@@ -50,6 +50,7 @@ class _RecordingSlashGateway implements SlashCommandGateway {
 Future<void> _pumpChat(
   WidgetTester tester, {
   required _RecordingSlashGateway gateway,
+  required List<String> submitted,
 }) async {
   await tester.pumpWidget(
     MaterialApp(
@@ -61,7 +62,7 @@ Future<void> _pumpChat(
           label: 'Fixture',
           host: 'fixture.invalid',
           port: 8642,
-          apiKey: 'fixture-key',
+          apiKey: 'fixture-key'
         ),
         session: Session(
           id: 'slash-new-session',
@@ -79,7 +80,19 @@ Future<void> _pumpChat(
           httpClient: MockClient((_) async => http.Response('{"data":[]}', 200)),
         ),
         testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
-        testRemotePromptSubmit: completedStockTurn(null),
+        // Records every ordinary prompt send: a locally handled command must
+        // never leak to the model as prose.
+        testRemotePromptSubmit: completedStockTurn(
+          ({
+            required sessionId,
+            required text,
+            required onEvent,
+            required onSent,
+          }) async {
+            onSent();
+            submitted.add(text);
+          },
+        ),
         testSlashGateway: gateway,
       ),
     ),
@@ -111,11 +124,14 @@ void main() {
     tester,
   ) async {
     final gateway = _RecordingSlashGateway();
-    await _pumpChat(tester, gateway: gateway);
+    final submitted = <String>[];
+    await _pumpChat(tester, gateway: gateway, submitted: submitted);
 
     await _send(tester, '/new');
 
     expect(gateway.executed, isEmpty);
+    // Handled locally means handled completely: never resubmitted as prose.
+    expect(submitted, isEmpty);
     final screens = _chatScreens(tester);
     expect(screens.length, 2, reason: '/new must open a second chat route');
     final fresh = screens.last.session;
@@ -129,7 +145,11 @@ void main() {
 
   testWidgets('/new with a title names the fresh draft', (tester) async {
     final gateway = _RecordingSlashGateway();
-    await _pumpChat(tester, gateway: gateway);
+    await _pumpChat(
+      tester,
+      gateway: gateway,
+      submitted: <String>[],
+    );
 
     await _send(tester, '/new My next chat');
 
@@ -141,11 +161,25 @@ void main() {
     tester,
   ) async {
     final gateway = _RecordingSlashGateway();
-    await _pumpChat(tester, gateway: gateway);
+    final submitted = <String>[];
+    await _pumpChat(tester, gateway: gateway, submitted: submitted);
 
     await _send(tester, '/reset');
 
     expect(gateway.executed, isEmpty);
+    expect(submitted, isEmpty);
+    expect(_chatScreens(tester).length, 2);
+  });
+
+  testWidgets('//new canonicalizes onto the local handler', (tester) async {
+    final gateway = _RecordingSlashGateway();
+    final submitted = <String>[];
+    await _pumpChat(tester, gateway: gateway, submitted: submitted);
+
+    await _send(tester, '//new');
+
+    expect(gateway.executed, isEmpty);
+    expect(submitted, isEmpty);
     expect(_chatScreens(tester).length, 2);
   });
 
@@ -153,7 +187,11 @@ void main() {
     tester,
   ) async {
     final gateway = _RecordingSlashGateway();
-    await _pumpChat(tester, gateway: gateway);
+    await _pumpChat(
+      tester,
+      gateway: gateway,
+      submitted: <String>[],
+    );
 
     await _send(tester, '/status');
 

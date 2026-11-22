@@ -4584,15 +4584,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     // `/new` (and its registry alias `/reset`) are app-owned, exactly like the
     // desktop's local dispatch: the headless gateway worker cannot show the
     // destructive-confirm modal and only answers "cancelled (no input)".
-    // Open the fresh chat here instead, before any gateway round-trip.
-    if (_localNewSessionNames.contains(name.toLowerCase())) {
+    // Open the fresh chat here instead, before any gateway round-trip. The
+    // name is canonicalized the same way the catalogue gate does, so `//new`
+    // cannot slip past to the worker.
+    final bareName = name.toLowerCase().replaceFirst(RegExp(r'^/+'), '');
+    if (_localNewSessionNames.contains(bareName)) {
       if (_sending || _streaming || _preparingSend) return null;
-      final revision = _composerRevision;
+      // Fully synchronous: the push starts and the command is consumed in
+      // this same microtask, so nothing can edit the draft in between.
       unawaited(_openFreshDraftChat(_slashCommandArgument(text)));
-      // The command line is consumed; typing during the push wins the draft.
-      if (_draftWriter.isCurrent && revision == _composerRevision) {
-        _setRestoredComposer('');
-      }
+      _setRestoredComposer('');
       _commitComposerForSend();
       return '';
     }
@@ -4686,7 +4687,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   /// Opens a fresh local draft chat above this one — the mobile mirror of the
   /// desktop's local `/new`: a new session id carrying the current chat's
   /// model and project context. Like the New-chat affordance's draft, it
-  /// commits to the gateway on its first prompt.
+  /// commits to the gateway on its first prompt. Unlike the conversation
+  /// browser's New button, a chat screen has no chat-space context, so the
+  /// draft is not assigned to any space.
   Future<void> _openFreshDraftChat(String title) async {
     final now = DateTime.now();
     final draft = Session(
@@ -4704,17 +4707,41 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     // is popped, and the command is already handled.
     Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
+        // The draft is the same product surface, so it inherits the parent's
+        // archive ownership and every test seam (hermeticity: a child left
+        // with real implementations would reach the network in tests). Only
+        // the parent's staged attachments and its session-ensure observer
+        // stay behind — both are scoped to the parent session.
         builder: (_) => ChatScreen(
           connection: widget.connection,
           session: draft,
           projectName: widget.projectName,
           projectWorkingDirectory: widget.projectWorkingDirectory,
           turnApplicationController: widget.turnApplicationController,
+          onArchiveChanged: widget.onArchiveChanged,
+          sessionArchiver: widget.sessionArchiver,
+          testTurnApplicationSession: widget.testTurnApplicationSession,
           testApiClient: widget.testApiClient,
+          testAttachmentDraftService: widget.testAttachmentDraftService,
           testRemotePromptSubmit: widget.testRemotePromptSubmit,
-          testSlashGateway: widget.testSlashGateway,
-          testVoiceComposerAdapter: widget.testVoiceComposerAdapter,
           testNormalResume: widget.testNormalResume,
+          testServerFilePicker: widget.testServerFilePicker,
+          testRemoteAttachmentUpload: widget.testRemoteAttachmentUpload,
+          testComposerDraftReader: widget.testComposerDraftReader,
+          testVoiceComposerAdapter: widget.testVoiceComposerAdapter,
+          testVoiceRecorder: widget.testVoiceRecorder,
+          testVoiceTranscription: widget.testVoiceTranscription,
+          testHandsFreePlatform: widget.testHandsFreePlatform,
+          testVoiceReplySpeaker: widget.testVoiceReplySpeaker,
+          testTurnNotifications: widget.testTurnNotifications,
+          testDesktopConnectionHook: widget.testDesktopConnectionHook,
+          testDesktopAsyncEventHook: widget.testDesktopAsyncEventHook,
+          testProjectOverviewLoader: widget.testProjectOverviewLoader,
+          testLegacyProjectSessionEnsure: widget.testLegacyProjectSessionEnsure,
+          testStoredSessionKey: widget.testStoredSessionKey,
+          testMediaFilesClient: widget.testMediaFilesClient,
+          testTaskHistorySource: widget.testTaskHistorySource,
+          testSlashGateway: widget.testSlashGateway,
         ),
       ),
     );
