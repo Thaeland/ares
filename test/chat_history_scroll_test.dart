@@ -1950,6 +1950,141 @@ void main() {
       );
       expect(tester.takeException(), isNull);
     });
+
+    testWidgets('a keyboard raised over a dialog leaves the parked reader', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(360, 720);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
+      final client = _ControlledChatHttpClient(_longHistory());
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'dialog-kb',
+        sessionId: 'dialog-kb',
+      );
+      final controller = _chatListController(tester);
+      controller.jumpTo(320);
+      await tester.pump();
+      await tester.tap(find.byTooltip('Command palette'));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('command-palette-query')), findsOneWidget);
+      // The palette's own field raises the keyboard over the chat. That is
+      // not the composer asking for the end: the parked reader stays put.
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'dialog-kb',
+        sessionId: 'dialog-kb',
+        viewInsets: const EdgeInsets.only(bottom: 300),
+      );
+      expect(controller.position.pixels, closeTo(320, 1));
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a held-open keyboard does not re-jump after scrolling away', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(360, 720);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
+      final client = _ControlledChatHttpClient(_longHistory());
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'held-kb',
+        sessionId: 'held-kb',
+      );
+      final controller = _chatListController(tester);
+      controller.jumpTo(320);
+      await tester.pump();
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'held-kb',
+        sessionId: 'held-kb',
+        viewInsets: const EdgeInsets.only(bottom: 300),
+      );
+      expect(
+        controller.position.pixels,
+        closeTo(controller.position.maxScrollExtent, 1),
+      );
+      // The reader scrolls away while the keyboard stays up: the rising
+      // edge already fired, so no later build drags them back.
+      controller.jumpTo(320);
+      await tester.pump();
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'held-kb',
+        sessionId: 'held-kb',
+        viewInsets: const EdgeInsets.only(bottom: 300),
+      );
+      expect(controller.position.pixels, closeTo(320, 1));
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('opening the keyboard during a stream re-arms auto-follow', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(360, 720);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
+      final initial = _longHistory();
+      final client = _ControlledChatHttpClient(initial);
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'stream-kb',
+        sessionId: 'stream-kb',
+      );
+      final controller = _chatListController(tester);
+      await tester.enterText(find.byType(TextField), 'follow me');
+      await tester.tap(find.byTooltip('Send'));
+      await tester.pump();
+      await client.postStarted.future;
+      client.emitToken('first chunk');
+      await tester.pump();
+      await tester.pump();
+      // A direct drag releases the sticky follow.
+      await tester.drag(find.byType(ListView).first, const Offset(0, 400));
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pump();
+      expect(
+        controller.position.pixels,
+        lessThan(controller.position.maxScrollExtent),
+      );
+      // The keyboard rising returns the view to the end and re-arms follow,
+      // so the next streamed chunk keeps the reader attached to the reply.
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'stream-kb',
+        sessionId: 'stream-kb',
+        viewInsets: const EdgeInsets.only(bottom: 300),
+      );
+      expect(
+        controller.position.pixels,
+        closeTo(controller.position.maxScrollExtent, 1),
+      );
+      client.emitToken(List.filled(20, 'growing reply').join('\n'));
+      await tester.pump();
+      await tester.pump();
+      expect(
+        controller.position.pixels,
+        closeTo(controller.position.maxScrollExtent, 1),
+      );
+      client.finish([
+        ...initial,
+        {'role': 'user', 'content': 'follow me'},
+        {'role': 'assistant', 'content': 'done'},
+      ]);
+      await pumpChatUpdates(tester);
+    });
   });
 }
 

@@ -6807,7 +6807,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
-    if (keyboardOpen && !_keyboardWasOpen) {
+    // Only the chat's own keyboard counts: a dialog or sheet on top raising
+    // its own keyboard must not yank a reader parked in history.
+    final routeVisible = ModalRoute.of(context)?.isCurrent ?? true;
+    if (keyboardOpen && !_keyboardWasOpen && routeVisible) {
       // The keyboard rising means the reader asked to compose: bring the
       // latest message back into view and re-arm sticky streaming follow,
       // like stock chat apps do when the composer takes focus.
