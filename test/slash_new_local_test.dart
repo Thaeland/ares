@@ -62,7 +62,7 @@ Future<void> _pumpChat(
           label: 'Fixture',
           host: 'fixture.invalid',
           port: 8642,
-          apiKey: 'fixture-key'
+          apiKey: 'fixture-key',
         ),
         session: Session(
           id: 'slash-new-session',
@@ -145,15 +145,13 @@ void main() {
 
   testWidgets('/new with a title names the fresh draft', (tester) async {
     final gateway = _RecordingSlashGateway();
-    await _pumpChat(
-      tester,
-      gateway: gateway,
-      submitted: <String>[],
-    );
+    final submitted = <String>[];
+    await _pumpChat(tester, gateway: gateway, submitted: submitted);
 
     await _send(tester, '/new My next chat');
 
     expect(gateway.executed, isEmpty);
+    expect(submitted, isEmpty);
     expect(_chatScreens(tester).last.session.title, 'My next chat');
   });
 
@@ -187,15 +185,13 @@ void main() {
     tester,
   ) async {
     final gateway = _RecordingSlashGateway();
-    await _pumpChat(
-      tester,
-      gateway: gateway,
-      submitted: <String>[],
-    );
+    final submitted = <String>[];
+    await _pumpChat(tester, gateway: gateway, submitted: submitted);
 
     await _send(tester, '/status');
 
     expect(gateway.executed, ['/status']);
+    expect(submitted, isEmpty);
     expect(_chatScreens(tester).length, 1);
   });
 }
