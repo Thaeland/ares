@@ -1935,8 +1935,10 @@ void main() {
       expect(controller.position.pixels, controller.position.maxScrollExtent);
       controller.jumpTo(320);
       await tester.pump();
-      // The same screen sees the keyboard rise under the composer: the
-      // reader asked to compose, so the latest message comes back into view.
+      await tester.tap(find.byKey(const Key('chat-message-composer')));
+      await tester.pump();
+      // The same screen sees the keyboard rise under the focused composer:
+      // the reader asked to compose, so the latest message comes back.
       await _pumpChat(
         tester,
         client: client,
@@ -1984,6 +1986,48 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
+    testWidgets(
+      'the composer still gets its scroll after a blocked dialog keyboard', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(360, 720);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
+      final client = _ControlledChatHttpClient(_longHistory());
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'blocked-then-composer',
+        sessionId: 'blocked-then-composer',
+      );
+      final controller = _chatListController(tester);
+      controller.jumpTo(320);
+      await tester.pump();
+      await tester.tap(find.byTooltip('Command palette'));
+      await tester.pumpAndSettle();
+      // The palette's field raises the keyboard: blocked, the reader stays.
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'blocked-then-composer',
+        sessionId: 'blocked-then-composer',
+        viewInsets: const EdgeInsets.only(bottom: 300),
+      );
+      expect(controller.position.pixels, closeTo(320, 1));
+      // The palette closes with the IME still up (no inset dip), then the
+      // composer takes focus: it must still get its scroll to the end.
+      await tester.tap(find.text('Close'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('chat-message-composer')));
+      await tester.pump();
+      expect(
+        controller.position.pixels,
+        closeTo(controller.position.maxScrollExtent, 1),
+      );
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('a held-open keyboard does not re-jump after scrolling away', (
       tester,
     ) async {
@@ -2000,6 +2044,8 @@ void main() {
       );
       final controller = _chatListController(tester);
       controller.jumpTo(320);
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('chat-message-composer')));
       await tester.pump();
       await _pumpChat(
         tester,
@@ -2058,8 +2104,17 @@ void main() {
         controller.position.pixels,
         lessThan(controller.position.maxScrollExtent),
       );
-      // The keyboard rising returns the view to the end and re-arms follow,
-      // so the next streamed chunk keeps the reader attached to the reply.
+      // Prove the drag actually disarmed follow: a chunk now must not move
+      // the parked view.
+      final parked = controller.position.pixels;
+      client.emitToken('disarm probe');
+      await tester.pump();
+      await tester.pump();
+      expect(controller.position.pixels, closeTo(parked, 1));
+      // The composer takes focus and the keyboard rises: the view returns
+      // to the end and sticky follow re-arms.
+      await tester.tap(find.byKey(const Key('chat-message-composer')));
+      await tester.pump();
       await _pumpChat(
         tester,
         client: client,
@@ -2071,6 +2126,11 @@ void main() {
         controller.position.pixels,
         closeTo(controller.position.maxScrollExtent, 1),
       );
+      // Let the end-alignment convergence loop expire so only sticky follow
+      // can keep the view attached below.
+      for (var frame = 0; frame < 15; frame++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
       client.emitToken(List.filled(20, 'growing reply').join('\n'));
       await tester.pump();
       await tester.pump();

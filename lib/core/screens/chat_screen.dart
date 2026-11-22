@@ -913,7 +913,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final _scrollController = ScrollController();
   final _scrollCoordinator = ChatScrollCoordinator();
   final _endAffordanceController = ChatEndAffordanceController();
-  bool _keyboardWasOpen = false;
+  final _composerFocus = FocusNode();
+  bool _keyboardEndScrollDone = false;
   bool _streamFollowScheduled = false;
   bool _initialEndFrameScheduled = false;
   bool _openingHistoryChromePending = true;
@@ -931,6 +932,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    _composerFocus.addListener(_syncComposerKeyboardEndScroll);
     _notificationApprovalOrigin = NotificationApprovalAuthority.origin(
       widget.connection,
     );
@@ -1769,6 +1771,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       pendingSubmission.complete();
     }
     _manualAudioIntent++;
+    _composerFocus
+      ..removeListener(_syncComposerKeyboardEndScroll)
+      ..dispose();
     _voiceBound = false;
     handsFreeRouteObserver.removeListener(_onVoiceRouteChanged);
     handsFreeEnabled.removeListener(_onHandsFreeEnabledChanged);
@@ -2942,6 +2947,25 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       return;
     }
     _applyScrollTarget(const ChatScrollTarget.end());
+  }
+
+  /// The composer's keyboard rising means the reader asked to compose:
+  /// bring the latest message back into view and re-arm sticky streaming
+  /// follow. A dialog or sheet field holds focus instead, so its keyboard
+  /// never moves a reader parked in history — and if the IME stayed up
+  /// across that dialog's pop, the composer still gets its scroll when it
+  /// takes focus. Runs from build (keyboard changes) and from the composer's
+  /// focus listener (focus changes while the keyboard is already up).
+  void _syncComposerKeyboardEndScroll() {
+    if (!mounted) return;
+    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    if (!keyboardOpen) {
+      _keyboardEndScrollDone = false;
+    } else if (_composerFocus.hasFocus && !_keyboardEndScrollDone) {
+      _keyboardEndScrollDone = true;
+      _scrollCoordinator.updateFromUserScroll(isNearEnd: true);
+      _scheduleScrollTarget(const ChatScrollTarget.end());
+    }
   }
 
   void _scheduleScrollTarget(ChatScrollTarget? target) {
@@ -6806,18 +6830,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
-    // Only the chat's own keyboard counts: a dialog or sheet on top raising
-    // its own keyboard must not yank a reader parked in history.
-    final routeVisible = ModalRoute.of(context)?.isCurrent ?? true;
-    if (keyboardOpen && !_keyboardWasOpen && routeVisible) {
-      // The keyboard rising means the reader asked to compose: bring the
-      // latest message back into view and re-arm sticky streaming follow,
-      // like stock chat apps do when the composer takes focus.
-      _scrollCoordinator.updateFromUserScroll(isNearEnd: true);
-      _scheduleScrollTarget(const ChatScrollTarget.end());
-    }
-    _keyboardWasOpen = keyboardOpen;
+    _syncComposerKeyboardEndScroll();
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -7403,6 +7416,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                             ),
                             child: TextField(
                               key: const Key('chat-message-composer'),
+                              focusNode: _composerFocus,
                               controller: _textController,
                               inputFormatters: [_largePasteFormatter],
                               decoration: InputDecoration(
