@@ -913,6 +913,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final _scrollController = ScrollController();
   final _scrollCoordinator = ChatScrollCoordinator();
   final _endAffordanceController = ChatEndAffordanceController();
+  bool _keyboardWasOpen = false;
   bool _streamFollowScheduled = false;
   bool _initialEndFrameScheduled = false;
   bool _openingHistoryChromePending = true;
@@ -6805,6 +6806,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    if (keyboardOpen && !_keyboardWasOpen) {
+      // The keyboard rising means the reader asked to compose: bring the
+      // latest message back into view and re-arm sticky streaming follow,
+      // like stock chat apps do when the composer takes focus.
+      _scrollCoordinator.updateFromUserScroll(isNearEnd: true);
+      _scheduleScrollTarget(const ChatScrollTarget.end());
+    }
+    _keyboardWasOpen = keyboardOpen;
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,

@@ -1916,6 +1916,40 @@ void main() {
         expect(composer.controller!.text, '@file /srv/project/README.md ');
       },
     );
+
+    testWidgets('opening the keyboard returns the transcript to the end', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(360, 720);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
+      final client = _ControlledChatHttpClient(_longHistory());
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'keyboard-end',
+        sessionId: 'keyboard-end',
+      );
+      final controller = _chatListController(tester);
+      expect(controller.position.pixels, controller.position.maxScrollExtent);
+      controller.jumpTo(320);
+      await tester.pump();
+      // The same screen sees the keyboard rise under the composer: the
+      // reader asked to compose, so the latest message comes back into view.
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'keyboard-end',
+        sessionId: 'keyboard-end',
+        viewInsets: const EdgeInsets.only(bottom: 300),
+      );
+      expect(
+        controller.position.pixels,
+        closeTo(controller.position.maxScrollExtent, 1),
+      );
+      expect(tester.takeException(), isNull);
+    });
   });
 }
 
