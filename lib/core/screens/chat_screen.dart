@@ -4581,6 +4581,21 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   Future<String?> _dispatchSlashCommand(String text) async {
     final name = slashCommandName(text);
     if (name == null) return null;
+    // `/new` (and its registry alias `/reset`) are app-owned, exactly like the
+    // desktop's local dispatch: the headless gateway worker cannot show the
+    // destructive-confirm modal and only answers "cancelled (no input)".
+    // Open the fresh chat here instead, before any gateway round-trip.
+    if (_localNewSessionNames.contains(name.toLowerCase())) {
+      if (_sending || _streaming || _preparingSend) return null;
+      final revision = _composerRevision;
+      unawaited(_openFreshDraftChat(_slashCommandArgument(text)));
+      // The command line is consumed; typing during the push wins the draft.
+      if (_draftWriter.isCurrent && revision == _composerRevision) {
+        _setRestoredComposer('');
+      }
+      _commitComposerForSend();
+      return '';
+    }
     final gateway = _slashGateway;
     if (gateway == null || !gateway.slashCommandsSupported) return null;
     if (_sending || _streaming || _preparingSend) return null;
@@ -4654,6 +4669,55 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     } finally {
       _preparingSend = false;
     }
+  }
+
+  /// Slash commands the app answers itself instead of `slash.exec`. The
+  /// gateway's headless worker cannot show their interactive confirmation,
+  /// so the desktop owns them locally; the mobile mirror owns them the same
+  /// way. `reset` is the registry alias of `new`.
+  static const Set<String> _localNewSessionNames = {'new', 'reset'};
+
+  /// The trailing argument of a slash line (`/new My title`), empty when none.
+  static String _slashCommandArgument(String text) {
+    final parts = text.split(RegExp(r'\s+'));
+    return parts.skip(1).join(' ').trim();
+  }
+
+  /// Opens a fresh local draft chat above this one — the mobile mirror of the
+  /// desktop's local `/new`: a new session id carrying the current chat's
+  /// model and project context. Like the New-chat affordance's draft, it
+  /// commits to the gateway on its first prompt.
+  Future<void> _openFreshDraftChat(String title) async {
+    final now = DateTime.now();
+    final draft = Session(
+      id: GatewayChatClient.generateSessionId(),
+      title: title.isEmpty ? context.l10n.new_chat : title,
+      model: widget.session.model,
+      source: 'mobile',
+      messageCount: 0,
+      isActive: true,
+      preview: '',
+      startedAt: now.millisecondsSinceEpoch / 1000.0,
+      isLocalDraft: true,
+    );
+    // Pushed, not awaited: the returned Future completes when the new chat
+    // is popped, and the command is already handled.
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => ChatScreen(
+          connection: widget.connection,
+          session: draft,
+          projectName: widget.projectName,
+          projectWorkingDirectory: widget.projectWorkingDirectory,
+          turnApplicationController: widget.turnApplicationController,
+          testApiClient: widget.testApiClient,
+          testRemotePromptSubmit: widget.testRemotePromptSubmit,
+          testSlashGateway: widget.testSlashGateway,
+          testVoiceComposerAdapter: widget.testVoiceComposerAdapter,
+          testNormalResume: widget.testNormalResume,
+        ),
+      ),
+    );
   }
 
   static bool _isSlashUnsupported(JsonRpcError error) {
