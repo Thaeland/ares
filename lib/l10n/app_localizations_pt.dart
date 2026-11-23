@@ -3983,7 +3983,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get slash_sessions_inline =>
-      'The session list is already open in this view.';
+      'A lista de sessões já está aberta nesta visualização.';
 
   @override
   String get nextgen_toggle => 'Interface NextGen';

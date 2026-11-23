@@ -3986,7 +3986,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get slash_sessions_inline =>
-      'The session list is already open in this view.';
+      'Список сессий уже открыт в этом представлении.';
 
   @override
   String get nextgen_toggle => 'Интерфейс NextGen';

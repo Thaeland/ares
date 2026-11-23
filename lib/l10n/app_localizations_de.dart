@@ -3990,7 +3990,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get slash_sessions_inline =>
-      'The session list is already open in this view.';
+      'Die Sitzungsliste ist in dieser Ansicht bereits geöffnet.';
 
   @override
   String get nextgen_toggle => 'NextGen-Oberfläche';

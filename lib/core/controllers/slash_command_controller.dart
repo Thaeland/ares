@@ -106,7 +106,9 @@ class SlashCommandController extends ChangeNotifier {
     return isOpen;
   }
 
-  /// Loads the catalogue once per scope. Catalogues are read-only, so a
+  /// Loads the catalogue once per scope. Catalogue entries are read-only
+  /// (the only mutation is the learned `refused` set, which dies with the
+  /// cache), so a
   /// successful response is cached until [invalidate]; a failure is sticky
   /// until the next explicit invalidation (connection change) and never
   /// retried per keystroke.

@@ -1086,6 +1086,7 @@
   "slash_command_delivery_unknown": "The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.",
   "slash_command_failed": "The command could not be run.",
   "slash_command_unsupported": "Este comando no está disponible en este servidor.",
+  "slash_sessions_inline": "La lista de sesiones ya está abierta en esta vista.",
   "nextgen_toggle": "Interfaz NextGen",
   "nextgen_toggle_subtitle": "Un diseño nuevo con un solo inicio de sesión, chats en directo y búsqueda en la red. Tus gateways y chats se comparten con esta interfaz.",
   "nextgen_single_login": "Conectar con un solo inicio de sesión",

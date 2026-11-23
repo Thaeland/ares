@@ -3820,8 +3820,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get slash_command_unsupported => '此命令在此服务器上不可用。';
 
   @override
-  String get slash_sessions_inline =>
-      'The session list is already open in this view.';
+  String get slash_sessions_inline => '会话列表已在此视图中打开。';
 
   @override
   String get nextgen_toggle => 'NextGen 界面';

@@ -1102,6 +1102,42 @@ void main() {
       );
     });
 
+    testWidgets('a transport-level 4001 keeps the plain send and the dropdown intact', (
+      tester,
+    ) async {
+      final submitted = <String>[];
+      final gateway = _FakeSlashGateway(
+        error: JsonRpcError('slash.exec', 'session not found', code: 4001),
+      );
+      await _pumpChat(
+        tester,
+        slashGateway: gateway,
+        remoteSubmit:
+            ({
+              required sessionId,
+              required text,
+              required onEvent,
+              required onSent,
+            }) async {
+              onSent();
+              submitted.add(text);
+            },
+      );
+
+      await tester.enterText(find.byKey(_composerKey), '/status');
+      await tester.pump();
+      await _send(tester);
+
+      // A stale session is not a command refusal: old behaviour (plain send,
+      // no card, command stays offered) must survive.
+      expect(submitted, ['/status']);
+      expect(find.byKey(Key('slash-command-notice')), findsNothing);
+
+      await tester.enterText(find.byKey(_composerKey), '/stat');
+      await pumpChatUpdates(tester);
+      expect(find.byKey(ValueKey('slash-command-status')), findsOneWidget);
+    });
+
     testWidgets('a refused command is no longer offered by the dropdown', (
       tester,
     ) async {
@@ -1219,6 +1255,10 @@ void main() {
       await expectModelPicker(tester, '//model');
     });
 
+    testWidgets('/MODEL casefolds to the same local path', (tester) async {
+      await expectModelPicker(tester, '/MODEL');
+    });
+
     testWidgets('/sessions pops back to the session list', (tester) async {
       final gateway = _FakeSlashGateway();
       await _pushChat(tester, slashGateway: gateway);
@@ -1242,6 +1282,7 @@ void main() {
 
       expect(gateway.commands, isEmpty);
       expect(find.byKey(_composerKey), findsNothing);
+      expect(find.byKey(Key('session-list-page')), findsOneWidget);
     });
 
     testWidgets('/sessions in an embedded chat answers with a notice', (

@@ -4593,10 +4593,22 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       // Local app-surface equivalents: these names already have screens of
       // their own in the app, so they act locally instead of asking the
       // gateway (which refuses them). `slashCommandName` keeps any leading
-      // slash of a `//name` escape, so strip it here — never a raw-text match.
-      final bare = name.replaceFirst(RegExp(r'^/+'), '');
+      // slash of a `//name` escape and does not casefold, so strip and
+      // lowercase here — never a raw-text match.
+      final bare = name.replaceFirst(RegExp(r'^/+'), '').toLowerCase();
       if (bare == 'model' || bare == 'sessions' || bare == 'resume') {
         if (!mounted) return '';
+        if (bare == 'model' &&
+            (_pendingReattachResync || _loadingModelOptions)) {
+          // The picker would swallow the tap silently; say so instead of
+          // eating the line.
+          if (_draftWriter.isCurrent && revision == _composerRevision) {
+            _setRestoredComposer('');
+          }
+          _commitComposerForSend();
+          _appendSlashCommandNotice(text, context.l10n.slash_command_failed);
+          return '';
+        }
         if (_draftWriter.isCurrent && revision == _composerRevision) {
           _setRestoredComposer('');
         }
@@ -4645,11 +4657,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         );
       } on JsonRpcError catch (error) {
         if (_isSlashUnsupported(error)) {
-          // A command the loaded catalogue lists but the gateway refuses is
-          // not prose: answer with the gateway's own hint (REFUSAL_HINTS ride
-          // `data.detail`) on a notice card, and consume the line the way an
-          // executed command does. Unknown `/`-lines keep the plain send.
-          if (catalogReady && _slashController.isExecutable(name)) {
+          // A command the loaded catalogue lists but the gateway REFUSES
+          // (per-command `unsupported_command`, not a transport-level 4001
+          // stale session or -32601 missing method — those keep the old
+          // plain-send fallback) is not prose: answer with the gateway's own
+          // hint (REFUSAL_HINTS ride `data.detail`) on a notice card, and
+          // consume the line the way an executed command does. Unknown
+          // `/`-lines keep the plain send.
+          if (_isSlashCommandRefusal(error) &&
+              catalogReady &&
+              _slashController.isExecutable(name)) {
             if (!mounted) return '';
             _slashController.markRefused(name);
             if (_draftWriter.isCurrent && revision == _composerRevision) {
@@ -4718,6 +4735,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final reason = error.reason?.toLowerCase() ?? '';
     return _slashUnsupportedCodes.contains(error.code) ||
         reason.contains('unsupported');
+  }
+
+  /// The narrow test for the refusal card: a genuine per-command
+  /// `unsupported_command` answer. Broad `_isSlashUnsupported` codes like
+  /// 4001 (stale session) or -32601 (method missing) describe the transport,
+  /// not the command, and must not hide working commands for the session.
+  static bool _isSlashCommandRefusal(JsonRpcError error) {
+    final reason = error.reason?.toLowerCase() ?? '';
+    return error.code == 4018 || reason.contains('unsupported');
   }
 
   /// The transport timed out or dropped after the write: the gateway may still
