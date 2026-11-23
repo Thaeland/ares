@@ -826,6 +826,79 @@ The Cron Jobs screen supports full CRUD:
 - **Pause/Resume** — Toggle job enabled state.
 - **Delete** — Remove a job (with confirmation).
 
+## iOS, iPadOS and macOS (Apple port)
+
+Ares ships the **same Dart chat client** on iOS/iPadOS and macOS (bundle id
+`com.hermesagent.ares`, display name **Ares**) alongside Android. The Apple
+bundle id deliberately differs from the Android application id
+`com.hermesagent.hermes_android`: App Store Connect's bundle-id form rejects
+underscores, so `com.hermesagent.ares` was registered for the iOS/macOS app
+container. This is a native Flutter port, not an APK wrapper or a web shell. Deployment
+floors are **iOS 15.0** and **macOS 13.0**; the Xcode 27 / Flutter 3.44 runner
+uses arm64-only `ARCHS` and a Podfile deployment-target clamp because Xcode 27
+rejects the older Flutter ancillary targets.
+
+### Adaptive layout (size-driven, never a device-name check)
+
+| Window width | Behaviour |
+| --- | --- |
+| `< 600 pt` | Normal phone navigation/stack: bottom `NavigationBar` (Classic), modal sessions drawer (NextGen). |
+| `600..<840 pt` | Navigation rail where appropriate; NextGen keeps the drawer with a sidebar toggle. |
+| `>= 840 pt` (and `>= 480 pt` tall) | Productive wide layout: **list + detail** in Classic (sessions list beside an inline conversation) and a **docked sessions sidebar** beside the chat in NextGen. |
+
+The same code serves an unfolded foldable, an iPad in Split View, and an
+arbitrarily resized Mac window. Selection, session-list filters, composer
+drafts and scroll state survive resize/fold: Classic keeps every visited pane
+mounted in its `IndexedStack`, and NextGen reuses one `NgChatController`
+(`ObjectKey(chat)`) plus one keyed `NgSessionsSidebar` state as it moves
+between the drawer and the docked pane. Folding a Classic wide window back to
+compact re-homes the inline chat as a full-screen route.
+
+### macOS desktop polish
+
+- Keyboard shortcuts: `Cmd+N` new chat, `Cmd+K`/`Cmd+F` search, `Cmd+,`
+  settings, `Cmd+1..4` switch destinations/pages. Plain `Enter` sends the
+  composer and `Shift+Enter` inserts a newline.
+- A purposeful commented sidebar/rail, readable content widths, full-width
+  transcript/code views, hover/pointer-aware controls, Dynamic Type, dark
+  mode, safe areas and accessible labels/targets.
+
+### Apple platform notes
+
+- Local notifications use `DarwinInitializationSettings`/`DarwinNotificationDetails`
+  with Approve/Deny categories and passive permission checks; the secure
+  credential stores use `MacOsOptions(usesDataProtectionKeychain: false)` so
+  ad-hoc local macOS builds do not fail with `errSecMissingEntitlement`.
+- Native Swift channels implement PDF preview, voice-fragment duration/join
+  (AAC M4A), and cached-file export via `UIDocumentPicker` / `NSSavePanel`.
+- Privacy usage strings are present only for features actually used:
+  microphone, speech recognition, camera and photo library (iOS/macOS), plus
+  local-network access for gateway connections.
+- **Android-only features are hidden, not broken:** the foreground/background
+  work service, battery-optimisation prompts, embedded FCM push bridge, APK
+  self-update and the Android hands-free wake-word service do not apply to
+  Apple platforms and are omitted there. Android behaviour and tests are
+  unchanged.
+- **Known limitations:** background execution follows iOS/macOS rules (no
+  Android-style foreground service), so a backgrounded turn is reported via
+  local notifications rather than a persistent socket. `image_picker` camera
+  capture is unavailable on macOS (gallery/file import works). Apple builds
+  must be code-signed/provisioned by the release owner; local ad-hoc builds
+  are unsigned.
+
+### Build & verify
+
+```bash
+flutter pub get
+flutter analyze                       # excludes build/** (SPM checkouts)
+flutter test                          # includes apple_adaptive_layout_test.dart
+flutter build ios --simulator         # unsigned simulator build
+flutter build macos --release         # unsigned/ad-hoc local build
+```
+
+Signed App Store archives, notarisation, upload and metadata are owned
+centrally and are **not** performed here.
+
 ## Development
 
 ```bash

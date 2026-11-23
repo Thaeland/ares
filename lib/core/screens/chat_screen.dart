@@ -103,6 +103,7 @@ import '../widgets/slash_command_notice_card.dart';
 import '../widgets/voice_composer_controls.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
+import '../widgets/desktop_shortcuts.dart';
 
 /// Recovery v2 opens a new server session and cannot yet target an existing
 /// Gateway session. Keep it confined to locally-created drafts; a session from
@@ -598,6 +599,12 @@ class ChatScreen extends StatefulWidget {
   /// Retained/offstage destinations must explicitly relinquish voice authority.
   final bool active;
 
+  /// When set, the chat is embedded in a wider list+detail pane rather than
+  /// pushed as a route: the AppBar shows a close affordance that calls this
+  /// instead of popping the enclosing route. Null keeps the normal pushed
+  /// full-screen behaviour (back button pops the route).
+  final VoidCallback? onClose;
+
   /// Lets a test observe what the chat posts to Android when a turn settles,
   /// without touching the notification platform channel.
   @visibleForTesting
@@ -670,6 +677,7 @@ class ChatScreen extends StatefulWidget {
     this.testHandsFreePlatform,
     this.testVoiceReplySpeaker,
     this.active = true,
+    this.onClose,
     this.testTurnNotifications,
     this.testDesktopConnectionHook,
     this.testDesktopAsyncEventHook,
@@ -6808,6 +6816,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
+        automaticallyImplyLeading: widget.onClose == null,
+        leading: widget.onClose == null
+            ? null
+            : IconButton(
+                tooltip: MaterialLocalizations.of(context).closeButtonLabel,
+                onPressed: widget.onClose,
+                icon: const Icon(Icons.close),
+              ),
         title: Text(
           _sessionTitle.trim().isEmpty
               ? context.l10n.untitled_chat
@@ -7388,29 +7404,34 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                 160.0,
                               ),
                             ),
-                            child: TextField(
-                              key: const Key('chat-message-composer'),
-                              controller: _textController,
-                              inputFormatters: [_largePasteFormatter],
-                              decoration: InputDecoration(
-                                hintText: context.l10n.message_hermes,
-                                filled: true,
-                                fillColor: Colors.transparent,
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
+                            child: SendOnEnter(
+                              enabled: sendEnabled,
+                              onSend: () => unawaited(_sendMessage()),
+                              child: TextField(
+                                key: const Key('chat-message-composer'),
+                                controller: _textController,
+                                inputFormatters: [_largePasteFormatter],
+                                decoration: InputDecoration(
+                                  hintText: context.l10n.message_hermes,
+                                  filled: true,
+                                  fillColor: Colors.transparent,
+                                  border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  isDense: true,
                                 ),
-                                isDense: true,
+                                minLines: 1,
+                                maxLines: 5,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                keyboardType: TextInputType.multiline,
+                                textInputAction: TextInputAction.newline,
+                                enabled: !_transcriptLoadBlocksComposer,
                               ),
-                              minLines: 1,
-                              maxLines: 5,
-                              textCapitalization: TextCapitalization.sentences,
-                              keyboardType: TextInputType.multiline,
-                              textInputAction: TextInputAction.newline,
-                              enabled: !_transcriptLoadBlocksComposer,
                             ),
                           ),
                         ],

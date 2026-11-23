@@ -108,6 +108,9 @@ class HermesPaneVisibility extends InheritedWidget {
 /// when there is nothing to report.
 class HermesShell extends StatefulWidget {
   /// Below this width the shell uses a bottom bar; at or above it, a rail.
+  /// Kept at the established 720 pt threshold so the Android phone/tablet
+  /// behaviour and its validated widget tests stay intact. New Apple-facing
+  /// adaptive surfaces use [AdaptiveBreakpoints] (600/840) directly.
   static const double railBreakpoint = 720;
 
   static const int maxBadgeCount = 99;
@@ -134,14 +137,17 @@ class HermesShell extends StatefulWidget {
   });
 
   @override
-  State<HermesShell> createState() => _HermesShellState();
+  State<HermesShell> createState() => HermesShellState();
 }
 
-class _HermesShellState extends State<HermesShell> {
+class HermesShellState extends State<HermesShell> {
   late HermesDestination _current = widget.initialDestination;
   late final Set<HermesDestination> _visitedDestinations = {
     widget.initialDestination,
   };
+
+  /// Public tab switch used by desktop keyboard shortcuts (Cmd+1..4).
+  void select(HermesDestination destination) => _select(destination);
 
   void _select(HermesDestination destination) {
     // Re-tapping the active destination is a no-op rather than a rebuild or a

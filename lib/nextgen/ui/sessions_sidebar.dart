@@ -354,6 +354,7 @@ class NgSessionsSidebar extends StatefulWidget {
     required this.onOpen,
     required this.onNewChat,
     required this.onDestination,
+    this.docked = false,
   });
 
   final NgSessionsModel model;
@@ -361,6 +362,11 @@ class NgSessionsSidebar extends StatefulWidget {
   final ValueChanged<Session> onOpen;
   final VoidCallback onNewChat;
   final ValueChanged<NgDestination> onDestination;
+
+  /// When true the sidebar renders as a persistent docked pane (wide windows)
+  /// rather than a modal [Drawer]. The search/filter/scroll state is identical
+  /// in both modes so resizing across the breakpoint preserves it.
+  final bool docked;
 
   @override
   State<NgSessionsSidebar> createState() => _NgSessionsSidebarState();
@@ -497,181 +503,184 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
     final scope = NgScope.of(context);
+    final content = SafeArea(
+      child: ListenableBuilder(
+        listenable: Listenable.merge([widget.model, scope.gateway]),
+        builder: (context, _) {
+          final needsYou = scope.gateway.needsYou;
+          final all = widget.model.sessions;
+          final chats = all.where((s) => !isCronSession(s)).toList();
+          final filtered = switch (_filter) {
+            NgSidebarFilter.all => chats,
+            NgSidebarFilter.running => chats.where((s) => s.isActive).toList(),
+            NgSidebarFilter.needsYou =>
+              chats
+                  .where(
+                    (s) => needsYou.contains(s.id) || widget.model.isUnread(s),
+                  )
+                  .toList(),
+            NgSidebarFilter.crons =>
+              all.where((s) => isCronSession(s)).toList(),
+          };
+          final pinned =
+              _filter == NgSidebarFilter.all && widget.model.query.isEmpty
+              ? filtered.where((s) => s.pinned).toList()
+              : <Session>[];
+          final rest = filtered.where((s) => !pinned.contains(s)).toList();
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 12, 14, 6),
+                child: TextField(
+                  key: const Key('ng-session-search'),
+                  controller: _search,
+                  focusNode: _searchFocus,
+                  onChanged: (value) {
+                    widget.model.search(value);
+                    setState(() {});
+                  },
+                  style: NgType.body.copyWith(color: c.text),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor: c.input,
+                    prefixIcon: Icon(Icons.search, color: c.text3, size: 20),
+                    suffixIcon: _search.text.isEmpty
+                        ? null
+                        : IconButton(
+                            key: const Key('ng-clear-search'),
+                            tooltip:
+                                AppLocalizations.of(context)?.clear_search ??
+                                'Clear search',
+                            icon: const Icon(Icons.clear, size: 18),
+                            color: c.text3,
+                            constraints: const BoxConstraints.tightFor(
+                              width: 40,
+                              height: 40,
+                            ),
+                            onPressed: () {
+                              _search.clear();
+                              widget.model.clearSearch();
+                              _searchFocus.requestFocus();
+                              setState(() {});
+                            },
+                          ),
+                    hintText: ngL.ng_search_chats,
+                    hintStyle: NgType.body.copyWith(color: c.textMuted),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(NgRadii.full),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: widget.model.refresh,
+                  child: ListView(
+                    controller: _scroll,
+                    padding: const EdgeInsets.fromLTRB(10, 4, 10, 12),
+                    children: [
+                      _tiles(c),
+                      const SizedBox(height: 8),
+                      _filters(
+                        c,
+                        chats
+                            .where(
+                              (s) =>
+                                  needsYou.contains(s.id) ||
+                                  widget.model.isUnread(s),
+                            )
+                            .length,
+                      ),
+                      if (pinned.isNotEmpty) ...[
+                        NgSectionLabel(ngL.ng_pinned),
+                        for (final s in pinned) _tile(c, s, needsYou),
+                      ],
+                      if (pinned.isNotEmpty && rest.isNotEmpty)
+                        NgSectionLabel(ngL.ng_recent),
+                      if (widget.model.error != null && all.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            widget.model.error!,
+                            style: NgType.bodySmall.copyWith(color: c.danger),
+                          ),
+                        )
+                      else if (!widget.model.loading && filtered.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Text(
+                            switch (_filter) {
+                              _ when widget.model.query.isNotEmpty =>
+                                ngL.ng_no_chats_match,
+                              NgSidebarFilter.all => ngL.ng_no_chats_yet,
+                              NgSidebarFilter.running =>
+                                ngL.ng_nothing_is_running,
+                              NgSidebarFilter.needsYou =>
+                                ngL.ng_nothing_is_waiting_on_you,
+                              NgSidebarFilter.crons =>
+                                AppLocalizations.of(
+                                      context,
+                                    )?.cron_conversations_empty ??
+                                    'Conversations from scheduled jobs appear here, including older runs.',
+                            },
+                            textAlign: TextAlign.center,
+                            style: NgType.bodySmall.copyWith(color: c.text3),
+                          ),
+                        ),
+                      for (final s in rest) _tile(c, s, needsYou),
+                      // A short list has no scroll extent, so scroll-only
+                      // paging cannot grow it; offer an explicit read on.
+                      if (widget.model.hasMore &&
+                          !widget.model.loading &&
+                          widget.model.query.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Center(
+                            child: TextButton.icon(
+                              key: const Key('ng-sessions-load-more'),
+                              onPressed: widget.model.loadMore,
+                              icon: const Icon(Icons.expand_more, size: 18),
+                              label: Text(
+                                AppLocalizations.of(context)?.load_more ??
+                                    'Load more…',
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (widget.model.loading)
+                        const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Center(
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              _footer(c, scope),
+            ],
+          );
+        },
+      ),
+    );
+    if (widget.docked) {
+      return Material(
+        color: c.sidebar,
+        child: SizedBox(width: 330, child: content),
+      );
+    }
     return Drawer(
       backgroundColor: c.sidebar,
       width: 330,
       shape: const RoundedRectangleBorder(),
-      child: SafeArea(
-        child: ListenableBuilder(
-          listenable: Listenable.merge([widget.model, scope.gateway]),
-          builder: (context, _) {
-            final needsYou = scope.gateway.needsYou;
-            final all = widget.model.sessions;
-            final chats = all.where((s) => !isCronSession(s)).toList();
-            final filtered = switch (_filter) {
-              NgSidebarFilter.all => chats,
-              NgSidebarFilter.running =>
-                chats.where((s) => s.isActive).toList(),
-              NgSidebarFilter.needsYou =>
-                chats
-                    .where(
-                      (s) =>
-                          needsYou.contains(s.id) || widget.model.isUnread(s),
-                    )
-                    .toList(),
-              NgSidebarFilter.crons =>
-                all.where((s) => isCronSession(s)).toList(),
-            };
-            final pinned =
-                _filter == NgSidebarFilter.all && widget.model.query.isEmpty
-                ? filtered.where((s) => s.pinned).toList()
-                : <Session>[];
-            final rest = filtered.where((s) => !pinned.contains(s)).toList();
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 12, 14, 6),
-                  child: TextField(
-                    key: const Key('ng-session-search'),
-                    controller: _search,
-                    focusNode: _searchFocus,
-                    onChanged: (value) {
-                      widget.model.search(value);
-                      setState(() {});
-                    },
-                    style: NgType.body.copyWith(color: c.text),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      filled: true,
-                      fillColor: c.input,
-                      prefixIcon: Icon(Icons.search, color: c.text3, size: 20),
-                      suffixIcon: _search.text.isEmpty
-                          ? null
-                          : IconButton(
-                              key: const Key('ng-clear-search'),
-                              tooltip:
-                                  AppLocalizations.of(context)?.clear_search ??
-                                  'Clear search',
-                              icon: const Icon(Icons.clear, size: 18),
-                              color: c.text3,
-                              constraints: const BoxConstraints.tightFor(
-                                width: 40,
-                                height: 40,
-                              ),
-                              onPressed: () {
-                                _search.clear();
-                                widget.model.clearSearch();
-                                _searchFocus.requestFocus();
-                                setState(() {});
-                              },
-                            ),
-                      hintText: ngL.ng_search_chats,
-                      hintStyle: NgType.body.copyWith(color: c.textMuted),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(NgRadii.full),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: widget.model.refresh,
-                    child: ListView(
-                      controller: _scroll,
-                      padding: const EdgeInsets.fromLTRB(10, 4, 10, 12),
-                      children: [
-                        _tiles(c),
-                        const SizedBox(height: 8),
-                        _filters(
-                          c,
-                          chats
-                              .where(
-                                (s) =>
-                                    needsYou.contains(s.id) ||
-                                    widget.model.isUnread(s),
-                              )
-                              .length,
-                        ),
-                        if (pinned.isNotEmpty) ...[
-                          NgSectionLabel(ngL.ng_pinned),
-                          for (final s in pinned) _tile(c, s, needsYou),
-                        ],
-                        if (pinned.isNotEmpty && rest.isNotEmpty)
-                          NgSectionLabel(ngL.ng_recent),
-                        if (widget.model.error != null && all.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Text(
-                              widget.model.error!,
-                              style: NgType.bodySmall.copyWith(color: c.danger),
-                            ),
-                          )
-                        else if (!widget.model.loading && filtered.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(24),
-                            child: Text(
-                              switch (_filter) {
-                                _ when widget.model.query.isNotEmpty =>
-                                  ngL.ng_no_chats_match,
-                                NgSidebarFilter.all => ngL.ng_no_chats_yet,
-                                NgSidebarFilter.running =>
-                                  ngL.ng_nothing_is_running,
-                                NgSidebarFilter.needsYou =>
-                                  ngL.ng_nothing_is_waiting_on_you,
-                                NgSidebarFilter.crons =>
-                                  AppLocalizations.of(
-                                        context,
-                                      )?.cron_conversations_empty ??
-                                      'Conversations from scheduled jobs appear here, including older runs.',
-                              },
-                              textAlign: TextAlign.center,
-                              style: NgType.bodySmall.copyWith(color: c.text3),
-                            ),
-                          ),
-                        for (final s in rest) _tile(c, s, needsYou),
-                        // A short list has no scroll extent, so scroll-only
-                        // paging cannot grow it; offer an explicit read on.
-                        if (widget.model.hasMore &&
-                            !widget.model.loading &&
-                            widget.model.query.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6),
-                            child: Center(
-                              child: TextButton.icon(
-                                key: const Key('ng-sessions-load-more'),
-                                onPressed: widget.model.loadMore,
-                                icon: const Icon(Icons.expand_more, size: 18),
-                                label: Text(
-                                  AppLocalizations.of(context)?.load_more ??
-                                      'Load more…',
-                                ),
-                              ),
-                            ),
-                          ),
-                        if (widget.model.loading)
-                          const Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Center(
-                              child: SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-                _footer(c, scope),
-              ],
-            );
-          },
-        ),
-      ),
+      child: content,
     );
   }
 

@@ -39,6 +39,7 @@ import '../services/shared_attachment_preparer.dart';
 import '../services/session_browser_loader.dart';
 import '../theme/hermes_theme.dart';
 import '../utils/activity_feed.dart';
+import '../utils/adaptive_layout.dart';
 import '../utils/operational_activity_feed.dart';
 import '../utils/home_turn_signals.dart';
 import '../utils/new_chat_options.dart';
@@ -69,6 +70,7 @@ import '../widgets/update_available_dialog.dart';
 import 'workspace_sessions_screen.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
+import '../widgets/desktop_shortcuts.dart';
 
 /// Builds the Projects repository for a connection. Injectable for tests.
 typedef ProjectsRepositoryFactory =
@@ -131,6 +133,7 @@ Widget buildWorkspaceChatScreen({
   Future<void> Function(String sessionId, bool archived)? onArchiveChanged,
   Future<bool> Function(String sessionId, bool archived)? sessionArchiver,
   ApiClient? testApiClient,
+  VoidCallback? onClose,
 }) {
   return ChatScreen(
     connection: connection,
@@ -143,6 +146,7 @@ Widget buildWorkspaceChatScreen({
     onArchiveChanged: onArchiveChanged,
     sessionArchiver: sessionArchiver,
     testApiClient: testApiClient,
+    onClose: onClose,
   );
 }
 
@@ -299,6 +303,23 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   /// The destination currently on screen. New is a Chats-only
   /// affordance: over Projects or More it would be ambiguous what it creates.
   HermesDestination _destination = HermesDestination.chats;
+
+  /// The chat shown in the inline detail pane on wide (expanded) windows.
+  /// Null means the Chats list fills the pane. Compact windows keep pushing
+  /// chats as full-screen routes instead.
+  Session? _detailSession;
+  String? _detailProjectName;
+  String? _detailWorkingDirectory;
+  String? _detailComposerText;
+  List<AttachmentDraft> _detailAttachments = const [];
+
+  /// Tracks the previous window class so folding a wide window back to compact
+  /// re-homes an open inline detail chat as a full-screen route.
+  bool _wasExpanded = false;
+
+  /// Desktop keyboard shortcut subscription (no-op on touch platforms).
+  StreamSubscription<DesktopShortcut>? _desktopShortcutSub;
+  final _shellKey = GlobalKey<HermesShellState>();
 
   /// The last known attention/running signals. The compact attention section uses these; an
   /// empty value simply means everything falls back to `Continue working`.
@@ -746,6 +767,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   @override
   void initState() {
     super.initState();
+    _desktopShortcutSub = desktopShortcutBus.stream.listen(_onDesktopShortcut);
     _initialization = _initialize();
     _activityListener = _turnController.addTurnActivityListener(
       _onTurnActivityChanged,
@@ -917,6 +939,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
 
   @override
   void dispose() {
+    _desktopShortcutSub?.cancel();
     _activityRead++;
     _activitySessionRead++;
     _activityDebounce?.cancel();
@@ -936,6 +959,27 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     _sessionsApi?.close();
     _archivedSessionsClient?.close();
     super.dispose();
+  }
+
+  /// Handles desktop keyboard shortcuts routed from the app root.
+  void _onDesktopShortcut(DesktopShortcut shortcut) {
+    if (!mounted) return;
+    switch (shortcut) {
+      case DesktopShortcut.newChat:
+        unawaited(_startNewChat());
+      case DesktopShortcut.search:
+        _openWorkspaceSessionView(WorkspaceSessionView.search);
+      case DesktopShortcut.settings:
+        _push(SettingsScreen(connection: widget.connection));
+      case DesktopShortcut.tab1:
+        _shellKey.currentState?.select(HermesDestination.chats);
+      case DesktopShortcut.tab2:
+        _shellKey.currentState?.select(HermesDestination.crons);
+      case DesktopShortcut.tab3:
+        _shellKey.currentState?.select(HermesDestination.projects);
+      case DesktopShortcut.tab4:
+        _shellKey.currentState?.select(HermesDestination.activity);
+    }
   }
 
   Future<void> _initialize() async {
@@ -1025,9 +1069,10 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   }
 
   Widget _pane(BuildContext context, HermesDestination destination) {
+    final tokens = HermesTokens.of(context);
     switch (destination) {
       case HermesDestination.chats:
-        return WorkspaceSessionsScreen(
+        final chatsList = WorkspaceSessionsScreen(
           key: _chatsKey,
           title: context.l10n.chats,
           view: WorkspaceSessionView.all,
@@ -1063,6 +1108,41 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           onRename: _renameSession,
           onArchive: _archiveSession,
         );
+        if (isExpandedWindow(context)) {
+          final detail = _detailSession;
+          return Row(
+            children: [
+              SizedBox(width: 380, child: chatsList),
+              VerticalDivider(width: 1, thickness: 1, color: tokens.border),
+              Expanded(
+                child: detail == null
+                    ? _detailPlaceholder()
+                    : KeyedSubtree(
+                        key: ValueKey('classic-detail-${detail.id}'),
+                        child: buildWorkspaceChatScreen(
+                          connection: widget.connection,
+                          session: detail,
+                          projectName: _detailProjectName,
+                          projectWorkingDirectory: _detailWorkingDirectory,
+                          initialComposerText: _detailComposerText,
+                          initialAttachmentDrafts: _detailAttachments,
+                          turnApplicationController:
+                              widget.turnApplicationController,
+                          sessionArchiver: (storedId, archived) =>
+                              _archiveSession(
+                                detail.withStoredId(storedId),
+                                archived,
+                              ),
+                          testApiClient: widget.testChatApiClientFactory
+                              ?.call(),
+                          onClose: _closeDetail,
+                        ),
+                      ),
+              ),
+            ],
+          );
+        }
+        return chatsList;
       case HermesDestination.crons:
         // Issue #259: Upcoming (scheduled job definitions, read from the
         // cron manager's own dashboard route) beside History (the cron run
@@ -1223,6 +1303,37 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
   }
 
+  /// Clears the inline detail pane on a wide window.
+  void _closeDetail() {
+    setState(() {
+      _detailSession = null;
+      _detailProjectName = null;
+      _detailWorkingDirectory = null;
+      _detailComposerText = null;
+      _detailAttachments = const [];
+    });
+  }
+
+  /// The empty right-hand pane shown on a wide window before a chat is picked.
+  Widget _detailPlaceholder() {
+    final tokens = HermesTokens.of(context);
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.chat_bubble_outline, size: 48, color: tokens.muted),
+          const SizedBox(height: HermesSpacing.md),
+          Text(
+            context.l10n.chats,
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(color: tokens.muted),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// Opens a chat from the conversation browser.
   ///
   /// A host that supplied [WorkspaceScreen.onOpenSession] owns navigation, so
@@ -1241,6 +1352,23 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     final report = widget.onOpenSession;
     if (report != null) {
       report(session);
+      return;
+    }
+
+    // Wide windows show the chat in an inline detail pane beside the list
+    // (list+detail), preserving the list's filters and scroll. The legacy
+    // sessionScreenBuilder test seam and compact windows keep the pushed
+    // full-screen route.
+    if (widget.sessionScreenBuilder == null &&
+        _destination == HermesDestination.chats &&
+        isExpandedWindow(context)) {
+      setState(() {
+        _detailSession = session;
+        _detailProjectName = projectName;
+        _detailWorkingDirectory = projectWorkingDirectory;
+        _detailComposerText = initialComposerText;
+        _detailAttachments = initialAttachmentDrafts;
+      });
       return;
     }
 
@@ -2104,6 +2232,35 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   @override
   Widget build(BuildContext context) {
     final tokens = HermesTokens.of(context);
+    final expanded = isExpandedWindow(context);
+    // Folding a wide window back to compact re-homes an open inline detail
+    // chat as a full-screen route so the conversation is not lost. The list
+    // keeps its filters/scroll either way (it stays mounted in the shell).
+    if (_wasExpanded && !expanded && _detailSession != null) {
+      final session = _detailSession!;
+      final projectName = _detailProjectName;
+      final workingDir = _detailWorkingDirectory;
+      final composerText = _detailComposerText;
+      final attachments = _detailAttachments;
+      _detailSession = null;
+      _detailProjectName = null;
+      _detailWorkingDirectory = null;
+      _detailComposerText = null;
+      _detailAttachments = const [];
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        unawaited(
+          _openSession(
+            session,
+            projectName: projectName,
+            projectWorkingDirectory: workingDir,
+            initialComposerText: composerText,
+            initialAttachmentDrafts: attachments,
+          ),
+        );
+      });
+    }
+    _wasExpanded = expanded;
 
     return Scaffold(
       // The nested HermesShell owns keyboard resizing and the bottom navigation.
@@ -2141,6 +2298,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         ],
       ),
       body: HermesShell(
+        key: _shellKey,
         initialDestination: HermesDestination.chats,
         // The badge is the only attention signal visible from another
         // destination, so blocked work has to raise it even while the user is

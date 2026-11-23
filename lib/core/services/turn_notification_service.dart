@@ -115,14 +115,26 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
     const androidSettings = AndroidInitializationSettings(
       'ic_stat_mobile_push',
     );
-    const iosSettings = DarwinInitializationSettings(
+    final darwinSettings = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
       requestSoundPermission: false,
+      // Approve/Deny action buttons on iOS and macOS notifications. The
+      // category id matches the channel used for attention notifications.
+      notificationCategories: [
+        DarwinNotificationCategory(
+          'hermes_approval',
+          actions: [
+            DarwinNotificationAction.plain('approve', 'Approve'),
+            DarwinNotificationAction.plain('reject', 'Deny'),
+          ],
+        ),
+      ],
     );
-    const settings = InitializationSettings(
+    final settings = InitializationSettings(
       android: androidSettings,
-      iOS: iosSettings,
+      iOS: darwinSettings,
+      macOS: darwinSettings,
     );
 
     await _plugin.initialize(
@@ -153,6 +165,16 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
           permissions?.isProvisionalEnabled == true;
     }
 
+    final macos = _plugin
+        .resolvePlatformSpecificImplementation<
+          MacOSFlutterLocalNotificationsPlugin
+        >();
+    if (macos != null) {
+      final permissions = await macos.checkPermissions();
+      return permissions?.isEnabled == true ||
+          permissions?.isProvisionalEnabled == true;
+    }
+
     return null;
   }
 
@@ -172,6 +194,14 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
         >();
     if (ios != null) {
       return ios.requestPermissions(alert: true, badge: true, sound: true);
+    }
+
+    final macos = _plugin
+        .resolvePlatformSpecificImplementation<
+          MacOSFlutterLocalNotificationsPlugin
+        >();
+    if (macos != null) {
+      return macos.requestPermissions(alert: true, badge: true, sound: true);
     }
 
     // No platform implementation resolved: nothing gates posting here.
@@ -219,14 +249,24 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
           ),
       ],
     );
-    final iosDetails = DarwinNotificationDetails(
+    final hasApprovalActions = notification.actions.any(
+      (action) => action.id == 'approve',
+    );
+    final darwinDetails = DarwinNotificationDetails(
       presentAlert: !notification.silent,
       presentBadge: !notification.silent,
       presentSound: !notification.silent,
+      categoryIdentifier: hasApprovalActions ? 'hermes_approval' : null,
+      interruptionLevel: notification.silent
+          ? InterruptionLevel.passive
+          : notification.importance == TurnNotificationImportance.high
+          ? InterruptionLevel.timeSensitive
+          : InterruptionLevel.active,
     );
     final details = NotificationDetails(
       android: androidDetails,
-      iOS: iosDetails,
+      iOS: darwinDetails,
+      macOS: darwinDetails,
     );
 
     await _plugin.show(

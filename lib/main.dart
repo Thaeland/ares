@@ -37,6 +37,7 @@ import 'core/screens/workspace_screen.dart';
 import 'core/theme/hermes_theme.dart';
 import 'core/utils/responsive.dart';
 import 'core/widgets/config_backup_card.dart';
+import 'core/widgets/desktop_shortcuts.dart';
 import 'core/widgets/theme_palette_picker.dart';
 import 'core/widgets/hermes_system_ui.dart';
 import 'core/widgets/setup_interface_choice.dart';
@@ -1256,7 +1257,9 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
             data: systemMediaQuery.copyWith(
               textScaler: preference.applyTo(systemMediaQuery.textScaler),
             ),
-            child: nextGen ? NgLocalizationScope(child: child!) : child!,
+            child: DesktopShortcuts(
+              child: nextGen ? NgLocalizationScope(child: child!) : child!,
+            ),
           ),
         );
       },

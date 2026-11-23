@@ -383,7 +383,13 @@ class _PlatformSignInSecretStore implements SignInSecretStore {
     migrateWithBackup: true,
     storageNamespace: 'hermes_android_sign_in',
   );
-  final _storage = const FlutterSecureStorage(aOptions: _options);
+  // macOS: login keychain (data-protection keychain needs Developer ID
+  // signing; unsigned local builds would fail with -34018).
+  static const _macOptions = MacOsOptions(usesDataProtectionKeychain: false);
+  final _storage = const FlutterSecureStorage(
+    aOptions: _options,
+    mOptions: _macOptions,
+  );
 
   @override
   Future<String?> read(String key) => _storage.read(key: key);

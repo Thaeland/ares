@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/app_licenses.dart';
+import '../utils/platform_capabilities.dart';
 import '../services/locale_preference.dart';
 import 'provider_oauth_screen.dart';
 import '../services/config_backup_io.dart';
@@ -163,17 +164,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // ---- Section: Notifications ----
         _buildSectionHeader(context.l10n.notifications),
         const _NotificationSettings(),
-        MobilePushSettings(
-          connection: widget.connection,
-          connectionManager: context
-              .findAncestorStateOfType<HermesAppState>()!
-              .widget
-              .connManager,
-        ),
-        const SizedBox(height: 16),
-        _buildSectionHeader(context.l10n.background_work),
-        const BackgroundWorkSettings(),
-        const SizedBox(height: 16),
+        // The embedded Android push bridge and foreground-service/battery
+        // prompts do not exist on iOS/macOS. Voice, appearance and gateway
+        // settings above/below are shared.
+        if (!isApplePlatform) ...[
+          MobilePushSettings(
+            connection: widget.connection,
+            connectionManager: context
+                .findAncestorStateOfType<HermesAppState>()!
+                .widget
+                .connManager,
+          ),
+          const SizedBox(height: 16),
+          _buildSectionHeader(context.l10n.background_work),
+          const BackgroundWorkSettings(),
+          const SizedBox(height: 16),
+        ],
 
         // ---- Section: Voice ----
         _buildSectionHeader(context.l10n.voice, classicOnly: true),
@@ -445,7 +451,9 @@ class _AboutCardState extends State<_AboutCard> {
                 );
               },
             ),
-            if (!AppUpdateService.isPlayBuild) ...[
+            // APK self-update is Android-only; Apple builds update through
+            // their respective stores / ad-hoc distribution.
+            if (supportsApkSelfUpdate && !AppUpdateService.isPlayBuild) ...[
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(context.l10n.check_for_updates),

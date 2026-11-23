@@ -52,11 +52,23 @@ class FlutterSecureCredentialStore implements CredentialStore {
     storageNamespace: 'hermes_android_connections',
   );
 
+  /// macOS: use the login keychain, not the data-protection keychain. The
+  /// latter requires a Developer ID signature + keychain-access-group
+  /// entitlement; unsigned/ad-hoc local builds would fail with -34018.
+  static const MacOsOptions _macOsOptions = MacOsOptions(
+    usesDataProtectionKeychain: false,
+  );
+
   final FlutterSecureStorage _storage;
   final Map<String, String> _cache = <String, String>{};
 
   FlutterSecureCredentialStore({FlutterSecureStorage? storage})
-    : _storage = storage ?? FlutterSecureStorage(aOptions: _androidOptions);
+    : _storage =
+          storage ??
+          FlutterSecureStorage(
+            aOptions: _androidOptions,
+            mOptions: _macOsOptions,
+          );
 
   @override
   String? readCached(String key) => _cache[key];

@@ -17,6 +17,7 @@ import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
 import '../../core/utils/delivered_files.dart';
 import '../../core/utils/media_tags.dart';
+import '../../core/widgets/desktop_shortcuts.dart';
 import '../../core/widgets/markdown_code_block.dart';
 import '../../core/widgets/media_artifact_card.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
@@ -867,33 +868,37 @@ class _NgChatViewState extends State<NgChatView> {
                     ],
                   ),
                 ),
-              TextField(
-                key: const ValueKey('ng-composer-field'),
-                controller: _input,
-                focusNode: _focus,
-                onTap: () {
-                  // Android can hide the keyboard with Back while this node
-                  // retains focus. Explicitly show it on every composer tap.
-                  _focus.requestFocus();
-                  unawaited(
-                    SystemChannels.textInput.invokeMethod<void>(
-                      'TextInput.show',
-                    ),
-                  );
-                },
-                minLines: 1,
-                maxLines: 8,
-                textCapitalization: TextCapitalization.sentences,
-                style: NgType.body.copyWith(color: c.text),
-                decoration: InputDecoration(
-                  hintText: _listening
-                      ? ngL.ng_listening
-                      : chat.running
-                      ? ngL.ng_steer_or_queue_a_message
-                      : ngL.ng_message_hermes,
-                  hintStyle: NgType.body.copyWith(color: c.textMuted),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
+              SendOnEnter(
+                enabled: _input.text.trim().isNotEmpty,
+                onSend: () => unawaited(_send()),
+                child: TextField(
+                  key: const ValueKey('ng-composer-field'),
+                  controller: _input,
+                  focusNode: _focus,
+                  onTap: () {
+                    // Android can hide the keyboard with Back while this node
+                    // retains focus. Explicitly show it on every composer tap.
+                    _focus.requestFocus();
+                    unawaited(
+                      SystemChannels.textInput.invokeMethod<void>(
+                        'TextInput.show',
+                      ),
+                    );
+                  },
+                  minLines: 1,
+                  maxLines: 8,
+                  textCapitalization: TextCapitalization.sentences,
+                  style: NgType.body.copyWith(color: c.text),
+                  decoration: InputDecoration(
+                    hintText: _listening
+                        ? ngL.ng_listening
+                        : chat.running
+                        ? ngL.ng_steer_or_queue_a_message
+                        : ngL.ng_message_hermes,
+                    hintStyle: NgType.body.copyWith(color: c.textMuted),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
+                  ),
                 ),
               ),
               Row(
