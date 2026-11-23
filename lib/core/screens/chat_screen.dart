@@ -4617,6 +4617,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           // executed command does. Unknown `/`-lines keep the plain send.
           if (catalogReady && _slashController.isExecutable(name)) {
             if (!mounted) return '';
+            _slashController.markRefused(name);
             if (_draftWriter.isCurrent && revision == _composerRevision) {
               _setRestoredComposer('');
             }

@@ -67,12 +67,15 @@ class SlashCommandController extends ChangeNotifier {
     final catalog = _catalog;
     if (catalog == null) return const [];
     final query = _query.toLowerCase();
+    final visible = catalog.commands
+        .where((command) => !catalog.isRefused(command.name))
+        .toList();
     if (query.isEmpty) {
-      return List<SlashCommand>.unmodifiable(catalog.commands.take(limit));
+      return List<SlashCommand>.unmodifiable(visible.take(limit));
     }
     final prefix = <SlashCommand>[];
     final contains = <SlashCommand>[];
-    for (final command in catalog.commands) {
+    for (final command in visible) {
       final name = command.name.toLowerCase();
       if (name.startsWith(query)) {
         prefix.add(command);
@@ -149,6 +152,10 @@ class SlashCommandController extends ChangeNotifier {
     final bare = name.trim().replaceFirst(RegExp(r'^/+'), '').toLowerCase();
     return bare.isNotEmpty && kSlashExecutableCommands.contains(bare);
   }
+
+  /// Records that the gateway refused [name] with `unsupported_command`; the
+  /// dropdown stops offering it until the catalogue cache is invalidated.
+  void markRefused(String name) => _catalog?.markRefused(name);
 
   /// Drops the cache. Called on connection changes and scope switches.
   void invalidate() {

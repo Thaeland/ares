@@ -482,6 +482,43 @@ void main() {
     });
   });
 
+  group('learned refusals', () {
+    test('a refused command disappears from the dropdown matches', () async {
+      final controller = SlashCommandController(
+        loadCatalog: () async => _catalog(),
+        limit: 20,
+      );
+      addTearDown(controller.dispose);
+      controller.updateText('/');
+      await controller.ensureCatalog();
+      expect(controller.matches.map((c) => c.name), contains('status'));
+
+      controller.markRefused('/status');
+      expect(
+        controller.matches.map((c) => c.name),
+        isNot(contains('status')),
+      );
+      controller.updateText('/st');
+      expect(
+        controller.matches.map((c) => c.name),
+        isNot(contains('status')),
+      );
+    });
+
+    test('invalidate drops the learned refusals', () async {
+      final controller = SlashCommandController(
+        loadCatalog: () async => _catalog(),
+        limit: 20,
+      );
+      addTearDown(controller.dispose);
+      await controller.ensureCatalog();
+      controller.markRefused('status');
+      controller.invalidate();
+      await controller.ensureCatalog();
+      expect(controller.matches.map((c) => c.name), contains('status'));
+    });
+  });
+
   group('dropdown', () {
     testWidgets('lists the filtered commands and reports a choice', (
       tester,
@@ -1024,6 +1061,25 @@ void main() {
         find.textContaining('not available on this server'),
         findsNothing,
       );
+    });
+
+    testWidgets('a refused command is no longer offered by the dropdown', (
+      tester,
+    ) async {
+      final gateway = _FakeSlashGateway(
+        error: JsonRpcError('slash.exec', 'unsupported_command', code: 4018),
+      );
+      await _pumpChat(tester, slashGateway: gateway);
+
+      await tester.enterText(find.byKey(_composerKey), '/status');
+      await tester.pump();
+      await _send(tester);
+
+      await tester.enterText(find.byKey(_composerKey), '/stat');
+      await pumpChatUpdates(tester);
+      expect(find.byType(SlashCommandDropdown), findsOneWidget);
+      expect(find.byKey(ValueKey('slash-command-status')), findsNothing);
+      expect(find.text('No matching commands'), findsOneWidget);
     });
 
     testWidgets('an unsupported command outside the catalogue still falls back to the plain send', (

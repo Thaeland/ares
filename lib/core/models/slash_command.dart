@@ -97,6 +97,26 @@ class SlashCommandCatalog {
   /// Canonical (bare, lowercase) names the gateway dispatches.
   final Set<String> executable;
 
+  /// Names this connection already saw the gateway refuse with
+  /// `unsupported_command`. The dropdown hides them for the life of the
+  /// cached catalogue: `SlashCommandController.invalidate()` drops the
+  /// memory with the cache, so a server that starts accepting a command
+  /// offers it again on the next connection. Learned, never mirrored.
+  final Set<String> _refused = <String>{};
+
+  /// Records that the gateway refused [name] (any spelling; canonicalized
+  /// like every other catalogue key). Unknown names are still recorded —
+  /// only listed ones render, so a stray mark is inert.
+  void markRefused(String name) {
+    final canonical = _canonicalName(name);
+    if (canonical != null) _refused.add(canonical);
+  }
+
+  bool isRefused(String name) {
+    final canonical = _canonicalName(name);
+    return canonical != null && _refused.contains(canonical);
+  }
+
   bool canExecute(String name) {
     final canonical = _canonicalName(name);
     return canonical != null && executable.contains(canonical);
