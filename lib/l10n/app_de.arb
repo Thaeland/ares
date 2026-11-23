@@ -1085,6 +1085,7 @@
   "slash_command_no_output": "The command completed with no output.",
   "slash_command_delivery_unknown": "The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.",
   "slash_command_failed": "The command could not be run.",
+  "slash_command_unsupported": "Dieser Befehl ist auf diesem Server nicht verfügbar.",
   "nextgen_toggle": "NextGen-Oberfläche",
   "nextgen_toggle_subtitle": "Ein neues Design mit einer Anmeldung, Live-Chats und Netzwerksuche. Gateways und Chats werden mit dieser Oberfläche geteilt.",
   "nextgen_single_login": "Mit einer Anmeldung verbinden",

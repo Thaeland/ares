@@ -4573,8 +4573,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   ///
   /// Returns null when the caller must keep its ordinary send behaviour: plain
   /// message, REST-only transport, a name the loaded catalogue does not know,
-  /// an unsupported command, a busy chat, or a failure before the RPC was
-  /// written. An empty string means the command was handled here (notice card,
+  /// an unsupported command outside the catalogue, a busy chat, or a failure
+  /// before the RPC was written. An empty string means the command was
+  /// handled here (notice card,
   /// composer prefill, delivery-unknown notice) and must not also be submitted
   /// as prose. Any other value is the message the gateway asked the app to
   /// submit instead.
@@ -4591,7 +4592,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     try {
       // A catalogue that cannot load must not silence the feature: the server
       // owns the command set and answers `unsupported_command`, which falls
-      // back to the plain send. A LOADED catalogue gates unknown names here.
+      // back to the plain send for names no catalogue listed. A LOADED
+      // catalogue gates unknown names here and refuses known ones by card.
       final catalogReady = await _slashController.ensureCatalog().timeout(
         const Duration(seconds: 3),
         onTimeout: () => false,
@@ -4608,7 +4610,28 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           onSent: () => sent = true,
         );
       } on JsonRpcError catch (error) {
-        if (_isSlashUnsupported(error)) return null;
+        if (_isSlashUnsupported(error)) {
+          // A command the loaded catalogue lists but the gateway refuses is
+          // not prose: answer with the gateway's own hint (REFUSAL_HINTS ride
+          // `data.detail`) on a notice card, and consume the line the way an
+          // executed command does. Unknown `/`-lines keep the plain send.
+          if (catalogReady && _slashController.isExecutable(name)) {
+            if (!mounted) return '';
+            if (_draftWriter.isCurrent && revision == _composerRevision) {
+              _setRestoredComposer('');
+            }
+            _commitComposerForSend();
+            final detail = error.data['detail'];
+            _appendSlashCommandNotice(
+              text,
+              detail is String && detail.trim().isNotEmpty
+                  ? detail.trim()
+                  : context.l10n.slash_command_unsupported,
+            );
+            return '';
+          }
+          return null;
+        }
         // Once the request is on the wire it may already have run: the draft
         // stays and nothing is re-sent as prose.
         if (!sent) return null;

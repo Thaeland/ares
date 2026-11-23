@@ -3985,6 +3985,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get slash_command_failed => 'The command could not be run.';
 
   @override
+  String get slash_command_unsupported =>
+      'Dieser Befehl ist auf diesem Server nicht verfügbar.';
+
+  @override
   String get nextgen_toggle => 'NextGen-Oberfläche';
 
   @override

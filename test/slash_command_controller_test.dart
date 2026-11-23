@@ -939,7 +939,7 @@ void main() {
       );
     });
 
-    testWidgets('an unsupported command falls back to the plain send', (
+    testWidgets('a catalogued unsupported command shows a refusal notice, not prose', (
       tester,
     ) async {
       final submitted = <String>[];
@@ -970,7 +970,93 @@ void main() {
       await _send(tester);
 
       expect(gateway.commands, ['/status']);
-      expect(submitted, ['/status']);
+      expect(submitted, isEmpty);
+      expect(_composerText(tester), isEmpty);
+      expect(
+        find.byKey(Key('slash-command-notice')),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('not available on this server'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('the gateway refusal hint rides the notice card', (
+      tester,
+    ) async {
+      final submitted = <String>[];
+      final gateway = _FakeSlashGateway(
+        error: JsonRpcError(
+          'slash.exec',
+          'unsupported_command',
+          code: 4018,
+          data: {
+            'detail': 'Run `hermes backup --quick` in a terminal.',
+          },
+        ),
+      );
+      await _pumpChat(
+        tester,
+        slashGateway: gateway,
+        remoteSubmit:
+            ({
+              required sessionId,
+              required text,
+              required onEvent,
+              required onSent,
+            }) async {
+              onSent();
+              submitted.add(text);
+            },
+      );
+
+      await tester.enterText(find.byKey(_composerKey), '/status');
+      await tester.pump();
+      await _send(tester);
+
+      expect(submitted, isEmpty);
+      expect(
+        find.textContaining('Run `hermes backup --quick` in a terminal.'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('not available on this server'),
+        findsNothing,
+      );
+    });
+
+    testWidgets('an unsupported command outside the catalogue still falls back to the plain send', (
+      tester,
+    ) async {
+      final submitted = <String>[];
+      final gateway = _FakeSlashGateway(
+        error: JsonRpcError(
+          'slash.exec',
+          'not a quick/plugin/bundle/skill command: /notacommand',
+          code: 4018,
+        ),
+      );
+      await _pumpChat(
+        tester,
+        slashGateway: gateway,
+        remoteSubmit:
+            ({
+              required sessionId,
+              required text,
+              required onEvent,
+              required onSent,
+            }) async {
+              onSent();
+              submitted.add(text);
+            },
+      );
+
+      await tester.enterText(find.byKey(_composerKey), '/notacommand');
+      await tester.pump();
+      await _send(tester);
+
+      expect(submitted, ['/notacommand']);
       expect(_composerText(tester), isEmpty);
     });
   });

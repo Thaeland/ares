@@ -6666,6 +6666,12 @@ abstract class AppLocalizations {
   /// **'The command could not be run.'**
   String get slash_command_failed;
 
+  /// No description provided for @slash_command_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This command is not available on this server.'**
+  String get slash_command_unsupported;
+
   /// No description provided for @nextgen_toggle.
   ///
   /// In en, this message translates to:

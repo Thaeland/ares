@@ -3817,6 +3817,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get slash_command_failed => 'The command could not be run.';
 
   @override
+  String get slash_command_unsupported => '此命令在此服务器上不可用。';
+
+  @override
   String get nextgen_toggle => 'NextGen 界面';
 
   @override
