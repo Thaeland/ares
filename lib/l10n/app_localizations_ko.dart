@@ -3879,6 +3879,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get slash_command_unsupported => '이 명령은 이 서버에서 사용할 수 없습니다.';
 
   @override
+  String get slash_sessions_inline =>
+      'The session list is already open in this view.';
+
+  @override
   String get nextgen_toggle => 'NextGen 인터페이스';
 
   @override

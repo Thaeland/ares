@@ -3985,6 +3985,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Эта команда недоступна на этом сервере.';
 
   @override
+  String get slash_sessions_inline =>
+      'The session list is already open in this view.';
+
+  @override
   String get nextgen_toggle => 'Интерфейс NextGen';
 
   @override

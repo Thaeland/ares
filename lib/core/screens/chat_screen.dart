@@ -4590,6 +4590,40 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _preparingSend = true;
     final revision = _composerRevision;
     try {
+      // Local app-surface equivalents: these names already have screens of
+      // their own in the app, so they act locally instead of asking the
+      // gateway (which refuses them). `slashCommandName` keeps any leading
+      // slash of a `//name` escape, so strip it here — never a raw-text match.
+      final bare = name.replaceFirst(RegExp(r'^/+'), '');
+      if (bare == 'model' || bare == 'sessions' || bare == 'resume') {
+        if (!mounted) return '';
+        if (_draftWriter.isCurrent && revision == _composerRevision) {
+          _setRestoredComposer('');
+        }
+        _commitComposerForSend();
+        if (bare == 'model') {
+          unawaited(_showModelSelector());
+        } else {
+          // Full-screen chats sit on top of the session list: popping IS the
+          // session browser. The chat's own PopScope holds pops while the
+          // dropdown is open, so close it and pop once that frame has landed
+          // — a same-frame maybePop would read the stale canPop. Embedded
+          // chats (workspace panes) cannot pop, and say so instead of
+          // vanishing the line.
+          _slashController.close();
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            if (!mounted) return;
+            final popped = await Navigator.of(context).maybePop();
+            if (!popped && mounted) {
+              _appendSlashCommandNotice(
+                text,
+                context.l10n.slash_sessions_inline,
+              );
+            }
+          });
+        }
+        return '';
+      }
       // A catalogue that cannot load must not silence the feature: the server
       // owns the command set and answers `unsupported_command`, which falls
       // back to the plain send for names no catalogue listed. A LOADED

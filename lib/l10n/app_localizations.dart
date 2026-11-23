@@ -6672,6 +6672,12 @@ abstract class AppLocalizations {
   /// **'This command is not available on this server.'**
   String get slash_command_unsupported;
 
+  /// No description provided for @slash_sessions_inline.
+  ///
+  /// In en, this message translates to:
+  /// **'The session list is already open in this view.'**
+  String get slash_sessions_inline;
+
   /// No description provided for @nextgen_toggle.
   ///
   /// In en, this message translates to:

@@ -3982,6 +3982,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'Este comando não está disponível neste servidor.';
 
   @override
+  String get slash_sessions_inline =>
+      'The session list is already open in this view.';
+
+  @override
   String get nextgen_toggle => 'Interface NextGen';
 
   @override

@@ -3989,6 +3989,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dieser Befehl ist auf diesem Server nicht verfügbar.';
 
   @override
+  String get slash_sessions_inline =>
+      'The session list is already open in this view.';
+
+  @override
   String get nextgen_toggle => 'NextGen-Oberfläche';
 
   @override

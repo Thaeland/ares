@@ -137,44 +137,83 @@ String _composerText(WidgetTester tester) =>
 /// test needs its own session identity.
 var _pumpedSessions = 0;
 
+ChatScreen _chatScreen({
+  required SlashCommandGateway slashGateway,
+  TestRemotePromptSubmit? remoteSubmit,
+  required String sessionId,
+  http.Client? apiClient,
+}) {
+  return ChatScreen(
+    connection: SavedConnection(
+      id: 'slash-fixture',
+      label: 'Slash fixture',
+      host: 'slash.invalid',
+      port: 8642,
+      apiKey: 'fixture-key',
+    ),
+    session: Session(
+      id: sessionId,
+      title: 'Slash chat',
+      model: 'fixture-model',
+      source: 'test',
+      messageCount: 0,
+      isActive: true,
+      preview: '',
+      startedAt: 1,
+    ),
+    testApiClient: ApiClient(
+      baseUrl: 'http://slash.invalid',
+      apiKey: 'fixture-key',
+      httpClient:
+          apiClient ?? MockClient((_) async => http.Response('{"data":[]}', 200)),
+    ),
+    testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
+    testSlashGateway: slashGateway,
+    testRemotePromptSubmit: completedStockTurn(remoteSubmit),
+  );
+}
+
 Future<void> _pumpChat(
   WidgetTester tester, {
   required SlashCommandGateway slashGateway,
   TestRemotePromptSubmit? remoteSubmit,
   String? sessionId,
+  http.Client? apiClient,
 }) async {
   final id = sessionId ?? 'slash-session-${_pumpedSessions++}';
   await tester.pumpWidget(
     MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: ChatScreen(
-        connection: SavedConnection(
-          id: 'slash-fixture',
-          label: 'Slash fixture',
-          host: 'slash.invalid',
-          port: 8642,
-          apiKey: 'fixture-key',
-        ),
-        session: Session(
-          id: id,
-          title: 'Slash chat',
-          model: 'fixture-model',
-          source: 'test',
-          messageCount: 0,
-          isActive: true,
-          preview: '',
-          startedAt: 1,
-        ),
-        testApiClient: ApiClient(
-          baseUrl: 'http://slash.invalid',
-          apiKey: 'fixture-key',
-          httpClient: MockClient((_) async => http.Response('{"data":[]}', 200)),
-        ),
-        testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
-        testSlashGateway: slashGateway,
-        testRemotePromptSubmit: completedStockTurn(remoteSubmit),
+      home: _chatScreen(
+        slashGateway: slashGateway,
+        remoteSubmit: remoteSubmit,
+        sessionId: id,
+        apiClient: apiClient,
       ),
+    ),
+  );
+  await pumpChatUpdates(tester);
+}
+
+/// Pumps the chat as a PUSHED route over a stand-in session list, so
+/// navigation away (the `/sessions` intercept) is observable.
+Future<void> _pushChat(
+  WidgetTester tester, {
+  required SlashCommandGateway slashGateway,
+}) async {
+  final id = 'slash-session-${_pumpedSessions++}';
+  await tester.pumpWidget(
+    MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: const Scaffold(body: SizedBox(key: Key('session-list-page'))),
+    ),
+  );
+  final context = tester.element(find.byKey(const Key('session-list-page')));
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (_) => _chatScreen(slashGateway: slashGateway, sessionId: id),
     ),
   );
   await pumpChatUpdates(tester);
@@ -1114,6 +1153,111 @@ void main() {
 
       expect(submitted, ['/notacommand']);
       expect(_composerText(tester), isEmpty);
+    });
+  });
+
+  group('screen local intercepts', () {
+    // A model inventory (plus session metadata the picker's getSession call
+    // insists on) so `/model` can actually open the picker sheet.
+    http.Client inventoryClient() => MockClient((req) async {
+      if (req.url.path.contains('api/model/options')) {
+        return http.Response(
+          '{"model":"fixmodel","providers":[{"slug":"fixprov","models":["fixmodel"]}]}',
+          200,
+        );
+      }
+      if (req.url.path.startsWith('/api/sessions/')) {
+        return http.Response(
+          '{"object":"hermes.session","session":{"id":"x","model":"fixmodel"}}',
+          200,
+        );
+      }
+      return http.Response('{"data":[]}', 200);
+    });
+
+    Future<void> expectModelPicker(WidgetTester tester, String line) async {
+      final gateway = _FakeSlashGateway();
+      final submitted = <String>[];
+      await _pumpChat(
+        tester,
+        slashGateway: gateway,
+        apiClient: inventoryClient(),
+        remoteSubmit:
+            ({
+              required sessionId,
+              required text,
+              required onEvent,
+              required onSent,
+            }) async {
+              onSent();
+              submitted.add(text);
+            },
+      );
+
+      await tester.enterText(find.byKey(_composerKey), line);
+      await tester.pump();
+      // Not _send(): its pumpAndSettle never settles once the picker's
+      // spinner opens, so drive the tap with timed pumps instead.
+      await tester.tap(find.byTooltip('Send'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+
+      expect(gateway.commands, isEmpty);
+      expect(submitted, isEmpty);
+      expect(_composerText(tester), isEmpty);
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.byType(BottomSheet), findsOneWidget);
+    }
+
+    testWidgets('/model opens the model picker instead of asking the gateway', (
+      tester,
+    ) async {
+      await expectModelPicker(tester, '/model');
+    });
+
+    testWidgets('//model canonicalizes to the same local path', (tester) async {
+      await expectModelPicker(tester, '//model');
+    });
+
+    testWidgets('/sessions pops back to the session list', (tester) async {
+      final gateway = _FakeSlashGateway();
+      await _pushChat(tester, slashGateway: gateway);
+
+      await tester.enterText(find.byKey(_composerKey), '/sessions');
+      await tester.pump();
+      await _send(tester);
+
+      expect(gateway.commands, isEmpty);
+      expect(find.byKey(_composerKey), findsNothing);
+      expect(find.byKey(Key('session-list-page')), findsOneWidget);
+    });
+
+    testWidgets('/resume pops back to the session list too', (tester) async {
+      final gateway = _FakeSlashGateway();
+      await _pushChat(tester, slashGateway: gateway);
+
+      await tester.enterText(find.byKey(_composerKey), '/resume old-chat');
+      await tester.pump();
+      await _send(tester);
+
+      expect(gateway.commands, isEmpty);
+      expect(find.byKey(_composerKey), findsNothing);
+    });
+
+    testWidgets('/sessions in an embedded chat answers with a notice', (
+      tester,
+    ) async {
+      final gateway = _FakeSlashGateway();
+      await _pumpChat(tester, slashGateway: gateway);
+
+      await tester.enterText(find.byKey(_composerKey), '/sessions');
+      await tester.pump();
+      await _send(tester);
+
+      expect(gateway.commands, isEmpty);
+      expect(_composerText(tester), isEmpty);
+      expect(find.byKey(Key('slash-command-notice')), findsOneWidget);
+      expect(find.textContaining('session list'), findsOneWidget);
     });
   });
 }
