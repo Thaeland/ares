@@ -4708,10 +4708,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
         // The draft is the same product surface, so it inherits the parent's
-        // archive ownership and every test seam (hermeticity: a child left
-        // with real implementations would reach the network in tests). Only
-        // the parent's staged attachments and its session-ensure observer
-        // stay behind — both are scoped to the parent session.
+        // archive ownership and the test seams that are safe to share. The
+        // desktop connection/async-event hooks are deliberately NOT
+        // forwarded: they are single-slot holders, so a second live screen
+        // would steal the parent's handler in its initState and null it in
+        // its dispose. Only the parent's staged attachments and its
+        // session-ensure observer stay behind — both are scoped to the
+        // parent session.
         builder: (_) => ChatScreen(
           connection: widget.connection,
           session: draft,
@@ -4734,8 +4737,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           testHandsFreePlatform: widget.testHandsFreePlatform,
           testVoiceReplySpeaker: widget.testVoiceReplySpeaker,
           testTurnNotifications: widget.testTurnNotifications,
-          testDesktopConnectionHook: widget.testDesktopConnectionHook,
-          testDesktopAsyncEventHook: widget.testDesktopAsyncEventHook,
           testProjectOverviewLoader: widget.testProjectOverviewLoader,
           testLegacyProjectSessionEnsure: widget.testLegacyProjectSessionEnsure,
           testStoredSessionKey: widget.testStoredSessionKey,
