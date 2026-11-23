@@ -1138,6 +1138,88 @@ void main() {
       expect(find.byKey(ValueKey('slash-command-status')), findsOneWidget);
     });
 
+    testWidgets('the control-socket refusal shape (4001 + data.reason) gets the card', (
+      tester,
+    ) async {
+      final submitted = <String>[];
+      final gateway = _FakeSlashGateway(
+        error: JsonRpcError(
+          'slash.exec',
+          'unsupported_command',
+          code: 4001,
+          // What `JsonRpcError.fromGateway` produces from the wire: the
+          // verdict rides data.reason and is surfaced on `.reason`.
+          reason: 'unsupported_command',
+          data: {
+            'reason': 'unsupported_command',
+            'detail': 'Run `hermes profile export [name] -o <file>` in a terminal.',
+          },
+        ),
+      );
+      await _pumpChat(
+        tester,
+        slashGateway: gateway,
+        remoteSubmit:
+            ({
+              required sessionId,
+              required text,
+              required onEvent,
+              required onSent,
+            }) async {
+              onSent();
+              submitted.add(text);
+            },
+      );
+
+      await tester.enterText(find.byKey(_composerKey), '/status');
+      await tester.pump();
+      await _send(tester);
+
+      // Live stock gateways refuse with code 4001 and ride the verdict in
+      // data.reason — this is the shape shipped servers actually send.
+      expect(submitted, isEmpty);
+      expect(
+        find.textContaining('Run `hermes profile export'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('an unsupported_session_field verdict is not a command refusal', (
+      tester,
+    ) async {
+      final submitted = <String>[];
+      final gateway = _FakeSlashGateway(
+        error: JsonRpcError(
+          'slash.exec',
+          'refused',
+          code: 4001,
+          reason: 'unsupported_session_field',
+          data: {'reason': 'unsupported_session_field'},
+        ),
+      );
+      await _pumpChat(
+        tester,
+        slashGateway: gateway,
+        remoteSubmit:
+            ({
+              required sessionId,
+              required text,
+              required onEvent,
+              required onSent,
+            }) async {
+              onSent();
+              submitted.add(text);
+            },
+      );
+
+      await tester.enterText(find.byKey(_composerKey), '/status');
+      await tester.pump();
+      await _send(tester);
+
+      expect(submitted, ['/status']);
+      expect(find.byKey(Key('slash-command-notice')), findsNothing);
+    });
+
     testWidgets('a refused command is no longer offered by the dropdown', (
       tester,
     ) async {

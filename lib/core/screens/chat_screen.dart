@@ -4598,23 +4598,19 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       final bare = name.replaceFirst(RegExp(r'^/+'), '').toLowerCase();
       if (bare == 'model' || bare == 'sessions' || bare == 'resume') {
         if (!mounted) return '';
-        if (bare == 'model' &&
-            (_pendingReattachResync || _loadingModelOptions)) {
-          // The picker would swallow the tap silently; say so instead of
-          // eating the line.
-          if (_draftWriter.isCurrent && revision == _composerRevision) {
-            _setRestoredComposer('');
-          }
-          _commitComposerForSend();
-          _appendSlashCommandNotice(text, context.l10n.slash_command_failed);
-          return '';
-        }
         if (_draftWriter.isCurrent && revision == _composerRevision) {
           _setRestoredComposer('');
         }
         _commitComposerForSend();
         if (bare == 'model') {
-          unawaited(_showModelSelector());
+          // A reattach resync makes the picker return silently; say so
+          // instead of eating the line. If a picker is merely still loading,
+          // the request is already being served — consume quietly.
+          if (_pendingReattachResync) {
+            _appendSlashCommandNotice(text, context.l10n.slash_command_failed);
+          } else {
+            unawaited(_showModelSelector());
+          }
         } else {
           // Full-screen chats sit on top of the session list: popping IS the
           // session browser. The chat's own PopScope holds pops while the
@@ -4737,13 +4733,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         reason.contains('unsupported');
   }
 
-  /// The narrow test for the refusal card: a genuine per-command
-  /// `unsupported_command` answer. Broad `_isSlashUnsupported` codes like
-  /// 4001 (stale session) or -32601 (method missing) describe the transport,
-  /// not the command, and must not hide working commands for the session.
+  /// The narrow test for the refusal card: the gateway's own per-command
+  /// `unsupported_command` verdict. Substring matching would let transport
+  /// verdicts like `unsupported_session_field` hide working commands, and
+  /// broad `_isSlashUnsupported` codes (4001 stale session, -32601 missing
+  /// method) describe the transport, not the command.
   static bool _isSlashCommandRefusal(JsonRpcError error) {
     final reason = error.reason?.toLowerCase() ?? '';
-    return error.code == 4018 || reason.contains('unsupported');
+    return error.code == 4018 || reason == 'unsupported_command';
   }
 
   /// The transport timed out or dropped after the write: the gateway may still
