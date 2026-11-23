@@ -2025,6 +2025,14 @@ void main() {
         controller.position.pixels,
         closeTo(controller.position.maxScrollExtent, 1),
       );
+      // Let the end-alignment convergence loop expire, then verify the
+      // jump fired exactly once: scrolling away after it must not re-fire.
+      for (var frame = 0; frame < 15; frame++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      controller.jumpTo(320);
+      await tester.pump();
+      expect(controller.position.pixels, closeTo(320, 1));
       expect(tester.takeException(), isNull);
     });
 
@@ -2069,6 +2077,106 @@ void main() {
         sessionId: 'held-kb',
         viewInsets: const EdgeInsets.only(bottom: 300),
       );
+      expect(controller.position.pixels, closeTo(320, 1));
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('closing the keyboard re-arms the end scroll for the next session', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(360, 720);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
+      final client = _ControlledChatHttpClient(_longHistory());
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'kb-cycle',
+        sessionId: 'kb-cycle',
+      );
+      final controller = _chatListController(tester);
+      controller.jumpTo(320);
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('chat-message-composer')));
+      await tester.pump();
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'kb-cycle',
+        sessionId: 'kb-cycle',
+        viewInsets: const EdgeInsets.only(bottom: 300),
+      );
+      expect(
+        controller.position.pixels,
+        closeTo(controller.position.maxScrollExtent, 1),
+      );
+      // The keyboard drops: the session ends, so the next raise counts as
+      // a fresh compose request even though focus never left the composer.
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'kb-cycle',
+        sessionId: 'kb-cycle',
+      );
+      controller.jumpTo(320);
+      await tester.pump();
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'kb-cycle',
+        sessionId: 'kb-cycle',
+        viewInsets: const EdgeInsets.only(bottom: 300),
+      );
+      expect(
+        controller.position.pixels,
+        closeTo(controller.position.maxScrollExtent, 1),
+      );
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a focus round-trip mid-session does not re-jump a parked reader', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(360, 720);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
+      final client = _ControlledChatHttpClient(_longHistory());
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'kb-roundtrip',
+        sessionId: 'kb-roundtrip',
+      );
+      final controller = _chatListController(tester);
+      controller.jumpTo(320);
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('chat-message-composer')));
+      await tester.pump();
+      await _pumpChat(
+        tester,
+        client: client,
+        connectionId: 'kb-roundtrip',
+        sessionId: 'kb-roundtrip',
+        viewInsets: const EdgeInsets.only(bottom: 300),
+      );
+      expect(
+        controller.position.pixels,
+        closeTo(controller.position.maxScrollExtent, 1),
+      );
+      // Park away from the end while the IME stays up, then let focus leave
+      // for the palette and come back. The keyboard session already fired:
+      // focus traffic within one session must not re-jump the parked reader.
+      controller.jumpTo(320);
+      await tester.pump();
+      await tester.tap(find.byTooltip('Command palette'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Close'));
+      await tester.pumpAndSettle();
+      expect(controller.position.pixels, closeTo(320, 1));
+      await tester.tap(find.byKey(const Key('chat-message-composer')));
+      await tester.pump();
       expect(controller.position.pixels, closeTo(320, 1));
       expect(tester.takeException(), isNull);
     });
