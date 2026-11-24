@@ -438,7 +438,7 @@ void main() {
     expect(fixture.modelWrites, isEmpty);
   });
 
-  testWidgets('a default on a provider with its own saved address is changed', (
+  testWidgets('a default on a provider plugin\'s own address is changed', (
     tester,
   ) async {
     // A subscription plugin: the gateway keeps its address with the default
@@ -456,7 +456,7 @@ void main() {
           'provider': 'plugin-subscription',
           'model': 'big-model[1m]',
         };
-        f.endpoint = 'https://plugin.example/v1';
+        f.endpoint = 'process://plugin-subscription';
       },
     );
     expect(inside('ng-models-default', 'big-model[1m]'), findsOneWidget);
@@ -465,7 +465,7 @@ void main() {
       // Only the helper task that has its own endpoint says so.
       findsOneWidget,
     );
-    expect(find.textContaining('plugin.example'), findsNothing);
+    expect(find.textContaining('process://'), findsNothing);
 
     await tapKey(tester, 'ng-models-change-default');
     await tester.tap(choice('homelab/local-llm'));
@@ -509,7 +509,7 @@ void main() {
     expect(find.byKey(const ValueKey('ng-fallback-change-2')), findsNothing);
 
     await tapKey(tester, 'ng-fallback-change-0');
-    // Another row's model cannot be picked; the row's own is marked.
+    // Another row's model cannot be picked: the sheet stays open.
     await tester.tap(choice('homelab/local-llm'));
     await tester.pumpAndSettle();
     expect(choice('homelab/local-llm'), findsOneWidget);

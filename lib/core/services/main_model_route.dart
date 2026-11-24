@@ -57,17 +57,44 @@ bool mainModelUsesCustomEndpoint(String provider, String baseUrl) {
       baseUrl.replaceFirst(RegExp(r'/+$'), '') != canonical;
 }
 
-/// True when [baseUrl] provably replaces [provider]'s standard address. A
-/// provider with no reviewed standard address proves nothing either way:
-/// plugin and newer providers save their own address in the same field.
-bool mainModelOverridesStandardEndpoint(String provider, String baseUrl) {
-  final canonical = _canonicalEndpoints[provider];
-  return canonical != null &&
-      baseUrl.isNotEmpty &&
-      baseUrl.replaceFirst(RegExp(r'/+$'), '') != canonical;
+/// Provider names the gateway routes as an endpoint with no name of its own
+/// (`auth._PROVIDER_ALIASES` sends the local-server names to `custom`). It
+/// matches them in any letter case.
+const _unnamedEndpointProviders = {
+  'custom',
+  'local',
+  'ollama',
+  'vllm',
+  'llamacpp',
+  'llama.cpp',
+  'llama-cpp',
+};
+
+bool isUnnamedEndpointProvider(String provider) =>
+    _unnamedEndpointProviders.contains(provider.trim().toLowerCase());
+
+/// An endpoint address as the gateway compares them: no surrounding space,
+/// no trailing slash, any letter case.
+String normaliseEndpointAddress(Object? raw) => raw is String
+    ? raw.trim().replaceFirst(RegExp(r'/+$'), '').toLowerCase()
+    : '';
+
+/// [provider] has a reviewed standard address and [baseUrl] is that address.
+/// Null when the app has no reviewed address for [provider].
+bool? isReviewedStandardEndpoint(String provider, String baseUrl) {
+  final canonical = _canonicalEndpoints[provider.trim().toLowerCase()];
+  if (canonical == null) return null;
+  return normaliseEndpointAddress(baseUrl) ==
+      normaliseEndpointAddress(canonical);
 }
 
-/// `custom` and `local` name an endpoint the gateway holds without a name of
-/// its own. It exists only where it is used.
-bool isUnnamedEndpointProvider(String provider) =>
-    provider == 'custom' || provider == 'local';
+/// `process://<provider>`: the address an external-process provider plugin
+/// registers for itself (`agent/process_transport.py`). The gateway writes it
+/// back whenever that provider is chosen, so it is never lost.
+bool isProviderOwnProcessAddress(String provider, String baseUrl) {
+  final uri = Uri.tryParse(baseUrl.trim());
+  return uri != null &&
+      uri.scheme.toLowerCase() == 'process' &&
+      uri.host.toLowerCase() == provider.trim().toLowerCase() &&
+      uri.path.replaceAll('/', '').isEmpty;
+}

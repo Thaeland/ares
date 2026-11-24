@@ -111,7 +111,7 @@ class NgCatalogProvider {
     required this.name,
     required this.models,
     required this.totalModels,
-    required this.unnamed,
+    required this.gatewayOnly,
     this.warning,
     this.windows = const [],
     this.accounts = const [],
@@ -124,11 +124,14 @@ class NgCatalogProvider {
   final List<NgCatalogModel> models;
   final int totalModels;
 
-  /// An endpoint the gateway holds without a name (`custom` or `local`). It
-  /// is shown but cannot be chosen: there is no name to assign it by. A named
-  /// endpoint is an ordinary provider here, because the gateway keeps its
-  /// address and key and applies them when one of its models is assigned.
-  final bool unnamed;
+  /// Shown but not chosen from the app: an endpoint with no name (`custom`,
+  /// `local` and the local-server names the gateway routes there), and the
+  /// `custom:` slugs the picker makes up for legacy `custom_providers`
+  /// entries, which the gateway's fallback and helper-task resolvers do not
+  /// all accept. A `providers:` entry is an ordinary provider here: the
+  /// gateway keeps its address and key and applies them when one of its
+  /// models is assigned.
+  final bool gatewayOnly;
   final String? warning;
   final List<NgUsageWindow> windows;
   final List<NgUsageAccount> accounts;
@@ -152,7 +155,7 @@ class NgModelCatalog {
 
   /// Providers a model can be assigned from.
   Iterable<NgCatalogProvider> get assignable =>
-      providers.where((p) => !p.unnamed && p.models.isNotEmpty);
+      providers.where((p) => !p.gatewayOnly && p.models.isNotEmpty);
 
   NgCatalogProvider? provider(String slug) {
     for (final p in providers) {
@@ -169,7 +172,7 @@ class NgModelCatalog {
   bool canAssign(String provider, String model) {
     final row = this.provider(provider);
     final entry = row?.model(model);
-    return row != null && !row.unnamed && entry != null && !entry.locked;
+    return row != null && !row.gatewayOnly && entry != null && !entry.locked;
   }
 
   factory NgModelCatalog.fromOptions(Map<String, dynamic> data) {
@@ -268,7 +271,9 @@ class NgModelCatalog {
           totalModels: total is int && total > models.length
               ? total
               : models.length,
-          unnamed: isUnnamedEndpointProvider(slug),
+          gatewayOnly:
+              isUnnamedEndpointProvider(slug) ||
+              slug.trim().toLowerCase().startsWith('custom:'),
           warning: warning.isEmpty ? null : warning,
           windows: usage is Map
               ? NgUsageWindow.parseAll(usage['windows'])

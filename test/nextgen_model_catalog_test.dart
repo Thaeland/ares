@@ -70,25 +70,33 @@ void main() {
     expect(c.model('openrouter', 'openai/gpt-pro')!.locked, isTrue);
     expect(c.canAssign('openrouter', 'openai/gpt-pro'), isFalse);
     // A named endpoint is assigned by name like any other provider.
-    expect(c.provider('homelab')!.unnamed, isFalse);
+    expect(c.provider('homelab')!.gatewayOnly, isFalse);
     expect(c.canAssign('homelab', 'local-llm'), isTrue);
   });
 
-  test('only an endpoint with no name cannot be assigned', () {
-    for (final slug in ['custom', 'local']) {
+  test('endpoints with no name and legacy custom: rows are not chosen', () {
+    for (final slug in [
+      'custom',
+      'local',
+      'Custom',
+      'ollama',
+      'llama.cpp',
+      'custom:lab',
+      'custom:ollama',
+    ]) {
       final c = catalog([
         {
           'slug': slug,
           'models': ['m'],
         },
       ]);
-      expect(c.providers.single.unnamed, isTrue, reason: slug);
+      expect(c.providers.single.gatewayOnly, isTrue, reason: slug);
       expect(c.assignable, isEmpty, reason: slug);
       expect(c.canAssign(slug, 'm'), isFalse, reason: slug);
     }
-    // Named endpoints, however the gateway marks them, are chosen by name.
+    // `providers:` entries, however the gateway marks them, are chosen by
+    // name.
     for (final row in [
-      {'slug': 'custom:lab'},
       {'slug': 'lab', 'is_user_defined': true},
       {'slug': 'lab', 'api_url': 'https://private.example/v1'},
       {'slug': 'lab', 'base_url': 'https://private.example/v1'},
@@ -101,7 +109,7 @@ void main() {
         },
       ]);
       final slug = row['slug'] as String;
-      expect(c.providers.single.unnamed, isFalse, reason: '$row');
+      expect(c.providers.single.gatewayOnly, isFalse, reason: '$row');
       expect(c.canAssign(slug, 'm'), isTrue, reason: '$row');
     }
   });

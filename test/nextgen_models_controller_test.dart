@@ -236,6 +236,55 @@ void main() {
           f.endpoint = 'https://elsewhere.example/v1';
         },
       ),
+      (
+        'a local server name the gateway routes as an unnamed endpoint',
+        (f) {
+          f.info = {...f.info, 'provider': 'ollama', 'model': 'qwen3'};
+          f.endpoint = 'http://nas.example:11434/v1';
+        },
+      ),
+      (
+        'an unnamed endpoint spelt in capitals',
+        (f) {
+          f.info = {...f.info, 'provider': 'Custom', 'model': 'qwen3'};
+          f.endpoint = 'http://nas.example:11434/v1';
+        },
+      ),
+      (
+        'an address typed for a provider the app has no address for',
+        (f) {
+          f.info = {...f.info, 'provider': 'kilocode', 'model': 'm'};
+          f.endpoint = 'https://proxy.example/v1';
+        },
+      ),
+      (
+        'a bare custom default at a providers: entry\'s address',
+        (f) {
+          f.info = {...f.info, 'provider': 'custom', 'model': 'local-llm'};
+          f.endpoint = 'http://private.example:8000/v1/';
+        },
+      ),
+      (
+        'a legacy custom: default at another address',
+        (f) {
+          f.providers.add({
+            'slug': 'custom:legacy',
+            'name': 'Legacy',
+            'models': ['legacy-model'],
+            'is_user_defined': true,
+            'api_url': 'http://legacy.example:9000/v1',
+          });
+          f.info = {...f.info, 'provider': 'custom:legacy', 'model': 'm'};
+          f.endpoint = 'http://other.example:9000/v1';
+        },
+      ),
+      (
+        'a legacy custom: default with no entry',
+        (f) {
+          f.info = {...f.info, 'provider': 'custom:gone', 'model': 'm'};
+          f.endpoint = 'http://other.example:9000/v1';
+        },
+      ),
     ]) {
       test('a default on $name is never changed', () async {
         final (f, c) = await loaded(arrange);
@@ -276,10 +325,10 @@ void main() {
       expect(c.canChangeMain, isTrue);
     });
 
-    test('a default on a provider with its own saved address is changed, '
+    test('a default on a provider plugin\'s own address is changed, '
         'whether or not its model is listed', () async {
-      // A plugin or newer provider: the gateway saves its address with the
-      // default model, and the app has no standard address to compare.
+      // An external-process provider plugin registers `process://<name>`,
+      // and the gateway writes it back whenever that provider is chosen.
       final (f, c) = await loaded((f) {
         f.providers.add({
           'slug': 'plugin-subscription',
@@ -291,7 +340,7 @@ void main() {
           'provider': 'plugin-subscription',
           'model': 'big-model[1m]',
         };
-        f.endpoint = 'https://plugin.example/v1';
+        f.endpoint = 'process://Plugin-Subscription';
       });
       expect(c.routeVerified, isTrue);
       expect(c.endpointOnlyHere, isFalse);
@@ -307,20 +356,79 @@ void main() {
       );
     });
 
-    test('an endpoint with no name that the gateway also holds by name '
-        'can be changed', () async {
-      final (f, c) = await loaded((f) {
-        f.info = {...f.info, 'provider': 'custom', 'model': 'local-llm'};
-        f.endpoint = 'http://private.example:8000/v1/';
+    for (final (name, arrange) in <(String, void Function(ModelsFixture))>[
+      (
+        'a bare custom default at a legacy entry\'s address',
+        (f) {
+          f.providers.add({
+            'slug': 'custom:legacy',
+            'name': 'Legacy',
+            'models': ['legacy-model'],
+            'is_user_defined': true,
+            'api_url': 'http://legacy.example:9000/v1',
+          });
+          f.info = {...f.info, 'provider': 'custom', 'model': 'legacy-model'};
+          f.endpoint = 'HTTP://legacy.example:9000/v1/ ';
+        },
+      ),
+      (
+        'a legacy custom: default at its entry\'s address',
+        (f) {
+          f.providers.add({
+            'slug': 'custom:legacy',
+            'name': 'Legacy',
+            'models': ['legacy-model'],
+            'is_user_defined': true,
+            'api_url': 'http://legacy.example:9000/v1',
+          });
+          f.info = {...f.info, 'provider': 'custom:legacy', 'model': 'm'};
+          f.endpoint = 'http://legacy.example:9000/v1';
+        },
+      ),
+      (
+        'a reviewed provider at its standard address in another spelling',
+        (f) {
+          f.info = {...f.info, 'provider': 'openrouter', 'model': 'm'};
+          f.endpoint = ' https://OpenRouter.ai/api/v1/';
+        },
+      ),
+    ]) {
+      test('$name can be changed', () async {
+        final (f, c) = await loaded(arrange);
+        expect(c.endpointOnlyHere, isFalse);
+        expect(c.canChangeMain, isTrue);
+        expect(
+          await c.setMain('anthropic', 'claude-haiku-4.5'),
+          isA<NgModelSaved>(),
+        );
+        expect(f.modelWrites, hasLength(1));
       });
-      expect(c.endpointOnlyHere, isFalse);
-      expect(c.canChangeMain, isTrue);
-      expect(
-        await c.setMain('openrouter', 'google/gemini-flash'),
-        isA<NgModelSaved>(),
-      );
-      expect(f.modelWrites, hasLength(1));
-    });
+    }
+
+    test(
+      'route rows the app cannot read leave the default unchangeable',
+      () async {
+        for (final endpoints in [
+          ['not a row'],
+          [
+            {'id': 'a', 'is_current': 'yes'},
+          ],
+        ]) {
+          final (f, c) = await loaded(
+            (f) => f.routeOverride = {
+              'current': {
+                'provider': 'anthropic',
+                'model': 'claude-opus-4.5',
+                'base_url': '',
+              },
+              'endpoints': endpoints,
+            },
+          );
+          expect(c.routeVerified, isFalse, reason: '$endpoints');
+          expect(c.canChangeMain, isFalse, reason: '$endpoints');
+        }
+      },
+    );
 
     test('an unreadable route leaves the default unchangeable', () async {
       final (f, c) = await loaded((f) => f.routeStatus = 500);
@@ -589,6 +697,24 @@ void main() {
           {'provider': 'retired', 'model': 'old-model'},
         ]);
         expect(c.fallbackDirty, isFalse);
+
+        // Not while a save is being read back, nor while the list cannot be
+        // read.
+        final held = Completer<http.Response>();
+        f.heldWrite = held;
+        final saving = c.saveFallbacks();
+        await pumpEventQueue();
+        expect(c.saving, isTrue);
+        expect(c.replaceFallback(1, 'anthropic', 'claude-opus-4.5'), isFalse);
+        f.heldWrite = null;
+        held.complete(http.Response('{"ok":true}', 200));
+        await saving;
+        f.schemaStatus = 404;
+        await c.load();
+        expect(c.fallbackFailed, isTrue);
+        expect(c.replaceFallback(1, 'anthropic', 'claude-opus-4.5'), isFalse);
+        f.schemaStatus = 200;
+        await c.load();
 
         // A named endpoint is added by name as well.
         expect(c.addFallback('homelab', 'local-llm'), isTrue);

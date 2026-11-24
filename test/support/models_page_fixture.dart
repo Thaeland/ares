@@ -46,9 +46,8 @@ class ModelsFixture {
   /// that endpoint's address unless this overrides it.
   String endpoint = '';
 
-  /// The gateway replaces the saved address when the default changes. Off
-  /// for a gateway that leaves the old one behind.
-  bool replacesAddress = true;
+  /// Replaces the custom-endpoints answer when set.
+  Map<String, dynamic>? routeOverride;
   Completer<http.Response>? heldWrite;
   Completer<http.Response>? heldInfo;
 
@@ -219,20 +218,30 @@ class ModelsFixture {
         return _json(config);
       }
       if (path.endsWith('/providers/custom-endpoints')) {
-        // As the gateway builds it: one row per named endpoint, the one in
-        // use marked, and a made-up `custom` row for an endpoint that has no
-        // name. An unnamed endpoint at a named endpoint's address marks
-        // that row instead.
-        final named = [
+        if (routeOverride != null) return _json(routeOverride!, routeStatus);
+        // As `config_env._custom_endpoint_response` builds it. `providers:`
+        // entries are in use when the default names them; legacy
+        // `custom_providers` entries (slug `custom:<id>`) only when the
+        // default is a bare `custom` at their address; and a made-up
+        // `custom` row stands for a bare `custom` default that matches no
+        // entry.
+        final rows = [
           for (final p in providers)
             if (p['is_user_defined'] == true && p['api_url'] is String) p,
         ];
-        String bare(Object? url) => '$url'.replaceFirst(RegExp(r'/+$'), '');
-        bool inUse(Map<String, dynamic> p) =>
-            p['slug'] == info['provider'] ||
-            (info['provider'] == 'custom' &&
-                bare(p['api_url']) == bare(endpoint));
-        final own = named.where((p) => p['slug'] == info['provider']);
+        final provider = '${info['provider']}';
+        final bareCustom = provider.toLowerCase() == 'custom';
+        String bare(Object? url) =>
+            '$url'.trim().replaceFirst(RegExp(r'/+$'), '').toLowerCase();
+        bool legacy(Map<String, dynamic> p) =>
+            '${p['slug']}'.startsWith('custom:');
+        bool inUse(Map<String, dynamic> p) => legacy(p)
+            ? bareCustom &&
+                  endpoint.isNotEmpty &&
+                  bare(p['api_url']) == bare(endpoint)
+            : p['slug'] == provider ||
+                  'custom:${p['slug']}' == provider.toLowerCase();
+        final own = rows.where((p) => !legacy(p) && inUse(p));
         final address = endpoint.isNotEmpty || own.isEmpty
             ? endpoint
             : own.first['api_url'] as String;
@@ -243,19 +252,19 @@ class ModelsFixture {
             'base_url': address,
           },
           'endpoints': [
-            for (final p in named)
+            for (final p in rows)
               {
-                'id': p['slug'],
+                'id': legacy(p)
+                    ? '${p['slug']}'.substring('custom:'.length)
+                    : p['slug'],
                 'name': p['name'],
                 'base_url': p['api_url'],
                 'is_current': inUse(p),
-                'source': 'providers',
+                'source': legacy(p) ? 'custom_providers' : 'providers',
                 'has_api_key': true,
                 'api_key_preview': 'sk-...cret',
               },
-            if (info['provider'] == 'custom' &&
-                endpoint.isNotEmpty &&
-                !named.any(inUse))
+            if (bareCustom && endpoint.isNotEmpty && !rows.any(inUse))
               {
                 'id': 'custom',
                 'name': 'Custom',
@@ -286,7 +295,8 @@ class ModelsFixture {
               'provider': body['provider'],
               'model': body['model'],
             };
-            if (replacesAddress) endpoint = '';
+            // The gateway writes the new provider's own address.
+            endpoint = '';
           } else {
             tasks = [
               for (final task in tasks)

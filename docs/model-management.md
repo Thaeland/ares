@@ -40,28 +40,37 @@ read or write, and no endpoint address, credential or key name on screen.
 Three things differ:
 
 - **What can be assigned.** The classic screen assigns only providers whose
-  address it can match against its reviewed list, so a default on a plugin
-  provider, a newer provider or a named endpoint is read-only there. This page
-  assigns any provider the gateway lists by name, named endpoints
-  (`providers:` and `custom_providers:` entries) included, as a default, a
-  fallback or a helper-task model. It sends the provider and model only; the
-  gateway applies that provider's address and key
-  (`model_assignment.validated_main_model_selection`,
-  `model_switch.model_selection_config_updates`) and refuses a pick it cannot
-  validate. What stays read-only is what would be lost:
-  - a default whose endpoint exists only in the default-model setting: an
-    endpoint with no name (`custom` or `local` with no matching named entry),
-    an address that differs from the named endpoint it belongs to, or an
-    address that replaces a reviewed provider's standard one;
-  - a helper task that carries its own endpoint, which the gateway drops when
-    the task is reassigned;
-  - a fallback entry with routing details (`base_url`, `key_env`, `api_key`
-    and the like), or on a provider the gateway no longer lists. It can still
-    be moved or removed.
+  address it can match against its reviewed list, so a default on a provider
+  plugin, a newer provider or a named endpoint is read-only there. This page
+  assigns any provider the gateway lists under a `providers:` name, named
+  endpoints included, as a default, a fallback or a helper-task model. It
+  sends the provider and model only, and the gateway applies that provider's
+  address and key (`model_assignment.validated_main_model_selection`,
+  `model_switch.model_selection_config_updates`). The gateway validates a
+  default-model pick and refuses one it cannot validate; it does not validate
+  helper-task or fallback picks, so the page offers only models the gateway
+  lists for those. Not offered anywhere: endpoints with no name (`custom`,
+  `local` and the local-server names the gateway routes there, such as
+  `ollama`, `vllm` and `llama.cpp`, in any letter case) and the `custom:` rows
+  the picker makes up for legacy `custom_providers` entries.
 
-  After a default-model change the route is read again; if the gateway still
-  reports the old address for a reviewed provider, the change is not reported
-  as saved.
+  The default model stays read-only unless its address is known to come back
+  when its provider is chosen again. It can be changed when it has no saved
+  address, when it is a `providers:` entry at that entry's own address, when
+  it is a bare `custom` default at a legacy entry's address, when it is a
+  `custom:` default at its legacy entry's address, when the address is a
+  reviewed provider's standard address (compared without case, spaces or
+  trailing slash), or when it is the `process://<provider>` address a provider
+  plugin registers for itself. Everything else, including an address on a
+  provider the app has no reviewed address for, is read-only. After a change
+  the route is read again, and a default that is read-only by these rules is
+  not reported as saved.
+
+  Helper tasks that carry their own endpoint stay read-only, because the
+  gateway drops that endpoint when the task is reassigned. Fallback entries
+  with routing details (`base_url`, `key_env`, `api_key` and the like), or on
+  a provider the gateway no longer lists, keep their model; they can still be
+  moved or removed.
 - When the gateway answers a default or auxiliary assignment with
   `confirm_required`, the page shows the gateway's own warning and sends the
   assignment again with `confirm_expensive_model: true` only if the user

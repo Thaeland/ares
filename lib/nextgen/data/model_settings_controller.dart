@@ -69,13 +69,12 @@ class NgModelSettingsController extends ChangeNotifier {
   /// The default model's route was read and matches what `model/info` names.
   bool get routeVerified => _routeVerified;
 
-  /// The default model's endpoint exists only in that setting (an endpoint
-  /// with no name on the gateway, or an address that replaces a provider's
-  /// own), or its route could not be confirmed. Assigning another model
-  /// would drop that endpoint and the app could not choose it again, so it
-  /// is not changed from here. A default on a named endpoint or a provider
-  /// the gateway lists can be changed: the gateway keeps what it needs to
-  /// go back.
+  /// The default model's endpoint address could be lost by assigning another
+  /// model (see [DashboardClient.getMainModelEndpointOwnership]), or its
+  /// route could not be confirmed, so it is not changed from here. A default
+  /// on a named endpoint at its own address, on a provider's reviewed
+  /// standard address or on a provider plugin's own address can be changed:
+  /// the gateway restores those when the provider is chosen again.
   bool get endpointOnlyHere => !_routeVerified || _endpointOnlyHere;
 
   bool get canChangeMain =>
