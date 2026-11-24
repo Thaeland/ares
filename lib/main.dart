@@ -645,6 +645,12 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     );
     if (!mounted) return;
     if (!delivered) {
+      if (nextGenEnabled.value) {
+        // NextGen owns the chat surface; hand the reply to MainPage so it
+        // opens a fresh NextGen chat instead of the Classic ChatScreen.
+        pendingNextGenVoiceReply.value = message;
+        return;
+      }
       nav.push(
         MaterialPageRoute<void>(
           builder: (_) => ChatScreen(

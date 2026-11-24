@@ -46,12 +46,19 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     nextGenOpenRequest.addListener(_onOpenRequest);
     nextGenNotificationAnswer.addListener(_onNotificationAnswer);
+    pendingNextGenVoiceReply.addListener(_onPendingVoiceReply);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && pendingNextGenVoiceReply.value != null) {
+        unawaited(_onPendingVoiceReply());
+      }
+    });
   }
 
   @override
   void dispose() {
     nextGenOpenRequest.removeListener(_onOpenRequest);
     nextGenNotificationAnswer.removeListener(_onNotificationAnswer);
+    pendingNextGenVoiceReply.removeListener(_onPendingVoiceReply);
     _requestSub?.cancel();
     _watchedGateway?.removeListener(_onGatewayChanged);
     _pendingAnswerTimeout?.cancel();
@@ -84,6 +91,23 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
     _scaffold.currentState?.closeDrawer();
     if (id == _chat?.storedId) return;
     _openId(id, '');
+  }
+
+  /// Android Auto voice reply: open a fresh NextGen chat and send the text
+  /// there, instead of the Classic chat screen.
+  Future<void> _onPendingVoiceReply() async {
+    if (!mounted) return;
+    final text = pendingNextGenVoiceReply.value;
+    if (text == null || text.trim().isEmpty) return;
+    pendingNextGenVoiceReply.value = null;
+    _newChat();
+    // The new controller is installed synchronously by _openId; give it one
+    // frame so the chat view is attached before sending.
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+    if (!mounted) return;
+    final chat = _chat;
+    if (chat == null) return;
+    await chat.send(text);
   }
 
   @override
