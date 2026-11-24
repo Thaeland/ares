@@ -907,12 +907,20 @@ class _NgChatViewState extends State<NgChatView> {
                     icon: Icon(Icons.add_circle_outline, color: c.text2),
                     onPressed: _preparing ? null : _attach,
                   ),
-                  Flexible(
-                    child: NgPill(
-                      key: const ValueKey('ng-model-picker'),
-                      modelLabel,
-                      icon: Icons.auto_awesome,
-                      onTap: () => showNgModelSheet(context, chat),
+                  // Expanded + Spacer split the free width evenly, so the
+                  // pill keeps its half-width cap while the row is always
+                  // filled and mic/send end flush right. A loose Flexible
+                  // left its unused share after the send button instead,
+                  // which on wide desktop windows put both buttons mid-row.
+                  Expanded(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: NgPill(
+                        key: const ValueKey('ng-model-picker'),
+                        modelLabel,
+                        icon: Icons.auto_awesome,
+                        onTap: () => showNgModelSheet(context, chat),
+                      ),
                     ),
                   ),
                   const Spacer(),
