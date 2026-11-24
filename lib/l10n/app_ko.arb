@@ -1,4 +1,5 @@
 {
+  "slash_local_arguments": "이 바로 가기는 여기서 인수를 지원하지 않습니다. 앱의 컨트롤을 사용하세요. 초안은 보관되었습니다.",
   "fallback_title": "대체 모델",
   "fallback_notice": "기본 모델을 사용할 수 없을 때 순서대로 시도합니다. 변경은 이 프로필에만 적용됩니다. 전체 목록을 명시적으로 저장하세요.",
   "fallback_unavailable": "대체 설정을 사용할 수 없거나 올바르지 않습니다. 연결, 선택한 프로필 및 호스트 버전을 확인한 후 다시 시도하세요.",
@@ -1086,7 +1087,7 @@
   "slash_command_delivery_unknown": "The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.",
   "slash_command_failed": "The command could not be run.",
   "slash_command_unsupported": "이 명령은 이 서버에서 사용할 수 없습니다.",
-  "slash_sessions_inline": "세션 목록이 이 보기에서 이미 열려 있습니다.",
+  "slash_sessions_inline": "세션 목록을 열어 채팅을 선택하세요. 초안은 보관되었습니다.",
   "nextgen_toggle": "NextGen 인터페이스",
   "nextgen_toggle_subtitle": "한 번의 로그인, 실시간 채팅, 네트워크 검색을 갖춘 새로운 디자인입니다. 게이트웨이와 채팅은 이 인터페이스와 공유됩니다.",
   "nextgen_single_login": "하나의 로그인으로 연결",

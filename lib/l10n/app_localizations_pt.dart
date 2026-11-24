@@ -9,6 +9,10 @@ class AppLocalizationsPt extends AppLocalizations {
   AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
+  String get slash_local_arguments =>
+      'Este atalho não aceita argumentos aqui. Use os controlos da aplicação; o rascunho foi mantido.';
+
+  @override
   String get fallback_title => 'Modelos de recurso';
 
   @override
@@ -3983,7 +3987,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get slash_sessions_inline =>
-      'A lista de sessões já está aberta nesta visualização.';
+      'Abra a lista de sessões para escolher uma conversa. O rascunho foi mantido.';
 
   @override
   String get nextgen_toggle => 'Interface NextGen';
@@ -6047,6 +6051,10 @@ class AppLocalizationsPt extends AppLocalizations {
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
 class AppLocalizationsPtBr extends AppLocalizationsPt {
   AppLocalizationsPtBr() : super('pt_BR');
+
+  @override
+  String get slash_local_arguments =>
+      'Este atalho não aceita argumentos aqui. Use os controles do aplicativo; seu rascunho foi mantido.';
 
   @override
   String get fallback_title => 'Modelos alternativos';
@@ -9823,6 +9831,14 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get slash_command_failed => 'The command could not be run.';
+
+  @override
+  String get slash_command_unsupported =>
+      'Este comando não está disponível neste servidor.';
+
+  @override
+  String get slash_sessions_inline =>
+      'Abra a lista de sessões para escolher uma conversa. Seu rascunho foi mantido.';
 
   @override
   String get nextgen_toggle => 'Interface NextGen';

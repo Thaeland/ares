@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 /// One slash command advertised by the gateway's `commands.catalog` RPC.
 class SlashCommand {
   const SlashCommand({
@@ -26,7 +28,7 @@ class SlashCommand {
 /// surfaces); a loaded catalogue is authoritative. This constant just keeps a
 /// cold session from treating the first typed command as prose before
 /// `commands.catalog` answers — the server's deterministic
-/// `unsupported_command` reply still falls back to a plain send.
+/// `unsupported_command` reply is shown locally, never resent as prose.
 const Set<String> kSlashExecutableCommands = {
   'help',
   'commands',
@@ -89,37 +91,30 @@ class SlashCommandCatalog {
   SlashCommandCatalog({
     required List<SlashCommand> commands,
     required Set<String> executable,
+    Map<String, String> aliases = const {},
   }) : commands = List<SlashCommand>.unmodifiable(commands),
-       executable = Set<String>.unmodifiable(executable);
+       executable = Set<String>.unmodifiable(executable),
+       _aliases = Map.unmodifiable(aliases);
 
   final List<SlashCommand> commands;
 
   /// Canonical (bare, lowercase) names the gateway dispatches.
   final Set<String> executable;
 
-  /// Names this connection already saw the gateway refuse with
-  /// `unsupported_command`. The dropdown hides them for the life of the
-  /// cached catalogue: `SlashCommandController.invalidate()` drops the
-  /// memory with the cache, so a server that starts accepting a command
-  /// offers it again on the next connection. Learned, never mirrored.
-  final Set<String> _refused = <String>{};
-
-  /// Records that the gateway refused [name] (any spelling; canonicalized
-  /// like every other catalogue key). Unknown names are still recorded —
-  /// only listed ones render, so a stray mark is inert.
-  void markRefused(String name) {
-    final canonical = _canonicalName(name);
-    if (canonical != null) _refused.add(canonical);
+  String canonicalName(String name) {
+    final bare = _canonicalName(name) ?? '';
+    return _aliases[bare]?.toLowerCase() ?? bare;
   }
 
-  bool isRefused(String name) {
-    final canonical = _canonicalName(name);
-    return canonical != null && _refused.contains(canonical);
-  }
+  final Map<String, String> _aliases;
+
+  bool containsName(String name) => commands.any(
+    (command) => canonicalName(command.name) == canonicalName(name),
+  );
 
   bool canExecute(String name) {
-    final canonical = _canonicalName(name);
-    return canonical != null && executable.contains(canonical);
+    final canonical = canonicalName(name);
+    return executable.contains(canonical);
   }
 
   static SlashCommandCatalog fromResult(Object? result) {
@@ -168,21 +163,27 @@ class SlashCommandCatalog {
       }
     }
     // Tolerant legacy envelopes: a list under `commands`, `entries` or `items`.
-    for (final legacy in [result['commands'], result['entries'], result['items']]) {
+    for (final legacy in [
+      result['commands'],
+      result['entries'],
+      result['items'],
+    ]) {
       if (legacy is List) _addEntries(builder, legacy);
     }
     return _build(builder, result);
   }
 
-  static SlashCommandCatalog _build(
-    _CatalogBuilder builder,
-    Object? result,
-  ) {
+  static SlashCommandCatalog _build(_CatalogBuilder builder, Object? result) {
     return SlashCommandCatalog(
       commands: builder.commands,
       // A gateway that advertises its own execution set wins; otherwise every
       // catalogued name is dispatchable and the server still refuses politely.
-      executable: _advertisedExecutable(result) ?? builder.names,
+      executable:
+          _advertisedExecutable(result)
+              ?.map((name) => builder._canon[name]?.toLowerCase() ?? name)
+              .toSet() ??
+          builder.names,
+      aliases: builder._canon,
     );
   }
 
@@ -198,7 +199,7 @@ class SlashCommandCatalog {
       final name = _canonicalName(entry is Map ? _entryName(entry) : entry);
       if (name != null) names.add(name);
     }
-    return names.isEmpty ? null : names;
+    return names;
   }
 
   static void _addPairs(
@@ -287,9 +288,7 @@ class SlashCommandCatalog {
       if (entry is List && entry.isNotEmpty) {
         final name = _bareName(entry.first);
         if (name == null) continue;
-        pairs.add(
-          _CatalogPair(name, entry.length > 1 ? _text(entry[1]) : ''),
-        );
+        pairs.add(_CatalogPair(name, entry.length > 1 ? _text(entry[1]) : ''));
         continue;
       }
       if (entry is String) {
@@ -328,7 +327,8 @@ class SlashCommandCatalog {
     return name;
   }
 
-  static String? _canonicalName(Object? value) => _bareName(value)?.toLowerCase();
+  static String? _canonicalName(Object? value) =>
+      _bareName(value)?.toLowerCase();
 
   static String _text(Object? value) {
     if (value is! String) return '';
@@ -373,11 +373,7 @@ class _CatalogBuilder {
   /// Canonical names plus every alias the gateway said it accepts.
   Set<String> get names => {..._index.keys, ..._accepted};
 
-  void add(
-    Object? raw, {
-    String description = '',
-    String category = '',
-  }) {
+  void add(Object? raw, {String description = '', String category = ''}) {
     final bare = SlashCommandCatalog._bareName(raw);
     final unaliased = SlashCommandCatalog._canonicalName(raw);
     if (bare == null || unaliased == null) return;
@@ -526,7 +522,8 @@ class SlashCommandNotice {
 ///
 /// [DesktopGatewayClient] implements it; tests provide a double without a
 /// socket. `onSent` fires after the request is written to the transport, which
-/// separates "never sent, safe to fall back" from "delivery unknown".
+/// distinguishes a local failure from delivery uncertainty. Neither permits
+/// automatic retry or conversion of a failed command into a prompt.
 abstract interface class SlashCommandGateway {
   bool get slashCommandsSupported;
 
@@ -537,4 +534,31 @@ abstract interface class SlashCommandGateway {
     required String command,
     void Function()? onSent,
   });
+}
+
+/// Connection-owned learned bare-command refusals, shared by retained routes.
+/// Catalogues remain immutable; resetting a socket forgets only observations
+/// from that socket. Epochs fence responses which arrive after reconnect.
+class SlashCommandRefusals extends ChangeNotifier {
+  final Set<String> _names = {};
+  int _epoch = 0;
+  int get epoch => _epoch;
+  bool contains(String name) => _names.contains(name);
+  void mark(String name) {
+    if (_names.add(name)) notifyListeners();
+  }
+
+  void reset() {
+    _epoch++;
+    _names.clear();
+    notifyListeners();
+  }
+}
+
+// Weak keys prevent closed gateway clients from becoming process-wide caches.
+final _connectionRefusals = Expando<SlashCommandRefusals>();
+
+extension SlashCommandConnectionMemory on SlashCommandGateway {
+  SlashCommandRefusals get slashRefusals =>
+      _connectionRefusals[this] ??= SlashCommandRefusals();
 }

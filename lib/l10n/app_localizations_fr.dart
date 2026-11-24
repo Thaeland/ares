@@ -9,6 +9,10 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
+  String get slash_local_arguments =>
+      'Ce raccourci n’accepte pas d’arguments ici. Utilisez les commandes de l’application ; votre brouillon a été conservé.';
+
+  @override
   String get fallback_title => 'Modèles de secours';
 
   @override
@@ -3993,7 +3997,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get slash_sessions_inline =>
-      'La liste des sessions est déjà ouverte dans cette vue.';
+      'Ouvrez la liste des sessions pour choisir une conversation. Votre brouillon a été conservé.';
 
   @override
   String get nextgen_toggle => 'Interface NextGen';

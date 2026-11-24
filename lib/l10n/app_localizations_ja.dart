@@ -9,6 +9,10 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get slash_local_arguments =>
+      'ここではこのショートカットに引数を指定できません。アプリの操作画面を使用してください。下書きは保持されています。';
+
+  @override
   String get fallback_title => 'フォールバックモデル';
 
   @override
@@ -3878,7 +3882,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get slash_command_unsupported => 'このコマンドはこのサーバーでは利用できません。';
 
   @override
-  String get slash_sessions_inline => 'セッションリストはこのビューで既に開かれています。';
+  String get slash_sessions_inline => 'セッションリストを開いてチャットを選択してください。下書きは保持されています。';
 
   @override
   String get nextgen_toggle => 'NextGen インターフェース';

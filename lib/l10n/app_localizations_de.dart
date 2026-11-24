@@ -9,6 +9,10 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
+  String get slash_local_arguments =>
+      'Diese Verknüpfung unterstützt hier keine Argumente. Verwende die App-Steuerelemente; dein Entwurf wurde beibehalten.';
+
+  @override
   String get fallback_title => 'Ausweichmodelle';
 
   @override
@@ -3990,7 +3994,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get slash_sessions_inline =>
-      'Die Sitzungsliste ist in dieser Ansicht bereits geöffnet.';
+      'Öffne die Sitzungsliste, um einen Chat auszuwählen. Dein Entwurf wurde beibehalten.';
 
   @override
   String get nextgen_toggle => 'NextGen-Oberfläche';

@@ -9,6 +9,10 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get slash_local_arguments =>
+      '이 바로 가기는 여기서 인수를 지원하지 않습니다. 앱의 컨트롤을 사용하세요. 초안은 보관되었습니다.';
+
+  @override
   String get fallback_title => '대체 모델';
 
   @override
@@ -3879,7 +3883,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get slash_command_unsupported => '이 명령은 이 서버에서 사용할 수 없습니다.';
 
   @override
-  String get slash_sessions_inline => '세션 목록이 이 보기에서 이미 열려 있습니다.';
+  String get slash_sessions_inline => '세션 목록을 열어 채팅을 선택하세요. 초안은 보관되었습니다.';
 
   @override
   String get nextgen_toggle => 'NextGen 인터페이스';

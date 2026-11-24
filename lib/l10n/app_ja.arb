@@ -1,4 +1,5 @@
 {
+  "slash_local_arguments": "ここではこのショートカットに引数を指定できません。アプリの操作画面を使用してください。下書きは保持されています。",
   "fallback_title": "フォールバックモデル",
   "fallback_notice": "メインモデルが利用できない場合に順番に試行します。変更はこのプロファイルのみに適用されます。リスト全体を明示的に保存してください。",
   "fallback_unavailable": "フォールバック設定を利用できないか、設定が無効です。接続、選択したプロファイル、ホストのバージョンを確認して再試行してください。",
@@ -1086,7 +1087,7 @@
   "slash_command_delivery_unknown": "The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.",
   "slash_command_failed": "The command could not be run.",
   "slash_command_unsupported": "このコマンドはこのサーバーでは利用できません。",
-  "slash_sessions_inline": "セッションリストはこのビューで既に開かれています。",
+  "slash_sessions_inline": "セッションリストを開いてチャットを選択してください。下書きは保持されています。",
   "nextgen_toggle": "NextGen インターフェース",
   "nextgen_toggle_subtitle": "1回のサインイン、ライブチャット、ネットワーク検出を備えた新しいデザイン。ゲートウェイとチャットはこのインターフェースと共有されます。",
   "nextgen_single_login": "1つのログインでサインイン",

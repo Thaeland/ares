@@ -9,6 +9,10 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get slash_local_arguments =>
+      'This shortcut does not accept arguments here. Use the app controls; your draft was kept.';
+
+  @override
   String get fallback_title => 'Fallback models';
 
   @override
@@ -3957,7 +3961,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get slash_sessions_inline =>
-      'The session list is already open in this view.';
+      'Open the session list to choose a chat. Your draft was kept.';
 
   @override
   String get nextgen_toggle => 'NextGen interface';

@@ -9,6 +9,10 @@ class AppLocalizationsUk extends AppLocalizations {
   AppLocalizationsUk([String locale = 'uk']) : super(locale);
 
   @override
+  String get slash_local_arguments =>
+      'Цей ярлик тут не підтримує аргументи. Скористайтеся елементами керування застосунку; чернетку збережено.';
+
+  @override
   String get fallback_title => 'Резервні моделі';
 
   @override
@@ -3979,7 +3983,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get slash_sessions_inline =>
-      'Список сесій уже відкрито в цьому поданні.';
+      'Відкрийте список сесій, щоб вибрати чат. Чернетку збережено.';
 
   @override
   String get nextgen_toggle => 'Інтерфейс NextGen';

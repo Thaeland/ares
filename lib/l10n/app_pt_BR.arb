@@ -1,4 +1,7 @@
 {
+  "slash_local_arguments": "Este atalho não aceita argumentos aqui. Use os controles do aplicativo; seu rascunho foi mantido.",
+  "slash_command_unsupported": "Este comando não está disponível neste servidor.",
+  "slash_sessions_inline": "Abra a lista de sessões para escolher uma conversa. Seu rascunho foi mantido.",
   "fallback_title": "Modelos alternativos",
   "fallback_notice": "São tentados em ordem quando o modelo principal está indisponível. As alterações se aplicam apenas a este perfil; salve explicitamente a lista completa.",
   "fallback_unavailable": "As configurações alternativas estão indisponíveis ou são inválidas. Verifique a conexão, o perfil selecionado e a versão do servidor e tente novamente.",
