@@ -57,6 +57,9 @@ class SlashCommandController extends ChangeNotifier {
 
   bool get catalogLoaded => _catalog != null;
 
+  /// The loaded catalogue (read-only), or null before it loads.
+  SlashCommandCatalog? get catalog => _catalog;
+
   /// A failed catalogue fetch disables the feature without touching the
   /// composer; it never rethrows into the text field's listener.
   bool get catalogUnavailable => _catalogError != null;

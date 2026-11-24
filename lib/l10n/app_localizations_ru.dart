@@ -3968,6 +3968,26 @@ class AppLocalizationsRu extends AppLocalizations {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias — псевдоним для $command';
+  }
+
+  @override
+  String get slash_command_info_no_description => 'Описание недоступно.';
+
+  @override
+  String get slash_command_info_arguments_options =>
+      'Принимает один из фиксированных вариантов.';
+
+  @override
+  String get slash_command_info_arguments_text =>
+      'Принимает текст после команды.';
+
+  @override
+  String get slash_command_info_arguments_mixed =>
+      'Принимает вариант или текст после команды.';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -4522,6 +4542,30 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get ng_send => 'Отправить';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias — псевдоним для $command';
+  }
+
+  @override
+  String get ng_slash_command_no_description => 'Описание недоступно.';
+
+  @override
+  String get ng_slash_command_arguments_options =>
+      'Принимает один из фиксированных вариантов.';
+
+  @override
+  String get ng_slash_command_arguments_text =>
+      'Принимает текст после команды.';
+
+  @override
+  String get ng_slash_command_arguments_mixed =>
+      'Принимает вариант или текст после команды.';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'NextGen отправляет это Hermes как обычное сообщение; сама команда не выполняется.';
 
   @override
   String get ng_steered => 'Направлено';

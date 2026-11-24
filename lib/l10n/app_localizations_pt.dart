@@ -3965,6 +3965,26 @@ class AppLocalizationsPt extends AppLocalizations {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias é um alias de $command';
+  }
+
+  @override
+  String get slash_command_info_no_description => 'Sem descrição disponível.';
+
+  @override
+  String get slash_command_info_arguments_options =>
+      'Aceita uma opção de uma lista fixa.';
+
+  @override
+  String get slash_command_info_arguments_text =>
+      'Aceita texto depois do comando.';
+
+  @override
+  String get slash_command_info_arguments_mixed =>
+      'Aceita uma opção ou texto depois do comando.';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -4525,6 +4545,30 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ng_send => 'Enviar';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias é um alias de $command';
+  }
+
+  @override
+  String get ng_slash_command_no_description => 'Sem descrição disponível.';
+
+  @override
+  String get ng_slash_command_arguments_options =>
+      'Aceita uma opção de uma lista fixa.';
+
+  @override
+  String get ng_slash_command_arguments_text =>
+      'Aceita texto depois do comando.';
+
+  @override
+  String get ng_slash_command_arguments_mixed =>
+      'Aceita uma opção ou texto depois do comando.';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'O NextGen envia isto ao Hermes como uma mensagem normal; o comando em si não é executado.';
 
   @override
   String get ng_steered => 'Orientado';
@@ -9804,6 +9848,27 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias é um alias de $command';
+  }
+
+  @override
+  String get slash_command_info_no_description =>
+      'Nenhuma descrição disponível.';
+
+  @override
+  String get slash_command_info_arguments_options =>
+      'Aceita uma opção de uma lista fixa.';
+
+  @override
+  String get slash_command_info_arguments_text =>
+      'Aceita texto depois do comando.';
+
+  @override
+  String get slash_command_info_arguments_mixed =>
+      'Aceita uma opção ou texto depois do comando.';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -10361,6 +10426,30 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get ng_send => 'Enviar';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias é um alias de $command';
+  }
+
+  @override
+  String get ng_slash_command_no_description => 'Nenhuma descrição disponível.';
+
+  @override
+  String get ng_slash_command_arguments_options =>
+      'Aceita uma opção de uma lista fixa.';
+
+  @override
+  String get ng_slash_command_arguments_text =>
+      'Aceita texto depois do comando.';
+
+  @override
+  String get ng_slash_command_arguments_mixed =>
+      'Aceita uma opção ou texto depois do comando.';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'O NextGen envia isso ao Hermes como uma mensagem normal; o comando em si não é executado.';
 
   @override
   String get ng_steered => 'Orientada';

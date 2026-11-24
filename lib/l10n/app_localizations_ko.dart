@@ -3863,6 +3863,23 @@ class AppLocalizationsKo extends AppLocalizations {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias은(는) $command의 별칭입니다';
+  }
+
+  @override
+  String get slash_command_info_no_description => '설명이 없습니다.';
+
+  @override
+  String get slash_command_info_arguments_options => '정해진 옵션 중 하나를 받습니다.';
+
+  @override
+  String get slash_command_info_arguments_text => '명령 뒤에 텍스트를 받습니다.';
+
+  @override
+  String get slash_command_info_arguments_mixed => '명령 뒤에 옵션이나 텍스트를 받습니다.';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -4403,6 +4420,27 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_send => '보내기';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias은(는) $command의 별칭입니다';
+  }
+
+  @override
+  String get ng_slash_command_no_description => '설명이 없습니다.';
+
+  @override
+  String get ng_slash_command_arguments_options => '정해진 옵션 중 하나를 받습니다.';
+
+  @override
+  String get ng_slash_command_arguments_text => '명령 뒤에 텍스트를 받습니다.';
+
+  @override
+  String get ng_slash_command_arguments_mixed => '명령 뒤에 옵션이나 텍스트를 받습니다.';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'NextGen에서는 이 내용이 일반 메시지로 Hermes에 전송되며, 명령 자체는 실행되지 않습니다.';
 
   @override
   String get ng_steered => '지시 반영됨';

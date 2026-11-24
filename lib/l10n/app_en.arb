@@ -1327,6 +1327,21 @@
   "slash_commands": "Slash commands",
   "slash_commands_loading": "Loading commands…",
   "slash_commands_empty": "No matching commands",
+  "slash_command_info_alias": "{alias} is an alias of {command}",
+  "@slash_command_info_alias": {
+    "placeholders": {
+      "alias": {
+        "type": "String"
+      },
+      "command": {
+        "type": "String"
+      }
+    }
+  },
+  "slash_command_info_no_description": "No description available.",
+  "slash_command_info_arguments_options": "Takes one option from a fixed list.",
+  "slash_command_info_arguments_text": "Takes text after the command.",
+  "slash_command_info_arguments_mixed": "Takes an option or text after the command.",
   "slash_command_output": "Command output",
   "slash_command_no_output": "The command completed with no output.",
   "slash_command_delivery_unknown": "The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.",
@@ -1682,6 +1697,22 @@
   "ng_dictate": "Dictate",
   "ng_stop": "Stop",
   "ng_send": "Send",
+  "ng_slash_command_alias": "{alias} is an alias of {command}",
+  "@ng_slash_command_alias": {
+    "placeholders": {
+      "alias": {
+        "type": "String"
+      },
+      "command": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_slash_command_no_description": "No description available.",
+  "ng_slash_command_arguments_options": "Takes one option from a fixed list.",
+  "ng_slash_command_arguments_text": "Takes text after the command.",
+  "ng_slash_command_arguments_mixed": "Takes an option or text after the command.",
+  "ng_slash_command_sent_as_message": "NextGen sends this to Hermes as a normal message; the command itself doesn't run.",
   "ng_steered": "Steered",
   "ng_copied": "Copied",
   "ng_not_sent": "Not sent: {reason}",

@@ -19,6 +19,7 @@ import '../../core/utils/delivered_files.dart';
 import '../../core/utils/media_tags.dart';
 import '../../core/widgets/markdown_code_block.dart';
 import '../../core/widgets/media_artifact_card.dart';
+import '../../core/widgets/slash_command_highlight.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
 import '../../core/services/attachment_draft_service.dart';
@@ -31,6 +32,7 @@ import 'model_sheet.dart';
 import 'nextgen_scope.dart';
 import 'session_dock.dart';
 import 'sessions_sidebar.dart';
+import 'slash_command_info.dart';
 import 'widgets.dart';
 import '../nextgen_l10n.dart';
 
@@ -72,7 +74,7 @@ class _NgChatViewState extends State<NgChatView> {
     );
   }
 
-  final _input = TextEditingController();
+  final _input = SlashCommandHighlightController();
   final _focus = FocusNode();
   final _scroll = ScrollController();
   Timer? _ticker;
@@ -510,7 +512,12 @@ class _NgChatViewState extends State<NgChatView> {
               if (chat.request != null)
                 _InputPanel(chat: chat, request: chat.request!)
               else
-                _composer(c, state),
+                NgSlashCommandInfo(
+                  chat: chat,
+                  controller: _input,
+                  focusNode: _focus,
+                  child: _composer(c, state),
+                ),
             ],
           ),
         );

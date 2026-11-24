@@ -3804,6 +3804,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias 是 $command 的别名';
+  }
+
+  @override
+  String get slash_command_info_no_description => '暂无说明。';
+
+  @override
+  String get slash_command_info_arguments_options => '接受固定选项中的一个。';
+
+  @override
+  String get slash_command_info_arguments_text => '在命令后接受文本。';
+
+  @override
+  String get slash_command_info_arguments_mixed => '在命令后接受选项或文本。';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -4334,6 +4351,27 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ng_send => '发送';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias 是 $command 的别名';
+  }
+
+  @override
+  String get ng_slash_command_no_description => '暂无说明。';
+
+  @override
+  String get ng_slash_command_arguments_options => '接受固定选项中的一个。';
+
+  @override
+  String get ng_slash_command_arguments_text => '在命令后接受文本。';
+
+  @override
+  String get ng_slash_command_arguments_mixed => '在命令后接受选项或文本。';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'NextGen 会将此作为普通消息发送给 Hermes，不会执行该命令。';
 
   @override
   String get ng_steered => '已调整指示';
@@ -9388,6 +9426,23 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias 是 $command 的别名';
+  }
+
+  @override
+  String get slash_command_info_no_description => '暂无说明。';
+
+  @override
+  String get slash_command_info_arguments_options => '接受固定选项中的一个。';
+
+  @override
+  String get slash_command_info_arguments_text => '在命令后接受文本。';
+
+  @override
+  String get slash_command_info_arguments_mixed => '在命令后接受选项或文本。';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -9918,6 +9973,27 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_send => '发送';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias 是 $command 的别名';
+  }
+
+  @override
+  String get ng_slash_command_no_description => '暂无说明。';
+
+  @override
+  String get ng_slash_command_arguments_options => '接受固定选项中的一个。';
+
+  @override
+  String get ng_slash_command_arguments_text => '在命令后接受文本。';
+
+  @override
+  String get ng_slash_command_arguments_mixed => '在命令后接受选项或文本。';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'NextGen 会将此作为普通消息发送给 Hermes，不会执行该命令。';
 
   @override
   String get ng_steered => '已调整指示';

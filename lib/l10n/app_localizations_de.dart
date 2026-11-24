@@ -3972,6 +3972,27 @@ class AppLocalizationsDe extends AppLocalizations {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias ist ein Alias für $command';
+  }
+
+  @override
+  String get slash_command_info_no_description =>
+      'Keine Beschreibung verfügbar.';
+
+  @override
+  String get slash_command_info_arguments_options =>
+      'Erwartet eine Option aus einer festen Auswahl.';
+
+  @override
+  String get slash_command_info_arguments_text =>
+      'Erwartet Text nach dem Befehl.';
+
+  @override
+  String get slash_command_info_arguments_mixed =>
+      'Erwartet eine Option oder Text nach dem Befehl.';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -4529,6 +4550,30 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ng_send => 'Senden';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias ist ein Alias für $command';
+  }
+
+  @override
+  String get ng_slash_command_no_description => 'Keine Beschreibung verfügbar.';
+
+  @override
+  String get ng_slash_command_arguments_options =>
+      'Erwartet eine Option aus einer festen Auswahl.';
+
+  @override
+  String get ng_slash_command_arguments_text =>
+      'Erwartet Text nach dem Befehl.';
+
+  @override
+  String get ng_slash_command_arguments_mixed =>
+      'Erwartet eine Option oder Text nach dem Befehl.';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'NextGen sendet dies als normale Nachricht an Hermes; der Befehl selbst wird nicht ausgeführt.';
 
   @override
   String get ng_steered => 'Angepasst';

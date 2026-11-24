@@ -3862,6 +3862,23 @@ class AppLocalizationsJa extends AppLocalizations {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias は $command の別名です';
+  }
+
+  @override
+  String get slash_command_info_no_description => '説明はありません。';
+
+  @override
+  String get slash_command_info_arguments_options => '決められた選択肢から1つを指定します。';
+
+  @override
+  String get slash_command_info_arguments_text => 'コマンドの後にテキストを指定します。';
+
+  @override
+  String get slash_command_info_arguments_mixed => 'コマンドの後に選択肢またはテキストを指定します。';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -4403,6 +4420,27 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ng_send => '送信';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias は $command の別名です';
+  }
+
+  @override
+  String get ng_slash_command_no_description => '説明はありません。';
+
+  @override
+  String get ng_slash_command_arguments_options => '決められた選択肢から1つを指定します。';
+
+  @override
+  String get ng_slash_command_arguments_text => 'コマンドの後にテキストを指定します。';
+
+  @override
+  String get ng_slash_command_arguments_mixed => 'コマンドの後に選択肢またはテキストを指定します。';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'NextGen ではこれは通常のメッセージとして Hermes に送信され、コマンド自体は実行されません。';
 
   @override
   String get ng_steered => '指示を反映しました';

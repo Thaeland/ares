@@ -99,6 +99,7 @@ import '../widgets/gateway_sensitive_prompt_dialog.dart';
 import '../widgets/hermes_components.dart';
 import '../widgets/media_artifact_card.dart';
 import '../widgets/slash_command_dropdown.dart';
+import '../widgets/slash_command_highlight.dart';
 import '../widgets/slash_command_notice_card.dart';
 import '../widgets/voice_composer_controls.dart';
 
@@ -798,7 +799,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   bool _appInBackground = false;
 
   // Chat sending state
-  final _textController = TextEditingController();
+  final _textController = SlashCommandHighlightController();
   int _composerRevision = 0;
   int _clearedComposerRevision = 0;
   bool _preparingPaste = false;
@@ -7621,7 +7622,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           const SingleActivator(LogicalKeyboardKey.escape):
               _slashController.close,
         },
-        child: composer,
+        child: ChatComposerSlashInfo(
+          controller: _textController,
+          focusNode: _composerFocus,
+          commands: _slashController,
+          available: _slashCommandsAvailable,
+          dropdownOpen: _slashDropdownVisible,
+          localCommands: _localNewSessionNames,
+          scope: widget.session.id,
+          child: composer,
+        ),
       ),
     );
   }

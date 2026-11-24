@@ -6642,6 +6642,36 @@ abstract class AppLocalizations {
   /// **'No matching commands'**
   String get slash_commands_empty;
 
+  /// No description provided for @slash_command_info_alias.
+  ///
+  /// In en, this message translates to:
+  /// **'{alias} is an alias of {command}'**
+  String slash_command_info_alias(String alias, String command);
+
+  /// No description provided for @slash_command_info_no_description.
+  ///
+  /// In en, this message translates to:
+  /// **'No description available.'**
+  String get slash_command_info_no_description;
+
+  /// No description provided for @slash_command_info_arguments_options.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes one option from a fixed list.'**
+  String get slash_command_info_arguments_options;
+
+  /// No description provided for @slash_command_info_arguments_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes text after the command.'**
+  String get slash_command_info_arguments_text;
+
+  /// No description provided for @slash_command_info_arguments_mixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes an option or text after the command.'**
+  String get slash_command_info_arguments_mixed;
+
   /// No description provided for @slash_command_output.
   ///
   /// In en, this message translates to:
@@ -7559,6 +7589,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Send'**
   String get ng_send;
+
+  /// No description provided for @ng_slash_command_alias.
+  ///
+  /// In en, this message translates to:
+  /// **'{alias} is an alias of {command}'**
+  String ng_slash_command_alias(String alias, String command);
+
+  /// No description provided for @ng_slash_command_no_description.
+  ///
+  /// In en, this message translates to:
+  /// **'No description available.'**
+  String get ng_slash_command_no_description;
+
+  /// No description provided for @ng_slash_command_arguments_options.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes one option from a fixed list.'**
+  String get ng_slash_command_arguments_options;
+
+  /// No description provided for @ng_slash_command_arguments_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes text after the command.'**
+  String get ng_slash_command_arguments_text;
+
+  /// No description provided for @ng_slash_command_arguments_mixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes an option or text after the command.'**
+  String get ng_slash_command_arguments_mixed;
+
+  /// No description provided for @ng_slash_command_sent_as_message.
+  ///
+  /// In en, this message translates to:
+  /// **'NextGen sends this to Hermes as a normal message; the command itself doesn\'t run.'**
+  String get ng_slash_command_sent_as_message;
 
   /// No description provided for @ng_steered.
   ///
