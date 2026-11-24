@@ -715,6 +715,12 @@ class NgChatController extends ChangeNotifier {
         if (!gateway.sessionAuthority) 'inline_images': false,
       });
       _withAuthority(result);
+      // The first canonical attach starts the cursor at the snapshot's
+      // watermark. A later one (a poll, a re-attach after a replay) keeps the
+      // cursor of what was actually applied, so the bridged frames count.
+      if (gateway.sessionAuthority && _cursor == null) {
+        _acceptSnapshot(result);
+      }
       runtimeId = result['session_id']?.toString() ?? runtimeId;
       if (runtimeId != null) gateway.bindRuntime(runtimeId!, id);
       final wasRunning = running;
@@ -1139,10 +1145,31 @@ class NgChatController extends ChangeNotifier {
 
   // ── Catch-up (Kyllene's ChatSession.catchUp) ──────────────────────────
 
-  /// The last live event applied (`seq`), and the gateway process it was
-  /// counted in (`replay_epoch`).
+  /// Legacy (non-authority) gateways number events per gateway process: the
+  /// last live event applied (`seq`) and the `gateway.ready` epoch it was
+  /// counted in.
   int? _lastSeq;
   String? _seqEpoch;
+
+  /// After a legacy reload found no turn running, turn frames held during
+  /// it belong to a turn the transcript already shows: dropped until the
+  /// next turn starts. Legacy frames carry no snapshot watermark to fence on.
+  bool _legacyDropSettledTurn = false;
+
+  /// The canonical session authority numbers each session's events per
+  /// SessionEvents lifetime (`replay_epoch` on its snapshots and frames),
+  /// unrelated to the process epoch in `gateway.ready`: the position of the
+  /// last event applied, or of the snapshot accepted in its place.
+  NgReplayCursor? _cursor;
+
+  /// This session's earlier event streams (a restart, a released stream):
+  /// their late frames are dropped, never read as a new stream.
+  final Set<String> _retiredEpochs = {};
+
+  /// The open reply is missing part of what its turn streamed (attached
+  /// mid-turn, reloaded, or a hole replay could not fill), so the turn's
+  /// final text replaces it instead of being spliced after the hole.
+  bool _replyGap = false;
 
   /// Live events held while a catch-up fills a gap, applied after it.
   List<StreamEvent>? _held;
@@ -1163,6 +1190,31 @@ class NgChatController extends ChangeNotifier {
     return find(frame)?.toString();
   }
 
+  static String? _frameEpoch(StreamEvent event) {
+    final epoch = event.envelope['replay_epoch'];
+    return epoch is String && epoch.isNotEmpty ? epoch : null;
+  }
+
+  /// Takes a canonical snapshot's watermark as the cursor: frames it covers
+  /// are not applied again, and an earlier stream's frames are dropped.
+  void _acceptSnapshot(Map<String, dynamic> snapshot) {
+    final epoch = snapshot['replay_epoch'];
+    final sequence = snapshot['last_sequence'];
+    if (epoch is! String || epoch.isEmpty || sequence is! int) return;
+    if (sequence < 0) return;
+    final next = NgReplayCursor(epoch, sequence);
+    final previous = _cursor;
+    if (previous != null && previous.epoch != epoch) {
+      _retiredEpochs.add(previous.epoch);
+    }
+    _retiredEpochs.remove(epoch);
+    final missed = previous == null
+        ? sequence > 0
+        : previous.epoch != epoch || previous.sequence < sequence;
+    if (snapshot['running'] == true && missed) _replyGap = true;
+    _cursor = next;
+  }
+
   void _onEvent(StreamEvent event) {
     if (_disposed || !_isMine(event)) return;
     _deliver(event);
@@ -1170,11 +1222,23 @@ class NgChatController extends ChangeNotifier {
 
   /// Applies a live event in order: one already applied is skipped, and one
   /// past a gap waits, with those after it, while [_catchUp] fills the gap.
-  void _deliver(StreamEvent event) {
+  /// [draining] marks the held events a finished catch-up lets through.
+  void _deliver(StreamEvent event, {bool draining = false}) {
     final held = _held;
     if (held != null) {
       held.add(event);
       return;
+    }
+    if (gateway.sessionAuthority) {
+      _deliverCanonical(event, draining: draining);
+      return;
+    }
+    if (draining && _legacyDropSettledTurn) {
+      if (event.type == 'message.start') {
+        _legacyDropSettledTurn = false;
+      } else if (_settledTurnFrames.contains(event.type)) {
+        return;
+      }
     }
     final seq = event.seq;
     final last = _lastSeq;
@@ -1191,6 +1255,64 @@ class NgChatController extends ChangeNotifier {
         unawaited(_catchUp());
         return;
       }
+    }
+    _applyEvent(event);
+  }
+
+  static const _settledTurnFrames = {
+    'message.delta',
+    'message.interim',
+    'message.complete',
+    'reasoning.delta',
+    'reasoning.available',
+    'thinking.delta',
+    'tool.start',
+    'tool.generating',
+    'tool.complete',
+    'status.update',
+    'turn.end',
+    'turn.error',
+    'error',
+  };
+
+  void _deliverCanonical(StreamEvent event, {required bool draining}) {
+    if (event.type == 'session.replay_gap') {
+      // The owner retired this socket's subscription (its backlog overflowed)
+      // while the socket stayed up: nothing more arrives live until the chat
+      // replays what it missed and attaches again.
+      _held = [];
+      unawaited(_catchUp(resubscribe: true));
+      return;
+    }
+    final seq = event.seq;
+    final epoch = _frameEpoch(event);
+    final cursor = _cursor;
+    if (seq == null || epoch == null || cursor == null) {
+      _applyEvent(event);
+      return;
+    }
+    if (epoch != cursor.epoch) {
+      // A retired stream's straggler; or, right after a catch-up settled
+      // the current stream, a frame from before what it accepted.
+      if (draining || _retiredEpochs.contains(epoch)) return;
+      _held = [event];
+      unawaited(_catchUp());
+      return;
+    }
+    if (seq <= cursor.sequence) return;
+    if (seq > cursor.sequence + 1) {
+      if (draining) {
+        // Past what the catch-up just settled. Never chase it with another
+        // catch-up straight away (an owner answering with an older
+        // watermark would loop): apply it, and the running reply's final
+        // text fills the hole.
+        if (running) _replyGap = true;
+        _applyEvent(event);
+        return;
+      }
+      _held = [event];
+      unawaited(_catchUp());
+      return;
     }
     _applyEvent(event);
   }
@@ -1215,34 +1337,63 @@ class NgChatController extends ChangeNotifier {
       return;
     }
     _held ??= [];
+    if (gateway.sessionAuthority && _cursor != null) {
+      // Replay first, then attach: the owner bridges whatever it publishes
+      // between the two onto this socket.
+      await _catchUp(resubscribe: true);
+      return;
+    }
     await _attach();
     await _catchUp();
   }
 
   bool _attachedOnce = false;
 
-  /// Replays the events after [_lastSeq] from the gateway's ring
+  /// Replays the events after the cursor from the gateway's ring
   /// (`session.events.since`), then lets held live events through. When the
-  /// ring can't (an older gateway, too long away, a restart) the transcript
-  /// is read again; a turn that ended meanwhile still finishes here, so its
-  /// reply notifies.
-  Future<void> _catchUp({bool foreground = false}) async {
+  /// ring can't (an older gateway, too long away, a restart, a new stream)
+  /// the gateway's state is read again ([_reconcile]); a turn that ended
+  /// meanwhile still finishes here, so its reply notifies. [resubscribe]
+  /// re-attaches after a successful replay, for a retired subscription.
+  Future<void> _catchUp({
+    bool foreground = false,
+    bool resubscribe = false,
+  }) async {
     final rt = runtimeId;
-    final from = _lastSeq;
     List<StreamEvent>? missed;
-    if (rt != null && from != null && _seqEpoch == _readyEpoch()) {
-      try {
-        final reply = await gateway.call('session.events.since', {
-          'session_id': rt,
-          'last_seen': from,
-        });
-        missed = ngParseReplay(reply, rt, from, _seqEpoch);
-        final open = reply['open_requests'];
-        if (open is List && open.isNotEmpty) {
-          gateway.socket?.deliverOpenRequests(open);
+    if (rt != null && gateway.sessionAuthority) {
+      final cursor = _cursor;
+      if (cursor != null) {
+        try {
+          final reply = await gateway.call('session.events.since', {
+            'session_id': rt,
+            'replay_epoch': cursor.epoch,
+            'last_sequence': cursor.sequence,
+          });
+          missed = ngParseCanonicalReplay(
+            reply,
+            rt,
+            cursor.epoch,
+            cursor.sequence,
+          );
+          _deliverOpenRequests(reply['open_requests']);
+        } catch (_) {
+          missed = null; // replay unavailable, or the link went again
         }
-      } catch (_) {
-        missed = null; // older gateway, or the link went again
+      }
+    } else if (rt != null) {
+      final from = _lastSeq;
+      if (from != null && _seqEpoch == _readyEpoch()) {
+        try {
+          final reply = await gateway.call('session.events.since', {
+            'session_id': rt,
+            'last_seen': from,
+          });
+          missed = ngParseReplay(reply, rt, from, _seqEpoch);
+          _deliverOpenRequests(reply['open_requests']);
+        } catch (_) {
+          missed = null; // older gateway, or the link went again
+        }
       }
     }
     if (_disposed) return;
@@ -1250,76 +1401,145 @@ class NgChatController extends ChangeNotifier {
       for (final e in missed) {
         _applyEvent(e);
       }
+      if (resubscribe) await _attach();
     } else {
-      final wasRunning = running;
-      // Back mid-turn with nothing to replay: keep the running reply as it
-      // shows rather than laying the stale copy over a fresh transcript.
-      final keep = foreground && running;
-      if (!keep) await _reloadForCatchUp(wasRunning: wasRunning);
-      _lastSeq = null;
+      await _reconcile(foreground: foreground);
     }
     if (_disposed) return;
     final held = _held ?? const <StreamEvent>[];
     _held = null;
     for (final e in held) {
-      _deliver(e);
+      _deliver(e, draining: true);
     }
+    _legacyDropSettledTurn = false;
     _changed();
   }
 
-  Future<void> _reloadForCatchUp({required bool wasRunning}) async {
+  void _deliverOpenRequests(Object? open) {
+    if (open is List && open.isNotEmpty) {
+      gateway.socket?.deliverOpenRequests(open);
+    }
+  }
+
+  /// Reads the gateway's own state when the missed events can't be
+  /// replayed: whether the turn still runs and what waits on the user
+  /// (`session.resume`), then the transcript — unless, back in sight
+  /// mid-turn, the live reply is kept because the transcript has none of
+  /// what it streamed. Nothing on screen changes until the reads are in; if
+  /// either fails the live view stays and the next resync tries again.
+  /// Nothing is ever sent again from here.
+  Future<void> _reconcile({required bool foreground}) async {
     final id = storedId;
     final rt = runtimeId;
-    if (id == null) return;
+    final canonical = gateway.sessionAuthority;
+    final wasRunning = running;
+    final shownGeneration = _executionGeneration;
+    if (id == null) {
+      _dropCursor(canonical);
+      return;
+    }
+    // The same window as shown, so a long scroll back isn't lost.
+    final limit = max(ngHistoryPage, _rowIds.length).clamp(1, 500);
+    Map<String, dynamic>? snapshot;
+    List<Map<String, dynamic>>? rows;
     try {
-      // Whether the turn still runs, as the gateway has it now.
       if (rt != null) {
-        final result = await gateway.call('session.resume', {
+        snapshot = await gateway.call('session.resume', {
           'session_id': id,
           'source': 'desktop',
           'omit_messages': true,
           'defer_history': true,
           // The canonical resume model forbids inline_images (#291).
-          if (!gateway.sessionAuthority) 'inline_images': false,
+          if (!canonical) 'inline_images': false,
         });
-        _withAuthority(result);
-        runtimeId = result['session_id']?.toString() ?? runtimeId;
-        running = result['running'] == true;
-        // A question asked while the app was away comes back only here.
-        final open = result['open_requests'];
-        if (open is List && open.isNotEmpty) {
-          gateway.socket?.deliverOpenRequests(open);
-          for (final pending in gateway.openRequests.values.toList()) {
-            _onServerRequest(pending);
-          }
+      }
+      if (_disposed) return;
+      final nowRunning = snapshot == null
+          ? running
+          : snapshot['running'] == true;
+      // A canonical owner names its claim: a newer turn running now is not
+      // the reply on screen, so that one is reloaded, never continued.
+      final sameTurn =
+          !canonical ||
+          snapshot == null ||
+          snapshot['execution_generation'] == shownGeneration;
+      if (!(foreground && wasRunning && nowRunning && sameTurn)) {
+        rows = await _fetchRows(id, limit: limit);
+      }
+      if (_disposed) return;
+    } catch (_) {
+      // Nothing was admitted. Live events still come, and whatever this
+      // left out of the running reply is a hole its final text fills.
+      if (_disposed) return;
+      if (running) _replyGap = true;
+      _dropCursor(canonical);
+      return;
+    }
+    if (snapshot != null) {
+      _withAuthority(snapshot);
+      runtimeId = snapshot['session_id']?.toString() ?? runtimeId;
+      running = snapshot['running'] == true;
+      _withInfo(snapshot['info']);
+      if (canonical) {
+        _acceptSnapshot(snapshot);
+      } else {
+        _lastSeq = null;
+      }
+      // A question asked while the app was away comes back only here.
+      final open = snapshot['open_requests'];
+      if (open is List && open.isNotEmpty) {
+        gateway.socket?.deliverOpenRequests(open);
+        for (final pending in gateway.openRequests.values.toList()) {
+          _onServerRequest(pending);
         }
       }
-      // The same window as shown, so a long scroll back isn't lost.
-      final limit = max(ngHistoryPage, _rowIds.length).clamp(1, 500);
-      final messages = await _fetchRows(id, limit: limit);
-      if (_disposed) return;
-      final keepQueued = List.of(queued);
-      _setRows(messages, limit);
-      queued
-        ..clear()
-        ..addAll(keepQueued);
-      if (running) {
-        _openReply();
-      } else if (wasRunning) {
+    } else {
+      _dropCursor(canonical);
+    }
+    if (rows == null) {
+      // Back mid-turn and it still runs: the live reply stays as it shows.
+      // What streamed while away is a hole its final text fills (a canonical
+      // snapshot said whether there was one).
+      if (running && (!canonical || snapshot == null)) _replyGap = true;
+      return;
+    }
+    final keepQueued = List.of(queued);
+    _setRows(rows, limit);
+    queued
+      ..clear()
+      ..addAll(keepQueued);
+    if (running) {
+      _openReply();
+      _replyGap = true;
+    } else {
+      if (!canonical) _legacyDropSettledTurn = true;
+      if (wasRunning) {
         // It ended while the app was away.
         lastTurnFailed = false;
         lastTurnInterrupted = false;
         _finishTurn();
       }
-    } catch (_) {
-      // Live events still come; the next resync tries again.
+    }
+  }
+
+  void _dropCursor(bool canonical) {
+    if (canonical) {
+      _cursor = null;
+    } else {
+      _lastSeq = null;
     }
   }
 
   void _applyEvent(StreamEvent event) {
-    if (event.seq != null) {
-      _lastSeq = event.seq;
-      _seqEpoch = _readyEpoch();
+    final seq = event.seq;
+    if (seq != null) {
+      if (gateway.sessionAuthority) {
+        final epoch = _frameEpoch(event);
+        if (epoch != null) _cursor = NgReplayCursor(epoch, seq);
+      } else {
+        _lastSeq = seq;
+        _seqEpoch = _readyEpoch();
+      }
     }
     final p = event.data;
     _adoptExecutionGeneration(
@@ -1335,6 +1555,7 @@ class NgChatController extends ChangeNotifier {
         // A new turn hasn't planned yet; the last plan is from before.
         todosLive = todosLive && running;
         running = true;
+        _replyGap = false;
         error = null;
         turnStartedAt ??= DateTime.now();
         for (final item in items.whereType<NgUserItem>()) {
@@ -1495,7 +1716,10 @@ class NgChatController extends ChangeNotifier {
       case 'message.complete' || 'turn.end':
         final reply = _openReply();
         final text = s('text');
-        if (reply.text.isEmpty && text != null) reply.text = text;
+        if (text != null &&
+            (reply.text.isEmpty || _replyGap && text.trim().isNotEmpty)) {
+          reply.text = text;
+        }
         final u = NgUsage.parse(p['usage']);
         if (u != null) {
           reply.inputTokens = u.input;
@@ -1696,6 +1920,7 @@ class NgChatController extends ChangeNotifier {
       if (last is NgAssistantItem && last.isEmpty) items.removeLast();
     }
     running = false;
+    _replyGap = false;
     todosLive = false;
     status = null;
     thinkingFrame = null;
@@ -1751,6 +1976,8 @@ class NgChatController extends ChangeNotifier {
           'reasoning_effort': pickedEffort,
     });
     _withAuthority(result);
+    // A canonical create attaches with the same snapshot a resume returns.
+    if (gateway.sessionAuthority && _cursor == null) _acceptSnapshot(result);
     runtimeId = result['session_id']?.toString();
     storedId = result['stored_session_id']?.toString() ?? runtimeId;
     if (runtimeId != null) gateway.bindRuntime(runtimeId!, storedId!);
@@ -2562,6 +2789,64 @@ List<StreamEvent>? ngParseReplay(
   }
   // A syntactically valid prefix is still incomplete when the server says it
   // had later events. Reload rather than silently advancing over missing work.
+  if (cursor != latest) return null;
+  return missed;
+}
+
+/// Where a canonical session's event stream stands for this chat: the
+/// session's own replay epoch and the last sequence applied (or covered by
+/// an accepted snapshot).
+@immutable
+class NgReplayCursor {
+  final String epoch;
+  final int sequence;
+  const NgReplayCursor(this.epoch, this.sequence);
+
+  @override
+  bool operator ==(Object other) =>
+      other is NgReplayCursor &&
+      other.epoch == epoch &&
+      other.sequence == sequence;
+
+  @override
+  int get hashCode => Object.hash(epoch, sequence);
+}
+
+/// The canonical events after [from] in [epoch] for [sessionId], oldest
+/// first, when the owner's `session.events.since` reply proves none is
+/// missing; null when a snapshot is needed instead: `snapshot_required` or
+/// `truncated`, another epoch (a restart or new stream), a frame of another
+/// epoch or session, a hole, or fewer events than `last_sequence` promises.
+List<StreamEvent>? ngParseCanonicalReplay(
+  Map<String, dynamic> reply,
+  String sessionId,
+  String epoch,
+  int from,
+) {
+  if (reply['snapshot_required'] != false || reply['truncated'] != false) {
+    return null;
+  }
+  final replyEpoch = reply['replay_epoch'] ?? reply['epoch'];
+  if (replyEpoch != epoch) return null;
+  final latest = reply['last_sequence'] ?? reply['latest_seq'];
+  final events = reply['events'];
+  if (latest is! int || events is! List || latest < from) return null;
+  var cursor = from;
+  final missed = <StreamEvent>[];
+  for (final raw in events) {
+    if (raw is! Map) return null;
+    final frame = Map<String, dynamic>.from(raw);
+    if (frame['session_id'] != sessionId) return null;
+    if (frame['replay_epoch'] != epoch) return null;
+    final seq = frame['seq'];
+    if (seq is! int) return null;
+    if (seq <= cursor) continue;
+    if (seq != cursor + 1) return null;
+    cursor = seq;
+    final event = WsClient.parseGatewayEvent(frame);
+    if (event == null) return null;
+    missed.add(event);
+  }
   if (cursor != latest) return null;
   return missed;
 }
