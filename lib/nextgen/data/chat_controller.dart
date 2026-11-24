@@ -2013,6 +2013,8 @@ class NgChatController extends ChangeNotifier {
         'text': prompt,
       }, submissionId: effectiveSubmissionId);
       item.pending = false;
+      // A canonical receipt names the execution its admission started.
+      _adoptExecutionGeneration(result['execution_generation']);
       final status = result['status']?.toString();
       if (status == 'queued') item.text = trimmed;
       _changed();
@@ -2030,10 +2032,17 @@ class NgChatController extends ChangeNotifier {
     }
   }
 
-  /// Steers the running turn at its next safe boundary.
+  /// Steers the running turn at its next safe boundary. On the canonical
+  /// session authority the guidance names the exact execution the user saw
+  /// ([_executionGeneration] now); a turn that changed meanwhile refuses it
+  /// (`stale_generation`). Never sent again: it has no idempotency key, and
+  /// a newer turn must not get guidance meant for another.
   Future<void> steer(String text) async {
     final trimmed = text.trim();
-    if (trimmed.isEmpty || runtimeId == null) return;
+    final id = runtimeId;
+    if (trimmed.isEmpty || id == null) return;
+    final canonical = gateway.sessionAuthority;
+    final generation = _executionGeneration;
     final item = NgUserItem(
       _key('u'),
       trimmed,
@@ -2043,18 +2052,36 @@ class NgChatController extends ChangeNotifier {
     );
     items.add(item);
     _changed();
+    if (canonical && generation == null) {
+      item.pending = false;
+      item.failure = ngL.ng_turn_not_known_yet;
+      _changed();
+      return;
+    }
     try {
-      await gateway.call('session.steer', {
-        'session_id': runtimeId,
+      final ack = await gateway.call('session.steer', {
+        'session_id': id,
+        if (canonical) 'execution_generation': generation,
         'text': trimmed,
       });
       item.pending = false;
+      // Only `queued` is delivery; `rejected` (or anything unknown) is not,
+      // and is not sent again either.
+      if (ack['status'] != 'queued' && ack['voice_stopped'] != true) {
+        item.failure = ngL.ng_steer_rejected;
+      }
     } catch (e) {
       item.pending = false;
-      item.failure = _clean(e);
+      item.failure = _controlFailure(e);
     }
     _changed();
   }
+
+  /// A refused Stop/Steer, as the person reads it.
+  static String _controlFailure(Object e) =>
+      e is JsonRpcError && e.reason == 'stale_generation'
+      ? ngL.ng_turn_changed
+      : _clean(e);
 
   /// Queues [text] to send once the running turn ends.
   void enqueue(String text) {
@@ -2069,14 +2096,27 @@ class NgChatController extends ChangeNotifier {
     _changed();
   }
 
-  /// Stops the running turn.
+  /// Stops the running turn. On the canonical session authority the stop
+  /// names the exact execution the user saw ([_executionGeneration] now): a
+  /// later claim is never stopped by it, and `stale_generation` is reported,
+  /// not retried against the newer turn. Legacy gateways get their own shape.
   Future<void> stop() async {
     final id = runtimeId;
     if (id == null) return;
+    final canonical = gateway.sessionAuthority;
+    final generation = _executionGeneration;
+    if (canonical && generation == null) {
+      error = ngL.ng_couldn_t_stop(ngL.ng_turn_not_known_yet);
+      _changed();
+      return;
+    }
     try {
-      await gateway.call('session.interrupt', {'session_id': id});
+      await gateway.call('session.interrupt', {
+        'session_id': id,
+        if (canonical) 'execution_generation': generation,
+      });
     } catch (e) {
-      error = ngL.ng_couldn_t_stop(_clean(e));
+      error = ngL.ng_couldn_t_stop(_controlFailure(e));
       _changed();
     }
   }

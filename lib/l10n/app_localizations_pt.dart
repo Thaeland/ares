@@ -4075,6 +4075,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ng_the_turn_failed => 'A execução falhou.';
 
   @override
+  String get ng_turn_changed =>
+      'essa execução já terminou ou começou uma mais recente';
+
+  @override
+  String get ng_steer_rejected => 'a execução em curso não o aceitou';
+
+  @override
+  String get ng_turn_not_known_yet =>
+      'a execução em curso ainda não é conhecida; tente novamente daqui a pouco';
+
+  @override
   String ng_couldn_t_stop(Object error) {
     return 'Não foi possível parar: $error';
   }
@@ -9911,6 +9922,17 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get ng_the_turn_failed => 'A resposta falhou.';
+
+  @override
+  String get ng_turn_changed =>
+      'essa resposta já terminou ou uma mais recente começou';
+
+  @override
+  String get ng_steer_rejected => 'a resposta em andamento não aceitou';
+
+  @override
+  String get ng_turn_not_known_yet =>
+      'a resposta em andamento ainda não é conhecida; tente de novo em instantes';
 
   @override
   String ng_couldn_t_stop(Object error) {

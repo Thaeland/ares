@@ -3972,6 +3972,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_the_turn_failed => '응답 생성에 실패했습니다.';
 
   @override
+  String get ng_turn_changed => '해당 응답이 이미 끝났거나 새 응답이 시작되었습니다';
+
+  @override
+  String get ng_steer_rejected => '진행 중인 응답이 받아들이지 않았습니다';
+
+  @override
+  String get ng_turn_not_known_yet => '진행 중인 응답을 아직 확인할 수 없습니다. 잠시 후 다시 시도하세요';
+
+  @override
   String ng_couldn_t_stop(Object error) {
     return '중지하지 못했습니다: $error';
   }
