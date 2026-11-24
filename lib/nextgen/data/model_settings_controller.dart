@@ -42,7 +42,7 @@ class NgModelSettingsController extends ChangeNotifier {
   bool mainLoading = true;
   bool mainFailed = false;
   bool _routeVerified = false;
-  bool _endpointRoute = false;
+  bool _endpointOnlyHere = false;
 
   // Providers and their models.
   NgModelCatalog? catalog;
@@ -69,10 +69,13 @@ class NgModelSettingsController extends ChangeNotifier {
   /// The default model's route was read and matches what `model/info` names.
   bool get routeVerified => _routeVerified;
 
-  /// The default model runs on an endpoint set up on the gateway, or its
-  /// route could not be confirmed. Either way it is not changed from here.
-  bool get customRoute =>
-      !_routeVerified || _endpointRoute || (main?.customEndpoint ?? true);
+  /// The default model's endpoint address could be lost by assigning another
+  /// model (see [DashboardClient.getMainModelEndpointOwnership]), or its
+  /// route could not be confirmed, so it is not changed from here. A default
+  /// on a named endpoint at its own address, on a provider's reviewed
+  /// standard address or on a provider plugin's own address can be changed:
+  /// the gateway restores those when the provider is chosen again.
+  bool get endpointOnlyHere => !_routeVerified || _endpointOnlyHere;
 
   bool get canChangeMain =>
       !_disposed &&
@@ -81,7 +84,7 @@ class NgModelSettingsController extends ChangeNotifier {
       !mainFailed &&
       main != null &&
       catalog != null &&
-      !customRoute;
+      !endpointOnlyHere;
 
   bool get canEditFallbacks =>
       !_disposed &&
@@ -104,8 +107,10 @@ class NgModelSettingsController extends ChangeNotifier {
     return false;
   }
 
-  /// A fallback the app cannot rebuild: it carries routing details, or names
-  /// a provider that is not in the list models are assigned from.
+  /// A fallback whose model cannot be changed here: it carries routing
+  /// details the app must not move to another model, or names a provider
+  /// that is not in the list models are assigned from. It can still be
+  /// moved or removed.
   bool fallbackLocked(FallbackEntry entry) =>
       entry.hasMetadata ||
       (catalog != null &&
@@ -212,8 +217,8 @@ class NgModelSettingsController extends ChangeNotifier {
   // none. Only the route the gateway reports for this profile can.
   Future<_Route?> _readRoute() async {
     try {
-      final route = await _client.getMainModelRoute();
-      return _Route(route.provider, route.model, route.hasEndpoint);
+      final route = await _client.getMainModelEndpointOwnership();
+      return _Route(route.provider, route.model, route.endpointOnlyHere);
     } catch (_) {
       return null;
     }
@@ -224,7 +229,7 @@ class NgModelSettingsController extends ChangeNotifier {
         route != null &&
         route.provider == main?.provider &&
         route.model == main?.model;
-    _endpointRoute = route?.hasEndpoint ?? false;
+    _endpointOnlyHere = route?.endpointOnlyHere ?? false;
   }
 
   /// Makes [model] the profile's default. Pass [confirmed] only after the
@@ -259,7 +264,11 @@ class NgModelSettingsController extends ChangeNotifier {
       if (info.provider != provider || info.model != model) {
         return const NgModelSaveFailed();
       }
-      return customRoute ? const NgModelSaveFailed() : const NgModelSaved();
+      // A route that cannot be confirmed after the write, or an address the
+      // gateway left behind from the old model, is not a clean save.
+      return endpointOnlyHere
+          ? const NgModelSaveFailed()
+          : const NgModelSaved();
     });
   }
 
@@ -316,7 +325,7 @@ class NgModelSettingsController extends ChangeNotifier {
         current.model == model;
     if (!canEditAux ||
         current == null ||
-        // Assigning over an endpoint would drop it on the gateway.
+        // The gateway drops a task's own endpoint when it is reassigned.
         current.endpoint ||
         (!auto &&
             !unchangedRoute &&
@@ -374,6 +383,31 @@ class NgModelSettingsController extends ChangeNotifier {
       ...fallbackDraft,
       FallbackEntry({'provider': provider, 'model': model}),
     ];
+    _notify();
+    return true;
+  }
+
+  /// Gives the fallback at [index] another model. Nothing is sent until
+  /// [saveFallbacks]. A row that carries routing details is left alone: its
+  /// address and key belong to the model it has.
+  bool replaceFallback(int index, String provider, String model) {
+    if (!canEditFallbacks ||
+        index < 0 ||
+        index >= fallbackDraft.length ||
+        fallbackLocked(fallbackDraft[index]) ||
+        !(catalog?.canAssign(provider, model) ?? false)) {
+      return false;
+    }
+    for (var i = 0; i < fallbackDraft.length; i++) {
+      final other = fallbackDraft[i];
+      if (i != index && other.provider == provider && other.model == model) {
+        return false;
+      }
+    }
+    final current = fallbackDraft[index];
+    if (current.provider == provider && current.model == model) return false;
+    fallbackDraft = [...fallbackDraft]
+      ..[index] = FallbackEntry({'provider': provider, 'model': model});
     _notify();
     return true;
   }
@@ -448,10 +482,10 @@ class NgModelSettingsController extends ChangeNotifier {
 }
 
 class _Route {
-  const _Route(this.provider, this.model, this.hasEndpoint);
+  const _Route(this.provider, this.model, this.endpointOnlyHere);
   final String provider;
   final String model;
-  final bool hasEndpoint;
+  final bool endpointOnlyHere;
 }
 
 bool _sameJson(Object? a, Object? b) {

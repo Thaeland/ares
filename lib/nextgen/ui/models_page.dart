@@ -213,6 +213,37 @@ class _NgModelsPageState extends State<NgModelsPage> {
     }
   }
 
+  Future<void> _changeFallback(int index) async {
+    final c = _c;
+    final catalog = c.catalog;
+    if (catalog == null ||
+        !c.canEditFallbacks ||
+        index >= c.fallbackDraft.length) {
+      return;
+    }
+    final entry = c.fallbackDraft[index];
+    if (c.fallbackLocked(entry)) return;
+    final pick = await showNgModelChoice(
+      context,
+      catalog: catalog,
+      title: ngL.fallback_title,
+      selectedProvider: entry.provider,
+      selectedModel: entry.model,
+      taken: {
+        for (final e in c.fallbackDraft)
+          if (!identical(e, entry)) '${e.provider}/${e.model}',
+      },
+    );
+    // The list may have changed while the sheet was open; only the row that
+    // was tapped is replaced.
+    if (pick is NgPickModel &&
+        identical(c, _c) &&
+        index < c.fallbackDraft.length &&
+        identical(c.fallbackDraft[index], entry)) {
+      c.replaceFallback(index, pick.provider, pick.model);
+    }
+  }
+
   Future<void> _saveFallbacks() async {
     final c = _c;
     final result = await c.saveFallbacks();
@@ -359,7 +390,7 @@ class _NgModelsPageState extends State<NgModelsPage> {
     ];
     // Shown while a change is possible in principle, so the button does not
     // come and go while something else is being saved.
-    final changeable = _c.routeVerified && !_c.customRoute && catalog != null;
+    final changeable = !_c.endpointOnlyHere && catalog != null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -409,7 +440,7 @@ class _NgModelsPageState extends State<NgModelsPage> {
         ],
         if (!_c.routeVerified)
           _Note(ngL.model_management_unavailable)
-        else if (_c.customRoute)
+        else if (_c.endpointOnlyHere)
           _Note(ngL.ng_models_custom_endpoint)
         else if (catalog == null && _c.catalogFailed)
           _Note(ngL.fallback_discovery_unavailable),
@@ -456,6 +487,10 @@ class _NgModelsPageState extends State<NgModelsPage> {
                   entry: rows[i],
                   detail: _routeDetail(rows[i].provider, rows[i].model),
                   locked: _c.fallbackLocked(rows[i]),
+                  onChange:
+                      edit && _c.catalog != null && !_c.fallbackLocked(rows[i])
+                      ? () => _changeFallback(i)
+                      : null,
                   onUp: edit && i > 0 ? () => _c.moveFallback(i, -1) : null,
                   onDown: edit && i < rows.length - 1
                       ? () => _c.moveFallback(i, 1)
@@ -865,6 +900,7 @@ class _FallbackRow extends StatelessWidget {
     required this.entry,
     required this.detail,
     required this.locked,
+    required this.onChange,
     required this.onUp,
     required this.onDown,
     required this.onRemove,
@@ -874,6 +910,9 @@ class _FallbackRow extends StatelessWidget {
   final FallbackEntry entry;
   final String detail;
   final bool locked;
+
+  /// Chooses another model for this row; null when it cannot be changed.
+  final VoidCallback? onChange;
   final VoidCallback? onUp;
   final VoidCallback? onDown;
   final VoidCallback? onRemove;
@@ -905,7 +944,35 @@ class _FallbackRow extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: _RouteText(model: entry.model, detail: detail),
+                child: onChange == null
+                    ? _RouteText(model: entry.model, detail: detail)
+                    : Tooltip(
+                        message: ngL.ng_models_change,
+                        child: InkWell(
+                          key: ValueKey('ng-fallback-change-$index'),
+                          onTap: onChange,
+                          borderRadius: BorderRadius.circular(NgRadii.md),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: _RouteText(
+                                    model: entry.model,
+                                    detail: detail,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.edit_outlined,
+                                  size: 16,
+                                  color: c.text3,
+                                ),
+                                const SizedBox(width: 4),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
               ),
               button('up', Icons.arrow_upward, ngL.fallback_move_up, onUp),
               button(
