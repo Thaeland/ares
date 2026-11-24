@@ -21,6 +21,26 @@ Publication correction: tag v4.0.6 has no published APK assets; its release
 workflow failed the identity gate because the tag preceded the version bump.
 The paging change it names (#284) first ships in the published 4.0.7 APKs.
 
+## [4.0.12] - 2026-11-25
+
+Stable release `4.0.12+3068`, with release APK codes `30681`, `30682` and
+`30683`. Each split exceeds the published 4.0.11 stable splits (`30673`).
+Installs over the existing app.
+
+### Added
+
+- **A Models page in NextGen (#347).** NextGen's model settings are now one
+  page, opened from Settings, More and the top of a chat's model picker. It
+  shows the default model with what the gateway reports about it (context
+  window, maximum output, prices, and whether it supports tools, vision,
+  reasoning and fast mode), the ordered fallback list, every helper task with
+  the model and thinking level it uses, and each provider with its model count,
+  allowance and rate limits. A change counts as saved only after it has been
+  read back from the gateway, one change runs at a time, and a model the
+  gateway warns is expensive is assigned only after you agree. Anything the
+  gateway does not report is left out rather than guessed. The classic model
+  screen is unchanged. See [model management](docs/model-management.md).
+
 ## [4.0.11] - 2026-11-24
 
 Stable release `4.0.11+3067`, with release APK codes `30671`, `30672` and
