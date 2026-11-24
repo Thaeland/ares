@@ -4297,6 +4297,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_retry => '重试';
 
   @override
+  String get ng_project_home => '主页';
+
+  @override
+  String get ng_choose_project => '选择项目';
+
+  @override
+  String ng_project_cwd_fallback(String path) {
+    return '项目文件夹不可用，因此此聊天在 $path 中运行。';
+  }
+
+  @override
+  String get ng_project_create_uncertain =>
+      '网关可能已创建此聊天，但未确认。开始新聊天前请检查聊天列表；此请求不会自动重试。';
+
+  @override
   String get ng_what_should_we_work_on => '我们要做些什么？';
 
   @override
@@ -9879,6 +9894,21 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_retry => '重试';
+
+  @override
+  String get ng_project_home => '主页';
+
+  @override
+  String get ng_choose_project => '选择项目';
+
+  @override
+  String ng_project_cwd_fallback(String path) {
+    return '项目文件夹不可用，因此此聊天在 $path 中运行。';
+  }
+
+  @override
+  String get ng_project_create_uncertain =>
+      '网关可能已创建此聊天，但未确认。开始新聊天前请检查聊天列表；此请求不会自动重试。';
 
   @override
   String get ng_what_should_we_work_on => '我们要做些什么？';

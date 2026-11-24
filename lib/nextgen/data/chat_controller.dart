@@ -509,11 +509,14 @@ class NgChatController extends ChangeNotifier {
     this.gateway, {
     String? sessionId,
     this.title = '',
-    this.workingDirectory,
+    String? workingDirectory,
     this.onCreated,
     this.onTurnFinished,
     AttachmentDraftService? attachmentService,
-  }) : storedId = sessionId,
+    // Keep the public named argument while the mutable field stays private.
+    // ignore: prefer_initializing_formals
+  }) : _workingDirectory = workingDirectory,
+       storedId = sessionId,
        attachmentService = attachmentService ?? AttachmentDraftService() {
     _subs.add(gateway.events.listen(_onEvent));
     _subs.add(gateway.serverRequests.listen(_onServerRequest));
@@ -521,7 +524,29 @@ class NgChatController extends ChangeNotifier {
   }
 
   final NextGenGateway gateway;
-  final String? workingDirectory;
+  String? _workingDirectory;
+  String? get workingDirectory => _workingDirectory;
+  bool _creatingSession = false;
+  bool _createUncertain = false;
+
+  /// A deliberate folder pick is local until the first session is created.
+  /// Acquire creation authority before its first await; never change a cwd
+  /// while create is in flight or after an ambiguous acknowledgement.
+  bool get canPickProject =>
+      !_disposed &&
+      !_creatingSession &&
+      !_createUncertain &&
+      runtimeId == null &&
+      storedId == null &&
+      items.isEmpty &&
+      !running;
+
+  bool startIn(String? folder) {
+    if (!canPickProject) return false;
+    _workingDirectory = folder?.trim().isNotEmpty == true ? folder : null;
+    _changed();
+    return true;
+  }
 
   /// Prepares and caches composer attachments (shared with classic chat).
   final AttachmentDraftService attachmentService;
@@ -1730,44 +1755,97 @@ class NgChatController extends ChangeNotifier {
   // ── Actions ─────────────────────────────────────────────────────────
 
   Future<void> _ensureSession() async {
+    if (_disposed) {
+      throw StateError(ngL.ng_the_gateway_connection_dropped_try_again);
+    }
     if (runtimeId != null && storedId != null) return;
-    await gateway.connected();
-    final pickedModel = _pickedModel;
-    final pickedProvider = _pickedProvider;
-    final pickedEffort = _pickedEffort;
-    final result = await gateway.call('session.create', {
-      // CanonicalCreateParams.source refuses the legacy 'desktop' hint on
-      // the authority route; 'gui' is the canonical graphical surface (#291).
-      'source': gateway.sessionAuthority ? 'gui' : 'desktop',
-      if (workingDirectory != null && workingDirectory!.trim().isNotEmpty)
-        'cwd': workingDirectory,
-      'model': ?pickedModel,
-      if (pickedProvider != null && pickedProvider.trim().isNotEmpty)
-        'provider': pickedProvider,
-      if (pickedEffort != null)
-        if (gateway.sessionAuthority)
-          'reasoning': pickedEffort
-        else
-          'reasoning_effort': pickedEffort,
-    });
-    _withAuthority(result);
-    runtimeId = result['session_id']?.toString();
-    storedId = result['stored_session_id']?.toString() ?? runtimeId;
-    if (runtimeId != null) gateway.bindRuntime(runtimeId!, storedId!);
-    _withInfo(result['info']);
-    if (storedId != null) onCreated?.call(storedId!);
-    _pickedModel = null;
-    _pickedProvider = null;
-    _pickedEffort = null;
-    if (pickedModel != null) {
-      final info = result['info'];
-      final actualModel = info is Map ? info['model']?.toString() : null;
-      if (actualModel != null && actualModel != pickedModel) {
-        final message = ngL.ng_gateway_kept_default_model(actualModel);
-        error = message;
-        _changed();
-        throw StateError(message);
+    if (_createUncertain) throw StateError(ngL.ng_project_create_uncertain);
+    if (_creatingSession) {
+      throw StateError(ngL.ng_connecting);
+    }
+    _creatingSession = true;
+    _changed();
+    try {
+      await gateway.connected();
+      if (_disposed) {
+        throw StateError(ngL.ng_the_gateway_connection_dropped_try_again);
       }
+      final cwd = workingDirectory;
+      final pickedModel = _pickedModel;
+      final pickedProvider = _pickedProvider;
+      final pickedEffort = _pickedEffort;
+      late final Map<String, dynamic> result;
+      try {
+        result = await gateway.call('session.create', {
+          // CanonicalCreateParams.source refuses the legacy 'desktop' hint on
+          // the authority route; 'gui' is the canonical graphical surface (#291).
+          'source': gateway.sessionAuthority ? 'gui' : 'desktop',
+          if (cwd != null && cwd.trim().isNotEmpty) ...{
+            'cwd': cwd,
+            // Current legacy + canonical contracts declare this. Older closed
+            // validators reject before the handler: fail visibly, NEVER retry
+            // without provenance and silently run in a named profile's default.
+            'cwd_explicit': true,
+          },
+          'model': ?pickedModel,
+          if (pickedProvider != null && pickedProvider.trim().isNotEmpty)
+            'provider': pickedProvider,
+          if (pickedEffort != null)
+            if (gateway.sessionAuthority)
+              'reasoning': pickedEffort
+            else
+              'reasoning_effort': pickedEffort,
+        });
+      } on JsonRpcError catch (error) {
+        // Only pre-handler validation/method refusals prove no create ran.
+        // An internal RPC error may have happened after a session was minted.
+        if (!{-32601, -32602, 4000}.contains(error.code)) {
+          _createUncertain = true;
+        }
+        rethrow;
+      } catch (_) {
+        _createUncertain = true; // A timeout/disconnect may have created it.
+        rethrow;
+      }
+      // A scope switch can dispose this owner while the gateway creates it.
+      // Do not publish IDs, call its parent, or submit a prompt after that.
+      if (_disposed) {
+        throw StateError(ngL.ng_the_gateway_connection_dropped_try_again);
+      }
+      _withAuthority(result);
+      runtimeId = result['session_id']?.toString();
+      storedId = result['stored_session_id']?.toString() ?? runtimeId;
+      if (runtimeId == null || storedId == null) {
+        _createUncertain = true;
+        throw StateError(ngL.ng_project_create_uncertain);
+      }
+      final info = result['info'];
+      final actualCwd = info is Map ? info['cwd']?.toString() : null;
+      if (cwd != null &&
+          actualCwd != null &&
+          cwd.replaceFirst(RegExp(r'[/\\]+$'), '') !=
+              actualCwd.replaceFirst(RegExp(r'[/\\]+$'), '')) {
+        error = ngL.ng_project_cwd_fallback(actualCwd);
+      }
+      if (runtimeId != null) gateway.bindRuntime(runtimeId!, storedId!);
+      _withInfo(result['info']);
+      if (storedId != null) onCreated?.call(storedId!);
+      _pickedModel = null;
+      _pickedProvider = null;
+      _pickedEffort = null;
+      if (pickedModel != null) {
+        final info = result['info'];
+        final actualModel = info is Map ? info['model']?.toString() : null;
+        if (actualModel != null && actualModel != pickedModel) {
+          final message = ngL.ng_gateway_kept_default_model(actualModel);
+          error = message;
+          _changed();
+          throw StateError(message);
+        }
+      }
+    } finally {
+      _creatingSession = false;
+      _changed();
     }
   }
 

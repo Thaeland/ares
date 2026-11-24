@@ -4488,6 +4488,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_retry => 'Reintentar';
 
   @override
+  String get ng_project_home => 'Inicio';
+
+  @override
+  String get ng_choose_project => 'Elegir un proyecto';
+
+  @override
+  String ng_project_cwd_fallback(String path) {
+    return 'La carpeta del proyecto no estaba disponible, así que este chat se ejecuta en $path.';
+  }
+
+  @override
+  String get ng_project_create_uncertain =>
+      'Es posible que la pasarela haya creado este chat, pero no lo confirmó. Revisa los chats antes de iniciar otro; esta solicitud no se reintentará automáticamente.';
+
+  @override
   String get ng_what_should_we_work_on => '¿En qué trabajamos?';
 
   @override

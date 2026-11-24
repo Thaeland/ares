@@ -4366,6 +4366,21 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_retry => '다시 시도';
 
   @override
+  String get ng_project_home => '홈';
+
+  @override
+  String get ng_choose_project => '프로젝트 선택';
+
+  @override
+  String ng_project_cwd_fallback(String path) {
+    return '프로젝트 폴더를 사용할 수 없어 이 채팅은 $path에서 실행됩니다.';
+  }
+
+  @override
+  String get ng_project_create_uncertain =>
+      '게이트웨이가 채팅을 만들었을 수 있지만 확인하지 못했습니다. 새 채팅을 시작하기 전에 채팅 목록을 확인하세요. 이 요청은 자동으로 재시도되지 않습니다.';
+
+  @override
   String get ng_what_should_we_work_on => '무엇을 해볼까요?';
 
   @override

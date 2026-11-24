@@ -1,10 +1,7 @@
 // Classic's server-owned Projects browser on the selected NextGen connection.
 // Keep its nested navigation and repository in one gateway-owned subtree: a
 // changed connection/profile discards both drill-in routes and pending reads.
-import 'dart:async';
-import 'dart:convert';
 
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,13 +9,7 @@ import '../../core/l10n/l10n.dart';
 import '../../core/models/hermes_project.dart';
 import '../../core/models/session.dart';
 import '../../core/services/project_folder_discovery.dart';
-import '../../core/services/project_folder_provisioner.dart';
-import '../../core/services/projects_gateway_client.dart';
 import '../../core/services/projects_repository.dart';
-import '../../core/services/projects_root_preference.dart';
-import '../../core/services/projects_root_resolver.dart';
-import '../../core/services/remote_files_client.dart';
-import '../../core/services/ws_client.dart';
 import '../../core/widgets/project_detail_screen.dart';
 import '../../core/widgets/projects_pane.dart';
 import '../data/nextgen_gateway.dart';
@@ -79,75 +70,9 @@ class _ProjectsBrowserState extends State<_ProjectsBrowser> {
   @override
   void initState() {
     super.initState();
-    final gateway = widget.gateway;
-    final connection = gateway.connection;
-    final roots = ProjectsRootPreference(widget.preferences);
-    String? readConfiguredRoot() => roots.read(
-      connectionIdentity: ProjectsRootPreference.identityOf(connection),
-    );
-    // Never reuse another profile's disk snapshot, even when a saved
-    // connection is edited in place. Only the digest is written to prefs.
-    final cacheScope = sha256.convert(
-      utf8.encode(
-        jsonEncode([
-          connection.toMap(),
-          connection.apiKey,
-          connection.dashboardPassword,
-          connection.clientCertificate?.privateKeyPassword,
-        ]),
-      ),
-    );
-    _repository = ProjectsRepository(
-      client: ProjectsGatewayClient(_call),
-      preferences: widget.preferences,
-      connectionId: 'nextgen_$cacheScope',
-      folderProvisioner: DashboardFolderProvisioner(
-        gateway.dashboard,
-        readConfiguredRoot: readConfiguredRoot,
-      ),
-    );
-    // These collaborators borrow the selected gateway's authenticated client;
-    // do not close it when leaving Projects or allocate another chat socket.
-    final files = RemoteFilesClient(
-      dashboard: gateway.dashboard,
-      profile: gateway.profile,
-    );
-    _folderDiscovery = DashboardProjectFolderDiscovery(
-      listDirectory: files.listDirectory,
-      roots: ProjectsRootResolver(
-        dashboard: gateway.dashboard,
-        readConfiguredRoot: readConfiguredRoot,
-      ),
-    );
-  }
-
-  /// ProjectsGatewayClient consumes envelopes; NextGenGateway returns results
-  /// and throws typed RPC errors. Preserve codes so old hosts keep Classic's
-  /// compatibility state rather than appearing empty or as a network failure.
-  Future<Map<String, dynamic>> _call(
-    String method,
-    Map<String, dynamic> params,
-  ) async {
-    if (!_isCurrent) throw StateError('Projects scope is no longer selected');
-    await widget.gateway.connected();
-    if (!_isCurrent) throw StateError('Projects scope is no longer selected');
-    try {
-      return {'result': await widget.gateway.call(method, params)};
-    } on JsonRpcError catch (error) {
-      return {
-        'error': {
-          'code': error.code,
-          'message': error.message,
-          'data': error.data,
-        },
-      };
-    }
-  }
-
-  @override
-  void dispose() {
-    unawaited(_repository.close());
-    super.dispose();
+    final projects = widget.gateway.projects(widget.preferences);
+    _repository = projects.repository;
+    _folderDiscovery = projects.folderDiscovery;
   }
 
   void _openSession(Session session) {

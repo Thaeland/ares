@@ -22,14 +22,23 @@ import 'sessions_sidebar.dart';
 import 'settings_page.dart';
 import '../nextgen_l10n.dart';
 
-class NgMainPage extends StatefulWidget {
+class NgMainPage extends StatelessWidget {
   const NgMainPage({super.key});
 
   @override
-  State<NgMainPage> createState() => _NgMainPageState();
+  Widget build(BuildContext context) =>
+      _NgMainContent(key: ObjectKey(NgScope.of(context).gateway));
 }
 
-class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
+class _NgMainContent extends StatefulWidget {
+  const _NgMainContent({super.key});
+
+  @override
+  State<_NgMainContent> createState() => _NgMainPageState();
+}
+
+class _NgMainPageState extends State<_NgMainContent>
+    with WidgetsBindingObserver {
   final _scaffold = GlobalKey<ScaffoldState>();
   NgSessionsModel? _sessions;
   NgChatController? _chat;

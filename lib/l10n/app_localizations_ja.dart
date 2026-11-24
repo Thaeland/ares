@@ -4366,6 +4366,21 @@ class AppLocalizationsJa extends AppLocalizations {
   String get ng_retry => '再試行';
 
   @override
+  String get ng_project_home => 'ホーム';
+
+  @override
+  String get ng_choose_project => 'プロジェクトを選択';
+
+  @override
+  String ng_project_cwd_fallback(String path) {
+    return 'プロジェクトフォルダーを利用できなかったため、このチャットは $path で実行されます。';
+  }
+
+  @override
+  String get ng_project_create_uncertain =>
+      'ゲートウェイがチャットを作成した可能性がありますが、確認できませんでした。別のチャットを開始する前にチャット一覧を確認してください。このリクエストは自動的に再試行されません。';
+
+  @override
   String get ng_what_should_we_work_on => '何に取り組みますか？';
 
   @override

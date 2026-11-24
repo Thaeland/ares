@@ -4480,6 +4480,21 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_retry => 'Повторити';
 
   @override
+  String get ng_project_home => 'Головна';
+
+  @override
+  String get ng_choose_project => 'Вибрати проєкт';
+
+  @override
+  String ng_project_cwd_fallback(String path) {
+    return 'Папка проєкту недоступна, тому цей чат працює в $path.';
+  }
+
+  @override
+  String get ng_project_create_uncertain =>
+      'Шлюз міг створити цей чат, але не підтвердив це. Перевірте список чатів, перш ніж починати новий. Запит не буде повторено автоматично.';
+
+  @override
   String get ng_what_should_we_work_on => 'Над чим попрацюємо?';
 
   @override

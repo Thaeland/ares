@@ -10,8 +10,10 @@ import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:hermes_android/core/widgets/project_detail_screen.dart';
 import 'package:hermes_android/core/widgets/projects_pane.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
+import 'package:hermes_android/nextgen/data/chat_controller.dart';
 import 'package:hermes_android/nextgen/data/nextgen_gateway.dart';
 import 'package:hermes_android/nextgen/nextgen_preferences.dart';
+import 'package:hermes_android/nextgen/nextgen_l10n.dart';
 import 'package:hermes_android/nextgen/theme/nextgen_theme.dart';
 import 'package:hermes_android/nextgen/ui/chat_view.dart';
 import 'package:hermes_android/nextgen/ui/main_page.dart';
@@ -58,12 +60,23 @@ class _Gateway extends NextGenGateway {
         ),
       );
 
+  @override
+  NgConnectionState get state =>
+      const NgConnectionState(NgConnectionPhase.connected);
+
   final calls = <({String method, Map<String, dynamic> params})>[];
   final dummy = WsClient('https://gateway.example/hermes');
   Completer<void>? listGate;
   Completer<void>? treeGate;
   Completer<void>? detailGate;
   bool folderless = false;
+  bool empty = false;
+  bool includeFolderless = false;
+  Completer<void>? createGate;
+  Completer<void>? connectionGate;
+  Object? createError;
+  String? actualCwd;
+  final created = Completer<void>();
   bool unsupported = false;
   int count = 2;
 
@@ -78,7 +91,10 @@ class _Gateway extends NextGenGateway {
   @override
   Future<WsClient> connected({
     Duration timeout = const Duration(seconds: 20),
-  }) async => dummy;
+  }) async {
+    await connectionGate?.future;
+    return dummy;
+  }
 
   @override
   Future<Map<String, dynamic>> call(
@@ -94,7 +110,16 @@ class _Gateway extends NextGenGateway {
           throw JsonRpcError(method, 'Method not found', code: -32601);
         }
         return {
-          'projects': [project],
+          'projects': [
+            if (!empty) project,
+            if (includeFolderless)
+              {
+                'id': 'p2',
+                'slug': 'no-folder',
+                'name': 'No folder',
+                'folders': [],
+              },
+          ],
         };
       case 'projects.tree':
         final snapshot = count;
@@ -138,7 +163,14 @@ class _Gateway extends NextGenGateway {
       case 'session.resume':
         return {'session_id': 'runtime-existing', 'running': false};
       case 'session.create':
-        return {'session_id': 'runtime-new', 'stored_session_id': 'stored-new'};
+        if (!created.isCompleted) created.complete();
+        await createGate?.future;
+        if (createError != null) throw createError!;
+        return {
+          'session_id': 'runtime-new',
+          'stored_session_id': 'stored-new',
+          if (actualCwd != null) 'info': {'cwd': actualCwd},
+        };
       case 'prompt.submit':
         return {'status': 'started'};
       default:
@@ -159,6 +191,8 @@ Future<void> _app(
   WidgetTester tester,
   ValueNotifier<NextGenGateway> selected, {
   bool main = false,
+  Locale locale = const Locale('en'),
+  double textScale = 1,
 }) async {
   final prefs = await SharedPreferences.getInstance();
   final manager = ConnectionManager(prefs);
@@ -166,19 +200,27 @@ Future<void> _app(
     ValueListenableBuilder<NextGenGateway>(
       valueListenable: selected,
       builder: (_, gateway, _) => MaterialApp(
+        locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         theme: nextGenTheme(Brightness.dark, NextGenLook.instance),
-        builder: (_, child) => NgScope(
-          connManager: manager,
-          gateway: gateway,
-          connections: [gateway.connection],
-          switchTo: (_) async {},
-          addGateway: () async {},
-          signOut: (_) async {},
-          reload: () async {},
-          signInAgain: () async {},
-          child: child!,
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(textScale)),
+          child: NgLocalizationScope(
+            child: NgScope(
+              connManager: manager,
+              gateway: gateway,
+              connections: [gateway.connection],
+              switchTo: (_) async {},
+              addGateway: () async {},
+              signOut: (_) async {},
+              reload: () async {},
+              signInAgain: () async {},
+              child: child!,
+            ),
+          ),
         ),
         home: main ? const NgMainPage() : NgMorePage(onOpenSession: (_) {}),
       ),
@@ -221,6 +263,438 @@ void main() {
     nextGenOpenRequest.value = null;
     nextGenNotificationAnswer.value = null;
   });
+
+  testWidgets(
+    'new chat greeting offers a project picker without replacing its draft',
+    (tester) async {
+      final gateway = _Gateway(_connection());
+      await _app(tester, ValueNotifier(gateway), main: true);
+      expect(find.byKey(const Key('nextgen-project-picker')), findsOneWidget);
+      await tester.enterText(find.byType(TextField).last, 'Keep this draft');
+      final chat = tester.widget<NgChatView>(find.byType(NgChatView)).chat;
+      await tester.tap(find.byKey(const Key('nextgen-project-picker')));
+      await _frames(tester);
+      await tester.tap(
+        find.widgetWithText(CheckedPopupMenuItem<String>, 'work project'),
+      );
+      await _frames(tester);
+      expect(
+        tester.widget<NgChatView>(find.byType(NgChatView)).chat,
+        same(chat),
+      );
+      expect(chat.workingDirectory, '/srv/work/project');
+      expect(find.text('Keep this draft'), findsOneWidget);
+      expect(gateway.reads('session.create'), 0);
+      await _close(tester, [gateway]);
+    },
+  );
+
+  testWidgets(
+    'picker send is explicit, hides after create and excludes folderless projects',
+    (tester) async {
+      final gateway = _Gateway(_connection())..includeFolderless = true;
+      await _app(tester, ValueNotifier(gateway), main: true);
+      await tester.tap(find.byKey(const Key('nextgen-project-picker')));
+      await _frames(tester);
+      expect(find.text('No folder'), findsNothing);
+      await tester.tap(
+        find.widgetWithText(CheckedPopupMenuItem<String>, 'work project'),
+      );
+      await _frames(tester);
+      final chat = tester.widget<NgChatView>(find.byType(NgChatView)).chat;
+      expect(await chat.send('Run pwd'), isTrue);
+      await _frames(tester);
+      expect(find.byKey(const Key('nextgen-project-picker')), findsNothing);
+      expect(chat.startIn('/wrong'), isFalse);
+      final params = gateway.calls
+          .singleWhere((c) => c.method == 'session.create')
+          .params;
+      expect(params['cwd'], '/srv/work/project');
+      expect(params['cwd_explicit'], true);
+      await _close(tester, [gateway]);
+    },
+  );
+
+  testWidgets('Home clears a pending cwd and sends neither cwd field', (
+    tester,
+  ) async {
+    final gateway = _Gateway(_connection());
+    await _app(tester, ValueNotifier(gateway), main: true);
+    final chat = tester.widget<NgChatView>(find.byType(NgChatView)).chat;
+    expect(chat.startIn('/srv/work/project/'), true);
+    await _frames(tester);
+    expect(
+      find.text('work project'),
+      findsOneWidget,
+      reason: 'trailing slash matches project',
+    );
+    await tester.tap(find.byKey(const Key('nextgen-project-picker')));
+    await _frames(tester);
+    await tester.tap(find.widgetWithText(CheckedPopupMenuItem<String>, 'Home'));
+    await _frames(tester);
+    expect(chat.workingDirectory, isNull);
+    await chat.send('Home prompt');
+    final params = gateway.calls
+        .singleWhere((c) => c.method == 'session.create')
+        .params;
+    expect(params.containsKey('cwd'), false);
+    expect(params.containsKey('cwd_explicit'), false);
+    await _close(tester, [gateway]);
+  });
+
+  testWidgets(
+    'held Projects never blocks typing and chosen cwd stays visible',
+    (tester) async {
+      final gateway = _Gateway(_connection())..listGate = Completer<void>();
+      await _app(tester, ValueNotifier(gateway), main: true);
+      expect(find.byKey(const Key('nextgen-project-picker')), findsNothing);
+      await tester.enterText(
+        find.byType(TextField).last,
+        'Typing while projects load',
+      );
+      final chat = tester.widget<NgChatView>(find.byType(NgChatView)).chat;
+      expect(chat.startIn('/srv/chosen'), true);
+      await _frames(tester);
+      expect(find.byKey(const Key('nextgen-project-picker')), findsOneWidget);
+      expect(find.text('chosen'), findsOneWidget);
+      expect(find.text('Typing while projects load'), findsOneWidget);
+      gateway.listGate!.complete();
+      await _frames(tester);
+      await _close(tester, [gateway]);
+    },
+  );
+
+  for (final empty in [false, true]) {
+    testWidgets(
+      'picker hidden with ${empty ? 'no projects' : 'only folderless projects'}',
+      (tester) async {
+        final gateway = _Gateway(_connection())
+          ..empty = empty
+          ..folderless = !empty;
+        await _app(tester, ValueNotifier(gateway), main: true);
+        expect(find.byKey(const Key('nextgen-project-picker')), findsNothing);
+        await _close(tester, [gateway]);
+      },
+    );
+  }
+
+  for (final newConnection in [false, true]) {
+    testWidgets(
+      'pending pick resets on ${newConnection ? 'connection' : 'profile'} replacement',
+      (tester) async {
+        final old = _Gateway(_connection(profile: 'old'));
+        final next = _Gateway(
+          _connection(id: newConnection ? 'c2' : 'c1', profile: 'next'),
+        );
+        final selected = ValueNotifier<NextGenGateway>(old);
+        await _app(tester, selected, main: true);
+        final chat = tester.widget<NgChatView>(find.byType(NgChatView)).chat;
+        expect(chat.startIn('/srv/old/project'), true);
+        await _frames(tester);
+        // Hold an open popup across the authority switch too.
+        await tester.tap(find.byKey(const Key('nextgen-project-picker')));
+        await _frames(tester);
+        final stalePick = tester
+            .widget<PopupMenuButton<String>>(
+              find.byKey(const Key('nextgen-project-picker')),
+            )
+            .onSelected!;
+        selected.value = next;
+        await _frames(tester);
+        stalePick('/srv/old/project');
+        final current = tester.widget<NgChatView>(find.byType(NgChatView)).chat;
+        expect(current, isNot(same(chat)));
+        expect(current.gateway, same(next));
+        expect(current.workingDirectory, isNull);
+        expect(next.reads('session.create'), 0);
+        final nav = tester.state<NavigatorState>(find.byType(Navigator).first);
+        nav.popUntil((route) => route.isFirst);
+        await _frames(tester);
+        await tester.tap(find.byKey(const Key('nextgen-project-picker')));
+        await _frames(tester);
+        expect(find.text('old project'), findsNothing);
+        expect(find.text('next project'), findsOneWidget);
+        await _close(tester, [old, next]);
+      },
+    );
+  }
+
+  for (final authority in [false, true]) {
+    test(
+      'explicit cwd survives first create (${authority ? 'canonical' : 'legacy'})',
+      () async {
+        final gateway = _Gateway(_connection());
+        if (authority) {
+          gateway.readyFrame = {
+            'params': {
+              'type': 'gateway.ready',
+              'payload': {'session_authority': true},
+            },
+          };
+        }
+        final chat = NgChatController(
+          gateway,
+          workingDirectory: '/srv/work/project',
+        );
+        addTearDown(() {
+          chat.dispose();
+          gateway.dispose();
+        });
+        expect(await chat.send('pwd'), true);
+        final params = gateway.calls
+            .singleWhere((c) => c.method == 'session.create')
+            .params;
+        expect(params['cwd'], '/srv/work/project');
+        expect(params['cwd_explicit'], true);
+      },
+    );
+  }
+
+  test(
+    'creation locks picks before connection wait and throughout held create',
+    () async {
+      final gateway = _Gateway(_connection())
+        ..connectionGate = Completer<void>()
+        ..createGate = Completer<void>();
+      final chat = NgChatController(gateway);
+      addTearDown(() {
+        chat.dispose();
+        gateway.dispose();
+      });
+      expect(chat.startIn('/srv/work/project'), true);
+      final send = chat.send('pwd');
+      expect(chat.startIn('/wrong'), false);
+      gateway.connectionGate!.complete();
+      await gateway.created.future;
+      expect(chat.startIn(null), false);
+      gateway.createGate!.complete();
+      expect(await send, true);
+      expect(chat.startIn(null), false);
+      expect(gateway.reads('session.create'), 1);
+    },
+  );
+
+  test(
+    'older closed contract refuses explicit cwd without an unsafe create retry',
+    () async {
+      final gateway = _Gateway(_connection())
+        ..createError = JsonRpcError(
+          'session.create',
+          'invalid params for session.create: cwd_explicit: Extra inputs are not permitted — run hermes update',
+          code: 4000,
+        );
+      final chat = NgChatController(
+        gateway,
+        workingDirectory: '/srv/work/project',
+      );
+      addTearDown(() {
+        chat.dispose();
+        gateway.dispose();
+      });
+      expect(await chat.send('pwd'), false);
+      expect(gateway.reads('session.create'), 1);
+      expect(gateway.reads('prompt.submit'), 0);
+      expect(
+        chat.items.whereType<NgUserItem>().single.failure,
+        contains('cwd_explicit'),
+      );
+      expect(chat.workingDirectory, '/srv/work/project');
+    },
+  );
+
+  test('ambiguous create never retries or unlocks the pending cwd', () async {
+    final gateway = _Gateway(_connection())
+      ..createError = TimeoutException('lost create acknowledgement');
+    final chat = NgChatController(
+      gateway,
+      workingDirectory: '/srv/work/project',
+    );
+    addTearDown(() {
+      chat.dispose();
+      gateway.dispose();
+    });
+    expect(await chat.send('pwd'), false);
+    expect(chat.startIn(null), false);
+    expect(await chat.send('try again'), false);
+    await chat.retryLast();
+    expect(gateway.reads('session.create'), 1);
+    expect(gateway.reads('prompt.submit'), 0);
+  });
+
+  test(
+    'gateway cwd mismatch is visible but equivalent trailing slash is not',
+    () async {
+      final gateway = _Gateway(_connection())..actualCwd = '/fallback';
+      final chat = NgChatController(gateway, workingDirectory: '/missing');
+      addTearDown(() {
+        chat.dispose();
+        gateway.dispose();
+      });
+      expect(await chat.send('pwd'), true);
+      expect(chat.error, contains('/fallback'));
+      final same = NgChatController(gateway, workingDirectory: '/fallback/');
+      expect(await same.send('pwd'), true);
+      expect(same.error, isNull);
+      same.dispose();
+    },
+  );
+
+  test(
+    'internal create error is also ambiguous and cannot mint another session',
+    () async {
+      final gateway = _Gateway(_connection())
+        ..createError = JsonRpcError(
+          'session.create',
+          'handler error after mint',
+          code: -32000,
+        );
+      final chat = NgChatController(
+        gateway,
+        workingDirectory: '/srv/work/project',
+      );
+      addTearDown(() {
+        chat.dispose();
+        gateway.dispose();
+      });
+      expect(await chat.send('pwd'), false);
+      await chat.retryLast();
+      expect(gateway.reads('session.create'), 1);
+      expect(gateway.reads('prompt.submit'), 0);
+    },
+  );
+
+  testWidgets('greeting stays hidden on an existing empty stored chat', (
+    tester,
+  ) async {
+    final gateway = _Gateway(_connection());
+    await _app(tester, ValueNotifier(gateway), main: true);
+    await _browse(tester, main: true);
+    await _detail(tester, gateway);
+    await tester.tap(find.text('Existing project conversation'));
+    await _frames(tester);
+    expect(find.byKey(const Key('nextgen-project-picker')), findsNothing);
+    expect(
+      tester.widget<NgChatView>(find.byType(NgChatView)).chat.startIn('/wrong'),
+      false,
+    );
+    await _close(tester, [gateway]);
+  });
+
+  testWidgets('browser and greeting reuse the exact same Projects repository', (
+    tester,
+  ) async {
+    final gateway = _Gateway(_connection());
+    final prefs = await SharedPreferences.getInstance();
+    await _app(tester, ValueNotifier(gateway), main: true);
+    final projects = gateway.projects(prefs);
+    await _browse(tester, main: true);
+    expect(
+      tester.widget<ProjectsPane>(find.byType(ProjectsPane)).repository,
+      same(projects.repository),
+    );
+    await _close(tester, [gateway]);
+  });
+
+  test(
+    'disposing an owner during held create cannot publish or submit',
+    () async {
+      final gateway = _Gateway(_connection())..createGate = Completer<void>();
+      var published = 0;
+      final chat = NgChatController(
+        gateway,
+        workingDirectory: '/srv/old/project',
+        onCreated: (_) => published++,
+      );
+      final send = chat.send('Do not run after scope switch');
+      await gateway.created.future;
+      chat.dispose();
+      gateway.createGate!.complete();
+      expect(await send, false);
+      expect(published, 0);
+      expect(gateway.reads('session.create'), 1);
+      expect(gateway.reads('prompt.submit'), 0);
+      gateway.dispose();
+    },
+  );
+
+  testWidgets('late greeting list cannot restore an old scope cwd or choices', (
+    tester,
+  ) async {
+    final old = _Gateway(_connection(profile: 'old'))
+      ..listGate = Completer<void>();
+    final next = _Gateway(_connection(profile: 'next'));
+    final selected = ValueNotifier<NextGenGateway>(old);
+    await _app(tester, selected, main: true);
+    final chat = tester.widget<NgChatView>(find.byType(NgChatView)).chat;
+    chat.startIn('/srv/old/project');
+    selected.value = next;
+    await _frames(tester);
+    old.listGate!.complete();
+    await _frames(tester);
+    final current = tester.widget<NgChatView>(find.byType(NgChatView)).chat;
+    expect(current.workingDirectory, isNull);
+    await tester.tap(find.byKey(const Key('nextgen-project-picker')));
+    await _frames(tester);
+    expect(find.text('old project'), findsNothing);
+    expect(find.text('next project'), findsOneWidget);
+    expect(next.reads('session.create'), 0);
+    await _close(tester, [old, next]);
+  });
+
+  testWidgets('root cwd keeps a nonempty greeting label while projects load', (
+    tester,
+  ) async {
+    final gateway = _Gateway(_connection())..listGate = Completer<void>();
+    await _app(tester, ValueNotifier(gateway), main: true);
+    final chat = tester.widget<NgChatView>(find.byType(NgChatView)).chat;
+    chat.startIn('/');
+    await _frames(tester);
+    expect(find.text('/'), findsOneWidget);
+    gateway.listGate!.complete();
+    await _frames(tester);
+    await _close(tester, [gateway]);
+  });
+
+  for (final locale in [
+    const Locale('en'),
+    const Locale('de'),
+    const Locale('ja'),
+    const Locale('ru'),
+  ]) {
+    testWidgets('project picker fits narrow phone at large text in $locale', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(320, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final gateway = _Gateway(
+        _connection(profile: 'A very long project name for testing ellipsis'),
+      );
+      final selected = ValueNotifier<NextGenGateway>(gateway);
+      await _app(tester, selected, main: true, locale: locale, textScale: 2);
+      expect(find.byKey(const Key('nextgen-project-picker')), findsOneWidget);
+      final chat = tester.widget<NgChatView>(find.byType(NgChatView)).chat;
+      chat.startIn(
+        '/srv/A very long project name for testing ellipsis/project',
+      );
+      await _frames(tester);
+      await tester.tap(find.byKey(const Key('nextgen-project-picker')));
+      await _frames(tester);
+      final home = lookupAppLocalizations(locale).ng_project_home;
+      expect(
+        find.widgetWithText(CheckedPopupMenuItem<String>, home),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.tap(find.widgetWithText(CheckedPopupMenuItem<String>, home));
+      await _frames(tester);
+      expect(chat.workingDirectory, isNull);
+      expect(tester.takeException(), isNull);
+      // Reset the process-wide NextGen strings for following tests.
+      await _app(tester, selected, main: true);
+      await _close(tester, [gateway]);
+    });
+  }
 
   testWidgets('More browses Classic projects and refreshes counts on return', (
     tester,
@@ -294,6 +768,7 @@ void main() {
       (c) => c.method == 'session.create',
     );
     expect(create.params['cwd'], '/srv/work/project');
+    expect(create.params['cwd_explicit'], isTrue);
     expect(gateway.reads('projects.assign_session'), 0);
     expect(gateway.reads('config.set'), 0);
     await _close(tester, [gateway]);
