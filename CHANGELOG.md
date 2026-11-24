@@ -21,6 +21,51 @@ Publication correction: tag v4.0.6 has no published APK assets; its release
 workflow failed the identity gate because the tag preceded the version bump.
 The paging change it names (#284) first ships in the published 4.0.7 APKs.
 
+## [4.0.12] - 2026-11-25
+
+Stable release `4.0.12+3068`, with release APK codes `30681`, `30682` and
+`30683`. Each split exceeds the published 4.0.11 stable splits (`30673`).
+Installs over the existing app.
+
+### Added
+
+- **A Models page in NextGen (#347).** NextGen's model settings are now one
+  page, opened from Settings, More and the top of a chat's model picker. It
+  shows the default model with what the gateway reports about it (context
+  window, maximum output, prices, and whether it supports tools, vision,
+  reasoning and fast mode), the ordered fallback list, every helper task with
+  the model and thinking level it uses, and each provider with its model count,
+  allowance and rate limits. A change counts as saved only after it has been
+  read back from the gateway, one change runs at a time, and a model the
+  gateway warns is expensive is assigned only after you agree. Anything the
+  gateway does not report is left out rather than guessed. The classic model
+  screen is unchanged. See [model management](docs/model-management.md).
+
+## [4.0.11] - 2026-11-24
+
+Stable release `4.0.11+3067`, with release APK codes `30671`, `30672` and
+`30673`. Each split exceeds the published 4.0.10 stable splits (`30663`).
+Installs over the existing app.
+
+### Fixed
+
+- **The transcript scrolls to the end when the keyboard opens (#300).** Opening
+  the composer keyboard mid-conversation used to leave the last message behind
+  the keyboard with no scroll, forcing a manual scroll to reply. The
+  keyboard-rise edge now triggers one composer-focused end-scroll, edge-triggered
+  and re-armed on the keyboard-drop reset, so parked readers stay put when a
+  dialog steals focus and the follow-after-stream re-arm still works.
+- **`/new` starts a fresh session locally like the desktop (#301).** Typing
+  `/new` and hitting send used to route to the slash worker's headless
+  `slash.exec`, which always answered "cancelled, no input". The bare `/new`
+  command (and `/reset`) is now intercepted locally before the gateway round
+  trip and pushes a fresh chat carrying the parent model, project name and
+  working directory, exactly like the desktop's `/new` handling.
+
+### Thanks
+
+- @Thaeland — both of these, with regression tests and a focused review pass.
+
 ## [4.0.10] - 2026-11-20
 
 Stable release `4.0.10+3066`, with release APK codes `30661`, `30662` and
