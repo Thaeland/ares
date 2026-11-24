@@ -969,16 +969,24 @@ dart run msix:pack
 ```
 
 `pubspec.yaml` holds the identity used for sideloading. A Microsoft Store
-package must instead carry the identity Partner Center shows under
-**Product identity** once the product name is reserved. Pass it on the
-command line to both commands:
+package must instead carry the values Partner Center shows under
+**Product identity**, and its display name must be the reserved product name.
+Pass them on the command line to both commands:
 
 ```powershell
 --store --identity-name <Package/Identity/Name> `
   --publisher <Package/Identity/Publisher> `
   --publisher-display-name <PublisherDisplayName> `
-  --display-name Ares --version 4.0.10.0
+  --display-name "<reserved product name>" --version 4.0.10.0
 ```
+
+Between `msix:build` and `msix:pack`, edit `Release\AppxManifest.xml`:
+
+- `Application Id`: msix derives `hermesandroid` from the Dart package name.
+  Set it to `Ares`. Windows treats it as part of the app's identity, so it
+  must not change after the first release.
+- `uap:VisualElements DisplayName` and `uap:DefaultTile ShortName`: set to
+  `Ares` so the Start menu shows the short name.
 
 To upload, put the `.msix` at the root of a ZIP and name it `.msixupload`.
 Partner Center signs Store packages, so the package is left unsigned.
