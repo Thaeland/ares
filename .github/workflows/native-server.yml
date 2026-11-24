@@ -47,9 +47,21 @@ jobs:
               "flutter.buildMode=debug\n"
           )
           PY
+      # Enhanced caching in v6 is proprietary; never load or opt into it.
       - uses: gradle/actions/setup-gradle@v6
         with:
-          gradle-version: '9.1.0'
+          gradle-version: '9.9.2'
+          cache-provider: basic
+          cache-disabled: true
+      - name: Cache open-source Gradle dependencies
+        uses: actions/cache@v6
+        with:
+          # Do not cache credentials, init scripts or the configuration cache.
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper/dists
+          key: gradle-${{ runner.os }}-java17-${{ hashFiles('android/**/*.gradle*', 'android/gradle.properties', 'android/gradle/wrapper/gradle-wrapper.properties', 'pubspec.lock') }}
+          restore-keys: gradle-${{ runner.os }}-java17-
       - name: Verify voice preparation and native CI configuration
         run: python3 -m unittest scripts.test_prepare_voice_inputs scripts.test_native_ci_config
       - name: Cache hash-verified build-time voice artifacts
