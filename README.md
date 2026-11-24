@@ -27,10 +27,10 @@
 
 **[Watch the 80 second showcase](docs/video/ares-4.0-showcase.mp4).** No voiceover. The score is original synthwave written for this film. It was recorded on the production-signed [4.0.0-rc.7](https://github.com/rusty4444/hermes-android/releases/tag/v4.0.0-rc.7) build during the candidate cycle, with illustrative fixture chats. **4.0.11** is the latest stable release. NextGen adapts the [Kyllene](https://github.com/Giton22/kyllene) design by Giton22 (MIT).
 
-# Ares - formerly Hermes Android v4.0.12
+# Ares - formerly Hermes Android v4.0.13
 
 > **Hermes Android is now Ares.** In 4.0.0 the app is called "Ares - formerly
-> Hermes Android", and the launcher label is Ares. **4.0.12** is the latest
+> Hermes Android", and the launcher label is Ares. **4.0.13** is the latest
 > stable release. The package
 > `com.hermesagent.hermes_android` and the signing key are unchanged, so the
 > update installs over the existing app. It still connects to
@@ -98,20 +98,20 @@ Emulator captures of production-signed **4.0.0-rc.7** (version code 30432). Clas
 
 ## Current release
 
-**4.0.12** (base build **3068**) is the latest stable release. Its ABI splits are
-`30681`, `30682` and `30683`, each above the highest published 4.0.11
-split (`30673`). The production package and signer are unchanged. Install over
-the existing app; do not uninstall or clear app data. 4.0.12 adds a Models page to
-NextGen: the default model, the fallback list, helper-task models and
-providers in one place.
+**4.0.13** (base build **3069**) is the latest stable release. Its ABI splits are
+`30691`, `30692` and `30693`, each above the highest published 4.0.12
+split (`30683`). The production package and signer are unchanged. Install over
+the existing app; do not uninstall or clear app data. 4.0.13 lets the NextGen
+Models page change the default model and fallback models on any provider
+the gateway lists by name.
 
 | Download | Device | Version code |
 | --- | --- | --- |
-| [ARM64 APK](https://github.com/rusty4444/ares/releases/download/v4.0.12/app-arm64-v8a-release.apk) | Most current Android phones/tablets | `30682` |
-| [ARMv7 APK](https://github.com/rusty4444/ares/releases/download/v4.0.12/app-armeabi-v7a-release.apk) | Older 32-bit ARM devices | `30681` |
-| [x86_64 APK](https://github.com/rusty4444/ares/releases/download/v4.0.12/app-x86_64-release.apk) | x86_64 Android devices/emulators | `30683` |
+| [ARM64 APK](https://github.com/rusty4444/ares/releases/download/v4.0.13/app-arm64-v8a-release.apk) | Most current Android phones/tablets | `30692` |
+| [ARMv7 APK](https://github.com/rusty4444/ares/releases/download/v4.0.13/app-armeabi-v7a-release.apk) | Older 32-bit ARM devices | `30691` |
+| [x86_64 APK](https://github.com/rusty4444/ares/releases/download/v4.0.13/app-x86_64-release.apk) | x86_64 Android devices/emulators | `30693` |
 
-[Release and checksums](https://github.com/rusty4444/ares/releases/tag/v4.0.12) · [4.0.12 release notes](docs/releases/4.0.12.md) · [Full changelog](CHANGELOG.md)
+[Release and checksums](https://github.com/rusty4444/ares/releases/tag/v4.0.13) · [4.0.13 release notes](docs/releases/4.0.13.md) · [Full changelog](CHANGELOG.md)
 
 Debug builds use the separate `com.hermesagent.hermes_android.dev` package and Android debug certificate. Older production APKs have lower version codes; downgrading can require uninstalling and restoring a backup.
 
@@ -328,6 +328,16 @@ sanitized implementation and validation record.
 NextGen adapts [Kyllene](https://github.com/Giton22/kyllene) by Giton22 (MIT).
 See [4.0.0 release notes](docs/releases/4.0.0.md).
 
+## What's new in v4.0.13
+
+- **Change the default and fallback models from NextGen (#357).** The Models
+  page can now set the default model, a fallback or a helper-task model to any
+  provider the gateway lists by name, named endpoints and provider plugins
+  included, and tapping a fallback row gives it another model. A default whose
+  address would be lost by switching stays read-only.
+
+See [4.0.13 release notes](docs/releases/4.0.13.md).
+
 ## What's new in v4.0.12
 
 - **A Models page in NextGen (#347).** Model settings are one page, opened from
@@ -353,24 +363,6 @@ See [4.0.12 release notes](docs/releases/4.0.12.md).
   no input" refusal.
 
 See [4.0.11 release notes](docs/releases/4.0.11.md).
-
-## What's new in v4.0.10
-
-- **The chat list fills past scheduled-job pages (#298, fixes #297).** On
-  cron-heavy gateways the All list no longer stops at one or two chats:
-  NextGen reads bounded pages until the list is usable, load-more advances
-  past hidden cron rows, and a Load more row grows short lists. Reported by
-  [@bruno-keeper](https://github.com/bruno-keeper).
-- **Clarify questions survive returning to a chat (#295).** A question asked
-  while the app was away is replayed from the catch-up resume, so the card
-  shows instead of nothing. Thanks to
-  [@manuelanguitatrejo](https://github.com/manuelanguitatrejo).
-- **Profile chooser after sign-in on gated gateways (#296).** Multiplexed
-  gateways that hide profiles from the status probe now offer the chooser
-  right after sign-in, with a visible-chat preselect. Thanks to
-  [@manuelanguitatrejo](https://github.com/manuelanguitatrejo).
-
-See [4.0.10 release notes](docs/releases/4.0.10.md).
 
 ## Features
 
@@ -848,7 +840,7 @@ cp build/app/outputs/flutter-apk/app-*-release.apk release-apks/
 block in `android/app/build.gradle.kts` derives per-ABI codes as
 `base * 10 + ABI code` (armeabi-v7a = 1, arm64-v8a = 2, x86_64 = 3), so the
 codes stay ordered armeabi-v7a < arm64-v8a < x86_64 as fdroiddata requires.
-For v4.0.12, base `3068` produces codes `30681`/`30682`/`30683`.
+For v4.0.13, base `3069` produces codes `30691`/`30692`/`30693`.
 Before publication, CI verifies all three actual APKs: package, version, ABI,
 effective code, production signer and required licence/source assets. Releases
 include checksums and exact-commit source/relink materials. Release-floor checks

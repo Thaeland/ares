@@ -21,6 +21,27 @@ Publication correction: tag v4.0.6 has no published APK assets; its release
 workflow failed the identity gate because the tag preceded the version bump.
 The paging change it names (#284) first ships in the published 4.0.7 APKs.
 
+## [4.0.13] - 2026-11-25
+
+Stable release `4.0.13+3069`, with release APK codes `30691`, `30692` and
+`30693`. Each split exceeds the published 4.0.12 stable splits (`30683`).
+Installs over the existing app.
+
+### Fixed
+
+- **The NextGen Models page can change the default model and fallback models
+  (#357).** In 4.0.12 the default was read-only whenever its provider had an
+  address saved with it that the app did not recognise, which included every
+  provider plugin and every named endpoint, and a fallback row could not be
+  given another model. Any provider the gateway lists by name can now be chosen
+  as the default, a fallback or a helper-task model, and tapping a fallback row
+  gives it another model. The default stays read-only only when its address
+  would not come back on switching back: an endpoint with no name, a named
+  endpoint at another address, or an address typed for a provider the app has
+  no reviewed address for. Fallback rows with routing details keep their model.
+  The classic model screen is unchanged. See
+  [model management](docs/model-management.md).
+
 ## [4.0.12] - 2026-11-25
 
 Stable release `4.0.12+3068`, with release APK codes `30681`, `30682` and
