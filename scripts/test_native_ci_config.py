@@ -71,6 +71,40 @@ class NativeCiConfigurationTest(unittest.TestCase):
             self.assertIn(f"build/{module}/reports/tests/testDebugUnitTest", workflow)
             self.assertIn(f"build/{module}/test-results/testDebugUnitTest", workflow)
 
+    def test_app_and_tts_share_one_robolectric_version(self):
+        properties = dict(
+            line.split("=", 1)
+            for line in (ROOT / "android/gradle.properties").read_text().splitlines()
+            if "=" in line and not line.startswith("#")
+        )
+        self.assertEqual(properties.get("robolectricVersion"), "4.18.1")
+        app = (ROOT / "android/app/build.gradle.kts").read_text()
+        tts = (ROOT / "android/flutter-tts-patch.gradle").read_text()
+        self.assertIn('providers.gradleProperty("robolectricVersion").get()', app)
+        self.assertIn("providers.gradleProperty('robolectricVersion').get()", tts)
+        self.assertIn('org.robolectric:robolectric:$robolectricVersion', app)
+        self.assertIn('org.robolectric:robolectric:${robolectricVersion}', tts)
+
+    def test_ci_caches_robolectric_runtime_downloads_separately_from_gradle(self):
+        workflow = (ROOT / ".github/workflows/native-server.yml").read_text()
+        marker = "      - name: Cache Robolectric runtimes\n"
+        self.assertIn(marker, workflow)
+        cache = workflow.split(marker, 1)[1]
+        cache = cache.split("      - name:", 1)[0]
+        self.assertIn("uses: actions/cache@v4", cache)
+        self.assertIn("path: ~/.m2/repository/org/robolectric/android-all-instrumented", cache)
+        self.assertIn("key: robolectric-${{ runner.os }}-", cache)
+        for source in (
+            "android/gradle.properties",
+            "android/app/src/test/**",
+            "android/flutter_tts_tests/**",
+        ):
+            self.assertIn(source, cache)
+        self.assertLess(
+            workflow.index("      - name: Cache Robolectric runtimes"),
+            workflow.index("      - name: Run native lifecycle"),
+        )
+
     def test_missing_pubspec_identity_fails_before_writing_properties(self):
         result, text = self.run_configuration("name: hermes_android\n")
         self.assertNotEqual(result.returncode, 0)

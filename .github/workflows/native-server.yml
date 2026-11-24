@@ -57,6 +57,15 @@ jobs:
         with:
           path: ~/.cache/hermes-voice
           key: voice-inputs-${{ hashFiles('third_party/voice/manifest.json') }}
+      # Robolectric's Maven resolver writes outside Gradle's dependency cache.
+      # Include SDK annotations in the key so newly required runtimes are saved.
+      - name: Cache Robolectric runtimes
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository/org/robolectric/android-all-instrumented
+          key: robolectric-${{ runner.os }}-${{ hashFiles('android/gradle.properties', 'android/app/src/test/**', 'android/flutter_tts_tests/**') }}
+          restore-keys: |
+            robolectric-${{ runner.os }}-
       - name: Run native lifecycle, voice ownership and push tests
         working-directory: android
         run: gradle :app:testDebugUnitTest :flutter_tts:testDebugUnitTest --no-daemon --stacktrace
