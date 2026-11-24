@@ -8,6 +8,34 @@ import 'package:hermes_android/core/services/desktop_gateway_client.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
 
 void main() {
+  test(
+    'notification revocation during real session.resume prevents prompt and create',
+    () async {
+      final gateway = await _Gateway.start();
+      final client = gateway.client();
+      addTearDown(() async {
+        client.close();
+        await gateway.close();
+      });
+      client.bindStoredSession('stored', 'stored');
+      gateway.held.add('session.resume');
+      var valid = true;
+      final flight = client.submitPrompt(
+        sessionId: 'stored',
+        text: 'dictated',
+        onEvent: (_) {},
+        onSent: () {},
+        beforeSend: () async => valid,
+      );
+      final outcome = _outcome(flight);
+      final held = await gateway.take('session.resume');
+      valid = false;
+      held.replyDefault();
+      expect(await outcome, isA<StateError>());
+      expect(gateway.calls('prompt.submit'), isEmpty);
+      expect(gateway.calls('session.create'), isEmpty);
+    },
+  );
   for (final warmSocket in [false, true]) {
     for (final create in [false, true]) {
       test(

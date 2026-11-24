@@ -169,6 +169,7 @@ class NormalGatewayApplicationSession {
   final NormalGatewayResume _resume;
   final NormalGatewayHistory _history;
   final TurnNotificationService notifications;
+  ConversationNotificationTarget? Function(String)? conversationFor;
   final void Function()? onActivityChanged;
   final ChatPresentationRegistry? presentation;
   final Map<String, NormalGatewayChatOwner> _aliases = {};
@@ -253,6 +254,7 @@ class NormalGatewayApplicationSession {
     ChatPresentationRegistry? presentation,
     OperationalActivityStore? activityStore,
     void Function()? onActivityChanged,
+    ConversationNotificationTarget? Function(String)? conversationFor,
   }) {
     return NormalGatewayApplicationSession(
       connection: connection,
@@ -262,7 +264,7 @@ class NormalGatewayApplicationSession {
       client: DesktopGatewayClient.fromConnection(connection),
       historyClient: ApiClient.forConnection(connection),
       onActivityChanged: onActivityChanged,
-    );
+    )..conversationFor = conversationFor;
   }
 
   Iterable<NormalGatewayChatOwner> get chats => _aliases.values.toSet();
@@ -1604,6 +1606,7 @@ class NormalGatewayChatOwner {
     bool canRestoreDraft = false,
     ComposerDraftHandle? draftHandle,
     bool Function()? maySubmit,
+    Future<bool> Function()? beforeSend,
     void Function()? onAccepted,
   }) async {
     if (_redirect != null) {
@@ -1617,6 +1620,7 @@ class NormalGatewayChatOwner {
         canRestoreDraft: canRestoreDraft,
         draftHandle: draftHandle,
         maySubmit: maySubmit,
+        beforeSend: beforeSend,
         onAccepted: onAccepted,
       );
     }
@@ -1658,6 +1662,12 @@ class NormalGatewayChatOwner {
     _boundSettledPresentation();
     _notify();
     try {
+      if (beforeSend != null && !await beforeSend()) {
+        throw StateError('Notification admission revoked');
+      }
+      if (!_submissionCurrent(generation) || maySubmit?.call() == false) {
+        throw StateError('Prompt admission revoked');
+      }
       if (storedSessionId == null && knownStoredSessionId != null) {
         _session._bind(this, knownStoredSessionId);
       }
@@ -1687,6 +1697,9 @@ class NormalGatewayChatOwner {
       if (!_historyKnown && !createdEmpty) {
         final stored = storedSessionId!;
         final baseline = await _readAdmissionBaseline(stored);
+        if (beforeSend != null && !await beforeSend()) {
+          throw StateError('Notification admission revoked');
+        }
         if (!_submissionCurrent(generation)) return;
         if (maySubmit?.call() == false) {
           throw StateError('Voice admission revoked');
@@ -1719,6 +1732,9 @@ class NormalGatewayChatOwner {
         updatedAt: now,
       );
       await _session.pendingStore.put(_marker!);
+      if (beforeSend != null && !await beforeSend()) {
+        throw StateError('Notification admission revoked');
+      }
       if (!_submissionCurrent(generation)) return;
       if (maySubmit?.call() == false) {
         throw StateError('Voice admission revoked');
@@ -1741,6 +1757,7 @@ class NormalGatewayChatOwner {
                   onAccepted: () {
                     if (_current(generation)) onAccepted?.call();
                   },
+                  beforeSend: beforeSend,
                   maySend: () =>
                       _current(generation) &&
                       snapshot.hasActiveTurn &&
@@ -2662,19 +2679,36 @@ class NormalGatewayChatOwner {
             ? HermesNotificationKind.turnDone
             : HermesNotificationKind.turnError;
         if (notificationKindEnabled(kind)) {
-          await _session.notifications.showKind(
-            kind: kind,
-            title: completed ? 'Hermes response ready' : 'Hermes turn failed',
-            body: settledTitle,
-            eventId: settledTurnId,
-            sessionId: settledSessionId,
-            connectionId: _session.connection.id,
-            payload: jsonEncode({
-              'sessionId': settledSessionId,
-              'connectionId': _session.connection.id,
-              'turnId': settledTurnId,
-            }),
-          );
+          // Preserve the existing generic terminal oracle unless the root has
+          // explicitly supplied a car conversation producer for this account.
+          if (completed &&
+              _session.conversationFor != null &&
+              publicFinal != null &&
+              publicFinal.isNotEmpty &&
+              _session.hasCurrentAccount) {
+            await _session.notifications.showTurnCompleted(
+              title: settledTitle,
+              turnSummary: publicFinal,
+              turnId: settledTurnId,
+              sessionId: settledSessionId,
+              connectionId: _session.connection.id,
+              conversation: _session.conversationFor?.call(settledSessionId),
+            );
+          } else {
+            await _session.notifications.showKind(
+              kind: kind,
+              title: completed ? 'Hermes response ready' : 'Hermes turn failed',
+              body: settledTitle,
+              eventId: settledTurnId,
+              sessionId: settledSessionId,
+              connectionId: _session.connection.id,
+              payload: jsonEncode({
+                'sessionId': settledSessionId,
+                'connectionId': _session.connection.id,
+                'turnId': settledTurnId,
+              }),
+            );
+          }
         }
       }
     } catch (_) {

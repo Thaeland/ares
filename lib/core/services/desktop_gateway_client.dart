@@ -216,7 +216,12 @@ class DesktopGatewayClient implements SlashCommandGateway {
   Future<_DesktopGatewaySession> _connect(
     String mobileSessionId, {
     String? workingDirectory,
+    Future<bool> Function()? beforeRequest,
   }) async {
+    _checkOpen();
+    if (beforeRequest != null && !await beforeRequest()) {
+      throw StateError('Notification admission revoked');
+    }
     _checkOpen();
     final requestedWorkingDirectory = workingDirectory?.trim();
     if (requestedWorkingDirectory != null &&
@@ -234,18 +239,29 @@ class DesktopGatewayClient implements SlashCommandGateway {
         existing,
         mobileSessionId,
         workingDirectory: effectiveWorkingDirectory,
+        beforeRequest: beforeRequest,
       );
+      if (beforeRequest != null && !await beforeRequest()) {
+        throw StateError('Notification admission revoked');
+      }
       _rememberBinding(existing, mobileSessionId, binding);
       return _DesktopGatewaySession(existing, binding.runtimeSessionId);
     }
 
-    final client = await _ensureSocket();
+    final client = await _ensureSocket(beforeRequest: beforeRequest);
+    if (beforeRequest != null && !await beforeRequest()) {
+      throw StateError('Notification admission revoked');
+    }
     _checkSocket(client);
     final binding = await _resumeOrCreateSingle(
       client,
       mobileSessionId,
       workingDirectory: effectiveWorkingDirectory,
+      beforeRequest: beforeRequest,
     );
+    if (beforeRequest != null && !await beforeRequest()) {
+      throw StateError('Notification admission revoked');
+    }
     _rememberBinding(client, mobileSessionId, binding);
     return _DesktopGatewaySession(client, binding.runtimeSessionId);
   }
@@ -257,6 +273,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
     WsClient client,
     String mobileSessionId, {
     String? workingDirectory,
+    Future<bool> Function()? beforeRequest,
   }) {
     _checkSocket(client);
     final inFlight = _bindingInFlight[mobileSessionId];
@@ -265,6 +282,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
       client,
       mobileSessionId,
       workingDirectory: workingDirectory,
+      beforeRequest: beforeRequest,
     );
     _bindingInFlight[mobileSessionId] = future;
     future.whenComplete(() {
@@ -280,7 +298,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
   /// `isConnected` check, both mint tickets, and both build sockets: the
   /// last assignment wins and the loser's socket leaks with the async-event
   /// bridge attached.
-  Future<WsClient> _ensureSocket() {
+  Future<WsClient> _ensureSocket({Future<bool> Function()? beforeRequest}) {
     _checkOpen();
     final existing = _ws;
     if (existing != null && existing.isConnected) {
@@ -288,7 +306,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
     }
     final inFlight = _socketInFlight;
     if (inFlight != null) return inFlight;
-    final future = _openSocket(existing);
+    final future = _openSocket(existing, beforeRequest: beforeRequest);
     if (!_closed) _socketInFlight = future;
     future.whenComplete(() {
       if (identical(_socketInFlight, future)) _socketInFlight = null;
@@ -296,7 +314,10 @@ class DesktopGatewayClient implements SlashCommandGateway {
     return future;
   }
 
-  Future<WsClient> _openSocket(WsClient? existing) async {
+  Future<WsClient> _openSocket(
+    WsClient? existing, {
+    Future<bool> Function()? beforeRequest,
+  }) async {
     _checkOpen();
     _connectionListener?.call(
       existing == null
@@ -320,6 +341,9 @@ class DesktopGatewayClient implements SlashCommandGateway {
     _capabilities.reset();
     _checkOpen();
     final ticket = await _dashboard.mintWebSocketTicket();
+    if (beforeRequest != null && !await beforeRequest()) {
+      throw StateError('Notification admission revoked');
+    }
     _checkOpen();
     final client = WsClient(
       _baseUrl,
@@ -442,7 +466,12 @@ class DesktopGatewayClient implements SlashCommandGateway {
     WsClient client,
     String mobileSessionId, {
     String? workingDirectory,
+    Future<bool> Function()? beforeRequest,
   }) async {
+    _checkSocket(client);
+    if (beforeRequest != null && !await beforeRequest()) {
+      throw StateError('Notification admission revoked');
+    }
     _checkSocket(client);
     final storedSessionId =
         _storedSessionIds[mobileSessionId] ?? mobileSessionId;
@@ -608,8 +637,15 @@ class DesktopGatewayClient implements SlashCommandGateway {
     String mobileSessionId,
     Future<T> Function(_DesktopGatewaySession session) call, {
     bool Function()? mayRetry,
+    Future<bool> Function()? beforeRequest,
   }) async {
-    final session = await _connect(mobileSessionId);
+    final session = await _connect(
+      mobileSessionId,
+      beforeRequest: beforeRequest,
+    );
+    if (beforeRequest != null && !await beforeRequest()) {
+      throw StateError('Notification admission revoked');
+    }
     _checkSocket(session.client);
     try {
       final result = await call(session);
@@ -624,11 +660,18 @@ class DesktopGatewayClient implements SlashCommandGateway {
         rethrow;
       }
       _gatewaySessionIds.remove(mobileSessionId);
+      if (beforeRequest != null && !await beforeRequest()) {
+        throw StateError('Notification admission revoked');
+      }
       final binding = await _resumeOrCreateSingle(
         client,
         mobileSessionId,
         workingDirectory: _workingDirectories[mobileSessionId],
+        beforeRequest: beforeRequest,
       );
+      if (beforeRequest != null && !await beforeRequest()) {
+        throw StateError('Notification admission revoked');
+      }
       _rememberBinding(client, mobileSessionId, binding);
       return call(_DesktopGatewaySession(client, binding.runtimeSessionId));
     }
@@ -665,14 +708,24 @@ class DesktopGatewayClient implements SlashCommandGateway {
     required String localSessionId,
     required String storedSessionId,
     bool Function()? acceptsResult,
+    Future<bool> Function()? beforeRequest,
   }) {
     bindStoredSession(localSessionId, storedSessionId);
     final existing = _resumeOnlyInFlight[localSessionId];
     if (existing != null) return existing;
     final future = () async {
-      final client = await _ensureSocket();
+      if (beforeRequest != null && !await beforeRequest()) {
+        throw StateError('Notification admission revoked');
+      }
+      final client = await _ensureSocket(beforeRequest: beforeRequest);
+      if (beforeRequest != null && !await beforeRequest()) {
+        throw StateError('Notification admission revoked');
+      }
       _checkSocket(client);
       final resumed = await client.resumeSessionDetails(storedSessionId);
+      if (beforeRequest != null && !await beforeRequest()) {
+        throw StateError('Notification admission revoked');
+      }
       if (_closed || !identical(client, _ws) || !client.isConnected) {
         throw StateError('Session resume belongs to a replaced socket.');
       }
@@ -817,34 +870,47 @@ class DesktopGatewayClient implements SlashCommandGateway {
     required StreamCallback onEvent,
     required void Function() onSent,
     bool Function()? maySend,
+    Future<bool> Function()? beforeSend,
     void Function()? onAccepted,
   }) async {
     var emitted = false;
-    await _callSessionScoped(sessionId, (gateway) {
-      // Admission can converge while _connect is suspended. Nothing awaits
-      // between this fence and the socket sink write.
-      if (maySend?.call() == false) {
-        throw StateError('Prompt admission is no longer owned.');
-      }
-      _checkSocket(gateway.client);
-      return gateway.client.submitPrompt(
-        text,
-        sessionId: gateway.sessionId,
-        onEvent: (event) {
-          if (!_closed) onEvent(event);
-        },
-        maySend: () => !_closed && (maySend?.call() ?? true) && !_closed,
-        onAccepted: () {
-          if (!_closed) onAccepted?.call();
-        },
-        onSent: () {
-          if (_closed) return;
-          emitted = true;
-          _resumeOnlySessions.add(sessionId);
-          onSent();
-        },
-      );
-    }, mayRetry: () => !emitted);
+    if (beforeSend != null && !await beforeSend()) {
+      throw StateError('Notification admission revoked');
+    }
+    await _callSessionScoped(
+      sessionId,
+      (gateway) async {
+        if (beforeSend != null && !await beforeSend()) {
+          throw StateError('Notification admission revoked');
+        }
+        // Admission can converge while _connect is suspended. Nothing awaits
+        // between this fence and the socket sink write.
+        if (maySend?.call() == false) {
+          throw StateError('Prompt admission is no longer owned.');
+        }
+        _checkSocket(gateway.client);
+        return gateway.client.submitPrompt(
+          text,
+          sessionId: gateway.sessionId,
+          onEvent: (event) {
+            if (!_closed) onEvent(event);
+          },
+          beforeSend: beforeSend,
+          maySend: () => !_closed && (maySend?.call() ?? true) && !_closed,
+          onAccepted: () {
+            if (!_closed) onAccepted?.call();
+          },
+          onSent: () {
+            if (_closed) return;
+            emitted = true;
+            _resumeOnlySessions.add(sessionId);
+            onSent();
+          },
+        );
+      },
+      mayRetry: () => !emitted,
+      beforeRequest: beforeSend,
+    );
   }
 
   /// Receives durable session-scoped events plus terminal turn frames.

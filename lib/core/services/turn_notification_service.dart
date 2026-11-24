@@ -8,6 +8,10 @@ import '../../l10n/app_localizations.dart';
 import '../l10n/l10n.dart' show resolvePreferredLocale;
 import 'notification_prefs.dart';
 import 'notification_approval_authority.dart';
+import 'auto_messaging_service.dart';
+import 'connection_manager.dart';
+import 'connection_mutation_barrier.dart';
+import 'mobile_push_service.dart';
 
 /// Delivered to the app root when the user taps a notification body or one of
 /// its action buttons. Set once by the root widget; every service instance
@@ -46,6 +50,26 @@ class TurnNotificationAction {
   const TurnNotificationAction({required this.id, required this.label});
 }
 
+/// Frozen producer authority. A delayed platform post cannot mint a new car
+/// action after an account mutation, including a same-value ABA edit.
+class ConversationNotificationTarget {
+  ConversationNotificationTarget(
+    this.manager,
+    SavedConnection connection,
+    this.data,
+  ) : mutation = ConnectionMutationBarrier.capture(connection.id);
+  final ConnectionManager manager;
+  final Map<String, dynamic> data;
+  final Object? mutation;
+  bool get isCurrent {
+    final id = data['connectionId'] as String;
+    final saved = manager.getConnections().where((c) => c.id == id).firstOrNull;
+    return ConnectionMutationBarrier.isCurrent(id, mutation) &&
+        saved != null &&
+        MobilePushService.binding(saved) == data['binding'];
+  }
+}
+
 /// A notification Hermes wants Android to post, described as plain data.
 class TurnNotification {
   final int id;
@@ -58,6 +82,7 @@ class TurnNotification {
   final bool ongoing;
   final bool silent;
   final bool onlyAlertOnce;
+  final ConversationNotificationTarget? conversation;
 
   const TurnNotification({
     required this.id,
@@ -70,6 +95,7 @@ class TurnNotification {
     this.ongoing = false,
     this.silent = false,
     this.onlyAlertOnce = false,
+    this.conversation,
   });
 }
 
@@ -187,6 +213,41 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
 
   @override
   Future<void> show(TurnNotification notification) async {
+    // Only app-proven assistant finals become conversations. Attention,
+    // failures, tests and generic push hints keep their existing private path.
+    final target = notification.conversation;
+    if (target != null && defaultTargetPlatform == TargetPlatform.android) {
+      if (!notificationKindEnabled(HermesNotificationKind.turnDone)) {
+        throw StateError('Conversation disabled');
+      }
+      if (!target.isCurrent) throw StateError('Conversation account changed');
+      final ticket = await AutoMessagingService.platform.invokeMethod<int>(
+        'ticket',
+        target.data,
+      );
+      if (ticket == null || !target.isCurrent) {
+        throw StateError('Conversation account changed');
+      }
+      final locale = resolvePreferredLocale(
+        PlatformDispatcher.instance.locales,
+        AppLocalizations.supportedLocales,
+      );
+      final strings = lookupAppLocalizations(locale);
+      final sent = await AutoMessagingService.platform
+          .invokeMethod<bool>('show', {
+            'id': notification.id,
+            'title': notification.title,
+            'body': notification.body,
+            'replyLabel': strings.send,
+            'readLabel': strings.ng_mark_as_read,
+            'userLabel': strings.task_role_user,
+            'channelLabel': notification.channel.name,
+            ...target.data,
+            'ticket': ticket,
+          });
+      if (sent != true) throw StateError('Conversation authority unavailable');
+      return;
+    }
     final (importance, priority) = switch (notification.importance) {
       TurnNotificationImportance.high => (Importance.high, Priority.high),
       TurnNotificationImportance.low => (Importance.low, Priority.low),
@@ -239,10 +300,22 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
   }
 
   @override
-  Future<void> cancel(int id) => _plugin.cancel(id);
+  Future<void> cancel(int id) async {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await AutoMessagingService.platform.invokeMethod<void>('cancel', {
+        'id': id,
+      });
+    }
+    await _plugin.cancel(id);
+  }
 
   @override
-  Future<void> cancelAll() => _plugin.cancelAll();
+  Future<void> cancelAll() async {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await AutoMessagingService.platform.invokeMethod<void>('cancelAll');
+    }
+    await _plugin.cancelAll();
+  }
 }
 
 /// Delivers Android notifications when a gateway turn completes while the app
@@ -680,6 +753,7 @@ class TurnNotificationService {
     required String turnId,
     String? sessionId,
     String? connectionId,
+    ConversationNotificationTarget? conversation,
   }) async {
     if (!notificationKindEnabled(HermesNotificationKind.turnDone)) {
       recordAttempt('reply', title, 'skipped', 'replies are off');
@@ -707,8 +781,35 @@ class TurnNotificationService {
           connectionId: connectionId,
         ),
         channel: turnChannel,
+        conversation: conversation,
       ),
     );
+  }
+
+  /// Frozen account provenance at the producer, not a lookup from the currently
+  /// selected connection when a delayed notification finally posts.
+  static ConversationNotificationTarget? conversationTarget(
+    ConnectionManager manager,
+    SavedConnection connection,
+    String? sessionId,
+  ) {
+    if (sessionId == null ||
+        sessionId.isEmpty ||
+        sessionId == '__new__' ||
+        !ConnectionMutationBarrier.isCurrent(
+          connection.id,
+          ConnectionMutationBarrier.capture(connection.id),
+        )) {
+      return null;
+    }
+    final metadata = manager.mobilePushConsentMetadata(connection.id);
+    if (metadata == null) return null;
+    return ConversationNotificationTarget(manager, connection, {
+      'connectionId': connection.id,
+      'sessionId': sessionId,
+      'binding': MobilePushService.binding(connection),
+      'metadata': metadata,
+    });
   }
 
   /// Cancels a specific turn notification.

@@ -64,11 +64,6 @@ bool routeNotificationAnswerToNextGen({
 /// ChatService does.
 final ValueNotifier<bool> nextGenTurnActive = ValueNotifier(false);
 
-/// A voice reply from Android Auto that must open a NextGen chat once the
-/// shell is ready. Consumed by [MainPage] so the reply lands in the same
-/// interface the user is looking at instead of the Classic chat screen.
-final ValueNotifier<String?> pendingNextGenVoiceReply = ValueNotifier(null);
-
 /// The accents NextGen offers (Kyllene's palette: one blue, five others).
 enum NgAccent { blue, violet, green, orange, pink, teal }
 

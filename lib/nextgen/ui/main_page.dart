@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/models/session.dart';
 import '../../core/services/notification_prefs.dart';
+import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/turn_notification_service.dart';
 import '../data/nextgen_gateway.dart';
 import '../data/chat_controller.dart';
@@ -33,6 +34,8 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
   NgSessionsModel? _sessions;
   NgChatController? _chat;
   bool _foreground = true;
+  NextGenGateway? _notificationGateway;
+  Object? _notificationMutation;
 
   /// LRU cache of recently-viewed chat controllers. Keeps parsed transcripts
   /// in memory so switching back doesn't re-fetch multi-MB history pages.
@@ -46,19 +49,12 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     nextGenOpenRequest.addListener(_onOpenRequest);
     nextGenNotificationAnswer.addListener(_onNotificationAnswer);
-    pendingNextGenVoiceReply.addListener(_onPendingVoiceReply);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && pendingNextGenVoiceReply.value != null) {
-        unawaited(_onPendingVoiceReply());
-      }
-    });
   }
 
   @override
   void dispose() {
     nextGenOpenRequest.removeListener(_onOpenRequest);
     nextGenNotificationAnswer.removeListener(_onNotificationAnswer);
-    pendingNextGenVoiceReply.removeListener(_onPendingVoiceReply);
     _requestSub?.cancel();
     _watchedGateway?.removeListener(_onGatewayChanged);
     _pendingAnswerTimeout?.cancel();
@@ -93,27 +89,16 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
     _openId(id, '');
   }
 
-  /// Android Auto voice reply: open a fresh NextGen chat and send the text
-  /// there, instead of the Classic chat screen.
-  Future<void> _onPendingVoiceReply() async {
-    if (!mounted) return;
-    final text = pendingNextGenVoiceReply.value;
-    if (text == null || text.trim().isEmpty) return;
-    pendingNextGenVoiceReply.value = null;
-    _newChat();
-    // The new controller is installed synchronously by _openId; give it one
-    // frame so the chat view is attached before sending.
-    await Future<void>.delayed(const Duration(milliseconds: 150));
-    if (!mounted) return;
-    final chat = _chat;
-    if (chat == null) return;
-    await chat.send(text);
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final scope = NgScope.of(context);
+    if (!identical(_notificationGateway, scope.gateway)) {
+      _notificationGateway = scope.gateway;
+      _notificationMutation = ConnectionMutationBarrier.capture(
+        scope.connection.id,
+      );
+    }
     final sessions = _sessions;
     if (sessions == null) {
       _sessions = NgSessionsModel(scope);
@@ -435,7 +420,21 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
         : text.length > 180
         ? '${text.substring(0, 180)}…'
         : text;
-    final connectionId = NgScope.of(context).connection.id;
+    final scope = NgScope.of(context);
+    final connectionId = chat.gateway.connection.id;
+    final conversation =
+        identical(chat.gateway, scope.gateway) &&
+            ConnectionMutationBarrier.isCurrent(
+              connectionId,
+              _notificationMutation,
+            ) &&
+            text.isNotEmpty
+        ? TurnNotificationService.conversationTarget(
+            scope.connManager,
+            chat.gateway.connection,
+            stored,
+          )
+        : null;
     final notifications = TurnNotificationService.shared;
     unawaited(
       failed
@@ -452,6 +451,7 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
               turnId: _replyTurnId,
               sessionId: stored,
               connectionId: connectionId,
+              conversation: conversation,
             ),
     );
     if (stored != null) _postedReplies.add(stored);
