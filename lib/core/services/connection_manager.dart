@@ -3644,6 +3644,68 @@ class DashboardClient {
     );
   }
 
+  /// For the NextGen Models page: the default model the gateway holds, and
+  /// whether its endpoint address exists only in that setting, so assigning
+  /// another model would lose it. That is the case for an endpoint with no
+  /// name on the gateway, an address that differs from the named endpoint it
+  /// belongs to, and an address that replaces a provider's known standard
+  /// one. An address saved for a provider the app has no standard address
+  /// for is taken as that provider's own: the gateway saves one on every
+  /// ordinary switch. Addresses are compared here and not kept.
+  Future<({String provider, String model, bool endpointOnlyHere})>
+  getMainModelEndpointOwnership() async {
+    final data = await apiGet(
+      'providers/custom-endpoints',
+      queryParameters: _modelQuery(),
+    );
+    final current = data['current'];
+    final endpoints = data['endpoints'];
+    if (current is! Map ||
+        current['provider'] is! String ||
+        current['model'] is! String ||
+        current['base_url'] is! String ||
+        endpoints is! List ||
+        endpoints.any((row) => row is! Map || row['is_current'] is! bool)) {
+      throw const FormatException('Invalid main model routing metadata');
+    }
+    final provider = current['provider'] as String;
+    final address = _endpointAddress(current['base_url']);
+    // A named endpoint the gateway marks as the one in use. The row the
+    // gateway makes up for an unnamed endpoint is not one.
+    final named = [
+      for (final row in endpoints)
+        if (row['is_current'] == true &&
+            row['id'] != 'custom' &&
+            row['source'] != 'direct-config')
+          row as Map,
+    ];
+    final bool onlyHere;
+    if (address.isEmpty) {
+      onlyHere = false;
+    } else if (named.isNotEmpty) {
+      onlyHere = !named.any(
+        (row) => _endpointAddress(row['base_url']) == address,
+      );
+    } else if (isUnnamedEndpointProvider(provider)) {
+      onlyHere = true;
+    } else {
+      onlyHere = mainModelOverridesStandardEndpoint(
+        provider,
+        current['base_url'] as String,
+      );
+    }
+    return (
+      provider: provider,
+      model: current['model'] as String,
+      endpointOnlyHere: onlyHere,
+    );
+  }
+
+  // The gateway compares endpoint addresses without case or trailing slashes.
+  static String _endpointAddress(Object? raw) => raw is String
+      ? raw.trim().replaceFirst(RegExp(r'/+$'), '').toLowerCase()
+      : '';
+
   Future<Map<String, dynamic>> getModelInfo() =>
       apiGet('model/info', queryParameters: _modelQuery());
   Future<Map<String, dynamic>> getModelOptions() =>

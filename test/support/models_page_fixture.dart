@@ -41,8 +41,14 @@ class ModelsFixture {
   /// The gateway's warning for a model it wants confirmed first.
   String? confirmMessage;
 
-  /// The default model's endpoint; empty for a provider's own address.
+  /// The address saved with the default model when its provider is not a
+  /// named endpoint; empty for none. A default on a named endpoint reports
+  /// that endpoint's address unless this overrides it.
   String endpoint = '';
+
+  /// The gateway replaces the saved address when the default changes. Off
+  /// for a gateway that leaves the old one behind.
+  bool replacesAddress = true;
   Completer<http.Response>? heldWrite;
   Completer<http.Response>? heldInfo;
 
@@ -213,13 +219,51 @@ class ModelsFixture {
         return _json(config);
       }
       if (path.endsWith('/providers/custom-endpoints')) {
+        // As the gateway builds it: one row per named endpoint, the one in
+        // use marked, and a made-up `custom` row for an endpoint that has no
+        // name. An unnamed endpoint at a named endpoint's address marks
+        // that row instead.
+        final named = [
+          for (final p in providers)
+            if (p['is_user_defined'] == true && p['api_url'] is String) p,
+        ];
+        String bare(Object? url) => '$url'.replaceFirst(RegExp(r'/+$'), '');
+        bool inUse(Map<String, dynamic> p) =>
+            p['slug'] == info['provider'] ||
+            (info['provider'] == 'custom' &&
+                bare(p['api_url']) == bare(endpoint));
+        final own = named.where((p) => p['slug'] == info['provider']);
+        final address = endpoint.isNotEmpty || own.isEmpty
+            ? endpoint
+            : own.first['api_url'] as String;
         return _json({
           'current': {
             'provider': info['provider'],
             'model': info['model'],
-            'base_url': endpoint,
+            'base_url': address,
           },
-          'endpoints': [],
+          'endpoints': [
+            for (final p in named)
+              {
+                'id': p['slug'],
+                'name': p['name'],
+                'base_url': p['api_url'],
+                'is_current': inUse(p),
+                'source': 'providers',
+                'has_api_key': true,
+                'api_key_preview': 'sk-...cret',
+              },
+            if (info['provider'] == 'custom' &&
+                endpoint.isNotEmpty &&
+                !named.any(inUse))
+              {
+                'id': 'custom',
+                'name': 'Custom',
+                'base_url': endpoint,
+                'is_current': true,
+                'source': 'direct-config',
+              },
+          ],
         }, routeStatus);
       }
       if (path.endsWith('/model/set')) {
@@ -242,6 +286,7 @@ class ModelsFixture {
               'provider': body['provider'],
               'model': body['model'],
             };
+            if (replacesAddress) endpoint = '';
           } else {
             tasks = [
               for (final task in tasks)

@@ -56,3 +56,18 @@ bool mainModelUsesCustomEndpoint(String provider, String baseUrl) {
   return canonical == null ||
       baseUrl.replaceFirst(RegExp(r'/+$'), '') != canonical;
 }
+
+/// True when [baseUrl] provably replaces [provider]'s standard address. A
+/// provider with no reviewed standard address proves nothing either way:
+/// plugin and newer providers save their own address in the same field.
+bool mainModelOverridesStandardEndpoint(String provider, String baseUrl) {
+  final canonical = _canonicalEndpoints[provider];
+  return canonical != null &&
+      baseUrl.isNotEmpty &&
+      baseUrl.replaceFirst(RegExp(r'/+$'), '') != canonical;
+}
+
+/// `custom` and `local` name an endpoint the gateway holds without a name of
+/// its own. It exists only where it is used.
+bool isUnnamedEndpointProvider(String provider) =>
+    provider == 'custom' || provider == 'local';

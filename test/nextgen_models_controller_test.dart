@@ -27,7 +27,7 @@ void main() {
     expect(c.loading, isFalse);
     expect(c.main!.model, 'claude-opus-4.5');
     expect(c.routeVerified, isTrue);
-    expect(c.customRoute, isFalse);
+    expect(c.endpointOnlyHere, isFalse);
     expect(c.canChangeMain, isTrue);
     expect(c.catalog!.providers, hasLength(3));
     expect(c.auxTasks, hasLength(5));
@@ -192,10 +192,16 @@ void main() {
       );
     });
 
-    test('only standard catalogue models can be chosen', () async {
-      final (f, c) = await loaded();
+    test('only models the gateway lists can be chosen', () async {
+      final (f, c) = await loaded(
+        (f) => f.providers.add({
+          'slug': 'custom',
+          'name': 'Custom',
+          'models': ['private-model'],
+        }),
+      );
       for (final (provider, model) in [
-        ('homelab', 'local-llm'), // endpoint on the gateway
+        ('custom', 'private-model'), // an endpoint with no name
         ('openrouter', 'openai/gpt-pro'), // not on the plan
         ('anthropic', 'made-up'), // not offered
         ('', ''),
@@ -209,18 +215,111 @@ void main() {
       expect(f.modelWrites, isEmpty);
     });
 
-    test('a default on a custom endpoint is never changed', () async {
-      final (f, c) = await loaded(
+    // The three cases where assigning another model would lose an endpoint
+    // the app could not choose again.
+    for (final (name, arrange) in <(String, void Function(ModelsFixture))>[
+      (
+        'an address that replaces the provider\'s own',
         (f) => f.endpoint = 'https://private.example/v1',
+      ),
+      (
+        'an endpoint with no name',
+        (f) {
+          f.info = {...f.info, 'provider': 'custom', 'model': 'private-model'};
+          f.endpoint = 'https://private.example/v1';
+        },
+      ),
+      (
+        'a named endpoint used at another address',
+        (f) {
+          f.info = {...f.info, 'provider': 'homelab', 'model': 'local-llm'};
+          f.endpoint = 'https://elsewhere.example/v1';
+        },
+      ),
+    ]) {
+      test('a default on $name is never changed', () async {
+        final (f, c) = await loaded(arrange);
+        expect(c.routeVerified, isTrue);
+        expect(c.endpointOnlyHere, isTrue);
+        expect(c.canChangeMain, isFalse);
+        expect(
+          await c.setMain('openrouter', 'google/gemini-flash'),
+          isA<NgModelSaveFailed>(),
+        );
+        expect(f.modelWrites, isEmpty);
+      });
+    }
+
+    test('a default on a named endpoint is changed and changed back', () async {
+      final (f, c) = await loaded(
+        (f) =>
+            f.info = {...f.info, 'provider': 'homelab', 'model': 'local-llm'},
       );
       expect(c.routeVerified, isTrue);
-      expect(c.customRoute, isTrue);
-      expect(c.canChangeMain, isFalse);
+      expect(c.endpointOnlyHere, isFalse);
+      expect(c.canChangeMain, isTrue);
+
       expect(
         await c.setMain('openrouter', 'google/gemini-flash'),
-        isA<NgModelSaveFailed>(),
+        isA<NgModelSaved>(),
       );
-      expect(f.modelWrites, isEmpty);
+      expect(c.main!.provider, 'openrouter');
+      // The named endpoint is chosen by name; no address is sent.
+      expect(await c.setMain('homelab', 'local-llm'), isA<NgModelSaved>());
+      expect(f.modelWrites.last, {
+        'scope': 'main',
+        'provider': 'homelab',
+        'model': 'local-llm',
+        'profile': profile,
+      });
+      expect(c.main!.provider, 'homelab');
+      expect(c.canChangeMain, isTrue);
+    });
+
+    test('a default on a provider with its own saved address is changed, '
+        'whether or not its model is listed', () async {
+      // A plugin or newer provider: the gateway saves its address with the
+      // default model, and the app has no standard address to compare.
+      final (f, c) = await loaded((f) {
+        f.providers.add({
+          'slug': 'plugin-subscription',
+          'name': 'Plugin subscription',
+          'models': ['big-model'],
+        });
+        f.info = {
+          ...f.info,
+          'provider': 'plugin-subscription',
+          'model': 'big-model[1m]',
+        };
+        f.endpoint = 'https://plugin.example/v1';
+      });
+      expect(c.routeVerified, isTrue);
+      expect(c.endpointOnlyHere, isFalse);
+      expect(c.canChangeMain, isTrue);
+      expect(
+        await c.setMain('anthropic', 'claude-haiku-4.5'),
+        isA<NgModelSaved>(),
+      );
+      expect(c.main!.model, 'claude-haiku-4.5');
+      expect(
+        await c.setMain('plugin-subscription', 'big-model'),
+        isA<NgModelSaved>(),
+      );
+    });
+
+    test('an endpoint with no name that the gateway also holds by name '
+        'can be changed', () async {
+      final (f, c) = await loaded((f) {
+        f.info = {...f.info, 'provider': 'custom', 'model': 'local-llm'};
+        f.endpoint = 'http://private.example:8000/v1/';
+      });
+      expect(c.endpointOnlyHere, isFalse);
+      expect(c.canChangeMain, isTrue);
+      expect(
+        await c.setMain('openrouter', 'google/gemini-flash'),
+        isA<NgModelSaved>(),
+      );
+      expect(f.modelWrites, hasLength(1));
     });
 
     test('an unreadable route leaves the default unchangeable', () async {
@@ -240,7 +339,8 @@ void main() {
       expect(c.canChangeMain, isTrue);
     });
 
-    test('a change that lands on a custom endpoint is not confirmed', () async {
+    test('a change after which the old address is still there is not '
+        'confirmed', () async {
       final fixture = ModelsFixture();
       final controller = NgModelSettingsController(fixture.client);
       addTearDown(controller.dispose);
@@ -257,7 +357,7 @@ void main() {
       fixture.endpoint = 'https://private.example/v1';
       write.complete(http.Response('{"ok":true}', 200));
       expect(await pending, isA<NgModelSaveFailed>());
-      expect(controller.customRoute, isTrue);
+      expect(controller.endpointOnlyHere, isTrue);
       expect(controller.canChangeMain, isFalse);
     });
   });
@@ -348,12 +448,26 @@ void main() {
         () => c.setAux('custom_route', 'auto', ''),
         () => c.setAuxEffort('custom_route', 'high'),
         () => c.setAux('never_listed', 'anthropic', 'claude-haiku-4.5'),
-        () => c.setAux('vision', 'homelab', 'local-llm'),
+        () => c.setAux('vision', 'custom', 'private-model'),
         () => c.setAux('vision', 'openrouter', 'openai/gpt-pro'),
       ]) {
         expect(await attempt(), isA<NgModelSaveFailed>());
       }
       expect(f.modelWrites, isEmpty);
+
+      // A named endpoint is assigned by name, like any other provider.
+      expect(
+        await c.setAux('vision', 'homelab', 'local-llm'),
+        isA<NgModelSaved>(),
+      );
+      expect(f.modelWrites.single, {
+        'scope': 'auxiliary',
+        'task': 'vision',
+        'provider': 'homelab',
+        'model': 'local-llm',
+        'confirm_expensive_model': false,
+        'profile': profile,
+      });
     });
 
     test('a save the gateway did not keep is not a save', () async {
@@ -397,10 +511,11 @@ void main() {
       final (f, c) = await loaded();
       expect(c.addFallback('anthropic', 'claude-haiku-4.5'), isTrue);
       expect(c.fallbackDirty, isTrue);
-      // The same route twice, an endpoint and a plan-locked model are refused.
+      // The same route twice, a plan-locked model and one that is not
+      // listed are refused.
       expect(c.addFallback('anthropic', 'claude-haiku-4.5'), isFalse);
-      expect(c.addFallback('homelab', 'local-llm'), isFalse);
       expect(c.addFallback('openrouter', 'openai/gpt-pro'), isFalse);
+      expect(c.addFallback('anthropic', 'made-up'), isFalse);
       expect(c.fallbackDraft.map((e) => e.model), [
         'google/gemini-flash',
         'claude-haiku-4.5',
@@ -419,6 +534,70 @@ void main() {
       expect(c.fallbackDirty, isFalse);
       expect(f.configWrites, isEmpty);
     });
+
+    test(
+      'a row is given another model in place, named endpoints included',
+      () async {
+        final (f, c) = await loaded(
+          (f) => f.config = {
+            'fallback_providers': [
+              {'provider': 'openrouter', 'model': 'google/gemini-flash'},
+              {'provider': 'homelab', 'model': 'local-llm'},
+              {
+                'provider': 'lab',
+                'model': 'private-model',
+                'base_url': r'${LAB_URL}',
+                'key_env': 'LAB_KEY',
+              },
+              {'provider': 'retired', 'model': 'old-model'},
+            ],
+          },
+        );
+        // A named endpoint is an ordinary row; routing details and a provider
+        // the gateway no longer lists keep the model they have.
+        expect(c.fallbackLocked(c.fallbackDraft[1]), isFalse);
+        expect(c.fallbackLocked(c.fallbackDraft[2]), isTrue);
+        expect(c.fallbackLocked(c.fallbackDraft[3]), isTrue);
+
+        expect(c.replaceFallback(0, 'anthropic', 'claude-haiku-4.5'), isTrue);
+        expect(c.fallbackDirty, isTrue);
+        // Refused: a row already in the list, the same model again, a model
+        // that cannot be assigned, a row that must keep its model, no row.
+        expect(c.replaceFallback(0, 'homelab', 'local-llm'), isFalse);
+        expect(c.replaceFallback(0, 'anthropic', 'claude-haiku-4.5'), isFalse);
+        expect(c.replaceFallback(0, 'openrouter', 'openai/gpt-pro'), isFalse);
+        expect(c.replaceFallback(2, 'anthropic', 'claude-opus-4.5'), isFalse);
+        expect(c.replaceFallback(3, 'anthropic', 'claude-opus-4.5'), isFalse);
+        expect(c.replaceFallback(9, 'anthropic', 'claude-opus-4.5'), isFalse);
+        expect(
+          c.replaceFallback(1, 'openrouter', 'google/gemini-flash'),
+          isTrue,
+        );
+        expect(f.configWrites, isEmpty);
+
+        expect(await c.saveFallbacks(), isA<NgModelSaved>());
+        final sent = f.configWrites.single['config'] as Map<String, dynamic>;
+        expect(sent['fallback_providers'], [
+          {'provider': 'anthropic', 'model': 'claude-haiku-4.5'},
+          {'provider': 'openrouter', 'model': 'google/gemini-flash'},
+          {
+            'provider': 'lab',
+            'model': 'private-model',
+            'base_url': r'${LAB_URL}',
+            'key_env': 'LAB_KEY',
+          },
+          {'provider': 'retired', 'model': 'old-model'},
+        ]);
+        expect(c.fallbackDirty, isFalse);
+
+        // A named endpoint is added by name as well.
+        expect(c.addFallback('homelab', 'local-llm'), isTrue);
+        expect(c.fallbackDraft.last.toJson(), {
+          'provider': 'homelab',
+          'model': 'local-llm',
+        });
+      },
+    );
 
     test('saving sends only the list, in order, and reads it back', () async {
       final (f, c) = await loaded();

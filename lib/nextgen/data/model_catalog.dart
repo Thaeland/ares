@@ -1,8 +1,8 @@
 // What the gateway reports about models, in the shape the Models page shows.
 //
 // Built from `model/options`, `model/info` and `model/auxiliary`. Endpoint
-// addresses and key names in those payloads are reduced to "has a custom
-// endpoint" here and never kept, so nothing on the page can show one.
+// addresses and key names in those payloads are never kept, so nothing on
+// the page can show one.
 import '../../core/services/main_model_route.dart';
 
 /// Prices as the gateway formats them: `$3.00`, `free`, or empty when unknown.
@@ -111,7 +111,7 @@ class NgCatalogProvider {
     required this.name,
     required this.models,
     required this.totalModels,
-    required this.custom,
+    required this.unnamed,
     this.warning,
     this.windows = const [],
     this.accounts = const [],
@@ -124,9 +124,11 @@ class NgCatalogProvider {
   final List<NgCatalogModel> models;
   final int totalModels;
 
-  /// Runs on an endpoint set up on the gateway. The app can show these but
-  /// never assigns them, because it cannot carry the endpoint along.
-  final bool custom;
+  /// An endpoint the gateway holds without a name (`custom` or `local`). It
+  /// is shown but cannot be chosen: there is no name to assign it by. A named
+  /// endpoint is an ordinary provider here, because the gateway keeps its
+  /// address and key and applies them when one of its models is assigned.
+  final bool unnamed;
   final String? warning;
   final List<NgUsageWindow> windows;
   final List<NgUsageAccount> accounts;
@@ -150,7 +152,7 @@ class NgModelCatalog {
 
   /// Providers a model can be assigned from.
   Iterable<NgCatalogProvider> get assignable =>
-      providers.where((p) => !p.custom && p.models.isNotEmpty);
+      providers.where((p) => !p.unnamed && p.models.isNotEmpty);
 
   NgCatalogProvider? provider(String slug) {
     for (final p in providers) {
@@ -167,7 +169,7 @@ class NgModelCatalog {
   bool canAssign(String provider, String model) {
     final row = this.provider(provider);
     final entry = row?.model(model);
-    return row != null && !row.custom && entry != null && !entry.locked;
+    return row != null && !row.unnamed && entry != null && !entry.locked;
   }
 
   factory NgModelCatalog.fromOptions(Map<String, dynamic> data) {
@@ -266,7 +268,7 @@ class NgModelCatalog {
           totalModels: total is int && total > models.length
               ? total
               : models.length,
-          custom: _customProvider(row, slug),
+          unnamed: isUnnamedEndpointProvider(slug),
           warning: warning.isEmpty ? null : warning,
           windows: usage is Map
               ? NgUsageWindow.parseAll(usage['windows'])
@@ -281,16 +283,6 @@ class NgModelCatalog {
   }
 }
 
-bool _customProvider(Map row, String slug) =>
-    ngCustomProviderSlug(slug) ||
-    row['is_user_defined'] == true ||
-    (row['api_url'] ?? '') != '' ||
-    (row['base_url'] ?? '') != '';
-
-/// Slugs that always mean an endpoint set up on the gateway.
-bool ngCustomProviderSlug(String slug) =>
-    slug == 'custom' || slug == 'local' || slug.startsWith('custom:');
-
 DateTime? _time(Object? raw) =>
     raw is String && raw.isNotEmpty ? DateTime.tryParse(raw) : null;
 
@@ -302,7 +294,6 @@ class NgMainModel {
     required this.autoContext,
     required this.configContext,
     required this.effectiveContext,
-    required this.customEndpoint,
     this.tools,
     this.vision,
     this.reasoning,
@@ -315,8 +306,6 @@ class NgMainModel {
   final int configContext;
   final int effectiveContext;
 
-  /// The reported address is not the provider's own.
-  final bool customEndpoint;
   final bool? tools;
   final bool? vision;
   final bool? reasoning;
@@ -338,10 +327,6 @@ class NgMainModel {
       autoContext: count(info['auto_context_length']),
       configContext: count(info['config_context_length']),
       effectiveContext: count(info['effective_context_length']),
-      customEndpoint: mainModelUsesCustomEndpoint(
-        text('provider'),
-        text('base_url'),
-      ),
       tools: flag('supports_tools'),
       vision: flag('supports_vision'),
       reasoning: flag('supports_reasoning'),
@@ -369,8 +354,9 @@ class NgAuxTask {
   final String provider;
   final String model;
 
-  /// Set to an endpoint on the gateway: shown, never changed from the app,
-  /// because a new assignment would drop the endpoint.
+  /// Carries its own endpoint address, or uses an endpoint with no name:
+  /// shown, never changed from the app, because the gateway drops that
+  /// endpoint when the task is given another model.
   final bool endpoint;
 
   /// The gateway reports a thinking level for helper tasks.
@@ -409,7 +395,8 @@ class NgAuxTask {
           provider: provider,
           model: row['model'] is String ? row['model'] as String : '',
           endpoint:
-              (row['base_url'] ?? '') != '' || ngCustomProviderSlug(provider),
+              (row['base_url'] ?? '') != '' ||
+              isUnnamedEndpointProvider(provider),
           effortSupported: row.containsKey('reasoning_effort'),
           effort: text(row['reasoning_effort']),
           label: text(row['label']),
