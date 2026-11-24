@@ -53,7 +53,7 @@ jobs:
       - name: Verify voice preparation and native CI configuration
         run: python3 -m unittest scripts.test_prepare_voice_inputs scripts.test_native_ci_config
       - name: Cache hash-verified build-time voice artifacts
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/hermes-voice
           key: voice-inputs-${{ hashFiles('third_party/voice/manifest.json') }}
