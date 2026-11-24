@@ -82,6 +82,63 @@ void main() {
       expect(c.saving, isFalse);
     });
 
+    test('another model read back is shown, and is not a save', () async {
+      final (f, c) = await loaded();
+      final write = Completer<http.Response>();
+      f.heldWrite = write;
+      final pending = c.setMain('openrouter', 'google/gemini-flash');
+      await pumpEventQueue();
+      // The gateway accepts the write but ends up on a different model.
+      f.heldWrite = null;
+      f.info = {
+        ...f.info,
+        'provider': 'anthropic',
+        'model': 'claude-haiku-4.5',
+      };
+      write.complete(http.Response(jsonEncode({'ok': true}), 200));
+      expect(await pending, isA<NgModelSaveFailed>());
+      expect(c.main!.provider, 'anthropic');
+      expect(c.main!.model, 'claude-haiku-4.5');
+      expect(c.saving, isFalse);
+    });
+
+    test('a write or a read-back that fails leaves nothing stuck', () async {
+      final (f, c) = await loaded();
+      // The gateway answers the write with an error.
+      final write = Completer<http.Response>();
+      f.heldWrite = write;
+      final refused = c.setMain('openrouter', 'google/gemini-flash');
+      await pumpEventQueue();
+      expect(c.saving, isTrue);
+      write.complete(
+        http.Response(jsonEncode({'detail': 'secret-detail'}), 500),
+      );
+      expect(await refused, isA<NgModelSaveFailed>());
+      expect(c.saving, isFalse);
+      expect(c.canChangeMain, isTrue);
+
+      // The write is accepted, then the read-back fails.
+      f.heldWrite = null;
+      f.failInfo = true;
+      expect(
+        await c.setMain('openrouter', 'google/gemini-flash'),
+        isA<NgModelSaveFailed>(),
+      );
+      expect(c.saving, isFalse);
+
+      // The connection drops while a write is on its way.
+      f.failInfo = false;
+      final dropped = Completer<http.Response>();
+      f.heldWrite = dropped;
+      final lost = c.setAux('vision', 'anthropic', 'claude-haiku-4.5');
+      await pumpEventQueue();
+      expect(c.saving, isTrue);
+      dropped.completeError(http.ClientException('connection closed'));
+      expect(await lost, isA<NgModelSaveFailed>());
+      expect(c.saving, isFalse);
+      expect(c.canEditAux, isTrue);
+    });
+
     test('a refused write is not a save', () async {
       final (_, c) = await loaded((f) => f.accept = false);
       expect(
@@ -260,6 +317,20 @@ void main() {
         );
       },
     );
+
+    test('a thinking level the gateway did not keep is not a save', () async {
+      final (f, c) = await loaded((f) => f.persist = false);
+      expect(
+        await c.setAuxEffort('compression', 'high'),
+        isA<NgModelSaveFailed>(),
+      );
+      expect(f.modelWrites.single['reasoning_effort'], 'high');
+      expect(
+        c.auxTasks!.firstWhere((t) => t.task == 'compression').effort,
+        'low',
+      );
+      expect(c.saving, isFalse);
+    });
 
     test('no thinking level is sent to a gateway that reports none', () async {
       final (f, c) = await loaded();
@@ -466,6 +537,32 @@ void main() {
       c.revertFallbacks();
       expect(c.fallbackDraft.single.model, 'meta/llama-free');
     });
+
+    test('unsaved edits survive a refresh that fails', () async {
+      final (f, c) = await loaded();
+      c.addFallback('anthropic', 'claude-haiku-4.5');
+      f.schemaStatus = 404;
+      await c.load();
+      expect(c.fallbackFailed, isTrue);
+      // Kept, but not editable or saveable until the list can be read again.
+      expect(c.fallbackDraft, hasLength(2));
+      expect(c.canEditFallbacks, isFalse);
+      c.removeFallback(0);
+      expect(c.addFallback('openrouter', 'meta/llama-free'), isFalse);
+      expect(c.fallbackDraft, hasLength(2));
+      expect(await c.saveFallbacks(), isA<NgModelSaveFailed>());
+      expect(f.configWrites, isEmpty);
+
+      f.schemaStatus = 200;
+      await c.load();
+      expect(c.fallbackFailed, isFalse);
+      expect(c.fallbackDraft.map((e) => e.model), [
+        'google/gemini-flash',
+        'claude-haiku-4.5',
+      ]);
+      expect(c.fallbackDirty, isTrue);
+      expect(c.canEditFallbacks, isTrue);
+    });
   });
 
   group('sections fail on their own', () {
@@ -562,6 +659,28 @@ void main() {
       expect(c.main!.model, 'claude-opus-4.5');
       // No read-back was attempted for a page that is gone.
       expect(fixture.at('/model/info'), hasLength(1));
+    });
+
+    test('a page that has closed sends nothing', () async {
+      final fixture = ModelsFixture();
+      addTearDown(fixture.client.close);
+      final c = NgModelSettingsController(fixture.client);
+      await c.load();
+      c.addFallback('anthropic', 'claude-haiku-4.5');
+      final requests = fixture.requests.length;
+      c.dispose();
+      expect(c.canChangeMain, isFalse);
+      expect(c.canEditAux, isFalse);
+      expect(c.canEditFallbacks, isFalse);
+      for (final attempt in [
+        () => c.setMain('openrouter', 'google/gemini-flash'),
+        () => c.setAux('vision', 'anthropic', 'claude-haiku-4.5'),
+        () => c.setAuxEffort('compression', 'high'),
+        () => c.saveFallbacks(),
+      ]) {
+        expect(await attempt(), isA<NgModelSaveFailed>());
+      }
+      expect(fixture.requests, hasLength(requests));
     });
 
     test('a slow first read cannot overwrite a newer one', () async {

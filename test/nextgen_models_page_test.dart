@@ -144,6 +144,9 @@ void main() {
       'Output price',
       'Tools',
       'Vision',
+      // The model list calls every model it has no record for a reasoning
+      // model, so only `model/info` counts.
+      'Reasoning',
       'Free',
     ]) {
       expect(inside(card, absent), findsNothing, reason: absent);
@@ -367,6 +370,34 @@ void main() {
     expect(fixture.modelWrites[2]['confirm_expensive_model'], isTrue);
     expect(inside('ng-models-default', 'claude-haiku-4.5'), findsOneWidget);
   });
+
+  testWidgets(
+    'agreeing after the page moved to another gateway sends nothing',
+    (tester) async {
+      final first = await open(
+        tester,
+        arrange: (f) => f.confirmMessage = 'claude-haiku-4.5 is expensive.',
+      );
+      await tapKey(tester, 'ng-models-change-default');
+      await tester.tap(choice('anthropic/claude-haiku-4.5'));
+      await tester.pumpAndSettle();
+      expect(find.text('claude-haiku-4.5 is expensive.'), findsOneWidget);
+
+      // The page is given another gateway while the warning is still open.
+      final second = ModelsFixture();
+      addTearDown(second.client.close);
+      await tester.pumpWidget(
+        app(NgModelsPage(connection: modelsConnection, client: second.client)),
+      );
+      await tester.pumpAndSettle();
+      expect(second.at('/model/info'), hasLength(1));
+
+      await tapKey(tester, 'ng-models-confirm');
+      expect(first.modelWrites, hasLength(1));
+      expect(second.modelWrites, isEmpty);
+      expect(find.textContaining('Profile default set to'), findsNothing);
+    },
+  );
 
   testWidgets('a save that cannot be confirmed says so', (tester) async {
     final fixture = await open(tester, arrange: (f) => f.persist = false);

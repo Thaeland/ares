@@ -75,6 +75,7 @@ class NgModelSettingsController extends ChangeNotifier {
       !_routeVerified || _endpointRoute || (main?.customEndpoint ?? true);
 
   bool get canChangeMain =>
+      !_disposed &&
       !saving &&
       !mainLoading &&
       !mainFailed &&
@@ -83,10 +84,14 @@ class NgModelSettingsController extends ChangeNotifier {
       !customRoute;
 
   bool get canEditFallbacks =>
-      !saving && !fallbackLoading && !fallbackFailed && fallback != null;
+      !_disposed &&
+      !saving &&
+      !fallbackLoading &&
+      !fallbackFailed &&
+      fallback != null;
 
   bool get canEditAux =>
-      !saving && !auxLoading && !auxFailed && auxTasks != null;
+      !_disposed && !saving && !auxLoading && !auxFailed && auxTasks != null;
 
   bool get fallbackDirty {
     final saved = fallback?.entries;
@@ -191,8 +196,12 @@ class NgModelSettingsController extends ChangeNotifier {
     } catch (_) {
       if (!_alive(generation)) return;
       // A list that cannot be read in full must not be left half editable.
-      fallback = null;
-      fallbackDraft = const [];
+      // Unsaved edits are kept for the next read that works; until then
+      // [fallbackFailed] keeps them from being changed or saved.
+      if (!keepDraft) {
+        fallback = null;
+        fallbackDraft = const [];
+      }
       fallbackFailed = true;
     }
     fallbackLoading = false;
@@ -243,11 +252,13 @@ class NgModelSettingsController extends ChangeNotifier {
       ]);
       if (!_alive(generation)) return const NgModelSaveFailed();
       final info = NgMainModel.fromInfo(readback[0] as Map<String, dynamic>);
+      // Whatever came back is what the gateway holds now, so the page shows
+      // it even when it is not the model that was asked for.
+      main = info;
+      _acceptRoute(readback[1] as _Route?);
       if (info.provider != provider || info.model != model) {
         return const NgModelSaveFailed();
       }
-      main = info;
-      _acceptRoute(readback[1] as _Route?);
       return customRoute ? const NgModelSaveFailed() : const NgModelSaved();
     });
   }
