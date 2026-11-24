@@ -9,6 +9,10 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
+  String get slash_local_arguments =>
+      'Diese Verknüpfung unterstützt hier keine Argumente. Verwende die App-Steuerelemente; dein Entwurf wurde beibehalten.';
+
+  @override
   String get fallback_title => 'Ausweichmodelle';
 
   @override
@@ -4004,6 +4008,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get slash_command_failed => 'The command could not be run.';
+
+  @override
+  String get slash_command_unsupported =>
+      'Dieser Befehl ist auf diesem Server nicht verfügbar.';
+
+  @override
+  String get slash_sessions_inline =>
+      'Öffne die Sitzungsliste, um einen Chat auszuwählen. Dein Entwurf wurde beibehalten.';
 
   @override
   String get nextgen_toggle => 'NextGen-Oberfläche';

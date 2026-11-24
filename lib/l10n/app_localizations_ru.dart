@@ -9,6 +9,10 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
+  String get slash_local_arguments =>
+      'Этот ярлык здесь не поддерживает аргументы. Используйте элементы управления приложения; черновик сохранён.';
+
+  @override
   String get fallback_title => 'Резервные модели';
 
   @override
@@ -3999,6 +4003,14 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get slash_command_failed => 'The command could not be run.';
+
+  @override
+  String get slash_command_unsupported =>
+      'Эта команда недоступна на этом сервере.';
+
+  @override
+  String get slash_sessions_inline =>
+      'Откройте список сессий, чтобы выбрать чат. Черновик сохранён.';
 
   @override
   String get nextgen_toggle => 'Интерфейс NextGen';

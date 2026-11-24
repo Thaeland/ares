@@ -1,4 +1,5 @@
 {
+  "slash_local_arguments": "Este atalho não aceita argumentos aqui. Use os controlos da aplicação; o rascunho foi mantido.",
   "fallback_title": "Modelos de recurso",
   "fallback_notice": "São tentados por ordem quando o modelo principal está indisponível. As alterações aplicam-se apenas a este perfil; guarde explicitamente a lista completa.",
   "fallback_unavailable": "As definições de recurso estão indisponíveis ou são inválidas. Verifique a ligação, o perfil selecionado e a versão do servidor e tente novamente.",
@@ -1090,6 +1091,8 @@
   "slash_command_no_output": "The command completed with no output.",
   "slash_command_delivery_unknown": "The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.",
   "slash_command_failed": "The command could not be run.",
+  "slash_command_unsupported": "Este comando não está disponível neste servidor.",
+  "slash_sessions_inline": "Abra a lista de sessões para escolher uma conversa. O rascunho foi mantido.",
   "nextgen_toggle": "Interface NextGen",
   "nextgen_toggle_subtitle": "Um novo design com um único início de sessão, conversas em direto e descoberta na rede. Os seus gateways e conversas são partilhados com esta interface.",
   "nextgen_single_login": "Entrar com um único início de sessão",

@@ -9,6 +9,10 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get slash_local_arguments =>
+      'Este atajo no admite argumentos aquí. Usa los controles de la aplicación; se conservó tu borrador.';
+
+  @override
   String get fallback_title => 'Modelos de respaldo';
 
   @override
@@ -3999,6 +4003,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get slash_command_failed => 'The command could not be run.';
+
+  @override
+  String get slash_command_unsupported =>
+      'Este comando no está disponible en este servidor.';
+
+  @override
+  String get slash_sessions_inline =>
+      'Abre la lista de sesiones para elegir un chat. Se conservó tu borrador.';
 
   @override
   String get nextgen_toggle => 'Interfaz NextGen';

@@ -1,4 +1,7 @@
 {
+  "slash_local_arguments": "此处的快捷命令不支持参数。请使用应用中的控件；草稿已保留。",
+  "slash_command_unsupported": "此命令在此服务器上不可用。",
+  "slash_sessions_inline": "请打开会话列表选择聊天。草稿已保留。",
   "fallback_title": "备用模型",
   "fallback_notice": "主模型不可用时按顺序尝试。更改仅适用于此配置；请明确保存完整列表。",
   "fallback_unavailable": "备用设置不可用或无效。请检查连接、所选配置和主机版本，然后重试。",

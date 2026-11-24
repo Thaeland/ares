@@ -1,4 +1,5 @@
 {
+  "slash_local_arguments": "Diese Verknüpfung unterstützt hier keine Argumente. Verwende die App-Steuerelemente; dein Entwurf wurde beibehalten.",
   "fallback_title": "Ausweichmodelle",
   "fallback_notice": "Werden der Reihe nach versucht, wenn das Hauptmodell nicht verfügbar ist. Änderungen gelten nur für dieses Profil; speichere die vollständige Liste ausdrücklich.",
   "fallback_unavailable": "Die Ausweichkonfiguration ist nicht verfügbar oder ungültig. Prüfe Verbindung, ausgewähltes Profil und Host-Version und versuche es erneut.",
@@ -1090,6 +1091,8 @@
   "slash_command_no_output": "The command completed with no output.",
   "slash_command_delivery_unknown": "The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.",
   "slash_command_failed": "The command could not be run.",
+  "slash_command_unsupported": "Dieser Befehl ist auf diesem Server nicht verfügbar.",
+  "slash_sessions_inline": "Öffne die Sitzungsliste, um einen Chat auszuwählen. Dein Entwurf wurde beibehalten.",
   "nextgen_toggle": "NextGen-Oberfläche",
   "nextgen_toggle_subtitle": "Ein neues Design mit einer Anmeldung, Live-Chats und Netzwerksuche. Gateways und Chats werden mit dieser Oberfläche geteilt.",
   "nextgen_single_login": "Mit einer Anmeldung verbinden",

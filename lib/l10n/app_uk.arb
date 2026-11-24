@@ -1,4 +1,5 @@
 {
+  "slash_local_arguments": "Цей ярлик тут не підтримує аргументи. Скористайтеся елементами керування застосунку; чернетку збережено.",
   "cron_model_default": "За замовчуванням",
   "cron_model_notice": "Лише для цього завдання за розкладом. Без закріпленої моделі Hermes використовує типову модель розкладу, а потім основну. Власними моделями керуйте на сервері.",
   "model_management_unavailable": "Не вдалося завантажити або зберегти налаштування моделей. Оновіть і спробуйте ще раз.",
@@ -1243,6 +1244,8 @@
   "slash_command_no_output": "The command completed with no output.",
   "slash_command_delivery_unknown": "The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.",
   "slash_command_failed": "The command could not be run.",
+  "slash_command_unsupported": "Ця команда недоступна на цьому сервері.",
+  "slash_sessions_inline": "Відкрийте список сесій, щоб вибрати чат. Чернетку збережено.",
   "nextgen_toggle": "Інтерфейс NextGen",
   "nextgen_toggle_subtitle": "Новий дизайн з єдиним входом, живими чатами та пошуком у мережі. Шлюзи й чати спільні з цим інтерфейсом.",
   "nextgen_single_login": "Увійти з одним логіном",
