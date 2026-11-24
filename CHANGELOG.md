@@ -21,6 +21,18 @@ Publication correction: tag v4.0.6 has no published APK assets; its release
 workflow failed the identity gate because the tag preceded the version bump.
 The paging change it names (#284) first ships in the published 4.0.7 APKs.
 
+## [4.0.14] - 2026-11-25
+
+Stable release `4.0.14+3070`, with release APK codes `30701`, `30702` and
+`30703`. Each split exceeds the published 4.0.13 stable splits (`30693`).
+Installs over the existing app.
+
+### Fixed
+
+- **NextGen German copy corrected (#359).** The German catalogue had carried
+  Spanish wording through the NextGen screens; `app_de.arb` now carries real
+  German copy with matching regression tests.
+
 ## [4.0.13] - 2026-11-25
 
 Stable release `4.0.13+3069`, with release APK codes `30691`, `30692` and
