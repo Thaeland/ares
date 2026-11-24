@@ -5254,131 +5254,131 @@ class AppLocalizationsDe extends AppLocalizations {
   String get ng_no_chats_match => 'Keine passenden Chats gefunden.';
 
   @override
-  String get ng_no_chats_yet => 'Aún no hay chats.';
+  String get ng_no_chats_yet => 'Noch keine Chats.';
 
   @override
-  String get ng_nothing_is_running => 'No hay nada en ejecución.';
+  String get ng_nothing_is_running => 'Es läuft gerade nichts.';
 
   @override
-  String get ng_nothing_is_waiting_on_you => 'No hay nada pendiente de ti.';
+  String get ng_nothing_is_waiting_on_you => 'Nichts wartet auf dich.';
 
   @override
-  String get ng_settings => 'Ajustes';
+  String get ng_settings => 'Einstellungen';
 
   @override
-  String get ng_all => 'Todo';
+  String get ng_all => 'Alle';
 
   @override
   String ng_needs_you(Object count) {
-    return 'Requiere tu atención · $count';
+    return 'Braucht dich · $count';
   }
 
   @override
-  String get ng_needs_you_2 => 'Requiere tu atención';
+  String get ng_needs_you_2 => 'Braucht dich';
 
   @override
   String get ng_gateways => 'Gateways';
 
   @override
   String ng_classic_connection(Object address) {
-    return '$address · conexión clásica';
+    return '$address · klassische Verbindung';
   }
 
   @override
   String get ng_gateway_2 => 'Gateway';
 
   @override
-  String get ng_signed_in => 'Sesión iniciada';
+  String get ng_signed_in => 'Angemeldet';
 
   @override
-  String get ng_classic_connection_2 => 'Conexión clásica';
+  String get ng_classic_connection_2 => 'Klassische Verbindung';
 
   @override
-  String get ng_in_the_browser => 'En el navegador';
+  String get ng_in_the_browser => 'Im Browser';
 
   @override
   String ng_in_the_browser_as(Object name) {
-    return 'En el navegador como $name';
+    return 'Im Browser als $name';
   }
 
   @override
-  String get ng_not_required => 'No es necesario';
+  String get ng_not_required => 'Nicht erforderlich';
 
   @override
-  String get ng_test_connection => 'Probar conexión';
+  String get ng_test_connection => 'Verbindung testen';
 
   @override
-  String get ng_sign_in_again_2 => 'Iniciar sesión de nuevo';
+  String get ng_sign_in_again_2 => 'Erneut anmelden';
 
   @override
-  String get ng_sign_out => 'Cerrar sesión';
+  String get ng_sign_out => 'Abmelden';
 
   @override
   String get ng_saved_gateways => 'Gateways guardados';
 
   @override
-  String get ng_in_use => 'En uso';
+  String get ng_in_use => 'In Verwendung';
 
   @override
   String get ng_appearance => 'Aspecto';
 
   @override
-  String get ng_theme => 'Tema';
+  String get ng_theme => 'Design';
 
   @override
-  String get ng_system => 'Sistema';
+  String get ng_system => 'System';
 
   @override
-  String get ng_light => 'Claro';
+  String get ng_light => 'Hell';
 
   @override
-  String get ng_dark => 'Oscuro';
+  String get ng_dark => 'Dunkel';
 
   @override
-  String get ng_accent => 'Color de énfasis';
+  String get ng_accent => 'Akzent';
 
   @override
-  String get ng_pure_black => 'Negro puro';
+  String get ng_pure_black => 'Reines Schwarz';
 
   @override
   String get ng_dark_theme_uses_true_black_oled =>
-      'El tema oscuro usa negro puro (OLED)';
+      'Das dunkle Design nutzt reines Schwarz (OLED)';
 
   @override
-  String get ng_glow => 'Resplandor';
+  String get ng_glow => 'Leuchten';
 
   @override
   String get ng_soft_accent_light_behind_each_screen =>
-      'Un suave resplandor de color detrás de cada pantalla';
+      'Sanftes Akzentlicht hinter jedem Bildschirm';
 
   @override
   String get ng_the_new_interface_turn_off_to =>
-      'La nueva interfaz. Desactívala para volver a la clásica; tus gateways y chats se comparten.';
+      'Die neue Oberfläche. Zum Zurückwechseln zur klassischen ausschalten; deine Gateways und Chats werden geteilt.';
 
   @override
-  String get ng_more_settings => 'Más ajustes';
+  String get ng_more_settings => 'Weitere Einstellungen';
 
   @override
   String get ng_voice_notifications_language_backups_and_the =>
-      'Voz, notificaciones, idioma, copias de seguridad y configuración del gateway';
+      'Stimme, Benachrichtigungen, Sprache, Backups und die Gateway-Konfiguration';
 
   @override
-  String get ng_licences => 'Licencias';
+  String get ng_licences => 'Lizenzen';
 
   @override
   String ng_sign_out_of(Object name) {
-    return '¿Cerrar sesión en $name?';
+    return 'Von $name abmelden?';
   }
 
   @override
   String get ng_this_gateway_and_its_saved_sign =>
-      'Este gateway y sus credenciales guardadas se eliminarán de este teléfono en ambas interfaces. Tus chats seguirán en el gateway.';
+      'Dieses Gateway und die gespeicherte Anmeldung werden in beiden Oberflächen von diesem Telefon entfernt. Deine Chats bleiben auf dem Gateway.';
 
   @override
-  String get ng_password_or_browser => 'Contraseña o navegador';
+  String get ng_password_or_browser => 'Passwort oder Browser';
 
   @override
-  String get ng_unsupported => 'No compatible';
+  String get ng_unsupported => 'Nicht unterstützt';
 
   @override
   String get ng_background_task_finished => 'Hintergrundaufgabe abgeschlossen';
@@ -5873,4 +5873,175 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ng_notify_master_off => 'Benachrichtigungen deaktiviert';
+
+  @override
+  String get ng_models_default => 'Standardmodell';
+
+  @override
+  String get ng_models_change => 'Ändern';
+
+  @override
+  String get ng_models_custom_endpoint =>
+      'Läuft über einen benutzerdefinierten Endpunkt. Ändere ihn auf dem Gateway.';
+
+  @override
+  String get ng_models_context_window => 'Kontextfenster';
+
+  @override
+  String ng_models_token_count(String count) {
+    return '$count Token';
+  }
+
+  @override
+  String ng_models_context_override(String count) {
+    return 'Auf dem Gateway festgelegt. Automatisch erkannt: $count Token.';
+  }
+
+  @override
+  String get ng_models_max_output => 'Max. Ausgabe';
+
+  @override
+  String get ng_models_input_price => 'Eingabepreis';
+
+  @override
+  String get ng_models_output_price => 'Ausgabepreis';
+
+  @override
+  String get ng_models_cache_price => 'Preis für zwischengespeicherte Eingabe';
+
+  @override
+  String ng_models_per_million(String price) {
+    return '$price pro 1 Mio. Token';
+  }
+
+  @override
+  String ng_models_price_pair(String input, String output) {
+    return '$input Eingabe · $output Ausgabe pro 1 Mio. Token';
+  }
+
+  @override
+  String get ng_models_free => 'Kostenlos';
+
+  @override
+  String get ng_models_vision => 'Bildanalyse';
+
+  @override
+  String get ng_models_reasoning => 'Denken';
+
+  @override
+  String get ng_models_fast => 'Schnellmodus';
+
+  @override
+  String get ng_models_in_use => 'In Verwendung';
+
+  @override
+  String ng_models_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Modelle',
+      one: '$count Modell',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_models_rate_limited => 'Limit erreicht';
+
+  @override
+  String get ng_models_plan_locked => 'Nicht in deinem Tarif';
+
+  @override
+  String get ng_models_unsaved => 'Nicht gespeicherte Änderungen';
+
+  @override
+  String get ng_models_discard => 'Verwerfen';
+
+  @override
+  String get ng_models_aux_hint =>
+      'Hilfsaufgaben nutzen das Standardmodell, solange du ihnen kein eigenes zuweist.';
+
+  @override
+  String get ng_models_uses_default => 'Nutzt das Standardmodell';
+
+  @override
+  String get ng_models_thinking_level => 'Denkstufe';
+
+  @override
+  String get ng_models_providers => 'Anbieter';
+
+  @override
+  String get ng_models_saved => 'Gespeichert';
+
+  @override
+  String get ng_aux_vision => 'Bildanalyse';
+
+  @override
+  String get ng_aux_vision_hint => 'Liest Bilder und Screenshots';
+
+  @override
+  String get ng_aux_compression => 'Komprimierung';
+
+  @override
+  String get ng_aux_compression_hint =>
+      'Kürzt lange Chats, damit sie ins Kontextfenster passen';
+
+  @override
+  String get ng_aux_approval => 'Freigabe';
+
+  @override
+  String get ng_aux_approval_hint =>
+      'Entscheidet, ob ein Befehl ohne Nachfrage sicher ausgeführt werden kann';
+
+  @override
+  String get ng_aux_mcp => 'MCP';
+
+  @override
+  String get ng_aux_mcp_hint => 'Wählt aus, welche MCP-Tools verwendet werden';
+
+  @override
+  String get ng_aux_title_generation => 'Chat-Titel';
+
+  @override
+  String get ng_aux_title_generation_hint => 'Benennt neue Chats';
+
+  @override
+  String get ng_aux_review => 'Überprüfung';
+
+  @override
+  String get ng_aux_review_hint =>
+      'Prüft die Arbeit, wenn du /review ausführst';
+
+  @override
+  String get ng_aux_voice_chat => 'Sprachchat';
+
+  @override
+  String get ng_aux_voice_chat_hint => 'Antwortet im Sprachmodus';
+
+  @override
+  String get ng_aux_triage_specifier => 'Triage';
+
+  @override
+  String get ng_aux_triage_specifier_hint =>
+      'Macht aus einer einzeiligen Kanban-Karte eine Spezifikation';
+
+  @override
+  String get ng_aux_kanban_decomposer => 'Kanban-Zerlegung';
+
+  @override
+  String get ng_aux_kanban_decomposer_hint =>
+      'Teilt eine Kanban-Karte in kleinere Aufgaben auf';
+
+  @override
+  String get ng_aux_profile_describer => 'Profilbeschreibungen';
+
+  @override
+  String get ng_aux_profile_describer_hint =>
+      'Schreibt die Kurzbeschreibung jedes Profils';
+
+  @override
+  String get ng_aux_curator => 'Kurator';
+
+  @override
+  String get ng_aux_curator_hint => 'Prüft, wie Skills genutzt werden';
 }

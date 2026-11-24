@@ -3570,6 +3570,48 @@ class DashboardClient {
     },
   );
 
+  /// [setAuxiliaryModel] for the Models page. [confirmExpensive] is only for
+  /// a choice the user has just agreed to against the gateway's own warning.
+  /// The thinking level is left alone unless [setReasoningEffort] is true; a
+  /// null level then clears it.
+  Future<Map<String, dynamic>> assignAuxiliaryModel({
+    required String task,
+    required String provider,
+    required String model,
+    bool confirmExpensive = false,
+    bool setReasoningEffort = false,
+    String? reasoningEffort,
+  }) => apiPost(
+    'model/set',
+    body: {
+      'scope': 'auxiliary',
+      'task': task,
+      'provider': provider,
+      'model': model,
+      'confirm_expensive_model': confirmExpensive,
+      if (setReasoningEffort) 'reasoning_effort': reasoningEffort,
+      'profile': ?_gatewayProfile,
+    },
+  );
+
+  /// [setModel] for the profile's default model, from the Models page.
+  /// [confirmExpensive] is only for a choice the user has just agreed to
+  /// against the gateway's own warning.
+  Future<Map<String, dynamic>> assignMainModel(
+    String provider,
+    String model, {
+    bool confirmExpensive = false,
+  }) => apiPost(
+    'model/set',
+    body: {
+      'scope': 'main',
+      'provider': provider,
+      'model': model,
+      if (confirmExpensive) 'confirm_expensive_model': true,
+      'profile': ?_gatewayProfile,
+    },
+  );
+
   /// Custom endpoint status for the main assignment, without retaining URLs or
   /// credential previews. Canonical standard URLs are not endpoint overrides.
   /// model/info omits base_url; config flattens model. The custom-endpoints route
@@ -3600,6 +3642,85 @@ class DashboardClient {
           ) ||
           endpoints.any((row) => row['is_current'] == true),
     );
+  }
+
+  /// For the NextGen Models page: the default model the gateway holds, and
+  /// whether its endpoint address could be lost by assigning another model,
+  /// because the app could not choose that address again. Fails closed: an
+  /// address counts as the provider's own only when the gateway holds it
+  /// under a name (and it matches), it is the provider's reviewed standard
+  /// address, or it is the `process://` address a provider plugin registers
+  /// for itself. Addresses are compared here and not kept.
+  Future<({String provider, String model, bool endpointOnlyHere})>
+  getMainModelEndpointOwnership() async {
+    final data = await apiGet(
+      'providers/custom-endpoints',
+      queryParameters: _modelQuery(),
+    );
+    final current = data['current'];
+    final endpoints = data['endpoints'];
+    if (current is! Map ||
+        current['provider'] is! String ||
+        current['model'] is! String ||
+        current['base_url'] is! String ||
+        endpoints is! List ||
+        endpoints.any((row) => row is! Map || row['is_current'] is! bool)) {
+      throw const FormatException('Invalid main model routing metadata');
+    }
+    final provider = current['provider'] as String;
+    final rawAddress = current['base_url'] as String;
+    return (
+      provider: provider,
+      model: current['model'] as String,
+      endpointOnlyHere: _endpointOnlyHere(
+        provider,
+        rawAddress,
+        endpoints.cast<Map>(),
+      ),
+    );
+  }
+
+  static bool _endpointOnlyHere(
+    String provider,
+    String rawAddress,
+    List<Map> endpoints,
+  ) {
+    final address = normaliseEndpointAddress(rawAddress);
+    final key = provider.trim().toLowerCase();
+    bool same(Map row) => normaliseEndpointAddress(row['base_url']) == address;
+    // The row the gateway makes up for an endpoint that exists only in the
+    // default-model setting.
+    if (endpoints.any(
+      (row) =>
+          row['is_current'] == true &&
+          (row['id'] == 'custom' || row['source'] == 'direct-config'),
+    )) {
+      return true;
+    }
+    final named = [
+      for (final row in endpoints)
+        if (row['is_current'] == true) row,
+    ];
+    // A named endpoint in use: safe only at its own address.
+    if (named.isNotEmpty) return address.isNotEmpty && !named.every(same);
+    if (address.isEmpty) return isUnnamedEndpointProvider(provider);
+    if (isUnnamedEndpointProvider(provider)) return true;
+    if (key.startsWith('custom:')) {
+      // A legacy `custom_providers` entry the gateway does not mark as in
+      // use by name: compare with the entry that name points to.
+      final own = [
+        for (final row in endpoints)
+          if (row['source'] == 'custom_providers' &&
+              'custom:${row['id']}'.toLowerCase() == key)
+            row,
+      ];
+      return own.isEmpty || !own.every(same);
+    }
+    if (isProviderOwnProcessAddress(provider, rawAddress)) return false;
+    final standard = isReviewedStandardEndpoint(provider, rawAddress);
+    // No reviewed address for this provider: an address in this setting may
+    // be one the user typed, and switching back would not restore it.
+    return standard != true;
   }
 
   Future<Map<String, dynamic>> getModelInfo() =>
