@@ -14,7 +14,10 @@
 ; Installs for the current user only; no administrator rights needed.
 
 #define MyAppName "Ares"
-#define MyAppVersion "4.0.10"
+; Keep in step with pubspec.yaml, or pass /DMyAppVersion=x.y.z to ISCC.
+#ifndef MyAppVersion
+  #define MyAppVersion "4.0.12"
+#endif
 #define MyAppPublisher "Sam Russell"
 #define MyAppURL "https://github.com/rusty4444/ares"
 #define MyAppExeName "ares.exe"
@@ -55,7 +58,7 @@ VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription={#MyAppName} for Windows
 VersionInfoProductName={#MyAppName}
 VersionInfoProductVersion={#MyAppVersion}
-VersionInfoVersion=4.0.10.0
+VersionInfoVersion={#MyAppVersion}.0
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
