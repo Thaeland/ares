@@ -47,7 +47,7 @@ jobs:
               "flutter.buildMode=debug\n"
           )
           PY
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
         with:
           gradle-version: '9.1.0'
       - name: Verify voice preparation and native CI configuration
