@@ -938,6 +938,15 @@ flutter build windows --release
 
 The app is written to `build\windows\x64\runner\Release`.
 
+That build asks GitHub at launch whether a newer release exists, as the
+Android build from GitHub does. A Microsoft Store package must not: the Store
+delivers its updates, and the GitHub releases carry no Windows download. Build
+the Store package with the check compiled out:
+
+```powershell
+flutter build windows --release --dart-define=ARES_PLAY_BUILD=true
+```
+
 ### Test
 
 ```powershell
