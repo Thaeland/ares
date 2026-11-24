@@ -991,6 +991,19 @@ Between `msix:build` and `msix:pack`, edit `Release\AppxManifest.xml`:
 To upload, put the `.msix` at the root of a ZIP and name it `.msixupload`.
 Partner Center signs Store packages, so the package is left unsigned.
 
+### Test installer
+
+A Store package cannot be installed until Microsoft has signed it. To try the
+same files on a PC, build the Inno Setup installer from an unpacked copy of the
+package. It installs for the current user and needs no administrator rights:
+
+```powershell
+ISCC.exe /DSourceDir=C:\path\to\unpacked-msix windows\installer\ares.iss
+```
+
+The installer is unsigned, so Windows SmartScreen asks for confirmation before
+running it.
+
 ## Development
 
 ```bash
