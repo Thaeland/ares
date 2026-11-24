@@ -4606,6 +4606,22 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   Future<String?> _dispatchSlashCommand(String text) async {
     final name = slashCommandName(text);
     if (name == null) return null;
+    // `/new` (and its registry alias `/reset`) are app-owned, exactly like the
+    // desktop's local dispatch: the headless gateway worker cannot show the
+    // destructive-confirm modal and only answers "cancelled (no input)".
+    // Open the fresh chat here instead, before any gateway round-trip. The
+    // name is canonicalized the same way the catalogue gate does, so `//new`
+    // cannot slip past to the worker.
+    final bareName = name.toLowerCase().replaceFirst(RegExp(r'^/+'), '');
+    if (_localNewSessionNames.contains(bareName)) {
+      if (_sending || _streaming || _preparingSend) return null;
+      // Fully synchronous: the push starts and the command is consumed in
+      // this same microtask, so nothing can edit the draft in between.
+      unawaited(_openFreshDraftChat(_slashCommandArgument(text)));
+      _setRestoredComposer('');
+      _commitComposerForSend();
+      return '';
+    }
     final gateway = _slashGateway;
     if (gateway == null || !gateway.slashCommandsSupported) return null;
     if (_sending || _streaming || _preparingSend) return null;
@@ -4679,6 +4695,82 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     } finally {
       _preparingSend = false;
     }
+  }
+
+  /// Slash commands the app answers itself instead of `slash.exec`. The
+  /// gateway's headless worker cannot show their interactive confirmation,
+  /// so the desktop owns them locally; the mobile mirror owns them the same
+  /// way. `reset` is the registry alias of `new`.
+  static const Set<String> _localNewSessionNames = {'new', 'reset'};
+
+  /// The trailing argument of a slash line (`/new My title`), empty when none.
+  static String _slashCommandArgument(String text) {
+    final parts = text.split(RegExp(r'\s+'));
+    return parts.skip(1).join(' ').trim();
+  }
+
+  /// Opens a fresh local draft chat above this one — the mobile mirror of the
+  /// desktop's local `/new`: a new session id carrying the current chat's
+  /// model and project context. Like the New-chat affordance's draft, it
+  /// commits to the gateway on its first prompt. Unlike the conversation
+  /// browser's New button, a chat screen has no chat-space context, so the
+  /// draft is not assigned to any space.
+  Future<void> _openFreshDraftChat(String title) async {
+    final now = DateTime.now();
+    final draft = Session(
+      id: GatewayChatClient.generateSessionId(),
+      title: title.isEmpty ? context.l10n.new_chat : title,
+      model: widget.session.model,
+      source: 'mobile',
+      messageCount: 0,
+      isActive: true,
+      preview: '',
+      startedAt: now.millisecondsSinceEpoch / 1000.0,
+      isLocalDraft: true,
+    );
+    // Pushed, not awaited: the returned Future completes when the new chat
+    // is popped, and the command is already handled.
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        // The draft is the same product surface, so it inherits the parent's
+        // archive ownership and the test seams that are safe to share. The
+        // desktop connection/async-event hooks are deliberately NOT
+        // forwarded: they are single-slot holders, so a second live screen
+        // would steal the parent's handler in its initState and null it in
+        // its dispose. Only the parent's staged attachments and its
+        // session-ensure observer stay behind — both are scoped to the
+        // parent session.
+        builder: (_) => ChatScreen(
+          connection: widget.connection,
+          session: draft,
+          projectName: widget.projectName,
+          projectWorkingDirectory: widget.projectWorkingDirectory,
+          turnApplicationController: widget.turnApplicationController,
+          onArchiveChanged: widget.onArchiveChanged,
+          sessionArchiver: widget.sessionArchiver,
+          testTurnApplicationSession: widget.testTurnApplicationSession,
+          testApiClient: widget.testApiClient,
+          testAttachmentDraftService: widget.testAttachmentDraftService,
+          testRemotePromptSubmit: widget.testRemotePromptSubmit,
+          testNormalResume: widget.testNormalResume,
+          testServerFilePicker: widget.testServerFilePicker,
+          testRemoteAttachmentUpload: widget.testRemoteAttachmentUpload,
+          testComposerDraftReader: widget.testComposerDraftReader,
+          testVoiceComposerAdapter: widget.testVoiceComposerAdapter,
+          testVoiceRecorder: widget.testVoiceRecorder,
+          testVoiceTranscription: widget.testVoiceTranscription,
+          testHandsFreePlatform: widget.testHandsFreePlatform,
+          testVoiceReplySpeaker: widget.testVoiceReplySpeaker,
+          testTurnNotifications: widget.testTurnNotifications,
+          testProjectOverviewLoader: widget.testProjectOverviewLoader,
+          testLegacyProjectSessionEnsure: widget.testLegacyProjectSessionEnsure,
+          testStoredSessionKey: widget.testStoredSessionKey,
+          testMediaFilesClient: widget.testMediaFilesClient,
+          testTaskHistorySource: widget.testTaskHistorySource,
+          testSlashGateway: widget.testSlashGateway,
+        ),
+      ),
+    );
   }
 
   static bool _isSlashUnsupported(JsonRpcError error) {
