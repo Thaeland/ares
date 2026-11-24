@@ -162,12 +162,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const SizedBox(height: 16),
 
         // ---- Section: Notifications ----
-        _buildSectionHeader(context.l10n.notifications),
-        const _NotificationSettings(),
+        // Hidden where the app cannot post notifications (Windows).
+        if (supportsLocalNotifications) ...[
+          _buildSectionHeader(context.l10n.notifications),
+          const _NotificationSettings(),
+        ],
         // The embedded Android push bridge and foreground-service/battery
-        // prompts do not exist on iOS/macOS. Voice, appearance and gateway
-        // settings above/below are shared.
-        if (!isApplePlatform) ...[
+        // prompts do not exist on iOS, macOS or Windows. Voice, appearance
+        // and gateway settings above/below are shared.
+        if (!isApplePlatform && !isWindowsPlatform) ...[
           MobilePushSettings(
             connection: widget.connection,
             connectionManager: context

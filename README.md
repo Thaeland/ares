@@ -899,6 +899,90 @@ flutter build macos --release         # unsigned/ad-hoc local build
 Signed App Store archives, notarisation, upload and metadata are owned
 centrally and are **not** performed here.
 
+## Windows
+
+Ares runs on Windows 10 (1809 or later) and Windows 11, x64, from the same
+Dart sources as the Android, iOS and macOS apps. The app is `ares.exe`,
+version `4.0.10`, packaged as an MSIX.
+
+What is specific to Windows:
+
+- **Runner** (`windows/runner`): one Ares window per user. A second launch
+  brings the running window forward and exits.
+- **Saving large attachments**: a native save dialog copies the downloaded
+  file to the place you choose (`ares_platform.cpp`, channel
+  `com.hermesagent.hermes_android/attachment_save`). Only files Ares itself
+  downloaded to its temporary folder can be saved this way.
+- **PDF previews** are rendered in Dart with `pdfx` (PDFium), inside the same
+  size limits as the other platforms.
+- **Voice drafts**: recording uses the `record` plugin. Measuring a draft and
+  joining it after pause/resume uses the `ffmpeg.exe` and `ffprobe.exe` that
+  ship in an `ffmpeg` folder beside `ares.exe`. Ares only ever runs that
+  bundled copy.
+- **Notifications**: Windows does not post notifications yet, and the
+  notification settings are hidden there. The notification plugin Ares pins
+  has no Windows support; adding it means a major upgrade of that plugin on
+  every platform.
+- **Android-only settings** (mobile push and background work) are hidden.
+
+### Build
+
+On a Windows machine with Flutter and the Visual Studio C++ tools. `nuget.exe`
+must be on `PATH`: the `flutter_tts` plugin needs it and the build stops
+without it.
+
+```powershell
+flutter pub get --enforce-lockfile
+flutter build windows --release
+```
+
+The app is written to `build\windows\x64\runner\Release`.
+
+### Test
+
+```powershell
+flutter analyze
+flutter test
+```
+
+`test/windows_voice_tools_ffmpeg_test.dart` runs the voice-draft tools against
+real FFmpeg executables. It is skipped unless both are named:
+
+```powershell
+$env:ARES_TEST_FFMPEG = 'C:\path\to\ffmpeg.exe'
+$env:ARES_TEST_FFPROBE = 'C:\path\to\ffprobe.exe'
+flutter test test/windows_voice_tools_ffmpeg_test.dart
+```
+
+### Package
+
+1. Copy an **LGPL** FFmpeg build (`ffmpeg.exe`, `ffprobe.exe` and their DLLs)
+   into `build\windows\x64\runner\Release\ffmpeg`, and its licence text and a
+   link to its source into `Release\licenses`. Ares is MIT-licensed; do not
+   ship a GPL build of FFmpeg with it.
+2. Remove the `.lib`, `.exp` and `.pdb` files from `Release`.
+3. Build the package:
+
+```powershell
+dart run msix:build --build-windows false
+dart run msix:pack
+```
+
+`pubspec.yaml` holds the identity used for sideloading. A Microsoft Store
+package must instead carry the identity Partner Center shows under
+**Product identity** once the product name is reserved. Pass it on the
+command line to both commands:
+
+```powershell
+--store --identity-name <Package/Identity/Name> `
+  --publisher <Package/Identity/Publisher> `
+  --publisher-display-name <PublisherDisplayName> `
+  --display-name Ares --version 4.0.10.0
+```
+
+To upload, put the `.msix` at the root of a ZIP and name it `.msixupload`.
+Partner Center signs Store packages, so the package is left unsigned.
+
 ## Development
 
 ```bash

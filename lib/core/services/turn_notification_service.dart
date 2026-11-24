@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../l10n/l10n.dart' show resolvePreferredLocale;
+import '../utils/platform_capabilities.dart';
 import 'notification_prefs.dart';
 import 'notification_approval_authority.dart';
 
@@ -102,6 +103,41 @@ abstract class TurnNotificationSink {
 
   Future<void> cancelAll();
 }
+
+/// Sink for platforms where the app cannot post notifications (Windows):
+/// nothing is shown and no permission is asked for, so the notification
+/// plugin is never called there.
+class SilentTurnNotificationSink implements TurnNotificationSink {
+  const SilentTurnNotificationSink();
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<bool?> checkPermission() async => null;
+
+  @override
+  Future<bool?> requestPermission() async => null;
+
+  @override
+  Future<NotificationResponse?> takeInitialLaunchResponse() async => null;
+
+  @override
+  Future<void> show(TurnNotification notification) async {}
+
+  @override
+  Future<void> cancel(int id) async {}
+
+  @override
+  Future<void> cancelAll() async {}
+}
+
+/// The sink a [TurnNotificationService] uses when none is injected.
+TurnNotificationSink defaultTurnNotificationSink({
+  FlutterLocalNotificationsPlugin? plugin,
+}) => supportsLocalNotifications
+    ? PluginTurnNotificationSink(plugin: plugin)
+    : const SilentTurnNotificationSink();
 
 /// Default sink backed by `flutter_local_notifications`.
 class PluginTurnNotificationSink implements TurnNotificationSink {
@@ -591,7 +627,7 @@ class TurnNotificationService {
   TurnNotificationService({
     TurnNotificationSink? sink,
     FlutterLocalNotificationsPlugin? plugin,
-  }) : _sink = sink ?? PluginTurnNotificationSink(plugin: plugin);
+  }) : _sink = sink ?? defaultTurnNotificationSink(plugin: plugin);
 
   /// Whether the platform currently allows Hermes to post notifications.
   ///

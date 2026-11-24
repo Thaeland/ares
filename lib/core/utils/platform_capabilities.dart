@@ -13,6 +13,14 @@ bool get isApplePlatform =>
     defaultTargetPlatform == TargetPlatform.iOS ||
     defaultTargetPlatform == TargetPlatform.macOS;
 
+/// True when the app is running on Windows.
+bool get isWindowsPlatform => defaultTargetPlatform == TargetPlatform.windows;
+
+/// Operating-system notifications. The notification plugin has no Windows
+/// implementation at the version Ares pins, so Windows posts none and hides
+/// the notification settings.
+bool get supportsLocalNotifications => !isWindowsPlatform;
+
 /// Android foreground service / battery-optimisation background work.
 bool get supportsAndroidBackgroundWork =>
     defaultTargetPlatform == TargetPlatform.android;
