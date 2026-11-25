@@ -1957,5 +1957,15 @@
   "render_plugin_notes": "Нотатки",
   "catalog_scan_passed": "пройдено",
   "catalog_scan_warnings": "знайдено попередження",
-  "catalog_scan_failed": "не пройдено"
+  "catalog_scan_failed": "не пройдено",
+  "desktop_tray_open": "Відкрити Ares",
+  "desktop_tray_new_chat": "Новий чат",
+  "desktop_tray_quick_entry": "Швидке введення…",
+  "desktop_tray_pause_notifications": "Призупинити сповіщення",
+  "desktop_tray_quit": "Вийти з Ares",
+  "desktop_integration_title": "Інтеграція з робочим столом",
+  "desktop_tray_setting": "Показувати Ares у системному треї або рядку меню",
+  "desktop_tray_setting_help": "Через значок можна відкрити Ares, почати чат, відкрити швидке введення, призупинити сповіщення або вийти.",
+  "desktop_close_to_tray_setting": "Продовжувати роботу в треї після закриття вікна",
+  "desktop_tray_unsupported": "У цьому середовищі немає системного трею, доступного для Ares."
 }

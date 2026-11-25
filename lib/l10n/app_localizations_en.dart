@@ -6811,4 +6811,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+
+  @override
+  String get desktop_tray_open => 'Open Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'New chat';
+
+  @override
+  String get desktop_tray_quick_entry => 'Quick entry…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'Pause notifications';
+
+  @override
+  String get desktop_tray_quit => 'Quit Ares';
+
+  @override
+  String get desktop_integration_title => 'Desktop integration';
+
+  @override
+  String get desktop_tray_setting => 'Show Ares in the tray or menu bar';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'Open Ares, start a chat, open quick entry, pause notifications or quit from the icon.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'Keep running in the tray when the window closes';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'This desktop has no system tray Ares can use.';
 }

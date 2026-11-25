@@ -32,6 +32,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../services/app_update_service.dart';
 import '../services/legal_links.dart';
 import '../widgets/update_available_dialog.dart';
+import '../desktop/desktop_integration_card.dart';
+import '../desktop/desktop_os.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
 
@@ -177,6 +179,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
               .prefs,
         ),
         const SizedBox(height: 16),
+
+        if (isDesktopOs) ...[
+          _buildSectionHeader(context.l10n.desktop_integration_title),
+          DesktopIntegrationCard(
+            preferences: context
+                .findAncestorStateOfType<HermesAppState>()!
+                .widget
+                .connManager
+                .prefs,
+          ),
+          const SizedBox(height: 16),
+        ],
 
         _buildSectionHeader('Keyboard shortcuts'),
         KeyboardShortcutsSettingsCard(

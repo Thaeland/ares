@@ -2859,5 +2859,15 @@
   "render_plugin_notes": "الملاحظات",
   "catalog_scan_passed": "نجح",
   "catalog_scan_warnings": "وُجدت تحذيرات",
-  "catalog_scan_failed": "فشل"
+  "catalog_scan_failed": "فشل",
+  "desktop_tray_open": "فتح Ares",
+  "desktop_tray_new_chat": "دردشة جديدة",
+  "desktop_tray_quick_entry": "إدخال سريع…",
+  "desktop_tray_pause_notifications": "إيقاف الإشعارات مؤقتًا",
+  "desktop_tray_quit": "إنهاء Ares",
+  "desktop_integration_title": "التكامل مع سطح المكتب",
+  "desktop_tray_setting": "إظهار Ares في علبة النظام أو شريط القوائم",
+  "desktop_tray_setting_help": "افتح Ares أو ابدأ دردشة أو افتح الإدخال السريع أو أوقف الإشعارات مؤقتًا أو أنهِ التطبيق من الأيقونة.",
+  "desktop_close_to_tray_setting": "استمر في العمل في علبة النظام عند إغلاق النافذة",
+  "desktop_tray_unsupported": "لا يوفّر سطح المكتب هذا علبة نظام يمكن لـ Ares استخدامها."
 }

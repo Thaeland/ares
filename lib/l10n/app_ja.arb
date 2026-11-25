@@ -1804,5 +1804,15 @@
   "render_plugin_notes": "メモ",
   "catalog_scan_passed": "合格",
   "catalog_scan_warnings": "警告あり",
-  "catalog_scan_failed": "不合格"
+  "catalog_scan_failed": "不合格",
+  "desktop_tray_open": "Ares を開く",
+  "desktop_tray_new_chat": "新しいチャット",
+  "desktop_tray_quick_entry": "クイック入力…",
+  "desktop_tray_pause_notifications": "通知を一時停止",
+  "desktop_tray_quit": "Ares を終了",
+  "desktop_integration_title": "デスクトップ統合",
+  "desktop_tray_setting": "システムトレイまたはメニューバーに Ares を表示",
+  "desktop_tray_setting_help": "アイコンから Ares を開く、チャットを開始する、クイック入力を開く、通知を一時停止する、終了することができます。",
+  "desktop_close_to_tray_setting": "ウィンドウを閉じてもトレイで実行を続ける",
+  "desktop_tray_unsupported": "このデスクトップには Ares が使えるシステムトレイがありません。"
 }

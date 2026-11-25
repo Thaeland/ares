@@ -25,6 +25,8 @@ import 'models_page.dart';
 import 'nextgen_scope.dart';
 import 'widgets.dart';
 import '../nextgen_l10n.dart';
+import '../../core/desktop/desktop_integration_card.dart';
+import '../../core/desktop/desktop_os.dart';
 
 class NgSettingsPage extends StatefulWidget {
   const NgSettingsPage({super.key});
@@ -242,6 +244,10 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
             NgSectionLabel(ngL.ng_interface),
             KeepAwakeSettingsCard(preferences: scope.prefs),
             const SizedBox(height: 12),
+            if (isDesktopOs) ...[
+              DesktopIntegrationCard(preferences: scope.prefs),
+              const SizedBox(height: 12),
+            ],
             KeyboardShortcutsSettingsCard(preferences: scope.prefs),
             const SizedBox(height: 12),
             NgSectionLabel(ngL.ng_appearance),

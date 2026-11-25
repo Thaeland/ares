@@ -2871,5 +2871,15 @@
   "render_plugin_notes": "筆記",
   "catalog_scan_passed": "通過",
   "catalog_scan_warnings": "發現警告",
-  "catalog_scan_failed": "失敗"
+  "catalog_scan_failed": "失敗",
+  "desktop_tray_open": "開啟 Ares",
+  "desktop_tray_new_chat": "新聊天",
+  "desktop_tray_quick_entry": "快速輸入…",
+  "desktop_tray_pause_notifications": "暫停通知",
+  "desktop_tray_quit": "結束 Ares",
+  "desktop_integration_title": "桌面整合",
+  "desktop_tray_setting": "在系統匣或選單列中顯示 Ares",
+  "desktop_tray_setting_help": "可透過圖示開啟 Ares、開始聊天、開啟快速輸入、暫停通知或結束。",
+  "desktop_close_to_tray_setting": "關閉視窗後繼續在系統匣中執行",
+  "desktop_tray_unsupported": "此桌面沒有可供 Ares 使用的系統匣。"
 }

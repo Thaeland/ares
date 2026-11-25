@@ -6868,4 +6868,38 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+
+  @override
+  String get desktop_tray_open => 'Ares öffnen';
+
+  @override
+  String get desktop_tray_new_chat => 'Neuer Chat';
+
+  @override
+  String get desktop_tray_quick_entry => 'Schnelleingabe…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'Benachrichtigungen pausieren';
+
+  @override
+  String get desktop_tray_quit => 'Ares beenden';
+
+  @override
+  String get desktop_integration_title => 'Desktop-Integration';
+
+  @override
+  String get desktop_tray_setting =>
+      'Ares im Infobereich oder in der Menüleiste anzeigen';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'Über das Symbol Ares öffnen, einen Chat starten, die Schnelleingabe öffnen, Benachrichtigungen pausieren oder beenden.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'Beim Schließen des Fensters im Infobereich weiterlaufen';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'Diese Arbeitsumgebung hat keinen Infobereich, den Ares nutzen kann.';
 }

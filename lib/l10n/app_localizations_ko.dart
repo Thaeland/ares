@@ -6674,4 +6674,36 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+
+  @override
+  String get desktop_tray_open => 'Ares 열기';
+
+  @override
+  String get desktop_tray_new_chat => '새 채팅';
+
+  @override
+  String get desktop_tray_quick_entry => '빠른 입력…';
+
+  @override
+  String get desktop_tray_pause_notifications => '알림 일시 중지';
+
+  @override
+  String get desktop_tray_quit => 'Ares 종료';
+
+  @override
+  String get desktop_integration_title => '데스크톱 통합';
+
+  @override
+  String get desktop_tray_setting => '시스템 트레이 또는 메뉴 막대에 Ares 표시';
+
+  @override
+  String get desktop_tray_setting_help =>
+      '아이콘에서 Ares 열기, 채팅 시작, 빠른 입력 열기, 알림 일시 중지 또는 종료를 할 수 있습니다.';
+
+  @override
+  String get desktop_close_to_tray_setting => '창을 닫아도 트레이에서 계속 실행';
+
+  @override
+  String get desktop_tray_unsupported =>
+      '이 데스크톱에는 Ares가 사용할 수 있는 시스템 트레이가 없습니다.';
 }

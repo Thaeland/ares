@@ -1804,5 +1804,15 @@
   "render_plugin_notes": "Notizen",
   "catalog_scan_passed": "bestanden",
   "catalog_scan_warnings": "Warnungen gefunden",
-  "catalog_scan_failed": "fehlgeschlagen"
+  "catalog_scan_failed": "fehlgeschlagen",
+  "desktop_tray_open": "Ares öffnen",
+  "desktop_tray_new_chat": "Neuer Chat",
+  "desktop_tray_quick_entry": "Schnelleingabe…",
+  "desktop_tray_pause_notifications": "Benachrichtigungen pausieren",
+  "desktop_tray_quit": "Ares beenden",
+  "desktop_integration_title": "Desktop-Integration",
+  "desktop_tray_setting": "Ares im Infobereich oder in der Menüleiste anzeigen",
+  "desktop_tray_setting_help": "Über das Symbol Ares öffnen, einen Chat starten, die Schnelleingabe öffnen, Benachrichtigungen pausieren oder beenden.",
+  "desktop_close_to_tray_setting": "Beim Schließen des Fensters im Infobereich weiterlaufen",
+  "desktop_tray_unsupported": "Diese Arbeitsumgebung hat keinen Infobereich, den Ares nutzen kann."
 }

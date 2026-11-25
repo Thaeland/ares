@@ -6669,4 +6669,35 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+
+  @override
+  String get desktop_tray_open => 'Ares を開く';
+
+  @override
+  String get desktop_tray_new_chat => '新しいチャット';
+
+  @override
+  String get desktop_tray_quick_entry => 'クイック入力…';
+
+  @override
+  String get desktop_tray_pause_notifications => '通知を一時停止';
+
+  @override
+  String get desktop_tray_quit => 'Ares を終了';
+
+  @override
+  String get desktop_integration_title => 'デスクトップ統合';
+
+  @override
+  String get desktop_tray_setting => 'システムトレイまたはメニューバーに Ares を表示';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'アイコンから Ares を開く、チャットを開始する、クイック入力を開く、通知を一時停止する、終了することができます。';
+
+  @override
+  String get desktop_close_to_tray_setting => 'ウィンドウを閉じてもトレイで実行を続ける';
+
+  @override
+  String get desktop_tray_unsupported => 'このデスクトップには Ares が使えるシステムトレイがありません。';
 }

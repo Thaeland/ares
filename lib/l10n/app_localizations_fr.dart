@@ -6878,4 +6878,38 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+
+  @override
+  String get desktop_tray_open => 'Ouvrir Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'Nouvelle discussion';
+
+  @override
+  String get desktop_tray_quick_entry => 'Saisie rapide…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'Suspendre les notifications';
+
+  @override
+  String get desktop_tray_quit => 'Quitter Ares';
+
+  @override
+  String get desktop_integration_title => 'Intégration au bureau';
+
+  @override
+  String get desktop_tray_setting =>
+      'Afficher Ares dans la zone de notification ou la barre des menus';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'Depuis l’icône : ouvrir Ares, démarrer une discussion, ouvrir la saisie rapide, suspendre les notifications ou quitter.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'Continuer dans la zone de notification à la fermeture de la fenêtre';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'Ce bureau n’a pas de zone de notification utilisable par Ares.';
 }

@@ -1804,5 +1804,15 @@
   "render_plugin_notes": "Notes",
   "catalog_scan_passed": "réussi",
   "catalog_scan_warnings": "avertissements trouvés",
-  "catalog_scan_failed": "échoué"
+  "catalog_scan_failed": "échoué",
+  "desktop_tray_open": "Ouvrir Ares",
+  "desktop_tray_new_chat": "Nouvelle discussion",
+  "desktop_tray_quick_entry": "Saisie rapide…",
+  "desktop_tray_pause_notifications": "Suspendre les notifications",
+  "desktop_tray_quit": "Quitter Ares",
+  "desktop_integration_title": "Intégration au bureau",
+  "desktop_tray_setting": "Afficher Ares dans la zone de notification ou la barre des menus",
+  "desktop_tray_setting_help": "Depuis l’icône : ouvrir Ares, démarrer une discussion, ouvrir la saisie rapide, suspendre les notifications ou quitter.",
+  "desktop_close_to_tray_setting": "Continuer dans la zone de notification à la fermeture de la fenêtre",
+  "desktop_tray_unsupported": "Ce bureau n’a pas de zone de notification utilisable par Ares."
 }

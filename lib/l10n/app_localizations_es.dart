@@ -6863,4 +6863,38 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+
+  @override
+  String get desktop_tray_open => 'Abrir Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'Nuevo chat';
+
+  @override
+  String get desktop_tray_quick_entry => 'Entrada rápida…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'Pausar notificaciones';
+
+  @override
+  String get desktop_tray_quit => 'Salir de Ares';
+
+  @override
+  String get desktop_integration_title => 'Integración con el escritorio';
+
+  @override
+  String get desktop_tray_setting =>
+      'Mostrar Ares en la bandeja del sistema o la barra de menús';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'Desde el icono puedes abrir Ares, iniciar un chat, abrir la entrada rápida, pausar las notificaciones o salir.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'Seguir ejecutándose en la bandeja al cerrar la ventana';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'Este escritorio no tiene una bandeja del sistema que Ares pueda usar.';
 }

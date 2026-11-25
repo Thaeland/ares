@@ -33,6 +33,8 @@ import 'core/services/hermes_sign_in.dart';
 import 'core/services/hermes_deeplink.dart';
 import 'core/services/keep_awake.dart';
 import 'core/services/shortcuts_store.dart';
+import 'core/desktop/desktop_integration.dart';
+import 'core/desktop/desktop_os.dart';
 import 'core/services/locale_preference.dart';
 import 'core/services/lan_discovery_service.dart';
 import 'core/services/text_size_preference.dart';
@@ -420,6 +422,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
   /// Opt-in "keep the computer awake" policy (Dart-side, device-local).
   KeepAwakeController? _keepAwake;
   ShortcutsStore? _shortcutsStore;
+  DesktopIntegration? _desktop;
   VoidCallback? _keepAwakePreferenceListener;
 
   Object? _keepAliveTurnActivityToken;
@@ -486,6 +489,12 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
       store: KeepAwakePolicyStore(widget.connManager.prefs),
     )..setWorking(_hasActiveTurn);
     _shortcutsStore = ShortcutsStore(widget.connManager.prefs);
+    // Native tray, quick entry, hotkey and power events: desktop primary
+    // window only, every feature opt-in.
+    if (isDesktopOs) {
+      _desktop = DesktopIntegration(preferences: widget.connManager.prefs)
+        ..start();
+    }
     _keepAwakePreferenceListener = () {
       _keepAwake?.refreshFromStore();
     };
@@ -1412,6 +1421,8 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     }
     _keepAwake?.dispose();
     _keepAwake = null;
+    unawaited(_desktop?.dispose());
+    _desktop = null;
     // Belt for the detached case: if the widget tree tears down while the
     // service is up, the native side must not outlive its only controller.
     unawaited(_keepAlive.stop());

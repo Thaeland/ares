@@ -33,6 +33,10 @@ bool FlutterWindow::OnCreate() {
     toasts_ = std::make_unique<ToastChannel>(flutter_controller_->engine(),
         std::move(initial_toast_), GetHandle());
   }
+  if (accepts_toasts_) {
+    desktop_ = std::make_unique<DesktopOs>(GetHandle(),
+                                           flutter_controller_->engine());
+  }
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
   flutter_controller_->engine()->SetNextFrameCallback([&]() {
@@ -49,6 +53,7 @@ bool FlutterWindow::OnCreate() {
 
 void FlutterWindow::OnDestroy() {
   // Release the channels before the engine they speak through.
+  desktop_ = nullptr;
   toasts_ = nullptr;
   platform_ = nullptr;
   if (flutter_controller_) {
@@ -72,6 +77,11 @@ FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
     if (toasts_) toasts_->Activate(std::move(token));
     else initial_toast_ = std::move(token);
     return TRUE;
+  }
+  if (desktop_) {
+    if (auto handled = desktop_->HandleMessage(hwnd, message, wparam, lparam)) {
+      return *handled;
+    }
   }
   // Give Flutter, including plugins, an opportunity to handle window messages.
   if (flutter_controller_) {

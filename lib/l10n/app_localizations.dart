@@ -11498,6 +11498,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'e.g. X-Custom-Header: value'**
   String get custom_headers_hint;
+
+  /// No description provided for @desktop_tray_open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Ares'**
+  String get desktop_tray_open;
+
+  /// No description provided for @desktop_tray_new_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'New chat'**
+  String get desktop_tray_new_chat;
+
+  /// No description provided for @desktop_tray_quick_entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick entry…'**
+  String get desktop_tray_quick_entry;
+
+  /// No description provided for @desktop_tray_pause_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause notifications'**
+  String get desktop_tray_pause_notifications;
+
+  /// No description provided for @desktop_tray_quit.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit Ares'**
+  String get desktop_tray_quit;
+
+  /// No description provided for @desktop_integration_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Desktop integration'**
+  String get desktop_integration_title;
+
+  /// No description provided for @desktop_tray_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Ares in the tray or menu bar'**
+  String get desktop_tray_setting;
+
+  /// No description provided for @desktop_tray_setting_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Ares, start a chat, open quick entry, pause notifications or quit from the icon.'**
+  String get desktop_tray_setting_help;
+
+  /// No description provided for @desktop_close_to_tray_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep running in the tray when the window closes'**
+  String get desktop_close_to_tray_setting;
+
+  /// No description provided for @desktop_tray_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This desktop has no system tray Ares can use.'**
+  String get desktop_tray_unsupported;
 }
 
 class _AppLocalizationsDelegate

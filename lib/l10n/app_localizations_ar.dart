@@ -6810,4 +6810,38 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+
+  @override
+  String get desktop_tray_open => 'فتح Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'دردشة جديدة';
+
+  @override
+  String get desktop_tray_quick_entry => 'إدخال سريع…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'إيقاف الإشعارات مؤقتًا';
+
+  @override
+  String get desktop_tray_quit => 'إنهاء Ares';
+
+  @override
+  String get desktop_integration_title => 'التكامل مع سطح المكتب';
+
+  @override
+  String get desktop_tray_setting =>
+      'إظهار Ares في علبة النظام أو شريط القوائم';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'افتح Ares أو ابدأ دردشة أو افتح الإدخال السريع أو أوقف الإشعارات مؤقتًا أو أنهِ التطبيق من الأيقونة.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'استمر في العمل في علبة النظام عند إغلاق النافذة';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'لا يوفّر سطح المكتب هذا علبة نظام يمكن لـ Ares استخدامها.';
 }

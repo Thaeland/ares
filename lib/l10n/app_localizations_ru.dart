@@ -6866,4 +6866,38 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+
+  @override
+  String get desktop_tray_open => 'Открыть Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'Новый чат';
+
+  @override
+  String get desktop_tray_quick_entry => 'Быстрый ввод…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'Приостановить уведомления';
+
+  @override
+  String get desktop_tray_quit => 'Выйти из Ares';
+
+  @override
+  String get desktop_integration_title => 'Интеграция с рабочим столом';
+
+  @override
+  String get desktop_tray_setting =>
+      'Показывать Ares в системном трее или строке меню';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'Через значок можно открыть Ares, начать чат, открыть быстрый ввод, приостановить уведомления или выйти.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'Продолжать работу в трее после закрытия окна';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'В этой среде нет системного трея, доступного для Ares.';
 }

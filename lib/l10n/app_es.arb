@@ -1804,5 +1804,15 @@
   "render_plugin_notes": "Notas",
   "catalog_scan_passed": "superado",
   "catalog_scan_warnings": "encontró advertencias",
-  "catalog_scan_failed": "falló"
+  "catalog_scan_failed": "falló",
+  "desktop_tray_open": "Abrir Ares",
+  "desktop_tray_new_chat": "Nuevo chat",
+  "desktop_tray_quick_entry": "Entrada rápida…",
+  "desktop_tray_pause_notifications": "Pausar notificaciones",
+  "desktop_tray_quit": "Salir de Ares",
+  "desktop_integration_title": "Integración con el escritorio",
+  "desktop_tray_setting": "Mostrar Ares en la bandeja del sistema o la barra de menús",
+  "desktop_tray_setting_help": "Desde el icono puedes abrir Ares, iniciar un chat, abrir la entrada rápida, pausar las notificaciones o salir.",
+  "desktop_close_to_tray_setting": "Seguir ejecutándose en la bandeja al cerrar la ventana",
+  "desktop_tray_unsupported": "Este escritorio no tiene una bandeja del sistema que Ares pueda usar."
 }

@@ -6865,6 +6865,40 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+
+  @override
+  String get desktop_tray_open => 'Abrir o Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'Novo chat';
+
+  @override
+  String get desktop_tray_quick_entry => 'Entrada rápida…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'Pausar notificações';
+
+  @override
+  String get desktop_tray_quit => 'Sair do Ares';
+
+  @override
+  String get desktop_integration_title => 'Integração com a área de trabalho';
+
+  @override
+  String get desktop_tray_setting =>
+      'Mostrar o Ares na bandeja do sistema ou na barra de menus';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'No ícone, abra o Ares, inicie um chat, abra a entrada rápida, pause as notificações ou saia.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'Continuar em execução na bandeja ao fechar a janela';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'Esta área de trabalho não tem uma bandeja do sistema que o Ares possa usar.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -13154,4 +13188,38 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get catalog_scan_failed => 'falhou';
+
+  @override
+  String get desktop_tray_open => 'Abrir o Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'Novo chat';
+
+  @override
+  String get desktop_tray_quick_entry => 'Entrada rápida…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'Pausar notificações';
+
+  @override
+  String get desktop_tray_quit => 'Sair do Ares';
+
+  @override
+  String get desktop_integration_title => 'Integração com a área de trabalho';
+
+  @override
+  String get desktop_tray_setting =>
+      'Mostrar o Ares na bandeja do sistema ou na barra de menus';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'No ícone, abra o Ares, inicie um chat, abra a entrada rápida, pause as notificações ou saia.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'Continuar em execução na bandeja ao fechar a janela';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'Esta área de trabalho não tem uma bandeja do sistema que o Ares possa usar.';
 }

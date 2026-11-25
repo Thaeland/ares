@@ -8,6 +8,7 @@
 #include <string>
 
 #include "ares_platform.h"
+#include "desktop_os.h"
 #include "toast_channel.h"
 #include "win32_window.h"
 
@@ -37,6 +38,8 @@ class FlutterWindow : public Win32Window {
   std::string initial_toast_;
   const bool accepts_toasts_;
   std::unique_ptr<ToastChannel> toasts_;
+  // Tray, hotkey, power and capture: primary window only.
+  std::unique_ptr<DesktopOs> desktop_;
 };
 
 #endif  // RUNNER_FLUTTER_WINDOW_H_

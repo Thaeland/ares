@@ -1804,5 +1804,15 @@
   "render_plugin_notes": "笔记",
   "catalog_scan_passed": "已通过",
   "catalog_scan_warnings": "发现警告",
-  "catalog_scan_failed": "未通过"
+  "catalog_scan_failed": "未通过",
+  "desktop_tray_open": "打开 Ares",
+  "desktop_tray_new_chat": "新聊天",
+  "desktop_tray_quick_entry": "快速输入…",
+  "desktop_tray_pause_notifications": "暂停通知",
+  "desktop_tray_quit": "退出 Ares",
+  "desktop_integration_title": "桌面集成",
+  "desktop_tray_setting": "在系统托盘或菜单栏中显示 Ares",
+  "desktop_tray_setting_help": "可通过图标打开 Ares、开始聊天、打开快速输入、暂停通知或退出。",
+  "desktop_close_to_tray_setting": "关闭窗口后继续在托盘中运行",
+  "desktop_tray_unsupported": "此桌面没有可供 Ares 使用的系统托盘。"
 }

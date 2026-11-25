@@ -6579,6 +6579,36 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+
+  @override
+  String get desktop_tray_open => '打开 Ares';
+
+  @override
+  String get desktop_tray_new_chat => '新聊天';
+
+  @override
+  String get desktop_tray_quick_entry => '快速输入…';
+
+  @override
+  String get desktop_tray_pause_notifications => '暂停通知';
+
+  @override
+  String get desktop_tray_quit => '退出 Ares';
+
+  @override
+  String get desktop_integration_title => '桌面集成';
+
+  @override
+  String get desktop_tray_setting => '在系统托盘或菜单栏中显示 Ares';
+
+  @override
+  String get desktop_tray_setting_help => '可通过图标打开 Ares、开始聊天、打开快速输入、暂停通知或退出。';
+
+  @override
+  String get desktop_close_to_tray_setting => '关闭窗口后继续在托盘中运行';
+
+  @override
+  String get desktop_tray_unsupported => '此桌面没有可供 Ares 使用的系统托盘。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -12588,6 +12618,36 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get catalog_scan_failed => '未通过';
+
+  @override
+  String get desktop_tray_open => '打开 Ares';
+
+  @override
+  String get desktop_tray_new_chat => '新聊天';
+
+  @override
+  String get desktop_tray_quick_entry => '快速输入…';
+
+  @override
+  String get desktop_tray_pause_notifications => '暂停通知';
+
+  @override
+  String get desktop_tray_quit => '退出 Ares';
+
+  @override
+  String get desktop_integration_title => '桌面集成';
+
+  @override
+  String get desktop_tray_setting => '在系统托盘或菜单栏中显示 Ares';
+
+  @override
+  String get desktop_tray_setting_help => '可通过图标打开 Ares、开始聊天、打开快速输入、暂停通知或退出。';
+
+  @override
+  String get desktop_close_to_tray_setting => '关闭窗口后继续在托盘中运行';
+
+  @override
+  String get desktop_tray_unsupported => '此桌面没有可供 Ares 使用的系统托盘。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -18995,4 +19055,34 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get catalog_scan_failed => '失敗';
+
+  @override
+  String get desktop_tray_open => '開啟 Ares';
+
+  @override
+  String get desktop_tray_new_chat => '新聊天';
+
+  @override
+  String get desktop_tray_quick_entry => '快速輸入…';
+
+  @override
+  String get desktop_tray_pause_notifications => '暫停通知';
+
+  @override
+  String get desktop_tray_quit => '結束 Ares';
+
+  @override
+  String get desktop_integration_title => '桌面整合';
+
+  @override
+  String get desktop_tray_setting => '在系統匣或選單列中顯示 Ares';
+
+  @override
+  String get desktop_tray_setting_help => '可透過圖示開啟 Ares、開始聊天、開啟快速輸入、暫停通知或結束。';
+
+  @override
+  String get desktop_close_to_tray_setting => '關閉視窗後繼續在系統匣中執行';
+
+  @override
+  String get desktop_tray_unsupported => '此桌面沒有可供 Ares 使用的系統匣。';
 }
