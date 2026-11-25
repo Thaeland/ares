@@ -19,7 +19,8 @@ class FlutterEngine;
 
 // The primary window's desktop integration (docs/desktop-os-native.md):
 //
-//   com.hermesagent.ares/shell   setTray, showWindow, quit; onTrayAction
+//   com.hermesagent.ares/shell   setTray, showWindow, quit, isTraySupported,
+//                                allowForeground; onTrayAction, onTrayStatus
 //   com.hermesagent.ares/hotkey  register, unregister; onHotKey
 //   com.hermesagent.ares/power   isSupported, setAwake; onPowerEvent
 //   com.hermesagent.ares/capture status, capture (Windows Graphics Capture)
@@ -54,6 +55,12 @@ class DesktopOs {
   void FinishCapture(const std::string& path, const std::string& error);
   bool InstallTray();
   void RemoveTray();
+  // A wanted icon that NIM_ADD could not install (Explorer not ready at
+  // sign-in): retried on a backoff timer and on TaskbarCreated.
+  void ScheduleTrayRetry();
+  void StopTrayRetry();
+  void RetryTray();
+  void ReportTrayStatus();
   void ShowMenu(int x, int y);
   void ShowMain();
 
@@ -70,6 +77,13 @@ class DesktopOs {
   std::wstring capture_directory_;
 
   bool tray_installed_ = false;
+  // Dart asked for the icon (setTray enabled), installed or not yet.
+  bool tray_wanted_ = false;
+  // The shown state Dart last heard (setTray's answer or onTrayStatus).
+  bool tray_reported_ = false;
+  unsigned tray_retry_attempt_ = 0;
+  bool tray_retry_pending_ = false;
+  // Close-to-tray as Dart asked; it applies only while tray_installed_.
   bool close_to_tray_ = false;
   bool menu_open_ = false;
   std::u16string tooltip_;

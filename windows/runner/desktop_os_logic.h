@@ -118,6 +118,24 @@ inline std::optional<size_t> TrayIndexForCommand(unsigned command,
   return index;
 }
 
+// Explorer may not be ready when Ares starts at sign-in, so a failed
+// NIM_ADD is retried: on TaskbarCreated, and on a short backoff timer.
+// Returns the wait before retry |attempt| (0-based) in milliseconds, or 0
+// when the timer gives up (TaskbarCreated still re-adds the icon later).
+inline constexpr unsigned kTrayRetryTimerId = 0xA7E6;
+inline unsigned TrayRetryDelayMs(unsigned attempt) {
+  constexpr unsigned kDelays[] = {1000, 2000, 4000, 8000, 15000, 30000};
+  return attempt < sizeof(kDelays) / sizeof(kDelays[0]) ? kDelays[attempt]
+                                                         : 0;
+}
+
+// The child process quick entry was started as, which alone may take the
+// foreground (AllowSetForegroundWindow(pid), never ASFW_ANY). Process ids
+// are positive DWORDs; 0 and ASFW_ANY ((DWORD)-1) are refused.
+inline bool ValidForegroundPid(long long pid) {
+  return pid > 0 && pid < 0xFFFFFFFFLL;
+}
+
 // ---- Global hotkey ---------------------------------------------------------
 
 // RegisterHotKey modifiers (winuser.h) and the app's hotkey id (0-0xBFFF).

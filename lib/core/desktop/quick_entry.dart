@@ -239,12 +239,17 @@ class QuickEntryLauncher {
     required this._locale,
     required this._onPrefill,
     this._owner,
+    this._onSpawned,
     QuickEntrySpawn? spawn,
     this.readyTimeout = const Duration(seconds: 45),
   }) : _spawn = spawn ?? _spawnQuickEntry;
 
   final List<QuickEntryChat> Function() _chats;
   final HermesLinkOwner? Function()? _owner;
+
+  /// Called with the child's process id as soon as it starts, so the
+  /// primary can let exactly that process take the foreground.
+  final void Function(int pid)? _onSpawned;
   final String Function() _locale;
   final void Function(QuickEntryPrefill prefill) _onPrefill;
   final QuickEntrySpawn _spawn;
@@ -296,6 +301,8 @@ class QuickEntryLauncher {
       process.kill();
       return false;
     }
+    // Only this child may take the foreground (Windows); never any process.
+    _onSpawned?.call(process.pid);
     _process = process;
     active.value = true;
     final ready = Completer<bool>();

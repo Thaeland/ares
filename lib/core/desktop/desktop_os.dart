@@ -106,6 +106,19 @@ class DesktopShell {
   /// also ends every pop-out child through its closed pipe.
   Future<void> quit() => _invoke('quit');
 
+  /// Lets the child process [pid] (the quick-entry window just started)
+  /// take the foreground. Windows only (`AllowSetForegroundWindow(pid)`,
+  /// never "any process"); other runners need nothing and ignore it.
+  Future<void> allowForeground(int pid) async {
+    try {
+      await channel.invokeMethod<Object?>('allowForeground', {'pid': pid});
+    } on MissingPluginException {
+      // macOS and Linux activate the child window themselves.
+    } on PlatformException {
+      // Never throw into the quick-entry launch.
+    }
+  }
+
   Future<void> _invoke(String method) async {
     try {
       await channel.invokeMethod<void>(method);

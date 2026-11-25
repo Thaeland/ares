@@ -53,6 +53,12 @@ class DesktopIntegration {
           (quickEntryChats == null ? QuickEntryTargets.currentOwner : null),
       locale: () => strings().localeName,
       onPrefill: _routePrefill,
+      // Windows: the primary had the foreground right (hotkey press or
+      // tray choice) and passes it to this one child pid, never to any
+      // process. macOS and Linux activate the child window themselves.
+      onSpawned: (platform ?? defaultTargetPlatform) == TargetPlatform.windows
+          ? (pid) => unawaited(_shell.allowForeground(pid))
+          : null,
       spawn: quickEntrySpawn,
     );
     power = PowerEventsListener(channel: powerChannel);

@@ -96,6 +96,8 @@ DesktopOs::DesktopOs(HWND window, flutter::FlutterEngine* engine)
 DesktopOs::~DesktopOs() {
   // Exit releases the hotkey even if Dart never got to unregister it.
   UnregisterHotkey();
+  tray_wanted_ = false;
+  StopTrayRetry();
   RemoveTray();
   if (session_notifications_) ::WTSUnRegisterSessionNotification(window_);
   if (awake_.Any()) ::SetThreadExecutionState(ES_CONTINUOUS);
@@ -119,6 +121,8 @@ void DesktopOs::HandleShell(
     // Closing from inside a channel callback would destroy the engine that
     // is dispatching it; post the close instead. Close-to-tray is off now.
     close_to_tray_ = false;
+    tray_wanted_ = false;
+    StopTrayRetry();
     RemoveTray();
     ::PostMessageW(window_, WM_CLOSE, 0, 0);
     result->Success();
@@ -126,6 +130,24 @@ void DesktopOs::HandleShell(
   }
   if (method == "isTraySupported") {
     result->Success(EncodableValue(true));
+    return;
+  }
+  if (method == "allowForeground") {
+    // Quick entry started as this child process: only it may take the
+    // foreground (never ASFW_ANY). The primary holds the right just after
+    // the hotkey press or the tray menu choice that opened it.
+    const auto* args = std::get_if<EncodableMap>(call.arguments());
+    const auto* value = args ? Field(*args, "pid") : nullptr;
+    long long pid = 0;
+    if (value) {
+      // (Not "small": rpcndr.h defines it as a macro for char.)
+      if (const auto* as_int32 = std::get_if<int32_t>(value)) pid = *as_int32;
+      if (const auto* as_int64 = std::get_if<int64_t>(value)) pid = *as_int64;
+    }
+    const bool allowed =
+        ares::desktop::ValidForegroundPid(pid) &&
+        ::AllowSetForegroundWindow(static_cast<DWORD>(pid)) != FALSE;
+    result->Success(EncodableValue(allowed));
     return;
   }
   if (method != "setTray") {
@@ -139,7 +161,10 @@ void DesktopOs::HandleShell(
   }
   if (!BoolField(*args, "enabled")) {
     close_to_tray_ = false;
+    tray_wanted_ = false;
+    StopTrayRetry();
     RemoveTray();
+    tray_reported_ = false;
     result->Success(EncodableValue(false));
     return;
   }
@@ -166,8 +191,20 @@ void DesktopOs::HandleShell(
   tooltip_ = ares::desktop::MenuTextFromUtf8(StringField(*args, "tooltip"),
                                              ares::desktop::kTrayTipUnits);
   if (tooltip_.empty()) tooltip_ = u"Ares";
+  tray_wanted_ = true;
+  // Applies only while the icon is installed (WM_CLOSE checks both), so a
+  // retry that installs it later also brings close-to-tray back.
+  close_to_tray_ = BoolField(*args, "closeToTray");
   const bool shown = InstallTray();
-  close_to_tray_ = shown && BoolField(*args, "closeToTray");
+  if (shown) {
+    StopTrayRetry();
+  } else if (!tray_retry_pending_) {
+    // Explorer may still be starting (sign-in): retry on a short backoff,
+    // and on TaskbarCreated. Dart hears onTrayStatus when it works.
+    tray_retry_attempt_ = 0;
+    ScheduleTrayRetry();
+  }
+  tray_reported_ = shown;
   result->Success(EncodableValue(shown));
 }
 
@@ -330,6 +367,51 @@ bool DesktopOs::InstallTray() {
   return true;
 }
 
+void DesktopOs::ScheduleTrayRetry() {
+  const unsigned delay = ares::desktop::TrayRetryDelayMs(tray_retry_attempt_);
+  if (delay == 0) {
+    // The timer gives up; TaskbarCreated still re-adds the icon.
+    tray_retry_pending_ = false;
+    return;
+  }
+  ++tray_retry_attempt_;
+  tray_retry_pending_ =
+      ::SetTimer(window_, ares::desktop::kTrayRetryTimerId, delay, nullptr) !=
+      0;
+}
+
+void DesktopOs::StopTrayRetry() {
+  if (tray_retry_pending_) {
+    ::KillTimer(window_, ares::desktop::kTrayRetryTimerId);
+  }
+  tray_retry_pending_ = false;
+  tray_retry_attempt_ = 0;
+}
+
+void DesktopOs::RetryTray() {
+  if (!tray_wanted_) {
+    StopTrayRetry();
+    return;
+  }
+  if (InstallTray()) {
+    StopTrayRetry();
+    ReportTrayStatus();
+    return;
+  }
+  // An icon Dart was told is shown is gone (Explorer restarted and the
+  // re-add failed): say so, and keep trying.
+  ReportTrayStatus();
+  ScheduleTrayRetry();
+}
+
+// The icon appeared (or went away) after setTray answered: tell Dart.
+void DesktopOs::ReportTrayStatus() {
+  const bool shown = tray_wanted_ && tray_installed_;
+  if (shown == tray_reported_ || !shell_) return;
+  tray_reported_ = shown;
+  shell_->InvokeMethod("onTrayStatus", std::make_unique<EncodableValue>(shown));
+}
+
 void DesktopOs::RemoveTray() {
   if (!tray_installed_) return;
   NOTIFYICONDATAW data{};
@@ -348,10 +430,14 @@ void DesktopOs::ShowMain() {
 
 void DesktopOs::ShowMenu(int x, int y) {
   if (menu_open_ || items_.empty()) return;
+  // The menu loop below pumps messages, so a setTray can replace items_
+  // while it is open. The chosen command maps back through this snapshot of
+  // what was shown, never through the newer list.
+  const std::vector<ares::desktop::TrayItem> shown = items_;
   HMENU menu = ::CreatePopupMenu();
   if (!menu) return;
-  for (size_t i = 0; i < items_.size(); ++i) {
-    const auto& item = items_[i];
+  for (size_t i = 0; i < shown.size(); ++i) {
+    const auto& item = shown[i];
     if (item.separator_before && i > 0) {
       ::AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
     }
@@ -373,12 +459,12 @@ void DesktopOs::ShowMenu(int x, int y) {
   ::PostMessageW(window_, WM_NULL, 0, 0);
   ::DestroyMenu(menu);
   const auto index = ares::desktop::TrayIndexForCommand(
-      static_cast<unsigned>(command), items_.size());
+      static_cast<unsigned>(command), shown.size());
   if (index && shell_) {
-    // The chosen item may start the quick-entry window; let it take focus.
-    ::AllowSetForegroundWindow(ASFW_ANY);
+    // A quick-entry window this starts gets the foreground through
+    // allowForeground with its own pid, once Dart has started it.
     shell_->InvokeMethod(
-        "onTrayAction", std::make_unique<EncodableValue>(items_[*index].id));
+        "onTrayAction", std::make_unique<EncodableValue>(shown[*index].id));
   }
 }
 
@@ -399,12 +485,22 @@ std::optional<LRESULT> DesktopOs::HandleMessage(HWND, UINT message,
     return 0;
   }
   if (taskbar_created_ != 0 && message == taskbar_created_) {
-    // Explorer restarted: its notification area forgot the icon.
-    if (tray_installed_) {
+    // Explorer (re)started: its notification area forgot the icon, or it
+    // was not ready when setTray first asked (sign-in). Add it now if Dart
+    // wants it, installed before or never.
+    if (tray_wanted_) {
       tray_installed_ = false;
-      InstallTray();
+      tray_retry_attempt_ = 0;
+      RetryTray();
     }
     return std::nullopt;
+  }
+  if (message == WM_TIMER &&
+      wparam == static_cast<WPARAM>(ares::desktop::kTrayRetryTimerId)) {
+    ::KillTimer(window_, ares::desktop::kTrayRetryTimerId);
+    tray_retry_pending_ = false;
+    RetryTray();
+    return 0;
   }
   if (message == kCapturePicked) {
     auto* picked = reinterpret_cast<ares::capture::Picked*>(lparam);
@@ -437,8 +533,8 @@ std::optional<LRESULT> DesktopOs::HandleMessage(HWND, UINT message,
   if (message == WM_HOTKEY &&
       wparam == static_cast<WPARAM>(ares::desktop::kHotkeyId)) {
     if (hotkey_registered_ && hotkey_) {
-      // Quick entry starts as a child process; let it take the foreground.
-      ::AllowSetForegroundWindow(ASFW_ANY);
+      // Quick entry starts as a child process; Dart passes its pid to
+      // allowForeground so only that process may take the foreground.
       hotkey_->InvokeMethod("onHotKey", nullptr);
     }
     return 0;

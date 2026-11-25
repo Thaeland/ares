@@ -318,6 +318,64 @@ void main() {
     });
   });
 
+  group('foreground right (Windows)', () {
+    const channel = MethodChannel('test/quick_entry_foreground_shell');
+
+    Future<List<MethodCall>> openOn(TargetPlatform platform) async {
+      SharedPreferences.setMockInitialValues({});
+      final calls = <MethodCall>[];
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async {
+            calls.add(call);
+            return call.method == 'allowForeground' ? true : null;
+          });
+      addTearDown(
+        () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, null),
+      );
+      final spawned = <FakeChildProcess>[];
+      final integration = DesktopIntegration(
+        preferences: await SharedPreferences.getInstance(),
+        shell: const DesktopShell(channel),
+        hotkeyChannel: const MethodChannel('test/quick_entry_fg_hotkey'),
+        notifications: ValueNotifier(NotificationPrefs.defaults),
+        quickEntryChats: () => _chats,
+        quickEntrySpawn: () async {
+          final process = FakeChildProcess();
+          spawned.add(process);
+          return process;
+        },
+        platform: platform,
+        strings: () => lookupAppLocalizations(const Locale('en')),
+      )..start();
+      addTearDown(integration.dispose);
+      final opening = integration.openQuickEntry();
+      await pumpEventQueue();
+      spawned.single.emit(quickEntryReady);
+      expect(await opening, isTrue);
+      return calls;
+    }
+
+    test('only the quick-entry child pid may take the foreground, never any '
+        'process', () async {
+      final calls = await openOn(TargetPlatform.windows);
+      final allow = calls.where((c) => c.method == 'allowForeground').toList();
+      expect(allow, hasLength(1));
+      expect(allow.single.arguments, {'pid': 4242});
+    });
+
+    test('macOS and Linux runners are not asked', () async {
+      for (final platform in [TargetPlatform.macOS, TargetPlatform.linux]) {
+        final calls = await openOn(platform);
+        expect(
+          calls.where((c) => c.method == 'allowForeground'),
+          isEmpty,
+          reason: '$platform',
+        );
+      }
+    });
+  });
+
   group('quick-entry owner (PROBE-4)', () {
     const channel = MethodChannel('test/quick_entry_owner_shell');
 

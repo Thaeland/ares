@@ -60,6 +60,31 @@ void TestTrayItems() {
   CHECK(!TrayIndexForCommand(kTrayFirstCommand, 0));
 }
 
+void TestTrayRetryAndForeground() {
+  using ares::desktop::TrayRetryDelayMs;
+  using ares::desktop::ValidForegroundPid;
+  // A short backoff, growing, that gives up after about a minute.
+  unsigned total = 0;
+  unsigned previous = 0;
+  unsigned attempt = 0;
+  for (; TrayRetryDelayMs(attempt) != 0; ++attempt) {
+    CHECK(TrayRetryDelayMs(attempt) > previous);
+    previous = TrayRetryDelayMs(attempt);
+    total += previous;
+  }
+  CHECK(attempt == 6);
+  CHECK(TrayRetryDelayMs(0) == 1000);
+  CHECK(total == 60000);
+  CHECK(TrayRetryDelayMs(100) == 0);
+  CHECK(ares::desktop::kTrayRetryTimerId != ares::desktop::kHotkeyId);
+  // Only a real child pid; never "any process".
+  CHECK(ValidForegroundPid(4242));
+  CHECK(!ValidForegroundPid(0));
+  CHECK(!ValidForegroundPid(-1));
+  CHECK(!ValidForegroundPid(0xFFFFFFFFLL));  // ASFW_ANY
+  CHECK(!ValidForegroundPid(0x100000000LL));
+}
+
 void TestHotkey() {
   using ares::desktop::HotkeyFor;
   using ares::desktop::VirtualKeyForName;
@@ -125,6 +150,7 @@ void TestPower() {
 int main() {
   TestMenuText();
   TestTrayItems();
+  TestTrayRetryAndForeground();
   TestHotkey();
   TestPower();
   std::printf("windows desktop_os_logic: %d checks, %d failures\n", checks,
