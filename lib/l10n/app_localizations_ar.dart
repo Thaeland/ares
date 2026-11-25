@@ -9,11 +9,11 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get workspace_workers => 'Live workers';
+  String get workspace_workers => 'العمّال النشطون';
 
   @override
   String get workers_unattached =>
-      'Counts only. To steer a worker, choose Live workers in its attached parent chat.';
+      'أعداد فقط. لتوجيه عامل، اختر «العمّال النشطون» في المحادثة الأم المرتبط بها.';
 
   @override
   String get slash_local_arguments =>
@@ -664,14 +664,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get allow_folder_until_sandbox_off =>
-      'Allow this folder until the sandbox is switched off.';
+      'السماح بهذا المجلد حتى إيقاف بيئة العزل.';
 
   @override
   String get allow_once => 'السماح مرة واحدة';
 
   @override
   String get allow_website_until_sandbox_off =>
-      'Allow this website until the sandbox is switched off.';
+      'السماح بهذا الموقع حتى إيقاف بيئة العزل.';
 
   @override
   String get always_allow => 'السماح دائمًا';
@@ -739,18 +739,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String get attachment_drafts => 'مسودات المرفقات';
 
   @override
-  String get recover_text_draft => 'Recover a text draft';
+  String get recover_text_draft => 'استعادة مسودة نصية';
 
   @override
-  String get undo_draft_recovery => 'Undo';
+  String get undo_draft_recovery => 'تراجع';
 
   @override
   String get draft_session_exists =>
-      'This chat still exists. Open it to continue your draft.';
+      'لا تزال هذه المحادثة موجودة. افتحها لمتابعة مسودتك.';
 
   @override
   String get draft_recovery_unavailable =>
-      'Could not verify this draft. Nothing was changed.';
+      'تعذّر التحقق من هذه المسودة. لم يتغيّر أي شيء.';
 
   @override
   String attachment_of(Object index, Object total) {
@@ -1925,33 +1925,32 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get windows_notifications_blocked =>
-      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+      'الإشعارات غير متاحة. استخدم تطبيق Ares المثبّت وتحقق من الإعدادات ← النظام ← الإشعارات في Windows.';
 
   @override
-  String get windows_notification_diagnostics =>
-      'What Ares submitted to Windows';
+  String get windows_notification_diagnostics => 'ما أرسله Ares إلى Windows';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
+  String get windows_window_activity => 'مشاركة نشاط المحادثة';
 
   @override
   String get windows_window_activity_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+      'أبلِغ البوابة المتصلة المتوافقة عندما تستخدم هذه المحادثة، حتى يتجنّب ملحق إشعارات الهاتف فيها التنبيهات المكررة. لا تُرسَل أي مفاتيح أو نصوص رسائل.';
 
   @override
-  String get windows_completion_sound => 'Completion sound';
+  String get windows_completion_sound => 'صوت الاكتمال';
 
   @override
-  String get windows_sound_default => 'Windows default';
+  String get windows_sound_default => 'الافتراضي في Windows';
 
   @override
-  String get windows_sound_mail => 'Mail';
+  String get windows_sound_mail => 'البريد';
 
   @override
-  String get windows_sound_reminder => 'Reminder';
+  String get windows_sound_reminder => 'تذكير';
 
   @override
-  String get windows_sound_silent => 'Silent';
+  String get windows_sound_silent => 'صامت';
 
   @override
   String get notifications_permission_denied =>
@@ -3000,7 +2999,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get destination_label => 'الوجهة';
 
   @override
-  String get markdown_source => 'Source';
+  String get markdown_source => 'المصدر';
 
   @override
   String get preview_label => 'معاينة';
@@ -4709,23 +4708,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ng_allow_once => 'السماح مرة واحدة';
 
   @override
-  String get ng_allow_until_sandbox_off => 'Until the sandbox is switched off';
+  String get ng_allow_until_sandbox_off => 'حتى إيقاف بيئة العزل';
 
   @override
-  String get ng_folder_access => 'Folder access';
+  String get ng_folder_access => 'الوصول إلى المجلد';
 
   @override
   String get ng_folder_access_unspecified =>
-      'The gateway did not say whether this is read-only or read-write.';
+      'لم تحدّد البوابة ما إذا كان الوصول للقراءة فقط أم للقراءة والكتابة.';
 
   @override
-  String get ng_folder_read_only => 'Read-only';
+  String get ng_folder_read_only => 'للقراءة فقط';
 
   @override
-  String get ng_folder_read_write => 'Read and write';
+  String get ng_folder_read_write => 'قراءة وكتابة';
 
   @override
-  String get ng_website_access => 'Website access';
+  String get ng_website_access => 'الوصول إلى الموقع';
 
   @override
   String get ng_allow_for_this_chat => 'السماح لهذه المحادثة';

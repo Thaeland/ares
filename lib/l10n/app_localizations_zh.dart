@@ -12078,6 +12078,12 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   AppLocalizationsZhHant() : super('zh_Hant');
 
   @override
+  String get workspace_workers => '即時工作者';
+
+  @override
+  String get workers_unattached => '僅顯示數量。若要引導工作者，請在其所屬的上層聊天中選擇「即時工作者」。';
+
+  @override
   String get slash_local_arguments => '此處的快捷指令不支援參數。請使用應用程式中的控制項；草稿已保留。';
 
   @override
@@ -12687,7 +12693,13 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
       '允許符合此規則的指令，直到本次 Hermes 工作階段結束。';
 
   @override
+  String get allow_folder_until_sandbox_off => '允許此資料夾，直到關閉沙箱為止。';
+
+  @override
   String get allow_once => '允許一次';
+
+  @override
+  String get allow_website_until_sandbox_off => '允許此網站，直到關閉沙箱為止。';
 
   @override
   String get always_allow => '一律允許';
@@ -12751,6 +12763,18 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get attachment_drafts => '附件草稿';
+
+  @override
+  String get recover_text_draft => '找回文字草稿';
+
+  @override
+  String get undo_draft_recovery => '復原';
+
+  @override
+  String get draft_session_exists => '此聊天仍然存在。開啟後即可繼續編輯草稿。';
+
+  @override
+  String get draft_recovery_unavailable => '無法驗證此草稿，未做任何變更。';
 
   @override
   String attachment_of(Object index, Object total) {
@@ -13887,6 +13911,35 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get notifications => '通知';
 
   @override
+  String get windows_notifications_blocked =>
+      '無法使用通知。請使用已安裝的 Ares 應用程式，並檢查 Windows 的「設定」→「系統」→「通知」。';
+
+  @override
+  String get windows_notification_diagnostics => 'Ares 傳送給 Windows 的內容';
+
+  @override
+  String get windows_window_activity => '分享聊天活動';
+
+  @override
+  String get windows_window_activity_hint =>
+      '在你使用此聊天時告知相容的已連線閘道，讓其手機通知外掛程式避免重複提醒。不會傳送任何金鑰或訊息內容。';
+
+  @override
+  String get windows_completion_sound => '完成提示音';
+
+  @override
+  String get windows_sound_default => 'Windows 預設';
+
+  @override
+  String get windows_sound_mail => '郵件';
+
+  @override
+  String get windows_sound_reminder => '提醒';
+
+  @override
+  String get windows_sound_silent => '靜音';
+
+  @override
   String get notifications_permission_denied =>
       '系統已阻止通知。請在 Android 設定中允許此應用程式傳送通知。';
 
@@ -14908,6 +14961,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get destination_label => '目標';
+
+  @override
+  String get markdown_source => '原始碼';
 
   @override
   String get preview_label => '預覽';
@@ -16531,6 +16587,24 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get ng_allow_once => '允許一次';
+
+  @override
+  String get ng_allow_until_sandbox_off => '直到關閉沙箱為止';
+
+  @override
+  String get ng_folder_access => '資料夾存取權';
+
+  @override
+  String get ng_folder_access_unspecified => '閘道未說明這是唯讀還是可讀寫。';
+
+  @override
+  String get ng_folder_read_only => '唯讀';
+
+  @override
+  String get ng_folder_read_write => '讀取與寫入';
+
+  @override
+  String get ng_website_access => '網站存取權';
 
   @override
   String get ng_allow_for_this_chat => '在此聊天中允許';
