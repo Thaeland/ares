@@ -172,7 +172,7 @@ void main() {
   group('NextGen wide docked sidebar', () {
     setUp(() => SharedPreferences.setMockInitialValues({}));
 
-    Future<void> pumpNextGen(WidgetTester tester, Size size) async {
+    Future<NextGenGateway> pumpNextGen(WidgetTester tester, Size size) async {
       tester.view.physicalSize = size;
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
@@ -188,7 +188,6 @@ void main() {
         signInMethod: 'none',
       );
       final gateway = NextGenGateway(conn);
-      addTearDown(gateway.dispose);
       await tester.pumpWidget(
         MaterialApp(
           theme: nextGenTheme(Brightness.light, NextGenLook.instance),
@@ -206,10 +205,20 @@ void main() {
         ),
       );
       await tester.pump(const Duration(milliseconds: 300));
+      return gateway;
+    }
+
+    // The new-chat greeting loads Projects through gateway.connected(), which
+    // starts the reconnect loop and waits up to 20 s. Unmount, dispose and let
+    // those timers run out inside the test, as the other NgMainPage tests do.
+    Future<void> unmount(WidgetTester tester, NextGenGateway gateway) async {
+      await tester.pumpWidget(const SizedBox());
+      gateway.dispose();
+      await tester.pump(const Duration(seconds: 30));
     }
 
     testWidgets('compact window uses a drawer', (tester) async {
-      await pumpNextGen(tester, const Size(800, 600));
+      final gateway = await pumpNextGen(tester, const Size(800, 600));
       final scaffold = tester.state<ScaffoldState>(find.byType(Scaffold).first);
       expect(scaffold.isDrawerOpen, isFalse);
       // The sidebar is not inline on a phone-width window.
@@ -218,14 +227,16 @@ void main() {
       await tester.pumpAndSettle();
       expect(scaffold.isDrawerOpen, isTrue);
       expect(find.byKey(const Key('ng-session-search')), findsOneWidget);
+      await unmount(tester, gateway);
     });
 
     testWidgets('unfolded/wide window docks the sessions pane', (tester) async {
-      await pumpNextGen(tester, const Size(1024, 800));
+      final gateway = await pumpNextGen(tester, const Size(1024, 800));
       // No modal drawer at the expanded breakpoint; the sidebar is inline.
       expect(find.byType(Drawer), findsNothing);
       expect(find.byKey(const Key('ng-session-search')), findsOneWidget);
       expect(find.byKey(const ValueKey('ng-sidebar-button')), findsOneWidget);
+      await unmount(tester, gateway);
     });
   });
 }
