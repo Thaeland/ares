@@ -9,6 +9,12 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get workspace_workers => '运行中的子代理';
+
+  @override
+  String get workers_unattached => '仅显示数量。要向子代理发送指令，请在已连接的上级对话中选择“运行中的子代理”。';
+
+  @override
   String get slash_local_arguments => '此处的快捷命令不支持参数。请使用应用中的控件；草稿已保留。';
 
   @override
@@ -684,6 +690,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get attachment_drafts => '附件草稿';
+
+  @override
+  String get recover_text_draft => '恢复文字草稿';
+
+  @override
+  String get undo_draft_recovery => '撤销';
+
+  @override
+  String get draft_session_exists => '此对话仍然存在。请打开它以继续编辑草稿。';
+
+  @override
+  String get draft_recovery_unavailable => '无法验证此草稿。未作任何更改。';
 
   @override
   String attachment_of(Object index, Object total) {
@@ -5919,6 +5937,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   AppLocalizationsZhHans() : super('zh_Hans');
 
   @override
+  String get workspace_workers => '运行中的子代理';
+
+  @override
+  String get workers_unattached => '仅显示数量。要向子代理发送指令，请在已连接的上级对话中选择“运行中的子代理”。';
+
+  @override
   String get slash_local_arguments => '此处的快捷命令不支持参数。请使用应用中的控件；草稿已保留。';
 
   @override
@@ -6555,6 +6579,18 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get attachment_drafts => '附件草稿';
+
+  @override
+  String get recover_text_draft => '恢复文字草稿';
+
+  @override
+  String get undo_draft_recovery => '撤销';
+
+  @override
+  String get draft_session_exists => '此对话仍然存在。请打开它以继续编辑草稿。';
+
+  @override
+  String get draft_recovery_unavailable => '无法验证此草稿。未作任何更改。';
 
   @override
   String attachment_of(Object index, Object total) {

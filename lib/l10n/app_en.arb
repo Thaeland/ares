@@ -1,4 +1,6 @@
 {
+  "workspace_workers": "Live workers",
+  "workers_unattached": "Counts only. To steer a worker, choose Live workers in its attached parent chat.",
   "slash_local_arguments": "This shortcut does not accept arguments here. Use the app controls; your draft was kept.",
   "fallback_title": "Fallback models",
   "fallback_notice": "Tried in order when the main model is unavailable. Changes apply to this profile only; save the complete list explicitly.",
@@ -290,6 +292,10 @@
   "assets_unavailable": "Assets unavailable",
   "attach_image_or_file": "Attach image or file",
   "attachment_drafts": "Attachment drafts",
+  "recover_text_draft": "Recover a text draft",
+  "undo_draft_recovery": "Undo",
+  "draft_session_exists": "This chat still exists. Open it to continue your draft.",
+  "draft_recovery_unavailable": "Could not verify this draft. Nothing was changed.",
   "attachment_of": "Attachment {index} of {total}",
   "auto_device_default": "Auto (device default)",
   "agent": "Agent",

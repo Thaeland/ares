@@ -9,6 +9,13 @@ class AppLocalizationsUk extends AppLocalizations {
   AppLocalizationsUk([String locale = 'uk']) : super(locale);
 
   @override
+  String get workspace_workers => 'Активні субагенти';
+
+  @override
+  String get workers_unattached =>
+      'Показано лише кількість. Щоб дати вказівку, виберіть «Активні субагенти» в підключеному батьківському чаті.';
+
+  @override
   String get slash_local_arguments =>
       'Цей ярлик тут не підтримує аргументи. Скористайтеся елементами керування застосунку; чернетку збережено.';
 
@@ -721,6 +728,20 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get attachment_drafts => 'Чернетки вкладень';
+
+  @override
+  String get recover_text_draft => 'Відновити чернетку';
+
+  @override
+  String get undo_draft_recovery => 'Скасувати';
+
+  @override
+  String get draft_session_exists =>
+      'Цей чат ще існує. Відкрийте його, щоб продовжити роботу з чернеткою.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Не вдалося перевірити чернетку. Нічого не змінено.';
 
   @override
   String attachment_of(Object index, Object total) {

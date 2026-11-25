@@ -9,6 +9,13 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get workspace_workers => 'Subagentes activos';
+
+  @override
+  String get workers_unattached =>
+      'Solo se muestran cantidades. Para dirigir un subagente, elige Subagentes activos en el chat principal conectado.';
+
+  @override
   String get slash_local_arguments =>
       'Este atajo no admite argumentos aquí. Usa los controles de la aplicación; se conservó tu borrador.';
 
@@ -724,6 +731,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get attachment_drafts => 'Borradores de adjuntos';
+
+  @override
+  String get recover_text_draft => 'Recuperar un borrador de texto';
+
+  @override
+  String get undo_draft_recovery => 'Deshacer';
+
+  @override
+  String get draft_session_exists =>
+      'Este chat aún existe. Ábrelo para continuar con el borrador.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'No se pudo verificar el borrador. No se ha cambiado nada.';
 
   @override
   String attachment_of(Object index, Object total) {

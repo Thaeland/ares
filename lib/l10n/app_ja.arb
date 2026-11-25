@@ -1,4 +1,6 @@
 {
+  "workspace_workers": "実行中のサブエージェント",
+  "workers_unattached": "件数のみ表示しています。指示を送るには、接続中の親チャットで「実行中のサブエージェント」を選んでください。",
   "slash_local_arguments": "ここではこのショートカットに引数を指定できません。アプリの操作画面を使用してください。下書きは保持されています。",
   "fallback_title": "フォールバックモデル",
   "fallback_notice": "メインモデルが利用できない場合に順番に試行します。変更はこのプロファイルのみに適用されます。リスト全体を明示的に保存してください。",
@@ -195,6 +197,10 @@
   "assets_unavailable": "アセットを利用できません",
   "attach_image_or_file": "画像またはファイルを添付",
   "attachment_drafts": "添付ドラフト",
+  "recover_text_draft": "テキストの下書きを復元",
+  "undo_draft_recovery": "元に戻す",
+  "draft_session_exists": "このチャットはまだ存在します。開いて下書きの編集を続けてください。",
+  "draft_recovery_unavailable": "下書きを確認できませんでした。変更はありません。",
   "attachment_of": "添付 {index}/{total}",
   "auto_device_default": "自動（端末のデフォルト）",
   "agent": "エージェント",

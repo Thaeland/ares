@@ -116,6 +116,18 @@ abstract class AppLocalizations {
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
   ];
 
+  /// No description provided for @workspace_workers.
+  ///
+  /// In en, this message translates to:
+  /// **'Live workers'**
+  String get workspace_workers;
+
+  /// No description provided for @workers_unattached.
+  ///
+  /// In en, this message translates to:
+  /// **'Counts only. To steer a worker, choose Live workers in its attached parent chat.'**
+  String get workers_unattached;
+
   /// No description provided for @slash_local_arguments.
   ///
   /// In en, this message translates to:
@@ -1345,6 +1357,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Attachment drafts'**
   String get attachment_drafts;
+
+  /// No description provided for @recover_text_draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Recover a text draft'**
+  String get recover_text_draft;
+
+  /// No description provided for @undo_draft_recovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo_draft_recovery;
+
+  /// No description provided for @draft_session_exists.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat still exists. Open it to continue your draft.'**
+  String get draft_session_exists;
+
+  /// No description provided for @draft_recovery_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not verify this draft. Nothing was changed.'**
+  String get draft_recovery_unavailable;
 
   /// No description provided for @attachment_of.
   ///

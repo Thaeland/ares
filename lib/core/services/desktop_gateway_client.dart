@@ -48,6 +48,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
   final String? _gatewayProfile;
   final ClientCertificateConfig? _clientCertificate;
   WsClient? _ws;
+  bool get sessionAuthority => _ws?.sessionAuthority == true;
   Future<WsClient>? _socketInFlight;
   Timer? _reconnectTimer;
   int _reconnectAttempts = 0;
@@ -899,6 +900,9 @@ class DesktopGatewayClient implements SlashCommandGateway {
     bool Function()? maySend,
     Future<bool> Function()? beforeSend,
     void Function()? onAccepted,
+    String? submissionId,
+    Future<void> Function()? beforeLegacy,
+    Future<void> Function(Object?, String)? onReceipt,
   }) async {
     var emitted = false;
     if (beforeSend != null && !await beforeSend()) {
@@ -919,6 +923,9 @@ class DesktopGatewayClient implements SlashCommandGateway {
         return gateway.client.submitPrompt(
           text,
           sessionId: gateway.sessionId,
+          submissionId: submissionId,
+          beforeLegacy: beforeLegacy,
+          onReceipt: onReceipt,
           onEvent: (event) {
             if (!_closed) onEvent(event);
           },

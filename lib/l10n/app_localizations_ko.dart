@@ -9,6 +9,13 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get workspace_workers => '실행 중인 하위 에이전트';
+
+  @override
+  String get workers_unattached =>
+      '개수만 표시됩니다. 지시를 보내려면 연결된 상위 채팅에서 ‘실행 중인 하위 에이전트’를 선택하세요.';
+
+  @override
   String get slash_local_arguments =>
       '이 바로 가기는 여기서 인수를 지원하지 않습니다. 앱의 컨트롤을 사용하세요. 초안은 보관되었습니다.';
 
@@ -704,6 +711,18 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get attachment_drafts => '첨부 파일 초안';
+
+  @override
+  String get recover_text_draft => '텍스트 초안 복구';
+
+  @override
+  String get undo_draft_recovery => '실행 취소';
+
+  @override
+  String get draft_session_exists => '이 채팅은 아직 존재합니다. 채팅을 열어 초안을 이어서 작성하세요.';
+
+  @override
+  String get draft_recovery_unavailable => '초안을 확인할 수 없습니다. 변경된 내용이 없습니다.';
 
   @override
   String attachment_of(Object index, Object total) {

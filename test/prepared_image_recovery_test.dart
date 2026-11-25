@@ -1,0 +1,368 @@
+import 'dart:async';
+
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:hermes_android/core/models/attachment_draft.dart';
+import 'package:hermes_android/core/services/connection_manager.dart';
+import 'package:hermes_android/core/services/prepared_image_store.dart';
+
+import 'package:hermes_android/core/widgets/prepared_image_recovery.dart';
+import 'package:hermes_android/nextgen/data/chat_controller.dart';
+import 'package:hermes_android/nextgen/data/nextgen_gateway.dart';
+// ignore: depend_on_referenced_packages
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class _Paths extends PathProviderPlatform {
+  _Paths(this.root);
+  final Directory root;
+  @override
+  Future<String?> getApplicationSupportPath() async => root.path;
+  @override
+  Future<String?> getTemporaryPath() async => root.path;
+}
+
+final fixture = SavedConnection(
+  id: 'fixture',
+  label: 'fixture',
+  host: '127.0.0.1',
+  port: 1,
+  apiKey: 'synthetic-secret',
+  gatewayProfile: 'fixture',
+);
+
+class _Gateway extends NextGenGateway {
+  _Gateway(this.canonical) : super(fixture);
+  final bool canonical;
+  @override
+  bool get sessionAuthority => canonical;
+  final calls = <Map<String, dynamic>>[];
+  bool ack = false;
+  int uploads = 0;
+  @override
+  Future<Map<String, dynamic>> call(
+    String method,
+    Map<String, dynamic> params, {
+    Duration timeout = const Duration(seconds: 30),
+  }) async {
+    if (method == 'image.attach_bytes') {
+      return {
+        'attached': true,
+        'path': '/fixture/${++uploads}',
+        'mime': 'image/png',
+      };
+    }
+    if (method == 'prompt.submit') {
+      calls.add(Map.of(params));
+      return {
+        'submission_id': ack ? params['submission_id'] : 'wrong',
+        'session_id': params['session_id'],
+        'status': 'queued',
+      };
+    }
+    throw StateError('unexpected method $method');
+  }
+}
+
+void main() {
+  final connection = fixture;
+  TestWidgetsFlutterBinding.ensureInitialized();
+  late Directory dir;
+  late PathProviderPlatform oldPaths;
+  final store = PreparedImageStore.shared;
+  late PreparedImageTarget target;
+  Future<AttachmentDraft> image(String name, List<int> bytes) async {
+    final f = await File('${dir.path}/$name').writeAsBytes(bytes);
+    return AttachmentDraft(
+      id: name,
+      cachedPath: f.path,
+      name: 'photo.png',
+      byteLength: bytes.length,
+      mediaType: 'image/png',
+      kind: AttachmentDraftKind.image,
+      sanitized: true,
+    );
+  }
+
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+    dir = await Directory.systemTemp.createTemp('prepared-fixture-');
+    oldPaths = PathProviderPlatform.instance;
+    PathProviderPlatform.instance = _Paths(dir);
+    target = PreparedImageTarget(
+      connection,
+      'stored',
+      PreparedImageTransport.classicRefs,
+    );
+  });
+  tearDown(() async {
+    PathProviderPlatform.instance = oldPaths;
+    await dir.delete(recursive: true);
+  });
+  test(
+    'only explicitly restored, unchanged occurrences can adopt frozen refs',
+    () async {
+      final a = await image('a', [1, 2]), b = await image('b', [3, 4]);
+      final snap = await store.capture([a, b]);
+      await File(a.cachedPath).writeAsBytes([9, 9]);
+      const prompt = 'caption\n\n@file:/one\n@file:/two';
+      final prepared = await store.prepare(
+        target,
+        ' caption ',
+        snap,
+        prompt: prompt,
+      );
+      await snap.close();
+      await File(b.cachedPath).delete();
+      final fresh = PreparedImageStore();
+      final entry = (await fresh.list(target)).single;
+      expect(entry.id, prepared.id);
+      expect(entry.prompt, prompt);
+      final drafts = (await fresh.restore(entry, () => true))!;
+      expect(await File(drafts.first.cachedPath).readAsBytes(), [1, 2]);
+      expect(await File(drafts.last.cachedPath).readAsBytes(), [3, 4]);
+      expect((await fresh.adopt(target, ' caption ', drafts))!.id, entry.id);
+      expect(await fresh.adopt(target, 'caption', drafts), isNull);
+      expect(
+        await fresh.adopt(target, entry.text, drafts.reversed.toList()),
+        isNull,
+      );
+      expect(
+        await fresh.adopt(target, entry.text, [drafts[0], drafts[0]]),
+        isNull,
+      );
+      expect(await fresh.adopt(target, entry.text, [a, b]), isNull);
+      await File(drafts[0].cachedPath).writeAsBytes([2, 1]);
+      expect(await fresh.adopt(target, entry.text, drafts), isNull);
+      for (final other in [
+        PreparedImageTarget(
+          connection.copyWith(apiKey: 'another-secret'),
+          'stored',
+          target.transport,
+        ),
+        PreparedImageTarget(
+          connection.copyWith(gatewayProfile: 'other'),
+          'stored',
+          target.transport,
+        ),
+        PreparedImageTarget(connection, 'other', target.transport),
+        PreparedImageTarget(
+          connection,
+          'stored',
+          PreparedImageTransport.nextgenCanonical,
+        ),
+      ]) {
+        expect(await fresh.list(other), isEmpty);
+        await expectLater(
+          fresh.adopt(other, entry.text, drafts),
+          throwsA(isA<PreparedImageException>()),
+        );
+      }
+      final manifest =
+          await dir
+                  .list(recursive: true)
+                  .where((f) => f.path.endsWith('entry.json'))
+                  .single
+              as File;
+      expect(
+        await manifest.readAsString(),
+        isNot(contains('synthetic-secret')),
+      );
+      expect(manifest.path, isNot(contains('synthetic-secret')));
+      await expectLater(
+        prepared.receipt({
+          'submission_id': entry.id,
+          'session_id': 'other',
+          'status': 'queued',
+        }, 'rt'),
+        throwsA(isA<PreparedImageException>()),
+      );
+      expect(await fresh.list(target), hasLength(1));
+      final receipt = {
+        // The canonical server mints this independently of submission_id.
+        'admission_id': 'host-generated-not-the-request-uuid',
+        'ref': {'session_id': 'rt', 'profile_id': '/fixture/work'},
+        'sequence': 11, 'authority_epoch': 7, 'execution_generation': null,
+        'status': 'queued', 'outcome': null,
+      };
+      await expectLater(
+        prepared.receipt(receipt, 'another'),
+        throwsA(isA<PreparedImageException>()),
+      );
+      expect(await fresh.list(target), hasLength(1));
+      await prepared.receipt(receipt, 'rt');
+      expect(await fresh.list(target), isEmpty);
+    },
+  );
+  test(
+    'upload interrupted before submit retains caption and original bytes as a copy, not a replay',
+    () async {
+      final draft = await image('interrupted', [3, 2, 1]);
+      final capture = await store.capture(
+        [draft],
+        beforeUpload: (target: target, text: 'caption before upload'),
+      );
+      expect(
+        await store.list(target),
+        isEmpty,
+      ); // Producer still owns the upload.
+      await File(draft.cachedPath).delete();
+      await capture.close();
+      final reopened = PreparedImageStore();
+      final entry = (await reopened.list(target)).single;
+      expect(entry.copyOnly, isTrue);
+      expect(entry.text, 'caption before upload');
+      final recovered = (await reopened.restore(entry, () => true))!;
+      expect(await File(recovered.single.cachedPath).readAsBytes(), [3, 2, 1]);
+      expect(await reopened.adopt(target, entry.text, recovered), isNull);
+    },
+  );
+  test('identityless fallback is durably copy-only before its write', () async {
+    final snap = await store.capture([
+      await image('a', [1]),
+    ]);
+    final attempt = await store.prepare(
+      target,
+      'one',
+      snap,
+      prompt: 'one\n@file',
+    );
+    final drafts = (await store.restore(attempt.entry, () => true))!;
+    final adopted = (await store.adopt(target, 'one', drafts))!;
+    await expectLater(
+      adopted.beforeLegacy(),
+      throwsA(isA<PreparedImageException>()),
+    );
+    await attempt.beforeLegacy();
+    final entry = (await PreparedImageStore().list(target)).single;
+    expect(entry.copyOnly, isTrue);
+    expect(
+      await store.adopt(
+        target,
+        'one',
+        (await store.restore(entry, () => true))!,
+      ),
+      isNull,
+    );
+    await expectLater(
+      store.adopt(target, 'one', drafts),
+      throwsA(isA<PreparedImageException>()),
+    );
+  });
+  for (final canonical in [true, false]) {
+    test(
+      'NextGen sends retained identity and correct image transport (canonical=$canonical)',
+      () async {
+        final g = _Gateway(canonical);
+        final chat = NgChatController(g, sessionId: 'stored')..runtimeId = 'rt';
+        addTearDown(() {
+          chat.dispose();
+          g.dispose();
+        });
+        final original = await image('a', [1, 2, 3]);
+        final sent = await chat.send(
+          'caption',
+          composerImageText: ' caption ',
+          attachments: [original],
+        );
+        expect(sent, isFalse);
+        expect(g.uploads, 1);
+        expect(g.calls, hasLength(1));
+        final entry = (await store.list(chat.imageTarget!)).single;
+        expect(entry.id, g.calls.single['submission_id']);
+        expect(entry.copyOnly, !canonical);
+        expect(await File(original.cachedPath).exists(), isFalse);
+        final removed = await store.restore(entry, () => false);
+        expect(removed, isNull);
+        final copies = (await store.restore(entry, () => true))!;
+        expect(g.calls, hasLength(1));
+        await chat.retryLast();
+        expect(g.calls, hasLength(1));
+        g.ack = true;
+        expect(
+          await chat.send(
+            'caption',
+            composerImageText: entry.text,
+            attachments: copies,
+          ),
+          isTrue,
+        );
+        expect(g.calls, hasLength(2));
+        if (canonical) {
+          expect(g.uploads, 1);
+          expect(g.calls[1], g.calls[0]);
+          expect(g.calls[0]['attachments'], [
+            {'path': '/fixture/1', 'mime': 'image/png'},
+          ]);
+          expect(await store.list(chat.imageTarget!), isEmpty);
+        } else {
+          expect(g.uploads, 2);
+          expect(g.calls[1]['submission_id'], isNot(entry.id));
+          expect(g.calls[1].containsKey('attachments'), isFalse);
+          expect((await store.list(chat.imageTarget!)).single.id, entry.id);
+        }
+      },
+    );
+  }
+  testWidgets(
+    'gesture restore refuses edit-then-clear while disk read is held',
+    (tester) async {
+      final gate = Completer<Directory>();
+      final reader = PreparedImageStore(cache: () => gate.future);
+      final entry = (await tester.runAsync(() async {
+        final snap = await store.capture([
+          await image('a', [1, 2, 3]),
+        ]);
+        return (await store.prepare(
+          target,
+          'caption',
+          snap,
+          prompt: 'caption',
+        )).entry;
+      }))!;
+      int revision = 0, installed = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PreparedImageRecovery(
+              target: target,
+              store: reader,
+              revision: () => revision,
+              install: (text, drafts) {
+                installed++;
+              },
+            ),
+          ),
+        ),
+      );
+      Future<void> waitFor(Finder finder) async {
+        for (var i = 0; i < 100 && finder.evaluate().isEmpty; i++) {
+          await tester.pump(const Duration(milliseconds: 20));
+          await tester.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 2)),
+          );
+        }
+        expect(finder, findsOneWidget);
+      }
+
+      expect(installed, 0);
+      await tester.tap(find.byType(TextButton));
+      await waitFor(find.text('caption'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('caption'));
+      await tester.pumpAndSettle();
+      revision += 2;
+      gate.complete(dir);
+      await tester.pumpAndSettle();
+      expect(installed, 0);
+      expect(
+        await tester.runAsync(
+          () => store.list(target).then((v) => v.single.id),
+        ),
+        entry.id,
+      );
+    },
+  );
+}

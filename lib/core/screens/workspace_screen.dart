@@ -25,6 +25,7 @@ import '../services/connection_manager.dart';
 import '../services/desktop_gateway_client.dart';
 import 'workspace_profiles_screen.dart';
 import 'fleet_screen.dart';
+import 'workspace_workers_screen.dart';
 import '../services/gateway_turn_application_controller.dart';
 import '../services/gateway_turn_journal.dart';
 import '../services/local_chat_pin_store.dart';
@@ -1240,6 +1241,13 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           onOpenItem: _openActivityItem,
         );
       case HermesDestination.more:
+        final gateway = _ownedGateway;
+        final workers = gateway == null
+            ? null
+            : WorkspaceWorkersScreen.capture(
+                gateway.workspace,
+                widget.connection.label,
+              );
         return MorePane(
           sections: buildMoreSections(
             providerIds: _providerIds,
@@ -1250,9 +1258,15 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
             workspaceAvailable: _ownedGateway != null,
             l10n: context.l10n,
           ),
-          onSelect: (entry) => entry.id == 'parallel-workspace'
-              ? openParallel()
-              : _openMoreEntry(entry),
+          onSelect: (entry) {
+            if (entry.id == 'parallel-workspace') {
+              openParallel();
+            } else if (entry.id == 'workspace-workers') {
+              workers?.open(context);
+            } else {
+              _openMoreEntry(entry);
+            }
+          },
         );
     }
   }

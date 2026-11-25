@@ -9,6 +9,13 @@ class AppLocalizationsPt extends AppLocalizations {
   AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
+  String get workspace_workers => 'Subagentes ativos';
+
+  @override
+  String get workers_unattached =>
+      'Apenas contagens. Para orientar um subagente, escolha Subagentes ativos na conversa principal ligada.';
+
+  @override
   String get slash_local_arguments =>
       'Este atalho não aceita argumentos aqui. Use os controlos da aplicação; o rascunho foi mantido.';
 
@@ -725,6 +732,20 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get attachment_drafts => 'Rascunhos de anexos';
+
+  @override
+  String get recover_text_draft => 'Recuperar um rascunho de texto';
+
+  @override
+  String get undo_draft_recovery => 'Desfazer';
+
+  @override
+  String get draft_session_exists =>
+      'Esta conversa ainda existe. Abra-a para continuar o rascunho.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Não foi possível verificar o rascunho. Nada foi alterado.';
 
   @override
   String attachment_of(Object index, Object total) {
@@ -6188,6 +6209,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   AppLocalizationsPtBr() : super('pt_BR');
 
   @override
+  String get workspace_workers => 'Subagentes ativos';
+
+  @override
+  String get workers_unattached =>
+      'Apenas contagens. Para orientar um subagente, selecione Subagentes ativos na conversa principal conectada.';
+
+  @override
   String get slash_local_arguments =>
       'Este atalho não aceita argumentos aqui. Use os controles do aplicativo; seu rascunho foi mantido.';
 
@@ -6864,6 +6892,20 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get attachment_drafts => 'Rascunhos de anexos';
+
+  @override
+  String get recover_text_draft => 'Recuperar um rascunho de texto';
+
+  @override
+  String get undo_draft_recovery => 'Desfazer';
+
+  @override
+  String get draft_session_exists =>
+      'Esta conversa ainda existe. Abra-a para continuar o rascunho.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Não foi possível verificar o rascunho. Nada foi alterado.';
 
   @override
   String attachment_of(Object index, Object total) {

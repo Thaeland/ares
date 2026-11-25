@@ -155,8 +155,8 @@ class _Servers {
 
 void main() {
   setUp(mockChatImageRecovery);
-  // 390 is a phone: Classic keeps the app bar from overflowing by moving the
-  // browser preview into Chat actions.
+  // 390 is a phone: the app bar keeps from overflowing by moving the browser
+  // preview into More chat tools.
   for (final (classic, width) in [
     (true, 480.0),
     (true, 390.0),
@@ -231,13 +231,14 @@ void main() {
           await t.pump();
         }
 
-        // A phone-width Classic pane offers the preview from Chat actions.
+        // A phone-width pane offers the preview from More chat tools.
         Future<void> openPreview() async {
           if (find.byTooltip('Open browser preview').evaluate().isNotEmpty) {
             return tap(find.byTooltip('Open browser preview'));
           }
-          await tap(find.byTooltip('Chat actions'));
-          // Only the menu animation; settling would run the fixture clocks.
+          // tap() pumps the frame that starts the menu animation; the next
+          // pump completes it. Settling would run the fixture clocks.
+          await tap(find.byTooltip('More chat tools'));
           await t.pump(const Duration(milliseconds: 400));
           await tap(find.text('Open browser preview'));
           await t.pump(const Duration(milliseconds: 400));

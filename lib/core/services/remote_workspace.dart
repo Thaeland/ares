@@ -23,6 +23,9 @@ part 'workspace_files.dart';
 part 'remote_profile_admin.dart';
 part 'remote_agent_transfer.dart';
 
+part 'workspace_workers.dart';
+part 'workspace_queue.dart';
+
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {
   profiles,

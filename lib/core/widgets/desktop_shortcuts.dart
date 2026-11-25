@@ -91,12 +91,14 @@ class SendOnEnter extends StatelessWidget {
   const SendOnEnter({
     required this.child,
     required this.onSend,
+    this.onNavigate,
     this.enabled = true,
     super.key,
   });
 
   final Widget child;
   final VoidCallback onSend;
+  final KeyEventResult Function(KeyEvent)? onNavigate;
   final bool enabled;
 
   @override
@@ -106,7 +108,7 @@ class SendOnEnter extends StatelessWidget {
         onSend();
         return KeyEventResult.handled;
       }
-      return KeyEventResult.ignored;
+      return onNavigate?.call(event) ?? KeyEventResult.ignored;
     },
     child: child,
   );

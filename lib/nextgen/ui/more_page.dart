@@ -20,6 +20,7 @@ import '../../core/screens/provider_oauth_screen.dart';
 import '../../core/screens/skills_screen.dart';
 import '../../core/screens/workspace_profiles_screen.dart';
 import '../../core/services/chat_assets_client.dart';
+import '../../core/screens/workspace_workers_screen.dart';
 import '../../core/services/dashboard_api_client.dart';
 import '../../core/services/remote_files_client.dart';
 import '../nextgen_preferences.dart';
@@ -55,6 +56,10 @@ class NgMorePage extends StatelessWidget {
 
   Widget _menu(BuildContext context, NgScope scope, VoidCallback openParallel) {
     final conn = scope.connection;
+    final workers = WorkspaceWorkersScreen.capture(
+      scope.gateway.workspace,
+      conn.label,
+    );
     void push(Widget page) => Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(builder: (_) => page));
@@ -165,6 +170,12 @@ class NgMorePage extends StatelessWidget {
                       route: scope.gateway.workspace.route(),
                     ),
                   ),
+                ),
+                NgRow(
+                  icon: Icons.account_tree_outlined,
+                  title: ngL.workspace_workers,
+                  subtitle: ngL.ng_show_subagents,
+                  onTap: () => workers.open(context),
                 ),
                 NgRow(
                   icon: Icons.memory,

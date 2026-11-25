@@ -13,6 +13,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/models/attachment_draft.dart';
 import '../../core/preview/chat_preview.dart';
+import '../../core/screens/workspace_workers_screen.dart';
+import '../../core/screens/gateway_queue_screen.dart';
 import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
 import '../../core/utils/delivered_files.dart';
@@ -20,6 +22,9 @@ import '../../core/utils/media_tags.dart';
 import '../../core/widgets/desktop_shortcuts.dart';
 import '../../core/widgets/transcript_reader.dart';
 import '../../core/widgets/transcript_body.dart';
+import '../../core/services/chat_presentation_state.dart';
+import '../../core/widgets/composer_prompt_recall.dart';
+import '../../core/widgets/orphan_draft_recovery.dart';
 import '../../core/widgets/markdown_code_block.dart';
 import '../../core/widgets/media_artifact_card.dart';
 import '../../core/widgets/slash_command_highlight.dart';
@@ -27,6 +32,9 @@ import '../../core/widgets/session_files_view.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
 import '../../core/services/attachment_draft_service.dart';
+import '../../core/widgets/client_held_queue_bar.dart';
+import '../../core/widgets/prepared_image_recovery.dart';
+import '../../core/services/prepared_image_store.dart';
 import '../../core/services/voice_composer_adapter.dart';
 import '../data/chat_controller.dart';
 import '../data/nextgen_gateway.dart';
@@ -70,7 +78,7 @@ class NgChatView extends StatefulWidget {
   State<NgChatView> createState() => _NgChatViewState();
 }
 
-class _NgChatViewState extends State<NgChatView> {
+class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
   /// A fresh files client per card: cards close theirs when done, so they
   /// must not share the gateway's own dashboard connection.
   RemoteFilesDataSource _filesClient() {
@@ -82,6 +90,67 @@ class _NgChatViewState extends State<NgChatView> {
 
   final _input = SlashCommandHighlightController();
   bool _showSessionFiles = false;
+  final _promptRecall = ComposerPromptRecall();
+  late ComposerDraftWriter _draftWriter;
+  String _lastText = '';
+  bool _hydrating = false;
+  Timer? _checkpoint;
+
+  void _openDraft() {
+    _draftWriter = chat.gateway.draftPresentation
+        .chatFor(chat.draftKey)
+        .openWriter(
+          deviceLocal: chat.isNew,
+          onBindingChanged: () => unawaited(_restoreDraft()),
+        );
+    unawaited(_restoreDraft());
+  }
+
+  Future<void> _restoreDraft() async {
+    final writer = _draftWriter;
+    final revision = writer.revision;
+    final text = await writer.read(requireProvenance: true);
+    if (!mounted ||
+        !writer.isCurrent ||
+        !chat.draftOwnerCurrent ||
+        text == null ||
+        revision != writer.revision ||
+        _input.text.isNotEmpty ||
+        text.isEmpty) {
+      return;
+    }
+    _hydrating = true;
+    try {
+      _input.value = TextEditingValue(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+      );
+    } finally {
+      _hydrating = false;
+    }
+  }
+
+  void _onDraftEdit() {
+    _promptRecall.editorChanged();
+    final text = _input.text;
+    if (text == _lastText) return;
+    _lastText = text;
+    if (_hydrating || !chat.draftOwnerCurrent) return;
+    _draftWriter.edit(text);
+    _checkpoint?.cancel();
+    _checkpoint = Timer(
+      const Duration(milliseconds: 300),
+      () => unawaited(_draftWriter.flush()),
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) {
+      _checkpoint?.cancel();
+      unawaited(_draftWriter.flush());
+    }
+  }
 
   /// The composer's command catalogue: it decides both the highlight and
   /// whether a sent `/command` runs on the gateway.
@@ -94,6 +163,22 @@ class _NgChatViewState extends State<NgChatView> {
   /// Files picked for the next message.
   final List<AttachmentDraft> _drafts = [];
   final _preview = PreviewSlot();
+  int _imageDraftRevision = 0;
+  Object? _imageRestoreRevision() =>
+      mounted &&
+          !_preparing &&
+          !_listening &&
+          !chat.running &&
+          _drafts.isEmpty &&
+          _input.text.isEmpty &&
+          chat.imageTarget != null
+      ? (
+          chat,
+          chat.imageTarget!.key,
+          _imageDraftRevision,
+          _draftWriter.revision,
+        )
+      : null;
   bool _preparing = false;
   final _imagePicker = ImagePicker();
 
@@ -110,6 +195,9 @@ class _NgChatViewState extends State<NgChatView> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _openDraft();
+    _input.addListener(_onDraftEdit);
     chat.addListener(_onChat);
     _readAloud = (widget.readAloudFactory ?? NgReadAloud.new)();
     _readAloud.addListener(_onReadAloud);
@@ -118,7 +206,11 @@ class _NgChatViewState extends State<NgChatView> {
         ngToast(context, ngL.read_aloud_is_unavailable_on_this_device);
       }
     };
-    _input.addListener(() => setState(() {}));
+    _input.addListener(
+      () => setState(() {
+        _imageDraftRevision++;
+      }),
+    );
     _scroll.addListener(() {
       if (_scroll.hasClients &&
           _scroll.position.userScrollDirection != ScrollDirection.idle) {
@@ -137,7 +229,21 @@ class _NgChatViewState extends State<NgChatView> {
     if (old.chat != chat) {
       _showSessionFiles = false;
       _preview.close();
+      _imageDraftRevision++;
+      final recovered = _drafts.where(PreparedImageStore.isRestored).toList();
+      if (recovered.isNotEmpty) {
+        _drafts.removeWhere(PreparedImageStore.isRestored);
+        _input.clear();
+        unawaited(old.chat.attachmentService.removeAll(recovered));
+      }
       old.chat.removeListener(_onChat);
+      _checkpoint?.cancel();
+      unawaited(_draftWriter.close());
+      _hydrating = true;
+      _input.clear();
+      _hydrating = false;
+      _promptRecall.editorChanged();
+      _openDraft();
       chat.addListener(_onChat);
       // A reply being read belongs to the chat we left.
       unawaited(_readAloud.stop());
@@ -187,6 +293,9 @@ class _NgChatViewState extends State<NgChatView> {
   @override
   void dispose() {
     chat.removeListener(_onChat);
+    WidgetsBinding.instance.removeObserver(this);
+    _checkpoint?.cancel();
+    unawaited(_draftWriter.close());
     _readAloud.removeListener(_onReadAloud);
     _readAloud.dispose();
     _ticker?.cancel();
@@ -205,6 +314,7 @@ class _NgChatViewState extends State<NgChatView> {
   int get _slotsLeft => maxRemoteAttachmentDrafts - _drafts.length;
 
   Future<void> _attach() async {
+    _imageDraftRevision++;
     final c = NgColors.of(context);
     final choice = await showNgSheet<String>(
       context,
@@ -323,7 +433,22 @@ class _NgChatViewState extends State<NgChatView> {
   Future<void> _send() async {
     if (_decidingCommand) return;
     final text = _input.text.trim();
-    if (text.isEmpty && _drafts.isEmpty) return;
+    if (text.isEmpty && _drafts.isEmpty) {
+      // Empty Enter delivers the client-held head. While idle it drains;
+      // while a turn is running it is send-now (unpark, then interrupt).
+      // Nothing queued does not stop the turn — Stop and Esc do that.
+      if (!_listening &&
+          chat.queued.isNotEmpty &&
+          chat.draftOwnerCurrent &&
+          _draftWriter.isCurrent) {
+        if (chat.running) {
+          await chat.sendQueuedNow(chat.queued.first);
+        } else {
+          chat.setLocalQueuePaused(false);
+        }
+      }
+      return;
+    }
     // A command runs at once, mid-turn too; with files it is a prompt.
     final command = _drafts.isEmpty ? NgSlashLine.parse(text) : null;
     if (command != null) {
@@ -333,17 +458,40 @@ class _NgChatViewState extends State<NgChatView> {
       if (!mounted || _input.text.trim() != text) return;
     }
     if (_drafts.isNotEmpty && !chat.running) {
+      final raw = _input.text;
       final drafts = List.of(_drafts);
       _input.clear();
       setState(_drafts.clear);
       // A refused prompt keeps its files on the message for Retry.
-      await chat.send(text, attachments: drafts);
+      await chat.send(text, attachments: drafts, composerImageText: raw);
       return;
     }
     if (text.isEmpty) return;
     if (chat.running) {
+      final source = chat;
+      final writer = _draftWriter, revision = writer.revision;
+      final stored = source.storedId;
       final choice = await _busyChoice();
-      if (choice == null) return;
+      if (!mounted ||
+          choice == null ||
+          source != chat ||
+          writer != _draftWriter ||
+          writer.revision != revision ||
+          stored != source.storedId ||
+          !source.draftOwnerCurrent) {
+        return;
+      }
+      if (choice == 'queue' && source.gateway.sessionAuthority) {
+        if (stored == null || _drafts.isNotEmpty) {
+          ngToast(
+            context,
+            'The gateway queue needs an attached chat and a text-only prompt.',
+          );
+          return;
+        }
+        _openGatewayQueue(source, stored);
+        return;
+      }
       _input.clear();
       switch (choice) {
         case 'steer':
@@ -441,6 +589,31 @@ class _NgChatViewState extends State<NgChatView> {
     _input.value = TextEditingValue(
       text: text,
       selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+
+  void _openGatewayQueue(NgChatController source, String stored) {
+    final writer = _draftWriter, revision = writer.revision;
+    final text = _drafts.isEmpty ? _input.text : '';
+    final owner = source.gateway.workspace;
+    GatewayQueueScreen.open(
+      context,
+      owner,
+      owner.route(storedSessionId: stored),
+      draft: text,
+      onAdmitted: (sent) {
+        if (mounted &&
+            chat == source &&
+            writer == _draftWriter &&
+            source.draftOwnerCurrent &&
+            source.storedId == stored &&
+            writer.revision == revision &&
+            sent == text &&
+            text.isNotEmpty &&
+            _drafts.isEmpty) {
+          _input.clear();
+        }
+      },
     );
   }
 
@@ -574,139 +747,231 @@ class _NgChatViewState extends State<NgChatView> {
         final fileOwner = identical(fileChat.gateway, gateway)
             ? gateway.workspace
             : null;
-        return Scaffold(
-          backgroundColor: c.background,
-          appBar: AppBar(
-            backgroundColor: c.background,
-            surfaceTintColor: Colors.transparent,
-            automaticallyImplyLeading: false,
-            leading: widget.onClose != null
-                ? CloseButton(onPressed: widget.onClose)
-                : widget.onOpenSidebar == null
-                ? null
-                : ListenableBuilder(
-                    listenable: widget.sessions == null
-                        ? const _NoListenable()
-                        : Listenable.merge([widget.sessions, gateway]),
-                    builder: (context, _) {
-                      final unread = widget.sessions?.unreadCount ?? 0;
-                      final dot = switch (widget.sessions?.topAttention) {
-                        NgChatAttention.waiting => c.warning,
-                        NgChatAttention.finished => c.success,
-                        _ => c.accent,
-                      };
-                      return IconButton(
-                        key: const ValueKey('ng-sidebar-button'),
-                        tooltip: unread > 0
-                            ? ngL.ng_chats_unread(unread)
-                            : ngL.ng_chats,
-                        icon: Badge(
-                          isLabelVisible: unread > 0,
-                          smallSize: 8,
-                          backgroundColor: dot,
-                          child: const Icon(Icons.view_sidebar_outlined),
+        final parentId = chat.storedId;
+        final workers = parentId == null || chat.runtimeId == null
+            ? null
+            : WorkspaceWorkersScreen.capture(
+                chat.gateway.workspace,
+                chat.gateway.connection.label,
+                storedSessionId: parentId,
+              );
+        final showQueue = workers != null && gateway.sessionAuthority;
+        // Measure the pane, not the window: phones and narrow parallel panes
+        // get one tools menu so the app bar never overflows.
+        return LayoutBuilder(
+          builder: (context, box) {
+            final compactTools = box.maxWidth < 480;
+            return Scaffold(
+              backgroundColor: c.background,
+              appBar: AppBar(
+                backgroundColor: c.background,
+                surfaceTintColor: Colors.transparent,
+                automaticallyImplyLeading: false,
+                leading: widget.onClose != null
+                    ? CloseButton(onPressed: widget.onClose)
+                    : widget.onOpenSidebar == null
+                    ? null
+                    : ListenableBuilder(
+                        listenable: widget.sessions == null
+                            ? const _NoListenable()
+                            : Listenable.merge([widget.sessions, gateway]),
+                        builder: (context, _) {
+                          final unread = widget.sessions?.unreadCount ?? 0;
+                          final dot = switch (widget.sessions?.topAttention) {
+                            NgChatAttention.waiting => c.warning,
+                            NgChatAttention.finished => c.success,
+                            _ => c.accent,
+                          };
+                          return IconButton(
+                            key: const ValueKey('ng-sidebar-button'),
+                            tooltip: unread > 0
+                                ? ngL.ng_chats_unread(unread)
+                                : ngL.ng_chats,
+                            icon: Badge(
+                              isLabelVisible: unread > 0,
+                              smallSize: 8,
+                              backgroundColor: dot,
+                              child: const Icon(Icons.view_sidebar_outlined),
+                            ),
+                            onPressed: widget.onOpenSidebar,
+                          );
+                        },
+                      ),
+                titleSpacing: 0,
+                title: GestureDetector(
+                  onTap: chat.isNew ? null : _rename,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        chat.title.isEmpty ? ngL.ng_new_chat : chat.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: NgType.heading.copyWith(color: c.text),
+                      ),
+                      Text(
+                        _subtitle(state),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: NgType.caption.copyWith(
+                          color: state.isConnected ? c.text3 : c.warning,
                         ),
-                        onPressed: widget.onOpenSidebar,
-                      );
-                    },
+                      ),
+                    ],
                   ),
-            titleSpacing: 0,
-            title: GestureDetector(
-              onTap: chat.isNew ? null : _rename,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    chat.title.isEmpty ? ngL.ng_new_chat : chat.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: NgType.heading.copyWith(color: c.text),
-                  ),
-                  Text(
-                    _subtitle(state),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: NgType.caption.copyWith(
-                      color: state.isConnected ? c.text3 : c.warning,
+                ),
+                actions: [
+                  if (chat.items.isNotEmpty)
+                    IconButton(
+                      tooltip: 'Find in transcript',
+                      icon: const Icon(Icons.find_in_page_outlined),
+                      onPressed: () => _reader.currentState?.open(),
                     ),
-                  ),
+                  if (fileId != null && fileOwner != null && !_showSessionFiles)
+                    IconButton(
+                      tooltip: 'Session files',
+                      icon: const Icon(Icons.account_tree_outlined),
+                      onPressed: () => setState(() => _showSessionFiles = true),
+                    ),
+                  if (!compactTools) ...[
+                    if (chat.storedId case final id?)
+                      IconButton(
+                        tooltip: 'Open browser preview',
+                        icon: const Icon(Icons.web_asset),
+                        onPressed: () => setState(
+                          () => _preview.open(chat.gateway.workspace, id),
+                        ),
+                      ),
+                    if (showQueue)
+                      IconButton(
+                        tooltip: 'Gateway queue',
+                        icon: const Icon(Icons.queue),
+                        onPressed: () => _openGatewayQueue(chat, parentId!),
+                      ),
+                    if (workers != null)
+                      IconButton(
+                        tooltip: ngL.workspace_workers,
+                        icon: const Icon(Icons.hub_outlined),
+                        onPressed: () => workers.open(context),
+                      ),
+                  ] else if (chat.storedId != null || workers != null)
+                    PopupMenuButton<String>(
+                      key: const ValueKey('chat-tools-menu'),
+                      tooltip: 'More chat tools',
+                      icon: const Icon(Icons.widgets_outlined),
+                      onSelected: (tool) {
+                        final id = chat.storedId;
+                        if (tool == 'browser' && id != null) {
+                          setState(
+                            () => _preview.open(chat.gateway.workspace, id),
+                          );
+                        }
+                        if (tool == 'queue' && showQueue) {
+                          _openGatewayQueue(chat, parentId!);
+                        }
+                        if (tool == 'workers') workers?.open(context);
+                      },
+                      itemBuilder: (_) => [
+                        if (chat.storedId != null)
+                          const PopupMenuItem(
+                            value: 'browser',
+                            child: ListTile(
+                              leading: Icon(Icons.web_asset),
+                              title: Text('Open browser preview'),
+                            ),
+                          ),
+                        if (showQueue)
+                          const PopupMenuItem(
+                            value: 'queue',
+                            child: ListTile(
+                              leading: Icon(Icons.queue),
+                              title: Text('Gateway queue'),
+                            ),
+                          ),
+                        if (workers != null)
+                          PopupMenuItem(
+                            value: 'workers',
+                            child: ListTile(
+                              leading: const Icon(Icons.hub_outlined),
+                              title: Text(ngL.workspace_workers),
+                            ),
+                          ),
+                      ],
+                    ),
+                  if (chat.usage != null)
+                    IconButton(
+                      tooltip: ngL.ng_usage,
+                      icon: const Icon(Icons.data_usage),
+                      onPressed: _showUsage,
+                    ),
+                  if (widget.onNewChat != null)
+                    IconButton(
+                      tooltip: ngL.ng_new_chat,
+                      icon: const Icon(Icons.edit_square),
+                      onPressed: widget.onNewChat,
+                    ),
                 ],
               ),
-            ),
-            actions: [
-              if (chat.items.isNotEmpty)
-                IconButton(
-                  tooltip: 'Find in transcript',
-                  icon: const Icon(Icons.find_in_page_outlined),
-                  onPressed: () => _reader.currentState?.open(),
+              body: SessionFilesLayout(
+                files: !_showSessionFiles || fileId == null || fileOwner == null
+                    ? null
+                    : SessionFilesView(
+                        owner: fileOwner,
+                        route: fileOwner.route(storedSessionId: fileId),
+                        onClose: () =>
+                            setState(() => _showSessionFiles = false),
+                        onReference: (ref) {
+                          if (chat != fileChat ||
+                              chat.storedId != fileId ||
+                              !identical(
+                                NgScope.of(context).gateway,
+                                gateway,
+                              )) {
+                            return;
+                          }
+                          appendWorkspaceReference(_input, ref);
+                          setState(() => _showSessionFiles = false);
+                        },
+                      ),
+                child: Column(
+                  children: [
+                    if (!state.isConnected) _connectionBanner(c, gateway),
+                    Expanded(child: _transcript(c)),
+                    NgSessionDock(chat: chat),
+                    if (chat.canPickProject && _drafts.isEmpty && !_preparing)
+                      OrphanDraftRecovery(
+                        key: ObjectKey(_draftWriter),
+                        writer: _draftWriter,
+                        editor: _input,
+                        lookup: chat.gateway.api.getSession,
+                        isCurrent: () =>
+                            chat.draftOwnerCurrent &&
+                            identical(chat.gateway, gateway) &&
+                            chat.canPickProject &&
+                            _drafts.isEmpty &&
+                            !_preparing &&
+                            !_listening,
+                      ),
+                    if (chat.error != null) _errorBar(c),
+                    if (chat.queued.isNotEmpty) _queue(c),
+                    if (chat.request != null)
+                      _InputPanel(chat: chat, request: chat.request!)
+                    else
+                      NgSlashCommandInfo(
+                        chat: chat,
+                        controller: _input,
+                        focusNode: _focus,
+                        catalog: _slashCatalog,
+                        // Commands run here now, so the card no longer says they
+                        // are sent as a message.
+                        showsSentAsMessageNote: false,
+                        child: _composer(c, state),
+                      ),
+                  ],
                 ),
-              if (fileId != null && fileOwner != null && !_showSessionFiles)
-                IconButton(
-                  tooltip: 'Session files',
-                  icon: const Icon(Icons.account_tree_outlined),
-                  onPressed: () => setState(() => _showSessionFiles = true),
-                ),
-              if (chat.storedId case final id?)
-                IconButton(
-                  tooltip: 'Open browser preview',
-                  icon: const Icon(Icons.web_asset),
-                  onPressed: () =>
-                      setState(() => _preview.open(chat.gateway.workspace, id)),
-                ),
-              if (chat.usage != null)
-                IconButton(
-                  tooltip: ngL.ng_usage,
-                  icon: const Icon(Icons.data_usage),
-                  onPressed: _showUsage,
-                ),
-              if (widget.onNewChat != null)
-                IconButton(
-                  tooltip: ngL.ng_new_chat,
-                  icon: const Icon(Icons.edit_square),
-                  onPressed: widget.onNewChat,
-                ),
-            ],
-          ),
-          body: SessionFilesLayout(
-            files: !_showSessionFiles || fileId == null || fileOwner == null
-                ? null
-                : SessionFilesView(
-                    owner: fileOwner,
-                    route: fileOwner.route(storedSessionId: fileId),
-                    onClose: () => setState(() => _showSessionFiles = false),
-                    onReference: (ref) {
-                      if (chat != fileChat ||
-                          chat.storedId != fileId ||
-                          !identical(NgScope.of(context).gateway, gateway)) {
-                        return;
-                      }
-                      appendWorkspaceReference(_input, ref);
-                      setState(() => _showSessionFiles = false);
-                    },
-                  ),
-            child: Column(
-              children: [
-                if (!state.isConnected) _connectionBanner(c, gateway),
-                Expanded(child: _transcript(c)),
-                NgSessionDock(chat: chat),
-                if (chat.error != null) _errorBar(c),
-                if (chat.queued.isNotEmpty) _queue(c),
-                if (chat.request != null)
-                  _InputPanel(chat: chat, request: chat.request!)
-                else
-                  NgSlashCommandInfo(
-                    chat: chat,
-                    controller: _input,
-                    focusNode: _focus,
-                    catalog: _slashCatalog,
-                    // Commands run here now, so the card no longer says they
-                    // are sent as a message.
-                    showsSentAsMessageNote: false,
-                    child: _composer(c, state),
-                  ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
@@ -841,43 +1106,71 @@ class _NgChatViewState extends State<NgChatView> {
     ),
   );
 
-  Widget _queue(NgColors c) => Padding(
-    padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (final q in chat.queued)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(12, 6, 4, 6),
-              decoration: BoxDecoration(
-                color: c.surface2,
-                borderRadius: BorderRadius.circular(NgRadii.md),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.schedule_send, size: 16, color: c.text3),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      q.display ?? q.text,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: NgType.bodySmall.copyWith(color: c.text2),
-                    ),
-                  ),
-                  IconButton(
-                    visualDensity: VisualDensity.compact,
-                    icon: const Icon(Icons.close, size: 16),
-                    onPressed: () => chat.unqueue(q),
-                  ),
-                ],
-              ),
-            ),
+  Future<void> _editLocal(NgQueued row) async {
+    final source = chat;
+    source.beginLocalEdit(row);
+    var draft = row.text;
+    try {
+      final result = await showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Edit unsent prompt'),
+          content: TextFormField(
+            initialValue: draft,
+            onChanged: (v) => draft = v,
+            maxLines: 4,
           ),
-      ],
-    ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, draft),
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      );
+      if (mounted && source == chat && result != null) {
+        source.editLocalQueue(row, result);
+      }
+    } finally {
+      source.endLocalEdit(row);
+    }
+  }
+
+  NgQueued? _queuedByKey(String id) {
+    for (final row in chat.queued) {
+      if (row.key == id) return row;
+    }
+    return null;
+  }
+
+  Widget _queue(NgColors _) => ClientHeldQueueBar(
+    count: chat.queued.length,
+    parked: chat.localQueuePaused,
+    rows: [
+      for (final row in chat.queued)
+        ClientHeldQueueRow(
+          id: row.key,
+          text: row.display ?? row.text,
+          canEdit: row.display == null,
+        ),
+    ],
+    onResume: () => chat.setLocalQueuePaused(false),
+    onSend: (id) {
+      final row = _queuedByKey(id);
+      if (row != null) unawaited(chat.sendQueuedNow(row));
+    },
+    onRemove: (id) {
+      final row = _queuedByKey(id);
+      if (row != null) chat.unqueue(row);
+    },
+    onEdit: (id) {
+      final row = _queuedByKey(id);
+      if (row != null) unawaited(_editLocal(row));
+    },
   );
 
   Widget _transcript(NgColors c) {
@@ -983,7 +1276,9 @@ class _NgChatViewState extends State<NgChatView> {
     return switch (item) {
       NgUserItem() => _UserBubble(
         item: item,
-        onRetry: i == lastUserIndex && !chat.running ? chat.retryLast : null,
+        onRetry: i == lastUserIndex && !chat.running && !item.recoverInComposer
+            ? chat.retryLast
+            : null,
       ),
       NgAssistantItem() => _AssistantBlock(
         item: item,
@@ -1047,150 +1342,192 @@ class _NgChatViewState extends State<NgChatView> {
       if (chat.reasoningEffort != null && chat.reasoningEffort!.isNotEmpty)
         ngEffortLabel(chat.reasoningEffort),
     ].join(' · ');
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
-        child: Container(
-          decoration: BoxDecoration(
-            color: c.input,
-            borderRadius: BorderRadius.circular(NgRadii.xl),
-            border: Border.all(color: c.stroke),
-          ),
-          padding: const EdgeInsets.fromLTRB(6, 4, 6, 6),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (_drafts.isNotEmpty || _preparing)
-                SizedBox(
-                  height: 44,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.fromLTRB(6, 6, 6, 0),
-                    children: [
-                      for (final d in _drafts)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 6),
-                          child: InputChip(
-                            avatar: Icon(
-                              d.kind == AttachmentDraftKind.image
-                                  ? Icons.image_outlined
-                                  : Icons.insert_drive_file_outlined,
-                              size: 16,
-                            ),
-                            label: ConstrainedBox(
-                              constraints: const BoxConstraints(maxWidth: 160),
-                              child: Text(
-                                d.name,
-                                overflow: TextOverflow.ellipsis,
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.escape): () {
+          if (chat.running && chat.draftOwnerCurrent) {
+            unawaited(chat.stop());
+          }
+        },
+      },
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
+          child: Container(
+            decoration: BoxDecoration(
+              color: c.input,
+              borderRadius: BorderRadius.circular(NgRadii.xl),
+              border: Border.all(color: c.stroke),
+            ),
+            padding: const EdgeInsets.fromLTRB(6, 4, 6, 6),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (_imageRestoreRevision() != null)
+                  PreparedImageRecovery(
+                    target: chat.imageTarget!,
+                    revision: () => _draftWriter.hasConfirmedEmptyDraft
+                        ? _imageRestoreRevision()
+                        : null,
+                    install: (text, drafts) {
+                      setState(() => _drafts.addAll(drafts));
+                      _setComposer(text);
+                    },
+                  ),
+                if (_drafts.isNotEmpty || _preparing)
+                  SizedBox(
+                    height: 44,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.fromLTRB(6, 6, 6, 0),
+                      children: [
+                        for (final d in _drafts)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: InputChip(
+                              avatar: Icon(
+                                d.kind == AttachmentDraftKind.image
+                                    ? Icons.image_outlined
+                                    : Icons.insert_drive_file_outlined,
+                                size: 16,
                               ),
+                              label: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 160,
+                                ),
+                                child: Text(
+                                  d.name,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              onDeleted: () => _removeDraft(d),
                             ),
-                            onDeleted: () => _removeDraft(d),
                           ),
-                        ),
-                      if (_preparing)
-                        const Padding(
-                          padding: EdgeInsets.all(10),
-                          child: SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                        if (_preparing)
+                          const Padding(
+                            padding: EdgeInsets.all(10),
+                            child: SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
                           ),
+                      ],
+                    ),
+                  ),
+                SendOnEnter(
+                  enabled:
+                      _input.text.trim().isNotEmpty ||
+                      (!_listening &&
+                          _drafts.isEmpty &&
+                          chat.queued.isNotEmpty),
+                  onNavigate: (event) =>
+                      !chat.draftOwnerCurrent ||
+                          !_draftWriter.isCurrent ||
+                          _drafts.isNotEmpty ||
+                          _listening
+                      ? KeyEventResult.ignored
+                      : _promptRecall.handle(
+                          event,
+                          _input,
+                          () => chat.items
+                              .whereType<NgUserItem>()
+                              .where(
+                                (item) => !item.pending && item.failure == null,
+                              )
+                              .map((item) => item.text),
                         ),
-                    ],
+                  onSend: () => unawaited(_send()),
+                  child: TextField(
+                    key: const ValueKey('ng-composer-field'),
+                    controller: _input,
+                    focusNode: _focus,
+                    onTap: () {
+                      // Android can hide the keyboard with Back while this node
+                      // retains focus. Explicitly show it on every composer tap.
+                      _focus.requestFocus();
+                      unawaited(
+                        SystemChannels.textInput.invokeMethod<void>(
+                          'TextInput.show',
+                        ),
+                      );
+                    },
+                    minLines: 1,
+                    maxLines: 8,
+                    textCapitalization: TextCapitalization.sentences,
+                    style: NgType.body.copyWith(color: c.text),
+                    decoration: InputDecoration(
+                      hintText: _listening
+                          ? ngL.ng_listening
+                          : chat.running
+                          ? ngL.ng_steer_or_queue_a_message
+                          : ngL.ng_message_hermes,
+                      hintStyle: NgType.body.copyWith(color: c.textMuted),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
+                    ),
                   ),
                 ),
-              SendOnEnter(
-                enabled: _input.text.trim().isNotEmpty,
-                onSend: () => unawaited(_send()),
-                child: TextField(
-                  key: const ValueKey('ng-composer-field'),
-                  controller: _input,
-                  focusNode: _focus,
-                  onTap: () {
-                    // Android can hide the keyboard with Back while this node
-                    // retains focus. Explicitly show it on every composer tap.
-                    _focus.requestFocus();
-                    unawaited(
-                      SystemChannels.textInput.invokeMethod<void>(
-                        'TextInput.show',
+                Row(
+                  children: [
+                    IconButton(
+                      tooltip: ngL.ng_attach,
+                      icon: Icon(Icons.add_circle_outline, color: c.text2),
+                      onPressed: _preparing ? null : _attach,
+                    ),
+                    // Expanded + Spacer split the free width evenly, so the
+                    // pill keeps its half-width cap while the row is always
+                    // filled and mic/send end flush right. A loose Flexible
+                    // left its unused share after the send button instead,
+                    // which on wide desktop windows put both buttons mid-row.
+                    Expanded(
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: NgPill(
+                          key: const ValueKey('ng-model-picker'),
+                          modelLabel,
+                          icon: Icons.auto_awesome,
+                          onTap: () => showNgModelSheet(context, chat),
+                        ),
                       ),
-                    );
-                  },
-                  minLines: 1,
-                  maxLines: 8,
-                  textCapitalization: TextCapitalization.sentences,
-                  style: NgType.body.copyWith(color: c.text),
-                  decoration: InputDecoration(
-                    hintText: _listening
-                        ? ngL.ng_listening
-                        : chat.running
-                        ? ngL.ng_steer_or_queue_a_message
-                        : ngL.ng_message_hermes,
-                    hintStyle: NgType.body.copyWith(color: c.textMuted),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
-                  ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      tooltip: _listening
+                          ? ngL.ng_stop_dictation
+                          : ngL.ng_dictate,
+                      icon: Icon(
+                        _listening ? Icons.mic : Icons.mic_none,
+                        color: _listening ? c.accent : c.text2,
+                      ),
+                      onPressed: _toggleDictation,
+                    ),
+                    if (chat.running && !hasText)
+                      IconButton.filled(
+                        tooltip: ngL.ng_stop,
+                        style: IconButton.styleFrom(
+                          backgroundColor: c.inverse,
+                          foregroundColor: c.onInverse,
+                        ),
+                        icon: const Icon(Icons.stop_rounded),
+                        onPressed: chat.stop,
+                      )
+                    else
+                      IconButton.filled(
+                        tooltip: ngL.ng_send,
+                        style: IconButton.styleFrom(
+                          backgroundColor: c.accent,
+                          foregroundColor: c.onAccent,
+                          disabledBackgroundColor: c.surface3,
+                        ),
+                        icon: const Icon(Icons.arrow_upward_rounded),
+                        onPressed: canSend ? _send : null,
+                      ),
+                  ],
                 ),
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    tooltip: ngL.ng_attach,
-                    icon: Icon(Icons.add_circle_outline, color: c.text2),
-                    onPressed: _preparing ? null : _attach,
-                  ),
-                  // Expanded + Spacer split the free width evenly, so the
-                  // pill keeps its half-width cap while the row is always
-                  // filled and mic/send end flush right. A loose Flexible
-                  // left its unused share after the send button instead,
-                  // which on wide desktop windows put both buttons mid-row.
-                  Expanded(
-                    child: Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: NgPill(
-                        key: const ValueKey('ng-model-picker'),
-                        modelLabel,
-                        icon: Icons.auto_awesome,
-                        onTap: () => showNgModelSheet(context, chat),
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    tooltip: _listening
-                        ? ngL.ng_stop_dictation
-                        : ngL.ng_dictate,
-                    icon: Icon(
-                      _listening ? Icons.mic : Icons.mic_none,
-                      color: _listening ? c.accent : c.text2,
-                    ),
-                    onPressed: _toggleDictation,
-                  ),
-                  if (chat.running && !hasText)
-                    IconButton.filled(
-                      tooltip: ngL.ng_stop,
-                      style: IconButton.styleFrom(
-                        backgroundColor: c.inverse,
-                        foregroundColor: c.onInverse,
-                      ),
-                      icon: const Icon(Icons.stop_rounded),
-                      onPressed: chat.stop,
-                    )
-                  else
-                    IconButton.filled(
-                      tooltip: ngL.ng_send,
-                      style: IconButton.styleFrom(
-                        backgroundColor: c.accent,
-                        foregroundColor: c.onAccent,
-                        disabledBackgroundColor: c.surface3,
-                      ),
-                      icon: const Icon(Icons.arrow_upward_rounded),
-                      onPressed: canSend ? _send : null,
-                    ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -173,6 +173,18 @@ List<MoreSection> buildMoreSections({
               : l10n.desktop_gateway_is_not_configured_for_this_connection,
         ),
         MoreEntry(
+          id: 'workspace-workers',
+          title: l10n.workspace_workers,
+          subtitle: l10n.ng_show_subagents,
+          icon: Icons.account_tree_outlined,
+          availability: workspaceAvailable
+              ? MoreEntryAvailability.available
+              : MoreEntryAvailability.unavailable,
+          unavailableReason: workspaceAvailable
+              ? null
+              : l10n.desktop_gateway_is_not_configured_for_this_connection,
+        ),
+        MoreEntry(
           id: 'model',
           title: l10n.model,
           subtitle: l10n.model_management_subtitle,

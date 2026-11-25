@@ -1250,7 +1250,10 @@ class _SessionListScreenState extends State<SessionListScreen> {
       await _client.deleteSession(session.id);
       // A deleted session must not leave an orphaned draft behind.
       await ComposerDraftStore.remove(
-        connectionId: widget.connection.id,
+        connectionId: ComposerDraftStore.namespace(
+          widget.connection.id,
+          widget.connection.gatewayProfile,
+        ),
         sessionId: session.id,
       );
       await _spaceStore?.assignSession(session.id, null);

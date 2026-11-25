@@ -1,4 +1,6 @@
 {
+  "workspace_workers": "Sous-agents actifs",
+  "workers_unattached": "Seul le nombre est affiché. Pour guider un sous-agent, choisissez Sous-agents actifs dans la conversation parente connectée.",
   "slash_local_arguments": "Ce raccourci n’accepte pas d’arguments ici. Utilisez les commandes de l’application ; votre brouillon a été conservé.",
   "fallback_title": "Modèles de secours",
   "fallback_notice": "Essayés dans cet ordre si le modèle principal est indisponible. Les modifications concernent uniquement ce profil ; enregistrez explicitement la liste complète.",
@@ -195,6 +197,10 @@
   "assets_unavailable": "Ressources indisponibles",
   "attach_image_or_file": "Joindre une image ou un fichier",
   "attachment_drafts": "Brouillons de pièces jointes",
+  "recover_text_draft": "Récupérer un brouillon",
+  "undo_draft_recovery": "Annuler",
+  "draft_session_exists": "Cette discussion existe toujours. Ouvrez-la pour reprendre votre brouillon.",
+  "draft_recovery_unavailable": "Impossible de vérifier le brouillon. Aucune modification effectuée.",
   "attachment_of": "Pièce jointe {index} sur {total}",
   "auto_device_default": "Automatique (par défaut de l'appareil)",
   "agent": "Agent",

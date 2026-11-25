@@ -9,6 +9,13 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
+  String get workspace_workers => 'Aktive Unteragenten';
+
+  @override
+  String get workers_unattached =>
+      'Nur Anzahl. Wähle zum Steuern im verbundenen übergeordneten Chat „Aktive Unteragenten“.';
+
+  @override
   String get slash_local_arguments =>
       'Diese Verknüpfung unterstützt hier keine Argumente. Verwende die App-Steuerelemente; dein Entwurf wurde beibehalten.';
 
@@ -725,6 +732,20 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get attachment_drafts => 'Anhangsentwürfe';
+
+  @override
+  String get recover_text_draft => 'Textentwurf wiederherstellen';
+
+  @override
+  String get undo_draft_recovery => 'Rückgängig';
+
+  @override
+  String get draft_session_exists =>
+      'Dieser Chat existiert noch. Öffne ihn, um den Entwurf fortzusetzen.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Der Entwurf konnte nicht überprüft werden. Es wurde nichts geändert.';
 
   @override
   String attachment_of(Object index, Object total) {

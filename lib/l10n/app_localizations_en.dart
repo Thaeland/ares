@@ -9,6 +9,13 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get workspace_workers => 'Live workers';
+
+  @override
+  String get workers_unattached =>
+      'Counts only. To steer a worker, choose Live workers in its attached parent chat.';
+
+  @override
   String get slash_local_arguments =>
       'This shortcut does not accept arguments here. Use the app controls; your draft was kept.';
 
@@ -719,6 +726,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get attachment_drafts => 'Attachment drafts';
+
+  @override
+  String get recover_text_draft => 'Recover a text draft';
+
+  @override
+  String get undo_draft_recovery => 'Undo';
+
+  @override
+  String get draft_session_exists =>
+      'This chat still exists. Open it to continue your draft.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Could not verify this draft. Nothing was changed.';
 
   @override
   String attachment_of(Object index, Object total) {

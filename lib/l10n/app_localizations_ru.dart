@@ -9,6 +9,13 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
+  String get workspace_workers => 'Активные субагенты';
+
+  @override
+  String get workers_unattached =>
+      'Показано только количество. Чтобы дать указание, выберите «Активные субагенты» в подключённом родительском чате.';
+
+  @override
   String get slash_local_arguments =>
       'Этот ярлык здесь не поддерживает аргументы. Используйте элементы управления приложения; черновик сохранён.';
 
@@ -724,6 +731,20 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get attachment_drafts => 'Черновики вложений';
+
+  @override
+  String get recover_text_draft => 'Восстановить черновик';
+
+  @override
+  String get undo_draft_recovery => 'Отменить';
+
+  @override
+  String get draft_session_exists =>
+      'Этот чат ещё существует. Откройте его, чтобы продолжить работу с черновиком.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Не удалось проверить черновик. Ничего не изменено.';
 
   @override
   String attachment_of(Object index, Object total) {
