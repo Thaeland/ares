@@ -239,6 +239,9 @@ class _NgMainPageState extends State<_NgMainContent>
       chat = cached;
       // Update the title in case it changed while parked.
       if (title.isNotEmpty) chat.title = title;
+      // A parked chat keeps its draft; a link's prefill is appended to it
+      // when the view mounts.
+      if (initialText != null) chat.offerInitialText(initialText);
     } else {
       chat = NgChatController(
         scope.gateway,
@@ -849,7 +852,14 @@ class _NgMainPageState extends State<_NgMainContent>
           return;
         }
         _scaffold.currentState?.closeDrawer();
-        _openId(id, ngSessionTitle(match), initialText: link.prefill);
+        final open = _chat;
+        final prefill = link.prefill;
+        if (open != null && open.storedId == id) {
+          // Already open: the view appends the prefill to its draft.
+          if (prefill != null) open.offerInitialText(prefill);
+          return;
+        }
+        _openId(id, ngSessionTitle(match), initialText: prefill);
         return;
       case HermesDeepLinkKind.ignore:
         return;

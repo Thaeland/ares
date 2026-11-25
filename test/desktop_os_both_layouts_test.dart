@@ -844,6 +844,31 @@ void main() {
           expect(fixture.promptSubmissions, 0);
           expect(tester.takeException(), isNull);
 
+          // A second link for the open chat appends after the unsent draft
+          // the user typed; it never replaces it or sends.
+          await tester.enterText(
+            find.byKey(const Key('ng-composer-field')),
+            'My unsent draft',
+          );
+          await tester.pump();
+          HermesDeepLinkService.shared.handleRawLink(
+            'hermes://session/s-alpha?prefill=From+the+link',
+          );
+          for (var i = 0; i < 10; i++) {
+            await tester.runAsync(
+              () => Future<void>.delayed(const Duration(milliseconds: 10)),
+            );
+            await tester.pump(const Duration(milliseconds: 30));
+          }
+          expect(
+            tester
+                .widget<TextField>(find.byKey(const Key('ng-composer-field')))
+                .controller
+                ?.text,
+            'My unsent draft\n\nFrom the link',
+          );
+          expect(fixture.promptSubmissions, 0);
+
           // On <480 px, App command palette is inside 'More chat tools', never overflowing.
           expect(
             find.byKey(const ValueKey('app-command-palette-button')),

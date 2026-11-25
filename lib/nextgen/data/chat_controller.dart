@@ -660,6 +660,15 @@ class NgChatController extends ChangeNotifier {
     return value;
   }
 
+  /// Offers a deep-link prefill to this chat's view (a mounted view picks it
+  /// up on its next change notification, a new one when it mounts). The view
+  /// appends it after any unsent draft; nothing is sent.
+  void offerInitialText(String text) {
+    if (_disposed || text.trim().isEmpty) return;
+    _initialText = text;
+    notifyListeners();
+  }
+
   bool get draftOwnerCurrent => !_disposed && gateway.draftAccountCurrent;
   final Object? _imageEpoch;
   PreparedImageTarget? get imageTarget {

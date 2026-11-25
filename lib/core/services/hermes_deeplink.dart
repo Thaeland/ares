@@ -285,6 +285,18 @@ String describeHermesDeepLink(HermesDeepLink link) {
   }
 }
 
+/// The composer text once a deep-link prefill arrives for a chat that may
+/// already hold an unsent draft: the prefill on its own for an empty
+/// composer, otherwise appended after the draft on a new paragraph. A link
+/// never replaces what the user typed, and the same prefill is not added
+/// twice when the link is opened again.
+String appendComposerPrefill(String draft, String prefill) {
+  if (draft.trim().isEmpty) return prefill;
+  final addition = prefill.trim();
+  if (addition.isEmpty || draft.trimRight().endsWith(addition)) return draft;
+  return '${draft.trimRight()}\n\n$prefill';
+}
+
 /// Primary-window `hermes://` deep-link bridge.
 ///
 /// Only the primary application shell owns this service (pop-out child windows

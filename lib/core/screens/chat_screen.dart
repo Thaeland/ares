@@ -20,6 +20,7 @@ import '../presentation/transcript_reading.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:uuid/uuid.dart';
 import '../controllers/hands_free_conversation_controller.dart';
+import '../services/hermes_deeplink.dart' show appendComposerPrefill;
 import '../services/hands_free_preference.dart';
 import '../services/hands_free_voice_platform.dart';
 import '../services/android_voice_composer_adapter.dart';
@@ -586,6 +587,33 @@ class ChatScreen extends StatefulWidget {
   /// composer; sending remains an explicit user action.
   final String? initialComposerText;
 
+  /// When true, [initialComposerText] (a `hermes://` link's prefill) is
+  /// appended to the chat's unsent draft instead of replacing it.
+  final bool initialComposerAppends;
+
+  /// Mounted chats by connection and session (the latest mount wins), so a
+  /// deep-link prefill for a chat that is already open goes into its live
+  /// composer rather than a second copy of the chat.
+  static final Map<String, _ChatScreenState> _mounted = {};
+
+  static String _mountKey(String connectionId, String sessionId) =>
+      '$connectionId\u0000$sessionId';
+
+  /// Appends [text] to the composer of the open chat [sessionId] on
+  /// [connectionId], after its unsent draft, and returns that chat's route
+  /// so the caller can bring it forward. Null when the chat is not open.
+  /// Nothing is sent.
+  static ModalRoute<Object?>? appendToOpenChat({
+    required String connectionId,
+    required String sessionId,
+    required String text,
+  }) {
+    final state = _mounted[_mountKey(connectionId, sessionId)];
+    if (state == null || !state.mounted) return null;
+    unawaited(state._appendLinkPrefill(text));
+    return ModalRoute.of(state.context);
+  }
+
   /// Validated app-private files supplied by Android's share sheet.
   final List<AttachmentDraft> initialAttachmentDrafts;
 
@@ -712,6 +740,7 @@ class ChatScreen extends StatefulWidget {
     this.projectName,
     this.projectWorkingDirectory,
     this.initialComposerText,
+    this.initialComposerAppends = false,
     this.initialAttachmentDrafts = const [],
     this.turnApplicationController,
     this.testTurnApplicationSession,
@@ -1056,6 +1085,11 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   void initState() {
     super.initState();
+    ChatScreen._mounted[ChatScreen._mountKey(
+          widget.connection.id,
+          widget.session.id,
+        )] =
+        this;
     CompanionDraft.pending.addListener(_applyCompanionDraft);
     _composerFocus.addListener(_syncComposerKeyboardEndScroll);
     _notificationApprovalOrigin = NotificationApprovalAuthority.origin(
@@ -1104,10 +1138,15 @@ class _ChatScreenState extends State<ChatScreen>
     }
     _textController.addListener(_onComposerChanged);
     if (widget.initialComposerText case final shared?) {
-      _textController.text = shared;
-      _textController.selection = TextSelection.collapsed(
-        offset: shared.length,
-      );
+      if (widget.initialComposerAppends) {
+        // A link's prefill goes after the unsent draft, never over it.
+        unawaited(_appendLinkPrefill(shared));
+      } else {
+        _textController.text = shared;
+        _textController.selection = TextSelection.collapsed(
+          offset: shared.length,
+        );
+      }
     }
     _turnNotifications =
         widget.testTurnNotifications ??
@@ -1735,6 +1774,29 @@ class _ChatScreenState extends State<ChatScreen>
     );
   }
 
+  /// Puts a `hermes://` link's prefill into the composer after whatever is
+  /// there or saved (an unsent draft is never replaced). Reads the draft
+  /// first so a restore that has not landed yet is not lost.
+  Future<void> _appendLinkPrefill(String prefill) async {
+    String? draft;
+    try {
+      draft = await _draftWriter
+          .read(reader: widget.testComposerDraftReader)
+          .timeout(const Duration(seconds: 5));
+    } catch (_) {
+      draft = null;
+    }
+    if (!mounted) return;
+    final current = _textController.text;
+    final base = current.trim().isNotEmpty ? current : (draft ?? '');
+    final text = appendComposerPrefill(base, prefill);
+    if (text == current) return;
+    _textController.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+
   Future<void> _restoreComposerDraft() async {
     final revision = _composerRevision;
     await _normalSession?.ready;
@@ -1950,6 +2012,13 @@ class _ChatScreenState extends State<ChatScreen>
 
   @override
   void dispose() {
+    final mountKey = ChatScreen._mountKey(
+      widget.connection.id,
+      widget.session.id,
+    );
+    if (identical(ChatScreen._mounted[mountKey], this)) {
+      ChatScreen._mounted.remove(mountKey);
+    }
     final pendingSubmission = _recoverableSubmissionState;
     if (pendingSubmission != null && !pendingSubmission.isCompleted) {
       pendingSubmission.complete();

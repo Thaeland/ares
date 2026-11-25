@@ -149,6 +149,7 @@ Widget buildWorkspaceChatScreen({
   String? projectName,
   String? projectWorkingDirectory,
   String? initialComposerText,
+  bool initialComposerAppends = false,
   List<AttachmentDraft> initialAttachmentDrafts = const [],
   GatewayTurnApplicationController? turnApplicationController,
   Future<void> Function(String sessionId, bool archived)? onArchiveChanged,
@@ -163,6 +164,7 @@ Widget buildWorkspaceChatScreen({
     projectName: projectName,
     projectWorkingDirectory: projectWorkingDirectory,
     initialComposerText: initialComposerText,
+    initialComposerAppends: initialComposerAppends,
     initialAttachmentDrafts: initialAttachmentDrafts,
     turnApplicationController: turnApplicationController,
     onArchiveChanged: onArchiveChanged,
@@ -334,6 +336,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   String? _detailProjectName;
   String? _detailWorkingDirectory;
   String? _detailComposerText;
+  bool _detailComposerAppends = false;
   List<AttachmentDraft> _detailAttachments = const [];
 
   /// Tracks the previous window class so folding a wide window back to compact
@@ -1256,7 +1259,30 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           );
           return;
         }
-        unawaited(_openSession(match, initialComposerText: link.prefill));
+        final prefill = link.prefill;
+        if (prefill != null) {
+          // Already open (pushed, or in the wide detail pane): append to its
+          // live composer and bring it forward instead of a second copy.
+          final open = ChatScreen.appendToOpenChat(
+            connectionId: widget.connection.id,
+            sessionId: match.id,
+            text: prefill,
+          );
+          if (open != null) {
+            if (!open.isCurrent) {
+              Navigator.of(context).popUntil((route) => route == open);
+            }
+            return;
+          }
+        }
+        // A link never replaces the chat's unsent draft: append to it.
+        unawaited(
+          _openSession(
+            match,
+            initialComposerText: prefill,
+            initialComposerAppends: prefill != null,
+          ),
+        );
         return;
       case HermesDeepLinkKind.ignore:
         return;
@@ -1412,6 +1438,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                           projectName: _detailProjectName,
                           projectWorkingDirectory: _detailWorkingDirectory,
                           initialComposerText: _detailComposerText,
+                          initialComposerAppends: _detailComposerAppends,
                           initialAttachmentDrafts: _detailAttachments,
                           turnApplicationController:
                               widget.turnApplicationController,
@@ -1635,6 +1662,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       _detailProjectName = null;
       _detailWorkingDirectory = null;
       _detailComposerText = null;
+      _detailComposerAppends = false;
       _detailAttachments = const [];
     });
   }
@@ -1670,6 +1698,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     String? projectName,
     String? projectWorkingDirectory,
     String? initialComposerText,
+    bool initialComposerAppends = false,
     List<AttachmentDraft> initialAttachmentDrafts = const [],
     VoidCallback? onArchiveCommitted,
     Future<void> Function()? refreshBrowser,
@@ -1692,6 +1721,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         _detailProjectName = projectName;
         _detailWorkingDirectory = projectWorkingDirectory;
         _detailComposerText = initialComposerText;
+        _detailComposerAppends = initialComposerAppends;
         _detailAttachments = initialAttachmentDrafts;
       });
       return;
@@ -1711,6 +1741,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                 projectName: projectName,
                 projectWorkingDirectory: projectWorkingDirectory,
                 initialComposerText: initialComposerText,
+                initialComposerAppends: initialComposerAppends,
                 initialAttachmentDrafts: initialAttachmentDrafts,
                 turnApplicationController: widget.turnApplicationController,
                 sessionArchiver: (storedId, archived) async {
@@ -2682,11 +2713,13 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       final projectName = _detailProjectName;
       final workingDir = _detailWorkingDirectory;
       final composerText = _detailComposerText;
+      final composerAppends = _detailComposerAppends;
       final attachments = _detailAttachments;
       _detailSession = null;
       _detailProjectName = null;
       _detailWorkingDirectory = null;
       _detailComposerText = null;
+      _detailComposerAppends = false;
       _detailAttachments = const [];
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -2696,6 +2729,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
             projectName: projectName,
             projectWorkingDirectory: workingDir,
             initialComposerText: composerText,
+            initialComposerAppends: composerAppends,
             initialAttachmentDrafts: attachments,
           ),
         );

@@ -3,6 +3,7 @@
 // pill composer (model chip, dictation, send/stop, steer or queue while busy).
 import 'dart:async';
 import '../../core/workspace/terminal_chat_link.dart';
+import '../../core/services/hermes_deeplink.dart' show appendComposerPrefill;
 import '../../core/services/connection_manager.dart';
 import '../../core/services/remote_workspace.dart' show RemoteWorkspaceOwner;
 
@@ -202,6 +203,30 @@ class _NgChatViewState extends State<NgChatView>
     unawaited(_restoreDraft());
   }
 
+  /// Puts a `hermes://` link's prefill after whatever the composer holds or
+  /// the draft store has (an unsent draft is never replaced). Reads the
+  /// draft first so a restore that has not landed yet is not lost.
+  Future<void> _applyLinkPrefill(String prefill) async {
+    final writer = _draftWriter;
+    String? draft;
+    try {
+      draft = await writer
+          .read(requireProvenance: true)
+          .timeout(const Duration(seconds: 5));
+    } catch (_) {
+      draft = null;
+    }
+    if (!mounted || !identical(writer, _draftWriter)) return;
+    final current = _input.text;
+    final base = current.trim().isNotEmpty ? current : (draft ?? '');
+    final text = appendComposerPrefill(base, prefill);
+    if (text == current) return;
+    _input.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+
   Future<void> _restoreDraft() async {
     final writer = _draftWriter;
     final revision = writer.revision;
@@ -289,18 +314,12 @@ class _NgChatViewState extends State<NgChatView>
     WidgetsBinding.instance.addObserver(this);
     CompanionDraft.pending.addListener(_applyCompanionDraft);
     _openDraft();
-    // Validated deep-link prefill: one-shot, never sent — it only populates
-    // the composer, which the user still edits before anything is sent.
-    // Setting the controller text before the restore draft runs means the
-    // restore keeps its own guard (non-empty composer wins).
-    final initial = chat.consumeInitialText();
-    if (initial != null) {
-      _input.value = TextEditingValue(
-        text: initial,
-        selection: TextSelection.collapsed(offset: initial.length),
-      );
-    }
     _input.addListener(_onDraftEdit);
+    // Validated deep-link prefill: one-shot, never sent — it only populates
+    // the composer, which the user still edits before anything is sent. It
+    // goes after the chat's unsent draft, never over it.
+    final initial = chat.consumeInitialText();
+    if (initial != null) unawaited(_applyLinkPrefill(initial));
     chat.addListener(_onChat);
     _readAloud = (widget.readAloudFactory ?? NgReadAloud.new)();
     _readAloud.addListener(_onReadAloud);
@@ -367,6 +386,9 @@ class _NgChatViewState extends State<NgChatView>
 
   void _onChat() {
     if (!mounted) return;
+    // A link for this already-open chat (main page offers it here).
+    final offered = chat.consumeInitialText();
+    if (offered != null) unawaited(_applyLinkPrefill(offered));
     if (_companionLeftDuringTurn && !chat.running) {
       _companionLeftDuringTurn = false;
       _companionUnread = true;
