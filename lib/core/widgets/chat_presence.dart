@@ -93,6 +93,7 @@ class _ChatPresenceState extends State<ChatPresence> {
   @override
   Widget build(BuildContext context) => Focus(
     focusNode: _focus,
+    includeSemantics: false,
     child: Listener(
       onPointerDown: (_) => _noteInput(),
       onPointerSignal: (_) => _noteInput(),
