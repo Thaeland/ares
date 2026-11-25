@@ -84,6 +84,25 @@ class WindowsToastSink implements TurnNotificationSink {
   Future<T> _serialized<T>(Future<T> Function() op) =>
       WindowsToastLedger.serialized(op);
 
+  /// Kind, id, outcome and error class only, never a ticket or text.
+  static void _record(
+    String kind,
+    String outcome, {
+    int? id,
+    String? detail,
+    Object? error,
+    String? errorClass,
+  }) => TurnNotificationService.recordAttempt(
+    kind,
+    '',
+    outcome,
+    detail: detail,
+    id: id,
+    error:
+        errorClass ??
+        (error == null ? null : TurnNotificationService.errorClass(error)),
+  );
+
   @override
   Future<void> initialize() async {}
   @override
@@ -164,7 +183,8 @@ class WindowsToastSink implements TurnNotificationSink {
       if (native) {
         try {
           await channel.invokeMethod<void>('cancel', id);
-        } catch (_) {
+        } catch (error) {
+          _record('cancel', 'failed', id: id, error: error);
           await _restore(prefs, rows);
         }
       }
@@ -266,6 +286,15 @@ class WindowsToastSink implements TurnNotificationSink {
       if (delivery == 'blocked') {
         throw StateError('Windows notifications are off');
       }
+      if (delivery == 'unknown') {
+        _record(
+          'setting',
+          'unknown',
+          id: n.id,
+          detail: 'Windows did not report its notification setting',
+          errorClass: 'SettingUnreadable',
+        );
+      }
       if (n.windowsStillNeeded?.call() == false) {
         throw StateError('Notification withdrawn');
       }
@@ -289,7 +318,13 @@ class WindowsToastSink implements TurnNotificationSink {
       final prefs = await SharedPreferences.getInstance();
       final entries = await _load(prefs);
       final row = entries.remove(token);
-      if (row is! Map) return null;
+      if (row is! Map) {
+        // A click Windows delivered that no live ticket backs: consumed,
+        // expired, revoked, or never stored. The ticket itself is not kept.
+        _record('activation', 'failed', errorClass: 'UnknownTicket');
+        return null;
+      }
+      final id = row['id'] is int ? row['id'] as int : null;
       await _save(
         prefs,
         entries,
@@ -301,6 +336,12 @@ class WindowsToastSink implements TurnNotificationSink {
                   !HermesNotificationKind.values.any(
                     (k) => k.name == kind && notificationKindEnabled(k),
                   )))) {
+        _record(
+          'activation',
+          'skipped',
+          id: id,
+          detail: 'notifications are off',
+        );
         return null;
       }
       final target = WindowsToastTarget.decode(row['target']);
@@ -311,7 +352,9 @@ class WindowsToastSink implements TurnNotificationSink {
               target.mutation,
             );
       await channel.invokeMethod<void>('focus');
-      if (target == null || mutation == null) return null;
+      final opens = target != null && mutation != null;
+      _record('activation', opens ? 'opened' : 'focused', id: id);
+      if (!opens) return null;
       return WindowsToastResponse(
         WindowsToastTarget(
           target.connectionId,
@@ -347,7 +390,8 @@ class WindowsToastSink implements TurnNotificationSink {
     }
     try {
       await channel.invokeMethod<void>('cancel', id);
-    } catch (_) {
+    } catch (error) {
+      _record('cancel', 'failed', id: id, error: error);
       await _restore(prefs, rows);
       rethrow;
     }
@@ -359,7 +403,8 @@ class WindowsToastSink implements TurnNotificationSink {
     await _save(prefs, {});
     try {
       await channel.invokeMethod<void>('cancelAll');
-    } catch (_) {
+    } catch (error) {
+      _record('cancel', 'failed', error: error);
       await _restore(prefs, rows);
       rethrow;
     }
