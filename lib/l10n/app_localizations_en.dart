@@ -4549,6 +4549,30 @@ class AppLocalizationsEn extends AppLocalizations {
       'NextGen sends this to Hermes as a normal message; the command itself doesn\'t run.';
 
   @override
+  String get ng_slash_command_output => 'Command output';
+
+  @override
+  String get ng_slash_command_running => 'Running command…';
+
+  @override
+  String get ng_slash_command_done => 'Done.';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return 'Couldn\'t run the command: $error';
+  }
+
+  @override
+  String get ng_slash_command_refused => 'Hermes can\'t run this command here.';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      'The command was sent but no reply came back. It may still be running on the gateway, so it wasn\'t sent again and your draft was kept.';
+
+  @override
+  String get ng_slash_command_nothing_running => 'Nothing is running.';
+
+  @override
   String get ng_steered => 'Steered';
 
   @override

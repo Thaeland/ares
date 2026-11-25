@@ -7644,6 +7644,48 @@ abstract class AppLocalizations {
   /// **'NextGen sends this to Hermes as a normal message; the command itself doesn\'t run.'**
   String get ng_slash_command_sent_as_message;
 
+  /// No description provided for @ng_slash_command_output.
+  ///
+  /// In en, this message translates to:
+  /// **'Command output'**
+  String get ng_slash_command_output;
+
+  /// No description provided for @ng_slash_command_running.
+  ///
+  /// In en, this message translates to:
+  /// **'Running command…'**
+  String get ng_slash_command_running;
+
+  /// No description provided for @ng_slash_command_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done.'**
+  String get ng_slash_command_done;
+
+  /// No description provided for @ng_slash_command_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t run the command: {error}'**
+  String ng_slash_command_failed(Object error);
+
+  /// No description provided for @ng_slash_command_refused.
+  ///
+  /// In en, this message translates to:
+  /// **'Hermes can\'t run this command here.'**
+  String get ng_slash_command_refused;
+
+  /// No description provided for @ng_slash_command_delivery_unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'The command was sent but no reply came back. It may still be running on the gateway, so it wasn\'t sent again and your draft was kept.'**
+  String get ng_slash_command_delivery_unknown;
+
+  /// No description provided for @ng_slash_command_nothing_running.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is running.'**
+  String get ng_slash_command_nothing_running;
+
   /// No description provided for @ng_steered.
   ///
   /// In en, this message translates to:

@@ -4593,6 +4593,31 @@ class AppLocalizationsFr extends AppLocalizations {
       'NextGen envoie ceci à Hermes comme un message normal ; la commande elle-même n’est pas exécutée.';
 
   @override
+  String get ng_slash_command_output => 'Sortie de la commande';
+
+  @override
+  String get ng_slash_command_running => 'Exécution de la commande…';
+
+  @override
+  String get ng_slash_command_done => 'Terminé.';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return 'Impossible d\'exécuter la commande : $error';
+  }
+
+  @override
+  String get ng_slash_command_refused =>
+      'Hermes ne peut pas exécuter cette commande ici.';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      'La commande a été envoyée mais aucune réponse n’est arrivée. Elle est peut-être encore en cours sur la passerelle : elle n’a donc pas été renvoyée et votre brouillon a été conservé.';
+
+  @override
+  String get ng_slash_command_nothing_running => 'Rien n’est en cours.';
+
+  @override
   String get ng_steered => 'Orienté';
 
   @override

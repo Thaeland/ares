@@ -1,6 +1,6 @@
 // Slash-command highlighting and the tap-for-details card for the NextGen
-// composer. Display only: NextGen sends a `/command` draft as an ordinary
-// prompt, and the card says so.
+// composer. Display only: the chat view runs a sent `/command` (see
+// `NgSlashCatalog.runsOnGateway`), using the same catalogue as the highlight.
 import 'dart:async';
 
 import 'package:flutter/material.dart';

@@ -4583,6 +4583,31 @@ class AppLocalizationsPt extends AppLocalizations {
       'O NextGen envia isto ao Hermes como uma mensagem normal; o comando em si não é executado.';
 
   @override
+  String get ng_slash_command_output => 'Saída do comando';
+
+  @override
+  String get ng_slash_command_running => 'A executar o comando…';
+
+  @override
+  String get ng_slash_command_done => 'Concluído.';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return 'Não foi possível executar o comando: $error';
+  }
+
+  @override
+  String get ng_slash_command_refused =>
+      'O Hermes não consegue executar este comando aqui.';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      'O comando foi enviado, mas não chegou resposta. Pode ainda estar a ser executado no gateway, por isso não foi enviado de novo e o rascunho foi mantido.';
+
+  @override
+  String get ng_slash_command_nothing_running => 'Nada está em execução.';
+
+  @override
   String get ng_steered => 'Orientado';
 
   @override
@@ -10474,6 +10499,31 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get ng_slash_command_sent_as_message =>
       'O NextGen envia isso ao Hermes como uma mensagem normal; o comando em si não é executado.';
+
+  @override
+  String get ng_slash_command_output => 'Saída do comando';
+
+  @override
+  String get ng_slash_command_running => 'Executando o comando…';
+
+  @override
+  String get ng_slash_command_done => 'Concluído.';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return 'Não foi possível executar o comando: $error';
+  }
+
+  @override
+  String get ng_slash_command_refused =>
+      'O Hermes não consegue executar este comando aqui.';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      'O comando foi enviado, mas nenhuma resposta chegou. Ele ainda pode estar em execução no gateway, então não foi enviado de novo e seu rascunho foi mantido.';
+
+  @override
+  String get ng_slash_command_nothing_running => 'Nada está em execução.';
 
   @override
   String get ng_steered => 'Orientada';

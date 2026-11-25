@@ -4383,6 +4383,30 @@ class AppLocalizationsZh extends AppLocalizations {
       'NextGen 会将此作为普通消息发送给 Hermes，不会执行该命令。';
 
   @override
+  String get ng_slash_command_output => '命令输出';
+
+  @override
+  String get ng_slash_command_running => '正在运行命令…';
+
+  @override
+  String get ng_slash_command_done => '完成。';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return '无法运行命令：$error';
+  }
+
+  @override
+  String get ng_slash_command_refused => 'Hermes 无法在此运行此命令。';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      '命令已发送，但未收到回复。它可能仍在网关上运行，因此没有重新发送，并保留了你的草稿。';
+
+  @override
+  String get ng_slash_command_nothing_running => '当前没有正在运行的任务。';
+
+  @override
   String get ng_steered => '已调整指示';
 
   @override
@@ -10012,6 +10036,30 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   @override
   String get ng_slash_command_sent_as_message =>
       'NextGen 会将此作为普通消息发送给 Hermes，不会执行该命令。';
+
+  @override
+  String get ng_slash_command_output => '命令输出';
+
+  @override
+  String get ng_slash_command_running => '正在运行命令…';
+
+  @override
+  String get ng_slash_command_done => '完成。';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return '无法运行命令：$error';
+  }
+
+  @override
+  String get ng_slash_command_refused => 'Hermes 无法在此运行此命令。';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      '命令已发送，但未收到回复。它可能仍在网关上运行，因此没有重新发送，并保留了你的草稿。';
+
+  @override
+  String get ng_slash_command_nothing_running => '当前没有正在运行的任务。';
 
   @override
   String get ng_steered => '已调整指示';

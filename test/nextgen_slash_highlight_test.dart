@@ -1,8 +1,9 @@
 // NextGen composer: a typed slash command is highlighted from a scoped,
 // cached `commands.catalog` read and tapping it shows its description. Uses
 // only public NextGen APIs and keys, so the same file runs (red) against a
-// build without the feature. Sending is unchanged: the draft goes out as an
-// ordinary prompt.
+// build without the feature. Sending a highlighted command runs it on the
+// gateway (see nextgen_slash_exec_test.dart), so the card no longer says it
+// goes out as a message.
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -266,9 +267,7 @@ void main() {
   });
 
   testWidgets('tapping the token shows the description and dismisses on a '
-      'tap elsewhere, typing and send; the prompt is unchanged', (
-    tester,
-  ) async {
+      'tap elsewhere, typing and send; send runs the command', (tester) async {
     final (gateway, _) = await pump(tester);
     await _type(tester, '/bg run tests');
     expect(gateway.catalogCalls.single.params, isEmpty, reason: 'draft chat');
@@ -289,7 +288,8 @@ void main() {
         "NextGen sends this to Hermes as a normal message; the command "
         "itself doesn't run.",
       ),
-      findsOneWidget,
+      findsNothing,
+      reason: 'NextGen runs commands now',
     );
     expect(tester.testTextInput.isVisible, isTrue);
 
@@ -308,11 +308,14 @@ void main() {
     await tester.pump();
     await tester.pump();
     expect(find.byKey(_infoKey), findsNothing);
-    final submit = gateway.calls.singleWhere(
-      (c) => c.method == 'prompt.submit',
-    );
-    expect(submit.params['text'], '/bg run all tests');
-    expect(gateway.calls.where((c) => c.method == 'slash.exec'), isEmpty);
+    await tester.pump();
+    await tester.pump();
+    final exec = gateway.calls.singleWhere((c) => c.method == 'slash.exec');
+    expect(exec.params, {
+      'session_id': 'rt-new',
+      'command': 'bg run all tests',
+    });
+    expect(gateway.calls.where((c) => c.method == 'prompt.submit'), isEmpty);
   });
 
   testWidgets('a chat switch dismisses the card', (tester) async {
@@ -331,25 +334,24 @@ void main() {
     expect(find.byKey(_infoKey), findsNothing);
   });
 
-  testWidgets('a failed catalogue leaves the composer working unhighlighted', (
-    tester,
-  ) async {
+  testWidgets("a failed catalogue falls back to Classic's command set for "
+      'both the highlight and send', (tester) async {
     final (gateway, _) = await pump(tester, catalogFails: true);
     await _type(tester, '/help me');
     expect(gateway.catalogCalls, hasLength(1));
-    expect(_highlighted(tester), isEmpty);
-    await _tapText(tester, 1, 4);
-    expect(find.byKey(_infoKey), findsNothing);
+    expect(_highlighted(tester), '/help', reason: 'kSlashExecutableCommands');
+    await _type(tester, '/bg run tests');
+    expect(_highlighted(tester), isEmpty, reason: 'not in the fallback set');
     await _type(tester, '/help me now');
     expect(gateway.catalogCalls, hasLength(1), reason: 'no per-key retry');
 
     await tester.tap(find.byTooltip('Send'));
-    await tester.pump();
-    await tester.pump();
-    final submit = gateway.calls.singleWhere(
-      (c) => c.method == 'prompt.submit',
-    );
-    expect(submit.params['text'], '/help me now');
+    for (var i = 0; i < 4; i++) {
+      await tester.pump();
+    }
+    final exec = gateway.calls.singleWhere((c) => c.method == 'slash.exec');
+    expect(exec.params, {'session_id': 'rt-new', 'command': 'help me now'});
+    expect(gateway.calls.where((c) => c.method == 'prompt.submit'), isEmpty);
   });
 
   group('card placement', () {

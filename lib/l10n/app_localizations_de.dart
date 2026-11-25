@@ -4588,6 +4588,31 @@ class AppLocalizationsDe extends AppLocalizations {
       'NextGen sendet dies als normale Nachricht an Hermes; der Befehl selbst wird nicht ausgeführt.';
 
   @override
+  String get ng_slash_command_output => 'Befehlsausgabe';
+
+  @override
+  String get ng_slash_command_running => 'Befehl wird ausgeführt…';
+
+  @override
+  String get ng_slash_command_done => 'Fertig.';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return 'Befehl konnte nicht ausgeführt werden: $error';
+  }
+
+  @override
+  String get ng_slash_command_refused =>
+      'Hermes kann diesen Befehl hier nicht ausführen.';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      'Der Befehl wurde gesendet, aber es kam keine Antwort. Er läuft möglicherweise noch auf dem Gateway, daher wurde er nicht erneut gesendet und dein Entwurf wurde behalten.';
+
+  @override
+  String get ng_slash_command_nothing_running => 'Es läuft gerade nichts.';
+
+  @override
   String get ng_steered => 'Angepasst';
 
   @override

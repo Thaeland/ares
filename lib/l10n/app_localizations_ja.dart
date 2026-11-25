@@ -4453,6 +4453,30 @@ class AppLocalizationsJa extends AppLocalizations {
       'NextGen ではこれは通常のメッセージとして Hermes に送信され、コマンド自体は実行されません。';
 
   @override
+  String get ng_slash_command_output => 'コマンドの出力';
+
+  @override
+  String get ng_slash_command_running => 'コマンドを実行中…';
+
+  @override
+  String get ng_slash_command_done => '完了しました。';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return 'コマンドを実行できませんでした: $error';
+  }
+
+  @override
+  String get ng_slash_command_refused => 'Hermes はここでこのコマンドを実行できません。';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      'コマンドは送信されましたが、応答がありませんでした。ゲートウェイでまだ実行中の可能性があるため、再送信せず下書きを残しました。';
+
+  @override
+  String get ng_slash_command_nothing_running => '実行中のものはありません。';
+
+  @override
   String get ng_steered => '指示を反映しました';
 
   @override

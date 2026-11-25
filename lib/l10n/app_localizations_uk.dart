@@ -4575,6 +4575,31 @@ class AppLocalizationsUk extends AppLocalizations {
       'NextGen надсилає це Hermes як звичайне повідомлення; сама команда не виконується.';
 
   @override
+  String get ng_slash_command_output => 'Вивід команди';
+
+  @override
+  String get ng_slash_command_running => 'Виконується команда…';
+
+  @override
+  String get ng_slash_command_done => 'Готово.';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return 'Не вдалося виконати команду: $error';
+  }
+
+  @override
+  String get ng_slash_command_refused =>
+      'Hermes не може виконати цю команду тут.';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      'Команду надіслано, але відповідь не надійшла. Можливо, вона ще виконується на шлюзі, тому її не надіслано повторно, а чернетку збережено.';
+
+  @override
+  String get ng_slash_command_nothing_running => 'Нічого не виконується.';
+
+  @override
   String get ng_steered => 'Спрямовано';
 
   @override

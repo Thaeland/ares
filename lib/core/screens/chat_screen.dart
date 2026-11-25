@@ -48,6 +48,7 @@ import '../services/gateway_turn_coordinator.dart';
 import '../services/gateway_turn_recovery.dart';
 import '../services/gateway_turn_ui_projection.dart';
 import '../services/remote_files_client.dart';
+import '../services/slash_command_errors.dart';
 import '../services/legal_links.dart';
 import '../services/turn_notification_service.dart';
 import '../services/notification_approval_authority.dart';
@@ -4853,19 +4854,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   /// 4018 is also used for quick-command failures and dispatch-required
   /// skills. Learn only an explicit verdict or the legacy not-a-command form.
+  /// Shared with NextGen ([isSlashCommandRefusal]).
   static bool _isSlashCommandRefusal(JsonRpcError error) =>
-      error.reason == 'unsupported_command' ||
-      (error.reason == null &&
-          error.code == 4018 &&
-          (error.message == 'unsupported_command' ||
-              error.message.startsWith(
-                'not a quick/plugin/bundle/skill command:',
-              )));
+      isSlashCommandRefusal(error);
 
   /// The transport timed out or dropped after the write: the gateway may still
   /// be running the command. Same uncertainty rule as `session.steer` (#191).
   static bool _isSlashDeliveryUnknown(JsonRpcError error) =>
-      error.message == 'Timeout' || error.reason == 'connection_closed';
+      isSlashDeliveryUnknown(error);
 
   void _showSlashDeliveryUnknown() {
     if (!mounted) return;

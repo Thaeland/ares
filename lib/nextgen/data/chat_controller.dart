@@ -13,11 +13,14 @@ import 'package:uuid/uuid.dart';
 import '../../core/models/attachment_draft.dart';
 import '../../core/models/background_report.dart';
 import '../../core/models/legacy_lcm_summary.dart';
+import '../../core/models/slash_command.dart';
 import '../../core/services/attachment_draft_service.dart';
+import '../../core/services/slash_command_errors.dart';
 import '../../core/services/ws_client.dart';
 import 'history_rows.dart';
 import 'nextgen_gateway.dart';
 import 'session_control.dart';
+import 'slash_exec.dart';
 import '../nextgen_l10n.dart';
 
 /// The gateway outcome for a per-chat model pick.
@@ -184,6 +187,11 @@ class NgUserItem extends NgItem {
   /// Client-generated UUID for `prompt.submit` idempotency on modern gateways.
   final String? submissionId;
 
+  /// The model-facing prompt when the bubble shows something else: a
+  /// command's send/skill directive shows its `display` line in [text] and
+  /// submits this. Null when [text] is what was sent.
+  final String? sentText;
+
   NgUserItem(
     super.key,
     this.text, {
@@ -193,7 +201,24 @@ class NgUserItem extends NgItem {
     this.attachments = const [],
     this.files = const [],
     this.submissionId,
+    this.sentText,
   });
+}
+
+/// A `/command` run on the gateway and what it answered: shown under the
+/// command, local to this view, never part of the stored transcript.
+class NgCommandItem extends NgItem {
+  /// The command as typed (`/title Trip`).
+  final String command;
+  final DateTime time;
+
+  /// The gateway's output (with any warning or notice), or why it failed.
+  String output = '';
+  bool running = true;
+  bool failed = false;
+  bool expanded = true;
+
+  NgCommandItem(super.key, this.command, {required this.time});
 }
 
 class NgAssistantItem extends NgItem {
@@ -290,7 +315,52 @@ bool ngNoticeIsLong(String text) =>
 class NgQueued {
   final String key;
   final String text;
-  NgQueued(this.key, this.text);
+
+  /// What to show instead of [text] (a command's send/skill directive).
+  final String? display;
+  NgQueued(this.key, this.text, {this.display});
+}
+
+/// What running a typed command came to (see [NgChatController.runCommand]).
+enum NgCommandResult {
+  /// The gateway ran it; its answer is on the card.
+  done,
+
+  /// It became a prompt (a send/skill directive), sent or queued.
+  sentAsPrompt,
+
+  /// The gateway handed text back for the composer ([NgCommandOutcome.text]).
+  prefill,
+
+  /// The gateway refused it before running anything.
+  refused,
+
+  /// It could not run (not sent, or the gateway answered with an error).
+  failed,
+
+  /// Sent, but no reply came back: it may still be running.
+  deliveryUnknown,
+
+  /// This connection has no `slash.exec`: nothing ran, send it as a prompt.
+  unsupported,
+}
+
+class NgCommandOutcome {
+  const NgCommandOutcome(this.result, {this.text = '', this.item});
+  final NgCommandResult result;
+
+  /// The prefill text.
+  final String text;
+
+  /// The command's card, when it has one.
+  final NgCommandItem? item;
+
+  /// The draft should come back: nothing ran, or it may not have.
+  bool get keepsDraft =>
+      result == NgCommandResult.refused ||
+      result == NgCommandResult.failed ||
+      result == NgCommandResult.deliveryUnknown ||
+      result == NgCommandResult.unsupported;
 }
 
 enum NgRequestKind { approval, clarify, secret, saveLogin }
@@ -1123,8 +1193,17 @@ class NgChatController extends ChangeNotifier {
 
   // ── Live events ─────────────────────────────────────────────────────
 
+  /// The last item that is not a command card: a command run mid-turn adds
+  /// its card under the streaming reply without ending it.
+  NgItem? get _lastTurnItem {
+    for (var i = items.length - 1; i >= 0; i--) {
+      if (items[i] is! NgCommandItem) return items[i];
+    }
+    return null;
+  }
+
   NgAssistantItem _openReply() {
-    final last = items.isNotEmpty ? items.last : null;
+    final last = _lastTurnItem;
     if (last is NgAssistantItem && last.open) return last;
     final reply = NgAssistantItem(_key('a'));
     items.add(reply);
@@ -1691,10 +1770,8 @@ class NgChatController extends ChangeNotifier {
       }
     }
     // Drop the empty reply a cancelled turn leaves behind.
-    if (items.isNotEmpty) {
-      final last = items.last;
-      if (last is NgAssistantItem && last.isEmpty) items.removeLast();
-    }
+    final last = _lastTurnItem;
+    if (last is NgAssistantItem && last.isEmpty) items.remove(last);
     running = false;
     todosLive = false;
     status = null;
@@ -1706,7 +1783,9 @@ class NgChatController extends ChangeNotifier {
     if (control?.goal != null) unawaited(refreshControl());
     if (queued.isNotEmpty && !failed) {
       final next = queued.removeAt(0);
-      scheduleMicrotask(() => unawaited(send(next.text)));
+      scheduleMicrotask(
+        () => unawaited(send(next.text, display: next.display)),
+      );
     }
   }
 
@@ -1966,22 +2045,27 @@ class NgChatController extends ChangeNotifier {
 
   /// Sends [text] (and any [attachments]) as a new prompt. Returns whether
   /// the gateway accepted it; on failure the attachments stay with the
-  /// message so Retry can send them again.
+  /// message so Retry can send them again. A command's send/skill directive
+  /// passes the gateway's [display] line: the bubble shows that, never the
+  /// model-facing [text].
   Future<bool> send(
     String text, {
     List<AttachmentDraft> attachments = const [],
     String? submissionId,
+    String? display,
   }) async {
     final trimmed = text.trim();
     if (trimmed.isEmpty && attachments.isEmpty) return false;
+    final shown = display?.trim() ?? '';
     final effectiveSubmissionId = submissionId ?? const Uuid().v4();
     final item = NgUserItem(
       _key('u'),
-      trimmed,
+      shown.isEmpty ? trimmed : shown,
       time: DateTime.now(),
       pending: true,
       attachments: List.of(attachments),
       submissionId: effectiveSubmissionId,
+      sentText: shown.isEmpty ? null : trimmed,
     );
     items.add(item);
     error = null;
@@ -2014,7 +2098,7 @@ class NgChatController extends ChangeNotifier {
       }, submissionId: effectiveSubmissionId);
       item.pending = false;
       final status = result['status']?.toString();
-      if (status == 'queued') item.text = trimmed;
+      if (status == 'queued' && item.sentText == null) item.text = trimmed;
       _changed();
       if (item.attachments.isNotEmpty) {
         unawaited(attachmentService.removeAll(item.attachments));
@@ -2087,6 +2171,243 @@ class NgChatController extends ChangeNotifier {
     await stop();
   }
 
+  // ── Slash commands (Kyllene's ChatSession.runCommand) ─────────────────
+
+  /// Whether this connection said it has no `slash.exec` (an older gateway).
+  bool get slashExecUnsupported =>
+      ngSlashExecUnsupported(gateway.socket ?? gateway);
+
+  /// Runs [command] on the gateway the way Kyllene and Classic do, under a
+  /// card in the transcript: `slash.exec` first, then `command.dispatch`
+  /// (the gateway's stage for skills, bundles and quick commands) only after
+  /// a definite refusal. A lost reply (timeout, dropped socket) never falls
+  /// back or resends: both methods reach the same executor and the first may
+  /// already have run. A send/skill directive becomes a prompt through
+  /// [send] (queued while a turn runs), showing the gateway's `display`.
+  Future<NgCommandOutcome> runCommand(NgSlashLine command) async {
+    if (slashExecUnsupported) {
+      return const NgCommandOutcome(NgCommandResult.unsupported);
+    }
+    final card = NgCommandItem(_key('c'), command.label, time: DateTime.now());
+    items.add(card);
+    error = null;
+    _changedNow();
+    final String runtime;
+    try {
+      runtime = await _ensureCommandSession();
+    } catch (e) {
+      return _commandFailed(
+        card,
+        NgCommandResult.failed,
+        ngL.ng_slash_command_failed(_clean(e)),
+      );
+    }
+    return _execute(card, command, runtime, followAlias: true);
+  }
+
+  /// The live session a command runs in: a new chat is created as a prompt
+  /// would create it; a stored chat that is not attached yet attaches
+  /// rather than starting another session.
+  Future<String> _ensureCommandSession() async {
+    if (storedId == null) {
+      await _ensureSession();
+    } else if (runtimeId == null) {
+      await _attach();
+    }
+    final id = runtimeId;
+    if (id == null) throw StateError(error ?? ngL.ng_offline);
+    return id;
+  }
+
+  Future<NgCommandOutcome> _execute(
+    NgCommandItem card,
+    NgSlashLine command,
+    String runtime, {
+    required bool followAlias,
+  }) async {
+    final connection = gateway.socket ?? gateway;
+    Map<String, dynamic> reply;
+    try {
+      reply = await gateway.call('slash.exec', {
+        'session_id': runtime,
+        'command': command.line,
+      }, timeout: kNgSlashCommandTimeout);
+    } on JsonRpcError catch (e) {
+      if (ngIsMethodNotFound(e)) {
+        // Nothing ran: the line goes out as a prompt, as it always did here.
+        ngMarkSlashExecUnsupported(connection);
+        items.remove(card);
+        _changedNow();
+        return const NgCommandOutcome(NgCommandResult.unsupported);
+      }
+      if (isSlashDeliveryUnknown(e)) {
+        return _commandFailed(
+          card,
+          NgCommandResult.deliveryUnknown,
+          ngL.ng_slash_command_delivery_unknown,
+        );
+      }
+      if (!isSlashCommandRefusal(e) && !ngIsDispatchRedirect(e)) {
+        return _commandFailed(card, NgCommandResult.failed, _rpcFailure(e));
+      }
+      // A definite refusal: nothing ran, so the dispatch stage may try.
+      try {
+        reply = await gateway.call('command.dispatch', {
+          'session_id': runtime,
+          'name': command.name,
+          if (command.arg.isNotEmpty) 'arg': command.arg,
+        }, timeout: kNgSlashCommandTimeout);
+      } on JsonRpcError catch (d) {
+        if (isSlashDeliveryUnknown(d)) {
+          return _commandFailed(
+            card,
+            NgCommandResult.deliveryUnknown,
+            ngL.ng_slash_command_delivery_unknown,
+          );
+        }
+        if (ngIsMethodNotFound(d) ||
+            isSlashCommandRefusal(d) ||
+            ngIsNotDispatchable(d)) {
+          return _commandFailed(
+            card,
+            NgCommandResult.refused,
+            _refusalText(e) ?? _refusalText(d) ?? ngL.ng_slash_command_refused,
+          );
+        }
+        return _commandFailed(card, NgCommandResult.failed, _rpcFailure(d));
+      } catch (d) {
+        return _commandFailed(
+          card,
+          NgCommandResult.failed,
+          ngL.ng_slash_command_failed(_clean(d)),
+        );
+      }
+    } catch (e) {
+      return _commandFailed(
+        card,
+        NgCommandResult.failed,
+        ngL.ng_slash_command_failed(_clean(e)),
+      );
+    }
+    final result = SlashCommandResult.fromResult(reply);
+    if (followAlias && result.aliasTarget.isNotEmpty) {
+      // Once: an alias naming another alias shows what the gateway said.
+      final next = command.aliasedTo(result.aliasTarget);
+      if (next != null) {
+        return _execute(card, next, runtime, followAlias: false);
+      }
+    }
+    if (result.isPrompt) {
+      _settleCommandCard(card, result.notice);
+      final display = result.display.isNotEmpty
+          ? result.display
+          : command.label;
+      if (running) {
+        // Like any message sent mid-turn: it waits for the turn to end.
+        queued.add(NgQueued(_key('q'), result.text, display: display));
+        _changedNow();
+      } else {
+        await send(result.text, display: display);
+      }
+      return NgCommandOutcome(NgCommandResult.sentAsPrompt, item: card);
+    }
+    if (result.isPrefill) {
+      _settleCommandCard(card, result.notice, keep: true);
+      // `/undo` took turns off the stored transcript: show it without them.
+      await _reloadShownHistory();
+      return NgCommandOutcome(
+        NgCommandResult.prefill,
+        text: result.text,
+        item: card,
+      );
+    }
+    card
+      ..output = result.text.trim().isEmpty
+          ? ngL.ng_slash_command_done
+          : ngStripAnsi(result.text).trimRight()
+      ..running = false;
+    _changedNow();
+    return NgCommandOutcome(NgCommandResult.done, item: card);
+  }
+
+  NgCommandOutcome _commandFailed(
+    NgCommandItem card,
+    NgCommandResult result,
+    String message,
+  ) {
+    if (!items.contains(card)) items.add(card);
+    card
+      ..output = message
+      ..running = false
+      ..failed = true;
+    _changedNow();
+    return NgCommandOutcome(result, item: card);
+  }
+
+  /// Shows [notice] on the card, or drops the card when there is nothing to
+  /// show (and [keep] is false).
+  void _settleCommandCard(
+    NgCommandItem card,
+    String notice, {
+    bool keep = false,
+  }) {
+    card.running = false;
+    if (notice.trim().isNotEmpty) {
+      card.output = ngStripAnsi(notice).trim();
+    } else if (!keep) {
+      items.remove(card);
+    }
+    _changedNow();
+  }
+
+  /// Puts [text] on [card] (a prefill the composer could not take because
+  /// the user typed meanwhile), or drops a card with nothing to show.
+  void settleCommand(NgCommandItem card, {String? text}) {
+    final add = text?.trim() ?? '';
+    if (add.isNotEmpty) {
+      if (!items.contains(card)) items.add(card);
+      card.output = card.output.isEmpty ? add : '${card.output}\n\n$add';
+    } else if (card.output.isEmpty) {
+      items.remove(card);
+    }
+    card.running = false;
+    _changedNow();
+  }
+
+  static String? _refusalText(JsonRpcError error) {
+    final detail = error.data['detail'];
+    return detail is String && detail.trim().isNotEmpty ? detail.trim() : null;
+  }
+
+  static String _rpcFailure(JsonRpcError error) {
+    final detail = _refusalText(error);
+    final message = error.message.trim();
+    return ngL.ng_slash_command_failed(
+      detail ?? (message.isEmpty ? error.method : message),
+    );
+  }
+
+  /// Reads the shown window of the stored transcript again (after `/undo`
+  /// and the like), keeping the command cards since the last turn.
+  Future<void> _reloadShownHistory() async {
+    final id = storedId;
+    if (id == null || running || _disposed) return;
+    try {
+      final limit = max(ngHistoryPage, _rowIds.length).clamp(1, 500);
+      final rows = await _fetchRows(id, limit: limit);
+      if (_disposed || storedId != id || running) return;
+      final tail = <NgCommandItem>[];
+      for (var i = items.length - 1; i >= 0 && items[i] is NgCommandItem; i--) {
+        tail.insert(0, items[i] as NgCommandItem);
+      }
+      _setRows(rows, limit);
+      items.addAll(tail);
+      _changedNow();
+    } catch (_) {
+      // The transcript stays as shown; the next catch-up reads it again.
+    }
+  }
+
   Future<Map<String, dynamic>> _submitPromptWithCompatibility(
     Map<String, dynamic> baseParams, {
     required String submissionId,
@@ -2114,9 +2435,10 @@ class NgChatController extends ChangeNotifier {
       items.remove(last);
     }
     await send(
-      last.text,
+      last.sentText ?? last.text,
       attachments: last.failure != null ? last.attachments : const [],
       submissionId: last.failure != null ? last.submissionId : null,
+      display: last.sentText == null ? null : last.text,
     );
   }
 

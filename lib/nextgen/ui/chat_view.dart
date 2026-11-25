@@ -27,6 +27,8 @@ import '../../core/services/voice_composer_adapter.dart';
 import '../data/chat_controller.dart';
 import '../data/nextgen_gateway.dart';
 import '../data/read_aloud.dart';
+import '../data/slash_catalog.dart';
+import '../data/slash_exec.dart';
 import '../theme/nextgen_theme.dart';
 import 'model_sheet.dart';
 import 'nextgen_scope.dart';
@@ -75,6 +77,10 @@ class _NgChatViewState extends State<NgChatView> {
   }
 
   final _input = SlashCommandHighlightController();
+
+  /// The composer's command catalogue: it decides both the highlight and
+  /// whether a sent `/command` runs on the gateway.
+  final _slashCatalog = NgSlashCatalog();
   final _focus = FocusNode();
   final _scroll = ScrollController();
   Timer? _ticker;
@@ -176,6 +182,7 @@ class _NgChatViewState extends State<NgChatView> {
     _readAloud.dispose();
     _ticker?.cancel();
     _input.dispose();
+    _slashCatalog.dispose();
     _focus.dispose();
     _scroll.dispose();
     _voice?.dispose();
@@ -300,9 +307,22 @@ class _NgChatViewState extends State<NgChatView> {
     await chat.attachmentService.removeCachedFile(draft);
   }
 
+  /// Set while a sent `/command` waits to learn whether the gateway runs it,
+  /// so a second tap cannot run it twice.
+  bool _decidingCommand = false;
+
   Future<void> _send() async {
+    if (_decidingCommand) return;
     final text = _input.text.trim();
     if (text.isEmpty && _drafts.isEmpty) return;
+    // A command runs at once, mid-turn too; with files it is a prompt.
+    final command = _drafts.isEmpty ? NgSlashLine.parse(text) : null;
+    if (command != null) {
+      if (await _runCommand(command, text)) return;
+      // Not a command the gateway runs: it goes out as a prompt, exactly as
+      // before, provided the draft is still the one that was decided on.
+      if (!mounted || _input.text.trim() != text) return;
+    }
     if (_drafts.isNotEmpty && !chat.running) {
       final drafts = List.of(_drafts);
       _input.clear();
@@ -328,6 +348,87 @@ class _NgChatViewState extends State<NgChatView> {
     }
     _input.clear();
     await chat.send(text);
+  }
+
+  /// Runs a typed `/command`, the way Kyllene does: NextGen's own `/new`,
+  /// `/reset`, `/stop` and bare `/model` here, anything the gateway would
+  /// run there (see [NgSlashCatalog.runsOnGateway]). Returns false when
+  /// [text] is ordinary text to send as a prompt.
+  Future<bool> _runCommand(NgSlashLine command, String text) async {
+    switch (command.name) {
+      case 'new' || 'reset':
+        _input.clear();
+        widget.onNewChat();
+        return true;
+      case 'stop':
+        _input.clear();
+        if (chat.running) {
+          await chat.stop();
+        } else {
+          ngToast(context, ngL.ng_slash_command_nothing_running);
+        }
+        return true;
+      case 'model' when command.arg.isEmpty:
+        _input.clear();
+        await showNgModelSheet(context, chat);
+        return true;
+    }
+    final owner = chat;
+    _decidingCommand = true;
+    final bool runs;
+    try {
+      _slashCatalog.scopeTo(owner.gateway, sessionId: owner.runtimeId);
+      runs = await _slashCatalog.runsOnGateway(command.name);
+    } finally {
+      _decidingCommand = false;
+    }
+    if (!runs) return false;
+    // Edited or switched while deciding: run nothing; the new draft stays.
+    if (!mounted ||
+        !identical(owner, widget.chat) ||
+        _input.text.trim() != text) {
+      return true;
+    }
+    _input.clear();
+    final outcome = await owner.runCommand(command);
+    if (!mounted || !identical(owner, widget.chat)) return true;
+    final composerFree = _input.text.trim().isEmpty;
+    switch (outcome.result) {
+      case NgCommandResult.unsupported:
+        // An older gateway without `slash.exec`: nothing ran, so the line is
+        // sent as the prompt it always was.
+        if (composerFree) {
+          _setComposer(text);
+          return false;
+        }
+        if (owner.running) {
+          owner.enqueue(text);
+        } else {
+          await owner.send(text);
+        }
+      case NgCommandResult.prefill:
+        final card = outcome.item;
+        if (composerFree) {
+          _setComposer(outcome.text);
+          if (card != null) owner.settleCommand(card);
+        } else if (card != null) {
+          // Never write over newer typing: the text stays on the card.
+          owner.settleCommand(card, text: outcome.text);
+        }
+      case _ when outcome.keepsDraft:
+        // Nothing ran, or it may not have: never resend, keep the line.
+        if (composerFree) _setComposer(text);
+      case _:
+        break;
+    }
+    return true;
+  }
+
+  void _setComposer(String text) {
+    _input.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
   }
 
   Future<String?> _busyChoice() {
@@ -516,6 +617,10 @@ class _NgChatViewState extends State<NgChatView> {
                   chat: chat,
                   controller: _input,
                   focusNode: _focus,
+                  catalog: _slashCatalog,
+                  // Commands run here now, so the card no longer says they
+                  // are sent as a message.
+                  showsSentAsMessageNote: false,
                   child: _composer(c, state),
                 ),
             ],
@@ -673,7 +778,7 @@ class _NgChatViewState extends State<NgChatView> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      q.text,
+                      q.display ?? q.text,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: NgType.bodySmall.copyWith(color: c.text2),
@@ -771,6 +876,7 @@ class _NgChatViewState extends State<NgChatView> {
         readAloud: _readAloud,
       ),
       NgSystemItem() => _SystemCard(item: item),
+      NgCommandItem() => _CommandCard(item: item),
       NgNoticeItem() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Text(
@@ -1068,6 +1174,128 @@ class _SystemCardState extends State<_SystemCard> {
                   ),
                 ],
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A `/command` run on the gateway: the command, then its output (or why it
+/// failed). Open when it arrives; tap folds it, long-press copies the output.
+class _CommandCard extends StatefulWidget {
+  const _CommandCard({required this.item});
+
+  final NgCommandItem item;
+
+  @override
+  State<_CommandCard> createState() => _CommandCardState();
+}
+
+class _CommandCardState extends State<_CommandCard> {
+  @override
+  Widget build(BuildContext context) {
+    final c = NgColors.of(context);
+    final item = widget.item;
+    final output = item.output;
+    final hasOutput = output.isNotEmpty;
+    final tint = item.failed ? c.danger : c.text3;
+    final bodyStyle = NgType.caption.copyWith(
+      color: item.failed ? c.danger : c.text2,
+      fontFamily: NgType.mono,
+      height: 1.45,
+    );
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Semantics(
+        container: true,
+        label: ngL.ng_slash_command_output,
+        child: Material(
+          key: const ValueKey('ng-command-card'),
+          color: c.surface2,
+          borderRadius: BorderRadius.circular(NgRadii.md),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: hasOutput
+                ? () => setState(() => item.expanded = !item.expanded)
+                : null,
+            onLongPress: hasOutput
+                ? () {
+                    Clipboard.setData(ClipboardData(text: output));
+                    ngToast(context, ngL.ng_copied);
+                  }
+                : null,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        item.failed ? Icons.error_outline : Icons.terminal,
+                        size: 16,
+                        color: tint,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          item.command,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: NgType.label.copyWith(
+                            color: c.text2,
+                            fontFamily: NgType.mono,
+                          ),
+                        ),
+                      ),
+                      if (item.running)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: SizedBox(
+                            width: 14,
+                            height: 14,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 1.8,
+                              color: c.accent,
+                              semanticsLabel: ngL.ng_slash_command_running,
+                            ),
+                          ),
+                        )
+                      else
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Text(
+                            ngStamp(context, item.time),
+                            style: NgType.caption.copyWith(color: c.textMuted),
+                          ),
+                        ),
+                      if (hasOutput)
+                        Icon(
+                          item.expanded ? Icons.expand_less : Icons.expand_more,
+                          size: 18,
+                          color: c.text3,
+                        ),
+                    ],
+                  ),
+                  if (hasOutput && item.expanded) ...[
+                    const SizedBox(height: 8),
+                    SelectableText(ngCapShown(output), style: bodyStyle),
+                  ] else if (hasOutput) ...[
+                    const SizedBox(height: 4),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 24, right: 8),
+                      child: Text(
+                        output,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: bodyStyle,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
             ),
           ),
         ),

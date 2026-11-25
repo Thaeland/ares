@@ -428,7 +428,10 @@ void main() {
       final gateway = _CatalogGateway(profile: 'work');
       final reader = NgSlashCatalog();
       reader.scopeTo(gateway);
-      expect(reader.resolve('help'), isNull);
+      // Before the catalogue: only Classic's fallback set (what a send would
+      // run), with its details pending.
+      expect(reader.resolve('background'), isNull);
+      expect(reader.resolve('help')!.detailsPending, isTrue);
       await reader.ensureLoaded();
       expect(gateway.calls, [<String, dynamic>{}]);
       expect(reader.resolve('help')!.description, 'Show help');
@@ -442,7 +445,7 @@ void main() {
 
       // A live session is its own scope (its workspace's skills).
       reader.scopeTo(gateway, sessionId: 'rt-1');
-      expect(reader.resolve('help'), isNull);
+      expect(reader.resolve('background'), isNull);
       await reader.ensureLoaded();
       expect(gateway.calls.last, {'session_id': 'rt-1'});
       expect(gateway.calls, hasLength(2));
@@ -450,7 +453,7 @@ void main() {
       // Another connection/profile never reuses this one's answer.
       final other = _CatalogGateway(profile: 'home');
       reader.scopeTo(other);
-      expect(reader.resolve('help'), isNull);
+      expect(reader.resolve('background'), isNull);
       await reader.ensureLoaded();
       expect(other.calls, hasLength(1));
       reader.dispose();
@@ -472,23 +475,29 @@ void main() {
       reader.dispose();
     });
 
-    test('a failure leaves no highlight and retries only later', () async {
-      final gateway = _CatalogGateway()..failure = StateError('refused');
-      final reader = NgSlashCatalog(retryAfter: const Duration(hours: 1))
-        ..scopeTo(gateway);
-      await reader.ensureLoaded();
-      expect(reader.resolve('help'), isNull);
-      await reader.ensureLoaded();
-      expect(gateway.calls, hasLength(1), reason: 'no retry per keystroke');
+    test(
+      "a failure falls back to Classic's set and retries only later",
+      () async {
+        final gateway = _CatalogGateway()..failure = StateError('refused');
+        final reader = NgSlashCatalog(retryAfter: const Duration(hours: 1))
+          ..scopeTo(gateway);
+        await reader.ensureLoaded();
+        expect(reader.resolve('background'), isNull);
+        expect(reader.resolve('help')!.detailsPending, isTrue);
+        await reader.ensureLoaded();
+        expect(gateway.calls, hasLength(1), reason: 'no retry per keystroke');
 
-      final eager = NgSlashCatalog(retryAfter: Duration.zero)..scopeTo(gateway);
-      gateway.failure = null;
-      await eager.ensureLoaded();
-      expect(gateway.calls, hasLength(2));
-      expect(eager.resolve('help'), isNotNull);
-      reader.dispose();
-      eager.dispose();
-    });
+        final eager = NgSlashCatalog(retryAfter: Duration.zero)
+          ..scopeTo(gateway);
+        gateway.failure = null;
+        await eager.ensureLoaded();
+        expect(gateway.calls, hasLength(2));
+        expect(eager.resolve('help')!.detailsPending, isFalse);
+        expect(eager.resolve('background'), isNotNull);
+        reader.dispose();
+        eager.dispose();
+      },
+    );
 
     test('offline is not a failure and sends nothing', () async {
       final gateway = _CatalogGateway(online: false);

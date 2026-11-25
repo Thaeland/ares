@@ -1,12 +1,15 @@
-// The gateway's slash-command catalogue, read only to highlight a typed
-// `/command` in the NextGen composer and describe it on tap. NextGen still
-// sends every draft as a prompt; nothing here dispatches a command.
+// The gateway's slash-command catalogue for the NextGen composer: it decides
+// which typed `/command` is highlighted, described on tap and, on send, run
+// on the gateway instead of going out as a prompt. Running a command is the
+// chat controller's job; nothing here dispatches one.
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../../core/models/slash_command.dart';
 import '../../core/widgets/slash_command_highlight.dart';
 import 'nextgen_gateway.dart';
+import 'slash_exec.dart';
 
 /// A cached, scoped `commands.catalog` reader for one composer.
 ///
@@ -72,8 +75,53 @@ class NgSlashCatalog extends ChangeNotifier {
     if (!identical(before, lookup)) _notify();
   }
 
-  /// Highlights only names the loaded catalogue knows (aliases included).
-  SlashCommandTokenInfo? resolve(String name) => lookup?.resolve(name);
+  /// Whether `slash.exec` is known to be missing on the current connection.
+  bool get _execUnsupported {
+    final gateway = _gateway;
+    return gateway != null && ngSlashExecUnsupported(gateway.socket ?? gateway);
+  }
+
+  /// Highlights exactly what a send would run as a command, now:
+  ///
+  /// * NextGen's own `/new`, `/reset`, `/stop` and `/model` always;
+  /// * with a loaded catalogue, the names it knows (aliases via `canon`,
+  ///   skills, plugin commands);
+  /// * before it loads, or when it cannot, Classic's reviewed
+  ///   [kSlashExecutableCommands] fallback;
+  /// * nothing else once this connection said it has no `slash.exec`.
+  SlashCommandTokenInfo? resolve(String name) {
+    final bare = name.toLowerCase();
+    final known = lookup?.resolve(name);
+    if (kNgLocalSlashCommands.contains(bare)) {
+      return known ?? SlashCommandTokenInfo(typed: name, canonical: bare);
+    }
+    if (_execUnsupported) return null;
+    if (lookup != null) return known;
+    if (!kSlashExecutableCommands.contains(bare)) return null;
+    return SlashCommandTokenInfo(
+      typed: name,
+      canonical: bare,
+      detailsPending: true,
+    );
+  }
+
+  /// Whether a sent `/name` runs on the gateway rather than going out as a
+  /// prompt. The same rule as [resolve], after waiting up to [wait] for a
+  /// catalogue that is loading (or stale after a reconnect): when it has
+  /// not arrived by then, Classic's fallback set decides.
+  Future<bool> runsOnGateway(
+    String name, {
+    Duration wait = kNgSlashCatalogWait,
+  }) async {
+    if (_execUnsupported) return false;
+    try {
+      await ensureLoaded().timeout(wait);
+    } on TimeoutException {
+      // Decide with what is known now; the load carries on for next time.
+    }
+    if (_disposed) return false;
+    return resolve(name) != null;
+  }
 
   /// Loads the catalogue for the current scope unless it is cached, loading,
   /// or failed recently.
