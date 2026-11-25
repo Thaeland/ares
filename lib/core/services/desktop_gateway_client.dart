@@ -334,6 +334,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
       inheritedConnectionListener?.call(connected);
       if (_closed) return;
       if (connected) {
+        slashRefusals.reset();
         // Fires inside connect() before _ws is assigned, so no identical()
         // guard is possible here. The single-flight in _ensureSocket keeps
         // loser sockets from being built concurrently.
@@ -353,6 +354,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
         }
         _connectionListener?.call(DesktopConnectionState.connected);
       } else if (identical(_ws, client)) {
+        slashRefusals.reset();
         _gatewaySessionIds.clear();
         _connectionListener?.call(DesktopConnectionState.disconnected);
         // A socket that was once live and then dropped (phone sleep,
@@ -1180,7 +1182,10 @@ class DesktopGatewayClient implements SlashCommandGateway {
   }
 
   /// Steers only the currently bound live session. Reconnect/create and
-  /// automatic retries could deliver the guidance to a different turn.
+  /// automatic retries could deliver the guidance to a different turn. On
+  /// the canonical session authority the socket names the execution
+  /// generation it last admitted, captured as this call starts; a refusal
+  /// (`stale_generation`) propagates and is never retried.
   Future<bool> steerPrompt({
     required String sessionId,
     required String text,
@@ -1232,7 +1237,10 @@ class DesktopGatewayClient implements SlashCommandGateway {
     return client.slashExec(gatewaySessionId, command, onSent: onSent);
   }
 
-  /// Interrupts the active turn in the Desktop gateway runtime.
+  /// Interrupts the active turn in the Desktop gateway runtime. On the
+  /// canonical session authority it names the execution generation the
+  /// socket last admitted, so a later claim is never interrupted by it; a
+  /// `stale_generation` refusal propagates and is never retried.
   Future<bool> interruptPrompt({required String sessionId}) async {
     final gatewaySessionId = _gatewaySessionIds[sessionId];
     final client = _ws;
@@ -1477,6 +1485,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
     // Idempotent: a double close must not re-enter or corrupt state.
     if (_closed) return;
     _closed = true;
+    slashRefusals.reset();
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
     _asyncEventListener = null;

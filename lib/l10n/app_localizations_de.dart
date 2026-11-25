@@ -9,6 +9,10 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
+  String get slash_local_arguments =>
+      'Diese Verknüpfung unterstützt hier keine Argumente. Verwende die App-Steuerelemente; dein Entwurf wurde beibehalten.';
+
+  @override
   String get fallback_title => 'Ausweichmodelle';
 
   @override
@@ -3972,6 +3976,27 @@ class AppLocalizationsDe extends AppLocalizations {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias ist ein Alias für $command';
+  }
+
+  @override
+  String get slash_command_info_no_description =>
+      'Keine Beschreibung verfügbar.';
+
+  @override
+  String get slash_command_info_arguments_options =>
+      'Erwartet eine Option aus einer festen Auswahl.';
+
+  @override
+  String get slash_command_info_arguments_text =>
+      'Erwartet Text nach dem Befehl.';
+
+  @override
+  String get slash_command_info_arguments_mixed =>
+      'Erwartet eine Option oder Text nach dem Befehl.';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -3983,6 +4008,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get slash_command_failed => 'The command could not be run.';
+
+  @override
+  String get slash_command_unsupported =>
+      'Dieser Befehl ist auf diesem Server nicht verfügbar.';
+
+  @override
+  String get slash_sessions_inline =>
+      'Öffne die Sitzungsliste, um einen Chat auszuwählen. Dein Entwurf wurde beibehalten.';
 
   @override
   String get nextgen_toggle => 'NextGen-Oberfläche';
@@ -4079,6 +4112,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ng_the_turn_failed => 'Der Durchlauf ist fehlgeschlagen.';
+
+  @override
+  String get ng_turn_changed =>
+      'dieser Durchlauf ist bereits beendet oder ein neuerer hat begonnen';
+
+  @override
+  String get ng_steer_rejected =>
+      'der laufende Durchlauf hat es nicht angenommen';
+
+  @override
+  String get ng_turn_not_known_yet =>
+      'der laufende Durchlauf ist noch nicht bekannt; versuche es gleich noch einmal';
 
   @override
   String ng_couldn_t_stop(Object error) {
@@ -4529,6 +4574,55 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ng_send => 'Senden';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias ist ein Alias für $command';
+  }
+
+  @override
+  String get ng_slash_command_no_description => 'Keine Beschreibung verfügbar.';
+
+  @override
+  String get ng_slash_command_arguments_options =>
+      'Erwartet eine Option aus einer festen Auswahl.';
+
+  @override
+  String get ng_slash_command_arguments_text =>
+      'Erwartet Text nach dem Befehl.';
+
+  @override
+  String get ng_slash_command_arguments_mixed =>
+      'Erwartet eine Option oder Text nach dem Befehl.';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'NextGen sendet dies als normale Nachricht an Hermes; der Befehl selbst wird nicht ausgeführt.';
+
+  @override
+  String get ng_slash_command_output => 'Befehlsausgabe';
+
+  @override
+  String get ng_slash_command_running => 'Befehl wird ausgeführt…';
+
+  @override
+  String get ng_slash_command_done => 'Fertig.';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return 'Befehl konnte nicht ausgeführt werden: $error';
+  }
+
+  @override
+  String get ng_slash_command_refused =>
+      'Hermes kann diesen Befehl hier nicht ausführen.';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      'Der Befehl wurde gesendet, aber es kam keine Antwort. Er läuft möglicherweise noch auf dem Gateway, daher wurde er nicht erneut gesendet und dein Entwurf wurde behalten.';
+
+  @override
+  String get ng_slash_command_nothing_running => 'Es läuft gerade nichts.';
 
   @override
   String get ng_steered => 'Angepasst';
