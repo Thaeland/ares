@@ -58,6 +58,7 @@ import '../services/gateway_turn_recovery.dart';
 import '../services/gateway_turn_ui_projection.dart';
 import '../services/remote_files_client.dart';
 import '../preview/chat_preview.dart';
+import 'kanban_board_screen.dart';
 import '../services/slash_command_errors.dart';
 import '../services/legal_links.dart';
 import '../services/turn_notification_service.dart';
@@ -4805,6 +4806,26 @@ class _ChatScreenState extends State<ChatScreen>
     if (name == null) return null;
     if (_sending || _streaming || _preparingSend) return '';
     final bareName = name.toLowerCase().replaceFirst(RegExp(r'^/+'), '');
+    if (bareName == 'kanban' &&
+        _slashCommandArgument(text).isEmpty &&
+        _desktopGateway != null) {
+      final gateway = _desktopGateway!;
+      final connection = widget.connection;
+      _setRestoredComposer('');
+      _commitComposerForSend();
+      unawaited(
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => KanbanBoardScreen(
+              owner: gateway.workspace,
+              route: gateway.workspace.route(),
+              connection: connection,
+            ),
+          ),
+        ),
+      );
+      return '';
+    }
     if (_localNewSessionNames.contains(bareName)) {
       if (widget.singleSession) {
         ScaffoldMessenger.of(context).showSnackBar(

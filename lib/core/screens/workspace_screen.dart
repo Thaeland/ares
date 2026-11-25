@@ -29,6 +29,7 @@ import 'workspace_profiles_screen.dart';
 import 'fleet_screen.dart';
 import 'workspace_workers_screen.dart';
 import 'host_operations_screen.dart';
+import 'kanban_board_screen.dart';
 import 'schedule_desk_screen.dart';
 import 'memory_graph_screen.dart';
 import '../services/gateway_turn_application_controller.dart';
@@ -2340,6 +2341,16 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           HostOperationsScreen(
             owner: host.workspace,
             route: host.workspace.route(),
+            connection: connection,
+          ),
+        );
+      case 'kanban':
+        final kanban = _ownedGateway;
+        if (kanban == null) return;
+        _push(
+          KanbanBoardScreen(
+            owner: kanban.workspace,
+            route: kanban.workspace.route(),
             connection: connection,
           ),
         );

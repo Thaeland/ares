@@ -18,6 +18,7 @@ import '../../core/models/attachment_draft.dart';
 import '../../core/preview/chat_preview.dart';
 import '../../core/screens/workspace_workers_screen.dart';
 import '../../core/screens/gateway_queue_screen.dart';
+import '../../core/screens/kanban_board_screen.dart';
 import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
 import '../../core/utils/delivered_files.dart';
@@ -550,6 +551,20 @@ class _NgChatViewState extends State<NgChatView>
       case 'model' when command.arg.isEmpty:
         _input.clear();
         await showNgModelSheet(context, chat);
+        return true;
+      case 'kanban' when command.arg.isEmpty:
+        _input.clear();
+        final gateway = chat.gateway;
+        final conn = gateway.connection;
+        await Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => KanbanBoardScreen(
+              owner: gateway.workspace,
+              route: gateway.workspace.route(),
+              connection: conn,
+            ),
+          ),
+        );
         return true;
     }
     final owner = chat;

@@ -91,6 +91,7 @@ void main() {
           'parallel-workspace',
           'workspace-profiles',
           'workspace-workers',
+          'kanban',
           'model',
           'cron',
           'skills',
@@ -375,6 +376,7 @@ void main() {
           expect(agent.entries.map((entry) => entry.id), [
             'workspace-profiles',
             'workspace-workers',
+            'kanban',
             'model',
             'cron',
             'skills',

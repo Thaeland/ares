@@ -34,6 +34,7 @@ export '../models/session.dart';
 part 'profile_dashboard_transport.dart';
 part 'host_dashboard_transport.dart';
 part 'host_terminal_socket.dart';
+part 'kanban_dashboard_transport.dart';
 
 /// Injectable secret storage boundary used by [ConnectionManager].
 ///

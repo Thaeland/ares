@@ -25,6 +25,7 @@ import '../../core/screens/workspace_profiles_screen.dart';
 import '../../core/services/chat_assets_client.dart';
 import '../../core/screens/workspace_workers_screen.dart';
 import '../../core/screens/host_operations_screen.dart';
+import '../../core/screens/kanban_board_screen.dart';
 import '../../core/screens/memory_graph_screen.dart';
 import '../../core/screens/schedule_desk_screen.dart';
 import '../../core/services/dashboard_api_client.dart';
@@ -194,6 +195,19 @@ class NgMorePage extends StatelessWidget {
                   title: ngL.workspace_workers,
                   subtitle: ngL.ng_show_subagents,
                   onTap: () => workers.open(context),
+                ),
+                NgRow(
+                  icon: Icons.view_kanban_outlined,
+                  title: 'Kanban',
+                  subtitle:
+                      'Boards, task dependencies, worker assignment and logs',
+                  onTap: () => push(
+                    KanbanBoardScreen(
+                      owner: scope.gateway.workspace,
+                      route: scope.gateway.workspace.route(),
+                      connection: conn,
+                    ),
+                  ),
                 ),
                 NgRow(
                   icon: Icons.memory,

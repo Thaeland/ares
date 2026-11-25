@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import 'connection_manager.dart';
@@ -33,6 +34,7 @@ part 'workspace_workers.dart';
 part 'workspace_queue.dart';
 
 part 'remote_workspace_terminal.dart';
+part 'remote_kanban.dart';
 
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {
@@ -109,7 +111,10 @@ final class RemoteWorkspaceOwner {
     profile: profile,
     storedSessionId: storedSessionId,
   );
-  void close() => _closed = true;
+  void close() {
+    _closed = true;
+    WorkspaceKanban._cancelNudge(this);
+  }
 
   void _check() {
     if (_closed ||
@@ -555,7 +560,11 @@ Future<T> _guard<T>(void Function() check, Future<T> Function() run) async {
     return value;
   } catch (error) {
     check(); // Never surface an old owner's error on the replacement route.
-    if (error is WorkspaceException) rethrow;
+    if (error is WorkspaceException ||
+        error is KanbanActionRefusedException ||
+        error is KanbanBoardNotFoundException) {
+      rethrow;
+    }
     if (error is DashboardHttpException) {
       if (const {401, 403}.contains(error.statusCode)) {
         _fail(WorkspaceFailure.denied);
