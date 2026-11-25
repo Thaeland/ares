@@ -447,6 +447,8 @@ class _NgConnectScreenState extends State<NgConnectScreen> {
         _signInError = ngL.ng_too_many_attempts_wait_a_moment;
       case SignInFailed(:final message):
         _signInError = message;
+      case SignInGatewayHasNoAuth():
+        _signInError = ngL.ng_token_gateway_has_no_sign_in;
     }
     if (mounted) {
       setState(() {

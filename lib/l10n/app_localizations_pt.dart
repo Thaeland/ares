@@ -7017,6 +7017,10 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get keep_awake_always_help_mobile =>
       'Keep the screen on while Ares is open.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'Este gateway não tem início de sessão, por isso não consegue verificar um token de implementação. Ative a autenticação do painel no anfitrião (ou atualize o Hermes) e tente novamente.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -13420,4 +13424,8 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get capture_open_settings => 'Abrir Ajustes do Sistema';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'Este gateway não tem login, então não consegue verificar um token de implantação. Ative a autenticação do painel no host (ou atualize o Hermes) e tente novamente.';
 }

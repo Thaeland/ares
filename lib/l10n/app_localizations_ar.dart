@@ -6960,4 +6960,8 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get keep_awake_always_help_mobile =>
       'Keep the screen on while Ares is open.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'لا تحتوي هذه البوابة على تسجيل دخول، لذا لا يمكنها التحقق من رمز النشر. فعّل مصادقة لوحة التحكم على المضيف (أو حدّث Hermes)، ثم حاول مرة أخرى.';
 }

@@ -1836,5 +1836,6 @@
   "capture_screen_failed": "无法截取屏幕。请重试。",
   "capture_permission_title": "允许录屏",
   "capture_permission_body": "要截取窗口，Ares 需要录屏权限。请在“系统设置” > “隐私与安全性” > “录屏”中打开 Ares，然后重试。",
-  "capture_open_settings": "打开系统设置"
+  "capture_open_settings": "打开系统设置",
+  "ng_token_gateway_has_no_sign_in": "此网关没有登录功能，因此无法验证部署令牌。请在主机上启用仪表板身份验证（或更新 Hermes），然后重试。"
 }

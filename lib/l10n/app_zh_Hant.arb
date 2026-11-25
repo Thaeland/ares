@@ -2903,5 +2903,6 @@
   "capture_screen_failed": "無法擷取螢幕。請再試一次。",
   "capture_permission_title": "允許螢幕錄製",
   "capture_permission_body": "若要擷取視窗，Ares 需要螢幕錄製權限。請在「系統設定」>「隱私權與安全性」>「螢幕錄製」中開啟 Ares，然後再試一次。",
-  "capture_open_settings": "開啟系統設定"
+  "capture_open_settings": "開啟系統設定",
+  "ng_token_gateway_has_no_sign_in": "此閘道沒有登入功能，因此無法驗證部署權杖。請在主機上啟用儀表板驗證（或更新 Hermes），然後再試一次。"
 }

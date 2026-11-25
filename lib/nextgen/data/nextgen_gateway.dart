@@ -464,26 +464,42 @@ class NextGenGateway extends ChangeNotifier {
       _set(NgConnectionState(NgConnectionPhase.connecting, attempt: _attempt));
       WsClient? client;
       try {
+        // A deployment-token connection authenticates the upgrade with
+        // `?token=` exactly as Hermes Desktop does; loopback gateways cannot
+        // mint `POST /api/auth/ws-ticket` tickets. Everything else spends a
+        // single-use ticket in the subprotocol.
+        final deploymentToken = dashboard.deploymentToken;
         String? ticket;
-        try {
-          ticket = await _mintTicket();
-        } on DashboardHttpException catch (e) {
-          if (e.statusCode == 401) {
-            _set(const NgConnectionState(NgConnectionPhase.sessionExpired));
-            _running = false;
-            return;
+        if (deploymentToken == null) {
+          try {
+            ticket = await _mintTicket();
+          } on DashboardHttpException catch (e) {
+            if (e.statusCode == 401) {
+              _set(const NgConnectionState(NgConnectionPhase.sessionExpired));
+              _running = false;
+              return;
+            }
+            rethrow;
           }
-          rethrow;
+          if (ticket == null) return;
         }
-        if (ticket == null || !_running || _disposed) return;
-        client = WsClient(
-          dashboard.baseUrl,
-          ticket: ticket,
-          profile: profile,
-          clientCertificate: connection.clientCertificate,
-          customHeaders: connection.customHeaders,
-          ticketInSubprotocol: true,
-        );
+        if (!_running || _disposed) return;
+        client = deploymentToken != null
+            ? WsClient(
+                dashboard.baseUrl,
+                token: deploymentToken,
+                profile: profile,
+                clientCertificate: connection.clientCertificate,
+                customHeaders: connection.customHeaders,
+              )
+            : WsClient(
+                dashboard.baseUrl,
+                ticket: ticket,
+                profile: profile,
+                clientCertificate: connection.clientCertificate,
+                customHeaders: connection.customHeaders,
+                ticketInSubprotocol: true,
+              );
         final closed = Completer<void>();
         client.onStreamEvent = _onSocketEvent;
         client.onServerRequest = acceptServerRequest;

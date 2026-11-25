@@ -11756,6 +11756,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keep the screen on while Ares is open.'**
   String get keep_awake_always_help_mobile;
+
+  /// No description provided for @ng_token_gateway_has_no_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway has no sign-in, so it can\'t check a deployment token. Turn on dashboard authentication on the host (or update Hermes), then try again.'**
+  String get ng_token_gateway_has_no_sign_in;
 }
 
 class _AppLocalizationsDelegate

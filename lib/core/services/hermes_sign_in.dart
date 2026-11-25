@@ -814,6 +814,13 @@ class SignInFailed extends SignInResult {
   const SignInFailed(this.message);
 }
 
+/// The gateway answers its protected routes without any credential: it has
+/// no sign-in, so a deployment token cannot be verified there. Token sign-in
+/// fails closed with this instead of accepting any token.
+class SignInGatewayHasNoAuth extends SignInResult {
+  const SignInGatewayHasNoAuth();
+}
+
 /// Who the stored sign-in belongs to (`GET /api/auth/me`).
 @immutable
 class AuthUser {
@@ -864,9 +871,11 @@ class HermesSignIn {
 
   /// Verifies an explicit deployment session token (`X-Hermes-Session-Token`).
   ///
-  /// Tries `GET /api/auth/me` first; when the gateway runs session-token-only
-  /// without OAuth/basic routes mounted (HTTP 404), falls back to
-  /// `GET /api/model/info` with the same token header.
+  /// Tries `GET /api/auth/me` first. An older gateway without that route
+  /// (HTTP 404) is checked on `GET /api/model/info` instead, and only counts
+  /// as verified when that route also refuses the same request without the
+  /// token: a gateway that answers it either way has no sign-in, and the
+  /// result is [SignInGatewayHasNoAuth] (fail closed), never a sign-in.
   Future<SignInResult> tokenSignIn(
     GatewayUrl url, {
     required String token,
@@ -915,13 +924,29 @@ class HermesSignIn {
           return const SignInInvalidCredentials();
         }
         if (modelRes.statusCode == 429) return const SignInRateLimited();
-        if (modelRes.statusCode >= 200 && modelRes.statusCode < 300) {
-          await HermesSignInVault.instance.setSession(url.canonical, null);
-          return const SignInOk('deployment-token');
+        if (modelRes.statusCode < 200 || modelRes.statusCode >= 300) {
+          return SignInFailed(
+            'The gateway answered HTTP ${modelRes.statusCode}.',
+          );
         }
-        return SignInFailed(
-          'The gateway answered HTTP ${modelRes.statusCode}.',
-        );
+        // Same request without the token: a gateway that answers it too
+        // never looked at the token.
+        final bareRes = await client
+            .get(
+              modelUri,
+              headers: _headers(modelUri, customHeaders: customHeaders),
+            )
+            .timeout(const Duration(seconds: 20));
+        if (bareRes.statusCode >= 200 && bareRes.statusCode < 300) {
+          return const SignInGatewayHasNoAuth();
+        }
+        if (bareRes.statusCode != 401 && bareRes.statusCode != 403) {
+          return SignInFailed(
+            'The gateway answered HTTP ${bareRes.statusCode}.',
+          );
+        }
+        await HermesSignInVault.instance.setSession(url.canonical, null);
+        return const SignInOk('deployment-token');
       }
       return SignInFailed('The gateway answered HTTP ${meRes.statusCode}.');
     } on TimeoutException {

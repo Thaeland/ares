@@ -6963,4 +6963,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get keep_awake_always_help_mobile =>
       'Keep the screen on while Ares is open.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'This gateway has no sign-in, so it can\'t check a deployment token. Turn on dashboard authentication on the host (or update Hermes), then try again.';
 }

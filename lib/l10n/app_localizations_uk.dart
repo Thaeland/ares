@@ -7017,4 +7017,8 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get keep_awake_always_help_mobile =>
       'Keep the screen on while Ares is open.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'Цей шлюз не має входу, тому не може перевірити токен розгортання. Увімкніть автентифікацію панелі на хості (або оновіть Hermes) і спробуйте ще раз.';
 }

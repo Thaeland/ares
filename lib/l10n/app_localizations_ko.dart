@@ -6821,4 +6821,8 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get keep_awake_always_help_mobile =>
       'Keep the screen on while Ares is open.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      '이 게이트웨이에는 로그인이 없어 배포 토큰을 확인할 수 없습니다. 호스트에서 대시보드 인증을 켜거나 Hermes를 업데이트한 뒤 다시 시도하세요.';
 }

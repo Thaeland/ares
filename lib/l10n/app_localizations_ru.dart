@@ -7018,4 +7018,8 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get keep_awake_always_help_mobile =>
       'Keep the screen on while Ares is open.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'У этого шлюза нет входа, поэтому он не может проверить токен развёртывания. Включите аутентификацию панели на хосте (или обновите Hermes) и повторите попытку.';
 }

@@ -416,18 +416,17 @@ class DesktopGatewayClient implements SlashCommandGateway {
     // on the new socket re-populates protocol/advertisement.
     _capabilities.reset();
     _checkOpen();
-    final ticket = await _dashboard.mintWebSocketTicket();
+    final deploymentToken = _dashboard.deploymentToken;
+    final ticket = deploymentToken != null
+        ? null
+        : await _dashboard.mintWebSocketTicket();
     if (beforeRequest != null && !await beforeRequest()) {
       throw StateError('Notification admission revoked');
     }
     _checkOpen();
-    final client = WsClient(
-      _baseUrl,
+    final client = _socketClient(
+      deploymentToken: deploymentToken,
       ticket: ticket,
-      ticketInSubprotocol: true,
-      profile: _gatewayProfile,
-      clientCertificate: _clientCertificate,
-      customHeaders: _customHeaders,
     );
     _installAsyncEventBridge(client);
     final inheritedConnectionListener = client.onConnectionChanged;
@@ -917,6 +916,30 @@ class DesktopGatewayClient implements SlashCommandGateway {
   /// Opens (or reuses) the gateway socket without binding it to a session.
   Future<WsClient> _connectControl() => _ensureSocket();
 
+  /// The gateway socket, authenticated the way Hermes Desktop does it. A
+  /// deployment-token connection puts the token in `?token=`, which loopback,
+  /// `--insecure` and gated gateways all accept (a loopback gateway cannot
+  /// mint `POST /api/auth/ws-ticket` tickets); every other connection spends
+  /// a single-use ticket in the subprotocol. The upgrade never follows a
+  /// redirect either way.
+  WsClient _socketClient({String? deploymentToken, String? ticket}) =>
+      deploymentToken != null
+      ? WsClient(
+          _baseUrl,
+          token: deploymentToken,
+          profile: _gatewayProfile,
+          clientCertificate: _clientCertificate,
+          customHeaders: _customHeaders,
+        )
+      : WsClient(
+          _baseUrl,
+          ticket: ticket,
+          ticketInSubprotocol: true,
+          profile: _gatewayProfile,
+          clientCertificate: _clientCertificate,
+          customHeaders: _customHeaders,
+        );
+
   /// Creates the source-only recovery-v2 registry without changing any legacy
   /// session, submit, interrupt, or event route in this client.
   GatewayTurnCoordinatorRegistry enableTurnRecoveryCoordinator({
@@ -930,15 +953,14 @@ class DesktopGatewayClient implements SlashCommandGateway {
             journal: journal ?? GatewayTurnJournal(),
             freshSocketFactory: () async {
               _checkOpen();
-              final ticket = await _dashboard.mintWebSocketTicket();
+              final deploymentToken = _dashboard.deploymentToken;
+              final ticket = deploymentToken != null
+                  ? null
+                  : await _dashboard.mintWebSocketTicket();
               _checkOpen();
-              final client = WsClient(
-                _baseUrl,
+              final client = _socketClient(
+                deploymentToken: deploymentToken,
                 ticket: ticket,
-                ticketInSubprotocol: true,
-                profile: _gatewayProfile,
-                clientCertificate: _clientCertificate,
-                customHeaders: _customHeaders,
               );
               _installAsyncEventBridge(client);
               return client;

@@ -7021,4 +7021,8 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get keep_awake_always_help_mobile =>
       'Keep the screen on while Ares is open.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'Dieses Gateway hat keine Anmeldung und kann daher kein Bereitstellungstoken prüfen. Aktiviere die Dashboard-Authentifizierung auf dem Host (oder aktualisiere Hermes) und versuche es erneut.';
 }

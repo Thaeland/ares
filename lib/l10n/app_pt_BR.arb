@@ -1836,5 +1836,6 @@
   "capture_screen_failed": "Não foi possível capturar a tela. Tente novamente.",
   "capture_permission_title": "Permitir gravação de tela",
   "capture_permission_body": "Para capturar uma janela, o Ares precisa da permissão de gravação de tela. Ative o Ares em Ajustes do Sistema > Privacidade e Segurança > Gravação de Tela e tente novamente.",
-  "capture_open_settings": "Abrir Ajustes do Sistema"
+  "capture_open_settings": "Abrir Ajustes do Sistema",
+  "ng_token_gateway_has_no_sign_in": "Este gateway não tem login, então não consegue verificar um token de implantação. Ative a autenticação do painel no host (ou atualize o Hermes) e tente novamente."
 }

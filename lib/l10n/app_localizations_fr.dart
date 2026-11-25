@@ -7031,4 +7031,8 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get keep_awake_always_help_mobile =>
       'Keep the screen on while Ares is open.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'Cette passerelle n’a pas de connexion, elle ne peut donc pas vérifier un jeton de déploiement. Activez l’authentification du tableau de bord sur l’hôte (ou mettez Hermes à jour), puis réessayez.';
 }

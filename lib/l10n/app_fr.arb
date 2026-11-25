@@ -1836,5 +1836,6 @@
   "capture_screen_failed": "Impossible de capturer l’écran. Réessayez.",
   "capture_permission_title": "Autoriser l’enregistrement de l’écran",
   "capture_permission_body": "Pour capturer une fenêtre, Ares a besoin de l’autorisation d’enregistrement de l’écran. Activez Ares dans Réglages Système > Confidentialité et sécurité > Enregistrement de l’écran, puis réessayez.",
-  "capture_open_settings": "Ouvrir Réglages Système"
+  "capture_open_settings": "Ouvrir Réglages Système",
+  "ng_token_gateway_has_no_sign_in": "Cette passerelle n’a pas de connexion, elle ne peut donc pas vérifier un jeton de déploiement. Activez l’authentification du tableau de bord sur l’hôte (ou mettez Hermes à jour), puis réessayez."
 }

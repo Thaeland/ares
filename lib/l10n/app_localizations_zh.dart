@@ -6720,6 +6720,10 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get keep_awake_always_help_mobile =>
       'Keep the screen on while Ares is open.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      '此网关没有登录功能，因此无法验证部署令牌。请在主机上启用仪表板身份验证（或更新 Hermes），然后重试。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -12832,6 +12836,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get capture_open_settings => '打开系统设置';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      '此网关没有登录功能，因此无法验证部署令牌。请在主机上启用仪表板身份验证（或更新 Hermes），然后重试。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -19342,4 +19350,8 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get capture_open_settings => '開啟系統設定';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      '此閘道沒有登入功能，因此無法驗證部署權杖。請在主機上啟用儀表板驗證（或更新 Hermes），然後再試一次。';
 }

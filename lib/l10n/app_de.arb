@@ -1836,5 +1836,6 @@
   "capture_screen_failed": "Der Bildschirm konnte nicht aufgenommen werden. Versuche es erneut.",
   "capture_permission_title": "Bildschirmaufnahme erlauben",
   "capture_permission_body": "Um ein Fenster aufzunehmen, braucht Ares die Berechtigung „Bildschirmaufnahme“. Aktiviere Ares unter Systemeinstellungen > Datenschutz & Sicherheit > Bildschirmaufnahme und versuche es dann erneut.",
-  "capture_open_settings": "Systemeinstellungen öffnen"
+  "capture_open_settings": "Systemeinstellungen öffnen",
+  "ng_token_gateway_has_no_sign_in": "Dieses Gateway hat keine Anmeldung und kann daher kein Bereitstellungstoken prüfen. Aktiviere die Dashboard-Authentifizierung auf dem Host (oder aktualisiere Hermes) und versuche es erneut."
 }

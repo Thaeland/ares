@@ -255,29 +255,42 @@ Future<ConnectionReport> runConnectionCheck(
     );
     WsClient? client;
     try {
-      final ticketRes = await dashboard.apiRequest('POST', 'auth/ws-ticket');
-      if (ticketRes.statusCode != 200) {
-        record(
-          CheckStage.live,
-          StageResult(
-            CheckOutcome.failed,
-            ngL.ng_the_gateway_wouldn_t_issue_a(
-              dashboardErrorMessage(ticketRes),
-            ),
-            ngL.ng_sign_in_again_or_update_hermes,
-          ),
+      // Same transport as the live chat: `?token=` for a deployment token
+      // (as Hermes Desktop), otherwise a single-use ticket.
+      final deploymentToken = dashboard.deploymentToken;
+      if (deploymentToken != null) {
+        client = WsClient(
+          dashboard.baseUrl,
+          token: deploymentToken,
+          profile: connection.gatewayProfile,
+          clientCertificate: connection.clientCertificate,
+          customHeaders: connection.customHeaders,
         );
-        return ConnectionReport(results);
+      } else {
+        final ticketRes = await dashboard.apiRequest('POST', 'auth/ws-ticket');
+        if (ticketRes.statusCode != 200) {
+          record(
+            CheckStage.live,
+            StageResult(
+              CheckOutcome.failed,
+              ngL.ng_the_gateway_wouldn_t_issue_a(
+                dashboardErrorMessage(ticketRes),
+              ),
+              ngL.ng_sign_in_again_or_update_hermes,
+            ),
+          );
+          return ConnectionReport(results);
+        }
+        final ticket = (jsonDecode(ticketRes.body) as Map)['ticket'] as String;
+        client = WsClient(
+          dashboard.baseUrl,
+          ticket: ticket,
+          profile: connection.gatewayProfile,
+          clientCertificate: connection.clientCertificate,
+          customHeaders: connection.customHeaders,
+          ticketInSubprotocol: true,
+        );
       }
-      final ticket = (jsonDecode(ticketRes.body) as Map)['ticket'] as String;
-      client = WsClient(
-        dashboard.baseUrl,
-        ticket: ticket,
-        profile: connection.gatewayProfile,
-        clientCertificate: connection.clientCertificate,
-        customHeaders: connection.customHeaders,
-        ticketInSubprotocol: true,
-      );
       await client.connect();
       await client.waitForGatewayReady();
       record(

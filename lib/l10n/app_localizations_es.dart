@@ -7015,4 +7015,8 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get keep_awake_always_help_mobile =>
       'Keep the screen on while Ares is open.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'Este gateway no tiene inicio de sesión, así que no puede comprobar un token de despliegue. Activa la autenticación del panel en el host (o actualiza Hermes) y vuelve a intentarlo.';
 }
