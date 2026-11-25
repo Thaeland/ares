@@ -6047,4 +6047,30 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => '스킬 사용 현황을 검토합니다';
+
+  @override
+  String get auto_speak_replies_title => '답변을 자동으로 읽기';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      '턴이 완료될 때마다 새 답변을 읽어줍니다. 기본적으로 꺼짐; 채팅 내 말하기 토글이 계속 적용됩니다.';
+
+  @override
+  String get ng_auto_read_replies_title => 'Auto-read replies';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      '턴이 완료될 때마다 새 답변을 읽어줍니다. 기본적으로 꺼짐.';
+
+  @override
+  String get barge_in_title => '말 끊기';
+
+  @override
+  String get barge_in_subtitle => '읽는 중에 말해 멈추게 하기';
+
+  @override
+  String get ng_barge_in_title => '말 끊기';
+
+  @override
+  String get ng_barge_in_subtitle => '읽는 중에 말해 멈추게 하기';
 }

@@ -1699,5 +1699,13 @@
   "ng_folder_access_unspecified": "게이트웨이가 읽기 전용인지 읽기 및 쓰기인지 알려 주지 않았습니다.",
   "ng_folder_read_only": "읽기 전용",
   "ng_folder_read_write": "읽기 및 쓰기",
-  "ng_website_access": "웹사이트 접근"
+  "ng_website_access": "웹사이트 접근",
+  "auto_speak_replies_title": "답변을 자동으로 읽기",
+  "auto_speak_replies_subtitle": "턴이 완료될 때마다 새 답변을 읽어줍니다. 기본적으로 꺼짐; 채팅 내 말하기 토글이 계속 적용됩니다.",
+  "ng_auto_read_replies_title": "Auto-read replies",
+  "ng_auto_read_replies_subtitle": "턴이 완료될 때마다 새 답변을 읽어줍니다. 기본적으로 꺼짐.",
+  "barge_in_title": "말 끊기",
+  "barge_in_subtitle": "읽는 중에 말해 멈추게 하기",
+  "ng_barge_in_title": "말 끊기",
+  "ng_barge_in_subtitle": "읽는 중에 말해 멈추게 하기"
 }

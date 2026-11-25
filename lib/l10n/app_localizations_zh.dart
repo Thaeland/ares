@@ -5956,6 +5956,30 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => '审查技能的使用情况';
+
+  @override
+  String get auto_speak_replies_title => '自动朗读回复';
+
+  @override
+  String get auto_speak_replies_subtitle => '每回合结束后自动朗读新回复。默认关闭；聊天内的已朗读开关仍然生效。';
+
+  @override
+  String get ng_auto_read_replies_title => 'Auto-read replies';
+
+  @override
+  String get ng_auto_read_replies_subtitle => '每回合结束后自动朗读新回复。默认关闭。';
+
+  @override
+  String get barge_in_title => '插话';
+
+  @override
+  String get barge_in_subtitle => '朗读时开口说话即可提前停止';
+
+  @override
+  String get ng_barge_in_title => '插话';
+
+  @override
+  String get ng_barge_in_subtitle => '朗读时开口说话即可提前停止';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -11680,4 +11704,28 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_aux_curator_hint => '审查技能的使用情况';
+
+  @override
+  String get auto_speak_replies_title => '自动朗读回复';
+
+  @override
+  String get auto_speak_replies_subtitle => '每回合结束后自动朗读新回复。默认关闭；聊天内的已朗读开关仍然生效。';
+
+  @override
+  String get ng_auto_read_replies_title => 'Auto-read replies';
+
+  @override
+  String get ng_auto_read_replies_subtitle => '每回合结束后自动朗读新回复。默认关闭。';
+
+  @override
+  String get barge_in_title => '插话';
+
+  @override
+  String get barge_in_subtitle => '朗读时开口说话即可提前停止';
+
+  @override
+  String get ng_barge_in_title => '插话';
+
+  @override
+  String get ng_barge_in_subtitle => '朗读时开口说话即可提前停止';
 }

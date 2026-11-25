@@ -16,6 +16,8 @@ import '../../core/services/turn_notification_service.dart';
 import '../../core/services/hermes_sign_in.dart';
 import '../../core/services/legal_links.dart';
 import '../data/connection_check.dart';
+import '../../core/services/auto_speak_replies.dart';
+import '../../core/services/barge_in_preference.dart';
 import '../nextgen_preferences.dart';
 import '../theme/nextgen_theme.dart';
 import 'models_page.dart';
@@ -311,6 +313,36 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                     value: look.glow,
                     onChanged: (v) =>
                         NextGenPreferences.setGlow(scope.prefs, v),
+                  ),
+                ],
+              ),
+            ),
+            NgSectionLabel(ngL.ng_auto_read_replies_title),
+            NgCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ValueListenableBuilder<bool>(
+                    valueListenable: autoSpeakRepliesEnabled,
+                    builder: (context, enabled, _) => SwitchListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                      title: Text(ngL.ng_auto_read_replies_title),
+                      subtitle: Text(ngL.ng_auto_read_replies_subtitle),
+                      value: enabled,
+                      onChanged: (v) =>
+                          unawaited(AutoSpeakRepliesStore.setEnabled(v)),
+                    ),
+                  ),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: bargeInEnabled,
+                    builder: (context, enabled, _) => SwitchListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                      title: Text(ngL.ng_barge_in_title),
+                      subtitle: Text(ngL.ng_barge_in_subtitle),
+                      value: enabled,
+                      onChanged: (v) =>
+                          unawaited(BargeInPreferenceStore.setEnabled(v)),
+                    ),
                   ),
                 ],
               ),

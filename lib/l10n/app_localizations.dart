@@ -10415,6 +10415,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reviews how skills are used'**
   String get ng_aux_curator_hint;
+
+  /// No description provided for @auto_speak_replies_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-read replies aloud'**
+  String get auto_speak_replies_title;
+
+  /// No description provided for @auto_speak_replies_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reads each new reply aloud when a turn completes. Off by default; the per-chat spoken-replies toggle still applies.'**
+  String get auto_speak_replies_subtitle;
+
+  /// No description provided for @ng_auto_read_replies_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-read replies'**
+  String get ng_auto_read_replies_title;
+
+  /// No description provided for @ng_auto_read_replies_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reads each new reply aloud when a turn completes. Off by default.'**
+  String get ng_auto_read_replies_subtitle;
+
+  /// No description provided for @barge_in_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Barge in'**
+  String get barge_in_title;
+
+  /// No description provided for @barge_in_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Speak over the reply to cut it short'**
+  String get barge_in_subtitle;
+
+  /// No description provided for @ng_barge_in_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Barge in'**
+  String get ng_barge_in_title;
+
+  /// No description provided for @ng_barge_in_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Speak over the reply to cut it short'**
+  String get ng_barge_in_subtitle;
 }
 
 class _AppLocalizationsDelegate

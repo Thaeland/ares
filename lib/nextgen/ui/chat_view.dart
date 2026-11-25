@@ -35,6 +35,7 @@ import '../../core/widgets/session_files_view.dart';
 import '../../core/widgets/git_review_pane.dart';
 import '../../core/models/turn_changed_files.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
+import '../../core/services/auto_speak_replies.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
 import '../../core/services/attachment_draft_service.dart';
 import '../../core/widgets/client_held_queue_bar.dart';
@@ -288,7 +289,27 @@ class _NgChatViewState extends State<NgChatView>
     if (reading != null && !chat.items.any((item) => item.key == reading)) {
       unawaited(_readAloud.stop());
     }
+    _maybeAutoReadReply();
     setState(() {});
+  }
+
+  /// Auto-reads the newest unspoken assistant reply when the turn finishes.
+  /// A reply is only read once per mount; reopening the chat resets the
+  /// served set so a fresh visit can read the latest reply once.
+  final Set<String> _autoReadServed = <String>{};
+
+  void _maybeAutoReadReply() {
+    if (!autoSpeakRepliesEnabled.value) return;
+    if (chat.running) return;
+    if (chat.items.isEmpty) return;
+    final last = chat.items.last;
+    if (last is! NgAssistantItem) return;
+    if (last.isEmpty) return;
+    if (_autoReadServed.contains(last.key)) return;
+    _autoReadServed.add(last.key);
+    final text = last.text.trim();
+    if (text.isEmpty) return;
+    unawaited(_readAloud.read(last.key, text));
   }
 
   /// The transcript is reversed, so its top is the scroll's far end: fetch

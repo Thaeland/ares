@@ -1699,5 +1699,13 @@
   "ng_folder_access_unspecified": "Das Gateway hat nicht angegeben, ob der Zugriff schreibgeschützt ist oder Lesen und Schreiben erlaubt.",
   "ng_folder_read_only": "Schreibgeschützt",
   "ng_folder_read_write": "Lesen und Schreiben",
-  "ng_website_access": "Websitezugriff"
+  "ng_website_access": "Websitezugriff",
+  "auto_speak_replies_title": "Antworten automatisch vorlesen",
+  "auto_speak_replies_subtitle": "Liest jede neue Antwort nach Abschluss eines Turns hörbar vor. Aus standardmäßig; der in-Chat Schalter „Spoken replies“ gilt weiterhin.",
+  "ng_auto_read_replies_title": "Auto-read replies",
+  "ng_auto_read_replies_subtitle": "Liest jede neue Antwort nach Abschluss eines Turns hörbar vor. Aus standardmäßig.",
+  "barge_in_title": "Hereinbrechen",
+  "barge_in_subtitle": "Sprechen Sie beim Vorlesen etwas an, um es abzubrechen",
+  "ng_barge_in_title": "Hereinbrechen",
+  "ng_barge_in_subtitle": "Sprechen Sie beim Vorlesen etwas an, um es abzubrechen"
 }

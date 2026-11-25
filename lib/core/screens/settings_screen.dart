@@ -13,6 +13,8 @@ import 'provider_oauth_screen.dart';
 import '../services/config_backup_io.dart';
 import '../services/config_backup_service.dart';
 import '../services/connection_manager.dart';
+import '../services/auto_speak_replies.dart';
+import '../services/barge_in_preference.dart';
 import '../services/hands_free_preference.dart';
 import '../services/notification_prefs.dart';
 import '../widgets/background_work_settings.dart';
@@ -191,6 +193,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _VoicePicker(),
         const SizedBox(height: 8),
         const _HandsFreeToggle(),
+        const SizedBox(height: 8),
+        const _AutoSpeakToggle(),
+        const SizedBox(height: 8),
+        const _BargeInToggle(),
         const SizedBox(height: 16),
 
         // ---- Section: Session Sources ----
@@ -542,6 +548,46 @@ class _HandsFreeToggle extends StatelessWidget {
           subtitle: Text(context.l10n.hands_free_settings_subtitle),
           value: enabled,
           onChanged: (on) => unawaited(HandsFreePreferenceStore.setEnabled(on)),
+        ),
+      ),
+    );
+  }
+}
+
+class _AutoSpeakToggle extends StatelessWidget {
+  const _AutoSpeakToggle();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: autoSpeakRepliesEnabled,
+      builder: (context, enabled, _) => Card(
+        child: SwitchListTile(
+          secondary: const Icon(Icons.record_voice_over_outlined),
+          title: Text(context.l10n.auto_speak_replies_title),
+          subtitle: Text(context.l10n.auto_speak_replies_subtitle),
+          value: enabled,
+          onChanged: (on) => unawaited(AutoSpeakRepliesStore.setEnabled(on)),
+        ),
+      ),
+    );
+  }
+}
+
+class _BargeInToggle extends StatelessWidget {
+  const _BargeInToggle();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: bargeInEnabled,
+      builder: (context, enabled, _) => Card(
+        child: SwitchListTile(
+          secondary: const Icon(Icons.mic_outlined),
+          title: Text(context.l10n.barge_in_title),
+          subtitle: Text(context.l10n.barge_in_subtitle),
+          value: enabled,
+          onChanged: (on) => unawaited(BargeInPreferenceStore.setEnabled(on)),
         ),
       ),
     );

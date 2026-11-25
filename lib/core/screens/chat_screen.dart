@@ -15,6 +15,9 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:uuid/uuid.dart';
 import '../controllers/hands_free_conversation_controller.dart';
+import '../services/auto_speak_replies.dart';
+import '../services/barge_in_monitor.dart';
+import '../services/barge_in_preference.dart';
 import '../services/hands_free_preference.dart';
 import '../services/hands_free_voice_platform.dart';
 import '../services/android_voice_composer_adapter.dart';
@@ -1498,6 +1501,7 @@ class _ChatScreenState extends State<ChatScreen>
         snapshot.phase == NormalGatewayTurnPhase.reconciledUnknown) {
       _awaitingVoiceReply = false;
     }
+    var voiceSpoke = false;
     if (snapshot.phase == NormalGatewayTurnPhase.completed &&
         _awaitingVoiceReply) {
       final rows = currentRows;
@@ -1509,10 +1513,27 @@ class _ChatScreenState extends State<ChatScreen>
             text.isNotEmpty) {
           _awaitingVoiceReply = false;
           unawaited(_speakAssistantText(text).catchError((Object _) {}));
+          voiceSpoke = true;
           break;
         }
       }
       _awaitingVoiceReply = false;
+    }
+    // An ordinary typed turn with auto-read on: read the terminal reply.
+    if (!voiceSpoke &&
+        snapshot.phase == NormalGatewayTurnPhase.completed &&
+        autoSpeakRepliesEnabled.value) {
+      final rows = currentRows;
+      for (final row in rows.reversed) {
+        if (row['role'] == 'user') break;
+        final text = row['content']?.toString() ?? '';
+        if (const {'assistant', 'agent'}.contains(row['role']) &&
+            row['_gateway_interim'] != true &&
+            text.isNotEmpty) {
+          unawaited(_speakAssistantText(text).catchError((Object _) {}));
+          break;
+        }
+      }
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted || ModalRoute.of(context)?.isCurrent != true) return;
@@ -2840,15 +2861,49 @@ class _ChatScreenState extends State<ChatScreen>
           ),
         );
     }
+    var interrupted = false;
+    final monitor = bargeInEnabled.value ? SpeechToTextBargeInMonitor() : null;
     try {
       if (!_handsFreeSupported && widget.testVoiceReplySpeaker == null) {
         // Preserve non-Android Read aloud: queue mode/input-length APIs are
         // Android-only; hands-free completion guarantees are not claimed here.
         await _flutterTts.stop();
+        if (monitor != null) {
+          unawaited(
+            monitor.start(
+              onInterrupt: () {
+                interrupted = true;
+                unawaited(_flutterTts.stop().catchError((Object _) {}));
+              },
+              echoText: spokenText,
+              isCurrent: () =>
+                  mounted &&
+                  intent == _manualAudioIntent &&
+                  _voiceRouteCurrent &&
+                  _voiceForeground,
+            ),
+          );
+        }
         await _flutterTts.speak(spokenText);
         return;
       }
       await _replySpeaker.stop();
+      if (monitor != null) {
+        unawaited(
+          monitor.start(
+            onInterrupt: () {
+              interrupted = true;
+              unawaited(_replySpeaker.stop().catchError((Object _) {}));
+            },
+            echoText: spokenText,
+            isCurrent: () =>
+                mounted &&
+                intent == _manualAudioIntent &&
+                _voiceRouteCurrent &&
+                _voiceForeground,
+          ),
+        );
+      }
       final outcome = await _replySpeaker.speak(
         spokenText,
         isCurrent: () =>
@@ -2861,6 +2916,7 @@ class _ChatScreenState extends State<ChatScreen>
         throw StateError('Playback unavailable');
       }
     } catch (_) {
+      if (interrupted) return;
       if (!announce || !mounted) return;
       final messenger = ScaffoldMessenger.of(context);
       messenger
@@ -2873,6 +2929,8 @@ class _ChatScreenState extends State<ChatScreen>
             duration: Duration(seconds: 3),
           ),
         );
+    } finally {
+      await monitor?.stop();
     }
   }
 
@@ -3745,7 +3803,15 @@ class _ChatScreenState extends State<ChatScreen>
       pendingSubmission.complete();
     }
     if (materialized) _registerMaterializedAssistantMessage();
-    if (speakTerminalResponse) unawaited(_speakAssistantText(nextText));
+    if (speakTerminalResponse) {
+      unawaited(_speakAssistantText(nextText));
+    } else if (projection.isTerminal &&
+        !projection.isFailClosed &&
+        autoSpeakRepliesEnabled.value &&
+        nextText.trim().isNotEmpty) {
+      // Ordinary typed turn: auto-read the terminal reply.
+      unawaited(_speakAssistantText(nextText).catchError((Object _) {}));
+    }
     if (projection.isActive) {
       _scrollCoordinator.beginStreaming(isNearEnd: _isNearEnd());
       _scheduleStreamingFollow();
@@ -5385,6 +5451,7 @@ class _ChatScreenState extends State<ChatScreen>
               _activeResponseTransport = _ResponseTransport.none;
             });
             _scheduleScrollTarget(_scrollCoordinator.endStreaming());
+            var voiceSpoke = false;
             if (_awaitingVoiceReply) {
               _awaitingVoiceReply = false;
               final assistant = messages.reversed.firstWhere(
@@ -5393,6 +5460,24 @@ class _ChatScreenState extends State<ChatScreen>
               );
               final assistantText = assistant['content']?.toString();
               if (assistantText != null) {
+                await _speakAssistantText(assistantText);
+                voiceSpoke = true;
+              }
+            }
+            if (!voiceSpoke && autoSpeakRepliesEnabled.value) {
+              // Ordinary typed turn: auto-read the terminal reply.
+              final assistant = messages.reversed.firstWhere(
+                (message) => message['role'] == 'assistant',
+                orElse: () => const <String, dynamic>{},
+              );
+              final rawContent = assistant['content'];
+              String? assistantText;
+              if (rawContent is String) {
+                assistantText = rawContent.trim();
+              } else if (rawContent != null) {
+                assistantText = rawContent.toString().trim();
+              }
+              if (assistantText != null && assistantText.isNotEmpty) {
                 await _speakAssistantText(assistantText);
               }
             }

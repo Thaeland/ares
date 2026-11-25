@@ -1699,5 +1699,13 @@
   "ng_folder_access_unspecified": "El gateway no indicó si es de solo lectura o de lectura y escritura.",
   "ng_folder_read_only": "Solo lectura",
   "ng_folder_read_write": "Lectura y escritura",
-  "ng_website_access": "Acceso a sitios web"
+  "ng_website_access": "Acceso a sitios web",
+  "auto_speak_replies_title": "Leer respuestas en voz alta",
+  "auto_speak_replies_subtitle": "Lee cada nueva respuesta en voz alta al finalizar un turno. Desactivado por defecto; el control de respuestas habladas sigue aplicando.",
+  "ng_auto_read_replies_title": "Auto-read replies",
+  "ng_auto_read_replies_subtitle": "Lee cada nueva respuesta en voz alta al finalizar un turno. Desactivado por defecto.",
+  "barge_in_title": "Interrumpir",
+  "barge_in_subtitle": "Hable sobre la respuesta para acortarla",
+  "ng_barge_in_title": "Interrumpir",
+  "ng_barge_in_subtitle": "Hable sobre la respuesta para acortarla"
 }

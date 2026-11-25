@@ -6227,4 +6227,30 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'Revisa cómo se usan las habilidades';
+
+  @override
+  String get auto_speak_replies_title => 'Leer respuestas en voz alta';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'Lee cada nueva respuesta en voz alta al finalizar un turno. Desactivado por defecto; el control de respuestas habladas sigue aplicando.';
+
+  @override
+  String get ng_auto_read_replies_title => 'Auto-read replies';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      'Lee cada nueva respuesta en voz alta al finalizar un turno. Desactivado por defecto.';
+
+  @override
+  String get barge_in_title => 'Interrumpir';
+
+  @override
+  String get barge_in_subtitle => 'Hable sobre la respuesta para acortarla';
+
+  @override
+  String get ng_barge_in_title => 'Interrumpir';
+
+  @override
+  String get ng_barge_in_subtitle => 'Hable sobre la respuesta para acortarla';
 }

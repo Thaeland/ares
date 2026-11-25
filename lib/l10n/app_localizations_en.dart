@@ -6181,4 +6181,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'Reviews how skills are used';
+
+  @override
+  String get auto_speak_replies_title => 'Auto-read replies aloud';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'Reads each new reply aloud when a turn completes. Off by default; the per-chat spoken-replies toggle still applies.';
+
+  @override
+  String get ng_auto_read_replies_title => 'Auto-read replies';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      'Reads each new reply aloud when a turn completes. Off by default.';
+
+  @override
+  String get barge_in_title => 'Barge in';
+
+  @override
+  String get barge_in_subtitle => 'Speak over the reply to cut it short';
+
+  @override
+  String get ng_barge_in_title => 'Barge in';
+
+  @override
+  String get ng_barge_in_subtitle => 'Speak over the reply to cut it short';
 }

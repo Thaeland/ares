@@ -6233,4 +6233,32 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'Prüft, wie Skills genutzt werden';
+
+  @override
+  String get auto_speak_replies_title => 'Antworten automatisch vorlesen';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'Liest jede neue Antwort nach Abschluss eines Turns hörbar vor. Aus standardmäßig; der in-Chat Schalter „Spoken replies“ gilt weiterhin.';
+
+  @override
+  String get ng_auto_read_replies_title => 'Auto-read replies';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      'Liest jede neue Antwort nach Abschluss eines Turns hörbar vor. Aus standardmäßig.';
+
+  @override
+  String get barge_in_title => 'Hereinbrechen';
+
+  @override
+  String get barge_in_subtitle =>
+      'Sprechen Sie beim Vorlesen etwas an, um es abzubrechen';
+
+  @override
+  String get ng_barge_in_title => 'Hereinbrechen';
+
+  @override
+  String get ng_barge_in_subtitle =>
+      'Sprechen Sie beim Vorlesen etwas an, um es abzubrechen';
 }

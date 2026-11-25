@@ -1699,5 +1699,13 @@
   "ng_folder_access_unspecified": "La passerelle n’a pas indiqué si l’accès est en lecture seule ou en lecture et écriture.",
   "ng_folder_read_only": "Lecture seule",
   "ng_folder_read_write": "Lecture et écriture",
-  "ng_website_access": "Accès au site web"
+  "ng_website_access": "Accès au site web",
+  "auto_speak_replies_title": "Lire les réponses à voix haute",
+  "auto_speak_replies_subtitle": "Lit chaque nouvelle réponse à voix haute à la fin d’un tour. Par défaut désactivé ; le contrôle « Spoken replies » reste valable.",
+  "ng_auto_read_replies_title": "Auto-read replies",
+  "ng_auto_read_replies_subtitle": "Lit chaque nouvelle réponse à voix haute à la fin d’un tour. Par défaut désactivé.",
+  "barge_in_title": "Couper la lecture",
+  "barge_in_subtitle": "Parlez par-dessus la réponse pour l’interrompre",
+  "ng_barge_in_title": "Couper la lecture",
+  "ng_barge_in_subtitle": "Parlez par-dessus la réponse pour l’interrompre"
 }

@@ -6229,6 +6229,32 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'Analisa a utilização das competências';
+
+  @override
+  String get auto_speak_replies_title => 'Ler respostas em voz alta';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'Lê cada nova resposta em voz alta ao concluir um turno. Desativado por padrão; o controle de respostas faladas do chat continua valendo.';
+
+  @override
+  String get ng_auto_read_replies_title => 'Auto-read replies';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      'Lê cada nova resposta em voz alta ao concluir um turno. Desativado por padrão.';
+
+  @override
+  String get barge_in_title => 'Interromper a leitura';
+
+  @override
+  String get barge_in_subtitle => 'Fale sobre a resposta para interrompê-la';
+
+  @override
+  String get ng_barge_in_title => 'Interromper a leitura';
+
+  @override
+  String get ng_barge_in_subtitle => 'Fale sobre a resposta para interrompê-la';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -12220,4 +12246,30 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get ng_aux_curator_hint => 'Analisa como as habilidades são usadas';
+
+  @override
+  String get auto_speak_replies_title => 'Ler respostas em voz alta';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'Lê cada nova resposta em voz alta ao concluir um turno. Desativado por padrão; o controle de respostas faladas do chat continua valendo.';
+
+  @override
+  String get ng_auto_read_replies_title => 'Auto-read replies';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      'Lê cada nova resposta em voz alta ao concluir um turno. Desativado por padrão.';
+
+  @override
+  String get barge_in_title => 'Interromper a leitura';
+
+  @override
+  String get barge_in_subtitle => 'Fale sobre a resposta para interrompê-la';
+
+  @override
+  String get ng_barge_in_title => 'Interromper a leitura';
+
+  @override
+  String get ng_barge_in_subtitle => 'Fale sobre a resposta para interrompê-la';
 }

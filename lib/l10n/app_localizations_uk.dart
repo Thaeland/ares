@@ -6225,4 +6225,32 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'Перевіряє, як використовуються навички';
+
+  @override
+  String get auto_speak_replies_title => 'Читати відповіді вголос';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'Читає кожен новий відгук уголос після завершення ходу. За замовчуванням вимкнено; перемикач «Spoken replies» у чаті все ще застосовується.';
+
+  @override
+  String get ng_auto_read_replies_title => 'Auto-read replies';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      'Читає кожен новий відгук уголос після завершення ходу. За замовчуванням вимкнено.';
+
+  @override
+  String get barge_in_title => 'Перерватити';
+
+  @override
+  String get barge_in_subtitle =>
+      'Скажіть щось під час читання, щоб зупинити його';
+
+  @override
+  String get ng_barge_in_title => 'Перерватити';
+
+  @override
+  String get ng_barge_in_subtitle =>
+      'Скажіть щось під час читання, щоб зупинити його';
 }

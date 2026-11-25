@@ -1699,5 +1699,13 @@
   "ng_folder_access_unspecified": "Шлюз не сообщил, доступ только для чтения или для чтения и записи.",
   "ng_folder_read_only": "Только чтение",
   "ng_folder_read_write": "Чтение и запись",
-  "ng_website_access": "Доступ к сайту"
+  "ng_website_access": "Доступ к сайту",
+  "auto_speak_replies_title": "Читать ответы вслух",
+  "auto_speak_replies_subtitle": "Читает каждую новую реплику вслух после завершения хода. По умолчанию выключено; тоггл «Spoken replies» в чате по-прежнему действует.",
+  "ng_auto_read_replies_title": "Auto-read replies",
+  "ng_auto_read_replies_subtitle": "Читает каждую новую реплику вслух после завершения хода. По умолчанию выключено.",
+  "barge_in_title": "Перебить",
+  "barge_in_subtitle": "Скажите что-нибудь во время чтения, чтобы остановить его",
+  "ng_barge_in_title": "Перебить",
+  "ng_barge_in_subtitle": "Скажите что-нибудь во время чтения, чтобы остановить его"
 }

@@ -17,6 +17,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/controllers/hands_free_conversation_controller.dart'
     show HandsFreeSpeechOutcome;
+import '../../core/services/barge_in_monitor.dart';
+import '../../core/services/barge_in_preference.dart';
 import '../../core/services/hands_free_speech.dart';
 
 class NgReadAloud extends ChangeNotifier {
@@ -25,7 +27,9 @@ class NgReadAloud extends ChangeNotifier {
     VoiceReplySpeaker? speaker,
     Future<SharedPreferences> Function()? prefs,
     bool? android,
+    BargeInMonitor Function()? bargeInMonitor,
   }) : _tts = tts ?? FlutterTts(),
+       _bargeInMonitor = bargeInMonitor ?? SpeechToTextBargeInMonitor.new,
        _prefs = prefs ?? SharedPreferences.getInstance,
        _android =
            android ??
@@ -41,6 +45,7 @@ class NgReadAloud extends ChangeNotifier {
   }
 
   final FlutterTts _tts;
+  final BargeInMonitor Function() _bargeInMonitor;
   final Future<SharedPreferences> Function() _prefs;
   final bool _android;
   late final VoiceReplySpeaker? _speaker;
@@ -72,14 +77,33 @@ class NgReadAloud extends ChangeNotifier {
     if (spoken.isEmpty || _disposed) return;
     final intent = await _claim(key);
     if (intent == null || _disposed) return;
+    BargeInMonitor? monitor;
     HandsFreeSpeechOutcome? outcome;
+    var interrupted = false;
     try {
       await _configureVoice();
       if (_disposed || intent != _generation) return;
+      if (bargeInEnabled.value) {
+        monitor = _bargeInMonitor();
+        unawaited(
+          monitor.start(
+            onInterrupt: () {
+              interrupted = true;
+              unawaited(stop());
+            },
+            echoText: spoken,
+            isCurrent: () => !_disposed && intent == _generation,
+          ),
+        );
+      }
       outcome = await _speak(spoken, intent);
     } catch (_) {
       outcome = HandsFreeSpeechOutcome.failed;
+    } finally {
+      await monitor?.stop();
     }
+    // A user interrupt is not a failure: stop() already cleaned the state.
+    if (interrupted) return;
     // A null outcome means the side-channel handlers own the terminal state.
     if (outcome == null || _disposed || intent != _generation) return;
     _readingKey = null;

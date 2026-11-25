@@ -1699,5 +1699,13 @@
   "ng_folder_access_unspecified": "网关未说明是只读还是可读写。",
   "ng_folder_read_only": "只读",
   "ng_folder_read_write": "可读写",
-  "ng_website_access": "网站访问"
+  "ng_website_access": "网站访问",
+  "auto_speak_replies_title": "自动朗读回复",
+  "auto_speak_replies_subtitle": "每回合结束后自动朗读新回复。默认关闭；聊天内的已朗读开关仍然生效。",
+  "ng_auto_read_replies_title": "Auto-read replies",
+  "ng_auto_read_replies_subtitle": "每回合结束后自动朗读新回复。默认关闭。",
+  "barge_in_title": "插话",
+  "barge_in_subtitle": "朗读时开口说话即可提前停止",
+  "ng_barge_in_title": "插话",
+  "ng_barge_in_subtitle": "朗读时开口说话即可提前停止"
 }

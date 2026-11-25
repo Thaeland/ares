@@ -1852,5 +1852,13 @@
   "ng_folder_access_unspecified": "Шлюз не повідомив, чи доступ лише для читання, чи для читання й запису.",
   "ng_folder_read_only": "Лише для читання",
   "ng_folder_read_write": "Читання й запис",
-  "ng_website_access": "Доступ до вебсайту"
+  "ng_website_access": "Доступ до вебсайту",
+  "auto_speak_replies_title": "Читати відповіді вголос",
+  "auto_speak_replies_subtitle": "Читає кожен новий відгук уголос після завершення ходу. За замовчуванням вимкнено; перемикач «Spoken replies» у чаті все ще застосовується.",
+  "ng_auto_read_replies_title": "Auto-read replies",
+  "ng_auto_read_replies_subtitle": "Читає кожен новий відгук уголос після завершення ходу. За замовчуванням вимкнено.",
+  "barge_in_title": "Перерватити",
+  "barge_in_subtitle": "Скажіть щось під час читання, щоб зупинити його",
+  "ng_barge_in_title": "Перерватити",
+  "ng_barge_in_subtitle": "Скажіть щось під час читання, щоб зупинити його"
 }

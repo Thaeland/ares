@@ -6043,4 +6043,29 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'スキルの使われ方を確認します';
+
+  @override
+  String get auto_speak_replies_title => '返信を自動読み上げ';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'ターン完了時に各返信を読み上げます。デフォルトではオフ。チャット内の読み上げトグルは引き続き有効です。';
+
+  @override
+  String get ng_auto_read_replies_title => 'Auto-read replies';
+
+  @override
+  String get ng_auto_read_replies_subtitle => 'ターン完了時に各返信を読み上げます。デフォルトではオフ。';
+
+  @override
+  String get barge_in_title => '割り込み';
+
+  @override
+  String get barge_in_subtitle => '読み上げ中に話して途中で止める';
+
+  @override
+  String get ng_barge_in_title => '割り込み';
+
+  @override
+  String get ng_barge_in_subtitle => '読み上げ中に話して途中で止める';
 }

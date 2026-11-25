@@ -1699,5 +1699,13 @@
   "ng_folder_access_unspecified": "O gateway não informou se é somente leitura ou leitura e gravação.",
   "ng_folder_read_only": "Somente leitura",
   "ng_folder_read_write": "Leitura e gravação",
-  "ng_website_access": "Acesso ao site"
+  "ng_website_access": "Acesso ao site",
+  "auto_speak_replies_title": "Ler respostas em voz alta",
+  "auto_speak_replies_subtitle": "Lê cada nova resposta em voz alta ao concluir um turno. Desativado por padrão; o controle de respostas faladas do chat continua valendo.",
+  "ng_auto_read_replies_title": "Auto-read replies",
+  "ng_auto_read_replies_subtitle": "Lê cada nova resposta em voz alta ao concluir um turno. Desativado por padrão.",
+  "barge_in_title": "Interromper a leitura",
+  "barge_in_subtitle": "Fale sobre a resposta para interrompê-la",
+  "ng_barge_in_title": "Interromper a leitura",
+  "ng_barge_in_subtitle": "Fale sobre a resposta para interrompê-la"
 }

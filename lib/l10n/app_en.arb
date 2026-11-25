@@ -2629,5 +2629,13 @@
   "ng_aux_profile_describer": "Profile descriptions",
   "ng_aux_profile_describer_hint": "Writes each profile's short description",
   "ng_aux_curator": "Curator",
-  "ng_aux_curator_hint": "Reviews how skills are used"
+  "ng_aux_curator_hint": "Reviews how skills are used",
+  "auto_speak_replies_title": "Auto-read replies aloud",
+  "auto_speak_replies_subtitle": "Reads each new reply aloud when a turn completes. Off by default; the per-chat spoken-replies toggle still applies.",
+  "ng_auto_read_replies_title": "Auto-read replies",
+  "ng_auto_read_replies_subtitle": "Reads each new reply aloud when a turn completes. Off by default.",
+  "barge_in_title": "Barge in",
+  "barge_in_subtitle": "Speak over the reply to cut it short",
+  "ng_barge_in_title": "Barge in",
+  "ng_barge_in_subtitle": "Speak over the reply to cut it short"
 }
