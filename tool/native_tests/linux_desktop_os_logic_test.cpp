@@ -80,9 +80,24 @@ void TestHotkey() {
   CHECK(!X11StateMatches(kControlMask, mods));
 }
 
+void TestDeepLinks() {
+  using ares::desktop::IsDeepLink;
+  CHECK(IsDeepLink("hermes://session/abc"));
+  CHECK(IsDeepLink("HERMES://open/chat?prefill=a%20b"));
+  CHECK(IsDeepLink("hermes:launch"));
+  CHECK(!IsDeepLink("hermes"));
+  CHECK(!IsDeepLink("hermesx://launch"));
+  CHECK(!IsDeepLink("https://example.com"));
+  CHECK(!IsDeepLink("--ares-quick-entry-v1"));
+  CHECK(!IsDeepLink(std::string("hermes://open") + '\n'));
+  CHECK(!IsDeepLink(std::string("hermes://open") + '\x7f'));
+  CHECK(!IsDeepLink("hermes://open?prefill=" + std::string(16 * 1024, 'a')));
+}
+
 }  // namespace
 
 int main() {
+  TestDeepLinks();
   TestLabels();
   TestIds();
   TestHotkey();

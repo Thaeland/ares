@@ -28,8 +28,14 @@ The runner's `desktop_os.cc` implements the primary window's channels described 
 | Quick-entry window | Same executable with `--ares-quick-entry-v1`: keep-above, centred, no taskbar entry | — |
 | Global hotkey | `XGrabKey` on the root window, with Caps Lock / Num Lock variants | X11. Wayland: reported as unsupported. |
 | Sleep / lock pause | logind `PrepareForSleep`, session `Lock`/`Unlock`/`LockedHint`, `ScreenSaver.ActiveChanged` | System and session D-Bus (missing buses: no events, sockets simply stay up) |
-| Keep awake | xdg-desktop-portal `Inhibit` (suspend flag) | A portal implementation (GNOME, KDE, wlroots portals) |
+| Keep awake | xdg-desktop-portal `Inhibit` (suspend flag), else `org.freedesktop.ScreenSaver.Inhibit` | A portal implementation (GNOME, KDE, wlroots portals) or a screensaver service; Settings hides the card when neither is on the session bus |
 | Screen capture | xdg-desktop-portal `Screenshot` (interactive) | A portal implementation with the Screenshot interface |
+
+### hermes:// links
+
+`linux/packaging/com.hermesagent.ares.desktop` (installed into the bundle's `share/applications/`) declares `MimeType=x-scheme-handler/hermes;` and `Exec=ares %u`. A relocatable bundle cannot register itself; to use links, copy the file to `~/.local/share/applications/`, set `Exec=` to the bundle's absolute `ares` path, then run `update-desktop-database ~/.local/share/applications` and `xdg-mime default com.hermesagent.ares.desktop x-scheme-handler/hermes`. A distribution package installs it into `/usr/share/applications`.
+
+The primary window is a unique `GApplication` (`G_APPLICATION_HANDLES_OPEN`); child windows keep `G_APPLICATION_NON_UNIQUE`. Launching `ares hermes://…` while Ares runs sends the link to the running primary over the session D-Bus (`GApplication.open`); with no running primary that launch becomes it and Dart reads the link with `getInitialLink`. A second plain launch brings the existing window forward instead of opening a second primary. The runner only checks the scheme, length (16 KiB) and control characters (`IsDeepLink` in `desktop_os_logic.h`); Dart's router validates the route and never sends, approves or installs anything.
 
 Build: the runner now links **libX11** directly (`pkg_check_modules(X11 … x11)`); `libx11-dev` is already a dependency of `libgtk-3-dev`, so the Debian package list above is unchanged. GIO (D-Bus, portals) comes with GTK. The runner is compiled as C++17. Licences: libX11 is MIT (X11); it is linked dynamically and not copied into the bundle, like GTK.
 

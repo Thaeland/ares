@@ -65,6 +65,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+; hermes:// is also the Hermes Desktop app's scheme, so taking it over is a
+; visible choice (on by default).
+Name: "hermeslinks"; Description: "Open hermes:// links with Ares"; GroupDescription: "Links:"
 
 [Files]
 ; The whole app folder: engine, Dart AOT, plugin DLLs, PDFium, the FFmpeg
@@ -77,6 +80,14 @@ Source: "{#SourceDir}\*"; DestDir: "{app}"; Excludes: "AppxManifest.xml,AppxBloc
 Root: HKCU; Subkey: "Software\Classes\ares-notification"; ValueType: string; ValueData: "URL:Ares notification"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\Classes\ares-notification"; ValueName: "URL Protocol"; ValueType: string; ValueData: ""
 Root: HKCU; Subkey: "Software\Classes\ares-notification\shell\open\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+; hermes:// links: the runner accepts the whole link as the sole argument,
+; forwards it to the running primary window (the toast ticket's single-instance
+; path, no second activator) and Dart's router validates it. A link can
+; navigate and prefill a draft; it never sends, approves or installs anything.
+Root: HKCU; Subkey: "Software\Classes\hermes"; ValueType: string; ValueData: "URL:Hermes link"; Flags: uninsdeletekey; Tasks: hermeslinks
+Root: HKCU; Subkey: "Software\Classes\hermes"; ValueName: "URL Protocol"; ValueType: string; ValueData: ""; Tasks: hermeslinks
+Root: HKCU; Subkey: "Software\Classes\hermes\DefaultIcon"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"",0"; Tasks: hermeslinks
+Root: HKCU; Subkey: "Software\Classes\hermes\shell\open\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Tasks: hermeslinks
 
 [Icons]
 ; Protocol-only activation uses Microsoft's stub-CLSID desktop toast model.

@@ -62,6 +62,21 @@ A small always-on-top window for typing a prompt into a chosen chat or a new one
 - macOS: `NSWorkspace` will-sleep/did-wake and session resign/become active, plus the `com.apple.screenIsLocked`/`Unlocked` distributed notifications.
 - Linux: logind `PrepareForSleep` (system bus), the session's `Lock`/`Unlock` signals and `LockedHint` (session found with `GetSessionByPID`), and `ActiveChanged` from `org.freedesktop.ScreenSaver` / `org.gnome.ScreenSaver` (session bus). GIO only; no new library.
 
+## hermes:// links — `com.hermesagent.ares/deeplink`
+
+| Direction | Method | Arguments | Result |
+| --- | --- | --- | --- |
+| Dart → runner | `getInitialLink` | — | the launch link, once, or `null` |
+| runner → Dart | `onDeepLink` | the whole link (string) | — |
+
+Every runner only bounds a link (scheme `hermes:` in any case, at most 16 KiB, no control characters) and hands the whole string to Dart's validated router (`lib/core/services/hermes_deeplink.dart`). A link can navigate and prefill a draft; it never sends, approves or installs anything. A link that arrives before Dart has asked for the initial one waits in the runner (the latest wins). Primary window only.
+
+- **Android:** `VIEW` intent filter (`DEFAULT`, `BROWSABLE`, `scheme="hermes"`) on `MainActivity` (`singleTop`): cold from the launch intent, warm from `onNewIntent`. Flutter's built-in route push is off (`flutter_deeplinking_enabled=false`); the app has no named routes for links.
+- **iOS:** `CFBundleURLTypes` (`hermes`), `FlutterDeepLinkingEnabled=false`; `SceneDelegate` reads `connectionOptions.urlContexts` (cold) and `scene(_:openURLContexts:)` (warm) into `AresDeepLinkInbox` (`apple/AresApple.swift`).
+- **macOS:** `CFBundleURLTypes` (`hermes`); `AppDelegate.application(_:open:)` feeds the same inbox (created before launch finishes, so a cold link waits) and shows the main window. A child window process (pop-out, companion, quick entry) ignores links.
+- **Windows:** the Inno installer registers `HKCU\Software\Classes\hermes` (task **Open hermes:// links with Ares**, on by default, since Hermes Desktop uses the same scheme) and the MSIX manifest declares `hermes` next to `ares-msix-notification`. `ClassifyLaunch` accepts a link only as the sole argument (`LaunchRole::deep_link`, `deep_link.h`); it never reaches Dart's entrypoint arguments. A second launch forwards it over the existing single-instance path to the **primary** window class with `WM_COPYDATA` (`dwData` `'ARLK'`; toast tickets use `'ARES'`), like toast tickets: no second activator, COM server or window class. The primary restores itself and passes the link to Dart.
+- **Linux:** `linux/packaging/com.hermesagent.ares.desktop` (`MimeType=x-scheme-handler/hermes;`, `Exec=ares %u`), installed into the bundle's `share/applications`. The primary is a unique `GApplication` with `G_APPLICATION_HANDLES_OPEN` (children stay non-unique): a link launch while Ares runs reaches the primary's `open` over D-Bus; otherwise that launch becomes the primary. See [linux-runner.md](linux-runner.md#hermes-links).
+
 ## Screen capture — `com.hermesagent.ares/capture`
 
 | Direction | Method | Arguments | Result |
@@ -78,9 +93,9 @@ A small always-on-top window for typing a prompt into a chosen chat or a new one
 
 ## Checks without an app build
 
-- `tool/native_tests/ios_typecheck.sh` — type-checks `ios/Runner/SceneDelegate.swift` (keep-awake and deep-link channels) against the iOS SDK and a declarations-only Flutter stub.
+- `tool/native_tests/ios_typecheck.sh` — type-checks `ios/Runner/SceneDelegate.swift` (keep-awake and deep-link channels) and `apple/AresApple.swift` against the iOS SDK and the real Flutter.framework from the Flutter cache (a declarations-only stub when the cache is absent), warnings as errors.
 
-- `tool/native_tests/run.sh` — host C++17 unit tests (`clang++ -std=c++17 -Wall -Wextra -Werror -pedantic`) for the platform-free headers `windows/runner/desktop_os_logic.h` and `linux/runner/desktop_os_logic.h`.
-- `tool/native_tests/macos_typecheck.sh` — type-checks the macOS runner Swift against the macOS SDK and a declarations-only FlutterMacOS stub, with warnings as errors.
+- `tool/native_tests/run.sh` — host C++17 unit tests (including `windows/runner/deep_link.h` through `launch_role.h`) (`clang++ -std=c++17 -Wall -Wextra -Werror -pedantic`) for the platform-free headers `windows/runner/desktop_os_logic.h` and `linux/runner/desktop_os_logic.h`.
+- `tool/native_tests/macos_typecheck.sh` — type-checks the macOS runner Swift against the macOS SDK and a declarations-only FlutterMacOS stub, with warnings as errors, then again against the real FlutterMacOS framework from the Flutter cache together with `apple/AresApple.swift`.
 - `tool/native_tests/linux_compile_check.sh <flutter-gtk-dir>` — compiles the Linux runner sources (`-fsyntax-only`) against Debian 12 GTK 3 and the engine's `flutter_linux` headers in a network-less container.
 - The Windows runner files that include `windows.h` need the Windows SDK: build on the Windows host (`/W4 /WX`).

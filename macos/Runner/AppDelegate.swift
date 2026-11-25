@@ -5,6 +5,9 @@ import FlutterMacOS
 class AppDelegate: FlutterAppDelegate {
   private var aresChannels: AresAppleChannels?
   private var desktopOS: AresDesktopOS?
+  // hermes:// links: created up front because a cold-start link can arrive
+  // before applicationDidFinishLaunching.
+  private let deepLinks = AresDeepLinkInbox()
 
   override func applicationDidFinishLaunching(_ notification: Notification) {
     registerAresChannels()
@@ -27,13 +30,27 @@ class AppDelegate: FlutterAppDelegate {
 
   private func attachChannels(_ controller: FlutterViewController) {
     aresChannels = AresAppleChannels(messenger: controller.engine.binaryMessenger)
-    // Tray, hotkey, power and capture belong to the primary window only.
+    // Tray, hotkey, power, capture and deep links belong to the primary
+    // window only.
     if !AresProcessRole.isChild {
       desktopOS = AresDesktopOS(
         messenger: controller.engine.binaryMessenger,
         window: mainFlutterWindow
       )
+      deepLinks.attach(messenger: controller.engine.binaryMessenger)
     }
+  }
+
+  // hermes:// links (Info.plist CFBundleURLTypes), cold and warm.
+  override func application(_ application: NSApplication, open urls: [URL]) {
+    super.application(application, open: urls)
+    // Links belong to the primary window; a child window process ignores them.
+    guard !AresProcessRole.isChild else { return }
+    var received = false
+    for url in urls where deepLinks.receive(url) {
+      received = true
+    }
+    if received { desktopOS?.showMainWindow() }
   }
 
   override func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -48,6 +65,7 @@ class AppDelegate: FlutterAppDelegate {
   }
 
   override func applicationWillTerminate(_ notification: Notification) {
+    deepLinks.detach()
     desktopOS?.shutdown()
     desktopOS = nil
     super.applicationWillTerminate(notification)

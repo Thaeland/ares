@@ -49,6 +49,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   // plugins.
   if (FAILED(RoInitialize(RO_INIT_SINGLETHREADED))) return EXIT_FAILURE;
   auto token = role == ares::LaunchRole::toast ? ares::toast::ParseActivation(args.front(), packaged) : "";
+  // A hermes:// link goes to the primary window's deep-link channel, never
+  // to Dart's entrypoint arguments; Dart validates it before any UI changes.
+  std::string link = role == ares::LaunchRole::deep_link
+      ? ares::deep_link::Parse(args.front()) : std::string();
 
   // One Ares instance per user: a second launch focuses the running window
   // and exits instead of opening a second chat session.
@@ -72,6 +76,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
         DWORD_PTR received = 0;
         SendMessageTimeoutW(existing, WM_COPYDATA, 0, reinterpret_cast<LPARAM>(&data),
                             SMTO_ABORTIFHUNG, 2000, &received);
+      } else if (!link.empty()) {
+        // Same single-instance path as toast tickets: the primary window
+        // (found by its own class, never a pop-out) shows itself and passes
+        // the link to Dart.
+        DWORD pid = 0;
+        GetWindowThreadProcessId(existing, &pid);
+        AllowSetForegroundWindow(pid);
+        COPYDATASTRUCT data{ares::deep_link::kCopyDataId,
+                            static_cast<DWORD>(link.size()), link.data()};
+        DWORD_PTR received = 0;
+        SendMessageTimeoutW(existing, WM_COPYDATA, 0, reinterpret_cast<LPARAM>(&data),
+                            SMTO_ABORTIFHUNG, 2000, &received);
       } else if (args.empty()) {
         ::ShowWindow(existing, IsIconic(existing) ? SW_RESTORE : SW_SHOW);
         ::SetForegroundWindow(existing);
@@ -90,10 +106,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   flutter::DartProject project(L"data");
   // The validated pop-out marker goes to Dart, never an activation URI.
-  if (role != ares::LaunchRole::toast) {
+  if (role != ares::LaunchRole::toast && role != ares::LaunchRole::deep_link) {
     project.set_dart_entrypoint_arguments(std::move(args));
   }
-  FlutterWindow window(project, std::move(token), !pet_child);
+  FlutterWindow window(project, std::move(token), !pet_child, std::move(link));
   Win32Window::Point origin(10, 10);
   const wchar_t* title = chat_child    ? L"Ares - Chat"
                          : quick_entry ? L"Ares - Quick entry"

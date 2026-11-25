@@ -68,6 +68,24 @@ inline bool IsChildWindowMarker(std::string_view arg) {
          arg == "--ares-pet-companion-v1" || arg == "--ares-quick-entry-v1";
 }
 
+// True for a hermes: link the runner may hand to Dart's validated router
+// (lib/core/services/hermes_deeplink.dart): the scheme in any case, at most
+// 16 KiB, no control characters. The runner never interprets the link.
+inline bool IsDeepLink(std::string_view arg) {
+  constexpr std::string_view scheme = "hermes:";
+  if (arg.size() < scheme.size() || arg.size() > 16 * 1024) return false;
+  for (std::size_t i = 0; i < scheme.size(); ++i) {
+    char c = arg[i];
+    if (c >= 'A' && c <= 'Z') c = static_cast<char>(c - 'A' + 'a');
+    if (c != scheme[i]) return false;
+  }
+  for (const char c : arg) {
+    const auto byte = static_cast<unsigned char>(c);
+    if (byte < 0x20 || byte == 0x7f) return false;
+  }
+  return true;
+}
+
 // The X keysym name (XStringToKeysym) for a shortcuts_store key name, or
 // an empty string.
 inline std::string X11KeysymName(std::string_view name) {

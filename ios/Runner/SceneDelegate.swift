@@ -4,6 +4,7 @@ import UIKit
 class SceneDelegate: FlutterSceneDelegate {
   private var aresChannels: AresAppleChannels?
   private var keepAwake: AresKeepAwakeChannel?
+  private let deepLinks = AresDeepLinkInbox()
 
   override func scene(
     _ scene: UIScene,
@@ -12,6 +13,19 @@ class SceneDelegate: FlutterSceneDelegate {
   ) {
     super.scene(scene, willConnectTo: session, options: connectionOptions)
     registerAresChannels()
+    // Cold launch from a hermes:// link: Dart reads it with getInitialLink.
+    for context in connectionOptions.urlContexts {
+      deepLinks.receive(context.url)
+    }
+  }
+
+  // Warm: a hermes:// link while the scene is connected.
+  override func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+    super.scene(scene, openURLContexts: URLContexts)
+    registerAresChannels()
+    for context in URLContexts {
+      deepLinks.receive(context.url)
+    }
   }
 
   override func sceneDidBecomeActive(_ scene: UIScene) {
@@ -25,6 +39,7 @@ class SceneDelegate: FlutterSceneDelegate {
     else { return }
     aresChannels = AresAppleChannels(messenger: controller.binaryMessenger)
     keepAwake = AresKeepAwakeChannel(messenger: controller.binaryMessenger)
+    deepLinks.attach(messenger: controller.binaryMessenger)
   }
 }
 

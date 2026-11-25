@@ -55,4 +55,5 @@ open class FlutterAppDelegate: NSObject, NSApplicationDelegate {
   open func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
   open func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool { true }
   open func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool { false }
+  open func application(_ application: NSApplication, open urls: [URL]) {}
 }

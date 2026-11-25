@@ -53,10 +53,52 @@ void TestQuickEntryRole() {
                        true, false) == LaunchRole::invalid);
 }
 
+void TestDeepLinkRole() {
+  const std::string token(32, 'a');
+  // The sole argument, any case of the scheme.
+  CHECK(ClassifyLaunch(Args{"hermes://session/abc"}, false, false) ==
+        LaunchRole::deep_link);
+  CHECK(ClassifyLaunch(Args{"HERMES://open/chat?prefill=hi"}, false, true) ==
+        LaunchRole::deep_link);
+  CHECK(ClassifyLaunch(Args{"hermes:launch"}, false, false) ==
+        LaunchRole::deep_link);
+  // Never mixed with anything else, in either position.
+  CHECK(ClassifyLaunch(Args{"hermes://launch", "x"}, false, false) ==
+        LaunchRole::invalid);
+  CHECK(ClassifyLaunch(Args{"x", "hermes://launch"}, false, false) ==
+        LaunchRole::invalid);
+  CHECK(ClassifyLaunch(Args{"--ares-quick-entry-v1", "hermes://launch"}, true,
+                       false) == LaunchRole::invalid);
+  CHECK(ClassifyLaunch(Args{"ares-notification:" + token, "hermes://launch"},
+                       false, false) == LaunchRole::invalid);
+  // Control characters or an oversized argument are refused outright.
+  CHECK(ClassifyLaunch(Args{std::string("hermes://open%0Ax")}, false,
+                       false) == LaunchRole::deep_link);  // encoded is text
+  CHECK(ClassifyLaunch(Args{std::string("hermes://open") + '\n'}, false,
+                       false) == LaunchRole::invalid);
+  CHECK(ClassifyLaunch(Args{std::string("hermes://open") + '\x7f'}, false,
+                       false) == LaunchRole::invalid);
+  CHECK(ClassifyLaunch(
+            Args{"hermes://open/chat?prefill=" +
+                 std::string(ares::deep_link::kMaxBytes, 'a')},
+            false, false) == LaunchRole::invalid);
+  // Other schemes are not links (and stay ordinary arguments).
+  CHECK(ClassifyLaunch(Args{"hermesx://launch"}, false, false) ==
+        LaunchRole::primary);
+  CHECK(ClassifyLaunch(Args{"https://example.com"}, false, false) ==
+        LaunchRole::primary);
+  // Parse returns the whole link unchanged; the runner never interprets it.
+  CHECK(ares::deep_link::Parse("hermes://session/abc?prefill=a%20b") ==
+        "hermes://session/abc?prefill=a%20b");
+  CHECK(ares::deep_link::Parse("hermes").empty());
+  CHECK(ares::deep_link::kCopyDataId != 0x41524553ul);  // not the toast id
+}
+
 }  // namespace
 
 int main() {
   TestQuickEntryRole();
+  TestDeepLinkRole();
   std::printf("windows launch_role: %d checks, %d failures\n", checks,
               failures);
   return failures == 0 ? 0 : 1;

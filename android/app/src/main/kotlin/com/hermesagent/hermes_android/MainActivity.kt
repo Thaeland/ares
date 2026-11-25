@@ -27,6 +27,11 @@ class MainActivity : FlutterActivity() {
     private var launchChannel: MethodChannel? = null
     private var initialShareIntent: Intent? = null
     private var initialLaunchAction: String? = null
+    // hermes:// links (com.hermesagent.ares/deeplink): the cold-start link, or a
+    // warm one that arrived before Dart asked for the initial link.
+    private var deepLinkChannel: MethodChannel? = null
+    private var pendingDeepLink: String? = null
+    private var deepLinkReady = false
     private var attachmentPdfPreview: AttachmentPdfPreview? = null
     private var apkUpdateInstaller: ApkUpdateInstaller? = null
     private var attachmentFileSaver: AttachmentFileSaver? = null
@@ -35,6 +40,9 @@ class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         initialShareIntent = intent.takeIf(::isShareIntent)
         initialLaunchAction = launchActionFor(intent)
+        // A recreated activity (rotation, process restore) re-reads the same
+        // launch intent; only a fresh launch carries the link to Dart.
+        if (savedInstanceState == null) pendingDeepLink = deepLinkFor(intent)
         super.onCreate(savedInstanceState)
         runCatching { MobilePushBridge.captureTap(this, intent) }
         if (intent?.action == HermesAutoNotifications.OPEN) runCatching { HermesAutoNotifications.receive(this, intent) }
@@ -109,6 +117,22 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
+        deepLinkReady = false
+        deepLinkChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger,
+            "com.hermesagent.ares/deeplink").apply {
+            setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "getInitialLink" -> {
+                        // Dart listens from here on: later links go straight to it.
+                        deepLinkReady = true
+                        val pending = pendingDeepLink
+                        pendingDeepLink = null
+                        result.success(pending)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
+        }
         launchChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, launchChannelName).apply {
             setMethodCallHandler { call, result ->
                 when (call.method) {
@@ -147,6 +171,9 @@ class MainActivity : FlutterActivity() {
     }
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        deepLinkChannel?.setMethodCallHandler(null)
+        deepLinkChannel = null
+        deepLinkReady = false
         handsFreeVoice?.setForeground(false)
         handsFreeVoice = null
         super.cleanUpFlutterEngine(flutterEngine)
@@ -210,6 +237,15 @@ class MainActivity : FlutterActivity() {
         WindowViewport.refresh(window.decorView)
         runCatching { MobilePushBridge.captureTap(this, intent) }
         if (intent?.action == HermesAutoNotifications.OPEN) runCatching { HermesAutoNotifications.receive(this, intent) }
+        deepLinkFor(intent)?.let { link ->
+            val channel = deepLinkChannel
+            if (channel != null && deepLinkReady) {
+                channel.invokeMethod("onDeepLink", link)
+            } else {
+                pendingDeepLink = link
+            }
+            return
+        }
         launchActionFor(intent)?.let { action ->
             launchChannel?.invokeMethod("launchAction", action)
             return
@@ -220,6 +256,17 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+
+    /// The whole hermes: link from a VIEW intent, or null. The runner only bounds
+    /// it (16 KiB, no control characters); Dart's router validates the route.
+    private fun deepLinkFor(intent: Intent?): String? {
+        if (intent == null || intent.action != Intent.ACTION_VIEW) return null
+        val data = intent.data ?: return null
+        if (data.scheme?.lowercase() != "hermes") return null
+        val link = data.toString()
+        if (link.length > 16 * 1024 || link.any { it < ' ' || it == '\u007f' }) return null
+        return link
+    }
 
     private fun launchActionFor(intent: Intent?): String? =
         if (intent?.action == quickChatAction) "quickChat" else null
