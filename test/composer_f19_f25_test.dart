@@ -162,6 +162,76 @@ void main() {
     );
   });
 
+  test('a missing method is Desktop\'s isMissingRpcMethod (gateway-rpc.ts:'
+      '7-17), plus an older gateway\'s 4004 "unknown method"', () async {
+    // The JSON-RPC code decides when there is one.
+    expect(
+      missingRpcMethod(
+        JsonRpcError('prompt.background', 'unknown method', code: -32601),
+      ),
+      isTrue,
+    );
+    expect(
+      missingRpcMethod(
+        JsonRpcError(
+          'prompt.background',
+          'unknown method: prompt.background',
+          code: 4004,
+        ),
+      ),
+      isTrue,
+    );
+    // A coded error that merely mentions the words, or a 4004 for bad
+    // input, is a real failure.
+    expect(
+      missingRpcMethod(
+        JsonRpcError('x', 'unknown method in user script', code: -32000),
+      ),
+      isFalse,
+    );
+    expect(
+      missingRpcMethod(JsonRpcError('x', 'text is required', code: 4004)),
+      isFalse,
+    );
+    // A codeless (flattened) error decides by its message.
+    for (final message in [
+      'unknown method: prompt.background',
+      'Method not found',
+      'RPC failed: -32601',
+      'no such method',
+    ]) {
+      expect(missingRpcMethod(JsonRpcError('x', message)), isTrue);
+      expect(missingRpcMethod(StateError(message)), isTrue);
+    }
+    expect(
+      missingRpcMethod(JsonRpcError('x', 'Hermes gateway is not connected')),
+      isFalse,
+    );
+    // So /bg on such a gateway takes the slash.exec route; a real failure
+    // is reported instead.
+    for (final error in [
+      JsonRpcError('prompt.background', 'unknown method', code: 4004),
+      JsonRpcError('prompt.background', 'unknown method: prompt.background'),
+    ]) {
+      final run = await runDedicatedCommand(
+        name: 'bg',
+        arg: 'look',
+        sessionId: 's',
+        rpc: (_, _) async => throw error,
+      );
+      expect(run!.answer!.fallbackToExec, isTrue, reason: '$error');
+    }
+    final refused = await runDedicatedCommand(
+      name: 'bg',
+      arg: 'look',
+      sessionId: 's',
+      rpc: (_, _) async =>
+          throw JsonRpcError('prompt.background', 'busy', code: 4009),
+    );
+    expect(refused!.answer!.fallbackToExec, isFalse);
+    expect(refused.answer!.failed, isTrue);
+  });
+
   test('a handoff that handoff.fail reports completed is completed', () async {
     final calls = <String>[];
     var clock = 0;

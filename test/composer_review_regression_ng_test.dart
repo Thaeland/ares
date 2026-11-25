@@ -338,6 +338,49 @@ void main() {
     );
   });
 
+  // An older gateway without prompt.background: Desktop's slash.ts falls
+  // back to slash.exec when the method is missing (isMissingRpcMethod).
+  for (final (label, error) in [
+    (
+      '-32601',
+      JsonRpcError('prompt.background', 'unknown method', code: -32601),
+    ),
+    (
+      '4004 unknown method',
+      JsonRpcError(
+        'prompt.background',
+        'unknown method: prompt.background',
+        code: 4004,
+      ),
+    ),
+  ]) {
+    testWidgets('/background on a gateway without prompt.background ($label) '
+        'runs through slash.exec', (tester) async {
+      final h = await pump(tester, storedId: 'stored-1', runtimeId: 'rt-1');
+      h.gateway.handlers['prompt.background'] = (p) => throw error;
+      h.gateway.handlers['slash.exec'] = (p) => {'output': 'BG-EXEC-OK'};
+      await _send(tester, '/background summarise the repo');
+      await _settle(tester);
+      expect(h.gateway.of('prompt.background'), hasLength(1));
+      final exec = h.gateway.of('slash.exec');
+      expect(exec, hasLength(1), reason: 'no slash.exec fallback');
+      expect(exec.single.params['command'], 'background summarise the repo');
+      expect(h.gateway.of('prompt.submit'), isEmpty);
+    });
+  }
+
+  testWidgets('/background whose prompt.background really fails (4004 bad '
+      'input) is reported, never re-run through slash.exec', (tester) async {
+    final h = await pump(tester, storedId: 'stored-1', runtimeId: 'rt-1');
+    h.gateway.handlers['prompt.background'] = (p) =>
+        throw JsonRpcError('prompt.background', 'text is required', code: 4004);
+    await _send(tester, '/background summarise the repo');
+    await _settle(tester);
+    expect(h.gateway.of('slash.exec'), isEmpty);
+    expect(h.gateway.of('prompt.submit'), isEmpty);
+    expect(find.textContaining('text is required'), findsWidgets);
+  });
+
   testWidgets('PROBE NG3 Retry on the failure card after the gateway accepted '
       'the turn does not submit the prompt a second time', (tester) async {
     final h = await pump(tester, storedId: 'stored-1', runtimeId: 'rt-1');

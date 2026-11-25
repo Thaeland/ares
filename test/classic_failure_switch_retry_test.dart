@@ -54,6 +54,9 @@ class _Server {
     {'id': 2, 'role': 'assistant', 'content': ''},
   ];
   Completer<void>? configGate;
+
+  /// Methods this gateway answers with a JSON-RPC error (an older gateway).
+  final errors = <String, Map<String, dynamic>>{};
   bool _closed = false;
 
   SavedConnection get connection => SavedConnection(
@@ -108,6 +111,13 @@ class _Server {
       if (method == null) return;
       frames.add(frame);
       final result = <String, dynamic>{'jsonrpc': '2.0', 'id': frame['id']};
+      if (errors[method] case final error?) {
+        result['error'] = error;
+        if (!_closed && socket.readyState == WebSocket.open) {
+          socket.add(jsonEncode(result));
+        }
+        return;
+      }
       switch (method) {
         case 'session.resume':
           result['result'] = {
@@ -129,6 +139,15 @@ class _Server {
             'attached': true,
             'ref_text': '@file:/up/${frame['params']['name']}',
           };
+        case 'commands.catalog':
+          result['result'] = {
+            'pairs': [
+              ['/background', 'Run a prompt in the background'],
+            ],
+            'canon': {'/bg': '/background'},
+          };
+        case 'slash.exec':
+          result['result'] = {'output': 'Background task started.'};
         default:
           result['result'] = {'ok': true};
       }
@@ -640,6 +659,58 @@ void main() {
       expect(h.server.of('session.history'), isEmpty);
       await _finish(tester, h.server);
     });
+  }
+
+  // /bg on an older gateway without prompt.background: as Desktop's slash.ts
+  // (isMissingRpcMethod), it runs through slash.exec instead; a real failure
+  // of prompt.background is reported, never re-run.
+  for (final (label, error, fallsBack) in [
+    ('-32601', {'code': -32601, 'message': 'unknown method'}, true),
+    (
+      '4004 unknown method',
+      {'code': 4004, 'message': 'unknown method: prompt.background'},
+      true,
+    ),
+    ('4004 bad input', {'code': 4004, 'message': 'text is required'}, false),
+  ]) {
+    testWidgets(
+      '/background, prompt.background answers $label: '
+      '${fallsBack ? 'runs through slash.exec' : 'reported, no slash.exec'}',
+      (tester) async {
+        final h = await mount(tester);
+        h.server.errors['prompt.background'] = error;
+        await tester.enterText(
+          find.byKey(_composerKey),
+          '/background summarise the repo',
+        );
+        await tester.pump();
+        await tester.tap(find.byKey(const Key('chat-send-message')));
+        await _until(
+          tester,
+          () =>
+              h.server.of('prompt.background').isNotEmpty &&
+              (!fallsBack || h.server.of('slash.exec').isNotEmpty),
+        );
+        await _pump(tester);
+        expect(h.server.of('prompt.background'), hasLength(1));
+        expect(
+          h.server.of('prompt.background').single['params']['text'],
+          'summarise the repo',
+        );
+        final exec = h.server.of('slash.exec');
+        if (fallsBack) {
+          expect(exec, hasLength(1), reason: 'no slash.exec fallback');
+          expect(
+            '${exec.single['params']['command']}',
+            contains('background summarise the repo'),
+          );
+        } else {
+          expect(exec, isEmpty);
+        }
+        expect(h.server.of('prompt.submit'), isEmpty);
+        await _finish(tester, h.server);
+      },
+    );
   }
 
   // Intake over the gateway (the re-check's CR2): the Attach picker's files

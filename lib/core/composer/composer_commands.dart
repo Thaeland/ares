@@ -162,8 +162,32 @@ class CommandAnswer {
   final String taskId;
 }
 
-bool missingRpcMethod(Object error) =>
-    error is JsonRpcError && error.code == -32601;
+/// Whether [error] says the gateway has no such method, so the command takes
+/// its older slash.exec route. Desktop's isMissingRpcMethod (b7ee21c14e
+/// apps/desktop/src/lib/gateway-rpc.ts:7-17, used by slash.ts's /background
+/// fallback): a JSON-RPC code decides when there is one (-32601), and a
+/// codeless error decides by its message ("method not found", "-32601",
+/// "unknown method", "no such method"). An older gateway's 4004 refusal
+/// whose message names an unknown method is that same verdict. Any other
+/// coded error (a 4004 for bad input, a -32000 that merely mentions the
+/// words) is a real failure and is reported, never re-run.
+bool missingRpcMethod(Object error) {
+  final code = error is JsonRpcError ? error.code : null;
+  final message = error is JsonRpcError ? error.message : error.toString();
+  if (code == -32601) return true;
+  if (code == 4004) return _unknownMethod.hasMatch(message);
+  if (code != null) return false;
+  return _missingMethod.hasMatch(message);
+}
+
+final _missingMethod = RegExp(
+  r'method not found|-32601|unknown method|no such method',
+  caseSensitive: false,
+);
+final _unknownMethod = RegExp(
+  r'unknown method|method not found|no such method',
+  caseSensitive: false,
+);
 
 CommandAnswer interpretCommandResult({
   required DedicatedSlash kind,
