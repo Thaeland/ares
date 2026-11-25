@@ -22,7 +22,7 @@ import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
 import '../../core/utils/delivered_files.dart';
 import '../../core/utils/media_tags.dart';
-import '../../core/widgets/windows_chat_presence.dart';
+import '../../core/widgets/chat_presence.dart';
 import '../../core/widgets/desktop_shortcuts.dart';
 import '../../core/widgets/transcript_reader.dart';
 import '../../core/widgets/transcript_body.dart';
@@ -736,7 +736,7 @@ class _NgChatViewState extends State<NgChatView>
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
     final gateway = NgScope.of(context).gateway;
-    return WindowsChatPresence(
+    return ChatPresence(
       target: () {
         final socket = chat.gateway.socket;
         final runtime = chat.runtimeId;

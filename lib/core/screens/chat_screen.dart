@@ -2,7 +2,7 @@
 // Uses REST endpoints: POST /api/sessions/{id}/chat and
 // GET /api/sessions/{id}/messages.
 import 'dart:async';
-import '../widgets/windows_chat_presence.dart';
+import '../widgets/chat_presence.dart';
 import '../workspace/terminal_chat_link.dart';
 import 'dart:convert';
 
@@ -7542,7 +7542,7 @@ class _ChatScreenState extends State<ChatScreen>
         });
       },
     );
-    return WindowsChatPresence(
+    return ChatPresence(
       target: () => (_desktopGateway ?? _normalSession?.client)?.presenceFor(
         _normalLocalSessionKey,
       ),
