@@ -701,8 +701,21 @@ Android's restrictions; the app does not request an exemption on startup.
 
 While protection is active, Android requires a foreground-service disclosure.
 Hermes uses one service for active chats and separate quiet ongoing entries for
-their status. **Settings → Notifications** controls optional alerts. Returning
-to the app does not mean all chat notifications should disappear: ongoing work
+their status. **Settings → Notifications** controls optional alerts, including
+an opt-in report of activity in the open chat and a completion sound. The
+activity report is off until enabled, counts only input inside the chat
+(touches, clicks, keys, and typing or focus in the composer), and is sent on
+the chat's existing connection when the gateway accepts it. Panes that share a
+connection send one report for the pane used most recently, and leaving the
+chat withdraws it at once. Pop-out chat windows follow the same setting. The
+completion sound can be the system sound, Mail, Reminder or silent. Mail and
+Reminder are original short tones on Android and Apple, desktop sound-theme
+names on Linux, and Windows notification sounds on Windows. While Ares is open
+it also plays the chosen sound in the app when a reply finishes (System default
+plays a short chime); **Mute app sounds** turns that off. Approvals, other
+notification kinds, background notifications from the server and Android Auto
+messages keep the system sound. Returning to the app does not mean all chat
+notifications should disappear: ongoing work
 and other chats retain their own state. Grant or revoke OS notification permission
 in Android settings; the app refreshes that status on return without another
 startup prompt.
@@ -916,8 +929,10 @@ What is specific to Windows:
   ship in an `ffmpeg` folder beside `ares.exe`. Ares only ever runs that
   bundled copy.
 - **Notifications (5.0 development)**: Classic and NextGen use Windows toasts
-  for background replies and requests. Settings includes category controls, a
-  test notification, a completion sound, and optional chat activity sharing.
+  for background replies and requests. Category controls, the test
+  notification, the completion sound and optional chat activity sharing are
+  the same controls as on the other platforms; Windows plays the chosen
+  completion sound as a Windows notification sound.
   Turn notifications on or off in Windows **Settings → System → Notifications**.
   Use an installed build: a loose copy does not own the installer's click handler.
   [Native verification and remaining gates](docs/windows-notifications.md).

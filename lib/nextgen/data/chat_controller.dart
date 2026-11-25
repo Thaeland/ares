@@ -14,7 +14,10 @@ import '../../core/models/attachment_draft.dart';
 import '../../core/models/background_report.dart';
 import '../../core/models/legacy_lcm_summary.dart';
 import '../../core/models/slash_command.dart';
+import '../../core/render/catalog_install.dart';
+import '../../core/render/setup_beat.dart';
 import '../../core/services/attachment_draft_service.dart';
+import '../../core/services/completion_cue_player.dart';
 import '../../core/services/remote_workspace.dart';
 import '../../core/services/composer_draft_store.dart';
 import '../../core/services/connection_mutation_barrier.dart';
@@ -411,7 +414,7 @@ class NgCommandOutcome {
       result == NgCommandResult.unsupported;
 }
 
-enum NgRequestKind { approval, clarify, secret, saveLogin }
+enum NgRequestKind { approval, clarify, secret, saveLogin, setupBeat }
 
 class NgClarifyQuestion {
   final String? qid;
@@ -437,6 +440,9 @@ class NgInputRequest {
   final List<NgClarifyQuestion> questions;
   final bool masked;
 
+  /// The onboarding card, for [NgRequestKind.setupBeat].
+  final SetupBeatRequest? setupBeat;
+
   NgInputRequest._(
     this.request, {
     required this.kind,
@@ -446,6 +452,7 @@ class NgInputRequest {
     this.choices = const [],
     this.questions = const [],
     this.masked = true,
+    this.setupBeat,
   });
 
   static List<String> _strings(Object? value) => value is List
@@ -506,6 +513,15 @@ class NgInputRequest {
               : ngL.ng_hermes_wants_to_run_this,
           command: s('command'),
           choices: ordered,
+        );
+      case 'setup_beat':
+        final card = SetupBeatRequest.parse(request.id, p);
+        if (card == null) return null;
+        return NgInputRequest._(
+          request,
+          kind: NgRequestKind.setupBeat,
+          title: card.question,
+          setupBeat: card,
         );
       case 'clarify':
         final batch = <NgClarifyQuestion>[];
@@ -801,6 +817,41 @@ class NgChatController extends ChangeNotifier {
   String? error;
   FailureSurface? turnFailure;
   NgInputRequest? request;
+
+  /// The open `manage_catalog` install card of this chat, if any.
+  CatalogOperation? catalog;
+
+  /// Answers this chat's catalog card through `connection.respond`, owned
+  /// by this chat's runtime session. False when the card is not this chat's
+  /// open operation any more or the gateway refused the answer.
+  Future<bool> respondCatalog(
+    CatalogOperation operation,
+    Map<String, dynamic> answer,
+  ) async {
+    final current = catalog;
+    final runtime = runtimeId;
+    if (_disposed ||
+        runtime == null ||
+        current == null ||
+        current.opId != operation.opId ||
+        current.settled) {
+      return false;
+    }
+    final result = await gateway.call('connection.respond', {
+      'owner': {'type': 'session', 'session_id': runtime},
+      'op_id': operation.opId,
+      'result': answer,
+    });
+    return result['status'] == 'ok';
+  }
+
+  /// Hides a settled catalog card.
+  void dismissCatalog(String opId) {
+    if (catalog?.opId != opId || !(catalog?.settled ?? false)) return;
+    catalog = null;
+    _changed();
+  }
+
   String? model;
   String? provider;
   String? reasoningEffort;
@@ -1987,6 +2038,7 @@ class NgChatController extends ChangeNotifier {
         );
         _finishTurn(failed: true);
       case 'message.complete' || 'turn.end':
+        final live = running;
         final reply = _openReply();
         final text = s('text');
         if (text != null &&
@@ -2003,6 +2055,13 @@ class NgChatController extends ChangeNotifier {
         lastTurnFailed = outcome == 'error';
         lastTurnInterrupted = outcome == 'interrupted';
         _finishTurn(failed: lastTurnFailed);
+        // The in-app cue for a live reply that finished here (Desktop plays
+        // it on message.complete); a stopped or failed turn has none.
+        if (live && !lastTurnFailed && !lastTurnInterrupted) {
+          CompletionCuePlayer.instance.turnFinished(
+            '${gateway.connection.id}|${storedId ?? runtimeId}',
+          );
+        }
         unawaited(_adoptPersistedIds());
       case 'turn.error':
         error = s('message') ?? ngL.ng_the_turn_failed;
@@ -2027,6 +2086,14 @@ class NgChatController extends ChangeNotifier {
             ..output = answer.text
             ..running = false,
         );
+      case 'connection.request' || 'connection.update':
+        final next = CatalogOperation.merge(
+          catalog,
+          p,
+          opens: event.type == 'connection.request',
+        );
+        if (identical(next, catalog)) return;
+        catalog = next;
       default:
         return;
     }
@@ -2037,6 +2104,8 @@ class NgChatController extends ChangeNotifier {
           'error' ||
           'turn.error' ||
           'request.cancel' ||
+          'connection.request' ||
+          'connection.update' ||
           'message.start' ||
           'session.updated' ||
           'session.info' ||
@@ -2635,6 +2704,7 @@ class NgChatController extends ChangeNotifier {
     String? composerImageText,
     String? submissionId,
     String? display,
+    bool hidden = false,
     WorkspaceTarget? fleetTarget,
     Map<String, Object> promptParams = const {},
   }) async {
@@ -2652,24 +2722,35 @@ class NgChatController extends ChangeNotifier {
       return false;
     }
     if (trimmed.isEmpty && attachments.isEmpty) return false;
+    // A hidden widget intent is plain text on this chat's own runtime, and
+    // only starts a turn: it never steers or queues behind a running one.
+    if (hidden &&
+        (running ||
+            attachments.isNotEmpty ||
+            composerImageText != null ||
+            fleetTarget != null)) {
+      return false;
+    }
     final shown = display?.trim() ?? '';
     if (composerImageText != null &&
         (composerImageText.trim() != trimmed || shown.isNotEmpty)) {
       return false;
     }
     final effectiveSubmissionId = submissionId ?? const Uuid().v4();
-    final item = NgUserItem(
-      _key('u'),
-      shown.isEmpty ? trimmed : shown,
-      time: DateTime.now(),
-      pending: true,
-      attachments: List.of(attachments),
-      submissionId: effectiveSubmissionId,
-      composerImageText: composerImageText,
-      sentText: shown.isEmpty ? null : trimmed,
-      promptParams: promptParams,
-    );
-    items.add(item);
+    final NgUserItem? item = hidden
+        ? null
+        : NgUserItem(
+            _key('u'),
+            shown.isEmpty ? trimmed : shown,
+            time: DateTime.now(),
+            pending: true,
+            attachments: List.of(attachments),
+            submissionId: effectiveSubmissionId,
+            composerImageText: composerImageText,
+            sentText: shown.isEmpty ? null : trimmed,
+            promptParams: promptParams,
+          );
+    if (item != null) items.add(item);
     error = null;
     running = true;
     turnStartedAt = DateTime.now();
@@ -2720,7 +2801,10 @@ class NgChatController extends ChangeNotifier {
       checkOwner();
       final refs = <String>[];
       final wireImages = <Map<String, String>>[];
-      for (final draft in capture?.drafts ?? item.attachments) {
+      for (final draft
+          in capture?.drafts ??
+              item?.attachments ??
+              const <AttachmentDraft>[]) {
         if (adopted != null) break;
         checkOwner();
         final ref =
@@ -2749,15 +2833,16 @@ class NgChatController extends ChangeNotifier {
                 )
               : null);
       checkOwner();
-      if (attempt != null) {
+      if (attempt != null && item != null) {
         item.submissionId = attempt.id;
         item.recoverInComposer = true;
       }
+      final wireSubmissionId = item?.submissionId ?? effectiveSubmissionId;
       final explicitImages = adopted?.entry.wireImages ?? wireImages;
       _clearRetainedModelMutation();
       mayHaveSubmitted = true;
       final result = fleetTarget != null
-          ? await fleetTarget.submitFleetText(prompt, item.submissionId!)
+          ? await fleetTarget.submitFleetText(prompt, wireSubmissionId)
           : await _submitPromptWithCompatibility(
               {
                 ...promptParams,
@@ -2765,31 +2850,37 @@ class NgChatController extends ChangeNotifier {
                 'text': prompt,
                 if (explicitImages.isNotEmpty) 'attachments': explicitImages,
               },
-              submissionId: item.submissionId!,
+              submissionId: wireSubmissionId,
               attempt: attempt,
               checkOwner: checkOwner,
             );
       if (attempt != null) await attempt.receipt(result, live!);
-      item.pending = false;
+      item?.pending = false;
       // A canonical receipt names the execution its admission started.
       _adoptExecutionGeneration(result['execution_generation']);
       final status = result['status']?.toString();
-      if (status == 'queued' && item.sentText == null) item.text = trimmed;
+      if (item != null && status == 'queued' && item.sentText == null) {
+        item.text = trimmed;
+      }
       _changed();
-      if (item.attachments.isNotEmpty) {
+      if (item != null && item.attachments.isNotEmpty) {
         unawaited(attachmentService.removeAll(item.attachments));
       }
       return true;
     } catch (e) {
-      if (!mayHaveSubmitted && sameUploadOwner?.call() == true) {
-        await _detach(queued);
-        _resetQueuedImages(item.attachments);
+      if (item != null) {
+        if (!mayHaveSubmitted && sameUploadOwner?.call() == true) {
+          await _detach(queued);
+          _resetQueuedImages(item.attachments);
+        }
+        if (item.recoverInComposer) {
+          await attachmentService.removeAll(item.attachments);
+        }
+        item.pending = false;
+        item.failure = _clean(e);
+      } else {
+        error = _clean(e);
       }
-      if (item.recoverInComposer) {
-        await attachmentService.removeAll(item.attachments);
-      }
-      item.pending = false;
-      item.failure = _clean(e);
       running = false;
       turnStartedAt = null;
       _changed();
@@ -3427,6 +3518,44 @@ class NgChatController extends ChangeNotifier {
   }
 
   bool answerApproval(String choice) => _answer({'choice': choice});
+
+  /// Answers this chat's waiting setup card [requestId] on the socket it
+  /// arrived on. False when that card is no longer the one waiting here
+  /// (withdrawn, answered elsewhere, or replaced by a newer card) or the
+  /// answer did not go out.
+  bool answerSetupBeat(String requestId, Map<String, dynamic> result) =>
+      sendSetupBeat(requestId, result) == SetupBeatSend.sent;
+
+  /// Sends [result] for this chat's waiting setup card [requestId]. The
+  /// card closes only once the answer went out; a send that failed keeps it
+  /// to be answered again, as the Desktop's setup-beat store does.
+  SetupBeatSend sendSetupBeat(String requestId, Map<String, dynamic> result) {
+    final current = request;
+    if (current == null ||
+        current.kind != NgRequestKind.setupBeat ||
+        current.request.id != requestId ||
+        !gateway.openRequests.containsKey(requestId)) {
+      return SetupBeatSend.closed;
+    }
+    if (!current.request.raw.respond(result)) return SetupBeatSend.failed;
+    gateway.forgetRequest(current.request.id);
+    request = null;
+    _changed();
+    return SetupBeatSend.sent;
+  }
+
+  /// A message sent while a setup card waits closes it unanswered with
+  /// `{wrote_instead: true}`: the backend ends the card's turn and the
+  /// message runs as the next one (Desktop's yieldSetupBeatToMessage). True
+  /// when a card closed.
+  bool yieldSetupBeatToMessage() {
+    final current = request;
+    if (current == null || current.kind != NgRequestKind.setupBeat) {
+      return false;
+    }
+    return sendSetupBeat(current.request.id, const {'wrote_instead': true}) ==
+        SetupBeatSend.sent;
+  }
 
   bool answerClarify(List<List<String>> answers) {
     final current = request;

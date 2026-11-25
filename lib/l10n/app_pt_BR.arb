@@ -1246,7 +1246,13 @@
   "ng_choose_project": "Escolher um projeto",
   "ng_project_cwd_fallback": "A pasta do projeto não estava disponível, então esta conversa é executada em {path}.",
   "ng_project_create_uncertain": "O gateway pode ter criado esta conversa, mas não a confirmou. Verifique as conversas antes de iniciar outra; esta solicitação não será repetida automaticamente.",
-  "@ng_project_cwd_fallback": {"placeholders": {"path": {"type": "String"}}},
+  "@ng_project_cwd_fallback": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "ng_what_should_we_work_on": "No que vamos trabalhar?",
   "ng_ask_hermes_anything_it_can_run": "Pergunte qualquer coisa ao Hermes. Ele pode usar ferramentas, navegar e trabalhar nos seus arquivos no servidor.",
   "ng_working_2": "Trabalhando · {frame}",
@@ -1699,5 +1705,104 @@
   "ng_folder_access_unspecified": "O gateway não informou se é somente leitura ou leitura e gravação.",
   "ng_folder_read_only": "Somente leitura",
   "ng_folder_read_write": "Leitura e gravação",
-  "ng_website_access": "Acesso ao site"
+  "ng_website_access": "Acesso ao site",
+  "appearance_inline_embeds": "Conteúdo incorporado",
+  "appearance_inline_embeds_hint": "As prévias avançadas são carregadas de sites de terceiros (YouTube, X, …). Perguntar mostra um espaço reservado até você permitir cada uma; Sempre as carrega automaticamente; Desativado mantém links simples.",
+  "appearance_embeds_ask": "Perguntar",
+  "appearance_embeds_always": "Sempre",
+  "appearance_embeds_off": "Desativado",
+  "appearance_embeds_reset": "{count, plural, =1{Redefinir 1 serviço permitido} other{Redefinir {count} serviços permitidos}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "Carregar",
+  "appearance_embed_always_allow": "Sempre permitir {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "Carregando prévia…",
+  "appearance_embed_image_failed": "Não foi possível carregar a imagem de {host}. Toque para abri-la.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "Prévia indisponível",
+  "render_widget_file_truncated": "Só o início deste arquivo foi lido, então o widget pode estar incompleto.",
+  "setup_beat_title": "Configuração",
+  "setup_beat_use_name": "Usar {name}",
+  "setup_beat_name_hint": "Como o Hermes deve chamar você?",
+  "setup_beat_on_computer": "Esta etapa é feita no Hermes, no computador onde ele roda. Continuar mantém o que já está configurado lá.",
+  "setup_beat_not_waiting": "Este cartão de configuração não está mais esperando resposta.",
+  "catalog_kind_plugin": "Plugin",
+  "catalog_kind_skill": "Habilidade",
+  "catalog_tier_official": "Oficial",
+  "catalog_tier_verified": "Verificado",
+  "catalog_tier_community": "Comunidade",
+  "catalog_install": "Instalar",
+  "catalog_waiting": "Aguardando sua escolha",
+  "catalog_installed": "Instalado",
+  "catalog_installed_off": "Instalado, não ativado",
+  "catalog_skipped": "Ignorado",
+  "catalog_not_installed": "Não instalado",
+  "catalog_target_profile": "É instalado no perfil {profile}",
+  "catalog_source": "{repo} em {sha}",
+  "catalog_scan": "Análise de segurança: {status}. {summary}",
+  "catalog_requires_hermes": "Requer Hermes {range}",
+  "catalog_skill_ready": "A habilidade {name} está pronta",
+  "catalog_missing_env": "Ainda precisa de: {names}",
+  "catalog_server_error": "{name} não conectou: {error}",
+  "catalog_send_failed": "Sua escolha não foi enviada. Tente novamente.",
+  "attachment_video_speed": "Velocidade de reprodução",
+  "catalog_installing": "Instalando…",
+  "catalog_phase_downloading": "Baixando…",
+  "catalog_phase_python_packages": "Instalando pacotes Python…",
+  "catalog_phase_loading_tools": "Carregando as ferramentas…",
+  "setup_beat_send_failed": "Sua resposta não foi enviada. Tente novamente.",
+  "catalog_tool_count": "{count, plural, =1{1 ferramenta} other{{count} ferramentas}}",
+  "render_svg_not_drawn": "Este SVG não foi desenhado.",
+  "render_notes_directive": "Diretiva de notas",
+  "render_maths_source": "Fonte da fórmula",
+  "render_inline_maths_source": "Fonte da fórmula inline",
+  "render_sequence_outline": "Esquema da sequência",
+  "render_diagram_outline": "Esquema do diagrama",
+  "render_revision_of": "Revisão {index} de {count}",
+  "render_previous_revision": "Revisão anterior",
+  "render_next_revision": "Próxima revisão",
+  "render_show_rendered": "Renderizado",
+  "render_show_source": "Código-fonte",
+  "render_copied_file": "{name} copiado",
+  "render_copy_file": "Copiar {name}",
+  "render_artifact_too_long": "Este artefato é longo demais para ser exibido aqui como página.",
+  "render_active_content_removed": "Os scripts, frames e endereços externos foram removidos.",
+  "render_widget_file": "Arquivo de widget {file}",
+  "render_widget_runs_as_text": "É executado como texto neste chat. Scripts e frames externos são removidos.",
+  "render_load_widget": "Carregar widget",
+  "render_not_html_widget": "Este arquivo não é um widget HTML.",
+  "render_widget_sent": "Enviado para este chat",
+  "render_widget_not_sent": "Não enviado para este chat",
+  "render_widget_throttled": "Aguarde um momento antes de enviar novamente",
+  "render_widget_too_long": "Esta solicitação é longa demais para ser enviada",
+  "render_widget_no_gesture": "Toque em um controle do widget para enviar",
+  "render_widget_invalid": "Não foi possível enviar esta solicitação",
+  "render_inspected_image": "Imagem inspecionada",
+  "render_contributions": "Contribuições",
+  "render_contributions_intro": "Somente contribuições compiladas no Ares podem acrescentar algo a uma resposta. O texto do chat não pode registrar nenhuma, e uma permissão vale apenas para esta conexão.",
+  "render_grant_plugin": "Permitir {name}",
+  "render_revoke_plugin": "Revogar {name}",
+  "render_plugin_slots": "cartões de resposta para ::{directive}",
+  "render_plugin_notes": "Notas",
+  "catalog_scan_passed": "aprovado",
+  "catalog_scan_warnings": "encontrou avisos",
+  "catalog_scan_failed": "falhou"
 }

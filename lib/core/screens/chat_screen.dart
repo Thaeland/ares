@@ -2,7 +2,7 @@
 // Uses REST endpoints: POST /api/sessions/{id}/chat and
 // GET /api/sessions/{id}/messages.
 import 'dart:async';
-import '../widgets/windows_chat_presence.dart';
+import '../widgets/chat_presence.dart';
 import '../workspace/terminal_chat_link.dart';
 import 'dart:convert';
 
@@ -14,6 +14,11 @@ import '../widgets/rewind_dialogs.dart';
 import '../history/rewind_submit.dart' show RewindPlan, buildRewindParams;
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import '../presentation/companion_draft.dart';
+import '../presentation/petdex.dart';
+import '../presentation/presentation_chrome.dart';
+import '../presentation/radio.dart' show showAresRadioSheet;
+import '../presentation/transcript_reading.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:uuid/uuid.dart';
 import '../controllers/hands_free_conversation_controller.dart';
@@ -60,9 +65,15 @@ import '../services/gateway_turn_recovery.dart';
 import '../services/gateway_turn_ui_projection.dart';
 import '../services/remote_files_client.dart';
 import '../preview/chat_preview.dart';
+import '../render/render_scope.dart';
+import '../capabilities/capability_admin.dart';
+import '../render/catalog_install.dart';
+import '../render/rich_transcript.dart';
+import '../render/setup_beat.dart';
 import '../services/slash_command_errors.dart';
 import '../services/legal_links.dart';
 import '../services/turn_notification_service.dart';
+import '../services/completion_cue_player.dart';
 import '../services/notification_approval_authority.dart';
 import '../services/notification_prefs.dart';
 import '../services/voice_composer_adapter.dart';
@@ -928,6 +939,8 @@ class _ChatScreenState extends State<ChatScreen>
   bool _changingModel = false;
   bool _sending = false;
   bool _streaming = false;
+  bool _companionLeftDuringTurn = false;
+  bool _companionUnread = false;
   final _held = ClientHeldQueue();
   bool _heldDrainBusy = false;
   bool _heldTouched = false;
@@ -975,6 +988,13 @@ class _ChatScreenState extends State<ChatScreen>
   Route<GatewaySensitivePromptDialogResult>? _sensitivePromptRoute;
   final List<_PendingClarifyPrompt> _clarifyPromptQueue = [];
   _PendingClarifyPrompt? _activeClarifyPrompt;
+
+  /// The onboarding card waiting in this chat (one per chat, as on the
+  /// Desktop). Cleared when answered, closed or withdrawn.
+  SetupBeatRequest? _setupBeat;
+
+  /// The open `manage_catalog` install card of this chat, if any.
+  CatalogOperation? _catalog;
   bool _clarifyPromptRouteOpen = false;
   Route<bool>? _clarifyPromptRoute;
   bool _clarifyPromptClosing = false;
@@ -1048,6 +1068,7 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   void initState() {
     super.initState();
+    CompanionDraft.pending.addListener(_applyCompanionDraft);
     _composerFocus.addListener(_syncComposerKeyboardEndScroll);
     _notificationApprovalOrigin = NotificationApprovalAuthority.origin(
       widget.connection,
@@ -1674,6 +1695,11 @@ class _ChatScreenState extends State<ChatScreen>
     _slashController.updateText(text);
   }
 
+  void _applyCompanionDraft() {
+    if (!mounted) return;
+    CompanionDraft.applyTo(_textController);
+  }
+
   void _onSlashCommandChanged() {
     if (mounted) setState(() {});
   }
@@ -2020,6 +2046,7 @@ class _ChatScreenState extends State<ChatScreen>
     _slashController
       ..removeListener(_onSlashCommandChanged)
       ..dispose();
+    CompanionDraft.pending.removeListener(_applyCompanionDraft);
     final draftSaved = _draftWriter.close();
     unawaited(draftSaved.then((_) => _localTurnController?.close()));
     _textController.dispose();
@@ -2065,12 +2092,18 @@ class _ChatScreenState extends State<ChatScreen>
         state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached) {
+      if (_sending || _streaming) _companionLeftDuringTurn = true;
       _appInBackground = true;
       _normalSession?.setLifecycle(background: true);
       // Persist the draft on the way out: a process kill must not lose it.
       unawaited(_draftWriter.flush());
     } else if (state == AppLifecycleState.resumed) {
       _appInBackground = false;
+      if (_companionLeftDuringTurn && !_sending && !_streaming) {
+        _companionLeftDuringTurn = false;
+        _companionUnread = true;
+        if (mounted) setState(() {});
+      }
       if (_normalChat?.snapshot.reconciling == true) {
         widget.testDesktopSessionEnsured?.call();
       }
@@ -3126,11 +3159,13 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   void _onTurnSettled(GatewayTurnRecoveryState state) {
-    if (!mounted || !_appInBackground) return;
+    if (!mounted) return;
     final turnId = state.turnId ?? state.clientTurnId;
     final completed =
         !state.isFailClosed &&
         state.status == GatewayRecoveryTurnStatus.completed;
+    if (completed && !_appInBackground) _playCompletionCue();
+    if (!_appInBackground) return;
     final kind = completed
         ? HermesNotificationKind.turnDone
         : HermesNotificationKind.turnError;
@@ -3158,6 +3193,16 @@ class _ChatScreenState extends State<ChatScreen>
             ),
     );
   }
+
+  /// The in-app completion cue for this chat (it plays only while Ares is
+  /// in front; a completion notification covers the background).
+  void _playCompletionCue() =>
+      CompletionCuePlayer.instance.turnFinished(_completionCueKey);
+
+  /// Names this chat for the cue, as a pop-out of it does, so only one
+  /// window plays it.
+  String get _completionCueKey =>
+      '${widget.connection.id}|${widget.session.id}';
 
   /// Mirrors a blocking approval to a native notification (with approve/deny
   /// buttons) while the app is in the background — the one prompt class that
@@ -4892,6 +4937,7 @@ class _ChatScreenState extends State<ChatScreen>
     HandsFreePrompt? handsFreePrompt,
     _HandsFreeTurnBinding? voiceBinding,
     Map<String, Object?> promptParams = const {},
+    bool hiddenIntent = false,
   }) async {
     final keepComposer = textOverride != null || voiceBinding != null;
     if (textOverride == null &&
@@ -4920,6 +4966,23 @@ class _ChatScreenState extends State<ChatScreen>
         textOverride ??
         handsFreePrompt?.transcript ??
         _textController.text.trim();
+    if (_setupBeat != null &&
+        !hiddenIntent &&
+        text.isNotEmpty &&
+        slashCommandName(text) == null) {
+      final yielded = await _yieldSetupBeatToMessage();
+      if (!mounted) return;
+      // The card's turn ends on that answer, so a typed message waits for
+      // it in the held queue and runs as the next turn, never a steer.
+      if (yielded &&
+          _streaming &&
+          textOverride == null &&
+          handsFreePrompt == null &&
+          !_usesNormalInputOwner) {
+        _queueHeldFromComposer();
+        return;
+      }
+    }
     if (_streaming) {
       if (text.isNotEmpty) {
         await _sendWhileWorking(text);
@@ -5061,6 +5124,7 @@ class _ChatScreenState extends State<ChatScreen>
       preserveComposer: keepComposer,
       onAccepted: onAccepted,
       promptParams: promptParams,
+      hiddenIntent: hiddenIntent,
     );
   }
 
@@ -5728,6 +5792,26 @@ class _ChatScreenState extends State<ChatScreen>
     }
   }
 
+  Future<WidgetHtmlSource?> _readWidgetHtml(String path) async {
+    final client = _newMediaFilesClient();
+    try {
+      final preview = await client.readText(path);
+      if (preview.binary) return null;
+      return WidgetHtmlSource(preview.text, truncated: preview.truncated);
+    } catch (_) {
+      return null;
+    } finally {
+      if (client is RemoteFilesClient) client.close();
+    }
+  }
+
+  Future<void> _deliverWidgetIntent(String prompt) async {
+    if (_sending || _streaming || _preparingSend || _voiceComposer.listening) {
+      throw StateError('undelivered');
+    }
+    await _sendMessage(textOverride: prompt, hiddenIntent: true);
+  }
+
   Future<void> _submitMessage({
     required String text,
     required List<AttachmentDraft> attachments,
@@ -5735,6 +5819,7 @@ class _ChatScreenState extends State<ChatScreen>
     _HandsFreeTurnBinding? voiceBinding,
     bool preserveComposer = false,
     VoidCallback? onAccepted,
+    bool hiddenIntent = false,
     bool heldUntilAccepted = false,
     Map<String, Object?> promptParams = const {},
   }) async {
@@ -5749,6 +5834,7 @@ class _ChatScreenState extends State<ChatScreen>
         voiceBinding: voiceBinding,
         preserveComposer: keepComposer,
         onAccepted: onAccepted,
+        hiddenIntent: hiddenIntent,
         heldUntilAccepted: heldUntilAccepted,
       );
       return;
@@ -5831,6 +5917,7 @@ class _ChatScreenState extends State<ChatScreen>
           message: text,
           imageDataUrl: imageDataUrl,
         ),
+        if (hiddenIntent) 'display_kind': 'hidden',
       });
       // Insert a placeholder streaming message
       _messages.add({
@@ -5914,6 +6001,7 @@ class _ChatScreenState extends State<ChatScreen>
         onDone: () async {
           if (!mounted || responseGeneration != _responseGeneration) return;
           onAccepted?.call();
+          _playCompletionCue();
           // The SSE client requires an explicit successful protocol completion.
           final assistant = _lastAssistantMessage();
           setState(() {
@@ -6339,6 +6427,7 @@ class _ChatScreenState extends State<ChatScreen>
     _HandsFreeTurnBinding? voiceBinding,
     bool preserveComposer = false,
     VoidCallback? onAccepted,
+    bool hiddenIntent = false,
     bool heldUntilAccepted = false,
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
@@ -6460,6 +6549,7 @@ class _ChatScreenState extends State<ChatScreen>
         AndroidPromptContext.localUserTextKey: true,
         ChatMessageTime.observedAtKey: DateTime.now().millisecondsSinceEpoch,
         ChatMessageTime.sourceKey: 'sent',
+        if (hiddenIntent) 'display_kind': 'hidden',
       });
       _messages.add({
         'role': 'assistant',
@@ -6611,6 +6701,27 @@ class _ChatScreenState extends State<ChatScreen>
     }
     if (event.type == 'clarify.request') {
       _queueClarifyPrompt(event.data, responseGeneration);
+      return;
+    }
+    if (event.type == 'connection.request' ||
+        event.type == 'connection.update') {
+      final next = CatalogOperation.merge(
+        _catalog,
+        event.data,
+        opens: event.type == 'connection.request',
+      );
+      if (!identical(next, _catalog) && mounted) {
+        setState(() => _catalog = next);
+      }
+      return;
+    }
+    if (event.type == 'setup_beat.request') {
+      final id =
+          (event.data['server_request_id'] ?? event.data['request_id'])
+              ?.toString() ??
+          '';
+      final request = SetupBeatRequest.parse(id, event.data);
+      if (request != null && mounted) setState(() => _setupBeat = request);
       return;
     }
     if (event.type == 'clarify.remaining') {
@@ -6795,6 +6906,9 @@ class _ChatScreenState extends State<ChatScreen>
     if (!mounted || mobileSessionId != widget.session.id) return;
     const interactiveTypes = {
       'approval.request',
+      'setup_beat.request',
+      'connection.request',
+      'connection.update',
       'clarify.request',
       'clarify.remaining',
       'sudo.request',
@@ -7108,6 +7222,164 @@ class _ChatScreenState extends State<ChatScreen>
       // dismiss that independent request or send an unintended denial.
       navigator.removeRoute(route, false);
     }
+  }
+
+  /// Answers this chat's catalog card with `connection.respond` through the
+  /// owner that holds this chat's runtime session. Nothing is sent for an
+  /// operation that is not this chat's open one.
+  Future<bool> _respondCatalog(
+    CatalogOperation operation,
+    Map<String, dynamic> answer,
+  ) async {
+    final current = _catalog;
+    if (!mounted ||
+        current == null ||
+        current.opId != operation.opId ||
+        current.settled) {
+      return false;
+    }
+    final sessionId = widget.session.id;
+    if (await (_normalSession?.tryRespondToConnection(
+          sessionId: sessionId,
+          opId: operation.opId,
+          result: answer,
+        ) ??
+        Future.value(false))) {
+      return true;
+    }
+    final turnSession = _turnApplicationSession;
+    if (turnSession is GatewaySetupBeatResponder &&
+        await (turnSession as GatewaySetupBeatResponder).tryRespondToConnection(
+          sessionId: sessionId,
+          opId: operation.opId,
+          result: answer,
+        )) {
+      return true;
+    }
+    return await _desktopGateway?.respondToConnection(
+          sessionId: sessionId,
+          opId: operation.opId,
+          result: answer,
+        ) ??
+        false;
+  }
+
+  /// Installs a failed catalog plugin again after its operation settled,
+  /// through this connection's capabilities install into the row's own
+  /// target profile.
+  Future<CatalogRetryResult> _retryCatalogRow(CatalogRow row) async {
+    final gateway = _desktopGateway ?? _normalSession?.client;
+    if (gateway == null) {
+      return CatalogRetryResult(
+        ok: false,
+        message: context.l10n.catalog_send_failed,
+      );
+    }
+    final admin = CapabilityAdmin(
+      profile: widget.connection.gatewayProfile,
+      rest: (method, path, {query, body, timeout}) =>
+          throw const CapabilityException('Not used for a catalog install.'),
+      rpc: (method, params) =>
+          gateway.call(method, params, timeout: const Duration(minutes: 3)),
+    );
+    final mutation = await admin.installCatalogPlugin(
+      row.name,
+      profile: row.targetProfile,
+      force: row.approvedForce,
+      enable: row.approvedEnable,
+      ref: row.approvedRef,
+    );
+    return CatalogRetryResult(
+      ok: mutation.ok,
+      message:
+          mutation.message ??
+          (mutation.lines.isEmpty ? null : mutation.lines.join('\n')),
+    );
+  }
+
+  /// Answers this chat's waiting setup card through whichever owner holds
+  /// the request (the stock gateway's chat owner, the recovery session or
+  /// the Desktop gateway client). Nothing is sent for a card that is no
+  /// longer open here, or for another chat. The card closes only once the
+  /// answer went out: one that did not, while an owner still holds the
+  /// request, keeps the card to be answered again, as on the Desktop.
+  /// [quiet] skips the "no longer waiting" note (a message sent instead).
+  Future<SetupBeatSend> _answerSetupBeat(
+    SetupBeatRequest request,
+    Map<String, dynamic> result, {
+    bool quiet = false,
+  }) async {
+    if (!mounted || _setupBeat?.requestId != request.requestId) {
+      return SetupBeatSend.closed;
+    }
+    final sessionId = widget.session.id;
+    final requestId = request.requestId;
+    var sent =
+        _normalSession?.tryRespondToSetupBeat(
+          sessionId: sessionId,
+          requestId: requestId,
+          result: result,
+        ) ??
+        false;
+    final turnSession = _turnApplicationSession;
+    if (!sent && turnSession is GatewaySetupBeatResponder) {
+      sent = (turnSession as GatewaySetupBeatResponder).tryRespondToSetupBeat(
+        sessionId: sessionId,
+        requestId: requestId,
+        result: result,
+      );
+    }
+    if (!sent) {
+      sent =
+          _desktopGateway?.respondToSetupBeat(
+            sessionId: sessionId,
+            requestId: requestId,
+            result: result,
+          ) ??
+          false;
+    }
+    if (!mounted || _setupBeat?.requestId != request.requestId) {
+      return sent ? SetupBeatSend.sent : SetupBeatSend.closed;
+    }
+    if (!sent) {
+      final held =
+          (_normalSession?.holdsSetupBeat(
+                sessionId: sessionId,
+                requestId: requestId,
+              ) ??
+              false) ||
+          (turnSession is GatewaySetupBeatResponder &&
+              (turnSession as GatewaySetupBeatResponder).holdsSetupBeat(
+                sessionId: sessionId,
+                requestId: requestId,
+              )) ||
+          (_desktopGateway?.holdsSetupBeat(
+                sessionId: sessionId,
+                requestId: requestId,
+              ) ??
+              false);
+      if (held) return SetupBeatSend.failed;
+    }
+    setState(() => _setupBeat = null);
+    if (!sent && !quiet) {
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        SnackBar(content: Text(context.l10n.setup_beat_not_waiting)),
+      );
+    }
+    return sent ? SetupBeatSend.sent : SetupBeatSend.closed;
+  }
+
+  /// A message sent while a setup card waits closes the card unanswered
+  /// with `{wrote_instead: true}` before the message goes out: the backend
+  /// ends the card's turn and the message runs as the next one (Desktop's
+  /// yieldSetupBeatToMessage). True when the card closed.
+  Future<bool> _yieldSetupBeatToMessage() async {
+    final card = _setupBeat;
+    if (card == null) return false;
+    return await _answerSetupBeat(card, const {
+          'wrote_instead': true,
+        }, quiet: true) ==
+        SetupBeatSend.sent;
   }
 
   Future<void> _respondToGatewayClarify({
@@ -7449,6 +7721,13 @@ class _ChatScreenState extends State<ChatScreen>
     final requestId = event.data['id']?.toString().trim() ?? '';
     final method = event.data['method']?.toString().trim() ?? '';
     if (requestId.isEmpty) return;
+
+    if (_setupBeat?.requestId == requestId) {
+      // Withdrawn (timeout, Stop, Skip setup, answered in another window)
+      // or its socket went: the card can no longer be answered.
+      setState(() => _setupBeat = null);
+      return;
+    }
 
     if (method == 'sudo' || method == 'secret') {
       _expireSensitivePrompt(
@@ -8126,20 +8405,42 @@ class _ChatScreenState extends State<ChatScreen>
         });
       },
     );
-    return defaultTargetPlatform == TargetPlatform.windows
-        ? WindowsChatPresence(
-            target: () => (_desktopGateway ?? _normalSession?.client)
-                ?.presenceFor(_normalLocalSessionKey),
-            child: screen,
-          )
-        : screen;
+    // Render state is scoped per connection and chat; presence reports only
+    // this chat's own socket.
+    return ChatPresence(
+      target: () => (_desktopGateway ?? _normalSession?.client)?.presenceFor(
+        _normalLocalSessionKey,
+      ),
+      cueKey: () => _completionCueKey,
+      child: RenderScope(
+        connection: renderConnectionKey(widget.connection),
+        chat: _storedSessionId ?? _storedSessionKey,
+        child: screen,
+      ),
+    );
   }
 
-  Widget _buildChat(BuildContext context) => LayoutBuilder(
-    // Measure the pane, not the window: a phone, split view or parallel
-    // workspace pane gets compact chrome so the app bar never overflows.
-    builder: (context, box) => _buildChatScaffold(context, box.maxWidth),
+  Widget _buildChat(BuildContext context) => ReactionScope(
+    chat: _reactionChat,
+    // Switching the radio on or off adds or drops its narrow-pane menu entry.
+    child: ListenableBuilder(
+      listenable: presentationToolsListenable(context),
+      builder: (context, _) => LayoutBuilder(
+        // Measure the pane, not the window: a phone, split view or parallel
+        // workspace pane gets compact chrome so the app bar never overflows.
+        builder: (context, box) => _buildChatScaffold(context, box.maxWidth),
+      ),
+    ),
   );
+
+  /// Reactions belong to this stored chat on this connection and profile:
+  /// another chat or gateway can reuse the same message id.
+  String get _reactionChat => [
+    'classic',
+    widget.connection.id,
+    widget.connection.gatewayProfile ?? '',
+    _storedSessionId ?? _storedSessionKey,
+  ].join('\u0000');
 
   Widget _buildChatScaffold(BuildContext context, double paneWidth) {
     final compactTools = paneWidth < 480;
@@ -8162,6 +8463,7 @@ class _ChatScreenState extends State<ChatScreen>
 
     final workers = captureWorkers();
     final showQueue = workers != null && gateway?.sessionAuthority == true;
+    final radio = compactTools ? compactRadioTool(context) : null;
     void openGatewayQueue([WorkspaceWorkersScreen? fresh]) {
       final target = fresh ?? workers!;
       final writer = _draftWriter, revision = _composerRevision;
@@ -8223,6 +8525,19 @@ class _ChatScreenState extends State<ChatScreen>
           ),
         ),
         actions: [
+          PresentationChrome(
+            compact: compactTools,
+            activity: (_sending || _streaming)
+                ? PetActivity.working
+                : _companionUnread
+                ? PetActivity.completed
+                : PetActivity.idle,
+            unread: _companionUnread,
+            onCompose: () {
+              setState(() => _companionUnread = false);
+              _composerFocus.requestFocus();
+            },
+          ),
           IconButton(
             tooltip: 'Find in transcript',
             icon: const Icon(Icons.find_in_page_outlined),
@@ -8264,14 +8579,24 @@ class _ChatScreenState extends State<ChatScreen>
                 icon: const Icon(Icons.hub_outlined),
                 onPressed: () => workers.open(context),
               ),
-          ] else if (_desktopGateway != null || workers != null)
+          ] else if (_desktopGateway != null ||
+              workers != null ||
+              radio != null)
             // One always-visible menu on narrow panes, also while a reply
-            // streams (the gateway queue matters most then).
+            // streams (the gateway queue matters most then). The radio's
+            // controls move here from the app bar.
             PopupMenuButton<String>(
               key: const ValueKey('chat-tools-menu'),
               tooltip: 'More chat tools',
               icon: const Icon(Icons.widgets_outlined),
               onSelected: (tool) {
+                if (tool == radioToolValue) {
+                  final current = compactRadioTool(context);
+                  if (current != null) {
+                    unawaited(showAresRadioSheet(context, current));
+                  }
+                  return;
+                }
                 if (tool == 'browser' && _desktopGateway != null) {
                   openBrowserPreview();
                 }
@@ -8323,6 +8648,7 @@ class _ChatScreenState extends State<ChatScreen>
                       ),
                     ),
                   ),
+                if (radio != null) radioToolItem(context),
               ],
             ),
           if (_streaming)
@@ -8694,6 +9020,25 @@ class _ChatScreenState extends State<ChatScreen>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (_catalog case final operation?)
+                      CatalogInstallCard(
+                        key: ValueKey(operation.opId),
+                        operation: operation,
+                        respond: (answer) => _respondCatalog(operation, answer),
+                        retry: _retryCatalogRow,
+                        onDismiss: () {
+                          if (_catalog?.opId == operation.opId &&
+                              operation.settled) {
+                            setState(() => _catalog = null);
+                          }
+                        },
+                      ),
+                    if (_setupBeat != null)
+                      SetupBeatCard(
+                        request: _setupBeat!,
+                        onAnswer: (result) =>
+                            _answerSetupBeat(_setupBeat!, result),
+                      ),
                     if (_voiceRecording.recording ||
                         _voiceRecording.hasDraft ||
                         _voiceRecording.busy ||
@@ -9042,32 +9387,35 @@ class _ChatScreenState extends State<ChatScreen>
                                         )
                                       : KeyEventResult.ignored,
                                   onSend: () => unawaited(_sendMessage()),
-                                  child: TextField(
-                                    key: const Key('chat-message-composer'),
-                                    focusNode: _composerFocus,
-                                    controller: _textController,
-                                    inputFormatters: [_largePasteFormatter],
-                                    decoration: InputDecoration(
-                                      hintText: context.l10n.message_hermes,
-                                      filled: true,
-                                      fillColor: Colors.transparent,
-                                      border: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 8,
-                                          ),
-                                      isDense: true,
+                                  child: ChatPresenceComposer(
+                                    builder: (_, input) => TextField(
+                                      key: const Key('chat-message-composer'),
+                                      onChanged: (_) => input(),
+                                      focusNode: _composerFocus,
+                                      controller: _textController,
+                                      inputFormatters: [_largePasteFormatter],
+                                      decoration: InputDecoration(
+                                        hintText: context.l10n.message_hermes,
+                                        filled: true,
+                                        fillColor: Colors.transparent,
+                                        border: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                              horizontal: 12,
+                                              vertical: 8,
+                                            ),
+                                        isDense: true,
+                                      ),
+                                      minLines: 1,
+                                      maxLines: 5,
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      keyboardType: TextInputType.multiline,
+                                      textInputAction: TextInputAction.newline,
+                                      enabled: !_transcriptLoadBlocksComposer,
                                     ),
-                                    minLines: 1,
-                                    maxLines: 5,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    keyboardType: TextInputType.multiline,
-                                    textInputAction: TextInputAction.newline,
-                                    enabled: !_transcriptLoadBlocksComposer,
                                   ),
                                 ),
                               ),
@@ -9483,6 +9831,8 @@ class _ChatScreenState extends State<ChatScreen>
         mediaReferencesFinal: message['_gateway_pending_response'] != true,
         mediaSourceIdentity: sourceIdentity,
         mediaFilesClient: isUser ? null : filesClient,
+        readWidgetHtml: _readWidgetHtml,
+        onWidgetIntent: _deliverWidgetIntent,
       );
     }
 
@@ -9493,12 +9843,16 @@ class _ChatScreenState extends State<ChatScreen>
         context: context,
         isScrollControlled: true,
         useSafeArea: true,
-        builder: (_) => ReceivedRecoveryInspector(
-          section: section,
-          verbose: verbose,
-          sourceIdentity: sourceIdentity,
-          filesClient: filesClient,
-          messageBuilder: buildMessage,
+        builder: (_) => RenderScope(
+          connection: renderConnectionKey(widget.connection),
+          chat: _storedSessionId ?? sessionId,
+          child: ReceivedRecoveryInspector(
+            section: section,
+            verbose: verbose,
+            sourceIdentity: sourceIdentity,
+            filesClient: filesClient,
+            messageBuilder: buildMessage,
+          ),
         ),
       );
     } finally {
@@ -9709,6 +10063,8 @@ class _ChatScreenState extends State<ChatScreen>
       mediaReferencesFinal: msg['_gateway_pending_response'] != true,
       mediaSourceIdentity: (widget.connection, _storedSessionKey, source),
       mediaFilesClient: isUser ? null : _newMediaFilesClient,
+      readWidgetHtml: _readWidgetHtml,
+      onWidgetIntent: _deliverWidgetIntent,
       onReadAloud: isUser
           ? null
           : () => _readAssistantText(content, announce: true),
@@ -10120,6 +10476,8 @@ class MessageBubble extends StatelessWidget {
   /// the phone would be worse than a dead link).
   final RemoteFilesDataSource Function()? mediaFilesClient;
   final Object? mediaSourceIdentity;
+  final WidgetHtmlReader? readWidgetHtml;
+  final Future<void> Function(String prompt)? onWidgetIntent;
 
   const MessageBubble({
     super.key,
@@ -10138,6 +10496,8 @@ class MessageBubble extends StatelessWidget {
     this.mediaSourceIdentity,
     this.mediaReferencesFinal = true,
     this.showQuickActions = false,
+    this.readWidgetHtml,
+    this.onWidgetIntent,
   });
 
   Future<void> _copyMessage(BuildContext context) async {
@@ -10181,6 +10541,13 @@ class MessageBubble extends StatelessWidget {
                 isFinal: mediaReferencesFinal,
               )
             : content;
+        final sheet = _messageStyleSheet(
+          dialogContext,
+          dialogTheme,
+          tokens,
+          isUser: false,
+          assistantTextColor: dialogTheme.colorScheme.onSurface,
+        );
         return AlertDialog(
           title: Text(dialogContext.l10n.select_text),
           content: SingleChildScrollView(
@@ -10199,8 +10566,13 @@ class MessageBubble extends StatelessWidget {
                       MarkdownBody(
                         data: block as String,
                         selectable: false,
-                        sizedImageBuilder: (image) =>
-                            Text(image.alt ?? image.title ?? ''),
+                        sizedImageBuilder: (image) => externalEmbed(
+                          dialogContext,
+                          uri: '${image.uri}',
+                          alt: image.alt ?? image.title,
+                          blocked: Text(image.alt ?? image.title ?? ''),
+                          linkColor: sheet.a?.color,
+                        ),
                         onTapLink: (_, href, _) => unawaited(
                           _openLink(
                             dialogContext,
@@ -10208,12 +10580,7 @@ class MessageBubble extends StatelessWidget {
                             previewOwner: previewOwner,
                           ),
                         ),
-                        styleSheet: _messageStyleSheet(
-                          dialogTheme,
-                          tokens,
-                          isUser: false,
-                          assistantTextColor: dialogTheme.colorScheme.onSurface,
-                        ),
+                        styleSheet: sheet,
                       ),
                 ],
               ),
@@ -10283,19 +10650,26 @@ class MessageBubble extends StatelessWidget {
   }
 
   MarkdownStyleSheet _messageStyleSheet(
+    BuildContext context,
     ThemeData theme,
     HermesTokens tokens, {
     required bool isUser,
     required Color assistantTextColor,
   }) {
     final foreground = isUser ? tokens.onAccent : assistantTextColor;
-    final body = theme.textTheme.bodyMedium?.copyWith(color: foreground);
+    final body = chatTypeface(
+      context,
+      theme.textTheme.bodyMedium?.copyWith(color: foreground),
+    );
     final rule = isUser ? tokens.onAccent : tokens.border;
     return MarkdownStyleSheet(
       p: body,
-      code: tokens.typography.mono.copyWith(
-        backgroundColor: tokens.accentContainer,
-        color: tokens.onAccentContainer,
+      code: terminalTypeface(
+        context,
+        tokens.typography.mono.copyWith(
+          backgroundColor: tokens.accentContainer,
+          color: tokens.onAccentContainer,
+        ),
       ),
       a: TextStyle(
         color: isUser ? tokens.onAccent : tokens.accent,
@@ -10341,6 +10715,7 @@ class MessageBubble extends StatelessWidget {
     Color assistantTextColor,
   ) {
     final styleSheet = _messageStyleSheet(
+      context,
       Theme.of(context),
       tokens,
       isUser: isUser,
@@ -10367,29 +10742,50 @@ class MessageBubble extends StatelessWidget {
         }
       }
     }
-    Widget prose(String text) => transcriptBody(
-      MarkdownBody(
-        data: text,
-        selectable: false,
-        styleSheet: styleSheet,
-        // Local images become lazy file cards below. Never let Markdown load a
-        // host path from the phone or contact an arbitrary image URL on render.
-        sizedImageBuilder: (image) => Text(image.alt ?? image.title ?? ''),
-        onTapLink: (_, href, _) => unawaited(_openLink(context, href)),
-      ),
-    );
+    Widget prose(String text) {
+      final body = transcriptBody(
+        MarkdownBody(
+          data: text,
+          selectable: false,
+          styleSheet: styleSheet,
+          // Local images become lazy file cards below. Remote https images
+          // follow Inline Embeds; nothing loads a host path from the phone.
+          sizedImageBuilder: (image) => externalEmbed(
+            context,
+            uri: '${image.uri}',
+            alt: image.alt ?? image.title,
+            blocked: Text(image.alt ?? image.title ?? ''),
+            linkColor: styleSheet.a?.color,
+          ),
+          onTapLink: (_, href, _) => unawaited(_openLink(context, href)),
+        ),
+      );
+      if (isUser) return body;
+      return transcriptEmbeds(
+        context,
+        text,
+        body,
+        complete: mediaReferencesFinal,
+      );
+    }
 
     final parseMedia = filesClient != null;
-    final blocks = splitMarkdownCodeBlocks(content);
+    final blocks = splitMarkdownCodeBlocks(content, openTail: true);
     final mediaOccurrences = <String, int>{};
 
     List<Widget> renderProse(String text) {
-      if (!parseMedia) return [prose(text)];
+      List<Widget> rich(String chunk) => richProseWidgets(
+        text: chunk,
+        markdown: prose,
+        readHtml: readWidgetHtml,
+        onIntent: onWidgetIntent,
+      );
+      if (!parseMedia) return rich(text);
       final segments = splitMediaTags(text, isFinal: mediaReferencesFinal);
       if (!segments.any((s) => s.isMedia)) {
-        return [
-          prose(inlineMediaTagsAsLinks(text, isFinal: mediaReferencesFinal)),
-        ];
+        return rich(
+          inlineMediaTagsAsLinks(text, isFinal: mediaReferencesFinal),
+        );
       }
       final widgets = <Widget>[];
       for (final segment in segments) {
@@ -10412,8 +10808,8 @@ class MessageBubble extends StatelessWidget {
           );
         } else if (segment.text.trim().isNotEmpty) {
           // Inline refs (mid-line) become markdown links in place.
-          widgets.add(
-            prose(
+          widgets.addAll(
+            rich(
               inlineMediaTagsAsLinks(
                 segment.text,
                 isFinal: mediaReferencesFinal,
@@ -10428,7 +10824,14 @@ class MessageBubble extends StatelessWidget {
     return [
       for (final block in blocks)
         if (block is MarkdownCodeBlock)
-          block
+          RichFence(
+            language: block.language,
+            code: block.code,
+            corpus: content,
+            fallback: block,
+            readHtml: readWidgetHtml,
+            onIntent: onWidgetIntent,
+          )
         else
           ...renderProse(block as String),
       if (filesClient != null)
@@ -10719,7 +11122,9 @@ class MessageBubble extends StatelessWidget {
         ),
         padding: density.bubblePadding,
         decoration: BoxDecoration(
-          color: isUser ? userBubbleColor : assistantBubbleColor,
+          color: isUser
+              ? userBubbleFill(context, userBubbleColor)
+              : assistantBubbleColor,
           borderRadius: BorderRadius.circular(density.bubbleRadius),
         ),
         child: Column(
@@ -10777,11 +11182,6 @@ class MessageBubble extends StatelessWidget {
                 ),
               ),
             ],
-            // Message content: assistant `MEDIA:` refs become file cards;
-            // prose renders as markdown and fenced code blocks render with
-            // language, copy, and wrap controls. User bubbles never parse
-            // MEDIA: — the contract is assistant-side delivery, and quoted
-            // tags in a prompt must stay verbatim.
             ..._renderContent(context, tokens, isUser, assistantTextColor),
             if (messageTime != null)
               Padding(
@@ -10813,16 +11213,34 @@ class MessageBubble extends StatelessWidget {
 
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      // Compact drops the visible label, but the speaker is still information:
-      // keep it for screen readers instead of removing it from the tree.
-      child: density.showsSenderLabel
-          ? bubble
-          : Semantics(
-              container: true,
-              label: isUser ? 'You' : 'Hermes',
-              child: bubble,
-            ),
+      child: transcriptDirection(
+        context,
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: isUser
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
+          children: [
+            density.showsSenderLabel
+                ? bubble
+                : Semantics(
+                    container: true,
+                    label: isUser ? 'You' : 'Hermes',
+                    child: bubble,
+                  ),
+            MessageReaction(messageId: _reactionId),
+          ],
+        ),
+      ),
     );
+  }
+
+  String? get _reactionId {
+    final id = metadata['id'] ?? metadata['message_id'];
+    if (id is! String || id.isEmpty || id.length > 200 || id.contains('\n')) {
+      return null;
+    }
+    return id;
   }
 }
 

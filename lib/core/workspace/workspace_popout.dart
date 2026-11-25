@@ -9,8 +9,11 @@ import 'package:uuid/uuid.dart';
 
 import '../../nextgen/nextgen_preferences.dart';
 import '../screens/parallel_workspace_entry.dart';
+import '../services/completion_cue_player.dart';
 import '../services/connection_mutation_barrier.dart';
 import '../services/hermes_sign_in.dart';
+import '../services/notification_prefs.dart';
+import '../widgets/chat_presence.dart';
 import 'popout_owner.dart';
 import 'popout_protocol.dart';
 
@@ -24,6 +27,114 @@ bool get supportsWorkspacePopout =>
     };
 
 final _openTargets = <String>{};
+
+/// Tells a launched pop-out whenever sharing chat activity is off, so an
+/// opt-out reaches open windows at once. Returns the remover. The child copied
+/// the preference at launch; this line can only take authority away.
+@visibleForTesting
+VoidCallback forwardActivityOptOut(IOSink stdin) {
+  var told = false;
+  void sync() {
+    if (notificationPrefs.value.shareWindowActivity) {
+      told = false;
+      return;
+    }
+    if (told) return;
+    told = true;
+    try {
+      stdin.writeln(workspacePopoutStopActivity);
+    } on Object {
+      // The child has exited; its reports ended with it.
+    }
+  }
+
+  notificationPrefs.addListener(sync);
+  sync();
+  return () => notificationPrefs.removeListener(sync);
+}
+
+/// The main window's half of the cue hand-off for one open pop-out.
+///
+/// A chat open in both windows must play its completion cue once. Desktop
+/// gives each cue to one window (`ownsAmbientCue`); here the main window
+/// decides, from what both windows show, and tells the pop-out
+/// ([workspacePopoutCueMain] / [workspacePopoutCuePopout]):
+///
+/// * the pop-out plays while it holds presence for the chat (it reports
+///   [workspacePopoutPresenceHeld]) and the main window does not;
+/// * otherwise the main window plays when it shows the chat;
+/// * otherwise the pop-out plays: it is the only window with the chat.
+///
+/// The main window plays the chat's cue only while its last line gave it the
+/// cue, and the pop-out only while that line gave the cue to the pop-out, so
+/// the two windows never both play it.
+class PopoutCueLink {
+  PopoutCueLink._(this.cueKey, this._send);
+
+  final String cueKey;
+  final void Function(String line) _send;
+  bool _held = false;
+  bool? _popoutPlays;
+
+  /// What the pop-out was last told; null before the first line.
+  bool? get popoutPlays => _popoutPlays;
+
+  /// The pop-out's latest [workspacePopoutPresenceHeld] or
+  /// [workspacePopoutPresenceFree] line.
+  void childPresence(bool held) {
+    _held = held;
+    _sync();
+  }
+
+  void _sync() {
+    final presence = ChatPresenceCoordinator.instance;
+    final plays = (_held && !presence.holds(cueKey)) || !presence.shows(cueKey);
+    if (plays == _popoutPlays) return;
+    _popoutPlays = plays;
+    try {
+      _send(plays ? workspacePopoutCuePopout : workspacePopoutCueMain);
+    } on Object {
+      // The child has exited; its cue ended with it.
+    }
+  }
+
+  /// The pop-out closed: the main window plays every cue for this chat.
+  void close() {
+    if (!identical(_cueLinks[cueKey], this)) return;
+    _cueLinks.remove(cueKey);
+    if (_cueLinks.isNotEmpty) return;
+    ChatPresenceCoordinator.instance.changes.removeListener(_syncCueLinks);
+    final player = CompletionCuePlayer.instance;
+    if (player.ownership == _mainPlaysCue) player.ownership = null;
+  }
+}
+
+final _cueLinks = <String, PopoutCueLink>{};
+
+void _syncCueLinks() {
+  for (final link in List.of(_cueLinks.values)) {
+    link._sync();
+  }
+}
+
+bool _mainPlaysCue(String key) => _cueLinks[key]?.popoutPlays != true;
+
+/// Starts the cue hand-off for a launched pop-out of [target]; [send] writes
+/// one line to its stdin. The first line goes out at once.
+@visibleForTesting
+PopoutCueLink linkPopoutCue(
+  PopoutTarget target,
+  void Function(String line) send,
+) {
+  if (_cueLinks.isEmpty) {
+    ChatPresenceCoordinator.instance.changes.addListener(_syncCueLinks);
+    CompletionCuePlayer.instance.ownership = _mainPlaysCue;
+  }
+  final link = PopoutCueLink._(target.cueKey, send);
+  _cueLinks[link.cueKey] = link;
+  link._sync();
+  return link;
+}
 
 /// Opens only from the keyed workspace entry. A launched child has no root
 /// navigator, connection chooser or durable app-state writer. No shell, URI
@@ -92,6 +203,8 @@ Future<void> _openNative(
   Process? child;
   var retired = false;
   var listening = true;
+  VoidCallback? stopForwarding;
+  PopoutCueLink? cue;
   final ready = Completer<bool>();
   void retire() {
     retired = true;
@@ -127,6 +240,10 @@ Future<void> _openNative(
 
   void detach() {
     listening = false;
+    stopForwarding?.call();
+    stopForwarding = null;
+    cue?.close();
+    cue = null;
     _openTargets.remove(target.key);
     ConnectionMutationBarrier.removeListener(check);
     HermesSignInVault.instance.removeListener(checkCredentials);
@@ -175,9 +292,14 @@ Future<void> _openNative(
         .transform(const Utf8Decoder(allowMalformed: true))
         .transform(const LineSplitter())
         .listen((line) {
-          if (ready.isCompleted) return;
-          if (line == workspacePopoutReady) ready.complete(true);
-          if (line == workspacePopoutFailed) ready.complete(false);
+          if (!ready.isCompleted) {
+            if (line == workspacePopoutReady) ready.complete(true);
+            if (line == workspacePopoutFailed) ready.complete(false);
+            return;
+          }
+          // After ready, only the pop-out's presence for its chat is read.
+          if (line == workspacePopoutPresenceHeld) cue?.childPresence(true);
+          if (line == workspacePopoutPresenceFree) cue?.childPresence(false);
         }, onError: (Object _) => retire());
     check();
     if (retired) {
@@ -188,6 +310,10 @@ Future<void> _openNative(
       jsonEncode({'target': target.toJson(), 'nonce': nonce, 'proof': proof}),
     );
     await process.stdin.flush(); // Keep the pipe open until exit.
+    if (listening) {
+      stopForwarding = forwardActivityOptOut(process.stdin);
+      cue = linkPopoutCue(target, process.stdin.writeln);
+    }
     final ok = await ready.future.timeout(
       const Duration(seconds: 45),
       onTimeout: () => false,

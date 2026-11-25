@@ -19,6 +19,27 @@ typedef GatewayTurnApplicationSessionFactory =
     GatewayTurnApplicationSession Function(SavedConnection connection);
 typedef GatewayTurnJournalFactory = GatewayTurnJournal Function();
 
+/// Answers `setup_beat` cards. The live recovery session implements it;
+/// a session that does not leaves the card to the screen's other owners.
+abstract interface class GatewaySetupBeatResponder {
+  bool tryRespondToSetupBeat({
+    required String sessionId,
+    required String requestId,
+    required Map<String, dynamic> result,
+  });
+
+  /// Whether this owner still holds [sessionId]'s setup card [requestId]
+  /// open, so an answer that did not go out can be sent again.
+  bool holdsSetupBeat({required String sessionId, required String requestId});
+
+  /// Answers [sessionId]'s connection operation card (`connection.respond`).
+  Future<bool> tryRespondToConnection({
+    required String sessionId,
+    required String opId,
+    required Map<String, dynamic> result,
+  });
+}
+
 /// Connection-scoped recovery surface retained by the application owner.
 abstract interface class GatewayTurnApplicationSession {
   /// Routes interactive server requests for one mounted chat screen.
@@ -436,7 +457,10 @@ class GatewayTurnApplicationController {
 }
 
 class _CoordinatorGatewayTurnApplicationSession
-    implements GatewayTurnApplicationSession, GuardedGatewayTurnSubmission {
+    implements
+        GatewayTurnApplicationSession,
+        GuardedGatewayTurnSubmission,
+        GatewaySetupBeatResponder {
   final DesktopGatewayClient _client;
   final Map<String, _ApplicationAsyncEventRegistration> _asyncEventListeners =
       {};
@@ -570,6 +594,39 @@ class _CoordinatorGatewayTurnApplicationSession
     );
     return true;
   }
+
+  @override
+  Future<bool> tryRespondToConnection({
+    required String sessionId,
+    required String opId,
+    required Map<String, dynamic> result,
+  }) async {
+    if (_closed) return false;
+    return _client.respondToConnection(
+      sessionId: sessionId,
+      opId: opId,
+      result: result,
+    );
+  }
+
+  @override
+  bool tryRespondToSetupBeat({
+    required String sessionId,
+    required String requestId,
+    required Map<String, dynamic> result,
+  }) {
+    if (_closed) return false;
+    return _client.respondToSetupBeat(
+      sessionId: sessionId,
+      requestId: requestId,
+      result: result,
+    );
+  }
+
+  @override
+  bool holdsSetupBeat({required String sessionId, required String requestId}) =>
+      !_closed &&
+      _client.holdsSetupBeat(sessionId: sessionId, requestId: requestId);
 
   @override
   Future<bool> tryRespondToSudo({

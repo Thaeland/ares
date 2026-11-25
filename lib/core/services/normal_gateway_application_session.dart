@@ -24,6 +24,7 @@ import 'prepared_image_store.dart';
 import 'operational_activity_store.dart';
 import 'notification_prefs.dart';
 import 'turn_notification_service.dart';
+import 'completion_cue_player.dart';
 import 'notification_approval_authority.dart';
 import 'connection_mutation_barrier.dart';
 import 'ws_client.dart';
@@ -700,6 +701,54 @@ class NormalGatewayApplicationSession {
       chat._notify();
     }
     return true;
+  }
+
+  /// Answers [sessionId]'s connection operation card; false when this owner
+  /// does not hold that chat or its runtime session.
+  Future<bool> tryRespondToConnection({
+    required String sessionId,
+    required String opId,
+    required Map<String, dynamic> result,
+  }) async {
+    final chat = _aliases[sessionId];
+    final gateway = client;
+    if (_closed || chat == null || gateway == null) return false;
+    return gateway.respondToConnection(
+      sessionId: chat.localSessionId,
+      opId: opId,
+      result: result,
+    );
+  }
+
+  /// Answers the `setup_beat` card [requestId] for [sessionId]; false when
+  /// this owner does not hold it open.
+  bool tryRespondToSetupBeat({
+    required String sessionId,
+    required String requestId,
+    required Map<String, dynamic> result,
+  }) {
+    final chat = _aliases[sessionId];
+    final gateway = client;
+    if (_closed || chat == null || gateway == null) return false;
+    final sent = gateway.respondToSetupBeat(
+      sessionId: chat.localSessionId,
+      requestId: requestId,
+      result: result,
+    );
+    if (sent) forgetAnsweredInput(requestId);
+    return sent;
+  }
+
+  /// Whether this owner still holds [sessionId]'s setup card [requestId]
+  /// open, so an answer that did not go out can be sent again.
+  bool holdsSetupBeat({required String sessionId, required String requestId}) {
+    final chat = _aliases[sessionId];
+    final gateway = client;
+    if (_closed || chat == null || gateway == null) return false;
+    return gateway.holdsSetupBeat(
+      sessionId: chat.localSessionId,
+      requestId: requestId,
+    );
   }
 
   void forgetAnsweredInput(String requestId) {
@@ -1928,6 +1977,9 @@ class NormalGatewayChatOwner {
       'background.complete',
       'btw.complete',
       'review.summary',
+      // manage_catalog install cards: the chat screen draws and answers them.
+      'connection.request',
+      'connection.update',
     }.contains(event.type)) {
       _auxiliaryEvents.add(event);
       if (_auxiliaryEvents.length > 20) _auxiliaryEvents.removeAt(0);
@@ -2738,6 +2790,12 @@ class NormalGatewayChatOwner {
               _history.any((row) => _responseRow(row, _floor!)))) {
         unawaited(_refreshSettledHistory(owned));
       }
+      if (settledWireEmitted && completed == true && !_session._background) {
+        // The in-app cue; a completion notification covers the background.
+        CompletionCuePlayer.instance.turnFinished(
+          '${_session.connection.id}|$settledSessionId',
+        );
+      }
       if (settledWireEmitted &&
           completed != null &&
           _session._background &&
@@ -3203,6 +3261,7 @@ class _ReceivedTurnPersistence {
 
 bool _interactive(String type) => const {
   'approval.request',
+  'setup_beat.request',
   'clarify.request',
   'clarify.remaining',
   'sudo.request',
