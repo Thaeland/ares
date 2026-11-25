@@ -901,6 +901,11 @@ class _ChatScreenState extends State<ChatScreen>
 
   final _imagePicker = ImagePicker();
   final List<AttachmentDraft> _attachmentDrafts = [];
+
+  /// Every draft intake (drops, pastes, keyboard images, the pickers and
+  /// files-panel drags) checks the free slots and prepares inside this
+  /// queue, so two that overlap never pass the limits together.
+  final _intake = ComposerIntakeQueue();
   final _preview = PreviewSlot();
   String? _sessionModel;
   String? _sessionProvider;
@@ -4066,7 +4071,10 @@ class _ChatScreenState extends State<ChatScreen>
     unawaited(_prepareLargePaste(edit, revision));
   }
 
-  Future<void> _prepareLargePaste(LargePasteEdit edit, int revision) async {
+  Future<void> _prepareLargePaste(LargePasteEdit edit, int revision) =>
+      _intake.run(() => _prepareLargePasteNow(edit, revision));
+
+  Future<void> _prepareLargePasteNow(LargePasteEdit edit, int revision) async {
     AttachmentDraft? prepared;
     try {
       prepared = await _attachmentDraftService.preparePastedText(
@@ -4279,7 +4287,17 @@ class _ChatScreenState extends State<ChatScreen>
 
   /// Returns how many images became drafts. [remote] says whether the
   /// gateway takes several drafts (by default, a Desktop gateway does).
-  Future<int> _preparePickedImages(List<XFile> images, {bool? remote}) async {
+  Future<int> _preparePickedImages(List<XFile> images, {bool? remote}) =>
+      _intake.run(() async {
+        if (!mounted) return 0;
+        return _preparePickedImagesNow(images, remote: remote);
+      });
+
+  /// [_preparePickedImages] inside the intake queue.
+  Future<int> _preparePickedImagesNow(
+    List<XFile> images, {
+    bool? remote,
+  }) async {
     final l10n = context.l10n;
     final isRemote = remote ?? _desktopGateway != null;
     final prepared = <AttachmentDraft>[];
@@ -4344,45 +4362,48 @@ class _ChatScreenState extends State<ChatScreen>
       );
       final files = result?.files ?? const [];
       if (files.isEmpty) return;
-      final available = maxRemoteAttachmentDrafts - _attachmentDrafts.length;
-      if (available <= 0) {
+      await _intake.run(() async {
         if (!mounted) return;
-        _showAttachmentError(
-          context.l10n.you_can_attach_up_to_items(maxRemoteAttachmentDrafts),
-        );
-        return;
-      }
-      final prepared = <AttachmentDraft>[];
-      var rejected = 0;
-      for (final file in files.take(available)) {
-        final path = file.path;
-        if (path == null) {
-          rejected++;
-          continue;
-        }
-        try {
-          prepared.add(
-            await _attachmentDraftService.prepareGenericFile(
-              sourcePath: path,
-              displayName: file.name,
-              existingDrafts: [..._attachmentDrafts, ...prepared],
-            ),
+        final available = maxRemoteAttachmentDrafts - _attachmentDrafts.length;
+        if (available <= 0) {
+          _showAttachmentError(
+            context.l10n.you_can_attach_up_to_items(maxRemoteAttachmentDrafts),
           );
-        } catch (_) {
-          rejected++;
+          return;
         }
-      }
-      if (!mounted) {
-        await _attachmentDraftService.removeAll(prepared);
-        return;
-      }
-      setState(() => _attachmentDrafts.addAll(prepared));
-      if (files.length > available || rejected > 0) {
-        _showAttachmentError(
-          context.l10n.files_skipped(files.length - prepared.length),
-        );
-      }
+        final prepared = <AttachmentDraft>[];
+        var rejected = 0;
+        for (final file in files.take(available)) {
+          final path = file.path;
+          if (path == null) {
+            rejected++;
+            continue;
+          }
+          try {
+            prepared.add(
+              await _attachmentDraftService.prepareGenericFile(
+                sourcePath: path,
+                displayName: file.name,
+                existingDrafts: [..._attachmentDrafts, ...prepared],
+              ),
+            );
+          } catch (_) {
+            rejected++;
+          }
+        }
+        if (!mounted) {
+          await _attachmentDraftService.removeAll(prepared);
+          return;
+        }
+        setState(() => _attachmentDrafts.addAll(prepared));
+        if (files.length > available || rejected > 0) {
+          _showAttachmentError(
+            context.l10n.files_skipped(files.length - prepared.length),
+          );
+        }
+      });
     } catch (_) {
+      if (!mounted) return;
       _showAttachmentError(
         context.l10n.unable_to_prepare_this_file_try_another_one,
       );
@@ -4432,20 +4453,32 @@ class _ChatScreenState extends State<ChatScreen>
       }
       // REST takes one image, replacing the last; the gateway counts drafts.
       final restImage = image && !_remoteDraftsAllowed;
-      if (!restImage && _attachmentDrafts.length >= maxRemoteAttachmentDrafts) {
+      // The slot check runs in the intake queue, after every earlier drop,
+      // paste or pick has staged: two at once never both take the last slot.
+      var full = false;
+      staged += await withDroppedFileAccess(
+        file,
+        () => _intake.run(() async {
+          if (!mounted) return 0;
+          if (!restImage &&
+              _attachmentDrafts.length >= maxRemoteAttachmentDrafts) {
+            full = true;
+            return 0;
+          }
+          return image
+              ? _preparePickedImagesNow([
+                  XFile(file.path, name: file.name),
+                ], remote: _remoteDraftsAllowed)
+              : _prepareLocalFile(file.path, file.name);
+        }),
+      );
+      if (!mounted) break;
+      if (full) {
         _showAttachmentError(
           context.l10n.you_can_attach_up_to_items(maxRemoteAttachmentDrafts),
         );
         break;
       }
-      staged += await withDroppedFileAccess(
-        file,
-        () => image
-            ? _preparePickedImages([
-                XFile(file.path, name: file.name),
-              ], remote: _remoteDraftsAllowed)
-            : _prepareLocalFile(file.path, file.name),
-      );
       if (restImage) break;
     }
     if (folders && mounted) {
@@ -4454,7 +4487,8 @@ class _ChatScreenState extends State<ChatScreen>
     return staged;
   }
 
-  /// One local non-image file as a draft, as Choose files prepares it.
+  /// One local non-image file as a draft, as Choose files prepares it. Runs
+  /// inside the intake queue.
   Future<int> _prepareLocalFile(String path, String name) async {
     try {
       final draft = await _attachmentDraftService.prepareGenericFile(
@@ -8472,6 +8506,11 @@ class _ChatScreenState extends State<ChatScreen>
             'Wait for the composer to become available.',
           );
         }
+        // A drop or paste may have staged drafts while the crops prepared.
+        _attachmentDraftService.validateRemoteDrafts([
+          ..._attachmentDrafts,
+          ...crops,
+        ]);
         setState(() {
           _attachmentDrafts.addAll(crops);
           appendPreviewText(_textController, text);

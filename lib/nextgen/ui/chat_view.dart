@@ -578,19 +578,18 @@ class _NgChatViewState extends State<NgChatView>
                   maxWidth: 1600,
                   maxHeight: 1600,
                 );
-          for (final image in images.take(_slotsLeft)) {
-            try {
-              final draft = await chat.attachmentService.prepareImage(
+          for (final image in images) {
+            final error = await _queueDraft(
+              () => chat.attachmentService.prepareImage(
                 sourcePath: image.path,
                 displayName: image.name,
-                existingDrafts: _drafts,
+                existingDrafts: List.of(_drafts),
                 mode: AttachmentDraftMode.remoteGateway,
                 maxTotalBytes: maxNextGenAttachmentDraftBytes,
-              );
-              if (mounted) setState(() => _drafts.add(draft));
-            } on AttachmentDraftException catch (e) {
-              errors.add(e.message);
-            }
+              ),
+            );
+            if (error != null) errors.add(error);
+            if (_slotsLeft <= 0 || !mounted) break;
           }
         case 'files':
           final result = await FilePicker.platform.pickFiles(
@@ -598,29 +597,28 @@ class _NgChatViewState extends State<NgChatView>
             allowMultiple: true,
             withData: false,
           );
-          for (final file in (result?.files ?? const []).take(_slotsLeft)) {
+          for (final file in result?.files ?? const <PlatformFile>[]) {
             final path = file.path;
             if (path == null) {
               errors.add(ngL.ng_couldn_t_read(file.name));
               continue;
             }
-            try {
-              final draft = await chat.attachmentService.prepareGenericFile(
+            final error = await _queueDraft(
+              () => chat.attachmentService.prepareGenericFile(
                 sourcePath: path,
                 displayName: file.name,
                 mediaType:
                     attachmentMimeType((file.extension ?? '').toLowerCase()) ??
                     'application/octet-stream',
-                existingDrafts: _drafts,
+                existingDrafts: List.of(_drafts),
                 // Kyllene's limit: files past the inline size stream to the
                 // gateway's upload, which takes up to 100 MB each.
                 maxFileBytes: maxNextGenAttachmentBytes,
                 maxTotalBytes: maxNextGenAttachmentDraftBytes,
-              );
-              if (mounted) setState(() => _drafts.add(draft));
-            } on AttachmentDraftException catch (e) {
-              errors.add(e.message);
-            }
+              ),
+            );
+            if (error != null) errors.add(error);
+            if (_slotsLeft <= 0 || !mounted) break;
           }
       }
     } catch (e) {
@@ -680,6 +678,18 @@ class _NgChatViewState extends State<NgChatView>
       return;
     }
     if (_drafts.isNotEmpty && !chat.running) {
+      // The whole draft against the limits, as Classic checks it before an
+      // upload: a refused draft keeps its text and files.
+      try {
+        chat.attachmentService.validateRemoteDrafts(
+          _drafts,
+          maxFileBytes: maxNextGenAttachmentBytes,
+          maxTotalBytes: maxNextGenAttachmentDraftBytes,
+        );
+      } on AttachmentDraftException catch (error) {
+        ngToast(context, error.message);
+        return;
+      }
       final raw = _input.text;
       final drafts = List.of(_drafts);
       _input.clear();
@@ -976,17 +986,14 @@ class _NgChatViewState extends State<NgChatView>
       return;
     }
     if (plan.kind == LocalIntake.pastedText) {
-      try {
-        final draft = await chat.attachmentService.preparePastedText(
+      final error = await _queueDraft(
+        () => chat.attachmentService.preparePastedText(
           text: chunk.text,
-          existingDrafts: _drafts,
-        );
-        if (!mounted) return;
-        _removePasted(chunk);
-        setState(() => _drafts.add(draft));
-      } on AttachmentDraftException catch (error) {
-        if (mounted) ngToast(context, error.message);
-      }
+          existingDrafts: List.of(_drafts),
+        ),
+        onStaged: () => _removePasted(chunk),
+      );
+      if (error != null && mounted) ngToast(context, error);
       return;
     }
     final staged = plan.path;
@@ -1012,26 +1019,17 @@ class _NgChatViewState extends State<NgChatView>
   /// person sends, within the draft count and size limits the Attach button
   /// uses.
   Future<bool> _stageLocal(LocalIntake kind, String path) async {
-    if (_slotsLeft <= 0) {
-      if (mounted) {
-        ngToast(
-          context,
-          ngL.ng_you_can_attach_up_to_files(maxRemoteAttachmentDrafts),
-        );
-      }
-      return false;
-    }
-    try {
-      final name = path.split(RegExp(r'[\\/]')).where((p) => p.isNotEmpty).last;
-      final draft = kind == LocalIntake.imageFile
-          ? await chat.attachmentService.prepareImage(
+    final name = path.split(RegExp(r'[\\/]')).where((p) => p.isNotEmpty).last;
+    final error = await _queueDraft(
+      () => kind == LocalIntake.imageFile
+          ? chat.attachmentService.prepareImage(
               sourcePath: path,
               displayName: name,
-              existingDrafts: _drafts,
+              existingDrafts: List.of(_drafts),
               mode: AttachmentDraftMode.remoteGateway,
               maxTotalBytes: maxNextGenAttachmentDraftBytes,
             )
-          : await chat.attachmentService.prepareGenericFile(
+          : chat.attachmentService.prepareGenericFile(
               sourcePath: path,
               displayName: name,
               mediaType:
@@ -1041,24 +1039,53 @@ class _NgChatViewState extends State<NgChatView>
                         : '',
                   ) ??
                   'application/octet-stream',
-              existingDrafts: _drafts,
+              existingDrafts: List.of(_drafts),
               maxFileBytes: maxNextGenAttachmentBytes,
               maxTotalBytes: maxNextGenAttachmentDraftBytes,
-            );
-      if (!mounted) {
-        await chat.attachmentService.removeAll([draft]);
-        return false;
-      }
-      setState(() => _drafts.add(draft));
-      return true;
-    } on AttachmentDraftException catch (error) {
-      if (mounted) ngToast(context, error.message);
-      return false;
-    } catch (_) {
-      if (mounted) ngToast(context, ngL.ng_couldn_t_read(path));
-      return false;
-    }
+            ),
+      unreadable: ngL.ng_couldn_t_read(path),
+    );
+    if (error == null) return true;
+    if (mounted) ngToast(context, error);
+    return false;
   }
+
+  /// This composer's intake, one draft at a time (see
+  /// [ComposerIntakeQueue]): drops, pastes, keyboard images, the Attach
+  /// picker and files-panel drags all stage through it.
+  final _intake = ComposerIntakeQueue();
+
+  /// Prepares one draft in the intake queue: the free-slot check and the
+  /// prepare see every draft staged before this one, so overlapping intake
+  /// never passes [maxRemoteAttachmentDrafts] together. Returns null once
+  /// the draft is staged ([onStaged] runs in the same frame), else why not.
+  Future<String?> _queueDraft(
+    Future<AttachmentDraft> Function() prepare, {
+    VoidCallback? onStaged,
+    String? unreadable,
+  }) => _intake.run(() async {
+    if (!mounted) return '';
+    if (_slotsLeft <= 0) {
+      return ngL.ng_you_can_attach_up_to_files(maxRemoteAttachmentDrafts);
+    }
+    final AttachmentDraft draft;
+    try {
+      draft = await prepare();
+    } on AttachmentDraftException catch (error) {
+      return error.message;
+    } catch (error) {
+      return unreadable ?? ngL.ng_couldn_t_prepare_that_file(error);
+    }
+    if (!mounted || _slotsLeft <= 0) {
+      await chat.attachmentService.removeAll([draft]);
+      return mounted
+          ? ngL.ng_you_can_attach_up_to_files(maxRemoteAttachmentDrafts)
+          : '';
+    }
+    setState(() => _drafts.add(draft));
+    onStaged?.call();
+    return null;
+  });
 
   /// Files dropped from the OS: each file becomes a draft; a folder cannot.
   Future<void> _acceptOsFiles(List<OsIntakeFile> files) async {
@@ -1358,6 +1385,12 @@ class _NgChatViewState extends State<NgChatView>
             'Wait for the composer to become available.',
           );
         }
+        // A drop or paste may have staged drafts while the crops prepared.
+        chat.attachmentService.validateRemoteDrafts(
+          [..._drafts, ...crops],
+          maxFileBytes: maxNextGenAttachmentBytes,
+          maxTotalBytes: maxNextGenAttachmentDraftBytes,
+        );
         setState(() {
           _drafts.addAll(crops);
           appendPreviewText(_input, text);

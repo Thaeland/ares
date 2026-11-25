@@ -1,7 +1,44 @@
+import 'dart:async';
+
 import '../utils/large_paste.dart';
 import 'composer_drag.dart';
 
 const kLocalImageExtensions = {'png', 'jpg', 'jpeg', 'webp'};
+
+/// One composer's attachment intake, one job at a time.
+///
+/// Every way a draft arrives (an OS drop, a paste, a keyboard image, the
+/// Attach picker, a drag from the files panel) checks the free slots and the
+/// size budget against the drafts already staged, then awaits file work. Two
+/// jobs that both checked before either finished would both pass, so the
+/// composer runs the check and its prepare inside [run]: each job starts
+/// only after the one before it has staged its draft (or failed).
+///
+/// A job must not await another [run] of the same queue: it would wait on
+/// itself.
+class ComposerIntakeQueue {
+  Future<void> _tail = Future<void>.value();
+  int _pending = 0;
+
+  /// Whether a job is waiting or running.
+  bool get busy => _pending > 0;
+
+  Future<T> run<T>(Future<T> Function() job) {
+    final previous = _tail;
+    final done = Completer<void>();
+    _tail = done.future;
+    _pending++;
+    return () async {
+      try {
+        await previous;
+        return await job();
+      } finally {
+        _pending--;
+        done.complete();
+      }
+    }();
+  }
+}
 
 enum LocalIntake { leaveText, pastedText, imageFile, genericFile, reference }
 
