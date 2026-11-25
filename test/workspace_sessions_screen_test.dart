@@ -1,9 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hermes_android/core/models/connection.dart';
+import 'package:hermes_android/core/services/session_search_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/models/session.dart';
+import 'package:hermes_android/core/models/session_search_hit.dart';
 import 'package:hermes_android/core/screens/workspace_sessions_screen.dart';
 import 'package:hermes_android/core/theme/hermes_theme.dart';
 import 'package:hermes_android/core/widgets/hermes_components.dart';
@@ -47,6 +51,112 @@ void main() {
     );
     expect(result.map((session) => session.id), ['s2']);
   });
+
+  testWidgets(
+    'active Classic search merges current content hits and ignores superseded replies',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final connection = SavedConnection(
+        id: 'search',
+        label: 'Search',
+        host: 'test.invalid',
+        port: 8642,
+        apiKey: '',
+      );
+      await (await SessionSearchPreferences.open()).saveMode(
+        connectionIdentity: sessionSearchIdentity(connection),
+        mode: SessionSearchMode.server,
+      );
+      final held = Completer<List<SessionSearchHit>>();
+      Session? opened;
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: WorkspaceSessionsScreen(
+              title: 'Chats',
+              view: WorkspaceSessionView.all,
+              embedded: true,
+              load: () async => WorkspaceSessionsData(
+                sessions: [_session('a', 'Pinned title', pinned: true)],
+              ),
+              searchScope: connection,
+              searchMessages: (q, _) => q == 'old'
+                  ? held.future
+                  : Future.value([
+                      SessionSearchHit(
+                        session: _session('a', 'Sparse title'),
+                        snippet: 'Excerpt: current',
+                      ),
+                    ]),
+              onOpenSession: (s) => opened = s,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final field = find.byKey(kWorkspaceSessionSearchKey);
+      await tester.enterText(field, 'old');
+      await tester.pump(const Duration(milliseconds: 310));
+      await tester.enterText(field, 'current');
+      await tester.pump(const Duration(milliseconds: 310));
+      held.completeError(StateError('old failure'));
+      await tester.pumpAndSettle();
+      expect(find.text('Pinned title'), findsOneWidget);
+      expect(find.text('Sparse title'), findsNothing);
+      expect(find.text('Excerpt: current'), findsOneWidget);
+      expect(find.byIcon(Icons.push_pin), findsOneWidget);
+      await tester.tap(find.text('Pinned title'));
+      expect(opened?.id, 'a');
+      await tester.tap(find.byTooltip(l10n.clear_search));
+      await tester.pump();
+      expect(tester.widget<TextField>(field).controller!.text, isEmpty);
+      expect(find.text('Excerpt: current'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Classic groups by project without moving pins into project sections',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(700, 1200));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: WorkspaceSessionsScreen(
+              title: 'Chats',
+              view: WorkspaceSessionView.all,
+              embedded: true,
+              load: () async => WorkspaceSessionsData(
+                sessions: [
+                  _session('a', 'Alpha'),
+                  _session('b', 'Pinned finding', pinned: true),
+                ],
+                claimedSessionIds: const {'a', 'b'},
+                projectLabels: const {'a': 'Research', 'b': 'Research'},
+              ),
+              onOpenSession: (_) {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Organise chats'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.widgetWithText(CheckedPopupMenuItem<Object>, 'Group by project'),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Research'), findsNWidgets(3));
+      expect(
+        tester.getTopLeft(find.text('Pinned finding')).dy,
+        lessThan(tester.getTopLeft(find.text('Alpha')).dy),
+      );
+    },
+  );
 
   group('WorkspaceChatsFilter', () {
     test('declares the four validated chip filters in order', () {

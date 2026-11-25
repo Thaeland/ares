@@ -18,6 +18,8 @@ enum HermesNotificationKind {
   plugin,
 }
 
+enum WindowsCompletionSound { system, mail, reminder, silent }
+
 /// Per-device notification preferences: one master switch and a toggle per
 /// kind. Stored in [SharedPreferences] so they survive restarts and never
 /// leave the device.
@@ -26,7 +28,14 @@ class NotificationPrefs {
   final bool enabled;
   final Map<HermesNotificationKind, bool> kinds;
 
-  const NotificationPrefs({required this.enabled, required this.kinds});
+  final WindowsCompletionSound completionSound;
+  final bool shareWindowActivity;
+  const NotificationPrefs({
+    required this.enabled,
+    required this.kinds,
+    this.completionSound = WindowsCompletionSound.system,
+    this.shareWindowActivity = false,
+  });
 
   static const defaults = NotificationPrefs(
     enabled: true,
@@ -49,6 +58,8 @@ class NotificationPrefs {
     bool? enabled,
     HermesNotificationKind? kind,
     bool? kindValue,
+    WindowsCompletionSound? completionSound,
+    bool? shareWindowActivity,
   }) {
     final nextKinds = Map<HermesNotificationKind, bool>.from(kinds);
     if (kind != null && kindValue != null) {
@@ -57,6 +68,8 @@ class NotificationPrefs {
     return NotificationPrefs(
       enabled: enabled ?? this.enabled,
       kinds: nextKinds,
+      completionSound: completionSound ?? this.completionSound,
+      shareWindowActivity: shareWindowActivity ?? this.shareWindowActivity,
     );
   }
 
@@ -74,11 +87,20 @@ class NotificationPrefs {
     return NotificationPrefs(
       enabled: json['enabled'] is bool ? json['enabled'] as bool : true,
       kinds: kinds,
+      shareWindowActivity: json['shareWindowActivity'] == true,
+      completionSound:
+          WindowsCompletionSound.values
+              .where((s) => s.name == json['windowsSound'])
+              .firstOrNull ??
+          WindowsCompletionSound.system,
     );
   }
 
   Map<String, dynamic> toJson() => {
     'enabled': enabled,
+    if (shareWindowActivity) 'shareWindowActivity': true,
+    if (completionSound != WindowsCompletionSound.system)
+      'windowsSound': completionSound.name,
     'kinds': {for (final entry in kinds.entries) entry.key.name: entry.value},
   };
 }
@@ -115,6 +137,18 @@ abstract final class NotificationPrefsStore {
 
   static Future<void> setEnabled(bool enabled) async {
     final next = notificationPrefs.value.copyWith(enabled: enabled);
+    notificationPrefs.value = next;
+    await _persist(next);
+  }
+
+  static Future<void> setShareWindowActivity(bool value) async {
+    final next = notificationPrefs.value.copyWith(shareWindowActivity: value);
+    notificationPrefs.value = next;
+    await _persist(next);
+  }
+
+  static Future<void> setWindowsSound(WindowsCompletionSound sound) async {
+    final next = notificationPrefs.value.copyWith(completionSound: sound);
     notificationPrefs.value = next;
     await _persist(next);
   }

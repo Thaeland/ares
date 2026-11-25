@@ -119,6 +119,18 @@ abstract class AppLocalizations {
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
   ];
 
+  /// No description provided for @workspace_workers.
+  ///
+  /// In en, this message translates to:
+  /// **'Live workers'**
+  String get workspace_workers;
+
+  /// No description provided for @workers_unattached.
+  ///
+  /// In en, this message translates to:
+  /// **'Counts only. To steer a worker, choose Live workers in its attached parent chat.'**
+  String get workers_unattached;
+
   /// No description provided for @slash_local_arguments.
   ///
   /// In en, this message translates to:
@@ -1348,6 +1360,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Attachment drafts'**
   String get attachment_drafts;
+
+  /// No description provided for @recover_text_draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Recover a text draft'**
+  String get recover_text_draft;
+
+  /// No description provided for @undo_draft_recovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo_draft_recovery;
+
+  /// No description provided for @draft_session_exists.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat still exists. Open it to continue your draft.'**
+  String get draft_session_exists;
+
+  /// No description provided for @draft_recovery_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not verify this draft. Nothing was changed.'**
+  String get draft_recovery_unavailable;
 
   /// No description provided for @attachment_of.
   ///
@@ -3309,6 +3345,60 @@ abstract class AppLocalizations {
   /// **'Notifications'**
   String get notifications;
 
+  /// No description provided for @windows_notifications_blocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.'**
+  String get windows_notifications_blocked;
+
+  /// No description provided for @windows_notification_diagnostics.
+  ///
+  /// In en, this message translates to:
+  /// **'What Ares submitted to Windows'**
+  String get windows_notification_diagnostics;
+
+  /// No description provided for @windows_window_activity.
+  ///
+  /// In en, this message translates to:
+  /// **'Share chat activity'**
+  String get windows_window_activity;
+
+  /// No description provided for @windows_window_activity_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.'**
+  String get windows_window_activity_hint;
+
+  /// No description provided for @windows_completion_sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion sound'**
+  String get windows_completion_sound;
+
+  /// No description provided for @windows_sound_default.
+  ///
+  /// In en, this message translates to:
+  /// **'Windows default'**
+  String get windows_sound_default;
+
+  /// No description provided for @windows_sound_mail.
+  ///
+  /// In en, this message translates to:
+  /// **'Mail'**
+  String get windows_sound_mail;
+
+  /// No description provided for @windows_sound_reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder'**
+  String get windows_sound_reminder;
+
+  /// No description provided for @windows_sound_silent.
+  ///
+  /// In en, this message translates to:
+  /// **'Silent'**
+  String get windows_sound_silent;
+
   /// No description provided for @notifications_permission_denied.
   ///
   /// In en, this message translates to:
@@ -4999,6 +5089,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Destination'**
   String get destination_label;
+
+  /// No description provided for @markdown_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get markdown_source;
 
   /// No description provided for @preview_label.
   ///

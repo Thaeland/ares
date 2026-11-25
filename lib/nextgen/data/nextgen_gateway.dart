@@ -12,7 +12,10 @@ import '../../core/services/connection_manager.dart';
 import '../../core/services/dashboard_api_client.dart';
 import '../../core/services/desktop_gateway_client.dart';
 import '../../core/services/hermes_sign_in.dart';
+import '../../core/services/remote_files_client.dart';
 import '../../core/services/remote_workspace.dart';
+import '../../core/services/chat_presentation_state.dart';
+import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/ws_client.dart';
 import '../nextgen_l10n.dart';
 import 'nextgen_projects.dart';
@@ -73,6 +76,7 @@ class NextGenGateway extends ChangeNotifier {
     // NextGen reads chats from the dashboard for every connection, so stored
     // ids always match the ones its `/api/ws` socket resumes.
     api = DashboardApiClient.withDashboard(this.dashboard, profile: profile);
+    _draftAccount = ConnectionMutationBarrier.capture(connection.id);
     writes = DashboardSessionWrites(this.dashboard, profile: profile);
     workspace = RemoteWorkspaceOwner(
       connectionId: connection.id,
@@ -87,6 +91,23 @@ class NextGenGateway extends ChangeNotifier {
   }
 
   late final RemoteWorkspaceOwner workspace;
+  late final draftPresentation = ChatPresentationRegistry.forConnection(
+    connection,
+  );
+  late final Object? _draftAccount;
+  bool get draftAccountCurrent =>
+      !_disposed &&
+      ConnectionMutationBarrier.isCurrent(connection.id, _draftAccount);
+
+  /// Browsers and attachment cards close their own clients, never the live gateway.
+  RemoteFilesClient createFilesClient({
+    String? sessionId,
+    int? maxDownloadBytes,
+  }) => RemoteFilesClient.fromConnection(
+    connection,
+    sessionId: sessionId,
+    maxDownloadBytes: maxDownloadBytes,
+  );
 
   NgProjects? _projects;
 
@@ -646,6 +667,7 @@ class NextGenGateway extends ChangeNotifier {
   @override
   void dispose() {
     workspace.close();
+    draftPresentation.close();
     _projects?.close();
     stop();
     _disposed = true;

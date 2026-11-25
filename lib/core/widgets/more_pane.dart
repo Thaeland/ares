@@ -107,6 +107,12 @@ List<MoreSection> buildMoreSections({
     MoreSection(
       title: l10n.workspace,
       entries: [
+        const MoreEntry(
+          id: 'gateway-fleet',
+          title: 'Gateway fleet',
+          subtitle: 'Connected sessions, Hermes Cloud and Desktop Webapp',
+          icon: Icons.hub_outlined,
+        ),
         MoreEntry(
           id: 'unassigned',
           title: l10n.unassigned_chats,
@@ -159,6 +165,18 @@ List<MoreSection> buildMoreSections({
           title: l10n.ng_profiles,
           subtitle: l10n.ng_agent_gateway,
           icon: Icons.people_outline,
+          availability: workspaceAvailable
+              ? MoreEntryAvailability.available
+              : MoreEntryAvailability.unavailable,
+          unavailableReason: workspaceAvailable
+              ? null
+              : l10n.desktop_gateway_is_not_configured_for_this_connection,
+        ),
+        MoreEntry(
+          id: 'workspace-workers',
+          title: l10n.workspace_workers,
+          subtitle: l10n.ng_show_subagents,
+          icon: Icons.account_tree_outlined,
           availability: workspaceAvailable
               ? MoreEntryAvailability.available
               : MoreEntryAvailability.unavailable,

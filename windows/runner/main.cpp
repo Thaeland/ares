@@ -8,6 +8,9 @@
 
 #include "flutter_window.h"
 #include "utils.h"
+#include "toast_identity.h"
+#include "launch_role.h"
+#include <roapi.h>
 
 namespace {
 
@@ -22,14 +25,16 @@ bool HasPackageIdentity() {
 
 int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
                       _In_ wchar_t *command_line, _In_ int show_command) {
-  auto command_line_arguments = GetCommandLineArguments();
-  const bool pet_child = command_line_arguments.size() == 1 &&
-      (command_line_arguments[0] == "--ares-workspace-chat-v1" ||
-       command_line_arguments[0] == "--ares-pet-companion-v1") &&
-      ::GetFileType(::GetStdHandle(STD_INPUT_HANDLE)) == FILE_TYPE_PIPE;
-  const bool chat_child =
-      pet_child &&
-      command_line_arguments[0] == "--ares-workspace-chat-v1";
+  auto args = GetCommandLineArguments();
+  const bool packaged = HasPackageIdentity();
+  const auto role = ares::ClassifyLaunch(args,
+      ::GetFileType(::GetStdHandle(STD_INPUT_HANDLE)) == FILE_TYPE_PIPE, packaged);
+  if (role == ares::LaunchRole::invalid) return EXIT_FAILURE;
+  const bool chat_child = role == ares::LaunchRole::chat;
+  // The pet companion is a child process too: no console, no single-instance
+  // mutex, no toast routing, and a window class Home launches never target.
+  const bool pet_child = chat_child || role == ares::LaunchRole::pet;
+  Win32Window::SetChatPopoutProcess(pet_child);
   // Preserve inherited IPC handles. A pop-out must not attach a console.
   // Attach to console when present (e.g., 'flutter run') or create a
   // new console when running with a debugger.
@@ -39,19 +44,38 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   // Initialize COM, so that it is available for use in the library and/or
   // plugins.
-  ::CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+  if (FAILED(RoInitialize(RO_INIT_SINGLETHREADED))) return EXIT_FAILURE;
+  auto token = role == ares::LaunchRole::toast ? ares::toast::ParseActivation(args.front(), packaged) : "";
 
   // One Ares instance per user: a second launch focuses the running window
   // and exits instead of opening a second chat session.
   HANDLE single_instance = pet_child ? nullptr :
-      ::CreateMutexW(nullptr, TRUE, L"Ares.com.hermesagent.ares.single-instance");
+      ::CreateMutexW(nullptr, TRUE, (ares::toast::WindowClass() + L".mutex").c_str());
+  if (!pet_child && !single_instance) { RoUninitialize(); return EXIT_FAILURE; }
   if (!pet_child && ::GetLastError() == ERROR_ALREADY_EXISTS) {
-    HWND existing = ::FindWindowW(Win32Window::WindowClassName(), L"Ares");
+    HWND existing = nullptr;
+    // A chat pop-out registers a different Win32 class. Never forward a toast
+    // or a second launch to the most recently focused child instead of Home.
+    for (int i = 0; i < 100 && !existing; ++i) {
+      existing = ::FindWindowW(Win32Window::WindowClassName(), nullptr);
+      if (!existing) Sleep(20);
+    }
     if (existing) {
-      ::ShowWindow(existing, SW_SHOW);
-      ::SetForegroundWindow(existing);
+      if (!token.empty()) {
+        DWORD pid = 0;
+        GetWindowThreadProcessId(existing, &pid);
+        AllowSetForegroundWindow(pid);
+        COPYDATASTRUCT data{0x41524553, static_cast<DWORD>(token.size()), token.data()};
+        DWORD_PTR received = 0;
+        SendMessageTimeoutW(existing, WM_COPYDATA, 0, reinterpret_cast<LPARAM>(&data),
+                            SMTO_ABORTIFHUNG, 2000, &received);
+      } else if (args.empty()) {
+        ::ShowWindow(existing, IsIconic(existing) ? SW_RESTORE : SW_SHOW);
+        ::SetForegroundWindow(existing);
+      }
     }
     if (single_instance) ::CloseHandle(single_instance);
+    RoUninitialize();
     return EXIT_SUCCESS;
   }
 
@@ -62,9 +86,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   }
 
   flutter::DartProject project(L"data");
-  project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
-
-  FlutterWindow window(project);
+  // The validated pop-out marker goes to Dart, never an activation URI.
+  if (role != ares::LaunchRole::toast) {
+    project.set_dart_entrypoint_arguments(std::move(args));
+  }
+  FlutterWindow window(project, std::move(token), !pet_child);
   Win32Window::Point origin(10, 10);
   const wchar_t* title = chat_child
       ? L"Ares - Chat"
@@ -94,6 +120,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
     ::ReleaseMutex(single_instance);
     ::CloseHandle(single_instance);
   }
-  ::CoUninitialize();
+  RoUninitialize();
   return EXIT_SUCCESS;
 }

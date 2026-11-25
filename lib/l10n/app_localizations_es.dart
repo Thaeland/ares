@@ -9,6 +9,13 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get workspace_workers => 'Subagentes activos';
+
+  @override
+  String get workers_unattached =>
+      'Solo se muestran cantidades. Para dirigir un subagente, elige Subagentes activos en el chat principal conectado.';
+
+  @override
   String get slash_local_arguments =>
       'Este atajo no admite argumentos aquí. Usa los controles de la aplicación; se conservó tu borrador.';
 
@@ -724,6 +731,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get attachment_drafts => 'Borradores de adjuntos';
+
+  @override
+  String get recover_text_draft => 'Recuperar un borrador de texto';
+
+  @override
+  String get undo_draft_recovery => 'Deshacer';
+
+  @override
+  String get draft_session_exists =>
+      'Este chat aún existe. Ábrelo para continuar con el borrador.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'No se pudo verificar el borrador. No se ha cambiado nada.';
 
   @override
   String attachment_of(Object index, Object total) {
@@ -1906,6 +1927,36 @@ class AppLocalizationsEs extends AppLocalizations {
   String get notifications => 'Notificaciones';
 
   @override
+  String get windows_notifications_blocked =>
+      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+
+  @override
+  String get windows_notification_diagnostics =>
+      'What Ares submitted to Windows';
+
+  @override
+  String get windows_window_activity => 'Share chat activity';
+
+  @override
+  String get windows_window_activity_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+
+  @override
+  String get windows_completion_sound => 'Completion sound';
+
+  @override
+  String get windows_sound_default => 'Windows default';
+
+  @override
+  String get windows_sound_mail => 'Mail';
+
+  @override
+  String get windows_sound_reminder => 'Reminder';
+
+  @override
+  String get windows_sound_silent => 'Silent';
+
+  @override
   String get notifications_permission_denied =>
       'Las notificaciones están bloqueadas por el sistema. Actívalas para esta app en los ajustes de Android.';
 
@@ -2956,6 +3007,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get destination_label => 'Destino';
+
+  @override
+  String get markdown_source => 'Código fuente';
 
   @override
   String get preview_label => 'Vista previa';

@@ -11,6 +11,19 @@ export 'package:hermes_android/l10n/app_localizations.dart'
 /// instead of importing and resolving [AppLocalizations] everywhere.
 extension AppLocalizationsX on BuildContext {
   AppLocalizations get l10n => AppLocalizations.of(this)!;
+
+  /// For widgets shared by Classic and NextGen. NextGen reads its strings
+  /// from `ngL`, so its trees need not carry the generated delegate; fall
+  /// back to the ambient locale, then English.
+  AppLocalizations get sharedL10n {
+    final strings = AppLocalizations.of(this);
+    if (strings != null) return strings;
+    final locale = Localizations.maybeLocaleOf(this);
+    if (locale != null && AppLocalizations.delegate.isSupported(locale)) {
+      return lookupAppLocalizations(locale);
+    }
+    return lookupAppLocalizations(const Locale('en'));
+  }
 }
 
 /// The app's supported locales with English first.

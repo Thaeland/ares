@@ -302,24 +302,42 @@ void main() {
       },
     );
   }
-  for (final wrong in [false, true]) {
-    test(
-      'NextGen never creates or submits instead of a refused/mismatched resume ($wrong)',
-      () async {
-        final gateway = _Refused(wrong);
-        final chat = NgChatController(gateway, sessionId: 's-1');
-        try {
-          expect(await chat.send('fixture prompt'), false);
-          expect(gateway.calls, ['session.resume']);
-          expect(chat.storedId, 's-1');
-          expect(chat.runtimeId, isNull);
-        } finally {
-          chat.dispose();
-          gateway.dispose();
-        }
-      },
-    );
-  }
+  test(
+    'NextGen never creates or submits instead of a refused resume',
+    () async {
+      final gateway = _Refused(false);
+      final chat = NgChatController(gateway, sessionId: 's-1');
+      try {
+        expect(await chat.send('fixture prompt'), false);
+        expect(gateway.calls, ['session.resume']);
+        expect(chat.storedId, 's-1');
+        expect(chat.runtimeId, isNull);
+      } finally {
+        chat.dispose();
+        gateway.dispose();
+      }
+    },
+  );
+  test(
+    'NextGen binds a resume that followed a compressed chat to its tip, never creating another chat',
+    () async {
+      // The gateway answers a compressed chat's original id with its lineage
+      // tip (tui_gateway methods_session._resume_follow_tip); that is the
+      // same conversation, so it binds rather than refusing or creating.
+      final gateway = _Refused(true);
+      final chat = NgChatController(gateway, sessionId: 's-1');
+      try {
+        await chat.send('fixture prompt');
+        expect(gateway.calls.first, 'session.resume');
+        expect(gateway.calls, isNot(contains('session.create')));
+        expect(chat.storedId, 's-1');
+        expect(chat.runtimeId, 'wrong-runtime');
+      } finally {
+        chat.dispose();
+        gateway.dispose();
+      }
+    },
+  );
   test(
     'read-only child auth cannot rotate, replace or delete credentials',
     () async {

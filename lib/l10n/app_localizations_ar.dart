@@ -9,6 +9,13 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get workspace_workers => 'Live workers';
+
+  @override
+  String get workers_unattached =>
+      'Counts only. To steer a worker, choose Live workers in its attached parent chat.';
+
+  @override
   String get slash_local_arguments =>
       'لا يقبل هذا الاختصار معاملات هنا. استخدم عناصر التحكم في التطبيق. لم تتغير مسودتك.';
 
@@ -722,6 +729,20 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get attachment_drafts => 'مسودات المرفقات';
+
+  @override
+  String get recover_text_draft => 'Recover a text draft';
+
+  @override
+  String get undo_draft_recovery => 'Undo';
+
+  @override
+  String get draft_session_exists =>
+      'This chat still exists. Open it to continue your draft.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Could not verify this draft. Nothing was changed.';
 
   @override
   String attachment_of(Object index, Object total) {
@@ -1895,6 +1916,36 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifications => 'الإشعارات';
 
   @override
+  String get windows_notifications_blocked =>
+      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+
+  @override
+  String get windows_notification_diagnostics =>
+      'What Ares submitted to Windows';
+
+  @override
+  String get windows_window_activity => 'Share chat activity';
+
+  @override
+  String get windows_window_activity_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+
+  @override
+  String get windows_completion_sound => 'Completion sound';
+
+  @override
+  String get windows_sound_default => 'Windows default';
+
+  @override
+  String get windows_sound_mail => 'Mail';
+
+  @override
+  String get windows_sound_reminder => 'Reminder';
+
+  @override
+  String get windows_sound_silent => 'Silent';
+
+  @override
   String get notifications_permission_denied =>
       'يحظر نظام التشغيل الإشعارات. فعّل إشعارات هذا التطبيق في إعدادات Android.';
 
@@ -2939,6 +2990,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get destination_label => 'الوجهة';
+
+  @override
+  String get markdown_source => 'Source';
 
   @override
   String get preview_label => 'معاينة';

@@ -20,6 +20,10 @@ the [Library notice](third_party/embedded-push-notice.md),
 and [source/relink instructions](third_party/embedded-push-relink.md).
 Other dependencies retain their own licences and notices.
 
+Telegram onboarding draws its QR code on the device with the Dart `qr` library
+([BSD-3-Clause licence](third_party/licenses/qr-BSD-3-Clause.txt)); no QR
+payload is sent to an image-generation service.
+
 Synthetic fixture credentials are test data only. No private gateway
 credentials, release signing keys, device profiles, or operator logs are part
 of the public source tree.

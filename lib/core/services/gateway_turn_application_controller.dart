@@ -230,7 +230,7 @@ class GatewayTurnApplicationController {
     _presentationScopes[connection.id] = key;
     return _presentations.putIfAbsent(
       key,
-      () => ChatPresentationRegistry(connection.id),
+      () => ChatPresentationRegistry.forConnection(connection),
     );
   }
 
