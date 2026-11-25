@@ -28,6 +28,53 @@ Future<void> _until(bool Function() predicate) async {
   expect(predicate(), true);
 }
 
+final class _PlainIO extends IOOverrides {}
+
+/// Real file I/O; only the timing after the first create/open is stretched,
+/// as a slow disk or a second window would.
+class _SlowPin implements File {
+  _SlowPin(String path, this.gate) : _f = _PlainIO().createFile(path);
+  final File _f;
+  final Future<void> gate;
+  @override
+  String get path => _f.path;
+  @override
+  Uri get uri => _f.uri;
+  @override
+  File get absolute => _f.absolute;
+  @override
+  Future<bool> exists() => _f.exists();
+  @override
+  Future<File> create({bool recursive = false, bool exclusive = false}) async {
+    final r = await _f.create(recursive: recursive, exclusive: exclusive);
+    await gate;
+    return r;
+  }
+
+  @override
+  Future<RandomAccessFile> open({FileMode mode = FileMode.read}) async {
+    final r = await _f.open(mode: mode);
+    await gate;
+    return r;
+  }
+
+  @override
+  Future<int> length() => _f.length();
+  @override
+  Future<String> readAsString({Encoding encoding = utf8}) =>
+      _f.readAsString(encoding: encoding);
+  @override
+  Future<File> writeAsString(
+    String contents, {
+    FileMode mode = FileMode.write,
+    Encoding encoding = utf8,
+    bool flush = false,
+  }) =>
+      _f.writeAsString(contents, mode: mode, encoding: encoding, flush: flush);
+  @override
+  dynamic noSuchMethod(Invocation i) => throw UnimplementedError('$i');
+}
+
 int _updatePosts(FleetFixture f) => f.requests
     .where((r) => r.method == 'POST' && r.uri.path == '/api/hermes/update')
     .length;
@@ -224,6 +271,61 @@ void main() {
           throwsA(isA<FleetSshException>()),
         );
         expect((await ssh.enrolled(d))?.encoded, second.encoded);
+
+        // A slow first enrollment holds the pin; a second, different key
+        // must wait and then be refused, never complete the still-empty file.
+        final slowRoot = Directory.fromUri(work.uri.resolve('slow/'));
+        final slowDst = SshDestination('127.0.0.1', 2999, 'fixture');
+        final gate = Completer<void>();
+        final slow = IOOverrides.runZoned(
+          () => FleetSsh(slowRoot).enroll(slowDst, first),
+          createFile: (p) => _SlowPin(p, gate.future),
+        ).then((_) => 'ok', onError: (Object _) => 'refused');
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+        var otherDone = false;
+        final other = FleetSsh(slowRoot)
+            .enroll(slowDst, second)
+            .then((_) => 'ok', onError: (Object _) => 'refused')
+            .whenComplete(() => otherDone = true);
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+        expect(otherDone, false, reason: 'second enrollment waits');
+        gate.complete();
+        expect(await slow, 'ok');
+        expect(await other, 'refused');
+        expect(
+          (await FleetSsh(slowRoot).enrolled(slowDst))?.encoded,
+          first.encoded,
+        );
+
+        // Concurrent enrollments of different keys (two screens or windows),
+        // from no pin and from an interrupted empty pin: exactly one is told
+        // the key is pinned, and the pin holds that key. Separate FleetSsh
+        // instances stand in for separate screens.
+        Future<String> outcome(Future<void> f) =>
+            f.then((_) => 'ok', onError: (Object _) => 'refused');
+        for (var round = 0; round < 20; round++) {
+          final root = Directory.fromUri(work.uri.resolve('race-$round/'));
+          final dst = SshDestination('127.0.0.1', 3000 + round, 'fixture');
+          if (round.isOdd) {
+            await FleetSsh(root).enroll(dst, first);
+            Directory.fromUri(root.uri)
+                .listSync(recursive: true)
+                .whereType<File>()
+                .single
+                .writeAsStringSync('');
+          }
+          final results = await Future.wait([
+            outcome(FleetSsh(root).enroll(dst, first)),
+            outcome(FleetSsh(root).enroll(dst, second)),
+          ]);
+          expect(results.where((r) => r == 'ok').length, 1, reason: '$round');
+          final winner = results.first == 'ok' ? first : second;
+          expect(
+            (await FleetSsh(root).enrolled(dst))?.encoded,
+            winner.encoded,
+            reason: '$round',
+          );
+        }
       } finally {
         await work.delete(recursive: true);
       }

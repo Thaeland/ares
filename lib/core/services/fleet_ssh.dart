@@ -91,33 +91,43 @@ class FleetSsh {
     return key;
   }
 
+  static final _pinning = <String, Future<void>>{};
+
   /// Called only after the user compares the displayed fingerprint and agrees.
-  /// Exclusive creation, no rotation-on-connect or overwrite-on-mismatch.
+  /// No rotation-on-connect or overwrite-on-mismatch: a key is written only
+  /// into an empty pin, and the empty check and write happen together under
+  /// an in-process queue plus an OS file lock (other windows are other
+  /// processes). An empty pin left by an interrupted enrollment pins nothing,
+  /// so it may be completed; a written pin is never replaced.
   Future<void> enroll(SshDestination d, SshPublicKey key) async {
     final dir = _dir(d);
     await dir.create(recursive: true);
     final f = _pin(d);
+    final id = f.absolute.path;
+    final previous = _pinning[id];
+    final mine = Completer<void>();
+    _pinning[id] = mine.future;
     try {
-      await f.create(exclusive: true);
-    } on FileSystemException {
-      final existing = await enrolled(d);
-      if (existing?.encoded == key.encoded) return;
-      // Only an interrupted (empty) enrollment may be completed in place.
-      if (existing == null && await f.length() == 0) {
-        await f.writeAsString(key.line, flush: true);
-        if ((await enrolled(d))?.encoded != key.encoded) {
-          _refuse('Could not verify host-key enrollment.');
+      await previous;
+      // Append mode creates without truncating an existing pin.
+      final raf = await f.open(mode: FileMode.append);
+      try {
+        await raf.lock(FileLock.blockingExclusive);
+        if (await raf.length() == 0) {
+          await raf.writeString(key.line);
+          await raf.flush();
         }
-        return;
+      } finally {
+        await raf.close(); // Also releases the lock.
       }
-      _refuse(
-        'A different key is already pinned. Verify the change separately.',
-      );
+    } finally {
+      mine.complete();
+      if (identical(_pinning[id], mine.future)) _pinning.remove(id);
     }
-    await f.writeAsString(key.line, flush: true);
-    if ((await enrolled(d))?.encoded != key.encoded) {
-      _refuse('Could not verify host-key enrollment.');
-    }
+    final existing = await enrolled(d);
+    if (existing?.encoded == key.encoded) return;
+    if (existing == null) _refuse('Could not verify host-key enrollment.');
+    _refuse('A different key is already pinned. Verify the change separately.');
   }
 
   Future<Process> _start(
