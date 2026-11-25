@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/presentation/petdex.dart';
 import 'package:image/image.dart' as img;
@@ -242,52 +241,56 @@ void main() {
       await rebind();
       await wide(tester);
       final semantics = tester.ensureSemantics();
-      addTearDown(semantics.dispose);
-      await tester.pumpWidget(
-        host(
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              PetCompanion.compact(controller: controller),
-              PetdexSettings(controller: controller),
-            ],
+      try {
+        await tester.pumpWidget(
+          host(
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                PetCompanion.compact(controller: controller),
+                PetdexSettings(controller: controller),
+              ],
+            ),
           ),
-        ),
-      );
-      expect(prefs.getKeys(), isEmpty);
-      expect(find.bySemanticsLabel('Mosskip · At rest'), findsNothing);
-      for (final name in ['Mosskip', 'Emberbun', 'Tideling']) {
-        await tester.tap(find.widgetWithText(ChoiceChip, name));
-        await tester.pump();
-        if (!controller.enabled || controller.species.name != name.toLowerCase()) {
-          final chip = tester.widget<ChoiceChip>(
-            find.widgetWithText(ChoiceChip, name),
-          );
-          chip.onSelected?.call(true);
+        );
+        expect(prefs.getKeys(), isEmpty);
+        expect(find.bySemanticsLabel('Mosskip · At rest'), findsNothing);
+        for (final name in ['Mosskip', 'Emberbun', 'Tideling']) {
+          await tester.tap(find.widgetWithText(ChoiceChip, name));
           await tester.pump();
+          if (!controller.enabled ||
+              controller.species.name != name.toLowerCase()) {
+            final chip = tester.widget<ChoiceChip>(
+              find.widgetWithText(ChoiceChip, name),
+            );
+            chip.onSelected?.call(true);
+            await tester.pump();
+          }
+          expect(controller.enabled, isTrue, reason: name);
+          expect(controller.species.name, name.toLowerCase(), reason: name);
+          expect(find.bySemanticsLabel('$name · At rest'), findsOneWidget);
         }
-        expect(controller.enabled, isTrue, reason: name);
-        expect(controller.species.name, name.toLowerCase(), reason: name);
-        expect(find.bySemanticsLabel('$name · At rest'), findsOneWidget);
+        await tester.tap(find.text('Roam when idle'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Large'));
+        await tester.pumpAndSettle();
+        final art = find.descendant(
+          of: find.byType(PetCompanion),
+          matching: find.byType(CustomPaint),
+        );
+        expect(tester.getSize(art.last), const Size.square(36));
+        await tester.tap(find.text('Pet companion'));
+        await tester.pumpAndSettle();
+        expect(find.bySemanticsLabel('Tideling · At rest'), findsNothing);
+        final restored = PetdexController(prefs);
+        expect(restored.enabled, isFalse);
+        expect(restored.roaming, isTrue);
+        expect(restored.size, PetSize.large);
+        expect(restored.species, PetSpecies.tideling);
+        restored.dispose();
+      } finally {
+        semantics.dispose();
       }
-      await tester.tap(find.text('Roam when idle'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Large'));
-      await tester.pumpAndSettle();
-      final art = find.descendant(
-        of: find.byType(PetCompanion),
-        matching: find.byType(CustomPaint),
-      );
-      expect(tester.getSize(art.last), const Size.square(36));
-      await tester.tap(find.text('Pet companion'));
-      await tester.pumpAndSettle();
-      expect(find.bySemanticsLabel('Tideling · At rest'), findsNothing);
-      final restored = PetdexController(prefs);
-      expect(restored.enabled, isFalse);
-      expect(restored.roaming, isTrue);
-      expect(restored.size, PetSize.large);
-      expect(restored.species, PetSpecies.tideling);
-      restored.dispose();
     },
   );
 
@@ -379,46 +382,51 @@ void main() {
       await rebind();
       await wide(tester);
       final semantics = tester.ensureSemantics();
-      addTearDown(semantics.dispose);
-      await controller.adopt(PetSpecies.emberbun);
-      final before = controller.snapshot;
-      var taps = 0;
-      Widget full(PetActivity activity, bool unread) => host(
-        PetCompanion.full(
-          controller: controller,
-          activity: activity,
-          anyUnread: unread,
-          onCompose: () => taps++,
-        ),
-      );
-      await tester.pumpWidget(full(PetActivity.working, true));
-      final stage = find.bySemanticsLabel('Emberbun · Working · Unread reply');
-      expect(stage, findsOneWidget);
-      await tester.tap(stage);
-      await tester.pump();
-      expect(find.textContaining('Hello!'), findsOneWidget);
-      await tester.pump(const Duration(seconds: 3));
-      expect(find.textContaining('Hello!'), findsNothing);
-      await tester.tap(find.text('Compose'));
-      expect(taps, 1);
-      await tester.pumpWidget(full(PetActivity.waiting, false));
-      expect(
-        find.bySemanticsLabel('Emberbun · Waiting for you'),
-        findsOneWidget,
-      );
-      expect(find.byIcon(Icons.mark_email_unread_outlined), findsNothing);
-      await tester.pumpWidget(
-        host(
-          PetCompanion.compact(
+      try {
+        await controller.adopt(PetSpecies.emberbun);
+        final before = controller.snapshot;
+        var taps = 0;
+        Widget full(PetActivity activity, bool unread) => host(
+          PetCompanion.full(
             controller: controller,
-            activity: PetActivity.failed,
+            activity: activity,
+            anyUnread: unread,
             onCompose: () => taps++,
           ),
-        ),
-      );
-      await tester.tap(find.bySemanticsLabel('Emberbun · Turn failed'));
-      expect(taps, 2);
-      expect(controller.snapshot, before);
+        );
+        await tester.pumpWidget(full(PetActivity.working, true));
+        final stage = find.bySemanticsLabel(
+          'Emberbun · Working · Unread reply',
+        );
+        expect(stage, findsOneWidget);
+        await tester.tap(stage);
+        await tester.pump();
+        expect(find.textContaining('Hello!'), findsOneWidget);
+        await tester.pump(const Duration(seconds: 3));
+        expect(find.textContaining('Hello!'), findsNothing);
+        await tester.tap(find.text('Compose'));
+        expect(taps, 1);
+        await tester.pumpWidget(full(PetActivity.waiting, false));
+        expect(
+          find.bySemanticsLabel('Emberbun · Waiting for you'),
+          findsOneWidget,
+        );
+        expect(find.byIcon(Icons.mark_email_unread_outlined), findsNothing);
+        await tester.pumpWidget(
+          host(
+            PetCompanion.compact(
+              controller: controller,
+              activity: PetActivity.failed,
+              onCompose: () => taps++,
+            ),
+          ),
+        );
+        await tester.tap(find.bySemanticsLabel('Emberbun · Turn failed'));
+        expect(taps, 2);
+        expect(controller.snapshot, before);
+      } finally {
+        semantics.dispose();
+      }
     },
   );
 

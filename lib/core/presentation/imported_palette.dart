@@ -21,14 +21,14 @@ ThemeData paintImportedTheme(ThemeData current, ImportedTheme imported) {
         danger: imported[ImportedThemeColor.error],
       );
   final ng = current.extension<NgColors>();
-  final extensions = <ThemeExtension<dynamic>>[];
-  for (final extension in current.extensions.values) {
-    if (extension is! HermesTokens && extension is! NgColors) {
-      extensions.add(extension);
-    }
-  }
-  extensions.add(hermes);
-  if (ng != null) extensions.add(_paintNg(ng, imported));
+  final extensions = List<ThemeExtension<dynamic>>.from(
+    current.extensions.values.where(
+      (extension) => extension is! HermesTokens && extension is! NgColors,
+    ),
+  );
+  extensions
+    ..add(hermes)
+    ..addAll([if (ng != null) _paintNg(ng, imported)]);
   return current.copyWith(
     scaffoldBackgroundColor: imported[ImportedThemeColor.background],
     canvasColor: imported[ImportedThemeColor.background],

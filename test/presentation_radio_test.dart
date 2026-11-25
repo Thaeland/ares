@@ -239,24 +239,27 @@ void main() {
     );
   }
 
-  test('platform stop during preparation does not release a live pause', () async {
-    final player = _Player()..resumeGate = Completer<void>();
-    final radio = create(factory: () => player);
-    addTearDown(radio.dispose);
-    await radio.setEnabled(true);
-    final start = radio.play();
-    await player.gotSource.future;
-    player.states.add(PlayerState.stopped);
-    expect(radio.status, AresRadioStatus.connecting);
-    expect(player.releases, 0);
-    player.resumeGate!.complete();
-    await start;
-    expect(player.starts, 1);
-    expect(radio.status, AresRadioStatus.playing);
-    player.states.add(PlayerState.paused);
-    expect(radio.status, AresRadioStatus.paused);
-    expect(player.releases, 1);
-  });
+  test(
+    'platform stop during preparation does not release a live pause',
+    () async {
+      final player = _Player()..resumeGate = Completer<void>();
+      final radio = create(factory: () => player);
+      addTearDown(radio.dispose);
+      await radio.setEnabled(true);
+      final start = radio.play();
+      await player.gotSource.future;
+      player.states.add(PlayerState.stopped);
+      expect(radio.status, AresRadioStatus.connecting);
+      expect(player.releases, 0);
+      player.resumeGate!.complete();
+      await start;
+      expect(player.starts, 1);
+      expect(radio.status, AresRadioStatus.playing);
+      player.states.add(PlayerState.paused);
+      expect(radio.status, AresRadioStatus.paused);
+      expect(player.releases, 1);
+    },
+  );
 
   test(
     'native stream errors and ends release rather than claiming live or retrying',
@@ -338,6 +341,7 @@ void main() {
           'metadata': {'artist': 'Artist'},
         },
       ]);
+      await tester.pump();
       await tester.pump();
       expect(radio.nowPlaying, 'Artist — First track');
       expect(find.textContaining('Artist — First track'), findsOneWidget);

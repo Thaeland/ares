@@ -40,8 +40,8 @@
   "portal_all_providers": "涵蓋所選閘道設定檔中的所有供應商。記錄的費用為零，不代表模型免費。",
   "portal_period": "最近 {days} 天",
   "portal_sessions": "工作階段",
-  "portal_input": "輸入權杖",
-  "portal_output": "輸出權杖",
+  "portal_input": "輸入令牌",
+  "portal_output": "輸出令牌",
   "portal_estimated": "已記錄的預估費用",
   "portal_actual": "已記錄的實際費用",
   "portal_recorded_models": "已記錄模型",
@@ -367,7 +367,7 @@
   "connection_issue": "連線問題",
   "connection_switched_the_running_reply_continues_on_the_server_and": "已切換連線。伺服器仍在產生回覆，應用程式會自動重新接上。",
   "connection_appearance_and_device_preferences": "連線、外觀和裝置偏好設定",
-  "context_tokens": "上下文：{effectiveContextLength} 權杖",
+  "context_tokens": "上下文：{effectiveContextLength} 令牌",
   "continue_label": "繼續",
   "continue_working": "繼續工作",
   "conversations_in_this_project": "此專案中的對話",
@@ -1176,8 +1176,8 @@
   "auxiliary_unavailable": "輔助設定不可用。",
   "provider_oauth_title": "供應商登入",
   "provider_oauth_more_subtitle": "管理 Hermes 主機上的供應商登入",
-  "provider_oauth_settings_subtitle": "在 Hermes 主機上登入；供應商權杖不會儲存在此裝置上",
-  "provider_oauth_intro": "請在外部瀏覽器登入供應商帳戶。權杖只會儲存在 Hermes 主機上，不會留在此裝置。登入不會變更此應用程式選用的聊天模型。",
+  "provider_oauth_settings_subtitle": "在 Hermes 主機上登入；供應商令牌不會儲存在此裝置上",
+  "provider_oauth_intro": "請在外部瀏覽器登入供應商帳戶。令牌只會儲存在 Hermes 主機上，不會留在此裝置。登入不會變更此應用程式選用的聊天模型。",
   "provider_oauth_defaults_notice": "某些主機流程（包括替換 Nous 免費方案帳戶）可能會更新主機預設設定。登入後請檢查主機設定。",
   "provider_oauth_transport_init_failed": "無法初始化所選的安全儀表板連線。請檢查其 TLS 身分和連線設定。",
   "provider_oauth_https_required": "供應商登入需要透過 HTTPS 連線至 Hermes 儀表板。",
@@ -1501,10 +1501,10 @@
     }
   },
   "ng_use_the_dashboard_s_address_and": "請使用儀表板的位址和連接埠（預設為 9119），而不是 API 伺服器的位址和連接埠。",
-  "ng_cloudflare_access_turned_the_service_token": "Cloudflare Access 拒絕了服務權杖。",
+  "ng_cloudflare_access_turned_the_service_token": "Cloudflare Access 拒絕了服務令牌。",
   "ng_cloudflare_access_is_in_front_of": "此位址前方設定了 Cloudflare Access。",
-  "ng_check_the_service_token_and_its": "請檢查服務權杖和對應的 Service Auth 原則。",
-  "ng_add_a_cloudflare_access_service_token": "為此位址新增 Cloudflare Access 服務權杖。",
+  "ng_check_the_service_token_and_its": "請檢查服務令牌和對應的 Service Auth 原則。",
+  "ng_add_a_cloudflare_access_service_token": "為此位址新增 Cloudflare Access 服務令牌。",
   "ng_the_server_asks_for_a_client": "伺服器要求提供用戶端憑證。",
   "ng_pick_the_client_certificate_for_this": "為此閘道選擇用戶端憑證，然後再次測試。",
   "ng_needs_server_access_first": "請先連線伺服器。",
@@ -1697,9 +1697,9 @@
     }
   },
   "ng_this_chat": "此聊天",
-  "ng_input_tokens": "輸入權杖",
-  "ng_output_tokens": "輸出權杖",
-  "ng_reasoning_tokens": "推理權杖",
+  "ng_input_tokens": "輸入令牌",
+  "ng_output_tokens": "輸出令牌",
+  "ng_reasoning_tokens": "推理令牌",
   "ng_cache_reads": "快取讀取",
   "ng_api_calls": "API 呼叫",
   "ng_cost": "費用",
@@ -1838,8 +1838,8 @@
   "ng_this_address_isn_t_private_and": "此位址不是私有位址，且未使用 https://，因此你的密碼和聊天內容會以未加密的形式透過網際網路傳輸。請改用 https://、Tailscale 或你自己的網路。",
   "ng_continue_to_sign_in": "繼續登入",
   "ng_use_the_classic_interface_instead": "改用經典介面",
-  "ng_if_cloudflare_access_protects_this_address": "如果此位址受 Cloudflare Access 保護，請在 Cloudflare Zero Trust 的 Access → Service credentials 中建立服務權杖，再為 Access 應用程式新增對應的 Service Auth 原則。",
-  "ng_a_service_token_is_saved_for": "已為此位址儲存服務權杖",
+  "ng_if_cloudflare_access_protects_this_address": "如果此位址受 Cloudflare Access 保護，請在 Cloudflare Zero Trust 的 Access → Service credentials 中建立服務令牌，再為 Access 應用程式新增對應的 Service Auth 原則。",
+  "ng_a_service_token_is_saved_for": "已為此位址儲存服務令牌",
   "ng_forget": "移除",
   "ng_client_id": "用戶端識別碼（Client ID）",
   "ng_client_secret": "用戶端密鑰（Client Secret）",
@@ -1883,7 +1883,7 @@
     }
   },
   "ng_cloudflare_access_stopped_the_request": "Cloudflare Access 已攔截此要求",
-  "ng_cloudflare_access_turned_down_the_service": "Cloudflare Access 拒絕了服務權杖（HTTP {status}）。請檢查用戶端識別碼、用戶端密鑰及 Service Auth 原則。",
+  "ng_cloudflare_access_turned_down_the_service": "Cloudflare Access 拒絕了服務令牌（HTTP {status}）。請檢查用戶端識別碼、用戶端密鑰及 Service Auth 原則。",
   "@ng_cloudflare_access_turned_down_the_service": {
     "placeholders": {
       "status": {
@@ -1891,7 +1891,7 @@
       }
     }
   },
-  "ng_add_a_cloudflare_access_service_token_2": "請在下方新增 Cloudflare Access 服務權杖，然後重新測試。",
+  "ng_add_a_cloudflare_access_service_token_2": "請在下方新增 Cloudflare Access 服務令牌，然後重新測試。",
   "ng_a_client_certificate_is_needed": "需要用戶端憑證",
   "ng_this_server_asks_for_a_client": "此伺服器要求先提供用戶端憑證。請在下方選擇伺服器提供的憑證，然後重新測試。",
   "ng_this_dashboard_doesn_t_ask_for": "此儀表板不需要登入。",
@@ -1959,9 +1959,9 @@
   "ng_insights": "使用量分析",
   "ng_couldn_t_load_insights": "無法載入使用量分析",
   "ng_sessions": "工作階段",
-  "ng_tokens": "權杖",
+  "ng_tokens": "令牌",
   "ng_est_cost": "預估費用",
-  "ng_daily_tokens": "每日權杖用量",
+  "ng_daily_tokens": "每日令牌用量",
   "ng_models": "模型",
   "ng_tools": "工具",
   "ng_hermes_is_waiting_for_you": "Hermes 正在等你。",
@@ -2574,7 +2574,7 @@
   "ng_models_change": "更改",
   "ng_models_custom_endpoint": "使用自訂端點。請在閘道上更改。",
   "ng_models_context_window": "上下文視窗",
-  "ng_models_token_count": "{count} 個權杖",
+  "ng_models_token_count": "{count} 個令牌",
   "@ng_models_token_count": {
     "placeholders": {
       "count": {
@@ -2582,7 +2582,7 @@
       }
     }
   },
-  "ng_models_context_override": "已在閘道上設定。自動偵測：{count} 權杖。",
+  "ng_models_context_override": "已在閘道上設定。自動偵測：{count} 令牌。",
   "@ng_models_context_override": {
     "placeholders": {
       "count": {
@@ -2594,7 +2594,7 @@
   "ng_models_input_price": "輸入價格",
   "ng_models_output_price": "輸出價格",
   "ng_models_cache_price": "快取輸入價格",
-  "ng_models_per_million": "每百萬權杖 {price}",
+  "ng_models_per_million": "每百萬令牌 {price}",
   "@ng_models_per_million": {
     "placeholders": {
       "price": {
@@ -2602,7 +2602,7 @@
       }
     }
   },
-  "ng_models_price_pair": "每百萬權杖：輸入 {input} · 輸出 {output}",
+  "ng_models_price_pair": "每百萬令牌：輸入 {input} · 輸出 {output}",
   "@ng_models_price_pair": {
     "placeholders": {
       "input": {
