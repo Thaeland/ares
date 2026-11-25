@@ -4997,6 +4997,12 @@ abstract class AppLocalizations {
   /// **'Destination'**
   String get destination_label;
 
+  /// No description provided for @markdown_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get markdown_source;
+
   /// No description provided for @preview_label.
   ///
   /// In en, this message translates to:

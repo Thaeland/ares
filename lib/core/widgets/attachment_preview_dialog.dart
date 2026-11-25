@@ -13,6 +13,7 @@ import '../utils/attachment_types.dart';
 import 'attachment_document_preview.dart';
 import 'attachment_video_preview.dart';
 import 'hermes_system_ui.dart';
+import 'markdown_file_preview.dart';
 
 export '../utils/attachment_types.dart' show attachmentIsImage;
 
@@ -53,7 +54,7 @@ bool attachmentIsText(String extension) => const {
   'rb',
 }.contains(extension.toLowerCase());
 
-/// Inert, bounded UTF-8, never Markdown/HTML/SVG execution or network loading.
+/// Bounded UTF-8 detection before choosing the plain or Markdown viewer.
 class AttachmentTextContent {
   static const maxBytes = 64 * 1024;
   final String? text;
@@ -321,16 +322,24 @@ class AttachmentPreviewDialog extends StatelessWidget {
               child: Text(context.l10n.attachment_text_truncated),
             ),
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: SelectableText(
-                content.text!,
-                key: const Key('attachment-text-preview'),
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(fontFamily: 'monospace'),
-              ),
-            ),
+            child: isMarkdownFilename(controller.ref.filename)
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: MarkdownFilePreview(
+                      key: ObjectKey(controller),
+                      text: content.text!,
+                    ),
+                  )
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: SelectableText(
+                      content.text!,
+                      key: const Key('attachment-text-preview'),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(fontFamily: 'monospace'),
+                    ),
+                  ),
           ),
         ],
       );

@@ -12,7 +12,6 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/models/attachment_draft.dart';
-import '../../core/services/connection_manager.dart';
 import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
 import '../../core/utils/delivered_files.dart';
@@ -71,10 +70,7 @@ class _NgChatViewState extends State<NgChatView> {
   /// A fresh files client per card: cards close theirs when done, so they
   /// must not share the gateway's own dashboard connection.
   RemoteFilesDataSource _filesClient() {
-    final scope = NgScope.of(context);
-    return RemoteFilesClient(
-      dashboard: DashboardClient.fromConnection(scope.connection),
-      profile: scope.gateway.profile,
+    return NgScope.of(context).gateway.createFilesClient(
       sessionId: chat.storedId,
       maxDownloadBytes: maxAttachmentDownloadBytes,
     );
@@ -887,7 +883,7 @@ class _NgChatViewState extends State<NgChatView> {
       NgAssistantItem() => _AssistantBlock(
         item: item,
         files: _filesClient,
-        filesIdentity: (NgScope.of(context).connection.id, chat.storedId),
+        filesIdentity: (NgScope.of(context).gateway, chat.storedId),
         last: i == items.length - 1,
         onRetry: i == items.length - 1 && !chat.running ? chat.retryLast : null,
         readAloud: _readAloud,

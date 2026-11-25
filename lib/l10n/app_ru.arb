@@ -786,6 +786,7 @@
   "hermes_heading": "## Hermes",
   "action_label": "Действие",
   "destination_label": "Назначение",
+  "markdown_source": "Исходный текст",
   "preview_label": "Предпросмотр",
   "share_action_summarize": "Суммировать",
   "share_action_explain": "Объяснить",
