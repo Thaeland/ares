@@ -86,7 +86,7 @@ class SessionSearchClient {
       throw SessionSearchException('Could not reach the dashboard: $error');
     }
 
-    return _readResponse(response, trimmed, profile);
+    return _readResponse(response, trimmed, profile, safeLimit);
   }
 
   /// The active browsers borrow the selected dashboard's authenticated,
@@ -101,23 +101,21 @@ class SessionSearchClient {
     final term = query.trim();
     if (term.isEmpty) return const [];
     final selected = profile ?? dashboard.gatewayProfile;
+    final safeLimit = limit.clamp(1, maxLimit);
     final response = await dashboard.apiRequest(
       'GET',
       'sessions/search',
-      queryParameters: {
-        'q': term,
-        'limit': '${limit.clamp(1, maxLimit)}',
-        'profile': ?selected,
-      },
+      queryParameters: {'q': term, 'limit': '$safeLimit', 'profile': ?selected},
       timeout: timeout,
     );
-    return _readResponse(response, term, selected);
+    return _readResponse(response, term, selected, safeLimit);
   }
 
   static List<SessionSearchHit> _readResponse(
     http.Response response,
     String query,
     String? profile,
+    int limit,
   ) {
     if (response.statusCode == 401 || response.statusCode == 403) {
       throw const SessionSearchException(
@@ -139,13 +137,14 @@ class SessionSearchClient {
       );
     }
 
-    return _decodeHits(response.body, query, profile);
+    return _decodeHits(response.body, query, profile, limit);
   }
 
   static List<SessionSearchHit> _decodeHits(
     String body,
     String query,
     String? profile,
+    int limit,
   ) {
     final Object? decoded;
     try {
@@ -165,6 +164,11 @@ class SessionSearchClient {
     final results = decoded['results'];
     bool wrongProfile(Map<String, dynamic> data) =>
         data['profile'] != null && data['profile'] != (profile ?? 'default');
+    if (results is List && results.length > limit) {
+      throw const SessionSearchException(
+        'The dashboard returned more search results than requested.',
+      );
+    }
     if (results is! List ||
         wrongProfile(decoded) ||
         [

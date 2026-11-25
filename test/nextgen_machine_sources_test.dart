@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hermes_android/core/services/session_search_client.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/dashboard_api_client.dart';
@@ -608,6 +609,27 @@ void main() {
       });
     },
   );
+
+  test('rejects an oversized search page before mapping its rows', () async {
+    final f = await _fixture();
+    f.searchRows = [for (var i = 0; i < 61; i++) _row('item$i')];
+    await expectLater(
+      f.gateway.api.getSessionsPage(title: 'x', limit: 60),
+      throwsA(
+        isA<SessionSearchException>().having(
+          (e) => e.message,
+          'reason',
+          contains('more search results'),
+        ),
+      ),
+    );
+    expect(f.requests.last.url.queryParameters['limit'], '60');
+    f.searchRows.removeLast();
+    expect(
+      (await f.gateway.api.getSessionsPage(title: 'x', limit: 60)).sessions,
+      hasLength(60),
+    );
+  });
 
   test('generic dashboard paging and search remain unfiltered', () async {
     final f = await _fixture();
