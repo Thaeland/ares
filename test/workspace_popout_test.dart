@@ -262,6 +262,46 @@ void main() {
       expect(s.isLocalDraft, false);
     },
   );
+  for (final nextGen in [false, true]) {
+    test(
+      'a named profile must be confirmed by the stored row ($nextGen)',
+      () async {
+        final named = PopoutTarget(
+          connectionId: 'gateway',
+          sessionId: 'shared-id',
+          profile: 'work',
+          nextGen: nextGen,
+        );
+        for (final row in <Map<String, dynamic>>[
+          {'id': 'shared-id'},
+          {'id': 'shared-id', 'profile': null},
+          {'id': 'shared-id', 'profile': ''},
+          {'id': 'shared-id', 'profile': 'other'},
+        ]) {
+          await expectLater(
+            exactPopoutSession(named, (_) async => row),
+            throwsStateError,
+          );
+        }
+        final stored = await exactPopoutSession(
+          named,
+          (id) async => {'id': id, 'profile': 'work'},
+        );
+        expect(stored.id, 'shared-id');
+        final legacy = PopoutTarget(
+          connectionId: 'gateway',
+          sessionId: 'shared-id',
+          profile: '',
+          nextGen: nextGen,
+        );
+        final unqualified = await exactPopoutSession(
+          legacy,
+          (id) async => {'id': id},
+        );
+        expect(unqualified.id, 'shared-id');
+      },
+    );
+  }
   for (final wrong in [false, true]) {
     test(
       'NextGen never creates or submits instead of a refused/mismatched resume ($wrong)',

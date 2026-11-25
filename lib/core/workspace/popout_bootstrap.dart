@@ -199,11 +199,15 @@ Future<Session> exactPopoutSession(
   Future<Map<String, dynamic>> Function(String) get,
 ) async {
   final row = await get(target.sessionId);
+  // An older gateway may ignore a profile query. An ID shared by two
+  // profiles is not enough to open a named profile's transcript.
+  final profile = row['profile'];
+  final matchesProfile = target.profile.isNotEmpty
+      ? profile == target.profile
+      : profile == null || profile == '' || profile == 'default';
   if (row['id'] != target.sessionId ||
       row['is_local_draft'] == true ||
-      (row['profile'] != null &&
-          row['profile'] != target.profile &&
-          !(target.profile.isEmpty && row['profile'] == 'default'))) {
+      !matchesProfile) {
     throw StateError('Stored chat unavailable');
   }
   return Session.fromJson(row);
