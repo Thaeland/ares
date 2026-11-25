@@ -1636,10 +1636,10 @@ class WsClient {
     if (rawPayload is! Map) {
       throw StateError('session.resume succeeded without a result payload.');
     }
-    if (rawPayload.containsKey('stored_session_id') &&
-        rawPayload['stored_session_id'] != sessionId) {
-      throw StateError('session.resume returned a different stored chat.');
-    }
+    // A different stored_session_id is not a different chat: the gateway
+    // follows a compressed chat to its lineage tip (tui_gateway
+    // methods_session._resume_follow_tip), so resuming the original id
+    // legitimately returns the continuation's id.
     final payload = Map<String, dynamic>.from(rawPayload);
     final runtimeSessionId = payload['session_id'] as String?;
     if (runtimeSessionId == null || runtimeSessionId.isEmpty) {
