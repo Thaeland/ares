@@ -129,11 +129,17 @@ class VerifyPlayBundleTest(unittest.TestCase):
 
     def test_signature_integrity_and_pin_are_independent(self):
         ok = subprocess.CompletedProcess([], 4, stdout='jar verified, with signer errors.', stderr='')
-        pinned = subprocess.CompletedProcess([], 0, stdout=f'SHA256: {v.PRODUCTION_CERT_SHA256}\n', stderr='')
+        fingerprint = f'SHA256: {v.PRODUCTION_CERT_SHA256}\n'
+        def cert(start_year, end_year):
+            dates = f'Valid from: Sat Jan 01 00:00:00 UTC {start_year} until: Mon Dec 31 23:59:59 UTC {end_year}\n'
+            return subprocess.CompletedProcess([], 0, stdout=dates + fingerprint, stderr='')
+        pinned = cert(2000, 2200)
         with patch.dict(os.environ, {'JAVA_HOME':'/fixture'}):
             with patch.object(v.subprocess, 'run', side_effect=[ok, pinned]):
                 v._verify_signer(self.bundle)
             for results, error in (([subprocess.CompletedProcess([], 16, stdout='jar verified', stderr='')], 'signature'),
+                                   ([ok, cert(2000, 2001)], 'not currently valid'),
+                                   ([ok, cert(2200, 2201)], 'not currently valid'),
                                    ([ok, subprocess.CompletedProcess([], 0, stdout='SHA256: 00', stderr='')], 'signer')):
                 with patch.object(v.subprocess, 'run', side_effect=results), self.assertRaisesRegex(ValueError, error):
                     v._verify_signer(self.bundle)

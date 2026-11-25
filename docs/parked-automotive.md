@@ -30,9 +30,12 @@ The manual workflow builds, signs and verifies an AAB; it does **not** create a 
 gh workflow run release.yml --ref <reviewed-branch> -f automotive_only=true
 ```
 
-For a local build and inspection:
+For local builds use a **separate worktree**: Flutter otherwise writes the car bundle over the phone's `app-release.aab`. From the reviewed revision, create and enter a new worktree, resolve dependencies there, then build and inspect:
 
 ```sh
+git worktree add --detach ../ares-automotive-bundle HEAD
+cd ../ares-automotive-bundle
+flutter pub get --enforce-lockfile
 ARES_PLAY_BUILD=true flutter build appbundle --release --no-pub \
   --dart-define=ARES_PLAY_BUILD=true --dart-define=ARES_PARKED_AUTOMOTIVE=true
 python3 scripts/verify_play_bundle.py --automotive \

@@ -8,6 +8,7 @@ import json
 import os
 import re
 import subprocess
+from datetime import datetime, timezone
 import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
@@ -125,7 +126,7 @@ def _verify_signer(path: Path) -> None:
     # Strict verification rejects unsigned payload entries even when a valid
     # pinned certificate can still be read elsewhere in the same JAR. JDK bit 4
     # alone is normal for a privately issued upload key (no public trust chain).
-    locale = ["-J-Duser.language=en", "-J-Duser.country=US"]
+    locale = ["-J-Duser.language=en", "-J-Duser.country=US", "-J-Duser.timezone=UTC"]
     integrity = subprocess.run([_java_tool("jarsigner"), *locale, "-verify", "-strict", path],
                                capture_output=True, text=True, timeout=180)
     if integrity.returncode not in (0, 4) or "jar verified" not in integrity.stdout:
@@ -138,6 +139,15 @@ def _verify_signer(path: Path) -> None:
                     re.findall(r"(?im)^\s*SHA-?256:\s*([0-9A-Fa-f:]+)\s*$", result.stdout)]
     if fingerprints != [PRODUCTION_CERT_SHA256]:
         raise ValueError("Play AAB signer does not match the production certificate")
+    # Jarsigner bit 4 covers time-invalid certificates as well as self-signed ones.
+    # Locale/timezone above force a stable keytool date representation.
+    dates = re.findall(r"(?m)^Valid from: ([^\r\n]+) until: ([^\r\n]+)$", result.stdout)
+    if len(dates) != 1:
+        raise ValueError("missing or ambiguous signer validity interval")
+    start, end = (datetime.strptime(s, "%a %b %d %H:%M:%S UTC %Y").replace(tzinfo=timezone.utc)
+                  for s in dates[0])
+    if not start <= datetime.now(timezone.utc) <= end:
+        raise ValueError("Play upload certificate is not currently valid")
 
 
 def verify(bundle: Path, manifest: Path | None = None, allow_unsigned: bool = False, *,
