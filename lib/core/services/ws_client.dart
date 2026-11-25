@@ -283,7 +283,18 @@ class GatewayServerRequest {
 }
 
 /// WebSocket client for the Hermes JSON-RPC gateway.
+final class WorkspaceRuntime {
+  WorkspaceRuntime._(this.runtimeId, this.profile, this.cwd, this.backend);
+  final String runtimeId;
+  final String? profile;
+  final String? cwd;
+  final String? backend;
+}
+
 class WsClient {
+  final _workspaceBindings = <String, WorkspaceRuntime>{};
+  WorkspaceRuntime? workspaceBinding(String storedId) =>
+      _workspaceBindings[storedId];
   final String baseUrl;
   final String? _token;
   final String? _ticket;
@@ -467,6 +478,7 @@ class WsClient {
     final wasConnected = _connected || _channel != null;
     _connected = false;
     _channel = null;
+    _workspaceBindings.clear();
     // Reject all pending request-response calls.
     for (var entry in _pending.values) {
       entry.timer?.cancel();
@@ -990,6 +1002,11 @@ class WsClient {
 
     final id = _nextId++;
     final completer = Completer<Map<String, dynamic>>();
+    final generation = _connectionGeneration;
+    final isBinding = method == 'session.create' || method == 'session.resume';
+    final requestedId = params['session_id'];
+    final requestedProfile =
+        params['profile'] ?? (includeProfile ? _profile?.trim() : null);
     final timer = Timer(timeout, () {
       _pending.remove(id);
       if (!completer.isCompleted) {
@@ -1018,7 +1035,70 @@ class WsClient {
       // A local observer must not turn a successfully emitted RPC into an
       // apparent transport failure.
     }
-    return completer.future;
+    if (!isBinding && method != 'session.close') return completer.future;
+    final reply = await completer.future;
+    if (generation != _connectionGeneration || reply['error'] != null) {
+      return reply;
+    }
+    if (!isBinding) {
+      _workspaceBindings.removeWhere(
+        (id, b) => id == requestedId || b.runtimeId == requestedId,
+      );
+    } else {
+      _noteWorkspaceBinding(
+        reply['result'],
+        method == 'session.resume' ? requestedId : null,
+        requestedProfile,
+      );
+    }
+    return reply;
+  }
+
+  // Evidence on THIS socket only. A session coordinator can use its own
+  // independent socket; its IDs must not leak into workspace dispatch.
+  void _noteWorkspaceBinding(
+    Object? result,
+    Object? expectedId,
+    Object? requestedProfile,
+  ) {
+    if (result is! Map) return;
+    final runtime = result['session_id'];
+    final info = result['info'];
+    final stored =
+        result['stored_session_id'] ??
+        (info is Map ? info['stored_session_id'] : null);
+    if (runtime is! String || runtime.isEmpty) return;
+    _workspaceBindings.removeWhere(
+      (id, b) => b.runtimeId == runtime && id != stored,
+    );
+    if (stored is! String || stored.isEmpty) return;
+    final reportedProfile = info is Map ? info['profile_name'] : null;
+    final profile = reportedProfile ?? requestedProfile;
+    final cwd = info is Map ? info['cwd'] : null;
+    final backend = info is Map ? info['terminal_backend'] : null;
+    if ((requestedProfile != null &&
+            reportedProfile != null &&
+            reportedProfile != requestedProfile) ||
+        (expectedId != null && stored != expectedId) ||
+        (profile != null && profile is! String) ||
+        (cwd != null && cwd is! String) ||
+        (backend != null && backend is! String)) {
+      _workspaceBindings.remove(stored);
+      return;
+    }
+    final old = _workspaceBindings[stored];
+    if (old == null ||
+        old.runtimeId != runtime ||
+        old.profile != profile ||
+        old.cwd != cwd ||
+        old.backend != backend) {
+      _workspaceBindings[stored] = WorkspaceRuntime._(
+        runtime,
+        profile as String?,
+        cwd as String?,
+        backend as String?,
+      );
+    }
   }
 
   /// Send a JSON-RPC method call and receive streaming events.

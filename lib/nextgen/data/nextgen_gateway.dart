@@ -12,6 +12,7 @@ import '../../core/services/connection_manager.dart';
 import '../../core/services/dashboard_api_client.dart';
 import '../../core/services/desktop_gateway_client.dart';
 import '../../core/services/hermes_sign_in.dart';
+import '../../core/services/remote_workspace.dart';
 import '../../core/services/ws_client.dart';
 import '../nextgen_l10n.dart';
 import 'nextgen_projects.dart';
@@ -73,7 +74,16 @@ class NextGenGateway extends ChangeNotifier {
     // ids always match the ones its `/api/ws` socket resumes.
     api = DashboardApiClient.withDashboard(this.dashboard, profile: profile);
     writes = DashboardSessionWrites(this.dashboard, profile: profile);
+    workspace = RemoteWorkspaceOwner(
+      connectionId: connection.id,
+      profile: profile,
+      dashboard: this.dashboard,
+      connect: connected,
+      ownsSocket: (ws) => !_disposed && identical(ws, _ws) && ws.isConnected,
+    );
   }
+
+  late final RemoteWorkspaceOwner workspace;
 
   NgProjects? _projects;
 
@@ -632,6 +642,7 @@ class NextGenGateway extends ChangeNotifier {
 
   @override
   void dispose() {
+    workspace.close();
     _projects?.close();
     stop();
     _disposed = true;
