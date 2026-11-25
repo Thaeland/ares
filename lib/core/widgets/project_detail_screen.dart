@@ -27,6 +27,8 @@ import '../models/session.dart';
 import '../screens/files_screen.dart';
 import '../services/projects_repository.dart';
 import '../services/remote_files_client.dart';
+import '../services/remote_workspace.dart';
+import 'project_settings_view.dart';
 import '../theme/hermes_theme.dart';
 import '../utils/project_session_filter.dart';
 import '../utils/relative_time.dart';
@@ -55,6 +57,8 @@ class ProjectDetailScreen extends StatefulWidget {
   final String projectName;
 
   final ProjectSessionsLoader loadSessions;
+  final RemoteWorkspaceOwner? workspace;
+  final ValueChanged<String>? onNewLaneChat;
   final RemoteFilesClient Function()? createFilesClient;
 
   /// Opens one chat. When null the rows are drawn inert rather than
@@ -80,6 +84,8 @@ class ProjectDetailScreen extends StatefulWidget {
     required this.projectId,
     required this.projectName,
     required this.loadSessions,
+    this.workspace,
+    this.onNewLaneChat,
     this.createFilesClient,
     this.onOpenSession,
     this.onNewChat,
@@ -408,6 +414,24 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
       appBar: AppBar(
         title: Text(title),
         actions: [
+          if (widget.workspace case final owner?)
+            IconButton(
+              tooltip: 'Project settings',
+              icon: const Icon(Icons.tune),
+              onPressed: () async {
+                final route = owner.route();
+                await Navigator.of(context).push<void>(
+                  MaterialPageRoute(
+                    builder: (_) => ProjectSettingsView(
+                      owner: owner,
+                      route: route,
+                      projectId: widget.projectId,
+                    ),
+                  ),
+                );
+                if (mounted) await _load(refresh: true);
+              },
+            ),
           if (hasActions)
             if (_deleting || _managing)
               const Padding(
@@ -678,7 +702,11 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   HermesSpacing.lg,
                   HermesSpacing.md,
                 ),
-                child: _RepoCard(repo: repo),
+                child: _RepoCard(
+                  repo: repo,
+                  onOpen: widget.onOpenSession,
+                  onNew: view.isStale ? null : widget.onNewLaneChat,
+                ),
               ),
           ],
           if (tree?.path != null) ...[
@@ -991,7 +1019,13 @@ class _SessionCard extends StatelessWidget {
 class _RepoCard extends StatelessWidget {
   final ProjectRepo repo;
 
-  const _RepoCard({required this.repo});
+  final ValueChanged<Session>? onOpen;
+  final ValueChanged<String>? onNew;
+  const _RepoCard({
+    required this.repo,
+    required this.onOpen,
+    required this.onNew,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1024,21 +1058,35 @@ class _RepoCard extends StatelessWidget {
           ),
           if (lanes.isNotEmpty) ...[
             const SizedBox(height: HermesSpacing.sm),
-            Wrap(
-              spacing: HermesSpacing.sm,
-              runSpacing: HermesSpacing.xs,
-              children: [
-                for (final lane in lanes)
-                  Text(
+            for (final lane in lanes)
+              Material(
+                type: MaterialType.transparency,
+                child: ExpansionTile(
+                  title: Text(
                     lane.isMain
                         ? context.l10n.branch_main(lane.label)
                         : lane.label,
-                    style: tokens.typography.label.copyWith(
-                      color: lane.isMain ? tokens.accent : tokens.muted,
-                    ),
                   ),
-              ],
-            ),
+                  subtitle: lane.path == null ? null : Text(lane.path!),
+                  children: [
+                    if (onNew != null &&
+                        lane.path != null &&
+                        isSafeWorkspacePath(lane.path!))
+                      ListTile(
+                        leading: const Icon(Icons.add_comment_outlined),
+                        title: const Text('New chat in this lane'),
+                        onTap: () => onNew!(lane.path!),
+                      ),
+                    for (final session in lane.sessions)
+                      ListTile(
+                        title: Text(
+                          session.title.isEmpty ? session.id : session.title,
+                        ),
+                        onTap: onOpen == null ? null : () => onOpen!(session),
+                      ),
+                  ],
+                ),
+              ),
           ],
         ],
       ),

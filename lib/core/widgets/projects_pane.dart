@@ -16,6 +16,9 @@ import '../models/projects_tree_overview.dart';
 import '../services/chat_space_store.dart';
 import '../services/project_folder_discovery.dart';
 import '../services/projects_repository.dart';
+import '../services/remote_workspace.dart';
+import 'project_settings_view.dart';
+import 'workspace_discovery_view.dart';
 import '../theme/hermes_theme.dart';
 import 'adopt_project_folder_sheet.dart';
 import 'hermes_components.dart';
@@ -26,6 +29,7 @@ import 'package:hermes_android/core/l10n/l10n.dart';
 
 class ProjectsPane extends StatefulWidget {
   final ProjectsRepository repository;
+  final RemoteWorkspaceOwner? workspace;
   final Future<void> Function(String projectId)? onProjectSelected;
 
   /// The legacy local Spaces store, when this connection still has one.
@@ -45,6 +49,7 @@ class ProjectsPane extends StatefulWidget {
 
   const ProjectsPane({
     required this.repository,
+    this.workspace,
     this.onProjectSelected,
     this.spaceStore,
     this.folderDiscovery,
@@ -172,6 +177,19 @@ class _ProjectsPaneState extends State<ProjectsPane>
 
   /// Only offer the migration when there is something real to migrate.
   bool get _hasLocalSpaces => _spaces?.spaces.isNotEmpty ?? false;
+
+  Widget _discovery(RemoteWorkspaceOwner owner) {
+    final route = owner.route();
+    return ListTile(
+      leading: const Icon(Icons.travel_explore),
+      title: const Text('Discover repositories'),
+      onTap: () => Navigator.of(context).push<void>(
+        MaterialPageRoute(
+          builder: (_) => WorkspaceDiscoveryView(owner: owner, route: route),
+        ),
+      ),
+    );
+  }
 
   Future<void> _createProject() async {
     final name = await showDialog<String>(
@@ -353,6 +371,7 @@ class _ProjectsPaneState extends State<ProjectsPane>
           child: ListView(
             children: [
               SizedBox(height: MediaQuery.sizeOf(context).height * 0.12),
+              if (widget.workspace case final owner?) _discovery(owner),
               EmptyState(
                 icon: Icons.folder_outlined,
                 title: context.l10n.no_projects_yet,
@@ -377,6 +396,7 @@ class _ProjectsPaneState extends State<ProjectsPane>
           padding: const EdgeInsets.only(bottom: 96),
           children: [
             if (view.isStale) _OfflineBanner(error: view.error),
+            if (widget.workspace case final owner?) _discovery(owner),
             SectionHeader(
               title: context.l10n.projects,
               count: view.projects.length,
@@ -652,9 +672,9 @@ class _ProjectCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(HermesRadius.sm),
             ),
             child: Icon(
-              Icons.folder_rounded,
+              projectGlyph(project.icon),
               size: 20,
-              color: tokens.onAccentContainer,
+              color: projectSwatch(project.color) ?? tokens.onAccentContainer,
             ),
           ),
           const SizedBox(width: HermesSpacing.md),

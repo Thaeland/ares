@@ -6,6 +6,9 @@ import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 import 'ws_client.dart';
 
+part 'workspace_discovery.dart';
+part 'workspace_project_settings.dart';
+
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {
   profiles,
@@ -414,6 +417,29 @@ final class WorkspaceTarget {
           operation == WorkspaceRead.processes,
     );
   }
+}
+
+/// File operations accept literal host-native absolute paths, never URLs,
+/// network-device names, escaped separators, or Windows alternate streams.
+bool isSafeWorkspacePath(String path) {
+  if (!_canonicalPath(path) || path.startsWith(r'\\') || path.contains('%'))
+    return false;
+  final windows = !path.startsWith('/');
+  final rest = windows ? path.substring(3) : path.substring(1);
+  if (!windows && rest.contains(r'\')) return false;
+  if (rest.contains(':')) return false;
+  return rest
+      .split(RegExp(r'[/\\]'))
+      .every(
+        (s) =>
+            s.trim() == s &&
+            (!windows ||
+                (!s.endsWith('.') &&
+                    !RegExp(
+                      r'^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)',
+                      caseSensitive: false,
+                    ).hasMatch(s))),
+      );
 }
 
 /// An absolute server spelling, not a client-side realpath. Reject ambiguous
