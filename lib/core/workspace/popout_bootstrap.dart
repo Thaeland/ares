@@ -15,14 +15,20 @@ import '../../nextgen/theme/nextgen_theme.dart';
 import '../../nextgen/ui/parallel_chat_pane.dart';
 import '../../nextgen/ui/nextgen_scope.dart';
 import '../l10n/l10n.dart';
+import '../presentation/imported_theme.dart' show ImportedThemeStore;
+import '../presentation/presentation_scope.dart';
+import '../presentation/reading_controls.dart';
 import '../screens/chat_screen.dart';
+import '../services/completion_cue_player.dart';
 import '../services/connection_manager.dart';
 import '../services/desktop_gateway_client.dart';
 import '../services/hermes_sign_in.dart';
 import '../services/locale_preference.dart';
+import '../services/notification_prefs.dart';
 import '../services/theme_preference.dart';
 import '../services/turn_notification_service.dart';
 import '../theme/hermes_theme.dart';
+import '../widgets/chat_presence.dart';
 import 'popout_owner.dart';
 import 'popout_protocol.dart';
 
@@ -35,6 +41,8 @@ void runWorkspacePopoutChild(List<String> args) {
     exit(1);
   }
   final timeout = Timer(const Duration(seconds: 45), () => exit(1));
+  var activityStopped = false;
+  PopoutCueFollower? cue;
   runApp(
     const MaterialApp(
       home: Scaffold(body: Center(child: CircularProgressIndicator())),
@@ -46,6 +54,8 @@ void runWorkspacePopoutChild(List<String> args) {
       onLaunch: (frame) async {
         try {
           final target = PopoutTarget.decode(frame['target']);
+          // Before any await: the parent's first cue line follows the frame.
+          cue = PopoutCueFollower(target.cueKey);
           final nonce = frame['nonce'];
           final proof = frame['proof'];
           if (frame.length != 3 ||
@@ -63,11 +73,15 @@ void runWorkspacePopoutChild(List<String> args) {
             throw StateError('No private cache');
           }
           final app = await preparePopout(target, nonce, proof, directory);
+          // An opt-out that arrived while the copied preference loaded wins.
+          if (activityStopped) stopPopoutActivity();
           timeout.cancel();
           runApp(app);
-          WidgetsBinding.instance.addPostFrameCallback(
-            (_) => stdout.writeln(workspacePopoutReady),
-          );
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            stdout.writeln(workspacePopoutReady);
+            // The parent reads presence lines only after ready.
+            cue?.report(stdout.writeln);
+          });
         } catch (_) {
           stdout.writeln(workspacePopoutFailed);
           await stdout.flush();
@@ -75,11 +89,74 @@ void runWorkspacePopoutChild(List<String> args) {
         }
       },
       onRevoked: () => exit(0),
+      onStopActivity: () {
+        activityStopped = true;
+        stopPopoutActivity();
+      },
+      onCue: (popoutPlays) => cue?.plays = popoutPlays,
     ),
   );
 }
 
-const _appearanceKeys = {
+/// The pop-out's half of the cue hand-off (see `PopoutCueLink` in the main
+/// window): it reports whether it holds presence for its chat, and plays
+/// that chat's completion cue only while the main window's last cue line
+/// gave the cue to the pop-out. Until the first line it plays, as the only
+/// window known to show the chat.
+@visibleForTesting
+class PopoutCueFollower {
+  PopoutCueFollower(this.cueKey) {
+    CompletionCuePlayer.instance.ownership = _owns;
+  }
+
+  final String cueKey;
+
+  /// The main window's latest [workspacePopoutCuePopout] (true) or
+  /// [workspacePopoutCueMain] (false) line.
+  bool plays = true;
+
+  void Function(String line)? _write;
+  bool? _held;
+
+  bool _owns(String key) => key != cueKey || plays;
+
+  /// Writes [workspacePopoutPresenceHeld] or [workspacePopoutPresenceFree]
+  /// now and whenever it changes.
+  void report(void Function(String line) write) {
+    _write = write;
+    ChatPresenceCoordinator.instance.changes.addListener(_sync);
+    _sync();
+  }
+
+  void _sync() {
+    final write = _write;
+    if (write == null) return;
+    final held = ChatPresenceCoordinator.instance.holds(cueKey);
+    if (held == _held) return;
+    _held = held;
+    try {
+      write(held ? workspacePopoutPresenceHeld : workspacePopoutPresenceFree);
+    } on Object {
+      // The parent has gone; this window is about to be revoked.
+    }
+  }
+
+  void dispose() {
+    ChatPresenceCoordinator.instance.changes.removeListener(_sync);
+    _write = null;
+    final player = CompletionCuePlayer.instance;
+    if (player.ownership == _owns) player.ownership = null;
+  }
+}
+
+/// The parent turned activity sharing off. Only the live value changes:
+/// this can arrive before the child's in-memory store is installed, and a
+/// write then would land in the main app's real preferences.
+@visibleForTesting
+void stopPopoutActivity() => notificationPrefs.value = notificationPrefs.value
+    .copyWith(shareWindowActivity: false);
+
+const _carriedKeys = {
   LocalePreference.key,
   ThemePreferenceStore.modeKey,
   ThemePreferenceStore.paletteKey,
@@ -87,10 +164,18 @@ const _appearanceKeys = {
   NextGenPreferences.accentKey,
   NextGenPreferences.pureBlackKey,
   NextGenPreferences.glowKey,
+  // Device-local notification choices (no secrets): the chat-activity
+  // opt-in, reply kinds and the completion sound. The parent can only turn
+  // activity sharing off afterwards ([workspacePopoutStopActivity]).
+  NotificationPrefsStore.storageKey,
+  // The selected imported theme (colours and labels only) and the reading
+  // choices. The companion and radio stay with the main window.
+  ImportedThemeStore.preferenceKey,
+  ReadingControls.preferenceKey,
 };
 
-/// Only the selected sanitized metadata row and cosmetic preferences enter
-/// the child store. Existing transcripts, composer drafts and write-ahead
+/// Only the selected sanitized metadata row, cosmetic preferences and the
+/// notification choices enter the child store. Existing transcripts, composer drafts and write-ahead
 /// markers are neither imported nor overwritten by a second process.
 Map<String, Object> popoutPreferences(
   Map<String, Object> source,
@@ -112,7 +197,7 @@ Map<String, Object> popoutPreferences(
   }
   return {
     savedKey: <String>[jsonEncode(row)],
-    for (final key in _appearanceKeys)
+    for (final key in _carriedKeys)
       if (source.containsKey('flutter.$key'))
         'flutter.$key': source['flutter.$key']!,
   };
@@ -151,7 +236,7 @@ Future<Widget> preparePopout(
             prefix: 'flutter.',
             allowList: {
               'flutter.saved_connections',
-              for (final key in _appearanceKeys) 'flutter.$key',
+              for (final key in _carriedKeys) 'flutter.$key',
             },
           ),
         ),
@@ -175,6 +260,9 @@ Future<Widget> preparePopout(
     PathProviderPlatform.instance,
   );
   NextGenPreferences.load(prefs);
+  // The child reports chat activity through its own socket, under the same
+  // opt-in as the main window.
+  await NotificationPrefsStore.load();
   final gateway = target.nextGen ? NextGenGateway(connection) : null;
   final api = gateway?.api ?? ApiClient.forConnection(connection);
   late Session session;
@@ -299,7 +387,11 @@ class _PopoutChatAppState extends State<PopoutChatApp> {
       darkTheme: gateway == null
           ? hermesTheme(Brightness.dark, palette: theme.readPalette())
           : nextGenTheme(Brightness.dark, look),
-      builder: (_, child) => NgLocalizationScope(child: child!),
+      // The same imported theme and reading choices as the main window.
+      builder: (_, child) => PresentationRoot(
+        preferences: prefs,
+        child: NgLocalizationScope(child: child!),
+      ),
       home: gateway == null
           ? ChatScreen(
               connection: widget.connection,
