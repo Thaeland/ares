@@ -6136,4 +6136,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get catalog_send_failed => '選択を送信できませんでした。もう一度お試しください。';
+
+  @override
+  String get attachment_video_speed => '再生速度';
 }

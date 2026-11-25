@@ -10565,6 +10565,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your choice was not sent. Try again.'**
   String get catalog_send_failed;
+
+  /// No description provided for @attachment_video_speed.
+  ///
+  /// In en, this message translates to:
+  /// **'Playback speed'**
+  String get attachment_video_speed;
 }
 
 class _AppLocalizationsDelegate

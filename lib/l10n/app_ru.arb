@@ -1724,5 +1724,6 @@
   "catalog_skill_ready": "Навык {name} готов",
   "catalog_missing_env": "Ещё нужно: {names}",
   "catalog_server_error": "{name} не подключился: {error}",
-  "catalog_send_failed": "Ваш выбор не отправлен. Попробуйте ещё раз."
+  "catalog_send_failed": "Ваш выбор не отправлен. Попробуйте ещё раз.",
+  "attachment_video_speed": "Скорость воспроизведения"
 }

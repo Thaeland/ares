@@ -6324,6 +6324,9 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get catalog_send_failed =>
       'A sua escolha não foi enviada. Tente novamente.';
+
+  @override
+  String get attachment_video_speed => 'Velocidade de reprodução';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -12410,4 +12413,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get catalog_send_failed =>
       'Sua escolha não foi enviada. Tente novamente.';
+
+  @override
+  String get attachment_video_speed => 'Velocidade de reprodução';
 }

@@ -1877,5 +1877,6 @@
   "catalog_skill_ready": "Навичка {name} готова",
   "catalog_missing_env": "Ще потрібно: {names}",
   "catalog_server_error": "{name} не під’єднався: {error}",
-  "catalog_send_failed": "Ваш вибір не надіслано. Спробуйте ще раз."
+  "catalog_send_failed": "Ваш вибір не надіслано. Спробуйте ще раз.",
+  "attachment_video_speed": "Швидкість відтворення"
 }

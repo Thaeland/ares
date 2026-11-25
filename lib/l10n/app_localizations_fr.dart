@@ -6337,4 +6337,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get catalog_send_failed =>
       'Votre choix n’a pas été envoyé. Réessayez.';
+
+  @override
+  String get attachment_video_speed => 'Vitesse de lecture';
 }

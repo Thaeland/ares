@@ -6319,4 +6319,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get catalog_send_failed => 'Ваш вибір не надіслано. Спробуйте ще раз.';
+
+  @override
+  String get attachment_video_speed => 'Швидкість відтворення';
 }

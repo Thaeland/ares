@@ -1724,5 +1724,6 @@
   "catalog_skill_ready": "Skill {name} ist einsatzbereit",
   "catalog_missing_env": "Benötigt noch: {names}",
   "catalog_server_error": "{name} hat sich nicht verbunden: {error}",
-  "catalog_send_failed": "Deine Wahl wurde nicht gesendet. Versuche es erneut."
+  "catalog_send_failed": "Deine Wahl wurde nicht gesendet. Versuche es erneut.",
+  "attachment_video_speed": "Wiedergabegeschwindigkeit"
 }

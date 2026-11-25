@@ -1724,5 +1724,6 @@
   "catalog_skill_ready": "A competência {name} está pronta",
   "catalog_missing_env": "Ainda precisa de: {names}",
   "catalog_server_error": "{name} não ligou: {error}",
-  "catalog_send_failed": "A sua escolha não foi enviada. Tente novamente."
+  "catalog_send_failed": "A sua escolha não foi enviada. Tente novamente.",
+  "attachment_video_speed": "Velocidade de reprodução"
 }

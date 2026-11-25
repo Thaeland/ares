@@ -1724,5 +1724,6 @@
   "catalog_skill_ready": "技能 {name} 已可使用",
   "catalog_missing_env": "仍需要：{names}",
   "catalog_server_error": "{name} 未能连接：{error}",
-  "catalog_send_failed": "你的选择未发送，请重试。"
+  "catalog_send_failed": "你的选择未发送，请重试。",
+  "attachment_video_speed": "播放速度"
 }

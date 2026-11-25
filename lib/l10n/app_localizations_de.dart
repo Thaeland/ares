@@ -6328,4 +6328,7 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get catalog_send_failed =>
       'Deine Wahl wurde nicht gesendet. Versuche es erneut.';
+
+  @override
+  String get attachment_video_speed => 'Wiedergabegeschwindigkeit';
 }

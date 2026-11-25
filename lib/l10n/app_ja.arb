@@ -1724,5 +1724,6 @@
   "catalog_skill_ready": "スキル {name} を使用できます",
   "catalog_missing_env": "まだ必要: {names}",
   "catalog_server_error": "{name} に接続できませんでした: {error}",
-  "catalog_send_failed": "選択を送信できませんでした。もう一度お試しください。"
+  "catalog_send_failed": "選択を送信できませんでした。もう一度お試しください。",
+  "attachment_video_speed": "再生速度"
 }

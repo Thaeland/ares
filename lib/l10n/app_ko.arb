@@ -1724,5 +1724,6 @@
   "catalog_skill_ready": "스킬 {name}을(를) 사용할 수 있습니다",
   "catalog_missing_env": "아직 필요: {names}",
   "catalog_server_error": "{name} 연결 실패: {error}",
-  "catalog_send_failed": "선택이 전송되지 않았습니다. 다시 시도하세요."
+  "catalog_send_failed": "선택이 전송되지 않았습니다. 다시 시도하세요.",
+  "attachment_video_speed": "재생 속도"
 }

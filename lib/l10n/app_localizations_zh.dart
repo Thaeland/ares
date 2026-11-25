@@ -6047,6 +6047,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get catalog_send_failed => '你的选择未发送，请重试。';
+
+  @override
+  String get attachment_video_speed => '播放速度';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -11862,4 +11865,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get catalog_send_failed => '你的选择未发送，请重试。';
+
+  @override
+  String get attachment_video_speed => '播放速度';
 }

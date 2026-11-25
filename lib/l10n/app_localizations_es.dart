@@ -6322,4 +6322,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get catalog_send_failed =>
       'No se envió tu elección. Inténtalo de nuevo.';
+
+  @override
+  String get attachment_video_speed => 'Velocidad de reproducción';
 }

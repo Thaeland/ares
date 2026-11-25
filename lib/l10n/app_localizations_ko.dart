@@ -6140,4 +6140,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get catalog_send_failed => '선택이 전송되지 않았습니다. 다시 시도하세요.';
+
+  @override
+  String get attachment_video_speed => '재생 속도';
 }
