@@ -6047,4 +6047,8 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => '스킬 사용 현황을 검토합니다';
+
+  @override
+  String get render_widget_file_truncated =>
+      '이 파일의 앞부분만 읽었으므로 위젯이 불완전할 수 있습니다.';
 }

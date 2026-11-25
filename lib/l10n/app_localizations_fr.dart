@@ -6242,4 +6242,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'Examine l’utilisation des compétences';
+
+  @override
+  String get render_widget_file_truncated =>
+      'Seul le début de ce fichier a été lu : le widget peut être incomplet.';
 }

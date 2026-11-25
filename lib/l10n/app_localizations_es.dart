@@ -6227,4 +6227,8 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'Revisa cómo se usan las habilidades';
+
+  @override
+  String get render_widget_file_truncated =>
+      'Solo se leyó el principio de este archivo, así que el widget puede estar incompleto.';
 }

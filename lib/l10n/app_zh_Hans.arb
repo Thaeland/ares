@@ -1699,5 +1699,6 @@
   "ng_folder_access_unspecified": "网关未说明是只读还是可读写。",
   "ng_folder_read_only": "只读",
   "ng_folder_read_write": "可读写",
-  "ng_website_access": "网站访问"
+  "ng_website_access": "网站访问",
+  "render_widget_file_truncated": "只读取了此文件的开头部分，因此小组件可能不完整。"
 }

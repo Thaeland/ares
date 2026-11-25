@@ -10415,6 +10415,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reviews how skills are used'**
   String get ng_aux_curator_hint;
+
+  /// No description provided for @render_widget_file_truncated.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the start of this file was read, so the widget may be incomplete.'**
+  String get render_widget_file_truncated;
 }
 
 class _AppLocalizationsDelegate

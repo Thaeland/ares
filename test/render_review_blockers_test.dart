@@ -380,8 +380,9 @@ void main() {
           home: Scaffold(
             body: SandboxPreviewCard(
               file: 'w.html',
-              readHtml: (_) async =>
-                  '<p>Widget</p><button data-hermes-send="run report">Go</button>',
+              readHtml: (_) async => WidgetHtmlSource(
+                '<p>Widget</p><button data-hermes-send="run report">Go</button>',
+              ),
               onIntent: (prompt) async {
                 sent.add(prompt);
                 await gate.future;
@@ -410,8 +411,9 @@ void main() {
           MessageBubble(
             content: 'Widget:\n\n::preview{file="w.html"}\n',
             isUser: false,
-            readWidgetHtml: (_) async =>
-                '<p>Widget</p><button data-hermes-send="run report">Go</button>',
+            readWidgetHtml: (_) async => WidgetHtmlSource(
+              '<p>Widget</p><button data-hermes-send="run report">Go</button>',
+            ),
             onWidgetIntent: (prompt) async {
               sent.add(prompt);
               await gate.future;

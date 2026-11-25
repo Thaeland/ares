@@ -6233,4 +6233,8 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'Prüft, wie Skills genutzt werden';
+
+  @override
+  String get render_widget_file_truncated =>
+      'Nur der Anfang dieser Datei wurde gelesen, daher ist das Widget möglicherweise unvollständig.';
 }

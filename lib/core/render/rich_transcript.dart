@@ -1,18 +1,33 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/l10n.dart';
 import 'artifact_library.dart';
 import 'plugin_slots.dart';
 import 'render_contract.dart';
 import 'render_scope.dart';
 import 'rich_blocks.dart';
 
+/// An HTML widget file as the gateway returned it.
+class WidgetHtmlSource {
+  const WidgetHtmlSource(this.text, {this.truncated = false});
+
+  final String text;
+
+  /// The gateway sent only the start of the file (its read limit).
+  final bool truncated;
+}
+
+/// Reads a `::preview{file=…}` widget file for the chat that shows it.
+typedef WidgetHtmlReader = Future<WidgetHtmlSource?> Function(String path);
+
 List<Widget> richProseWidgets({
   required String text,
   required Widget Function(String text) markdown,
-  Future<String?> Function(String path)? readHtml,
+  WidgetHtmlReader? readHtml,
   Future<void> Function(String prompt)? onIntent,
 }) {
   final pieces = splitRichProse(text);
@@ -54,7 +69,7 @@ class RichFence extends StatelessWidget {
   final String code;
   final String corpus;
   final Widget fallback;
-  final Future<String?> Function(String path)? readHtml;
+  final WidgetHtmlReader? readHtml;
   final Future<void> Function(String prompt)? onIntent;
 
   @override
@@ -102,7 +117,7 @@ class RichPieceView extends StatelessWidget {
 
   final Object value;
   final Widget Function(String text) markdown;
-  final Future<String?> Function(String path)? readHtml;
+  final WidgetHtmlReader? readHtml;
   final Future<void> Function(String prompt)? onIntent;
 
   @override
@@ -459,8 +474,68 @@ class ArtifactRevisionCard extends StatefulWidget {
 /// so one long artefact cannot stall every streamed token.
 const artifactRenderChars = 32 * 1024;
 
+/// HTML up to this size is parsed inline. A longer page is parsed on a
+/// background isolate and cached by content, so a page that is still
+/// streaming is not parsed again on the UI thread for every token.
+const sandboxInlineParseChars = 8 * 1024;
+
 final _pages = ContentMemo<SandboxDocument?>(16);
+final _pageParses = <String, Future<SandboxDocument?>>{};
 final _drawings = ContentMemo<SvgDrawing?>(16);
+
+/// Pages parsed on the UI thread and on a background isolate, for tests.
+@visibleForTesting
+int debugInlinePageParses = 0;
+@visibleForTesting
+int debugBackgroundPageParses = 0;
+
+/// The parsed page if it is ready: at once for a short page, from the cache
+/// for a longer one. `ready` is false while a longer page has not been
+/// parsed yet; [parseSandboxedPage] parses it.
+({SandboxDocument? document, bool ready}) readSandboxedPage(String content) {
+  if (content.length <= sandboxInlineParseChars) {
+    final document = _pages.lookup(content, () {
+      debugInlinePageParses++;
+      return parseSandboxedHtml(content);
+    });
+    return (document: document, ready: true);
+  }
+  final hit = _pages.peek(content);
+  return (document: hit?.value, ready: hit != null);
+}
+
+SandboxDocument? _parseInBackground(String content) =>
+    parseSandboxedHtml(content);
+
+/// Parses [content] (off the UI thread when it is long) and caches it. One
+/// parse runs per content at a time.
+Future<SandboxDocument?> parseSandboxedPage(String content) {
+  final ready = readSandboxedPage(content);
+  if (ready.ready) return Future.value(ready.document);
+  final key = '${artifactContentHash(content)}:${content.length}';
+  return _pageParses.putIfAbsent(key, () {
+    debugBackgroundPageParses++;
+    return compute(_parseInBackground, content)
+        .then<SandboxDocument?>((document) {
+          _pages.put(content, document);
+          return document;
+        }, onError: (Object _) => null)
+        // A block body: returning the removed (this very) future from the
+        // callback would make whenComplete wait for itself.
+        .whenComplete(() {
+          _pageParses.remove(key);
+        });
+  });
+}
+
+/// Drops parsed pages and drawings, for a renderer reset.
+void resetSandboxedPages() {
+  _pages.clear();
+  _pageParses.clear();
+  _drawings.clear();
+  debugInlinePageParses = 0;
+  debugBackgroundPageParses = 0;
+}
 
 /// Revisions follow the reply as it streams: each rebuild with new text
 /// re-reads the (memoised) history, so the card, Copy and download settle on
@@ -470,6 +545,32 @@ class _ArtifactRevisionCardState extends State<ArtifactRevisionCard> {
   late int _index;
   String? _pinned;
   var _source = false;
+
+  /// The last page this card drew for revision [_pageRevision]: a longer
+  /// page that is still streaming keeps showing it while the next parse
+  /// runs in the background, one parse at a time.
+  SandboxDocument? _page;
+  int? _pageRevision;
+  var _parsing = false;
+
+  SandboxDocument? _readPage(ArtifactRevision revision) {
+    final page = readSandboxedPage(revision.content);
+    if (page.ready) {
+      _page = page.document;
+      _pageRevision = revision.index;
+      return page.document;
+    }
+    if (!_parsing) {
+      _parsing = true;
+      unawaited(
+        parseSandboxedPage(revision.content).whenComplete(() {
+          _parsing = false;
+          if (mounted) setState(() {});
+        }),
+      );
+    }
+    return _pageRevision == revision.index ? _page : null;
+  }
 
   @override
   void initState() {
@@ -547,7 +648,7 @@ class _ArtifactRevisionCardState extends State<ArtifactRevisionCard> {
     final tooLarge = content.length > artifactRenderChars;
     final html =
         !tooLarge && revision.detection.kind == GeneratedArtifactKind.html
-        ? _pages.lookup(content, () => parseSandboxedHtml(content))
+        ? _readPage(revision)
         : null;
     final svg =
         !tooLarge && revision.detection.kind == GeneratedArtifactKind.svg
@@ -643,7 +744,7 @@ class SandboxPreviewCard extends StatefulWidget {
   });
 
   final String file;
-  final Future<String?> Function(String path)? readHtml;
+  final WidgetHtmlReader? readHtml;
   final Future<void> Function(String prompt)? onIntent;
 
   @override
@@ -655,6 +756,7 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
   SandboxDocument? _document;
   var _loaded = false;
   var _missing = false;
+  var _truncated = false;
   String? _status;
   var _lastAcceptedAt = 0;
   var _delivering = false;
@@ -670,11 +772,15 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
     }
     final source = await reader(widget.file);
     if (!mounted) return;
-    final document = source == null ? null : parseSandboxedHtml(source);
+    final document = source == null
+        ? null
+        : await parseSandboxedPage(source.text);
+    if (!mounted) return;
     setState(() {
       _loaded = true;
       _document = document;
       _missing = document == null;
+      _truncated = source?.truncated ?? false;
     });
   }
 
@@ -738,6 +844,11 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
             else if (_missing)
               const Text('This file is not an HTML widget.')
             else if (document != null) ...[
+              if (_truncated)
+                Text(
+                  context.sharedL10n.render_widget_file_truncated,
+                  key: const Key('widget-file-truncated'),
+                ),
               if (document.droppedActiveContent)
                 const Text(
                   'Scripts, frames and external addresses were removed.',

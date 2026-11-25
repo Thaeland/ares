@@ -1699,5 +1699,6 @@
   "ng_folder_access_unspecified": "게이트웨이가 읽기 전용인지 읽기 및 쓰기인지 알려 주지 않았습니다.",
   "ng_folder_read_only": "읽기 전용",
   "ng_folder_read_write": "읽기 및 쓰기",
-  "ng_website_access": "웹사이트 접근"
+  "ng_website_access": "웹사이트 접근",
+  "render_widget_file_truncated": "이 파일의 앞부분만 읽었으므로 위젯이 불완전할 수 있습니다."
 }

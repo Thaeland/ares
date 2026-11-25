@@ -6225,4 +6225,8 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'Перевіряє, як використовуються навички';
+
+  @override
+  String get render_widget_file_truncated =>
+      'Прочитано лише початок цього файлу, тому віджет може бути неповним.';
 }

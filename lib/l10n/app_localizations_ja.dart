@@ -6043,4 +6043,8 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'スキルの使われ方を確認します';
+
+  @override
+  String get render_widget_file_truncated =>
+      'このファイルは先頭部分しか読み込まれていないため、ウィジェットが不完全な可能性があります。';
 }

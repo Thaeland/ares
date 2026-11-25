@@ -5159,12 +5159,12 @@ class _ChatScreenState extends State<ChatScreen>
     }
   }
 
-  Future<String?> _readWidgetHtml(String path) async {
+  Future<WidgetHtmlSource?> _readWidgetHtml(String path) async {
     final client = _newMediaFilesClient();
     try {
       final preview = await client.readText(path);
       if (preview.binary) return null;
-      return preview.text;
+      return WidgetHtmlSource(preview.text, truncated: preview.truncated);
     } catch (_) {
       return null;
     } finally {
@@ -9496,7 +9496,7 @@ class MessageBubble extends StatelessWidget {
   /// the phone would be worse than a dead link).
   final RemoteFilesDataSource Function()? mediaFilesClient;
   final Object? mediaSourceIdentity;
-  final Future<String?> Function(String path)? readWidgetHtml;
+  final WidgetHtmlReader? readWidgetHtml;
   final Future<void> Function(String prompt)? onWidgetIntent;
 
   const MessageBubble({

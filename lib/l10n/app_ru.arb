@@ -1699,5 +1699,6 @@
   "ng_folder_access_unspecified": "Шлюз не сообщил, доступ только для чтения или для чтения и записи.",
   "ng_folder_read_only": "Только чтение",
   "ng_folder_read_write": "Чтение и запись",
-  "ng_website_access": "Доступ к сайту"
+  "ng_website_access": "Доступ к сайту",
+  "render_widget_file_truncated": "Прочитано только начало этого файла, поэтому виджет может быть неполным."
 }

@@ -6229,6 +6229,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'Analisa a utilização das competências';
+
+  @override
+  String get render_widget_file_truncated =>
+      'Só o início deste ficheiro foi lido, por isso o widget pode estar incompleto.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -12220,4 +12224,8 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get ng_aux_curator_hint => 'Analisa como as habilidades são usadas';
+
+  @override
+  String get render_widget_file_truncated =>
+      'Só o início deste arquivo foi lido, então o widget pode estar incompleto.';
 }

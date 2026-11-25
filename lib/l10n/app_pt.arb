@@ -1699,5 +1699,6 @@
   "ng_folder_access_unspecified": "O gateway não indicou se é só de leitura ou de leitura e escrita.",
   "ng_folder_read_only": "Só de leitura",
   "ng_folder_read_write": "Leitura e escrita",
-  "ng_website_access": "Acesso ao site"
+  "ng_website_access": "Acesso ao site",
+  "render_widget_file_truncated": "Só o início deste ficheiro foi lido, por isso o widget pode estar incompleto."
 }

@@ -5956,6 +5956,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => '审查技能的使用情况';
+
+  @override
+  String get render_widget_file_truncated => '只读取了此文件的开头部分，因此小组件可能不完整。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -11680,4 +11683,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_aux_curator_hint => '审查技能的使用情况';
+
+  @override
+  String get render_widget_file_truncated => '只读取了此文件的开头部分，因此小组件可能不完整。';
 }

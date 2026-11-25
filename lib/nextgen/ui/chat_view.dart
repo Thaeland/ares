@@ -105,13 +105,13 @@ class _NgChatViewState extends State<NgChatView>
     );
   }
 
-  Future<String?> _readWidgetHtml(String path) async {
+  Future<WidgetHtmlSource?> _readWidgetHtml(String path) async {
     if (!mounted) return null;
     final client = _filesClient();
     try {
       final preview = await client.readText(path);
       if (preview.binary) return null;
-      return preview.text;
+      return WidgetHtmlSource(preview.text, truncated: preview.truncated);
     } catch (_) {
       return null;
     } finally {
@@ -2118,7 +2118,7 @@ class _AssistantBlock extends StatefulWidget {
     this.onIntent,
     this.onRetry,
   });
-  final Future<String?> Function(String path)? readHtml;
+  final WidgetHtmlReader? readHtml;
   final Future<void> Function(String prompt)? onIntent;
   final NgAssistantItem item;
 

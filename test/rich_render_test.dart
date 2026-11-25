@@ -270,9 +270,10 @@ void main() {
         child: MessageBubble(
           content: _reply,
           isUser: false,
-          readWidgetHtml: (_) async =>
-              '<p>Safe copy</p><script>alert(1)</script>'
-              '<button data-hermes-send="continue please">Go</button>',
+          readWidgetHtml: (_) async => WidgetHtmlSource(
+            '<p>Safe copy</p><script>alert(1)</script>'
+            '<button data-hermes-send="continue please">Go</button>',
+          ),
           onWidgetIntent: (prompt) async => prompts.add(prompt),
         ),
       ),

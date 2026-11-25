@@ -1852,5 +1852,6 @@
   "ng_folder_access_unspecified": "Шлюз не повідомив, чи доступ лише для читання, чи для читання й запису.",
   "ng_folder_read_only": "Лише для читання",
   "ng_folder_read_write": "Читання й запис",
-  "ng_website_access": "Доступ до вебсайту"
+  "ng_website_access": "Доступ до вебсайту",
+  "render_widget_file_truncated": "Прочитано лише початок цього файлу, тому віджет може бути неповним."
 }

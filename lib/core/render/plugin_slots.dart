@@ -4,33 +4,26 @@ import 'artifact_library.dart';
 import 'rich_blocks.dart';
 import 'rich_transcript.dart';
 
-enum PluginSlot { pane, page, composerAction, command, directive, toolMedia }
-
 /// A contribution compiled into the client. Chat text and downloaded packages
-/// cannot add one of these.
+/// cannot add one of these. The only slot Ares draws is a reply card for a
+/// `::name{…}` directive; the Desktop's pane, page, composer, command and
+/// tool-player slots have no Ares surface, so they are not modelled here.
 class PluginDescriptor {
   const PluginDescriptor({
     required this.id,
     required this.title,
-    required this.slots,
-    this.directive,
+    required this.directive,
   });
 
   final String id;
   final String title;
-  final Set<PluginSlot> slots;
-  final String? directive;
+  final String directive;
 }
 
 /// The reviewed contributions. Notes draws `::notes{text="…"}` directives
 /// from a reply as a card once it is granted for that connection.
 const reviewedPlugins = <PluginDescriptor>[
-  PluginDescriptor(
-    id: 'notes',
-    title: 'Notes',
-    slots: {PluginSlot.directive},
-    directive: 'notes',
-  ),
+  PluginDescriptor(id: 'notes', title: 'Notes', directive: 'notes'),
 ];
 
 PluginDescriptor? reviewedPlugin(String id) {
@@ -61,9 +54,7 @@ class PluginGrants extends ChangeNotifier {
 
   bool showsDirective(String scope, String name) {
     for (final plugin in reviewedPlugins) {
-      if (plugin.directive == name &&
-          plugin.slots.contains(PluginSlot.directive) &&
-          granted(scope, plugin.id)) {
+      if (plugin.directive == name && granted(scope, plugin.id)) {
         return true;
       }
     }
@@ -84,4 +75,5 @@ void resetSandboxedRenderer() {
   resetArtifactCaches();
   resetRichBlockCaches();
   resetInspectedImagePaths();
+  resetSandboxedPages();
 }

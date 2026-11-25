@@ -6227,4 +6227,8 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'Проверяет, как используются навыки';
+
+  @override
+  String get render_widget_file_truncated =>
+      'Прочитано только начало этого файла, поэтому виджет может быть неполным.';
 }

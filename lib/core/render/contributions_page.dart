@@ -62,16 +62,5 @@ class ContributionsPage extends StatelessWidget {
 }
 
 extension PluginDescriptorLabels on PluginDescriptor {
-  String get grantedSlotsLabel {
-    final names = [
-      if (slots.contains(PluginSlot.pane)) 'pane',
-      if (slots.contains(PluginSlot.page)) 'page',
-      if (slots.contains(PluginSlot.composerAction)) 'composer',
-      if (slots.contains(PluginSlot.command)) 'command',
-      if (slots.contains(PluginSlot.directive))
-        directive == null ? 'directive' : 'reply cards for ::$directive',
-      if (slots.contains(PluginSlot.toolMedia)) 'tool player',
-    ];
-    return names.join(', ');
-  }
+  String get grantedSlotsLabel => 'reply cards for ::$directive';
 }

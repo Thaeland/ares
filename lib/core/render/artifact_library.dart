@@ -38,6 +38,28 @@ class ContentMemo<V> {
     return value;
   }
 
+  /// The stored value for [content] without computing one, or null.
+  ({V value})? peek(String content, {String scope = ''}) {
+    final key = '$scope:${artifactContentHash(content)}:${content.length}';
+    final hit = _entries.remove(key);
+    if (hit == null || hit.$1 != scope || hit.$2 != content) {
+      if (hit != null) _entries[key] = hit;
+      return null;
+    }
+    _entries[key] = hit;
+    return (value: hit.$3);
+  }
+
+  /// Stores a value computed elsewhere (a background parse).
+  void put(String content, V value, {String scope = ''}) {
+    final key = '$scope:${artifactContentHash(content)}:${content.length}';
+    _entries.remove(key);
+    _entries[key] = (scope, content, value);
+    while (_entries.length > capacity) {
+      _entries.remove(_entries.keys.first);
+    }
+  }
+
   void clear() {
     _entries.clear();
     misses = 0;

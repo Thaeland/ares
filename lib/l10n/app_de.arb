@@ -1699,5 +1699,6 @@
   "ng_folder_access_unspecified": "Das Gateway hat nicht angegeben, ob der Zugriff schreibgeschützt ist oder Lesen und Schreiben erlaubt.",
   "ng_folder_read_only": "Schreibgeschützt",
   "ng_folder_read_write": "Lesen und Schreiben",
-  "ng_website_access": "Websitezugriff"
+  "ng_website_access": "Websitezugriff",
+  "render_widget_file_truncated": "Nur der Anfang dieser Datei wurde gelesen, daher ist das Widget möglicherweise unvollständig."
 }
