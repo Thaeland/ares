@@ -1,10 +1,6 @@
-import 'dart:convert';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../history/foreign_file.dart';
 import '../services/remote_workspace.dart';
 
 /// Branch, rewind, checkpoints, export and Claude/Codex import for one chat.
@@ -45,7 +41,7 @@ class _SessionHistoryPageState extends State<SessionHistoryPage> {
   ForeignSessionPage? _foreign;
   String? _selectedForeign;
   ForeignPreviewView? _foreignPreview;
-  ForeignFilePreview? _filePreview;
+  var _foreignUnsupported = false;
   String? _notice;
 
   @override
@@ -68,7 +64,13 @@ class _SessionHistoryPageState extends State<SessionHistoryPage> {
       final messages = await target.transcript();
       final lineage = await target.lineage();
       final checkpoints = await target.checkpoints();
-      final foreign = await target.foreignSessions();
+      ForeignSessionPage? foreign;
+      try {
+        foreign = await target.foreignSessions();
+      } on WorkspaceException catch (error) {
+        if (error.reason != WorkspaceFailure.unsupported) rethrow;
+        _foreignUnsupported = true;
+      }
       if (!mounted || !target.isCurrent) return;
       setState(() {
         _target = target;
@@ -261,9 +263,19 @@ class _SessionHistoryPageState extends State<SessionHistoryPage> {
     try {
       final page = await target.foreignSessions(source: source);
       if (!mounted || !target.isCurrent) return;
-      setState(() => _foreign = page);
+      setState(() {
+        _foreignUnsupported = false;
+        _foreign = page;
+      });
     } on WorkspaceException catch (error) {
       if (!mounted) return;
+      if (error.reason == WorkspaceFailure.unsupported) {
+        setState(() {
+          _foreignUnsupported = true;
+          _foreign = null;
+        });
+        return;
+      }
       setState(() => _error = error.reason.name);
     }
   }
@@ -281,6 +293,13 @@ class _SessionHistoryPageState extends State<SessionHistoryPage> {
       setState(() => _foreignPreview = preview);
     } on WorkspaceException catch (error) {
       if (!mounted) return;
+      if (error.reason == WorkspaceFailure.unsupported) {
+        setState(() {
+          _foreignUnsupported = true;
+          _foreignPreview = null;
+        });
+        return;
+      }
       setState(() => _error = error.reason.name);
     }
   }
@@ -310,57 +329,14 @@ class _SessionHistoryPageState extends State<SessionHistoryPage> {
       });
     } on WorkspaceException catch (error) {
       if (!mounted) return;
-      setState(() {
-        _error = error.reason.name;
-        _busy = false;
-      });
-    }
-  }
-
-  Future<void> _pickFile() async {
-    final target = _target;
-    if (target == null) return;
-    final picked = await FilePicker.platform.pickFiles(withData: true);
-    if (!mounted || !target.isCurrent) return;
-    final bytes = picked?.files.single.bytes;
-    if (bytes == null) {
-      setState(() => _error = 'invalid');
-      return;
-    }
-    try {
-      final preview = parseForeignFile(
-        utf8.decode(bytes),
-        sourceHint: _foreignSource,
-      );
-      setState(() {
-        _filePreview = preview;
-        _error = null;
-      });
-    } on FormatException {
-      setState(() => _error = 'invalid');
-    }
-  }
-
-  Future<void> _importFile() async {
-    final target = _target;
-    final preview = _filePreview;
-    if (target == null || preview == null || _busy) return;
-    final confirmed = await _confirm(
-      'Import this file',
-      'The preview below is what will be copied. Tokens were removed on '
-          'this device and the file path is not sent.',
-    );
-    if (!confirmed || !target.isCurrent) return;
-    setState(() => _busy = true);
-    try {
-      final receipt = await target.importUserFile(preview, confirmed: true);
-      if (!mounted) return;
-      setState(() {
-        _notice = 'Imported as ${receipt.sessionId}';
-        _busy = false;
-      });
-    } on WorkspaceException catch (error) {
-      if (!mounted) return;
+      if (error.reason == WorkspaceFailure.unsupported) {
+        setState(() {
+          _foreignUnsupported = true;
+          _foreignPreview = null;
+          _busy = false;
+        });
+        return;
+      }
       setState(() {
         _error = error.reason.name;
         _busy = false;
@@ -470,59 +446,41 @@ class _SessionHistoryPageState extends State<SessionHistoryPage> {
                   'Import Claude or Codex',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                Text(
-                  _foreign == null
-                      ? ''
-                      : 'Reading from ${_foreign!.host}. '
-                            '${_foreign!.unreadable} logs could not be read.',
-                ),
-                SegmentedButton<String?>(
-                  segments: const [
-                    ButtonSegment(value: null, label: Text('All')),
-                    ButtonSegment(value: 'claude', label: Text('Claude')),
-                    ButtonSegment(value: 'codex', label: Text('Codex')),
-                  ],
-                  selected: {_foreignSource},
-                  onSelectionChanged: (value) => _reloadForeign(value.single),
-                ),
-                for (final row in _foreign?.sessions ?? const [])
-                  ListTile(
-                    key: ValueKey('history-foreign-${row.id}'),
-                    selected: _selectedForeign == row.id,
-                    title: Text(row.title),
-                    subtitle: Text('${row.label} · ${row.turns}'),
-                    onTap: () => _previewForeign(row.id),
+                if (_foreignUnsupported)
+                  const Text(
+                    'Claude and Codex import is not supported by this gateway.',
+                  )
+                else ...[
+                  Text(
+                    _foreign == null
+                        ? ''
+                        : 'Reading from ${_foreign!.host}. '
+                              '${_foreign!.unreadable} logs could not be read.',
                   ),
-                if (_foreignPreview != null) _previewList(_foreignPreview!),
-                FilledButton(
-                  key: const ValueKey('history-import-host'),
-                  onPressed: _foreignPreview == null || _busy
-                      ? null
-                      : _importForeign,
-                  child: const Text('Import selected session'),
-                ),
-                OutlinedButton(
-                  key: const ValueKey('history-pick-file'),
-                  onPressed: _busy ? null : _pickFile,
-                  child: const Text('Preview a file'),
-                ),
-                if (_filePreview != null) ...[
-                  Text(_filePreview!.title),
-                  if (_filePreview!.truncated)
-                    const Text('Only the first 500 turns can be imported.'),
-                  for (final turn in _filePreview!.previewTurns)
+                  SegmentedButton<String?>(
+                    segments: const [
+                      ButtonSegment(value: null, label: Text('All')),
+                      ButtonSegment(value: 'claude', label: Text('Claude')),
+                      ButtonSegment(value: 'codex', label: Text('Codex')),
+                    ],
+                    selected: {_foreignSource},
+                    onSelectionChanged: (value) => _reloadForeign(value.single),
+                  ),
+                  for (final row in _foreign?.sessions ?? const [])
                     ListTile(
-                      title: Text(turn.role),
-                      subtitle: Text(
-                        turn.text,
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      key: ValueKey('history-foreign-${row.id}'),
+                      selected: _selectedForeign == row.id,
+                      title: Text(row.title),
+                      subtitle: Text('${row.label} · ${row.turns}'),
+                      onTap: () => _previewForeign(row.id),
                     ),
+                  if (_foreignPreview != null) _previewList(_foreignPreview!),
                   FilledButton(
-                    key: const ValueKey('history-import-file'),
-                    onPressed: _busy ? null : _importFile,
-                    child: const Text('Import this file'),
+                    key: const ValueKey('history-import-host'),
+                    onPressed: _foreignPreview == null || _busy
+                        ? null
+                        : _importForeign,
+                    child: const Text('Import selected session'),
                   ),
                 ],
               ],

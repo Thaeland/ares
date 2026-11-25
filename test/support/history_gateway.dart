@@ -224,11 +224,6 @@ class HistoryGateway {
       case 'session.foreign.import':
         imports.add(params);
         return {'session_id': 'imported-host', 'already_imported': false};
-      case 'session.foreign.import_text':
-        imports.add(params);
-        final encoded = jsonEncode(params);
-        if (encoded.contains(secret) || encoded.contains('ghp_')) return null;
-        return {'session_id': 'imported-file', 'already_imported': false};
       default:
         return null;
     }

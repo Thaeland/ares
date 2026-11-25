@@ -407,44 +407,6 @@ extension SessionHistory on WorkspaceTarget {
     return _importReceipt(result);
   }, session: true);
 
-  /// Imports a file the user already previewed. The body is the redacted
-  /// turns only: no path, and no turn that still contains a token.
-  Future<ForeignImportReceipt> importUserFile(
-    ForeignFilePreview preview, {
-    required bool confirmed,
-  }) async {
-    if (!confirmed) _fail(WorkspaceFailure.invalid);
-    final digest = foreignFileDigest(
-      preview.source,
-      preview.title,
-      preview.turns,
-    );
-    if (preview.source != 'claude' && preview.source != 'codex' ||
-        digest != preview.digest ||
-        preview.turns.isEmpty ||
-        containsSecret(preview.title)) {
-      _fail(WorkspaceFailure.invalid);
-    }
-    for (final turn in preview.turns) {
-      if ((turn.role != 'user' && turn.role != 'assistant') ||
-          containsSecret(turn.text)) {
-        _fail(WorkspaceFailure.invalid);
-      }
-    }
-    return _withOwner(() async {
-      final result = await _rpc('session.foreign.import_text', {
-        'source': preview.source,
-        'title': preview.title,
-        'digest': digest,
-        'turns': [
-          for (final turn in preview.turns)
-            {'role': turn.role, 'content': turn.text},
-        ],
-      });
-      return _importReceipt(result);
-    }, session: true);
-  }
-
   Future<({int revision, int generation})> _readFences() async {
     final id = route.storedSessionId!;
     final row = await _get(['sessions', id, 'mutation-snapshot']);

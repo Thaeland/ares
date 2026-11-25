@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hermes_android/core/history/foreign_file.dart';
 import 'package:hermes_android/core/services/desktop_gateway_client.dart';
 import 'package:hermes_android/core/services/remote_workspace.dart';
 import 'package:hermes_android/nextgen/data/nextgen_gateway.dart';
@@ -155,21 +154,4 @@ Future<void> _exercise(WorkspaceTarget target, HistoryGateway gateway) async {
   expect(preview.messages.single.text, isNot(contains(HistoryGateway.secret)));
   final imported = await target.importForeign(page.sessions.single.id);
   expect(imported.sessionId, 'imported-host');
-
-  final file = parseForeignFile(
-    '{"type":"user","message":{"role":"user","content":"Hello ${HistoryGateway.secret}"}}\n'
-    '{"type":"assistant","message":{"role":"assistant","content":"Hi"}}\n',
-    sourceHint: 'claude',
-  );
-  expect(file.turns.first.text, isNot(contains(HistoryGateway.secret)));
-  await expectLater(
-    target.importUserFile(file, confirmed: false),
-    throwsA(isA<WorkspaceException>()),
-  );
-  final filed = await target.importUserFile(file, confirmed: true);
-  expect(filed.sessionId, 'imported-file');
-  expect(
-    gateway.imports.last.toString(),
-    isNot(contains(HistoryGateway.secret)),
-  );
 }

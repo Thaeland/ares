@@ -12,7 +12,7 @@ import 'connection_mutation_barrier.dart';
 import 'portable_profile_bundle.dart';
 import 'ws_client.dart';
 import 'preview_peer.dart';
-import '../history/foreign_file.dart';
+import '../history/foreign_session.dart';
 import '../history/fork_lineage.dart';
 import '../history/transcript_redaction.dart';
 
