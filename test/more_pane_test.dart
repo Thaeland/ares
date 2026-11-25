@@ -171,6 +171,7 @@ void main() {
 
     test('Usage heading is localized in every supported locale', () async {
       const titles = {
+        'ar': 'الاستخدام',
         'de': 'Nutzung',
         'en': 'Usage',
         'es': 'Uso',
@@ -183,6 +184,7 @@ void main() {
         'uk': 'Використання',
         'zh': '用量',
         'zh_Hans': '用量',
+        'zh_Hant': '用量',
       };
       expect(
         titles.keys,
@@ -341,6 +343,7 @@ void main() {
       'groups Cron, Skills and Memory under Agent in every locale',
       () async {
         const titles = {
+          'ar': 'الوكيل',
           'de': 'Agent',
           'en': 'Agent',
           'es': 'Agente',
@@ -353,6 +356,7 @@ void main() {
           'uk': 'Агент',
           'zh': '智能体',
           'zh_Hans': '智能体',
+          'zh_Hant': '代理程式',
         };
         expect(
           titles.keys,

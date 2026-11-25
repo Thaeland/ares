@@ -1852,5 +1852,37 @@
   "ng_folder_access_unspecified": "Шлюз не повідомив, чи доступ лише для читання, чи для читання й запису.",
   "ng_folder_read_only": "Лише для читання",
   "ng_folder_read_write": "Читання й запис",
-  "ng_website_access": "Доступ до вебсайту"
+  "ng_website_access": "Доступ до вебсайту",
+  "appearance_inline_embeds": "Вбудований вміст",
+  "appearance_inline_embeds_hint": "Розширені попередні перегляди завантажуються зі сторонніх сайтів (YouTube, X, …). «Запитувати» показує заповнювач, доки ви не дозволите кожен; «Завжди» завантажує їх автоматично; «Вимк.» залишає звичайні посилання.",
+  "appearance_embeds_ask": "Запитувати",
+  "appearance_embeds_always": "Завжди",
+  "appearance_embeds_off": "Вимк.",
+  "appearance_embeds_reset": "{count, plural, =1{Скинути 1 дозволений сервіс} one{Скинути {count} дозволений сервіс} few{Скинути {count} дозволені сервіси} many{Скинути {count} дозволених сервісів} other{Скинути {count} дозволеного сервісу}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "Завантажити",
+  "appearance_embed_always_allow": "Завжди дозволяти {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "Завантаження попереднього перегляду…",
+  "appearance_embed_image_failed": "Не вдалося завантажити зображення з {host}. Торкніться, щоб відкрити.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "Попередній перегляд недоступний"
 }

@@ -1,0 +1,2772 @@
+{
+  "@@locale": "ar",
+  "workspace_workers": "العمّال النشطون",
+  "workers_unattached": "أعداد فقط. لتوجيه عامل، اختر «العمّال النشطون» في المحادثة الأم المرتبط بها.",
+  "slash_local_arguments": "لا يقبل هذا الاختصار معاملات هنا. استخدم عناصر التحكم في التطبيق. لم تتغير مسودتك.",
+  "fallback_title": "النماذج الاحتياطية",
+  "fallback_notice": "عندما لا يتوفر النموذج الرئيسي، تُجرَّب النماذج الاحتياطية بالترتيب. تخص التغييرات هذا الملف الشخصي فقط. اضغط على زر الحفظ لحفظ القائمة كاملة.",
+  "fallback_unavailable": "إعدادات النماذج الاحتياطية غير متاحة أو غير صالحة. تحقق من الاتصال والملف الشخصي المحدد وإصدار المضيف، ثم أعد المحاولة.",
+  "fallback_discovery_unavailable": "يتعذر اكتشاف المزوّدين حاليًا. ما زالت الإدخالات الحالية محفوظة. أعد المحاولة لاختيار المزوّدين والنماذج.",
+  "fallback_empty": "قائمة النماذج الاحتياطية فارغة.",
+  "fallback_incomplete": "اختر مزوّدًا ونموذجًا لكل إدخال، أو أزل الإدخالات غير المكتملة قبل الحفظ.",
+  "fallback_add": "إضافة نموذج احتياطي",
+  "fallback_save": "حفظ قائمة النماذج الاحتياطية",
+  "fallback_save_failed": "تعذّر التحقق من قائمة النماذج الاحتياطية المحفوظة. ما زالت مسودتك محفوظة. أعد محاولة الحفظ أو حدّث الصفحة لإعادة تحميل إعدادات المضيف.",
+  "fallback_saved": "حُفظت قائمة النماذج الاحتياطية وتم التحقق منها.",
+  "fallback_legacy_title": "النماذج الاحتياطية القديمة (للقراءة فقط)",
+  "fallback_legacy_notice": "يستخدم المضيف أيضًا fallback_model بعد هذه القائمة، ويتخطى المسارات المكررة. تظل الإدخالات القديمة محفوظة حتى لو كانت القائمة أعلاه فارغة. يمكنك تعديلها على المضيف.",
+  "fallback_priority": "الأولوية: {position}",
+  "@fallback_priority": {
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  },
+  "fallback_move_up": "نقل لأعلى",
+  "fallback_move_down": "نقل لأسفل",
+  "fallback_routing_read_only": "يحتفظ التطبيق بتفاصيل التوجيه أو بالمزوّد غير المدرج. عدّل المزوّد أو النموذج على المضيف. لا يزال بإمكانك تغيير ترتيب الإدخال أو إزالته.",
+  "cron_model_default": "استخدام النموذج الافتراضي",
+  "cron_model_notice": "ينطبق هذا الاختيار على مهمة cron هذه فقط. إذا لم تحدد لها نموذجًا بعينه، يستخدم Hermes نموذج cron الافتراضي، ثم النموذج الرئيسي. يمكنك إدارة النماذج المخصصة على المضيف.",
+  "model_management_unavailable": "تعذّر تحميل إعدادات النماذج أو حفظها. حدّث الصفحة وحاول مجددًا.",
+  "model_management_subtitle": "النموذج الرئيسي والنماذج الاحتياطية والمساعدة لهذا الملف الشخصي",
+  "usage": "الاستخدام",
+  "nous_portal": "بوابة Nous",
+  "portal_menu_subtitle": "حالة البوابة والاستخدام المسجّل",
+  "portal_read_only": "بيانات البوابة للقراءة فقط. يمكنك إدارة مصادقة Nous على مضيف Hermes. لا تتيح نقاط النهاية هذه معرفة رصيد الاشتراك أو الرصيد الائتماني.",
+  "portal_status": "حالة اتصال البوابة بخدمة Nous Portal",
+  "portal_free_tier": "وصول ضمن الباقة المجانية (من دون تسجيل الدخول إلى حساب)",
+  "portal_signed_in": "تم تسجيل الدخول",
+  "portal_signed_out": "لم يتم تسجيل الدخول",
+  "portal_account_tier": "فئة الحساب",
+  "portal_recorded_usage": "الاستخدام المسجّل",
+  "portal_all_providers": "يشمل جميع المزوّدين في الملف الشخصي المحدد للبوابة. تسجيل تكلفة قدرها صفر لا يعني أن النموذج مجاني.",
+  "portal_period": "آخر {days} يومًا",
+  "@portal_period": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "portal_sessions": "الجلسات",
+  "portal_input": "رموز الإدخال",
+  "portal_output": "رموز الإخراج",
+  "portal_estimated": "التكلفة التقديرية المسجّلة",
+  "portal_actual": "التكلفة الفعلية المسجّلة",
+  "portal_recorded_models": "النماذج المسجّلة",
+  "portal_no_models": "لا توجد نماذج مسجّلة.",
+  "portal_unavailable": "البيانات غير متاحة. تحقق من الاتصال والملف الشخصي المحدد وإصدار البوابة، ثم أعد المحاولة.",
+  "paste_attachment_failed_text_kept": "تعذّر إرفاق المحتوى الملصق. بقي النص في الرسالة.",
+  "background_task_report": "مهمة في الخلفية",
+  "background_process_report": "عملية في الخلفية",
+  "background_report_issues": "أُبلغ عن مشكلات. وسّع التقرير لعرض التفاصيل.",
+  "background_report_expand": "توسيع التقرير",
+  "background_report_collapse": "طيّ التقرير",
+  "copy_session_id": "نسخ معرّف الجلسة",
+  "copy_session_id_failed": "تعذّر نسخ معرّف الجلسة.",
+  "setup_interface_title": "اختر واجهتك",
+  "setup_interface_classic": "Classic",
+  "setup_interface_nextgen": "NextGen",
+  "setup_interface_classic_description": "مساحة عمل Ares الأصلية، مع جميع أدوات التحكم في الاتصال وإعدادات واجهة Classic.",
+  "setup_interface_nextgen_description": "واجهة أحدث تتيح تسجيل الدخول مرة واحدة إلى لوحة التحكم، ومتابعة الخطط مباشرة، واستخدام الوكلاء الفرعيين والإشعارات.",
+  "setup_interface_switch_later": "يمكنك تبديل الواجهة في أي وقت من الإعدادات.",
+  "ng_confirm_model_switch": "هل تريد تبديل النموذج؟",
+  "ng_switch": "تبديل",
+  "ng_model_confirmation_required": "يلزم التأكيد قبل اختيار هذا النموذج.",
+  "ng_model_switches_next_turn": "سيُستخدم {model} في الجولة التالية.",
+  "@ng_model_switches_next_turn": {"placeholders": {"model": {"type": "String"}}},
+  "ng_model_switch_not_connected": "الدردشة غير جاهزة لتبديل النموذج. افتحها مجددًا وأعد المحاولة.",
+  "ng_gateway_kept_default_model": "أبقت البوابة على {model} لهذه الدردشة. أعد اختيار النموذج قبل الإرسال.",
+  "@ng_gateway_kept_default_model": {"placeholders": {"model": {"type": "String"}}},
+  "hands_free_title": "الاستخدام دون لمس",
+  "hands_free_start": "بدء الاستخدام دون لمس",
+  "hands_free_stop": "إيقاف الاستخدام دون لمس",
+  "hands_free_preparing": "جارٍ تجهيز الصوت. انتظر إشارة الجاهزية",
+  "hands_free_listening": "قل «Hey Hermes»",
+  "hands_free_recording": "جاهز — تحدث الآن",
+  "hands_free_waiting": "في انتظار Hermes",
+  "hands_free_speaking": "جارٍ نطق الرد — الميكروفون مغلق",
+  "hands_free_followup": "الاستماع لمدة تصل إلى {seconds} ثانية",
+  "@hands_free_followup": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "hands_free_error": "توقف وضع الاستخدام دون لمس",
+  "hands_free_setup": "إعداد الاستخدام دون لمس",
+  "hands_free_preview": "معاينة الإملاء الصوتي: {transcript}",
+  "@hands_free_preview": {
+    "placeholders": {
+      "transcript": {
+        "type": "String"
+      }
+    }
+  },
+  "hands_free_short_disclosure": "يعمل هذا الوضع فقط عندما تكون هذه الدردشة مفتوحة في الواجهة. لا يتطلب رصد عبارة التنبيه اتصالًا، لكن الخدمات الصوتية قد تستخدم الشبكة. يستهلك الاستماع طاقة البطارية.",
+  "hands_free_error_action": "تحقق من إذن الميكروفون وخدمة الكلام وصوت الرد والاتصال، ثم اضغط على زر الإيقاف يليه زر البدء لإعادة المحاولة. لن يُعاد إرسال أي شيء.",
+  "hands_free_disclosure": "تُرصد عبارة التنبيه على وحدة المعالجة المركزية (CPU) دون اتصال. قد تستخدم خدمة التعرّف على الكلام في Android وصوت الرد المحدد والبوابة اتصالات الشبكة. يستهلك الاستماع طاقة البطارية وقد يتنشط الميكروفون بالخطأ. يتوقف الوضع إذا غطّت شاشة أخرى الدردشة أو أُغلقت أو انتقلت إلى الخلفية. لا يُستأنف تلقائيًا عند فتحها مجددًا. يبقى النص الذي تمليه يدويًا مسودة قابلة للتعديل.",
+  "hands_free_ready_cue": "قل «Hey Hermes»، وانتظر إشارة «جاهز — تحدث الآن»، ثم تحدث. لا يُسجَّل الكلام المتصل بعبارة التنبيه، ولا ما سبق الإشارة. إذا انتقلت خارج التطبيق لضبط الإذن، فاضغط على زر البدء مجددًا بعد منحه.",
+  "hands_free_settings_title": "التحكم الصوتي دون لمس",
+  "hands_free_settings_subtitle": "إظهار زر بدء الاستماع لعبارة «Hey Hermes» في الدردشات. يؤدي تعطيل هذا الخيار إلى إيقاف أي جلسة نشطة للاستخدام دون لمس.",
+  "hands_free_timing_limit": "مهلة انتظار المتابعة حد أقصى، وليست حدًا أدنى. قد يتوقف Android عن الاستماع قبل انتهائها. عند الصمت يعود التطبيق إلى رصد عبارة التنبيه محليًا دون تكرار تشغيل خدمة التعرّف على الكلام.",
+  "hands_free_followup_off": "المتابعة معطّلة — قل «Hey Hermes» قبل كل طلب",
+  "hands_free_start_blocked": "للبدء، يجب أن تكون المسودة فارغة وبلا مرفقات، وأن تكون الدردشة متصلة ولا تنفذ أي طلب، وأن تكون الردود المنطوقة مفعّلة. أنهِ أولًا أي إجراء صوتي بدأته يدويًا.",
+  "hands_free_setup_complete": "اكتمل إعداد الميكروفون. اضغط على زر البدء مجددًا.",
+  "message_time_recorded": "وقت التسجيل على الخادم: {time} (بالتوقيت المحلي)",
+  "@message_time_recorded": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "message_time_sent": "وقت رصد الإرسال على هذا الجهاز: {time} (بالتوقيت المحلي)",
+  "@message_time_sent": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "message_time_received": "وقت أول استلام على هذا الجهاز: {time} (بالتوقيت المحلي)",
+  "@message_time_received": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "stop_and_send": "إيقاف وإرسال",
+  "message_queued_for_running_turn": "أُضيفت الرسالة إلى قائمة انتظار التنفيذ الجاري.",
+  "running_message_not_accepted": "تعذّر على Hermes قبول هذه الرسالة. ما زالت مسودتك محفوظة. أوقف الرد أو انتظر انتهاءه، ثم أعد الإرسال.",
+  "running_message_delivery_unknown": "تعذّر تأكيد تسليم الرسالة. ما زالت مسودتك محفوظة. تحقق من الدردشة قبل إعادة المحاولة.",
+  "attachment_tap_to_preview": "اضغط للمعاينة",
+  "attachment_save": "حفظ",
+  "attachment_share": "مشاركة",
+  "attachment_saved": "حُفظ الملف",
+  "attachment_save_cancelled": "أُلغي الحفظ",
+  "attachment_save_failed": "تعذّر حفظ هذا الملف. حاول مجددًا.",
+  "attachment_share_failed": "تعذّرت مشاركة هذا الملف. حاول مجددًا.",
+  "attachment_download_failed": "تعذّر تحميل هذا الملف. تحقق من الاتصال وحاول مجددًا.",
+  "attachment_no_inline_preview": "لا تتوفر معاينة داخل التطبيق لهذا النوع من الملفات. احفظ الملف الأصلي أو شاركه لفتحه في تطبيق آخر.",
+  "attachment_image_failed": "تعذّر فك ترميز هذه الصورة. لا يزال بإمكانك حفظ الملف الأصلي أو مشاركته.",
+  "attachment_text_truncated": "المعاينة مختصرة. احفظ الملف أو شاركه لقراءته كاملًا.",
+  "attachment_text_unavailable": "تعذّر عرض هذا الملف كنص. احفظ الملف الأصلي أو شاركه.",
+  "attachment_pdf_failed": "تعذّرت معاينة ملف PDF هذا. احفظ الملف الأصلي أو شاركه.",
+  "attachment_pdf_unavailable": "تتوفر معاينة ملفات PDF على Android. لا يزال بإمكانك حفظ هذا الملف أو مشاركته.",
+  "attachment_pdf_page": "الصفحة {page} من {total}",
+  "@attachment_pdf_page": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "attachment_previous_page": "الصفحة السابقة",
+  "attachment_next_page": "الصفحة التالية",
+  "attachment_loading": "جارٍ تحميل المعاينة…",
+  "attachment_document_text_notice": "هذه معاينة نصية. قد يختلف تخطيط المستند وصوره وتنسيقه عن الأصل.",
+  "attachment_document_failed": "تعذّرت معاينة هذا المستند. احفظ الملف الأصلي أو شاركه.",
+  "attachment_document_empty": "لم يُعثر على نص قابل للقراءة في هذا المستند.",
+  "attachment_video_failed": "تعذّر تشغيل هذا الفيديو. قد لا يكون تنسيقه أو برنامج الترميز المستخدم مدعومًا. احفظ الملف الأصلي أو شاركه.",
+  "attachment_video_play": "تشغيل",
+  "attachment_video_pause": "إيقاف مؤقت",
+  "attachment_video_mute": "كتم الصوت",
+  "attachment_video_unmute": "إلغاء كتم الصوت",
+  "attachment_video_seek": "موضع التشغيل في الفيديو",
+  "attachment_close": "إغلاق المعاينة",
+  "attachment_retry": "إعادة المحاولة",
+  "saved_history_heading": "السجل المحفوظ",
+  "received_output_heading": "المخرجات المستلَمة — لم تتأكد مطابقتها للسجل المحفوظ",
+  "received_output_details": "حول المخرجات المستلَمة",
+  "received_output_explanation": "قد تظهر هذه المخرجات أيضًا في السجل المحفوظ. لا يستطيع التطبيق تأكيد تطابقها معه.",
+  "local_prompt_context": "السياق المحلي للطلب",
+  "received_output_badge": "مستلَم · لم يتأكد التطابق",
+  "received_output_lifetime": "تُحفظ المخرجات المستلَمة مؤقتًا خلال جلسة التطبيق هذه، وقد تُختصر أو تُزال عند بلوغ حدود التخزين. وقد لا تبقى متاحة بعد إغلاق التطبيق أو قطع الاتصال.",
+  "theme_palette": "نَسق الألوان",
+  "theme_palette_gold": "ذهبي",
+  "theme_palette_purple": "بنفسجي",
+  "theme_palette_orange": "برتقالي",
+  "theme_palette_green": "أخضر",
+  "theme_palette_blue": "أزرق",
+  "theme_palette_red": "أحمر",
+  "theme_palette_teal": "أخضر مزرقّ",
+  "theme_palette_pink": "وردي",
+  "theme_palette_indigo": "نيلي",
+  "theme_palette_cyan": "سماوي",
+  "assets_recent_subtitle": "اعثر على الملفات التي شاركها Hermes في الدردشات المحفوظة",
+  "assets_scope_notice": "تظهر هنا الملفات التي أُنشئت وشاركها Hermes صراحةً في الردود المحفوظة. هذه نظرة جزئية على سجل الدردشة وليست قائمة شاملة بالملفات أو المرفقات. قد لا تعود الملفات المشار إليها موجودة.",
+  "assets_download_limit": "لا تُحمّل الملفات إلا عند الضغط عليها. الحد الأقصى لكل معاينة أو تنزيل هو 25 MiB. استخدم لوحة التحكم للملفات الأكبر.",
+  "assets_search_hint": "ابحث في الملفات التي عُثر عليها أو في دردشاتها الأصلية",
+  "assets_all": "الكل",
+  "assets_images": "الصور",
+  "assets_audio": "الصوتيات",
+  "assets_video": "الفيديو",
+  "assets_documents": "المستندات والملفات الأخرى",
+  "assets_empty": "لم يُعثر على ملفات في الرسائل المفحوصة",
+  "assets_empty_detail": "افحص مزيدًا من الدردشات أو رسائل أقدم لتوسيع نطاق البحث. لا تشمل الفهرسة هنا المرفقات العادية ولا الملفات التي لا توجد روابط لها.",
+  "assets_no_matches": "لا توجد ملفات مطابقة",
+  "assets_load_more_chats": "فحص مزيد من الدردشات",
+  "assets_load_older_messages": "فحص رسائل أقدم",
+  "assets_load_failed": "تعذّرت قراءة جزء من السجل، لذا فالنتائج غير مكتملة. تحقق من الاتصال بلوحة التحكم وأعد المحاولة.",
+  "assets_retry_failed": "إعادة محاولة قراءة الأجزاء المتعذّرة من السجل",
+  "assets_partial": "أفاد الخادم بأن السجل غير مكتمل. تحقق من لوحة التحكم ثم حدّث النتائج.",
+  "assets_scan_summary": "عدد الإشارات إلى الملفات: {files}، وعدد الدردشات المفحوصة: {chats}",
+  "@assets_scan_summary": {
+    "placeholders": {
+      "files": {
+        "type": "int"
+      },
+      "chats": {
+        "type": "int"
+      }
+    }
+  },
+  "assets_open_chat": "فتح الدردشة: {title}",
+  "@assets_open_chat": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "assets_file_too_large": "يتجاوز هذا الملف حد التنزيل. افتح لوحة التحكم لتنزيله.",
+  "a_one_off_question_archives_itself_after_72_hours_anything": "دردشة لسؤال واحد تُؤرشف تلقائيًا بعد 72 ساعة، ويظل ما يستحق الاحتفاظ به في الذاكرة.",
+  "archive_chat": "أرشفة الدردشة",
+  "unarchive_chat": "إلغاء أرشفة الدردشة",
+  "chat_archived": "أُرشفت الدردشة",
+  "chat_unarchived": "أُعيدت الدردشة من الأرشيف",
+  "could_not_update_chat_archive": "تعذّر تحديث حالة أرشفة الدردشة: {error}",
+  "@could_not_update_chat_archive": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "quick_chat_description": "دردشة لسؤال واحد.",
+  "ai_full_text": "الذكاء الاصطناعي والبحث في النص الكامل",
+  "ai_search_model": "نموذج البحث بالذكاء الاصطناعي",
+  "ai_searched_for": "بحث الذكاء الاصطناعي عن: {aiRewrittenQuery}",
+  "ai_assisted_filing": "التصنيف بمساعدة الذكاء الاصطناعي",
+  "api_key": "مفتاح API",
+  "api_server_key_from_hermes_env": "قيمة API_SERVER_KEY من الملف ~/.hermes/.env",
+  "active": "نشط",
+  "activity": "النشاط",
+  "activity_reads_the_durable_turn_journal_to_know_what_hermes": "يعرض قسم النشاط ما يفعله Hermes استنادًا إلى سجل الجولات الدائم. تحقق من إمكانية الوصول إلى البوابة، ثم أعد المحاولة.",
+  "add": "إضافة",
+  "add_connection": "إضافة اتصال",
+  "add_cron_job": "إضافة مهمة cron",
+  "add_gateway_connection": "إضافة اتصال ببوابة",
+  "add_and_update_connections_from_the_backup_keep_the_rest": "إضافة الاتصالات وتحديثها من النسخة الاحتياطية مع إبقاء بقية الاتصالات كما هي.",
+  "add_attachment": "إضافة مرفق",
+  "add_new_cron_job": "إضافة مهمة cron جديدة",
+  "add_to_chat": "إضافة إلى الدردشة",
+  "all_chats": "كل الدردشات",
+  "all_stored_message_content": "جميع محتويات الرسائل المخزّنة",
+  "allow_for_this_session": "السماح لهذه الجلسة",
+  "allow_matching_commands_until_this_hermes_session_ends": "السماح بالأوامر المطابقة حتى انتهاء جلسة Hermes هذه.",
+  "allow_folder_until_sandbox_off": "السماح بهذا المجلد حتى إيقاف بيئة العزل.",
+  "allow_once": "السماح مرة واحدة",
+  "allow_website_until_sandbox_off": "السماح بهذا الموقع حتى إيقاف بيئة العزل.",
+  "always_allow": "السماح دائمًا",
+  "apply_to_this_chat": "تطبيق على هذه الدردشة",
+  "approval_needed": "الموافقة مطلوبة",
+  "approval_needed_description": "هناك أمر ينتظر موافقتك أو رفضك.",
+  "approve": "موافقة",
+  "archive": "أرشفة",
+  "archive_project": "أرشفة المشروع",
+  "archive_2": "هل تريد أرشفة {projectName}؟",
+  "archive_3": "هل تريد أرشفة {name}؟",
+  "archived": "مؤرشف",
+  "archived_conversations_appear_here": "تظهر هنا المحادثات المؤرشفة فقط. تبقى الدردشات القديمة ضمن «كل الدردشات».",
+  "archived_quick_chats": "الدردشات السريعة المؤرشفة",
+  "artifacts_attachments_and_generated_media": "الملفات الناتجة والمرفقات والوسائط المُولَّدة",
+  "ask_ai_to_find_a_conversation": "اطلب من الذكاء الاصطناعي العثور على محادثة",
+  "assets": "الملفات",
+  "assets_need_a_server_authoritative_assets_index_in_the_hermes": "لعرض الملفات حسب المشروع، يجب أن توفر بوابة Hermes فهرسًا للملفات يديره الخادم ويُعتمد عليه مرجعًا.",
+  "assets_unavailable": "الملفات غير متاحة",
+  "attach_image_or_file": "إرفاق صورة أو ملف",
+  "attachment_drafts": "مسودات المرفقات",
+  "recover_text_draft": "استعادة مسودة نصية",
+  "undo_draft_recovery": "تراجع",
+  "draft_session_exists": "لا تزال هذه المحادثة موجودة. افتحها لمتابعة مسودتك.",
+  "draft_recovery_unavailable": "تعذّر التحقق من هذه المسودة. لم يتغيّر أي شيء.",
+  "attachment_of": "المرفق {index} من {total}",
+  "auto_device_default": "تلقائي (إعداد الجهاز الافتراضي)",
+  "agent": "الوكيل",
+  "autonomous_agents": "الوكلاء المستقلون",
+  "background_recovery_unavailable_legacy_transport": "الاستعادة في الخلفية غير متاحة بسبب استخدام آلية اتصال قديمة",
+  "background_task_completed": "اكتملت المهمة في الخلفية",
+  "background_task_completed_description": "اكتمل تنفيذ أمر في الطرفية كان يعمل في الخلفية.",
+  "backup_restore": "النسخ الاحتياطي والاستعادة",
+  "backup_exported": "صُدّرت النسخة الاحتياطية إلى {destination}",
+  "base_url": "عنوان URL الأساسي",
+  "binary_preview_is_unavailable_download_the_file_to_open_it": "لا تتوفر معاينة للملف الثنائي. نزّل الملف لفتحه.",
+  "branch": "إنشاء فرع",
+  "branch_chat": "إنشاء فرع من الدردشة",
+  "branch_created_in_hermes_history": "أُنشئ فرع في سجل Hermes.",
+  "browse_and_manage_your_hermes_agent_sessions_from_your_phone": "تصفّح جلسات Hermes Agent وأدرها من هاتفك. يتصل التطبيق بلوحة تحكم Hermes التي تعمل على شبكتك المحلية.",
+  "browse_server_files": "تصفّح ملفات الخادم",
+  "browse_the_miniserver_folders_behind_your_projects": "تصفّح مجلدات الخادم المصغّر التي تستند إليها مشاريعك",
+  "cancel": "إلغاء",
+  "cancel_voice_input": "إلغاء الإدخال الصوتي",
+  "cannot_reach": "تعذّر الوصول إلى {host}:{port}.",
+  "cannot_reach_check_the_host_and_port": "تعذّر الوصول إلى {host}:{port}. تحقق من المضيف والمنفذ.",
+  "change_ai_search_model": "تغيير نموذج البحث بالذكاء الاصطناعي",
+  "changes_the_default_for_use_the_selector_in_a_chat": "يغيّر الإعداد الافتراضي لـ {label}. لتغييره لمحادثة واحدة فقط، استخدم أداة الاختيار داخل تلك الدردشة.",
+  "chat_actions": "إجراءات الدردشة",
+  "chats": "الدردشات",
+  "chats_from_this_gateway_are_not_grouped_yet_grouping_stays": "لم تُجمع دردشات هذه البوابة في مشاريع بعد. يبقى تنظيمها محليًا على هذا الهاتف إلى أن تدعم البوابة استضافة المشاريع.",
+  "chats_in_this_project_will_show_their_state_and_last": "تظهر هنا حالة كل دردشة في هذا المشروع وآخر نشاط فيها.",
+  "chats_that_are_not_assigned_to_a_project": "الدردشات التي لا تنتمي إلى أي مشروع",
+  "chats_you_start_in_this_project_will_appear_here_on": "ستظهر هنا الدردشات التي تبدأها في هذا المشروع، على كل جهاز سجّلت دخوله إلى خادم Hermes هذا.",
+  "check_that_the_gateway_is_running_and_reachable_then_try": "تحقق من أن البوابة تعمل ويمكن الوصول إليها، ثم أعد المحاولة.",
+  "check_the_dashboard_connection_and_try_again": "تحقق من الاتصال بلوحة التحكم وحاول مجددًا.",
+  "check_the_connection_and_try_again": "تحقق من الاتصال وحاول مجددًا.",
+  "choose_a_small_model_to_rewrite_queries": "اختر نموذجًا صغيرًا لإعادة صياغة استعلامات البحث",
+  "choose_an_ai_search_model_before_using_ai_search": "اختر نموذجًا للبحث بالذكاء الاصطناعي قبل استخدامه.",
+  "choose_an_active_project_next": "اختر مشروعًا نشطًا في الخطوة التالية",
+  "choose_chat_model": "اختيار نموذج الدردشة",
+  "choose_files": "اختيار ملفات",
+  "choose_image": "اختيار صورة",
+  "choose_images": "اختيار صور",
+  "choose_its_destination_space": "اختر المساحة التي تريد نقله إليها",
+  "clear_search": "مسح البحث",
+  "close": "إغلاق",
+  "code_copied": "نُسخت الشيفرة",
+  "code_format": "شيفرة",
+  "coming_next": "قريبًا",
+  "command": "الأمر",
+  "command_palette": "لوحة الأوامر",
+  "command_palette_hint": "اكتب أمرًا",
+  "command_palette_no_results": "لم يُعثر على أوامر",
+  "command_palette_new_chat": "دردشة جديدة",
+  "command_palette_search_chats": "البحث في الدردشات",
+  "command_palette_toggle_theme": "تبديل المظهر",
+  "command_palette_copy_last_code": "نسخ آخر كتلة شيفرة",
+  "command_line_chats": "دردشات سطر الأوامر",
+  "compatibility_mode": "وضع التوافق",
+  "configure_a_valid_desktop_gateway_url_before_attaching_files": "أدخل عنوان URL صالحًا لبوابة سطح المكتب قبل إرفاق الملفات.",
+  "confirm_always_allow": "تأكيد السماح الدائم",
+  "confirm_passphrase": "تأكيد عبارة المرور",
+  "connecting_to": "جارٍ الاتصال بـ {baseUrl}...",
+  "connection_issue": "مشكلة في الاتصال",
+  "connection_switched_the_running_reply_continues_on_the_server_and": "تبدّل الاتصال. يستمر إنشاء الرد على الخادم، وسيتصل التطبيق به مجددًا بشكل تلقائي.",
+  "connection_appearance_and_device_preferences": "الاتصال والمظهر وتفضيلات الجهاز",
+  "context_tokens": "طول السياق بالرموز: {effectiveContextLength}",
+  "continue_label": "متابعة",
+  "continue_working": "متابعة العمل",
+  "conversations_in_this_project": "المحادثات في هذا المشروع",
+  "copy_code": "نسخ الشيفرة",
+  "copy_message": "نسخ الرسالة",
+  "could_not_branch_chat": "تعذّر إنشاء فرع من الدردشة: {error}",
+  "could_not_delete_session": "تعذّر حذف الجلسة: {error}",
+  "could_not_deny_the_command": "تعذّر رفض الأمر: {error}",
+  "could_not_load_ai_search_models": "تعذّر تحميل نماذج البحث بالذكاء الاصطناعي: {error}",
+  "could_not_load_conversations": "تعذّر تحميل المحادثات",
+  "could_not_load_files": "تعذّر تحميل الملفات",
+  "could_not_load_models_for_this_profile": "تعذّر تحميل نماذج هذا الملف الشخصي: {error}",
+  "could_not_load_more_chats": "تعذّر تحميل مزيد من الدردشات: {error}",
+  "could_not_open_link": "تعذّر فتح هذا الرابط.",
+  "could_not_open_the_hermes_dashboard": "تعذّر فتح لوحة تحكم Hermes.",
+  "could_not_open_this_project": "تعذّر فتح هذا المشروع",
+  "could_not_preview_file": "تعذّرت معاينة الملف",
+  "could_not_reach_hermes": "تعذّر الوصول إلى Hermes",
+  "could_not_reach_authenticate_the_dashboard_at_check_the_port": "تعذّر الوصول إلى لوحة التحكم على {host}:{dashboardPort} أو إتمام المصادقة. تحقق من المنفذ وبيانات الاعتماد.",
+  "could_not_read_activity": "تعذّرت قراءة سجل النشاط",
+  "could_not_rename_chat": "تعذّر تغيير اسم الدردشة: {error}",
+  "could_not_send_the_approval": "تعذّر إرسال الموافقة: {error}",
+  "could_not_skip_the_hermes_question": "تعذّر تخطي سؤال Hermes.",
+  "could_not_the_project": "تعذّر تنفيذ الإجراء «{action}» على المشروع: {error}",
+  "couldn_t_delete_project": "تعذّر حذف المشروع",
+  "couldn_t_load_runs": "تعذّر تحميل سجل التشغيل: {error}",
+  "couldn_t_move_conversation": "تعذّر نقل المحادثة",
+  "couldn_t_move_to": "تعذّر النقل إلى {label}: {reason}",
+  "couldn_t_prepare_the_shared_files": "تعذّر تجهيز الملفات المشتركة.",
+  "couldn_t_promote_conversation": "تعذّرت إضافة المحادثة إلى مشروع",
+  "couldn_t_project": "تعذّر تنفيذ الإجراء «{action}» على المشروع",
+  "create": "إنشاء",
+  "create_a_project": "إنشاء مشروع",
+  "create_a_project_first_then_chats_can_live_inside_it": "أنشئ مشروعًا أولًا لتتمكن من جمع الدردشات فيه.",
+  "create_a_space_to_separate_related_conversations": "أنشئ مساحة تجمع المحادثات المرتبطة ببعضها بعيدًا عن غيرها.",
+  "create_branch": "إنشاء فرع",
+  "credit_notifications": "إشعارات الرصيد",
+  "credit_notifications_description": "تنبيهات عند إيقاف استخدام الرصيد أو استئنافه.",
+  "cron": "Cron",
+  "crons": "الجدولة",
+  "cron_conversations_empty": "تظهر هنا محادثات المهام المجدولة، بما فيها محادثات مرات التشغيل السابقة.",
+  "search_cron_conversations": "البحث في محادثات مهام cron",
+  "cron_jobs": "مهام cron",
+  "cron_schedule_timezone": "المنطقة الزمنية للجدول: {zone}",
+  "crons_upcoming": "القادمة",
+  "crons_history": "السجل",
+  "cron_time_with_zone": "{time} ({zone})",
+  "cron_time_zone_unknown": "{time} (المنطقة الزمنية غير معروفة)",
+  "cron_no_next_run": "لا يوجد موعد تشغيل تالٍ",
+  "cron_status_scheduled": "مجدولة",
+  "cron_status_paused": "متوقفة مؤقتًا",
+  "cron_delivers_to": "وجهة التسليم: {target}",
+  "cron_upcoming_empty_title": "لا توجد مهام مجدولة",
+  "cron_upcoming_empty_message": "لا توجد مهام بانتظار التشغيل. أنشئ مهمة في «مهام cron» أو اطلب من الوكيل جدولة مهمة.",
+  "cron_upcoming_unavailable": "المهام المجدولة غير متاحة",
+  "cron_upcoming_needs_dashboard": "تتطلب المهام المجدولة اتصالًا بلوحة التحكم. لا يتيح هذا العنوان الاطلاع على جدول cron. تحقق من عنوان لوحة التحكم ومن دعم المضيف لهذه الميزة.",
+  "cron_upcoming_needs_dashboard_auth": "تتطلب المهام المجدولة المصادقة لدى لوحة التحكم. أضف اسم المستخدم وكلمة المرور للوحة التحكم الخاصة بهذا الاتصال، أو فعّل وضع الاتصال عبر وكيل الشبكة.",
+  "cron_upcoming_dashboard_unreachable": "تعذّر الوصول إلى لوحة التحكم. تحقق من المضيف ومنفذ لوحة التحكم والشبكة، ثم أعد المحاولة.",
+  "cron_upcoming_load_failed": "تعذّرت قراءة المهام المجدولة. تحقق من الاتصال بلوحة التحكم، ثم أعد المحاولة.",
+  "cron_upcoming_refresh_failed": "تعذّر تحديث الجدول. المعروض هو آخر جدول أمكن تحميله.",
+  "cron_job_added": "أُضيفت مهمة cron",
+  "cron_job_updated": "حُدّثت مهمة cron",
+  "cron_run": "تشغيل مهمة cron",
+  "cross_device_ordering_and_reversible_bulk_organization": "ترتيب موحّد عبر الأجهزة وتنظيم جماعي يمكن التراجع عنه",
+  "current_profile_default": "الإعداد الافتراضي للملف الشخصي الحالي",
+  "custom_proxy_and_dashboard_details": "تفاصيل وكيل الشبكة ولوحة التحكم المخصّصة",
+  "dark": "داكن",
+  "dashboard_proxy_settings": "إعدادات لوحة التحكم ووكيل الشبكة",
+  "dashboard_password_optional": "كلمة مرور لوحة التحكم (اختيارية)",
+  "dashboard_port": "منفذ لوحة التحكم",
+  "dashboard_username_optional": "اسم مستخدم لوحة التحكم (اختياري)",
+  "dashboard_behind_proxy": "لوحة التحكم خلف وكيل شبكة",
+  "dashboard_path_prefix": "بادئة مسار لوحة التحكم",
+  "delegated_task": "المهمة المفوّضة: {goal}",
+  "delete": "حذف",
+  "delete_2": "هل تريد حذف «{name}»؟",
+  "delete_from_the_remote_hermes_history_this_cannot_be_undone": "هل تريد حذف «{title}» من سجل Hermes البعيد؟ لا يمكن التراجع عن الحذف.",
+  "delete_cron_job": "حذف مهمة Cron",
+  "delete_connections_that_are_not_in_the_backup": "احذف الاتصالات غير الموجودة في النسخة الاحتياطية.",
+  "delete_failed": "تعذّر الحذف: {error}",
+  "delete_project": "حذف المشروع",
+  "delete_session": "هل تريد حذف الجلسة؟",
+  "delete_3": "هل تريد حذف {projectName}؟",
+  "deleted": "حُذف «{name}»",
+  "delivery_is_uncertain_recovering_without_resending": "لم يتأكد التسليم؛ تجري محاولة الاستعادة دون إعادة الإرسال…",
+  "desktop_gateway_url_optional": "عنوان URL لبوابة Desktop Gateway (اختياري)",
+  "desktop_gateway_is_not_configured_for_this_connection": "لم تُضبط بوابة سطح المكتب (Desktop Gateway) لهذا الاتصال.",
+  "desktop_app": "تطبيق سطح المكتب",
+  "developer_tool_calls": "استدعاءات الأدوات للمطوّرين",
+  "discord_chats": "محادثات Discord",
+  "dismiss": "إغلاق",
+  "do_not_run_this_command": "لا تشغّل هذا الأمر.",
+  "documents_archives_audio_video_or_data": "مستندات أو أرشيفات أو ملفات صوت أو فيديو أو بيانات",
+  "download": "تنزيل",
+  "download_failed": "تعذّر التنزيل: {error}",
+  "durable_facts_hermes_keeps_about_you": "معلومات يحتفظ بها Hermes عنك على المدى الطويل",
+  "durable_work_inside_one_of_your_projects_shared_with_desktop": "عمل محفوظ ضمن أحد مشاريعك ومشترك مع تطبيق سطح المكتب.",
+  "edit": "تعديل",
+  "edit_connection": "تعديل الاتصال",
+  "edit_cron_job": "تعديل مهمة Cron",
+  "edit_gateway_connection": "تعديل الاتصال بالبوابة",
+  "edit_and_resend": "تعديل وإعادة إرسال",
+  "enable_notifications": "تفعيل الإشعارات",
+  "enable_notifications_description": "يؤدي إيقاف هذا الخيار إلى تعطيل جميع الإشعارات أدناه.",
+  "enables_file_attachments_through_the_desktop_remote_gateway": "يتيح إرفاق الملفات عبر بوابة سطح المكتب البعيدة.",
+  "enter_a_name": "أدخل اسمًا",
+  "enter_a_passphrase": "أدخل عبارة مرور.",
+  "enter_the_passphrase_for_this_backup": "أدخل عبارة المرور لهذه النسخة الاحتياطية.",
+  "every_conversation_is_already_assigned_to_a_project": "كل محادثة مرتبطة بمشروع بالفعل.",
+  "everything_not_yet_native_in_the_authenticated_web_dashboard": "الميزات التي لم تُدمج بعد في التطبيق متاحة في لوحة تحكم الويب بعد تسجيل الدخول",
+  "explain_the_attached_content_clearly": "اشرح المحتوى المرفق بوضوح.",
+  "explain_this_content_clearly": "اشرح هذا المحتوى بوضوح:\n\n{text}",
+  "explicit_choices_adjust_android_accessibility_text_size_system_leaves_it": "يؤدي اختيار حجم محدد إلى تغيير حجم النص في إعدادات تسهيل الاستخدام على Android. أما خيار «النظام» فيُبقي الحجم كما هو.",
+  "export_label": "تصدير",
+  "export_share": "تصدير / مشاركة",
+  "external_api_clients": "تطبيقات خارجية تستخدم واجهة API",
+  "extra_high": "مرتفع جدًا",
+  "extract_tasks": "استخراج المهام",
+  "extract_the_decisions_deadlines_owners_and_actionable_action_items_from": "استخرج من المحتوى المرفق القرارات والمواعيد النهائية وأسماء المسؤولين والخطوات المطلوب تنفيذها.",
+  "extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2": "استخرج من المحتوى التالي القرارات والمواعيد النهائية وأسماء المسؤولين والخطوات المطلوب تنفيذها:\n\n{text}",
+  "failed_to_add_job": "تعذّرت إضافة المهمة: {error}",
+  "failed_to_load_cron_jobs": "تعذّر تحميل مهام cron",
+  "failed_to_load_memory": "تعذّر تحميل الذاكرة",
+  "failed_to_load_messages": "تعذّر تحميل الرسائل",
+  "failed_to_load_settings": "تعذّر تحميل الإعدادات",
+  "failed_to_load_skills": "تعذّر تحميل المهارات",
+  "failed_to_update_job": "تعذّر تحديث المهمة: {error}",
+  "failed": "فشلت العملية: {error}",
+  "file_attached_document_catalog_registration_is_pending": "أُرفق الملف، ولم يُسجّل بعد في فهرس المستندات.",
+  "file_reference_added_to_chat": "أُضيف مرجع الملف إلى المحادثة",
+  "files": "الملفات",
+  "fill_from_document": "تعبئة من مستند",
+  "folder_is_empty": "المجلد فارغ",
+  "folders": "المجلدات",
+  "full_text": "النص الكامل",
+  "gateway_api_access": "الوصول إلى واجهة API للبوابة",
+  "gateway_connected_but_the_dashboard_could_not_be_reached_or": "تم الاتصال بالبوابة، لكن تعذّر الوصول إلى لوحة التحكم أو التحقق من الهوية. تحقّق من بيانات لوحة التحكم، أو امسحها لتخطّي هذه الخطوة.",
+  "gateway_path_prefix": "بادئة مسار البوابة",
+  "go_to_end": "الانتقال إلى النهاية",
+  "hermes_agent": "Ares - المعروف سابقًا باسم Hermes Android",
+  "hermes_agent_for_android": "Ares - المعروف سابقًا باسم Hermes Android",
+  "hermes_could_not_accept_the_answer_please_try_again": "تعذّر على Hermes قبول الإجابة. حاول مجددًا.",
+  "hermes_could_not_load_your_saved_connections": "تعذّر على Hermes تحميل اتصالاتك المحفوظة",
+  "hermes_did_not_accept_the_response_please_try_again": "لم يقبل Hermes الرد. حاول مجددًا.",
+  "hermes_is_responding": "يكتب Hermes ردًا…",
+  "hermes_is_waiting_for_input": "ينتظر Hermes ردّك…",
+  "hermes_keeps_android_accessibility_text_scaling_active": "يحافظ Ares على تفعيل تحجيم النص وفق إعدادات تسهيل الاستخدام في Android.",
+  "hermes_needs_your_input": "يحتاج Hermes إلى ردّك",
+  "hermes_profile_optional": "ملف Hermes الشخصي (اختياري)",
+  "hermes_profile_must_be_a_plain_profile_name_such_as": "أدخل اسم ملف Hermes الشخصي فقط، مثل \"sol\"، وليس مسارًا.",
+  "hermes_reasoning_details": "تفاصيل استدلال Hermes",
+  "hermes_recovery_is_unavailable": "استعادة Hermes غير متاحة: {error}",
+  "hermes_stopped_recovery_safely_no_prompt_was_resent": "أوقف Hermes الاستعادة بأمان. لم يُعَد إرسال أي طلب.",
+  "hide_passphrase": "إخفاء عبارة المرور",
+  "home_needs_your_recent_chats_to_know_what_deserves_your": "تحتاج الصفحة الرئيسية إلى محادثاتك الأخيرة لتعرض ما يستحق انتباهك. تأكّد من إمكانية الوصول إلى البوابة، ثم حاول مجددًا.",
+  "host": "المضيف",
+  "image_selection_was_interrupted_try_again": "توقفت عملية اختيار الصورة قبل اكتمالها. حاول مجددًا.",
+  "import_label": "استيراد",
+  "inbox": "صندوق الوارد",
+  "inbox_is_clear": "صندوق الوارد فارغ",
+  "input_needed": "مطلوب ردّ منك",
+  "input_needed_description": "طرح Hermes سؤالًا أو يحتاج إلى كلمة مرور أو معلومة سرية.",
+  "insert_a_remote_file_reference": "إدراج مرجع @file لملف بعيد",
+  "invalid_port_number": "رقم المنفذ غير صالح.",
+  "job_paused": "أُوقفت المهمة مؤقتًا",
+  "job_resumed": "استُؤنفت المهمة",
+  "job_triggered": "طُلب تشغيل المهمة",
+  "label": "التسمية",
+  "last_activity": "آخر نشاط: {day}/{month}/{year}",
+  "last": "آخر تشغيل: {lastRun}",
+  "leave_blank_for_default_8642_443_with_https": "اتركه فارغًا لاستخدام المنفذ الافتراضي (8642؛ أو 443 مع https)",
+  "leave_blank_for_default_9119": "اتركه فارغًا لاستخدام المنفذ الافتراضي (9119)",
+  "light": "فاتح",
+  "listening": "جارٍ الاستماع • {elapsed}",
+  "listening_elapsed": "جارٍ الاستماع، الوقت المنقضي: {elapsed}",
+  "load_more": "تحميل المزيد…",
+  "loading": "جارٍ التحميل",
+  "location": "الموقع",
+  "make_sure_the_gateway_api_server_is_running_hermes_gateway": "تأكّد من تشغيل خادم واجهة API للبوابة\n(hermes gateway status)",
+  "matches": "يطابق {name} · {assigned}",
+  "memory": "الذاكرة",
+  "memory_about_you": "عنك",
+  "memory_agent_notes": "ملاحظات الوكيل",
+  "memory_builtin_scope": "معلومات محفوظة من ملفّي USER.md وMEMORY.md لهذا الملف الشخصي. لا يظهر هنا مزوّدو الذاكرة الخارجيون، بما فيهم MemPalace.",
+  "memory_read_only": "للقراءة فقط. اطلب من Hermes في المحادثة تصحيح معلومة أو نسيانها.",
+  "memory_unavailable": "لا توفّر هذه البوابة أو هذا الملف الشخصي معلومات الذاكرة المحفوظة. تحقّق من الملف الشخصي المحدد وحدّث Hermes عند الحاجة.",
+  "memory_load_error": "تحقّق من الاتصال بلوحة التحكم ومن بيانات تسجيل الدخول، ثم حاول مجددًا.",
+  "memory_read_full_fact": "قراءة المعلومة كاملة",
+  "memory_full_fact_requires_update": "يتطلب عرض المعلومات كاملةً إصدارًا أحدث من بوابة Hermes. حدّث Hermes ثم أعد تحميل القائمة.",
+  "memory_fact_detail_error": "تعذّر تحميل المعلومة كاملةً. ربما تغيّرت؛ حدّث القائمة ثم حاول مجددًا.",
+  "memory_entries_are_cross_session_facts_the_agent_remembers_they": "ستظهر المعلومات المحفوظة هنا بعد أن يتذكّرها Hermes.",
+  "merge": "دمج",
+  "message": "رسالة",
+  "message_hermes": "راسل Hermes…",
+  "message_actions": "إجراءات الرسالة",
+  "message_copied": "نُسخت الرسالة",
+  "migrating": "جارٍ الترحيل…",
+  "migration_complete": "اكتمل الترحيل",
+  "migration_failed_local_spaces_were_kept_unchanged": "فشل الترحيل. بقيت المساحات المحلية دون تغيير.",
+  "migration_incomplete": "لم يكتمل الترحيل",
+  "migration_preview": "معاينة الترحيل",
+  "model": "النموذج",
+  "model_and_thinking_for_this_chat": "النموذج ومستوى التفكير لهذه المحادثة",
+  "model_was_not_changed": "لم يتغيّر النموذج: {error}",
+  "move_attachment_next": "نقل المرفق إلى الموضع التالي",
+  "move_attachment_previous": "نقل المرفق إلى الموضع السابق",
+  "move_chat": "نقل المحادثة",
+  "move_conversation": "نقل المحادثة",
+  "move_to_project": "نقل إلى مشروع",
+  "move_to_space": "نقل إلى مساحة",
+  "moved_to_a_project": "نُقلت المحادثة إلى مشروع",
+  "moved_to": "نُقلت إلى {label}",
+  "name": "الاسم",
+  "name_prompt_and_schedule_are_required": "يجب إدخال الاسم والطلب والجدول الزمني",
+  "nav_activity": "النشاط",
+  "nav_projects": "المشاريع",
+  "needs_a_correction_aware_filing_contract_in_the_hermes_gateway": "يتطلب ذلك آلية تصنيف تراعي التصحيحات في بوابة Hermes.",
+  "needs_a_reachable_hermes_dashboard_check_the_host_port_and": "يجب أن تكون لوحة تحكم Hermes متاحة. تحقّق من المضيف والمنفذ وبيانات الاعتماد لهذا الاتصال.",
+  "needs_a_server_authoritative_assets_index_in_the_hermes_gateway": "يتطلب ذلك فهرسًا للأصول في بوابة Hermes يكون الخادم مرجعه المعتمد.",
+  "needs_durable_pin_ordering_batch_mutation_and_undo_contracts_in": "يتطلب ذلك دعم بوابة Hermes لحفظ ترتيب العناصر المثبّتة وإجراء تغييرات جماعية والتراجع عنها.",
+  "needs_you": "يحتاج إلى تدخّلك",
+  "new_label": "جديد",
+  "new_chat": "محادثة جديدة",
+  "new_chat_2": "محادثة جديدة",
+  "new_chat_3": "محادثة جديدة · {projectName}",
+  "new_project": "مشروع جديد",
+  "new_space": "مساحة جديدة",
+  "next": "التشغيل التالي: {nextRun}",
+  "nginx_injects_auth_app_sends_clean_requests": "يضيف Nginx بيانات المصادقة؛ يرسل التطبيق الطلبات دونها",
+  "no_tts_voices_found_ninstall_google_text_to_speech_and": "لم يُعثر على أصوات لتحويل النص إلى كلام (TTS).\nثبّت Google Text-to-Speech ونزّل بيانات الأصوات.",
+  "no_active_projects_on_this_gateway": "لا توجد مشاريع نشطة على هذه البوابة",
+  "no_activity_yet": "لا يوجد نشاط بعد",
+  "no_chat_is_blocked_running_or_waiting_to_be_resumed": "لا توجد محادثة متوقفة أو جارية أو بانتظار الاستئناف. ابدأ محادثة جديدة متى شئت.",
+  "no_chats_in_this_project_match": "لا توجد محادثات في هذا المشروع تطابق «{searchQuery}».",
+  "no_chats_in_this_space_yet_tap_to_start_one": "لا توجد محادثات في هذه المساحة بعد. اضغط على + لبدء محادثة.",
+  "no_chats_yet": "لا توجد محادثات بعد",
+  "no_connections": "لا توجد اتصالات",
+  "no_conversation_matches_this_view": "لا توجد محادثة تطابق معايير العرض الحالية.",
+  "no_cron_jobs": "لا توجد مهام cron",
+  "no_folders_yet": "لا توجد مجلدات بعد",
+  "no_local_spaces_were_found_for_this_connection_so_projects": "لم يُعثر على مساحات محلية لهذا الاتصال، لذا فالمشاريع هي بالفعل الوسيلة الوحيدة للتنظيم هنا.",
+  "no_matches": "لا توجد نتائج مطابقة",
+  "no_memory_entries": "لا توجد معلومات محفوظة في الذاكرة",
+  "no_message_content_matches": "لا توجد نتائج مطابقة في نصوص الرسائل",
+  "no_new_messages": "لا توجد رسائل جديدة",
+  "no_projects_yet": "لا توجد مشاريع بعد",
+  "no_runs_yet": "لم تُشغّل المهمة بعد.",
+  "no_server_project_matches_this_name": "لا يوجد مشروع على الخادم يطابق هذا الاسم · {assigned}",
+  "no_sessions_yet": "لا توجد جلسات بعد",
+  "no_skills_found": "لم يُعثر على مهارات",
+  "no_spaces_on_this_device": "لا توجد مساحات على هذا الجهاز",
+  "no_text_shared": "لم يُشارَك أي نص",
+  "no_turn_is_blocked_in_flight_or_recently_finished_work": "لا يوجد طلب متعثر أو قيد التنفيذ أو اكتمل مؤخرًا. سيظهر هنا أي عمل تبدأه.",
+  "no_turn_needs_your_input_or_has_failed": "لا توجد طلبات فشلت أو تنتظر ردّك.",
+  "no_unassigned_chats": "لا توجد محادثات بلا مشروع.",
+  "nothing_changed_in_the_last_seven_days": "لم يتغيّر شيء خلال الأيام السبعة الماضية.",
+  "nothing_has_moved_yet_this_is_only_what_a_migration": "لم يُنقل أي شيء بعد. هذه مجرد معاينة لما سيحدث عند الترحيل.",
+  "nothing_here": "لا يوجد شيء هنا",
+  "nothing_is_running": "لا شيء قيد التشغيل",
+  "nothing_needs_you": "لا شيء يتطلّب تدخّلك",
+  "nothing_to_migrate": "لا يوجد ما يمكن ترحيله",
+  "notifications": "الإشعارات",
+  "windows_notifications_blocked": "الإشعارات غير متاحة. استخدم تطبيق Ares المثبّت وتحقق من الإعدادات ← النظام ← الإشعارات في Windows.",
+  "windows_notification_diagnostics": "ما أرسله Ares إلى Windows",
+  "windows_window_activity": "مشاركة نشاط المحادثة",
+  "windows_window_activity_hint": "أبلِغ البوابة المتصلة المتوافقة عندما تستخدم هذه المحادثة، حتى يتجنّب ملحق إشعارات الهاتف فيها التنبيهات المكررة. لا تُرسَل أي مفاتيح أو نصوص رسائل.",
+  "windows_completion_sound": "صوت الاكتمال",
+  "windows_sound_default": "الافتراضي في Windows",
+  "windows_sound_mail": "البريد",
+  "windows_sound_reminder": "تذكير",
+  "windows_sound_silent": "صامت",
+  "notifications_permission_denied": "يحظر نظام التشغيل الإشعارات. فعّل إشعارات هذا التطبيق في إعدادات Android.",
+  "off_no_thinking": "متوقف (دون تفكير)",
+  "offline_showing_the_last_known_activity": "غير متصل — يُعرض آخر نشاط معروف.",
+  "offline_showing_the_last_known_chats": "غير متصل — تُعرض آخر المحادثات المعروفة",
+  "offline_showing_the_last_known_projects": "غير متصل — تُعرض آخر المشاريع المعروفة.",
+  "on_this_device": "على هذا الجهاز",
+  "on_device": "على الجهاز",
+  "open_inbox": "فتح صندوق الوارد",
+  "open_inbox_2": "فتح صندوق الوارد ({count})",
+  "open_the_hermes_dashboard": "فتح لوحة تحكم Hermes",
+  "optional_for_the_memory_cron_skills_settings_tabs_leave_blank": "اختياري. يُستخدم لتبويبات الذاكرة وCron والمهارات والإعدادات. اتركه فارغًا لاستخدام منفذ لوحة التحكم الافتراضي (9119) دون تسجيل الدخول.",
+  "organization": "التنظيم",
+  "other_answer": "إجابة أخرى",
+  "overview": "نظرة عامة",
+  "passphrase": "عبارة المرور",
+  "password_optional": "كلمة المرور (اختياري)",
+  "phone_or_tablet": "هاتف أو جهاز لوحي",
+  "pin_batch_and_undo": "التثبيت والإجراءات الجماعية والتراجع",
+  "plugin_notifications": "إشعارات الإضافات",
+  "plugin_notifications_description": "أرسلت البوابة إشعارًا أثناء عمل التطبيق في الخلفية.",
+  "port": "المنفذ",
+  "preparing_attachments": "جارٍ تحضير المرفقات…",
+  "preview_truncated": "المعاينة مختصرة",
+  "preview_unavailable": "المعاينة غير متاحة",
+  "profile": "الملف الشخصي",
+  "profile_default_model": "النموذج الافتراضي للملف الشخصي",
+  "profile_default_set_to_chats_with_their_own_model_keep": "أصبح {selectedModel} النموذج الافتراضي للملف الشخصي. تحتفظ المحادثات التي اخترت لها نموذجًا محددًا بنموذجها.",
+  "profile_this_connection_chats_as_when_the_dashboard_serves_several": "الملف الشخصي المستخدم للمحادثات عبر هذا الاتصال عندما تدعم لوحة التحكم عدة ملفات شخصية. اتركه فارغًا إذا كانت لكل ملف شخصي لوحة تحكم مستقلة.",
+  "project": "مشروع",
+  "project_actions": "إجراءات المشروع",
+  "project_chat": "محادثة المشروع",
+  "project_chats_unavailable": "محادثات المشروع غير متاحة",
+  "projects": "المشاريع",
+  "projects_group_related_chats_files_and_activity_and_stay_in": "تجمع المشاريع المحادثات والملفات والأنشطة ذات الصلة، وتظل متزامنة مع Hermes على حاسوبك.",
+  "projects_need_a_desktop_gateway_connection_add_the_desktop_gateway": "تتطلب المشاريع اتصالًا ببوابة سطح المكتب (Desktop Gateway). أضف عنوان URL الخاص ببوابة Desktop Gateway إلى إعدادات هذا الاتصال لتنظيم محادثاتك عبر أجهزتك.",
+  "projects_unavailable": "المشاريع غير متاحة",
+  "projects_activity_new_navigation": "المشاريع والنشاط — طريقة جديدة للتنقّل",
+  "promote_to_project": "تحويل إلى مشروع",
+  "prompt": "الطلب",
+  "protect_this_backup": "حماية هذه النسخة الاحتياطية",
+  "provider": "المزوّد",
+  "proxy_injects_auth_app_sends_clean_requests": "يضيف الوكيل الوسيط بيانات المصادقة؛ يرسل التطبيق الطلبات دونها",
+  "quick_chat": "محادثة سريعة",
+  "quick_chats_appear_here_after_their_retention_period": "تظهر المحادثات السريعة هنا بعد انتهاء مدة الاحتفاظ بها.",
+  "read_aloud": "قراءة بصوت عالٍ",
+  "read_aloud_is_unavailable_on_this_device": "القراءة بصوت عالٍ غير متاحة على هذا الجهاز",
+  "reading_response_aloud": "جارٍ قراءة الرد بصوت عالٍ",
+  "ready_to_upload": "جاهز للرفع",
+  "reasoning": "الاستدلال",
+  "recently_completed": "اكتمل مؤخرًا",
+  "recently_active": "نشط مؤخرًا",
+  "recovering_hermes": "جارٍ استعادة Hermes…",
+  "refresh": "تحديث",
+  "regenerate_response": "توليد الرد مجددًا",
+  "remove_attachment": "إزالة المرفق",
+  "rename": "إعادة تسمية",
+  "rename_chat": "إعادة تسمية المحادثة",
+  "rename_project": "إعادة تسمية المشروع",
+  "rename_space": "إعادة تسمية المساحة",
+  "rename_2": "إعادة تسمية {projectName}",
+  "rename_3": "إعادة تسمية {name}",
+  "replace": "استبدال",
+  "repositories": "المستودعات",
+  "research_the_attached_content_verify_the_important_claims_and_cite": "ابحث في موضوع المحتوى المرفق، وتحقّق من الادعاءات المهمة، واذكر المصادر.",
+  "research_this_content_verify_the_important_claims_and_cite_sources": "ابحث في موضوع المحتوى التالي، وتحقّق من الادعاءات المهمة، واذكر المصادر:\n\n{text}",
+  "reset_failed_the_secure_storage_may_need_reinstall": "تعذّرت إعادة الضبط: {retryError}. قد يلزم إعادة تثبيت مكوّن التخزين الآمن.",
+  "reset_saved_connections": "إعادة ضبط الاتصالات المحفوظة",
+  "responding": "جارٍ الرد…",
+  "response_closed_locally_gateway_stop_failed": "أُغلق الرد محليًا، لكن تعذّر إيقافه على البوابة: {error}",
+  "response_closed_locally_no_active_gateway_turn_was_found": "أُغلق الرد محليًا؛ لم يُعثر على طلب نشط في البوابة.",
+  "response_complete": "اكتمل الرد",
+  "response_complete_description": "اكتمل الرد على طلب أثناء عمل التطبيق في الخلفية.",
+  "response_ready": "الرد جاهز",
+  "response_stopped": "أُوقف الرد.",
+  "restore": "استعادة",
+  "restore_configuration": "استعادة التكوين",
+  "restore_project": "استعادة المشروع",
+  "retry": "إعادة المحاولة",
+  "retry_failed_for_the_draft_and_prompt_were_kept": "تعذّرت إعادة المحاولة لـ {name}. احتُفظ بالمسودة والطلب.",
+  "retry_upload": "إعادة محاولة الرفع",
+  "retrying": "جارٍ إعادة المحاولة لـ {name}…",
+  "review_local_spaces": "مراجعة المساحات المحلية",
+  "review_or_promote_quick_chats_past_their_retention_period": "راجع المحادثات السريعة التي انتهت مدة الاحتفاظ بها أو حوّلها إلى محادثات مشروع",
+  "review_the_attached_content": "راجع المحتوى المرفق.",
+  "run_only_this_command": "شغّل هذا الأمر فقط.",
+  "running_now": "قيد التشغيل الآن",
+  "save": "حفظ",
+  "save_changes": "حفظ التغييرات",
+  "save_a_permanent_rule_in_the_hermes_configuration": "احفظ قاعدة دائمة في إعدادات Hermes.",
+  "save_the_durable_facts_from_the_attached_content_to_memory": "احفظ في الذاكرة المعلومات المفيدة على المدى الطويل من المحتوى المرفق، ثم أكّد ما احتفظت به.",
+  "save_the_durable_facts_from_this_content_to_memory_then": "احفظ في الذاكرة المعلومات المفيدة على المدى الطويل من المحتوى التالي، ثم أكّد ما احتفظت به:\n\n{text}",
+  "save_your_connections_and_settings_to_an_encrypted_file_then": "احفظ اتصالاتك وإعداداتك في ملف مشفّر لتستعيدها بعد إعادة التثبيت أو على جهاز آخر.",
+  "save_2": "حفظ {filename}",
+  "schedule": "الجدول الزمني",
+  "scheduled_jobs_and_their_last_runs": "المهام المجدولة وآخر تشغيل لكل منها",
+  "scheduled_tasks": "المهام المجدولة",
+  "script_only_no_agent": "برنامج نصي فقط (دون وكيل)",
+  "scroll_horizontally": "تمرير أفقي",
+  "search_all_chats": "البحث في جميع المحادثات",
+  "search_all_message_content": "البحث في محتوى جميع الرسائل",
+  "search_chats": "البحث في المحادثات",
+  "search_conversations": "البحث في المحادثات",
+  "search_loaded_chats": "البحث في المحادثات المحمّلة",
+  "search_mode": "وضع البحث",
+  "select_one_option_or_enter_another_answer": "اختر أحد الخيارات، أو أدخل إجابة أخرى.",
+  "select_one_or_more_options_then_continue": "اختر خيارًا واحدًا أو أكثر، ثم تابع.",
+  "select_text": "تحديد النص",
+  "send": "إرسال",
+  "send_failed": "تعذّر الإرسال: {error}",
+  "send_failed_api_only_permission_denied": "تعذّر الإرسال: {error}. رفض الخادم عملية الكتابة هذه للهوية المرتبطة بمفتاح API. إذا كانت المحادثة مملوكة للوحة التحكم، فقد تتيح إضافة اسم المستخدم وكلمة المرور الخاصّين بلوحة التحكم إلى هذا الاتصال إرسال الرسائل. وقد يكون الخادم يرفض الإرسال عن قصد.",
+  "send_message": "إرسال رسالة",
+  "send_test_notification": "إرسال إشعار تجريبي",
+  "session_sources": "مصادر الجلسات",
+  "session_deleted_from_remote_hermes": "حُذفت الجلسة من Hermes البعيد.",
+  "session_search_failed": "تعذّر البحث في الجلسات: {error}",
+  "set_profile_default": "تعيين كخيار افتراضي للملف الشخصي",
+  "settings": "الإعدادات",
+  "share_to_hermes": "مشاركة مع Hermes",
+  "show_passphrase": "إظهار عبارة المرور",
+  "show_tool_calls_thinking_and_message_metadata": "اعرض الأدوات والاستدلال والمهام وتفاصيل الرسائل في أقسام مطوية. عند تعطيل هذا الخيار، لا تظهر سوى المحادثة.",
+  "signal_messages": "رسائل Signal",
+  "skills": "المهارات",
+  "skills_2": "المهارات ({count})",
+  "skills_and_tools": "المهارات والأدوات",
+  "skip": "تخطّي",
+  "slack_chats": "محادثات Slack",
+  "source": "المصدر: {source}",
+  "space_actions": "إجراءات المساحة",
+  "spaces": "المساحات",
+  "speak_to_hermes": "تحدّث إلى Hermes",
+  "speech_recognition_is_unavailable": "التعرّف على الكلام غير متاح",
+  "spoken_replies": "الردود الصوتية",
+  "spoken_replies_off": "الردود الصوتية معطّلة",
+  "spoken_replies_on": "الردود الصوتية مفعّلة",
+  "stalled_no_update_from_hermes": "توقّف التقدّم — لا تحديث من Hermes",
+  "start_something_new": "ابدأ شيئًا جديدًا",
+  "start_voice_input": "بدء الإدخال الصوتي",
+  "starting_hermes": "جارٍ بدء تشغيل Hermes…",
+  "media_card_download": "تنزيل الملف",
+  "media_card_tap_to_download": "اضغط للتنزيل",
+  "still_loading_your_projects": "لا يزال تحميل مشاريعك جاريًا.",
+  "stop": "إيقاف",
+  "stop_response": "إيقاف الرد",
+  "stop_voice_input": "إيقاف الإدخال الصوتي",
+  "submitted_waiting_for_hermes": "أُرسل الطلب، بانتظار Hermes",
+  "suggest_projects_and_learn_from_your_corrections": "اقتراح مشاريع والتعلّم من تصحيحاتك",
+  "summarize_the_attached_content": "لخّص المحتوى المرفق.",
+  "summarize_this_content": "لخّص هذا المحتوى:\n\n{text}",
+  "switch_profile": "تبديل الملف الشخصي",
+  "system": "النظام",
+  "take_photo": "التقاط صورة",
+  "tap_to_add_a_remote_hermes_gateway_api_server_port": "اضغط على + لإضافة بوابة Hermes بعيدة\n(API Server، المنفذ 8642)",
+  "tap_the_button_to_start_a_new_chat": "اضغط على زر + لبدء محادثة جديدة",
+  "telegram_messages": "رسائل Telegram",
+  "terminal_sessions": "جلسات الطرفية",
+  "test_notification_body": "إذا ظهر لك هذا الإشعار، فإشعارات النظام تعمل.",
+  "test_notification_sent": "أُرسل إشعار الاختبار.",
+  "test_notification_title": "اختبار إشعارات Hermes",
+  "test_notification_unsupported": "تعذّر إرسال الإشعار. تأكد من أن نظام التشغيل (OS) يسمح بالإشعارات.",
+  "text_size": "حجم النص",
+  "text_size_preview": "معاينة حجم النص",
+  "text_size_2": "حجم النص: {label}",
+  "the_api_key_could_not_be_stored_securely": "تعذّر تخزين مفتاح API بأمان.",
+  "the_project_will_move_to_archived_its_chats_and_files": "سينتقل المشروع إلى الأرشيف. ستبقى محادثاته وملفاته كما هي، ويمكنك استعادته في أي وقت.",
+  "the_project_will_move_to_archived_its_chats_and_files_2": "سينتقل المشروع إلى الأرشيف. ستبقى محادثاته وملفاته كما هي، ويمكنك استعادته لاحقًا.",
+  "the_active_profile_did_not_return_any_selectable_models": "لم يعرض ملف التعريف النشط أي نماذج يمكن اختيارها.",
+  "the_backup_could_not_be_exported": "تعذّر تصدير النسخة الاحتياطية.",
+  "the_backup_could_not_be_restored": "تعذّرت استعادة النسخة الاحتياطية.",
+  "the_connection_could_not_be_deleted_safely": "تعذّر حذف الاتصال بأمان.",
+  "the_connection_could_not_be_stored_securely": "تعذّر تخزين الاتصال بأمان.",
+  "the_dashboard_credentials_could_not_be_stored_securely": "تعذّر تخزين بيانات اعتماد لوحة التحكم بأمان.",
+  "the_detached_reply_failed": "فشل الرد الذي كان يعمل في الخلفية.",
+  "the_detached_reply_failed_2": "فشل الرد الذي كان يعمل في الخلفية: {error}",
+  "the_file_contains_your_api_keys_and_dashboard_password_so": "الملف مشفّر لأنه يحتوي على مفاتيح API وكلمة مرور لوحة التحكم. لا يمكن استعادة النسخة الاحتياطية من دون عبارة المرور هذه.",
+  "the_last_turn_failed": "فشلت الجولة الأخيرة",
+  "the_local_connection_store_looks_damaged_you_can_reset_the": "يبدو أن مخزن الاتصالات المحلي تالف ({errorType}). يمكنك إعادة ضبط الاتصالات المحفوظة والبدء من جديد. لن تتأثر المحادثات الموجودة على البوابة.",
+  "the_model_only_rewrites_your_question_into_a_short_full": "يقتصر دور النموذج على إعادة صياغة سؤالك في عبارة قصيرة للبحث في النص الكامل. يستخدم Hermes بيانات اعتماد المزوّد التي سبق إعدادها على المضيف.",
+  "the_server_has_not_reported_folders_for_this_project_yet": "لم يُبلغ الخادم عن أي مجلدات لهذا المشروع بعد. ما زال بإمكانك فتح «الملفات العامة» من «المزيد».",
+  "the_turn_failed": "فشلت الجولة",
+  "the_two_passphrases_do_not_match": "عبارتا المرور غير متطابقتين.",
+  "the_value_is_sent_directly_to_the_active_hermes_gateway": "تُرسل القيمة مباشرة إلى بوابة Hermes النشطة ولا يحفظها تطبيق Android هذا.",
+  "there_are_no_visible_files_in_this_server_folder": "لا توجد ملفات ظاهرة في هذا المجلد على الخادم.",
+  "thinking_effort": "مستوى جهد التفكير",
+  "this_hermes_gateway_does_not_support_opening_a_project_yet": "لا تدعم بوابة Hermes هذه فتح المشاريع بعد. حدّث Hermes على الخادم لتتمكن من تصفّح مشروع من هاتفك.",
+  "this_hermes_gateway_is_older_than_server_side_projects_so": "إصدار بوابة Hermes هذه أقدم من ميزة المشاريع على الخادم، لذا يقتصر تجميع المحادثات على هذا الجهاز. حدّث Hermes لاستخدام المشاريع نفسها على جميع أجهزتك.",
+  "this_project_has_no_folder_to_open_the_chat_in": "يحتاج هذا المشروع إلى مجلد قبل أن تتمكن من بدء محادثة فيه. أضف مجلدًا ثم حاول مجددًا.",
+  "this_chat_has_no_messages_available_in_the_desktop_session": "لا تتوفر أي رسائل لهذه المحادثة في جلسة سطح المكتب بعد.",
+  "this_creates_a_permanent_rule_in_hermes_review_the_full": "سيؤدي هذا إلى إنشاء قاعدة دائمة في Hermes. راجع الأمر كاملًا قبل التأكيد.",
+  "this_gateway_does_not_host_projects_yet_update_the_gateway": "لا تستضيف هذه البوابة مشاريع بعد. حدّث البوابة لتنظيم المحادثات عبر أجهزتك.",
+  "this_permanently_deletes_the_project_chats_will_not_be_deleted": "سيُحذف المشروع نهائيًا. لن تُحذف محادثاته، بل ستعود إلى قسم «غير معيّنة».",
+  "this_server_doesn_t_offer_background_recovery_chats_run_live": "لا يدعم هذا الخادم استئناف المحادثات في الخلفية، لذا تجري المحادثات مباشرة فقط",
+  "this_week": "هذا الأسبوع",
+  "titles_previews_and_models": "العناوين والمعاينات والنماذج",
+  "tool_activity": "نشاط الأدوات",
+  "trigger_now": "تشغيل الآن",
+  "received_outcome_unknown": "انتهت الجولة ولم تتأكد نتيجتها",
+  "turn_completed": "اكتملت الجولة",
+  "turn_failed": "فشلت الجولة",
+  "turn_failed_description": "انتهت جولة في الخلفية بخطأ.",
+  "turn_recovery_failed": "تعذّر استئناف الجولة",
+  "unable_to_prepare_this_file_try_another_one": "تعذّر تجهيز هذا الملف. جرّب ملفًا آخر.",
+  "unable_to_prepare_this_image_try_another_one": "تعذّر تجهيز هذه الصورة. جرّب صورة أخرى.",
+  "unable_to_prepare": "تعذّر تجهيز {name}.",
+  "unable_to_read_the_selected_image_the_selection_was_kept": "تعذّرت قراءة الصورة المحددة. لم يتغيّر اختيارك.",
+  "unassigned": "غير معيّنة",
+  "unassigned_chats": "محادثات غير معيّنة",
+  "untitled_chat": "محادثة بلا عنوان",
+  "untitled_session": "جلسة بلا عنوان",
+  "update_api_key": "تحديث مفتاح API",
+  "upload_failed": "فشل الرفع",
+  "upload_failed_tap_retry": "فشل الرفع • اضغط لإعادة المحاولة",
+  "uploading": "جارٍ رفع {index}/{total}: {name}",
+  "use_as_is": "استخدام النص كما هو",
+  "use_at_least_8_characters": "استخدم 8 أحرف على الأقل.",
+  "use_for_cron_jobs_backed_by_scripts": "استخدم هذا الخيار لمهام cron التي تشغّل نصوصًا برمجية.",
+  "use_on_device": "البحث على الجهاز",
+  "use_the_attached_content_to_identify_and_fill_the_relevant": "استخدم المحتوى المرفق لتحديد الحقول المناسبة في المستند أو النموذج وتعبئتها. اطلب الإذن قبل إرسال أي شيء.",
+  "use_this_content_to_identify_and_fill_the_relevant_document": "استخدم هذا المحتوى لتحديد الحقول المناسبة في المستند أو النموذج وتعبئتها. اطلب الإذن قبل إرسال أي شيء:\n\n{text}",
+  "used_for_hosted_path_prefixes_and_for_the_settings_memory": "تُستخدم هذه الإعدادات لبادئات مسارات الاستضافة ولتبويبات الإعدادات والذاكرة والمهارات وCron. إذا كانت لوحة التحكم متاحة بلا مصادقة، فاترك اسم المستخدم وكلمة المرور فارغين. وإذا كان الوكيل العكسي يضيف بيانات المصادقة للوحة التحكم، ففعّل وضع الوكيل.",
+  "username_optional": "اسم المستخدم (اختياري)",
+  "using": "جارٍ استخدام {displayName}…",
+  "verbose_mode": "الوضع المفصّل",
+  "message_metadata": "تفاصيل الرسالة",
+  "voice": "الصوت",
+  "voice_setup_failed": "تعذّر إعداد الصوت: {error}",
+  "waiting_for_your_input": "بانتظار ردّك",
+  "what_hermes_knows_how_to_do": "ما يستطيع Hermes فعله",
+  "what_should_the_agent_do": "ماذا تريد من الوكيل أن يفعل؟",
+  "whatsapp_messages": "رسائل WhatsApp",
+  "which_project": "أي مشروع؟",
+  "workspace": "مساحة العمل",
+  "wrap_lines": "التفاف الأسطر",
+  "you_can_attach_up_to_items": "الحد الأقصى للعناصر التي يمكنك إرفاقها هو {maxRemoteAttachmentDrafts}.",
+  "your_answer": "إجابتك",
+  "e_g_dashboard": "مثل: /dashboard",
+  "e_g_dashboard_proxy_path_before_api": "مثل: /dashboard (مسار الوكيل قبل /api/)",
+  "e_g_profile_peter": "مثل: /profile/peter",
+  "e_g_sol": "مثل: sol",
+  "e_g_0_9_or_every_2h": "مثل: 0 9 * * * أو every 2h",
+  "e_g_daily_backup": "مثل: نسخ احتياطي يومي",
+  "downloaded": "اكتمل تنزيل {filename}",
+  "activity_name_status": "{displayName}: {statusLabel}",
+  "connection_status_label": "{connectionLabel} {label}",
+  "example_host_hint": "192.168.1.50 أو 100.x.y.z أو hermes-machine.tailnet.ts.net",
+  "example_profile_prefix_hint_full": "مثل: /profile/peter (مسار الوكيل قبل /api/ و/v1/)",
+  "and_more": "والمزيد ({count})",
+  "chats_count": "{count, plural, one{{count} محادثة} other{عدد المحادثات: {count}}}",
+  "on_this_device_only": "{chats} · على هذا الجهاز فقط",
+  "spaces_count": "{count, plural, one{{count} مساحة} other{عدد المساحات: {count}}}",
+  "no_new_projects_needed": "لا حاجة إلى مشاريع جديدة",
+  "projects_to_create": "{count, plural, one{{count} مشروع سيُنشأ} other{عدد المشاريع التي ستُنشأ: {count}}}",
+  "chats_migrated_projects_created": "المحادثات التي نُقلت: {linkedSessions} · المشاريع التي أُنشئت: {createdProjects}",
+  "chats_stayed_in_local_spaces": "بقيت بعض المحادثات في المساحات المحلية (عددها: {unlinkedSessions}). يمكنك إعادة محاولة نقلها بأمان.",
+  "model_recommended": "{provider} • موصى به: نموذج صغير ومنخفض التكلفة",
+  "session_meta": "الرسائل: {count} • {model} • {time}",
+  "model_scope_label": "{model} • {scope}",
+  "this_chat": "هذه المحادثة",
+  "profile_default": "الإعداد الافتراضي لملف التعريف",
+  "minutes_ago": "منذ {count} د",
+  "hours_ago": "منذ {count} س",
+  "days_ago": "منذ {count} ي",
+  "now_label": "الآن",
+  "latest_label": "الأحدث",
+  "new_count_indicator": "رسائل جديدة: {count}",
+  "new_messages": "{count, plural, one{{count} رسالة جديدة} other{الرسائل الجديدة: {count}}}",
+  "activity_failed_summary": "حالات الفشل: {failures} • الإجمالي: {total}",
+  "activity_completed_summary": "المكتمل: {count}",
+  "tool_start_observed": "رُصد البدء في {time} (بالتوقيت المحلي)",
+  "tool_last_observed": "آخر رصد في {time} (بالتوقيت المحلي)",
+  "tool_result_recorded": "سُجّلت النتيجة في {time} (بالتوقيت المحلي)",
+  "tool_time_unavailable": "الوقت غير متاح",
+  "hermes_is_using_a_tool": "يستخدم Hermes أداة",
+  "hermes_is_using_tools": "عدد الأدوات التي يستخدمها Hermes: {count}",
+  "delegated_tasks_completed": "المهام المفوّضة المكتملة: {count}",
+  "delegated_tasks_active": "المهام المفوّضة النشطة: {count}",
+  "branch_main": "{label} · الفرع الرئيسي",
+  "you_heading": "## أنت",
+  "hermes_heading": "## Hermes",
+  "action_label": "الإجراء",
+  "destination_label": "الوجهة",
+  "markdown_source": "المصدر",
+  "preview_label": "معاينة",
+  "share_action_summarize": "تلخيص",
+  "share_action_explain": "شرح",
+  "share_action_research": "بحث",
+  "share_action_remember": "تذكّر",
+  "text_size_small": "صغير",
+  "text_size_default": "افتراضي",
+  "text_size_large": "كبير",
+  "text_size_extra_large": "كبير جدًا",
+  "text_size_use_system_description": "استخدام حجم النص المحدد في إعدادات تسهيل الاستخدام في Android دون تغيير.",
+  "text_size_percent_description": "{percent}% من حجم النص في Android.",
+  "text_size_label_description": "{label} — {description}",
+  "files_skipped": "عدد الملفات التي جرى تخطّيها: {count}. السبب: تجاوز حدّ العدد أو الحجم، أو تعذّر القراءة، أو حساسية اسم الملف.",
+  "model_scope_applied": "{model} • {effort} — تسري هذه الإعدادات الآن على هذه المحادثة فقط.",
+  "reasoning_minimal": "أدنى",
+  "reasoning_low": "منخفض",
+  "reasoning_medium": "متوسط",
+  "reasoning_high": "مرتفع",
+  "reasoning_max": "أقصى",
+  "reasoning_ultra": "فائق",
+  "status_running": "قيد التشغيل",
+  "status_failed": "فشل",
+  "status_done": "تمّ",
+  "status_idle": "خامل",
+  "upload_status_uploading": "جارٍ الرفع",
+  "upload_status_uploaded": "اكتمل الرفع",
+  "attachment_count": "{count, plural, one{{count} مرفق} other{عدد المرفقات: {count}}}",
+  "action_create": "إنشاء",
+  "action_rename": "إعادة تسمية",
+  "action_archive": "أرشفة",
+  "action_restore": "استعادة",
+  "action_delete": "حذف",
+  "migrate": "نقل",
+  "assigned_chats": "{count, plural, one{{count} محادثة معيّنة} other{عدد المحادثات المعيّنة: {count}}}",
+  "date_today": "اليوم",
+  "date_yesterday": "أمس",
+  "date_earlier": "في وقت سابق",
+  "nav_home": "الرئيسية",
+  "nav_more": "المزيد",
+  "status_completed": "مكتمل",
+  "filter_all": "الكل",
+  "filter_recent": "الأحدث",
+  "connection_address_key": "{address}  •  المفتاح: {status}",
+  "model_via_provider": "{model}  \nعبر `{provider}`",
+  "deny": "رفض",
+  "connect": "اتصال",
+  "appearance": "المظهر",
+  "connection_section": "الاتصال",
+  "about": "حول التطبيق",
+  "version_label": "الإصدار {version}",
+  "matched": "مطابق",
+  "search": "بحث",
+  "on": "مفعّل",
+  "off": "معطّل",
+  "reasoning_off": "معطّل",
+  "hermes_response_ready": "ردّ Hermes جاهز",
+  "admin_password_needed": "كلمة مرور المسؤول مطلوبة",
+  "hermes_needs_a_sudo_password_for_the_pending_terminal_command": "يحتاج Hermes إلى كلمة مرور sudo لتنفيذ أمر الطرفية المعلّق.",
+  "sudo_password": "كلمة مرور sudo",
+  "secret_needed": "يلزم إدخال قيمة سرّية",
+  "hermes_needs_a_secret_for_the_pending_skill": "يحتاج Hermes إلى قيمة سرّية لتشغيل المهارة المعلّقة.",
+  "secret_value": "القيمة السرّية",
+  "attached_file": "ملف مرفق",
+  "pin_chat": "تثبيت المحادثة",
+  "unpin_chat": "إلغاء تثبيت المحادثة",
+  "pinned_chats": "المحادثات المثبّتة",
+  "could_not_update_chat_pin": "تعذّر تحديث حالة تثبيت المحادثة: {error}",
+  "@could_not_update_chat_pin": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "could_not_save_chat_spaces": "تعذّر حفظ مساحات المحادثات على هذا الجهاز",
+  "update_available": "يتوفر تحديث",
+  "update_now": "تحديث الآن",
+  "update_install": "تثبيت التحديث",
+  "update_downloading": "جارٍ تنزيل التحديث والتحقق منه…",
+  "update_allow_install": "اسمح لتطبيق Hermes بتثبيت هذا التحديث، ثم عُد إلى هنا واضغط على «تثبيت التحديث».",
+  "update_failed": "تعذّر تنزيل التحديث أو التحقق منه أو فتحه. حاول مجددًا أو راجع صفحة الإصدار.",
+  "a_newer_hermes_android_build_is_available_on_github": "يتوفر إصدار أحدث من Ares على GitHub.",
+  "release_notes": "ملاحظات الإصدار",
+  "view_release": "عرض الإصدار",
+  "skip_this_version": "تخطّي هذا الإصدار",
+  "later": "لاحقًا",
+  "check_for_updates": "التحقق من وجود تحديثات",
+  "check_for_updates_on_launch": "التحقق من وجود تحديثات عند بدء التشغيل",
+  "you_re_on_the_latest_version": "أنت تستخدم أحدث إصدار.",
+  "couldn_t_check_for_updates": "تعذّر التحقق من وجود تحديثات.",
+  "chat_density": "كثافة عرض المحادثة",
+  "chat_density_2": "كثافة عرض المحادثة: {label}",
+  "chat_density_comfortable": "مريح",
+  "chat_density_compact": "مضغوط",
+  "chat_density_comfortable_description": "فقاعات أوسع يظهر فوق كلّ منها اسم المُرسِل.",
+  "chat_density_compact_description": "فقاعات أصغر بلا أسماء للمرسلين، لتتسع الشاشة لعدد أكبر من الرسائل.",
+  "chat_density_label_description": "{label} — {description}",
+  "compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins": "يخفي العرض المضغوط التسميتين «أنت» و«Hermes»، ويقلّل المساحة داخل الفقاعات والمسافات بينها والهوامش الجانبية.",
+  "client_certificate_mtls": "شهادة العميل (mTLS)",
+  "client_certificate_mtls_description": "قدّم شهادة عندما يتطلب وكيل HTTPS مصادقة متبادلة باستخدام TLS.",
+  "client_certificate_https_only": "لا تُستخدم شهادات العميل إلا مع اتصالات HTTPS.",
+  "choose_certificate": "اختيار شهادة",
+  "certificate_password": "كلمة مرور الشهادة",
+  "this_certificate_is_password_protected": "هذه الشهادة محمية بكلمة مرور. ستُفتح بمجرد كتابة كلمة المرور الصحيحة.",
+  "enter_the_certificate_password_to_finish_loading_it": "أدخل كلمة مرور الشهادة التي اخترتها لإكمال تحميلها.",
+  "client_certificate_required": "حمّل شهادة عميل أو عطّل خيار شهادة العميل.",
+  "client_certificate_loaded": "الشهادة المحمّلة: {label}",
+  "@client_certificate_loaded": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "remove_certificate": "إزالة الشهادة",
+  "certificate_import_failed": "تعذّر تحميل تلك الشهادة.",
+  "background_work": "العمل في الخلفية",
+  "keep_chats_active_in_background": "إبقاء المحادثات نشطة في الخلفية",
+  "background_work_description": "يُبقي هذا الخيار المحادثات التي بدأتها متصلة أثناء عمل التطبيق في الخلفية. قد تنقطع الاتصالات الخاملة. يزيد تفعيل هذا الخيار من استهلاك البطارية والبيانات، ولا يؤدي تعطيله إلى إيقاف العمل على الخادم.",
+  "background_work_limits": "قد يعلّق Android الاتصالات في وضع السكون (Doze) أو ينهي عملية التطبيق. لتلقّي الإشعارات بعد انتهاء العملية، يجب إعداد الإشعارات الفورية بشكل منفصل. الإيقاف الإجباري غير مدعوم.",
+  "background_work_disclosure": "يبقى إشعار الخدمة الإلزامي ظاهرًا ما دامت الحماية في الخلفية مفعّلة، حتى عند إيقاف إشعارات المحادثة الاختيارية.",
+  "battery_optimisation_settings": "إعدادات تحسين استهلاك البطارية",
+  "battery_optimisation_description": "افتح إعدادات Android لمراجعة قيود البطارية. لا يطلب التطبيق إعفاءً تلقائيًا، وتغيير الإعدادات لا يضمن وصول الإشعارات.",
+  "battery_settings_unavailable": "تعذّر فتح إعدادات البطارية على هذا الجهاز.",
+  "background_work_save_failed": "تعذّر حفظ إعداد العمل في الخلفية.",
+  "ongoing_chat_channel_name": "المحادثات النشطة",
+  "ongoing_chat_channel_description": "إشعارات صامتة بحالة المحادثات التي بدأتها ولم تنتهِ بعد",
+  "task_timeline": "التسلسل الزمني للمهمة",
+  "task_refresh_history": "تحديث سجل المهمة",
+  "task_live_preview": "معاينة مباشرة من أحداث المهمة الأم",
+  "task_preview_explanation": "تعرض المعاينة آخر ما أُتيح فقط، وليست جزءًا من السجل المحفوظ.",
+  "task_preview": "معاينة",
+  "task_recorded_history": "سجل المهمة المحفوظ",
+  "task_loading_history": "جارٍ تحميل سجل المهمة…",
+  "task_empty_history": "لا توجد رسائل مسجّلة بعد. ربما لم تحفظ المهمة سجلها بعد، وهذا لا يعني أنها لم تنجز أي عمل.",
+  "task_load_older": "تحميل السجلات الأقدم",
+  "task_default_goal": "مهمة مفوّضة",
+  "task_status": "الحالة: {status}",
+  "task_identity": "المهمة: {id}",
+  "task_stored_session": "الجلسة المحفوظة: {id}",
+  "task_delegation": "التفويض: {id}",
+  "task_read_only_notice": "للقراءة فقط · قد يظهر السجل بعد أن تحفظه المهمة. حدّث الصفحة للتحقق مجددًا.",
+  "task_row_label": "{role} · السطر {id}",
+  "task_role_assistant": "المساعد",
+  "task_role_user": "المستخدم",
+  "task_role_tool": "الأداة",
+  "task_tool_call": "استدعاء أداة · {name}",
+  "task_tool_result": "نتيجة الأداة · {name}",
+  "task_call_details": "معرّف الاستدعاء: {id}\nالوسائط\n{arguments}",
+  "task_result_details": "معرّف الاستدعاء: {id}\nالنتيجة\n{result}",
+  "task_not_supplied": "غير متوفر",
+  "task_missing_arguments": "لم يحتفظ الخادم بوسائط الاستدعاء.",
+  "task_image_placeholder": "[صورة]",
+  "task_invalid_reference": "نصّ المهمة غير متاح: المرجع المحفوظ للجلسة غير صالح.",
+  "task_auth_required": "نصّ المهمة غير متاح: اضبط إعدادات مصادقة لوحة التحكم لهذه البوابة. لا يتيح مفتاح خادم API الاطّلاع على خطوات تفكير المهمة.",
+  "task_auth_rejected": "نصّ المهمة غير متاح: رفضت لوحة التحكم المصادقة. تحقّق من إعدادات لوحة التحكم لهذه البوابة.",
+  "task_incompatible_history": "نصّ المهمة غير متاح: لا تتيح لوحة التحكم هذه قراءة جزء محدود من السجل بصيغته الأصلية بطريقة متوافقة مع ملف التعريف المحدد.",
+  "task_identity_unproven": "نصّ المهمة غير متاح: لم تتمكن لوحة التحكم من التحقق من هوية الجلسة المحفوظة أو تتبّع أصلها عبر عمليات الضغط. لم يُعرض نصّ من أي جلسة أخرى.",
+  "task_partial_compression": "السجل غير مكتمل: استمرّت المهمة بعد الضغط، لكن البوابة لم تُتح مرجعًا أحدث يمكن التحقق منه. قد لا يظهر الرد الأخير. أُوقف التحديث التلقائي مؤقتًا؛ اضغط على «تحديث» للمحاولة مجددًا.",
+  "task_partial_ancestors": "السجل غير مكتمل: لا تعرض البوابة السجلات السابقة التي استُخدمت في ضغط سجل هذه المهمة، لذا قد تغيب بعض أجزائه الأولى. تبقى السطور المتاحة محفوظة؛ اضغط على «تحديث» للمحاولة مجددًا.",
+  "task_missing_reference": "نصّ المهمة غير متاح: لم يحتفظ الخادم بمرجع الجلسة الخاصة بها.",
+  "task_missing_row_identity": "نصّ المهمة غير متاح: لم يوفّر الخادم معرّفات ثابتة لسطور الرسائل.",
+  "task_history_not_ready": "سجل المهمة غير متاح بعد (HTTP 404). ربما لم تحفظ المهمة سجلها بعد، أو ربما لا تدعم لوحة التحكم سجل المهام. حاول مجددًا للتحقق.",
+  "task_refresh_failed": "تعذّر تحديث سجل المهمة. تحقّق من الاتصال ثم حاول مجددًا.",
+  "task_status_interrupted": "انقطعت",
+  "task_status_cancelled": "أُلغيت",
+  "task_status_requested": "طُلِبت",
+  "task_status_thinking": "جارٍ التفكير",
+  "task_status_tool": "جارٍ استخدام أداة",
+  "task_status_pending": "قيد الانتظار",
+  "task_status_dispatched": "أُرسلت للتنفيذ",
+  "task_status_unknown": "حالة غير معروفة: {status}",
+  "task_tasks_finished": "المهام المفوّضة التي انتهت: {count}",
+  "activity_status_unconfirmed": "الحالة غير مؤكدة",
+  "activity_recently_updated": "حُدّث مؤخرًا",
+  "activity_reconnecting": "جارٍ إعادة الاتصال للتحقق من حالة الجولة",
+  "activity_outcome_unknown": "تعذّر تأكيد نتيجة الجولة. افتح المحادثة للتحقق.",
+  "activity_chat_updated_detail": "سجّلت البوابة نشاطًا في المحادثة، لكن الحالة المباشرة للجولة غير متاحة.",
+  "activity_updated": "حُدّث",
+  "activity_empty_title": "لا يوجد نشاط حديث",
+  "activity_empty_detail": "تظهر هنا الجولات التي بدأتَها في هذا التطبيق ومحادثات البوابة التي حُدّثت خلال آخر 7 أيام.",
+  "activity_read_error": "تعذّرت قراءة سجلات الجولات أو محادثات البوابة لعرض النشاط. تحقّق من الاتصال وحاول مجددًا.",
+  "activity_chat_unavailable": "لم تعد هذه المحادثة متاحة، أو تعذّر الاتصال بالبوابة.",
+  "activity_partial_title": "لم يُحمَّل النشاط بالكامل",
+  "activity_partial_detail": "يظهر جزء فقط من نشاط البوابة. قد تكون هناك محادثات أخرى؛ اسحب لأسفل للتحديث.",
+  "provider_usage": "الاستخدام المسجّل",
+  "provider_usage_notice": "هذه بيانات استخدام Hermes خلال آخر 30 يومًا، وليست رصيد الحساب أو أسعار النماذج. اضبط بيانات اعتماد المزوّد على خادم Hermes؛ فهذا التطبيق لا يخزّن مفاتيح API الخاصة بالمزوّد.",
+  "provider_usage_failed": "تعذّر تحميل بيانات الاستخدام المسجّل.",
+  "provider_usage_empty": "لا يوجد استخدام مسجّل لهذا المزوّد.",
+  "provider_usage_counts": "الجلسات: {sessions} · المدخلات: {input} · المخرجات: {output}",
+  "@provider_usage_counts": {
+    "placeholders": {
+      "sessions": {
+        "type": "String"
+      },
+      "input": {
+        "type": "String"
+      },
+      "output": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_usage_costs": "التكلفة المقدّرة: {estimated} · التكلفة المُبلّغ عنها: {actual}",
+  "@provider_usage_costs": {
+    "placeholders": {
+      "estimated": {
+        "type": "String"
+      },
+      "actual": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_quota_codex": "اشتراك OpenAI Codex",
+  "provider_quota_claude": "اشتراك Claude",
+  "provider_quota_openai_api": "الاستخدام المسجّل لواجهة OpenAI API",
+  "provider_quota_notice": "يعرض المزوّد حدود الاشتراك لكل فترة، وهي منفصلة عن الاستخدام الذي يسجّله Hermes وعن فواتير API. يُعرض كل حساب على حدة؛ وبلوغ حدّ نموذج معيّن لا يعني استنفاد حصة الحساب بالكامل.",
+  "provider_quota_windows_notice": "لاشتراكات Codex وClaude حدود لكل جلسة مدتها خمس ساعات وحدود أسبوعية. لا تظهر إلا الفترات التي يُبلغ عنها المزوّد. إذا لم يذكر حدًا أو موعدًا لتجديد الحصة، تظل هذه المعلومة غير متاحة. قد تسري الحدود الأسبوعية على الحساب أو على نماذج معيّنة.",
+  "provider_quota_five_hour_session": "جلسة مدتها 5 ساعات",
+  "provider_quota_unavailable": "حصة الاشتراك غير متاحة.",
+  "provider_quota_failed": "تعذّر تحديث حصة الاشتراك. أي قيم محفوظة تعود إلى آخر قراءة.",
+  "provider_quota_account": "الحساب",
+  "provider_quota_unknown": "غير معروف",
+  "provider_quota_state": "حالة الحساب: {state}",
+  "@provider_quota_state": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_quota_scope": "النطاق: {scope}",
+  "@provider_quota_scope": {
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_quota_percent": "المُستخدَم: {used}% · المتبقي: {remaining}%",
+  "@provider_quota_percent": {
+    "placeholders": {
+      "used": {
+        "type": "String"
+      },
+      "remaining": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_quota_reset": "موعد تجديد الحصة: {reset}",
+  "@provider_quota_reset": {
+    "placeholders": {
+      "reset": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_quota_reset_unknown": "موعد تجديد الحصة غير متاح.",
+  "auxiliary_models": "النماذج المساعدة",
+  "auxiliary_notice": "اختر نموذجًا لكل مهمة. يجب إدارة نقاط الاتصال المخصّصة على الخادم. يتّبع الخيار «تلقائي» قواعد توارث الإعدادات الخاصة بالمهمة.",
+  "auxiliary_inherit": "تلقائي (توارث الإعدادات)",
+  "auxiliary_unavailable": "إعدادات النماذج المساعدة غير متاحة.",
+  "provider_oauth_title": "تسجيل الدخول لدى المزوّد",
+  "provider_oauth_more_subtitle": "إدارة تسجيل الدخول لدى المزوّد على مضيف Hermes",
+  "provider_oauth_settings_subtitle": "سجّل الدخول على مضيف Hermes؛ لا تُخزَّن رموز المزوّد على هذا الجهاز",
+  "provider_oauth_intro": "سجّل الدخول إلى حسابك لدى المزوّد في متصفح خارجي. تُحفظ رموز الوصول على مضيف Hermes فقط، وليس على هذا الجهاز. لا يؤدي تسجيل الدخول إلى اختيار نموذج للمحادثة في هذا التطبيق.",
+  "provider_oauth_defaults_notice": "قد تؤدي بعض إجراءات المضيف، مثل استبدال حساب الباقة المجانية لدى Nous، إلى تغيير إعداداته الافتراضية. راجع إعدادات المضيف بعد تسجيل الدخول.",
+  "provider_oauth_transport_init_failed": "تعذّر تهيئة وسيلة الاتصال الآمن المحددة للوحة التحكم. تحقّق من هوية TLS وإعدادات الاتصال.",
+  "provider_oauth_https_required": "يتطلب تسجيل الدخول لدى المزوّد اتصالًا بلوحة تحكم Hermes عبر HTTPS.",
+  "provider_oauth_auth_required": "أعدّ المصادقة بكلمة مرور للوحة التحكم أو اضبط وكيلًا موثوقًا قبل تسجيل الدخول.",
+  "provider_oauth_catalog_failed": "تسجيل الدخول لدى المزوّد غير متاح على هذا المضيف. تحقّق من مصادقة لوحة التحكم، وحدّث المضيف إن لم يكن يدعم OAuth للمزوّد.",
+  "provider_oauth_expired": "انتهت صلاحية طلب تسجيل الدخول. ابدأ من جديد.",
+  "provider_oauth_start_failed": "تعذّر بدء تسجيل الدخول الآمن لدى المزوّد. حاول مجددًا.",
+  "provider_oauth_denied": "رُفض طلب تسجيل الدخول. ابدأ من جديد.",
+  "provider_oauth_cancelled": "أُلغي تسجيل الدخول.",
+  "provider_oauth_host_failed": "تعذّر على المضيف إكمال تسجيل الدخول. ابدأ من جديد.",
+  "provider_oauth_poll_failed": "تعذّر التحقق من حالة تسجيل الدخول. ابدأ من جديد.",
+  "provider_oauth_cancellation_unconfirmed": "{message} تعذّر تأكيد الإلغاء؛ قد تبقى الجلسة نشطة على المضيف حتى تنتهي صلاحيتها.",
+  "@provider_oauth_cancellation_unconfirmed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_oauth_browser_failed": "تعذّر فتح المتصفح الخارجي. أعد المحاولة أو ألغِ تسجيل الدخول.",
+  "provider_oauth_retry": "إعادة المحاولة",
+  "provider_oauth_complete": "إكمال تسجيل الدخول إلى {provider}",
+  "@provider_oauth_complete": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_oauth_code_instruction": "أدخل هذا الرمز المؤقت في صفحة المزوّد:",
+  "provider_oauth_waiting": "بانتظار الموافقة. تنتهي صلاحية هذه الجلسة تلقائيًا.",
+  "provider_oauth_open_browser": "فتح صفحة المزوّد في المتصفح",
+  "provider_oauth_cancel": "إلغاء تسجيل الدخول",
+  "provider_oauth_signed_out": "لم تسجّل الدخول على المضيف",
+  "provider_oauth_sign_in_again": "تسجيل الدخول مجددًا",
+  "provider_oauth_sign_in": "تسجيل الدخول",
+  "provider_oauth_cli_required": "سجّل الدخول باستخدام واجهة سطر الأوامر (CLI) الخاصة بالمزوّد على مضيف Hermes. لا يتيح هذا المضيف تسجيل الدخول إلى هذا المزوّد من داخل التطبيق.",
+  "provider_oauth_checking_account": "وصلت الموافقة. جارٍ التحقق من الحساب على المضيف…",
+  "provider_oauth_verification_unavailable": "وصلت الموافقة، لكن التحقق من الحساب غير متاح. افتح «الاستخدام» لتحديث بيانات استخدام الحساب.",
+  "provider_oauth_verified_account": "سجّلت الدخول إلى مضيف Hermes بالحساب {email}. افتح «الاستخدام» لتحديث بيانات استخدام الحساب.",
+  "@provider_oauth_verified_account": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_oauth_credentials_unverified": "يشير المضيف إلى توفّر بيانات الاعتماد، لكن لم يجرِ التحقق من هوية الحساب.",
+  "provider_oauth_account_status_unknown": "حالة الحساب على المضيف غير متاحة.",
+  "app_language": "لغة التطبيق",
+  "app_language_system": "لغة الهاتف",
+  "auto_archives_after_72_hours": "يُؤرشف تلقائيًا بعد 72 ساعة",
+  "automation": "الأتمتة",
+  "voice_recording_start": "تسجيل رسالة صوتية",
+  "voice_recording_pause": "إيقاف التسجيل مؤقتًا",
+  "voice_recording_preview": "تشغيل التسجيل",
+  "voice_recording_resume": "متابعة التسجيل",
+  "voice_recording_send": "إرسال الرسالة الصوتية",
+  "voice_recording_discard": "تجاهل التسجيل",
+  "voice_recording_processing": "جارٍ تجهيز الرسالة الصوتية…",
+  "voice_recording_elapsed": "جارٍ التسجيل: {time}",
+  "@voice_recording_elapsed": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "voice_recording_draft": "رسالة صوتية: {time}",
+  "@voice_recording_draft": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "voice_recording_permission": "اسمح بالوصول إلى الميكروفون لتسجيل رسالة صوتية.",
+  "voice_recording_limit": "بلغ التسجيل مدته القصوى وهي عشر دقائق.",
+  "voice_recording_empty": "لم يُسجَّل أي صوت. أعد المحاولة.",
+  "voice_recording_failed": "تعذّرت معالجة التسجيل. احتفظ التطبيق بكل المقاطع المحفوظة.",
+  "voice_recording_unconfirmed": "لم يتأكد وصول الرسالة. تسجيلك محفوظ. تحقّق من المحادثة قبل إعادة المحاولة.",
+  "voice_recording_submit_failed": "تعذّر إرسال الرسالة الصوتية. تسجيلك محفوظ. تحقّق من الاتصال وإمكانية الوصول إلى لوحة التحكم وإعدادات تحويل الصوت إلى نص على الخادم.",
+  "voice_recording_pause_playback": "إيقاف التشغيل مؤقتًا",
+  "projects_root_title": "مجلد المشاريع على الخادم",
+  "projects_root_more_subtitle": "المكان الذي تُنشأ فيه مجلدات المشاريع الجديدة على الخادم",
+  "projects_root_description": "يُنشأ هنا مجلد لكل مشروع تنشئه على هذا الهاتف. حدّد المجلد الذي يستخدمه Hermes نفسه لتتمكن من الوصول إلى المشاريع نفسها من الهاتف والخادم.",
+  "projects_root_label": "مسار المجلد الجذر للمشاريع",
+  "projects_root_default_hint": "المسار الافتراضي للخادم: {path}",
+  "@projects_root_default_hint": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "projects_root_locked_title": "يحدّده الخادم",
+  "projects_root_locked_explanation": "يقصر هذا الخادم الوصول إلى الملفات على مجلد جذر واحد، لذا لا يمكنك تغيير مجلد المشاريع من التطبيق.",
+  "projects_root_saved": "حُفظ مجلد المشاريع.",
+  "projects_root_reset": "استخدام المسار الافتراضي للخادم",
+  "projects_root_invalid_empty": "أدخل مسار مجلد.",
+  "projects_root_invalid_absolute": "أدخل مسارًا مطلقًا يبدأ بشرطة مائلة (/).",
+  "projects_root_invalid_segments": "أزل مقاطع النقاط ومحارف التحكم من المسار.",
+  "projects_root_unsupported": "هذا الاتصال لا يدعم هذه الميزة. تحتاج إلى اتصال ببوابة سطح المكتب (Desktop Gateway) يتيح الوصول إلى لوحة التحكم لقراءة مجلد المشاريع على الخادم أو تغييره.",
+  "projects_root_unavailable": "تعذّرت قراءة مجلد المشاريع على الخادم. تحقّق من الاتصال بلوحة التحكم، ثم أعد المحاولة.",
+  "adopt_folder_action": "إضافة مجلد موجود",
+  "adopt_folder_description": "المجلدات الموجودة ضمن {root} التي لم تُسجَّل كمشاريع بعد.",
+  "@adopt_folder_description": {
+    "placeholders": {
+      "root": {
+        "type": "String"
+      }
+    }
+  },
+  "adopt_folder_registered": "مسجّل بالفعل كمشروع: {name}",
+  "@adopt_folder_registered": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adopt_folder_none": "كل مجلد ضمن هذا المسار مسجّل بالفعل كمشروع.",
+  "adopt_folder_unsupported": "لا يتيح هذا الاتصال عرض مجلدات الخادم. أدخل بدلًا من ذلك المسار المطلق لمجلد موجود.",
+  "adopt_folder_failed": "تعذّر عرض مجلدات الخادم: {error}",
+  "@adopt_folder_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "adopt_folder_manual_label": "مسار المجلد الموجود",
+  "adopt_folder_name_label": "اسم المشروع",
+  "adopt_folder_add": "إضافة كمشروع",
+  "adopt_folder_added": "يستخدم {name} الآن المسار {path}",
+  "@adopt_folder_added": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "adopt_folder_error": "تعذّرت إضافة المجلد: {error}",
+  "@adopt_folder_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "adopt_folder_folderless": "أُنشئ المشروع {name}، لكن لم يُربط به المجلد. اربطه من خلال Hermes على الخادم.",
+  "@adopt_folder_folderless": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "slash_commands": "أوامر الشرطة المائلة",
+  "slash_commands_loading": "جارٍ تحميل الأوامر…",
+  "slash_commands_empty": "لا توجد أوامر مطابقة",
+  "slash_command_info_alias": "{alias} اسم بديل للأمر {command}",
+  "@slash_command_info_alias": {
+    "placeholders": {
+      "alias": {
+        "type": "String"
+      },
+      "command": {
+        "type": "String"
+      }
+    }
+  },
+  "slash_command_info_no_description": "لا يوجد وصف متاح.",
+  "slash_command_info_arguments_options": "يقبل خيارًا واحدًا من قائمة محدّدة.",
+  "slash_command_info_arguments_text": "يقبل نصًا بعد الأمر.",
+  "slash_command_info_arguments_mixed": "يقبل خيارًا أو نصًا بعد الأمر.",
+  "slash_command_output": "مخرجات الأمر",
+  "slash_command_no_output": "اكتمل تنفيذ الأمر دون مخرجات.",
+  "slash_command_delivery_unknown": "أُرسل الأمر لكن لم يصل ردّ. قد يظلّ قيد التنفيذ على البوابة، لذا احتفظنا بمسودتك. تحقّق من البوابة قبل إعادة المحاولة.",
+  "slash_command_failed": "تعذّر تنفيذ الأمر.",
+  "slash_command_unsupported": "هذا الأمر غير متاح على هذا الخادم.",
+  "slash_sessions_inline": "افتح قائمة الجلسات لاختيار محادثة. مسودتك محفوظة.",
+  "nextgen_toggle": "واجهة NextGen",
+  "nextgen_toggle_subtitle": "تصميم جديد يتيح تسجيل الدخول مرة واحدة والمحادثات المباشرة واكتشاف الأجهزة على الشبكة. بواباتك ومحادثاتك متاحة في هذه الواجهة أيضًا.",
+  "nextgen_single_login": "تسجيل الدخول مرة واحدة",
+  "nextgen_single_login_subtitle": "لإضافة بوابة، يكفي إدخال عنوان لوحة التحكم وتسجيل الدخول مرة واحدة.",
+  "ng_allow_this_command": "هل تسمح بتنفيذ هذا الأمر؟",
+  "ng_hermes_wants_to_run_this_with": "يريد Hermes تنفيذ هذا الأمر باستخدام {tool}.",
+  "@ng_hermes_wants_to_run_this_with": {
+    "placeholders": {
+      "tool": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_hermes_wants_to_run_this": "يريد Hermes تنفيذ هذا الأمر.",
+  "ng_hermes_has_a_question": "لدى Hermes سؤال",
+  "ng_hermes_has_questions": "لدى Hermes أسئلة",
+  "ng_password_for_sudo": "كلمة مرور sudo",
+  "ng_hermes_needs_your_sudo_password_to": "يحتاج Hermes إلى كلمة مرور sudo الخاصة بك لتنفيذ هذا الأمر.",
+  "ng_a_secret_value": "قيمة سرية",
+  "ng_value_for": "قيمة {variable}",
+  "@ng_value_for": {
+    "placeholders": {
+      "variable": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_your_password_manager": "مدير كلمات المرور لديك",
+  "ng_unlock": "فتح قفل {name}",
+  "@ng_unlock": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_hermes_needs_unlocked_to_sign_in": "يحتاج Hermes إلى فتح قفل {name} لتسجيل الدخول نيابةً عنك.",
+  "@ng_hermes_needs_unlocked_to_sign_in": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_sign_in_code": "رمز تسجيل الدخول",
+  "ng_enter_the_sign_in_code": "أدخل رمز تسجيل الدخول.",
+  "ng_enter_the_sign_in_code_for": "أدخل رمز تسجيل الدخول إلى {site}.",
+  "@ng_enter_the_sign_in_code_for": {
+    "placeholders": {
+      "site": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_save_a_login": "هل تريد حفظ بيانات تسجيل الدخول؟",
+  "ng_save_your_login": "هل تريد حفظ بيانات تسجيل دخولك إلى {site}؟",
+  "@ng_save_your_login": {
+    "placeholders": {
+      "site": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_couldn_t_load_this_chat": "تعذّر تحميل هذه المحادثة: {error}",
+  "@ng_couldn_t_load_this_chat": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_live_updates_are_unavailable": "التحديثات المباشرة غير متاحة: {error}",
+  "@ng_live_updates_are_unavailable": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_preparing": "جارٍ تجهيز {name}…",
+  "@ng_preparing": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_the_turn_failed": "فشلت معالجة الطلب.",
+  "ng_turn_changed": "انتهت معالجة ذلك الطلب أو بدأت معالجة طلب أحدث",
+  "ng_steer_rejected": "لم تُقبل الرسالة أثناء معالجة الطلب الحالي",
+  "ng_turn_not_known_yet": "لم يُحدَّد الطلب الجاري بعد؛ أعد المحاولة بعد قليل",
+  "ng_couldn_t_stop": "تعذّر الإيقاف: {error}",
+  "@ng_couldn_t_stop": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_server_access": "الوصول إلى الخادم",
+  "ng_sign_in": "تسجيل الدخول",
+  "ng_live_connection": "الاتصال المباشر",
+  "ng_check_that_tailscale_is_on_on": "تأكّد من تشغيل Tailscale على هذا الهاتف وعلى الخادم.",
+  "ng_check_the_address_and_that_the": "تحقّق من العنوان وتأكّد من أن الوكيل يعيد توجيه الطلبات إلى لوحة التحكم.",
+  "ng_use_the_same_network_as_the": "اتصل بالشبكة نفسها التي يتصل بها الخادم، وشغّل لوحة التحكم باستخدام --host 0.0.0.0 لتتمكن الأجهزة الأخرى من الوصول إليها.",
+  "ng_check_the_address_vpn_or_tailscale": "تحقّق من العنوان أو من اتصال VPN أو Tailscale.",
+  "ng_not_checked_yet": "لم يجرِ التحقق بعد.",
+  "ng_checking": "جارٍ التحقق…",
+  "ng_hermes_answers_at": "يستجيب Hermes {version} على العنوان {address}.",
+  "@ng_hermes_answers_at": {
+    "placeholders": {
+      "version": {
+        "type": "Object"
+      },
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_something_answered_but_not_a_hermes": "وصل ردّ، لكنه ليس من لوحة تحكم Hermes.",
+  "ng_something_answered_http_but_not_a": "وصل ردّ (HTTP {status})، لكنه ليس من لوحة تحكم Hermes.",
+  "@ng_something_answered_http_but_not_a": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_use_the_dashboard_s_address_and": "استخدم عنوان لوحة التحكم ومنفذها (9119 افتراضيًا)، وليس عنوان خادم API ومنفذه.",
+  "ng_cloudflare_access_turned_the_service_token": "رفضت Cloudflare Access رمز الخدمة.",
+  "ng_cloudflare_access_is_in_front_of": "هذا العنوان محميّ بواسطة Cloudflare Access.",
+  "ng_check_the_service_token_and_its": "تحقّق من رمز الخدمة وسياسة Service Auth الخاصة به.",
+  "ng_add_a_cloudflare_access_service_token": "أضف رمز خدمة Cloudflare Access لهذا العنوان.",
+  "ng_the_server_asks_for_a_client": "يطلب الخادم شهادة عميل.",
+  "ng_pick_the_client_certificate_for_this": "اختر شهادة العميل لهذه البوابة، ثم أعد الاختبار.",
+  "ng_needs_server_access_first": "يلزم الوصول إلى الخادم أولًا.",
+  "ng_needs_a_sign_in_first": "يلزم تسجيل الدخول أولًا.",
+  "ng_signed_in_as": "سجّلت الدخول باسم {name}.",
+  "@ng_signed_in_as": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_this_dashboard_doesn_t_need_a": "لا تتطلب لوحة التحكم هذه تسجيل الدخول.",
+  "ng_the_saved_sign_in_has_expired": "انتهت صلاحية جلسة الدخول المحفوظة.",
+  "ng_sign_in_again": "سجّل الدخول مجددًا.",
+  "ng_too_many_sign_in_attempts": "تجاوزت الحد المسموح به لمحاولات تسجيل الدخول.",
+  "ng_wait_a_minute_then_check_again": "انتظر دقيقة ثم تحقّق مجددًا.",
+  "ng_the_gateway_answered": "ردّت البوابة: {message}.",
+  "@ng_the_gateway_answered": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_sign_in_again_or_update_hermes": "سجّل الدخول مجددًا أو حدّث Hermes.",
+  "ng_couldn_t_check_the_sign_in": "تعذّر التحقق من تسجيل الدخول: {error}",
+  "@ng_couldn_t_check_the_sign_in": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_the_gateway_wouldn_t_issue_a": "رفضت البوابة إصدار تذكرة اتصال بالمحادثة ({message}).",
+  "@ng_the_gateway_wouldn_t_issue_a": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_the_chat_connection_opened_and_the": "فُتح اتصال المحادثة وأكّدت البوابة جاهزيتها.",
+  "ng_the_gateway_never_said_it_was": "لم تؤكّد البوابة جاهزيتها.",
+  "ng_check_that_the_agent_is_running": "تأكّد من أن الوكيل يعمل على الخادم.",
+  "ng_the_gateway_refused_the_chat_connection": "رفضت البوابة اتصال المحادثة (HTTP 403).",
+  "ng_this_dashboard_has_no_chat_endpoint": "لا توفّر لوحة التحكم هذه نقطة اتصال للمحادثة (/api/ws).",
+  "ng_the_chat_connection_failed": "فشل اتصال المحادثة: {detail}",
+  "@ng_the_chat_connection_failed": {
+    "placeholders": {
+      "detail": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_use_the_exact_address_the_dashboard": "استخدم العنوان المحدّد في إعدادات لوحة التحكم كما هو.",
+  "ng_update_hermes": "حدّث Hermes.",
+  "ng_make_sure_the_proxy_allows_websocket": "تأكّد من أن الوكيل يسمح بترقية الاتصال إلى WebSocket على المسار /api/ws.",
+  "ng_offline": "غير متصل",
+  "ng_connecting": "جارٍ الاتصال…",
+  "ng_connected": "متصل",
+  "ng_reconnecting": "جارٍ إعادة الاتصال…",
+  "ng_signed_out": "لم تسجّل الدخول",
+  "ng_connection_failed": "فشل الاتصال",
+  "ng_rate_limited_by_gateway": "فرضت البوابة حدًّا على معدل الطلبات",
+  "ng_couldn_t_open_the_chat_connection": "تعذّر فتح اتصال المحادثة: {message}",
+  "@ng_couldn_t_open_the_chat_connection": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_the_gateway_returned_no_websocket_ticket": "لم تُرسل البوابة تذكرة WebSocket.",
+  "ng_connection_lost": "انقطع الاتصال",
+  "ng_this_dashboard_has_no_chat_endpoint_2": "لا توفّر لوحة التحكم هذه نقطة اتصال للمحادثة (/api/ws). حدّث Hermes.",
+  "ng_the_gateway_refused_the_chat_connection_2": "رفضت البوابة اتصال المحادثة. تأكّد من أن العنوان يطابق المضيف المحدّد في إعدادات لوحة التحكم وأن المحادثة المضمّنة مفعّلة.",
+  "ng_the_gateway_refused": "رفضت البوابة {method}.",
+  "@ng_the_gateway_refused": {
+    "placeholders": {
+      "method": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_couldn_t_read_your_saved_gateways": "تعذّرت قراءة بواباتك المحفوظة: {error}",
+  "@ng_couldn_t_read_your_saved_gateways": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_applies_to_new_chats": "يسري على المحادثات الجديدة",
+  "ng_couldn_t_change": "تعذّر تغيير {label}: {error}",
+  "@ng_couldn_t_change": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      },
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_capabilities": "الإمكانات",
+  "ng_skills": "المهارات",
+  "ng_toolsets": "مجموعات الأدوات",
+  "ng_search": "بحث",
+  "ng_couldn_t_load": "تعذّر التحميل",
+  "ng_try_again": "إعادة المحاولة",
+  "ng_no_skills": "لا توجد مهارات",
+  "ng_no_toolsets": "لا توجد مجموعات أدوات",
+  "ng_no_mcp_servers": "لا توجد خوادم MCP",
+  "ng_that_file_is_too_large_to": "هذا الملف أكبر من الحجم المتوقع لملف شهادة.",
+  "ng_the_certificate_couldn_t_be_imported": "تعذّر استيراد الشهادة: {error}",
+  "@ng_the_certificate_couldn_t_be_imported": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_now_pick_its_private_key": "اختر الآن المفتاح الخاص بالشهادة.",
+  "ng_now_pick_its_certificate": "اختر الآن الشهادة المرتبطة بالمفتاح.",
+  "ng_that_file_isn_t_a_certificate": "هذا الملف ليس شهادة ولا مفتاحًا خاصًا.",
+  "ng_if_a_proxy_in_front_of": "إذا كان الوكيل الذي يحمي هذا العنوان يطلب شهادة عميل، فاخترها هنا لتُقدَّم عند اختبار الاتصال وتسجيل الدخول واستخدام المحادثة.",
+  "ng_client_certificates_are_only_used_with": "تُستخدم شهادات العميل فقط مع العناوين التي تبدأ بـ https://.",
+  "ng_remove": "إزالة",
+  "ng_certificate_password": "كلمة مرور الشهادة",
+  "ng_importing": "جارٍ الاستيراد…",
+  "ng_pick_certificate": "اختيار شهادة",
+  "ng_pick_a_different_certificate": "اختيار شهادة أخرى",
+  "ng_accepts_p12_pfx_or_pem_certificate": "يُقبل ملف بصيغة .p12/.pfx أو ملفا شهادة ومفتاح بصيغة PEM. يبقى المفتاح في مساحة التخزين الخاصة بالتطبيق.",
+  "ng_photos": "الصور",
+  "ng_camera": "الكاميرا",
+  "ng_files": "الملفات",
+  "ng_you_can_attach_up_to_files": "الحد الأقصى لعدد الملفات التي يمكنك إرفاقها هو {count}.",
+  "@ng_you_can_attach_up_to_files": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_couldn_t_read": "تعذّرت قراءة {name}.",
+  "@ng_couldn_t_read": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_couldn_t_prepare_that_file": "تعذّر تجهيز الملف: {error}",
+  "@ng_couldn_t_prepare_that_file": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_hermes_is_still_working": "لا يزال Hermes يعمل",
+  "ng_steer": "توجيه",
+  "ng_adds_this_to_the_running_turn": "يضيف هذه الرسالة إلى الطلب الجاري عند خطوته التالية",
+  "ng_queue": "إضافة إلى قائمة الانتظار",
+  "ng_sends_it_when_the_turn_finishes": "يرسل الرسالة بعد اكتمال معالجة الطلب الجاري",
+  "ng_stop_and_send": "إيقاف وإرسال",
+  "ng_stops_the_turn_then_sends_this": "يوقف معالجة الطلب الجاري ثم يرسل هذه الرسالة",
+  "ng_dictation_stopped": "توقّف الإملاء: {message}",
+  "@ng_dictation_stopped": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_speech_recognition_isn_t_available": "التعرّف على الكلام غير متاح.",
+  "ng_working": "جارٍ العمل",
+  "ng_ready": "جاهز",
+  "ng_chats": "المحادثات",
+  "ng_new_chat": "محادثة جديدة",
+  "ng_usage": "الاستخدام",
+  "ng_rename_chat": "إعادة تسمية المحادثة",
+  "ng_couldn_t_rename": "تعذّرت إعادة التسمية: {error}",
+  "@ng_couldn_t_rename": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_this_chat": "هذه المحادثة",
+  "ng_input_tokens": "رموز الإدخال",
+  "ng_output_tokens": "رموز الإخراج",
+  "ng_reasoning_tokens": "رموز الاستدلال",
+  "ng_cache_reads": "عمليات القراءة من ذاكرة التخزين المؤقت",
+  "ng_api_calls": "استدعاءات API",
+  "ng_cost": "التكلفة",
+  "ng_context": "السياق",
+  "ng_your_sign_in_expired": "انتهت صلاحية جلسة دخولك.",
+  "ng_sign_in_2": "تسجيل الدخول",
+  "ng_retry": "إعادة المحاولة",
+  "ng_project_home": "الرئيسية",
+  "ng_choose_project": "اختيار مشروع",
+  "ng_project_cwd_fallback": "مجلد المشروع غير متاح، لذا تعمل هذه المحادثة في {path}.",
+  "@ng_project_cwd_fallback": {"placeholders": {"path": {"type": "String"}}},
+  "ng_project_create_uncertain": "ربما أنشأت البوابة هذه المحادثة، لكنها لم تؤكّد ذلك. تحقّق من «المحادثات» قبل بدء محادثة أخرى. لن يُعاد إرسال الطلب تلقائيًا.",
+  "ng_what_should_we_work_on": "ما الذي تودّ أن نعمل عليه؟",
+  "ng_ask_hermes_anything_it_can_run": "اسأل Hermes عمّا تشاء. يمكنه تشغيل الأدوات والتصفّح والعمل على ملفاتك الموجودة على الخادم.",
+  "ng_working_2": "جارٍ العمل · {frame}",
+  "@ng_working_2": {
+    "placeholders": {
+      "frame": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_default_model": "النموذج الافتراضي",
+  "ng_listening": "جارٍ الاستماع…",
+  "ng_steer_or_queue_a_message": "أرسل توجيهًا أو أضف رسالة إلى قائمة الانتظار",
+  "ng_message_hermes": "راسل Hermes",
+  "ng_attach": "إرفاق",
+  "ng_stop_dictation": "إيقاف الإملاء",
+  "ng_dictate": "إملاء",
+  "ng_stop": "إيقاف",
+  "ng_send": "إرسال",
+  "ng_slash_command_alias": "{alias} اسم بديل للأمر {command}",
+  "@ng_slash_command_alias": {
+    "placeholders": {
+      "alias": {
+        "type": "String"
+      },
+      "command": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_slash_command_no_description": "لا يوجد وصف متاح.",
+  "ng_slash_command_arguments_options": "يقبل خيارًا واحدًا من قائمة محدّدة.",
+  "ng_slash_command_arguments_text": "يقبل نصًا بعد الأمر.",
+  "ng_slash_command_arguments_mixed": "يقبل خيارًا أو نصًا بعد الأمر.",
+  "ng_slash_command_sent_as_message": "ترسل واجهة NextGen هذا النص إلى Hermes كرسالة عادية، ولا يُنفَّذ الأمر نفسه.",
+  "ng_slash_command_output": "مخرجات الأمر",
+  "ng_slash_command_running": "جارٍ تنفيذ الأمر…",
+  "ng_slash_command_done": "تمّ.",
+  "ng_slash_command_failed": "تعذّر تنفيذ الأمر: {error}",
+  "@ng_slash_command_failed": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_slash_command_refused": "لا يستطيع Hermes تنفيذ هذا الأمر هنا.",
+  "ng_slash_command_delivery_unknown": "أُرسل الأمر لكن لم يصل ردّ. قد يظلّ قيد التنفيذ على البوابة، لذا لم يُرسَل مجددًا واحتفظنا بمسودتك.",
+  "ng_slash_command_nothing_running": "لا شيء قيد التنفيذ.",
+  "ng_steered": "أُرسل التوجيه",
+  "ng_copied": "نُسخ",
+  "ng_not_sent": "لم يُرسَل: {reason}",
+  "@ng_not_sent": {
+    "placeholders": {
+      "reason": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_thinking": "جارٍ التفكير…",
+  "ng_thought": "التفكير",
+  "ng_used": "استخدم {name}",
+  "@ng_used": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_used_tools": "عدد الأدوات المستخدمة: {count}",
+  "@ng_used_tools": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_copy": "نسخ",
+  "ng_read_aloud": "قراءة بصوت عالٍ",
+  "ng_the_gateway_connection_dropped_try_again": "انقطع الاتصال بالبوابة. أعد المحاولة.",
+  "ng_allow_once": "السماح مرة واحدة",
+  "ng_allow_until_sandbox_off": "حتى إيقاف بيئة العزل",
+  "ng_folder_access": "الوصول إلى المجلد",
+  "ng_folder_access_unspecified": "لم تحدّد البوابة ما إذا كان الوصول للقراءة فقط أم للقراءة والكتابة.",
+  "ng_folder_read_only": "للقراءة فقط",
+  "ng_folder_read_write": "قراءة وكتابة",
+  "ng_website_access": "الوصول إلى الموقع",
+  "ng_allow_for_this_chat": "السماح لهذه المحادثة",
+  "ng_always_allow": "السماح دائمًا",
+  "ng_deny": "رفض",
+  "ng_your_answer": "إجابتك",
+  "ng_or_type_an_answer": "أو اكتب إجابة",
+  "ng_skip": "تخطّي",
+  "ng_answer": "إجابة",
+  "ng_cancel": "إلغاء",
+  "ng_username_or_email": "اسم المستخدم أو البريد الإلكتروني",
+  "ng_password": "كلمة المرور",
+  "ng_not_now": "ليس الآن",
+  "ng_save": "حفظ",
+  "ng_enter_both_the_client_id_and": "أدخل معرّف العميل (Client ID) وسرّ العميل (Client Secret) معًا، أو اترك الحقلين فارغين.",
+  "ng_enter_your_username_and_password": "أدخل اسم المستخدم وكلمة المرور.",
+  "ng_couldn_t_save_the_sign_in": "تعذّر حفظ بيانات تسجيل الدخول: {error}",
+  "@ng_couldn_t_save_the_sign_in": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_wrong_username_or_password": "اسم المستخدم أو كلمة المرور غير صحيحة.",
+  "ng_too_many_attempts_wait_a_moment": "تجاوزت الحد المسموح به للمحاولات. انتظر قليلًا ثم أعد المحاولة.",
+  "ng_welcome_to_hermes": "مرحبًا بك في Ares",
+  "ng_add_a_gateway": "إضافة بوابة",
+  "ng_connect_to_your_hermes_agent_dashboard": "اتصل بلوحة تحكم Hermes Agent. يكفي عنوان واحد وتسجيل الدخول مرة واحدة للوصول إلى محادثاتك وأدواتك وإعداداتك. لن يُرسل أي شيء حتى تسجّل الدخول.",
+  "ng_connect_to_another_hermes_agent_dashboard": "اتصل بلوحة تحكم أخرى لـ Hermes Agent. ستبقى مسجّل الدخول إلى لوحات التحكم التي حفظتها.",
+  "ng_dashboard_address": "عنوان لوحة التحكم",
+  "ng_testing": "جارٍ الاختبار…",
+  "ng_test": "اختبار",
+  "ng_where_your_hermes_dashboard_runs_lan": "مكان تشغيل لوحة تحكم Hermes: عبر LAN أو Tailscale أو HTTPS.",
+  "ng_find_on_my_network": "بحث في شبكتي",
+  "ng_which_address_do_i_use": "أي عنوان أستخدم؟",
+  "ng_behind_cloudflare_access": "هل يحمي Cloudflare Access هذا العنوان؟",
+  "ng_need_a_client_certificate": "هل تحتاج إلى شهادة عميل؟",
+  "ng_this_address_isn_t_private_and": "هذا العنوان ليس خاصًا ولا يستخدم https://، لذا ستنتقل كلمة مرورك ومحادثاتك عبر الإنترنت دون تشفير. استخدم https:// أو Tailscale أو شبكتك الخاصة بدلًا من ذلك.",
+  "ng_continue_to_sign_in": "المتابعة لتسجيل الدخول",
+  "ng_use_the_classic_interface_instead": "استخدام الواجهة التقليدية بدلًا من ذلك",
+  "ng_if_cloudflare_access_protects_this_address": "إذا كان Cloudflare Access يحمي هذا العنوان، فأنشئ رمز خدمة في Cloudflare Zero Trust (Access، ثم Service credentials)، وأضف إلى تطبيق Access سياسة Service Auth لهذا الرمز.",
+  "ng_a_service_token_is_saved_for": "يوجد رمز خدمة محفوظ لهذا العنوان",
+  "ng_forget": "إزالة من المحفوظات",
+  "ng_client_id": "معرّف العميل (Client ID)",
+  "ng_client_secret": "سرّ العميل (Client Secret)",
+  "ng_stored_encrypted_on_this_phone_and": "تُحفظ هذه البيانات مشفّرة على هذا الهاتف ولا تُرسَل إلا إلى هذا العنوان.",
+  "ng_hermes_is_reachable": "يمكن الوصول إلى Hermes",
+  "ng_hermes_is_reachable_2": "يمكن الوصول إلى Hermes {version}",
+  "@ng_hermes_is_reachable_2": {
+    "placeholders": {
+      "version": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_sign_in_is_tested_next_then": "الخطوة التالية هي اختبار تسجيل الدخول، ثم المحادثة",
+  "ng_agent_gateway": "بوابة الوكيل",
+  "ng_running": "قيد التشغيل",
+  "ng_stopped": "متوقف",
+  "ng_username_password": "اسم المستخدم وكلمة المرور",
+  "ng_browser": "المتصفح",
+  "ng_in_the_browser_sso": "في المتصفح (SSO)",
+  "ng_profiles": "الملفات الشخصية",
+  "ng_this_dashboard_offers_neither_a_username": "لا توفّر لوحة التحكم هذه مزوّدًا للمصادقة باسم المستخدم وكلمة المرور، ولا تتيح تسجيل الدخول عبر المتصفح. حدّث Hermes أو اضبط مزوّد المصادقة باسم المستخدم وكلمة المرور على الخادم.",
+  "ng_the_auth_gate_is_off_on": "التحقق من الهوية معطّل في لوحة التحكم هذه. يمكن لأي شخص يصل إليها استخدام وكيلك.",
+  "ng_couldn_t_reach_the_dashboard": "تعذّر الوصول إلى لوحة التحكم",
+  "ng_check_the_address_and_port_9119": "{reason}\n\nتحقّق من العنوان والمنفذ (9119 افتراضيًا). إذا لم تكن لوحة التحكم قيد التشغيل بعد، فنفّذ هذا الأمر على الخادم:\nhermes dashboard --host 0.0.0.0",
+  "@ng_check_the_address_and_port_9119": {
+    "placeholders": {
+      "reason": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_that_isn_t_a_hermes_dashboard": "هذه ليست لوحة تحكم Hermes",
+  "ng_something_answered_but_not_a_hermes_2": "وصل ردّ، لكنه ليس من لوحة تحكم Hermes. استخدم عنوان لوحة التحكم، لا عنوان خادم API (المنفذ 8642).",
+  "ng_something_answered_http_but_not_a_2": "وصل ردّ (HTTP {status})، لكنه ليس من لوحة تحكم Hermes. استخدم عنوان لوحة التحكم، لا عنوان خادم API (المنفذ 8642).",
+  "@ng_something_answered_http_but_not_a_2": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_cloudflare_access_stopped_the_request": "أوقف Cloudflare Access الطلب",
+  "ng_cloudflare_access_turned_down_the_service": "رفض Cloudflare Access رمز الخدمة (HTTP {status}). تحقّق من معرّف العميل (Client ID) وسرّه (Client Secret) ومن سياسة Service Auth.",
+  "@ng_cloudflare_access_turned_down_the_service": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_add_a_cloudflare_access_service_token_2": "أضف رمز خدمة Cloudflare Access أدناه، ثم أعد الاختبار.",
+  "ng_a_client_certificate_is_needed": "يلزم تقديم شهادة عميل",
+  "ng_this_server_asks_for_a_client": "يطلب هذا الخادم شهادة عميل قبل أن يستجيب. اختر أدناه الشهادة التي منحك إياها، ثم أعد الاختبار.",
+  "ng_this_dashboard_doesn_t_ask_for": "لا تطلب لوحة التحكم هذه تسجيل الدخول.",
+  "ng_use_the_dashboard_username_and_password": "استخدم اسم المستخدم وكلمة المرور المحدّدين للوحة التحكم على {address}، أو سجّل الدخول عبر المتصفح.",
+  "@ng_use_the_dashboard_username_and_password": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_use_the_dashboard_username_and_password_2": "استخدم اسم المستخدم وكلمة المرور المحدّدين للوحة التحكم على {address}.",
+  "@ng_use_the_dashboard_username_and_password_2": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_sign_in_to_in_your_browser": "سجّل الدخول إلى {address} عبر المتصفح باستخدام الحساب الذي تستخدمه لوحة التحكم هناك.",
+  "@ng_sign_in_to_in_your_browser": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_gateway": "البوابة: {address}",
+  "@ng_gateway": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_profile": "الملف الشخصي",
+  "ng_server_default": "الإعداد الافتراضي للخادم",
+  "ng_continue": "متابعة",
+  "ng_username": "اسم المستخدم",
+  "ng_signing_in": "جارٍ تسجيل الدخول…",
+  "ng_waiting_for_the_browser": "بانتظار المتصفح…",
+  "ng_sign_in_with_browser": "تسجيل الدخول عبر المتصفح",
+  "ng_finish_signing_in_on_the_page": "أكمل تسجيل الدخول في الصفحة التي فُتحت. ستعود تلقائيًا إلى Hermes عند الانتهاء.",
+  "ng_use_a_different_gateway": "استخدام بوابة أخرى",
+  "ng_same_wi_fi_or_local_network": "شبكة Wi-Fi نفسها أو الشبكة المحلية نفسها",
+  "ng_use_the_server_s_local_address": "استخدم العنوان المحلي للخادم ومنفذه، مثل 192.168.1.20:9119. شغّل لوحة التحكم باستخدام --host 0.0.0.0 لتتمكن الأجهزة الأخرى من الوصول إليها.",
+  "ng_tailscale": "Tailscale",
+  "ng_turn_on_tailscale_on_this_phone": "شغّل Tailscale على هذا الهاتف واستخدم عنوان الخادم على Tailscale، مثل 100.64.0.1:9119، أو اسمه المنتهي بـ .ts.net. يعمل هذا الاتصال خارج المنزل أيضًا.",
+  "ng_use_your_https_address_when_the": "استخدم عنوان https:// عندما تكون لوحة التحكم خلف وكيل مزوّد بشهادة. يجب أن يسمح الوكيل أيضًا بتمرير طلبات ترقية الاتصال إلى WebSocket على المسار /api/ws.",
+  "ng_start_the_dashboard_on_the_server": "شغّل لوحة التحكم على الخادم:",
+  "ng_enter_a_port_from_1_to": "أدخل رقم منفذ من 1 إلى 65535.",
+  "ng_looks_for_hermes_dashboards_on_port": "يبحث عن لوحات تحكم Hermes على المنفذ 9119 في شبكة Wi-Fi هذه، ويفحص أيضًا أجهزة الكمبيوتر التي حفظتها سابقًا.",
+  "ng_looks_for_hermes_dashboards_on_ports": "يبحث عن لوحات تحكم Hermes على المنفذين 9119 و{port} في شبكة Wi-Fi هذه، ويتحقق أيضًا من أجهزة الكمبيوتر التي حفظتها سابقًا.",
+  "@ng_looks_for_hermes_dashboards_on_ports": {
+    "placeholders": {
+      "port": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_other_port_optional": "منفذ آخر (اختياري)",
+  "ng_no_dashboards_answered_start_one_with": "لم تستجب أي لوحة تحكم. شغّل إحداها بالأمر hermes dashboard --host 0.0.0.0، أو أدخل عنوانها.",
+  "ng_using_tailscale_or_a_vpn_those": "هل تستخدم Tailscale أو شبكة VPN؟ لا يمكن البحث في هذه الشبكات. أدخل بدلًا من ذلك عنوان جهاز الكمبيوتر الذي يبدأ بـ 100.x أو اسمه المنتهي بـ .ts.net.",
+  "ng_search_again": "البحث مجددًا",
+  "ng_insights": "إحصاءات الاستخدام",
+  "ng_couldn_t_load_insights": "تعذّر تحميل إحصاءات الاستخدام",
+  "ng_sessions": "الجلسات",
+  "ng_tokens": "الرموز النصية",
+  "ng_est_cost": "التكلفة التقديرية",
+  "ng_daily_tokens": "استهلاك الرموز اليومي",
+  "ng_models": "النماذج",
+  "ng_tools": "الأدوات",
+  "ng_hermes_is_waiting_for_you": "ينتظر Hermes ردّك.",
+  "ng_hermes_replied": "ردّ Hermes",
+  "ng_the_turn_finished": "انتهت الجولة.",
+  "ng_off": "متوقف",
+  "ng_minimal": "أدنى مستوى",
+  "ng_low": "منخفض",
+  "ng_medium": "متوسط",
+  "ng_high": "مرتفع",
+  "ng_extra_high": "مرتفع جدًا",
+  "ng_max": "أقصى مستوى",
+  "ng_ultra": "فائق",
+  "ng_default": "افتراضي",
+  "ng_couldn_t_switch_model": "تعذّر تبديل النموذج: {error}",
+  "@ng_couldn_t_switch_model": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_model": "النموذج",
+  "ng_thinking_2": "التفكير",
+  "ng_search_models": "البحث عن نموذج",
+  "ng_no_models_match": "لا توجد نماذج تطابق عوامل التصفية هذه.",
+  "privacy_policy": "سياسة الخصوصية",
+  "report_ai_output": "الإبلاغ عن محتوى أنشأه الذكاء الاصطناعي",
+  "ng_couldn_t_load_models": "تعذّر تحميل النماذج: {error}",
+  "@ng_couldn_t_load_models": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_no_providers_are_set_up_on": "لم يُضبط أي مزوّد على هذه البوابة بعد.",
+  "ng_starred": "المميّزة بنجمة",
+  "ng_recent": "الأخيرة",
+  "ng_more": "المزيد",
+  "ng_archived_chats": "المحادثات المؤرشفة",
+  "ng_projects": "المشاريع",
+  "ng_chats_grouped_by_project_and_workspace": "المحادثات مرتبة حسب المشروع ومساحة العمل",
+  "ng_agent": "الوكيل",
+  "ng_memory": "الذاكرة",
+  "ng_what_hermes_remembers_about_you": "ما يتذكّره Hermes عنك",
+  "ng_skills_library": "مكتبة المهارات",
+  "ng_browse_and_read_installed_skills": "تصفّح المهارات المثبّتة واقرأها",
+  "ng_cron_editor": "محرّر Cron",
+  "ng_edit_schedules_prompts_and_delivery": "تعديل مواعيد التشغيل والتعليمات ووجهات الإرسال",
+  "ng_config_file": "ملف الإعدادات",
+  "ng_edit_config_yaml_on_the_gateway": "تعديل ملف config.yaml على البوابة",
+  "ng_models_and_providers": "النماذج والمزوّدون",
+  "ng_model_management": "إدارة النماذج",
+  "ng_default_fallback_and_auxiliary_models": "النماذج الافتراضية والاحتياطية والمساعدة",
+  "ng_provider_sign_in": "تسجيل الدخول إلى المزوّد",
+  "ng_connect_provider_accounts_with_oauth": "ربط حسابات المزوّدين باستخدام OAuth",
+  "ng_nous_portal": "Nous Portal",
+  "ng_subscription_credits_and_usage": "الاشتراك والرصيد والاستخدام",
+  "ng_interface": "الواجهة",
+  "ng_switch_to_the_classic_interface": "التبديل إلى الواجهة الكلاسيكية",
+  "ng_turns_nextgen_off_you_can_turn": "يُوقف واجهة NextGen. يمكنك تفعيلها مجددًا من الإعدادات.",
+  "ng_restored": "تمت الاستعادة",
+  "ng_archived": "تمت الأرشفة",
+  "ng_couldn_t_load_archived_chats": "تعذّر تحميل المحادثات المؤرشفة",
+  "ng_nothing_archived": "لا توجد محادثات مؤرشفة",
+  "ng_restore": "استعادة",
+  "ng_saved_new_chats_use_it": "حُفظ الإعداد. ستستخدمه المحادثات الجديدة.",
+  "ng_couldn_t_save": "تعذّر الحفظ: {error}",
+  "@ng_couldn_t_save": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_saving": "جارٍ الحفظ…",
+  "ng_today": "اليوم، {time}",
+  "@ng_today": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_mon": "الاثنين",
+  "ng_tue": "الثلاثاء",
+  "ng_wed": "الأربعاء",
+  "ng_thu": "الخميس",
+  "ng_fri": "الجمعة",
+  "ng_sat": "السبت",
+  "ng_sun": "الأحد",
+  "ng_scheduled": "المهام المجدولة",
+  "ng_new_job": "مهمة جديدة",
+  "ng_couldn_t_load_scheduled_jobs": "تعذّر تحميل المهام المجدولة",
+  "ng_nothing_scheduled": "لا توجد مهام مجدولة",
+  "ng_ask_hermes_to_do_something_on": "اطلب من Hermes جدولة مهمة، أو أضف مهمة هنا.",
+  "ng_active": "نشطة",
+  "ng_paused": "متوقفة مؤقتًا",
+  "ng_next": "التشغيل التالي: {when}",
+  "@ng_next": {
+    "placeholders": {
+      "when": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_last": "آخر تشغيل: {when}",
+  "@ng_last": {
+    "placeholders": {
+      "when": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_last_2": "آخر تشغيل: {when} · {result}",
+  "@ng_last_2": {
+    "placeholders": {
+      "when": {
+        "type": "Object"
+      },
+      "result": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_job": "المهمة {id}",
+  "@ng_job": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_delete": "حذف",
+  "ng_delete_this_job": "هل تريد حذف هذه المهمة؟",
+  "ng_it_stops_running_past_runs_stay": "لن تُشغّل هذه المهمة مجددًا. تبقى نتائج التشغيل السابقة في محادثاتك.",
+  "ng_next_run": "التشغيل التالي: {when}",
+  "@ng_next_run": {
+    "placeholders": {
+      "when": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_delivers_to": "تُرسَل النتائج إلى {target}",
+  "@ng_delivers_to": {
+    "placeholders": {
+      "target": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_run_now": "تشغيل الآن",
+  "ng_started": "بدأ التشغيل",
+  "ng_pause": "إيقاف مؤقت",
+  "ng_resume": "استئناف",
+  "ng_resumed": "استُؤنف التشغيل",
+  "ng_prompt": "التعليمات",
+  "ng_runs": "سجلّ التشغيل",
+  "ng_no_runs_yet": "لم تُشغّل المهمة بعد.",
+  "ng_enter_a_schedule_and_a_prompt": "حدّد موعد التشغيل وأدخل التعليمات.",
+  "ng_name_optional": "الاسم (اختياري)",
+  "ng_schedule": "جدول التشغيل",
+  "ng_every_1h_0_9_or_30m": "every 1h، أو 0 9 * * *، أو 30m",
+  "ng_create": "إنشاء",
+  "ng_unpin": "إلغاء التثبيت",
+  "ng_pin": "تثبيت",
+  "ng_rename": "إعادة تسمية",
+  "ng_archive": "أرشفة",
+  "ng_delete_this_chat": "هل تريد حذف هذه المحادثة؟",
+  "ng_it_is_removed_from_the_gateway": "ستُحذف المحادثة من البوابة ولن تظهر على أي جهاز.",
+  "ng_search_chats": "البحث في المحادثات",
+  "ng_pinned": "المحادثات المثبّتة",
+  "ng_no_chats_match": "لا توجد محادثات تطابق بحثك.",
+  "ng_no_chats_yet": "لا توجد محادثات بعد.",
+  "ng_nothing_is_running": "لا شيء قيد التشغيل.",
+  "ng_nothing_is_waiting_on_you": "لا شيء ينتظر تدخّلك.",
+  "ng_settings": "الإعدادات",
+  "ng_all": "الكل",
+  "ng_needs_you": "بانتظار تدخّلك · {count}",
+  "@ng_needs_you": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_needs_you_2": "بانتظار تدخّلك",
+  "ng_gateways": "البوابات",
+  "ng_classic_connection": "{address} · اتصال كلاسيكي",
+  "@ng_classic_connection": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_gateway_2": "البوابة",
+  "ng_signed_in": "تم تسجيل الدخول",
+  "ng_classic_connection_2": "اتصال كلاسيكي",
+  "ng_in_the_browser": "في المتصفّح",
+  "ng_in_the_browser_as": "في المتصفّح باسم {name}",
+  "@ng_in_the_browser_as": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_not_required": "غير مطلوب",
+  "ng_test_connection": "اختبار الاتصال",
+  "ng_sign_in_again_2": "تسجيل الدخول مجددًا",
+  "ng_sign_out": "تسجيل الخروج",
+  "ng_saved_gateways": "البوابات المحفوظة",
+  "ng_in_use": "قيد الاستخدام",
+  "ng_appearance": "المظهر",
+  "ng_theme": "السمة",
+  "ng_system": "حسب النظام",
+  "ng_light": "فاتحة",
+  "ng_dark": "داكنة",
+  "ng_accent": "لون التمييز",
+  "ng_pure_black": "أسود خالص",
+  "ng_dark_theme_uses_true_black_oled": "تستخدم السمة الداكنة الأسود الخالص لشاشات OLED",
+  "ng_glow": "التوهّج",
+  "ng_soft_accent_light_behind_each_screen": "توهّج خافت بلون التمييز خلف كل شاشة",
+  "ng_the_new_interface_turn_off_to": "هذه هي الواجهة الجديدة. عطّلها للعودة إلى الواجهة الكلاسيكية. بواباتك ومحادثاتك متاحة في كلتا الواجهتين.",
+  "ng_more_settings": "المزيد من الإعدادات",
+  "ng_voice_notifications_language_backups_and_the": "الصوت والإشعارات واللغة والنُسخ الاحتياطية وإعدادات البوابة",
+  "ng_licences": "التراخيص",
+  "ng_sign_out_of": "هل تريد تسجيل الخروج من {name}؟",
+  "@ng_sign_out_of": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_this_gateway_and_its_saved_sign": "ستُزال هذه البوابة وبيانات الدخول المحفوظة لها من هذا الهاتف في كلتا الواجهتين. ستبقى محادثاتك على البوابة.",
+  "ng_password_or_browser": "كلمة المرور أو المتصفّح",
+  "ng_unsupported": "غير مدعوم",
+  "ng_background_task_finished": "انتهت المهمة التي كانت تعمل في الخلفية",
+  "ng_background_process_finished": "انتهت العملية التي كانت تعمل في الخلفية",
+  "ng_system_message": "رسالة من النظام",
+  "ng_summary": "الملخّص",
+  "classic_interface_only": "للواجهة الكلاسيكية فقط",
+  "classic_only_settings_hint": "الأقسام التي تحمل علامة «للواجهة الكلاسيكية فقط» تغيّر مظهر الواجهة الكلاسيكية ومحادثاتها، ولا تؤثّر في NextGen. يمكنك تخصيص مظهر NextGen من إعداداتها.",
+  "attachment_preview_too_large": "الملف أكبر من أن يُعايَن هنا. اختر «حفظ» أو «مشاركة» لتنزيله على هاتفك (حتى 1 GB).",
+  "attachment_over_phone_limit": "يتجاوز حجم الملف حدّ التنزيل البالغ 1 GB. افتح لوحة التحكم لتنزيله.",
+  "attachment_downloading_percent": "جارٍ التنزيل… {percent}%",
+  "@attachment_downloading_percent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "attachment_downloading_mb": "جارٍ التنزيل… {megabytes} MB",
+  "@attachment_downloading_mb": {
+    "placeholders": {
+      "megabytes": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_attachment_too_large_for_gateway": "يتجاوز حجم {name} حدّ هذه البوابة البالغ 12 MB. حدّث Hermes لإرسال ملفات يصل حجمها إلى 100 MB.",
+  "@ng_attachment_too_large_for_gateway": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_couldn_t_upload": "تعذّر رفع {name}.",
+  "@ng_couldn_t_upload": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_uploading_percent": "جارٍ الرفع… {percent}%",
+  "@ng_uploading_percent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_show_tasks": "إظهار المهام",
+  "ng_hide_tasks": "إخفاء المهام",
+  "ng_goal": "الهدف",
+  "ng_loop": "حلقة التكرار",
+  "ng_heartbeat": "النبض الدوري",
+  "ng_goal_working": "العمل جارٍ",
+  "ng_goal_waiting": "قيد الانتظار",
+  "ng_goal_blocked": "متعذّر التقدّم",
+  "ng_goal_done": "مكتمل",
+  "ng_goal_turns_of": "الجولات: {used} من {max}",
+  "@ng_goal_turns_of": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_goal_turn": "الجولة {used}",
+  "@ng_goal_turn": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_loop_held": "معلّقة بانتظار الهدف",
+  "ng_loop_finished": "انتهت",
+  "ng_loop_running": "قيد التشغيل",
+  "ng_loop_runs_of": "مرّات التشغيل: {fired} من {times}",
+  "@ng_loop_runs_of": {
+    "placeholders": {
+      "fired": {
+        "type": "int"
+      },
+      "times": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_loop_runs": "{count, plural, =1{تشغيل واحد} other{عدد مرّات التشغيل: {count}}}",
+  "@ng_loop_runs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_loop_next": "الموعد التالي: {time}",
+  "@ng_loop_next": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_loop_due_now": "حان موعد التشغيل",
+  "ng_every_seconds": "كل {seconds} s",
+  "@ng_every_seconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_every_minutes": "كل {minutes} min",
+  "@ng_every_minutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_every_hours": "كل {hours} h",
+  "@ng_every_hours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_every_hours_minutes": "كل {hours} h و{minutes} min",
+  "@ng_every_hours_minutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_heartbeat_fired": "عدد النبضات: {count}",
+  "@ng_heartbeat_fired": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_heartbeat_last_fired": "آخر نبضة: {time}",
+  "@ng_heartbeat_last_fired": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_wait_until": "بانتظار حلول {time}",
+  "@ng_wait_until": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_wait_resume": "بانتظار الاستئناف",
+  "ng_wait_other_chat": "بانتظار محادثة أخرى",
+  "ng_wait_process": "بانتظار العملية {pid}",
+  "@ng_wait_process": {
+    "placeholders": {
+      "pid": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_control_open": "فتح لوحة الهدف والأتمتة",
+  "ng_control_title": "الهدف والأتمتة",
+  "ng_control_subtitle": "الهدف الذي تسعى إليه هذه المحادثة والمهام التي تعمل تلقائيًا.",
+  "ng_contract_outcome": "النتيجة المطلوبة",
+  "ng_contract_verification": "التحقّق",
+  "ng_contract_constraints": "القيود",
+  "ng_contract_boundaries": "الحدود",
+  "ng_contract_stop_when": "شروط التوقّف",
+  "ng_subgoals": "الأهداف الفرعية",
+  "ng_subgoal_add_placeholder": "أضف هدفًا فرعيًا",
+  "ng_add": "إضافة",
+  "ng_subgoal_remove": "إزالة الهدف الفرعي",
+  "ng_goal_checks": "الفحوصات",
+  "ng_gate_not_run": "لم يُنفّذ بعد",
+  "ng_gate_attempts": "المحاولات: {attempts} من {tries}",
+  "@ng_gate_attempts": {
+    "placeholders": {
+      "attempts": {
+        "type": "int"
+      },
+      "tries": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_gate_exit": "رمز الخروج: {code}",
+  "@ng_gate_exit": {
+    "placeholders": {
+      "code": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_resume_now": "استئناف الآن",
+  "ng_goal_clear": "مسح الهدف",
+  "ng_goal_clear_title": "هل تريد مسح هذا الهدف؟",
+  "ng_goal_clear_message": "سيتوقّف الوكيل عن العمل على هذا الهدف، وستُحذف أهدافه الفرعية وفحوصاته أيضًا.",
+  "ng_subgoal_remove_title": "هل تريد إزالة هذا الهدف الفرعي؟",
+  "ng_subgoal_remove_message": "لن يعود «{text}» جزءًا من الهدف.",
+  "@ng_subgoal_remove_message": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_subgoals_clear_title": "هل تريد مسح كل الأهداف الفرعية؟",
+  "ng_subgoals_clear_message": "سيبقى عنوان الهدف، لكن ستُحذف كل أهدافه الفرعية.",
+  "ng_clear_all": "مسح الكل",
+  "ng_clear": "مسح",
+  "ng_dismiss": "إغلاق",
+  "ng_loop_stop_title": "هل تريد إيقاف حلقة التكرار هذه؟",
+  "ng_heartbeat_clear_title": "هل تريد مسح هذا النبض الدوري؟",
+  "ng_wont_fire_again": "لن يتكرّر التشغيل.",
+  "ng_loop_self_paced": "بوتيرة تلقائية",
+  "ng_loop_until": "حتى يتحقّق الشرط: {condition}",
+  "@ng_loop_until": {
+    "placeholders": {
+      "condition": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_loop_waits_for_goal": "تنتظر الحلقة ما دام العمل على الهدف جاريًا.",
+  "ng_loop_awaiting_reply": "بانتظار ردّ الوكيل.",
+  "ng_loop_stopped_reason": "توقّفت: {reason}",
+  "@ng_loop_stopped_reason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_hide_subagents": "إخفاء الوكلاء الفرعيين",
+  "ng_show_subagents": "إظهار الوكلاء الفرعيين",
+  "ng_subagent": "وكيل فرعي",
+  "ng_subagent_queued": "في قائمة الانتظار",
+  "ng_subagent_starting": "جارٍ البدء…",
+  "ng_subagent_running": "قيد التشغيل",
+  "ng_subagent_done": "أنهى عمله",
+  "ng_subagent_failed": "فشل",
+  "ng_subagent_stopped": "متوقّف",
+  "ng_subagent_stop": "إيقاف الوكيل الفرعي",
+  "ng_subagent_tools": "{count, plural, =1{أداة واحدة} other{عدد الأدوات: {count}}}",
+  "@ng_subagent_tools": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_mark_as_read": "وضع علامة «مقروءة»",
+  "ng_mark_as_unread": "وضع علامة «غير مقروءة»",
+  "ng_chats_unread": "{count, plural, =1{المحادثات، محادثة واحدة غير مقروءة} other{المحادثات، عدد المحادثات غير المقروءة: {count}}}",
+  "@ng_chats_unread": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_unread_finished": "انتهى التشغيل، وهناك ردّ غير مقروء",
+  "ng_unread_updates": "التشغيل جارٍ، وهناك تحديثات غير مقروءة",
+  "ng_notifications": "الإشعارات",
+  "ng_notifications_hint": "الردود والطلبات أثناء عمل Ares في الخلفية",
+  "ng_notify_replies": "الردود",
+  "ng_notify_replies_hint": "عند اكتمال جولة أو فشلها في المحادثة المفتوحة",
+  "ng_notify_requests": "طلبات الموافقة والأسئلة",
+  "ng_notify_requests_hint": "تنبيه عندما ينتظر الوكيل تدخّلك، مع خياري «السماح مرة واحدة» و«رفض»",
+  "ng_keep_running": "إبقاء الاتصال مفتوحًا أثناء إعداد الردّ",
+  "ng_keep_running_hint": "يبقى الاتصال مفتوحًا في الخلفية حتى يكتمل الردّ، ويظهر إشعار صامت خلال ذلك",
+  "ng_battery_settings": "تحسين استهلاك البطارية",
+  "ng_battery_settings_hint": "اسمح بتشغيل Ares في الخلفية لتصلك الإشعارات في وقتها",
+  "ng_send_test_notification": "إرسال إشعار تجريبي",
+  "ng_test_notification_title": "إشعارات Ares تعمل",
+  "ng_test_notification_body": "ستظهر الردود والطلبات بهذا الشكل.",
+  "ng_test_notification_sent": "أُرسل الإشعار التجريبي",
+  "ng_notifications_blocked": "الإشعارات محظورة. اسمح بها في إعدادات Android.",
+  "ng_notifications_off_hint": "الإشعارات معطّلة، لذا لن يرسل Ares أي إشعار أثناء عمله في الخلفية.",
+  "ng_insights_building": "جارٍ إعداد التقرير. إذا كانت الفترة طويلة، فقد يستغرق إعداده دقيقة عند طلبه أول مرة.",
+  "ng_insights_timed_out": "استغرقت البوابة وقتًا أطول من اللازم لإعداد التقرير. حاول مجددًا أو اختر فترة أقصر.",
+  "ng_dock_goal_active": "الهدف نشط",
+  "ng_dock_goal_paused": "الهدف متوقّف مؤقتًا",
+  "ng_dock_goal_waiting": "الهدف قيد الانتظار",
+  "ng_dock_goal_blocked": "تعذّر التقدّم نحو الهدف",
+  "ng_dock_goal_done": "اكتمل الهدف",
+  "ng_dock_turn_of": "الجولة {used}/{max}",
+  "@ng_dock_turn_of": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_dock_turn": "الجولة {used}",
+  "@ng_dock_turn": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_dock_subagents": "{count, plural, =1{وكيل فرعي واحد} other{عدد الوكلاء الفرعيين: {count}}}",
+  "@ng_dock_subagents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_dock_subagents_done": "عدد من أنهوا العمل: {count}",
+  "@ng_dock_subagents_done": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_dock_tasks": "المهام: {done}/{total}",
+  "@ng_dock_tasks": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_dock_previous_tasks": "المهام السابقة: {done}/{total}",
+  "@ng_dock_previous_tasks": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_dock_manage": "إدارة",
+  "ng_recent_notifications": "الإشعارات الأخيرة",
+  "ng_recent_notifications_hint": "الإشعارات التي حاول Ares إرسالها وما إذا كان Android قد عرضها",
+  "ng_recent_notifications_empty": "لا توجد إشعارات بعد. ستظهر المحاولات هنا عند وجود ردّ أو سؤال أو إخفاق يستدعي إشعارك.",
+  "ng_notify_permission_granted": "مُنح الإذن",
+  "ng_notify_permission_denied": "رُفض الإذن",
+  "ng_notify_master_on": "الإشعارات مفعّلة",
+  "ng_notify_master_off": "الإشعارات معطّلة",
+  "ng_models_default": "النموذج الافتراضي",
+  "ng_models_change": "تغيير",
+  "ng_models_custom_endpoint": "يعمل عبر نقطة اتصال مخصّصة. يمكنك تغييرها على البوابة.",
+  "ng_models_context_window": "نافذة السياق",
+  "ng_models_token_count": "عدد الرموز النصية: {count}",
+  "@ng_models_token_count": {"placeholders": {"count": {"type": "String"}}},
+  "ng_models_context_override": "ضُبطت نافذة السياق على البوابة. عدد الرموز المكتشف تلقائيًا: {count}.",
+  "@ng_models_context_override": {"placeholders": {"count": {"type": "String"}}},
+  "ng_models_max_output": "الحدّ الأقصى للمخرجات",
+  "ng_models_input_price": "سعر الإدخال",
+  "ng_models_output_price": "سعر الإخراج",
+  "ng_models_cache_price": "سعر المدخلات المخزّنة مؤقتًا",
+  "ng_models_per_million": "{price} لكل مليون رمز نصي",
+  "@ng_models_per_million": {"placeholders": {"price": {"type": "String"}}},
+  "ng_models_price_pair": "{input} للإدخال · {output} للإخراج لكل مليون رمز نصي",
+  "@ng_models_price_pair": {"placeholders": {"input": {"type": "String"}, "output": {"type": "String"}}},
+  "ng_models_free": "مجاني",
+  "ng_models_vision": "الرؤية",
+  "ng_models_reasoning": "الاستدلال",
+  "ng_models_fast": "الوضع السريع",
+  "ng_models_in_use": "قيد الاستخدام",
+  "ng_models_count": "{count, plural, one{عدد النماذج: {count}} other{عدد النماذج: {count}}}",
+  "@ng_models_count": {"placeholders": {"count": {"type": "int"}}},
+  "ng_models_rate_limited": "معدّل الطلبات مقيّد",
+  "ng_models_plan_locked": "غير مشمول في خطتك",
+  "ng_models_unsaved": "تغييرات غير محفوظة",
+  "ng_models_discard": "تجاهل",
+  "ng_models_aux_hint": "تستخدم المهام المساعدة النموذج الافتراضي ما لم تحدّد لها نموذجًا خاصًا.",
+  "ng_models_uses_default": "يستخدم النموذج الافتراضي",
+  "ng_models_thinking_level": "مستوى التفكير",
+  "ng_models_providers": "المزوّدون",
+  "ng_models_saved": "تم الحفظ",
+  "ng_aux_vision": "الرؤية",
+  "ng_aux_vision_hint": "يقرأ الصور ولقطات الشاشة",
+  "ng_aux_compression": "الضغط",
+  "ng_aux_compression_hint": "يختصر المحادثات الطويلة لتلائم نافذة السياق",
+  "ng_aux_approval": "الموافقة",
+  "ng_aux_approval_hint": "يقرّر ما إذا كان يمكن تنفيذ الأمر بأمان دون طلب موافقتك",
+  "ng_aux_mcp": "MCP",
+  "ng_aux_mcp_hint": "يختار أدوات MCP المناسبة للاستخدام",
+  "ng_aux_title_generation": "عناوين المحادثات",
+  "ng_aux_title_generation_hint": "يضع عناوين للمحادثات الجديدة",
+  "ng_aux_review": "المراجعة",
+  "ng_aux_review_hint": "يراجع العمل عند تشغيل الأمر /review",
+  "ng_aux_voice_chat": "المحادثة الصوتية",
+  "ng_aux_voice_chat_hint": "يردّ في وضع المحادثة الصوتية",
+  "ng_aux_triage_specifier": "فرز المهام",
+  "ng_aux_triage_specifier_hint": "يحوّل بطاقة Kanban من سطر واحد إلى مواصفات مفصّلة",
+  "ng_aux_kanban_decomposer": "تقسيم مهام Kanban",
+  "ng_aux_kanban_decomposer_hint": "يقسّم بطاقة Kanban إلى مهام أصغر",
+  "ng_aux_profile_describer": "أوصاف الملفات الشخصية",
+  "ng_aux_profile_describer_hint": "يكتب وصفًا موجزًا لكل ملف شخصي",
+  "ng_aux_curator": "منسّق المهارات",
+  "ng_aux_curator_hint": "يراجع كيفية استخدام المهارات",
+  "appearance_save_failed": "تعذّر حفظ هذا التغيير.",
+  "appearance_keep_which_theme": "أي سمة نُبقي؟",
+  "appearance_tour_back": "رجوع",
+  "appearance_tour_finish": "إنهاء",
+  "appearance_tour_next": "التالي",
+  "appearance_tour_close": "إغلاق الجولة",
+  "appearance_dismiss_tip": "إخفاء التلميح",
+  "appearance_search_settings": "البحث في الإعدادات",
+  "appearance_search_show": "إظهار",
+  "appearance_no_matching_setting": "لا يوجد إعداد مطابق.",
+  "appearance_replay_tour": "إعادة الجولة",
+  "appearance_show_tips_again": "أظهر التلميحات مجددًا",
+  "appearance_window_translucency_unavailable": "شفافية النافذة غير متاحة على هذا الجهاز. لا يدعمها لينكس، وترسم إصدارات آبل وويندوز نافذة Flutter معتمة.",
+  "appearance_imported_themes": "السمات المستوردة",
+  "appearance_import_theme_file": "استيراد ملف سمة",
+  "appearance_remove_theme": "حذف السمة",
+  "appearance_chat_font": "خط الدردشة",
+  "appearance_terminal_font": "خط الطرفية",
+  "appearance_font_platform": "خط الجهاز",
+  "appearance_automatic": "تلقائي",
+  "appearance_force_left_to_right": "إجبار من اليسار",
+  "appearance_force_right_to_left": "إجبار من اليمين",
+  "appearance_user_bubble_opacity": "شفافية فقاعة رسائلك",
+  "appearance_inline_embeds": "المحتوى المضمّن",
+  "appearance_inline_embeds_hint": "تُحمَّل المعاينات الغنية من مواقع خارجية (YouTube وX و…). يعرض «اسأل» عنصرًا نائبًا حتى تسمح بكل واحدة؛ ويحمّلها «دائمًا» تلقائيًا؛ ويُبقي «إيقاف» الروابط عادية.",
+  "appearance_embeds_ask": "اسأل",
+  "appearance_embeds_always": "دائمًا",
+  "appearance_embeds_off": "إيقاف",
+  "appearance_embeds_reset": "{count, plural, =1{إعادة تعيين خدمة واحدة مسموح بها} other{إعادة تعيين الخدمات المسموح بها: {count}}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "تحميل",
+  "appearance_embed_always_allow": "السماح دائمًا بـ {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "جارٍ تحميل المعاينة…",
+  "appearance_embed_image_failed": "تعذّر تحميل الصورة من {host}. اضغط لفتحها.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "المعاينة غير متاحة",
+  "appearance_emoji_reactions": "تفاعلات الإيموجي",
+  "appearance_celebration_hearts": "قلوب الاحتفال",
+  "appearance_celebration_hearts_hint": "يظهر قلب عندما يصل رد وأنت بعيد.",
+  "appearance_pop_out_companion": "افتح الرفيق في نافذة",
+  "appearance_mosskip": "موسكيب",
+  "appearance_emberbun": "إمبربن",
+  "appearance_tideling": "تايدلينغ",
+  "appearance_my_hatchling": "رفيقي الصغير",
+  "appearance_at_rest": "يستريح",
+  "appearance_working": "يعمل",
+  "appearance_thinking": "يفكّر",
+  "appearance_waiting_for_you": "ينتظرك",
+  "appearance_reply_ready": "الرد جاهز",
+  "appearance_turn_failed": "تعذّر إكمال الدور",
+  "appearance_small": "صغير",
+  "appearance_medium": "متوسط",
+  "appearance_large": "كبير",
+  "appearance_hello": "مرحبًا!",
+  "appearance_unread_reply": "رد غير مقروء",
+  "appearance_compose": "كتابة رسالة",
+  "appearance_say_hello": "إلقاء التحية",
+  "appearance_pet_image_failed": "تعذّر فتح الصورة. اختر صورة PNG أو JPEG أصغر.",
+  "appearance_pet_companion": "الرفيق الصغير",
+  "appearance_pet_companion_hint": "أظهر رفيقًا أثناء الدردشة.",
+  "appearance_adopt_a_companion": "تبنَّ رفيقًا",
+  "appearance_roam_when_idle": "التجوّل أثناء الراحة",
+  "appearance_pet_size": "حجم الرفيق",
+  "appearance_hatch_from_a_local_picture": "فقس رفيق من صورة محلية",
+  "appearance_pet_image_limits": "اختر صورة PNG أو JPEG (حتى ٤ ميبيبايت و٤٠٩٦ بكسل للضلع و٨ ميغابكسل). عاينها أولًا. يحفظ الفقس صورة ٢٤ × ٢٤ بكسل بدلًا من رفيقك المُفقس السابق.",
+  "appearance_choose_picture": "اختيار صورة",
+  "appearance_hatchling_preview": "معاينة الرفيق",
+  "appearance_hatch_and_adopt": "فقس وتبنٍّ",
+  "appearance_discard_draft": "تجاهل المسودة",
+  "appearance_forget_saved_hatchling": "حذف الرفيق المُفقس المحفوظ",
+  "appearance_radio": "الراديو",
+  "appearance_radio_hint": "يأتي البث مباشرةً من {stations}، ولا يبدأ إلا عند الضغط على تشغيل. يبقى البحث عن المحطات على هذا الجهاز.",
+  "@appearance_radio_hint": {
+    "placeholders": {
+      "stations": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_radio_save_failed": "تعذّر حفظ إعدادات الراديو.",
+  "appearance_choose_a_station": "اختيار محطة",
+  "appearance_pause_radio": "إيقاف الراديو مؤقتًا",
+  "appearance_play_radio": "تشغيل الراديو",
+  "appearance_next_station": "المحطة التالية",
+  "appearance_radio_trace_semantics": "نشاط البث. مستويات الصوت غير متاحة، لذا يبقى الخط مستويًا.",
+  "appearance_radio_is_off": "الراديو متوقف",
+  "appearance_paused": "متوقف مؤقتًا",
+  "appearance_connecting": "جارٍ الاتصال…",
+  "appearance_live": "بث مباشر",
+  "appearance_stream_unavailable": "البث غير متاح",
+  "appearance_now_playing": "يُبث الآن: {credit}",
+  "@appearance_now_playing": {
+    "placeholders": {
+      "credit": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_audio_only_waveform_unavailable": "صوت فقط · شكل الموجة غير متاح",
+  "appearance_volume": "مستوى الصوت",
+  "appearance_search_presets": "البحث في المحطات المحفوظة مسبقًا",
+  "appearance_no_stations_found": "لم يُعثر على محطات",
+  "appearance_unpin_station": "إلغاء تثبيت المحطة: {station}",
+  "@appearance_unpin_station": {
+    "placeholders": {
+      "station": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_pin_station": "تثبيت المحطة: {station}",
+  "@appearance_pin_station": {
+    "placeholders": {
+      "station": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_radio_picker_metadata_notice": "عندما تكون هذه القائمة مفتوحة، قد تُعرض معلومات المقطع من جهة البث مباشرةً أثناء التشغيل.",
+  "appearance_message_from_your_companion": "رسالة من رفيقك",
+  "appearance_send_to_the_open_chat": "أرسل إلى الدردشة المفتوحة",
+  "appearance_tour_theme_body": "استورد سمة ألوان من ملف على هذا الجهاز، ثم اختر النسخة التي تريد إبقاءها.",
+  "appearance_tour_fonts_title": "خطوط القراءة",
+  "appearance_tour_fonts_body": "يستخدم نص الدردشة وشفرة الطرفية خطين منفصلين مدمجين مع آريس.",
+  "appearance_tour_direction_title": "اتجاه النص",
+  "appearance_tour_direction_body": "اتركه تلقائيًا، أو أجبر نص المحادثة من اليسار أو من اليمين.",
+  "appearance_tour_pet_title": "الرفيق",
+  "appearance_tour_pet_body": "يبقى الرفيق متوقفًا حتى تتبناه. النافذة المنبثقة تضيف مربع كتابة صغيرًا.",
+  "appearance_tour_radio_body": "يبقى الراديو متوقفًا حتى تفعّله. زر التشغيل هو ما يفتح البث.",
+  "appearance_tip_theme": "تحل السمات المستوردة محل لوحة الألوان المدمجة حتى تلغي الاختيار. تُحفظ الألوان فقط.",
+  "appearance_tip_pet": "يحفظ الرفيق صورة صغيرة واحدة على هذا الجهاز. لا يرفع الصورة التي تفقس منها.",
+  "appearance_theme_import_failed": "تعذّر استيراد هذه السمة. اختر سمة ألوان من VS Code محفوظة في ملف بامتداد vsix أو json أو jsonc."
+}

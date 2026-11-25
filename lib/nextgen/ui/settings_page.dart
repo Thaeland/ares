@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/models/connection.dart';
 import '../../core/screens/settings_screen.dart';
+import '../../core/presentation/presentation_settings.dart';
 import '../../core/services/app_licenses.dart';
 import '../../core/services/background_work_prefs.dart';
 import '../../core/services/notification_prefs.dart';
@@ -312,6 +313,7 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                     onChanged: (v) =>
                         NextGenPreferences.setGlow(scope.prefs, v),
                   ),
+                  PresentationSettingsPanel(preferences: scope.prefs),
                 ],
               ),
             ),

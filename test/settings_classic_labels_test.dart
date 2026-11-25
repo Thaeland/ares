@@ -64,10 +64,20 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    // Drive the settings list's own vertical Scrollable. The list builds
+    // lazily and corrects its offset as the tall appearance panel and the
+    // voice section are laid out; with 300 px drags the Session Sources
+    // header was never on screen between two drags and the run hit the end
+    // of the list. Short drags, with enough of them to cross the whole
+    // screen, keep every header on screen for at least one check.
     final scroll = find
         .descendant(
           of: find.byType(SettingsScreen),
-          matching: find.byType(Scrollable),
+          matching: find.byWidgetPredicate(
+            (widget) =>
+                widget is Scrollable &&
+                widget.axisDirection == AxisDirection.down,
+          ),
         )
         .first;
     for (final section in ['Appearance', 'Voice', 'Session Sources']) {

@@ -1699,5 +1699,37 @@
   "ng_folder_access_unspecified": "O gateway não indicou se é só de leitura ou de leitura e escrita.",
   "ng_folder_read_only": "Só de leitura",
   "ng_folder_read_write": "Leitura e escrita",
-  "ng_website_access": "Acesso ao site"
+  "ng_website_access": "Acesso ao site",
+  "appearance_inline_embeds": "Conteúdo incorporado",
+  "appearance_inline_embeds_hint": "As pré-visualizações enriquecidas são carregadas de sites de terceiros (YouTube, X, …). Perguntar mostra um marcador de posição até permitir cada uma; Sempre carrega-as automaticamente; Desativado mantém ligações simples.",
+  "appearance_embeds_ask": "Perguntar",
+  "appearance_embeds_always": "Sempre",
+  "appearance_embeds_off": "Desativado",
+  "appearance_embeds_reset": "{count, plural, =1{Repor 1 serviço permitido} other{Repor {count} serviços permitidos}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "Carregar",
+  "appearance_embed_always_allow": "Permitir sempre {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "A carregar pré-visualização…",
+  "appearance_embed_image_failed": "Não foi possível carregar a imagem de {host}. Toque para a abrir.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "Pré-visualização indisponível"
 }
