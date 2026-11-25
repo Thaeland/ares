@@ -2215,8 +2215,11 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   void _openCapability(String id) {
     final connection = widget.connection;
     final gateway = _ownedGateway;
+    final owned = gateway == null
+        ? DashboardClient.fromConnection(connection)
+        : null;
     final admin = CapabilityAdmin.fromDashboard(
-      gateway?.dashboard ?? DashboardClient.fromConnection(connection),
+      gateway?.dashboard ?? owned!,
       profile: connection.gatewayProfile,
       rpc: gateway == null
           ? null
@@ -2227,7 +2230,13 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       'agent-policy' => AgentPolicyScreen(admin: admin),
       _ => CapabilityAdminScreen(admin: admin),
     };
-    _push(page);
+    unawaited(
+      pushAndRelease(
+        context,
+        ProfileTheme(connection: connection, nextGen: false, child: page),
+        owned?.close,
+      ),
+    );
   }
 
   void _openMoreEntry(MoreEntry entry) {

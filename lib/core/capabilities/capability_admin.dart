@@ -746,18 +746,37 @@ class CapabilityAdmin {
     bool force = false,
   }) async {
     final scan = await scanHubSkill(identifier);
+    // policy=block never installs, including when the caller passes force.
+    // policy=ask installs only after an explicit confirmation, and that
+    // confirmation is the stock install's force flag.
     if (scan.blocked || (scan.caution && !force)) {
       return HubInstallResult(installed: false, scan: scan);
     }
     final decoded = await _send(
       'POST',
       'skills/hub/install',
-      body: {'identifier': _identifier(identifier)},
+      body: {'identifier': _identifier(identifier), if (force) 'force': true},
       timeout: const Duration(seconds: 45),
     );
     _requireOk(decoded, 'The skill was not installed.');
-    final action = decoded is Map ? decoded['action']?.toString() : null;
-    return HubInstallResult(installed: true, scan: scan, action: action);
+    final action = decoded is Map
+        ? (decoded['name'] ?? decoded['action'])?.toString()
+        : null;
+    return HubInstallResult(
+      installed: _installConfirmed(decoded),
+      scan: scan,
+      action: action,
+    );
+  }
+
+  /// A spawned action (`ok`, `pid`, `name`) has not installed the skill.
+  bool _installConfirmed(Object? decoded) {
+    if (decoded is! Map || decoded['ok'] == false) return false;
+    if (decoded['installed'] == true) return true;
+    final status = '${decoded['status'] ?? ''}'.toLowerCase();
+    return status == 'installed' ||
+        status == 'succeeded' ||
+        status == 'success';
   }
 
   Future<void> updateHubSkills() async {
@@ -782,20 +801,23 @@ class CapabilityAdmin {
   SkillScan _scan(Object? decoded) {
     final map = decoded is Map ? decoded : const {};
     final verdict = '${map['verdict'] ?? ''}'.toLowerCase();
+    final policy = '${map['policy'] ?? ''}'.toLowerCase();
     final findings = <String>[
       for (final row
           in map['findings'] is List ? map['findings'] as List : const [])
         row is Map
-            ? '${row['message'] ?? row['summary'] ?? row['pattern_id'] ?? row}'
+            ? '${row['description'] ?? row['message'] ?? row['summary'] ?? row['pattern_id'] ?? row}'
             : '$row',
     ];
-    final blocked =
-        map['blocked'] == true ||
-        verdict == 'block' ||
-        verdict == 'blocked' ||
-        verdict == 'deny' ||
-        (map['ok'] == false && verdict != 'caution' && verdict != 'warning');
-    final caution = !blocked && (verdict == 'caution' || verdict == 'warning');
+    final reason = '${map['policy_reason'] ?? ''}'.trim();
+    if (reason.isNotEmpty && !findings.contains(reason)) {
+      findings.insert(0, reason);
+    }
+    // Stock hub scans decide with policy: allow, ask, or block. Verdict is
+    // safe, caution, or dangerous and is shown, not used as the gate.
+    // Anything other than allow or ask fails closed and is never installed.
+    final blocked = policy != 'allow' && policy != 'ask';
+    final caution = policy == 'ask';
     return SkillScan(
       verdict: verdict.isEmpty ? (blocked ? 'blocked' : 'clean') : verdict,
       findings: findings,
@@ -971,32 +993,11 @@ class CapabilityAdmin {
         'Give the server a command or an http(s) URL.',
       );
     }
-    final config = await _send(
-      'GET',
-      'config',
-      query: {'include_defaults': 'false'},
+    await _send(
+      'POST',
+      'mcp/servers',
+      body: {'name': server, ...spec.toJson()},
     );
-    if (config is! Map) {
-      throw const CapabilityException('The gateway config could not be read.');
-    }
-    final current = config['mcp_servers'];
-    if (current != null && current is! Map) {
-      throw const CapabilityException(
-        'The gateway returned MCP servers in an unexpected shape.',
-      );
-    }
-    final servers = <String, Object?>{
-      if (current is Map)
-        for (final entry in current.entries)
-          if (entry.key is String) entry.key as String: entry.value,
-    };
-    if (servers.containsKey(server)) {
-      throw const CapabilityException(
-        'A server with that name already exists.',
-      );
-    }
-    servers[server] = spec.toJson();
-    await _send('PUT', 'mcp/servers', body: {'servers': servers});
   }
 
   Future<String> mcpLogs({String? server}) async {
@@ -1326,7 +1327,12 @@ class CapabilityAdmin {
     final browser = decoded['browser'] is Map
         ? decoded['browser'] as Map
         : const {};
-    final mode = '${approvals['mode'] ?? 'manual'}';
+    final rawMode = approvals['mode'];
+    final mode = rawMode == false
+        ? 'off'
+        : rawMode == null
+        ? 'manual'
+        : '$rawMode';
     return AgentPolicy(
       approvalMode: AgentPolicy.modes.contains(mode) ? mode : 'manual',
       approvalTimeout: approvals['timeout'] is num

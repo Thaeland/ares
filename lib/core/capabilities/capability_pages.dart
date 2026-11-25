@@ -2,6 +2,23 @@ import 'package:flutter/material.dart';
 
 import 'capability_admin.dart';
 
+/// Pushes [page] and runs [release] when the route is gone.
+///
+/// A Classic capability page opened without a shared gateway owns a REST
+/// dashboard client. That client is [release]d here, including when the push
+/// fails, and a shared gateway client is left open by passing null.
+Future<void> pushAndRelease(
+  BuildContext context,
+  Widget page,
+  void Function()? release,
+) {
+  return Navigator.of(
+    context,
+  ).push<void>(MaterialPageRoute<void>(builder: (_) => page)).whenComplete(() {
+    release?.call();
+  });
+}
+
 class CapabilityAdminScreen extends StatefulWidget {
   const CapabilityAdminScreen({required this.admin, super.key});
 
@@ -78,11 +95,17 @@ class _SkillsTabState extends State<_SkillsTab> {
   @override
   void initState() {
     super.initState();
+    _identifier.addListener(_onIdentifier);
     _load();
+  }
+
+  void _onIdentifier() {
+    if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
+    _identifier.removeListener(_onIdentifier);
     _identifier.dispose();
     super.dispose();
   }
@@ -115,26 +138,34 @@ class _SkillsTabState extends State<_SkillsTab> {
     }
   }
 
-  bool _caution = false;
+  String? _cautionFor;
 
-  Future<void> _install({required bool force}) async {
+  Future<void> _install({required bool force, String? identifier}) async {
+    final requested = (identifier ?? _identifier.text).trim();
     try {
       final result = await widget.admin.installHubSkill(
-        _identifier.text,
+        requested,
         force: force,
       );
       if (!mounted) return;
       if (!result.installed) {
+        final verdict = result.scan.verdict;
+        final detail = result.scan.findings.join('; ');
         setState(() {
-          _caution = result.scan.caution;
+          _cautionFor = result.scan.caution ? requested : null;
           _error = result.scan.blocked
-              ? 'Install blocked: ${result.scan.findings.join('; ')}'
-              : 'The scan needs confirmation before install.';
+              ? 'Install blocked ($verdict): $detail'
+              : result.scan.caution
+              ? 'Scan verdict: $verdict. Confirm $requested before installing.'
+              : 'The gateway has not confirmed that $requested is installed.';
         });
         return;
       }
       _identifier.clear();
-      setState(() => _caution = false);
+      setState(() {
+        _cautionFor = null;
+        _error = null;
+      });
       await _load();
     } catch (error) {
       if (!mounted) return;
@@ -219,11 +250,11 @@ class _SkillsTabState extends State<_SkillsTab> {
               onPressed: () => _install(force: false),
               child: const Text('Install'),
             ),
-            if (_caution)
+            if (_cautionFor != null && _identifier.text.trim() == _cautionFor)
               TextButton(
                 key: const Key('hub-force'),
-                onPressed: () => _install(force: true),
-                child: const Text('Install anyway'),
+                onPressed: () => _install(force: true, identifier: _cautionFor),
+                child: Text('Install $_cautionFor anyway'),
               ),
             TextButton(
               key: const Key('skill-update-all'),
@@ -315,9 +346,23 @@ class _PluginsTabState extends State<_PluginsTab> {
     }
   }
 
+  bool _consent = false;
+  bool _scanBlocked = false;
+
+  Future<void> _guard(Future<void> Function() action) async {
+    try {
+      await action();
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _notice = '$error');
+    }
+  }
+
   Future<void> _show(PluginMutation result, String name) async {
     if (!mounted) return;
     setState(() {
+      _consent = result.consentRequired;
+      _scanBlocked = result.scanBlocked;
       _pendingName = result.consentRequired || result.scanBlocked ? name : null;
       _lines = result.lines;
       _notice = result.ok
@@ -329,6 +374,33 @@ class _PluginsTabState extends State<_PluginsTab> {
           : (result.message ?? 'The plugin was not changed.');
     });
     if (result.ok) await _load();
+  }
+
+  Future<void> _confirmScan(String name) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Install $name despite the scan?'),
+        content: Text(
+          'The security scan blocked $name. This confirmation applies only to $name.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            key: const Key('plugin-scan-confirm'),
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('Install $name anyway'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    await _guard(() async {
+      await _show(await widget.admin.updatePlugin(name, force: true), name);
+    });
   }
 
   @override
@@ -348,32 +420,47 @@ class _PluginsTabState extends State<_PluginsTab> {
           children: [
             TextButton(
               key: const Key('plugin-install'),
-              onPressed: () async {
+              onPressed: () => _guard(() async {
                 final result = await widget.admin.installPlugin(
                   _identifier.text,
                 );
                 await _show(result, _identifier.text.trim());
-              },
+              }),
               child: const Text('Install plugin'),
             ),
             TextButton(
-              onPressed: () async {
+              onPressed: () => _guard(() async {
                 await _show(await widget.admin.updateAllPlugins(), '');
-              },
+              }),
               child: const Text('Update plugins'),
             ),
             if (_pendingName != null)
               TextButton(
                 key: const Key('plugin-accept'),
-                onPressed: () async {
-                  final result = await widget.admin.updatePlugin(
-                    _pendingName!,
-                    acceptCapabilities: true,
-                    force: _notice?.contains('scan') ?? false,
-                  );
-                  await _show(result, _pendingName!);
+                onPressed: () {
+                  final name = _pendingName!;
+                  if (!_consent) {
+                    setState(() {
+                      _notice =
+                          'Accepting capabilities does not override the scan of $name.';
+                    });
+                    return;
+                  }
+                  _guard(() async {
+                    final result = await widget.admin.updatePlugin(
+                      name,
+                      acceptCapabilities: true,
+                    );
+                    await _show(result, name);
+                  });
                 },
                 child: const Text('Accept capabilities'),
+              ),
+            if (_scanBlocked && _pendingName != null)
+              TextButton(
+                key: const Key('plugin-scan-review'),
+                onPressed: () => _confirmScan(_pendingName!),
+                child: Text('Review scan for $_pendingName'),
               ),
           ],
         ),
@@ -391,18 +478,20 @@ class _PluginsTabState extends State<_PluginsTab> {
                   Switch(
                     key: Key('plugin-enable-${plugin.name}'),
                     value: plugin.enabled,
-                    onChanged: (enabled) async {
+                    onChanged: (enabled) => _guard(() async {
                       await widget.admin.togglePlugin(plugin.key, enabled);
                       await _load();
-                    },
+                    }),
                   ),
                 IconButton(
                   key: Key('plugin-update-${plugin.name}'),
                   tooltip: 'Update',
-                  onPressed: () async => _show(
-                    await widget.admin.updatePlugin(plugin.name),
-                    plugin.name,
-                  ),
+                  onPressed: () => _guard(() async {
+                    await _show(
+                      await widget.admin.updatePlugin(plugin.name),
+                      plugin.name,
+                    );
+                  }),
                   icon: const Icon(Icons.system_update_alt),
                 ),
                 IconButton(
@@ -427,8 +516,10 @@ class _PluginsTabState extends State<_PluginsTab> {
                       ),
                     );
                     if (confirmed == true) {
-                      await widget.admin.removePlugin(plugin.name);
-                      await _load();
+                      await _guard(() async {
+                        await widget.admin.removePlugin(plugin.name);
+                        await _load();
+                      });
                     }
                   },
                   icon: const Icon(Icons.delete_outline),
@@ -439,10 +530,10 @@ class _PluginsTabState extends State<_PluginsTab> {
           if (plugin.hasDesktopHalf)
             TextButton(
               key: Key('plugin-desktop-${plugin.name}'),
-              onPressed: () async {
+              onPressed: () => _guard(() async {
                 await widget.admin.removePluginDesktopHalf(plugin.name);
                 await _load();
-              },
+              }),
               child: const Text('Remove desktop half'),
             ),
         ],
@@ -470,9 +561,19 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
   List<McpServerRecord> _servers = const [];
   List<ConnectorAccount> _accounts = const [];
   ConnectorToolGrant? _grant;
+  String? _grantConnector;
   final Set<String> _disabled = {};
   String? _logs;
   String? _error;
+
+  Future<void> _guard(Future<void> Function() action) async {
+    try {
+      await action();
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _error = '$error');
+    }
+  }
 
   @override
   void initState() {
@@ -548,15 +649,15 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
                 Switch(
                   key: Key('mcp-enable-${server.name}'),
                   value: server.enabled,
-                  onChanged: (enabled) async {
+                  onChanged: (enabled) => _guard(() async {
                     await widget.admin.setMcpEnabled(server.name, enabled);
                     await _load();
-                  },
+                  }),
                 ),
                 IconButton(
                   key: Key('mcp-probe-${server.name}'),
                   tooltip: 'Probe',
-                  onPressed: () async {
+                  onPressed: () => _guard(() async {
                     final probe = await widget.admin.probeMcpServer(
                       server.name,
                     );
@@ -566,19 +667,19 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
                           ? 'Probe ${server.name}: ${probe.tools.join(', ')}'
                           : (probe.error ?? 'Probe failed.');
                     });
-                  },
+                  }),
                   icon: const Icon(Icons.network_check),
                 ),
                 IconButton(
                   key: Key('mcp-logs-${server.name}'),
                   tooltip: 'Logs',
-                  onPressed: () async {
+                  onPressed: () => _guard(() async {
                     final logs = await widget.admin.mcpLogs(
                       server: server.name,
                     );
                     if (!mounted) return;
                     setState(() => _logs = logs);
-                  },
+                  }),
                   icon: const Icon(Icons.receipt_long),
                 ),
               ],
@@ -588,11 +689,11 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
           SelectableText(_logs!, key: const Key('mcp-log-text')),
         TextButton(
           key: const Key('mcp-log-file'),
-          onPressed: () async {
+          onPressed: () => _guard(() async {
             final logs = await widget.admin.mcpLogs();
             if (!mounted) return;
             setState(() => _logs = logs);
-          },
+          }),
           child: const Text('MCP log'),
         ),
         TextField(
@@ -606,7 +707,7 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
         ),
         TextButton(
           key: const Key('connector-link'),
-          onPressed: () async {
+          onPressed: () => _guard(() async {
             await widget.admin.connectConnector(
               _connector.text,
               alias: _alias.text,
@@ -614,7 +715,7 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
             final accounts = await widget.admin.connectorAccounts();
             if (!mounted) return;
             setState(() => _accounts = accounts);
-          },
+          }),
           child: const Text('Link account'),
         ),
         for (final account in _accounts)
@@ -626,12 +727,12 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
             trailing: IconButton(
               key: Key('account-remove-${account.connectionId}'),
               tooltip: 'Remove account',
-              onPressed: () async {
+              onPressed: () => _guard(() async {
                 await widget.admin.removeConnectorAccount(account.connectionId);
                 final accounts = await widget.admin.connectorAccounts();
                 if (!mounted) return;
                 setState(() => _accounts = accounts);
-              },
+              }),
               icon: const Icon(Icons.link_off),
             ),
           ),
@@ -642,18 +743,18 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
         ),
         TextButton(
           key: const Key('tool-load'),
-          onPressed: () async {
-            final grant = await widget.admin.connectorTools(
-              _toolConnector.text,
-            );
+          onPressed: () => _guard(() async {
+            final connector = _toolConnector.text.trim();
+            final grant = await widget.admin.connectorTools(connector);
             if (!mounted) return;
             setState(() {
               _grant = grant;
+              _grantConnector = connector;
               _disabled
                 ..clear()
                 ..addAll(grant.disabled);
             });
-          },
+          }),
           child: const Text('Load tools'),
         ),
         if (_grant != null)
@@ -677,14 +778,21 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
         if (_grant?.revision != null)
           TextButton(
             key: const Key('tool-save'),
-            onPressed: () async {
+            onPressed: () => _guard(() async {
+              final connector = _grantConnector;
+              final revision = _grant?.revision;
+              if (connector == null || revision == null) return;
               await widget.admin.setDisabledTools(
-                connector: _toolConnector.text,
+                connector: connector,
                 disabledTools: _disabled.toList(),
-                expectedRevision: _grant!.revision!,
+                expectedRevision: revision,
               );
-            },
-            child: const Text('Save tool grants'),
+            }),
+            child: Text(
+              _grantConnector == null
+                  ? 'Save tool grants'
+                  : 'Save tool grants for $_grantConnector',
+            ),
           ),
         if (_grant != null && _grant!.revision == null)
           const Text(
@@ -716,6 +824,14 @@ class _BackendsTabState extends State<_BackendsTab> {
     _load();
   }
 
+  Future<void> _guard(Future<void> Function() action) async {
+    try {
+      await action();
+    } catch (error) {
+      if (mounted) setState(() => _error = '$error');
+    }
+  }
+
   Future<void> _load() async {
     try {
       final toolsets = await widget.admin.toolsets();
@@ -739,11 +855,11 @@ class _BackendsTabState extends State<_BackendsTab> {
         for (final toolset in _toolsets)
           ListTile(
             title: Text(toolset.name),
-            onTap: () async {
+            onTap: () => _guard(() async {
               final setup = await widget.admin.toolsetSetup(toolset.name);
               if (!mounted) return;
               setState(() => _setup = setup);
-            },
+            }),
           ),
         if (_setup != null) ...[
           Text('Backends for ${_setup!.name}'),
@@ -755,7 +871,7 @@ class _BackendsTabState extends State<_BackendsTab> {
                   ? const Text('Active')
                   : TextButton(
                       key: Key('provider-${provider.name}'),
-                      onPressed: () async {
+                      onPressed: () => _guard(() async {
                         await widget.admin.selectToolsetProvider(
                           _setup!.name,
                           provider.name,
@@ -765,19 +881,19 @@ class _BackendsTabState extends State<_BackendsTab> {
                         );
                         if (!mounted) return;
                         setState(() => _setup = setup);
-                      },
+                      }),
                       child: const Text('Use'),
                     ),
             ),
             if (provider.setupKey != null)
               TextButton(
                 key: Key('setup-${provider.name}'),
-                onPressed: () async {
+                onPressed: () => _guard(() async {
                   await widget.admin.runToolsetSetup(
                     _setup!.name,
                     provider.setupKey!,
                   );
-                },
+                }),
                 child: const Text('Run setup'),
               ),
           ],
@@ -815,8 +931,12 @@ class _BackendsTabState extends State<_BackendsTab> {
                         ),
                       );
                       if (confirmed == true) {
-                        await widget.admin.selectTerminalBackend(backend.name);
-                        await _load();
+                        await _guard(() async {
+                          await widget.admin.selectTerminalBackend(
+                            backend.name,
+                          );
+                          await _load();
+                        });
                       }
                     },
                     child: const Text('Select'),

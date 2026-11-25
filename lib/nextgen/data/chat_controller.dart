@@ -422,6 +422,31 @@ class NgInputRequest {
         }
         choices.add('deny');
         const order = ['once', 'session', 'always', 'deny'];
+        final ordered = order.where(choices.contains).toList();
+        final kind = s('kind');
+        if (kind == 'access' || kind == 'network') {
+          final description = s('description');
+          final level = switch (s('access')) {
+            'read' => ngL.ng_folder_read_only,
+            'read_write' => ngL.ng_folder_read_write,
+            _ => kind == 'access' ? ngL.ng_folder_access_unspecified : '',
+          };
+          final target = kind == 'access' ? s('path') : s('host');
+          return NgInputRequest._(
+            request,
+            kind: NgRequestKind.approval,
+            title: kind == 'access'
+                ? ngL.ng_folder_access
+                : ngL.ng_website_access,
+            body: [
+              if (description.isNotEmpty) description,
+              if (level.isNotEmpty) level,
+              ngL.ng_allow_until_sandbox_off,
+            ].join('\n'),
+            command: target,
+            choices: ordered,
+          );
+        }
         return NgInputRequest._(
           request,
           kind: NgRequestKind.approval,
@@ -432,7 +457,7 @@ class NgInputRequest {
               ? ngL.ng_hermes_wants_to_run_this_with(s('tool_name'))
               : ngL.ng_hermes_wants_to_run_this,
           command: s('command'),
-          choices: order.where(choices.contains).toList(),
+          choices: ordered,
         );
       case 'clarify':
         final batch = <NgClarifyQuestion>[];

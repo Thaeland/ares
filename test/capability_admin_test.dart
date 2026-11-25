@@ -11,7 +11,7 @@ void main() {
         if (path == 'skills/hub/scan') {
           return const CapabilityResponse(
             200,
-            '{"verdict":"blocked","findings":[{"message":"unsafe"}]}',
+            '{"verdict":"dangerous","policy":"block","findings":[{"description":"unsafe"}]}',
           );
         }
         return const CapabilityResponse(500, '{}');
@@ -32,9 +32,12 @@ void main() {
       rest: (method, path, {query, body, timeout}) async {
         calls.add('$method $path');
         if (path == 'skills/hub/scan') {
-          return const CapabilityResponse(200, '{"verdict":"caution"}');
+          return const CapabilityResponse(
+            200,
+            '{"verdict":"caution","policy":"ask"}',
+          );
         }
-        return const CapabilityResponse(200, '{"ok":true,"action":"install"}');
+        return const CapabilityResponse(200, '{"ok":true,"installed":true}');
       },
     );
 
@@ -94,41 +97,35 @@ void main() {
     expect(skillIsEditable('hub'), isFalse);
   });
 
-  test(
-    'adding an MCP server keeps the existing map and refuses a duplicate',
-    () async {
-      final puts = <Object?>[];
-      final admin = _admin(
-        [],
-        rest: (method, path, {query, body, timeout}) async {
-          if (path == 'config') {
-            return const CapabilityResponse(
-              200,
-              '{"mcp_servers":{"kept":{"command":"echo"}}}',
-            );
-          }
-          puts.add(body);
-          return const CapabilityResponse(200, '{"ok":true}');
-        },
-      );
+  test('adding an MCP server is one POST and a duplicate is refused', () async {
+    final calls = <String>[];
+    final admin = _admin(
+      [],
+      rest: (method, path, {query, body, timeout}) async {
+        calls.add('$method $path');
+        if (body is Map && body['name'] == 'kept') {
+          return const CapabilityResponse(
+            409,
+            '{"detail":"Server already exists"}',
+          );
+        }
+        return const CapabilityResponse(200, '{"name":"added"}');
+      },
+    );
 
-      await admin.addMcpServer(
-        'added',
-        const McpServerSpec.stdio(command: 'fixture-mcp'),
-      );
-      final servers = (puts.single! as Map)['servers'] as Map;
-      expect(servers['kept'], {'command': 'echo'});
-      expect((servers['added'] as Map)['command'], 'fixture-mcp');
-      expect((servers['added'] as Map)['args'], isEmpty);
-      expect(
-        () => admin.addMcpServer(
-          'kept',
-          const McpServerSpec.http(url: 'https://fixture.example/mcp'),
-        ),
-        throwsA(isA<CapabilityException>()),
-      );
-    },
-  );
+    await admin.addMcpServer(
+      'added',
+      const McpServerSpec.stdio(command: 'fixture-mcp'),
+    );
+    expect(
+      () => admin.addMcpServer(
+        'kept',
+        const McpServerSpec.http(url: 'https://fixture.example/mcp'),
+      ),
+      throwsA(isA<CapabilityException>()),
+    );
+    expect(calls, ['POST mcp/servers', 'POST mcp/servers']);
+  });
 
   test('MCP logs are redacted before they can be shown', () async {
     final admin = _admin(

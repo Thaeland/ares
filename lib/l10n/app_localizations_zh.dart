@@ -620,7 +620,13 @@ class AppLocalizationsZh extends AppLocalizations {
       '在此 Hermes 会话结束前允许匹配的命令。';
 
   @override
+  String get allow_folder_until_sandbox_off => '在沙箱关闭之前允许此文件夹。';
+
+  @override
   String get allow_once => '允许一次';
+
+  @override
+  String get allow_website_until_sandbox_off => '在沙箱关闭之前允许此网站。';
 
   @override
   String get always_allow => '总是允许';
@@ -4476,6 +4482,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_allow_once => '允许一次';
 
   @override
+  String get ng_allow_until_sandbox_off => '直到沙箱关闭';
+
+  @override
+  String get ng_folder_access => '文件夹访问';
+
+  @override
+  String get ng_folder_access_unspecified => '网关未说明这是只读还是读写。';
+
+  @override
+  String get ng_folder_read_only => '只读';
+
+  @override
+  String get ng_folder_read_write => '读取和写入';
+
+  @override
+  String get ng_website_access => '网站访问';
+
+  @override
   String get ng_allow_for_this_chat => '在此聊天中允许';
 
   @override
@@ -6458,7 +6482,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
       '在此 Hermes 会话结束前允许匹配的命令。';
 
   @override
+  String get allow_folder_until_sandbox_off => '在沙箱关闭之前允许此文件夹。';
+
+  @override
   String get allow_once => '允许一次';
+
+  @override
+  String get allow_website_until_sandbox_off => '在沙箱关闭之前允许此网站。';
 
   @override
   String get always_allow => '总是允许';
@@ -10159,6 +10189,24 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_allow_once => '允许一次';
+
+  @override
+  String get ng_allow_until_sandbox_off => '直到沙箱关闭';
+
+  @override
+  String get ng_folder_access => '文件夹访问';
+
+  @override
+  String get ng_folder_access_unspecified => '网关未说明这是只读还是读写。';
+
+  @override
+  String get ng_folder_read_only => '只读';
+
+  @override
+  String get ng_folder_read_write => '读取和写入';
+
+  @override
+  String get ng_website_access => '网站访问';
 
   @override
   String get ng_allow_for_this_chat => '在此聊天中允许';

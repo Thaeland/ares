@@ -65,7 +65,7 @@ void main() {
     expect(find.text('/fixture/notes'), findsOneWidget);
     expect(find.text('Read-only'), findsOneWidget);
     expect(
-      find.text('Allow this folder for this request only.'),
+      find.text('Allow this folder until the sandbox is switched off.'),
       findsOneWidget,
     );
     expect(find.text('echo fixture'), findsNothing);

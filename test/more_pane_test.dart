@@ -92,6 +92,9 @@ void main() {
           'model',
           'cron',
           'skills',
+          'capability-admin',
+          'browser-vault',
+          'agent-policy',
           'memory',
           'provider-sign-in',
           'nous-portal',
@@ -363,6 +366,9 @@ void main() {
             'model',
             'cron',
             'skills',
+            'capability-admin',
+            'browser-vault',
+            'agent-policy',
             'memory',
           ]);
         }
@@ -423,9 +429,11 @@ void main() {
         );
         expect(find.text(section.title), findsOneWidget);
       }
+      // Section titles were walked top to bottom, so Cron is now above
+      // the viewport. Search upward; a downward drag cannot rebuild it.
       await tester.scrollUntilVisible(
         find.text('Cron'),
-        160,
+        -160,
         scrollable: find.byType(Scrollable).first,
       );
       expect(find.text('Cron'), findsOneWidget);
@@ -543,7 +551,14 @@ void main() {
         await tester.pumpAndSettle();
       }
 
-      expect(picked, ['model', 'cron', 'skills', 'memory']);
+      expect(picked, [
+        'model',
+        'cron',
+        'skills',
+        'capability-admin',
+        'agent-policy',
+        'memory',
+      ]);
     });
 
     testWidgets('selecting an available entry reports it once', (tester) async {

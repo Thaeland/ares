@@ -77,7 +77,7 @@ class _GatewayApprovalDialogState extends State<GatewayApprovalDialog> {
     if (request.kind == GatewayApprovalKind.access) {
       return switch (choice) {
         GatewayApprovalChoice.once =>
-          'Allow this folder for this request only.',
+          context.l10n.allow_folder_until_sandbox_off,
         GatewayApprovalChoice.session =>
           'Allow this folder until the session ends.',
         GatewayApprovalChoice.always =>
@@ -88,7 +88,7 @@ class _GatewayApprovalDialogState extends State<GatewayApprovalDialog> {
     if (request.kind == GatewayApprovalKind.network) {
       return switch (choice) {
         GatewayApprovalChoice.once =>
-          'Allow this website for this request only.',
+          context.l10n.allow_website_until_sandbox_off,
         GatewayApprovalChoice.session =>
           'Allow this website until the session ends.',
         GatewayApprovalChoice.always =>
