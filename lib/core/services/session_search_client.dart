@@ -37,10 +37,12 @@ class SessionSearchClient {
 
   final http.Client _http;
   final String _baseUrl;
+  final String? profile;
   final Future<Map<String, String>> Function() _authHeaders;
 
   SessionSearchClient({
     required String baseUrl,
+    this.profile,
     required Future<Map<String, String>> Function() headers,
     ClientCertificateConfig? clientCertificate,
     TlsClientFactory tlsClientFactory = const TlsClientFactory(),
@@ -69,9 +71,13 @@ class SessionSearchClient {
     if (trimmed.isEmpty) return const [];
 
     final safeLimit = limit.clamp(1, maxLimit);
-    final uri = Uri.parse(
-      '$_baseUrl/api/sessions/search',
-    ).replace(queryParameters: {'q': trimmed, 'limit': '$safeLimit'});
+    final uri = Uri.parse('$_baseUrl/api/sessions/search').replace(
+      queryParameters: {
+        'q': trimmed,
+        'limit': '$safeLimit',
+        'profile': ?profile,
+      },
+    );
 
     final http.Response response;
     try {
@@ -80,7 +86,7 @@ class SessionSearchClient {
       throw SessionSearchException('Could not reach the dashboard: $error');
     }
 
-    return _readResponse(response, trimmed, null);
+    return _readResponse(response, trimmed, profile);
   }
 
   /// The active browsers borrow the selected dashboard's authenticated,

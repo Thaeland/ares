@@ -171,6 +171,17 @@ abstract final class NextGenPreferences {
     return prefs.setStringList(recentModelsKey, next.take(6).toList());
   }
 
+  static const reopenKey = 'nextgen_reopen_last_chat';
+  static bool reopenLastChat(SharedPreferences prefs) =>
+      prefs.getBool(reopenKey) ?? true;
+  static String? launchSession(
+    SharedPreferences prefs,
+    String connectionId, {
+    String? requested,
+  }) =>
+      requested ??
+      (reopenLastChat(prefs) ? lastSession(prefs, connectionId) : null);
+
   /// The chat NextGen last had open on [connectionId], reopened on launch.
   static String? lastSession(SharedPreferences prefs, String connectionId) =>
       prefs.getString('$lastSessionKeyPrefix$connectionId');

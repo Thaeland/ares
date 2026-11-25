@@ -16,6 +16,7 @@ import '../widgets/copy_session_id.dart';
 import '../widgets/hermes_components.dart';
 import '../widgets/hermes_shell.dart';
 import '../widgets/session_name_dialog.dart';
+import '../widgets/session_organisation.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
 
@@ -616,6 +617,9 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
 
   /// The active chip filter in the embedded Chats browser.
   WorkspaceChatsFilter _filter = WorkspaceChatsFilter.all;
+  SessionSort _sort = SessionSort.recent;
+  SessionGroup _group = SessionGroup.standard;
+  bool _details = false;
 
   /// Injectable clock for deterministic tests.
   DateTime get _now => widget.now ?? DateTime.now();
@@ -1556,19 +1560,33 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
     // Server pins (shared with Hermes Desktop) lead the date groups. Search
     // and the selected filter have already run, so a pin never bypasses
     // them, and an archived row stays in its own view.
-    final ordered = orderPinnedChatsFirst(sessions);
+    final ordered = orderPinnedChatsFirst(_sort.apply(sessions));
     final pinnedSessions = ordered.where(isPinnedChat).toList();
     final unpinnedSessions = ordered
         .where((session) => !isPinnedChat(session))
         .toList();
-    final groups = widget.embedded
-        ? groupChatsByDate(_now, unpinnedSessions)
-        : [
-            MapEntry(
-              ChatDateBucket.today,
-              List<Session>.unmodifiable(unpinnedSessions),
-            ),
-          ];
+    final groups = switch (_group) {
+      SessionGroup.status => labelledGroups(
+        unpinnedSessions,
+        (s) =>
+            s.isActive ? context.l10n.status_running : context.l10n.status_done,
+      ).entries,
+      SessionGroup.project => labelledGroups(
+        unpinnedSessions,
+        (s) =>
+            data.projectLabels[s.id] ??
+            (data.projectsKnown && !data.claimedSessionIds.contains(s.id)
+                ? context.l10n.unassigned
+                : 'Unknown project'),
+      ).entries,
+      SessionGroup.standard
+          when widget.embedded && _sort == SessionSort.recent =>
+        groupChatsByDate(
+          _now,
+          unpinnedSessions,
+        ).map((g) => MapEntry(g.key.label(context.l10n), g.value)),
+      _ => [MapEntry(widget.title, unpinnedSessions)],
+    };
 
     return RefreshIndicator(
       onRefresh: refresh,
@@ -1641,7 +1659,21 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
           ),
           if (widget.embedded) ...[
             const SizedBox(height: HermesSpacing.md),
-            _buildChips(),
+            Row(
+              children: [
+                Expanded(child: _buildChips()),
+                SessionOrganisationMenu(
+                  sort: _sort,
+                  group: _group,
+                  rows: sessions,
+                  details: _details,
+                  projects: widget.kind == WorkspaceSessionKind.chats,
+                  onSort: (s) => setState(() => _sort = s),
+                  onGroup: (g) => setState(() => _group = g),
+                  onDetails: () => setState(() => _details = !_details),
+                ),
+              ],
+            ),
           ],
           const SizedBox(height: HermesSpacing.lg),
           if (_searching) const LinearProgressIndicator(),
@@ -1684,9 +1716,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
                     bottom: HermesSpacing.sm,
                   ),
                   child: Text(
-                    widget.embedded
-                        ? group.key.label(context.l10n)
-                        : widget.title,
+                    group.key,
                     style: HermesTokens.of(context).typography.section,
                   ),
                 ),
@@ -1791,6 +1821,11 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
+                if (_details)
+                  Text(
+                    sessionDetails(session),
+                    style: TextStyle(color: tokens.muted),
+                  ),
                 if (excerpt?.isNotEmpty == true || session.preview.isNotEmpty)
                   Text(
                     excerpt?.isNotEmpty == true ? excerpt! : session.preview,

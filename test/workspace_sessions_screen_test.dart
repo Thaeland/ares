@@ -100,6 +100,48 @@ void main() {
     },
   );
 
+  testWidgets(
+    'Classic groups by project without moving pins into project sections',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(700, 1200));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: WorkspaceSessionsScreen(
+              title: 'Chats',
+              view: WorkspaceSessionView.all,
+              embedded: true,
+              load: () async => WorkspaceSessionsData(
+                sessions: [
+                  _session('a', 'Alpha'),
+                  _session('b', 'Pinned finding', pinned: true),
+                ],
+                claimedSessionIds: const {'a', 'b'},
+                projectLabels: const {'a': 'Research', 'b': 'Research'},
+              ),
+              onOpenSession: (_) {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Organise chats'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.widgetWithText(CheckedPopupMenuItem<Object>, 'Group by project'),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Research'), findsNWidgets(3));
+      expect(
+        tester.getTopLeft(find.text('Pinned finding')).dy,
+        lessThan(tester.getTopLeft(find.text('Alpha')).dy),
+      );
+    },
+  );
+
   group('WorkspaceChatsFilter', () {
     test('declares the four validated chip filters in order', () {
       expect(WorkspaceChatsFilter.values, [

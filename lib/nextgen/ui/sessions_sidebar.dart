@@ -15,6 +15,7 @@ import '../../core/services/session_search_client.dart';
 import '../../core/services/dashboard_api_client.dart';
 import '../../core/utils/session_sources.dart';
 import '../../core/widgets/copy_session_id.dart';
+import '../../core/widgets/session_organisation.dart';
 import '../data/seen_chats.dart';
 import '../theme/nextgen_theme.dart';
 import 'nextgen_scope.dart';
@@ -226,6 +227,9 @@ class NgSessionsModel extends ChangeNotifier {
 
   String? error;
   String query = '';
+  SessionSort sort = SessionSort.recent;
+  SessionGroup group = SessionGroup.standard;
+  bool details = false;
   Timer? _debounce;
   int _generation = 0;
   Future<void>? _refreshing;
@@ -402,6 +406,8 @@ class NgSessionsModel extends ChangeNotifier {
   }
 
   void replace(Session updated) {
+    final browseIndex = _browseRows.indexWhere((s) => s.id == updated.id);
+    if (browseIndex >= 0) _browseRows[browseIndex] = updated;
     final i = sessions.indexWhere((s) => s.id == updated.id);
     if (i >= 0) {
       sessions[i] = updated;
@@ -569,8 +575,19 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
     final choice = at == null
         ? await _actionSheet(s)
         : await _actionMenu(s, at);
-    if (!mounted || choice == null) return;
-    await _runAction(s, choice, api);
+    if (!mounted ||
+        choice == null ||
+        !identical(widget.model.scope.gateway.api, api)) {
+      return;
+    }
+    final current = widget.model.sessions
+        .where((row) => row.id == s.id)
+        .firstOrNull;
+    if (current == null ||
+        !_actionItems(current).any((a) => a.value == choice)) {
+      return;
+    }
+    await _runAction(current, choice, api);
   }
 
   Future<String?> _actionSheet(Session s) {
@@ -653,6 +670,8 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
     String choice,
     DashboardApiClient api,
   ) async {
+    bool currentOwner() =>
+        mounted && identical(widget.model.scope.gateway.api, api);
     try {
       switch (choice) {
         case 'copyId':
@@ -664,7 +683,12 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
             widget.model.markUnread(s);
           }
         case 'pin':
-          await api.setSessionPinned(sessionId: s.id, pinned: !s.pinned);
+          final pinned = await api.setSessionPinned(
+            sessionId: s.id,
+            pinned: !s.pinned,
+          );
+          if (!currentOwner()) return;
+          widget.model.replace(s.withPinned(pinned));
           await widget.model.refresh();
         case 'rename':
           final title = await ngPromptText(
@@ -672,8 +696,10 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
             title: ngL.ng_rename_chat,
             initial: ngSessionTitle(s),
           );
-          if (title == null || title.trim().isEmpty) return;
-          await api.renameSession(sessionId: s.id, title: title);
+          if (title == null || title.trim().isEmpty || !currentOwner()) return;
+          final saved = await api.renameSession(sessionId: s.id, title: title);
+          if (!currentOwner()) return;
+          widget.model.replace(s.withTitle(saved));
           await widget.model.refresh();
         case 'archive':
           await api.setSessionArchived(
@@ -681,6 +707,7 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
             archived: true,
             clearPin: true,
           );
+          if (!currentOwner()) return;
           widget.model.remove(s.id);
           if (mounted) ngToast(context, ngL.ng_archived);
         case 'delete':
@@ -689,8 +716,9 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
             title: ngL.ng_delete_this_chat,
             body: ngL.ng_it_is_removed_from_the_gateway,
           );
-          if (!ok) return;
+          if (!ok || !currentOwner()) return;
           await api.deleteSession(s.id);
+          if (!currentOwner()) return;
           widget.model.remove(s.id);
       }
     } catch (e) {
@@ -709,7 +737,7 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
           final needsYou = scope.gateway.needsYou;
           final all = widget.model.sessions;
           final chats = all.where(widget.model.includesChat).toList();
-          final filtered = switch (_filter) {
+          final filtered = widget.model.sort.apply(switch (_filter) {
             NgSidebarFilter.all => chats,
             NgSidebarFilter.running => chats.where((s) => s.isActive).toList(),
             NgSidebarFilter.needsYou =>
@@ -720,9 +748,8 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
                   .toList(),
             NgSidebarFilter.crons =>
               all.where((s) => isCronSession(s)).toList(),
-          };
-          final pinned =
-              _filter == NgSidebarFilter.all && widget.model.query.isEmpty
+          });
+          final pinned = _filter == NgSidebarFilter.all
               ? filtered.where((s) => s.pinned).toList()
               : <Session>[];
           final rest = filtered.where((s) => !pinned.contains(s)).toList();
@@ -782,15 +809,35 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
                     children: [
                       _tiles(c),
                       const SizedBox(height: 8),
-                      _filters(
-                        c,
-                        chats
-                            .where(
-                              (s) =>
-                                  needsYou.contains(s.id) ||
-                                  widget.model.isUnread(s),
-                            )
-                            .length,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _filters(
+                              c,
+                              chats
+                                  .where(
+                                    (s) =>
+                                        needsYou.contains(s.id) ||
+                                        widget.model.isUnread(s),
+                                  )
+                                  .length,
+                            ),
+                          ),
+                          SessionOrganisationMenu(
+                            sort: widget.model.sort,
+                            group: widget.model.group,
+                            rows: filtered,
+                            details: widget.model.details,
+                            onSort: (s) =>
+                                setState(() => widget.model.sort = s),
+                            onGroup: (g) =>
+                                setState(() => widget.model.group = g),
+                            onDetails: () => setState(
+                              () =>
+                                  widget.model.details = !widget.model.details,
+                            ),
+                          ),
+                        ],
                       ),
                       if (pinned.isNotEmpty) ...[
                         NgSectionLabel(ngL.ng_pinned),
@@ -829,7 +876,20 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
                             style: NgType.bodySmall.copyWith(color: c.text3),
                           ),
                         ),
-                      for (final s in rest) _tile(c, s, needsYou),
+                      if (widget.model.group == SessionGroup.status)
+                        for (final g in labelledGroups(
+                          rest,
+                          (s) => needsYou.contains(s.id)
+                              ? ngL.ng_needs_you_2
+                              : s.isActive
+                              ? ngL.ng_running
+                              : 'Idle',
+                        ).entries) ...[
+                          NgSectionLabel(g.key),
+                          for (final s in g.value) _tile(c, s, needsYou),
+                        ]
+                      else
+                        for (final s in rest) _tile(c, s, needsYou),
                       // A short list has no scroll extent, so scroll-only
                       // paging cannot grow it; offer an explicit read on.
                       if (widget.model.hasMore &&
@@ -1067,7 +1127,7 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
                         ),
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
@@ -1083,6 +1143,13 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
                                     : FontWeight.w500,
                               ),
                             ),
+                            if (widget.model.details)
+                              Text(
+                                sessionDetails(s),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: NgType.caption.copyWith(color: c.text3),
+                              ),
                             if (widget.model.excerpts[s.id] case final snippet?
                                 when snippet.isNotEmpty)
                               Text(

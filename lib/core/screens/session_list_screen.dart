@@ -260,6 +260,7 @@ class _SessionListScreenState extends State<SessionListScreen> {
     final created = SessionSearchClient(
       baseUrl: dashboard.baseUrl,
       headers: dashboard.authHeaders,
+      profile: dashboard.gatewayProfile,
       clientCertificate: widget.connection.clientCertificate,
       httpClient: widget.testHttpClient,
     );

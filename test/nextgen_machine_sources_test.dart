@@ -169,6 +169,39 @@ Future<_Fixture> _fixture({
 
 void main() {
   testWidgets(
+    'NextGen organises known usage below pins and can show row metadata',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(700, 1200));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final f = await _fixture();
+      f.pages[0] = [
+        {..._row('pin'), 'pinned': true, 'total_tokens': 1},
+        {..._row('small'), 'total_tokens': 2},
+        {..._row('large'), 'total_tokens': 900},
+      ];
+      f.total = 3;
+      await f.model.refresh();
+      await tester.pumpWidget(f.widget);
+      await tester.pumpAndSettle();
+      Future<void> choose(String label) async {
+        await tester.tap(find.byTooltip('Organise chats'));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.widgetWithText(CheckedPopupMenuItem<Object>, label),
+        );
+        await tester.pumpAndSettle();
+      }
+
+      await choose('Most tokens');
+      await choose('Show model and usage');
+      double y(String s) => tester.getTopLeft(find.text(s)).dy;
+      expect(y('Row pin'), lessThan(y('Row large')));
+      expect(y('Row large'), lessThan(y('Row small')));
+      expect(find.textContaining('900 tokens'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+  testWidgets(
     'active NextGen search resolves stored IDs, shows excerpts, and distinguishes wrong scope and unsupported from empty',
     (tester) async {
       final f = await _fixture();

@@ -218,6 +218,21 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                 ),
               ),
             ),
+            SwitchListTile(
+              title: const Text('Reopen last chat on launch'),
+              value: NextGenPreferences.reopenLastChat(scope.prefs),
+              onChanged: (v) async {
+                final saved = await scope.prefs.setBool(
+                  NextGenPreferences.reopenKey,
+                  v,
+                );
+                if (!mounted) return;
+                setState(() {});
+                if (!saved && context.mounted) {
+                  ngToast(context, 'Could not save launch preference.');
+                }
+              },
+            ),
             NgSectionLabel(ngL.ng_appearance),
             NgCard(
               child: Column(

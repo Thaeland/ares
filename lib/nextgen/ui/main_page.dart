@@ -134,9 +134,11 @@ class _NgMainPageState extends State<_NgMainContent>
     if (sessions == null) {
       _sessions = NgSessionsModel(scope);
       unawaited(_sessions!.refresh());
-      final last =
-          _takeOpenRequest(scope.connection.id) ??
-          NextGenPreferences.lastSession(scope.prefs, scope.connection.id);
+      final last = NextGenPreferences.launchSession(
+        scope.prefs,
+        scope.connection.id,
+        requested: _takeOpenRequest(scope.connection.id),
+      );
       _openId(last, '', initial: true);
       _listenForRequests(scope);
     } else {
