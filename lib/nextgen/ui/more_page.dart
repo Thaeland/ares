@@ -158,7 +158,9 @@ class NgMorePage extends StatelessWidget {
                   subtitle: ngL.ng_agent_gateway,
                   onTap: () => push(
                     WorkspaceProfilesScreen(
+                      nextGen: true,
                       owner: scope.gateway.workspace,
+                      connection: conn,
                       label: conn.label,
                       route: scope.gateway.workspace.route(),
                     ),

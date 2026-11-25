@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../core/services/connection_manager.dart';
 import '../core/services/gateway_fleet.dart';
 import '../core/services/hermes_sign_in.dart';
+import '../core/workspace/profile_presentation_store.dart';
 import 'data/nextgen_gateway.dart';
 import 'nextgen_preferences.dart';
 import 'theme/nextgen_theme.dart';
@@ -272,13 +273,17 @@ class _NextGenHomeState extends State<NextGenHome> {
       signOut: _signOut,
       reload: _reload,
       signInAgain: () => _connectFlow(existing: gateway.connection),
-      child: NavigatorPopHandler(
-        onPopWithResult: (_) => _navigator.currentState?.maybePop(),
-        child: Navigator(
-          key: _navigator,
-          onGenerateInitialRoutes: (_, _) => [
-            MaterialPageRoute<void>(builder: (_) => const NgMainPage()),
-          ],
+      child: ProfileTheme(
+        connection: gateway.connection,
+        nextGen: true,
+        child: NavigatorPopHandler(
+          onPopWithResult: (_) => _navigator.currentState?.maybePop(),
+          child: Navigator(
+            key: _navigator,
+            onGenerateInitialRoutes: (_, _) => [
+              MaterialPageRoute<void>(builder: (_) => const NgMainPage()),
+            ],
+          ),
         ),
       ),
     );

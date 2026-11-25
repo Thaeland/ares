@@ -31,6 +31,8 @@ import 'main_model_route.dart';
 export '../models/connection.dart';
 export '../models/session.dart';
 
+part 'profile_dashboard_transport.dart';
+
 /// Injectable secret storage boundary used by [ConnectionManager].
 ///
 /// The production implementation is backed by Android Keystore through
@@ -2961,6 +2963,20 @@ class DashboardClient {
     }
   }
 
+  Future<Object?> _workspaceExchange(
+    List<String> segments, {
+    required Map<String, String> query,
+    required void Function() check,
+    required String method,
+    Map<String, Object?>? body,
+  }) => _workspaceJson(
+    segments,
+    query: query,
+    check: check,
+    profileMethod: method,
+    profileBody: body,
+  );
+
   Future<Object?> _workspaceJson(
     List<String> segments, {
     required Map<String, String> query,
@@ -2971,6 +2987,10 @@ class DashboardClient {
     bool makeWebappPrimary = false,
     bool startFleetUpdate = false,
     void Function()? beforeSend,
+    // Profile administration only: a closed catalogue (ProfileDashboardOp)
+    // chooses the method; nothing else may.
+    String? profileMethod,
+    Map<String, Object?>? profileBody,
   }) async {
     if (segments.isEmpty ||
         segments.any(
@@ -3026,17 +3046,36 @@ class DashboardClient {
             mintHostTerminalTicket)) {
       throw const FormatException('Invalid file replacement operation');
     }
+    if (profileMethod != null &&
+        (!const {
+              'GET',
+              'POST',
+              'PUT',
+              'PATCH',
+              'DELETE',
+            }.contains(profileMethod) ||
+            fileWrite ||
+            patchDirection ||
+            makeWebappPrimary ||
+            startFleetUpdate ||
+            mintHostTerminalTicket)) {
+      throw const FormatException('Invalid profile operation');
+    }
     final request = http.Request(
-      patchDirection
-          ? 'PATCH'
-          : mintHostTerminalTicket ||
-                makeWebappPrimary ||
-                startFleetUpdate ||
-                fileWrite
-          ? 'POST'
-          : 'GET',
+      profileMethod ??
+          (patchDirection
+              ? 'PATCH'
+              : mintHostTerminalTicket ||
+                    makeWebappPrimary ||
+                    startFleetUpdate ||
+                    fileWrite
+              ? 'POST'
+              : 'GET'),
       uri,
     )..followRedirects = false;
+    if (profileBody != null) {
+      request.bodyBytes = utf8.encode(jsonEncode(profileBody));
+    }
     request.headers.addAll(await _authHeaders());
     if (fileWrite) {
       request.headers['Content-Type'] = 'application/json';
