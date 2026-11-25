@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../services/remote_files_client.dart';
+import '../services/remote_workspace.dart';
 import '../theme/hermes_theme.dart';
 import '../widgets/hermes_components.dart';
 import '../widgets/markdown_file_preview.dart';
@@ -93,6 +94,9 @@ class _FilesScreenState extends State<FilesScreen> {
           ? await widget.files.defaultDirectory()
           : RemoteDirectory(path: directory);
       if (!_owns(generation)) return;
+      if (!isSafeWorkspacePath(root.path)) {
+        throw const FormatException('Invalid gateway root');
+      }
       _root = root;
       await _openDirectory(root.path);
     } catch (error) {
@@ -115,6 +119,9 @@ class _FilesScreenState extends State<FilesScreen> {
     try {
       final entries = await widget.files.listDirectory(path);
       if (!_owns(generation)) return;
+      if (!entries.every((e) => isWorkspaceChild(path, e.name, e.path))) {
+        throw const FormatException('Invalid gateway listing');
+      }
       setState(() {
         _path = path;
         _entries = entries;
@@ -142,6 +149,9 @@ class _FilesScreenState extends State<FilesScreen> {
     try {
       final preview = await widget.files.readText(entry.path);
       if (!_owns(generation)) return;
+      if (preview.path != entry.path) {
+        throw const FormatException('Gateway file changed');
+      }
       setState(() {
         _preview = preview;
         _loading = false;
@@ -326,7 +336,9 @@ class _FilesScreenState extends State<FilesScreen> {
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: _downloading ? null : _download,
+                  onPressed: _downloading || _preview == null
+                      ? null
+                      : _download,
                   icon: const Icon(Icons.download_outlined),
                   label: Text(context.l10n.download),
                 ),
@@ -335,16 +347,18 @@ class _FilesScreenState extends State<FilesScreen> {
                 const SizedBox(width: HermesSpacing.md),
                 Expanded(
                   child: FilledButton.icon(
-                    onPressed: () {
-                      widget.onAddToChat!(selected.path);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            context.l10n.file_reference_added_to_chat,
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: _preview == null
+                        ? null
+                        : () {
+                            widget.onAddToChat!(selected.path);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  context.l10n.file_reference_added_to_chat,
+                                ),
+                              ),
+                            );
+                          },
                     icon: const Icon(Icons.add_comment_outlined),
                     label: Text(context.l10n.add_to_chat),
                   ),

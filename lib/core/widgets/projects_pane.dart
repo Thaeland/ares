@@ -192,14 +192,27 @@ class _ProjectsPaneState extends State<ProjectsPane>
   }
 
   Future<void> _createProject() async {
-    final name = await showDialog<String>(
+    final repository = widget.repository;
+    final spec = await showDialog<({String name, String idea})>(
       context: context,
       builder: (dialogContext) => const _CreateProjectDialog(),
     );
-    if (name == null || !mounted) return;
+    if (spec == null || !mounted || widget.repository != repository) return;
 
     try {
-      await widget.repository.create(name);
+      final created = await repository.create(spec.name, idea: spec.idea);
+      if (mounted &&
+          widget.repository == repository &&
+          spec.idea.isNotEmpty &&
+          created.description != spec.idea) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Project created, but the gateway did not confirm its idea.',
+            ),
+          ),
+        );
+      }
     } catch (error) {
       if (!mounted) return;
       _showMutationError('create', error);
@@ -823,6 +836,7 @@ class _CreateProjectDialog extends StatefulWidget {
 
 class _CreateProjectDialogState extends State<_CreateProjectDialog> {
   String _draft = '';
+  String _idea = '';
   String? _error;
 
   void _submit() {
@@ -831,24 +845,41 @@ class _CreateProjectDialogState extends State<_CreateProjectDialog> {
       setState(() => _error = context.l10n.enter_a_name);
       return;
     }
-    Navigator.pop(context, name);
+    Navigator.pop(context, (name: name, idea: _idea.trim()));
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      scrollable: true,
       title: Text(context.l10n.new_project),
-      content: TextField(
-        key: const Key('project-name'),
-        autofocus: true,
-        maxLength: 80,
-        textCapitalization: TextCapitalization.sentences,
-        decoration: InputDecoration(
-          labelText: context.l10n.name,
-          errorText: _error,
-        ),
-        onChanged: (value) => _draft = value,
-        onSubmitted: (_) => _submit(),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            key: const Key('project-name'),
+            autofocus: true,
+            maxLength: 80,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: InputDecoration(
+              labelText: context.l10n.name,
+              errorText: _error,
+            ),
+            onChanged: (value) => _draft = value,
+            onSubmitted: (_) => _submit(),
+          ),
+          TextField(
+            key: const Key('project-idea'),
+            maxLength: 2000,
+            minLines: 2,
+            maxLines: 4,
+            decoration: const InputDecoration(
+              labelText: 'Project idea (optional)',
+              helperText: 'Saved in the project description, not a file.',
+            ),
+            onChanged: (value) => _idea = value,
+          ),
+        ],
       ),
       actions: [
         TextButton(

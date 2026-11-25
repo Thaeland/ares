@@ -2837,6 +2837,42 @@ class DashboardClient {
     required Map<String, String> query,
     required void Function() check,
     bool mintHostTerminalTicket = false,
+  }) => _workspaceJson(
+    segments,
+    query: query,
+    check: check,
+    mintHostTerminalTicket: mintHostTerminalTicket,
+  );
+
+  /// Never forward this content to `/fs/write-text`: the old route ignores
+  /// preconditions. A distinct URL makes old gateways fail closed.
+  Future<Object?> workspaceReplaceText({
+    required String profile,
+    required String sessionId,
+    required String cwd,
+    required String path,
+    required String expectedHash,
+    required String content,
+    required void Function() check,
+  }) => _workspaceJson(
+    ['fs', 'replace-text-v1'],
+    query: {'profile': profile},
+    check: check,
+    fileReplacement: {
+      'session_id': sessionId,
+      'cwd': cwd,
+      'path': path,
+      'expected_sha256': expectedHash,
+      'content': content,
+    },
+  );
+
+  Future<Object?> _workspaceJson(
+    List<String> segments, {
+    required Map<String, String> query,
+    required void Function() check,
+    bool mintHostTerminalTicket = false,
+    Map<String, String>? fileReplacement,
   }) async {
     if (segments.isEmpty ||
         segments.any(
@@ -2863,9 +2899,15 @@ class DashboardClient {
       ],
       queryParameters: query.isEmpty ? null : query,
     );
-    final request = http.Request(mintHostTerminalTicket ? 'POST' : 'GET', uri)
-      ..followRedirects = false;
+    final request = http.Request(
+      mintHostTerminalTicket || fileReplacement != null ? 'POST' : 'GET',
+      uri,
+    )..followRedirects = false;
     request.headers.addAll(await _authHeaders());
+    if (fileReplacement != null) {
+      request.headers['Content-Type'] = 'application/json';
+      request.bodyBytes = utf8.encode(jsonEncode(fileReplacement));
+    }
     check();
     final response = await _http
         .send(request)

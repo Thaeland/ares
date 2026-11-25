@@ -2,12 +2,17 @@
 /// docs/remote-workspace-contract.md before adding an operation.
 library;
 
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'package:uuid/uuid.dart';
+
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 import 'ws_client.dart';
 
 part 'workspace_discovery.dart';
 part 'workspace_project_settings.dart';
+part 'workspace_files.dart';
 
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {
@@ -293,14 +298,19 @@ final class WorkspaceTarget {
 
   Future<Map<String, dynamic>> _rpc(
     String method,
-    Map<String, dynamic> params,
-  ) async {
+    Map<String, dynamic> params, {
+    bool bindProfile = true,
+  }) async {
     checkCurrent();
     if (params.containsKey('profile')) _fail(WorkspaceFailure.mismatch);
-    final response = await _socket.send(method, {
-      ...params,
-      'profile': ?effectiveProfile,
-    }, includeProfile: false);
+    final response = await _socket.send(
+      method,
+      {
+        ...params,
+        if (bindProfile) 'profile': ?effectiveProfile,
+      },
+      includeProfile: false,
+    );
     checkCurrent();
     final error = response['error'];
     if (error != null) {
@@ -422,8 +432,9 @@ final class WorkspaceTarget {
 /// File operations accept literal host-native absolute paths, never URLs,
 /// network-device names, escaped separators, or Windows alternate streams.
 bool isSafeWorkspacePath(String path) {
-  if (!_canonicalPath(path) || path.startsWith(r'\\') || path.contains('%'))
+  if (!_canonicalPath(path) || path.startsWith(r'\\') || path.contains('%')) {
     return false;
+  }
   final windows = !path.startsWith('/');
   final rest = windows ? path.substring(3) : path.substring(1);
   if (!windows && rest.contains(r'\')) return false;
