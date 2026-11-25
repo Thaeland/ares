@@ -3979,6 +3979,27 @@ class AppLocalizationsFr extends AppLocalizations {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias est un alias de $command';
+  }
+
+  @override
+  String get slash_command_info_no_description =>
+      'Aucune description disponible.';
+
+  @override
+  String get slash_command_info_arguments_options =>
+      'Accepte une option parmi une liste fixe.';
+
+  @override
+  String get slash_command_info_arguments_text =>
+      'Accepte du texte après la commande.';
+
+  @override
+  String get slash_command_info_arguments_mixed =>
+      'Accepte une option ou du texte après la commande.';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -4556,6 +4577,56 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ng_send => 'Envoyer';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias est un alias de $command';
+  }
+
+  @override
+  String get ng_slash_command_no_description =>
+      'Aucune description disponible.';
+
+  @override
+  String get ng_slash_command_arguments_options =>
+      'Accepte une option parmi une liste fixe.';
+
+  @override
+  String get ng_slash_command_arguments_text =>
+      'Accepte du texte après la commande.';
+
+  @override
+  String get ng_slash_command_arguments_mixed =>
+      'Accepte une option ou du texte après la commande.';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'NextGen envoie ceci à Hermes comme un message normal ; la commande elle-même n’est pas exécutée.';
+
+  @override
+  String get ng_slash_command_output => 'Sortie de la commande';
+
+  @override
+  String get ng_slash_command_running => 'Exécution de la commande…';
+
+  @override
+  String get ng_slash_command_done => 'Terminé.';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return 'Impossible d\'exécuter la commande : $error';
+  }
+
+  @override
+  String get ng_slash_command_refused =>
+      'Hermes ne peut pas exécuter cette commande ici.';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      'La commande a été envoyée mais aucune réponse n’est arrivée. Elle est peut-être encore en cours sur la passerelle : elle n’a donc pas été renvoyée et votre brouillon a été conservé.';
+
+  @override
+  String get ng_slash_command_nothing_running => 'Rien n’est en cours.';
 
   @override
   String get ng_steered => 'Orienté';

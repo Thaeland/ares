@@ -417,7 +417,13 @@ enum SlashCommandResultKind { exec, prompt, prefill }
 /// `type`; `type` is only set when the gateway rerouted the command to
 /// `command.dispatch` (`exec`, `alias`, `plugin`, `send`, `skill`, `prefill`).
 class SlashCommandResult {
-  const SlashCommandResult._(this.kind, this.text);
+  const SlashCommandResult._(
+    this.kind,
+    this.text, {
+    this.display = '',
+    this.notice = '',
+    this.aliasTarget = '',
+  });
 
   const SlashCommandResult.exec(String output)
     : this._(SlashCommandResultKind.exec, output);
@@ -429,7 +435,20 @@ class SlashCommandResult {
     : this._(SlashCommandResultKind.prefill, message);
 
   final SlashCommandResultKind kind;
+
+  /// What to show (exec), submit (prompt) or put in the composer (prefill).
+  /// For a prompt this is model-facing: UIs show [display], never this.
   final String text;
+
+  /// The gateway's user-facing line for a send/skill directive, when given.
+  final String display;
+
+  /// A line a send/skill/prefill directive asks the UI to show first.
+  final String notice;
+
+  /// For an `alias` reply, the command it names (`/name args`); [text] still
+  /// carries what to show when the alias is not followed.
+  final String aliasTarget;
 
   bool get isExecuted => kind == SlashCommandResultKind.exec;
 
@@ -452,17 +471,32 @@ class SlashCommandResult {
         final message = _resultText(result['message']);
         return message.isEmpty
             ? const SlashCommandResult.exec('')
-            : SlashCommandResult.prompt(message);
+            : SlashCommandResult._(
+                SlashCommandResultKind.prompt,
+                message,
+                display: _resultText(result['display']).trim(),
+                notice: _resultText(result['notice']).trim(),
+              );
       case 'prefill':
         final message = _resultText(result['message']);
         return message.isEmpty
             ? const SlashCommandResult.exec('')
-            : SlashCommandResult.prefill(message);
+            : SlashCommandResult._(
+                SlashCommandResultKind.prefill,
+                message,
+                notice: _resultText(result['notice']).trim(),
+              );
       case 'alias':
-        // An alias reply names `target`; UIs render `display`. The app does not
-        // re-dispatch, so surface what the gateway told us and never re-send.
-        return SlashCommandResult.exec(
+        // An alias reply names `target`; UIs render `display`. Classic does
+        // not re-dispatch, so it surfaces what the gateway told us and never
+        // re-sends; NextGen follows [aliasTarget] once.
+        final target = _resultText(result['target']).trim();
+        return SlashCommandResult._(
+          SlashCommandResultKind.exec,
           _withWarning(_directiveText(result, slashTarget: true), warning),
+          aliasTarget: target.isEmpty || target.startsWith('/')
+              ? target
+              : '/$target',
         );
       case 'exec':
       case 'plugin':

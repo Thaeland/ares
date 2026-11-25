@@ -48,6 +48,7 @@ import '../services/gateway_turn_coordinator.dart';
 import '../services/gateway_turn_recovery.dart';
 import '../services/gateway_turn_ui_projection.dart';
 import '../services/remote_files_client.dart';
+import '../services/slash_command_errors.dart';
 import '../services/legal_links.dart';
 import '../services/turn_notification_service.dart';
 import '../services/notification_approval_authority.dart';
@@ -99,6 +100,7 @@ import '../widgets/gateway_sensitive_prompt_dialog.dart';
 import '../widgets/hermes_components.dart';
 import '../widgets/media_artifact_card.dart';
 import '../widgets/slash_command_dropdown.dart';
+import '../widgets/slash_command_highlight.dart';
 import '../widgets/slash_command_notice_card.dart';
 import '../widgets/voice_composer_controls.dart';
 
@@ -798,7 +800,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   bool _appInBackground = false;
 
   // Chat sending state
-  final _textController = TextEditingController();
+  final _textController = SlashCommandHighlightController();
   int _composerRevision = 0;
   int _clearedComposerRevision = 0;
   bool _preparingPaste = false;
@@ -4856,19 +4858,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   /// 4018 is also used for quick-command failures and dispatch-required
   /// skills. Learn only an explicit verdict or the legacy not-a-command form.
+  /// Shared with NextGen ([isSlashCommandRefusal]).
   static bool _isSlashCommandRefusal(JsonRpcError error) =>
-      error.reason == 'unsupported_command' ||
-      (error.reason == null &&
-          error.code == 4018 &&
-          (error.message == 'unsupported_command' ||
-              error.message.startsWith(
-                'not a quick/plugin/bundle/skill command:',
-              )));
+      isSlashCommandRefusal(error);
 
   /// The transport timed out or dropped after the write: the gateway may still
   /// be running the command. Same uncertainty rule as `session.steer` (#191).
   static bool _isSlashDeliveryUnknown(JsonRpcError error) =>
-      error.message == 'Timeout' || error.reason == 'connection_closed';
+      isSlashDeliveryUnknown(error);
 
   void _showSlashDeliveryUnknown() {
     if (!mounted) return;
@@ -7707,7 +7704,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           const SingleActivator(LogicalKeyboardKey.escape):
               _slashController.close,
         },
-        child: composer,
+        child: ChatComposerSlashInfo(
+          controller: _textController,
+          focusNode: _composerFocus,
+          commands: _slashController,
+          isAvailable: () => _slashCommandsAvailable,
+          dropdownOpen: _slashDropdownVisible,
+          localCommands: _localNewSessionNames,
+          scope: widget.session.id,
+          child: composer,
+        ),
       ),
     );
   }
