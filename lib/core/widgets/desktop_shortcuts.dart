@@ -83,92 +83,20 @@ class DesktopShortcuts extends StatelessWidget {
       );
 
   Map<ShortcutActivator, VoidCallback> _buildBindings() {
-    final shortcutsStore = store;
-    final customMap = shortcutsStore?.readMap() ?? const <String, String>{};
-    final conflictedChords = <String>{
-      if (shortcutsStore != null)
-        for (final entry in shortcutsStore.conflicts()) entry[2] as String,
+    // One plan for the key handler and Settings: the same chords that fire
+    // here are the ones the conflict check sees (including the Windows/Linux
+    // Ctrl twins), and a custom chord that collides falls back to its default.
+    final plan =
+        store?.plan(platform: defaultTargetPlatform) ??
+        shortcuts_store.ShortcutPlan.resolve(
+          const <String, String>{},
+          defaultTargetPlatform,
+        );
+    return {
+      for (final binding in plan.bindings)
+        _activatorFor(binding.chord): () =>
+            fireDesktopShortcut(_shortcutFor(binding.action)),
     };
-
-    final bindings = <ShortcutActivator, VoidCallback>{};
-    final usedSerialized = <String>{};
-
-    // First pass: resolve effective chord per action. If a custom chord caused
-    // a duplicate conflict, fall back to the action's default chord so a
-    // conflict never overwrites another action's shortcut.
-    final resolved =
-        <shortcuts_store.ShortcutAction, shortcuts_store.KeyChord>{};
-    for (final action in shortcuts_store.ShortcutRegistry.actions) {
-      final defaultChord = shortcuts_store.ShortcutRegistry.defaultChord(
-        action,
-      );
-      final configured = shortcutsStore?.chordFor(action) ?? defaultChord;
-      final isCustom = customMap.containsKey(action.id);
-      if (isCustom && conflictedChords.contains(configured.serialize())) {
-        resolved[action] = defaultChord;
-      } else {
-        resolved[action] = configured;
-      }
-    }
-
-    for (final action in shortcuts_store.ShortcutRegistry.actions) {
-      final chord = resolved[action]!;
-      final serialized = chord.serialize();
-      if (!usedSerialized.add(serialized)) continue;
-      final desktopShortcut = _shortcutFor(action);
-      bindings[_activatorFor(chord)] = () =>
-          fireDesktopShortcut(desktopShortcut);
-    }
-
-    // Platform convenience: for uncustomized default meta+<key> bindings, also
-    // accept Ctrl+<key> when that chord is not claimed by any binding, so
-    // Windows and Linux keyboards work with Ctrl out of the box. Never on
-    // macOS or iOS: there Ctrl+letter is a text-editing command (Ctrl+K
-    // deletes to the end of the line) and Cmd is the shortcut modifier.
-    final ctrlTwins = shortcuts_store.shortcutsAddCtrlTwins(
-      defaultTargetPlatform,
-    );
-    for (final action in shortcuts_store.ShortcutRegistry.actions) {
-      if (!ctrlTwins) break;
-      if (customMap.containsKey(action.id)) continue;
-      final chord = resolved[action]!;
-      if (!chord.meta || chord.ctrl) continue;
-      final ctrlMirror = shortcuts_store.KeyChord(
-        key: chord.key,
-        ctrl: true,
-        shift: chord.shift,
-        alt: chord.alt,
-      );
-      if (usedSerialized.add(ctrlMirror.serialize())) {
-        final desktopShortcut = _shortcutFor(action);
-        bindings[_activatorFor(ctrlMirror)] = () =>
-            fireDesktopShortcut(desktopShortcut);
-      }
-    }
-
-    // Secondary alias: Shift+Cmd/Ctrl+F also triggers search when unclaimed.
-    if (!customMap.containsKey(shortcuts_store.ShortcutAction.search.id)) {
-      for (final alias in [
-        const shortcuts_store.KeyChord(
-          key: LogicalKeyboardKey.keyF,
-          meta: true,
-          shift: true,
-        ),
-        if (ctrlTwins)
-          const shortcuts_store.KeyChord(
-            key: LogicalKeyboardKey.keyF,
-            ctrl: true,
-            shift: true,
-          ),
-      ]) {
-        if (usedSerialized.add(alias.serialize())) {
-          bindings[_activatorFor(alias)] = () =>
-              fireDesktopShortcut(DesktopShortcut.search);
-        }
-      }
-    }
-
-    return bindings;
   }
 
   @override

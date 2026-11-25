@@ -9,7 +9,8 @@ library;
 
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart' show TargetPlatform, ValueNotifier;
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, ValueNotifier, defaultTargetPlatform;
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -374,21 +375,206 @@ class ShortcutsStore {
     shortcutsStoreChanges.value++;
   }
 
-  /// Finds chords that are shared across actions. The returned list is empty
-  /// when every binding is distinct. Each entry is `[actionA, actionB,
-  /// sharedChord]`.
-  List<List<dynamic>> conflicts() {
-    final bindings = allBindings();
-    final byChord = <String, List<ShortcutAction>>{};
-    for (final entry in bindings.entries) {
-      byChord.putIfAbsent(entry.value.serialize(), () => []).add(entry.key);
-    }
-    final conflicts = <List<dynamic>>[];
-    for (final entry in byChord.entries) {
-      if (entry.value.length > 1) {
-        conflicts.add([entry.value[0], entry.value[1], entry.key]);
+  /// What fires on [platform] (default: the current one) and which custom
+  /// bindings collide with something that would fire. See [ShortcutPlan].
+  ShortcutPlan plan({TargetPlatform? platform}) =>
+      ShortcutPlan.resolve(readMap(), platform ?? defaultTargetPlatform);
+
+  /// Chords claimed by two actions among the bindings that actually fire on
+  /// [platform] (default: the current one), including the automatic Ctrl
+  /// twins on Windows and Linux. Empty when every binding is distinct. Each
+  /// entry is `[actionA, actionB, sharedChord]` (serialized chord).
+  List<List<dynamic>> conflicts({TargetPlatform? platform}) => [
+    for (final conflict in plan(platform: platform).conflicts)
+      [conflict.first, conflict.second, conflict.chord.serialize()],
+  ];
+}
+
+/// How a chord reaches its action.
+enum ShortcutBindingKind {
+  /// The action's own chord (default or custom), shown in Settings.
+  primary,
+
+  /// The automatic Ctrl twin of an uncustomized Cmd default (Windows, Linux).
+  /// Settings shows it as part of the default (`Cmd/Ctrl + K`).
+  ctrlTwin,
+
+  /// A hidden convenience (Shift+Cmd/Ctrl+F for search). It never conflicts:
+  /// it simply stops firing when any other binding claims the chord.
+  alias,
+}
+
+/// One chord that fires one action.
+class ShortcutBinding {
+  const ShortcutBinding(
+    this.action,
+    this.chord, {
+    this.kind = ShortcutBindingKind.primary,
+  });
+
+  final ShortcutAction action;
+  final KeyChord chord;
+  final ShortcutBindingKind kind;
+}
+
+/// Two actions claiming the same chord.
+class ShortcutConflict {
+  const ShortcutConflict(this.first, this.second, this.chord);
+
+  final ShortcutAction first;
+  final ShortcutAction second;
+  final KeyChord chord;
+}
+
+/// The single answer to "what does this chord do here", shared by the key
+/// handler ([bindings]) and Settings ([conflicts]) so they cannot disagree.
+///
+/// Every visible binding takes part: each action's chord and, where the
+/// platform adds them, the Ctrl twins of uncustomized Cmd defaults. A custom
+/// chord that collides with any of them is reported and reverted to the
+/// action's default (with its twin), repeatedly until nothing collides, so a
+/// conflict never silently takes another action's shortcut away.
+class ShortcutPlan {
+  const ShortcutPlan._({
+    required this.bindings,
+    required this.conflicts,
+    required this.reverted,
+  });
+
+  /// Every chord that fires, each at most once, in priority order.
+  final List<ShortcutBinding> bindings;
+
+  /// Collisions found among the configured bindings.
+  final List<ShortcutConflict> conflicts;
+
+  /// Actions whose custom chord was reverted to the default.
+  final Set<ShortcutAction> reverted;
+
+  /// The chord → action table the key handler installs.
+  Map<KeyChord, ShortcutAction> get firing => {
+    for (final binding in bindings) binding.chord: binding.action,
+  };
+
+  static ShortcutPlan resolve(
+    Map<String, String> customMap,
+    TargetPlatform platform,
+  ) {
+    final twins = shortcutsAddCtrlTwins(platform);
+    final custom = <ShortcutAction, KeyChord>{};
+    for (final action in ShortcutRegistry.actions) {
+      final parsed = KeyChord.parse(customMap[action.id]);
+      // Re-saving the default is not a customization: keep its Ctrl twin.
+      if (parsed != null && parsed != ShortcutRegistry.defaultChord(action)) {
+        custom[action] = parsed;
       }
     }
-    return conflicts;
+    final reverted = <ShortcutAction>{};
+    final conflicts = <ShortcutConflict>[];
+    final seen = <String>{};
+
+    List<ShortcutBinding> visible() {
+      final primary = <ShortcutBinding>[];
+      final twinBindings = <ShortcutBinding>[];
+      for (final action in ShortcutRegistry.actions) {
+        final customized =
+            custom.containsKey(action) && !reverted.contains(action);
+        final chord = customized
+            ? custom[action]!
+            : ShortcutRegistry.defaultChord(action);
+        primary.add(ShortcutBinding(action, chord));
+        if (!customized && twins && chord.meta && !chord.ctrl) {
+          twinBindings.add(
+            ShortcutBinding(
+              action,
+              KeyChord(
+                key: chord.key,
+                ctrl: true,
+                shift: chord.shift,
+                alt: chord.alt,
+              ),
+              kind: ShortcutBindingKind.ctrlTwin,
+            ),
+          );
+        }
+      }
+      return [...primary, ...twinBindings];
+    }
+
+    var candidates = visible();
+    for (var round = 0; round <= ShortcutRegistry.actions.length; round++) {
+      final byChord = <String, List<ShortcutBinding>>{};
+      for (final binding in candidates) {
+        byChord.putIfAbsent(binding.chord.serialize(), () => []).add(binding);
+      }
+      var changed = false;
+      for (final entry in byChord.entries) {
+        final actions = <ShortcutAction>{
+          for (final binding in entry.value) binding.action,
+        }.toList();
+        if (actions.length < 2) continue;
+        for (var i = 1; i < actions.length; i++) {
+          final key = '${actions[0].id}|${actions[i].id}|${entry.key}';
+          if (seen.add(key)) {
+            conflicts.add(
+              ShortcutConflict(actions[0], actions[i], entry.value.first.chord),
+            );
+          }
+        }
+        for (final action in actions) {
+          if (custom.containsKey(action) && reverted.add(action)) {
+            changed = true;
+          }
+        }
+      }
+      if (!changed) break;
+      candidates = visible();
+    }
+
+    final used = <String>{};
+    final bindings = <ShortcutBinding>[
+      for (final binding in candidates)
+        if (used.add(binding.chord.serialize())) binding,
+    ];
+    final searchCustomized =
+        custom.containsKey(ShortcutAction.search) &&
+        !reverted.contains(ShortcutAction.search);
+    if (!searchCustomized) {
+      for (final alias in [
+        const KeyChord(key: LogicalKeyboardKey.keyF, meta: true, shift: true),
+        if (twins)
+          const KeyChord(key: LogicalKeyboardKey.keyF, ctrl: true, shift: true),
+      ]) {
+        if (used.add(alias.serialize())) {
+          bindings.add(
+            ShortcutBinding(
+              ShortcutAction.search,
+              alias,
+              kind: ShortcutBindingKind.alias,
+            ),
+          );
+        }
+      }
+    }
+    return ShortcutPlan._(
+      bindings: List.unmodifiable(bindings),
+      conflicts: List.unmodifiable(conflicts),
+      reverted: Set.unmodifiable(reverted),
+    );
   }
+}
+
+/// True for Cmd/Ctrl + C, V, X, Z, A or Y (with or without Shift): the
+/// clipboard, undo/redo and select-all commands of every text field. Binding
+/// an app shortcut there takes the command away from the composer, so
+/// Settings warns about it.
+bool isTextEditingChord(KeyChord chord) {
+  if (!(chord.meta || chord.ctrl) || chord.alt) return false;
+  return const {
+    'keyC',
+    'keyV',
+    'keyX',
+    'keyZ',
+    'keyA',
+    'keyY',
+  }.contains(chord.keyName);
 }
