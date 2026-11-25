@@ -301,7 +301,11 @@ void main() {
           tester.view.devicePixelRatio = 1.0;
           addTearDown(tester.view.reset);
           final spawned = <FakeChildProcess>[];
-          final integration = await _quickEntryIntegration(spawned);
+          // Created outside the test clock so its own futures can complete
+          // inside runAsync at the end.
+          final integration = (await tester.runAsync(
+            () => _quickEntryIntegration(spawned),
+          ))!;
           // Async teardown does not run microtasks under the fake clock;
           // dispose in the body, and only the synchronous part on failure.
           addTearDown(integration.quickEntry.dispose);
