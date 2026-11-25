@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/screens/projects_root_screen.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
+import 'package:hermes_android/core/services/remote_files_client.dart';
 import 'package:hermes_android/core/widgets/project_detail_screen.dart';
 import 'package:hermes_android/core/widgets/projects_pane.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
@@ -23,6 +24,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'support/markdown_file_fixture.dart';
 import 'support/mtls_fixture.dart';
 
 SavedConnection _connection({String id = 'c1', String profile = 'work'}) =>
@@ -42,13 +44,14 @@ SavedConnection _connection({String id = 'c1', String profile = 'work'}) =>
     );
 
 class _Gateway extends NextGenGateway {
-  _Gateway(super.connection)
+  _Gateway(super.connection, {this.markdown})
     : super(
         dashboard: DashboardClient.fromConnection(
           connection,
           httpClient: MockClient((request) async {
             expectSync(request.method, 'GET', reason: 'no settings writes');
             expectSync(request.url.path, startsWith('/hermes/api/'));
+            if (markdown != null) return markdown.respond(request);
             if (request.url.path.endsWith('/messages')) {
               return http.Response(jsonEncode({'messages': []}), 200);
             }
@@ -59,6 +62,18 @@ class _Gateway extends NextGenGateway {
           }),
         ),
       );
+
+  final MarkdownDashboardFixture? markdown;
+  @override
+  RemoteFilesClient createFilesClient({
+    String? sessionId,
+    int? maxDownloadBytes,
+  }) => RemoteFilesClient.fromConnection(
+    connection,
+    sessionId: sessionId,
+    maxDownloadBytes: maxDownloadBytes,
+    httpClient: MockClient(markdown!.respond),
+  );
 
   @override
   NgConnectionState get state =>
@@ -692,6 +707,72 @@ void main() {
       expect(tester.takeException(), isNull);
       // Reset the process-wide NextGen strings for following tests.
       await _app(tester, selected, main: true);
+      await _close(tester, [gateway]);
+    });
+  }
+
+  for (final entry in [
+    'Files',
+    'Assets',
+    'project folder',
+    'chat attachment',
+  ]) {
+    testWidgets('NextGen $entry opens the same rich Markdown fixture', (
+      tester,
+    ) async {
+      // Distinct layouts exercise both phone and desktop route geometry.
+      await tester.binding.setSurfaceSize(
+        entry == 'Assets' || entry == 'project folder'
+            ? const Size(1150, 820)
+            : const Size(390, 844),
+      );
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final backend = MarkdownDashboardFixture();
+      final gateway = _Gateway(_connection(), markdown: backend);
+      final chat = entry == 'chat attachment';
+      final folder = entry == 'project folder';
+      await _app(tester, ValueNotifier(gateway), main: chat);
+      if (folder || chat) {
+        await _browse(tester, main: chat);
+        await _detail(tester, gateway);
+        if (folder) {
+          await tester.tap(find.text('Files'));
+          await _frames(tester);
+          await tester.tap(find.text(MarkdownDashboardFixture.directory));
+        } else {
+          await tester.tap(find.text('Existing project conversation'));
+        }
+      } else {
+        await tester.tap(find.text(entry));
+      }
+      await _frames(tester);
+      final file = find.text(MarkdownDashboardFixture.filename);
+      await tester.ensureVisible(file);
+      expect(
+        backend.requests.where((uri) => uri.path.contains('/fs/download')),
+        isEmpty,
+      );
+      await tester.tap(file);
+      await _frames(tester);
+      if (chat || entry == 'Assets') await waitForMarkdownDownload(tester);
+      await verifyMarkdownPreview(tester);
+      final fs = backend.requests
+          .where((uri) => uri.path.contains('/fs/'))
+          .toList();
+      expect(
+        fs.every((uri) => uri.queryParameters['profile'] == 'work'),
+        isTrue,
+      );
+      if (chat || entry == 'Assets') {
+        expect(
+          fs.single.queryParameters['session_id'],
+          MarkdownDashboardFixture.session,
+        );
+        expect(fs.single.path, endsWith('/fs/download'));
+      } else {
+        expect(fs.last.path, endsWith('/fs/read-text'));
+        expect(fs.any((uri) => uri.path.endsWith('/fs/default-cwd')), !folder);
+      }
       await _close(tester, [gateway]);
     });
   }

@@ -24,7 +24,9 @@ import 'package:flutter/material.dart';
 import '../models/hermes_project.dart';
 import '../models/project_sessions_tree.dart';
 import '../models/session.dart';
+import '../screens/files_screen.dart';
 import '../services/projects_repository.dart';
+import '../services/remote_files_client.dart';
 import '../theme/hermes_theme.dart';
 import '../utils/project_session_filter.dart';
 import '../utils/relative_time.dart';
@@ -53,6 +55,7 @@ class ProjectDetailScreen extends StatefulWidget {
   final String projectName;
 
   final ProjectSessionsLoader loadSessions;
+  final RemoteFilesClient Function()? createFilesClient;
 
   /// Opens one chat. When null the rows are drawn inert rather than
   /// fake-tappable.
@@ -77,6 +80,7 @@ class ProjectDetailScreen extends StatefulWidget {
     required this.projectId,
     required this.projectName,
     required this.loadSessions,
+    this.createFilesClient,
     this.onOpenSession,
     this.onNewChat,
     this.projects = const [],
@@ -696,8 +700,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
 
   /// The project's folders, exactly as the server described them.
   ///
-  /// Paths come from `projects.project_sessions` (project, repos, lanes); the
-  /// screen never scans local storage and never invents a tree of its own.
+  /// Merge the registered project folders with the repos/lanes in its tree.
+  /// Never scan local storage or invent a path for a folderless project.
   Widget _buildFiles(ProjectSessionsView view) {
     final tokens = HermesTokens.of(context);
     final paths = <String>[];
@@ -708,6 +712,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     }
 
     final tree = view.tree;
+    final project = widget.projects
+        .where((p) => p.id == widget.projectId)
+        .firstOrNull;
+    add(project?.primaryPath);
+    for (final folder in project?.folders ?? const <ProjectFolder>[]) {
+      add(folder.path);
+    }
     add(tree?.path);
     for (final repo in tree?.repos ?? const <ProjectRepo>[]) {
       add(repo.path);
@@ -716,6 +727,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
       }
     }
 
+    final createFiles = widget.createFilesClient;
     return RefreshIndicator(
       onRefresh: () => _load(refresh: true),
       child: ListView(
@@ -745,6 +757,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   HermesSpacing.sm,
                 ),
                 child: HermesCard(
+                  onTap: createFiles == null
+                      ? null
+                      : () => FilesScreen.open(
+                          context,
+                          createFiles(),
+                          directory: path,
+                        ),
                   child: Row(
                     children: [
                       Icon(
@@ -761,6 +780,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                           ),
                         ),
                       ),
+                      if (createFiles != null) const Icon(Icons.chevron_right),
                     ],
                   ),
                 ),

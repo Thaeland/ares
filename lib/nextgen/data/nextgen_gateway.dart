@@ -12,6 +12,7 @@ import '../../core/services/connection_manager.dart';
 import '../../core/services/dashboard_api_client.dart';
 import '../../core/services/desktop_gateway_client.dart';
 import '../../core/services/hermes_sign_in.dart';
+import '../../core/services/remote_files_client.dart';
 import '../../core/services/ws_client.dart';
 import '../nextgen_l10n.dart';
 import 'nextgen_projects.dart';
@@ -74,6 +75,16 @@ class NextGenGateway extends ChangeNotifier {
     api = DashboardApiClient.withDashboard(this.dashboard, profile: profile);
     writes = DashboardSessionWrites(this.dashboard, profile: profile);
   }
+
+  /// Browsers and attachment cards close their own clients, never the live gateway.
+  RemoteFilesClient createFilesClient({
+    String? sessionId,
+    int? maxDownloadBytes,
+  }) => RemoteFilesClient.fromConnection(
+    connection,
+    sessionId: sessionId,
+    maxDownloadBytes: maxDownloadBytes,
+  );
 
   NgProjects? _projects;
 

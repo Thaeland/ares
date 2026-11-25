@@ -8,13 +8,17 @@ import 'package:flutter/material.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/hermes_project.dart';
 import '../../core/models/session.dart';
+import '../../core/screens/assets_screen.dart';
 import '../../core/screens/cron_screen.dart';
+import '../../core/screens/files_screen.dart';
 import '../../core/screens/memory_screen.dart';
 import '../../core/screens/nous_portal_screen.dart';
 import '../../core/screens/projects_root_screen.dart';
 import '../../core/screens/provider_oauth_screen.dart';
 import '../../core/screens/skills_screen.dart';
+import '../../core/services/chat_assets_client.dart';
 import '../../core/services/dashboard_api_client.dart';
+import '../../core/services/remote_files_client.dart';
 import '../nextgen_preferences.dart';
 import '../theme/nextgen_theme.dart';
 import 'models_page.dart';
@@ -65,6 +69,43 @@ class NgMorePage extends StatelessWidget {
                     NgProjectsPage(
                       onOpenSession: onOpenSession,
                       onNewProjectChat: onNewProjectChat,
+                    ),
+                  ),
+                ),
+                NgRow(
+                  icon: Icons.folder_open_outlined,
+                  title: context.l10n.files,
+                  onTap: () => FilesScreen.open(
+                    context,
+                    scope.gateway.createFilesClient(),
+                  ),
+                ),
+                NgRow(
+                  icon: Icons.perm_media_outlined,
+                  title: context.l10n.assets,
+                  onTap: () => push(
+                    AssetsScreen(
+                      source: ChatAssetsClient(
+                        dashboard: scope.gateway.dashboard,
+                        profile: scope.gateway.profile,
+                      ),
+                      filesClient: (session) => scope.gateway.createFilesClient(
+                        sessionId: session.id,
+                        maxDownloadBytes: maxAttachmentDownloadBytes,
+                      ),
+                      onOpenSession: (session) {
+                        if (!context.mounted ||
+                            !identical(
+                              NgScope.of(context).gateway,
+                              scope.gateway,
+                            )) {
+                          return;
+                        }
+                        Navigator.of(
+                          context,
+                        ).popUntil((route) => route.isFirst);
+                        onOpenSession(session);
+                      },
                     ),
                   ),
                 ),

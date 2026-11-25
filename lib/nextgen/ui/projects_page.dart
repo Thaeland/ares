@@ -111,6 +111,7 @@ class _ProjectsBrowserState extends State<_ProjectsBrowser> {
         builder: (_) => ProjectDetailScreen(
           projectId: project.id,
           projectName: project.name,
+          createFilesClient: widget.gateway.createFilesClient,
           loadSessions: ({required refresh}) =>
               _repository.projectSessions(project.id, refresh: refresh),
           onOpenSession: _openSession,
