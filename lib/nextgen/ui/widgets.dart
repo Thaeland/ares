@@ -583,6 +583,7 @@ Future<String?> ngPromptText(
   final controller = TextEditingController(text: initial);
   final result = await showDialog<String>(
     context: context,
+    useRootNavigator: false,
     builder: (context) => AlertDialog(
       title: Text(title),
       content: TextField(
@@ -616,6 +617,7 @@ Future<bool> ngConfirm(
   final c = NgColors.of(context);
   final ok = await showDialog<bool>(
     context: context,
+    useRootNavigator: false,
     builder: (context) => AlertDialog(
       title: Text(title),
       content: Text(body),

@@ -601,6 +601,13 @@ class ChatScreen extends StatefulWidget {
   /// Retained/offstage destinations must explicitly relinquish voice authority.
   final bool active;
 
+  /// A dedicated stored-chat window must not open a second chat via /new.
+  final bool singleSession;
+
+  /// An isolated pop-out supplies a silent service. Regular embedded chat
+  /// panes continue using the main application's notification owner.
+  final TurnNotificationService? notifications;
+
   /// When set, the chat is embedded in a wider list+detail pane rather than
   /// pushed as a route: the AppBar shows a close affordance that calls this
   /// instead of popping the enclosing route. Null keeps the normal pushed
@@ -679,6 +686,8 @@ class ChatScreen extends StatefulWidget {
     this.testHandsFreePlatform,
     this.testVoiceReplySpeaker,
     this.active = true,
+    this.singleSession = false,
+    this.notifications,
     this.onClose,
     this.testTurnNotifications,
     this.testDesktopConnectionHook,
@@ -995,7 +1004,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       );
     }
     _turnNotifications =
-        widget.testTurnNotifications ?? TurnNotificationService.shared;
+        widget.testTurnNotifications ??
+        widget.notifications ??
+        TurnNotificationService.shared;
     unawaited(_turnNotifications.ensureInitialized());
     // A notification action that could not answer directly (the request is
     // owned by this screen's gateway, not the app-level controller) lands in
@@ -1126,7 +1137,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _loadChatDensity();
     chatDensitySelection.addListener(_onChatDensityChanged);
     _voiceSetup = _initVoice();
-    _recoverLostImage();
+    // retrieveLostData is Android-only and has no owning session ID. A
+    // restored workspace must not race several chats for the same photo.
+    if (!kIsWeb &&
+        defaultTargetPlatform == TargetPlatform.android &&
+        !widget.singleSession) {
+      unawaited(_recoverLostImage());
+    }
     _scrollController.addListener(_onScroll);
     if (_desktopGateway != null) unawaited(_ensureDesktopSession());
   }
@@ -4644,6 +4661,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (_sending || _streaming || _preparingSend) return '';
     final bareName = name.toLowerCase().replaceFirst(RegExp(r'^/+'), '');
     if (_localNewSessionNames.contains(bareName)) {
+      if (widget.singleSession) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Start a new chat in the main window.')),
+        );
+        return '';
+      }
       unawaited(_openFreshDraftChat(_slashCommandArgument(text)));
       _setRestoredComposer('');
       _commitComposerForSend();
@@ -6181,7 +6204,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       return;
     }
     _clarifyPromptClosing = true;
-    final navigator = Navigator.of(context, rootNavigator: true);
+    final navigator = route.navigator;
+    if (navigator == null) return;
     if (route.isCurrent) {
       navigator.pop(false);
     } else {
@@ -6345,10 +6369,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         ),
       );
       _approvalPromptRoute = approvalRoute;
-      final responded = await Navigator.of(
-        context,
-        rootNavigator: true,
-      ).push(approvalRoute);
+      final responded = await Navigator.of(context).push(approvalRoute);
       _approvalPromptRoute = null;
       _approvalRouteOpen = false;
       _approvalDialogOpen = false;
@@ -6471,10 +6492,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         ),
       );
       _sensitivePromptRoute = sensitiveRoute;
-      final result = await Navigator.of(
-        context,
-        rootNavigator: true,
-      ).push(sensitiveRoute);
+      final result = await Navigator.of(context).push(sensitiveRoute);
       _sensitivePromptRoute = null;
       _sensitivePromptRouteOpen = false;
       _expiredSensitivePromptIds.remove(pending.request.requestId);
@@ -6662,6 +6680,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       _clarifyPromptRouteOpen = true;
       final responded = await showDialog<bool>(
         context: context,
+        useRootNavigator: false,
         barrierDismissible: true,
         builder: (dialogContext) {
           _clarifyPromptRoute = ModalRoute.of<bool>(dialogContext);
@@ -8496,6 +8515,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     var query = '';
     final action = await showDialog<String>(
       context: context,
+      useRootNavigator: false,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
           scrollable: true,

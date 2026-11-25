@@ -11,6 +11,7 @@ import '../../core/models/session.dart';
 import '../../core/screens/cron_screen.dart';
 import '../../core/screens/memory_screen.dart';
 import '../../core/screens/nous_portal_screen.dart';
+import '../../core/screens/parallel_workspace_entry.dart';
 import '../../core/screens/projects_root_screen.dart';
 import '../../core/screens/provider_oauth_screen.dart';
 import '../../core/screens/skills_screen.dart';
@@ -20,6 +21,7 @@ import '../nextgen_preferences.dart';
 import '../theme/nextgen_theme.dart';
 import 'models_page.dart';
 import 'nextgen_scope.dart';
+import 'parallel_workspace_page.dart';
 import 'projects_page.dart';
 import 'scheduled_page.dart';
 import 'sessions_sidebar.dart';
@@ -38,6 +40,15 @@ class NgMorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scope = NgScope.of(context);
+    return ParallelWorkspaceEntryHost(
+      owner: scope.gateway,
+      connection: scope.connection,
+      workspace: (_) => NgParallelWorkspacePage(gateway: scope.gateway),
+      home: (openParallel) => _menu(context, scope, openParallel),
+    );
+  }
+
+  Widget _menu(BuildContext context, NgScope scope, VoidCallback openParallel) {
     final conn = scope.connection;
     void push(Widget page) => Navigator.of(
       context,
@@ -57,6 +68,12 @@ class NgMorePage extends StatelessWidget {
                   title: ngL.ng_archived_chats,
                   onTap: () =>
                       push(NgArchivedPage(onOpenSession: onOpenSession)),
+                ),
+                NgRow(
+                  icon: Icons.view_week_outlined,
+                  title: parallelWorkspaceEntryTitle,
+                  subtitle: parallelWorkspaceEntrySubtitle,
+                  onTap: openParallel,
                 ),
                 NgRow(
                   icon: Icons.folder_outlined,
