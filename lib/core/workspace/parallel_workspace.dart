@@ -9,6 +9,7 @@ import '../models/connection.dart';
 import '../models/session.dart';
 import '../services/connection_mutation_barrier.dart';
 import 'workspace_layout.dart';
+import 'terminal_chat_link.dart';
 import 'workspace_pane.dart';
 import 'workspace_picker.dart';
 import 'workspace_popout.dart';
@@ -57,6 +58,9 @@ enum _Command {
 }
 
 class _WorkspaceState extends State<ParallelWorkspace> {
+  final _chatLinks = <String, TerminalChatLink>{};
+  TerminalChatLink _link(String id) =>
+      _chatLinks.putIfAbsent(id, () => TerminalChatLink(widget.connection, id));
   final _versions = <PaneRef, Object>{};
   Object _version(PaneRef pane) => _versions.putIfAbsent(pane, Object.new);
   WorkspaceLayout _layout = WorkspaceLayout();
@@ -147,6 +151,9 @@ class _WorkspaceState extends State<ParallelWorkspace> {
     setState(() {
       apply();
       _versions.removeWhere((pane, _) => !_layout.tabs.contains(pane));
+      _chatLinks.removeWhere(
+        (id, _) => !_layout.tabs.any((pane) => pane.sessionId == id),
+      );
       if (_primary == null) _focus = false;
     });
     // SharedPreferences updates its in-process cache synchronously and sends
@@ -214,6 +221,7 @@ class _WorkspaceState extends State<ParallelWorkspace> {
           _current &&
           (owner == null || identical(version, _versions[owner])) &&
           (id.isEmpty || (row != null && identical(_roster[id], row))),
+      row == null ? null : _link(id),
     );
   }
 
@@ -431,7 +439,10 @@ class _WorkspaceState extends State<ParallelWorkspace> {
   Widget _content(BuildContext context, PaneRef ref) {
     final row = _roster[ref.sessionId];
     if (ref.page.isEmpty && row != null) {
-      return widget.buildChat(context, row, () => _close(ref));
+      return TerminalChatSlot(
+        link: _link(row.id),
+        child: widget.buildChat(context, row, () => _close(ref)),
+      );
     }
     final page = _registry.page(ref.page);
     if (page != null) {

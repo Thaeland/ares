@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 
 import '../models/connection.dart';
 import '../models/session.dart';
+import 'terminal_chat_link.dart';
+import 'terminal_page.dart';
 
 /// Runtime-only context for trusted, compiled-in client features. Recheck
 /// [current] after awaiting consent or resolving a remote capability. A page
@@ -14,12 +16,14 @@ class WorkspaceTarget {
     this.connection,
     this.session,
     this.nextGen,
-    this.current,
-  );
+    this.current, [
+    this.chatLink,
+  ]);
   final SavedConnection connection;
   final Session? session;
   final bool nextGen;
   final bool Function() current;
+  final TerminalChatLink? chatLink;
 }
 
 typedef WorkspaceAvailability = String? Function(WorkspaceTarget);
@@ -125,6 +129,12 @@ Widget _sessionDetails(BuildContext context, WorkspaceTarget target) {
 }
 
 final aresWorkspaceRegistry = WorkspaceRegistry(const [
+  WorkspacePage(
+    'chat.terminals',
+    'Terminals',
+    Icons.terminal,
+    buildTerminalPage,
+  ),
   WorkspacePage(
     'chat.details',
     'Chat details',

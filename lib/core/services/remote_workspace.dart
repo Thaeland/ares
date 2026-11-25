@@ -2,9 +2,15 @@
 /// docs/remote-workspace-contract.md before adding an operation.
 library;
 
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 import 'ws_client.dart';
+
+part 'remote_workspace_terminal.dart';
 
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {
