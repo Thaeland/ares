@@ -32,13 +32,17 @@ class ParallelWorkspaceEntryHost extends StatefulWidget {
     if (state == null || !state._current) return null;
     final connection = state.widget.connection;
     final route = ModalRoute.of(state.context);
+    // The owning route must still exist (not popped or replaced), but may be
+    // covered: opening search, a notification's chat or any other page on top
+    // must not close the user's pop-out windows. Account changes revoke via
+    // _current above.
     return (
       connection: connection,
       current: () =>
           state.mounted &&
           state._current &&
           identical(state.widget.connection, connection) &&
-          (route == null || route.isCurrent),
+          (route == null || route.isActive),
     );
   }
 
