@@ -492,7 +492,8 @@ class WsClient {
     };
     // Ticket-bearing upgrades require a no-redirect client even without mTLS.
     // Preserve platform trust and the exact configured client identity.
-    final customClient = useProtocol || _clientCertificate != null
+    final customClient =
+        useProtocol || _clientCertificate != null || upgradeHeaders.isNotEmpty
         ? _UpgradeClient(_tlsClientFactory.createHttpClient(_clientCertificate))
         : null;
     final channel = IOWebSocketChannel.connect(

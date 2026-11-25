@@ -1448,12 +1448,14 @@ class ApiClient {
     Map<String, String> customHeaders = const <String, String>{},
     http.Client? httpClient,
   }) : _apiKey = apiKey,
-       _customHeaders = customHeaders,
+       _customHeaders = normalizeRemoteHeaders(customHeaders),
        _gatewayProfile = gatewayProfile?.trim().isEmpty == true
            ? null
            : gatewayProfile?.trim(),
        baseUrl = SavedConnection.joinBaseUrl(baseUrl, pathPrefix),
-       _http = httpClient ?? _freshClient(clientCertificate);
+       _http = NoGatewayRedirects(
+         httpClient ?? _freshClient(clientCertificate),
+       );
 
   /// The session/history client for [connection]: the API server for a
   /// classic connection, or the dashboard itself for a single-login one (no
@@ -2705,6 +2707,9 @@ class DashboardClient {
   /// The deployment token in use, or null when not configured.
   String? get deploymentToken => _deploymentToken;
 
+  /// Validated per-gateway HTTP headers configured on this client.
+  Map<String, String> get customHeaders => _customHeaders;
+
   String get baseUrl => _baseUrl;
 
   /// Selected connection profile; generic API helpers deliberately do not add it.
@@ -2736,7 +2741,7 @@ class DashboardClient {
            deploymentToken == null || deploymentToken.trim().isEmpty
            ? null
            : deploymentToken.trim(),
-       _customHeaders = customHeaders,
+       _customHeaders = normalizeRemoteHeaders(customHeaders),
        _gatewayProfile = gatewayProfile?.trim().isEmpty == true
            ? null
            : gatewayProfile?.trim(),
@@ -3017,7 +3022,7 @@ class DashboardClient {
     final res = await http.Response.fromStream(
       await _http.send(request).timeout(timeout),
     ).timeout(timeout);
-    if (res.statusCode == 401 && !retried) {
+    if (res.statusCode == 401 && !retried && _deploymentToken == null) {
       _resetAuth(ifGeneration: authGeneration);
       return apiRequest(
         method,
@@ -3356,7 +3361,7 @@ class DashboardClient {
       Uri.parse('$_baseUrl/api/auth/ws-ticket'),
       headers: headers,
     );
-    if (res.statusCode == 401 && !retried) {
+    if (res.statusCode == 401 && !retried && _deploymentToken == null) {
       _resetAuth(ifGeneration: authGeneration);
       return mintWebSocketTicket(retried: true);
     }
@@ -3395,7 +3400,7 @@ class DashboardClient {
     final res = await _http
         .get(uri, headers: headers)
         .timeout(timeout ?? ApiClient.requestTimeout);
-    if (res.statusCode == 401 && !retried) {
+    if (res.statusCode == 401 && !retried && _deploymentToken == null) {
       _resetAuth(ifGeneration: authGeneration);
       return apiGet(
         endpoint,
@@ -3460,7 +3465,7 @@ class DashboardClient {
         );
       }
     }
-    if (res.statusCode == 401 && !retried) {
+    if (res.statusCode == 401 && !retried && _deploymentToken == null) {
       _resetAuth(ifGeneration: authGeneration);
       return apiGetBytes(
         endpoint,
@@ -3532,7 +3537,7 @@ class DashboardClient {
     final res = await http.Response.fromStream(
       await responseFuture.timeout(const Duration(minutes: 2)),
     ).timeout(const Duration(minutes: 2));
-    if (res.statusCode == 401 && !retried) {
+    if (res.statusCode == 401 && !retried && _deploymentToken == null) {
       _resetAuth(ifGeneration: authGeneration);
       return apiUploadStream(
         file,
@@ -3573,7 +3578,7 @@ class DashboardClient {
         .timeout(ApiClient.requestTimeout);
     if (response.statusCode != 200) {
       await response.stream.listen((_) {}).cancel();
-      if (response.statusCode == 401 && !retried) {
+      if (response.statusCode == 401 && !retried && _deploymentToken == null) {
         _resetAuth(ifGeneration: authGeneration);
         return apiDownloadToFile(
           endpoint,
@@ -3633,7 +3638,7 @@ class DashboardClient {
     final res = await _http
         .get(uri, headers: headers)
         .timeout(ApiClient.requestTimeout);
-    if (res.statusCode == 401 && !retried) {
+    if (res.statusCode == 401 && !retried && _deploymentToken == null) {
       _resetAuth(ifGeneration: authGeneration);
       return apiGetList(
         endpoint,
@@ -3829,7 +3834,7 @@ class DashboardClient {
           body: body != null ? jsonEncode(body) : null,
         )
         .timeout(timeout);
-    if (res.statusCode == 401 && !retried) {
+    if (res.statusCode == 401 && !retried && _deploymentToken == null) {
       _resetAuth(ifGeneration: authGeneration);
       return apiPost(
         endpoint,
@@ -3858,7 +3863,7 @@ class DashboardClient {
     final res = await _http
         .delete(uri, headers: headers)
         .timeout(ApiClient.requestTimeout);
-    if (res.statusCode == 401 && !retried) {
+    if (res.statusCode == 401 && !retried && _deploymentToken == null) {
       _resetAuth(ifGeneration: authGeneration);
       return apiDelete(
         endpoint,
@@ -3890,7 +3895,7 @@ class DashboardClient {
           body: body != null ? jsonEncode(body) : null,
         )
         .timeout(timeout);
-    if (res.statusCode == 401 && !retried) {
+    if (res.statusCode == 401 && !retried && _deploymentToken == null) {
       _resetAuth(ifGeneration: authGeneration);
       return apiPut(
         endpoint,
@@ -3943,7 +3948,7 @@ class DashboardClient {
     final response = await (() async => http.Response.fromStream(
       await _http.send(request),
     ))().timeout(ApiClient.requestTimeout);
-    if (response.statusCode == 401 && !retried) {
+    if (response.statusCode == 401 && !retried && _deploymentToken == null) {
       _resetAuth(ifGeneration: generation);
       return _oauthRequest(method, path, retried: true);
     }
@@ -4013,7 +4018,7 @@ class DashboardClient {
       final response = await (() async => http.Response.fromStream(
         await _http.send(request),
       ))().timeout(ApiClient.requestTimeout);
-      if (response.statusCode == 401 && !retried) {
+      if (response.statusCode == 401 && !retried && _deploymentToken == null) {
         _resetAuth(ifGeneration: generation);
         return _requireRawFallbackConfig(retried: true);
       }

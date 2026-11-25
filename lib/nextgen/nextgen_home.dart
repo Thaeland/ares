@@ -220,6 +220,7 @@ class _NextGenHomeState extends State<NextGenHome> {
           gateway.url,
           authHeaders: headers,
           certificate: connection.clientCertificate,
+          customHeaders: connection.customHeaders,
         );
       } catch (_) {
         // Forgetting locally still signs this phone out.

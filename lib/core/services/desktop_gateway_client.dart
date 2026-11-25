@@ -876,6 +876,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
                 ticketInSubprotocol: true,
                 profile: _gatewayProfile,
                 clientCertificate: _clientCertificate,
+                customHeaders: _customHeaders,
               );
               _installAsyncEventBridge(client);
               return client;

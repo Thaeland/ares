@@ -1966,6 +1966,7 @@ class HomeScreenState extends State<HomeScreen> {
                           pathPrefix: conn.gatewayPrefix ?? '',
                           gatewayProfile: conn.gatewayProfile,
                           clientCertificate: conn.clientCertificate,
+                          customHeaders: conn.customHeaders,
                         );
                         final result = await client.checkHealth();
                         client.close();
@@ -2186,6 +2187,7 @@ class HomeScreenState extends State<HomeScreen> {
                           apiKey: conn.apiKey,
                           pathPrefix: gatewayPrefix,
                           clientCertificate: conn.clientCertificate,
+                          customHeaders: conn.customHeaders,
                         );
                         final result = await apiClient.checkHealth();
                         apiClient.close();

@@ -455,6 +455,7 @@ class NextGenGateway extends ChangeNotifier {
           ticket: ticket,
           profile: profile,
           clientCertificate: connection.clientCertificate,
+          customHeaders: connection.customHeaders,
           ticketInSubprotocol: true,
         );
         final closed = Completer<void>();
