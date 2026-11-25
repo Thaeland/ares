@@ -580,7 +580,7 @@ class _NgSlashSuggestionsState extends State<NgSlashSuggestions> {
         key: const ValueKey('ng-slash-suggestions'),
         color: c.sheet,
         elevation: 6,
-        shadowColor: Colors.black54,
+        shadowColor: Theme.of(context).colorScheme.shadow,
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(NgRadii.md),
