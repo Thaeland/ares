@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/connection.dart';
 import '../models/session.dart';
 import '../services/connection_mutation_barrier.dart';
+import '../widgets/keyboard_room.dart';
 import 'workspace_layout.dart';
 import 'profile_presentation_store.dart';
 import 'terminal_chat_link.dart';
@@ -536,7 +537,7 @@ class _WorkspaceState extends State<ParallelWorkspace> {
     );
   }
 
-  Widget _panes(BoxConstraints box) {
+  Widget _panes(BoxConstraints box, {required bool typing}) {
     final p = _primary, s = _layout.secondary;
     final vertical = _layout.stacked;
     final minSide =
@@ -547,6 +548,10 @@ class _WorkspaceState extends State<ParallelWorkspace> {
         !_focus &&
         s != null &&
         (vertical ? minSide >= 340 && box.maxWidth >= 360 : minSide >= 440);
+    // The keyboard can squeeze a stacked pair down to one pane. The pane
+    // being typed in stays the one shown, or its field would lose focus
+    // (and the keyboard close) the moment the keyboard opened.
+    final shown = !both && typing && s != null && _lastTouched == s ? s : p;
     final first =
         (vertical ? box.maxHeight : box.maxWidth) * _layout.percent / 100;
     return Stack(
@@ -568,11 +573,11 @@ class _WorkspaceState extends State<ParallelWorkspace> {
             top: both && vertical && ref == s ? first + 1 : 0,
             bottom: both && vertical && ref == p ? box.maxHeight - first : 0,
             child: Offstage(
-              offstage: ref != p && !(both && ref == s),
+              offstage: ref != shown && !(both && ref == s),
               child: ExcludeFocus(
-                excluding: ref != p && !(both && ref == s),
+                excluding: ref != shown && !(both && ref == s),
                 child: TickerMode(
-                  enabled: ref == p || (both && ref == s),
+                  enabled: ref == shown || (both && ref == s),
                   child: LayoutBuilder(
                     builder: (ctx, local) => MediaQuery(
                       data: MediaQuery.of(ctx).copyWith(size: local.biggest),
@@ -585,7 +590,7 @@ class _WorkspaceState extends State<ParallelWorkspace> {
                         child: WorkspacePane(
                           key: ObjectKey(_version(ref)),
                           handleBack:
-                              ref == (both && _lastTouched == s ? s : p),
+                              ref == (both && _lastTouched == s ? s : shown),
                           child: Builder(builder: (ctx) => _content(ctx, ref)),
                         ),
                       ),
@@ -603,46 +608,74 @@ class _WorkspaceState extends State<ParallelWorkspace> {
   Widget build(BuildContext context) =>
       _WorkspaceOpener(openSession: _openSession, child: _build(context));
 
-  Widget _build(BuildContext context) {
+  /// The Scaffold resizes the panes for the keyboard. With little room left
+  /// above it, the tab strip and pane switcher fold away while typing (and,
+  /// on a landscape phone, the workspace bar too), so a pane's composer is
+  /// never pushed under the keyboard. They come back when it closes.
+  Widget _build(BuildContext context) => LayoutBuilder(
+    builder: (context, box) {
+      final typing = keyboardHeightOf(context) > 0;
+      final room =
+          box.maxHeight -
+          MediaQuery.viewInsetsOf(context).bottom -
+          MediaQuery.paddingOf(context).top;
+      return _scaffold(
+        context,
+        typing: typing,
+        foldStrip: typing && room < foldWorkspaceStripBelow,
+        foldBar: typing && room < foldWorkspaceBarBelow,
+      );
+    },
+  );
+
+  Widget _scaffold(
+    BuildContext context, {
+    required bool typing,
+    required bool foldStrip,
+    required bool foldBar,
+  }) {
     final p = _primary;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _focus && p != null ? _title(p) : 'Parallel workspace',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        leading: _focus
-            ? IconButton(
-                tooltip: 'Show workspace',
-                icon: const Icon(Icons.fullscreen_exit),
-                onPressed: () => setState(() => _focus = false),
-              )
-            : null,
-        actions: _focus
-            ? null
-            : [
-                IconButton(
-                  tooltip: 'Add chat',
-                  icon: const Icon(Icons.add_comment_outlined),
-                  onPressed: _prefs == null ? null : () => _pick(),
-                ),
-                _tools(),
-                _menu(),
-              ],
-      ),
+      appBar: foldBar
+          ? null
+          : AppBar(
+              title: Text(
+                _focus && p != null ? _title(p) : 'Parallel workspace',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              leading: _focus
+                  ? IconButton(
+                      tooltip: 'Show workspace',
+                      icon: const Icon(Icons.fullscreen_exit),
+                      onPressed: () => setState(() => _focus = false),
+                    )
+                  : null,
+              actions: _focus
+                  ? null
+                  : [
+                      IconButton(
+                        tooltip: 'Add chat',
+                        icon: const Icon(Icons.add_comment_outlined),
+                        onPressed: _prefs == null ? null : () => _pick(),
+                      ),
+                      _tools(),
+                      _menu(),
+                    ],
+            ),
       body: SafeArea(
-        top: false,
+        // With the bar folded, the body keeps clear of the status bar.
+        top: foldBar,
         child: Column(
           children: [
             if (_loading) const LinearProgressIndicator(),
-            if (_failed)
+            if (_failed && !foldStrip)
               TextButton.icon(
                 onPressed: _refresh,
                 icon: const Icon(Icons.refresh),
                 label: const Text('Could not load chats. Retry'),
               ),
-            if (!_focus && _layout.tabs.isNotEmpty)
+            if (!_focus && !foldStrip && _layout.tabs.isNotEmpty)
               SizedBox(
                 height: 48,
                 child: ListView(
@@ -671,7 +704,7 @@ class _WorkspaceState extends State<ParallelWorkspace> {
                   ],
                 ),
               ),
-            if (_layout.secondary case final s? when !_focus)
+            if (_layout.secondary case final s? when !_focus && !foldStrip)
               Align(
                 alignment: AlignmentDirectional.centerEnd,
                 child: TextButton.icon(
@@ -684,7 +717,11 @@ class _WorkspaceState extends State<ParallelWorkspace> {
                   ),
                 ),
               ),
-            Expanded(child: LayoutBuilder(builder: (_, box) => _panes(box))),
+            Expanded(
+              child: LayoutBuilder(
+                builder: (_, box) => _panes(box, typing: typing),
+              ),
+            ),
           ],
         ),
       ),

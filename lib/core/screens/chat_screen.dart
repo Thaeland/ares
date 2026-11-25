@@ -117,6 +117,7 @@ import '../models/turn_changed_files.dart';
 import '../widgets/background_report_card.dart';
 import '../widgets/gateway_activity_card.dart';
 import '../widgets/chat_context_header.dart';
+import '../widgets/keyboard_room.dart';
 import '../widgets/chat_activity_bar.dart';
 import '../widgets/markdown_code_block.dart';
 import '../widgets/markdown_link_handler.dart';
@@ -3317,7 +3318,8 @@ class _ChatScreenState extends State<ChatScreen>
   /// focus listener (focus changes while the keyboard is already up).
   void _syncComposerKeyboardEndScroll() {
     if (!mounted) return;
-    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    // A pane's host Scaffold may already have resized for the keyboard.
+    final keyboardOpen = keyboardHeightOf(context) > 0;
     if (!keyboardOpen) {
       _keyboardEndScrollDone = false;
     } else if (_composerFocus.hasFocus && !_keyboardEndScrollDone) {
@@ -8618,7 +8620,8 @@ class _ChatScreenState extends State<ChatScreen>
       builder: (context, _) => LayoutBuilder(
         // Measure the pane, not the window: a phone, split view or parallel
         // workspace pane gets compact chrome so the app bar never overflows.
-        builder: (context, box) => _buildChatScaffold(context, box.maxWidth),
+        builder: (context, box) =>
+            _buildChatScaffold(context, box.maxWidth, box.maxHeight),
       ),
     ),
   );
@@ -8632,8 +8635,21 @@ class _ChatScreenState extends State<ChatScreen>
     _storedSessionId ?? _storedSessionKey,
   ].join('\u0000');
 
-  Widget _buildChatScaffold(BuildContext context, double paneWidth) {
+  Widget _buildChatScaffold(
+    BuildContext context,
+    double paneWidth,
+    double paneHeight,
+  ) {
     final compactTools = paneWidth < 480;
+    // With the keyboard up and little room above it (a landscape phone, a
+    // small phone, a Parallel workspace pane), the context header folds so
+    // the composer is never pushed under the keyboard. The pane may sit in
+    // a Scaffold that has already resized for it: then the local inset is 0
+    // and the pane height is what is left.
+    final foldHeader =
+        keyboardHeightOf(context) > 0 &&
+        paneHeight - MediaQuery.viewInsetsOf(context).bottom <
+            foldChatChromeBelow;
     final fileOwner = _desktopGateway?.workspace;
     final fileId = _fileSessionId;
     final gateway = _desktopGateway;
@@ -8703,17 +8719,19 @@ class _ChatScreenState extends State<ChatScreen>
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: ChatContextHeader(
-            projectName: _projectName,
-            model: _sessionModel ?? widget.session.model,
-            reasoningEffort: _sessionReasoningEffort ?? 'default',
-            reasoningEffortWire: _sessionReasoningWire,
-            connectionLabel: widget.connection.label,
-            connectionStatus: _chatConnectionStatus,
-          ),
-        ),
+        bottom: foldHeader
+            ? null
+            : PreferredSize(
+                preferredSize: const Size.fromHeight(48),
+                child: ChatContextHeader(
+                  projectName: _projectName,
+                  model: _sessionModel ?? widget.session.model,
+                  reasoningEffort: _sessionReasoningEffort ?? 'default',
+                  reasoningEffortWire: _sessionReasoningWire,
+                  connectionLabel: widget.connection.label,
+                  connectionStatus: _chatConnectionStatus,
+                ),
+              ),
         actions: [
           PresentationChrome(
             compact: compactTools,
@@ -9137,7 +9155,14 @@ class _ChatScreenState extends State<ChatScreen>
   Widget _buildInputBar({required double availableHeight}) {
     final handsFreeAction = _buildHandsFreeComposerAction();
     final separateVoiceAction = MediaQuery.sizeOf(context).width < 400;
-    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+    // Also true in a pane whose host Scaffold already resized for the
+    // keyboard (its MediaQuery then shows no inset).
+    final keyboardOpen = keyboardHeightOf(context) > 0;
+    // The model/status row is chrome: with the keyboard up and under
+    // [foldComposerStatusBelow] for transcript and composer, it folds away
+    // (and comes back when the keyboard closes).
+    final foldStatus =
+        keyboardOpen && availableHeight < foldComposerStatusBelow;
     final sendEnabled =
         !_voiceRecording.recording &&
         !_voiceRecording.busy &&
@@ -9306,36 +9331,39 @@ class _ChatScreenState extends State<ChatScreen>
                       ChatActivityBar(text: activity)
                     else if (_terminalNoticeText case final notice?)
                       ChatActivityBar(text: notice, isTerminalNotice: true),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(4, 2, 4, 4),
-                      child: Row(
-                        children: [
-                          Flexible(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: _modelRowButton(context),
+                    if (!foldStatus)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(4, 2, 4, 4),
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: _modelRowButton(context),
+                              ),
                             ),
-                          ),
-                          // Status shares the model row: no extra height.
-                          ComposerStatusMenu(
-                            layout: _statusLayout,
-                            usage: const UsageReading(),
-                            breakdown: _statusBreakdown,
-                            onLayout: _setStatusLayout,
-                          ),
-                        ],
+                            // Status shares the model row: no extra height.
+                            ComposerStatusMenu(
+                              layout: _statusLayout,
+                              usage: const UsageReading(),
+                              breakdown: _statusBreakdown,
+                              onLayout: _setStatusLayout,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    ComposerContextStatus(
-                      layout: _statusLayout,
-                      usage: const UsageReading(),
-                      breakdown: _statusBreakdown,
-                      breakdownLoading: _statusBreakdownLoading,
-                      showMenu: false,
-                      compact: MediaQuery.sizeOf(context).width < 480,
-                      maxHeight: availableHeight * (keyboardOpen ? 0.15 : 0.25),
-                      onLayout: _setStatusLayout,
-                    ),
+                    if (!foldStatus)
+                      ComposerContextStatus(
+                        layout: _statusLayout,
+                        usage: const UsageReading(),
+                        breakdown: _statusBreakdown,
+                        breakdownLoading: _statusBreakdownLoading,
+                        showMenu: false,
+                        compact: MediaQuery.sizeOf(context).width < 480,
+                        maxHeight:
+                            availableHeight * (keyboardOpen ? 0.15 : 0.25),
+                        onLayout: _setStatusLayout,
+                      ),
                     ConstrainedBox(
                       constraints: BoxConstraints(
                         maxHeight: availableHeight * (keyboardOpen ? 0.2 : 0.3),
