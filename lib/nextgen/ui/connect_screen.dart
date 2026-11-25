@@ -179,7 +179,7 @@ class _NgConnectScreenState extends State<NgConnectScreen> {
     final parsedHeaders = parseRemoteHeadersBlock(_customHeaders.text);
     if (parsedHeaders.problems.isNotEmpty) {
       setState(() {
-        _addressError = parsedHeaders.problems.first;
+        _addressError = describeHeaderIssue(ngL, parsedHeaders.issues.first);
         _showCustomHeaders = true;
       });
       return;
@@ -397,7 +397,7 @@ class _NgConnectScreenState extends State<NgConnectScreen> {
   Future<void> _tokenSignIn() async {
     final token = _deploymentToken.text.trim();
     if (token.isEmpty) {
-      setState(() => _signInError = 'Enter a deployment session token.');
+      setState(() => _signInError = ngL.ng_enter_a_deployment_token);
       return;
     }
     setState(() {
@@ -589,7 +589,7 @@ class _NgConnectScreenState extends State<NgConnectScreen> {
               onTap: () => setState(() => _showCertificate = !_showCertificate),
             ),
             NgPill(
-              'Custom headers',
+              ngL.ng_custom_headers,
               icon: Icons.http_outlined,
               tone: _customHeadersMap.isNotEmpty
                   ? NgTone.success
@@ -710,7 +710,7 @@ class _NgConnectScreenState extends State<NgConnectScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Extra per-gateway HTTP headers (Name: Value, one per line) sent to this gateway on REST and WebSocket calls. Stored in the secure credential store; auth and hop-by-hop headers are rejected.',
+            ngL.ng_custom_headers_help,
             style: NgType.bodySmall.copyWith(color: c.text2),
           ),
           const SizedBox(height: 12),
@@ -730,7 +730,7 @@ class _NgConnectScreenState extends State<NgConnectScreen> {
           if (parsed.problems.isNotEmpty) ...[
             const SizedBox(height: 6),
             Text(
-              parsed.problems.first,
+              describeHeaderIssue(ngL, parsed.issues.first),
               style: NgType.caption.copyWith(color: c.danger),
             ),
           ],
@@ -1025,7 +1025,7 @@ class _NgConnectScreenState extends State<NgConnectScreen> {
           Align(
             alignment: Alignment.centerLeft,
             child: NgPill(
-              'Use a deployment session token',
+              ngL.ng_use_a_deployment_token,
               icon: Icons.vpn_key_outlined,
               tone: _showTokenField ? NgTone.accent : NgTone.neutral,
               onTap: () => setState(() => _showTokenField = !_showTokenField),
@@ -1052,7 +1052,7 @@ class _NgConnectScreenState extends State<NgConnectScreen> {
             const SizedBox(height: 10),
             NgSecondaryButton(
               key: const Key('ng-connect-deployment-token-submit'),
-              label: 'Sign in with deployment token',
+              label: ngL.ng_sign_in_with_deployment_token,
               icon: Icons.vpn_key_outlined,
               onPressed: _signingIn ? null : _tokenSignIn,
             ),

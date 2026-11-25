@@ -663,17 +663,17 @@ class _NgMainPageState extends State<_NgMainContent>
     showAppCommandPalette(
       context,
       actions: [
-        const PaletteAction(
+        PaletteAction(
           id: 'new-chat',
-          label: 'New chat',
+          label: ngL.ng_new_chat,
           icon: Icons.add_comment_outlined,
-          keywords: ['compose', 'start', 'new', 'chat'],
+          keywords: const ['compose', 'start', 'new', 'chat'],
         ),
-        const PaletteAction(
+        PaletteAction(
           id: 'search',
-          label: 'Search sessions',
+          label: ngL.palette_search_sessions,
           icon: Icons.search,
-          keywords: ['find', 'sessions', 'chats', 'search'],
+          keywords: const ['find', 'sessions', 'chats', 'search'],
         ),
         if (DesktopIntegration.current != null)
           PaletteAction(
@@ -682,41 +682,41 @@ class _NgMainPageState extends State<_NgMainContent>
             icon: Icons.edit_note_outlined,
             keywords: const ['hud', 'quick', 'prompt', 'entry', 'hotkey'],
           ),
-        const PaletteAction(
+        PaletteAction(
           id: 'nav-scheduled',
-          label: 'Scheduled',
+          label: ngL.ng_scheduled,
           icon: Icons.schedule,
-          keywords: ['cron', 'scheduled', 'jobs'],
+          keywords: const ['cron', 'scheduled', 'jobs'],
         ),
-        const PaletteAction(
+        PaletteAction(
           id: 'nav-insights',
-          label: 'Insights & usage',
+          label: ngL.palette_insights_usage,
           icon: Icons.insights_outlined,
-          keywords: ['usage', 'analytics', 'stats'],
+          keywords: const ['usage', 'analytics', 'stats'],
         ),
-        const PaletteAction(
+        PaletteAction(
           id: 'nav-capabilities',
-          label: 'Capabilities',
+          label: ngL.ng_capabilities,
           icon: Icons.extension_outlined,
-          keywords: ['skills', 'plugins', 'mcp', 'tools'],
+          keywords: const ['skills', 'plugins', 'mcp', 'tools'],
         ),
-        const PaletteAction(
+        PaletteAction(
           id: 'nav-archived',
-          label: 'Archived chats',
+          label: ngL.ng_archived_chats,
           icon: Icons.archive_outlined,
-          keywords: ['archive', 'archived'],
+          keywords: const ['archive', 'archived'],
         ),
-        const PaletteAction(
+        PaletteAction(
           id: 'nav-more',
-          label: 'More & projects',
+          label: ngL.palette_more_projects,
           icon: Icons.more_horiz,
-          keywords: ['projects', 'files', 'memory', 'models'],
+          keywords: const ['projects', 'files', 'memory', 'models'],
         ),
-        const PaletteAction(
+        PaletteAction(
           id: 'settings',
-          label: 'Settings',
+          label: ngL.ng_settings,
           icon: Icons.settings,
-          keywords: [
+          keywords: const [
             'preferences',
             'options',
             'shortcuts',
@@ -844,10 +844,7 @@ class _NgMainPageState extends State<_NgMainContent>
           // A validated but unknown id must not create a chat — it would
           // either silently open an empty chat or pretend the session
           // exists. Surface honesty instead.
-          ngToast(
-            context,
-            'Chat not found in the list. It may not have loaded yet.',
-          );
+          ngToast(context, ngL.deeplink_chat_not_found);
           unawaited(sessions?.refresh());
           return;
         }

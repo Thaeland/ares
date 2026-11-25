@@ -8081,7 +8081,7 @@ class _ChatScreenState extends State<ChatScreen>
             if (widget.onOpenAppCommandPalette != null)
               IconButton(
                 key: const ValueKey('app-command-palette-button'),
-                tooltip: 'App command palette',
+                tooltip: context.l10n.palette_open,
                 icon: const Icon(Icons.keyboard_command_key),
                 onPressed: widget.onOpenAppCommandPalette,
               ),
@@ -8141,11 +8141,11 @@ class _ChatScreenState extends State<ChatScreen>
               },
               itemBuilder: (_) => [
                 if (widget.onOpenAppCommandPalette != null)
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'app-command-palette',
                     child: ListTile(
-                      leading: Icon(Icons.keyboard_command_key),
-                      title: Text('App command palette'),
+                      leading: const Icon(Icons.keyboard_command_key),
+                      title: Text(context.l10n.palette_open),
                     ),
                   ),
                 if (_desktopGateway != null)

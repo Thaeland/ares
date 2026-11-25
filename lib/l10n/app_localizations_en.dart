@@ -6967,4 +6967,141 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ng_token_gateway_has_no_sign_in =>
       'This gateway has no sign-in, so it can\'t check a deployment token. Turn on dashboard authentication on the host (or update Hermes), then try again.';
+
+  @override
+  String get palette_open => 'App command palette';
+
+  @override
+  String get palette_no_matches => 'No matching actions';
+
+  @override
+  String get palette_filter_hint => 'Type to filter actions…';
+
+  @override
+  String get palette_keys_move => '↑↓ to move';
+
+  @override
+  String get palette_keys_run => 'Enter to run';
+
+  @override
+  String get palette_keys_close => 'Esc to close';
+
+  @override
+  String get palette_search_sessions => 'Search sessions';
+
+  @override
+  String get palette_scheduled_crons => 'Scheduled / Crons';
+
+  @override
+  String get palette_capabilities_skills => 'Capabilities & skills';
+
+  @override
+  String get palette_insights_usage => 'Insights & usage';
+
+  @override
+  String get palette_more_projects => 'More & projects';
+
+  @override
+  String get deeplink_chat_not_found =>
+      'Chat not found in the list. It may not have loaded yet.';
+
+  @override
+  String get keyboard_shortcuts_title => 'Keyboard shortcuts';
+
+  @override
+  String get shortcuts_reset_all => 'Reset all';
+
+  @override
+  String get shortcuts_reset_to_default => 'Reset to default';
+
+  @override
+  String get shortcut_action_command_palette => 'Command palette';
+
+  @override
+  String get shortcut_action_new_chat => 'New chat';
+
+  @override
+  String get shortcut_action_search => 'Search';
+
+  @override
+  String get shortcut_action_settings => 'Settings';
+
+  @override
+  String shortcut_action_go_to_tab(int number) {
+    return 'Go to tab $number';
+  }
+
+  @override
+  String shortcuts_conflict(String first, String second, String chord) {
+    return 'Conflict: \"$first\" and \"$second\" both use $chord. The custom shortcut keeps its default until you change one of them.';
+  }
+
+  @override
+  String shortcuts_editor_title(String action) {
+    return 'Shortcut: $action';
+  }
+
+  @override
+  String get shortcuts_editor_help =>
+      'Press a key combination, or choose modifiers and a key below:';
+
+  @override
+  String get shortcuts_editor_needs_modifier =>
+      'Select at least Cmd/Meta, Ctrl or Alt so typing in the composer is unaffected.';
+
+  @override
+  String shortcuts_text_editing_warning(String chord) {
+    return '$chord is a text editing shortcut (copy, paste, cut, undo, redo or select all). Binding it here takes it away from text fields.';
+  }
+
+  @override
+  String shortcuts_text_editing_in_use(String action, String chord) {
+    return '\"$action\" uses $chord, a text editing shortcut. Text fields lose it while it is bound here.';
+  }
+
+  @override
+  String custom_headers_problem_format(int line) {
+    return 'Line $line: expected \"Name: Value\"';
+  }
+
+  @override
+  String custom_headers_problem_missing_name(int line) {
+    return 'Line $line: missing header name';
+  }
+
+  @override
+  String custom_headers_problem_invalid_name(int line, String name) {
+    return 'Line $line: invalid header name \"$name\"';
+  }
+
+  @override
+  String custom_headers_problem_reserved(int line, String name) {
+    return 'Line $line: \"$name\" is reserved and cannot be passed through';
+  }
+
+  @override
+  String custom_headers_problem_empty_value(int line) {
+    return 'Line $line: empty header value';
+  }
+
+  @override
+  String get ng_enter_a_deployment_token => 'Enter a deployment session token.';
+
+  @override
+  String get ng_custom_headers => 'Custom headers';
+
+  @override
+  String get ng_custom_headers_help =>
+      'Extra HTTP headers for this gateway (Name: Value, one per line), sent on its REST and WebSocket calls. They are kept in the secure credential store. Authentication and hop-by-hop headers are rejected.';
+
+  @override
+  String get ng_use_a_deployment_token => 'Use a deployment session token';
+
+  @override
+  String get ng_sign_in_with_deployment_token =>
+      'Sign in with deployment token';
+
+  @override
+  String get ng_signed_in_with_deployment_token =>
+      'Signed in with the deployment token.';
 }

@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/l10n.dart';
 import '../services/shortcuts_store.dart';
 import '../widgets/keyboard_shortcuts_settings_card.dart'
-    show showShortcutChordEditor;
+    show shortcutActionLabel, showShortcutChordEditor;
 import 'desktop_integration.dart';
 import 'desktop_os.dart';
 import 'global_hotkey.dart';
@@ -25,7 +25,7 @@ String hotkeyProblemText(AppLocalizations l, HotkeyCheck check) =>
       HotkeyProblem.superKey => l.desktop_hotkey_super_key,
       HotkeyProblem.reserved => l.desktop_hotkey_reserved,
       HotkeyProblem.inAppShortcut => l.desktop_hotkey_in_app(
-        ShortcutRegistry.label(check.action ?? ShortcutAction.commandPalette),
+        shortcutActionLabel(l, check.action ?? ShortcutAction.commandPalette),
       ),
     };
 

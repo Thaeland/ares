@@ -218,7 +218,7 @@ class CommandPaletteState extends State<CommandPalette> {
     required bool isNarrow,
   }) {
     final list = _filtered.isEmpty
-        ? const Center(child: Text('No matching actions'))
+        ? Center(child: Text(context.sharedL10n.palette_no_matches))
         : ListView.builder(
             key: const Key('app-command-palette-list'),
             controller: _scroll,
@@ -259,11 +259,11 @@ class CommandPaletteState extends State<CommandPalette> {
               autofocus: true,
               onChanged: _filter,
               onSubmitted: (_) => _selectCurrent(),
-              decoration: const InputDecoration(
-                hintText: 'Type to filter actions…',
-                prefixIcon: Icon(Icons.search),
+              decoration: InputDecoration(
+                hintText: context.sharedL10n.palette_filter_hint,
+                prefixIcon: const Icon(Icons.search),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(
+                contentPadding: const EdgeInsets.symmetric(
                   horizontal: 8,
                   vertical: 12,
                 ),
@@ -284,10 +284,13 @@ class CommandPaletteState extends State<CommandPalette> {
       child: Wrap(
         spacing: 10,
         runSpacing: 2,
-        children: const [
-          Text('↑↓ to move', style: TextStyle(fontSize: 12)),
-          Text('Enter to run', style: TextStyle(fontSize: 12)),
-          Text('Esc to close', style: TextStyle(fontSize: 12)),
+        children: [
+          for (final hint in [
+            context.sharedL10n.palette_keys_move,
+            context.sharedL10n.palette_keys_run,
+            context.sharedL10n.palette_keys_close,
+          ])
+            Text(hint, style: const TextStyle(fontSize: 12)),
         ],
       ),
     );

@@ -6850,24 +6850,24 @@ class AppLocalizationsDe extends AppLocalizations {
   String get catalog_scan_failed => 'fehlgeschlagen';
 
   @override
-  String get deployment_token_label => 'Deployment token (optional)';
+  String get deployment_token_label => 'Bereitstellungstoken (optional)';
 
   @override
   String get deployment_token_helper =>
-      'For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.';
+      'Für Hermes-Dashboard-Sitzungstokens, gesendet als X-Hermes-Session-Token. Nicht im Klartext in den Einstellungen gespeichert.';
 
   @override
-  String get deployment_token_hint => 'Dashboard session token';
+  String get deployment_token_hint => 'Dashboard-Sitzungstoken';
 
   @override
-  String get custom_headers_label => 'Custom headers (optional)';
+  String get custom_headers_label => 'Eigene Header (optional)';
 
   @override
   String get custom_headers_helper =>
-      'One per line, e.g. X-Custom: value. Forbidden headers are rejected.';
+      'Einer pro Zeile, z. B. X-Custom: Wert. Verbotene Header werden abgelehnt.';
 
   @override
-  String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+  String get custom_headers_hint => 'z. B. X-Custom-Header: Wert';
 
   @override
   String get desktop_tray_open => 'Ares öffnen';
@@ -6985,44 +6985,183 @@ class AppLocalizationsDe extends AppLocalizations {
   String get capture_open_settings => 'Systemeinstellungen öffnen';
 
   @override
-  String get keep_awake_title => 'Keep computer awake';
+  String get keep_awake_title => 'Computer wach halten';
 
   @override
-  String get keep_awake_title_mobile => 'Keep screen on';
+  String get keep_awake_title_mobile => 'Bildschirm eingeschaltet lassen';
 
   @override
-  String get keep_awake_mode_off => 'Off';
+  String get keep_awake_mode_off => 'Aus';
 
   @override
-  String get keep_awake_mode_while_working => 'While working';
+  String get keep_awake_mode_while_working => 'Während der Arbeit';
 
   @override
-  String get keep_awake_mode_always => 'Always';
+  String get keep_awake_mode_always => 'Immer';
 
   @override
-  String get keep_awake_off_help => 'Never block system sleep (default).';
+  String get keep_awake_off_help => 'Ruhezustand nie verhindern (Standard).';
 
   @override
   String get keep_awake_while_working_help =>
-      'Prevent idle sleep only while an agent turn is running.';
+      'Leerlauf-Ruhezustand nur verhindern, während ein Agent-Durchlauf läuft.';
 
   @override
   String get keep_awake_always_help =>
-      'Prevent idle sleep while Ares is open on this device.';
+      'Leerlauf-Ruhezustand verhindern, solange Ares auf diesem Gerät geöffnet ist.';
 
   @override
   String get keep_awake_off_help_mobile =>
-      'Let the screen turn off as usual (default).';
+      'Bildschirm wie gewohnt ausschalten lassen (Standard).';
 
   @override
   String get keep_awake_while_working_help_mobile =>
-      'Keep the screen on while an agent turn is running and Ares is open.';
+      'Bildschirm eingeschaltet lassen, während ein Agent-Durchlauf läuft und Ares geöffnet ist.';
 
   @override
   String get keep_awake_always_help_mobile =>
-      'Keep the screen on while Ares is open.';
+      'Bildschirm eingeschaltet lassen, solange Ares geöffnet ist.';
 
   @override
   String get ng_token_gateway_has_no_sign_in =>
       'Dieses Gateway hat keine Anmeldung und kann daher kein Bereitstellungstoken prüfen. Aktiviere die Dashboard-Authentifizierung auf dem Host (oder aktualisiere Hermes) und versuche es erneut.';
+
+  @override
+  String get palette_open => 'App-Befehlspalette';
+
+  @override
+  String get palette_no_matches => 'Keine passenden Aktionen';
+
+  @override
+  String get palette_filter_hint => 'Tippen, um Aktionen zu filtern…';
+
+  @override
+  String get palette_keys_move => '↑↓ zum Bewegen';
+
+  @override
+  String get palette_keys_run => 'Eingabe zum Ausführen';
+
+  @override
+  String get palette_keys_close => 'Esc zum Schließen';
+
+  @override
+  String get palette_search_sessions => 'Sitzungen durchsuchen';
+
+  @override
+  String get palette_scheduled_crons => 'Geplant / Crons';
+
+  @override
+  String get palette_capabilities_skills => 'Fähigkeiten & Skills';
+
+  @override
+  String get palette_insights_usage => 'Einblicke & Nutzung';
+
+  @override
+  String get palette_more_projects => 'Mehr & Projekte';
+
+  @override
+  String get deeplink_chat_not_found =>
+      'Chat nicht in der Liste gefunden. Möglicherweise ist er noch nicht geladen.';
+
+  @override
+  String get keyboard_shortcuts_title => 'Tastenkürzel';
+
+  @override
+  String get shortcuts_reset_all => 'Alle zurücksetzen';
+
+  @override
+  String get shortcuts_reset_to_default => 'Auf Standard zurücksetzen';
+
+  @override
+  String get shortcut_action_command_palette => 'Befehlspalette';
+
+  @override
+  String get shortcut_action_new_chat => 'Neuer Chat';
+
+  @override
+  String get shortcut_action_search => 'Suchen';
+
+  @override
+  String get shortcut_action_settings => 'Einstellungen';
+
+  @override
+  String shortcut_action_go_to_tab(int number) {
+    return 'Zu Tab $number';
+  }
+
+  @override
+  String shortcuts_conflict(String first, String second, String chord) {
+    return 'Konflikt: „$first“ und „$second“ verwenden beide $chord. Das eigene Tastenkürzel behält seinen Standard, bis du eines davon änderst.';
+  }
+
+  @override
+  String shortcuts_editor_title(String action) {
+    return 'Tastenkürzel: $action';
+  }
+
+  @override
+  String get shortcuts_editor_help =>
+      'Drücke eine Tastenkombination oder wähle unten Modifikatoren und eine Taste:';
+
+  @override
+  String get shortcuts_editor_needs_modifier =>
+      'Wähle mindestens Cmd/Meta, Ctrl oder Alt, damit das Tippen im Eingabefeld nicht betroffen ist.';
+
+  @override
+  String shortcuts_text_editing_warning(String chord) {
+    return '$chord ist ein Textbearbeitungskürzel (Kopieren, Einfügen, Ausschneiden, Rückgängig, Wiederholen oder Alles auswählen). Wenn du es hier belegst, fehlt es in Textfeldern.';
+  }
+
+  @override
+  String shortcuts_text_editing_in_use(String action, String chord) {
+    return '„$action“ verwendet $chord, ein Textbearbeitungskürzel. Textfelder verlieren es, solange es hier belegt ist.';
+  }
+
+  @override
+  String custom_headers_problem_format(int line) {
+    return 'Zeile $line: „Name: Wert“ erwartet';
+  }
+
+  @override
+  String custom_headers_problem_missing_name(int line) {
+    return 'Zeile $line: Header-Name fehlt';
+  }
+
+  @override
+  String custom_headers_problem_invalid_name(int line, String name) {
+    return 'Zeile $line: ungültiger Header-Name „$name“';
+  }
+
+  @override
+  String custom_headers_problem_reserved(int line, String name) {
+    return 'Zeile $line: „$name“ ist reserviert und kann nicht weitergegeben werden';
+  }
+
+  @override
+  String custom_headers_problem_empty_value(int line) {
+    return 'Zeile $line: leerer Header-Wert';
+  }
+
+  @override
+  String get ng_enter_a_deployment_token =>
+      'Gib ein Bereitstellungs-Sitzungstoken ein.';
+
+  @override
+  String get ng_custom_headers => 'Eigene Header';
+
+  @override
+  String get ng_custom_headers_help =>
+      'Zusätzliche HTTP-Header für dieses Gateway (Name: Wert, einer pro Zeile), gesendet bei seinen REST- und WebSocket-Aufrufen. Sie liegen im sicheren Anmeldedatenspeicher. Authentifizierungs- und Hop-by-Hop-Header werden abgelehnt.';
+
+  @override
+  String get ng_use_a_deployment_token =>
+      'Bereitstellungs-Sitzungstoken verwenden';
+
+  @override
+  String get ng_sign_in_with_deployment_token =>
+      'Mit Bereitstellungstoken anmelden';
+
+  @override
+  String get ng_signed_in_with_deployment_token =>
+      'Mit dem Bereitstellungstoken angemeldet.';
 }

@@ -12,6 +12,22 @@ import '../l10n/l10n.dart';
 import '../services/shortcuts_store.dart' as shortcuts_store;
 import 'desktop_shortcuts.dart' show desktopShortcutsAvailable;
 
+/// The localised name of a bindable action.
+String shortcutActionLabel(
+  AppLocalizations l10n,
+  shortcuts_store.ShortcutAction action,
+) => switch (action) {
+  shortcuts_store.ShortcutAction.commandPalette =>
+    l10n.shortcut_action_command_palette,
+  shortcuts_store.ShortcutAction.newChat => l10n.shortcut_action_new_chat,
+  shortcuts_store.ShortcutAction.search => l10n.shortcut_action_search,
+  shortcuts_store.ShortcutAction.settings => l10n.shortcut_action_settings,
+  shortcuts_store.ShortcutAction.tab1 => l10n.shortcut_action_go_to_tab(1),
+  shortcuts_store.ShortcutAction.tab2 => l10n.shortcut_action_go_to_tab(2),
+  shortcuts_store.ShortcutAction.tab3 => l10n.shortcut_action_go_to_tab(3),
+  shortcuts_store.ShortcutAction.tab4 => l10n.shortcut_action_go_to_tab(4),
+};
+
 class KeyboardShortcutsSettingsCard extends StatelessWidget {
   const KeyboardShortcutsSettingsCard({required this.preferences, super.key});
 
@@ -52,9 +68,12 @@ class KeyboardShortcutsSettingsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // Bindings only fire on the desktop runners; never show a dead control.
     if (!desktopShortcutsAvailable()) return const SizedBox.shrink();
+    final l10n = context.sharedL10n;
     final theme = Theme.of(context);
     final store = shortcuts_store.ShortcutsStore(preferences);
     final apple = _appleSymbols;
+    String chordText(shortcuts_store.KeyChord chord) =>
+        shortcuts_store.formatKeyChord(chord, appleSymbols: apple);
     return Card(
       key: const Key('keyboard-shortcuts-settings-card'),
       child: Padding(
@@ -63,7 +82,17 @@ class KeyboardShortcutsSettingsCard extends StatelessWidget {
           valueListenable: shortcuts_store.shortcutsStoreChanges,
           builder: (context, _, _) {
             final customMap = store.readMap();
-            final conflicts = store.conflicts();
+            final plan = store.plan();
+            final conflicts = plan.conflicts;
+            // Custom chords that take a text-editing command (copy, paste,
+            // cut, undo, redo, select all) away from text fields.
+            final editing = [
+              for (final action in shortcuts_store.ShortcutRegistry.actions)
+                if (customMap.containsKey(action.id) &&
+                    !plan.reverted.contains(action) &&
+                    shortcuts_store.isTextEditingChord(store.chordFor(action)))
+                  action,
+            ];
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -76,7 +105,7 @@ class KeyboardShortcutsSettingsCard extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        'Keyboard shortcuts',
+                        l10n.keyboard_shortcuts_title,
                         style: theme.textTheme.titleMedium,
                       ),
                     ),
@@ -84,7 +113,7 @@ class KeyboardShortcutsSettingsCard extends StatelessWidget {
                       TextButton(
                         key: const Key('shortcuts-reset-all'),
                         onPressed: store.resetToDefaults,
-                        child: const Text('Reset all'),
+                        child: Text(l10n.shortcuts_reset_all),
                       ),
                   ],
                 ),
@@ -101,11 +130,42 @@ class KeyboardShortcutsSettingsCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (final entry in conflicts)
+                        for (final conflict in conflicts)
                           Text(
-                            'Conflict: "${shortcuts_store.ShortcutRegistry.label(entry[0] as shortcuts_store.ShortcutAction)}" and "${shortcuts_store.ShortcutRegistry.label(entry[1] as shortcuts_store.ShortcutAction)}" share ${entry[2]}; conflicting custom bindings keep their defaults until resolved.',
+                            l10n.shortcuts_conflict(
+                              shortcutActionLabel(l10n, conflict.first),
+                              shortcutActionLabel(l10n, conflict.second),
+                              chordText(conflict.chord),
+                            ),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onErrorContainer,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+                if (editing.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    key: const Key('shortcuts-text-editing-warning'),
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.tertiaryContainer,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (final action in editing)
+                          Text(
+                            l10n.shortcuts_text_editing_in_use(
+                              shortcutActionLabel(l10n, action),
+                              chordText(store.chordFor(action)),
+                            ),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onTertiaryContainer,
                             ),
                           ),
                       ],
@@ -123,9 +183,7 @@ class KeyboardShortcutsSettingsCard extends StatelessWidget {
                         child: Row(
                           children: [
                             Expanded(
-                              child: Text(
-                                shortcuts_store.ShortcutRegistry.label(action),
-                              ),
+                              child: Text(shortcutActionLabel(l10n, action)),
                             ),
                             ActionChip(
                               key: Key('shortcut-rebind-${action.id}'),
@@ -140,7 +198,7 @@ class KeyboardShortcutsSettingsCard extends StatelessWidget {
                             if (isCustom)
                               IconButton(
                                 key: Key('shortcut-reset-${action.id}'),
-                                tooltip: 'Reset to default',
+                                tooltip: l10n.shortcuts_reset_to_default,
                                 icon: const Icon(Icons.restart_alt, size: 18),
                                 onPressed: () => store.resetAction(action),
                               ),
@@ -275,9 +333,7 @@ class _ShortcutChordEditorState extends State<_ShortcutChordEditor> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Press a key combination on your keyboard, or choose modifiers and a key below:',
-          ),
+          Text(l10n.shortcuts_editor_help),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
@@ -328,8 +384,22 @@ class _ShortcutChordEditorState extends State<_ShortcutChordEditor> {
           if (!_hasModifier) ...[
             const SizedBox(height: 8),
             Text(
-              'Select at least Cmd/Meta, Ctrl, or Alt so typing in the composer is unaffected.',
+              l10n.shortcuts_editor_needs_modifier,
               style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ] else if (shortcuts_store.isTextEditingChord(_chord)) ...[
+            const SizedBox(height: 8),
+            Text(
+              l10n.shortcuts_text_editing_warning(
+                shortcuts_store.formatKeyChord(
+                  _chord,
+                  appleSymbols:
+                      defaultTargetPlatform == TargetPlatform.macOS ||
+                      defaultTargetPlatform == TargetPlatform.iOS,
+                ),
+              ),
+              key: const Key('chord-text-editing-warning'),
+              style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
             ),
           ],
         ],
@@ -338,7 +408,7 @@ class _ShortcutChordEditorState extends State<_ShortcutChordEditor> {
 
     final title =
         widget.title ??
-        'Shortcut: ${shortcuts_store.ShortcutRegistry.label(widget.action!)}';
+        l10n.shortcuts_editor_title(shortcutActionLabel(l10n, widget.action!));
     if (widget.fullscreen) {
       return Scaffold(
         appBar: AppBar(

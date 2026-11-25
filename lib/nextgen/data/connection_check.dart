@@ -179,7 +179,7 @@ Future<ConnectionReport> runConnectionCheck(
             CheckStage.signIn,
             StageResult(
               CheckOutcome.passed,
-              ngL.ng_signed_in_as('deployment token'),
+              ngL.ng_signed_in_with_deployment_token,
             ),
           );
         } else if (modelRes.statusCode == 401 || modelRes.statusCode == 403) {

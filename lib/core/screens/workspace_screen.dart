@@ -1072,17 +1072,17 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     showAppCommandPalette(
       context,
       actions: [
-        const PaletteAction(
+        PaletteAction(
           id: 'new-chat',
-          label: 'New chat',
+          label: context.l10n.command_palette_new_chat,
           icon: Icons.add_comment_outlined,
-          keywords: ['compose', 'start', 'new', 'chat'],
+          keywords: const ['compose', 'start', 'new', 'chat'],
         ),
-        const PaletteAction(
+        PaletteAction(
           id: 'search',
-          label: 'Search sessions',
+          label: context.l10n.palette_search_sessions,
           icon: Icons.search,
-          keywords: ['find', 'sessions', 'chats', 'search'],
+          keywords: const ['find', 'sessions', 'chats', 'search'],
         ),
         if (DesktopIntegration.current != null)
           PaletteAction(
@@ -1091,41 +1091,41 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
             icon: Icons.edit_note_outlined,
             keywords: const ['hud', 'quick', 'prompt', 'entry', 'hotkey'],
           ),
-        const PaletteAction(
+        PaletteAction(
           id: 'nav-chats',
-          label: 'Chats',
+          label: context.l10n.chats,
           icon: Icons.chat_bubble_outline,
-          keywords: ['conversations', 'home'],
+          keywords: const ['conversations', 'home'],
         ),
-        const PaletteAction(
+        PaletteAction(
           id: 'nav-crons',
-          label: 'Scheduled / Crons',
+          label: context.l10n.palette_scheduled_crons,
           icon: Icons.schedule_outlined,
-          keywords: ['cron', 'scheduled', 'jobs'],
+          keywords: const ['cron', 'scheduled', 'jobs'],
         ),
-        const PaletteAction(
+        PaletteAction(
           id: 'nav-projects',
-          label: 'Projects',
+          label: context.l10n.projects,
           icon: Icons.folder_outlined,
-          keywords: ['folders', 'workspaces'],
+          keywords: const ['folders', 'workspaces'],
         ),
-        const PaletteAction(
+        PaletteAction(
           id: 'nav-activity',
-          label: 'Activity',
+          label: context.l10n.nav_activity,
           icon: Icons.bolt_outlined,
-          keywords: ['timeline', 'runs', 'inbox'],
+          keywords: const ['timeline', 'runs', 'inbox'],
         ),
-        const PaletteAction(
+        PaletteAction(
           id: 'capabilities',
-          label: 'Capabilities & skills',
+          label: context.l10n.palette_capabilities_skills,
           icon: Icons.extension_outlined,
-          keywords: ['skills', 'plugins', 'mcp', 'tools'],
+          keywords: const ['skills', 'plugins', 'mcp', 'tools'],
         ),
-        const PaletteAction(
+        PaletteAction(
           id: 'settings',
-          label: 'Settings',
+          label: context.l10n.settings,
           icon: Icons.settings,
-          keywords: [
+          keywords: const [
             'preferences',
             'options',
             'shortcuts',
@@ -1251,11 +1251,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         final match = _knownSessions.where((s) => s.id == id).firstOrNull;
         if (match == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text(
-                'Chat not found in the list. It may not have loaded yet.',
-              ),
-            ),
+            SnackBar(content: Text(context.l10n.deeplink_chat_not_found)),
           );
           return;
         }
@@ -2767,7 +2763,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           const PresentationChrome(),
           IconButton(
             key: const ValueKey('app-command-palette-button'),
-            tooltip: 'App command palette',
+            tooltip: context.l10n.palette_open,
             onPressed: _openCommandPalette,
             icon: const Icon(Icons.keyboard_command_key),
           ),

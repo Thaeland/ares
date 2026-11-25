@@ -6561,24 +6561,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get catalog_scan_failed => '未通过';
 
   @override
-  String get deployment_token_label => 'Deployment token (optional)';
+  String get deployment_token_label => '部署令牌（可选）';
 
   @override
   String get deployment_token_helper =>
-      'For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.';
+      '用于以 X-Hermes-Session-Token 发送的 Hermes Dashboard 会话令牌。不会以明文保存在偏好设置中。';
 
   @override
-  String get deployment_token_hint => 'Dashboard session token';
+  String get deployment_token_hint => '仪表板会话令牌';
 
   @override
-  String get custom_headers_label => 'Custom headers (optional)';
+  String get custom_headers_label => '自定义标头（可选）';
 
   @override
-  String get custom_headers_helper =>
-      'One per line, e.g. X-Custom: value. Forbidden headers are rejected.';
+  String get custom_headers_helper => '每行一个，例如 X-Custom: 值。禁止的标头会被拒绝。';
 
   @override
-  String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+  String get custom_headers_hint => '例如 X-Custom-Header: 值';
 
   @override
   String get desktop_tray_open => '打开 Ares';
@@ -6684,46 +6683,175 @@ class AppLocalizationsZh extends AppLocalizations {
   String get capture_open_settings => '打开系统设置';
 
   @override
-  String get keep_awake_title => 'Keep computer awake';
+  String get keep_awake_title => '保持电脑唤醒';
 
   @override
-  String get keep_awake_title_mobile => 'Keep screen on';
+  String get keep_awake_title_mobile => '保持屏幕常亮';
 
   @override
-  String get keep_awake_mode_off => 'Off';
+  String get keep_awake_mode_off => '关闭';
 
   @override
-  String get keep_awake_mode_while_working => 'While working';
+  String get keep_awake_mode_while_working => '工作时';
 
   @override
-  String get keep_awake_mode_always => 'Always';
+  String get keep_awake_mode_always => '始终';
 
   @override
-  String get keep_awake_off_help => 'Never block system sleep (default).';
+  String get keep_awake_off_help => '从不阻止系统睡眠（默认）。';
 
   @override
-  String get keep_awake_while_working_help =>
-      'Prevent idle sleep only while an agent turn is running.';
+  String get keep_awake_while_working_help => '仅在代理回合运行时阻止空闲睡眠。';
 
   @override
-  String get keep_awake_always_help =>
-      'Prevent idle sleep while Ares is open on this device.';
+  String get keep_awake_always_help => '在此设备上打开 Ares 期间阻止空闲睡眠。';
 
   @override
-  String get keep_awake_off_help_mobile =>
-      'Let the screen turn off as usual (default).';
+  String get keep_awake_off_help_mobile => '让屏幕照常关闭（默认）。';
 
   @override
   String get keep_awake_while_working_help_mobile =>
-      'Keep the screen on while an agent turn is running and Ares is open.';
+      '在代理回合运行且 Ares 打开期间保持屏幕常亮。';
 
   @override
-  String get keep_awake_always_help_mobile =>
-      'Keep the screen on while Ares is open.';
+  String get keep_awake_always_help_mobile => '在 Ares 打开期间保持屏幕常亮。';
 
   @override
   String get ng_token_gateway_has_no_sign_in =>
       '此网关没有登录功能，因此无法验证部署令牌。请在主机上启用仪表板身份验证（或更新 Hermes），然后重试。';
+
+  @override
+  String get palette_open => '应用命令面板';
+
+  @override
+  String get palette_no_matches => '没有匹配的操作';
+
+  @override
+  String get palette_filter_hint => '输入以筛选操作…';
+
+  @override
+  String get palette_keys_move => '↑↓ 移动';
+
+  @override
+  String get palette_keys_run => 'Enter 运行';
+
+  @override
+  String get palette_keys_close => 'Esc 关闭';
+
+  @override
+  String get palette_search_sessions => '搜索会话';
+
+  @override
+  String get palette_scheduled_crons => '计划任务 / Cron';
+
+  @override
+  String get palette_capabilities_skills => '能力与技能';
+
+  @override
+  String get palette_insights_usage => '洞察与用量';
+
+  @override
+  String get palette_more_projects => '更多与项目';
+
+  @override
+  String get deeplink_chat_not_found => '列表中找不到该聊天，可能尚未加载。';
+
+  @override
+  String get keyboard_shortcuts_title => '键盘快捷键';
+
+  @override
+  String get shortcuts_reset_all => '全部重置';
+
+  @override
+  String get shortcuts_reset_to_default => '恢复默认';
+
+  @override
+  String get shortcut_action_command_palette => '命令面板';
+
+  @override
+  String get shortcut_action_new_chat => '新建聊天';
+
+  @override
+  String get shortcut_action_search => '搜索';
+
+  @override
+  String get shortcut_action_settings => '设置';
+
+  @override
+  String shortcut_action_go_to_tab(int number) {
+    return '转到标签页 $number';
+  }
+
+  @override
+  String shortcuts_conflict(String first, String second, String chord) {
+    return '冲突：“$first”和“$second”都使用 $chord。在你更改其中一个之前，自定义快捷键保持默认值。';
+  }
+
+  @override
+  String shortcuts_editor_title(String action) {
+    return '快捷键：$action';
+  }
+
+  @override
+  String get shortcuts_editor_help => '按下组合键，或在下方选择修饰键和按键：';
+
+  @override
+  String get shortcuts_editor_needs_modifier =>
+      '请至少选择 Cmd/Meta、Ctrl 或 Alt，以免影响在输入框中打字。';
+
+  @override
+  String shortcuts_text_editing_warning(String chord) {
+    return '$chord 是文本编辑快捷键（复制、粘贴、剪切、撤销、重做或全选）。在此绑定后，文本框将无法使用它。';
+  }
+
+  @override
+  String shortcuts_text_editing_in_use(String action, String chord) {
+    return '“$action”使用了文本编辑快捷键 $chord。在此绑定期间，文本框无法使用它。';
+  }
+
+  @override
+  String custom_headers_problem_format(int line) {
+    return '第 $line 行：应为“名称: 值”';
+  }
+
+  @override
+  String custom_headers_problem_missing_name(int line) {
+    return '第 $line 行：缺少标头名称';
+  }
+
+  @override
+  String custom_headers_problem_invalid_name(int line, String name) {
+    return '第 $line 行：标头名称“$name”无效';
+  }
+
+  @override
+  String custom_headers_problem_reserved(int line, String name) {
+    return '第 $line 行：“$name”为保留标头，不能传递';
+  }
+
+  @override
+  String custom_headers_problem_empty_value(int line) {
+    return '第 $line 行：标头值为空';
+  }
+
+  @override
+  String get ng_enter_a_deployment_token => '请输入部署会话令牌。';
+
+  @override
+  String get ng_custom_headers => '自定义标头';
+
+  @override
+  String get ng_custom_headers_help =>
+      '此网关的额外 HTTP 标头（名称: 值，每行一个），随其 REST 和 WebSocket 调用发送，保存在安全凭据存储中。身份验证标头和逐跳标头会被拒绝。';
+
+  @override
+  String get ng_use_a_deployment_token => '使用部署会话令牌';
+
+  @override
+  String get ng_sign_in_with_deployment_token => '使用部署令牌登录';
+
+  @override
+  String get ng_signed_in_with_deployment_token => '已使用部署令牌登录。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -12735,6 +12863,25 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get catalog_scan_failed => '未通过';
 
   @override
+  String get deployment_token_label => '部署令牌（可选）';
+
+  @override
+  String get deployment_token_helper =>
+      '用于以 X-Hermes-Session-Token 发送的 Hermes Dashboard 会话令牌。不会以明文保存在偏好设置中。';
+
+  @override
+  String get deployment_token_hint => '仪表板会话令牌';
+
+  @override
+  String get custom_headers_label => '自定义标头（可选）';
+
+  @override
+  String get custom_headers_helper => '每行一个，例如 X-Custom: 值。禁止的标头会被拒绝。';
+
+  @override
+  String get custom_headers_hint => '例如 X-Custom-Header: 值';
+
+  @override
   String get desktop_tray_open => '打开 Ares';
 
   @override
@@ -12838,8 +12985,175 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get capture_open_settings => '打开系统设置';
 
   @override
+  String get keep_awake_title => '保持电脑唤醒';
+
+  @override
+  String get keep_awake_title_mobile => '保持屏幕常亮';
+
+  @override
+  String get keep_awake_mode_off => '关闭';
+
+  @override
+  String get keep_awake_mode_while_working => '工作时';
+
+  @override
+  String get keep_awake_mode_always => '始终';
+
+  @override
+  String get keep_awake_off_help => '从不阻止系统睡眠（默认）。';
+
+  @override
+  String get keep_awake_while_working_help => '仅在代理回合运行时阻止空闲睡眠。';
+
+  @override
+  String get keep_awake_always_help => '在此设备上打开 Ares 期间阻止空闲睡眠。';
+
+  @override
+  String get keep_awake_off_help_mobile => '让屏幕照常关闭（默认）。';
+
+  @override
+  String get keep_awake_while_working_help_mobile =>
+      '在代理回合运行且 Ares 打开期间保持屏幕常亮。';
+
+  @override
+  String get keep_awake_always_help_mobile => '在 Ares 打开期间保持屏幕常亮。';
+
+  @override
   String get ng_token_gateway_has_no_sign_in =>
       '此网关没有登录功能，因此无法验证部署令牌。请在主机上启用仪表板身份验证（或更新 Hermes），然后重试。';
+
+  @override
+  String get palette_open => '应用命令面板';
+
+  @override
+  String get palette_no_matches => '没有匹配的操作';
+
+  @override
+  String get palette_filter_hint => '输入以筛选操作…';
+
+  @override
+  String get palette_keys_move => '↑↓ 移动';
+
+  @override
+  String get palette_keys_run => 'Enter 运行';
+
+  @override
+  String get palette_keys_close => 'Esc 关闭';
+
+  @override
+  String get palette_search_sessions => '搜索会话';
+
+  @override
+  String get palette_scheduled_crons => '计划任务 / Cron';
+
+  @override
+  String get palette_capabilities_skills => '能力与技能';
+
+  @override
+  String get palette_insights_usage => '洞察与用量';
+
+  @override
+  String get palette_more_projects => '更多与项目';
+
+  @override
+  String get deeplink_chat_not_found => '列表中找不到该聊天，可能尚未加载。';
+
+  @override
+  String get keyboard_shortcuts_title => '键盘快捷键';
+
+  @override
+  String get shortcuts_reset_all => '全部重置';
+
+  @override
+  String get shortcuts_reset_to_default => '恢复默认';
+
+  @override
+  String get shortcut_action_command_palette => '命令面板';
+
+  @override
+  String get shortcut_action_new_chat => '新建聊天';
+
+  @override
+  String get shortcut_action_search => '搜索';
+
+  @override
+  String get shortcut_action_settings => '设置';
+
+  @override
+  String shortcut_action_go_to_tab(int number) {
+    return '转到标签页 $number';
+  }
+
+  @override
+  String shortcuts_conflict(String first, String second, String chord) {
+    return '冲突：“$first”和“$second”都使用 $chord。在你更改其中一个之前，自定义快捷键保持默认值。';
+  }
+
+  @override
+  String shortcuts_editor_title(String action) {
+    return '快捷键：$action';
+  }
+
+  @override
+  String get shortcuts_editor_help => '按下组合键，或在下方选择修饰键和按键：';
+
+  @override
+  String get shortcuts_editor_needs_modifier =>
+      '请至少选择 Cmd/Meta、Ctrl 或 Alt，以免影响在输入框中打字。';
+
+  @override
+  String shortcuts_text_editing_warning(String chord) {
+    return '$chord 是文本编辑快捷键（复制、粘贴、剪切、撤销、重做或全选）。在此绑定后，文本框将无法使用它。';
+  }
+
+  @override
+  String shortcuts_text_editing_in_use(String action, String chord) {
+    return '“$action”使用了文本编辑快捷键 $chord。在此绑定期间，文本框无法使用它。';
+  }
+
+  @override
+  String custom_headers_problem_format(int line) {
+    return '第 $line 行：应为“名称: 值”';
+  }
+
+  @override
+  String custom_headers_problem_missing_name(int line) {
+    return '第 $line 行：缺少标头名称';
+  }
+
+  @override
+  String custom_headers_problem_invalid_name(int line, String name) {
+    return '第 $line 行：标头名称“$name”无效';
+  }
+
+  @override
+  String custom_headers_problem_reserved(int line, String name) {
+    return '第 $line 行：“$name”为保留标头，不能传递';
+  }
+
+  @override
+  String custom_headers_problem_empty_value(int line) {
+    return '第 $line 行：标头值为空';
+  }
+
+  @override
+  String get ng_enter_a_deployment_token => '请输入部署会话令牌。';
+
+  @override
+  String get ng_custom_headers => '自定义标头';
+
+  @override
+  String get ng_custom_headers_help =>
+      '此网关的额外 HTTP 标头（名称: 值，每行一个），随其 REST 和 WebSocket 调用发送，保存在安全凭据存储中。身份验证标头和逐跳标头会被拒绝。';
+
+  @override
+  String get ng_use_a_deployment_token => '使用部署会话令牌';
+
+  @override
+  String get ng_sign_in_with_deployment_token => '使用部署令牌登录';
+
+  @override
+  String get ng_signed_in_with_deployment_token => '已使用部署令牌登录。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -19249,6 +19563,25 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get catalog_scan_failed => '失敗';
 
   @override
+  String get deployment_token_label => '部署權杖（選填）';
+
+  @override
+  String get deployment_token_helper =>
+      '用於以 X-Hermes-Session-Token 傳送的 Hermes Dashboard 工作階段權杖。不會以明文儲存在偏好設定中。';
+
+  @override
+  String get deployment_token_hint => '儀表板工作階段權杖';
+
+  @override
+  String get custom_headers_label => '自訂標頭（選填）';
+
+  @override
+  String get custom_headers_helper => '每行一個，例如 X-Custom: 值。禁止的標頭會遭拒絕。';
+
+  @override
+  String get custom_headers_hint => '例如 X-Custom-Header: 值';
+
+  @override
   String get desktop_tray_open => '開啟 Ares';
 
   @override
@@ -19352,6 +19685,173 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get capture_open_settings => '開啟系統設定';
 
   @override
+  String get keep_awake_title => '讓電腦保持喚醒';
+
+  @override
+  String get keep_awake_title_mobile => '讓螢幕保持開啟';
+
+  @override
+  String get keep_awake_mode_off => '關閉';
+
+  @override
+  String get keep_awake_mode_while_working => '工作時';
+
+  @override
+  String get keep_awake_mode_always => '一律';
+
+  @override
+  String get keep_awake_off_help => '絕不阻止系統睡眠（預設）。';
+
+  @override
+  String get keep_awake_while_working_help => '僅在代理回合執行時阻止閒置睡眠。';
+
+  @override
+  String get keep_awake_always_help => '在此裝置上開啟 Ares 期間阻止閒置睡眠。';
+
+  @override
+  String get keep_awake_off_help_mobile => '讓螢幕照常關閉（預設）。';
+
+  @override
+  String get keep_awake_while_working_help_mobile =>
+      '在代理回合執行且 Ares 開啟期間讓螢幕保持開啟。';
+
+  @override
+  String get keep_awake_always_help_mobile => '在 Ares 開啟期間讓螢幕保持開啟。';
+
+  @override
   String get ng_token_gateway_has_no_sign_in =>
       '此閘道沒有登入功能，因此無法驗證部署權杖。請在主機上啟用儀表板驗證（或更新 Hermes），然後再試一次。';
+
+  @override
+  String get palette_open => '應用程式命令面板';
+
+  @override
+  String get palette_no_matches => '沒有相符的操作';
+
+  @override
+  String get palette_filter_hint => '輸入以篩選操作…';
+
+  @override
+  String get palette_keys_move => '↑↓ 移動';
+
+  @override
+  String get palette_keys_run => 'Enter 執行';
+
+  @override
+  String get palette_keys_close => 'Esc 關閉';
+
+  @override
+  String get palette_search_sessions => '搜尋工作階段';
+
+  @override
+  String get palette_scheduled_crons => '排程 / Cron';
+
+  @override
+  String get palette_capabilities_skills => '功能與技能';
+
+  @override
+  String get palette_insights_usage => '洞察與用量';
+
+  @override
+  String get palette_more_projects => '更多與專案';
+
+  @override
+  String get deeplink_chat_not_found => '清單中找不到此聊天，可能尚未載入。';
+
+  @override
+  String get keyboard_shortcuts_title => '鍵盤快速鍵';
+
+  @override
+  String get shortcuts_reset_all => '全部重設';
+
+  @override
+  String get shortcuts_reset_to_default => '還原預設值';
+
+  @override
+  String get shortcut_action_command_palette => '命令面板';
+
+  @override
+  String get shortcut_action_new_chat => '新增聊天';
+
+  @override
+  String get shortcut_action_search => '搜尋';
+
+  @override
+  String get shortcut_action_settings => '設定';
+
+  @override
+  String shortcut_action_go_to_tab(int number) {
+    return '前往分頁 $number';
+  }
+
+  @override
+  String shortcuts_conflict(String first, String second, String chord) {
+    return '衝突：「$first」和「$second」都使用 $chord。在你變更其中一個之前，自訂快速鍵會保持預設值。';
+  }
+
+  @override
+  String shortcuts_editor_title(String action) {
+    return '快速鍵：$action';
+  }
+
+  @override
+  String get shortcuts_editor_help => '按下按鍵組合，或在下方選擇輔助鍵和按鍵：';
+
+  @override
+  String get shortcuts_editor_needs_modifier =>
+      '請至少選擇 Cmd/Meta、Ctrl 或 Alt，以免影響在輸入框中打字。';
+
+  @override
+  String shortcuts_text_editing_warning(String chord) {
+    return '$chord 是文字編輯快速鍵（複製、貼上、剪下、復原、重做或全選）。在此指定後，文字欄位將無法使用它。';
+  }
+
+  @override
+  String shortcuts_text_editing_in_use(String action, String chord) {
+    return '「$action」使用了文字編輯快速鍵 $chord。在此指定期間，文字欄位無法使用它。';
+  }
+
+  @override
+  String custom_headers_problem_format(int line) {
+    return '第 $line 行：應為「名稱: 值」';
+  }
+
+  @override
+  String custom_headers_problem_missing_name(int line) {
+    return '第 $line 行：缺少標頭名稱';
+  }
+
+  @override
+  String custom_headers_problem_invalid_name(int line, String name) {
+    return '第 $line 行：標頭名稱「$name」無效';
+  }
+
+  @override
+  String custom_headers_problem_reserved(int line, String name) {
+    return '第 $line 行：「$name」為保留標頭，無法傳遞';
+  }
+
+  @override
+  String custom_headers_problem_empty_value(int line) {
+    return '第 $line 行：標頭值為空';
+  }
+
+  @override
+  String get ng_enter_a_deployment_token => '請輸入部署工作階段權杖。';
+
+  @override
+  String get ng_custom_headers => '自訂標頭';
+
+  @override
+  String get ng_custom_headers_help =>
+      '此閘道的額外 HTTP 標頭（名稱: 值，每行一個），隨其 REST 和 WebSocket 呼叫傳送，並保存在安全的憑證儲存區中。驗證標頭和逐跳標頭會遭拒絕。';
+
+  @override
+  String get ng_use_a_deployment_token => '使用部署工作階段權杖';
+
+  @override
+  String get ng_sign_in_with_deployment_token => '使用部署權杖登入';
+
+  @override
+  String get ng_signed_in_with_deployment_token => '已使用部署權杖登入。';
 }

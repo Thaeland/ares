@@ -6792,24 +6792,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String get catalog_scan_failed => 'فشل';
 
   @override
-  String get deployment_token_label => 'Deployment token (optional)';
+  String get deployment_token_label => 'رمز النشر (اختياري)';
 
   @override
   String get deployment_token_helper =>
-      'For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.';
+      'لرموز جلسات Hermes Dashboard المرسلة بصفة X-Hermes-Session-Token. لا يُخزَّن كنص عادي في التفضيلات.';
 
   @override
-  String get deployment_token_hint => 'Dashboard session token';
+  String get deployment_token_hint => 'رمز جلسة لوحة التحكم';
 
   @override
-  String get custom_headers_label => 'Custom headers (optional)';
+  String get custom_headers_label => 'ترويسات مخصصة (اختياري)';
 
   @override
   String get custom_headers_helper =>
-      'One per line, e.g. X-Custom: value. Forbidden headers are rejected.';
+      'واحدة في كل سطر، مثل X-Custom: value. تُرفض الترويسات المحظورة.';
 
   @override
-  String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+  String get custom_headers_hint => 'مثال: X-Custom-Header: value';
 
   @override
   String get desktop_tray_open => 'فتح Ares';
@@ -6924,44 +6924,180 @@ class AppLocalizationsAr extends AppLocalizations {
   String get capture_open_settings => 'فتح إعدادات النظام';
 
   @override
-  String get keep_awake_title => 'Keep computer awake';
+  String get keep_awake_title => 'إبقاء الحاسوب مستيقظًا';
 
   @override
-  String get keep_awake_title_mobile => 'Keep screen on';
+  String get keep_awake_title_mobile => 'إبقاء الشاشة قيد التشغيل';
 
   @override
-  String get keep_awake_mode_off => 'Off';
+  String get keep_awake_mode_off => 'إيقاف';
 
   @override
-  String get keep_awake_mode_while_working => 'While working';
+  String get keep_awake_mode_while_working => 'أثناء العمل';
 
   @override
-  String get keep_awake_mode_always => 'Always';
+  String get keep_awake_mode_always => 'دائمًا';
 
   @override
-  String get keep_awake_off_help => 'Never block system sleep (default).';
+  String get keep_awake_off_help => 'لا تمنع سكون النظام أبدًا (الافتراضي).';
 
   @override
   String get keep_awake_while_working_help =>
-      'Prevent idle sleep only while an agent turn is running.';
+      'منع السكون بسبب الخمول فقط أثناء تشغيل دور الوكيل.';
 
   @override
   String get keep_awake_always_help =>
-      'Prevent idle sleep while Ares is open on this device.';
+      'منع السكون بسبب الخمول ما دام Ares مفتوحًا على هذا الجهاز.';
 
   @override
   String get keep_awake_off_help_mobile =>
-      'Let the screen turn off as usual (default).';
+      'دع الشاشة تنطفئ كالمعتاد (الافتراضي).';
 
   @override
   String get keep_awake_while_working_help_mobile =>
-      'Keep the screen on while an agent turn is running and Ares is open.';
+      'إبقاء الشاشة قيد التشغيل أثناء تشغيل دور الوكيل وما دام Ares مفتوحًا.';
 
   @override
   String get keep_awake_always_help_mobile =>
-      'Keep the screen on while Ares is open.';
+      'إبقاء الشاشة قيد التشغيل ما دام Ares مفتوحًا.';
 
   @override
   String get ng_token_gateway_has_no_sign_in =>
       'لا تحتوي هذه البوابة على تسجيل دخول، لذا لا يمكنها التحقق من رمز النشر. فعّل مصادقة لوحة التحكم على المضيف (أو حدّث Hermes)، ثم حاول مرة أخرى.';
+
+  @override
+  String get palette_open => 'لوحة أوامر التطبيق';
+
+  @override
+  String get palette_no_matches => 'لا توجد إجراءات مطابقة';
+
+  @override
+  String get palette_filter_hint => 'اكتب لتصفية الإجراءات…';
+
+  @override
+  String get palette_keys_move => '↑↓ للتنقل';
+
+  @override
+  String get palette_keys_run => 'Enter للتشغيل';
+
+  @override
+  String get palette_keys_close => 'Esc للإغلاق';
+
+  @override
+  String get palette_search_sessions => 'البحث في الجلسات';
+
+  @override
+  String get palette_scheduled_crons => 'المجدولة / Cron';
+
+  @override
+  String get palette_capabilities_skills => 'القدرات والمهارات';
+
+  @override
+  String get palette_insights_usage => 'الرؤى والاستخدام';
+
+  @override
+  String get palette_more_projects => 'المزيد والمشاريع';
+
+  @override
+  String get deeplink_chat_not_found =>
+      'لم يُعثر على المحادثة في القائمة. ربما لم تُحمَّل بعد.';
+
+  @override
+  String get keyboard_shortcuts_title => 'اختصارات لوحة المفاتيح';
+
+  @override
+  String get shortcuts_reset_all => 'إعادة تعيين الكل';
+
+  @override
+  String get shortcuts_reset_to_default => 'استعادة الافتراضي';
+
+  @override
+  String get shortcut_action_command_palette => 'لوحة الأوامر';
+
+  @override
+  String get shortcut_action_new_chat => 'محادثة جديدة';
+
+  @override
+  String get shortcut_action_search => 'بحث';
+
+  @override
+  String get shortcut_action_settings => 'الإعدادات';
+
+  @override
+  String shortcut_action_go_to_tab(int number) {
+    return 'الانتقال إلى علامة التبويب $number';
+  }
+
+  @override
+  String shortcuts_conflict(String first, String second, String chord) {
+    return 'تعارض: يستخدم «$first» و«$second» كلاهما $chord. يبقى الاختصار المخصص على قيمته الافتراضية حتى تغيّر أحدهما.';
+  }
+
+  @override
+  String shortcuts_editor_title(String action) {
+    return 'الاختصار: $action';
+  }
+
+  @override
+  String get shortcuts_editor_help =>
+      'اضغط مجموعة مفاتيح، أو اختر مفاتيح التعديل ومفتاحًا أدناه:';
+
+  @override
+  String get shortcuts_editor_needs_modifier =>
+      'اختر على الأقل Cmd/Meta أو Ctrl أو Alt حتى لا تتأثر الكتابة في حقل الرسالة.';
+
+  @override
+  String shortcuts_text_editing_warning(String chord) {
+    return '$chord اختصار لتحرير النص (نسخ أو لصق أو قص أو تراجع أو إعادة أو تحديد الكل). ربطه هنا يحرم حقول النص منه.';
+  }
+
+  @override
+  String shortcuts_text_editing_in_use(String action, String chord) {
+    return 'يستخدم «$action» الاختصار $chord الخاص بتحرير النص. تفقده حقول النص ما دام مربوطًا هنا.';
+  }
+
+  @override
+  String custom_headers_problem_format(int line) {
+    return 'السطر $line: المتوقع «الاسم: القيمة»';
+  }
+
+  @override
+  String custom_headers_problem_missing_name(int line) {
+    return 'السطر $line: اسم الترويسة مفقود';
+  }
+
+  @override
+  String custom_headers_problem_invalid_name(int line, String name) {
+    return 'السطر $line: اسم ترويسة غير صالح «$name»';
+  }
+
+  @override
+  String custom_headers_problem_reserved(int line, String name) {
+    return 'السطر $line: «$name» محجوز ولا يمكن تمريره';
+  }
+
+  @override
+  String custom_headers_problem_empty_value(int line) {
+    return 'السطر $line: قيمة الترويسة فارغة';
+  }
+
+  @override
+  String get ng_enter_a_deployment_token => 'أدخل رمز جلسة النشر.';
+
+  @override
+  String get ng_custom_headers => 'ترويسات مخصصة';
+
+  @override
+  String get ng_custom_headers_help =>
+      'ترويسات HTTP إضافية لهذه البوابة (الاسم: القيمة، واحدة في كل سطر)، تُرسل مع استدعاءات REST وWebSocket الخاصة بها، وتُحفظ في مخزن بيانات الاعتماد الآمن. تُرفض ترويسات المصادقة والترويسات بين القفزات.';
+
+  @override
+  String get ng_use_a_deployment_token => 'استخدام رمز جلسة النشر';
+
+  @override
+  String get ng_sign_in_with_deployment_token => 'تسجيل الدخول برمز النشر';
+
+  @override
+  String get ng_signed_in_with_deployment_token =>
+      'تم تسجيل الدخول برمز النشر.';
 }

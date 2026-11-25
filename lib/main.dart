@@ -3037,7 +3037,7 @@ class _AddDialogState extends State<_AddDialog> {
     final parsedHeaders = parseRemoteHeadersBlock(_customHeaders.text);
     if (parsedHeaders.problems.isNotEmpty) {
       setState(() {
-        _error = parsedHeaders.problems.first;
+        _error = describeHeaderIssue(context.l10n, parsedHeaders.issues.first);
         _showDashboard = true;
       });
       return;

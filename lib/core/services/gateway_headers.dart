@@ -13,6 +13,8 @@
 ///    were saved for — never to any other origin.
 library;
 
+import '../../l10n/app_localizations.dart';
+
 /// RFC 7230 token characters for a header name.
 final remoteHeaderNameRe = RegExp(r"^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$");
 
@@ -68,15 +70,63 @@ Map<String, String> normalizeRemoteHeaders(Map<String, dynamic> raw) {
 /// line that could not be kept. Lines with problems are dropped, never
 /// repaired.
 class ParsedRemoteHeaders {
-  const ParsedRemoteHeaders({required this.headers, required this.problems});
+  const ParsedRemoteHeaders({
+    required this.headers,
+    required this.problems,
+    this.issues = const [],
+  });
 
   final Map<String, String> headers;
+
+  /// English descriptions (logs, tests). Show [issues] through
+  /// [describeHeaderIssue] in the UI instead.
   final List<String> problems;
+
+  /// The same problems, typed, in line order, for localised display.
+  final List<HeaderIssue> issues;
 }
+
+/// Why a line of the custom headers block was dropped.
+enum HeaderIssueKind { format, missingName, invalidName, reserved, emptyValue }
+
+/// One dropped line of the custom headers block.
+class HeaderIssue {
+  const HeaderIssue(this.kind, this.line, [this.name = '']);
+
+  final HeaderIssueKind kind;
+
+  /// 1-based line number.
+  final int line;
+
+  /// The header name, for [HeaderIssueKind.invalidName] and
+  /// [HeaderIssueKind.reserved].
+  final String name;
+}
+
+/// The localised message for [issue].
+String describeHeaderIssue(AppLocalizations l10n, HeaderIssue issue) =>
+    switch (issue.kind) {
+      HeaderIssueKind.format => l10n.custom_headers_problem_format(issue.line),
+      HeaderIssueKind.missingName => l10n.custom_headers_problem_missing_name(
+        issue.line,
+      ),
+      HeaderIssueKind.invalidName => l10n.custom_headers_problem_invalid_name(
+        issue.line,
+        issue.name,
+      ),
+      HeaderIssueKind.reserved => l10n.custom_headers_problem_reserved(
+        issue.line,
+        issue.name,
+      ),
+      HeaderIssueKind.emptyValue => l10n.custom_headers_problem_empty_value(
+        issue.line,
+      ),
+    };
 
 ParsedRemoteHeaders parseRemoteHeadersBlock(String text) {
   final out = <String, String>{};
   final problems = <String>[];
+  final issues = <HeaderIssue>[];
   final lines = text.split('\n');
   for (var i = 0; i < lines.length; i++) {
     final raw = lines[i];
@@ -85,25 +135,32 @@ ParsedRemoteHeaders parseRemoteHeadersBlock(String text) {
     final colon = raw.indexOf(':');
     if (colon < 0) {
       problems.add('Line ${i + 1}: expected "Name: Value"');
+      issues.add(HeaderIssue(HeaderIssueKind.format, i + 1));
       continue;
     }
     final name = raw.substring(0, colon).trim();
     final value = raw.substring(colon + 1).trim();
     if (name.isEmpty) {
       problems.add('Line ${i + 1}: missing header name');
+      issues.add(HeaderIssue(HeaderIssueKind.missingName, i + 1));
       continue;
     }
     if (!remoteHeaderNameRe.hasMatch(name)) {
       problems.add('Line ${i + 1}: invalid header name "$name"');
+      issues.add(HeaderIssue(HeaderIssueKind.invalidName, i + 1, name));
       continue;
     }
     if (forbiddenRemoteHeaderNames.contains(name.toLowerCase())) {
-      problems.add('Line ${i + 1}: "$name" is reserved and cannot be passed through');
+      problems.add(
+        'Line ${i + 1}: "$name" is reserved and cannot be passed through',
+      );
+      issues.add(HeaderIssue(HeaderIssueKind.reserved, i + 1, name));
       continue;
     }
     final sanitized = sanitizeHeaderValue(value);
     if (sanitized.isEmpty) {
       problems.add('Line ${i + 1}: empty header value');
+      issues.add(HeaderIssue(HeaderIssueKind.emptyValue, i + 1));
       continue;
     }
     out[name] = sanitized;
@@ -111,6 +168,7 @@ ParsedRemoteHeaders parseRemoteHeadersBlock(String text) {
   return ParsedRemoteHeaders(
     headers: normalizeRemoteHeaders(out),
     problems: problems,
+    issues: issues,
   );
 }
 

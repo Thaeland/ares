@@ -202,7 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
 
         if (desktopShortcutsAvailable()) ...[
-          _buildSectionHeader('Keyboard shortcuts'),
+          _buildSectionHeader(context.l10n.keyboard_shortcuts_title),
           KeyboardShortcutsSettingsCard(
             preferences: context
                 .findAncestorStateOfType<HermesAppState>()!
