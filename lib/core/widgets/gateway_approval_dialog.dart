@@ -73,6 +73,29 @@ class _GatewayApprovalDialogState extends State<GatewayApprovalDialog> {
   }
 
   String _scopeFor(GatewayApprovalChoice choice) {
+    final request = widget.request;
+    if (request.kind == GatewayApprovalKind.access) {
+      return switch (choice) {
+        GatewayApprovalChoice.once =>
+          'Allow this folder for this request only.',
+        GatewayApprovalChoice.session =>
+          'Allow this folder until the session ends.',
+        GatewayApprovalChoice.always =>
+          'Save this folder grant for later requests.',
+        GatewayApprovalChoice.deny => 'Do not grant this folder.',
+      };
+    }
+    if (request.kind == GatewayApprovalKind.network) {
+      return switch (choice) {
+        GatewayApprovalChoice.once =>
+          'Allow this website for this request only.',
+        GatewayApprovalChoice.session =>
+          'Allow this website until the session ends.',
+        GatewayApprovalChoice.always =>
+          'Save this website grant for later requests.',
+        GatewayApprovalChoice.deny => 'Do not grant this website.',
+      };
+    }
     return switch (choice) {
       GatewayApprovalChoice.once => context.l10n.run_only_this_command,
       GatewayApprovalChoice.session =>
@@ -98,13 +121,28 @@ class _GatewayApprovalDialogState extends State<GatewayApprovalDialog> {
     final request = widget.request;
     final busy = _submitting != null;
 
+    final title = switch (request.kind) {
+      GatewayApprovalKind.access => 'Folder access',
+      GatewayApprovalKind.network => 'Website access',
+      GatewayApprovalKind.command => context.l10n.approval_needed,
+    };
+    final accessLabel = switch (request.folderAccess) {
+      'read' => 'Read-only',
+      'read_write' => 'Read and write',
+      _ => 'The gateway did not say whether this is read-only or read-write.',
+    };
+
     // Back is a denial only before submission. Once a response is in flight,
     // dismissing would race that response against the route owner's denial.
     return PopScope(
       canPop: !busy,
       child: AlertDialog(
-        icon: const Icon(Icons.gpp_maybe_outlined),
-        title: Text(context.l10n.approval_needed),
+        icon: Icon(
+          request.kind == GatewayApprovalKind.command
+              ? Icons.gpp_maybe_outlined
+              : Icons.folder_shared_outlined,
+        ),
+        title: Text(title),
         content: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 520),
           child: SingleChildScrollView(
@@ -113,7 +151,31 @@ class _GatewayApprovalDialogState extends State<GatewayApprovalDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(request.description),
-                if (request.command.isNotEmpty) ...[
+                if (request.kind == GatewayApprovalKind.access) ...[
+                  const SizedBox(height: 16),
+                  Text('Folder', style: theme.textTheme.labelLarge),
+                  const SizedBox(height: 6),
+                  SelectableText(
+                    request.folderPath?.isNotEmpty == true
+                        ? request.folderPath!
+                        : 'The gateway did not name a folder.',
+                  ),
+                  const SizedBox(height: 8),
+                  Text(accessLabel, key: const Key('approval-access')),
+                ],
+                if (request.kind == GatewayApprovalKind.network) ...[
+                  const SizedBox(height: 16),
+                  Text('Website', style: theme.textTheme.labelLarge),
+                  const SizedBox(height: 6),
+                  SelectableText(
+                    request.host?.isNotEmpty == true
+                        ? request.host!
+                        : 'The gateway did not name a website.',
+                    key: const Key('approval-host'),
+                  ),
+                ],
+                if (request.kind == GatewayApprovalKind.command &&
+                    request.command.isNotEmpty) ...[
                   const SizedBox(height: 16),
                   Text(context.l10n.command, style: theme.textTheme.labelLarge),
                   const SizedBox(height: 6),
