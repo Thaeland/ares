@@ -311,6 +311,9 @@ final class WorkspaceRuntime {
 class WsClient {
   int get socketEpoch => _connectionGeneration;
   final _workspaceBindings = <String, WorkspaceRuntime>{};
+  // Retain per-socket fences even after close/rebinding: a delayed older
+  // acknowledgement cannot resurrect authority cleared by the newer one.
+  final _workspaceReceipt = <String, int>{};
   WorkspaceRuntime? workspaceBinding(String storedId) =>
       _workspaceBindings[storedId];
   final String baseUrl;
@@ -497,6 +500,7 @@ class WsClient {
     _connected = false;
     _channel = null;
     _workspaceBindings.clear();
+    _workspaceReceipt.clear();
     // Reject all pending request-response calls.
     for (var entry in _pending.values) {
       entry.timer?.cancel();
@@ -1059,11 +1063,13 @@ class WsClient {
       return reply;
     }
     if (!isBinding) {
+      if (requestedId is String) _noteWorkspaceReceipt(id, [requestedId]);
       _workspaceBindings.removeWhere(
         (id, b) => id == requestedId || b.runtimeId == requestedId,
       );
     } else {
       _noteWorkspaceBinding(
+        id,
         reply['result'],
         method == 'session.resume' ? requestedId : null,
         requestedProfile,
@@ -1075,6 +1081,7 @@ class WsClient {
   // Evidence on THIS socket only. A session coordinator can use its own
   // independent socket; its IDs must not leak into workspace dispatch.
   void _noteWorkspaceBinding(
+    int requestId,
     Object? result,
     Object? expectedId,
     Object? requestedProfile,
@@ -1085,6 +1092,19 @@ class WsClient {
     final infoId = info is Map ? info['stored_session_id'] : null;
     final stored = result['stored_session_id'] ?? infoId;
     if (runtime is! String || runtime.isEmpty) return;
+    final ids = {
+      runtime,
+      if (stored is String) stored,
+      if (expectedId is String) expectedId,
+    };
+    if (!_noteWorkspaceReceipt(requestId, ids)) {
+      // Completion order disagrees with request order. Neither ordering is
+      // server-side proof: require a new receipt, don't pick a winner.
+      _workspaceBindings.removeWhere(
+        (id, b) => ids.contains(id) || ids.contains(b.runtimeId),
+      );
+      return;
+    }
     _workspaceBindings.removeWhere(
       (id, b) => b.runtimeId == runtime && id != stored,
     );
@@ -1118,6 +1138,18 @@ class WsClient {
         backend as String?,
       );
     }
+  }
+
+  bool _noteWorkspaceReceipt(int requestId, Iterable<String> ids) {
+    var ordered = true;
+    for (final id in ids) {
+      if ((_workspaceReceipt[id] ?? -1) > requestId) {
+        ordered = false;
+      } else {
+        _workspaceReceipt[id] = requestId;
+      }
+    }
+    return ordered;
   }
 
   /// Send a JSON-RPC method call and receive streaming events.

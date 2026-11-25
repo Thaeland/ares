@@ -274,136 +274,145 @@ final class WorkspaceTarget {
     }
   }
 
-  Future<Object?> read(WorkspaceRead operation) {
-    final live =
-        operation == WorkspaceRead.pendingApprovals ||
-        operation == WorkspaceRead.processes;
-    final scoped = live || operation == WorkspaceRead.gitStatus;
-    void check() {
-      checkCurrent();
-      if (scoped && _row == null) _fail(WorkspaceFailure.unbound);
-      if (live && runtimeSessionId == null) _fail(WorkspaceFailure.unbound);
-    }
-
-    Future<void> verifyRow() async {
-      if (scoped) await verifySession();
-      check();
-    }
-
-    Future<Object?> get(
-      List<String> segments, [
-      Map<String, String> params = const {},
-    ]) => _owner._dashboard.workspaceJson(
+  // Kept library-private: typed feature methods can share custody and fencing
+  // without exposing a raw RPC name, credential or REST path to renderers.
+  Future<Object?> _get(
+    List<String> segments, [
+    Map<String, String> params = const {},
+  ]) {
+    if (params.containsKey('profile')) _fail(WorkspaceFailure.mismatch);
+    return _owner._dashboard.workspaceJson(
       segments,
-      check: check,
-      query: {'profile': ?effectiveProfile, ...params},
+      check: checkCurrent,
+      query: {...params, 'profile': ?effectiveProfile},
     );
-    Future<Map<String, dynamic>> rpc(
-      String method,
-      Map<String, dynamic> params,
-    ) async {
-      check();
-      final response = await _socket.send(method, {
-        'profile': ?effectiveProfile,
-        ...params,
-      }, includeProfile: false);
-      check();
-      final error = response['error'];
-      if (error != null) {
-        if (error is Map && error['code'] == -32601) {
-          _fail(WorkspaceFailure.unsupported);
-        }
-        if (error is Map && const {401, 403}.contains(error['code'])) {
-          _fail(WorkspaceFailure.denied);
-        }
-        _fail(WorkspaceFailure.unavailable);
-      }
-      final result = response['result'];
-      if (result is! Map<String, dynamic>) _fail(WorkspaceFailure.invalid);
-      return result;
-    }
+  }
 
-    return _guard(check, () async {
-      await verifyRow();
-      Object? value;
-      switch (operation) {
-        case WorkspaceRead.profiles:
-          final result = await rpc('profiles.list', {
-            'include_sessions': false,
-          });
-          if (result['profiles'] is! List ||
-              !(result['profiles'] as List).every(
-                (r) => r is Map && r['name'] is String,
-              )) {
-            _fail(WorkspaceFailure.invalid);
-          }
-          value = result;
-        case WorkspaceRead.pendingApprovals:
-        case WorkspaceRead.processes:
-          final approvals = operation == WorkspaceRead.pendingApprovals;
-          final result = await rpc(
-            approvals ? 'approval.pending' : 'process.list',
-            {'session_id': runtimeSessionId},
-          );
-          if (result[approvals ? 'approvals' : 'processes'] is! List) {
-            _fail(WorkspaceFailure.invalid);
-          }
-          value = result;
-        case WorkspaceRead.defaultDirectory:
-          final result = await get(['fs', 'default-cwd']);
-          if (result is! Map ||
-              result['cwd'] is! String ||
-              !_canonicalPath(result['cwd'] as String)) {
-            _fail(WorkspaceFailure.invalid);
-          }
-          value = result;
-        case WorkspaceRead.dashboardPlugins:
-          final result = await get(['dashboard', 'plugins']);
-          if (result is! List ||
-              !result.every((r) => r is Map && r['name'] is String)) {
-            _fail(WorkspaceFailure.invalid);
-          }
-          value = result;
-        case WorkspaceRead.terminalBackends:
-          final result = await get(['tools', 'terminal', 'backends']);
-          if (result is! Map ||
-              result['active'] is! String ||
-              result['backends'] is! List) {
-            _fail(WorkspaceFailure.invalid);
-          }
-          value = result;
-        case WorkspaceRead.gitStatus:
-          final cwd = canonicalCwd;
-          if (cwd == null) _fail(WorkspaceFailure.unbound);
-          if (_binding?.backend != null && _binding!.backend != 'local') {
-            _fail(WorkspaceFailure.unbound);
-          }
-          // /api/git is a host path, not the executor's SSH/container filesystem.
-          final backend = await get(['tools', 'terminal', 'backends']);
-          if (backend is! Map || backend['active'] != 'local') {
-            _fail(WorkspaceFailure.unbound);
-          }
-          await verifyRow();
-          final result = await get(['git', 'status'], {'path': cwd});
-          if (result != null &&
-              (result is! Map ||
-                  result['files'] is! List ||
-                  result['changed'] is! int)) {
-            _fail(WorkspaceFailure.invalid);
-          }
-          value = result;
-        case WorkspaceRead.hostTerminalTicket:
-          // Do not open a shell to discover support, nor give a ticket to UI.
-          value = await _owner._dashboard.workspaceJson(
-            ['webapp', 'socket-ticket'],
-            query: {'socket': 'host-terminal'},
-            check: check,
-            mintHostTerminalTicket: true,
-          );
+  Future<Map<String, dynamic>> _rpc(
+    String method,
+    Map<String, dynamic> params,
+  ) async {
+    checkCurrent();
+    if (params.containsKey('profile')) _fail(WorkspaceFailure.mismatch);
+    final response = await _socket.send(method, {
+      ...params,
+      'profile': ?effectiveProfile,
+    }, includeProfile: false);
+    checkCurrent();
+    final error = response['error'];
+    if (error != null) {
+      if (error is Map && error['code'] == -32601) {
+        _fail(WorkspaceFailure.unsupported);
       }
-      await verifyRow();
-      return value;
-    });
+      if (error is Map && const {401, 403}.contains(error['code'])) {
+        _fail(WorkspaceFailure.denied);
+      }
+      _fail(WorkspaceFailure.unavailable);
+    }
+    final result = response['result'];
+    if (result is! Map<String, dynamic>) _fail(WorkspaceFailure.invalid);
+    return result;
+  }
+
+  Future<T> _withOwner<T>(
+    Future<T> Function() operation, {
+    bool session = false,
+    bool live = false,
+  }) => _guard(checkCurrent, () async {
+    if (live && runtimeSessionId == null) _fail(WorkspaceFailure.unbound);
+    if (session || live) await verifySession();
+    checkCurrent();
+    final value = await operation();
+    if (session || live) await verifySession();
+    return value;
+  });
+
+  Future<Object?> read(WorkspaceRead operation) {
+    return _withOwner(
+      () async {
+        Object? value;
+        switch (operation) {
+          case WorkspaceRead.profiles:
+            final result = await _rpc('profiles.list', {
+              'include_sessions': false,
+            });
+            if (result['profiles'] is! List ||
+                !(result['profiles'] as List).every(
+                  (r) => r is Map && r['name'] is String,
+                )) {
+              _fail(WorkspaceFailure.invalid);
+            }
+            value = result;
+          case WorkspaceRead.pendingApprovals:
+          case WorkspaceRead.processes:
+            final approvals = operation == WorkspaceRead.pendingApprovals;
+            final result = await _rpc(
+              approvals ? 'approval.pending' : 'process.list',
+              {'session_id': runtimeSessionId},
+            );
+            if (result[approvals ? 'approvals' : 'processes'] is! List) {
+              _fail(WorkspaceFailure.invalid);
+            }
+            value = result;
+          case WorkspaceRead.defaultDirectory:
+            final result = await _get(['fs', 'default-cwd']);
+            if (result is! Map ||
+                result['cwd'] is! String ||
+                !_canonicalPath(result['cwd'] as String)) {
+              _fail(WorkspaceFailure.invalid);
+            }
+            value = result;
+          case WorkspaceRead.dashboardPlugins:
+            final result = await _get(['dashboard', 'plugins']);
+            if (result is! List ||
+                !result.every((r) => r is Map && r['name'] is String)) {
+              _fail(WorkspaceFailure.invalid);
+            }
+            value = result;
+          case WorkspaceRead.terminalBackends:
+            final result = await _get(['tools', 'terminal', 'backends']);
+            if (result is! Map ||
+                result['active'] is! String ||
+                result['backends'] is! List) {
+              _fail(WorkspaceFailure.invalid);
+            }
+            value = result;
+          case WorkspaceRead.gitStatus:
+            final cwd = canonicalCwd;
+            if (cwd == null) _fail(WorkspaceFailure.unbound);
+            if (_binding?.backend != null && _binding!.backend != 'local') {
+              _fail(WorkspaceFailure.unbound);
+            }
+            // /api/git is a host path, not the executor's SSH/container filesystem.
+            final backend = await _get(['tools', 'terminal', 'backends']);
+            if (backend is! Map || backend['active'] != 'local') {
+              _fail(WorkspaceFailure.unbound);
+            }
+            await verifySession();
+            final result = await _get(['git', 'status'], {'path': cwd});
+            if (result != null &&
+                (result is! Map ||
+                    result['files'] is! List ||
+                    result['changed'] is! int)) {
+              _fail(WorkspaceFailure.invalid);
+            }
+            value = result;
+          case WorkspaceRead.hostTerminalTicket:
+            // Do not open a shell to discover support, nor give a ticket to UI.
+            value = await _owner._dashboard.workspaceJson(
+              ['webapp', 'socket-ticket'],
+              query: {'socket': 'host-terminal'},
+              check: checkCurrent,
+              mintHostTerminalTicket: true,
+            );
+        }
+        return value;
+      },
+      session: operation == WorkspaceRead.gitStatus,
+      live:
+          operation == WorkspaceRead.pendingApprovals ||
+          operation == WorkspaceRead.processes,
+    );
   }
 }
 

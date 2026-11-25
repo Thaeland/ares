@@ -295,6 +295,39 @@ void main() {
         timeout: const Timeout(Duration(seconds: 10)),
       );
 
+      if (!classic) {
+        test(
+          'late resume receipt cannot restore an obsolete runtime',
+          () async {
+            server.holdResume = true;
+            final old = attach();
+            await server.waiting.future.timeout(const Duration(seconds: 5));
+            server.runtime = 'new';
+            await attach();
+            final current = await pane.bind(route);
+            expect(current.runtimeSessionId, 'new');
+            server.release.complete();
+            await old;
+            expect(
+              await current.probe(WorkspaceRead.pendingApprovals),
+              WorkspaceFailure.stale,
+            );
+            final ambiguous = await pane.bind(route);
+            expect(
+              await ambiguous.probe(WorkspaceRead.pendingApprovals),
+              WorkspaceFailure.unbound,
+            );
+            expect(
+              server.rpc.where((r) => r['method'] == 'approval.pending'),
+              isEmpty,
+            );
+            await attach();
+            final fresh = await pane.bind(route);
+            expect(await fresh.probe(WorkspaceRead.pendingApprovals), isNull);
+          },
+        );
+      }
+
       test(
         'unsupported, auth denial, redirect and malformed success are distinct',
         () async {
@@ -350,6 +383,7 @@ class _Fixture {
   };
   String runtime = 'runtime', backend = 'local';
   bool hold = false, unknown = false;
+  bool holdResume = false;
   int pluginCode = 200;
   Object plugins = [
     {'name': 'fixture-plugin'},
@@ -439,6 +473,11 @@ class _Fixture {
           'process.list' => {'processes': []},
           _ => <String, dynamic>{},
         };
+        if (holdResume && method == 'session.resume') {
+          holdResume = false;
+          waiting.complete();
+          await release.future;
+        }
         ws.add(
           jsonEncode({
             'jsonrpc': '2.0',
