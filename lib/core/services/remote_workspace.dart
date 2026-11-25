@@ -5,6 +5,9 @@ library;
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 import 'ws_client.dart';
+import 'preview_peer.dart';
+
+part 'remote_preview.dart';
 
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {

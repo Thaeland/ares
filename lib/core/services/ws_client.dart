@@ -5,6 +5,8 @@
 // After submitting a prompt, the server pushes stream events and finally
 // a JSON-RPC response with the same id.
 import 'dart:async';
+
+import 'preview_peer.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -309,6 +311,7 @@ final class WorkspaceRuntime {
 
 /// WebSocket client for the Hermes JSON-RPC gateway.
 class WsClient {
+  final previewPeers = PreviewPeers();
   int get socketEpoch => _connectionGeneration;
   final _workspaceBindings = <String, WorkspaceRuntime>{};
   // Retain per-socket fences even after close/rebinding: a delayed older
@@ -500,6 +503,7 @@ class WsClient {
     _connected = false;
     _channel = null;
     _workspaceBindings.clear();
+    previewPeers.clear();
     _workspaceReceipt.clear();
     // Reject all pending request-response calls.
     for (var entry in _pending.values) {
@@ -763,6 +767,19 @@ class WsClient {
       fail: (code, message) =>
           _sendServerResponse(id, error: {'code': code, 'message': message}),
     );
+    if (method == 'preview.read' || method == 'preview.act') {
+      try {
+        final answer = previewPeers.answer(method, params, replayed: replayed);
+        if (answer != null) {
+          request.respond(answer);
+        } else {
+          request.fail(-32601, 'No shared preview for this operation');
+        }
+      } catch (_) {
+        request.fail(-32603, 'Preview unavailable');
+      }
+      return;
+    }
     final listener = onServerRequest;
     if (listener == null) {
       request.fail(-32601, 'no handler for server request: $method');
