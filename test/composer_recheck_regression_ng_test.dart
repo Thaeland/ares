@@ -228,9 +228,12 @@ void main() {
     expect(moved.removeFrom('/p/x.txt and /p/x.txt')!.text, '/p/x.txt and ');
   });
 
+  // A regenerate is Desktop's runReload -> runRewindSubmit: the resolved row
+  // is the cut and every such submit carries confirm_empty_truncate
+  // (rewind.ts:361-369), first turn or later.
   for (final first in [true, false]) {
-    testWidgets('a regenerate confirms an empty transcript only when it cuts '
-        'at the first turn (${first ? 'first' : 'a later'} turn)', (
+    testWidgets('a regenerate sends runRewindSubmit\'s params: the row and '
+        'confirm_empty_truncate (${first ? 'first' : 'a later'} turn)', (
       tester,
     ) async {
       final h = await pump(tester);
@@ -264,11 +267,7 @@ void main() {
       expect(submit['confirm_truncate'], isTrue);
       expect(submit['truncate_before_row_id'], 7);
       expect(submit.containsKey('truncate_before_user_ordinal'), isFalse);
-      if (first) {
-        expect(submit['confirm_empty_truncate'], isTrue);
-      } else {
-        expect(submit.containsKey('confirm_empty_truncate'), isFalse);
-      }
+      expect(submit['confirm_empty_truncate'], isTrue);
     });
   }
 

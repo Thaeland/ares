@@ -10,17 +10,36 @@ typedef GatewayRpc =
       Map<String, dynamic> params,
     );
 
-/// Desktop's `truncateSubmitParams` for a resolved durable row
-/// (rewind.ts): `confirm_truncate` states that this submit really is a
-/// regenerate and the row id is the cut. Only a cut at the first user turn
-/// ([ordinal] 0) leaves an empty transcript, so only that one carries
-/// `confirm_empty_truncate`. The ordinal itself is not sent: in row-id mode
-/// Desktop drops it, as a client-side ordinal can disagree with the
-/// gateway's and trip its cross-check.
-Map<String, Object> regenerateSubmitParams(int rowId, {int? ordinal}) => {
-  'confirm_truncate': true,
-  'truncate_before_row_id': rowId,
-  if (ordinal == 0) 'confirm_empty_truncate': true,
+/// Desktop's `truncateSubmitParams` (b7ee21c14e
+/// apps/desktop/src/app/session/hooks/use-prompt-actions/rewind.ts:174-197):
+/// `confirm_truncate` states that this submit really is a rewind, edit or
+/// regenerate; the cut is the user [ordinal] and/or the durable [rowId].
+/// Only an ordinal-0 cut (an empty transcript) adds `confirm_empty_truncate`.
+/// The builder for a truncating action that is not a retry; Ares's only
+/// truncating action today is retry/regenerate ([regenerateSubmitParams]).
+Map<String, Object> truncateSubmitParams({int? ordinal, int? rowId}) {
+  final hasOrdinal = ordinal != null && ordinal >= 0;
+  if (!hasOrdinal && rowId == null) return const {};
+  return {
+    'confirm_truncate': true,
+    if (hasOrdinal) 'truncate_before_user_ordinal': ordinal,
+    'truncate_before_row_id': ?rowId,
+    if (ordinal == 0) 'confirm_empty_truncate': true,
+  };
+}
+
+/// Retry/regenerate's submit params, as Desktop's `runReload` sends them
+/// through `runRewindSubmit` (rewind.ts:275-369). With the durable row
+/// resolved, the tail-local ordinal is dropped (rewind.ts:313-324: a
+/// client-side ordinal can disagree with the gateway's and trip its
+/// cross-check), so the params are [truncateSubmitParams] for the row alone
+/// plus `confirm_empty_truncate` on every resolved-row submit
+/// (rewind.ts:361-369): the durable target is authoritative, a cut at the
+/// first active turn is allowed, and the gateway ignores the flag when the
+/// kept prefix is non-empty.
+Map<String, Object> regenerateSubmitParams(int rowId) => {
+  ...truncateSubmitParams(rowId: rowId),
+  'confirm_empty_truncate': true,
 };
 
 /// The turn to regenerate: its durable row id and its place among the

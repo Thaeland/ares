@@ -3430,10 +3430,8 @@ class NgChatController extends ChangeNotifier {
     final sent = await send(
       text,
       display: last.sentText == null ? null : last.text,
-      promptParams: regenerateSubmitParams(
-        target.rowId,
-        ordinal: target.ordinal,
-      ),
+      // runRewindSubmit's params for the resolved row (Desktop's runReload).
+      promptParams: regenerateSubmitParams(target.rowId),
     );
     if (!sent && !_disposed) {
       // Desktop's rollback: the transcript as it was, and why.

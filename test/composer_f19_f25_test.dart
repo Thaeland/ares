@@ -217,25 +217,47 @@ void main() {
       ),
       isNull,
     );
-    // Desktop's truncateSubmitParams: the empty-transcript confirmation
-    // only for a cut at the first user turn.
     expect(
       await resolveRegenerateTarget(rpc: history, sessionId: 's', text: 'same'),
       (rowId: 5, ordinal: 1),
     );
-    expect(regenerateSubmitParams(5, ordinal: 1), {
+    // Retry/regenerate is Desktop's runReload -> runRewindSubmit: with the
+    // row resolved the ordinal is dropped and every submit carries
+    // confirm_empty_truncate (rewind.ts:361-369), first turn or later.
+    expect(regenerateSubmitParams(5), {
       'confirm_truncate': true,
       'truncate_before_row_id': 5,
+      'confirm_empty_truncate': true,
     });
-    expect(regenerateSubmitParams(1, ordinal: 0), {
+    expect(regenerateSubmitParams(1), {
       'confirm_truncate': true,
       'truncate_before_row_id': 1,
       'confirm_empty_truncate': true,
     });
-    expect(
-      regenerateSubmitParams(5),
-      isNot(contains('confirm_empty_truncate')),
-    );
+  });
+
+  test('truncateSubmitParams is Desktop\'s (rewind.ts:174-197): the empty '
+      'confirmation only for an ordinal-0 cut', () {
+    expect(truncateSubmitParams(), isEmpty);
+    expect(truncateSubmitParams(ordinal: 0), {
+      'confirm_truncate': true,
+      'truncate_before_user_ordinal': 0,
+      'confirm_empty_truncate': true,
+    });
+    expect(truncateSubmitParams(ordinal: 2), {
+      'confirm_truncate': true,
+      'truncate_before_user_ordinal': 2,
+    });
+    expect(truncateSubmitParams(rowId: 9), {
+      'confirm_truncate': true,
+      'truncate_before_row_id': 9,
+    });
+    expect(truncateSubmitParams(ordinal: 0, rowId: 9), {
+      'confirm_truncate': true,
+      'truncate_before_user_ordinal': 0,
+      'truncate_before_row_id': 9,
+      'confirm_empty_truncate': true,
+    });
   });
 
   test('an argument replaces from replace_from and keeps the command', () {

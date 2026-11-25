@@ -2305,10 +2305,8 @@ class _ChatScreenState extends State<ChatScreen>
     if (_sending || _streaming || _preparingSend) return;
     await _sendMessage(
       textOverride: text.trim(),
-      promptParams: regenerateSubmitParams(
-        target.rowId,
-        ordinal: target.ordinal,
-      ),
+      // runRewindSubmit's params for the resolved row (Desktop's runReload).
+      promptParams: regenerateSubmitParams(target.rowId),
     );
   }
 

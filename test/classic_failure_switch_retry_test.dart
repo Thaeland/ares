@@ -577,11 +577,9 @@ void main() {
         expect(retry['text'], 'hello there');
         expect(retry['confirm_truncate'], isTrue);
         expect(retry['truncate_before_row_id'], 7);
-        if (first) {
-          expect(retry['confirm_empty_truncate'], isTrue);
-        } else {
-          expect(retry.containsKey('confirm_empty_truncate'), isFalse);
-        }
+        // runRewindSubmit (rewind.ts:361-369): every resolved-row retry.
+        expect(retry['confirm_empty_truncate'], isTrue);
+        expect(retry.containsKey('truncate_before_user_ordinal'), isFalse);
         expect(
           methods.indexOf('config.set'),
           lessThan(methods.lastIndexOf('prompt.submit')),
