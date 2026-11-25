@@ -505,12 +505,39 @@ final _fence = RegExp(r'```([^\n`]*)\n([\s\S]*?)```');
 List<VersionedArtifact> artifactHistoryFromText(String corpus) =>
     _histories.lookup(corpus, () => _historyFromText(corpus));
 
+/// A fence opened at the start of a line after [from] that never closes:
+/// a reply still streaming, or one cut off at its token limit. Its body is
+/// everything after the opening line.
+({String language, String body})? openFenceTail(String corpus, int from) {
+  final open = corpus.lastIndexOf('```');
+  if (open < from) return null;
+  var lineStart = open;
+  while (lineStart > 0 && corpus.codeUnitAt(lineStart - 1) == 0x20) {
+    lineStart--;
+  }
+  if (open - lineStart > 3) return null;
+  if (lineStart > 0 && corpus.codeUnitAt(lineStart - 1) != 0x0a) return null;
+  final infoEnd = corpus.indexOf('\n', open + 3);
+  if (infoEnd < 0) return null;
+  final info = corpus.substring(open + 3, infoEnd);
+  if (info.contains('`')) return null;
+  return (language: info, body: corpus.substring(infoEnd + 1));
+}
+
 List<VersionedArtifact> _historyFromText(String corpus) {
   final grouped = <String, List<ArtifactRevision>>{};
   final order = <String>[];
+  var closedEnd = 0;
+  final fences = <(String?, String)>[];
   for (final match in _fence.allMatches(corpus)) {
-    final language = match.group(1);
-    final body = match.group(2) ?? '';
+    fences.add((match.group(1), match.group(2) ?? ''));
+    closedEnd = match.end;
+  }
+  // The open fence at the end of the reply is its latest revision, so every
+  // card in the reply counts it while it streams or after a cut-off.
+  final tail = openFenceTail(corpus, closedEnd);
+  if (tail != null) fences.add((tail.language, tail.body));
+  for (final (language, body) in fences) {
     final detection = detectArtifact(language, body);
     if (detection == null) continue;
     final slug = artifactSlug(detection);

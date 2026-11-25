@@ -272,6 +272,26 @@ Future<void> _tapLink(WidgetTester tester, String needle) async {
   fail('no tappable link contains $needle');
 }
 
+List<String> _captureClipboard(WidgetTester tester) {
+  final copied = <String>[];
+  tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+    SystemChannels.platform,
+    (call) async {
+      if (call.method == 'Clipboard.setData') {
+        copied.add((call.arguments as Map)['text'] as String);
+      }
+      return null;
+    },
+  );
+  addTearDown(
+    () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      null,
+    ),
+  );
+  return copied;
+}
+
 String _base64(int length) =>
     List.generate(length, (i) => 'ABCDEFGHabcdefgh0123+/'[i % 22]).join();
 
@@ -654,6 +674,168 @@ void main() {
       await _tapLink(tester, 'the clip');
       await pumpChatUpdates(tester);
       expect(launched, [...providers, 'https://youtu.be/xyz']);
+    });
+  });
+
+  group('R3 an open fence is its own latest revision', () {
+    const head = '<!doctype html><html><head><title>Board</title></head><body>';
+    const v1 = 'v1:\n\n```html\n$head<p>ALPHA</p></body></html>\n```\n\n';
+
+    List<String?> labels(WidgetTester tester) => tester
+        .widgetList<Text>(find.textContaining('Revision '))
+        .map((text) => text.data)
+        .toList();
+
+    Future<String> copyCard(
+      WidgetTester tester,
+      List<String> copied,
+      Finder card,
+    ) async {
+      copied.clear();
+      // Centre the button: the chat may draw its composer over the bottom
+      // edge of the list.
+      await tester.ensureVisible(card);
+      await Scrollable.ensureVisible(tester.element(card), alignment: 0.5);
+      await tester.pump();
+      await tester.tap(card);
+      await tester.pump();
+      // The "Copied" snack bar would cover the next card's button.
+      for (final messenger in tester.stateList<ScaffoldMessengerState>(
+        find.byType(ScaffoldMessenger),
+      )) {
+        messenger.clearSnackBars();
+        messenger.removeCurrentSnackBar();
+      }
+      await tester.pump();
+      return copied.single;
+    }
+
+    testWidgets('W2n NextGen: the streaming revision copies itself', (
+      tester,
+    ) async {
+      final copied = _captureClipboard(tester);
+      final gateway = NextGenGateway(_ngConnection('c1'));
+      addTearDown(gateway.dispose);
+      final chat = _ngChat(gateway, 's', [
+        {'role': 'user', 'content': 'build'},
+      ]);
+      await _pumpNg(tester, gateway, chat);
+      _emit(gateway, 'rt-s', 'message.start');
+      _emit(gateway, 'rt-s', 'message.delta', {
+        'text': '${v1}v2:\n\n```html\n$head<p>BETA',
+      });
+      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(labels(tester), ['Revision 1 of 2', 'Revision 2 of 2']);
+      final cards = find.textContaining('Copy Board');
+      expect(await copyCard(tester, copied, cards.last), contains('BETA'));
+      expect(await copyCard(tester, copied, cards.first), contains('ALPHA'));
+
+      _emit(gateway, 'rt-s', 'message.delta', {
+        'text': ' part</p><p>OMEGA END</p></body></html>\n```\n',
+      });
+      _emit(gateway, 'rt-s', 'message.complete', {'status': 'complete'});
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(labels(tester), ['Revision 1 of 2', 'Revision 2 of 2']);
+      final last = await copyCard(tester, copied, cards.last);
+      expect(last, contains('OMEGA END'));
+      final first = await copyCard(tester, copied, cards.first);
+      expect(first, allOf(contains('ALPHA'), isNot(contains('BETA'))));
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('W2u NextGen: a reply cut off inside a fence copies its end', (
+      tester,
+    ) async {
+      final copied = _captureClipboard(tester);
+      final gateway = NextGenGateway(_ngConnection('c1'));
+      addTearDown(gateway.dispose);
+      final chat = _ngChat(gateway, 's', [
+        {'role': 'user', 'content': 'build'},
+      ]);
+      await _pumpNg(tester, gateway, chat);
+      _emit(gateway, 'rt-s', 'message.start');
+      _emit(gateway, 'rt-s', 'message.delta', {
+        'text': '${v1}v2:\n\n```html\n$head<p>BETA FINAL</p></body></html>\n',
+      });
+      _emit(gateway, 'rt-s', 'message.complete', {'status': 'complete'});
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(labels(tester), ['Revision 1 of 2', 'Revision 2 of 2']);
+      final cards = find.textContaining('Copy Board');
+      expect(
+        await copyCard(tester, copied, cards.last),
+        allOf(contains('BETA FINAL'), isNot(contains('ALPHA'))),
+      );
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    Future<_Rest> startClassic(WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(900, 2400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final rest = _Rest([]);
+      await tester.pumpWidget(
+        _classicChat(_classicConnection('cx'), 'chat-a', rest),
+      );
+      await pumpChatUpdates(tester);
+      await tester.enterText(
+        find.byKey(const Key('chat-message-composer')),
+        'build',
+      );
+      await tester.tap(find.byKey(const Key('chat-send-message')));
+      await pumpChatUpdates(tester);
+      return rest;
+    }
+
+    testWidgets('W2n Classic: the streaming revision copies itself', (
+      tester,
+    ) async {
+      final copied = _captureClipboard(tester);
+      final rest = await startClassic(tester);
+      rest.delta(0, '${v1}v2:\n\n```html\n$head<p>BETA');
+      await pumpChatUpdates(tester);
+      expect(labels(tester), ['Revision 1 of 2', 'Revision 2 of 2']);
+      final cards = find.textContaining('Copy Board');
+      expect(await copyCard(tester, copied, cards.last), contains('BETA'));
+
+      const stored =
+          '${v1}v2:\n\n```html\n$head<p>BETA part</p><p>OMEGA END</p>'
+          '</body></html>\n```\n';
+      rest.delta(0, ' part</p><p>OMEGA END</p></body></html>\n```\n');
+      rest.rows = [
+        {'id': 1, 'role': 'user', 'content': 'build'},
+        {'id': 2, 'role': 'assistant', 'content': stored},
+      ];
+      rest.finish(0);
+      await pumpChatUpdates(tester);
+      await pumpChatUpdates(tester);
+      expect(labels(tester), ['Revision 1 of 2', 'Revision 2 of 2']);
+      expect(await copyCard(tester, copied, cards.last), contains('OMEGA END'));
+      expect(
+        await copyCard(tester, copied, cards.first),
+        allOf(contains('ALPHA'), isNot(contains('BETA'))),
+      );
+    });
+
+    testWidgets('W2u Classic: a reply cut off inside a fence copies its end', (
+      tester,
+    ) async {
+      final copied = _captureClipboard(tester);
+      final rest = await startClassic(tester);
+      const cut = '${v1}v2:\n\n```html\n$head<p>BETA FINAL</p></body></html>\n';
+      rest.delta(0, cut);
+      rest.rows = [
+        {'id': 1, 'role': 'user', 'content': 'build'},
+        {'id': 2, 'role': 'assistant', 'content': cut},
+      ];
+      rest.finish(0);
+      await pumpChatUpdates(tester);
+      await pumpChatUpdates(tester);
+      expect(labels(tester), ['Revision 1 of 2', 'Revision 2 of 2']);
+      final cards = find.textContaining('Copy Board');
+      expect(
+        await copyCard(tester, copied, cards.last),
+        allOf(contains('BETA FINAL'), isNot(contains('ALPHA'))),
+      );
     });
   });
 }

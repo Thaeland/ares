@@ -9759,7 +9759,7 @@ class MessageBubble extends StatelessWidget {
     );
 
     final parseMedia = filesClient != null;
-    final blocks = splitMarkdownCodeBlocks(content);
+    final blocks = splitMarkdownCodeBlocks(content, openTail: true);
     final mediaOccurrences = <String, int>{};
 
     List<Widget> renderProse(String text) {

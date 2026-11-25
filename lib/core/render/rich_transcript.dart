@@ -508,15 +508,26 @@ class _ArtifactRevisionCardState extends State<ArtifactRevisionCard> {
     _pinned = hash == _currentHash ? null : hash;
   });
 
+  /// The stored revisions of this artefact, plus this fence as a
+  /// provisional last revision when none of them is this fence's text (an
+  /// open fence the history does not hold). Copy and download then use the
+  /// card's own text, never the previous revision.
   List<ArtifactRevision> _load() {
     final slug = artifactSlug(widget.detection);
+    final hash = _currentHash;
+    var stored = const <ArtifactRevision>[];
     for (final artifact in artifactHistoryFromText(widget.corpus)) {
-      if (artifact.slug == slug) return artifact.revisions;
+      if (artifact.slug == slug) {
+        stored = artifact.revisions;
+        break;
+      }
     }
+    if (stored.any((revision) => revision.hash == hash)) return stored;
     return [
+      ...stored,
       ArtifactRevision(
-        index: 1,
-        hash: artifactContentHash(widget.code.trim()),
+        index: stored.length + 1,
+        hash: hash,
         content: widget.code.trim(),
         detection: widget.detection,
       ),
