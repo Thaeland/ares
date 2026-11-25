@@ -7,6 +7,7 @@ enum ProfileDashboardOp {
   rename('PATCH', 'profiles/@'),
   remove('DELETE', 'profiles/@'),
   soul('GET', 'profiles/@/soul'),
+  desktopOverlay('GET', 'profiles/@/desktop-overlay'),
   saveSoul('PUT', 'profiles/@/soul'),
   export('POST', 'profiles/@/export'),
   importArchive('POST', 'profiles/import'),

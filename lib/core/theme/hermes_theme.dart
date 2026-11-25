@@ -348,8 +348,9 @@ ColorScheme _hermesColorScheme(Brightness brightness, HermesPalette palette) {
 ThemeData hermesTheme(
   Brightness brightness, {
   HermesPalette palette = HermesPalette.gold,
+  ColorScheme? profileScheme,
 }) {
-  final scheme = _hermesColorScheme(brightness, palette);
+  final scheme = profileScheme ?? _hermesColorScheme(brightness, palette);
   final tokens = HermesTokens._fromScheme(scheme, palette);
   final base = ThemeData(
     colorScheme: scheme,

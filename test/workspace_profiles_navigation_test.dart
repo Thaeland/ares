@@ -7,6 +7,7 @@ import 'package:hermes_android/core/screens/workspace_screen.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/connection_mutation_barrier.dart';
 import 'package:hermes_android/core/theme/hermes_theme.dart';
+import 'package:hermes_android/core/workspace/profile_presentation_store.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:hermes_android/nextgen/data/nextgen_gateway.dart';
 import 'package:hermes_android/nextgen/nextgen_l10n.dart';
@@ -86,6 +87,26 @@ void main() {
                 );
               });
               return;
+            } else if (req.uri.path == '/api/profiles/editor/desktop-overlay' &&
+                req.uri.queryParameters['profile'] == 'editor' &&
+                req.headers.value('cookie') ==
+                    'hermes_session_at=fixture-cookie') {
+              response.write(
+                jsonEncode({
+                  'exists': true,
+                  'desktop': {
+                    'version': 1,
+                    'skin': 'catppuccin',
+                    'mode': 'dark',
+                    'layoutTree': {
+                      'type': 'group',
+                      'id': 'never-bind',
+                      'panes': ['private-session'],
+                      'active': 'private-session',
+                    },
+                  },
+                }),
+              );
             } else if (req.uri.path == '/api/profiles/editor/soul' &&
                 req.uri.queryParameters['profile'] == 'editor' &&
                 req.headers.value('cookie') ==
@@ -216,6 +237,25 @@ void main() {
           await waitForText('Persona saved.');
           expect(persona, 'Changed by the fixture');
           expect(soulRequests, ['GET', 'GET', 'PUT', 'GET']);
+          await tester.tap(find.text('Portable profile bundle'));
+          await tester.pumpAndSettle();
+          await tester.tap(
+            find.text('Review appearance saved with this profile'),
+          );
+          await waitForText('Skin: catppuccin · Mode: dark · One pane');
+          final styleStore = ProfilePresentationStore(prefs),
+              editor = c.copyWith(gatewayProfile: 'editor');
+          expect(styleStore.read(editor), isNull);
+          await tester.tap(find.text('Apply to this profile on this device'));
+          await waitForText('Appearance applied to Fixture gateway / editor.');
+          expect(styleStore.read(editor)!.style.skin, 'catppuccin');
+          expect(styleStore.read(c), isNull);
+          expect(
+            prefs.getKeys().map((k) => prefs.get(k)).join(),
+            isNot(contains('private-session')),
+          );
+          await tester.pageBack();
+          await tester.pumpAndSettle();
           Future<void> tapRow(String name) async {
             final scrollable = find
                 .descendant(

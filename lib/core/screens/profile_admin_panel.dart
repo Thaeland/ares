@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
+import '../services/profile_file_save.dart';
 import 'package:qr/qr.dart';
 import '../services/remote_workspace.dart';
+import '../models/connection.dart';
 import 'profile_transfer_screen.dart';
 import 'profile_bundle_screen.dart';
 
@@ -57,10 +58,14 @@ class ProfileAdminPanel extends StatefulWidget {
     super.key,
     required this.admin,
     required this.label,
+    required this.connection,
+    required this.nextGen,
     required this.onRosterChanged,
   });
   final RemoteProfileAdmin admin;
   final String label;
+  final SavedConnection connection;
+  final bool nextGen;
   final VoidCallback onRosterChanged;
   @override
   State<ProfileAdminPanel> createState() => _ProfileAdminPanelState();
@@ -346,8 +351,12 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
           action('Portable profile bundle', () async {
             await Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) =>
-                    ProfileBundleScreen(admin: a, gateway: widget.label),
+                builder: (_) => ProfileBundleScreen(
+                  admin: a,
+                  gateway: widget.label,
+                  connection: widget.connection,
+                  nextGen: widget.nextGen,
+                ),
               ),
             );
           }),
@@ -620,9 +629,15 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
                 final bytes = await a.backupBytes(done);
                 if (!mounted) return;
                 a.check();
-                final path = await FilePicker.platform.saveFile(
-                  dialogTitle: 'Save sensitive full-home archive',
-                  fileName: 'hermes-backup.zip',
+                final path = await saveProfileFile(
+                  title: 'Save sensitive full-home archive',
+                  filename: 'hermes-backup.zip',
+                  check: () {
+                    if (!mounted || ModalRoute.of(context)?.isCurrent != true) {
+                      throw const WorkspaceException(WorkspaceFailure.stale);
+                    }
+                    a.check();
+                  },
                   bytes: bytes,
                 );
                 message = path == null ? 'Save cancelled.' : 'Backup saved.';

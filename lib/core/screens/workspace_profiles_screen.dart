@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/l10n.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../workspace/profile_presentation_store.dart';
 import '../services/connection_mutation_barrier.dart';
 import '../services/remote_workspace.dart';
 import '../services/desktop_gateway_client.dart';
@@ -15,11 +17,13 @@ class WorkspaceProfilesScreen extends StatefulWidget {
     required this.route,
     required this.label,
     required this.connection,
+    this.nextGen = false,
   });
   final RemoteWorkspaceOwner owner;
   final WorkspaceRoute route;
   final String label;
   final SavedConnection connection;
+  final bool nextGen;
 
   @override
   State<WorkspaceProfilesScreen> createState() =>
@@ -34,6 +38,7 @@ class _WorkspaceProfilesScreenState extends State<WorkspaceProfilesScreen> {
   Future<RemoteProfileAdmin>? _settings;
   String? _selected;
   Object? _account;
+  ProfilePresentationStore? _styles;
 
   void _bind() {
     _pane = widget.owner.pane();
@@ -53,6 +58,9 @@ class _WorkspaceProfilesScreenState extends State<WorkspaceProfilesScreen> {
   void initState() {
     super.initState();
     _bind();
+    SharedPreferences.getInstance().then((p) {
+      if (mounted) setState(() => _styles = ProfilePresentationStore(p));
+    });
     ConnectionMutationBarrier.addListener(_accountChanged);
   }
 
@@ -209,6 +217,10 @@ class _WorkspaceProfilesScreenState extends State<WorkspaceProfilesScreen> {
                             return ProfileAdminPanel(
                               key: ValueKey(s.requireData),
                               admin: s.requireData,
+                              connection: widget.connection.copyWith(
+                                gatewayProfile: _selected,
+                              ),
+                              nextGen: widget.nextGen,
                               label: widget.label,
                               onRosterChanged: () {
                                 roster.chooseAgain();
@@ -249,7 +261,17 @@ class _WorkspaceProfilesScreenState extends State<WorkspaceProfilesScreen> {
                           },
                         )
                       : ListTile(
-                          leading: const Icon(Icons.person_outline),
+                          leading: Icon(
+                            Icons.person_outline,
+                            color: _styles
+                                ?.read(
+                                  widget.connection.copyWith(
+                                    gatewayProfile: names[i],
+                                  ),
+                                )
+                                ?.style
+                                .rail,
+                          ),
                           title: Text(names[i]),
                           subtitle: roster.names[names[i]]!.isEmpty
                               ? null

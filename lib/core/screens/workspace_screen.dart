@@ -39,6 +39,7 @@ import '../services/remote_files_client.dart';
 import '../services/shared_attachment_preparer.dart';
 import '../services/session_browser_loader.dart';
 import '../theme/hermes_theme.dart';
+import '../workspace/profile_presentation_store.dart';
 import '../utils/activity_feed.dart';
 import '../utils/adaptive_layout.dart';
 import '../utils/operational_activity_feed.dart';
@@ -1313,7 +1314,12 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   }
 
   void _push(Widget screen) {
-    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
+    final themed = ProfileTheme(
+      connection: widget.connection,
+      nextGen: false,
+      child: screen,
+    );
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => themed));
   }
 
   /// Clears the inline detail pane on a wide window.
@@ -1388,26 +1394,30 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     final builder = widget.sessionScreenBuilder;
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) =>
-            builder?.call(session) ??
-            buildWorkspaceChatScreen(
-              connection: widget.connection,
-              session: session,
-              projectName: projectName,
-              projectWorkingDirectory: projectWorkingDirectory,
-              initialComposerText: initialComposerText,
-              initialAttachmentDrafts: initialAttachmentDrafts,
-              turnApplicationController: widget.turnApplicationController,
-              sessionArchiver: (storedId, archived) async {
-                final saved = await _archiveSession(
-                  session.withStoredId(storedId),
-                  archived,
-                );
-                onArchiveCommitted?.call();
-                return saved;
-              },
-              testApiClient: widget.testChatApiClientFactory?.call(),
-            ),
+        builder: (_) => ProfileTheme(
+          connection: widget.connection,
+          nextGen: false,
+          child:
+              builder?.call(session) ??
+              buildWorkspaceChatScreen(
+                connection: widget.connection,
+                session: session,
+                projectName: projectName,
+                projectWorkingDirectory: projectWorkingDirectory,
+                initialComposerText: initialComposerText,
+                initialAttachmentDrafts: initialAttachmentDrafts,
+                turnApplicationController: widget.turnApplicationController,
+                sessionArchiver: (storedId, archived) async {
+                  final saved = await _archiveSession(
+                    session.withStoredId(storedId),
+                    archived,
+                  );
+                  onArchiveCommitted?.call();
+                  return saved;
+                },
+                testApiClient: widget.testChatApiClientFactory?.call(),
+              ),
+        ),
       ),
     );
     if (!mounted) return;
@@ -2285,15 +2295,20 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     }
     _wasExpanded = expanded;
 
-    return ParallelWorkspaceEntryHost(
-      owner: widget.connection,
+    return ProfileTheme(
       connection: widget.connection,
-      workspace: (_) => ClassicParallelWorkspace(
+      nextGen: false,
+      child: ParallelWorkspaceEntryHost(
+        owner: widget.connection,
         connection: widget.connection,
-        turnController: widget.turnApplicationController,
-        clientFactory: widget.testChatApiClientFactory,
+        workspace: (_) => ClassicParallelWorkspace(
+          connection: widget.connection,
+          turnController: widget.turnApplicationController,
+          clientFactory: widget.testChatApiClientFactory,
+        ),
+        home: (openParallel) =>
+            Builder(builder: (ctx) => _buildHome(ctx, openParallel)),
       ),
-      home: (openParallel) => _buildHome(context, openParallel),
     );
   }
 

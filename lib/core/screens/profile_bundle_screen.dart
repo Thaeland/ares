@@ -1,8 +1,13 @@
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../models/connection.dart';
+import '../workspace/profile_presentation.dart';
+import '../workspace/profile_presentation_store.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import '../services/connection_mutation_barrier.dart';
 import '../services/portable_profile_bundle.dart';
+import '../services/profile_file_save.dart';
 import '../services/remote_workspace.dart';
 import 'profile_admin_panel.dart' show profileError;
 
@@ -11,9 +16,13 @@ class ProfileBundleScreen extends StatefulWidget {
     super.key,
     required this.admin,
     required this.gateway,
+    required this.connection,
+    required this.nextGen,
   });
   final RemoteProfileAdmin admin;
   final String gateway;
+  final SavedConnection connection;
+  final bool nextGen;
   @override
   State<ProfileBundleScreen> createState() => _BundleState();
 }
@@ -24,6 +33,8 @@ class _BundleState extends State<ProfileBundleScreen> {
   final dest = TextEditingController();
   String message = '';
   bool importing = false, busy = false;
+  bool adopt = false;
+  ProfilePresentation? preview;
   @override
   void initState() {
     super.initState();
@@ -38,6 +49,8 @@ class _BundleState extends State<ProfileBundleScreen> {
         setState(() {
           bundle = null;
           checked.clear();
+          preview = null;
+          adopt = false;
           message = 'Connection changed. Reopen Profiles.';
         });
       }
@@ -98,10 +111,21 @@ class _BundleState extends State<ProfileBundleScreen> {
     check();
     final b = await PortableProfileBundle.inspect(bytes);
     check();
-    bundle = b;
+    bundle = b.withDesktop(
+      ProfilePresentation.parseText(b.files['desktop.json'])?.encode(),
+    );
     importing = true;
+    preview = null;
+    adopt = false;
     checked.clear();
   }
+
+  String _layoutLabel(ProfilePresentation style) => switch (style.geometry) {
+    null => 'Current layout',
+    (paired: false, stacked: _, percent: _) => 'One pane',
+    final g =>
+      '${g.stacked ? 'Stacked' : 'Side by side'} · ${g.percent}% first pane',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +139,43 @@ class _BundleState extends State<ProfileBundleScreen> {
           if (busy) const LinearProgressIndicator(),
           if (message.isNotEmpty) Text(message),
           if (b == null) ...[
+            TextButton(
+              onPressed: busy
+                  ? null
+                  : () => run(() async {
+                      final style = ProfilePresentation.parse(
+                        await widget.admin.bundledPresentation(),
+                      );
+                      check();
+                      preview = style;
+                      if (preview == null) {
+                        message = 'No supported appearance in this profile.';
+                      }
+                    }),
+              child: const Text('Review appearance saved with this profile'),
+            ),
+            if (preview case final style?) ...[
+              Text(
+                'Skin: ${style.skin ?? 'unchanged'} · Mode: ${style.mode?.name ?? 'unchanged'} · ${_layoutLabel(style)}',
+              ),
+              const Text(
+                'Applies only to this named profile on this device. An imported arrangement starts with empty panes; choose its chats yourself.',
+              ),
+              FilledButton(
+                onPressed: busy
+                    ? null
+                    : () => run(() async {
+                        final store = ProfilePresentationStore(
+                          await SharedPreferences.getInstance(),
+                        );
+                        await store.apply(widget.connection, style, check);
+                        preview = null;
+                        message =
+                            'Appearance applied to ${widget.gateway} / ${widget.admin.name}.';
+                      }),
+                child: const Text('Apply to this profile on this device'),
+              ),
+            ],
             const Text(
               'Export prepares a .tar.gz on the gateway. Review its portable files before saving a copy here. Import opens a local archive for review; opening alone uploads nothing.',
             ),
@@ -124,7 +185,16 @@ class _BundleState extends State<ProfileBundleScreen> {
                   : () => run(() async {
                       final data = await widget.admin.portableExport(check);
                       check();
-                      bundle = data;
+                      final store = ProfilePresentationStore(
+                        await SharedPreferences.getInstance(),
+                      );
+                      check();
+                      bundle = data.withDesktop(
+                        store
+                            .snapshot(widget.connection, widget.nextGen)
+                            .encode(),
+                      );
+                      preview = null;
                       importing = false;
                       checked.clear();
                     }),
@@ -165,11 +235,25 @@ class _BundleState extends State<ProfileBundleScreen> {
                 ],
               ),
             if (importing) ...[
+              if (checked.contains('desktop.json'))
+                CheckboxListTile(
+                  value: adopt,
+                  onChanged: busy
+                      ? null
+                      : (v) => setState(() => adopt = v == true),
+                  title: const Text(
+                    'Apply appearance to the new profile on this device',
+                  ),
+                  subtitle: const Text(
+                    'Imports colours and pane sizes, never chats, tools or session IDs.',
+                  ),
+                ),
               const Text(
                 'The gateway retains a private staged copy. Import creates a new profile; it will not replace an existing one.',
               ),
               TextField(
                 controller: dest,
+                enabled: !busy,
                 decoration: const InputDecoration(labelText: 'New profile ID'),
               ),
             ],
@@ -179,7 +263,7 @@ class _BundleState extends State<ProfileBundleScreen> {
                   : () => run(() async {
                       if (importing) {
                         final name = dest.text;
-                        await widget.admin.importPortable(
+                        final receipt = await widget.admin.importPortable(
                           b,
                           Set.of(checked),
                           name,
@@ -187,12 +271,39 @@ class _BundleState extends State<ProfileBundleScreen> {
                         );
                         check();
                         message = 'Imported $name on ${widget.gateway}.';
+                        if (adopt && checked.contains('desktop.json')) {
+                          final actual = ProfilePresentation.parse(receipt);
+                          if (actual == null ||
+                              actual.encode() != b.files['desktop.json']) {
+                            message +=
+                                ' Appearance not applied: the gateway did not confirm the reviewed overlay.';
+                          } else {
+                            try {
+                              final store = ProfilePresentationStore(
+                                await SharedPreferences.getInstance(),
+                              );
+                              await store.apply(
+                                widget.connection.copyWith(
+                                  gatewayProfile: name,
+                                ),
+                                actual,
+                                check,
+                              );
+                              message += ' Appearance applied on this device.';
+                            } catch (_) {
+                              check();
+                              message +=
+                                  ' Appearance was not saved on this device.';
+                            }
+                          }
+                        }
                       } else {
                         final bytes = b.encode(checked);
                         check();
-                        final path = await FilePicker.platform.saveFile(
-                          dialogTitle: 'Save reviewed profile bundle',
-                          fileName: '${b.profile}.tar.gz',
+                        final path = await saveProfileFile(
+                          title: 'Save reviewed profile bundle',
+                          filename: '${b.profile}.tar.gz',
+                          check: check,
                           bytes: bytes,
                         );
                         check();

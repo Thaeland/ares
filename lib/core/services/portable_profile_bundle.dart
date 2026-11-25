@@ -13,6 +13,19 @@ class PortableProfileBundle {
   final String profile;
   final Map<String, String> files;
   final int omitted;
+
+  /// Replace rather than append: review exactly one overlay, not an old
+  /// desktop.json alongside the newly generated one.
+  PortableProfileBundle withDesktop(String? desktop) {
+    final next = Map.of(files)..remove('desktop.json');
+    if (desktop != null) next['desktop.json'] = desktop;
+    return PortableProfileBundle._(
+      profile,
+      Map.unmodifiable(next),
+      omitted + (desktop == null && files.containsKey('desktop.json') ? 1 : 0),
+    );
+  }
+
   static const compressedLimit = 16 * 1024 * 1024,
       expandedLimit = 32 * 1024 * 1024;
   static Future<Uint8List> bounded(Stream<List<int>> input, int limit) async {

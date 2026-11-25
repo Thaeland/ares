@@ -300,7 +300,13 @@ class RemoteProfileAdmin {
     });
   }
 
-  Future<void> importPortable(
+  Future<Object?> bundledPresentation() async {
+    final r = await _request(ProfileDashboardOp.desktopOverlay);
+    if (r['exists'] is! bool) _fail(WorkspaceFailure.invalid);
+    return r['exists'] == true ? r['desktop'] : null;
+  }
+
+  Future<Object?> importPortable(
     PortableProfileBundle bundle,
     Set<String> reviewed,
     String dest,
@@ -345,10 +351,10 @@ class RemoteProfileAdmin {
         ).hasMatch(canonical.substring('$home/uploads/'.length))) {
       _fail(WorkspaceFailure.mismatch);
     }
-    await importProfile(path, dest, view: view);
+    return importProfile(path, dest, view: view);
   }
 
-  Future<void> importProfile(
+  Future<Object?> importProfile(
     String archive,
     String dest, {
     void Function()? view,
@@ -372,6 +378,7 @@ class RemoteProfileAdmin {
         !(await roster.refresh()).names.containsKey(dest)) {
       _fail(WorkspaceFailure.mismatch);
     }
+    return r['desktop'];
   }
 
   Future<List<ProfileChannel>> channels() async => [
