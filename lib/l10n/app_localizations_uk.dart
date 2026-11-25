@@ -730,6 +730,20 @@ class AppLocalizationsUk extends AppLocalizations {
   String get attachment_drafts => 'Чернетки вкладень';
 
   @override
+  String get recover_text_draft => 'Відновити чернетку';
+
+  @override
+  String get undo_draft_recovery => 'Скасувати';
+
+  @override
+  String get draft_session_exists =>
+      'Цей чат ще існує. Відкрийте його, щоб продовжити роботу з чернеткою.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Не вдалося перевірити чернетку. Нічого не змінено.';
+
+  @override
   String attachment_of(Object index, Object total) {
     return 'Вкладення $index з $total';
   }

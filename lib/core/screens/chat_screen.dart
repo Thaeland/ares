@@ -107,6 +107,8 @@ import '../widgets/voice_composer_controls.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
 import '../widgets/desktop_shortcuts.dart';
+import '../widgets/composer_prompt_recall.dart';
+import '../widgets/orphan_draft_recovery.dart';
 
 /// Recovery v2 opens a new server session and cannot yet target an existing
 /// Gateway session. Keep it confined to locally-created drafts; a session from
@@ -925,6 +927,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final _scrollCoordinator = ChatScrollCoordinator();
   final _endAffordanceController = ChatEndAffordanceController();
   final _composerFocus = FocusNode();
+  final _promptRecall = ComposerPromptRecall();
   bool _keyboardEndScrollDone = false;
   bool _streamFollowScheduled = false;
   bool _initialEndFrameScheduled = false;
@@ -1543,6 +1546,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       '$_connectionIdentity|${widget.session.id}';
 
   void _onComposerChanged() {
+    _promptRecall.editorChanged();
     if (_voiceBound && _handsFree.active) {
       _handsFree.revoke(HandsFreeStopReason.composerEdited);
     }
@@ -1558,6 +1562,31 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   void _onSlashCommandChanged() {
     if (mounted) setState(() {});
+  }
+
+  bool get _composerOwnerCurrent =>
+      mounted &&
+      widget.active &&
+      _draftWriter.isCurrent &&
+      identical(_presentationRegistry, _reasoningRegistry) &&
+      identical(_presentation, _reasoningPresentation) &&
+      ConnectionMutationBarrier.isCurrent(
+        widget.connection.id,
+        _voiceAccountEpoch,
+      ) &&
+      _voiceAccountCurrent();
+
+  Iterable<String> _sentPrompts() sync* {
+    final items = _normalChat == null
+        ? buildConversationAttachmentItems(messages: _messages)
+        : _normalDisplaySections(
+            verbose: false,
+          ).expand((section) => section.items);
+    for (final row in items.whereType<Map<String, dynamic>>()) {
+      if (row['role'] == 'user') {
+        if (row['_display_content'] case final String text) yield text;
+      }
+    }
   }
 
   /// Replaces the draft with the chosen command and a trailing space. The
@@ -7404,6 +7433,21 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                             !_voiceComposer.listening,
                         onSend: () => unawaited(_sendRecordedVoice()),
                       ),
+                    if (!_hasStoredArchiveTarget &&
+                        _attachmentDrafts.isEmpty &&
+                        !_sending &&
+                        !_streaming)
+                      OrphanDraftRecovery(
+                        writer: _draftWriter,
+                        editor: _textController,
+                        lookup: _client.getSession,
+                        isCurrent: () =>
+                            _composerOwnerCurrent &&
+                            !_hasStoredArchiveTarget &&
+                            _attachmentDrafts.isEmpty &&
+                            !_sending &&
+                            !_streaming,
+                      ),
                     if (_currentActivityText case final activity?)
                       ChatActivityBar(text: activity)
                     else if (_terminalNoticeText case final notice?)
@@ -7623,6 +7667,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                             ),
                             child: SendOnEnter(
                               enabled: sendEnabled,
+                              onNavigate: (event) =>
+                                  _composerOwnerCurrent &&
+                                      _attachmentDrafts.isEmpty &&
+                                      !_slashDropdownVisible
+                                  ? _promptRecall.handle(
+                                      event,
+                                      _textController,
+                                      _sentPrompts,
+                                    )
+                                  : KeyEventResult.ignored,
                               onSend: () => unawaited(_sendMessage()),
                               child: TextField(
                                 key: const Key('chat-message-composer'),

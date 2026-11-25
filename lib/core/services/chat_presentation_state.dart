@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import '../models/connection.dart';
 import 'composer_draft_store.dart';
+import 'mobile_push_service.dart';
 import 'tool_activity_group_pins.dart';
 
 /// Null is observed absence; a failed read must throw, never manufacture empty
@@ -14,9 +16,17 @@ typedef ComposerDraftReader =
 /// Connection-configuration lifetime, owned by the application, not a route.
 /// No transcript, credentials, or pending-turn receipt is kept here.
 class ChatPresentationRegistry {
-  ChatPresentationRegistry(this.connectionId);
+  ChatPresentationRegistry(this.connectionId) : recoveryScope = null;
+
+  ChatPresentationRegistry.forConnection(SavedConnection connection)
+    : connectionId = ComposerDraftStore.namespace(
+        connection.id,
+        connection.gatewayProfile,
+      ),
+      recoveryScope = MobilePushService.binding(connection);
 
   final String connectionId;
+  final String? recoveryScope;
   final Map<String, ChatPresentationState> _aliases = {};
   int _intent = 0;
   bool _closed = false;
@@ -219,7 +229,10 @@ class ChatPresentationState {
   bool _writerEdited = false;
   int _pendingWrites = 0;
 
-  ComposerDraftWriter openWriter({void Function()? onBindingChanged}) {
+  ComposerDraftWriter openWriter({
+    void Function()? onBindingChanged,
+    bool deviceLocal = false,
+  }) {
     final state = _root;
     // Once a detached writer's checkpoint drains, re-read durable state on
     // the next mount, including writes made by another application embedder.
@@ -231,6 +244,8 @@ class ChatPresentationState {
     final token = ComposerDraftStore.open(
       connectionId: _registry.connectionId,
       sessionId: state._sessionId,
+      recoveryScope: _registry.recoveryScope,
+      deviceLocal: deviceLocal,
     );
     state._writer = token;
     state._onBindingChanged = onBindingChanged;
@@ -277,7 +292,15 @@ class ComposerDraftWriter {
   bool get isCurrent =>
       !_closed && !_state._registry._closed && identical(_root._writer, _token);
 
-  Future<String?> read({ComposerDraftReader? reader}) async {
+  /// An empty widget alone is not proof of an empty draft: hydration may
+  /// still be outstanding or unavailable. Capture edit AND alias chronology.
+  (int, int) get revision => (_root._edit, _root._binding);
+  bool get hasConfirmedEmptyDraft => isCurrent && _root._text == '';
+
+  Future<String?> read({
+    ComposerDraftReader? reader,
+    bool requireProvenance = false,
+  }) async {
     while (isCurrent) {
       final state = _root;
       if (state._text != null) return state._text;
@@ -293,6 +316,7 @@ class ComposerDraftWriter {
             ? await ComposerDraftStore.read(
                 connectionId: _token.connectionId,
                 sessionId: _token.sessionId,
+                expectedScope: requireProvenance ? _token.recoveryScope : null,
               )
             : await reader(
                 connectionId: state._registry.connectionId,

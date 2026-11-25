@@ -1358,6 +1358,30 @@ abstract class AppLocalizations {
   /// **'Attachment drafts'**
   String get attachment_drafts;
 
+  /// No description provided for @recover_text_draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Recover a text draft'**
+  String get recover_text_draft;
+
+  /// No description provided for @undo_draft_recovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo_draft_recovery;
+
+  /// No description provided for @draft_session_exists.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat still exists. Open it to continue your draft.'**
+  String get draft_session_exists;
+
+  /// No description provided for @draft_recovery_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not verify this draft. Nothing was changed.'**
+  String get draft_recovery_unavailable;
+
   /// No description provided for @attachment_of.
   ///
   /// In en, this message translates to:

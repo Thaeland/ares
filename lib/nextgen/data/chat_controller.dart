@@ -15,6 +15,7 @@ import '../../core/models/background_report.dart';
 import '../../core/models/legacy_lcm_summary.dart';
 import '../../core/models/slash_command.dart';
 import '../../core/services/attachment_draft_service.dart';
+import '../../core/services/composer_draft_store.dart';
 import '../../core/services/slash_command_errors.dart';
 import '../../core/services/ws_client.dart';
 import 'history_rows.dart';
@@ -587,6 +588,7 @@ class NgChatController extends ChangeNotifier {
     // ignore: prefer_initializing_formals
   }) : _workingDirectory = workingDirectory,
        storedId = sessionId,
+       draftKey = sessionId ?? ComposerDraftStore.newLocalKey(),
        attachmentService = attachmentService ?? AttachmentDraftService() {
     _subs.add(gateway.events.listen(_onEvent));
     _subs.add(gateway.serverRequests.listen(_onServerRequest));
@@ -596,6 +598,8 @@ class NgChatController extends ChangeNotifier {
   }
 
   final NextGenGateway gateway;
+  final String draftKey;
+  bool get draftOwnerCurrent => !_disposed && gateway.draftAccountCurrent;
   String? _workingDirectory;
   String? get workingDirectory => _workingDirectory;
   bool _creatingSession = false;
@@ -2136,6 +2140,12 @@ class NgChatController extends ChangeNotifier {
         error = ngL.ng_project_cwd_fallback(actualCwd);
       }
       if (runtimeId != null) gateway.bindRuntime(runtimeId!, storedId!);
+      final storedDraft = result['stored_session_id'];
+      if (draftOwnerCurrent &&
+          storedDraft is String &&
+          storedDraft.isNotEmpty) {
+        gateway.draftPresentation.bind(draftKey, storedDraft);
+      }
       _withInfo(result['info']);
       if (storedId != null) onCreated?.call(storedId!);
       _pickedModel = null;

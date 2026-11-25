@@ -734,6 +734,20 @@ class AppLocalizationsPt extends AppLocalizations {
   String get attachment_drafts => 'Rascunhos de anexos';
 
   @override
+  String get recover_text_draft => 'Recuperar um rascunho de texto';
+
+  @override
+  String get undo_draft_recovery => 'Desfazer';
+
+  @override
+  String get draft_session_exists =>
+      'Esta conversa ainda existe. Abra-a para continuar o rascunho.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Não foi possível verificar o rascunho. Nada foi alterado.';
+
+  @override
   String attachment_of(Object index, Object total) {
     return 'Anexo $index de $total';
   }
@@ -6845,6 +6859,20 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get attachment_drafts => 'Rascunhos de anexos';
+
+  @override
+  String get recover_text_draft => 'Recuperar um rascunho de texto';
+
+  @override
+  String get undo_draft_recovery => 'Desfazer';
+
+  @override
+  String get draft_session_exists =>
+      'Esta conversa ainda existe. Abra-a para continuar o rascunho.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Não foi possível verificar o rascunho. Nada foi alterado.';
 
   @override
   String attachment_of(Object index, Object total) {

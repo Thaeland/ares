@@ -733,6 +733,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get attachment_drafts => 'Borradores de adjuntos';
 
   @override
+  String get recover_text_draft => 'Recuperar un borrador de texto';
+
+  @override
+  String get undo_draft_recovery => 'Deshacer';
+
+  @override
+  String get draft_session_exists =>
+      'Este chat aún existe. Ábrelo para continuar con el borrador.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'No se pudo verificar el borrador. No se ha cambiado nada.';
+
+  @override
   String attachment_of(Object index, Object total) {
     return 'Adjunto $index de $total';
   }

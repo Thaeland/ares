@@ -735,6 +735,20 @@ class AppLocalizationsFr extends AppLocalizations {
   String get attachment_drafts => 'Brouillons de pièces jointes';
 
   @override
+  String get recover_text_draft => 'Récupérer un brouillon';
+
+  @override
+  String get undo_draft_recovery => 'Annuler';
+
+  @override
+  String get draft_session_exists =>
+      'Cette discussion existe toujours. Ouvrez-la pour reprendre votre brouillon.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Impossible de vérifier le brouillon. Aucune modification effectuée.';
+
+  @override
   String attachment_of(Object index, Object total) {
     return 'Pièce jointe $index sur $total';
   }

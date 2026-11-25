@@ -714,6 +714,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get attachment_drafts => '添付ドラフト';
 
   @override
+  String get recover_text_draft => 'テキストの下書きを復元';
+
+  @override
+  String get undo_draft_recovery => '元に戻す';
+
+  @override
+  String get draft_session_exists => 'このチャットはまだ存在します。開いて下書きの編集を続けてください。';
+
+  @override
+  String get draft_recovery_unavailable => '下書きを確認できませんでした。変更はありません。';
+
+  @override
   String attachment_of(Object index, Object total) {
     return '添付 $index/$total';
   }

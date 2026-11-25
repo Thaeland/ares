@@ -410,7 +410,11 @@ class DashboardApiClient extends ApiClient {
       'sessions/${Uri.encodeComponent(sessionId)}',
       queryParameters: _profileQuery,
     );
-    if (res.statusCode == 404) throw SessionNotFoundException(sessionId);
+    // A missing proxy route, wrong prefix or unavailable endpoint is not
+    // evidence that this session died. Require the session-specific verdict.
+    if (res.statusCode == 404 && _sessionMissing(res, sessionId)) {
+      throw SessionNotFoundException(sessionId);
+    }
     if (res.statusCode != 200) {
       throw DashboardRequestException(
         res.statusCode,
@@ -425,6 +429,27 @@ class DashboardApiClient extends ApiClient {
       row['pinned'] = row['pinned'] == true || row['pinned'] == 1;
     }
     return row;
+  }
+
+  static bool _sessionMissing(http.Response res, String id) {
+    try {
+      final body = _decodeMap(res);
+      final reason = body['error'] ?? body['detail'];
+      if (body['session_id'] != null && body['session_id'] != id) return false;
+      if (reason is Map) {
+        if (reason['session_id'] != null && reason['session_id'] != id) {
+          return false;
+        }
+        return reason['code'] == 'session_not_found';
+      }
+      return reason is String &&
+          const {
+            'session_not_found',
+            'session not found',
+          }.contains(reason.toLowerCase());
+    } on FormatException {
+      return false;
+    }
   }
 
   @override

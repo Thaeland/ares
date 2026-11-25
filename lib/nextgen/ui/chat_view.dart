@@ -19,6 +19,9 @@ import '../../core/services/legal_links.dart';
 import '../../core/utils/delivered_files.dart';
 import '../../core/utils/media_tags.dart';
 import '../../core/widgets/desktop_shortcuts.dart';
+import '../../core/services/chat_presentation_state.dart';
+import '../../core/widgets/composer_prompt_recall.dart';
+import '../../core/widgets/orphan_draft_recovery.dart';
 import '../../core/widgets/markdown_code_block.dart';
 import '../../core/widgets/media_artifact_card.dart';
 import '../../core/widgets/slash_command_highlight.dart';
@@ -66,7 +69,7 @@ class NgChatView extends StatefulWidget {
   State<NgChatView> createState() => _NgChatViewState();
 }
 
-class _NgChatViewState extends State<NgChatView> {
+class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
   /// A fresh files client per card: cards close theirs when done, so they
   /// must not share the gateway's own dashboard connection.
   RemoteFilesDataSource _filesClient() {
@@ -80,6 +83,67 @@ class _NgChatViewState extends State<NgChatView> {
   }
 
   final _input = SlashCommandHighlightController();
+  final _promptRecall = ComposerPromptRecall();
+  late ComposerDraftWriter _draftWriter;
+  String _lastText = '';
+  bool _hydrating = false;
+  Timer? _checkpoint;
+
+  void _openDraft() {
+    _draftWriter = chat.gateway.draftPresentation
+        .chatFor(chat.draftKey)
+        .openWriter(
+          deviceLocal: chat.isNew,
+          onBindingChanged: () => unawaited(_restoreDraft()),
+        );
+    unawaited(_restoreDraft());
+  }
+
+  Future<void> _restoreDraft() async {
+    final writer = _draftWriter;
+    final revision = writer.revision;
+    final text = await writer.read(requireProvenance: true);
+    if (!mounted ||
+        !writer.isCurrent ||
+        !chat.draftOwnerCurrent ||
+        text == null ||
+        revision != writer.revision ||
+        _input.text.isNotEmpty ||
+        text.isEmpty) {
+      return;
+    }
+    _hydrating = true;
+    try {
+      _input.value = TextEditingValue(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+      );
+    } finally {
+      _hydrating = false;
+    }
+  }
+
+  void _onDraftEdit() {
+    _promptRecall.editorChanged();
+    final text = _input.text;
+    if (text == _lastText) return;
+    _lastText = text;
+    if (_hydrating || !chat.draftOwnerCurrent) return;
+    _draftWriter.edit(text);
+    _checkpoint?.cancel();
+    _checkpoint = Timer(
+      const Duration(milliseconds: 300),
+      () => unawaited(_draftWriter.flush()),
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) {
+      _checkpoint?.cancel();
+      unawaited(_draftWriter.flush());
+    }
+  }
 
   /// The composer's command catalogue: it decides both the highlight and
   /// whether a sent `/command` runs on the gateway.
@@ -106,6 +170,9 @@ class _NgChatViewState extends State<NgChatView> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _openDraft();
+    _input.addListener(_onDraftEdit);
     chat.addListener(_onChat);
     _readAloud = (widget.readAloudFactory ?? NgReadAloud.new)();
     _readAloud.addListener(_onReadAloud);
@@ -132,6 +199,13 @@ class _NgChatViewState extends State<NgChatView> {
     super.didUpdateWidget(old);
     if (old.chat != chat) {
       old.chat.removeListener(_onChat);
+      _checkpoint?.cancel();
+      unawaited(_draftWriter.close());
+      _hydrating = true;
+      _input.clear();
+      _hydrating = false;
+      _promptRecall.editorChanged();
+      _openDraft();
       chat.addListener(_onChat);
       // A reply being read belongs to the chat we left.
       unawaited(_readAloud.stop());
@@ -181,6 +255,9 @@ class _NgChatViewState extends State<NgChatView> {
   @override
   void dispose() {
     chat.removeListener(_onChat);
+    WidgetsBinding.instance.removeObserver(this);
+    _checkpoint?.cancel();
+    unawaited(_draftWriter.close());
     _readAloud.removeListener(_onReadAloud);
     _readAloud.dispose();
     _ticker?.cancel();
@@ -625,6 +702,20 @@ class _NgChatViewState extends State<NgChatView> {
               if (!state.isConnected) _connectionBanner(c, gateway),
               Expanded(child: _transcript(c)),
               NgSessionDock(chat: chat),
+              if (chat.canPickProject && _drafts.isEmpty && !_preparing)
+                OrphanDraftRecovery(
+                  key: ObjectKey(_draftWriter),
+                  writer: _draftWriter,
+                  editor: _input,
+                  lookup: chat.gateway.api.getSession,
+                  isCurrent: () =>
+                      chat.draftOwnerCurrent &&
+                      identical(chat.gateway, gateway) &&
+                      chat.canPickProject &&
+                      _drafts.isEmpty &&
+                      !_preparing &&
+                      !_listening,
+                ),
               if (chat.error != null) _errorBar(c),
               if (chat.queued.isNotEmpty) _queue(c),
               if (chat.request != null)
@@ -1002,6 +1093,22 @@ class _NgChatViewState extends State<NgChatView> {
                 ),
               SendOnEnter(
                 enabled: _input.text.trim().isNotEmpty,
+                onNavigate: (event) =>
+                    !chat.draftOwnerCurrent ||
+                        !_draftWriter.isCurrent ||
+                        _drafts.isNotEmpty ||
+                        _listening
+                    ? KeyEventResult.ignored
+                    : _promptRecall.handle(
+                        event,
+                        _input,
+                        () => chat.items
+                            .whereType<NgUserItem>()
+                            .where(
+                              (item) => !item.pending && item.failure == null,
+                            )
+                            .map((item) => item.text),
+                      ),
                 onSend: () => unawaited(_send()),
                 child: TextField(
                   key: const ValueKey('ng-composer-field'),

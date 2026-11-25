@@ -692,6 +692,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get attachment_drafts => '附件草稿';
 
   @override
+  String get recover_text_draft => '恢复文字草稿';
+
+  @override
+  String get undo_draft_recovery => '撤销';
+
+  @override
+  String get draft_session_exists => '此对话仍然存在。请打开它以继续编辑草稿。';
+
+  @override
+  String get draft_recovery_unavailable => '无法验证此草稿。未作任何更改。';
+
+  @override
   String attachment_of(Object index, Object total) {
     return '附件 $index / $total';
   }
@@ -6534,6 +6546,18 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get attachment_drafts => '附件草稿';
+
+  @override
+  String get recover_text_draft => '恢复文字草稿';
+
+  @override
+  String get undo_draft_recovery => '撤销';
+
+  @override
+  String get draft_session_exists => '此对话仍然存在。请打开它以继续编辑草稿。';
+
+  @override
+  String get draft_recovery_unavailable => '无法验证此草稿。未作任何更改。';
 
   @override
   String attachment_of(Object index, Object total) {

@@ -713,6 +713,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get attachment_drafts => '첨부 파일 초안';
 
   @override
+  String get recover_text_draft => '텍스트 초안 복구';
+
+  @override
+  String get undo_draft_recovery => '실행 취소';
+
+  @override
+  String get draft_session_exists => '이 채팅은 아직 존재합니다. 채팅을 열어 초안을 이어서 작성하세요.';
+
+  @override
+  String get draft_recovery_unavailable => '초안을 확인할 수 없습니다. 변경된 내용이 없습니다.';
+
+  @override
   String attachment_of(Object index, Object total) {
     return '첨부 파일 $index/$total';
   }

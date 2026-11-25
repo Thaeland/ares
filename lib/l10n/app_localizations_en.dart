@@ -728,6 +728,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get attachment_drafts => 'Attachment drafts';
 
   @override
+  String get recover_text_draft => 'Recover a text draft';
+
+  @override
+  String get undo_draft_recovery => 'Undo';
+
+  @override
+  String get draft_session_exists =>
+      'This chat still exists. Open it to continue your draft.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Could not verify this draft. Nothing was changed.';
+
+  @override
   String attachment_of(Object index, Object total) {
     return 'Attachment $index of $total';
   }

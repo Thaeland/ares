@@ -733,6 +733,20 @@ class AppLocalizationsRu extends AppLocalizations {
   String get attachment_drafts => 'Черновики вложений';
 
   @override
+  String get recover_text_draft => 'Восстановить черновик';
+
+  @override
+  String get undo_draft_recovery => 'Отменить';
+
+  @override
+  String get draft_session_exists =>
+      'Этот чат ещё существует. Откройте его, чтобы продолжить работу с черновиком.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Не удалось проверить черновик. Ничего не изменено.';
+
+  @override
   String attachment_of(Object index, Object total) {
     return 'Вложение $index из $total';
   }
