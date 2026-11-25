@@ -82,6 +82,11 @@ class _NgMainPageState extends State<_NgMainContent>
     _desktopShortcutSub = desktopShortcutBus.stream.listen(_onDesktopShortcut);
     _deepLinkListener = _onPendingDeepLink;
     HermesDeepLinkService.shared.pendingLink.addListener(_deepLinkListener!);
+    if (HermesDeepLinkService.shared.pendingLink.value != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _onPendingDeepLink();
+      });
+    }
     nextGenOpenRequest.addListener(_onOpenRequest);
     nextGenNotificationAnswer.addListener(_onNotificationAnswer);
   }
@@ -108,6 +113,7 @@ class _NgMainPageState extends State<_NgMainContent>
       if (!identical(c, _chat)) c.dispose();
     }
     _cache.clear();
+    _sessions?.removeListener(_onSessionsChanged);
     _sessions?.dispose();
     super.dispose();
   }
@@ -157,7 +163,7 @@ class _NgMainPageState extends State<_NgMainContent>
     }
     final sessions = _sessions;
     if (sessions == null) {
-      _sessions = NgSessionsModel(scope);
+      _sessions = NgSessionsModel(scope)..addListener(_onSessionsChanged);
       unawaited(_sessions!.refresh());
       final last = NextGenPreferences.launchSession(
         scope.prefs,
@@ -622,32 +628,95 @@ class _NgMainPageState extends State<_NgMainContent>
     }
   }
 
+  void _onSessionsChanged() {
+    if (!mounted) return;
+    if (HermesDeepLinkService.shared.pendingLink.value != null) {
+      _onPendingDeepLink();
+    }
+  }
+
   /// Opens the shared app-wide command palette (same widget as Classic).
   void _openCommandPalette() {
+    final sessions = _sessions?.sessions ?? const <Session>[];
     showAppCommandPalette(
       context,
-      actions: const [
-        PaletteAction(
+      actions: [
+        const PaletteAction(
           id: 'new-chat',
           label: 'New chat',
           icon: Icons.add_comment_outlined,
-          keywords: ['compose', 'start', 'new'],
+          keywords: ['compose', 'start', 'new', 'chat'],
         ),
-        PaletteAction(
+        const PaletteAction(
           id: 'search',
           label: 'Search sessions',
           icon: Icons.search,
-          keywords: ['find', 'sessions', 'chats'],
+          keywords: ['find', 'sessions', 'chats', 'search'],
         ),
-        PaletteAction(
+        const PaletteAction(
+          id: 'nav-scheduled',
+          label: 'Scheduled',
+          icon: Icons.schedule,
+          keywords: ['cron', 'scheduled', 'jobs'],
+        ),
+        const PaletteAction(
+          id: 'nav-insights',
+          label: 'Insights & usage',
+          icon: Icons.insights_outlined,
+          keywords: ['usage', 'analytics', 'stats'],
+        ),
+        const PaletteAction(
+          id: 'nav-capabilities',
+          label: 'Capabilities',
+          icon: Icons.extension_outlined,
+          keywords: ['skills', 'plugins', 'mcp', 'tools'],
+        ),
+        const PaletteAction(
+          id: 'nav-archived',
+          label: 'Archived chats',
+          icon: Icons.archive_outlined,
+          keywords: ['archive', 'archived'],
+        ),
+        const PaletteAction(
+          id: 'nav-more',
+          label: 'More & projects',
+          icon: Icons.more_horiz,
+          keywords: ['projects', 'files', 'memory', 'models'],
+        ),
+        const PaletteAction(
           id: 'settings',
           label: 'Settings',
           icon: Icons.settings,
-          keywords: ['preferences', 'options'],
+          keywords: [
+            'preferences',
+            'options',
+            'shortcuts',
+            'keep awake',
+            'appearance',
+            'notifications',
+          ],
         ),
+        for (final session in sessions)
+          PaletteAction(
+            id: 'session:${session.id}',
+            label: ngSessionTitle(session),
+            hint: session.id,
+            icon: Icons.forum_outlined,
+            keywords: [session.id, if (session.model.isNotEmpty) session.model],
+          ),
       ],
       onSelected: (action) {
         if (!mounted) return;
+        if (action.id.startsWith('session:')) {
+          final id = action.id.substring('session:'.length);
+          final match = _sessions?.sessions
+              .where((s) => s.id == id)
+              .firstOrNull;
+          if (match != null) {
+            _open(match);
+          }
+          return;
+        }
         switch (action.id) {
           case 'new-chat':
             _newChat();
@@ -661,6 +730,16 @@ class _NgMainPageState extends State<_NgMainContent>
               _focusDrawerSearch = true;
               _scaffold.currentState?.openDrawer();
             }
+          case 'nav-scheduled':
+            _go(NgDestination.scheduled);
+          case 'nav-insights':
+            _go(NgDestination.insights);
+          case 'nav-capabilities':
+            _go(NgDestination.capabilities);
+          case 'nav-archived':
+            _go(NgDestination.archived);
+          case 'nav-more':
+            _go(NgDestination.more);
           case 'settings':
             _go(NgDestination.settings);
         }
@@ -670,6 +749,20 @@ class _NgMainPageState extends State<_NgMainContent>
 
   /// Consumes a validated `hermes://` link. Never sends, never executes.
   void _onPendingDeepLink() {
+    final peek = HermesDeepLinkService.shared.pendingLink.value;
+    if (peek == null || !mounted) return;
+    if (peek.kind == HermesDeepLinkKind.session) {
+      final id = peek.sessionId;
+      final sessions = _sessions;
+      if (id != null &&
+          (sessions == null ||
+              (sessions.loading &&
+                  !sessions.sessions.any((s) => s.id == id)))) {
+        // Wait for the initial session list load before deciding whether this
+        // session exists on the connected gateway.
+        return;
+      }
+    }
     final link = HermesDeepLinkService.shared.takePendingLink();
     if (link == null || !mounted || link.isIgnored) return;
     switch (link.kind) {
@@ -680,11 +773,37 @@ class _NgMainPageState extends State<_NgMainContent>
         // tab is advisory.
         _go(NgDestination.settings);
         return;
+      case HermesDeepLinkKind.install:
+        // Navigation-only: open Capabilities for explicit user review, never
+        // auto-installing a skill, plugin or MCP server on link open.
+        _go(NgDestination.capabilities);
+        return;
       case HermesDeepLinkKind.open:
-        if (link.path != null && link.path!.startsWith('/settings')) {
+        final path = link.path ?? '';
+        if (path.startsWith('/settings')) {
           _go(NgDestination.settings);
+        } else if (path == '/scheduled' ||
+            path == '/crons' ||
+            path == '/cron') {
+          _go(NgDestination.scheduled);
+        } else if (path == '/insights' || path == '/activity') {
+          _go(NgDestination.insights);
+        } else if (path == '/capabilities' ||
+            path == '/skills' ||
+            path == '/plugins' ||
+            path == '/mcp') {
+          _go(NgDestination.capabilities);
+        } else if (path == '/archived') {
+          _go(NgDestination.archived);
+        } else if (path == '/more' || path == '/projects') {
+          _go(NgDestination.more);
+        } else if (path == '/chat' || path == '/chats') {
+          if (link.prefill != null) {
+            _scaffold.currentState?.closeDrawer();
+            _openId(null, '', initialText: link.prefill);
+          }
         }
-        return; // other paths are in-app routes we do not own
+        return;
       case HermesDeepLinkKind.session:
         final id = link.sessionId;
         if (id == null) return;
@@ -701,6 +820,7 @@ class _NgMainPageState extends State<_NgMainContent>
           unawaited(sessions?.refresh());
           return;
         }
+        _scaffold.currentState?.closeDrawer();
         _openId(id, ngSessionTitle(match), initialText: link.prefill);
         return;
       case HermesDeepLinkKind.ignore:
@@ -798,6 +918,7 @@ class _NgMainPageState extends State<_NgMainContent>
             onOpenSidebar: toggleSidebar,
             sessions: _sessions,
             onNewChat: _newChat,
+            onOpenCommandPalette: _openCommandPalette,
           );
 
     final chatView = view;

@@ -17,7 +17,7 @@ import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:flutter/services.dart';
 
 /// Allowlisted deep-link routes.
-enum HermesDeepLinkKind { launch, open, settings, session, ignore }
+enum HermesDeepLinkKind { launch, open, settings, session, install, ignore }
 
 /// Result of parsing a `hermes://` URL. `kind == ignore` means the URL was
 /// rejected and must not be acted on.
@@ -28,6 +28,8 @@ class HermesDeepLink {
     this.prefill,
     this.params = const {},
     this.sessionId,
+    this.installTarget,
+    this.installId,
   });
 
   const HermesDeepLink.launch() : this._(kind: HermesDeepLinkKind.launch);
@@ -45,6 +47,14 @@ class HermesDeepLink {
     : this._(kind: HermesDeepLinkKind.settings, path: '/settings/$tab');
   const HermesDeepLink.session(String id, {String? prefill})
     : this._(kind: HermesDeepLinkKind.session, sessionId: id, prefill: prefill);
+  const HermesDeepLink.install({
+    required String target,
+    required String identifier,
+  }) : this._(
+         kind: HermesDeepLinkKind.install,
+         installTarget: target,
+         installId: identifier,
+       );
   const HermesDeepLink.ignore() : this._(kind: HermesDeepLinkKind.ignore);
 
   final HermesDeepLinkKind kind;
@@ -61,6 +71,13 @@ class HermesDeepLink {
   /// Validated session id — never sent, never a raw `sessionId` to a command.
   final String? sessionId;
 
+  /// Validated capability target (`skill`, `plugin`, `mcp`) for navigation-only
+  /// install review — never auto-installed on open.
+  final String? installTarget;
+
+  /// Validated identifier for a capability review link — never executed.
+  final String? installId;
+
   bool get isIgnored => kind == HermesDeepLinkKind.ignore;
 }
 
@@ -69,6 +86,19 @@ final RegExp _routeComponentRe = RegExp(r'^[a-z0-9][a-z0-9-]{0,63}$');
 
 /// A session/chat/object id: conservative charset, bounded length.
 final RegExp _idRe = RegExp(r'^[A-Za-z0-9._-]{1,128}$');
+
+/// A skill/plugin/mcp catalog or repo identifier: conservative charset, no
+/// traversal, no backslashes or scheme smuggling.
+final RegExp _installIdRe = RegExp(r'^[A-Za-z0-9._/@:-]{1,160}$');
+
+bool _isValidInstallId(String? value) {
+  if (value == null || value.isEmpty) return false;
+  if (value != value.trim()) return false;
+  if (value.contains('..') || value.contains('://') || value.contains(r'\')) {
+    return false;
+  }
+  return _installIdRe.hasMatch(value);
+}
 
 /// Settings tabs this build understands. Any other tab is rejected.
 const _knownSettingsTabs = {
@@ -150,27 +180,35 @@ HermesDeepLink? parseHermesDeepLink(String? raw) {
       ? afterScheme.substring(afterScheme.indexOf('?') + 1)
       : '';
 
-  Map<String, String> queryParams() {
+  Map<String, String>? queryParams() {
     final params = <String, String>{};
     if (query.isEmpty) return params;
-    for (final pair in query.split('&')) {
-      if (pair.isEmpty) continue;
-      final eq = pair.indexOf('=');
-      final key = eq < 0 ? pair : pair.substring(0, eq);
-      final value = eq < 0 ? '' : pair.substring(eq + 1);
-      if (key.isEmpty) continue;
-      params[Uri.decodeComponent(key)] = Uri.decodeComponent(value);
+    try {
+      for (final pair in query.split('&')) {
+        if (pair.isEmpty) continue;
+        final eq = pair.indexOf('=');
+        final key = eq < 0 ? pair : pair.substring(0, eq);
+        final value = eq < 0 ? '' : pair.substring(eq + 1);
+        if (key.isEmpty) continue;
+        params[Uri.decodeQueryComponent(key)] = Uri.decodeQueryComponent(value);
+      }
+      return params;
+    } on FormatException {
+      return null;
+    } on ArgumentError {
+      return null;
     }
-    return params;
   }
 
   // hermes://launch — focus/open only; never prefill, never navigate.
-  if (hostPart == 'launch' && rawPath.isEmpty) {
+  // Matches Desktop's handleLaunchDeepLink: any path or query tail is ignored.
+  if (hostPart == 'launch') {
     return const HermesDeepLink.launch();
   }
 
   if (hostPart == 'open') {
     final params = queryParams();
+    if (params == null) return const HermesDeepLink.ignore();
     final prefill = _sanitizePrefill(params['prefill']);
     final session = params['session'];
     if (session != null && !_idRe.hasMatch(session)) {
@@ -190,19 +228,38 @@ HermesDeepLink? parseHermesDeepLink(String? raw) {
 
   if (hostPart == 'settings' || hostPart == 'settings/') {
     final params = queryParams();
+    if (params == null) return const HermesDeepLink.ignore();
     final tab = rawPath.isNotEmpty ? rawPath : params['tab'];
     if (tab == null || tab.isEmpty) return const HermesDeepLink.ignore();
     if (!_knownSettingsTabs.contains(tab)) return const HermesDeepLink.ignore();
     return HermesDeepLink.settings(tab);
   }
 
-  if (hostPart == 'session') {
+  if (hostPart == 'session' || hostPart == 'chat') {
     final segments = rawPath.split('/').where((s) => s.isNotEmpty);
     final id = segments.join('/');
     if (!_idRe.hasMatch(id)) return const HermesDeepLink.ignore();
     final params = queryParams();
+    if (params == null) return const HermesDeepLink.ignore();
     final prefill = _sanitizePrefill(params['prefill']);
     return HermesDeepLink.session(id, prefill: prefill);
+  }
+
+  if (hostPart == 'skill' || hostPart == 'plugin' || hostPart == 'mcp') {
+    final segments = rawPath.split('/').where((s) => s.isNotEmpty).toList();
+    if (segments.length != 1 || segments.single != 'install') {
+      return const HermesDeepLink.ignore();
+    }
+    final params = queryParams();
+    if (params == null) return const HermesDeepLink.ignore();
+    final id = switch (hostPart) {
+      'skill' => params['identifier'],
+      'plugin' => params['catalog'] ?? params['repo'] ?? params['identifier'],
+      'mcp' => params['name'],
+      _ => null,
+    };
+    if (!_isValidInstallId(id)) return const HermesDeepLink.ignore();
+    return HermesDeepLink.install(target: hostPart, identifier: id!);
   }
 
   return const HermesDeepLink.ignore();
@@ -221,6 +278,8 @@ String describeHermesDeepLink(HermesDeepLink link) {
       return 'settings /${link.path?.substring(1)}';
     case HermesDeepLinkKind.session:
       return 'session';
+    case HermesDeepLinkKind.install:
+      return 'install ${link.installTarget}';
     case HermesDeepLinkKind.ignore:
       return 'ignored';
   }
@@ -305,6 +364,14 @@ class HermesDeepLinkService {
     final link = pendingLink.value;
     if (link != null) pendingLink.value = null;
     return link;
+  }
+
+  /// Clears test state without disposing the shared notifier.
+  void resetForTesting() {
+    _initialized = false;
+    _lastDiagnostic = null;
+    _launchCount = 0;
+    pendingLink.value = null;
   }
 
   void dispose() {

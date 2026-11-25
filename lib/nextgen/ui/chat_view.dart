@@ -76,6 +76,7 @@ class NgChatView extends StatefulWidget {
     this.onClose,
     this.sessions,
     this.onNewChat,
+    this.onOpenCommandPalette,
     this.readAloudFactory,
   });
 
@@ -86,6 +87,7 @@ class NgChatView extends StatefulWidget {
   /// The sidebar's list, for a dot on its button while other chats are unread.
   final NgSessionsModel? sessions;
   final VoidCallback? onNewChat;
+  final VoidCallback? onOpenCommandPalette;
 
   /// Test hook: supplies the read-aloud controller (e.g. a fake speaker).
   @visibleForTesting
@@ -1016,6 +1018,13 @@ class _NgChatViewState extends State<NgChatView>
                       onPressed: () => setState(() => _showSessionFiles = true),
                     ),
                   if (!compactTools) ...[
+                    if (widget.onOpenCommandPalette != null)
+                      IconButton(
+                        key: const ValueKey('app-command-palette-button'),
+                        tooltip: 'App command palette',
+                        icon: const Icon(Icons.keyboard_command_key),
+                        onPressed: widget.onOpenCommandPalette,
+                      ),
                     if (chat.storedId case final id?)
                       IconButton(
                         tooltip: 'Open browser preview',
@@ -1038,13 +1047,18 @@ class _NgChatViewState extends State<NgChatView>
                       ),
                   ] else if (chat.storedId != null ||
                       workers != null ||
-                      radio != null)
+                      radio != null ||
+                      widget.onOpenCommandPalette != null)
                     // The radio's controls move here from the app bar.
                     PopupMenuButton<String>(
                       key: const ValueKey('chat-tools-menu'),
                       tooltip: 'More chat tools',
                       icon: const Icon(Icons.widgets_outlined),
                       onSelected: (tool) {
+                        if (tool == 'app-command-palette') {
+                          widget.onOpenCommandPalette?.call();
+                          return;
+                        }
                         if (tool == radioToolValue) {
                           final current = compactRadioTool(context);
                           if (current != null) {
@@ -1064,6 +1078,14 @@ class _NgChatViewState extends State<NgChatView>
                         if (tool == 'workers') workers?.open(context);
                       },
                       itemBuilder: (_) => [
+                        if (widget.onOpenCommandPalette != null)
+                          const PopupMenuItem(
+                            value: 'app-command-palette',
+                            child: ListTile(
+                              leading: Icon(Icons.keyboard_command_key),
+                              title: Text('App command palette'),
+                            ),
+                          ),
                         if (chat.storedId != null)
                           const PopupMenuItem(
                             value: 'browser',

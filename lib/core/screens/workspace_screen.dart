@@ -153,6 +153,7 @@ Widget buildWorkspaceChatScreen({
   Future<bool> Function(String sessionId, bool archived)? sessionArchiver,
   ApiClient? testApiClient,
   VoidCallback? onClose,
+  VoidCallback? onOpenAppCommandPalette,
 }) {
   return ChatScreen(
     connection: connection,
@@ -166,6 +167,7 @@ Widget buildWorkspaceChatScreen({
     sessionArchiver: sessionArchiver,
     testApiClient: testApiClient,
     onClose: onClose,
+    onOpenAppCommandPalette: onOpenAppCommandPalette,
   );
 }
 
@@ -491,6 +493,11 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           titleRevision == _sessionTitleRevision) {
         setState(() => _knownSessions = sessions);
         if (complete) _sessionsKnown = true;
+        if (HermesDeepLinkService.shared.pendingLink.value != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _onPendingDeepLink();
+          });
+        }
       }
       return sessions;
     }
@@ -790,6 +797,11 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     _desktopShortcutSub = desktopShortcutBus.stream.listen(_onDesktopShortcut);
     _deepLinkListener = _onPendingDeepLink;
     HermesDeepLinkService.shared.pendingLink.addListener(_deepLinkListener!);
+    if (HermesDeepLinkService.shared.pendingLink.value != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _onPendingDeepLink();
+      });
+    }
     _initialization = _initialize();
     _activityListener = _turnController.addTurnActivityListener(
       _onTurnActivityChanged,
@@ -1012,35 +1024,101 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
 
   /// Opens the shared app-wide command palette (Classic: same widget as NextGen).
   void _openCommandPalette() {
+    final sessions = _knownSessions.where((s) => !isMachineSession(s)).toList();
     showAppCommandPalette(
       context,
-      actions: const [
-        PaletteAction(
+      actions: [
+        const PaletteAction(
           id: 'new-chat',
           label: 'New chat',
           icon: Icons.add_comment_outlined,
-          keywords: ['compose', 'start', 'new'],
+          keywords: ['compose', 'start', 'new', 'chat'],
         ),
-        PaletteAction(
+        const PaletteAction(
           id: 'search',
           label: 'Search sessions',
           icon: Icons.search,
-          keywords: ['find', 'sessions', 'chats'],
+          keywords: ['find', 'sessions', 'chats', 'search'],
         ),
-        PaletteAction(
+        const PaletteAction(
+          id: 'nav-chats',
+          label: 'Chats',
+          icon: Icons.chat_bubble_outline,
+          keywords: ['conversations', 'home'],
+        ),
+        const PaletteAction(
+          id: 'nav-crons',
+          label: 'Scheduled / Crons',
+          icon: Icons.schedule_outlined,
+          keywords: ['cron', 'scheduled', 'jobs'],
+        ),
+        const PaletteAction(
+          id: 'nav-projects',
+          label: 'Projects',
+          icon: Icons.folder_outlined,
+          keywords: ['folders', 'workspaces'],
+        ),
+        const PaletteAction(
+          id: 'nav-activity',
+          label: 'Activity',
+          icon: Icons.bolt_outlined,
+          keywords: ['timeline', 'runs', 'inbox'],
+        ),
+        const PaletteAction(
+          id: 'capabilities',
+          label: 'Capabilities & skills',
+          icon: Icons.extension_outlined,
+          keywords: ['skills', 'plugins', 'mcp', 'tools'],
+        ),
+        const PaletteAction(
           id: 'settings',
           label: 'Settings',
           icon: Icons.settings,
-          keywords: ['preferences', 'options'],
+          keywords: [
+            'preferences',
+            'options',
+            'shortcuts',
+            'keep awake',
+            'appearance',
+            'notifications',
+          ],
         ),
+        for (final session in sessions)
+          PaletteAction(
+            id: 'session:${session.id}',
+            label: session.title.trim().isEmpty
+                ? context.l10n.untitled_chat
+                : session.title,
+            hint: session.id,
+            icon: Icons.forum_outlined,
+            keywords: [session.id, if (session.model.isNotEmpty) session.model],
+          ),
       ],
       onSelected: (action) {
         if (!mounted) return;
+        if (action.id.startsWith('session:')) {
+          final id = action.id.substring('session:'.length);
+          final match = _knownSessions.where((s) => s.id == id).firstOrNull;
+          if (match != null) {
+            unawaited(_openSession(match));
+          }
+          return;
+        }
         switch (action.id) {
           case 'new-chat':
             unawaited(_startNewChat());
           case 'search':
             _openWorkspaceSessionView(WorkspaceSessionView.search);
+          case 'nav-chats':
+            _shellKey.currentState?.select(HermesDestination.chats);
+          case 'nav-crons':
+            _shellKey.currentState?.select(HermesDestination.crons);
+          case 'nav-projects':
+            _shellKey.currentState?.select(HermesDestination.projects);
+          case 'nav-activity':
+            _shellKey.currentState?.select(HermesDestination.activity);
+          case 'capabilities':
+            _openCapability('capability-admin');
           case 'settings':
             _push(SettingsScreen(connection: widget.connection));
         }
@@ -1048,8 +1126,32 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     );
   }
 
+  /// Opens a prefilled draft without sending or executing anything.
+  void _openPrefilledDraft(String prefill) {
+    final draft = buildNewChatDraft(
+      l10n: context.l10n,
+      mode: NewChatMode.quickChat,
+      sessionId:
+          (widget.newChatSessionIdFactory ??
+                  GatewayChatClient.generateSessionId)
+              .call(),
+      now: DateTime.now(),
+    );
+    unawaited(_openSession(draft.session, initialComposerText: prefill));
+  }
+
   /// Consumes a validated `hermes://` link. Never sends, never executes.
   void _onPendingDeepLink() {
+    final peek = HermesDeepLinkService.shared.pendingLink.value;
+    if (peek == null || !mounted) return;
+    if (peek.kind == HermesDeepLinkKind.session && !_sessionsKnown) {
+      final id = peek.sessionId;
+      if (id != null && !_knownSessions.any((s) => s.id == id)) {
+        // Wait for the initial session list load before deciding whether this
+        // session exists on the connected gateway.
+        return;
+      }
+    }
     final link = HermesDeepLinkService.shared.takePendingLink();
     if (link == null || !mounted || link.isIgnored) return;
     switch (link.kind) {
@@ -1060,12 +1162,34 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         // the validated tab is advisory (the screen is not tab-paginated).
         _push(SettingsScreen(connection: widget.connection));
         return;
+      case HermesDeepLinkKind.install:
+        // Navigation-only: open Capabilities for explicit user review, never
+        // auto-installing a skill, plugin or MCP server on link open.
+        _openCapability('capability-admin');
+        return;
       case HermesDeepLinkKind.open:
         // In-app route only; never following an external/raw URL.
-        if (link.path != null && link.path!.startsWith('/settings')) {
+        final path = link.path ?? '';
+        if (path.startsWith('/settings')) {
           _push(SettingsScreen(connection: widget.connection));
+        } else if (path == '/crons' ||
+            path == '/scheduled' ||
+            path == '/cron') {
+          _shellKey.currentState?.select(HermesDestination.crons);
+        } else if (path == '/projects') {
+          _shellKey.currentState?.select(HermesDestination.projects);
+        } else if (path == '/activity' || path == '/insights') {
+          _shellKey.currentState?.select(HermesDestination.activity);
+        } else if (path == '/capabilities' ||
+            path == '/skills' ||
+            path == '/plugins' ||
+            path == '/mcp') {
+          _openCapability('capability-admin');
         } else {
           _shellKey.currentState?.select(HermesDestination.chats);
+          if (link.prefill != null) {
+            _openPrefilledDraft(link.prefill!);
+          }
         }
         return;
       case HermesDeepLinkKind.session:
@@ -1082,7 +1206,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           );
           return;
         }
-        _openSession(match, initialComposerText: link.prefill);
+        unawaited(_openSession(match, initialComposerText: link.prefill));
         return;
       case HermesDeepLinkKind.ignore:
         return;
@@ -1548,6 +1672,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                   return saved;
                 },
                 testApiClient: widget.testChatApiClientFactory?.call(),
+                onOpenAppCommandPalette: _openCommandPalette,
               ),
         ),
       ),
@@ -2556,6 +2681,12 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         centerTitle: false,
         actions: [
           const PresentationChrome(),
+          IconButton(
+            key: const ValueKey('app-command-palette-button'),
+            tooltip: 'App command palette',
+            onPressed: _openCommandPalette,
+            icon: const Icon(Icons.keyboard_command_key),
+          ),
           if (_destination == HermesDestination.chats) ...[
             IconButton(
               tooltip: _inboxActionCount == 0

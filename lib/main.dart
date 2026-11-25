@@ -484,7 +484,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     _keepAwake = KeepAwakeController(
       adapter: const MethodChannelKeepAwakeAdapter(),
       store: KeepAwakePolicyStore(widget.connManager.prefs),
-    );
+    )..setWorking(_hasActiveTurn);
     _shortcutsStore = ShortcutsStore(widget.connManager.prefs);
     _keepAwakePreferenceListener = () {
       _keepAwake?.refreshFromStore();

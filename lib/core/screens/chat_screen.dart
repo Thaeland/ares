@@ -644,6 +644,9 @@ class ChatScreen extends StatefulWidget {
   /// full-screen behaviour (back button pops the route).
   final VoidCallback? onClose;
 
+  /// Opens the app-wide command palette owned by the enclosing workspace.
+  final VoidCallback? onOpenAppCommandPalette;
+
   /// Lets a test observe what the chat posts to Android when a turn settles,
   /// without touching the notification platform channel.
   @visibleForTesting
@@ -724,6 +727,7 @@ class ChatScreen extends StatefulWidget {
     this.singleSession = false,
     this.notifications,
     this.onClose,
+    this.onOpenAppCommandPalette,
     this.testTurnNotifications,
     this.testDesktopConnectionHook,
     this.testDesktopGateway,
@@ -7977,6 +7981,13 @@ class _ChatScreenState extends State<ChatScreen>
               ),
             ),
           if (!compactTools) ...[
+            if (widget.onOpenAppCommandPalette != null)
+              IconButton(
+                key: const ValueKey('app-command-palette-button'),
+                tooltip: 'App command palette',
+                icon: const Icon(Icons.keyboard_command_key),
+                onPressed: widget.onOpenAppCommandPalette,
+              ),
             if (_desktopGateway != null)
               IconButton(
                 tooltip: 'Open browser preview',
@@ -7997,7 +8008,8 @@ class _ChatScreenState extends State<ChatScreen>
               ),
           ] else if (_desktopGateway != null ||
               workers != null ||
-              radio != null)
+              radio != null ||
+              widget.onOpenAppCommandPalette != null)
             // One always-visible menu on narrow panes, also while a reply
             // streams (the gateway queue matters most then). The radio's
             // controls move here from the app bar.
@@ -8006,6 +8018,10 @@ class _ChatScreenState extends State<ChatScreen>
               tooltip: 'More chat tools',
               icon: const Icon(Icons.widgets_outlined),
               onSelected: (tool) {
+                if (tool == 'app-command-palette') {
+                  widget.onOpenAppCommandPalette?.call();
+                  return;
+                }
                 if (tool == radioToolValue) {
                   final current = compactRadioTool(context);
                   if (current != null) {
@@ -8027,6 +8043,14 @@ class _ChatScreenState extends State<ChatScreen>
                 }
               },
               itemBuilder: (_) => [
+                if (widget.onOpenAppCommandPalette != null)
+                  const PopupMenuItem(
+                    value: 'app-command-palette',
+                    child: ListTile(
+                      leading: Icon(Icons.keyboard_command_key),
+                      title: Text('App command palette'),
+                    ),
+                  ),
                 if (_desktopGateway != null)
                   const PopupMenuItem(
                     value: 'browser',

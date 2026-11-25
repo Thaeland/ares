@@ -94,12 +94,15 @@ class CommandPaletteState extends State<CommandPalette> {
       _filtered = widget.actions.where((action) {
         final haystack = <String>[
           action.label,
+          if (action.hint != null) action.hint!,
           ...action.keywords,
         ].join(' ').toLowerCase();
         return haystack.contains(query);
       }).toList();
     }
-    _selectedIndex = _selectedIndex.clamp(0, _filtered.length - 1);
+    _selectedIndex = _filtered.isEmpty
+        ? 0
+        : _selectedIndex.clamp(0, _filtered.length - 1);
     setState(() {});
   }
 
