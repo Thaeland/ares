@@ -11,7 +11,7 @@ Future<void> _pumpPane(
   ValueChanged<MoreEntry>? onSelect,
   // Tall by default so assertions are about content, not scroll position; the
   // narrow-phone tests below set a real phone height explicitly.
-  Size size = const Size(360, 1600),
+  Size size = const Size(360, 2800),
   double textScale = 1.0,
   Brightness brightness = Brightness.dark,
 }) async {
@@ -98,6 +98,9 @@ void main() {
           'browser-vault',
           'agent-policy',
           'memory',
+          'host-operations',
+          'schedule-desk',
+          'memory-graph',
           'provider-sign-in',
           'nous-portal',
           'provider-admin',
@@ -379,6 +382,9 @@ void main() {
             'browser-vault',
             'agent-policy',
             'memory',
+            'host-operations',
+            'schedule-desk',
+            'memory-graph',
           ]);
         }
       },

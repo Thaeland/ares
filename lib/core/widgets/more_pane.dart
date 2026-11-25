@@ -245,6 +245,42 @@ List<MoreSection> buildMoreSections({
           availability: dashboardBacked(),
           unavailableReason: dashboardReason(),
         ),
+        MoreEntry(
+          id: 'host-operations',
+          title: 'Host',
+          subtitle: 'Remote logs, health, maintenance and update',
+          icon: Icons.monitor_heart_outlined,
+          availability: workspaceAvailable
+              ? MoreEntryAvailability.available
+              : MoreEntryAvailability.unavailable,
+          unavailableReason: workspaceAvailable
+              ? null
+              : l10n.desktop_gateway_is_not_configured_for_this_connection,
+        ),
+        MoreEntry(
+          id: 'schedule-desk',
+          title: 'Schedules',
+          subtitle: 'All profiles, blueprints, catch-up and stop',
+          icon: Icons.event_note_outlined,
+          availability: workspaceAvailable
+              ? MoreEntryAvailability.available
+              : MoreEntryAvailability.unavailable,
+          unavailableReason: workspaceAvailable
+              ? null
+              : l10n.desktop_gateway_is_not_configured_for_this_connection,
+        ),
+        MoreEntry(
+          id: 'memory-graph',
+          title: 'Memory graph',
+          subtitle: 'Timeline, edits and memory providers',
+          icon: Icons.hub_outlined,
+          availability: workspaceAvailable
+              ? MoreEntryAvailability.available
+              : MoreEntryAvailability.unavailable,
+          unavailableReason: workspaceAvailable
+              ? null
+              : l10n.desktop_gateway_is_not_configured_for_this_connection,
+        ),
       ],
     ),
     MoreSection(

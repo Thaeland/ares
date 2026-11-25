@@ -32,6 +32,7 @@ export '../models/connection.dart';
 export '../models/session.dart';
 
 part 'profile_dashboard_transport.dart';
+part 'host_dashboard_transport.dart';
 
 /// Injectable secret storage boundary used by [ConnectionManager].
 ///
@@ -2918,7 +2919,7 @@ class DashboardClient {
     webappDirection: webappDirection,
     makeWebappPrimary: makeWebappPrimary,
     startFleetUpdate: startFleetUpdate,
-    beforeSend: beforeSend,
+    beforeSend: beforeSend == null ? null : () async => beforeSend(),
   );
 
   /// Never forward this content to `/fs/write-text`: the old route ignores
@@ -2969,12 +2970,14 @@ class DashboardClient {
     required void Function() check,
     required String method,
     Map<String, Object?>? body,
+    Future<void> Function()? beforeSend,
   }) => _workspaceJson(
     segments,
     query: query,
     check: check,
     profileMethod: method,
     profileBody: body,
+    beforeSend: beforeSend,
   );
 
   /// Posts one named Git mutation. The operation selects the route; callers
@@ -3029,7 +3032,9 @@ class DashboardClient {
     String? webappDirection,
     bool makeWebappPrimary = false,
     bool startFleetUpdate = false,
-    void Function()? beforeSend,
+    // Last admission gate, awaited after every other await and immediately
+    // before the request leaves. It may throw; nothing is sent when it does.
+    Future<void> Function()? beforeSend,
     // Profile administration only: a closed catalogue (ProfileDashboardOp)
     // chooses the method; nothing else may.
     String? profileMethod,
@@ -3157,7 +3162,9 @@ class DashboardClient {
           : '{}';
     }
     check();
-    beforeSend?.call();
+    // Last gate for a host update: nothing is sent when this throws.
+    if (beforeSend != null) await beforeSend();
+    check();
     final response = await _http
         .send(request)
         .timeout(ApiClient.requestTimeout);

@@ -28,6 +28,9 @@ import '../capabilities/capability_pages.dart';
 import 'workspace_profiles_screen.dart';
 import 'fleet_screen.dart';
 import 'workspace_workers_screen.dart';
+import 'host_operations_screen.dart';
+import 'schedule_desk_screen.dart';
+import 'memory_graph_screen.dart';
 import '../services/gateway_turn_application_controller.dart';
 import '../services/gateway_turn_journal.dart';
 import '../services/local_chat_pin_store.dart';
@@ -2330,6 +2333,36 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         _openCapability(entry.id);
       case 'memory':
         _push(MemoryScreen(connection: connection));
+      case 'host-operations':
+        final host = _ownedGateway;
+        if (host == null) return;
+        _push(
+          HostOperationsScreen(
+            owner: host.workspace,
+            route: host.workspace.route(),
+            connection: connection,
+          ),
+        );
+      case 'schedule-desk':
+        final schedules = _ownedGateway;
+        if (schedules == null) return;
+        _push(
+          ScheduleDeskScreen(
+            owner: schedules.workspace,
+            route: schedules.workspace.route(),
+            connection: connection,
+          ),
+        );
+      case 'memory-graph':
+        final memory = _ownedGateway;
+        if (memory == null) return;
+        _push(
+          MemoryGraphScreen(
+            owner: memory.workspace,
+            route: memory.workspace.route(),
+            connection: connection,
+          ),
+        );
       case 'provider-sign-in':
         _push(ProviderOAuthScreen(connection: connection));
       case 'nous-portal':
