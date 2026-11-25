@@ -72,6 +72,13 @@ class NgSessionsModel extends ChangeNotifier {
   List<Session> _browseRows = [];
   Map<String, String> excerpts = {};
 
+  // Only older reads need this overlay. A later physical read can observe a
+  // legitimate unarchive, so start a fresh set with each request generation.
+  Set<String>? _removedDuringRead;
+  bool _removed(Session row) =>
+      _removedDuringRead?.contains(row.id) == true ||
+      _removedDuringRead?.contains(row.lineageRootId) == true;
+
   void _projectSearch(Iterable<SessionSearchHit> hits) {
     final matches = projectSessionSearch(
       _browseRows,
@@ -255,6 +262,7 @@ class NgSessionsModel extends ChangeNotifier {
 
   Future<void> _refreshOnce() async {
     final generation = ++_generation;
+    _removedDuringRead = {};
     final api = scope.gateway.api;
     final browsingCrons = _browsingCrons;
     loading = true;
@@ -267,10 +275,11 @@ class NgSessionsModel extends ChangeNotifier {
         if (generation != _generation) return;
         _projectSearch([
           for (final row in page.sessions)
-            SessionSearchHit(
-              session: row,
-              snippet: page.searchExcerpts[row.id] ?? '',
-            ),
+            if (!_removed(row))
+              SessionSearchHit(
+                session: row,
+                snippet: page.searchExcerpts[row.id] ?? '',
+              ),
         ]);
         _serverOffset = 0;
         hasMore = false;
@@ -311,7 +320,7 @@ class NgSessionsModel extends ChangeNotifier {
           if (visible >= _targetChats) break;
         }
         if (generation != _generation) return;
-        _browseRows = sessions = collected;
+        _browseRows = sessions = collected.where((s) => !_removed(s)).toList();
         _serverOffset = offset;
         hasMore = more;
       }
@@ -325,6 +334,7 @@ class NgSessionsModel extends ChangeNotifier {
       }
     } catch (e) {
       if (generation != _generation) return;
+      if (query.isNotEmpty) _projectSearch(const []);
       error = query.isEmpty
           ? '$e'.replaceFirst('Exception: ', '')
           : e is SessionSearchException
@@ -332,6 +342,7 @@ class NgSessionsModel extends ChangeNotifier {
           : 'Message search unavailable. Showing local matches.';
     } finally {
       if (generation == _generation) {
+        _removedDuringRead = null;
         loading = false;
         notifyListeners();
       }
@@ -341,6 +352,7 @@ class NgSessionsModel extends ChangeNotifier {
   Future<void> loadMore() async {
     if (loading || !hasMore || query.isNotEmpty) return;
     final generation = _generation;
+    _removedDuringRead = {};
     loading = true;
     notifyListeners();
     try {
@@ -364,7 +376,7 @@ class NgSessionsModel extends ChangeNotifier {
             addedVisible++;
           }
         }
-        _browseRows = sessions = [...collected];
+        _browseRows = sessions = collected.where((s) => !_removed(s)).toList();
         hasMore = page.sessions.isNotEmpty && page.hasMore;
         if (!hasMore || addedVisible >= _targetChats) break;
       }
@@ -373,6 +385,7 @@ class NgSessionsModel extends ChangeNotifier {
       hasMore = false;
     } finally {
       if (generation == _generation) {
+        _removedDuringRead = null;
         loading = false;
         notifyListeners();
       }
@@ -416,6 +429,15 @@ class NgSessionsModel extends ChangeNotifier {
   }
 
   void remove(String id) {
+    final removed = _removedDuringRead;
+    if (removed != null) {
+      removed.add(id);
+      for (final row in [...sessions, ..._browseRows]) {
+        if (row.id == id && row.lineageRootId != null)
+          removed.add(row.lineageRootId!);
+      }
+    }
+    excerpts.remove(id);
     _browseRows.removeWhere((s) => s.id == id);
     sessions.removeWhere((s) => s.id == id);
     notifyListeners();

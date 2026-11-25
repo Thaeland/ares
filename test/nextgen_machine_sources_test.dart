@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hermes_android/core/services/session_search_client.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
@@ -60,6 +61,15 @@ class _Fixture {
             },
           );
         }
+        if (request.url.path == '/hermes/api/sessions/buried') {
+          if (request.method == 'PATCH') {
+            archived = true;
+            return _json({});
+          }
+          return _json({
+            'session': {'id': 'buried', 'archived': archived},
+          });
+        }
         if (request.url.path == '/hermes/api/config') {
           if (heldConfig != null) return heldConfig!.future;
           return configStatus == 200
@@ -111,6 +121,7 @@ class _Fixture {
   Completer<http.Response>? heldConfig;
   List<Map<String, dynamic>> searchRows = [];
   int total = 0;
+  bool archived = false;
   late final SavedConnection connection;
   late final DashboardClient dashboard;
   late final NextGenGateway gateway;
@@ -169,6 +180,72 @@ Future<_Fixture> _fixture({
 }
 
 void main() {
+  testWidgets('same-query refresh must drop FTS-only rows on fallback', (
+    t,
+  ) async {
+    final f = await _fixture();
+    f.pages[0] = [_row('local')];
+    await f.model.refresh();
+    await t.pumpWidget(f.widget);
+    f.searchRows = [
+      {
+        'session_id': 'buried',
+        'title': 'Remote only',
+        'snippet': 'private excerpt',
+      },
+    ];
+    await t.enterText(find.byKey(const Key('ng-session-search')), 'local');
+    await t.pump(const Duration(milliseconds: 350));
+    await t.pumpAndSettle();
+    expect(find.text('private excerpt'), findsOneWidget);
+    final unavailable = f.heldSearch = Completer();
+    final refresh = f.model.refresh();
+    await t.pump();
+    unavailable.completeError(http.ClientException('fixture offline'));
+    await refresh;
+    await t.pump();
+    expect(f.model.error, contains('Showing local matches'));
+    expect(find.text('Row local'), findsOneWidget);
+    expect(find.text('private excerpt'), findsNothing);
+  });
+  testWidgets('archive read-back wins over older held search', (t) async {
+    final f = await _fixture();
+    await f.model.refresh();
+    await t.pumpWidget(f.widget);
+    f.searchRows = [
+      {
+        'session_id': 'buried',
+        'title': 'Remote only',
+        'snippet': 'content excerpt',
+      },
+    ];
+    await t.enterText(find.byKey(const Key('ng-session-search')), 'content');
+    await t.pump(const Duration(milliseconds: 350));
+    await t.pumpAndSettle();
+    await t.testTextInput.receiveAction(TextInputAction.done);
+    await t.pumpAndSettle();
+    expect(find.text('content excerpt'), findsOneWidget);
+    final held = f.heldSearch = Completer();
+    final old = f.model.refresh();
+    await t.pump();
+    expect(f.requests.where((r) => r.url.path.endsWith('/search')).length, 2);
+    await t.longPress(find.text('Remote only'));
+    await t.pump();
+    await t.pump(const Duration(milliseconds: 350));
+    await t.tap(find.widgetWithText(ListTile, 'Archive'));
+    await t.pump();
+    await t.pump(const Duration(milliseconds: 350));
+    await t.pump();
+    expect(f.archived, true);
+    expect(f.model.sessions, isEmpty);
+    expect(f.model.loading, true);
+    expect(f.model.error, isNull);
+    held.complete(_json({'results': f.searchRows}));
+    await old;
+    await t.pumpAndSettle();
+    expect(find.text('Remote only'), findsNothing);
+  });
+
   testWidgets(
     'NextGen organises known usage below pins and can show row metadata',
     (tester) async {
