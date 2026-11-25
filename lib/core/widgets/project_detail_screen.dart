@@ -29,6 +29,7 @@ import '../services/projects_repository.dart';
 import '../services/remote_files_client.dart';
 import '../services/remote_workspace.dart';
 import 'project_settings_view.dart';
+import 'git_review_pane.dart';
 import '../theme/hermes_theme.dart';
 import '../utils/project_session_filter.dart';
 import '../utils/relative_time.dart';
@@ -706,6 +707,24 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   repo: repo,
                   onOpen: widget.onOpenSession,
                   onNew: view.isStale ? null : widget.onNewLaneChat,
+                  onReview: widget.workspace == null
+                      ? null
+                      : (session, path) {
+                          final owner = widget.workspace!;
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (routeContext) => GitReviewPane(
+                                owner: owner,
+                                route: owner.route(storedSessionId: session.id),
+                                expectedCwd:
+                                    path != null && isSafeWorkspacePath(path)
+                                    ? path
+                                    : null,
+                                onClose: () => Navigator.pop(routeContext),
+                              ),
+                            ),
+                          );
+                        },
                 ),
               ),
           ],
@@ -1021,10 +1040,12 @@ class _RepoCard extends StatelessWidget {
 
   final ValueChanged<Session>? onOpen;
   final ValueChanged<String>? onNew;
+  final void Function(Session session, String? path)? onReview;
   const _RepoCard({
     required this.repo,
     required this.onOpen,
     required this.onNew,
+    required this.onReview,
   });
 
   @override
@@ -1076,6 +1097,13 @@ class _RepoCard extends StatelessWidget {
                         leading: const Icon(Icons.add_comment_outlined),
                         title: const Text('New chat in this lane'),
                         onTap: () => onNew!(lane.path!),
+                      ),
+                    if (onReview != null && lane.sessions.isNotEmpty)
+                      ListTile(
+                        key: Key('review-git-${lane.id}'),
+                        leading: const Icon(Icons.difference_outlined),
+                        title: const Text('Review Git'),
+                        onTap: () => onReview!(lane.sessions.first, lane.path),
                       ),
                     for (final session in lane.sessions)
                       ListTile(

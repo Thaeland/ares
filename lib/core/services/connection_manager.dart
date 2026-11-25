@@ -2867,12 +2867,58 @@ class DashboardClient {
     },
   );
 
+  /// Posts one named Git mutation. The operation selects the route; callers
+  /// cannot supply a URL, a git executable or an argument vector.
+  Future<Object?> workspaceGitPost({
+    required String operation,
+    required Map<String, Object?> body,
+    required String? profile,
+    required void Function() check,
+  }) {
+    const allowed = <String, Set<String>>{
+      'review/stage': {'path', 'file'},
+      'review/unstage': {'path', 'file'},
+      'review/revert': {'path', 'file'},
+      'review/commit': {'path', 'message', 'push'},
+      'review/push': {'path'},
+      'review/create-pr': {'path'},
+      'worktree/add': {'path', 'name', 'branch', 'base', 'existingBranch'},
+      'worktree/remove': {'path', 'worktreePath', 'force'},
+      'branch/switch': {'path', 'branch'},
+    };
+    final fields = allowed[operation];
+    final segments = operation.split('/');
+    if (fields == null ||
+        segments.length < 2 ||
+        body['path'] is! String ||
+        (body['path'] as String).isEmpty ||
+        body.keys.any((key) => !fields.contains(key)) ||
+        segments.any(
+          (segment) =>
+              segment.isEmpty ||
+              segment == '.' ||
+              segment == '..' ||
+              RegExp(r'[/\\%?#\x00-\x1f]').hasMatch(segment),
+        )) {
+      throw const FormatException('Unsupported git operation');
+    }
+    return _workspaceJson(
+      ['git', ...segments],
+      query: {'profile': ?profile},
+      check: check,
+      gitPost: {
+        for (final entry in body.entries) entry.key: ?entry.value,
+      },
+    );
+  }
+
   Future<Object?> _workspaceJson(
     List<String> segments, {
     required Map<String, String> query,
     required void Function() check,
     bool mintHostTerminalTicket = false,
     Map<String, String>? fileReplacement,
+    Map<String, Object>? gitPost,
   }) async {
     if (segments.isEmpty ||
         segments.any(
@@ -2889,6 +2935,12 @@ class DashboardClient {
             query['socket'] != 'host-terminal')) {
       throw const FormatException('Invalid ticket route');
     }
+    if ((mintHostTerminalTicket ? 1 : 0) +
+            (fileReplacement != null ? 1 : 0) +
+            (gitPost != null ? 1 : 0) >
+        1) {
+      throw const FormatException('Invalid workspace route');
+    }
     check();
     final base = Uri.parse(_baseUrl);
     final uri = base.replace(
@@ -2900,13 +2952,15 @@ class DashboardClient {
       queryParameters: query.isEmpty ? null : query,
     );
     final request = http.Request(
-      mintHostTerminalTicket || fileReplacement != null ? 'POST' : 'GET',
+      mintHostTerminalTicket || fileReplacement != null || gitPost != null
+          ? 'POST'
+          : 'GET',
       uri,
     )..followRedirects = false;
     request.headers.addAll(await _authHeaders());
-    if (fileReplacement != null) {
+    if (fileReplacement != null || gitPost != null) {
       request.headers['Content-Type'] = 'application/json';
-      request.bodyBytes = utf8.encode(jsonEncode(fileReplacement));
+      request.bodyBytes = utf8.encode(jsonEncode(fileReplacement ?? gitPost));
     }
     check();
     final response = await _http
