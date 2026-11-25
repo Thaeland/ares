@@ -411,6 +411,28 @@ class _CatalogInstallCardState extends State<CatalogInstallCard> {
     };
   }
 
+  /// The host's scan verdict in the app language (Desktop's
+  /// catalogInstall.scan); a verdict this build does not know is shown as
+  /// the host wrote it.
+  String _scanStatus(String status) {
+    final l = context.sharedL10n;
+    return switch (status) {
+      'passed' => l.catalog_scan_passed,
+      'warnings' => l.catalog_scan_warnings,
+      'failed' => l.catalog_scan_failed,
+      _ => status,
+    };
+  }
+
+  /// A platform as people write it (Desktop's platformName).
+  static String _platformName(String platform) =>
+      switch (platform.toLowerCase()) {
+        'darwin' || 'macos' => 'macOS',
+        'linux' => 'Linux',
+        'windows' => 'Windows',
+        _ => platform,
+      };
+
   /// The host's install step, worded; null for a step this build does not
   /// know.
   String? _phase(CatalogRow row) {
@@ -468,7 +490,7 @@ class _CatalogInstallCardState extends State<CatalogInstallCard> {
               for (final platform in row.platforms)
                 Chip(
                   visualDensity: VisualDensity.compact,
-                  label: Text(platform),
+                  label: Text(_platformName(platform)),
                 ),
             ],
           ),
@@ -485,7 +507,10 @@ class _CatalogInstallCardState extends State<CatalogInstallCard> {
             ),
           if (row.scanStatus != null)
             Text(
-              l.catalog_scan(row.scanStatus!, row.scanSummary ?? ''),
+              l.catalog_scan(
+                _scanStatus(row.scanStatus!),
+                row.scanSummary ?? '',
+              ),
               key: Key('catalog-scan-${row.name}'),
               style: small,
             ),

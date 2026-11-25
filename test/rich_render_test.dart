@@ -302,7 +302,8 @@ void main() {
     expect(find.text('Sent to this chat'), findsOneWidget);
     await tester.tap(find.text('Go'));
     await tester.pump();
-    expect(find.text('throttled'), findsOneWidget);
+    // The refusal code `throttled`, worded.
+    expect(find.text('Wait a moment before sending again'), findsOneWidget);
     expect(prompts, ['continue please']);
   });
 

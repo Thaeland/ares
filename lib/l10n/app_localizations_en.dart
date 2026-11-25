@@ -6304,4 +6304,127 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get render_svg_not_drawn => 'This SVG was not drawn.';
+
+  @override
+  String get render_notes_directive => 'Notes directive';
+
+  @override
+  String get render_maths_source => 'Maths source';
+
+  @override
+  String get render_inline_maths_source => 'Inline maths source';
+
+  @override
+  String get render_sequence_outline => 'Sequence outline';
+
+  @override
+  String get render_diagram_outline => 'Diagram outline';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return 'Revision $index of $count';
+  }
+
+  @override
+  String get render_previous_revision => 'Previous revision';
+
+  @override
+  String get render_next_revision => 'Next revision';
+
+  @override
+  String get render_show_rendered => 'Rendered';
+
+  @override
+  String get render_show_source => 'Source';
+
+  @override
+  String render_copied_file(String name) {
+    return 'Copied $name';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return 'Copy $name';
+  }
+
+  @override
+  String get render_artifact_too_long =>
+      'This artefact is too long to show as a page here.';
+
+  @override
+  String get render_active_content_removed =>
+      'Scripts, frames and external addresses were removed.';
+
+  @override
+  String render_widget_file(String file) {
+    return 'Widget $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      'Runs as text in this chat. Scripts and external frames are removed.';
+
+  @override
+  String get render_load_widget => 'Load widget';
+
+  @override
+  String get render_not_html_widget => 'This file is not an HTML widget.';
+
+  @override
+  String get render_widget_sent => 'Sent to this chat';
+
+  @override
+  String get render_widget_not_sent => 'Not sent to this chat';
+
+  @override
+  String get render_widget_throttled => 'Wait a moment before sending again';
+
+  @override
+  String get render_widget_too_long => 'This request is too long to send';
+
+  @override
+  String get render_widget_no_gesture => 'Tap a control in the widget to send';
+
+  @override
+  String get render_widget_invalid => 'This request could not be sent';
+
+  @override
+  String get render_inspected_image => 'Inspected image';
+
+  @override
+  String get render_contributions => 'Contributions';
+
+  @override
+  String get render_contributions_intro =>
+      'Only contributions compiled into Ares can add to a reply. Chat text cannot register one, and a grant applies to this connection only.';
+
+  @override
+  String render_grant_plugin(String name) {
+    return 'Grant $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return 'Revoke $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return 'reply cards for ::$directive';
+  }
+
+  @override
+  String get render_plugin_notes => 'Notes';
+
+  @override
+  String get catalog_scan_passed => 'passed';
+
+  @override
+  String get catalog_scan_warnings => 'found warnings';
+
+  @override
+  String get catalog_scan_failed => 'failed';
 }

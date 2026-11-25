@@ -6164,4 +6164,125 @@ class AppLocalizationsJa extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get render_svg_not_drawn => 'この SVG は描画されませんでした。';
+
+  @override
+  String get render_notes_directive => 'メモ ディレクティブ';
+
+  @override
+  String get render_maths_source => '数式のソース';
+
+  @override
+  String get render_inline_maths_source => 'インライン数式のソース';
+
+  @override
+  String get render_sequence_outline => 'シーケンスの概要';
+
+  @override
+  String get render_diagram_outline => '図の概要';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return 'リビジョン $index/$count';
+  }
+
+  @override
+  String get render_previous_revision => '前のリビジョン';
+
+  @override
+  String get render_next_revision => '次のリビジョン';
+
+  @override
+  String get render_show_rendered => '表示';
+
+  @override
+  String get render_show_source => 'ソース';
+
+  @override
+  String render_copied_file(String name) {
+    return '$name をコピーしました';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return '$name をコピー';
+  }
+
+  @override
+  String get render_artifact_too_long => 'この成果物は長すぎるため、ここではページとして表示できません。';
+
+  @override
+  String get render_active_content_removed => 'スクリプト、フレーム、外部アドレスは削除されました。';
+
+  @override
+  String render_widget_file(String file) {
+    return 'ウィジェット $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      'このチャットではテキストとして動作します。スクリプトと外部フレームは削除されます。';
+
+  @override
+  String get render_load_widget => 'ウィジェットを読み込む';
+
+  @override
+  String get render_not_html_widget => 'このファイルは HTML ウィジェットではありません。';
+
+  @override
+  String get render_widget_sent => 'このチャットに送信しました';
+
+  @override
+  String get render_widget_not_sent => 'このチャットに送信されませんでした';
+
+  @override
+  String get render_widget_throttled => '少し待ってからもう一度送信してください';
+
+  @override
+  String get render_widget_too_long => 'このリクエストは長すぎるため送信できません';
+
+  @override
+  String get render_widget_no_gesture => '送信するにはウィジェット内のコントロールをタップしてください';
+
+  @override
+  String get render_widget_invalid => 'このリクエストを送信できませんでした';
+
+  @override
+  String get render_inspected_image => '確認した画像';
+
+  @override
+  String get render_contributions => 'コントリビューション';
+
+  @override
+  String get render_contributions_intro =>
+      '返信に追加できるのは Ares に組み込まれたコントリビューションだけです。チャットのテキストからは登録できず、許可はこの接続にのみ適用されます。';
+
+  @override
+  String render_grant_plugin(String name) {
+    return '$name を許可';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return '$name の許可を取り消す';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return '::$directive の返信カード';
+  }
+
+  @override
+  String get render_plugin_notes => 'メモ';
+
+  @override
+  String get catalog_scan_passed => '合格';
+
+  @override
+  String get catalog_scan_warnings => '警告あり';
+
+  @override
+  String get catalog_scan_failed => '不合格';
 }

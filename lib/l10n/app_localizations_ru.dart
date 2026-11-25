@@ -6354,4 +6354,130 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get render_svg_not_drawn => 'Этот SVG не отрисован.';
+
+  @override
+  String get render_notes_directive => 'Директива заметок';
+
+  @override
+  String get render_maths_source => 'Исходный текст формулы';
+
+  @override
+  String get render_inline_maths_source => 'Исходный текст встроенной формулы';
+
+  @override
+  String get render_sequence_outline => 'Схема последовательности';
+
+  @override
+  String get render_diagram_outline => 'Схема диаграммы';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return 'Версия $index из $count';
+  }
+
+  @override
+  String get render_previous_revision => 'Предыдущая версия';
+
+  @override
+  String get render_next_revision => 'Следующая версия';
+
+  @override
+  String get render_show_rendered => 'Отображение';
+
+  @override
+  String get render_show_source => 'Исходный код';
+
+  @override
+  String render_copied_file(String name) {
+    return '$name скопирован';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return 'Копировать $name';
+  }
+
+  @override
+  String get render_artifact_too_long =>
+      'Этот артефакт слишком длинный, чтобы показать его здесь как страницу.';
+
+  @override
+  String get render_active_content_removed =>
+      'Скрипты, фреймы и внешние адреса удалены.';
+
+  @override
+  String render_widget_file(String file) {
+    return 'Виджет $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      'Работает как текст в этом чате. Скрипты и внешние фреймы удаляются.';
+
+  @override
+  String get render_load_widget => 'Загрузить виджет';
+
+  @override
+  String get render_not_html_widget => 'Этот файл не является HTML-виджетом.';
+
+  @override
+  String get render_widget_sent => 'Отправлено в этот чат';
+
+  @override
+  String get render_widget_not_sent => 'Не отправлено в этот чат';
+
+  @override
+  String get render_widget_throttled =>
+      'Подождите немного перед повторной отправкой';
+
+  @override
+  String get render_widget_too_long =>
+      'Этот запрос слишком длинный для отправки';
+
+  @override
+  String get render_widget_no_gesture =>
+      'Чтобы отправить, нажмите элемент управления в виджете';
+
+  @override
+  String get render_widget_invalid => 'Не удалось отправить этот запрос';
+
+  @override
+  String get render_inspected_image => 'Просмотренное изображение';
+
+  @override
+  String get render_contributions => 'Дополнения';
+
+  @override
+  String get render_contributions_intro =>
+      'Дополнять ответ могут только дополнения, встроенные в Ares. Текст чата не может их зарегистрировать, а разрешение действует только для этого подключения.';
+
+  @override
+  String render_grant_plugin(String name) {
+    return 'Разрешить $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return 'Отозвать $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return 'карточки ответа для ::$directive';
+  }
+
+  @override
+  String get render_plugin_notes => 'Заметки';
+
+  @override
+  String get catalog_scan_passed => 'пройдена';
+
+  @override
+  String get catalog_scan_warnings => 'найдены предупреждения';
+
+  @override
+  String get catalog_scan_failed => 'не пройдена';
 }

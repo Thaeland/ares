@@ -6169,4 +6169,125 @@ class AppLocalizationsKo extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get render_svg_not_drawn => '이 SVG는 그려지지 않았습니다.';
+
+  @override
+  String get render_notes_directive => '메모 지시문';
+
+  @override
+  String get render_maths_source => '수식 원문';
+
+  @override
+  String get render_inline_maths_source => '인라인 수식 원문';
+
+  @override
+  String get render_sequence_outline => '시퀀스 개요';
+
+  @override
+  String get render_diagram_outline => '다이어그램 개요';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return '리비전 $index/$count';
+  }
+
+  @override
+  String get render_previous_revision => '이전 리비전';
+
+  @override
+  String get render_next_revision => '다음 리비전';
+
+  @override
+  String get render_show_rendered => '렌더링';
+
+  @override
+  String get render_show_source => '소스';
+
+  @override
+  String render_copied_file(String name) {
+    return '$name을(를) 복사했습니다';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return '$name 복사';
+  }
+
+  @override
+  String get render_artifact_too_long => '이 결과물은 너무 길어 여기서 페이지로 표시할 수 없습니다.';
+
+  @override
+  String get render_active_content_removed => '스크립트, 프레임, 외부 주소가 제거되었습니다.';
+
+  @override
+  String render_widget_file(String file) {
+    return '위젯 $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      '이 채팅에서 텍스트로 실행됩니다. 스크립트와 외부 프레임은 제거됩니다.';
+
+  @override
+  String get render_load_widget => '위젯 불러오기';
+
+  @override
+  String get render_not_html_widget => '이 파일은 HTML 위젯이 아닙니다.';
+
+  @override
+  String get render_widget_sent => '이 채팅으로 보냈습니다';
+
+  @override
+  String get render_widget_not_sent => '이 채팅으로 보내지 않았습니다';
+
+  @override
+  String get render_widget_throttled => '잠시 후 다시 보내세요';
+
+  @override
+  String get render_widget_too_long => '이 요청은 너무 길어 보낼 수 없습니다';
+
+  @override
+  String get render_widget_no_gesture => '보내려면 위젯의 컨트롤을 탭하세요';
+
+  @override
+  String get render_widget_invalid => '이 요청을 보낼 수 없습니다';
+
+  @override
+  String get render_inspected_image => '검사한 이미지';
+
+  @override
+  String get render_contributions => '기여 항목';
+
+  @override
+  String get render_contributions_intro =>
+      'Ares에 포함된 기여 항목만 답장에 내용을 추가할 수 있습니다. 채팅 텍스트로는 등록할 수 없으며, 허용은 이 연결에만 적용됩니다.';
+
+  @override
+  String render_grant_plugin(String name) {
+    return '$name 허용';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return '$name 허용 취소';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return '::$directive 답장 카드';
+  }
+
+  @override
+  String get render_plugin_notes => '메모';
+
+  @override
+  String get catalog_scan_passed => '통과';
+
+  @override
+  String get catalog_scan_warnings => '경고 발견';
+
+  @override
+  String get catalog_scan_failed => '실패';
 }

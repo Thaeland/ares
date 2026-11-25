@@ -6354,6 +6354,132 @@ class AppLocalizationsPt extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get render_svg_not_drawn => 'Este SVG não foi desenhado.';
+
+  @override
+  String get render_notes_directive => 'Diretiva de notas';
+
+  @override
+  String get render_maths_source => 'Fonte da fórmula';
+
+  @override
+  String get render_inline_maths_source => 'Fonte da fórmula em linha';
+
+  @override
+  String get render_sequence_outline => 'Esquema da sequência';
+
+  @override
+  String get render_diagram_outline => 'Esquema do diagrama';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return 'Revisão $index de $count';
+  }
+
+  @override
+  String get render_previous_revision => 'Revisão anterior';
+
+  @override
+  String get render_next_revision => 'Revisão seguinte';
+
+  @override
+  String get render_show_rendered => 'Renderizado';
+
+  @override
+  String get render_show_source => 'Código-fonte';
+
+  @override
+  String render_copied_file(String name) {
+    return '$name copiado';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return 'Copiar $name';
+  }
+
+  @override
+  String get render_artifact_too_long =>
+      'Este artefacto é demasiado longo para ser mostrado aqui como página.';
+
+  @override
+  String get render_active_content_removed =>
+      'Os scripts, frames e endereços externos foram removidos.';
+
+  @override
+  String render_widget_file(String file) {
+    return 'Ficheiro de widget $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      'É executado como texto nesta conversa. Os scripts e frames externos são removidos.';
+
+  @override
+  String get render_load_widget => 'Carregar widget';
+
+  @override
+  String get render_not_html_widget => 'Este ficheiro não é um widget HTML.';
+
+  @override
+  String get render_widget_sent => 'Enviado para esta conversa';
+
+  @override
+  String get render_widget_not_sent => 'Não enviado para esta conversa';
+
+  @override
+  String get render_widget_throttled =>
+      'Aguarde um momento antes de enviar novamente';
+
+  @override
+  String get render_widget_too_long =>
+      'Este pedido é demasiado longo para ser enviado';
+
+  @override
+  String get render_widget_no_gesture =>
+      'Toque num controlo do widget para enviar';
+
+  @override
+  String get render_widget_invalid => 'Não foi possível enviar este pedido';
+
+  @override
+  String get render_inspected_image => 'Imagem inspecionada';
+
+  @override
+  String get render_contributions => 'Contribuições';
+
+  @override
+  String get render_contributions_intro =>
+      'Só as contribuições compiladas no Ares podem acrescentar algo a uma resposta. O texto da conversa não pode registar nenhuma, e uma autorização aplica-se apenas a esta ligação.';
+
+  @override
+  String render_grant_plugin(String name) {
+    return 'Permitir $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return 'Revogar $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return 'cartões de resposta para ::$directive';
+  }
+
+  @override
+  String get render_plugin_notes => 'Notas';
+
+  @override
+  String get catalog_scan_passed => 'aprovado';
+
+  @override
+  String get catalog_scan_warnings => 'encontrou avisos';
+
+  @override
+  String get catalog_scan_failed => 'falhou';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -12470,4 +12596,131 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
     );
     return '$_temp0';
   }
+
+  @override
+  String get render_svg_not_drawn => 'Este SVG não foi desenhado.';
+
+  @override
+  String get render_notes_directive => 'Diretiva de notas';
+
+  @override
+  String get render_maths_source => 'Fonte da fórmula';
+
+  @override
+  String get render_inline_maths_source => 'Fonte da fórmula inline';
+
+  @override
+  String get render_sequence_outline => 'Esquema da sequência';
+
+  @override
+  String get render_diagram_outline => 'Esquema do diagrama';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return 'Revisão $index de $count';
+  }
+
+  @override
+  String get render_previous_revision => 'Revisão anterior';
+
+  @override
+  String get render_next_revision => 'Próxima revisão';
+
+  @override
+  String get render_show_rendered => 'Renderizado';
+
+  @override
+  String get render_show_source => 'Código-fonte';
+
+  @override
+  String render_copied_file(String name) {
+    return '$name copiado';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return 'Copiar $name';
+  }
+
+  @override
+  String get render_artifact_too_long =>
+      'Este artefato é longo demais para ser exibido aqui como página.';
+
+  @override
+  String get render_active_content_removed =>
+      'Os scripts, frames e endereços externos foram removidos.';
+
+  @override
+  String render_widget_file(String file) {
+    return 'Arquivo de widget $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      'É executado como texto neste chat. Scripts e frames externos são removidos.';
+
+  @override
+  String get render_load_widget => 'Carregar widget';
+
+  @override
+  String get render_not_html_widget => 'Este arquivo não é um widget HTML.';
+
+  @override
+  String get render_widget_sent => 'Enviado para este chat';
+
+  @override
+  String get render_widget_not_sent => 'Não enviado para este chat';
+
+  @override
+  String get render_widget_throttled =>
+      'Aguarde um momento antes de enviar novamente';
+
+  @override
+  String get render_widget_too_long =>
+      'Esta solicitação é longa demais para ser enviada';
+
+  @override
+  String get render_widget_no_gesture =>
+      'Toque em um controle do widget para enviar';
+
+  @override
+  String get render_widget_invalid =>
+      'Não foi possível enviar esta solicitação';
+
+  @override
+  String get render_inspected_image => 'Imagem inspecionada';
+
+  @override
+  String get render_contributions => 'Contribuições';
+
+  @override
+  String get render_contributions_intro =>
+      'Somente contribuições compiladas no Ares podem acrescentar algo a uma resposta. O texto do chat não pode registrar nenhuma, e uma permissão vale apenas para esta conexão.';
+
+  @override
+  String render_grant_plugin(String name) {
+    return 'Permitir $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return 'Revogar $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return 'cartões de resposta para ::$directive';
+  }
+
+  @override
+  String get render_plugin_notes => 'Notas';
+
+  @override
+  String get catalog_scan_passed => 'aprovado';
+
+  @override
+  String get catalog_scan_warnings => 'encontrou avisos';
+
+  @override
+  String get catalog_scan_failed => 'falhou';
 }

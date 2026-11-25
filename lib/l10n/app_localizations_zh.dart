@@ -6075,6 +6075,126 @@ class AppLocalizationsZh extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get render_svg_not_drawn => '此 SVG 未绘制。';
+
+  @override
+  String get render_notes_directive => '笔记指令';
+
+  @override
+  String get render_maths_source => '数学公式源码';
+
+  @override
+  String get render_inline_maths_source => '行内数学公式源码';
+
+  @override
+  String get render_sequence_outline => '时序图大纲';
+
+  @override
+  String get render_diagram_outline => '图表大纲';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return '修订版 $index/$count';
+  }
+
+  @override
+  String get render_previous_revision => '上一修订版';
+
+  @override
+  String get render_next_revision => '下一修订版';
+
+  @override
+  String get render_show_rendered => '渲染视图';
+
+  @override
+  String get render_show_source => '源码';
+
+  @override
+  String render_copied_file(String name) {
+    return '已复制 $name';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return '复制 $name';
+  }
+
+  @override
+  String get render_artifact_too_long => '此产物太长，无法在此处以页面显示。';
+
+  @override
+  String get render_active_content_removed => '已移除脚本、框架和外部地址。';
+
+  @override
+  String render_widget_file(String file) {
+    return '小组件 $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text => '在此聊天中以文本形式运行。脚本和外部框架会被移除。';
+
+  @override
+  String get render_load_widget => '加载小组件';
+
+  @override
+  String get render_not_html_widget => '此文件不是 HTML 小组件。';
+
+  @override
+  String get render_widget_sent => '已发送到此聊天';
+
+  @override
+  String get render_widget_not_sent => '未发送到此聊天';
+
+  @override
+  String get render_widget_throttled => '请稍候再发送';
+
+  @override
+  String get render_widget_too_long => '此请求太长，无法发送';
+
+  @override
+  String get render_widget_no_gesture => '点按小组件中的控件以发送';
+
+  @override
+  String get render_widget_invalid => '无法发送此请求';
+
+  @override
+  String get render_inspected_image => '已检查的图片';
+
+  @override
+  String get render_contributions => '扩展项';
+
+  @override
+  String get render_contributions_intro =>
+      '只有内置在 Ares 中的扩展项才能为回复添加内容。聊天文本无法注册扩展项，授权仅适用于此连接。';
+
+  @override
+  String render_grant_plugin(String name) {
+    return '授权 $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return '撤销 $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return '::$directive 的回复卡片';
+  }
+
+  @override
+  String get render_plugin_notes => '笔记';
+
+  @override
+  String get catalog_scan_passed => '已通过';
+
+  @override
+  String get catalog_scan_warnings => '发现警告';
+
+  @override
+  String get catalog_scan_failed => '未通过';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -11918,4 +12038,124 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
     );
     return '$_temp0';
   }
+
+  @override
+  String get render_svg_not_drawn => '此 SVG 未绘制。';
+
+  @override
+  String get render_notes_directive => '笔记指令';
+
+  @override
+  String get render_maths_source => '数学公式源码';
+
+  @override
+  String get render_inline_maths_source => '行内数学公式源码';
+
+  @override
+  String get render_sequence_outline => '时序图大纲';
+
+  @override
+  String get render_diagram_outline => '图表大纲';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return '修订版 $index/$count';
+  }
+
+  @override
+  String get render_previous_revision => '上一修订版';
+
+  @override
+  String get render_next_revision => '下一修订版';
+
+  @override
+  String get render_show_rendered => '渲染视图';
+
+  @override
+  String get render_show_source => '源码';
+
+  @override
+  String render_copied_file(String name) {
+    return '已复制 $name';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return '复制 $name';
+  }
+
+  @override
+  String get render_artifact_too_long => '此产物太长，无法在此处以页面显示。';
+
+  @override
+  String get render_active_content_removed => '已移除脚本、框架和外部地址。';
+
+  @override
+  String render_widget_file(String file) {
+    return '小组件 $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text => '在此聊天中以文本形式运行。脚本和外部框架会被移除。';
+
+  @override
+  String get render_load_widget => '加载小组件';
+
+  @override
+  String get render_not_html_widget => '此文件不是 HTML 小组件。';
+
+  @override
+  String get render_widget_sent => '已发送到此聊天';
+
+  @override
+  String get render_widget_not_sent => '未发送到此聊天';
+
+  @override
+  String get render_widget_throttled => '请稍候再发送';
+
+  @override
+  String get render_widget_too_long => '此请求太长，无法发送';
+
+  @override
+  String get render_widget_no_gesture => '点按小组件中的控件以发送';
+
+  @override
+  String get render_widget_invalid => '无法发送此请求';
+
+  @override
+  String get render_inspected_image => '已检查的图片';
+
+  @override
+  String get render_contributions => '扩展项';
+
+  @override
+  String get render_contributions_intro =>
+      '只有内置在 Ares 中的扩展项才能为回复添加内容。聊天文本无法注册扩展项，授权仅适用于此连接。';
+
+  @override
+  String render_grant_plugin(String name) {
+    return '授权 $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return '撤销 $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return '::$directive 的回复卡片';
+  }
+
+  @override
+  String get render_plugin_notes => '笔记';
+
+  @override
+  String get catalog_scan_passed => '已通过';
+
+  @override
+  String get catalog_scan_warnings => '发现警告';
+
+  @override
+  String get catalog_scan_failed => '未通过';
 }

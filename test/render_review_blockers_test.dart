@@ -499,7 +499,8 @@ void main() {
       await tester.pump();
       await tester.pump();
       expect(gateway.submits, isEmpty);
-      expect(find.text('undelivered'), findsOneWidget);
+      // The refusal code `undelivered`, worded.
+      expect(find.text('Not sent to this chat'), findsOneWidget);
       await tester.pumpWidget(const SizedBox());
     });
   });

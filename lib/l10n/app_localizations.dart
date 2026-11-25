@@ -10607,6 +10607,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 tool} other{{count} tools}}'**
   String catalog_tool_count(int count);
+
+  /// No description provided for @render_svg_not_drawn.
+  ///
+  /// In en, this message translates to:
+  /// **'This SVG was not drawn.'**
+  String get render_svg_not_drawn;
+
+  /// No description provided for @render_notes_directive.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes directive'**
+  String get render_notes_directive;
+
+  /// No description provided for @render_maths_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Maths source'**
+  String get render_maths_source;
+
+  /// No description provided for @render_inline_maths_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Inline maths source'**
+  String get render_inline_maths_source;
+
+  /// No description provided for @render_sequence_outline.
+  ///
+  /// In en, this message translates to:
+  /// **'Sequence outline'**
+  String get render_sequence_outline;
+
+  /// No description provided for @render_diagram_outline.
+  ///
+  /// In en, this message translates to:
+  /// **'Diagram outline'**
+  String get render_diagram_outline;
+
+  /// No description provided for @render_revision_of.
+  ///
+  /// In en, this message translates to:
+  /// **'Revision {index} of {count}'**
+  String render_revision_of(int index, int count);
+
+  /// No description provided for @render_previous_revision.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous revision'**
+  String get render_previous_revision;
+
+  /// No description provided for @render_next_revision.
+  ///
+  /// In en, this message translates to:
+  /// **'Next revision'**
+  String get render_next_revision;
+
+  /// No description provided for @render_show_rendered.
+  ///
+  /// In en, this message translates to:
+  /// **'Rendered'**
+  String get render_show_rendered;
+
+  /// No description provided for @render_show_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get render_show_source;
+
+  /// No description provided for @render_copied_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {name}'**
+  String render_copied_file(String name);
+
+  /// No description provided for @render_copy_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy {name}'**
+  String render_copy_file(String name);
+
+  /// No description provided for @render_artifact_too_long.
+  ///
+  /// In en, this message translates to:
+  /// **'This artefact is too long to show as a page here.'**
+  String get render_artifact_too_long;
+
+  /// No description provided for @render_active_content_removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Scripts, frames and external addresses were removed.'**
+  String get render_active_content_removed;
+
+  /// No description provided for @render_widget_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Widget {file}'**
+  String render_widget_file(String file);
+
+  /// No description provided for @render_widget_runs_as_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs as text in this chat. Scripts and external frames are removed.'**
+  String get render_widget_runs_as_text;
+
+  /// No description provided for @render_load_widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Load widget'**
+  String get render_load_widget;
+
+  /// No description provided for @render_not_html_widget.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is not an HTML widget.'**
+  String get render_not_html_widget;
+
+  /// No description provided for @render_widget_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to this chat'**
+  String get render_widget_sent;
+
+  /// No description provided for @render_widget_not_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sent to this chat'**
+  String get render_widget_not_sent;
+
+  /// No description provided for @render_widget_throttled.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait a moment before sending again'**
+  String get render_widget_throttled;
+
+  /// No description provided for @render_widget_too_long.
+  ///
+  /// In en, this message translates to:
+  /// **'This request is too long to send'**
+  String get render_widget_too_long;
+
+  /// No description provided for @render_widget_no_gesture.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a control in the widget to send'**
+  String get render_widget_no_gesture;
+
+  /// No description provided for @render_widget_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This request could not be sent'**
+  String get render_widget_invalid;
+
+  /// No description provided for @render_inspected_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Inspected image'**
+  String get render_inspected_image;
+
+  /// No description provided for @render_contributions.
+  ///
+  /// In en, this message translates to:
+  /// **'Contributions'**
+  String get render_contributions;
+
+  /// No description provided for @render_contributions_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Only contributions compiled into Ares can add to a reply. Chat text cannot register one, and a grant applies to this connection only.'**
+  String get render_contributions_intro;
+
+  /// No description provided for @render_grant_plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant {name}'**
+  String render_grant_plugin(String name);
+
+  /// No description provided for @render_revoke_plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke {name}'**
+  String render_revoke_plugin(String name);
+
+  /// No description provided for @render_plugin_slots.
+  ///
+  /// In en, this message translates to:
+  /// **'reply cards for ::{directive}'**
+  String render_plugin_slots(String directive);
+
+  /// No description provided for @render_plugin_notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get render_plugin_notes;
+
+  /// No description provided for @catalog_scan_passed.
+  ///
+  /// In en, this message translates to:
+  /// **'passed'**
+  String get catalog_scan_passed;
+
+  /// No description provided for @catalog_scan_warnings.
+  ///
+  /// In en, this message translates to:
+  /// **'found warnings'**
+  String get catalog_scan_warnings;
+
+  /// No description provided for @catalog_scan_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'failed'**
+  String get catalog_scan_failed;
 }
 
 class _AppLocalizationsDelegate

@@ -6359,4 +6359,129 @@ class AppLocalizationsDe extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get render_svg_not_drawn => 'Dieses SVG wurde nicht gezeichnet.';
+
+  @override
+  String get render_notes_directive => 'Notiz-Direktive';
+
+  @override
+  String get render_maths_source => 'Formelquelle';
+
+  @override
+  String get render_inline_maths_source => 'Inline-Formelquelle';
+
+  @override
+  String get render_sequence_outline => 'Ablaufübersicht';
+
+  @override
+  String get render_diagram_outline => 'Diagrammübersicht';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return 'Revision $index von $count';
+  }
+
+  @override
+  String get render_previous_revision => 'Vorherige Revision';
+
+  @override
+  String get render_next_revision => 'Nächste Revision';
+
+  @override
+  String get render_show_rendered => 'Dargestellt';
+
+  @override
+  String get render_show_source => 'Quelltext';
+
+  @override
+  String render_copied_file(String name) {
+    return '$name kopiert';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return '$name kopieren';
+  }
+
+  @override
+  String get render_artifact_too_long =>
+      'Dieses Artefakt ist zu lang, um es hier als Seite anzuzeigen.';
+
+  @override
+  String get render_active_content_removed =>
+      'Skripte, Frames und externe Adressen wurden entfernt.';
+
+  @override
+  String render_widget_file(String file) {
+    return 'Widget-Datei $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      'Läuft als Text in diesem Chat. Skripte und externe Frames werden entfernt.';
+
+  @override
+  String get render_load_widget => 'Widget laden';
+
+  @override
+  String get render_not_html_widget => 'Diese Datei ist kein HTML-Widget.';
+
+  @override
+  String get render_widget_sent => 'An diesen Chat gesendet';
+
+  @override
+  String get render_widget_not_sent => 'Nicht an diesen Chat gesendet';
+
+  @override
+  String get render_widget_throttled => 'Warte kurz, bevor du erneut sendest';
+
+  @override
+  String get render_widget_too_long => 'Diese Anfrage ist zu lang zum Senden';
+
+  @override
+  String get render_widget_no_gesture =>
+      'Tippe zum Senden auf ein Steuerelement im Widget';
+
+  @override
+  String get render_widget_invalid =>
+      'Diese Anfrage konnte nicht gesendet werden';
+
+  @override
+  String get render_inspected_image => 'Untersuchtes Bild';
+
+  @override
+  String get render_contributions => 'Beiträge';
+
+  @override
+  String get render_contributions_intro =>
+      'Nur in Ares eingebaute Beiträge können eine Antwort ergänzen. Chattext kann keinen registrieren, und eine Freigabe gilt nur für diese Verbindung.';
+
+  @override
+  String render_grant_plugin(String name) {
+    return '$name erlauben';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return '$name entziehen';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return 'Antwortkarten für ::$directive';
+  }
+
+  @override
+  String get render_plugin_notes => 'Notizen';
+
+  @override
+  String get catalog_scan_passed => 'bestanden';
+
+  @override
+  String get catalog_scan_warnings => 'Warnungen gefunden';
+
+  @override
+  String get catalog_scan_failed => 'fehlgeschlagen';
 }

@@ -95,7 +95,7 @@ class RichFence extends StatelessWidget {
       if (drawing != null) return SafeSvgView(drawing: drawing);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [const Text('This SVG was not drawn.'), fallback],
+        children: [Text(context.sharedL10n.render_svg_not_drawn), fallback],
       );
     }
     if (clean == 'listing') {
@@ -163,7 +163,10 @@ class _GrantedDirective extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [const Text('Notes directive'), Text(text)],
+          children: [
+            Text(context.sharedL10n.render_notes_directive),
+            Text(text),
+          ],
         ),
       ),
     );
@@ -224,7 +227,11 @@ class MathBlock extends StatelessWidget {
             : CrossAxisAlignment.start,
         children: [
           // The expression is shown as written; it is not typeset.
-          Text(piece.display ? 'Maths source' : 'Inline maths source'),
+          Text(
+            piece.display
+                ? context.sharedL10n.render_maths_source
+                : context.sharedL10n.render_inline_maths_source,
+          ),
           Text(piece.source, key: const Key('math-expression')),
         ],
       ),
@@ -334,7 +341,9 @@ class DiagramView extends StatelessWidget {
         children: [
           // Nodes and links as text; the diagram itself is not drawn.
           Text(
-            model.kind == 'sequence' ? 'Sequence outline' : 'Diagram outline',
+            model.kind == 'sequence'
+                ? context.sharedL10n.render_sequence_outline
+                : context.sharedL10n.render_diagram_outline,
           ),
           for (final node in model.nodes)
             Text(node.label, key: Key('diagram-${node.id}')),
@@ -643,6 +652,7 @@ class _ArtifactRevisionCardState extends State<ArtifactRevisionCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.sharedL10n;
     final revision = _revisions[_index];
     final content = revision.content;
     final tooLarge = content.length > artifactRenderChars;
@@ -668,23 +678,25 @@ class _ArtifactRevisionCardState extends State<ArtifactRevisionCard> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(revision.detection.title),
-            Text('Revision ${revision.index} of ${_revisions.length}'),
+            Text(l.render_revision_of(revision.index, _revisions.length)),
             Wrap(
               spacing: 8,
               children: [
                 TextButton(
                   onPressed: _index == 0 ? null : () => _step(-1),
-                  child: const Text('Previous revision'),
+                  child: Text(l.render_previous_revision),
                 ),
                 TextButton(
                   onPressed: _index == _revisions.length - 1
                       ? null
                       : () => _step(1),
-                  child: const Text('Next revision'),
+                  child: Text(l.render_next_revision),
                 ),
                 TextButton(
                   onPressed: () => setState(() => _source = !_source),
-                  child: Text(_source ? 'Rendered' : 'Source'),
+                  child: Text(
+                    _source ? l.render_show_rendered : l.render_show_source,
+                  ),
                 ),
                 TextButton(
                   onPressed: () async {
@@ -694,16 +706,17 @@ class _ArtifactRevisionCardState extends State<ArtifactRevisionCard> {
                     if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Copied ${revision.downloadName}'),
+                        content: Text(
+                          l.render_copied_file(revision.downloadName),
+                        ),
                       ),
                     );
                   },
-                  child: Text('Copy ${revision.downloadName}'),
+                  child: Text(l.render_copy_file(revision.downloadName)),
                 ),
               ],
             ),
-            if (tooLarge && !_source)
-              const Text('This artefact is too long to show as a page here.'),
+            if (tooLarge && !_source) Text(l.render_artifact_too_long),
             if (_source || (html == null && svg == null))
               source
             else if (html != null)
@@ -728,7 +741,7 @@ class _HtmlBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (document.droppedActiveContent)
-          const Text('Scripts, frames and external addresses were removed.'),
+          Text(context.sharedL10n.render_active_content_removed),
         Text(document.text),
       ],
     );
@@ -757,9 +770,24 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
   var _loaded = false;
   var _missing = false;
   var _truncated = false;
+
+  /// [_sent], or the code an intent was refused with (`IntentRejected`:
+  /// invalid, too_long, throttled, undelivered, no_gesture); worded while
+  /// building, so the locale can change under it.
   String? _status;
+  static const _sent = 'sent';
   var _lastAcceptedAt = 0;
   var _delivering = false;
+
+  static String _statusText(AppLocalizations l, String status) =>
+      switch (status) {
+        _sent => l.render_widget_sent,
+        'undelivered' => l.render_widget_not_sent,
+        'throttled' => l.render_widget_throttled,
+        'too_long' => l.render_widget_too_long,
+        'no_gesture' => l.render_widget_no_gesture,
+        _ => l.render_widget_invalid,
+      };
 
   Future<void> _load() async {
     final reader = widget.readHtml;
@@ -817,7 +845,7 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
     _delivering = true;
     try {
       await deliver(decision.prompt);
-      if (mounted) setState(() => _status = 'Sent to this chat');
+      if (mounted) setState(() => _status = _sent);
     } catch (_) {
       if (mounted) setState(() => _status = 'undelivered');
     } finally {
@@ -827,6 +855,7 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.sharedL10n;
     final document = _document;
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
@@ -835,24 +864,20 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Widget ${widget.file}'),
-            const Text(
-              'Runs as text in this chat. Scripts and external frames are removed.',
-            ),
+            Text(l.render_widget_file(widget.file)),
+            Text(l.render_widget_runs_as_text),
             if (!_loaded)
-              TextButton(onPressed: _load, child: const Text('Load widget'))
+              TextButton(onPressed: _load, child: Text(l.render_load_widget))
             else if (_missing)
-              const Text('This file is not an HTML widget.')
+              Text(l.render_not_html_widget)
             else if (document != null) ...[
               if (_truncated)
                 Text(
-                  context.sharedL10n.render_widget_file_truncated,
+                  l.render_widget_file_truncated,
                   key: const Key('widget-file-truncated'),
                 ),
               if (document.droppedActiveContent)
-                const Text(
-                  'Scripts, frames and external addresses were removed.',
-                ),
+                Text(l.render_active_content_removed),
               Text(document.text),
               for (final control in document.controls)
                 TextButton(
@@ -862,7 +887,7 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
                   ),
                 ),
             ],
-            if (_status != null) Text(_status!),
+            if (_status case final status?) Text(_statusText(l, status)),
           ],
         ),
       ),
@@ -890,7 +915,7 @@ class InspectedImageTile extends StatelessWidget {
     return ListTile(
       key: Key('inspected-image-$name'),
       leading: const Icon(Icons.image_search),
-      title: const Text('Inspected image'),
+      title: Text(context.sharedL10n.render_inspected_image),
       subtitle: Text(name),
     );
   }

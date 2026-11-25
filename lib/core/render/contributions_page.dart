@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
 import 'plugin_slots.dart';
 
 /// Reviewed client contributions for one connection. Granting a slot does
@@ -13,27 +14,24 @@ class ContributionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.sharedL10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Contributions')),
+      appBar: AppBar(title: Text(l.render_contributions)),
       body: ListenableBuilder(
         listenable: pluginGrants,
         builder: (context, _) {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              const Text(
-                'Only contributions compiled into Ares can add to a reply. '
-                'Chat text cannot register one, and a grant applies to this '
-                'connection only.',
-              ),
+              Text(l.render_contributions_intro),
               const SizedBox(height: 12),
               for (final plugin in reviewedPlugins) ...[
                 Text(
-                  plugin.title,
+                  plugin.localizedTitle(l),
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Text(
-                  plugin.grantedSlotsLabel,
+                  plugin.grantedSlotsLabel(l),
                   key: Key('plugin-slots-${plugin.id}'),
                 ),
                 Wrap(
@@ -42,12 +40,16 @@ class ContributionsPage extends StatelessWidget {
                     if (!pluginGrants.granted(scope, plugin.id))
                       FilledButton(
                         onPressed: () => pluginGrants.grant(scope, plugin.id),
-                        child: Text('Grant ${plugin.title}'),
+                        child: Text(
+                          l.render_grant_plugin(plugin.localizedTitle(l)),
+                        ),
                       )
                     else
                       OutlinedButton(
                         onPressed: () => pluginGrants.revoke(scope, plugin.id),
-                        child: Text('Revoke ${plugin.title}'),
+                        child: Text(
+                          l.render_revoke_plugin(plugin.localizedTitle(l)),
+                        ),
                       ),
                   ],
                 ),
@@ -62,5 +64,13 @@ class ContributionsPage extends StatelessWidget {
 }
 
 extension PluginDescriptorLabels on PluginDescriptor {
-  String get grantedSlotsLabel => 'reply cards for ::$directive';
+  String grantedSlotsLabel(AppLocalizations l) =>
+      l.render_plugin_slots(directive);
+
+  /// The reviewed contribution's name in the app language; [title] for one
+  /// this build has no words for.
+  String localizedTitle(AppLocalizations l) => switch (id) {
+    'notes' => l.render_plugin_notes,
+    _ => title,
+  };
 }

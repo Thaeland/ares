@@ -6368,4 +6368,130 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get render_svg_not_drawn => 'Ce SVG n’a pas été dessiné.';
+
+  @override
+  String get render_notes_directive => 'Directive de notes';
+
+  @override
+  String get render_maths_source => 'Source de la formule';
+
+  @override
+  String get render_inline_maths_source => 'Source de la formule en ligne';
+
+  @override
+  String get render_sequence_outline => 'Plan de la séquence';
+
+  @override
+  String get render_diagram_outline => 'Plan du diagramme';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return 'Révision $index sur $count';
+  }
+
+  @override
+  String get render_previous_revision => 'Révision précédente';
+
+  @override
+  String get render_next_revision => 'Révision suivante';
+
+  @override
+  String get render_show_rendered => 'Rendu';
+
+  @override
+  String get render_show_source => 'Code source';
+
+  @override
+  String render_copied_file(String name) {
+    return '$name copié';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return 'Copier $name';
+  }
+
+  @override
+  String get render_artifact_too_long =>
+      'Cet artefact est trop long pour être affiché ici sous forme de page.';
+
+  @override
+  String get render_active_content_removed =>
+      'Les scripts, les cadres et les adresses externes ont été supprimés.';
+
+  @override
+  String render_widget_file(String file) {
+    return 'Fichier widget $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      'S’exécute sous forme de texte dans cette discussion. Les scripts et les cadres externes sont supprimés.';
+
+  @override
+  String get render_load_widget => 'Charger le widget';
+
+  @override
+  String get render_not_html_widget => 'Ce fichier n’est pas un widget HTML.';
+
+  @override
+  String get render_widget_sent => 'Envoyé dans cette discussion';
+
+  @override
+  String get render_widget_not_sent => 'Non envoyé dans cette discussion';
+
+  @override
+  String get render_widget_throttled =>
+      'Patientez un instant avant de renvoyer';
+
+  @override
+  String get render_widget_too_long =>
+      'Cette demande est trop longue pour être envoyée';
+
+  @override
+  String get render_widget_no_gesture =>
+      'Touchez une commande du widget pour envoyer';
+
+  @override
+  String get render_widget_invalid => 'Cette demande n’a pas pu être envoyée';
+
+  @override
+  String get render_inspected_image => 'Image inspectée';
+
+  @override
+  String get render_contributions => 'Contributions';
+
+  @override
+  String get render_contributions_intro =>
+      'Seules les contributions intégrées à Ares peuvent compléter une réponse. Le texte de la discussion ne peut pas en enregistrer, et une autorisation ne s’applique qu’à cette connexion.';
+
+  @override
+  String render_grant_plugin(String name) {
+    return 'Autoriser $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return 'Révoquer $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return 'cartes de réponse pour ::$directive';
+  }
+
+  @override
+  String get render_plugin_notes => 'Notes';
+
+  @override
+  String get catalog_scan_passed => 'réussi';
+
+  @override
+  String get catalog_scan_warnings => 'avertissements trouvés';
+
+  @override
+  String get catalog_scan_failed => 'échoué';
 }
