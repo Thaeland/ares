@@ -169,6 +169,7 @@ class WindowsToastSink implements TurnNotificationSink {
       if (n.windowsTarget != null) 'target': n.windowsTarget!.toJson(),
     };
     await _save(prefs, entries);
+    var acknowledged = false;
     try {
       if (n.windowsStillNeeded?.call() == false) {
         throw StateError('Notification withdrawn');
@@ -187,17 +188,23 @@ class WindowsToastSink implements TurnNotificationSink {
             ? notificationPrefs.value.completionSound.name
             : 'system',
       });
-      // A click can already be queued behind the OS acknowledgement. Withdraw
-      // while still holding the ledger, before that activation can consume it.
+      acknowledged = true;
       if (n.windowsStillNeeded?.call() == false) {
-        entries.remove(token);
-        await _save(prefs, entries);
-        await channel.invokeMethod<void>('cancel', n.id);
         throw StateError('Notification withdrawn');
       }
     } catch (_) {
+      // Keep queued activations behind cleanup. Revocation is idempotent, so
+      // retry the same snapshot once if storage rejected or lost the write.
       entries.remove(token);
-      await _save(prefs, entries);
+      try {
+        await _save(prefs, entries);
+      } catch (_) {
+        await _save(prefs, entries);
+      } finally {
+        // Native dismissal is independent of ticket storage. Only dismiss the
+        // exact toast Windows acknowledged; never remove a sibling or all.
+        if (acknowledged) await channel.invokeMethod<void>('cancel', n.id);
+      }
       rethrow;
     }
   });
