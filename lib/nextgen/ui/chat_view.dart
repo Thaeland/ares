@@ -2,6 +2,9 @@
 // thinking and tool rows), status line, inline approval/question panel and the
 // pill composer (model chip, dictation, send/stop, steer or queue while busy).
 import 'dart:async';
+import '../../core/workspace/terminal_chat_link.dart';
+import '../../core/services/connection_manager.dart';
+import '../../core/services/remote_workspace.dart' show RemoteWorkspaceOwner;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +83,17 @@ class NgChatView extends StatefulWidget {
   State<NgChatView> createState() => _NgChatViewState();
 }
 
-class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
+class _NgChatViewState extends State<NgChatView>
+    with WidgetsBindingObserver, TerminalComposerAttachment<NgChatView> {
+  @override
+  SavedConnection get terminalConnection => chat.gateway.connection;
+  @override
+  String? get terminalSession => chat.storedId;
+  @override
+  RemoteWorkspaceOwner get terminalOwner => chat.gateway.workspace;
+  @override
+  TextEditingController get terminalComposer => _input;
+
   /// A fresh files client per card: cards close theirs when done, so they
   /// must not share the gateway's own dashboard connection.
   RemoteFilesDataSource _filesClient() {

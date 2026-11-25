@@ -3,6 +3,7 @@
 // GET /api/sessions/{id}/messages.
 import 'dart:async';
 import '../widgets/windows_chat_presence.dart';
+import '../workspace/terminal_chat_link.dart';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -753,7 +754,16 @@ class _HandsFreeTurnBinding {
   }
 }
 
-class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
+class _ChatScreenState extends State<ChatScreen>
+    with WidgetsBindingObserver, TerminalComposerAttachment<ChatScreen> {
+  @override
+  SavedConnection get terminalConnection => widget.connection;
+  @override
+  String get terminalSession => widget.session.id;
+  @override
+  RemoteWorkspaceOwner? get terminalOwner => _desktopGateway?.workspace;
+  @override
+  TextEditingController get terminalComposer => _textController;
   List<Map<String, dynamic>> _messages = [];
   ChatTimeline _timeline = const ChatTimeline();
   RestChatReplyRetention? _restReplyRetention;

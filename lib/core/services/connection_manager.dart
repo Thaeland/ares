@@ -33,6 +33,7 @@ export '../models/session.dart';
 
 part 'profile_dashboard_transport.dart';
 part 'host_dashboard_transport.dart';
+part 'host_terminal_socket.dart';
 
 /// Injectable secret storage boundary used by [ConnectionManager].
 ///
@@ -2584,6 +2585,7 @@ class DownloadSizeLimitException implements Exception {
 ///
 /// Used for Dashboard-only features: cron, memory, skills, settings.
 class DashboardClient {
+  final HttpClient Function() _upgradeClient;
   final http.Client _http;
   final String _baseUrl;
   final bool _proxied;
@@ -2621,6 +2623,8 @@ class DashboardClient {
     TlsClientFactory tlsClientFactory = const TlsClientFactory(),
     http.Client? httpClient,
   }) : _proxied = proxied,
+       _upgradeClient = (() =>
+           tlsClientFactory.createHttpClient(clientCertificate)),
        _username = username,
        _password = password,
        _gatewayProfile = gatewayProfile?.trim().isEmpty == true
@@ -2911,16 +2915,21 @@ class DashboardClient {
     // Last admission gate, run after every await and immediately before the
     // request leaves. It may throw; nothing is sent when it does.
     void Function()? beforeSend,
-  }) => _workspaceJson(
-    segments,
-    query: query,
-    check: check,
-    mintHostTerminalTicket: mintHostTerminalTicket,
-    webappDirection: webappDirection,
-    makeWebappPrimary: makeWebappPrimary,
-    startFleetUpdate: startFleetUpdate,
-    beforeSend: beforeSend == null ? null : () async => beforeSend(),
-  );
+  }) async {
+    final data = await _workspaceJson(
+      segments,
+      query: query,
+      check: check,
+      mintHostTerminalTicket: mintHostTerminalTicket,
+      webappDirection: webappDirection,
+      makeWebappPrimary: makeWebappPrimary,
+      startFleetUpdate: startFleetUpdate,
+      beforeSend: beforeSend == null ? null : () async => beforeSend(),
+    );
+    // Negotiation only: a terminal credential never reaches the UI. The
+    // library-private upgrade reads the ticket from _workspaceJson.
+    return mintHostTerminalTicket ? true : data;
+  }
 
   /// Never forward this content to `/fs/write-text`: the old route ignores
   /// preconditions. A distinct URL makes old gateways fail closed.
@@ -3194,7 +3203,7 @@ class DashboardClient {
         (data['ttl_seconds'] as int) <= 0) {
       throw const FormatException('Invalid terminal ticket');
     }
-    return true; // Negotiation only. Never give a terminal credential to UI.
+    return data['ticket']; // Library-private. Only the upgrade spends this.
   }
 
   /// Resolves the dashboard auth headers for a caller that issues its own

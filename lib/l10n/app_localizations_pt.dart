@@ -666,14 +666,14 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get allow_folder_until_sandbox_off =>
-      'Permitir esta pasta até a sandbox ser desligada.';
+      'Allow this folder until the sandbox is switched off.';
 
   @override
   String get allow_once => 'Permitir uma vez';
 
   @override
   String get allow_website_until_sandbox_off =>
-      'Permitir este site até a sandbox ser desligada.';
+      'Allow this website until the sandbox is switched off.';
 
   @override
   String get always_allow => 'Permitir sempre';
@@ -4743,23 +4743,23 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ng_allow_once => 'Permitir uma vez';
 
   @override
-  String get ng_allow_until_sandbox_off => 'Até a sandbox ser desligada';
+  String get ng_allow_until_sandbox_off => 'Until the sandbox is switched off';
 
   @override
-  String get ng_folder_access => 'Acesso à pasta';
+  String get ng_folder_access => 'Folder access';
 
   @override
   String get ng_folder_access_unspecified =>
-      'O gateway não indicou se isto é só leitura ou leitura e escrita.';
+      'The gateway did not say whether this is read-only or read-write.';
 
   @override
-  String get ng_folder_read_only => 'Só leitura';
+  String get ng_folder_read_only => 'Read-only';
 
   @override
-  String get ng_folder_read_write => 'Leitura e escrita';
+  String get ng_folder_read_write => 'Read and write';
 
   @override
-  String get ng_website_access => 'Acesso ao site';
+  String get ng_website_access => 'Website access';
 
   @override
   String get ng_allow_for_this_chat => 'Permitir nesta conversa';
@@ -6852,15 +6852,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
       'Permitir comandos correspondentes até esta sessão do Hermes terminar.';
 
   @override
-  String get allow_folder_until_sandbox_off =>
-      'Permitir esta pasta até a sandbox ser desligada.';
-
-  @override
   String get allow_once => 'Permitir uma vez';
-
-  @override
-  String get allow_website_until_sandbox_off =>
-      'Permitir este site até a sandbox ser desligada.';
 
   @override
   String get always_allow => 'Permitir sempre';

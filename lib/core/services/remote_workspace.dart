@@ -2,7 +2,9 @@
 /// docs/remote-workspace-contract.md before adding an operation.
 library;
 
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
@@ -29,6 +31,8 @@ part 'remote_host_ops.dart';
 
 part 'workspace_workers.dart';
 part 'workspace_queue.dart';
+
+part 'remote_workspace_terminal.dart';
 
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {
