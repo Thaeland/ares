@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:html/dom.dart';
@@ -105,10 +106,59 @@ class ReaderDocument {
     'th',
   };
 
+  /// [ReaderDocument.parse] in a separate isolate that is killed after
+  /// [timeout], so neither the UI nor a background core is held by a page.
+  static Future<ReaderDocument> parseInBackground(
+    Uri location,
+    String source, {
+    int limit = 256 * 1024,
+    Duration timeout = const Duration(seconds: 6),
+  }) async {
+    if (source.length > limit) {
+      throw const PreviewError('Page exceeds the reader limit.');
+    }
+    final replies = ReceivePort();
+    Isolate? worker;
+    try {
+      worker = await Isolate.spawn<(SendPort, String, String, int)>(
+        _parseInIsolate,
+        (replies.sendPort, location.toString(), source, limit),
+        onError: replies.sendPort,
+        onExit: replies.sendPort,
+      );
+      final reply = await replies.first.timeout(timeout);
+      if (reply is ReaderDocument) return reply;
+      if (reply is PreviewError) throw reply;
+      throw const PreviewError('The page could not be read.');
+    } on TimeoutException {
+      throw const PreviewError('This page is too complex for reader mode.');
+    } finally {
+      worker?.kill(priority: Isolate.immediate);
+      replies.close();
+    }
+  }
+
+  static void _parseInIsolate((SendPort, String, String, int) message) {
+    final (port, location, source, limit) = message;
+    try {
+      port.send(
+        ReaderDocument.parse(Uri.parse(location), source, limit: limit),
+      );
+    } on PreviewError catch (error) {
+      port.send(error);
+    } catch (_) {
+      port.send(const PreviewError('The page could not be read.'));
+    }
+  }
+
   /// Project only visible reader text and structural selectors. Never retain
   /// attribute values, input values, original markup or a page-defined style.
-  factory ReaderDocument.parse(Uri location, String source) {
-    if (source.length > 256 * 1024) {
+  factory ReaderDocument.parse(
+    Uri location,
+    String source, {
+    int limit = 256 * 1024,
+  }) {
+    if (source.length > limit) {
       throw const PreviewError('Page exceeds the reader limit.');
     }
     final doc = html.parse(source);
@@ -241,13 +291,18 @@ class ReaderLoad {
       }
       check();
       final text = utf8.decode(bytes.takeBytes(), allowMalformed: true);
-      if (mime == 'text/plain') {
-        return ReaderDocument.parse(
-          url,
-          '<pre>${const HtmlEscape().convert(text)}</pre>',
-        );
-      }
-      return ReaderDocument.parse(url, text);
+      // Parse off the UI isolate: HTML parsing cost grows with nesting, and
+      // a hostile page within the byte limit must never freeze the app.
+      final document = mime == 'text/plain'
+          // Escaping can grow text up to 6x; the byte limit already applied.
+          ? await ReaderDocument.parseInBackground(
+              url,
+              '<pre>${const HtmlEscape().convert(text)}</pre>',
+              limit: 6 * 256 * 1024 + 11,
+            )
+          : await ReaderDocument.parseInBackground(url, text);
+      check();
+      return document;
     } on PreviewError {
       rethrow;
     } catch (_) {
