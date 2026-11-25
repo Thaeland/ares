@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'transcript_body.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -344,7 +346,16 @@ class TranscriptReaderState extends State<TranscriptReader> {
       }
     }
 
-    visit(row);
+    void findBody(RenderObject node) {
+      if (result != null) return;
+      if (isTranscriptBody(node)) {
+        visit(node);
+      } else {
+        node.visitChildren(findBody);
+      }
+    }
+
+    findBody(row);
     return result;
   }
 

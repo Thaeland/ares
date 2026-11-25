@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:highlight/highlight.dart' as syntax;
 
 import '../theme/hermes_theme.dart';
+import 'transcript_body.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
 
@@ -157,9 +158,11 @@ class _MarkdownCodeBlockState extends State<MarkdownCodeBlock> {
     // Inside a SelectionArea the code must be plain Text so it joins the
     // surrounding prose in one selection; a SelectableText would be its own
     // island and a drag could not cross into it.
-    final code = widget.selectable
-        ? SelectableText.rich(span, style: style)
-        : Text.rich(span, style: style);
+    final code = transcriptBody(
+      widget.selectable
+          ? SelectableText.rich(span, style: style)
+          : Text.rich(span, style: style),
+    );
     final body = _wrap
         ? code
         : SingleChildScrollView(scrollDirection: Axis.horizontal, child: code);
@@ -239,9 +242,7 @@ class _MarkdownCodeBlockState extends State<MarkdownCodeBlock> {
                         ),
                         style: TextButton.styleFrom(
                           minimumSize: const Size(64, 40),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           visualDensity: VisualDensity.compact,
                         ),
                       ),

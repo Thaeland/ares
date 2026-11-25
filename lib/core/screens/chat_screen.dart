@@ -80,6 +80,7 @@ import '../utils/rest_chat_reply_retention.dart';
 import '../utils/android_prompt_context.dart';
 import '../utils/chat_history_scroll.dart';
 import '../widgets/transcript_reader.dart';
+import '../widgets/transcript_body.dart';
 import '../utils/message_content.dart';
 import '../utils/responsive.dart';
 import '../utils/turn_recovery_fallback.dart';
@@ -8902,14 +8903,16 @@ class MessageBubble extends StatelessWidget {
         }
       }
     }
-    Widget prose(String text) => MarkdownBody(
-      data: text,
-      selectable: false,
-      styleSheet: styleSheet,
-      // Local images become lazy file cards below. Never let Markdown load a
-      // host path from the phone or contact an arbitrary image URL on render.
-      sizedImageBuilder: (image) => Text(image.alt ?? image.title ?? ''),
-      onTapLink: (_, href, _) => unawaited(_openLink(context, href)),
+    Widget prose(String text) => transcriptBody(
+      MarkdownBody(
+        data: text,
+        selectable: false,
+        styleSheet: styleSheet,
+        // Local images become lazy file cards below. Never let Markdown load a
+        // host path from the phone or contact an arbitrary image URL on render.
+        sizedImageBuilder: (image) => Text(image.alt ?? image.title ?? ''),
+        onTapLink: (_, href, _) => unawaited(_openLink(context, href)),
+      ),
     );
 
     final parseMedia = filesClient != null;

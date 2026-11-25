@@ -157,6 +157,86 @@ Future<void> _settle() async {
 }
 
 void main() {
+  testWidgets(
+    'NextGen find should seek the matching reply, not the attached tool label',
+    (t) async {
+      SharedPreferences.setMockInitialValues({});
+      final p = await SharedPreferences.getInstance();
+      final g = NextGenGateway(_conn());
+      final chat = NgChatController(g, sessionId: 'id', title: 'Testing');
+      addTearDown(g.dispose);
+      addTearDown(chat.dispose);
+      chat.debugApplyHistory([
+        {'id': 'p', 'role': 'user', 'content': 'Prompt'},
+        {
+          'id': 'a0',
+          'role': 'assistant',
+          'content': '',
+          'tool_calls': [
+            {
+              'id': 't',
+              'function': {'name': 'terminal', 'arguments': '{}'},
+            },
+          ],
+        },
+        {'id': 't1', 'role': 'tool', 'tool_call_id': 't', 'content': 'ran'},
+        {
+          'id': 'a',
+          'role': 'assistant',
+          'content':
+              List.filled(45, 'Ordinary paragraph.').join('\n\n') +
+              '\n\nThe terminal result.',
+        },
+      ]);
+      expect(
+        chat.items.whereType<NgAssistantItem>().single.tools.single.name,
+        'terminal',
+      );
+      await t.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: nextGenTheme(Brightness.light, NextGenLook.instance),
+          home: NgScope(
+            connManager: ConnectionManager(p),
+            gateway: g,
+            connections: [g.connection],
+            switchTo: (_) async {},
+            addGateway: () async {},
+            signOut: (_) async {},
+            reload: () async {},
+            signInAgain: () async {},
+            child: NgChatView(
+              chat: chat,
+              onOpenSidebar: () {},
+              onNewChat: () {},
+            ),
+          ),
+        ),
+      );
+      await t.pumpAndSettle();
+      await t.tap(find.byTooltip('Find in transcript'));
+      await t.pumpAndSettle();
+      await t.enterText(find.byKey(const Key('transcript-query')), 'terminal');
+      await t.pumpAndSettle();
+      expect(find.text('1/1'), findsOneWidget);
+      final label = find.textContaining('terminal', findRichText: true);
+      final a = find.text('The terminal result.', findRichText: true);
+      final visible = label
+          .hitTestable()
+          .evaluate()
+          .map((e) => e.widget.toString())
+          .toList();
+      final at = t.getCenter(a.first);
+      final region = t.getRect(find.byKey(const ValueKey('ng-transcript')));
+      expect(
+        region.contains(at),
+        isTrue,
+        reason: 'body centre $at, viewport $region; visible labels: $visible',
+      );
+    },
+  );
+
   group('Markdown chunks', () {
     test('short text stays whole', () {
       expect(ngMarkdownChunks('one\n\ntwo'), ['one\n\ntwo']);

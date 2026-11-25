@@ -19,6 +19,7 @@ import '../../core/utils/delivered_files.dart';
 import '../../core/utils/media_tags.dart';
 import '../../core/widgets/desktop_shortcuts.dart';
 import '../../core/widgets/transcript_reader.dart';
+import '../../core/widgets/transcript_body.dart';
 import '../../core/widgets/markdown_code_block.dart';
 import '../../core/widgets/media_artifact_card.dart';
 import '../../core/widgets/slash_command_highlight.dart';
@@ -925,13 +926,15 @@ class _NgChatViewState extends State<NgChatView> {
       NgCommandItem() => _CommandCard(item: item),
       NgNoticeItem() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Text(
-          item.time == null
-              ? item.text
-              : '${item.text} · ${ngStamp(context, item.time!)}',
-          textAlign: TextAlign.center,
-          style: NgType.caption.copyWith(
-            color: item.error ? c.danger : c.text3,
+        child: transcriptBody(
+          Text(
+            item.time == null
+                ? item.text
+                : '${item.text} · ${ngStamp(context, item.time!)}',
+            textAlign: TextAlign.center,
+            style: NgType.caption.copyWith(
+              color: item.error ? c.danger : c.text3,
+            ),
           ),
         ),
       ),
@@ -1390,11 +1393,13 @@ class _UserBubble extends StatelessWidget {
                   color: c.userBubble,
                   borderRadius: BorderRadius.circular(NgRadii.lg),
                 ),
-                child: SelectableText(
-                  ngCapShown(item.text),
-                  style: NgType.body.copyWith(
-                    color: c.onUserBubble.withValues(
-                      alpha: item.pending ? 0.6 : 1,
+                child: transcriptBody(
+                  SelectableText(
+                    ngCapShown(item.text),
+                    style: NgType.body.copyWith(
+                      color: c.onUserBubble.withValues(
+                        alpha: item.pending ? 0.6 : 1,
+                      ),
                     ),
                   ),
                 ),
@@ -1677,7 +1682,7 @@ class _AssistantBlockState extends State<_AssistantBlock> {
     );
     Widget cached(String text) {
       used.add(text);
-      return _prose.putIfAbsent(text, () => parse(text));
+      return _prose.putIfAbsent(text, () => transcriptBody(parse(text)));
     }
 
     Widget codeBlock(String text) {
