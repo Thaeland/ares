@@ -6914,4 +6914,44 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get quick_entry_unavailable =>
       'Не вдалося відкрити швидке введення. Спробуйте ще раз.';
+
+  @override
+  String get desktop_hotkey_setting =>
+      'Комбінація клавіш для швидкого введення';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'Натисніть $shortcut будь-де, щоб відкрити швидке введення.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return '$shortcut уже використовує інший застосунок. Виберіть іншу комбінацію.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'Це середовище не дозволяє застосункам реєструвати глобальні комбінації клавіш (наприклад, Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Додайте Cmd, Ctrl або Alt.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'Клавіша Windows або Super зарезервована системою.';
+
+  @override
+  String get desktop_hotkey_reserved =>
+      'Цю комбінацію вже використовує система.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares уже використовує цю комбінацію для дії «$action».';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'Змінити';
+
+  @override
+  String get desktop_hotkey_reset => 'За замовчуванням';
 }

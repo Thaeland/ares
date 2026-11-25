@@ -1972,5 +1972,15 @@
   "quick_entry_hint": "Введіть запит для Ares…",
   "quick_entry_submit": "Вставити в поле введення",
   "quick_entry_never_sends": "Enter вставляє текст у поле введення чату. Нічого не надсилається, доки ви не натиснете «Надіслати».",
-  "quick_entry_unavailable": "Не вдалося відкрити швидке введення. Спробуйте ще раз."
+  "quick_entry_unavailable": "Не вдалося відкрити швидке введення. Спробуйте ще раз.",
+  "desktop_hotkey_setting": "Комбінація клавіш для швидкого введення",
+  "desktop_hotkey_help": "Натисніть {shortcut} будь-де, щоб відкрити швидке введення.",
+  "desktop_hotkey_conflict": "{shortcut} уже використовує інший застосунок. Виберіть іншу комбінацію.",
+  "desktop_hotkey_unsupported": "Це середовище не дозволяє застосункам реєструвати глобальні комбінації клавіш (наприклад, Wayland).",
+  "desktop_hotkey_no_modifier": "Додайте Cmd, Ctrl або Alt.",
+  "desktop_hotkey_super_key": "Клавіша Windows або Super зарезервована системою.",
+  "desktop_hotkey_reserved": "Цю комбінацію вже використовує система.",
+  "desktop_hotkey_in_app": "Ares уже використовує цю комбінацію для дії «{action}».",
+  "desktop_hotkey_change": "Змінити",
+  "desktop_hotkey_reset": "За замовчуванням"
 }

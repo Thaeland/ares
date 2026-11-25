@@ -6861,4 +6861,43 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get quick_entry_unavailable =>
       'Quick entry couldn\'t open. Try again.';
+
+  @override
+  String get desktop_hotkey_setting => 'Quick entry shortcut';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'Press $shortcut anywhere to open quick entry.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return 'Another app already uses $shortcut. Choose a different shortcut.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'This desktop does not let apps register a global shortcut (for example on Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Include Cmd, Ctrl or Alt.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'The Windows or Super key is reserved for the system.';
+
+  @override
+  String get desktop_hotkey_reserved =>
+      'The system already uses this shortcut.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares already uses this shortcut for $action.';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'Change';
+
+  @override
+  String get desktop_hotkey_reset => 'Use default';
 }

@@ -3048,5 +3048,18 @@
   "quick_entry_hint": "Type a prompt for Ares…",
   "quick_entry_submit": "Put in composer",
   "quick_entry_never_sends": "Enter puts the text in the chat's composer. Nothing is sent until you press Send.",
-  "quick_entry_unavailable": "Quick entry couldn't open. Try again."
+  "quick_entry_unavailable": "Quick entry couldn't open. Try again.",
+  "desktop_hotkey_setting": "Quick entry shortcut",
+  "desktop_hotkey_help": "Press {shortcut} anywhere to open quick entry.",
+  "@desktop_hotkey_help": {"placeholders": {"shortcut": {"type": "String"}}},
+  "desktop_hotkey_conflict": "Another app already uses {shortcut}. Choose a different shortcut.",
+  "@desktop_hotkey_conflict": {"placeholders": {"shortcut": {"type": "String"}}},
+  "desktop_hotkey_unsupported": "This desktop does not let apps register a global shortcut (for example on Wayland).",
+  "desktop_hotkey_no_modifier": "Include Cmd, Ctrl or Alt.",
+  "desktop_hotkey_super_key": "The Windows or Super key is reserved for the system.",
+  "desktop_hotkey_reserved": "The system already uses this shortcut.",
+  "desktop_hotkey_in_app": "Ares already uses this shortcut for {action}.",
+  "@desktop_hotkey_in_app": {"placeholders": {"action": {"type": "String"}}},
+  "desktop_hotkey_change": "Change",
+  "desktop_hotkey_reset": "Use default"
 }

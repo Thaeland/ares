@@ -118,4 +118,65 @@ inline std::optional<size_t> TrayIndexForCommand(unsigned command,
   return index;
 }
 
+// ---- Global hotkey ---------------------------------------------------------
+
+// RegisterHotKey modifiers (winuser.h) and the app's hotkey id (0-0xBFFF).
+inline constexpr unsigned kModAlt = 0x0001;
+inline constexpr unsigned kModControl = 0x0002;
+inline constexpr unsigned kModShift = 0x0004;
+inline constexpr unsigned kModNoRepeat = 0x4000;
+inline constexpr int kHotkeyId = 0xA7E5;
+
+// The virtual-key code for a shortcuts_store key name, or nothing.
+inline std::optional<unsigned> VirtualKeyForName(std::string_view name) {
+  if (name.size() == 4 && name.substr(0, 3) == "key" && name[3] >= 'A' &&
+      name[3] <= 'Z') {
+    return static_cast<unsigned>(name[3]);  // VK_A..VK_Z == 'A'..'Z'
+  }
+  if (name.size() == 6 && name.substr(0, 5) == "digit" && name[5] >= '0' &&
+      name[5] <= '9') {
+    return static_cast<unsigned>(name[5]);  // VK_0..VK_9 == '0'..'9'
+  }
+  struct Entry {
+    std::string_view name;
+    unsigned vk;
+  };
+  static constexpr Entry kTable[] = {
+      {"space", 0x20},        {"enter", 0x0D},       {"escape", 0x1B},
+      {"tab", 0x09},          {"comma", 0xBC},       {"period", 0xBE},
+      {"slash", 0xBF},        {"semicolon", 0xBA},   {"quoteSingle", 0xDE},
+      {"backslash", 0xDC},    {"minus", 0xBD},       {"equal", 0xBB},
+      {"bracketLeft", 0xDB},  {"bracketRight", 0xDD}, {"backquote", 0xC0},
+      {"arrowLeft", 0x25},    {"arrowUp", 0x26},     {"arrowRight", 0x27},
+      {"arrowDown", 0x28},    {"home", 0x24},        {"end", 0x23},
+      {"pageUp", 0x21},       {"pageDown", 0x22},    {"insert", 0x2D},
+      {"delete", 0x2E},
+  };
+  for (const auto& entry : kTable) {
+    if (entry.name == name) return entry.vk;
+  }
+  return std::nullopt;
+}
+
+struct HotkeyRequest {
+  unsigned vk;
+  unsigned modifiers;
+};
+
+// RegisterHotKey arguments for a chord, or nothing when it is not allowed:
+// the Windows key belongs to the shell, and Ctrl or Alt is required so
+// ordinary typing never triggers it.
+inline std::optional<HotkeyRequest> HotkeyFor(std::string_view key, bool meta,
+                                              bool ctrl, bool alt,
+                                              bool shift) {
+  if (meta || !(ctrl || alt)) return std::nullopt;
+  const auto vk = VirtualKeyForName(key);
+  if (!vk) return std::nullopt;
+  unsigned modifiers = kModNoRepeat;
+  if (ctrl) modifiers |= kModControl;
+  if (alt) modifiers |= kModAlt;
+  if (shift) modifiers |= kModShift;
+  return HotkeyRequest{*vk, modifiers};
+}
+
 }  // namespace ares::desktop

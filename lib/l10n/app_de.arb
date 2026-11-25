@@ -1819,5 +1819,15 @@
   "quick_entry_hint": "Prompt für Ares eingeben…",
   "quick_entry_submit": "In Eingabefeld übernehmen",
   "quick_entry_never_sends": "Mit Enter landet der Text im Eingabefeld des Chats. Gesendet wird erst, wenn du auf Senden drückst.",
-  "quick_entry_unavailable": "Die Schnelleingabe konnte nicht geöffnet werden. Versuche es erneut."
+  "quick_entry_unavailable": "Die Schnelleingabe konnte nicht geöffnet werden. Versuche es erneut.",
+  "desktop_hotkey_setting": "Tastenkürzel für Schnelleingabe",
+  "desktop_hotkey_help": "Drücke überall {shortcut}, um die Schnelleingabe zu öffnen.",
+  "desktop_hotkey_conflict": "Eine andere App verwendet bereits {shortcut}. Wähle ein anderes Tastenkürzel.",
+  "desktop_hotkey_unsupported": "Diese Arbeitsumgebung erlaubt Apps keine globalen Tastenkürzel (zum Beispiel unter Wayland).",
+  "desktop_hotkey_no_modifier": "Füge Cmd, Strg oder Alt hinzu.",
+  "desktop_hotkey_super_key": "Die Windows- bzw. Super-Taste ist dem System vorbehalten.",
+  "desktop_hotkey_reserved": "Das System verwendet dieses Tastenkürzel bereits.",
+  "desktop_hotkey_in_app": "Ares verwendet dieses Tastenkürzel bereits für {action}.",
+  "desktop_hotkey_change": "Ändern",
+  "desktop_hotkey_reset": "Standard verwenden"
 }

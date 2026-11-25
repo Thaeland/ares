@@ -1819,5 +1819,15 @@
   "quick_entry_hint": "Введите запрос для Ares…",
   "quick_entry_submit": "Вставить в поле ввода",
   "quick_entry_never_sends": "Enter вставляет текст в поле ввода чата. Ничего не отправляется, пока вы не нажмёте «Отправить».",
-  "quick_entry_unavailable": "Не удалось открыть быстрый ввод. Попробуйте ещё раз."
+  "quick_entry_unavailable": "Не удалось открыть быстрый ввод. Попробуйте ещё раз.",
+  "desktop_hotkey_setting": "Сочетание клавиш для быстрого ввода",
+  "desktop_hotkey_help": "Нажмите {shortcut} где угодно, чтобы открыть быстрый ввод.",
+  "desktop_hotkey_conflict": "{shortcut} уже использует другое приложение. Выберите другое сочетание.",
+  "desktop_hotkey_unsupported": "Эта среда не позволяет приложениям регистрировать глобальные сочетания клавиш (например, Wayland).",
+  "desktop_hotkey_no_modifier": "Добавьте Cmd, Ctrl или Alt.",
+  "desktop_hotkey_super_key": "Клавиша Windows или Super зарезервирована системой.",
+  "desktop_hotkey_reserved": "Это сочетание уже использует система.",
+  "desktop_hotkey_in_app": "Ares уже использует это сочетание для действия «{action}».",
+  "desktop_hotkey_change": "Изменить",
+  "desktop_hotkey_reset": "По умолчанию"
 }

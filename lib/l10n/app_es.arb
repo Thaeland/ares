@@ -1819,5 +1819,15 @@
   "quick_entry_hint": "Escribe una instrucción para Ares…",
   "quick_entry_submit": "Poner en el editor",
   "quick_entry_never_sends": "Enter coloca el texto en el editor del chat. No se envía nada hasta que pulses Enviar.",
-  "quick_entry_unavailable": "No se pudo abrir la entrada rápida. Inténtalo de nuevo."
+  "quick_entry_unavailable": "No se pudo abrir la entrada rápida. Inténtalo de nuevo.",
+  "desktop_hotkey_setting": "Atajo de entrada rápida",
+  "desktop_hotkey_help": "Pulsa {shortcut} en cualquier lugar para abrir la entrada rápida.",
+  "desktop_hotkey_conflict": "Otra app ya usa {shortcut}. Elige un atajo diferente.",
+  "desktop_hotkey_unsupported": "Este escritorio no permite que las apps registren un atajo global (por ejemplo, en Wayland).",
+  "desktop_hotkey_no_modifier": "Incluye Cmd, Ctrl o Alt.",
+  "desktop_hotkey_super_key": "La tecla Windows o Super está reservada para el sistema.",
+  "desktop_hotkey_reserved": "El sistema ya usa este atajo.",
+  "desktop_hotkey_in_app": "Ares ya usa este atajo para {action}.",
+  "desktop_hotkey_change": "Cambiar",
+  "desktop_hotkey_reset": "Usar predeterminado"
 }

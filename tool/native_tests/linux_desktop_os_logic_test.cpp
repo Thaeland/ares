@@ -52,11 +52,40 @@ void TestIds() {
   CHECK(!IsChildWindowMarker("hermes://launch"));
 }
 
+void TestHotkey() {
+  using namespace ares::desktop;
+  CHECK(X11KeysymName("keyA") == "a");
+  CHECK(X11KeysymName("keyZ") == "z");
+  CHECK(X11KeysymName("digit7") == "7");
+  CHECK(X11KeysymName("space") == "space");
+  CHECK(X11KeysymName("quoteSingle") == "apostrophe");
+  CHECK(X11KeysymName("pageDown") == "Next");
+  CHECK(X11KeysymName("enter") == "Return");
+  CHECK(X11KeysymName("keya").empty());
+  CHECK(X11KeysymName("f1").empty());
+  CHECK(X11KeysymName("").empty());
+
+  CHECK(X11HotkeyModifiers(false, true, false, true) ==
+        (kControlMask | kShiftMask));
+  CHECK(X11HotkeyModifiers(false, false, true, false) == kMod1Mask);
+  CHECK(X11HotkeyModifiers(true, true, false, false) == 0u);   // Super
+  CHECK(X11HotkeyModifiers(false, false, false, true) == 0u);  // Shift only
+
+  const unsigned mods = kControlMask | kShiftMask;
+  CHECK(X11StateMatches(mods, mods));
+  CHECK(X11StateMatches(mods | kLockMask, mods));              // Caps Lock
+  CHECK(X11StateMatches(mods | kMod2Mask, mods));              // Num Lock
+  CHECK(!X11StateMatches(mods | kMod1Mask, mods));             // extra Alt
+  CHECK(!X11StateMatches(mods | kMod4Mask, mods));             // extra Super
+  CHECK(!X11StateMatches(kControlMask, mods));
+}
+
 }  // namespace
 
 int main() {
   TestLabels();
   TestIds();
+  TestHotkey();
   std::printf("linux desktop_os_logic: %d checks, %d failures\n", checks,
               failures);
   return failures == 0 ? 0 : 1;

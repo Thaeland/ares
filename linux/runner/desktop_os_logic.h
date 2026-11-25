@@ -68,6 +68,66 @@ inline bool IsChildWindowMarker(std::string_view arg) {
          arg == "--ares-pet-companion-v1" || arg == "--ares-quick-entry-v1";
 }
 
+// The X keysym name (XStringToKeysym) for a shortcuts_store key name, or
+// an empty string.
+inline std::string X11KeysymName(std::string_view name) {
+  if (name.size() == 4 && name.substr(0, 3) == "key" && name[3] >= 'A' &&
+      name[3] <= 'Z') {
+    return std::string(1, static_cast<char>(name[3] - 'A' + 'a'));
+  }
+  if (name.size() == 6 && name.substr(0, 5) == "digit" && name[5] >= '0' &&
+      name[5] <= '9') {
+    return std::string(1, name[5]);
+  }
+  struct Entry {
+    std::string_view name;
+    std::string_view keysym;
+  };
+  static constexpr Entry kTable[] = {
+      {"space", "space"},           {"enter", "Return"},
+      {"escape", "Escape"},         {"tab", "Tab"},
+      {"comma", "comma"},           {"period", "period"},
+      {"slash", "slash"},           {"semicolon", "semicolon"},
+      {"quoteSingle", "apostrophe"}, {"backslash", "backslash"},
+      {"minus", "minus"},           {"equal", "equal"},
+      {"bracketLeft", "bracketleft"}, {"bracketRight", "bracketright"},
+      {"backquote", "grave"},       {"arrowLeft", "Left"},
+      {"arrowRight", "Right"},      {"arrowUp", "Up"},
+      {"arrowDown", "Down"},        {"home", "Home"},
+      {"end", "End"},               {"pageUp", "Prior"},
+      {"pageDown", "Next"},         {"insert", "Insert"},
+      {"delete", "Delete"},
+  };
+  for (const auto& entry : kTable) {
+    if (entry.name == name) return std::string(entry.keysym);
+  }
+  return std::string();
+}
+
+// X modifier masks (X.h): the chord's modifiers, and the lock bits a grab
+// must also cover so Caps Lock or Num Lock never disable the hotkey.
+inline constexpr unsigned kShiftMask = 1u << 0;
+inline constexpr unsigned kLockMask = 1u << 1;
+inline constexpr unsigned kControlMask = 1u << 2;
+inline constexpr unsigned kMod1Mask = 1u << 3;  // Alt
+inline constexpr unsigned kMod2Mask = 1u << 4;  // Num Lock
+inline constexpr unsigned kMod4Mask = 1u << 6;  // Super
+
+// The grab modifiers for a chord: 0 when it is not allowed (Super belongs
+// to the desktop; Ctrl or Alt is required).
+inline unsigned X11HotkeyModifiers(bool meta, bool ctrl, bool alt,
+                                   bool shift) {
+  if (meta || !(ctrl || alt)) return 0;
+  return (ctrl ? kControlMask : 0) | (alt ? kMod1Mask : 0) |
+         (shift ? kShiftMask : 0);
+}
+
+// Whether a KeyPress state matches the grabbed modifiers, ignoring locks.
+inline bool X11StateMatches(unsigned state, unsigned modifiers) {
+  const unsigned relevant = kShiftMask | kControlMask | kMod1Mask | kMod4Mask;
+  return (state & relevant) == modifiers;
+}
+
 }  // namespace ares::desktop
 
 #endif  // RUNNER_DESKTOP_OS_LOGIC_H_

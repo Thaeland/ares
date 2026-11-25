@@ -6,15 +6,18 @@ library;
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/hermes_deeplink.dart';
 import '../services/locale_preference.dart';
 import '../services/notification_prefs.dart';
+import '../services/shortcuts_store.dart';
 import '../services/turn_notification_service.dart' show notificationStrings;
 import '../widgets/desktop_shortcuts.dart';
 import 'desktop_os.dart';
+import 'global_hotkey.dart';
 import 'quick_entry.dart';
 import 'tray_controller.dart';
 
@@ -28,6 +31,8 @@ class DesktopIntegration {
     this._deepLinks,
     List<QuickEntryChat> Function()? quickEntryChats,
     QuickEntrySpawn? quickEntrySpawn,
+    MethodChannel hotkeyChannel = DesktopOsChannels.hotkey,
+    TargetPlatform? platform,
     this._strings,
   }) : prefs = DesktopOsPrefs(preferences),
        _shell = shell,
@@ -40,6 +45,13 @@ class DesktopIntegration {
       locale: () => strings().localeName,
       onPrefill: _routePrefill,
       spawn: quickEntrySpawn,
+    );
+    hotkey = GlobalHotkeyController(
+      prefs: prefs,
+      shortcuts: ShortcutsStore(preferences),
+      onPressed: () => unawaited(quickEntry.toggle()),
+      channel: hotkeyChannel,
+      platform: platform,
     );
     tray = TrayController(
       prefs: prefs,
@@ -67,6 +79,7 @@ class DesktopIntegration {
 
   late final TrayController tray;
   late final QuickEntryLauncher quickEntry;
+  late final GlobalHotkeyController hotkey;
 
   bool _disposed = false;
 
@@ -76,6 +89,7 @@ class DesktopIntegration {
     if (_disposed) return;
     current = this;
     tray.start();
+    hotkey.start();
   }
 
   AppLocalizations strings() {
@@ -144,6 +158,7 @@ class DesktopIntegration {
     _disposed = true;
     if (identical(current, this)) current = null;
     quickEntry.dispose();
+    await hotkey.dispose();
     await tray.dispose();
   }
 }

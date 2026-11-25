@@ -5,13 +5,29 @@
 /// [DesktopIntegration] applies the change natively.
 library;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' hide ShortcutRegistry;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/l10n.dart';
+import '../services/shortcuts_store.dart';
+import '../widgets/keyboard_shortcuts_settings_card.dart'
+    show showShortcutChordEditor;
 import 'desktop_integration.dart';
 import 'desktop_os.dart';
+import 'global_hotkey.dart';
 import 'tray_controller.dart';
+
+/// The settings text for a rejected hotkey chord.
+String hotkeyProblemText(AppLocalizations l, HotkeyCheck check) =>
+    switch (check.problem) {
+      HotkeyProblem.noModifier || null => l.desktop_hotkey_no_modifier,
+      HotkeyProblem.superKey => l.desktop_hotkey_super_key,
+      HotkeyProblem.reserved => l.desktop_hotkey_reserved,
+      HotkeyProblem.inAppShortcut => l.desktop_hotkey_in_app(
+        ShortcutRegistry.label(check.action ?? ShortcutAction.commandPalette),
+      ),
+    };
 
 class DesktopIntegrationCard extends StatelessWidget {
   const DesktopIntegrationCard({
@@ -25,12 +41,47 @@ class DesktopIntegrationCard extends StatelessWidget {
   /// Defaults to [DesktopIntegration.current].
   final DesktopIntegration? integration;
 
+  Future<void> _changeHotkey(
+    BuildContext context,
+    DesktopOsPrefs prefs,
+    GlobalHotkeyController? hotkey,
+    KeyChord current,
+    TargetPlatform platform,
+  ) async {
+    final l = context.sharedL10n;
+    final next = await showShortcutChordEditor(
+      context,
+      title: l.desktop_hotkey_setting,
+      initial: current,
+    );
+    if (next == null || !context.mounted) return;
+    final check =
+        hotkey?.check(next) ??
+        checkGlobalHotkey(
+          next,
+          platform: platform,
+          inApp: ShortcutsStore(preferences).allBindings(),
+        );
+    if (!check.isOk) {
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        SnackBar(
+          key: const Key('desktop-hotkey-rejected'),
+          content: Text(hotkeyProblemText(l, check)),
+        ),
+      );
+      return;
+    }
+    await prefs.setHotkeyChord(next.serialize());
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l = context.sharedL10n;
     final prefs = DesktopOsPrefs(preferences);
     final running = integration ?? DesktopIntegration.current;
+    final hotkey = running?.hotkey;
+    final platform = hotkey?.platform ?? defaultTargetPlatform;
     final muted = theme.textTheme.bodySmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
     );
@@ -41,6 +92,23 @@ class DesktopIntegrationCard extends StatelessWidget {
         child: ValueListenableBuilder<int>(
           valueListenable: desktopOsPrefsChanges,
           builder: (context, _, _) {
+            final chord =
+                KeyChord.parse(prefs.hotkeyChord) ??
+                defaultQuickEntryChord(platform);
+            final chordLabel = formatKeyChord(
+              chord,
+              appleSymbols: platform == TargetPlatform.macOS,
+            );
+            String hotkeyText(HotkeyStatus status) => switch (status) {
+              HotkeyStatus.off => chordLabel,
+              HotkeyStatus.registered => l.desktop_hotkey_help(chordLabel),
+              HotkeyStatus.conflict => l.desktop_hotkey_conflict(chordLabel),
+              HotkeyStatus.unsupported => l.desktop_hotkey_unsupported,
+              HotkeyStatus.invalid => hotkeyProblemText(
+                l,
+                hotkey?.lastCheck ?? HotkeyCheck.ok,
+              ),
+            };
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -92,6 +160,47 @@ class DesktopIntegrationCard extends StatelessWidget {
                           )
                         : const SizedBox.shrink(),
                   ),
+                const Divider(height: 16),
+                SwitchListTile(
+                  key: const Key('desktop-hotkey-switch'),
+                  title: Text(l.desktop_hotkey_setting),
+                  subtitle: hotkey == null
+                      ? Text(chordLabel)
+                      : ValueListenableBuilder<HotkeyStatus>(
+                          valueListenable: hotkey.status,
+                          builder: (context, status, _) => Text(
+                            hotkeyText(status),
+                            key: Key('desktop-hotkey-status-${status.name}'),
+                          ),
+                        ),
+                  value: prefs.hotkeyEnabled,
+                  onChanged: (value) => prefs.setHotkeyEnabled(value),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Wrap(
+                    spacing: 8,
+                    children: [
+                      TextButton(
+                        key: const Key('desktop-hotkey-change'),
+                        onPressed: () => _changeHotkey(
+                          context,
+                          prefs,
+                          hotkey,
+                          chord,
+                          platform,
+                        ),
+                        child: Text(l.desktop_hotkey_change),
+                      ),
+                      if (prefs.hotkeyChord != null)
+                        TextButton(
+                          key: const Key('desktop-hotkey-reset'),
+                          onPressed: () => prefs.setHotkeyChord(null),
+                          child: Text(l.desktop_hotkey_reset),
+                        ),
+                    ],
+                  ),
+                ),
               ],
             );
           },

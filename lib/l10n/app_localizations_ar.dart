@@ -6861,4 +6861,41 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get quick_entry_unavailable =>
       'تعذّر فتح الإدخال السريع. حاول مرة أخرى.';
+
+  @override
+  String get desktop_hotkey_setting => 'اختصار الإدخال السريع';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'اضغط $shortcut في أي مكان لفتح الإدخال السريع.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return 'يستخدم تطبيق آخر $shortcut بالفعل. اختر اختصارًا مختلفًا.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'لا يسمح سطح المكتب هذا للتطبيقات بتسجيل اختصار عام (مثل Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'أضف Cmd أو Ctrl أو Alt.';
+
+  @override
+  String get desktop_hotkey_super_key => 'مفتاح Windows أو Super محجوز للنظام.';
+
+  @override
+  String get desktop_hotkey_reserved => 'يستخدم النظام هذا الاختصار بالفعل.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'يستخدم Ares هذا الاختصار بالفعل لـ $action.';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'تغيير';
+
+  @override
+  String get desktop_hotkey_reset => 'استخدام الافتراضي';
 }

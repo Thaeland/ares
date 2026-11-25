@@ -52,10 +52,19 @@ DesktopOs::DesktopOs(HWND window, flutter::FlutterEngine* engine)
   shell_->SetMethodCallHandler([this](const auto& call, auto result) {
     HandleShell(call, std::move(result));
   });
+  hotkey_ = std::make_unique<flutter::MethodChannel<EncodableValue>>(
+      engine->messenger(), "com.hermesagent.ares/hotkey",
+      &flutter::StandardMethodCodec::GetInstance());
+  hotkey_->SetMethodCallHandler([this](const auto& call, auto result) {
+    HandleHotkey(call, std::move(result));
+  });
 }
 
 DesktopOs::~DesktopOs() {
+  // Exit releases the hotkey even if Dart never got to unregister it.
+  UnregisterHotkey();
   RemoveTray();
+  if (hotkey_) hotkey_->SetMethodCallHandler(nullptr);
   if (shell_) shell_->SetMethodCallHandler(nullptr);
   if (tray_icon_) ::DestroyIcon(tray_icon_);
 }
@@ -122,6 +131,49 @@ void DesktopOs::HandleShell(
   const bool shown = InstallTray();
   close_to_tray_ = shown && BoolField(*args, "closeToTray");
   result->Success(EncodableValue(shown));
+}
+
+void DesktopOs::HandleHotkey(
+    const flutter::MethodCall<EncodableValue>& call, Result result) {
+  const std::string& method = call.method_name();
+  if (method == "unregister") {
+    UnregisterHotkey();
+    result->Success();
+    return;
+  }
+  if (method != "register") {
+    result->NotImplemented();
+    return;
+  }
+  const auto* args = std::get_if<EncodableMap>(call.arguments());
+  if (!args) {
+    result->Error("bad-args", "register expects a map");
+    return;
+  }
+  const auto request = ares::desktop::HotkeyFor(
+      StringField(*args, "key"), BoolField(*args, "meta"),
+      BoolField(*args, "ctrl"), BoolField(*args, "alt"),
+      BoolField(*args, "shift"));
+  if (!request) {
+    result->Success(EncodableValue("invalid"));
+    return;
+  }
+  UnregisterHotkey();
+  if (::RegisterHotKey(window_, ares::desktop::kHotkeyId, request->modifiers,
+                       request->vk)) {
+    hotkey_registered_ = true;
+    result->Success(EncodableValue("registered"));
+    return;
+  }
+  const DWORD error = ::GetLastError();
+  result->Success(EncodableValue(
+      error == ERROR_HOTKEY_ALREADY_REGISTERED ? "conflict" : "unsupported"));
+}
+
+void DesktopOs::UnregisterHotkey() {
+  if (!hotkey_registered_) return;
+  ::UnregisterHotKey(window_, ares::desktop::kHotkeyId);
+  hotkey_registered_ = false;
 }
 
 bool DesktopOs::InstallTray() {
@@ -225,6 +277,15 @@ std::optional<LRESULT> DesktopOs::HandleMessage(HWND, UINT message,
       InstallTray();
     }
     return std::nullopt;
+  }
+  if (message == WM_HOTKEY &&
+      wparam == static_cast<WPARAM>(ares::desktop::kHotkeyId)) {
+    if (hotkey_registered_ && hotkey_) {
+      // Quick entry starts as a child process; let it take the foreground.
+      ::AllowSetForegroundWindow(ASFW_ANY);
+      hotkey_->InvokeMethod("onHotKey", nullptr);
+    }
+    return 0;
   }
   if (message == WM_CLOSE && close_to_tray_ && tray_installed_) {
     ::ShowWindow(window_, SW_HIDE);

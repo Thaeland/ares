@@ -2,7 +2,8 @@
 /// and NextGen, with a narrow-device / touch-friendly chord editor fallback.
 library;
 
-import 'package:flutter/foundation.dart' show TargetPlatform, defaultTargetPlatform;
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,10 +12,7 @@ import '../l10n/l10n.dart';
 import '../services/shortcuts_store.dart' as shortcuts_store;
 
 class KeyboardShortcutsSettingsCard extends StatelessWidget {
-  const KeyboardShortcutsSettingsCard({
-    required this.preferences,
-    super.key,
-  });
+  const KeyboardShortcutsSettingsCard({required this.preferences, super.key});
 
   final SharedPreferences preferences;
 
@@ -122,12 +120,17 @@ class KeyboardShortcutsSettingsCard extends StatelessWidget {
                         child: Row(
                           children: [
                             Expanded(
-                              child: Text(shortcuts_store.ShortcutRegistry.label(action)),
+                              child: Text(
+                                shortcuts_store.ShortcutRegistry.label(action),
+                              ),
                             ),
                             ActionChip(
                               key: Key('shortcut-rebind-${action.id}'),
                               label: Text(
-                                shortcuts_store.formatKeyChord(chord, appleSymbols: apple),
+                                shortcuts_store.formatKeyChord(
+                                  chord,
+                                  appleSymbols: apple,
+                                ),
                               ),
                               onPressed: () => _rebind(context, store, action),
                             ),
@@ -152,14 +155,43 @@ class KeyboardShortcutsSettingsCard extends StatelessWidget {
   }
 }
 
+/// Opens the chord editor (dialog, or a full-screen page below 480 px) and
+/// returns the chosen chord, or null when cancelled. Shared with the desktop
+/// quick-entry hotkey setting.
+Future<shortcuts_store.KeyChord?> showShortcutChordEditor(
+  BuildContext context, {
+  required String title,
+  required shortcuts_store.KeyChord initial,
+}) {
+  final isNarrow = MediaQuery.sizeOf(context).width < 480;
+  final editor = _ShortcutChordEditor(
+    title: title,
+    initial: initial,
+    fullscreen: isNarrow,
+  );
+  return isNarrow
+      ? Navigator.of(context).push<shortcuts_store.KeyChord>(
+          MaterialPageRoute<shortcuts_store.KeyChord>(
+            fullscreenDialog: true,
+            builder: (_) => editor,
+          ),
+        )
+      : showDialog<shortcuts_store.KeyChord>(
+          context: context,
+          builder: (_) => editor,
+        );
+}
+
 class _ShortcutChordEditor extends StatefulWidget {
   const _ShortcutChordEditor({
-    required this.action,
+    this.action,
+    this.title,
     required this.initial,
     required this.fullscreen,
   });
 
-  final shortcuts_store.ShortcutAction action;
+  final shortcuts_store.ShortcutAction? action;
+  final String? title;
   final shortcuts_store.KeyChord initial;
   final bool fullscreen;
 
@@ -172,7 +204,8 @@ class _ShortcutChordEditorState extends State<_ShortcutChordEditor> {
   late bool _ctrl = widget.initial.ctrl;
   late bool _alt = widget.initial.alt;
   late bool _shift = widget.initial.shift;
-  late String _keyName = shortcuts_store.supportedShortcutKeys.containsKey(widget.initial.keyName)
+  late String _keyName =
+      shortcuts_store.supportedShortcutKeys.containsKey(widget.initial.keyName)
       ? widget.initial.keyName
       : 'keyK';
 
@@ -300,7 +333,9 @@ class _ShortcutChordEditorState extends State<_ShortcutChordEditor> {
       ),
     );
 
-    final title = 'Shortcut: ${shortcuts_store.ShortcutRegistry.label(widget.action)}';
+    final title =
+        widget.title ??
+        'Shortcut: ${shortcuts_store.ShortcutRegistry.label(widget.action!)}';
     if (widget.fullscreen) {
       return Scaffold(
         appBar: AppBar(

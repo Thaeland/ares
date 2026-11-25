@@ -1819,5 +1819,15 @@
   "quick_entry_hint": "Ares へのプロンプトを入力…",
   "quick_entry_submit": "入力欄に入れる",
   "quick_entry_never_sends": "Enter でテキストがチャットの入力欄に入ります。送信を押すまで何も送信されません。",
-  "quick_entry_unavailable": "クイック入力を開けませんでした。もう一度お試しください。"
+  "quick_entry_unavailable": "クイック入力を開けませんでした。もう一度お試しください。",
+  "desktop_hotkey_setting": "クイック入力のショートカット",
+  "desktop_hotkey_help": "どこからでも {shortcut} を押すとクイック入力が開きます。",
+  "desktop_hotkey_conflict": "{shortcut} は別のアプリが使用しています。別のショートカットを選んでください。",
+  "desktop_hotkey_unsupported": "このデスクトップではアプリがグローバルショートカットを登録できません（Wayland など）。",
+  "desktop_hotkey_no_modifier": "Cmd、Ctrl、Alt のいずれかを含めてください。",
+  "desktop_hotkey_super_key": "Windows キーまたは Super キーはシステム用に予約されています。",
+  "desktop_hotkey_reserved": "このショートカットはシステムが使用しています。",
+  "desktop_hotkey_in_app": "このショートカットは Ares の {action} で使用されています。",
+  "desktop_hotkey_change": "変更",
+  "desktop_hotkey_reset": "既定値を使用"
 }

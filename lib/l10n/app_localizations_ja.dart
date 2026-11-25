@@ -6716,4 +6716,42 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get quick_entry_unavailable => 'クイック入力を開けませんでした。もう一度お試しください。';
+
+  @override
+  String get desktop_hotkey_setting => 'クイック入力のショートカット';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'どこからでも $shortcut を押すとクイック入力が開きます。';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return '$shortcut は別のアプリが使用しています。別のショートカットを選んでください。';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'このデスクトップではアプリがグローバルショートカットを登録できません（Wayland など）。';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Cmd、Ctrl、Alt のいずれかを含めてください。';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'Windows キーまたは Super キーはシステム用に予約されています。';
+
+  @override
+  String get desktop_hotkey_reserved => 'このショートカットはシステムが使用しています。';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'このショートカットは Ares の $action で使用されています。';
+  }
+
+  @override
+  String get desktop_hotkey_change => '変更';
+
+  @override
+  String get desktop_hotkey_reset => '既定値を使用';
 }

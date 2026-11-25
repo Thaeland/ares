@@ -30,6 +30,21 @@ A small always-on-top window for typing a prompt into a chosen chat or a new one
 - Showing it while it is open closes it (toggle). Windows activation stays primary-only: no second activator, COM server or `WM_COPYDATA` path; the primary calls `AllowSetForegroundWindow(ASFW_ANY)` before a tray or hotkey launch so the window can take focus.
 - Placement: Windows centres it on the monitor under the pointer, a fifth of the way down, `HWND_TOPMOST`; macOS uses a floating window on all Spaces (also over full-screen apps); Linux keeps it above, centred, without a taskbar entry.
 
+## Global hotkey — `com.hermesagent.ares/hotkey`
+
+| Direction | Method | Arguments | Result |
+| --- | --- | --- | --- |
+| Dart → runner | `register` | `{key, meta, ctrl, alt, shift}` (`key` in `shortcuts_store` names, e.g. `space`, `keyK`) | `registered`, `conflict`, `unsupported` or `invalid` |
+| Dart → runner | `unregister` | — | — |
+| runner → Dart | `onHotKey` | — | — |
+
+- Opt-in (off by default) and remappable in **Desktop integration → Quick entry shortcut**. The default is Cmd+Shift+Space on macOS and Ctrl+Shift+Space on Windows and Linux. A press toggles quick entry.
+- Dart checks a chord before the runner sees it: it needs Cmd, Ctrl or Alt; the Windows/Super key is refused on Windows and Linux; a short list of system chords is refused (Spotlight, app switching, Task Manager, lock screen …); and it must not equal an in-app shortcut, including the Ctrl form of an uncustomized Cmd shortcut on Windows and Linux. Rebinding an in-app shortcut onto the hotkey releases the hotkey. The runner reports a chord another app owns as `conflict`.
+- Unregistered when turned off, before a remap, when Dart disposes, and by the runner when the primary window goes away (exit).
+- Windows: `RegisterHotKey` on the primary window with `MOD_NOREPEAT` (`ERROR_HOTKEY_ALREADY_REGISTERED` → conflict); `WM_HOTKEY` allows the quick-entry child to take the foreground.
+- macOS: Carbon `RegisterEventHotKey` (no Accessibility permission needed; `eventHotKeyExistsErr` → conflict).
+- Linux: a passive `XGrabKey` on the X11 root window, also covering Caps Lock and Num Lock (`BadAccess` → conflict). libX11 (MIT), already a GTK 3 dependency, is linked directly. Wayland has no app-registered global shortcut, so `register` returns `unsupported` and Settings says so; the XDG GlobalShortcuts portal is not used.
+
 ## Checks without an app build
 
 - `tool/native_tests/run.sh` — host C++17 unit tests (`clang++ -std=c++17 -Wall -Wextra -Werror -pedantic`) for the platform-free headers `windows/runner/desktop_os_logic.h` and `linux/runner/desktop_os_logic.h`.

@@ -6722,4 +6722,42 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get quick_entry_unavailable => '빠른 입력을 열 수 없습니다. 다시 시도하세요.';
+
+  @override
+  String get desktop_hotkey_setting => '빠른 입력 단축키';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return '어디서나 $shortcut을(를) 누르면 빠른 입력이 열립니다.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return '다른 앱이 이미 $shortcut을(를) 사용 중입니다. 다른 단축키를 선택하세요.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      '이 데스크톱에서는 앱이 전역 단축키를 등록할 수 없습니다(예: Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Cmd, Ctrl 또는 Alt를 포함하세요.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'Windows 키 또는 Super 키는 시스템용으로 예약되어 있습니다.';
+
+  @override
+  String get desktop_hotkey_reserved => '시스템에서 이미 이 단축키를 사용합니다.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares에서 이미 $action에 이 단축키를 사용합니다.';
+  }
+
+  @override
+  String get desktop_hotkey_change => '변경';
+
+  @override
+  String get desktop_hotkey_reset => '기본값 사용';
 }

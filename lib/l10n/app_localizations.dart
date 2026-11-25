@@ -11588,6 +11588,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Quick entry couldn\'t open. Try again.'**
   String get quick_entry_unavailable;
+
+  /// No description provided for @desktop_hotkey_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick entry shortcut'**
+  String get desktop_hotkey_setting;
+
+  /// No description provided for @desktop_hotkey_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Press {shortcut} anywhere to open quick entry.'**
+  String desktop_hotkey_help(String shortcut);
+
+  /// No description provided for @desktop_hotkey_conflict.
+  ///
+  /// In en, this message translates to:
+  /// **'Another app already uses {shortcut}. Choose a different shortcut.'**
+  String desktop_hotkey_conflict(String shortcut);
+
+  /// No description provided for @desktop_hotkey_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This desktop does not let apps register a global shortcut (for example on Wayland).'**
+  String get desktop_hotkey_unsupported;
+
+  /// No description provided for @desktop_hotkey_no_modifier.
+  ///
+  /// In en, this message translates to:
+  /// **'Include Cmd, Ctrl or Alt.'**
+  String get desktop_hotkey_no_modifier;
+
+  /// No description provided for @desktop_hotkey_super_key.
+  ///
+  /// In en, this message translates to:
+  /// **'The Windows or Super key is reserved for the system.'**
+  String get desktop_hotkey_super_key;
+
+  /// No description provided for @desktop_hotkey_reserved.
+  ///
+  /// In en, this message translates to:
+  /// **'The system already uses this shortcut.'**
+  String get desktop_hotkey_reserved;
+
+  /// No description provided for @desktop_hotkey_in_app.
+  ///
+  /// In en, this message translates to:
+  /// **'Ares already uses this shortcut for {action}.'**
+  String desktop_hotkey_in_app(String action);
+
+  /// No description provided for @desktop_hotkey_change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get desktop_hotkey_change;
+
+  /// No description provided for @desktop_hotkey_reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Use default'**
+  String get desktop_hotkey_reset;
 }
 
 class _AppLocalizationsDelegate

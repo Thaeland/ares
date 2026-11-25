@@ -6929,4 +6929,42 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get quick_entry_unavailable =>
       'Impossible d’ouvrir la saisie rapide. Réessayez.';
+
+  @override
+  String get desktop_hotkey_setting => 'Raccourci de saisie rapide';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'Appuyez sur $shortcut n’importe où pour ouvrir la saisie rapide.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return 'Une autre app utilise déjà $shortcut. Choisissez un autre raccourci.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'Ce bureau ne permet pas aux apps d’enregistrer un raccourci global (par exemple sous Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Incluez Cmd, Ctrl ou Alt.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'La touche Windows ou Super est réservée au système.';
+
+  @override
+  String get desktop_hotkey_reserved => 'Le système utilise déjà ce raccourci.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares utilise déjà ce raccourci pour $action.';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'Modifier';
+
+  @override
+  String get desktop_hotkey_reset => 'Utiliser la valeur par défaut';
 }

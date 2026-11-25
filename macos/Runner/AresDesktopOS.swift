@@ -2,11 +2,13 @@
 // (docs/desktop-os-native.md):
 //
 //   com.hermesagent.ares/shell   setTray, showWindow, quit; onTrayAction
+//   com.hermesagent.ares/hotkey  register, unregister; onHotKey
 //
 // Only the primary process creates this. Pop-out, companion and quick-entry
 // children are separate processes started with a marker argument and never
 // own a menu-bar item.
 
+import Carbon.HIToolbox
 import Cocoa
 import FlutterMacOS
 
@@ -26,7 +28,11 @@ enum AresProcessRole {
 
 final class AresDesktopOS: NSObject {
   private let shellChannel: FlutterMethodChannel
+  private let hotkeyChannel: FlutterMethodChannel
   private weak var window: NSWindow?
+
+  private var hotKeyRef: EventHotKeyRef?
+  private var hotKeyHandler: EventHandlerRef?
 
   private var statusItem: NSStatusItem?
   private var trayItemIds: [String] = []
@@ -39,6 +45,10 @@ final class AresDesktopOS: NSObject {
       name: "com.hermesagent.ares/shell",
       binaryMessenger: messenger
     )
+    hotkeyChannel = FlutterMethodChannel(
+      name: "com.hermesagent.ares/hotkey",
+      binaryMessenger: messenger
+    )
     self.window = window
     super.init()
     // A hidden window must be shown again, not recreated.
@@ -46,11 +56,100 @@ final class AresDesktopOS: NSObject {
     shellChannel.setMethodCallHandler { [weak self] call, result in
       self?.handleShell(call, result: result)
     }
+    hotkeyChannel.setMethodCallHandler { [weak self] call, result in
+      self?.handleHotkey(call, result: result)
+    }
   }
 
   func shutdown() {
+    // Exit releases the hotkey even if Dart never got to unregister it.
+    unregisterHotKey()
+    if let handler = hotKeyHandler {
+      RemoveEventHandler(handler)
+      hotKeyHandler = nil
+    }
     removeStatusItem()
     shellChannel.setMethodCallHandler(nil)
+    hotkeyChannel.setMethodCallHandler(nil)
+  }
+
+  // MARK: - Global hotkey (Carbon; needs no Accessibility permission)
+
+  private func handleHotkey(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    switch call.method {
+    case "unregister":
+      unregisterHotKey()
+      result(nil)
+    case "register":
+      guard let args = call.arguments as? [String: Any] else {
+        result(FlutterError(code: "bad-args", message: "register expects a map", details: nil))
+        return
+      }
+      result(registerHotKey(args))
+    default:
+      result(FlutterMethodNotImplemented)
+    }
+  }
+
+  private func registerHotKey(_ args: [String: Any]) -> String {
+    let command = args["meta"] as? Bool == true
+    let control = args["ctrl"] as? Bool == true
+    let option = args["alt"] as? Bool == true
+    let shift = args["shift"] as? Bool == true
+    guard command || control || option,
+          let key = args["key"] as? String,
+          let code = AresHotkeyKeys.keyCode(for: key)
+    else { return "invalid" }
+    unregisterHotKey()
+    guard installHotKeyHandler() else { return "unsupported" }
+    var modifiers: UInt32 = 0
+    if command { modifiers |= UInt32(cmdKey) }
+    if control { modifiers |= UInt32(controlKey) }
+    if option { modifiers |= UInt32(optionKey) }
+    if shift { modifiers |= UInt32(shiftKey) }
+    let id = EventHotKeyID(signature: OSType(0x4152_4553), id: 1)  // 'ARES'
+    var ref: EventHotKeyRef?
+    let status = RegisterEventHotKey(
+      UInt32(code), modifiers, id, GetApplicationEventTarget(), 0, &ref)
+    if status == noErr, let ref = ref {
+      hotKeyRef = ref
+      return "registered"
+    }
+    return status == OSStatus(eventHotKeyExistsErr) ? "conflict" : "unsupported"
+  }
+
+  private func unregisterHotKey() {
+    if let ref = hotKeyRef {
+      UnregisterEventHotKey(ref)
+      hotKeyRef = nil
+    }
+  }
+
+  private func installHotKeyHandler() -> Bool {
+    if hotKeyHandler != nil { return true }
+    var spec = EventTypeSpec(
+      eventClass: OSType(kEventClassKeyboard),
+      eventKind: UInt32(kEventHotKeyPressed)
+    )
+    let status = InstallEventHandler(
+      GetApplicationEventTarget(),
+      { _, _, userData -> OSStatus in
+        guard let userData = userData else { return noErr }
+        let owner = Unmanaged<AresDesktopOS>.fromOpaque(userData).takeUnretainedValue()
+        DispatchQueue.main.async { owner.hotKeyPressed() }
+        return noErr
+      },
+      1,
+      &spec,
+      Unmanaged.passUnretained(self).toOpaque(),
+      &hotKeyHandler
+    )
+    return status == noErr
+  }
+
+  private func hotKeyPressed() {
+    guard hotKeyRef != nil else { return }
+    hotkeyChannel.invokeMethod("onHotKey", arguments: nil)
   }
 
   // MARK: - Shell
@@ -136,6 +235,51 @@ final class AresDesktopOS: NSObject {
     guard trayItemIds.indices.contains(sender.tag) else { return }
     shellChannel.invokeMethod("onTrayAction", arguments: trayItemIds[sender.tag])
   }
+}
+
+/// shortcuts_store key names to Carbon virtual key codes.
+enum AresHotkeyKeys {
+  static func keyCode(for name: String) -> Int? {
+    if name.count == 4, name.hasPrefix("key"), let letter = name.last,
+       let code = letters[letter] {
+      return code
+    }
+    if name.count == 6, name.hasPrefix("digit"), let digit = name.last,
+       let code = digits[digit] {
+      return code
+    }
+    return named[name]
+  }
+
+  private static let letters: [Character: Int] = [
+    "A": kVK_ANSI_A, "B": kVK_ANSI_B, "C": kVK_ANSI_C, "D": kVK_ANSI_D,
+    "E": kVK_ANSI_E, "F": kVK_ANSI_F, "G": kVK_ANSI_G, "H": kVK_ANSI_H,
+    "I": kVK_ANSI_I, "J": kVK_ANSI_J, "K": kVK_ANSI_K, "L": kVK_ANSI_L,
+    "M": kVK_ANSI_M, "N": kVK_ANSI_N, "O": kVK_ANSI_O, "P": kVK_ANSI_P,
+    "Q": kVK_ANSI_Q, "R": kVK_ANSI_R, "S": kVK_ANSI_S, "T": kVK_ANSI_T,
+    "U": kVK_ANSI_U, "V": kVK_ANSI_V, "W": kVK_ANSI_W, "X": kVK_ANSI_X,
+    "Y": kVK_ANSI_Y, "Z": kVK_ANSI_Z,
+  ]
+
+  private static let digits: [Character: Int] = [
+    "0": kVK_ANSI_0, "1": kVK_ANSI_1, "2": kVK_ANSI_2, "3": kVK_ANSI_3,
+    "4": kVK_ANSI_4, "5": kVK_ANSI_5, "6": kVK_ANSI_6, "7": kVK_ANSI_7,
+    "8": kVK_ANSI_8, "9": kVK_ANSI_9,
+  ]
+
+  private static let named: [String: Int] = [
+    "space": kVK_Space, "enter": kVK_Return, "escape": kVK_Escape,
+    "tab": kVK_Tab, "comma": kVK_ANSI_Comma, "period": kVK_ANSI_Period,
+    "slash": kVK_ANSI_Slash, "semicolon": kVK_ANSI_Semicolon,
+    "quoteSingle": kVK_ANSI_Quote, "backslash": kVK_ANSI_Backslash,
+    "minus": kVK_ANSI_Minus, "equal": kVK_ANSI_Equal,
+    "bracketLeft": kVK_ANSI_LeftBracket, "bracketRight": kVK_ANSI_RightBracket,
+    "backquote": kVK_ANSI_Grave, "arrowLeft": kVK_LeftArrow,
+    "arrowRight": kVK_RightArrow, "arrowUp": kVK_UpArrow,
+    "arrowDown": kVK_DownArrow, "home": kVK_Home, "end": kVK_End,
+    "pageUp": kVK_PageUp, "pageDown": kVK_PageDown,
+    "delete": kVK_ForwardDelete,
+  ]
 }
 
 /// Label rules shared with the Windows and Linux runners.

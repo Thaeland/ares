@@ -25,5 +25,9 @@ add_definitions(-DAPPLICATION_ID="${APPLICATION_ID}")
 # Add dependency libraries. Add any application-specific dependencies here.
 target_link_libraries(${BINARY_NAME} PRIVATE flutter)
 target_link_libraries(${BINARY_NAME} PRIVATE PkgConfig::GTK)
+# The global quick-entry hotkey grabs a key on the X11 root window. libX11
+# (MIT) is already a GTK 3 dependency; it is linked directly for XGrabKey.
+pkg_check_modules(X11 REQUIRED IMPORTED_TARGET x11)
+target_link_libraries(${BINARY_NAME} PRIVATE PkgConfig::X11)
 
 target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}")

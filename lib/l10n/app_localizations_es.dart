@@ -6914,4 +6914,42 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get quick_entry_unavailable =>
       'No se pudo abrir la entrada rápida. Inténtalo de nuevo.';
+
+  @override
+  String get desktop_hotkey_setting => 'Atajo de entrada rápida';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'Pulsa $shortcut en cualquier lugar para abrir la entrada rápida.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return 'Otra app ya usa $shortcut. Elige un atajo diferente.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'Este escritorio no permite que las apps registren un atajo global (por ejemplo, en Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Incluye Cmd, Ctrl o Alt.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'La tecla Windows o Super está reservada para el sistema.';
+
+  @override
+  String get desktop_hotkey_reserved => 'El sistema ya usa este atajo.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares ya usa este atajo para $action.';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'Cambiar';
+
+  @override
+  String get desktop_hotkey_reset => 'Usar predeterminado';
 }

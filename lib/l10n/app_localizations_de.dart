@@ -6919,4 +6919,43 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get quick_entry_unavailable =>
       'Die Schnelleingabe konnte nicht geöffnet werden. Versuche es erneut.';
+
+  @override
+  String get desktop_hotkey_setting => 'Tastenkürzel für Schnelleingabe';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'Drücke überall $shortcut, um die Schnelleingabe zu öffnen.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return 'Eine andere App verwendet bereits $shortcut. Wähle ein anderes Tastenkürzel.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'Diese Arbeitsumgebung erlaubt Apps keine globalen Tastenkürzel (zum Beispiel unter Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Füge Cmd, Strg oder Alt hinzu.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'Die Windows- bzw. Super-Taste ist dem System vorbehalten.';
+
+  @override
+  String get desktop_hotkey_reserved =>
+      'Das System verwendet dieses Tastenkürzel bereits.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares verwendet dieses Tastenkürzel bereits für $action.';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'Ändern';
+
+  @override
+  String get desktop_hotkey_reset => 'Standard verwenden';
 }

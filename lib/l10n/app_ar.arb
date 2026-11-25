@@ -2874,5 +2874,15 @@
   "quick_entry_hint": "اكتب طلبًا لـ Ares…",
   "quick_entry_submit": "ضعه في مربع الكتابة",
   "quick_entry_never_sends": "يضع Enter النص في مربع كتابة الدردشة. لا يُرسَل شيء حتى تضغط إرسال.",
-  "quick_entry_unavailable": "تعذّر فتح الإدخال السريع. حاول مرة أخرى."
+  "quick_entry_unavailable": "تعذّر فتح الإدخال السريع. حاول مرة أخرى.",
+  "desktop_hotkey_setting": "اختصار الإدخال السريع",
+  "desktop_hotkey_help": "اضغط {shortcut} في أي مكان لفتح الإدخال السريع.",
+  "desktop_hotkey_conflict": "يستخدم تطبيق آخر {shortcut} بالفعل. اختر اختصارًا مختلفًا.",
+  "desktop_hotkey_unsupported": "لا يسمح سطح المكتب هذا للتطبيقات بتسجيل اختصار عام (مثل Wayland).",
+  "desktop_hotkey_no_modifier": "أضف Cmd أو Ctrl أو Alt.",
+  "desktop_hotkey_super_key": "مفتاح Windows أو Super محجوز للنظام.",
+  "desktop_hotkey_reserved": "يستخدم النظام هذا الاختصار بالفعل.",
+  "desktop_hotkey_in_app": "يستخدم Ares هذا الاختصار بالفعل لـ {action}.",
+  "desktop_hotkey_change": "تغيير",
+  "desktop_hotkey_reset": "استخدام الافتراضي"
 }

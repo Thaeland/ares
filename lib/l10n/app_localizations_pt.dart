@@ -6916,6 +6916,44 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get quick_entry_unavailable =>
       'Não foi possível abrir a entrada rápida. Tente novamente.';
+
+  @override
+  String get desktop_hotkey_setting => 'Atalho da entrada rápida';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'Pressione $shortcut em qualquer lugar para abrir a entrada rápida.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return 'Outro app já usa $shortcut. Escolha um atalho diferente.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'Esta área de trabalho não permite que apps registrem um atalho global (por exemplo, no Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Inclua Cmd, Ctrl ou Alt.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'A tecla Windows ou Super é reservada ao sistema.';
+
+  @override
+  String get desktop_hotkey_reserved => 'O sistema já usa este atalho.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'O Ares já usa este atalho para $action.';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'Alterar';
+
+  @override
+  String get desktop_hotkey_reset => 'Usar padrão';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -13256,4 +13294,42 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get quick_entry_unavailable =>
       'Não foi possível abrir a entrada rápida. Tente novamente.';
+
+  @override
+  String get desktop_hotkey_setting => 'Atalho da entrada rápida';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'Pressione $shortcut em qualquer lugar para abrir a entrada rápida.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return 'Outro app já usa $shortcut. Escolha um atalho diferente.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'Esta área de trabalho não permite que apps registrem um atalho global (por exemplo, no Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Inclua Cmd, Ctrl ou Alt.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'A tecla Windows ou Super é reservada ao sistema.';
+
+  @override
+  String get desktop_hotkey_reserved => 'O sistema já usa este atalho.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'O Ares já usa este atalho para $action.';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'Alterar';
+
+  @override
+  String get desktop_hotkey_reset => 'Usar padrão';
 }

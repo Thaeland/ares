@@ -1819,5 +1819,15 @@
   "quick_entry_hint": "Saisissez une requête pour Ares…",
   "quick_entry_submit": "Placer dans la zone de saisie",
   "quick_entry_never_sends": "Entrée place le texte dans la zone de saisie de la discussion. Rien n’est envoyé avant que vous appuyiez sur Envoyer.",
-  "quick_entry_unavailable": "Impossible d’ouvrir la saisie rapide. Réessayez."
+  "quick_entry_unavailable": "Impossible d’ouvrir la saisie rapide. Réessayez.",
+  "desktop_hotkey_setting": "Raccourci de saisie rapide",
+  "desktop_hotkey_help": "Appuyez sur {shortcut} n’importe où pour ouvrir la saisie rapide.",
+  "desktop_hotkey_conflict": "Une autre app utilise déjà {shortcut}. Choisissez un autre raccourci.",
+  "desktop_hotkey_unsupported": "Ce bureau ne permet pas aux apps d’enregistrer un raccourci global (par exemple sous Wayland).",
+  "desktop_hotkey_no_modifier": "Incluez Cmd, Ctrl ou Alt.",
+  "desktop_hotkey_super_key": "La touche Windows ou Super est réservée au système.",
+  "desktop_hotkey_reserved": "Le système utilise déjà ce raccourci.",
+  "desktop_hotkey_in_app": "Ares utilise déjà ce raccourci pour {action}.",
+  "desktop_hotkey_change": "Modifier",
+  "desktop_hotkey_reset": "Utiliser la valeur par défaut"
 }

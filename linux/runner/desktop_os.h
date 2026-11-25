@@ -6,7 +6,8 @@
 
 // The primary window's desktop integration (docs/desktop-os-native.md):
 //
-//   com.hermesagent.ares/shell  setTray, showWindow, quit; onTrayAction
+//   com.hermesagent.ares/shell   setTray, showWindow, quit; onTrayAction
+//   com.hermesagent.ares/hotkey  register, unregister; onHotKey (X11)
 //
 // Created only for the primary window; child window processes never own a
 // tray icon.

@@ -60,11 +60,44 @@ void TestTrayItems() {
   CHECK(!TrayIndexForCommand(kTrayFirstCommand, 0));
 }
 
+void TestHotkey() {
+  using ares::desktop::HotkeyFor;
+  using ares::desktop::VirtualKeyForName;
+  CHECK(VirtualKeyForName("keyA") == 0x41u);
+  CHECK(VirtualKeyForName("keyZ") == 0x5Au);
+  CHECK(VirtualKeyForName("digit0") == 0x30u);
+  CHECK(VirtualKeyForName("digit9") == 0x39u);
+  CHECK(VirtualKeyForName("space") == 0x20u);
+  CHECK(VirtualKeyForName("comma") == 0xBCu);
+  CHECK(VirtualKeyForName("backquote") == 0xC0u);
+  CHECK(VirtualKeyForName("arrowDown") == 0x28u);
+  CHECK(VirtualKeyForName("delete") == 0x2Eu);
+  CHECK(!VirtualKeyForName("keya"));
+  CHECK(!VirtualKeyForName("key1"));
+  CHECK(!VirtualKeyForName("digitA"));
+  CHECK(!VirtualKeyForName("f4"));
+  CHECK(!VirtualKeyForName(""));
+
+  // Default chord: Ctrl+Shift+Space, never auto-repeating.
+  const auto def = HotkeyFor("space", false, true, false, true);
+  CHECK(def.has_value());
+  CHECK(def && def->vk == 0x20u);
+  CHECK(def && def->modifiers == (0x0002u | 0x0004u | 0x4000u));
+  const auto alt = HotkeyFor("keyQ", false, false, true, false);
+  CHECK(alt && alt->modifiers == (0x0001u | 0x4000u));
+  // The Windows key is the shell's; Shift alone is ordinary typing.
+  CHECK(!HotkeyFor("space", true, true, false, true));
+  CHECK(!HotkeyFor("space", false, false, false, true));
+  CHECK(!HotkeyFor("space", false, false, false, false));
+  CHECK(!HotkeyFor("f13", false, true, false, false));
+}
+
 }  // namespace
 
 int main() {
   TestMenuText();
   TestTrayItems();
+  TestHotkey();
   std::printf("windows desktop_os_logic: %d checks, %d failures\n", checks,
               failures);
   return failures == 0 ? 0 : 1;

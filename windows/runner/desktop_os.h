@@ -18,7 +18,8 @@ class FlutterEngine;
 
 // The primary window's desktop integration (docs/desktop-os-native.md):
 //
-//   com.hermesagent.ares/shell  setTray, showWindow, quit; onTrayAction
+//   com.hermesagent.ares/shell   setTray, showWindow, quit; onTrayAction
+//   com.hermesagent.ares/hotkey  register, unregister; onHotKey
 //
 // Created only for the primary window. Pop-out, companion and quick-entry
 // children never construct it, so they own no tray icon. Activation stays
@@ -40,6 +41,9 @@ class DesktopOs {
 
   void HandleShell(const flutter::MethodCall<flutter::EncodableValue>& call,
                    Result result);
+  void HandleHotkey(const flutter::MethodCall<flutter::EncodableValue>& call,
+                    Result result);
+  void UnregisterHotkey();
   bool InstallTray();
   void RemoveTray();
   void ShowMenu(int x, int y);
@@ -47,6 +51,8 @@ class DesktopOs {
 
   HWND window_;
   std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> shell_;
+  std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> hotkey_;
+  bool hotkey_registered_ = false;
 
   bool tray_installed_ = false;
   bool close_to_tray_ = false;

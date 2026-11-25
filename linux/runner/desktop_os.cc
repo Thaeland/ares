@@ -5,6 +5,7 @@
 #include <vector>
 
 #ifdef GDK_WINDOWING_X11
+#include <X11/Xlib.h>
 #include <gdk/gdkx.h>
 #endif
 
@@ -71,6 +72,12 @@ struct _AresDesktopOs {
   GtkWidget* menu = nullptr;
   std::vector<std::string> item_ids;
   bool close_to_tray = false;
+  // Global hotkey: a passive key grab on the X11 root window. Wayland has no
+  // app-registered global shortcut, so register reports "unsupported".
+  FlMethodChannel* hotkey = nullptr;
+  unsigned hotkey_keycode = 0;
+  unsigned hotkey_modifiers = 0;
+  bool hotkey_filter = false;
 };
 
 namespace {
@@ -179,6 +186,107 @@ bool ApplyTray(AresDesktopOs* self, FlValue* args) {
 
 G_GNUC_END_IGNORE_DEPRECATIONS
 
+#ifdef GDK_WINDOWING_X11
+constexpr unsigned kLockVariants[] = {
+    0, ares::desktop::kLockMask, ares::desktop::kMod2Mask,
+    ares::desktop::kLockMask | ares::desktop::kMod2Mask};
+
+void UngrabHotkey(AresDesktopOs* self) {
+  if (self->hotkey_keycode == 0) return;
+  GdkDisplay* display = gdk_display_get_default();
+  if (display != nullptr && GDK_IS_X11_DISPLAY(display)) {
+    Display* xdisplay = GDK_DISPLAY_XDISPLAY(display);
+    const Window root = DefaultRootWindow(xdisplay);
+    gdk_x11_display_error_trap_push(display);
+    for (unsigned lock : kLockVariants) {
+      XUngrabKey(xdisplay, static_cast<int>(self->hotkey_keycode),
+                 self->hotkey_modifiers | lock, root);
+    }
+    XSync(xdisplay, False);
+    gdk_x11_display_error_trap_pop_ignored(display);
+  }
+  self->hotkey_keycode = 0;
+  self->hotkey_modifiers = 0;
+}
+
+GdkFilterReturn HotkeyFilter(GdkXEvent* native, GdkEvent*, gpointer user_data) {
+  auto* self = static_cast<AresDesktopOs*>(user_data);
+  auto* event = static_cast<XEvent*>(native);
+  if (event->type != KeyPress || self->hotkey_keycode == 0 ||
+      event->xkey.keycode != self->hotkey_keycode ||
+      !ares::desktop::X11StateMatches(event->xkey.state,
+                                      self->hotkey_modifiers)) {
+    return GDK_FILTER_CONTINUE;
+  }
+  if (self->hotkey != nullptr) {
+    fl_method_channel_invoke_method(self->hotkey, "onHotKey", nullptr, nullptr,
+                                    nullptr, nullptr);
+  }
+  return GDK_FILTER_REMOVE;
+}
+
+const char* GrabHotkey(AresDesktopOs* self, FlValue* args) {
+  const unsigned modifiers = ares::desktop::X11HotkeyModifiers(
+      BoolArg(args, "meta"), BoolArg(args, "ctrl"), BoolArg(args, "alt"),
+      BoolArg(args, "shift"));
+  const std::string keysym_name =
+      ares::desktop::X11KeysymName(StringArg(args, "key"));
+  if (modifiers == 0 || keysym_name.empty()) return "invalid";
+  GdkDisplay* display = gdk_display_get_default();
+  if (display == nullptr || !GDK_IS_X11_DISPLAY(display)) return "unsupported";
+  Display* xdisplay = GDK_DISPLAY_XDISPLAY(display);
+  const KeySym keysym = XStringToKeysym(keysym_name.c_str());
+  const KeyCode keycode =
+      keysym == NoSymbol ? 0 : XKeysymToKeycode(xdisplay, keysym);
+  if (keycode == 0) return "invalid";
+  UngrabHotkey(self);
+  const Window root = DefaultRootWindow(xdisplay);
+  gdk_x11_display_error_trap_push(display);
+  for (unsigned lock : kLockVariants) {
+    XGrabKey(xdisplay, keycode, modifiers | lock, root, False, GrabModeAsync,
+             GrabModeAsync);
+  }
+  XSync(xdisplay, False);
+  // BadAccess: another client already grabbed this chord.
+  if (gdk_x11_display_error_trap_pop(display) != 0) {
+    gdk_x11_display_error_trap_push(display);
+    for (unsigned lock : kLockVariants) {
+      XUngrabKey(xdisplay, keycode, modifiers | lock, root);
+    }
+    XSync(xdisplay, False);
+    gdk_x11_display_error_trap_pop_ignored(display);
+    return "conflict";
+  }
+  self->hotkey_keycode = keycode;
+  self->hotkey_modifiers = modifiers;
+  if (!self->hotkey_filter) {
+    gdk_window_add_filter(gdk_get_default_root_window(), HotkeyFilter, self);
+    self->hotkey_filter = true;
+  }
+  return "registered";
+}
+#else
+void UngrabHotkey(AresDesktopOs*) {}
+const char* GrabHotkey(AresDesktopOs*, FlValue*) { return "unsupported"; }
+#endif
+
+void HotkeyCallCb(FlMethodChannel*, FlMethodCall* call, gpointer user_data) {
+  auto* self = static_cast<AresDesktopOs*>(user_data);
+  const gchar* method = fl_method_call_get_name(call);
+  g_autoptr(FlMethodResponse) response = nullptr;
+  if (strcmp(method, "unregister") == 0) {
+    UngrabHotkey(self);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(nullptr));
+  } else if (strcmp(method, "register") == 0) {
+    g_autoptr(FlValue) value =
+        fl_value_new_string(GrabHotkey(self, fl_method_call_get_args(call)));
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(value));
+  } else {
+    response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
+  }
+  Respond(call, response);
+}
+
 gboolean QuitIdleCb(gpointer user_data) {
   g_application_quit(G_APPLICATION(user_data));
   g_object_unref(user_data);
@@ -229,6 +337,18 @@ namespace {
 // The integration lives exactly as long as the primary window.
 void WindowDestroyCb(GtkWidget*, gpointer user_data) {
   auto* self = static_cast<AresDesktopOs*>(user_data);
+  // Exit releases the hotkey even if Dart never got to unregister it.
+  UngrabHotkey(self);
+#ifdef GDK_WINDOWING_X11
+  if (self->hotkey_filter) {
+    gdk_window_remove_filter(gdk_get_default_root_window(), HotkeyFilter, self);
+  }
+#endif
+  if (self->hotkey != nullptr) {
+    fl_method_channel_set_method_call_handler(self->hotkey, nullptr, nullptr,
+                                              nullptr);
+    g_clear_object(&self->hotkey);
+  }
   RemoveTray(self);
   if (self->shell != nullptr) {
     fl_method_channel_set_method_call_handler(self->shell, nullptr, nullptr,
@@ -249,6 +369,10 @@ void ares_desktop_os_attach(FlView* view, GtkWindow* window) {
   self->shell = fl_method_channel_new(messenger, "com.hermesagent.ares/shell",
                                       FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(self->shell, ShellCallCb, self,
+                                            nullptr);
+  self->hotkey = fl_method_channel_new(messenger, "com.hermesagent.ares/hotkey",
+                                       FL_METHOD_CODEC(codec));
+  fl_method_channel_set_method_call_handler(self->hotkey, HotkeyCallCb, self,
                                             nullptr);
   g_signal_connect(window, "delete-event", G_CALLBACK(DeleteEventCb), self);
   g_signal_connect(window, "destroy", G_CALLBACK(WindowDestroyCb), self);

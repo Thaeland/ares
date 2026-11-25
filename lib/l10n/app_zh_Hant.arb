@@ -2886,5 +2886,15 @@
   "quick_entry_hint": "輸入給 Ares 的提示…",
   "quick_entry_submit": "放入輸入框",
   "quick_entry_never_sends": "按 Enter 會將文字放入聊天輸入框。在你按下傳送之前不會傳送任何內容。",
-  "quick_entry_unavailable": "無法開啟快速輸入。請再試一次。"
+  "quick_entry_unavailable": "無法開啟快速輸入。請再試一次。",
+  "desktop_hotkey_setting": "快速輸入快捷鍵",
+  "desktop_hotkey_help": "在任何地方按 {shortcut} 即可開啟快速輸入。",
+  "desktop_hotkey_conflict": "其他應用程式已在使用 {shortcut}。請選擇其他快捷鍵。",
+  "desktop_hotkey_unsupported": "此桌面不允許應用程式註冊全域快捷鍵（例如 Wayland）。",
+  "desktop_hotkey_no_modifier": "請包含 Cmd、Ctrl 或 Alt。",
+  "desktop_hotkey_super_key": "Windows 鍵或 Super 鍵保留給系統使用。",
+  "desktop_hotkey_reserved": "系統已在使用此快捷鍵。",
+  "desktop_hotkey_in_app": "Ares 已將此快捷鍵用於{action}。",
+  "desktop_hotkey_change": "變更",
+  "desktop_hotkey_reset": "使用預設值"
 }

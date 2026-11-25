@@ -6624,6 +6624,42 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get quick_entry_unavailable => '无法打开快速输入。请重试。';
+
+  @override
+  String get desktop_hotkey_setting => '快速输入快捷键';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return '在任意位置按 $shortcut 即可打开快速输入。';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return '其他应用已在使用 $shortcut。请选择其他快捷键。';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported => '此桌面不允许应用注册全局快捷键（例如 Wayland）。';
+
+  @override
+  String get desktop_hotkey_no_modifier => '请包含 Cmd、Ctrl 或 Alt。';
+
+  @override
+  String get desktop_hotkey_super_key => 'Windows 键或 Super 键为系统保留。';
+
+  @override
+  String get desktop_hotkey_reserved => '系统已在使用此快捷键。';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares 已将此快捷键用于$action。';
+  }
+
+  @override
+  String get desktop_hotkey_change => '更改';
+
+  @override
+  String get desktop_hotkey_reset => '使用默认值';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -12678,6 +12714,42 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get quick_entry_unavailable => '无法打开快速输入。请重试。';
+
+  @override
+  String get desktop_hotkey_setting => '快速输入快捷键';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return '在任意位置按 $shortcut 即可打开快速输入。';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return '其他应用已在使用 $shortcut。请选择其他快捷键。';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported => '此桌面不允许应用注册全局快捷键（例如 Wayland）。';
+
+  @override
+  String get desktop_hotkey_no_modifier => '请包含 Cmd、Ctrl 或 Alt。';
+
+  @override
+  String get desktop_hotkey_super_key => 'Windows 键或 Super 键为系统保留。';
+
+  @override
+  String get desktop_hotkey_reserved => '系统已在使用此快捷键。';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares 已将此快捷键用于$action。';
+  }
+
+  @override
+  String get desktop_hotkey_change => '更改';
+
+  @override
+  String get desktop_hotkey_reset => '使用默认值';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -19130,4 +19202,40 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get quick_entry_unavailable => '無法開啟快速輸入。請再試一次。';
+
+  @override
+  String get desktop_hotkey_setting => '快速輸入快捷鍵';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return '在任何地方按 $shortcut 即可開啟快速輸入。';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return '其他應用程式已在使用 $shortcut。請選擇其他快捷鍵。';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported => '此桌面不允許應用程式註冊全域快捷鍵（例如 Wayland）。';
+
+  @override
+  String get desktop_hotkey_no_modifier => '請包含 Cmd、Ctrl 或 Alt。';
+
+  @override
+  String get desktop_hotkey_super_key => 'Windows 鍵或 Super 鍵保留給系統使用。';
+
+  @override
+  String get desktop_hotkey_reserved => '系統已在使用此快捷鍵。';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares 已將此快捷鍵用於$action。';
+  }
+
+  @override
+  String get desktop_hotkey_change => '變更';
+
+  @override
+  String get desktop_hotkey_reset => '使用預設值';
 }
