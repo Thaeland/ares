@@ -8484,13 +8484,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             key: _reader,
             scroll: _scrollController,
             onLatest: _goToEnd,
-            storageKey: widget.session.isLocalDraft
+            storageKey: widget.session.isLocalDraft && _storedSessionId == null
                 ? null
                 : readingPositionKey(
                     'classic',
                     widget.connection.id,
                     widget.connection.gatewayProfile,
-                    _storedSessionKey,
+                    _storedSessionId ?? _storedSessionKey,
                   ),
             onNavigate: () {
               _openingScrollInterrupted = true;
