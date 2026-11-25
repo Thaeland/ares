@@ -866,7 +866,7 @@ class HermesSignIn {
   ///
   /// Tries `GET /api/auth/me` first; when the gateway runs session-token-only
   /// without OAuth/basic routes mounted (HTTP 404), falls back to
-  /// `GET /api/model-info` with the same token header.
+  /// `GET /api/model/info` with the same token header.
   Future<SignInResult> tokenSignIn(
     GatewayUrl url, {
     required String token,
@@ -901,7 +901,7 @@ class HermesSignIn {
         return SignInOk(user);
       }
       if (meRes.statusCode == 404) {
-        final modelUri = Uri.parse(url.resolve('api/model-info'));
+        final modelUri = Uri.parse(url.resolve('api/model/info'));
         final modelRes = await client
             .get(
               modelUri,

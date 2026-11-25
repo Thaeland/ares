@@ -173,7 +173,7 @@ Future<ConnectionReport> runConnectionCheck(
         );
       } else if (res.statusCode == 404 &&
           connection.deploymentToken?.trim().isNotEmpty == true) {
-        final modelRes = await dashboard.apiRequest('GET', 'model-info');
+        final modelRes = await dashboard.apiRequest('GET', 'model/info');
         if (modelRes.statusCode >= 200 && modelRes.statusCode < 300) {
           record(
             CheckStage.signIn,
