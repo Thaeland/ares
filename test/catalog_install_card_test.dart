@@ -77,7 +77,7 @@ Map<String, dynamic> _frame(
   if (settled) 'settled': true,
 };
 
-SavedConnection _ngConnection(String id) => SavedConnection(
+SavedConnection _ngConnection(String id, {String? profile}) => SavedConnection(
   id: id,
   label: 'Home $id',
   host: '10.0.0.5',
@@ -86,11 +86,13 @@ SavedConnection _ngConnection(String id) => SavedConnection(
   desktopGatewayUrl: 'http://10.0.0.5:9119',
   singleLogin: true,
   signInMethod: 'none',
+  gatewayProfile: profile,
 );
 
 /// Records gateway calls; answers connection.respond and plugins.manage.
 class _Gateway extends NextGenGateway {
-  _Gateway(String id) : super(_ngConnection(id));
+  _Gateway(String id, {String? profile})
+    : super(_ngConnection(id, profile: profile));
 
   final calls = <(String, Map<String, dynamic>)>[];
   Map<String, dynamic> install = {'ok': true};
@@ -456,6 +458,44 @@ void main() {
       expect(
         gateway.calls.where((call) => call.$1 == 'connection.respond'),
         isEmpty,
+      );
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    // Desktop's retrySettled installs through the owner of the request's
+    // session (connectionOwnerFor), not the active connection: a chat on
+    // another connection than the selected one installs on its own.
+    testWidgets('Try again installs through the chat connection, not the '
+        'active one', (tester) async {
+      final active = _Gateway('active', profile: 'active-profile');
+      final own = _Gateway('own', profile: 'chat-profile');
+      addTearDown(active.dispose);
+      addTearDown(own.dispose);
+      final chat = _ngChat(own, 'chat-a');
+      await _pumpNg(tester, active, chat);
+      // No target profile on the row: the install goes to the chat's own
+      // profile.
+      final row = _blender(state: 'failed', detail: 'Clone timed out.')
+        ..remove('target_profile');
+      own.frame(
+        'rt-chat-a',
+        'connection.request',
+        _frame(5, [row], settled: true),
+      );
+      await tester.pump();
+      await tester.pump();
+      await _tapKey(tester, 'catalog-retry-button-blender');
+      await tester.pump();
+      expect(active.calls, isEmpty, reason: 'the active connection');
+      final (method, params) = own.calls.single;
+      expect(method, 'plugins.manage');
+      expect(params['catalog_name'], 'blender');
+      expect(params['profile'], 'chat-profile');
+      expect(
+        tester
+            .widget<Text>(find.byKey(const Key('catalog-state-blender')))
+            .data,
+        'Installed',
       );
       await tester.pumpWidget(const SizedBox());
     });

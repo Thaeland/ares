@@ -123,10 +123,12 @@ class _NgChatViewState extends State<NgChatView>
   }
 
   /// Installs a failed catalog plugin again after its operation settled,
-  /// through this connection's capabilities install into the row's own
-  /// target profile.
+  /// through the capabilities install of the chat's own connection and
+  /// profile (not the active one, which may be another connection) into the
+  /// row's own target profile, as Desktop's retrySettled does through the
+  /// owner of the request's session.
   Future<CatalogRetryResult> _retryCatalogRow(CatalogRow row) async {
-    final gateway = NgScope.of(context).gateway;
+    final gateway = chat.gateway;
     final admin = CapabilityAdmin.fromDashboard(
       gateway.dashboard,
       profile: gateway.profile,
