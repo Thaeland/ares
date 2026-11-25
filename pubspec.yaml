@@ -23,6 +23,7 @@ dependencies:
 
   # Offline, bounded Office document previews (also used transitively by image).
   archive: 4.0.9
+  qr: 3.0.3
   xml: 6.6.1
 
   # State management

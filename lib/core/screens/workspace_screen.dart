@@ -2198,6 +2198,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         _push(
           WorkspaceProfilesScreen(
             owner: gateway.workspace,
+            connection: connection,
             label: connection.label,
             route: gateway.workspace.route(),
           ),

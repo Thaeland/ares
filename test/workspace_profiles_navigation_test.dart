@@ -31,6 +31,8 @@ void main() {
         final sockets = <WebSocket>[];
         final rosterCalls = <Object?>[];
         var tickets = 0;
+        var persona = 'Initial fixture persona';
+        final soulRequests = <String>[];
         await tester.runAsync(() async {
           server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
           server.listen((req) async {
@@ -72,8 +74,10 @@ void main() {
                     'id': frame['id'],
                     'result': roster
                         ? {
+                            'install_id': 'fixture-machine',
                             'profiles': [
                               {'name': 'fixture-profile-${rosterCalls.length}'},
+                              {'name': 'editor'},
                             ],
                           }
                         : <String, Object?>{},
@@ -81,6 +85,21 @@ void main() {
                 );
               });
               return;
+            } else if (req.uri.path == '/api/profiles/editor/soul' &&
+                req.uri.queryParameters['profile'] == 'editor' &&
+                req.headers.value('cookie') ==
+                    'hermes_session_at=fixture-cookie') {
+              soulRequests.add(req.method);
+              if (req.method == 'PUT') {
+                persona =
+                    jsonDecode(await utf8.decoder.bind(req).join())['content']
+                        as String;
+                response.write('{"ok":true}');
+              } else {
+                response.write(
+                  jsonEncode({'content': persona, 'exists': true}),
+                );
+              }
             } else {
               response.write('{}');
             }
@@ -163,14 +182,27 @@ void main() {
           await tester.tap(find.byTooltip('Refresh'));
           await waitForText('fixture-profile-2');
           expect(find.text('fixture-profile-1'), findsNothing);
+          await tester.tap(find.text('editor'));
+          await waitForText('Edit persona');
+          await tester.tap(find.text('Edit persona'));
+          await waitForText('Initial fixture persona');
+          await tester.enterText(
+            find.widgetWithText(TextFormField, 'Persona'),
+            'Changed by the fixture',
+          );
+          await tester.tap(find.text('Confirm'));
+          await waitForText('Persona saved.');
+          expect(persona, 'Changed by the fixture');
+          expect(soulRequests, ['GET', 'GET', 'PUT', 'GET']);
           final edit = ConnectionMutationBarrier.begin(['fixture']);
           edit.release();
           await waitForText('The gateway connection dropped. Try again.');
           expect(find.text('fixture-profile-2'), findsNothing);
-          expect(tickets, 1);
+          expect(tickets, 2);
           expect(rosterCalls, [
             for (var i = 0; i < 2; i++)
               {'include_sessions': false, 'profile': 'work'},
+            {'include_sessions': false, 'profile': 'editor'},
           ]);
           await tester.pumpWidget(const SizedBox());
           ng?.dispose();

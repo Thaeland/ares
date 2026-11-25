@@ -29,6 +29,8 @@ import 'main_model_route.dart';
 export '../models/connection.dart';
 export '../models/session.dart';
 
+part 'profile_dashboard_transport.dart';
+
 /// Injectable secret storage boundary used by [ConnectionManager].
 ///
 /// The production implementation is backed by Android Keystore through
@@ -2837,6 +2839,21 @@ class DashboardClient {
     required Map<String, String> query,
     required void Function() check,
     bool mintHostTerminalTicket = false,
+  }) => _workspaceExchange(
+    segments,
+    query: query,
+    check: check,
+    method: mintHostTerminalTicket ? 'POST' : 'GET',
+    mintHostTerminalTicket: mintHostTerminalTicket,
+  );
+
+  Future<Object?> _workspaceExchange(
+    List<String> segments, {
+    required Map<String, String> query,
+    required void Function() check,
+    required String method,
+    Map<String, Object?>? body,
+    bool mintHostTerminalTicket = false,
   }) async {
     if (segments.isEmpty ||
         segments.any(
@@ -2863,8 +2880,8 @@ class DashboardClient {
       ],
       queryParameters: query.isEmpty ? null : query,
     );
-    final request = http.Request(mintHostTerminalTicket ? 'POST' : 'GET', uri)
-      ..followRedirects = false;
+    final request = http.Request(method, uri)..followRedirects = false;
+    if (body != null) request.bodyBytes = utf8.encode(jsonEncode(body));
     request.headers.addAll(await _authHeaders());
     check();
     final response = await _http
