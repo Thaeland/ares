@@ -25,7 +25,7 @@ The preview uses the ordinary Android launcher activity with **no** `distraction
 With the preview installed and the emulator parked, inspect the **packaged** APK and test the actual driver display. The emulator smoke check changes the simulated driving state and restores park; it refuses a physical device or a non-automotive emulator. Use an API 35 AAOS image with `cmd car_service emulate-driving-state` support.
 
 ```sh
-apkanalyzer manifest print "$APK" > parked-manifest.xml
+"$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer" manifest print "$APK" > parked-manifest.xml
 python3 scripts/check_parked_automotive.py parked-manifest.xml --emulator "$SERIAL"
 ```
 
