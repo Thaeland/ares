@@ -1,6 +1,7 @@
 """Exercise the actual native CI configuration script in a disposable checkout."""
 
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -51,11 +52,32 @@ class NativeCiConfigurationTest(unittest.TestCase):
     def test_native_job_supplies_the_pinned_gradle_without_an_ignored_wrapper(self):
         workflow = (ROOT / ".github/workflows/native-server.yml").read_text()
         wrapper = (ROOT / "android/gradle/wrapper/gradle-wrapper.properties").read_text()
-        self.assertIn("gradle-9.1.0-all.zip", wrapper)
-        self.assertIn("gradle/actions/setup-gradle@v4", workflow)
-        self.assertIn("gradle-version: '9.1.0'", workflow)
+        version = re.search(r"distributionUrl=.*gradle-([\d.]+)-all\.zip", wrapper)
+        self.assertIsNotNone(version, "Wrapper must pin a Gradle release")
+        assert version is not None
+        self.assertIn("gradle/actions/setup-gradle@v6", workflow)
+        self.assertIn(f"gradle-version: '{version.group(1)}'", workflow)
         self.assertIn("run: gradle :app:testDebugUnitTest", workflow)
         self.assertNotIn("run: ./gradlew", workflow)
+
+    def test_setup_gradle_never_engages_proprietary_caching(self):
+        workflow = (ROOT / ".github/workflows/native-server.yml").read_text()
+        setup = workflow.split("uses: gradle/actions/setup-gradle@v6\n", 1)[1]
+        setup = setup.split("      - name:", 1)[0]
+        self.assertIn("cache-disabled: true", setup)
+        self.assertIn("cache-provider: basic", setup)
+        self.assertNotIn("build-scan-terms-of-use-agree", workflow)
+        cache = workflow.split("name: Cache open-source Gradle dependencies\n", 1)[1]
+        cache = cache.split("      - name:", 1)[0]
+        self.assertIn("uses: actions/cache@v6", cache)
+        paths = cache.split("path: |\n", 1)[1].split("          key:", 1)[0]
+        self.assertEqual(
+            {line.strip() for line in paths.splitlines() if line.strip()},
+            {"~/.gradle/caches/modules-2", "~/.gradle/wrapper/dists"},
+        )
+        for build_input in ("android/**/*.gradle*", "android/gradle.properties",
+                            "android/gradle/wrapper/gradle-wrapper.properties", "pubspec.lock"):
+            self.assertIn(build_input, cache)
 
     def test_ci_runs_tts_correlation_and_retains_both_native_reports(self):
         workflow = (ROOT / ".github/workflows/native-server.yml").read_text()
