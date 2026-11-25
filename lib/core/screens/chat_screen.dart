@@ -8483,7 +8483,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         Expanded(
           child: TranscriptReader(
             key: _reader,
-            owner: (widget.connection, widget.session.id),
+            owner: (_reasoningRegistry, widget.session.id),
             scroll: _scrollController,
             onLatest: _goToEnd,
             storageKey: widget.session.isLocalDraft && _storedSessionId == null
