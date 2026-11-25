@@ -49,7 +49,10 @@ class _MarkdownFilePreviewState extends State<MarkdownFilePreview> {
     final prefix = StringBuffer();
     for (final match in _lines.allMatches(input).take(400)) {
       final line = _prefix(match[0]!, 4096);
-      if (_markers.allMatches(line).take(65).length > 64 ||
+      // Table delimiter rows and thematic breaks are flat, however many
+      // dashes pad them; only nesting-capable markers are bounded.
+      if ((!_flatRule.hasMatch(line) &&
+              _markers.allMatches(line).take(65).length > 64) ||
           '|'.allMatches(line).take(25).length > 24) {
         break;
       }
@@ -62,6 +65,11 @@ class _MarkdownFilePreviewState extends State<MarkdownFilePreview> {
 
   static final _lines = RegExp(r'[^\r\n]*(?:\r\n?|\n|$)');
   static final _markers = RegExp(r'[>_*\[\]~`+.)\-]');
+  static final _flatRule = RegExp(
+    r'^ {0,3}(?:([-*_])(?:[ \t]*\1){2,}'
+    r'|\|?[ \t]*:?-+:?[ \t]*(?:\|[ \t]*:?-+:?[ \t]*)*\|?)'
+    r'[ \t]*(?:\r\n?|\n)?$',
+  );
 
   static String _prefix(String text, int limit) {
     if (text.length <= limit) return text;
