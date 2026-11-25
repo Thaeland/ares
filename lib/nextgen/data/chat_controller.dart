@@ -2477,7 +2477,10 @@ class NgChatController extends ChangeNotifier {
             )
           : null;
       if (journal && adopted == null) {
-        capture = await PreparedImageStore.shared.capture(attachments);
+        capture = await PreparedImageStore.shared.capture(
+          attachments,
+          beforeUpload: (target: target!, text: composerImageText),
+        );
       }
       checkOwner();
       final refs = <String>[];

@@ -94,9 +94,24 @@ class PreparedImageAttempt {
   }
 
   Future<void> receipt(Object? result, String sessionId) async {
+    // The RPC id correlates this reply to this submission. Canonical Hermes
+    // mints a separate admission_id; it does not echo the submission UUID.
+    final ref = result is Map ? result['ref'] : null;
+    final canonical =
+        ref is Map &&
+        ref['session_id'] == sessionId &&
+        ref['profile_id'] is String &&
+        (ref['profile_id'] as String).isNotEmpty &&
+        result is Map &&
+        result['admission_id'] is String &&
+        (result['admission_id'] as String).isNotEmpty &&
+        result['sequence'] is int &&
+        result['authority_epoch'] is int;
     if (result is! Map ||
+        (ref != null && !canonical) ||
         (result['session_id'] != null && result['session_id'] != sessionId) ||
-        (!_legacy &&
+        (!canonical &&
+            !_legacy &&
             (result['submission_id'] ?? result['admission_id']) != id) ||
         !const {
           'queued',
@@ -115,11 +130,21 @@ class PreparedImageAttempt {
 }
 
 class PreparedImageCapture {
-  PreparedImageCapture._(this._staging, this.drafts, this._metadata);
+  PreparedImageCapture._(
+    this._staging,
+    this.drafts,
+    this._metadata,
+    this._publishedId,
+  );
   final Directory _staging;
+  final String? _publishedId;
   final List<AttachmentDraft> drafts;
   final List<Map<String, dynamic>> _metadata;
   Future<void> close() async {
+    if (_publishedId != null) {
+      PreparedImageStore._preparing.remove(_staging.path);
+      return; // Recovery owns it until receipt/discard.
+    }
     if (await _staging.exists()) await _staging.delete(recursive: true);
   }
 }
@@ -134,8 +159,10 @@ class PreparedImageStore {
   static final shared = PreparedImageStore();
   // Fallback fence if storage will neither mark nor unpublish an admitted ID.
   static final _spent = <String>{};
+  static final _preparing = <String>{};
   static Future<bool> _available(Directory dir) async =>
       !_spent.contains(dir.path) &&
+      !_preparing.contains(dir.path) &&
       await dir.exists() &&
       !await File('${dir.path}/spent').exists();
   static final _origin = Expando<({PreparedImageEntry entry, int index})>();
@@ -155,16 +182,24 @@ class PreparedImageStore {
 
   /// Upload these private snapshots, never re-read a picker file after upload
   /// and assume its *current* bytes describe the frozen wire payload.
-  Future<PreparedImageCapture> capture(List<AttachmentDraft> drafts) async {
+  Future<PreparedImageCapture> capture(
+    List<AttachmentDraft> drafts, {
+    ({PreparedImageTarget target, String text})? beforeUpload,
+  }) async {
     if (!supports('', drafts) ||
+        (beforeUpload?.text.length ?? 0) > _maxText ||
         drafts.any(
           (d) => d.byteLength <= 0 || d.byteLength > maxNextGenAttachmentBytes,
         )) {
       throw const PreparedImageException();
     }
-    final root = Directory('${(await support()).path}/prepared-images-v1');
+    final root = beforeUpload == null
+        ? Directory('${(await support()).path}/prepared-images-v1')
+        : await _scope(beforeUpload.target);
     await root.create(recursive: true);
     final staging = await root.createTemp('.capture-');
+    final id = beforeUpload == null ? null : const Uuid().v4();
+    final published = id == null ? staging : Directory('${root.path}/$id');
     try {
       final images = <Map<String, dynamic>>[];
       final copies = <AttachmentDraft>[];
@@ -180,7 +215,7 @@ class PreparedImageStore {
         copies.add(
           AttachmentDraft(
             id: draft.id,
-            cachedPath: saved.path,
+            cachedPath: '${published.path}/${images.length}',
             name: draft.name,
             byteLength: draft.byteLength,
             mediaType: draft.mediaType,
@@ -198,7 +233,24 @@ class PreparedImageStore {
           'format': draft.sourceImageFormat?.name,
         });
       }
-      return PreparedImageCapture._(staging, copies, images);
+      if (beforeUpload != null) {
+        // Uploads do not yet give us frozen wire references. A process exit
+        // here must leave the original bytes and caption, but no retry identity.
+        await File('${staging.path}/before-upload.json').writeAsString(
+          jsonEncode({
+            'text': beforeUpload.text,
+            'prompt': '',
+            'wireImages': [],
+            'images': images,
+            'created': DateTime.now().millisecondsSinceEpoch,
+            'copyOnly': true,
+          }),
+          flush: true,
+        );
+        await staging.rename(published.path);
+        _preparing.add(published.path);
+      }
+      return PreparedImageCapture._(published, copies, images, id);
     } catch (_) {
       await staging.delete(recursive: true);
       throw const PreparedImageException();
@@ -218,10 +270,13 @@ class PreparedImageStore {
     if (text.length > _maxText || prompt.length > _maxText) {
       throw const PreparedImageException();
     }
-    final id = const Uuid().v4();
+    final id = capture._publishedId ?? const Uuid().v4();
     final root = await _scope(target);
     await root.create(recursive: true);
     final staging = capture._staging;
+    if (capture._publishedId != null && staging.path != '${root.path}/$id') {
+      throw const PreparedImageException();
+    }
     final metadata = {
       'text': text,
       'prompt': prompt,
@@ -230,10 +285,13 @@ class PreparedImageStore {
       'created': DateTime.now().millisecondsSinceEpoch,
       'copyOnly': copyOnly,
     };
-    await File(
-      '${staging.path}/entry.json',
-    ).writeAsString(jsonEncode(metadata), flush: true);
-    final dir = await staging.rename('${root.path}/$id');
+    final tmp = File('${staging.path}/entry.pending');
+    await tmp.writeAsString(jsonEncode(metadata), flush: true);
+    await tmp.rename('${staging.path}/entry.json');
+    _preparing.remove(staging.path);
+    final dir = capture._publishedId != null
+        ? staging
+        : await staging.rename('${root.path}/$id');
     return PreparedImageAttempt(await _read(target, dir, id));
   }
 
@@ -242,8 +300,11 @@ class PreparedImageStore {
     Directory dir,
     String id,
   ) async {
-    final data =
-        jsonDecode(await File('${dir.path}/entry.json').readAsString()) as Map;
+    final prepared = File('${dir.path}/entry.json');
+    final manifest = await prepared.exists()
+        ? prepared
+        : File('${dir.path}/before-upload.json');
+    final data = jsonDecode(await manifest.readAsString()) as Map;
     final images = (data['images'] as List).cast<Map<String, dynamic>>();
     if (images.isEmpty || images.length > maxRemoteAttachmentDrafts) {
       throw const PreparedImageException();

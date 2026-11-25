@@ -180,12 +180,43 @@ void main() {
         throwsA(isA<PreparedImageException>()),
       );
       expect(await fresh.list(target), hasLength(1));
-      await prepared.receipt({
-        'admission_id': entry.id,
-        'session_id': 'rt',
-        'status': 'queued',
-      }, 'rt');
+      final receipt = {
+        // The canonical server mints this independently of submission_id.
+        'admission_id': 'host-generated-not-the-request-uuid',
+        'ref': {'session_id': 'rt', 'profile_id': '/fixture/work'},
+        'sequence': 11, 'authority_epoch': 7, 'execution_generation': null,
+        'status': 'queued', 'outcome': null,
+      };
+      await expectLater(
+        prepared.receipt(receipt, 'another'),
+        throwsA(isA<PreparedImageException>()),
+      );
+      expect(await fresh.list(target), hasLength(1));
+      await prepared.receipt(receipt, 'rt');
       expect(await fresh.list(target), isEmpty);
+    },
+  );
+  test(
+    'upload interrupted before submit retains caption and original bytes as a copy, not a replay',
+    () async {
+      final draft = await image('interrupted', [3, 2, 1]);
+      final capture = await store.capture(
+        [draft],
+        beforeUpload: (target: target, text: 'caption before upload'),
+      );
+      expect(
+        await store.list(target),
+        isEmpty,
+      ); // Producer still owns the upload.
+      await File(draft.cachedPath).delete();
+      await capture.close();
+      final reopened = PreparedImageStore();
+      final entry = (await reopened.list(target)).single;
+      expect(entry.copyOnly, isTrue);
+      expect(entry.text, 'caption before upload');
+      final recovered = (await reopened.restore(entry, () => true))!;
+      expect(await File(recovered.single.cachedPath).readAsBytes(), [3, 2, 1]);
+      expect(await reopened.adopt(target, entry.text, recovered), isNull);
     },
   );
   test('identityless fallback is durably copy-only before its write', () async {

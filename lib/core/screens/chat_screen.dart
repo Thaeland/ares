@@ -5416,6 +5416,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         await _applySessionModelOverride(desktopGateway);
       }
       if (!mounted || responseGeneration != _responseGeneration) return;
+      if (journalImages &&
+          _imageTarget == null &&
+          widget.session.isLocalDraft) {
+        await desktopGateway.ensureSession(_normalLocalSessionKey);
+        if (!mounted || responseGeneration != _responseGeneration) return;
+      }
       final beforeUpload = _imageTarget;
       final adopted = journalImages && beforeUpload != null
           ? await PreparedImageStore.shared.adopt(
@@ -5425,7 +5431,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             )
           : null;
       if (journalImages && adopted == null) {
-        capture = await PreparedImageStore.shared.capture(attachments);
+        if (beforeUpload == null) throw const PreparedImageException();
+        capture = await PreparedImageStore.shared.capture(
+          attachments,
+          beforeUpload: (target: beforeUpload, text: imageText),
+        );
       }
       if (!mounted || responseGeneration != _responseGeneration) return;
       await _attachmentSendCoordinator.uploadThenSubmit(
