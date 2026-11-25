@@ -345,9 +345,18 @@ void main() {
       await tester.enterText(find.byKey(_composerKey), 'my newer draft');
       await tester.pump();
 
+      // This REST connection cannot re-run the turn: the card says so
+      // before the switch (on the card and in its confirm), not after.
+      const noRetry =
+          "Switching changes the model only: this connection can't run the "
+          'failed turn again. Send it again after switching.';
+      expect(find.text(noRetry), findsOneWidget);
       await tester.tap(find.text('Switch to GPT-5 mini'));
       await pumpChatUpdates(tester);
-      expect(find.text('Switch this chat to GPT-5 mini?'), findsOneWidget);
+      expect(
+        find.text('Switch this chat to GPT-5 mini?\n\n$noRetry'),
+        findsOneWidget,
+      );
       await tester.tap(
         find.descendant(
           of: find.byType(AlertDialog),
@@ -364,12 +373,8 @@ void main() {
         'model': 'gpt-5-mini',
         'require_model_lock': true,
       });
-      // Then the retry: on this REST connection Retry cannot replace the
-      // turn, so it says so and sends nothing again.
-      expect(
-        find.textContaining('Retry cannot replace a turn'),
-        findsOneWidget,
-      );
+      // Only the switch: no retry attempt, so no after-the-fact notice.
+      expect(find.textContaining('Retry cannot replace a turn'), findsNothing);
       expect(c.writes, hasLength(1));
       expect(find.byType(FailureRecoveryCard), findsNothing);
       expect(_composer(tester), 'my newer draft');
