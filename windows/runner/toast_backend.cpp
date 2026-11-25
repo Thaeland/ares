@@ -27,13 +27,23 @@ ToastNotifier Notifier() {
   return Family().empty() ? ToastNotificationManager::CreateToastNotifier(kDirectId)
                           : ToastNotificationManager::CreateToastNotifier();
 }
+// A newly registered desktop sender has no WPN settings row until its first
+// Show. Only that specific absence is an eligible first submission. The OS
+// still enforces user/policy settings; other failures are never a grant.
+bool AllowsSubmission(const ToastNotifier& notifier) {
+  try { return notifier.Setting() == NotificationSetting::Enabled; }
+  catch (const hresult_error& error) {
+    if (error.code() == HRESULT_FROM_WIN32(ERROR_NOT_FOUND)) return true;
+    throw;
+  }
 }
-bool Enabled() { return OwnsProtocol() && Notifier().Setting() == NotificationSetting::Enabled; }
+}
+bool Enabled() { return OwnsProtocol() && AllowsSubmission(Notifier()); }
 void Show(int id, const std::string& token, const std::string& body,
           const std::string& sound, bool suppress_popup) {
   if (!ValidToken(token)) throw hresult_invalid_argument();
   auto notifier = Notifier();
-  if (notifier.Setting() != NotificationSetting::Enabled) throw hresult_access_denied();
+  if (!AllowsSubmission(notifier)) throw hresult_access_denied();
   XmlDocument doc;
   doc.LoadXml(L"<toast activationType='protocol'><visual><binding template='ToastGeneric'><text>Ares</text><text/></binding></visual><audio/></toast>");
   auto root = doc.DocumentElement();
@@ -50,6 +60,8 @@ void Show(int id, const std::string& token, const std::string& body,
   toast.Tag(to_hstring(id));
   toast.SuppressPopup(suppress_popup);
   notifier.Show(toast);
+  // Now that the sender exists, report the actual policy, not optimistic success.
+  if (notifier.Setting() != NotificationSetting::Enabled) throw hresult_access_denied();
 }
 void Cancel(int id) {
   if (!OwnsProtocol()) return;
