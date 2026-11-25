@@ -107,6 +107,12 @@ List<MoreSection> buildMoreSections({
     MoreSection(
       title: l10n.workspace,
       entries: [
+        const MoreEntry(
+          id: 'gateway-fleet',
+          title: 'Gateway fleet',
+          subtitle: 'Connected sessions, Hermes Cloud and Desktop Webapp',
+          icon: Icons.hub_outlined,
+        ),
         MoreEntry(
           id: 'unassigned',
           title: l10n.unassigned_chats,

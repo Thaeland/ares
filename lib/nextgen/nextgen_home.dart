@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../core/services/connection_manager.dart';
+import '../core/services/gateway_fleet.dart';
 import '../core/services/hermes_sign_in.dart';
 import 'data/nextgen_gateway.dart';
 import 'nextgen_preferences.dart';
@@ -90,35 +91,62 @@ class _NextGenHomeState extends State<NextGenHome> {
     try {
       final list = await _manager.loadConnectionsWithSecrets();
       if (!mounted) return;
+      // A notification's connection is an explicit choice. Always evaluate
+      // it: _pendingConnection also clears a stale request.
       final pending = _pendingConnection(list);
+      final explicit = select ?? pending;
+      final primary = GatewayFleet.primaryId(_manager, list);
       final wanted =
-          select ??
-          (list.any((c) => c.id == pending) ? pending : null) ??
+          explicit ??
           _gateway?.connection.id ??
+          primary ??
           NextGenPreferences.currentConnectionId(_manager.prefs);
       final pick =
           list.where((c) => c.id == wanted).firstOrNull ??
           list.where((c) => c.singleLogin).firstOrNull ??
           list.firstOrNull;
+      // Launching on the primary is routing, not a last-used choice. Keep that
+      // true across later reloads of the same automatically chosen gateway.
+      final automatic =
+          explicit == null &&
+          pick != null &&
+          pick.id == primary &&
+          (_gateway == null || _startedOnPrimary);
       setState(() {
         _connections = list;
         _loadError = null;
       });
-      _use(pick, force: force);
+      _use(pick, force: force, remember: !automatic);
     } catch (e) {
       if (mounted) setState(() => _loadError = '$e');
     }
   }
 
-  void _use(SavedConnection? connection, {bool force = false}) {
+  bool _startedOnPrimary = false;
+
+  void _use(
+    SavedConnection? connection, {
+    bool force = false,
+    bool remember = true,
+  }) {
     final current = _gateway;
     if (connection == null) {
       current?.dispose();
+      _startedOnPrimary = false;
       setState(() => _gateway = null);
       unawaited(
         NextGenPreferences.setCurrentConnectionId(_manager.prefs, null),
       );
       return;
+    }
+    _startedOnPrimary = !remember;
+    if (remember) {
+      unawaited(
+        NextGenPreferences.setCurrentConnectionId(
+          _manager.prefs,
+          connection.id,
+        ),
+      );
     }
     if (!force &&
         current != null &&
@@ -136,9 +164,6 @@ class _NextGenHomeState extends State<NextGenHome> {
       _navigator = GlobalKey<NavigatorState>();
     });
     current?.dispose();
-    unawaited(
-      NextGenPreferences.setCurrentConnectionId(_manager.prefs, connection.id),
-    );
   }
 
   static bool _sameAccess(SavedConnection a, SavedConnection b) =>

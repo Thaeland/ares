@@ -26,6 +26,9 @@ class NgConnectScreen extends StatefulWidget {
     required this.connManager,
     required this.onConnected,
     this.existing,
+    this.initialAddress,
+    this.initialLabel,
+    this.fleetEnrollment = false,
     this.firstRun = true,
     this.onCancel,
     this.onUseClassic,
@@ -36,6 +39,11 @@ class NgConnectScreen extends StatefulWidget {
 
   /// A saved connection to sign in to again (address pre-filled).
   final SavedConnection? existing;
+
+  /// Credential-free suggestion. Unlike a saved account, never auto-probe it.
+  final Uri? initialAddress;
+  final String? initialLabel;
+  final bool fleetEnrollment;
   final bool firstRun;
   final VoidCallback? onCancel;
 
@@ -77,6 +85,9 @@ class _NgConnectScreenState extends State<NgConnectScreen> {
     super.initState();
     _certificate.addListener(_onCertificate);
     final existing = widget.existing;
+    if (widget.initialAddress != null) {
+      _address.text = widget.initialAddress.toString();
+    }
     if (existing != null) {
       _address.text =
           existing.singleLoginUrl ??
@@ -223,7 +234,12 @@ class _NgConnectScreenState extends State<NgConnectScreen> {
         widget.connManager.saveSingleLoginConnection(
           url: url,
           signInMethod: method,
-          label: widget.existing?.label,
+          fleetKind: widget.fleetEnrollment
+              ? (widget.initialAddress == null ? 'direct' : 'cloud')
+              : null,
+          label:
+              widget.existing?.label ??
+              (url.uri == widget.initialAddress ? widget.initialLabel : null),
           username: method == 'password' ? _username.text : null,
           password: method == 'password' ? _password.text : null,
           profile: profile,
