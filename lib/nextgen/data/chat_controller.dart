@@ -16,6 +16,7 @@ import '../../core/models/legacy_lcm_summary.dart';
 import '../../core/models/slash_command.dart';
 import '../../core/services/attachment_draft_service.dart';
 import '../../core/services/slash_command_errors.dart';
+import '../../core/services/remote_workspace.dart';
 import '../../core/services/ws_client.dart';
 import 'history_rows.dart';
 import 'nextgen_gateway.dart';
@@ -823,7 +824,10 @@ class NgChatController extends ChangeNotifier {
       if (runtimeId != null) gateway.bindRuntime(runtimeId!, id);
       final wasRunning = running;
       running = result['running'] == true;
-      if (running && !wasRunning) turnStartedAt ??= DateTime.now();
+      if (running && !wasRunning) {
+        turnStartedAt ??= DateTime.now();
+        _captureGitTurnBaseline();
+      }
       _withInfo(result['info']);
       _withTodos(NgTodoList.parse(result['todo_state']));
       _attachedOnce = true;
@@ -889,6 +893,14 @@ class NgChatController extends ChangeNotifier {
       .replaceFirst('Bad state: ', '')
       .replaceFirst('Exception: ', '')
       .replaceFirst(RegExp(r'^JsonRpcError\([^)]*\): '), '');
+
+  void _captureGitTurnBaseline() {
+    final session = storedId;
+    if (session == null || session.isEmpty) return;
+    unawaited(
+      captureGitTurnBaseline(owner: gateway.workspace, sessionId: session),
+    );
+  }
 
   void _withInfo(Object? raw) {
     if (raw is! Map) return;
@@ -1658,11 +1670,15 @@ class NgChatController extends ChangeNotifier {
     switch (event.type) {
       case 'message.start':
         // A new turn hasn't planned yet; the last plan is from before.
+        final starting = !running;
         todosLive = todosLive && running;
         running = true;
         _replyGap = false;
         error = null;
-        turnStartedAt ??= DateTime.now();
+        if (starting) {
+          turnStartedAt ??= DateTime.now();
+          _captureGitTurnBaseline();
+        }
         for (final item in items.whereType<NgUserItem>()) {
           item.pending = false;
         }

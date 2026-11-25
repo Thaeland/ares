@@ -720,6 +720,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                                     path != null && isSafeWorkspacePath(path)
                                     ? path
                                     : null,
+                                turnBaseline: path == null
+                                    ? null
+                                    : gitTurnMemory.baselineFor(
+                                        ownerId: owner.connectionId,
+                                        profile: owner.profile,
+                                        sessionId: session.id,
+                                        cwd: path,
+                                      ),
                                 onClose: () => Navigator.pop(routeContext),
                               ),
                             ),

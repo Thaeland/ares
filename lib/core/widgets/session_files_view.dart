@@ -633,13 +633,25 @@ class _FilesState extends State<SessionFilesView> {
     ],
   );
 
+  String? _recordedTurnBaseline() {
+    final session = widget.route.storedSessionId;
+    final cwd = _target?.canonicalCwd;
+    if (session == null || cwd == null) return null;
+    return gitTurnMemory.baselineFor(
+      ownerId: widget.owner.connectionId,
+      profile: widget.owner.profile,
+      sessionId: session,
+      cwd: cwd,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_git) {
       return GitReviewPane(
         owner: widget.owner,
         route: widget.route,
-        turnBaseline: widget.turnBaseline,
+        turnBaseline: _recordedTurnBaseline() ?? widget.turnBaseline,
         initialFile: widget.focusGitFile,
         onHandOff: widget.onHandOff,
         onClose: () {

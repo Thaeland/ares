@@ -17,11 +17,14 @@ class DisposableGitGateway {
   var generation = 3;
   final executables = <String>[];
   final posts = <Map<String, Object?>>[];
+  final extraReviewRows = <Map<String, Object?>>[];
   final _sockets = <WebSocket>[];
   final _tickets = <String>{};
   var _sequence = 0;
+  var ghReady = false;
+  String? pullRequestUrl;
+  var dropResume = false;
   final _sha = RegExp(r'^[0-9a-f]{7,64}$');
-  final _branch = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._/-]{0,199}$');
 
   SavedConnection get connection => SavedConnection(
     id: 'fixture',
@@ -99,6 +102,11 @@ class DisposableGitGateway {
           final params = frame['params'];
           Object? result = <String, Object?>{};
           if (method == 'session.resume' && params is Map) {
+            if (dropResume) {
+              dropResume = false;
+              await socket.close();
+              return;
+            }
             result = {
               'session_id': 'runtime',
               'stored_session_id': 'stored',
@@ -250,7 +258,11 @@ class DisposableGitGateway {
         };
       case '/prefix/api/git/review/ship-info':
         _owns(query['path']);
-        return {'ghReady': false, 'pr': null};
+        final url = pullRequestUrl;
+        return {
+          'ghReady': ghReady,
+          'pr': url == null ? null : {'url': url, 'state': 'OPEN', 'number': 1},
+        };
       case '/prefix/api/git/worktrees':
         _owns(query['path']);
         return {'worktrees': await _worktrees()};
@@ -325,7 +337,7 @@ class DisposableGitGateway {
           if (body['force'] == true) '--force',
           target,
         ]);
-        return {'ok': true, 'removed': target};
+        return {'removed': target};
       case '/prefix/api/git/branch/switch':
         final branch = _branchName(body['branch']);
         await _ok(['switch', branch]);
@@ -360,33 +372,61 @@ class DisposableGitGateway {
       );
       return {'files': files, 'base': resolved};
     }
-    return {'files': await _uncommitted(), 'base': null};
+    final files = await _uncommitted();
+    files.addAll(extraReviewRows);
+    return {'files': files, 'base': null};
   }
 
   Future<List<Map<String, Object?>>> _uncommitted() async {
     final staged = await _numstat(['--cached']);
     final unstaged = await _numstat([]);
     final files = <Map<String, Object?>>[];
-    for (final line in (await _out(['status', '--porcelain'])).split('\n')) {
-      if (line.length < 4) continue;
-      final xy = line.substring(0, 2);
-      final path = line.substring(3);
-      if (!_relative(path)) continue;
+    for (final entry in await _statusEntries()) {
+      final path = entry.$3;
       final counts = (
         (staged[path]?.$1 ?? 0) + (unstaged[path]?.$1 ?? 0),
         (staged[path]?.$2 ?? 0) + (unstaged[path]?.$2 ?? 0),
       );
-      final added = xy == '??' ? await _lineCount(path) : counts.$1;
+      final added = entry.$1 == '?' ? await _lineCount(path) : counts.$1;
       files.add({
         'path': path,
         'added': added,
         'removed': counts.$2,
-        'status': xy == '??' ? '?' : _letter(xy),
-        'staged': xy[0] != ' ' && xy[0] != '?',
+        'status': _statusLetter(entry.$1, entry.$2),
+        'staged':
+            (entry.$1 == '1' || entry.$1 == '2') &&
+            entry.$2.isNotEmpty &&
+            entry.$2[0] != '.' &&
+            entry.$2[0] != '?',
       });
     }
     files.sort((a, b) => (a['path'] as String).compareTo(b['path'] as String));
     return files;
+  }
+
+  /// Porcelain v2 `-z`, the shape `review_list` reads. Paths are not quoted
+  /// and no row is dropped.
+  Future<List<(String, String, String)>> _statusEntries() async {
+    final raw = await _out(['status', '--porcelain=v2', '-z']);
+    final records = raw.split('\u0000');
+    final entries = <(String, String, String)>[];
+    for (var i = 0; i < records.length; i++) {
+      final rec = records[i];
+      if (rec.isEmpty) continue;
+      final tag = rec[0];
+      if (tag == '?') {
+        entries.add(('?', '??', rec.length < 2 ? '' : rec.substring(2)));
+      } else if (tag == 'u') {
+        final bits = rec.split(' ');
+        entries.add(('u', bits.length > 1 ? bits[1] : 'u', bits.last));
+      } else if (tag == '1' || tag == '2') {
+        final parts = _splitMax(rec, ' ', tag == '1' ? 8 : 9);
+        final xy = parts.length > 1 ? parts[1] : '.';
+        entries.add((tag, xy, parts.last));
+        if (tag == '2') i++;
+      }
+    }
+    return entries;
   }
 
   Future<String> _diff(
@@ -483,17 +523,10 @@ class DisposableGitGateway {
       branch = body['branch'] == null
           ? 'hermes/$name'
           : _branchName(body['branch']);
-      if (!_branch.hasMatch(branch)) throw _GitReject();
+      if (!_refName(branch)) throw _GitReject();
       directory = '${root.path}/.worktrees/${name.replaceAll('/', '-')}';
       final base = body['base'] == null ? null : _branchName(body['base']);
-      await _ok([
-        'worktree',
-        'add',
-        '-b',
-        branch,
-        directory,
-        ?base,
-      ]);
+      await _ok(['worktree', 'add', '-b', branch, directory, ?base]);
     }
     return {'path': directory, 'branch': branch, 'repoRoot': root.path};
   }
@@ -651,15 +684,30 @@ class DisposableGitGateway {
   }
 
   String _branchName(Object? value) {
-    if (value is! String ||
-        !_branch.hasMatch(value) ||
-        value.contains('..') ||
-        value.contains('//') ||
-        value.endsWith('/') ||
-        value.endsWith('.')) {
-      throw _GitReject();
-    }
+    if (value is! String || !_refName(value)) throw _GitReject();
     return value;
+  }
+
+  bool _refName(String name) {
+    if (name.isEmpty || name.length > 200 || name == '@') return false;
+    if (name.startsWith('/') ||
+        name.endsWith('/') ||
+        name.endsWith('.') ||
+        name.contains('..') ||
+        name.contains('//') ||
+        name.contains('@{') ||
+        name.contains('\\')) {
+      return false;
+    }
+    if (RegExp(r'[\x00-\x20\x7f~^:?*\[]').hasMatch(name)) return false;
+    return name
+        .split('/')
+        .every(
+          (part) =>
+              part.isNotEmpty &&
+              !part.startsWith('.') &&
+              !part.endsWith('.lock'),
+        );
   }
 
   String? _shaOnly(String? value) {
@@ -674,9 +722,25 @@ class DisposableGitGateway {
       !path.contains('..') &&
       !path.contains(r'\');
 
-  String _letter(String xy) {
-    final code = xy[0] == ' ' ? xy[1] : xy[0];
-    return 'MADRC?'.contains(code) ? code : 'M';
+  String _statusLetter(String tag, String xy) {
+    if (tag == '?' || tag == 'u') return tag.toUpperCase();
+    final code = xy.isEmpty
+        ? '.'
+        : (xy[0] != '.' ? xy[0] : (xy.length > 1 ? xy[1] : '.'));
+    return (code == '.' ? 'M' : code).toUpperCase();
+  }
+
+  List<String> _splitMax(String value, String separator, int max) {
+    final out = <String>[];
+    var rest = value;
+    for (var i = 0; i < max; i++) {
+      final at = rest.indexOf(separator);
+      if (at < 0) break;
+      out.add(rest.substring(0, at));
+      rest = rest.substring(at + separator.length);
+    }
+    out.add(rest);
+    return out;
   }
 
   Future<String> _out(List<String> args) async {

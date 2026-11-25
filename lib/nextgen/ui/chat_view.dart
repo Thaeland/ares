@@ -936,7 +936,10 @@ class _NgChatViewState extends State<NgChatView> {
                 : null,
             readAloud: _readAloud,
           ),
-          if (!item.open && _latestAssistant(items, item))
+          if (!item.open &&
+              _latestAssistant(items, item) &&
+              chat.storedId != null &&
+              identical(chat.gateway, NgScope.of(context).gateway))
             TurnChangedFilesCard(
               files: changedFilesFromToolParts([
                 for (final tool in item.tools)

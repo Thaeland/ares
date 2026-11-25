@@ -147,6 +147,7 @@ void main() {
           expect(published.exitCode, 0);
           expect((published.stdout as String).trim(), hasLength(40));
 
+          gateway.ghReady = true;
           final url = await followed.gitCreatePullRequest();
           expect(url, startsWith('file:'));
           expect(

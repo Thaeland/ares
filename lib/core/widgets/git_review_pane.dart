@@ -1,9 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../models/turn_changed_files.dart';
 import '../services/remote_workspace.dart';
+import 'markdown_link_handler.dart';
+
+/// Test hook for the pull-request button. Production uses the shared web-link
+/// handler, which allows only http and https.
+@visibleForTesting
+Future<void> Function(String url)? debugOpenGitPullRequest;
 
 class TurnChangedFilesCard extends StatelessWidget {
   const TurnChangedFilesCard({
@@ -77,7 +83,7 @@ class GitReviewPane extends StatefulWidget {
 }
 
 class _GitReviewPaneState extends State<GitReviewPane> {
-  late final WorkspacePane _pane;
+  late WorkspacePane _pane;
   WorkspaceTarget? _target;
   var _epoch = 0;
   var _busy = false;
@@ -85,6 +91,8 @@ class _GitReviewPaneState extends State<GitReviewPane> {
   String? _expected;
   var _scope = GitReviewScope.uncommitted;
   String? _baseline;
+  String? _baselineCwd;
+  var _omitted = 0;
   String? _message;
   String? _diff;
   String? _selected;
@@ -113,6 +121,31 @@ class _GitReviewPaneState extends State<GitReviewPane> {
   }
 
   @override
+  void didUpdateWidget(GitReviewPane old) {
+    super.didUpdateWidget(old);
+    final switched =
+        !identical(old.owner, widget.owner) || old.route != widget.route;
+    if (switched) {
+      _pane.close();
+      _pane = widget.owner.pane();
+      _target = null;
+      _expected = widget.expectedCwd;
+      _baseline = widget.turnBaseline;
+      _baselineCwd = null;
+      _files = const [];
+      _diff = null;
+      _message = null;
+      _load();
+      return;
+    }
+    if (old.turnBaseline != widget.turnBaseline) {
+      _baseline = widget.turnBaseline;
+      _baselineCwd = null;
+      if (_scope == GitReviewScope.lastTurn) _load();
+    }
+  }
+
+  @override
   void dispose() {
     _epoch++;
     _pane.close();
@@ -124,30 +157,47 @@ class _GitReviewPaneState extends State<GitReviewPane> {
 
   Future<void> _load({String? expected}) async {
     final epoch = ++_epoch;
-    if (expected != null) _expected = expected;
+    // A Follow confirms one directory. Keeping that path would make every
+    // later move look like the session changed.
+    final pinned = expected ?? _expected;
+    if (expected != null) _expected = null;
     setState(() {
       _busy = true;
       _message = null;
     });
+    WorkspaceTarget? bound;
     try {
-      final target = await _pane.bind(widget.route, expectedCwd: _expected);
+      final target = await _pane.bind(widget.route, expectedCwd: pinned);
       if (!_owns(epoch)) return;
+      bound = target;
+      final cwd = target.canonicalCwd;
+      final baseline = _baselineFor(cwd);
       final results = await Future.wait<Object?>([
-        target.gitReviewList(scope: _scope, base: _scopeBase),
-        target.gitWorktrees(),
-        target.gitBranches(),
-        target.gitBaseBranches(),
+        target.gitReviewList(
+          scope: _scope,
+          base: _scope == GitReviewScope.lastTurn ? baseline : null,
+        ),
+        target.gitWorktreeRows(),
+        target.gitBranchRows(),
+        target.gitBaseBranchRows(),
         target.gitShipInfo(),
       ]);
       if (!_owns(epoch)) return;
       final list = results[0] as GitReviewList;
+      final trees = results[1] as GitRows<GitWorktreeInfo>;
+      final branches = results[2] as GitRows<GitBranchInfo>;
+      final bases = results[3] as GitRows<GitBaseBranch>;
       final ship = results[4] as GitShipInfo;
       setState(() {
         _target = target;
+        _baseline = baseline;
+        _baselineCwd = cwd;
         _files = list.files;
-        _trees = results[1] as List<GitWorktreeInfo>;
-        _branches = results[2] as List<GitBranchInfo>;
-        _bases = results[3] as List<GitBaseBranch>;
+        _trees = trees.rows;
+        _branches = branches.rows;
+        _bases = bases.rows;
+        _omitted =
+            list.omitted + trees.omitted + branches.omitted + bases.omitted;
         _ghReady = ship.ghReady;
         _prUrl = ship.prUrl ?? _prUrl;
         _base ??= _bases
@@ -163,8 +213,35 @@ class _GitReviewPaneState extends State<GitReviewPane> {
       setState(() {
         _busy = false;
         _message = _why(error);
+        if (bound != null) _target = bound;
+      });
+    } catch (_) {
+      if (!_owns(epoch)) return;
+      setState(() {
+        _busy = false;
+        _message = 'The Git operation did not complete.';
+        if (bound != null) _target = bound;
       });
     }
+  }
+
+  String? _baselineFor(String? cwd) {
+    final session = widget.route.storedSessionId;
+    if (cwd != null && session != null) {
+      final recorded = gitTurnMemory.baselineFor(
+        ownerId: widget.owner.connectionId,
+        profile: widget.owner.profile,
+        sessionId: session,
+        cwd: cwd,
+      );
+      if (recorded != null) return recorded;
+    }
+    if (cwd != null && cwd == _baselineCwd) return _baseline;
+    if (widget.turnBaseline != null &&
+        (widget.expectedCwd == null || widget.expectedCwd == cwd)) {
+      return widget.turnBaseline;
+    }
+    return null;
   }
 
   String? get _scopeBase =>
@@ -218,6 +295,12 @@ class _GitReviewPaneState extends State<GitReviewPane> {
       setState(() {
         _busy = false;
         _message = _why(error);
+      });
+    } catch (_) {
+      if (!_owns(epoch)) return;
+      setState(() {
+        _busy = false;
+        _message = 'The Git operation did not complete.';
       });
     }
   }
@@ -276,6 +359,13 @@ class _GitReviewPaneState extends State<GitReviewPane> {
             ),
             if (_busy) const LinearProgressIndicator(),
             if (_message != null) Text(_message!, key: const Key('git-error')),
+            if (_omitted > 0)
+              Text(
+                _omitted == 1
+                    ? '1 Git entry was left out because it was not safe to show.'
+                    : '$_omitted Git entries were left out because they were not safe to show.',
+                key: const Key('git-omitted'),
+              ),
             if (_target?.canonicalCwd case final cwd?)
               Text(cwd, key: const Key('git-cwd')),
             const SizedBox(height: 8),
@@ -320,10 +410,20 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                     ? null
                     : () => _act((target) async {
                         final sha = await target.gitRevParseHead();
-                        if (sha == null) {
+                        final cwd = target.canonicalCwd;
+                        final session = widget.route.storedSessionId;
+                        if (sha == null || cwd == null || session == null) {
                           throw WorkspaceException(WorkspaceFailure.invalid);
                         }
+                        gitTurnMemory.remember(
+                          ownerId: widget.owner.connectionId,
+                          profile: widget.owner.profile,
+                          sessionId: session,
+                          cwd: cwd,
+                          sha: sha,
+                        );
                         _baseline = sha;
+                        _baselineCwd = cwd;
                       }),
                 child: const Text('Mark HEAD as the turn baseline'),
               ),
@@ -479,10 +579,14 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                     key: const Key('git-pr'),
                     onPressed: _busy
                         ? null
-                        : () => _act((target) async {
+                        : _prUrl != null
+                        ? () => unawaited(_openPullRequest(_prUrl!))
+                        : _ghReady
+                        ? () => _act((target) async {
                             final url = await target.gitCreatePullRequest();
                             _prUrl = url;
-                          }),
+                          })
+                        : null,
                     child: Text(
                       _prUrl == null
                           ? 'Create pull request'
@@ -504,7 +608,8 @@ class _GitReviewPaneState extends State<GitReviewPane> {
               Text(
                 _ghReady
                     ? 'gh is authenticated on this gateway.'
-                    : 'gh is not authenticated here. Create pull request still uses the gateway route.',
+                    : 'Install the GitHub CLI (gh) and sign in to open PRs',
+                key: const Key('git-gh'),
               ),
               if (_prUrl case final url?)
                 Row(
@@ -512,17 +617,10 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                     Expanded(
                       child: SelectableText(url, key: const Key('git-pr-url')),
                     ),
-                    if (url.startsWith('https://') || url.startsWith('http://'))
-                      TextButton(
-                        onPressed: () => launchUrl(Uri.parse(url)),
-                        child: const Text('Open'),
-                      )
-                    else
-                      TextButton(
-                        onPressed: () =>
-                            Clipboard.setData(ClipboardData(text: url)),
-                        child: const Text('Copy'),
-                      ),
+                    TextButton(
+                      onPressed: () => unawaited(_openPullRequest(url)),
+                      child: const Text('Open'),
+                    ),
                   ],
                 ),
             ],
@@ -566,7 +664,7 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                                 : () async {
                                     final yes = await _confirm(
                                       'Remove ${tree.branch}?',
-                                      'The worktree directory is removed. A dirty tree needs the force option.',
+                                      'The worktree directory is removed.',
                                       'Remove',
                                     );
                                     if (!yes) return;
@@ -667,6 +765,12 @@ class _GitReviewPaneState extends State<GitReviewPane> {
         ),
       ),
     );
+  }
+
+  Future<void> _openPullRequest(String url) {
+    final hook = debugOpenGitPullRequest;
+    if (hook != null) return hook(url);
+    return openMarkdownWebLink(context, url);
   }
 }
 

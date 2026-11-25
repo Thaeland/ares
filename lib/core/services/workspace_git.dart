@@ -28,9 +28,22 @@ final class GitReviewFile {
 }
 
 final class GitReviewList {
-  const GitReviewList({required this.files, required this.base});
+  const GitReviewList({
+    required this.files,
+    required this.base,
+    this.omitted = 0,
+  });
   final List<GitReviewFile> files;
   final String? base;
+
+  /// Rows that were not safe to show. One bad row does not fail the read.
+  final int omitted;
+}
+
+final class GitRows<T> {
+  const GitRows(this.rows, {this.omitted = 0});
+  final List<T> rows;
+  final int omitted;
 }
 
 final class GitWorktreeInfo {
@@ -95,48 +108,101 @@ final class GitWorktreeCreated {
   final String repoRoot;
 }
 
-/// HEAD captured before a turn, keyed by the bound directory.
+/// HEAD captured when a turn starts. The key is owner, session and
+/// directory, so following into another directory does not keep the old base.
 final class GitTurnMemory {
-  String? cwd;
-  String? head;
+  static const _cap = 8;
+  final Map<String, String> _sha = {};
+  final List<String> _order = [];
 
-  void remember(String directory, String sha) {
-    cwd = directory;
-    head = sha;
+  static String key({
+    required String ownerId,
+    required String? profile,
+    required String sessionId,
+    required String cwd,
+  }) => '$ownerId\u0000${profile ?? ''}\u0000$sessionId\u0000${cwd.trim()}';
+
+  void remember({
+    required String ownerId,
+    required String? profile,
+    required String sessionId,
+    required String cwd,
+    required String sha,
+  }) {
+    final id = key(
+      ownerId: ownerId,
+      profile: profile,
+      sessionId: sessionId,
+      cwd: cwd,
+    );
+    if (_sha[id] == sha) return;
+    _order.remove(id);
+    while (_order.length >= _cap) {
+      _sha.remove(_order.removeAt(0));
+    }
+    _order.add(id);
+    _sha[id] = sha;
   }
 
-  String? baselineFor(String directory) => cwd == directory ? head : null;
+  String? baselineFor({
+    required String ownerId,
+    required String? profile,
+    required String sessionId,
+    required String cwd,
+  }) =>
+      _sha[key(
+        ownerId: ownerId,
+        profile: profile,
+        sessionId: sessionId,
+        cwd: cwd,
+      )];
 }
 
-const _gitStatuses = {'M', 'A', 'D', 'R', 'C', 'U', '?'};
+final gitTurnMemory = GitTurnMemory();
+
 final _gitSha = RegExp(r'^[0-9a-f]{7,64}$');
-final _gitBranchName = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._/-]{0,199}$');
+const _knownGitStatus = {'M', 'A', 'D', 'R', 'C', 'T', 'U', '?'};
 
+/// A repository-relative path Git can return: a leading dot, spaces and a
+/// trailing slash are ordinary. Absolute paths, `..` and controls are not.
 bool _gitRelative(String file) {
-  if (file.isEmpty ||
-      file.length > 1024 ||
-      !RegExp(r'^[A-Za-z0-9][A-Za-z0-9._/-]*$').hasMatch(file) ||
-      file.contains('..') ||
-      file.contains('//') ||
-      file.endsWith('/')) {
-    return false;
-  }
-  return file
-      .split('/')
-      .every((part) => part.isNotEmpty && part != '.' && part != '..');
+  if (file.isEmpty || file.length > 1024) return false;
+  if (file.startsWith('/') || file.startsWith('\\')) return false;
+  if (RegExp(r'^[A-Za-z]:[/\\]').hasMatch(file)) return false;
+  if (RegExp(r'[\x00-\x1f\x7f]').hasMatch(file)) return false;
+  final parts = file.split(RegExp(r'[/\\]'));
+  if (parts.last.isEmpty) parts.removeLast();
+  if (parts.isEmpty) return false;
+  return parts.every((part) => part.isNotEmpty && part != '.' && part != '..');
 }
 
+/// `git check-ref-format` rules, including `@` inside a name.
 bool _gitBranch(String name) {
-  if (!_gitBranchName.hasMatch(name)) return false;
-  if (name.endsWith('/') ||
+  if (name.isEmpty || name.length > 200 || name == '@') return false;
+  if (name.startsWith('/') ||
+      name.endsWith('/') ||
       name.endsWith('.') ||
-      name.endsWith('.lock') ||
       name.contains('..') ||
+      name.contains('//') ||
       name.contains('@{') ||
-      name.contains('//')) {
+      name.contains('\\')) {
     return false;
   }
-  return true;
+  if (RegExp(r'[\x00-\x20\x7f~^:?*\[]').hasMatch(name)) return false;
+  return name
+      .split('/')
+      .every(
+        (part) =>
+            part.isNotEmpty && !part.startsWith('.') && !part.endsWith('.lock'),
+      );
+}
+
+String? _gitStatus(String status) {
+  if (_knownGitStatus.contains(status)) return status;
+  if (status.length == 1 && RegExp(r'^[A-Za-z]$').hasMatch(status)) {
+    return 'changed';
+  }
+  return null;
 }
 
 bool _commitMessage(String message) {
@@ -187,8 +253,8 @@ Future<void> _requireHostGit(WorkspaceTarget target) async {
   await target.verifySession();
 }
 
-GitReviewFile _reviewFile(Object? raw) {
-  if (raw is! Map) _fail(WorkspaceFailure.invalid);
+GitReviewFile? _reviewFile(Object? raw) {
+  if (raw is! Map) return null;
   final path = raw['path'];
   final added = raw['added'];
   final removed = raw['removed'];
@@ -201,17 +267,47 @@ GitReviewFile _reviewFile(Object? raw) {
       removed is! int ||
       removed < 0 ||
       status is! String ||
-      !_gitStatuses.contains(status) ||
       staged is! bool) {
-    _fail(WorkspaceFailure.invalid);
+    return null;
   }
+  final shown = _gitStatus(status);
+  if (shown == null) return null;
   return GitReviewFile(
     path: path,
     added: added,
     removed: removed,
-    status: status,
+    status: shown,
     staged: staged,
   );
+}
+
+/// Records HEAD for this session directory when a turn becomes busy.
+/// Failure is ignored: a directory that is not a local repository has no
+/// last-turn baseline, and the turn itself is not delayed.
+Future<void> captureGitTurnBaseline({
+  required RemoteWorkspaceOwner owner,
+  required String sessionId,
+}) async {
+  if (sessionId.isEmpty) return;
+  final pane = owner.pane();
+  try {
+    final target = await pane.bind(owner.route(storedSessionId: sessionId));
+    final cwd = target.canonicalCwd;
+    if (cwd == null) return;
+    final sha = await target.gitRevParseHead();
+    if (sha == null) return;
+    gitTurnMemory.remember(
+      ownerId: owner.connectionId,
+      profile: owner.profile,
+      sessionId: sessionId,
+      cwd: cwd,
+      sha: sha,
+    );
+  } on WorkspaceException {
+    return;
+  } finally {
+    pane.close();
+  }
 }
 
 extension SessionGit on WorkspaceTarget {
@@ -254,8 +350,21 @@ extension SessionGit on WorkspaceTarget {
         (reported is! String || !_gitSha.hasMatch(reported))) {
       _fail(WorkspaceFailure.invalid);
     }
-    final files = [for (final row in raw['files'] as List) _reviewFile(row)];
-    return GitReviewList(files: List.unmodifiable(files), base: reported);
+    final files = <GitReviewFile>[];
+    var omitted = 0;
+    for (final row in raw['files'] as List) {
+      final file = _reviewFile(row);
+      if (file == null) {
+        omitted++;
+      } else {
+        files.add(file);
+      }
+    }
+    return GitReviewList(
+      files: List.unmodifiable(files),
+      base: reported,
+      omitted: omitted,
+    );
   }, session: true);
 
   Future<String> gitReviewDiff({
@@ -320,41 +429,44 @@ extension SessionGit on WorkspaceTarget {
     );
   }, session: true);
 
-  Future<List<GitWorktreeInfo>> gitWorktrees() => _withOwner(() async {
+  Future<GitRows<GitWorktreeInfo>> gitWorktreeRows() => _withOwner(() async {
     final cwd = _boundGitCwd(this);
     await _requireHostGit(this);
     final raw = await _get(['git', 'worktrees'], {'path': cwd});
     if (raw is! Map || raw['worktrees'] is! List) {
       _fail(WorkspaceFailure.invalid);
     }
-    return List.unmodifiable([
-      for (final row in raw['worktrees'] as List) _worktree(row),
-    ]);
+    return _keep((raw['worktrees'] as List).map(_worktree));
   }, session: true);
 
-  Future<List<GitBranchInfo>> gitBranches() => _withOwner(() async {
+  Future<List<GitWorktreeInfo>> gitWorktrees() async =>
+      (await gitWorktreeRows()).rows;
+
+  Future<GitRows<GitBranchInfo>> gitBranchRows() => _withOwner(() async {
     final cwd = _boundGitCwd(this);
     await _requireHostGit(this);
     final raw = await _get(['git', 'branches'], {'path': cwd});
     if (raw is! Map || raw['branches'] is! List) {
       _fail(WorkspaceFailure.invalid);
     }
-    return List.unmodifiable([
-      for (final row in raw['branches'] as List) _branch(row),
-    ]);
+    return _keep((raw['branches'] as List).map(_branch));
   }, session: true);
 
-  Future<List<GitBaseBranch>> gitBaseBranches() => _withOwner(() async {
+  Future<List<GitBranchInfo>> gitBranches() async =>
+      (await gitBranchRows()).rows;
+
+  Future<GitRows<GitBaseBranch>> gitBaseBranchRows() => _withOwner(() async {
     final cwd = _boundGitCwd(this);
     await _requireHostGit(this);
     final raw = await _get(['git', 'base-branches'], {'path': cwd});
     if (raw is! Map || raw['branches'] is! List) {
       _fail(WorkspaceFailure.invalid);
     }
-    return List.unmodifiable([
-      for (final row in raw['branches'] as List) _baseBranch(row),
-    ]);
+    return _keep((raw['branches'] as List).map(_baseBranch));
   }, session: true);
+
+  Future<List<GitBaseBranch>> gitBaseBranches() async =>
+      (await gitBaseBranchRows()).rows;
 
   Future<void> gitStage({String? file}) => _mutate('review/stage', file: file);
 
@@ -370,6 +482,10 @@ extension SessionGit on WorkspaceTarget {
   Future<void> gitPush() => _mutate('review/push');
 
   Future<String> gitCreatePullRequest() => _withOwner(() async {
+    final ship = await gitShipInfo();
+    // Stock pushes before it tries gh, so this must not be called unready.
+    if (!ship.ghReady) _fail(WorkspaceFailure.denied);
+    if (ship.prUrl != null) return ship.prUrl!;
     final raw = await _post('review/create-pr', const {});
     if (raw is! Map ||
         raw['url'] is! String ||
@@ -483,13 +599,33 @@ extension SessionGit on WorkspaceTarget {
         operation == 'branch/switch') {
       return raw;
     }
+    if (operation == 'worktree/remove') {
+      final requested = fields['worktreePath'];
+      if (raw is! Map || raw['removed'] != requested) {
+        _fail(WorkspaceFailure.invalid);
+      }
+      return raw;
+    }
     if (raw is! Map || raw['ok'] != true) _fail(WorkspaceFailure.invalid);
     return raw;
   }
 }
 
-GitWorktreeInfo _worktree(Object? raw) {
-  if (raw is! Map) _fail(WorkspaceFailure.invalid);
+GitRows<T> _keep<T>(Iterable<T?> rows) {
+  final kept = <T>[];
+  var omitted = 0;
+  for (final row in rows) {
+    if (row == null) {
+      omitted++;
+    } else {
+      kept.add(row);
+    }
+  }
+  return GitRows(List.unmodifiable(kept), omitted: omitted);
+}
+
+GitWorktreeInfo? _worktree(Object? raw) {
+  if (raw is! Map) return null;
   final path = raw['path'];
   final branch = raw['branch'];
   if (path is! String ||
@@ -498,7 +634,7 @@ GitWorktreeInfo _worktree(Object? raw) {
       raw['isMain'] is! bool ||
       raw['detached'] is! bool ||
       raw['locked'] is! bool) {
-    _fail(WorkspaceFailure.invalid);
+    return null;
   }
   return GitWorktreeInfo(
     path: path,
@@ -509,8 +645,8 @@ GitWorktreeInfo _worktree(Object? raw) {
   );
 }
 
-GitBranchInfo _branch(Object? raw) {
-  if (raw is! Map) _fail(WorkspaceFailure.invalid);
+GitBranchInfo? _branch(Object? raw) {
+  if (raw is! Map) return null;
   final name = raw['name'];
   final worktree = raw['worktreePath'];
   if (name is! String ||
@@ -520,7 +656,7 @@ GitBranchInfo _branch(Object? raw) {
       raw['isRemote'] is! bool ||
       (worktree != null &&
           (worktree is! String || !isSafeWorkspacePath(worktree)))) {
-    _fail(WorkspaceFailure.invalid);
+    return null;
   }
   return GitBranchInfo(
     name: name,
@@ -531,14 +667,14 @@ GitBranchInfo _branch(Object? raw) {
   );
 }
 
-GitBaseBranch _baseBranch(Object? raw) {
-  if (raw is! Map) _fail(WorkspaceFailure.invalid);
+GitBaseBranch? _baseBranch(Object? raw) {
+  if (raw is! Map) return null;
   final name = raw['name'];
   if (name is! String ||
       !_gitBranch(name) ||
       raw['isRemote'] is! bool ||
       raw['isDefault'] is! bool) {
-    _fail(WorkspaceFailure.invalid);
+    return null;
   }
   return GitBaseBranch(
     name: name,
