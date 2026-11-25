@@ -26,6 +26,7 @@ import 'desktop_gateway_client.dart';
 import 'hermes_sign_in.dart';
 import 'tls_client_factory.dart';
 import 'main_model_route.dart';
+import 'gateway_headers.dart';
 
 // Re-export for convenience
 export '../models/connection.dart';
@@ -135,21 +136,37 @@ class _ConnectionCredentials {
 
   /// Password for an encrypted PEM client key. Persisted here (the platform
   /// secure store) rather than in the connection metadata preferences.
-  final String? clientKeyPassword;
+    /// Deployment session token for the dashboard transport. Same contract as
+  /// [dashboardPassword]: never stored in plaintext metadata.
+  final String? deploymentToken;
+
+  /// Validated per-connection HTTP headers for the gateway. Never stored in
+  /// plaintext metadata.
+  final Map<String, String> customHeaders;
+
+final String? clientKeyPassword;
 
   const _ConnectionCredentials({
     required this.apiKey,
     required this.dashboardPassword,
     this.clientKeyPassword,
+    this.deploymentToken,
+    this.customHeaders = const <String, String>{},
   });
 
   bool get isEmpty =>
-      apiKey.isEmpty && dashboardPassword == null && clientKeyPassword == null;
+      apiKey.isEmpty &&
+      dashboardPassword == null &&
+      clientKeyPassword == null &&
+      deploymentToken == null &&
+      customHeaders.isEmpty;
 
-  String encode() => jsonEncode(<String, String>{
+  String encode() => jsonEncode(<String, Object?>{
     if (apiKey.isNotEmpty) 'api_key': apiKey,
     'dashboard_password': ?dashboardPassword,
     'client_key_password': ?clientKeyPassword,
+    'deployment_token': ?deploymentToken,
+    if (customHeaders.isNotEmpty) 'custom_headers': customHeaders,
   });
 
   static _ConnectionCredentials decode(String encoded) {
@@ -158,18 +175,39 @@ class _ConnectionCredentials {
       final apiKey = map['api_key'];
       final dashboardPassword = map['dashboard_password'];
       final clientKeyPassword = map['client_key_password'];
+      final deploymentToken = map['deployment_token'];
+      final customHeaders = map['custom_headers'];
       if (apiKey != null && apiKey is! String ||
           dashboardPassword != null && dashboardPassword is! String ||
-          clientKeyPassword != null && clientKeyPassword is! String) {
+          clientKeyPassword != null && clientKeyPassword is! String ||
+          deploymentToken != null && deploymentToken is! String) {
         throw const FormatException();
       }
+      if (customHeaders != null && customHeaders is! Map) {
+        throw const FormatException();
+      }
+      final headers = <String, String>{};
+      if (customHeaders != null) {
+        for (final entry in (customHeaders as Map).entries) {
+          final key = entry.key;
+          final value = entry.value;
+          if (key is! String || value is! String) {
+            throw const FormatException();
+          }
+          // Normalize on read too: defense in depth. Never repair.
+          headers.addAll(normalizeRemoteHeaders({key: value}));
+        }
+      }
       final password = (dashboardPassword as String?)?.trim();
+      final token = (deploymentToken as String?)?.trim();
       return _ConnectionCredentials(
         apiKey: (apiKey as String?) ?? '',
         dashboardPassword: password == null || password.isEmpty
             ? null
             : password,
         clientKeyPassword: clientKeyPassword as String?,
+        deploymentToken: token == null || token.isEmpty ? null : token,
+        customHeaders: headers,
       );
     } catch (_) {
       throw const CredentialStorageException(
@@ -180,11 +218,14 @@ class _ConnectionCredentials {
 
   static _ConnectionCredentials fromConnection(SavedConnection connection) {
     final password = connection.dashboardPassword?.trim();
+    final token = connection.deploymentToken?.trim();
 
     return _ConnectionCredentials(
       apiKey: connection.apiKey,
       dashboardPassword: password == null || password.isEmpty ? null : password,
       clientKeyPassword: connection.clientCertificate?.privateKeyPassword,
+      deploymentToken: token == null || token.isEmpty ? null : token,
+      customHeaders: normalizeRemoteHeaders(connection.customHeaders),
     );
   }
 }
@@ -547,9 +588,15 @@ class ConnectionManager {
     String? dashboardPassword,
     String? gatewayProfile,
     ClientCertificateConfig? clientCertificate,
+    String? deploymentToken,
+    Map<String, String> customHeaders = const <String, String>{},
   }) => _withSavedListTransaction([], () async {
     final normalized = SavedConnection.normalizeHostAndPort(host, port);
     final profile = gatewayProfile?.trim();
+    final deploymentTokenValue = deploymentToken == null || deploymentToken.trim().isEmpty
+        ? null
+        : deploymentToken.trim();
+    final headers = normalizeRemoteHeaders(customHeaders);
     final conn = SavedConnection(
       id: _uuid.v4(),
       label: label,
@@ -566,6 +613,8 @@ class ConnectionManager {
       dashboardPassword: dashboardPassword,
       gatewayProfile: profile == null || profile.isEmpty ? null : profile,
       clientCertificate: clientCertificate,
+      deploymentToken: deploymentTokenValue,
+      customHeaders: headers,
     );
     final current = await _loadConnectionsWithSecrets();
     final previousConnections = List<SavedConnection>.of(current);
@@ -696,6 +745,10 @@ class ConnectionManager {
     String? gatewayProfile,
     ClientCertificateConfig? clientCertificate,
     bool clearClientCertificate = false,
+    String? deploymentToken,
+    Map<String, String> customHeaders = const <String, String>{},
+    bool clearDeploymentToken = false,
+    bool clearCustomHeaders = false,
   }) => _withSavedListTransaction([connId], () async {
     final current = await _loadConnectionsWithSecrets();
     final idx = current.indexWhere((c) => c.id == connId);
@@ -713,6 +766,9 @@ class ConnectionManager {
     final dashPass = dashboardPassword?.trim();
     final desktopGateway = desktopGatewayUrl?.trim();
     final profile = gatewayProfile?.trim();
+    final token = deploymentToken?.trim();
+    final hasToken = token != null && token.isNotEmpty;
+    final headers = normalizeRemoteHeaders(customHeaders);
 
     current[idx] = current[idx].copyWith(
       label: label,
@@ -742,6 +798,10 @@ class ConnectionManager {
       clearGatewayProfile: profile != null && profile.isEmpty,
       clientCertificate: clientCertificate,
       clearClientCertificate: clearClientCertificate,
+      deploymentToken: hasToken ? token : null,
+      clearDeploymentToken: clearDeploymentToken || (token != null && token.isEmpty),
+      customHeaders: headers,
+      clearCustomHeaders: clearCustomHeaders || headers.isEmpty,
     );
     await _commitCredentialAndMetadata(
       connectionId: connId,
@@ -1041,6 +1101,10 @@ class ConnectionManager {
         privateKeyPassword: credentials.clientKeyPassword,
         clearPrivateKeyPassword: credentials.clientKeyPassword == null,
       ),
+      deploymentToken: credentials.deploymentToken,
+      clearDeploymentToken: credentials.deploymentToken == null,
+      customHeaders: credentials.customHeaders,
+      clearCustomHeaders: credentials.customHeaders.isEmpty,
     );
   }
 
@@ -1339,6 +1403,7 @@ class ApiClient {
   final String baseUrl;
   final String _apiKey;
   final String? _gatewayProfile;
+  final Map<String, String> _customHeaders;
 
   /// How long a single request may take before the UI may surface an error.
   ///
@@ -1354,8 +1419,10 @@ class ApiClient {
     String pathPrefix = '',
     String? gatewayProfile,
     ClientCertificateConfig? clientCertificate,
+    Map<String, String> customHeaders = const <String, String>{},
     http.Client? httpClient,
   }) : _apiKey = apiKey,
+       _customHeaders = customHeaders,
        _gatewayProfile = gatewayProfile?.trim().isEmpty == true
            ? null
            : gatewayProfile?.trim(),
@@ -1381,6 +1448,7 @@ class ApiClient {
       pathPrefix: connection.gatewayPrefix ?? '',
       gatewayProfile: connection.gatewayProfile,
       clientCertificate: connection.clientCertificate,
+      customHeaders: connection.customHeaders,
       httpClient: httpClient,
     );
   }
@@ -1397,6 +1465,7 @@ class ApiClient {
   }
 
   Map<String, String> get _headers => {
+    ..._customHeaders,
     'Authorization': 'Bearer $_apiKey',
     'Content-Type': 'application/json',
   };
@@ -2599,6 +2668,16 @@ class DashboardClient {
   Future<String>? _cookieInFlight;
   Future<String>? _tokenInFlight;
 
+  /// Deployment session token (X-Hermes-Session-Token), when configured.
+  /// A token-mode connection never falls back to cookie/SPA auth.
+  final String? _deploymentToken;
+
+  /// Operator-supplied per-gateway HTTP headers, applied to every request.
+  final Map<String, String> _customHeaders;
+
+  /// The deployment token in use, or null when not configured.
+  String? get deploymentToken => _deploymentToken;
+
   String get baseUrl => _baseUrl;
 
   /// Selected connection profile; generic API helpers deliberately do not add it.
@@ -2617,11 +2696,17 @@ class DashboardClient {
     String? password,
     String? gatewayProfile,
     ClientCertificateConfig? clientCertificate,
+    String? deploymentToken,
+    Map<String, String> customHeaders = const <String, String>{},
     TlsClientFactory tlsClientFactory = const TlsClientFactory(),
     http.Client? httpClient,
   }) : _proxied = proxied,
        _username = username,
        _password = password,
+       _deploymentToken = deploymentToken == null || deploymentToken.trim().isEmpty
+           ? null
+           : deploymentToken.trim(),
+       _customHeaders = customHeaders,
        _gatewayProfile = gatewayProfile?.trim().isEmpty == true
            ? null
            : gatewayProfile?.trim(),
@@ -2653,6 +2738,8 @@ class DashboardClient {
       password: connection.dashboardPassword,
       gatewayProfile: connection.gatewayProfile,
       clientCertificate: connection.clientCertificate,
+      deploymentToken: connection.deploymentToken,
+      customHeaders: connection.customHeaders,
       tlsClientFactory: tlsClientFactory,
       httpClient: httpClient,
     );
@@ -2832,23 +2919,42 @@ class DashboardClient {
     final access = HermesSignInVault.instance.accessHeadersFor(
       Uri.parse(_baseUrl),
     );
+    // Deployment token mode: the token is the credential. It is sent as the
+    // X-Hermes-Session-Token header (the Desktop REST contract) and nothing
+    // else — no bearer/SPA/cookie fallback. Custom headers are merged below
+    // in a non-overriding way (auth wins). Authorization and x-hermes-session-token
+    // are forbidden from the custom set, so this cannot be spoofed.
+    final token = _deploymentToken;
+    if (token != null) {
+      return {
+        ..._customHeaders,
+        ...access,
+        'X-Hermes-Session-Token': token,
+        'Content-Type': 'application/json',
+      };
+    }
     final bearer = await _bearerHeader();
     if (bearer != null) {
       return {
+        ..._customHeaders,
         ...access,
         'Authorization': bearer,
         'Content-Type': 'application/json',
       };
     }
-    if (_proxied) return {...access, 'Content-Type': 'application/json'};
+    if (_proxied) {
+      return {..._customHeaders, ...access, 'Content-Type': 'application/json'};
+    }
     if (_usesPasswordAuth) {
       return {
+        ..._customHeaders,
         ...access,
         'Cookie': await _getCookie(),
         'Content-Type': 'application/json',
       };
     }
     return {
+      ..._customHeaders,
       ...access,
       'X-Hermes-Session-Token': await _getToken(),
       'Content-Type': 'application/json',
