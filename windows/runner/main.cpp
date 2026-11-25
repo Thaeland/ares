@@ -8,6 +8,8 @@
 
 #include "flutter_window.h"
 #include "utils.h"
+#include "toast_identity.h"
+#include <roapi.h>
 
 namespace {
 
@@ -30,19 +32,37 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   // Initialize COM, so that it is available for use in the library and/or
   // plugins.
-  ::CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+  if (FAILED(RoInitialize(RO_INIT_SINGLETHREADED))) return EXIT_FAILURE;
+  auto args = GetCommandLineArguments();
+  auto token = args.size() == 1 ? ares::toast::ParseActivation(args.front(), HasPackageIdentity()) : "";
 
   // One Ares instance per user: a second launch focuses the running window
   // and exits instead of opening a second chat session.
   HANDLE single_instance =
-      ::CreateMutexW(nullptr, TRUE, L"Ares.com.hermesagent.ares.single-instance");
+      ::CreateMutexW(nullptr, TRUE, (ares::toast::WindowClass() + L".mutex").c_str());
   if (::GetLastError() == ERROR_ALREADY_EXISTS) {
-    HWND existing = ::FindWindowW(Win32Window::WindowClassName(), nullptr);
+    HWND existing = nullptr;
+    // The primary may still be creating its first window.
+    for (int i = 0; i < 100 && !existing; ++i) {
+      existing = FindWindowW(Win32Window::WindowClassName(), nullptr);
+      if (!existing) Sleep(20);
+    }
     if (existing) {
-      ::ShowWindow(existing, SW_SHOW);
-      ::SetForegroundWindow(existing);
+      if (!token.empty()) {
+        DWORD pid = 0;
+        GetWindowThreadProcessId(existing, &pid);
+        AllowSetForegroundWindow(pid);
+        COPYDATASTRUCT data{0x41524553, static_cast<DWORD>(token.size()), token.data()};
+        DWORD_PTR received = 0;
+        SendMessageTimeoutW(existing, WM_COPYDATA, 0, reinterpret_cast<LPARAM>(&data),
+                            SMTO_ABORTIFHUNG, 2000, &received);
+      } else if (args.empty()) {
+        ::ShowWindow(existing, IsIconic(existing) ? SW_RESTORE : SW_SHOW);
+        ::SetForegroundWindow(existing);
+      }
     }
     if (single_instance) ::CloseHandle(single_instance);
+    RoUninitialize();
     return EXIT_SUCCESS;
   }
 
@@ -54,12 +74,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   flutter::DartProject project(L"data");
 
-  std::vector<std::string> command_line_arguments =
-      GetCommandLineArguments();
+  // Protocol arguments are untrusted and are not Dart entry-point options.
+  if (args.empty() || args.front().rfind("ares-", 0) != 0)
+    project.set_dart_entrypoint_arguments(std::move(args));
 
-  project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
-
-  FlutterWindow window(project);
+  FlutterWindow window(project, std::move(token));
   Win32Window::Point origin(10, 10);
   Win32Window::Size size(1280, 720);
   if (!window.Create(L"Ares", origin, size)) {
@@ -77,6 +96,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
     ::ReleaseMutex(single_instance);
     ::CloseHandle(single_instance);
   }
-  ::CoUninitialize();
+  RoUninitialize();
   return EXIT_SUCCESS;
 }
