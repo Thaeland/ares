@@ -68,6 +68,8 @@ dependencies:
   # Notifications
   flutter_local_notifications: ^18.0.0
   cryptography: ^2.7.0
+  xterm: 4.0.0
+  dartssh2: 4.1.0
 
 dev_dependencies:
   flutter_test:

@@ -664,7 +664,15 @@ class AppLocalizationsEs extends AppLocalizations {
       'Permitir los comandos coincidentes hasta que finalice esta sesión de Hermes.';
 
   @override
+  String get allow_folder_until_sandbox_off =>
+      'Allow this folder until the sandbox is switched off.';
+
+  @override
   String get allow_once => 'Permitir una vez';
+
+  @override
+  String get allow_website_until_sandbox_off =>
+      'Allow this website until the sandbox is switched off.';
 
   @override
   String get always_allow => 'Permitir siempre';
@@ -4735,6 +4743,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ng_allow_once => 'Permitir una vez';
+
+  @override
+  String get ng_allow_until_sandbox_off => 'Hasta que se desactive el sandbox';
+
+  @override
+  String get ng_folder_access => 'Acceso a carpetas';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      'El gateway no indicó si es de solo lectura o de lectura y escritura.';
+
+  @override
+  String get ng_folder_read_only => 'Solo lectura';
+
+  @override
+  String get ng_folder_read_write => 'Lectura y escritura';
+
+  @override
+  String get ng_website_access => 'Acceso a sitios web';
 
   @override
   String get ng_allow_for_this_chat => 'Permitir en este chat';

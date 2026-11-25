@@ -410,6 +410,11 @@ class _HeldApprovalClient implements DesktopGatewayClient {
   @override
   String? storedSessionKeyFor(String mobileSessionId) => mobileSessionId;
 
+  /// Local capability flag from the gateway greeting; this fake never
+  /// greets, so it reports a pre-authority gateway (no gateway queue tool).
+  @override
+  bool get sessionAuthority => false;
+
   @override
   Future<void> ensureSession(
     String sessionId, {

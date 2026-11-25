@@ -666,7 +666,15 @@ class AppLocalizationsFr extends AppLocalizations {
       'Autoriser les commandes correspondantes jusqu\'à la fin de cette session Hermes.';
 
   @override
+  String get allow_folder_until_sandbox_off =>
+      'Allow this folder until the sandbox is switched off.';
+
+  @override
   String get allow_once => 'Autoriser une fois';
+
+  @override
+  String get allow_website_until_sandbox_off =>
+      'Allow this website until the sandbox is switched off.';
 
   @override
   String get always_allow => 'Toujours autoriser';
@@ -4743,6 +4751,26 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ng_allow_once => 'Autoriser une fois';
+
+  @override
+  String get ng_allow_until_sandbox_off =>
+      'Jusqu’à la désactivation du bac à sable';
+
+  @override
+  String get ng_folder_access => 'Accès au dossier';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      'La passerelle n’a pas indiqué si l’accès est en lecture seule ou en lecture et écriture.';
+
+  @override
+  String get ng_folder_read_only => 'Lecture seule';
+
+  @override
+  String get ng_folder_read_write => 'Lecture et écriture';
+
+  @override
+  String get ng_website_access => 'Accès au site web';
 
   @override
   String get ng_allow_for_this_chat => 'Autoriser pour cette conversation';

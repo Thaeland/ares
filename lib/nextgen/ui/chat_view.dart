@@ -2,6 +2,9 @@
 // thinking and tool rows), status line, inline approval/question panel and the
 // pill composer (model chip, dictation, send/stop, steer or queue while busy).
 import 'dart:async';
+import '../../core/workspace/terminal_chat_link.dart';
+import '../../core/services/connection_manager.dart';
+import '../../core/services/remote_workspace.dart' show RemoteWorkspaceOwner;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +84,17 @@ class NgChatView extends StatefulWidget {
   State<NgChatView> createState() => _NgChatViewState();
 }
 
-class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
+class _NgChatViewState extends State<NgChatView>
+    with WidgetsBindingObserver, TerminalComposerAttachment<NgChatView> {
+  @override
+  SavedConnection get terminalConnection => chat.gateway.connection;
+  @override
+  String? get terminalSession => chat.storedId;
+  @override
+  RemoteWorkspaceOwner get terminalOwner => chat.gateway.workspace;
+  @override
+  TextEditingController get terminalComposer => _input;
+
   /// A fresh files client per card: cards close theirs when done, so they
   /// must not share the gateway's own dashboard connection.
   RemoteFilesDataSource _filesClient() {
@@ -1406,7 +1419,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     final modelLabel = [
       chat.model == null ? ngL.ng_default_model : _shortModel(chat.model!),
       if (chat.reasoningEffort != null && chat.reasoningEffort!.isNotEmpty)
-        ngEffortLabel(chat.reasoningEffort),
+        ngRouteEffortLabel(chat.reasoningEffort, chat.reasoningEffortWire),
     ].join(' · ');
     return CallbackShortcuts(
       bindings: {
@@ -2648,6 +2661,22 @@ class _InputPanelState extends State<_InputPanel> {
     _ => choice,
   };
 
+  Widget _choiceChild(String choice) {
+    final grant = widget.request.request.params['kind']?.toString();
+    final sandboxGrant = grant == 'access' || grant == 'network';
+    if (choice != 'once' || !sandboxGrant) {
+      return Text(_choiceLabel(choice));
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(_choiceLabel(choice)),
+        Text(ngL.ng_allow_until_sandbox_off),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
@@ -2727,7 +2756,7 @@ class _InputPanelState extends State<_InputPanel> {
                         ),
                         onPressed: () =>
                             _done(widget.chat.answerApproval(choice)),
-                        child: Text(_choiceLabel(choice)),
+                        child: _choiceChild(choice),
                       )
                     : FilledButton(
                         style: FilledButton.styleFrom(
@@ -2741,7 +2770,7 @@ class _InputPanelState extends State<_InputPanel> {
                         ),
                         onPressed: () =>
                             _done(widget.chat.answerApproval(choice)),
-                        child: Text(_choiceLabel(choice)),
+                        child: _choiceChild(choice),
                       ),
             ],
           ),
