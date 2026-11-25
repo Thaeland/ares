@@ -146,6 +146,34 @@ inline bool X11StateMatches(unsigned state, unsigned modifiers) {
   return (state & relevant) == modifiers;
 }
 
+// The session's lock state, from its two sources of truth: logind's
+// Session.LockedHint property and the screensaver's ActiveChanged
+// (org.freedesktop.ScreenSaver / org.gnome.ScreenSaver). logind's
+// Session.Lock and Unlock signals are only requests (Unlock is sent only for
+// `loginctl unlock-session`; swaylock, i3lock and IdleAction=lock unlock
+// locally), so they never set the state: the runner re-reads the sources.
+class LockTracker {
+ public:
+  enum class Source { kLockedHint, kScreenSaver };
+
+  // Records one source's state. Returns "lock" or "unlock" when the combined
+  // state changed and Dart must hear it, otherwise nullptr.
+  const char* Update(Source source, bool active) {
+    (source == Source::kLockedHint ? hint_ : saver_) = active;
+    const bool locked = hint_ || saver_;
+    if (locked == reported_) return nullptr;
+    reported_ = locked;
+    return locked ? "lock" : "unlock";
+  }
+
+  bool Locked() const { return hint_ || saver_; }
+
+ private:
+  bool hint_ = false;
+  bool saver_ = false;
+  bool reported_ = false;
+};
+
 }  // namespace ares::desktop
 
 #endif  // RUNNER_DESKTOP_OS_LOGIC_H_

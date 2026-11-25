@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart' show AppLifecycleState;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/desktop/desktop_os.dart';
 import 'package:hermes_android/core/desktop/power_events.dart';
@@ -175,6 +177,99 @@ void main() {
     });
   });
 
+  group('a lock with no matching unlock (PROBE-2)', () {
+    // logind sends Session.Lock for `loginctl lock-session` and IdleAction,
+    // but Unlock only for `loginctl unlock-session`: swaylock and i3lock
+    // unlock locally. The pause must not outlive the user's return.
+    test('app focus, pointer and key input lift the pause', () async {
+      final listener = PowerEventsListener(channel: _power)..start();
+      addTearDown(listener.dispose);
+      final gate = SystemSleepGate.instance;
+      final binding = TestWidgetsFlutterBinding.instance;
+
+      await _send('onPowerEvent', 'lock');
+      expect(gate.value, isTrue);
+      binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      expect(gate.value, isTrue, reason: 'losing focus is not a return');
+      binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      expect(gate.value, isFalse, reason: 'the window regained focus');
+
+      await _send('onPowerEvent', 'lock');
+      await _send('onPowerEvent', 'suspend');
+      binding.handlePointerEvent(const PointerHoverEvent());
+      expect(gate.value, isTrue, reason: 'hover is not input');
+      binding.handlePointerEvent(const PointerDownEvent());
+      binding.handlePointerEvent(const PointerUpEvent());
+      expect(gate.value, isFalse);
+      expect(gate.suspended, isFalse);
+
+      await _send('onPowerEvent', 'lock');
+      await simulateKeyDownEvent(LogicalKeyboardKey.keyA);
+      await simulateKeyUpEvent(LogicalKeyboardKey.keyA);
+      expect(gate.value, isFalse);
+    });
+
+    test('a resume re-reads the lock state from the runner', () async {
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      bool? locked = true;
+      var asked = 0;
+      messenger.setMockMethodCallHandler(_power, (call) async {
+        if (call.method != 'isLocked') return null;
+        asked++;
+        return locked;
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(_power, null));
+      final listener = PowerEventsListener(channel: _power)..start();
+      addTearDown(listener.dispose);
+      final gate = SystemSleepGate.instance;
+
+      await _send('onPowerEvent', 'lock');
+      await _send('onPowerEvent', 'suspend');
+      await _send('onPowerEvent', 'resume');
+      await pumpEventQueue();
+      expect(asked, 1);
+      expect(gate.value, isTrue, reason: 'still on the lock screen');
+
+      await _send('onPowerEvent', 'suspend');
+      locked = null; // A runner that cannot tell keeps the pause.
+      await _send('onPowerEvent', 'resume');
+      await pumpEventQueue();
+      expect(asked, 2);
+      expect(gate.value, isTrue);
+
+      await _send('onPowerEvent', 'suspend');
+      locked = false; // Unlocked locally while asleep: no unlock event.
+      await _send('onPowerEvent', 'resume');
+      await pumpEventQueue();
+      expect(asked, 3);
+      expect(gate.value, isFalse);
+    });
+
+    test('a runner without isLocked degrades to the activity check', () async {
+      final listener = PowerEventsListener(channel: _power)..start();
+      addTearDown(listener.dispose);
+      await _send('onPowerEvent', 'lock');
+      await _send('onPowerEvent', 'resume');
+      await pumpEventQueue();
+      expect(SystemSleepGate.instance.value, isTrue);
+      SystemSleepGate.instance.noteUserActivity();
+      expect(SystemSleepGate.instance.value, isFalse);
+    });
+
+    test('dispose stops watching activity and drops the probe', () async {
+      final listener = PowerEventsListener(channel: _power)..start();
+      expect(SystemSleepGate.instance.lockProbe, isNotNull);
+      listener.dispose();
+      expect(SystemSleepGate.instance.lockProbe, isNull);
+      SystemSleepGate.instance.apply(PowerEvent.lock);
+      TestWidgetsFlutterBinding.instance.handlePointerEvent(
+        const PointerDownEvent(),
+      );
+      expect(SystemSleepGate.instance.value, isTrue);
+    });
+  });
+
   group('PowerEventsListener', () {
     test('feeds runner events into the gate and ignores others', () async {
       final listener = PowerEventsListener(channel: _power)..start();
@@ -338,6 +433,47 @@ void main() {
         expect(gateway.promptSubmissions, 0);
       },
     );
+
+    test('PROBE-2 a lock with no matching unlock, then app activity: Classic '
+        'and NextGen resume without resending anything', () async {
+      final gateway = await _Gateway.start();
+      addTearDown(gateway.close);
+      final listener = PowerEventsListener(channel: _power)..start();
+      addTearDown(listener.dispose);
+      final ng = NextGenGateway(gateway.connection());
+      addTearDown(ng.dispose);
+      final client = DesktopGatewayClient.fromConnection(gateway.connection());
+      addTearDown(client.close);
+      ng.start();
+      await _waitFor(() => ng.state.phase == NgConnectionPhase.connected);
+      client.bindStoredSession('local-alpha', 's-alpha');
+      await client.call('projects.list', {});
+      await gateway.until(() => gateway.live == 2);
+      final openedBefore = gateway.opened;
+
+      // logind Lock request; the locker unlocks locally and never says so.
+      await _send('onPowerEvent', 'lock');
+      await _send('onPowerEvent', 'suspend');
+      await _send('onPowerEvent', 'resume');
+      await gateway.until(() => gateway.live == 0);
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      expect(SystemSleepGate.instance.value, isTrue);
+      expect(gateway.opened, openedBefore);
+
+      // The user is back in the window.
+      final methodsBefore = gateway.methods.length;
+      TestWidgetsFlutterBinding.instance.handleAppLifecycleStateChanged(
+        AppLifecycleState.resumed,
+      );
+      expect(SystemSleepGate.instance.value, isFalse);
+      await gateway.until(() => gateway.live == 2);
+      await _waitFor(() => ng.state.phase == NgConnectionPhase.connected);
+      await gateway.until(
+        () => gateway.methods.skip(methodsBefore).contains('session.resume'),
+      );
+      await client.call('projects.list', {});
+      expect(gateway.promptSubmissions, 0);
+    });
 
     test(
       'an idle Classic client stays idle on wake and dials lazily',

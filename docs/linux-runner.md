@@ -27,7 +27,7 @@ The runner's `desktop_os.cc` implements the primary window's channels described 
 | Tray icon, close to tray | `GtkStatusIcon` (XEmbed) with the bundle's `data/flutter_assets/assets/icon/icon.png` | An X11 session with a tray host (KDE, Xfce, MATE, Cinnamon; GNOME needs a tray extension). Wayland: reported as unsupported. |
 | Quick-entry window | Same executable with `--ares-quick-entry-v1`: keep-above, centred, no taskbar entry | — |
 | Global hotkey | `XGrabKey` on the root window, with Caps Lock / Num Lock variants | X11. Wayland: reported as unsupported. |
-| Sleep / lock pause | logind `PrepareForSleep`, session `Lock`/`Unlock`/`LockedHint`, `ScreenSaver.ActiveChanged` | System and session D-Bus (missing buses: no events, sockets simply stay up) |
+| Sleep / lock pause | logind `PrepareForSleep`; lock state from the session's `LockedHint` and `ScreenSaver.ActiveChanged` (logind `Lock`/`Unlock` requests only trigger a re-read); `isLocked` for Dart's re-check after resume | System and session D-Bus (missing buses: no events, sockets simply stay up). A locker that sets neither `LockedHint` nor a screensaver state (plain swaylock/i3lock) does not pause; focus or input in Ares always lifts a pause |
 | Keep awake | xdg-desktop-portal `Inhibit` (suspend flag), else `org.freedesktop.ScreenSaver.Inhibit` | A portal implementation (GNOME, KDE, wlroots portals) or a screensaver service; Settings hides the card when neither is on the session bus |
 | Screen capture | xdg-desktop-portal `Screenshot` (interactive) | A portal implementation with the Screenshot interface |
 

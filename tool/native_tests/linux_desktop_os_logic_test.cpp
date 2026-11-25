@@ -94,9 +94,40 @@ void TestDeepLinks() {
   CHECK(!IsDeepLink("hermes://open?prefill=" + std::string(16 * 1024, 'a')));
 }
 
+void TestLockTracker() {
+  using ares::desktop::LockTracker;
+  using Source = LockTracker::Source;
+  auto same = [](const char* a, const char* b) {
+    return (a == nullptr && b == nullptr) ||
+           (a != nullptr && b != nullptr && std::string(a) == b);
+  };
+  LockTracker tracker;
+  CHECK(!tracker.Locked());
+  // Nothing to report while every source says unlocked.
+  CHECK(same(tracker.Update(Source::kLockedHint, false), nullptr));
+  CHECK(same(tracker.Update(Source::kScreenSaver, false), nullptr));
+  // LockedHint is the state: lock, then a local unlock clears it.
+  CHECK(same(tracker.Update(Source::kLockedHint, true), "lock"));
+  CHECK(tracker.Locked());
+  CHECK(same(tracker.Update(Source::kLockedHint, true), nullptr));
+  CHECK(same(tracker.Update(Source::kLockedHint, false), "unlock"));
+  CHECK(!tracker.Locked());
+  // Either source locks; the session is unlocked only when both clear.
+  CHECK(same(tracker.Update(Source::kScreenSaver, true), "lock"));
+  CHECK(same(tracker.Update(Source::kLockedHint, true), nullptr));
+  CHECK(same(tracker.Update(Source::kScreenSaver, false), nullptr));
+  CHECK(tracker.Locked());
+  CHECK(same(tracker.Update(Source::kLockedHint, false), "unlock"));
+  // A screensaver that blanks and wakes again pauses and resumes.
+  CHECK(same(tracker.Update(Source::kScreenSaver, true), "lock"));
+  CHECK(same(tracker.Update(Source::kScreenSaver, false), "unlock"));
+  CHECK(!tracker.Locked());
+}
+
 }  // namespace
 
 int main() {
+  TestLockTracker();
   TestDeepLinks();
   TestLabels();
   TestIds();

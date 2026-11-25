@@ -81,8 +81,9 @@ struct _AresDesktopOs {
   unsigned hotkey_keycode = 0;
   unsigned hotkey_modifiers = 0;
   bool hotkey_filter = false;
-  // Power: logind PrepareForSleep (system bus), the session's Lock/Unlock
-  // and LockedHint, and screensaver ActiveChanged (session bus). Keep-awake
+  // Power: logind PrepareForSleep (system bus); the lock state from the
+  // session's LockedHint and screensaver ActiveChanged (session bus), with
+  // logind's Lock/Unlock requests only prompting a re-read. Keep-awake
   // holds an xdg-desktop-portal Inhibit request (suspend only), or, without
   // a portal, an org.freedesktop.ScreenSaver Inhibit cookie (idle).
   FlMethodChannel* power = nullptr;
@@ -91,6 +92,9 @@ struct _AresDesktopOs {
   GDBusConnection* session_bus = nullptr;
   std::vector<guint> system_signals;
   std::vector<guint> session_signals;
+  std::string session_path;
+  bool session_auto_tried = false;
+  ares::desktop::LockTracker lock;
   std::vector<std::string> awake_owners;
   std::string inhibit_handle;
   guint32 screensaver_cookie = 0;
@@ -329,22 +333,139 @@ void PrepareForSleepCb(GDBusConnection*, const gchar*, const gchar*,
             starting ? "suspend" : "resume");
 }
 
+void UpdateLock(AresDesktopOs* self, ares::desktop::LockTracker::Source source,
+                bool active) {
+  if (const char* event = self->lock.Update(source, active)) {
+    EmitPower(self, event);
+  }
+}
+
+// One re-read of the lock sources: LockedHint, and GetActive on each
+// screensaver interface. Answers isLocked when |call| is set: the combined
+// state, or null when no source answered.
+struct LockQuery {
+  AresDesktopOs* self = nullptr;
+  GCancellable* cancellable = nullptr;
+  FlMethodCall* call = nullptr;
+  int pending = 0;
+  bool hint_answered = false;
+  bool hint = false;
+  bool saver_answered = false;
+  bool saver = false;
+};
+
+void FinishLockQuery(LockQuery* query) {
+  if (--query->pending > 0) return;
+  const bool gone = g_cancellable_is_cancelled(query->cancellable);
+  if (!gone) {
+    AresDesktopOs* self = query->self;
+    using Source = ares::desktop::LockTracker::Source;
+    if (query->hint_answered) UpdateLock(self, Source::kLockedHint, query->hint);
+    if (query->saver_answered) {
+      UpdateLock(self, Source::kScreenSaver, query->saver);
+    }
+    if (query->call != nullptr) {
+      g_autoptr(FlValue) value =
+          query->hint_answered || query->saver_answered
+              ? fl_value_new_bool(self->lock.Locked())
+              : fl_value_new_null();
+      g_autoptr(FlMethodResponse) response =
+          FL_METHOD_RESPONSE(fl_method_success_response_new(value));
+      Respond(query->call, response);
+    }
+  }
+  if (query->call != nullptr) g_object_unref(query->call);
+  g_object_unref(query->cancellable);
+  delete query;
+}
+
+void LockedHintReadCb(GObject* source, GAsyncResult* result,
+                      gpointer user_data) {
+  auto* query = static_cast<LockQuery*>(user_data);
+  g_autoptr(GVariant) reply = g_dbus_connection_call_finish(
+      G_DBUS_CONNECTION(source), result, nullptr);
+  if (reply != nullptr) {
+    g_autoptr(GVariant) boxed = nullptr;
+    g_variant_get(reply, "(v)", &boxed);
+    if (boxed != nullptr && g_variant_is_of_type(boxed, G_VARIANT_TYPE("b"))) {
+      query->hint_answered = true;
+      query->hint = g_variant_get_boolean(boxed);
+    }
+  }
+  FinishLockQuery(query);
+}
+
+void ScreenSaverReadCb(GObject* source, GAsyncResult* result,
+                       gpointer user_data) {
+  auto* query = static_cast<LockQuery*>(user_data);
+  g_autoptr(GVariant) reply = g_dbus_connection_call_finish(
+      G_DBUS_CONNECTION(source), result, nullptr);
+  if (reply != nullptr) {
+    gboolean active = FALSE;
+    g_variant_get(reply, "(b)", &active);
+    query->saver_answered = true;
+    query->saver = query->saver || active;
+  }
+  FinishLockQuery(query);
+}
+
+// Re-reads the lock state (after a logind Lock/Unlock request, at startup,
+// and for Dart's isLocked). Never blocks: every read is asynchronous.
+void RefreshLock(AresDesktopOs* self, FlMethodCall* call) {
+  auto* query = new LockQuery();
+  query->self = self;
+  query->cancellable = G_CANCELLABLE(g_object_ref(self->cancellable));
+  query->call = call != nullptr ? FL_METHOD_CALL(g_object_ref(call)) : nullptr;
+  query->pending = 1;  // Held until every read is issued.
+  if (self->system_bus != nullptr && !self->session_path.empty()) {
+    ++query->pending;
+    g_dbus_connection_call(
+        self->system_bus, "org.freedesktop.login1", self->session_path.c_str(),
+        "org.freedesktop.DBus.Properties", "Get",
+        g_variant_new("(ss)", "org.freedesktop.login1.Session", "LockedHint"),
+        G_VARIANT_TYPE("(v)"), G_DBUS_CALL_FLAGS_NONE, 2000, self->cancellable,
+        LockedHintReadCb, query);
+  }
+  if (self->session_bus != nullptr) {
+    static constexpr const char* kSavers[][2] = {
+        {"org.freedesktop.ScreenSaver", "/org/freedesktop/ScreenSaver"},
+        {"org.gnome.ScreenSaver", "/org/gnome/ScreenSaver"},
+    };
+    for (const auto& saver : kSavers) {
+      ++query->pending;
+      g_dbus_connection_call(self->session_bus, saver[0], saver[1], saver[0],
+                             "GetActive", nullptr, G_VARIANT_TYPE("(b)"),
+                             G_DBUS_CALL_FLAGS_NO_AUTO_START, 2000,
+                             self->cancellable, ScreenSaverReadCb, query);
+    }
+  }
+  FinishLockQuery(query);
+}
+
+// logind's Lock and Unlock are requests, not the state: re-read it.
 void SessionLockCb(GDBusConnection*, const gchar*, const gchar*,
-                   const gchar*, const gchar* signal, GVariant*,
+                   const gchar*, const gchar*, GVariant*,
                    gpointer user_data) {
-  auto* self = static_cast<AresDesktopOs*>(user_data);
-  if (g_strcmp0(signal, "Lock") == 0) EmitPower(self, "lock");
-  if (g_strcmp0(signal, "Unlock") == 0) EmitPower(self, "unlock");
+  RefreshLock(static_cast<AresDesktopOs*>(user_data), nullptr);
 }
 
 void LockedHintCb(GDBusConnection*, const gchar*, const gchar*, const gchar*,
                   const gchar*, GVariant* parameters, gpointer user_data) {
   if (!g_variant_is_of_type(parameters, G_VARIANT_TYPE("(sa{sv}as)"))) return;
+  auto* self = static_cast<AresDesktopOs*>(user_data);
   g_autoptr(GVariant) changed = g_variant_get_child_value(parameters, 1);
   gboolean locked = FALSE;
   if (g_variant_lookup(changed, "LockedHint", "b", &locked)) {
-    EmitPower(static_cast<AresDesktopOs*>(user_data),
-              locked ? "lock" : "unlock");
+    UpdateLock(self, ares::desktop::LockTracker::Source::kLockedHint, locked);
+    return;
+  }
+  g_autofree const gchar** invalidated = nullptr;
+  g_variant_get_child(parameters, 2, "^a&s", &invalidated);
+  for (const gchar** it = invalidated; it != nullptr && *it != nullptr; ++it) {
+    if (g_strcmp0(*it, "LockedHint") == 0) {
+      RefreshLock(self, nullptr);
+      return;
+    }
   }
 }
 
@@ -353,19 +474,45 @@ void ScreenSaverCb(GDBusConnection*, const gchar*, const gchar*, const gchar*,
   if (!g_variant_is_of_type(parameters, G_VARIANT_TYPE("(b)"))) return;
   gboolean active = FALSE;
   g_variant_get(parameters, "(b)", &active);
-  EmitPower(static_cast<AresDesktopOs*>(user_data), active ? "lock" : "unlock");
+  UpdateLock(static_cast<AresDesktopOs*>(user_data),
+             ares::desktop::LockTracker::Source::kScreenSaver, active);
 }
 
-// logind names this process's session; its lock signals are per session.
+void SessionPathCb(GObject* source, GAsyncResult* result, gpointer user_data);
+
+void FindSession(AresDesktopOs* self, bool by_pid) {
+  g_dbus_connection_call(
+      self->system_bus, "org.freedesktop.login1", "/org/freedesktop/login1",
+      "org.freedesktop.login1.Manager",
+      by_pid ? "GetSessionByPID" : "GetSession",
+      by_pid ? g_variant_new("(u)", static_cast<guint32>(getpid()))
+             : g_variant_new("(s)", "auto"),
+      G_VARIANT_TYPE("(o)"), G_DBUS_CALL_FLAGS_NONE, 5000, self->cancellable,
+      SessionPathCb, self);
+}
+
+// logind names this process's session (or, for a process started outside
+// one, the user's display session via "auto"); its lock state is per
+// session.
 void SessionPathCb(GObject* source, GAsyncResult* result, gpointer user_data) {
   g_autoptr(GError) error = nullptr;
   g_autoptr(GVariant) reply = g_dbus_connection_call_finish(
       G_DBUS_CONNECTION(source), result, &error);
-  if (reply == nullptr) return;  // Cancelled (window gone) or no session.
+  if (reply == nullptr) {
+    // Cancelled: the window is gone and |user_data| with it.
+    if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) return;
+    auto* self = static_cast<AresDesktopOs*>(user_data);
+    if (!self->session_auto_tried && self->system_bus != nullptr) {
+      self->session_auto_tried = true;
+      FindSession(self, false);
+    }
+    return;
+  }
   auto* self = static_cast<AresDesktopOs*>(user_data);
   const gchar* path = nullptr;
   g_variant_get(reply, "(&o)", &path);
   if (path == nullptr || self->system_bus == nullptr) return;
+  self->session_path = path;
   self->system_signals.push_back(g_dbus_connection_signal_subscribe(
       self->system_bus, "org.freedesktop.login1",
       "org.freedesktop.login1.Session", nullptr, path, nullptr,
@@ -375,6 +522,7 @@ void SessionPathCb(GObject* source, GAsyncResult* result, gpointer user_data) {
       "org.freedesktop.DBus.Properties", "PropertiesChanged", path,
       "org.freedesktop.login1.Session", G_DBUS_SIGNAL_FLAGS_NONE,
       LockedHintCb, self, nullptr));
+  RefreshLock(self, nullptr);
 }
 
 void WatchPower(AresDesktopOs* self) {
@@ -386,12 +534,7 @@ void WatchPower(AresDesktopOs* self) {
         "org.freedesktop.login1.Manager", "PrepareForSleep",
         "/org/freedesktop/login1", nullptr, G_DBUS_SIGNAL_FLAGS_NONE,
         PrepareForSleepCb, self, nullptr));
-    g_dbus_connection_call(
-        self->system_bus, "org.freedesktop.login1", "/org/freedesktop/login1",
-        "org.freedesktop.login1.Manager", "GetSessionByPID",
-        g_variant_new("(u)", static_cast<guint32>(getpid())),
-        G_VARIANT_TYPE("(o)"), G_DBUS_CALL_FLAGS_NONE, 5000,
-        self->cancellable, SessionPathCb, self);
+    FindSession(self, true);
   }
   self->session_bus = g_bus_get_sync(G_BUS_TYPE_SESSION, nullptr, nullptr);
   if (self->session_bus != nullptr) {
@@ -498,6 +641,11 @@ void PowerCallCb(FlMethodChannel*, FlMethodCall* call, gpointer user_data) {
   const gchar* method = fl_method_call_get_name(call);
   FlValue* args = fl_method_call_get_args(call);
   g_autoptr(FlMethodResponse) response = nullptr;
+  if (strcmp(method, "isLocked") == 0) {
+    // Answered asynchronously once the lock sources are re-read.
+    RefreshLock(self, call);
+    return;
+  }
   if (strcmp(method, "isSupported") == 0) {
     g_autoptr(FlValue) value = fl_value_new_bool(KeepAwakeAvailable(self));
     response = FL_METHOD_RESPONSE(fl_method_success_response_new(value));
