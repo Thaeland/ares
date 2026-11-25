@@ -3415,13 +3415,13 @@ class NgChatController extends ChangeNotifier {
       }
       if (_disposed || running) return NgRetryResult.failed;
     }
-    final row = await resolveRegenerateRow(
+    final target = await resolveRegenerateTarget(
       rpc: (method, params) => gateway.call(method, params),
       sessionId: runtime,
       text: text,
     );
     if (_disposed) return NgRetryResult.nothing;
-    if (row == null) return NgRetryResult.notFound;
+    if (target == null) return NgRetryResult.notFound;
     final index = items.indexOf(last);
     if (index < 0) return NgRetryResult.nothing;
     // As Desktop's applyReloadOptimistic: the replaced turn leaves the view.
@@ -3430,7 +3430,10 @@ class NgChatController extends ChangeNotifier {
     final sent = await send(
       text,
       display: last.sentText == null ? null : last.text,
-      promptParams: regenerateSubmitParams(row),
+      promptParams: regenerateSubmitParams(
+        target.rowId,
+        ordinal: target.ordinal,
+      ),
     );
     if (!sent && !_disposed) {
       // Desktop's rollback: the transcript as it was, and why.

@@ -2280,20 +2280,23 @@ class _ChatScreenState extends State<ChatScreen>
       _showRetryNotice(l10n.composer_retry_unavailable);
       return;
     }
-    final row = await resolveRegenerateRow(
+    final target = await resolveRegenerateTarget(
       rpc: gateway.requestSessionRpc,
       sessionId: session,
       text: text,
     );
     if (!mounted) return;
-    if (row == null) {
+    if (target == null) {
       _showRetryNotice(l10n.composer_retry_not_found);
       return;
     }
     if (_sending || _streaming || _preparingSend) return;
     await _sendMessage(
       textOverride: text.trim(),
-      promptParams: regenerateSubmitParams(row),
+      promptParams: regenerateSubmitParams(
+        target.rowId,
+        ordinal: target.ordinal,
+      ),
     );
   }
 

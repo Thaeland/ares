@@ -217,11 +217,25 @@ void main() {
       ),
       isNull,
     );
-    expect(regenerateSubmitParams(5), {
+    // Desktop's truncateSubmitParams: the empty-transcript confirmation
+    // only for a cut at the first user turn.
+    expect(
+      await resolveRegenerateTarget(rpc: history, sessionId: 's', text: 'same'),
+      (rowId: 5, ordinal: 1),
+    );
+    expect(regenerateSubmitParams(5, ordinal: 1), {
       'confirm_truncate': true,
       'truncate_before_row_id': 5,
+    });
+    expect(regenerateSubmitParams(1, ordinal: 0), {
+      'confirm_truncate': true,
+      'truncate_before_row_id': 1,
       'confirm_empty_truncate': true,
     });
+    expect(
+      regenerateSubmitParams(5),
+      isNot(contains('confirm_empty_truncate')),
+    );
   });
 
   test('an argument replaces from replace_from and keeps the command', () {

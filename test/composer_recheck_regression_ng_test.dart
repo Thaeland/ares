@@ -7,6 +7,8 @@
 //         staged nothing (the composer ended as 'see ')
 //   paste caret: a staged path was removed at its first occurrence, not
 //         where it was pasted
+//   regenerate: every retry sent confirm_empty_truncate, not only a cut at
+//         the first turn (Desktop's truncateSubmitParams)
 //   keyboard: a long multi-line draft at 320x640, 2.0x text and a 260 px
 //         keyboard put the field 128 px under the keyboard (185 px with
 //         the status row on)
@@ -225,6 +227,50 @@ void main() {
     expect(moved.offsetIn('nothing pasted'), -1);
     expect(moved.removeFrom('/p/x.txt and /p/x.txt')!.text, '/p/x.txt and ');
   });
+
+  for (final first in [true, false]) {
+    testWidgets('a regenerate confirms an empty transcript only when it cuts '
+        'at the first turn (${first ? 'first' : 'a later'} turn)', (
+      tester,
+    ) async {
+      final h = await pump(tester);
+      StreamEvent ev(String type, Map<String, dynamic> data) =>
+          StreamEvent(type: type, data: data, sessionId: 'rt-1');
+      h.gateway.handlers['session.history'] = (p) => {
+        'messages': [
+          if (!first) ...[
+            {'role': 'user', 'text': 'older', 'row_id': 3},
+            {'role': 'assistant', 'text': 'reply', 'row_id': 4},
+          ],
+          {'role': 'user', 'text': 'hello there', 'row_id': 7},
+        ],
+      };
+      h.gateway.handlers['session.interrupt'] = (p) {
+        h.gateway.debugEmit(ev('message.complete', {'status': 'interrupted'}));
+        return {'status': 'ok'};
+      };
+      await tester.enterText(find.byKey(_fieldKey), 'hello there');
+      await _settle(tester);
+      await tester.tap(find.byTooltip('Send'));
+      await _settle(tester);
+      h.gateway.debugEmit(ev('message.start', {}));
+      await _settle(tester);
+      final retry = h.chat.retryLast();
+      for (var i = 0; i < 30; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(await retry, NgRetryResult.regenerated);
+      final submit = h.gateway.of('prompt.submit').last.params;
+      expect(submit['confirm_truncate'], isTrue);
+      expect(submit['truncate_before_row_id'], 7);
+      expect(submit.containsKey('truncate_before_user_ordinal'), isFalse);
+      if (first) {
+        expect(submit['confirm_empty_truncate'], isTrue);
+      } else {
+        expect(submit.containsKey('confirm_empty_truncate'), isFalse);
+      }
+    });
+  }
 
   group('intake limits', () {
     late Directory root;
