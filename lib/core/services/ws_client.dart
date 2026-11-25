@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:uuid/uuid.dart';
 import 'package:web_socket_channel/io.dart';
 
+import '../history/rewind_submit.dart';
 import '../models/client_certificate.dart';
 import '../models/slash_command.dart';
 import 'hermes_sign_in.dart';
@@ -1265,6 +1266,7 @@ class WsClient {
     bool Function()? maySend,
     Future<bool> Function()? beforeSend,
     String? submissionId,
+    Map<String, dynamic>? extraSubmitParams,
     Future<void> Function()? beforeLegacy,
     Future<void> Function(Object?, String)? onReceipt,
     Duration timeout = const Duration(minutes: 10),
@@ -1340,53 +1342,70 @@ class WsClient {
 
     try {
       final effectiveSubmissionId = submissionId ?? const Uuid().v4();
-      final baseParams = <String, dynamic>{
+      var currentBase = <String, dynamic>{
+        ...?extraSubmitParams,
         'session_id': sessionId,
         'text': promptText,
         // Stock gateways use this only for title generation. The app's note
         // must not become the subject of an otherwise short user prompt.
         if (promptText != message) 'title_preview': message,
       };
-      var response = await send('prompt.submit', {
-        ...baseParams,
-        'submission_id': effectiveSubmissionId,
-      }, onSent: onSent);
-      var error = response['error'];
-      if (error != null) {
+      var includeSubmissionId = true;
+      var firstSend = true;
+      late Map<String, dynamic> response;
+      while (true) {
+        final sentParams = includeSubmissionId
+            ? <String, dynamic>{
+                ...currentBase,
+                'submission_id': effectiveSubmissionId,
+              }
+            : currentBase;
+        response = await send(
+          'prompt.submit',
+          sentParams,
+          onSent: firstSend ? onSent : null,
+        );
+        firstSend = false;
+        final error = response['error'];
+        if (error == null) break;
         final rpcError = _gatewayResponseError(
           'prompt.submit',
           error,
           fallbackMessage: 'Unknown error',
         );
-        if (isRejectedSubmissionIdError(rpcError)) {
-          if (beforeLegacy != null) await beforeLegacy();
-          // The refusal crossed an async boundary: re-validate admission and
-          // socket ownership before the compatibility retry writes again, so
-          // a stale owner or a replacement socket never receives the prompt.
-          if (beforeSend != null && !await beforeSend()) {
-            throw StateError('Notification admission revoked');
-          }
-          if (!_connected || !identical(source, _channel)) {
-            throw JsonRpcError(
-              'prompt.submit',
-              'Desktop gateway connection closed',
-              reason: 'connection_closed',
-            );
-          }
-          if (maySend?.call() == false) {
-            throw StateError('Prompt admission is no longer owned.');
-          }
-          response = await send('prompt.submit', baseParams);
-          error = response['error'];
-          if (error != null) {
-            throw _gatewayResponseError(
-              'prompt.submit',
-              error,
-              fallbackMessage: 'Unknown error',
-            );
-          }
-        } else {
+        final rejectedDeep = isRejectedDeepTruncatePayload(
+          code: rpcError.code,
+          message: rpcError.message,
+          sentParams: sentParams,
+        );
+        final rejectedSubmissionId =
+            includeSubmissionId && isRejectedSubmissionIdError(rpcError);
+        if (!rejectedDeep && !rejectedSubmissionId) {
           throw rpcError;
+        }
+        if (rejectedSubmissionId && beforeLegacy != null) {
+          await beforeLegacy();
+        }
+        // The refusal crossed an async boundary: re-validate admission and
+        // socket ownership before the compatibility retry writes again, so
+        // a stale owner or a replacement socket never receives the prompt.
+        if (beforeSend != null && !await beforeSend()) {
+          throw StateError('Notification admission revoked');
+        }
+        if (!_connected || !identical(source, _channel)) {
+          throw JsonRpcError(
+            'prompt.submit',
+            'Desktop gateway connection closed',
+            reason: 'connection_closed',
+          );
+        }
+        if (maySend?.call() == false) {
+          throw StateError('Prompt admission is no longer owned.');
+        }
+        if (rejectedDeep) {
+          currentBase = stripRejectedDeepTruncate(currentBase);
+        } else {
+          includeSubmissionId = false;
         }
       }
       // Stock typed voice controls acknowledge without starting an agent turn

@@ -901,6 +901,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
     Future<bool> Function()? beforeSend,
     void Function()? onAccepted,
     String? submissionId,
+    Map<String, dynamic>? extraSubmitParams,
     Future<void> Function()? beforeLegacy,
     Future<void> Function(Object?, String)? onReceipt,
   }) async {
@@ -924,6 +925,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
           text,
           sessionId: gateway.sessionId,
           submissionId: submissionId,
+          extraSubmitParams: extraSubmitParams,
           beforeLegacy: beforeLegacy,
           onReceipt: onReceipt,
           onEvent: (event) {
@@ -946,6 +948,30 @@ class DesktopGatewayClient implements SlashCommandGateway {
       beforeRequest: beforeSend,
     );
   }
+
+  /// Session-scoped RPC helper used by rewind resolution (`session.history`)
+  /// and pre-rewind interrupts (`session.interrupt`).
+  Future<Map<String, dynamic>?> sessionRpc(
+    String mobileSessionId,
+    String method,
+    Map<String, dynamic> params,
+  ) => _callSessionScoped(mobileSessionId, (gateway) async {
+    _checkSocket(gateway.client);
+    final response = await gateway.client.send(method, {
+      ...params,
+      'session_id': gateway.sessionId,
+    });
+    final error = response['error'];
+    if (error is Map) {
+      throw JsonRpcError.fromGateway(
+        method,
+        error,
+        fallbackMessage: 'Unknown error',
+      );
+    }
+    final result = response['result'];
+    return result is Map<String, dynamic> ? result : null;
+  });
 
   /// Receives durable session-scoped events plus terminal turn frames.
   ///
