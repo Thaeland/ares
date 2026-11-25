@@ -490,6 +490,19 @@ void main() {
         if (ms >= _callBudgetMs) slow.add('${entry.key}: ${ms}ms');
       }
       expect(slow, isEmpty);
+      // The sequence scan keeps what the pattern matched.
+      List<String> sequence(String body) => [
+        for (final edge
+            in parseMermaid('sequenceDiagram\n$body')?.edges ?? const [])
+          '${edge.from}>${edge.to}:${edge.label}',
+      ];
+      expect(sequence('Alice->>Bob: Hello there'), ['Alice>Bob:Hello there']);
+      expect(sequence('A -->> B : ok'), ['A>B:ok']);
+      expect(sequence('my-actor->b: x'), ['my-actor>b:x']);
+      expect(sequence('a->b->c: x'), ['a>b->c:x']);
+      expect(sequence('a b->c: x'), isEmpty);
+      expect(sequence('a->b:'), isEmpty);
+      expect(sequence('a->b: x\nc->d'), ['a>b:x']);
       // The separator scan keeps what the pattern matched.
       bool table(String separator) => splitRichProse(
         '| a | b |\n$separator\n| 1 | 2 |',

@@ -96,6 +96,67 @@ final _mermaidModels = ContentMemo<DiagramModel?>(32);
   return null;
 }
 
+/// `from ->> to: message` (also `->`, `-->>`): the first arrow after the
+/// opening word, the shortest word after it that a `:` follows, and the
+/// rest. Read in one pass; the old lazy pattern
+/// `^(\S+?)\s*(-{1,2}>>|->>|->)\s*(\S+?)\s*:\s*(.+)` retried every
+/// split of a long arrow chain that had no message.
+(String, String, String)? _sequenceMessage(String line) {
+  final n = line.length;
+  var tokenEnd = 0;
+  while (tokenEnd < n && !isMarkupSpace(line.codeUnitAt(tokenEnd))) {
+    tokenEnd++;
+  }
+  bool arrowAt(int at) =>
+      line.startsWith('->', at) || line.startsWith('-->>', at);
+  // The arrow starts inside the first word or after the spaces that end it.
+  var arrow = -1;
+  for (var at = line.indexOf('-', 1); at >= 0 && at < tokenEnd;) {
+    if (arrowAt(at)) {
+      arrow = at;
+      break;
+    }
+    at = line.indexOf('-', at + 1);
+  }
+  if (arrow < 0) {
+    if (tokenEnd == 0) return null;
+    var next = tokenEnd;
+    while (next < n && isMarkupSpace(line.codeUnitAt(next))) {
+      next++;
+    }
+    if (next >= n || !arrowAt(next)) return null;
+    arrow = next;
+  }
+  final from = line.substring(0, arrow).trimRight();
+  if (from.isEmpty) return null;
+  for (final mark in const ['-->>', '->>', '->']) {
+    if (!line.startsWith(mark, arrow)) continue;
+    var start = arrow + mark.length;
+    while (start < n && isMarkupSpace(line.codeUnitAt(start))) {
+      start++;
+    }
+    var end = start;
+    while (end < n && !isMarkupSpace(line.codeUnitAt(end))) {
+      end++;
+    }
+    // The shortest target: the first `:` after its first character, or a
+    // `:` after the spaces that end it; the message must not be empty.
+    var colon = start + 1 < end ? line.indexOf(':', start + 1) : -1;
+    if (colon < 0 || colon >= end) {
+      colon = end;
+      while (colon < n && isMarkupSpace(line.codeUnitAt(colon))) {
+        colon++;
+      }
+      if (colon >= n || line.codeUnitAt(colon) != 0x3a /* : */ ) continue;
+    }
+    if (end <= start || colon + 1 >= n) continue;
+    final to = line.substring(start, colon).trimRight();
+    if (to.isEmpty) continue;
+    return (from, to, line.substring(colon + 1).trim());
+  }
+  return null;
+}
+
 /// A bounded flowchart or sequence diagram. Anything else stays a code fence.
 /// Memoised by source, so a streaming reply re-parses only a changed diagram.
 DiagramModel? parseMermaid(String source) {
@@ -121,16 +182,14 @@ DiagramModel? _parseMermaid(String source) {
   if (header.startsWith('sequencediagram')) {
     final nodes = <String, DiagramNode>{};
     final edges = <DiagramEdge>[];
-    final arrow = RegExp(r'^(\S+?)\s*(-{1,2}>>|->>|->)\s*(\S+?)\s*:\s*(.+)');
     for (final line in lines.skip(1)) {
       if (line.length > mermaidMaxLineChars) continue;
-      final match = arrow.firstMatch(line);
-      if (match == null) continue;
-      final from = match.group(1)!;
-      final to = match.group(3)!;
+      final message = _sequenceMessage(line);
+      if (message == null) continue;
+      final (from, to, label) = message;
       nodes.putIfAbsent(from, () => DiagramNode(from, from, 'actor'));
       nodes.putIfAbsent(to, () => DiagramNode(to, to, 'actor'));
-      edges.add(DiagramEdge(from, to, match.group(4)));
+      edges.add(DiagramEdge(from, to, label));
     }
     if (edges.isEmpty) return null;
     return DiagramModel(
