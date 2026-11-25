@@ -336,9 +336,7 @@ class _FilesScreenState extends State<FilesScreen> {
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: _downloading || _preview == null
-                      ? null
-                      : _download,
+                  onPressed: _downloading ? null : _download,
                   icon: const Icon(Icons.download_outlined),
                   label: Text(context.l10n.download),
                 ),
