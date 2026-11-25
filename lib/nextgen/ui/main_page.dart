@@ -11,6 +11,7 @@ import '../../core/services/notification_prefs.dart';
 import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/turn_notification_service.dart';
 import '../../core/utils/adaptive_layout.dart';
+import '../../core/utils/platform_capabilities.dart';
 import '../../core/widgets/desktop_shortcuts.dart';
 import '../data/nextgen_gateway.dart';
 import '../data/chat_controller.dart';
@@ -105,7 +106,12 @@ class _NgMainPageState extends State<_NgMainContent>
   String? _takeOpenRequest(String connectionId) {
     final request = nextGenOpenRequest.value;
     if (request == null || request.connectionId != connectionId) return null;
+    final target = pendingWindowsToastTarget;
+    pendingWindowsToastTarget = null;
     nextGenOpenRequest.value = null;
+    if (target != null && !target.matches(NgScope.of(context).connection)) {
+      return null;
+    }
     return request.sessionId;
   }
 
@@ -149,7 +155,7 @@ class _NgMainPageState extends State<_NgMainContent>
     // In sight while resumed or only covered (the notification shade).
     _foreground =
         state == AppLifecycleState.resumed ||
-        state == AppLifecycleState.inactive;
+        (!isWindowsPlatform && state == AppLifecycleState.inactive);
     final chat = _chat;
     if (!_foreground && wasForeground && chat != null) {
       // Out of sight: what arrives from now on is news when the user is back.
@@ -342,6 +348,7 @@ class _NgMainPageState extends State<_NgMainContent>
         ? HermesNotificationKind.approval
         : HermesNotificationKind.input;
     final posted = await TurnNotificationService.shared.showKind(
+      origin: scope.connection,
       kind: kind,
       title: input.title,
       body: input.body.isNotEmpty
@@ -506,6 +513,7 @@ class _NgMainPageState extends State<_NgMainContent>
     unawaited(
       failed
           ? notifications.showTurnFailed(
+              origin: chat.gateway.connection,
               title: title,
               turnSummary: body,
               turnId: _replyTurnId,
@@ -513,6 +521,7 @@ class _NgMainPageState extends State<_NgMainContent>
               connectionId: connectionId,
             )
           : notifications.showTurnCompleted(
+              origin: chat.gateway.connection,
               title: title,
               turnSummary: body,
               turnId: _replyTurnId,

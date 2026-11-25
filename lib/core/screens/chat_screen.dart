@@ -1908,7 +1908,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (_voiceForeground != foreground) _voiceForegroundEpoch++;
     _voiceForeground = foreground;
     if (!_voiceForeground) _revokeVoice(HandsFreeStopReason.background);
-    if (state == AppLifecycleState.paused ||
+    if ((defaultTargetPlatform == TargetPlatform.windows &&
+            state == AppLifecycleState.inactive) ||
+        state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached) {
       _appInBackground = true;
@@ -2763,6 +2765,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     unawaited(
       completed
           ? _turnNotifications.showTurnCompleted(
+              origin: widget.connection,
               title: context.l10n.hermes_response_ready,
               turnSummary: '$_sessionTitle: $summary',
               turnId: turnId,
@@ -2770,6 +2773,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               connectionId: widget.connection.id,
             )
           : _turnNotifications.showTurnFailed(
+              origin: widget.connection,
               title: context.l10n.the_turn_failed,
               turnSummary: '$_sessionTitle: $summary',
               turnId: turnId,
@@ -2789,6 +2793,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     const body = 'Open the chat to review the requested action.';
     unawaited(
       _turnNotifications.showKind(
+        origin: widget.connection,
         kind: HermesNotificationKind.approval,
         title: '${context.l10n.approval_needed} — $_sessionTitle',
         body: body,
@@ -2818,6 +2823,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     const noticeBody = 'Open the chat to respond.';
     unawaited(
       _turnNotifications.showKind(
+        origin: widget.connection,
         kind: HermesNotificationKind.input,
         title: '${context.l10n.input_needed} — $_sessionTitle',
         body: noticeBody,
@@ -2846,6 +2852,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         notification.key == 'credits.restored';
     unawaited(
       _turnNotifications.showKind(
+        origin: widget.connection,
         kind: isCredits
             ? HermesNotificationKind.credits
             : HermesNotificationKind.plugin,
@@ -2876,6 +2883,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final isBackground = notice.kind == GatewayNoticeKind.background;
     unawaited(
       _turnNotifications.showKind(
+        origin: widget.connection,
         kind: isBackground
             ? HermesNotificationKind.backgroundDone
             : HermesNotificationKind.plugin,

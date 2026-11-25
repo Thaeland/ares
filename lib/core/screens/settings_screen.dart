@@ -6,6 +6,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/app_licenses.dart';
 import '../utils/platform_capabilities.dart';
+import '../widgets/windows_completion_sound_tile.dart';
 import '../services/locale_preference.dart';
 import 'provider_oauth_screen.dart';
 import '../services/config_backup_io.dart';
@@ -888,6 +889,7 @@ class _NotificationSettingsState extends State<_NotificationSettings>
                 }
               },
             ),
+            if (isWindowsPlatform) WindowsCompletionSoundTile(prefs: prefs),
             for (final kind in HermesNotificationKind.values) ...[
               const Divider(height: 1),
               SwitchListTile(
@@ -913,7 +915,11 @@ class _NotificationSettingsState extends State<_NotificationSettings>
                   Icons.warning_amber_outlined,
                   color: Theme.of(context).colorScheme.error,
                 ),
-                title: Text(context.l10n.notifications_permission_denied),
+                title: Text(
+                  isWindowsPlatform
+                      ? context.l10n.windows_notifications_blocked
+                      : context.l10n.notifications_permission_denied,
+                ),
               ),
             ],
           ],

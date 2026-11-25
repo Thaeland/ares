@@ -32,6 +32,18 @@ class NotificationApprovalAuthority {
     'approvalMutation': _originMutation(connection.id),
   };
 
+  static bool matchesOrigin(
+    SavedConnection connection,
+    String? account,
+    String? mutation,
+  ) =>
+      !ConnectionMutationBarrier.isPending(connection.id) &&
+      account == MobilePushService.binding(connection) &&
+      mutation != null &&
+      _originPattern.hasMatch(mutation) &&
+      (!mutation.startsWith('$_process:') ||
+          mutation == _originMutation(connection.id));
+
   static NotificationApprovalAuthority? capture({
     required SavedConnection connection,
     required String? accountBinding,
@@ -42,11 +54,7 @@ class NotificationApprovalAuthority {
   }) {
     final mutation = ConnectionMutationBarrier.capture(connection.id);
     if (!ConnectionMutationBarrier.isCurrent(connection.id, mutation) ||
-        accountBinding != MobilePushService.binding(connection) ||
-        originMutation == null ||
-        !_originPattern.hasMatch(originMutation) ||
-        (originMutation.startsWith('$_process:') &&
-            originMutation != _originMutation(connection.id))) {
+        !matchesOrigin(connection, accountBinding, originMutation)) {
       return null;
     }
     return NotificationApprovalAuthority._(

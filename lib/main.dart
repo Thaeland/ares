@@ -105,6 +105,9 @@ class _StartupAppState extends State<StartupApp> {
       () async {
         prefs = await SharedPreferences.getInstance();
         NextGenPreferences.load(prefs);
+        if (defaultTargetPlatform == TargetPlatform.windows) {
+          await NotificationPrefsStore.load();
+        }
         try {
           // Browser sign-ins and Cloudflare Access tokens, shared by both
           // interfaces; a Keystore fault only costs those sign-ins.
@@ -321,12 +324,14 @@ class _NotificationNavigationIntent {
   final MobilePushRoute? pushRoute;
   final int generation;
   final Object? mutationEpoch;
+  final WindowsToastTarget? windowsTarget;
 
   _NotificationNavigationIntent(
     this.connection,
     this.sessionId,
     MobilePushRoute? pushRoute,
     this.generation,
+    this.windowsTarget,
   ) : mutationEpoch = ConnectionMutationBarrier.capture(connection.id),
       pushRoute = pushRoute == null
           ? null
@@ -652,6 +657,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
             _ongoingChats.add(key);
             try {
               await service.showOngoingChat(
+                origin: _connectionById(activity.connectionId),
                 connectionId: activity.connectionId,
                 localSessionId: activity.localSessionId,
                 storedSessionId: activity.storedSessionId,
@@ -789,6 +795,28 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
   /// every response lands the user on the session the notification was about.
   void _handleNotificationResponse(NotificationResponse response) {
     if (!mounted || _closingTurnOwner) return;
+    if (response is WindowsToastResponse) {
+      final target = response.target;
+      final connection = _connectionById(target.connectionId);
+      if (connection == null || !target.matches(connection)) return;
+      void open() {
+        if (!target.matches(_connectionById(connection.id))) return;
+        unawaited(
+          _openNotificationSession(
+            connection,
+            target.sessionId,
+            windowsTarget: target,
+          ).catchError((Object _) {}),
+        );
+      }
+
+      if (_background || !_rootFrameReady) {
+        _pendingNormalResponse = open;
+      } else {
+        open();
+      }
+      return;
+    }
     _pruneApprovalActions();
     final route = NotificationRoute.fromResponse(response);
     final hasExplicitConnection =
@@ -992,6 +1020,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     SavedConnection connection,
     String? sessionId, {
     MobilePushRoute? pushRoute,
+    WindowsToastTarget? windowsTarget,
   }) async {
     if (!mounted ||
         _closingTurnOwner ||
@@ -999,7 +1028,13 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
         !_connectionIsCurrent(connection)) {
       return;
     }
-    if (routeNotificationToNextGen(connection.id, sessionId)) return;
+    if (routeNotificationToNextGen(
+      connection.id,
+      sessionId,
+      target: windowsTarget,
+    )) {
+      return;
+    }
     final identity = _notificationChatIdentity(connection, sessionId);
     final activeIntent = _routingIntent;
     if (_routingIdentity == identity &&
@@ -1023,6 +1058,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
       sessionId,
       pushRoute,
       generation,
+      windowsTarget,
     );
     _pendingNavigation = intent;
     await _runNotificationNavigation(intent);
@@ -1136,7 +1172,10 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
       if (!await current() || !currentSync()) return;
       // Push has no legacy workspace/draft fallback: only the authenticated
       // existing session named by the reconciled event is eligible.
-      if (pushRoute != null && session == null) return;
+      if ((pushRoute != null || intent.windowsTarget != null) &&
+          session == null) {
+        return;
+      }
       // Binding may have converged while the authenticated detail read awaited.
       if (session != null && _focusNotificationChat(connection, session.id)) {
         return;
