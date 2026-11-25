@@ -1957,5 +1957,6 @@
   "render_plugin_notes": "Нотатки",
   "catalog_scan_passed": "пройдено",
   "catalog_scan_warnings": "знайдено попередження",
-  "catalog_scan_failed": "не пройдено"
+  "catalog_scan_failed": "не пройдено",
+  "composer_failure_switch_no_retry": "Перемикання змінює лише модель: це з’єднання не може повторити невдалий хід. Надішліть його знову після перемикання."
 }

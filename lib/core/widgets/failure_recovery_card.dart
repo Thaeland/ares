@@ -19,6 +19,7 @@ class FailureRecoveryCard extends StatefulWidget {
     this.onCompress,
     this.onChooseModel,
     this.onSwitchTo,
+    this.switchRetries = true,
     this.onNewSession,
     this.onEdit,
     this.onDismiss,
@@ -36,6 +37,11 @@ class FailureRecoveryCard extends StatefulWidget {
   final Future<void> Function()? onCompress;
   final VoidCallback? onChooseModel;
   final Future<void> Function(ModelSuggestion suggestion)? onSwitchTo;
+
+  /// Whether [onSwitchTo] runs the failed turn again after switching. Where
+  /// it cannot (a transport with no regenerate), the card and its confirm
+  /// say so before the switch.
+  final bool switchRetries;
   final VoidCallback? onNewSession;
   final VoidCallback? onEdit;
   final VoidCallback? onDismiss;
@@ -56,6 +62,14 @@ class _FailureRecoveryCardState extends State<FailureRecoveryCard> {
   }
 
   int get _now => widget.nowMs ?? DateTime.now().millisecondsSinceEpoch;
+
+  /// A Switch to button that will not re-run the failed turn.
+  bool get _switchOnly =>
+      !widget.switchRetries &&
+      widget.onSwitchTo != null &&
+      widget.recovery.suggestion != null &&
+      (widget.recovery.primary == RecoveryAction.switchToModel ||
+          widget.recovery.secondary == RecoveryAction.switchToModel);
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +117,15 @@ class _FailureRecoveryCardState extends State<FailureRecoveryCard> {
                 ],
               ],
             ),
+            if (_switchOnly)
+              Padding(
+                padding: const EdgeInsets.only(right: 8, bottom: 4),
+                child: Text(
+                  l10n.composer_failure_switch_no_retry,
+                  key: const ValueKey('failure-card-switch-no-retry'),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
             if (widget.showDiagnostics)
               Align(
                 alignment: Alignment.centerLeft,
@@ -229,7 +252,12 @@ class _FailureRecoveryCardState extends State<FailureRecoveryCard> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        content: Text(l10n.composer_failure_confirm_model(suggestion.label)),
+        content: Text(
+          [
+            l10n.composer_failure_confirm_model(suggestion.label),
+            if (!widget.switchRetries) l10n.composer_failure_switch_no_retry,
+          ].join('\n\n'),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),

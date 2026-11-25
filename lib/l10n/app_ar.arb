@@ -2859,5 +2859,6 @@
   "render_plugin_notes": "الملاحظات",
   "catalog_scan_passed": "نجح",
   "catalog_scan_warnings": "وُجدت تحذيرات",
-  "catalog_scan_failed": "فشل"
+  "catalog_scan_failed": "فشل",
+  "composer_failure_switch_no_retry": "يغيّر التبديل النموذج فقط: لا يمكن لهذا الاتصال إعادة تشغيل الدور الفاشل. أرسله مجددًا بعد التبديل."
 }

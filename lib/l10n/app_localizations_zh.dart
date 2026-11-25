@@ -4100,6 +4100,10 @@ class AppLocalizationsZh extends AppLocalizations {
       'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
 
   @override
+  String get composer_failure_switch_no_retry =>
+      '切换只会更改模型：此连接无法重新运行失败的轮次。切换后请重新发送。';
+
+  @override
   String get composer_command_needs_gateway_session =>
       'This chat has no gateway session yet. Send a message first, then run the command again.';
 
@@ -10458,6 +10462,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get slash_sessions_inline => '请打开会话列表选择聊天。草稿已保留。';
 
   @override
+  String get composer_failure_switch_no_retry =>
+      '切换只会更改模型：此连接无法重新运行失败的轮次。切换后请重新发送。';
+
+  @override
   String get nextgen_toggle => 'NextGen 界面';
 
   @override
@@ -16695,6 +16703,10 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get slash_sessions_inline => '請開啟工作階段清單選擇聊天。草稿已保留。';
+
+  @override
+  String get composer_failure_switch_no_retry =>
+      '切換只會變更模型：此連線無法重新執行失敗的輪次。切換後請重新傳送。';
 
   @override
   String get nextgen_toggle => 'NextGen 介面';

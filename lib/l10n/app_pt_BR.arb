@@ -1804,5 +1804,6 @@
   "render_plugin_notes": "Notas",
   "catalog_scan_passed": "aprovado",
   "catalog_scan_warnings": "encontrou avisos",
-  "catalog_scan_failed": "falhou"
+  "catalog_scan_failed": "falhou",
+  "composer_failure_switch_no_retry": "A troca muda só o modelo: esta conexão não consegue executar de novo o turno que falhou. Envie-o novamente depois de trocar."
 }

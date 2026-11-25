@@ -2871,5 +2871,6 @@
   "render_plugin_notes": "筆記",
   "catalog_scan_passed": "通過",
   "catalog_scan_warnings": "發現警告",
-  "catalog_scan_failed": "失敗"
+  "catalog_scan_failed": "失敗",
+  "composer_failure_switch_no_retry": "切換只會變更模型：此連線無法重新執行失敗的輪次。切換後請重新傳送。"
 }

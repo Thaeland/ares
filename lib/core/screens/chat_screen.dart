@@ -1415,6 +1415,7 @@ class _ChatScreenState extends State<ChatScreen>
     }
     _normalSnapshot =
         snapshot; // read-only owner projection, not a route buffer
+    _cardNormalFailure(snapshot);
     _retainedRecoveryOutcomeIds.retainAll(
       snapshot.receivedOutcomes.map((outcome) => outcome.id),
     );
@@ -2253,22 +2254,22 @@ class _ChatScreenState extends State<ChatScreen>
     FocusScope.of(context).nextFocus();
   }
 
-  /// Whether Retry can regenerate here: only the Desktop gateway's stock
-  /// owner path truncates (Desktop's `runReload`).
-  bool get _canRegenerate =>
-      _desktopGateway != null &&
-      _normalChat != null &&
-      (_turnApplicationSession == null || _legacyTransportFallback);
+  /// Whether Retry can regenerate here: the Desktop gateway's stock owner
+  /// truncates (Desktop's `runReload`). A recovery-v2 chat regenerates
+  /// through it too: the v2 submit carries no truncation, and the stock
+  /// owner shares this chat's Desktop socket and live session (the one its
+  /// model switch and commands already use). REST cannot truncate.
+  bool get _canRegenerate => _desktopGateway != null && _normalChat != null;
 
-  /// Retry of a turn the gateway accepted, as Desktop's regenerate: the same
-  /// prompt with `confirm_truncate` and the turn's durable row, so it
-  /// replaces the failed turn instead of appending a duplicate. Never
-  /// touches the composer (a newer draft stays), and never falls back to a
-  /// plain resend: without a durable row it says so and sends nothing.
+  /// Retry of a turn the gateway accepted, as Desktop's regenerate
+  /// (`runReload` → `runRewindSubmit`): a live turn is interrupted first,
+  /// then the same prompt goes again with `confirm_truncate` and the turn's
+  /// durable row, so it replaces the failed turn instead of appending a
+  /// duplicate. Never touches the composer (a newer draft stays), and never
+  /// falls back to a plain resend: without a durable row it says so and
+  /// sends nothing. Owner-scoped: a screen that has gone sends nothing.
   Future<void> _retryPrompt(String text) async {
     if (_archiving ||
-        _sending ||
-        _streaming ||
         _preparingSend ||
         _pendingReattachResync ||
         text.trim().isEmpty) {
@@ -2281,6 +2282,16 @@ class _ChatScreenState extends State<ChatScreen>
       _showRetryNotice(l10n.composer_retry_unavailable);
       return;
     }
+    if (_streaming) {
+      // runRewindSubmit's interruptFirst (NextGen's retryLast too): stop the
+      // live turn, then wait for it to settle before replacing it.
+      await _stopResponse();
+      for (var i = 0; i < 50 && mounted && _hasLiveTurn; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+      if (!mounted) return;
+    }
+    if (_sending || _streaming || _hasLiveTurn) return;
     final target = await resolveRegenerateTarget(
       rpc: gateway.requestSessionRpc,
       sessionId: session,
@@ -3943,6 +3954,17 @@ class _ChatScreenState extends State<ChatScreen>
             : null;
       }
     });
+    if (!projection.isActive) {
+      // A failure frame that arrived while this turn was live: now that the
+      // turn has settled as failed, it goes to the card.
+      final frame = _liveFailureFrame;
+      _liveFailureFrame = null;
+      if (frame != null &&
+          !projection.isFailClosed &&
+          projection.status == GatewayRecoveryTurnStatus.failed) {
+        _noteRecovery(frame);
+      }
+    }
     final pendingSubmission = _recoverableSubmissionState;
     if (pendingSubmission != null && !pendingSubmission.isCompleted) {
       pendingSubmission.complete();
@@ -5017,9 +5039,13 @@ class _ChatScreenState extends State<ChatScreen>
 
   /// The failure card's Switch to (model): Desktop's switchAndRetry and
   /// NextGen's. The suggested model becomes this chat's model, then the
-  /// failed turn runs again on it (Retry's regenerate; a newer draft
-  /// stays). With no provider to pair the model with, the picker opens.
+  /// failed turn runs again on it, exactly once, through Retry's regenerate
+  /// (a newer draft stays). With no provider to pair the model with, the
+  /// picker opens. Where no regenerate is possible (REST) the card already
+  /// said the switch will not re-run the turn, so it only switches. A
+  /// screen left mid-switch sends nothing.
   Future<void> _switchToSuggested(ModelSuggestion suggestion) async {
+    if (_switchingToSuggested) return;
     final provider = suggestion.provider?.trim().isNotEmpty == true
         ? suggestion.provider!.trim()
         : _sessionProvider?.trim() ?? '';
@@ -5028,19 +5054,34 @@ class _ChatScreenState extends State<ChatScreen>
       return;
     }
     final prompt = _lastPromptText;
-    final switched = await _setSessionModel(
-      _ModelSelection(
-        choice: _ModelChoice(provider: provider, model: suggestion.model),
-        reasoningEffort: null,
-      ),
-    );
-    if (!switched || !mounted) return;
-    setState(() {
-      _recoveryMessage = null;
-      _recoverySurface = null;
-    });
-    if (prompt != null) await _retryPrompt(prompt);
+    _switchingToSuggested = true;
+    try {
+      final switched = await _setSessionModel(
+        _ModelSelection(
+          choice: _ModelChoice(provider: provider, model: suggestion.model),
+          reasoningEffort: null,
+        ),
+      );
+      if (!switched || !mounted) return;
+      setState(() {
+        _recoveryMessage = null;
+        _recoverySurface = null;
+      });
+      if (prompt != null && _canRegenerate) {
+        _modelOverrideFresh = true;
+        await _retryPrompt(prompt);
+      }
+    } finally {
+      _switchingToSuggested = false;
+      _modelOverrideFresh = false;
+    }
   }
+
+  bool _switchingToSuggested = false;
+
+  /// Set by Switch to for the retry right behind it; see
+  /// [_applySessionModelOverride].
+  bool _modelOverrideFresh = false;
 
   /// Send message via SSE streaming (Gateway API Server).
   Future<void> _startRecordedVoice() async {
@@ -5239,7 +5280,9 @@ class _ChatScreenState extends State<ChatScreen>
     // Own this submission before the first await. Only the captured prompt is
     // consumed; setup, uploads and stream callbacks must not clear newer text.
     if (_normalChat != null &&
-        (_turnApplicationSession == null || _legacyTransportFallback)) {
+        (_turnApplicationSession == null ||
+            _legacyTransportFallback ||
+            promptParams.isNotEmpty)) {
       final reservation = _normalChat!.reserve();
       if (reservation == null) return;
       _normalReservation = reservation;
@@ -5769,6 +5812,36 @@ class _ChatScreenState extends State<ChatScreen>
       _pendingReattachResync ||
       _normalChat?.snapshot.hasActiveTurn == true;
 
+  /// The stock owner's failure frame raises the failure card once its turn
+  /// has settled as failed, or at once for a detached turn that failed on
+  /// the server. Each frame is shown once per screen.
+  void _cardNormalFailure(NormalGatewayChatSnapshot snapshot) {
+    final failure = snapshot.failureFrame;
+    if (failure == null ||
+        failure.serial == _cardedFailureSerial ||
+        snapshot.hasActiveTurn ||
+        !(failure.detached ||
+            snapshot.responseFailure != null ||
+            snapshot.phase == NormalGatewayTurnPhase.failed)) {
+      return;
+    }
+    _cardedFailureSerial = failure.serial;
+    // Snapshots also arrive while this screen is being set up.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // A newer turn may have cleared it in the meantime.
+      if (mounted && _normalSnapshot?.failureFrame?.serial == failure.serial) {
+        _noteRecovery(failure.data);
+      }
+    });
+    WidgetsBinding.instance.ensureVisualUpdate();
+  }
+
+  int? _cardedFailureSerial;
+
+  /// A recovery-v2 turn's failure frame that arrived while the turn was
+  /// still live here: the card shows it once that turn settles as failed.
+  Map<String, dynamic>? _liveFailureFrame;
+
   void _noteRecovery(Map<String, dynamic> data) {
     final message = data['message']?.toString().trim();
     final surface = FailureSurface.parse(
@@ -6013,7 +6086,11 @@ class _ChatScreenState extends State<ChatScreen>
     final keepComposer = preserveComposer || voiceBinding != null;
     // A remote-gateway profile uses one transport for every prompt. Images and
     // arbitrary files are both attached with the official `file.attach` RPC.
-    if (_turnApplicationSession != null && !_legacyTransportFallback) {
+    // A regenerate (truncation params) always goes through the stock owner:
+    // the recovery-v2 submit has no truncation.
+    if (_turnApplicationSession != null &&
+        !_legacyTransportFallback &&
+        promptParams.isEmpty) {
       await _sendRecoverableGatewayMessage(
         text: text,
         attachments: attachments,
@@ -7108,10 +7185,15 @@ class _ChatScreenState extends State<ChatScreen>
     }
     if (event.type == 'error' || event.type == 'turn.error') {
       // The client hands every terminal frame to this async path BEFORE the
-      // live turn's own stream, which reports and settles it: while a turn
-      // is live here the frame is that duplicate. Only a frame with no live
-      // turn (a detached turn settling later) is news for the failure card.
-      if (!_hasLiveTurn) _noteRecovery(event.data);
+      // live turn's own stream, which reports and settles it. A frame with
+      // no live turn (a detached turn settling later) goes to the card now;
+      // a live turn's frame carries its failure surface, so the card shows
+      // it once that turn settles as failed (_applyGatewayTurnState).
+      if (_hasLiveTurn) {
+        _liveFailureFrame = event.data;
+      } else {
+        _noteRecovery(event.data);
+      }
       return;
     }
     if (const {'message.complete', 'turn.end'}.contains(event.type)) {
@@ -9286,6 +9368,9 @@ class _ChatScreenState extends State<ChatScreen>
                               : _compressClassicChat,
                           onChooseModel: () => _showModelSelector(),
                           onSwitchTo: _switchToSuggested,
+                          // REST cannot regenerate: the card says so
+                          // before the switch, not after it.
+                          switchRetries: _canRegenerate,
                           onNewSession: widget.singleSession
                               ? null
                               : () => unawaited(_openFreshDraftChat('')),
@@ -10552,6 +10637,12 @@ class _ChatScreenState extends State<ChatScreen>
   Future<void> _applySessionModelOverride(
     DesktopGatewayClient desktopGateway,
   ) async {
+    if (_modelOverrideFresh) {
+      // Switch to has just set it on this live session (one config.set, as
+      // Desktop's switchAndRetry): its retry does not send it again.
+      _modelOverrideFresh = false;
+      return;
+    }
     final provider = _sessionProvider;
     final model = _sessionModel;
     if (!_sessionModelOverride || provider == null || model == null) return;

@@ -1804,5 +1804,6 @@
   "render_plugin_notes": "Notes",
   "catalog_scan_passed": "réussi",
   "catalog_scan_warnings": "avertissements trouvés",
-  "catalog_scan_failed": "échoué"
+  "catalog_scan_failed": "échoué",
+  "composer_failure_switch_no_retry": "Le changement ne modifie que le modèle : cette connexion ne peut pas relancer le tour en échec. Renvoyez-le après le changement."
 }

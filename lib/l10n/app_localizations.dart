@@ -7167,6 +7167,12 @@ abstract class AppLocalizations {
   /// **'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.'**
   String get composer_retry_unavailable;
 
+  /// Failure card note under 'Switch to <model>' on a connection that cannot re-run a failed turn (REST).
+  ///
+  /// In en, this message translates to:
+  /// **'Switching changes the model only: this connection can\'t run the failed turn again. Send it again after switching.'**
+  String get composer_failure_switch_no_retry;
+
   /// No description provided for @composer_command_needs_gateway_session.
   ///
   /// In en, this message translates to:

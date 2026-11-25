@@ -4282,6 +4282,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
 
   @override
+  String get composer_failure_switch_no_retry =>
+      'Le changement ne modifie que le modèle : cette connexion ne peut pas relancer le tour en échec. Renvoyez-le après le changement.';
+
+  @override
   String get composer_command_needs_gateway_session =>
       'This chat has no gateway session yet. Send a message first, then run the command again.';
 

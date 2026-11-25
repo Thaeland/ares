@@ -4271,6 +4271,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
 
   @override
+  String get composer_failure_switch_no_retry =>
+      'Mudar altera apenas o modelo: esta ligação não consegue voltar a executar o turno que falhou. Envie-o novamente depois de mudar.';
+
+  @override
   String get composer_command_needs_gateway_session =>
       'This chat has no gateway session yet. Send a message first, then run the command again.';
 
@@ -10913,6 +10917,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get slash_sessions_inline =>
       'Abra a lista de sessões para escolher uma conversa. Seu rascunho foi mantido.';
+
+  @override
+  String get composer_failure_switch_no_retry =>
+      'A troca muda só o modelo: esta conexão não consegue executar de novo o turno que falhou. Envie-o novamente depois de trocar.';
 
   @override
   String get nextgen_toggle => 'Interface NextGen';

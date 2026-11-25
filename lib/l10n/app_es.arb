@@ -1804,5 +1804,6 @@
   "render_plugin_notes": "Notas",
   "catalog_scan_passed": "superado",
   "catalog_scan_warnings": "encontró advertencias",
-  "catalog_scan_failed": "falló"
+  "catalog_scan_failed": "falló",
+  "composer_failure_switch_no_retry": "Cambiar solo cambia el modelo: esta conexión no puede volver a ejecutar el turno fallido. Envíalo de nuevo después de cambiar."
 }

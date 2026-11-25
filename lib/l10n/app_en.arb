@@ -1451,6 +1451,10 @@
   "composer_command_needs_session": "This command needs an open chat.",
   "composer_retry_not_found": "This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.",
   "composer_retry_unavailable": "Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.",
+  "composer_failure_switch_no_retry": "Switching changes the model only: this connection can't run the failed turn again. Send it again after switching.",
+  "@composer_failure_switch_no_retry": {
+    "description": "Failure card note under 'Switch to <model>' on a connection that cannot re-run a failed turn (REST)."
+  },
   "composer_command_needs_gateway_session": "This chat has no gateway session yet. Send a message first, then run the command again.",
   "composer_side_question": "btw \u2014 answering from a conversation snapshot",
   "composer_side_question_id": "btw {id} \u2014 answering from a conversation snapshot",
