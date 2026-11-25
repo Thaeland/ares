@@ -18,11 +18,12 @@ typedef ComposerDraftReader =
 class ChatPresentationRegistry {
   ChatPresentationRegistry(this.connectionId) : recoveryScope = null;
 
+  /// Drafts stay in the saved connection's bucket, including for a named
+  /// gateway profile: that is where shipped releases kept them and where
+  /// connection-scoped reads look. Account and profile isolation for
+  /// cross-chat recovery comes from [recoveryScope] provenance, not the key.
   ChatPresentationRegistry.forConnection(SavedConnection connection)
-    : connectionId = ComposerDraftStore.namespace(
-        connection.id,
-        connection.gatewayProfile,
-      ),
+    : connectionId = connection.id,
       recoveryScope = MobilePushService.binding(connection);
 
   final String connectionId;

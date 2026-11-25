@@ -1693,5 +1693,11 @@
   "ng_aux_profile_describer": "Profilbeschreibungen",
   "ng_aux_profile_describer_hint": "Schreibt die Kurzbeschreibung jedes Profils",
   "ng_aux_curator": "Kurator",
-  "ng_aux_curator_hint": "Prüft, wie Skills genutzt werden"
+  "ng_aux_curator_hint": "Prüft, wie Skills genutzt werden",
+  "ng_allow_until_sandbox_off": "Bis die Sandbox ausgeschaltet wird",
+  "ng_folder_access": "Ordnerzugriff",
+  "ng_folder_access_unspecified": "Das Gateway hat nicht angegeben, ob der Zugriff schreibgeschützt ist oder Lesen und Schreiben erlaubt.",
+  "ng_folder_read_only": "Schreibgeschützt",
+  "ng_folder_read_write": "Lesen und Schreiben",
+  "ng_website_access": "Websitezugriff"
 }

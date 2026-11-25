@@ -793,6 +793,31 @@ class DesktopGatewayClient implements SlashCommandGateway {
   /// standing up a second unauthenticated HTTP client.
   DashboardClient get dashboard => _dashboard;
 
+  /// One control-plane JSON-RPC call on this connection's socket.
+  ///
+  /// Opens the socket when the workspace has not connected yet. The call stays
+  /// on this client, so a profile name cannot hop to another machine.
+  Future<Map<String, dynamic>> call(
+    String method,
+    Map<String, dynamic> params, {
+    Duration timeout = const Duration(seconds: 45),
+  }) async {
+    final client = await _ensureSocket();
+    final response = await client.send(method, params, timeout: timeout);
+    final error = response['error'];
+    if (error != null) {
+      throw JsonRpcError.fromGateway(
+        method,
+        error is Map ? Map<dynamic, dynamic>.from(error) : const {},
+        fallbackMessage: 'The gateway refused $method.',
+      );
+    }
+    final result = response['result'];
+    if (result is Map<String, dynamic>) return result;
+    if (result is Map) return Map<String, dynamic>.from(result);
+    return <String, dynamic>{};
+  }
+
   /// Server-owned Hermes Projects for this gateway.
   ///
   /// Projects are connection-scoped, not session-scoped, so this opens the
@@ -1508,6 +1533,12 @@ class DesktopGatewayClient implements SlashCommandGateway {
       throw StateError('The Desktop gateway session is no longer connected');
     }
     return client;
+  }
+
+  /// One JSON-RPC call on the already connected gateway socket.
+  /// Billing and chat presets use this; it does not open a new session.
+  Future<Map<String, dynamic>> rpc(String method, Map<String, dynamic> params) {
+    return _connectedClient().send(method, params);
   }
 
   /// The profile-scoped catalog and default shown by Hermes Desktop.  Keeping

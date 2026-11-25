@@ -11,7 +11,7 @@ Future<void> _pumpPane(
   ValueChanged<MoreEntry>? onSelect,
   // Tall by default so assertions are about content, not scroll position; the
   // narrow-phone tests below set a real phone height explicitly.
-  Size size = const Size(360, 1600),
+  Size size = const Size(360, 2800),
   double textScale = 1.0,
   Brightness brightness = Brightness.dark,
 }) async {
@@ -94,9 +94,17 @@ void main() {
           'model',
           'cron',
           'skills',
+          'capability-admin',
+          'browser-vault',
+          'agent-policy',
           'memory',
+          'host-operations',
+          'schedule-desk',
+          'memory-graph',
           'provider-sign-in',
           'nous-portal',
+          'provider-admin',
+          'nous-billing',
           'openrouter',
           'openai',
           'anthropic',
@@ -130,6 +138,8 @@ void main() {
           expect(usage.entries.map((e) => e.id), [
             'provider-sign-in',
             'nous-portal',
+            'provider-admin',
+            'nous-billing',
             'openrouter',
             'openai',
             'anthropic',
@@ -138,6 +148,8 @@ void main() {
           expect(usage.entries.map((e) => e.title), [
             'Provider sign-in',
             'Nous Portal',
+            'Providers and routes',
+            'Credits and plans',
             'OpenRouter',
             'OpenAI',
             'Claude (Anthropic)',
@@ -366,7 +378,13 @@ void main() {
             'model',
             'cron',
             'skills',
+            'capability-admin',
+            'browser-vault',
+            'agent-policy',
             'memory',
+            'host-operations',
+            'schedule-desk',
+            'memory-graph',
           ]);
         }
       },
@@ -416,7 +434,7 @@ void main() {
 
     testWidgets('renders every section title and entry', (tester) async {
       final built = sections();
-      await _pumpPane(tester, sections: built);
+      await _pumpPane(tester, sections: built, size: const Size(360, 4000));
 
       for (final section in built) {
         await tester.scrollUntilVisible(
@@ -426,9 +444,11 @@ void main() {
         );
         expect(find.text(section.title), findsOneWidget);
       }
+      // Section titles were walked top to bottom, so Cron is now above
+      // the viewport. Search upward; a downward drag cannot rebuild it.
       await tester.scrollUntilVisible(
         find.text('Cron'),
-        160,
+        -160,
         scrollable: find.byType(Scrollable).first,
       );
       expect(find.text('Cron'), findsOneWidget);
@@ -546,7 +566,14 @@ void main() {
         await tester.pumpAndSettle();
       }
 
-      expect(picked, ['model', 'cron', 'skills', 'memory']);
+      expect(picked, [
+        'model',
+        'cron',
+        'skills',
+        'capability-admin',
+        'agent-policy',
+        'memory',
+      ]);
     });
 
     testWidgets('selecting an available entry reports it once', (tester) async {
