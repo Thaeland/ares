@@ -2,7 +2,7 @@
 // Uses REST endpoints: POST /api/sessions/{id}/chat and
 // GET /api/sessions/{id}/messages.
 import 'dart:async';
-import '../widgets/windows_chat_presence.dart';
+import '../widgets/chat_presence.dart';
 import '../workspace/terminal_chat_link.dart';
 import 'dart:convert';
 
@@ -61,6 +61,7 @@ import '../preview/chat_preview.dart';
 import '../services/slash_command_errors.dart';
 import '../services/legal_links.dart';
 import '../services/turn_notification_service.dart';
+import '../services/completion_cue_player.dart';
 import '../services/notification_approval_authority.dart';
 import '../services/notification_prefs.dart';
 import '../services/voice_composer_adapter.dart';
@@ -2877,11 +2878,13 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   void _onTurnSettled(GatewayTurnRecoveryState state) {
-    if (!mounted || !_appInBackground) return;
+    if (!mounted) return;
     final turnId = state.turnId ?? state.clientTurnId;
     final completed =
         !state.isFailClosed &&
         state.status == GatewayRecoveryTurnStatus.completed;
+    if (completed && !_appInBackground) _playCompletionCue();
+    if (!_appInBackground) return;
     final kind = completed
         ? HermesNotificationKind.turnDone
         : HermesNotificationKind.turnError;
@@ -2909,6 +2912,16 @@ class _ChatScreenState extends State<ChatScreen>
             ),
     );
   }
+
+  /// The in-app completion cue for this chat (it plays only while Ares is
+  /// in front; a completion notification covers the background).
+  void _playCompletionCue() =>
+      CompletionCuePlayer.instance.turnFinished(_completionCueKey);
+
+  /// Names this chat for the cue, as a pop-out of it does, so only one
+  /// window plays it.
+  String get _completionCueKey =>
+      '${widget.connection.id}|${widget.session.id}';
 
   /// Mirrors a blocking approval to a native notification (with approve/deny
   /// buttons) while the app is in the background — the one prompt class that
@@ -5336,6 +5349,7 @@ class _ChatScreenState extends State<ChatScreen>
         onDone: () async {
           if (!mounted || responseGeneration != _responseGeneration) return;
           onAccepted?.call();
+          _playCompletionCue();
           // The SSE client requires an explicit successful protocol completion.
           final assistant = _lastAssistantMessage();
           setState(() {
@@ -7542,13 +7556,13 @@ class _ChatScreenState extends State<ChatScreen>
         });
       },
     );
-    return defaultTargetPlatform == TargetPlatform.windows
-        ? WindowsChatPresence(
-            target: () => (_desktopGateway ?? _normalSession?.client)
-                ?.presenceFor(_normalLocalSessionKey),
-            child: screen,
-          )
-        : screen;
+    return ChatPresence(
+      target: () => (_desktopGateway ?? _normalSession?.client)?.presenceFor(
+        _normalLocalSessionKey,
+      ),
+      cueKey: () => _completionCueKey,
+      child: screen,
+    );
   }
 
   Widget _buildChat(BuildContext context) => LayoutBuilder(
@@ -8384,32 +8398,35 @@ class _ChatScreenState extends State<ChatScreen>
                                         )
                                       : KeyEventResult.ignored,
                                   onSend: () => unawaited(_sendMessage()),
-                                  child: TextField(
-                                    key: const Key('chat-message-composer'),
-                                    focusNode: _composerFocus,
-                                    controller: _textController,
-                                    inputFormatters: [_largePasteFormatter],
-                                    decoration: InputDecoration(
-                                      hintText: context.l10n.message_hermes,
-                                      filled: true,
-                                      fillColor: Colors.transparent,
-                                      border: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 8,
-                                          ),
-                                      isDense: true,
+                                  child: ChatPresenceComposer(
+                                    builder: (_, input) => TextField(
+                                      key: const Key('chat-message-composer'),
+                                      onChanged: (_) => input(),
+                                      focusNode: _composerFocus,
+                                      controller: _textController,
+                                      inputFormatters: [_largePasteFormatter],
+                                      decoration: InputDecoration(
+                                        hintText: context.l10n.message_hermes,
+                                        filled: true,
+                                        fillColor: Colors.transparent,
+                                        border: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                              horizontal: 12,
+                                              vertical: 8,
+                                            ),
+                                        isDense: true,
+                                      ),
+                                      minLines: 1,
+                                      maxLines: 5,
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      keyboardType: TextInputType.multiline,
+                                      textInputAction: TextInputAction.newline,
+                                      enabled: !_transcriptLoadBlocksComposer,
                                     ),
-                                    minLines: 1,
-                                    maxLines: 5,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    keyboardType: TextInputType.multiline,
-                                    textInputAction: TextInputAction.newline,
-                                    enabled: !_transcriptLoadBlocksComposer,
                                   ),
                                 ),
                               ),

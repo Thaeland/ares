@@ -1943,26 +1943,44 @@ class AppLocalizationsEs extends AppLocalizations {
       'What Ares submitted to Windows';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
+  String get chat_activity_share => 'Share chat activity';
 
   @override
-  String get windows_window_activity_hint =>
+  String get chat_activity_share_hint =>
       'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
 
   @override
-  String get windows_completion_sound => 'Completion sound';
+  String get completion_sound => 'Completion sound';
 
   @override
-  String get windows_sound_default => 'Windows default';
+  String get completion_sound_system => 'System default';
 
   @override
-  String get windows_sound_mail => 'Mail';
+  String get completion_sound_mail => 'Mail';
 
   @override
-  String get windows_sound_reminder => 'Reminder';
+  String get completion_sound_reminder => 'Reminder';
 
   @override
-  String get windows_sound_silent => 'Silent';
+  String get completion_sound_silent => 'Silent';
+
+  @override
+  String get completion_sound_scope =>
+      'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.';
+
+  @override
+  String get completion_sound_scope_android =>
+      'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.';
+
+  @override
+  String get notification_open_action => 'Open';
+
+  @override
+  String get app_sounds_mute => 'Mute app sounds';
+
+  @override
+  String get app_sounds_mute_hint =>
+      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
 
   @override
   String get notifications_permission_denied =>

@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../l10n/app_localizations.dart';
 import '../l10n/l10n.dart' show resolvePreferredLocale;
 import '../utils/platform_capabilities.dart';
+import 'completion_cue.dart';
 import 'notification_prefs.dart';
 import 'windows_toast_ledger.dart';
 import 'notification_approval_authority.dart';
@@ -114,6 +115,110 @@ class TurnNotification {
   });
 }
 
+/// Platform details for one notification.
+///
+/// Completion and test alerts follow [CompletionCue]. Every other kind keeps
+/// its previous sound. Android Auto conversation posts return before this and
+/// stay on their own native path.
+NotificationDetails turnNotificationDetails(TurnNotification notification) {
+  final strings = notificationStrings();
+  final cue = CompletionCue.resolve(
+    silent: notification.silent,
+    onlyAlertOnce: notification.onlyAlertOnce,
+    ongoing: notification.ongoing,
+    payload: notification.payload,
+    kind: notification.kind,
+  );
+  final (importance, priority) = switch (notification.importance) {
+    TurnNotificationImportance.high => (Importance.high, Priority.high),
+    TurnNotificationImportance.low => (Importance.low, Priority.low),
+    TurnNotificationImportance.defaultImportance => (
+      Importance.defaultImportance,
+      Priority.defaultPriority,
+    ),
+  };
+  final channel = notification.channel;
+  final suffix = cue.channelSuffix;
+  final androidDetails = AndroidNotificationDetails(
+    suffix.isEmpty ? channel.id : '${channel.id}_$suffix',
+    suffix.isEmpty
+        ? channel.name
+        : '${channel.name} (${_choiceLabel(strings, suffix)})',
+    channelDescription: channel.description,
+    // A white silhouette, as Android expects in the status bar; the
+    // launcher's adaptive icon shows as a blank circle there.
+    icon: 'ic_stat_mobile_push',
+    importance: importance,
+    priority: priority,
+    autoCancel: !notification.ongoing,
+    ongoing: notification.ongoing,
+    silent: notification.silent,
+    onlyAlertOnce: notification.onlyAlertOnce,
+    playSound: cue.audible,
+    enableVibration: cue.audible,
+    sound: cue.audible && cue.androidRaw != null
+        ? RawResourceAndroidNotificationSound(cue.androidRaw!)
+        : null,
+    actions: [
+      for (final action in notification.actions)
+        AndroidNotificationAction(
+          action.id,
+          action.label,
+          showsUserInterface: true,
+        ),
+    ],
+  );
+  final hasApprovalActions = notification.actions.any(
+    (action) => action.id == 'approve',
+  );
+  final darwinDetails = DarwinNotificationDetails(
+    presentAlert: !notification.silent,
+    presentBadge: !notification.silent,
+    presentSound: cue.audible,
+    sound: cue.audible ? cue.darwinFile : null,
+    categoryIdentifier: hasApprovalActions ? 'hermes_approval' : null,
+    interruptionLevel: notification.silent
+        ? InterruptionLevel.passive
+        : notification.importance == TurnNotificationImportance.high
+        ? InterruptionLevel.timeSensitive
+        : InterruptionLevel.active,
+  );
+  return NotificationDetails(
+    android: androidDetails,
+    iOS: darwinDetails,
+    macOS: darwinDetails,
+    linux: LinuxNotificationDetails(
+      suppressSound: !cue.audible,
+      sound: cue.audible && cue.linuxTheme != null
+          ? ThemeLinuxSound(cue.linuxTheme!)
+          : null,
+      defaultActionName: strings.notification_open_action,
+      actions: [
+        for (final action in notification.actions)
+          LinuxNotificationAction(key: action.id, label: action.label),
+      ],
+    ),
+  );
+}
+
+/// The app's strings for text the operating system shows outside any widget:
+/// channel names and notification actions follow the device language.
+AppLocalizations notificationStrings() => lookupAppLocalizations(
+  resolvePreferredLocale(
+    PlatformDispatcher.instance.locales,
+    AppLocalizations.supportedLocales,
+  ),
+);
+
+/// The completion choice a channel suffix belongs to, as the settings name it.
+String _choiceLabel(AppLocalizations strings, String suffix) =>
+    switch (suffix) {
+      'mail' => strings.completion_sound_mail,
+      'reminder' => strings.completion_sound_reminder,
+      'silent' => strings.completion_sound_silent,
+      _ => suffix,
+    };
+
 /// The platform seam [TurnNotificationService] posts through.
 ///
 /// The production implementation is [PluginTurnNotificationSink]; tests supply
@@ -144,6 +249,11 @@ abstract class TurnNotificationSink {
   Future<void> cancelAll();
 }
 
+/// A sink that can delete Android notification channels it created.
+abstract interface class TurnNotificationChannelCleaner {
+  Future<void> deleteChannel(String id);
+}
+
 /// Windows uses a runner channel; FLN v18 still owns Android and Darwin.
 TurnNotificationSink defaultTurnNotificationSink({
   FlutterLocalNotificationsPlugin? plugin,
@@ -152,11 +262,19 @@ TurnNotificationSink defaultTurnNotificationSink({
     : PluginTurnNotificationSink(plugin: plugin);
 
 /// Default sink backed by `flutter_local_notifications`.
-class PluginTurnNotificationSink implements TurnNotificationSink {
+class PluginTurnNotificationSink
+    implements TurnNotificationSink, TurnNotificationChannelCleaner {
   final FlutterLocalNotificationsPlugin _plugin;
 
   PluginTurnNotificationSink({FlutterLocalNotificationsPlugin? plugin})
     : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
+
+  @override
+  Future<void> deleteChannel(String id) async => _plugin
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >()
+      ?.deleteNotificationChannel(id);
 
   @override
   Future<void> initialize() async {
@@ -183,6 +301,13 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
       android: androidSettings,
       iOS: darwinSettings,
       macOS: darwinSettings,
+      // Linux previously threw on startup because this was omitted. The
+      // default sound is the desktop theme's message sound; a completion
+      // choice replaces it per notification.
+      linux: LinuxInitializationSettings(
+        defaultActionName: notificationStrings().notification_open_action,
+        defaultSound: ThemeLinuxSound('message'),
+      ),
     );
 
     await _plugin.initialize(
@@ -300,57 +425,7 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
       if (sent != true) throw StateError('Conversation authority unavailable');
       return;
     }
-    final (importance, priority) = switch (notification.importance) {
-      TurnNotificationImportance.high => (Importance.high, Priority.high),
-      TurnNotificationImportance.low => (Importance.low, Priority.low),
-      TurnNotificationImportance.defaultImportance => (
-        Importance.defaultImportance,
-        Priority.defaultPriority,
-      ),
-    };
-    final androidDetails = AndroidNotificationDetails(
-      notification.channel.id,
-      notification.channel.name,
-      channelDescription: notification.channel.description,
-      // A white silhouette, as Android expects in the status bar; the
-      // launcher's adaptive icon shows as a blank circle there.
-      icon: 'ic_stat_mobile_push',
-      importance: importance,
-      priority: priority,
-      autoCancel: !notification.ongoing,
-      ongoing: notification.ongoing,
-      silent: notification.silent,
-      onlyAlertOnce: notification.onlyAlertOnce,
-      playSound: !notification.silent,
-      enableVibration: !notification.silent,
-      actions: [
-        for (final action in notification.actions)
-          AndroidNotificationAction(
-            action.id,
-            action.label,
-            showsUserInterface: true,
-          ),
-      ],
-    );
-    final hasApprovalActions = notification.actions.any(
-      (action) => action.id == 'approve',
-    );
-    final darwinDetails = DarwinNotificationDetails(
-      presentAlert: !notification.silent,
-      presentBadge: !notification.silent,
-      presentSound: !notification.silent,
-      categoryIdentifier: hasApprovalActions ? 'hermes_approval' : null,
-      interruptionLevel: notification.silent
-          ? InterruptionLevel.passive
-          : notification.importance == TurnNotificationImportance.high
-          ? InterruptionLevel.timeSensitive
-          : InterruptionLevel.active,
-    );
-    final details = NotificationDetails(
-      android: androidDetails,
-      iOS: darwinDetails,
-      macOS: darwinDetails,
-    );
+    final details = turnNotificationDetails(notification);
 
     await _plugin.show(
       notification.id,
@@ -949,6 +1024,32 @@ class TurnNotificationService {
       _initialized = true;
     } catch (_) {
       // Missing plugins must not break startup; a later call may retry.
+      return;
+    }
+    await pruneCompletionChannels();
+  }
+
+  /// Android locks a channel's sound when it is created, so each completion
+  /// choice posts on its own channel. Deletes the choice channels the current
+  /// choice does not use, so they do not pile up in the system settings.
+  /// Called when the choice changes and on startup.
+  Future<void> pruneCompletionChannels() async {
+    final sink = _sink;
+    if (sink is! TurnNotificationChannelCleaner ||
+        defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
+    final cleaner = sink as TurnNotificationChannelCleaner;
+    final keep = CompletionCue.channelSuffixFor(
+      notificationPrefs.value.completionSound,
+    );
+    for (final suffix in CompletionCue.choiceSuffixes) {
+      if (suffix == keep) continue;
+      try {
+        await cleaner.deleteChannel('${turnChannel.id}_$suffix');
+      } catch (_) {
+        // A channel that cannot be deleted now is retried next time.
+      }
     }
   }
 

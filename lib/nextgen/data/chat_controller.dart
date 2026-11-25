@@ -15,6 +15,7 @@ import '../../core/models/background_report.dart';
 import '../../core/models/legacy_lcm_summary.dart';
 import '../../core/models/slash_command.dart';
 import '../../core/services/attachment_draft_service.dart';
+import '../../core/services/completion_cue_player.dart';
 import '../../core/services/remote_workspace.dart';
 import '../../core/services/composer_draft_store.dart';
 import '../../core/services/connection_mutation_barrier.dart';
@@ -1906,6 +1907,7 @@ class NgChatController extends ChangeNotifier {
         error = s('message') ?? ngL.ng_the_turn_failed;
         _finishTurn(failed: true);
       case 'message.complete' || 'turn.end':
+        final live = running;
         final reply = _openReply();
         final text = s('text');
         if (text != null &&
@@ -1922,6 +1924,13 @@ class NgChatController extends ChangeNotifier {
         lastTurnFailed = outcome == 'error';
         lastTurnInterrupted = outcome == 'interrupted';
         _finishTurn(failed: lastTurnFailed);
+        // The in-app cue for a live reply that finished here (Desktop plays
+        // it on message.complete); a stopped or failed turn has none.
+        if (live && !lastTurnFailed && !lastTurnInterrupted) {
+          CompletionCuePlayer.instance.turnFinished(
+            '${gateway.connection.id}|${storedId ?? runtimeId}',
+          );
+        }
         unawaited(_adoptPersistedIds());
       case 'turn.error':
         error = s('message') ?? ngL.ng_the_turn_failed;

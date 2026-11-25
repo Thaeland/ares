@@ -72,13 +72,14 @@ void main() {
         .first;
     for (final section in ['Appearance', 'Voice', 'Session Sources']) {
       final chip = find.byKey(ValueKey('classic-only-$section'));
-      // Small steps: the lazy list re-estimates extents while scrolling, and
-      // a 300 px step can carry a short section header past the viewport.
+      // Short steps: the lazy list re-estimates extents while scrolling, and
+      // a 300 px step can carry a short section header past the viewport
+      // (the notification rows also grew the list).
       await tester.scrollUntilVisible(
         chip,
         100,
         scrollable: scroll,
-        maxScrolls: 150,
+        maxScrolls: 200,
       );
       expect(chip, findsOneWidget, reason: section);
       expect(

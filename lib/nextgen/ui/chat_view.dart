@@ -22,6 +22,7 @@ import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
 import '../../core/utils/delivered_files.dart';
 import '../../core/utils/media_tags.dart';
+import '../../core/widgets/chat_presence.dart';
 import '../../core/widgets/desktop_shortcuts.dart';
 import '../../core/widgets/transcript_reader.dart';
 import '../../core/widgets/transcript_body.dart';
@@ -735,23 +736,39 @@ class _NgChatViewState extends State<NgChatView>
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
     final gateway = NgScope.of(context).gateway;
-    return _preview.layout(
-      chat: _buildChat(c, gateway),
-      storedId: chat.storedId,
-      service: chat.attachmentService,
-      existing: _drafts,
-      update: setState,
-      commit: (text, crops) {
-        if (_preparing || chat.running) {
-          throw const AttachmentDraftException(
-            'Wait for the composer to become available.',
-          );
-        }
-        setState(() {
-          _drafts.addAll(crops);
-          appendPreviewText(_input, text);
-        });
+    return ChatPresence(
+      target: () {
+        final socket = chat.gateway.socket;
+        final runtime = chat.runtimeId;
+        return socket != null &&
+                runtime != null &&
+                chat.gateway.storedIdFor(runtime) == chat.storedId
+            ? (socket, runtime)
+            : null;
       },
+      // As the controller names it for the completion cue.
+      cueKey: () {
+        final id = chat.storedId ?? chat.runtimeId;
+        return id == null ? null : '${chat.gateway.connection.id}|$id';
+      },
+      child: _preview.layout(
+        chat: _buildChat(c, gateway),
+        storedId: chat.storedId,
+        service: chat.attachmentService,
+        existing: _drafts,
+        update: setState,
+        commit: (text, crops) {
+          if (_preparing || chat.running) {
+            throw const AttachmentDraftException(
+              'Wait for the composer to become available.',
+            );
+          }
+          setState(() {
+            _drafts.addAll(crops);
+            appendPreviewText(_input, text);
+          });
+        },
+      ),
     );
   }
 
@@ -1514,33 +1531,42 @@ class _NgChatViewState extends State<NgChatView>
                               .map((item) => item.text),
                         ),
                   onSend: () => unawaited(_send()),
-                  child: TextField(
-                    key: const ValueKey('ng-composer-field'),
-                    controller: _input,
-                    focusNode: _focus,
-                    onTap: () {
-                      // Android can hide the keyboard with Back while this node
-                      // retains focus. Explicitly show it on every composer tap.
-                      _focus.requestFocus();
-                      unawaited(
-                        SystemChannels.textInput.invokeMethod<void>(
-                          'TextInput.show',
+                  child: ChatPresenceComposer(
+                    builder: (_, input) => TextField(
+                      key: const ValueKey('ng-composer-field'),
+                      onChanged: (_) => input(),
+                      controller: _input,
+                      focusNode: _focus,
+                      onTap: () {
+                        // Android can hide the keyboard with Back while this
+                        // node retains focus. Explicitly show it on every
+                        // composer tap.
+                        _focus.requestFocus();
+                        unawaited(
+                          SystemChannels.textInput.invokeMethod<void>(
+                            'TextInput.show',
+                          ),
+                        );
+                      },
+                      minLines: 1,
+                      maxLines: 8,
+                      textCapitalization: TextCapitalization.sentences,
+                      style: NgType.body.copyWith(color: c.text),
+                      decoration: InputDecoration(
+                        hintText: _listening
+                            ? ngL.ng_listening
+                            : chat.running
+                            ? ngL.ng_steer_or_queue_a_message
+                            : ngL.ng_message_hermes,
+                        hintStyle: NgType.body.copyWith(color: c.textMuted),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.fromLTRB(
+                          12,
+                          12,
+                          12,
+                          6,
                         ),
-                      );
-                    },
-                    minLines: 1,
-                    maxLines: 8,
-                    textCapitalization: TextCapitalization.sentences,
-                    style: NgType.body.copyWith(color: c.text),
-                    decoration: InputDecoration(
-                      hintText: _listening
-                          ? ngL.ng_listening
-                          : chat.running
-                          ? ngL.ng_steer_or_queue_a_message
-                          : ngL.ng_message_hermes,
-                      hintStyle: NgType.body.copyWith(color: c.textMuted),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
+                      ),
                     ),
                   ),
                 ),

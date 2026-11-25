@@ -3366,47 +3366,77 @@ abstract class AppLocalizations {
   /// **'What Ares submitted to Windows'**
   String get windows_notification_diagnostics;
 
-  /// No description provided for @windows_window_activity.
+  /// No description provided for @chat_activity_share.
   ///
   /// In en, this message translates to:
   /// **'Share chat activity'**
-  String get windows_window_activity;
+  String get chat_activity_share;
 
-  /// No description provided for @windows_window_activity_hint.
+  /// No description provided for @chat_activity_share_hint.
   ///
   /// In en, this message translates to:
   /// **'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.'**
-  String get windows_window_activity_hint;
+  String get chat_activity_share_hint;
 
-  /// No description provided for @windows_completion_sound.
+  /// No description provided for @completion_sound.
   ///
   /// In en, this message translates to:
   /// **'Completion sound'**
-  String get windows_completion_sound;
+  String get completion_sound;
 
-  /// No description provided for @windows_sound_default.
+  /// No description provided for @completion_sound_system.
   ///
   /// In en, this message translates to:
-  /// **'Windows default'**
-  String get windows_sound_default;
+  /// **'System default'**
+  String get completion_sound_system;
 
-  /// No description provided for @windows_sound_mail.
+  /// No description provided for @completion_sound_mail.
   ///
   /// In en, this message translates to:
   /// **'Mail'**
-  String get windows_sound_mail;
+  String get completion_sound_mail;
 
-  /// No description provided for @windows_sound_reminder.
+  /// No description provided for @completion_sound_reminder.
   ///
   /// In en, this message translates to:
   /// **'Reminder'**
-  String get windows_sound_reminder;
+  String get completion_sound_reminder;
 
-  /// No description provided for @windows_sound_silent.
+  /// No description provided for @completion_sound_silent.
   ///
   /// In en, this message translates to:
   /// **'Silent'**
-  String get windows_sound_silent;
+  String get completion_sound_silent;
+
+  /// No description provided for @completion_sound_scope.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.'**
+  String get completion_sound_scope;
+
+  /// No description provided for @completion_sound_scope_android.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.'**
+  String get completion_sound_scope_android;
+
+  /// No description provided for @notification_open_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get notification_open_action;
+
+  /// No description provided for @app_sounds_mute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute app sounds'**
+  String get app_sounds_mute;
+
+  /// No description provided for @app_sounds_mute_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.'**
+  String get app_sounds_mute_hint;
 
   /// No description provided for @notifications_permission_denied.
   ///

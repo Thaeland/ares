@@ -10,7 +10,7 @@ import '../../core/screens/settings_screen.dart';
 import '../../core/services/app_licenses.dart';
 import '../../core/services/background_work_prefs.dart';
 import '../../core/services/notification_prefs.dart';
-import '../../core/widgets/windows_completion_sound_tile.dart';
+import '../../core/widgets/completion_sound_settings.dart';
 import '../../core/utils/platform_capabilities.dart';
 import '../../core/services/turn_notification_service.dart';
 import '../../core/services/hermes_sign_in.dart';
@@ -500,7 +500,7 @@ class NgNotificationSettings extends StatelessWidget {
                 value: on && all(_requestKinds),
                 onChanged: on ? (v) => _setKinds(_requestKinds, v) : null,
               ),
-              if (isWindowsPlatform) WindowsCompletionSoundTile(prefs: prefs),
+              CompletionSoundSettings(prefs: prefs),
               if (!isWindowsPlatform)
                 SwitchListTile(
                   key: const ValueKey('ng-keep-running'),
