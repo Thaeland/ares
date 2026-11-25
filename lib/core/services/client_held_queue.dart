@@ -2,8 +2,8 @@
 ///
 /// Desktop 0.23.4 keeps this list in the composer and parks it on Stop or
 /// Esc. A healthy gateway FIFO is a different queue: nothing here holds,
-/// releases or reorders it. The park is memory-only, so a new process starts
-/// unparked.
+/// releases or reorders it. Classic persists the texts beside the draft;
+/// reopening restores them parked and does not send them.
 final class ClientHeldPrompt {
   ClientHeldPrompt(this.id, this.text);
 
@@ -37,6 +37,33 @@ final class ClientHeldQueue {
   }
 
   void unpark() => parked = false;
+
+  /// Reopen. The texts come back parked, so nothing is sent until Resume or
+  /// a row send.
+  void restoreParked(Iterable<String> texts) {
+    entries.clear();
+    _sequence = 0;
+    parked = false;
+    for (final text in texts) {
+      final trimmed = text.trim();
+      if (trimmed.isEmpty) continue;
+      entries.add(ClientHeldPrompt('held-$_sequence', trimmed));
+      _sequence += 1;
+    }
+    parked = entries.isNotEmpty;
+  }
+
+  /// Next automatic drain. [skipId] is the row whose editor is open; later
+  /// rows may still drain, in their original order. The entry stays until
+  /// the send is accepted.
+  ClientHeldPrompt? peekAuto({String? skipId}) {
+    if (parked) return null;
+    for (final entry in entries) {
+      if (entry.id == skipId) continue;
+      return entry;
+    }
+    return null;
+  }
 
   bool promote(String id) {
     final index = entries.indexWhere((entry) => entry.id == id);
@@ -74,4 +101,7 @@ final class ClientHeldQueue {
 }
 
 String clientHeldQueueLabel({required int count, required bool parked}) =>
-    parked ? '$count queued — paused' : '$count queued';
+    parked ? '$count queued \u2014 paused' : '$count queued';
+
+const heldPromptMissingMessage =
+    'That unsent prompt is no longer in the queue.';

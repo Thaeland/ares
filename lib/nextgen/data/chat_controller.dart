@@ -663,6 +663,10 @@ class NgChatController extends ChangeNotifier {
   final List<NgItem> items = [];
   final List<NgQueued> queued = [];
   bool localQueuePaused = false;
+
+  /// The local row whose editor is open. Drain skips it and may send later
+  /// rows in their original order.
+  String? editingLocalKey;
   bool _drainScheduled = false;
   bool running = false;
   bool loadingHistory = false;
@@ -2070,19 +2074,42 @@ class NgChatController extends ChangeNotifier {
 
   // These are this client's unsent entries, never admissions copied back
   // from the owner. Recheck at dispatch: a pause/removal may win the tick.
+  NgQueued? _nextLocalDrain() {
+    for (final row in queued) {
+      if (row.key == editingLocalKey) continue;
+      return row;
+    }
+    return null;
+  }
+
   void _scheduleLocalDrain() {
-    if (_drainScheduled || localQueuePaused || running || queued.isEmpty) {
+    if (_drainScheduled ||
+        localQueuePaused ||
+        running ||
+        _nextLocalDrain() == null) {
       return;
     }
     _drainScheduled = true;
     scheduleMicrotask(() {
       _drainScheduled = false;
-      if (!draftOwnerCurrent || localQueuePaused || running || queued.isEmpty) {
-        return;
-      }
-      final next = queued.removeAt(0);
+      if (!draftOwnerCurrent || localQueuePaused || running) return;
+      final next = _nextLocalDrain();
+      if (next == null) return;
+      queued.remove(next);
       unawaited(send(next.text, display: next.display));
     });
+  }
+
+  void beginLocalEdit(NgQueued row) {
+    if (_disposed || !draftOwnerCurrent) return;
+    editingLocalKey = row.key;
+  }
+
+  void endLocalEdit(NgQueued row) {
+    if (editingLocalKey == row.key) editingLocalKey = null;
+    if (_disposed) return;
+    _scheduleLocalDrain();
+    _changed();
   }
 
   void setLocalQueuePaused(bool paused) {
@@ -2094,11 +2121,15 @@ class NgChatController extends ChangeNotifier {
   }
 
   void editLocalQueue(NgQueued original, String text) {
+    if (!draftOwnerCurrent || text.trim().isEmpty || original.display != null) {
+      return;
+    }
     final index = queued.indexOf(original);
-    if (!draftOwnerCurrent ||
-        index < 0 ||
-        text.trim().isEmpty ||
-        original.display != null) {
+    if (index < 0) {
+      if (!queued.any((row) => row.key == original.key)) {
+        error = 'That unsent prompt is no longer in the queue.';
+        _changed();
+      }
       return;
     }
     queued[index] = NgQueued(original.key, text.trim());
@@ -2671,7 +2702,9 @@ class NgChatController extends ChangeNotifier {
   /// [item] now and leaves the rest to follow.
   Future<void> sendQueuedNow(NgQueued item) async {
     final index = queued.indexOf(item);
-    if (!draftOwnerCurrent || index < 0) return;
+    if (!draftOwnerCurrent || index < 0 || item.key == editingLocalKey) {
+      return;
+    }
     if (index > 0) {
       queued.removeAt(index);
       queued.insert(0, item);

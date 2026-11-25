@@ -62,6 +62,12 @@ void main() {
     queue.remove(queue.entries.single.id);
     expect(queue.parked, isFalse);
     expect(queue.entries, isEmpty);
+    queue.restoreParked(['kept', '  ', 'later']);
+    expect(queue.parked, isTrue);
+    expect(queue.peekAuto()?.text, isNull);
+    expect(queue.entries.map((entry) => entry.text), ['kept', 'later']);
+    queue.unpark();
+    expect(queue.peekAuto(skipId: queue.entries.first.id)?.text, 'later');
   });
 
   testWidgets('NextGen Stop shows N queued — paused and Resume admits once', (

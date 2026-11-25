@@ -89,6 +89,7 @@ abstract final class ComposerDraftStore {
   static const _aliasPrefix = 'composer_draft_alias';
   static const _writtenPrefix = 'composer_draft_written';
   static const _recoveryPrefix = 'composer_draft_recovery';
+  static const _heldPrefix = 'client_held_queue';
 
   // The slash disambiguates this client-only namespace from a server ID.
   static String newLocalKey() => 'local-draft/${const Uuid().v4()}';
@@ -246,6 +247,13 @@ abstract final class ComposerDraftStore {
         // Only an explicit later edit can claim this shared lease again.
         _owners[stored] ??= canonicalExists ? 0 : _owners[local] ?? 0;
         _owners.remove(local);
+        final targetHeld = _heldStorageKey(stored);
+        if (prefs.getString(targetHeld) == null) {
+          final held = prefs.getString(_heldStorageKey(local));
+          if (held != null && held.isNotEmpty) {
+            await prefs.setString(targetHeld, held);
+          }
+        }
       });
     } catch (_) {
       // Best-effort; the untouched source remains available to retry migration.
@@ -436,7 +444,68 @@ abstract final class ComposerDraftStore {
   static Future<void> remove({
     required String connectionId,
     required String sessionId,
-  }) => save(connectionId: connectionId, sessionId: sessionId, text: '');
+  }) async {
+    await save(connectionId: connectionId, sessionId: sessionId, text: '');
+    await saveHeldPrompts(
+      connectionId: connectionId,
+      sessionId: sessionId,
+      texts: const [],
+    );
+  }
+
+  /// Prompt texts only. Same owner and session resolution as a draft. No
+  /// credentials and no attachments.
+  static Future<List<String>> readHeldPrompts({
+    required String connectionId,
+    required String sessionId,
+  }) async {
+    try {
+      return await _serialized((prefs) async {
+        await prefs.reload();
+        final raw = prefs.getString(
+          _heldStorageKey(_resolve(prefs, connectionId, sessionId)),
+        );
+        if (raw == null || raw.isEmpty) return const <String>[];
+        final decoded = jsonDecode(raw);
+        if (decoded is! List) return const <String>[];
+        return [
+          for (final item in decoded)
+            if (item is String && item.trim().isNotEmpty) item,
+        ];
+      });
+    } catch (_) {
+      return const <String>[];
+    }
+  }
+
+  static Future<void> saveHeldPrompts({
+    required String connectionId,
+    required String sessionId,
+    required List<String> texts,
+  }) async {
+    try {
+      await _serialized((prefs) async {
+        final key = _heldStorageKey(_resolve(prefs, connectionId, sessionId));
+        final body = [
+          for (final text in texts)
+            if (text.trim().isNotEmpty) text,
+        ];
+        if (body.isEmpty) {
+          if (prefs.containsKey(key)) await prefs.remove(key);
+          return;
+        }
+        final saved = await prefs.setString(key, jsonEncode(body));
+        if (!saved) {
+          throw StateError('Client-held queue write was rejected.');
+        }
+      });
+    } catch (_) {
+      // Best-effort, same as a draft save.
+    }
+  }
+
+  static String _heldStorageKey(String resolvedDraftKey) =>
+      '$_heldPrefix.${resolvedDraftKey.substring(_prefix.length + 1)}';
 
   /// Drops every draft and alias for this connection only.
   static Future<void> removeConnection(String connectionId) async {
@@ -452,6 +521,8 @@ abstract final class ComposerDraftStore {
               ? _writtenPrefix
               : key.startsWith('$_recoveryPrefix.')
               ? _recoveryPrefix
+              : key.startsWith('$_heldPrefix.')
+              ? _heldPrefix
               : null;
           if (prefix == null) continue;
           final decoded = _decode(key, prefix);

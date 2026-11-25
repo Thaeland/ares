@@ -38,6 +38,7 @@ import '../widgets/delegated_task_labels.dart';
 import '../services/connection_manager.dart';
 import '../services/attachment_draft_service.dart';
 import '../services/client_held_queue.dart';
+import '../services/composer_draft_store.dart';
 import '../services/prepared_image_store.dart';
 import '../widgets/client_held_queue_bar.dart';
 import '../widgets/image_recovery_capability_notice.dart';
@@ -840,6 +841,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   bool _streaming = false;
   final _held = ClientHeldQueue();
   bool _heldDrainBusy = false;
+  bool _heldTouched = false;
+  String? _editingHeldId;
   bool _parkHeldOnStop = true;
   bool _preparingSend = false;
   bool _midTurnSendInFlight = false;
@@ -1142,6 +1145,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _recoverLostImage();
     _scrollController.addListener(_onScroll);
     if (_desktopGateway != null) unawaited(_ensureDesktopSession());
+    unawaited(_restoreHeldQueue());
   }
 
   void _attachNormalSession() {
@@ -5053,6 +5057,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _HandsFreeTurnBinding? voiceBinding,
     bool preserveComposer = false,
     VoidCallback? onAccepted,
+    bool heldUntilAccepted = false,
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     // A remote-gateway profile uses one transport for every prompt. Images and
@@ -5065,6 +5070,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         voiceBinding: voiceBinding,
         preserveComposer: keepComposer,
         onAccepted: onAccepted,
+        heldUntilAccepted: heldUntilAccepted,
       );
       return;
     }
@@ -5076,6 +5082,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         voiceBinding: voiceBinding,
         preserveComposer: keepComposer,
         onAccepted: onAccepted,
+        heldUntilAccepted: heldUntilAccepted,
       );
       return;
     }
@@ -5089,7 +5096,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       } catch (_) {
         if (mounted) setState(() => _sending = false);
         if (!mounted) return;
-        _restoreComposerAfterRejectedSend(text);
+        if (!heldUntilAccepted) _restoreComposerAfterRejectedSend(text);
         _showAttachmentError(
           context.l10n.unable_to_read_the_selected_image_the_selection_was_kept,
         );
@@ -5332,7 +5339,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               _messages.removeLast();
             }
           });
-          if (!hadContent && !keepComposer) {
+          if (!hadContent && !keepComposer && !heldUntilAccepted) {
             _restoreComposerAfterRejectedSend(text);
           }
           if (voiceBinding != null) {
@@ -5426,6 +5433,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _HandsFreeTurnBinding? voiceBinding,
     bool preserveComposer = false,
     VoidCallback? onAccepted,
+    bool heldUntilAccepted = false,
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     final chat = _normalChat;
@@ -5621,7 +5629,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               );
           });
         }
-        if (!keepComposer) {
+        if (!keepComposer && !heldUntilAccepted) {
           _restoreComposerAfterRejectedSend(handedOff ? recoveryText : text);
         }
         voiceBinding?.finish(HandsFreeTurnStatus.failed);
@@ -5645,6 +5653,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _HandsFreeTurnBinding? voiceBinding,
     bool preserveComposer = false,
     VoidCallback? onAccepted,
+    bool heldUntilAccepted = false,
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     final turnSession = _turnApplicationSession;
@@ -5730,7 +5739,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ..status = AttachmentDraftStatus.ready
           ..error = null;
       }
-      _restoreComposerAfterRejectedSend(text);
+      if (!heldUntilAccepted) _restoreComposerAfterRejectedSend(text);
       _handleSendError(error);
       unawaited(_refreshDeferredHistoryIfIdle());
       return;
@@ -5825,7 +5834,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               ..addAll(attachments);
           }
         });
-        if (!keepComposer) _restoreComposerAfterRejectedSend(text);
+        if (!keepComposer && !heldUntilAccepted) {
+          _restoreComposerAfterRejectedSend(text);
+        }
         _handleSendError(error);
         unawaited(_refreshDeferredHistoryIfIdle());
         return;
@@ -6949,7 +6960,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       }
       return false;
     } finally {
-      if (mounted) setState(() => _stopResponseInFlight = false);
+      _finishStopInFlight();
       unawaited(_refreshDeferredHistoryIfIdle());
     }
   }
@@ -6966,20 +6977,80 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       !_stopResponseInFlight &&
       !_pendingReattachResync;
 
+  Future<void> _persistHeldQueue() {
+    if (_usesNormalInputOwner) return Future<void>.value();
+    if (!_heldTouched && _held.entries.isEmpty) return Future<void>.value();
+    final handle = _draftWriter.draftHandle;
+    return ComposerDraftStore.saveHeldPrompts(
+      connectionId: handle.connectionId,
+      sessionId: handle.sessionId,
+      texts: [for (final entry in _held.entries) entry.text],
+    );
+  }
+
+  Future<void> _restoreHeldQueue() async {
+    if (_usesNormalInputOwner) return;
+    final handle = _draftWriter.draftHandle;
+    final texts = await ComposerDraftStore.readHeldPrompts(
+      connectionId: handle.connectionId,
+      sessionId: handle.sessionId,
+    );
+    if (!mounted || _heldTouched || texts.isEmpty || _held.entries.isNotEmpty) {
+      return;
+    }
+    setState(() => _held.restoreParked(texts));
+  }
+
+  void _keepRefusedHeldPrompt(String id) {
+    _held.promote(id);
+    _held.park();
+    if (!mounted) return;
+    setState(() {
+      _terminalTurnNotice ??= context.l10n.send_failed(
+        'The queued prompt was not sent.',
+      );
+    });
+  }
+
+  void _finishStopInFlight() {
+    if (mounted) {
+      setState(() => _stopResponseInFlight = false);
+    } else {
+      _stopResponseInFlight = false;
+    }
+    unawaited(_drainHeldIfIdle());
+  }
+
   Future<void> _drainHeldIfIdle() async {
     if (_heldDrainBusy || !_heldIdle) return;
-    final next = _held.takeHead(manual: false);
+    final next = _held.peekAuto(skipId: _editingHeldId);
     if (next == null) return;
     _heldDrainBusy = true;
     if (mounted) setState(() {});
+    var accepted = false;
     try {
       await _submitMessage(
         text: next.text,
         attachments: const [],
         speakResponse: false,
+        heldUntilAccepted: true,
+        onAccepted: () {
+          if (accepted) return;
+          accepted = true;
+          _heldTouched = true;
+          _held.remove(next.id);
+          unawaited(_persistHeldQueue());
+          if (mounted) setState(() {});
+        },
       );
+    } catch (_) {
+      accepted = false;
     } finally {
       _heldDrainBusy = false;
+    }
+    if (!mounted) return;
+    if (!accepted && _held.entries.any((entry) => entry.id == next.id)) {
+      _keepRefusedHeldPrompt(next.id);
     }
   }
 
@@ -6987,12 +7058,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (_usesNormalInputOwner || !_streaming) return;
     final text = _textController.text.trim();
     if (text.isEmpty) return;
+    _heldTouched = true;
     setState(() {
       _held.enqueue(text);
       _textController.clear();
     });
     _draftWriter.edit('');
     unawaited(_draftWriter.save(''));
+    unawaited(_persistHeldQueue());
   }
 
   Future<void> _sendHeldNow(String id) async {
@@ -7009,8 +7082,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   Future<void> _editHeld(String id) async {
     final index = _held.entries.indexWhere((entry) => entry.id == id);
-    if (index < 0) return;
+    if (index < 0) {
+      _reportMissingHeldEdit();
+      return;
+    }
     var draft = _held.entries[index].text;
+    _editingHeldId = id;
     final result = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
@@ -7032,20 +7109,41 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         ],
       ),
     );
-    if (!mounted || result == null) return;
-    setState(() => _held.edit(id, result));
+    try {
+      if (!mounted || result == null) return;
+      final saved = _held.edit(id, result);
+      if (!saved) {
+        _reportMissingHeldEdit();
+        return;
+      }
+      _heldTouched = true;
+      unawaited(_persistHeldQueue());
+      if (mounted) setState(() {});
+    } finally {
+      if (_editingHeldId == id) _editingHeldId = null;
+      if (mounted) unawaited(_drainHeldIfIdle());
+    }
+  }
+
+  void _reportMissingHeldEdit() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text(heldPromptMissingMessage)));
   }
 
   Future<bool> _stopResponse() async {
     final parkHeld = _parkHeldOnStop;
     _parkHeldOnStop = true;
+    // A row send unparks even when Stop is already in flight. Returning
+    // first used to consume that request and leave the list parked.
+    if (!_usesNormalInputOwner && !parkHeld) {
+      _held.unpark();
+      if (mounted) setState(() {});
+    }
     if (!_streaming || _stopResponseInFlight) return false;
-    if (!_usesNormalInputOwner) {
-      if (parkHeld) {
-        _held.park();
-      } else {
-        _held.unpark();
-      }
+    if (!_usesNormalInputOwner && parkHeld) {
+      _held.park();
       if (mounted) setState(() {});
     }
     if (_turnApplicationSession != null && !_legacyTransportFallback) {
@@ -7081,7 +7179,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           );
         }
       } finally {
-        if (mounted) setState(() => _stopResponseInFlight = false);
+        _finishStopInFlight();
       }
       return false;
     }
@@ -7156,7 +7254,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       );
       return false;
     } finally {
-      if (mounted) setState(() => _stopResponseInFlight = false);
+      _finishStopInFlight();
       unawaited(_refreshDeferredHistoryIfIdle());
     }
   }
@@ -7743,7 +7841,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                           unawaited(_drainHeldIfIdle());
                         },
                         onSend: (id) => unawaited(_sendHeldNow(id)),
-                        onRemove: (id) => setState(() => _held.remove(id)),
+                        onRemove: (id) {
+                          _heldTouched = true;
+                          setState(() => _held.remove(id));
+                          unawaited(_persistHeldQueue());
+                        },
                         onEdit: (id) => unawaited(_editHeld(id)),
                       ),
                     if (!_hasStoredArchiveTarget &&

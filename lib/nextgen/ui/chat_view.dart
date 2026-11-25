@@ -969,30 +969,35 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
 
   Future<void> _editLocal(NgQueued row) async {
     final source = chat;
+    source.beginLocalEdit(row);
     var draft = row.text;
-    final result = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Edit unsent prompt'),
-        content: TextFormField(
-          initialValue: draft,
-          onChanged: (v) => draft = v,
-          maxLines: 4,
+    try {
+      final result = await showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Edit unsent prompt'),
+          content: TextFormField(
+            initialValue: draft,
+            onChanged: (v) => draft = v,
+            maxLines: 4,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, draft),
+              child: const Text('Save'),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, draft),
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-    if (mounted && source == chat && result != null) {
-      source.editLocalQueue(row, result);
+      );
+      if (mounted && source == chat && result != null) {
+        source.editLocalQueue(row, result);
+      }
+    } finally {
+      source.endLocalEdit(row);
     }
   }
 
