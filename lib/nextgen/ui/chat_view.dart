@@ -998,27 +998,26 @@ class _NgChatViewState extends State<NgChatView>
     }
     final staged = plan.path;
     if (staged == null) return;
-    _removePasted(chunk);
-    await _stageLocal(plan.kind, staged);
+    // The path leaves the text only once its draft is staged: a refused
+    // file (no slot, too large, unreadable) keeps what was pasted.
+    await _stageLocal(plan.kind, staged, onStaged: () => _removePasted(chunk));
   }
 
+  /// Takes the paste out where it was pasted (its caret), never an earlier
+  /// copy of the same text; edits since the paste stay.
   void _removePasted(PastedChunk chunk) {
-    final text = _input.text;
-    final index = text.indexOf(chunk.text);
-    if (index < 0) return;
-    final next = text.replaceRange(index, index + chunk.text.length, '');
-    _input.value = TextEditingValue(
-      text: next,
-      selection: TextSelection.collapsed(
-        offset: next.length.clamp(0, next.length),
-      ),
-    );
+    final next = chunk.removeFrom(_input.text);
+    if (next != null) _input.value = next;
   }
 
   /// Stages one local file as an attachment draft: never sent until the
   /// person sends, within the draft count and size limits the Attach button
-  /// uses.
-  Future<bool> _stageLocal(LocalIntake kind, String path) async {
+  /// uses. [onStaged] runs in the frame the draft appears.
+  Future<bool> _stageLocal(
+    LocalIntake kind,
+    String path, {
+    VoidCallback? onStaged,
+  }) async {
     final name = path.split(RegExp(r'[\\/]')).where((p) => p.isNotEmpty).last;
     final error = await _queueDraft(
       () => kind == LocalIntake.imageFile
@@ -1043,6 +1042,7 @@ class _NgChatViewState extends State<NgChatView>
               maxFileBytes: maxNextGenAttachmentBytes,
               maxTotalBytes: maxNextGenAttachmentDraftBytes,
             ),
+      onStaged: onStaged,
       unreadable: ngL.ng_couldn_t_read(path),
     );
     if (error == null) return true;

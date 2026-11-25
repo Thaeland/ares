@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/composer/composer_drag.dart';
+import 'package:hermes_android/core/composer/composer_intake.dart';
 import 'package:hermes_android/core/composer/os_intake.dart';
 import 'package:hermes_android/core/services/attachment_draft_service.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
@@ -213,6 +214,18 @@ void main() {
     return (gateway: gateway, chat: chat);
   }
 
+  test('a paste is found at its caret, else at the copy nearest to it', () {
+    const chunk = PastedChunk('/p/x.txt', 'see  and ', 4);
+    expect(chunk.offsetIn('see /p/x.txt and '), 4);
+    // An earlier copy typed by hand is not the paste.
+    const moved = PastedChunk('/p/x.txt', '/p/x.txt and ', 13);
+    expect(moved.offsetIn('/p/x.txt and /p/x.txt'), 13);
+    // Typing before the paste moved it: the nearest copy, not the first.
+    expect(moved.offsetIn('/p/x.txt and so /p/x.txt'), 16);
+    expect(moved.offsetIn('nothing pasted'), -1);
+    expect(moved.removeFrom('/p/x.txt and /p/x.txt')!.text, '/p/x.txt and ');
+  });
+
   group('intake limits', () {
     late Directory root;
     late PathProviderPlatform previousPaths;
@@ -334,7 +347,37 @@ void main() {
       await pasteAtCaret(tester, 'see ', pasted.path);
       await _drain(tester);
       expect(_chips(), hasLength(maxRemoteAttachmentDrafts));
-      expect(_composer(tester), startsWith('see '));
+      // Only a staged path leaves the text: whichever lost keeps its text.
+      final staged = _chips().contains('pasted.txt');
+      expect(_composer(tester), staged ? 'see ' : 'see ${pasted.path}');
+    });
+
+    testWidgets('RNG6d pasting a local file path when no slot is left keeps '
+        'the pasted text', (tester) async {
+      tester.view.physicalSize = const Size(4000, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      await pump(tester);
+      target(tester).onFiles(make(maxRemoteAttachmentDrafts, 'd'));
+      await _drain(
+        tester,
+        done: () => _chips().length >= maxRemoteAttachmentDrafts,
+      );
+      final extra = File('${root.path}/extra.txt')..writeAsStringSync('x');
+      await pasteAtCaret(tester, 'see ', extra.path);
+      await _drain(tester);
+      expect(_chips(), hasLength(maxRemoteAttachmentDrafts));
+      expect(_composer(tester), 'see ${extra.path}');
+    });
+
+    testWidgets('a staged pasted path leaves at the caret, not at an earlier '
+        'copy of the same text', (tester) async {
+      await pump(tester);
+      final file = File('${root.path}/same.txt')..writeAsStringSync('s');
+      await pasteAtCaret(tester, 'was ${file.path} now ', file.path);
+      await _drain(tester, done: () => _chips().isNotEmpty);
+      expect(_chips(), ['same.txt']);
+      expect(_composer(tester), 'was ${file.path} now ');
     });
   });
 }

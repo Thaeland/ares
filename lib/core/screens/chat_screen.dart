@@ -4604,19 +4604,10 @@ class _ChatScreenState extends State<ChatScreen>
     if (!looksLikeImagePath(path) && !_remoteDraftsAllowed) return;
     final staged = await _intakeLocalFiles([file]);
     if (staged == 0 || !mounted) return;
-    final text = _textController.text;
-    final at =
-        chunk.caret + chunk.text.length <= text.length &&
-            text.substring(chunk.caret, chunk.caret + chunk.text.length) ==
-                chunk.text
-        ? chunk.caret
-        : text.indexOf(chunk.text);
-    if (at < 0) return;
-    // Edits since the paste stay; only the pasted path leaves.
-    _textController.value = TextEditingValue(
-      text: text.replaceRange(at, at + chunk.text.length, ''),
-      selection: TextSelection.collapsed(offset: at),
-    );
+    // Edits since the paste stay; only the pasted path leaves, where it was
+    // pasted rather than at an earlier copy of the same text.
+    final next = chunk.removeFrom(_textController.text);
+    if (next != null) _textController.value = next;
   }
 
   void _showAttachmentError(String message) {

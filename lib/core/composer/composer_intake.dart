@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
+
 import '../utils/large_paste.dart';
 import 'composer_drag.dart';
 
@@ -121,6 +123,39 @@ class PastedChunk {
   /// also leave the path in the draft.
   final String withoutPaste;
   final int caret;
+
+  /// Where this paste sits in [text] now: at its caret when it is still
+  /// there, else the copy nearest the caret (edits before it moved it). An
+  /// earlier copy the person typed or pasted is never the first choice.
+  /// -1 when the pasted text is gone.
+  int offsetIn(String text) {
+    final end = caret + this.text.length;
+    if (caret >= 0 &&
+        end <= text.length &&
+        text.substring(caret, end) == this.text) {
+      return caret;
+    }
+    var best = -1;
+    for (
+      var at = text.indexOf(this.text);
+      at >= 0;
+      at = text.indexOf(this.text, at + 1)
+    ) {
+      if (best < 0 || (at - caret).abs() < (best - caret).abs()) best = at;
+    }
+    return best;
+  }
+
+  /// [text] without this paste (see [offsetIn]), the caret where it was;
+  /// null when the pasted text is gone.
+  TextEditingValue? removeFrom(String text) {
+    final at = offsetIn(text);
+    if (at < 0) return null;
+    return TextEditingValue(
+      text: text.replaceRange(at, at + this.text.length, ''),
+      selection: TextSelection.collapsed(offset: at),
+    );
+  }
 
   /// A single insertion at the caret. One-character typing is ignored.
   static PastedChunk? detect(String before, int start, int end, String after) {
