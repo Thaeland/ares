@@ -1283,6 +1283,7 @@ class WsClient {
     Future<void> Function()? beforeLegacy,
     Future<void> Function(Object?, String)? onReceipt,
     Duration timeout = const Duration(minutes: 10),
+    Map<String, Object?> extraParams = const {},
   }) async {
     final source = _channel;
     final promptText = await _androidPromptText(message);
@@ -1356,6 +1357,8 @@ class WsClient {
     try {
       final effectiveSubmissionId = submissionId ?? const Uuid().v4();
       final baseParams = <String, dynamic>{
+        // A regenerate's truncation target (Desktop's truncateSubmitParams).
+        ...extraParams,
         'session_id': sessionId,
         'text': promptText,
         // Stock gateways use this only for title generation. The app's note

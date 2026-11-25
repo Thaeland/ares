@@ -7116,6 +7116,18 @@ abstract class AppLocalizations {
   /// **'This command needs an open chat.'**
   String get composer_command_needs_session;
 
+  /// No description provided for @composer_retry_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.'**
+  String get composer_retry_not_found;
+
+  /// No description provided for @composer_retry_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.'**
+  String get composer_retry_unavailable;
+
   /// No description provided for @composer_command_needs_gateway_session.
   ///
   /// In en, this message translates to:

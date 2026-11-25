@@ -4241,6 +4241,14 @@ class AppLocalizationsPt extends AppLocalizations {
       'This command needs an open chat.';
 
   @override
+  String get composer_retry_not_found =>
+      'This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.';
+
+  @override
+  String get composer_retry_unavailable =>
+      'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
+
+  @override
   String get composer_command_needs_gateway_session =>
       'This chat has no gateway session yet. Send a message first, then run the command again.';
 

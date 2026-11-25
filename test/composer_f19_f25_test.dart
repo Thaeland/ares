@@ -8,6 +8,7 @@ import 'package:hermes_android/core/composer/emoji_completion.dart';
 import 'package:hermes_android/core/composer/failure_recovery.dart';
 import 'package:hermes_android/core/composer/prompt_snippets.dart';
 import 'package:hermes_android/core/composer/reference_completion.dart';
+import 'package:hermes_android/core/composer/regenerate.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:hermes_android/core/widgets/failure_recovery_card.dart';
 import 'package:hermes_android/core/widgets/prompt_snippet_sheet.dart';
@@ -189,6 +190,38 @@ void main() {
     );
     expect(failed.phase, HandoffPhase.failed);
     expect(failed.error, 'no bot');
+  });
+
+  test('regenerate cuts only at the newest durable user row', () async {
+    Future<Map<String, dynamic>> history(String method, Map params) async => {
+      'messages': [
+        {'role': 'user', 'text': 'same', 'row_id': 1},
+        {'role': 'assistant', 'text': 'a', 'row_id': 2},
+        {'role': 'user', 'text': 'same', 'row_id': 5},
+        {'role': 'user', 'text': 'note', 'row_id': 6, 'display_kind': 'x'},
+      ],
+    };
+    expect(
+      await resolveRegenerateRow(rpc: history, sessionId: 's', text: 'same'),
+      5,
+    );
+    expect(
+      await resolveRegenerateRow(rpc: history, sessionId: 's', text: 'a'),
+      isNull,
+    );
+    expect(
+      await resolveRegenerateRow(
+        rpc: (_, _) async => throw StateError('offline'),
+        sessionId: 's',
+        text: 'same',
+      ),
+      isNull,
+    );
+    expect(regenerateSubmitParams(5), {
+      'confirm_truncate': true,
+      'truncate_before_row_id': 5,
+      'confirm_empty_truncate': true,
+    });
   });
 
   test('side answers carry Desktop headers and drop empty events', () {

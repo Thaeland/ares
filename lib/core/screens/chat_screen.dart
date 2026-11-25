@@ -126,6 +126,7 @@ import '../widgets/desktop_shortcuts.dart';
 import '../widgets/composer_prompt_recall.dart';
 import '../composer/composer_commands.dart';
 import '../composer/failure_recovery.dart';
+import '../composer/regenerate.dart';
 import '../widgets/failure_recovery_card.dart';
 import '../widgets/prompt_snippet_sheet.dart';
 import '../widgets/resume_session_picker.dart';
@@ -2125,16 +2126,70 @@ class _ChatScreenState extends State<ChatScreen>
     FocusScope.of(context).nextFocus();
   }
 
+  /// Whether Retry can regenerate here: only the Desktop gateway's stock
+  /// owner path truncates (Desktop's `runReload`).
+  bool get _canRegenerate =>
+      _desktopGateway != null &&
+      _normalChat != null &&
+      (_turnApplicationSession == null || _legacyTransportFallback);
+
+  /// Retry of a turn the gateway accepted, as Desktop's regenerate: the same
+  /// prompt with `confirm_truncate` and the turn's durable row, so it
+  /// replaces the failed turn instead of appending a duplicate. Never
+  /// touches the composer (a newer draft stays), and never falls back to a
+  /// plain resend: without a durable row it says so and sends nothing.
   Future<void> _retryPrompt(String text) async {
     if (_archiving ||
         _sending ||
         _streaming ||
+        _preparingSend ||
         _pendingReattachResync ||
         text.trim().isEmpty) {
       return;
     }
-    _editAndResend(text);
-    await _sendMessage();
+    final l10n = context.sharedL10n;
+    final gateway = _desktopGateway;
+    final session = _normalLocalSessionKey;
+    if (!_canRegenerate || !gateway!.hasLiveSession(session)) {
+      _showRetryNotice(l10n.composer_retry_unavailable);
+      return;
+    }
+    final row = await resolveRegenerateRow(
+      rpc: gateway.requestSessionRpc,
+      sessionId: session,
+      text: text,
+    );
+    if (!mounted) return;
+    if (row == null) {
+      _showRetryNotice(l10n.composer_retry_not_found);
+      return;
+    }
+    if (_sending || _streaming || _preparingSend) return;
+    await _sendMessage(
+      textOverride: text.trim(),
+      promptParams: regenerateSubmitParams(row),
+    );
+  }
+
+  void _showRetryNotice(String text) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  /// The newest prompt the person sent here, for Retry.
+  String? get _lastPromptText {
+    for (final rows in [
+      _normalSnapshot?.displayRows ?? const <Map<String, dynamic>>[],
+      _messages,
+    ]) {
+      for (final row in rows.reversed) {
+        if (row['role'] != 'user') continue;
+        final text = row['content']?.toString().trim() ?? '';
+        if (text.isNotEmpty) return text;
+      }
+    }
+    return null;
   }
 
   bool get _canRename =>
@@ -4647,6 +4702,7 @@ class _ChatScreenState extends State<ChatScreen>
     VoidCallback? onAccepted,
     HandsFreePrompt? handsFreePrompt,
     _HandsFreeTurnBinding? voiceBinding,
+    Map<String, Object?> promptParams = const {},
   }) async {
     final keepComposer = textOverride != null || voiceBinding != null;
     if (textOverride == null &&
@@ -4777,7 +4833,12 @@ class _ChatScreenState extends State<ChatScreen>
     if (_turnApplicationSession == null || _legacyTransportFallback) {
       voiceBinding?.admitted.complete(true);
     }
-    setState(() => _sending = true);
+    setState(() {
+      _sending = true;
+      // A new turn supersedes the last failure's recovery card.
+      _recoveryMessage = null;
+      _recoverySurface = null;
+    });
     if (!keepComposer) _clearComposerForSend(text);
     try {
       await _sessionModelRestore;
@@ -4810,6 +4871,7 @@ class _ChatScreenState extends State<ChatScreen>
       voiceBinding: voiceBinding,
       preserveComposer: keepComposer,
       onAccepted: onAccepted,
+      promptParams: promptParams,
     );
   }
 
@@ -5118,6 +5180,16 @@ class _ChatScreenState extends State<ChatScreen>
     return true;
   }
 
+  /// A turn is live on this screen: being prepared, sent, streamed,
+  /// recovered or owned by the stock application owner.
+  bool get _hasLiveTurn =>
+      _sending ||
+      _streaming ||
+      _preparingSend ||
+      _recoveringTurn ||
+      _pendingReattachResync ||
+      _normalChat?.snapshot.hasActiveTurn == true;
+
   void _noteRecovery(Map<String, dynamic> data) {
     final message = data['message']?.toString().trim();
     final surface = FailureSurface.parse(
@@ -5336,6 +5408,7 @@ class _ChatScreenState extends State<ChatScreen>
     bool preserveComposer = false,
     VoidCallback? onAccepted,
     bool heldUntilAccepted = false,
+    Map<String, Object?> promptParams = const {},
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     // A remote-gateway profile uses one transport for every prompt. Images and
@@ -5361,9 +5434,13 @@ class _ChatScreenState extends State<ChatScreen>
         preserveComposer: keepComposer,
         onAccepted: onAccepted,
         heldUntilAccepted: heldUntilAccepted,
+        promptParams: promptParams,
       );
       return;
     }
+    // Only the Desktop gateway truncates: _retryPrompt never sends a
+    // regenerate down another transport.
+    assert(promptParams.isEmpty);
 
     final pendingImage = attachments.firstOrNull;
     String? imageDataUrl;
@@ -5712,6 +5789,7 @@ class _ChatScreenState extends State<ChatScreen>
     bool preserveComposer = false,
     VoidCallback? onAccepted,
     bool heldUntilAccepted = false,
+    Map<String, Object?> promptParams = const {},
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     final chat = _normalChat;
@@ -5876,6 +5954,7 @@ class _ChatScreenState extends State<ChatScreen>
             maySubmit: voiceBinding == null
                 ? null
                 : () => _handsFree.isCurrent(voiceBinding.prompt.authority),
+            promptParams: promptParams,
           );
           final submittedTurn = chat.snapshot.turnId;
           await submitted;
@@ -6399,7 +6478,11 @@ class _ChatScreenState extends State<ChatScreen>
       return;
     }
     if (event.type == 'error' || event.type == 'turn.error') {
-      _noteRecovery(event.data);
+      // The client hands every terminal frame to this async path BEFORE the
+      // live turn's own stream, which reports and settles it: while a turn
+      // is live here the frame is that duplicate. Only a frame with no live
+      // turn (a detached turn settling later) is news for the failure card.
+      if (!_hasLiveTurn) _noteRecovery(event.data);
       return;
     }
     if (const {'message.complete', 'turn.end'}.contains(event.type)) {
@@ -8303,16 +8386,7 @@ class _ChatScreenState extends State<ChatScreen>
                             _recoverySurface = null;
                           }),
                           onRetry: () {
-                            String? prompt;
-                            for (final message in _messages.reversed) {
-                              if (message['role'] == 'user') {
-                                final text = message['content']?.toString();
-                                if (text != null && text.trim().isNotEmpty) {
-                                  prompt = text;
-                                  break;
-                                }
-                              }
-                            }
+                            final prompt = _lastPromptText;
                             setState(() {
                               _recoveryMessage = null;
                               _recoverySurface = null;
@@ -9270,7 +9344,9 @@ class _ChatScreenState extends State<ChatScreen>
           ? null
           : () => _readAssistantText(content, announce: true),
       onEdit: isUser ? () => _editAndResend(content) : null,
-      onRetry: isUser
+      // Regenerate needs a transport that truncates; elsewhere Retry would
+      // only append the same turn again.
+      onRetry: isUser || !_canRegenerate
           ? null
           : () => _retryPrompt(msg['_retry_prompt']?.toString() ?? ''),
       showQuickActions:

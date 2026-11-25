@@ -1646,6 +1646,7 @@ class NormalGatewayChatOwner {
     bool Function()? maySubmit,
     Future<bool> Function()? beforeSend,
     void Function()? onAccepted,
+    Map<String, Object?> promptParams = const {},
   }) async {
     if (_redirect != null) {
       return _root.submitPrepared(
@@ -1661,6 +1662,7 @@ class NormalGatewayChatOwner {
         maySubmit: maySubmit,
         beforeSend: beforeSend,
         onAccepted: onAccepted,
+        promptParams: promptParams,
       );
     }
     if (!identical(_reservation, reservation) ||
@@ -1794,6 +1796,7 @@ class NormalGatewayChatOwner {
                   submissionId: imageAttempt?.id,
                   beforeLegacy: imageAttempt?.beforeLegacy,
                   onReceipt: imageAttempt?.receipt,
+                  extraParams: promptParams,
                   text: text,
                   onEvent: onEvent,
                   onSent: onSent,

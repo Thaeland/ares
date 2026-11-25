@@ -125,7 +125,7 @@ void main() {
       reason: 'Retry must not resubmit a turn the gateway already accepted',
     );
     expect(_composer(tester), 'my newer unsent draft');
-  }, skip: _pendingRetry);
+  });
 
   testWidgets('PROBE C2 a btw.complete answer is shown in Classic', (
     tester,
@@ -276,6 +276,5 @@ void main() {
 }
 
 // Each flag goes once its review item lands (one commit per item).
-const _pendingRetry = true;
 const _pendingResume = true;
 const _pendingClassicParity = true;

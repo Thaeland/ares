@@ -328,7 +328,57 @@ void main() {
           'truncate_before_* + confirm_truncate); a plain second submit '
           'duplicates the accepted user turn',
     );
-  }, skip: _pendingRetry);
+  });
+
+  testWidgets('Retry of an accepted turn regenerates it in place with its '
+      'durable row', (tester) async {
+    final h = await pump(tester, storedId: 'stored-1', runtimeId: 'rt-1');
+    h.gateway.handlers['session.history'] = (p) => {
+      'messages': [
+        {'role': 'user', 'text': 'older', 'row_id': 3},
+        {'role': 'assistant', 'text': 'reply', 'row_id': 4},
+        {'role': 'user', 'text': 'hello there', 'row_id': 7},
+      ],
+    };
+    await _send(tester, 'hello there');
+    h.gateway.debugEmit(ev('message.start', {}));
+    h.gateway.debugEmit(ev('error', {'message': 'Provider timed out'}));
+    await _settle(tester);
+    await _type(tester, 'a newer draft');
+    await tester.tap(find.text('Retry'));
+    await _settle(tester);
+    final submits = h.gateway.of('prompt.submit');
+    expect(submits, hasLength(2));
+    final regenerate = submits.last.params;
+    expect(regenerate['text'], 'hello there');
+    expect(regenerate['confirm_truncate'], isTrue);
+    expect(regenerate['truncate_before_row_id'], 7);
+    expect(
+      regenerate['submission_id'],
+      isNot(submits.first.params['submission_id']),
+    );
+    expect(_composer(tester), 'a newer draft');
+    expect(find.text('hello there'), findsOneWidget);
+  });
+
+  testWidgets('Retry without a durable row sends nothing and never replaces '
+      'a newer draft', (tester) async {
+    final h = await pump(tester, storedId: 'stored-1', runtimeId: 'rt-1');
+    h.gateway.handlers['session.history'] = (p) => {
+      'messages': [
+        {'role': 'user', 'text': 'something else', 'row_id': 2},
+      ],
+    };
+    await _send(tester, 'hello there');
+    h.gateway.debugEmit(ev('message.start', {}));
+    h.gateway.debugEmit(ev('error', {'message': 'Provider timed out'}));
+    await _settle(tester);
+    await _type(tester, 'keep me');
+    await tester.tap(find.text('Retry'));
+    await _settle(tester);
+    expect(h.gateway.of('prompt.submit'), hasLength(1));
+    expect(_composer(tester), 'keep me');
+  });
 
   testWidgets('PROBE NG4 accepting a complete.slash argument keeps the command '
       '(replace_from)', (tester) async {
@@ -423,6 +473,5 @@ void main() {
 }
 
 // Each flag goes once its review item lands (one commit per item).
-const _pendingRetry = true;
 const _pendingArgument = true;
 const _pendingKeyboard = true;

@@ -1424,6 +1424,26 @@ class _NgChatViewState extends State<NgChatView>
     );
   }
 
+  /// Retry, the way Desktop retries (see [NgChatController.retryLast]).
+  /// When an accepted turn has no durable row to replace, nothing is sent:
+  /// the prompt comes back to an empty composer so the person can send it
+  /// deliberately, and newer typing is never replaced.
+  Future<void> _retry() async {
+    final owner = chat;
+    final last = owner.items
+        .whereType<NgUserItem>()
+        .where((item) => !item.steered)
+        .lastOrNull;
+    final result = await owner.retryLast();
+    if (!mounted || !identical(owner, widget.chat)) return;
+    if (result != NgRetryResult.notFound) return;
+    ngToast(context, context.sharedL10n.composer_retry_not_found);
+    final text = last?.sentText ?? last?.text;
+    if (text != null && _input.text.trim().isEmpty && _drafts.isEmpty) {
+      _setComposer(text);
+    }
+  }
+
   Widget _errorBar(NgColors c) {
     final message = chat.error ?? '';
     final surface = chat.turnFailure;
@@ -1456,7 +1476,7 @@ class _NgChatViewState extends State<NgChatView>
             chat.error = null;
             chat.turnFailure = null;
           });
-          unawaited(chat.retryLast());
+          unawaited(_retry());
         },
         onCompress: _compressChat,
         onChooseModel: () => showNgModelSheet(context, chat),
@@ -1646,7 +1666,7 @@ class _NgChatViewState extends State<NgChatView>
       NgUserItem() => _UserBubble(
         item: item,
         onRetry: i == lastUserIndex && !chat.running && !item.recoverInComposer
-            ? chat.retryLast
+            ? () => unawaited(_retry())
             : null,
       ),
       NgAssistantItem() => Column(
@@ -1658,7 +1678,7 @@ class _NgChatViewState extends State<NgChatView>
             filesIdentity: (NgScope.of(context).gateway, chat.storedId),
             last: i == items.length - 1,
             onRetry: i == items.length - 1 && !chat.running
-                ? chat.retryLast
+                ? () => unawaited(_retry())
                 : null,
             readAloud: _readAloud,
           ),

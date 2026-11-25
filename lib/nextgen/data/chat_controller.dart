@@ -23,6 +23,7 @@ import '../../core/services/slash_command_errors.dart';
 import '../../core/services/ws_client.dart';
 import '../../core/composer/composer_commands.dart';
 import '../../core/composer/failure_recovery.dart';
+import '../../core/composer/regenerate.dart';
 import 'history_rows.dart';
 import 'nextgen_gateway.dart';
 import 'session_control.dart';
@@ -200,6 +201,10 @@ class NgUserItem extends NgItem {
   /// submits this. Null when [text] is what was sent.
   final String? sentText;
 
+  /// Extra `prompt.submit` params (a regenerate's truncation target), sent
+  /// again unchanged with the same submission id when the send is retried.
+  final Map<String, Object> promptParams;
+
   NgUserItem(
     super.key,
     this.text, {
@@ -211,7 +216,26 @@ class NgUserItem extends NgItem {
     this.submissionId,
     this.composerImageText,
     this.sentText,
+    this.promptParams = const {},
   });
+}
+
+/// What [NgChatController.retryLast] did.
+enum NgRetryResult {
+  /// Nothing to retry (or the chat closed).
+  nothing,
+
+  /// An unaccepted submission went again under its submission id.
+  resent,
+
+  /// An accepted turn was regenerated in place.
+  regenerated,
+
+  /// An accepted turn with no durable row to replace: nothing was sent.
+  notFound,
+
+  /// The send failed; the transcript is as it was.
+  failed,
 }
 
 /// A `/command` run on the gateway and what it answered: shown under the
@@ -2606,8 +2630,10 @@ class NgChatController extends ChangeNotifier {
     String? submissionId,
     String? display,
     WorkspaceTarget? fleetTarget,
+    Map<String, Object> promptParams = const {},
   }) async {
     final trimmed = text.trim();
+    if (fleetTarget != null && promptParams.isNotEmpty) return false;
     // A fleet send is text only, on the exact bound route and runtime.
     if (fleetTarget != null &&
         (attachments.isNotEmpty ||
@@ -2635,6 +2661,7 @@ class NgChatController extends ChangeNotifier {
       submissionId: effectiveSubmissionId,
       composerImageText: composerImageText,
       sentText: shown.isEmpty ? null : trimmed,
+      promptParams: promptParams,
     );
     items.add(item);
     error = null;
@@ -2727,6 +2754,7 @@ class NgChatController extends ChangeNotifier {
           ? await fleetTarget.submitFleetText(prompt, item.submissionId!)
           : await _submitPromptWithCompatibility(
               {
+                ...promptParams,
                 'session_id': runtimeId,
                 'text': prompt,
                 if (explicitImages.isNotEmpty) 'attachments': explicitImages,
@@ -3237,21 +3265,77 @@ class NgChatController extends ChangeNotifier {
     }
   }
 
-  /// Sends the last prompt again.
-  Future<void> retryLast() async {
-    final last = items.whereType<NgUserItem>().lastOrNull;
-    if (last == null) return;
-    if (last.failure != null && last.recoverInComposer) return;
+  /// Retry for the last prompt, the way Desktop retries.
+  ///
+  /// A submission the gateway never accepted goes again with the SAME
+  /// `submission_id`, so a gateway that did receive it answers with the turn
+  /// it already has. A turn the gateway accepted is regenerated (Desktop's
+  /// `runReload`): the running turn is interrupted first, then the prompt is
+  /// submitted with `confirm_truncate` and its durable row
+  /// (`truncate_before_row_id`), replacing the failed turn. Without a
+  /// durable row nothing is sent: a plain resubmit would append the same
+  /// turn twice.
+  Future<NgRetryResult> retryLast() async {
+    final last = items
+        .whereType<NgUserItem>()
+        .where((item) => !item.steered)
+        .lastOrNull;
+    if (last == null) return NgRetryResult.nothing;
     if (last.failure != null) {
+      if (last.recoverInComposer) return NgRetryResult.nothing;
       items.remove(last);
+      final sent = await send(
+        last.sentText ?? last.text,
+        attachments: last.attachments,
+        composerImageText: last.composerImageText,
+        submissionId: last.submissionId,
+        display: last.sentText == null ? null : last.text,
+        promptParams: last.promptParams,
+      );
+      return sent ? NgRetryResult.resent : NgRetryResult.failed;
     }
-    await send(
-      last.sentText ?? last.text,
-      attachments: last.failure != null ? last.attachments : const [],
-      composerImageText: last.failure != null ? last.composerImageText : null,
-      submissionId: last.failure != null ? last.submissionId : null,
-      display: last.sentText == null ? null : last.text,
+    final text = last.sentText ?? last.text;
+    final String runtime;
+    try {
+      runtime = await _ensureCommandSession();
+    } catch (_) {
+      return NgRetryResult.notFound;
+    }
+    if (running) {
+      await stop(parkLocalQueue: false);
+      for (var i = 0; i < 50 && running && !_disposed; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+      if (_disposed || running) return NgRetryResult.failed;
+    }
+    final row = await resolveRegenerateRow(
+      rpc: (method, params) => gateway.call(method, params),
+      sessionId: runtime,
+      text: text,
     );
+    if (_disposed) return NgRetryResult.nothing;
+    if (row == null) return NgRetryResult.notFound;
+    final index = items.indexOf(last);
+    if (index < 0) return NgRetryResult.nothing;
+    // As Desktop's applyReloadOptimistic: the replaced turn leaves the view.
+    final replaced = items.sublist(index);
+    items.removeRange(index, items.length);
+    final sent = await send(
+      text,
+      display: last.sentText == null ? null : last.text,
+      promptParams: regenerateSubmitParams(row),
+    );
+    if (!sent && !_disposed) {
+      // Desktop's rollback: the transcript as it was, and why.
+      final failed = items.whereType<NgUserItem>().lastOrNull;
+      if (failed != null && failed.failure != null) {
+        error = failed.failure;
+        items.remove(failed);
+      }
+      items.addAll(replaced);
+      _changedNow();
+    }
+    return sent ? NgRetryResult.regenerated : NgRetryResult.failed;
   }
 
   bool _answer(Map<String, dynamic> result) {
