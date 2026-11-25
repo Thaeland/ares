@@ -246,7 +246,7 @@ class WindowsToastSink implements TurnNotificationSink {
         throw StateError('Notification withdrawn');
       }
       posted = true;
-      final allowed = await channel.invokeMethod<bool>('show', {
+      final delivery = await channel.invokeMethod<String>('show', {
         'id': n.id,
         'ticket': token,
         'body': message,
@@ -260,9 +260,12 @@ class WindowsToastSink implements TurnNotificationSink {
             ? notificationPrefs.value.completionSound.name
             : 'system',
       });
-      // The runner posted the toast, but the current OS setting will not
-      // display it: report that as a failure, not delivery.
-      if (allowed == false) throw StateError('Windows notifications are off');
+      // Windows accepted the toast, but its notification setting will not
+      // display it: report a failure, not delivery. An unreadable setting
+      // ('unknown') keeps the toast and its live ticket.
+      if (delivery == 'blocked') {
+        throw StateError('Windows notifications are off');
+      }
       if (n.windowsStillNeeded?.call() == false) {
         throw StateError('Notification withdrawn');
       }
