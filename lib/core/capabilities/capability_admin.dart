@@ -872,6 +872,29 @@ class CapabilityAdmin {
     });
   }
 
+  /// Installs a curated catalog plugin by its catalog name: the backend
+  /// resolves the repository and pinned commit from its own catalog
+  /// (Desktop `installAgentPlugin` with `catalog_name`). [profile] is the
+  /// profile the install goes into; null keeps this admin's profile.
+  Future<PluginMutation> installCatalogPlugin(
+    String catalogName, {
+    String? profile,
+    bool force = false,
+    bool enable = true,
+    String? ref,
+  }) {
+    final target = _clean(profile);
+    return _pluginAction({
+      'action': 'install',
+      'identifier': '',
+      'catalog_name': _name(catalogName, 'Choose a plugin.'),
+      'force': force,
+      'enable': enable,
+      if (ref != null && ref.trim().isNotEmpty) 'ref': ref.trim(),
+      'profile': ?target,
+    });
+  }
+
   Future<PluginMutation> updatePlugin(
     String name, {
     bool force = false,

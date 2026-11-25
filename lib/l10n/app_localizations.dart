@@ -11060,6 +11060,450 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.'**
   String get appearance_theme_import_failed;
+
+  /// No description provided for @windows_window_activity.
+  ///
+  /// In en, this message translates to:
+  /// **'Share chat activity'**
+  String get windows_window_activity;
+
+  /// No description provided for @windows_window_activity_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.'**
+  String get windows_window_activity_hint;
+
+  /// No description provided for @windows_completion_sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion sound'**
+  String get windows_completion_sound;
+
+  /// No description provided for @windows_sound_default.
+  ///
+  /// In en, this message translates to:
+  /// **'Windows default'**
+  String get windows_sound_default;
+
+  /// No description provided for @windows_sound_mail.
+  ///
+  /// In en, this message translates to:
+  /// **'Mail'**
+  String get windows_sound_mail;
+
+  /// No description provided for @windows_sound_reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder'**
+  String get windows_sound_reminder;
+
+  /// No description provided for @windows_sound_silent.
+  ///
+  /// In en, this message translates to:
+  /// **'Silent'**
+  String get windows_sound_silent;
+
+  /// No description provided for @render_widget_file_truncated.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the start of this file was read, so the widget may be incomplete.'**
+  String get render_widget_file_truncated;
+
+  /// No description provided for @setup_beat_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup'**
+  String get setup_beat_title;
+
+  /// No description provided for @setup_beat_use_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Use {name}'**
+  String setup_beat_use_name(String name);
+
+  /// No description provided for @setup_beat_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'What should Hermes call you?'**
+  String get setup_beat_name_hint;
+
+  /// No description provided for @setup_beat_on_computer.
+  ///
+  /// In en, this message translates to:
+  /// **'This step is done in Hermes on the computer it runs on. Continue keeps what is set up there.'**
+  String get setup_beat_on_computer;
+
+  /// No description provided for @setup_beat_not_waiting.
+  ///
+  /// In en, this message translates to:
+  /// **'This setup card is no longer waiting for an answer.'**
+  String get setup_beat_not_waiting;
+
+  /// No description provided for @catalog_kind_plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Plugin'**
+  String get catalog_kind_plugin;
+
+  /// No description provided for @catalog_kind_skill.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill'**
+  String get catalog_kind_skill;
+
+  /// No description provided for @catalog_tier_official.
+  ///
+  /// In en, this message translates to:
+  /// **'Official'**
+  String get catalog_tier_official;
+
+  /// No description provided for @catalog_tier_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get catalog_tier_verified;
+
+  /// No description provided for @catalog_tier_community.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get catalog_tier_community;
+
+  /// No description provided for @catalog_install.
+  ///
+  /// In en, this message translates to:
+  /// **'Install'**
+  String get catalog_install;
+
+  /// No description provided for @catalog_waiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for your choice'**
+  String get catalog_waiting;
+
+  /// No description provided for @catalog_installed.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed'**
+  String get catalog_installed;
+
+  /// No description provided for @catalog_installed_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed, not turned on'**
+  String get catalog_installed_off;
+
+  /// No description provided for @catalog_skipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get catalog_skipped;
+
+  /// No description provided for @catalog_not_installed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not installed'**
+  String get catalog_not_installed;
+
+  /// No description provided for @catalog_target_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Installs into the {profile} profile'**
+  String catalog_target_profile(String profile);
+
+  /// No description provided for @catalog_source.
+  ///
+  /// In en, this message translates to:
+  /// **'{repo} at {sha}'**
+  String catalog_source(String repo, String sha);
+
+  /// No description provided for @catalog_scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Security scan: {status}. {summary}'**
+  String catalog_scan(String status, String summary);
+
+  /// No description provided for @catalog_requires_hermes.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Hermes {range}'**
+  String catalog_requires_hermes(String range);
+
+  /// No description provided for @catalog_skill_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill {name} is ready to use'**
+  String catalog_skill_ready(String name);
+
+  /// No description provided for @catalog_missing_env.
+  ///
+  /// In en, this message translates to:
+  /// **'Still needs: {names}'**
+  String catalog_missing_env(String names);
+
+  /// No description provided for @catalog_server_error.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} did not connect: {error}'**
+  String catalog_server_error(String name, String error);
+
+  /// No description provided for @catalog_send_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your choice was not sent. Try again.'**
+  String get catalog_send_failed;
+
+  /// No description provided for @attachment_video_speed.
+  ///
+  /// In en, this message translates to:
+  /// **'Playback speed'**
+  String get attachment_video_speed;
+
+  /// No description provided for @catalog_installing.
+  ///
+  /// In en, this message translates to:
+  /// **'Installing…'**
+  String get catalog_installing;
+
+  /// No description provided for @catalog_phase_downloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading…'**
+  String get catalog_phase_downloading;
+
+  /// No description provided for @catalog_phase_python_packages.
+  ///
+  /// In en, this message translates to:
+  /// **'Installing Python packages…'**
+  String get catalog_phase_python_packages;
+
+  /// No description provided for @catalog_phase_loading_tools.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading its tools…'**
+  String get catalog_phase_loading_tools;
+
+  /// No description provided for @setup_beat_send_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your answer was not sent. Try again.'**
+  String get setup_beat_send_failed;
+
+  /// No description provided for @catalog_tool_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 tool} other{{count} tools}}'**
+  String catalog_tool_count(int count);
+
+  /// No description provided for @render_svg_not_drawn.
+  ///
+  /// In en, this message translates to:
+  /// **'This SVG was not drawn.'**
+  String get render_svg_not_drawn;
+
+  /// No description provided for @render_notes_directive.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes directive'**
+  String get render_notes_directive;
+
+  /// No description provided for @render_maths_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Maths source'**
+  String get render_maths_source;
+
+  /// No description provided for @render_inline_maths_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Inline maths source'**
+  String get render_inline_maths_source;
+
+  /// No description provided for @render_sequence_outline.
+  ///
+  /// In en, this message translates to:
+  /// **'Sequence outline'**
+  String get render_sequence_outline;
+
+  /// No description provided for @render_diagram_outline.
+  ///
+  /// In en, this message translates to:
+  /// **'Diagram outline'**
+  String get render_diagram_outline;
+
+  /// No description provided for @render_revision_of.
+  ///
+  /// In en, this message translates to:
+  /// **'Revision {index} of {count}'**
+  String render_revision_of(int index, int count);
+
+  /// No description provided for @render_previous_revision.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous revision'**
+  String get render_previous_revision;
+
+  /// No description provided for @render_next_revision.
+  ///
+  /// In en, this message translates to:
+  /// **'Next revision'**
+  String get render_next_revision;
+
+  /// No description provided for @render_show_rendered.
+  ///
+  /// In en, this message translates to:
+  /// **'Rendered'**
+  String get render_show_rendered;
+
+  /// No description provided for @render_show_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get render_show_source;
+
+  /// No description provided for @render_copied_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {name}'**
+  String render_copied_file(String name);
+
+  /// No description provided for @render_copy_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy {name}'**
+  String render_copy_file(String name);
+
+  /// No description provided for @render_artifact_too_long.
+  ///
+  /// In en, this message translates to:
+  /// **'This artefact is too long to show as a page here.'**
+  String get render_artifact_too_long;
+
+  /// No description provided for @render_active_content_removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Scripts, frames and external addresses were removed.'**
+  String get render_active_content_removed;
+
+  /// No description provided for @render_widget_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Widget {file}'**
+  String render_widget_file(String file);
+
+  /// No description provided for @render_widget_runs_as_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs as text in this chat. Scripts and external frames are removed.'**
+  String get render_widget_runs_as_text;
+
+  /// No description provided for @render_load_widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Load widget'**
+  String get render_load_widget;
+
+  /// No description provided for @render_not_html_widget.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is not an HTML widget.'**
+  String get render_not_html_widget;
+
+  /// No description provided for @render_widget_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to this chat'**
+  String get render_widget_sent;
+
+  /// No description provided for @render_widget_not_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sent to this chat'**
+  String get render_widget_not_sent;
+
+  /// No description provided for @render_widget_throttled.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait a moment before sending again'**
+  String get render_widget_throttled;
+
+  /// No description provided for @render_widget_too_long.
+  ///
+  /// In en, this message translates to:
+  /// **'This request is too long to send'**
+  String get render_widget_too_long;
+
+  /// No description provided for @render_widget_no_gesture.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a control in the widget to send'**
+  String get render_widget_no_gesture;
+
+  /// No description provided for @render_widget_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This request could not be sent'**
+  String get render_widget_invalid;
+
+  /// No description provided for @render_inspected_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Inspected image'**
+  String get render_inspected_image;
+
+  /// No description provided for @render_contributions.
+  ///
+  /// In en, this message translates to:
+  /// **'Contributions'**
+  String get render_contributions;
+
+  /// No description provided for @render_contributions_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Only contributions compiled into Ares can add to a reply. Chat text cannot register one, and a grant applies to this connection only.'**
+  String get render_contributions_intro;
+
+  /// No description provided for @render_grant_plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant {name}'**
+  String render_grant_plugin(String name);
+
+  /// No description provided for @render_revoke_plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke {name}'**
+  String render_revoke_plugin(String name);
+
+  /// No description provided for @render_plugin_slots.
+  ///
+  /// In en, this message translates to:
+  /// **'reply cards for ::{directive}'**
+  String render_plugin_slots(String directive);
+
+  /// No description provided for @render_plugin_notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get render_plugin_notes;
+
+  /// No description provided for @catalog_scan_passed.
+  ///
+  /// In en, this message translates to:
+  /// **'passed'**
+  String get catalog_scan_passed;
+
+  /// No description provided for @catalog_scan_warnings.
+  ///
+  /// In en, this message translates to:
+  /// **'found warnings'**
+  String get catalog_scan_warnings;
+
+  /// No description provided for @catalog_scan_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'failed'**
+  String get catalog_scan_failed;
 }
 
 class _AppLocalizationsDelegate

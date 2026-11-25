@@ -1931,26 +1931,44 @@ class AppLocalizationsAr extends AppLocalizations {
   String get windows_notification_diagnostics => 'ما أرسله Ares إلى Windows';
 
   @override
-  String get windows_window_activity => 'مشاركة نشاط المحادثة';
+  String get chat_activity_share => 'Share chat activity';
 
   @override
-  String get windows_window_activity_hint =>
-      'أبلِغ البوابة المتصلة المتوافقة عندما تستخدم هذه المحادثة، حتى يتجنّب ملحق إشعارات الهاتف فيها التنبيهات المكررة. لا تُرسَل أي مفاتيح أو نصوص رسائل.';
+  String get chat_activity_share_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
 
   @override
-  String get windows_completion_sound => 'صوت الاكتمال';
+  String get completion_sound => 'Completion sound';
 
   @override
-  String get windows_sound_default => 'الافتراضي في Windows';
+  String get completion_sound_system => 'System default';
 
   @override
-  String get windows_sound_mail => 'البريد';
+  String get completion_sound_mail => 'Mail';
 
   @override
-  String get windows_sound_reminder => 'تذكير';
+  String get completion_sound_reminder => 'Reminder';
 
   @override
-  String get windows_sound_silent => 'صامت';
+  String get completion_sound_silent => 'Silent';
+
+  @override
+  String get completion_sound_scope =>
+      'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.';
+
+  @override
+  String get completion_sound_scope_android =>
+      'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.';
+
+  @override
+  String get notification_open_action => 'Open';
+
+  @override
+  String get app_sounds_mute => 'Mute app sounds';
+
+  @override
+  String get app_sounds_mute_hint =>
+      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
 
   @override
   String get notifications_permission_denied =>
@@ -6526,4 +6544,272 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get appearance_theme_import_failed =>
       'تعذّر استيراد هذه السمة. اختر سمة ألوان من VS Code محفوظة في ملف بامتداد vsix أو json أو jsonc.';
+
+  @override
+  String get windows_window_activity => 'مشاركة نشاط المحادثة';
+
+  @override
+  String get windows_window_activity_hint =>
+      'أبلِغ البوابة المتصلة المتوافقة عندما تستخدم هذه المحادثة، حتى يتجنّب ملحق إشعارات الهاتف فيها التنبيهات المكررة. لا تُرسَل أي مفاتيح أو نصوص رسائل.';
+
+  @override
+  String get windows_completion_sound => 'صوت الاكتمال';
+
+  @override
+  String get windows_sound_default => 'الافتراضي في Windows';
+
+  @override
+  String get windows_sound_mail => 'البريد';
+
+  @override
+  String get windows_sound_reminder => 'تذكير';
+
+  @override
+  String get windows_sound_silent => 'صامت';
+
+  @override
+  String get render_widget_file_truncated =>
+      'Only the start of this file was read, so the widget may be incomplete.';
+
+  @override
+  String get setup_beat_title => 'Setup';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return 'Use $name';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'What should Hermes call you?';
+
+  @override
+  String get setup_beat_on_computer =>
+      'This step is done in Hermes on the computer it runs on. Continue keeps what is set up there.';
+
+  @override
+  String get setup_beat_not_waiting =>
+      'This setup card is no longer waiting for an answer.';
+
+  @override
+  String get catalog_kind_plugin => 'Plugin';
+
+  @override
+  String get catalog_kind_skill => 'Skill';
+
+  @override
+  String get catalog_tier_official => 'Official';
+
+  @override
+  String get catalog_tier_verified => 'Verified';
+
+  @override
+  String get catalog_tier_community => 'Community';
+
+  @override
+  String get catalog_install => 'Install';
+
+  @override
+  String get catalog_waiting => 'Waiting for your choice';
+
+  @override
+  String get catalog_installed => 'Installed';
+
+  @override
+  String get catalog_installed_off => 'Installed, not turned on';
+
+  @override
+  String get catalog_skipped => 'Skipped';
+
+  @override
+  String get catalog_not_installed => 'Not installed';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return 'Installs into the $profile profile';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo at $sha';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return 'Security scan: $status. $summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return 'Needs Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return 'Skill $name is ready to use';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return 'Still needs: $names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name did not connect: $error';
+  }
+
+  @override
+  String get catalog_send_failed => 'Your choice was not sent. Try again.';
+
+  @override
+  String get attachment_video_speed => 'Playback speed';
+
+  @override
+  String get catalog_installing => 'Installing…';
+
+  @override
+  String get catalog_phase_downloading => 'Downloading…';
+
+  @override
+  String get catalog_phase_python_packages => 'Installing Python packages…';
+
+  @override
+  String get catalog_phase_loading_tools => 'Loading its tools…';
+
+  @override
+  String get setup_beat_send_failed => 'Your answer was not sent. Try again.';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tools',
+      one: '1 tool',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get render_svg_not_drawn => 'This SVG was not drawn.';
+
+  @override
+  String get render_notes_directive => 'Notes directive';
+
+  @override
+  String get render_maths_source => 'Maths source';
+
+  @override
+  String get render_inline_maths_source => 'Inline maths source';
+
+  @override
+  String get render_sequence_outline => 'Sequence outline';
+
+  @override
+  String get render_diagram_outline => 'Diagram outline';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return 'Revision $index of $count';
+  }
+
+  @override
+  String get render_previous_revision => 'Previous revision';
+
+  @override
+  String get render_next_revision => 'Next revision';
+
+  @override
+  String get render_show_rendered => 'Rendered';
+
+  @override
+  String get render_show_source => 'Source';
+
+  @override
+  String render_copied_file(String name) {
+    return 'Copied $name';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return 'Copy $name';
+  }
+
+  @override
+  String get render_artifact_too_long =>
+      'This artefact is too long to show as a page here.';
+
+  @override
+  String get render_active_content_removed =>
+      'Scripts, frames and external addresses were removed.';
+
+  @override
+  String render_widget_file(String file) {
+    return 'Widget $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      'Runs as text in this chat. Scripts and external frames are removed.';
+
+  @override
+  String get render_load_widget => 'Load widget';
+
+  @override
+  String get render_not_html_widget => 'This file is not an HTML widget.';
+
+  @override
+  String get render_widget_sent => 'Sent to this chat';
+
+  @override
+  String get render_widget_not_sent => 'Not sent to this chat';
+
+  @override
+  String get render_widget_throttled => 'Wait a moment before sending again';
+
+  @override
+  String get render_widget_too_long => 'This request is too long to send';
+
+  @override
+  String get render_widget_no_gesture => 'Tap a control in the widget to send';
+
+  @override
+  String get render_widget_invalid => 'This request could not be sent';
+
+  @override
+  String get render_inspected_image => 'Inspected image';
+
+  @override
+  String get render_contributions => 'Contributions';
+
+  @override
+  String get render_contributions_intro =>
+      'Only contributions compiled into Ares can add to a reply. Chat text cannot register one, and a grant applies to this connection only.';
+
+  @override
+  String render_grant_plugin(String name) {
+    return 'Grant $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return 'Revoke $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return 'reply cards for ::$directive';
+  }
+
+  @override
+  String get render_plugin_notes => 'Notes';
+
+  @override
+  String get catalog_scan_passed => 'passed';
+
+  @override
+  String get catalog_scan_warnings => 'found warnings';
+
+  @override
+  String get catalog_scan_failed => 'failed';
 }

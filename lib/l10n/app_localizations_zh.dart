@@ -6320,6 +6320,267 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get appearance_theme_import_failed =>
       'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
+
+  @override
+  String get windows_window_activity => 'Share chat activity';
+
+  @override
+  String get windows_window_activity_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+
+  @override
+  String get windows_completion_sound => 'Completion sound';
+
+  @override
+  String get windows_sound_default => 'Windows default';
+
+  @override
+  String get windows_sound_mail => 'Mail';
+
+  @override
+  String get windows_sound_reminder => 'Reminder';
+
+  @override
+  String get windows_sound_silent => 'Silent';
+
+  @override
+  String get render_widget_file_truncated => '只读取了此文件的开头部分，因此小组件可能不完整。';
+
+  @override
+  String get setup_beat_title => '设置';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return '使用 $name';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Hermes 应该怎么称呼你？';
+
+  @override
+  String get setup_beat_on_computer => '此步骤在运行 Hermes 的电脑上完成。选择“继续”将保留那里已有的设置。';
+
+  @override
+  String get setup_beat_not_waiting => '此设置卡片已不再等待回答。';
+
+  @override
+  String get catalog_kind_plugin => '插件';
+
+  @override
+  String get catalog_kind_skill => '技能';
+
+  @override
+  String get catalog_tier_official => '官方';
+
+  @override
+  String get catalog_tier_verified => '已验证';
+
+  @override
+  String get catalog_tier_community => '社区';
+
+  @override
+  String get catalog_install => '安装';
+
+  @override
+  String get catalog_waiting => '等待你的选择';
+
+  @override
+  String get catalog_installed => '已安装';
+
+  @override
+  String get catalog_installed_off => '已安装，未启用';
+
+  @override
+  String get catalog_skipped => '已跳过';
+
+  @override
+  String get catalog_not_installed => '未安装';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return '安装到 $profile 配置文件';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo（$sha）';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return '安全扫描：$status。$summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return '需要 Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return '技能 $name 已可使用';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return '仍需要：$names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name 未能连接：$error';
+  }
+
+  @override
+  String get catalog_send_failed => '你的选择未发送，请重试。';
+
+  @override
+  String get attachment_video_speed => '播放速度';
+
+  @override
+  String get catalog_installing => '正在安装…';
+
+  @override
+  String get catalog_phase_downloading => '正在下载…';
+
+  @override
+  String get catalog_phase_python_packages => '正在安装 Python 包…';
+
+  @override
+  String get catalog_phase_loading_tools => '正在加载工具…';
+
+  @override
+  String get setup_beat_send_failed => '你的回答未发送，请重试。';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个工具',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get render_svg_not_drawn => '此 SVG 未绘制。';
+
+  @override
+  String get render_notes_directive => '笔记指令';
+
+  @override
+  String get render_maths_source => '数学公式源码';
+
+  @override
+  String get render_inline_maths_source => '行内数学公式源码';
+
+  @override
+  String get render_sequence_outline => '时序图大纲';
+
+  @override
+  String get render_diagram_outline => '图表大纲';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return '修订版 $index/$count';
+  }
+
+  @override
+  String get render_previous_revision => '上一修订版';
+
+  @override
+  String get render_next_revision => '下一修订版';
+
+  @override
+  String get render_show_rendered => '渲染视图';
+
+  @override
+  String get render_show_source => '源码';
+
+  @override
+  String render_copied_file(String name) {
+    return '已复制 $name';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return '复制 $name';
+  }
+
+  @override
+  String get render_artifact_too_long => '此产物太长，无法在此处以页面显示。';
+
+  @override
+  String get render_active_content_removed => '已移除脚本、框架和外部地址。';
+
+  @override
+  String render_widget_file(String file) {
+    return '小组件 $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text => '在此聊天中以文本形式运行。脚本和外部框架会被移除。';
+
+  @override
+  String get render_load_widget => '加载小组件';
+
+  @override
+  String get render_not_html_widget => '此文件不是 HTML 小组件。';
+
+  @override
+  String get render_widget_sent => '已发送到此聊天';
+
+  @override
+  String get render_widget_not_sent => '未发送到此聊天';
+
+  @override
+  String get render_widget_throttled => '请稍候再发送';
+
+  @override
+  String get render_widget_too_long => '此请求太长，无法发送';
+
+  @override
+  String get render_widget_no_gesture => '点按小组件中的控件以发送';
+
+  @override
+  String get render_widget_invalid => '无法发送此请求';
+
+  @override
+  String get render_inspected_image => '已检查的图片';
+
+  @override
+  String get render_contributions => '扩展项';
+
+  @override
+  String get render_contributions_intro =>
+      '只有内置在 Ares 中的扩展项才能为回复添加内容。聊天文本无法注册扩展项，授权仅适用于此连接。';
+
+  @override
+  String render_grant_plugin(String name) {
+    return '授权 $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return '撤销 $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return '::$directive 的回复卡片';
+  }
+
+  @override
+  String get render_plugin_notes => '笔记';
+
+  @override
+  String get catalog_scan_passed => '已通过';
+
+  @override
+  String get catalog_scan_warnings => '发现警告';
+
+  @override
+  String get catalog_scan_failed => '未通过';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -12090,6 +12351,245 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get appearance_embed_preview_unavailable => '无法预览';
+
+  @override
+  String get render_widget_file_truncated => '只读取了此文件的开头部分，因此小组件可能不完整。';
+
+  @override
+  String get setup_beat_title => '设置';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return '使用 $name';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Hermes 应该怎么称呼你？';
+
+  @override
+  String get setup_beat_on_computer => '此步骤在运行 Hermes 的电脑上完成。选择“继续”将保留那里已有的设置。';
+
+  @override
+  String get setup_beat_not_waiting => '此设置卡片已不再等待回答。';
+
+  @override
+  String get catalog_kind_plugin => '插件';
+
+  @override
+  String get catalog_kind_skill => '技能';
+
+  @override
+  String get catalog_tier_official => '官方';
+
+  @override
+  String get catalog_tier_verified => '已验证';
+
+  @override
+  String get catalog_tier_community => '社区';
+
+  @override
+  String get catalog_install => '安装';
+
+  @override
+  String get catalog_waiting => '等待你的选择';
+
+  @override
+  String get catalog_installed => '已安装';
+
+  @override
+  String get catalog_installed_off => '已安装，未启用';
+
+  @override
+  String get catalog_skipped => '已跳过';
+
+  @override
+  String get catalog_not_installed => '未安装';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return '安装到 $profile 配置文件';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo（$sha）';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return '安全扫描：$status。$summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return '需要 Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return '技能 $name 已可使用';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return '仍需要：$names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name 未能连接：$error';
+  }
+
+  @override
+  String get catalog_send_failed => '你的选择未发送，请重试。';
+
+  @override
+  String get attachment_video_speed => '播放速度';
+
+  @override
+  String get catalog_installing => '正在安装…';
+
+  @override
+  String get catalog_phase_downloading => '正在下载…';
+
+  @override
+  String get catalog_phase_python_packages => '正在安装 Python 包…';
+
+  @override
+  String get catalog_phase_loading_tools => '正在加载工具…';
+
+  @override
+  String get setup_beat_send_failed => '你的回答未发送，请重试。';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个工具',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get render_svg_not_drawn => '此 SVG 未绘制。';
+
+  @override
+  String get render_notes_directive => '笔记指令';
+
+  @override
+  String get render_maths_source => '数学公式源码';
+
+  @override
+  String get render_inline_maths_source => '行内数学公式源码';
+
+  @override
+  String get render_sequence_outline => '时序图大纲';
+
+  @override
+  String get render_diagram_outline => '图表大纲';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return '修订版 $index/$count';
+  }
+
+  @override
+  String get render_previous_revision => '上一修订版';
+
+  @override
+  String get render_next_revision => '下一修订版';
+
+  @override
+  String get render_show_rendered => '渲染视图';
+
+  @override
+  String get render_show_source => '源码';
+
+  @override
+  String render_copied_file(String name) {
+    return '已复制 $name';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return '复制 $name';
+  }
+
+  @override
+  String get render_artifact_too_long => '此产物太长，无法在此处以页面显示。';
+
+  @override
+  String get render_active_content_removed => '已移除脚本、框架和外部地址。';
+
+  @override
+  String render_widget_file(String file) {
+    return '小组件 $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text => '在此聊天中以文本形式运行。脚本和外部框架会被移除。';
+
+  @override
+  String get render_load_widget => '加载小组件';
+
+  @override
+  String get render_not_html_widget => '此文件不是 HTML 小组件。';
+
+  @override
+  String get render_widget_sent => '已发送到此聊天';
+
+  @override
+  String get render_widget_not_sent => '未发送到此聊天';
+
+  @override
+  String get render_widget_throttled => '请稍候再发送';
+
+  @override
+  String get render_widget_too_long => '此请求太长，无法发送';
+
+  @override
+  String get render_widget_no_gesture => '点按小组件中的控件以发送';
+
+  @override
+  String get render_widget_invalid => '无法发送此请求';
+
+  @override
+  String get render_inspected_image => '已检查的图片';
+
+  @override
+  String get render_contributions => '扩展项';
+
+  @override
+  String get render_contributions_intro =>
+      '只有内置在 Ares 中的扩展项才能为回复添加内容。聊天文本无法注册扩展项，授权仅适用于此连接。';
+
+  @override
+  String render_grant_plugin(String name) {
+    return '授权 $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return '撤销 $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return '::$directive 的回复卡片';
+  }
+
+  @override
+  String get render_plugin_notes => '笔记';
+
+  @override
+  String get catalog_scan_passed => '已通过';
+
+  @override
+  String get catalog_scan_warnings => '发现警告';
+
+  @override
+  String get catalog_scan_failed => '未通过';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -13935,28 +14435,6 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get windows_notification_diagnostics => 'Ares 傳送給 Windows 的內容';
-
-  @override
-  String get windows_window_activity => '分享聊天活動';
-
-  @override
-  String get windows_window_activity_hint =>
-      '在你使用此聊天時告知相容的已連線閘道，讓其手機通知外掛程式避免重複提醒。不會傳送任何金鑰或訊息內容。';
-
-  @override
-  String get windows_completion_sound => '完成提示音';
-
-  @override
-  String get windows_sound_default => 'Windows 預設';
-
-  @override
-  String get windows_sound_mail => '郵件';
-
-  @override
-  String get windows_sound_reminder => '提醒';
-
-  @override
-  String get windows_sound_silent => '靜音';
 
   @override
   String get notifications_permission_denied =>
@@ -18361,4 +18839,26 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   @override
   String get appearance_theme_import_failed =>
       '無法匯入這個佈景主題。請選擇以 .vsix、.json 或 .jsonc 檔案儲存的 VS Code 色彩佈景主題。';
+
+  @override
+  String get windows_window_activity => '分享聊天活動';
+
+  @override
+  String get windows_window_activity_hint =>
+      '在你使用此聊天時告知相容的已連線閘道，讓其手機通知外掛程式避免重複提醒。不會傳送任何金鑰或訊息內容。';
+
+  @override
+  String get windows_completion_sound => '完成提示音';
+
+  @override
+  String get windows_sound_default => 'Windows 預設';
+
+  @override
+  String get windows_sound_mail => '郵件';
+
+  @override
+  String get windows_sound_reminder => '提醒';
+
+  @override
+  String get windows_sound_silent => '靜音';
 }

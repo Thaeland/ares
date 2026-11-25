@@ -15,7 +15,16 @@ import 'package:hermes_android/core/l10n/l10n.dart';
 /// blocks are removed from the surrounding markdown so they render once,
 /// with full fidelity, instead of relying on flutter_markdown's `pre`
 /// builder (which leaves its internal inline state unbalanced).
-List<Object> splitMarkdownCodeBlocks(String content, {bool selectable = true}) {
+///
+/// With [openTail], a fence opened at the start of a line after the last
+/// closed one and never closed (a reply still streaming, or one cut off at
+/// its token limit) is a code block too, as NextGen draws it, so its copy
+/// control and artefact card use the reply's own final text.
+List<Object> splitMarkdownCodeBlocks(
+  String content, {
+  bool selectable = true,
+  bool openTail = false,
+}) {
   final result = <Object>[];
   final regex = RegExp(
     r'```([\w+-]*)[ \t]*\r?\n([\s\S]*?)```',
@@ -38,9 +47,64 @@ List<Object> splitMarkdownCodeBlocks(String content, {bool selectable = true}) {
   }
 
   if (cursor < content.length) {
-    result.add(content.substring(cursor));
+    final open = openTail ? _openFence(content, cursor) : null;
+    if (open == null) {
+      result.add(content.substring(cursor));
+    } else {
+      if (open.start > cursor) {
+        result.add(content.substring(cursor, open.start));
+      }
+      result.add(
+        MarkdownCodeBlock(
+          code: open.code,
+          language: open.language,
+          selectable: selectable,
+        ),
+      );
+    }
   }
   return result;
+}
+
+bool _fenceLanguageChar(int c) =>
+    (c >= 0x61 && c <= 0x7a) ||
+    (c >= 0x41 && c <= 0x5a) ||
+    (c >= 0x30 && c <= 0x39) ||
+    c == 0x5f ||
+    c == 0x2b ||
+    c == 0x2d;
+
+/// The last ``` in [content] after [from] when it opens a fence at a line
+/// start (up to three spaces) with a `[\w+-]*` language and no closer.
+({int start, String? language, String code})? _openFence(
+  String content,
+  int from,
+) {
+  final at = content.lastIndexOf('```');
+  if (at < from) return null;
+  var lineStart = at;
+  while (lineStart > from && content.codeUnitAt(lineStart - 1) == 0x20) {
+    lineStart--;
+  }
+  if (at - lineStart > 3) return null;
+  if (lineStart > 0 && content.codeUnitAt(lineStart - 1) != 0x0a) return null;
+  var i = at + 3;
+  final languageStart = i;
+  while (i < content.length && _fenceLanguageChar(content.codeUnitAt(i))) {
+    i++;
+  }
+  final language = content.substring(languageStart, i);
+  while (i < content.length &&
+      (content.codeUnitAt(i) == 0x20 || content.codeUnitAt(i) == 0x09)) {
+    i++;
+  }
+  if (i < content.length && content.codeUnitAt(i) == 0x0d) i++;
+  if (i >= content.length || content.codeUnitAt(i) != 0x0a) return null;
+  return (
+    start: lineStart,
+    language: language.isEmpty ? null : language,
+    code: content.substring(i + 1),
+  );
 }
 
 /// Renders a fenced code block with a language label, copy, and wrap controls.

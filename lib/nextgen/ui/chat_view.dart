@@ -16,6 +16,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/models/attachment_draft.dart';
 import '../../core/preview/chat_preview.dart';
+import '../../core/render/render_scope.dart';
+import '../../core/capabilities/capability_admin.dart';
+import '../../core/render/catalog_install.dart';
+import '../../core/render/rich_transcript.dart';
+import '../../core/render/setup_beat.dart';
 import '../../core/screens/workspace_workers_screen.dart';
 import '../../core/screens/gateway_queue_screen.dart';
 import '../../core/services/remote_files_client.dart';
@@ -111,6 +116,64 @@ class _NgChatViewState extends State<NgChatView>
       sessionId: chat.storedId,
       maxDownloadBytes: maxAttachmentDownloadBytes,
     );
+  }
+
+  Future<WidgetHtmlSource?> _readWidgetHtml(String path) async {
+    if (!mounted) return null;
+    final client = _filesClient();
+    try {
+      final preview = await client.readText(path);
+      if (preview.binary) return null;
+      return WidgetHtmlSource(preview.text, truncated: preview.truncated);
+    } catch (_) {
+      return null;
+    } finally {
+      if (client is RemoteFilesClient) client.close();
+    }
+  }
+
+  /// Installs a failed catalog plugin again after its operation settled,
+  /// through the capabilities install of the chat's own connection and
+  /// profile (not the active one, which may be another connection) into the
+  /// row's own target profile, as Desktop's retrySettled does through the
+  /// owner of the request's session.
+  Future<CatalogRetryResult> _retryCatalogRow(CatalogRow row) async {
+    final gateway = chat.gateway;
+    final admin = CapabilityAdmin.fromDashboard(
+      gateway.dashboard,
+      profile: gateway.profile,
+      // The chat's own socket: a settled card belongs to a live chat.
+      rpc: (method, params) =>
+          gateway.call(method, params, timeout: const Duration(minutes: 3)),
+    );
+    final mutation = await admin.installCatalogPlugin(
+      row.name,
+      profile: row.targetProfile,
+      force: row.approvedForce,
+      enable: row.approvedEnable,
+      ref: row.approvedRef,
+    );
+    return CatalogRetryResult(
+      ok: mutation.ok,
+      message:
+          mutation.message ??
+          (mutation.lines.isEmpty ? null : mutation.lines.join('\n')),
+    );
+  }
+
+  /// A widget may continue only an idle chat, as in Classic: a running
+  /// turn, dictation, an attachment being prepared or a stale owner
+  /// refuses it rather than steering or queueing a hidden prompt.
+  Future<void> _deliverWidgetIntent(String prompt) async {
+    if (!mounted ||
+        chat.running ||
+        _listening ||
+        _preparing ||
+        !chat.draftOwnerCurrent) {
+      throw StateError('undelivered');
+    }
+    final accepted = await chat.send(prompt, hidden: true);
+    if (!accepted) throw StateError('undelivered');
   }
 
   final _input = SlashCommandHighlightController();
@@ -509,6 +572,18 @@ class _NgChatViewState extends State<NgChatView>
       // before, provided the draft is still the one that was decided on.
       if (!mounted || _input.text.trim() != text) return;
     }
+    // A message sent while a setup card waits closes the card with
+    // {wrote_instead}; the backend ends the card's turn, so the message
+    // waits for that turn to end and runs as the next one, never a steer
+    // (Desktop's yieldParkedCardsToMessage).
+    if (chat.yieldSetupBeatToMessage() &&
+        chat.running &&
+        _drafts.isEmpty &&
+        text.isNotEmpty) {
+      _input.clear();
+      chat.enqueue(text);
+      return;
+    }
     if (_drafts.isNotEmpty && !chat.running) {
       final raw = _input.text;
       final drafts = List.of(_drafts);
@@ -769,39 +844,49 @@ class _NgChatViewState extends State<NgChatView>
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
     final gateway = NgScope.of(context).gateway;
-    return ChatPresence(
-      target: () {
-        final socket = chat.gateway.socket;
-        final runtime = chat.runtimeId;
-        return socket != null &&
-                runtime != null &&
-                chat.gateway.storedIdFor(runtime) == chat.storedId
-            ? (socket, runtime)
-            : null;
-      },
-      // As the controller names it for the completion cue.
-      cueKey: () {
-        final id = chat.storedId ?? chat.runtimeId;
-        return id == null ? null : '${chat.gateway.connection.id}|$id';
-      },
-      child: _preview.layout(
-        chat: _buildChat(c, gateway),
-        storedId: chat.storedId,
-        service: chat.attachmentService,
-        existing: _drafts,
-        update: setState,
-        commit: (text, crops) {
-          if (_preparing || chat.running) {
-            throw const AttachmentDraftException(
-              'Wait for the composer to become available.',
-            );
-          }
-          setState(() {
-            _drafts.addAll(crops);
-            appendPreviewText(_input, text);
-          });
+    // Render state (embed consent, revisions, video memory) is scoped per
+    // connection and chat; presence reports only this chat's own socket.
+    return RenderScope(
+      connection: renderConnectionKey(chat.gateway.connection),
+      chat: chat.storedId ?? 'draft:${identityHashCode(chat)}',
+      child: ChatPresence(
+        target: () {
+          final socket = chat.gateway.socket;
+          final runtime = chat.runtimeId;
+          return socket != null &&
+                  runtime != null &&
+                  chat.gateway.storedIdFor(runtime) == chat.storedId
+              ? (socket, runtime)
+              : null;
         },
+        // As the controller names it for the completion cue.
+        cueKey: () {
+          final id = chat.storedId ?? chat.runtimeId;
+          return id == null ? null : '${chat.gateway.connection.id}|$id';
+        },
+        child: _buildScoped(c, gateway),
       ),
+    );
+  }
+
+  Widget _buildScoped(NgColors c, NextGenGateway gateway) {
+    return _preview.layout(
+      chat: _buildChat(c, gateway),
+      storedId: chat.storedId,
+      service: chat.attachmentService,
+      existing: _drafts,
+      update: setState,
+      commit: (text, crops) {
+        if (_preparing || chat.running) {
+          throw const AttachmentDraftException(
+            'Wait for the composer to become available.',
+          );
+        }
+        setState(() {
+          _drafts.addAll(crops);
+          appendPreviewText(_input, text);
+        });
+      },
     );
   }
 
@@ -1067,7 +1152,26 @@ class _NgChatViewState extends State<NgChatView>
                         ),
                       if (chat.error != null) _errorBar(c),
                       if (chat.queued.isNotEmpty) _queue(c),
-                      if (chat.request != null)
+                      if (chat.catalog case final operation?)
+                        CatalogInstallCard(
+                          key: ValueKey(operation.opId),
+                          operation: operation,
+                          respond: (answer) =>
+                              chat.respondCatalog(operation, answer),
+                          retry: _retryCatalogRow,
+                          onDismiss: () => chat.dismissCatalog(operation.opId),
+                        ),
+                      // The composer stays below a setup card: a message
+                      // sent instead of an answer closes the card.
+                      if (chat.request?.setupBeat case final card?)
+                        SetupBeatCard(
+                          key: ValueKey(card.requestId),
+                          request: card,
+                          onAnswer: (result) async =>
+                              chat.sendSetupBeat(card.requestId, result),
+                        ),
+                      if (chat.request != null &&
+                          chat.request!.kind != NgRequestKind.setupBeat)
                         _InputPanel(
                           chat: chat,
                           request: chat.request!,
@@ -1420,6 +1524,8 @@ class _NgChatViewState extends State<NgChatView>
                 ? chat.retryLast
                 : null,
             readAloud: _readAloud,
+            readHtml: _readWidgetHtml,
+            onIntent: _deliverWidgetIntent,
           ),
           if (!item.open &&
               _latestAssistant(items, item) &&
@@ -2178,8 +2284,12 @@ class _AssistantBlock extends StatefulWidget {
     required this.files,
     required this.filesIdentity,
     required this.readAloud,
+    this.readHtml,
+    this.onIntent,
     this.onRetry,
   });
+  final WidgetHtmlReader? readHtml;
+  final Future<void> Function(String prompt)? onIntent;
   final NgAssistantItem item;
 
   /// Opens a files client for this chat, for `MEDIA:` deliveries.
@@ -2335,14 +2445,29 @@ class _AssistantBlockState extends State<_AssistantBlock> {
     final seen = <String, int>{};
     for (final (block, code) in ngSplitCodeFences(text)) {
       if (code) {
-        // Code is documentation, never a delivery; a fence stays whole and
-        // exposes the same copy/wrap controls as Classic.
-        out.add(codeBlock(block));
+        final fence = ngCodeFenceParts(block);
+        out.add(
+          RichFence(
+            language: fence.language,
+            code: fence.code,
+            corpus: text,
+            fallback: codeBlock(block),
+            readHtml: widget.readHtml,
+            onIntent: widget.onIntent,
+          ),
+        );
         continue;
       }
       final segments = splitMediaTags(block, isFinal: isFinal);
       if (!segments.any((s) => s.isMedia)) {
-        out.add(prose(inlineMediaTagsAsLinks(block, isFinal: isFinal)));
+        out.addAll(
+          richProseWidgets(
+            text: inlineMediaTagsAsLinks(block, isFinal: isFinal),
+            markdown: (chunk) => prose(chunk),
+            readHtml: widget.readHtml,
+            onIntent: widget.onIntent,
+          ),
+        );
         continue;
       }
       for (final segment in segments) {
@@ -2352,8 +2477,13 @@ class _AssistantBlockState extends State<_AssistantBlock> {
           final n = seen.update(media.path, (v) => v + 1, ifAbsent: () => 0);
           out.add(card(media, n));
         } else if (segment.text.trim().isNotEmpty) {
-          out.add(
-            prose(inlineMediaTagsAsLinks(segment.text, isFinal: isFinal)),
+          out.addAll(
+            richProseWidgets(
+              text: inlineMediaTagsAsLinks(segment.text, isFinal: isFinal),
+              markdown: (chunk) => prose(chunk),
+              readHtml: widget.readHtml,
+              onIntent: widget.onIntent,
+            ),
           );
         }
       }
@@ -2702,6 +2832,8 @@ class _ToolRowState extends State<_ToolRow> {
         if (_open) ...[
           if (t.input?.isNotEmpty ?? false) _codeBlock(c, t.input!),
           if (t.output?.isNotEmpty ?? false) _codeBlock(c, t.output!),
+          if (t.name == 'vision_analyze' || t.name == 'image_generate')
+            InspectedImageTile(source: t.input ?? '', output: t.output),
         ],
       ],
     );
@@ -2881,6 +3013,9 @@ class _InputPanelState extends State<_InputPanel> {
 
   List<Widget> _body(NgColors c, NgInputRequest r) {
     switch (r.kind) {
+      case NgRequestKind.setupBeat:
+        // Drawn by SetupBeatCard instead of this panel.
+        return const [];
       case NgRequestKind.approval:
         return [
           Wrap(

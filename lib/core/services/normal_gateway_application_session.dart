@@ -703,6 +703,54 @@ class NormalGatewayApplicationSession {
     return true;
   }
 
+  /// Answers [sessionId]'s connection operation card; false when this owner
+  /// does not hold that chat or its runtime session.
+  Future<bool> tryRespondToConnection({
+    required String sessionId,
+    required String opId,
+    required Map<String, dynamic> result,
+  }) async {
+    final chat = _aliases[sessionId];
+    final gateway = client;
+    if (_closed || chat == null || gateway == null) return false;
+    return gateway.respondToConnection(
+      sessionId: chat.localSessionId,
+      opId: opId,
+      result: result,
+    );
+  }
+
+  /// Answers the `setup_beat` card [requestId] for [sessionId]; false when
+  /// this owner does not hold it open.
+  bool tryRespondToSetupBeat({
+    required String sessionId,
+    required String requestId,
+    required Map<String, dynamic> result,
+  }) {
+    final chat = _aliases[sessionId];
+    final gateway = client;
+    if (_closed || chat == null || gateway == null) return false;
+    final sent = gateway.respondToSetupBeat(
+      sessionId: chat.localSessionId,
+      requestId: requestId,
+      result: result,
+    );
+    if (sent) forgetAnsweredInput(requestId);
+    return sent;
+  }
+
+  /// Whether this owner still holds [sessionId]'s setup card [requestId]
+  /// open, so an answer that did not go out can be sent again.
+  bool holdsSetupBeat({required String sessionId, required String requestId}) {
+    final chat = _aliases[sessionId];
+    final gateway = client;
+    if (_closed || chat == null || gateway == null) return false;
+    return gateway.holdsSetupBeat(
+      sessionId: chat.localSessionId,
+      requestId: requestId,
+    );
+  }
+
   void forgetAnsweredInput(String requestId) {
     for (final chat in chats) {
       if (chat._pendingInput.remove(requestId) != null) {
@@ -1925,6 +1973,9 @@ class NormalGatewayChatOwner {
       'notification.clear',
       'background.complete',
       'review.summary',
+      // manage_catalog install cards: the chat screen draws and answers them.
+      'connection.request',
+      'connection.update',
     }.contains(event.type)) {
       _auxiliaryEvents.add(event);
       if (_auxiliaryEvents.length > 20) _auxiliaryEvents.removeAt(0);
@@ -3206,6 +3257,7 @@ class _ReceivedTurnPersistence {
 
 bool _interactive(String type) => const {
   'approval.request',
+  'setup_beat.request',
   'clarify.request',
   'clarify.remaining',
   'sudo.request',

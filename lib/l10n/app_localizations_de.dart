@@ -6597,4 +6597,277 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get appearance_theme_import_failed =>
       'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
+
+  @override
+  String get windows_window_activity => 'Share chat activity';
+
+  @override
+  String get windows_window_activity_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+
+  @override
+  String get windows_completion_sound => 'Completion sound';
+
+  @override
+  String get windows_sound_default => 'Windows default';
+
+  @override
+  String get windows_sound_mail => 'Mail';
+
+  @override
+  String get windows_sound_reminder => 'Reminder';
+
+  @override
+  String get windows_sound_silent => 'Silent';
+
+  @override
+  String get render_widget_file_truncated =>
+      'Nur der Anfang dieser Datei wurde gelesen, daher ist das Widget möglicherweise unvollständig.';
+
+  @override
+  String get setup_beat_title => 'Einrichtung';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return '$name verwenden';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Wie soll Hermes dich nennen?';
+
+  @override
+  String get setup_beat_on_computer =>
+      'Dieser Schritt erfolgt in Hermes auf dem Computer, auf dem es läuft. „Weiter“ behält, was dort eingerichtet ist.';
+
+  @override
+  String get setup_beat_not_waiting =>
+      'Diese Einrichtungskarte wartet nicht mehr auf eine Antwort.';
+
+  @override
+  String get catalog_kind_plugin => 'Plugin';
+
+  @override
+  String get catalog_kind_skill => 'Skill';
+
+  @override
+  String get catalog_tier_official => 'Offiziell';
+
+  @override
+  String get catalog_tier_verified => 'Geprüft';
+
+  @override
+  String get catalog_tier_community => 'Community';
+
+  @override
+  String get catalog_install => 'Installieren';
+
+  @override
+  String get catalog_waiting => 'Wartet auf deine Wahl';
+
+  @override
+  String get catalog_installed => 'Installiert';
+
+  @override
+  String get catalog_installed_off => 'Installiert, nicht aktiviert';
+
+  @override
+  String get catalog_skipped => 'Übersprungen';
+
+  @override
+  String get catalog_not_installed => 'Nicht installiert';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return 'Wird im Profil $profile installiert';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo bei $sha';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return 'Sicherheitsprüfung: $status. $summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return 'Benötigt Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return 'Skill $name ist einsatzbereit';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return 'Benötigt noch: $names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name hat sich nicht verbunden: $error';
+  }
+
+  @override
+  String get catalog_send_failed =>
+      'Deine Wahl wurde nicht gesendet. Versuche es erneut.';
+
+  @override
+  String get attachment_video_speed => 'Wiedergabegeschwindigkeit';
+
+  @override
+  String get catalog_installing => 'Wird installiert…';
+
+  @override
+  String get catalog_phase_downloading => 'Wird heruntergeladen…';
+
+  @override
+  String get catalog_phase_python_packages =>
+      'Python-Pakete werden installiert…';
+
+  @override
+  String get catalog_phase_loading_tools => 'Werkzeuge werden geladen…';
+
+  @override
+  String get setup_beat_send_failed =>
+      'Deine Antwort wurde nicht gesendet. Versuche es erneut.';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Tools',
+      one: '1 Tool',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get render_svg_not_drawn => 'Dieses SVG wurde nicht gezeichnet.';
+
+  @override
+  String get render_notes_directive => 'Notiz-Direktive';
+
+  @override
+  String get render_maths_source => 'Formelquelle';
+
+  @override
+  String get render_inline_maths_source => 'Inline-Formelquelle';
+
+  @override
+  String get render_sequence_outline => 'Ablaufübersicht';
+
+  @override
+  String get render_diagram_outline => 'Diagrammübersicht';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return 'Revision $index von $count';
+  }
+
+  @override
+  String get render_previous_revision => 'Vorherige Revision';
+
+  @override
+  String get render_next_revision => 'Nächste Revision';
+
+  @override
+  String get render_show_rendered => 'Dargestellt';
+
+  @override
+  String get render_show_source => 'Quelltext';
+
+  @override
+  String render_copied_file(String name) {
+    return '$name kopiert';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return '$name kopieren';
+  }
+
+  @override
+  String get render_artifact_too_long =>
+      'Dieses Artefakt ist zu lang, um es hier als Seite anzuzeigen.';
+
+  @override
+  String get render_active_content_removed =>
+      'Skripte, Frames und externe Adressen wurden entfernt.';
+
+  @override
+  String render_widget_file(String file) {
+    return 'Widget-Datei $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      'Läuft als Text in diesem Chat. Skripte und externe Frames werden entfernt.';
+
+  @override
+  String get render_load_widget => 'Widget laden';
+
+  @override
+  String get render_not_html_widget => 'Diese Datei ist kein HTML-Widget.';
+
+  @override
+  String get render_widget_sent => 'An diesen Chat gesendet';
+
+  @override
+  String get render_widget_not_sent => 'Nicht an diesen Chat gesendet';
+
+  @override
+  String get render_widget_throttled => 'Warte kurz, bevor du erneut sendest';
+
+  @override
+  String get render_widget_too_long => 'Diese Anfrage ist zu lang zum Senden';
+
+  @override
+  String get render_widget_no_gesture =>
+      'Tippe zum Senden auf ein Steuerelement im Widget';
+
+  @override
+  String get render_widget_invalid =>
+      'Diese Anfrage konnte nicht gesendet werden';
+
+  @override
+  String get render_inspected_image => 'Untersuchtes Bild';
+
+  @override
+  String get render_contributions => 'Beiträge';
+
+  @override
+  String get render_contributions_intro =>
+      'Nur in Ares eingebaute Beiträge können eine Antwort ergänzen. Chattext kann keinen registrieren, und eine Freigabe gilt nur für diese Verbindung.';
+
+  @override
+  String render_grant_plugin(String name) {
+    return '$name erlauben';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return '$name entziehen';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return 'Antwortkarten für ::$directive';
+  }
+
+  @override
+  String get render_plugin_notes => 'Notizen';
+
+  @override
+  String get catalog_scan_passed => 'bestanden';
+
+  @override
+  String get catalog_scan_warnings => 'Warnungen gefunden';
+
+  @override
+  String get catalog_scan_failed => 'fehlgeschlagen';
 }

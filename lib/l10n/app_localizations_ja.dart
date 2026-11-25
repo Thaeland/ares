@@ -6407,4 +6407,268 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get appearance_theme_import_failed =>
       'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
+
+  @override
+  String get windows_window_activity => 'Share chat activity';
+
+  @override
+  String get windows_window_activity_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+
+  @override
+  String get windows_completion_sound => 'Completion sound';
+
+  @override
+  String get windows_sound_default => 'Windows default';
+
+  @override
+  String get windows_sound_mail => 'Mail';
+
+  @override
+  String get windows_sound_reminder => 'Reminder';
+
+  @override
+  String get windows_sound_silent => 'Silent';
+
+  @override
+  String get render_widget_file_truncated =>
+      'このファイルは先頭部分しか読み込まれていないため、ウィジェットが不完全な可能性があります。';
+
+  @override
+  String get setup_beat_title => 'セットアップ';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return '$name を使う';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Hermes はあなたを何と呼べばよいですか？';
+
+  @override
+  String get setup_beat_on_computer =>
+      'この手順は Hermes が動作しているコンピューターで行います。「続ける」を選ぶと、そこでの設定がそのまま使われます。';
+
+  @override
+  String get setup_beat_not_waiting => 'このセットアップカードはもう回答を待っていません。';
+
+  @override
+  String get catalog_kind_plugin => 'プラグイン';
+
+  @override
+  String get catalog_kind_skill => 'スキル';
+
+  @override
+  String get catalog_tier_official => '公式';
+
+  @override
+  String get catalog_tier_verified => '検証済み';
+
+  @override
+  String get catalog_tier_community => 'コミュニティ';
+
+  @override
+  String get catalog_install => 'インストール';
+
+  @override
+  String get catalog_waiting => '選択を待っています';
+
+  @override
+  String get catalog_installed => 'インストール済み';
+
+  @override
+  String get catalog_installed_off => 'インストール済み（未有効化）';
+
+  @override
+  String get catalog_skipped => 'スキップしました';
+
+  @override
+  String get catalog_not_installed => 'インストールされていません';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return '$profile プロファイルにインストールされます';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo（$sha）';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return 'セキュリティスキャン: $status。$summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return 'Hermes $range が必要です';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return 'スキル $name を使用できます';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return 'まだ必要: $names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name に接続できませんでした: $error';
+  }
+
+  @override
+  String get catalog_send_failed => '選択を送信できませんでした。もう一度お試しください。';
+
+  @override
+  String get attachment_video_speed => '再生速度';
+
+  @override
+  String get catalog_installing => 'インストール中…';
+
+  @override
+  String get catalog_phase_downloading => 'ダウンロード中…';
+
+  @override
+  String get catalog_phase_python_packages => 'Python パッケージをインストール中…';
+
+  @override
+  String get catalog_phase_loading_tools => 'ツールを読み込み中…';
+
+  @override
+  String get setup_beat_send_failed => '回答を送信できませんでした。もう一度お試しください。';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 個のツール',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get render_svg_not_drawn => 'この SVG は描画されませんでした。';
+
+  @override
+  String get render_notes_directive => 'メモ ディレクティブ';
+
+  @override
+  String get render_maths_source => '数式のソース';
+
+  @override
+  String get render_inline_maths_source => 'インライン数式のソース';
+
+  @override
+  String get render_sequence_outline => 'シーケンスの概要';
+
+  @override
+  String get render_diagram_outline => '図の概要';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return 'リビジョン $index/$count';
+  }
+
+  @override
+  String get render_previous_revision => '前のリビジョン';
+
+  @override
+  String get render_next_revision => '次のリビジョン';
+
+  @override
+  String get render_show_rendered => '表示';
+
+  @override
+  String get render_show_source => 'ソース';
+
+  @override
+  String render_copied_file(String name) {
+    return '$name をコピーしました';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return '$name をコピー';
+  }
+
+  @override
+  String get render_artifact_too_long => 'この成果物は長すぎるため、ここではページとして表示できません。';
+
+  @override
+  String get render_active_content_removed => 'スクリプト、フレーム、外部アドレスは削除されました。';
+
+  @override
+  String render_widget_file(String file) {
+    return 'ウィジェット $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      'このチャットではテキストとして動作します。スクリプトと外部フレームは削除されます。';
+
+  @override
+  String get render_load_widget => 'ウィジェットを読み込む';
+
+  @override
+  String get render_not_html_widget => 'このファイルは HTML ウィジェットではありません。';
+
+  @override
+  String get render_widget_sent => 'このチャットに送信しました';
+
+  @override
+  String get render_widget_not_sent => 'このチャットに送信されませんでした';
+
+  @override
+  String get render_widget_throttled => '少し待ってからもう一度送信してください';
+
+  @override
+  String get render_widget_too_long => 'このリクエストは長すぎるため送信できません';
+
+  @override
+  String get render_widget_no_gesture => '送信するにはウィジェット内のコントロールをタップしてください';
+
+  @override
+  String get render_widget_invalid => 'このリクエストを送信できませんでした';
+
+  @override
+  String get render_inspected_image => '確認した画像';
+
+  @override
+  String get render_contributions => 'コントリビューション';
+
+  @override
+  String get render_contributions_intro =>
+      '返信に追加できるのは Ares に組み込まれたコントリビューションだけです。チャットのテキストからは登録できず、許可はこの接続にのみ適用されます。';
+
+  @override
+  String render_grant_plugin(String name) {
+    return '$name を許可';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return '$name の許可を取り消す';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return '::$directive の返信カード';
+  }
+
+  @override
+  String get render_plugin_notes => 'メモ';
+
+  @override
+  String get catalog_scan_passed => '合格';
+
+  @override
+  String get catalog_scan_warnings => '警告あり';
+
+  @override
+  String get catalog_scan_failed => '不合格';
 }
