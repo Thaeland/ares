@@ -2637,23 +2637,38 @@ class DashboardClient {
     return future;
   }
 
+  // Credential acquisition is single-origin. A proxy redirect cannot receive
+  // Cloudflare headers or decide where a password, cookie or ticket goes.
+  Future<http.Response> _authRequest(
+    String method,
+    Uri uri, {
+    required Map<String, String> headers,
+    String? body,
+  }) async {
+    final request = http.Request(method, uri)..followRedirects = false;
+    request.headers.addAll(headers);
+    if (body != null) request.body = body;
+    return http.Response.fromStream(
+      await _http.send(request).timeout(ApiClient.requestTimeout),
+    ).timeout(ApiClient.requestTimeout);
+  }
+
   /// Logs in against the `basic` password provider and caches the session
   /// cookie. Throws on failure (bad credentials → 401, etc.).
   Future<String> _login() async {
-    final res = await _http
-        .post(
-          Uri.parse('$_baseUrl/auth/password-login'),
-          headers: {
-            'Content-Type': 'application/json',
-            ...HermesSignInVault.instance.accessHeadersFor(Uri.parse(_baseUrl)),
-          },
-          body: jsonEncode({
-            'provider': 'basic',
-            'username': _username,
-            'password': _password,
-          }),
-        )
-        .timeout(ApiClient.requestTimeout);
+    final res = await _authRequest(
+      'POST',
+      Uri.parse('$_baseUrl/auth/password-login'),
+      headers: {
+        'Content-Type': 'application/json',
+        ...HermesSignInVault.instance.accessHeadersFor(Uri.parse(_baseUrl)),
+      },
+      body: jsonEncode({
+        'provider': 'basic',
+        'username': _username,
+        'password': _password,
+      }),
+    );
     if (res.statusCode == 401) {
       throw Exception('Dashboard login failed: invalid username or password');
     }
@@ -2710,14 +2725,11 @@ class DashboardClient {
   }
 
   Future<String> _fetchToken() async {
-    final res = await _http
-        .get(
-          Uri.parse('$_baseUrl/'),
-          headers: HermesSignInVault.instance.accessHeadersFor(
-            Uri.parse(_baseUrl),
-          ),
-        )
-        .timeout(ApiClient.requestTimeout);
+    final res = await _authRequest(
+      'GET',
+      Uri.parse('$_baseUrl/'),
+      headers: HermesSignInVault.instance.accessHeadersFor(Uri.parse(_baseUrl)),
+    );
     if (res.statusCode != 200) {
       throw DashboardAuthUnavailableException(
         'Dashboard not reachable',
@@ -2783,8 +2795,8 @@ class DashboardClient {
   }
 
   /// Sends one dashboard request and returns the raw response, retrying once
-  /// with fresh credentials after a 401. Unlike the typed helpers this never
-  /// throws for an HTTP status, so callers can read the gateway's own error.
+  /// with fresh credentials after a 401. For workspace reads use [workspaceJson]
+  /// instead: it fences physical dispatch, forbids redirects and never replays.
   Future<http.Response> apiRequest(
     String method,
     String endpoint, {
@@ -2799,6 +2811,7 @@ class DashboardClient {
       '$_baseUrl/api/$endpoint',
     ).replace(queryParameters: queryParameters);
     final request = http.Request(method, uri)..headers.addAll(headers);
+    if (endpoint == 'auth/ws-ticket') request.followRedirects = false;
     if (body != null) request.body = body is String ? body : jsonEncode(body);
     final res = await http.Response.fromStream(
       await _http.send(request).timeout(timeout),
@@ -2817,6 +2830,75 @@ class DashboardClient {
     return res;
   }
 
+  /// Internal transport for the audited workspace endpoint catalogue. No URL,
+  /// auth headers, redirect, automatic retry or raw error body crosses it.
+  Future<Object?> workspaceJson(
+    List<String> segments, {
+    required Map<String, String> query,
+    required void Function() check,
+    bool mintHostTerminalTicket = false,
+  }) async {
+    if (segments.isEmpty ||
+        segments.any(
+          (s) =>
+              s.isEmpty ||
+              s == '.' ||
+              s == '..' ||
+              RegExp(r'[/\\%?#\x00-\x1f]').hasMatch(s),
+        )) {
+      throw const FormatException('Invalid workspace route');
+    }
+    if (mintHostTerminalTicket &&
+        (segments.join('/') != 'webapp/socket-ticket' ||
+            query['socket'] != 'host-terminal')) {
+      throw const FormatException('Invalid ticket route');
+    }
+    check();
+    final base = Uri.parse(_baseUrl);
+    final uri = base.replace(
+      pathSegments: [
+        ...base.pathSegments.where((s) => s.isNotEmpty),
+        'api',
+        ...segments,
+      ],
+      queryParameters: query.isEmpty ? null : query,
+    );
+    final request = http.Request(mintHostTerminalTicket ? 'POST' : 'GET', uri)
+      ..followRedirects = false;
+    request.headers.addAll(await _authHeaders());
+    check();
+    final response = await _http
+        .send(request)
+        .timeout(ApiClient.requestTimeout);
+    final bytes = BytesBuilder(copy: false);
+    await for (final chunk in response.stream.timeout(
+      ApiClient.requestTimeout,
+    )) {
+      check();
+      if (response.statusCode != 200) {
+        throw DashboardHttpException(response.statusCode);
+      }
+      if (bytes.length + chunk.length > 2 * 1024 * 1024) {
+        throw const FormatException('Workspace response too large');
+      }
+      bytes.add(chunk);
+    }
+    check();
+    if (response.statusCode != 200) {
+      throw DashboardHttpException(response.statusCode);
+    }
+    final data = jsonDecode(utf8.decode(bytes.takeBytes()));
+    if (!mintHostTerminalTicket) return data;
+    if (data is! Map ||
+        data['ticket'] is! String ||
+        (data['ticket'] as String).isEmpty ||
+        data['ttl_seconds'] is! int ||
+        (data['ttl_seconds'] as int) <= 0) {
+      throw const FormatException('Invalid terminal ticket');
+    }
+    return true; // Negotiation only. Never give a terminal credential to UI.
+  }
+
   /// Resolves the dashboard auth headers for a caller that issues its own
   /// requests against [baseUrl].
   ///
@@ -2831,9 +2913,11 @@ class DashboardClient {
   Future<String> mintWebSocketTicket({bool retried = false}) async {
     final authGeneration = _authGeneration;
     final headers = await _authHeaders();
-    final res = await _http
-        .post(Uri.parse('$_baseUrl/api/auth/ws-ticket'), headers: headers)
-        .timeout(ApiClient.requestTimeout);
+    final res = await _authRequest(
+      'POST',
+      Uri.parse('$_baseUrl/api/auth/ws-ticket'),
+      headers: headers,
+    );
     if (res.statusCode == 401 && !retried) {
       _resetAuth(ifGeneration: authGeneration);
       return mintWebSocketTicket(retried: true);

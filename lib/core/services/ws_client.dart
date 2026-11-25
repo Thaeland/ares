@@ -6,6 +6,7 @@
 // a JSON-RPC response with the same id.
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:uuid/uuid.dart';
@@ -282,8 +283,39 @@ class GatewayServerRequest {
   }
 }
 
+/// dart:io WebSocket.connect opens a GET through customClient.openUrl. Never
+/// forward its credential-bearing protocol/header set on an HTTP redirect.
+final class _UpgradeClient implements HttpClient {
+  _UpgradeClient(this.inner);
+  final HttpClient inner;
+  @override
+  Future<HttpClientRequest> openUrl(String method, Uri url) async =>
+      (await inner.openUrl(method, url))..followRedirects = false;
+  @override
+  void close({bool force = false}) => inner.close(force: force);
+  @override
+  dynamic noSuchMethod(Invocation invocation) =>
+      throw UnsupportedError('Not an upgrade operation');
+}
+
+/// A live binding observed on this exact socket, never a persisted locator.
+final class WorkspaceRuntime {
+  WorkspaceRuntime._(this.runtimeId, this.profile, this.cwd, this.backend);
+  final String runtimeId;
+  final String? profile;
+  final String? cwd;
+  final String? backend;
+}
+
 /// WebSocket client for the Hermes JSON-RPC gateway.
 class WsClient {
+  int get socketEpoch => _connectionGeneration;
+  final _workspaceBindings = <String, WorkspaceRuntime>{};
+  // Retain per-socket fences even after close/rebinding: a delayed older
+  // acknowledgement cannot resurrect authority cleared by the newer one.
+  final _workspaceReceipt = <String, int>{};
+  WorkspaceRuntime? workspaceBinding(String storedId) =>
+      _workspaceBindings[storedId];
   final String baseUrl;
   final String? _token;
   final String? _ticket;
@@ -407,14 +439,11 @@ class WsClient {
     final accessHeaders = HermesSignInVault.instance.accessHeadersFor(
       Uri.parse(wsUrl),
     );
-    // Without a client certificate the platform WebSocket default is kept:
-    // flutter_test's binding replaces every freshly constructed HttpClient
-    // with a mock, and only the SDK's shared default (built before tests
-    // install that override) still reaches a real loopback server. A
-    // certificate always needs its own context, so that path constructs one.
-    final customClient = _clientCertificate == null
-        ? null
-        : _tlsClientFactory.createHttpClient(_clientCertificate);
+    // Ticket-bearing upgrades require a no-redirect client even without mTLS.
+    // Preserve platform trust and the exact configured client identity.
+    final customClient = useProtocol || _clientCertificate != null
+        ? _UpgradeClient(_tlsClientFactory.createHttpClient(_clientCertificate))
+        : null;
     final channel = IOWebSocketChannel.connect(
       Uri.parse(wsUrl),
       customClient: customClient,
@@ -455,6 +484,9 @@ class WsClient {
         // Preserve the original setup failure after closing this exact socket.
       }
       rethrow;
+    } finally {
+      // The upgraded socket has detached from this HTTP client.
+      customClient?.close();
     }
   }
 
@@ -467,6 +499,8 @@ class WsClient {
     final wasConnected = _connected || _channel != null;
     _connected = false;
     _channel = null;
+    _workspaceBindings.clear();
+    _workspaceReceipt.clear();
     // Reject all pending request-response calls.
     for (var entry in _pending.values) {
       entry.timer?.cancel();
@@ -990,6 +1024,11 @@ class WsClient {
 
     final id = _nextId++;
     final completer = Completer<Map<String, dynamic>>();
+    final generation = _connectionGeneration;
+    final isBinding = method == 'session.create' || method == 'session.resume';
+    final requestedId = params['session_id'];
+    final requestedProfile =
+        params['profile'] ?? (includeProfile ? _profile?.trim() : null);
     final timer = Timer(timeout, () {
       _pending.remove(id);
       if (!completer.isCompleted) {
@@ -1018,7 +1057,99 @@ class WsClient {
       // A local observer must not turn a successfully emitted RPC into an
       // apparent transport failure.
     }
-    return completer.future;
+    if (!isBinding && method != 'session.close') return completer.future;
+    final reply = await completer.future;
+    if (generation != _connectionGeneration || reply['error'] != null) {
+      return reply;
+    }
+    if (!isBinding) {
+      if (requestedId is String) _noteWorkspaceReceipt(id, [requestedId]);
+      _workspaceBindings.removeWhere(
+        (id, b) => id == requestedId || b.runtimeId == requestedId,
+      );
+    } else {
+      _noteWorkspaceBinding(
+        id,
+        reply['result'],
+        method == 'session.resume' ? requestedId : null,
+        requestedProfile,
+      );
+    }
+    return reply;
+  }
+
+  // Evidence on THIS socket only. A session coordinator can use its own
+  // independent socket; its IDs must not leak into workspace dispatch.
+  void _noteWorkspaceBinding(
+    int requestId,
+    Object? result,
+    Object? expectedId,
+    Object? requestedProfile,
+  ) {
+    if (result is! Map) return;
+    final runtime = result['session_id'];
+    final info = result['info'];
+    final infoId = info is Map ? info['stored_session_id'] : null;
+    final stored = result['stored_session_id'] ?? infoId;
+    if (runtime is! String || runtime.isEmpty) return;
+    final ids = {
+      runtime,
+      if (stored is String) stored,
+      if (expectedId is String) expectedId,
+    };
+    if (!_noteWorkspaceReceipt(requestId, ids)) {
+      // Completion order disagrees with request order. Neither ordering is
+      // server-side proof: require a new receipt, don't pick a winner.
+      _workspaceBindings.removeWhere(
+        (id, b) => ids.contains(id) || ids.contains(b.runtimeId),
+      );
+      return;
+    }
+    _workspaceBindings.removeWhere(
+      (id, b) => b.runtimeId == runtime && id != stored,
+    );
+    if (stored is! String || stored.isEmpty) return;
+    final reportedProfile = info is Map ? info['profile_name'] : null;
+    final profile = reportedProfile ?? requestedProfile;
+    final cwd = info is Map ? info['cwd'] : null;
+    final backend = info is Map ? info['terminal_backend'] : null;
+    if ((infoId != null && stored != infoId) ||
+        (requestedProfile != null &&
+            reportedProfile != null &&
+            reportedProfile != requestedProfile) ||
+        (expectedId != null && stored != expectedId) ||
+        (profile != null && profile is! String) ||
+        (cwd != null && cwd is! String) ||
+        (backend != null && backend is! String)) {
+      _workspaceBindings.remove(stored);
+      _workspaceBindings.remove(expectedId);
+      return;
+    }
+    final old = _workspaceBindings[stored];
+    if (old == null ||
+        old.runtimeId != runtime ||
+        old.profile != profile ||
+        old.cwd != cwd ||
+        old.backend != backend) {
+      _workspaceBindings[stored] = WorkspaceRuntime._(
+        runtime,
+        profile as String?,
+        cwd as String?,
+        backend as String?,
+      );
+    }
+  }
+
+  bool _noteWorkspaceReceipt(int requestId, Iterable<String> ids) {
+    var ordered = true;
+    for (final id in ids) {
+      if ((_workspaceReceipt[id] ?? -1) > requestId) {
+        ordered = false;
+      } else {
+        _workspaceReceipt[id] = requestId;
+      }
+    }
+    return ordered;
   }
 
   /// Send a JSON-RPC method call and receive streaming events.

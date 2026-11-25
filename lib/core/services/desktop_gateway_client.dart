@@ -11,6 +11,7 @@ import 'connection_manager.dart';
 import 'gateway_turn_coordinator.dart';
 import 'gateway_turn_journal.dart';
 import 'projects_gateway_client.dart';
+import 'remote_workspace.dart';
 import 'ws_client.dart';
 
 typedef DesktopAsyncEventCallback =
@@ -105,7 +106,18 @@ class DesktopGatewayClient implements SlashCommandGateway {
     required this._dashboard,
     this._gatewayProfile,
     this._clientCertificate,
-  });
+  }) {
+    workspace = RemoteWorkspaceOwner(
+      connectionId: _connectionId,
+      expectedBaseUrl: _baseUrl,
+      profile: _gatewayProfile,
+      dashboard: _dashboard,
+      connect: _ensureSocket,
+      ownsSocket: _ownsSocket,
+    );
+  }
+
+  late final RemoteWorkspaceOwner workspace;
 
   void _checkOpen() {
     if (_closed) throw StateError('DesktopGatewayClient is closed.');
@@ -348,6 +360,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
     final client = WsClient(
       _baseUrl,
       ticket: ticket,
+      ticketInSubprotocol: true,
       profile: _gatewayProfile,
       clientCertificate: _clientCertificate,
     );
@@ -817,6 +830,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
               final client = WsClient(
                 _baseUrl,
                 ticket: ticket,
+                ticketInSubprotocol: true,
                 profile: _gatewayProfile,
                 clientCertificate: _clientCertificate,
               );
@@ -1551,6 +1565,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
     // Idempotent: a double close must not re-enter or corrupt state.
     if (_closed) return;
     _closed = true;
+    workspace.close();
     slashRefusals.reset();
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
