@@ -9,7 +9,7 @@ extension FleetUpdates on GatewayFleet {
           await old.refreshReceipt();
           return old;
         }
-        final r = FleetUpdateRow._(h, _updates);
+        final r = FleetUpdateRow._(h, _updates, _installationBusy);
         await r._check();
         return r;
       }),
@@ -29,9 +29,10 @@ extension FleetUpdates on GatewayFleet {
 }
 
 final class FleetUpdateRow {
-  FleetUpdateRow._(this.host, this._operations);
+  FleetUpdateRow._(this.host, this._operations, this._busy);
   final FleetHost host;
   final Map<FleetHost, FleetUpdateRow> _operations;
+  final bool Function(String install) _busy;
   WorkspaceTarget? _target;
   FleetUpdateCheck? _offer;
   String state = 'Not checked';
@@ -42,7 +43,8 @@ final class FleetUpdateRow {
       _offer?.eligible == true &&
       !_handedOff &&
       _target?.isCurrent == true &&
-      !host.busyInstallation;
+      !host.busyInstallation &&
+      !_busy(_offer!.install);
   String get description =>
       '${host.gateway.connection.label} · ${host.gateway.url.display}';
   Future<void> _check() async {
@@ -80,12 +82,23 @@ final class FleetUpdateRow {
     _operations[host] = this;
     _handedOff = true;
     state = 'Requesting';
+    final install = _offer!.install;
     try {
-      _action = await _target!.startFleetUpdate(_offer!);
+      // Rechecked after the eligibility re-read and again immediately before
+      // the POST leaves: a chat may start on any entry for this installation.
+      _action = await _target!.startFleetUpdate(
+        _offer!,
+        admit: () => host.current && !_busy(install),
+      );
       state = _action == null
           ? 'Accepted; receipt unavailable'
           : 'Accepted; awaiting receipt';
       if (hasReceipt) await refreshReceipt();
+    } on FleetUpdateHeld {
+      // Nothing was sent. Release the reservation so a later check can retry.
+      if (identical(_operations[host], this)) _operations.remove(host);
+      _handedOff = false;
+      state = 'Skipped: a chat on this installation is running';
     } catch (_) {
       state = 'Not confirmed; do not resend automatically';
     }

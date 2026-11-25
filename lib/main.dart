@@ -1615,19 +1615,28 @@ class HomeScreenState extends State<HomeScreen> {
         widget.launchIntents?.pendingQuickChat.value == true) {
       return;
     }
+    final primary = GatewayFleet.primaryId(widget.connManager, _connections);
     final lastId =
-        GatewayFleet.primaryId(widget.connManager, _connections) ??
-        widget.connManager.prefs.getString(_lastConnectionKey);
+        primary ?? widget.connManager.prefs.getString(_lastConnectionKey);
     if (lastId == null) return;
     final conn = _connections.where((c) => c.id == lastId).firstOrNull;
     if (conn == null) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _navigateToWorkspace(conn);
+      // Launching on the primary is routing, not a last-used choice: share
+      // and quick-chat keep following the account the user last opened.
+      if (mounted) {
+        _navigateToWorkspace(conn, rememberLastUsed: primary == null);
+      }
     });
   }
 
-  void _navigateToWorkspace(SavedConnection conn) {
-    widget.connManager.prefs.setString(_lastConnectionKey, conn.id);
+  void _navigateToWorkspace(
+    SavedConnection conn, {
+    bool rememberLastUsed = true,
+  }) {
+    if (rememberLastUsed) {
+      widget.connManager.prefs.setString(_lastConnectionKey, conn.id);
+    }
     final sharedPayload = widget.shareIntents?.takePendingShare();
     final initialQuickChat =
         widget.launchIntents?.takePendingQuickChat() == true &&

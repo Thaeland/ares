@@ -2884,6 +2884,9 @@ class DashboardClient {
     String? webappDirection,
     bool makeWebappPrimary = false,
     bool startFleetUpdate = false,
+    // Last admission gate, run after every await and immediately before the
+    // request leaves. It may throw; nothing is sent when it does.
+    void Function()? beforeSend,
   }) async {
     if (segments.isEmpty ||
         segments.any(
@@ -2954,6 +2957,7 @@ class DashboardClient {
           : '{}';
     }
     check();
+    beforeSend?.call();
     final response = await _http
         .send(request)
         .timeout(ApiClient.requestTimeout);

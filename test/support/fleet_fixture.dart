@@ -20,6 +20,11 @@ class FleetFixture {
   String primary = 'local';
   String receipt = '0' * 32;
   bool mayUpdate = true;
+
+  /// Holds `GET /api/hermes/update/check` until completed, so a test can
+  /// change chat state between eligibility review and the update POST.
+  Completer<void>? holdCheck;
+  final enteredCheck = Completer<void>();
   String? direction;
   int revision = 0;
   final writes =
@@ -188,6 +193,11 @@ class FleetFixture {
               ],
             };
     } else if (path == '/api/hermes/update/check') {
+      final held = holdCheck;
+      if (held != null) {
+        if (!enteredCheck.isCompleted) enteredCheck.complete();
+        await held.future;
+      }
       body = {
         'install_method': 'git',
         'current_version': '1.2.3',

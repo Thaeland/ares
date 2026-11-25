@@ -82,6 +82,9 @@ class FleetSsh {
     final f = _pin(d);
     if (!await f.exists()) return null;
     final s = await f.readAsString();
+    // An empty pin is an enrollment interrupted between exclusive creation
+    // and the write. It pins nothing, so the host is still unenrolled.
+    if (s.isEmpty) return null;
     if (!s.startsWith('ares-pinned ')) _refuse('Invalid saved host key.');
     final key = SshPublicKey.parse(s.substring('ares-pinned '.length));
     if (s != key.line) _refuse('Invalid saved host key.');
@@ -97,7 +100,16 @@ class FleetSsh {
     try {
       await f.create(exclusive: true);
     } on FileSystemException {
-      if ((await enrolled(d))?.encoded == key.encoded) return;
+      final existing = await enrolled(d);
+      if (existing?.encoded == key.encoded) return;
+      // Only an interrupted (empty) enrollment may be completed in place.
+      if (existing == null && await f.length() == 0) {
+        await f.writeAsString(key.line, flush: true);
+        if ((await enrolled(d))?.encoded != key.encoded) {
+          _refuse('Could not verify host-key enrollment.');
+        }
+        return;
+      }
       _refuse(
         'A different key is already pinned. Verify the change separately.',
       );

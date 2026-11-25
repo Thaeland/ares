@@ -67,6 +67,11 @@ final class FleetHost extends ChangeNotifier {
       !_closed &&
       ConnectionMutationBarrier.isCurrent(gateway.connection.id, _epoch);
   List<String> profiles = const [];
+
+  /// The installation behind this saved entry, from the last good roster.
+  /// Null while unknown; a busy host with an unknown installation blocks
+  /// every fleet update, because it may be the same installation.
+  String? installId;
   List<FleetSession> sessions = const [];
   int total = 0;
   int _nextOffset = 0;
@@ -99,6 +104,8 @@ final class FleetHost extends ChangeNotifier {
       host.checkCurrent();
       if (!identical(flight, _flight) || !current) return;
       _target = host;
+      final install = roster['install_id'];
+      installId = install is String && install.isNotEmpty ? install : null;
       profiles = List.unmodifiable([
         for (final r in roster['profiles'] as List) r['name'] as String,
       ]);
@@ -117,6 +124,7 @@ final class FleetHost extends ChangeNotifier {
           ? e.reason
           : WorkspaceFailure.unavailable;
       profiles = const [];
+      installId = null;
       sessions = const [];
       total = 0;
       hasMore = false;
@@ -251,6 +259,18 @@ final class GatewayFleet extends ChangeNotifier {
   final _hosts = <String, FleetHost>{};
   FleetHost? host(String id) => _hosts[id];
   final _updates = <FleetHost, FleetUpdateRow>{};
+
+  /// Busy across every saved entry that is, or may be, [install]: several
+  /// addresses (LAN, Tailscale, localhost) can reach one installation.
+  bool _installationBusy(String install) => _hosts.values.any(
+    (h) =>
+        h.current &&
+        h.busyInstallation &&
+        [
+          h,
+          ...h.attachedProfiles,
+        ].any((p) => p.installId == null || p.installId == install),
+  );
   bool _closed = false;
   void _prune() {
     for (final id in _hosts.keys.toList()) {
