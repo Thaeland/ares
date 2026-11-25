@@ -358,6 +358,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
       inheritedConnectionListener?.call(connected);
       if (_closed) return;
       if (connected) {
+        slashRefusals.reset();
         // Fires inside connect() before _ws is assigned, so no identical()
         // guard is possible here. The single-flight in _ensureSocket keeps
         // loser sockets from being built concurrently.
@@ -377,6 +378,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
         }
         _connectionListener?.call(DesktopConnectionState.connected);
       } else if (identical(_ws, client)) {
+        slashRefusals.reset();
         _gatewaySessionIds.clear();
         _connectionListener?.call(DesktopConnectionState.disconnected);
         // A socket that was once live and then dropped (phone sleep,
@@ -1483,6 +1485,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
     // Idempotent: a double close must not re-enter or corrupt state.
     if (_closed) return;
     _closed = true;
+    slashRefusals.reset();
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
     _asyncEventListener = null;
