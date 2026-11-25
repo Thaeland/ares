@@ -29,6 +29,7 @@ import '../../core/widgets/slash_command_highlight.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
 import '../../core/services/attachment_draft_service.dart';
+import '../../core/widgets/client_held_queue_bar.dart';
 import '../../core/widgets/prepared_image_recovery.dart';
 import '../../core/services/prepared_image_store.dart';
 import '../../core/services/voice_composer_adapter.dart';
@@ -425,7 +426,22 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
   Future<void> _send() async {
     if (_decidingCommand) return;
     final text = _input.text.trim();
-    if (text.isEmpty && _drafts.isEmpty) return;
+    if (text.isEmpty && _drafts.isEmpty) {
+      // Empty Enter delivers the client-held head. While idle it drains;
+      // while a turn is running it is send-now (unpark, then interrupt).
+      // Nothing queued does not stop the turn — Stop and Esc do that.
+      if (!_listening &&
+          chat.queued.isNotEmpty &&
+          chat.draftOwnerCurrent &&
+          _draftWriter.isCurrent) {
+        if (chat.running) {
+          await chat.sendQueuedNow(chat.queued.first);
+        } else {
+          chat.setLocalQueuePaused(false);
+        }
+      }
+      return;
+    }
     // A command runs at once, mid-turn too; with files it is a prompt.
     final command = _drafts.isEmpty ? NgSlashLine.parse(text) : null;
     if (command != null) {
@@ -980,59 +996,37 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     }
   }
 
-  Widget _queue(NgColors c) => Padding(
-    padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextButton.icon(
-          onPressed: () => chat.setLocalQueuePaused(!chat.localQueuePaused),
-          icon: Icon(chat.localQueuePaused ? Icons.play_arrow : Icons.pause),
-          label: Text(
-            chat.localQueuePaused
-                ? 'Resume device queue'
-                : 'Pause device queue',
-          ),
+  NgQueued? _queuedByKey(String id) {
+    for (final row in chat.queued) {
+      if (row.key == id) return row;
+    }
+    return null;
+  }
+
+  Widget _queue(NgColors _) => ClientHeldQueueBar(
+    count: chat.queued.length,
+    parked: chat.localQueuePaused,
+    rows: [
+      for (final row in chat.queued)
+        ClientHeldQueueRow(
+          id: row.key,
+          text: row.display ?? row.text,
+          canEdit: row.display == null,
         ),
-        for (final q in chat.queued)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(12, 6, 4, 6),
-              decoration: BoxDecoration(
-                color: c.surface2,
-                borderRadius: BorderRadius.circular(NgRadii.md),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.schedule_send, size: 16, color: c.text3),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      q.display ?? q.text,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: NgType.bodySmall.copyWith(color: c.text2),
-                    ),
-                  ),
-                  IconButton(
-                    visualDensity: VisualDensity.compact,
-                    tooltip: 'Edit unsent prompt',
-                    icon: const Icon(Icons.edit_outlined, size: 16),
-                    onPressed: q.display == null ? () => _editLocal(q) : null,
-                  ),
-                  IconButton(
-                    visualDensity: VisualDensity.compact,
-                    tooltip: 'Remove unsent prompt',
-                    icon: const Icon(Icons.close, size: 16),
-                    onPressed: () => chat.unqueue(q),
-                  ),
-                ],
-              ),
-            ),
-          ),
-      ],
-    ),
+    ],
+    onResume: () => chat.setLocalQueuePaused(false),
+    onSend: (id) {
+      final row = _queuedByKey(id);
+      if (row != null) unawaited(chat.sendQueuedNow(row));
+    },
+    onRemove: (id) {
+      final row = _queuedByKey(id);
+      if (row != null) chat.unqueue(row);
+    },
+    onEdit: (id) {
+      final row = _queuedByKey(id);
+      if (row != null) unawaited(_editLocal(row));
+    },
   );
 
   Widget _transcript(NgColors c) {
@@ -1170,177 +1164,192 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
       if (chat.reasoningEffort != null && chat.reasoningEffort!.isNotEmpty)
         ngEffortLabel(chat.reasoningEffort),
     ].join(' · ');
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
-        child: Container(
-          decoration: BoxDecoration(
-            color: c.input,
-            borderRadius: BorderRadius.circular(NgRadii.xl),
-            border: Border.all(color: c.stroke),
-          ),
-          padding: const EdgeInsets.fromLTRB(6, 4, 6, 6),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (_imageRestoreRevision() != null)
-                PreparedImageRecovery(
-                  target: chat.imageTarget!,
-                  revision: () => _draftWriter.hasConfirmedEmptyDraft
-                      ? _imageRestoreRevision()
-                      : null,
-                  install: (text, drafts) {
-                    setState(() => _drafts.addAll(drafts));
-                    _setComposer(text);
-                  },
-                ),
-              if (_drafts.isNotEmpty || _preparing)
-                SizedBox(
-                  height: 44,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.fromLTRB(6, 6, 6, 0),
-                    children: [
-                      for (final d in _drafts)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 6),
-                          child: InputChip(
-                            avatar: Icon(
-                              d.kind == AttachmentDraftKind.image
-                                  ? Icons.image_outlined
-                                  : Icons.insert_drive_file_outlined,
-                              size: 16,
-                            ),
-                            label: ConstrainedBox(
-                              constraints: const BoxConstraints(maxWidth: 160),
-                              child: Text(
-                                d.name,
-                                overflow: TextOverflow.ellipsis,
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.escape): () {
+          if (chat.running && chat.draftOwnerCurrent) {
+            unawaited(chat.stop());
+          }
+        },
+      },
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
+          child: Container(
+            decoration: BoxDecoration(
+              color: c.input,
+              borderRadius: BorderRadius.circular(NgRadii.xl),
+              border: Border.all(color: c.stroke),
+            ),
+            padding: const EdgeInsets.fromLTRB(6, 4, 6, 6),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (_imageRestoreRevision() != null)
+                  PreparedImageRecovery(
+                    target: chat.imageTarget!,
+                    revision: () => _draftWriter.hasConfirmedEmptyDraft
+                        ? _imageRestoreRevision()
+                        : null,
+                    install: (text, drafts) {
+                      setState(() => _drafts.addAll(drafts));
+                      _setComposer(text);
+                    },
+                  ),
+                if (_drafts.isNotEmpty || _preparing)
+                  SizedBox(
+                    height: 44,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.fromLTRB(6, 6, 6, 0),
+                      children: [
+                        for (final d in _drafts)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: InputChip(
+                              avatar: Icon(
+                                d.kind == AttachmentDraftKind.image
+                                    ? Icons.image_outlined
+                                    : Icons.insert_drive_file_outlined,
+                                size: 16,
                               ),
+                              label: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 160,
+                                ),
+                                child: Text(
+                                  d.name,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              onDeleted: () => _removeDraft(d),
                             ),
-                            onDeleted: () => _removeDraft(d),
                           ),
-                        ),
-                      if (_preparing)
-                        const Padding(
-                          padding: EdgeInsets.all(10),
-                          child: SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                        if (_preparing)
+                          const Padding(
+                            padding: EdgeInsets.all(10),
+                            child: SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
                           ),
+                      ],
+                    ),
+                  ),
+                SendOnEnter(
+                  enabled:
+                      _input.text.trim().isNotEmpty ||
+                      (!_listening &&
+                          _drafts.isEmpty &&
+                          chat.queued.isNotEmpty),
+                  onNavigate: (event) =>
+                      !chat.draftOwnerCurrent ||
+                          !_draftWriter.isCurrent ||
+                          _drafts.isNotEmpty ||
+                          _listening
+                      ? KeyEventResult.ignored
+                      : _promptRecall.handle(
+                          event,
+                          _input,
+                          () => chat.items
+                              .whereType<NgUserItem>()
+                              .where(
+                                (item) => !item.pending && item.failure == null,
+                              )
+                              .map((item) => item.text),
                         ),
-                    ],
+                  onSend: () => unawaited(_send()),
+                  child: TextField(
+                    key: const ValueKey('ng-composer-field'),
+                    controller: _input,
+                    focusNode: _focus,
+                    onTap: () {
+                      // Android can hide the keyboard with Back while this node
+                      // retains focus. Explicitly show it on every composer tap.
+                      _focus.requestFocus();
+                      unawaited(
+                        SystemChannels.textInput.invokeMethod<void>(
+                          'TextInput.show',
+                        ),
+                      );
+                    },
+                    minLines: 1,
+                    maxLines: 8,
+                    textCapitalization: TextCapitalization.sentences,
+                    style: NgType.body.copyWith(color: c.text),
+                    decoration: InputDecoration(
+                      hintText: _listening
+                          ? ngL.ng_listening
+                          : chat.running
+                          ? ngL.ng_steer_or_queue_a_message
+                          : ngL.ng_message_hermes,
+                      hintStyle: NgType.body.copyWith(color: c.textMuted),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
+                    ),
                   ),
                 ),
-              SendOnEnter(
-                enabled: _input.text.trim().isNotEmpty,
-                onNavigate: (event) =>
-                    !chat.draftOwnerCurrent ||
-                        !_draftWriter.isCurrent ||
-                        _drafts.isNotEmpty ||
-                        _listening
-                    ? KeyEventResult.ignored
-                    : _promptRecall.handle(
-                        event,
-                        _input,
-                        () => chat.items
-                            .whereType<NgUserItem>()
-                            .where(
-                              (item) => !item.pending && item.failure == null,
-                            )
-                            .map((item) => item.text),
+                Row(
+                  children: [
+                    IconButton(
+                      tooltip: ngL.ng_attach,
+                      icon: Icon(Icons.add_circle_outline, color: c.text2),
+                      onPressed: _preparing ? null : _attach,
+                    ),
+                    // Expanded + Spacer split the free width evenly, so the
+                    // pill keeps its half-width cap while the row is always
+                    // filled and mic/send end flush right. A loose Flexible
+                    // left its unused share after the send button instead,
+                    // which on wide desktop windows put both buttons mid-row.
+                    Expanded(
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: NgPill(
+                          key: const ValueKey('ng-model-picker'),
+                          modelLabel,
+                          icon: Icons.auto_awesome,
+                          onTap: () => showNgModelSheet(context, chat),
+                        ),
                       ),
-                onSend: () => unawaited(_send()),
-                child: TextField(
-                  key: const ValueKey('ng-composer-field'),
-                  controller: _input,
-                  focusNode: _focus,
-                  onTap: () {
-                    // Android can hide the keyboard with Back while this node
-                    // retains focus. Explicitly show it on every composer tap.
-                    _focus.requestFocus();
-                    unawaited(
-                      SystemChannels.textInput.invokeMethod<void>(
-                        'TextInput.show',
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      tooltip: _listening
+                          ? ngL.ng_stop_dictation
+                          : ngL.ng_dictate,
+                      icon: Icon(
+                        _listening ? Icons.mic : Icons.mic_none,
+                        color: _listening ? c.accent : c.text2,
                       ),
-                    );
-                  },
-                  minLines: 1,
-                  maxLines: 8,
-                  textCapitalization: TextCapitalization.sentences,
-                  style: NgType.body.copyWith(color: c.text),
-                  decoration: InputDecoration(
-                    hintText: _listening
-                        ? ngL.ng_listening
-                        : chat.running
-                        ? ngL.ng_steer_or_queue_a_message
-                        : ngL.ng_message_hermes,
-                    hintStyle: NgType.body.copyWith(color: c.textMuted),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
-                  ),
+                      onPressed: _toggleDictation,
+                    ),
+                    if (chat.running && !hasText)
+                      IconButton.filled(
+                        tooltip: ngL.ng_stop,
+                        style: IconButton.styleFrom(
+                          backgroundColor: c.inverse,
+                          foregroundColor: c.onInverse,
+                        ),
+                        icon: const Icon(Icons.stop_rounded),
+                        onPressed: chat.stop,
+                      )
+                    else
+                      IconButton.filled(
+                        tooltip: ngL.ng_send,
+                        style: IconButton.styleFrom(
+                          backgroundColor: c.accent,
+                          foregroundColor: c.onAccent,
+                          disabledBackgroundColor: c.surface3,
+                        ),
+                        icon: const Icon(Icons.arrow_upward_rounded),
+                        onPressed: canSend ? _send : null,
+                      ),
+                  ],
                 ),
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    tooltip: ngL.ng_attach,
-                    icon: Icon(Icons.add_circle_outline, color: c.text2),
-                    onPressed: _preparing ? null : _attach,
-                  ),
-                  // Expanded + Spacer split the free width evenly, so the
-                  // pill keeps its half-width cap while the row is always
-                  // filled and mic/send end flush right. A loose Flexible
-                  // left its unused share after the send button instead,
-                  // which on wide desktop windows put both buttons mid-row.
-                  Expanded(
-                    child: Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: NgPill(
-                        key: const ValueKey('ng-model-picker'),
-                        modelLabel,
-                        icon: Icons.auto_awesome,
-                        onTap: () => showNgModelSheet(context, chat),
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    tooltip: _listening
-                        ? ngL.ng_stop_dictation
-                        : ngL.ng_dictate,
-                    icon: Icon(
-                      _listening ? Icons.mic : Icons.mic_none,
-                      color: _listening ? c.accent : c.text2,
-                    ),
-                    onPressed: _toggleDictation,
-                  ),
-                  if (chat.running && !hasText)
-                    IconButton.filled(
-                      tooltip: ngL.ng_stop,
-                      style: IconButton.styleFrom(
-                        backgroundColor: c.inverse,
-                        foregroundColor: c.onInverse,
-                      ),
-                      icon: const Icon(Icons.stop_rounded),
-                      onPressed: chat.stop,
-                    )
-                  else
-                    IconButton.filled(
-                      tooltip: ngL.ng_send,
-                      style: IconButton.styleFrom(
-                        backgroundColor: c.accent,
-                        foregroundColor: c.onAccent,
-                        disabledBackgroundColor: c.surface3,
-                      ),
-                      icon: const Icon(Icons.arrow_upward_rounded),
-                      onPressed: canSend ? _send : null,
-                    ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

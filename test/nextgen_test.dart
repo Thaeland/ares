@@ -312,6 +312,74 @@ void main() {
       },
     );
 
+    test('an empty device queue cannot be parked', () {
+      chat.setLocalQueuePaused(true);
+      expect(chat.localQueuePaused, isFalse);
+    });
+
+    test(
+      'queueing a fresh prompt lifts a park without sending mid-turn',
+      () async {
+        gateway.debugEmit(ev('message.start'));
+        await pumpEventQueue();
+        chat.enqueue('held');
+        chat.setLocalQueuePaused(true);
+        chat.enqueue('fresh');
+        await pumpEventQueue();
+        expect(chat.running, isTrue);
+        expect(chat.localQueuePaused, isFalse);
+        expect(chat.queued.map((row) => row.text), ['held', 'fresh']);
+      },
+    );
+
+    test('removing the last held prompt clears the park', () {
+      chat.enqueue('only');
+      chat.setLocalQueuePaused(true);
+      chat.unqueue(chat.queued.single);
+      expect(chat.localQueuePaused, isFalse);
+      expect(chat.queued, isEmpty);
+    });
+
+    test(
+      'row send while busy unparks, promotes, and admits the row once',
+      () async {
+        final sends = <String>[];
+        final legacy = _FakeCallGateway((method, params) async {
+          if (method == 'prompt.submit') sends.add(params['text'] as String);
+          return {'status': 'queued'};
+        });
+        final owner = NgChatController(legacy, sessionId: 'stored')
+          ..runtimeId = 'rt';
+        addTearDown(() {
+          owner.dispose();
+          legacy.dispose();
+        });
+        legacy.debugEmit(
+          StreamEvent(type: 'message.start', data: const {}, sessionId: 'rt'),
+        );
+        await pumpEventQueue();
+        owner.enqueue('first');
+        owner.enqueue('second');
+        owner.setLocalQueuePaused(true);
+        final second = owner.queued.last;
+        await owner.sendQueuedNow(second);
+        expect(owner.localQueuePaused, isFalse);
+        expect(owner.queued.first.text, 'second');
+        expect(sends, isEmpty);
+        legacy.debugEmit(
+          StreamEvent(
+            type: 'message.complete',
+            data: const {},
+            sessionId: 'rt',
+          ),
+        );
+        await pumpEventQueue();
+        expect(sends, ['second']);
+        expect(owner.queued.single.text, 'first');
+        expect(owner.running, isTrue);
+      },
+    );
+
     test(
       'send includes submission_id and retries without it on legacy gateway',
       () async {

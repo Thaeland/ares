@@ -2087,6 +2087,7 @@ class NgChatController extends ChangeNotifier {
 
   void setLocalQueuePaused(bool paused) {
     if (!draftOwnerCurrent) return;
+    if (paused && queued.isEmpty) return;
     localQueuePaused = paused;
     if (!paused) _scheduleLocalDrain();
     _changed();
@@ -2647,16 +2648,44 @@ class NgChatController extends ChangeNotifier {
       : _clean(e);
 
   /// Queues [text] to send once the running turn ends.
+  ///
+  /// Queueing is fresh intent, so a park from Stop or a failed turn is lifted.
+  /// The entry still waits while a turn is running.
   void enqueue(String text) {
     final trimmed = text.trim();
-    if (trimmed.isEmpty) return;
+    if (trimmed.isEmpty || !draftOwnerCurrent) return;
     queued.add(NgQueued(_key('q'), trimmed));
+    localQueuePaused = false;
     _changed();
+    _scheduleLocalDrain();
   }
 
   void unqueue(NgQueued item) {
     queued.remove(item);
+    if (queued.isEmpty) localQueuePaused = false;
     _changed();
+  }
+
+  /// Row send. While a turn is running this unparks, moves [item] to the
+  /// head and interrupts; the settle drain admits it. While idle it admits
+  /// [item] now and leaves the rest to follow.
+  Future<void> sendQueuedNow(NgQueued item) async {
+    final index = queued.indexOf(item);
+    if (!draftOwnerCurrent || index < 0) return;
+    if (index > 0) {
+      queued.removeAt(index);
+      queued.insert(0, item);
+    }
+    localQueuePaused = false;
+    _changed();
+    if (running) {
+      await stop(parkLocalQueue: false);
+      return;
+    }
+    if (queued.isEmpty || !identical(queued.first, item)) return;
+    queued.removeAt(0);
+    if (queued.isEmpty) localQueuePaused = false;
+    await send(item.text, display: item.display);
   }
 
   /// Stops the running turn. On the canonical session authority the stop
