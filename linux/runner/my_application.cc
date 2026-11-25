@@ -20,6 +20,9 @@ struct _MyApplication {
   FlMethodChannel* deep_links;
   gchar* pending_link;
   gboolean links_ready;
+  // Set once Flutter rendered the primary's first frame (which shows it).
+  // Before that, an activation or a link leaves showing to first_frame_cb.
+  gboolean first_frame_shown;
 };
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
@@ -53,13 +56,19 @@ static void deep_link_call_cb(FlMethodChannel* channel, FlMethodCall* call,
   }
 }
 
+// Brings the primary window back: shown even when it was closed to the tray
+// (hidden), restored when minimised, and raised.
+static void present_primary(MyApplication* self) {
+  if (self->primary == nullptr || !self->first_frame_shown) return;
+  gtk_widget_show(GTK_WIDGET(self->primary));
+  gtk_window_deiconify(self->primary);
+  gtk_window_present(self->primary);
+}
+
 // Shows the primary window and hands |link| to Dart's validated router, or
 // keeps it for getInitialLink.
 static void deliver_link(MyApplication* self, const gchar* link) {
-  if (self->primary != nullptr &&
-      gtk_widget_get_visible(GTK_WIDGET(self->primary))) {
-    gtk_window_present(self->primary);
-  }
+  present_primary(self);
   if (self->deep_links != nullptr && self->links_ready) {
     g_autoptr(FlValue) value = fl_value_new_string(link);
     fl_method_channel_invoke_method(self->deep_links, "onDeepLink", value,
@@ -73,15 +82,18 @@ static void deliver_link(MyApplication* self, const gchar* link) {
 // Called when first Flutter frame received.
 static void first_frame_cb(MyApplication* self, FlView* view) {
   gtk_widget_show(gtk_widget_get_toplevel(GTK_WIDGET(view)));
+  self->first_frame_shown = TRUE;
 }
 
 // Implements GApplication::activate.
 static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
   // The primary instance is unique: a second launch (or a link) activates
-  // this one, which brings its window forward instead of opening another.
+  // this one over D-Bus, which brings its window forward (also out of the
+  // tray) instead of opening a second window, tray icon and hotkey. The
+  // second process exits without creating a window.
   if (self->primary != nullptr) {
-    gtk_window_present(self->primary);
+    present_primary(self);
     return;
   }
   GtkWindow* window =

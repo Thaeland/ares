@@ -27,5 +27,7 @@ image=${ARES_LINUX_CC_IMAGE:-ares-linux-cc:bookworm}
   # project flags (apply_standard_settings: -Wall -Werror).
   clang++ $flags -Wextra /src/linux/runner/desktop_os.cc
   echo "ok desktop_os.cc (-Wall -Wextra -Werror)"
+  clang++ $flags -Wextra /src/linux/runner/status_notifier.cc
+  echo "ok status_notifier.cc (-Wall -Wextra -Werror)"
   clang++ $flags /src/linux/runner/my_application.cc
   echo "ok my_application.cc (-Wall -Werror)"'

@@ -24,11 +24,11 @@ The runner's `desktop_os.cc` implements the primary window's channels described 
 
 | Feature | Linux mechanism | Needs at runtime |
 | --- | --- | --- |
-| Tray icon, close to tray | `GtkStatusIcon` (XEmbed) with the bundle's `data/flutter_assets/assets/icon/icon.png`; `setTray` answers `true` only once the host has embedded it | An X11 session with a tray host (KDE, Xfce, MATE, Cinnamon; GNOME needs a tray extension). Wayland or no tray host: Settings shows one disabled row instead of the switches. |
+| Tray icon, close to tray | StatusNotifierItem + dbusmenu over GDBus (`status_notifier.cc`) with the bundle's `data/flutter_assets/assets/icon/icon.png`; on X11 without a StatusNotifierWatcher, `GtkStatusIcon` (XEmbed). `setTray` answers `true` only once the icon is shown | A shell that hosts StatusNotifierItems (KDE, GNOME + AppIndicator extension, Xfce, MATE, Cinnamon, LXQt, waybar; X11 or Wayland), or an X11 XEmbed tray host. Neither: Settings shows one disabled row instead of the switches. |
 | Quick-entry window | Same executable with `--ares-quick-entry-v1`: keep-above, centred, no taskbar entry | — |
 | Global hotkey | `XGrabKey` on the root window, with Caps Lock / Num Lock variants | X11. Wayland: `isSupported` is false and Settings shows one disabled row instead of the switch. |
 | Sleep / lock pause | logind `PrepareForSleep`; lock state from the session's `LockedHint` and `ScreenSaver.ActiveChanged` (logind `Lock`/`Unlock` requests only trigger a re-read); `isLocked` for Dart's re-check after resume | System and session D-Bus (missing buses: no events, sockets simply stay up). A locker that sets neither `LockedHint` nor a screensaver state (plain swaylock/i3lock) does not pause; focus or input in Ares always lifts a pause |
-| Keep awake | xdg-desktop-portal `Inhibit` (suspend flag), else `org.freedesktop.ScreenSaver.Inhibit` | A portal with an Inhibit backend (GNOME, KDE, wlroots portals) or a running screensaver service; Settings hides the card when neither answers (an activatable name alone does not count) |
+| Keep awake | xdg-desktop-portal `Inhibit` (suspend flag), else `org.freedesktop.ScreenSaver.Inhibit`; asynchronous calls | A portal with an Inhibit backend (GNOME, KDE, wlroots portals) or a running screensaver service; Settings hides the card when neither answers (an activatable name alone does not count) |
 | Screen capture | xdg-desktop-portal `Screenshot` (interactive) | A portal implementation with the Screenshot interface |
 
 ### hermes:// links

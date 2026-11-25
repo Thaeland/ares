@@ -13,6 +13,7 @@
 #endif
 
 #include "desktop_os_logic.h"
+#include "status_notifier.h"
 
 namespace {
 
@@ -69,11 +70,16 @@ void Respond(FlMethodCall* call, FlMethodResponse* response) {
 struct _AresDesktopOs {
   GtkWindow* window = nullptr;
   FlMethodChannel* shell = nullptr;
-  // GtkStatusIcon is the XEmbed tray: X11 desktops with a tray host. GNOME
-  // needs a tray extension; Wayland has none (setTray reports false).
-  // Embedding is asynchronous, so setTray answers once the host has taken
-  // the icon (or false after a short wait), and a later change reaches Dart
-  // as onTrayStatus.
+  // Tray: a StatusNotifierItem (status_notifier.h) wherever a desktop shell
+  // hosts one (KDE, GNOME with the AppIndicator extension, Xfce, MATE,
+  // Cinnamon, LXQt, wlroots bars; X11 and Wayland), else on X11 the XEmbed
+  // GtkStatusIcon with a tray host. Never both: a StatusNotifierItem that
+  // comes up removes the XEmbed icon. Showing is asynchronous, so setTray
+  // answers once the icon is shown (or false after a short wait), and a
+  // later change reaches Dart as onTrayStatus.
+  ares::tray::StatusNotifier* sni = nullptr;
+  std::vector<ares::tray::MenuEntry> tray_entries;
+  std::string tray_tooltip;
   GtkStatusIcon* tray = nullptr;
   GtkWidget* menu = nullptr;
   std::vector<std::string> item_ids;
@@ -103,8 +109,12 @@ struct _AresDesktopOs {
   bool session_auto_tried = false;
   ares::desktop::LockTracker lock;
   std::vector<std::string> awake_owners;
+  // The inhibit request is asynchronous: |inhibit_pending| while the portal
+  // (or screensaver) has not answered. An answer that arrives after the last
+  // owner let go is released at once.
   std::string inhibit_handle;
   guint32 screensaver_cookie = 0;
+  bool inhibit_pending = false;
   // Screen capture through the xdg-desktop-portal Screenshot dialog, which
   // is also the user's consent. One capture at a time.
   FlMethodChannel* capture = nullptr;
@@ -140,11 +150,14 @@ bool XEmbedTrayHostPresent() {
 #endif
 }
 
-// What isTraySupported answers: a tray host this runner can reach now.
-bool TrayHostAvailable(AresDesktopOs*) { return XEmbedTrayHostPresent(); }
+bool SniShown(AresDesktopOs* self) {
+  return self->sni != nullptr && self->sni->Shown();
+}
 
-// Whether the icon is actually on screen.
-bool TrayShown(AresDesktopOs* self) { return TrayEmbedded(self); }
+// Whether the icon is actually on screen, by either path.
+bool TrayShown(AresDesktopOs* self) {
+  return SniShown(self) || TrayEmbedded(self);
+}
 
 void ClearTrayWait(AresDesktopOs* self) {
   if (self->tray_timeout != 0) {
@@ -161,7 +174,7 @@ void RespondTray(AresDesktopOs* self, FlMethodCall* call, bool shown) {
   Respond(call, response);
 }
 
-// Answers a setTray that waited for the icon to embed.
+// Answers a setTray that waited for the icon to show.
 void AnswerTray(AresDesktopOs* self) {
   ClearTrayWait(self);
   FlMethodCall* call = self->tray_call;
@@ -171,8 +184,8 @@ void AnswerTray(AresDesktopOs* self) {
   g_object_unref(call);
 }
 
-// The icon embedded or went away after setTray answered (a tray host that
-// started late, or restarted): tell Dart, or finish a waiting setTray.
+// The icon came up or went away after setTray answered (a tray host that
+// started late, a shell restart): tell Dart, or finish a waiting setTray.
 void TrayStatusChanged(AresDesktopOs* self) {
   if (self->tray_call != nullptr) {
     if (TrayShown(self)) AnswerTray(self);
@@ -200,7 +213,7 @@ gboolean TrayTimeoutCb(gpointer user_data) {
   return G_SOURCE_REMOVE;
 }
 
-void RemoveTray(AresDesktopOs* self) {
+void RemoveXEmbedTray(AresDesktopOs* self) {
   if (self->tray != nullptr) {
     g_signal_handlers_disconnect_by_data(self->tray, self);
     gtk_status_icon_set_visible(self->tray, FALSE);
@@ -213,11 +226,24 @@ void RemoveTray(AresDesktopOs* self) {
   self->item_ids.clear();
 }
 
+void RemoveTray(AresDesktopOs* self) {
+  RemoveXEmbedTray(self);
+  delete self->sni;
+  self->sni = nullptr;
+}
+
 void ShowMain(AresDesktopOs* self) {
   GtkWidget* widget = GTK_WIDGET(self->window);
   gtk_widget_show(widget);
   gtk_window_deiconify(self->window);
   gtk_window_present(self->window);
+}
+
+void InvokeTrayAction(AresDesktopOs* self, const std::string& id) {
+  if (self->shell == nullptr) return;
+  g_autoptr(FlValue) value = fl_value_new_string(id.c_str());
+  fl_method_channel_invoke_method(self->shell, "onTrayAction", value, nullptr,
+                                  nullptr, nullptr);
 }
 
 void TrayActivateCb(GtkStatusIcon*, gpointer user_data) {
@@ -234,51 +260,145 @@ void MenuItemActivateCb(GtkMenuItem* item, gpointer user_data) {
   auto* self = static_cast<AresDesktopOs*>(user_data);
   const size_t index =
       GPOINTER_TO_SIZE(g_object_get_data(G_OBJECT(item), "ares-index"));
-  if (index >= self->item_ids.size() || self->shell == nullptr) return;
-  g_autoptr(FlValue) id = fl_value_new_string(self->item_ids[index].c_str());
-  fl_method_channel_invoke_method(self->shell, "onTrayAction", id, nullptr,
-                                  nullptr, nullptr);
+  if (index >= self->item_ids.size()) return;
+  InvokeTrayAction(self, self->item_ids[index]);
 }
 
-void BuildTrayMenu(AresDesktopOs* self, FlValue* args) {
-  if (self->menu != nullptr) gtk_widget_destroy(self->menu);
-  self->menu = gtk_menu_new();
-  self->item_ids.clear();
+// The menu Dart sent, bounded and cleaned, for either tray path.
+std::vector<ares::tray::MenuEntry> ParseTrayMenu(FlValue* args) {
+  std::vector<ares::tray::MenuEntry> entries;
   FlValue* items = MapValue(args, "items");
   const size_t count = items != nullptr &&
                                fl_value_get_type(items) == FL_VALUE_TYPE_LIST
                            ? fl_value_get_length(items)
                            : 0;
-  for (size_t i = 0; i < count && self->item_ids.size() < 16; ++i) {
+  for (size_t i = 0; i < count && entries.size() < 16; ++i) {
     FlValue* entry = fl_value_get_list_value(items, i);
-    const std::string id = StringArg(entry, "id");
-    const std::string label =
-        ares::desktop::CleanLabel(StringArg(entry, "label"), 64);
-    if (!ares::desktop::ValidTrayItemId(id) || label.empty()) continue;
-    if (BoolArg(entry, "separatorBefore") && !self->item_ids.empty()) {
+    ares::tray::MenuEntry parsed;
+    parsed.id = StringArg(entry, "id");
+    parsed.label = ares::desktop::CleanLabel(StringArg(entry, "label"), 64);
+    if (!ares::desktop::ValidTrayItemId(parsed.id) || parsed.label.empty()) {
+      continue;
+    }
+    parsed.has_check = MapValue(entry, "checked") != nullptr;
+    parsed.checked = BoolArg(entry, "checked");
+    parsed.separator_before =
+        BoolArg(entry, "separatorBefore") && !entries.empty();
+    entries.push_back(std::move(parsed));
+  }
+  return entries;
+}
+
+void BuildXEmbedMenu(AresDesktopOs* self) {
+  if (self->menu != nullptr) gtk_widget_destroy(self->menu);
+  self->menu = gtk_menu_new();
+  self->item_ids.clear();
+  for (const auto& entry : self->tray_entries) {
+    if (entry.separator_before) {
       gtk_menu_shell_append(GTK_MENU_SHELL(self->menu),
                             gtk_separator_menu_item_new());
     }
     GtkWidget* item;
-    if (MapValue(entry, "checked") != nullptr) {
-      item = gtk_check_menu_item_new_with_label(label.c_str());
-      gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item),
-                                     BoolArg(entry, "checked"));
+    if (entry.has_check) {
+      item = gtk_check_menu_item_new_with_label(entry.label.c_str());
+      gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), entry.checked);
     } else {
-      item = gtk_menu_item_new_with_label(label.c_str());
+      item = gtk_menu_item_new_with_label(entry.label.c_str());
     }
     g_object_set_data(G_OBJECT(item), "ares-index",
                       GSIZE_TO_POINTER(self->item_ids.size()));
     g_signal_connect(item, "activate", G_CALLBACK(MenuItemActivateCb), self);
     gtk_menu_shell_append(GTK_MENU_SHELL(self->menu), item);
-    self->item_ids.push_back(id);
+    self->item_ids.push_back(entry.id);
   }
   gtk_widget_show_all(self->menu);
 }
 
-// setTray: answers true only once the icon is actually shown. Embedding is
-// asynchronous, so with a tray host present the answer waits for it (at
-// most 2.5 s); later changes are reported with onTrayStatus.
+// The XEmbed icon, on X11 only and only while no StatusNotifierItem shows.
+void ShowXEmbedTray(AresDesktopOs* self) {
+  if (!IsX11() || SniShown(self)) {
+    RemoveXEmbedTray(self);
+    return;
+  }
+  if (self->tray == nullptr) {
+    const std::string icon = BundleIconPath();
+    self->tray = icon.empty()
+                     ? gtk_status_icon_new_from_icon_name(APPLICATION_ID)
+                     : gtk_status_icon_new_from_file(icon.c_str());
+    g_signal_connect(self->tray, "activate", G_CALLBACK(TrayActivateCb), self);
+    g_signal_connect(self->tray, "popup-menu", G_CALLBACK(TrayPopupCb), self);
+    g_signal_connect(self->tray, "notify::embedded",
+                     G_CALLBACK(TrayEmbeddedCb), self);
+  }
+  gtk_status_icon_set_tooltip_text(self->tray, self->tray_tooltip.c_str());
+  gtk_status_icon_set_title(self->tray, "Ares");
+  BuildXEmbedMenu(self);
+  gtk_status_icon_set_visible(self->tray, TRUE);
+}
+
+// The bundle icon as StatusNotifierItem pixmaps (ARGB32, network order).
+std::vector<ares::tray::Pixmap> TrayPixmaps() {
+  std::vector<ares::tray::Pixmap> pixmaps;
+  const std::string path = BundleIconPath();
+  if (path.empty()) return pixmaps;
+  for (int size : {22, 32, 48}) {
+    g_autoptr(GdkPixbuf) pixbuf =
+        gdk_pixbuf_new_from_file_at_size(path.c_str(), size, size, nullptr);
+    if (pixbuf == nullptr) continue;
+    const int width = gdk_pixbuf_get_width(pixbuf);
+    const int height = gdk_pixbuf_get_height(pixbuf);
+    const int channels = gdk_pixbuf_get_n_channels(pixbuf);
+    const int stride = gdk_pixbuf_get_rowstride(pixbuf);
+    const bool alpha = gdk_pixbuf_get_has_alpha(pixbuf);
+    const guchar* pixels = gdk_pixbuf_read_pixels(pixbuf);
+    if (channels < 3 || pixels == nullptr) continue;
+    ares::tray::Pixmap pixmap;
+    pixmap.width = width;
+    pixmap.height = height;
+    pixmap.argb.reserve(static_cast<size_t>(width) * height * 4);
+    for (int y = 0; y < height; ++y) {
+      const guchar* row = pixels + static_cast<size_t>(y) * stride;
+      for (int x = 0; x < width; ++x) {
+        const guchar* p = row + static_cast<size_t>(x) * channels;
+        pixmap.argb.push_back(alpha ? p[3] : 255);
+        pixmap.argb.push_back(p[0]);
+        pixmap.argb.push_back(p[1]);
+        pixmap.argb.push_back(p[2]);
+      }
+    }
+    pixmaps.push_back(std::move(pixmap));
+  }
+  return pixmaps;
+}
+
+// A StatusNotifierItem came up (or went away): it replaces the XEmbed icon,
+// and the XEmbed icon is the fallback when it goes.
+void SniShownChanged(AresDesktopOs* self) {
+  if (self->tray_wanted) ShowXEmbedTray(self);
+  TrayStatusChanged(self);
+}
+
+void ShowSniTray(AresDesktopOs* self) {
+  if (self->session_bus == nullptr) return;
+  if (self->sni == nullptr) {
+    ares::tray::StatusNotifier::Callbacks callbacks;
+    callbacks.activate = [self] { ShowMain(self); };
+    callbacks.menu = [self](const std::string& id) {
+      InvokeTrayAction(self, id);
+    };
+    callbacks.shown_changed = [self](bool) { SniShownChanged(self); };
+    self->sni = new ares::tray::StatusNotifier(
+        self->session_bus, APPLICATION_ID, "Ares", TrayPixmaps(),
+        std::move(callbacks));
+  }
+  self->sni->SetTooltip(self->tray_tooltip);
+  self->sni->SetMenu(self->tray_entries);
+}
+
+// setTray: answers true only once the icon is actually shown. Showing is
+// asynchronous (a StatusNotifierWatcher accepting the item, an XEmbed host
+// embedding the icon), so the answer waits for it, at most 2.5 s; later
+// changes are reported with onTrayStatus.
 void ApplyTray(AresDesktopOs* self, FlMethodCall* call) {
   FlValue* args = fl_method_call_get_args(call);
   // An earlier setTray still waiting is answered with the state now.
@@ -293,36 +413,43 @@ void ApplyTray(AresDesktopOs* self, FlMethodCall* call) {
   self->tray_wanted = true;
   // Close-to-tray applies only while the icon is shown (DeleteEventCb).
   self->close_to_tray = BoolArg(args, "closeToTray");
-  if (!IsX11()) {
-    RemoveTray(self);
-    RespondTray(self, call, false);
+  self->tray_tooltip =
+      ares::desktop::CleanLabel(StringArg(args, "tooltip"), 127);
+  if (self->tray_tooltip.empty()) self->tray_tooltip = "Ares";
+  self->tray_entries = ParseTrayMenu(args);
+  ShowSniTray(self);
+  ShowXEmbedTray(self);
+  if (TrayShown(self)) {
+    RespondTray(self, call, true);
     return;
   }
-  if (self->tray == nullptr) {
-    const std::string icon = BundleIconPath();
-    self->tray = icon.empty()
-                     ? gtk_status_icon_new_from_icon_name(APPLICATION_ID)
-                     : gtk_status_icon_new_from_file(icon.c_str());
-    g_signal_connect(self->tray, "activate", G_CALLBACK(TrayActivateCb), self);
-    g_signal_connect(self->tray, "popup-menu", G_CALLBACK(TrayPopupCb), self);
-    g_signal_connect(self->tray, "notify::embedded",
-                     G_CALLBACK(TrayEmbeddedCb), self);
-  }
-  std::string tooltip =
-      ares::desktop::CleanLabel(StringArg(args, "tooltip"), 127);
-  gtk_status_icon_set_tooltip_text(self->tray,
-                                   tooltip.empty() ? "Ares" : tooltip.c_str());
-  gtk_status_icon_set_title(self->tray, "Ares");
-  BuildTrayMenu(self, args);
-  gtk_status_icon_set_visible(self->tray, TRUE);
-  if (TrayShown(self) || !XEmbedTrayHostPresent()) {
-    // Already embedded, or no host to embed it (a host that starts later
-    // still takes the icon; Dart hears onTrayStatus then).
-    RespondTray(self, call, TrayShown(self));
+  if (self->sni == nullptr && self->tray == nullptr) {
+    RespondTray(self, call, false);  // No session bus and no X11.
     return;
   }
   self->tray_call = FL_METHOD_CALL(g_object_ref(call));
   self->tray_timeout = g_timeout_add(2500, TrayTimeoutCb, self);
+}
+
+// isTraySupported: a StatusNotifierWatcher with a host, or an XEmbed tray
+// host on X11. Answered asynchronously.
+void QueryTraySupport(AresDesktopOs* self, FlMethodCall* call) {
+  if (XEmbedTrayHostPresent() || self->session_bus == nullptr) {
+    g_autoptr(FlValue) value = fl_value_new_bool(XEmbedTrayHostPresent());
+    g_autoptr(FlMethodResponse) response =
+        FL_METHOD_RESPONSE(fl_method_success_response_new(value));
+    Respond(call, response);
+    return;
+  }
+  FlMethodCall* pending = FL_METHOD_CALL(g_object_ref(call));
+  ares::tray::StatusNotifier::QueryWatcher(
+      self->session_bus, self->cancellable, [pending](bool host) {
+        g_autoptr(FlValue) value = fl_value_new_bool(host);
+        g_autoptr(FlMethodResponse) response =
+            FL_METHOD_RESPONSE(fl_method_success_response_new(value));
+        Respond(pending, response);
+        g_object_unref(pending);
+      });
 }
 
 G_GNUC_END_IGNORE_DEPRECATIONS
@@ -750,44 +877,94 @@ void QueryKeepAwake(AresDesktopOs* self, FlMethodCall* call) {
   FinishKeepAwakeQuery(query);
 }
 
+// An inhibit call's context: the integration may be gone when it answers.
+struct InhibitCall {
+  AresDesktopOs* self;
+  GCancellable* cancellable;
+};
+
+InhibitCall* NewInhibitCall(AresDesktopOs* self) {
+  return new InhibitCall{self,
+                         G_CANCELLABLE(g_object_ref(self->cancellable))};
+}
+
+// Finishes an inhibit call: false when the window is gone (nothing to do).
+bool InhibitCallLive(InhibitCall* call) {
+  const bool live = !g_cancellable_is_cancelled(call->cancellable);
+  g_object_unref(call->cancellable);
+  return live;
+}
+
+void ScreenSaverInhibitCb(GObject* source, GAsyncResult* result,
+                          gpointer user_data) {
+  auto* call = static_cast<InhibitCall*>(user_data);
+  AresDesktopOs* self = call->self;
+  g_autoptr(GVariant) reply = g_dbus_connection_call_finish(
+      G_DBUS_CONNECTION(source), result, nullptr);
+  const bool live = InhibitCallLive(call);
+  delete call;
+  if (!live) return;
+  self->inhibit_pending = false;
+  if (reply != nullptr) g_variant_get(reply, "(u)", &self->screensaver_cookie);
+  // Every owner let go while this was in flight: release it now.
+  if (self->awake_owners.empty()) ReleaseInhibit(self);
+}
+
 // Without a portal: org.freedesktop.ScreenSaver.Inhibit (KDE, GNOME, Xfce
 // and others), which blocks idle blanking and idle suspend until UnInhibit or
 // until this connection closes.
-bool TakeScreenSaverInhibit(AresDesktopOs* self) {
-  g_autoptr(GVariant) reply = g_dbus_connection_call_sync(
+void TakeScreenSaverInhibit(AresDesktopOs* self) {
+  self->inhibit_pending = true;
+  g_dbus_connection_call(
       self->session_bus, "org.freedesktop.ScreenSaver",
       "/org/freedesktop/ScreenSaver", "org.freedesktop.ScreenSaver", "Inhibit",
       g_variant_new("(ss)", "Ares", "Ares is working on a reply"),
-      G_VARIANT_TYPE("(u)"), G_DBUS_CALL_FLAGS_NONE, 2000, nullptr, nullptr);
-  if (reply == nullptr) return false;
-  g_variant_get(reply, "(u)", &self->screensaver_cookie);
-  return self->screensaver_cookie != 0;
+      G_VARIANT_TYPE("(u)"), G_DBUS_CALL_FLAGS_NONE, 5000, self->cancellable,
+      ScreenSaverInhibitCb, NewInhibitCall(self));
 }
 
-// Asks the desktop not to suspend (the display may still sleep). Returns
-// false when neither the portal nor a screensaver service answers.
-bool TakeInhibit(AresDesktopOs* self) {
-  if (!self->inhibit_handle.empty() || self->screensaver_cookie != 0) {
-    return true;
+void PortalInhibitCb(GObject* source, GAsyncResult* result,
+                     gpointer user_data) {
+  auto* call = static_cast<InhibitCall*>(user_data);
+  AresDesktopOs* self = call->self;
+  g_autoptr(GVariant) reply = g_dbus_connection_call_finish(
+      G_DBUS_CONNECTION(source), result, nullptr);
+  const bool live = InhibitCallLive(call);
+  delete call;
+  if (!live) return;
+  if (reply == nullptr) {
+    // No portal (or no Inhibit backend): try the screensaver, unless nobody
+    // wants it any more.
+    self->inhibit_pending = false;
+    if (!self->awake_owners.empty()) TakeScreenSaverInhibit(self);
+    return;
   }
-  if (self->session_bus == nullptr) return false;
+  self->inhibit_pending = false;
+  const gchar* handle = nullptr;
+  g_variant_get(reply, "(&o)", &handle);
+  if (handle != nullptr) self->inhibit_handle = handle;
+  if (self->awake_owners.empty()) ReleaseInhibit(self);
+}
+
+// Asks the desktop not to suspend (the display may still sleep). Never
+// blocks the UI thread: the portal answers asynchronously, and without one
+// the screensaver is asked instead.
+void TakeInhibit(AresDesktopOs* self) {
+  if (self->inhibit_pending || !self->inhibit_handle.empty() ||
+      self->screensaver_cookie != 0 || self->session_bus == nullptr) {
+    return;
+  }
+  self->inhibit_pending = true;
   GVariantBuilder options;
   g_variant_builder_init(&options, G_VARIANT_TYPE_VARDICT);
   g_variant_builder_add(&options, "{sv}", "reason",
                         g_variant_new_string("Ares is working on a reply"));
-  g_autoptr(GError) error = nullptr;
-  g_autoptr(GVariant) reply = g_dbus_connection_call_sync(
+  g_dbus_connection_call(
       self->session_bus, "org.freedesktop.portal.Desktop",
       "/org/freedesktop/portal/desktop", "org.freedesktop.portal.Inhibit",
       "Inhibit", g_variant_new("(sua{sv})", "", 4u, &options),
-      G_VARIANT_TYPE("(o)"), G_DBUS_CALL_FLAGS_NONE, 2000, nullptr, &error);
-  if (reply != nullptr) {
-    const gchar* handle = nullptr;
-    g_variant_get(reply, "(&o)", &handle);
-    if (handle != nullptr) self->inhibit_handle = handle;
-  }
-  if (!self->inhibit_handle.empty()) return true;
-  return TakeScreenSaverInhibit(self);
+      G_VARIANT_TYPE("(o)"), G_DBUS_CALL_FLAGS_NONE, 5000, self->cancellable,
+      PortalInhibitCb, NewInhibitCall(self));
 }
 
 void PowerCallCb(FlMethodChannel*, FlMethodCall* call, gpointer user_data) {
@@ -1036,7 +1213,7 @@ gboolean QuitIdleCb(gpointer user_data) {
 // window can always be brought back.
 gboolean DeleteEventCb(GtkWidget* widget, GdkEvent*, gpointer user_data) {
   auto* self = static_cast<AresDesktopOs*>(user_data);
-  if (self->close_to_tray && TrayEmbedded(self)) {
+  if (self->close_to_tray && TrayShown(self)) {
     gtk_widget_hide(widget);
     return TRUE;
   }
@@ -1059,8 +1236,8 @@ void ShellCallCb(FlMethodChannel*, FlMethodCall* call, gpointer user_data) {
     if (app != nullptr) g_idle_add(QuitIdleCb, g_object_ref(app));
     response = FL_METHOD_RESPONSE(fl_method_success_response_new(nullptr));
   } else if (strcmp(method, "isTraySupported") == 0) {
-    g_autoptr(FlValue) value = fl_value_new_bool(TrayHostAvailable(self));
-    response = FL_METHOD_RESPONSE(fl_method_success_response_new(value));
+    QueryTraySupport(self, call);  // Answers itself once the bus replies.
+    return;
   } else if (strcmp(method, "setTray") == 0) {
     ApplyTray(self, call);  // Answers itself, possibly later.
     return;
