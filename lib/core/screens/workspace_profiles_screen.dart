@@ -86,20 +86,41 @@ class _WorkspaceProfilesScreenState extends State<WorkspaceProfilesScreen> {
   }
 
   void _select(ProfileRoster roster, String name) {
+    if (!roster.target.isCurrent ||
+        widget.connection.id != widget.owner.connectionId ||
+        DesktopGatewayClient.normalizedGatewayBaseUrl(widget.connection) !=
+            widget.owner.expectedBaseUrl) {
+      roster.chooseAgain();
+      setState(_startRead);
+      return;
+    }
     _clearSelection();
     final owner = (_scoped = DesktopGatewayClient.fromConnection(
       widget.connection.copyWith(gatewayProfile: name),
     )).workspace;
     final pane = _settingsPane = owner.pane();
     _selected = name;
-    _settings = pane.bind(owner.route()).then((t) => roster.settings(t, name));
+    _settings = pane
+        .bind(owner.route())
+        .then((t) => roster.settings(t, name))
+        .then((admin) {
+          admin.check();
+          roster.rememberSettings(name);
+          return admin;
+        });
     _settings!.ignore();
     setState(() {});
   }
 
   Future<ProfileRoster> _load() async {
     final target = await _pane.bind(widget.route);
-    return ProfileRoster.read(target);
+    final roster = await ProfileRoster.read(target);
+    target.checkCurrent();
+    final remembered = roster.appliesTo;
+    if (mounted && remembered != null) {
+      _select(roster, remembered);
+    }
+    return roster;
   }
 
   @override
@@ -164,7 +185,10 @@ class _WorkspaceProfilesScreenState extends State<WorkspaceProfilesScreen> {
                         leading: const Icon(Icons.arrow_back),
                         title: Text('Applies to: $_selected'),
                         subtitle: const Text('Choose another profile'),
-                        onTap: () => setState(_startRead),
+                        onTap: () {
+                          roster.chooseAgain();
+                          setState(_startRead);
+                        },
                       ),
                       Expanded(
                         child: FutureBuilder<RemoteProfileAdmin>(
@@ -186,7 +210,10 @@ class _WorkspaceProfilesScreenState extends State<WorkspaceProfilesScreen> {
                               key: ValueKey(s.requireData),
                               admin: s.requireData,
                               label: widget.label,
-                              onRosterChanged: () => setState(_startRead),
+                              onRosterChanged: () {
+                                roster.chooseAgain();
+                                setState(_startRead);
+                              },
                             );
                           },
                         ),

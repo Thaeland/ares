@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:qr/qr.dart';
 import '../services/remote_workspace.dart';
+import 'profile_transfer_screen.dart';
+import 'profile_bundle_screen.dart';
 
 String profileError(Object e) => switch (e) {
   WorkspaceException(reason: WorkspaceFailure.unsupported) =>
@@ -69,10 +72,12 @@ class _Field {
     this.value = '',
     this.secret = false,
     this.lines = 1,
+    this.choices,
   });
   final String label, value;
   final bool secret;
   final int lines;
+  final List<String>? choices;
 }
 
 class _Editor {
@@ -95,6 +100,7 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
   TelegramSetup? setup;
   QrImage? qr;
   ProfileBackup? backup;
+  ProfileBackup? completedBackup;
   String? revealedSecret;
   bool showSecret = false;
   List<String> csv(String s) => s
@@ -165,13 +171,21 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
   void channelEditor(ProfileChannel c) {
     final inputs = [
       for (final f in c.fields)
-        _Field(f.key, value: f.listValue ?? '', secret: f.listValue == null),
+        _Field(
+          '${f.key} (${f.isSet ? 'configured' : 'not set'})',
+          value: f.listValue ?? '',
+          secret: f.listValue == null,
+        ),
     ];
     edit(
       'Configure ${c.name}',
       'Applies to $scope. Blank keeps an existing value. To remove a value, list its key below.',
       [
-        _Field('Enabled (yes/no)', value: c.enabled ? 'yes' : 'no'),
+        _Field(
+          'Enabled',
+          value: c.enabled ? 'yes' : 'no',
+          choices: const ['yes', 'no'],
+        ),
         ...inputs,
         const _Field('Keys to remove (comma-separated)'),
       ],
@@ -204,13 +218,31 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
       [
         const _Field('Route ID'),
         const _Field(
-          'Signature (generic, github, gitlab, linear)',
+          'Signature',
           value: 'generic',
+          choices: ['generic', 'github', 'gitlab', 'linear'],
         ),
         const _Field('Events (comma-separated)'),
-        const _Field('Delivery target', value: 'log'),
+        const _Field(
+          'Delivery target',
+          value: 'log',
+          choices: [
+            'log',
+            'telegram',
+            'discord',
+            'slack',
+            'email',
+            'github_comment',
+          ],
+        ),
         const _Field('Prompt', lines: 3),
         const _Field('Skills (comma-separated)'),
+        const _Field(
+          'Delivery mode',
+          value: 'Agent processes event',
+          choices: ['Agent processes event', 'Direct delivery'],
+        ),
+        const _Field('Delivery chat ID (optional)'),
       ],
       (v) async {
         final r = await a.createHook(
@@ -220,6 +252,8 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
           delivery: v[3],
           prompt: v[4],
           skills: csv(v[5]),
+          direct: v[6] == 'Direct delivery',
+          chatId: v[7],
         );
         hooks = await a.hooks();
         revealedSecret = r.secret;
@@ -249,22 +283,38 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
           Text(form.title, style: Theme.of(context).textTheme.titleLarge),
           Text(form.warning),
           for (var i = 0; i < form.fields.length; i++)
-            TextFormField(
-              key: ValueKey((form, i)),
-              initialValue: form.fields[i].value,
-              enabled: !busy,
-              obscureText: form.fields[i].secret,
-              autocorrect: false,
-              enableSuggestions: false,
-              minLines: form.fields[i].lines,
-              maxLines: form.fields[i].lines,
-              maxLength: form.fields[i].lines > 1 ? 131072 : 8192,
-              decoration: InputDecoration(
-                labelText: form.fields[i].label,
-                counterText: '',
+            if (form.fields[i].choices case final options?)
+              DropdownButtonFormField<String>(
+                key: ValueKey((form, i)),
+                initialValue: values[i],
+                decoration: InputDecoration(labelText: form.fields[i].label),
+                items: [
+                  for (final option in options)
+                    DropdownMenuItem(value: option, child: Text(option)),
+                ],
+                onChanged: busy
+                    ? null
+                    : (v) {
+                        if (v != null) values[i] = v;
+                      },
+              )
+            else
+              TextFormField(
+                key: ValueKey((form, i)),
+                initialValue: values[i],
+                enabled: !busy,
+                obscureText: form.fields[i].secret,
+                autocorrect: false,
+                enableSuggestions: false,
+                minLines: form.fields[i].lines,
+                maxLines: form.fields[i].lines,
+                maxLength: form.fields[i].lines > 1 ? 131072 : 8192,
+                decoration: InputDecoration(
+                  labelText: form.fields[i].label,
+                  counterText: '',
+                ),
+                onChanged: (v) => values[i] = v,
               ),
-              onChanged: (v) => values[i] = v,
-            ),
           Wrap(
             children: [
               TextButton(
@@ -293,6 +343,14 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
           ),
         ] else ...[
           action('Edit persona', persona, detail: 'SOUL.md'),
+          action('Portable profile bundle', () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) =>
+                    ProfileBundleScreen(admin: a, gateway: widget.label),
+              ),
+            );
+          }),
           action(
             'Clone profile',
             () async => edit(
@@ -381,23 +439,29 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
             if (pairs!.isEmpty) message = 'No pending or approved users.';
           }),
           for (final p in pairs ?? <ProfilePair>[])
-            action(
-              '${p.pending ? 'Approve' : 'Revoke'} ${p.user}',
-              () async => edit(
+            if (p.pending &&
+                !RegExp(r'^[a-f0-9]{16}$').hasMatch(p.request ?? ''))
+              ListTile(
+                title: Text(p.user),
+                subtitle: const Text(
+                  'Legacy pairing: no verifiable request ID. Ask the user to pair again.',
+                ),
+              )
+            else
+              action(
                 '${p.pending ? 'Approve' : 'Revoke'} ${p.user}',
-                '${p.platform} on $scope: ${p.pending ? 'allow' : 'remove'} this user’s messaging access.',
-                [
-                  if (p.pending && (p.request ?? '').isEmpty)
-                    const _Field('Pairing code', secret: true),
-                ],
-                (v) async {
-                  await a.changePair(p, code: v.firstOrNull);
-                  pairs = await a.pairs();
-                  message = 'Pairing change verified.';
-                },
+                () async => edit(
+                  '${p.pending ? 'Approve' : 'Revoke'} ${p.user}',
+                  '${p.platform} on $scope: ${p.pending ? 'allow' : 'remove'} this user’s messaging access.',
+                  [],
+                  (v) async {
+                    await a.changePair(p);
+                    pairs = await a.pairs();
+                    message = 'Pairing change verified.';
+                  },
+                ),
+                detail: p.platform,
               ),
-              detail: p.platform,
-            ),
           if (setup == null)
             action(
               'Create Telegram bot by QR',
@@ -525,20 +589,46 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
               'This is not an Ares settings backup. Save all profiles, sessions and credentials on ${widget.label}. The archive is sensitive.',
               [],
               (v) async {
+                completedBackup = null;
                 backup = await a.startBackup();
                 message = 'Backup started on ${widget.label}.';
               },
             ),
           ),
+          action('Transfer to a Cloud agent', () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) =>
+                    ProfileTransferScreen(source: a, label: widget.label),
+              ),
+            );
+          }),
           if (backup case final b?)
             action('Check backup progress', () async {
               if (await a.backupDone(b)) {
                 message = 'Backup verified on ${widget.label}: ${b.archive}';
+                completedBackup = b;
                 backup = null;
               } else {
                 message = 'Backup still running on ${widget.label}.';
               }
             }),
+          if (completedBackup case final done?)
+            action(
+              'Save backup to this device',
+              () async {
+                final bytes = await a.backupBytes(done);
+                if (!mounted) return;
+                a.check();
+                final path = await FilePicker.platform.saveFile(
+                  dialogTitle: 'Save sensitive full-home archive',
+                  fileName: 'hermes-backup.zip',
+                  bytes: bytes,
+                );
+                message = path == null ? 'Save cancelled.' : 'Backup saved.';
+              },
+              detail: 'Up to 32 MiB. Larger archives remain on the gateway.',
+            ),
         ],
       ],
     );

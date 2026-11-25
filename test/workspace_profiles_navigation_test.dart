@@ -33,6 +33,7 @@ void main() {
         var tickets = 0;
         var persona = 'Initial fixture persona';
         final soulRequests = <String>[];
+        final backupRequests = <String>[];
         await tester.runAsync(() async {
           server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
           server.listen((req) async {
@@ -100,6 +101,27 @@ void main() {
                   jsonEncode({'content': persona, 'exists': true}),
                 );
               }
+            } else if (req.uri.path == '/api/cloud/agents' &&
+                req.uri.queryParameters['profile'] == 'editor' &&
+                req.headers.value('cookie') ==
+                    'hermes_session_at=fixture-cookie') {
+              response.write(
+                '{"agents":[{"id":"qa1","name":"Disposable cloud destination","dashboardUrl":"https://fixture-only.agents.nousresearch.com","dashboardGatewayState":"up"}]}',
+              );
+            } else if (req.uri.queryParameters['profile'] == 'editor' &&
+                req.headers.value('cookie') ==
+                    'hermes_session_at=fixture-cookie' &&
+                req.uri.path.startsWith('/api/ops/backup')) {
+              backupRequests.add(req.method);
+              response.write(
+                '{"ok":true,"name":"backup","pid":33,"archive":"/fixture/home.zip"}',
+              );
+            } else if (req.uri.queryParameters['profile'] == 'editor' &&
+                req.uri.path == '/api/actions/backup/status') {
+              backupRequests.add(req.method);
+              response.write(
+                '{"name":"backup","pid":33,"running":false,"exit_code":0}',
+              );
             } else {
               response.write('{}');
             }
@@ -194,6 +216,56 @@ void main() {
           await waitForText('Persona saved.');
           expect(persona, 'Changed by the fixture');
           expect(soulRequests, ['GET', 'GET', 'PUT', 'GET']);
+          Future<void> tapRow(String name) async {
+            final scrollable = find
+                .descendant(
+                  of: find.byType(ListView).last,
+                  matching: find.byType(Scrollable),
+                )
+                .first;
+            await tester.scrollUntilVisible(
+              find.text(name),
+              160,
+              scrollable: scrollable,
+            );
+            await tester.ensureVisible(find.text(name));
+            await tester.pumpAndSettle();
+            if (find.text(name).hitTestable().evaluate().isEmpty) {
+              await tester.drag(scrollable, const Offset(0, -200));
+              await tester.pumpAndSettle();
+            }
+            expect(find.text(name).hitTestable(), findsOneWidget);
+            await tester.tap(find.text(name));
+            await tester.pump();
+          }
+
+          await tapRow('Back up entire agent home');
+          await tester.tap(find.text('Cancel'));
+          await tester.pump();
+          expect(backupRequests, isEmpty);
+          await tapRow('Back up entire agent home');
+          await tester.tap(find.text('Confirm'));
+          await waitForText('Backup started on Fixture gateway.');
+          await tapRow('Check backup progress');
+          // A successful start is not a completed backup: a PID-matched owner
+          // status read is required before a local save is offered.
+          await tester.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 50)),
+          );
+          await tester.pump();
+          await tester.pump();
+          await waitForText('Save backup to this device');
+          expect(backupRequests, ['POST', 'GET']);
+          await tapRow('Transfer to a Cloud agent');
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Find my Cloud agents'));
+          await waitForText('Disposable cloud destination');
+          await tester.tap(find.text('Disposable cloud destination'));
+          await waitForText(
+            'Sign in to exactly one saved Ares connection for https://fixture-only.agents.nousresearch.com, then return here.',
+          );
+          await tester.pageBack();
+          await tester.pumpAndSettle();
           final edit = ConnectionMutationBarrier.begin(['fixture']);
           edit.release();
           await waitForText('The gateway connection dropped. Try again.');

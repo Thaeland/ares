@@ -4,24 +4,50 @@ bool isProfileId(String value) =>
     value != 'current' && RegExp(r'^[a-z0-9][a-z0-9_-]{0,63}$').hasMatch(value);
 
 class ProfileRoster {
-  const ProfileRoster._(this.target, this.installId, this.names);
+  static final _choices = Expando<({String name, String install})>();
+
+  /// A UI preference only. Always bind/verify a fresh scoped owner before
+  /// using it. It is never shared with chat or another constructed gateway.
+  String? get appliesTo {
+    final choice = _choices[target.route.issuer];
+    return choice != null &&
+            choice.install == installId &&
+            names.containsKey(choice.name)
+        ? choice.name
+        : null;
+  }
+
+  void rememberSettings(String name) {
+    target.checkCurrent();
+    if (installId != null && names.containsKey(name)) {
+      _choices[target.route.issuer] = (name: name, install: installId!);
+    }
+  }
+
+  void chooseAgain() => _choices[target.route.issuer] = null;
+  const ProfileRoster._(this.target, this.installId, this.names, this._homes);
+  final Map<String, String> _homes;
   final WorkspaceTarget target;
   final String? installId;
   final Map<String, String> names;
   static Future<ProfileRoster> read(WorkspaceTarget target) async {
     final result = await target.read(WorkspaceRead.profiles) as Map;
     final names = <String, String>{};
+    final homes = <String, String>{};
     for (final row in result['profiles'] as List) {
       final name = row['name'] as String;
       if (!isProfileId(name) || names.containsKey(name)) {
         _fail(WorkspaceFailure.invalid);
       }
       names[name] = row['display_name'] as String? ?? '';
+      final path = row['path'];
+      if (path is String && _canonicalPath(path)) homes[name] = path;
     }
     return ProfileRoster._(
       target,
       result['install_id'] as String?,
       Map.unmodifiable(names),
+      Map.unmodifiable(homes),
     );
   }
 
@@ -77,6 +103,7 @@ class ProfileRoster {
     if (installId == null ||
         installId!.isEmpty ||
         other.installId != installId ||
+        other._homes[name] != _homes[name] ||
         !other.names.containsKey(name)) {
       _fail(WorkspaceFailure.mismatch);
     }
@@ -120,8 +147,20 @@ typedef ProfileHook = ({
   String url,
   bool enabled,
 });
-typedef TelegramSetup = ({String id, String payload, DateTime expires});
-typedef ProfileBackup = ({int pid, String archive});
+
+final class TelegramSetup {
+  TelegramSetup._(this._owner, this.id, this.payload, this.expires);
+  final RemoteProfileAdmin _owner;
+  final String id, payload;
+  final DateTime expires;
+}
+
+final class ProfileBackup {
+  ProfileBackup._(this._owner, this.pid, this.archive);
+  final RemoteProfileAdmin _owner;
+  final int pid;
+  final String archive;
+}
 
 class RemoteProfileAdmin {
   RemoteProfileAdmin._(this.roster, this._target, this.name);
@@ -137,16 +176,27 @@ class RemoteProfileAdmin {
     ProfileDashboardOp op, {
     String? key,
     Map<String, Object?>? fields,
-  }) => _guard(check, () async {
-    final response = await _target._owner._dashboard.profileOperation(
-      op,
-      check: check,
-      key: key,
-      fields: fields,
-    );
-    if (response is! Map) _fail(WorkspaceFailure.invalid);
-    return response;
-  });
+    Map<String, String> query = const {},
+    void Function()? peerCheck,
+  }) {
+    void fence() {
+      check();
+      peerCheck?.call();
+    }
+
+    return _guard(fence, () async {
+      final response = await _target._owner._dashboard.profileOperation(
+        op,
+        check: fence,
+        key: key,
+        fields: fields,
+        query: query,
+      );
+      if (response is! Map) _fail(WorkspaceFailure.invalid);
+      return response;
+    });
+  }
+
   Future<void> _ok(
     ProfileDashboardOp op, {
     String? key,
@@ -219,7 +269,90 @@ class RemoteProfileAdmin {
     return path;
   }
 
-  Future<void> importProfile(String archive, String dest) async {
+  Future<PortableProfileBundle> portableExport(void Function() view) async {
+    void fence() {
+      view();
+      check();
+    }
+
+    final r = await _request(
+      ProfileDashboardOp.export,
+      fields: {},
+      peerCheck: view,
+    );
+    final path = r['archive'];
+    if (r['ok'] != true ||
+        path is! String ||
+        !_canonicalPath(path) ||
+        !RegExp(
+          '^$name-[0-9]{8}-[0-9]{6}\\.tar\\.gz\u0024',
+        ).hasMatch(path.split(RegExp(r'[/\\]')).last)) {
+      _fail(WorkspaceFailure.invalid);
+    }
+    return _guard(fence, () async {
+      final bytes = await _target._owner._dashboard.downloadProfileExport(
+        path,
+        fence,
+      );
+      final bundle = await PortableProfileBundle.inspect(bytes);
+      if (bundle.profile != name) _fail(WorkspaceFailure.mismatch);
+      return bundle;
+    });
+  }
+
+  Future<void> importPortable(
+    PortableProfileBundle bundle,
+    Set<String> reviewed,
+    String dest,
+    void Function() view,
+  ) async {
+    void fence() {
+      view();
+      check();
+    }
+
+    if (!isProfileId(dest) ||
+        dest == 'default' ||
+        (await roster.refresh()).names.containsKey(dest)) {
+      _fail(WorkspaceFailure.invalid);
+    }
+    final expectedHome = roster._homes[name];
+    if (expectedHome == null ||
+        (await roster.refresh())._homes[name] != expectedHome) {
+      _fail(WorkspaceFailure.mismatch);
+    }
+    final bytes = bundle.encode(reviewed);
+    final r = await _guard(
+      fence,
+      () => _target._owner._dashboard.stageProfileBundle(bytes, fence),
+    );
+    final desc = r['staged_upload'], path = r['path'];
+    if (r['ok'] != true ||
+        r['size'] != bytes.length ||
+        path is! String ||
+        !_canonicalPath(path) ||
+        desc is! Map ||
+        desc['install_id'] != roster.installId ||
+        desc['path'] != path ||
+        desc['profile_home'] != expectedHome) {
+      _fail(WorkspaceFailure.mismatch);
+    }
+    final home = (desc['profile_home'] as String).replaceAll('\\', '/');
+    final canonical = path.replaceAll('\\', '/');
+    if (!canonical.startsWith('$home/uploads/') ||
+        !RegExp(
+          r'^web-[0-9a-f]{16}-profile\.tar\.gz$',
+        ).hasMatch(canonical.substring('$home/uploads/'.length))) {
+      _fail(WorkspaceFailure.mismatch);
+    }
+    await importProfile(path, dest, view: view);
+  }
+
+  Future<void> importProfile(
+    String archive,
+    String dest, {
+    void Function()? view,
+  }) async {
     if (!isProfileId(dest) ||
         dest == 'default' ||
         !_canonicalPath(archive) ||
@@ -232,6 +365,7 @@ class RemoteProfileAdmin {
     final r = await _request(
       ProfileDashboardOp.importArchive,
       fields: {'archive': archive, 'name': dest},
+      peerCheck: view,
     );
     if (r['ok'] != true ||
         r['name'] != dest ||
@@ -293,24 +427,17 @@ class RemoteProfileAdmin {
     ];
   }
 
-  Future<void> changePair(ProfilePair pair, {String? code}) async {
+  Future<void> changePair(ProfilePair pair) async {
     if (!(await pairs()).contains(pair)) _fail(WorkspaceFailure.mismatch);
     final id = pair.request;
-    if (pair.pending &&
-        (id == null || id.isEmpty) &&
-        (code == null || code.isEmpty)) {
-      _fail(WorkspaceFailure.invalid);
+    if (pair.pending && !RegExp(r'^[a-f0-9]{16}$').hasMatch(id ?? '')) {
+      _fail(WorkspaceFailure.unsupported);
     }
     final r = await _request(
       pair.pending ? ProfileDashboardOp.approve : ProfileDashboardOp.revoke,
       fields: {
         'platform': pair.platform,
-        if (!pair.pending)
-          'user_id': pair.user
-        else if (id != null && id.isNotEmpty)
-          'request_id': id
-        else
-          'code': code,
+        if (!pair.pending) 'user_id': pair.user else 'request_id': id,
       },
     );
     if (r['ok'] != true ||
@@ -357,10 +484,13 @@ class RemoteProfileAdmin {
     required String delivery,
     required String prompt,
     required List<String> skills,
+    bool direct = false,
+    String chatId = '',
   }) async {
     if (!isProfileId(route) ||
         !{'generic', 'github', 'gitlab', 'linear'}.contains(signature) ||
-        delivery.isEmpty) {
+        delivery.isEmpty ||
+        direct && delivery == 'log') {
       _fail(WorkspaceFailure.invalid);
     }
     final before = await hooks();
@@ -374,6 +504,8 @@ class RemoteProfileAdmin {
         'signature': signature,
         'events': events,
         'deliver': delivery,
+        'deliver_only': direct,
+        if (chatId.isNotEmpty) 'deliver_chat_id': chatId,
         'prompt': prompt,
         'skills': skills,
       },
@@ -418,21 +550,24 @@ class RemoteProfileAdmin {
         uri == null ||
         uri.scheme != 'https' ||
         uri.host != 't.me' ||
+        !uri.path.startsWith('/newbot/') ||
+        r['deep_link'] != payload ||
         uri.userInfo.isNotEmpty ||
         uri.hasPort) {
       _fail(WorkspaceFailure.invalid);
     }
-    return (
-      id: r['pairing_id'] as String,
-      payload: payload,
-      expires: DateTime.parse(r['expires_at'] as String),
+    return TelegramSetup._(
+      this,
+      r['pairing_id'] as String,
+      payload,
+      DateTime.parse(r['expires_at'] as String),
     );
   }
 
   Future<({bool ready, String user, String bot})> telegramStatus(
     TelegramSetup setup,
   ) async {
-    if (!setup.expires.isAfter(DateTime.now())) {
+    if (setup._owner != this || !setup.expires.isAfter(DateTime.now())) {
       _fail(WorkspaceFailure.unavailable);
     }
     final r = await _request(ProfileDashboardOp.telegramStatus, key: setup.id);
@@ -474,10 +609,26 @@ class RemoteProfileAdmin {
     return r['needs_restart'] == true;
   }
 
-  Future<void> cancelTelegram(TelegramSetup setup) =>
-      _ok(ProfileDashboardOp.telegramCancel, key: setup.id);
-  Future<ProfileBackup> startBackup() async {
-    final r = await _request(ProfileDashboardOp.backup, fields: {});
+  Future<void> cancelTelegram(TelegramSetup setup) {
+    if (setup._owner != this) _fail(WorkspaceFailure.mismatch);
+    return _ok(ProfileDashboardOp.telegramCancel, key: setup.id);
+  }
+
+  Future<Uint8List> backupBytes(ProfileBackup receipt) async {
+    if (!await backupDone(receipt)) _fail(WorkspaceFailure.unavailable);
+    return _guard(
+      check,
+      () =>
+          _target._owner._dashboard.downloadAgentBackup(receipt.archive, check),
+    );
+  }
+
+  Future<ProfileBackup> startBackup({void Function()? peerCheck}) async {
+    final r = await _request(
+      ProfileDashboardOp.backup,
+      fields: {},
+      peerCheck: peerCheck,
+    );
     final path = r['archive'];
     if (r['ok'] != true ||
         r['pid'] is! int ||
@@ -488,10 +639,11 @@ class RemoteProfileAdmin {
         !path.endsWith('.zip')) {
       _fail(WorkspaceFailure.invalid);
     }
-    return (pid: r['pid'] as int, archive: path);
+    return ProfileBackup._(this, r['pid'] as int, path);
   }
 
   Future<bool> backupDone(ProfileBackup backup) async {
+    if (backup._owner != this) _fail(WorkspaceFailure.mismatch);
     final r = await _request(ProfileDashboardOp.backupStatus);
     if (r['pid'] != backup.pid || r['name'] != 'backup') {
       _fail(WorkspaceFailure.mismatch);

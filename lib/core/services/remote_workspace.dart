@@ -2,11 +2,17 @@
 /// docs/remote-workspace-contract.md before adding an operation.
 library;
 
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:crypto/crypto.dart' show sha256;
+
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
+import 'portable_profile_bundle.dart';
 import 'ws_client.dart';
 
 part 'remote_profile_admin.dart';
+part 'remote_agent_transfer.dart';
 
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {
