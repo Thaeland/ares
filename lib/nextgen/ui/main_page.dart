@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../../core/models/hermes_project.dart';
 import '../../core/models/session.dart';
 import '../../core/services/notification_prefs.dart';
+import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/turn_notification_service.dart';
 import '../data/nextgen_gateway.dart';
 import '../data/chat_controller.dart';
@@ -43,6 +44,8 @@ class _NgMainPageState extends State<_NgMainContent>
   NgSessionsModel? _sessions;
   NgChatController? _chat;
   bool _foreground = true;
+  NextGenGateway? _notificationGateway;
+  Object? _notificationMutation;
 
   /// LRU cache of recently-viewed chat controllers. Keeps parsed transcripts
   /// in memory so switching back doesn't re-fetch multi-MB history pages.
@@ -101,6 +104,12 @@ class _NgMainPageState extends State<_NgMainContent>
   void didChangeDependencies() {
     super.didChangeDependencies();
     final scope = NgScope.of(context);
+    if (!identical(_notificationGateway, scope.gateway)) {
+      _notificationGateway = scope.gateway;
+      _notificationMutation = ConnectionMutationBarrier.capture(
+        scope.connection.id,
+      );
+    }
     final sessions = _sessions;
     if (sessions == null) {
       _sessions = NgSessionsModel(scope);
@@ -428,7 +437,21 @@ class _NgMainPageState extends State<_NgMainContent>
         : text.length > 180
         ? '${text.substring(0, 180)}…'
         : text;
-    final connectionId = NgScope.of(context).connection.id;
+    final scope = NgScope.of(context);
+    final connectionId = chat.gateway.connection.id;
+    final conversation =
+        identical(chat.gateway, scope.gateway) &&
+            ConnectionMutationBarrier.isCurrent(
+              connectionId,
+              _notificationMutation,
+            ) &&
+            text.isNotEmpty
+        ? TurnNotificationService.conversationTarget(
+            scope.connManager,
+            chat.gateway.connection,
+            stored,
+          )
+        : null;
     final notifications = TurnNotificationService.shared;
     unawaited(
       failed
@@ -445,6 +468,7 @@ class _NgMainPageState extends State<_NgMainContent>
               turnId: _replyTurnId,
               sessionId: stored,
               connectionId: connectionId,
+              conversation: conversation,
             ),
     );
     if (stored != null) _postedReplies.add(stored);
