@@ -171,9 +171,9 @@ class DesktopShortcuts extends StatelessWidget {
     return ValueListenableBuilder<int>(
       valueListenable: shortcuts_store.shortcutsStoreChanges,
       builder: (context, _, _) {
-        return Focus(
-          autofocus: true,
-          child: CallbackShortcuts(bindings: _buildBindings(), child: child),
+        return CallbackShortcuts(
+          bindings: _buildBindings(),
+          child: Focus(autofocus: true, includeSemantics: false, child: child),
         );
       },
     );
