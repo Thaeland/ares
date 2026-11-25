@@ -665,7 +665,15 @@ class AppLocalizationsDe extends AppLocalizations {
       'Passende Befehle bis zum Ende dieser Hermes-Sitzung erlauben.';
 
   @override
+  String get allow_folder_until_sandbox_off =>
+      'Allow this folder until the sandbox is switched off.';
+
+  @override
   String get allow_once => 'Einmal erlauben';
+
+  @override
+  String get allow_website_until_sandbox_off =>
+      'Allow this website until the sandbox is switched off.';
 
   @override
   String get always_allow => 'Immer erlauben';
@@ -4739,6 +4747,25 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ng_allow_once => 'Einmal erlauben';
+
+  @override
+  String get ng_allow_until_sandbox_off => 'Bis die Sandbox ausgeschaltet wird';
+
+  @override
+  String get ng_folder_access => 'Ordnerzugriff';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      'Das Gateway hat nicht angegeben, ob der Zugriff schreibgeschützt ist oder Lesen und Schreiben erlaubt.';
+
+  @override
+  String get ng_folder_read_only => 'Schreibgeschützt';
+
+  @override
+  String get ng_folder_read_write => 'Lesen und Schreiben';
+
+  @override
+  String get ng_website_access => 'Websitezugriff';
 
   @override
   String get ng_allow_for_this_chat => 'Für diesen Chat erlauben';

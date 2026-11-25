@@ -82,6 +82,8 @@ void main() {
         .first;
     for (final section in ['Appearance', 'Voice', 'Session Sources']) {
       final chip = find.byKey(ValueKey('classic-only-$section'));
+      // Small steps: the lazy list re-estimates extents while scrolling, and
+      // a 300 px step can carry a short section header past the viewport.
       await tester.scrollUntilVisible(
         chip,
         100,

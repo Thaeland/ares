@@ -665,7 +665,15 @@ class AppLocalizationsPt extends AppLocalizations {
       'Permitir comandos correspondentes até esta sessão do Hermes terminar.';
 
   @override
+  String get allow_folder_until_sandbox_off =>
+      'Allow this folder until the sandbox is switched off.';
+
+  @override
   String get allow_once => 'Permitir uma vez';
+
+  @override
+  String get allow_website_until_sandbox_off =>
+      'Allow this website until the sandbox is switched off.';
 
   @override
   String get always_allow => 'Permitir sempre';
@@ -4733,6 +4741,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ng_allow_once => 'Permitir uma vez';
+
+  @override
+  String get ng_allow_until_sandbox_off => 'Até a sandbox ser desativada';
+
+  @override
+  String get ng_folder_access => 'Acesso à pasta';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      'O gateway não indicou se é só de leitura ou de leitura e escrita.';
+
+  @override
+  String get ng_folder_read_only => 'Só de leitura';
+
+  @override
+  String get ng_folder_read_write => 'Leitura e escrita';
+
+  @override
+  String get ng_website_access => 'Acesso ao site';
 
   @override
   String get ng_allow_for_this_chat => 'Permitir nesta conversa';
@@ -11017,6 +11044,25 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get ng_allow_once => 'Permitir uma vez';
+
+  @override
+  String get ng_allow_until_sandbox_off => 'Até a sandbox ser desativada';
+
+  @override
+  String get ng_folder_access => 'Acesso à pasta';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      'O gateway não informou se é somente leitura ou leitura e gravação.';
+
+  @override
+  String get ng_folder_read_only => 'Somente leitura';
+
+  @override
+  String get ng_folder_read_write => 'Leitura e gravação';
+
+  @override
+  String get ng_website_access => 'Acesso ao site';
 
   @override
   String get ng_allow_for_this_chat => 'Permitir neste chat';

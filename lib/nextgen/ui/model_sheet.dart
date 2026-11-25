@@ -2,6 +2,7 @@
 // search, starred and recent models, then every configured provider.
 import 'package:flutter/material.dart';
 
+import '../../core/services/model_admin.dart';
 import '../data/chat_controller.dart';
 import '../nextgen_preferences.dart';
 import '../theme/nextgen_theme.dart';
@@ -24,6 +25,16 @@ List<(String, String)> get ngEfforts => [
 
 String ngEffortLabel(String? wire) =>
     ngEfforts.where((e) => e.$1 == wire).firstOrNull?.$2 ?? ngL.ng_default;
+
+/// `Ultra→Max` when the gateway stamps a different wire effort, otherwise the
+/// picked level. Nothing is inferred when the wire value is still unknown.
+String ngRouteEffortLabel(String? effort, String? wire) {
+  final clamp = reasoningEffortClamp(effort, wire);
+  if (clamp == null) return ngEffortLabel(effort);
+  final picked = ngEfforts.where((e) => e.$1 == clamp.picked).firstOrNull?.$2;
+  final sent = ngEfforts.where((e) => e.$1 == clamp.wire).firstOrNull?.$2;
+  return '${picked ?? clamp.picked}→${sent ?? clamp.wire}';
+}
 
 class NgModelChoice {
   final String provider;

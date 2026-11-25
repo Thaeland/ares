@@ -1,5 +1,6 @@
 // NextGen settings: the gateway you're signed in to (with Kyllene's staged
 // connection check), saved gateways, appearance, and the NextGen switch.
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -526,10 +527,13 @@ class NgNotificationSettings extends StatelessWidget {
                 subtitle: isWindowsPlatform
                     ? ngL.windows_notification_diagnostics
                     : ngL.ng_recent_notifications_hint,
-                onTap: () => showNgSheet<void>(
-                  context,
-                  builder: (_) => const NgRecentNotificationsSheet(),
-                ),
+                onTap: () {
+                  unawaited(TurnNotificationService.loadRecentAttempts());
+                  showNgSheet<void>(
+                    context,
+                    builder: (_) => const NgRecentNotificationsSheet(),
+                  );
+                },
               ),
               NgRow(
                 icon: Icons.notifications_active_outlined,
@@ -569,7 +573,8 @@ class NgNotificationSettings extends StatelessWidget {
 }
 
 /// What Ares tried to post lately and what came of it, so a notification
-/// that never showed can be explained on the phone.
+/// that never showed can be explained on the device. Earlier runs' entries
+/// keep only kind, id, outcome and error class.
 class NgRecentNotificationsSheet extends StatelessWidget {
   const NgRecentNotificationsSheet({super.key});
 
@@ -617,17 +622,21 @@ class NgRecentNotificationsSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(
-                        switch (a.outcome) {
-                          'posted' => Icons.check_circle_outline,
-                          'skipped' => Icons.remove_circle_outline,
-                          _ => Icons.error_outline,
-                        },
+                        a.succeeded
+                            ? Icons.check_circle_outline
+                            : switch (a.outcome) {
+                                'skipped' => Icons.remove_circle_outline,
+                                'unknown' => Icons.help_outline,
+                                _ => Icons.error_outline,
+                              },
                         size: 18,
-                        color: switch (a.outcome) {
-                          'posted' => c.success,
-                          'skipped' => c.text3,
-                          _ => c.danger,
-                        },
+                        color: a.succeeded
+                            ? c.success
+                            : switch (a.outcome) {
+                                'skipped' => c.text3,
+                                'unknown' => c.text2,
+                                _ => c.danger,
+                              },
                       ),
                       const SizedBox(width: 10),
                       Expanded(
@@ -638,12 +647,18 @@ class NgRecentNotificationsSheet extends StatelessWidget {
                               '${ngStamp(context, a.at, seconds: true)} · ${a.kind} · ${a.outcome}',
                               style: NgType.caption.copyWith(color: c.text3),
                             ),
-                            Text(
-                              a.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: NgType.bodySmall.copyWith(color: c.text),
-                            ),
+                            if (a.title.isNotEmpty)
+                              Text(
+                                a.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: NgType.bodySmall.copyWith(color: c.text),
+                              ),
+                            if (a.reference.isNotEmpty)
+                              Text(
+                                a.reference,
+                                style: NgType.caption.copyWith(color: c.text2),
+                              ),
                             if (a.detail != null)
                               Text(
                                 a.detail!,

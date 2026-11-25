@@ -209,12 +209,77 @@ List<MoreSection> buildMoreSections({
           unavailableReason: dashboardReason(),
         ),
         MoreEntry(
+          id: 'capability-admin',
+          title: 'Capabilities',
+          subtitle:
+              'Install and govern skills, plugins, connectors and tool backends',
+          icon: Icons.extension_outlined,
+          availability: dashboardBacked(),
+          unavailableReason: dashboardReason(),
+        ),
+        MoreEntry(
+          id: 'browser-vault',
+          title: 'Browser vault',
+          subtitle: 'Site logins, addresses, cards and credential sources',
+          icon: Icons.vpn_key_outlined,
+          availability: workspaceAvailable
+              ? MoreEntryAvailability.available
+              : MoreEntryAvailability.unavailable,
+          unavailableReason: workspaceAvailable
+              ? null
+              : l10n.desktop_gateway_is_not_configured_for_this_connection,
+        ),
+        MoreEntry(
+          id: 'agent-policy',
+          title: 'Agent policy',
+          subtitle: 'Approvals, checkpoints, browser access and shared metrics',
+          icon: Icons.admin_panel_settings_outlined,
+          availability: dashboardBacked(),
+          unavailableReason: dashboardReason(),
+        ),
+        MoreEntry(
           id: 'memory',
           title: l10n.memory,
           subtitle: l10n.durable_facts_hermes_keeps_about_you,
           icon: Icons.psychology_outlined,
           availability: dashboardBacked(),
           unavailableReason: dashboardReason(),
+        ),
+        MoreEntry(
+          id: 'host-operations',
+          title: 'Host',
+          subtitle: 'Remote logs, health, maintenance and update',
+          icon: Icons.monitor_heart_outlined,
+          availability: workspaceAvailable
+              ? MoreEntryAvailability.available
+              : MoreEntryAvailability.unavailable,
+          unavailableReason: workspaceAvailable
+              ? null
+              : l10n.desktop_gateway_is_not_configured_for_this_connection,
+        ),
+        MoreEntry(
+          id: 'schedule-desk',
+          title: 'Schedules',
+          subtitle: 'All profiles, blueprints, catch-up and stop',
+          icon: Icons.event_note_outlined,
+          availability: workspaceAvailable
+              ? MoreEntryAvailability.available
+              : MoreEntryAvailability.unavailable,
+          unavailableReason: workspaceAvailable
+              ? null
+              : l10n.desktop_gateway_is_not_configured_for_this_connection,
+        ),
+        MoreEntry(
+          id: 'memory-graph',
+          title: 'Memory graph',
+          subtitle: 'Timeline, edits and memory providers',
+          icon: Icons.hub_outlined,
+          availability: workspaceAvailable
+              ? MoreEntryAvailability.available
+              : MoreEntryAvailability.unavailable,
+          unavailableReason: workspaceAvailable
+              ? null
+              : l10n.desktop_gateway_is_not_configured_for_this_connection,
         ),
       ],
     ),
@@ -234,6 +299,22 @@ List<MoreSection> buildMoreSections({
           title: l10n.nous_portal,
           subtitle: l10n.portal_menu_subtitle,
           icon: Icons.public,
+          availability: dashboardBacked(),
+          unavailableReason: dashboardReason(),
+        ),
+        MoreEntry(
+          id: 'provider-admin',
+          title: 'Providers and routes',
+          subtitle: 'Keys, endpoints, delegation and mixtures',
+          icon: Icons.key_outlined,
+          availability: dashboardBacked(),
+          unavailableReason: dashboardReason(),
+        ),
+        MoreEntry(
+          id: 'nous-billing',
+          title: 'Credits and plans',
+          subtitle: 'Consented Nous billing when the account allows it',
+          icon: Icons.account_balance_wallet_outlined,
           availability: dashboardBacked(),
           unavailableReason: dashboardReason(),
         ),

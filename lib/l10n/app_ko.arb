@@ -1693,5 +1693,11 @@
   "ng_aux_profile_describer": "프로필 설명",
   "ng_aux_profile_describer_hint": "각 프로필의 짧은 설명을 작성합니다",
   "ng_aux_curator": "큐레이터",
-  "ng_aux_curator_hint": "스킬 사용 현황을 검토합니다"
+  "ng_aux_curator_hint": "스킬 사용 현황을 검토합니다",
+  "ng_allow_until_sandbox_off": "샌드박스가 꺼질 때까지",
+  "ng_folder_access": "폴더 접근",
+  "ng_folder_access_unspecified": "게이트웨이가 읽기 전용인지 읽기 및 쓰기인지 알려 주지 않았습니다.",
+  "ng_folder_read_only": "읽기 전용",
+  "ng_folder_read_write": "읽기 및 쓰기",
+  "ng_website_access": "웹사이트 접근"
 }

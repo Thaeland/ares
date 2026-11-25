@@ -187,6 +187,10 @@ void main() {
         'flutter.theme_mode': 'dark',
         'flutter.drafts': 'old',
         'flutter.gateway_turn_journal_v2': 'existing',
+        // The primary window alone owns toast activation tickets and the
+        // notification log; a child never reads or rewrites either.
+        'flutter.windows_toast_tickets_v1': '{}',
+        'flutter.notification_attempts_v1': '[]',
       };
       final physical = InMemorySharedPreferencesStore.withData(source);
       final initial = popoutPreferences(await physical.getAll(), _target);

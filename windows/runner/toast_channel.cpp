@@ -23,10 +23,10 @@ ToastChannel::ToastChannel(flutter::FlutterEngine* engine, std::string initial, 
         result->Success();
       } else if (method == "show") {
         auto& args = std::get<Map>(*call.arguments());
-        ares::toast::Show(std::get<int>(args.at(Value("id"))),
+        const auto delivery = ares::toast::Show(std::get<int>(args.at(Value("id"))),
           std::get<std::string>(args.at(Value("ticket"))), std::get<std::string>(args.at(Value("body"))),
           std::get<std::string>(args.at(Value("sound"))), std::get<bool>(args.at(Value("quiet"))));
-        result->Success();
+        result->Success(Value(std::string(ares::toast::DeliveryName(delivery))));
       } else if (method == "cancel") {
         ares::toast::Cancel(std::get<int>(*call.arguments()));
         result->Success();
