@@ -591,6 +591,8 @@ class NgChatController extends ChangeNotifier {
     _subs.add(gateway.events.listen(_onEvent));
     _subs.add(gateway.serverRequests.listen(_onServerRequest));
     _subs.add(gateway.reconnected.listen((_) => unawaited(_reattach())));
+    // Answered on another device, withdrawn, or no longer open per the server.
+    _subs.add(gateway.withdrawnRequests.listen(forgetRequest));
   }
 
   final NextGenGateway gateway;
@@ -801,6 +803,7 @@ class NgChatController extends ChangeNotifier {
     _attachCompleter = attaching;
     try {
       await gateway.connected();
+      final known = gateway.openRequestIdsFor([id, runtimeId]);
       final result = await gateway.call('session.resume', {
         'session_id': id,
         'source': 'desktop',
@@ -826,10 +829,8 @@ class NgChatController extends ChangeNotifier {
       _attachedOnce = true;
       unawaited(refreshControl());
       unawaited(refreshSubagents());
-      final open = result['open_requests'];
-      if (open is List && open.isNotEmpty) {
-        gateway.socket?.deliverOpenRequests(open);
-      }
+      // The server's list is authoritative: one answered elsewhere is gone.
+      gateway.reconcileOpenRequests(result['open_requests'], known: known);
       // Requests that arrived before this chat bound its runtime id.
       for (final pending in gateway.openRequests.values) {
         _onServerRequest(pending);
@@ -1469,6 +1470,7 @@ class NgChatController extends ChangeNotifier {
       final cursor = _cursor;
       if (cursor != null) {
         try {
+          final known = gateway.openRequestIdsFor([rt, storedId]);
           final reply = await gateway.call('session.events.since', {
             'session_id': rt,
             'replay_epoch': cursor.epoch,
@@ -1480,7 +1482,7 @@ class NgChatController extends ChangeNotifier {
             cursor.epoch,
             cursor.sequence,
           );
-          _deliverOpenRequests(reply['open_requests']);
+          gateway.reconcileOpenRequests(reply['open_requests'], known: known);
         } catch (_) {
           missed = null; // replay unavailable, or the link went again
         }
@@ -1489,12 +1491,13 @@ class NgChatController extends ChangeNotifier {
       final from = _lastSeq;
       if (from != null && _seqEpoch == _readyEpoch()) {
         try {
+          final known = gateway.openRequestIdsFor([rt, storedId]);
           final reply = await gateway.call('session.events.since', {
             'session_id': rt,
             'last_seen': from,
           });
           missed = ngParseReplay(reply, rt, from, _seqEpoch);
-          _deliverOpenRequests(reply['open_requests']);
+          gateway.reconcileOpenRequests(reply['open_requests'], known: known);
         } catch (_) {
           missed = null; // older gateway, or the link went again
         }
@@ -1519,12 +1522,6 @@ class NgChatController extends ChangeNotifier {
     _changed();
   }
 
-  void _deliverOpenRequests(Object? open) {
-    if (open is List && open.isNotEmpty) {
-      gateway.socket?.deliverOpenRequests(open);
-    }
-  }
-
   /// Reads the gateway's own state when the missed events can't be
   /// replayed: whether the turn still runs and what waits on the user
   /// (`session.resume`), then the transcript — unless, back in sight
@@ -1546,8 +1543,11 @@ class NgChatController extends ChangeNotifier {
     final limit = max(ngHistoryPage, _rowIds.length).clamp(1, 500);
     Map<String, dynamic>? snapshot;
     List<Map<String, dynamic>>? rows;
+    // Requests cached when the read started: the reply settles only these.
+    var known = const <String>{};
     try {
       if (rt != null) {
+        known = gateway.openRequestIdsFor([rt, id]);
         snapshot = await gateway.call('session.resume', {
           'session_id': id,
           'source': 'desktop',
@@ -1589,10 +1589,11 @@ class NgChatController extends ChangeNotifier {
       } else {
         _lastSeq = null;
       }
-      // A question asked while the app was away comes back only here.
+      // A question asked while the app was away comes back only here, and
+      // one answered on another device is dropped only here.
       final open = snapshot['open_requests'];
+      gateway.reconcileOpenRequests(open, known: known);
       if (open is List && open.isNotEmpty) {
-        gateway.socket?.deliverOpenRequests(open);
         for (final pending in gateway.openRequests.values.toList()) {
           _onServerRequest(pending);
         }
@@ -2039,7 +2040,8 @@ class NgChatController extends ChangeNotifier {
     }
   }
 
-  /// Drops the request [id] once it was answered elsewhere (a notification).
+  /// Drops the request [id] once it was answered elsewhere (a notification,
+  /// another device) or withdrawn.
   void forgetRequest(String id) {
     if (request?.request.id != id) return;
     request = null;

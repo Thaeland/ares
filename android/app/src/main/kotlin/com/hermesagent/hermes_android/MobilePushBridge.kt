@@ -413,6 +413,13 @@ internal object MobilePushBridge {
             changed()
             return
         }
+        if (clean.getString("kind") == "input_resolved") {
+            // Answered (possibly on another device) or withdrawn: no news to post.
+            // Take down the question it answers; `resolves` is that hint's opaque
+            // event id (older servers omit it, and then nothing is posted either).
+            resolve(context, state, clean.getString("event_id"), hint.optString("resolves"))
+            return
+        }
         if (!state.optBoolean("master") || !allowed(context)) return
         val kinds = state.optJSONArray("kinds") ?: JSONArray()
         if ((0 until kinds.length()).none { kinds.optString(it) == clean.getString("kind") }) return
@@ -436,6 +443,25 @@ internal object MobilePushBridge {
         manager.notify("mobile_push", event.hashCode(), builder.setSmallIcon(R.drawable.ic_stat_mobile_push)
             .setContentTitle("Hermes").setContentText("Server activity is available. Open Hermes to check.")
             .setVisibility(android.app.Notification.VISIBILITY_SECRET).setAutoCancel(true).setContentIntent(pending).build())
+        changed()
+    }
+
+    private fun resolve(context: Context, state: JSONObject, event: String, resolves: String) {
+        val seen = state.optJSONArray("seen") ?: JSONArray()
+        if ((0 until seen.length()).any { seen.optString(it) == event }) return
+        seen.put(event); state.put("seen", last(seen, 256))
+        val answered = resolves.isNotEmpty() && resolves.length <= 256
+        if (answered) {
+            val issued = state.optJSONArray("issued") ?: JSONArray()
+            val kept = JSONArray()
+            for (i in 0 until issued.length()) {
+                val tap = issued.getJSONObject(i)
+                if (tap.optString("event_id") != resolves) kept.put(tap)
+            }
+            state.put("issued", kept)
+        }
+        MobilePushStore.write(context, state)
+        if (answered) context.getSystemService(NotificationManager::class.java).cancel("mobile_push", resolves.hashCode())
         changed()
     }
 
