@@ -1699,5 +1699,37 @@
   "ng_folder_access_unspecified": "読み取り専用か読み書き可能かがゲートウェイから示されていません。",
   "ng_folder_read_only": "読み取り専用",
   "ng_folder_read_write": "読み書き",
-  "ng_website_access": "ウェブサイトへのアクセス"
+  "ng_website_access": "ウェブサイトへのアクセス",
+  "appearance_inline_embeds": "インライン埋め込み",
+  "appearance_inline_embeds_hint": "リッチプレビューは外部サイト（YouTube、X など）から読み込まれます。「確認」はそれぞれ許可するまでプレースホルダーを表示し、「常に」は自動で読み込み、「オフ」は通常のリンクのままにします。",
+  "appearance_embeds_ask": "確認",
+  "appearance_embeds_always": "常に",
+  "appearance_embeds_off": "オフ",
+  "appearance_embeds_reset": "{count, plural, =1{許可済みのサービス 1 件をリセット} other{許可済みのサービス {count} 件をリセット}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "読み込む",
+  "appearance_embed_always_allow": "{service} を常に許可",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "プレビューを読み込み中…",
+  "appearance_embed_image_failed": "{host} から画像を読み込めませんでした。タップして開きます。",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "プレビューを表示できません"
 }

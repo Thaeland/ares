@@ -1699,5 +1699,37 @@
   "ng_folder_access_unspecified": "网关未说明是只读还是可读写。",
   "ng_folder_read_only": "只读",
   "ng_folder_read_write": "可读写",
-  "ng_website_access": "网站访问"
+  "ng_website_access": "网站访问",
+  "appearance_inline_embeds": "内嵌内容",
+  "appearance_inline_embeds_hint": "丰富预览会从第三方网站加载（YouTube、X 等）。“询问”会先显示占位符，直到你逐一允许；“始终”会自动加载；“关闭”只保留普通链接。",
+  "appearance_embeds_ask": "询问",
+  "appearance_embeds_always": "始终",
+  "appearance_embeds_off": "关闭",
+  "appearance_embeds_reset": "{count, plural, =1{重置 1 个已允许的服务} other{重置 {count} 个已允许的服务}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "加载",
+  "appearance_embed_always_allow": "始终允许 {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "正在加载预览…",
+  "appearance_embed_image_failed": "无法从 {host} 加载图片。轻触即可打开。",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "无法预览"
 }

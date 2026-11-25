@@ -2199,7 +2199,8 @@ class _AssistantBlockState extends State<_AssistantBlock> {
       c.strokeStrong,
       reading?.chatFont,
       reading?.terminalFont,
-      reading?.externalEmbeds,
+      reading?.embedMode,
+      isFinal,
     );
     if (look != _proseLook) {
       _prose.clear();
@@ -2212,9 +2213,9 @@ class _AssistantBlockState extends State<_AssistantBlock> {
       // across paragraphs and code fences; a SelectableText here would be
       // its own island and confine the selection to a single block.
       selectable: false,
-      // Never fetch a remote image while drawing the transcript. With
-      // external embeds off the alt text stays; with them on, a card opens
-      // the https address in the browser. Classic follows the same rule.
+      // Remote images follow Inline Embeds, as in Classic: a link when Off,
+      // a placeholder until Load or Always allow when Ask, the image (https
+      // only, capped) when Always or allowed.
       sizedImageBuilder: (image) => externalEmbed(
         context,
         uri: '${image.uri}',
@@ -2256,7 +2257,15 @@ class _AssistantBlockState extends State<_AssistantBlock> {
     );
     Widget cached(String text) {
       used.add(text);
-      return _prose.putIfAbsent(text, () => transcriptBody(parse(text)));
+      return _prose.putIfAbsent(
+        text,
+        () => transcriptEmbeds(
+          context,
+          text,
+          transcriptBody(parse(text)),
+          complete: isFinal,
+        ),
+      );
     }
 
     Widget codeBlock(String text) {

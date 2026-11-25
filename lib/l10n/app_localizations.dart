@@ -10557,17 +10557,71 @@ abstract class AppLocalizations {
   /// **'User bubble opacity'**
   String get appearance_user_bubble_opacity;
 
-  /// No description provided for @appearance_external_embeds.
+  /// No description provided for @appearance_inline_embeds.
   ///
   /// In en, this message translates to:
-  /// **'External embeds'**
-  String get appearance_external_embeds;
+  /// **'Inline embeds'**
+  String get appearance_inline_embeds;
 
-  /// No description provided for @appearance_external_embeds_hint.
+  /// No description provided for @appearance_inline_embeds_hint.
   ///
   /// In en, this message translates to:
-  /// **'Show a card for https images. Nothing is downloaded until you open it.'**
-  String get appearance_external_embeds_hint;
+  /// **'Rich previews load from third-party sites (YouTube, X, …). Ask shows a placeholder until you allow each one; Always loads them automatically; Off keeps plain links.'**
+  String get appearance_inline_embeds_hint;
+
+  /// No description provided for @appearance_embeds_ask.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask'**
+  String get appearance_embeds_ask;
+
+  /// No description provided for @appearance_embeds_always.
+  ///
+  /// In en, this message translates to:
+  /// **'Always'**
+  String get appearance_embeds_always;
+
+  /// No description provided for @appearance_embeds_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get appearance_embeds_off;
+
+  /// No description provided for @appearance_embeds_reset.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Reset 1 allowed service} other{Reset {count} allowed services}}'**
+  String appearance_embeds_reset(int count);
+
+  /// No description provided for @appearance_embed_load.
+  ///
+  /// In en, this message translates to:
+  /// **'Load'**
+  String get appearance_embed_load;
+
+  /// No description provided for @appearance_embed_always_allow.
+  ///
+  /// In en, this message translates to:
+  /// **'Always allow {service}'**
+  String appearance_embed_always_allow(String service);
+
+  /// No description provided for @appearance_embed_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading preview…'**
+  String get appearance_embed_loading;
+
+  /// No description provided for @appearance_embed_image_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load the image from {host}. Tap to open it.'**
+  String appearance_embed_image_failed(String host);
+
+  /// No description provided for @appearance_embed_preview_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview unavailable'**
+  String get appearance_embed_preview_unavailable;
 
   /// No description provided for @appearance_emoji_reactions.
   ///
@@ -10910,12 +10964,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Send to the open chat'**
   String get appearance_send_to_the_open_chat;
-
-  /// No description provided for @appearance_open_embed.
-  ///
-  /// In en, this message translates to:
-  /// **'Open embed'**
-  String get appearance_open_embed;
 
   /// No description provided for @appearance_tour_theme_body.
   ///

@@ -1699,5 +1699,37 @@
   "ng_folder_access_unspecified": "El gateway no indicó si es de solo lectura o de lectura y escritura.",
   "ng_folder_read_only": "Solo lectura",
   "ng_folder_read_write": "Lectura y escritura",
-  "ng_website_access": "Acceso a sitios web"
+  "ng_website_access": "Acceso a sitios web",
+  "appearance_inline_embeds": "Contenido insertado",
+  "appearance_inline_embeds_hint": "Las vistas previas enriquecidas se cargan desde sitios de terceros (YouTube, X, …). Preguntar muestra un marcador hasta que permitas cada una; Siempre las carga automáticamente; Desactivado mantiene enlaces simples.",
+  "appearance_embeds_ask": "Preguntar",
+  "appearance_embeds_always": "Siempre",
+  "appearance_embeds_off": "Desactivado",
+  "appearance_embeds_reset": "{count, plural, =1{Restablecer 1 servicio permitido} other{Restablecer {count} servicios permitidos}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "Cargar",
+  "appearance_embed_always_allow": "Permitir siempre {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "Cargando vista previa…",
+  "appearance_embed_image_failed": "No se pudo cargar la imagen de {host}. Toca para abrirla.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "Vista previa no disponible"
 }

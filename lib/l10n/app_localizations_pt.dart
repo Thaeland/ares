@@ -6301,11 +6301,51 @@ class AppLocalizationsPt extends AppLocalizations {
   String get appearance_user_bubble_opacity => 'User bubble opacity';
 
   @override
-  String get appearance_external_embeds => 'External embeds';
+  String get appearance_inline_embeds => 'Conteúdo incorporado';
 
   @override
-  String get appearance_external_embeds_hint =>
-      'Show a card for https images. Nothing is downloaded until you open it.';
+  String get appearance_inline_embeds_hint =>
+      'As pré-visualizações enriquecidas são carregadas de sites de terceiros (YouTube, X, …). Perguntar mostra um marcador de posição até permitir cada uma; Sempre carrega-as automaticamente; Desativado mantém ligações simples.';
+
+  @override
+  String get appearance_embeds_ask => 'Perguntar';
+
+  @override
+  String get appearance_embeds_always => 'Sempre';
+
+  @override
+  String get appearance_embeds_off => 'Desativado';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Repor $count serviços permitidos',
+      one: 'Repor 1 serviço permitido',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => 'Carregar';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return 'Permitir sempre $service';
+  }
+
+  @override
+  String get appearance_embed_loading => 'A carregar pré-visualização…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return 'Não foi possível carregar a imagem de $host. Toque para a abrir.';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable =>
+      'Pré-visualização indisponível';
 
   @override
   String get appearance_emoji_reactions => 'Emoji reactions';
@@ -6494,9 +6534,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get appearance_send_to_the_open_chat => 'Send to the open chat';
-
-  @override
-  String get appearance_open_embed => 'Open embed';
 
   @override
   String get appearance_tour_theme_body =>
@@ -12529,4 +12566,50 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get ng_aux_curator_hint => 'Analisa como as habilidades são usadas';
+
+  @override
+  String get appearance_inline_embeds => 'Conteúdo incorporado';
+
+  @override
+  String get appearance_inline_embeds_hint =>
+      'As prévias avançadas são carregadas de sites de terceiros (YouTube, X, …). Perguntar mostra um espaço reservado até você permitir cada uma; Sempre as carrega automaticamente; Desativado mantém links simples.';
+
+  @override
+  String get appearance_embeds_ask => 'Perguntar';
+
+  @override
+  String get appearance_embeds_always => 'Sempre';
+
+  @override
+  String get appearance_embeds_off => 'Desativado';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Redefinir $count serviços permitidos',
+      one: 'Redefinir 1 serviço permitido',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => 'Carregar';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return 'Sempre permitir $service';
+  }
+
+  @override
+  String get appearance_embed_loading => 'Carregando prévia…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return 'Não foi possível carregar a imagem de $host. Toque para abri-la.';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable => 'Prévia indisponível';
 }

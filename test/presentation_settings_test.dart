@@ -38,14 +38,18 @@ void main() {
     await controls.setTerminalFont(AresTypeface.geistMono);
     await controls.setDirection(TranscriptDirection.rightToLeft);
     await controls.setBubbleOpacity(0.2);
-    await controls.setExternalEmbeds(true);
+    await controls.setEmbedMode(InlineEmbedMode.always);
+    await controls.allowEmbedService('youtube');
+    await controls.allowEmbedService('image:images.example.org');
+    await controls.allowEmbedService('not a service');
     final again = ReadingControls(await SharedPreferences.getInstance());
     addTearDown(again.dispose);
     expect(again.chatFont, AresTypeface.cinzel);
     expect(again.terminalFont, AresTypeface.geistMono);
     expect(again.direction, TranscriptDirection.rightToLeft);
     expect(again.bubbleOpacity, ReadingControls.minBubbleOpacity);
-    expect(again.externalEmbeds, isTrue);
+    expect(again.embedMode, InlineEmbedMode.always);
+    expect(again.allowedEmbeds, {'youtube', 'image:images.example.org'});
   });
 
   test(

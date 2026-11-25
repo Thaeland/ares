@@ -6299,11 +6299,52 @@ class AppLocalizationsRu extends AppLocalizations {
   String get appearance_user_bubble_opacity => 'User bubble opacity';
 
   @override
-  String get appearance_external_embeds => 'External embeds';
+  String get appearance_inline_embeds => 'Встроенный контент';
 
   @override
-  String get appearance_external_embeds_hint =>
-      'Show a card for https images. Nothing is downloaded until you open it.';
+  String get appearance_inline_embeds_hint =>
+      'Расширенные превью загружаются со сторонних сайтов (YouTube, X, …). «Спрашивать» показывает заглушку, пока вы не разрешите каждое; «Всегда» загружает их автоматически; «Выкл.» оставляет обычные ссылки.';
+
+  @override
+  String get appearance_embeds_ask => 'Спрашивать';
+
+  @override
+  String get appearance_embeds_always => 'Всегда';
+
+  @override
+  String get appearance_embeds_off => 'Выкл.';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Сбросить $count разрешённого сервиса',
+      many: 'Сбросить $count разрешённых сервисов',
+      few: 'Сбросить $count разрешённых сервиса',
+      one: 'Сбросить $count разрешённый сервис',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => 'Загрузить';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return 'Всегда разрешать $service';
+  }
+
+  @override
+  String get appearance_embed_loading => 'Загрузка превью…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return 'Не удалось загрузить изображение с $host. Нажмите, чтобы открыть.';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable => 'Превью недоступно';
 
   @override
   String get appearance_emoji_reactions => 'Emoji reactions';
@@ -6492,9 +6533,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get appearance_send_to_the_open_chat => 'Send to the open chat';
-
-  @override
-  String get appearance_open_embed => 'Open embed';
 
   @override
   String get appearance_tour_theme_body =>

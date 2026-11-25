@@ -6119,11 +6119,50 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appearance_user_bubble_opacity => 'User bubble opacity';
 
   @override
-  String get appearance_external_embeds => 'External embeds';
+  String get appearance_inline_embeds => '인라인 임베드';
 
   @override
-  String get appearance_external_embeds_hint =>
-      'Show a card for https images. Nothing is downloaded until you open it.';
+  String get appearance_inline_embeds_hint =>
+      '풍부한 미리보기는 외부 사이트(YouTube, X 등)에서 불러옵니다. ‘묻기’는 하나씩 허용할 때까지 자리표시자를 보여 주고, ‘항상’은 자동으로 불러오며, ‘끄기’는 일반 링크로 둡니다.';
+
+  @override
+  String get appearance_embeds_ask => '묻기';
+
+  @override
+  String get appearance_embeds_always => '항상';
+
+  @override
+  String get appearance_embeds_off => '끄기';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '허용된 서비스 $count개 초기화',
+      one: '허용된 서비스 1개 초기화',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => '불러오기';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return '$service 항상 허용';
+  }
+
+  @override
+  String get appearance_embed_loading => '미리보기 불러오는 중…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return '$host에서 이미지를 불러오지 못했습니다. 탭하여 여세요.';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable => '미리보기를 사용할 수 없음';
 
   @override
   String get appearance_emoji_reactions => 'Emoji reactions';
@@ -6312,9 +6351,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get appearance_send_to_the_open_chat => 'Send to the open chat';
-
-  @override
-  String get appearance_open_embed => 'Open embed';
 
   @override
   String get appearance_tour_theme_body =>

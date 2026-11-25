@@ -6314,11 +6314,50 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appearance_user_bubble_opacity => 'User bubble opacity';
 
   @override
-  String get appearance_external_embeds => 'External embeds';
+  String get appearance_inline_embeds => 'Contenus intégrés';
 
   @override
-  String get appearance_external_embeds_hint =>
-      'Show a card for https images. Nothing is downloaded until you open it.';
+  String get appearance_inline_embeds_hint =>
+      'Les aperçus enrichis se chargent depuis des sites tiers (YouTube, X, …). Demander affiche un espace réservé jusqu’à ce que vous autorisiez chacun ; Toujours les charge automatiquement ; Désactivé conserve des liens simples.';
+
+  @override
+  String get appearance_embeds_ask => 'Demander';
+
+  @override
+  String get appearance_embeds_always => 'Toujours';
+
+  @override
+  String get appearance_embeds_off => 'Désactivé';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Réinitialiser $count services autorisés',
+      one: 'Réinitialiser 1 service autorisé',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => 'Charger';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return 'Toujours autoriser $service';
+  }
+
+  @override
+  String get appearance_embed_loading => 'Chargement de l’aperçu…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return 'Impossible de charger l’image depuis $host. Touchez pour l’ouvrir.';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable => 'Aperçu indisponible';
 
   @override
   String get appearance_emoji_reactions => 'Emoji reactions';
@@ -6507,9 +6546,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get appearance_send_to_the_open_chat => 'Send to the open chat';
-
-  @override
-  String get appearance_open_embed => 'Open embed';
 
   @override
   String get appearance_tour_theme_body =>

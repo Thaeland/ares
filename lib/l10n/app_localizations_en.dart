@@ -6253,11 +6253,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appearance_user_bubble_opacity => 'User bubble opacity';
 
   @override
-  String get appearance_external_embeds => 'External embeds';
+  String get appearance_inline_embeds => 'Inline embeds';
 
   @override
-  String get appearance_external_embeds_hint =>
-      'Show a card for https images. Nothing is downloaded until you open it.';
+  String get appearance_inline_embeds_hint =>
+      'Rich previews load from third-party sites (YouTube, X, …). Ask shows a placeholder until you allow each one; Always loads them automatically; Off keeps plain links.';
+
+  @override
+  String get appearance_embeds_ask => 'Ask';
+
+  @override
+  String get appearance_embeds_always => 'Always';
+
+  @override
+  String get appearance_embeds_off => 'Off';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Reset $count allowed services',
+      one: 'Reset 1 allowed service',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => 'Load';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return 'Always allow $service';
+  }
+
+  @override
+  String get appearance_embed_loading => 'Loading preview…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return 'Couldn\'t load the image from $host. Tap to open it.';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable => 'Preview unavailable';
 
   @override
   String get appearance_emoji_reactions => 'Emoji reactions';
@@ -6446,9 +6485,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appearance_send_to_the_open_chat => 'Send to the open chat';
-
-  @override
-  String get appearance_open_embed => 'Open embed';
 
   @override
   String get appearance_tour_theme_body =>

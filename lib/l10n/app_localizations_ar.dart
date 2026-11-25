@@ -6257,11 +6257,50 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appearance_user_bubble_opacity => 'شفافية فقاعة رسائلك';
 
   @override
-  String get appearance_external_embeds => 'المحتوى المضمّن الخارجي';
+  String get appearance_inline_embeds => 'المحتوى المضمّن';
 
   @override
-  String get appearance_external_embeds_hint =>
-      'أظهر بطاقة لصور https. لا يُنزَّل شيء حتى تفتحه.';
+  String get appearance_inline_embeds_hint =>
+      'تُحمَّل المعاينات الغنية من مواقع خارجية (YouTube وX و…). يعرض «اسأل» عنصرًا نائبًا حتى تسمح بكل واحدة؛ ويحمّلها «دائمًا» تلقائيًا؛ ويُبقي «إيقاف» الروابط عادية.';
+
+  @override
+  String get appearance_embeds_ask => 'اسأل';
+
+  @override
+  String get appearance_embeds_always => 'دائمًا';
+
+  @override
+  String get appearance_embeds_off => 'إيقاف';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'إعادة تعيين الخدمات المسموح بها: $count',
+      one: 'إعادة تعيين خدمة واحدة مسموح بها',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => 'تحميل';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return 'السماح دائمًا بـ $service';
+  }
+
+  @override
+  String get appearance_embed_loading => 'جارٍ تحميل المعاينة…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return 'تعذّر تحميل الصورة من $host. اضغط لفتحها.';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable => 'المعاينة غير متاحة';
 
   @override
   String get appearance_emoji_reactions => 'تفاعلات الإيموجي';
@@ -6446,9 +6485,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appearance_send_to_the_open_chat => 'أرسل إلى الدردشة المفتوحة';
-
-  @override
-  String get appearance_open_embed => 'فتح المحتوى المضمّن';
 
   @override
   String get appearance_tour_theme_body =>

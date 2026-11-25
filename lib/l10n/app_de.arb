@@ -1699,5 +1699,37 @@
   "ng_folder_access_unspecified": "Das Gateway hat nicht angegeben, ob der Zugriff schreibgeschützt ist oder Lesen und Schreiben erlaubt.",
   "ng_folder_read_only": "Schreibgeschützt",
   "ng_folder_read_write": "Lesen und Schreiben",
-  "ng_website_access": "Websitezugriff"
+  "ng_website_access": "Websitezugriff",
+  "appearance_inline_embeds": "Eingebettete Inhalte",
+  "appearance_inline_embeds_hint": "Umfangreiche Vorschauen werden von Websites Dritter geladen (YouTube, X, …). „Fragen“ zeigt einen Platzhalter, bis du jede einzeln erlaubst; „Immer“ lädt sie automatisch; „Aus“ behält einfache Links.",
+  "appearance_embeds_ask": "Fragen",
+  "appearance_embeds_always": "Immer",
+  "appearance_embeds_off": "Aus",
+  "appearance_embeds_reset": "{count, plural, =1{1 erlaubten Dienst zurücksetzen} other{{count} erlaubte Dienste zurücksetzen}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "Laden",
+  "appearance_embed_always_allow": "{service} immer erlauben",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "Vorschau wird geladen…",
+  "appearance_embed_image_failed": "Das Bild von {host} konnte nicht geladen werden. Tippe, um es zu öffnen.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "Vorschau nicht verfügbar"
 }

@@ -347,8 +347,38 @@ void main() {
     );
   });
 
-  group('A3 Markdown images are not fetched', () {
+  // The old External embeds switch is migrated to Inline Embeds: off becomes
+  // Ask (nothing is fetched until the reader chooses), on becomes Always
+  // (the https image, and nothing else, is requested).
+  group('A3 Markdown images follow the migrated embed choice', () {
     const reply = 'Here:\n\n![pixel](https://tracker.invalid/p.png?u=me)\n';
+
+    // Each case must make (or refuse) its own request, not reuse an image
+    // an earlier case left in the process-wide cache.
+    setUp(
+      () => PaintingBinding.instance.imageCache
+        ..clear()
+        ..clearLiveImages(),
+    );
+
+    void expectMigrated(_NoNetwork network, bool embeds) {
+      if (embeds) {
+        expect(network.attempts, isNotEmpty);
+        expect(
+          network.attempts.where(
+            (a) => !a.contains('https://tracker.invalid/'),
+          ),
+          isEmpty,
+        );
+      } else {
+        expect(network.attempts, isEmpty);
+        expect(find.text('tracker.invalid'), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('embed-load-image:tracker.invalid')),
+          findsOneWidget,
+        );
+      }
+    }
 
     for (final embeds in [false, true]) {
       testWidgets('NextGen with external embeds ${embeds ? 'on' : 'off'}', (
@@ -356,7 +386,10 @@ void main() {
       ) async {
         SharedPreferences.setMockInitialValues(_reading(embeds: embeds));
         final prefs = await SharedPreferences.getInstance();
-        expect(ReadingControls(prefs).externalEmbeds, embeds);
+        expect(
+          ReadingControls(prefs).embedMode,
+          embeds ? InlineEmbedMode.always : InlineEmbedMode.ask,
+        );
         final network = await _forbidNetwork();
         final gateway = _gateway();
         final chat = _ngChat(gateway, 's', [
@@ -370,20 +403,9 @@ void main() {
         await _pumpNg(tester, prefs, gateway, chat);
         await tester.pump(const Duration(milliseconds: 300));
 
+        // Never Flutter's NetworkImage: its shared client has no byte cap.
         expect(_networkImages, findsNothing);
-        expect(network.attempts, isEmpty);
-        if (embeds) {
-          // The same browser card as Classic: nothing is downloaded.
-          expect(
-            find.textContaining('tracker.invalid'),
-            findsOneWidget,
-            reason: 'embed card names the host',
-          );
-          expect(find.byType(OutlinedButton), findsWidgets);
-        } else {
-          expect(find.text('pixel'), findsOneWidget);
-          expect(find.textContaining('tracker.invalid'), findsNothing);
-        }
+        expectMigrated(network, embeds);
         await tester.pumpWidget(const SizedBox());
         network.release();
       });
@@ -415,13 +437,7 @@ void main() {
 
         expect(find.text('Show it'), findsOneWidget);
         expect(_networkImages, findsNothing);
-        expect(network.attempts, isEmpty);
-        if (embeds) {
-          expect(find.textContaining('tracker.invalid'), findsOneWidget);
-        } else {
-          expect(find.text('pixel'), findsOneWidget);
-          expect(find.textContaining('tracker.invalid'), findsNothing);
-        }
+        expectMigrated(network, embeds);
         await tester.pumpWidget(const SizedBox());
         network.release();
       });

@@ -1699,5 +1699,37 @@
   "ng_folder_access_unspecified": "Шлюз не сообщил, доступ только для чтения или для чтения и записи.",
   "ng_folder_read_only": "Только чтение",
   "ng_folder_read_write": "Чтение и запись",
-  "ng_website_access": "Доступ к сайту"
+  "ng_website_access": "Доступ к сайту",
+  "appearance_inline_embeds": "Встроенный контент",
+  "appearance_inline_embeds_hint": "Расширенные превью загружаются со сторонних сайтов (YouTube, X, …). «Спрашивать» показывает заглушку, пока вы не разрешите каждое; «Всегда» загружает их автоматически; «Выкл.» оставляет обычные ссылки.",
+  "appearance_embeds_ask": "Спрашивать",
+  "appearance_embeds_always": "Всегда",
+  "appearance_embeds_off": "Выкл.",
+  "appearance_embeds_reset": "{count, plural, =1{Сбросить 1 разрешённый сервис} one{Сбросить {count} разрешённый сервис} few{Сбросить {count} разрешённых сервиса} many{Сбросить {count} разрешённых сервисов} other{Сбросить {count} разрешённого сервиса}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "Загрузить",
+  "appearance_embed_always_allow": "Всегда разрешать {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "Загрузка превью…",
+  "appearance_embed_image_failed": "Не удалось загрузить изображение с {host}. Нажмите, чтобы открыть.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "Превью недоступно"
 }

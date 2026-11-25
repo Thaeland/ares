@@ -1699,5 +1699,37 @@
   "ng_folder_access_unspecified": "게이트웨이가 읽기 전용인지 읽기 및 쓰기인지 알려 주지 않았습니다.",
   "ng_folder_read_only": "읽기 전용",
   "ng_folder_read_write": "읽기 및 쓰기",
-  "ng_website_access": "웹사이트 접근"
+  "ng_website_access": "웹사이트 접근",
+  "appearance_inline_embeds": "인라인 임베드",
+  "appearance_inline_embeds_hint": "풍부한 미리보기는 외부 사이트(YouTube, X 등)에서 불러옵니다. ‘묻기’는 하나씩 허용할 때까지 자리표시자를 보여 주고, ‘항상’은 자동으로 불러오며, ‘끄기’는 일반 링크로 둡니다.",
+  "appearance_embeds_ask": "묻기",
+  "appearance_embeds_always": "항상",
+  "appearance_embeds_off": "끄기",
+  "appearance_embeds_reset": "{count, plural, =1{허용된 서비스 1개 초기화} other{허용된 서비스 {count}개 초기화}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "불러오기",
+  "appearance_embed_always_allow": "{service} 항상 허용",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "미리보기 불러오는 중…",
+  "appearance_embed_image_failed": "{host}에서 이미지를 불러오지 못했습니다. 탭하여 여세요.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "미리보기를 사용할 수 없음"
 }

@@ -2653,8 +2653,38 @@
   "appearance_force_left_to_right": "Force left to right",
   "appearance_force_right_to_left": "Force right to left",
   "appearance_user_bubble_opacity": "User bubble opacity",
-  "appearance_external_embeds": "External embeds",
-  "appearance_external_embeds_hint": "Show a card for https images. Nothing is downloaded until you open it.",
+  "appearance_inline_embeds": "Inline embeds",
+  "appearance_inline_embeds_hint": "Rich previews load from third-party sites (YouTube, X, …). Ask shows a placeholder until you allow each one; Always loads them automatically; Off keeps plain links.",
+  "appearance_embeds_ask": "Ask",
+  "appearance_embeds_always": "Always",
+  "appearance_embeds_off": "Off",
+  "appearance_embeds_reset": "{count, plural, =1{Reset 1 allowed service} other{Reset {count} allowed services}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "Load",
+  "appearance_embed_always_allow": "Always allow {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "Loading preview…",
+  "appearance_embed_image_failed": "Couldn't load the image from {host}. Tap to open it.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "Preview unavailable",
   "appearance_emoji_reactions": "Emoji reactions",
   "appearance_celebration_hearts": "Celebration hearts",
   "appearance_celebration_hearts_hint": "A heart plays when a reply arrives while you were away.",
@@ -2733,7 +2763,6 @@
   "appearance_radio_picker_metadata_notice": "While this picker is open, playing stations may share track details directly from the broadcaster.",
   "appearance_message_from_your_companion": "Message from your companion",
   "appearance_send_to_the_open_chat": "Send to the open chat",
-  "appearance_open_embed": "Open embed",
   "appearance_tour_theme_body": "Import a VS Code colour theme from a file on this device, then choose which variant to keep.",
   "appearance_tour_fonts_title": "Reading fonts",
   "appearance_tour_fonts_body": "Chat prose and terminal code use separate faces shipped with Ares.",

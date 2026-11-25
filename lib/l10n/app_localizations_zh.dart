@@ -6028,11 +6028,50 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appearance_user_bubble_opacity => 'User bubble opacity';
 
   @override
-  String get appearance_external_embeds => 'External embeds';
+  String get appearance_inline_embeds => '内嵌内容';
 
   @override
-  String get appearance_external_embeds_hint =>
-      'Show a card for https images. Nothing is downloaded until you open it.';
+  String get appearance_inline_embeds_hint =>
+      '丰富预览会从第三方网站加载（YouTube、X 等）。“询问”会先显示占位符，直到你逐一允许；“始终”会自动加载；“关闭”只保留普通链接。';
+
+  @override
+  String get appearance_embeds_ask => '询问';
+
+  @override
+  String get appearance_embeds_always => '始终';
+
+  @override
+  String get appearance_embeds_off => '关闭';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '重置 $count 个已允许的服务',
+      one: '重置 1 个已允许的服务',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => '加载';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return '始终允许 $service';
+  }
+
+  @override
+  String get appearance_embed_loading => '正在加载预览…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return '无法从 $host 加载图片。轻触即可打开。';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable => '无法预览';
 
   @override
   String get appearance_emoji_reactions => 'Emoji reactions';
@@ -6221,9 +6260,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get appearance_send_to_the_open_chat => 'Send to the open chat';
-
-  @override
-  String get appearance_open_embed => 'Open embed';
 
   @override
   String get appearance_tour_theme_body =>
@@ -11989,6 +12025,52 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_aux_curator_hint => '审查技能的使用情况';
+
+  @override
+  String get appearance_inline_embeds => '内嵌内容';
+
+  @override
+  String get appearance_inline_embeds_hint =>
+      '丰富预览会从第三方网站加载（YouTube、X 等）。“询问”会先显示占位符，直到你逐一允许；“始终”会自动加载；“关闭”只保留普通链接。';
+
+  @override
+  String get appearance_embeds_ask => '询问';
+
+  @override
+  String get appearance_embeds_always => '始终';
+
+  @override
+  String get appearance_embeds_off => '关闭';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '重置 $count 个已允许的服务',
+      one: '重置 1 个已允许的服务',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => '加载';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return '始终允许 $service';
+  }
+
+  @override
+  String get appearance_embed_loading => '正在加载预览…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return '无法从 $host 加载图片。轻触即可打开。';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable => '无法预览';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -17926,10 +18008,50 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get appearance_user_bubble_opacity => '自己的訊息氣泡透明度';
 
   @override
-  String get appearance_external_embeds => '外部嵌入內容';
+  String get appearance_inline_embeds => '內嵌內容';
 
   @override
-  String get appearance_external_embeds_hint => '為 https 圖片顯示卡片。開啟之前不會下載。';
+  String get appearance_inline_embeds_hint =>
+      '豐富預覽會從第三方網站載入（YouTube、X 等）。「詢問」會先顯示預留位置，直到你逐一允許；「一律」會自動載入；「關閉」只保留一般連結。';
+
+  @override
+  String get appearance_embeds_ask => '詢問';
+
+  @override
+  String get appearance_embeds_always => '一律';
+
+  @override
+  String get appearance_embeds_off => '關閉';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '重設 $count 個已允許的服務',
+      one: '重設 1 個已允許的服務',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => '載入';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return '一律允許 $service';
+  }
+
+  @override
+  String get appearance_embed_loading => '正在載入預覽…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return '無法從 $host 載入圖片。輕觸即可開啟。';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable => '無法預覽';
 
   @override
   String get appearance_emoji_reactions => '表情回應';
@@ -18109,9 +18231,6 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get appearance_send_to_the_open_chat => '送到目前的聊天';
-
-  @override
-  String get appearance_open_embed => '開啟嵌入內容';
 
   @override
   String get appearance_tour_theme_body =>

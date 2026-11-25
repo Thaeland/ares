@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../l10n/l10n.dart';
 import '../theme/hermes_theme.dart';
+import 'inline_embeds.dart';
 import 'reading_controls.dart';
 
 /// Chat face for prose. Missing scope keeps the surrounding theme.
@@ -34,53 +33,26 @@ Widget transcriptDirection(BuildContext context, Widget child) {
   return Directionality(textDirection: direction, child: child);
 }
 
-/// Remote images stay as their alt text until embeds are opted in. Opting in
-/// shows the host name and opens the https URL in the browser on tap. The
-/// transcript still does not fetch the image itself.
+/// The transcript's Markdown image hook, shared by both layouts. Inline
+/// Embeds decides: Off keeps a link to the image, Ask shows a placeholder
+/// naming the host until Load or Always allow, Always shows the image.
+/// Only https images are ever downloaded; other sources stay [blocked].
 Widget externalEmbed(
   BuildContext context, {
   required String? uri,
   required String? alt,
   required Widget blocked,
-}) {
-  final enabled = ReadingControls.maybeOf(context)?.externalEmbeds ?? false;
-  if (!enabled) return blocked;
-  final parsed = uri == null ? null : Uri.tryParse(uri);
-  if (parsed == null ||
-      parsed.scheme != 'https' ||
-      parsed.host.isEmpty ||
-      parsed.userInfo.isNotEmpty) {
-    return blocked;
-  }
-  final label = (alt == null || alt.trim().isEmpty) ? parsed.host : alt.trim();
-  return _EmbedCard(label: label, host: parsed.host, uri: parsed);
-}
+}) => inlineImageEmbed(context, uri: uri, alt: alt, blocked: blocked);
 
-class _EmbedCard extends StatelessWidget {
-  const _EmbedCard({
-    required this.label,
-    required this.host,
-    required this.uri,
-  });
-
-  final String label;
-  final String host;
-  final Uri uri;
-
-  @override
-  Widget build(BuildContext context) {
-    final open = context.sharedL10n.appearance_open_embed;
-    return Semantics(
-      link: true,
-      label: '$label, $host',
-      child: OutlinedButton.icon(
-        onPressed: () => launchUrl(uri, mode: LaunchMode.externalApplication),
-        icon: const Icon(Icons.open_in_new, size: 16),
-        label: Text('$open · $host', overflow: TextOverflow.ellipsis),
-      ),
-    );
-  }
-}
+/// The transcript's provider-link hook, shared by both layouts: previews
+/// for the bare YouTube, X, TikTok, Spotify, Maps… links in [markdown],
+/// under its rendered [body]. The links in [body] stay tappable.
+Widget transcriptEmbeds(
+  BuildContext context,
+  String markdown,
+  Widget body, {
+  required bool complete,
+}) => withProviderEmbeds(context, markdown, body, complete: complete);
 
 /// The chat a transcript's reactions belong to. Message ids are only unique
 /// inside one chat (NextGen numbers every chat's rows from the same

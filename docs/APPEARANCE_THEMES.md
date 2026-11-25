@@ -18,6 +18,18 @@ Status colours retain their meaning: errors remain red, success remains green, a
 
 The Android launcher icon and native launch screen are branding assets, not Flutter theme surfaces. Once Flutter is visible, status icons follow the app's selected light/dark mode. Gesture navigation remains transparent over the themed app. Three-button navigation receives a palette-matched surface in the OS-compatible brightness, because some Android versions tint those system buttons from the OS mode even when the app requests otherwise. This narrow system-chrome exception keeps buttons readable when the app and OS use opposite modes; it does not alter the chosen app theme.
 
+## Inline embeds
+
+**Settings → Appearance → Inline embeds** matches Hermes Desktop's setting of the same name. Rich previews come from third-party sites, so the choice applies before anything is fetched:
+
+- **Ask** (the default) shows a placeholder naming the host for each https Markdown image and each bare YouTube, Vimeo, X, TikTok or Spotify link. **Load** shows that one embed; **Always allow _service_** remembers the service (an image's host, or the provider). Nothing is requested until you choose.
+- **Always** loads them without asking.
+- **Off** keeps plain links. An image becomes a link to itself.
+
+**Reset _N_ allowed services** clears the remembered services. The setting replaces the earlier **External embeds** switch: on becomes Always, off becomes Ask.
+
+Ares has no WebView, so no provider page, frame or script runs in the app. Images are downloaded only over https, without cookies, up to 8 MiB, and decoded no larger than 2048 pixels on the longer side; a failure leaves a link to the image. Provider previews show the provider's public title and thumbnail from its documented oEmbed endpoint (YouTube, Vimeo, X, TikTok and Spotify) or YouTube's thumbnail URL, and only those hosts and their thumbnail CDNs are contacted. Google Maps, OpenStreetMap, Instagram and Pinterest publish no keyless preview endpoint: their card is drawn from the link alone, contacts nobody, and needs no consent. Tapping any preview opens the link in your browser, and the link in the reply stays tappable in every mode. Providers are recognised by exact host or subdomain, never by a substring, so `eviltiktok.com` or `maps.google.evil.example` are ordinary links.
+
 ## Development and regression checks
 
 - `lib/core/theme/hermes_theme.dart` owns palette seeds, semantic ramps, full colour schemes and component defaults.

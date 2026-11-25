@@ -9774,22 +9774,31 @@ class MessageBubble extends StatelessWidget {
         }
       }
     }
-    Widget prose(String text) => transcriptBody(
-      MarkdownBody(
-        data: text,
-        selectable: false,
-        styleSheet: styleSheet,
-        // Local images become lazy file cards below. Never let Markdown load a
-        // host path from the phone or contact an arbitrary image URL on render.
-        sizedImageBuilder: (image) => externalEmbed(
-          context,
-          uri: '${image.uri}',
-          alt: image.alt ?? image.title,
-          blocked: Text(image.alt ?? image.title ?? ''),
+    Widget prose(String text) {
+      final body = transcriptBody(
+        MarkdownBody(
+          data: text,
+          selectable: false,
+          styleSheet: styleSheet,
+          // Local images become lazy file cards below. Remote https images
+          // follow Inline Embeds; nothing loads a host path from the phone.
+          sizedImageBuilder: (image) => externalEmbed(
+            context,
+            uri: '${image.uri}',
+            alt: image.alt ?? image.title,
+            blocked: Text(image.alt ?? image.title ?? ''),
+          ),
+          onTapLink: (_, href, _) => unawaited(_openLink(context, href)),
         ),
-        onTapLink: (_, href, _) => unawaited(_openLink(context, href)),
-      ),
-    );
+      );
+      if (isUser) return body;
+      return transcriptEmbeds(
+        context,
+        text,
+        body,
+        complete: mediaReferencesFinal,
+      );
+    }
 
     final parseMedia = filesClient != null;
     final blocks = splitMarkdownCodeBlocks(content);

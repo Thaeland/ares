@@ -1699,5 +1699,37 @@
   "ng_folder_access_unspecified": "La passerelle n’a pas indiqué si l’accès est en lecture seule ou en lecture et écriture.",
   "ng_folder_read_only": "Lecture seule",
   "ng_folder_read_write": "Lecture et écriture",
-  "ng_website_access": "Accès au site web"
+  "ng_website_access": "Accès au site web",
+  "appearance_inline_embeds": "Contenus intégrés",
+  "appearance_inline_embeds_hint": "Les aperçus enrichis se chargent depuis des sites tiers (YouTube, X, …). Demander affiche un espace réservé jusqu’à ce que vous autorisiez chacun ; Toujours les charge automatiquement ; Désactivé conserve des liens simples.",
+  "appearance_embeds_ask": "Demander",
+  "appearance_embeds_always": "Toujours",
+  "appearance_embeds_off": "Désactivé",
+  "appearance_embeds_reset": "{count, plural, =1{Réinitialiser 1 service autorisé} other{Réinitialiser {count} services autorisés}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "Charger",
+  "appearance_embed_always_allow": "Toujours autoriser {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "Chargement de l’aperçu…",
+  "appearance_embed_image_failed": "Impossible de charger l’image depuis {host}. Touchez pour l’ouvrir.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "Aperçu indisponible"
 }

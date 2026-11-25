@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,6 +49,17 @@ enum TranscriptDirection {
   static TranscriptDirection? named(Object? value) => values.asNameMap()[value];
 }
 
+/// Inline embeds, as in Hermes Desktop: Ask shows a placeholder until the
+/// reader allows each embed or service; Always loads them; Off keeps plain
+/// links. Nothing is fetched for an embed the mode does not permit.
+enum InlineEmbedMode {
+  ask,
+  always,
+  off;
+
+  static InlineEmbedMode? named(Object? value) => values.asNameMap()[value];
+}
+
 /// Device-local reading preferences. One JSON value, written in order.
 class ReadingControls extends ChangeNotifier {
   ReadingControls(this._preferences)
@@ -58,6 +70,19 @@ class ReadingControls extends ChangeNotifier {
   /// Lowest user-bubble fill that still keeps the accent recognisable.
   static const minBubbleOpacity = 0.7;
 
+  /// Services with a standing "Always allow"; the oldest drops first.
+  static const maxAllowedEmbeds = 64;
+
+  /// A provider id (`youtube`) or `image:` and an image host.
+  static bool isEmbedServiceKey(String service) {
+    if (_providerKey.hasMatch(service)) return true;
+    return service.startsWith('image:') &&
+        _hostKey.hasMatch(service.substring(6));
+  }
+
+  static final _providerKey = RegExp(r'^[a-z]{1,32}$');
+  static final _hostKey = RegExp(r'^[a-z0-9](?:[a-z0-9.-]{0,251}[a-z0-9])?$');
+
   final SharedPreferences _preferences;
   _ReadingState _state;
   Future<void> _tail = Future<void>.value();
@@ -67,7 +92,10 @@ class ReadingControls extends ChangeNotifier {
   AresTypeface get terminalFont => _state.terminalFont;
   TranscriptDirection get direction => _state.direction;
   double get bubbleOpacity => _state.bubbleOpacity;
-  bool get externalEmbeds => _state.externalEmbeds;
+  InlineEmbedMode get embedMode => _state.embedMode;
+
+  /// Services the reader always allows, in the order they were allowed.
+  Set<String> get allowedEmbeds => _state.allowedEmbeds;
   bool get emojiReactions => _state.emojiReactions;
   bool get celebrationHearts => _state.celebrationHearts;
 
@@ -91,8 +119,25 @@ class ReadingControls extends ChangeNotifier {
     return _change((state) => state.copy(bubbleOpacity: opacity));
   }
 
-  Future<void> setExternalEmbeds(bool value) =>
-      _change((state) => state.copy(externalEmbeds: value));
+  Future<void> setEmbedMode(InlineEmbedMode value) =>
+      _change((state) => state.copy(embedMode: value));
+
+  /// "Always allow" for one service. Invalid keys are ignored.
+  Future<void> allowEmbedService(String service) {
+    if (!isEmbedServiceKey(service)) return Future<void>.value();
+    return _change((state) {
+      if (state.allowedEmbeds.contains(service)) return state;
+      final next = [...state.allowedEmbeds, service];
+      return state.copy(
+        allowedEmbeds: next
+            .skip(math.max(0, next.length - maxAllowedEmbeds))
+            .toSet(),
+      );
+    });
+  }
+
+  Future<void> resetAllowedEmbeds() =>
+      _change((state) => state.copy(allowedEmbeds: const {}));
 
   Future<void> setEmojiReactions(bool value) =>
       _change((state) => state.copy(emojiReactions: value));
@@ -138,10 +183,8 @@ class ReadingControls extends ChangeNotifier {
 }
 
 class _ReadingScope extends InheritedNotifier<ReadingControls> {
-  const _ReadingScope({
-    required ReadingControls controls,
-    required super.child,
-  }) : super(notifier: controls);
+  const _ReadingScope({required ReadingControls controls, required super.child})
+    : super(notifier: controls);
 
   ReadingControls get controls => notifier!;
 }
@@ -164,7 +207,8 @@ final class _ReadingState {
     this.terminalFont = AresTypeface.geistMono,
     this.direction = TranscriptDirection.automatic,
     this.bubbleOpacity = 1,
-    this.externalEmbeds = false,
+    this.embedMode = InlineEmbedMode.ask,
+    this.allowedEmbeds = const {},
     this.emojiReactions = false,
     this.celebrationHearts = false,
   });
@@ -173,7 +217,8 @@ final class _ReadingState {
   final AresTypeface terminalFont;
   final TranscriptDirection direction;
   final double bubbleOpacity;
-  final bool externalEmbeds;
+  final InlineEmbedMode embedMode;
+  final Set<String> allowedEmbeds;
   final bool emojiReactions;
   final bool celebrationHearts;
 
@@ -182,7 +227,8 @@ final class _ReadingState {
     AresTypeface? terminalFont,
     TranscriptDirection? direction,
     double? bubbleOpacity,
-    bool? externalEmbeds,
+    InlineEmbedMode? embedMode,
+    Set<String>? allowedEmbeds,
     bool? emojiReactions,
     bool? celebrationHearts,
   }) => _ReadingState(
@@ -190,7 +236,10 @@ final class _ReadingState {
     terminalFont: terminalFont ?? this.terminalFont,
     direction: direction ?? this.direction,
     bubbleOpacity: bubbleOpacity ?? this.bubbleOpacity,
-    externalEmbeds: externalEmbeds ?? this.externalEmbeds,
+    embedMode: embedMode ?? this.embedMode,
+    allowedEmbeds: allowedEmbeds == null
+        ? this.allowedEmbeds
+        : Set.unmodifiable(allowedEmbeds),
     emojiReactions: emojiReactions ?? this.emojiReactions,
     celebrationHearts: celebrationHearts ?? this.celebrationHearts,
   );
@@ -200,14 +249,15 @@ final class _ReadingState {
     'terminalFont': terminalFont.name,
     'direction': direction.name,
     'bubbleOpacity': bubbleOpacity,
-    'externalEmbeds': externalEmbeds,
+    'embedMode': embedMode.name,
+    'allowedEmbeds': allowedEmbeds.toList(),
     'emojiReactions': emojiReactions,
     'celebrationHearts': celebrationHearts,
   };
 
   static _ReadingState decode(Object? raw) {
     const fallback = _ReadingState();
-    if (raw is! String || raw.length > 1024) return fallback;
+    if (raw is! String || raw.length > 32 * 1024) return fallback;
     try {
       final map = jsonDecode(raw);
       if (map is! Map) return fallback;
@@ -219,7 +269,6 @@ final class _ReadingState {
       if (chat == null ||
           terminal == null ||
           direction == null ||
-          map['externalEmbeds'] is! bool ||
           map['emojiReactions'] is! bool ||
           map['celebrationHearts'] is! bool) {
         return fallback;
@@ -236,12 +285,31 @@ final class _ReadingState {
           ReadingControls.minBubbleOpacity,
           1.0,
         ),
-        externalEmbeds: map['externalEmbeds'] as bool,
+        // The old on/off switch: on loaded every https image (Always), off
+        // kept them as links, which Ask now does until the reader chooses.
+        embedMode:
+            InlineEmbedMode.named(map['embedMode']) ??
+            (map['externalEmbeds'] == true
+                ? InlineEmbedMode.always
+                : InlineEmbedMode.ask),
+        allowedEmbeds: Set.unmodifiable(_allowed(map['allowedEmbeds'])),
         emojiReactions: map['emojiReactions'] as bool,
         celebrationHearts: map['celebrationHearts'] as bool,
       );
     } on FormatException {
       return fallback;
     }
+  }
+
+  static Iterable<String> _allowed(Object? raw) {
+    if (raw is! List) return const [];
+    final valid = <String>{
+      for (final service in raw)
+        if (service is String && ReadingControls.isEmbedServiceKey(service))
+          service,
+    }.toList();
+    return valid.skip(
+      math.max(0, valid.length - ReadingControls.maxAllowedEmbeds),
+    );
   }
 }

@@ -6297,11 +6297,53 @@ class AppLocalizationsUk extends AppLocalizations {
   String get appearance_user_bubble_opacity => 'User bubble opacity';
 
   @override
-  String get appearance_external_embeds => 'External embeds';
+  String get appearance_inline_embeds => 'Вбудований вміст';
 
   @override
-  String get appearance_external_embeds_hint =>
-      'Show a card for https images. Nothing is downloaded until you open it.';
+  String get appearance_inline_embeds_hint =>
+      'Розширені попередні перегляди завантажуються зі сторонніх сайтів (YouTube, X, …). «Запитувати» показує заповнювач, доки ви не дозволите кожен; «Завжди» завантажує їх автоматично; «Вимк.» залишає звичайні посилання.';
+
+  @override
+  String get appearance_embeds_ask => 'Запитувати';
+
+  @override
+  String get appearance_embeds_always => 'Завжди';
+
+  @override
+  String get appearance_embeds_off => 'Вимк.';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Скинути $count дозволеного сервісу',
+      many: 'Скинути $count дозволених сервісів',
+      few: 'Скинути $count дозволені сервіси',
+      one: 'Скинути $count дозволений сервіс',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => 'Завантажити';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return 'Завжди дозволяти $service';
+  }
+
+  @override
+  String get appearance_embed_loading => 'Завантаження попереднього перегляду…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return 'Не вдалося завантажити зображення з $host. Торкніться, щоб відкрити.';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable =>
+      'Попередній перегляд недоступний';
 
   @override
   String get appearance_emoji_reactions => 'Emoji reactions';
@@ -6490,9 +6532,6 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get appearance_send_to_the_open_chat => 'Send to the open chat';
-
-  @override
-  String get appearance_open_embed => 'Open embed';
 
   @override
   String get appearance_tour_theme_body =>

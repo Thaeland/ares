@@ -566,16 +566,7 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
       listenable: reading,
       builder: (context, _) => Column(
         children: [
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            key: const ValueKey('presentation-embeds'),
-            title: Text(context.sharedL10n.appearance_external_embeds),
-            subtitle: Text(context.sharedL10n.appearance_external_embeds_hint),
-            value: reading.externalEmbeds,
-            onChanged: _busy
-                ? null
-                : (value) => _run(() => reading.setExternalEmbeds(value)),
-          ),
+          _inlineEmbeds(context, reading),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             key: const ValueKey('presentation-reactions'),
@@ -599,6 +590,51 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
           ),
         ],
       ),
+    );
+  }
+
+  /// Hermes Desktop's Inline Embeds: Ask, Always or Off, and a reset for
+  /// the services the reader always allows.
+  Widget _inlineEmbeds(BuildContext context, ReadingControls reading) {
+    final l = context.sharedL10n;
+    final allowed = reading.allowedEmbeds.length;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Text(l.appearance_inline_embeds),
+          subtitle: Text(l.appearance_inline_embeds_hint),
+        ),
+        SegmentedButton<InlineEmbedMode>(
+          key: const ValueKey('presentation-embeds'),
+          showSelectedIcon: false,
+          segments: [
+            ButtonSegment(
+              value: InlineEmbedMode.ask,
+              label: Text(l.appearance_embeds_ask),
+            ),
+            ButtonSegment(
+              value: InlineEmbedMode.always,
+              label: Text(l.appearance_embeds_always),
+            ),
+            ButtonSegment(
+              value: InlineEmbedMode.off,
+              label: Text(l.appearance_embeds_off),
+            ),
+          ],
+          selected: {reading.embedMode},
+          onSelectionChanged: _busy
+              ? null
+              : (choice) => _run(() => reading.setEmbedMode(choice.single)),
+        ),
+        if (allowed > 0)
+          TextButton(
+            key: const ValueKey('presentation-embeds-reset'),
+            onPressed: _busy ? null : () => _run(reading.resetAllowedEmbeds),
+            child: Text(l.appearance_embeds_reset(allowed)),
+          ),
+      ],
     );
   }
 

@@ -2680,8 +2680,38 @@
   "appearance_force_left_to_right": "強制由左至右",
   "appearance_force_right_to_left": "強制由右至左",
   "appearance_user_bubble_opacity": "自己的訊息氣泡透明度",
-  "appearance_external_embeds": "外部嵌入內容",
-  "appearance_external_embeds_hint": "為 https 圖片顯示卡片。開啟之前不會下載。",
+  "appearance_inline_embeds": "內嵌內容",
+  "appearance_inline_embeds_hint": "豐富預覽會從第三方網站載入（YouTube、X 等）。「詢問」會先顯示預留位置，直到你逐一允許；「一律」會自動載入；「關閉」只保留一般連結。",
+  "appearance_embeds_ask": "詢問",
+  "appearance_embeds_always": "一律",
+  "appearance_embeds_off": "關閉",
+  "appearance_embeds_reset": "{count, plural, =1{重設 1 個已允許的服務} other{重設 {count} 個已允許的服務}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "載入",
+  "appearance_embed_always_allow": "一律允許 {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "正在載入預覽…",
+  "appearance_embed_image_failed": "無法從 {host} 載入圖片。輕觸即可開啟。",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "無法預覽",
   "appearance_emoji_reactions": "表情回應",
   "appearance_celebration_hearts": "慶祝愛心",
   "appearance_celebration_hearts_hint": "你離開時若有回覆送達，會播放一顆愛心。",
@@ -2760,7 +2790,6 @@
   "appearance_radio_picker_metadata_notice": "開啟此面板並播放時，會向支援此功能的廣播業者取得曲目資訊。",
   "appearance_message_from_your_companion": "來自夥伴的訊息",
   "appearance_send_to_the_open_chat": "送到目前的聊天",
-  "appearance_open_embed": "開啟嵌入內容",
   "appearance_tour_theme_body": "從這台裝置上的檔案匯入 VS Code 色彩佈景主題，再選擇要保留的版本。",
   "appearance_tour_fonts_title": "閱讀字型",
   "appearance_tour_fonts_body": "聊天內文和終端機程式碼使用 Ares 內建的不同字型。",

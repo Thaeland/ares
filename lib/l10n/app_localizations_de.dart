@@ -6305,11 +6305,50 @@ class AppLocalizationsDe extends AppLocalizations {
   String get appearance_user_bubble_opacity => 'User bubble opacity';
 
   @override
-  String get appearance_external_embeds => 'External embeds';
+  String get appearance_inline_embeds => 'Eingebettete Inhalte';
 
   @override
-  String get appearance_external_embeds_hint =>
-      'Show a card for https images. Nothing is downloaded until you open it.';
+  String get appearance_inline_embeds_hint =>
+      'Umfangreiche Vorschauen werden von Websites Dritter geladen (YouTube, X, …). „Fragen“ zeigt einen Platzhalter, bis du jede einzeln erlaubst; „Immer“ lädt sie automatisch; „Aus“ behält einfache Links.';
+
+  @override
+  String get appearance_embeds_ask => 'Fragen';
+
+  @override
+  String get appearance_embeds_always => 'Immer';
+
+  @override
+  String get appearance_embeds_off => 'Aus';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count erlaubte Dienste zurücksetzen',
+      one: '1 erlaubten Dienst zurücksetzen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => 'Laden';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return '$service immer erlauben';
+  }
+
+  @override
+  String get appearance_embed_loading => 'Vorschau wird geladen…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return 'Das Bild von $host konnte nicht geladen werden. Tippe, um es zu öffnen.';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable => 'Vorschau nicht verfügbar';
 
   @override
   String get appearance_emoji_reactions => 'Emoji reactions';
@@ -6498,9 +6537,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get appearance_send_to_the_open_chat => 'Send to the open chat';
-
-  @override
-  String get appearance_open_embed => 'Open embed';
 
   @override
   String get appearance_tour_theme_body =>

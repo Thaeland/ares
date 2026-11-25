@@ -6115,11 +6115,50 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appearance_user_bubble_opacity => 'User bubble opacity';
 
   @override
-  String get appearance_external_embeds => 'External embeds';
+  String get appearance_inline_embeds => 'インライン埋め込み';
 
   @override
-  String get appearance_external_embeds_hint =>
-      'Show a card for https images. Nothing is downloaded until you open it.';
+  String get appearance_inline_embeds_hint =>
+      'リッチプレビューは外部サイト（YouTube、X など）から読み込まれます。「確認」はそれぞれ許可するまでプレースホルダーを表示し、「常に」は自動で読み込み、「オフ」は通常のリンクのままにします。';
+
+  @override
+  String get appearance_embeds_ask => '確認';
+
+  @override
+  String get appearance_embeds_always => '常に';
+
+  @override
+  String get appearance_embeds_off => 'オフ';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '許可済みのサービス $count 件をリセット',
+      one: '許可済みのサービス 1 件をリセット',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => '読み込む';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return '$service を常に許可';
+  }
+
+  @override
+  String get appearance_embed_loading => 'プレビューを読み込み中…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return '$host から画像を読み込めませんでした。タップして開きます。';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable => 'プレビューを表示できません';
 
   @override
   String get appearance_emoji_reactions => 'Emoji reactions';
@@ -6308,9 +6347,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get appearance_send_to_the_open_chat => 'Send to the open chat';
-
-  @override
-  String get appearance_open_embed => 'Open embed';
 
   @override
   String get appearance_tour_theme_body =>

@@ -2617,8 +2617,38 @@
   "appearance_force_left_to_right": "إجبار من اليسار",
   "appearance_force_right_to_left": "إجبار من اليمين",
   "appearance_user_bubble_opacity": "شفافية فقاعة رسائلك",
-  "appearance_external_embeds": "المحتوى المضمّن الخارجي",
-  "appearance_external_embeds_hint": "أظهر بطاقة لصور https. لا يُنزَّل شيء حتى تفتحه.",
+  "appearance_inline_embeds": "المحتوى المضمّن",
+  "appearance_inline_embeds_hint": "تُحمَّل المعاينات الغنية من مواقع خارجية (YouTube وX و…). يعرض «اسأل» عنصرًا نائبًا حتى تسمح بكل واحدة؛ ويحمّلها «دائمًا» تلقائيًا؛ ويُبقي «إيقاف» الروابط عادية.",
+  "appearance_embeds_ask": "اسأل",
+  "appearance_embeds_always": "دائمًا",
+  "appearance_embeds_off": "إيقاف",
+  "appearance_embeds_reset": "{count, plural, =1{إعادة تعيين خدمة واحدة مسموح بها} other{إعادة تعيين الخدمات المسموح بها: {count}}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "تحميل",
+  "appearance_embed_always_allow": "السماح دائمًا بـ {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "جارٍ تحميل المعاينة…",
+  "appearance_embed_image_failed": "تعذّر تحميل الصورة من {host}. اضغط لفتحها.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "المعاينة غير متاحة",
   "appearance_emoji_reactions": "تفاعلات الإيموجي",
   "appearance_celebration_hearts": "قلوب الاحتفال",
   "appearance_celebration_hearts_hint": "يظهر قلب عندما يصل رد وأنت بعيد.",
@@ -2697,7 +2727,6 @@
   "appearance_radio_picker_metadata_notice": "عندما تكون هذه القائمة مفتوحة، قد تُعرض معلومات المقطع من جهة البث مباشرةً أثناء التشغيل.",
   "appearance_message_from_your_companion": "رسالة من رفيقك",
   "appearance_send_to_the_open_chat": "أرسل إلى الدردشة المفتوحة",
-  "appearance_open_embed": "فتح المحتوى المضمّن",
   "appearance_tour_theme_body": "استورد سمة ألوان من ملف على هذا الجهاز، ثم اختر النسخة التي تريد إبقاءها.",
   "appearance_tour_fonts_title": "خطوط القراءة",
   "appearance_tour_fonts_body": "يستخدم نص الدردشة وشفرة الطرفية خطين منفصلين مدمجين مع آريس.",
