@@ -831,6 +831,17 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       (widget.session.isLocalDraft
           ? _normalChat?.storedSessionId
           : _storedSessionKey);
+
+  /// The session tree needs a stored chat whose live binding is not a remote
+  /// terminal. Drafts and non-local backends keep the earlier file browser.
+  bool get _sessionScopedFiles {
+    final id = _fileSessionId;
+    final gateway = _desktopGateway;
+    if (gateway == null || id == null) return false;
+    final backend = gateway.boundTerminalBackend(id);
+    return backend == null || backend == 'local';
+  }
+
   int _projectNameRefreshGeneration = 0;
   bool _sessionModelOverride = false;
   bool _loadingModelOptions = false;
@@ -3892,14 +3903,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final testPicker = widget.testServerFilePicker;
     if (testPicker != null) {
       path = await testPicker();
-    } else if (_desktopGateway != null) {
-      if (_fileSessionId == null) {
-        _showAttachmentError(
-          'Start the session before attaching gateway files.',
-        );
-      } else {
-        setState(() => _showSessionFiles = true);
-      }
+    } else if (_desktopGateway != null && _sessionScopedFiles) {
+      setState(() => _showSessionFiles = true);
       return;
     } else {
       final files = RemoteFilesClient.fromConnection(widget.connection);
@@ -3920,7 +3925,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
     if (!mounted || path == null || path.trim().isEmpty) return;
     final current = _textController.text.trimRight();
-    final reference = '@file ${path.trim()} ';
+    final reference =
+        '${gatewayContextReference(folder: false, path: path.trim())} ';
     final next = current.isEmpty ? reference : '$current\n$reference';
     _textController.value = TextEditingValue(
       text: next,

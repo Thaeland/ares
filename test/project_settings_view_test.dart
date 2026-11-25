@@ -2,10 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hermes_android/core/models/hermes_project.dart';
+import 'package:hermes_android/core/models/project_sessions_tree.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/connection_mutation_barrier.dart';
+import 'package:hermes_android/core/services/projects_repository.dart';
 import 'package:hermes_android/core/services/remote_workspace.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
+import 'package:hermes_android/core/theme/hermes_theme.dart';
+import 'package:hermes_android/core/widgets/project_detail_screen.dart';
 import 'package:hermes_android/core/widgets/project_settings_view.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 
@@ -517,5 +522,69 @@ void main() {
     expect(find.text('/private/draft'), findsNothing);
     expect(find.text('Add folders'), findsNothing);
     expect(socket.methods, ['projects.list']);
+  });
+
+  testWidgets('review: project files refresh when project settings change', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(420, 1200);
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        theme: hermesTheme(Brightness.dark),
+        home: ProjectDetailScreen(
+          projectId: _id,
+          projectName: 'Alpha',
+          workspace: owner,
+          loadSessions: ({required bool refresh}) async =>
+              const ProjectSessionsView(
+                projectId: _id,
+                tree: ProjectSessionsTree(
+                  id: _id,
+                  label: 'Alpha',
+                  sessionCount: 0,
+                  lastActive: 0,
+                ),
+              ),
+          projects: const [
+            HermesProject(
+              id: _id,
+              slug: 'alpha',
+              name: 'Alpha',
+              primaryPath: '/server/base',
+            ),
+          ],
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(Tab, 'Files'));
+    await tester.pumpAndSettle();
+    expect(find.text('/server/base'), findsWidgets);
+    expect(find.text('/server/added'), findsNothing);
+    await tester.tap(find.byTooltip('Project settings'));
+    await tester.pumpAndSettle();
+    final settings = find.byType(ProjectSettingsView);
+    final field = find.descendant(
+      of: settings,
+      matching: find.byType(TextField),
+    );
+    await tester.enterText(field, '/server/added');
+    await tester.pump();
+    await tester.tap(
+      find.descendant(of: settings, matching: find.text('Add folders')),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(of: settings, matching: find.text('/server/added')),
+      findsWidgets,
+    );
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(find.text('Project settings'), findsNothing);
+    expect(find.text('/server/added'), findsOneWidget);
   });
 }

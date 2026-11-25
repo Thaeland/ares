@@ -32,6 +32,7 @@ enum WorkspaceFailure {
   unbound,
   unsupported,
   denied,
+  ineligible,
   unavailable,
   invalid,
   insecure,
@@ -236,6 +237,7 @@ final class WorkspaceTarget {
   final _StoredWorkspace? _row;
   final Future<_StoredWorkspace> Function() _readRow;
   final WorkspaceRuntime? _binding;
+  bool? _guardedSavePresent;
   String? get runtimeSessionId => _binding?.runtimeId;
   final bool sessionAuthority;
   String? get canonicalCwd => _row?.cwd;
@@ -303,14 +305,10 @@ final class WorkspaceTarget {
   }) async {
     checkCurrent();
     if (params.containsKey('profile')) _fail(WorkspaceFailure.mismatch);
-    final response = await _socket.send(
-      method,
-      {
-        ...params,
-        if (bindProfile) 'profile': ?effectiveProfile,
-      },
-      includeProfile: false,
-    );
+    final response = await _socket.send(method, {
+      ...params,
+      if (bindProfile) 'profile': ?effectiveProfile,
+    }, includeProfile: false);
     checkCurrent();
     final error = response['error'];
     if (error != null) {
@@ -451,6 +449,16 @@ bool isSafeWorkspacePath(String path) {
                       caseSensitive: false,
                     ).hasMatch(s))),
       );
+}
+
+/// One trailing separator is the same directory. Anything else stays untouched
+/// so an ambiguous path is still rejected rather than repaired.
+String normalizeWorkspaceCwd(String path) {
+  if (path.length > 1 && (path.endsWith('/') || path.endsWith(r'\'))) {
+    final stripped = path.substring(0, path.length - 1);
+    if (!stripped.endsWith(':') && !stripped.endsWith(r'\')) return stripped;
+  }
+  return path;
 }
 
 /// An absolute server spelling, not a client-side realpath. Reject ambiguous

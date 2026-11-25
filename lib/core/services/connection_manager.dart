@@ -2867,6 +2867,25 @@ class DashboardClient {
     },
   );
 
+  /// An empty body cannot be a save. 400/413/415 means the route exists and
+  /// refused the probe; 404 means a stock gateway has no such route.
+  Future<int> workspaceReplaceTextProbe({
+    required String profile,
+    required void Function() check,
+  }) async {
+    try {
+      await _workspaceJson(
+        ['fs', 'replace-text-v1'],
+        query: {'profile': profile},
+        check: check,
+        fileReplacement: const <String, String>{},
+      );
+      return 200;
+    } on DashboardHttpException catch (error) {
+      return error.statusCode;
+    }
+  }
+
   Future<Object?> _workspaceJson(
     List<String> segments, {
     required Map<String, String> query,

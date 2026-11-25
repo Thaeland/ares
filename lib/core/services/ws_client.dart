@@ -316,6 +316,21 @@ class WsClient {
   final _workspaceReceipt = <String, int>{};
   WorkspaceRuntime? workspaceBinding(String storedId) =>
       _workspaceBindings[storedId];
+
+  /// Replace only the cwd of a binding this socket already holds, after a
+  /// confirmed workspace mutate for that same stored session. A missing
+  /// binding is left missing: this never invents authority.
+  void adoptConfirmedWorkspaceCwd(String storedId, String cwd) {
+    final old = _workspaceBindings[storedId];
+    if (old == null || old.cwd == cwd) return;
+    _workspaceBindings[storedId] = WorkspaceRuntime._(
+      old.runtimeId,
+      old.profile,
+      cwd,
+      old.backend,
+    );
+  }
+
   final String baseUrl;
   final String? _token;
   final String? _ticket;

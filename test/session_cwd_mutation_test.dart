@@ -94,63 +94,91 @@ class _Socket extends Fake implements WsClient {
 }
 
 void main() {
-  test('workspace move uses the closed mutate field set and the fresh fences', () async {
-    final socket = _Socket();
-    final owner = RemoteWorkspaceOwner(
-      connectionId: 'cwd-fixture',
-      expectedBaseUrl: _url,
-      profile: 'work',
-      dashboard: _Dashboard(socket),
-      connect: () async => socket,
-      ownsSocket: (ws) => identical(ws, socket),
-    );
-    final pane = owner.pane();
-    final target = await pane.bind(owner.route(storedSessionId: 'stored'));
-    await target.changeCwd('/srv/other', (revision: 4, generation: 9));
-    final sent = socket.calls.single;
-    expect(sent.keys.toSet(), {
-      'method',
-      'session_id',
-      'request_id',
-      'operation',
-      'expected_revision',
-      'expected_generation',
-      'payload',
-    });
-    expect(sent['request_id'], isA<String>());
-    expect((sent['request_id'] as String).isNotEmpty, isTrue);
-    expect(sent['payload'], {'cwd': '/srv/other'});
-    expect(sent['expected_revision'], 4);
-    expect(socket.cwd, '/srv/other');
-    pane.close();
-    owner.close();
-  });
+  test(
+    'workspace move uses the closed mutate field set and the fresh fences',
+    () async {
+      final socket = _Socket();
+      final owner = RemoteWorkspaceOwner(
+        connectionId: 'cwd-fixture',
+        expectedBaseUrl: _url,
+        profile: 'work',
+        dashboard: _Dashboard(socket),
+        connect: () async => socket,
+        ownsSocket: (ws) => identical(ws, socket),
+      );
+      final pane = owner.pane();
+      final target = await pane.bind(owner.route(storedSessionId: 'stored'));
+      await target.changeCwd('/srv/other', (revision: 4, generation: 9));
+      final sent = socket.calls.single;
+      expect(sent.keys.toSet(), {
+        'method',
+        'session_id',
+        'request_id',
+        'operation',
+        'expected_revision',
+        'expected_generation',
+        'payload',
+      });
+      expect(sent['request_id'], isA<String>());
+      expect((sent['request_id'] as String).isNotEmpty, isTrue);
+      expect(sent['payload'], {'cwd': '/srv/other'});
+      expect(sent['expected_revision'], 4);
+      expect(socket.cwd, '/srv/other');
+      pane.close();
+      owner.close();
+    },
+  );
 
-  test('a newer revision fence is refused before any workspace mutation', () async {
-    final socket = _Socket()..revision = 8;
-    final owner = RemoteWorkspaceOwner(
-      connectionId: 'cwd-fixture',
-      expectedBaseUrl: _url,
-      profile: 'work',
-      dashboard: _Dashboard(socket),
-      connect: () async => socket,
-      ownsSocket: (ws) => identical(ws, socket),
-    );
-    final pane = owner.pane();
-    final target = await pane.bind(owner.route(storedSessionId: 'stored'));
-    await expectLater(
-      target.changeCwd('/srv/later', (revision: 4, generation: 9)),
-      throwsA(
-        isA<WorkspaceException>().having(
-          (e) => e.reason,
-          'reason',
-          WorkspaceFailure.mismatch,
+  test(
+    'a newer revision fence is refused before any workspace mutation',
+    () async {
+      final socket = _Socket()..revision = 8;
+      final owner = RemoteWorkspaceOwner(
+        connectionId: 'cwd-fixture',
+        expectedBaseUrl: _url,
+        profile: 'work',
+        dashboard: _Dashboard(socket),
+        connect: () async => socket,
+        ownsSocket: (ws) => identical(ws, socket),
+      );
+      final pane = owner.pane();
+      final target = await pane.bind(owner.route(storedSessionId: 'stored'));
+      await expectLater(
+        target.changeCwd('/srv/later', (revision: 4, generation: 9)),
+        throwsA(
+          isA<WorkspaceException>().having(
+            (e) => e.reason,
+            'reason',
+            WorkspaceFailure.mismatch,
+          ),
         ),
-      ),
-    );
-    expect(socket.calls, isEmpty);
-    expect(socket.cwd, '/srv/work');
-    pane.close();
-    owner.close();
-  });
+      );
+      expect(socket.calls, isEmpty);
+      expect(socket.cwd, '/srv/work');
+      pane.close();
+      owner.close();
+    },
+  );
+
+  test(
+    'review: a trailing slash is normalised before the workspace mutate',
+    () async {
+      final socket = _Socket();
+      final owner = RemoteWorkspaceOwner(
+        connectionId: 'cwd-fixture',
+        expectedBaseUrl: _url,
+        profile: 'work',
+        dashboard: _Dashboard(socket),
+        connect: () async => socket,
+        ownsSocket: (ws) => identical(ws, socket),
+      );
+      final pane = owner.pane();
+      final target = await pane.bind(owner.route(storedSessionId: 'stored'));
+      await target.changeCwd('/srv/other/', (revision: 4, generation: 9));
+      expect(socket.calls.single['payload'], {'cwd': '/srv/other'});
+      expect(socket.cwd, '/srv/other');
+      pane.close();
+      owner.close();
+    },
+  );
 }

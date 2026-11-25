@@ -45,6 +45,46 @@ void appendWorkspaceReference(TextEditingController input, String reference) {
   );
 }
 
+bool _referenceNeedsQuoting(String value) {
+  const marks = '()[]{}<>`"\'';
+  for (final unit in value.codeUnits) {
+    if (unit == 9 ||
+        unit == 10 ||
+        unit == 11 ||
+        unit == 12 ||
+        unit == 13 ||
+        unit == 32) {
+      return true;
+    }
+  }
+  return value.split('').any(marks.contains);
+}
+
+/// Quote like the gateway's format_reference_value so REFERENCE_PATTERN reads
+/// the whole path. A line range stays outside the quotes.
+String formatGatewayReferenceValue(String value) {
+  if (!_referenceNeedsQuoting(value)) return value;
+  for (final quote in ['`', '"', "'"]) {
+    if (!value.contains(quote)) return '$quote$value$quote';
+  }
+  return value;
+}
+
+String gatewayContextReference({
+  required bool folder,
+  required String path,
+  int? lineStart,
+  int? lineEnd,
+}) {
+  final value = formatGatewayReferenceValue(path);
+  final range = lineStart == null
+      ? ''
+      : (lineEnd == null || lineEnd == lineStart)
+      ? ':$lineStart'
+      : ':$lineStart-$lineEnd';
+  return '@${folder ? 'folder' : 'file'}:$value$range';
+}
+
 class SessionFilesView extends StatefulWidget {
   const SessionFilesView({
     super.key,
@@ -77,6 +117,7 @@ class _FilesState extends State<SessionFilesView> {
       _showSource = false,
       _review = false;
   String? _message;
+  String? _saveNote;
   bool get _dirty => _editing && _file != null && _source.text != _file!.text;
   bool _owns(int e) => mounted && e == _epoch;
 
@@ -112,6 +153,7 @@ class _FilesState extends State<SessionFilesView> {
     _source.clear();
     _editing = false;
     _review = false;
+    _saveNote = null;
     _target = null;
     _busy = false;
   }
@@ -145,6 +187,7 @@ class _FilesState extends State<SessionFilesView> {
           WorkspaceFailure.unbound =>
             'No verified host working directory for this session.',
           WorkspaceFailure.denied => 'The gateway denied this operation.',
+          WorkspaceFailure.ineligible => guardedSaveRefused,
           WorkspaceFailure.unsupported =>
             'This gateway does not support this operation.',
           WorkspaceFailure.mismatch =>
@@ -249,8 +292,14 @@ class _FilesState extends State<SessionFilesView> {
     }
     final file = await t.readDocument(node);
     if (!_owns(e)) return;
+    final present = await t.guardedSavePresent();
+    if (!_owns(e)) return;
+    final note = present ? t.saveRefusal(file.entry) : guardedSaveUnavailable;
     t.checkCurrent();
-    setState(() => _display(file));
+    setState(() {
+      _display(file);
+      _saveNote = note;
+    });
   });
   void _display(WorkspaceDocument file) {
     _file = file;
@@ -270,7 +319,8 @@ class _FilesState extends State<SessionFilesView> {
     await t.verifySession();
     if (!_owns(e)) return;
     t.checkCurrent();
-    var suffix = '';
+    int? lineStart;
+    int? lineEnd;
     if (lines) {
       if (!selection.isValid ||
           selection.isCollapsed ||
@@ -280,14 +330,23 @@ class _FilesState extends State<SessionFilesView> {
       }
       int lineAt(int offset) =>
           '\n'.allMatches(_source.text.substring(0, offset)).length + 1;
-      final first = lineAt(selection.start), last = lineAt(selection.end - 1);
-      suffix = first == last ? ':$first' : ':$first-$last';
+      lineStart = lineAt(selection.start);
+      final last = lineAt(selection.end - 1);
+      lineEnd = lineStart == last ? null : last;
     }
-    final path = '${relative ? n.relative : n.path}$suffix';
     if (copy) {
-      await Clipboard.setData(ClipboardData(text: path));
+      await Clipboard.setData(
+        ClipboardData(text: relative ? n.relative : n.path),
+      );
     } else {
-      widget.onReference('@${n.directory ? 'folder' : 'file'} $path');
+      widget.onReference(
+        gatewayContextReference(
+          folder: n.directory,
+          path: n.path,
+          lineStart: lineStart,
+          lineEnd: lineEnd,
+        ),
+      );
     }
   });
 
@@ -359,9 +418,13 @@ class _FilesState extends State<SessionFilesView> {
       if (!_owns(e)) return;
       setState(() {
         _review = true;
-        _message = err.reason == WorkspaceFailure.unsupported
-            ? 'Guarded saving is unavailable on this gateway. Your draft is still here.'
-            : '${_failure(err)} Save was not confirmed. Your draft is still here.';
+        _message = switch (err.reason) {
+          WorkspaceFailure.unsupported =>
+            'Guarded saving is unavailable on this gateway. Your draft is still here.',
+          WorkspaceFailure.ineligible => guardedSaveRefused,
+          _ =>
+            '${_failure(err)} Save was not confirmed. Your draft is still here.',
+        };
       });
     }
   });
@@ -440,6 +503,7 @@ class _FilesState extends State<SessionFilesView> {
       _source.clear();
       _editing = false;
       _review = false;
+      _saveNote = null;
       _message = null;
     });
   }
@@ -553,6 +617,7 @@ class _FilesState extends State<SessionFilesView> {
     children: [
       SelectableText(file.entry.relative),
       if (file.truncated) const Text('Preview truncated — editing disabled.'),
+      if (_saveNote != null) Text(_saveNote!),
       Wrap(
         children: [
           if (!_editing && !file.binary)
@@ -560,7 +625,7 @@ class _FilesState extends State<SessionFilesView> {
               onPressed: () => setState(() => _showSource = true),
               child: const Text('Select lines'),
             ),
-          if (!_editing && file.editable)
+          if (!_editing && file.editable && _saveNote == null)
             TextButton(
               onPressed: _busy
                   ? null

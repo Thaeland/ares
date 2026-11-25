@@ -117,6 +117,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
   bool _deleting = false;
   bool _managing = false;
   late String _projectName;
+  List<ProjectSettingsFolder>? _settingsFolders;
 
   @override
   void initState() {
@@ -426,6 +427,12 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                       owner: owner,
                       route: route,
                       projectId: widget.projectId,
+                      onChanged: (snapshot) {
+                        if (!mounted || snapshot.id != widget.projectId) {
+                          return;
+                        }
+                        setState(() => _settingsFolders = snapshot.folders);
+                      },
                     ),
                   ),
                 );
@@ -740,12 +747,19 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     }
 
     final tree = view.tree;
-    final project = widget.projects
-        .where((p) => p.id == widget.projectId)
-        .firstOrNull;
-    add(project?.primaryPath);
-    for (final folder in project?.folders ?? const <ProjectFolder>[]) {
-      add(folder.path);
+    final settingsFolders = _settingsFolders;
+    if (settingsFolders != null) {
+      for (final folder in settingsFolders) {
+        add(folder.path);
+      }
+    } else {
+      final project = widget.projects
+          .where((p) => p.id == widget.projectId)
+          .firstOrNull;
+      add(project?.primaryPath);
+      for (final folder in project?.folders ?? const <ProjectFolder>[]) {
+        add(folder.path);
+      }
     }
     add(tree?.path);
     for (final repo in tree?.repos ?? const <ProjectRepo>[]) {

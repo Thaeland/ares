@@ -15,6 +15,7 @@ class SessionFilesGateway {
   final methods = <String>[];
   final requests = <(String, Uri)>[];
   final replacements = <Map<String, dynamic>>[];
+  final mutations = <Map<String, dynamic>>[];
   final reads = <String>[];
   static const session = 'stored-field-chat';
   static const profile = 'field-work';
@@ -22,11 +23,25 @@ class SessionFilesGateway {
   static const folder = '$root/docs';
   static const name = 'notes.MD';
   static const path = '$folder/$name';
+  static const leaf = 'field.md';
+  static const leafPath = '$root/$leaf';
+  static const spaced = 'my notes.txt';
+  static const spacedPath = '$root/$spaced';
+  static const hidden = '.secret';
+  static const hiddenPath = '$root/$hidden';
+  static const database = 'cache.db';
+  static const databasePath = '$root/$database';
   static const transcript = 'Check the field notes';
   String text = markdownFixture;
   String sibling = 'before.txt';
   // Simulates another writer AFTER the client's preflight GET, before the CAS.
   String? competingWrite;
+  String cwd = root;
+  int revision = 4;
+  int generation = 9;
+  String terminalBackend = 'local';
+  bool stock = false;
+  bool forbidSave = false;
 
   SavedConnection get connection => SavedConnection(
     id: 'files-fixture',
@@ -58,6 +73,37 @@ class SessionFilesGateway {
     bool directory = false,
   }) => {'name': name, 'path': '$parent/$name', 'isDirectory': directory};
 
+  List<Map<String, Object>> _rootEntries() => [
+    _entry(root, 'docs', directory: true),
+    _entry(root, leaf),
+    _entry(root, spaced),
+    _entry(root, hidden),
+    _entry(root, database),
+  ];
+
+  String? _preview(String? filePath) {
+    if (filePath == SessionFilesGateway.path || filePath == leafPath) {
+      return text;
+    }
+    if (filePath == spacedPath) return 'spaced notes\n';
+    if (filePath == hiddenPath) return 'hidden\n';
+    if (filePath == databasePath) return 'db\n';
+    return null;
+  }
+
+  bool _eligibleSave(Map<String, dynamic> data) {
+    final cwd = data['cwd'];
+    final path = data['path'];
+    if (cwd is! String || path is! String || !path.startsWith('$cwd/')) {
+      return false;
+    }
+    final rel = path.substring(cwd.length + 1);
+    if (rel.isEmpty || rel.contains('/') || rel.startsWith('.')) return false;
+    final folded = rel.toLowerCase();
+    const refused = ['.db', '.sqlite', '.sqlite3', '-journal', '-wal', '-shm'];
+    return !refused.any(folded.endsWith);
+  }
+
   Future<void> _handle(HttpRequest req) async {
     final uri = req.uri;
     requests.add((req.method, uri));
@@ -77,7 +123,10 @@ class SessionFilesGateway {
           jsonEncode({
             'jsonrpc': '2.0',
             'method': 'event',
-            'params': {'type': 'gateway.ready', 'payload': {}},
+            'params': {
+              'type': 'gateway.ready',
+              'payload': {'session_authority': true},
+            },
           }),
         );
         ws.listen((raw) {
@@ -91,12 +140,29 @@ class SessionFilesGateway {
               'stored_session_id': session,
               'info': {
                 'profile_name': profile,
+                // Resume keeps the directory it first reported. A later
+                // session.mutate must not be ignored just because this frame
+                // is stale.
                 'cwd': root,
-                'terminal_backend': 'local',
+                'terminal_backend': terminalBackend,
               },
               'running': false,
             },
             'config.get' => {'config': {}},
+            'session.mutate' => () {
+              final params = Map<String, dynamic>.from(frame['params'] as Map);
+              mutations.add(params);
+              final payload = params['payload'];
+              if (payload is Map && payload['cwd'] is String) {
+                cwd = payload['cwd'] as String;
+                revision++;
+              }
+              return {
+                'session_id': session,
+                'operation': 'workspace',
+                'revision': revision,
+              };
+            }(),
             _ => null,
           };
           ws.add(
@@ -118,36 +184,50 @@ class SessionFilesGateway {
             {'id': 1, 'role': 'user', 'content': transcript, 'timestamp': 1},
           ],
         };
+      case ('GET', '/api/sessions/$session/mutation-snapshot'):
+        body = {
+          'session_id': session,
+          'exists': true,
+          'runtime_revision': revision,
+          'runtime_generation': generation,
+        };
       case ('GET', '/api/sessions/$session') when q['profile'] == profile:
         body = {
           'id': session,
           'profile': profile,
-          'cwd': root,
+          'cwd': cwd,
           'git_metadata_generation': 1,
         };
       case ('GET', '/api/tools/terminal/backends') when q['profile'] == profile:
-        body = {'active': 'local', 'backends': []};
-      case ('GET', '/api/fs/git-root')
-          when q['path'] == root && q['profile'] == profile:
+        body = {'active': terminalBackend, 'backends': []};
+      case ('GET', '/api/fs/git-root') when q['profile'] == profile:
         body = {'root': null};
+      case ('GET', '/api/fs/default-cwd') when q['profile'] == profile:
+        body = {'cwd': root};
       case ('GET', '/api/fs/list')
           when q['profile'] == profile &&
               q['git_flags'] == 'true' &&
-              (q['path'] == root || q['path'] == folder):
+              (q['path'] == root || q['path'] == folder || q['path'] == cwd):
         body = {
           'entries': q['path'] == root
-              ? [_entry(root, 'docs', directory: true)]
-              : [_entry(folder, name), _entry(folder, sibling)],
+              ? _rootEntries()
+              : q['path'] == folder
+              ? [_entry(folder, name), _entry(folder, sibling)]
+              : [_entry(cwd, name)],
         };
+      case ('GET', '/api/fs/list')
+          when q['profile'] == profile && q['path'] == root:
+        body = {'entries': _rootEntries()};
       case ('GET', '/api/fs/read-text')
-          when q['path'] == path &&
-              q['profile'] == profile &&
-              q['session_id'] == session:
-        reads.add(text);
+          when q['profile'] == profile &&
+              q['session_id'] == session &&
+              _preview(q['path']) != null:
+        final preview = _preview(q['path'])!;
+        reads.add(preview);
         body = {
-          'path': path,
-          'text': text,
-          'byteSize': utf8.encode(text).length,
+          'path': q['path'],
+          'text': preview,
+          'byteSize': utf8.encode(preview).length,
           'truncated': false,
           'binary': false,
         };
@@ -155,21 +235,48 @@ class SessionFilesGateway {
         final data =
             jsonDecode(await utf8.decoder.bind(req).join())
                 as Map<String, dynamic>;
-        replacements.add(data);
-        if (data['cwd'] != root ||
-            data['path'] != path ||
-            data['session_id'] != session ||
-            data['content'] is! String) {
+        if (stock) {
+          res.statusCode = 404;
+          break;
+        }
+        if (data['content'] is! String) {
           res.statusCode = 400;
           break;
         }
-        text = competingWrite ?? text;
-        competingWrite = null;
-        if (data['expected_sha256'] != hash(text)) {
-          res.statusCode = HttpStatus.conflict;
+        replacements.add(data);
+        if (forbidSave || !_eligibleSave(data)) {
+          res.statusCode = 403;
+          body = {
+            'detail': 'File or workspace is not eligible for confirmed editing',
+          };
+          break;
+        }
+        if (data['cwd'] != cwd ||
+            data['session_id'] != session ||
+            _preview(data['path'] as String?) == null) {
+          res.statusCode = 400;
+          break;
+        }
+        if (data['path'] == path || data['path'] == leafPath) {
+          text = competingWrite ?? text;
+          competingWrite = null;
+          if (data['expected_sha256'] != hash(text)) {
+            res.statusCode = HttpStatus.conflict;
+          } else {
+            text = data['content'] as String;
+            body = {'ok': true, 'path': data['path'], 'sha256': hash(text)};
+          }
         } else {
-          text = data['content'] as String;
-          body = {'ok': true, 'path': path, 'sha256': hash(text)};
+          final current = _preview(data['path'] as String)!;
+          if (data['expected_sha256'] != hash(current)) {
+            res.statusCode = HttpStatus.conflict;
+          } else {
+            body = {
+              'ok': true,
+              'path': data['path'],
+              'sha256': hash(data['content'] as String),
+            };
+          }
         }
       default:
         res.statusCode = HttpStatus.notFound;

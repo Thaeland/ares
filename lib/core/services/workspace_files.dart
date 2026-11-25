@@ -1,5 +1,10 @@
 part of 'remote_workspace.dart';
 
+const guardedSaveUnavailable = "Guarded saving isn't available on this gateway";
+const guardedSaveRefused = "This file can't be saved by the gateway";
+const _guardedSaveOnlyHere =
+    'Only a file directly in the working directory can be saved.';
+
 /// Entries are issued by a directory read. A spelling, even an absolute one,
 /// is not a capability to use this target or another session's file.
 final class WorkspaceEntry {
@@ -181,6 +186,7 @@ extension SessionWorkspaceFiles on WorkspaceTarget {
       );
     } on DashboardHttpException catch (e) {
       if (e.statusCode == 409) _fail(WorkspaceFailure.mismatch);
+      if (e.statusCode == 403) _fail(WorkspaceFailure.ineligible);
       rethrow;
     }
     if (receipt is! Map ||
@@ -251,36 +257,97 @@ extension SessionWorkspaceFiles on WorkspaceTarget {
   Future<void> changeCwd(
     String path,
     ({int revision, int generation}) fences,
-  ) => _withOwner(() async {
-    if (!isSafeWorkspacePath(path)) _fail(WorkspaceFailure.invalid);
-    // The confirmed fences can go stale while the dialog is open. Re-read
-    // them in this same owner turn, immediately before the closed field set
-    // is dispatched. session.mutate forbids a profile parameter; the socket
-    // already carries the bound profile.
-    final current = await cwdFences();
-    if (current != fences) _fail(WorkspaceFailure.mismatch);
-    final id = route.storedSessionId!;
-    final r = await _rpc(
-      'session.mutate',
-      {
+  ) async {
+    final normalized = normalizeWorkspaceCwd(path);
+    var adopt = false;
+    await _withOwner(() async {
+      if (!isSafeWorkspacePath(normalized)) _fail(WorkspaceFailure.invalid);
+      // The confirmed fences can go stale while the dialog is open. Re-read
+      // them in this same owner turn, immediately before the closed field set
+      // is dispatched. session.mutate forbids a profile parameter; the socket
+      // already carries the bound profile.
+      final current = await cwdFences();
+      if (current != fences) _fail(WorkspaceFailure.mismatch);
+      final id = route.storedSessionId!;
+      final receipt = await _rpc('session.mutate', {
         'session_id': id,
         'request_id': const Uuid().v4(),
         'operation': 'workspace',
         'expected_revision': current.revision,
         'expected_generation': current.generation,
-        'payload': {'cwd': path},
-      },
-      bindProfile: false,
-    );
-    if (r['session_id'] != id ||
-        r['operation'] != 'workspace' ||
-        r['revision'] is! int ||
-        (r['revision'] as int) <= fences.revision) {
-      _fail(WorkspaceFailure.mismatch);
+        'payload': {'cwd': normalized},
+      }, bindProfile: false);
+      if (receipt['session_id'] != id ||
+          receipt['operation'] != 'workspace' ||
+          receipt['revision'] is! int ||
+          (receipt['revision'] as int) <= fences.revision) {
+        _fail(WorkspaceFailure.mismatch);
+      }
+      final row = await _readRow();
+      if (row.cwd != normalized || row.profile != effectiveProfile) {
+        _fail(WorkspaceFailure.mismatch);
+      }
+      final snap = await _get(['sessions', id, 'mutation-snapshot']);
+      adopt =
+          snap is Map &&
+          snap['session_id'] == id &&
+          snap['exists'] == true &&
+          snap['runtime_generation'] == current.generation &&
+          snap['runtime_revision'] == receipt['revision'];
+    });
+    // The guard above still compares the pre-move binding. Adopt only after
+    // it returns, and only for this session when its generation did not move.
+    if (adopt && _binding != null) {
+      _socket.adoptConfirmedWorkspaceCwd(route.storedSessionId!, normalized);
     }
-    final row = await _readRow();
-    if (row.cwd != path || row.profile != effectiveProfile) {
-      _fail(WorkspaceFailure.mismatch);
+  }
+
+  /// Unknown and absent are the same to the person reading the file: do not
+  /// offer a draft that the gateway cannot keep.
+  Future<bool> guardedSavePresent() async {
+    final cached = _guardedSavePresent;
+    if (cached != null) return cached;
+    try {
+      final present = await _withOwner(() async {
+        final status = await _owner._dashboard.workspaceReplaceTextProbe(
+          profile: effectiveProfile!,
+          check: checkCurrent,
+        );
+        return status == 400 || status == 413 || status == 415;
+      }, session: true);
+      _guardedSavePresent = present;
+      return present;
+    } on WorkspaceException catch (error) {
+      if (error.reason == WorkspaceFailure.stale ||
+          error.reason == WorkspaceFailure.mismatch) {
+        rethrow;
+      }
+      _guardedSavePresent = false;
+      return false;
     }
-  });
+  }
+
+  /// Mirrors the confirmed-edit patch: an immediate child of the session
+  /// directory, not hidden, and not a refused database suffix.
+  String? saveRefusal(WorkspaceEntry entry) {
+    _ownsEntry(entry, directory: false);
+    final root = fileRoot;
+    final name = entry.name;
+    final immediate =
+        name == entry.relative && isWorkspaceChild(root, name, entry.path);
+    if (!immediate) return _guardedSaveOnlyHere;
+    if (name.startsWith('.')) {
+      return "Hidden files can't be saved by the gateway.";
+    }
+    if (root == '/' ||
+        (root.length == 3 &&
+            root[1] == ':' &&
+            (root[2] == '/' || root.codeUnitAt(2) == 92))) {
+      return guardedSaveRefused;
+    }
+    final folded = name.toLowerCase();
+    const refused = ['.db', '.sqlite', '.sqlite3', '-journal', '-wal', '-shm'];
+    if (refused.any(folded.endsWith)) return guardedSaveRefused;
+    return null;
+  }
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/screens/chat_screen.dart';
+import 'package:hermes_android/core/screens/files_screen.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/gateway_turn_application_controller.dart';
 import 'package:hermes_android/core/widgets/markdown_file_preview.dart';
@@ -77,12 +78,15 @@ Future<void> _tap(WidgetTester tester, Finder match) async {
 Future<void> _withChat(
   WidgetTester tester,
   _Chat shell,
-  Future<void> Function(SessionFilesGateway wire) exercise,
-) async {
+  Future<void> Function(SessionFilesGateway wire) exercise, {
+  String terminalBackend = 'local',
+  bool draft = false,
+}) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = const Size(412, 900);
   addTearDown(tester.view.reset);
   final wire = (await tester.runAsync(SessionFilesGateway.start))!;
+  wire.terminalBackend = terminalBackend;
   final connection = wire.connection;
   final previous = HttpOverrides.current;
   final network = _FixtureOnly(connection.port);
@@ -95,15 +99,16 @@ Future<void> _withChat(
     close = owner.close;
     home = ChatScreen(
       connection: connection,
-      session: const Session(
-        id: SessionFilesGateway.session,
+      session: Session(
+        id: draft ? 'local-draft' : SessionFilesGateway.session,
         title: 'Field chat',
         model: 'fixture',
         source: 'desktop',
-        messageCount: 1,
+        messageCount: draft ? 0 : 1,
         isActive: false,
         preview: '',
         startedAt: 1,
+        isLocalDraft: draft,
       ),
       turnApplicationController: owner,
       testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
@@ -143,10 +148,14 @@ Future<void> _withChat(
         home: home,
       ),
     );
-    await _wait(
-      tester,
-      find.text(SessionFilesGateway.transcript, findRichText: true),
-    );
+    if (draft) {
+      await _wait(tester, find.bySemanticsLabel('Add attachment'));
+    } else {
+      await _wait(
+        tester,
+        find.text(SessionFilesGateway.transcript, findRichText: true),
+      );
+    }
     expect(_pane, findsNothing);
     await exercise(wire);
     expect(network.blocked, isEmpty);
@@ -169,6 +178,19 @@ Future<void> _openFolder(WidgetTester tester) async {
   await _tap(tester, find.byTooltip('Session files'));
   await _tap(tester, _inside(find.text('docs')));
   await _wait(tester, _file);
+}
+
+/// Pinned to hermes-agent b7ee21c14e `REFERENCE_PATTERN`.
+final _gatewayReference = RegExp(
+  r'''(?<![\w/])@(?:(?:diff|staged)\b|(?:file|folder|git|url):(?:(?:`[^`\n]+`|"[^"\n]+"|'[^'\n]+')(?::\d+(?:-\d+)?)?|\S+))''',
+);
+
+List<String> _gatewayRefs(String text) =>
+    _gatewayReference.allMatches(text).map((match) => match.group(0)!).toList();
+
+Future<void> _openNamed(WidgetTester tester, String name) async {
+  await _tap(tester, find.byTooltip('Session files'));
+  await _tap(tester, _inside(find.text(name)));
 }
 
 void main() {
@@ -232,7 +254,7 @@ void main() {
           expect(tester.widget<TextField>(composer).controller, same(draft));
           expect(
             draft.text,
-            'My unsent question\n@file ${SessionFilesGateway.path}:3-5 ',
+            'My unsent question\n@file:${SessionFilesGateway.path}:3-5 ',
           );
           expect(wire.replacements, isEmpty);
         });
@@ -242,8 +264,7 @@ void main() {
       '${shell.name}: guarded save preserves a conflicting draft, reviews the current host version, then saves and reads it back',
       (tester) async {
         await _withChat(tester, shell, (wire) async {
-          await _openFolder(tester);
-          await _tap(tester, _file);
+          await _openNamed(tester, SessionFilesGateway.leaf);
           await _tap(tester, _inside(find.text('Edit')));
           const edit = '# My reconciled café notes\n';
           const other = '# Changed on the gateway\n';
@@ -261,7 +282,7 @@ void main() {
           expect(wire.replacements.single, {
             'session_id': SessionFilesGateway.session,
             'cwd': SessionFilesGateway.root,
-            'path': SessionFilesGateway.path,
+            'path': SessionFilesGateway.leafPath,
             'expected_sha256': SessionFilesGateway.hash(markdownFixture),
             'content': edit,
           });
@@ -318,8 +339,7 @@ void main() {
       (tester) async {
         await _withChat(tester, shell, (wire) async {
           await tester.enterText(_composer(shell), 'Separate chat draft');
-          await _openFolder(tester);
-          await _tap(tester, _file);
+          await _openNamed(tester, SessionFilesGateway.leaf);
           await _tap(tester, _inside(find.text('Edit')));
           await tester.enterText(_source, 'Discard this file draft');
           wire.text = '# New host text before save';
@@ -353,5 +373,195 @@ void main() {
         });
       },
     );
+    testWidgets(
+      '${shell.name}: review: file references match the gateway grammar',
+      (tester) async {
+        await _withChat(tester, shell, (wire) async {
+          final composer = _composer(shell);
+          await tester.enterText(composer, 'My unsent question');
+          await _openFolder(tester);
+          await _tap(tester, _file);
+          await _tap(tester, _inside(find.text('Select lines')));
+          final field = tester.widget<TextField>(_source);
+          field.controller!.selection = TextSelection(
+            baseOffset: markdownFixture.indexOf('## Observations'),
+            extentOffset: markdownFixture.indexOf('- Gamma'),
+          );
+          await _tap(tester, _inside(find.text('Attach selected lines')));
+          await _wait(tester, find.byTooltip('Session files'));
+          expect(
+            _gatewayRefs(tester.widget<TextField>(composer).controller!.text),
+            ['@file:${SessionFilesGateway.path}:3-5'],
+          );
+          await _tap(tester, find.byTooltip('Session files'));
+          final spaced = _inside(find.text(SessionFilesGateway.spaced));
+          await _wait(tester, spaced);
+          await tester.ensureVisible(spaced);
+          await _tap(
+            tester,
+            find.byTooltip('Actions for ${SessionFilesGateway.spaced}'),
+          );
+          await _tap(tester, find.text('Attach file reference'));
+          await _wait(tester, find.byTooltip('Session files'));
+          expect(
+            _gatewayRefs(tester.widget<TextField>(composer).controller!.text),
+            [
+              '@file:${SessionFilesGateway.path}:3-5',
+              '@file:`${SessionFilesGateway.spacedPath}`',
+            ],
+          );
+          expect(wire.replacements, isEmpty);
+        });
+      },
+    );
+    testWidgets(
+      '${shell.name}: review: a confirmed directory change reloads the tree',
+      (tester) async {
+        await _withChat(tester, shell, (wire) async {
+          await _tap(tester, find.byTooltip('Session files'));
+          await _wait(tester, _inside(find.text('docs')));
+          await _tap(tester, find.byTooltip('Change working directory'));
+          final field = find.descendant(
+            of: find.byType(AlertDialog),
+            matching: find.byType(TextFormField),
+          );
+          await _wait(tester, field);
+          await tester.enterText(field, '${SessionFilesGateway.folder}/');
+          await _tap(
+            tester,
+            find.widgetWithText(FilledButton, 'Change directory'),
+          );
+          await _wait(tester, _inside(find.text(SessionFilesGateway.name)));
+          expect(wire.mutations, hasLength(1));
+          expect(wire.mutations.single['payload'], {
+            'cwd': SessionFilesGateway.folder,
+          });
+          expect(wire.cwd, SessionFilesGateway.folder);
+          expect(find.byTooltip('Change working directory'), findsOneWidget);
+          expect(
+            find.text(
+              'The gateway returned an unsafe path or invalid file response.',
+            ),
+            findsNothing,
+          );
+        });
+      },
+    );
+    testWidgets(
+      '${shell.name}: review: guarded save is offered only when it can succeed',
+      (tester) async {
+        await _withChat(tester, shell, (wire) async {
+          await _openNamed(tester, SessionFilesGateway.leaf);
+          await _wait(tester, _inside(find.text('Edit')));
+          await _tap(tester, find.byTooltip('Back to tree'));
+          await _tap(tester, _inside(find.text('docs')));
+          await _tap(tester, _inside(find.text(SessionFilesGateway.name)));
+          await _wait(
+            tester,
+            _inside(
+              find.text(
+                'Only a file directly in the working directory can be saved.',
+              ),
+            ),
+          );
+          expect(_inside(find.text('Edit')), findsNothing);
+          await _tap(tester, find.byTooltip('Back to tree'));
+          await _tap(tester, _inside(find.text(SessionFilesGateway.hidden)));
+          await _wait(
+            tester,
+            _inside(find.text("Hidden files can't be saved by the gateway.")),
+          );
+          expect(_inside(find.text('Edit')), findsNothing);
+          await _tap(tester, find.byTooltip('Back to tree'));
+          await tester.ensureVisible(
+            _inside(find.text(SessionFilesGateway.database)),
+          );
+          await _tap(tester, _inside(find.text(SessionFilesGateway.database)));
+          await _wait(
+            tester,
+            _inside(find.text("This file can't be saved by the gateway")),
+          );
+          expect(_inside(find.text('Edit')), findsNothing);
+          expect(wire.replacements, isEmpty);
+        });
+      },
+    );
+    testWidgets('${shell.name}: review: a stock gateway stays read-only', (
+      tester,
+    ) async {
+      await _withChat(tester, shell, (wire) async {
+        wire.stock = true;
+        await _openNamed(tester, SessionFilesGateway.leaf);
+        await _wait(
+          tester,
+          _inside(find.text("Guarded saving isn't available on this gateway")),
+        );
+        expect(_inside(find.text('Edit')), findsNothing);
+        expect(wire.replacements, isEmpty);
+      });
+    });
+    testWidgets(
+      '${shell.name}: review: a refused save names the gateway limit',
+      (tester) async {
+        await _withChat(tester, shell, (wire) async {
+          wire.forbidSave = true;
+          await _openNamed(tester, SessionFilesGateway.leaf);
+          await _tap(tester, _inside(find.text('Edit')));
+          await tester.enterText(_source, '# edited\n');
+          await _tap(tester, _inside(find.text('Save')));
+          await _tap(tester, find.widgetWithText(FilledButton, 'Save changes'));
+          await _wait(
+            tester,
+            _inside(find.text("This file can't be saved by the gateway")),
+          );
+          expect(
+            _inside(find.text('The gateway denied this operation.')),
+            findsNothing,
+          );
+        });
+      },
+    );
   }
+
+  testWidgets(
+    'classic: review: non-local backend keeps the server file browser',
+    (tester) async {
+      await _withChat(tester, _Chat.classic, (wire) async {
+        for (
+          var i = 0;
+          i < 50 && !wire.methods.contains('session.resume');
+          i++
+        ) {
+          await tester.pump(const Duration(milliseconds: 16));
+          await tester.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 10)),
+          );
+        }
+        expect(wire.methods, contains('session.resume'));
+        await _tap(tester, find.bySemanticsLabel('Add attachment'));
+        await _tap(tester, find.text('Browse server files'));
+        await _wait(tester, find.byType(FilesScreen));
+        expect(find.byType(SessionFilesView), findsNothing);
+        expect(
+          find.text('Start the session before attaching gateway files.'),
+          findsNothing,
+        );
+      }, terminalBackend: 'ssh');
+    },
+  );
+
+  testWidgets('classic: review: a draft chat keeps the server file browser', (
+    tester,
+  ) async {
+    await _withChat(tester, _Chat.classic, (wire) async {
+      await _tap(tester, find.bySemanticsLabel('Add attachment'));
+      await _tap(tester, find.text('Browse server files'));
+      await _wait(tester, find.byType(FilesScreen));
+      expect(find.byType(SessionFilesView), findsNothing);
+      expect(
+        find.text('Start the session before attaching gateway files.'),
+        findsNothing,
+      );
+    }, draft: true);
+  });
 }
