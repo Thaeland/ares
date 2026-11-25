@@ -6155,4 +6155,18 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get catalog_phase_loading_tools => '도구를 불러오는 중…';
+
+  @override
+  String get setup_beat_send_failed => '답변이 전송되지 않았습니다. 다시 시도하세요.';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '도구 $count개',
+      one: '도구 1개',
+    );
+    return '$_temp0';
+  }
 }

@@ -1206,10 +1206,17 @@ class DesktopGatewayClient implements SlashCommandGateway {
     }
   }
 
-  /// Rejects requests that no mounted route can answer.
+  /// Rejects requests that no mounted route can answer. A `setup_beat` card
+  /// is not one of them: like the Desktop, which parks it per session and
+  /// shows it again on resume, it waits for its chat to be opened again
+  /// ([replayServerRequestsForSession]) until the backend withdraws it.
   void rejectServerRequestsForSession(String mobileSessionId) {
     final requestIds = _serverRequestMobileSessionIds.entries
-        .where((entry) => entry.value == mobileSessionId)
+        .where(
+          (entry) =>
+              entry.value == mobileSessionId &&
+              _serverRequests[entry.key]?.method != 'setup_beat',
+        )
         .map((entry) => entry.key)
         .toList(growable: false);
     for (final requestId in requestIds) {
@@ -1315,7 +1322,8 @@ class DesktopGatewayClient implements SlashCommandGateway {
   /// Answers the `setup_beat` card [requestId] for the chat [sessionId] on
   /// the socket it arrived on. False, and nothing is sent, when the request
   /// is no longer open here (answered, withdrawn, its socket gone) or
-  /// belongs to another chat.
+  /// belongs to another chat. An answer that did not go out leaves the
+  /// request held ([holdsSetupBeat]), so the card can be answered again.
   bool respondToSetupBeat({
     required String sessionId,
     required String requestId,
@@ -1330,10 +1338,17 @@ class DesktopGatewayClient implements SlashCommandGateway {
         !client.isConnected) {
       return false;
     }
-    final sent = request!.respond(result);
+    if (!request!.respond(result)) return false;
     _forgetServerRequest(requestId);
-    return sent;
+    return true;
   }
+
+  /// Whether the `setup_beat` card [requestId] of the chat [sessionId] is
+  /// still open here.
+  bool holdsSetupBeat({required String sessionId, required String requestId}) =>
+      !_closed &&
+      _serverRequests[requestId]?.method == 'setup_beat' &&
+      _serverRequestMobileSessionIds[requestId] == sessionId;
 
   /// Whether this client owns the active approval for [sessionId].
   ///

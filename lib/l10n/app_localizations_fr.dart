@@ -6353,4 +6353,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get catalog_phase_loading_tools => 'Chargement de ses outils…';
+
+  @override
+  String get setup_beat_send_failed =>
+      'Votre réponse n’a pas été envoyée. Réessayez.';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count outils',
+      one: '1 outil',
+    );
+    return '$_temp0';
+  }
 }

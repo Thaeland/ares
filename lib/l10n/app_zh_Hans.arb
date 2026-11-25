@@ -1729,5 +1729,7 @@
   "catalog_installing": "正在安装…",
   "catalog_phase_downloading": "正在下载…",
   "catalog_phase_python_packages": "正在安装 Python 包…",
-  "catalog_phase_loading_tools": "正在加载工具…"
+  "catalog_phase_loading_tools": "正在加载工具…",
+  "setup_beat_send_failed": "你的回答未发送，请重试。",
+  "catalog_tool_count": "{count, plural, other{{count} 个工具}}"
 }

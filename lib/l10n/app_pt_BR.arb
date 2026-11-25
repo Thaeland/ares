@@ -1729,5 +1729,7 @@
   "catalog_installing": "Instalando…",
   "catalog_phase_downloading": "Baixando…",
   "catalog_phase_python_packages": "Instalando pacotes Python…",
-  "catalog_phase_loading_tools": "Carregando as ferramentas…"
+  "catalog_phase_loading_tools": "Carregando as ferramentas…",
+  "setup_beat_send_failed": "Sua resposta não foi enviada. Tente novamente.",
+  "catalog_tool_count": "{count, plural, =1{1 ferramenta} other{{count} ferramentas}}"
 }

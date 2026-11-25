@@ -2667,5 +2667,8 @@
   "catalog_installing": "Installing…",
   "catalog_phase_downloading": "Downloading…",
   "catalog_phase_python_packages": "Installing Python packages…",
-  "catalog_phase_loading_tools": "Loading its tools…"
+  "catalog_phase_loading_tools": "Loading its tools…",
+  "setup_beat_send_failed": "Your answer was not sent. Try again.",
+  "catalog_tool_count": "{count, plural, =1{1 tool} other{{count} tools}}",
+  "@catalog_tool_count": {"placeholders": {"count": {"type": "int"}}}
 }

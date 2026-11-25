@@ -1729,5 +1729,7 @@
   "catalog_installing": "설치 중…",
   "catalog_phase_downloading": "다운로드 중…",
   "catalog_phase_python_packages": "Python 패키지 설치 중…",
-  "catalog_phase_loading_tools": "도구를 불러오는 중…"
+  "catalog_phase_loading_tools": "도구를 불러오는 중…",
+  "setup_beat_send_failed": "답변이 전송되지 않았습니다. 다시 시도하세요.",
+  "catalog_tool_count": "{count, plural, =1{도구 1개} other{도구 {count}개}}"
 }

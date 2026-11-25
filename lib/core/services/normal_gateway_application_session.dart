@@ -738,6 +738,18 @@ class NormalGatewayApplicationSession {
     return sent;
   }
 
+  /// Whether this owner still holds [sessionId]'s setup card [requestId]
+  /// open, so an answer that did not go out can be sent again.
+  bool holdsSetupBeat({required String sessionId, required String requestId}) {
+    final chat = _aliases[sessionId];
+    final gateway = client;
+    if (_closed || chat == null || gateway == null) return false;
+    return gateway.holdsSetupBeat(
+      sessionId: chat.localSessionId,
+      requestId: requestId,
+    );
+  }
+
   void forgetAnsweredInput(String requestId) {
     for (final chat in chats) {
       if (chat._pendingInput.remove(requestId) != null) {

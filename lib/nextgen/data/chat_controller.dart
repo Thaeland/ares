@@ -3201,16 +3201,40 @@ class NgChatController extends ChangeNotifier {
 
   /// Answers this chat's waiting setup card [requestId] on the socket it
   /// arrived on. False when that card is no longer the one waiting here
-  /// (withdrawn, answered elsewhere, or replaced by a newer card).
-  bool answerSetupBeat(String requestId, Map<String, dynamic> result) {
+  /// (withdrawn, answered elsewhere, or replaced by a newer card) or the
+  /// answer did not go out.
+  bool answerSetupBeat(String requestId, Map<String, dynamic> result) =>
+      sendSetupBeat(requestId, result) == SetupBeatSend.sent;
+
+  /// Sends [result] for this chat's waiting setup card [requestId]. The
+  /// card closes only once the answer went out; a send that failed keeps it
+  /// to be answered again, as the Desktop's setup-beat store does.
+  SetupBeatSend sendSetupBeat(String requestId, Map<String, dynamic> result) {
     final current = request;
     if (current == null ||
         current.kind != NgRequestKind.setupBeat ||
         current.request.id != requestId ||
         !gateway.openRequests.containsKey(requestId)) {
+      return SetupBeatSend.closed;
+    }
+    if (!current.request.raw.respond(result)) return SetupBeatSend.failed;
+    gateway.forgetRequest(current.request.id);
+    request = null;
+    _changed();
+    return SetupBeatSend.sent;
+  }
+
+  /// A message sent while a setup card waits closes it unanswered with
+  /// `{wrote_instead: true}`: the backend ends the card's turn and the
+  /// message runs as the next one (Desktop's yieldSetupBeatToMessage). True
+  /// when a card closed.
+  bool yieldSetupBeatToMessage() {
+    final current = request;
+    if (current == null || current.kind != NgRequestKind.setupBeat) {
       return false;
     }
-    return _answer(result);
+    return sendSetupBeat(current.request.id, const {'wrote_instead': true}) ==
+        SetupBeatSend.sent;
   }
 
   bool answerClarify(List<List<String>> answers) {

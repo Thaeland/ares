@@ -6344,4 +6344,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get catalog_phase_loading_tools => 'Werkzeuge werden geladen…';
+
+  @override
+  String get setup_beat_send_failed =>
+      'Deine Antwort wurde nicht gesendet. Versuche es erneut.';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Tools',
+      one: '1 Tool',
+    );
+    return '$_temp0';
+  }
 }

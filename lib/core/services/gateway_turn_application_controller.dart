@@ -28,6 +28,10 @@ abstract interface class GatewaySetupBeatResponder {
     required Map<String, dynamic> result,
   });
 
+  /// Whether this owner still holds [sessionId]'s setup card [requestId]
+  /// open, so an answer that did not go out can be sent again.
+  bool holdsSetupBeat({required String sessionId, required String requestId});
+
   /// Answers [sessionId]'s connection operation card (`connection.respond`).
   Future<bool> tryRespondToConnection({
     required String sessionId,
@@ -618,6 +622,11 @@ class _CoordinatorGatewayTurnApplicationSession
       result: result,
     );
   }
+
+  @override
+  bool holdsSetupBeat({required String sessionId, required String requestId}) =>
+      !_closed &&
+      _client.holdsSetupBeat(sessionId: sessionId, requestId: requestId);
 
   @override
   Future<bool> tryRespondToSudo({

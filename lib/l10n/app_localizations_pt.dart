@@ -6339,6 +6339,21 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get catalog_phase_loading_tools => 'A carregar as ferramentas…';
+
+  @override
+  String get setup_beat_send_failed =>
+      'A sua resposta não foi enviada. Tente novamente.';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ferramentas',
+      one: '1 ferramenta',
+    );
+    return '$_temp0';
+  }
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -12440,4 +12455,19 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get catalog_phase_loading_tools => 'Carregando as ferramentas…';
+
+  @override
+  String get setup_beat_send_failed =>
+      'Sua resposta não foi enviada. Tente novamente.';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ferramentas',
+      one: '1 ferramenta',
+    );
+    return '$_temp0';
+  }
 }

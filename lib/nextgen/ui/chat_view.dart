@@ -538,6 +538,18 @@ class _NgChatViewState extends State<NgChatView>
       // before, provided the draft is still the one that was decided on.
       if (!mounted || _input.text.trim() != text) return;
     }
+    // A message sent while a setup card waits closes the card with
+    // {wrote_instead}; the backend ends the card's turn, so the message
+    // waits for that turn to end and runs as the next one, never a steer
+    // (Desktop's yieldParkedCardsToMessage).
+    if (chat.yieldSetupBeatToMessage() &&
+        chat.running &&
+        _drafts.isEmpty &&
+        text.isNotEmpty) {
+      _input.clear();
+      chat.enqueue(text);
+      return;
+    }
     if (_drafts.isNotEmpty && !chat.running) {
       final raw = _input.text;
       final drafts = List.of(_drafts);
@@ -1068,14 +1080,17 @@ class _NgChatViewState extends State<NgChatView>
                           retry: _retryCatalogRow,
                           onDismiss: () => chat.dismissCatalog(operation.opId),
                         ),
+                      // The composer stays below a setup card: a message
+                      // sent instead of an answer closes the card.
                       if (chat.request?.setupBeat case final card?)
                         SetupBeatCard(
                           key: ValueKey(card.requestId),
                           request: card,
                           onAnswer: (result) async =>
-                              chat.answerSetupBeat(card.requestId, result),
-                        )
-                      else if (chat.request != null)
+                              chat.sendSetupBeat(card.requestId, result),
+                        ),
+                      if (chat.request != null &&
+                          chat.request!.kind != NgRequestKind.setupBeat)
                         _InputPanel(
                           chat: chat,
                           request: chat.request!,

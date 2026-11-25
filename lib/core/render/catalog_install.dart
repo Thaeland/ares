@@ -63,6 +63,7 @@ class CatalogRow {
     this.approvedEnable = true,
     this.approvedRef,
     this.phase,
+    this.tools = const [],
   });
 
   final String name;
@@ -96,6 +97,9 @@ class CatalogRow {
   /// The install step while the row is installing (`InstallPhase`:
   /// downloading, python_packages, loading_tools); the card words it.
   final String? phase;
+
+  /// On an installed row: the tools that went live (`_installed_row`).
+  final List<String> tools;
 
   String get title => (display?.trim().isNotEmpty ?? false) ? display! : name;
 
@@ -167,6 +171,7 @@ class CatalogRow {
       approvedEnable: !(approved is Map && approved['enable'] == false),
       approvedRef: approved is Map ? _string(approved['ref']) : null,
       phase: _string(raw['phase']),
+      tools: _strings(raw['tools']),
     );
   }
 }
@@ -234,6 +239,14 @@ class CatalogOperation {
     );
   }
 
+  /// Continue: end the operation now with whatever is unresolved
+  /// (Desktop's continueConnectionRequest; the host settles it with
+  /// `SettleReason.continue_`).
+  static const Map<String, dynamic> continueAnswer = {'settled_by': 'continue'};
+
+  /// Whether a row still needs something from the user or the host.
+  bool get unresolved => rows.any((row) => !row.resolved);
+
   /// The card's answer for one row (`ConnectionAnswer`).
   static Map<String, dynamic> answer(
     CatalogRow row, {
@@ -294,6 +307,9 @@ class _CatalogInstallCardState extends State<CatalogInstallCard> {
   final _env = <String, TextEditingController>{};
   String? _error;
 
+  /// The seq Continue was sent at; held until a newer frame.
+  int? _continuedAt;
+
   @override
   void didUpdateWidget(CatalogInstallCard oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -301,8 +317,28 @@ class _CatalogInstallCardState extends State<CatalogInstallCard> {
       _sentAt.clear();
       _retried.clear();
       _retrying.clear();
+      _continuedAt = null;
       _error = null;
     }
+  }
+
+  Future<void> _continue() async {
+    final seq = widget.operation.seq;
+    setState(() {
+      _continuedAt = seq;
+      _error = null;
+    });
+    var sent = false;
+    try {
+      sent = await widget.respond(CatalogOperation.continueAnswer);
+    } catch (_) {
+      sent = false;
+    }
+    if (!mounted || sent) return;
+    setState(() {
+      _continuedAt = null;
+      _error = context.sharedL10n.catalog_send_failed;
+    });
   }
 
   @override
@@ -489,6 +525,12 @@ class _CatalogInstallCardState extends State<CatalogInstallCard> {
             Text(row.detail!, key: Key('catalog-detail-${row.name}')),
           if (retried?.message != null)
             Text(retried!.message!, key: Key('catalog-retry-${row.name}')),
+          if (row.state == 'connected' && row.tools.isNotEmpty)
+            Text(
+              l.catalog_tool_count(row.tools.length),
+              key: Key('catalog-tools-${row.name}'),
+              style: small,
+            ),
           if (row.skill != null) Text(l.catalog_skill_ready(row.skill!)),
           if (row.missingEnv.isNotEmpty)
             Text(l.catalog_missing_env(row.missingEnv.join(', '))),
@@ -551,6 +593,17 @@ class _CatalogInstallCardState extends State<CatalogInstallCard> {
             mainAxisSize: MainAxisSize.min,
             children: [
               for (final row in operation.rows) _row(row),
+              if (!operation.settled && operation.unresolved)
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: TextButton(
+                    key: const Key('catalog-continue'),
+                    onPressed: (_continuedAt ?? -1) >= operation.seq
+                        ? null
+                        : _continue,
+                    child: Text(l.ng_continue),
+                  ),
+                ),
               if (profile != null)
                 Text(
                   l.catalog_target_profile(profile),

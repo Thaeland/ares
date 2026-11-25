@@ -1729,5 +1729,7 @@
   "catalog_installing": "Установка…",
   "catalog_phase_downloading": "Загрузка…",
   "catalog_phase_python_packages": "Установка пакетов Python…",
-  "catalog_phase_loading_tools": "Загрузка инструментов…"
+  "catalog_phase_loading_tools": "Загрузка инструментов…",
+  "setup_beat_send_failed": "Ваш ответ не отправлен. Попробуйте ещё раз.",
+  "catalog_tool_count": "{count, plural, one{{count} инструмент} few{{count} инструмента} many{{count} инструментов} other{{count} инструмента}}"
 }

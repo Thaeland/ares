@@ -132,9 +132,24 @@ class SetupBeatRequest {
   };
 }
 
-/// Sends a result for the card; false when the request is no longer open
-/// (answered elsewhere, withdrawn, or another chat's).
-typedef SetupBeatAnswer = Future<bool> Function(Map<String, dynamic> result);
+/// What became of a card's answer.
+enum SetupBeatSend {
+  /// The answer went out on the request's socket; the card closes.
+  sent,
+
+  /// The request still waits here but the answer did not go out (its socket
+  /// dropped). The card stays to be answered again, as on the Desktop,
+  /// whose setup-beat store clears a card only once its answer is sent.
+  failed,
+
+  /// The request no longer waits here (answered elsewhere, withdrawn, or
+  /// another chat's).
+  closed,
+}
+
+/// Sends a result for the card.
+typedef SetupBeatAnswer =
+    Future<SetupBeatSend> Function(Map<String, dynamic> result);
 
 /// The card for one waiting beat, drawn above the composer in both layouts.
 class SetupBeatCard extends StatefulWidget {
@@ -179,11 +194,21 @@ class _SetupBeatCardState extends State<SetupBeatCard> {
       _error = null;
     });
     final requestId = widget.request.requestId;
-    final sent = await widget.onAnswer(result);
+    SetupBeatSend outcome;
+    try {
+      outcome = await widget.onAnswer(result);
+    } catch (_) {
+      outcome = SetupBeatSend.failed;
+    }
     if (!mounted || widget.request.requestId != requestId) return;
+    final l = context.sharedL10n;
     setState(() {
       _sending = false;
-      if (!sent) _error = context.sharedL10n.setup_beat_not_waiting;
+      _error = switch (outcome) {
+        SetupBeatSend.sent => null,
+        SetupBeatSend.failed => l.setup_beat_send_failed,
+        SetupBeatSend.closed => l.setup_beat_not_waiting,
+      };
     });
   }
 
@@ -275,40 +300,49 @@ class _SetupBeatCardState extends State<SetupBeatCard> {
           Text(l.setup_beat_on_computer, style: theme.textTheme.bodySmall),
         );
     }
+    // The composer stays below the card, so on a phone the card scrolls
+    // within at most two fifths of the screen.
     return Card(
       key: Key('setup-beat-${request.requestId}'),
       margin: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              request.question.isNotEmpty
-                  ? request.question
-                  : l.setup_beat_title,
-              style: theme.textTheme.titleSmall,
-            ),
-            const SizedBox(height: 8),
-            ...body,
-            if (_error != null) ...[
-              const SizedBox(height: 6),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * 0.4,
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
               Text(
-                _error!,
-                key: const Key('setup-beat-error'),
-                style: TextStyle(color: theme.colorScheme.error),
+                request.question.isNotEmpty
+                    ? request.question
+                    : l.setup_beat_title,
+                style: theme.textTheme.titleSmall,
+              ),
+              const SizedBox(height: 8),
+              ...body,
+              if (_error != null) ...[
+                const SizedBox(height: 6),
+                Text(
+                  _error!,
+                  key: const Key('setup-beat-error'),
+                  style: TextStyle(color: theme.colorScheme.error),
+                ),
+              ],
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: TextButton(
+                  key: const Key('setup-beat-close'),
+                  onPressed: _sending ? null : () => _send(const {}),
+                  child: Text(
+                    request.answerable ? l.ng_not_now : l.ng_continue,
+                  ),
+                ),
               ),
             ],
-            Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: TextButton(
-                key: const Key('setup-beat-close'),
-                onPressed: _sending ? null : () => _send(const {}),
-                child: Text(request.answerable ? l.ng_not_now : l.ng_continue),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

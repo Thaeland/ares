@@ -6337,4 +6337,21 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get catalog_phase_loading_tools => 'Загрузка инструментов…';
+
+  @override
+  String get setup_beat_send_failed =>
+      'Ваш ответ не отправлен. Попробуйте ещё раз.';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count инструмента',
+      many: '$count инструментов',
+      few: '$count инструмента',
+      one: '$count инструмент',
+    );
+    return '$_temp0';
+  }
 }

@@ -4673,6 +4673,23 @@ class _ChatScreenState extends State<ChatScreen>
         textOverride ??
         handsFreePrompt?.transcript ??
         _textController.text.trim();
+    if (_setupBeat != null &&
+        !hiddenIntent &&
+        text.isNotEmpty &&
+        slashCommandName(text) == null) {
+      final yielded = await _yieldSetupBeatToMessage();
+      if (!mounted) return;
+      // The card's turn ends on that answer, so a typed message waits for
+      // it in the held queue and runs as the next turn, never a steer.
+      if (yielded &&
+          _streaming &&
+          textOverride == null &&
+          handsFreePrompt == null &&
+          !_usesNormalInputOwner) {
+        _queueHeldFromComposer();
+        return;
+      }
+    }
     if (_streaming) {
       if (text.isNotEmpty) {
         await _sendWhileWorking(text);
@@ -6665,12 +6682,18 @@ class _ChatScreenState extends State<ChatScreen>
   /// Answers this chat's waiting setup card through whichever owner holds
   /// the request (the stock gateway's chat owner, the recovery session or
   /// the Desktop gateway client). Nothing is sent for a card that is no
-  /// longer open here, or for another chat.
-  Future<bool> _answerSetupBeat(
+  /// longer open here, or for another chat. The card closes only once the
+  /// answer went out: one that did not, while an owner still holds the
+  /// request, keeps the card to be answered again, as on the Desktop.
+  /// [quiet] skips the "no longer waiting" note (a message sent instead).
+  Future<SetupBeatSend> _answerSetupBeat(
     SetupBeatRequest request,
-    Map<String, dynamic> result,
-  ) async {
-    if (!mounted || _setupBeat?.requestId != request.requestId) return false;
+    Map<String, dynamic> result, {
+    bool quiet = false,
+  }) async {
+    if (!mounted || _setupBeat?.requestId != request.requestId) {
+      return SetupBeatSend.closed;
+    }
     final sessionId = widget.session.id;
     final requestId = request.requestId;
     var sent =
@@ -6697,14 +6720,48 @@ class _ChatScreenState extends State<ChatScreen>
           ) ??
           false;
     }
-    if (!mounted || _setupBeat?.requestId != request.requestId) return sent;
-    setState(() => _setupBeat = null);
+    if (!mounted || _setupBeat?.requestId != request.requestId) {
+      return sent ? SetupBeatSend.sent : SetupBeatSend.closed;
+    }
     if (!sent) {
+      final held =
+          (_normalSession?.holdsSetupBeat(
+                sessionId: sessionId,
+                requestId: requestId,
+              ) ??
+              false) ||
+          (turnSession is GatewaySetupBeatResponder &&
+              (turnSession as GatewaySetupBeatResponder).holdsSetupBeat(
+                sessionId: sessionId,
+                requestId: requestId,
+              )) ||
+          (_desktopGateway?.holdsSetupBeat(
+                sessionId: sessionId,
+                requestId: requestId,
+              ) ??
+              false);
+      if (held) return SetupBeatSend.failed;
+    }
+    setState(() => _setupBeat = null);
+    if (!sent && !quiet) {
       ScaffoldMessenger.maybeOf(context)?.showSnackBar(
         SnackBar(content: Text(context.l10n.setup_beat_not_waiting)),
       );
     }
-    return sent;
+    return sent ? SetupBeatSend.sent : SetupBeatSend.closed;
+  }
+
+  /// A message sent while a setup card waits closes the card unanswered
+  /// with `{wrote_instead: true}` before the message goes out: the backend
+  /// ends the card's turn and the message runs as the next one (Desktop's
+  /// yieldSetupBeatToMessage). True when the card closed.
+  Future<bool> _yieldSetupBeatToMessage() async {
+    final card = _setupBeat;
+    if (card == null) return false;
+    return await _answerSetupBeat(card, const {
+          'wrote_instead': true,
+        }, quiet: true) ==
+        SetupBeatSend.sent;
   }
 
   Future<void> _respondToGatewayClarify({

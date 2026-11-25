@@ -10595,6 +10595,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading its tools…'**
   String get catalog_phase_loading_tools;
+
+  /// No description provided for @setup_beat_send_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your answer was not sent. Try again.'**
+  String get setup_beat_send_failed;
+
+  /// No description provided for @catalog_tool_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 tool} other{{count} tools}}'**
+  String catalog_tool_count(int count);
 }
 
 class _AppLocalizationsDelegate

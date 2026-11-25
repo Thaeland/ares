@@ -34,6 +34,8 @@ Map<String, dynamic> _blender({
   String? detail,
   bool? enabled,
   String? phase,
+  bool? resolved,
+  List<String>? tools,
 }) => {
   'name': 'blender',
   'kind': 'plugin',
@@ -50,13 +52,16 @@ Map<String, dynamic> _blender({
   'detail': ?detail,
   'enabled': ?enabled,
   'phase': ?phase,
+  'resolved': ?resolved,
+  'tools': ?tools,
 };
 
-Map<String, dynamic> _pdf({String state = 'pending'}) => {
+Map<String, dynamic> _pdf({String state = 'pending', bool? resolved}) => {
   'name': 'pdf-tools',
   'kind': 'skill',
   'action': 'install',
   'state': state,
+  'resolved': ?resolved,
   'display': 'PDF tools',
   'tier': 'community',
   'target_profile': 'work',
@@ -208,6 +213,10 @@ class _Session extends InertTurnApplicationSession
     required String requestId,
     required Map<String, dynamic> result,
   }) => false;
+
+  @override
+  bool holdsSetupBeat({required String sessionId, required String requestId}) =>
+      false;
 }
 
 Widget _classic(String connectionId, String chatId, _Session session) =>
@@ -553,6 +562,100 @@ void main() {
       await tester.pump();
       expect(find.text('Blender'), findsNothing);
       expect(onY.answers, isEmpty);
+    });
+  });
+
+  // Desktop's CatalogInstallCard offers Continue while any row is unresolved
+  // and the operation open (continueConnectionRequest sends
+  // {settled_by: continue}, catalog.py apply_answer settles it), and an
+  // installed row words how many tools went live.
+  group('Continue and tool count', () {
+    testWidgets('NextGen', (tester) async {
+      final gateway = _Gateway('c1');
+      addTearDown(gateway.dispose);
+      final chat = _ngChat(gateway, 'chat-a');
+      await _pumpNg(tester, gateway, chat);
+      gateway.frame(
+        'rt-chat-a',
+        'connection.request',
+        _frame(1, [_blender(), _pdf()]),
+      );
+      await tester.pump();
+      await tester.pump();
+      await _tapKey(tester, 'catalog-continue');
+      expect(gateway.calls.single.$1, 'connection.respond');
+      expect(gateway.calls.single.$2['result'], {'settled_by': 'continue'});
+      // Held until the host's next frame.
+      expect(
+        tester
+            .widget<TextButton>(find.byKey(const Key('catalog-continue')))
+            .onPressed,
+        isNull,
+      );
+
+      gateway.frame(
+        'rt-chat-a',
+        'connection.update',
+        _frame(2, [
+          _blender(
+            state: 'connected',
+            enabled: true,
+            resolved: true,
+            tools: ['render', 'export', 'import'],
+          ),
+          _pdf(state: 'skipped', resolved: true),
+        ]),
+      );
+      await tester.pump();
+      expect(find.byKey(const Key('catalog-continue')), findsNothing);
+      expect(
+        tester
+            .widget<Text>(find.byKey(const Key('catalog-tools-blender')))
+            .data,
+        '3 tools',
+      );
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('Classic', (tester) async {
+      await tester.binding.setSurfaceSize(const Size(900, 1400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final session = _Session();
+      await tester.pumpWidget(_classic('cx', 'chat-a', session));
+      await pumpChatUpdates(tester);
+      session.frame(
+        'chat-a',
+        'connection.request',
+        _frame(1, [
+          _blender(
+            state: 'connected',
+            enabled: true,
+            resolved: true,
+            tools: ['render'],
+          ),
+          _pdf(),
+        ]),
+      );
+      await tester.pump();
+      expect(
+        tester
+            .widget<Text>(find.byKey(const Key('catalog-tools-blender')))
+            .data,
+        '1 tool',
+      );
+      await _tapKey(tester, 'catalog-continue');
+      await tester.pump();
+      expect(session.answers, ['chat-a|op-1|{"settled_by":"continue"}']);
+      session.frame(
+        'chat-a',
+        'connection.update',
+        _frame(2, [
+          _blender(state: 'connected', enabled: true, resolved: true),
+          _pdf(resolved: false),
+        ], settled: true),
+      );
+      await tester.pump();
+      expect(find.byKey(const Key('catalog-continue')), findsNothing);
     });
   });
 

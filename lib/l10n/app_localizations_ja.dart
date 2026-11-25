@@ -6151,4 +6151,17 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get catalog_phase_loading_tools => 'ツールを読み込み中…';
+
+  @override
+  String get setup_beat_send_failed => '回答を送信できませんでした。もう一度お試しください。';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 個のツール',
+    );
+    return '$_temp0';
+  }
 }

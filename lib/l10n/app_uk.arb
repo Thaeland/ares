@@ -1882,5 +1882,7 @@
   "catalog_installing": "Встановлення…",
   "catalog_phase_downloading": "Завантаження…",
   "catalog_phase_python_packages": "Встановлення пакетів Python…",
-  "catalog_phase_loading_tools": "Завантаження інструментів…"
+  "catalog_phase_loading_tools": "Завантаження інструментів…",
+  "setup_beat_send_failed": "Вашу відповідь не надіслано. Спробуйте ще раз.",
+  "catalog_tool_count": "{count, plural, one{{count} інструмент} few{{count} інструменти} many{{count} інструментів} other{{count} інструмента}}"
 }

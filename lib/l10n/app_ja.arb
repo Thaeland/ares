@@ -1729,5 +1729,7 @@
   "catalog_installing": "インストール中…",
   "catalog_phase_downloading": "ダウンロード中…",
   "catalog_phase_python_packages": "Python パッケージをインストール中…",
-  "catalog_phase_loading_tools": "ツールを読み込み中…"
+  "catalog_phase_loading_tools": "ツールを読み込み中…",
+  "setup_beat_send_failed": "回答を送信できませんでした。もう一度お試しください。",
+  "catalog_tool_count": "{count, plural, other{{count} 個のツール}}"
 }

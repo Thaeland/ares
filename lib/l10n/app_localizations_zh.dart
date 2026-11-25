@@ -6062,6 +6062,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get catalog_phase_loading_tools => '正在加载工具…';
+
+  @override
+  String get setup_beat_send_failed => '你的回答未发送，请重试。';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个工具',
+    );
+    return '$_temp0';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -11892,4 +11905,17 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get catalog_phase_loading_tools => '正在加载工具…';
+
+  @override
+  String get setup_beat_send_failed => '你的回答未发送，请重试。';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个工具',
+    );
+    return '$_temp0';
+  }
 }

@@ -1,6 +1,7 @@
 // The setup_beat card in Classic and NextGen: drawn only in the chat whose
 // request it is, answered through that chat's server-request reply, closed
 // with {} like the Desktop, and never answered once withdrawn or stale.
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:hermes_android/core/screens/chat_screen.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/desktop_gateway_client.dart';
 import 'package:hermes_android/core/services/gateway_turn_application_controller.dart';
+import 'package:hermes_android/core/services/gateway_turn_coordinator.dart';
+import 'package:hermes_android/core/services/gateway_turn_recovery.dart';
 import 'package:hermes_android/core/services/hermes_sign_in.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
@@ -28,6 +31,7 @@ import 'support/pump_chat_updates.dart';
 
 const _question = 'Pick a first build';
 const _notWaiting = 'This setup card is no longer waiting for an answer.';
+const _notSent = 'Your answer was not sent. Try again.';
 
 Map<String, dynamic> _buildCard(String runtime) => {
   'session_id': runtime,
@@ -124,25 +128,56 @@ class _SetupSession extends InertTurnApplicationSession
   final open = <String, Set<String>>{};
   final answers = <String>[];
 
+  /// Answers and prompt submissions, in the order they left.
+  final log = <String>[];
+
+  /// The socket is down: a card stays held but no answer goes out.
+  var offline = false;
+
+  /// Re-delivers the cards still open for a chat when its screen listens
+  /// again, as GatewayTurnApplicationController does on a reopened route.
+  var replayOnListen = false;
+  final _raised = <String, StreamEvent>{};
+
   @override
   Object setAsyncEventListener(
     String localSessionId,
     DesktopAsyncEventCallback listener,
   ) {
     listeners[localSessionId] = listener;
+    if (replayOnListen) {
+      for (final id in open[localSessionId] ?? const <String>{}) {
+        final event = _raised[id];
+        if (event != null) listener(localSessionId, event);
+      }
+    }
     return Object();
   }
 
   void raise(String chat, String requestId, Map<String, dynamic> params) {
     (open[chat] ??= {}).add(requestId);
-    listeners[chat]?.call(
-      chat,
-      StreamEvent(
-        type: 'setup_beat.request',
-        data: {...params, 'request_id': requestId},
-      ),
+    final event = StreamEvent(
+      type: 'setup_beat.request',
+      data: {...params, 'request_id': requestId},
     );
+    _raised[requestId] = event;
+    listeners[chat]?.call(chat, event);
   }
+
+  @override
+  Future<GatewayTurnRecoveryState> submit({
+    required String localSessionId,
+    required String text,
+    List<GatewayTurnAttachmentReceipt> attachments = const [],
+    GatewayTurnStateCallback? onState,
+  }) {
+    log.add('submit:$localSessionId|$text');
+    return Completer<GatewayTurnRecoveryState>().future;
+  }
+
+  @override
+  bool holdsSetupBeat({required String sessionId, required String requestId}) =>
+      open[sessionId]?.contains(requestId) ?? false;
 
   void withdraw(String chat, String requestId) {
     open[chat]?.remove(requestId);
@@ -168,9 +203,28 @@ class _SetupSession extends InertTurnApplicationSession
     required String requestId,
     required Map<String, dynamic> result,
   }) {
+    if (offline) return false;
     if (!(open[sessionId]?.remove(requestId) ?? false)) return false;
     answers.add('$sessionId|$requestId|${jsonEncode(result)}');
+    log.add('answer:$sessionId|$requestId|${jsonEncode(result)}');
     return true;
+  }
+}
+
+/// A NextGen gateway that records calls and accepts every prompt.
+class _CallsGateway extends NextGenGateway {
+  _CallsGateway(String id) : super(_ngConnection(id));
+
+  final calls = <(String, Map<String, dynamic>)>[];
+
+  @override
+  Future<Map<String, dynamic>> call(
+    String method,
+    Map<String, dynamic> params, {
+    Duration timeout = const Duration(seconds: 30),
+  }) async {
+    calls.add((method, params));
+    return {'status': 'queued'};
   }
 }
 
@@ -364,6 +418,101 @@ void main() {
       ]);
       await tester.pumpWidget(const SizedBox());
     });
+
+    // Desktop's setup-beat store clears a card only once its answer is sent,
+    // so a failed send leaves it on screen to answer again.
+    testWidgets('a failed send keeps the card to answer again', (tester) async {
+      final gateway = NextGenGateway(_ngConnection('c1'));
+      addTearDown(gateway.dispose);
+      final chat = _ngChat(gateway, 'chat-a');
+      final answers = <Map<String, dynamic>>[];
+      var online = false;
+      await _pumpNg(tester, gateway, chat);
+      gateway.debugRequest(
+        GatewayServerRequest.forTesting(
+          id: 'sb-f',
+          method: 'setup_beat',
+          params: _buildCard('rt-chat-a'),
+          respond: (result) {
+            if (!online) return false;
+            answers.add(result);
+            return true;
+          },
+        ),
+      );
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('setup-beat-option-site')));
+      await tester.pump();
+      expect(answers, isEmpty);
+      expect(find.text(_question), findsOneWidget);
+      expect(find.text(_notSent), findsOneWidget);
+
+      online = true;
+      await tester.tap(find.byKey(const Key('setup-beat-option-site')));
+      await tester.pump();
+      expect(answers, [
+        {
+          'answer': {'build': 'site', 'label': 'A website'},
+        },
+      ]);
+      expect(find.text(_question), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    // Desktop's yieldSetupBeatToMessage: a message sent while the card waits
+    // closes it with {wrote_instead: true}; the backend ends the card's turn
+    // and the message runs as the next turn, never a steer.
+    testWidgets('a message sent while the card waits closes it', (
+      tester,
+    ) async {
+      final gateway = _CallsGateway('c1');
+      addTearDown(gateway.dispose);
+      final chat = _ngChat(gateway, 'chat-a');
+      final answers = <Map<String, dynamic>>[];
+      await _pumpNg(tester, gateway, chat);
+      gateway.debugEmit(
+        StreamEvent(
+          type: 'message.start',
+          data: const {},
+          sessionId: 'rt-chat-a',
+        ),
+      );
+      _raise(gateway, 'sb-w', _buildCard('rt-chat-a'), answers);
+      await tester.pump();
+      expect(find.text(_question), findsOneWidget);
+      await tester.enterText(
+        find.byKey(const ValueKey('ng-composer-field')),
+        'Actually, help me with my CV',
+      );
+      await tester.pump();
+      await tester.tap(find.byTooltip('Send'));
+      await tester.pump();
+      await tester.pump();
+      expect(answers, [
+        {'wrote_instead': true},
+      ]);
+      expect(find.text(_question), findsNothing);
+      expect(gateway.calls.map((call) => call.$1), isNot(contains('steer')));
+      expect(chat.queued.single.text, 'Actually, help me with my CV');
+
+      gateway.debugEmit(
+        StreamEvent(
+          type: 'message.complete',
+          data: const {},
+          sessionId: 'rt-chat-a',
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      expect(
+        gateway.calls
+            .where((call) => call.$1 == 'prompt.submit')
+            .single
+            .$2['text'],
+        'Actually, help me with my CV',
+      );
+      await tester.pumpWidget(const SizedBox());
+    });
   });
 
   group('Classic', () {
@@ -467,6 +616,73 @@ void main() {
       await tester.tap(find.byKey(const Key('setup-beat-close')));
       await tester.pump();
       expect(session.answers, ['chat-a|k3|{}']);
+    });
+
+    testWidgets('a failed send keeps the card to answer again', (tester) async {
+      final session = _SetupSession();
+      await show(tester, _classic('cx', 'chat-a', session));
+      session.raise('chat-a', 'k4', _buildCard('runtime-a'));
+      await tester.pump();
+      session.offline = true;
+      await tester.tap(find.byKey(const Key('setup-beat-option-site')));
+      await tester.pump();
+      expect(session.answers, isEmpty);
+      expect(find.text(_question), findsOneWidget);
+      expect(find.text(_notSent), findsOneWidget);
+      expect(find.text(_notWaiting), findsNothing);
+
+      session.offline = false;
+      await tester.tap(find.byKey(const Key('setup-beat-option-site')));
+      await tester.pump();
+      expect(session.answers, [
+        'chat-a|k4|{"answer":{"build":"site","label":"A website"}}',
+      ]);
+      expect(find.text(_question), findsNothing);
+    });
+
+    // Desktop re-delivers a session's open requests when it is resumed; a
+    // card still waiting comes back when its chat is opened again.
+    testWidgets('an open card returns when the chat is reopened', (
+      tester,
+    ) async {
+      final session = _SetupSession()..replayOnListen = true;
+      await show(tester, _classic('cx', 'chat-a', session));
+      session.raise('chat-a', 'k5', _buildCard('runtime-a'));
+      await tester.pump();
+      expect(find.text(_question), findsOneWidget);
+      await show(tester, _classic('cx', 'chat-b', session));
+      expect(find.text(_question), findsNothing);
+      await show(tester, _classic('cx', 'chat-a', session));
+      expect(find.text(_question), findsOneWidget);
+      await tester.tap(find.byKey(const Key('setup-beat-option-own')));
+      await tester.pump();
+      expect(session.answers, [
+        'chat-a|k5|{"answer":{"build":"own","label":"Something else"}}',
+      ]);
+    });
+
+    testWidgets('a message sent while the card waits closes it first', (
+      tester,
+    ) async {
+      final session = _SetupSession();
+      await show(tester, _classic('cx', 'chat-a', session));
+      session.raise('chat-a', 'k6', _buildCard('runtime-a'));
+      await tester.pump();
+      expect(find.text(_question), findsOneWidget);
+      await tester.enterText(
+        find.byKey(const Key('chat-message-composer')),
+        'Actually, help me with my CV',
+      );
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('chat-send-message')));
+      await tester.pump();
+      await tester.pump();
+      expect(session.log, [
+        'answer:chat-a|k6|{"wrote_instead":true}',
+        'submit:chat-a|Actually, help me with my CV',
+      ]);
+      expect(find.text(_question), findsNothing);
+      expect(find.text(_notWaiting), findsNothing);
     });
   });
 }
