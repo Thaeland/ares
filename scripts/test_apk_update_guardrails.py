@@ -71,7 +71,8 @@ class ApkUpdateGuardrailsTest(unittest.TestCase):
         self.assertIsNotNone(provider)
         self.assertEqual(provider.get(tools), "remove")
         gradle = (ROOT / "android/app/build.gradle.kts").read_text()
-        self.assertIn('System.getenv("ARES_PLAY_BUILD") == "true"', gradle)
+        self.assertIn('providers.environmentVariable("ARES_PLAY_BUILD")', gradle)
+        self.assertIn('require(playBuild == dartFlag("ARES_PLAY_BUILD"))', gradle)
         self.assertIn('sourceSets.getByName("release").manifest.srcFile("src/play/AndroidManifest.xml")', gradle)
         activity = (
             ROOT / "android/app/src/main/kotlin/com/hermesagent/hermes_android/MainActivity.kt"

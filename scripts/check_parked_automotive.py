@@ -10,8 +10,10 @@ import xml.etree.ElementTree as ET
 
 
 A = '{http://schemas.android.com/apk/res/android}'
-PACKAGE = 'com.hermesagent.hermes_android.automotive.preview'
-ACTIVITY = 'com.hermesagent.hermes_android.MainActivity'
+PLAY_PACKAGE = 'com.hermesagent.hermes_android'
+PREVIEW_PACKAGE = PLAY_PACKAGE + '.automotive.preview'
+ACTIVITY = PLAY_PACKAGE + '.MainActivity'
+CAR_FEATURE = 'android.hardware.type.automotive'
 
 
 def require(ok, message):
@@ -19,21 +21,31 @@ def require(ok, message):
         raise ValueError(message)
 
 
-def check_manifest(root):
-    require(root.get('package') == PACKAGE, 'not the private Automotive preview package')
-    car = root.find(f"uses-feature[@{A}name='android.hardware.type.automotive']")
-    require(car is not None and car.get(A + 'required') == 'true', 'AAOS must be required')
+def check_manifest(root, *, play=False):
+    package = PLAY_PACKAGE if play else PREVIEW_PACKAGE
+    require(root.get('package') == package, f'expected Automotive package {package}')
+    car = root.findall(f"uses-feature[@{A}name='{CAR_FEATURE}']")
+    require(len(car) == 1 and car[0].get(A + 'required') == 'true', 'AAOS must be required')
+    sdk = root.find('uses-sdk')
+    require(sdk is not None and sdk.get(A + 'minSdkVersion') == '33', 'AAOS must require API 33')
+    app = root.find('application')
+    label = 'Ares' if play else 'Ares Parked'
+    require(app is not None and app.get(A + 'label') == label, f'expected label {label}')
+    require(A + 'appCategory' not in app.attrib, 'no claimed parked app category')
     for elt in root.iter():
         name = elt.get(A + 'name', '')
         require(name not in {
             'android.permission.RECORD_AUDIO', 'android.permission.POST_NOTIFICATIONS',
-            'android.permission.REQUEST_INSTALL_PACKAGES', 'com.google.android.gms.car.application',
-            'com.google.android.gms.car.notification.SmallIcon', 'distractionOptimized',
+            'android.permission.REQUEST_INSTALL_PACKAGES', 'com.android.automotive', 'distractionOptimized',
+            'android.media.browse.MediaBrowserService',
             'android.intent.category.CAR_LAUNCHER', 'androidx.car.app.CarAppService',
-        }, f'unexpected manifest entry: {name}')
+        } and not name.startswith(('com.google.android.gms.car.', 'androidx.car.app.category.')),
+            f'unexpected manifest entry: {name}')
         require(not name.endswith('.AutoMessageReceiver'), 'phone reply receiver present')
-        require(elt.get(A + 'authorities') != PACKAGE + '.update_provider', 'APK updater present')
-    activity = root.find(f"./application/activity[@{A}name='{ACTIVITY}']")
+        require(not any(a.endswith('.update_provider') for a in elt.get(A + 'authorities', '').split(';')),
+                'APK updater present')
+    activity = next((item for item in app.findall('activity') if item.get(A + 'name') in
+                     (ACTIVITY, '.MainActivity' if play else ACTIVITY)), None)
     if activity is None or activity.get(A + 'exported') != 'true':
         raise ValueError('no Ares activity')
     require(any(f.find(f"action[@{A}name='android.intent.action.MAIN']") is not None
@@ -55,7 +67,7 @@ def until(description, predicate):
     raise RuntimeError('timed out: ' + description)
 
 
-def smoke(serial, adb):
+def smoke(serial, adb, package):
     require(re.fullmatch(r'emulator-\d+', serial), 'only use a dedicated AAOS emulator')
 
     def shell(*args):
@@ -73,19 +85,22 @@ def smoke(serial, adb):
 
     def launch():
         shell('am', 'start', '--user', 'current', '-a', 'android.intent.action.MAIN',
-              '-c', 'android.intent.category.LAUNCHER', '-n', PACKAGE + '/' + ACTIVITY)
+              '-c', 'android.intent.category.LAUNCHER', '-n', package + '/' + ACTIVITY)
+
+    def resumed():
+        return package + '/' in driver_activities()
 
     def blocked():
         resumed = driver_activities()
-        return 'BlockingActivity' in resumed and PACKAGE not in resumed
+        return 'BlockingActivity' in resumed and package + '/' not in resumed
 
     require(shell('getprop', 'ro.kernel.qemu') == '1', 'not an emulator')
     require('feature:android.hardware.type.automotive' in shell('pm', 'list', 'features').splitlines(),
             'not Automotive OS')
-    require('package:' in shell('pm', 'path', '--user', 'current', PACKAGE), 'install the APK first')
+    require('package:' in shell('pm', 'path', '--user', 'current', package), 'install the APK first')
     require('baseline' in restrictions(), 'start the test parked')
     launch()
-    until('Ares resumed on the parked driver display', lambda: PACKAGE in driver_activities())
+    until('Ares resumed on the parked driver display', resumed)
     try:
         shell('cmd', 'car_service', 'emulate-driving-state', 'drive')
         until('driver display restricts text', lambda: 'no_text_message' in restrictions())
@@ -96,19 +111,20 @@ def smoke(serial, adb):
         shell('cmd', 'car_service', 'emulate-driving-state', 'park')
         until('park restored', lambda: 'baseline' in restrictions())
     launch()
-    until('Ares resumed again after parking', lambda: PACKAGE in driver_activities())
+    until('Ares resumed again after parking', resumed)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('manifest', type=Path, help='XML from apkanalyzer manifest print <apk>')
+    parser.add_argument('--automotive-play', action='store_true', help='expect the Play package instead of the preview')
     parser.add_argument('--emulator', help='opt in to the driving-state test on this AVD')
     parser.add_argument('--adb', default='adb')
     args = parser.parse_args()
-    check_manifest(ET.parse(args.manifest).getroot())
+    check_manifest(ET.parse(args.manifest).getroot(), play=args.automotive_play)
     print('PASS: parked Automotive manifest', flush=True)
     if args.emulator:
-        smoke(args.emulator, args.adb)
+        smoke(args.emulator, args.adb, PLAY_PACKAGE if args.automotive_play else PREVIEW_PACKAGE)
 
 
 if __name__ == '__main__':

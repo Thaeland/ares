@@ -18,7 +18,28 @@ adb -s "$SERIAL" install -r "$APK"
 
 Choose **Ares Parked** in the vehicle launcher. Enter your gateway address and sign in as usual. `localhost` on the car is not your phone or workstation. Use the gateway's reachable HTTPS address. For a local emulator test only, `adb -s "$SERIAL" reverse tcp:18642 tcp:18642` connects the emulator's `127.0.0.1:18642` to a loopback test service on the workstation.
 
-The preview uses the ordinary Android launcher activity with **no** `distractionOptimized` exemption. AAOS decides when it obscures that activity; do not turn off vehicle UX restrictions. The preview is text-first: no microphone, read-aloud, audio/video playback, notification permission, phone car-reply receiver or GitHub APK installer. Storage and updates are isolated under `com.hermesagent.hermes_android.automotive.preview`; this is a debug build for testing, not a release for personal credentials on a production dashboard. Without the flag the phone build and its application ID remain unchanged. Release/profile variants and Play builds are intentionally unavailable with the preview flag.
+The preview uses the ordinary Android launcher activity with **no** `distractionOptimized` exemption. AAOS decides when it obscures that activity; do not turn off vehicle UX restrictions. The preview is text-first: no microphone, read-aloud, audio/video playback, notification permission, phone car-reply receiver or GitHub APK installer. Storage and updates are isolated under `com.hermesagent.hermes_android.automotive.preview`; this is a debug build for testing, not a release for personal credentials on a production dashboard. Without the flag the phone build and its application ID remain unchanged. The parked flag alone enables only the debug variant. The separate, explicitly selected Play build below uses the same parked restrictions.
+
+## Build for the existing Play listing
+
+The phone and Automotive bundles both use `com.hermesagent.hermes_android`. Only the car bundle requires `android.hardware.type.automotive` and API 33+. The car uses `1_000_000_000 + pubspec base versionCode` so the two bundles can coexist. Keep the base code unique for every new Automotive upload, even for a car-only fix. Don't use `--split-per-abi` or a version override. The ordinary phone release and the private preview keep their existing IDs and codes.
+
+The manual workflow builds, signs and verifies an AAB; it does **not** create a Play track, upload to Play, publish a GitHub release or change the phone rollout:
+
+```sh
+gh workflow run release.yml --ref <reviewed-branch> -f automotive_only=true
+```
+
+For a local build and inspection:
+
+```sh
+ARES_PLAY_BUILD=true flutter build appbundle --release --no-pub \
+  --dart-define=ARES_PLAY_BUILD=true --dart-define=ARES_PARKED_AUTOMOTIVE=true
+python3 scripts/verify_play_bundle.py --automotive \
+  --bundle build/app/outputs/bundle/release/app-release.aab --bundletool "$BUNDLETOOL_JAR"
+```
+
+Use `--allow-unsigned` only for local packaging QA. The signed gate verifies the packaged base manifest, version code and upload certificate. This file belongs **only** on `automotive:production` (or an explicitly intended Automotive testing track), never on mobile `production`. Before submission, confirm Automotive eligibility for Ares and enable the form factor on the existing listing, select the dedicated track, and verify there is no unrelated pending review that would be restarted. Selecting a build mode is not Google approval.
 
 ## Verify it on a dedicated AAOS emulator
 
