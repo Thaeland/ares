@@ -18,8 +18,9 @@ void main() {
   final c = fixtureApprovalConnection('c-beta');
   late WindowsToastSink sink;
   Map posted = {};
-  String? initial;
+  String? initial, delivery;
   var focuses = 0, denied = false;
+  final cancelled = <int>[];
   late SharedPreferences prefs;
   setUp(() async {
     debugDefaultTargetPlatformOverride = TargetPlatform.windows;
@@ -29,8 +30,10 @@ void main() {
     notificationPrefs.value = NotificationPrefs.defaults;
     posted = {};
     initial = null;
+    delivery = null;
     focuses = 0;
     denied = false;
+    cancelled.clear();
     messenger.setMockMethodCallHandler(WindowsToastSink.channel, (m) async {
       switch (m.method) {
         case 'listen':
@@ -40,6 +43,9 @@ void main() {
         case 'show':
           posted = m.arguments as Map;
           if (denied) throw PlatformException(code: 'windows_toast');
+          return delivery;
+        case 'cancel':
+          cancelled.add(m.arguments as int);
         case 'focus':
           focuses++;
       }
@@ -214,6 +220,27 @@ void main() {
       initial = posted['ticket'];
       expect(await sink.takeInitialLaunchResponse(), isNull);
       expect(focuses, 0);
+    },
+  );
+  test(
+    'a toast Windows accepted but will not display is withdrawn; an unknown setting stays live',
+    () async {
+      delivery = 'blocked';
+      await expectLater(show(id: 31), throwsStateError);
+      final blocked = posted['ticket'] as String;
+      // The runner may already have the toast: take it down by its own id.
+      expect(cancelled, [31]);
+      initial = blocked;
+      expect(await sink.takeInitialLaunchResponse(), isNull);
+
+      delivery = 'unknown';
+      initial = await show(id: 32);
+      expect(cancelled, [31]);
+      final response =
+          await WindowsToastSink().takeInitialLaunchResponse()
+              as WindowsToastResponse;
+      expect(response.target.sessionId, 'session-beta');
+      expect(focuses, 1);
     },
   );
   test(
