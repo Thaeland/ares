@@ -23,31 +23,46 @@ String readingPositionKey(
 Widget transcriptShortcuts(
   GlobalKey<TranscriptReaderState> key,
   Widget child,
-) => CallbackShortcuts(
-  bindings: {
-    for (final meta in [true, false]) ...{
-      SingleActivator(
-        LogicalKeyboardKey.keyF,
-        meta: meta,
-        control: !meta,
-      ): () =>
-          key.currentState?.open(),
-      SingleActivator(
-        LogicalKeyboardKey.keyG,
-        meta: meta,
-        control: !meta,
-      ): () =>
-          key.currentState?.step(1),
-      SingleActivator(
-        LogicalKeyboardKey.keyG,
-        meta: meta,
-        control: !meta,
-        shift: true,
-      ): () =>
-          key.currentState?.step(-1),
-    },
+) => Focus(
+  // A full-chat semantic focus node would absorb standalone controls such as
+  // Classic’s Go to end into a viewport-sized tap target for screen readers.
+  includeSemantics: false,
+  skipTraversal: true,
+  autofocus: true,
+  onKeyEvent: (node, event) {
+    final bindings = <ShortcutActivator, VoidCallback>{
+      for (final meta in [true, false]) ...{
+        SingleActivator(
+          LogicalKeyboardKey.keyF,
+          meta: meta,
+          control: !meta,
+        ): () =>
+            key.currentState?.open(),
+        SingleActivator(
+          LogicalKeyboardKey.keyG,
+          meta: meta,
+          control: !meta,
+        ): () =>
+            key.currentState?.step(1),
+        SingleActivator(
+          LogicalKeyboardKey.keyG,
+          meta: meta,
+          control: !meta,
+          shift: true,
+        ): () =>
+            key.currentState?.step(-1),
+      },
+    };
+    for (final entry in bindings.entries) {
+      if (entry.key.accepts(event, HardwareKeyboard.instance) &&
+          key.currentState != null) {
+        entry.value();
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
   },
-  child: Focus(autofocus: true, skipTraversal: true, child: child),
+  child: child,
 );
 
 class TranscriptReader extends StatefulWidget {
@@ -140,8 +155,9 @@ class TranscriptReaderState extends State<TranscriptReader> {
   void rememberLatest() {
     ++_generation;
     final key = _scope;
-    if (key != null && _prefs != null)
+    if (key != null && _prefs != null) {
       unawaited(_prefs!.remove(key).catchError((Object _) => false));
+    }
   }
 
   void _latest() {

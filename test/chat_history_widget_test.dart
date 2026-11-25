@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/l10n/l10n.dart';
 import 'package:hermes_android/core/screens/chat_screen.dart';
@@ -161,7 +162,14 @@ void main() {
       ]);
       await tester.pumpWidget(_chat(client));
       await pumpChatUpdates(tester);
-      await tester.tap(find.byTooltip('Find in transcript'));
+      if (width > 1000) {
+        await tester.tap(find.byType(TextField).last);
+        await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+        await tester.sendKeyEvent(LogicalKeyboardKey.keyF);
+        await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+      } else {
+        await tester.tap(find.byTooltip('Find in transcript'));
+      }
       await tester.pumpAndSettle();
       await tester.enterText(
         find.byKey(const Key('transcript-query')),
