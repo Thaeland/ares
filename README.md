@@ -899,7 +899,7 @@ centrally and are **not** performed here.
 
 Ares runs on Windows 10 (1809 or later) and Windows 11, x64, from the same
 Dart sources as the Android, iOS and macOS apps. The app is `ares.exe`,
-version `4.0.13`, packaged as an MSIX.
+version `4.0.15`, packaged as an MSIX.
 
 What is specific to Windows:
 
@@ -982,7 +982,7 @@ Pass them on the command line to both commands:
 --store --identity-name <Package/Identity/Name> `
   --publisher <Package/Identity/Publisher> `
   --publisher-display-name <PublisherDisplayName> `
-  --display-name "<reserved product name>" --version 4.0.13.0
+  --display-name "<reserved product name>" --version 4.0.15.0
 ```
 
 Between `msix:build` and `msix:pack`, edit `Release\AppxManifest.xml`:
