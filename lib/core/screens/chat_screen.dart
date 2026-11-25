@@ -49,6 +49,7 @@ import '../services/gateway_turn_recovery.dart';
 import '../services/gateway_turn_ui_projection.dart';
 import '../services/remote_files_client.dart';
 import '../preview/chat_preview.dart';
+import '../render/rich_transcript.dart';
 import '../services/slash_command_errors.dart';
 import '../services/legal_links.dart';
 import '../services/turn_notification_service.dart';
@@ -4515,6 +4516,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     VoidCallback? onAccepted,
     HandsFreePrompt? handsFreePrompt,
     _HandsFreeTurnBinding? voiceBinding,
+    bool hiddenIntent = false,
   }) async {
     final keepComposer = textOverride != null || voiceBinding != null;
     if (textOverride == null &&
@@ -4663,6 +4665,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       voiceBinding: voiceBinding,
       preserveComposer: keepComposer,
       onAccepted: onAccepted,
+      hiddenIntent: hiddenIntent,
     );
   }
 
@@ -5022,6 +5025,29 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
   }
 
+  Future<String?> _readWidgetHtml(String path) async {
+    final client = _newMediaFilesClient();
+    try {
+      final preview = await client.readText(path);
+      if (preview.binary) return null;
+      return preview.text;
+    } catch (_) {
+      return null;
+    } finally {
+      if (client is RemoteFilesClient) client.close();
+    }
+  }
+
+  Future<void> _deliverWidgetIntent(String prompt) async {
+    if (_sending ||
+        _streaming ||
+        _preparingSend ||
+        _voiceComposer.listening) {
+      throw StateError('undelivered');
+    }
+    await _sendMessage(textOverride: prompt, hiddenIntent: true);
+  }
+
   Future<void> _submitMessage({
     required String text,
     required List<AttachmentDraft> attachments,
@@ -5029,6 +5055,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _HandsFreeTurnBinding? voiceBinding,
     bool preserveComposer = false,
     VoidCallback? onAccepted,
+    bool hiddenIntent = false,
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     // A remote-gateway profile uses one transport for every prompt. Images and
@@ -5117,6 +5144,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           message: text,
           imageDataUrl: imageDataUrl,
         ),
+        if (hiddenIntent) 'display_kind': 'hidden',
       });
       // Insert a placeholder streaming message
       _messages.add({
@@ -5609,6 +5637,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         AndroidPromptContext.localUserTextKey: true,
         ChatMessageTime.observedAtKey: DateTime.now().millisecondsSinceEpoch,
         ChatMessageTime.sourceKey: 'sent',
+        if (hiddenIntent) 'display_kind': 'hidden',
       });
       _messages.add({
         'role': 'assistant',
@@ -7662,6 +7691,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                   : _composerFormatRow(context),
                             ),
                           if (!keyboardOpen) const SizedBox(height: 4),
+                          ComposerRenderExtras(
+                            sessionId: widget.session.id,
+                            controller: _textController,
+                          ),
                           ConstrainedBox(
                             constraints: BoxConstraints(
                               maxHeight: (availableHeight * 0.30).clamp(
@@ -8091,6 +8124,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         mediaReferencesFinal: message['_gateway_pending_response'] != true,
         mediaSourceIdentity: sourceIdentity,
         mediaFilesClient: isUser ? null : filesClient,
+        sessionId: sessionId,
+        readWidgetHtml: _readWidgetHtml,
+        onWidgetIntent: _deliverWidgetIntent,
       );
     }
 
@@ -8315,6 +8351,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       mediaReferencesFinal: msg['_gateway_pending_response'] != true,
       mediaSourceIdentity: (widget.connection, _storedSessionKey, source),
       mediaFilesClient: isUser ? null : _newMediaFilesClient,
+      sessionId: widget.session.id,
+      readWidgetHtml: _readWidgetHtml,
+      onWidgetIntent: _deliverWidgetIntent,
       onReadAloud: isUser
           ? null
           : () => _readAssistantText(content, announce: true),
@@ -8676,6 +8715,9 @@ class MessageBubble extends StatelessWidget {
   /// the phone would be worse than a dead link).
   final RemoteFilesDataSource Function()? mediaFilesClient;
   final Object? mediaSourceIdentity;
+  final String sessionId;
+  final Future<String?> Function(String path)? readWidgetHtml;
+  final Future<void> Function(String prompt)? onWidgetIntent;
 
   const MessageBubble({
     super.key,
@@ -8693,6 +8735,9 @@ class MessageBubble extends StatelessWidget {
     this.mediaSourceIdentity,
     this.mediaReferencesFinal = true,
     this.showQuickActions = false,
+    this.sessionId = '',
+    this.readWidgetHtml,
+    this.onWidgetIntent,
   });
 
   Future<void> _copyMessage(BuildContext context) async {
@@ -8937,12 +8982,18 @@ class MessageBubble extends StatelessWidget {
     final mediaOccurrences = <String, int>{};
 
     List<Widget> renderProse(String text) {
-      if (!parseMedia) return [prose(text)];
+      List<Widget> rich(String chunk) => richProseWidgets(
+        text: chunk,
+        markdown: prose,
+        readHtml: readWidgetHtml,
+        onIntent: onWidgetIntent,
+      );
+      if (!parseMedia) return rich(text);
       final segments = splitMediaTags(text, isFinal: mediaReferencesFinal);
       if (!segments.any((s) => s.isMedia)) {
-        return [
-          prose(inlineMediaTagsAsLinks(text, isFinal: mediaReferencesFinal)),
-        ];
+        return rich(
+          inlineMediaTagsAsLinks(text, isFinal: mediaReferencesFinal),
+        );
       }
       final widgets = <Widget>[];
       for (final segment in segments) {
@@ -8965,8 +9016,8 @@ class MessageBubble extends StatelessWidget {
           );
         } else if (segment.text.trim().isNotEmpty) {
           // Inline refs (mid-line) become markdown links in place.
-          widgets.add(
-            prose(
+          widgets.addAll(
+            rich(
               inlineMediaTagsAsLinks(
                 segment.text,
                 isFinal: mediaReferencesFinal,
@@ -8981,7 +9032,14 @@ class MessageBubble extends StatelessWidget {
     return [
       for (final block in blocks)
         if (block is MarkdownCodeBlock)
-          block
+          RichFence(
+            language: block.language,
+            code: block.code,
+            corpus: content,
+            fallback: block,
+            readHtml: readWidgetHtml,
+            onIntent: onWidgetIntent,
+          )
         else
           ...renderProse(block as String),
       if (filesClient != null)
@@ -9316,11 +9374,8 @@ class MessageBubble extends StatelessWidget {
                 ),
               ),
             ],
-            // Message content: assistant `MEDIA:` refs become file cards;
-            // prose renders as markdown and fenced code blocks render with
-            // language, copy, and wrap controls. User bubbles never parse
-            // MEDIA: — the contract is assistant-side delivery, and quoted
-            // tags in a prompt must stay verbatim.
+            if (!isUser && mediaReferencesFinal)
+              PreviewOfferHook(sessionId: sessionId, text: content),
             ..._renderContent(context, tokens, isUser, assistantTextColor),
             if (messageTime != null)
               Padding(

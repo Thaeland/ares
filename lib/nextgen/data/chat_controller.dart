@@ -2379,21 +2379,25 @@ class NgChatController extends ChangeNotifier {
     List<AttachmentDraft> attachments = const [],
     String? submissionId,
     String? display,
+    bool hidden = false,
   }) async {
     final trimmed = text.trim();
     if (trimmed.isEmpty && attachments.isEmpty) return false;
+    if (hidden && attachments.isNotEmpty) return false;
     final shown = display?.trim() ?? '';
     final effectiveSubmissionId = submissionId ?? const Uuid().v4();
-    final item = NgUserItem(
-      _key('u'),
-      shown.isEmpty ? trimmed : shown,
-      time: DateTime.now(),
-      pending: true,
-      attachments: List.of(attachments),
-      submissionId: effectiveSubmissionId,
-      sentText: shown.isEmpty ? null : trimmed,
-    );
-    items.add(item);
+    final NgUserItem? item = hidden
+        ? null
+        : NgUserItem(
+            _key('u'),
+            shown.isEmpty ? trimmed : shown,
+            time: DateTime.now(),
+            pending: true,
+            attachments: List.of(attachments),
+            submissionId: effectiveSubmissionId,
+            sentText: shown.isEmpty ? null : trimmed,
+          );
+    if (item != null) items.add(item);
     error = null;
     running = true;
     turnStartedAt = DateTime.now();
@@ -2403,13 +2407,13 @@ class NgChatController extends ChangeNotifier {
       await _ensureSession();
       final refs = <String>[];
       try {
-        for (final draft in item.attachments) {
+        for (final draft in item?.attachments ?? const <AttachmentDraft>[]) {
           final ref = draft.refText ?? await _upload(draft, queued);
           if (ref != null) refs.add(ref);
         }
       } catch (_) {
         await _detach(queued);
-        _resetQueuedImages(item.attachments);
+        _resetQueuedImages(item?.attachments ?? const []);
         rethrow;
       }
       // Like Desktop and Kyllene: the file references first, then the text.
@@ -2422,19 +2426,25 @@ class NgChatController extends ChangeNotifier {
         'session_id': runtimeId,
         'text': prompt,
       }, submissionId: effectiveSubmissionId);
-      item.pending = false;
+      item?.pending = false;
       // A canonical receipt names the execution its admission started.
       _adoptExecutionGeneration(result['execution_generation']);
       final status = result['status']?.toString();
-      if (status == 'queued' && item.sentText == null) item.text = trimmed;
+      if (item != null && status == 'queued' && item.sentText == null) {
+        item.text = trimmed;
+      }
       _changed();
-      if (item.attachments.isNotEmpty) {
+      if (item != null && item.attachments.isNotEmpty) {
         unawaited(attachmentService.removeAll(item.attachments));
       }
       return true;
     } catch (e) {
-      item.pending = false;
-      item.failure = _clean(e);
+      if (item != null) {
+        item.pending = false;
+        item.failure = _clean(e);
+      } else {
+        error = _clean(e);
+      }
       running = false;
       turnStartedAt = null;
       _changed();

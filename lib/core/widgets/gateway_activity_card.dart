@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/gateway_activity.dart';
 import '../l10n/l10n.dart';
+import '../render/rich_transcript.dart';
 import '../theme/hermes_theme.dart';
 import 'hermes_components.dart';
 
@@ -298,6 +299,16 @@ class _GatewayActivityRow extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
+                  if (activity.name == 'vision_analyze' ||
+                      activity.name == 'image_generate')
+                    InspectedImageTile(source: activity.detail ?? ''),
+                  if (activity.name == 'setup_beat' ||
+                      activity.name == 'catalog_install')
+                    InteractiveToolCard(
+                      toolName: activity.name,
+                      callId: activity.identity,
+                      output: activity.detail ?? '',
+                    ),
                 ],
               ),
             ),

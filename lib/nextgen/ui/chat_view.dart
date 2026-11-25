@@ -13,6 +13,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/models/attachment_draft.dart';
 import '../../core/preview/chat_preview.dart';
+import '../../core/render/plugin_slots.dart';
+import '../../core/render/rich_transcript.dart';
 import '../../core/services/connection_manager.dart';
 import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
@@ -79,6 +81,25 @@ class _NgChatViewState extends State<NgChatView> {
       sessionId: chat.storedId,
       maxDownloadBytes: maxAttachmentDownloadBytes,
     );
+  }
+
+  Future<String?> _readWidgetHtml(String path) async {
+    if (!mounted) return null;
+    final client = _filesClient();
+    try {
+      final preview = await client.readText(path);
+      if (preview.binary) return null;
+      return preview.text;
+    } catch (_) {
+      return null;
+    } finally {
+      if (client is RemoteFilesClient) client.close();
+    }
+  }
+
+  Future<void> _deliverWidgetIntent(String prompt) async {
+    final accepted = await chat.send(prompt, hidden: true);
+    if (!accepted) throw StateError('undelivered');
   }
 
   final _input = SlashCommandHighlightController();
@@ -922,6 +943,9 @@ class _NgChatViewState extends State<NgChatView> {
         last: i == items.length - 1,
         onRetry: i == items.length - 1 && !chat.running ? chat.retryLast : null,
         readAloud: _readAloud,
+        sessionId: chat.storedId ?? chat.runtimeId ?? 'draft',
+        readHtml: _readWidgetHtml,
+        onIntent: _deliverWidgetIntent,
       ),
       NgSystemItem() => _SystemCard(item: item),
       NgCommandItem() => _CommandCard(item: item),
@@ -989,6 +1013,10 @@ class _NgChatViewState extends State<NgChatView> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              ComposerRenderExtras(
+                sessionId: chat.storedId ?? chat.runtimeId ?? 'draft',
+                controller: _input,
+              ),
               if (_drafts.isNotEmpty || _preparing)
                 SizedBox(
                   height: 44,
@@ -1595,8 +1623,14 @@ class _AssistantBlock extends StatefulWidget {
     required this.files,
     required this.filesIdentity,
     required this.readAloud,
+    required this.sessionId,
+    this.readHtml,
+    this.onIntent,
     this.onRetry,
   });
+  final String sessionId;
+  final Future<String?> Function(String path)? readHtml;
+  final Future<void> Function(String prompt)? onIntent;
   final NgAssistantItem item;
 
   /// Opens a files client for this chat, for `MEDIA:` deliveries.
@@ -1722,14 +1756,29 @@ class _AssistantBlockState extends State<_AssistantBlock> {
     final seen = <String, int>{};
     for (final (block, code) in ngSplitCodeFences(text)) {
       if (code) {
-        // Code is documentation, never a delivery; a fence stays whole and
-        // exposes the same copy/wrap controls as Classic.
-        out.add(codeBlock(block));
+        final fence = ngCodeFenceParts(block);
+        out.add(
+          RichFence(
+            language: fence.language,
+            code: fence.code,
+            corpus: text,
+            fallback: codeBlock(block),
+            readHtml: widget.readHtml,
+            onIntent: widget.onIntent,
+          ),
+        );
         continue;
       }
       final segments = splitMediaTags(block, isFinal: isFinal);
       if (!segments.any((s) => s.isMedia)) {
-        out.add(prose(inlineMediaTagsAsLinks(block, isFinal: isFinal)));
+        out.addAll(
+          richProseWidgets(
+            text: inlineMediaTagsAsLinks(block, isFinal: isFinal),
+            markdown: (chunk) => prose(chunk),
+            readHtml: widget.readHtml,
+            onIntent: widget.onIntent,
+          ),
+        );
         continue;
       }
       for (final segment in segments) {
@@ -1739,8 +1788,13 @@ class _AssistantBlockState extends State<_AssistantBlock> {
           final n = seen.update(media.path, (v) => v + 1, ifAbsent: () => 0);
           out.add(card(media, n));
         } else if (segment.text.trim().isNotEmpty) {
-          out.add(
-            prose(inlineMediaTagsAsLinks(segment.text, isFinal: isFinal)),
+          out.addAll(
+            richProseWidgets(
+              text: inlineMediaTagsAsLinks(segment.text, isFinal: isFinal),
+              markdown: (chunk) => prose(chunk),
+              readHtml: widget.readHtml,
+              onIntent: widget.onIntent,
+            ),
           );
         }
       }
@@ -1821,7 +1875,14 @@ class _AssistantBlockState extends State<_AssistantBlock> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
-                children: _content(c, item),
+                children: [
+                  if (!item.open)
+                    PreviewOfferHook(
+                      sessionId: widget.sessionId,
+                      text: item.text,
+                    ),
+                  ..._content(c, item),
+                ],
               ),
             ),
           if (!item.open && item.text.isNotEmpty)
@@ -2085,6 +2146,19 @@ class _ToolRowState extends State<_ToolRow> {
         if (_open) ...[
           if (t.input?.isNotEmpty ?? false) _codeBlock(c, t.input!),
           if (t.output?.isNotEmpty ?? false) _codeBlock(c, t.output!),
+          if (t.name == 'vision_analyze' || t.name == 'image_generate')
+            InspectedImageTile(source: '${t.input ?? ''}\n${t.output ?? ''}'),
+          if (t.name == 'setup_beat' || t.name == 'catalog_install')
+            InteractiveToolCard(
+              toolName: t.name,
+              callId: t.id,
+              output: t.output ?? '',
+            ),
+          if (pluginGrants.mediaPlayerFor(t.name) case final player?)
+            ListTile(
+              title: Text('${player.title} player'),
+              subtitle: Text(t.output ?? ''),
+            ),
         ],
       ],
     );

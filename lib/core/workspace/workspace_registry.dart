@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../models/connection.dart';
 import '../models/session.dart';
+import '../render/contributions_page.dart';
 
 /// Runtime-only context for trusted, compiled-in client features. Recheck
 /// [current] after awaiting consent or resolving a remote capability. A page
@@ -124,6 +125,10 @@ Widget _sessionDetails(BuildContext context, WorkspaceTarget target) {
   );
 }
 
+Widget _contributionsPage(BuildContext context, WorkspaceTarget target) {
+  return const ContributionsPage();
+}
+
 final aresWorkspaceRegistry = WorkspaceRegistry(const [
   WorkspacePage(
     'chat.details',
@@ -132,4 +137,11 @@ final aresWorkspaceRegistry = WorkspaceRegistry(const [
     _sessionDetails,
   ),
   WorkspaceAction('chat.copy-id', 'Copy session ID', Icons.copy, _copySession),
+  WorkspacePage(
+    'extensions.contributions',
+    'Contributions',
+    Icons.extension_outlined,
+    _contributionsPage,
+    requiresSession: false,
+  ),
 ]);

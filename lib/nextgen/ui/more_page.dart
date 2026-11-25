@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/hermes_project.dart';
 import '../../core/models/session.dart';
+import '../../core/render/contributions_page.dart';
+import '../../core/screens/assets_screen.dart';
 import '../../core/screens/cron_screen.dart';
 import '../../core/screens/memory_screen.dart';
 import '../../core/screens/nous_portal_screen.dart';
@@ -16,7 +18,9 @@ import '../../core/screens/projects_root_screen.dart';
 import '../../core/screens/provider_oauth_screen.dart';
 import '../../core/screens/skills_screen.dart';
 import '../../core/screens/workspace_profiles_screen.dart';
+import '../../core/services/chat_assets_client.dart';
 import '../../core/services/dashboard_api_client.dart';
+import '../../core/services/remote_files_client.dart';
 import '../nextgen_preferences.dart';
 import '../theme/nextgen_theme.dart';
 import 'models_page.dart';
@@ -91,6 +95,37 @@ class NgMorePage extends StatelessWidget {
                   title: context.l10n.projects_root_title,
                   subtitle: context.l10n.projects_root_more_subtitle,
                   onTap: () => push(ProjectsRootScreen(connection: conn)),
+                ),
+                NgRow(
+                  icon: Icons.image_outlined,
+                  title: context.l10n.assets,
+                  subtitle: context.l10n.assets_recent_subtitle,
+                  onTap: () {
+                    final source = ChatAssetsClient.fromConnection(conn);
+                    Navigator.of(context)
+                        .push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => AssetsScreen(
+                              source: source,
+                              filesClient: (session) =>
+                                  RemoteFilesClient.fromConnection(
+                                    conn,
+                                    sessionId: session.id,
+                                    maxDownloadBytes:
+                                        maxAttachmentDownloadBytes,
+                                  ),
+                              onOpenSession: onOpenSession,
+                            ),
+                          ),
+                        )
+                        .whenComplete(source.close);
+                  },
+                ),
+                NgRow(
+                  icon: Icons.extension_outlined,
+                  title: 'Contributions',
+                  subtitle: 'Reviewed panes, commands and preview grants',
+                  onTap: () => push(const ContributionsPage()),
                 ),
               ],
             ),
