@@ -72,7 +72,14 @@ void main() {
         .first;
     for (final section in ['Appearance', 'Voice', 'Session Sources']) {
       final chip = find.byKey(ValueKey('classic-only-$section'));
-      await tester.scrollUntilVisible(chip, 300, scrollable: scroll);
+      // Short steps: the list builds rows lazily, and 300 px steps passed
+      // the Session Sources header once the notification rows grew.
+      await tester.scrollUntilVisible(
+        chip,
+        100,
+        scrollable: scroll,
+        maxScrolls: 200,
+      );
       expect(chip, findsOneWidget, reason: section);
       expect(
         find.descendant(
