@@ -21,10 +21,15 @@ class AssetsScreen extends StatefulWidget {
   final RemoteFilesDataSource Function(Session session) filesClient;
   final ValueChanged<Session> onOpenSession;
 
+  /// The render connection key for Contributions; the toolbar entry is
+  /// shown only when the caller names the connection.
+  final String? contributionsScope;
+
   const AssetsScreen({
     required this.source,
     required this.filesClient,
     required this.onOpenSession,
+    this.contributionsScope,
     super.key,
   });
 
@@ -364,17 +369,18 @@ class _AssetsScreenState extends State<AssetsScreen> {
       appBar: AppBar(
         title: Text(context.l10n.assets),
         actions: [
-          IconButton(
-            tooltip: 'Contributions',
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const ContributionsPage(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.extension_outlined),
-          ),
+          if (widget.contributionsScope case final scope?)
+            IconButton(
+              tooltip: 'Contributions',
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => ContributionsPage(scope: scope),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.extension_outlined),
+            ),
           IconButton(
             tooltip: context.l10n.refresh,
             onPressed: () => unawaited(_scan(_Scan.chats, reset: true)),

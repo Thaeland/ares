@@ -5,6 +5,8 @@ import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
 import 'package:xml/xml.dart';
 
+import 'artifact_library.dart';
+
 class DiagramNode {
   const DiagramNode(this.id, this.label, this.shape);
 
@@ -52,20 +54,77 @@ DiagramNode? _node(String raw) {
   return DiagramNode(id, label, shape);
 }
 
+/// Diagram source beyond these bounds is not drawn; it stays a code fence.
+const mermaidMaxChars = 16 * 1024;
+const mermaidMaxLines = 300;
+const mermaidMaxLineChars = 400;
+
+final _mermaidModels = ContentMemo<DiagramModel?>(32);
+
+/// `from -->|label| to`, `from --> to` or `from --- to`. The first arrow
+/// with whitespace on both sides wins, as the old lazy pattern chose. Each
+/// arrow is checked in constant time apart from its label, and lines are
+/// capped, so a long run of spaces cannot make the scan restart from every
+/// character.
+({String from, String to, String? label})? _mermaidLink(String line) {
+  for (final arrow in const ['-->', '---']) {
+    final labels = arrow == '-->';
+    var at = line.indexOf(arrow);
+    while (at >= 0) {
+      if (at >= 2 && isMarkupSpace(line.codeUnitAt(at - 1))) {
+        var rest = at + arrow.length;
+        String? label;
+        if (labels &&
+            rest < line.length &&
+            line.codeUnitAt(rest) == 0x7c /* | */ ) {
+          final close = line.indexOf('|', rest + 1);
+          if (close > rest + 1) {
+            label = line.substring(rest + 1, close);
+            rest = close + 1;
+          }
+        }
+        if (rest < line.length && isMarkupSpace(line.codeUnitAt(rest))) {
+          final from = line.substring(0, at).trimRight();
+          final to = line.substring(rest).trim();
+          if (from.isNotEmpty && to.isNotEmpty) {
+            return (from: from, to: to, label: label);
+          }
+        }
+      }
+      at = line.indexOf(arrow, at + 1);
+    }
+  }
+  return null;
+}
+
 /// A bounded flowchart or sequence diagram. Anything else stays a code fence.
+/// Memoised by source, so a streaming reply re-parses only a changed diagram.
 DiagramModel? parseMermaid(String source) {
+  if (source.length > mermaidMaxChars) return null;
+  return _mermaidModels.lookup(source, () => _parseMermaid(source));
+}
+
+/// Drops memoised diagrams and prose splits, for a renderer reset or a cold
+/// timing test.
+void resetRichBlockCaches() {
+  _mermaidModels.clear();
+  _prosePieces.clear();
+}
+
+DiagramModel? _parseMermaid(String source) {
   final lines = source
       .split('\n')
       .map((line) => line.trim())
       .where((line) => line.isNotEmpty && !line.startsWith('%%'))
       .toList();
-  if (lines.isEmpty) return null;
+  if (lines.isEmpty || lines.length > mermaidMaxLines) return null;
   final header = lines.first.toLowerCase();
   if (header.startsWith('sequencediagram')) {
     final nodes = <String, DiagramNode>{};
     final edges = <DiagramEdge>[];
     final arrow = RegExp(r'^(\S+?)\s*(-{1,2}>>|->>|->)\s*(\S+?)\s*:\s*(.+)');
     for (final line in lines.skip(1)) {
+      if (line.length > mermaidMaxLineChars) continue;
       final match = arrow.firstMatch(line);
       if (match == null) continue;
       final from = match.group(1)!;
@@ -90,25 +149,20 @@ DiagramModel? parseMermaid(String source) {
       : 'TD';
   final nodes = <String, DiagramNode>{};
   final edges = <DiagramEdge>[];
-  final link = RegExp(
-    r'^(.+?)\s+-->(?:\|([^|]+)\|)?\s+(.+)\s*'
-    r'|^(.+?)\s+---\s+(.+)\s*',
-  );
   for (final line in lines.skip(1)) {
-    final match = link.firstMatch(line);
-    if (match == null) {
+    if (line.length > mermaidMaxLineChars) continue;
+    final link = _mermaidLink(line);
+    if (link == null) {
       final lone = _node(line);
       if (lone != null) nodes.putIfAbsent(lone.id, () => lone);
       continue;
     }
-    final fromRaw = match.group(1) ?? match.group(4)!;
-    final toRaw = match.group(3) ?? match.group(5)!;
-    final from = _node(fromRaw);
-    final to = _node(toRaw);
+    final from = _node(link.from);
+    final to = _node(link.to);
     if (from == null || to == null) continue;
     nodes[from.id] = from;
     nodes[to.id] = to;
-    edges.add(DiagramEdge(from.id, to.id, match.group(2)));
+    edges.add(DiagramEdge(from.id, to.id, link.label));
   }
   if (nodes.isEmpty) return null;
   return DiagramModel(
@@ -361,10 +415,7 @@ Map<String, String> _directiveAttrs(String raw) {
 }
 
 final _directive = RegExp(r'::([a-z][a-z0-9-]*)\{([^{}]*)\}');
-final _alert = RegExp(
-  r'(?:^|\n)(?:>\s*)+\[!(note|tip|important|warning|caution)\]\s*\n((?:>.*(?:\n|$))*)',
-  caseSensitive: false,
-);
+const _alertTypes = {'note', 'tip', 'important', 'warning', 'caution'};
 final _displayMath = RegExp(r'\$\$([^$]+)\$\$');
 final _inlineMath = RegExp(r'(?<!\$)\$([^$\n]+)\$(?!\$)');
 
@@ -382,36 +433,48 @@ List<String> _cells(String line) => line
 bool _separator(String line) =>
     RegExp(r'^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$').hasMatch(line);
 
+/// [host] is [domain] or one of its subdomains. A name that merely contains
+/// or starts with [domain] (eviltiktok.com, maps.google.evil.example) is not.
+bool hostWithin(String host, String domain) =>
+    host == domain || host.endsWith('.$domain');
+
+/// A provider card for an https link on that provider's own registrable
+/// domain. Plain http, look-alike names and other ports are ordinary links.
 EmbedPiece? detectProviderEmbed(String raw) {
   final uri = Uri.tryParse(raw.trim());
-  if (uri == null || (uri.scheme != 'https' && uri.scheme != 'http')) {
+  if (uri == null ||
+      uri.scheme != 'https' ||
+      uri.userInfo.isNotEmpty ||
+      (uri.hasPort && uri.port != 443)) {
     return null;
   }
-  final host = uri.host.toLowerCase().replaceFirst(RegExp(r'^www\.'), '');
+  final host = uri.host.toLowerCase();
+  if (host.isEmpty || host.endsWith('.')) return null;
   String? provider;
   String id = uri.path;
   if (host == 'youtu.be') {
     provider = 'youtube';
     id = uri.pathSegments.isEmpty ? '' : uri.pathSegments.first;
-  } else if (host == 'youtube.com' || host == 'm.youtube.com') {
+  } else if (hostWithin(host, 'youtube.com')) {
     provider = 'youtube';
     id = uri.queryParameters['v'] ?? uri.pathSegments.lastOrNull ?? '';
-  } else if (host == 'vimeo.com') {
+  } else if (hostWithin(host, 'vimeo.com')) {
     provider = 'vimeo';
     id = uri.pathSegments.lastOrNull ?? '';
-  } else if (host == 'instagram.com') {
+  } else if (hostWithin(host, 'instagram.com')) {
     provider = 'instagram';
-  } else if (host == 'pinterest.com' || host.endsWith('.pinterest.com')) {
+  } else if (hostWithin(host, 'pinterest.com')) {
     provider = 'pinterest';
-  } else if (host.endsWith('tiktok.com')) {
+  } else if (hostWithin(host, 'tiktok.com')) {
     provider = 'tiktok';
-  } else if (host == 'twitter.com' || host == 'x.com') {
+  } else if (hostWithin(host, 'twitter.com') || hostWithin(host, 'x.com')) {
     provider = 'twitter';
   } else if (host == 'open.spotify.com') {
     provider = 'spotify';
-  } else if (host == 'google.com' && uri.path.startsWith('/maps') ||
-      host.startsWith('maps.google.') ||
-      host == 'maps.app.goo.gl') {
+  } else if (hostWithin(host, 'maps.google.com') ||
+      host == 'maps.app.goo.gl' ||
+      ((host == 'google.com' || host == 'www.google.com') &&
+          (uri.path == '/maps' || uri.path.startsWith('/maps/')))) {
     provider = 'maps';
   }
   if (provider == null || id.isEmpty) return null;
@@ -504,14 +567,7 @@ List<TranscriptPiece> _piecesFromProse(String text) {
       match.group(0)!,
     );
   });
-  take(_alert, (match) {
-    final body = (match.group(2) ?? '')
-        .split('\n')
-        .map((line) => line.replaceFirst(RegExp(r'^>\s?'), ''))
-        .join('\n')
-        .trim();
-    return AlertPiece(match.group(1)!.toLowerCase(), body);
-  });
+  _alerts(text, matches);
   take(_displayMath, (match) {
     final body = match.group(1)!.trim();
     return _mathLike(body) ? MathPiece(body, display: true) : null;
@@ -583,6 +639,59 @@ List<TranscriptPiece> _piecesFromProse(String text) {
   }).toList();
 }
 
+final _quoteMark = RegExp(r'^>\s?');
+
+/// `> [!NOTE]` and the other alert headers, without the leading `>` marks.
+String? _alertHeader(String line) {
+  if (!line.startsWith('>')) return null;
+  var i = 0;
+  while (i < line.length &&
+      (line.codeUnitAt(i) == 0x3e || isMarkupSpace(line.codeUnitAt(i)))) {
+    i++;
+  }
+  if (!line.startsWith('[!', i)) return null;
+  final close = line.indexOf(']', i + 2);
+  if (close < 0) return null;
+  final type = line.substring(i + 2, close).toLowerCase();
+  if (!_alertTypes.contains(type)) return null;
+  for (var j = close + 1; j < line.length; j++) {
+    if (!isMarkupSpace(line.codeUnitAt(j))) return null;
+  }
+  return type;
+}
+
+/// GitHub-style alert blocks, read one line at a time. The old pattern
+/// nested `(?:>\s*)+` and restarted at every line, so a reply made of many
+/// `>` lines took quadratic time on every rebuild.
+void _alerts(String text, List<_Hit> into) {
+  final lines = text.split('\n');
+  var offset = 0;
+  var row = 0;
+  while (row < lines.length) {
+    final start = offset;
+    final type = _alertHeader(lines[row]);
+    offset += lines[row].length + 1;
+    row++;
+    // The header needs its own line break, as the pattern required.
+    if (type == null || row >= lines.length) continue;
+    final body = <String>[];
+    var end = offset;
+    while (row < lines.length && lines[row].startsWith('>')) {
+      body.add(lines[row].replaceFirst(_quoteMark, ''));
+      offset += lines[row].length + 1;
+      end = offset;
+      row++;
+    }
+    into.add(
+      _Hit(
+        start,
+        end > text.length ? text.length : end,
+        AlertPiece(type, body.join('\n').trim()),
+      ),
+    );
+  }
+}
+
 class _Hit {
   const _Hit(this.start, this.end, this.value);
 
@@ -591,31 +700,42 @@ class _Hit {
   final Object value;
 }
 
-List<TranscriptPiece> splitRichProse(String text) => _piecesFromProse(text);
+final _prosePieces = ContentMemo<List<TranscriptPiece>>(64);
+
+/// Splits reply prose into Markdown and rich pieces. Memoised by text, so
+/// every unchanged paragraph of a streaming reply skips the scan.
+List<TranscriptPiece> splitRichProse(String text) => _prosePieces.lookup(
+  text,
+  () => List<TranscriptPiece>.unmodifiable(_piecesFromProse(text)),
+);
 
 enum EmbedMode { always, ask, off }
 
+/// Embed choices for one chat. [chat] is the render scope's chat key
+/// (connection, profile and stored chat), so a choice in one chat is not
+/// a choice in another, even when two chats reuse the same message ids.
 class EmbedConsent extends ChangeNotifier {
   EmbedMode mode = EmbedMode.ask;
-  final allowedProviders = <String>{};
-  final loadedOnce = <String>{};
+  final _allowedProviders = <String, Set<String>>{};
+  final _loadedOnce = <String, Set<String>>{};
 
-  bool fetches(EmbedPiece embed) {
+  bool fetches(EmbedPiece embed, {required String chat}) {
     if (mode == EmbedMode.off) return false;
-    if (mode == EmbedMode.always || allowedProviders.contains(embed.provider)) {
+    if (mode == EmbedMode.always ||
+        (_allowedProviders[chat]?.contains(embed.provider) ?? false)) {
       return true;
     }
-    return loadedOnce.contains(embed.url);
+    return _loadedOnce[chat]?.contains(embed.url) ?? false;
   }
 
-  void loadOnce(EmbedPiece embed) {
-    loadedOnce.add(embed.url);
-    notifyListeners();
+  void loadOnce(EmbedPiece embed, {required String chat}) {
+    if ((_loadedOnce[chat] ??= <String>{}).add(embed.url)) notifyListeners();
   }
 
-  void allowProvider(String provider) {
-    allowedProviders.add(provider);
-    notifyListeners();
+  void allowProvider(String provider, {required String chat}) {
+    if ((_allowedProviders[chat] ??= <String>{}).add(provider)) {
+      notifyListeners();
+    }
   }
 
   void setMode(EmbedMode value) {
@@ -625,8 +745,8 @@ class EmbedConsent extends ChangeNotifier {
 
   void reset() {
     mode = EmbedMode.ask;
-    allowedProviders.clear();
-    loadedOnce.clear();
+    _allowedProviders.clear();
+    _loadedOnce.clear();
     notifyListeners();
   }
 }

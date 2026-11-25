@@ -7,7 +7,6 @@ import '../services/attachment_controller.dart';
 import '../services/remote_files_client.dart';
 import '../utils/attachment_types.dart';
 import '../utils/media_tags.dart';
-import '../render/playback_bar.dart';
 import 'attachment_preview_dialog.dart';
 
 /// Compatibility API for callers that explicitly request the share sheet.
@@ -359,9 +358,6 @@ class _MediaArtifactCardState extends State<MediaArtifactCard> {
                 onTap: _openingPreview ? null : () => unawaited(_openPreview()),
               ),
             ),
-            if (attachmentIsAudio(widget.ref.extension) ||
-                attachmentIsVideo(widget.ref.extension))
-              TranscriptPlaybackBar(mediaId: widget.ref.path),
           ],
         ),
       ),

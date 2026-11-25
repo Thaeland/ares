@@ -57,6 +57,7 @@ import '../services/gateway_turn_recovery.dart';
 import '../services/gateway_turn_ui_projection.dart';
 import '../services/remote_files_client.dart';
 import '../preview/chat_preview.dart';
+import '../render/render_scope.dart';
 import '../render/rich_transcript.dart';
 import '../services/slash_command_errors.dart';
 import '../services/legal_links.dart';
@@ -7532,13 +7533,18 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         });
       },
     );
+    final scoped = RenderScope(
+      connection: renderConnectionKey(widget.connection),
+      chat: _storedSessionId ?? _storedSessionKey,
+      child: screen,
+    );
     return defaultTargetPlatform == TargetPlatform.windows
         ? WindowsChatPresence(
             target: () => (_desktopGateway ?? _normalSession?.client)
                 ?.presenceFor(_normalLocalSessionKey),
-            child: screen,
+            child: scoped,
           )
-        : screen;
+        : scoped;
   }
 
   Widget _buildChat(BuildContext context) => LayoutBuilder(
@@ -8345,10 +8351,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                   : _composerFormatRow(context),
                             ),
                           if (!keyboardOpen) const SizedBox(height: 4),
-                          ComposerRenderExtras(
-                            sessionId: widget.session.id,
-                            controller: _textController,
-                          ),
                           ConstrainedBox(
                             constraints: BoxConstraints(
                               maxHeight: (availableHeight * 0.30).clamp(
@@ -8803,7 +8805,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         mediaReferencesFinal: message['_gateway_pending_response'] != true,
         mediaSourceIdentity: sourceIdentity,
         mediaFilesClient: isUser ? null : filesClient,
-        sessionId: sessionId,
         readWidgetHtml: _readWidgetHtml,
         onWidgetIntent: _deliverWidgetIntent,
       );
@@ -8816,12 +8817,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         context: context,
         isScrollControlled: true,
         useSafeArea: true,
-        builder: (_) => ReceivedRecoveryInspector(
-          section: section,
-          verbose: verbose,
-          sourceIdentity: sourceIdentity,
-          filesClient: filesClient,
-          messageBuilder: buildMessage,
+        builder: (_) => RenderScope(
+          connection: renderConnectionKey(widget.connection),
+          chat: _storedSessionId ?? sessionId,
+          child: ReceivedRecoveryInspector(
+            section: section,
+            verbose: verbose,
+            sourceIdentity: sourceIdentity,
+            filesClient: filesClient,
+            messageBuilder: buildMessage,
+          ),
         ),
       );
     } finally {
@@ -9032,7 +9037,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       mediaReferencesFinal: msg['_gateway_pending_response'] != true,
       mediaSourceIdentity: (widget.connection, _storedSessionKey, source),
       mediaFilesClient: isUser ? null : _newMediaFilesClient,
-      sessionId: widget.session.id,
       readWidgetHtml: _readWidgetHtml,
       onWidgetIntent: _deliverWidgetIntent,
       onReadAloud: isUser
@@ -9438,7 +9442,6 @@ class MessageBubble extends StatelessWidget {
   /// the phone would be worse than a dead link).
   final RemoteFilesDataSource Function()? mediaFilesClient;
   final Object? mediaSourceIdentity;
-  final String sessionId;
   final Future<String?> Function(String path)? readWidgetHtml;
   final Future<void> Function(String prompt)? onWidgetIntent;
 
@@ -9458,7 +9461,6 @@ class MessageBubble extends StatelessWidget {
     this.mediaSourceIdentity,
     this.mediaReferencesFinal = true,
     this.showQuickActions = false,
-    this.sessionId = '',
     this.readWidgetHtml,
     this.onWidgetIntent,
   });
@@ -10099,8 +10101,6 @@ class MessageBubble extends StatelessWidget {
                 ),
               ),
             ],
-            if (!isUser && mediaReferencesFinal)
-              PreviewOfferHook(sessionId: sessionId, text: content),
             ..._renderContent(context, tokens, isUser, assistantTextColor),
             if (messageTime != null)
               Padding(

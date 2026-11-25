@@ -2,6 +2,72 @@ import 'package:flutter/foundation.dart';
 
 import '../utils/media_tags.dart';
 
+/// Agent text is inspected only up to this many characters. Titles,
+/// document markers and tags sit near the start; a longer body is never
+/// rescanned whole on the UI thread.
+const artifactInspectChars = 16 * 1024;
+
+/// A small most-recently-used memo keyed by a content hash. The stored text
+/// is compared on a hash hit, so a collision recomputes instead of returning
+/// another fence's result. A rebuild with unchanged text (every earlier
+/// fence while a reply streams) skips the parser.
+class ContentMemo<V> {
+  ContentMemo(this.capacity);
+
+  final int capacity;
+  // Map literals keep insertion order, which makes this least-recently-used.
+  final _entries = <String, (String, String, V)>{};
+
+  /// How many times [lookup] had to compute. Tests use it to prove a cache hit.
+  @visibleForTesting
+  int misses = 0;
+
+  V lookup(String content, V Function() compute, {String scope = ''}) {
+    final key = '$scope:${artifactContentHash(content)}:${content.length}';
+    final hit = _entries.remove(key);
+    if (hit != null && hit.$1 == scope && hit.$2 == content) {
+      _entries[key] = hit;
+      return hit.$3;
+    }
+    misses++;
+    final value = compute();
+    _entries[key] = (scope, content, value);
+    while (_entries.length > capacity) {
+      _entries.remove(_entries.keys.first);
+    }
+    return value;
+  }
+
+  void clear() {
+    _entries.clear();
+    misses = 0;
+  }
+}
+
+String _head(String text) => text.length > artifactInspectChars
+    ? text.substring(0, artifactInspectChars)
+    : text;
+
+bool _asciiLetter(int c) =>
+    (c >= 0x61 && c <= 0x7a) || (c >= 0x41 && c <= 0x5a);
+
+bool _tagNameChar(int c) =>
+    _asciiLetter(c) || (c >= 0x30 && c <= 0x39) || c == 0x2d;
+
+/// The whitespace `\s` matched for these short markers.
+bool isMarkupSpace(int c) =>
+    c == 0x20 ||
+    (c >= 0x09 && c <= 0x0d) ||
+    c == 0xa0 ||
+    c == 0x1680 ||
+    (c >= 0x2000 && c <= 0x200a) ||
+    c == 0x2028 ||
+    c == 0x2029 ||
+    c == 0x202f ||
+    c == 0x205f ||
+    c == 0x3000 ||
+    c == 0xfeff;
+
 enum GeneratedArtifactKind { code, html, svg }
 
 class GeneratedArtifact {
@@ -67,14 +133,15 @@ const _commonCodeLanguages = {
 };
 
 final _languageTag = RegExp(r'^[a-z0-9][a-z0-9+#-]*$', caseSensitive: false);
-final _htmlDocument = RegExp(
-  r'<!doctype\s+html|<html[\s>]|<head[\s>]|<body[\s>]',
-  caseSensitive: false,
-);
-final _htmlTag = RegExp(r'<[a-z][a-z0-9-]*(\s[^>]*)?>', caseSensitive: false);
+// Indentation only: a `\s*` here also ate blank lines from every newline and
+// went quadratic on a run of empty lines.
 final _codeDeclaration = RegExp(
-  r'(?:^|\n)\s*(?:export\s+)?(?:default\s+)?(?:async\s+)?(?:function|class|struct|interface|enum|trait|impl|def|fn)\s+([A-Za-z_$][\w$]*)',
+  r'(?:^|\n)[ \t]*(?:export\s+)?(?:default\s+)?(?:async\s+)?(?:function|class|struct|interface|enum|trait|impl|def|fn)\s+([A-Za-z_$][\w$]*)',
 );
+final _codeSignal = RegExp(
+  r'[;{}]|\b(def|class|function|import|const|let|var|fn|struct)\b',
+);
+final _wordGap = RegExp(r'\s+');
 final _filenameComment = RegExp(
   r'^\s*(?://|#|--|<!--|/\*)\s*([\w./-]+\.[a-z0-9]{1,8})\b',
   caseSensitive: false,
@@ -97,30 +164,135 @@ bool isLikelyProseCodeBlock(String language, String code) {
   if (_commonCodeLanguages.contains(language)) return false;
   var prose = 0;
   var signals = 0;
-  for (final line in code.split('\n')) {
-    if (RegExp(
-      r'[;{}]|\b(def|class|function|import|const|let|var|fn|struct)\b',
-    ).hasMatch(line)) {
+  for (final line in _head(code).split('\n')) {
+    if (_codeSignal.hasMatch(line)) {
       signals++;
-    } else if (line.trim().split(RegExp(r'\s+')).length > 8) {
+    } else if (line.trim().split(_wordGap).length > 8) {
       prose++;
     }
   }
   return prose >= 2 && signals <= 1;
 }
 
-String _stripTags(String value) => value
-    .replaceAll(RegExp(r'<[^>]*>'), ' ')
-    .replaceAll(RegExp(r'\s+'), ' ')
-    .trim();
+/// [lowerAscii] is a lower-case ASCII pattern; [text] is compared without
+/// regard to ASCII case, in place, so offsets stay those of [text].
+bool _matchesAt(String text, int at, String lowerAscii) {
+  if (at < 0 || at + lowerAscii.length > text.length) return false;
+  for (var i = 0; i < lowerAscii.length; i++) {
+    var c = text.codeUnitAt(at + i);
+    if (c >= 0x41 && c <= 0x5a) c |= 0x20;
+    if (c != lowerAscii.codeUnitAt(i)) return false;
+  }
+  return true;
+}
 
+int _indexOfIgnoreCase(String text, String lowerAscii, [int from = 0]) {
+  final last = text.length - lowerAscii.length;
+  for (var i = from < 0 ? 0 : from; i <= last; i++) {
+    if (_matchesAt(text, i, lowerAscii)) return i;
+  }
+  return -1;
+}
+
+/// `<!doctype html`, `<html`, `<head` or `<body` followed by a space or `>`.
+/// One forward pass; replaces a regex that the reply text could stall.
+bool _looksLikeHtmlDocument(String text) {
+  var at = text.indexOf('<');
+  while (at >= 0) {
+    if (_matchesAt(text, at, '<!doctype')) {
+      var i = at + 9;
+      final start = i;
+      while (i < text.length && isMarkupSpace(text.codeUnitAt(i))) {
+        i++;
+      }
+      if (i > start && _matchesAt(text, i, 'html')) return true;
+    } else if (_matchesAt(text, at, '<html') ||
+        _matchesAt(text, at, '<head') ||
+        _matchesAt(text, at, '<body')) {
+      final next = at + 5;
+      if (next < text.length) {
+        final c = text.codeUnitAt(next);
+        if (c == 0x3e || isMarkupSpace(c)) return true;
+      }
+    }
+    at = text.indexOf('<', at + 1);
+  }
+  return false;
+}
+
+/// `<name` followed by a space or `>`, anywhere in [text].
+bool _hasOpenTag(String text, String name) {
+  final open = '<$name';
+  var at = _indexOfIgnoreCase(text, open);
+  while (at >= 0) {
+    final next = at + open.length;
+    if (next < text.length) {
+      final c = text.codeUnitAt(next);
+      if (c == 0x3e || isMarkupSpace(c)) return true;
+    }
+    at = _indexOfIgnoreCase(text, open, at + 1);
+  }
+  return false;
+}
+
+/// True when [text] holds `<name>` or `<name attrs…>`. Each `<` is read
+/// once: the tag name stops before the next `<`, and whether any `>`
+/// follows is one precomputed index, so unterminated tags cannot make the
+/// scan restart from every `<`.
+bool _hasHtmlTag(String text) {
+  final lastClose = text.lastIndexOf('>');
+  if (lastClose < 0) return false;
+  var at = text.indexOf('<');
+  while (at >= 0 && at < lastClose) {
+    var i = at + 1;
+    if (i < text.length && _asciiLetter(text.codeUnitAt(i))) {
+      i++;
+      while (i < text.length && _tagNameChar(text.codeUnitAt(i))) {
+        i++;
+      }
+      if (i < text.length) {
+        final c = text.codeUnitAt(i);
+        if (c == 0x3e) return true;
+        if (isMarkupSpace(c) && lastClose > i) return true;
+      }
+    }
+    at = text.indexOf('<', at + 1);
+  }
+  return false;
+}
+
+/// Replaces each `<…>` with a space, then collapses whitespace. Unclosed
+/// `<` keeps the rest as text, as the old pattern did, in one pass.
+String _stripTags(String value) {
+  final out = StringBuffer();
+  var i = 0;
+  while (i < value.length) {
+    final open = value.indexOf('<', i);
+    final close = open < 0 ? -1 : value.indexOf('>', open + 1);
+    if (close < 0) {
+      out.write(value.substring(i));
+      break;
+    }
+    out
+      ..write(value.substring(i, open))
+      ..write(' ');
+    i = close + 1;
+  }
+  return out.toString().replaceAll(_wordGap, ' ').trim();
+}
+
+/// The text of the first `<tag …>…</tag>` in the inspected head. Only the
+/// first opener can match: a later one has the same or a later `>` and
+/// closer, so failing there fails everywhere.
 String _titleFromTag(String content, String tag) {
-  final match = RegExp(
-    '<$tag[^>]*>([\\s\\S]*?)</$tag>',
-    caseSensitive: false,
-  ).firstMatch(content);
-  if (match == null) return '';
-  final text = _stripTags(match.group(1) ?? '');
+  final head = _head(content);
+  final open = _indexOfIgnoreCase(head, '<$tag');
+  if (open < 0) return '';
+  final gt = head.indexOf('>', open + tag.length + 1);
+  if (gt < 0) return '';
+  final close = _indexOfIgnoreCase(head, '</$tag>', gt + 1);
+  if (close < 0) return '';
+  final text = _stripTags(head.substring(gt + 1, close));
   return text.length > 80 ? text.substring(0, 80) : text;
 }
 
@@ -143,33 +315,53 @@ int _lineCount(String text) {
   return lines;
 }
 
+final _detections = ContentMemo<GeneratedArtifact?>(64);
+final _histories = ContentMemo<List<VersionedArtifact>>(16);
+
+/// Drops memoised detections, for a renderer reset or a cold timing test.
+void resetArtifactCaches() {
+  _detections.clear();
+  _histories.clear();
+}
+
+/// Scans actually run (cache misses), for tests.
+@visibleForTesting
+int get debugArtifactScans => _detections.misses + _histories.misses;
+
 /// Promotes a substantial HTML, SVG or code fence. Small snippets stay inline.
+/// Results are memoised by content, so a rebuild or streamed token that
+/// leaves this fence unchanged does not scan it again.
 GeneratedArtifact? detectArtifact(String? language, String? code) {
   final trimmed = (code ?? '').trim();
   if (trimmed.isEmpty) return null;
   final clean = sanitizeLanguageTag(language);
+  return _detections.lookup(
+    trimmed,
+    () => _detect(clean, trimmed),
+    scope: clean,
+  );
+}
+
+GeneratedArtifact? _detect(String clean, String trimmed) {
   if (_htmlLanguages.contains(clean)) {
-    final document = _htmlDocument.hasMatch(trimmed);
+    final head = _head(trimmed);
+    final document = _looksLikeHtmlDocument(head);
     // A fenced HTML document is one artefact even when the draft is short.
     // Fragments still have to be large so a tag example stays a code fence.
     final substantial =
         document ||
-        (trimmed.length >= _htmlFragmentMinChars && _htmlTag.hasMatch(trimmed));
+        (trimmed.length >= _htmlFragmentMinChars && _hasHtmlTag(head));
     if (!substantial) return null;
-    final title = _titleFromTag(trimmed, 'title');
+    final title = _titleFromTag(head, 'title');
+    final heading = title.isEmpty ? _titleFromTag(head, 'h1') : '';
     return GeneratedArtifact(
       kind: GeneratedArtifactKind.html,
       language: clean,
-      title: title.isNotEmpty
-          ? title
-          : (_titleFromTag(trimmed, 'h1').isNotEmpty
-                ? _titleFromTag(trimmed, 'h1')
-                : 'HTML'),
+      title: title.isNotEmpty ? title : (heading.isNotEmpty ? heading : 'HTML'),
     );
   }
   if (clean == 'svg') {
-    if (trimmed.length >= _svgMinChars &&
-        RegExp(r'<svg[\s>]', caseSensitive: false).hasMatch(trimmed)) {
+    if (trimmed.length >= _svgMinChars && _hasOpenTag(_head(trimmed), 'svg')) {
       final title = _titleFromTag(trimmed, 'title');
       return GeneratedArtifact(
         kind: GeneratedArtifactKind.svg,
@@ -290,8 +482,11 @@ final _fence = RegExp(r'```([^\n`]*)\n([\s\S]*?)```');
 
 /// Rebuilds versioned artifacts from assistant text. The same title in one
 /// corpus is one artifact; a changed body is the next revision. No file is
-/// required.
-List<VersionedArtifact> artifactHistoryFromText(String corpus) {
+/// required. Memoised by corpus, so every card in one reply shares one scan.
+List<VersionedArtifact> artifactHistoryFromText(String corpus) =>
+    _histories.lookup(corpus, () => _historyFromText(corpus));
+
+List<VersionedArtifact> _historyFromText(String corpus) {
   final grouped = <String, List<ArtifactRevision>>{};
   final order = <String>[];
   for (final match in _fence.allMatches(corpus)) {
@@ -315,10 +510,13 @@ List<VersionedArtifact> artifactHistoryFromText(String corpus) {
       ),
     );
   }
-  return [
+  return List.unmodifiable([
     for (final slug in order)
-      VersionedArtifact(slug: slug, revisions: grouped[slug]!),
-  ];
+      VersionedArtifact(
+        slug: slug,
+        revisions: List.unmodifiable(grouped[slug]!),
+      ),
+  ]);
 }
 
 enum IndexedArtifactKind { image, file, link }
@@ -559,114 +757,3 @@ List<IndexedArtifact> indexArtifactsFromMessages({
     });
   return values;
 }
-
-class PreviewSuggestion {
-  const PreviewSuggestion({
-    required this.sessionId,
-    required this.target,
-    required this.label,
-    required this.completionId,
-  });
-
-  final String sessionId;
-  final String target;
-  final String label;
-  final String completionId;
-}
-
-/// Dismissals survive a replay of the same completion. A later successful
-/// completion of the same target may offer it again.
-class PreviewSuggestionStore extends ChangeNotifier {
-  final _visible = <String, List<PreviewSuggestion>>{};
-  final _dismissedCompletion = <String, Map<String, String>>{};
-
-  List<PreviewSuggestion> visible(String sessionId) =>
-      List.unmodifiable(_visible[sessionId] ?? const []);
-
-  void record({
-    required String sessionId,
-    required String target,
-    required String label,
-    required String completionId,
-  }) {
-    final dismissed = _dismissedCompletion.putIfAbsent(sessionId, () => {});
-    if (dismissed[target] == completionId) return;
-    if (dismissed.containsKey(target)) dismissed.remove(target);
-    final list = _visible.putIfAbsent(sessionId, () => []);
-    for (final item in list) {
-      if (item.target == target && item.completionId == completionId) {
-        return;
-      }
-    }
-    list.removeWhere((item) => item.target == target);
-    list.insert(
-      0,
-      PreviewSuggestion(
-        sessionId: sessionId,
-        target: target,
-        label: label,
-        completionId: completionId,
-      ),
-    );
-    if (list.length > 4) list.removeRange(4, list.length);
-    notifyListeners();
-  }
-
-  void dismiss(String sessionId, String target) {
-    final list = _visible[sessionId];
-    if (list == null) return;
-    final match = list.where((item) => item.target == target).toList();
-    if (match.isEmpty) return;
-    list.removeWhere((item) => item.target == target);
-    _dismissedCompletion.putIfAbsent(sessionId, () => {})[target] =
-        match.first.completionId;
-    notifyListeners();
-  }
-
-  void reset() {
-    _visible.clear();
-    _dismissedCompletion.clear();
-    notifyListeners();
-  }
-}
-
-final previewSuggestions = PreviewSuggestionStore();
-
-final _previewTarget = RegExp(
-  r'''(?:https?://(?:localhost|127\.0\.0\.1)(?::\d+)?[^\s<>"'`]*|(?:/|\./|~/)[^\s<>"'`]+\.html?)''',
-);
-
-List<({String target, String label})> previewTargetsIn(String text) {
-  final found = <({String target, String label})>[];
-  final seen = <String>{};
-  for (final match in _previewTarget.allMatches(text)) {
-    final target = (match.group(0) ?? '').trim();
-    if (target.isEmpty || !seen.add(target)) continue;
-    final label = target.split('/').last;
-    found.add((target: target, label: label.isEmpty ? target : label));
-  }
-  return found;
-}
-
-class MediaPlaybackMemory {
-  final positions = <String, double>{};
-  final speeds = <String, double>{};
-
-  double positionOf(String id) => positions[id] ?? 0;
-
-  double speedOf(String id) => speeds[id] ?? 1;
-
-  void remember(String id, {double? position, double? speed}) {
-    if (position != null) {
-      positions[id] = position.clamp(0, 1).toDouble();
-    }
-    if (speed != null && speed > 0) speeds[id] = speed;
-  }
-
-  void reset() {
-    positions.clear();
-    speeds.clear();
-  }
-}
-
-final mediaPlayback = MediaPlaybackMemory();

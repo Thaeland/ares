@@ -6,121 +6,8 @@ import 'package:flutter/services.dart';
 import 'artifact_library.dart';
 import 'plugin_slots.dart';
 import 'render_contract.dart';
+import 'render_scope.dart';
 import 'rich_blocks.dart';
-
-/// Publishes localhost HTML and dev-server links for the composer strip.
-/// A dismissal of this completion is not offered again.
-class PreviewOfferHook extends StatefulWidget {
-  const PreviewOfferHook({
-    super.key,
-    required this.sessionId,
-    required this.text,
-    this.child = const SizedBox.shrink(),
-  });
-
-  final String sessionId;
-  final String text;
-  final Widget child;
-
-  @override
-  State<PreviewOfferHook> createState() => _PreviewOfferHookState();
-}
-
-class _PreviewOfferHookState extends State<PreviewOfferHook> {
-  @override
-  void initState() {
-    super.initState();
-    _publish();
-  }
-
-  @override
-  void didUpdateWidget(PreviewOfferHook oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.text != widget.text ||
-        oldWidget.sessionId != widget.sessionId) {
-      _publish();
-    }
-  }
-
-  void _publish() {
-    if (widget.sessionId.isEmpty) return;
-    final completionId = artifactContentHash(widget.text);
-    final targets = previewTargetsIn(widget.text);
-    if (targets.isEmpty) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      for (final target in targets) {
-        previewSuggestions.record(
-          sessionId: widget.sessionId,
-          target: target.target,
-          label: target.label,
-          completionId: completionId,
-        );
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => widget.child;
-}
-
-class ComposerRenderExtras extends StatelessWidget {
-  const ComposerRenderExtras({
-    super.key,
-    required this.sessionId,
-    required this.controller,
-  });
-
-  final String sessionId;
-  final TextEditingController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: Listenable.merge([previewSuggestions, pluginGrants]),
-      builder: (context, _) {
-        final suggestions = previewSuggestions.visible(sessionId);
-        final actions = pluginGrants.composerActions();
-        if (suggestions.isEmpty && actions.isEmpty) {
-          return const SizedBox.shrink();
-        }
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 6),
-          child: Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: [
-              for (final action in actions)
-                ActionChip(
-                  label: Text(action.composerLabel!),
-                  onPressed: () {
-                    final snippet = '${action.command ?? ''} ';
-                    final text = controller.text;
-                    final next = text.trim().isEmpty
-                        ? snippet.trimLeft()
-                        : '$text$snippet';
-                    controller.value = TextEditingValue(
-                      text: next,
-                      selection: TextSelection.collapsed(offset: next.length),
-                    );
-                  },
-                ),
-              for (final item in suggestions)
-                InputChip(
-                  key: Key('preview-suggestion-${item.target}'),
-                  label: Text(item.label),
-                  onDeleted: () =>
-                      previewSuggestions.dismiss(sessionId, item.target),
-                  deleteButtonTooltipMessage: 'Dismiss preview',
-                  onPressed: () {},
-                ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
 
 List<Widget> richProseWidgets({
   required String text,
@@ -187,7 +74,9 @@ class RichFence extends StatelessWidget {
       if (model != null) return DiagramView(model: model);
     }
     if (clean == 'svg') {
-      final drawing = parseSafeSvg(code);
+      final drawing = code.length > artifactRenderChars
+          ? null
+          : _drawings.lookup(code, () => parseSafeSvg(code));
       if (drawing != null) return SafeSvgView(drawing: drawing);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -231,10 +120,12 @@ class RichPieceView extends StatelessWidget {
           onIntent: onIntent,
         );
       }
+      final scope = RenderScope.maybeOf(context)?.connection;
       return ListenableBuilder(
         listenable: pluginGrants,
         builder: (context, _) {
-          if (!pluginGrants.showsDirective(value.name)) {
+          if (scope == null ||
+              !pluginGrants.showsDirective(scope, value.name)) {
             return Text(value.raw);
           }
           return _GrantedDirective(directive: value);
@@ -318,7 +209,8 @@ class MathBlock extends StatelessWidget {
             ? CrossAxisAlignment.center
             : CrossAxisAlignment.start,
         children: [
-          Text(piece.display ? 'Math' : 'Inline math'),
+          // The expression is shown as written; it is not typeset.
+          Text(piece.display ? 'Maths source' : 'Inline maths source'),
           Text(piece.source, key: const Key('math-expression')),
         ],
       ),
@@ -414,20 +306,32 @@ class _ResizableMarkdownTableState extends State<ResizableMarkdownTable> {
   }
 }
 
-class ConsentEmbed extends StatelessWidget {
+/// Embed consent belongs to the chat in the enclosing [RenderScope]. Outside
+/// a chat scope a choice lasts only as long as this card.
+class ConsentEmbed extends StatefulWidget {
   const ConsentEmbed({super.key, required this.embed});
 
   final EmbedPiece embed;
 
   @override
+  State<ConsentEmbed> createState() => _ConsentEmbedState();
+}
+
+class _ConsentEmbedState extends State<ConsentEmbed> {
+  static var _cards = 0;
+  final _local = 'card:${_cards++}';
+
+  @override
   Widget build(BuildContext context) {
+    final embed = widget.embed;
+    final chat = RenderScope.maybeOf(context)?.chatKey ?? _local;
     return ListenableBuilder(
       listenable: embedConsent,
       builder: (context, _) {
         if (embedConsent.mode == EmbedMode.off) {
           return Text(embed.url);
         }
-        if (!embedConsent.fetches(embed)) {
+        if (!embedConsent.fetches(embed, chat: chat)) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -437,12 +341,13 @@ class ConsentEmbed extends StatelessWidget {
                 spacing: 8,
                 children: [
                   TextButton(
-                    onPressed: () => embedConsent.loadOnce(embed),
+                    onPressed: () => embedConsent.loadOnce(embed, chat: chat),
                     child: const Text('Load once'),
                   ),
                   TextButton(
-                    onPressed: () => embedConsent.allowProvider(embed.provider),
-                    child: Text('Always allow ${embed.provider}'),
+                    onPressed: () =>
+                        embedConsent.allowProvider(embed.provider, chat: chat),
+                    child: Text('Always allow ${embed.provider} in this chat'),
                   ),
                 ],
               ),
@@ -475,7 +380,10 @@ class DiagramView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(model.kind == 'sequence' ? 'Sequence' : 'Diagram'),
+          // Nodes and links as text; the diagram itself is not drawn.
+          Text(
+            model.kind == 'sequence' ? 'Sequence outline' : 'Diagram outline',
+          ),
           for (final node in model.nodes)
             Text(node.label, key: Key('diagram-${node.id}')),
           for (final edge in model.edges)
@@ -610,10 +518,58 @@ class ArtifactRevisionCard extends StatefulWidget {
   State<ArtifactRevisionCard> createState() => _ArtifactRevisionCardState();
 }
 
+/// A revision bigger than this shows its source instead of a parsed page,
+/// so one long artefact cannot stall every streamed token.
+const artifactRenderChars = 32 * 1024;
+
+final _pages = ContentMemo<SandboxDocument?>(16);
+final _drawings = ContentMemo<SvgDrawing?>(16);
+
+/// Revisions follow the reply as it streams: each rebuild with new text
+/// re-reads the (memoised) history, so the card, Copy and download settle on
+/// the final content. A revision the user stepped to stays selected.
 class _ArtifactRevisionCardState extends State<ArtifactRevisionCard> {
-  late final List<ArtifactRevision> _revisions = _load();
-  late int _index = _initial();
+  late List<ArtifactRevision> _revisions;
+  late int _index;
+  String? _pinned;
   var _source = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _sync();
+  }
+
+  @override
+  void didUpdateWidget(ArtifactRevisionCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.corpus != widget.corpus ||
+        oldWidget.code != widget.code ||
+        artifactSlug(oldWidget.detection) != artifactSlug(widget.detection)) {
+      _sync();
+    }
+  }
+
+  String get _currentHash => artifactContentHash(widget.code.trim());
+
+  void _sync() {
+    _revisions = _load();
+    final pinned = _pinned == null
+        ? -1
+        : _revisions.indexWhere((revision) => revision.hash == _pinned);
+    if (pinned >= 0) {
+      _index = pinned;
+    } else {
+      _pinned = null;
+      _index = _initial();
+    }
+  }
+
+  void _step(int delta) => setState(() {
+    _index = (_index + delta).clamp(0, _revisions.length - 1);
+    final hash = _revisions[_index].hash;
+    _pinned = hash == _currentHash ? null : hash;
+  });
 
   List<ArtifactRevision> _load() {
     final slug = artifactSlug(widget.detection);
@@ -631,7 +587,7 @@ class _ArtifactRevisionCardState extends State<ArtifactRevisionCard> {
   }
 
   int _initial() {
-    final hash = artifactContentHash(widget.code.trim());
+    final hash = _currentHash;
     final match = _revisions.indexWhere((revision) => revision.hash == hash);
     return match < 0 ? _revisions.length - 1 : match;
   }
@@ -639,12 +595,22 @@ class _ArtifactRevisionCardState extends State<ArtifactRevisionCard> {
   @override
   Widget build(BuildContext context) {
     final revision = _revisions[_index];
-    final html = revision.detection.kind == GeneratedArtifactKind.html
-        ? parseSandboxedHtml(revision.content)
+    final content = revision.content;
+    final tooLarge = content.length > artifactRenderChars;
+    final html =
+        !tooLarge && revision.detection.kind == GeneratedArtifactKind.html
+        ? _pages.lookup(content, () => parseSandboxedHtml(content))
         : null;
-    final svg = revision.detection.kind == GeneratedArtifactKind.svg
-        ? parseSafeSvg(revision.content)
+    final svg =
+        !tooLarge && revision.detection.kind == GeneratedArtifactKind.svg
+        ? _drawings.lookup(content, () => parseSafeSvg(content))
         : null;
+    final source = revision.hash == _currentHash
+        ? widget.fallback
+        : SelectableText(
+            content,
+            style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+          );
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: Padding(
@@ -658,15 +624,13 @@ class _ArtifactRevisionCardState extends State<ArtifactRevisionCard> {
               spacing: 8,
               children: [
                 TextButton(
-                  onPressed: _index == 0
-                      ? null
-                      : () => setState(() => _index -= 1),
+                  onPressed: _index == 0 ? null : () => _step(-1),
                   child: const Text('Previous revision'),
                 ),
                 TextButton(
                   onPressed: _index == _revisions.length - 1
                       ? null
-                      : () => setState(() => _index += 1),
+                      : () => _step(1),
                   child: const Text('Next revision'),
                 ),
                 TextButton(
@@ -689,8 +653,10 @@ class _ArtifactRevisionCardState extends State<ArtifactRevisionCard> {
                 ),
               ],
             ),
+            if (tooLarge && !_source)
+              const Text('This artefact is too long to show as a page here.'),
             if (_source || (html == null && svg == null))
-              widget.fallback
+              source
             else if (html != null)
               _HtmlBody(document: html)
             else if (svg != null)
@@ -743,6 +709,7 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
   var _missing = false;
   String? _status;
   var _lastAcceptedAt = 0;
+  var _delivering = false;
 
   Future<void> _load() async {
     final reader = widget.readHtml;
@@ -778,6 +745,7 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
       userGesture: true,
       origin: opaqueWidgetOrigin(widget.file),
       expectedOrigin: opaqueWidgetOrigin(widget.file),
+      inFlight: _delivering,
     );
     if (decision is! IntentAccepted) {
       final reason = decision is IntentRejected ? decision.error : 'invalid';
@@ -789,12 +757,17 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
       setState(() => _status = 'undelivered');
       return;
     }
+    // Stamp the acceptance before the first await: a second tap during a
+    // slow delivery must see both the stamp and the in-flight delivery.
+    _lastAcceptedAt = now;
+    _delivering = true;
     try {
       await deliver(decision.prompt);
-      _lastAcceptedAt = now;
       if (mounted) setState(() => _status = 'Sent to this chat');
     } catch (_) {
       if (mounted) setState(() => _status = 'undelivered');
+    } finally {
+      _delivering = false;
     }
   }
 
@@ -867,80 +840,4 @@ String? inspectedImagePath(String text) {
   final path = match?.group(1);
   if (path == null || path.contains('://')) return null;
   return path;
-}
-
-class InteractiveToolCard extends StatelessWidget {
-  const InteractiveToolCard({
-    super.key,
-    required this.toolName,
-    required this.callId,
-    required this.output,
-  });
-
-  final String toolName;
-  final String callId;
-  final String output;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: Listenable.merge([catalogDecisions, setupAnswers]),
-      builder: (context, _) {
-        if (toolName == 'catalog_install') {
-          final notes = catalogDecisions.stateFor('notes');
-          final foreign = catalogDecisions.stateFor('remote.example');
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Install a reviewed contribution?'),
-              Wrap(
-                spacing: 8,
-                children: [
-                  FilledButton(
-                    onPressed: () => catalogDecisions.install('notes'),
-                    child: const Text('Install notes'),
-                  ),
-                  OutlinedButton(
-                    onPressed: () => catalogDecisions.skip('notes'),
-                    child: const Text('Skip install'),
-                  ),
-                  TextButton(
-                    onPressed: () => catalogDecisions.install('remote.example'),
-                    child: const Text('Install remote.example'),
-                  ),
-                ],
-              ),
-              Text(notes.reason ?? 'Notes is not installed.'),
-              Text(foreign.reason ?? '', key: const Key('catalog-foreign')),
-            ],
-          );
-        }
-        final settled = setupAnswers.settled[callId];
-        if (settled != null) {
-          return Text('Setup choice: $settled');
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Setup'),
-            Wrap(
-              spacing: 8,
-              children: [
-                FilledButton(
-                  onPressed: () =>
-                      setupAnswers.settle(callId, 'Named the agent'),
-                  child: const Text('Name the agent'),
-                ),
-                OutlinedButton(
-                  onPressed: () =>
-                      setupAnswers.settle(callId, 'Kept the default'),
-                  child: const Text('Keep the default'),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
 }

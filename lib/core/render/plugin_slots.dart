@@ -13,39 +13,22 @@ class PluginDescriptor {
     required this.title,
     required this.slots,
     this.directive,
-    this.toolName,
-    this.paneLabel,
-    this.command,
-    this.composerLabel,
   });
 
   final String id;
   final String title;
   final Set<PluginSlot> slots;
   final String? directive;
-  final String? toolName;
-  final String? paneLabel;
-  final String? command;
-  final String? composerLabel;
 }
 
+/// The reviewed contributions. Notes draws `::notes{text="…"}` directives
+/// from a reply as a card once it is granted for that connection.
 const reviewedPlugins = <PluginDescriptor>[
   PluginDescriptor(
     id: 'notes',
     title: 'Notes',
-    slots: {
-      PluginSlot.pane,
-      PluginSlot.page,
-      PluginSlot.composerAction,
-      PluginSlot.command,
-      PluginSlot.directive,
-      PluginSlot.toolMedia,
-    },
+    slots: {PluginSlot.directive},
     directive: 'notes',
-    toolName: 'notes.attach',
-    paneLabel: 'Notes',
-    command: '/notes',
-    composerLabel: 'Insert note',
   ),
 ];
 
@@ -56,52 +39,35 @@ PluginDescriptor? reviewedPlugin(String id) {
   return null;
 }
 
+/// Grants per connection ([scope] is a render connection key). A grant on
+/// one gateway or profile does nothing on another.
 class PluginGrants extends ChangeNotifier {
-  final _granted = <String>{};
+  final _granted = <String, Set<String>>{};
 
-  bool granted(String id) => _granted.contains(id);
+  bool granted(String scope, String id) =>
+      _granted[scope]?.contains(id) ?? false;
 
   /// Only a reviewed descriptor can receive a grant. Revocation is immediate.
-  bool grant(String id) {
+  bool grant(String scope, String id) {
     if (reviewedPlugin(id) == null) return false;
-    final added = _granted.add(id);
-    if (added) notifyListeners();
+    if ((_granted[scope] ??= <String>{}).add(id)) notifyListeners();
     return true;
   }
 
-  void revoke(String id) {
-    if (_granted.remove(id)) notifyListeners();
+  void revoke(String scope, String id) {
+    if (_granted[scope]?.remove(id) ?? false) notifyListeners();
   }
 
-  bool showsDirective(String name) {
+  bool showsDirective(String scope, String name) {
     for (final plugin in reviewedPlugins) {
       if (plugin.directive == name &&
           plugin.slots.contains(PluginSlot.directive) &&
-          _granted.contains(plugin.id)) {
+          granted(scope, plugin.id)) {
         return true;
       }
     }
     return false;
   }
-
-  PluginDescriptor? mediaPlayerFor(String toolName) {
-    for (final plugin in reviewedPlugins) {
-      if (plugin.toolName == toolName &&
-          plugin.slots.contains(PluginSlot.toolMedia) &&
-          _granted.contains(plugin.id)) {
-        return plugin;
-      }
-    }
-    return null;
-  }
-
-  List<PluginDescriptor> composerActions() => [
-    for (final plugin in reviewedPlugins)
-      if (_granted.contains(plugin.id) &&
-          plugin.slots.contains(PluginSlot.composerAction) &&
-          plugin.composerLabel != null)
-        plugin,
-  ];
 
   void reset() {
     _granted.clear();
@@ -111,115 +77,10 @@ class PluginGrants extends ChangeNotifier {
 
 final pluginGrants = PluginGrants();
 
-enum PreviewScriptChoice { undecided, denied, allowed }
-
-class PreviewScriptConsent extends ChangeNotifier {
-  final _choices = <String, PreviewScriptChoice>{};
-
-  String _key(String pluginId, String origin) => '$pluginId|$origin';
-
-  PreviewScriptChoice choice(String pluginId, String origin) =>
-      _choices[_key(pluginId, origin)] ?? PreviewScriptChoice.undecided;
-
-  void decide(String pluginId, String origin, PreviewScriptChoice choice) {
-    _choices[_key(pluginId, origin)] = choice;
-    notifyListeners();
-  }
-
-  void revoke(String pluginId, String origin) =>
-      decide(pluginId, origin, PreviewScriptChoice.denied);
-
-  void reset() {
-    _choices.clear();
-    notifyListeners();
-  }
-}
-
-final previewScriptConsent = PreviewScriptConsent();
-
-/// Allowing a site names the plugin and origin. It does not execute page script.
-bool pluginMaySeePreview({required String pluginId, required String origin}) {
-  if (!pluginGrants.granted(pluginId)) return false;
-  return previewScriptConsent.choice(pluginId, origin) ==
-      PreviewScriptChoice.allowed;
-}
-
-enum CatalogOutcome { offered, installed, skipped, refused }
-
-class CatalogDecision {
-  const CatalogDecision(this.outcome, {this.reason});
-
-  final CatalogOutcome outcome;
-  final String? reason;
-}
-
-class CatalogDecisions extends ChangeNotifier {
-  final byId = <String, CatalogDecision>{};
-
-  CatalogDecision stateFor(String id) =>
-      byId[id] ?? const CatalogDecision(CatalogOutcome.offered);
-
-  CatalogDecision install(String id) {
-    final plugin = reviewedPlugin(id);
-    final decision = plugin == null
-        ? const CatalogDecision(
-            CatalogOutcome.refused,
-            reason:
-                'This package is not a reviewed client contribution. Ares will not run it inside the app.',
-          )
-        : (pluginGrants.grant(id)
-              ? CatalogDecision(
-                  CatalogOutcome.installed,
-                  reason: '${plugin.title} can use its granted slots.',
-                )
-              : const CatalogDecision(
-                  CatalogOutcome.refused,
-                  reason: 'The contribution could not be granted.',
-                ));
-    byId[id] = decision;
-    notifyListeners();
-    return decision;
-  }
-
-  CatalogDecision skip(String id) {
-    const decision = CatalogDecision(CatalogOutcome.skipped);
-    byId[id] = decision;
-    notifyListeners();
-    return decision;
-  }
-
-  CatalogDecision retry(String id) => install(id);
-
-  void reset() {
-    byId.clear();
-    notifyListeners();
-  }
-}
-
-final catalogDecisions = CatalogDecisions();
-
-class SetupAnswers extends ChangeNotifier {
-  final settled = <String, String>{};
-
-  void settle(String callId, String label) {
-    settled[callId] = label;
-    notifyListeners();
-  }
-
-  void reset() {
-    settled.clear();
-    notifyListeners();
-  }
-}
-
-final setupAnswers = SetupAnswers();
-
+/// Clears every renderer store and parse cache. Tests call it between cases.
 void resetSandboxedRenderer() {
-  previewSuggestions.reset();
   embedConsent.reset();
   pluginGrants.reset();
-  previewScriptConsent.reset();
-  catalogDecisions.reset();
-  setupAnswers.reset();
-  mediaPlayback.reset();
+  resetArtifactCaches();
+  resetRichBlockCaches();
 }

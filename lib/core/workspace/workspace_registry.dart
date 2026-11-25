@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../models/connection.dart';
 import '../models/session.dart';
 import '../render/contributions_page.dart';
+import '../render/render_scope.dart';
 
 /// Runtime-only context for trusted, compiled-in client features. Recheck
 /// [current] after awaiting consent or resolving a remote capability. A page
@@ -126,7 +127,7 @@ Widget _sessionDetails(BuildContext context, WorkspaceTarget target) {
 }
 
 Widget _contributionsPage(BuildContext context, WorkspaceTarget target) {
-  return const ContributionsPage();
+  return ContributionsPage(scope: renderConnectionKey(target.connection));
 }
 
 final aresWorkspaceRegistry = WorkspaceRegistry(const [

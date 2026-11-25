@@ -10,7 +10,8 @@ const intentMessageType = 'hermes-inline-preview-intent';
 /// Over-long intents are rejected whole. They are never sliced.
 const maxIntentLength = 500;
 
-/// One accepted intent per widget per second.
+/// One accepted intent per widget per second. Acceptance is stamped before
+/// delivery starts, and nothing is accepted while a delivery is in flight.
 const intentThrottleMs = 1000;
 
 const minFrameHeight = 120;
@@ -58,6 +59,7 @@ IntentDecision? evaluateWidgetIntent({
   required bool userGesture,
   required String origin,
   required String expectedOrigin,
+  bool inFlight = false,
 }) {
   if (data is! Map) return null;
   if (data['type'] != intentMessageType || data['token'] != token) {
@@ -75,6 +77,9 @@ IntentDecision? evaluateWidgetIntent({
   }
   if (prompt.length > maxIntentLength) {
     return IntentRejected('too_long', id: id, maxLength: maxIntentLength);
+  }
+  if (inFlight) {
+    return IntentRejected('throttled', id: id, retryAfterMs: intentThrottleMs);
   }
   if (lastAcceptedAtMs > 0) {
     final elapsed = nowMs - lastAcceptedAtMs;

@@ -302,13 +302,6 @@ class _GatewayActivityRow extends StatelessWidget {
                   if (activity.name == 'vision_analyze' ||
                       activity.name == 'image_generate')
                     InspectedImageTile(source: activity.detail ?? ''),
-                  if (activity.name == 'setup_beat' ||
-                      activity.name == 'catalog_install')
-                    InteractiveToolCard(
-                      toolName: activity.name,
-                      callId: activity.identity,
-                      output: activity.detail ?? '',
-                    ),
                 ],
               ),
             ),

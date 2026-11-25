@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/models/gateway_activity.dart';
 import 'package:hermes_android/core/render/artifact_library.dart';
-import 'package:hermes_android/core/render/playback_bar.dart';
 import 'package:hermes_android/core/render/plugin_slots.dart';
 import 'package:hermes_android/core/render/render_contract.dart';
+import 'package:hermes_android/core/render/render_scope.dart';
 import 'package:hermes_android/core/render/rich_blocks.dart';
 import 'package:hermes_android/core/render/rich_transcript.dart';
 import 'package:hermes_android/core/screens/assets_screen.dart';
@@ -231,27 +231,13 @@ void main() {
   });
 
   test('an unreviewed package cannot receive a slot', () {
-    expect(pluginGrants.grant('remote.example'), isFalse);
-    expect(
-      catalogDecisions.install('remote.example').outcome,
-      CatalogOutcome.refused,
-    );
-    expect(catalogDecisions.install('notes').outcome, CatalogOutcome.installed);
-    expect(pluginGrants.showsDirective('notes'), isTrue);
-    previewScriptConsent.decide(
-      'notes',
-      'https://example.test',
-      PreviewScriptChoice.allowed,
-    );
-    expect(
-      pluginMaySeePreview(pluginId: 'notes', origin: 'https://example.test'),
-      isTrue,
-    );
-    previewScriptConsent.revoke('notes', 'https://example.test');
-    expect(
-      pluginMaySeePreview(pluginId: 'notes', origin: 'https://example.test'),
-      isFalse,
-    );
+    expect(pluginGrants.grant('c1', 'remote.example'), isFalse);
+    expect(pluginGrants.granted('c1', 'remote.example'), isFalse);
+    expect(pluginGrants.grant('c1', 'notes'), isTrue);
+    expect(pluginGrants.showsDirective('c1', 'notes'), isTrue);
+    expect(pluginGrants.showsDirective('c2', 'notes'), isFalse);
+    pluginGrants.revoke('c1', 'notes');
+    expect(pluginGrants.showsDirective('c1', 'notes'), isFalse);
   });
 
   testWidgets('Classic renders rich replies without running widget script', (
@@ -266,7 +252,6 @@ void main() {
         child: MessageBubble(
           content: _reply,
           isUser: false,
-          sessionId: 'stored',
           readWidgetHtml: (_) async =>
               '<p>Safe copy</p><script>alert(1)</script>'
               '<button data-hermes-send="continue please">Go</button>',
@@ -379,25 +364,7 @@ void main() {
     expect(find.text('shot.png'), findsOneWidget);
   });
 
-  testWidgets('playback speed survives a remount and columns can be dragged', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      _app(
-        theme: hermesTheme(Brightness.light),
-        child: const TranscriptPlaybackBar(mediaId: '/tmp/a.mp3'),
-      ),
-    );
-    await tester.tap(find.text('1.5x'));
-    await tester.pump();
-    await tester.pumpWidget(
-      _app(
-        theme: hermesTheme(Brightness.light),
-        child: const TranscriptPlaybackBar(mediaId: '/tmp/a.mp3'),
-      ),
-    );
-    expect(find.byKey(const Key('playback-speed-1.5-on')), findsOneWidget);
-
+  testWidgets('markdown table columns can be dragged', (tester) async {
     await tester.pumpWidget(
       _app(
         theme: hermesTheme(Brightness.light),
@@ -475,6 +442,7 @@ void main() {
             ),
             filesClient: (_) => _Files(),
             onOpenSession: (_) {},
+            contributionsScope: 'c1',
           ),
         ),
       );
@@ -490,41 +458,33 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Grant Notes'));
       await tester.pump();
-      expect(find.byKey(const Key('plugin-pane-notes')), findsOneWidget);
-      await tester.tap(find.text('Allow this site'));
-      await tester.pump();
-      expect(find.text('Notes may read https://example.test'), findsOneWidget);
-      await tester.tap(find.text('Install remote.example'));
-      await tester.pump();
-      expect(find.textContaining('will not run it'), findsOneWidget);
+      expect(find.text('Revoke Notes'), findsOneWidget);
+      expect(pluginGrants.granted('c1', 'notes'), isTrue);
+      expect(pluginGrants.granted('c2', 'notes'), isFalse);
     },
   );
 
-  testWidgets('a granted directive and composer action appear in both themes', (
+  testWidgets('a granted directive renders only on its own connection', (
     tester,
   ) async {
-    pluginGrants.grant('notes');
-    final controller = TextEditingController();
-    addTearDown(controller.dispose);
-    await tester.pumpWidget(
-      _app(
-        theme: nextGenTheme(Brightness.light, NextGenLook.instance),
-        child: Column(
-          children: [
-            ComposerRenderExtras(sessionId: 'stored', controller: controller),
-            MessageBubble(
-              content: '::notes{text="Remember the milk"}',
-              isUser: false,
-            ),
-          ],
+    pluginGrants.grant('c1', 'notes');
+    Widget bubble(String connection) => _app(
+      theme: nextGenTheme(Brightness.light, NextGenLook.instance),
+      child: RenderScope(
+        connection: connection,
+        chat: 'stored',
+        child: const MessageBubble(
+          content: '::notes{text="Remember the milk"}',
+          isUser: false,
         ),
       ),
     );
+    await tester.pumpWidget(bubble('c1'));
     expect(find.text('Notes directive'), findsOneWidget);
     expect(find.text('Remember the milk'), findsOneWidget);
-    await tester.tap(find.text('Insert note'));
-    await tester.pump();
-    expect(controller.text, contains('/notes'));
+    await tester.pumpWidget(bubble('c2'));
+    expect(find.text('Notes directive'), findsNothing);
+    expect(find.text('::notes{text="Remember the milk"}'), findsOneWidget);
   });
 }
 

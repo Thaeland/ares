@@ -13,7 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/models/attachment_draft.dart';
 import '../../core/preview/chat_preview.dart';
-import '../../core/render/plugin_slots.dart';
+import '../../core/render/render_scope.dart';
 import '../../core/render/rich_transcript.dart';
 import '../../core/screens/workspace_workers_screen.dart';
 import '../../core/screens/gateway_queue_screen.dart';
@@ -106,7 +106,17 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     }
   }
 
+  /// A widget may continue only an idle chat, as in Classic: a running
+  /// turn, dictation, an attachment being prepared or a stale owner
+  /// refuses it rather than steering or queueing a hidden prompt.
   Future<void> _deliverWidgetIntent(String prompt) async {
+    if (!mounted ||
+        chat.running ||
+        _listening ||
+        _preparing ||
+        !chat.draftOwnerCurrent) {
+      throw StateError('undelivered');
+    }
     final accepted = await chat.send(prompt, hidden: true);
     if (!accepted) throw StateError('undelivered');
   }
@@ -743,6 +753,14 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
     final gateway = NgScope.of(context).gateway;
+    return RenderScope(
+      connection: renderConnectionKey(chat.gateway.connection),
+      chat: chat.storedId ?? 'draft:${identityHashCode(chat)}',
+      child: _buildScoped(c, gateway),
+    );
+  }
+
+  Widget _buildScoped(NgColors c, NextGenGateway gateway) {
     return _preview.layout(
       chat: _buildChat(c, gateway),
       storedId: chat.storedId,
@@ -1339,7 +1357,6 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                 ? chat.retryLast
                 : null,
             readAloud: _readAloud,
-            sessionId: chat.storedId ?? chat.runtimeId ?? 'draft',
             readHtml: _readWidgetHtml,
             onIntent: _deliverWidgetIntent,
           ),
@@ -1442,10 +1459,6 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ComposerRenderExtras(
-                  sessionId: chat.storedId ?? chat.runtimeId ?? 'draft',
-                  controller: _input,
-                ),
                 if (_imageRestoreRevision() != null)
                   PreparedImageRecovery(
                     target: chat.imageTarget!,
@@ -2088,12 +2101,10 @@ class _AssistantBlock extends StatefulWidget {
     required this.files,
     required this.filesIdentity,
     required this.readAloud,
-    required this.sessionId,
     this.readHtml,
     this.onIntent,
     this.onRetry,
   });
-  final String sessionId;
   final Future<String?> Function(String path)? readHtml;
   final Future<void> Function(String prompt)? onIntent;
   final NgAssistantItem item;
@@ -2340,14 +2351,7 @@ class _AssistantBlockState extends State<_AssistantBlock> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (!item.open)
-                    PreviewOfferHook(
-                      sessionId: widget.sessionId,
-                      text: item.text,
-                    ),
-                  ..._content(c, item),
-                ],
+                children: _content(c, item),
               ),
             ),
           if (!item.open && item.text.isNotEmpty)
@@ -2613,17 +2617,6 @@ class _ToolRowState extends State<_ToolRow> {
           if (t.output?.isNotEmpty ?? false) _codeBlock(c, t.output!),
           if (t.name == 'vision_analyze' || t.name == 'image_generate')
             InspectedImageTile(source: '${t.input ?? ''}\n${t.output ?? ''}'),
-          if (t.name == 'setup_beat' || t.name == 'catalog_install')
-            InteractiveToolCard(
-              toolName: t.name,
-              callId: t.id,
-              output: t.output ?? '',
-            ),
-          if (pluginGrants.mediaPlayerFor(t.name) case final player?)
-            ListTile(
-              title: Text('${player.title} player'),
-              subtitle: Text(t.output ?? ''),
-            ),
         ],
       ],
     );

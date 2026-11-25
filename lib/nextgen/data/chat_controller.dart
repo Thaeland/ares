@@ -2523,9 +2523,11 @@ class NgChatController extends ChangeNotifier {
       return false;
     }
     if (trimmed.isEmpty && attachments.isEmpty) return false;
-    // A hidden widget intent is plain text on this chat's own runtime.
+    // A hidden widget intent is plain text on this chat's own runtime, and
+    // only starts a turn: it never steers or queues behind a running one.
     if (hidden &&
-        (attachments.isNotEmpty ||
+        (running ||
+            attachments.isNotEmpty ||
             composerImageText != null ||
             fleetTarget != null)) {
       return false;

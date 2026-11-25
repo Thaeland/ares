@@ -9,6 +9,7 @@ import '../../core/l10n/l10n.dart';
 import '../../core/models/hermes_project.dart';
 import '../../core/models/session.dart';
 import '../../core/render/contributions_page.dart';
+import '../../core/render/render_scope.dart';
 import '../../core/screens/assets_screen.dart';
 import '../../core/screens/cron_screen.dart';
 import '../../core/screens/files_screen.dart';
@@ -141,35 +142,14 @@ class NgMorePage extends StatelessWidget {
                   onTap: () => push(ProjectsRootScreen(connection: conn)),
                 ),
                 NgRow(
-                  icon: Icons.image_outlined,
-                  title: context.l10n.assets,
-                  subtitle: context.l10n.assets_recent_subtitle,
-                  onTap: () {
-                    final source = ChatAssetsClient.fromConnection(conn);
-                    Navigator.of(context)
-                        .push(
-                          MaterialPageRoute<void>(
-                            builder: (_) => AssetsScreen(
-                              source: source,
-                              filesClient: (session) =>
-                                  RemoteFilesClient.fromConnection(
-                                    conn,
-                                    sessionId: session.id,
-                                    maxDownloadBytes:
-                                        maxAttachmentDownloadBytes,
-                                  ),
-                              onOpenSession: onOpenSession,
-                            ),
-                          ),
-                        )
-                        .whenComplete(source.close);
-                  },
-                ),
-                NgRow(
                   icon: Icons.extension_outlined,
                   title: 'Contributions',
-                  subtitle: 'Reviewed panes, commands and preview grants',
-                  onTap: () => push(const ContributionsPage()),
+                  subtitle: 'Reviewed reply cards for this connection',
+                  onTap: () => push(
+                    ContributionsPage(
+                      scope: renderConnectionKey(scope.gateway.connection),
+                    ),
+                  ),
                 ),
               ],
             ),
