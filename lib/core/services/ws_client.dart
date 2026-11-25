@@ -1494,6 +1494,10 @@ class WsClient {
     if (rawPayload is! Map) {
       throw StateError('session.resume succeeded without a result payload.');
     }
+    if (rawPayload.containsKey('stored_session_id') &&
+        rawPayload['stored_session_id'] != sessionId) {
+      throw StateError('session.resume returned a different stored chat.');
+    }
     final payload = Map<String, dynamic>.from(rawPayload);
     final runtimeSessionId = payload['session_id'] as String?;
     if (runtimeSessionId == null || runtimeSessionId.isEmpty) {

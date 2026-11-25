@@ -415,7 +415,18 @@ class MemorySignInSecretStore implements SignInSecretStore {
 /// the platform secure store and mirrored in memory so every HTTP client and
 /// WebSocket in the app (classic and NextGen) can authenticate synchronously.
 class HermesSignInVault extends ChangeNotifier {
-  HermesSignInVault._(this._store);
+  HermesSignInVault._(this._store, {this.windowOrigin});
+
+  /// A separate chat window must never rotate a refresh token concurrently
+  /// with the main app or replace its shared secure-store token maps.
+  final String? windowOrigin;
+  bool get readOnly => windowOrigin != null;
+  static void useReadOnlyWindowStore(String baseUrl) {
+    instance = HermesSignInVault._(
+      _PlatformSignInSecretStore(),
+      windowOrigin: canonicalGatewayKey(baseUrl),
+    );
+  }
 
   static HermesSignInVault instance = HermesSignInVault._(
     _PlatformSignInSecretStore(),
@@ -450,7 +461,9 @@ class HermesSignInVault extends ChangeNotifier {
           if (decoded is Map) {
             for (final e in decoded.entries) {
               final session = NativeSession.fromJson(e.value);
-              if (session != null) _tokens[e.key.toString()] = session;
+              if (session != null && (!readOnly || e.key == windowOrigin)) {
+                _tokens[e.key.toString()] = session;
+              }
             }
           }
         }
@@ -460,7 +473,11 @@ class HermesSignInVault extends ChangeNotifier {
           if (decoded is Map) {
             for (final e in decoded.entries) {
               final token = AccessToken.fromJson(e.value);
-              if (token != null) _access[e.key.toString()] = token;
+              if (token != null &&
+                  (!readOnly ||
+                      e.key == _hostKey(Uri.parse(windowOrigin!).host))) {
+                _access[e.key.toString()] = token;
+              }
             }
           }
         }
@@ -520,6 +537,7 @@ class HermesSignInVault extends ChangeNotifier {
   }
 
   Future<void> setSession(String baseUrl, NativeSession? session) async {
+    if (readOnly) throw StateError('Sign in in the main window.');
     final key = canonicalGatewayKey(baseUrl);
     if (session == null) {
       if (_tokens.remove(key) == null) return;
@@ -533,6 +551,7 @@ class HermesSignInVault extends ChangeNotifier {
   AccessToken? accessTokenFor(String host) => _access[_hostKey(host)];
 
   Future<void> setAccessToken(String host, AccessToken? token) async {
+    if (readOnly) throw StateError('Sign in in the main window.');
     final key = _hostKey(host);
     if (token == null) {
       if (_access.remove(key) == null) return;
@@ -576,6 +595,7 @@ class HermesSignInVault extends ChangeNotifier {
     http.Client? client,
     String? expiredAccessToken,
   }) {
+    if (readOnly) return Future.value(null);
     final key = canonicalGatewayKey(baseUrl);
     final inFlight = _refreshing[key];
     if (inFlight != null) return inFlight;

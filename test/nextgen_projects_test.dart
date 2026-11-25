@@ -232,7 +232,7 @@ Future<void> _app(
 Future<void> _browse(WidgetTester tester, {bool main = false}) async {
   if (main) {
     final chat = tester.widget<NgChatView>(find.byType(NgChatView));
-    chat.onOpenSidebar();
+    chat.onOpenSidebar!();
     await _frames(tester);
     await tester.tap(find.text('More'));
     await _frames(tester);
@@ -812,7 +812,7 @@ void main() {
     await _frames(tester);
     var view = tester.widget<NgChatView>(find.byType(NgChatView));
     expect(view.chat.workingDirectory, '/srv/work/project');
-    view.onNewChat();
+    view.onNewChat!();
     await _frames(tester);
     view = tester.widget<NgChatView>(find.byType(NgChatView));
     expect(view.chat.workingDirectory, isNull);

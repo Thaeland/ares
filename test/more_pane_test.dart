@@ -87,6 +87,7 @@ void main() {
           'projects-root',
           'assets',
           'unassigned',
+          'parallel-workspace',
           'model',
           'cron',
           'skills',
@@ -184,6 +185,21 @@ void main() {
               (section) => section.entries.any((e) => e.id == 'openai'),
             );
         expect(usage.title, titles[locale.toString()], reason: '$locale');
+      }
+    });
+
+    test('parallel workspace refuses profile-unqualified legacy history', () {
+      for (final dashboardReachable in [true, false]) {
+        final entry =
+            buildMoreSections(
+                  dashboardReachable: dashboardReachable,
+                  l10n: l10n,
+                  profileScopedHistory: false,
+                )
+                .expand((section) => section.entries)
+                .singleWhere((e) => e.id == 'parallel-workspace');
+        expect(entry.isSelectable, isFalse);
+        expect(entry.unavailableReason, contains('named profile'));
       }
     });
 

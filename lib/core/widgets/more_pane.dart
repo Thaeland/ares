@@ -17,6 +17,7 @@ library;
 import 'package:flutter/material.dart';
 
 import '../theme/hermes_theme.dart';
+import '../screens/parallel_workspace_entry.dart';
 import 'hermes_components.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
@@ -91,6 +92,7 @@ class MoreSection {
 List<MoreSection> buildMoreSections({
   required bool dashboardReachable,
   required AppLocalizations l10n,
+  bool profileScopedHistory = true,
   Set<String> providerIds = const {},
 }) {
   MoreEntryAvailability dashboardBacked() => dashboardReachable
@@ -133,6 +135,18 @@ List<MoreSection> buildMoreSections({
           icon: Icons.image_outlined,
           availability: dashboardBacked(),
           unavailableReason: dashboardReason(),
+        ),
+        MoreEntry(
+          id: 'parallel-workspace',
+          title: parallelWorkspaceEntryTitle,
+          subtitle: parallelWorkspaceEntrySubtitle,
+          icon: Icons.view_week_outlined,
+          availability: profileScopedHistory
+              ? MoreEntryAvailability.available
+              : MoreEntryAvailability.unavailable,
+          unavailableReason: profileScopedHistory
+              ? null
+              : 'Use dashboard sign-in for a named profile. This legacy API cannot confirm which profile owns chat history.',
         ),
       ],
     ),
