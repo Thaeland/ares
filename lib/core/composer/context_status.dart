@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 /// Status items that stay hidden until the user turns them on. Matches the
 /// Desktop bar: cache, context, timers and throughput are diagnostics, not
 /// the default chrome.
@@ -35,6 +37,30 @@ class StatusBarLayout {
   }
 
   StatusBarLayout reset() => StatusBarLayout.defaults();
+}
+
+const _statusLayoutKey = 'composer_status_hidden_v1';
+
+/// The status bar the person chose, kept across launches (both layouts).
+Future<StatusBarLayout> loadStatusLayout() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getStringList(_statusLayoutKey);
+    return saved == null
+        ? StatusBarLayout.defaults()
+        : StatusBarLayout(saved.toSet());
+  } catch (_) {
+    return StatusBarLayout.defaults();
+  }
+}
+
+Future<void> saveStatusLayout(StatusBarLayout layout) async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(_statusLayoutKey, layout.hidden.toList()..sort());
+  } catch (_) {
+    // The choice still applies for this session.
+  }
 }
 
 class ContextCategory {

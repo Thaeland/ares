@@ -7,6 +7,13 @@ import '../composer/context_status.dart';
 
 /// Customisable live status. Hidden items stay off until chosen. A visible
 /// item with no reported figure says so in the menu and stays off the bar.
+///
+/// It sits above the composer, so its height is bounded by [maxHeight]
+/// (the caller passes its keyboard-aware share) and it scrolls inside. With
+/// [showMenu] false the Status control lives in the composer's own menu
+/// ([showComposerStatusSheet]) and nothing shows until an item is on, so
+/// the composer is no taller by default. On a [compact] (narrow) pane the
+/// context breakdown starts folded.
 class ComposerContextStatus extends StatefulWidget {
   const ComposerContextStatus({
     super.key,
@@ -18,6 +25,9 @@ class ComposerContextStatus extends StatefulWidget {
     this.runningSinceMs,
     this.sessionSinceMs,
     this.nowMs,
+    this.compact = false,
+    this.showMenu = true,
+    this.maxHeight = double.infinity,
   });
 
   final StatusBarLayout layout;
@@ -28,14 +38,119 @@ class ComposerContextStatus extends StatefulWidget {
   final int? sessionSinceMs;
   final int? nowMs;
   final ValueChanged<StatusBarLayout> onLayout;
+  final bool compact;
+  final bool showMenu;
+  final double maxHeight;
 
   @override
   State<ComposerContextStatus> createState() => _ComposerContextStatusState();
 }
 
+/// The Status choices as a sheet: the composer menu's entry on a compact
+/// pane, where an always-visible Status control would crowd the editor.
+Future<void> showComposerStatusSheet({
+  required BuildContext context,
+  required StatusBarLayout layout,
+  required UsageReading usage,
+  required ContextReading? breakdown,
+  required int? runningSinceMs,
+  required int? sessionSinceMs,
+  required ValueChanged<StatusBarLayout> onLayout,
+}) async {
+  final l10n = context.sharedL10n;
+  var current = layout;
+  await showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    builder: (sheetContext) => StatefulBuilder(
+      builder: (sheetContext, setSheet) {
+        void toggle(String id) {
+          current = current.setVisible(id, !current.visible(id));
+          setSheet(() {});
+          onLayout(current);
+        }
+
+        final items = _statusItems(
+          l10n,
+          usage: usage,
+          breakdown: breakdown,
+          runningSinceMs: runningSinceMs,
+          sessionSinceMs: sessionSinceMs,
+        );
+        return SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(title: Text(l10n.composer_status)),
+                for (final item in items)
+                  CheckboxListTile(
+                    key: ValueKey('composer-status-${item.id}'),
+                    value: current.visible(item.id),
+                    title: Text(item.label),
+                    subtitle: item.reported
+                        ? null
+                        : Text(l10n.composer_status_not_reported),
+                    onChanged: (_) => toggle(item.id),
+                  ),
+                ListTile(
+                  title: Text(l10n.composer_status_reset),
+                  onTap: () {
+                    current = current.reset();
+                    setSheet(() {});
+                    onLayout(current);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ),
+  );
+}
+
+typedef _StatusItem = ({String id, String label, bool reported});
+
+/// The Status choices. The session timer is offered only when the gateway
+/// reports when the session started.
+List<_StatusItem> _statusItems(
+  AppLocalizations l10n, {
+  required UsageReading usage,
+  required ContextReading? breakdown,
+  required int? runningSinceMs,
+  required int? sessionSinceMs,
+}) => [
+  (
+    id: 'context-usage',
+    label: l10n.composer_status_context,
+    reported:
+        (breakdown != null && breakdown.usable) ||
+        contextSummary(usage).isNotEmpty,
+  ),
+  (
+    id: 'cache-hit-rate',
+    label: l10n.composer_status_cache,
+    reported: cacheHitLabel(usage.cacheHitPct).isNotEmpty,
+  ),
+  (
+    id: 'tokens-per-second',
+    label: l10n.composer_status_throughput,
+    reported: tokensPerSecondLabel(usage.avgTps).isNotEmpty,
+  ),
+  (
+    id: 'running-timer',
+    label: l10n.composer_status_running,
+    reported: runningSinceMs != null,
+  ),
+  if (sessionSinceMs != null)
+    (id: 'session-timer', label: l10n.composer_status_session, reported: true),
+];
+
 class _ComposerContextStatusState extends State<ComposerContextStatus> {
   Timer? _tick;
   int _now = 0;
+  bool? _expanded;
 
   @override
   void initState() {
@@ -117,70 +232,66 @@ class _ComposerContextStatusState extends State<ComposerContextStatus> {
           formatDuration(_now - widget.sessionSinceMs!),
         ),
     ];
-    return Wrap(
+    final showBreakdown = widget.layout.visible('context-usage');
+    if (!widget.showMenu && chips.isEmpty && !showBreakdown) {
+      return const SizedBox.shrink();
+    }
+    final expanded = _expanded ?? !widget.compact;
+    final bar = Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: 8,
       children: [
         ...chips,
-        PopupMenuButton<String>(
-          key: const ValueKey('composer-status-menu'),
-          tooltip: l10n.composer_status,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            child: Text(l10n.composer_status),
+        if (widget.showMenu) _menu(l10n),
+        if (showBreakdown)
+          TextButton.icon(
+            key: const ValueKey('composer-context-breakdown-toggle'),
+            onPressed: () => setState(() => _expanded = !expanded),
+            icon: Icon(expanded ? Icons.expand_less : Icons.expand_more),
+            label: Text(l10n.composer_status_context),
           ),
-          itemBuilder: (context) => [
-            _item(
-              'context-usage',
-              l10n.composer_status_context,
-              _contextReported,
-            ),
-            _item(
-              'cache-hit-rate',
-              l10n.composer_status_cache,
-              cacheHitLabel(widget.usage.cacheHitPct).isNotEmpty,
-            ),
-            _item(
-              'tokens-per-second',
-              l10n.composer_status_throughput,
-              tokensPerSecondLabel(widget.usage.avgTps).isNotEmpty,
-            ),
-            _item(
-              'running-timer',
-              l10n.composer_status_running,
-              widget.runningSinceMs != null,
-            ),
-            _item(
-              'session-timer',
-              l10n.composer_status_session,
-              widget.sessionSinceMs != null,
-            ),
-            const PopupMenuDivider(),
-            PopupMenuItem(
-              value: 'reset',
-              child: Text(l10n.composer_status_reset),
-            ),
-          ],
-          onSelected: (id) {
-            if (id == 'reset') {
-              widget.onLayout(widget.layout.reset());
-              return;
-            }
-            widget.onLayout(
-              widget.layout.setVisible(id, !widget.layout.visible(id)),
-            );
-          },
-        ),
-        if (widget.layout.visible('context-usage')) _breakdown(l10n),
       ],
+    );
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: widget.maxHeight),
+      child: SingleChildScrollView(
+        key: const ValueKey('composer-context-status'),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [bar, if (showBreakdown && expanded) _breakdown(l10n)],
+        ),
+      ),
     );
   }
 
-  bool get _contextReported {
-    final breakdown = widget.breakdown;
-    if (breakdown != null && breakdown.usable) return true;
-    return contextSummary(widget.usage).isNotEmpty;
-  }
+  Widget _menu(AppLocalizations l10n) => PopupMenuButton<String>(
+    key: const ValueKey('composer-status-menu'),
+    tooltip: l10n.composer_status,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      child: Text(l10n.composer_status),
+    ),
+    itemBuilder: (context) => [
+      for (final item in _statusItems(
+        l10n,
+        usage: widget.usage,
+        breakdown: widget.breakdown,
+        runningSinceMs: widget.runningSinceMs,
+        sessionSinceMs: widget.sessionSinceMs,
+      ))
+        _item(item.id, item.label, item.reported),
+      const PopupMenuDivider(),
+      PopupMenuItem(value: 'reset', child: Text(l10n.composer_status_reset)),
+    ],
+    onSelected: (id) {
+      if (id == 'reset') {
+        widget.onLayout(widget.layout.reset());
+        return;
+      }
+      widget.onLayout(widget.layout.setVisible(id, !widget.layout.visible(id)));
+    },
+  );
 
   PopupMenuItem<String> _item(String id, String label, bool reported) {
     final l10n = context.sharedL10n;
@@ -204,6 +315,7 @@ class _ComposerContextStatusState extends State<ComposerContextStatus> {
       return Text(l10n.composer_status_empty);
     }
     return Column(
+      key: const ValueKey('composer-context-breakdown'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (final category in breakdown.categories)

@@ -236,6 +236,14 @@ class _NgChatViewState extends State<NgChatView>
     _openDraft();
     _input.addListener(_onDraftEdit);
     chat.addListener(_onChat);
+    _wasRunning = chat.running;
+    unawaited(
+      loadStatusLayout().then((layout) {
+        if (!mounted) return;
+        setState(() => _status = layout);
+        if (layout.visible('context-usage')) unawaited(_loadBreakdown());
+      }),
+    );
     _readAloud = (widget.readAloudFactory ?? NgReadAloud.new)();
     _readAloud.addListener(_onReadAloud);
     _readAloud.onUnavailable = () {
@@ -307,8 +315,46 @@ class _NgChatViewState extends State<NgChatView>
     if (reading != null && !chat.items.any((item) => item.key == reading)) {
       unawaited(_readAloud.stop());
     }
+    // Each finished turn changes the context: read the breakdown again.
+    final ended = _wasRunning && !chat.running;
+    _wasRunning = chat.running;
+    if (ended && _status.visible('context-usage')) {
+      unawaited(_loadBreakdown());
+    }
     setState(() {});
   }
+
+  bool _wasRunning = false;
+
+  /// Applies and keeps the person's status bar choice.
+  void _setStatus(StatusBarLayout layout) {
+    setState(() => _status = layout);
+    unawaited(saveStatusLayout(layout));
+    if (layout.visible('context-usage')) unawaited(_loadBreakdown());
+  }
+
+  Future<void> _openStatusSheet() => showComposerStatusSheet(
+    context: context,
+    layout: _status,
+    usage: _usageReading,
+    breakdown: _breakdown,
+    runningSinceMs: _runningSinceMs,
+    sessionSinceMs: null,
+    onLayout: _setStatus,
+  );
+
+  UsageReading get _usageReading => UsageReading(
+    cacheHitPct: chat.usage?.cacheHitPct,
+    avgTps: chat.usage?.avgTps,
+    contextUsed: chat.usage?.contextUsed,
+    contextMax: chat.usage?.contextMax,
+    estimated: chat.usage?.contextEstimated ?? false,
+    compressions: chat.usage?.compressions,
+  );
+
+  int? get _runningSinceMs => chat.running && chat.turnStartedAt != null
+      ? chat.turnStartedAt!.millisecondsSinceEpoch
+      : null;
 
   /// The transcript is reversed, so its top is the scroll's far end: fetch
   /// the page before when the reader gets near it.
@@ -355,37 +401,50 @@ class _NgChatViewState extends State<NgChatView>
     final c = NgColors.of(context);
     final choice = await showNgSheet<String>(
       context,
+      // Scrolls: at large text on a small phone the rows outgrow the sheet.
       builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: Icon(Icons.photo_library_outlined, color: c.text2),
-              title: Text(ngL.ng_photos),
-              onTap: () => Navigator.pop(context, 'photos'),
-            ),
-            ListTile(
-              leading: Icon(Icons.photo_camera_outlined, color: c.text2),
-              title: Text(ngL.ng_camera),
-              onTap: () => Navigator.pop(context, 'camera'),
-            ),
-            ListTile(
-              leading: Icon(Icons.attach_file, color: c.text2),
-              title: Text(ngL.ng_files),
-              onTap: () => Navigator.pop(context, 'files'),
-            ),
-            ListTile(
-              leading: Icon(Icons.notes_outlined, color: c.text2),
-              title: Text(context.sharedL10n.composer_snippets),
-              onTap: () => Navigator.pop(context, 'snippets'),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.photo_library_outlined, color: c.text2),
+                title: Text(ngL.ng_photos),
+                onTap: () => Navigator.pop(context, 'photos'),
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_camera_outlined, color: c.text2),
+                title: Text(ngL.ng_camera),
+                onTap: () => Navigator.pop(context, 'camera'),
+              ),
+              ListTile(
+                leading: Icon(Icons.attach_file, color: c.text2),
+                title: Text(ngL.ng_files),
+                onTap: () => Navigator.pop(context, 'files'),
+              ),
+              ListTile(
+                leading: Icon(Icons.notes_outlined, color: c.text2),
+                title: Text(context.sharedL10n.composer_snippets),
+                onTap: () => Navigator.pop(context, 'snippets'),
+              ),
+              ListTile(
+                key: const ValueKey('ng-composer-status'),
+                leading: Icon(Icons.tune, color: c.text2),
+                title: Text(context.sharedL10n.composer_status),
+                onTap: () => Navigator.pop(context, 'status'),
+              ),
+            ],
+          ),
         ),
       ),
     );
     if (choice == null || !mounted) return;
     if (choice == 'snippets') {
       await showPromptSnippets(context: context, editor: _input);
+      return;
+    }
+    if (choice == 'status') {
+      await _openStatusSheet();
       return;
     }
     if (_slotsLeft <= 0) {
@@ -1833,52 +1892,62 @@ class _NgChatViewState extends State<NgChatView>
                       ],
                     ),
                   ),
-                ComposerContextStatus(
-                  layout: _status,
-                  usage: UsageReading(
-                    cacheHitPct: chat.usage?.cacheHitPct,
-                    avgTps: chat.usage?.avgTps,
-                    contextUsed: chat.usage?.contextUsed,
-                    contextMax: chat.usage?.contextMax,
-                    estimated: chat.usage?.contextEstimated ?? false,
-                    compressions: chat.usage?.compressions,
+                // Stacked above the editor: bounded by the keyboard-aware
+                // share and scrolling inside, so the editor stays above the
+                // keyboard. Status lives in the composer menu (no extra row
+                // until an item is on); a narrow pane folds the breakdown.
+                LayoutBuilder(
+                  builder: (context, box) => ComposerContextStatus(
+                    layout: _status,
+                    usage: _usageReading,
+                    breakdown: _breakdown,
+                    breakdownLoading: _breakdownLoading,
+                    runningSinceMs: _runningSinceMs,
+                    showMenu: false,
+                    compact: box.maxWidth < 480,
+                    maxHeight: ngAboveComposerMaxHeight(
+                      context,
+                      fraction: 0.25,
+                      withKeyboard: 0.15,
+                    ),
+                    onLayout: _setStatus,
                   ),
-                  breakdown: _breakdown,
-                  breakdownLoading: _breakdownLoading,
-                  runningSinceMs: chat.running && chat.turnStartedAt != null
-                      ? chat.turnStartedAt!.millisecondsSinceEpoch
-                      : null,
-                  onLayout: (layout) {
-                    setState(() => _status = layout);
-                    if (layout.visible('context-usage')) {
-                      unawaited(_loadBreakdown());
-                    }
-                  },
                 ),
-                ComposerReferenceAssist(
-                  controller: _input,
-                  cacheScope: (chat.gateway, chat.storedId),
-                  completePath: (query) async {
-                    final owner = chat;
-                    final result = await owner.gateway.call(
-                      'complete.path',
-                      pathCompletionParams(
-                        query: query,
-                        sessionId: await owner.liveSessionId(),
-                      ),
-                    );
-                    final rows = parseReferenceCompletions(result);
-                    return rows.isEmpty ? starterSuggestions(query) : rows;
-                  },
-                  completeSlash: (text) async {
-                    final owner = chat;
-                    final sessionId = await owner.liveSessionId();
-                    final result = await owner.gateway.call('complete.slash', {
-                      'text': text,
-                      'session_id': ?sessionId,
-                    });
-                    return parseArgumentCompletion(result);
-                  },
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: ngAboveComposerMaxHeight(
+                      context,
+                      fraction: 0.35,
+                      withKeyboard: 0.2,
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: ComposerReferenceAssist(
+                      controller: _input,
+                      cacheScope: (chat.gateway, chat.storedId),
+                      completePath: (query) async {
+                        final owner = chat;
+                        final result = await owner.gateway.call(
+                          'complete.path',
+                          pathCompletionParams(
+                            query: query,
+                            sessionId: await owner.liveSessionId(),
+                          ),
+                        );
+                        final rows = parseReferenceCompletions(result);
+                        return rows.isEmpty ? starterSuggestions(query) : rows;
+                      },
+                      completeSlash: (text) async {
+                        final owner = chat;
+                        final sessionId = await owner.liveSessionId();
+                        final result = await owner.gateway.call(
+                          'complete.slash',
+                          {'text': text, 'session_id': ?sessionId},
+                        );
+                        return parseArgumentCompletion(result);
+                      },
+                    ),
+                  ),
                 ),
                 SendOnEnter(
                   enabled:

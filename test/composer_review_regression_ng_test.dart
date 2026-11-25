@@ -462,11 +462,36 @@ void main() {
         'context_source': 'provider_usage',
         'model': 'm',
       };
+      // A narrow pane keeps no always-visible Status control: it lives in
+      // the composer menu.
+      expect(find.byKey(const ValueKey('composer-status-menu')), findsNothing);
       if (breakdownOn) {
-        await tester.tap(find.text('Status'));
+        await tester.tap(find.byTooltip('Attach'));
         await _settle(tester);
-        await tester.tap(find.textContaining('Context').last);
+        final status = find.byKey(const ValueKey('ng-composer-status'));
+        await tester.ensureVisible(status);
         await _settle(tester);
+        await tester.tap(status);
+        await _settle(tester);
+        final context = find.byKey(
+          const ValueKey('composer-status-context-usage'),
+        );
+        await tester.ensureVisible(context);
+        await _settle(tester);
+        await tester.tap(context);
+        await _settle(tester);
+        await tester.tapAt(const Offset(5, 5));
+        await _settle(tester);
+        expect(h.gateway.of('session.context_breakdown'), isNotEmpty);
+        // Folded by default here; opening it must still fit.
+        await tester.tap(
+          find.byKey(const ValueKey('composer-context-breakdown-toggle')),
+        );
+        await _settle(tester);
+        expect(
+          find.byKey(const ValueKey('composer-context-breakdown')),
+          findsOneWidget,
+        );
       }
       h.chat.running = true;
       h.chat.turnStartedAt = DateTime.now();
@@ -487,9 +512,60 @@ void main() {
       expect(field.width, greaterThanOrEqualTo(80));
       expect(field.bottom, lessThanOrEqualTo(640 - 260));
       expect(field.top, greaterThanOrEqualTo(0));
-    }, skip: breakdownOn && _pendingKeyboard);
+    });
   }
-}
 
-// Each flag goes once its review item lands (one commit per item).
-const _pendingKeyboard = true;
+  testWidgets('the status layout choice is kept across chats and the '
+      'breakdown refreshes after each turn', (tester) async {
+    tester.view.physicalSize = const Size(1000, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    final h = await pump(tester, storedId: 'stored-1', runtimeId: 'rt-1');
+    h.gateway.handlers['session.context_breakdown'] = (p) => {
+      'categories': [
+        {'id': 'c', 'label': 'System', 'tokens': 10},
+      ],
+      'context_max': 1000,
+      'context_used': 10,
+    };
+    // Status lives in the composer menu: no extra row by default. The
+    // session timer, which the gateway does not report here, is not offered.
+    expect(find.byKey(const ValueKey('composer-context-status')), findsNothing);
+    await tester.tap(find.byTooltip('Attach'));
+    await _settle(tester);
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.tap(find.byKey(const ValueKey('ng-composer-status')));
+    await _settle(tester);
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(
+      find.byKey(const ValueKey('composer-status-session-timer')),
+      findsNothing,
+    );
+    await tester.tap(
+      find.byKey(const ValueKey('composer-status-context-usage')),
+    );
+    await _settle(tester);
+    await tester.tapAt(const Offset(5, 5));
+    await _settle(tester);
+    // A wide pane shows the breakdown open.
+    expect(
+      find.byKey(const ValueKey('composer-context-breakdown')),
+      findsOneWidget,
+    );
+    final reads = h.gateway.of('session.context_breakdown').length;
+    expect(reads, greaterThan(0));
+    final prefs = await SharedPreferences.getInstance();
+    expect(
+      prefs.getStringList('composer_status_hidden_v1'),
+      isNot(contains('context-usage')),
+    );
+    h.gateway.debugEmit(ev('message.start', {}));
+    await _settle(tester);
+    h.gateway.debugEmit(ev('message.complete', {'text': 'done'}));
+    await _settle(tester);
+    expect(
+      h.gateway.of('session.context_breakdown').length,
+      greaterThan(reads),
+    );
+  });
+}
