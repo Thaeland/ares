@@ -29,10 +29,12 @@ class NotificationPrefs {
   final Map<HermesNotificationKind, bool> kinds;
 
   final WindowsCompletionSound completionSound;
+  final bool shareWindowActivity;
   const NotificationPrefs({
     required this.enabled,
     required this.kinds,
     this.completionSound = WindowsCompletionSound.system,
+    this.shareWindowActivity = false,
   });
 
   static const defaults = NotificationPrefs(
@@ -57,6 +59,7 @@ class NotificationPrefs {
     HermesNotificationKind? kind,
     bool? kindValue,
     WindowsCompletionSound? completionSound,
+    bool? shareWindowActivity,
   }) {
     final nextKinds = Map<HermesNotificationKind, bool>.from(kinds);
     if (kind != null && kindValue != null) {
@@ -66,6 +69,7 @@ class NotificationPrefs {
       enabled: enabled ?? this.enabled,
       kinds: nextKinds,
       completionSound: completionSound ?? this.completionSound,
+      shareWindowActivity: shareWindowActivity ?? this.shareWindowActivity,
     );
   }
 
@@ -83,6 +87,7 @@ class NotificationPrefs {
     return NotificationPrefs(
       enabled: json['enabled'] is bool ? json['enabled'] as bool : true,
       kinds: kinds,
+      shareWindowActivity: json['shareWindowActivity'] == true,
       completionSound:
           WindowsCompletionSound.values
               .where((s) => s.name == json['windowsSound'])
@@ -93,6 +98,7 @@ class NotificationPrefs {
 
   Map<String, dynamic> toJson() => {
     'enabled': enabled,
+    if (shareWindowActivity) 'shareWindowActivity': true,
     if (completionSound != WindowsCompletionSound.system)
       'windowsSound': completionSound.name,
     'kinds': {for (final entry in kinds.entries) entry.key.name: entry.value},
@@ -131,6 +137,12 @@ abstract final class NotificationPrefsStore {
 
   static Future<void> setEnabled(bool enabled) async {
     final next = notificationPrefs.value.copyWith(enabled: enabled);
+    notificationPrefs.value = next;
+    await _persist(next);
+  }
+
+  static Future<void> setShareWindowActivity(bool value) async {
+    final next = notificationPrefs.value.copyWith(shareWindowActivity: value);
     notificationPrefs.value = next;
     await _persist(next);
   }

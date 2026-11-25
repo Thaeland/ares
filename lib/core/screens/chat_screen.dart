@@ -2,6 +2,7 @@
 // Uses REST endpoints: POST /api/sessions/{id}/chat and
 // GET /api/sessions/{id}/messages.
 import 'dart:async';
+import '../widgets/windows_chat_presence.dart';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -7022,7 +7023,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     _syncComposerKeyboardEndScroll();
-    return Scaffold(
+    final screen = Scaffold(
       appBar: AppBar(
         centerTitle: false,
         automaticallyImplyLeading: widget.onClose == null,
@@ -7267,6 +7268,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         ),
       ),
     );
+    return defaultTargetPlatform == TargetPlatform.windows
+        ? WindowsChatPresence(
+            target: () => (_desktopGateway ?? _normalSession?.client)
+                ?.presenceFor(_normalLocalSessionKey),
+            child: screen,
+          )
+        : screen;
   }
 
   Widget _buildGatewayNotification(GatewayNotification notification) {

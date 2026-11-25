@@ -618,6 +618,8 @@
   "notifications": "Notifications",
   "windows_notifications_blocked": "Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.",
   "windows_notification_diagnostics": "What Ares submitted to Windows",
+  "windows_window_activity": "Share chat activity",
+  "windows_window_activity_hint": "Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.",
   "windows_completion_sound": "Completion sound",
   "windows_sound_default": "Windows default",
   "windows_sound_mail": "Mail",

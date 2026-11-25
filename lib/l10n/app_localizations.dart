@@ -3306,6 +3306,18 @@ abstract class AppLocalizations {
   /// **'What Ares submitted to Windows'**
   String get windows_notification_diagnostics;
 
+  /// No description provided for @windows_window_activity.
+  ///
+  /// In en, this message translates to:
+  /// **'Share chat activity'**
+  String get windows_window_activity;
+
+  /// No description provided for @windows_window_activity_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.'**
+  String get windows_window_activity_hint;
+
   /// No description provided for @windows_completion_sound.
   ///
   /// In en, this message translates to:

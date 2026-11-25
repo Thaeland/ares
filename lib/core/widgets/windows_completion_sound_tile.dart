@@ -9,28 +9,38 @@ class WindowsCompletionSoundTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    return ListTile(
-      title: Text(l.windows_completion_sound),
-      trailing: DropdownButton<WindowsCompletionSound>(
-        value: prefs.completionSound,
-        items: [
-          for (final s in WindowsCompletionSound.values)
-            DropdownMenuItem(
-              value: s,
-              child: Text(switch (s) {
-                WindowsCompletionSound.system => l.windows_sound_default,
-                WindowsCompletionSound.mail => l.windows_sound_mail,
-                WindowsCompletionSound.reminder => l.windows_sound_reminder,
-                WindowsCompletionSound.silent => l.windows_sound_silent,
-              }),
-            ),
-        ],
-        onChanged: prefs.enabled
-            ? (v) {
-                if (v != null) NotificationPrefsStore.setWindowsSound(v);
-              }
-            : null,
-      ),
+    return Column(
+      children: [
+        SwitchListTile(
+          title: Text(l.windows_window_activity),
+          subtitle: Text(l.windows_window_activity_hint),
+          value: prefs.shareWindowActivity,
+          onChanged: NotificationPrefsStore.setShareWindowActivity,
+        ),
+        ListTile(
+          title: Text(l.windows_completion_sound),
+          trailing: DropdownButton<WindowsCompletionSound>(
+            value: prefs.completionSound,
+            items: [
+              for (final s in WindowsCompletionSound.values)
+                DropdownMenuItem(
+                  value: s,
+                  child: Text(switch (s) {
+                    WindowsCompletionSound.system => l.windows_sound_default,
+                    WindowsCompletionSound.mail => l.windows_sound_mail,
+                    WindowsCompletionSound.reminder => l.windows_sound_reminder,
+                    WindowsCompletionSound.silent => l.windows_sound_silent,
+                  }),
+                ),
+            ],
+            onChanged: prefs.enabled
+                ? (v) {
+                    if (v != null) NotificationPrefsStore.setWindowsSound(v);
+                  }
+                : null,
+          ),
+        ),
+      ],
     );
   }
 }

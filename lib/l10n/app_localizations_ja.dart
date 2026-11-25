@@ -1857,6 +1857,13 @@ class AppLocalizationsJa extends AppLocalizations {
       'What Ares submitted to Windows';
 
   @override
+  String get windows_window_activity => 'Share chat activity';
+
+  @override
+  String get windows_window_activity_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+
+  @override
   String get windows_completion_sound => 'Completion sound';
 
   @override
