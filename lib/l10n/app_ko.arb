@@ -1814,5 +1814,10 @@
   "desktop_tray_setting": "시스템 트레이 또는 메뉴 막대에 Ares 표시",
   "desktop_tray_setting_help": "아이콘에서 Ares 열기, 채팅 시작, 빠른 입력 열기, 알림 일시 중지 또는 종료를 할 수 있습니다.",
   "desktop_close_to_tray_setting": "창을 닫아도 트레이에서 계속 실행",
-  "desktop_tray_unsupported": "이 데스크톱에는 Ares가 사용할 수 있는 시스템 트레이가 없습니다."
+  "desktop_tray_unsupported": "이 데스크톱에는 Ares가 사용할 수 있는 시스템 트레이가 없습니다.",
+  "quick_entry_title": "빠른 입력",
+  "quick_entry_hint": "Ares에 보낼 프롬프트 입력…",
+  "quick_entry_submit": "입력란에 넣기",
+  "quick_entry_never_sends": "Enter를 누르면 텍스트가 채팅 입력란에 들어갑니다. 보내기를 누르기 전에는 아무것도 전송되지 않습니다.",
+  "quick_entry_unavailable": "빠른 입력을 열 수 없습니다. 다시 시도하세요."
 }

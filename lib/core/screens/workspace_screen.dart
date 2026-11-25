@@ -90,6 +90,8 @@ import 'package:hermes_android/core/l10n/l10n.dart';
 import '../widgets/desktop_shortcuts.dart';
 import '../widgets/command_palette.dart';
 import '../services/hermes_deeplink.dart';
+import '../desktop/desktop_integration.dart';
+import '../desktop/quick_entry.dart';
 
 /// Builds the Projects repository for a connection. Injectable for tests.
 typedef ProjectsRepositoryFactory =
@@ -341,6 +343,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   /// Desktop keyboard shortcut subscription (no-op on touch platforms).
   StreamSubscription<DesktopShortcut>? _desktopShortcutSub;
   VoidCallback? _deepLinkListener;
+  VoidCallback? _quickEntryTargets;
   final _shellKey = GlobalKey<HermesShellState>();
 
   /// The last known attention/running signals. The compact attention section uses these; an
@@ -795,6 +798,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   void initState() {
     super.initState();
     _desktopShortcutSub = desktopShortcutBus.stream.listen(_onDesktopShortcut);
+    _quickEntryTargets = QuickEntryTargets.register(_quickEntryChats);
     _deepLinkListener = _onPendingDeepLink;
     HermesDeepLinkService.shared.pendingLink.addListener(_deepLinkListener!);
     if (HermesDeepLinkService.shared.pendingLink.value != null) {
@@ -974,6 +978,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   @override
   void dispose() {
     _desktopShortcutSub?.cancel();
+    _quickEntryTargets?.call();
     final deepLinkListener = _deepLinkListener;
     if (deepLinkListener != null) {
       HermesDeepLinkService.shared.pendingLink.removeListener(deepLinkListener);
@@ -1022,6 +1027,29 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     }
   }
 
+  /// Recent human chats offered to the desktop quick-entry window.
+  List<QuickEntryChat> _quickEntryChats() {
+    if (!mounted) return const [];
+    final untitled = context.l10n.untitled_chat;
+    return [
+      for (final session in _knownSessions.where((s) => !isMachineSession(s)))
+        QuickEntryChat(
+          id: session.id,
+          title: session.title.trim().isEmpty ? untitled : session.title,
+        ),
+    ];
+  }
+
+  Future<void> _openQuickEntry() async {
+    final desktop = DesktopIntegration.current;
+    if (desktop == null) return;
+    final opened = await desktop.openQuickEntry();
+    if (opened || !mounted) return;
+    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+      SnackBar(content: Text(context.l10n.quick_entry_unavailable)),
+    );
+  }
+
   /// Opens the shared app-wide command palette (Classic: same widget as NextGen).
   void _openCommandPalette() {
     final sessions = _knownSessions.where((s) => !isMachineSession(s)).toList();
@@ -1040,6 +1068,13 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           icon: Icons.search,
           keywords: ['find', 'sessions', 'chats', 'search'],
         ),
+        if (DesktopIntegration.current != null)
+          PaletteAction(
+            id: 'quick-entry',
+            label: context.l10n.quick_entry_title,
+            icon: Icons.edit_note_outlined,
+            keywords: const ['hud', 'quick', 'prompt', 'entry', 'hotkey'],
+          ),
         const PaletteAction(
           id: 'nav-chats',
           label: 'Chats',
@@ -1109,6 +1144,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
             unawaited(_startNewChat());
           case 'search':
             _openWorkspaceSessionView(WorkspaceSessionView.search);
+          case 'quick-entry':
+            unawaited(_openQuickEntry());
           case 'nav-chats':
             _shellKey.currentState?.select(HermesDestination.chats);
           case 'nav-crons':

@@ -1814,5 +1814,10 @@
   "desktop_tray_setting": "Mostrar o Ares na bandeja do sistema ou na barra de menus",
   "desktop_tray_setting_help": "No ícone, abra o Ares, inicie um chat, abra a entrada rápida, pause as notificações ou saia.",
   "desktop_close_to_tray_setting": "Continuar em execução na bandeja ao fechar a janela",
-  "desktop_tray_unsupported": "Esta área de trabalho não tem uma bandeja do sistema que o Ares possa usar."
+  "desktop_tray_unsupported": "Esta área de trabalho não tem uma bandeja do sistema que o Ares possa usar.",
+  "quick_entry_title": "Entrada rápida",
+  "quick_entry_hint": "Digite um prompt para o Ares…",
+  "quick_entry_submit": "Colocar no editor",
+  "quick_entry_never_sends": "Enter coloca o texto no editor do chat. Nada é enviado até você clicar em Enviar.",
+  "quick_entry_unavailable": "Não foi possível abrir a entrada rápida. Tente novamente."
 }

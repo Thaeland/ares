@@ -1814,5 +1814,10 @@
   "desktop_tray_setting": "在系统托盘或菜单栏中显示 Ares",
   "desktop_tray_setting_help": "可通过图标打开 Ares、开始聊天、打开快速输入、暂停通知或退出。",
   "desktop_close_to_tray_setting": "关闭窗口后继续在托盘中运行",
-  "desktop_tray_unsupported": "此桌面没有可供 Ares 使用的系统托盘。"
+  "desktop_tray_unsupported": "此桌面没有可供 Ares 使用的系统托盘。",
+  "quick_entry_title": "快速输入",
+  "quick_entry_hint": "输入给 Ares 的提示…",
+  "quick_entry_submit": "放入输入框",
+  "quick_entry_never_sends": "按 Enter 会将文本放入聊天输入框。在你按下发送之前不会发送任何内容。",
+  "quick_entry_unavailable": "无法打开快速输入。请重试。"
 }

@@ -63,6 +63,15 @@ static void my_application_activate(GApplication* application) {
         gtk_window_set_default_size(window, 360, 520);
         break;
       }
+      if (g_strcmp0(*arg, "--ares-quick-entry-v1") == 0) {
+        // A small always-on-top panel; it never owns the tray or hotkey.
+        gtk_window_set_keep_above(window, TRUE);
+        gtk_window_set_default_size(window, 640, 220);
+        gtk_window_set_position(window, GTK_WIN_POS_CENTER);
+        gtk_window_set_skip_taskbar_hint(window, TRUE);
+        gtk_window_set_title(window, "Ares \u2014 Quick entry");
+        break;
+      }
     }
   }
 

@@ -6897,4 +6897,21 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get desktop_tray_unsupported =>
       'У цьому середовищі немає системного трею, доступного для Ares.';
+
+  @override
+  String get quick_entry_title => 'Швидке введення';
+
+  @override
+  String get quick_entry_hint => 'Введіть запит для Ares…';
+
+  @override
+  String get quick_entry_submit => 'Вставити в поле введення';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Enter вставляє текст у поле введення чату. Нічого не надсилається, доки ви не натиснете «Надіслати».';
+
+  @override
+  String get quick_entry_unavailable =>
+      'Не вдалося відкрити швидке введення. Спробуйте ще раз.';
 }

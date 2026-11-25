@@ -6897,4 +6897,21 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get desktop_tray_unsupported =>
       'Este escritorio no tiene una bandeja del sistema que Ares pueda usar.';
+
+  @override
+  String get quick_entry_title => 'Entrada rápida';
+
+  @override
+  String get quick_entry_hint => 'Escribe una instrucción para Ares…';
+
+  @override
+  String get quick_entry_submit => 'Poner en el editor';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Enter coloca el texto en el editor del chat. No se envía nada hasta que pulses Enviar.';
+
+  @override
+  String get quick_entry_unavailable =>
+      'No se pudo abrir la entrada rápida. Inténtalo de nuevo.';
 }

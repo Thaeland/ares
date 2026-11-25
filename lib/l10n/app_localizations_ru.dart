@@ -6900,4 +6900,21 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get desktop_tray_unsupported =>
       'В этой среде нет системного трея, доступного для Ares.';
+
+  @override
+  String get quick_entry_title => 'Быстрый ввод';
+
+  @override
+  String get quick_entry_hint => 'Введите запрос для Ares…';
+
+  @override
+  String get quick_entry_submit => 'Вставить в поле ввода';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Enter вставляет текст в поле ввода чата. Ничего не отправляется, пока вы не нажмёте «Отправить».';
+
+  @override
+  String get quick_entry_unavailable =>
+      'Не удалось открыть быстрый ввод. Попробуйте ещё раз.';
 }

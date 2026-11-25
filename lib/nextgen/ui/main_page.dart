@@ -29,6 +29,8 @@ import 'sessions_sidebar.dart';
 import 'widgets.dart';
 import 'settings_page.dart';
 import '../nextgen_l10n.dart';
+import '../../core/desktop/desktop_integration.dart';
+import '../../core/desktop/quick_entry.dart';
 
 class NgMainPage extends StatelessWidget {
   const NgMainPage({super.key});
@@ -62,6 +64,7 @@ class _NgMainPageState extends State<_NgMainContent>
   /// Desktop keyboard shortcut subscription (no-op on touch platforms).
   StreamSubscription<DesktopShortcut>? _desktopShortcutSub;
   VoidCallback? _deepLinkListener;
+  VoidCallback? _quickEntryTargets;
 
   NgSessionsModel? _sessions;
   NgChatController? _chat;
@@ -80,6 +83,7 @@ class _NgMainPageState extends State<_NgMainContent>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _desktopShortcutSub = desktopShortcutBus.stream.listen(_onDesktopShortcut);
+    _quickEntryTargets = QuickEntryTargets.register(_quickEntryChats);
     _deepLinkListener = _onPendingDeepLink;
     HermesDeepLinkService.shared.pendingLink.addListener(_deepLinkListener!);
     if (HermesDeepLinkService.shared.pendingLink.value != null) {
@@ -94,6 +98,7 @@ class _NgMainPageState extends State<_NgMainContent>
   @override
   void dispose() {
     _desktopShortcutSub?.cancel();
+    _quickEntryTargets?.call();
     final deepLinkListener = _deepLinkListener;
     if (deepLinkListener != null) {
       HermesDeepLinkService.shared.pendingLink.removeListener(deepLinkListener);
@@ -635,6 +640,20 @@ class _NgMainPageState extends State<_NgMainContent>
     }
   }
 
+  /// Recent chats offered to the desktop quick-entry window.
+  List<QuickEntryChat> _quickEntryChats() => [
+    for (final session in _sessions?.sessions ?? const <Session>[])
+      QuickEntryChat(id: session.id, title: ngSessionTitle(session)),
+  ];
+
+  Future<void> _openQuickEntry() async {
+    final desktop = DesktopIntegration.current;
+    if (desktop == null) return;
+    final opened = await desktop.openQuickEntry();
+    if (opened || !mounted) return;
+    ngToast(context, ngL.quick_entry_unavailable);
+  }
+
   /// Opens the shared app-wide command palette (same widget as Classic).
   void _openCommandPalette() {
     final sessions = _sessions?.sessions ?? const <Session>[];
@@ -653,6 +672,13 @@ class _NgMainPageState extends State<_NgMainContent>
           icon: Icons.search,
           keywords: ['find', 'sessions', 'chats', 'search'],
         ),
+        if (DesktopIntegration.current != null)
+          PaletteAction(
+            id: 'quick-entry',
+            label: ngL.quick_entry_title,
+            icon: Icons.edit_note_outlined,
+            keywords: const ['hud', 'quick', 'prompt', 'entry', 'hotkey'],
+          ),
         const PaletteAction(
           id: 'nav-scheduled',
           label: 'Scheduled',
@@ -730,6 +756,8 @@ class _NgMainPageState extends State<_NgMainContent>
               _focusDrawerSearch = true;
               _scaffold.currentState?.openDrawer();
             }
+          case 'quick-entry':
+            unawaited(_openQuickEntry());
           case 'nav-scheduled':
             _go(NgDestination.scheduled);
           case 'nav-insights':

@@ -6700,4 +6700,20 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get desktop_tray_unsupported => 'このデスクトップには Ares が使えるシステムトレイがありません。';
+
+  @override
+  String get quick_entry_title => 'クイック入力';
+
+  @override
+  String get quick_entry_hint => 'Ares へのプロンプトを入力…';
+
+  @override
+  String get quick_entry_submit => '入力欄に入れる';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Enter でテキストがチャットの入力欄に入ります。送信を押すまで何も送信されません。';
+
+  @override
+  String get quick_entry_unavailable => 'クイック入力を開けませんでした。もう一度お試しください。';
 }

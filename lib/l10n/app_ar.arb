@@ -2869,5 +2869,10 @@
   "desktop_tray_setting": "إظهار Ares في علبة النظام أو شريط القوائم",
   "desktop_tray_setting_help": "افتح Ares أو ابدأ دردشة أو افتح الإدخال السريع أو أوقف الإشعارات مؤقتًا أو أنهِ التطبيق من الأيقونة.",
   "desktop_close_to_tray_setting": "استمر في العمل في علبة النظام عند إغلاق النافذة",
-  "desktop_tray_unsupported": "لا يوفّر سطح المكتب هذا علبة نظام يمكن لـ Ares استخدامها."
+  "desktop_tray_unsupported": "لا يوفّر سطح المكتب هذا علبة نظام يمكن لـ Ares استخدامها.",
+  "quick_entry_title": "إدخال سريع",
+  "quick_entry_hint": "اكتب طلبًا لـ Ares…",
+  "quick_entry_submit": "ضعه في مربع الكتابة",
+  "quick_entry_never_sends": "يضع Enter النص في مربع كتابة الدردشة. لا يُرسَل شيء حتى تضغط إرسال.",
+  "quick_entry_unavailable": "تعذّر فتح الإدخال السريع. حاول مرة أخرى."
 }

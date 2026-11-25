@@ -6844,4 +6844,21 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get desktop_tray_unsupported =>
       'This desktop has no system tray Ares can use.';
+
+  @override
+  String get quick_entry_title => 'Quick entry';
+
+  @override
+  String get quick_entry_hint => 'Type a prompt for Ares…';
+
+  @override
+  String get quick_entry_submit => 'Put in composer';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Enter puts the text in the chat\'s composer. Nothing is sent until you press Send.';
+
+  @override
+  String get quick_entry_unavailable =>
+      'Quick entry couldn\'t open. Try again.';
 }

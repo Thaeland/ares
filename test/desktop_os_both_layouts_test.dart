@@ -6,6 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/capabilities/capability_pages.dart';
+import 'package:hermes_android/core/desktop/desktop_integration.dart';
+import 'package:hermes_android/core/desktop/desktop_os.dart';
+import 'package:hermes_android/core/desktop/quick_entry.dart';
+import 'package:hermes_android/core/services/notification_prefs.dart';
 import 'package:hermes_android/core/screens/chat_screen.dart';
 import 'package:hermes_android/core/screens/settings_screen.dart';
 import 'package:hermes_android/core/screens/workspace_screen.dart';
@@ -30,6 +34,8 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/fake_child_process.dart';
 
 class _ShellGatewayFixture {
   _ShellGatewayFixture._(this.server);
@@ -212,6 +218,51 @@ List<Session> _fixtureSessions() => [
   ),
 ];
 
+/// A running desktop integration whose quick-entry window is a fake child.
+Future<DesktopIntegration> _quickEntryIntegration(
+  List<FakeChildProcess> spawned,
+) async {
+  const shell = MethodChannel('test/both_layouts_shell');
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(shell, (_) async => null);
+  final integration = DesktopIntegration(
+    preferences: await SharedPreferences.getInstance(),
+    shell: const DesktopShell(shell),
+    notifications: ValueNotifier(NotificationPrefs.defaults),
+    quickEntrySpawn: () async {
+      final process = FakeChildProcess();
+      spawned.add(process);
+      return process;
+    },
+    strings: () => lookupAppLocalizations(const Locale('en')),
+  )..start();
+  return integration;
+}
+
+Future<void> _openQuickEntryFromPalette(WidgetTester tester) async {
+  await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+  await tester.sendKeyEvent(LogicalKeyboardKey.keyK);
+  await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+  await tester.pumpAndSettle();
+  // Search by keyword so the query field itself does not match the label.
+  await tester.enterText(
+    find.byKey(const Key('app-command-palette-query')),
+    'hud',
+  );
+  await tester.pumpAndSettle();
+  await tester.tap(
+    find.descendant(
+      of: find.byType(CommandPalette),
+      matching: find.text('Quick entry'),
+    ),
+  );
+  // Not pumpAndSettle: the launcher's ready wait is a pending timer.
+  for (var i = 0; i < 5; i++) {
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+  expect(find.byType(CommandPalette), findsNothing);
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -243,6 +294,67 @@ void main() {
   group(
     'Classic layout: command palette, shortcuts, narrow More chat tools, and deep links',
     () {
+      testWidgets(
+        'Classic palette opens desktop quick entry; its hand-back opens the chosen chat with a prefill and never sends',
+        (tester) async {
+          tester.view.physicalSize = const Size(1200, 800);
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(tester.view.reset);
+          final spawned = <FakeChildProcess>[];
+          final integration = await _quickEntryIntegration(spawned);
+          // Async teardown does not run microtasks under the fake clock;
+          // dispose in the body, and only the synchronous part on failure.
+          addTearDown(integration.quickEntry.dispose);
+          final openedSessions = <String>[];
+
+          await tester.pumpWidget(
+            MaterialApp(
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              home: DesktopShortcuts(
+                forceEnabled: true,
+                store: ShortcutsStore(await SharedPreferences.getInstance()),
+                child: WorkspaceScreen(
+                  connection: SavedConnection(
+                    id: 'classic-hud',
+                    label: 'Classic Host',
+                    host: 'offline.test',
+                    port: 8642,
+                    apiKey: 'test-key',
+                  ),
+                  sessionsLoader: () async => _fixtureSessions(),
+                  turnSignalsLoader: (_) async => HomeTurnSignals.empty,
+                  installedVersionLoader: () async => null,
+                  onOpenSession: (s) => openedSessions.add(s.id),
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await _openQuickEntryFromPalette(tester);
+          expect(spawned, hasLength(1));
+          final frame = QuickEntryLaunch.decode(
+            jsonDecode(spawned.single.stdinLines.single)
+                as Map<String, dynamic>,
+          );
+          expect(frame.chats.map((c) => c.id), ['s-alpha', 's-beta']);
+          expect(frame.chats.last.title, 'Beta Notes');
+
+          spawned.single.emit(quickEntryReady);
+          spawned.single.emit(
+            jsonEncode({'prefill': 'From the HUD', 'session': 's-beta'}),
+          );
+          for (var i = 0; i < 5; i++) {
+            await tester.pump(const Duration(milliseconds: 100));
+          }
+          expect(openedSessions, ['s-beta']);
+          expect(HermesDeepLinkService.shared.pendingLink.value, isNull);
+          await tester.runAsync(integration.dispose);
+          expect(DesktopIntegration.current, isNull);
+        },
+      );
+
       testWidgets(
         'wide Classic WorkspaceScreen opens palette via shortcut and button, switches sessions by ID, and honors rebound/conflicted chords',
         (tester) async {
@@ -518,6 +630,56 @@ void main() {
         gateway.dispose();
         await tester.pump(const Duration(seconds: 30));
       }
+
+      testWidgets(
+        'NextGen palette opens desktop quick entry; its hand-back prefills the chosen chat and never sends',
+        (tester) async {
+          final previousOverrides = HttpOverrides.current;
+          HttpOverrides.global = null;
+          addTearDown(() => HttpOverrides.global = previousOverrides);
+
+          final fixture = (await tester.runAsync(_ShellGatewayFixture.start))!;
+          addTearDown(fixture.close);
+          final spawned = <FakeChildProcess>[];
+          final integration = (await tester.runAsync(
+            () => _quickEntryIntegration(spawned),
+          ))!;
+          addTearDown(integration.quickEntry.dispose);
+
+          final gateway = await pumpNextGenShell(
+            tester,
+            fixture,
+            const Size(1200, 800),
+          );
+
+          await _openQuickEntryFromPalette(tester);
+          expect(spawned, hasLength(1));
+          final frame = QuickEntryLaunch.decode(
+            jsonDecode(spawned.single.stdinLines.single)
+                as Map<String, dynamic>,
+          );
+          expect(frame.chats.map((c) => c.id), contains('s-alpha'));
+
+          spawned.single.emit(quickEntryReady);
+          spawned.single.emit(
+            jsonEncode({'prefill': 'From the HUD', 'session': 's-alpha'}),
+          );
+          for (var i = 0; i < 15; i++) {
+            await tester.runAsync(
+              () => Future<void>.delayed(const Duration(milliseconds: 10)),
+            );
+            await tester.pump(const Duration(milliseconds: 30));
+          }
+          final composer = tester.widget<TextField>(
+            find.byKey(const Key('ng-composer-field')),
+          );
+          expect(composer.controller?.text, 'From the HUD');
+          expect(fixture.promptSubmissions, 0);
+          await tester.runAsync(integration.dispose);
+
+          await unmountNextGen(tester, gateway);
+        },
+      );
 
       testWidgets(
         'wide NextGen opens command palette via button and shortcut, switches sessions by ID, and rebinds in NgSettingsPage',

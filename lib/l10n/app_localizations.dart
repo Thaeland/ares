@@ -11558,6 +11558,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This desktop has no system tray Ares can use.'**
   String get desktop_tray_unsupported;
+
+  /// No description provided for @quick_entry_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick entry'**
+  String get quick_entry_title;
+
+  /// No description provided for @quick_entry_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a prompt for Ares…'**
+  String get quick_entry_hint;
+
+  /// No description provided for @quick_entry_submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Put in composer'**
+  String get quick_entry_submit;
+
+  /// No description provided for @quick_entry_never_sends.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter puts the text in the chat\'s composer. Nothing is sent until you press Send.'**
+  String get quick_entry_never_sends;
+
+  /// No description provided for @quick_entry_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick entry couldn\'t open. Try again.'**
+  String get quick_entry_unavailable;
 }
 
 class _AppLocalizationsDelegate

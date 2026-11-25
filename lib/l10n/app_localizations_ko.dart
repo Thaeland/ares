@@ -6706,4 +6706,20 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get desktop_tray_unsupported =>
       '이 데스크톱에는 Ares가 사용할 수 있는 시스템 트레이가 없습니다.';
+
+  @override
+  String get quick_entry_title => '빠른 입력';
+
+  @override
+  String get quick_entry_hint => 'Ares에 보낼 프롬프트 입력…';
+
+  @override
+  String get quick_entry_submit => '입력란에 넣기';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Enter를 누르면 텍스트가 채팅 입력란에 들어갑니다. 보내기를 누르기 전에는 아무것도 전송되지 않습니다.';
+
+  @override
+  String get quick_entry_unavailable => '빠른 입력을 열 수 없습니다. 다시 시도하세요.';
 }

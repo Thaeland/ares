@@ -1814,5 +1814,10 @@
   "desktop_tray_setting": "Afficher Ares dans la zone de notification ou la barre des menus",
   "desktop_tray_setting_help": "Depuis l’icône : ouvrir Ares, démarrer une discussion, ouvrir la saisie rapide, suspendre les notifications ou quitter.",
   "desktop_close_to_tray_setting": "Continuer dans la zone de notification à la fermeture de la fenêtre",
-  "desktop_tray_unsupported": "Ce bureau n’a pas de zone de notification utilisable par Ares."
+  "desktop_tray_unsupported": "Ce bureau n’a pas de zone de notification utilisable par Ares.",
+  "quick_entry_title": "Saisie rapide",
+  "quick_entry_hint": "Saisissez une requête pour Ares…",
+  "quick_entry_submit": "Placer dans la zone de saisie",
+  "quick_entry_never_sends": "Entrée place le texte dans la zone de saisie de la discussion. Rien n’est envoyé avant que vous appuyiez sur Envoyer.",
+  "quick_entry_unavailable": "Impossible d’ouvrir la saisie rapide. Réessayez."
 }

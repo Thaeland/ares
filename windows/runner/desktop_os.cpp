@@ -195,6 +195,8 @@ void DesktopOs::ShowMenu(int x, int y) {
   const auto index = ares::desktop::TrayIndexForCommand(
       static_cast<unsigned>(command), items_.size());
   if (index && shell_) {
+    // The chosen item may start the quick-entry window; let it take focus.
+    ::AllowSetForegroundWindow(ASFW_ANY);
     shell_->InvokeMethod(
         "onTrayAction", std::make_unique<EncodableValue>(items_[*index].id));
   }

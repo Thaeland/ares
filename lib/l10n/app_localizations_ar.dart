@@ -6844,4 +6844,21 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get desktop_tray_unsupported =>
       'لا يوفّر سطح المكتب هذا علبة نظام يمكن لـ Ares استخدامها.';
+
+  @override
+  String get quick_entry_title => 'إدخال سريع';
+
+  @override
+  String get quick_entry_hint => 'اكتب طلبًا لـ Ares…';
+
+  @override
+  String get quick_entry_submit => 'ضعه في مربع الكتابة';
+
+  @override
+  String get quick_entry_never_sends =>
+      'يضع Enter النص في مربع كتابة الدردشة. لا يُرسَل شيء حتى تضغط إرسال.';
+
+  @override
+  String get quick_entry_unavailable =>
+      'تعذّر فتح الإدخال السريع. حاول مرة أخرى.';
 }

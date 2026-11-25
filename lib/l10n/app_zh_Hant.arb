@@ -2881,5 +2881,10 @@
   "desktop_tray_setting": "在系統匣或選單列中顯示 Ares",
   "desktop_tray_setting_help": "可透過圖示開啟 Ares、開始聊天、開啟快速輸入、暫停通知或結束。",
   "desktop_close_to_tray_setting": "關閉視窗後繼續在系統匣中執行",
-  "desktop_tray_unsupported": "此桌面沒有可供 Ares 使用的系統匣。"
+  "desktop_tray_unsupported": "此桌面沒有可供 Ares 使用的系統匣。",
+  "quick_entry_title": "快速輸入",
+  "quick_entry_hint": "輸入給 Ares 的提示…",
+  "quick_entry_submit": "放入輸入框",
+  "quick_entry_never_sends": "按 Enter 會將文字放入聊天輸入框。在你按下傳送之前不會傳送任何內容。",
+  "quick_entry_unavailable": "無法開啟快速輸入。請再試一次。"
 }

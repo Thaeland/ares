@@ -31,9 +31,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
       ::GetFileType(::GetStdHandle(STD_INPUT_HANDLE)) == FILE_TYPE_PIPE, packaged);
   if (role == ares::LaunchRole::invalid) return EXIT_FAILURE;
   const bool chat_child = role == ares::LaunchRole::chat;
-  // The pet companion is a child process too: no console, no single-instance
-  // mutex, no toast routing, and a window class Home launches never target.
-  const bool pet_child = chat_child || role == ares::LaunchRole::pet;
+  const bool quick_entry = role == ares::LaunchRole::quick_entry;
+  // The pet companion and quick entry are child processes too: no console,
+  // no single-instance mutex, no toast routing, no tray or hotkey, and a
+  // window class Home launches never target.
+  const bool pet_child =
+      chat_child || quick_entry || role == ares::LaunchRole::pet;
   Win32Window::SetChatPopoutProcess(pet_child);
   // Preserve inherited IPC handles. A pop-out must not attach a console.
   // Attach to console when present (e.g., 'flutter run') or create a
@@ -92,20 +95,39 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   }
   FlutterWindow window(project, std::move(token), !pet_child);
   Win32Window::Point origin(10, 10);
-  const wchar_t* title = chat_child
-      ? L"Ares - Chat"
-      : pet_child ? L"Ares - Companion" : L"Ares";
-  Win32Window::Size size =
-      pet_child && !chat_child ? Win32Window::Size(360, 520)
+  const wchar_t* title = chat_child    ? L"Ares - Chat"
+                         : quick_entry ? L"Ares - Quick entry"
+                         : pet_child   ? L"Ares - Companion"
+                                       : L"Ares";
+  Win32Window::Size size = quick_entry ? Win32Window::Size(640, 220)
+                           : pet_child && !chat_child
+                               ? Win32Window::Size(360, 520)
                                : Win32Window::Size(1280, 720);
   if (!window.Create(title, origin, size)) {
     return EXIT_FAILURE;
   }
   if (pet_child && !chat_child) {
-    HWND companion = ::FindWindowW(Win32Window::WindowClassName(), title);
+    HWND companion = window.GetHandle();
     if (companion) {
       ::SetWindowPos(companion, HWND_TOPMOST, 0, 0, 0, 0,
                      SWP_NOMOVE | SWP_NOSIZE);
+    }
+    if (companion && quick_entry) {
+      // Centred on the monitor under the pointer, a fifth of the way down,
+      // in physical pixels (works for monitors left of or above the primary).
+      POINT cursor{};
+      RECT frame{};
+      MONITORINFO info{};
+      info.cbSize = sizeof(info);
+      if (::GetCursorPos(&cursor) && ::GetWindowRect(companion, &frame) &&
+          ::GetMonitorInfoW(
+              ::MonitorFromPoint(cursor, MONITOR_DEFAULTTONEAREST), &info)) {
+        const RECT& work = info.rcWork;
+        const LONG width = frame.right - frame.left;
+        const LONG x = work.left + (work.right - work.left - width) / 2;
+        const LONG y = work.top + (work.bottom - work.top) / 5;
+        ::SetWindowPos(companion, HWND_TOPMOST, x, y, 0, 0, SWP_NOSIZE);
+      }
     }
   }
   window.SetQuitOnClose(true);

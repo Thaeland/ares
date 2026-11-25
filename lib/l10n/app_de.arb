@@ -1814,5 +1814,10 @@
   "desktop_tray_setting": "Ares im Infobereich oder in der Menüleiste anzeigen",
   "desktop_tray_setting_help": "Über das Symbol Ares öffnen, einen Chat starten, die Schnelleingabe öffnen, Benachrichtigungen pausieren oder beenden.",
   "desktop_close_to_tray_setting": "Beim Schließen des Fensters im Infobereich weiterlaufen",
-  "desktop_tray_unsupported": "Diese Arbeitsumgebung hat keinen Infobereich, den Ares nutzen kann."
+  "desktop_tray_unsupported": "Diese Arbeitsumgebung hat keinen Infobereich, den Ares nutzen kann.",
+  "quick_entry_title": "Schnelleingabe",
+  "quick_entry_hint": "Prompt für Ares eingeben…",
+  "quick_entry_submit": "In Eingabefeld übernehmen",
+  "quick_entry_never_sends": "Mit Enter landet der Text im Eingabefeld des Chats. Gesendet wird erst, wenn du auf Senden drückst.",
+  "quick_entry_unavailable": "Die Schnelleingabe konnte nicht geöffnet werden. Versuche es erneut."
 }

@@ -35,6 +35,8 @@ import 'core/services/keep_awake.dart';
 import 'core/services/shortcuts_store.dart';
 import 'core/desktop/desktop_integration.dart';
 import 'core/desktop/desktop_os.dart';
+import 'core/desktop/quick_entry.dart' show quickEntryMarker;
+import 'core/desktop/quick_entry_window.dart';
 import 'core/services/locale_preference.dart';
 import 'core/services/lan_discovery_service.dart';
 import 'core/services/text_size_preference.dart';
@@ -74,6 +76,10 @@ void main([List<String> args = const []]) {
   }
   if (args.contains(petWindowMarker)) {
     unawaited(runPetCompanionChild());
+    return;
+  }
+  if (args.contains(quickEntryMarker)) {
+    runQuickEntryChild(args);
     return;
   }
   // Remove any private key left behind by a cancelled connection import.

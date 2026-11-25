@@ -21,6 +21,15 @@ Dart: `lib/core/desktop/`. Settings: **Desktop integration** card in Classic Set
 - macOS: `NSStatusItem` with a template SF Symbol.
 - Linux: `GtkStatusIcon` (XEmbed). It needs an X11 session with a tray host (KDE, Xfce, MATE, Cinnamon; GNOME needs a tray extension). On Wayland `setTray` returns `false` and Settings says the desktop has no usable tray. No new library is linked.
 
+## Quick entry (HUD)
+
+A small always-on-top window for typing a prompt into a chosen chat or a new one. Opened from the tray, the global hotkey, or **Quick entry** in the command palette (Classic and NextGen).
+
+- It reuses the pop-out child machinery: the primary starts the same executable with `--ares-quick-entry-v1` (Windows launch role `quick_entry`, which requires a parent pipe on stdin and must be the only argument), sends one launch frame through `watchPopoutPipe` (≤ 2 KB: up to 12 recent chats `{id, title}` and the app locale), and the child exits when the pipe closes. The child owns no connection, credentials, tray, hotkey, toast routing or instance mutex.
+- The child writes `ARES_QUICK_ENTRY_READY_V1`, then at most one line `{"prefill": text, "session": id|null}` and exits. The primary accepts only a chat id it offered and text up to 4,000 characters, then shows the main window and routes `hermes://session/<id>?prefill=…` or `hermes://open/chat?prefill=…` through the validated deep-link router. **Nothing is sent**: Enter in the window only puts the text in the composer; Shift+Enter adds a line; Escape closes.
+- Showing it while it is open closes it (toggle). Windows activation stays primary-only: no second activator, COM server or `WM_COPYDATA` path; the primary calls `AllowSetForegroundWindow(ASFW_ANY)` before a tray or hotkey launch so the window can take focus.
+- Placement: Windows centres it on the monitor under the pointer, a fifth of the way down, `HWND_TOPMOST`; macOS uses a floating window on all Spaces (also over full-screen apps); Linux keeps it above, centred, without a taskbar entry.
+
 ## Checks without an app build
 
 - `tool/native_tests/run.sh` — host C++17 unit tests (`clang++ -std=c++17 -Wall -Wextra -Werror -pedantic`) for the platform-free headers `windows/runner/desktop_os_logic.h` and `linux/runner/desktop_os_logic.h`.

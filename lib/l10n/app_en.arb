@@ -3043,5 +3043,10 @@
   "desktop_tray_setting": "Show Ares in the tray or menu bar",
   "desktop_tray_setting_help": "Open Ares, start a chat, open quick entry, pause notifications or quit from the icon.",
   "desktop_close_to_tray_setting": "Keep running in the tray when the window closes",
-  "desktop_tray_unsupported": "This desktop has no system tray Ares can use."
+  "desktop_tray_unsupported": "This desktop has no system tray Ares can use.",
+  "quick_entry_title": "Quick entry",
+  "quick_entry_hint": "Type a prompt for Ares…",
+  "quick_entry_submit": "Put in composer",
+  "quick_entry_never_sends": "Enter puts the text in the chat's composer. Nothing is sent until you press Send.",
+  "quick_entry_unavailable": "Quick entry couldn't open. Try again."
 }

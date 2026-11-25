@@ -6912,4 +6912,21 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get desktop_tray_unsupported =>
       'Ce bureau n’a pas de zone de notification utilisable par Ares.';
+
+  @override
+  String get quick_entry_title => 'Saisie rapide';
+
+  @override
+  String get quick_entry_hint => 'Saisissez une requête pour Ares…';
+
+  @override
+  String get quick_entry_submit => 'Placer dans la zone de saisie';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Entrée place le texte dans la zone de saisie de la discussion. Rien n’est envoyé avant que vous appuyiez sur Envoyer.';
+
+  @override
+  String get quick_entry_unavailable =>
+      'Impossible d’ouvrir la saisie rapide. Réessayez.';
 }

@@ -6609,6 +6609,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get desktop_tray_unsupported => '此桌面没有可供 Ares 使用的系统托盘。';
+
+  @override
+  String get quick_entry_title => '快速输入';
+
+  @override
+  String get quick_entry_hint => '输入给 Ares 的提示…';
+
+  @override
+  String get quick_entry_submit => '放入输入框';
+
+  @override
+  String get quick_entry_never_sends => '按 Enter 会将文本放入聊天输入框。在你按下发送之前不会发送任何内容。';
+
+  @override
+  String get quick_entry_unavailable => '无法打开快速输入。请重试。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -12648,6 +12663,21 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get desktop_tray_unsupported => '此桌面没有可供 Ares 使用的系统托盘。';
+
+  @override
+  String get quick_entry_title => '快速输入';
+
+  @override
+  String get quick_entry_hint => '输入给 Ares 的提示…';
+
+  @override
+  String get quick_entry_submit => '放入输入框';
+
+  @override
+  String get quick_entry_never_sends => '按 Enter 会将文本放入聊天输入框。在你按下发送之前不会发送任何内容。';
+
+  @override
+  String get quick_entry_unavailable => '无法打开快速输入。请重试。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -19085,4 +19115,19 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get desktop_tray_unsupported => '此桌面沒有可供 Ares 使用的系統匣。';
+
+  @override
+  String get quick_entry_title => '快速輸入';
+
+  @override
+  String get quick_entry_hint => '輸入給 Ares 的提示…';
+
+  @override
+  String get quick_entry_submit => '放入輸入框';
+
+  @override
+  String get quick_entry_never_sends => '按 Enter 會將文字放入聊天輸入框。在你按下傳送之前不會傳送任何內容。';
+
+  @override
+  String get quick_entry_unavailable => '無法開啟快速輸入。請再試一次。';
 }

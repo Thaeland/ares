@@ -6902,4 +6902,21 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get desktop_tray_unsupported =>
       'Diese Arbeitsumgebung hat keinen Infobereich, den Ares nutzen kann.';
+
+  @override
+  String get quick_entry_title => 'Schnelleingabe';
+
+  @override
+  String get quick_entry_hint => 'Prompt für Ares eingeben…';
+
+  @override
+  String get quick_entry_submit => 'In Eingabefeld übernehmen';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Mit Enter landet der Text im Eingabefeld des Chats. Gesendet wird erst, wenn du auf Senden drückst.';
+
+  @override
+  String get quick_entry_unavailable =>
+      'Die Schnelleingabe konnte nicht geöffnet werden. Versuche es erneut.';
 }

@@ -6899,6 +6899,23 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get desktop_tray_unsupported =>
       'Esta área de trabalho não tem uma bandeja do sistema que o Ares possa usar.';
+
+  @override
+  String get quick_entry_title => 'Entrada rápida';
+
+  @override
+  String get quick_entry_hint => 'Digite um prompt para o Ares…';
+
+  @override
+  String get quick_entry_submit => 'Colocar no editor';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Enter coloca o texto no editor do chat. Nada é enviado até você clicar em Enviar.';
+
+  @override
+  String get quick_entry_unavailable =>
+      'Não foi possível abrir a entrada rápida. Tente novamente.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -13222,4 +13239,21 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get desktop_tray_unsupported =>
       'Esta área de trabalho não tem uma bandeja do sistema que o Ares possa usar.';
+
+  @override
+  String get quick_entry_title => 'Entrada rápida';
+
+  @override
+  String get quick_entry_hint => 'Digite um prompt para o Ares…';
+
+  @override
+  String get quick_entry_submit => 'Colocar no editor';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Enter coloca o texto no editor do chat. Nada é enviado até você clicar em Enviar.';
+
+  @override
+  String get quick_entry_unavailable =>
+      'Não foi possível abrir a entrada rápida. Tente novamente.';
 }
