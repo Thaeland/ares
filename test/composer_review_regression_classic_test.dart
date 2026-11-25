@@ -218,6 +218,21 @@ void main() {
       dashboardPortOverride: server.port,
       apiKey: 'fixture',
     );
+    // The workspace detail pane: the host swaps the chat it shows through
+    // its own open path (what the review probe's bare embedding lacked).
+    final shown = ValueNotifier<Session>(
+      const Session(
+        id: 'embedded-chat',
+        title: 'Embedded',
+        model: 'm',
+        source: 'api_server',
+        messageCount: 0,
+        isActive: true,
+        preview: '',
+        startedAt: 1,
+      ),
+    );
+    addTearDown(shown.dispose);
     await tester.pumpWidget(
       _app(
         Scaffold(
@@ -225,19 +240,17 @@ void main() {
             children: [
               const SizedBox(width: 120, child: Text('WORKSPACE-SHELL')),
               Expanded(
-                child: ChatScreen(
-                  connection: connection,
-                  session: const Session(
-                    id: 'embedded-chat',
-                    title: 'Embedded',
-                    model: 'm',
-                    source: 'api_server',
-                    messageCount: 0,
-                    isActive: true,
-                    preview: '',
-                    startedAt: 1,
+                child: ValueListenableBuilder<Session>(
+                  valueListenable: shown,
+                  builder: (context, session, _) => KeyedSubtree(
+                    key: ValueKey(session.id),
+                    child: ChatScreen(
+                      connection: connection,
+                      session: session,
+                      testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
+                      onOpenSession: (picked) async => shown.value = picked,
+                    ),
                   ),
-                  testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
                 ),
               ),
             ],
@@ -272,9 +285,42 @@ void main() {
       'C3 shell after pick: ${find.text('WORKSPACE-SHELL').evaluate().length}',
     );
     expect(find.text('WORKSPACE-SHELL'), findsOneWidget);
-  }, skip: _pendingResume);
+    expect(shown.value.id, 'other-chat');
+    expect(
+      tester.widget<ChatScreen>(find.byType(ChatScreen)).session.id,
+      'other-chat',
+    );
+  });
+
+  testWidgets('/resume in a pane with no open path keeps the pane and the '
+      'line', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(800, 1400));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final hook = TestDesktopAsyncEventHook();
+    final c = classic(hook, 'probe-c3-bare');
+    await tester.pumpWidget(
+      _app(
+        Scaffold(
+          body: Row(
+            children: [
+              const SizedBox(width: 120, child: Text('WORKSPACE-SHELL')),
+              Expanded(child: c.screen),
+            ],
+          ),
+        ),
+      ),
+    );
+    await pumpChatUpdates(tester);
+    await tester.enterText(find.byKey(_composerKey), '/resume');
+    await tester.pump();
+    await tester.tap(find.byTooltip('Send'));
+    await pumpChatUpdates(tester);
+    expect(find.text('Resume a chat'), findsNothing);
+    expect(find.text('WORKSPACE-SHELL'), findsOneWidget);
+    expect(_composer(tester), '/resume');
+    expect(find.textContaining('session list'), findsOneWidget);
+  });
 }
 
 // Each flag goes once its review item lands (one commit per item).
-const _pendingResume = true;
 const _pendingClassicParity = true;

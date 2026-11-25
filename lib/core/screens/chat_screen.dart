@@ -66,6 +66,7 @@ import '../services/notification_prefs.dart';
 import '../services/voice_composer_adapter.dart';
 import '../services/ws_client.dart';
 import '../utils/media_tags.dart';
+import '../utils/session_sources.dart';
 import '../utils/large_paste.dart';
 import '../utils/delivered_files.dart';
 import '../utils/generated_media.dart';
@@ -732,8 +733,16 @@ class ChatScreen extends StatefulWidget {
     this.testSlashGateway,
     this.onArchiveChanged,
     this.sessionArchiver,
+    this.onOpenSession,
     super.key,
   });
+
+  /// The host's own way of opening a chat (the one its session list uses),
+  /// for `/resume`: it keeps the host, its turn controller, project context,
+  /// archive callbacks and notifications. Null where the host has none (a
+  /// parallel pane, a pop-out, a notification route): `/resume` then says
+  /// so and keeps the line, and never replaces the route itself.
+  final Future<void> Function(Session session)? onOpenSession;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -1924,6 +1933,9 @@ class _ChatScreenState extends State<ChatScreen>
     if (pendingSubmission != null && !pendingSubmission.isCompleted) {
       pendingSubmission.complete();
     }
+    // The resume picker's own client (never the injected one).
+    _ownedResumeClient?.close();
+    _ownedResumeClient = null;
     _manualAudioIntent++;
     _composerFocus
       ..removeListener(_syncComposerKeyboardEndScroll)
@@ -4927,14 +4939,15 @@ class _ChatScreenState extends State<ChatScreen>
           bareName == 'switch') {
         final query = _slashCommandArgument(text);
         _slashController.close();
-        if (!_canShowResumePicker()) {
-          // A pane without a session-list route is never replaced blindly:
-          // fall open with a notice and keep the draft.
-          _appendSlashCommandNotice(text, l10n.composer_resume_unavailable);
+        final open = widget.onOpenSession;
+        if (open == null) {
+          // No host path to open a chat from here: never replace the route
+          // blindly. Say so and keep the line, arguments included.
+          _appendSlashCommandNotice(text, l10n.slash_sessions_inline);
           return '';
         }
         consume();
-        unawaited(_openResumePicker(query));
+        unawaited(_openResumePicker(text, query, open));
         return '';
       }
       if (bareName == 'btw' ||
@@ -5072,56 +5085,59 @@ class _ChatScreenState extends State<ChatScreen>
   String? _recoveryMessage;
   FailureSurface? _recoverySurface;
 
-  /// The picker may open when this chat is the single-pane pane or a chat
-  /// pushed from a session list. An unrelated pushed route must never be
-  /// replaced blindly, so it falls open instead.
-  bool _canShowResumePicker() {
-    final route = ModalRoute.of(context);
-    if (route?.settings.name == '/classic-session-chat') return true;
-    final navigator = Navigator.maybeOf(context);
-    return navigator != null && !navigator.canPop();
-  }
-
-  Future<void> _openResumePicker(String query) async {
+  /// Desktop's resume picker over the chats Desktop lists (no cron, kanban,
+  /// one-shot, tool or subagent runs, nor this chat). The pick opens through
+  /// [open], the host's own path; cancelling gives back [typed].
+  Future<void> _openResumePicker(
+    String typed,
+    String query,
+    Future<void> Function(Session session) open,
+  ) async {
     if (!mounted) return;
-    final testClient = widget.testApiClient;
-    final available = testClient == null && widget.testSlashGateway == null;
     final loaded = <Session>[];
     final picked = await showResumePicker(
       context: context,
       initialQuery: query,
-      listAvailable: available,
+      listAvailable: true,
       load: (q) async {
         final client =
-            testClient ??
+            widget.testApiClient ??
             (_ownedResumeClient ??= ApiClient.forConnection(widget.connection));
         final page = await client.getSessionsPage(
           limit: 50,
           title: q.trim().isEmpty ? null : q.trim(),
         );
+        final rows = [
+          for (final row in page.sessions)
+            if (!isMachineSession(row) &&
+                !isInternalListingSession(row, showSubagents: false) &&
+                row.id != widget.session.id &&
+                row.id != _storedSessionKey)
+              row,
+        ];
         loaded
           ..clear()
-          ..addAll(page.sessions);
+          ..addAll(rows);
         return [
-          for (final row in page.sessions)
+          for (final row in rows)
             ResumeCandidate(id: row.id, title: row.title, preview: row.preview),
         ];
       },
     );
-    if (picked == null || !mounted) return;
+    if (!mounted) return;
+    if (picked == null) {
+      // Cancelled: the typed command comes back to an empty composer.
+      if (_draftWriter.isCurrent && _textController.text.isEmpty) {
+        _editComposerAsUser(typed);
+      }
+      return;
+    }
     Session? session;
     for (final row in loaded) {
       if (row.id == picked.id) session = row;
     }
     if (session == null) return;
-    final opened = session;
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(
-        settings: const RouteSettings(name: '/classic-session-chat'),
-        builder: (_) =>
-            ChatScreen(connection: widget.connection, session: opened),
-      ),
-    );
+    await open(session);
   }
 
   Future<void> _watchClassicHandoff(
