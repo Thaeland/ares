@@ -746,6 +746,11 @@ class _NgChatViewState extends State<NgChatView>
             ? (socket, runtime)
             : null;
       },
+      // As the controller names it for the completion cue.
+      cueKey: () {
+        final id = chat.storedId ?? chat.runtimeId;
+        return id == null ? null : '${chat.gateway.connection.id}|$id';
+      },
       child: _preview.layout(
         chat: _buildChat(c, gateway),
         storedId: chat.storedId,

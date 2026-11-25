@@ -74,6 +74,13 @@ class CompletionCuePlayer {
   final _recent = <String, Duration>{};
   final _bytes = <CompletionTone, Uint8List>{};
 
+  /// Whether this window plays the cue for the chat named by a key, when
+  /// another window can show the same chat (a pop-out runs in its own
+  /// process, so [dedupeWindow] cannot see the other copy). Desktop gives
+  /// each cue to one window (`ownsAmbientCue`); the pop-out plumbing installs
+  /// this. Null: this window plays every cue.
+  bool Function(String key)? ownership;
+
   /// Plays cues on the device. Called once by the app's entry points
   /// (`main` and the pop-out child); until then cues are silent, since
   /// creating an audio player needs the platform plugin.
@@ -113,6 +120,7 @@ class CompletionCuePlayer {
   void turnFinished(String key) {
     final tone = CompletionCuePlayer.tone;
     if (tone == null || !appInFront) return;
+    if (ownership?.call(key) == false) return;
     final now = _clock.elapsed;
     _recent.removeWhere((_, at) => now - at > dedupeWindow);
     if (_recent.containsKey(key)) return;

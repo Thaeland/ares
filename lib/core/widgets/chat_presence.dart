@@ -21,9 +21,19 @@ typedef ChatPresenceTarget = (WsClient, String)? Function();
 /// `client_activity`. Every pane reports through [ChatPresenceCoordinator], so
 /// panes that share a socket never overwrite each other.
 class ChatPresence extends StatefulWidget {
-  const ChatPresence({super.key, required this.target, required this.child});
+  const ChatPresence({
+    super.key,
+    required this.target,
+    this.cueKey,
+    required this.child,
+  });
 
   final ChatPresenceTarget target;
+
+  /// The chat this pane shows, named as its completion cue names it
+  /// (`<connection id>|<stored chat id>`), or null while it has none. Lets
+  /// the main window and a pop-out agree which of them plays the cue.
+  final String? Function()? cueKey;
   final Widget child;
 
   /// Records input in the pane around [context]. Pointer and hardware-key
@@ -132,6 +142,10 @@ class ChatPresenceComposer extends StatelessWidget {
   );
 }
 
+class _Changes extends ChangeNotifier {
+  void fire() => notifyListeners();
+}
+
 /// What one socket was last told: a claim for [session], or a withdrawal.
 class _Statement {
   const _Statement({
@@ -187,6 +201,7 @@ class ChatPresenceCoordinator with WidgetsBindingObserver {
   final _clock = Stopwatch()..start();
   final _panes = <_ChatPresenceState>[];
   final Map<WsClient, _Statement> _told = Map.identity();
+  final _changes = _Changes();
   Timer? _ticker;
   bool _scheduled = false;
 
@@ -194,6 +209,30 @@ class ChatPresenceCoordinator with WidgetsBindingObserver {
   bool get _on => notificationPrefs.value.shareWindowActivity;
   bool get _foreground =>
       WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
+
+  /// Fires after every evaluation, so cue ownership follows [shows] and
+  /// [holds].
+  Listenable get changes => _changes;
+
+  /// A pane in this window shows the chat named by [cueKey], seen or not.
+  bool shows(String cueKey) =>
+      _panes.any((pane) => pane.widget.cueKey?.call() == cueKey);
+
+  /// This window holds presence for the chat named by [cueKey]: sharing is
+  /// on, the window is in front, and a pane showing that chat is on screen
+  /// with input younger than [active]. Evidence only: it does not depend on
+  /// the gateway accepting reports.
+  bool holds(String cueKey) {
+    if (!_on || !_foreground) return false;
+    final now = _now;
+    return _panes.any((pane) {
+      final input = pane._input;
+      return input != null &&
+          now - input < active &&
+          pane._onScreen &&
+          pane.widget.cueKey?.call() == cueKey;
+    });
+  }
 
   void _attach(_ChatPresenceState pane) {
     if (_panes.isEmpty) {
@@ -314,6 +353,7 @@ class ChatPresenceCoordinator with WidgetsBindingObserver {
         _withdraw(socket, now);
       }
     }
+    _changes.fire();
   }
 
   void _claim(

@@ -2915,9 +2915,13 @@ class _ChatScreenState extends State<ChatScreen>
 
   /// The in-app completion cue for this chat (it plays only while Ares is
   /// in front; a completion notification covers the background).
-  void _playCompletionCue() => CompletionCuePlayer.instance.turnFinished(
-    '${widget.connection.id}|${widget.session.id}',
-  );
+  void _playCompletionCue() =>
+      CompletionCuePlayer.instance.turnFinished(_completionCueKey);
+
+  /// Names this chat for the cue, as a pop-out of it does, so only one
+  /// window plays it.
+  String get _completionCueKey =>
+      '${widget.connection.id}|${widget.session.id}';
 
   /// Mirrors a blocking approval to a native notification (with approve/deny
   /// buttons) while the app is in the background — the one prompt class that
@@ -7556,6 +7560,7 @@ class _ChatScreenState extends State<ChatScreen>
       target: () => (_desktopGateway ?? _normalSession?.client)?.presenceFor(
         _normalLocalSessionKey,
       ),
+      cueKey: () => _completionCueKey,
       child: screen,
     );
   }

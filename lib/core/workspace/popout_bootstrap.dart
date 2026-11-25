@@ -16,6 +16,7 @@ import '../../nextgen/ui/parallel_chat_pane.dart';
 import '../../nextgen/ui/nextgen_scope.dart';
 import '../l10n/l10n.dart';
 import '../screens/chat_screen.dart';
+import '../services/completion_cue_player.dart';
 import '../services/connection_manager.dart';
 import '../services/desktop_gateway_client.dart';
 import '../services/hermes_sign_in.dart';
@@ -24,6 +25,7 @@ import '../services/notification_prefs.dart';
 import '../services/theme_preference.dart';
 import '../services/turn_notification_service.dart';
 import '../theme/hermes_theme.dart';
+import '../widgets/chat_presence.dart';
 import 'popout_owner.dart';
 import 'popout_protocol.dart';
 
@@ -37,6 +39,7 @@ void runWorkspacePopoutChild(List<String> args) {
   }
   final timeout = Timer(const Duration(seconds: 45), () => exit(1));
   var activityStopped = false;
+  PopoutCueFollower? cue;
   runApp(
     const MaterialApp(
       home: Scaffold(body: Center(child: CircularProgressIndicator())),
@@ -48,6 +51,8 @@ void runWorkspacePopoutChild(List<String> args) {
       onLaunch: (frame) async {
         try {
           final target = PopoutTarget.decode(frame['target']);
+          // Before any await: the parent's first cue line follows the frame.
+          cue = PopoutCueFollower(target.cueKey);
           final nonce = frame['nonce'];
           final proof = frame['proof'];
           if (frame.length != 3 ||
@@ -69,9 +74,11 @@ void runWorkspacePopoutChild(List<String> args) {
           if (activityStopped) stopPopoutActivity();
           timeout.cancel();
           runApp(app);
-          WidgetsBinding.instance.addPostFrameCallback(
-            (_) => stdout.writeln(workspacePopoutReady),
-          );
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            stdout.writeln(workspacePopoutReady);
+            // The parent reads presence lines only after ready.
+            cue?.report(stdout.writeln);
+          });
         } catch (_) {
           stdout.writeln(workspacePopoutFailed);
           await stdout.flush();
@@ -83,8 +90,60 @@ void runWorkspacePopoutChild(List<String> args) {
         activityStopped = true;
         stopPopoutActivity();
       },
+      onCue: (popoutPlays) => cue?.plays = popoutPlays,
     ),
   );
+}
+
+/// The pop-out's half of the cue hand-off (see `PopoutCueLink` in the main
+/// window): it reports whether it holds presence for its chat, and plays
+/// that chat's completion cue only while the main window's last cue line
+/// gave the cue to the pop-out. Until the first line it plays, as the only
+/// window known to show the chat.
+@visibleForTesting
+class PopoutCueFollower {
+  PopoutCueFollower(this.cueKey) {
+    CompletionCuePlayer.instance.ownership = _owns;
+  }
+
+  final String cueKey;
+
+  /// The main window's latest [workspacePopoutCuePopout] (true) or
+  /// [workspacePopoutCueMain] (false) line.
+  bool plays = true;
+
+  void Function(String line)? _write;
+  bool? _held;
+
+  bool _owns(String key) => key != cueKey || plays;
+
+  /// Writes [workspacePopoutPresenceHeld] or [workspacePopoutPresenceFree]
+  /// now and whenever it changes.
+  void report(void Function(String line) write) {
+    _write = write;
+    ChatPresenceCoordinator.instance.changes.addListener(_sync);
+    _sync();
+  }
+
+  void _sync() {
+    final write = _write;
+    if (write == null) return;
+    final held = ChatPresenceCoordinator.instance.holds(cueKey);
+    if (held == _held) return;
+    _held = held;
+    try {
+      write(held ? workspacePopoutPresenceHeld : workspacePopoutPresenceFree);
+    } on Object {
+      // The parent has gone; this window is about to be revoked.
+    }
+  }
+
+  void dispose() {
+    ChatPresenceCoordinator.instance.changes.removeListener(_sync);
+    _write = null;
+    final player = CompletionCuePlayer.instance;
+    if (player.ownership == _owns) player.ownership = null;
+  }
 }
 
 /// The parent turned activity sharing off. Only the live value changes:
