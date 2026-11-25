@@ -20,7 +20,9 @@ import 'package:flutter/material.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../nextgen/theme/nextgen_theme.dart';
 import '../l10n/l10n.dart';
+import '../theme/hermes_theme.dart';
 import 'reading_controls.dart';
 
 /// The services Desktop embeds. [id] is Desktop's provider id and the key a
@@ -715,32 +717,51 @@ Future<void> _open(Uri uri) async {
 InlineEmbedMode _modeOf(ReadingControls? reading) =>
     reading?.embedMode ?? InlineEmbedMode.off;
 
+/// The layout's link ink on its own surfaces: NextGen's `accentText` (its
+/// `colorScheme.primary` is the accent fill, which is not a text colour)
+/// and Classic's accent, as their Markdown links use.
+Color embedLinkColor(BuildContext context) {
+  final theme = Theme.of(context);
+  return theme.extension<NgColors>()?.accentText ??
+      theme.extension<HermesTokens>()?.accent ??
+      theme.colorScheme.primary;
+}
+
 /// A Markdown image. Off: a link to the image. Ask: a placeholder naming
 /// the host until Load or Always allow. Always (or allowed): the image.
 /// Only https is ever downloaded; anything else stays [blocked].
+///
+/// [linkColor] is the surrounding prose's link colour (a user bubble's
+/// differs from the page's); the links drawn in the reply use it.
 Widget inlineImageEmbed(
   BuildContext context, {
   required String? uri,
   required String? alt,
   required Widget blocked,
+  Color? linkColor,
 }) {
   final parsed = uri == null ? null : _webUri(uri);
   if (parsed == null) return blocked;
   final label = (alt == null || alt.trim().isEmpty) ? null : alt.trim();
-  return _ImageEmbed(uri: parsed, alt: label);
+  return _ImageEmbed(uri: parsed, alt: label, linkColor: linkColor);
 }
 
 class _ImageEmbed extends StatelessWidget {
-  const _ImageEmbed({required this.uri, required this.alt});
+  const _ImageEmbed({required this.uri, required this.alt, this.linkColor});
 
   final Uri uri;
   final String? alt;
+  final Color? linkColor;
 
   @override
   Widget build(BuildContext context) {
     final reading = ReadingControls.maybeOf(context);
     final host = uri.host;
-    final link = _EmbedLink(uri: uri, label: alt ?? uri.toString());
+    final link = _EmbedLink(
+      uri: uri,
+      label: alt ?? uri.toString(),
+      color: linkColor,
+    );
     // Plain http is never fetched; neither is anything in Off.
     if (uri.scheme != 'https' || _modeOf(reading) == InlineEmbedMode.off) {
       return link;
@@ -752,21 +773,25 @@ class _ImageEmbed extends StatelessWidget {
       host: host,
       caption: alt,
       openUri: uri,
-      loaded: (context) => _RemoteImage(uri: uri, alt: alt),
+      linkColor: linkColor,
+      loaded: (context) =>
+          _RemoteImage(uri: uri, alt: alt, linkColor: linkColor),
     );
   }
 }
 
-/// A tappable link for an embed that is not shown inline.
+/// A tappable link for an embed that is not shown inline, in [color] or
+/// else the layout's link colour.
 class _EmbedLink extends StatelessWidget {
-  const _EmbedLink({required this.uri, required this.label});
+  const _EmbedLink({required this.uri, required this.label, this.color});
 
   final Uri uri;
   final String label;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final ink = color ?? embedLinkColor(context);
     return Semantics(
       link: true,
       child: InkWell(
@@ -775,9 +800,9 @@ class _EmbedLink extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            color: scheme.primary,
+            color: ink,
             decoration: TextDecoration.underline,
-            decorationColor: scheme.primary,
+            decorationColor: ink,
           ),
         ),
       ),
@@ -786,10 +811,11 @@ class _EmbedLink extends StatelessWidget {
 }
 
 class _RemoteImage extends StatelessWidget {
-  const _RemoteImage({required this.uri, required this.alt});
+  const _RemoteImage({required this.uri, required this.alt, this.linkColor});
 
   final Uri uri;
   final String? alt;
+  final Color? linkColor;
 
   @override
   Widget build(BuildContext context) {
@@ -814,6 +840,7 @@ class _RemoteImage extends StatelessWidget {
             errorBuilder: (context, _, _) => _EmbedLink(
               uri: uri,
               label: l.appearance_embed_image_failed(uri.host),
+              color: linkColor,
             ),
           ),
         ),
@@ -895,6 +922,7 @@ class EmbedGate extends StatefulWidget {
     required this.openUri,
     required this.loaded,
     this.caption,
+    this.linkColor,
   });
 
   final String service;
@@ -903,6 +931,10 @@ class EmbedGate extends StatefulWidget {
   final Uri openUri;
   final String? caption;
   final WidgetBuilder loaded;
+
+  /// The surrounding prose's link colour, for Off's link. The placeholder
+  /// draws on its own surface, in the layout's link colour.
+  final Color? linkColor;
 
   @override
   State<EmbedGate> createState() => _EmbedGateState();
@@ -919,6 +951,7 @@ class _EmbedGateState extends State<EmbedGate> {
       return _EmbedLink(
         uri: widget.openUri,
         label: widget.caption ?? widget.openUri.toString(),
+        color: widget.linkColor,
       );
     }
     final allowed =

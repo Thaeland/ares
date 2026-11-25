@@ -9575,6 +9575,13 @@ class MessageBubble extends StatelessWidget {
                 isFinal: mediaReferencesFinal,
               )
             : content;
+        final sheet = _messageStyleSheet(
+          dialogContext,
+          dialogTheme,
+          tokens,
+          isUser: false,
+          assistantTextColor: dialogTheme.colorScheme.onSurface,
+        );
         return AlertDialog(
           title: Text(dialogContext.l10n.select_text),
           content: SingleChildScrollView(
@@ -9598,6 +9605,7 @@ class MessageBubble extends StatelessWidget {
                           uri: '${image.uri}',
                           alt: image.alt ?? image.title,
                           blocked: Text(image.alt ?? image.title ?? ''),
+                          linkColor: sheet.a?.color,
                         ),
                         onTapLink: (_, href, _) => unawaited(
                           _openLink(
@@ -9606,13 +9614,7 @@ class MessageBubble extends StatelessWidget {
                             previewOwner: previewOwner,
                           ),
                         ),
-                        styleSheet: _messageStyleSheet(
-                          dialogContext,
-                          dialogTheme,
-                          tokens,
-                          isUser: false,
-                          assistantTextColor: dialogTheme.colorScheme.onSurface,
-                        ),
+                        styleSheet: sheet,
                       ),
                 ],
               ),
@@ -9787,6 +9789,7 @@ class MessageBubble extends StatelessWidget {
             uri: '${image.uri}',
             alt: image.alt ?? image.title,
             blocked: Text(image.alt ?? image.title ?? ''),
+            linkColor: styleSheet.a?.color,
           ),
           onTapLink: (_, href, _) => unawaited(_openLink(context, href)),
         ),

@@ -2224,6 +2224,7 @@ class _AssistantBlockState extends State<_AssistantBlock> {
           image.alt ?? image.title ?? '',
           style: NgType.body.copyWith(color: c.text3),
         ),
+        linkColor: c.accentText,
       ),
       onTapLink: (_, href, _) {
         if (_openDelivered(href)) return;

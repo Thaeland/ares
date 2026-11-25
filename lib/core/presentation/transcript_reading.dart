@@ -37,12 +37,20 @@ Widget transcriptDirection(BuildContext context, Widget child) {
 /// Embeds decides: Off keeps a link to the image, Ask shows a placeholder
 /// naming the host until Load or Always allow, Always shows the image.
 /// Only https images are ever downloaded; other sources stay [blocked].
+/// [linkColor] is the prose's own link colour, for the links drawn in it.
 Widget externalEmbed(
   BuildContext context, {
   required String? uri,
   required String? alt,
   required Widget blocked,
-}) => inlineImageEmbed(context, uri: uri, alt: alt, blocked: blocked);
+  Color? linkColor,
+}) => inlineImageEmbed(
+  context,
+  uri: uri,
+  alt: alt,
+  blocked: blocked,
+  linkColor: linkColor,
+);
 
 /// The transcript's provider-link hook, shared by both layouts: previews
 /// for the bare YouTube, X, TikTok, Spotify, Maps… links in [markdown],
