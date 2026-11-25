@@ -1180,7 +1180,10 @@ class DesktopGatewayClient implements SlashCommandGateway {
   }
 
   /// Steers only the currently bound live session. Reconnect/create and
-  /// automatic retries could deliver the guidance to a different turn.
+  /// automatic retries could deliver the guidance to a different turn. On
+  /// the canonical session authority the socket names the execution
+  /// generation it last admitted, captured as this call starts; a refusal
+  /// (`stale_generation`) propagates and is never retried.
   Future<bool> steerPrompt({
     required String sessionId,
     required String text,
@@ -1232,7 +1235,10 @@ class DesktopGatewayClient implements SlashCommandGateway {
     return client.slashExec(gatewaySessionId, command, onSent: onSent);
   }
 
-  /// Interrupts the active turn in the Desktop gateway runtime.
+  /// Interrupts the active turn in the Desktop gateway runtime. On the
+  /// canonical session authority it names the execution generation the
+  /// socket last admitted, so a later claim is never interrupted by it; a
+  /// `stale_generation` refusal propagates and is never retried.
   Future<bool> interruptPrompt({required String sessionId}) async {
     final gatewaySessionId = _gatewaySessionIds[sessionId];
     final client = _ws;
