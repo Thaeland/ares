@@ -80,7 +80,7 @@ Root: HKCU; Subkey: "Software\Classes\ares-notification\shell\open\command"; Val
 
 [Icons]
 ; Protocol-only activation uses Microsoft's stub-CLSID desktop toast model.
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; AppUserModelID: "com.hermesagent.ares"; AppUserModelToastActivatorCLSID: "{{F2BCD1C8-EDAB-4F31-A09F-39C2ED0F2A37}"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; AppUserModelID: "com.hermesagent.ares"; AppUserModelToastActivatorCLSID: "F2BCD1C8-EDAB-4F31-A09F-39C2ED0F2A37"
 Name: "{group}\Uninstall {#MyAppName}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
