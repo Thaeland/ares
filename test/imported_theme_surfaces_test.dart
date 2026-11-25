@@ -637,8 +637,48 @@ void main() {
                 'ng.accentText': ng.accentText,
               },
             };
+            // Status inks keep their hue and read wherever text does, and
+            // on their own badge wash over each opaque surface.
+            final status = <String, (Color, Color)>{
+              'error': (s.error, s.error.withValues(alpha: 0.16)),
+              'errorStyle': (
+                theme.inputDecorationTheme.errorStyle?.color ?? s.error,
+                s.error.withValues(alpha: 0.16),
+              ),
+              for (final (name, ink) in [
+                ('tokens.danger', tokens.danger),
+                ('tokens.success', tokens.success),
+                ('tokens.warning', tokens.warning),
+                ('tokens.running', tokens.running),
+                ('tokens.blocked', tokens.blocked),
+              ])
+                name: (ink, ink.withValues(alpha: 0.16)),
+              if (ng != null) ...{
+                'ng.danger': (ng.danger, ng.dangerSoft),
+                'ng.success': (ng.success, ng.successSoft),
+                'ng.warning': (ng.warning, ng.warningSoft),
+              },
+            };
+            // Badges sit on the plain surfaces, not on a selection or
+            // error tint.
+            const tints = {
+              'chip.selected',
+              'primaryContainer',
+              'errorContainer',
+              'row.selected',
+            };
+            final opaque = {
+              for (final e in surfaces.entries)
+                if (e.value.a == 1 &&
+                    !tints.contains(e.key) &&
+                    !e.key.contains('Soft/'))
+                  e.key: e.value,
+            };
             final ratios = <String, double>{
-              for (final ink in inks.entries)
+              for (final ink in {
+                ...inks,
+                for (final e in status.entries) e.key: e.value.$1,
+              }.entries)
                 for (final surface in surfaces.entries)
                   '${ink.key} on ${surface.key}': contrastRatio(
                     ink.value,
@@ -647,6 +687,12 @@ void main() {
                       surface.value,
                       theme.scaffoldBackgroundColor,
                     ),
+                  ),
+              for (final ink in status.entries)
+                for (final surface in opaque.entries)
+                  '${ink.key} badge on ${surface.key}': contrastRatio(
+                    ink.value.$1,
+                    over(ink.value.$2, surface.value),
                   ),
               // Inverted chrome: snack bars and tooltips.
               'snack': contrastRatio(
