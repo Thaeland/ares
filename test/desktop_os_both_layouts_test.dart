@@ -354,6 +354,23 @@ void main() {
           }
           expect(openedSessions, ['s-beta']);
           expect(HermesDeepLinkService.shared.pendingLink.value, isNull);
+
+          // PROBE-4: a hand-back owned by another connection (the window
+          // was offered that connection's chats) is never opened here, even
+          // for a chat id this list also has.
+          HermesDeepLinkService.shared.handleRawLink(
+            'hermes://session/s-alpha?prefill=Not+for+this+connection',
+            owner: HermesLinkOwner(connectionId: 'another-connection'),
+          );
+          for (var i = 0; i < 5; i++) {
+            await tester.pump(const Duration(milliseconds: 100));
+          }
+          expect(openedSessions, ['s-beta']);
+          expect(
+            HermesDeepLinkService.shared.pendingLink.value?.owner?.connectionId,
+            'another-connection',
+          );
+          HermesDeepLinkService.shared.takePendingLink();
           await tester.runAsync(integration.dispose);
           expect(DesktopIntegration.current, isNull);
         },
@@ -679,6 +696,31 @@ void main() {
           );
           expect(composer.controller?.text, 'From the HUD');
           expect(fixture.promptSubmissions, 0);
+
+          // PROBE-4: a hand-back owned by another connection waits for that
+          // connection; this one never applies it.
+          HermesDeepLinkService.shared.handleRawLink(
+            'hermes://session/s-alpha?prefill=Not+for+this+connection',
+            owner: HermesLinkOwner(connectionId: 'another-connection'),
+          );
+          for (var i = 0; i < 10; i++) {
+            await tester.runAsync(
+              () => Future<void>.delayed(const Duration(milliseconds: 10)),
+            );
+            await tester.pump(const Duration(milliseconds: 30));
+          }
+          expect(
+            tester
+                .widget<TextField>(find.byKey(const Key('ng-composer-field')))
+                .controller
+                ?.text,
+            'From the HUD',
+          );
+          expect(
+            HermesDeepLinkService.shared.pendingLink.value?.owner?.connectionId,
+            'another-connection',
+          );
+          HermesDeepLinkService.shared.takePendingLink();
           await tester.runAsync(integration.dispose);
 
           await unmountNextGen(tester, gateway);

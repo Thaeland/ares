@@ -501,8 +501,11 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     // Native tray, quick entry, hotkey and power events: desktop primary
     // window only, every feature opt-in.
     if (isDesktopOs) {
-      _desktop = DesktopIntegration(preferences: widget.connManager.prefs)
-        ..start();
+      _desktop = DesktopIntegration(
+        preferences: widget.connManager.prefs,
+        connections: widget.connManager.getConnections,
+        openOwner: _openQuickEntryOwner,
+      )..start();
     }
     _keepAwakePreferenceListener = () {
       _keepAwake?.refreshFromStore();
@@ -1032,6 +1035,31 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
         .getConnections()
         .where((connection) => connection.id == id)
         .firstOrNull;
+  }
+
+  /// A quick-entry hand-back waits in the deep-link service for the shell
+  /// of [connection] (its owner): bring that shell forward. NextGen
+  /// switches its connection; Classic opens the workspace for it unless one
+  /// is already mounted. The owned link is consumed there, never elsewhere.
+  void _openQuickEntryOwner(SavedConnection connection) {
+    if (!mounted || _closingTurnOwner) return;
+    if (nextGenEnabled.value) {
+      nextGenConnectionRequest.value = connection.id;
+      return;
+    }
+    if (WorkspaceScreen.isOpenFor(connection.id)) return;
+    final navigator = _navigatorKey.currentState;
+    if (navigator == null || !navigator.mounted) return;
+    unawaited(
+      navigator.push(
+        MaterialPageRoute<void>(
+          builder: (_) => WorkspaceScreen(
+            connection: connection,
+            turnApplicationController: _turnApplicationController,
+          ),
+        ),
+      ),
+    );
   }
 
   void _pruneNotificationChatRoutes() {

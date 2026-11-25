@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/connection.dart';
 import '../services/hermes_deeplink.dart';
 import '../services/locale_preference.dart';
 import '../services/notification_prefs.dart';
@@ -31,7 +32,10 @@ class DesktopIntegration {
     ValueListenable<NotificationPrefs>? notifications,
     this._deepLinks,
     List<QuickEntryChat> Function()? quickEntryChats,
+    HermesLinkOwner? Function()? quickEntryOwner,
     QuickEntrySpawn? quickEntrySpawn,
+    this._connections,
+    this._openOwner,
     MethodChannel hotkeyChannel = DesktopOsChannels.hotkey,
     MethodChannel powerChannel = DesktopOsChannels.power,
     TargetPlatform? platform,
@@ -44,6 +48,9 @@ class DesktopIntegration {
        _notifications = notifications ?? notificationPrefs {
     quickEntry = QuickEntryLauncher(
       chats: quickEntryChats ?? QuickEntryTargets.current,
+      owner:
+          quickEntryOwner ??
+          (quickEntryChats == null ? QuickEntryTargets.currentOwner : null),
       locale: () => strings().localeName,
       onPrefill: _routePrefill,
       spawn: quickEntrySpawn,
@@ -79,6 +86,14 @@ class DesktopIntegration {
   final ValueListenable<NotificationPrefs> _notifications;
   final HermesDeepLinkService? _deepLinks;
   final AppLocalizations Function()? _strings;
+
+  /// The saved connections now, to check a quick-entry owner still exists.
+  final List<SavedConnection> Function()? _connections;
+
+  /// Brings the shell for [connection] forward (the app root switches
+  /// NextGen's connection or opens Classic's workspace for it) so the
+  /// owned link can be consumed there.
+  final void Function(SavedConnection connection)? _openOwner;
 
   late final TrayController tray;
   late final QuickEntryLauncher quickEntry;
@@ -126,13 +141,38 @@ class DesktopIntegration {
       _disposed ? Future.value(false) : quickEntry.show();
 
   /// The hand-back from the quick-entry window: show the main window and
-  /// route a prefill-only link through the validated deep-link router.
+  /// route a prefill-only link through the validated deep-link router, to
+  /// the connection and profile whose chats were offered. When that owner no
+  /// longer exists (connection removed, or now on another profile) the text
+  /// is kept as a new draft in whichever chat list is showing: never sent,
+  /// never lost, never put into a chat of another connection.
   void _routePrefill(QuickEntryPrefill prefill) {
     if (_disposed) return;
     unawaited(_shell.showWindow());
-    (_deepLinks ?? HermesDeepLinkService.shared).handleRawLink(
-      prefill.toDeepLink(),
-    );
+    final links = _deepLinks ?? HermesDeepLinkService.shared;
+    final owner = prefill.owner;
+    if (owner == null) {
+      links.handleRawLink(prefill.toDeepLink());
+      return;
+    }
+    final connections = _connections;
+    final SavedConnection? target;
+    if (connections == null) {
+      target = null;
+    } else {
+      final found = connections()
+          .where((c) => c.id == owner.connectionId)
+          .firstOrNull;
+      target = found != null && owner.matches(found.id, found.gatewayProfile)
+          ? found
+          : null;
+      if (target == null) {
+        links.handleRawLink(QuickEntryPrefill(text: prefill.text).toDeepLink());
+        return;
+      }
+    }
+    links.handleRawLink(prefill.toDeepLink(), owner: owner);
+    if (target != null) _openOwner?.call(target);
   }
 
   @visibleForTesting

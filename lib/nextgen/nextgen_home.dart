@@ -43,7 +43,21 @@ class _NextGenHomeState extends State<NextGenHome> {
   void initState() {
     super.initState();
     nextGenOpenRequest.addListener(_onOpenRequest);
+    nextGenConnectionRequest.addListener(_onConnectionRequest);
     unawaited(_reload());
+  }
+
+  /// Switches to the connection something owned by it is waiting for.
+  void _onConnectionRequest() {
+    final id = nextGenConnectionRequest.value;
+    final connections = _connections;
+    if (id == null || connections == null) return;
+    nextGenConnectionRequest.value = null;
+    if (_gateway?.connection.id == id) {
+      _navigator.currentState?.popUntil((r) => r.isFirst);
+      return;
+    }
+    unawaited(_switchTo(id));
   }
 
   String? _pendingConnection(List<SavedConnection> list) {
@@ -84,6 +98,7 @@ class _NextGenHomeState extends State<NextGenHome> {
   @override
   void dispose() {
     nextGenOpenRequest.removeListener(_onOpenRequest);
+    nextGenConnectionRequest.removeListener(_onConnectionRequest);
     _gateway?.dispose();
     super.dispose();
   }
@@ -118,6 +133,8 @@ class _NextGenHomeState extends State<NextGenHome> {
         _loadError = null;
       });
       _use(pick, force: force, remember: !automatic);
+      // A connection request that arrived before the list loaded.
+      if (nextGenConnectionRequest.value != null) _onConnectionRequest();
     } catch (e) {
       if (mounted) setState(() => _loadError = '$e');
     }

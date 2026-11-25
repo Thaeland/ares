@@ -16,6 +16,8 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
+import '../services/hermes_deeplink.dart' show HermesLinkOwner;
+
 /// The OS command line carries this marker only.
 const quickEntryMarker = '--ares-quick-entry-v1';
 const quickEntryReady = 'ARES_QUICK_ENTRY_READY_V1';
@@ -52,15 +54,25 @@ class QuickEntryChat {
 }
 
 /// The recent chats the active shell offers to quick entry. Classic and
-/// NextGen each register a provider while their chat list is mounted.
+/// NextGen each register a provider while their chat list is mounted,
+/// together with the owner of those chats (connection and profile).
 abstract final class QuickEntryTargets {
   static List<QuickEntryChat> Function()? _provider;
+  static HermesLinkOwner? Function()? _owner;
 
-  /// Registers [provider]; returns the remover, which only removes this one.
-  static VoidCallback register(List<QuickEntryChat> Function() provider) {
+  /// Registers [provider] and its [owner]; returns the remover, which only
+  /// removes this one.
+  static VoidCallback register(
+    List<QuickEntryChat> Function() provider, {
+    HermesLinkOwner? Function()? owner,
+  }) {
     _provider = provider;
+    _owner = owner;
     return () {
-      if (identical(_provider, provider)) _provider = null;
+      if (identical(_provider, provider)) {
+        _provider = null;
+        _owner = null;
+      }
     };
   }
 
@@ -69,6 +81,15 @@ abstract final class QuickEntryTargets {
       return _provider?.call() ?? const [];
     } catch (_) {
       return const [];
+    }
+  }
+
+  /// The connection and profile whose chats [current] lists.
+  static HermesLinkOwner? currentOwner() {
+    try {
+      return _owner?.call();
+    } catch (_) {
+      return null;
     }
   }
 }
@@ -142,12 +163,19 @@ class QuickEntryLaunch {
 /// of the offered chats. Never a command and never a send.
 @immutable
 class QuickEntryPrefill {
-  const QuickEntryPrefill({required this.text, this.sessionId});
+  const QuickEntryPrefill({required this.text, this.sessionId, this.owner});
 
   final String text;
 
   /// Null for a new chat.
   final String? sessionId;
+
+  /// Whose chats were offered (the shell's connection and profile when the
+  /// window opened). Set by the primary, never by the child.
+  final HermesLinkOwner? owner;
+
+  QuickEntryPrefill withOwner(HermesLinkOwner? owner) =>
+      QuickEntryPrefill(text: text, sessionId: sessionId, owner: owner);
 
   String encode() => jsonEncode({'prefill': text, 'session': sessionId});
 
@@ -210,11 +238,13 @@ class QuickEntryLauncher {
     required this._chats,
     required this._locale,
     required this._onPrefill,
+    this._owner,
     QuickEntrySpawn? spawn,
     this.readyTimeout = const Duration(seconds: 45),
   }) : _spawn = spawn ?? _spawnQuickEntry;
 
   final List<QuickEntryChat> Function() _chats;
+  final HermesLinkOwner? Function()? _owner;
   final String Function() _locale;
   final void Function(QuickEntryPrefill prefill) _onPrefill;
   final QuickEntrySpawn _spawn;
@@ -252,6 +282,9 @@ class QuickEntryLauncher {
   }
 
   Future<bool> _start() async {
+    // The chats and their owner are captured together: the hand-back goes
+    // to this connection and profile, whatever is showing when it returns.
+    final owner = _owner?.call();
     final launch = QuickEntryLaunch.bounded(_chats(), locale: _locale());
     final Process process;
     try {
@@ -282,7 +315,7 @@ class QuickEntryLauncher {
             final prefill = QuickEntryPrefill.parse(line, launch.chats);
             if (prefill == null) return;
             handedBack = true;
-            _onPrefill(prefill);
+            _onPrefill(prefill.withOwner(owner));
           },
           onError: (Object _) {
             if (!ready.isCompleted) ready.complete(false);

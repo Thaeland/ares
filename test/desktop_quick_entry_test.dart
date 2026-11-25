@@ -9,6 +9,7 @@ import 'package:hermes_android/core/desktop/desktop_os.dart';
 import 'package:hermes_android/core/desktop/quick_entry.dart';
 import 'package:hermes_android/core/desktop/quick_entry_window.dart';
 import 'package:hermes_android/core/desktop/tray_controller.dart';
+import 'package:hermes_android/core/models/connection.dart';
 import 'package:hermes_android/core/services/hermes_deeplink.dart';
 import 'package:hermes_android/core/services/notification_prefs.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
@@ -314,6 +315,136 @@ void main() {
       await integration.dispose();
       expect(spawned.last.killed, isTrue);
       expect(await integration.openQuickEntry(), isFalse);
+    });
+  });
+
+  group('quick-entry owner (PROBE-4)', () {
+    const channel = MethodChannel('test/quick_entry_owner_shell');
+
+    setUp(() {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (_) async => null);
+    });
+
+    tearDown(() {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, null);
+    });
+
+    SavedConnection connection(String id, {String? profile}) => SavedConnection(
+      id: id,
+      label: id,
+      host: '$id.invalid',
+      port: 8642,
+      apiKey: 'k',
+      gatewayProfile: profile,
+    );
+
+    /// Opens quick entry while connection A (profile "sol") is showing, then
+    /// switches the main window to B (which has a chat with the same id)
+    /// before the hand-back arrives.
+    Future<
+      ({
+        HermesDeepLinkService links,
+        List<SavedConnection> opened,
+        DesktopIntegration integration,
+      })
+    >
+    handBack(List<SavedConnection> saved) async {
+      SharedPreferences.setMockInitialValues({});
+      final links = HermesDeepLinkService(
+        channel: const MethodChannel('test/quick_entry_owner_links'),
+      );
+      var offered = const [QuickEntryChat(id: 'shared-1', title: 'A: plan')];
+      var owner = HermesLinkOwner(connectionId: 'conn-a', profile: 'sol');
+      final opened = <SavedConnection>[];
+      final spawned = <FakeChildProcess>[];
+      final integration = DesktopIntegration(
+        preferences: await SharedPreferences.getInstance(),
+        shell: const DesktopShell(channel),
+        notifications: ValueNotifier(NotificationPrefs.defaults),
+        deepLinks: links,
+        quickEntryChats: () => offered,
+        quickEntryOwner: () => owner,
+        connections: () => saved,
+        openOwner: opened.add,
+        quickEntrySpawn: () async {
+          final process = FakeChildProcess();
+          spawned.add(process);
+          return process;
+        },
+        strings: () => lookupAppLocalizations(const Locale('en')),
+      )..start();
+      addTearDown(integration.dispose);
+      final opening = integration.openQuickEntry();
+      await pumpEventQueue();
+      spawned.single.emit(quickEntryReady);
+      expect(await opening, isTrue);
+      // The user switches the main window to connection B meanwhile.
+      offered = const [QuickEntryChat(id: 'shared-1', title: 'B: other')];
+      owner = HermesLinkOwner(connectionId: 'conn-b');
+      spawned.single.emit(
+        jsonEncode({'prefill': 'Draft for A', 'session': 'shared-1'}),
+      );
+      await pumpEventQueue();
+      return (links: links, opened: opened, integration: integration);
+    }
+
+    test('PROBE-4 the hand-back carries the connection and profile it was '
+        'offered from, and is routed to that owner', () async {
+      final a = connection('conn-a', profile: ' sol ');
+      final b = connection('conn-b');
+      final result = await handBack([a, b]);
+      final link = result.links.pendingLink.value!;
+      expect(link.kind, HermesDeepLinkKind.session);
+      expect(link.sessionId, 'shared-1');
+      expect(link.prefill, 'Draft for A');
+      expect(
+        link.owner,
+        HermesLinkOwner(connectionId: 'conn-a', profile: 'sol'),
+      );
+      // Only A's shell may consume it; B (now showing) must not.
+      expect(link.isFor('conn-a', 'sol'), isTrue);
+      expect(link.isFor('conn-b', null), isFalse);
+      expect(link.isFor('conn-a', null), isFalse);
+      // The app root is asked to bring A's shell forward.
+      expect(result.opened.map((c) => c.id), ['conn-a']);
+    });
+
+    test(
+      'an owner that no longer exists keeps the text as a new draft',
+      () async {
+        final result = await handBack([connection('conn-b')]);
+        final link = result.links.pendingLink.value!;
+        expect(link.kind, HermesDeepLinkKind.open);
+        expect(link.path, '/chat');
+        expect(link.sessionId, isNull);
+        expect(link.prefill, 'Draft for A');
+        expect(link.owner, isNull);
+        expect(result.opened, isEmpty);
+      },
+    );
+
+    test('an owner now on another profile counts as gone: new draft, never '
+        "the other profile's chat", () async {
+      final result = await handBack([
+        connection('conn-a', profile: 'other'),
+        connection('conn-b'),
+      ]);
+      final link = result.links.pendingLink.value!;
+      expect(link.kind, HermesDeepLinkKind.open);
+      expect(link.sessionId, isNull);
+      expect(link.prefill, 'Draft for A');
+      expect(link.owner, isNull);
+      expect(result.opened, isEmpty);
+    });
+
+    test('a hermes:// URL never carries an owner', () {
+      final parsed = parseHermesDeepLink(
+        'hermes://session/s-1?prefill=x&owner=conn-a&connection=conn-a',
+      )!;
+      expect(parsed.owner, isNull);
+      expect(parsed.isFor('anything', null), isTrue);
     });
   });
 

@@ -13,11 +13,45 @@
 ///    no I/O and no side effects.
 library;
 
-import 'package:flutter/foundation.dart' show ValueNotifier;
+import 'package:flutter/foundation.dart' show ValueNotifier, immutable;
 import 'package:flutter/services.dart';
 
 /// Allowlisted deep-link routes.
 enum HermesDeepLinkKind { launch, open, settings, session, install, ignore }
+
+String? _normalizedProfile(String? profile) {
+  final trimmed = profile?.trim();
+  return trimmed == null || trimmed.isEmpty ? null : trimmed;
+}
+
+/// The connection, and the gateway profile it talks to, that an in-app link
+/// belongs to. Only in-process producers (quick entry) set it; a
+/// `hermes://` URL never carries one. A shell consumes an owned link only
+/// when it shows that same connection and profile.
+@immutable
+class HermesLinkOwner {
+  HermesLinkOwner({required this.connectionId, String? profile})
+    : profile = _normalizedProfile(profile);
+
+  final String connectionId;
+
+  /// The gateway profile (`SavedConnection.gatewayProfile`), null for the
+  /// server's default.
+  final String? profile;
+
+  bool matches(String connectionId, String? profile) =>
+      this.connectionId == connectionId &&
+      this.profile == _normalizedProfile(profile);
+
+  @override
+  bool operator ==(Object other) =>
+      other is HermesLinkOwner &&
+      other.connectionId == connectionId &&
+      other.profile == profile;
+
+  @override
+  int get hashCode => Object.hash(connectionId, profile);
+}
 
 /// Result of parsing a `hermes://` URL. `kind == ignore` means the URL was
 /// rejected and must not be acted on.
@@ -30,6 +64,7 @@ class HermesDeepLink {
     this.sessionId,
     this.installTarget,
     this.installId,
+    this.owner,
   });
 
   const HermesDeepLink.launch() : this._(kind: HermesDeepLinkKind.launch);
@@ -78,7 +113,27 @@ class HermesDeepLink {
   /// Validated identifier for a capability review link — never executed.
   final String? installId;
 
+  /// Set only by in-process producers ([HermesDeepLinkService.handleRawLink]
+  /// with an owner): the connection and profile this link must open in.
+  final HermesLinkOwner? owner;
+
   bool get isIgnored => kind == HermesDeepLinkKind.ignore;
+
+  /// Whether a shell showing [connectionId] / [profile] may consume this
+  /// link: any shell for an unowned link, only its owner's otherwise.
+  bool isFor(String connectionId, String? profile) =>
+      owner?.matches(connectionId, profile) ?? true;
+
+  HermesDeepLink withOwner(HermesLinkOwner? owner) => HermesDeepLink._(
+    kind: kind,
+    path: path,
+    prefill: prefill,
+    params: params,
+    sessionId: sessionId,
+    installTarget: installTarget,
+    installId: installId,
+    owner: owner,
+  );
 }
 
 /// A route component: `/`, `[a-z0-9-]`, bounded length — no query, no `..`.
@@ -356,8 +411,9 @@ class HermesDeepLinkService {
 
   /// Validates [raw] and publishes only allowlisted navigation/prefill links.
   /// Returns `true` when [raw] was recognized as a valid `hermes://` link
-  /// (including `launch`), `false` when ignored.
-  bool handleRawLink(String? raw) {
+  /// (including `launch`), `false` when ignored. [owner] (in-process
+  /// producers only) limits the link to that connection and profile.
+  bool handleRawLink(String? raw, {HermesLinkOwner? owner}) {
     final parsed = parseHermesDeepLink(raw);
     if (parsed == null || parsed.isIgnored) {
       _lastDiagnostic = 'ignored';
@@ -368,7 +424,7 @@ class HermesDeepLinkService {
       _launchCount++;
       return true;
     }
-    pendingLink.value = parsed;
+    pendingLink.value = owner == null ? parsed : parsed.withOwner(owner);
     return true;
   }
 

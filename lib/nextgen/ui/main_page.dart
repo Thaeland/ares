@@ -83,7 +83,10 @@ class _NgMainPageState extends State<_NgMainContent>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _desktopShortcutSub = desktopShortcutBus.stream.listen(_onDesktopShortcut);
-    _quickEntryTargets = QuickEntryTargets.register(_quickEntryChats);
+    _quickEntryTargets = QuickEntryTargets.register(
+      _quickEntryChats,
+      owner: _quickEntryOwner,
+    );
     _deepLinkListener = _onPendingDeepLink;
     HermesDeepLinkService.shared.pendingLink.addListener(_deepLinkListener!);
     if (HermesDeepLinkService.shared.pendingLink.value != null) {
@@ -643,6 +646,16 @@ class _NgMainPageState extends State<_NgMainContent>
     }
   }
 
+  /// The connection and profile whose chats quick entry offers.
+  HermesLinkOwner? _quickEntryOwner() {
+    final connection = _notificationGateway?.connection;
+    if (!mounted || connection == null) return null;
+    return HermesLinkOwner(
+      connectionId: connection.id,
+      profile: connection.gatewayProfile,
+    );
+  }
+
   /// Recent chats offered to the desktop quick-entry window.
   List<QuickEntryChat> _quickEntryChats() => [
     for (final session in _sessions?.sessions ?? const <Session>[])
@@ -782,6 +795,10 @@ class _NgMainPageState extends State<_NgMainContent>
   void _onPendingDeepLink() {
     final peek = HermesDeepLinkService.shared.pendingLink.value;
     if (peek == null || !mounted) return;
+    // A link that belongs to another connection or profile (a quick-entry
+    // hand-back) waits until NextGen shows that connection.
+    final shown = NgScope.of(context).connection;
+    if (!peek.isFor(shown.id, shown.gatewayProfile)) return;
     if (peek.kind == HermesDeepLinkKind.session) {
       final id = peek.sessionId;
       final sessions = _sessions;

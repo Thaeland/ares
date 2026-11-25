@@ -178,6 +178,13 @@ Widget buildWorkspaceChatScreen({
 class WorkspaceScreen extends StatefulWidget {
   final SavedConnection connection;
 
+  static final Map<String, int> _openConnections = <String, int>{};
+
+  /// Whether a workspace for [connectionId] is mounted (the app root routes
+  /// a quick-entry hand-back there instead of opening another).
+  static bool isOpenFor(String connectionId) =>
+      (_openConnections[connectionId] ?? 0) > 0;
+
   /// Overrides repository construction. When provided, the caller keeps
   /// ownership of the repository lifecycle and this screen will not close it.
   final ProjectsRepositoryFactory? repositoryFactory;
@@ -297,6 +304,10 @@ class WorkspaceScreen extends StatefulWidget {
 }
 
 class _WorkspaceScreenState extends State<WorkspaceScreen> {
+  /// The connection counted in [WorkspaceScreen.isOpenFor] (stable even if
+  /// the widget is rebuilt with another connection object).
+  late final String _openConnectionId = widget.connection.id;
+
   ProjectsRepository? _repository;
   DesktopGatewayClient? _ownedGateway;
   ChatSpaceStore? _spaceStore;
@@ -801,7 +812,18 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   void initState() {
     super.initState();
     _desktopShortcutSub = desktopShortcutBus.stream.listen(_onDesktopShortcut);
-    _quickEntryTargets = QuickEntryTargets.register(_quickEntryChats);
+    WorkspaceScreen._openConnections.update(
+      _openConnectionId,
+      (count) => count + 1,
+      ifAbsent: () => 1,
+    );
+    _quickEntryTargets = QuickEntryTargets.register(
+      _quickEntryChats,
+      owner: () => HermesLinkOwner(
+        connectionId: widget.connection.id,
+        profile: widget.connection.gatewayProfile,
+      ),
+    );
     _deepLinkListener = _onPendingDeepLink;
     HermesDeepLinkService.shared.pendingLink.addListener(_deepLinkListener!);
     if (HermesDeepLinkService.shared.pendingLink.value != null) {
@@ -981,6 +1003,12 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   @override
   void dispose() {
     _desktopShortcutSub?.cancel();
+    final open = WorkspaceScreen._openConnections;
+    if ((open[_openConnectionId] ?? 0) <= 1) {
+      open.remove(_openConnectionId);
+    } else {
+      open[_openConnectionId] = open[_openConnectionId]! - 1;
+    }
     _quickEntryTargets?.call();
     final deepLinkListener = _deepLinkListener;
     if (deepLinkListener != null) {
@@ -1197,6 +1225,11 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   void _onPendingDeepLink() {
     final peek = HermesDeepLinkService.shared.pendingLink.value;
     if (peek == null || !mounted) return;
+    // A link that belongs to another connection or profile (a quick-entry
+    // hand-back) is left for that owner's workspace.
+    if (!peek.isFor(widget.connection.id, widget.connection.gatewayProfile)) {
+      return;
+    }
     if (peek.kind == HermesDeepLinkKind.session && !_sessionsKnown) {
       final id = peek.sessionId;
       if (id != null && !_knownSessions.any((s) => s.id == id)) {
