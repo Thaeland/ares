@@ -1,0 +1,339 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+
+import '../../nextgen/data/chat_controller.dart';
+import '../../nextgen/ui/connect_screen.dart';
+import '../services/gateway_fleet.dart';
+import '../services/remote_workspace.dart';
+import 'fleet_webapp_screen.dart';
+
+/// Owned above navigation: switching visible gateways doesn't reroute or close
+/// an attached conversation. Only explicit disconnect/account edits end it.
+class FleetScope extends InheritedWidget {
+  const FleetScope({super.key, required this.fleet, required super.child});
+  final GatewayFleet fleet;
+  static GatewayFleet of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<FleetScope>()!.fleet;
+  @override
+  bool updateShouldNotify(FleetScope oldWidget) => fleet != oldWidget.fleet;
+}
+
+String fleetError(Object e) => switch (e) {
+  WorkspaceException(reason: WorkspaceFailure.unsupported) =>
+    'This gateway does not offer this service.',
+  WorkspaceException(reason: WorkspaceFailure.denied) =>
+    'Sign-in or permission required on this gateway.',
+  WorkspaceException(reason: WorkspaceFailure.insecure) =>
+    'A secure gateway address is required.',
+  WorkspaceException(
+    reason: WorkspaceFailure.stale || WorkspaceFailure.mismatch,
+  ) =>
+    'The owner changed. Refresh before continuing.',
+  _ => 'Could not verify the operation. Check the gateway and refresh.',
+};
+void _notice(BuildContext context, Object e) => ScaffoldMessenger.of(
+  context,
+).showSnackBar(SnackBar(content: Text(fleetError(e))));
+
+Future<void> enrollFleetAddress(
+  BuildContext context,
+  GatewayFleet fleet, {
+  Uri? address,
+  String? label,
+}) async {
+  // A discovered URL only pre-fills the ordinary new-account flow. Never pass
+  // the discovery gateway's SavedConnection, certificate or Portal session.
+  await Navigator.of(context).push<void>(
+    MaterialPageRoute(
+      builder: (ctx) => NgConnectScreen(
+        connManager: fleet.manager,
+        firstRun: false,
+        initialAddress: address,
+        initialLabel: label,
+        onCancel: () => Navigator.pop(ctx),
+        onConnected: (_) => Navigator.pop(ctx),
+      ),
+    ),
+  );
+}
+
+class FleetScreen extends StatefulWidget {
+  const FleetScreen({super.key, required this.serving, required this.label});
+  final RemoteWorkspaceOwner? serving;
+  final String label;
+  @override
+  State<FleetScreen> createState() => _FleetScreenState();
+}
+
+class _FleetScreenState extends State<FleetScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final fleet = FleetScope.of(context);
+    return Scaffold(
+      appBar: AppBar(title: const Text('Gateway fleet')),
+      body: ListenableBuilder(
+        listenable: fleet,
+        builder: (context, _) => ListView(
+          padding: const EdgeInsets.all(12),
+          children: [
+            if (widget.serving case final owner?)
+              ListTile(
+                leading: const Icon(Icons.dns_outlined),
+                title: const Text('Cloud and Desktop Webapp'),
+                subtitle: Text(widget.label),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => FleetWebappScreen(
+                      owner: owner,
+                      label: widget.label,
+                      fleet: fleet,
+                    ),
+                  ),
+                ),
+              ),
+            ListTile(
+              leading: const Icon(Icons.add_link),
+              title: const Text('Register an existing gateway or Webapp'),
+              subtitle: const Text(
+                'Sign in to its address. Nothing is hosted on this device.',
+              ),
+              onTap: () async {
+                await enrollFleetAddress(context, fleet);
+                if (mounted) setState(() {});
+              },
+            ),
+            const Divider(),
+            for (final c in fleet.manager.getConnections())
+              if (fleet.host(c.id) case final h?)
+                _GatewayGroup(key: ObjectKey(h), host: h, fleet: fleet)
+              else
+                ListTile(
+                  title: Text(c.label),
+                  subtitle: Text(c.gatewayProfile ?? c.host),
+                  trailing: TextButton(
+                    onPressed: c.hasDashboardAuth
+                        ? () async {
+                            try {
+                              await fleet.attach(c.id);
+                            } catch (e) {
+                              if (context.mounted) _notice(context, e);
+                            }
+                          }
+                        : null,
+                    child: const Text('Connect'),
+                  ),
+                ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _GatewayGroup extends StatelessWidget {
+  const _GatewayGroup({super.key, required this.host, required this.fleet});
+  final FleetHost host;
+  final GatewayFleet fleet;
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: host,
+    builder: (context, _) {
+      final target = host.target;
+      final c = host.gateway.connection;
+      return Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ListTile(
+              title: Text(c.label),
+              subtitle: Text(
+                '${c.gatewayProfile ?? 'Serving profile'} · ${host.gateway.state.label}',
+              ),
+              trailing: Wrap(
+                children: [
+                  IconButton(
+                    tooltip: 'Refresh roster',
+                    onPressed: host.loading ? null : host.refresh,
+                    icon: const Icon(Icons.refresh),
+                  ),
+                  IconButton(
+                    tooltip: 'Disconnect ${c.label}',
+                    onPressed: () => fleet.detach(c.id),
+                    icon: const Icon(Icons.link_off),
+                  ),
+                ],
+              ),
+            ),
+            if (host.loading)
+              const LinearProgressIndicator()
+            else if (host.failure case final why?)
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(fleetError(WorkspaceException(why))),
+              )
+            else if (target != null) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text('Profiles: ${host.profiles.join(', ')}'),
+              ),
+              for (final r in host.sessions)
+                ListTile(
+                  leading: const Icon(Icons.chat_outlined),
+                  title: Text(r.title),
+                  subtitle: Text(r.profile),
+                  onTap: () async {
+                    try {
+                      final chat = await host.openSession(r, target);
+                      if (context.mounted && host.current) {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => _FleetChat(
+                              fleet: fleet,
+                              host: host,
+                              row: r,
+                              chat: chat,
+                            ),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) _notice(context, e);
+                    }
+                  },
+                ),
+              if (host.sessions.isEmpty)
+                const ListTile(title: Text('No sessions for this profile.')),
+              if (host.sessions.length < host.total)
+                TextButton(
+                  onPressed: () => host.refresh(more: true),
+                  child: const Text('More sessions'),
+                ),
+            ],
+          ],
+        ),
+      );
+    },
+  );
+}
+
+class _FleetChat extends StatefulWidget {
+  const _FleetChat({
+    required this.fleet,
+    required this.host,
+    required this.row,
+    required this.chat,
+  });
+  final GatewayFleet fleet;
+  final FleetHost host;
+  final FleetSession row;
+  final NgChatController chat;
+  @override
+  State<_FleetChat> createState() => _FleetChatState();
+}
+
+class _FleetChatState extends State<_FleetChat> {
+  final input = TextEditingController();
+  bool sending = false;
+  @override
+  void dispose() {
+    input.dispose();
+    super.dispose();
+  }
+
+  Future<void> send() async {
+    if (sending || input.text.trim().isEmpty) return;
+    setState(() => sending = true);
+    final text = input.text;
+    try {
+      if (!await widget.host.send(widget.row, widget.chat, text)) {
+        throw const WorkspaceException(WorkspaceFailure.unavailable);
+      }
+      if (mounted && input.text == text) input.clear();
+    } catch (e) {
+      if (mounted) _notice(context, e);
+    } finally {
+      if (mounted) setState(() => sending = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      title: Text(
+        '${widget.host.gateway.connection.label} / ${widget.row.profile}',
+      ),
+    ),
+    body: ListenableBuilder(
+      listenable: widget.fleet,
+      builder: (context, _) {
+        if (!widget.host.current) {
+          return const Center(child: Text('This gateway was disconnected.'));
+        }
+        final chat = widget.chat;
+        return ListenableBuilder(
+          listenable: Listenable.merge([chat, widget.host]),
+          builder: (context, _) => SafeArea(
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text(widget.row.title),
+                  subtitle: Text(widget.row.id),
+                ),
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      for (final item in chat.items)
+                        if (item is NgUserItem || item is NgAssistantItem)
+                          ListTile(
+                            title: Text(
+                              item is NgUserItem ? 'You' : 'Assistant',
+                            ),
+                            subtitle: SelectableText(
+                              item is NgUserItem
+                                  ? item.text
+                                  : (item as NgAssistantItem).text,
+                            ),
+                          ),
+                      if (chat.historyError != null || chat.error != null)
+                        const Text(
+                          'Some conversation data could not be loaded.',
+                        ),
+                    ],
+                  ),
+                ),
+                if (chat.running) const LinearProgressIndicator(),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: input,
+                        decoration: const InputDecoration(
+                          hintText: 'Message this session',
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: 'Send to this session',
+                      onPressed:
+                          widget.host.target != null &&
+                              chat.runtimeId != null &&
+                              !chat.running &&
+                              !sending
+                          ? send
+                          : null,
+                      icon: const Icon(Icons.send),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ),
+  );
+}

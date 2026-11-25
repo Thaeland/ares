@@ -15,6 +15,7 @@ import '../../core/models/background_report.dart';
 import '../../core/models/legacy_lcm_summary.dart';
 import '../../core/models/slash_command.dart';
 import '../../core/services/attachment_draft_service.dart';
+import '../../core/services/remote_workspace.dart';
 import '../../core/services/slash_command_errors.dart';
 import '../../core/services/ws_client.dart';
 import 'history_rows.dart';
@@ -2360,8 +2361,18 @@ class NgChatController extends ChangeNotifier {
     List<AttachmentDraft> attachments = const [],
     String? submissionId,
     String? display,
+    WorkspaceTarget? fleetTarget,
   }) async {
     final trimmed = text.trim();
+    if (fleetTarget != null &&
+        (attachments.isNotEmpty ||
+            fleetTarget.route !=
+                gateway.workspace.route(storedSessionId: storedId) ||
+            runtimeId == null ||
+            fleetTarget.runtimeSessionId != runtimeId ||
+            !fleetTarget.isCurrent)) {
+      return false;
+    }
     if (trimmed.isEmpty && attachments.isEmpty) return false;
     final shown = display?.trim() ?? '';
     final effectiveSubmissionId = submissionId ?? const Uuid().v4();
@@ -2381,7 +2392,7 @@ class NgChatController extends ChangeNotifier {
     _changed();
     final queued = <String>[];
     try {
-      await _ensureSession();
+      if (fleetTarget == null) await _ensureSession();
       final refs = <String>[];
       try {
         for (final draft in item.attachments) {
@@ -2399,10 +2410,12 @@ class NgChatController extends ChangeNotifier {
         trimmed,
       ].where((part) => part.trim().isNotEmpty).join('\n\n');
       _clearRetainedModelMutation();
-      final result = await _submitPromptWithCompatibility({
-        'session_id': runtimeId,
-        'text': prompt,
-      }, submissionId: effectiveSubmissionId);
+      final result = fleetTarget != null
+          ? await fleetTarget.submitFleetText(prompt, effectiveSubmissionId)
+          : await _submitPromptWithCompatibility({
+              'session_id': runtimeId,
+              'text': prompt,
+            }, submissionId: effectiveSubmissionId);
       item.pending = false;
       // A canonical receipt names the execution its admission started.
       _adoptExecutionGeneration(result['execution_generation']);

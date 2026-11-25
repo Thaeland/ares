@@ -2811,7 +2811,8 @@ class DashboardClient {
       '$_baseUrl/api/$endpoint',
     ).replace(queryParameters: queryParameters);
     final request = http.Request(method, uri)..headers.addAll(headers);
-    if (endpoint == 'auth/ws-ticket') request.followRedirects = false;
+    // History reads carry the same credentials as the ticket request.
+    request.followRedirects = false;
     if (body != null) request.body = body is String ? body : jsonEncode(body);
     final res = await http.Response.fromStream(
       await _http.send(request).timeout(timeout),
@@ -2837,6 +2838,10 @@ class DashboardClient {
     required Map<String, String> query,
     required void Function() check,
     bool mintHostTerminalTicket = false,
+    // The only fleet writes admitted by this transport are a single display
+    // key and a registry primary selection. No generic method/body override.
+    String? webappDirection,
+    bool makeWebappPrimary = false,
   }) async {
     if (segments.isEmpty ||
         segments.any(
@@ -2863,9 +2868,41 @@ class DashboardClient {
       ],
       queryParameters: query.isEmpty ? null : query,
     );
-    final request = http.Request(mintHostTerminalTicket ? 'POST' : 'GET', uri)
-      ..followRedirects = false;
+    final patchDirection = webappDirection != null;
+    if ((patchDirection &&
+            (segments.join('/') != 'ui-preferences' ||
+                !const {'auto', 'ltr', 'rtl'}.contains(webappDirection))) ||
+        (makeWebappPrimary &&
+            (segments.length != 3 ||
+                segments.first != 'gateway-connections' ||
+                segments.last != 'primary')) ||
+        ((patchDirection || makeWebappPrimary) &&
+            (query.isNotEmpty || mintHostTerminalTicket))) {
+      throw const FormatException('Invalid Webapp operation');
+    }
+    final request = http.Request(
+      patchDirection
+          ? 'PATCH'
+          : mintHostTerminalTicket || makeWebappPrimary
+          ? 'POST'
+          : 'GET',
+      uri,
+    )..followRedirects = false;
     request.headers.addAll(await _authHeaders());
+    if (patchDirection || makeWebappPrimary) {
+      request.headers['Origin'] = base.origin;
+      request.headers['Content-Type'] = 'application/json';
+      request.body = patchDirection
+          ? jsonEncode({
+              'values': {
+                'hermes.desktop.textDirection': webappDirection == 'auto'
+                    ? null
+                    : webappDirection,
+              },
+              'seed': false,
+            })
+          : '{}';
+    }
     check();
     final response = await _http
         .send(request)

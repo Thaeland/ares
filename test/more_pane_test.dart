@@ -83,6 +83,7 @@ void main() {
       expect(
         ids,
         unorderedEquals(<String>[
+          'gateway-fleet',
           'files',
           'projects-root',
           'assets',
