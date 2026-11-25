@@ -11,7 +11,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../core/l10n/l10n.dart';
 import '../../core/models/attachment_draft.dart';
 import '../../core/preview/chat_preview.dart';
 import '../../core/screens/workspace_workers_screen.dart';
@@ -438,113 +437,9 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
   /// Set while a sent `/command` waits to learn whether the gateway runs it,
   /// so a second tap cannot run it twice.
   bool _decidingCommand = false;
-  ({NgChatController chat, NgUserItem item})? _editingTurn;
-
-  Future<bool> _confirmRewindDialog({
-    required String title,
-    required String body,
-    required Key confirmKey,
-  }) async {
-    final l10n = context.sharedL10n;
-    final answer = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(title),
-        content: Text(body),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            key: confirmKey,
-            onPressed: () => Navigator.pop(dialogContext, true),
-            child: Text(l10n.continue_label),
-          ),
-        ],
-      ),
-    );
-    return answer == true && mounted;
-  }
-
-  void _beginEditUserTurn(NgUserItem item) {
-    setState(() => _editingTurn = (chat: chat, item: item));
-    _input.text = item.text;
-    _input.selection = TextSelection.collapsed(offset: item.text.length);
-    _focus.requestFocus();
-  }
-
-  void _cancelEditUserTurn() {
-    setState(() => _editingTurn = null);
-    _input.clear();
-  }
-
-  Future<void> _restoreUserTurn(NgUserItem item) async {
-    final source = chat;
-    final confirmed = await _confirmRewindDialog(
-      title: 'Restore to this message?',
-      body:
-          'This rewinds the conversation to this message, archives any later '
-          'turns, and runs this prompt again.',
-      confirmKey: const ValueKey('confirm-restore-turn'),
-    );
-    if (!confirmed || !identical(source, chat)) return;
-    if (_editingTurn != null) setState(() => _editingTurn = null);
-    await source.restoreToUserTurn(item);
-  }
-
-  Future<void> _regenerateAssistant(NgAssistantItem assistant) async {
-    final source = chat;
-    if (source.running) return;
-    final user = source.userTurnForAssistant(assistant);
-    if (user == null) return;
-    final deep =
-        user.failure == null && source.laterVisibleUserTurnsAfter(user) > 0;
-    if (deep) {
-      final confirmed = await _confirmRewindDialog(
-        title: 'Archive later messages?',
-        body:
-            'Regenerating from an earlier turn will archive later user turns '
-            'in this chat.',
-        confirmKey: const ValueKey('confirm-deep-truncate'),
-      );
-      if (!confirmed || !identical(source, chat) || source.running) return;
-    }
-    if (_editingTurn != null) setState(() => _editingTurn = null);
-    await source.regenerateFromAssistant(assistant, confirmDeepTruncate: deep);
-  }
 
   Future<void> _send() async {
     if (_decidingCommand) return;
-    final pendingEdit = _editingTurn;
-    if (pendingEdit != null && !identical(pendingEdit.chat, chat)) {
-      setState(() => _editingTurn = null);
-    } else if (pendingEdit != null && _drafts.isEmpty) {
-      final editedText = _input.text.trim();
-      if (editedText.isEmpty) return;
-      final source = chat;
-      final deep =
-          pendingEdit.item.failure == null &&
-          source.laterVisibleUserTurnsAfter(pendingEdit.item) > 0;
-      if (deep) {
-        final confirmed = await _confirmRewindDialog(
-          title: 'Archive later messages?',
-          body:
-              'Editing an earlier message will archive later user turns in '
-              'this chat.',
-          confirmKey: const ValueKey('confirm-deep-truncate'),
-        );
-        if (!confirmed || !identical(source, chat)) return;
-      }
-      setState(() => _editingTurn = null);
-      _input.clear();
-      await source.editUserTurn(
-        pendingEdit.item,
-        editedText,
-        confirmDeepTruncate: deep,
-      );
-      return;
-    }
     final text = _input.text.trim();
     if (text.isEmpty && _drafts.isEmpty) {
       // Empty Enter delivers the client-held head. While idle it drains;
@@ -1453,20 +1348,6 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     return switch (item) {
       NgUserItem() => _UserBubble(
         item: item,
-        onEdit:
-            !item.pending &&
-                !item.steered &&
-                item.failure == null &&
-                item.text.isNotEmpty
-            ? () => _beginEditUserTurn(item)
-            : null,
-        onRestore:
-            !item.pending &&
-                !item.steered &&
-                item.failure == null &&
-                item.text.isNotEmpty
-            ? () => unawaited(_restoreUserTurn(item))
-            : null,
         onRetry: i == lastUserIndex && !chat.running && !item.recoverInComposer
             ? chat.retryLast
             : null,
@@ -1479,8 +1360,8 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
             files: _filesClient,
             filesIdentity: (NgScope.of(context).gateway, chat.storedId),
             last: i == items.length - 1,
-            onRetry: !item.open && !chat.running
-                ? () => unawaited(_regenerateAssistant(item))
+            onRetry: i == items.length - 1 && !chat.running
+                ? chat.retryLast
                 : null,
             readAloud: _readAloud,
           ),
@@ -1635,32 +1516,6 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                       ],
                     ),
                   ),
-                if (_editingTurn != null && identical(_editingTurn!.chat, chat))
-                  Padding(
-                    key: const ValueKey('ng-editing-banner'),
-                    padding: const EdgeInsets.fromLTRB(12, 4, 4, 0),
-                    child: Row(
-                      children: [
-                        Icon(Icons.edit_outlined, size: 15, color: c.accent),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            'Editing message',
-                            style: NgType.caption.copyWith(color: c.text2),
-                          ),
-                        ),
-                        IconButton(
-                          key: const ValueKey('ng-cancel-edit'),
-                          tooltip: context.sharedL10n.cancel,
-                          visualDensity: VisualDensity.compact,
-                          iconSize: 16,
-                          color: c.text3,
-                          onPressed: _cancelEditUserTurn,
-                          icon: const Icon(Icons.close),
-                        ),
-                      ],
-                    ),
-                  ),
                 SendOnEnter(
                   enabled:
                       _input.text.trim().isNotEmpty ||
@@ -1760,7 +1615,6 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                       )
                     else
                       IconButton.filled(
-                        key: const ValueKey('ng-send-button'),
                         tooltip: ngL.ng_send,
                         style: IconButton.styleFrom(
                           backgroundColor: c.accent,
@@ -2012,15 +1866,8 @@ class _CommandCardState extends State<_CommandCard> {
 }
 
 class _UserBubble extends StatelessWidget {
-  const _UserBubble({
-    required this.item,
-    this.onEdit,
-    this.onRestore,
-    this.onRetry,
-  });
+  const _UserBubble({required this.item, this.onRetry});
   final NgUserItem item;
-  final VoidCallback? onEdit;
-  final VoidCallback? onRestore;
   final VoidCallback? onRetry;
 
   @override
@@ -2104,38 +1951,13 @@ class _UserBubble extends StatelessWidget {
                 ],
               ),
             ),
-          if ((onEdit != null || onRestore != null || item.time != null) &&
-              !item.pending)
+          if (item.time != null && !item.pending)
             Padding(
-              padding: const EdgeInsets.only(top: 2, right: 4),
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                alignment: WrapAlignment.end,
-                children: [
-                  if (onEdit != null)
-                    _ActionIcon(
-                      key: ValueKey('ng-edit-${item.key}'),
-                      icon: Icons.edit_outlined,
-                      tooltip: 'Edit and resend',
-                      onTap: onEdit!,
-                    ),
-                  if (onRestore != null)
-                    _ActionIcon(
-                      key: ValueKey('ng-restore-${item.key}'),
-                      icon: Icons.restore_rounded,
-                      tooltip: 'Restore to here',
-                      onTap: onRestore!,
-                    ),
-                  if (item.time != null)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: Text(
-                        ngStamp(context, item.time!),
-                        key: const ValueKey('ng-user-time'),
-                        style: NgType.caption.copyWith(color: c.textMuted),
-                      ),
-                    ),
-                ],
+              padding: const EdgeInsets.only(top: 4, right: 4),
+              child: Text(
+                ngStamp(context, item.time!),
+                key: const ValueKey('ng-user-time'),
+                style: NgType.caption.copyWith(color: c.textMuted),
               ),
             ),
           if (item.failure != null)
@@ -2547,7 +2369,6 @@ class _AssistantBlockState extends State<_AssistantBlock> {
                   ),
                   if (widget.onRetry != null)
                     _ActionIcon(
-                      key: ValueKey('ng-regenerate-${item.key}'),
                       icon: Icons.refresh_rounded,
                       tooltip: ngL.ng_retry,
                       onTap: widget.onRetry!,
@@ -2580,7 +2401,6 @@ class _AssistantBlockState extends State<_AssistantBlock> {
 
 class _ActionIcon extends StatelessWidget {
   const _ActionIcon({
-    super.key,
     required this.icon,
     required this.tooltip,
     required this.onTap,

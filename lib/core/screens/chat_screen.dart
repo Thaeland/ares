@@ -77,7 +77,6 @@ import '../models/gateway_approval.dart';
 import '../models/gateway_clarify.dart';
 import '../models/gateway_insight.dart';
 import '../models/gateway_sensitive_prompt.dart';
-import '../history/rewind_submit.dart';
 import '../models/gateway_turn_contract.dart';
 import '../models/projects_tree_overview.dart';
 import '../models/slash_command.dart';
@@ -450,7 +449,6 @@ typedef TestRemotePromptSubmit =
       required String text,
       required StreamCallback onEvent,
       required void Function() onSent,
-      Map<String, dynamic>? extraSubmitParams,
     });
 
 @visibleForTesting
@@ -2109,264 +2107,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       ..text = text
       ..selection = TextSelection.collapsed(offset: text.length);
     FocusScope.of(context).nextFocus();
-  }
-
-  _PendingClassicRewind? _pendingEdit;
-
-  static int? _parseMessageRowId(Map<String, dynamic> row) {
-    final raw = row['row_id'] ?? row['id'];
-    if (raw is int && raw > 0) return raw;
-    if (raw is String) {
-      final parsed = int.tryParse(raw);
-      if (parsed != null && parsed > 0) return parsed;
-    }
-    return null;
-  }
-
-  static String? _parseMessagePlatformId(Map<String, dynamic> row) {
-    final raw =
-        row['message_id']?.toString() ?? row['platform_message_id']?.toString();
-    if (raw == null ||
-        raw.trim().isEmpty ||
-        isSyntheticRendererId(raw.trim())) {
-      return null;
-    }
-    return raw.trim();
-  }
-
-  static bool _isVisibleHumanUserMap(dynamic item) {
-    if (item is! Map<String, dynamic>) return false;
-    if (item['role'] != 'user') return false;
-    final kind = item['display_kind']?.toString();
-    if (kind != null && kind.isNotEmpty) return false;
-    if (BackgroundReport.fromMessage(item) != null) return false;
-    return true;
-  }
-
-  _PendingClassicRewind _buildUserRewindTarget(
-    Map<String, dynamic> msg,
-    String content,
-    List<dynamic> displayItems,
-  ) {
-    final users = <Map<String, dynamic>>[
-      for (final entry in displayItems)
-        if (_isVisibleHumanUserMap(entry)) entry as Map<String, dynamic>,
-    ];
-    final rowId = _parseMessageRowId(msg);
-    var ordinal = users.indexWhere((entry) => identical(entry, msg));
-    if (ordinal < 0 && rowId != null) {
-      ordinal = users.indexWhere((entry) => _parseMessageRowId(entry) == rowId);
-    }
-    final laterUserTurns = ordinal >= 0 ? users.length - 1 - ordinal : 0;
-    final rebindIds = <int>[
-      for (final entry in users)
-        if (_parseMessageRowId(entry) case final int id) id,
-    ];
-    return _PendingClassicRewind(
-      sourceText: content.trim(),
-      rowId: rowId,
-      messageId: _parseMessagePlatformId(msg),
-      ordinal: ordinal >= 0 ? ordinal : null,
-      laterUserTurns: laterUserTurns,
-      rebindRowIds: rebindIds,
-    );
-  }
-
-  _PendingClassicRewind? _buildAssistantRewindTarget(
-    Map<String, dynamic> msg,
-    List<dynamic> displayItems,
-  ) {
-    final assistantIndex = displayItems.indexWhere((e) => identical(e, msg));
-    if (assistantIndex > 0) {
-      for (var i = assistantIndex - 1; i >= 0; i--) {
-        final candidate = displayItems[i];
-        if (_isVisibleHumanUserMap(candidate)) {
-          final userMap = candidate as Map<String, dynamic>;
-          final text = _transcriptText(userMap).trim();
-          if (text.isNotEmpty) {
-            return _buildUserRewindTarget(userMap, text, displayItems);
-          }
-        }
-      }
-    }
-    final fallbackPrompt = msg['_retry_prompt']?.toString().trim() ?? '';
-    if (fallbackPrompt.isEmpty) return null;
-    return _PendingClassicRewind(
-      sourceText: fallbackPrompt,
-      rowId: null,
-      messageId: null,
-      ordinal: 0,
-      laterUserTurns: 0,
-      rebindRowIds: const [],
-    );
-  }
-
-  void _beginUserEdit(
-    Map<String, dynamic> msg,
-    String content,
-    List<dynamic> displayItems,
-  ) {
-    if (_desktopGateway != null) {
-      setState(() {
-        _pendingEdit = _buildUserRewindTarget(msg, content, displayItems);
-      });
-    }
-    _editAndResend(content);
-  }
-
-  void _cancelPendingEdit() {
-    setState(() => _pendingEdit = null);
-    _textController.clear();
-  }
-
-  Future<bool> _confirmClassicRewindDialog({
-    required String title,
-    required String body,
-    required Key confirmKey,
-  }) async {
-    final l10n = context.sharedL10n;
-    final answer = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(title),
-        content: Text(body),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            key: confirmKey,
-            onPressed: () => Navigator.pop(dialogContext, true),
-            child: Text(l10n.continue_label),
-          ),
-        ],
-      ),
-    );
-    return answer == true && mounted;
-  }
-
-  Future<void> _restoreClassicUserTurn(
-    Map<String, dynamic> msg,
-    String content,
-    List<dynamic> displayItems,
-  ) async {
-    if (_archiving || _pendingReattachResync || content.trim().isEmpty) return;
-    final target = _buildUserRewindTarget(msg, content, displayItems);
-    final confirmed = await _confirmClassicRewindDialog(
-      title: 'Restore to this message?',
-      body:
-          'This rewinds the conversation to this message, archives any later '
-          'turns, and runs this prompt again.',
-      confirmKey: const ValueKey('confirm-restore-turn'),
-    );
-    if (!confirmed) return;
-    if (_pendingEdit != null) setState(() => _pendingEdit = null);
-    await _executeClassicRewindSubmit(
-      target,
-      target.sourceText,
-      confirmDeepTruncate: true,
-      preserveComposer: true,
-    );
-  }
-
-  Future<void> _retryClassicAssistantTurn(
-    Map<String, dynamic> msg,
-    List<dynamic> displayItems,
-  ) async {
-    if (_pendingEdit != null) setState(() => _pendingEdit = null);
-    if (_desktopGateway == null) {
-      await _retryPrompt(msg['_retry_prompt']?.toString() ?? '');
-      return;
-    }
-    if (_archiving ||
-        _sending ||
-        _streaming ||
-        _pendingReattachResync ||
-        _normalChat?.snapshot.hasActiveTurn == true) {
-      return;
-    }
-    final target = _buildAssistantRewindTarget(msg, displayItems);
-    if (target == null || target.sourceText.isEmpty) return;
-    final deep = target.laterUserTurns > 0;
-    if (deep) {
-      final confirmed = await _confirmClassicRewindDialog(
-        title: 'Archive later messages?',
-        body:
-            'Regenerating from an earlier turn will archive later user turns '
-            'in this chat.',
-        confirmKey: const ValueKey('confirm-deep-truncate'),
-      );
-      if (!confirmed ||
-          _sending ||
-          _streaming ||
-          _normalChat?.snapshot.hasActiveTurn == true) {
-        return;
-      }
-    }
-    await _executeClassicRewindSubmit(
-      target,
-      target.sourceText,
-      confirmDeepTruncate: deep,
-      preserveComposer: true,
-    );
-  }
-
-  Future<void> _executeClassicRewindSubmit(
-    _PendingClassicRewind target,
-    String submitText, {
-    required bool confirmDeepTruncate,
-    required bool preserveComposer,
-  }) async {
-    final gateway = _desktopGateway;
-    if (gateway == null) {
-      await _sendMessage(textOverride: submitText);
-      return;
-    }
-    final wasActive = _streaming || _normalChat?.snapshot.hasActiveTurn == true;
-    if (wasActive) {
-      try {
-        if (_normalChat?.snapshot.hasActiveTurn == true) {
-          await _normalChat!.interrupt();
-        } else {
-          await gateway.interruptPrompt(sessionId: _normalLocalSessionKey);
-        }
-      } catch (_) {
-        // Best-effort interrupt before truncating submit.
-      }
-      for (
-        var i = 0;
-        i < 40 &&
-            mounted &&
-            (_normalChat?.snapshot.hasActiveTurn == true || _streaming);
-        i++
-      ) {
-        await Future<void>.delayed(const Duration(milliseconds: 25));
-      }
-      if (!mounted) return;
-    }
-    final plan = await RewindPlan.resolve(
-      requestGateway: (method, params) =>
-          gateway.sessionRpc(_normalLocalSessionKey, method, params),
-      sessionId: _normalLocalSessionKey,
-      truncateOrdinal: target.ordinal,
-      truncateMessageId: target.messageId,
-      truncateRowId: target.rowId,
-      sourceText: target.sourceText,
-    );
-    if (!mounted) return;
-    final rewindParams = buildRewindParams(
-      plan,
-      confirmDeepTruncate: confirmDeepTruncate,
-      rebindSurvivorRowIds: target.rebindRowIds,
-    );
-    await _submitMessage(
-      text: submitText,
-      attachments: const [],
-      speakResponse: false,
-      preserveComposer: preserveComposer,
-      extraSubmitParams: rewindParams.isEmpty ? null : rewindParams,
-    );
   }
 
   Future<void> _retryPrompt(String text) async {
@@ -4975,39 +4715,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         textOverride ??
         handsFreePrompt?.transcript ??
         _textController.text.trim();
-    if (textOverride == null &&
-        handsFreePrompt == null &&
-        voiceBinding == null &&
-        _attachmentDrafts.isEmpty &&
-        _pendingEdit != null) {
-      if (text.isEmpty) return;
-      final pendingEdit = _pendingEdit!;
-      if (_desktopGateway == null) {
-        setState(() => _pendingEdit = null);
-      } else {
-        final deep = pendingEdit.laterUserTurns > 0;
-        if (deep) {
-          final confirmed = await _confirmClassicRewindDialog(
-            title: 'Archive later messages?',
-            body:
-                'Editing an earlier message will archive later user turns in '
-                'this chat.',
-            confirmKey: const ValueKey('confirm-deep-truncate'),
-          );
-          if (!confirmed) return;
-        }
-        setState(() => _pendingEdit = null);
-        _clearComposerForSend(text);
-        _commitComposerForSend();
-        await _executeClassicRewindSubmit(
-          pendingEdit,
-          text,
-          confirmDeepTruncate: deep,
-          preserveComposer: true,
-        );
-        return;
-      }
-    }
     if (_streaming) {
       if (text.isNotEmpty) {
         await _sendWhileWorking(text);
@@ -5511,7 +5218,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     bool preserveComposer = false,
     VoidCallback? onAccepted,
     bool heldUntilAccepted = false,
-    Map<String, dynamic>? extraSubmitParams,
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     // A remote-gateway profile uses one transport for every prompt. Images and
@@ -5537,7 +5243,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         preserveComposer: keepComposer,
         onAccepted: onAccepted,
         heldUntilAccepted: heldUntilAccepted,
-        extraSubmitParams: extraSubmitParams,
       );
       return;
     }
@@ -5889,7 +5594,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     bool preserveComposer = false,
     VoidCallback? onAccepted,
     bool heldUntilAccepted = false,
-    Map<String, dynamic>? extraSubmitParams,
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     final chat = _normalChat;
@@ -6054,7 +5758,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             maySubmit: voiceBinding == null
                 ? null
                 : () => _handsFree.isCurrent(voiceBinding.prompt.authority),
-            extraSubmitParams: extraSubmitParams,
           );
           final submittedTurn = chat.snapshot.turnId;
           await submitted;
@@ -8404,8 +8107,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             !_voiceComposer.listening &&
             _normalChat?.snapshot.steering != true &&
             (_streaming
-                ? (_pendingEdit != null ||
-                      _normalChat?.snapshot.hasActiveTurn != true ||
+                ? (_normalChat?.snapshot.hasActiveTurn != true ||
                       _normalChat!.canSteer)
                 : !_sending));
     final sendTooltip =
@@ -8639,35 +8341,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               LinearProgressIndicator(
                 key: const Key('paste-attachment-preparing'),
                 semanticsLabel: context.l10n.preparing_attachments,
-              ),
-            if (_pendingEdit != null)
-              Padding(
-                key: const ValueKey('classic-editing-banner'),
-                padding: const EdgeInsets.fromLTRB(12, 2, 8, 2),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.edit_outlined,
-                      size: 16,
-                      color: HermesTokens.of(context).accent,
-                    ),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        'Editing message',
-                        style: Theme.of(context).textTheme.labelMedium,
-                      ),
-                    ),
-                    IconButton(
-                      key: const ValueKey('classic-cancel-edit'),
-                      tooltip: context.sharedL10n.cancel,
-                      visualDensity: VisualDensity.compact,
-                      iconSize: 18,
-                      onPressed: _cancelPendingEdit,
-                      icon: const Icon(Icons.close),
-                    ),
-                  ],
-                ),
               ),
             Container(
               key: const Key('chat-composer-pill'),
@@ -9298,7 +8971,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     dynamic item, {
     ChatDisplaySource? source,
     bool isLast = false,
-    List<dynamic> displayItems = const [],
   }) {
     if (item is SlashCommandNotice) {
       return SlashCommandNoticeCard(
@@ -9422,13 +9094,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       onReadAloud: isUser
           ? null
           : () => _readAssistantText(content, announce: true),
-      onEdit: isUser ? () => _beginUserEdit(msg, content, displayItems) : null,
-      onRestore: isUser && _desktopGateway != null
-          ? () => _restoreClassicUserTurn(msg, content, displayItems)
-          : null,
+      onEdit: isUser ? () => _editAndResend(content) : null,
       onRetry: isUser
           ? null
-          : () => _retryClassicAssistantTurn(msg, displayItems),
+          : () => _retryPrompt(msg['_retry_prompt']?.toString() ?? ''),
       showQuickActions:
           !isUser &&
           isLast &&
@@ -9597,7 +9266,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               source: cell.source,
               isLast:
                   index - (_historyWindow.hasOlder ? 1 : 0) == cells.length - 1,
-              displayItems: displayMessages,
             );
             if (cell.source == null) return child;
             return KeyedSubtree(
@@ -9814,7 +9482,6 @@ class MessageBubble extends StatelessWidget {
   final Map<String, dynamic> metadata;
   final Future<void> Function()? onReadAloud;
   final VoidCallback? onEdit;
-  final Future<void> Function()? onRestore;
   final Future<void> Function()? onRetry;
   final bool mediaReferencesFinal;
 
@@ -9839,7 +9506,6 @@ class MessageBubble extends StatelessWidget {
     this.metadata = const {},
     this.onReadAloud,
     this.onEdit,
-    this.onRestore,
     this.onRetry,
     this.mediaFilesClient,
     this.mediaSourceIdentity,
@@ -10222,17 +9888,6 @@ class MessageBubble extends StatelessWidget {
                     onEdit!();
                   },
                 ),
-              if (onRestore != null)
-                _actionTile(
-                  sheetContext,
-                  label: 'Restore to here',
-                  tooltip: 'Restore to here',
-                  icon: Icons.restore,
-                  onTap: () {
-                    Navigator.of(sheetContext).pop();
-                    unawaited(onRestore!());
-                  },
-                ),
               if (onRetry != null)
                 _actionTile(
                   sheetContext,
@@ -10569,22 +10224,4 @@ class _CommandPaletteResults extends StatelessWidget {
       ],
     );
   }
-}
-
-class _PendingClassicRewind {
-  const _PendingClassicRewind({
-    required this.sourceText,
-    required this.rowId,
-    required this.messageId,
-    required this.ordinal,
-    required this.laterUserTurns,
-    required this.rebindRowIds,
-  });
-
-  final String sourceText;
-  final int? rowId;
-  final String? messageId;
-  final int? ordinal;
-  final int laterUserTurns;
-  final List<int> rebindRowIds;
 }

@@ -10,7 +10,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
-import '../../core/history/rewind_submit.dart';
 import '../../core/models/attachment_draft.dart';
 import '../../core/models/background_report.dart';
 import '../../core/models/legacy_lcm_summary.dart';
@@ -199,12 +198,6 @@ class NgUserItem extends NgItem {
   /// submits this. Null when [text] is what was sent.
   final String? sentText;
 
-  /// Durable SQLite row id (`row_id`) on the gateway, when persisted.
-  int? rowId;
-
-  /// Durable platform message id (never a synthetic renderer key).
-  final String? messageId;
-
   NgUserItem(
     super.key,
     this.text, {
@@ -216,8 +209,6 @@ class NgUserItem extends NgItem {
     this.submissionId,
     this.composerImageText,
     this.sentText,
-    this.rowId,
-    this.messageId,
   });
 }
 
@@ -1189,8 +1180,6 @@ class NgChatController extends ChangeNotifier {
                 body,
                 time: _time(m['timestamp']),
                 files: files,
-                rowId: _parseRowId(m),
-                messageId: _parsePlatformMessageId(m),
               ),
             );
           } else {
@@ -1221,8 +1210,6 @@ class NgChatController extends ChangeNotifier {
             time: _time(m['timestamp']),
             steered: displayKind == 'steer',
             files: files,
-            rowId: _parseRowId(m),
-            messageId: _parsePlatformMessageId(m),
           ),
         );
       } else if (role == 'assistant') {
@@ -3044,311 +3031,43 @@ class NgChatController extends ChangeNotifier {
     }
   }
 
-  static int? _parseRowId(Map<dynamic, dynamic> row) {
-    final raw = row['row_id'] ?? row['id'];
-    if (raw is int && raw > 0) return raw;
-    if (raw is String) {
-      final parsed = int.tryParse(raw);
-      if (parsed != null && parsed > 0) return parsed;
-    }
-    return null;
-  }
-
-  static String? _parsePlatformMessageId(Map<dynamic, dynamic> row) {
-    final raw =
-        row['message_id']?.toString() ?? row['platform_message_id']?.toString();
-    if (raw == null ||
-        raw.trim().isEmpty ||
-        isSyntheticRendererId(raw.trim())) {
-      return null;
-    }
-    return raw.trim();
-  }
-
   Future<Map<String, dynamic>> _submitPromptWithCompatibility(
     Map<String, dynamic> baseParams, {
     required String submissionId,
     PreparedImageAttempt? attempt,
     required void Function() checkOwner,
   }) async {
-    var currentBase = Map<String, dynamic>.of(baseParams);
-    var includeSubmissionId = true;
-    while (true) {
-      final sent = includeSubmissionId
-          ? <String, dynamic>{...currentBase, 'submission_id': submissionId}
-          : currentBase;
-      try {
-        return await gateway.call(
-          'prompt.submit',
-          sent,
-          timeout: const Duration(seconds: 60),
-        );
-      } on JsonRpcError catch (e) {
-        if (isRejectedDeepTruncatePayload(
-          code: e.code,
-          message: e.message,
-          sentParams: sent,
-        )) {
-          currentBase = stripRejectedDeepTruncate(currentBase);
-          checkOwner();
-          continue;
-        }
-        if (includeSubmissionId && isRejectedSubmissionIdError(e)) {
-          includeSubmissionId = false;
-          if (attempt != null) await attempt.beforeLegacy();
-          checkOwner();
-          continue;
-        }
-        rethrow;
-      }
-    }
-  }
-
-  static bool _isPersistedVisibleUser(NgUserItem item) =>
-      !item.steered && item.failure == null;
-
-  /// 0-based ordinal of [target] among visible persisted user turns.
-  int visibleUserOrdinalOf(NgUserItem target) {
-    var ordinal = 0;
-    for (final entry in items) {
-      if (entry is! NgUserItem || !_isPersistedVisibleUser(entry)) continue;
-      if (identical(entry, target)) return ordinal;
-      ordinal++;
-    }
-    return -1;
-  }
-
-  /// Count of visible persisted user turns strictly after [target].
-  int laterVisibleUserTurnsAfter(NgUserItem target) {
-    final anchor = items.indexOf(target);
-    if (anchor < 0) return 0;
-    var count = 0;
-    for (var i = anchor + 1; i < items.length; i++) {
-      final entry = items[i];
-      if (entry is NgUserItem && _isPersistedVisibleUser(entry)) count++;
-    }
-    return count;
-  }
-
-  /// The user turn that produced [assistant], matching Desktop `planReload`.
-  NgUserItem? userTurnForAssistant(NgAssistantItem assistant) {
-    final index = items.indexOf(assistant);
-    if (index < 0) return null;
-    for (var i = index - 1; i >= 0; i--) {
-      final entry = items[i];
-      if (entry is NgUserItem && !entry.steered) return entry;
-    }
-    return null;
-  }
-
-  void _applySurvivorRowIds(SurvivorRowIds? survivors) {
-    if (survivors == null) return;
-    final byId = survivors.byOldRowId;
-    if (byId != null) {
-      for (final entry in items.whereType<NgUserItem>()) {
-        final old = entry.rowId;
-        if (old == null || !byId.containsKey(old)) continue;
-        entry.rowId = byId[old];
-      }
-      return;
-    }
-    final byOrdinal = survivors.byUserOrdinal;
-    if (byOrdinal != null) {
-      var ordinal = 0;
-      for (final entry in items.whereType<NgUserItem>()) {
-        if (!_isPersistedVisibleUser(entry)) continue;
-        entry.rowId = ordinal < byOrdinal.length ? byOrdinal[ordinal] : null;
-        ordinal++;
-      }
-    }
-  }
-
-  /// Desktop-parity rewind submit (`rewind.ts` `runRewindSubmit`): resolves a
-  /// durable truncation target, interrupts a live turn first when needed,
-  /// submits ONE truncating `prompt.submit`, and rolls back optimistic UI if
-  /// the submit is rejected.
-  Future<bool> _rewindAndSubmit({
-    required NgUserItem sourceUser,
-    required String text,
-    required bool confirmDeepTruncate,
-  }) async {
-    final trimmed = text.trim();
-    if (trimmed.isEmpty) return false;
-    // Failed turns never reached the gateway: resubmit plainly without cutting.
-    if (sourceUser.failure != null) {
-      if (sourceUser.recoverInComposer) return false;
-      items.remove(sourceUser);
-      return send(
-        trimmed,
-        attachments: sourceUser.attachments,
-        composerImageText: sourceUser.composerImageText,
-        submissionId: sourceUser.submissionId,
-      );
-    }
-
-    final anchorIndex = items.indexOf(sourceUser);
-    if (anchorIndex < 0) return false;
-
-    final interruptFirst = running;
-    final ordinal = visibleUserOrdinalOf(sourceUser);
-    final sourceText = (sourceUser.sentText ?? sourceUser.text).trim();
-    final rebindIds = [
-      for (final entry in items.whereType<NgUserItem>())
-        if (entry.rowId != null && entry.rowId! > 0) entry.rowId!,
-    ];
-    final previousItems = List<NgItem>.of(items);
-    final effectiveSubmissionId = const Uuid().v4();
-    final replacement = NgUserItem(
-      _key('u'),
-      trimmed,
-      time: DateTime.now(),
-      pending: true,
-      submissionId: effectiveSubmissionId,
-    );
-
-    items
-      ..removeRange(anchorIndex, items.length)
-      ..add(replacement);
-    error = null;
-    running = true;
-    turnStartedAt = DateTime.now();
-    _changed();
-
     try {
-      await _ensureSession();
-      final live = runtimeId;
-      if (live == null) throw StateError('No active session to rewind.');
-      final socket = gateway.socket;
-      final epoch = socket?.socketEpoch;
-      void checkOwner() {
-        if (_disposed ||
-            live != runtimeId ||
-            !identical(socket, gateway.socket) ||
-            epoch != socket?.socketEpoch) {
-          throw StateError('Session owner changed during rewind.');
-        }
-      }
-
-      Future<Map<String, dynamic>?> rpc(
-        String method,
-        Map<String, dynamic> params,
-      ) => gateway.call(method, params);
-
-      final plan = await RewindPlan.resolve(
-        requestGateway: rpc,
-        sessionId: live,
-        truncateOrdinal: ordinal >= 0 ? ordinal : null,
-        truncateMessageId: sourceUser.messageId,
-        truncateRowId: sourceUser.rowId,
-        sourceText: sourceText,
-      );
+      return await gateway.call('prompt.submit', {
+        ...baseParams,
+        'submission_id': submissionId,
+      }, timeout: const Duration(seconds: 60));
+    } on JsonRpcError catch (e) {
+      if (!isRejectedSubmissionIdError(e)) rethrow;
+      if (attempt != null) await attempt.beforeLegacy();
       checkOwner();
-
-      if (interruptFirst) {
-        try {
-          await gateway.call('session.interrupt', {'session_id': live});
-        } catch (_) {
-          // Best-effort interrupt before truncating submit.
-        }
-        checkOwner();
-      }
-
-      final rewindParams = buildRewindParams(
-        plan,
-        confirmDeepTruncate: confirmDeepTruncate,
-        rebindSurvivorRowIds: rebindIds,
+      return gateway.call(
+        'prompt.submit',
+        baseParams,
+        timeout: const Duration(seconds: 60),
       );
-      _clearRetainedModelMutation();
-
-      Future<Map<String, dynamic>> doSubmit() => _submitPromptWithCompatibility(
-        <String, dynamic>{...rewindParams, 'session_id': live, 'text': trimmed},
-        submissionId: effectiveSubmissionId,
-        checkOwner: checkOwner,
-      );
-
-      Map<String, dynamic> result;
-      try {
-        result = await doSubmit();
-      } on JsonRpcError catch (err) {
-        if (!isSessionBusyPayload(code: err.code, message: err.message)) {
-          rethrow;
-        }
-        try {
-          await gateway.call('session.interrupt', {'session_id': live});
-        } catch (_) {}
-        checkOwner();
-        result = await doSubmit();
-      }
-
-      replacement.pending = false;
-      _adoptExecutionGeneration(result['execution_generation']);
-      _applySurvivorRowIds(SurvivorRowIds.fromSubmitResult(result));
-      _changed();
-      return true;
-    } catch (e) {
-      items
-        ..clear()
-        ..addAll(previousItems);
-      running = false;
-      turnStartedAt = null;
-      error = _clean(e);
-      _changed();
-      return false;
     }
   }
 
-  /// Edits [target] and resubmits via one truncating `prompt.submit`.
-  Future<bool> editUserTurn(
-    NgUserItem target,
-    String newText, {
-    required bool confirmDeepTruncate,
-  }) => _rewindAndSubmit(
-    sourceUser: target,
-    text: newText,
-    confirmDeepTruncate: confirmDeepTruncate,
-  );
-
-  /// Restores the conversation to [target] and runs that prompt again.
-  Future<bool> restoreToUserTurn(NgUserItem target) => _rewindAndSubmit(
-    sourceUser: target,
-    text: target.sentText ?? target.text,
-    confirmDeepTruncate: true,
-  );
-
-  /// Regenerates from [assistant] via one truncating `prompt.submit`.
-  Future<bool> regenerateFromAssistant(
-    NgAssistantItem assistant, {
-    required bool confirmDeepTruncate,
-  }) {
-    final user = userTurnForAssistant(assistant);
-    if (user == null) return Future.value(false);
-    return _rewindAndSubmit(
-      sourceUser: user,
-      text: user.sentText ?? user.text,
-      confirmDeepTruncate: confirmDeepTruncate,
-    );
-  }
-
-  /// Sends the last prompt again (truncating when persisted; plain when failed).
+  /// Sends the last prompt again.
   Future<void> retryLast() async {
     final last = items.whereType<NgUserItem>().lastOrNull;
     if (last == null) return;
     if (last.failure != null && last.recoverInComposer) return;
     if (last.failure != null) {
       items.remove(last);
-      await send(
-        last.sentText ?? last.text,
-        attachments: last.attachments,
-        composerImageText: last.composerImageText,
-        submissionId: last.submissionId,
-        display: last.sentText == null ? null : last.text,
-      );
-      return;
     }
-    await _rewindAndSubmit(
-      sourceUser: last,
-      text: last.sentText ?? last.text,
-      confirmDeepTruncate: false,
+    await send(
+      last.sentText ?? last.text,
+      attachments: last.failure != null ? last.attachments : const [],
+      composerImageText: last.failure != null ? last.composerImageText : null,
+      submissionId: last.failure != null ? last.submissionId : null,
+      display: last.sentText == null ? null : last.text,
     );
   }
 

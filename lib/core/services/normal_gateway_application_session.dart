@@ -34,7 +34,6 @@ typedef NormalGatewayPromptSubmit =
       required String text,
       required StreamCallback onEvent,
       required void Function() onSent,
-      Map<String, dynamic>? extraSubmitParams,
     });
 typedef NormalGatewayResume =
     Future<ResumedGatewaySession> Function({
@@ -1653,7 +1652,6 @@ class NormalGatewayChatOwner {
     bool Function()? maySubmit,
     Future<bool> Function()? beforeSend,
     void Function()? onAccepted,
-    Map<String, dynamic>? extraSubmitParams,
   }) async {
     if (_redirect != null) {
       return _root.submitPrepared(
@@ -1669,7 +1667,6 @@ class NormalGatewayChatOwner {
         maySubmit: maySubmit,
         beforeSend: beforeSend,
         onAccepted: onAccepted,
-        extraSubmitParams: extraSubmitParams,
       );
     }
     if (!identical(_reservation, reservation) ||
@@ -1686,20 +1683,9 @@ class NormalGatewayChatOwner {
     // genuinely received unknown-floor reply retained in the same projection.
     final protectUnknownPresentation =
         _floor == null && _hasReceivedPresentation;
-    final isTruncatingRewind =
-        extraSubmitParams != null &&
-        extraSubmitParams['confirm_truncate'] == true;
-    if (isTruncatingRewind) {
-      _priorDisplay.clear();
-      _settledPresentation.clear();
-      _historyPresentation.clear();
-      _persistedTurns.clear();
-      _timeline = const ChatTimeline();
-    } else {
-      _priorDisplay.addAll(_display);
-      if (_priorDisplay.length > 256) {
-        _priorDisplay.removeRange(0, _priorDisplay.length - 256);
-      }
+    _priorDisplay.addAll(_display);
+    if (_priorDisplay.length > 256) {
+      _priorDisplay.removeRange(0, _priorDisplay.length - 256);
     }
     _display.clear();
     _tools.clear();
@@ -1768,24 +1754,7 @@ class NormalGatewayChatOwner {
           _acceptHistory(baseline);
         }
       }
-      int rewindFloor() {
-        final cutRowId = extraSubmitParams!['truncate_before_row_id'];
-        if (cutRowId is int && cutRowId > 0) {
-          var keptMax = 0;
-          for (final row in _history) {
-            final id = row['id'];
-            if (id is int && id > 0 && id < cutRowId && id > keptMax) {
-              keptMax = id;
-            }
-          }
-          return keptMax;
-        }
-        return 0;
-      }
-
-      _floor = isTruncatingRewind
-          ? rewindFloor()
-          : protectUnknownPresentation
+      _floor = protectUnknownPresentation
           ? null
           : _historyKnown
           ? _numericFloor(_history)
@@ -1826,11 +1795,9 @@ class NormalGatewayChatOwner {
                   required String text,
                   required StreamCallback onEvent,
                   required void Function() onSent,
-                  Map<String, dynamic>? extraSubmitParams,
                 }) => _session.client!.submitPrompt(
                   sessionId: sessionId,
                   submissionId: imageAttempt?.id,
-                  extraSubmitParams: extraSubmitParams,
                   beforeLegacy: imageAttempt?.beforeLegacy,
                   onReceipt: imageAttempt?.receipt,
                   text: text,
@@ -1864,7 +1831,6 @@ class NormalGatewayChatOwner {
             : (event) {
                 if (_current(generation)) _event(event);
               },
-        extraSubmitParams: extraSubmitParams,
         onSent: () {
           if (!_current(generation) || !snapshot.hasActiveTurn) return;
           wireEmitted = true;

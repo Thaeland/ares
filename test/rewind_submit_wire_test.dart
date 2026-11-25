@@ -1,9 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/history/rewind_submit.dart';
-import 'package:hermes_android/core/services/ws_client.dart';
 
 void main() {
   test(
@@ -211,91 +207,6 @@ void main() {
       expect(calls[2].params['confirm_empty_truncate'], isTrue);
       expect(calls[2].params['rebind_survivor_row_ids'], [101, 102]);
       expect(survivors?.byOldRowId, {101: 301, 102: null});
-    },
-  );
-
-  test(
-    'WsClient.submitPrompt wire compatibility retries without confirm_deep_truncate on 4000 rejection',
-    () async {
-      final submits = <Map<String, dynamic>>[];
-      final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
-      addTearDown(() => server.close(force: true));
-
-      server.listen((req) async {
-        final ws = await WebSocketTransformer.upgrade(req);
-        ws.add(
-          jsonEncode({
-            'jsonrpc': '2.0',
-            'method': 'event',
-            'params': {
-              'type': 'gateway.ready',
-              'payload': {'session_authority': true},
-            },
-          }),
-        );
-        ws.listen((raw) {
-          final frame = jsonDecode(raw as String) as Map<String, dynamic>;
-          if (frame['method'] == 'prompt.submit') {
-            final params = Map<String, dynamic>.from(frame['params'] as Map);
-            submits.add(params);
-            if (params.containsKey('confirm_deep_truncate')) {
-              ws.add(
-                jsonEncode({
-                  'jsonrpc': '2.0',
-                  'id': frame['id'],
-                  'error': {
-                    'code': 4000,
-                    'message':
-                        'invalid params for prompt.submit: confirm_deep_truncate: Extra inputs are not permitted',
-                  },
-                }),
-              );
-              return;
-            }
-            ws.add(
-              jsonEncode({
-                'jsonrpc': '2.0',
-                'id': frame['id'],
-                'result': {'status': 'streaming', 'execution_generation': 2},
-              }),
-            );
-            ws.add(
-              jsonEncode({
-                'jsonrpc': '2.0',
-                'method': 'event',
-                'params': {
-                  'type': 'turn.end',
-                  'session_id': 'rt-wire',
-                  'payload': {'completed': true},
-                },
-              }),
-            );
-          }
-        });
-      });
-
-      final client = WsClient('http://127.0.0.1:${server.port}');
-      addTearDown(client.close);
-      await client.connect();
-
-      await client.submitPrompt(
-        'Edited wire prompt',
-        sessionId: 'rt-wire',
-        extraSubmitParams: const {
-          'confirm_truncate': true,
-          'truncate_before_row_id': 77,
-          'confirm_empty_truncate': true,
-          'confirm_deep_truncate': true,
-        },
-        onEvent: (_) {},
-      );
-
-      expect(submits, hasLength(2));
-      expect(submits[0]['confirm_deep_truncate'], isTrue);
-      expect(submits[1].containsKey('confirm_deep_truncate'), isFalse);
-      expect(submits[1]['confirm_truncate'], isTrue);
-      expect(submits[1]['truncate_before_row_id'], 77);
-      expect(submits[1]['confirm_empty_truncate'], isTrue);
     },
   );
 }
