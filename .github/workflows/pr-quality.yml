@@ -34,7 +34,7 @@ jobs:
           channel: 'stable'
 
       - name: Cache Flutter dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.pub-cache
           key: flutter-${{ runner.os }}-${{ hashFiles('pubspec.lock') }}
@@ -47,7 +47,7 @@ jobs:
       - name: Verify release identity and upgrade versionCode
         env:
           MINIMUM_INSTALLED_VERSION_CODE: '2127'
-          REQUIRED_BASE_VERSION_CODE: '3069'
+          REQUIRED_BASE_VERSION_CODE: '3071'
         run: |
           python3 - <<'PY'
           import os

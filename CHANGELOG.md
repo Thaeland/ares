@@ -21,6 +21,63 @@ Publication correction: tag v4.0.6 has no published APK assets; its release
 workflow failed the identity gate because the tag preceded the version bump.
 The paging change it names (#284) first ships in the published 4.0.7 APKs.
 
+## [4.0.15] - 2026-11-25
+
+Stable release `4.0.15+3071`, with release APK codes `30711`, `30712` and
+`30713`. Each split exceeds the published 4.0.14 stable splits (`30703`).
+Installs over the existing app.
+
+### Added
+
+- **NextGen Projects (#304).** More → Projects reuses the Classic project
+  browser for the selected connection and profile, opens project chats and
+  starts new chats in a project's folder (#367).
+- **Project picker on new chats.** An empty NextGen chat names its project in
+  the greeting; tap it to choose Home or another project. A deliberate pick
+  sends `cwd_explicit` so a named profile's default folder cannot override it
+  (#367).
+- **Slash command highlight and usage card** in both composers (#369).
+- **NextGen runs slash commands** through `slash.exec` / `command.dispatch`
+  like Classic and Kyllene, with no resend after a lost reply (#370).
+- **Android Auto notification replies (#356, @davidKooreman).** Completed
+  replies post as car-ready conversations with reply and mark-as-read; reply
+  actions are sealed, single-use and bound to the existing chat.
+
+### Fixed
+
+- **Refused slash commands** show a refusal instead of leaking into the chat as
+  prose, and keep the draft (#303, @Thaeland; audit #302).
+- **Repeat alerts after answering elsewhere.** Questions and approvals answered
+  on another device no longer re-notify or keep their highlight, and the push
+  "answered" hint now clears the original notification (#371).
+- **NextGen composer** mic and send sit flush right on wide windows (#363).
+- **NextGen chat list** excludes one-shot, subagent, kanban and tool runs,
+  respecting the profile's Show subagents setting (#362, #364).
+- **Canonical gateways:** Stop and Steer send the running turn's generation, and
+  NextGen replay uses the session's own epoch with a reconciling foreground
+  fallback (#84 items 1–3, #366).
+- **CI:** one Robolectric version with cached runtimes (#360) and a
+  deterministic root-navigation test (#361) (#365).
+
+### Dependencies
+
+- Gradle 9.9.2, Android Gradle plugin 9.5.2, embedded relink Kotlin 2.4.21 and
+  coroutines 1.11.0, `flutter_riverpod` 3.5.0, push companion `cryptography`
+  50.0.2, `actions/setup-java` v6, `actions/cache` v6 and
+  `gradle/actions/setup-gradle` v6 with its proprietary caching disabled (#368).
+
+## [4.0.14] - 2026-11-25
+
+Stable release `4.0.14+3070`, with release APK codes `30701`, `30702` and
+`30703`. Each split exceeds the published 4.0.13 stable splits (`30693`).
+Installs over the existing app.
+
+### Fixed
+
+- **NextGen German copy corrected (#359).** The German catalogue had carried
+  Spanish wording through the NextGen screens; `app_de.arb` now carries real
+  German copy with matching regression tests.
+
 ## [4.0.13] - 2026-11-25
 
 Stable release `4.0.13+3069`, with release APK codes `30691`, `30692` and
