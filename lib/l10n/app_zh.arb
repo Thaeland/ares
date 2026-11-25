@@ -786,6 +786,7 @@
   "hermes_heading": "## Hermes",
   "action_label": "操作",
   "destination_label": "目标",
+  "markdown_source": "源文本",
   "preview_label": "预览",
   "share_action_summarize": "总结",
   "share_action_explain": "解释",

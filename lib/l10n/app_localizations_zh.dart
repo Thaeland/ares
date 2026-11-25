@@ -2840,6 +2840,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get destination_label => '目标';
 
   @override
+  String get markdown_source => '源文本';
+
+  @override
   String get preview_label => '预览';
 
   @override
@@ -8633,6 +8636,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get destination_label => '目标';
+
+  @override
+  String get markdown_source => '源文本';
 
   @override
   String get preview_label => '预览';

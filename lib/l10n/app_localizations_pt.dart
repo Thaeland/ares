@@ -2959,6 +2959,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get destination_label => 'Destino';
 
   @override
+  String get markdown_source => 'Código-fonte';
+
+  @override
   String get preview_label => 'Pré-visualização';
 
   @override
@@ -9020,6 +9023,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get destination_label => 'Destino';
+
+  @override
+  String get markdown_source => 'Código-fonte';
 
   @override
   String get preview_label => 'Pré-visualização';
