@@ -2629,7 +2629,7 @@ class _ToolRowState extends State<_ToolRow> {
           if (t.input?.isNotEmpty ?? false) _codeBlock(c, t.input!),
           if (t.output?.isNotEmpty ?? false) _codeBlock(c, t.output!),
           if (t.name == 'vision_analyze' || t.name == 'image_generate')
-            InspectedImageTile(source: '${t.input ?? ''}\n${t.output ?? ''}'),
+            InspectedImageTile(source: t.input ?? '', output: t.output),
         ],
       ],
     );

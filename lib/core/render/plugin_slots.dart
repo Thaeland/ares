@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'artifact_library.dart';
 import 'rich_blocks.dart';
+import 'rich_transcript.dart';
 
 enum PluginSlot { pane, page, composerAction, command, directive, toolMedia }
 
@@ -83,4 +84,5 @@ void resetSandboxedRenderer() {
   pluginGrants.reset();
   resetArtifactCaches();
   resetRichBlockCaches();
+  resetInspectedImagePaths();
 }

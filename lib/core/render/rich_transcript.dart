@@ -812,13 +812,20 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
 }
 
 class InspectedImageTile extends StatelessWidget {
-  const InspectedImageTile({super.key, required this.source});
+  const InspectedImageTile({super.key, required this.source, this.output});
 
+  /// The tool row's text (Classic) or its arguments (NextGen).
   final String source;
+
+  /// The tool result, read when [source] names no image.
+  final String? output;
 
   @override
   Widget build(BuildContext context) {
-    final path = inspectedImagePath(source);
+    final output = this.output;
+    final path =
+        inspectedImagePath(source) ??
+        (output == null ? null : inspectedImagePath(output));
     if (path == null) return const SizedBox.shrink();
     final name = path.split('/').last;
     return ListTile(
@@ -830,14 +837,92 @@ class InspectedImageTile extends StatelessWidget {
   }
 }
 
-final _imagePath = RegExp(
-  r'''(?:Screenshot path:\s*)?(\S+\.(?:png|jpe?g|gif|webp))''',
-  caseSensitive: false,
-);
+/// Tool text is searched for an image path only this far. Tool arguments
+/// can carry a whole data: URL; the path, when there is one, comes first.
+const toolInspectChars = 2048;
 
+final _inspectedPaths = ContentMemo<String?>(32);
+
+/// The first image path in tool text, as the old
+/// `(?:Screenshot path:\s*)?(\S+\.(?:png|jpe?g|gif|webp))` pattern found it,
+/// read in one pass over the first [toolInspectChars] characters and
+/// memoised. The pattern restarted at every non-space character, so a long
+/// token (a base64 data: URL) took quadratic time on every rebuild.
 String? inspectedImagePath(String text) {
-  final match = _imagePath.firstMatch(text);
-  final path = match?.group(1);
-  if (path == null || path.contains('://')) return null;
-  return path;
+  final head = text.length > toolInspectChars
+      ? text.substring(0, toolInspectChars)
+      : text;
+  return _inspectedPaths.lookup(head, () {
+    final path = _firstImagePath(head);
+    if (path == null || path.contains('://')) return null;
+    return path;
+  });
+}
+
+/// Drops memoised tool-image paths, for a renderer reset.
+void resetInspectedImagePaths() => _inspectedPaths.clear();
+
+const _imageExtensions = ['png', 'jpeg', 'jpg', 'gif', 'webp'];
+
+/// The end of the last `.png`/`.jpe?g`/`.gif`/`.webp` in text[start, end)
+/// that has at least one character before its dot, or -1. Greedy `\S+`
+/// kept the last one.
+int _lastImageExtensionEnd(String text, int start, int end) {
+  for (var dot = end - 4; dot > start; dot--) {
+    if (text.codeUnitAt(dot) != 0x2e /* . */ ) continue;
+    for (final extension in _imageExtensions) {
+      if (dot + 1 + extension.length <= end &&
+          _matchesLowerAt(text, dot + 1, extension)) {
+        return dot + 1 + extension.length;
+      }
+    }
+  }
+  return -1;
+}
+
+bool _matchesLowerAt(String text, int at, String lower) {
+  if (at < 0 || at + lower.length > text.length) return false;
+  for (var i = 0; i < lower.length; i++) {
+    var c = text.codeUnitAt(at + i);
+    if (c >= 0x41 && c <= 0x5a) c |= 0x20;
+    if (c != lower.codeUnitAt(i)) return false;
+  }
+  return true;
+}
+
+bool _endsWithLower(String text, int end, String lower) =>
+    _matchesLowerAt(text, end - lower.length, lower);
+
+String? _firstImagePath(String text) {
+  var at = 0;
+  while (at < text.length) {
+    while (at < text.length && isMarkupSpace(text.codeUnitAt(at))) {
+      at++;
+    }
+    final start = at;
+    while (at < text.length && !isMarkupSpace(text.codeUnitAt(at))) {
+      at++;
+    }
+    if (start == at) break;
+    final own = _lastImageExtensionEnd(text, start, at);
+    if (own >= 0) return text.substring(start, own);
+    // `Screenshot path:` may join this token to the next one, with or
+    // without whitespace after the colon.
+    if (_endsWithLower(text, at, 'screenshot') &&
+        at + 6 <= text.length &&
+        text.codeUnitAt(at) == 0x20 &&
+        _matchesLowerAt(text, at + 1, 'path:')) {
+      var from = at + 6;
+      while (from < text.length && isMarkupSpace(text.codeUnitAt(from))) {
+        from++;
+      }
+      var to = from;
+      while (to < text.length && !isMarkupSpace(text.codeUnitAt(to))) {
+        to++;
+      }
+      final joined = _lastImageExtensionEnd(text, from, to);
+      if (joined >= 0) return text.substring(from, joined);
+    }
+  }
+  return null;
 }

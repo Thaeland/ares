@@ -383,11 +383,25 @@ GeneratedArtifact? _detect(String clean, String trimmed) {
   );
 }
 
+/// [value] without leading and trailing [chars]. A hand trim: `^-+|-+$`
+/// restarted inside a long dash run that did not end the value.
+String _trimRuns(String value, String chars) {
+  var start = 0;
+  var end = value.length;
+  while (start < end && chars.contains(value[start])) {
+    start++;
+  }
+  while (end > start && chars.contains(value[end - 1])) {
+    end--;
+  }
+  return value.substring(start, end);
+}
+
 String artifactSlug(GeneratedArtifact detection) {
-  final title = detection.title
-      .toLowerCase()
-      .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
-      .replaceAll(RegExp(r'^-+|-+$'), '');
+  final title = _trimRuns(
+    detection.title.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '-'),
+    '-',
+  );
   final trimmed = title.length > 48 ? title.substring(0, 48) : title;
   return '${detection.kind.name}:${detection.language}:${trimmed.isEmpty ? 'untitled' : trimmed}';
 }
@@ -433,16 +447,21 @@ const _downloadExtensions = {
 };
 
 String artifactDownloadName(GeneratedArtifact detection) {
-  final base = detection.title
-      .replaceAll(RegExp(r'[^A-Za-z0-9._ -]+'), '')
-      .trim()
-      .replaceAll(RegExp(r'\s+'), '-')
-      .replaceAll(RegExp(r'^-+|-+$'), '');
-  final clipped =
-      (base.isEmpty
-              ? 'artifact'
-              : (base.length > 60 ? base.substring(0, 60) : base))
-          .replaceAll(RegExp(r'[ .]+$'), '');
+  final base = _trimRuns(
+    detection.title
+        .replaceAll(RegExp(r'[^A-Za-z0-9._ -]+'), '')
+        .trim()
+        .replaceAll(RegExp(r'\s+'), '-'),
+    '-',
+  );
+  var clipped = base.isEmpty
+      ? 'artifact'
+      : (base.length > 60 ? base.substring(0, 60) : base);
+  var end = clipped.length;
+  while (end > 0 && ' .'.contains(clipped[end - 1])) {
+    end--;
+  }
+  clipped = clipped.substring(0, end);
   if (RegExp(r'\.[a-z0-9]{1,8}$', caseSensitive: false).hasMatch(clipped)) {
     return clipped;
   }
@@ -541,8 +560,82 @@ class IndexedArtifact {
   final double timestamp;
 }
 
-final _markdownImage = RegExp(r'!\[([^\]]*)\]\(([^)\s]+)\)');
-final _markdownLink = RegExp(r'\[([^\]]+)\]\(([^)\s]+)\)');
+/// Markdown link text longer than this is not read as a link label.
+const markdownLinkLabelMaxChars = 200;
+
+/// A path or URL longer than this is not indexed: no real artefact address
+/// is that long, and the extension checks below then stay bounded.
+const indexedValueMaxChars = 2048;
+
+/// One `[label](target)` or `![alt](target)` found by [_bracketLinks].
+typedef _BracketLink = ({int start, int end, String target});
+
+/// The `[label](target)` (or, with [image], `![alt](target)`) links in
+/// [text], leftmost first and not overlapping, as `allMatches` of
+/// `\[([^\]]+)\]\(([^)\s]+)\)` found them, but read in one pass. The
+/// patterns restarted at every `[` and rescanned to the end, so terminal
+/// output full of ANSI `ESC[` codes took seconds to index. A label over
+/// [markdownLinkLabelMaxChars] is not a link.
+List<_BracketLink> _bracketLinks(String text, {required bool image}) {
+  final found = <_BracketLink>[];
+  // The first `]` at or after a position, and the first `)` or whitespace,
+  // are reused while later starts fall before them, so each character is
+  // passed over a bounded number of times.
+  var closeFrom = -1, close = -1;
+  var stopFrom = -1, stop = -1;
+  int nextClose(int from) {
+    if (from < closeFrom || from > close || close < 0) {
+      closeFrom = from;
+      close = text.indexOf(']', from);
+      if (close < 0) close = text.length;
+    }
+    return close;
+  }
+
+  int nextStop(int from) {
+    if (from < stopFrom || from > stop) {
+      stopFrom = from;
+      var i = from;
+      while (i < text.length) {
+        final c = text.codeUnitAt(i);
+        if (c == 0x29 /* ) */ || isMarkupSpace(c)) break;
+        i++;
+      }
+      stop = i;
+    }
+    return stop;
+  }
+
+  var at = text.indexOf(image ? '![' : '[');
+  while (at >= 0) {
+    final open = image ? at + 1 : at;
+    final labelStart = open + 1;
+    final labelEnd = nextClose(labelStart);
+    final labelLength = labelEnd - labelStart;
+    var next = at + 1;
+    if (labelEnd < text.length &&
+        (image || labelLength > 0) &&
+        labelLength <= markdownLinkLabelMaxChars &&
+        labelEnd + 1 < text.length &&
+        text.codeUnitAt(labelEnd + 1) == 0x28 /* ( */ ) {
+      final targetStart = labelEnd + 2;
+      final targetEnd = nextStop(targetStart);
+      if (targetEnd > targetStart &&
+          targetEnd < text.length &&
+          text.codeUnitAt(targetEnd) == 0x29) {
+        found.add((
+          start: at,
+          end: targetEnd + 1,
+          target: text.substring(targetStart, targetEnd),
+        ));
+        next = targetEnd + 1;
+      }
+    }
+    at = text.indexOf(image ? '![' : '[', next);
+  }
+  return found;
+}
+
 final _bareUrl = RegExp(r'''https?://[^\s<>"'`)]+''');
 final _unixPath = RegExp(r'''(^|[\s("'`)])((?:/|~/|\.\.?/)[^\s"'`<>]+)''');
 final _imageExt = RegExp(
@@ -579,9 +672,16 @@ String _cleanArtifactValue(String value) {
     }
     break;
   }
-  return trimmed
-      .replaceAll(RegExp(r'[`*]+$'), '')
-      .replaceAll(RegExp(r'[),.;]+$'), '');
+  // Trailing emphasis and punctuation, trimmed by hand: `[`*]+$` and
+  // `[),.;]+$` restarted inside a long run that did not end the value.
+  var end = trimmed.length;
+  while (end > 0 && '`*'.contains(trimmed[end - 1])) {
+    end--;
+  }
+  while (end > 0 && '),.;'.contains(trimmed[end - 1])) {
+    end--;
+  }
+  return trimmed.substring(0, end);
 }
 
 IndexedArtifactKind? _kindFor(String value, {required bool explicit}) {
@@ -609,6 +709,7 @@ void _pushIndexed(
   required double timestamp,
   bool explicit = false,
 }) {
+  if (raw.length > indexedValueMaxChars) return;
   final value = _cleanArtifactValue(raw);
   if (value.isEmpty) return;
   final kind = _kindFor(value, explicit: explicit);
@@ -643,21 +744,21 @@ void _fromProse(
       explicit: true,
     );
   }
-  for (final match in _markdownImage.allMatches(text)) {
+  for (final link in _bracketLinks(text, image: true)) {
     _pushIndexed(
       into,
-      match.group(2) ?? '',
+      link.target,
       sessionId: sessionId,
       sessionTitle: sessionTitle,
       timestamp: timestamp,
     );
   }
-  for (final match in _markdownLink.allMatches(text)) {
-    final start = match.start;
-    if (start > 0 && text[start - 1] == '!') continue;
+  for (final link in _bracketLinks(text, image: false)) {
+    final start = link.start;
+    if (start > 0 && text.codeUnitAt(start - 1) == 0x21 /* ! */ ) continue;
     _pushIndexed(
       into,
-      match.group(2) ?? '',
+      link.target,
       sessionId: sessionId,
       sessionTitle: sessionTitle,
       timestamp: timestamp,

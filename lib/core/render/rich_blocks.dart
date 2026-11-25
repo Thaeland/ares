@@ -405,16 +405,99 @@ bool htmlFilePath(String path) {
       name.endsWith('.xhtml');
 }
 
+/// A `::name{…}` body longer than this stays prose. Directive attributes
+/// are short; a longer body is agent text, not a card.
+const directiveMaxBodyChars = 1024;
+
+bool _wordChar(int c) =>
+    (c >= 0x61 && c <= 0x7a) ||
+    (c >= 0x41 && c <= 0x5a) ||
+    (c >= 0x30 && c <= 0x39) ||
+    c == 0x5f;
+
+/// `key="value"` and `key='value'` pairs, read in one pass. The old
+/// `(\w+)\s*=` pattern restarted at every word character, so a long word
+/// run without `=` took quadratic time on every rebuild.
 Map<String, String> _directiveAttrs(String raw) {
   final attrs = <String, String>{};
-  final pattern = RegExp('(\\w+)\\s*=\\s*(?:"([^"]*)"|\'([^"]*)\')');
-  for (final match in pattern.allMatches(raw)) {
-    attrs[match.group(1)!] = match.group(2) ?? match.group(3) ?? '';
+  var floor = 0;
+  var eq = raw.indexOf('=');
+  while (eq >= 0) {
+    var keyEnd = eq;
+    while (keyEnd > floor && isMarkupSpace(raw.codeUnitAt(keyEnd - 1))) {
+      keyEnd--;
+    }
+    var keyStart = keyEnd;
+    while (keyStart > floor && _wordChar(raw.codeUnitAt(keyStart - 1))) {
+      keyStart--;
+    }
+    var at = eq + 1;
+    while (at < raw.length && isMarkupSpace(raw.codeUnitAt(at))) {
+      at++;
+    }
+    var next = eq + 1;
+    if (keyStart < keyEnd && at < raw.length) {
+      final quote = raw.codeUnitAt(at);
+      if (quote == 0x22 /* " */ || quote == 0x27 /* ' */ ) {
+        final close = raw.indexOf(String.fromCharCode(quote), at + 1);
+        if (close > at) {
+          attrs[raw.substring(keyStart, keyEnd)] = raw.substring(at + 1, close);
+          floor = close + 1;
+          next = close + 1;
+        }
+      }
+    }
+    eq = raw.indexOf('=', next);
   }
   return attrs;
 }
 
-final _directive = RegExp(r'::([a-z][a-z0-9-]*)\{([^{}]*)\}');
+bool _directiveNameStart(int c) => c >= 0x61 && c <= 0x7a;
+
+bool _directiveNameChar(int c) =>
+    _directiveNameStart(c) || (c >= 0x30 && c <= 0x39) || c == 0x2d;
+
+/// `::name{body}` with a lower-case name and a body free of braces, as the
+/// old pattern matched, read once from each `::`. A body over
+/// [directiveMaxBodyChars] is left as prose.
+void _directives(String text, List<_Hit> into) {
+  var at = text.indexOf('::');
+  while (at >= 0) {
+    var i = at + 2;
+    if (i < text.length && _directiveNameStart(text.codeUnitAt(i))) {
+      i++;
+      while (i < text.length && _directiveNameChar(text.codeUnitAt(i))) {
+        i++;
+      }
+      if (i < text.length && text.codeUnitAt(i) == 0x7b /* { */ ) {
+        final limit = i + 1 + directiveMaxBodyChars;
+        var j = i + 1;
+        while (j < text.length && j <= limit) {
+          final c = text.codeUnitAt(j);
+          if (c == 0x7b || c == 0x7d) break;
+          j++;
+        }
+        if (j < text.length && j <= limit && text.codeUnitAt(j) == 0x7d) {
+          into.add(
+            _Hit(
+              at,
+              j + 1,
+              DirectivePiece(
+                text.substring(at + 2, i),
+                _directiveAttrs(text.substring(i + 1, j)),
+                text.substring(at, j + 1),
+              ),
+            ),
+          );
+          at = text.indexOf('::', j + 1);
+          continue;
+        }
+      }
+    }
+    at = text.indexOf('::', at + 1);
+  }
+}
+
 const _alertTypes = {'note', 'tip', 'important', 'warning', 'caution'};
 final _displayMath = RegExp(r'\$\$([^$]+)\$\$');
 final _inlineMath = RegExp(r'(?<!\$)\$([^$\n]+)\$(?!\$)');
@@ -430,8 +513,35 @@ List<String> _cells(String line) => line
     .map((cell) => cell.trim())
     .toList();
 
-bool _separator(String line) =>
-    RegExp(r'^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$').hasMatch(line);
+/// `:?-{3,}:?` after trimming.
+bool _separatorCell(String cell) {
+  var start = 0;
+  var end = cell.length;
+  if (start < end && cell.codeUnitAt(start) == 0x3a /* : */ ) start++;
+  if (end > start && cell.codeUnitAt(end - 1) == 0x3a) end--;
+  if (end - start < 3) return false;
+  for (var i = start; i < end; i++) {
+    if (cell.codeUnitAt(i) != 0x2d /* - */ ) return false;
+  }
+  return true;
+}
+
+/// A table separator row: two or more `:?-{3,}:?` cells split by `|`,
+/// with optional outer pipes, as
+/// `^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$` matched. Read by
+/// splitting: the pattern's two `\s*` around the optional pipe made a long
+/// run of spaces quadratic.
+bool _separator(String line) {
+  var body = line.trim();
+  if (body.startsWith('|')) body = body.substring(1);
+  if (body.endsWith('|')) body = body.substring(0, body.length - 1);
+  final cells = body.split('|');
+  if (cells.length < 2) return false;
+  for (final cell in cells) {
+    if (!_separatorCell(cell.trim())) return false;
+  }
+  return true;
+}
 
 /// [host] is [domain] or one of its subdomains. A name that merely contains
 /// or starts with [domain] (eviltiktok.com, maps.google.evil.example) is not.
@@ -560,13 +670,7 @@ List<TranscriptPiece> _piecesFromProse(String text) {
     }
   }
 
-  take(_directive, (match) {
-    return DirectivePiece(
-      match.group(1)!,
-      _directiveAttrs(match.group(2) ?? ''),
-      match.group(0)!,
-    );
-  });
+  _directives(text, matches);
   _alerts(text, matches);
   take(_displayMath, (match) {
     final body = match.group(1)!.trim();
