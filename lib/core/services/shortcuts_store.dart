@@ -9,12 +9,22 @@ library;
 
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart' show ValueNotifier;
+import 'package:flutter/foundation.dart' show TargetPlatform, ValueNotifier;
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Broadcasts whenever [ShortcutsStore] persists or resets a key chord.
 final ValueNotifier<int> shortcutsStoreChanges = ValueNotifier<int>(0);
+
+/// Whether [platform] also answers each uncustomized Cmd (meta) default with
+/// its Ctrl twin (Ctrl+K for Cmd+K). Windows and Linux keyboards use Ctrl as
+/// the shortcut modifier (meta is the Windows/Super key); Android and Fuchsia
+/// hardware keyboards follow the same convention. macOS and iOS never get the
+/// twins: there Ctrl+letter is a text-editing command (Ctrl+K deletes to the
+/// end of the line, Ctrl+A moves to the line start) that the app must not
+/// steal from a focused text field.
+bool shortcutsAddCtrlTwins(TargetPlatform platform) =>
+    platform != TargetPlatform.macOS && platform != TargetPlatform.iOS;
 
 /// A stable identifier for a bindable action.
 enum ShortcutAction {

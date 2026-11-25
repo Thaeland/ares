@@ -122,8 +122,14 @@ class DesktopShortcuts extends StatelessWidget {
 
     // Platform convenience: for uncustomized default meta+<key> bindings, also
     // accept Ctrl+<key> when that chord is not claimed by any binding, so
-    // Windows and Linux keyboards work with Ctrl out of the box.
+    // Windows and Linux keyboards work with Ctrl out of the box. Never on
+    // macOS or iOS: there Ctrl+letter is a text-editing command (Ctrl+K
+    // deletes to the end of the line) and Cmd is the shortcut modifier.
+    final ctrlTwins = shortcuts_store.shortcutsAddCtrlTwins(
+      defaultTargetPlatform,
+    );
     for (final action in shortcuts_store.ShortcutRegistry.actions) {
+      if (!ctrlTwins) break;
       if (customMap.containsKey(action.id)) continue;
       final chord = resolved[action]!;
       if (!chord.meta || chord.ctrl) continue;
@@ -142,17 +148,18 @@ class DesktopShortcuts extends StatelessWidget {
 
     // Secondary alias: Shift+Cmd/Ctrl+F also triggers search when unclaimed.
     if (!customMap.containsKey(shortcuts_store.ShortcutAction.search.id)) {
-      for (final alias in const [
-        shortcuts_store.KeyChord(
+      for (final alias in [
+        const shortcuts_store.KeyChord(
           key: LogicalKeyboardKey.keyF,
           meta: true,
           shift: true,
         ),
-        shortcuts_store.KeyChord(
-          key: LogicalKeyboardKey.keyF,
-          ctrl: true,
-          shift: true,
-        ),
+        if (ctrlTwins)
+          const shortcuts_store.KeyChord(
+            key: LogicalKeyboardKey.keyF,
+            ctrl: true,
+            shift: true,
+          ),
       ]) {
         if (usedSerialized.add(alias.serialize())) {
           bindings[_activatorFor(alias)] = () =>
