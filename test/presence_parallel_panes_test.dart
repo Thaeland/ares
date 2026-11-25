@@ -9,6 +9,8 @@ import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/gateway_turn_application_controller.dart';
 import 'package:hermes_android/core/services/notification_prefs.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
+import 'package:hermes_android/core/theme/hermes_theme.dart';
+import 'package:hermes_android/core/widgets/hermes_shell.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:hermes_android/nextgen/nextgen_preferences.dart';
 import 'package:hermes_android/nextgen/theme/nextgen_theme.dart';
@@ -516,6 +518,110 @@ void main() {
         await tester.pump();
       }
       expectClaimedAtOnce(server.log, since: since, session: 'runtime-alpha');
+      await tester.pumpWidget(const SizedBox());
+      await _until(
+        tester,
+        () => (server.reports.last['sessions'] as List).isEmpty,
+      );
+      await controller.close();
+      await tester.runAsync(server.close);
+      await tester.pump(const Duration(seconds: 16));
+    },
+  );
+
+  // Review re-check of 5eedcb09: the Classic shell keeps a visited
+  // destination mounted in an IndexedStack with its tickers running, so the
+  // chat embedded in the wide Chats pane kept its claim after the user chose
+  // Activity. (NextGen opens its destinations as pushed routes, which the
+  // pushed-route test covers.)
+  testWidgets(
+    'Classic: a chat in a hidden Chats pane withdraws at once and is claimed again on input',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({'verbose_mode': true});
+      await NotificationPrefsStore.setShareWindowActivity(true);
+      const picker = MethodChannel('plugins.flutter.io/image_picker');
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        picker,
+        (_) async => null,
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          picker,
+          null,
+        ),
+      );
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(1400, 900);
+      addTearDown(tester.view.reset);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      final server = (await tester.runAsync(_PresenceServer.start))!;
+      final controller = GatewayTurnApplicationController();
+      final shell = GlobalKey<HermesShellState>();
+      // One connection object, as in the app: the pane is keyed by it, and a
+      // new one per build would remount the chat instead of hiding it.
+      final connection = server.connection;
+      final session = Session(
+        id: 'alpha',
+        title: 'Pane alpha',
+        model: 'fixture',
+        source: 'test',
+        messageCount: 0,
+        isActive: false,
+        preview: '',
+        startedAt: 1,
+      );
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: hermesTheme(Brightness.light),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: HermesShell(
+            key: shell,
+            builder: (context, destination) =>
+                destination == HermesDestination.chats
+                ? ClassicParallelChatPane(
+                    connection: connection,
+                    session: session,
+                    controller: controller,
+                    close: () {},
+                  )
+                : Center(child: Text(destination.name)),
+          ),
+        ),
+      );
+      await _until(tester, () => server.resumes.isNotEmpty);
+      final pane = find.byType(ClassicParallelChatPane);
+      final chat = tester.state(pane);
+      await tester.tap(pane);
+      await _until(tester, () => server.reports.isNotEmpty);
+      expect(server.reports.single['sessions'], ['runtime-alpha']);
+      shell.currentState!.select(HermesDestination.activity);
+      await tester.pump();
+      await _until(tester, () => server.reports.length > 1);
+      expect(
+        tester.state(find.byType(ClassicParallelChatPane, skipOffstage: false)),
+        same(chat),
+        reason: 'the hidden pane stays mounted',
+      );
+      expect(server.reports, hasLength(2), reason: server.log.log());
+      expect(server.reports.last['sessions'], isEmpty);
+      expect(server.reports.last.containsKey('away'), isFalse);
+      // The ticker does not claim the hidden pane's fresh input again.
+      await tester.pump(const Duration(seconds: 11));
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 200)),
+      );
+      await tester.pump();
+      expect(server.reports, hasLength(2), reason: server.log.log());
+      // Shown again, input there claims it.
+      shell.currentState!.select(HermesDestination.chats);
+      await tester.pump();
+      await tester.tap(pane);
+      await _until(
+        tester,
+        () => (server.reports.last['sessions'] as List).isNotEmpty,
+      );
+      expect(server.reports.last['sessions'], ['runtime-alpha']);
       await tester.pumpWidget(const SizedBox());
       await _until(
         tester,

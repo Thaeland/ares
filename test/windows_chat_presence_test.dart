@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:hermes_android/core/services/notification_prefs.dart';
 import 'package:hermes_android/core/widgets/chat_presence.dart';
+import 'package:hermes_android/core/widgets/hermes_shell.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/presence_socket.dart';
@@ -154,6 +155,48 @@ void main() {
       expect(controller.text, 'typed on a phone');
       expect(b.reports.single['sessions'], ['b']);
       expect(a.reports.last['sessions'], isEmpty);
+      await t.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'a hidden shell destination withdraws at once and input claims it again',
+    (t) async {
+      // The Classic shell's IndexedStack keeps the pane mounted with its
+      // tickers running; only HermesPaneVisibility says it is hidden.
+      await NotificationPrefsStore.setShareWindowActivity(true);
+      final socket = PresenceSocket(capable: true);
+      final active = ValueNotifier(true);
+      addTearDown(active.dispose);
+      t.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await t.pumpWidget(
+        MaterialApp(
+          home: ValueListenableBuilder<bool>(
+            valueListenable: active,
+            builder: (_, visible, child) =>
+                HermesPaneVisibility(active: visible, child: child!),
+            child: ChatPresence(
+              target: () => (socket, 'a'),
+              child: const ColoredBox(key: Key('chat'), color: Colors.black),
+            ),
+          ),
+        ),
+      );
+      await t.tap(find.byKey(const Key('chat')));
+      await t.pump();
+      expect(socket.reports.single['sessions'], ['a']);
+      active.value = false;
+      await t.pump();
+      expect(socket.reports, hasLength(2), reason: socket.log());
+      expect(socket.reports.last['sessions'], isEmpty);
+      expect(socket.reports.last.containsKey('away'), isFalse);
+      await t.pump(const Duration(seconds: 11));
+      expect(socket.reports, hasLength(2), reason: 'no tick claims it');
+      active.value = true;
+      await t.pump();
+      await t.tap(find.byKey(const Key('chat')));
+      await t.pump();
+      expect(socket.reports.last['sessions'], ['a'], reason: socket.log());
       await t.pumpWidget(const SizedBox());
     },
   );

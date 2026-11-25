@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../services/notification_prefs.dart';
 import '../services/turn_notification_service.dart';
 import '../services/ws_client.dart';
+import 'hermes_shell.dart' show HermesPaneVisibility;
 
 /// The socket a chat pane would report on, and the runtime session it shows.
 /// Null while the pane cannot name both without starting a connection or
@@ -42,13 +43,14 @@ class _ChatPresenceState extends State<ChatPresence> {
   Duration? _input;
   bool _ticking = true;
   bool _routeCurrent = true;
+  bool _paneVisible = true;
 
   ChatPresenceCoordinator get _coordinator => ChatPresenceCoordinator.instance;
 
   /// On screen: its ticker is live (not an offstage tab or a hidden parallel
-  /// pane) and no other route covers it. The app being in front is checked
-  /// by the coordinator.
-  bool get _onScreen => mounted && _ticking && _routeCurrent;
+  /// pane), its shell destination is selected, and no other route covers it.
+  /// The app being in front is checked by the coordinator.
+  bool get _onScreen => mounted && _ticking && _routeCurrent && _paneVisible;
 
   @override
   void initState() {
@@ -59,13 +61,20 @@ class _ChatPresenceState extends State<ChatPresence> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Both lookups make this method run again when they change, so a pushed
+    // Each lookup makes this method run again when it changes, so a pushed
     // route or a hidden pane is withdrawn at once, not at the next tick.
     final ticking = TickerMode.valuesOf(context).enabled;
     final routeCurrent = ModalRoute.isCurrentOf(context) != false;
-    if (ticking != _ticking || routeCurrent != _routeCurrent) {
+    // The Classic shell keeps a visited destination mounted in an
+    // IndexedStack with its tickers running, so a chat embedded in the Chats
+    // pane is only hidden by this flag when another destination is chosen.
+    final paneVisible = HermesPaneVisibility.of(context);
+    if (ticking != _ticking ||
+        routeCurrent != _routeCurrent ||
+        paneVisible != _paneVisible) {
       _ticking = ticking;
       _routeCurrent = routeCurrent;
+      _paneVisible = paneVisible;
       _coordinator._schedule();
     }
   }
