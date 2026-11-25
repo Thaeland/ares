@@ -3408,6 +3408,18 @@ abstract class AppLocalizations {
   /// **'Silent'**
   String get windows_sound_silent;
 
+  /// No description provided for @app_sounds_mute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute app sounds'**
+  String get app_sounds_mute;
+
+  /// No description provided for @app_sounds_mute_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.'**
+  String get app_sounds_mute_hint;
+
   /// No description provided for @notifications_permission_denied.
   ///
   /// In en, this message translates to:

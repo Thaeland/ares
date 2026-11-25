@@ -24,6 +24,7 @@ import 'prepared_image_store.dart';
 import 'operational_activity_store.dart';
 import 'notification_prefs.dart';
 import 'turn_notification_service.dart';
+import 'completion_cue_player.dart';
 import 'notification_approval_authority.dart';
 import 'connection_mutation_barrier.dart';
 import 'ws_client.dart';
@@ -2733,6 +2734,12 @@ class NormalGatewayChatOwner {
           !(_floor != null &&
               _history.any((row) => _responseRow(row, _floor!)))) {
         unawaited(_refreshSettledHistory(owned));
+      }
+      if (settledWireEmitted && completed == true && !_session._background) {
+        // The in-app cue; a completion notification covers the background.
+        CompletionCuePlayer.instance.turnFinished(
+          '${_session.connection.id}|$settledSessionId',
+        );
       }
       if (settledWireEmitted &&
           completed != null &&

@@ -1878,6 +1878,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get windows_sound_silent => 'Silent';
 
   @override
+  String get app_sounds_mute => 'Mute app sounds';
+
+  @override
+  String get app_sounds_mute_hint =>
+      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
+
+  @override
   String get notifications_permission_denied =>
       '系统已阻止通知。请在 Android 设置中允许此应用发送通知。';
 

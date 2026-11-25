@@ -38,7 +38,8 @@ void _size(WidgetTester tester, double width, double scale) {
   addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
 }
 
-/// Opens the sound sheet from the tile, checks it fits too, and picks Mail.
+/// Opens the sound sheet from the tile, checks it fits too, picks Mail and
+/// mutes app sounds.
 Future<void> _pickMail(WidgetTester tester, String context) async {
   final tile = find.byKey(const ValueKey('completion-sound'));
   await tester.ensureVisible(tile);
@@ -53,6 +54,14 @@ Future<void> _pickMail(WidgetTester tester, String context) async {
   expect(tester.takeException(), isNull, reason: '$context after pick');
   expect(notificationPrefs.value.completionSound, WindowsCompletionSound.mail);
   expect(find.byKey(const ValueKey('completion-sound-mail')), findsNothing);
+  // The in-app sound mute sits with the choice in both layouts.
+  final mute = find.byKey(const ValueKey('mute-app-sounds'));
+  await tester.ensureVisible(mute);
+  await tester.pumpAndSettle();
+  await tester.tap(mute);
+  await tester.pumpAndSettle();
+  expect(tester.takeException(), isNull, reason: '$context mute');
+  expect(notificationPrefs.value.muteAppSounds, isTrue);
 }
 
 void main() {

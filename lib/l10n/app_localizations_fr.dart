@@ -1969,6 +1969,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get windows_sound_silent => 'Silent';
 
   @override
+  String get app_sounds_mute => 'Mute app sounds';
+
+  @override
+  String get app_sounds_mute_hint =>
+      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
+
+  @override
   String get notifications_permission_denied =>
       'Les notifications sont bloquées par le système. Activez-les pour cette application dans les réglages Android.';
 

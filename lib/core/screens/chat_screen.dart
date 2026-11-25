@@ -61,6 +61,7 @@ import '../preview/chat_preview.dart';
 import '../services/slash_command_errors.dart';
 import '../services/legal_links.dart';
 import '../services/turn_notification_service.dart';
+import '../services/completion_cue_player.dart';
 import '../services/notification_approval_authority.dart';
 import '../services/notification_prefs.dart';
 import '../services/voice_composer_adapter.dart';
@@ -2877,11 +2878,13 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   void _onTurnSettled(GatewayTurnRecoveryState state) {
-    if (!mounted || !_appInBackground) return;
+    if (!mounted) return;
     final turnId = state.turnId ?? state.clientTurnId;
     final completed =
         !state.isFailClosed &&
         state.status == GatewayRecoveryTurnStatus.completed;
+    if (completed && !_appInBackground) _playCompletionCue();
+    if (!_appInBackground) return;
     final kind = completed
         ? HermesNotificationKind.turnDone
         : HermesNotificationKind.turnError;
@@ -2909,6 +2912,12 @@ class _ChatScreenState extends State<ChatScreen>
             ),
     );
   }
+
+  /// The in-app completion cue for this chat (it plays only while Ares is
+  /// in front; a completion notification covers the background).
+  void _playCompletionCue() => CompletionCuePlayer.instance.turnFinished(
+    '${widget.connection.id}|${widget.session.id}',
+  );
 
   /// Mirrors a blocking approval to a native notification (with approve/deny
   /// buttons) while the app is in the background — the one prompt class that
@@ -5336,6 +5345,7 @@ class _ChatScreenState extends State<ChatScreen>
         onDone: () async {
           if (!mounted || responseGeneration != _responseGeneration) return;
           onAccepted?.call();
+          _playCompletionCue();
           // The SSE client requires an explicit successful protocol completion.
           final assistant = _lastAssistantMessage();
           setState(() {

@@ -81,11 +81,17 @@ class CompletionSoundSettings extends StatelessWidget {
         ),
         ListTile(
           key: const ValueKey('completion-sound'),
-          enabled: prefs.enabled,
           title: Text(l.windows_completion_sound),
           subtitle: Text(soundLabel(l, prefs.completionSound)),
           trailing: const Icon(Icons.arrow_drop_down),
           onTap: () => _pick(context),
+        ),
+        SwitchListTile(
+          key: const ValueKey('mute-app-sounds'),
+          title: Text(l.app_sounds_mute),
+          subtitle: Text(l.app_sounds_mute_hint),
+          value: prefs.muteAppSounds,
+          onChanged: NotificationPrefsStore.setMuteAppSounds,
         ),
       ],
     );
