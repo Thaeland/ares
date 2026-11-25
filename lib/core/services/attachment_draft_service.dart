@@ -246,6 +246,30 @@ class AttachmentDraftService {
     }
   }
 
+  /// Captured preview pixels go through the same decoder, metadata scrub and
+  /// aggregate limits as a picked photo. No page supplies a cache path.
+  Future<AttachmentDraft> preparePreviewCrop({
+    required Uint8List png,
+    required int pin,
+    required Iterable<AttachmentDraft> existingDrafts,
+  }) async {
+    if (png.isEmpty || png.length > 4 * 1024 * 1024) {
+      throw const AttachmentDraftException('Preview crop exceeds its limit.');
+    }
+    final source = await _newCacheFile('png');
+    try {
+      await _cacheFileWriter(source, png);
+      return await prepareImage(
+        sourcePath: source.path,
+        displayName: 'preview-$pin.png',
+        existingDrafts: existingDrafts,
+        mode: AttachmentDraftMode.remoteGateway,
+      );
+    } finally {
+      await _deleteIfPresent(source);
+    }
+  }
+
   Future<AttachmentDraft> prepareGenericFile({
     required String sourcePath,
     required String displayName,

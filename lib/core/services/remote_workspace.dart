@@ -9,6 +9,9 @@ import 'package:uuid/uuid.dart';
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 import 'ws_client.dart';
+import 'preview_peer.dart';
+
+part 'remote_preview.dart';
 
 part 'remote_workspace_fleet.dart';
 part 'workspace_discovery.dart';
