@@ -1,4 +1,5 @@
 {
+  "slash_local_arguments": "Ce raccourci n’accepte pas d’arguments ici. Utilisez les commandes de l’application ; votre brouillon a été conservé.",
   "fallback_title": "Modèles de secours",
   "fallback_notice": "Essayés dans cet ordre si le modèle principal est indisponible. Les modifications concernent uniquement ce profil ; enregistrez explicitement la liste complète.",
   "fallback_unavailable": "La configuration de secours est indisponible ou invalide. Vérifiez la connexion, le profil sélectionné et la version de l’hôte, puis réessayez.",
@@ -1085,6 +1086,8 @@
   "slash_command_no_output": "The command completed with no output.",
   "slash_command_delivery_unknown": "The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.",
   "slash_command_failed": "The command could not be run.",
+  "slash_command_unsupported": "Cette commande n'est pas disponible sur ce serveur.",
+  "slash_sessions_inline": "Ouvrez la liste des sessions pour choisir une conversation. Votre brouillon a été conservé.",
   "nextgen_toggle": "Interface NextGen",
   "nextgen_toggle_subtitle": "Un nouveau design avec une seule connexion, des discussions en direct et la découverte réseau. Vos passerelles et discussions sont partagées avec cette interface.",
   "nextgen_single_login": "Se connecter avec un seul identifiant",

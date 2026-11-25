@@ -116,6 +116,12 @@ abstract class AppLocalizations {
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
   ];
 
+  /// No description provided for @slash_local_arguments.
+  ///
+  /// In en, this message translates to:
+  /// **'This shortcut does not accept arguments here. Use the app controls; your draft was kept.'**
+  String get slash_local_arguments;
+
   /// No description provided for @fallback_title.
   ///
   /// In en, this message translates to:
@@ -6665,6 +6671,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The command could not be run.'**
   String get slash_command_failed;
+
+  /// No description provided for @slash_command_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This command is not available on this server.'**
+  String get slash_command_unsupported;
+
+  /// No description provided for @slash_sessions_inline.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the session list to choose a chat. Your draft was kept.'**
+  String get slash_sessions_inline;
 
   /// No description provided for @nextgen_toggle.
   ///
