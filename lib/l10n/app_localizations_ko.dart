@@ -2912,6 +2912,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get destination_label => '대상';
 
   @override
+  String get markdown_source => '원문';
+
+  @override
   String get preview_label => '미리보기';
 
   @override

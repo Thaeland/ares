@@ -80,6 +80,8 @@ import '../models/chat_message_time.dart';
 import '../utils/rest_chat_reply_retention.dart';
 import '../utils/android_prompt_context.dart';
 import '../utils/chat_history_scroll.dart';
+import '../widgets/transcript_reader.dart';
+import '../widgets/transcript_body.dart';
 import '../utils/message_content.dart';
 import '../utils/responsive.dart';
 import '../utils/turn_recovery_fallback.dart';
@@ -930,6 +932,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   ChatDensity _chatDensity = chatDensitySelection.value;
 
   // Scroll management
+  final _reader = GlobalKey<TranscriptReaderState>();
   final _scrollController = ScrollController();
   final _scrollCoordinator = ChatScrollCoordinator();
   final _endAffordanceController = ChatEndAffordanceController();
@@ -2988,6 +2991,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   void _goToEnd() {
+    _reader.currentState?.rememberLatest();
+    _scrollCoordinator.updateFromUserScroll(isNearEnd: true);
     if (_canFocusSavedRecovery && _retainIdleRecoveryForPresentation()) {
       setState(() {});
       _scheduleScrollTarget(const ChatScrollTarget.end());
@@ -7042,7 +7047,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     _syncComposerKeyboardEndScroll();
-    final screen = Scaffold(
+    final chat = Scaffold(
       appBar: AppBar(
         centerTitle: false,
         automaticallyImplyLeading: widget.onClose == null,
@@ -7072,6 +7077,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ),
         ),
         actions: [
+          IconButton(
+            tooltip: 'Find in transcript',
+            icon: const Icon(Icons.find_in_page_outlined),
+            onPressed: () => _reader.currentState?.open(),
+          ),
           if (_archiving)
             const Padding(
               padding: EdgeInsets.only(right: 8),
@@ -7287,6 +7297,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         ),
       ),
     );
+    final screen = transcriptShortcuts(_reader, chat);
     return defaultTargetPlatform == TargetPlatform.windows
         ? WindowsChatPresence(
             target: () => (_desktopGateway ?? _normalSession?.client)
@@ -8156,6 +8167,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         maxDownloadBytes: maxAttachmentDownloadBytes,
       );
 
+  String _transcriptText(Map<String, dynamic> msg) =>
+      (msg['_display_content'] as String?) ??
+      stripToolResultText(
+        messageContentToText(
+          AndroidPromptContext.displayContent(msg, msg['content']),
+        ),
+      );
+
   Widget _buildDisplayItem(
     dynamic item, {
     ChatDisplaySource? source,
@@ -8261,13 +8280,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       );
     }
     final role = (msg['role'] as String?) ?? 'assistant';
-    final content =
-        (msg['_display_content'] as String?) ??
-        stripToolResultText(
-          messageContentToText(
-            AndroidPromptContext.displayContent(msg, msg['content']),
-          ),
-        );
+    final content = _transcriptText(msg);
     final isUser = role == 'user';
 
     return MessageBubble(
@@ -8502,7 +8515,40 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               ),
             ],
           ),
-        Expanded(child: list),
+        Expanded(
+          child: TranscriptReader(
+            key: _reader,
+            owner: (_reasoningRegistry, widget.session.id),
+            scroll: _scrollController,
+            onLatest: _goToEnd,
+            storageKey: widget.session.isLocalDraft && _storedSessionId == null
+                ? null
+                : readingPositionKey(
+                    'classic',
+                    widget.connection.id,
+                    widget.connection.gatewayProfile,
+                    _storedSessionId ?? _storedSessionKey,
+                  ),
+            onNavigate: () {
+              _openingScrollInterrupted = true;
+              _initialEndFramesRemaining = 0;
+              ++_automaticScrollGeneration;
+              _scrollCoordinator.updateFromUserScroll(isNearEnd: false);
+            },
+            entries: () => [
+              for (final (i, cell) in cells.indexed)
+                if (cell.item case final Map<String, dynamic> msg
+                    when msg['role'] == 'user' || msg['role'] == 'assistant')
+                  (
+                    id: (cell.source, chatDisplayItemIdentity(msg)),
+                    index: i + (_historyWindow.hasOlder ? 1 : 0),
+                    text: _transcriptText(msg),
+                    prompt: msg['role'] == 'user',
+                  ),
+            ],
+            child: list,
+          ),
+        ),
       ],
     );
   }
@@ -8893,14 +8939,16 @@ class MessageBubble extends StatelessWidget {
         }
       }
     }
-    Widget prose(String text) => MarkdownBody(
-      data: text,
-      selectable: false,
-      styleSheet: styleSheet,
-      // Local images become lazy file cards below. Never let Markdown load a
-      // host path from the phone or contact an arbitrary image URL on render.
-      sizedImageBuilder: (image) => Text(image.alt ?? image.title ?? ''),
-      onTapLink: (_, href, _) => unawaited(_openLink(context, href)),
+    Widget prose(String text) => transcriptBody(
+      MarkdownBody(
+        data: text,
+        selectable: false,
+        styleSheet: styleSheet,
+        // Local images become lazy file cards below. Never let Markdown load a
+        // host path from the phone or contact an arbitrary image URL on render.
+        sizedImageBuilder: (image) => Text(image.alt ?? image.title ?? ''),
+        onTapLink: (_, href, _) => unawaited(_openLink(context, href)),
+      ),
     );
 
     final parseMedia = filesClient != null;

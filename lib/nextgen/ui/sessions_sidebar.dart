@@ -9,9 +9,15 @@ import 'package:flutter/services.dart';
 import 'package:hermes_android/core/l10n/l10n.dart';
 
 import '../../core/models/session.dart';
+import '../../core/models/session_search_hit.dart';
+import '../../core/services/session_search_projection.dart';
+import '../../core/services/session_search_preferences.dart';
+import '../../core/widgets/session_search_mode_menu.dart';
+import '../../core/services/session_search_client.dart';
 import '../../core/services/dashboard_api_client.dart';
 import '../../core/utils/session_sources.dart';
 import '../../core/widgets/copy_session_id.dart';
+import '../../core/widgets/session_organisation.dart';
 import '../data/seen_chats.dart';
 import '../theme/nextgen_theme.dart';
 import 'nextgen_scope.dart';
@@ -37,7 +43,24 @@ enum NgDestination {
 /// Holds the sidebar's session list so it survives the drawer closing.
 class NgSessionsModel extends ChangeNotifier {
   NgSessionsModel(NgScope scope) : _scope = scope {
+    _bindSearchAccess();
     _listen();
+  }
+
+  late SessionSearchAccess searchAccess;
+  void _bindSearchAccess() {
+    searchAccess = SessionSearchAccess(
+      SessionSearchPreferences(scope.prefs),
+      sessionSearchIdentity(scope.connection),
+    )..addListener(_modeChanged);
+  }
+
+  void _modeChanged() {
+    if (query.isNotEmpty) {
+      search(query);
+    } else {
+      notifyListeners();
+    }
   }
 
   NgScope _scope;
@@ -49,9 +72,17 @@ class NgSessionsModel extends ChangeNotifier {
       return;
     }
     _generation++;
+    searchAccess.dispose();
     _scope = value;
+    _bindSearchAccess();
     _seen = null;
     _showSubagents = null;
+    _debounce?.cancel();
+    _changedDebounce?.cancel();
+    query = '';
+    error = null;
+    _browseRows = [];
+    excerpts = {};
     sessions = [];
     _serverOffset = 0;
     hasMore = false;
@@ -59,6 +90,25 @@ class NgSessionsModel extends ChangeNotifier {
   }
 
   List<Session> sessions = [];
+  List<Session> _browseRows = [];
+  Map<String, String> excerpts = {};
+
+  // Only older reads need this overlay. A later physical read can observe a
+  // legitimate unarchive, so start a fresh set with each request generation.
+  Set<String>? _removedDuringRead;
+  bool _removed(Session row) =>
+      _removedDuringRead?.contains(row.id) == true ||
+      _removedDuringRead?.contains(row.lineageRootId) == true;
+
+  void _projectSearch(Iterable<SessionSearchHit> hits) {
+    final matches = projectSessionSearch(
+      _browseRows,
+      hits,
+      query,
+    ).where((h) => !h.session.isUntitledCronShell && !h.session.archived);
+    sessions = [for (final h in matches) h.session];
+    excerpts = {for (final h in matches) h.session.id: h.snippet};
+  }
 
   bool _browsingCrons = false;
   bool? _showSubagents;
@@ -205,6 +255,9 @@ class NgSessionsModel extends ChangeNotifier {
 
   String? error;
   String query = '';
+  SessionSort sort = SessionSort.recent;
+  SessionGroup group = SessionGroup.standard;
+  bool details = false;
   Timer? _debounce;
   int _generation = 0;
   Future<void>? _refreshing;
@@ -230,6 +283,7 @@ class NgSessionsModel extends ChangeNotifier {
 
   Future<void> _refreshOnce() async {
     final generation = ++_generation;
+    _removedDuringRead = {};
     final api = scope.gateway.api;
     final browsingCrons = _browsingCrons;
     loading = true;
@@ -237,10 +291,26 @@ class NgSessionsModel extends ChangeNotifier {
     notifyListeners();
     try {
       if (query.isNotEmpty) {
+        if (!searchAccess.value) {
+          _projectSearch(const []);
+          hasMore = false;
+          return;
+        }
         // Search is one server-side read; it does not page.
-        final page = await api.getSessionsPage(limit: _pageSize, title: query);
+        final page = await api.getSessionsPage(
+          limit: _pageSize,
+          title: query,
+          maySendSearch: () => generation == _generation && searchAccess.value,
+        );
         if (generation != _generation) return;
-        sessions = page.sessions.where((s) => !s.isUntitledCronShell).toList();
+        _projectSearch([
+          for (final row in page.sessions)
+            if (!_removed(row))
+              SessionSearchHit(
+                session: row,
+                snippet: page.searchExcerpts[row.id] ?? '',
+              ),
+        ]);
         _serverOffset = 0;
         hasMore = false;
       } else {
@@ -280,7 +350,7 @@ class NgSessionsModel extends ChangeNotifier {
           if (visible >= _targetChats) break;
         }
         if (generation != _generation) return;
-        sessions = collected;
+        _browseRows = sessions = collected.where((s) => !_removed(s)).toList();
         _serverOffset = offset;
         hasMore = more;
       }
@@ -294,9 +364,15 @@ class NgSessionsModel extends ChangeNotifier {
       }
     } catch (e) {
       if (generation != _generation) return;
-      error = '$e'.replaceFirst('Exception: ', '');
+      if (query.isNotEmpty) _projectSearch(const []);
+      error = query.isEmpty
+          ? '$e'.replaceFirst('Exception: ', '')
+          : e is SessionSearchException
+          ? e.message
+          : 'Message search unavailable. Showing local matches.';
     } finally {
       if (generation == _generation) {
+        _removedDuringRead = null;
         loading = false;
         notifyListeners();
       }
@@ -306,6 +382,7 @@ class NgSessionsModel extends ChangeNotifier {
   Future<void> loadMore() async {
     if (loading || !hasMore || query.isNotEmpty) return;
     final generation = _generation;
+    _removedDuringRead = {};
     loading = true;
     notifyListeners();
     try {
@@ -329,7 +406,7 @@ class NgSessionsModel extends ChangeNotifier {
             addedVisible++;
           }
         }
-        sessions = [...collected];
+        _browseRows = sessions = collected.where((s) => !_removed(s)).toList();
         hasMore = page.sessions.isNotEmpty && page.hasMore;
         if (!hasMore || addedVisible >= _targetChats) break;
       }
@@ -338,6 +415,7 @@ class NgSessionsModel extends ChangeNotifier {
       hasMore = false;
     } finally {
       if (generation == _generation) {
+        _removedDuringRead = null;
         loading = false;
         notifyListeners();
       }
@@ -345,18 +423,34 @@ class NgSessionsModel extends ChangeNotifier {
   }
 
   void search(String value) {
+    ++_generation; // Invalidate in-flight hits before the debounce fires.
     query = value.trim();
+    error = null;
+    loading = query.isEmpty || searchAccess.value;
+    hasMore = false;
+    if (query.isEmpty) {
+      sessions = _browseRows;
+      excerpts = {};
+    } else {
+      _projectSearch(const []);
+    }
+    notifyListeners();
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), refresh);
+    if (loading) _debounce = Timer(const Duration(milliseconds: 300), refresh);
   }
 
   void clearSearch() {
     _debounce?.cancel();
+    ++_generation;
     query = '';
+    sessions = _browseRows;
+    excerpts = {};
     unawaited(refresh());
   }
 
   void replace(Session updated) {
+    final browseIndex = _browseRows.indexWhere((s) => s.id == updated.id);
+    if (browseIndex >= 0) _browseRows[browseIndex] = updated;
     final i = sessions.indexWhere((s) => s.id == updated.id);
     if (i >= 0) {
       sessions[i] = updated;
@@ -365,12 +459,24 @@ class NgSessionsModel extends ChangeNotifier {
   }
 
   void remove(String id) {
+    final removed = _removedDuringRead;
+    if (removed != null) {
+      removed.add(id);
+      for (final row in [...sessions, ..._browseRows]) {
+        if (row.id == id && row.lineageRootId != null) {
+          removed.add(row.lineageRootId!);
+        }
+      }
+    }
+    excerpts.remove(id);
+    _browseRows.removeWhere((s) => s.id == id);
     sessions.removeWhere((s) => s.id == id);
     notifyListeners();
   }
 
   @override
   void dispose() {
+    searchAccess.dispose();
     _generation++;
     _refreshPending = false;
     _debounce?.cancel();
@@ -392,7 +498,7 @@ DateTime? ngSessionTime(Session s) {
   return DateTime.fromMillisecondsSinceEpoch((t * 1000).round());
 }
 
-/// One of a chat row's actions: the value [_NgSessionsSidebarState] runs,
+/// One of a chat row's actions: the value [NgSessionsSidebarState] runs,
 /// and how both the long-press sheet and the desktop menu show it.
 typedef _NgChatAction = ({
   String value,
@@ -435,10 +541,11 @@ class NgSessionsSidebar extends StatefulWidget {
   final bool docked;
 
   @override
-  State<NgSessionsSidebar> createState() => _NgSessionsSidebarState();
+  State<NgSessionsSidebar> createState() => NgSessionsSidebarState();
 }
 
-class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
+class NgSessionsSidebarState extends State<NgSessionsSidebar> {
+  void focusSearch() => _searchFocus.requestFocus();
   final _search = TextEditingController();
   final _searchFocus = FocusNode();
   final _scroll = ScrollController();
@@ -522,8 +629,19 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
     final choice = at == null
         ? await _actionSheet(s)
         : await _actionMenu(s, at);
-    if (!mounted || choice == null) return;
-    await _runAction(s, choice, api);
+    if (!mounted ||
+        choice == null ||
+        !identical(widget.model.scope.gateway.api, api)) {
+      return;
+    }
+    final current = widget.model.sessions
+        .where((row) => row.id == s.id)
+        .firstOrNull;
+    if (current == null ||
+        !_actionItems(current).any((a) => a.value == choice)) {
+      return;
+    }
+    await _runAction(current, choice, api);
   }
 
   Future<String?> _actionSheet(Session s) {
@@ -606,6 +724,8 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
     String choice,
     DashboardApiClient api,
   ) async {
+    bool currentOwner() =>
+        mounted && identical(widget.model.scope.gateway.api, api);
     try {
       switch (choice) {
         case 'copyId':
@@ -617,7 +737,12 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
             widget.model.markUnread(s);
           }
         case 'pin':
-          await api.setSessionPinned(sessionId: s.id, pinned: !s.pinned);
+          final pinned = await api.setSessionPinned(
+            sessionId: s.id,
+            pinned: !s.pinned,
+          );
+          if (!currentOwner()) return;
+          widget.model.replace(s.withPinned(pinned));
           await widget.model.refresh();
         case 'rename':
           final title = await ngPromptText(
@@ -625,8 +750,10 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
             title: ngL.ng_rename_chat,
             initial: ngSessionTitle(s),
           );
-          if (title == null || title.trim().isEmpty) return;
-          await api.renameSession(sessionId: s.id, title: title);
+          if (title == null || title.trim().isEmpty || !currentOwner()) return;
+          final saved = await api.renameSession(sessionId: s.id, title: title);
+          if (!currentOwner()) return;
+          widget.model.replace(s.withTitle(saved));
           await widget.model.refresh();
         case 'archive':
           await api.setSessionArchived(
@@ -634,6 +761,7 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
             archived: true,
             clearPin: true,
           );
+          if (!currentOwner()) return;
           widget.model.remove(s.id);
           if (mounted) ngToast(context, ngL.ng_archived);
         case 'delete':
@@ -642,8 +770,9 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
             title: ngL.ng_delete_this_chat,
             body: ngL.ng_it_is_removed_from_the_gateway,
           );
-          if (!ok) return;
+          if (!ok || !currentOwner()) return;
           await api.deleteSession(s.id);
+          if (!currentOwner()) return;
           widget.model.remove(s.id);
       }
     } catch (e) {
@@ -662,7 +791,7 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
           final needsYou = scope.gateway.needsYou;
           final all = widget.model.sessions;
           final chats = all.where(widget.model.includesChat).toList();
-          final filtered = switch (_filter) {
+          final filtered = widget.model.sort.apply(switch (_filter) {
             NgSidebarFilter.all => chats,
             NgSidebarFilter.running => chats.where((s) => s.isActive).toList(),
             NgSidebarFilter.needsYou =>
@@ -673,9 +802,8 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
                   .toList(),
             NgSidebarFilter.crons =>
               all.where((s) => isCronSession(s)).toList(),
-          };
-          final pinned =
-              _filter == NgSidebarFilter.all && widget.model.query.isEmpty
+          });
+          final pinned = _filter == NgSidebarFilter.all
               ? filtered.where((s) => s.pinned).toList()
               : <Session>[];
           final rest = filtered.where((s) => !pinned.contains(s)).toList();
@@ -696,7 +824,9 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
                     isDense: true,
                     filled: true,
                     fillColor: c.input,
-                    prefixIcon: Icon(Icons.search, color: c.text3, size: 20),
+                    prefixIcon: SessionSearchModeMenu(
+                      widget.model.searchAccess,
+                    ),
                     suffixIcon: _search.text.isEmpty
                         ? null
                         : IconButton(
@@ -735,15 +865,35 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
                     children: [
                       _tiles(c),
                       const SizedBox(height: 8),
-                      _filters(
-                        c,
-                        chats
-                            .where(
-                              (s) =>
-                                  needsYou.contains(s.id) ||
-                                  widget.model.isUnread(s),
-                            )
-                            .length,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _filters(
+                              c,
+                              chats
+                                  .where(
+                                    (s) =>
+                                        needsYou.contains(s.id) ||
+                                        widget.model.isUnread(s),
+                                  )
+                                  .length,
+                            ),
+                          ),
+                          SessionOrganisationMenu(
+                            sort: widget.model.sort,
+                            group: widget.model.group,
+                            rows: filtered,
+                            details: widget.model.details,
+                            onSort: (s) =>
+                                setState(() => widget.model.sort = s),
+                            onGroup: (g) =>
+                                setState(() => widget.model.group = g),
+                            onDetails: () => setState(
+                              () =>
+                                  widget.model.details = !widget.model.details,
+                            ),
+                          ),
+                        ],
                       ),
                       if (pinned.isNotEmpty) ...[
                         NgSectionLabel(ngL.ng_pinned),
@@ -751,7 +901,8 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
                       ],
                       if (pinned.isNotEmpty && rest.isNotEmpty)
                         NgSectionLabel(ngL.ng_recent),
-                      if (widget.model.error != null && all.isEmpty)
+                      if (widget.model.error != null &&
+                          (widget.model.query.isNotEmpty || all.isEmpty))
                         Padding(
                           padding: const EdgeInsets.all(16),
                           child: Text(
@@ -781,7 +932,20 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
                             style: NgType.bodySmall.copyWith(color: c.text3),
                           ),
                         ),
-                      for (final s in rest) _tile(c, s, needsYou),
+                      if (widget.model.group == SessionGroup.status)
+                        for (final g in labelledGroups(
+                          rest,
+                          (s) => needsYou.contains(s.id)
+                              ? ngL.ng_needs_you_2
+                              : s.isActive
+                              ? ngL.ng_running
+                              : 'Idle',
+                        ).entries) ...[
+                          NgSectionLabel(g.key),
+                          for (final s in g.value) _tile(c, s, needsYou),
+                        ]
+                      else
+                        for (final s in rest) _tile(c, s, needsYou),
                       // A short list has no scroll extent, so scroll-only
                       // paging cannot grow it; offer an explicit read on.
                       if (widget.model.hasMore &&
@@ -1018,18 +1182,39 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
                           ),
                         ),
                       Expanded(
-                        child: Text(
-                          ngSessionTitle(s),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: NgType.label.copyWith(
-                            color: selected || marked ? c.text : c.text2,
-                            fontWeight: marked
-                                ? FontWeight.w700
-                                : selected
-                                ? FontWeight.w600
-                                : FontWeight.w500,
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              ngSessionTitle(s),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: NgType.label.copyWith(
+                                color: selected || marked ? c.text : c.text2,
+                                fontWeight: marked
+                                    ? FontWeight.w700
+                                    : selected
+                                    ? FontWeight.w600
+                                    : FontWeight.w500,
+                              ),
+                            ),
+                            if (widget.model.details)
+                              Text(
+                                sessionDetails(s),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: NgType.caption.copyWith(color: c.text3),
+                              ),
+                            if (widget.model.excerpts[s.id] case final snippet?
+                                when snippet.isNotEmpty)
+                              Text(
+                                snippet,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: NgType.caption.copyWith(color: c.text3),
+                              ),
+                          ],
                         ),
                       ),
                       const SizedBox(width: 8),

@@ -54,6 +54,14 @@ class DesktopShortcuts extends StatelessWidget {
           fireDesktopShortcut(DesktopShortcut.newChat),
       SingleActivator(LogicalKeyboardKey.keyK, meta: true): () =>
           fireDesktopShortcut(DesktopShortcut.search),
+      SingleActivator(LogicalKeyboardKey.keyF, meta: true, shift: true): () =>
+          fireDesktopShortcut(DesktopShortcut.search),
+      SingleActivator(
+        LogicalKeyboardKey.keyF,
+        control: true,
+        shift: true,
+      ): () =>
+          fireDesktopShortcut(DesktopShortcut.search),
       SingleActivator(LogicalKeyboardKey.keyF, meta: true): () =>
           fireDesktopShortcut(DesktopShortcut.search),
       SingleActivator(LogicalKeyboardKey.keyF, control: true): () =>

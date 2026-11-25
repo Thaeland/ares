@@ -2993,6 +2993,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get destination_label => 'Ziel';
 
   @override
+  String get markdown_source => 'Quelltext';
+
+  @override
   String get preview_label => 'Vorschau';
 
   @override

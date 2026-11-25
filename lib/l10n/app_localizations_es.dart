@@ -2988,6 +2988,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get destination_label => 'Destino';
 
   @override
+  String get markdown_source => 'Código fuente';
+
+  @override
   String get preview_label => 'Vista previa';
 
   @override

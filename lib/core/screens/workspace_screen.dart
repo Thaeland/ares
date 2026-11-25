@@ -39,6 +39,8 @@ import '../services/session_archive_ledger.dart';
 import '../services/remote_files_client.dart';
 import '../services/shared_attachment_preparer.dart';
 import '../services/session_browser_loader.dart';
+import '../services/session_search_client.dart';
+import '../models/session_search_hit.dart';
 import '../theme/hermes_theme.dart';
 import '../utils/activity_feed.dart';
 import '../utils/adaptive_layout.dart';
@@ -1082,6 +1084,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       case HermesDestination.chats:
         final chatsList = WorkspaceSessionsScreen(
           key: _chatsKey,
+          searchMessages: _searchMessages,
+          searchScope: widget.connection,
           title: context.l10n.chats,
           view: WorkspaceSessionView.all,
           embedded: true,
@@ -1168,6 +1172,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           ),
           history: WorkspaceSessionsScreen(
             key: _cronsKey,
+            searchMessages: _searchMessages,
+            searchScope: widget.connection,
             archiveSurfaceVisible: _cronsView == CronsView.history,
             title: context.l10n.crons,
             kind: WorkspaceSessionKind.crons,
@@ -1252,6 +1258,15 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   /// The dashboard only exists when the connection names a host to reach it
   /// on. Without one, every dashboard-backed entry is disabled *with a reason*
   /// rather than hidden, per the roadmap's capability-discovery rule.
+  Future<List<SessionSearchHit>> _searchMessages(
+    String term,
+    bool Function() maySend,
+  ) => SessionSearchClient.searchDashboard(
+    _dashboardClient,
+    term,
+    maySend: maySend,
+  );
+
   bool get _dashboardReachable => widget.connection.host.trim().isNotEmpty;
 
   /// The dashboard origin, which is not the gateway chat origin: it has its
@@ -1442,6 +1457,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         .where((project) => project.id == projectId)
         .firstOrNull;
 
+    final connection = widget.connection;
     final project =
         known ??
         HermesProject(
@@ -1455,6 +1471,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         builder: (_) => ProjectDetailScreen(
           projectId: projectId,
           projectName: project.name,
+          createFilesClient: () => _createFilesClient(connection),
           loadSessions: ({required bool refresh}) =>
               repository.projectSessions(projectId, refresh: refresh),
           onOpenSession: (session) => _openSession(
@@ -1991,6 +2008,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     _push(
       WorkspaceSessionsScreen(
         key: key,
+        searchMessages: _searchMessages,
+        searchScope: widget.connection,
         title: title,
         view: view,
         onPin: _pinSession,
@@ -2141,20 +2160,24 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     }
   }
 
+  RemoteFilesClient _createFilesClient(
+    SavedConnection connection, {
+    String? sessionId,
+    int? maxDownloadBytes,
+  }) => RemoteFilesClient.fromConnection(
+    connection,
+    sessionId: sessionId,
+    maxDownloadBytes: maxDownloadBytes,
+    httpClient: widget.testDashboardHttpClient,
+  );
+
   Future<void> _openFiles() async {
     final builder = widget.filesScreenBuilder;
     if (builder != null) {
       _push(builder(widget.connection));
       return;
     }
-    final files = RemoteFilesClient.fromConnection(widget.connection);
-    try {
-      await Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => FilesScreen(files: files)),
-      );
-    } finally {
-      files.close();
-    }
+    await FilesScreen.open(context, _createFilesClient(widget.connection));
   }
 
   /// Opens the full cron manager, which owns every schedule mutation.
@@ -2181,13 +2204,16 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     final factory = widget.assetsSourceFactory;
     final source =
         factory?.call(connection) ??
-        ChatAssetsClient.fromConnection(connection);
+        ChatAssetsClient.fromConnection(
+          connection,
+          httpClient: widget.testDashboardHttpClient,
+        );
     try {
       await Navigator.of(context).push<void>(
         MaterialPageRoute<void>(
           builder: (_) => AssetsScreen(
             source: source,
-            filesClient: (session) => RemoteFilesClient.fromConnection(
+            filesClient: (session) => _createFilesClient(
               connection,
               sessionId: session.id,
               maxDownloadBytes: maxAttachmentDownloadBytes,

@@ -786,6 +786,7 @@
   "hermes_heading": "## Hermes",
   "action_label": "アクション",
   "destination_label": "移動先",
+  "markdown_source": "ソース",
   "preview_label": "プレビュー",
   "share_action_summarize": "要約",
   "share_action_explain": "説明",

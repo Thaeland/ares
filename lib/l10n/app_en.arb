@@ -907,6 +907,7 @@
   "hermes_heading": "## Hermes",
   "action_label": "Action",
   "destination_label": "Destination",
+  "markdown_source": "Source",
   "preview_label": "Preview",
   "share_action_summarize": "Summarize",
   "share_action_explain": "Explain",

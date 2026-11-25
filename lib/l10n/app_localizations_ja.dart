@@ -2911,6 +2911,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get destination_label => '移動先';
 
   @override
+  String get markdown_source => 'ソース';
+
+  @override
   String get preview_label => 'プレビュー';
 
   @override

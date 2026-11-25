@@ -1,4 +1,12 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/connection.dart';
+
+String sessionSearchIdentity(SavedConnection connection) =>
+    '${connection.baseUrl}|${connection.gatewayPrefix ?? ''}|${connection.desktopGatewayUrl ?? ''}';
 
 /// How the session list search bar resolves a query.
 enum SessionSearchMode {
@@ -83,6 +91,10 @@ class AiSearchModel {
 /// search behaviour until the user opts in.
 class SessionSearchPreferences {
   static const _prefix = 'session_search';
+  static final _modeChanges =
+      StreamController<({String identity, SessionSearchMode mode})>.broadcast(
+        sync: true,
+      );
 
   final SharedPreferences _preferences;
 
@@ -93,19 +105,25 @@ class SessionSearchPreferences {
   }
 
   SessionSearchMode readMode({required String connectionIdentity}) {
-    return SessionSearchModeCodec.fromStorage(
-      _preferences.getString(_key(connectionIdentity, 'mode')),
-    );
+    return SessionSearchModeCodec.fromStorage(switch (_preferences.get(
+      _key(connectionIdentity, 'mode'),
+    )) {
+      String value => value,
+      _ => null,
+    });
   }
 
   Future<void> saveMode({
     required String connectionIdentity,
     required SessionSearchMode mode,
   }) async {
-    await _preferences.setString(
+    final write = _preferences.setString(
       _key(connectionIdentity, 'mode'),
       mode.storageValue,
     );
+    // Revoke a retained browser's in-flight reply before another frame or I/O.
+    _modeChanges.add((identity: connectionIdentity, mode: mode));
+    if (!await write) throw StateError('Search mode was not saved.');
   }
 
   AiSearchModel? readAiModel({required String connectionIdentity}) {
@@ -139,6 +157,10 @@ class SessionSearchPreferences {
   }
 
   Future<void> clear({required String connectionIdentity}) async {
+    _modeChanges.add((
+      identity: connectionIdentity,
+      mode: SessionSearchMode.local,
+    ));
     await Future.wait([
       _preferences.remove(_key(connectionIdentity, 'mode')),
       _preferences.remove(_key(connectionIdentity, 'ai_provider')),
@@ -151,5 +173,44 @@ class SessionSearchPreferences {
   static String _key(String connectionIdentity, String field) {
     final namespace = Uri.encodeComponent(connectionIdentity);
     return '$_prefix.$namespace.$field';
+  }
+}
+
+/// The active browsers offer literal dashboard search, not AI rewriting.
+/// Only the explicit server mode authorizes sending the original query.
+class SessionSearchAccess extends ValueNotifier<bool> {
+  SessionSearchAccess(this._preferences, this._identity)
+    : super(
+        _preferences.readMode(connectionIdentity: _identity) ==
+            SessionSearchMode.server,
+      ) {
+    _subscription = SessionSearchPreferences._modeChanges.stream.listen((
+      change,
+    ) {
+      if (change.identity == _identity) {
+        value = change.mode == SessionSearchMode.server;
+      }
+    });
+  }
+
+  final SessionSearchPreferences _preferences;
+  final String _identity;
+  late final StreamSubscription<({String identity, SessionSearchMode mode})>
+  _subscription;
+  bool _closed = false;
+
+  Future<void> setServer(bool enabled) async {
+    if (_closed) return;
+    await _preferences.saveMode(
+      connectionIdentity: _identity,
+      mode: enabled ? SessionSearchMode.server : SessionSearchMode.local,
+    );
+  }
+
+  @override
+  void dispose() {
+    _closed = true;
+    _subscription.cancel();
+    super.dispose();
   }
 }

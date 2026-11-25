@@ -2993,6 +2993,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get destination_label => 'Destination';
 
   @override
+  String get markdown_source => 'Source';
+
+  @override
   String get preview_label => 'Aperçu';
 
   @override

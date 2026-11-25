@@ -2991,6 +2991,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get destination_label => 'Назначение';
 
   @override
+  String get markdown_source => 'Исходный текст';
+
+  @override
   String get preview_label => 'Предпросмотр';
 
   @override
