@@ -38,6 +38,8 @@ import '../services/session_archive_ledger.dart';
 import '../services/remote_files_client.dart';
 import '../services/shared_attachment_preparer.dart';
 import '../services/session_browser_loader.dart';
+import '../services/session_search_client.dart';
+import '../models/session_search_hit.dart';
 import '../theme/hermes_theme.dart';
 import '../utils/activity_feed.dart';
 import '../utils/adaptive_layout.dart';
@@ -1081,6 +1083,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       case HermesDestination.chats:
         final chatsList = WorkspaceSessionsScreen(
           key: _chatsKey,
+          searchMessages: _searchMessages,
+          searchScope: widget.connection,
           title: context.l10n.chats,
           view: WorkspaceSessionView.all,
           embedded: true,
@@ -1167,6 +1171,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           ),
           history: WorkspaceSessionsScreen(
             key: _cronsKey,
+            searchMessages: _searchMessages,
+            searchScope: widget.connection,
             archiveSurfaceVisible: _cronsView == CronsView.history,
             title: context.l10n.crons,
             kind: WorkspaceSessionKind.crons,
@@ -1251,6 +1257,15 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   /// The dashboard only exists when the connection names a host to reach it
   /// on. Without one, every dashboard-backed entry is disabled *with a reason*
   /// rather than hidden, per the roadmap's capability-discovery rule.
+  Future<List<SessionSearchHit>> _searchMessages(
+    String term,
+    bool Function() maySend,
+  ) => SessionSearchClient.searchDashboard(
+    _dashboardClient,
+    term,
+    maySend: maySend,
+  );
+
   bool get _dashboardReachable => widget.connection.host.trim().isNotEmpty;
 
   /// The dashboard origin, which is not the gateway chat origin: it has its
@@ -1992,6 +2007,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     _push(
       WorkspaceSessionsScreen(
         key: key,
+        searchMessages: _searchMessages,
+        searchScope: widget.connection,
         title: title,
         view: view,
         onPin: _pinSession,

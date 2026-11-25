@@ -48,7 +48,8 @@ class _NgMainPageState extends State<_NgMainContent>
   /// Keeps the sidebar's search/filter/scroll state alive when it moves
   /// between the modal drawer (compact) and the docked pane (wide) as the
   /// window crosses the expanded breakpoint.
-  final _sidebarKey = GlobalKey();
+  final _sidebarKey = GlobalKey<NgSessionsSidebarState>();
+  bool _focusDrawerSearch = false;
 
   /// Whether the user collapsed the docked sidebar on a wide window. Reset
   /// implicitly when the window leaves the expanded class.
@@ -133,9 +134,11 @@ class _NgMainPageState extends State<_NgMainContent>
     if (sessions == null) {
       _sessions = NgSessionsModel(scope);
       unawaited(_sessions!.refresh());
-      final last =
-          _takeOpenRequest(scope.connection.id) ??
-          NextGenPreferences.lastSession(scope.prefs, scope.connection.id);
+      final last = NextGenPreferences.launchSession(
+        scope.prefs,
+        scope.connection.id,
+        requested: _takeOpenRequest(scope.connection.id),
+      );
       _openId(last, '', initial: true);
       _listenForRequests(scope);
     } else {
@@ -531,7 +534,17 @@ class _NgMainPageState extends State<_NgMainContent>
       case DesktopShortcut.newChat:
         _newChat();
       case DesktopShortcut.search:
-        if (!isExpandedWindow(context)) _scaffold.currentState?.openDrawer();
+        if (isExpandedWindow(context)) {
+          setState(() => _dockedSidebarCollapsed = false);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _sidebarKey.currentState?.focusSearch();
+          });
+        } else if (_scaffold.currentState?.isDrawerOpen ?? false) {
+          _sidebarKey.currentState?.focusSearch();
+        } else {
+          _focusDrawerSearch = true;
+          _scaffold.currentState?.openDrawer();
+        }
       case DesktopShortcut.settings:
         _go(NgDestination.settings);
       case DesktopShortcut.tab1:
@@ -647,7 +660,11 @@ class _NgMainPageState extends State<_NgMainContent>
         drawerEdgeDragWidth: 48,
         onDrawerChanged: (open) {
           _sessions?.drawerOpen = open || docked;
-          if (open) unawaited(_sessions?.refresh());
+          if (open) {
+            if (_focusDrawerSearch) _sidebarKey.currentState?.focusSearch();
+            _focusDrawerSearch = false;
+            unawaited(_sessions?.refresh());
+          }
         },
         drawer: docked ? null : sidebar,
         body: docked

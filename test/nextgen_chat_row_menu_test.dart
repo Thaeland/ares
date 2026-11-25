@@ -79,6 +79,7 @@ class _FakeApi extends DashboardApiClient {
     int offset = 0,
     String? title,
     String? excludeSources,
+    bool Function()? maySendSearch,
     Duration timeout = ApiClient.requestTimeout,
   }) async =>
       SessionListPage(sessions: offset == 0 ? rows : const [], hasMore: false);
