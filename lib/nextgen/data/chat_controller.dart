@@ -23,6 +23,12 @@ import '../../core/services/slash_command_errors.dart';
 import '../../core/services/ws_client.dart';
 import '../../core/composer/composer_commands.dart';
 import '../../core/composer/failure_recovery.dart';
+import '../../core/history/rewind_submit.dart'
+    show
+        RewindPlan,
+        buildRewindParams,
+        isRejectedDeepTruncatePayload,
+        stripRejectedDeepTruncate;
 import '../../core/composer/regenerate.dart';
 import 'history_rows.dart';
 import 'nextgen_gateway.dart';
@@ -3264,12 +3270,32 @@ class NgChatController extends ChangeNotifier {
     PreparedImageAttempt? attempt,
     required void Function() checkOwner,
   }) async {
+    final sent = <String, dynamic>{
+      ...baseParams,
+      'submission_id': submissionId,
+    };
     try {
-      return await gateway.call('prompt.submit', {
-        ...baseParams,
-        'submission_id': submissionId,
-      }, timeout: const Duration(seconds: 60));
+      return await gateway.call(
+        'prompt.submit',
+        sent,
+        timeout: const Duration(seconds: 60),
+      );
     } on JsonRpcError catch (e) {
+      // Backends predating confirm_deep_truncate reject it at contract
+      // admission (4000, handler never runs). The user already confirmed, so
+      // retry once without only that field — mirror of Desktop's
+      // runRewindSubmit (rewind.ts).
+      if (isRejectedDeepTruncatePayload(
+        code: e.code,
+        message: e.message,
+        sentParams: sent,
+      )) {
+        return gateway.call(
+          'prompt.submit',
+          stripRejectedDeepTruncate(sent),
+          timeout: const Duration(seconds: 60),
+        );
+      }
       if (!isRejectedSubmissionIdError(e)) rethrow;
       if (attempt != null) await attempt.beforeLegacy();
       checkOwner();
@@ -3352,6 +3378,42 @@ class NgChatController extends ChangeNotifier {
       _changedNow();
     }
     return sent ? NgRetryResult.regenerated : NgRetryResult.failed;
+  }
+
+  /// Edit or restore a stored user turn (F17, Desktop rewind semantics).
+  /// Resolves the durable target against `session.history`, interrupts a live
+  /// turn first, and sends exactly ONE truncating `prompt.submit` through the
+  /// same owned path Retry uses. The composer is never consumed.
+  Future<bool> rewindUserTurn({
+    required String text,
+    required String sourceText,
+    required int truncateOrdinal,
+    required bool confirmDeepTruncate,
+  }) async {
+    final runtime = runtimeId;
+    if (runtime == null) return false;
+    final plan = await RewindPlan.resolve(
+      requestGateway: (method, params) => gateway.call(method, params),
+      sessionId: runtime,
+      truncateOrdinal: truncateOrdinal,
+      truncateMessageId: null,
+      truncateRowId: null,
+      sourceText: sourceText,
+    );
+    if (_disposed) return false;
+    if (running) {
+      await stop(parkLocalQueue: false);
+      for (var i = 0; i < 50 && running && !_disposed; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+      if (_disposed || running) return false;
+    }
+    return send(
+      text,
+      promptParams: Map<String, Object>.from(
+        buildRewindParams(plan, confirmDeepTruncate: confirmDeepTruncate),
+      ),
+    );
   }
 
   bool _answer(Map<String, dynamic> result) {

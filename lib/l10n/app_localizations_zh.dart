@@ -6175,6 +6175,30 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => '审查技能的使用情况';
+
+  @override
+  String get edit_turn_title => 'Edit this prompt?';
+
+  @override
+  String get edit_turn_body =>
+      'The prompt will be re-run from here. Later turns are archived.';
+
+  @override
+  String get edit_turn_send => 'Send';
+
+  @override
+  String get restore_turn_title => 'Restore to this checkpoint?';
+
+  @override
+  String get restore_turn_body =>
+      'Everything after this prompt is removed from the conversation, and the prompt runs again from here.';
+
+  @override
+  String get restore_turn_confirm => 'Restore & rerun';
+
+  @override
+  String get edit_turn_later_turns_body =>
+      'This will archive later turns from the conversation. Continue?';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).

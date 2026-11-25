@@ -10781,6 +10781,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reviews how skills are used'**
   String get ng_aux_curator_hint;
+
+  /// No description provided for @edit_turn_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit this prompt?'**
+  String get edit_turn_title;
+
+  /// No description provided for @edit_turn_body.
+  ///
+  /// In en, this message translates to:
+  /// **'The prompt will be re-run from here. Later turns are archived.'**
+  String get edit_turn_body;
+
+  /// No description provided for @edit_turn_send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get edit_turn_send;
+
+  /// No description provided for @restore_turn_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore to this checkpoint?'**
+  String get restore_turn_title;
+
+  /// No description provided for @restore_turn_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything after this prompt is removed from the conversation, and the prompt runs again from here.'**
+  String get restore_turn_body;
+
+  /// No description provided for @restore_turn_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore & rerun'**
+  String get restore_turn_confirm;
+
+  /// No description provided for @edit_turn_later_turns_body.
+  ///
+  /// In en, this message translates to:
+  /// **'This will archive later turns from the conversation. Continue?'**
+  String get edit_turn_later_turns_body;
 }
 
 class _AppLocalizationsDelegate

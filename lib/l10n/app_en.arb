@@ -77,8 +77,20 @@
   "ng_model_switches_next_turn": "Switches to {model} at the next turn.",
   "ng_model_switch_not_connected": "The chat is not ready for a model switch. Reopen it and try again.",
   "ng_gateway_kept_default_model": "The gateway kept {model} for this chat. Pick the model again before sending.",
-  "@ng_model_switches_next_turn": {"placeholders": {"model": {"type": "String"}}},
-  "@ng_gateway_kept_default_model": {"placeholders": {"model": {"type": "String"}}},
+  "@ng_model_switches_next_turn": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      }
+    }
+  },
+  "@ng_gateway_kept_default_model": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      }
+    }
+  },
   "hands_free_title": "Hands-free",
   "hands_free_start": "Start hands-free",
   "hands_free_stop": "Stop hands-free",
@@ -1398,7 +1410,9 @@
   "composer_failure_retry_at": "Retry at {time}",
   "@composer_failure_retry_at": {
     "placeholders": {
-      "time": {"type": "String"}
+      "time": {
+        "type": "String"
+      }
     }
   },
   "composer_failure_compress": "Compress",
@@ -1406,7 +1420,9 @@
   "composer_failure_switch_to": "Switch to {model}",
   "@composer_failure_switch_to": {
     "placeholders": {
-      "model": {"type": "String"}
+      "model": {
+        "type": "String"
+      }
     }
   },
   "composer_failure_new_chat": "New chat",
@@ -1420,7 +1436,9 @@
   "composer_failure_confirm_model": "Switch this chat to {model}?",
   "@composer_failure_confirm_model": {
     "placeholders": {
-      "model": {"type": "String"}
+      "model": {
+        "type": "String"
+      }
     }
   },
   "composer_drop_attach": "Drop to attach",
@@ -1428,37 +1446,45 @@
   "composer_drop_reference": "Drop to reference",
   "composer_reference_copy": "Copy reference",
   "composer_reference_remove": "Remove reference",
-  "composer_btw_usage": "Usage: /btw <question> \u2014 answered from a snapshot of this conversation without interrupting it.",
-  "composer_background_usage": "Usage: /background <prompt> \u2014 the task runs separately and the result comes back here.",
-  "composer_handoff_usage": "Usage: /handoff <platform> \u2014 transfer this chat to that messaging platform.",
+  "composer_btw_usage": "Usage: /btw <question> — answered from a snapshot of this conversation without interrupting it.",
+  "composer_background_usage": "Usage: /background <prompt> — the task runs separately and the result comes back here.",
+  "composer_handoff_usage": "Usage: /handoff <platform> — transfer this chat to that messaging platform.",
   "composer_command_needs_session": "This command needs an open chat.",
   "composer_retry_not_found": "This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.",
   "composer_retry_unavailable": "Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.",
   "composer_command_needs_gateway_session": "This chat has no gateway session yet. Send a message first, then run the command again.",
-  "composer_side_question": "btw \u2014 answering from a conversation snapshot",
-  "composer_side_question_id": "btw {id} \u2014 answering from a conversation snapshot",
+  "composer_side_question": "btw — answering from a conversation snapshot",
+  "composer_side_question_id": "btw {id} — answering from a conversation snapshot",
   "@composer_side_question_id": {
     "placeholders": {
-      "id": {"type": "String"}
+      "id": {
+        "type": "String"
+      }
     }
   },
   "composer_background_started": "Background task started. You can keep chatting. The result will appear here.",
   "composer_background_started_id": "Background task {id} started. You can keep chatting. The result will appear here.",
   "@composer_background_started_id": {
     "placeholders": {
-      "id": {"type": "String"}
+      "id": {
+        "type": "String"
+      }
     }
   },
   "composer_handoff_requested": "Handoff to {platform} requested.",
   "@composer_handoff_requested": {
     "placeholders": {
-      "platform": {"type": "String"}
+      "platform": {
+        "type": "String"
+      }
     }
   },
   "composer_handoff_done": "Handed this chat to {platform}.",
   "@composer_handoff_done": {
     "placeholders": {
-      "platform": {"type": "String"}
+      "platform": {
+        "type": "String"
+      }
     }
   },
   "composer_handoff_failed": "Handoff failed.",
@@ -1813,7 +1839,13 @@
   "ng_choose_project": "Choose a project",
   "ng_project_cwd_fallback": "The project folder wasn't available, so this chat runs in {path}.",
   "ng_project_create_uncertain": "The gateway may have created this chat, but did not confirm it. Check Chats before starting another; this request will not be retried automatically.",
-  "@ng_project_cwd_fallback": {"placeholders": {"path": {"type": "String"}}},
+  "@ng_project_cwd_fallback": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "ng_what_should_we_work_on": "What should we work on?",
   "ng_ask_hermes_anything_it_can_run": "Ask Hermes anything. It can run tools, browse and work in your files on the server.",
   "ng_working_2": "Working · {frame}",
@@ -2677,24 +2709,57 @@
   "ng_models_custom_endpoint": "Runs on a custom endpoint. Change it on the gateway.",
   "ng_models_context_window": "Context window",
   "ng_models_token_count": "{count} tokens",
-  "@ng_models_token_count": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_models_token_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_models_context_override": "Set on the gateway. Auto-detected: {count} tokens.",
-  "@ng_models_context_override": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_models_context_override": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_models_max_output": "Max output",
   "ng_models_input_price": "Input price",
   "ng_models_output_price": "Output price",
   "ng_models_cache_price": "Cached input price",
   "ng_models_per_million": "{price} per 1M tokens",
-  "@ng_models_per_million": {"placeholders": {"price": {"type": "String"}}},
+  "@ng_models_per_million": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "ng_models_price_pair": "{input} in · {output} out per 1M tokens",
-  "@ng_models_price_pair": {"placeholders": {"input": {"type": "String"}, "output": {"type": "String"}}},
+  "@ng_models_price_pair": {
+    "placeholders": {
+      "input": {
+        "type": "String"
+      },
+      "output": {
+        "type": "String"
+      }
+    }
+  },
   "ng_models_free": "Free",
   "ng_models_vision": "Vision",
   "ng_models_reasoning": "Reasoning",
   "ng_models_fast": "Fast mode",
   "ng_models_in_use": "In use",
   "ng_models_count": "{count, plural, one{{count} model} other{{count} models}}",
-  "@ng_models_count": {"placeholders": {"count": {"type": "int"}}},
+  "@ng_models_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_models_rate_limited": "Rate-limited",
   "ng_models_plan_locked": "Not on your plan",
   "ng_models_unsaved": "Unsaved changes",
@@ -2725,5 +2790,12 @@
   "ng_aux_profile_describer": "Profile descriptions",
   "ng_aux_profile_describer_hint": "Writes each profile's short description",
   "ng_aux_curator": "Curator",
-  "ng_aux_curator_hint": "Reviews how skills are used"
+  "ng_aux_curator_hint": "Reviews how skills are used",
+  "edit_turn_title": "Edit this prompt?",
+  "edit_turn_body": "The prompt will be re-run from here. Later turns are archived.",
+  "edit_turn_send": "Send",
+  "restore_turn_title": "Restore to this checkpoint?",
+  "restore_turn_body": "Everything after this prompt is removed from the conversation, and the prompt runs again from here.",
+  "restore_turn_confirm": "Restore & rerun",
+  "edit_turn_later_turns_body": "This will archive later turns from the conversation. Continue?"
 }

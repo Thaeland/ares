@@ -29,6 +29,7 @@ import '../../core/widgets/transcript_body.dart';
 import '../../core/services/chat_presentation_state.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/widgets/composer_prompt_recall.dart';
+import '../../core/widgets/rewind_dialogs.dart';
 import '../../core/composer/composer_commands.dart';
 import '../../core/composer/composer_drag.dart';
 import '../../core/composer/composer_intake.dart';
@@ -1667,6 +1668,54 @@ class _NgChatViewState extends State<NgChatView>
     }
   }
 
+  /// Stored prompt positions among visible user turns. The durable target is
+  /// resolved against `session.history`; these positions only drive the
+  /// destructive-cut confirm and the ordinal fallback on legacy gateways.
+  ({int ordinal, bool laterTurns}) _turnPosition(NgUserItem item) {
+    final users = chat.items
+        .whereType<NgUserItem>()
+        .where((entry) => !entry.steered)
+        .toList();
+    final index = users.indexOf(item);
+    return (
+      ordinal: index < 0 ? users.length : index,
+      laterTurns: index >= 0 && index < users.length - 1,
+    );
+  }
+
+  Future<void> _editTurn(NgUserItem item) async {
+    if (chat.running) return;
+    final edited = await showDialog<String>(
+      context: context,
+      builder: (_) => EditTurnDialog(initialText: item.text),
+    );
+    if (!mounted || edited == null) return;
+    final text = edited.trim();
+    if (text.isEmpty || text == item.text.trim()) return;
+    final position = _turnPosition(item);
+    if (position.laterTurns && !await showRestoreTurnConfirm(context)) return;
+    if (!mounted) return;
+    await chat.rewindUserTurn(
+      text: text,
+      sourceText: item.text.trim(),
+      truncateOrdinal: position.ordinal,
+      confirmDeepTruncate: position.laterTurns,
+    );
+  }
+
+  Future<void> _restoreTurn(NgUserItem item) async {
+    if (chat.running) return;
+    if (!await showRestoreTurnConfirm(context)) return;
+    if (!mounted) return;
+    final position = _turnPosition(item);
+    await chat.rewindUserTurn(
+      text: item.text.trim(),
+      sourceText: item.text.trim(),
+      truncateOrdinal: position.ordinal,
+      confirmDeepTruncate: position.laterTurns,
+    );
+  }
+
   Widget _errorBar(NgColors c) {
     final message = chat.error ?? '';
     final surface = chat.turnFailure;
@@ -1890,6 +1939,12 @@ class _NgChatViewState extends State<NgChatView>
         item: item,
         onRetry: i == lastUserIndex && !chat.running && !item.recoverInComposer
             ? () => unawaited(_retry())
+            : null,
+        onEdit: !item.pending && item.failure == null
+            ? () => unawaited(_editTurn(item))
+            : null,
+        onRestore: !item.pending && item.failure == null
+            ? () => unawaited(_restoreTurn(item))
             : null,
       ),
       NgAssistantItem() => Column(
@@ -2498,9 +2553,16 @@ class _CommandCardState extends State<_CommandCard> {
 }
 
 class _UserBubble extends StatelessWidget {
-  const _UserBubble({required this.item, this.onRetry});
+  const _UserBubble({
+    required this.item,
+    this.onRetry,
+    this.onEdit,
+    this.onRestore,
+  });
   final NgUserItem item;
   final VoidCallback? onRetry;
+  final VoidCallback? onEdit;
+  final VoidCallback? onRestore;
 
   @override
   Widget build(BuildContext context) {
@@ -2591,6 +2653,25 @@ class _UserBubble extends StatelessWidget {
                 key: const ValueKey('ng-user-time'),
                 style: NgType.caption.copyWith(color: c.textMuted),
               ),
+            ),
+          if (onEdit != null || onRestore != null)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (onEdit != null)
+                  TextButton(
+                    key: const Key('ng-user-edit'),
+                    onPressed: onEdit,
+                    child: Text(context.l10n.edit_and_resend),
+                  ),
+                if (onRestore != null)
+                  TextButton(
+                    key: const Key('ng-user-restore'),
+                    onPressed: onRestore,
+                    child: Text(context.l10n.restore_turn_confirm),
+                  ),
+                const SizedBox(width: 12),
+              ],
             ),
           if (item.failure != null)
             Padding(

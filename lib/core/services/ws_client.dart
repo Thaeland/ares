@@ -18,6 +18,8 @@ import '../models/client_certificate.dart';
 import '../models/slash_command.dart';
 import 'hermes_sign_in.dart';
 import 'tls_client_factory.dart';
+import '../history/rewind_submit.dart'
+    show isRejectedDeepTruncatePayload, stripRejectedDeepTruncate;
 
 Object? _deepFreezeJson(Object? value) {
   if (value is Map) {
@@ -1376,7 +1378,33 @@ class WsClient {
           error,
           fallbackMessage: 'Unknown error',
         );
-        if (isRejectedSubmissionIdError(rpcError)) {
+        // Backends predating confirm_deep_truncate reject it at contract
+        // admission (4000, handler never runs). The user already confirmed
+        // the deep cut, so retry once without only that field — mirror of
+        // Desktop's runRewindSubmit (rewind.ts).
+        final sent = <String, dynamic>{
+          ...baseParams,
+          'submission_id': effectiveSubmissionId,
+        };
+        if (isRejectedDeepTruncatePayload(
+          code: rpcError.code,
+          message: rpcError.message,
+          sentParams: sent,
+        )) {
+          response = await send(
+            'prompt.submit',
+            stripRejectedDeepTruncate(sent),
+            onSent: onSent,
+          );
+          error = response['error'];
+          if (error != null) {
+            throw _gatewayResponseError(
+              'prompt.submit',
+              error,
+              fallbackMessage: 'Unknown error',
+            );
+          }
+        } else if (isRejectedSubmissionIdError(rpcError)) {
           if (beforeLegacy != null) await beforeLegacy();
           // The refusal crossed an async boundary: re-validate admission and
           // socket ownership before the compatibility retry writes again, so

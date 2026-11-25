@@ -10,6 +10,8 @@ import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import '../widgets/session_name_dialog.dart';
+import '../widgets/rewind_dialogs.dart';
+import '../history/rewind_submit.dart' show RewindPlan, buildRewindParams;
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -2136,13 +2138,6 @@ class _ChatScreenState extends State<ChatScreen>
     unawaited(_refreshProjectName());
   }
 
-  void _editAndResend(String text) {
-    _textController
-      ..text = text
-      ..selection = TextSelection.collapsed(offset: text.length);
-    FocusScope.of(context).nextFocus();
-  }
-
   /// Whether Retry can regenerate here: only the Desktop gateway's stock
   /// owner path truncates (Desktop's `runReload`).
   bool get _canRegenerate =>
@@ -2192,6 +2187,116 @@ class _ChatScreenState extends State<ChatScreen>
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  /// User rows the transcript currently renders, used only for positions in
+  /// the rewind/edit confirm path. The durable row id is resolved against
+  /// `session.history` on the gateway, never from these client-side rows.
+  List<Map<String, dynamic>> get _rewindRows {
+    final received = _normalSnapshot?.displayRows ?? const [];
+    return received.isNotEmpty ? received : _messages;
+  }
+
+  /// Best-effort visible-user ordinal of a stored prompt plus whether later
+  /// user turns would be archived by cutting at it (Desktop's
+  /// `visibleUserOrdinal` / `confirmIfDeepCut`). Identical prompts resolve to
+  /// their most recent occurrence; the gateway content lookup has the last
+  /// word on the durable target.
+  ({int ordinal, bool laterTurns}) _userTurnPosition(String content) {
+    final wanted = content.trim();
+    var count = 0;
+    var matched = -1;
+    for (final row in _rewindRows) {
+      if (row['role'] != 'user') continue;
+      if (_transcriptText(row).trim() == wanted) matched = count;
+      count++;
+    }
+    return (
+      ordinal: matched < 0 ? count : matched,
+      laterTurns: matched >= 0 && matched < count - 1,
+    );
+  }
+
+  /// One truncating `prompt.submit` for Edit and Restore (Desktop rewind
+  /// semantics). The composer draft is never consumed (`textOverride`), a
+  /// live turn is interrupted first, and a cut that archives later user turns
+  /// requires the destructive checkpoint confirm before any wire call.
+  Future<void> _submitRewindTurn({
+    required String text,
+    required String sourceText,
+    required int truncateOrdinal,
+    required bool laterTurns,
+    bool alwaysConfirm = false,
+  }) async {
+    final l10n = context.sharedL10n;
+    final gateway = _desktopGateway;
+    final session = _normalLocalSessionKey;
+    if (!_canRegenerate ||
+        gateway == null ||
+        !gateway.hasLiveSession(session)) {
+      _showRetryNotice(l10n.composer_retry_unavailable);
+      return;
+    }
+    if (laterTurns || alwaysConfirm) {
+      final confirmed = await showRestoreTurnConfirm(context);
+      if (!mounted || !confirmed) return;
+    }
+    final plan = await RewindPlan.resolve(
+      requestGateway: gateway.requestSessionRpc,
+      sessionId: session,
+      truncateOrdinal: truncateOrdinal,
+      truncateMessageId: null,
+      truncateRowId: null,
+      sourceText: sourceText,
+    );
+    if (!mounted) return;
+    if (_sending || _streaming || _preparingSend || _pendingReattachResync) {
+      return;
+    }
+    // Best-effort interrupt before the rewind, as Desktop's runRewindSubmit.
+    try {
+      await gateway.interruptPrompt(sessionId: session);
+    } catch (_) {
+      // The submit still gates on the gateway's own busy state.
+    }
+    if (!mounted) return;
+    await _sendMessage(
+      textOverride: text.trim(),
+      promptParams: buildRewindParams(plan, confirmDeepTruncate: laterTurns),
+    );
+  }
+
+  /// Re-run a stored prompt with edited text. Cancel or no change sends
+  /// nothing; the edited text replaces the turn, never appends a new one.
+  Future<void> _editAndResendTurn(String content) async {
+    if (_archiving || _sending || _preparingSend) return;
+    final edited = await showDialog<String>(
+      context: context,
+      builder: (_) => EditTurnDialog(initialText: content),
+    );
+    if (!mounted || edited == null) return;
+    final text = edited.trim();
+    if (text.isEmpty || text == content.trim()) return;
+    final position = _userTurnPosition(content);
+    await _submitRewindTurn(
+      text: text,
+      sourceText: content.trim(),
+      truncateOrdinal: position.ordinal,
+      laterTurns: position.laterTurns,
+    );
+  }
+
+  /// Restore a stored prompt to this checkpoint after explicit confirmation.
+  Future<void> _restoreUserTurn(String content) async {
+    if (_archiving || _sending || _preparingSend) return;
+    final position = _userTurnPosition(content);
+    await _submitRewindTurn(
+      text: content.trim(),
+      sourceText: content.trim(),
+      truncateOrdinal: position.ordinal,
+      laterTurns: position.laterTurns,
+      alwaysConfirm: true,
+    );
   }
 
   /// The newest prompt the person sent here, for Retry.
@@ -9607,7 +9712,12 @@ class _ChatScreenState extends State<ChatScreen>
       onReadAloud: isUser
           ? null
           : () => _readAssistantText(content, announce: true),
-      onEdit: isUser ? () => _editAndResend(content) : null,
+      onEdit: isUser && _canRegenerate
+          ? () => unawaited(_editAndResendTurn(content))
+          : null,
+      onRestore: isUser && _canRegenerate
+          ? () => unawaited(_restoreUserTurn(content))
+          : null,
       // Regenerate needs a transport that truncates; elsewhere Retry would
       // only append the same turn again.
       onRetry: isUser || !_canRegenerate
@@ -9997,6 +10107,7 @@ class MessageBubble extends StatelessWidget {
   final Map<String, dynamic> metadata;
   final Future<void> Function()? onReadAloud;
   final VoidCallback? onEdit;
+  final VoidCallback? onRestore;
   final Future<void> Function()? onRetry;
   final bool mediaReferencesFinal;
 
@@ -10021,6 +10132,7 @@ class MessageBubble extends StatelessWidget {
     this.metadata = const {},
     this.onReadAloud,
     this.onEdit,
+    this.onRestore,
     this.onRetry,
     this.mediaFilesClient,
     this.mediaSourceIdentity,
@@ -10403,6 +10515,18 @@ class MessageBubble extends StatelessWidget {
                     onEdit!();
                   },
                 ),
+              if (onRestore != null)
+                _actionTile(
+                  sheetContext,
+                  key: const Key('message-action-restore'),
+                  label: context.l10n.restore_turn_confirm,
+                  tooltip: context.l10n.restore_turn_confirm,
+                  icon: Icons.settings_backup_restore,
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    onRestore!();
+                  },
+                ),
               if (onRetry != null)
                 _actionTile(
                   sheetContext,
@@ -10505,12 +10629,14 @@ class MessageBubble extends StatelessWidget {
 
   Widget _actionTile(
     BuildContext context, {
+    Key? key,
     required String label,
     required String tooltip,
     required IconData icon,
     required VoidCallback onTap,
   }) {
     return Semantics(
+      key: key,
       label: label,
       button: true,
       excludeSemantics: true,
