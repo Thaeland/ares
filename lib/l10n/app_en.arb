@@ -1,4 +1,5 @@
 {
+  "slash_local_arguments": "This shortcut does not accept arguments here. Use the app controls; your draft was kept.",
   "fallback_title": "Fallback models",
   "fallback_notice": "Tried in order when the main model is unavailable. Changes apply to this profile only; save the complete list explicitly.",
   "fallback_unavailable": "Fallback settings are unavailable or invalid. Check the connection, selected profile and host version, then retry.",
@@ -1331,6 +1332,8 @@
   "slash_command_no_output": "The command completed with no output.",
   "slash_command_delivery_unknown": "The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.",
   "slash_command_failed": "The command could not be run.",
+  "slash_command_unsupported": "This command is not available on this server.",
+  "slash_sessions_inline": "Open the session list to choose a chat. Your draft was kept.",
   "nextgen_toggle": "NextGen interface",
   "nextgen_toggle_subtitle": "A new design with one sign-in, live chats and network discovery. Your gateways and chats are shared with this interface.",
   "nextgen_single_login": "Sign in with one login",

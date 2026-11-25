@@ -9,6 +9,9 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get slash_local_arguments => '此处的快捷命令不支持参数。请使用应用中的控件；草稿已保留。';
+
+  @override
   String get fallback_title => '备用模型';
 
   @override
@@ -3817,6 +3820,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get slash_command_failed => 'The command could not be run.';
 
   @override
+  String get slash_command_unsupported => '此命令在此服务器上不可用。';
+
+  @override
+  String get slash_sessions_inline => '请打开会话列表选择聊天。草稿已保留。';
+
+  @override
   String get nextgen_toggle => 'NextGen 界面';
 
   @override
@@ -5807,6 +5816,9 @@ class AppLocalizationsZh extends AppLocalizations {
 /// The translations for Chinese, using the Han script (`zh_Hans`).
 class AppLocalizationsZhHans extends AppLocalizationsZh {
   AppLocalizationsZhHans() : super('zh_Hans');
+
+  @override
+  String get slash_local_arguments => '此处的快捷命令不支持参数。请使用应用中的控件；草稿已保留。';
 
   @override
   String get fallback_title => '备用模型';
@@ -9423,6 +9435,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get slash_command_failed => 'The command could not be run.';
+
+  @override
+  String get slash_command_unsupported => '此命令在此服务器上不可用。';
+
+  @override
+  String get slash_sessions_inline => '请打开会话列表选择聊天。草稿已保留。';
 
   @override
   String get nextgen_toggle => 'NextGen 界面';

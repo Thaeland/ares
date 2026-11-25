@@ -1,4 +1,5 @@
 {
+  "slash_local_arguments": "Este atajo no admite argumentos aquí. Usa los controles de la aplicación; se conservó tu borrador.",
   "fallback_title": "Modelos de respaldo",
   "fallback_notice": "Se prueban en orden cuando el modelo principal no está disponible. Los cambios solo afectan a este perfil; guarda explícitamente la lista completa.",
   "fallback_unavailable": "La configuración de respaldo no está disponible o no es válida. Revisa la conexión, el perfil seleccionado y la versión del servidor e inténtalo de nuevo.",
@@ -1085,6 +1086,8 @@
   "slash_command_no_output": "The command completed with no output.",
   "slash_command_delivery_unknown": "The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.",
   "slash_command_failed": "The command could not be run.",
+  "slash_command_unsupported": "Este comando no está disponible en este servidor.",
+  "slash_sessions_inline": "Abre la lista de sesiones para elegir un chat. Se conservó tu borrador.",
   "nextgen_toggle": "Interfaz NextGen",
   "nextgen_toggle_subtitle": "Un diseño nuevo con un solo inicio de sesión, chats en directo y búsqueda en la red. Tus gateways y chats se comparten con esta interfaz.",
   "nextgen_single_login": "Conectar con un solo inicio de sesión",
