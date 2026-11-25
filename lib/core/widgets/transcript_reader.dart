@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// [index] is the actual builder index (including paging/status rows), not
 /// the chronological ordinal. [id] survives list growth while seeking.
 typedef TranscriptEntry = ({Object id, int index, String text, bool prompt});
+typedef _TimelineChoice = ({TranscriptEntry? prompt});
 typedef _Hit = ({Object id, int occurrence, int offset});
 
 String readingPositionKey(
@@ -71,6 +72,7 @@ class TranscriptReader extends StatefulWidget {
     required this.scroll,
     required this.entries,
     required this.storageKey,
+    this.owner,
     required this.child,
     this.reverse = false,
     this.onNavigate,
@@ -79,6 +81,7 @@ class TranscriptReader extends StatefulWidget {
   final ScrollController scroll;
   final List<TranscriptEntry> Function() entries;
   final String? storageKey;
+  final Object? owner;
   final bool reverse;
   final VoidCallback? onNavigate;
   final VoidCallback? onLatest;
@@ -98,6 +101,7 @@ class TranscriptReaderState extends State<TranscriptReader> {
   String? _notice;
   SharedPreferences? _prefs;
   late String? _scope;
+  DialogRoute<_TimelineChoice>? _timeline;
 
   @override
   void initState() {
@@ -108,13 +112,26 @@ class TranscriptReaderState extends State<TranscriptReader> {
   @override
   void didUpdateWidget(covariant TranscriptReader oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.storageKey != widget.storageKey ||
+    if (oldWidget.owner != widget.owner ||
+        oldWidget.storageKey != widget.storageKey ||
         oldWidget.scroll != widget.scroll) {
       _resetScope();
     }
   }
 
+  // A modal lives on the navigator, not under this State. Invalidate its
+  // callbacks now and remove that exact route after widget-tree teardown.
+  void _dismissTimeline() {
+    final route = _timeline;
+    _timeline = null;
+    if (route == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (route.isActive) route.navigator?.removeRoute(route);
+    });
+  }
+
   void _resetScope() {
+    _dismissTimeline();
     final epoch = ++_generation;
     _scope = widget.storageKey;
     _open = false;
@@ -186,6 +203,7 @@ class TranscriptReaderState extends State<TranscriptReader> {
 
   @override
   void dispose() {
+    _dismissTimeline();
     _field.dispose();
     _focus.dispose();
     super.dispose();
@@ -390,17 +408,21 @@ class TranscriptReaderState extends State<TranscriptReader> {
 
   Future<void> _prompts() async {
     final rows = widget.entries().where((e) => e.prompt).toList();
-    final scope = _scope;
-    final choice = await showDialog<TranscriptEntry>(
+    if (_timeline != null) return;
+    late final DialogRoute<_TimelineChoice> route;
+    void choose(TranscriptEntry? prompt) {
+      if (mounted && identical(_timeline, route) && route.isCurrent) {
+        route.navigator!.pop<_TimelineChoice>((prompt: prompt));
+      }
+    }
+
+    route = DialogRoute<_TimelineChoice>(
       context: context,
-      builder: (ctx) => AlertDialog(
+      builder: (_) => AlertDialog(
         title: const Text('Loaded prompts'),
         actions: [
           TextButton.icon(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _latest();
-            },
+            onPressed: () => choose(null),
             icon: const Icon(Icons.vertical_align_bottom),
             label: const Text('Jump to latest'),
           ),
@@ -419,15 +441,24 @@ class TranscriptReaderState extends State<TranscriptReader> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    onTap: () => Navigator.pop(ctx, rows[i]),
+                    onTap: () => choose(rows[i]),
                   ),
                 ),
         ),
       ),
     );
-    if (!mounted || scope != _scope || choice == null) return;
-    _field.clear();
-    _select(choice.id, 0);
+    _timeline = route;
+    final choice = await Navigator.of(context, rootNavigator: true).push(route);
+    if (!mounted || !identical(_timeline, route)) return;
+    _timeline = null;
+    if (choice == null) return;
+    final prompt = choice.prompt;
+    if (prompt == null) {
+      _latest();
+    } else {
+      _field.clear();
+      _select(prompt.id, 0);
+    }
   }
 
   @override

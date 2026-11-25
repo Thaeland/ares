@@ -845,6 +845,7 @@ class _NgChatViewState extends State<NgChatView> {
     final scope = NgScope.of(context);
     return TranscriptReader(
       key: _reader,
+      owner: chat,
       scroll: _scroll,
       reverse: true,
       storageKey: chat.storedId == null
