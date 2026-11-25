@@ -6954,6 +6954,31 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get desktop_hotkey_reset => 'Usar padrão';
+
+  @override
+  String get capture_screen_action => 'Capturar tela';
+
+  @override
+  String get capture_screen_help =>
+      'Adiciona uma captura de tela à mensagem como rascunho. Nada é enviado até você clicar em Enviar.';
+
+  @override
+  String get capture_screen_unavailable =>
+      'A captura de tela não está disponível nesta área de trabalho.';
+
+  @override
+  String get capture_screen_failed =>
+      'Não foi possível capturar a tela. Tente novamente.';
+
+  @override
+  String get capture_permission_title => 'Permitir gravação de tela';
+
+  @override
+  String get capture_permission_body =>
+      'Para capturar uma janela, o Ares precisa da permissão de gravação de tela. Ative o Ares em Ajustes do Sistema > Privacidade e Segurança > Gravação de Tela e tente novamente.';
+
+  @override
+  String get capture_open_settings => 'Abrir Ajustes do Sistema';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -13332,4 +13357,29 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get desktop_hotkey_reset => 'Usar padrão';
+
+  @override
+  String get capture_screen_action => 'Capturar tela';
+
+  @override
+  String get capture_screen_help =>
+      'Adiciona uma captura de tela à mensagem como rascunho. Nada é enviado até você clicar em Enviar.';
+
+  @override
+  String get capture_screen_unavailable =>
+      'A captura de tela não está disponível nesta área de trabalho.';
+
+  @override
+  String get capture_screen_failed =>
+      'Não foi possível capturar a tela. Tente novamente.';
+
+  @override
+  String get capture_permission_title => 'Permitir gravação de tela';
+
+  @override
+  String get capture_permission_body =>
+      'Para capturar uma janela, o Ares precisa da permissão de gravação de tela. Ative o Ares em Ajustes do Sistema > Privacidade e Segurança > Gravação de Tela e tente novamente.';
+
+  @override
+  String get capture_open_settings => 'Abrir Ajustes do Sistema';
 }

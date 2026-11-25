@@ -6754,4 +6754,27 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get desktop_hotkey_reset => '既定値を使用';
+
+  @override
+  String get capture_screen_action => '画面をキャプチャ';
+
+  @override
+  String get capture_screen_help =>
+      'スクリーンショットを下書きとしてメッセージに追加します。送信を押すまで何も送信されません。';
+
+  @override
+  String get capture_screen_unavailable => 'このデスクトップでは画面キャプチャを利用できません。';
+
+  @override
+  String get capture_screen_failed => '画面をキャプチャできませんでした。もう一度お試しください。';
+
+  @override
+  String get capture_permission_title => '画面収録を許可';
+
+  @override
+  String get capture_permission_body =>
+      'ウィンドウをキャプチャするには、Ares に画面収録の許可が必要です。システム設定 > プライバシーとセキュリティ > 画面収録 で Ares をオンにしてから、もう一度お試しください。';
+
+  @override
+  String get capture_open_settings => 'システム設定を開く';
 }

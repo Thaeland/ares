@@ -6900,4 +6900,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get desktop_hotkey_reset => 'Use default';
+
+  @override
+  String get capture_screen_action => 'Capture screen';
+
+  @override
+  String get capture_screen_help =>
+      'Adds a screenshot to the message as a draft. Nothing is sent until you press Send.';
+
+  @override
+  String get capture_screen_unavailable =>
+      'Screen capture isn\'t available on this desktop.';
+
+  @override
+  String get capture_screen_failed =>
+      'Couldn\'t capture the screen. Try again.';
+
+  @override
+  String get capture_permission_title => 'Allow screen recording';
+
+  @override
+  String get capture_permission_body =>
+      'To capture a window, Ares needs the Screen Recording permission. Turn on Ares in System Settings > Privacy & Security > Screen Recording, then try again.';
+
+  @override
+  String get capture_open_settings => 'Open System Settings';
 }

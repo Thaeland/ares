@@ -6898,4 +6898,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get desktop_hotkey_reset => 'استخدام الافتراضي';
+
+  @override
+  String get capture_screen_action => 'التقاط الشاشة';
+
+  @override
+  String get capture_screen_help =>
+      'يضيف لقطة شاشة إلى الرسالة كمسودة. لا يُرسَل شيء حتى تضغط إرسال.';
+
+  @override
+  String get capture_screen_unavailable =>
+      'التقاط الشاشة غير متاح على سطح المكتب هذا.';
+
+  @override
+  String get capture_screen_failed => 'تعذّر التقاط الشاشة. حاول مرة أخرى.';
+
+  @override
+  String get capture_permission_title => 'السماح بتسجيل الشاشة';
+
+  @override
+  String get capture_permission_body =>
+      'يحتاج Ares إلى إذن تسجيل الشاشة لالتقاط نافذة. فعّل Ares في إعدادات النظام > الخصوصية والأمن > تسجيل الشاشة، ثم حاول مرة أخرى.';
+
+  @override
+  String get capture_open_settings => 'فتح إعدادات النظام';
 }

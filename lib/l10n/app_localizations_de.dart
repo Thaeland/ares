@@ -6958,4 +6958,29 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get desktop_hotkey_reset => 'Standard verwenden';
+
+  @override
+  String get capture_screen_action => 'Bildschirm aufnehmen';
+
+  @override
+  String get capture_screen_help =>
+      'Fügt der Nachricht einen Screenshot als Entwurf hinzu. Gesendet wird erst, wenn du auf Senden drückst.';
+
+  @override
+  String get capture_screen_unavailable =>
+      'Bildschirmaufnahmen sind in dieser Arbeitsumgebung nicht verfügbar.';
+
+  @override
+  String get capture_screen_failed =>
+      'Der Bildschirm konnte nicht aufgenommen werden. Versuche es erneut.';
+
+  @override
+  String get capture_permission_title => 'Bildschirmaufnahme erlauben';
+
+  @override
+  String get capture_permission_body =>
+      'Um ein Fenster aufzunehmen, braucht Ares die Berechtigung „Bildschirmaufnahme“. Aktiviere Ares unter Systemeinstellungen > Datenschutz & Sicherheit > Bildschirmaufnahme und versuche es dann erneut.';
+
+  @override
+  String get capture_open_settings => 'Systemeinstellungen öffnen';
 }

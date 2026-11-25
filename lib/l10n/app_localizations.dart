@@ -11648,6 +11648,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use default'**
   String get desktop_hotkey_reset;
+
+  /// No description provided for @capture_screen_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Capture screen'**
+  String get capture_screen_action;
+
+  /// No description provided for @capture_screen_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds a screenshot to the message as a draft. Nothing is sent until you press Send.'**
+  String get capture_screen_help;
+
+  /// No description provided for @capture_screen_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen capture isn\'t available on this desktop.'**
+  String get capture_screen_unavailable;
+
+  /// No description provided for @capture_screen_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t capture the screen. Try again.'**
+  String get capture_screen_failed;
+
+  /// No description provided for @capture_permission_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow screen recording'**
+  String get capture_permission_title;
+
+  /// No description provided for @capture_permission_body.
+  ///
+  /// In en, this message translates to:
+  /// **'To capture a window, Ares needs the Screen Recording permission. Turn on Ares in System Settings > Privacy & Security > Screen Recording, then try again.'**
+  String get capture_permission_body;
+
+  /// No description provided for @capture_open_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open System Settings'**
+  String get capture_open_settings;
 }
 
 class _AppLocalizationsDelegate

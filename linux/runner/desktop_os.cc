@@ -92,9 +92,18 @@ struct _AresDesktopOs {
   std::vector<guint> session_signals;
   std::vector<std::string> awake_owners;
   std::string inhibit_handle;
+  // Screen capture through the xdg-desktop-portal Screenshot dialog, which
+  // is also the user's consent. One capture at a time.
+  FlMethodChannel* capture = nullptr;
+  FlMethodCall* capture_call = nullptr;
+  guint capture_signal = 0;
+  std::string capture_directory;
+  std::string capture_request;
 };
 
 namespace {
+
+void FailCapture(AresDesktopOs* self, const char* code);
 
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 
@@ -465,6 +474,12 @@ void StopPower(AresDesktopOs* self) {
     g_cancellable_cancel(self->cancellable);
     g_clear_object(&self->cancellable);
   }
+  if (self->capture_call != nullptr) FailCapture(self, "cancelled");
+  if (self->capture != nullptr) {
+    fl_method_channel_set_method_call_handler(self->capture, nullptr, nullptr,
+                                              nullptr);
+    g_clear_object(&self->capture);
+  }
   ReleaseInhibit(self);
   for (guint id : self->system_signals) {
     g_dbus_connection_signal_unsubscribe(self->system_bus, id);
@@ -481,6 +496,174 @@ void StopPower(AresDesktopOs* self) {
                                               nullptr);
     g_clear_object(&self->power);
   }
+}
+
+void FinishCapture(AresDesktopOs* self, FlMethodResponse* response) {
+  if (self->capture_signal != 0 && self->session_bus != nullptr) {
+    g_dbus_connection_signal_unsubscribe(self->session_bus,
+                                         self->capture_signal);
+  }
+  self->capture_signal = 0;
+  self->capture_request.clear();
+  FlMethodCall* call = self->capture_call;
+  self->capture_call = nullptr;
+  if (call != nullptr) {
+    Respond(call, response);
+    g_object_unref(call);
+  }
+}
+
+void FailCapture(AresDesktopOs* self, const char* code) {
+  g_autoptr(FlMethodResponse) response = FL_METHOD_RESPONSE(
+      fl_method_error_response_new(code, nullptr, nullptr));
+  FinishCapture(self, response);
+}
+
+// Portal Request::Response(u response, a{sv} results): 0 success with a
+// file:// "uri", 1 cancelled by the user, 2 any other failure.
+void CaptureResponseCb(GDBusConnection*, const gchar*, const gchar* path,
+                       const gchar*, const gchar*, GVariant* parameters,
+                       gpointer user_data) {
+  auto* self = static_cast<AresDesktopOs*>(user_data);
+  if (self->capture_call == nullptr || self->capture_request != path ||
+      !g_variant_is_of_type(parameters, G_VARIANT_TYPE("(ua{sv})"))) {
+    return;
+  }
+  guint32 code = 2;
+  g_autoptr(GVariant) results = nullptr;
+  g_variant_get(parameters, "(u@a{sv})", &code, &results);
+  if (code == 1) {
+    FailCapture(self, "cancelled");
+    return;
+  }
+  const gchar* uri = nullptr;
+  if (code != 0 || !g_variant_lookup(results, "uri", "&s", &uri)) {
+    FailCapture(self, "failed");
+    return;
+  }
+  g_autofree gchar* source_path = g_filename_from_uri(uri, nullptr, nullptr);
+  if (source_path == nullptr) {
+    FailCapture(self, "failed");
+    return;
+  }
+  // Copy into Ares' private folder; the portal's file stays where the
+  // desktop saved it.
+  g_autofree gchar* name = g_strdup_printf(
+      "screenshot-%" G_GINT64_FORMAT ".png", g_get_real_time() / 1000);
+  g_autofree gchar* target_path =
+      g_build_filename(self->capture_directory.c_str(), name, nullptr);
+  g_autoptr(GFile) source = g_file_new_for_path(source_path);
+  g_autoptr(GFile) target = g_file_new_for_path(target_path);
+  if (!g_file_copy(source, target, G_FILE_COPY_NONE, nullptr, nullptr,
+                   nullptr, nullptr)) {
+    FailCapture(self, "failed");
+    return;
+  }
+  g_autoptr(FlValue) value = fl_value_new_string(target_path);
+  g_autoptr(FlMethodResponse) response =
+      FL_METHOD_RESPONSE(fl_method_success_response_new(value));
+  FinishCapture(self, response);
+}
+
+void ScreenshotCallCb(GObject* source, GAsyncResult* result,
+                      gpointer user_data) {
+  g_autoptr(GError) error = nullptr;
+  g_autoptr(GVariant) reply = g_dbus_connection_call_finish(
+      G_DBUS_CONNECTION(source), result, &error);
+  if (reply == nullptr) {
+    if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) return;
+    FailCapture(static_cast<AresDesktopOs*>(user_data), "unsupported");
+    return;
+  }
+  auto* self = static_cast<AresDesktopOs*>(user_data);
+  const gchar* handle = nullptr;
+  g_variant_get(reply, "(&o)", &handle);
+  // Older portals ignore handle_token: follow the handle they returned.
+  if (handle != nullptr && self->capture_request != handle &&
+      self->capture_call != nullptr) {
+    g_dbus_connection_signal_unsubscribe(self->session_bus,
+                                         self->capture_signal);
+    self->capture_request = handle;
+    self->capture_signal = g_dbus_connection_signal_subscribe(
+        self->session_bus, "org.freedesktop.portal.Desktop",
+        "org.freedesktop.portal.Request", "Response", handle, nullptr,
+        G_DBUS_SIGNAL_FLAGS_NONE, CaptureResponseCb, self, nullptr);
+  }
+}
+
+void StartCapture(AresDesktopOs* self, FlMethodCall* call) {
+  const std::string directory =
+      StringArg(fl_method_call_get_args(call), "directory");
+  if (directory.empty() || !g_file_test(directory.c_str(), G_FILE_TEST_IS_DIR)) {
+    g_autoptr(FlMethodResponse) response = FL_METHOD_RESPONSE(
+        fl_method_error_response_new("bad-args", "capture expects {directory}",
+                                     nullptr));
+    Respond(call, response);
+    return;
+  }
+  if (self->session_bus == nullptr || self->capture_call != nullptr) {
+    g_autoptr(FlMethodResponse) response = FL_METHOD_RESPONSE(
+        fl_method_error_response_new(
+            self->session_bus == nullptr ? "unsupported" : "failed", nullptr,
+            nullptr));
+    Respond(call, response);
+    return;
+  }
+  self->capture_call = FL_METHOD_CALL(g_object_ref(call));
+  self->capture_directory = directory;
+  // Subscribe before calling, at the request path the portal will use.
+  g_autofree gchar* token = g_strdup_printf("ares%u", g_random_int());
+  std::string sender = g_dbus_connection_get_unique_name(self->session_bus);
+  if (!sender.empty() && sender[0] == ':') sender.erase(0, 1);
+  std::replace(sender.begin(), sender.end(), '.', '_');
+  self->capture_request =
+      "/org/freedesktop/portal/desktop/request/" + sender + "/" + token;
+  self->capture_signal = g_dbus_connection_signal_subscribe(
+      self->session_bus, "org.freedesktop.portal.Desktop",
+      "org.freedesktop.portal.Request", "Response",
+      self->capture_request.c_str(), nullptr, G_DBUS_SIGNAL_FLAGS_NONE,
+      CaptureResponseCb, self, nullptr);
+  GVariantBuilder options;
+  g_variant_builder_init(&options, G_VARIANT_TYPE_VARDICT);
+  g_variant_builder_add(&options, "{sv}", "handle_token",
+                        g_variant_new_string(token));
+  // Interactive: the user picks the screen, window or area, and consents.
+  g_variant_builder_add(&options, "{sv}", "interactive",
+                        g_variant_new_boolean(TRUE));
+  g_variant_builder_add(&options, "{sv}", "modal",
+                        g_variant_new_boolean(TRUE));
+  g_dbus_connection_call(
+      self->session_bus, "org.freedesktop.portal.Desktop",
+      "/org/freedesktop/portal/desktop", "org.freedesktop.portal.Screenshot",
+      "Screenshot", g_variant_new("(sa{sv})", "", &options),
+      G_VARIANT_TYPE("(o)"), G_DBUS_CALL_FLAGS_NONE, -1, self->cancellable,
+      ScreenshotCallCb, self);
+}
+
+void CaptureCallCb(FlMethodChannel*, FlMethodCall* call, gpointer user_data) {
+  auto* self = static_cast<AresDesktopOs*>(user_data);
+  const gchar* method = fl_method_call_get_name(call);
+  if (strcmp(method, "capture") == 0) {
+    StartCapture(self, call);
+    return;
+  }
+  g_autoptr(FlMethodResponse) response = nullptr;
+  if (strcmp(method, "status") == 0 ||
+      strcmp(method, "requestPermission") == 0) {
+    // The portal dialog is the consent for each capture.
+    g_autoptr(FlValue) value = fl_value_new_map();
+    fl_value_set_string_take(value, "supported",
+                             fl_value_new_bool(self->session_bus != nullptr));
+    fl_value_set_string_take(value, "permission",
+                             fl_value_new_string("not-required"));
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(value));
+  } else if (strcmp(method, "openSettings") == 0) {
+    g_autoptr(FlValue) value = fl_value_new_bool(FALSE);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(value));
+  } else {
+    response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
+  }
+  Respond(call, response);
 }
 
 gboolean QuitIdleCb(gpointer user_data) {
@@ -574,6 +757,10 @@ void ares_desktop_os_attach(FlView* view, GtkWindow* window) {
   self->power = fl_method_channel_new(messenger, "com.hermesagent.ares/power",
                                       FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(self->power, PowerCallCb, self,
+                                            nullptr);
+  self->capture = fl_method_channel_new(
+      messenger, "com.hermesagent.ares/capture", FL_METHOD_CODEC(codec));
+  fl_method_channel_set_method_call_handler(self->capture, CaptureCallCb, self,
                                             nullptr);
   WatchPower(self);
   g_signal_connect(window, "delete-event", G_CALLBACK(DeleteEventCb), self);

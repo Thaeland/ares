@@ -1829,5 +1829,12 @@
   "desktop_hotkey_reserved": "系统已在使用此快捷键。",
   "desktop_hotkey_in_app": "Ares 已将此快捷键用于{action}。",
   "desktop_hotkey_change": "更改",
-  "desktop_hotkey_reset": "使用默认值"
+  "desktop_hotkey_reset": "使用默认值",
+  "capture_screen_action": "截取屏幕",
+  "capture_screen_help": "将截图作为草稿添加到消息中。在你按下发送之前不会发送任何内容。",
+  "capture_screen_unavailable": "此桌面无法使用屏幕截取。",
+  "capture_screen_failed": "无法截取屏幕。请重试。",
+  "capture_permission_title": "允许录屏",
+  "capture_permission_body": "要截取窗口，Ares 需要录屏权限。请在“系统设置” > “隐私与安全性” > “录屏”中打开 Ares，然后重试。",
+  "capture_open_settings": "打开系统设置"
 }

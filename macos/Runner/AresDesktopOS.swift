@@ -4,6 +4,8 @@
 //   com.hermesagent.ares/shell   setTray, showWindow, quit; onTrayAction
 //   com.hermesagent.ares/hotkey  register, unregister; onHotKey
 //   com.hermesagent.ares/power   isSupported, setAwake; onPowerEvent
+//   com.hermesagent.ares/capture status, requestPermission, openSettings,
+//                                capture
 //
 // Only the primary process creates this. Pop-out, companion and quick-entry
 // children are separate processes started with a marker argument and never
@@ -13,6 +15,7 @@ import Carbon.HIToolbox
 import Cocoa
 import FlutterMacOS
 import IOKit.pwr_mgt
+import ScreenCaptureKit
 
 /// True when this process is a child window (pop-out chat, companion or
 /// quick entry), started by the primary with a marker argument.
@@ -37,6 +40,8 @@ final class AresDesktopOS: NSObject {
   private var hotKeyHandler: EventHandlerRef?
 
   private let powerChannel: FlutterMethodChannel
+  private let captureChannel: FlutterMethodChannel
+  private var capturing = false
   private var powerObservers: [(NotificationCenter, NSObjectProtocol)] = []
   private var awakeOwners = Set<String>()
   private var awakeAssertion: IOPMAssertionID?
@@ -60,6 +65,10 @@ final class AresDesktopOS: NSObject {
       name: "com.hermesagent.ares/power",
       binaryMessenger: messenger
     )
+    captureChannel = FlutterMethodChannel(
+      name: "com.hermesagent.ares/capture",
+      binaryMessenger: messenger
+    )
     self.window = window
     super.init()
     // A hidden window must be shown again, not recreated.
@@ -72,6 +81,9 @@ final class AresDesktopOS: NSObject {
     }
     powerChannel.setMethodCallHandler { [weak self] call, result in
       self?.handlePower(call, result: result)
+    }
+    captureChannel.setMethodCallHandler { [weak self] call, result in
+      self?.handleCapture(call, result: result)
     }
     observePower()
   }
@@ -93,6 +105,72 @@ final class AresDesktopOS: NSObject {
     shellChannel.setMethodCallHandler(nil)
     hotkeyChannel.setMethodCallHandler(nil)
     powerChannel.setMethodCallHandler(nil)
+    captureChannel.setMethodCallHandler(nil)
+  }
+
+  // MARK: - Screen capture (frontmost window of another app)
+
+  private static let askedKey = "ares.capture.permissionRequested"
+
+  private func captureStatus() -> [String: Any] {
+    let supported: Bool
+    if #available(macOS 14.0, *) { supported = true } else { supported = false }
+    let permission: String
+    if CGPreflightScreenCaptureAccess() {
+      permission = "granted"
+    } else if UserDefaults.standard.bool(forKey: Self.askedKey) {
+      permission = "denied"
+    } else {
+      permission = "prompt"
+    }
+    return ["supported": supported, "permission": permission]
+  }
+
+  private func handleCapture(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    switch call.method {
+    case "status":
+      result(captureStatus())
+    case "requestPermission":
+      // Shows the system prompt once; later the user grants it in Settings.
+      UserDefaults.standard.set(true, forKey: Self.askedKey)
+      _ = CGRequestScreenCaptureAccess()
+      result(captureStatus())
+    case "openSettings":
+      let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture")
+      result(url.map { NSWorkspace.shared.open($0) } ?? false)
+    case "capture":
+      guard let args = call.arguments as? [String: Any],
+            let directory = args["directory"] as? String, !directory.isEmpty
+      else {
+        result(FlutterError(code: "bad-args", message: "capture expects {directory}", details: nil))
+        return
+      }
+      guard #available(macOS 14.0, *) else {
+        result(FlutterError(code: "unsupported", message: "Needs macOS 14", details: nil))
+        return
+      }
+      guard CGPreflightScreenCaptureAccess() else {
+        result(FlutterError(code: "permission-denied", message: nil, details: nil))
+        return
+      }
+      guard !capturing else {
+        result(FlutterError(code: "failed", message: "busy", details: nil))
+        return
+      }
+      capturing = true
+      Task { @MainActor [weak self] in
+        defer { self?.capturing = false }
+        do {
+          let image = try await AresWindowCapture.frontmostImage()
+          let path = try AresWindowCapture.writePNG(image, directory: directory)
+          result(path)
+        } catch {
+          result(FlutterError(code: "failed", message: nil, details: nil))
+        }
+      }
+    default:
+      result(FlutterMethodNotImplemented)
+    }
   }
 
   // MARK: - Power: sleep/wake, lock/unlock, keep-awake
@@ -321,6 +399,69 @@ final class AresDesktopOS: NSObject {
   @objc private func trayItemChosen(_ sender: NSMenuItem) {
     guard trayItemIds.indices.contains(sender.tag) else { return }
     shellChannel.invokeMethod("onTrayAction", arguments: trayItemIds[sender.tag])
+  }
+}
+
+/// Captures the frontmost window that does not belong to Ares (any Ares
+/// process: main, pop-out, companion, quick entry), or the main display
+/// without Ares' windows when there is none.
+@available(macOS 14.0, *)
+enum AresWindowCapture {
+  enum Failure: Error { case noContent, encode }
+
+  @MainActor
+  static func frontmostImage() async throws -> CGImage {
+    let content = try await SCShareableContent.excludingDesktopWindows(
+      true, onScreenWindowsOnly: true)
+    let ownBundle = Bundle.main.bundleIdentifier
+    func isAres(_ pid: pid_t) -> Bool {
+      pid == getpid() ||
+        (ownBundle != nil &&
+          NSRunningApplication(processIdentifier: pid)?.bundleIdentifier == ownBundle)
+    }
+    // CGWindowList is front-to-back; ScreenCaptureKit's list is unordered.
+    let ordered = (CGWindowListCopyWindowInfo(
+      [.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID)
+      as? [[String: Any]]) ?? []
+    for entry in ordered {
+      guard (entry[kCGWindowLayer as String] as? Int) == 0,
+            let pid = entry[kCGWindowOwnerPID as String] as? pid_t, !isAres(pid),
+            let number = entry[kCGWindowNumber as String] as? UInt32,
+            let window = content.windows.first(where: { $0.windowID == number }),
+            window.frame.width >= 40, window.frame.height >= 40
+      else { continue }
+      let filter = SCContentFilter(desktopIndependentWindow: window)
+      return try await capture(filter, size: window.frame.size)
+    }
+    guard let display = content.displays.first(where: {
+      $0.displayID == CGMainDisplayID()
+    }) ?? content.displays.first else { throw Failure.noContent }
+    let ares = content.applications.filter { isAres($0.processID) }
+    let filter = SCContentFilter(
+      display: display, excludingApplications: ares, exceptingWindows: [])
+    return try await capture(filter, size: display.frame.size)
+  }
+
+  @MainActor
+  private static func capture(_ filter: SCContentFilter, size: CGSize) async throws -> CGImage {
+    let config = SCStreamConfiguration()
+    let scale = CGFloat(filter.pointPixelScale)
+    config.width = max(1, Int(size.width * scale))
+    config.height = max(1, Int(size.height * scale))
+    config.showsCursor = false
+    return try await SCScreenshotManager.captureImage(
+      contentFilter: filter, configuration: config)
+  }
+
+  static func writePNG(_ image: CGImage, directory: String) throws -> String {
+    let rep = NSBitmapImageRep(cgImage: image)
+    guard let data = rep.representation(using: .png, properties: [:]) else {
+      throw Failure.encode
+    }
+    let name = "screenshot-\(Int(Date().timeIntervalSince1970 * 1000)).png"
+    let url = URL(fileURLWithPath: directory, isDirectory: true).appendingPathComponent(name)
+    try data.write(to: url, options: .withoutOverwriting)
+    return url.path
   }
 }
 

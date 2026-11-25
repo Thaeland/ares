@@ -6660,6 +6660,28 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get desktop_hotkey_reset => '使用默认值';
+
+  @override
+  String get capture_screen_action => '截取屏幕';
+
+  @override
+  String get capture_screen_help => '将截图作为草稿添加到消息中。在你按下发送之前不会发送任何内容。';
+
+  @override
+  String get capture_screen_unavailable => '此桌面无法使用屏幕截取。';
+
+  @override
+  String get capture_screen_failed => '无法截取屏幕。请重试。';
+
+  @override
+  String get capture_permission_title => '允许录屏';
+
+  @override
+  String get capture_permission_body =>
+      '要截取窗口，Ares 需要录屏权限。请在“系统设置” > “隐私与安全性” > “录屏”中打开 Ares，然后重试。';
+
+  @override
+  String get capture_open_settings => '打开系统设置';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -12750,6 +12772,28 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get desktop_hotkey_reset => '使用默认值';
+
+  @override
+  String get capture_screen_action => '截取屏幕';
+
+  @override
+  String get capture_screen_help => '将截图作为草稿添加到消息中。在你按下发送之前不会发送任何内容。';
+
+  @override
+  String get capture_screen_unavailable => '此桌面无法使用屏幕截取。';
+
+  @override
+  String get capture_screen_failed => '无法截取屏幕。请重试。';
+
+  @override
+  String get capture_permission_title => '允许录屏';
+
+  @override
+  String get capture_permission_body =>
+      '要截取窗口，Ares 需要录屏权限。请在“系统设置” > “隐私与安全性” > “录屏”中打开 Ares，然后重试。';
+
+  @override
+  String get capture_open_settings => '打开系统设置';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -19238,4 +19282,26 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get desktop_hotkey_reset => '使用預設值';
+
+  @override
+  String get capture_screen_action => '擷取螢幕';
+
+  @override
+  String get capture_screen_help => '將螢幕截圖作為草稿加入訊息。在你按下傳送之前不會傳送任何內容。';
+
+  @override
+  String get capture_screen_unavailable => '此桌面無法使用螢幕擷取。';
+
+  @override
+  String get capture_screen_failed => '無法擷取螢幕。請再試一次。';
+
+  @override
+  String get capture_permission_title => '允許螢幕錄製';
+
+  @override
+  String get capture_permission_body =>
+      '若要擷取視窗，Ares 需要螢幕錄製權限。請在「系統設定」>「隱私權與安全性」>「螢幕錄製」中開啟 Ares，然後再試一次。';
+
+  @override
+  String get capture_open_settings => '開啟系統設定';
 }

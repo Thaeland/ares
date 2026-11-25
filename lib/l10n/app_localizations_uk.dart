@@ -6954,4 +6954,29 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get desktop_hotkey_reset => 'За замовчуванням';
+
+  @override
+  String get capture_screen_action => 'Знімок екрана';
+
+  @override
+  String get capture_screen_help =>
+      'Додає знімок екрана до повідомлення як чернетку. Нічого не надсилається, доки ви не натиснете «Надіслати».';
+
+  @override
+  String get capture_screen_unavailable =>
+      'Знімок екрана недоступний у цьому середовищі.';
+
+  @override
+  String get capture_screen_failed =>
+      'Не вдалося зробити знімок екрана. Спробуйте ще раз.';
+
+  @override
+  String get capture_permission_title => 'Дозвольте запис екрана';
+
+  @override
+  String get capture_permission_body =>
+      'Щоб зробити знімок вікна, Ares потрібен дозвіл на запис екрана. Увімкніть Ares у «Системні параметри» > «Приватність і безпека» > «Запис екрана», а потім спробуйте ще раз.';
+
+  @override
+  String get capture_open_settings => 'Відкрити Системні параметри';
 }

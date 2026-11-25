@@ -136,6 +136,8 @@ import 'package:hermes_android/core/l10n/l10n.dart';
 import '../widgets/desktop_shortcuts.dart';
 import '../widgets/composer_prompt_recall.dart';
 import '../widgets/orphan_draft_recovery.dart';
+import '../desktop/desktop_os.dart';
+import '../desktop/screen_capture.dart';
 
 /// Recovery v2 opens a new server session and cannot yet target an existing
 /// Gateway session. Keep it confined to locally-created drafts; a session from
@@ -598,6 +600,9 @@ class ChatScreen extends StatefulWidget {
   @visibleForTesting
   final AttachmentDraftService? testAttachmentDraftService;
 
+  /// Desktop screen capture; tests pass a fake-channel controller.
+  final ScreenCaptureController? screenCapture;
+
   @visibleForTesting
   final TestRemotePromptSubmit? testRemotePromptSubmit;
 
@@ -715,6 +720,7 @@ class ChatScreen extends StatefulWidget {
     this.testRemotePromptSubmit,
     this.testNormalResume,
     this.testServerFilePicker,
+    this.screenCapture,
     this.testRemoteAttachmentUpload,
     this.testInitialAttachmentDrafts = const [],
     this.testComposerDraftReader,
@@ -4052,6 +4058,17 @@ class _ChatScreenState extends State<ChatScreen>
                 unawaited(_pickServerFile());
               },
             ),
+            if (isDesktopOs)
+              ListTile(
+                key: const Key('classic-attach-capture-screen'),
+                leading: const Icon(Icons.screenshot_monitor_outlined),
+                title: Text(context.l10n.capture_screen_action),
+                subtitle: Text(context.l10n.capture_screen_help),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  unawaited(_captureScreen());
+                },
+              ),
             if (_desktopGateway != null)
               ListTile(
                 leading: const Icon(Icons.description_outlined),
@@ -4067,6 +4084,17 @@ class _ChatScreenState extends State<ChatScreen>
           ],
         ),
       ),
+    );
+  }
+
+  /// Adds a screen capture as an image draft through the picked-image
+  /// path. Never sends.
+  Future<void> _captureScreen() async {
+    await captureScreenIntoDraft(
+      context,
+      controller: widget.screenCapture,
+      attach: (png, name) =>
+          _preparePickedImages([XFile(png.path, name: name)]),
     );
   }
 

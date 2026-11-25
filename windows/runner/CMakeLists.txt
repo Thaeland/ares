@@ -9,6 +9,7 @@ project(runner LANGUAGES CXX)
 add_executable(${BINARY_NAME} WIN32
   "ares_platform.cpp"
   "desktop_os.cpp"
+  "screen_capture.cpp"
   "toast_channel.cpp"
   "toast_backend.cpp"
   "flutter_window.cpp"
@@ -40,6 +41,7 @@ target_link_libraries(${BINARY_NAME} PRIVATE flutter flutter_wrapper_app)
 target_link_libraries(${BINARY_NAME} PRIVATE "dwmapi.lib")
 target_link_libraries(${BINARY_NAME} PRIVATE "shell32.lib" "ole32.lib" "windowsapp.lib" "shlwapi.lib")
 target_link_libraries(${BINARY_NAME} PRIVATE "wtsapi32.lib")
+target_link_libraries(${BINARY_NAME} PRIVATE "d3d11.lib" "dxgi.lib" "windowscodecs.lib")
 target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}")
 
 # Run the Flutter tool portions of the build. This must not be removed.

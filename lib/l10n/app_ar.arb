@@ -2884,5 +2884,12 @@
   "desktop_hotkey_reserved": "يستخدم النظام هذا الاختصار بالفعل.",
   "desktop_hotkey_in_app": "يستخدم Ares هذا الاختصار بالفعل لـ {action}.",
   "desktop_hotkey_change": "تغيير",
-  "desktop_hotkey_reset": "استخدام الافتراضي"
+  "desktop_hotkey_reset": "استخدام الافتراضي",
+  "capture_screen_action": "التقاط الشاشة",
+  "capture_screen_help": "يضيف لقطة شاشة إلى الرسالة كمسودة. لا يُرسَل شيء حتى تضغط إرسال.",
+  "capture_screen_unavailable": "التقاط الشاشة غير متاح على سطح المكتب هذا.",
+  "capture_screen_failed": "تعذّر التقاط الشاشة. حاول مرة أخرى.",
+  "capture_permission_title": "السماح بتسجيل الشاشة",
+  "capture_permission_body": "يحتاج Ares إلى إذن تسجيل الشاشة لالتقاط نافذة. فعّل Ares في إعدادات النظام > الخصوصية والأمن > تسجيل الشاشة، ثم حاول مرة أخرى.",
+  "capture_open_settings": "فتح إعدادات النظام"
 }

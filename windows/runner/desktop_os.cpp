@@ -11,6 +11,7 @@
 #include <variant>
 
 #include "resource.h"
+#include "screen_capture.h"
 
 namespace {
 
@@ -19,6 +20,8 @@ using flutter::EncodableMap;
 using flutter::EncodableValue;
 
 constexpr UINT kTrayCallback = WM_APP + 0x41;
+constexpr UINT kCapturePicked = WM_APP + 0x42;
+constexpr UINT kCaptureDone = WM_APP + 0x43;
 constexpr UINT kTrayIconId = 1;
 
 const EncodableValue* Field(const EncodableMap& map, const char* key) {
@@ -40,6 +43,18 @@ std::string StringField(const EncodableMap& map, const char* key) {
 
 std::wstring Wide(const std::u16string& text) {
   return std::wstring(text.begin(), text.end());
+}
+
+std::wstring WideFromUtf8(const std::string& text) {
+  if (text.empty()) return std::wstring();
+  const int size = static_cast<int>(text.size());
+  const int length = ::MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+                                           text.c_str(), size, nullptr, 0);
+  if (length <= 0) return std::wstring();
+  std::wstring wide(static_cast<size_t>(length), L'\0');
+  ::MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, text.c_str(), size,
+                        wide.data(), length);
+  return wide;
 }
 
 }  // namespace
@@ -65,6 +80,12 @@ DesktopOs::DesktopOs(HWND window, flutter::FlutterEngine* engine)
   power_->SetMethodCallHandler([this](const auto& call, auto result) {
     HandlePower(call, std::move(result));
   });
+  capture_ = std::make_unique<flutter::MethodChannel<EncodableValue>>(
+      engine->messenger(), "com.hermesagent.ares/capture",
+      &flutter::StandardMethodCodec::GetInstance());
+  capture_->SetMethodCallHandler([this](const auto& call, auto result) {
+    HandleCapture(call, std::move(result));
+  });
   // Lock/unlock arrive as WM_WTSSESSION_CHANGE; suspend/resume as
   // WM_POWERBROADCAST, which every top-level window receives.
   session_notifications_ =
@@ -78,6 +99,8 @@ DesktopOs::~DesktopOs() {
   RemoveTray();
   if (session_notifications_) ::WTSUnRegisterSessionNotification(window_);
   if (awake_.Any()) ::SetThreadExecutionState(ES_CONTINUOUS);
+  if (capture_result_) capture_result_->Error("cancelled", "window closed");
+  if (capture_) capture_->SetMethodCallHandler(nullptr);
   if (power_) power_->SetMethodCallHandler(nullptr);
   if (hotkey_) hotkey_->SetMethodCallHandler(nullptr);
   if (shell_) shell_->SetMethodCallHandler(nullptr);
@@ -211,6 +234,65 @@ void DesktopOs::HandlePower(
   result->Success();
 }
 
+void DesktopOs::HandleCapture(
+    const flutter::MethodCall<EncodableValue>& call, Result result) {
+  const std::string& method = call.method_name();
+  if (method == "status" || method == "requestPermission") {
+    // The Graphics Capture picker is the consent for each capture.
+    result->Success(EncodableValue(EncodableMap{
+        {EncodableValue("supported"),
+         EncodableValue(ares::capture::Supported())},
+        {EncodableValue("permission"), EncodableValue("not-required")},
+    }));
+    return;
+  }
+  if (method == "openSettings") {
+    result->Success(EncodableValue(false));
+    return;
+  }
+  if (method != "capture") {
+    result->NotImplemented();
+    return;
+  }
+  const auto* args = std::get_if<EncodableMap>(call.arguments());
+  const std::wstring directory =
+      WideFromUtf8(args ? StringField(*args, "directory") : std::string());
+  const DWORD attributes =
+      directory.empty() ? INVALID_FILE_ATTRIBUTES
+                        : ::GetFileAttributesW(directory.c_str());
+  if (attributes == INVALID_FILE_ATTRIBUTES ||
+      !(attributes & FILE_ATTRIBUTE_DIRECTORY)) {
+    result->Error("bad-args", "capture expects {directory}");
+    return;
+  }
+  if (!ares::capture::Supported()) {
+    result->Error("unsupported", "Windows Graphics Capture is unavailable");
+    return;
+  }
+  if (capture_result_) {
+    result->Error("failed", "busy");
+    return;
+  }
+  capture_result_ = std::move(result);
+  capture_directory_ = directory;
+  if (!ares::capture::Pick(window_, kCapturePicked)) {
+    FinishCapture(std::string(), "failed");
+  }
+}
+
+void DesktopOs::FinishCapture(const std::string& path,
+                              const std::string& error) {
+  Result result = std::move(capture_result_);
+  capture_result_ = nullptr;
+  capture_directory_.clear();
+  if (!result) return;
+  if (!error.empty()) {
+    result->Error(error, error);
+  } else {
+    result->Success(EncodableValue(path));
+  }
+}
+
 void DesktopOs::UnregisterHotkey() {
   if (!hotkey_registered_) return;
   ::UnregisterHotKey(window_, ares::desktop::kHotkeyId);
@@ -318,6 +400,26 @@ std::optional<LRESULT> DesktopOs::HandleMessage(HWND, UINT message,
       InstallTray();
     }
     return std::nullopt;
+  }
+  if (message == kCapturePicked) {
+    auto* picked = reinterpret_cast<ares::capture::Picked*>(lparam);
+    if (!capture_result_) {
+      ares::capture::Release(picked);
+    } else if (!picked) {
+      FinishCapture(std::string(), "cancelled");
+    } else {
+      ares::capture::CaptureAsync(window_, kCaptureDone, picked,
+                                  capture_directory_);
+    }
+    return 0;
+  }
+  if (message == kCaptureDone) {
+    std::unique_ptr<ares::capture::Outcome> outcome(
+        reinterpret_cast<ares::capture::Outcome*>(lparam));
+    if (outcome && capture_result_) {
+      FinishCapture(outcome->path, outcome->error);
+    }
+    return 0;
   }
   if (const char* event = ares::desktop::PowerEventName(
           message, static_cast<unsigned long long>(wparam))) {

@@ -60,6 +60,20 @@ A small always-on-top window for typing a prompt into a chosen chat or a new one
 - macOS: `NSWorkspace` will-sleep/did-wake and session resign/become active, plus the `com.apple.screenIsLocked`/`Unlocked` distributed notifications.
 - Linux: logind `PrepareForSleep` (system bus), the session's `Lock`/`Unlock` signals and `LockedHint` (session found with `GetSessionByPID`), and `ActiveChanged` from `org.freedesktop.ScreenSaver` / `org.gnome.ScreenSaver` (session bus). GIO only; no new library.
 
+## Screen capture — `com.hermesagent.ares/capture`
+
+| Direction | Method | Arguments | Result |
+| --- | --- | --- | --- |
+| Dart → runner | `status`, `requestPermission` | — | `{supported, permission}` with `granted`, `denied`, `prompt` or `not-required` |
+| Dart → runner | `openSettings` | — | `bool` (macOS privacy pane) |
+| Dart → runner | `capture` | `{directory}` | PNG path inside `directory`; errors `cancelled`, `permission-denied`, `unsupported`, `failed` |
+
+- **Capture screen** in the attach sheet of both composers (Classic and NextGen, desktop only). The capture becomes an ordinary image draft through each composer's existing attachment path; the user reviews it and presses Send. **Never auto-sends.**
+- Dart creates a private `ares-capture-*` folder, accepts only a non-empty PNG (signature checked, ≤ 25 MB) inside that folder, and removes the folder once the draft has its own copy or the capture is rejected.
+- macOS (14 or later): `CGPreflightScreenCaptureAccess`; the first request shows the system prompt (`CGRequestScreenCaptureAccess`); afterwards Ares explains the Screen Recording setting and opens it (`x-apple.systempreferences:…Privacy_ScreenCapture`). The capture is the frontmost on-screen window of another app (no Ares process: main, pop-out, companion, quick entry), or the main display without Ares' windows, via ScreenCaptureKit `SCScreenshotManager`. macOS 13 reports `unsupported`.
+- Windows: Windows Graphics Capture with the system `GraphicsCapturePicker` (the picker is the consent; the user chooses a window or display). One frame is copied to a staging texture on a worker thread, made opaque and written as PNG with WIC; results return to the UI thread as window messages. Links `d3d11`, `dxgi`, `windowscodecs`.
+- Linux: xdg-desktop-portal `Screenshot` with `interactive: true` (the portal dialog is the consent and lets the user pick screen, window or area). The portal's file is copied into Ares' folder; the desktop's own copy stays where it saved it. No portal → `unsupported`.
+
 ## Checks without an app build
 
 - `tool/native_tests/run.sh` — host C++17 unit tests (`clang++ -std=c++17 -Wall -Wextra -Werror -pedantic`) for the platform-free headers `windows/runner/desktop_os_logic.h` and `linux/runner/desktop_os_logic.h`.

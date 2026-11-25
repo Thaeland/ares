@@ -1829,5 +1829,12 @@
   "desktop_hotkey_reserved": "O sistema já usa este atalho.",
   "desktop_hotkey_in_app": "O Ares já usa este atalho para {action}.",
   "desktop_hotkey_change": "Alterar",
-  "desktop_hotkey_reset": "Usar padrão"
+  "desktop_hotkey_reset": "Usar padrão",
+  "capture_screen_action": "Capturar tela",
+  "capture_screen_help": "Adiciona uma captura de tela à mensagem como rascunho. Nada é enviado até você clicar em Enviar.",
+  "capture_screen_unavailable": "A captura de tela não está disponível nesta área de trabalho.",
+  "capture_screen_failed": "Não foi possível capturar a tela. Tente novamente.",
+  "capture_permission_title": "Permitir gravação de tela",
+  "capture_permission_body": "Para capturar uma janela, o Ares precisa da permissão de gravação de tela. Ative o Ares em Ajustes do Sistema > Privacidade e Segurança > Gravação de Tela e tente novamente.",
+  "capture_open_settings": "Abrir Ajustes do Sistema"
 }

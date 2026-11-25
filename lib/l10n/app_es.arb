@@ -1829,5 +1829,12 @@
   "desktop_hotkey_reserved": "El sistema ya usa este atajo.",
   "desktop_hotkey_in_app": "Ares ya usa este atajo para {action}.",
   "desktop_hotkey_change": "Cambiar",
-  "desktop_hotkey_reset": "Usar predeterminado"
+  "desktop_hotkey_reset": "Usar predeterminado",
+  "capture_screen_action": "Capturar pantalla",
+  "capture_screen_help": "Añade una captura al mensaje como borrador. No se envía nada hasta que pulses Enviar.",
+  "capture_screen_unavailable": "La captura de pantalla no está disponible en este escritorio.",
+  "capture_screen_failed": "No se pudo capturar la pantalla. Inténtalo de nuevo.",
+  "capture_permission_title": "Permitir la grabación de pantalla",
+  "capture_permission_body": "Para capturar una ventana, Ares necesita el permiso de grabación de pantalla. Activa Ares en Ajustes del Sistema > Privacidad y seguridad > Grabación de pantalla y vuelve a intentarlo.",
+  "capture_open_settings": "Abrir Ajustes del Sistema"
 }

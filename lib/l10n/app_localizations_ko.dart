@@ -6760,4 +6760,27 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get desktop_hotkey_reset => '기본값 사용';
+
+  @override
+  String get capture_screen_action => '화면 캡처';
+
+  @override
+  String get capture_screen_help =>
+      '스크린샷을 메시지에 초안으로 추가합니다. 보내기를 누르기 전에는 아무것도 전송되지 않습니다.';
+
+  @override
+  String get capture_screen_unavailable => '이 데스크톱에서는 화면 캡처를 사용할 수 없습니다.';
+
+  @override
+  String get capture_screen_failed => '화면을 캡처할 수 없습니다. 다시 시도하세요.';
+
+  @override
+  String get capture_permission_title => '화면 기록 허용';
+
+  @override
+  String get capture_permission_body =>
+      '창을 캡처하려면 Ares에 화면 기록 권한이 필요합니다. 시스템 설정 > 개인정보 보호 및 보안 > 화면 기록에서 Ares를 켠 다음 다시 시도하세요.';
+
+  @override
+  String get capture_open_settings => '시스템 설정 열기';
 }

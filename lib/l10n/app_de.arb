@@ -1829,5 +1829,12 @@
   "desktop_hotkey_reserved": "Das System verwendet dieses Tastenkürzel bereits.",
   "desktop_hotkey_in_app": "Ares verwendet dieses Tastenkürzel bereits für {action}.",
   "desktop_hotkey_change": "Ändern",
-  "desktop_hotkey_reset": "Standard verwenden"
+  "desktop_hotkey_reset": "Standard verwenden",
+  "capture_screen_action": "Bildschirm aufnehmen",
+  "capture_screen_help": "Fügt der Nachricht einen Screenshot als Entwurf hinzu. Gesendet wird erst, wenn du auf Senden drückst.",
+  "capture_screen_unavailable": "Bildschirmaufnahmen sind in dieser Arbeitsumgebung nicht verfügbar.",
+  "capture_screen_failed": "Der Bildschirm konnte nicht aufgenommen werden. Versuche es erneut.",
+  "capture_permission_title": "Bildschirmaufnahme erlauben",
+  "capture_permission_body": "Um ein Fenster aufzunehmen, braucht Ares die Berechtigung „Bildschirmaufnahme“. Aktiviere Ares unter Systemeinstellungen > Datenschutz & Sicherheit > Bildschirmaufnahme und versuche es dann erneut.",
+  "capture_open_settings": "Systemeinstellungen öffnen"
 }

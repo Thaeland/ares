@@ -2896,5 +2896,12 @@
   "desktop_hotkey_reserved": "系統已在使用此快捷鍵。",
   "desktop_hotkey_in_app": "Ares 已將此快捷鍵用於{action}。",
   "desktop_hotkey_change": "變更",
-  "desktop_hotkey_reset": "使用預設值"
+  "desktop_hotkey_reset": "使用預設值",
+  "capture_screen_action": "擷取螢幕",
+  "capture_screen_help": "將螢幕截圖作為草稿加入訊息。在你按下傳送之前不會傳送任何內容。",
+  "capture_screen_unavailable": "此桌面無法使用螢幕擷取。",
+  "capture_screen_failed": "無法擷取螢幕。請再試一次。",
+  "capture_permission_title": "允許螢幕錄製",
+  "capture_permission_body": "若要擷取視窗，Ares 需要螢幕錄製權限。請在「系統設定」>「隱私權與安全性」>「螢幕錄製」中開啟 Ares，然後再試一次。",
+  "capture_open_settings": "開啟系統設定"
 }

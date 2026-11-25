@@ -6952,4 +6952,29 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get desktop_hotkey_reset => 'Usar predeterminado';
+
+  @override
+  String get capture_screen_action => 'Capturar pantalla';
+
+  @override
+  String get capture_screen_help =>
+      'Añade una captura al mensaje como borrador. No se envía nada hasta que pulses Enviar.';
+
+  @override
+  String get capture_screen_unavailable =>
+      'La captura de pantalla no está disponible en este escritorio.';
+
+  @override
+  String get capture_screen_failed =>
+      'No se pudo capturar la pantalla. Inténtalo de nuevo.';
+
+  @override
+  String get capture_permission_title => 'Permitir la grabación de pantalla';
+
+  @override
+  String get capture_permission_body =>
+      'Para capturar una ventana, Ares necesita el permiso de grabación de pantalla. Activa Ares en Ajustes del Sistema > Privacidad y seguridad > Grabación de pantalla y vuelve a intentarlo.';
+
+  @override
+  String get capture_open_settings => 'Abrir Ajustes del Sistema';
 }

@@ -67,6 +67,8 @@ import 'sessions_sidebar.dart';
 import 'slash_command_info.dart';
 import 'widgets.dart';
 import '../nextgen_l10n.dart';
+import '../../core/desktop/desktop_os.dart';
+import '../../core/desktop/screen_capture.dart';
 
 class NgChatView extends StatefulWidget {
   const NgChatView({
@@ -78,6 +80,7 @@ class NgChatView extends StatefulWidget {
     this.onNewChat,
     this.onOpenCommandPalette,
     this.readAloudFactory,
+    this.screenCapture,
   });
 
   final NgChatController chat;
@@ -92,6 +95,9 @@ class NgChatView extends StatefulWidget {
   /// Test hook: supplies the read-aloud controller (e.g. a fake speaker).
   @visibleForTesting
   final NgReadAloud Function()? readAloudFactory;
+
+  /// Desktop screen capture; tests pass a fake-channel controller.
+  final ScreenCaptureController? screenCapture;
 
   @override
   State<NgChatView> createState() => _NgChatViewState();
@@ -465,11 +471,26 @@ class _NgChatViewState extends State<NgChatView>
               title: Text(ngL.ng_files),
               onTap: () => Navigator.pop(context, 'files'),
             ),
+            if (isDesktopOs)
+              ListTile(
+                key: const Key('ng-attach-capture-screen'),
+                leading: Icon(
+                  Icons.screenshot_monitor_outlined,
+                  color: c.text2,
+                ),
+                title: Text(ngL.capture_screen_action),
+                subtitle: Text(ngL.capture_screen_help),
+                onTap: () => Navigator.pop(context, 'screen'),
+              ),
           ],
         ),
       ),
     );
     if (choice == null || !mounted) return;
+    if (choice == 'screen') {
+      await _captureScreen();
+      return;
+    }
     if (_slotsLeft <= 0) {
       ngToast(
         context,
@@ -547,6 +568,39 @@ class _NgChatViewState extends State<NgChatView>
       if (mounted) setState(() => _preparing = false);
     }
     if (errors.isNotEmpty && mounted) ngToast(context, errors.first);
+  }
+
+  /// Adds a screen capture as an image draft. Never sends.
+  Future<void> _captureScreen() async {
+    if (_slotsLeft <= 0) {
+      ngToast(
+        context,
+        ngL.ng_you_can_attach_up_to_files(maxRemoteAttachmentDrafts),
+      );
+      return;
+    }
+    await captureScreenIntoDraft(
+      context,
+      controller: widget.screenCapture,
+      attach: (png, name) async {
+        if (!mounted) return;
+        setState(() => _preparing = true);
+        try {
+          final draft = await chat.attachmentService.prepareImage(
+            sourcePath: png.path,
+            displayName: name,
+            existingDrafts: _drafts,
+            mode: AttachmentDraftMode.remoteGateway,
+            maxTotalBytes: maxNextGenAttachmentDraftBytes,
+          );
+          if (mounted) setState(() => _drafts.add(draft));
+        } on AttachmentDraftException catch (e) {
+          if (mounted) ngToast(context, e.message);
+        } finally {
+          if (mounted) setState(() => _preparing = false);
+        }
+      },
+    );
   }
 
   Future<void> _removeDraft(AttachmentDraft draft) async {
