@@ -25,12 +25,12 @@
 
 [![Ares 4.0.0 showcase: Classic and NextGen](docs/video/ares-4.0-poster.png)](docs/video/ares-4.0-showcase.mp4)
 
-**[Watch the 80 second showcase](docs/video/ares-4.0-showcase.mp4).** No voiceover. The score is original synthwave written for this film. It was recorded on the production-signed [4.0.0-rc.7](https://github.com/rusty4444/hermes-android/releases/tag/v4.0.0-rc.7) build during the candidate cycle, with illustrative fixture chats. **4.0.14** is the latest stable release. NextGen adapts the [Kyllene](https://github.com/Giton22/kyllene) design by Giton22 (MIT).
+**[Watch the 80 second showcase](docs/video/ares-4.0-showcase.mp4).** No voiceover. The score is original synthwave written for this film. It was recorded on the production-signed [4.0.0-rc.7](https://github.com/rusty4444/hermes-android/releases/tag/v4.0.0-rc.7) build during the candidate cycle, with illustrative fixture chats. **4.0.15** is the latest stable release. NextGen adapts the [Kyllene](https://github.com/Giton22/kyllene) design by Giton22 (MIT).
 
-# Ares - formerly Hermes Android v4.0.14
+# Ares - formerly Hermes Android v4.0.15
 
 > **Hermes Android is now Ares.** In 4.0.0 the app is called "Ares - formerly
-> Hermes Android", and the launcher label is Ares. **4.0.14** is the latest
+> Hermes Android", and the launcher label is Ares. **4.0.15** is the latest
 > stable release. The package
 > `com.hermesagent.hermes_android` and the signing key are unchanged, so the
 > update installs over the existing app. It still connects to
@@ -98,19 +98,20 @@ Emulator captures of production-signed **4.0.0-rc.7** (version code 30432). Clas
 
 ## Current release
 
-**4.0.14** (base build **3070**) is the latest stable release. Its ABI splits are
-`30701`, `30702` and `30703`, each above the highest published 4.0.13
-split (`30693`). The production package and signer are unchanged. Install over
-the existing app; do not uninstall or clear app data. 4.0.14 corrects the
-German copy shown in the NextGen interface.
+**4.0.15** (base build **3071**) is the latest stable release. Its ABI splits are
+`30711`, `30712` and `30713`, each above the highest published 4.0.14
+split (`30703`). The production package and signer are unchanged. Install over
+the existing app; do not uninstall or clear app data. 4.0.15 adds NextGen
+projects, slash commands that highlight, explain and run, and stops repeat
+alerts for questions answered on another device.
 
 | Download | Device | Version code |
 | --- | --- | --- |
-| [ARM64 APK](https://github.com/rusty4444/ares/releases/download/v4.0.14/app-arm64-v8a-release.apk) | Most current Android phones/tablets | `30702` |
-| [ARMv7 APK](https://github.com/rusty4444/ares/releases/download/v4.0.14/app-armeabi-v7a-release.apk) | Older 32-bit ARM devices | `30701` |
-| [x86_64 APK](https://github.com/rusty4444/ares/releases/download/v4.0.14/app-x86_64-release.apk) | x86_64 Android devices/emulators | `30703` |
+| [ARM64 APK](https://github.com/rusty4444/ares/releases/download/v4.0.15/app-arm64-v8a-release.apk) | Most current Android phones/tablets | `30712` |
+| [ARMv7 APK](https://github.com/rusty4444/ares/releases/download/v4.0.15/app-armeabi-v7a-release.apk) | Older 32-bit ARM devices | `30711` |
+| [x86_64 APK](https://github.com/rusty4444/ares/releases/download/v4.0.15/app-x86_64-release.apk) | x86_64 Android devices/emulators | `30713` |
 
-[Release and checksums](https://github.com/rusty4444/ares/releases/tag/v4.0.14) · [4.0.14 release notes](docs/releases/4.0.14.md) · [Full changelog](CHANGELOG.md)
+[Release and checksums](https://github.com/rusty4444/ares/releases/tag/v4.0.15) · [4.0.15 release notes](docs/releases/4.0.15.md) · [Full changelog](CHANGELOG.md)
 
 Debug builds use the separate `com.hermesagent.hermes_android.dev` package and Android debug certificate. Older production APKs have lower version codes; downgrading can require uninstalling and restoring a backup.
 
@@ -327,6 +328,30 @@ sanitized implementation and validation record.
 NextGen adapts [Kyllene](https://github.com/Giton22/kyllene) by Giton22 (MIT).
 See [4.0.0 release notes](docs/releases/4.0.0.md).
 
+## What's new in v4.0.15
+
+- **Projects in NextGen (#304).** More → Projects browses the selected
+  profile's projects, opens their chats and starts new chats in a project's
+  folder. A new chat's greeting also lets you choose the project it starts
+  in, as Kyllene does.
+- **Slash commands highlight, explain and run.** A typed command is
+  highlighted in both composers; tap it for a small card with its description
+  and usage. NextGen now runs commands through the gateway like Classic
+  (#303, contributed by @Thaeland, with refused commands no longer leaking
+  into the chat as prose).
+- **No repeat alerts after answering elsewhere.** A question or approval
+  answered on another device no longer re-notifies or keeps its yellow
+  highlight.
+- **Desktop composer.** On wide Windows and macOS windows the NextGen mic and
+  send buttons sit at the right edge again.
+- **NextGen chat list** hides one-shot, subagent, kanban and tool runs (#362).
+- **Stop and Steer on current gateways** target the running turn, and NextGen
+  catches up after the app returns from the background (#84).
+- **Android Auto replies (#356, contributed by @davidKooreman).** Finished
+  replies appear as car-ready conversations you can answer or mark read.
+
+See [4.0.15 release notes](docs/releases/4.0.15.md).
+
 ## What's new in v4.0.14
 
 - **German copy in the NextGen interface is fixed (#359).** The German
@@ -344,17 +369,6 @@ See [4.0.14 release notes](docs/releases/4.0.14.md).
   address would be lost by switching stays read-only.
 
 See [4.0.13 release notes](docs/releases/4.0.13.md).
-
-## What's new in v4.0.12
-
-- **A Models page in NextGen (#347).** Model settings are one page, opened from
-  Settings, More and the top of a chat's model picker: the default model with
-  its context window, prices and abilities, the ordered fallback list, every
-  helper task with its model and thinking level, and each provider with its
-  allowance and rate limits. Changes are read back from the gateway before they
-  count as saved. The classic model screen is unchanged.
-
-See [4.0.12 release notes](docs/releases/4.0.12.md).
 
 ## Features
 
@@ -832,7 +846,7 @@ cp build/app/outputs/flutter-apk/app-*-release.apk release-apks/
 block in `android/app/build.gradle.kts` derives per-ABI codes as
 `base * 10 + ABI code` (armeabi-v7a = 1, arm64-v8a = 2, x86_64 = 3), so the
 codes stay ordered armeabi-v7a < arm64-v8a < x86_64 as fdroiddata requires.
-For v4.0.14, base `3070` produces codes `30701`/`30702`/`30703`.
+For v4.0.15, base `3071` produces codes `30711`/`30712`/`30713`.
 Before publication, CI verifies all three actual APKs: package, version, ABI,
 effective code, production signer and required licence/source assets. Releases
 include checksums and exact-commit source/relink materials. Release-floor checks
