@@ -951,7 +951,7 @@ class ChatComposerSlashInfo extends StatelessWidget {
     required this.controller,
     required this.focusNode,
     required this.commands,
-    required this.available,
+    required this.isAvailable,
     required this.dropdownOpen,
     required this.localCommands,
     required this.scope,
@@ -961,7 +961,11 @@ class ChatComposerSlashInfo extends StatelessWidget {
   final SlashCommandHighlightController controller;
   final FocusNode focusNode;
   final SlashCommandController commands;
-  final bool available;
+
+  /// Whether the Desktop slash surface is up. Read only when a drafted
+  /// command needs it, never on an ordinary rebuild: asking the gateway on
+  /// every frame would add a call the composer did not make before.
+  final ValueGetter<bool> isAvailable;
   final bool dropdownOpen;
   final Set<String> localCommands;
   final Object? scope;
@@ -978,7 +982,7 @@ class ChatComposerSlashInfo extends StatelessWidget {
       resolver: (name) => resolveChatSlashToken(
         name,
         commands: commands,
-        available: available,
+        available: isAvailable(),
         localCommands: localCommands,
       ),
       highlightStyleOf: (context) => TextStyle(
@@ -1006,7 +1010,9 @@ class ChatComposerSlashInfo extends StatelessWidget {
       refresh: commands,
       // The send path consults the catalogue; load it as soon as a command
       // is drafted (typed, pasted or restored), as the dropdown does.
-      onToken: available ? () => unawaited(commands.ensureCatalog()) : null,
+      onToken: () {
+        if (isAvailable()) unawaited(commands.ensureCatalog());
+      },
       child: child,
     );
   }

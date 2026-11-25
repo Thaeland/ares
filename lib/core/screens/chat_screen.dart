@@ -7626,7 +7626,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           controller: _textController,
           focusNode: _composerFocus,
           commands: _slashController,
-          available: _slashCommandsAvailable,
+          isAvailable: () => _slashCommandsAvailable,
           dropdownOpen: _slashDropdownVisible,
           localCommands: _localNewSessionNames,
           scope: widget.session.id,
