@@ -9,6 +9,8 @@ import '../../core/screens/settings_screen.dart';
 import '../../core/services/app_licenses.dart';
 import '../../core/services/background_work_prefs.dart';
 import '../../core/services/notification_prefs.dart';
+import '../../core/widgets/windows_completion_sound_tile.dart';
+import '../../core/utils/platform_capabilities.dart';
 import '../../core/services/turn_notification_service.dart';
 import '../../core/services/hermes_sign_in.dart';
 import '../../core/services/legal_links.dart';
@@ -482,26 +484,31 @@ class NgNotificationSettings extends StatelessWidget {
                 value: on && all(_requestKinds),
                 onChanged: on ? (v) => _setKinds(_requestKinds, v) : null,
               ),
-              SwitchListTile(
-                key: const ValueKey('ng-keep-running'),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                title: Text(ngL.ng_keep_running),
-                subtitle: Text(ngL.ng_keep_running_hint),
-                value: backgroundWorkEnabled.value,
-                onChanged: (v) =>
-                    BackgroundWorkPrefsStore.setEnabled(v).catchError((_) {}),
-              ),
-              NgRow(
-                icon: Icons.battery_saver_outlined,
-                title: ngL.ng_battery_settings,
-                subtitle: ngL.ng_battery_settings_hint,
-                onTap: () => BackgroundWorkPlatform.openBatterySettings(),
-              ),
+              if (isWindowsPlatform) WindowsCompletionSoundTile(prefs: prefs),
+              if (!isWindowsPlatform)
+                SwitchListTile(
+                  key: const ValueKey('ng-keep-running'),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                  title: Text(ngL.ng_keep_running),
+                  subtitle: Text(ngL.ng_keep_running_hint),
+                  value: backgroundWorkEnabled.value,
+                  onChanged: (v) =>
+                      BackgroundWorkPrefsStore.setEnabled(v).catchError((_) {}),
+                ),
+              if (!isWindowsPlatform)
+                NgRow(
+                  icon: Icons.battery_saver_outlined,
+                  title: ngL.ng_battery_settings,
+                  subtitle: ngL.ng_battery_settings_hint,
+                  onTap: () => BackgroundWorkPlatform.openBatterySettings(),
+                ),
               NgRow(
                 key: const ValueKey('ng-recent-notifications'),
                 icon: Icons.history,
                 title: ngL.ng_recent_notifications,
-                subtitle: ngL.ng_recent_notifications_hint,
+                subtitle: isWindowsPlatform
+                    ? ngL.windows_notification_diagnostics
+                    : ngL.ng_recent_notifications_hint,
                 onTap: () => showNgSheet<void>(
                   context,
                   builder: (_) => const NgRecentNotificationsSheet(),
@@ -521,6 +528,8 @@ class NgNotificationSettings extends StatelessWidget {
                       context,
                       ok
                           ? ngL.ng_test_notification_sent
+                          : isWindowsPlatform
+                          ? ngL.windows_notifications_blocked
                           : ngL.ng_notifications_blocked,
                     );
                   }

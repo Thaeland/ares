@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart' show MissingPluginException;
+import 'package:flutter/services.dart'
+    show MethodChannel, MissingPluginException;
+import 'package:uuid/uuid.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,11 +11,14 @@ import '../../l10n/app_localizations.dart';
 import '../l10n/l10n.dart' show resolvePreferredLocale;
 import '../utils/platform_capabilities.dart';
 import 'notification_prefs.dart';
+import 'windows_toast_ledger.dart';
 import 'notification_approval_authority.dart';
 import 'auto_messaging_service.dart';
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 import 'mobile_push_service.dart';
+
+part 'windows_toast_sink.dart';
 
 /// Delivered to the app root when the user taps a notification body or one of
 /// its action buttons. Set once by the root widget; every service instance
@@ -84,6 +89,10 @@ class TurnNotification {
   final bool ongoing;
   final bool silent;
   final bool onlyAlertOnce;
+  final HermesNotificationKind? kind;
+  final WindowsToastTarget? windowsTarget;
+  // Live producer state is never serialised into a ticket or sent to Windows.
+  final bool Function()? windowsStillNeeded;
   final ConversationNotificationTarget? conversation;
 
   const TurnNotification({
@@ -98,6 +107,9 @@ class TurnNotification {
     this.silent = false,
     this.onlyAlertOnce = false,
     this.conversation,
+    this.windowsTarget,
+    this.windowsStillNeeded,
+    this.kind,
   });
 }
 
@@ -131,40 +143,12 @@ abstract class TurnNotificationSink {
   Future<void> cancelAll();
 }
 
-/// Sink for platforms where the app cannot post notifications (Windows):
-/// nothing is shown and no permission is asked for, so the notification
-/// plugin is never called there.
-class SilentTurnNotificationSink implements TurnNotificationSink {
-  const SilentTurnNotificationSink();
-
-  @override
-  Future<void> initialize() async {}
-
-  @override
-  Future<bool?> checkPermission() async => null;
-
-  @override
-  Future<bool?> requestPermission() async => null;
-
-  @override
-  Future<NotificationResponse?> takeInitialLaunchResponse() async => null;
-
-  @override
-  Future<void> show(TurnNotification notification) async {}
-
-  @override
-  Future<void> cancel(int id) async {}
-
-  @override
-  Future<void> cancelAll() async {}
-}
-
-/// The sink a [TurnNotificationService] uses when none is injected.
+/// Windows uses a runner channel; FLN v18 still owns Android and Darwin.
 TurnNotificationSink defaultTurnNotificationSink({
   FlutterLocalNotificationsPlugin? plugin,
-}) => supportsLocalNotifications
-    ? PluginTurnNotificationSink(plugin: plugin)
-    : const SilentTurnNotificationSink();
+}) => isWindowsPlatform
+    ? WindowsToastSink()
+    : PluginTurnNotificationSink(plugin: plugin);
 
 /// Default sink backed by `flutter_local_notifications`.
 class PluginTurnNotificationSink implements TurnNotificationSink {
@@ -616,6 +600,7 @@ class TurnNotificationService {
   /// One replaceable, quiet entry per local chat, independent of turn/stored
   /// identity changes. The native service's mandatory disclosure is separate.
   Future<void> showOngoingChat({
+    SavedConnection? origin,
     required String connectionId,
     required String localSessionId,
     String? storedSessionId,
@@ -643,6 +628,12 @@ class TurnNotificationService {
     }
     await _sink.show(
       TurnNotification(
+        kind: null,
+        windowsTarget: WindowsToastTarget.capture(
+          origin,
+          connectionId,
+          storedSessionId ?? localSessionId,
+        ),
         id: id,
         title: title,
         body: status,
@@ -860,6 +851,7 @@ class TurnNotificationService {
   /// [sessionId]/[connectionId] are carried in the payload so a tap can route
   /// back to the originating chat, even across multiple connections.
   Future<void> showTurnCompleted({
+    SavedConnection? origin,
     required String title,
     required String turnSummary,
     required String turnId,
@@ -882,6 +874,12 @@ class TurnNotificationService {
     }
 
     final notification = TurnNotification(
+      kind: HermesNotificationKind.turnDone,
+      windowsTarget: WindowsToastTarget.capture(
+        origin,
+        connectionId,
+        sessionId,
+      ),
       id: notificationIdFor(identity),
       title: title,
       body: turnSummary,
@@ -1052,6 +1050,7 @@ class TurnNotificationService {
   /// Posts the failure counterpart of [showTurnCompleted] on the same channel,
   /// so the two kinds share one Android channel but keep separate toggles.
   Future<void> showTurnFailed({
+    SavedConnection? origin,
     required String title,
     required String turnSummary,
     required String turnId,
@@ -1075,6 +1074,12 @@ class TurnNotificationService {
     await _post(
       'failure',
       TurnNotification(
+        kind: HermesNotificationKind.turnError,
+        windowsTarget: WindowsToastTarget.capture(
+          origin,
+          connectionId,
+          sessionId,
+        ),
         id: notificationIdFor(identity),
         title: title,
         body: turnSummary,
@@ -1129,6 +1134,7 @@ class TurnNotificationService {
   /// already up for the same identity in place, without alerting again.
   Future<bool> showKind({
     required HermesNotificationKind kind,
+    SavedConnection? origin,
     required String title,
     required String body,
     required String eventId,
@@ -1137,6 +1143,7 @@ class TurnNotificationService {
     List<TurnNotificationAction> actions = const [],
     String? payload,
     bool onlyAlertOnce = false,
+    bool Function()? windowsStillNeeded,
   }) async {
     if (!notificationKindEnabled(kind)) {
       recordAttempt(kind.name, title, 'skipped', '${kind.name} is off');
@@ -1155,10 +1162,17 @@ class TurnNotificationService {
     return _post(
       kind.name,
       TurnNotification(
+        kind: kind,
+        windowsTarget: WindowsToastTarget.capture(
+          origin,
+          connectionId,
+          sessionId,
+        ),
         id: notificationIdFor(identity),
         title: title,
         body: body,
         payload: payload ?? '',
+        windowsStillNeeded: windowsStillNeeded,
         channel: channelFor(kind),
         actions: actions,
         importance: importanceFor(kind),

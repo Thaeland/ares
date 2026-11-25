@@ -12,6 +12,37 @@ import 'package:hermes_android/core/services/ws_client.dart';
 
 void main() {
   test(
+    'window activity depends on the current socket capability acknowledgement',
+    () async {
+      for (final accepts in [false, true]) {
+        final gateway = await _ServerRequestGateway.start();
+        gateway.advertiseActivity = accepts;
+        final client = WsClient(
+          'http://127.0.0.1:${gateway.port}',
+          ticket: 'fixture',
+          profile: 'qa',
+        )..onServerRequest = (_) => false;
+        try {
+          expect(client.acceptsWindowActivity, isFalse);
+          await client.connect();
+          await _waitFor(() => gateway.capabilityFrames.isNotEmpty);
+          // A subsequent reply fences processing of the capabilities response.
+          await client.send('client.activity', {
+            'sessions': <String>[],
+            'idle_seconds': 60,
+            'basis': 'page',
+            'away': true,
+          }, includeProfile: false);
+          expect(client.acceptsWindowActivity, accepts);
+        } finally {
+          client.close();
+          await gateway.stop();
+        }
+        expect(client.acceptsWindowActivity, isFalse);
+      }
+    },
+  );
+  test(
     'closed recovery owner detach cannot reject a same-ID replacement request',
     () async {
       final gateway = await _ServerRequestGateway.start(
@@ -1055,6 +1086,7 @@ class _ServerRequestGateway {
   final bool withTurnRecovery;
   final List<Map<String, dynamic>>? openRequestsOnResume;
   final List<WebSocket> _sockets = [];
+  bool advertiseActivity = false;
   final List<Map<String, dynamic>> capabilityFrames = [];
   final Map<String, Map<String, dynamic>> serverResponses = {};
   final Map<String, int> serverResponseSocketIndexes = {};
@@ -1144,9 +1176,14 @@ class _ServerRequestGateway {
       onServerResponse?.call(socketIndex, frame);
       return;
     }
+    if (method == 'client.activity') {
+      _respond(socket, id, {});
+      return;
+    }
     if (method == 'client.capabilities') {
       capabilityFrames.add(frame);
       _respond(socket, id, {
+        if (advertiseActivity) 'client_activity': true,
         'server_requests': ['clarify', 'approval', 'sudo', 'secret'],
       });
       return;

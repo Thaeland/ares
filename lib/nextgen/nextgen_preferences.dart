@@ -4,6 +4,8 @@
 // sign-in. Only how the app looks and which connection NextGen opens on launch
 // are kept here.
 import 'package:flutter/material.dart';
+import '../core/services/turn_notification_service.dart'
+    show WindowsToastTarget;
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Whether the app runs the NextGen interface. Toggled from Settings in either
@@ -19,10 +21,17 @@ final ValueNotifier<NgOpenRequest?> nextGenOpenRequest = ValueNotifier(null);
 
 /// Routes a notification tap to NextGen. Returns false when NextGen is off
 /// or the payload names no chat, so the classic routing handles it.
-bool routeNotificationToNextGen(String? connectionId, String? sessionId) {
+WindowsToastTarget? pendingWindowsToastTarget;
+
+bool routeNotificationToNextGen(
+  String? connectionId,
+  String? sessionId, {
+  WindowsToastTarget? target,
+}) {
   if (!nextGenEnabled.value) return false;
   if (connectionId == null || connectionId.isEmpty) return false;
   if (sessionId == null || sessionId.isEmpty) return false;
+  pendingWindowsToastTarget = target;
   nextGenOpenRequest.value = (connectionId: connectionId, sessionId: sessionId);
   return true;
 }

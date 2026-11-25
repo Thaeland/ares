@@ -131,6 +131,7 @@ msix_config:
   publisher: CN=Sam Russell
   msix_version: 5.0.0.0
   logo_path: assets/icon/icon.png
+  protocol_activation: ares-msix-notification
   capabilities: internetClient, microphone
   languages: en-us
   store: false

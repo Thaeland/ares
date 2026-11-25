@@ -348,6 +348,8 @@ class WsClient {
   String? _gatewayReadyCanonical;
   JsonRpcError? _gatewayReadyFailure;
   bool _serverRequestsAdvertised = false;
+  bool _activityAccepted = false;
+  bool get acceptsWindowActivity => _connected && _activityAccepted;
 
   /// Global stream listener (receives all untargeted events).
   StreamCallback? onStreamEvent;
@@ -426,6 +428,7 @@ class WsClient {
     _gatewayReadyCanonical = null;
     _gatewayReadyFailure = null;
     _serverRequestsAdvertised = false;
+    _activityAccepted = false;
     final readyCompleter = Completer<Map<String, dynamic>>();
     _gatewayReadyCompleter = readyCompleter;
     // A transport can close before a caller starts waiting for gateway.ready.
@@ -741,10 +744,18 @@ class WsClient {
     _serverRequestsAdvertised = true;
     // This method is connection-scoped, not profile-scoped. Older gateways
     // answer -32601; deliberately ignore that response so they keep working.
+    final generation = _connectionGeneration;
     unawaited(
       send('client.capabilities', const {
         'server_requests': true,
-      }, includeProfile: false).then<void>((_) {}, onError: (_, _) {}),
+      }, includeProfile: false).then<void>((reply) {
+        if (_connectionGeneration == generation) {
+          _activityAccepted = switch (reply['result']) {
+            {'client_activity': true} => true,
+            _ => false,
+          };
+        }
+      }, onError: (_, _) {}),
     );
   }
 
