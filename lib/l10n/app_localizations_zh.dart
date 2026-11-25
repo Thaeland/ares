@@ -5976,6 +5976,77 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get setup_beat_not_waiting => '此设置卡片已不再等待回答。';
+
+  @override
+  String get catalog_kind_plugin => '插件';
+
+  @override
+  String get catalog_kind_skill => '技能';
+
+  @override
+  String get catalog_tier_official => '官方';
+
+  @override
+  String get catalog_tier_verified => '已验证';
+
+  @override
+  String get catalog_tier_community => '社区';
+
+  @override
+  String get catalog_install => '安装';
+
+  @override
+  String get catalog_waiting => '等待你的选择';
+
+  @override
+  String get catalog_installed => '已安装';
+
+  @override
+  String get catalog_installed_off => '已安装，未启用';
+
+  @override
+  String get catalog_skipped => '已跳过';
+
+  @override
+  String get catalog_not_installed => '未安装';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return '安装到 $profile 配置文件';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo（$sha）';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return '安全扫描：$status。$summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return '需要 Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return '技能 $name 已可使用';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return '仍需要：$names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name 未能连接：$error';
+  }
+
+  @override
+  String get catalog_send_failed => '你的选择未发送，请重试。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -11720,4 +11791,75 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get setup_beat_not_waiting => '此设置卡片已不再等待回答。';
+
+  @override
+  String get catalog_kind_plugin => '插件';
+
+  @override
+  String get catalog_kind_skill => '技能';
+
+  @override
+  String get catalog_tier_official => '官方';
+
+  @override
+  String get catalog_tier_verified => '已验证';
+
+  @override
+  String get catalog_tier_community => '社区';
+
+  @override
+  String get catalog_install => '安装';
+
+  @override
+  String get catalog_waiting => '等待你的选择';
+
+  @override
+  String get catalog_installed => '已安装';
+
+  @override
+  String get catalog_installed_off => '已安装，未启用';
+
+  @override
+  String get catalog_skipped => '已跳过';
+
+  @override
+  String get catalog_not_installed => '未安装';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return '安装到 $profile 配置文件';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo（$sha）';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return '安全扫描：$status。$summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return '需要 Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return '技能 $name 已可使用';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return '仍需要：$names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name 未能连接：$error';
+  }
+
+  @override
+  String get catalog_send_failed => '你的选择未发送，请重试。';
 }

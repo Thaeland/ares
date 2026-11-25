@@ -156,6 +156,13 @@ class _SetupSession extends InertTurnApplicationSession
   }
 
   @override
+  Future<bool> tryRespondToConnection({
+    required String sessionId,
+    required String opId,
+    required Map<String, dynamic> result,
+  }) async => false;
+
+  @override
   bool tryRespondToSetupBeat({
     required String sessionId,
     required String requestId,

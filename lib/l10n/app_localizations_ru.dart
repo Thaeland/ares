@@ -6250,4 +6250,76 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get setup_beat_not_waiting =>
       'Эта карточка настройки больше не ждёт ответа.';
+
+  @override
+  String get catalog_kind_plugin => 'Плагин';
+
+  @override
+  String get catalog_kind_skill => 'Навык';
+
+  @override
+  String get catalog_tier_official => 'Официальный';
+
+  @override
+  String get catalog_tier_verified => 'Проверенный';
+
+  @override
+  String get catalog_tier_community => 'Сообщество';
+
+  @override
+  String get catalog_install => 'Установить';
+
+  @override
+  String get catalog_waiting => 'Ждёт вашего решения';
+
+  @override
+  String get catalog_installed => 'Установлено';
+
+  @override
+  String get catalog_installed_off => 'Установлено, не включено';
+
+  @override
+  String get catalog_skipped => 'Пропущено';
+
+  @override
+  String get catalog_not_installed => 'Не установлено';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return 'Устанавливается в профиль $profile';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo, коммит $sha';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return 'Проверка безопасности: $status. $summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return 'Нужен Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return 'Навык $name готов';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return 'Ещё нужно: $names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name не подключился: $error';
+  }
+
+  @override
+  String get catalog_send_failed =>
+      'Ваш выбор не отправлен. Попробуйте ещё раз.';
 }

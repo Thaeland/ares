@@ -6065,4 +6065,75 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get setup_beat_not_waiting => 'このセットアップカードはもう回答を待っていません。';
+
+  @override
+  String get catalog_kind_plugin => 'プラグイン';
+
+  @override
+  String get catalog_kind_skill => 'スキル';
+
+  @override
+  String get catalog_tier_official => '公式';
+
+  @override
+  String get catalog_tier_verified => '検証済み';
+
+  @override
+  String get catalog_tier_community => 'コミュニティ';
+
+  @override
+  String get catalog_install => 'インストール';
+
+  @override
+  String get catalog_waiting => '選択を待っています';
+
+  @override
+  String get catalog_installed => 'インストール済み';
+
+  @override
+  String get catalog_installed_off => 'インストール済み（未有効化）';
+
+  @override
+  String get catalog_skipped => 'スキップしました';
+
+  @override
+  String get catalog_not_installed => 'インストールされていません';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return '$profile プロファイルにインストールされます';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo（$sha）';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return 'セキュリティスキャン: $status。$summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return 'Hermes $range が必要です';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return 'スキル $name を使用できます';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return 'まだ必要: $names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name に接続できませんでした: $error';
+  }
+
+  @override
+  String get catalog_send_failed => '選択を送信できませんでした。もう一度お試しください。';
 }

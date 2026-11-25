@@ -6250,4 +6250,76 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get setup_beat_not_waiting =>
       'Esta tarjeta de configuración ya no espera respuesta.';
+
+  @override
+  String get catalog_kind_plugin => 'Plugin';
+
+  @override
+  String get catalog_kind_skill => 'Habilidad';
+
+  @override
+  String get catalog_tier_official => 'Oficial';
+
+  @override
+  String get catalog_tier_verified => 'Verificado';
+
+  @override
+  String get catalog_tier_community => 'Comunidad';
+
+  @override
+  String get catalog_install => 'Instalar';
+
+  @override
+  String get catalog_waiting => 'Esperando tu elección';
+
+  @override
+  String get catalog_installed => 'Instalado';
+
+  @override
+  String get catalog_installed_off => 'Instalado, sin activar';
+
+  @override
+  String get catalog_skipped => 'Omitido';
+
+  @override
+  String get catalog_not_installed => 'No instalado';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return 'Se instala en el perfil $profile';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo en $sha';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return 'Análisis de seguridad: $status. $summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return 'Requiere Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return 'La habilidad $name está lista';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return 'Aún necesita: $names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name no se conectó: $error';
+  }
+
+  @override
+  String get catalog_send_failed =>
+      'No se envió tu elección. Inténtalo de nuevo.';
 }

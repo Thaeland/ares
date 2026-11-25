@@ -14,6 +14,7 @@ import '../../core/models/attachment_draft.dart';
 import '../../core/models/background_report.dart';
 import '../../core/models/legacy_lcm_summary.dart';
 import '../../core/models/slash_command.dart';
+import '../../core/render/catalog_install.dart';
 import '../../core/render/setup_beat.dart';
 import '../../core/services/attachment_draft_service.dart';
 import '../../core/services/remote_workspace.dart';
@@ -753,6 +754,41 @@ class NgChatController extends ChangeNotifier {
   String? thinkingFrame;
   String? error;
   NgInputRequest? request;
+
+  /// The open `manage_catalog` install card of this chat, if any.
+  CatalogOperation? catalog;
+
+  /// Answers this chat's catalog card through `connection.respond`, owned
+  /// by this chat's runtime session. False when the card is not this chat's
+  /// open operation any more or the gateway refused the answer.
+  Future<bool> respondCatalog(
+    CatalogOperation operation,
+    Map<String, dynamic> answer,
+  ) async {
+    final current = catalog;
+    final runtime = runtimeId;
+    if (_disposed ||
+        runtime == null ||
+        current == null ||
+        current.opId != operation.opId ||
+        current.settled) {
+      return false;
+    }
+    final result = await gateway.call('connection.respond', {
+      'owner': {'type': 'session', 'session_id': runtime},
+      'op_id': operation.opId,
+      'result': answer,
+    });
+    return result['status'] == 'ok';
+  }
+
+  /// Hides a settled catalog card.
+  void dismissCatalog(String opId) {
+    if (catalog?.opId != opId || !(catalog?.settled ?? false)) return;
+    catalog = null;
+    _changed();
+  }
+
   String? model;
   String? provider;
   String? reasoningEffort;
@@ -1949,6 +1985,14 @@ class NgChatController extends ChangeNotifier {
           gateway.forgetRequest(id);
           if (request?.request.id == id) request = null;
         }
+      case 'connection.request' || 'connection.update':
+        final next = CatalogOperation.merge(
+          catalog,
+          p,
+          opens: event.type == 'connection.request',
+        );
+        if (identical(next, catalog)) return;
+        catalog = next;
       default:
         return;
     }
@@ -1959,6 +2003,8 @@ class NgChatController extends ChangeNotifier {
           'error' ||
           'turn.error' ||
           'request.cancel' ||
+          'connection.request' ||
+          'connection.update' ||
           'message.start' ||
           'session.updated' ||
           'session.info' ||

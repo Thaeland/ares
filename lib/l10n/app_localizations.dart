@@ -10451,6 +10451,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This setup card is no longer waiting for an answer.'**
   String get setup_beat_not_waiting;
+
+  /// No description provided for @catalog_kind_plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Plugin'**
+  String get catalog_kind_plugin;
+
+  /// No description provided for @catalog_kind_skill.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill'**
+  String get catalog_kind_skill;
+
+  /// No description provided for @catalog_tier_official.
+  ///
+  /// In en, this message translates to:
+  /// **'Official'**
+  String get catalog_tier_official;
+
+  /// No description provided for @catalog_tier_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get catalog_tier_verified;
+
+  /// No description provided for @catalog_tier_community.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get catalog_tier_community;
+
+  /// No description provided for @catalog_install.
+  ///
+  /// In en, this message translates to:
+  /// **'Install'**
+  String get catalog_install;
+
+  /// No description provided for @catalog_waiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for your choice'**
+  String get catalog_waiting;
+
+  /// No description provided for @catalog_installed.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed'**
+  String get catalog_installed;
+
+  /// No description provided for @catalog_installed_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed, not turned on'**
+  String get catalog_installed_off;
+
+  /// No description provided for @catalog_skipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get catalog_skipped;
+
+  /// No description provided for @catalog_not_installed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not installed'**
+  String get catalog_not_installed;
+
+  /// No description provided for @catalog_target_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Installs into the {profile} profile'**
+  String catalog_target_profile(String profile);
+
+  /// No description provided for @catalog_source.
+  ///
+  /// In en, this message translates to:
+  /// **'{repo} at {sha}'**
+  String catalog_source(String repo, String sha);
+
+  /// No description provided for @catalog_scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Security scan: {status}. {summary}'**
+  String catalog_scan(String status, String summary);
+
+  /// No description provided for @catalog_requires_hermes.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Hermes {range}'**
+  String catalog_requires_hermes(String range);
+
+  /// No description provided for @catalog_skill_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill {name} is ready to use'**
+  String catalog_skill_ready(String name);
+
+  /// No description provided for @catalog_missing_env.
+  ///
+  /// In en, this message translates to:
+  /// **'Still needs: {names}'**
+  String catalog_missing_env(String names);
+
+  /// No description provided for @catalog_server_error.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} did not connect: {error}'**
+  String catalog_server_error(String name, String error);
+
+  /// No description provided for @catalog_send_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your choice was not sent. Try again.'**
+  String get catalog_send_failed;
 }
 
 class _AppLocalizationsDelegate

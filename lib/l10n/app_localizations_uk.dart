@@ -6248,4 +6248,75 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get setup_beat_not_waiting =>
       'Ця картка налаштування більше не чекає на відповідь.';
+
+  @override
+  String get catalog_kind_plugin => 'Плагін';
+
+  @override
+  String get catalog_kind_skill => 'Навичка';
+
+  @override
+  String get catalog_tier_official => 'Офіційний';
+
+  @override
+  String get catalog_tier_verified => 'Перевірений';
+
+  @override
+  String get catalog_tier_community => 'Спільнота';
+
+  @override
+  String get catalog_install => 'Встановити';
+
+  @override
+  String get catalog_waiting => 'Чекає на ваш вибір';
+
+  @override
+  String get catalog_installed => 'Встановлено';
+
+  @override
+  String get catalog_installed_off => 'Встановлено, не ввімкнено';
+
+  @override
+  String get catalog_skipped => 'Пропущено';
+
+  @override
+  String get catalog_not_installed => 'Не встановлено';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return 'Встановлюється в профіль $profile';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo, коміт $sha';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return 'Перевірка безпеки: $status. $summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return 'Потрібен Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return 'Навичка $name готова';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return 'Ще потрібно: $names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name не під’єднався: $error';
+  }
+
+  @override
+  String get catalog_send_failed => 'Ваш вибір не надіслано. Спробуйте ще раз.';
 }

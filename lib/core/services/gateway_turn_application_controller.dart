@@ -27,6 +27,13 @@ abstract interface class GatewaySetupBeatResponder {
     required String requestId,
     required Map<String, dynamic> result,
   });
+
+  /// Answers [sessionId]'s connection operation card (`connection.respond`).
+  Future<bool> tryRespondToConnection({
+    required String sessionId,
+    required String opId,
+    required Map<String, dynamic> result,
+  });
 }
 
 /// Connection-scoped recovery surface retained by the application owner.
@@ -582,6 +589,20 @@ class _CoordinatorGatewayTurnApplicationSession
       questionId: questionId,
     );
     return true;
+  }
+
+  @override
+  Future<bool> tryRespondToConnection({
+    required String sessionId,
+    required String opId,
+    required Map<String, dynamic> result,
+  }) async {
+    if (_closed) return false;
+    return _client.respondToConnection(
+      sessionId: sessionId,
+      opId: opId,
+      result: result,
+    );
   }
 
   @override

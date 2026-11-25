@@ -6204,4 +6204,75 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get setup_beat_not_waiting =>
       'This setup card is no longer waiting for an answer.';
+
+  @override
+  String get catalog_kind_plugin => 'Plugin';
+
+  @override
+  String get catalog_kind_skill => 'Skill';
+
+  @override
+  String get catalog_tier_official => 'Official';
+
+  @override
+  String get catalog_tier_verified => 'Verified';
+
+  @override
+  String get catalog_tier_community => 'Community';
+
+  @override
+  String get catalog_install => 'Install';
+
+  @override
+  String get catalog_waiting => 'Waiting for your choice';
+
+  @override
+  String get catalog_installed => 'Installed';
+
+  @override
+  String get catalog_installed_off => 'Installed, not turned on';
+
+  @override
+  String get catalog_skipped => 'Skipped';
+
+  @override
+  String get catalog_not_installed => 'Not installed';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return 'Installs into the $profile profile';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo at $sha';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return 'Security scan: $status. $summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return 'Needs Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return 'Skill $name is ready to use';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return 'Still needs: $names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name did not connect: $error';
+  }
+
+  @override
+  String get catalog_send_failed => 'Your choice was not sent. Try again.';
 }

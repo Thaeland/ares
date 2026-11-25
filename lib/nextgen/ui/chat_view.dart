@@ -17,6 +17,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/models/attachment_draft.dart';
 import '../../core/preview/chat_preview.dart';
 import '../../core/render/render_scope.dart';
+import '../../core/capabilities/capability_admin.dart';
+import '../../core/render/catalog_install.dart';
 import '../../core/render/rich_transcript.dart';
 import '../../core/render/setup_beat.dart';
 import '../../core/screens/workspace_workers_screen.dart';
@@ -118,6 +120,33 @@ class _NgChatViewState extends State<NgChatView>
     } finally {
       if (client is RemoteFilesClient) client.close();
     }
+  }
+
+  /// Installs a failed catalog plugin again after its operation settled,
+  /// through this connection's capabilities install into the row's own
+  /// target profile.
+  Future<CatalogRetryResult> _retryCatalogRow(CatalogRow row) async {
+    final gateway = NgScope.of(context).gateway;
+    final admin = CapabilityAdmin.fromDashboard(
+      gateway.dashboard,
+      profile: gateway.profile,
+      // The chat's own socket: a settled card belongs to a live chat.
+      rpc: (method, params) =>
+          gateway.call(method, params, timeout: const Duration(minutes: 3)),
+    );
+    final mutation = await admin.installCatalogPlugin(
+      row.name,
+      profile: row.targetProfile,
+      force: row.approvedForce,
+      enable: row.approvedEnable,
+      ref: row.approvedRef,
+    );
+    return CatalogRetryResult(
+      ok: mutation.ok,
+      message:
+          mutation.message ??
+          (mutation.lines.isEmpty ? null : mutation.lines.join('\n')),
+    );
   }
 
   /// A widget may continue only an idle chat, as in Classic: a running
@@ -1025,6 +1054,15 @@ class _NgChatViewState extends State<NgChatView>
                       ),
                     if (chat.error != null) _errorBar(c),
                     if (chat.queued.isNotEmpty) _queue(c),
+                    if (chat.catalog case final operation?)
+                      CatalogInstallCard(
+                        key: ValueKey(operation.opId),
+                        operation: operation,
+                        respond: (answer) =>
+                            chat.respondCatalog(operation, answer),
+                        retry: _retryCatalogRow,
+                        onDismiss: () => chat.dismissCatalog(operation.opId),
+                      ),
                     if (chat.request?.setupBeat case final card?)
                       SetupBeatCard(
                         key: ValueKey(card.requestId),

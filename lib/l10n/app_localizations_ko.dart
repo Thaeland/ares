@@ -6069,4 +6069,75 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get setup_beat_not_waiting => '이 설정 카드는 더 이상 응답을 기다리지 않습니다.';
+
+  @override
+  String get catalog_kind_plugin => '플러그인';
+
+  @override
+  String get catalog_kind_skill => '스킬';
+
+  @override
+  String get catalog_tier_official => '공식';
+
+  @override
+  String get catalog_tier_verified => '검증됨';
+
+  @override
+  String get catalog_tier_community => '커뮤니티';
+
+  @override
+  String get catalog_install => '설치';
+
+  @override
+  String get catalog_waiting => '선택을 기다리는 중';
+
+  @override
+  String get catalog_installed => '설치됨';
+
+  @override
+  String get catalog_installed_off => '설치됨, 켜지지 않음';
+
+  @override
+  String get catalog_skipped => '건너뜀';
+
+  @override
+  String get catalog_not_installed => '설치되지 않음';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return '$profile 프로필에 설치됩니다';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo ($sha)';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return '보안 검사: $status. $summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return 'Hermes $range 필요';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return '스킬 $name을(를) 사용할 수 있습니다';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return '아직 필요: $names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name 연결 실패: $error';
+  }
+
+  @override
+  String get catalog_send_failed => '선택이 전송되지 않았습니다. 다시 시도하세요.';
 }

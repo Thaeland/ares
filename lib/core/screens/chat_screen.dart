@@ -59,6 +59,8 @@ import '../services/gateway_turn_ui_projection.dart';
 import '../services/remote_files_client.dart';
 import '../preview/chat_preview.dart';
 import '../render/render_scope.dart';
+import '../capabilities/capability_admin.dart';
+import '../render/catalog_install.dart';
 import '../render/rich_transcript.dart';
 import '../render/setup_beat.dart';
 import '../services/slash_command_errors.dart';
@@ -960,6 +962,9 @@ class _ChatScreenState extends State<ChatScreen>
   /// The onboarding card waiting in this chat (one per chat, as on the
   /// Desktop). Cleared when answered, closed or withdrawn.
   SetupBeatRequest? _setupBeat;
+
+  /// The open `manage_catalog` install card of this chat, if any.
+  CatalogOperation? _catalog;
   bool _clarifyPromptRouteOpen = false;
   Route<bool>? _clarifyPromptRoute;
   bool _clarifyPromptClosing = false;
@@ -6067,6 +6072,18 @@ class _ChatScreenState extends State<ChatScreen>
       _queueClarifyPrompt(event.data, responseGeneration);
       return;
     }
+    if (event.type == 'connection.request' ||
+        event.type == 'connection.update') {
+      final next = CatalogOperation.merge(
+        _catalog,
+        event.data,
+        opens: event.type == 'connection.request',
+      );
+      if (!identical(next, _catalog) && mounted) {
+        setState(() => _catalog = next);
+      }
+      return;
+    }
     if (event.type == 'setup_beat.request') {
       final id =
           (event.data['server_request_id'] ?? event.data['request_id'])
@@ -6259,6 +6276,8 @@ class _ChatScreenState extends State<ChatScreen>
     const interactiveTypes = {
       'approval.request',
       'setup_beat.request',
+      'connection.request',
+      'connection.update',
       'clarify.request',
       'clarify.remaining',
       'sudo.request',
@@ -6568,6 +6587,79 @@ class _ChatScreenState extends State<ChatScreen>
       // dismiss that independent request or send an unintended denial.
       navigator.removeRoute(route, false);
     }
+  }
+
+  /// Answers this chat's catalog card with `connection.respond` through the
+  /// owner that holds this chat's runtime session. Nothing is sent for an
+  /// operation that is not this chat's open one.
+  Future<bool> _respondCatalog(
+    CatalogOperation operation,
+    Map<String, dynamic> answer,
+  ) async {
+    final current = _catalog;
+    if (!mounted ||
+        current == null ||
+        current.opId != operation.opId ||
+        current.settled) {
+      return false;
+    }
+    final sessionId = widget.session.id;
+    if (await (_normalSession?.tryRespondToConnection(
+          sessionId: sessionId,
+          opId: operation.opId,
+          result: answer,
+        ) ??
+        Future.value(false))) {
+      return true;
+    }
+    final turnSession = _turnApplicationSession;
+    if (turnSession is GatewaySetupBeatResponder &&
+        await (turnSession as GatewaySetupBeatResponder).tryRespondToConnection(
+          sessionId: sessionId,
+          opId: operation.opId,
+          result: answer,
+        )) {
+      return true;
+    }
+    return await _desktopGateway?.respondToConnection(
+          sessionId: sessionId,
+          opId: operation.opId,
+          result: answer,
+        ) ??
+        false;
+  }
+
+  /// Installs a failed catalog plugin again after its operation settled,
+  /// through this connection's capabilities install into the row's own
+  /// target profile.
+  Future<CatalogRetryResult> _retryCatalogRow(CatalogRow row) async {
+    final gateway = _desktopGateway ?? _normalSession?.client;
+    if (gateway == null) {
+      return CatalogRetryResult(
+        ok: false,
+        message: context.l10n.catalog_send_failed,
+      );
+    }
+    final admin = CapabilityAdmin(
+      profile: widget.connection.gatewayProfile,
+      rest: (method, path, {query, body, timeout}) =>
+          throw const CapabilityException('Not used for a catalog install.'),
+      rpc: (method, params) =>
+          gateway.call(method, params, timeout: const Duration(minutes: 3)),
+    );
+    final mutation = await admin.installCatalogPlugin(
+      row.name,
+      profile: row.targetProfile,
+      force: row.approvedForce,
+      enable: row.approvedEnable,
+      ref: row.approvedRef,
+    );
+    return CatalogRetryResult(
+      ok: mutation.ok,
+      message:
+          mutation.message ??
+          (mutation.lines.isEmpty ? null : mutation.lines.join('\n')),
+    );
   }
 
   /// Answers this chat's waiting setup card through whichever owner holds
@@ -8185,6 +8277,19 @@ class _ChatScreenState extends State<ChatScreen>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (_catalog case final operation?)
+                      CatalogInstallCard(
+                        key: ValueKey(operation.opId),
+                        operation: operation,
+                        respond: (answer) => _respondCatalog(operation, answer),
+                        retry: _retryCatalogRow,
+                        onDismiss: () {
+                          if (_catalog?.opId == operation.opId &&
+                              operation.settled) {
+                            setState(() => _catalog = null);
+                          }
+                        },
+                      ),
                     if (_setupBeat != null)
                       SetupBeatCard(
                         request: _setupBeat!,

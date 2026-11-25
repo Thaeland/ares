@@ -702,6 +702,23 @@ class NormalGatewayApplicationSession {
     return true;
   }
 
+  /// Answers [sessionId]'s connection operation card; false when this owner
+  /// does not hold that chat or its runtime session.
+  Future<bool> tryRespondToConnection({
+    required String sessionId,
+    required String opId,
+    required Map<String, dynamic> result,
+  }) async {
+    final chat = _aliases[sessionId];
+    final gateway = client;
+    if (_closed || chat == null || gateway == null) return false;
+    return gateway.respondToConnection(
+      sessionId: chat.localSessionId,
+      opId: opId,
+      result: result,
+    );
+  }
+
   /// Answers the `setup_beat` card [requestId] for [sessionId]; false when
   /// this owner does not hold it open.
   bool tryRespondToSetupBeat({
@@ -1943,6 +1960,9 @@ class NormalGatewayChatOwner {
       'notification.clear',
       'background.complete',
       'review.summary',
+      // manage_catalog install cards: the chat screen draws and answers them.
+      'connection.request',
+      'connection.update',
     }.contains(event.type)) {
       _auxiliaryEvents.add(event);
       if (_auxiliaryEvents.length > 20) _auxiliaryEvents.removeAt(0);

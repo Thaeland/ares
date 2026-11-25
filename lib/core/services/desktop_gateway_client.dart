@@ -1292,6 +1292,26 @@ class DesktopGatewayClient implements SlashCommandGateway {
   bool ownsServerRequest(String requestId, String method) =>
       _serverRequests[requestId]?.method == method;
 
+  /// Answers a connection operation card (`manage_catalog` rows) for the
+  /// chat [sessionId] with `connection.respond`, owned by that chat's
+  /// runtime session. False, with nothing sent, when the chat has no bound
+  /// runtime session here; false too when the gateway does not say ok.
+  Future<bool> respondToConnection({
+    required String sessionId,
+    required String opId,
+    required Map<String, dynamic> result,
+  }) async {
+    if (_closed) return false;
+    final runtime = _gatewaySessionIds[sessionId];
+    if (runtime == null || runtime.isEmpty || opId.isEmpty) return false;
+    final reply = await call('connection.respond', {
+      'owner': {'type': 'session', 'session_id': runtime},
+      'op_id': opId,
+      'result': result,
+    });
+    return reply['status'] == 'ok';
+  }
+
   /// Answers the `setup_beat` card [requestId] for the chat [sessionId] on
   /// the socket it arrived on. False, and nothing is sent, when the request
   /// is no longer open here (answered, withdrawn, its socket gone) or
