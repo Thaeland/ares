@@ -25,6 +25,13 @@ Ares does not automatically start a second phone TTS instance or microphone.
   idle state with no pending server requests, and submits through the existing
   application-owned normal gateway/journal. Native authority is rechecked through
   setup, baseline, write-ahead, socket/ticket/resume and prompt wire boundaries.
+- A conversation stands in for the completion alert only when the native owner
+  accepts it; a failed car path never loses the alert. Conversations are attempted
+  only after this engine's native owner has answered a claim. When the owner is
+  absent or rejects the post, the existing ordinary alert is posted instead (the
+  classic path keeps its generic "Hermes response ready" notice), unless a
+  targeted cancellation superseded the post. Ongoing-chat cleanup never depends
+  on the car owner and does not revoke sibling tickets.
 - Mark-as-read clears the exact notification and records the existing device-local
   read watermark. It does **not** claim a server-wide read receipt. Body tap uses
   the existing root notification navigation, never a new chat.

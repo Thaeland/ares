@@ -2679,22 +2679,26 @@ class NormalGatewayChatOwner {
             ? HermesNotificationKind.turnDone
             : HermesNotificationKind.turnError;
         if (notificationKindEnabled(kind)) {
-          // Preserve the existing generic terminal oracle unless the root has
-          // explicitly supplied a car conversation producer for this account.
-          if (completed &&
-              _session.conversationFor != null &&
-              publicFinal != null &&
-              publicFinal.isNotEmpty &&
-              _session.hasCurrentAccount) {
-            await _session.notifications.showTurnCompleted(
-              title: settledTitle,
-              turnSummary: publicFinal,
-              turnId: settledTurnId,
-              sessionId: settledSessionId,
-              connectionId: _session.connection.id,
-              conversation: _session.conversationFor?.call(settledSessionId),
-            );
-          } else {
+          // A car conversation is posted only when the root supplied a producer
+          // for this current account AND its native owner accepts it.
+          // Otherwise (no producer, non-Android, owner absent or rejecting)
+          // the existing generic terminal alert is preserved exactly.
+          final conversation =
+              completed &&
+                  publicFinal != null &&
+                  publicFinal.isNotEmpty &&
+                  _session.hasCurrentAccount
+              ? _session.conversationFor?.call(settledSessionId)
+              : null;
+          if (conversation == null ||
+              !await _session.notifications.showConversationReply(
+                title: settledTitle,
+                body: publicFinal!,
+                turnId: settledTurnId,
+                sessionId: settledSessionId,
+                connectionId: _session.connection.id,
+                conversation: conversation,
+              )) {
             await _session.notifications.showKind(
               kind: kind,
               title: completed ? 'Hermes response ready' : 'Hermes turn failed',

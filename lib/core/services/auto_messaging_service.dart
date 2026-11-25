@@ -35,6 +35,18 @@ class AutoMessagingService {
        _sessionFor = sessionFor ?? turns.normalSessionFor,
        _lookup = lookup ?? _findSession;
   static const platform = MethodChannel('com.hermesagent.hermes_android/auto');
+
+  /// Whether this engine's native conversation owner has actually answered.
+  /// Car conversations are attempted only after that proof; until then (other
+  /// platforms, or an engine without the owner registered) completed turns
+  /// keep their existing ordinary alerts instead of waiting on, or being lost
+  /// to, an absent native channel.
+  static bool get ownerAvailable => _ownerAvailable;
+  static bool _ownerAvailable = false;
+  @visibleForTesting
+  static set debugOwnerAvailable(bool value) => _ownerAvailable = value;
+
+  bool get _ownsPlatform => identical(channel, platform);
   final ConnectionManager manager;
   final GatewayTurnApplicationController turns;
   final Future<void> Function(SavedConnection, String)? onOpen;
@@ -72,7 +84,10 @@ class AutoMessagingService {
   void initialize() {
     if (!supported) return;
     channel.setMethodCallHandler((call) async {
-      if (call.method == 'changed') unawaited(drain());
+      if (call.method == 'changed') {
+        if (_ownsPlatform) _ownerAvailable = true;
+        unawaited(drain());
+      }
     });
     unawaited(drain());
   }
@@ -89,10 +104,14 @@ class AutoMessagingService {
         _dirty = false;
         while (!_closed) {
           final raw = await channel.invokeMapMethod<String, dynamic>('claim');
+          if (_ownsPlatform && !_closed) _ownerAvailable = true;
           if (raw == null || _closed) break;
           await _consume(Map<String, dynamic>.from(raw));
         }
       }
+    } on MissingPluginException {
+      // No native owner in this engine: it cannot have minted a conversation.
+      if (_ownsPlatform) _ownerAvailable = false;
     } catch (_) {
       // A lost claim acknowledgement is uncertain, not permission to retry.
     }
@@ -204,5 +223,7 @@ class AutoMessagingService {
   void dispose() {
     _closed = true;
     if (supported) channel.setMethodCallHandler(null);
+    // A later owner must prove the native channel again.
+    if (supported && _ownsPlatform) _ownerAvailable = false;
   }
 }

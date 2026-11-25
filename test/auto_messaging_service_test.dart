@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/auto_messaging_service.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
@@ -17,6 +18,8 @@ import 'package:hermes_android/core/services/notification_prefs.dart';
 import 'package:hermes_android/core/services/turn_notification_service.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/recording_turn_notification_sink.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -356,6 +359,310 @@ void main() {
       expect(frames.where((f) => f['method'] == 'prompt.submit'), isEmpty);
     },
   );
+
+  test(
+    'native conversation owner is proven by a platform claim, cleared on absence and disposal',
+    () async {
+      final f = await Fixture.create();
+      addTearDown(f.close);
+      addTearDown(() => AutoMessagingService.debugOwnerAvailable = false);
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      addTearDown(
+        () => messenger.setMockMethodCallHandler(
+          AutoMessagingService.platform,
+          null,
+        ),
+      );
+      AutoMessagingService owner() => AutoMessagingService(
+        manager: f.manager,
+        turns: f.turns,
+        supported: true,
+      );
+      // No owner registered in this engine: absence is not a failure, and
+      // never proves conversation authority.
+      final absent = owner()..initialize();
+      await absent.drain();
+      expect(AutoMessagingService.ownerAvailable, isFalse);
+      absent.dispose();
+      final claims = <String>[];
+      messenger.setMockMethodCallHandler(AutoMessagingService.platform, (
+        call,
+      ) async {
+        claims.add(call.method);
+        return null;
+      });
+      final present = owner()..initialize();
+      await present.drain();
+      expect(claims, contains('claim'));
+      expect(AutoMessagingService.ownerAvailable, isTrue);
+      present.dispose();
+      expect(AutoMessagingService.ownerAvailable, isFalse);
+      // A private test channel never stands in for the platform owner.
+      await f.service.drain();
+      expect(AutoMessagingService.ownerAvailable, isFalse);
+    },
+  );
+
+  group('conversation fallback keeps exactly one completion alert', () {
+    late Fixture f;
+    late ConversationNotificationTarget target;
+    setUp(() async {
+      f = await Fixture.create();
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      target = TurnNotificationService.conversationTarget(
+        f.manager,
+        f.manager.getConnections().single,
+        'stored',
+      )!;
+    });
+    tearDown(() async {
+      debugDefaultTargetPlatformOverride = null;
+      AutoMessagingService.debugOwnerAvailable = false;
+      await f.close();
+    });
+
+    test('other platforms never mint a conversation target', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      expect(
+        TurnNotificationService.conversationTarget(
+          f.manager,
+          f.manager.getConnections().single,
+          'stored',
+        ),
+        isNull,
+      );
+    });
+
+    test(
+      'absent owner: ordinary alert only, without touching the car path',
+      () async {
+        final sink = _ConversationSink();
+        final service = TurnNotificationService(sink: sink);
+        await service.showTurnCompleted(
+          title: 'Chat',
+          turnSummary: 'Answer',
+          turnId: 'next-1',
+          sessionId: 'stored',
+          connectionId: 'c',
+          conversation: target,
+        );
+        expect(sink.shown.map((n) => n.conversation), [isNull]);
+        expect(sink.shown.single.title, 'Chat');
+        final handled = await service.showConversationReply(
+          title: 'Chat',
+          body: 'Answer',
+          turnId: 'classic-1',
+          sessionId: 'stored',
+          connectionId: 'c',
+          conversation: target,
+        );
+        expect(handled, isFalse, reason: 'caller must keep its generic alert');
+        expect(sink.shown, hasLength(1));
+      },
+    );
+
+    test('posted conversation replaces, never duplicates, the alert', () async {
+      AutoMessagingService.debugOwnerAvailable = true;
+      final sink = _ConversationSink();
+      final service = TurnNotificationService(sink: sink);
+      await service.showTurnCompleted(
+        title: 'Chat',
+        turnSummary: 'Answer',
+        turnId: 'next-1',
+        sessionId: 'stored',
+        connectionId: 'c',
+        conversation: target,
+      );
+      expect(sink.shown.map((n) => n.conversation), [same(target)]);
+      expect(
+        await service.showConversationReply(
+          title: 'Chat',
+          body: 'Answer',
+          turnId: 'classic-1',
+          sessionId: 'stored',
+          connectionId: 'c',
+          conversation: target,
+        ),
+        isTrue,
+      );
+      expect(sink.shown.map((n) => n.conversation), [
+        same(target),
+        same(target),
+      ]);
+      // A replayed settlement is throttled and is still "handled".
+      expect(
+        await service.showConversationReply(
+          title: 'Chat',
+          body: 'Answer',
+          turnId: 'classic-1',
+          sessionId: 'stored',
+          connectionId: 'c',
+          conversation: target,
+        ),
+        isTrue,
+      );
+      expect(sink.shown, hasLength(2));
+    });
+
+    test('rejected conversation falls back to the ordinary alert', () async {
+      AutoMessagingService.debugOwnerAvailable = true;
+      final sink = _ConversationSink()
+        ..reject = StateError('Conversation account changed');
+      final service = TurnNotificationService(sink: sink);
+      await service.showTurnCompleted(
+        title: 'Chat',
+        turnSummary: 'Answer',
+        turnId: 'next-1',
+        sessionId: 'stored',
+        connectionId: 'c',
+        conversation: target,
+      );
+      expect(sink.attempts, 1);
+      expect(sink.shown.map((n) => n.conversation), [isNull]);
+      expect(
+        await service.showConversationReply(
+          title: 'Chat',
+          body: 'Answer',
+          turnId: 'classic-1',
+          sessionId: 'stored',
+          connectionId: 'c',
+          conversation: target,
+        ),
+        isFalse,
+      );
+      expect(sink.attempts, 2);
+      expect(sink.shown, hasLength(1));
+    });
+
+    for (final all in [false, true]) {
+      test(
+        'cancellation during a held conversation post suppresses fallback all=$all',
+        () async {
+          AutoMessagingService.debugOwnerAvailable = true;
+          final sink = _ConversationSink()..hold = Completer<void>();
+          final service = TurnNotificationService(sink: sink);
+          await service.ensureInitialized();
+          final posted = service.showTurnCompleted(
+            title: 'Chat',
+            turnSummary: 'Answer',
+            turnId: 'next-1',
+            sessionId: 'stored',
+            connectionId: 'c',
+            conversation: target,
+          );
+          await pumpEventQueue();
+          expect(sink.attempts, 1);
+          if (all) {
+            await service.cancelAll();
+          } else {
+            await service.cancelTurnCompleted(
+              'next-1',
+              sessionId: 'stored',
+              connectionId: 'c',
+            );
+          }
+          // The native epoch fence rejects the held post.
+          sink.hold!.completeError(
+            StateError('Conversation authority unavailable'),
+          );
+          await posted;
+          expect(sink.shown, isEmpty);
+        },
+      );
+    }
+  });
+
+  group('plugin sink cleanup is independent of the car owner', () {
+    const plugin = MethodChannel('dexterous.com/flutter/local_notifications');
+    final pluginCalls = <MethodCall>[];
+    final autoCalls = <MethodCall>[];
+    late TestDefaultBinaryMessenger messenger;
+    setUp(() {
+      messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      pluginCalls.clear();
+      autoCalls.clear();
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      AndroidFlutterLocalNotificationsPlugin.registerWith();
+      messenger.setMockMethodCallHandler(plugin, (call) async {
+        pluginCalls.add(call);
+        return null;
+      });
+    });
+    tearDown(() {
+      debugDefaultTargetPlatformOverride = null;
+      messenger.setMockMethodCallHandler(plugin, null);
+      messenger.setMockMethodCallHandler(AutoMessagingService.platform, null);
+    });
+    void autoOwner(Object? error) {
+      messenger.setMockMethodCallHandler(AutoMessagingService.platform, (
+        call,
+      ) async {
+        autoCalls.add(call);
+        if (error != null) throw error;
+        return null;
+      });
+    }
+
+    test('ongoing IDs never reach the car owner or bump its epoch', () async {
+      autoOwner(null);
+      final ongoing = TurnNotificationService.ongoingChatNotificationIdFor(
+        connectionId: 'c',
+        localSessionId: 'local',
+      );
+      await PluginTurnNotificationSink().cancel(ongoing);
+      expect(autoCalls, isEmpty);
+      expect(pluginCalls.map((c) => c.method), ['cancel']);
+      expect((pluginCalls.single.arguments as Map)['id'], ongoing);
+    });
+
+    test('absent owner still cancels the ordinary terminal record', () async {
+      final id = TurnNotificationService.notificationIdFor('terminal');
+      await PluginTurnNotificationSink().cancel(id);
+      await PluginTurnNotificationSink().cancelAll();
+      expect(pluginCalls.map((c) => c.method), ['cancel', 'cancelAll']);
+      expect((pluginCalls.first.arguments as Map)['id'], id);
+    });
+
+    test(
+      'failing owner fence is reported only after ordinary cleanup',
+      () async {
+        autoOwner(PlatformException(code: 'auto_unavailable'));
+        final id = TurnNotificationService.notificationIdFor('terminal');
+        await expectLater(
+          PluginTurnNotificationSink().cancel(id),
+          throwsA(isA<PlatformException>()),
+        );
+        await expectLater(
+          PluginTurnNotificationSink().cancelAll(),
+          throwsA(isA<PlatformException>()),
+        );
+        expect(autoCalls.map((c) => c.method), ['cancel', 'cancelAll']);
+        expect((autoCalls.first.arguments as Map)['id'], id);
+        expect(pluginCalls.map((c) => c.method), ['cancel', 'cancelAll']);
+      },
+    );
+  });
+}
+
+/// Simulates the native conversation owner behind the sink: conversation posts
+/// can be held or rejected; ordinary posts are recorded as shown.
+class _ConversationSink extends RecordingTurnNotificationSink {
+  Object? reject;
+  Completer<void>? hold;
+  int attempts = 0;
+  @override
+  Future<void> show(TurnNotification notification) async {
+    if (notification.conversation != null) {
+      attempts++;
+      final held = hold;
+      if (held != null) await held.future;
+      final error = reject;
+      if (error != null) throw error;
+    }
+    await super.show(notification);
+  }
 }
 
 class Secrets implements CredentialStore {
