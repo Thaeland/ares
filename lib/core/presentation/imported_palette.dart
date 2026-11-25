@@ -43,19 +43,20 @@ ThemeData paintImportedTheme(ThemeData current, ImportedTheme imported) {
 final _built = <String, ThemeData>{};
 
 ThemeData _build(ImportedTheme imported, {required bool nextGen}) {
-  final scheme = _importedScheme(imported, nextGen: nextGen);
+  final ink = _ReadableImport(imported);
+  final scheme = _importedScheme(ink, imported.brightness, nextGen: nextGen);
   return nextGen
       ? nextGenTheme(
           imported.brightness,
           NextGenLook.instance,
           profileScheme: scheme,
-          colors: _paintNg(imported, scheme),
+          colors: _paintNg(imported, ink, scheme),
         )
       : hermesTheme(imported.brightness, profileScheme: scheme);
 }
 
-/// Body text has to clear 4.5:1 on every surface it is drawn on. A theme
-/// that falls short keeps its hue and moves toward black or white.
+/// Text has to clear 4.5:1 on every surface it is drawn on. A theme that
+/// falls short keeps its hue and moves toward black or white.
 Color _legible(Color ink, List<Color> surfaces) {
   bool passes(Color color) =>
       surfaces.every((surface) => contrastRatio(color, surface) >= 4.5);
@@ -71,36 +72,141 @@ Color _legible(Color ink, List<Color> surfaces) {
 Color _over(Color tint, double alpha, Color surface) =>
     Color.alphaBlend(tint.withValues(alpha: alpha), surface);
 
-ColorScheme _importedScheme(ImportedTheme t, {required bool nextGen}) {
-  final background = t[ImportedThemeColor.background];
-  final card = t[ImportedThemeColor.card];
-  final raised = t[ImportedThemeColor.raised];
-  final accent = t[ImportedThemeColor.accent];
-  final error = t[ImportedThemeColor.error];
-  final surfaces = [background, card, raised];
-  final foreground = _legible(t[ImportedThemeColor.foreground], surfaces);
-  final muted = _legible(t[ImportedThemeColor.mutedForeground], surfaces);
+/// The tints both layouts lay over a surface to mark it selected, focused
+/// or in error: NextGen's accent and danger washes (16%), Classic's selected
+/// rows, chips and menu items (18%).
+List<Color> _tints(Color surface, Color accent, Color error) => [
+  _over(accent, 0.16, surface),
+  _over(accent, 0.18, surface),
+  _over(error, 0.16, surface),
+];
+
+/// A surface no text could be read on alongside the background (a dark
+/// activity bar in a light theme, say) moves toward the background until
+/// black or white text clears 4.5:1 on it again, with some headroom.
+Color _hostable(Color surface, Color background) {
+  final target = foregroundFor(background);
+  if (contrastRatio(target, surface) >= 4.5) return surface;
+  final goal = contrastRatio(target, background).clamp(4.5, 7.0);
+  for (var step = 1; step <= 32; step++) {
+    final mixed = Color.lerp(surface, background, step / 32)!;
+    if (contrastRatio(target, mixed) >= goal) return mixed;
+  }
+  return background;
+}
+
+/// An import's colours with every ink corrected against every surface it is
+/// drawn on in either layout: the page, cards, raised menus and dialogs, the
+/// sidebar, inputs and the composer, and the selected, focused and error
+/// tints over each of them. Snack bars and tooltips invert the foreground
+/// and the background, which clear 4.5:1 against each other by the same
+/// correction.
+final class _ReadableImport {
+  factory _ReadableImport(ImportedTheme t) {
+    final background = t[ImportedThemeColor.background];
+    Color host(ImportedThemeColor role) => _hostable(t[role], background);
+    final card = host(ImportedThemeColor.card);
+    final raised = host(ImportedThemeColor.raised);
+    final sidebar = host(ImportedThemeColor.sidebar);
+    final input = host(ImportedThemeColor.input);
+    final error = t[ImportedThemeColor.error];
+    final plain = [background, card, raised, sidebar, input];
+    // The accent is also text (links, selected rows, focused labels), so it
+    // has to read on its own selection tint as well.
+    bool accentPasses(Color accent) => [
+      for (final surface in plain) ...[
+        surface,
+        ..._tints(surface, accent, error),
+      ],
+    ].every((surface) => contrastRatio(accent, surface) >= 4.5);
+    var accent = t[ImportedThemeColor.accent];
+    if (!accentPasses(accent)) {
+      final target = foregroundFor(background);
+      final start = accent;
+      for (var step = 1; step <= 32; step++) {
+        accent = Color.lerp(start, target, step / 32)!;
+        if (accentPasses(accent)) break;
+      }
+    }
+    final surfaces = [
+      ...plain,
+      for (final surface in plain) ..._tints(surface, accent, error),
+    ];
+    final foreground = _legible(t[ImportedThemeColor.foreground], surfaces);
+    return _ReadableImport._(
+      background: background,
+      card: card,
+      raised: raised,
+      sidebar: sidebar,
+      input: input,
+      accent: accent,
+      error: error,
+      border: t[ImportedThemeColor.border],
+      foreground: foreground,
+      muted: _legible(t[ImportedThemeColor.mutedForeground], surfaces),
+      // Snack bar actions sit on the inverted foreground.
+      inverseAccent: _legible(accent, [foreground]),
+    );
+  }
+
+  const _ReadableImport._({
+    required this.background,
+    required this.card,
+    required this.raised,
+    required this.sidebar,
+    required this.input,
+    required this.accent,
+    required this.error,
+    required this.border,
+    required this.foreground,
+    required this.muted,
+    required this.inverseAccent,
+  });
+
+  final Color background;
+  final Color card;
+  final Color raised;
+  final Color sidebar;
+  final Color input;
+  final Color accent;
+  final Color error;
+  final Color border;
+  final Color foreground;
+  final Color muted;
+  final Color inverseAccent;
+}
+
+ColorScheme _importedScheme(
+  _ReadableImport ink,
+  Brightness brightness, {
+  required bool nextGen,
+}) {
+  final background = ink.background;
+  final accent = ink.accent;
+  final error = ink.error;
+  final foreground = ink.foreground;
   return ColorScheme.fromSeed(
     seedColor: accent,
-    brightness: t.brightness,
+    brightness: brightness,
   ).copyWith(
     primary: accent,
     onPrimary: foregroundFor(accent),
     primaryContainer: _over(accent, 0.16, background),
     onPrimaryContainer: foreground,
+    inversePrimary: ink.inverseAccent,
     surfaceTint: accent,
     surface: background,
     onSurface: foreground,
-    onSurfaceVariant: muted,
+    onSurfaceVariant: ink.muted,
     surfaceContainerLowest: background,
-    // Classic draws cards, menus and inputs on its raised surface; NextGen
-    // draws cards on `surface` and steps up from there.
-    surfaceContainerLow: nextGen ? card : raised,
-    surfaceContainer: raised,
-    surfaceContainerHigh: raised,
-    surfaceContainerHighest: raised,
-    outline: t[ImportedThemeColor.border],
-    outlineVariant: t[ImportedThemeColor.border],
+    // Classic draws cards, menus and inputs on its raised surface;
+    // NextGen draws cards on `surface` and steps up from there.
+    surfaceContainerLow: nextGen ? ink.card : ink.raised,
+    surfaceContainer: ink.raised,
+    surfaceContainerHigh: ink.raised,
+    surfaceContainerHighest: ink.raised,
+    outline: ink.border,
+    outlineVariant: ink.border,
     error: error,
     onError: foregroundFor(error),
     errorContainer: _over(error, 0.16, background),
@@ -110,7 +216,7 @@ ColorScheme _importedScheme(ImportedTheme t, {required bool nextGen}) {
   );
 }
 
-NgColors _paintNg(ImportedTheme imported, ColorScheme scheme) {
+NgColors _paintNg(ImportedTheme imported, _ReadableImport ink, ColorScheme s) {
   // Status colours follow the import's brightness, not the app's.
   final status = NgColors.build(
     imported.brightness,
@@ -118,36 +224,36 @@ NgColors _paintNg(ImportedTheme imported, ColorScheme scheme) {
     false,
     false,
   );
-  final accent = scheme.primary;
-  final background = scheme.surface;
+  final accent = s.primary;
+  final background = s.surface;
   return NgColors(
     background: background,
-    surface: imported[ImportedThemeColor.card],
-    surface2: imported[ImportedThemeColor.raised],
-    surface3: imported[ImportedThemeColor.raised],
-    well: imported[ImportedThemeColor.input],
-    thumb: imported[ImportedThemeColor.card],
-    sheet: imported[ImportedThemeColor.card],
-    input: imported[ImportedThemeColor.input],
-    sidebar: imported[ImportedThemeColor.sidebar],
+    surface: ink.card,
+    surface2: ink.raised,
+    surface3: ink.raised,
+    well: ink.input,
+    thumb: ink.card,
+    sheet: ink.card,
+    input: ink.input,
+    sidebar: ink.sidebar,
     userBubble: accent,
-    onUserBubble: scheme.onPrimary,
-    text: scheme.onSurface,
-    text2: scheme.onSurface,
-    text3: scheme.onSurfaceVariant,
-    textMuted: scheme.onSurfaceVariant,
+    onUserBubble: s.onPrimary,
+    text: s.onSurface,
+    text2: s.onSurface,
+    text3: s.onSurfaceVariant,
+    textMuted: s.onSurfaceVariant,
     accent: accent,
-    onAccent: scheme.onPrimary,
+    onAccent: s.onPrimary,
     accentText: accent,
     accentSoft: accent.withValues(alpha: 0.16),
-    inverse: scheme.onSurface,
+    inverse: s.onSurface,
     onInverse: background,
-    stroke: scheme.outlineVariant,
-    strokeStrong: scheme.outline,
-    danger: scheme.error,
+    stroke: s.outlineVariant,
+    strokeStrong: s.outline,
+    danger: s.error,
     success: status.success,
     warning: status.warning,
-    dangerSoft: scheme.error.withValues(alpha: 0.16),
+    dangerSoft: s.error.withValues(alpha: 0.16),
     successSoft: status.successSoft,
     warningSoft: status.warningSoft,
     glow: false,

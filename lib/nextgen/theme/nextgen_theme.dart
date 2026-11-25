@@ -382,6 +382,10 @@ ThemeData nextGenTheme(
           glow: look.glow,
         );
   final c = colors ?? fromLook;
+  // An imported palette has its muted ink corrected against every surface,
+  // so disabled text uses it instead of Material's 38% wash, which falls
+  // below 4.5:1 on a theme's own fills. Built-in looks keep the default.
+  final disabledInk = colors?.text3;
 
   final scheme = base.colorScheme.copyWith(
     brightness: brightness,
@@ -440,6 +444,7 @@ ThemeData nextGenTheme(
     colorScheme: scheme,
     scaffoldBackgroundColor: c.background,
     canvasColor: c.background,
+    disabledColor: disabledInk ?? base.disabledColor,
     cardColor: c.surface,
     dividerColor: c.stroke,
     textTheme: textTheme,
@@ -496,6 +501,8 @@ ThemeData nextGenTheme(
       style: FilledButton.styleFrom(
         backgroundColor: c.accent,
         foregroundColor: c.onAccent,
+        disabledBackgroundColor: disabledInk == null ? null : c.surface2,
+        disabledForegroundColor: disabledInk,
         shape: pill,
         minimumSize: const Size(0, 48),
         textStyle: t(NgType.label.copyWith(fontSize: 15)),
@@ -504,6 +511,7 @@ ThemeData nextGenTheme(
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: c.text,
+        disabledForegroundColor: disabledInk,
         side: BorderSide(color: c.strokeStrong),
         shape: pill,
         minimumSize: const Size(0, 44),
@@ -513,6 +521,7 @@ ThemeData nextGenTheme(
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         foregroundColor: c.accentText,
+        disabledForegroundColor: disabledInk,
         shape: pill,
         textStyle: t(NgType.label),
       ),
@@ -558,6 +567,14 @@ ThemeData nextGenTheme(
         side: BorderSide(color: c.stroke),
       ),
       textStyle: t(NgType.bodySmall),
+      labelTextStyle: disabledInk == null
+          ? null
+          : WidgetStateProperty.resolveWith(
+              (states) => t(
+                NgType.label,
+                states.contains(WidgetState.disabled) ? disabledInk : c.text,
+              ),
+            ),
     ),
     snackBarTheme: SnackBarThemeData(
       backgroundColor: c.inverse,
