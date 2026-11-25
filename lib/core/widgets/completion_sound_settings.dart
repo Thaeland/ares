@@ -19,10 +19,10 @@ class CompletionSoundSettings extends StatelessWidget {
 
   static String soundLabel(AppLocalizations l, WindowsCompletionSound sound) =>
       switch (sound) {
-        WindowsCompletionSound.system => l.windows_sound_default,
-        WindowsCompletionSound.mail => l.windows_sound_mail,
-        WindowsCompletionSound.reminder => l.windows_sound_reminder,
-        WindowsCompletionSound.silent => l.windows_sound_silent,
+        WindowsCompletionSound.system => l.completion_sound_system,
+        WindowsCompletionSound.mail => l.completion_sound_mail,
+        WindowsCompletionSound.reminder => l.completion_sound_reminder,
+        WindowsCompletionSound.silent => l.completion_sound_silent,
       };
 
   static Future<void> _choose(WindowsCompletionSound sound) async {
@@ -45,7 +45,7 @@ class CompletionSoundSettings extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  l.windows_completion_sound,
+                  l.completion_sound,
                   style: Theme.of(sheet).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 8),
@@ -81,14 +81,14 @@ class CompletionSoundSettings extends StatelessWidget {
       children: [
         SwitchListTile(
           key: const ValueKey('share-chat-activity'),
-          title: Text(l.windows_window_activity),
-          subtitle: Text(l.windows_window_activity_hint),
+          title: Text(l.chat_activity_share),
+          subtitle: Text(l.chat_activity_share_hint),
           value: prefs.shareWindowActivity,
           onChanged: NotificationPrefsStore.setShareWindowActivity,
         ),
         ListTile(
           key: const ValueKey('completion-sound'),
-          title: Text(l.windows_completion_sound),
+          title: Text(l.completion_sound),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

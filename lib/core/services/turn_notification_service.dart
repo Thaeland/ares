@@ -120,6 +120,7 @@ class TurnNotification {
 /// its previous sound. Android Auto conversation posts return before this and
 /// stay on their own native path.
 NotificationDetails turnNotificationDetails(TurnNotification notification) {
+  final strings = notificationStrings();
   final cue = CompletionCue.resolve(
     silent: notification.silent,
     onlyAlertOnce: notification.onlyAlertOnce,
@@ -139,7 +140,9 @@ NotificationDetails turnNotificationDetails(TurnNotification notification) {
   final suffix = cue.channelSuffix;
   final androidDetails = AndroidNotificationDetails(
     suffix.isEmpty ? channel.id : '${channel.id}_$suffix',
-    suffix.isEmpty ? channel.name : '${channel.name} ($suffix)',
+    suffix.isEmpty
+        ? channel.name
+        : '${channel.name} (${_choiceLabel(strings, suffix)})',
     channelDescription: channel.description,
     // A white silhouette, as Android expects in the status bar; the
     // launcher's adaptive icon shows as a blank circle there.
@@ -188,7 +191,7 @@ NotificationDetails turnNotificationDetails(TurnNotification notification) {
       sound: cue.audible && cue.linuxTheme != null
           ? ThemeLinuxSound(cue.linuxTheme!)
           : null,
-      defaultActionName: 'Open',
+      defaultActionName: strings.notification_open_action,
       actions: [
         for (final action in notification.actions)
           LinuxNotificationAction(key: action.id, label: action.label),
@@ -196,6 +199,24 @@ NotificationDetails turnNotificationDetails(TurnNotification notification) {
     ),
   );
 }
+
+/// The app's strings for text the operating system shows outside any widget:
+/// channel names and notification actions follow the device language.
+AppLocalizations notificationStrings() => lookupAppLocalizations(
+  resolvePreferredLocale(
+    PlatformDispatcher.instance.locales,
+    AppLocalizations.supportedLocales,
+  ),
+);
+
+/// The completion choice a channel suffix belongs to, as the settings name it.
+String _choiceLabel(AppLocalizations strings, String suffix) =>
+    switch (suffix) {
+      'mail' => strings.completion_sound_mail,
+      'reminder' => strings.completion_sound_reminder,
+      'silent' => strings.completion_sound_silent,
+      _ => suffix,
+    };
 
 /// The platform seam [TurnNotificationService] posts through.
 ///
@@ -283,7 +304,7 @@ class PluginTurnNotificationSink
       // default sound is the desktop theme's message sound; a completion
       // choice replaces it per notification.
       linux: LinuxInitializationSettings(
-        defaultActionName: 'Open',
+        defaultActionName: notificationStrings().notification_open_action,
         defaultSound: ThemeLinuxSound('message'),
       ),
     );
