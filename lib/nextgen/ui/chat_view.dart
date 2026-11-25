@@ -2,6 +2,7 @@
 // thinking and tool rows), status line, inline approval/question panel and the
 // pill composer (model chip, dictation, send/stop, steer or queue while busy).
 import 'dart:async';
+import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,20 @@ import '../../core/widgets/desktop_shortcuts.dart';
 import '../../core/widgets/transcript_reader.dart';
 import '../../core/widgets/transcript_body.dart';
 import '../../core/services/chat_presentation_state.dart';
+import '../../core/models/session.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/widgets/composer_prompt_recall.dart';
+import '../../core/composer/composer_commands.dart';
+import '../../core/composer/composer_drag.dart';
+import '../../core/composer/composer_intake.dart';
+import '../../core/composer/context_status.dart';
+import '../../core/composer/failure_recovery.dart';
+import '../../core/widgets/composer_context_status.dart';
+import '../../core/widgets/composer_drop_surface.dart';
+import '../../core/widgets/composer_reference_assist.dart';
+import '../../core/widgets/failure_recovery_card.dart';
+import '../../core/widgets/prompt_snippet_sheet.dart';
+import '../../core/widgets/resume_session_picker.dart';
 import '../../core/widgets/orphan_draft_recovery.dart';
 import '../../core/widgets/markdown_code_block.dart';
 import '../../core/widgets/media_artifact_card.dart';
@@ -61,6 +75,7 @@ class NgChatView extends StatefulWidget {
     this.onClose,
     this.sessions,
     this.onNewChat,
+    this.onResume,
     this.readAloudFactory,
   });
 
@@ -71,6 +86,7 @@ class NgChatView extends StatefulWidget {
   /// The sidebar's list, for a dot on its button while other chats are unread.
   final NgSessionsModel? sessions;
   final VoidCallback? onNewChat;
+  final void Function(String id, String title)? onResume;
 
   /// Test hook: supplies the read-aloud controller (e.g. a fake speaker).
   @visibleForTesting
@@ -93,6 +109,9 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
   final _input = SlashCommandHighlightController();
   bool _showSessionFiles = false;
   final _promptRecall = ComposerPromptRecall();
+  StatusBarLayout _status = StatusBarLayout.defaults();
+  ContextReading? _breakdown;
+  bool _breakdownLoading = false;
   late ComposerDraftWriter _draftWriter;
   String _lastText = '';
   bool _hydrating = false;
@@ -342,11 +361,20 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
               title: Text(ngL.ng_files),
               onTap: () => Navigator.pop(context, 'files'),
             ),
+            ListTile(
+              leading: Icon(Icons.notes_outlined, color: c.text2),
+              title: Text(context.sharedL10n.composer_snippets),
+              onTap: () => Navigator.pop(context, 'snippets'),
+            ),
           ],
         ),
       ),
     );
     if (choice == null || !mounted) return;
+    if (choice == 'snippets') {
+      await showPromptSnippets(context: context, editor: _input);
+      return;
+    }
     if (_slotsLeft <= 0) {
       ngToast(
         context,
@@ -512,11 +540,279 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     await chat.send(text);
   }
 
+  Future<bool> _runDedicated(NgSlashLine command) async {
+    final sessionId = chat.runtimeId ?? chat.storedId;
+    final run = await runDedicatedCommand(
+      name: command.name,
+      arg: command.arg,
+      sessionId: sessionId,
+      rpc: (method, params) => chat.gateway.call(
+        method,
+        params,
+        timeout: const Duration(minutes: 2),
+      ),
+    );
+    if (run == null) return false;
+    if (!mounted) return true;
+    if (run.plan.openResume) {
+      _input.clear();
+      final picked = await showResumePicker(
+        context: context,
+        initialQuery: run.plan.resumeQuery,
+        listAvailable: widget.sessions != null,
+        load: (_) async => [
+          for (final row in widget.sessions?.sessions ?? const <Session>[])
+            ResumeCandidate(id: row.id, title: row.title, preview: row.preview),
+        ],
+      );
+      if (picked != null) {
+        final open = widget.onResume;
+        if (open == null) {
+          chat.showCommandNotice(
+            context.sharedL10n.composer_resume_unavailable,
+          );
+        } else {
+          open(picked.id, picked.title);
+        }
+      }
+      return true;
+    }
+    if (run.answer?.fallbackToExec == true) return false;
+    final notice = run.answer?.notice ?? run.plan.notice;
+    _input.clear();
+    if (notice != null && notice.isNotEmpty) chat.showCommandNotice(notice);
+    if (run.answer?.watchHandoff == true && sessionId != null) {
+      unawaited(_watchHandoff(sessionId, command.arg.trim()));
+    }
+    return true;
+  }
+
+  Future<void> _watchHandoff(String sessionId, String platform) async {
+    final l10n = context.sharedL10n;
+    final deadline = DateTime.now().millisecondsSinceEpoch + 60000;
+    while (mounted && DateTime.now().millisecondsSinceEpoch < deadline) {
+      await Future<void>.delayed(const Duration(milliseconds: 800));
+      if (!mounted) return;
+      try {
+        final state = await chat.gateway.call('handoff.state', {
+          'session_id': sessionId,
+        });
+        final phase = readHandoffPhase(
+          state: state['state'],
+          nowMs: DateTime.now().millisecondsSinceEpoch,
+          deadlineMs: deadline,
+        );
+        if (phase == HandoffPhase.completed) {
+          chat.showCommandNotice(l10n.composer_handoff_done(platform));
+          return;
+        }
+        if (phase == HandoffPhase.failed) {
+          final error = state['error']?.toString().trim();
+          chat.showCommandNotice(
+            error == null || error.isEmpty
+                ? l10n.composer_handoff_failed
+                : error,
+          );
+          return;
+        }
+      } catch (_) {}
+    }
+    if (!mounted) return;
+    try {
+      await chat.gateway.call(
+        'handoff.fail',
+        handoffFailParams(sessionId, l10n.composer_handoff_timeout),
+      );
+    } catch (_) {}
+    chat.showCommandNotice(l10n.composer_handoff_timeout);
+  }
+
+  Future<void> _compressChat() async {
+    final id = chat.runtimeId ?? chat.storedId;
+    if (id == null) return;
+    await chat.gateway.call('session.compress', {
+      'session_id': id,
+    }, timeout: const Duration(minutes: 2));
+    await chat.reloadTranscript();
+    if (!mounted) return;
+    chat.showCommandNotice(context.sharedL10n.composer_compress_done);
+    await _loadBreakdown();
+  }
+
+  Future<void> _switchToSuggested(ModelSuggestion suggestion) async {
+    final provider = suggestion.provider ?? chat.provider;
+    if (provider == null || provider.isEmpty) {
+      await showNgModelSheet(context, chat);
+      return;
+    }
+    final result = await chat.setModel(
+      provider: provider,
+      model: suggestion.model,
+    );
+    if (!mounted) return;
+    if (result is NgModelSwitchNeedsConfirmation) {
+      final again = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: Text(result.message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(context.sharedL10n.composer_failure_hide_details),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(context.sharedL10n.composer_failure_switch_model),
+            ),
+          ],
+        ),
+      );
+      if (again == true) {
+        await chat.setModel(
+          provider: provider,
+          model: suggestion.model,
+          confirm: true,
+        );
+      }
+    } else if (result is NgModelSwitchFailed) {
+      chat.showCommandNotice(result.message);
+    }
+  }
+
+  void _editFailedPrompt() {
+    final last = chat.items.whereType<NgUserItem>().lastOrNull;
+    final text = last?.sentText ?? last?.text;
+    if (text == null || text.trim().isEmpty) return;
+    _setComposer(text);
+  }
+
+  Future<void> _loadBreakdown() async {
+    if (!_status.visible('context-usage')) return;
+    final id = chat.runtimeId ?? chat.storedId;
+    if (id == null) {
+      setState(() => _breakdown = ContextReading.empty);
+      return;
+    }
+    setState(() => _breakdownLoading = true);
+    try {
+      final result = await chat.gateway.call('session.context_breakdown', {
+        'session_id': id,
+      });
+      if (!mounted) return;
+      setState(() {
+        _breakdown = parseContextBreakdown(result);
+        _breakdownLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _breakdown = ContextReading.empty;
+        _breakdownLoading = false;
+      });
+    }
+  }
+
+  Future<void> _acceptDrop(ComposerDrag drag) async {
+    final plan = classifyDrag(drag);
+    final path = plan.path ?? '';
+    if (plan.kind == LocalIntake.reference) {
+      appendWorkspaceReference(
+        _input,
+        gatewayContextReference(folder: plan.directory, path: path),
+      );
+      return;
+    }
+    if (!File(path).existsSync()) {
+      ngToast(context, context.sharedL10n.composer_file_missing);
+      return;
+    }
+    await _stageLocal(plan.kind, path);
+  }
+
+  Future<void> _consumePaste(PastedChunk chunk) async {
+    final path = clipboardPath(chunk.text);
+    var exists = false;
+    var directory = false;
+    if (path != null) {
+      final type = FileSystemEntity.typeSync(path);
+      exists = type != FileSystemEntityType.notFound;
+      directory = type == FileSystemEntityType.directory;
+    }
+    final plan = classifyPaste(
+      chunk.text,
+      pathExists: exists,
+      directory: directory,
+    );
+    if (plan.kind == LocalIntake.leaveText) return;
+    if (plan.kind == LocalIntake.reference) {
+      _removePasted(chunk);
+      appendWorkspaceReference(
+        _input,
+        gatewayContextReference(folder: true, path: plan.path ?? ''),
+      );
+      return;
+    }
+    if (plan.kind == LocalIntake.pastedText) {
+      try {
+        final draft = await chat.attachmentService.preparePastedText(
+          text: chunk.text,
+          existingDrafts: _drafts,
+        );
+        if (!mounted) return;
+        _removePasted(chunk);
+        setState(() => _drafts.add(draft));
+      } on AttachmentDraftException catch (error) {
+        if (mounted) ngToast(context, error.message);
+      }
+      return;
+    }
+    final staged = plan.path;
+    if (staged == null) return;
+    _removePasted(chunk);
+    await _stageLocal(plan.kind, staged);
+  }
+
+  void _removePasted(PastedChunk chunk) {
+    final text = _input.text;
+    final index = text.indexOf(chunk.text);
+    if (index < 0) return;
+    final next = text.replaceRange(index, index + chunk.text.length, '');
+    _input.value = TextEditingValue(
+      text: next,
+      selection: TextSelection.collapsed(
+        offset: next.length.clamp(0, next.length),
+      ),
+    );
+  }
+
+  Future<void> _stageLocal(LocalIntake kind, String path) async {
+    try {
+      final name = path.split(RegExp(r'[\\/]')).where((p) => p.isNotEmpty).last;
+      final draft = kind == LocalIntake.imageFile
+          ? await chat.attachmentService.prepareImage(
+              sourcePath: path,
+              displayName: name,
+              existingDrafts: _drafts,
+              mode: AttachmentDraftMode.remoteGateway,
+              maxTotalBytes: maxNextGenAttachmentDraftBytes,
+            )
+          : await chat.attachmentService.prepareGenericFile(
+              sourcePath: path,
+              displayName: name,
+              existingDrafts: _drafts,
+            );
+      if (mounted) setState(() => _drafts.add(draft));
+    } on AttachmentDraftException catch (error) {
+      if (mounted) ngToast(context, error.message);
+    }
+  }
+
   /// Runs a typed `/command`, the way Kyllene does: NextGen's own `/new`,
   /// `/reset`, `/stop` and bare `/model` here, anything the gateway would
   /// run there (see [NgSlashCatalog.runsOnGateway]). Returns false when
   /// [text] is ordinary text to send as a prompt.
   Future<bool> _runCommand(NgSlashLine command, String text) async {
+    if (await _runDedicated(command)) return true;
     switch (command.name) {
       case 'new' || 'reset':
         if (widget.onNewChat == null) {
@@ -1100,29 +1396,48 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     );
   }
 
-  Widget _errorBar(NgColors c) => Container(
-    width: double.infinity,
-    margin: const EdgeInsets.fromLTRB(12, 0, 12, 6),
-    padding: const EdgeInsets.fromLTRB(14, 8, 4, 8),
-    decoration: BoxDecoration(
-      color: c.dangerSoft,
-      borderRadius: BorderRadius.circular(NgRadii.md),
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: Text(
-            chat.error!,
-            style: NgType.bodySmall.copyWith(color: c.text),
-          ),
+  Widget _errorBar(NgColors c) {
+    final message = chat.error ?? '';
+    final surface = chat.turnFailure;
+    final aligned =
+        surface != null &&
+            (surface.message == null || surface.message == message)
+        ? surface
+        : null;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    return Padding(
+      key: ValueKey(c.dangerSoft),
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
+      child: FailureRecoveryCard(
+        message: message,
+        recovery: presentRecovery(aligned, nowMs: now),
+        diagnosticsText: formatErrorDiagnostics(
+          errorText: message,
+          surface: aligned,
+          model: chat.model,
+          provider: chat.provider,
         ),
-        IconButton(
-          icon: const Icon(Icons.close, size: 18),
-          onPressed: () => setState(() => chat.error = null),
-        ),
-      ],
-    ),
-  );
+        showDiagnostics: showsDiagnostics(aligned),
+        resetsAt: aligned?.resetsAt,
+        onDismiss: () => setState(() {
+          chat.error = null;
+          chat.turnFailure = null;
+        }),
+        onRetry: () {
+          setState(() {
+            chat.error = null;
+            chat.turnFailure = null;
+          });
+          unawaited(chat.retryLast());
+        },
+        onCompress: _compressChat,
+        onChooseModel: () => showNgModelSheet(context, chat),
+        onSwitchTo: _switchToSuggested,
+        onNewSession: widget.onNewChat,
+        onEdit: _editFailedPrompt,
+      ),
+    );
+  }
 
   Future<void> _editLocal(NgQueued row) async {
     final source = chat;
@@ -1470,6 +1785,50 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                       ],
                     ),
                   ),
+                ComposerContextStatus(
+                  layout: _status,
+                  usage: UsageReading(
+                    cacheHitPct: chat.usage?.cacheHitPct,
+                    avgTps: chat.usage?.avgTps,
+                    contextUsed: chat.usage?.contextUsed,
+                    contextMax: chat.usage?.contextMax,
+                    estimated: chat.usage?.contextEstimated ?? false,
+                    compressions: chat.usage?.compressions,
+                  ),
+                  breakdown: _breakdown,
+                  breakdownLoading: _breakdownLoading,
+                  runningSinceMs: chat.running && chat.turnStartedAt != null
+                      ? chat.turnStartedAt!.millisecondsSinceEpoch
+                      : null,
+                  onLayout: (layout) {
+                    setState(() => _status = layout);
+                    if (layout.visible('context-usage')) {
+                      unawaited(_loadBreakdown());
+                    }
+                  },
+                ),
+                ComposerReferenceAssist(
+                  controller: _input,
+                  completePath: (query) async {
+                    final result = await chat.gateway.call(
+                      'complete.path',
+                      pathCompletionParams(
+                        query: query,
+                        sessionId: chat.runtimeId ?? chat.storedId,
+                      ),
+                    );
+                    final rows = parseReferenceCompletions(result);
+                    return rows.isEmpty ? starterSuggestions(query) : rows;
+                  },
+                  completeSlash: (text) async {
+                    final sessionId = chat.runtimeId ?? chat.storedId;
+                    final result = await chat.gateway.call('complete.slash', {
+                      'text': text,
+                      if (sessionId != null) 'session_id': sessionId,
+                    });
+                    return parseArgumentHints(result);
+                  },
+                ),
                 SendOnEnter(
                   enabled:
                       _input.text.trim().isNotEmpty ||
@@ -1493,33 +1852,55 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                               .map((item) => item.text),
                         ),
                   onSend: () => unawaited(_send()),
-                  child: TextField(
-                    key: const ValueKey('ng-composer-field'),
-                    controller: _input,
-                    focusNode: _focus,
-                    onTap: () {
-                      // Android can hide the keyboard with Back while this node
-                      // retains focus. Explicitly show it on every composer tap.
-                      _focus.requestFocus();
-                      unawaited(
-                        SystemChannels.textInput.invokeMethod<void>(
-                          'TextInput.show',
+                  child: ComposerDropSurface(
+                    onDrop: (drag) => unawaited(_acceptDrop(drag)),
+                    child: TextField(
+                      key: const ValueKey('ng-composer-field'),
+                      controller: _input,
+                      focusNode: _focus,
+                      inputFormatters: [
+                        TextInputFormatter.withFunction((oldValue, newValue) {
+                          final selection = oldValue.selection;
+                          if (!selection.isValid) return newValue;
+                          final chunk = PastedChunk.detect(
+                            oldValue.text,
+                            selection.start,
+                            selection.end,
+                            newValue.text,
+                          );
+                          if (chunk != null) unawaited(_consumePaste(chunk));
+                          return newValue;
+                        }),
+                      ],
+                      onTap: () {
+                        // Android can hide the keyboard with Back while this node
+                        // retains focus. Explicitly show it on every composer tap.
+                        _focus.requestFocus();
+                        unawaited(
+                          SystemChannels.textInput.invokeMethod<void>(
+                            'TextInput.show',
+                          ),
+                        );
+                      },
+                      minLines: 1,
+                      maxLines: 8,
+                      textCapitalization: TextCapitalization.sentences,
+                      style: NgType.body.copyWith(color: c.text),
+                      decoration: InputDecoration(
+                        hintText: _listening
+                            ? ngL.ng_listening
+                            : chat.running
+                            ? ngL.ng_steer_or_queue_a_message
+                            : ngL.ng_message_hermes,
+                        hintStyle: NgType.body.copyWith(color: c.textMuted),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.fromLTRB(
+                          12,
+                          12,
+                          12,
+                          6,
                         ),
-                      );
-                    },
-                    minLines: 1,
-                    maxLines: 8,
-                    textCapitalization: TextCapitalization.sentences,
-                    style: NgType.body.copyWith(color: c.text),
-                    decoration: InputDecoration(
-                      hintText: _listening
-                          ? ngL.ng_listening
-                          : chat.running
-                          ? ngL.ng_steer_or_queue_a_message
-                          : ngL.ng_message_hermes,
-                      hintStyle: NgType.body.copyWith(color: c.textMuted),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
+                      ),
                     ),
                   ),
                 ),

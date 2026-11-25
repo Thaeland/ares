@@ -1,0 +1,99 @@
+import '../utils/large_paste.dart';
+import 'composer_drag.dart';
+
+const kLocalImageExtensions = {'png', 'jpg', 'jpeg', 'webp'};
+
+enum LocalIntake { leaveText, pastedText, imageFile, genericFile, reference }
+
+class IntakePlan {
+  const IntakePlan(this.kind, {this.path, this.text, this.directory = false});
+
+  final LocalIntake kind;
+  final String? path;
+  final String? text;
+  final bool directory;
+}
+
+/// A single pasted chunk that is a filesystem path or file URL, or null.
+String? clipboardPath(String text) {
+  final trimmed = text.trim();
+  if (trimmed.isEmpty || trimmed.contains('\n') || trimmed.contains('\r')) {
+    return null;
+  }
+  if (trimmed.startsWith('file://')) {
+    final uri = Uri.tryParse(trimmed);
+    if (uri == null || uri.scheme != 'file') return null;
+    final path = uri.toFilePath();
+    return path.isEmpty ? null : path;
+  }
+  final absolute =
+      trimmed.startsWith('/') || RegExp(r'^[A-Za-z]:[\\/]').hasMatch(trimmed);
+  return absolute ? trimmed : null;
+}
+
+bool looksLikeImagePath(String path) {
+  final dot = path.lastIndexOf('.');
+  if (dot < 0 || dot == path.length - 1) return false;
+  return kLocalImageExtensions.contains(path.substring(dot + 1).toLowerCase());
+}
+
+/// Classify a drag. Existence of a local file is the caller's check: a missing
+/// local path must not become an attachment.
+IntakePlan classifyDrag(ComposerDrag drag) {
+  if (drag.onGateway || drag.directory) {
+    return IntakePlan(
+      LocalIntake.reference,
+      path: drag.path,
+      directory: drag.directory || drag.onGateway && drag.directory,
+    );
+  }
+  if (looksLikeImagePath(drag.path)) {
+    return IntakePlan(LocalIntake.imageFile, path: drag.path);
+  }
+  return IntakePlan(LocalIntake.genericFile, path: drag.path);
+}
+
+/// A committed paste. Oversized text becomes a paste file. A single path is
+/// only an attachment after [pathExists] is true.
+IntakePlan classifyPaste(
+  String inserted, {
+  required bool pathExists,
+  required bool directory,
+}) {
+  if (inserted.length > largePasteAttachmentThreshold) {
+    return IntakePlan(LocalIntake.pastedText, text: inserted);
+  }
+  final path = clipboardPath(inserted);
+  if (path == null) return const IntakePlan(LocalIntake.leaveText);
+  if (!pathExists) return const IntakePlan(LocalIntake.leaveText);
+  if (directory) {
+    return IntakePlan(LocalIntake.reference, path: path, directory: true);
+  }
+  if (looksLikeImagePath(path)) {
+    return IntakePlan(LocalIntake.imageFile, path: path);
+  }
+  return IntakePlan(LocalIntake.genericFile, path: path);
+}
+
+class PastedChunk {
+  const PastedChunk(this.text, this.withoutPaste, this.caret);
+
+  final String text;
+
+  /// Editor value with the chunk removed, so a confirmed file paste does not
+  /// also leave the path in the draft.
+  final String withoutPaste;
+  final int caret;
+
+  /// A single insertion at the caret. One-character typing is ignored.
+  static PastedChunk? detect(String before, int start, int end, String after) {
+    if (start < 0 || end < start || end > before.length) return null;
+    final prefix = before.substring(0, start);
+    final suffix = before.substring(end);
+    if (!after.startsWith(prefix) || !after.endsWith(suffix)) return null;
+    final length = after.length - prefix.length - suffix.length;
+    if (length < 2) return null;
+    final inserted = after.substring(prefix.length, prefix.length + length);
+    return PastedChunk(inserted, '$prefix$suffix', prefix.length);
+  }
+}

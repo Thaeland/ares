@@ -1378,7 +1378,7 @@ void main() {
       await expectModelPicker(tester, '/MODEL');
     });
 
-    testWidgets('/sessions pops back to the session list', (tester) async {
+    testWidgets('/sessions opens the resume picker', (tester) async {
       final gateway = _FakeSlashGateway();
       await _pushChat(tester, slashGateway: gateway);
 
@@ -1387,11 +1387,14 @@ void main() {
       await _send(tester);
 
       expect(gateway.commands, isEmpty);
-      expect(find.byKey(_composerKey), findsNothing);
-      expect(find.byKey(Key('session-list-page')), findsOneWidget);
+      expect(find.text('Resume a chat'), findsOneWidget);
+      expect(
+        find.text('This pane has no chat list to search.'),
+        findsOneWidget,
+      );
     });
 
-    testWidgets('/resume pops back to the session list too', (tester) async {
+    testWidgets('/resume opens the resume picker too', (tester) async {
       final gateway = _FakeSlashGateway();
       await _pushChat(tester, slashGateway: gateway);
 
@@ -1400,11 +1403,10 @@ void main() {
       await _send(tester);
 
       expect(gateway.commands, isEmpty);
-      expect(find.byKey(_composerKey), findsNothing);
-      expect(find.byKey(Key('session-list-page')), findsOneWidget);
+      expect(find.text('Resume a chat'), findsOneWidget);
     });
 
-    testWidgets('/sessions in an embedded chat answers with a notice', (
+    testWidgets('/sessions in an embedded chat opens the picker', (
       tester,
     ) async {
       final gateway = _FakeSlashGateway();
@@ -1415,9 +1417,11 @@ void main() {
       await _send(tester);
 
       expect(gateway.commands, isEmpty);
-      expect(_composerText(tester), '/sessions');
-      expect(find.byKey(Key('slash-command-notice')), findsOneWidget);
-      expect(find.textContaining('session list'), findsOneWidget);
+      expect(_composerText(tester), isEmpty);
+      expect(
+        find.text('This pane has no chat list to search.'),
+        findsOneWidget,
+      );
     });
   });
   group('review regressions', () {
@@ -1572,7 +1576,7 @@ void main() {
       expect(find.byType(BottomSheet), findsNothing);
     });
 
-    for (final line in ['/model gpt-5', '/resume old-chat', '/sessions all']) {
+    for (final line in ['/model gpt-5']) {
       testWidgets('$line does not silently discard arguments', (tester) async {
         final gateway = _FakeSlashGateway();
         final submitted = await prepare(tester, gateway);

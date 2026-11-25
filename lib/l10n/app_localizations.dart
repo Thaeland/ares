@@ -6822,6 +6822,348 @@ abstract class AppLocalizations {
   /// **'Open the session list to choose a chat. Your draft was kept.'**
   String get slash_sessions_inline;
 
+  /// No description provided for @composer_snippets.
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt snippets'**
+  String get composer_snippets;
+
+  /// No description provided for @composer_snippets_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a starter prompt to drop into the composer.'**
+  String get composer_snippets_description;
+
+  /// No description provided for @composer_snippet_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Code review'**
+  String get composer_snippet_review;
+
+  /// No description provided for @composer_snippet_review_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Audit the current change for regressions, dropped edge cases and missing tests.'**
+  String get composer_snippet_review_body;
+
+  /// No description provided for @composer_snippet_review_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Please review this for bugs, regressions and missing tests.'**
+  String get composer_snippet_review_text;
+
+  /// No description provided for @composer_snippet_plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Implementation plan'**
+  String get composer_snippet_plan;
+
+  /// No description provided for @composer_snippet_plan_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Outline an approach before touching code so the diff stays focused.'**
+  String get composer_snippet_plan_body;
+
+  /// No description provided for @composer_snippet_plan_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Please make a concise implementation plan before changing code.'**
+  String get composer_snippet_plan_text;
+
+  /// No description provided for @composer_snippet_explain.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain this'**
+  String get composer_snippet_explain;
+
+  /// No description provided for @composer_snippet_explain_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk through how the selected code works and point to the key files.'**
+  String get composer_snippet_explain_body;
+
+  /// No description provided for @composer_snippet_explain_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Please explain how this works and point me to the key files.'**
+  String get composer_snippet_explain_text;
+
+  /// No description provided for @composer_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get composer_status;
+
+  /// No description provided for @composer_status_context.
+  ///
+  /// In en, this message translates to:
+  /// **'Context'**
+  String get composer_status_context;
+
+  /// No description provided for @composer_status_cache.
+  ///
+  /// In en, this message translates to:
+  /// **'Cache hit'**
+  String get composer_status_cache;
+
+  /// No description provided for @composer_status_throughput.
+  ///
+  /// In en, this message translates to:
+  /// **'Output tokens/sec'**
+  String get composer_status_throughput;
+
+  /// No description provided for @composer_status_running.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get composer_status_running;
+
+  /// No description provided for @composer_status_session.
+  ///
+  /// In en, this message translates to:
+  /// **'Session'**
+  String get composer_status_session;
+
+  /// No description provided for @composer_status_not_reported.
+  ///
+  /// In en, this message translates to:
+  /// **'Not reported'**
+  String get composer_status_not_reported;
+
+  /// No description provided for @composer_status_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No context breakdown was reported.'**
+  String get composer_status_empty;
+
+  /// No description provided for @composer_status_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading context breakdown'**
+  String get composer_status_loading;
+
+  /// No description provided for @composer_status_reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset status bar'**
+  String get composer_status_reset;
+
+  /// No description provided for @composer_resume_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume a chat'**
+  String get composer_resume_title;
+
+  /// No description provided for @composer_resume_search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search titles and ids'**
+  String get composer_resume_search;
+
+  /// No description provided for @composer_resume_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No chats match.'**
+  String get composer_resume_empty;
+
+  /// No description provided for @composer_resume_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This pane has no chat list to search.'**
+  String get composer_resume_unavailable;
+
+  /// No description provided for @composer_failure_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get composer_failure_retry;
+
+  /// No description provided for @composer_failure_retry_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry at {time}'**
+  String composer_failure_retry_at(String time);
+
+  /// No description provided for @composer_failure_compress.
+  ///
+  /// In en, this message translates to:
+  /// **'Compress'**
+  String get composer_failure_compress;
+
+  /// No description provided for @composer_failure_switch_model.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch model'**
+  String get composer_failure_switch_model;
+
+  /// No description provided for @composer_failure_switch_to.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to {model}'**
+  String composer_failure_switch_to(String model);
+
+  /// No description provided for @composer_failure_new_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'New chat'**
+  String get composer_failure_new_chat;
+
+  /// No description provided for @composer_failure_edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit message'**
+  String get composer_failure_edit;
+
+  /// No description provided for @composer_failure_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get composer_failure_details;
+
+  /// No description provided for @composer_failure_hide_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide details'**
+  String get composer_failure_hide_details;
+
+  /// No description provided for @composer_failure_copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy diagnostics'**
+  String get composer_failure_copy;
+
+  /// No description provided for @composer_failure_account.
+  ///
+  /// In en, this message translates to:
+  /// **'The other fix is on the gateway account. This chat cannot do it.'**
+  String get composer_failure_account;
+
+  /// No description provided for @composer_failure_account_only.
+  ///
+  /// In en, this message translates to:
+  /// **'This has to be fixed on the gateway account. This chat cannot do it.'**
+  String get composer_failure_account_only;
+
+  /// No description provided for @composer_failure_confirm_compress.
+  ///
+  /// In en, this message translates to:
+  /// **'Compress this chat? The gateway will shorten the transcript.'**
+  String get composer_failure_confirm_compress;
+
+  /// No description provided for @composer_failure_confirm_model.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch this chat to {model}?'**
+  String composer_failure_confirm_model(String model);
+
+  /// No description provided for @composer_drop_attach.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop to attach'**
+  String get composer_drop_attach;
+
+  /// No description provided for @composer_drop_reference.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop to reference'**
+  String get composer_drop_reference;
+
+  /// No description provided for @composer_reference_copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy reference'**
+  String get composer_reference_copy;
+
+  /// No description provided for @composer_reference_remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove reference'**
+  String get composer_reference_remove;
+
+  /// No description provided for @composer_btw_usage.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage: /btw <question> — answered from a snapshot of this conversation without interrupting it.'**
+  String get composer_btw_usage;
+
+  /// No description provided for @composer_background_usage.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage: /background <prompt> — the task runs separately and the result comes back here.'**
+  String get composer_background_usage;
+
+  /// No description provided for @composer_handoff_usage.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage: /handoff <platform> — transfer this chat to that messaging platform.'**
+  String get composer_handoff_usage;
+
+  /// No description provided for @composer_command_needs_session.
+  ///
+  /// In en, this message translates to:
+  /// **'This command needs an open chat.'**
+  String get composer_command_needs_session;
+
+  /// No description provided for @composer_side_question.
+  ///
+  /// In en, this message translates to:
+  /// **'btw — answering from a conversation snapshot'**
+  String get composer_side_question;
+
+  /// No description provided for @composer_side_question_id.
+  ///
+  /// In en, this message translates to:
+  /// **'btw {id} — answering from a conversation snapshot'**
+  String composer_side_question_id(String id);
+
+  /// No description provided for @composer_background_started.
+  ///
+  /// In en, this message translates to:
+  /// **'Background task started. You can keep chatting. The result will appear here.'**
+  String get composer_background_started;
+
+  /// No description provided for @composer_background_started_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Background task {id} started. You can keep chatting. The result will appear here.'**
+  String composer_background_started_id(String id);
+
+  /// No description provided for @composer_handoff_requested.
+  ///
+  /// In en, this message translates to:
+  /// **'Handoff to {platform} requested.'**
+  String composer_handoff_requested(String platform);
+
+  /// No description provided for @composer_handoff_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Handed this chat to {platform}.'**
+  String composer_handoff_done(String platform);
+
+  /// No description provided for @composer_handoff_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Handoff failed.'**
+  String get composer_handoff_failed;
+
+  /// No description provided for @composer_handoff_timeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Handoff did not finish. It may still be running on the gateway.'**
+  String get composer_handoff_timeout;
+
+  /// No description provided for @composer_compress_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Compressed this chat.'**
+  String get composer_compress_done;
+
+  /// No description provided for @composer_file_missing.
+  ///
+  /// In en, this message translates to:
+  /// **'That file is not on this device.'**
+  String get composer_file_missing;
+
   /// No description provided for @nextgen_toggle.
   ///
   /// In en, this message translates to:

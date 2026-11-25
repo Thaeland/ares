@@ -123,6 +123,11 @@ import '../widgets/voice_composer_controls.dart';
 import 'package:hermes_android/core/l10n/l10n.dart';
 import '../widgets/desktop_shortcuts.dart';
 import '../widgets/composer_prompt_recall.dart';
+import '../composer/composer_commands.dart';
+import '../composer/failure_recovery.dart';
+import '../widgets/failure_recovery_card.dart';
+import '../widgets/prompt_snippet_sheet.dart';
+import '../widgets/resume_session_picker.dart';
 import '../widgets/orphan_draft_recovery.dart';
 
 /// Recovery v2 opens a new server session and cannot yet target an existing
@@ -3991,6 +3996,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 unawaited(_pickServerFile());
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.notes_outlined),
+              title: Text(context.sharedL10n.composer_snippets),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                unawaited(
+                  showPromptSnippets(context: context, editor: _textController),
+                );
+              },
+            ),
             if (_desktopGateway != null)
               ListTile(
                 leading: const Icon(Icons.description_outlined),
@@ -4831,42 +4846,56 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     try {
       // These are classic ChatScreen surfaces, not NextGen routes. Argument
       // forms are not implemented locally: preserve the exact requested line.
-      if (bareName == 'model' ||
+      if (bareName == 'resume' ||
           bareName == 'sessions' ||
-          bareName == 'resume') {
+          bareName == 'switch') {
+        final query = _slashCommandArgument(text);
+        _slashController.close();
+        consume();
+        unawaited(_openResumePicker(query));
+        return '';
+      }
+      if (bareName == 'btw' ||
+          bareName == 'bg' ||
+          bareName == 'background' ||
+          bareName == 'handoff') {
+        if (gateway is DesktopGatewayClient) {
+          final run = await runDedicatedCommand(
+            name: bareName,
+            arg: _slashCommandArgument(text),
+            sessionId: sessionId,
+            rpc: gateway.requestSessionRpc,
+          );
+          if (!current()) return '';
+          if (run?.answer?.fallbackToExec != true) {
+            final notice = run?.answer?.notice ?? run?.plan.notice;
+            if (notice != null && notice.isNotEmpty) {
+              _appendSlashCommandNotice(text, notice);
+            }
+            consume();
+            if (run?.answer?.watchHandoff == true) {
+              unawaited(
+                _watchClassicHandoff(
+                  gateway,
+                  sessionId,
+                  _slashCommandArgument(text),
+                ),
+              );
+            }
+            return '';
+          }
+        }
+      }
+      if (bareName == 'model') {
         if (_slashCommandArgument(text).isNotEmpty) {
           _appendSlashCommandNotice(text, context.l10n.slash_local_arguments);
-        } else if (bareName == 'model') {
-          // Do not hold the send lock for the lifetime of the modal. The
-          // callback consumes only when discovery really opens it.
+        } else {
           unawaited(
             _showModelSelector(
               onOpened: consume,
               canOpen: () => current() && _voiceRoute?.isCurrent != false,
             ),
           );
-        } else {
-          _slashController.close();
-          // A pop is safe only when the caller explicitly named a browser
-          // route. Other callers include crons, notification/deep-link chats
-          // and a /new chat stacked over another chat: never pop blindly.
-          final route = ModalRoute.of(context);
-          if (route?.settings.name == '/classic-session-chat') {
-            final navigator = Navigator.of(context);
-            final inlineText = context.l10n.slash_sessions_inline;
-            // Keep the send flight through navigation: two taps must not pop
-            // both the chat and its browser while PopScope is rebuilding.
-            await WidgetsBinding.instance.endOfFrame;
-            if (!current() || revision != _composerRevision) return '';
-            final popped = await navigator.maybePop();
-            if (popped) {
-              consume();
-            } else if (current()) {
-              _appendSlashCommandNotice(text, inlineText);
-            }
-          } else {
-            _appendSlashCommandNotice(text, context.l10n.slash_sessions_inline);
-          }
         }
         return '';
       }
@@ -4945,6 +4974,121 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     } finally {
       _preparingSend = false;
     }
+  }
+
+  ApiClient? _ownedResumeClient;
+  String? _recoveryMessage;
+  FailureSurface? _recoverySurface;
+
+  Future<void> _openResumePicker(String query) async {
+    if (!mounted) return;
+    final testClient = widget.testApiClient;
+    final available = testClient != null || widget.testSlashGateway == null;
+    final loaded = <Session>[];
+    final picked = await showResumePicker(
+      context: context,
+      initialQuery: query,
+      listAvailable: available,
+      load: (q) async {
+        final client =
+            testClient ??
+            (_ownedResumeClient ??= ApiClient.forConnection(widget.connection));
+        final page = await client.getSessionsPage(
+          limit: 50,
+          title: q.trim().isEmpty ? null : q.trim(),
+        );
+        loaded
+          ..clear()
+          ..addAll(page.sessions);
+        return [
+          for (final row in page.sessions)
+            ResumeCandidate(id: row.id, title: row.title, preview: row.preview),
+        ];
+      },
+    );
+    if (picked == null || !mounted) return;
+    Session? session;
+    for (final row in loaded) {
+      if (row.id == picked.id) session = row;
+    }
+    if (session == null) return;
+    final opened = session;
+    await Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        settings: const RouteSettings(name: '/classic-session-chat'),
+        builder: (_) =>
+            ChatScreen(connection: widget.connection, session: opened),
+      ),
+    );
+  }
+
+  Future<void> _watchClassicHandoff(
+    DesktopGatewayClient gateway,
+    String sessionId,
+    String platform,
+  ) async {
+    final deadline = DateTime.now().millisecondsSinceEpoch + 60000;
+    while (mounted && DateTime.now().millisecondsSinceEpoch < deadline) {
+      await Future<void>.delayed(const Duration(milliseconds: 800));
+      if (!mounted) return;
+      try {
+        final state = await gateway.requestSessionRpc(
+          'handoff.state',
+          handoffStateParams(sessionId),
+        );
+        final phase = readHandoffPhase(
+          state: state['state'],
+          nowMs: DateTime.now().millisecondsSinceEpoch,
+          deadlineMs: deadline,
+        );
+        if (phase == HandoffPhase.completed) {
+          _appendSlashCommandNotice(
+            '/handoff $platform',
+            context.sharedL10n.composer_handoff_done(platform),
+          );
+          return;
+        }
+        if (phase == HandoffPhase.failed) {
+          final error = state['error']?.toString().trim();
+          _appendSlashCommandNotice(
+            '/handoff $platform',
+            error == null || error.isEmpty
+                ? context.sharedL10n.composer_handoff_failed
+                : error,
+          );
+          return;
+        }
+      } catch (_) {}
+    }
+    if (!mounted) return;
+    try {
+      await gateway.requestSessionRpc(
+        'handoff.fail',
+        handoffFailParams(
+          sessionId,
+          context.sharedL10n.composer_handoff_timeout,
+        ),
+      );
+    } catch (_) {}
+    _appendSlashCommandNotice(
+      '/handoff $platform',
+      context.sharedL10n.composer_handoff_timeout,
+    );
+  }
+
+  void _noteRecovery(Map<String, dynamic> data) {
+    final message = data['message']?.toString().trim();
+    final surface = FailureSurface.parse(
+      data['surface'] ?? data['error_surface'] ?? data,
+    );
+    final text = message == null || message.isEmpty
+        ? surface?.message
+        : message;
+    if (text == null || text.isEmpty) return;
+    setState(() {
+      _recoveryMessage = text;
+      _recoverySurface = surface;
+    });
   }
 
   static const Set<String> _localNewSessionNames = {'new', 'reset'};
@@ -6187,12 +6331,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       _handleDesktopGatewayEvent(event, _responseGeneration);
       return;
     }
-    if (const {
-      'message.complete',
-      'turn.end',
-      'turn.error',
-      'error',
-    }.contains(event.type)) {
+    if (event.type == 'error' || event.type == 'turn.error') {
+      final data = event.data;
+      if (data is Map<String, dynamic>) {
+        _noteRecovery(data);
+      } else if (data is Map) {
+        _noteRecovery(Map<String, dynamic>.from(data));
+      }
+      return;
+    }
+    if (const {'message.complete', 'turn.end'}.contains(event.type)) {
       return;
     }
     if (event.type == 'notification.show') {
@@ -8071,6 +8219,48 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                       )
                     else if (_quietEmptyComposer && _imageRecoveryGap != null)
                       ImageRecoveryCapabilityNotice(gap: _imageRecoveryGap!),
+                    if (_recoveryMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                        child: FailureRecoveryCard(
+                          message: _recoveryMessage!,
+                          recovery: presentRecovery(
+                            _recoverySurface,
+                            nowMs: DateTime.now().millisecondsSinceEpoch,
+                          ),
+                          diagnosticsText: formatErrorDiagnostics(
+                            errorText: _recoveryMessage!,
+                            surface: _recoverySurface,
+                          ),
+                          showDiagnostics: showsDiagnostics(_recoverySurface),
+                          resetsAt: _recoverySurface?.resetsAt,
+                          onDismiss: () => setState(() {
+                            _recoveryMessage = null;
+                            _recoverySurface = null;
+                          }),
+                          onRetry: () {
+                            String? prompt;
+                            for (final message in _messages.reversed) {
+                              if (message['role'] == 'user') {
+                                final text = message['content']?.toString();
+                                if (text != null && text.trim().isNotEmpty) {
+                                  prompt = text;
+                                  break;
+                                }
+                              }
+                            }
+                            setState(() {
+                              _recoveryMessage = null;
+                              _recoverySurface = null;
+                            });
+                            if (prompt != null) unawaited(_retryPrompt(prompt));
+                          },
+                          onChooseModel: () => _showModelSelector(),
+                          onNewSession: widget.singleSession
+                              ? null
+                              : () => unawaited(_openFreshDraftChat('')),
+                        ),
+                      ),
                     if (!_usesNormalInputOwner && _held.entries.isNotEmpty)
                       ClientHeldQueueBar(
                         count: _held.entries.length,

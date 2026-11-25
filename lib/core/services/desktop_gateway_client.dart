@@ -1335,6 +1335,40 @@ class DesktopGatewayClient implements SlashCommandGateway {
     return client.slashExec(gatewaySessionId, command, onSent: onSent);
   }
 
+  /// One session-scoped JSON-RPC. The local session id in [params] is
+  /// replaced with the bound gateway id. Missing methods surface as
+  /// [JsonRpcError] `-32601` so the caller can fall back to slash.exec.
+  Future<Map<String, dynamic>> requestSessionRpc(
+    String method,
+    Map<String, dynamic> params,
+  ) async {
+    final requested = params['session_id']?.toString();
+    final gatewaySessionId = requested == null
+        ? null
+        : (_gatewaySessionIds[requested] ??
+              (_gatewaySessionIds.containsValue(requested) ? requested : null));
+    final client = _ws;
+    if (gatewaySessionId == null || client == null || !client.isConnected) {
+      throw StateError('The Desktop gateway session is no longer connected');
+    }
+    final response = await client.send(method, {
+      ...params,
+      'session_id': gatewaySessionId,
+    });
+    final error = response['error'];
+    if (error != null) {
+      throw JsonRpcError.fromGateway(
+        method,
+        error is Map ? Map<dynamic, dynamic>.from(error) : const {},
+        fallbackMessage: 'The gateway refused $method',
+      );
+    }
+    final result = response['result'];
+    if (result is Map<String, dynamic>) return result;
+    if (result is Map) return Map<String, dynamic>.from(result);
+    return const {};
+  }
+
   /// Interrupts the active turn in the Desktop gateway runtime. On the
   /// canonical session authority it names the execution generation the
   /// socket last admitted, so a later claim is never interrupted by it; a

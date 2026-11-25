@@ -21,6 +21,7 @@ import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/prepared_image_store.dart';
 import '../../core/services/slash_command_errors.dart';
 import '../../core/services/ws_client.dart';
+import '../../core/composer/failure_recovery.dart';
 import 'history_rows.dart';
 import 'nextgen_gateway.dart';
 import 'session_control.dart';
@@ -544,6 +545,10 @@ class NgUsage {
   final int? contextUsed;
   final int? contextMax;
   final int calls;
+  final double? cacheHitPct;
+  final double? avgTps;
+  final int? compressions;
+  final bool contextEstimated;
   const NgUsage({
     this.input = 0,
     this.output = 0,
@@ -553,6 +558,10 @@ class NgUsage {
     this.contextUsed,
     this.contextMax,
     this.calls = 0,
+    this.cacheHitPct,
+    this.avgTps,
+    this.compressions,
+    this.contextEstimated = false,
   });
 
   static int _i(Object? v) => v is num ? v.toInt() : int.tryParse('$v') ?? 0;
@@ -577,6 +586,18 @@ class NgUsage {
           ? (raw['context_length'] as num).toInt()
           : null,
       calls: _i(raw['api_calls'] ?? raw['calls']),
+      cacheHitPct:
+          raw.containsKey('cache_hit_pct') && raw['cache_hit_pct'] is num
+          ? (raw['cache_hit_pct'] as num).toDouble()
+          : null,
+      avgTps: raw.containsKey('avg_tps') && raw['avg_tps'] is num
+          ? (raw['avg_tps'] as num).toDouble()
+          : null,
+      compressions:
+          raw.containsKey('compressions') && raw['compressions'] is num
+          ? (raw['compressions'] as num).toInt()
+          : null,
+      contextEstimated: raw['context_estimated'] == true,
     );
   }
 }
@@ -713,6 +734,7 @@ class NgChatController extends ChangeNotifier {
   String? status;
   String? thinkingFrame;
   String? error;
+  FailureSurface? turnFailure;
   NgInputRequest? request;
   String? model;
   String? provider;
@@ -1010,6 +1032,22 @@ class NgChatController extends ChangeNotifier {
     } else {
       items.add(NgNoticeItem(_key('n'), trimmed, time: at));
     }
+  }
+
+  /// A local command result (side question, background, handoff, compress).
+  void showCommandNotice(String text) {
+    _addNotice(text);
+    _changedNow();
+  }
+
+  /// Re-read the transcript after a compression. Does not open a new session.
+  Future<void> reloadTranscript() async {
+    final id = storedId;
+    if (id == null || _disposed) return;
+    final messages = await _fetchRows(id, limit: ngHistoryPage);
+    if (_disposed) return;
+    _setRows(messages, ngHistoryPage);
+    _changedNow();
   }
 
   @visibleForTesting
@@ -1870,6 +1908,9 @@ class NgChatController extends ChangeNotifier {
         if (message != null && message.isNotEmpty) _addNotice(message);
       case 'error':
         error = s('message') ?? ngL.ng_the_turn_failed;
+        turnFailure = FailureSurface.parse(
+          p['surface'] ?? p['error_surface'] ?? p,
+        );
         _finishTurn(failed: true);
       case 'message.complete' || 'turn.end':
         final reply = _openReply();
