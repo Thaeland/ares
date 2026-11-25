@@ -80,6 +80,42 @@ Uri? _cloudAddress(Object? raw) {
 }
 
 extension FleetWorkspace on WorkspaceTarget {
+  /// Only health metadata and the enumerated state are shown. Upstream's
+  /// access-status handler is native-grant-only at the pin; 403 is not a
+  /// reason to mint a native grant, restart the gateway, or probe other hosts.
+  Future<({String version, String access})> fleetDiagnostics() =>
+      _withOwner(() async {
+        final health = await _get(['health']);
+        if (health is! Map || health['ok'] != true) {
+          _fail(WorkspaceFailure.unavailable);
+        }
+        final version = _fleetText(health['version']);
+        String access;
+        try {
+          final raw = await _get(['webapp-access', 'status']);
+          if (raw is! Map ||
+              raw['gateway'] is! Map ||
+              !const {
+                'off',
+                'serving',
+                'starting',
+                'stopped',
+                'unavailable',
+              }.contains(raw['gateway']['state'])) {
+            _fail(WorkspaceFailure.invalid);
+          }
+          access = raw['gateway']['state'] as String;
+        } on DashboardHttpException catch (e) {
+          if (e.statusCode == 403) {
+            access = 'Host-only access status';
+          } else if (e.statusCode == 404) {
+            access = 'No Web Access administration on this listener';
+          } else {
+            rethrow;
+          }
+        }
+        return (version: version, access: access);
+      });
   Future<FleetUpdateCheck> checkFleetUpdate() => _withOwner(() async {
     final roster = await read(WorkspaceRead.profiles) as Map;
     final install = _fleetId(roster['install_id']);

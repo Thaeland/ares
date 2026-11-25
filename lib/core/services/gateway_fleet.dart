@@ -163,13 +163,19 @@ final class FleetHost extends ChangeNotifier {
     FleetSession row,
     NgChatController chat,
     String text,
+    WorkspaceTarget displayed,
   ) async {
     _check();
+    displayed.checkCurrent();
+    if (!identical(displayed, target)) {
+      throw const WorkspaceException(WorkspaceFailure.stale);
+    }
     final pane = gateway.workspace.pane();
     try {
       final selected = await pane.bind(
         gateway.workspace.route(storedSessionId: row.id),
       );
+      displayed.checkCurrent();
       if (!identical(_chats[row.id], chat) ||
           selected.effectiveProfile != row.profile ||
           selected.runtimeSessionId == null ||
@@ -208,8 +214,9 @@ final class GatewayFleet extends ChangeNotifier {
   }
   final ConnectionManager manager;
   static const _primaryKey = 'ares.fleet.primary.v1';
-  static String _principal(SavedConnection c) =>
-      sha256.convert(utf8.encode(jsonEncode(c.toMap()))).toString();
+  static String _principal(SavedConnection c) => sha256
+      .convert(utf8.encode(jsonEncode(c.toMap()..remove('fleet_reconnect'))))
+      .toString();
   static String? primaryId(
     ConnectionManager manager,
     Iterable<SavedConnection> saved,
@@ -244,14 +251,48 @@ final class GatewayFleet extends ChangeNotifier {
     }
   }
 
-  Future<FleetHost> attach(String id) async {
+  Future<void> restore() async {
+    // Snapshot only explicit opt-ins. Recheck the physical entry under the
+    // saved-account transaction before any network I/O; never restore chats,
+    // send a prompt, or dial SSH merely because the app started.
+    final ids = [
+      for (final c in manager.getConnections())
+        if (c.fleetReconnect) c.id,
+    ];
+    await Future.wait(
+      ids.map((id) async {
+        try {
+          await attach(id, restoring: true);
+        } catch (_) {
+          /* Remains manually reconnectable. */
+        }
+      }),
+    );
+  }
+
+  Future<void> remember(FleetHost h, bool enabled) async {
+    if (!h.current || !identical(_hosts[h.gateway.connection.id], h)) {
+      throw const WorkspaceException(WorkspaceFailure.stale);
+    }
+    await manager.setFleetReconnect(h.gateway.connection.id, h._epoch, enabled);
+    if (!_closed) notifyListeners();
+  }
+
+  bool remembered(String id) =>
+      manager
+          .getConnections()
+          .where((c) => c.id == id)
+          .singleOrNull
+          ?.fleetReconnect ==
+      true;
+
+  Future<FleetHost> attach(String id, {bool restoring = false}) async {
     final epoch = ConnectionMutationBarrier.capture(id);
-    final saved = await manager.loadConnectionsWithSecrets();
+    final c = await manager.readFleetConnection(id);
     if (_closed || !ConnectionMutationBarrier.isCurrent(id, epoch)) {
       throw const WorkspaceException(WorkspaceFailure.stale);
     }
-    final c = saved.where((s) => s.id == id).singleOrNull;
-    if (c == null || !c.hasDashboardAuth) {
+    if (c == null || !c.hasDashboardAuth || (restoring && !c.fleetReconnect)) {
       throw const WorkspaceException(WorkspaceFailure.unbound);
     }
     final existing = _hosts[id];

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/screens/fleet_screen.dart';
@@ -12,9 +14,18 @@ import 'package:hermes_android/nextgen/theme/nextgen_theme.dart';
 import 'package:hermes_android/nextgen/ui/more_page.dart';
 import 'package:hermes_android/nextgen/ui/nextgen_scope.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+import 'package:hermes_android/core/services/fleet_ssh.dart';
 import 'dashboard_origin_test.dart' show MemoryCredentials;
 import 'support/fleet_fixture.dart';
 import 'support/mtls_fixture.dart';
+
+class _Support extends PathProviderPlatform {
+  _Support(this.dir);
+  final Directory dir;
+  @override
+  Future<String?> getApplicationSupportPath() async => dir.path;
+}
 
 void main() {
   for (final classic in [true, false]) {
@@ -33,6 +44,15 @@ void main() {
         addTearDown(tester.view.reset);
         final server = (await tester.runAsync(() => FleetFixture.start('UI')))!;
         final c = server.connection;
+        final support = (await tester.runAsync(
+          () => Directory.systemTemp.createTemp('fleet-support-'),
+        ))!;
+        final platform = PathProviderPlatform.instance;
+        PathProviderPlatform.instance = _Support(support);
+        addTearDown(() async {
+          PathProviderPlatform.instance = platform;
+          await support.delete(recursive: true);
+        });
         NextGenGateway? ng;
         Future<void> wait(Finder f) async {
           final clock = Stopwatch()..start();
@@ -94,8 +114,53 @@ void main() {
             }
             await tap('Gateway fleet');
             await tester.pumpAndSettle();
+            if (FleetSsh.supported) {
+              await tap('Verified SSH');
+              await tester.pumpAndSettle();
+              await tester.enterText(
+                find.widgetWithText(TextField, 'SSH host'),
+                'fixture.invalid',
+              );
+              await tester.enterText(
+                find.widgetWithText(TextField, 'SSH user'),
+                'fixture',
+              );
+              await tester.enterText(
+                find.widgetWithText(
+                  TextField,
+                  'Public host key from administrator (ssh-ed25519)',
+                ),
+                'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINdamAGCsQq31Uv+08lkBzoO4XLz2qYjJa8CGmj3B1Ea',
+              );
+              await tap('Review host key');
+              await wait(
+                find.textContaining(
+                  'SHA256:bbXpuKG6zhzdmnxq256TlqzFBzRl2f6OOg722cYNbU8',
+                ),
+              );
+              await tap('Cancel');
+              await tester.pumpAndSettle();
+              final trust = FleetSsh(
+                Directory.fromUri(support.uri.resolve('ares-ssh/')),
+              );
+              final dest = SshDestination('fixture.invalid', 22, 'fixture');
+              expect(await tester.runAsync(() => trust.enrolled(dest)), isNull);
+              await tap('Review host key');
+              await tap('Confirm');
+              await wait(find.text('Host key pinned.'));
+              expect(
+                (await tester.runAsync(
+                  () => trust.enrolled(dest),
+                ))?.fingerprint,
+                'SHA256:bbXpuKG6zhzdmnxq256TlqzFBzRl2f6OOg722cYNbU8',
+              );
+              await tester.pageBack();
+              await tester.pumpAndSettle();
+            }
             await tap('Cloud and Desktop Webapp');
             await tester.pumpAndSettle();
+            await tap('Check gateway and Web Access status');
+            await wait(find.text('Gateway 1.2.3 · Host-only access status'));
             await tap('Discover signed-in agents');
             await tap('Fixture team');
             await wait(find.text('Hosted UI'));

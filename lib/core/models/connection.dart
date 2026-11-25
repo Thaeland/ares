@@ -71,6 +71,7 @@ class SavedConnection {
   /// Explicit enrollment provenance. Older/imported unknown entries may be
   /// used for chat but are never implicitly eligible for a fleet update.
   final String? fleetKind;
+  final bool fleetReconnect;
 
   SavedConnection({
     required this.id,
@@ -91,6 +92,7 @@ class SavedConnection {
     this.singleLogin = false,
     this.signInMethod,
     this.fleetKind,
+    this.fleetReconnect = false,
   });
 
   /// The dashboard address of a [singleLogin] connection.
@@ -217,6 +219,7 @@ class SavedConnection {
       if (fleetKind != null) m['fleet_kind'] = fleetKind;
       if (signInMethod != null) m['sign_in_method'] = signInMethod;
     }
+    if (fleetReconnect) m['fleet_reconnect'] = true;
     return m;
   }
 
@@ -252,6 +255,7 @@ class SavedConnection {
       singleLogin: (map['single_login'] as bool?) ?? false,
       signInMethod: nonEmpty(map['sign_in_method']),
       fleetKind: nonEmpty(map['fleet_kind']),
+      fleetReconnect: map['fleet_reconnect'] == true,
     );
   }
 
@@ -259,6 +263,7 @@ class SavedConnection {
   /// flags to explicitly null out optional fields (since null args can't
   /// distinguish "leave unchanged" from "clear").
   SavedConnection copyWith({
+    bool? fleetReconnect,
     String? label,
     String? host,
     int? port,
@@ -319,6 +324,7 @@ class SavedConnection {
       singleLogin: singleLogin ?? this.singleLogin,
       signInMethod: signInMethod ?? this.signInMethod,
       fleetKind: fleetKind,
+      fleetReconnect: fleetReconnect ?? this.fleetReconnect,
     );
   }
 }

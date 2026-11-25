@@ -347,7 +347,7 @@ class _NotificationNavigationIntent {
 }
 
 class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
-  late final _fleet = GatewayFleet(widget.connManager);
+  late final _fleet = GatewayFleet(widget.connManager)..restore().ignore();
   late final GatewayTurnApplicationController _turnApplicationController;
   late final AutoMessagingService _autoMessaging;
   late final TurnNotificationService _notifications;

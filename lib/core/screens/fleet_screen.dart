@@ -214,6 +214,18 @@ class _GatewayGroup extends StatelessWidget {
                   }
                 },
               ),
+            if (!childProfile)
+              SwitchListTile(
+                title: const Text('Reconnect in fleet on launch'),
+                value: fleet.remembered(c.id),
+                onChanged: (v) async {
+                  try {
+                    await fleet.remember(host, v);
+                  } catch (e) {
+                    if (context.mounted) _notice(context, e);
+                  }
+                },
+              ),
             if (host.loading)
               const SizedBox.shrink()
             else if (host.failure case final why?)
@@ -323,12 +335,12 @@ class _FleetChatState extends State<_FleetChat> {
     super.dispose();
   }
 
-  Future<void> send() async {
+  Future<void> send(WorkspaceTarget displayed) async {
     if (sending || input.text.trim().isEmpty) return;
     setState(() => sending = true);
     final text = input.text;
     try {
-      if (!await widget.host.send(widget.row, widget.chat, text)) {
+      if (!await widget.host.send(widget.row, widget.chat, text, displayed)) {
         throw const WorkspaceException(WorkspaceFailure.unavailable);
       }
       if (mounted && input.text == text) input.clear();
@@ -398,13 +410,14 @@ class _FleetChatState extends State<_FleetChat> {
                     ),
                     IconButton(
                       tooltip: 'Send to this session',
-                      onPressed:
-                          widget.host.target != null &&
-                              chat.runtimeId != null &&
-                              !chat.running &&
-                              !sending
-                          ? send
-                          : null,
+                      onPressed: switch (widget.host.target) {
+                        final target?
+                            when chat.runtimeId != null &&
+                                !chat.running &&
+                                !sending =>
+                          () => send(target),
+                        _ => null,
+                      },
                       icon: const Icon(Icons.send),
                     ),
                   ],

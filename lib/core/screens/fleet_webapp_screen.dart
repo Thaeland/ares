@@ -190,6 +190,16 @@ class _FleetWebappScreenState extends State<FleetWebappScreen> {
         ],
         const Divider(),
         const Text('Existing Desktop Webapp'),
+        TextButton(
+          onPressed: busy
+              ? null
+              : () => run((t) async {
+                  final d = await t.fleetDiagnostics();
+                  t.checkCurrent();
+                  message = 'Gateway ${d.version} · ${d.access}';
+                }, fresh: true),
+          child: const Text('Check gateway and Web Access status'),
+        ),
         const Text(
           'These settings belong to the machine serving this Webapp. Publishing and restarts are not remote actions.',
         ),

@@ -89,6 +89,40 @@ void main() {
     manager.getConnections().singleWhere((c) => c.label == 'Gateway $name').id,
   );
   test(
+    'restart restores only explicit fleet consent; account replacement and import revoke it',
+    () => withPlatformTrust(() async {
+      final first = await attach('A');
+      final id = first.gateway.connection.id;
+      await until(() => first.target != null);
+      await fleet.remember(first, true);
+      expect(fleet.remembered(id), isTrue);
+      fleet.dispose();
+      fleet = GatewayFleet(manager);
+      await fleet.restore();
+      await until(() => fleet.host(id)?.target != null);
+      expect(a.issued, 2);
+      expect(b.requests, isEmpty);
+      expect(a.prompts, isEmpty);
+      final saved = fleet.host(id)!.gateway.connection;
+      await manager.updateDashboardAuth(
+        id,
+        username: 'test',
+        password: 'different fixture',
+        dashboardPort: a.server.port,
+      );
+      expect(fleet.remembered(id), isFalse);
+      expect(fleet.host(id), isNull);
+      await fleet.restore();
+      expect(a.issued, 2);
+      await manager.importConnections([
+        saved.copyWith(fleetReconnect: true),
+      ], replaceExisting: false);
+      expect(fleet.remembered(id), isFalse);
+      await fleet.restore();
+      expect(a.issued, 2);
+    }),
+  );
+  test(
     'profile owners and machine-scoped update receipts stay separate',
     () => withPlatformTrust(() async {
       Future<FleetHost> register(FleetFixture f, String kind) async {
@@ -160,7 +194,10 @@ void main() {
       ]);
       await until(() => ca.runtimeId == 'runtime' && cb.runtimeId == 'runtime');
       expect(
-        await Future.wait([ha.send(ra, ca, 'alpha'), hb.send(rb, cb, 'beta')]),
+        await Future.wait([
+          ha.send(ra, ca, 'alpha', ta),
+          hb.send(rb, cb, 'beta', tb),
+        ]),
         [true, true],
       );
       a.event('message.delta', {'text': 'one'});
@@ -173,6 +210,10 @@ void main() {
       await until(() => !ta.isCurrent && output(cb) == 'two!');
       await until(() => a.issued == 2 && ha.target != null);
       expect(hb.target, same(tb));
+      await expectLater(
+        ha.send(ra, ca, 'stale', ta),
+        throwsA(isA<WorkspaceException>()),
+      );
       expect(a.prompts, ['alpha']);
       expect(b.prompts, ['beta']);
       final lease = ConnectionMutationBarrier.begin([ha.gateway.connection.id]);

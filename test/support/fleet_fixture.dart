@@ -144,6 +144,11 @@ class FleetFixture {
       final ticket = '$name-${++issued}';
       tickets.add('hermes-gateway-ticket.$ticket');
       body = {'ticket': ticket};
+    } else if (path == '/api/health') {
+      body = {'ok': true, 'version': '1.2.3'};
+    } else if (path == '/api/webapp-access/status') {
+      res.statusCode = 403;
+      body = {'detail': 'never-render-this'};
     } else if (path == '/api/cloud/agents' &&
         req.uri.queryParameters['profile'] == 'work') {
       body = req.uri.queryParameters['org'] == null

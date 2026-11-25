@@ -319,12 +319,36 @@ class ConnectionManager {
   });
 
   /// Synchronous UI projection. Credentials are only as fresh as this store's
-  /// last read-back; mutations/export/push must refresh before using authority.
+  /// last read-back. Fleet startup uses [readFleetConnection] instead.
   List<SavedConnection> getConnections() {
     return _connectionsFromMaps(
       _readConnectionMaps(),
     ).map(_hydrateFromCachedCredentials).toList();
   }
+
+  Future<SavedConnection?> readFleetConnection(String id) =>
+      _withSavedListTransaction([], () async {
+        final c = _connectionsFromMaps(
+          _readConnectionMaps(),
+        ).where((c) => c.id == id).singleOrNull;
+        if (c == null) return null;
+        final encoded = await _readEncodedCredentials(id);
+        return encoded == null
+            ? c
+            : _applyCredentials(c, _ConnectionCredentials.decode(encoded));
+      });
+
+  Future<void> setFleetReconnect(String id, Object? epoch, bool enabled) =>
+      _withSavedListTransaction([], () async {
+        if (!ConnectionMutationBarrier.isCurrent(id, epoch)) {
+          throw StateError('Fleet account changed');
+        }
+        final list = _connectionsFromMaps(_readConnectionMaps());
+        final i = list.indexWhere((c) => c.id == id);
+        if (i < 0) throw StateError('Fleet account removed');
+        list[i] = list[i].copyWith(fleetReconnect: enabled);
+        await _saveAll(list);
+      });
 
   /// Returns every saved connection with its secrets read back from the secure
   /// store, rather than from the in-memory cache used by [getConnections].
@@ -409,7 +433,10 @@ class ConnectionManager {
     List<SavedConnection> incoming, {
     required bool replaceExisting,
   }) {
-    final ordered = List<SavedConnection>.of(incoming);
+    // A backup is not consent to start a socket on this device.
+    final ordered = [
+      for (final c in incoming) c.copyWith(fleetReconnect: false),
+    ];
     return _withSavedListTransaction(ordered.map((c) => c.id), () async {
       final current = await _loadConnectionsWithSecrets();
       final previousMetadata = prefs.getStringList(_key);
@@ -685,6 +712,7 @@ class ConnectionManager {
 
     current[idx] = current[idx].copyWith(
       label: label,
+      fleetReconnect: false,
       host: normalized.host,
       port: normalized.port,
       apiKey: apiKey,
@@ -743,6 +771,7 @@ class ConnectionManager {
     final gateway = gatewayPrefix?.trim();
     final dashboard = dashboardPrefix?.trim();
     current[idx] = current[idx].copyWith(
+      fleetReconnect: false,
       gatewayPrefix: gateway == null || gateway.isEmpty ? null : gateway,
       clearGatewayPrefix: gateway != null && gateway.isEmpty,
       dashboardPrefix: dashboard == null || dashboard.isEmpty
@@ -775,7 +804,10 @@ class ConnectionManager {
           current[idx],
         );
         final previousConnections = List<SavedConnection>.of(current);
-        current[idx] = current[idx].copyWith(apiKey: apiKey);
+        current[idx] = current[idx].copyWith(
+          apiKey: apiKey,
+          fleetReconnect: false,
+        );
         await _commitCredentialAndMetadata(
           connectionId: connId,
           previousCredentials: previousCredentials,
