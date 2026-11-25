@@ -4098,6 +4098,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_the_turn_failed => 'La respuesta ha fallado.';
 
   @override
+  String get ng_turn_changed =>
+      'esa respuesta ya terminó o empezó una más reciente';
+
+  @override
+  String get ng_steer_rejected => 'la respuesta en curso no lo aceptó';
+
+  @override
+  String get ng_turn_not_known_yet =>
+      'aún no se conoce la respuesta en curso; inténtalo de nuevo en un momento';
+
+  @override
   String ng_couldn_t_stop(Object error) {
     return 'No se ha podido detener: $error';
   }

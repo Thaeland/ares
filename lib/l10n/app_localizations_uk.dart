@@ -4090,6 +4090,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_the_turn_failed => 'Не вдалося виконати цей запит.';
 
   @override
+  String get ng_turn_changed => 'цей запит уже завершився або почався новіший';
+
+  @override
+  String get ng_steer_rejected => 'запит, що виконується, цього не прийняв';
+
+  @override
+  String get ng_turn_not_known_yet =>
+      'запит, що виконується, ще невідомий; спробуйте ще раз за мить';
+
+  @override
   String ng_couldn_t_stop(Object error) {
     return 'Не вдалося зупинити: $error';
   }
