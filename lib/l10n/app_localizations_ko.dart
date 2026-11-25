@@ -6051,4 +6051,22 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get render_widget_file_truncated =>
       '이 파일의 앞부분만 읽었으므로 위젯이 불완전할 수 있습니다.';
+
+  @override
+  String get setup_beat_title => '설정';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return '$name 사용';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Hermes가 어떻게 불러 드릴까요?';
+
+  @override
+  String get setup_beat_on_computer =>
+      '이 단계는 Hermes가 실행 중인 컴퓨터에서 진행합니다. 계속하면 그곳에 설정된 내용이 유지됩니다.';
+
+  @override
+  String get setup_beat_not_waiting => '이 설정 카드는 더 이상 응답을 기다리지 않습니다.';
 }

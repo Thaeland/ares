@@ -6246,4 +6246,23 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get render_widget_file_truncated =>
       'Seul le début de ce fichier a été lu : le widget peut être incomplet.';
+
+  @override
+  String get setup_beat_title => 'Configuration';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return 'Utiliser $name';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Comment Hermes doit-il vous appeler ?';
+
+  @override
+  String get setup_beat_on_computer =>
+      'Cette étape se fait dans Hermes, sur l’ordinateur où il s’exécute. Continuer conserve ce qui y est déjà configuré.';
+
+  @override
+  String get setup_beat_not_waiting =>
+      'Cette carte de configuration n’attend plus de réponse.';
 }

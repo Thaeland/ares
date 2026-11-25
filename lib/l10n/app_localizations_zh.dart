@@ -5959,6 +5959,23 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get render_widget_file_truncated => '只读取了此文件的开头部分，因此小组件可能不完整。';
+
+  @override
+  String get setup_beat_title => '设置';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return '使用 $name';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Hermes 应该怎么称呼你？';
+
+  @override
+  String get setup_beat_on_computer => '此步骤在运行 Hermes 的电脑上完成。选择“继续”将保留那里已有的设置。';
+
+  @override
+  String get setup_beat_not_waiting => '此设置卡片已不再等待回答。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -11686,4 +11703,21 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get render_widget_file_truncated => '只读取了此文件的开头部分，因此小组件可能不完整。';
+
+  @override
+  String get setup_beat_title => '设置';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return '使用 $name';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Hermes 应该怎么称呼你？';
+
+  @override
+  String get setup_beat_on_computer => '此步骤在运行 Hermes 的电脑上完成。选择“继续”将保留那里已有的设置。';
+
+  @override
+  String get setup_beat_not_waiting => '此设置卡片已不再等待回答。';
 }

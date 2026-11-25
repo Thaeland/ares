@@ -14,6 +14,7 @@ import '../../core/models/attachment_draft.dart';
 import '../../core/models/background_report.dart';
 import '../../core/models/legacy_lcm_summary.dart';
 import '../../core/models/slash_command.dart';
+import '../../core/render/setup_beat.dart';
 import '../../core/services/attachment_draft_service.dart';
 import '../../core/services/remote_workspace.dart';
 import '../../core/services/composer_draft_store.dart';
@@ -370,7 +371,7 @@ class NgCommandOutcome {
       result == NgCommandResult.unsupported;
 }
 
-enum NgRequestKind { approval, clarify, secret, saveLogin }
+enum NgRequestKind { approval, clarify, secret, saveLogin, setupBeat }
 
 class NgClarifyQuestion {
   final String? qid;
@@ -396,6 +397,9 @@ class NgInputRequest {
   final List<NgClarifyQuestion> questions;
   final bool masked;
 
+  /// The onboarding card, for [NgRequestKind.setupBeat].
+  final SetupBeatRequest? setupBeat;
+
   NgInputRequest._(
     this.request, {
     required this.kind,
@@ -405,6 +409,7 @@ class NgInputRequest {
     this.choices = const [],
     this.questions = const [],
     this.masked = true,
+    this.setupBeat,
   });
 
   static List<String> _strings(Object? value) => value is List
@@ -465,6 +470,15 @@ class NgInputRequest {
               : ngL.ng_hermes_wants_to_run_this,
           command: s('command'),
           choices: ordered,
+        );
+      case 'setup_beat':
+        final card = SetupBeatRequest.parse(request.id, p);
+        if (card == null) return null;
+        return NgInputRequest._(
+          request,
+          kind: NgRequestKind.setupBeat,
+          title: card.question,
+          setupBeat: card,
         );
       case 'clarify':
         final batch = <NgClarifyQuestion>[];
@@ -3138,6 +3152,20 @@ class NgChatController extends ChangeNotifier {
   }
 
   bool answerApproval(String choice) => _answer({'choice': choice});
+
+  /// Answers this chat's waiting setup card [requestId] on the socket it
+  /// arrived on. False when that card is no longer the one waiting here
+  /// (withdrawn, answered elsewhere, or replaced by a newer card).
+  bool answerSetupBeat(String requestId, Map<String, dynamic> result) {
+    final current = request;
+    if (current == null ||
+        current.kind != NgRequestKind.setupBeat ||
+        current.request.id != requestId ||
+        !gateway.openRequests.containsKey(requestId)) {
+      return false;
+    }
+    return _answer(result);
+  }
 
   bool answerClarify(List<List<String>> answers) {
     final current = request;

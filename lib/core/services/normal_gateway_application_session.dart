@@ -702,6 +702,25 @@ class NormalGatewayApplicationSession {
     return true;
   }
 
+  /// Answers the `setup_beat` card [requestId] for [sessionId]; false when
+  /// this owner does not hold it open.
+  bool tryRespondToSetupBeat({
+    required String sessionId,
+    required String requestId,
+    required Map<String, dynamic> result,
+  }) {
+    final chat = _aliases[sessionId];
+    final gateway = client;
+    if (_closed || chat == null || gateway == null) return false;
+    final sent = gateway.respondToSetupBeat(
+      sessionId: chat.localSessionId,
+      requestId: requestId,
+      result: result,
+    );
+    if (sent) forgetAnsweredInput(requestId);
+    return sent;
+  }
+
   void forgetAnsweredInput(String requestId) {
     for (final chat in chats) {
       if (chat._pendingInput.remove(requestId) != null) {
@@ -3199,6 +3218,7 @@ class _ReceivedTurnPersistence {
 
 bool _interactive(String type) => const {
   'approval.request',
+  'setup_beat.request',
   'clarify.request',
   'clarify.remaining',
   'sudo.request',

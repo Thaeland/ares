@@ -10421,6 +10421,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Only the start of this file was read, so the widget may be incomplete.'**
   String get render_widget_file_truncated;
+
+  /// No description provided for @setup_beat_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup'**
+  String get setup_beat_title;
+
+  /// No description provided for @setup_beat_use_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Use {name}'**
+  String setup_beat_use_name(String name);
+
+  /// No description provided for @setup_beat_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'What should Hermes call you?'**
+  String get setup_beat_name_hint;
+
+  /// No description provided for @setup_beat_on_computer.
+  ///
+  /// In en, this message translates to:
+  /// **'This step is done in Hermes on the computer it runs on. Continue keeps what is set up there.'**
+  String get setup_beat_on_computer;
+
+  /// No description provided for @setup_beat_not_waiting.
+  ///
+  /// In en, this message translates to:
+  /// **'This setup card is no longer waiting for an answer.'**
+  String get setup_beat_not_waiting;
 }
 
 class _AppLocalizationsDelegate

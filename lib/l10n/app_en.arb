@@ -2630,5 +2630,11 @@
   "ng_aux_profile_describer_hint": "Writes each profile's short description",
   "ng_aux_curator": "Curator",
   "ng_aux_curator_hint": "Reviews how skills are used",
-  "render_widget_file_truncated": "Only the start of this file was read, so the widget may be incomplete."
+  "render_widget_file_truncated": "Only the start of this file was read, so the widget may be incomplete.",
+  "setup_beat_title": "Setup",
+  "setup_beat_use_name": "Use {name}",
+  "@setup_beat_use_name": {"placeholders": {"name": {"type": "String"}}},
+  "setup_beat_name_hint": "What should Hermes call you?",
+  "setup_beat_on_computer": "This step is done in Hermes on the computer it runs on. Continue keeps what is set up there.",
+  "setup_beat_not_waiting": "This setup card is no longer waiting for an answer."
 }

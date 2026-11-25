@@ -6231,4 +6231,23 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get render_widget_file_truncated =>
       'Прочитано только начало этого файла, поэтому виджет может быть неполным.';
+
+  @override
+  String get setup_beat_title => 'Настройка';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return 'Использовать $name';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Как Hermes должен вас называть?';
+
+  @override
+  String get setup_beat_on_computer =>
+      'Этот шаг выполняется в Hermes на компьютере, где он работает. «Продолжить» сохраняет то, что там уже настроено.';
+
+  @override
+  String get setup_beat_not_waiting =>
+      'Эта карточка настройки больше не ждёт ответа.';
 }

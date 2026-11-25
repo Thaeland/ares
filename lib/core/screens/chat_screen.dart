@@ -60,6 +60,7 @@ import '../services/remote_files_client.dart';
 import '../preview/chat_preview.dart';
 import '../render/render_scope.dart';
 import '../render/rich_transcript.dart';
+import '../render/setup_beat.dart';
 import '../services/slash_command_errors.dart';
 import '../services/legal_links.dart';
 import '../services/turn_notification_service.dart';
@@ -955,6 +956,10 @@ class _ChatScreenState extends State<ChatScreen>
   Route<GatewaySensitivePromptDialogResult>? _sensitivePromptRoute;
   final List<_PendingClarifyPrompt> _clarifyPromptQueue = [];
   _PendingClarifyPrompt? _activeClarifyPrompt;
+
+  /// The onboarding card waiting in this chat (one per chat, as on the
+  /// Desktop). Cleared when answered, closed or withdrawn.
+  SetupBeatRequest? _setupBeat;
   bool _clarifyPromptRouteOpen = false;
   Route<bool>? _clarifyPromptRoute;
   bool _clarifyPromptClosing = false;
@@ -6062,6 +6067,15 @@ class _ChatScreenState extends State<ChatScreen>
       _queueClarifyPrompt(event.data, responseGeneration);
       return;
     }
+    if (event.type == 'setup_beat.request') {
+      final id =
+          (event.data['server_request_id'] ?? event.data['request_id'])
+              ?.toString() ??
+          '';
+      final request = SetupBeatRequest.parse(id, event.data);
+      if (request != null && mounted) setState(() => _setupBeat = request);
+      return;
+    }
     if (event.type == 'clarify.remaining') {
       _reconcileClarifyPrompts(event);
       return;
@@ -6244,6 +6258,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (!mounted || mobileSessionId != widget.session.id) return;
     const interactiveTypes = {
       'approval.request',
+      'setup_beat.request',
       'clarify.request',
       'clarify.remaining',
       'sudo.request',
@@ -6553,6 +6568,51 @@ class _ChatScreenState extends State<ChatScreen>
       // dismiss that independent request or send an unintended denial.
       navigator.removeRoute(route, false);
     }
+  }
+
+  /// Answers this chat's waiting setup card through whichever owner holds
+  /// the request (the stock gateway's chat owner, the recovery session or
+  /// the Desktop gateway client). Nothing is sent for a card that is no
+  /// longer open here, or for another chat.
+  Future<bool> _answerSetupBeat(
+    SetupBeatRequest request,
+    Map<String, dynamic> result,
+  ) async {
+    if (!mounted || _setupBeat?.requestId != request.requestId) return false;
+    final sessionId = widget.session.id;
+    final requestId = request.requestId;
+    var sent =
+        _normalSession?.tryRespondToSetupBeat(
+          sessionId: sessionId,
+          requestId: requestId,
+          result: result,
+        ) ??
+        false;
+    final turnSession = _turnApplicationSession;
+    if (!sent && turnSession is GatewaySetupBeatResponder) {
+      sent = (turnSession as GatewaySetupBeatResponder).tryRespondToSetupBeat(
+        sessionId: sessionId,
+        requestId: requestId,
+        result: result,
+      );
+    }
+    if (!sent) {
+      sent =
+          _desktopGateway?.respondToSetupBeat(
+            sessionId: sessionId,
+            requestId: requestId,
+            result: result,
+          ) ??
+          false;
+    }
+    if (!mounted || _setupBeat?.requestId != request.requestId) return sent;
+    setState(() => _setupBeat = null);
+    if (!sent) {
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        SnackBar(content: Text(context.l10n.setup_beat_not_waiting)),
+      );
+    }
+    return sent;
   }
 
   Future<void> _respondToGatewayClarify({
@@ -6894,6 +6954,13 @@ class _ChatScreenState extends State<ChatScreen>
     final requestId = event.data['id']?.toString().trim() ?? '';
     final method = event.data['method']?.toString().trim() ?? '';
     if (requestId.isEmpty) return;
+
+    if (_setupBeat?.requestId == requestId) {
+      // Withdrawn (timeout, Stop, Skip setup, answered in another window)
+      // or its socket went: the card can no longer be answered.
+      setState(() => _setupBeat = null);
+      return;
+    }
 
     if (method == 'sudo' || method == 'secret') {
       _expireSensitivePrompt(
@@ -8118,6 +8185,12 @@ class _ChatScreenState extends State<ChatScreen>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (_setupBeat != null)
+                      SetupBeatCard(
+                        request: _setupBeat!,
+                        onAnswer: (result) =>
+                            _answerSetupBeat(_setupBeat!, result),
+                      ),
                     if (_voiceRecording.recording ||
                         _voiceRecording.hasDraft ||
                         _voiceRecording.busy ||

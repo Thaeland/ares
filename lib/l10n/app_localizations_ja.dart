@@ -6047,4 +6047,22 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get render_widget_file_truncated =>
       'このファイルは先頭部分しか読み込まれていないため、ウィジェットが不完全な可能性があります。';
+
+  @override
+  String get setup_beat_title => 'セットアップ';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return '$name を使う';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Hermes はあなたを何と呼べばよいですか？';
+
+  @override
+  String get setup_beat_on_computer =>
+      'この手順は Hermes が動作しているコンピューターで行います。「続ける」を選ぶと、そこでの設定がそのまま使われます。';
+
+  @override
+  String get setup_beat_not_waiting => 'このセットアップカードはもう回答を待っていません。';
 }

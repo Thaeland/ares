@@ -1700,5 +1700,10 @@
   "ng_folder_read_only": "Schreibgeschützt",
   "ng_folder_read_write": "Lesen und Schreiben",
   "ng_website_access": "Websitezugriff",
-  "render_widget_file_truncated": "Nur der Anfang dieser Datei wurde gelesen, daher ist das Widget möglicherweise unvollständig."
+  "render_widget_file_truncated": "Nur der Anfang dieser Datei wurde gelesen, daher ist das Widget möglicherweise unvollständig.",
+  "setup_beat_title": "Einrichtung",
+  "setup_beat_use_name": "{name} verwenden",
+  "setup_beat_name_hint": "Wie soll Hermes dich nennen?",
+  "setup_beat_on_computer": "Dieser Schritt erfolgt in Hermes auf dem Computer, auf dem es läuft. „Weiter“ behält, was dort eingerichtet ist.",
+  "setup_beat_not_waiting": "Diese Einrichtungskarte wartet nicht mehr auf eine Antwort."
 }

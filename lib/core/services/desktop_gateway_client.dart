@@ -1060,7 +1060,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
 
   bool _handleServerRequest(WsClient client, GatewayServerRequest request) {
     if (_closed || !client.isConnected) return false;
-    const supported = {'clarify', 'approval', 'sudo', 'secret'};
+    const supported = {'clarify', 'approval', 'sudo', 'secret', 'setup_beat'};
     if (!supported.contains(request.method)) return false;
 
     final gatewaySessionId = request.params['session_id']?.toString();
@@ -1291,6 +1291,29 @@ class DesktopGatewayClient implements SlashCommandGateway {
   /// Whether this client owns an unresolved peer-to-peer request.
   bool ownsServerRequest(String requestId, String method) =>
       _serverRequests[requestId]?.method == method;
+
+  /// Answers the `setup_beat` card [requestId] for the chat [sessionId] on
+  /// the socket it arrived on. False, and nothing is sent, when the request
+  /// is no longer open here (answered, withdrawn, its socket gone) or
+  /// belongs to another chat.
+  bool respondToSetupBeat({
+    required String sessionId,
+    required String requestId,
+    required Map<String, dynamic> result,
+  }) {
+    if (_closed) return false;
+    final request = _serverRequests[requestId];
+    final client = _serverRequestClients[requestId];
+    if (request?.method != 'setup_beat' ||
+        _serverRequestMobileSessionIds[requestId] != sessionId ||
+        client == null ||
+        !client.isConnected) {
+      return false;
+    }
+    final sent = request!.respond(result);
+    _forgetServerRequest(requestId);
+    return sent;
+  }
 
   /// Whether this client owns the active approval for [sessionId].
   ///

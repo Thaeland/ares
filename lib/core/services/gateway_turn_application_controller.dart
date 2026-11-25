@@ -19,6 +19,16 @@ typedef GatewayTurnApplicationSessionFactory =
     GatewayTurnApplicationSession Function(SavedConnection connection);
 typedef GatewayTurnJournalFactory = GatewayTurnJournal Function();
 
+/// Answers `setup_beat` cards. The live recovery session implements it;
+/// a session that does not leaves the card to the screen's other owners.
+abstract interface class GatewaySetupBeatResponder {
+  bool tryRespondToSetupBeat({
+    required String sessionId,
+    required String requestId,
+    required Map<String, dynamic> result,
+  });
+}
+
 /// Connection-scoped recovery surface retained by the application owner.
 abstract interface class GatewayTurnApplicationSession {
   /// Routes interactive server requests for one mounted chat screen.
@@ -436,7 +446,10 @@ class GatewayTurnApplicationController {
 }
 
 class _CoordinatorGatewayTurnApplicationSession
-    implements GatewayTurnApplicationSession, GuardedGatewayTurnSubmission {
+    implements
+        GatewayTurnApplicationSession,
+        GuardedGatewayTurnSubmission,
+        GatewaySetupBeatResponder {
   final DesktopGatewayClient _client;
   final Map<String, _ApplicationAsyncEventRegistration> _asyncEventListeners =
       {};
@@ -569,6 +582,20 @@ class _CoordinatorGatewayTurnApplicationSession
       questionId: questionId,
     );
     return true;
+  }
+
+  @override
+  bool tryRespondToSetupBeat({
+    required String sessionId,
+    required String requestId,
+    required Map<String, dynamic> result,
+  }) {
+    if (_closed) return false;
+    return _client.respondToSetupBeat(
+      sessionId: sessionId,
+      requestId: requestId,
+      result: result,
+    );
   }
 
   @override

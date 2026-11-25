@@ -18,6 +18,7 @@ import '../../core/models/attachment_draft.dart';
 import '../../core/preview/chat_preview.dart';
 import '../../core/render/render_scope.dart';
 import '../../core/render/rich_transcript.dart';
+import '../../core/render/setup_beat.dart';
 import '../../core/screens/workspace_workers_screen.dart';
 import '../../core/screens/gateway_queue_screen.dart';
 import '../../core/services/remote_files_client.dart';
@@ -1024,7 +1025,14 @@ class _NgChatViewState extends State<NgChatView>
                       ),
                     if (chat.error != null) _errorBar(c),
                     if (chat.queued.isNotEmpty) _queue(c),
-                    if (chat.request != null)
+                    if (chat.request?.setupBeat case final card?)
+                      SetupBeatCard(
+                        key: ValueKey(card.requestId),
+                        request: card,
+                        onAnswer: (result) async =>
+                            chat.answerSetupBeat(card.requestId, result),
+                      )
+                    else if (chat.request != null)
                       _InputPanel(chat: chat, request: chat.request!)
                     else
                       NgSlashCommandInfo(
@@ -2796,6 +2804,9 @@ class _InputPanelState extends State<_InputPanel> {
 
   List<Widget> _body(NgColors c, NgInputRequest r) {
     switch (r.kind) {
+      case NgRequestKind.setupBeat:
+        // Drawn by SetupBeatCard instead of this panel.
+        return const [];
       case NgRequestKind.approval:
         return [
           Wrap(

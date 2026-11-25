@@ -6233,6 +6233,25 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get render_widget_file_truncated =>
       'Só o início deste ficheiro foi lido, por isso o widget pode estar incompleto.';
+
+  @override
+  String get setup_beat_title => 'Configuração';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return 'Usar $name';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Como é que o Hermes deve chamar-lhe?';
+
+  @override
+  String get setup_beat_on_computer =>
+      'Este passo faz-se no Hermes, no computador onde corre. Continuar mantém o que já está configurado lá.';
+
+  @override
+  String get setup_beat_not_waiting =>
+      'Este cartão de configuração já não está à espera de resposta.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -12228,4 +12247,23 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get render_widget_file_truncated =>
       'Só o início deste arquivo foi lido, então o widget pode estar incompleto.';
+
+  @override
+  String get setup_beat_title => 'Configuração';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return 'Usar $name';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Como o Hermes deve chamar você?';
+
+  @override
+  String get setup_beat_on_computer =>
+      'Esta etapa é feita no Hermes, no computador onde ele roda. Continuar mantém o que já está configurado lá.';
+
+  @override
+  String get setup_beat_not_waiting =>
+      'Este cartão de configuração não está mais esperando resposta.';
 }
