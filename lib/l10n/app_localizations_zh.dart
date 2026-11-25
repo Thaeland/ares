@@ -9,6 +9,12 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get workspace_workers => '运行中的子代理';
+
+  @override
+  String get workers_unattached => '仅显示数量。要向子代理发送指令，请在已连接的上级对话中选择“运行中的子代理”。';
+
+  @override
   String get slash_local_arguments => '此处的快捷命令不支持参数。请使用应用中的控件；草稿已保留。';
 
   @override
@@ -5884,6 +5890,12 @@ class AppLocalizationsZh extends AppLocalizations {
 /// The translations for Chinese, using the Han script (`zh_Hans`).
 class AppLocalizationsZhHans extends AppLocalizationsZh {
   AppLocalizationsZhHans() : super('zh_Hans');
+
+  @override
+  String get workspace_workers => '运行中的子代理';
+
+  @override
+  String get workers_unattached => '仅显示数量。要向子代理发送指令，请在已连接的上级对话中选择“运行中的子代理”。';
 
   @override
   String get slash_local_arguments => '此处的快捷命令不支持参数。请使用应用中的控件；草稿已保留。';

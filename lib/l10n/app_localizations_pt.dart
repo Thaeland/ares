@@ -9,6 +9,13 @@ class AppLocalizationsPt extends AppLocalizations {
   AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
+  String get workspace_workers => 'Subagentes ativos';
+
+  @override
+  String get workers_unattached =>
+      'Apenas contagens. Para orientar um subagente, escolha Subagentes ativos na conversa principal ligada.';
+
+  @override
   String get slash_local_arguments =>
       'Este atalho não aceita argumentos aqui. Use os controlos da aplicação; o rascunho foi mantido.';
 
@@ -6153,6 +6160,13 @@ class AppLocalizationsPt extends AppLocalizations {
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
 class AppLocalizationsPtBr extends AppLocalizationsPt {
   AppLocalizationsPtBr() : super('pt_BR');
+
+  @override
+  String get workspace_workers => 'Subagentes ativos';
+
+  @override
+  String get workers_unattached =>
+      'Apenas contagens. Para orientar um subagente, selecione Subagentes ativos na conversa principal conectada.';
 
   @override
   String get slash_local_arguments =>

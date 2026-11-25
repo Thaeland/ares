@@ -116,6 +116,18 @@ abstract class AppLocalizations {
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
   ];
 
+  /// No description provided for @workspace_workers.
+  ///
+  /// In en, this message translates to:
+  /// **'Live workers'**
+  String get workspace_workers;
+
+  /// No description provided for @workers_unattached.
+  ///
+  /// In en, this message translates to:
+  /// **'Counts only. To steer a worker, choose Live workers in its attached parent chat.'**
+  String get workers_unattached;
+
   /// No description provided for @slash_local_arguments.
   ///
   /// In en, this message translates to:

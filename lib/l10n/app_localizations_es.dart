@@ -9,6 +9,13 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get workspace_workers => 'Subagentes activos';
+
+  @override
+  String get workers_unattached =>
+      'Solo se muestran cantidades. Para dirigir un subagente, elige Subagentes activos en el chat principal conectado.';
+
+  @override
   String get slash_local_arguments =>
       'Este atajo no admite argumentos aquí. Usa los controles de la aplicación; se conservó tu borrador.';
 

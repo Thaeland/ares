@@ -9,6 +9,13 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
+  String get workspace_workers => 'Активные субагенты';
+
+  @override
+  String get workers_unattached =>
+      'Показано только количество. Чтобы дать указание, выберите «Активные субагенты» в подключённом родительском чате.';
+
+  @override
   String get slash_local_arguments =>
       'Этот ярлык здесь не поддерживает аргументы. Используйте элементы управления приложения; черновик сохранён.';
 

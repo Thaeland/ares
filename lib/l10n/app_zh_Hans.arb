@@ -1,4 +1,6 @@
 {
+  "workspace_workers": "运行中的子代理",
+  "workers_unattached": "仅显示数量。要向子代理发送指令，请在已连接的上级对话中选择“运行中的子代理”。",
   "slash_local_arguments": "此处的快捷命令不支持参数。请使用应用中的控件；草稿已保留。",
   "slash_command_unsupported": "此命令在此服务器上不可用。",
   "slash_sessions_inline": "请打开会话列表选择聊天。草稿已保留。",

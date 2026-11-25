@@ -88,6 +88,7 @@ void main() {
           'assets',
           'unassigned',
           'workspace-profiles',
+          'workspace-workers',
           'model',
           'cron',
           'skills',
@@ -344,6 +345,7 @@ void main() {
           expect(agent.title, titles[locale.toString()], reason: '$locale');
           expect(agent.entries.map((entry) => entry.id), [
             'workspace-profiles',
+            'workspace-workers',
             'model',
             'cron',
             'skills',

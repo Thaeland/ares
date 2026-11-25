@@ -12,6 +12,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/models/attachment_draft.dart';
+import '../../core/screens/workspace_workers_screen.dart';
 import '../../core/services/connection_manager.dart';
 import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
@@ -537,6 +538,14 @@ class _NgChatViewState extends State<NgChatView> {
       listenable: gateway,
       builder: (context, _) {
         final state = gateway.state;
+        final parentId = chat.storedId;
+        final workers = parentId == null || chat.runtimeId == null
+            ? null
+            : WorkspaceWorkersScreen.capture(
+                chat.gateway.workspace,
+                chat.gateway.connection.label,
+                storedSessionId: parentId,
+              );
         return Scaffold(
           backgroundColor: c.background,
           appBar: AppBar(
@@ -592,6 +601,12 @@ class _NgChatViewState extends State<NgChatView> {
               ),
             ),
             actions: [
+              if (workers != null)
+                IconButton(
+                  tooltip: ngL.workspace_workers,
+                  icon: const Icon(Icons.account_tree_outlined),
+                  onPressed: () => workers.open(context),
+                ),
               if (chat.usage != null)
                 IconButton(
                   tooltip: ngL.ng_usage,

@@ -9,6 +9,13 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get workspace_workers => 'Live workers';
+
+  @override
+  String get workers_unattached =>
+      'Counts only. To steer a worker, choose Live workers in its attached parent chat.';
+
+  @override
   String get slash_local_arguments =>
       'This shortcut does not accept arguments here. Use the app controls; your draft was kept.';
 

@@ -1,4 +1,6 @@
 {
+  "workspace_workers": "Subagentes activos",
+  "workers_unattached": "Solo se muestran cantidades. Para dirigir un subagente, elige Subagentes activos en el chat principal conectado.",
   "slash_local_arguments": "Este atajo no admite argumentos aquí. Usa los controles de la aplicación; se conservó tu borrador.",
   "fallback_title": "Modelos de respaldo",
   "fallback_notice": "Se prueban en orden cuando el modelo principal no está disponible. Los cambios solo afectan a este perfil; guarda explícitamente la lista completa.",

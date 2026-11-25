@@ -9,6 +9,13 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get workspace_workers => '実行中のサブエージェント';
+
+  @override
+  String get workers_unattached =>
+      '件数のみ表示しています。指示を送るには、接続中の親チャットで「実行中のサブエージェント」を選んでください。';
+
+  @override
   String get slash_local_arguments =>
       'ここではこのショートカットに引数を指定できません。アプリの操作画面を使用してください。下書きは保持されています。';
 

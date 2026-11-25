@@ -84,6 +84,7 @@ import '../utils/responsive.dart';
 import '../utils/turn_recovery_fallback.dart';
 import '../theme/hermes_theme.dart';
 import 'files_screen.dart';
+import 'workspace_workers_screen.dart';
 import '../widgets/background_report_card.dart';
 import '../widgets/gateway_activity_card.dart';
 import '../widgets/chat_context_header.dart';
@@ -7014,6 +7015,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     _syncComposerKeyboardEndScroll();
+    final gateway = _desktopGateway;
+    final parentId = gateway?.storedSessionKeyFor(_normalLocalSessionKey);
+    final workers = _usesNormalInputOwner && gateway != null && parentId != null
+        ? WorkspaceWorkersScreen.capture(
+            gateway.workspace,
+            widget.connection.label,
+            storedSessionId: parentId,
+          )
+        : null;
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -7044,6 +7054,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ),
         ),
         actions: [
+          if (workers != null)
+            IconButton(
+              tooltip: context.l10n.workspace_workers,
+              icon: const Icon(Icons.account_tree_outlined),
+              onPressed: () => workers.open(context),
+            ),
           if (_archiving)
             const Padding(
               padding: EdgeInsets.only(right: 8),

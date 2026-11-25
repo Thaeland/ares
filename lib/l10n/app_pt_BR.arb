@@ -1,4 +1,6 @@
 {
+  "workspace_workers": "Subagentes ativos",
+  "workers_unattached": "Apenas contagens. Para orientar um subagente, selecione Subagentes ativos na conversa principal conectada.",
   "slash_local_arguments": "Este atalho não aceita argumentos aqui. Use os controles do aplicativo; seu rascunho foi mantido.",
   "slash_command_unsupported": "Este comando não está disponível neste servidor.",
   "slash_sessions_inline": "Abra a lista de sessões para escolher uma conversa. Seu rascunho foi mantido.",

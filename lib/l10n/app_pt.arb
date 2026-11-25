@@ -1,4 +1,6 @@
 {
+  "workspace_workers": "Subagentes ativos",
+  "workers_unattached": "Apenas contagens. Para orientar um subagente, escolha Subagentes ativos na conversa principal ligada.",
   "slash_local_arguments": "Este atalho não aceita argumentos aqui. Use os controlos da aplicação; o rascunho foi mantido.",
   "fallback_title": "Modelos de recurso",
   "fallback_notice": "São tentados por ordem quando o modelo principal está indisponível. As alterações aplicam-se apenas a este perfil; guarde explicitamente a lista completa.",

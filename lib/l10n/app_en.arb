@@ -1,4 +1,6 @@
 {
+  "workspace_workers": "Live workers",
+  "workers_unattached": "Counts only. To steer a worker, choose Live workers in its attached parent chat.",
   "slash_local_arguments": "This shortcut does not accept arguments here. Use the app controls; your draft was kept.",
   "fallback_title": "Fallback models",
   "fallback_notice": "Tried in order when the main model is unavailable. Changes apply to this profile only; save the complete list explicitly.",

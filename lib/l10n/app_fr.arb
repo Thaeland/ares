@@ -1,4 +1,6 @@
 {
+  "workspace_workers": "Sous-agents actifs",
+  "workers_unattached": "Seul le nombre est affiché. Pour guider un sous-agent, choisissez Sous-agents actifs dans la conversation parente connectée.",
   "slash_local_arguments": "Ce raccourci n’accepte pas d’arguments ici. Utilisez les commandes de l’application ; votre brouillon a été conservé.",
   "fallback_title": "Modèles de secours",
   "fallback_notice": "Essayés dans cet ordre si le modèle principal est indisponible. Les modifications concernent uniquement ce profil ; enregistrez explicitement la liste complète.",

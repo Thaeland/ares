@@ -1,4 +1,6 @@
 {
+  "workspace_workers": "运行中的子代理",
+  "workers_unattached": "仅显示数量。要向子代理发送指令，请在已连接的上级对话中选择“运行中的子代理”。",
   "slash_local_arguments": "此处的快捷命令不支持参数。请使用应用中的控件；草稿已保留。",
   "fallback_title": "备用模型",
   "fallback_notice": "主模型不可用时按顺序尝试。更改仅适用于此配置；请明确保存完整列表。",
