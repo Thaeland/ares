@@ -38,6 +38,32 @@ class LocalTerminal implements DeviceTerminal {
   @visibleForTesting
   static bool? supportedOverride;
 
+  /// Environment for the packaged helper. Windows `cmd.exe` inherits it, so
+  /// it needs `SystemRoot` and a PATH that can see system commands. POSIX
+  /// keeps the shell off the user's PATH.
+  @visibleForTesting
+  static Map<String, String> shellEnvironment({
+    required String home,
+    required bool windows,
+    String? systemRoot,
+  }) {
+    final env = <String, String>{
+      'TERM': 'xterm-256color',
+      'LANG': 'en_US.UTF-8',
+      'HOME': home,
+    };
+    if (!windows) {
+      env['PATH'] = '/usr/bin:/bin:/usr/sbin:/sbin';
+      return env;
+    }
+    if (systemRoot != null && systemRoot.isNotEmpty) {
+      final root = systemRoot.replaceAll(RegExp(r'[\\/]+$'), '');
+      env['SystemRoot'] = root;
+      env['PATH'] = '$root\\System32;$root';
+    }
+    return env;
+  }
+
   static Future<LocalTerminal> start({required void Function() check}) async {
     if (!supported) throw UnsupportedError('No local shell on this platform');
     final cwd = directoryOverride ?? await getApplicationSupportDirectory();
@@ -68,14 +94,11 @@ class LocalTerminal implements DeviceTerminal {
       const [],
       workingDirectory: cwd.path,
       includeParentEnvironment: false,
-      environment: {
-        'TERM': 'xterm-256color',
-        'LANG': 'en_US.UTF-8',
-        'HOME': cwd.path,
-        if (!Platform.isWindows) 'PATH': '/usr/bin:/bin:/usr/sbin:/sbin',
-        if (Platform.isWindows)
-          'SystemRoot': ?Platform.environment['SystemRoot'],
-      },
+      environment: shellEnvironment(
+        home: cwd.path,
+        windows: Platform.isWindows,
+        systemRoot: Platform.environment['SystemRoot'],
+      ),
     );
     final term = LocalTerminal._(p);
     try {

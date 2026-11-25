@@ -14,6 +14,47 @@ import 'workspace_registry.dart';
 Widget buildTerminalPage(BuildContext context, WorkspaceTarget target) =>
     TerminalPage(target: target);
 
+class _ReviewPasteIntent extends Intent {
+  const _ReviewPasteIntent();
+}
+
+/// xterm's [Terminal.paste] writes straight to the shell. Hold that write
+/// until the page has shown the paste and the user has confirmed it.
+class _ReviewedTerminal extends Terminal {
+  _ReviewedTerminal() : super(maxLines: 2000);
+
+  void Function(String text)? onUnreviewedPaste;
+  bool _committing = false;
+
+  @override
+  void paste(String text) {
+    if (_committing) {
+      super.paste(text);
+      return;
+    }
+    onUnreviewedPaste?.call(text);
+  }
+
+  void commitPaste(String text) {
+    _committing = true;
+    try {
+      super.paste(text);
+    } finally {
+      _committing = false;
+    }
+  }
+}
+
+/// Replace every platform paste chord xterm binds. Copy and select-all stay.
+Map<ShortcutActivator, Intent> _reviewedShortcuts() {
+  final shortcuts = Map<ShortcutActivator, Intent>.of(defaultTerminalShortcuts);
+  const review = _ReviewPasteIntent();
+  for (final key in shortcuts.keys.toList()) {
+    if (shortcuts[key] is PasteTextIntent) shortcuts[key] = review;
+  }
+  return shortcuts;
+}
+
 class TerminalPage extends StatefulWidget {
   const TerminalPage({required this.target, super.key});
   final WorkspaceTarget target;
@@ -26,7 +67,7 @@ class _Tab {
   final String label;
   final TerminalChatAttachment? source;
   final String? process;
-  final emulator = Terminal(maxLines: 2000);
+  final emulator = _ReviewedTerminal();
   final selection = TerminalController();
   DeviceTerminal? device;
   remote.GatewayTerminal? gateway;
@@ -131,6 +172,9 @@ class _TerminalPageState extends State<TerminalPage> {
       } catch (_) {
         /* stale: resize cannot be redirected */
       }
+    };
+    tab.emulator.onUnreviewedPaste = (text) {
+      unawaited(run(() => paste(tab, text)));
     };
     setState(() {
       tabs.add(tab);
@@ -299,12 +343,13 @@ class _TerminalPageState extends State<TerminalPage> {
         )) {
       return;
     }
-    check(t);
+    // The user owns this shell. Closing it must not depend on the originating
+    // chat still being open. New input still goes through check().
     if (t.process != null) dismissed.add(t.process!);
     if (t.gateway?.retained == true) {
       ended(t, 'Closing…');
       try {
-        await t.gateway!.closeShell();
+        await t.gateway!.closeShell(requirePane: false);
       } catch (_) {
         ended(t, 'Close not confirmed');
         rethrow;
@@ -444,7 +489,32 @@ class _TerminalPageState extends State<TerminalPage> {
     }
     if (!await confirm('Paste into ${t.label}?', text)) return;
     check(t);
-    if (identical(active, t) && t.live) t.emulator.paste(text);
+    if (identical(active, t) && t.live) t.emulator.commitPaste(text);
+  }
+
+  Future<void> pasteClipboard(_Tab t) async {
+    final data = await Clipboard.getData(Clipboard.kTextPlain);
+    if (current && data?.text != null) await paste(t, data!.text!);
+  }
+
+  Future<void> pasteMenu(_Tab t, TapUpDetails details) async {
+    if (!current || !t.live || t.process != null) return;
+    final overlay =
+        Overlay.of(context).context.findRenderObject()! as RenderBox;
+    final selected = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromRect(
+        Rect.fromLTWH(
+          details.globalPosition.dx,
+          details.globalPosition.dy,
+          0,
+          0,
+        ),
+        Offset.zero & overlay.size,
+      ),
+      items: const [PopupMenuItem(value: 'paste', child: Text('Paste'))],
+    );
+    if (selected == 'paste' && current) await run(() => pasteClipboard(t));
   }
 
   void insert(_Tab t, String text) {
@@ -553,10 +623,11 @@ class _TerminalPageState extends State<TerminalPage> {
                 () async => insert(t, t.selected),
               ),
               if (t.live && t.process == null)
-                action('Review clipboard paste', Icons.content_paste, () async {
-                  final s = await Clipboard.getData(Clipboard.kTextPlain);
-                  if (current && s?.text != null) await paste(t, s!.text!);
-                }),
+                action(
+                  'Review clipboard paste',
+                  Icons.content_paste,
+                  () => pasteClipboard(t),
+                ),
               if (!t.live && t.gateway?.retained == true)
                 action('Reconnect same shell', Icons.refresh, () => connect(t)),
               action(
@@ -604,12 +675,26 @@ class _TerminalPageState extends State<TerminalPage> {
           Expanded(
             child: DragTarget<String>(
               onAcceptWithDetails: (d) => run(() => paste(t, d.data)),
-              builder: (context, _, _) => TerminalView(
-                t.emulator,
-                key: ObjectKey(t),
-                controller: t.selection,
-                readOnly: t.process != null || !t.live,
-                autofocus: false,
+              builder: (context, _, _) => Actions(
+                actions: <Type, Action<Intent>>{
+                  _ReviewPasteIntent: CallbackAction<Intent>(
+                    onInvoke: (_) {
+                      unawaited(run(() => pasteClipboard(t)));
+                      return null;
+                    },
+                  ),
+                },
+                child: TerminalView(
+                  t.emulator,
+                  key: ObjectKey(t),
+                  controller: t.selection,
+                  readOnly: t.process != null || !t.live,
+                  autofocus: false,
+                  shortcuts: _reviewedShortcuts(),
+                  onSecondaryTapUp: (details, _) {
+                    unawaited(pasteMenu(t, details));
+                  },
+                ),
               ),
             ),
           ),
