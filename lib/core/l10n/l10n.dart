@@ -2,7 +2,8 @@ import 'package:flutter/widgets.dart';
 
 import 'package:hermes_android/l10n/app_localizations.dart';
 
-export 'package:hermes_android/l10n/app_localizations.dart' show AppLocalizations;
+export 'package:hermes_android/l10n/app_localizations.dart'
+    show AppLocalizations;
 
 /// Convenience accessor for the generated [AppLocalizations].
 ///
@@ -10,6 +11,19 @@ export 'package:hermes_android/l10n/app_localizations.dart' show AppLocalization
 /// instead of importing and resolving [AppLocalizations] everywhere.
 extension AppLocalizationsX on BuildContext {
   AppLocalizations get l10n => AppLocalizations.of(this)!;
+
+  /// For widgets shared by Classic and NextGen. NextGen reads its strings
+  /// from `ngL`, so its trees need not carry the generated delegate; fall
+  /// back to the ambient locale, then English.
+  AppLocalizations get sharedL10n {
+    final strings = AppLocalizations.of(this);
+    if (strings != null) return strings;
+    final locale = Localizations.maybeLocaleOf(this);
+    if (locale != null && AppLocalizations.delegate.isSupported(locale)) {
+      return lookupAppLocalizations(locale);
+    }
+    return lookupAppLocalizations(const Locale('en'));
+  }
 }
 
 /// The app's supported locales with English first.
@@ -19,11 +33,11 @@ extension AppLocalizationsX on BuildContext {
 /// alphabetically (German first), so pass this list to [MaterialApp] to make
 /// English the fallback.
 List<Locale> preferredSupportedLocales() => <Locale>[
-      const Locale('en'),
-      ...AppLocalizations.supportedLocales.where(
-        (final Locale locale) => locale.languageCode != 'en',
-      ),
-    ];
+  const Locale('en'),
+  ...AppLocalizations.supportedLocales.where(
+    (final Locale locale) => locale.languageCode != 'en',
+  ),
+];
 
 /// Resolves the device's preferred locales to one the app can serve.
 ///

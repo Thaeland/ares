@@ -49,6 +49,7 @@ import '../services/chat_model_override_store.dart';
 import '../services/chat_density_preference.dart';
 import '../services/chat_history_window.dart';
 import '../services/desktop_gateway_client.dart';
+import '../services/remote_workspace.dart';
 import '../services/gateway_turn_application_controller.dart';
 import '../services/normal_gateway_application_session.dart';
 import '../services/gateway_turn_coordinator.dart';
@@ -97,6 +98,8 @@ import 'files_screen.dart';
 import '../widgets/session_files_view.dart';
 import 'workspace_workers_screen.dart';
 import 'gateway_queue_screen.dart';
+import '../widgets/git_review_pane.dart';
+import '../models/turn_changed_files.dart';
 import '../widgets/background_report_card.dart';
 import '../widgets/gateway_activity_card.dart';
 import '../widgets/chat_context_header.dart';
@@ -855,6 +858,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   String? _projectName;
   String? _storedSessionId;
   bool _showSessionFiles = false;
+  bool _openGit = false;
+  String? _gitFocus;
 
   String? get _fileSessionId =>
       _storedSessionId ??
@@ -870,6 +875,18 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (gateway == null || id == null) return false;
     final backend = gateway.boundTerminalBackend(id);
     return backend == null || backend == 'local';
+  }
+
+  void _noteGitTurnStarted() {
+    final owner = _desktopGateway?.workspace;
+    final session = _fileSessionId;
+    if (owner == null || session == null || session.isEmpty) return;
+    unawaited(captureGitTurnBaseline(owner: owner, sessionId: session));
+  }
+
+  List<TurnChangedFile> get _turnChangedFiles {
+    if (_desktopGateway == null || _fileSessionId == null) return const [];
+    return changedFilesInLatestTurn(_messages);
   }
 
   int _projectNameRefreshGeneration = 0;
@@ -1377,12 +1394,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         _registerMaterializedAssistantMessage();
       }
     }
+    final wasSending = _sending;
     setState(() {
       _desktopConnectionState = snapshot.connectionState;
       if (snapshot.turnId != null || snapshot.displayRows.isNotEmpty) {
         _loading = false;
       }
       _sending = snapshot.hasActiveTurn && !snapshot.reconciling;
+      if (!wasSending && _sending) scheduleMicrotask(_noteGitTurnStarted);
       _streaming =
           snapshot.hasActiveTurn &&
           !snapshot.reconciling &&
@@ -5518,6 +5537,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       return;
     }
     _normalReservation = reservation;
+    _noteGitTurnStarted();
     final desktopGateway = _desktopGateway;
     final responseGeneration = _responseGeneration;
     final pastedIds = attachments
@@ -5731,6 +5751,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final keepComposer = preserveComposer || voiceBinding != null;
     final turnSession = _turnApplicationSession;
     if (turnSession == null) return;
+    _noteGitTurnStarted();
     _awaitingVoiceReply = speakResponse && _voiceReplyEnabled;
     final responseGeneration = ++_responseGeneration;
     _activeResponseTransport = _ResponseTransport.desktop;
@@ -7793,6 +7814,19 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             : SessionFilesView(
                 owner: fileOwner,
                 route: fileOwner.route(storedSessionId: fileId),
+                startOnGit: _openGit,
+                focusGitFile: _gitFocus,
+                onGitClosed: () => setState(() => _openGit = false),
+                onHandOff: (text) {
+                  final current = _textController.text.trim();
+                  _textController.text = current.isEmpty
+                      ? text
+                      : '$current\n$text';
+                  setState(() {
+                    _openGit = false;
+                    _showSessionFiles = false;
+                  });
+                },
                 onClose: () => setState(() => _showSessionFiles = false),
                 onReference: (ref) {
                   if (fileOwner != _desktopGateway?.workspace ||
@@ -9169,6 +9203,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             ),
           ),
         if (_loading) const LinearProgressIndicator(),
+        if (_turnChangedFiles case final changed when changed.isNotEmpty)
+          TurnChangedFilesCard(
+            files: changed,
+            onOpen: (file) => setState(() {
+              _showSessionFiles = true;
+              _openGit = true;
+              _gitFocus = file.path;
+            }),
+          ),
         if (_error != null)
           MaterialBanner(
             content: Text(context.l10n.failed_to_load_messages),

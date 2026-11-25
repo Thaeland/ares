@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../services/connection_mutation_barrier.dart';
 import '../services/remote_workspace.dart';
+import 'git_review_pane.dart';
 import 'markdown_file_preview.dart';
 
 /// Same tree beside either chat; on a phone it takes the body while the live
@@ -92,11 +93,21 @@ class SessionFilesView extends StatefulWidget {
     required this.route,
     required this.onReference,
     required this.onClose,
+    this.onHandOff,
+    this.onGitClosed,
+    this.startOnGit = false,
+    this.focusGitFile,
+    this.turnBaseline,
   });
   final RemoteWorkspaceOwner owner;
   final WorkspaceRoute route;
   final ValueChanged<String> onReference;
   final VoidCallback onClose;
+  final ValueChanged<String>? onHandOff;
+  final VoidCallback? onGitClosed;
+  final bool startOnGit;
+  final String? focusGitFile;
+  final String? turnBaseline;
   @override
   State<SessionFilesView> createState() => _FilesState();
 }
@@ -111,11 +122,12 @@ class _FilesState extends State<SessionFilesView> {
   WorkspaceDocument? _file;
   final _source = TextEditingController();
   int _epoch = 0;
-  bool _busy = false,
-      _showIgnored = false,
-      _editing = false,
-      _showSource = false,
-      _review = false;
+  bool _busy = false;
+  bool _showIgnored = false;
+  bool _editing = false;
+  bool _showSource = false;
+  bool _review = false;
+  bool _git = false;
   String? _message;
   String? _saveNote;
   bool get _dirty => _editing && _file != null && _source.text != _file!.text;
@@ -125,6 +137,7 @@ class _FilesState extends State<SessionFilesView> {
   void initState() {
     super.initState();
     ConnectionMutationBarrier.addListener(_revoked);
+    _git = widget.startOnGit;
     _bind();
   }
 
@@ -135,6 +148,7 @@ class _FilesState extends State<SessionFilesView> {
       _pane.close();
       _bind();
     }
+    if (widget.startOnGit && !old.startOnGit) _git = true;
   }
 
   void _bind() {
@@ -684,8 +698,33 @@ class _FilesState extends State<SessionFilesView> {
     ],
   );
 
+  String? _recordedTurnBaseline() {
+    final session = widget.route.storedSessionId;
+    final cwd = _target?.canonicalCwd;
+    if (session == null || cwd == null) return null;
+    return gitTurnMemory.baselineFor(
+      ownerId: widget.owner.connectionId,
+      profile: widget.owner.profile,
+      sessionId: session,
+      cwd: cwd,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_git) {
+      return GitReviewPane(
+        owner: widget.owner,
+        route: widget.route,
+        turnBaseline: _recordedTurnBaseline() ?? widget.turnBaseline,
+        initialFile: widget.focusGitFile,
+        onHandOff: widget.onHandOff,
+        onClose: () {
+          setState(() => _git = false);
+          widget.onGitClosed?.call();
+        },
+      );
+    }
     final t = _target;
     final file = _file;
     return PopScope(
@@ -709,6 +748,15 @@ class _FilesState extends State<SessionFilesView> {
                       onPressed: _busy ? null : _back,
                     ),
                     const Expanded(child: Text('Session files')),
+                    if (file == null)
+                      IconButton(
+                        key: const Key('open-git-review'),
+                        tooltip: 'Git review',
+                        icon: const Icon(Icons.difference_outlined),
+                        onPressed: _busy
+                            ? null
+                            : () => setState(() => _git = true),
+                      ),
                     if (file == null)
                       IconButton(
                         tooltip: 'Refresh tree',

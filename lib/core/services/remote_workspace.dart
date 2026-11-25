@@ -19,6 +19,7 @@ part 'remote_workspace_fleet.dart';
 part 'workspace_discovery.dart';
 part 'workspace_project_settings.dart';
 part 'workspace_files.dart';
+part 'workspace_git.dart';
 
 part 'remote_profile_admin.dart';
 part 'remote_agent_transfer.dart';
@@ -122,6 +123,42 @@ final class WorkspacePane {
   void close() {
     _closed = true;
     invalidate();
+  }
+
+  /// The stored row can move before the live binding hears about it.
+  /// Resume is the only receipt that replaces that binding; it is not a
+  /// general command channel. A dropped socket becomes [WorkspaceFailure],
+  /// not an exception that leaves the caller busy.
+  Future<void> adoptMovedWorkspace(WorkspaceRoute route) {
+    void check() {
+      _owner._check();
+      if (_closed) _fail(WorkspaceFailure.stale);
+      if (!identical(route.issuer, _owner._issuer) ||
+          route.connectionId != _owner.connectionId ||
+          route.profile != _owner.profile ||
+          route.storedSessionId == null) {
+        _fail(WorkspaceFailure.mismatch);
+      }
+    }
+
+    return _guard(check, () async {
+      final socket = await _owner._connect();
+      if (!_owner._ownsSocket(socket)) _fail(WorkspaceFailure.stale);
+      final reply = await socket.send('session.resume', {
+        'session_id': route.storedSessionId,
+        'omit_messages': true,
+        'defer_history': true,
+        'source': 'desktop',
+      });
+      final result = reply['result'];
+      final info = result is Map ? result['info'] : null;
+      final cwd = info is Map ? info['cwd'] : null;
+      if (reply['error'] != null ||
+          cwd is! String ||
+          !isSafeWorkspacePath(cwd)) {
+        _fail(WorkspaceFailure.unavailable);
+      }
+    });
   }
 
   Future<WorkspaceTarget> bind(

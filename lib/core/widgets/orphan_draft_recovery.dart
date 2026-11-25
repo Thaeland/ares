@@ -68,7 +68,7 @@ class _OrphanDraftRecoveryState extends State<OrphanDraftRecovery> {
         writer.revision == started &&
         widget.editor.text.isEmpty;
     if (!eligible() || _checking || !_sources.contains(source)) return;
-    final l10n = context.l10n;
+    final l10n = context.sharedL10n;
     setState(() => _checking = true);
     try {
       if (!ComposerDraftStore.isLocalKey(source)) {
@@ -134,7 +134,7 @@ class _OrphanDraftRecoveryState extends State<OrphanDraftRecovery> {
       ValueListenableBuilder<TextEditingValue>(
         valueListenable: widget.editor,
         builder: (context, value, _) {
-          final l = context.l10n;
+          final l = context.sharedL10n;
           if (_undo != null &&
               _undo == widget.writer.revision &&
               value.text.isNotEmpty) {

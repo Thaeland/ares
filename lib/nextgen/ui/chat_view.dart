@@ -29,6 +29,8 @@ import '../../core/widgets/markdown_code_block.dart';
 import '../../core/widgets/media_artifact_card.dart';
 import '../../core/widgets/slash_command_highlight.dart';
 import '../../core/widgets/session_files_view.dart';
+import '../../core/widgets/git_review_pane.dart';
+import '../../core/models/turn_changed_files.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
 import '../../core/services/attachment_draft_service.dart';
@@ -151,6 +153,9 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
       unawaited(_draftWriter.flush());
     }
   }
+
+  bool _openGit = false;
+  String? _gitFocus;
 
   /// The composer's command catalogue: it decides both the highlight and
   /// whether a sent `/command` runs on the gateway.
@@ -918,6 +923,19 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                     : SessionFilesView(
                         owner: fileOwner,
                         route: fileOwner.route(storedSessionId: fileId),
+                        startOnGit: _openGit,
+                        focusGitFile: _gitFocus,
+                        onGitClosed: () => setState(() => _openGit = false),
+                        onHandOff: (text) {
+                          final current = _input.text.trim();
+                          _input.text = current.isEmpty
+                              ? text
+                              : '$current\n$text';
+                          setState(() {
+                            _openGit = false;
+                            _showSessionFiles = false;
+                          });
+                        },
                         onClose: () =>
                             setState(() => _showSessionFiles = false),
                         onReference: (ref) {
@@ -1271,6 +1289,14 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     );
   }
 
+  bool _latestAssistant(List<NgItem> items, NgAssistantItem item) {
+    final index = items.indexOf(item);
+    if (index < 0) return false;
+    final lastUser = items.lastIndexWhere((entry) => entry is NgUserItem);
+    if (index < lastUser) return false;
+    return !items.skip(index + 1).any((entry) => entry is NgAssistantItem);
+  }
+
   Widget _row(NgColors c, NgItem item, int i, int lastUserIndex) {
     final items = chat.items;
     return switch (item) {
@@ -1280,13 +1306,41 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
             ? chat.retryLast
             : null,
       ),
-      NgAssistantItem() => _AssistantBlock(
-        item: item,
-        files: _filesClient,
-        filesIdentity: (NgScope.of(context).gateway, chat.storedId),
-        last: i == items.length - 1,
-        onRetry: i == items.length - 1 && !chat.running ? chat.retryLast : null,
-        readAloud: _readAloud,
+      NgAssistantItem() => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _AssistantBlock(
+            item: item,
+            files: _filesClient,
+            filesIdentity: (NgScope.of(context).gateway, chat.storedId),
+            last: i == items.length - 1,
+            onRetry: i == items.length - 1 && !chat.running
+                ? chat.retryLast
+                : null,
+            readAloud: _readAloud,
+          ),
+          if (!item.open &&
+              _latestAssistant(items, item) &&
+              chat.storedId != null &&
+              identical(chat.gateway, NgScope.of(context).gateway))
+            TurnChangedFilesCard(
+              files: changedFilesFromToolParts([
+                for (final tool in item.tools)
+                  (
+                    name: tool.name,
+                    args: tool.input,
+                    result: tool.output,
+                    failed: tool.failed,
+                    running: tool.running,
+                  ),
+              ]),
+              onOpen: (file) => setState(() {
+                _showSessionFiles = true;
+                _openGit = true;
+                _gitFocus = file.path;
+              }),
+            ),
+        ],
       ),
       NgSystemItem() => _SystemCard(item: item),
       NgCommandItem() => _CommandCard(item: item),
