@@ -805,7 +805,8 @@ class TurnNotificationService {
   ///
   /// Callers gate on the app being backgrounded; this method enforces the
   /// user's per-kind preferences and the 1s replay throttle. Returns whether
-  /// the notification was handed to the platform.
+  /// the notification was handed to the platform. [onlyAlertOnce] updates one
+  /// already up for the same identity in place, without alerting again.
   Future<bool> showKind({
     required HermesNotificationKind kind,
     required String title,
@@ -815,6 +816,7 @@ class TurnNotificationService {
     String? connectionId,
     List<TurnNotificationAction> actions = const [],
     String? payload,
+    bool onlyAlertOnce = false,
   }) async {
     if (!notificationKindEnabled(kind)) {
       recordAttempt(kind.name, title, 'skipped', '${kind.name} is off');
@@ -827,7 +829,8 @@ class TurnNotificationService {
       sessionId ?? '',
       eventId,
     ]);
-    if (_throttled(identity)) return false;
+    // An in-place update is silent: the replay throttle is for new alerts.
+    if (!onlyAlertOnce && _throttled(identity)) return false;
 
     return _post(
       kind.name,
@@ -839,6 +842,7 @@ class TurnNotificationService {
         channel: channelFor(kind),
         actions: actions,
         importance: importanceFor(kind),
+        onlyAlertOnce: onlyAlertOnce,
       ),
     );
   }

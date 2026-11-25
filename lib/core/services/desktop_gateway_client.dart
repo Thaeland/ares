@@ -959,7 +959,12 @@ class DesktopGatewayClient implements SlashCommandGateway {
         mobileSessionId,
         StreamEvent(
           type: 'request.cancel',
-          data: {'id': existingKey, 'method': existing?.method},
+          // Replaced by the delivery below under the same server id.
+          data: {
+            'id': existingKey,
+            'method': existing?.method,
+            'settled': false,
+          },
         ),
       );
       if (_closed) return false;
@@ -970,6 +975,9 @@ class DesktopGatewayClient implements SlashCommandGateway {
     _serverRequestMobileSessionIds[requestId] = mobileSessionId;
     final data = Map<String, dynamic>.from(request.params);
     data['server_request_id'] = requestId;
+    // Stable across reconnect replays, unlike the namespaced local key: one
+    // server request alerts once.
+    data['wire_request_id'] = request.id;
 
     if (request.method == 'clarify') {
       data['request_id'] = requestId;
@@ -1045,7 +1053,9 @@ class DesktopGatewayClient implements SlashCommandGateway {
           mobileSessionId,
           StreamEvent(
             type: 'request.cancel',
-            data: {'id': requestId, 'method': request.method},
+            // The socket went, not the request: the server may still wait on
+            // it and replay it on the next connection.
+            data: {'id': requestId, 'method': request.method, 'settled': false},
           ),
         );
       }
@@ -1094,6 +1104,62 @@ class DesktopGatewayClient implements SlashCommandGateway {
         .toList(growable: false);
     for (final id in ids) {
       _forgetServerRequest(id);
+    }
+  }
+
+  /// Larger than any event seq: the read carries `open_requests` only.
+  static const _probeLastSeen = 9007199254740991;
+
+  /// Asks the gateway which of this socket's requests it still waits on and
+  /// withdraws the rest locally, as a `request.cancel` to the owner. Nothing
+  /// is answered or resent. Only the legacy sidecar gateway needs this: when
+  /// another client answers, it settles the request without telling this one
+  /// (a session-authority gateway sends `request.cancel reason: resolved` to
+  /// every attached viewer, and its replay read has side effects).
+  Future<void> revalidateServerRequests() async {
+    final client = _ws;
+    if (_closed || client == null || !client.isConnected) return;
+    if (client.sessionAuthority) return;
+    final byRuntime = <String, List<String>>{};
+    for (final entry in _serverRequestClients.entries) {
+      if (!identical(entry.value, client)) continue;
+      final sid = _serverRequests[entry.key]?.params['session_id']?.toString();
+      if (sid == null || sid.isEmpty) continue;
+      byRuntime.putIfAbsent(sid, () => []).add(entry.key);
+    }
+    for (final entry in byRuntime.entries) {
+      Map<String, dynamic> response;
+      try {
+        response = await client.send('session.events.since', {
+          'session_id': entry.key,
+          'last_seen': _probeLastSeen,
+        }, timeout: const Duration(seconds: 10));
+      } catch (_) {
+        continue; // unknown: keep what the socket delivered
+      }
+      if (_closed || !identical(_ws, client)) return;
+      final result = response['result'];
+      final open = result is Map ? result['open_requests'] : null;
+      if (open is! List) continue;
+      final listed = {
+        for (final raw in open)
+          if (raw is Map && raw['id'] is String) raw['id'] as String,
+      };
+      for (final key in entry.value) {
+        final request = _serverRequests[key];
+        if (request == null || listed.contains(request.id)) continue;
+        final mobileSessionId = _serverRequestMobileSessionIds[key];
+        _forgetServerRequest(key);
+        if (mobileSessionId == null) continue;
+        _asyncEventListener?.call(
+          mobileSessionId,
+          StreamEvent(
+            type: 'request.cancel',
+            data: {'id': key, 'method': request.method, 'reason': 'resolved'},
+          ),
+        );
+        if (_closed) return;
+      }
     }
   }
 
