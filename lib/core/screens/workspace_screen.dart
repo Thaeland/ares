@@ -1224,6 +1224,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           );
         }
         return ProjectsPane(
+          workspace: _ownedGateway?.workspace,
           repository: repository,
           onProjectSelected: (projectId) => _openProject(repository, projectId),
           spaceStore: _spaceStore,
@@ -1458,6 +1459,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         .firstOrNull;
 
     final connection = widget.connection;
+    final projectOwner = _ownedGateway?.workspace;
     final project =
         known ??
         HermesProject(
@@ -1469,6 +1471,14 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => ProjectDetailScreen(
+          workspace: projectOwner,
+          onNewLaneChat: (path) {
+            if (mounted &&
+                projectOwner != null &&
+                identical(projectOwner, _ownedGateway?.workspace)) {
+              _startProjectChat(project.inLane(path));
+            }
+          },
           projectId: projectId,
           projectName: project.name,
           createFilesClient: () => _createFilesClient(connection),

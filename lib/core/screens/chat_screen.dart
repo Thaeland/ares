@@ -87,6 +87,7 @@ import '../utils/responsive.dart';
 import '../utils/turn_recovery_fallback.dart';
 import '../theme/hermes_theme.dart';
 import 'files_screen.dart';
+import '../widgets/session_files_view.dart';
 import '../widgets/background_report_card.dart';
 import '../widgets/gateway_activity_card.dart';
 import '../widgets/chat_context_header.dart';
@@ -835,6 +836,24 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   String? _sessionReasoningEffort;
   String? _projectName;
   String? _storedSessionId;
+  bool _showSessionFiles = false;
+
+  String? get _fileSessionId =>
+      _storedSessionId ??
+      (widget.session.isLocalDraft
+          ? _normalChat?.storedSessionId
+          : _storedSessionKey);
+
+  /// The session tree needs a stored chat whose live binding is not a remote
+  /// terminal. Drafts and non-local backends keep the earlier file browser.
+  bool get _sessionScopedFiles {
+    final id = _fileSessionId;
+    final gateway = _desktopGateway;
+    if (gateway == null || id == null) return false;
+    final backend = gateway.boundTerminalBackend(id);
+    return backend == null || backend == 'local';
+  }
+
   int _projectNameRefreshGeneration = 0;
   bool _sessionModelOverride = false;
   bool _loadingModelOptions = false;
@@ -3915,6 +3934,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final testPicker = widget.testServerFilePicker;
     if (testPicker != null) {
       path = await testPicker();
+    } else if (_desktopGateway != null && _sessionScopedFiles) {
+      setState(() => _showSessionFiles = true);
+      return;
     } else {
       final files = RemoteFilesClient.fromConnection(widget.connection);
       try {
@@ -3934,7 +3956,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
     if (!mounted || path == null || path.trim().isEmpty) return;
     final current = _textController.text.trimRight();
-    final reference = '@file ${path.trim()} ';
+    final reference =
+        '${gatewayContextReference(folder: false, path: path.trim())} ';
     final next = current.isEmpty ? reference : '$current\n$reference';
     _textController.value = TextEditingValue(
       text: next,
@@ -7047,6 +7070,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     _syncComposerKeyboardEndScroll();
+    final fileOwner = _desktopGateway?.workspace;
+    final fileId = _fileSessionId;
     final chat = Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -7082,6 +7107,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             icon: const Icon(Icons.find_in_page_outlined),
             onPressed: () => _reader.currentState?.open(),
           ),
+          if (fileOwner != null && fileId != null && !_showSessionFiles)
+            IconButton(
+              tooltip: 'Session files',
+              icon: const Icon(Icons.account_tree_outlined),
+              onPressed: () => setState(() => _showSessionFiles = true),
+            ),
           if (_archiving)
             const Padding(
               padding: EdgeInsets.only(right: 8),
@@ -7211,88 +7242,109 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ],
         ],
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: Responsive.isTablet(context) ? 800 : double.infinity,
-          ),
-          child: Column(
-            children: [
-              if (_verboseMode)
-                for (final notification in _gatewayNotifications.values)
-                  _buildGatewayNotification(notification),
-              if (_verboseMode && _legacyTransportFallback)
-                Container(
-                  key: const ValueKey('legacy-transport-notice'),
-                  width: double.infinity,
-                  color: Theme.of(context).colorScheme.tertiaryContainer,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                  child: Text(
-                    _stockGatewayFallback
-                        ? context
-                              .l10n
-                              .this_server_doesn_t_offer_background_recovery_chats_run_live
-                        : context
-                              .l10n
-                              .background_recovery_unavailable_legacy_transport,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
-                      fontWeight: FontWeight.w600,
+      body: SessionFilesLayout(
+        files: !_showSessionFiles || fileOwner == null || fileId == null
+            ? null
+            : SessionFilesView(
+                owner: fileOwner,
+                route: fileOwner.route(storedSessionId: fileId),
+                onClose: () => setState(() => _showSessionFiles = false),
+                onReference: (ref) {
+                  if (fileOwner != _desktopGateway?.workspace ||
+                      fileId != _fileSessionId) {
+                    return;
+                  }
+                  appendWorkspaceReference(_textController, ref);
+                  setState(() => _showSessionFiles = false);
+                },
+              ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: Responsive.isTablet(context) ? 800 : double.infinity,
+            ),
+            child: Column(
+              children: [
+                if (_verboseMode)
+                  for (final notification in _gatewayNotifications.values)
+                    _buildGatewayNotification(notification),
+                if (_verboseMode && _legacyTransportFallback)
+                  Container(
+                    key: const ValueKey('legacy-transport-notice'),
+                    width: double.infinity,
+                    color: Theme.of(context).colorScheme.tertiaryContainer,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    child: Text(
+                      _stockGatewayFallback
+                          ? context
+                                .l10n
+                                .this_server_doesn_t_offer_background_recovery_chats_run_live
+                          : context
+                                .l10n
+                                .background_recovery_unavailable_legacy_transport,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onTertiaryContainer,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (context, viewport) {
-                    final slashOpen = _slashDropdownVisible;
-                    final slashMax = (viewport.maxHeight * 0.4)
-                        .clamp(0.0, 180.0)
-                        .toDouble();
-                    final slashHeight = slashOpen ? slashMax : 0.0;
-                    return Column(
-                      children: [
-                        Expanded(
-                          child: Stack(
-                            children: [
-                              Positioned.fill(child: _buildBody()),
-                              if (_endAffordanceController.isVisible ||
-                                  _canFocusSavedRecovery)
-                                Positioned(
-                                  right: 12,
-                                  bottom: 12,
-                                  child: ChatEndAffordance(
-                                    newMessageCount: _endAffordanceController
-                                        .newMessageCount,
-                                    onPressed: _goToEnd,
-                                    label: _canFocusSavedRecovery
-                                        ? context.l10n.saved_history_heading
-                                        : null,
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, viewport) {
+                      final slashOpen = _slashDropdownVisible;
+                      final slashMax = (viewport.maxHeight * 0.4)
+                          .clamp(0.0, 180.0)
+                          .toDouble();
+                      final slashHeight = slashOpen ? slashMax : 0.0;
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: Stack(
+                              children: [
+                                Positioned.fill(child: _buildBody()),
+                                if (_endAffordanceController.isVisible ||
+                                    _canFocusSavedRecovery)
+                                  Positioned(
+                                    right: 12,
+                                    bottom: 12,
+                                    child: ChatEndAffordance(
+                                      newMessageCount: _endAffordanceController
+                                          .newMessageCount,
+                                      onPressed: _goToEnd,
+                                      label: _canFocusSavedRecovery
+                                          ? context.l10n.saved_history_heading
+                                          : null,
+                                    ),
                                   ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        if (slashOpen)
-                          ConstrainedBox(
-                            constraints: BoxConstraints(maxHeight: slashHeight),
-                            child: SlashCommandDropdown(
-                              controller: _slashController,
-                              onSelected: _applySlashCommand,
+                              ],
                             ),
                           ),
-                        _buildInputBar(
-                          availableHeight: viewport.maxHeight - slashHeight,
-                        ),
-                      ],
-                    );
-                  },
+                          if (slashOpen)
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight: slashHeight,
+                              ),
+                              child: SlashCommandDropdown(
+                                controller: _slashController,
+                                onSelected: _applySlashCommand,
+                              ),
+                            ),
+                          _buildInputBar(
+                            availableHeight: viewport.maxHeight - slashHeight,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

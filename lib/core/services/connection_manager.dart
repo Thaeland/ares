@@ -2908,6 +2908,69 @@ class DashboardClient {
     // Last admission gate, run after every await and immediately before the
     // request leaves. It may throw; nothing is sent when it does.
     void Function()? beforeSend,
+  }) => _workspaceJson(
+    segments,
+    query: query,
+    check: check,
+    mintHostTerminalTicket: mintHostTerminalTicket,
+    webappDirection: webappDirection,
+    makeWebappPrimary: makeWebappPrimary,
+    startFleetUpdate: startFleetUpdate,
+    beforeSend: beforeSend,
+  );
+
+  /// Never forward this content to `/fs/write-text`: the old route ignores
+  /// preconditions. A distinct URL makes old gateways fail closed.
+  Future<Object?> workspaceReplaceText({
+    required String profile,
+    required String sessionId,
+    required String cwd,
+    required String path,
+    required String expectedHash,
+    required String content,
+    required void Function() check,
+  }) => _workspaceJson(
+    ['fs', 'replace-text-v1'],
+    query: {'profile': profile},
+    check: check,
+    fileReplacement: {
+      'session_id': sessionId,
+      'cwd': cwd,
+      'path': path,
+      'expected_sha256': expectedHash,
+      'content': content,
+    },
+  );
+
+  /// An empty body cannot be a save. 400/413/415 means the route exists and
+  /// refused the probe; 404 means a stock gateway has no such route.
+  Future<int> workspaceReplaceTextProbe({
+    required String profile,
+    required void Function() check,
+  }) async {
+    try {
+      await _workspaceJson(
+        ['fs', 'replace-text-v1'],
+        query: {'profile': profile},
+        check: check,
+        fileReplacement: const <String, String>{},
+      );
+      return 200;
+    } on DashboardHttpException catch (error) {
+      return error.statusCode;
+    }
+  }
+
+  Future<Object?> _workspaceJson(
+    List<String> segments, {
+    required Map<String, String> query,
+    required void Function() check,
+    bool mintHostTerminalTicket = false,
+    Map<String, String>? fileReplacement,
+    String? webappDirection,
+    bool makeWebappPrimary = false,
+    bool startFleetUpdate = false,
+    void Function()? beforeSend,
   }) async {
     if (segments.isEmpty ||
         segments.any(
@@ -2954,16 +3017,31 @@ class DashboardClient {
             (query.isNotEmpty || mintHostTerminalTicket))) {
       throw const FormatException('Invalid Webapp operation');
     }
+    final fileWrite = fileReplacement != null;
+    if (fileWrite &&
+        (segments.join('/') != 'fs/replace-text-v1' ||
+            patchDirection ||
+            makeWebappPrimary ||
+            startFleetUpdate ||
+            mintHostTerminalTicket)) {
+      throw const FormatException('Invalid file replacement operation');
+    }
     final request = http.Request(
       patchDirection
           ? 'PATCH'
-          : mintHostTerminalTicket || makeWebappPrimary || startFleetUpdate
+          : mintHostTerminalTicket ||
+                makeWebappPrimary ||
+                startFleetUpdate ||
+                fileWrite
           ? 'POST'
           : 'GET',
       uri,
     )..followRedirects = false;
     request.headers.addAll(await _authHeaders());
-    if (patchDirection || makeWebappPrimary || startFleetUpdate) {
+    if (fileWrite) {
+      request.headers['Content-Type'] = 'application/json';
+      request.bodyBytes = utf8.encode(jsonEncode(fileReplacement));
+    } else if (patchDirection || makeWebappPrimary || startFleetUpdate) {
       request.headers['Origin'] = base.origin;
       request.headers['Content-Type'] = 'application/json';
       request.body = patchDirection

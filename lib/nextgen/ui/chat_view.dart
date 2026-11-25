@@ -22,6 +22,7 @@ import '../../core/widgets/transcript_body.dart';
 import '../../core/widgets/markdown_code_block.dart';
 import '../../core/widgets/media_artifact_card.dart';
 import '../../core/widgets/slash_command_highlight.dart';
+import '../../core/widgets/session_files_view.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
 import '../../core/services/attachment_draft_service.dart';
@@ -79,6 +80,7 @@ class _NgChatViewState extends State<NgChatView> {
   }
 
   final _input = SlashCommandHighlightController();
+  bool _showSessionFiles = false;
 
   /// The composer's command catalogue: it decides both the highlight and
   /// whether a sent `/command` runs on the gateway.
@@ -131,6 +133,7 @@ class _NgChatViewState extends State<NgChatView> {
   void didUpdateWidget(covariant NgChatView old) {
     super.didUpdateWidget(old);
     if (old.chat != chat) {
+      _showSessionFiles = false;
       old.chat.removeListener(_onChat);
       chat.addListener(_onChat);
       // A reply being read belongs to the chat we left.
@@ -542,6 +545,11 @@ class _NgChatViewState extends State<NgChatView> {
       listenable: gateway,
       builder: (context, _) {
         final state = gateway.state;
+        final fileChat = chat;
+        final fileId = chat.storedId;
+        final fileOwner = identical(fileChat.gateway, gateway)
+            ? gateway.workspace
+            : null;
         return Scaffold(
           backgroundColor: c.background,
           appBar: AppBar(
@@ -608,6 +616,12 @@ class _NgChatViewState extends State<NgChatView> {
                   icon: const Icon(Icons.find_in_page_outlined),
                   onPressed: () => _reader.currentState?.open(),
                 ),
+              if (fileId != null && fileOwner != null && !_showSessionFiles)
+                IconButton(
+                  tooltip: 'Session files',
+                  icon: const Icon(Icons.account_tree_outlined),
+                  onPressed: () => setState(() => _showSessionFiles = true),
+                ),
               if (chat.usage != null)
                 IconButton(
                   tooltip: ngL.ng_usage,
@@ -622,27 +636,45 @@ class _NgChatViewState extends State<NgChatView> {
                 ),
             ],
           ),
-          body: Column(
-            children: [
-              if (!state.isConnected) _connectionBanner(c, gateway),
-              Expanded(child: _transcript(c)),
-              NgSessionDock(chat: chat),
-              if (chat.error != null) _errorBar(c),
-              if (chat.queued.isNotEmpty) _queue(c),
-              if (chat.request != null)
-                _InputPanel(chat: chat, request: chat.request!)
-              else
-                NgSlashCommandInfo(
-                  chat: chat,
-                  controller: _input,
-                  focusNode: _focus,
-                  catalog: _slashCatalog,
-                  // Commands run here now, so the card no longer says they
-                  // are sent as a message.
-                  showsSentAsMessageNote: false,
-                  child: _composer(c, state),
-                ),
-            ],
+          body: SessionFilesLayout(
+            files: !_showSessionFiles || fileId == null || fileOwner == null
+                ? null
+                : SessionFilesView(
+                    owner: fileOwner,
+                    route: fileOwner.route(storedSessionId: fileId),
+                    onClose: () => setState(() => _showSessionFiles = false),
+                    onReference: (ref) {
+                      if (chat != fileChat ||
+                          chat.storedId != fileId ||
+                          !identical(NgScope.of(context).gateway, gateway)) {
+                        return;
+                      }
+                      appendWorkspaceReference(_input, ref);
+                      setState(() => _showSessionFiles = false);
+                    },
+                  ),
+            child: Column(
+              children: [
+                if (!state.isConnected) _connectionBanner(c, gateway),
+                Expanded(child: _transcript(c)),
+                NgSessionDock(chat: chat),
+                if (chat.error != null) _errorBar(c),
+                if (chat.queued.isNotEmpty) _queue(c),
+                if (chat.request != null)
+                  _InputPanel(chat: chat, request: chat.request!)
+                else
+                  NgSlashCommandInfo(
+                    chat: chat,
+                    controller: _input,
+                    focusNode: _focus,
+                    catalog: _slashCatalog,
+                    // Commands run here now, so the card no longer says they
+                    // are sent as a message.
+                    showsSentAsMessageNote: false,
+                    child: _composer(c, state),
+                  ),
+              ],
+            ),
           ),
         );
       },

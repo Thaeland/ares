@@ -119,6 +119,10 @@ class DesktopGatewayClient implements SlashCommandGateway {
 
   late final RemoteWorkspaceOwner workspace;
 
+  /// The terminal executor reported by the live resume binding, if any.
+  String? boundTerminalBackend(String storedSessionId) =>
+      _ws?.workspaceBinding(storedSessionId)?.backend;
+
   void _checkOpen() {
     if (_closed) throw StateError('DesktopGatewayClient is closed.');
   }

@@ -2,11 +2,18 @@
 /// docs/remote-workspace-contract.md before adding an operation.
 library;
 
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'package:uuid/uuid.dart';
+
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 import 'ws_client.dart';
 
 part 'remote_workspace_fleet.dart';
+part 'workspace_discovery.dart';
+part 'workspace_project_settings.dart';
+part 'workspace_files.dart';
 
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {
@@ -26,6 +33,7 @@ enum WorkspaceFailure {
   unbound,
   unsupported,
   denied,
+  ineligible,
   unavailable,
   invalid,
   insecure,
@@ -230,6 +238,7 @@ final class WorkspaceTarget {
   final _StoredWorkspace? _row;
   final Future<_StoredWorkspace> Function() _readRow;
   final WorkspaceRuntime? _binding;
+  bool? _guardedSavePresent;
   String? get runtimeSessionId => _binding?.runtimeId;
   final bool sessionAuthority;
   String? get canonicalCwd => _row?.cwd;
@@ -292,13 +301,14 @@ final class WorkspaceTarget {
 
   Future<Map<String, dynamic>> _rpc(
     String method,
-    Map<String, dynamic> params,
-  ) async {
+    Map<String, dynamic> params, {
+    bool bindProfile = true,
+  }) async {
     checkCurrent();
     if (params.containsKey('profile')) _fail(WorkspaceFailure.mismatch);
     final response = await _socket.send(method, {
       ...params,
-      'profile': ?effectiveProfile,
+      if (bindProfile) 'profile': ?effectiveProfile,
     }, includeProfile: false);
     checkCurrent();
     final error = response['error'];
@@ -416,6 +426,40 @@ final class WorkspaceTarget {
           operation == WorkspaceRead.processes,
     );
   }
+}
+
+/// File operations accept literal host-native absolute paths, never URLs,
+/// network-device names, escaped separators, or Windows alternate streams.
+bool isSafeWorkspacePath(String path) {
+  if (!_canonicalPath(path) || path.startsWith(r'\\') || path.contains('%')) {
+    return false;
+  }
+  final windows = !path.startsWith('/');
+  final rest = windows ? path.substring(3) : path.substring(1);
+  if (!windows && rest.contains(r'\')) return false;
+  if (rest.contains(':')) return false;
+  return rest
+      .split(RegExp(r'[/\\]'))
+      .every(
+        (s) =>
+            s.trim() == s &&
+            (!windows ||
+                (!s.endsWith('.') &&
+                    !RegExp(
+                      r'^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)',
+                      caseSensitive: false,
+                    ).hasMatch(s))),
+      );
+}
+
+/// One trailing separator is the same directory. Anything else stays untouched
+/// so an ambiguous path is still rejected rather than repaired.
+String normalizeWorkspaceCwd(String path) {
+  if (path.length > 1 && (path.endsWith('/') || path.endsWith(r'\'))) {
+    final stripped = path.substring(0, path.length - 1);
+    if (!stripped.endsWith(':') && !stripped.endsWith(r'\')) return stripped;
+  }
+  return path;
 }
 
 /// An absolute server spelling, not a client-side realpath. Reject ambiguous
