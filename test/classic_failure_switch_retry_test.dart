@@ -17,8 +17,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hermes_android/core/composer/os_intake.dart';
 import 'package:hermes_android/core/screens/chat_screen.dart';
 import 'package:hermes_android/core/services/attachment_draft_service.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
@@ -28,6 +31,7 @@ import 'package:hermes_android/core/services/gateway_turn_coordinator.dart';
 import 'package:hermes_android/core/services/gateway_turn_recovery.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:hermes_android/core/theme/hermes_theme.dart';
+import 'package:hermes_android/core/widgets/attachment_draft_tile.dart';
 import 'package:hermes_android/core/widgets/failure_recovery_card.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 // ignore: depend_on_referenced_packages
@@ -120,6 +124,11 @@ class _Server {
           result['result'] = <String, dynamic>{};
         case 'session.history':
           result['result'] = {'messages': history};
+        case 'file.attach':
+          result['result'] = {
+            'attached': true,
+            'ref_text': '@file:/up/${frame['params']['name']}',
+          };
         default:
           result['result'] = {'ok': true};
       }
@@ -165,6 +174,32 @@ class _Paths extends PathProviderPlatform {
   @override
   Future<String?> getTemporaryPath() async => dir.path;
 }
+
+class _Picker extends FilePicker {
+  _Picker(this.files, {this.gate});
+  final List<PlatformFile> files;
+  final Completer<void>? gate;
+  @override
+  Future<FilePickerResult?> pickFiles({
+    String? dialogTitle,
+    String? initialDirectory,
+    FileType type = FileType.any,
+    List<String>? allowedExtensions,
+    Function(FilePickerStatus)? onFileLoading,
+    bool allowCompression = false,
+    int compressionQuality = 0,
+    bool allowMultiple = false,
+    bool withData = false,
+    bool withReadStream = false,
+    bool lockParentWindow = false,
+    bool readSequential = false,
+  }) async {
+    if (gate != null) await gate!.future;
+    return FilePickerResult(files);
+  }
+}
+
+int _tiles() => find.byType(AttachmentDraftTile).evaluate().length;
 
 Session _session(String id) => Session(
   id: id,
@@ -348,10 +383,20 @@ void main() {
     root = Directory.systemTemp.createTempSync('switch-retry');
     previousPaths = PathProviderPlatform.instance;
     PathProviderPlatform.instance = _Paths(root);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/image_picker'),
+          (_) async => null,
+        );
   });
   tearDown(() {
     HttpOverrides.global = previous;
     PathProviderPlatform.instance = previousPaths;
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/image_picker'),
+          null,
+        );
     try {
       root.deleteSync(recursive: true);
     } catch (_) {}
@@ -595,6 +640,53 @@ void main() {
       await _pump(tester, rounds: 40);
       expect(h.server.of('prompt.submit'), isEmpty);
       expect(h.server.of('session.history'), isEmpty);
+      await _finish(tester, h.server);
+    });
+  }
+
+  // Intake over the gateway (the re-check's CR2): the Attach picker's files
+  // and a drop arriving together at 9 drafts give exactly 10.
+  for (final order in ['picker-first', 'drop-first']) {
+    testWidgets('CR2 Attach (Choose files, 2 picked) + drop ($order) at 9 '
+        'drafts give exactly 10', (tester) async {
+      final h = await mount(tester);
+      List<OsIntakeFile> make(int n, String p) => [
+        for (var i = 0; i < n; i++)
+          OsIntakeFile(
+            (File('${root.path}/$p$i.txt')..writeAsStringSync('n$i')).path,
+          ),
+      ];
+      OsFileDropTarget target() =>
+          tester.widget<OsFileDropTarget>(find.byType(OsFileDropTarget));
+      for (final f in make(maxRemoteAttachmentDrafts - 1, 'base')) {
+        final before = _tiles();
+        for (var k = 0; k < 5 && _tiles() == before; k++) {
+          target().onFiles([f]);
+          await _until(tester, () => _tiles() > before);
+        }
+      }
+      expect(_tiles(), maxRemoteAttachmentDrafts - 1);
+      final gate = Completer<void>();
+      final picked = [
+        for (final n in ['pa.txt', 'pb.txt'])
+          (File('${root.path}/$n')..writeAsStringSync(n)),
+      ];
+      FilePicker.platform = _Picker([
+        for (final f in picked)
+          PlatformFile(name: f.uri.pathSegments.last, size: 2, path: f.path),
+      ], gate: gate);
+      addTearDown(() => FilePicker.platform = _Picker(const []));
+      final drop = make(1, 'drop');
+      if (order == 'drop-first') target().onFiles(drop);
+      await tester.tap(find.byTooltip('Attach image or file'));
+      await _pump(tester, rounds: 5);
+      await tester.tap(find.text('Choose files'), warnIfMissed: false);
+      await tester.pump();
+      if (order == 'picker-first') target().onFiles(drop);
+      gate.complete();
+      await _pump(tester, rounds: 40);
+      expect(tester.takeException(), isNull);
+      expect(_tiles(), maxRemoteAttachmentDrafts);
       await _finish(tester, h.server);
     });
   }

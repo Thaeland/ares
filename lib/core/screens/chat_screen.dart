@@ -4143,10 +4143,16 @@ class _ChatScreenState extends State<ChatScreen>
     unawaited(_prepareLargePaste(edit, revision));
   }
 
-  Future<void> _prepareLargePaste(LargePasteEdit edit, int revision) =>
-      _intake.run(() => _prepareLargePasteNow(edit, revision));
+  Future<void> _prepareLargePaste(LargePasteEdit edit, int revision) {
+    final owner = _intakeOwner;
+    return _intake.run(() => _prepareLargePasteNow(edit, revision, owner));
+  }
 
-  Future<void> _prepareLargePasteNow(LargePasteEdit edit, int revision) async {
+  Future<void> _prepareLargePasteNow(
+    LargePasteEdit edit,
+    int revision,
+    Object owner,
+  ) async {
     AttachmentDraft? prepared;
     try {
       prepared = await _attachmentDraftService.preparePastedText(
@@ -4154,6 +4160,7 @@ class _ChatScreenState extends State<ChatScreen>
         existingDrafts: List<AttachmentDraft>.of(_attachmentDrafts),
       );
       if (!mounted ||
+          owner != _intakeOwner ||
           _startingVoiceInput ||
           _voiceComposer.listening ||
           !_draftWriter.isCurrent ||
@@ -4296,6 +4303,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _pickGalleryImages() async {
+    final owner = _intakeOwner;
     try {
       final mode = _desktopGateway == null
           ? AttachmentDraftMode.rest
@@ -4307,7 +4315,7 @@ class _ChatScreenState extends State<ChatScreen>
           maxWidth: 1600,
           maxHeight: 1600,
         );
-        if (image != null) await _preparePickedImages([image]);
+        if (image != null) await _preparePickedImages([image], owner: owner);
         return;
       }
       final images = await _imagePicker.pickMultiImage(
@@ -4315,7 +4323,7 @@ class _ChatScreenState extends State<ChatScreen>
         maxWidth: 1600,
         maxHeight: 1600,
       );
-      if (images.isNotEmpty) await _preparePickedImages(images);
+      if (images.isNotEmpty) await _preparePickedImages(images, owner: owner);
     } catch (_) {
       if (!mounted) return;
       _showAttachmentError(
@@ -4325,6 +4333,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _pickCameraImage() async {
+    final owner = _intakeOwner;
     try {
       final image = await _imagePicker.pickImage(
         source: ImageSource.camera,
@@ -4332,7 +4341,7 @@ class _ChatScreenState extends State<ChatScreen>
         maxWidth: 1600,
         maxHeight: 1600,
       );
-      if (image != null) await _preparePickedImages([image]);
+      if (image != null) await _preparePickedImages([image], owner: owner);
     } catch (_) {
       if (!mounted) return;
       _showAttachmentError(
@@ -4357,18 +4366,34 @@ class _ChatScreenState extends State<ChatScreen>
     await _preparePickedImages(_desktopGateway == null ? [files.first] : files);
   }
 
+  /// The chat an intake belongs to: captured when it starts, checked before
+  /// its draft is staged. A host that swaps this screen's chat without a
+  /// remount must not get the earlier chat's drops, pastes or picks.
+  Object get _intakeOwner => (widget.connection.id, widget.session.id);
+
   /// Returns how many images became drafts. [remote] says whether the
   /// gateway takes several drafts (by default, a Desktop gateway does).
-  Future<int> _preparePickedImages(List<XFile> images, {bool? remote}) =>
-      _intake.run(() async {
-        if (!mounted) return 0;
-        return _preparePickedImagesNow(images, remote: remote);
-      });
+  Future<int> _preparePickedImages(
+    List<XFile> images, {
+    bool? remote,
+    Object? owner,
+  }) {
+    final intakeOwner = owner ?? _intakeOwner;
+    return _intake.run(() async {
+      if (!mounted || intakeOwner != _intakeOwner) return 0;
+      return _preparePickedImagesNow(
+        images,
+        remote: remote,
+        owner: intakeOwner,
+      );
+    });
+  }
 
   /// [_preparePickedImages] inside the intake queue.
   Future<int> _preparePickedImagesNow(
     List<XFile> images, {
     bool? remote,
+    required Object owner,
   }) async {
     final l10n = context.l10n;
     final isRemote = remote ?? _desktopGateway != null;
@@ -4394,7 +4419,8 @@ class _ChatScreenState extends State<ChatScreen>
         errors.add(l10n.unable_to_prepare(image.name));
       }
     }
-    if (!mounted) {
+    if (!mounted || owner != _intakeOwner) {
+      // Left, or this composer now belongs to another chat: drop them.
       await _attachmentDraftService.removeAll(prepared);
       return 0;
     }
@@ -4418,6 +4444,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _pickFiles() async {
+    final owner = _intakeOwner;
     if (_desktopGateway == null) {
       _showAttachmentError(
         context
@@ -4435,7 +4462,7 @@ class _ChatScreenState extends State<ChatScreen>
       final files = result?.files ?? const [];
       if (files.isEmpty) return;
       await _intake.run(() async {
-        if (!mounted) return;
+        if (!mounted || owner != _intakeOwner) return;
         final available = maxRemoteAttachmentDrafts - _attachmentDrafts.length;
         if (available <= 0) {
           _showAttachmentError(
@@ -4463,7 +4490,7 @@ class _ChatScreenState extends State<ChatScreen>
             rejected++;
           }
         }
-        if (!mounted) {
+        if (!mounted || owner != _intakeOwner) {
           await _attachmentDraftService.removeAll(prepared);
           return;
         }
@@ -4501,11 +4528,15 @@ class _ChatScreenState extends State<ChatScreen>
   /// from the session files panel). Images take the photo path, other files
   /// the Choose files path, with the same draft count and size limits. Each
   /// becomes a draft; nothing is sent. Returns how many were staged.
-  Future<int> _intakeLocalFiles(List<OsIntakeFile> files) async {
+  Future<int> _intakeLocalFiles(
+    List<OsIntakeFile> files, {
+    Object? owner,
+  }) async {
+    final intakeOwner = owner ?? _intakeOwner;
     var staged = 0;
     var folders = false;
     for (final file in files) {
-      if (!mounted) break;
+      if (!mounted || intakeOwner != _intakeOwner) break;
       if (!_attachIntakeOpen) {
         _showAttachmentError(context.sharedL10n.composer_attach_busy);
         break;
@@ -4531,17 +4562,19 @@ class _ChatScreenState extends State<ChatScreen>
       staged += await withDroppedFileAccess(
         file,
         () => _intake.run(() async {
-          if (!mounted) return 0;
+          if (!mounted || intakeOwner != _intakeOwner) return 0;
           if (!restImage &&
               _attachmentDrafts.length >= maxRemoteAttachmentDrafts) {
             full = true;
             return 0;
           }
           return image
-              ? _preparePickedImagesNow([
-                  XFile(file.path, name: file.name),
-                ], remote: _remoteDraftsAllowed)
-              : _prepareLocalFile(file.path, file.name);
+              ? _preparePickedImagesNow(
+                  [XFile(file.path, name: file.name)],
+                  remote: _remoteDraftsAllowed,
+                  owner: intakeOwner,
+                )
+              : _prepareLocalFile(file.path, file.name, owner: intakeOwner);
         }),
       );
       if (!mounted) break;
@@ -4561,14 +4594,18 @@ class _ChatScreenState extends State<ChatScreen>
 
   /// One local non-image file as a draft, as Choose files prepares it. Runs
   /// inside the intake queue.
-  Future<int> _prepareLocalFile(String path, String name) async {
+  Future<int> _prepareLocalFile(
+    String path,
+    String name, {
+    required Object owner,
+  }) async {
     try {
       final draft = await _attachmentDraftService.prepareGenericFile(
         sourcePath: path,
         displayName: name,
         existingDrafts: List<AttachmentDraft>.of(_attachmentDrafts),
       );
-      if (!mounted) {
+      if (!mounted || owner != _intakeOwner) {
         await _attachmentDraftService.removeAll([draft]);
         return 0;
       }
@@ -4584,17 +4621,23 @@ class _ChatScreenState extends State<ChatScreen>
 
   /// Cmd/Ctrl+V with files or an image on the clipboard.
   Future<void> _intakeClipboard(ClipboardAttachment found) async {
+    final owner = _intakeOwner;
     final image = found.image;
     if (image != null) {
-      await _intakeImageBytes(image, 'image/png');
+      await _intakeImageBytes(image, 'image/png', owner: owner);
       return;
     }
-    await _intakeLocalFiles(await osIntakeFilesFor(found.files));
+    await _intakeLocalFiles(await osIntakeFilesFor(found.files), owner: owner);
   }
 
   /// A pasted or keyboard-inserted image (Android keyboards insert images
   /// through contentInsertionConfiguration).
-  Future<void> _intakeImageBytes(Uint8List bytes, String mimeType) async {
+  Future<void> _intakeImageBytes(
+    Uint8List bytes,
+    String mimeType, {
+    Object? owner,
+  }) async {
+    final intakeOwner = owner ?? _intakeOwner;
     if (!mounted) return;
     if (!_attachIntakeOpen) {
       _showAttachmentError(context.sharedL10n.composer_attach_busy);
@@ -4612,7 +4655,9 @@ class _ChatScreenState extends State<ChatScreen>
       return;
     }
     try {
-      if (mounted) await _intakeLocalFiles([OsIntakeFile(path)]);
+      if (mounted) {
+        await _intakeLocalFiles([OsIntakeFile(path)], owner: intakeOwner);
+      }
     } finally {
       // The draft holds its own sanitised copy (or there is no draft).
       await discardStagedComposerImage(path);
@@ -4622,6 +4667,7 @@ class _ChatScreenState extends State<ChatScreen>
   /// A file or folder dragged from the session files panel: gateway paths
   /// and folders become references, a file on this device a draft.
   Future<void> _intakeComposerDrag(ComposerDrag drag) async {
+    final owner = _intakeOwner;
     final plan = classifyDrag(drag);
     final path = plan.path ?? '';
     if (plan.kind == LocalIntake.reference) {
@@ -4637,7 +4683,7 @@ class _ChatScreenState extends State<ChatScreen>
       _showAttachmentError(context.sharedL10n.composer_file_missing);
       return;
     }
-    await _intakeLocalFiles([local]);
+    await _intakeLocalFiles([local], owner: owner);
   }
 
   /// A short paste the editor's formatter saw, handled once the text is in
@@ -4669,13 +4715,14 @@ class _ChatScreenState extends State<ChatScreen>
   /// A pasted path to a file on this device becomes a draft and leaves the
   /// draft text. Folders, missing paths and gateway paths stay text.
   Future<void> _consumePathPaste(PastedChunk chunk) async {
+    final owner = _intakeOwner;
     final path = clipboardPath(chunk.text);
     if (path == null || !_attachIntakeOpen) return;
     final file = await localFileForPastedPath(path);
     if (file == null || !mounted) return;
     if (!looksLikeImagePath(path) && !_remoteDraftsAllowed) return;
-    final staged = await _intakeLocalFiles([file]);
-    if (staged == 0 || !mounted) return;
+    final staged = await _intakeLocalFiles([file], owner: owner);
+    if (staged == 0 || !mounted || owner != _intakeOwner) return;
     // Edits since the paste stay; only the pasted path leaves, where it was
     // pasted rather than at an earlier copy of the same text.
     final next = chunk.removeFrom(_textController.text);

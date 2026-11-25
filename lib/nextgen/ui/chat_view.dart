@@ -507,6 +507,8 @@ class _NgChatViewState extends State<NgChatView>
   int get _slotsLeft => maxRemoteAttachmentDrafts - _drafts.length;
 
   Future<void> _attach() async {
+    // The chat this intake starts in owns its drafts (see [_queueDraft]).
+    final owner = chat;
     _imageDraftRevision++;
     final c = NgColors.of(context);
     final choice = await showNgSheet<String>(
@@ -585,7 +587,8 @@ class _NgChatViewState extends State<NgChatView>
                 );
           for (final image in images) {
             final error = await _queueDraft(
-              () => chat.attachmentService.prepareImage(
+              owner: owner,
+              () => owner.attachmentService.prepareImage(
                 sourcePath: image.path,
                 displayName: image.name,
                 existingDrafts: List.of(_drafts),
@@ -609,7 +612,8 @@ class _NgChatViewState extends State<NgChatView>
               continue;
             }
             final error = await _queueDraft(
-              () => chat.attachmentService.prepareGenericFile(
+              owner: owner,
+              () => owner.attachmentService.prepareGenericFile(
                 sourcePath: path,
                 displayName: file.name,
                 mediaType:
@@ -954,6 +958,7 @@ class _NgChatViewState extends State<NgChatView>
   }
 
   Future<void> _acceptDrop(ComposerDrag drag) async {
+    final owner = chat;
     final plan = classifyDrag(drag);
     final path = plan.path ?? '';
     if (plan.kind == LocalIntake.reference) {
@@ -967,7 +972,7 @@ class _NgChatViewState extends State<NgChatView>
       ngToast(context, context.sharedL10n.composer_file_missing);
       return;
     }
-    await _stageLocal(plan.kind, path);
+    await _stageLocal(plan.kind, path, owner: owner);
   }
 
   /// The paste the editor's formatter saw, handled once the text is in the
@@ -975,6 +980,7 @@ class _NgChatViewState extends State<NgChatView>
   PastedChunk? _pendingPaste;
 
   Future<void> _consumePaste(PastedChunk chunk) async {
+    final owner = chat;
     final path = clipboardPath(chunk.text);
     var exists = false;
     var directory = false;
@@ -996,7 +1002,8 @@ class _NgChatViewState extends State<NgChatView>
     }
     if (plan.kind == LocalIntake.pastedText) {
       final error = await _queueDraft(
-        () => chat.attachmentService.preparePastedText(
+        owner: owner,
+        () => owner.attachmentService.preparePastedText(
           text: chunk.text,
           existingDrafts: List.of(_drafts),
         ),
@@ -1009,7 +1016,12 @@ class _NgChatViewState extends State<NgChatView>
     if (staged == null) return;
     // The path leaves the text only once its draft is staged: a refused
     // file (no slot, too large, unreadable) keeps what was pasted.
-    await _stageLocal(plan.kind, staged, onStaged: () => _removePasted(chunk));
+    await _stageLocal(
+      plan.kind,
+      staged,
+      owner: owner,
+      onStaged: () => _removePasted(chunk),
+    );
   }
 
   /// Takes the paste out where it was pasted (its caret), never an earlier
@@ -1025,19 +1037,21 @@ class _NgChatViewState extends State<NgChatView>
   Future<bool> _stageLocal(
     LocalIntake kind,
     String path, {
+    required NgChatController owner,
     VoidCallback? onStaged,
   }) async {
     final name = path.split(RegExp(r'[\\/]')).where((p) => p.isNotEmpty).last;
     final error = await _queueDraft(
+      owner: owner,
       () => kind == LocalIntake.imageFile
-          ? chat.attachmentService.prepareImage(
+          ? owner.attachmentService.prepareImage(
               sourcePath: path,
               displayName: name,
               existingDrafts: List.of(_drafts),
               mode: AttachmentDraftMode.remoteGateway,
               maxTotalBytes: maxNextGenAttachmentDraftBytes,
             )
-          : chat.attachmentService.prepareGenericFile(
+          : owner.attachmentService.prepareGenericFile(
               sourcePath: path,
               displayName: name,
               mediaType:
@@ -1068,12 +1082,18 @@ class _NgChatViewState extends State<NgChatView>
   /// prepare see every draft staged before this one, so overlapping intake
   /// never passes [maxRemoteAttachmentDrafts] together. Returns null once
   /// the draft is staged ([onStaged] runs in the same frame), else why not.
+  ///
+  /// [owner] is the chat the intake started in. If this composer belongs to
+  /// another chat by the time the job runs or its prepare finishes (a host
+  /// that swaps the chat without remounting the view), the draft is dropped,
+  /// never staged in the other chat.
   Future<String?> _queueDraft(
     Future<AttachmentDraft> Function() prepare, {
+    required NgChatController owner,
     VoidCallback? onStaged,
     String? unreadable,
   }) => _intake.run(() async {
-    if (!mounted) return '';
+    if (!mounted || !identical(owner, chat)) return '';
     if (_slotsLeft <= 0) {
       return ngL.ng_you_can_attach_up_to_files(maxRemoteAttachmentDrafts);
     }
@@ -1085,9 +1105,9 @@ class _NgChatViewState extends State<NgChatView>
     } catch (error) {
       return unreadable ?? ngL.ng_couldn_t_prepare_that_file(error);
     }
-    if (!mounted || _slotsLeft <= 0) {
-      await chat.attachmentService.removeAll([draft]);
-      return mounted
+    if (!mounted || !identical(owner, chat) || _slotsLeft <= 0) {
+      await owner.attachmentService.removeAll([draft]);
+      return mounted && identical(owner, chat)
           ? ngL.ng_you_can_attach_up_to_files(maxRemoteAttachmentDrafts)
           : '';
     }
@@ -1097,9 +1117,13 @@ class _NgChatViewState extends State<NgChatView>
   });
 
   /// Files dropped from the OS: each file becomes a draft; a folder cannot.
-  Future<void> _acceptOsFiles(List<OsIntakeFile> files) async {
+  Future<void> _acceptOsFiles(
+    List<OsIntakeFile> files, {
+    NgChatController? owner,
+  }) async {
+    final intakeOwner = owner ?? chat;
     for (final file in files) {
-      if (!mounted) return;
+      if (!mounted || !identical(intakeOwner, chat)) return;
       if (file.directory) {
         ngToast(context, context.sharedL10n.composer_drop_folder_unsupported);
         continue;
@@ -1109,7 +1133,7 @@ class _NgChatViewState extends State<NgChatView>
           : LocalIntake.genericFile;
       final staged = await withDroppedFileAccess(
         file,
-        () => _stageLocal(kind, file.path),
+        () => _stageLocal(kind, file.path, owner: intakeOwner),
       );
       if (!staged && _slotsLeft <= 0) return;
     }
@@ -1117,16 +1141,22 @@ class _NgChatViewState extends State<NgChatView>
 
   /// Cmd/Ctrl+V with files or an image on the clipboard.
   Future<void> _acceptClipboard(ClipboardAttachment found) async {
+    final owner = chat;
     final image = found.image;
     if (image != null) {
-      await _acceptImageBytes(image, 'image/png');
+      await _acceptImageBytes(image, 'image/png', owner: owner);
       return;
     }
-    await _acceptOsFiles(await osIntakeFilesFor(found.files));
+    await _acceptOsFiles(await osIntakeFilesFor(found.files), owner: owner);
   }
 
   /// A pasted or keyboard-inserted image.
-  Future<void> _acceptImageBytes(Uint8List bytes, String mimeType) async {
+  Future<void> _acceptImageBytes(
+    Uint8List bytes,
+    String mimeType, {
+    NgChatController? owner,
+  }) async {
+    final intakeOwner = owner ?? chat;
     final String path;
     try {
       path = await stageComposerImageBytes(bytes, mimeType: mimeType);
@@ -1137,7 +1167,9 @@ class _NgChatViewState extends State<NgChatView>
       return;
     }
     try {
-      if (mounted) await _stageLocal(LocalIntake.imageFile, path);
+      if (mounted) {
+        await _stageLocal(LocalIntake.imageFile, path, owner: intakeOwner);
+      }
     } finally {
       // The draft holds its own sanitised copy (or there is no draft).
       await discardStagedComposerImage(path);
