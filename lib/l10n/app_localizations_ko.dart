@@ -646,7 +646,15 @@ class AppLocalizationsKo extends AppLocalizations {
       '이 Hermes 세션이 끝날 때까지 일치하는 명령을 허용합니다.';
 
   @override
+  String get allow_folder_until_sandbox_off =>
+      'Allow this folder until the sandbox is switched off.';
+
+  @override
   String get allow_once => '한 번 허용';
+
+  @override
+  String get allow_website_until_sandbox_off =>
+      'Allow this website until the sandbox is switched off.';
 
   @override
   String get always_allow => '항상 허용';
@@ -4800,6 +4808,25 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_allow_once => '한 번 허용';
+
+  @override
+  String get ng_allow_until_sandbox_off => '샌드박스가 꺼질 때까지';
+
+  @override
+  String get ng_folder_access => '폴더 접근';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      '게이트웨이가 읽기 전용인지 읽기 및 쓰기인지 알려 주지 않았습니다.';
+
+  @override
+  String get ng_folder_read_only => '읽기 전용';
+
+  @override
+  String get ng_folder_read_write => '읽기 및 쓰기';
+
+  @override
+  String get ng_website_access => '웹사이트 접근';
 
   @override
   String get ng_allow_for_this_chat => '이 채팅에서 허용';

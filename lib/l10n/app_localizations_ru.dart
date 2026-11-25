@@ -665,7 +665,15 @@ class AppLocalizationsRu extends AppLocalizations {
       'Разрешать совпадающие команды до конца этой сессии Hermes.';
 
   @override
+  String get allow_folder_until_sandbox_off =>
+      'Allow this folder until the sandbox is switched off.';
+
+  @override
   String get allow_once => 'Разрешить один раз';
+
+  @override
+  String get allow_website_until_sandbox_off =>
+      'Allow this website until the sandbox is switched off.';
 
   @override
   String get always_allow => 'Всегда разрешать';
@@ -4932,6 +4940,25 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get ng_allow_once => 'Разрешить один раз';
+
+  @override
+  String get ng_allow_until_sandbox_off => 'Пока песочница не будет отключена';
+
+  @override
+  String get ng_folder_access => 'Доступ к папке';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      'Шлюз не сообщил, доступ только для чтения или для чтения и записи.';
+
+  @override
+  String get ng_folder_read_only => 'Только чтение';
+
+  @override
+  String get ng_folder_read_write => 'Чтение и запись';
+
+  @override
+  String get ng_website_access => 'Доступ к сайту';
 
   @override
   String get ng_allow_for_this_chat => 'Разрешить в этом чате';

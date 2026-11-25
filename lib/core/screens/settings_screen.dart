@@ -6,6 +6,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/app_licenses.dart';
 import '../utils/platform_capabilities.dart';
+import '../widgets/recent_notifications_sheet.dart';
 import '../widgets/windows_completion_sound_tile.dart';
 import '../services/locale_preference.dart';
 import 'provider_oauth_screen.dart';
@@ -907,6 +908,18 @@ class _NotificationSettingsState extends State<_NotificationSettings>
               leading: const Icon(Icons.send_outlined),
               title: Text(context.l10n.send_test_notification),
               onTap: () => unawaited(_sendTest()),
+            ),
+            const Divider(height: 1),
+            ListTile(
+              key: const ValueKey('classic-recent-notifications'),
+              leading: const Icon(Icons.history),
+              title: Text(context.l10n.ng_recent_notifications),
+              subtitle: Text(
+                isWindowsPlatform
+                    ? context.l10n.windows_notification_diagnostics
+                    : context.l10n.ng_recent_notifications_hint,
+              ),
+              onTap: () => unawaited(RecentNotificationsSheet.show(context)),
             ),
             if (!TurnNotificationService.shared.permissionGranted) ...[
               const Divider(height: 1),

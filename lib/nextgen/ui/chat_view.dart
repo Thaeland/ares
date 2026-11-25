@@ -3,6 +3,9 @@
 // pill composer (model chip, dictation, send/stop, steer or queue while busy).
 import 'dart:async';
 import 'dart:io';
+import '../../core/workspace/terminal_chat_link.dart';
+import '../../core/services/connection_manager.dart';
+import '../../core/services/remote_workspace.dart' show RemoteWorkspaceOwner;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +27,6 @@ import '../../core/widgets/desktop_shortcuts.dart';
 import '../../core/widgets/transcript_reader.dart';
 import '../../core/widgets/transcript_body.dart';
 import '../../core/services/chat_presentation_state.dart';
-import '../../core/models/session.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/widgets/composer_prompt_recall.dart';
 import '../../core/composer/composer_commands.dart';
@@ -97,7 +99,17 @@ class NgChatView extends StatefulWidget {
   State<NgChatView> createState() => _NgChatViewState();
 }
 
-class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
+class _NgChatViewState extends State<NgChatView>
+    with WidgetsBindingObserver, TerminalComposerAttachment<NgChatView> {
+  @override
+  SavedConnection get terminalConnection => chat.gateway.connection;
+  @override
+  String? get terminalSession => chat.storedId;
+  @override
+  RemoteWorkspaceOwner get terminalOwner => chat.gateway.workspace;
+  @override
+  TextEditingController get terminalComposer => _input;
+
   /// A fresh files client per card: cards close theirs when done, so they
   /// must not share the gateway's own dashboard connection.
   RemoteFilesDataSource _filesClient() {
@@ -1250,41 +1262,49 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                           setState(() => _showSessionFiles = false);
                         },
                       ),
-                child: Column(
-                  children: [
-                    if (!state.isConnected) _connectionBanner(c, gateway),
-                    Expanded(child: _transcript(c)),
-                    NgSessionDock(chat: chat),
-                    if (chat.canPickProject && _drafts.isEmpty && !_preparing)
-                      OrphanDraftRecovery(
-                        key: ObjectKey(_draftWriter),
-                        writer: _draftWriter,
-                        editor: _input,
-                        lookup: chat.gateway.api.getSession,
-                        isCurrent: () =>
-                            chat.draftOwnerCurrent &&
-                            identical(chat.gateway, gateway) &&
-                            chat.canPickProject &&
-                            _drafts.isEmpty &&
-                            !_preparing &&
-                            !_listening,
-                      ),
-                    if (chat.error != null) _errorBar(c),
-                    if (chat.queued.isNotEmpty) _queue(c),
-                    if (chat.request != null)
-                      _InputPanel(chat: chat, request: chat.request!)
-                    else
-                      NgSlashCommandInfo(
-                        chat: chat,
-                        controller: _input,
-                        focusNode: _focus,
-                        catalog: _slashCatalog,
-                        // Commands run here now, so the card no longer says they
-                        // are sent as a message.
-                        showsSentAsMessageNote: false,
-                        child: _composer(c, state),
-                      ),
-                  ],
+                // The body's real height: Scaffold has already taken the
+                // keyboard off it, so cards above the composer size from it.
+                child: LayoutBuilder(
+                  builder: (context, body) => Column(
+                    children: [
+                      if (!state.isConnected) _connectionBanner(c, gateway),
+                      Expanded(child: _transcript(c)),
+                      NgSessionDock(chat: chat, available: body.maxHeight),
+                      if (chat.canPickProject && _drafts.isEmpty && !_preparing)
+                        OrphanDraftRecovery(
+                          key: ObjectKey(_draftWriter),
+                          writer: _draftWriter,
+                          editor: _input,
+                          lookup: chat.gateway.api.getSession,
+                          isCurrent: () =>
+                              chat.draftOwnerCurrent &&
+                              identical(chat.gateway, gateway) &&
+                              chat.canPickProject &&
+                              _drafts.isEmpty &&
+                              !_preparing &&
+                              !_listening,
+                        ),
+                      if (chat.error != null) _errorBar(c),
+                      if (chat.queued.isNotEmpty) _queue(c),
+                      if (chat.request != null)
+                        _InputPanel(
+                          chat: chat,
+                          request: chat.request!,
+                          available: body.maxHeight,
+                        )
+                      else
+                        NgSlashCommandInfo(
+                          chat: chat,
+                          controller: _input,
+                          focusNode: _focus,
+                          catalog: _slashCatalog,
+                          // Commands run here now, so the card no longer says they
+                          // are sent as a message.
+                          showsSentAsMessageNote: false,
+                          child: _composer(c, state),
+                        ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -1712,7 +1732,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     final modelLabel = [
       chat.model == null ? ngL.ng_default_model : _shortModel(chat.model!),
       if (chat.reasoningEffort != null && chat.reasoningEffort!.isNotEmpty)
-        ngEffortLabel(chat.reasoningEffort),
+        ngRouteEffortLabel(chat.reasoningEffort, chat.reasoningEffortWire),
     ].join(' · ');
     return CallbackShortcuts(
       bindings: {
@@ -2958,9 +2978,16 @@ class _ToolRowState extends State<_ToolRow> {
 
 /// What the agent is waiting on: approval, a question or a secret.
 class _InputPanel extends StatefulWidget {
-  const _InputPanel({required this.chat, required this.request});
+  const _InputPanel({
+    required this.chat,
+    required this.request,
+    this.available = double.infinity,
+  });
   final NgChatController chat;
   final NgInputRequest request;
+
+  /// The chat body's height (keyboard already removed).
+  final double available;
 
   @override
   State<_InputPanel> createState() => _InputPanelState();
@@ -3022,6 +3049,22 @@ class _InputPanelState extends State<_InputPanel> {
     _ => choice,
   };
 
+  Widget _choiceChild(String choice) {
+    final grant = widget.request.request.params['kind']?.toString();
+    final sandboxGrant = grant == 'access' || grant == 'network';
+    if (choice != 'once' || !sandboxGrant) {
+      return Text(_choiceLabel(choice));
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(_choiceLabel(choice)),
+        Text(ngL.ng_allow_until_sandbox_off),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
@@ -3036,8 +3079,14 @@ class _InputPanelState extends State<_InputPanel> {
           borderRadius: BorderRadius.circular(NgRadii.xl),
           border: Border.all(color: c.accent.withValues(alpha: 0.5)),
         ),
+        // A share of the space above the keyboard, so the answer field
+        // stays in sight while typing.
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.sizeOf(context).height * 0.6,
+          maxHeight: ngAboveComposerMaxHeight(
+            context,
+            available: widget.available,
+            fraction: 0.6,
+          ),
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -3101,7 +3150,7 @@ class _InputPanelState extends State<_InputPanel> {
                         ),
                         onPressed: () =>
                             _done(widget.chat.answerApproval(choice)),
-                        child: Text(_choiceLabel(choice)),
+                        child: _choiceChild(choice),
                       )
                     : FilledButton(
                         style: FilledButton.styleFrom(
@@ -3115,7 +3164,7 @@ class _InputPanelState extends State<_InputPanel> {
                         ),
                         onPressed: () =>
                             _done(widget.chat.answerApproval(choice)),
-                        child: Text(_choiceLabel(choice)),
+                        child: _choiceChild(choice),
                       ),
             ],
           ),

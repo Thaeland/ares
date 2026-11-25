@@ -355,10 +355,7 @@ class NormalGatewayApplicationSession {
     _aliases[stored] = owner;
     unawaited(
       ComposerDraftStore.bind(
-        connectionId: ComposerDraftStore.namespace(
-          connection.id,
-          connection.gatewayProfile,
-        ),
+        connectionId: connection.id,
         localSessionId: owner.localSessionId,
         storedSessionId: stored,
       ),
@@ -369,10 +366,7 @@ class NormalGatewayApplicationSession {
     if (localAlias != null && localAlias != owner.localSessionId) {
       unawaited(
         ComposerDraftStore.bind(
-          connectionId: ComposerDraftStore.namespace(
-            connection.id,
-            connection.gatewayProfile,
-          ),
+          connectionId: connection.id,
           localSessionId: localAlias,
           storedSessionId: stored,
         ),
@@ -2651,10 +2645,7 @@ class NormalGatewayChatOwner {
         await (handle != null
             ? _restoreDraft(handle, _draftToRestore!, canRestore)
             : ComposerDraftStore.save(
-                connectionId: ComposerDraftStore.namespace(
-                  _session.connection.id,
-                  _session.connection.gatewayProfile,
-                ),
+                connectionId: _session.connection.id,
                 sessionId: localSessionId,
                 text: _draftToRestore!,
                 isCurrent: canRestore,

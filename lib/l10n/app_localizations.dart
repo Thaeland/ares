@@ -1238,11 +1238,23 @@ abstract class AppLocalizations {
   /// **'Allow matching commands until this Hermes session ends.'**
   String get allow_matching_commands_until_this_hermes_session_ends;
 
+  /// No description provided for @allow_folder_until_sandbox_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow this folder until the sandbox is switched off.'**
+  String get allow_folder_until_sandbox_off;
+
   /// No description provided for @allow_once.
   ///
   /// In en, this message translates to:
   /// **'Allow once'**
   String get allow_once;
+
+  /// No description provided for @allow_website_until_sandbox_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow this website until the sandbox is switched off.'**
+  String get allow_website_until_sandbox_off;
 
   /// No description provided for @always_allow.
   ///
@@ -8243,6 +8255,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Allow once'**
   String get ng_allow_once;
+
+  /// No description provided for @ng_allow_until_sandbox_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Until the sandbox is switched off'**
+  String get ng_allow_until_sandbox_off;
+
+  /// No description provided for @ng_folder_access.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder access'**
+  String get ng_folder_access;
+
+  /// No description provided for @ng_folder_access_unspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not say whether this is read-only or read-write.'**
+  String get ng_folder_access_unspecified;
+
+  /// No description provided for @ng_folder_read_only.
+  ///
+  /// In en, this message translates to:
+  /// **'Read-only'**
+  String get ng_folder_read_only;
+
+  /// No description provided for @ng_folder_read_write.
+  ///
+  /// In en, this message translates to:
+  /// **'Read and write'**
+  String get ng_folder_read_write;
+
+  /// No description provided for @ng_website_access.
+  ///
+  /// In en, this message translates to:
+  /// **'Website access'**
+  String get ng_website_access;
 
   /// No description provided for @ng_allow_for_this_chat.
   ///

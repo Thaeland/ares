@@ -3,6 +3,7 @@
 // GET /api/sessions/{id}/messages.
 import 'dart:async';
 import '../widgets/windows_chat_presence.dart';
+import '../workspace/terminal_chat_link.dart';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -758,7 +759,16 @@ class _HandsFreeTurnBinding {
   }
 }
 
-class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
+class _ChatScreenState extends State<ChatScreen>
+    with WidgetsBindingObserver, TerminalComposerAttachment<ChatScreen> {
+  @override
+  SavedConnection get terminalConnection => widget.connection;
+  @override
+  String get terminalSession => widget.session.id;
+  @override
+  RemoteWorkspaceOwner? get terminalOwner => _desktopGateway?.workspace;
+  @override
+  TextEditingController get terminalComposer => _textController;
   List<Map<String, dynamic>> _messages = [];
   ChatTimeline _timeline = const ChatTimeline();
   RestChatReplyRetention? _restReplyRetention;
@@ -860,6 +870,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   String? _sessionModel;
   String? _sessionProvider;
   String? _sessionReasoningEffort;
+  String? _sessionReasoningWire;
   String? _projectName;
   String? _storedSessionId;
   bool _showSessionFiles = false;
@@ -1802,6 +1813,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       _sessionModel = override.model;
       _sessionProvider = override.provider;
       _sessionReasoningEffort = override.reasoningEffort;
+      _sessionReasoningWire = '';
       _sessionModelOverride = true;
     });
   }
@@ -4551,6 +4563,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         _sessionModel = choice.model;
         _sessionProvider = choice.provider;
         _sessionReasoningEffort = selection.reasoningEffort;
+        _sessionReasoningWire = '';
         _sessionModelOverride = true;
       });
       ScaffoldMessenger.of(context).showSnackBar(
@@ -6111,8 +6124,33 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
   }
 
+  void _adoptRouteEffort(Map<String, dynamic> data) {
+    final info = data['info'] is Map
+        ? Map<String, dynamic>.from(data['info'] as Map)
+        : data;
+    if (!info.containsKey('reasoning_effort') &&
+        !info.containsKey('reasoning_effort_wire')) {
+      return;
+    }
+    setState(() {
+      final effort = info['reasoning_effort']?.toString();
+      if (effort != null && effort.isNotEmpty) {
+        _sessionReasoningEffort = effort;
+      }
+      if (info.containsKey('reasoning_effort_wire')) {
+        _sessionReasoningWire = info['reasoning_effort_wire']?.toString() ?? '';
+      } else if (info.containsKey('reasoning_effort')) {
+        _sessionReasoningWire = '';
+      }
+    });
+  }
+
   void _handleDesktopGatewayEvent(StreamEvent event, int responseGeneration) {
     if (!mounted || responseGeneration != _responseGeneration) return;
+    if (event.type == 'session.info') {
+      _adoptRouteEffort(event.data);
+      return;
+    }
     final reasoning = GatewayReasoningUpdate.fromGatewayEvent(
       event.type,
       event.data,
@@ -7753,6 +7791,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             projectName: _projectName,
             model: _sessionModel ?? widget.session.model,
             reasoningEffort: _sessionReasoningEffort ?? 'default',
+            reasoningEffortWire: _sessionReasoningWire,
             connectionLabel: widget.connection.label,
             connectionStatus: _chatConnectionStatus,
           ),
@@ -8630,7 +8669,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                       ),
                       const SizedBox(width: 4),
                       if (_streaming) ...[
-                        if (!_usesNormalInputOwner)
+                        if (showQueueHeld)
                           _buildComposerAction(
                             key: const Key('chat-queue-held'),
                             label: 'Queue',
