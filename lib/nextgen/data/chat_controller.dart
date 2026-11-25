@@ -19,6 +19,7 @@ import '../../core/render/setup_beat.dart';
 import '../../core/services/attachment_draft_service.dart';
 import '../../core/services/completion_cue_player.dart';
 import '../../core/services/remote_workspace.dart';
+import '../../core/services/system_sleep_gate.dart';
 import '../../core/services/composer_draft_store.dart';
 import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/prepared_image_store.dart';
@@ -645,6 +646,17 @@ class NgChatController extends ChangeNotifier {
     _subs.add(gateway.reconnected.listen((_) => unawaited(_reattach())));
     // Answered on another device, withdrawn, or no longer open per the server.
     _subs.add(gateway.withdrawnRequests.listen(forgetRequest));
+    SystemSleepGate.instance.addListener(_onSleepGate);
+  }
+
+  /// The computer slept or the session locked with this turn running: the
+  /// paused socket cannot see it end, so keep-awake waits until this chat
+  /// has re-attached and caught up after the pause ([_reattach]).
+  void _onSleepGate() {
+    if (_disposed) return;
+    if (SystemSleepGate.instance.value && running) {
+      SystemSleepGate.instance.holdReconcile(this);
+    }
   }
 
   final NextGenGateway gateway;
@@ -1591,21 +1603,28 @@ class NgChatController extends ChangeNotifier {
 
   /// Re-attaches after the socket came back, then fills what was missed.
   Future<void> _reattach() async {
-    if (_disposed) return;
-    // The first connect is the chat opening, which reads everything anyway.
-    if (!_attachedOnce) {
+    try {
+      if (_disposed) return;
+      // The first connect is the chat opening, which reads everything anyway.
+      if (!_attachedOnce) {
+        await _attach();
+        return;
+      }
+      _held ??= [];
+      if (gateway.sessionAuthority && _cursor != null) {
+        // Replay first, then attach: the owner bridges whatever it publishes
+        // between the two onto this socket.
+        await _catchUp(resubscribe: true);
+        return;
+      }
       await _attach();
-      return;
+      await _catchUp();
+    } finally {
+      // Caught up after a pause: [running] is current again.
+      if (!SystemSleepGate.instance.value) {
+        SystemSleepGate.instance.releaseReconcile(this);
+      }
     }
-    _held ??= [];
-    if (gateway.sessionAuthority && _cursor != null) {
-      // Replay first, then attach: the owner bridges whatever it publishes
-      // between the two onto this socket.
-      await _catchUp(resubscribe: true);
-      return;
-    }
-    await _attach();
-    await _catchUp();
   }
 
   bool _attachedOnce = false;
@@ -3620,6 +3639,8 @@ class NgChatController extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    SystemSleepGate.instance.removeListener(_onSleepGate);
+    SystemSleepGate.instance.releaseReconcile(this);
     for (final sub in _subs) {
       unawaited(sub.cancel());
     }

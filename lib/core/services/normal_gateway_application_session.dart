@@ -442,6 +442,10 @@ class NormalGatewayApplicationSession {
     winner._listeners.addAll(loser._listeners);
     loser._listeners.clear();
     loser._redirect = winner;
+    if (SystemSleepGate.instance.reconcilePendingFor(loser)) {
+      SystemSleepGate.instance.releaseReconcile(loser);
+      winner._holdReconcileForPause();
+    }
     for (final alias in _aliases.keys.toList()) {
       if (identical(_aliases[alias], loser)) _aliases[alias] = winner;
     }
@@ -550,7 +554,13 @@ class NormalGatewayApplicationSession {
   /// session ids, never by sending a prompt again.
   void _onSystemSleep() {
     if (_closed) return;
-    if (!SystemSleepGate.instance.value) {
+    if (SystemSleepGate.instance.value) {
+      // The paused socket cannot see these turns end: keep-awake waits
+      // until each has recovered its state after the pause.
+      for (final chat in chats) {
+        chat._holdReconcileForPause();
+      }
+    } else {
       unawaited(client?.revalidateServerRequests());
     }
     _applyRecoveryPolicy();
@@ -2497,14 +2507,27 @@ class NormalGatewayChatOwner {
     return pending;
   }
 
-  void requestRecovery() {
-    if (_redirect != null) return _root.requestRecovery();
-    if (!snapshot.hasActiveTurn ||
+  /// The pause started with this turn running: hold keep-awake's reconcile
+  /// until recovery has read the turn's state again (or it settles).
+  void _holdReconcileForPause() {
+    if (_redirect != null ||
+        !snapshot.hasActiveTurn ||
         (!wireEmitted && _terminalReceipt == null) ||
-        _settling ||
-        !_session._canRecover) {
+        _settling) {
       return;
     }
+    SystemSleepGate.instance.holdReconcile(this);
+  }
+
+  void requestRecovery() {
+    if (_redirect != null) return _root.requestRecovery();
+    if (!snapshot.hasActiveTurn || (!wireEmitted && _terminalReceipt == null)) {
+      // Nothing left to recover: the turn is over (or never reached the
+      // wire), so it holds no reconcile either.
+      SystemSleepGate.instance.releaseReconcile(this);
+      return;
+    }
+    if (_settling || !_session._canRecover) return;
     _retryTimer?.cancel();
     _retryTimer = null;
     _recoveryQueued = true;
@@ -2516,6 +2539,9 @@ class NormalGatewayChatOwner {
     _recovering = true;
     _recoveryQueued = false;
     final generation = _generation;
+    // Set once this attempt has read the turn's state from the gateway (or
+    // settled it): after a pause, that is the reconcile keep-awake waits for.
+    var observed = false;
 
     try {
       final terminal = _terminalReceipt;
@@ -2525,10 +2551,14 @@ class NormalGatewayChatOwner {
           terminal.error,
           generation: generation,
         );
+        observed = true;
         return;
       }
       final stored = storedSessionId;
-      if (stored == null) return; // no safe recovery without a durable identity
+      if (stored == null) {
+        observed = true; // nothing more will be learned about this turn
+        return; // no safe recovery without a durable identity
+      }
       // Recovery may attach while the submit wait is pending, but that read
       // cannot become settlement authority merely by arriving after the ACK.
       // Generation plus this immutable observation boundary identify its epoch.
@@ -2550,6 +2580,7 @@ class NormalGatewayChatOwner {
                   !_submissionPending,
             ));
       _reconcileParkedAttention(parkedAttention, resumed.openRequests);
+      observed = true;
       if (!_current(generation) || !snapshot.hasActiveTurn || _settling) return;
       if (_terminalReceipt != null) {
         // An owned terminal received during this read outranks the older
@@ -2632,6 +2663,9 @@ class NormalGatewayChatOwner {
       // A failed resume/history read is unknown, never an empty completion.
     } finally {
       _recovering = false;
+      if (observed && !SystemSleepGate.instance.value) {
+        SystemSleepGate.instance.releaseReconcile(this);
+      }
 
       // Old flight A must hand off to a queued generation B, even when A was
       // invalidated by terminal settlement while its read was held.
@@ -2869,6 +2903,11 @@ class NormalGatewayChatOwner {
         // The recovery flight owns its retry/backoff. Requeueing from inside
         // it would spin on a permanently rejected tombstone write.
         if (snapshot.hasActiveTurn && !_recovering) requestRecovery();
+      }
+      // Settled, and its end already published: nothing about this turn is
+      // left for keep-awake to wait on.
+      if (!snapshot.hasActiveTurn) {
+        SystemSleepGate.instance.releaseReconcile(this);
       }
     }
   }
@@ -3129,6 +3168,7 @@ class NormalGatewayChatOwner {
   }
 
   void _close() {
+    SystemSleepGate.instance.releaseReconcile(this);
     _generation++;
     _retryTimer?.cancel();
     _baselineTimer?.cancel();

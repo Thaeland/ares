@@ -13,6 +13,11 @@
 /// paused while the user is visibly using the app. Focus, pointer or key
 /// input in the app lifts the pause ([noteUserActivity]), and a resume
 /// re-reads the lock state from the runner ([lockProbe]).
+///
+/// A paused socket cannot see a turn end, so anything that follows turn
+/// state across a pause (keep-awake) waits for [reconciled]: chats with a
+/// running turn [holdReconcile] when the pause starts and
+/// [releaseReconcile] once they have read their state again after it.
 library;
 
 import 'dart:async';
@@ -56,6 +61,38 @@ class SystemSleepGate extends ChangeNotifier implements ValueListenable<bool> {
   bool get suspended => _suspended;
   bool get locked => _locked;
 
+  final Set<Object> _reconciling = <Object>{};
+  bool _awaitingReconcile = false;
+  final ValueNotifier<int> _reconciled = ValueNotifier<int>(0);
+
+  /// Bumps once after each pause, when the pause has lifted and every chat
+  /// that had a running turn when it started has read its state again
+  /// (re-attached and caught up, or recovered from history). Until then
+  /// nothing seen before the pause says whether that turn still runs.
+  ValueListenable<int> get reconciled => _reconciled;
+
+  /// Chats still to read their state again after the last pause.
+  @visibleForTesting
+  int get reconcilePending => _reconciling.length;
+
+  /// Whether [owner] still has to read its state again after the pause.
+  bool reconcilePendingFor(Object owner) => _reconciling.contains(owner);
+
+  /// [owner] had a running turn when the pause started and will call
+  /// [releaseReconcile] once it has read its state again. Only counts
+  /// during a pause or before the reconcile that follows it.
+  void holdReconcile(Object owner) {
+    if (!value && !_awaitingReconcile) return;
+    _reconciling.add(owner);
+  }
+
+  /// [owner] has read its state again after the pause, its turn ended, or
+  /// it is gone. Safe to call for an owner that never held.
+  void releaseReconcile(Object owner) {
+    if (!_reconciling.remove(owner)) return;
+    _finishReconcile();
+  }
+
   void apply(PowerEvent event) {
     final before = value;
     switch (event) {
@@ -71,7 +108,7 @@ class SystemSleepGate extends ChangeNotifier implements ValueListenable<bool> {
       case PowerEvent.unlock:
         _locked = false;
     }
-    if (value != before) notifyListeners();
+    _publish(before);
     if (event == PowerEvent.resume) unawaited(recheckLock());
   }
 
@@ -79,10 +116,10 @@ class SystemSleepGate extends ChangeNotifier implements ValueListenable<bool> {
   /// key input): the computer is awake and the session unlocked, whatever
   /// the last event said.
   void noteUserActivity() {
-    if (!value) return;
+    final before = value;
     _suspended = false;
     _locked = false;
-    notifyListeners();
+    _publish(before);
   }
 
   /// Re-reads the lock state from the runner. An unlocked answer lifts the
@@ -99,11 +136,30 @@ class SystemSleepGate extends ChangeNotifier implements ValueListenable<bool> {
     if (locked == false && _locked) apply(PowerEvent.unlock);
   }
 
-  /// Clears both flags (listener shutdown, tests).
+  void _publish(bool before) {
+    final now = value;
+    if (now == before) return;
+    if (now) _awaitingReconcile = true;
+    notifyListeners();
+    // Listeners (sockets) have started reconnecting; owners that held
+    // release as they catch up. With none holding, it is reconciled now.
+    if (!now) _finishReconcile();
+  }
+
+  void _finishReconcile() {
+    if (value || !_awaitingReconcile || _reconciling.isNotEmpty) return;
+    _awaitingReconcile = false;
+    _reconciled.value++;
+  }
+
+  /// Clears both flags and any pending reconcile (listener shutdown,
+  /// tests).
   void clear() {
     final before = value;
     _suspended = false;
     _locked = false;
-    if (before) notifyListeners();
+    _reconciling.clear();
+    _publish(before);
+    _finishReconcile();
   }
 }

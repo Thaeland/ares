@@ -22,6 +22,8 @@ import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'system_sleep_gate.dart';
+
 /// Broadcasts whenever [KeepAwakePolicyStore.write] updates the saved policy.
 final ValueNotifier<int> keepAwakePolicyChanges = ValueNotifier<int>(0);
 
@@ -120,22 +122,43 @@ class MethodChannelKeepAwakeAdapter implements KeepAwakeAdapter {
 
 /// Applies the policy for the active session. A single controller owns the
 /// OS-level wake flag: closing an old chat cannot release a newer chat's flag.
+///
+/// The request is released while the computer sleeps or the session is
+/// locked ([SystemSleepGate]): the sockets are paused then, so a turn that
+/// ends meanwhile is never seen, and a "while working" request would
+/// otherwise stay held until unlock. After the pause it is taken again only
+/// once the chats have reconciled ([SystemSleepGate.reconciled]) and the
+/// turn still runs, or when a turn is seen to start or end afterwards.
 class KeepAwakeController {
   KeepAwakeController({
     required this._adapter,
     required this._store,
     this._background = false,
-  }) {
+    SystemSleepGate? sleepGate,
+  }) : _gate = sleepGate ?? SystemSleepGate.instance {
+    _paused = _gate.value;
+    _confirmed = !_paused;
+    _gate.addListener(_onSleepGate);
+    _gate.reconciled.addListener(_onReconciled);
     final mode = _store?.read() ?? KeepAwakeMode.off;
     _apply(mode, working: false);
   }
 
   final KeepAwakeAdapter _adapter;
   final KeepAwakePolicyStore? _store;
+  final SystemSleepGate _gate;
   final String _owner = 'keep-awake-${DateTime.now().microsecondsSinceEpoch}';
   bool _awake = false;
   bool _busy = false;
   bool _background;
+  bool _disposed = false;
+
+  /// True while the computer sleeps or the session is locked.
+  bool _paused = false;
+
+  /// False from a pause until the turn state is known again: a turn that
+  /// was running when the sockets paused may have ended unseen.
+  bool _confirmed = true;
 
   /// Current policy, mirroring the store.
   KeepAwakeMode get mode => _store?.read() ?? KeepAwakeMode.off;
@@ -157,9 +180,12 @@ class KeepAwakeController {
   /// Begin/end a turn. A turn in flight keeps the computer awake when the
   /// policy is `whileWorking` or `always`. Every way a turn ends (finished,
   /// failed, cancelled or interrupted) reports `false` here and releases it.
+  /// A change seen after a pause is current again, so it also ends the wait
+  /// for [SystemSleepGate.reconciled].
   void setWorking(bool working) {
     if (_busy == working) return;
     _busy = working;
+    if (!_paused) _confirmed = true;
     _apply(_store?.read() ?? KeepAwakeMode.off, working: working);
   }
 
@@ -174,12 +200,28 @@ class KeepAwakeController {
     _apply(_store?.read() ?? KeepAwakeMode.off, working: _busy);
   }
 
+  void _onSleepGate() {
+    final paused = _gate.value;
+    if (paused == _paused) return;
+    _paused = paused;
+    if (paused) _confirmed = false;
+    _apply(_store?.read() ?? KeepAwakeMode.off, working: _busy);
+  }
+
+  void _onReconciled() {
+    if (_paused) return;
+    _confirmed = true;
+    _apply(_store?.read() ?? KeepAwakeMode.off, working: _busy);
+  }
+
   void _apply(KeepAwakeMode mode, {required bool working}) {
     final shouldAwake =
+        !_disposed &&
         !_background &&
+        !_paused &&
         switch (mode) {
           KeepAwakeMode.off => false,
-          KeepAwakeMode.whileWorking => working,
+          KeepAwakeMode.whileWorking => working && _confirmed,
           KeepAwakeMode.always => true,
         };
     if (_awake == shouldAwake) return;
@@ -189,6 +231,10 @@ class KeepAwakeController {
 
   /// Clean up: release the wake flag without touching the stored policy.
   void dispose() {
+    if (_disposed) return;
+    _gate.removeListener(_onSleepGate);
+    _gate.reconciled.removeListener(_onReconciled);
     _apply(KeepAwakeMode.off, working: false);
+    _disposed = true;
   }
 }
