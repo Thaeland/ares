@@ -13,6 +13,7 @@ import 'package:uuid/uuid.dart';
 
 import 'connection_manager.dart';
 import 'hermes_sign_in.dart';
+import 'session_search_client.dart';
 import '../utils/session_sources.dart' as sources;
 
 /// Thrown for API-server-only operations a dashboard can't perform.
@@ -367,16 +368,18 @@ class DashboardApiClient extends ApiClient {
     Duration timeout = ApiClient.requestTimeout,
   }) async {
     if (title != null && title.trim().isNotEmpty) {
-      final found = await _getMap(
-        'sessions/search',
-        query: {'q': title.trim(), 'limit': '${limit.clamp(1, 100)}'},
+      final hits = await SessionSearchClient.searchDashboard(
+        dashboard,
+        title,
+        profile: _profile,
+        limit: limit,
         timeout: timeout,
       );
-      final rows = (found['results'] as List? ?? const [])
-          .whereType<Map<String, dynamic>>()
-          .map(Session.fromJson)
-          .toList();
-      return SessionListPage(sessions: rows, hasMore: false);
+      return SessionListPage(
+        sessions: [for (final hit in hits) hit.session],
+        hasMore: false,
+        searchExcerpts: {for (final hit in hits) hit.session.id: hit.snippet},
+      );
     }
     final pageSize = limit.clamp(1, 100);
     final data = await _getMap(

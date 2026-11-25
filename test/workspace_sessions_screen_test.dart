@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/models/session.dart';
+import 'package:hermes_android/core/models/session_search_hit.dart';
 import 'package:hermes_android/core/screens/workspace_sessions_screen.dart';
 import 'package:hermes_android/core/theme/hermes_theme.dart';
 import 'package:hermes_android/core/widgets/hermes_components.dart';
@@ -47,6 +48,57 @@ void main() {
     );
     expect(result.map((session) => session.id), ['s2']);
   });
+
+  testWidgets(
+    'active Classic search merges current content hits and ignores superseded replies',
+    (tester) async {
+      final held = Completer<List<SessionSearchHit>>();
+      Session? opened;
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: WorkspaceSessionsScreen(
+              title: 'Chats',
+              view: WorkspaceSessionView.all,
+              embedded: true,
+              load: () async => WorkspaceSessionsData(
+                sessions: [_session('a', 'Pinned title', pinned: true)],
+              ),
+              searchMessages: (q) => q == 'old'
+                  ? held.future
+                  : Future.value([
+                      SessionSearchHit(
+                        session: _session('a', 'Sparse title'),
+                        snippet: 'Excerpt: current',
+                      ),
+                    ]),
+              onOpenSession: (s) => opened = s,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final field = find.byKey(kWorkspaceSessionSearchKey);
+      await tester.enterText(field, 'old');
+      await tester.pump(const Duration(milliseconds: 310));
+      await tester.enterText(field, 'current');
+      await tester.pump(const Duration(milliseconds: 310));
+      held.completeError(StateError('old failure'));
+      await tester.pumpAndSettle();
+      expect(find.text('Pinned title'), findsOneWidget);
+      expect(find.text('Sparse title'), findsNothing);
+      expect(find.text('Excerpt: current'), findsOneWidget);
+      expect(find.byIcon(Icons.push_pin), findsOneWidget);
+      await tester.tap(find.text('Pinned title'));
+      expect(opened?.id, 'a');
+      await tester.tap(find.byTooltip(l10n.clear_search));
+      await tester.pump();
+      expect(tester.widget<TextField>(field).controller!.text, isEmpty);
+      expect(find.text('Excerpt: current'), findsNothing);
+    },
+  );
 
   group('WorkspaceChatsFilter', () {
     test('declares the four validated chip filters in order', () {

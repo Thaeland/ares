@@ -1268,7 +1268,13 @@ class SessionListPage {
   final List<Session> sessions;
   final bool hasMore;
 
-  const SessionListPage({required this.sessions, required this.hasMore});
+  final Map<String, String> searchExcerpts;
+
+  const SessionListPage({
+    required this.sessions,
+    required this.hasMore,
+    this.searchExcerpts = const {},
+  });
 }
 
 /// HTTP client for the Hermes Gateway API Server (port 8642).

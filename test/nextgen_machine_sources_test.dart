@@ -68,7 +68,8 @@ class _Fixture {
               : http.Response('{}', configStatus);
         }
         if (request.url.path == '/hermes/api/sessions/search') {
-          return _json({'results': searchRows});
+          return heldSearch?.future ??
+              Future.value(searchReply ?? _json({'results': searchRows}));
         }
         if (request.url.path == '/hermes/api/sessions') {
           final offset = int.parse(
@@ -104,6 +105,8 @@ class _Fixture {
   final requests = <http.Request>[];
   final pages = <int, List<Map<String, dynamic>>>{};
   List<Map<String, dynamic>>? serverRows;
+  Completer<http.Response>? heldSearch;
+  http.Response? searchReply;
   Completer<http.Response>? heldConfig;
   List<Map<String, dynamic>> searchRows = [];
   int total = 0;
@@ -165,6 +168,62 @@ Future<_Fixture> _fixture({
 }
 
 void main() {
+  testWidgets(
+    'active NextGen search resolves stored IDs, shows excerpts, and distinguishes wrong scope and unsupported from empty',
+    (tester) async {
+      final f = await _fixture();
+      f.pages[0] = [_row('local')];
+      f.total = 1;
+      await f.model.refresh();
+      await tester.pumpWidget(f.widget);
+      final field = find.byKey(const Key('ng-session-search'));
+      Future<void> query(String text) async {
+        await tester.enterText(field, text);
+        await tester.pump(const Duration(milliseconds: 350));
+        await tester.pumpAndSettle();
+      }
+
+      f.searchRows = [
+        {
+          'session_id': 'buried',
+          'title': 'Hidden conversation',
+          'snippet': 'Found in a message',
+        },
+      ];
+      await query('message');
+      expect(find.text('Found in a message'), findsOneWidget);
+      expect(f.model.sessions.single.id, 'buried');
+      final old = f.heldSearch = Completer();
+      await tester.enterText(field, 'old');
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.enterText(field, 'local');
+      old.complete(_json({'results': f.searchRows}));
+      f.heldSearch = null;
+      await tester.pump();
+      expect(find.text('Hidden conversation'), findsNothing);
+      expect(find.text('Row local'), findsOneWidget);
+      f.searchReply = http.Response('{}', 404);
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('does not expose session search'),
+        findsOneWidget,
+      );
+      expect(find.text('Row local'), findsOneWidget);
+      f.searchReply = _json({'profile': 'different', 'results': f.searchRows});
+      await query('scoped');
+      expect(
+        find.textContaining('Unexpected message search response'),
+        findsOneWidget,
+      );
+      expect(find.text('Hidden conversation'), findsNothing);
+      f.searchReply = _json({'results': []});
+      await query('absent');
+      expect(f.model.error, isNull);
+      expect(f.model.sessions, isEmpty);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
   test(
     'chat browse requests server exclusions on the selected authenticated origin',
     () async {

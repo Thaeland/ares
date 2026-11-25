@@ -9,6 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:hermes_android/core/l10n/l10n.dart';
 
 import '../../core/models/session.dart';
+import '../../core/models/session_search_hit.dart';
+import '../../core/services/session_search_projection.dart';
+import '../../core/services/session_search_client.dart';
 import '../../core/services/dashboard_api_client.dart';
 import '../../core/utils/session_sources.dart';
 import '../../core/widgets/copy_session_id.dart';
@@ -52,6 +55,12 @@ class NgSessionsModel extends ChangeNotifier {
     _scope = value;
     _seen = null;
     _showSubagents = null;
+    _debounce?.cancel();
+    _changedDebounce?.cancel();
+    query = '';
+    error = null;
+    _browseRows = [];
+    excerpts = {};
     sessions = [];
     _serverOffset = 0;
     hasMore = false;
@@ -59,6 +68,18 @@ class NgSessionsModel extends ChangeNotifier {
   }
 
   List<Session> sessions = [];
+  List<Session> _browseRows = [];
+  Map<String, String> excerpts = {};
+
+  void _projectSearch(Iterable<SessionSearchHit> hits) {
+    final matches = projectSessionSearch(
+      _browseRows,
+      hits,
+      query,
+    ).where((h) => !h.session.isUntitledCronShell && !h.session.archived);
+    sessions = [for (final h in matches) h.session];
+    excerpts = {for (final h in matches) h.session.id: h.snippet};
+  }
 
   bool _browsingCrons = false;
   bool? _showSubagents;
@@ -240,7 +261,13 @@ class NgSessionsModel extends ChangeNotifier {
         // Search is one server-side read; it does not page.
         final page = await api.getSessionsPage(limit: _pageSize, title: query);
         if (generation != _generation) return;
-        sessions = page.sessions.where((s) => !s.isUntitledCronShell).toList();
+        _projectSearch([
+          for (final row in page.sessions)
+            SessionSearchHit(
+              session: row,
+              snippet: page.searchExcerpts[row.id] ?? '',
+            ),
+        ]);
         _serverOffset = 0;
         hasMore = false;
       } else {
@@ -280,7 +307,7 @@ class NgSessionsModel extends ChangeNotifier {
           if (visible >= _targetChats) break;
         }
         if (generation != _generation) return;
-        sessions = collected;
+        _browseRows = sessions = collected;
         _serverOffset = offset;
         hasMore = more;
       }
@@ -294,7 +321,11 @@ class NgSessionsModel extends ChangeNotifier {
       }
     } catch (e) {
       if (generation != _generation) return;
-      error = '$e'.replaceFirst('Exception: ', '');
+      error = query.isEmpty
+          ? '$e'.replaceFirst('Exception: ', '')
+          : e is SessionSearchException
+          ? e.message
+          : 'Message search unavailable. Showing local matches.';
     } finally {
       if (generation == _generation) {
         loading = false;
@@ -329,7 +360,7 @@ class NgSessionsModel extends ChangeNotifier {
             addedVisible++;
           }
         }
-        sessions = [...collected];
+        _browseRows = sessions = [...collected];
         hasMore = page.sessions.isNotEmpty && page.hasMore;
         if (!hasMore || addedVisible >= _targetChats) break;
       }
@@ -345,14 +376,28 @@ class NgSessionsModel extends ChangeNotifier {
   }
 
   void search(String value) {
+    ++_generation; // Invalidate in-flight hits before the debounce fires.
     query = value.trim();
+    error = null;
+    loading = true;
+    hasMore = false;
+    if (query.isEmpty) {
+      sessions = _browseRows;
+      excerpts = {};
+    } else {
+      _projectSearch(const []);
+    }
+    notifyListeners();
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), refresh);
   }
 
   void clearSearch() {
     _debounce?.cancel();
+    ++_generation;
     query = '';
+    sessions = _browseRows;
+    excerpts = {};
     unawaited(refresh());
   }
 
@@ -365,6 +410,7 @@ class NgSessionsModel extends ChangeNotifier {
   }
 
   void remove(String id) {
+    _browseRows.removeWhere((s) => s.id == id);
     sessions.removeWhere((s) => s.id == id);
     notifyListeners();
   }
@@ -751,7 +797,8 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
                       ],
                       if (pinned.isNotEmpty && rest.isNotEmpty)
                         NgSectionLabel(ngL.ng_recent),
-                      if (widget.model.error != null && all.isEmpty)
+                      if (widget.model.error != null &&
+                          (widget.model.query.isNotEmpty || all.isEmpty))
                         Padding(
                           padding: const EdgeInsets.all(16),
                           child: Text(
@@ -1018,18 +1065,32 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
                           ),
                         ),
                       Expanded(
-                        child: Text(
-                          ngSessionTitle(s),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: NgType.label.copyWith(
-                            color: selected || marked ? c.text : c.text2,
-                            fontWeight: marked
-                                ? FontWeight.w700
-                                : selected
-                                ? FontWeight.w600
-                                : FontWeight.w500,
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              ngSessionTitle(s),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: NgType.label.copyWith(
+                                color: selected || marked ? c.text : c.text2,
+                                fontWeight: marked
+                                    ? FontWeight.w700
+                                    : selected
+                                    ? FontWeight.w600
+                                    : FontWeight.w500,
+                              ),
+                            ),
+                            if (widget.model.excerpts[s.id] case final snippet?
+                                when snippet.isNotEmpty)
+                              Text(
+                                snippet,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: NgType.caption.copyWith(color: c.text3),
+                              ),
+                          ],
                         ),
                       ),
                       const SizedBox(width: 8),

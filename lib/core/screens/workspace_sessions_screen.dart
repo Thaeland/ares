@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../models/session.dart';
+import '../models/session_search_hit.dart';
+import '../services/session_search_client.dart';
+import '../services/session_search_projection.dart';
 import '../services/chat_pins.dart';
 import '../services/session_archive_ledger.dart';
 import '../theme/hermes_theme.dart';
@@ -418,6 +421,8 @@ class WorkspaceSessionsScreen extends StatefulWidget {
   final WorkspaceSessionView view;
   final WorkspaceSessionKind kind;
   final WorkspaceSessionsLoader load;
+  final Future<List<SessionSearchHit>> Function(String)? searchMessages;
+  final Object? searchScope;
   final WorkspaceSessionsProgressiveLoader? loadProgressively;
 
   /// [loadProgressively] minus the server-archive authority.
@@ -468,6 +473,8 @@ class WorkspaceSessionsScreen extends StatefulWidget {
     required this.view,
     this.kind = WorkspaceSessionKind.chats,
     required this.load,
+    this.searchMessages,
+    this.searchScope,
     this.loadProgressively,
     this.loadWithoutArchives,
     this.reloadActive,
@@ -499,6 +506,62 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
   bool _archivesFullyLoaded = false;
   Object? _error;
   String _query = '';
+  final _queryField = TextEditingController();
+  Timer? _searchTimer;
+  int _searchGeneration = 0,
+      _searchTitleRevision = 0,
+      _searchArchiveRevision = 0;
+  List<SessionSearchHit> _hits = const [];
+  String? _searchError;
+  bool _searching = false;
+
+  void _queryChanged(String value) {
+    final term = value.trim();
+    final request = ++_searchGeneration;
+    _searchTimer?.cancel();
+    final search = widget.searchMessages;
+    setState(() {
+      _query = term;
+      _hits = const [];
+      _searchError = null;
+      _searching = term.isNotEmpty && search != null;
+    });
+    if (term.isEmpty || search == null) return;
+    _searchTimer = Timer(const Duration(milliseconds: 300), () async {
+      _searchTitleRevision = _titleRevision;
+      _searchArchiveRevision = _archiveChanges.revision;
+      try {
+        final hits = await search(term);
+        if (!mounted || request != _searchGeneration) return;
+        setState(() {
+          _hits = hits;
+          _searching = false;
+        });
+      } catch (e) {
+        if (!mounted || request != _searchGeneration) return;
+        setState(() {
+          _searchError = e is SessionSearchException
+              ? e.message
+              : 'Message search unavailable. Showing local matches.';
+          _searching = false;
+        });
+      }
+    });
+  }
+
+  Iterable<SessionSearchHit> get _currentHits sync* {
+    for (final hit in _hits) {
+      final row = _savedPins.apply(hit.session, _searchTitleRevision);
+      final title = _savedTitles[row.id];
+      yield SessionSearchHit(
+        session: title != null && title.revision > _searchTitleRevision
+            ? row.withTitle(title.title)
+            : row,
+        snippet: hit.snippet,
+      );
+    }
+  }
+
   final Set<String> _promoting = {};
   int _projectRevision = 0;
   final _movedProjects = <String, ({int revision, String label})>{};
@@ -580,6 +643,11 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
   @override
   void didUpdateWidget(covariant WorkspaceSessionsScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.searchScope != widget.searchScope ||
+        oldWidget.kind != widget.kind) {
+      _queryField.clear();
+      _queryChanged('');
+    }
     if (!oldWidget.archiveSurfaceVisible &&
         widget.archiveSurfaceVisible &&
         _isArchivedSurface &&
@@ -657,6 +725,9 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
 
   @override
   void dispose() {
+    _queryField.dispose();
+    _searchTimer?.cancel();
+    ++_searchGeneration;
     ++_loadGeneration;
     WidgetsBinding.instance.removeObserver(this);
     _refreshTimer?.cancel();
@@ -1118,7 +1189,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
     for (final session in [...data.archivedSessions, ...data.sessions]) {
       if (session.id == id) return session;
     }
-    return null;
+    return _currentHits.where((h) => h.session.id == id).firstOrNull?.session;
   }
 
   Future<void> _rename(Session session) async {
@@ -1444,24 +1515,34 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
     List<Session> classified(List<Session> rows) => reuseClaims
         ? rows.where((s) => retainedIds.contains(s.id)).toList()
         : rows;
+    final matches = _query.isEmpty
+        ? const <SessionSearchHit>[]
+        : projectSessionSearch(unionSessions, _currentHits, _query);
+    final candidates = _query.isEmpty
+        ? unionSessions
+        : _archiveChanges.apply(
+            matches.map((h) => h.session),
+            _searchArchiveRevision,
+          );
+    final excerpts = {for (final hit in matches) hit.session.id: hit.snippet};
     final filteredSessions = widget.embedded
         ? filterChats(
-            sessions: classified(unionSessions),
+            sessions: classified(candidates),
             filter: _filter,
             kind: widget.kind,
             claimedSessionIds: data.claimedSessionIds,
             archivedQuickChatIds: data.archivedQuickChatIds,
-            query: _query,
+            query: '',
             now: _now,
             projectsKnown: data.projectsKnown || reuseClaims,
           )
         : filterWorkspaceSessions(
-            sessions: classified(unionSessions),
+            sessions: classified(candidates),
             view: widget.view,
             kind: widget.kind,
             claimedSessionIds: data.claimedSessionIds,
             archivedQuickChatIds: data.archivedQuickChatIds,
-            query: _query,
+            query: '',
             projectsKnown: data.projectsKnown || reuseClaims,
           );
 
@@ -1538,6 +1619,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
             ),
           TextField(
             key: kWorkspaceSessionSearchKey,
+            controller: _queryField,
             autofocus: widget.view == WorkspaceSessionView.search,
             decoration: InputDecoration(
               hintText: widget.kind == WorkspaceSessionKind.crons
@@ -1548,18 +1630,27 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
                   ? null
                   : IconButton(
                       tooltip: context.l10n.clear_search,
-                      onPressed: () => setState(() => _query = ''),
+                      onPressed: () {
+                        _queryField.clear();
+                        _queryChanged('');
+                      },
                       icon: const Icon(Icons.clear),
                     ),
             ),
-            onChanged: (value) => setState(() => _query = value),
+            onChanged: _queryChanged,
           ),
           if (widget.embedded) ...[
             const SizedBox(height: HermesSpacing.md),
             _buildChips(),
           ],
           const SizedBox(height: HermesSpacing.lg),
-          if (sessions.isEmpty && !scopeLoading && scopeError == null)
+          if (_searching) const LinearProgressIndicator(),
+          if (_searchError != null) Text(_searchError!),
+          if (sessions.isEmpty &&
+              !scopeLoading &&
+              scopeError == null &&
+              !_searching &&
+              _searchError == null)
             EmptyState(
               icon: _emptyIcon,
               title: _query.isEmpty
@@ -1582,7 +1673,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
               for (final session in pinnedSessions)
                 Padding(
                   padding: const EdgeInsets.only(bottom: HermesSpacing.sm),
-                  child: _buildSessionRow(session, data),
+                  child: _buildSessionRow(session, data, excerpts[session.id]),
                 ),
             ],
             for (final group in groups)
@@ -1602,7 +1693,11 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
                 for (final session in group.value)
                   Padding(
                     padding: const EdgeInsets.only(bottom: HermesSpacing.sm),
-                    child: _buildSessionRow(session, data),
+                    child: _buildSessionRow(
+                      session,
+                      data,
+                      excerpts[session.id],
+                    ),
                   ),
               ],
           ],
@@ -1640,7 +1735,11 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
     );
   }
 
-  Widget _buildSessionRow(Session session, WorkspaceSessionsData data) {
+  Widget _buildSessionRow(
+    Session session,
+    WorkspaceSessionsData data,
+    String? excerpt,
+  ) {
     final tokens = HermesTokens.of(context);
     final projectLabel = data.projectLabels[session.id];
     final isArchived =
@@ -1692,9 +1791,9 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                if (session.preview.isNotEmpty)
+                if (excerpt?.isNotEmpty == true || session.preview.isNotEmpty)
                   Text(
-                    session.preview,
+                    excerpt?.isNotEmpty == true ? excerpt! : session.preview,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: tokens.muted),

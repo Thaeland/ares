@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import '../models/client_certificate.dart';
 import '../models/session_search_hit.dart';
+import 'connection_manager.dart';
 import 'tls_client_factory.dart';
 
 /// Raised when a server-side session search cannot be completed.
@@ -79,13 +80,48 @@ class SessionSearchClient {
       throw SessionSearchException('Could not reach the dashboard: $error');
     }
 
+    return _readResponse(response, trimmed, null);
+  }
+
+  /// The active browsers borrow the selected dashboard's authenticated,
+  /// mTLS-aware transport rather than opening a second client.
+  static Future<List<SessionSearchHit>> searchDashboard(
+    DashboardClient dashboard,
+    String query, {
+    String? profile,
+    int limit = 60,
+    Duration timeout = ApiClient.requestTimeout,
+  }) async {
+    final term = query.trim();
+    if (term.isEmpty) return const [];
+    final selected = profile ?? dashboard.gatewayProfile;
+    final response = await dashboard.apiRequest(
+      'GET',
+      'sessions/search',
+      queryParameters: {
+        'q': term,
+        'limit': '${limit.clamp(1, maxLimit)}',
+        'profile': ?selected,
+      },
+      timeout: timeout,
+    );
+    return _readResponse(response, term, selected);
+  }
+
+  static List<SessionSearchHit> _readResponse(
+    http.Response response,
+    String query,
+    String? profile,
+  ) {
     if (response.statusCode == 401 || response.statusCode == 403) {
       throw const SessionSearchException(
         'The dashboard rejected the saved credentials. Check the dashboard '
         'username and password for this connection.',
       );
     }
-    if (response.statusCode == 404) {
+    if (response.statusCode == 404 ||
+        response.statusCode == 405 ||
+        response.statusCode == 501) {
       throw const SessionSearchException(
         'This dashboard does not expose session search. Update Hermes on the '
         'host, or switch back to on-device search.',
@@ -97,10 +133,14 @@ class SessionSearchClient {
       );
     }
 
-    return _decodeHits(response.body);
+    return _decodeHits(response.body, query, profile);
   }
 
-  List<SessionSearchHit> _decodeHits(String body) {
+  static List<SessionSearchHit> _decodeHits(
+    String body,
+    String query,
+    String? profile,
+  ) {
     final Object? decoded;
     try {
       decoded = jsonDecode(body);
@@ -117,7 +157,27 @@ class SessionSearchClient {
     }
 
     final results = decoded['results'];
-    if (results is! List) return const [];
+    bool wrongProfile(Map<String, dynamic> data) =>
+        data['profile'] != null && data['profile'] != (profile ?? 'default');
+    if (results is! List ||
+        wrongProfile(decoded) ||
+        [
+          decoded['q'],
+          decoded['query'],
+        ].any((echo) => echo != null && echo != query)) {
+      throw const SessionSearchException('Unexpected message search response.');
+    }
+    for (final row in results) {
+      if (row is! Map<String, dynamic> ||
+          wrongProfile(row) ||
+          (row['session_id'] ?? row['id']) is! String ||
+          ((row['session_id'] ?? row['id']) as String).trim().isEmpty ||
+          (row['id'] is String &&
+              row['session_id'] != null &&
+              row['id'] != row['session_id'])) {
+        throw const SessionSearchException('Unexpected message search result.');
+      }
+    }
 
     return results
         .whereType<Map<String, dynamic>>()
