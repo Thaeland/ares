@@ -58,24 +58,44 @@ class PopoutTarget {
   String get key => jsonEncode(toJson());
 }
 
+/// The only line a parent may send after the launch frame: the user turned
+/// off sharing chat activity. It can only take authority away.
+const workspacePopoutStopActivity = '{"share_activity":false}';
+
 /// Read precisely one small JSON frame. EOF (including parent crash), errors,
 /// and attempted renegotiation permanently revoke this child. Never rebind.
+/// After the launch frame only [workspacePopoutStopActivity] lines are
+/// accepted (each calls [onStopActivity]); any other byte revokes at once.
 Future<void> watchPopoutPipe(
   Stream<List<int>> pipe, {
   required void Function(Map<String, dynamic>) onLaunch,
   required void Function() onRevoked,
+  void Function()? onStopActivity,
 }) async {
   final bytes = <int>[];
+  final stop = utf8.encode(workspacePopoutStopActivity);
   var received = false;
   try {
     await for (final chunk in pipe) {
       for (final b in chunk) {
-        if (received || bytes.length >= 2048) return;
-        if (b == 10) {
-          received = true;
-          onLaunch(jsonDecode(utf8.decode(bytes)) as Map<String, dynamic>);
-        } else {
+        if (!received) {
+          if (bytes.length >= 2048) return;
+          if (b == 10) {
+            received = true;
+            onLaunch(jsonDecode(utf8.decode(bytes)) as Map<String, dynamic>);
+            bytes.clear();
+          } else {
+            bytes.add(b);
+          }
+        } else if (onStopActivity == null) {
+          return;
+        } else if (b == 10 && bytes.length == stop.length) {
+          bytes.clear();
+          onStopActivity();
+        } else if (bytes.length < stop.length && b == stop[bytes.length]) {
           bytes.add(b);
+        } else {
+          return;
         }
       }
     }

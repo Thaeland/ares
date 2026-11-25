@@ -20,6 +20,7 @@ import '../services/connection_manager.dart';
 import '../services/desktop_gateway_client.dart';
 import '../services/hermes_sign_in.dart';
 import '../services/locale_preference.dart';
+import '../services/notification_prefs.dart';
 import '../services/theme_preference.dart';
 import '../services/turn_notification_service.dart';
 import '../theme/hermes_theme.dart';
@@ -35,6 +36,7 @@ void runWorkspacePopoutChild(List<String> args) {
     exit(1);
   }
   final timeout = Timer(const Duration(seconds: 45), () => exit(1));
+  var activityStopped = false;
   runApp(
     const MaterialApp(
       home: Scaffold(body: Center(child: CircularProgressIndicator())),
@@ -63,6 +65,10 @@ void runWorkspacePopoutChild(List<String> args) {
             throw StateError('No private cache');
           }
           final app = await preparePopout(target, nonce, proof, directory);
+          // An opt-out that arrived while the copied preference loaded wins.
+          if (activityStopped) {
+            await NotificationPrefsStore.setShareWindowActivity(false);
+          }
           timeout.cancel();
           runApp(app);
           WidgetsBinding.instance.addPostFrameCallback(
@@ -75,11 +81,15 @@ void runWorkspacePopoutChild(List<String> args) {
         }
       },
       onRevoked: () => exit(0),
+      onStopActivity: () {
+        activityStopped = true;
+        unawaited(NotificationPrefsStore.setShareWindowActivity(false));
+      },
     ),
   );
 }
 
-const _appearanceKeys = {
+const _carriedKeys = {
   LocalePreference.key,
   ThemePreferenceStore.modeKey,
   ThemePreferenceStore.paletteKey,
@@ -87,10 +97,14 @@ const _appearanceKeys = {
   NextGenPreferences.accentKey,
   NextGenPreferences.pureBlackKey,
   NextGenPreferences.glowKey,
+  // Device-local notification choices (no secrets): the chat-activity
+  // opt-in, reply kinds and the completion sound. The parent can only turn
+  // activity sharing off afterwards ([workspacePopoutStopActivity]).
+  NotificationPrefsStore.storageKey,
 };
 
-/// Only the selected sanitized metadata row and cosmetic preferences enter
-/// the child store. Existing transcripts, composer drafts and write-ahead
+/// Only the selected sanitized metadata row, cosmetic preferences and the
+/// notification choices enter the child store. Existing transcripts, composer drafts and write-ahead
 /// markers are neither imported nor overwritten by a second process.
 Map<String, Object> popoutPreferences(
   Map<String, Object> source,
@@ -112,7 +126,7 @@ Map<String, Object> popoutPreferences(
   }
   return {
     savedKey: <String>[jsonEncode(row)],
-    for (final key in _appearanceKeys)
+    for (final key in _carriedKeys)
       if (source.containsKey('flutter.$key'))
         'flutter.$key': source['flutter.$key']!,
   };
@@ -151,7 +165,7 @@ Future<Widget> preparePopout(
             prefix: 'flutter.',
             allowList: {
               'flutter.saved_connections',
-              for (final key in _appearanceKeys) 'flutter.$key',
+              for (final key in _carriedKeys) 'flutter.$key',
             },
           ),
         ),
@@ -175,6 +189,9 @@ Future<Widget> preparePopout(
     PathProviderPlatform.instance,
   );
   NextGenPreferences.load(prefs);
+  // The child reports chat activity through its own socket, under the same
+  // opt-in as the main window.
+  await NotificationPrefsStore.load();
   final gateway = target.nextGen ? NextGenGateway(connection) : null;
   final api = gateway?.api ?? ApiClient.forConnection(connection);
   late Session session;

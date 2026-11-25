@@ -11,6 +11,7 @@ import '../../nextgen/nextgen_preferences.dart';
 import '../screens/parallel_workspace_entry.dart';
 import '../services/connection_mutation_barrier.dart';
 import '../services/hermes_sign_in.dart';
+import '../services/notification_prefs.dart';
 import 'popout_owner.dart';
 import 'popout_protocol.dart';
 
@@ -24,6 +25,31 @@ bool get supportsWorkspacePopout =>
     };
 
 final _openTargets = <String>{};
+
+/// Tells a launched pop-out whenever sharing chat activity is off, so an
+/// opt-out reaches open windows at once. Returns the remover. The child copied
+/// the preference at launch; this line can only take authority away.
+@visibleForTesting
+VoidCallback forwardActivityOptOut(IOSink stdin) {
+  var told = false;
+  void sync() {
+    if (notificationPrefs.value.shareWindowActivity) {
+      told = false;
+      return;
+    }
+    if (told) return;
+    told = true;
+    try {
+      stdin.writeln(workspacePopoutStopActivity);
+    } on Object {
+      // The child has exited; its reports ended with it.
+    }
+  }
+
+  notificationPrefs.addListener(sync);
+  sync();
+  return () => notificationPrefs.removeListener(sync);
+}
 
 /// Opens only from the keyed workspace entry. A launched child has no root
 /// navigator, connection chooser or durable app-state writer. No shell, URI
@@ -92,6 +118,7 @@ Future<void> _openNative(
   Process? child;
   var retired = false;
   var listening = true;
+  VoidCallback? stopForwarding;
   final ready = Completer<bool>();
   void retire() {
     retired = true;
@@ -127,6 +154,8 @@ Future<void> _openNative(
 
   void detach() {
     listening = false;
+    stopForwarding?.call();
+    stopForwarding = null;
     _openTargets.remove(target.key);
     ConnectionMutationBarrier.removeListener(check);
     HermesSignInVault.instance.removeListener(checkCredentials);
@@ -188,6 +217,7 @@ Future<void> _openNative(
       jsonEncode({'target': target.toJson(), 'nonce': nonce, 'proof': proof}),
     );
     await process.stdin.flush(); // Keep the pipe open until exit.
+    if (listening) stopForwarding = forwardActivityOptOut(process.stdin);
     final ok = await ready.future.timeout(
       const Duration(seconds: 45),
       onTimeout: () => false,
