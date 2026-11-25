@@ -12,28 +12,34 @@ class AppLocalizationsUk extends AppLocalizations {
   String get workspace_workers => 'Активні субагенти';
 
   @override
-  String get workers_unattached => 'Показано лише кількість. Щоб дати вказівку, виберіть «Активні субагенти» в підключеному батьківському чаті.';
+  String get workers_unattached =>
+      'Показано лише кількість. Щоб дати вказівку, виберіть «Активні субагенти» в підключеному батьківському чаті.';
 
   @override
-  String get slash_local_arguments => 'Цей ярлик тут не підтримує аргументи. Скористайтеся елементами керування застосунку; чернетку збережено.';
+  String get slash_local_arguments =>
+      'Цей ярлик тут не підтримує аргументи. Скористайтеся елементами керування застосунку; чернетку збережено.';
 
   @override
   String get fallback_title => 'Резервні моделі';
 
   @override
-  String get fallback_notice => 'Використовуються по черзі, коли основна модель недоступна. Зміни застосовуються лише до цього профілю; збережіть повний список явно.';
+  String get fallback_notice =>
+      'Використовуються по черзі, коли основна модель недоступна. Зміни застосовуються лише до цього профілю; збережіть повний список явно.';
 
   @override
-  String get fallback_unavailable => 'Параметри резерву недоступні або недійсні. Перевірте з’єднання, вибраний профіль і версію хоста, потім повторіть спробу.';
+  String get fallback_unavailable =>
+      'Параметри резерву недоступні або недійсні. Перевірте з’єднання, вибраний профіль і версію хоста, потім повторіть спробу.';
 
   @override
-  String get fallback_discovery_unavailable => 'Виявлення провайдерів недоступне. Наявні записи збережено; повторіть спробу, щоб вибрати провайдерів і моделі.';
+  String get fallback_discovery_unavailable =>
+      'Виявлення провайдерів недоступне. Наявні записи збережено; повторіть спробу, щоб вибрати провайдерів і моделі.';
 
   @override
   String get fallback_empty => 'У цьому списку резерву немає записів.';
 
   @override
-  String get fallback_incomplete => 'Виберіть провайдера і модель для кожного запису або видаліть незавершені записи перед збереженням.';
+  String get fallback_incomplete =>
+      'Виберіть провайдера і модель для кожного запису або видаліть незавершені записи перед збереженням.';
 
   @override
   String get fallback_add => 'Додати резерв';
@@ -42,7 +48,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get fallback_save => 'Зберегти список резерву';
 
   @override
-  String get fallback_save_failed => 'Не вдалося перевірити збережений список резерву. Ваш чернетку збережено. Повторіть спробу збереження або оновіть, щоб перезавантажити параметри хоста.';
+  String get fallback_save_failed =>
+      'Не вдалося перевірити збережений список резерву. Ваш чернетку збережено. Повторіть спробу збереження або оновіть, щоб перезавантажити параметри хоста.';
 
   @override
   String get fallback_saved => 'Список резерву збережено і перевірено.';
@@ -51,7 +58,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get fallback_legacy_title => 'Застарілі резерви (лише для читання)';
 
   @override
-  String get fallback_legacy_notice => 'Хост також використовує fallback_model після цього списку, пропускаючи дублікати маршрутів. Ці застарілі записи зберігаються, навіть коли список вище порожній. Редагуйте їх на хості.';
+  String get fallback_legacy_notice =>
+      'Хост також використовує fallback_model після цього списку, пропускаючи дублікати маршрутів. Ці застарілі записи зберігаються, навіть коли список вище порожній. Редагуйте їх на хості.';
 
   @override
   String fallback_priority(String position) {
@@ -65,19 +73,23 @@ class AppLocalizationsUk extends AppLocalizations {
   String get fallback_move_down => 'Перемістити вниз';
 
   @override
-  String get fallback_routing_read_only => 'Деталі маршрутизації або неперерахований провайдер зберігаються. Редагуйте цього провайдера/модель на хості; ви все ще можете перевпорядкувати або видалити запис.';
+  String get fallback_routing_read_only =>
+      'Деталі маршрутизації або неперерахований провайдер зберігаються. Редагуйте цього провайдера/модель на хості; ви все ще можете перевпорядкувати або видалити запис.';
 
   @override
   String get cron_model_default => 'За замовчуванням';
 
   @override
-  String get cron_model_notice => 'Лише для цього завдання за розкладом. Без закріпленої моделі Hermes використовує типову модель розкладу, а потім основну. Власними моделями керуйте на сервері.';
+  String get cron_model_notice =>
+      'Лише для цього завдання за розкладом. Без закріпленої моделі Hermes використовує типову модель розкладу, а потім основну. Власними моделями керуйте на сервері.';
 
   @override
-  String get model_management_unavailable => 'Не вдалося завантажити або зберегти налаштування моделей. Оновіть і спробуйте ще раз.';
+  String get model_management_unavailable =>
+      'Не вдалося завантажити або зберегти налаштування моделей. Оновіть і спробуйте ще раз.';
 
   @override
-  String get model_management_subtitle => 'Основна та допоміжні моделі цього профілю';
+  String get model_management_subtitle =>
+      'Основна та допоміжні моделі цього профілю';
 
   @override
   String get usage => 'Використання';
@@ -89,13 +101,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get portal_menu_subtitle => 'Стан шлюзу й облік використання';
 
   @override
-  String get portal_read_only => 'Дані шлюзу доступні лише для читання. Входом до Nous керуйте на сервері Hermes. Ці запити не надають залишок передплати чи кредитів.';
+  String get portal_read_only =>
+      'Дані шлюзу доступні лише для читання. Входом до Nous керуйте на сервері Hermes. Ці запити не надають залишок передплати чи кредитів.';
 
   @override
   String get portal_status => 'Стан порталу шлюзу';
 
   @override
-  String get portal_free_tier => 'Безкоштовний доступ без входу в обліковий запис';
+  String get portal_free_tier =>
+      'Безкоштовний доступ без входу в обліковий запис';
 
   @override
   String get portal_signed_in => 'Вхід виконано';
@@ -110,7 +124,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get portal_recorded_usage => 'Облік використання';
 
   @override
-  String get portal_all_providers => 'Усі провайдери вибраного профілю шлюзу. Нульова записана вартість не означає, що модель безкоштовна.';
+  String get portal_all_providers =>
+      'Усі провайдери вибраного профілю шлюзу. Нульова записана вартість не означає, що модель безкоштовна.';
 
   @override
   String portal_period(String days) {
@@ -139,10 +154,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get portal_no_models => 'Записів про моделі немає.';
 
   @override
-  String get portal_unavailable => 'Недоступно. Перевірте підключення, вибраний профіль і версію шлюзу та повторіть спробу.';
+  String get portal_unavailable =>
+      'Недоступно. Перевірте підключення, вибраний профіль і версію шлюзу та повторіть спробу.';
 
   @override
-  String get paste_attachment_failed_text_kept => 'Не вдалося додати вставлений текст як вкладення. Текст залишено в повідомленні.';
+  String get paste_attachment_failed_text_kept =>
+      'Не вдалося додати вставлений текст як вкладення. Текст залишено в повідомленні.';
 
   @override
   String get background_task_report => 'Фонове завдання';
@@ -151,7 +168,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get background_process_report => 'Фоновий процес';
 
   @override
-  String get background_report_issues => 'Виявлено проблеми — розгорніть подробиці.';
+  String get background_report_issues =>
+      'Виявлено проблеми — розгорніть подробиці.';
 
   @override
   String get background_report_expand => 'Розгорнути звіт';
@@ -175,13 +193,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get setup_interface_nextgen => 'NextGen';
 
   @override
-  String get setup_interface_classic_description => 'Початковий робочий простір Ares з усіма елементами керування підключенням та налаштуваннями Classic.';
+  String get setup_interface_classic_description =>
+      'Початковий робочий простір Ares з усіма елементами керування підключенням та налаштуваннями Classic.';
 
   @override
-  String get setup_interface_nextgen_description => 'Новий вигляд з одним входом до панелі, планами в реальному часі, субагентами та сповіщеннями.';
+  String get setup_interface_nextgen_description =>
+      'Новий вигляд з одним входом до панелі, планами в реальному часі, субагентами та сповіщеннями.';
 
   @override
-  String get setup_interface_switch_later => 'Перемкнутися можна будь-коли в Налаштуваннях.';
+  String get setup_interface_switch_later =>
+      'Перемкнутися можна будь-коли в Налаштуваннях.';
 
   @override
   String get ng_confirm_model_switch => 'Змінити модель?';
@@ -190,7 +211,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_switch => 'Змінити';
 
   @override
-  String get ng_model_confirmation_required => 'Перед вибором цієї моделі потрібне підтвердження.';
+  String get ng_model_confirmation_required =>
+      'Перед вибором цієї моделі потрібне підтвердження.';
 
   @override
   String ng_model_switches_next_turn(String model) {
@@ -198,7 +220,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_model_switch_not_connected => 'Чат ще не готовий до зміни моделі. Відкрийте його знову та повторіть спробу.';
+  String get ng_model_switch_not_connected =>
+      'Чат ще не готовий до зміни моделі. Відкрийте його знову та повторіть спробу.';
 
   @override
   String ng_gateway_kept_default_model(String model) {
@@ -246,34 +269,43 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get hands_free_short_disclosure => 'Лише поки цей чат відкритий на екрані. Активація працює локально; розпізнавання мовлення може використовувати мережу. Витрачає заряд.';
+  String get hands_free_short_disclosure =>
+      'Лише поки цей чат відкритий на екрані. Активація працює локально; розпізнавання мовлення може використовувати мережу. Витрачає заряд.';
 
   @override
-  String get hands_free_error_action => 'Перевірте дозвіл мікрофона, службу розпізнавання, голос відповідей і підключення. Для повторної спроби натисніть «Зупинити», а потім «Почати». Повторного надсилання немає.';
+  String get hands_free_error_action =>
+      'Перевірте дозвіл мікрофона, службу розпізнавання, голос відповідей і підключення. Для повторної спроби натисніть «Зупинити», а потім «Почати». Повторного надсилання немає.';
 
   @override
-  String get hands_free_disclosure => 'Активація голосом працює локально на процесорі. Розпізнавання Android, вибраний голос відповіді та шлюз можуть використовувати мережу. Слухання витрачає заряд; можливі хибні спрацювання. Зупиняється, коли чат перекритий, закритий або застосунок у фоні; повторне відкриття не запускає його. Звичайне диктування залишається редагованою чернеткою.';
+  String get hands_free_disclosure =>
+      'Активація голосом працює локально на процесорі. Розпізнавання Android, вибраний голос відповіді та шлюз можуть використовувати мережу. Слухання витрачає заряд; можливі хибні спрацювання. Зупиняється, коли чат перекритий, закритий або застосунок у фоні; повторне відкриття не запускає його. Звичайне диктування залишається редагованою чернеткою.';
 
   @override
-  String get hands_free_ready_cue => 'Скажіть «Hey Hermes», дочекайтеся «Готово — говоріть» і починайте. Початок фрази до сигналу не записується. Якщо для дозволів довелося вийти із застосунку, після повернення знову натисніть «Почати».';
+  String get hands_free_ready_cue =>
+      'Скажіть «Hey Hermes», дочекайтеся «Готово — говоріть» і починайте. Початок фрази до сигналу не записується. Якщо для дозволів довелося вийти із застосунку, після повернення знову натисніть «Почати».';
 
   @override
   String get hands_free_settings_title => 'Голосове керування без рук';
 
   @override
-  String get hands_free_settings_subtitle => 'Показувати кнопку запуску «Hey Hermes» у чатах. Вимкнення зупиняє поточне голосове керування.';
+  String get hands_free_settings_subtitle =>
+      'Показувати кнопку запуску «Hey Hermes» у чатах. Вимкнення зупиняє поточне голосове керування.';
 
   @override
-  String get hands_free_timing_limit => 'Час для продовження — максимальний, а не мінімальний. Android може завершити запис раніше. Після тиші повертається локальне очікування активації без повторних запусків розпізнавання.';
+  String get hands_free_timing_limit =>
+      'Час для продовження — максимальний, а не мінімальний. Android може завершити запис раніше. Після тиші повертається локальне очікування активації без повторних запусків розпізнавання.';
 
   @override
-  String get hands_free_followup_off => 'Продовження вимкнено — кажіть Hey Hermes перед кожним запитом';
+  String get hands_free_followup_off =>
+      'Продовження вимкнено — кажіть Hey Hermes перед кожним запитом';
 
   @override
-  String get hands_free_start_blocked => 'Для запуску потрібні порожня чернетка, відсутність вкладень, підключений вільний чат і ввімкнені голосові відповіді. Спершу завершіть ручний запис.';
+  String get hands_free_start_blocked =>
+      'Для запуску потрібні порожня чернетка, відсутність вкладень, підключений вільний чат і ввімкнені голосові відповіді. Спершу завершіть ручний запис.';
 
   @override
-  String get hands_free_setup_complete => 'Мікрофон налаштовано. Знову натисніть «Почати».';
+  String get hands_free_setup_complete =>
+      'Мікрофон налаштовано. Знову натисніть «Почати».';
 
   @override
   String message_time_recorded(String time) {
@@ -294,13 +326,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get stop_and_send => 'Зупинити й надіслати';
 
   @override
-  String get message_queued_for_running_turn => 'Повідомлення додано в чергу поточного запуску.';
+  String get message_queued_for_running_turn =>
+      'Повідомлення додано в чергу поточного запуску.';
 
   @override
-  String get running_message_not_accepted => 'Hermes не зміг прийняти повідомлення. Чернетку збережено; зупиніть відповідь або дочекайтеся завершення й надішліть знову.';
+  String get running_message_not_accepted =>
+      'Hermes не зміг прийняти повідомлення. Чернетку збережено; зупиніть відповідь або дочекайтеся завершення й надішліть знову.';
 
   @override
-  String get running_message_delivery_unknown => 'Не вдалося підтвердити доставку. Чернетку збережено. Перед повторним надсиланням перевірте чат.';
+  String get running_message_delivery_unknown =>
+      'Не вдалося підтвердити доставку. Чернетку збережено. Перед повторним надсиланням перевірте чат.';
 
   @override
   String get attachment_tap_to_preview => 'Торкніться для перегляду';
@@ -318,31 +353,40 @@ class AppLocalizationsUk extends AppLocalizations {
   String get attachment_save_cancelled => 'Збереження скасовано';
 
   @override
-  String get attachment_save_failed => 'Не вдалося зберегти файл. Спробуйте ще раз.';
+  String get attachment_save_failed =>
+      'Не вдалося зберегти файл. Спробуйте ще раз.';
 
   @override
-  String get attachment_share_failed => 'Не вдалося поділитися файлом. Спробуйте ще раз.';
+  String get attachment_share_failed =>
+      'Не вдалося поділитися файлом. Спробуйте ще раз.';
 
   @override
-  String get attachment_download_failed => 'Не вдалося завантажити файл. Перевірте підключення й повторіть спробу.';
+  String get attachment_download_failed =>
+      'Не вдалося завантажити файл. Перевірте підключення й повторіть спробу.';
 
   @override
-  String get attachment_no_inline_preview => 'Для цього типу файлу попередній перегляд недоступний. Збережіть оригінал або поділіться ним, щоб відкрити в іншому застосунку.';
+  String get attachment_no_inline_preview =>
+      'Для цього типу файлу попередній перегляд недоступний. Збережіть оригінал або поділіться ним, щоб відкрити в іншому застосунку.';
 
   @override
-  String get attachment_image_failed => 'Не вдалося прочитати зображення. Ви можете зберегти оригінал або поділитися ним.';
+  String get attachment_image_failed =>
+      'Не вдалося прочитати зображення. Ви можете зберегти оригінал або поділитися ним.';
 
   @override
-  String get attachment_text_truncated => 'Перегляд скорочено. Збережіть файл або поділіться ним, щоб прочитати повністю.';
+  String get attachment_text_truncated =>
+      'Перегляд скорочено. Збережіть файл або поділіться ним, щоб прочитати повністю.';
 
   @override
-  String get attachment_text_unavailable => 'Не вдалося показати файл як текст. Збережіть оригінал або поділіться ним.';
+  String get attachment_text_unavailable =>
+      'Не вдалося показати файл як текст. Збережіть оригінал або поділіться ним.';
 
   @override
-  String get attachment_pdf_failed => 'Не вдалося показати PDF. Збережіть оригінал або поділіться ним.';
+  String get attachment_pdf_failed =>
+      'Не вдалося показати PDF. Збережіть оригінал або поділіться ним.';
 
   @override
-  String get attachment_pdf_unavailable => 'Попередній перегляд PDF доступний на Android. Ви можете зберегти цей файл або поділитися ним.';
+  String get attachment_pdf_unavailable =>
+      'Попередній перегляд PDF доступний на Android. Ви можете зберегти цей файл або поділитися ним.';
 
   @override
   String attachment_pdf_page(int page, int total) {
@@ -359,16 +403,20 @@ class AppLocalizationsUk extends AppLocalizations {
   String get attachment_loading => 'Завантаження перегляду…';
 
   @override
-  String get attachment_document_text_notice => 'Текстовий перегляд. Розташування, зображення та форматування можуть відрізнятися від оригіналу.';
+  String get attachment_document_text_notice =>
+      'Текстовий перегляд. Розташування, зображення та форматування можуть відрізнятися від оригіналу.';
 
   @override
-  String get attachment_document_failed => 'Не вдалося показати документ. Збережіть оригінал або поділіться ним.';
+  String get attachment_document_failed =>
+      'Не вдалося показати документ. Збережіть оригінал або поділіться ним.';
 
   @override
-  String get attachment_document_empty => 'У документі не знайдено читабельного тексту.';
+  String get attachment_document_empty =>
+      'У документі не знайдено читабельного тексту.';
 
   @override
-  String get attachment_video_failed => 'Не вдалося відтворити відео. Формат або кодек може не підтримуватися. Збережіть оригінал або поділіться ним.';
+  String get attachment_video_failed =>
+      'Не вдалося відтворити відео. Формат або кодек може не підтримуватися. Збережіть оригінал або поділіться ним.';
 
   @override
   String get attachment_video_play => 'Відтворити';
@@ -395,13 +443,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get saved_history_heading => 'Збережена історія';
 
   @override
-  String get received_output_heading => 'Отримана відповідь — збіг зі збереженою історією не підтверджено';
+  String get received_output_heading =>
+      'Отримана відповідь — збіг зі збереженою історією не підтверджено';
 
   @override
   String get received_output_details => 'Про отриману відповідь';
 
   @override
-  String get received_output_explanation => 'Це також може бути у збереженій історії. Застосунок не може підтвердити збіг.';
+  String get received_output_explanation =>
+      'Це також може бути у збереженій історії. Застосунок не може підтвердити збіг.';
 
   @override
   String get local_prompt_context => 'Локальний контекст запиту';
@@ -410,7 +460,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get received_output_badge => 'Отримано · збіг не підтверджено';
 
   @override
-  String get received_output_lifetime => 'Отримана відповідь тимчасово зберігається в цій сесії застосунку. Після досягнення обмежень її можуть скоротити або видалити. Після закриття застосунку чи підключення вона може бути недоступною.';
+  String get received_output_lifetime =>
+      'Отримана відповідь тимчасово зберігається в цій сесії застосунку. Після досягнення обмежень її можуть скоротити або видалити. Після закриття застосунку чи підключення вона може бути недоступною.';
 
   @override
   String get theme_palette => 'Колірна тема';
@@ -446,16 +497,20 @@ class AppLocalizationsUk extends AppLocalizations {
   String get theme_palette_cyan => 'Блакитна';
 
   @override
-  String get assets_recent_subtitle => 'Файли, якими Hermes поділився у збережених чатах';
+  String get assets_recent_subtitle =>
+      'Файли, якими Hermes поділився у збережених чатах';
 
   @override
-  String get assets_scope_notice => 'Створені файли, на які Hermes явно послався у збережених відповідях. Це частковий перегляд історії, а не повний каталог файлів чи вкладень. Файли за посиланнями вже можуть не існувати.';
+  String get assets_scope_notice =>
+      'Створені файли, на які Hermes явно послався у збережених відповідях. Це частковий перегляд історії, а не повний каталог файлів чи вкладень. Файли за посиланнями вже можуть не існувати.';
 
   @override
-  String get assets_download_limit => 'Файли завантажуються лише після натискання. Межа перегляду й завантаження — 25 МіБ на файл; для більших файлів використовуйте вебпанель.';
+  String get assets_download_limit =>
+      'Файли завантажуються лише після натискання. Межа перегляду й завантаження — 25 МіБ на файл; для більших файлів використовуйте вебпанель.';
 
   @override
-  String get assets_search_hint => 'Пошук серед знайдених файлів і чатів-джерел';
+  String get assets_search_hint =>
+      'Пошук серед знайдених файлів і чатів-джерел';
 
   @override
   String get assets_all => 'Усі';
@@ -476,7 +531,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get assets_empty => 'У перевірених повідомленнях файлів не знайдено';
 
   @override
-  String get assets_empty_detail => 'Перевірте більше чатів або старіші повідомлення. Звичайні вкладення й файли без посилань тут не індексуються.';
+  String get assets_empty_detail =>
+      'Перевірте більше чатів або старіші повідомлення. Звичайні вкладення й файли без посилань тут не індексуються.';
 
   @override
   String get assets_no_matches => 'Відповідних файлів немає';
@@ -488,13 +544,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get assets_load_older_messages => 'Перевірити старіші повідомлення';
 
   @override
-  String get assets_load_failed => 'Частину історії не вдалося прочитати. Результати неповні. Перевірте підключення до вебпанелі й повторіть спробу.';
+  String get assets_load_failed =>
+      'Частину історії не вдалося прочитати. Результати неповні. Перевірте підключення до вебпанелі й повторіть спробу.';
 
   @override
   String get assets_retry_failed => 'Повторити невдалі читання історії';
 
   @override
-  String get assets_partial => 'Сервер повідомив про неповну історію. Перевірте вебпанель і оновіть.';
+  String get assets_partial =>
+      'Сервер повідомив про неповну історію. Перевірте вебпанель і оновіть.';
 
   @override
   String assets_scan_summary(int files, int chats) {
@@ -507,10 +565,12 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get assets_file_too_large => 'Файл перевищує межу завантаження. Відкрийте вебпанель, щоб завантажити його.';
+  String get assets_file_too_large =>
+      'Файл перевищує межу завантаження. Відкрийте вебпанель, щоб завантажити його.';
 
   @override
-  String get a_one_off_question_archives_itself_after_72_hours_anything => 'Разове запитання. Через 72 години чат автоматично архівується; важливе залишається в пам’яті.';
+  String get a_one_off_question_archives_itself_after_72_hours_anything =>
+      'Разове запитання. Через 72 години чат автоматично архівується; важливе залишається в пам’яті.';
 
   @override
   String get archive_chat => 'Архівувати чат';
@@ -550,7 +610,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get api_key => 'Ключ API';
 
   @override
-  String get api_server_key_from_hermes_env => 'API_SERVER_KEY із ~/.hermes/.env';
+  String get api_server_key_from_hermes_env =>
+      'API_SERVER_KEY із ~/.hermes/.env';
 
   @override
   String get active => 'Активний';
@@ -559,7 +620,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get activity => 'Активність';
 
   @override
-  String get activity_reads_the_durable_turn_journal_to_know_what_hermes => 'Вкладка активності читає збережений журнал ходів, щоб показувати роботу Hermes. Перевірте доступність шлюзу й повторіть спробу.';
+  String get activity_reads_the_durable_turn_journal_to_know_what_hermes =>
+      'Вкладка активності читає збережений журнал ходів, щоб показувати роботу Hermes. Перевірте доступність шлюзу й повторіть спробу.';
 
   @override
   String get add => 'Додати';
@@ -574,7 +636,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get add_gateway_connection => 'Додати підключення до шлюзу';
 
   @override
-  String get add_and_update_connections_from_the_backup_keep_the_rest => 'Додати й оновити підключення з резервної копії, решту залишити.';
+  String get add_and_update_connections_from_the_backup_keep_the_rest =>
+      'Додати й оновити підключення з резервної копії, решту залишити.';
 
   @override
   String get add_attachment => 'Додати вкладення';
@@ -595,10 +658,19 @@ class AppLocalizationsUk extends AppLocalizations {
   String get allow_for_this_session => 'Дозволити на цю сесію';
 
   @override
-  String get allow_matching_commands_until_this_hermes_session_ends => 'Дозволяти відповідні команди до завершення цієї сесії Hermes.';
+  String get allow_matching_commands_until_this_hermes_session_ends =>
+      'Дозволяти відповідні команди до завершення цієї сесії Hermes.';
+
+  @override
+  String get allow_folder_until_sandbox_off =>
+      'Allow this folder until the sandbox is switched off.';
 
   @override
   String get allow_once => 'Дозволити один раз';
+
+  @override
+  String get allow_website_until_sandbox_off =>
+      'Allow this website until the sandbox is switched off.';
 
   @override
   String get always_allow => 'Завжди дозволяти';
@@ -610,7 +682,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get approval_needed => 'Потрібне підтвердження';
 
   @override
-  String get approval_needed_description => 'Команда очікує вашого дозволу або відмови.';
+  String get approval_needed_description =>
+      'Команда очікує вашого дозволу або відмови.';
 
   @override
   String get approve => 'Дозволити';
@@ -635,13 +708,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get archived => 'Архів';
 
   @override
-  String get archived_conversations_appear_here => 'Тут лише архівні розмови. Старіші чати залишаються в розділі «Усі чати».';
+  String get archived_conversations_appear_here =>
+      'Тут лише архівні розмови. Старіші чати залишаються в розділі «Усі чати».';
 
   @override
   String get archived_quick_chats => 'Архівні швидкі чати';
 
   @override
-  String get artifacts_attachments_and_generated_media => 'Артефакти, вкладення та створені медіафайли';
+  String get artifacts_attachments_and_generated_media =>
+      'Артефакти, вкладення та створені медіафайли';
 
   @override
   String get ask_ai_to_find_a_conversation => 'Попросити ШІ знайти розмову';
@@ -650,7 +725,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get assets => 'Файли';
 
   @override
-  String get assets_need_a_server_authoritative_assets_index_in_the_hermes => 'Для показу файлів за проєктами потрібен серверний індекс файлів у шлюзі Hermes.';
+  String get assets_need_a_server_authoritative_assets_index_in_the_hermes =>
+      'Для показу файлів за проєктами потрібен серверний індекс файлів у шлюзі Hermes.';
 
   @override
   String get assets_unavailable => 'Файли недоступні';
@@ -668,10 +744,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get undo_draft_recovery => 'Скасувати';
 
   @override
-  String get draft_session_exists => 'Цей чат ще існує. Відкрийте його, щоб продовжити роботу з чернеткою.';
+  String get draft_session_exists =>
+      'Цей чат ще існує. Відкрийте його, щоб продовжити роботу з чернеткою.';
 
   @override
-  String get draft_recovery_unavailable => 'Не вдалося перевірити чернетку. Нічого не змінено.';
+  String get draft_recovery_unavailable =>
+      'Не вдалося перевірити чернетку. Нічого не змінено.';
 
   @override
   String attachment_of(Object index, Object total) {
@@ -688,13 +766,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get autonomous_agents => 'Автономні агенти';
 
   @override
-  String get background_recovery_unavailable_legacy_transport => 'Фонове відновлення недоступне — застаріле підключення';
+  String get background_recovery_unavailable_legacy_transport =>
+      'Фонове відновлення недоступне — застаріле підключення';
 
   @override
   String get background_task_completed => 'Фонове завдання завершено';
 
   @override
-  String get background_task_completed_description => 'Фонова команда термінала завершилася.';
+  String get background_task_completed_description =>
+      'Фонова команда термінала завершилася.';
 
   @override
   String get backup_restore => 'Резервна копія та відновлення';
@@ -708,7 +788,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get base_url => 'Базова адреса';
 
   @override
-  String get binary_preview_is_unavailable_download_the_file_to_open_it => 'Попередній перегляд двійкових файлів недоступний. Завантажте файл, щоб відкрити його.';
+  String get binary_preview_is_unavailable_download_the_file_to_open_it =>
+      'Попередній перегляд двійкових файлів недоступний. Завантажте файл, щоб відкрити його.';
 
   @override
   String get branch => 'Гілка';
@@ -717,16 +798,19 @@ class AppLocalizationsUk extends AppLocalizations {
   String get branch_chat => 'Створити відгалуження чату';
 
   @override
-  String get branch_created_in_hermes_history => 'Відгалуження створено в історії Hermes.';
+  String get branch_created_in_hermes_history =>
+      'Відгалуження створено в історії Hermes.';
 
   @override
-  String get browse_and_manage_your_hermes_agent_sessions_from_your_phone => 'Переглядайте сесії Hermes Agent і керуйте ними з телефона. Підключається до вебпанелі Hermes у вашій локальній мережі.';
+  String get browse_and_manage_your_hermes_agent_sessions_from_your_phone =>
+      'Переглядайте сесії Hermes Agent і керуйте ними з телефона. Підключається до вебпанелі Hermes у вашій локальній мережі.';
 
   @override
   String get browse_server_files => 'Перегляд файлів сервера';
 
   @override
-  String get browse_the_miniserver_folders_behind_your_projects => 'Переглядайте серверні папки ваших проєктів';
+  String get browse_the_miniserver_folders_behind_your_projects =>
+      'Переглядайте серверні папки ваших проєктів';
 
   @override
   String get cancel => 'Скасувати';
@@ -759,31 +843,40 @@ class AppLocalizationsUk extends AppLocalizations {
   String get chats => 'Чати';
 
   @override
-  String get chats_from_this_gateway_are_not_grouped_yet_grouping_stays => 'Чати цього шлюзу ще не згруповані. Групування залишатиметься на телефоні, доки шлюз не підтримуватиме проєкти.';
+  String get chats_from_this_gateway_are_not_grouped_yet_grouping_stays =>
+      'Чати цього шлюзу ще не згруповані. Групування залишатиметься на телефоні, доки шлюз не підтримуватиме проєкти.';
 
   @override
-  String get chats_in_this_project_will_show_their_state_and_last => 'Тут відображатимуться стан і остання активність чатів цього проєкту.';
+  String get chats_in_this_project_will_show_their_state_and_last =>
+      'Тут відображатимуться стан і остання активність чатів цього проєкту.';
 
   @override
-  String get chats_that_are_not_assigned_to_a_project => 'Чати, що не належать до жодного проєкту';
+  String get chats_that_are_not_assigned_to_a_project =>
+      'Чати, що не належать до жодного проєкту';
 
   @override
-  String get chats_you_start_in_this_project_will_appear_here_on => 'Створені в цьому проєкті чати відображатимуться тут на всіх пристроях, підключених до цього Hermes.';
+  String get chats_you_start_in_this_project_will_appear_here_on =>
+      'Створені в цьому проєкті чати відображатимуться тут на всіх пристроях, підключених до цього Hermes.';
 
   @override
-  String get check_that_the_gateway_is_running_and_reachable_then_try => 'Перевірте, чи шлюз запущений і доступний, та повторіть спробу.';
+  String get check_that_the_gateway_is_running_and_reachable_then_try =>
+      'Перевірте, чи шлюз запущений і доступний, та повторіть спробу.';
 
   @override
-  String get check_the_dashboard_connection_and_try_again => 'Перевірте підключення до вебпанелі й повторіть спробу.';
+  String get check_the_dashboard_connection_and_try_again =>
+      'Перевірте підключення до вебпанелі й повторіть спробу.';
 
   @override
-  String get check_the_connection_and_try_again => 'Перевірте підключення й повторіть спробу.';
+  String get check_the_connection_and_try_again =>
+      'Перевірте підключення й повторіть спробу.';
 
   @override
-  String get choose_a_small_model_to_rewrite_queries => 'Виберіть невелику модель для переформулювання запитів';
+  String get choose_a_small_model_to_rewrite_queries =>
+      'Виберіть невелику модель для переформулювання запитів';
 
   @override
-  String get choose_an_ai_search_model_before_using_ai_search => 'Перед використанням пошуку ШІ виберіть його модель.';
+  String get choose_an_ai_search_model_before_using_ai_search =>
+      'Перед використанням пошуку ШІ виберіть його модель.';
 
   @override
   String get choose_an_active_project_next => 'Далі виберіть активний проєкт';
@@ -849,7 +942,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get compatibility_mode => 'Режим сумісності';
 
   @override
-  String get configure_a_valid_desktop_gateway_url_before_attaching_files => 'Перед додаванням файлів налаштуйте правильну адресу серверного Desktop Gateway.';
+  String get configure_a_valid_desktop_gateway_url_before_attaching_files =>
+      'Перед додаванням файлів налаштуйте правильну адресу серверного Desktop Gateway.';
 
   @override
   String get confirm_always_allow => 'Підтвердити постійний дозвіл';
@@ -866,10 +960,13 @@ class AppLocalizationsUk extends AppLocalizations {
   String get connection_issue => 'Проблема підключення';
 
   @override
-  String get connection_switched_the_running_reply_continues_on_the_server_and => 'Підключення змінено — відповідь продовжує формуватися на сервері й автоматично під’єднається знову.';
+  String
+  get connection_switched_the_running_reply_continues_on_the_server_and =>
+      'Підключення змінено — відповідь продовжує формуватися на сервері й автоматично під’єднається знову.';
 
   @override
-  String get connection_appearance_and_device_preferences => 'Підключення, вигляд і налаштування пристрою';
+  String get connection_appearance_and_device_preferences =>
+      'Підключення, вигляд і налаштування пристрою';
 
   @override
   String context_tokens(Object effectiveContextLength) {
@@ -931,7 +1028,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get could_not_open_link => 'Не вдалося відкрити посилання.';
 
   @override
-  String get could_not_open_the_hermes_dashboard => 'Не вдалося відкрити вебпанель Hermes.';
+  String get could_not_open_the_hermes_dashboard =>
+      'Не вдалося відкрити вебпанель Hermes.';
 
   @override
   String get could_not_open_this_project => 'Не вдалося відкрити проєкт';
@@ -943,7 +1041,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get could_not_reach_hermes => 'Не вдалося підключитися до Hermes';
 
   @override
-  String could_not_reach_authenticate_the_dashboard_at_check_the_port(Object dashboardPort, Object host) {
+  String could_not_reach_authenticate_the_dashboard_at_check_the_port(
+    Object dashboardPort,
+    Object host,
+  ) {
     return 'Не вдалося підключитися або увійти до вебпанелі за адресою $host:$dashboardPort. Перевірте порт і облікові дані.';
   }
 
@@ -961,7 +1062,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get could_not_skip_the_hermes_question => 'Не вдалося пропустити запитання Hermes.';
+  String get could_not_skip_the_hermes_question =>
+      'Не вдалося пропустити запитання Hermes.';
 
   @override
   String could_not_the_project(Object action, Object error) {
@@ -985,10 +1087,12 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get couldn_t_prepare_the_shared_files => 'Не вдалося підготувати файли для поширення.';
+  String get couldn_t_prepare_the_shared_files =>
+      'Не вдалося підготувати файли для поширення.';
 
   @override
-  String get couldn_t_promote_conversation => 'Не вдалося перенести розмову до проєкту';
+  String get couldn_t_promote_conversation =>
+      'Не вдалося перенести розмову до проєкту';
 
   @override
   String couldn_t_project(Object action) {
@@ -1002,10 +1106,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get create_a_project => 'Створити проєкт';
 
   @override
-  String get create_a_project_first_then_chats_can_live_inside_it => 'Спершу створіть проєкт, потім додайте до нього чати.';
+  String get create_a_project_first_then_chats_can_live_inside_it =>
+      'Спершу створіть проєкт, потім додайте до нього чати.';
 
   @override
-  String get create_a_space_to_separate_related_conversations => 'Створіть розділ, щоб відокремити пов’язані розмови.';
+  String get create_a_space_to_separate_related_conversations =>
+      'Створіть розділ, щоб відокремити пов’язані розмови.';
 
   @override
   String get create_branch => 'Створити відгалуження';
@@ -1014,7 +1120,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get credit_notifications => 'Сповіщення про кредити';
 
   @override
-  String get credit_notifications_description => 'Використання кредитів зупинено або відновлено.';
+  String get credit_notifications_description =>
+      'Використання кредитів зупинено або відновлено.';
 
   @override
   String get cron => 'Розклад';
@@ -1023,7 +1130,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get crons => 'Розклади';
 
   @override
-  String get cron_conversations_empty => 'Тут розмови із завдань за розкладом, зокрема попередні запуски.';
+  String get cron_conversations_empty =>
+      'Тут розмови із завдань за розкладом, зокрема попередні запуски.';
 
   @override
   String get search_cron_conversations => 'Пошук розмов за розкладом';
@@ -1070,25 +1178,31 @@ class AppLocalizationsUk extends AppLocalizations {
   String get cron_upcoming_empty_title => 'Немає запланованих завдань';
 
   @override
-  String get cron_upcoming_empty_message => 'До запуску нічого не заплановано. Створіть завдання в розділі «Завдання за розкладом» або попросіть агента запланувати його.';
+  String get cron_upcoming_empty_message =>
+      'До запуску нічого не заплановано. Створіть завдання в розділі «Завдання за розкладом» або попросіть агента запланувати його.';
 
   @override
   String get cron_upcoming_unavailable => 'Заплановані завдання недоступні';
 
   @override
-  String get cron_upcoming_needs_dashboard => 'Для запланованих завдань потрібне підключення до вебпанелі. Ця адреса не надає розклад Cron. Перевірте адресу вебпанелі та підтримку цієї функції на сервері.';
+  String get cron_upcoming_needs_dashboard =>
+      'Для запланованих завдань потрібне підключення до вебпанелі. Ця адреса не надає розклад Cron. Перевірте адресу вебпанелі та підтримку цієї функції на сервері.';
 
   @override
-  String get cron_upcoming_needs_dashboard_auth => 'Для запланованих завдань потрібна автентифікація вебпанелі. Додайте ім’я користувача та пароль вебпанелі до цього підключення або увімкніть режим через проксі.';
+  String get cron_upcoming_needs_dashboard_auth =>
+      'Для запланованих завдань потрібна автентифікація вебпанелі. Додайте ім’я користувача та пароль вебпанелі до цього підключення або увімкніть режим через проксі.';
 
   @override
-  String get cron_upcoming_dashboard_unreachable => 'Не вдалося підключитися до вебпанелі. Перевірте вузол, порт вебпанелі та мережу, потім повторіть спробу.';
+  String get cron_upcoming_dashboard_unreachable =>
+      'Не вдалося підключитися до вебпанелі. Перевірте вузол, порт вебпанелі та мережу, потім повторіть спробу.';
 
   @override
-  String get cron_upcoming_load_failed => 'Не вдалося прочитати заплановані завдання. Перевірте підключення до вебпанелі й повторіть спробу.';
+  String get cron_upcoming_load_failed =>
+      'Не вдалося прочитати заплановані завдання. Перевірте підключення до вебпанелі й повторіть спробу.';
 
   @override
-  String get cron_upcoming_refresh_failed => 'Не вдалося оновити розклад. Показано останній успішний результат.';
+  String get cron_upcoming_refresh_failed =>
+      'Не вдалося оновити розклад. Показано останній успішний результат.';
 
   @override
   String get cron_job_added => 'Завдання за розкладом додано';
@@ -1100,13 +1214,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get cron_run => 'Запуск за розкладом';
 
   @override
-  String get cross_device_ordering_and_reversible_bulk_organization => 'Порядок на всіх пристроях і зворотне масове впорядкування';
+  String get cross_device_ordering_and_reversible_bulk_organization =>
+      'Порядок на всіх пристроях і зворотне масове впорядкування';
 
   @override
   String get current_profile_default => 'Типова модель поточного профілю';
 
   @override
-  String get custom_proxy_and_dashboard_details => 'Додаткові параметри проксі та вебпанелі';
+  String get custom_proxy_and_dashboard_details =>
+      'Додаткові параметри проксі та вебпанелі';
 
   @override
   String get dark => 'Темна';
@@ -1121,7 +1237,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get dashboard_port => 'Порт вебпанелі';
 
   @override
-  String get dashboard_username_optional => 'Ім’я користувача вебпанелі (необов’язково)';
+  String get dashboard_username_optional =>
+      'Ім’я користувача вебпанелі (необов’язково)';
 
   @override
   String get dashboard_behind_proxy => 'Вебпанель за проксі';
@@ -1143,7 +1260,9 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String delete_from_the_remote_hermes_history_this_cannot_be_undone(Object title) {
+  String delete_from_the_remote_hermes_history_this_cannot_be_undone(
+    Object title,
+  ) {
     return 'Видалити «$title» з історії на сервері Hermes? Цю дію неможливо скасувати.';
   }
 
@@ -1151,7 +1270,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get delete_cron_job => 'Видалити завдання за розкладом';
 
   @override
-  String get delete_connections_that_are_not_in_the_backup => 'Видалити підключення, яких немає в резервній копії.';
+  String get delete_connections_that_are_not_in_the_backup =>
+      'Видалити підключення, яких немає в резервній копії.';
 
   @override
   String delete_failed(Object error) {
@@ -1175,13 +1295,16 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get delivery_is_uncertain_recovering_without_resending => 'Доставка не підтверджена; відновлення без повторного надсилання…';
+  String get delivery_is_uncertain_recovering_without_resending =>
+      'Доставка не підтверджена; відновлення без повторного надсилання…';
 
   @override
-  String get desktop_gateway_url_optional => 'Адреса серверного Desktop Gateway (необов’язково)';
+  String get desktop_gateway_url_optional =>
+      'Адреса серверного Desktop Gateway (необов’язково)';
 
   @override
-  String get desktop_gateway_is_not_configured_for_this_connection => 'Для цього підключення серверний Desktop Gateway не налаштовано.';
+  String get desktop_gateway_is_not_configured_for_this_connection =>
+      'Для цього підключення серверний Desktop Gateway не налаштовано.';
 
   @override
   String get desktop_app => 'Десктопний застосунок';
@@ -1199,7 +1322,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get do_not_run_this_command => 'Не виконувати цю команду.';
 
   @override
-  String get documents_archives_audio_video_or_data => 'Документи, архіви, аудіо, відео або дані';
+  String get documents_archives_audio_video_or_data =>
+      'Документи, архіви, аудіо, відео або дані';
 
   @override
   String get download => 'Завантажити';
@@ -1210,10 +1334,12 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get durable_facts_hermes_keeps_about_you => 'Відомості про вас, які Hermes зберігає надовго';
+  String get durable_facts_hermes_keeps_about_you =>
+      'Відомості про вас, які Hermes зберігає надовго';
 
   @override
-  String get durable_work_inside_one_of_your_projects_shared_with_desktop => 'Тривала робота в одному з ваших проєктів, спільна з Desktop.';
+  String get durable_work_inside_one_of_your_projects_shared_with_desktop =>
+      'Тривала робота в одному з ваших проєктів, спільна з Desktop.';
 
   @override
   String get edit => 'Редагувати';
@@ -1234,10 +1360,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get enable_notifications => 'Увімкнути сповіщення';
 
   @override
-  String get enable_notifications_description => 'Вимкнення заблокує всі наведені нижче сповіщення.';
+  String get enable_notifications_description =>
+      'Вимкнення заблокує всі наведені нижче сповіщення.';
 
   @override
-  String get enables_file_attachments_through_the_desktop_remote_gateway => 'Дозволяє додавати файли через серверний Desktop Gateway.';
+  String get enables_file_attachments_through_the_desktop_remote_gateway =>
+      'Дозволяє додавати файли через серверний Desktop Gateway.';
 
   @override
   String get enter_a_name => 'Введіть назву';
@@ -1246,16 +1374,20 @@ class AppLocalizationsUk extends AppLocalizations {
   String get enter_a_passphrase => 'Введіть парольну фразу.';
 
   @override
-  String get enter_the_passphrase_for_this_backup => 'Введіть парольну фразу цієї резервної копії.';
+  String get enter_the_passphrase_for_this_backup =>
+      'Введіть парольну фразу цієї резервної копії.';
 
   @override
-  String get every_conversation_is_already_assigned_to_a_project => 'Усі розмови вже належать до проєктів.';
+  String get every_conversation_is_already_assigned_to_a_project =>
+      'Усі розмови вже належать до проєктів.';
 
   @override
-  String get everything_not_yet_native_in_the_authenticated_web_dashboard => 'Функції без вбудованого екрана доступні у вебпанелі після входу';
+  String get everything_not_yet_native_in_the_authenticated_web_dashboard =>
+      'Функції без вбудованого екрана доступні у вебпанелі після входу';
 
   @override
-  String get explain_the_attached_content_clearly => 'Зрозуміло поясни вміст вкладення.';
+  String get explain_the_attached_content_clearly =>
+      'Зрозуміло поясни вміст вкладення.';
 
   @override
   String explain_this_content_clearly(Object text) {
@@ -1263,7 +1395,9 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it => 'Явний вибір змінює масштаб доступності тексту Android; варіант «Системний» залишає його без змін.';
+  String
+  get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it =>
+      'Явний вибір змінює масштаб доступності тексту Android; варіант «Системний» залишає його без змін.';
 
   @override
   String get export_label => 'Експорт';
@@ -1281,10 +1415,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get extract_tasks => 'Виділити завдання';
 
   @override
-  String get extract_the_decisions_deadlines_owners_and_actionable_action_items_from => 'Виділи рішення, строки, відповідальних і конкретні дії зі вмісту вкладення.';
+  String
+  get extract_the_decisions_deadlines_owners_and_actionable_action_items_from =>
+      'Виділи рішення, строки, відповідальних і конкретні дії зі вмісту вкладення.';
 
   @override
-  String extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(Object text) {
+  String
+  extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(
+    Object text,
+  ) {
     return 'Виділи рішення, строки, відповідальних і конкретні дії з цього вмісту:\n\n$text';
   }
 
@@ -1294,7 +1433,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get failed_to_load_cron_jobs => 'Не вдалося завантажити завдання за розкладом';
+  String get failed_to_load_cron_jobs =>
+      'Не вдалося завантажити завдання за розкладом';
 
   @override
   String get failed_to_load_memory => 'Не вдалося завантажити пам’ять';
@@ -1319,7 +1459,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get file_attached_document_catalog_registration_is_pending => 'Файл додано; реєстрація в каталозі документів очікується.';
+  String get file_attached_document_catalog_registration_is_pending =>
+      'Файл додано; реєстрація в каталозі документів очікується.';
 
   @override
   String get file_reference_added_to_chat => 'Посилання на файл додано до чату';
@@ -1343,7 +1484,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get gateway_api_access => 'Доступ до API шлюзу';
 
   @override
-  String get gateway_connected_but_the_dashboard_could_not_be_reached_or => 'Шлюз підключено, але вебпанель недоступна або вхід не виконано. Перевірте її параметри або очистьте їх, щоб пропустити.';
+  String get gateway_connected_but_the_dashboard_could_not_be_reached_or =>
+      'Шлюз підключено, але вебпанель недоступна або вхід не виконано. Перевірте її параметри або очистьте їх, щоб пропустити.';
 
   @override
   String get gateway_path_prefix => 'Префікс шляху шлюзу';
@@ -1358,13 +1500,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get hermes_agent_for_android => 'Ares - formerly Hermes Android';
 
   @override
-  String get hermes_could_not_accept_the_answer_please_try_again => 'Hermes не зміг прийняти відповідь. Спробуйте ще раз.';
+  String get hermes_could_not_accept_the_answer_please_try_again =>
+      'Hermes не зміг прийняти відповідь. Спробуйте ще раз.';
 
   @override
-  String get hermes_could_not_load_your_saved_connections => 'Hermes не зміг завантажити збережені підключення';
+  String get hermes_could_not_load_your_saved_connections =>
+      'Hermes не зміг завантажити збережені підключення';
 
   @override
-  String get hermes_did_not_accept_the_response_please_try_again => 'Hermes не прийняв відповідь. Спробуйте ще раз.';
+  String get hermes_did_not_accept_the_response_please_try_again =>
+      'Hermes не прийняв відповідь. Спробуйте ще раз.';
 
   @override
   String get hermes_is_responding => 'Hermes відповідає…';
@@ -1373,7 +1518,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get hermes_is_waiting_for_input => 'Hermes очікує введення…';
 
   @override
-  String get hermes_keeps_android_accessibility_text_scaling_active => 'Ares зберігає системне масштабування тексту Android.';
+  String get hermes_keeps_android_accessibility_text_scaling_active =>
+      'Ares зберігає системне масштабування тексту Android.';
 
   @override
   String get hermes_needs_your_input => 'Hermes потребує вашої відповіді';
@@ -1382,7 +1528,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get hermes_profile_optional => 'Профіль Hermes (необов’язково)';
 
   @override
-  String get hermes_profile_must_be_a_plain_profile_name_such_as => 'Профіль Hermes має бути простою назвою, наприклад «sol», а не шляхом.';
+  String get hermes_profile_must_be_a_plain_profile_name_such_as =>
+      'Профіль Hermes має бути простою назвою, наприклад «sol», а не шляхом.';
 
   @override
   String get hermes_reasoning_details => 'Подробиці міркувань Hermes';
@@ -1393,19 +1540,22 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get hermes_stopped_recovery_safely_no_prompt_was_resent => 'Hermes безпечно зупинив відновлення. Повторного надсилання запиту не було.';
+  String get hermes_stopped_recovery_safely_no_prompt_was_resent =>
+      'Hermes безпечно зупинив відновлення. Повторного надсилання запиту не було.';
 
   @override
   String get hide_passphrase => 'Приховати парольну фразу';
 
   @override
-  String get home_needs_your_recent_chats_to_know_what_deserves_your => 'Для визначення важливих подій головному екрану потрібні ваші останні чати. Перевірте доступність шлюзу й повторіть спробу.';
+  String get home_needs_your_recent_chats_to_know_what_deserves_your =>
+      'Для визначення важливих подій головному екрану потрібні ваші останні чати. Перевірте доступність шлюзу й повторіть спробу.';
 
   @override
   String get host => 'Адреса сервера';
 
   @override
-  String get image_selection_was_interrupted_try_again => 'Вибір зображення перервано. Спробуйте ще раз.';
+  String get image_selection_was_interrupted_try_again =>
+      'Вибір зображення перервано. Спробуйте ще раз.';
 
   @override
   String get import_label => 'Імпорт';
@@ -1420,10 +1570,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get input_needed => 'Потрібна відповідь';
 
   @override
-  String get input_needed_description => 'Hermes поставив запитання або запитує пароль чи секрет.';
+  String get input_needed_description =>
+      'Hermes поставив запитання або запитує пароль чи секрет.';
 
   @override
-  String get insert_a_remote_file_reference => 'Вставити посилання @file на серверний файл';
+  String get insert_a_remote_file_reference =>
+      'Вставити посилання @file на серверний файл';
 
   @override
   String get invalid_port_number => 'Некоректний номер порту.';
@@ -1451,10 +1603,12 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get leave_blank_for_default_8642_443_with_https => 'Залиште порожнім для типового порту (8642; для HTTPS — 443)';
+  String get leave_blank_for_default_8642_443_with_https =>
+      'Залиште порожнім для типового порту (8642; для HTTPS — 443)';
 
   @override
-  String get leave_blank_for_default_9119 => 'Залиште порожнім для типового порту (9119)';
+  String get leave_blank_for_default_9119 =>
+      'Залиште порожнім для типового порту (9119)';
 
   @override
   String get light => 'Світла';
@@ -1479,7 +1633,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get location => 'Розташування';
 
   @override
-  String get make_sure_the_gateway_api_server_is_running_hermes_gateway => 'Переконайтеся, що API-сервер шлюзу працює\n(hermes gateway status)';
+  String get make_sure_the_gateway_api_server_is_running_hermes_gateway =>
+      'Переконайтеся, що API-сервер шлюзу працює\n(hermes gateway status)';
 
   @override
   String matches(Object assigned, Object name) {
@@ -1496,28 +1651,35 @@ class AppLocalizationsUk extends AppLocalizations {
   String get memory_agent_notes => 'Нотатки агента';
 
   @override
-  String get memory_builtin_scope => 'Збережені відомості з USER.md і MEMORY.md цього профілю. Дані зовнішніх сховищ пам’яті, зокрема MemPalace, тут не показуються.';
+  String get memory_builtin_scope =>
+      'Збережені відомості з USER.md і MEMORY.md цього профілю. Дані зовнішніх сховищ пам’яті, зокрема MemPalace, тут не показуються.';
 
   @override
-  String get memory_read_only => 'Лише для читання. Попросіть Hermes у чаті виправити або забути відомості.';
+  String get memory_read_only =>
+      'Лише для читання. Попросіть Hermes у чаті виправити або забути відомості.';
 
   @override
-  String get memory_unavailable => 'Цей шлюз або профіль не надає збережених відомостей пам’яті. Перевірте вибраний профіль і за потреби оновіть Hermes.';
+  String get memory_unavailable =>
+      'Цей шлюз або профіль не надає збережених відомостей пам’яті. Перевірте вибраний профіль і за потреби оновіть Hermes.';
 
   @override
-  String get memory_load_error => 'Перевірте підключення та вхід до вебпанелі й повторіть спробу.';
+  String get memory_load_error =>
+      'Перевірте підключення та вхід до вебпанелі й повторіть спробу.';
 
   @override
   String get memory_read_full_fact => 'Прочитати повністю';
 
   @override
-  String get memory_full_fact_requires_update => 'Для повних записів потрібна новіша версія шлюзу Hermes. Оновіть Hermes і цей список.';
+  String get memory_full_fact_requires_update =>
+      'Для повних записів потрібна новіша версія шлюзу Hermes. Оновіть Hermes і цей список.';
 
   @override
-  String get memory_fact_detail_error => 'Не вдалося завантажити повний запис. Можливо, він змінився; оновіть список і повторіть спробу.';
+  String get memory_fact_detail_error =>
+      'Не вдалося завантажити повний запис. Можливо, він змінився; оновіть список і повторіть спробу.';
 
   @override
-  String get memory_entries_are_cross_session_facts_the_agent_remembers_they => 'Збережені відомості з’являться тут, коли Hermes їх запам’ятає.';
+  String get memory_entries_are_cross_session_facts_the_agent_remembers_they =>
+      'Збережені відомості з’являться тут, коли Hermes їх запам’ятає.';
 
   @override
   String get merge => 'Об’єднати';
@@ -1541,7 +1703,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get migration_complete => 'Перенесення завершено';
 
   @override
-  String get migration_failed_local_spaces_were_kept_unchanged => 'Перенесення не вдалося. Локальні розділи залишено без змін.';
+  String get migration_failed_local_spaces_were_kept_unchanged =>
+      'Перенесення не вдалося. Локальні розділи залишено без змін.';
 
   @override
   String get migration_incomplete => 'Перенесення не завершено';
@@ -1553,7 +1716,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get model => 'Модель';
 
   @override
-  String get model_and_thinking_for_this_chat => 'Модель і міркування для цього чату';
+  String get model_and_thinking_for_this_chat =>
+      'Модель і міркування для цього чату';
 
   @override
   String model_was_not_changed(Object error) {
@@ -1590,7 +1754,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get name => 'Назва';
 
   @override
-  String get name_prompt_and_schedule_are_required => 'Назва, запит і розклад обов’язкові';
+  String get name_prompt_and_schedule_are_required =>
+      'Назва, запит і розклад обов’язкові';
 
   @override
   String get nav_activity => 'Активність';
@@ -1599,16 +1764,20 @@ class AppLocalizationsUk extends AppLocalizations {
   String get nav_projects => 'Проєкти';
 
   @override
-  String get needs_a_correction_aware_filing_contract_in_the_hermes_gateway => 'Потрібна підтримка впорядкування з виправленнями у шлюзі Hermes.';
+  String get needs_a_correction_aware_filing_contract_in_the_hermes_gateway =>
+      'Потрібна підтримка впорядкування з виправленнями у шлюзі Hermes.';
 
   @override
-  String get needs_a_reachable_hermes_dashboard_check_the_host_port_and => 'Потрібна доступна вебпанель Hermes. Перевірте адресу, порт і облікові дані підключення.';
+  String get needs_a_reachable_hermes_dashboard_check_the_host_port_and =>
+      'Потрібна доступна вебпанель Hermes. Перевірте адресу, порт і облікові дані підключення.';
 
   @override
-  String get needs_a_server_authoritative_assets_index_in_the_hermes_gateway => 'Потрібен серверний індекс файлів у шлюзі Hermes.';
+  String get needs_a_server_authoritative_assets_index_in_the_hermes_gateway =>
+      'Потрібен серверний індекс файлів у шлюзі Hermes.';
 
   @override
-  String get needs_durable_pin_ordering_batch_mutation_and_undo_contracts_in => 'Потрібна підтримка збереження порядку закріплень, масових змін і скасування у шлюзі Hermes.';
+  String get needs_durable_pin_ordering_batch_mutation_and_undo_contracts_in =>
+      'Потрібна підтримка збереження порядку закріплень, масових змін і скасування у шлюзі Hermes.';
 
   @override
   String get needs_you => 'Потрібна ваша дія';
@@ -1639,19 +1808,23 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get nginx_injects_auth_app_sends_clean_requests => 'Nginx додає авторизацію — застосунок надсилає запити без неї';
+  String get nginx_injects_auth_app_sends_clean_requests =>
+      'Nginx додає авторизацію — застосунок надсилає запити без неї';
 
   @override
-  String get no_tts_voices_found_ninstall_google_text_to_speech_and => 'Голоси озвучення не знайдено.\nУстановіть Google Text-to-Speech і завантажте голосові дані.';
+  String get no_tts_voices_found_ninstall_google_text_to_speech_and =>
+      'Голоси озвучення не знайдено.\nУстановіть Google Text-to-Speech і завантажте голосові дані.';
 
   @override
-  String get no_active_projects_on_this_gateway => 'На цьому шлюзі немає активних проєктів';
+  String get no_active_projects_on_this_gateway =>
+      'На цьому шлюзі немає активних проєктів';
 
   @override
   String get no_activity_yet => 'Активності ще немає';
 
   @override
-  String get no_chat_is_blocked_running_or_waiting_to_be_resumed => 'Немає чатів, що заблоковані, виконуються або очікують відновлення. Почніть новий, коли будете готові.';
+  String get no_chat_is_blocked_running_or_waiting_to_be_resumed =>
+      'Немає чатів, що заблоковані, виконуються або очікують відновлення. Почніть новий, коли будете готові.';
 
   @override
   String no_chats_in_this_project_match(Object searchQuery) {
@@ -1659,7 +1832,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get no_chats_in_this_space_yet_tap_to_start_one => 'У цьому розділі ще немає чатів. Натисніть +, щоб почати.';
+  String get no_chats_in_this_space_yet_tap_to_start_one =>
+      'У цьому розділі ще немає чатів. Натисніть +, щоб почати.';
 
   @override
   String get no_chats_yet => 'Чатів ще немає';
@@ -1668,7 +1842,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get no_connections => 'Підключень немає';
 
   @override
-  String get no_conversation_matches_this_view => 'Цьому перегляду не відповідає жодна розмова.';
+  String get no_conversation_matches_this_view =>
+      'Цьому перегляду не відповідає жодна розмова.';
 
   @override
   String get no_cron_jobs => 'Завдань за розкладом немає';
@@ -1677,7 +1852,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get no_folders_yet => 'Папок ще немає';
 
   @override
-  String get no_local_spaces_were_found_for_this_connection_so_projects => 'Для цього підключення немає локальних розділів; тут уже використовуються лише проєкти.';
+  String get no_local_spaces_were_found_for_this_connection_so_projects =>
+      'Для цього підключення немає локальних розділів; тут уже використовуються лише проєкти.';
 
   @override
   String get no_matches => 'Збігів немає';
@@ -1715,19 +1891,23 @@ class AppLocalizationsUk extends AppLocalizations {
   String get no_text_shared => 'Текст не передано';
 
   @override
-  String get no_turn_is_blocked_in_flight_or_recently_finished_work => 'Немає заблокованих, поточних або нещодавно завершених ходів. Розпочата робота з’явиться тут.';
+  String get no_turn_is_blocked_in_flight_or_recently_finished_work =>
+      'Немає заблокованих, поточних або нещодавно завершених ходів. Розпочата робота з’явиться тут.';
 
   @override
-  String get no_turn_needs_your_input_or_has_failed => 'Немає ходів, які потребують відповіді або завершилися помилкою.';
+  String get no_turn_needs_your_input_or_has_failed =>
+      'Немає ходів, які потребують відповіді або завершилися помилкою.';
 
   @override
   String get no_unassigned_chats => 'Чатів без проєкту немає.';
 
   @override
-  String get nothing_changed_in_the_last_seven_days => 'За останні сім днів змін не було.';
+  String get nothing_changed_in_the_last_seven_days =>
+      'За останні сім днів змін не було.';
 
   @override
-  String get nothing_has_moved_yet_this_is_only_what_a_migration => 'Ще нічого не переміщено — це лише попередній перегляд майбутнього перенесення.';
+  String get nothing_has_moved_yet_this_is_only_what_a_migration =>
+      'Ще нічого не переміщено — це лише попередній перегляд майбутнього перенесення.';
 
   @override
   String get nothing_here => 'Тут порожньо';
@@ -1745,46 +1925,71 @@ class AppLocalizationsUk extends AppLocalizations {
   String get notifications => 'Сповіщення';
 
   @override
-  String get windows_notifications_blocked => 'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+  String get windows_notifications_blocked =>
+      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
 
   @override
-  String get windows_notification_diagnostics => 'What Ares submitted to Windows';
+  String get windows_notification_diagnostics =>
+      'What Ares submitted to Windows';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
+  String get chat_activity_share => 'Share chat activity';
 
   @override
-  String get windows_window_activity_hint => 'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+  String get chat_activity_share_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
 
   @override
-  String get windows_completion_sound => 'Completion sound';
+  String get completion_sound => 'Completion sound';
 
   @override
-  String get windows_sound_default => 'Windows default';
+  String get completion_sound_system => 'System default';
 
   @override
-  String get windows_sound_mail => 'Mail';
+  String get completion_sound_mail => 'Mail';
 
   @override
-  String get windows_sound_reminder => 'Reminder';
+  String get completion_sound_reminder => 'Reminder';
 
   @override
-  String get windows_sound_silent => 'Silent';
+  String get completion_sound_silent => 'Silent';
 
   @override
-  String get notifications_permission_denied => 'Сповіщення заблоковані системою. Увімкніть їх для цього застосунку в налаштуваннях Android.';
+  String get completion_sound_scope =>
+      'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.';
+
+  @override
+  String get completion_sound_scope_android =>
+      'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.';
+
+  @override
+  String get notification_open_action => 'Open';
+
+  @override
+  String get app_sounds_mute => 'Mute app sounds';
+
+  @override
+  String get app_sounds_mute_hint =>
+      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
+
+  @override
+  String get notifications_permission_denied =>
+      'Сповіщення заблоковані системою. Увімкніть їх для цього застосунку в налаштуваннях Android.';
 
   @override
   String get off_no_thinking => 'Вимкнено (без міркувань)';
 
   @override
-  String get offline_showing_the_last_known_activity => 'Немає зв’язку — показано останній відомий стан активності.';
+  String get offline_showing_the_last_known_activity =>
+      'Немає зв’язку — показано останній відомий стан активності.';
 
   @override
-  String get offline_showing_the_last_known_chats => 'Немає зв’язку — показано останні відомі чати';
+  String get offline_showing_the_last_known_chats =>
+      'Немає зв’язку — показано останні відомі чати';
 
   @override
-  String get offline_showing_the_last_known_projects => 'Немає зв’язку — показано останні відомі проєкти.';
+  String get offline_showing_the_last_known_projects =>
+      'Немає зв’язку — показано останні відомі проєкти.';
 
   @override
   String get on_this_device => 'На цьому пристрої';
@@ -1804,7 +2009,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get open_the_hermes_dashboard => 'Відкрити вебпанель Hermes';
 
   @override
-  String get optional_for_the_memory_cron_skills_settings_tabs_leave_blank => 'Необов’язково. Для вкладок пам’яті, розкладу, навичок і налаштувань. Порожнє значення використовує типовий порт вебпанелі (9119) без входу.';
+  String get optional_for_the_memory_cron_skills_settings_tabs_leave_blank =>
+      'Необов’язково. Для вкладок пам’яті, розкладу, навичок і налаштувань. Порожнє значення використовує типовий порт вебпанелі (9119) без входу.';
 
   @override
   String get organization => 'Упорядкування';
@@ -1831,7 +2037,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get plugin_notifications => 'Сповіщення плагінів';
 
   @override
-  String get plugin_notifications_description => 'Шлюз надіслав сповіщення, поки застосунок був у фоні.';
+  String get plugin_notifications_description =>
+      'Шлюз надіслав сповіщення, поки застосунок був у фоні.';
 
   @override
   String get port => 'Порт';
@@ -1852,12 +2059,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get profile_default_model => 'Типова модель профілю';
 
   @override
-  String profile_default_set_to_chats_with_their_own_model_keep(Object selectedModel) {
+  String profile_default_set_to_chats_with_their_own_model_keep(
+    Object selectedModel,
+  ) {
     return 'Типову модель профілю змінено на $selectedModel. Чати з власною моделлю зберігають свій вибір.';
   }
 
   @override
-  String get profile_this_connection_chats_as_when_the_dashboard_serves_several => 'Профіль для чатів цього підключення, якщо вебпанель обслуговує кілька профілів. Для окремої вебпанелі одного профілю залиште порожнім.';
+  String
+  get profile_this_connection_chats_as_when_the_dashboard_serves_several =>
+      'Профіль для чатів цього підключення, якщо вебпанель обслуговує кілька профілів. Для окремої вебпанелі одного профілю залиште порожнім.';
 
   @override
   String get project => 'Проєкт';
@@ -1875,16 +2086,20 @@ class AppLocalizationsUk extends AppLocalizations {
   String get projects => 'Проєкти';
 
   @override
-  String get projects_group_related_chats_files_and_activity_and_stay_in => 'Проєкти об’єднують пов’язані чати, файли й активність та синхронізуються з Hermes на комп’ютері.';
+  String get projects_group_related_chats_files_and_activity_and_stay_in =>
+      'Проєкти об’єднують пов’язані чати, файли й активність та синхронізуються з Hermes на комп’ютері.';
 
   @override
-  String get projects_need_a_desktop_gateway_connection_add_the_desktop_gateway => 'Потрібна підтримка проєктів у серверному підключенні. Перевірте доступність сервера та підтримку API проєктів.';
+  String
+  get projects_need_a_desktop_gateway_connection_add_the_desktop_gateway =>
+      'Потрібна підтримка проєктів у серверному підключенні. Перевірте доступність сервера та підтримку API проєктів.';
 
   @override
   String get projects_unavailable => 'Проєкти недоступні';
 
   @override
-  String get projects_activity_new_navigation => 'Проєкти й активність — нова навігація';
+  String get projects_activity_new_navigation =>
+      'Проєкти й активність — нова навігація';
 
   @override
   String get promote_to_project => 'Перенести до проєкту';
@@ -1899,19 +2114,22 @@ class AppLocalizationsUk extends AppLocalizations {
   String get provider => 'Провайдер';
 
   @override
-  String get proxy_injects_auth_app_sends_clean_requests => 'Проксі додає авторизацію; застосунок надсилає запити без неї';
+  String get proxy_injects_auth_app_sends_clean_requests =>
+      'Проксі додає авторизацію; застосунок надсилає запити без неї';
 
   @override
   String get quick_chat => 'Швидкий чат';
 
   @override
-  String get quick_chats_appear_here_after_their_retention_period => 'Швидкі чати з’являються тут після завершення строку зберігання.';
+  String get quick_chats_appear_here_after_their_retention_period =>
+      'Швидкі чати з’являються тут після завершення строку зберігання.';
 
   @override
   String get read_aloud => 'Прочитати вголос';
 
   @override
-  String get read_aloud_is_unavailable_on_this_device => 'Озвучення недоступне на цьому пристрої';
+  String get read_aloud_is_unavailable_on_this_device =>
+      'Озвучення недоступне на цьому пристрої';
 
   @override
   String get reading_response_aloud => 'Озвучення відповіді';
@@ -1969,10 +2187,14 @@ class AppLocalizationsUk extends AppLocalizations {
   String get repositories => 'Репозиторії';
 
   @override
-  String get research_the_attached_content_verify_the_important_claims_and_cite => 'Досліди вміст вкладення, перевір важливі твердження й наведи джерела.';
+  String
+  get research_the_attached_content_verify_the_important_claims_and_cite =>
+      'Досліди вміст вкладення, перевір важливі твердження й наведи джерела.';
 
   @override
-  String research_this_content_verify_the_important_claims_and_cite_sources(Object text) {
+  String research_this_content_verify_the_important_claims_and_cite_sources(
+    Object text,
+  ) {
     return 'Досліди цей вміст, перевір важливі твердження й наведи джерела:\n\n$text';
   }
 
@@ -1993,13 +2215,15 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get response_closed_locally_no_active_gateway_turn_was_found => 'Відповідь закрито локально; активного ходу на шлюзі не знайдено.';
+  String get response_closed_locally_no_active_gateway_turn_was_found =>
+      'Відповідь закрито локально; активного ходу на шлюзі не знайдено.';
 
   @override
   String get response_complete => 'Відповідь завершено';
 
   @override
-  String get response_complete_description => 'Хід завершився, поки застосунок був у фоні.';
+  String get response_complete_description =>
+      'Хід завершився, поки застосунок був у фоні.';
 
   @override
   String get response_ready => 'Відповідь готова';
@@ -2036,7 +2260,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get review_local_spaces => 'Переглянути локальні розділи';
 
   @override
-  String get review_or_promote_quick_chats_past_their_retention_period => 'Перегляньте швидкі чати після завершення строку зберігання або перенесіть їх до проєкту';
+  String get review_or_promote_quick_chats_past_their_retention_period =>
+      'Перегляньте швидкі чати після завершення строку зберігання або перенесіть їх до проєкту';
 
   @override
   String get review_the_attached_content => 'Переглянь вміст вкладення.';
@@ -2054,10 +2279,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get save_changes => 'Зберегти зміни';
 
   @override
-  String get save_a_permanent_rule_in_the_hermes_configuration => 'Зберегти постійне правило в конфігурації Hermes.';
+  String get save_a_permanent_rule_in_the_hermes_configuration =>
+      'Зберегти постійне правило в конфігурації Hermes.';
 
   @override
-  String get save_the_durable_facts_from_the_attached_content_to_memory => 'Збережи важливі довготривалі відомості зі вкладення в пам’яті й підтвердь, що саме збережено.';
+  String get save_the_durable_facts_from_the_attached_content_to_memory =>
+      'Збережи важливі довготривалі відомості зі вкладення в пам’яті й підтвердь, що саме збережено.';
 
   @override
   String save_the_durable_facts_from_this_content_to_memory_then(Object text) {
@@ -2065,7 +2292,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get save_your_connections_and_settings_to_an_encrypted_file_then => 'Збережіть підключення й налаштування в зашифрованому файлі, щоб відновити їх після перевстановлення або на іншому пристрої.';
+  String get save_your_connections_and_settings_to_an_encrypted_file_then =>
+      'Збережіть підключення й налаштування в зашифрованому файлі, щоб відновити їх після перевстановлення або на іншому пристрої.';
 
   @override
   String save_2(Object filename) {
@@ -2076,7 +2304,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get schedule => 'Розклад';
 
   @override
-  String get scheduled_jobs_and_their_last_runs => 'Завдання за розкладом та останні запуски';
+  String get scheduled_jobs_and_their_last_runs =>
+      'Завдання за розкладом та останні запуски';
 
   @override
   String get scheduled_tasks => 'Заплановані завдання';
@@ -2106,10 +2335,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get search_mode => 'Режим пошуку';
 
   @override
-  String get select_one_option_or_enter_another_answer => 'Виберіть один варіант або введіть іншу відповідь.';
+  String get select_one_option_or_enter_another_answer =>
+      'Виберіть один варіант або введіть іншу відповідь.';
 
   @override
-  String get select_one_or_more_options_then_continue => 'Виберіть один чи кілька варіантів і продовжуйте.';
+  String get select_one_or_more_options_then_continue =>
+      'Виберіть один чи кілька варіантів і продовжуйте.';
 
   @override
   String get select_text => 'Виділити текст';
@@ -2137,7 +2368,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get session_sources => 'Джерела сесій';
 
   @override
-  String get session_deleted_from_remote_hermes => 'Сесію видалено з історії на сервері Hermes.';
+  String get session_deleted_from_remote_hermes =>
+      'Сесію видалено з історії на сервері Hermes.';
 
   @override
   String session_search_failed(Object error) {
@@ -2157,7 +2389,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get show_passphrase => 'Показати парольну фразу';
 
   @override
-  String get show_tool_calls_thinking_and_message_metadata => 'Показувати інструменти, міркування, завдання та подробиці повідомлень у згорнутих блоках. Якщо вимкнено, видно лише розмову.';
+  String get show_tool_calls_thinking_and_message_metadata =>
+      'Показувати інструменти, міркування, завдання та подробиці повідомлень у згорнутих блоках. Якщо вимкнено, видно лише розмову.';
 
   @override
   String get signal_messages => 'Повідомлення Signal';
@@ -2194,7 +2427,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get speak_to_hermes => 'Говорити до Hermes';
 
   @override
-  String get speech_recognition_is_unavailable => 'Розпізнавання мовлення недоступне';
+  String get speech_recognition_is_unavailable =>
+      'Розпізнавання мовлення недоступне';
 
   @override
   String get spoken_replies => 'Голосові відповіді';
@@ -2206,7 +2440,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get spoken_replies_on => 'Голосові відповіді ввімкнено';
 
   @override
-  String get stalled_no_update_from_hermes => 'Очікування затягнулося — немає оновлень від Hermes';
+  String get stalled_no_update_from_hermes =>
+      'Очікування затягнулося — немає оновлень від Hermes';
 
   @override
   String get start_something_new => 'Почати щось нове';
@@ -2239,7 +2474,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get submitted_waiting_for_hermes => 'Надіслано, очікування Hermes';
 
   @override
-  String get suggest_projects_and_learn_from_your_corrections => 'Пропонувати проєкти й навчатися на ваших виправленнях';
+  String get suggest_projects_and_learn_from_your_corrections =>
+      'Пропонувати проєкти й навчатися на ваших виправленнях';
 
   @override
   String get summarize_the_attached_content => 'Підсумуй вміст вкладення.';
@@ -2259,10 +2495,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get take_photo => 'Зробити фото';
 
   @override
-  String get tap_to_add_a_remote_hermes_gateway_api_server_port => 'Натисніть +, щоб додати віддалений шлюз Hermes\n(API-сервер, порт 8642)';
+  String get tap_to_add_a_remote_hermes_gateway_api_server_port =>
+      'Натисніть +, щоб додати віддалений шлюз Hermes\n(API-сервер, порт 8642)';
 
   @override
-  String get tap_the_button_to_start_a_new_chat => 'Натисніть +, щоб почати новий чат';
+  String get tap_the_button_to_start_a_new_chat =>
+      'Натисніть +, щоб почати новий чат';
 
   @override
   String get telegram_messages => 'Повідомлення Telegram';
@@ -2271,7 +2509,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get terminal_sessions => 'Сесії термінала';
 
   @override
-  String get test_notification_body => 'Якщо ви це бачите, системні сповіщення працюють.';
+  String get test_notification_body =>
+      'Якщо ви це бачите, системні сповіщення працюють.';
 
   @override
   String get test_notification_sent => 'Тестове сповіщення надіслано.';
@@ -2280,7 +2519,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get test_notification_title => 'Перевірка сповіщень Hermes';
 
   @override
-  String get test_notification_unsupported => 'Не вдалося надіслати сповіщення — перевірте системний дозвіл сповіщень.';
+  String get test_notification_unsupported =>
+      'Не вдалося надіслати сповіщення — перевірте системний дозвіл сповіщень.';
 
   @override
   String get text_size => 'Розмір тексту';
@@ -2294,34 +2534,44 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get the_api_key_could_not_be_stored_securely => 'Не вдалося безпечно зберегти ключ API.';
+  String get the_api_key_could_not_be_stored_securely =>
+      'Не вдалося безпечно зберегти ключ API.';
 
   @override
-  String get the_project_will_move_to_archived_its_chats_and_files => 'Проєкт переміститься до архіву. Чати й файли збережуться; відновити проєкт можна будь-коли.';
+  String get the_project_will_move_to_archived_its_chats_and_files =>
+      'Проєкт переміститься до архіву. Чати й файли збережуться; відновити проєкт можна будь-коли.';
 
   @override
-  String get the_project_will_move_to_archived_its_chats_and_files_2 => 'Проєкт переміститься до архіву. Чати й файли збережуться; відновити проєкт можна пізніше.';
+  String get the_project_will_move_to_archived_its_chats_and_files_2 =>
+      'Проєкт переміститься до архіву. Чати й файли збережуться; відновити проєкт можна пізніше.';
 
   @override
-  String get the_active_profile_did_not_return_any_selectable_models => 'Активний профіль не повернув моделей для вибору.';
+  String get the_active_profile_did_not_return_any_selectable_models =>
+      'Активний профіль не повернув моделей для вибору.';
 
   @override
-  String get the_backup_could_not_be_exported => 'Не вдалося експортувати резервну копію.';
+  String get the_backup_could_not_be_exported =>
+      'Не вдалося експортувати резервну копію.';
 
   @override
-  String get the_backup_could_not_be_restored => 'Не вдалося відновити резервну копію.';
+  String get the_backup_could_not_be_restored =>
+      'Не вдалося відновити резервну копію.';
 
   @override
-  String get the_connection_could_not_be_deleted_safely => 'Не вдалося безпечно видалити підключення.';
+  String get the_connection_could_not_be_deleted_safely =>
+      'Не вдалося безпечно видалити підключення.';
 
   @override
-  String get the_connection_could_not_be_stored_securely => 'Не вдалося безпечно зберегти підключення.';
+  String get the_connection_could_not_be_stored_securely =>
+      'Не вдалося безпечно зберегти підключення.';
 
   @override
-  String get the_dashboard_credentials_could_not_be_stored_securely => 'Не вдалося безпечно зберегти облікові дані вебпанелі.';
+  String get the_dashboard_credentials_could_not_be_stored_securely =>
+      'Не вдалося безпечно зберегти облікові дані вебпанелі.';
 
   @override
-  String get the_detached_reply_failed => 'Фонова відповідь завершилася помилкою.';
+  String get the_detached_reply_failed =>
+      'Фонова відповідь завершилася помилкою.';
 
   @override
   String the_detached_reply_failed_2(Object error) {
@@ -2329,60 +2579,76 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get the_file_contains_your_api_keys_and_dashboard_password_so => 'Файл містить ключі API та пароль вебпанелі, тому його зашифровано. Без цієї парольної фрази відновлення неможливе.';
+  String get the_file_contains_your_api_keys_and_dashboard_password_so =>
+      'Файл містить ключі API та пароль вебпанелі, тому його зашифровано. Без цієї парольної фрази відновлення неможливе.';
 
   @override
   String get the_last_turn_failed => 'Останній хід завершився помилкою';
 
   @override
-  String the_local_connection_store_looks_damaged_you_can_reset_the(Object errorType) {
+  String the_local_connection_store_looks_damaged_you_can_reset_the(
+    Object errorType,
+  ) {
     return 'Локальне сховище підключень виглядає пошкодженим ($errorType). Можна скинути збережені підключення й налаштувати їх заново. Чати на шлюзі не постраждають.';
   }
 
   @override
-  String get the_model_only_rewrites_your_question_into_a_short_full => 'Модель лише переформульовує ваше запитання в короткий повнотекстовий запит. Hermes використовує облікові дані провайдера, уже налаштовані на сервері.';
+  String get the_model_only_rewrites_your_question_into_a_short_full =>
+      'Модель лише переформульовує ваше запитання в короткий повнотекстовий запит. Hermes використовує облікові дані провайдера, уже налаштовані на сервері.';
 
   @override
-  String get the_server_has_not_reported_folders_for_this_project_yet => 'Сервер ще не надав папок цього проєкту. Загальний перегляд файлів доступний у розділі «Ще».';
+  String get the_server_has_not_reported_folders_for_this_project_yet =>
+      'Сервер ще не надав папок цього проєкту. Загальний перегляд файлів доступний у розділі «Ще».';
 
   @override
   String get the_turn_failed => 'Хід завершився помилкою';
 
   @override
-  String get the_two_passphrases_do_not_match => 'Парольні фрази не збігаються.';
+  String get the_two_passphrases_do_not_match =>
+      'Парольні фрази не збігаються.';
 
   @override
-  String get the_value_is_sent_directly_to_the_active_hermes_gateway => 'Значення надсилається безпосередньо до активного шлюзу Hermes і не зберігається цим Android-застосунком.';
+  String get the_value_is_sent_directly_to_the_active_hermes_gateway =>
+      'Значення надсилається безпосередньо до активного шлюзу Hermes і не зберігається цим Android-застосунком.';
 
   @override
-  String get there_are_no_visible_files_in_this_server_folder => 'У цій папці сервера немає видимих файлів.';
+  String get there_are_no_visible_files_in_this_server_folder =>
+      'У цій папці сервера немає видимих файлів.';
 
   @override
   String get thinking_effort => 'Рівень міркувань';
 
   @override
-  String get this_hermes_gateway_does_not_support_opening_a_project_yet => 'Цей шлюз Hermes ще не підтримує відкриття проєктів. Оновіть Hermes на сервері для перегляду проєктів із телефона.';
+  String get this_hermes_gateway_does_not_support_opening_a_project_yet =>
+      'Цей шлюз Hermes ще не підтримує відкриття проєктів. Оновіть Hermes на сервері для перегляду проєктів із телефона.';
 
   @override
-  String get this_hermes_gateway_is_older_than_server_side_projects_so => 'Цей шлюз Hermes не підтримує серверні проєкти, тому групування чатів зберігається лише на цьому пристрої. Оновіть Hermes для спільних проєктів на всіх пристроях.';
+  String get this_hermes_gateway_is_older_than_server_side_projects_so =>
+      'Цей шлюз Hermes не підтримує серверні проєкти, тому групування чатів зберігається лише на цьому пристрої. Оновіть Hermes для спільних проєктів на всіх пристроях.';
 
   @override
-  String get this_project_has_no_folder_to_open_the_chat_in => 'Для створення чату в цьому проєкті потрібна папка. Додайте її та повторіть спробу.';
+  String get this_project_has_no_folder_to_open_the_chat_in =>
+      'Для створення чату в цьому проєкті потрібна папка. Додайте її та повторіть спробу.';
 
   @override
-  String get this_chat_has_no_messages_available_in_the_desktop_session => 'У цій серверній сесії ще немає доступних повідомлень.';
+  String get this_chat_has_no_messages_available_in_the_desktop_session =>
+      'У цій серверній сесії ще немає доступних повідомлень.';
 
   @override
-  String get this_creates_a_permanent_rule_in_hermes_review_the_full => 'Ця дія створює постійне правило Hermes. Перед підтвердженням перегляньте повну команду.';
+  String get this_creates_a_permanent_rule_in_hermes_review_the_full =>
+      'Ця дія створює постійне правило Hermes. Перед підтвердженням перегляньте повну команду.';
 
   @override
-  String get this_gateway_does_not_host_projects_yet_update_the_gateway => 'Цей шлюз ще не підтримує проєкти. Оновіть його для впорядкування чатів на всіх пристроях.';
+  String get this_gateway_does_not_host_projects_yet_update_the_gateway =>
+      'Цей шлюз ще не підтримує проєкти. Оновіть його для впорядкування чатів на всіх пристроях.';
 
   @override
-  String get this_permanently_deletes_the_project_chats_will_not_be_deleted => 'Проєкт буде видалено назавжди. Чати залишаться та повернуться до розділу «Без проєкту».';
+  String get this_permanently_deletes_the_project_chats_will_not_be_deleted =>
+      'Проєкт буде видалено назавжди. Чати залишаться та повернуться до розділу «Без проєкту».';
 
   @override
-  String get this_server_doesn_t_offer_background_recovery_chats_run_live => 'Цей сервер не підтримує фонове відновлення — чати працюють у живому режимі';
+  String get this_server_doesn_t_offer_background_recovery_chats_run_live =>
+      'Цей сервер не підтримує фонове відновлення — чати працюють у живому режимі';
 
   @override
   String get this_week => 'Цього тижня';
@@ -2397,7 +2663,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get trigger_now => 'Запустити зараз';
 
   @override
-  String get received_outcome_unknown => 'Хід завершено — результат не підтверджено';
+  String get received_outcome_unknown =>
+      'Хід завершено — результат не підтверджено';
 
   @override
   String get turn_completed => 'Хід завершено';
@@ -2412,10 +2679,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get turn_recovery_failed => 'Не вдалося відновити хід';
 
   @override
-  String get unable_to_prepare_this_file_try_another_one => 'Не вдалося підготувати файл. Спробуйте інший.';
+  String get unable_to_prepare_this_file_try_another_one =>
+      'Не вдалося підготувати файл. Спробуйте інший.';
 
   @override
-  String get unable_to_prepare_this_image_try_another_one => 'Не вдалося підготувати зображення. Спробуйте інше.';
+  String get unable_to_prepare_this_image_try_another_one =>
+      'Не вдалося підготувати зображення. Спробуйте інше.';
 
   @override
   String unable_to_prepare(Object name) {
@@ -2423,7 +2692,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get unable_to_read_the_selected_image_the_selection_was_kept => 'Не вдалося прочитати вибране зображення. Вибір збережено.';
+  String get unable_to_read_the_selected_image_the_selection_was_kept =>
+      'Не вдалося прочитати вибране зображення. Вибір збережено.';
 
   @override
   String get unassigned => 'Без проєкту';
@@ -2444,7 +2714,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get upload_failed => 'Надсилання не вдалося';
 
   @override
-  String get upload_failed_tap_retry => 'Надсилання не вдалося • торкніться для повтору';
+  String get upload_failed_tap_retry =>
+      'Надсилання не вдалося • торкніться для повтору';
 
   @override
   String uploading(Object index, Object name, Object total) {
@@ -2458,21 +2729,26 @@ class AppLocalizationsUk extends AppLocalizations {
   String get use_at_least_8_characters => 'Використайте щонайменше 8 символів.';
 
   @override
-  String get use_for_cron_jobs_backed_by_scripts => 'Для завдань за розкладом на основі скриптів.';
+  String get use_for_cron_jobs_backed_by_scripts =>
+      'Для завдань за розкладом на основі скриптів.';
 
   @override
   String get use_on_device => 'Використати локально';
 
   @override
-  String get use_the_attached_content_to_identify_and_fill_the_relevant => 'Використай вкладення, щоб визначити та заповнити відповідні поля документа чи форми. Перед будь-яким надсиланням запитай.';
+  String get use_the_attached_content_to_identify_and_fill_the_relevant =>
+      'Використай вкладення, щоб визначити та заповнити відповідні поля документа чи форми. Перед будь-яким надсиланням запитай.';
 
   @override
-  String use_this_content_to_identify_and_fill_the_relevant_document(Object text) {
+  String use_this_content_to_identify_and_fill_the_relevant_document(
+    Object text,
+  ) {
     return 'Використай цей вміст, щоб визначити та заповнити відповідні поля документа чи форми. Перед будь-яким надсиланням запитай:\n\n$text';
   }
 
   @override
-  String get used_for_hosted_path_prefixes_and_for_the_settings_memory => 'Для префіксів шляхів і вкладок налаштувань, пам’яті, навичок та розкладу. Для відкритої вебпанелі залиште ім’я й пароль порожніми; якщо авторизацію додає проксі, увімкніть відповідний режим.';
+  String get used_for_hosted_path_prefixes_and_for_the_settings_memory =>
+      'Для префіксів шляхів і вкладок налаштувань, пам’яті, навичок та розкладу. Для відкритої вебпанелі залиште ім’я й пароль порожніми; якщо авторизацію додає проксі, увімкніть відповідний режим.';
 
   @override
   String get username_optional => 'Ім’я користувача (необов’язково)';
@@ -2529,7 +2805,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get e_g_dashboard => 'наприклад, /dashboard';
 
   @override
-  String get e_g_dashboard_proxy_path_before_api => 'наприклад, /dashboard (шлях проксі перед /api/)';
+  String get e_g_dashboard_proxy_path_before_api =>
+      'наприклад, /dashboard (шлях проксі перед /api/)';
 
   @override
   String get e_g_profile_peter => 'наприклад, /profile/peter';
@@ -2559,10 +2836,12 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get example_host_hint => '192.168.1.50, 100.x.y.z або hermes-machine.tailnet.ts.net';
+  String get example_host_hint =>
+      '192.168.1.50, 100.x.y.z або hermes-machine.tailnet.ts.net';
 
   @override
-  String get example_profile_prefix_hint_full => 'наприклад, /profile/peter (шлях проксі перед /api/ та /v1/)';
+  String get example_profile_prefix_hint_full =>
+      'наприклад, /profile/peter (шлях проксі перед /api/ та /v1/)';
 
   @override
   String and_more(Object count) {
@@ -2617,7 +2896,10 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String chats_migrated_projects_created(Object createdProjects, Object linkedSessions) {
+  String chats_migrated_projects_created(
+    Object createdProjects,
+    Object linkedSessions,
+  ) {
     return 'Перенесено чатів: $linkedSessions · створено проєктів: $createdProjects';
   }
 
@@ -2780,7 +3062,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get text_size_extra_large => 'Дуже великий';
 
   @override
-  String get text_size_use_system_description => 'Використовувати системний розмір тексту Android без змін.';
+  String get text_size_use_system_description =>
+      'Використовувати системний розмір тексту Android без змін.';
 
   @override
   String text_size_percent_description(Object percent) {
@@ -2958,7 +3241,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get admin_password_needed => 'Потрібен пароль адміністратора';
 
   @override
-  String get hermes_needs_a_sudo_password_for_the_pending_terminal_command => 'Hermes потрібен пароль sudo для очікуваної команди термінала.';
+  String get hermes_needs_a_sudo_password_for_the_pending_terminal_command =>
+      'Hermes потрібен пароль sudo для очікуваної команди термінала.';
 
   @override
   String get sudo_password => 'Пароль sudo';
@@ -2967,7 +3251,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get secret_needed => 'Потрібен секрет';
 
   @override
-  String get hermes_needs_a_secret_for_the_pending_skill => 'Hermes потрібен секрет для очікуваної навички.';
+  String get hermes_needs_a_secret_for_the_pending_skill =>
+      'Hermes потрібен секрет для очікуваної навички.';
 
   @override
   String get secret_value => 'Значення секрету';
@@ -2990,7 +3275,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get could_not_save_chat_spaces => 'Не вдалося зберегти розділи чатів на цьому пристрої';
+  String get could_not_save_chat_spaces =>
+      'Не вдалося зберегти розділи чатів на цьому пристрої';
 
   @override
   String get update_available => 'Доступне оновлення';
@@ -3005,13 +3291,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get update_downloading => 'Downloading and verifying update…';
 
   @override
-  String get update_allow_install => 'Allow Hermes to install this update, then return here and tap Install update.';
+  String get update_allow_install =>
+      'Allow Hermes to install this update, then return here and tap Install update.';
 
   @override
-  String get update_failed => 'The update could not be downloaded, verified, or opened. Try again or view the release page.';
+  String get update_failed =>
+      'The update could not be downloaded, verified, or opened. Try again or view the release page.';
 
   @override
-  String get a_newer_hermes_android_build_is_available_on_github => 'На GitHub доступна новіша збірка Ares.';
+  String get a_newer_hermes_android_build_is_available_on_github =>
+      'На GitHub доступна новіша збірка Ares.';
 
   @override
   String get release_notes => 'Примітки до випуску';
@@ -3029,7 +3318,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get check_for_updates => 'Перевірити оновлення';
 
   @override
-  String get check_for_updates_on_launch => 'Перевіряти оновлення під час запуску';
+  String get check_for_updates_on_launch =>
+      'Перевіряти оновлення під час запуску';
 
   @override
   String get you_re_on_the_latest_version => 'У вас найновіша версія.';
@@ -3052,10 +3342,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get chat_density_compact => 'Компактна';
 
   @override
-  String get chat_density_comfortable_description => 'Просторіші повідомлення з підписом автора над кожним.';
+  String get chat_density_comfortable_description =>
+      'Просторіші повідомлення з підписом автора над кожним.';
 
   @override
-  String get chat_density_compact_description => 'Щільніші повідомлення без підписів, щоб більше тексту вміщалося на екрані.';
+  String get chat_density_compact_description =>
+      'Щільніші повідомлення без підписів, щоб більше тексту вміщалося на екрані.';
 
   @override
   String chat_density_label_description(Object description, Object label) {
@@ -3063,16 +3355,20 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins => 'Компактний режим прибирає підписи «Ви» й «Hermes» та зменшує внутрішні, міжрядкові й бічні відступи повідомлень.';
+  String
+  get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins =>
+      'Компактний режим прибирає підписи «Ви» й «Hermes» та зменшує внутрішні, міжрядкові й бічні відступи повідомлень.';
 
   @override
   String get client_certificate_mtls => 'Клієнтський сертифікат (mTLS)';
 
   @override
-  String get client_certificate_mtls_description => 'Надавати сертифікат, коли HTTPS-проксі вимагає взаємного TLS.';
+  String get client_certificate_mtls_description =>
+      'Надавати сертифікат, коли HTTPS-проксі вимагає взаємного TLS.';
 
   @override
-  String get client_certificate_https_only => 'Клієнтські сертифікати використовуються лише для HTTPS-підключень.';
+  String get client_certificate_https_only =>
+      'Клієнтські сертифікати використовуються лише для HTTPS-підключень.';
 
   @override
   String get choose_certificate => 'Вибрати сертифікат';
@@ -3081,13 +3377,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get certificate_password => 'Пароль сертифіката';
 
   @override
-  String get this_certificate_is_password_protected => 'Цей сертифікат захищений паролем. Він відкривається під час введення.';
+  String get this_certificate_is_password_protected =>
+      'Цей сертифікат захищений паролем. Він відкривається під час введення.';
 
   @override
-  String get enter_the_certificate_password_to_finish_loading_it => 'Введіть пароль сертифіката, щоб завершити завантаження.';
+  String get enter_the_certificate_password_to_finish_loading_it =>
+      'Введіть пароль сертифіката, щоб завершити завантаження.';
 
   @override
-  String get client_certificate_required => 'Завантажте клієнтський сертифікат або вимкніть його використання.';
+  String get client_certificate_required =>
+      'Завантажте клієнтський сертифікат або вимкніть його використання.';
 
   @override
   String client_certificate_loaded(String label) {
@@ -3107,31 +3406,38 @@ class AppLocalizationsUk extends AppLocalizations {
   String get keep_chats_active_in_background => 'Підтримувати чати у фоні';
 
   @override
-  String get background_work_description => 'Зберігати підключення розпочатих вами чатів, поки застосунок у фоні. Неактивні підключення можуть закриватися. Витрачає більше заряду й трафіку. Вимкнення не зупиняє роботу сервера.';
+  String get background_work_description =>
+      'Зберігати підключення розпочатих вами чатів, поки застосунок у фоні. Неактивні підключення можуть закриватися. Витрачає більше заряду й трафіку. Вимкнення не зупиняє роботу сервера.';
 
   @override
-  String get background_work_limits => 'Android може призупинити підключення в режимі Doze або завершити процес застосунку. Для сповіщень після завершення процесу потрібне окреме налаштування push. Примусова зупинка не підтримується.';
+  String get background_work_limits =>
+      'Android може призупинити підключення в режимі Doze або завершити процес застосунку. Для сповіщень після завершення процесу потрібне окреме налаштування push. Примусова зупинка не підтримується.';
 
   @override
-  String get background_work_disclosure => 'Поки захист фонової роботи активний, обов’язкове службове сповіщення залишається видимим, навіть якщо сповіщення чатів вимкнено.';
+  String get background_work_disclosure =>
+      'Поки захист фонової роботи активний, обов’язкове службове сповіщення залишається видимим, навіть якщо сповіщення чатів вимкнено.';
 
   @override
   String get battery_optimisation_settings => 'Налаштування економії заряду';
 
   @override
-  String get battery_optimisation_description => 'Відкрити налаштування Android для перегляду обмежень батареї. Автоматичного запиту винятків немає; зміна налаштувань не гарантує доставку.';
+  String get battery_optimisation_description =>
+      'Відкрити налаштування Android для перегляду обмежень батареї. Автоматичного запиту винятків немає; зміна налаштувань не гарантує доставку.';
 
   @override
-  String get battery_settings_unavailable => 'Не вдалося відкрити налаштування батареї на цьому пристрої.';
+  String get battery_settings_unavailable =>
+      'Не вдалося відкрити налаштування батареї на цьому пристрої.';
 
   @override
-  String get background_work_save_failed => 'Не вдалося зберегти налаштування фонової роботи.';
+  String get background_work_save_failed =>
+      'Не вдалося зберегти налаштування фонової роботи.';
 
   @override
   String get ongoing_chat_channel_name => 'Активні чати';
 
   @override
-  String get ongoing_chat_channel_description => 'Тихі оновлення стану незавершених чатів, розпочатих користувачем';
+  String get ongoing_chat_channel_description =>
+      'Тихі оновлення стану незавершених чатів, розпочатих користувачем';
 
   @override
   String get task_timeline => 'Хронологія завдання';
@@ -3140,10 +3446,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get task_refresh_history => 'Оновити історію завдання';
 
   @override
-  String get task_live_preview => 'Поточний перегляд із подій батьківського чату';
+  String get task_live_preview =>
+      'Поточний перегляд із подій батьківського чату';
 
   @override
-  String get task_preview_explanation => 'Лише останнє доступне прев’ю; це не збережений рядок історії.';
+  String get task_preview_explanation =>
+      'Лише останнє доступне прев’ю; це не збережений рядок історії.';
 
   @override
   String get task_preview => 'Перегляд';
@@ -3155,7 +3463,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get task_loading_history => 'Завантаження історії завдання…';
 
   @override
-  String get task_empty_history => 'Збережених повідомлень ще немає. Завдання могло ще не записати історію; це не означає, що воно нічого не зробило.';
+  String get task_empty_history =>
+      'Збережених повідомлень ще немає. Завдання могло ще не записати історію; це не означає, що воно нічого не зробило.';
 
   @override
   String get task_load_older => 'Завантажити старіші';
@@ -3184,7 +3493,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get task_read_only_notice => 'Лише для читання · історія може з’явитися після запису завданням. Оновіть для перевірки.';
+  String get task_read_only_notice =>
+      'Лише для читання · історія може з’явитися після запису завданням. Оновіть для перевірки.';
 
   @override
   String task_row_label(Object id, Object role) {
@@ -3230,37 +3540,48 @@ class AppLocalizationsUk extends AppLocalizations {
   String get task_image_placeholder => '[зображення]';
 
   @override
-  String get task_invalid_reference => 'Історія завдання недоступна: некоректне посилання на збережену сесію.';
+  String get task_invalid_reference =>
+      'Історія завдання недоступна: некоректне посилання на збережену сесію.';
 
   @override
-  String get task_auth_required => 'Історія завдання недоступна: налаштуйте вхід до вебпанелі цього шлюзу. Ключ API-сервера не дає доступу до міркувань завдання.';
+  String get task_auth_required =>
+      'Історія завдання недоступна: налаштуйте вхід до вебпанелі цього шлюзу. Ключ API-сервера не дає доступу до міркувань завдання.';
 
   @override
-  String get task_auth_rejected => 'Історія завдання недоступна: вебпанель відхилила авторизацію. Перевірте налаштування вебпанелі цього шлюзу.';
+  String get task_auth_rejected =>
+      'Історія завдання недоступна: вебпанель відхилила авторизацію. Перевірте налаштування вебпанелі цього шлюзу.';
 
   @override
-  String get task_incompatible_history => 'Історія завдання недоступна: вебпанель не надає сумісної обмеженої історії для вибраного профілю.';
+  String get task_incompatible_history =>
+      'Історія завдання недоступна: вебпанель не надає сумісної обмеженої історії для вибраного профілю.';
 
   @override
-  String get task_identity_unproven => 'Історія завдання недоступна: вебпанель не підтвердила точну збережену сесію чи її ланцюжок стискання. Історія іншої сесії не показується.';
+  String get task_identity_unproven =>
+      'Історія завдання недоступна: вебпанель не підтвердила точну збережену сесію чи її ланцюжок стискання. Історія іншої сесії не показується.';
 
   @override
-  String get task_partial_compression => 'Неповна історія: завдання продовжилося після стискання, але шлюз не надав перевірюваного нового посилання. Останньої відповіді може бракувати. Автоматичне оновлення призупинено; натисніть «Оновити» для повтору.';
+  String get task_partial_compression =>
+      'Неповна історія: завдання продовжилося після стискання, але шлюз не надав перевірюваного нового посилання. Останньої відповіді може бракувати. Автоматичне оновлення призупинено; натисніть «Оновити» для повтору.';
 
   @override
-  String get task_partial_ancestors => 'Неповна історія: шлюз не надає попередні частини завдання до стискання. Відомі рядки збережено; натисніть «Оновити» для повтору.';
+  String get task_partial_ancestors =>
+      'Неповна історія: шлюз не надає попередні частини завдання до стискання. Відомі рядки збережено; натисніть «Оновити» для повтору.';
 
   @override
-  String get task_missing_reference => 'Історія завдання недоступна: сервер не зберіг посилання на сесію.';
+  String get task_missing_reference =>
+      'Історія завдання недоступна: сервер не зберіг посилання на сесію.';
 
   @override
-  String get task_missing_row_identity => 'Історія завдання недоступна: сервер не надав постійних ідентифікаторів рядків повідомлень.';
+  String get task_missing_row_identity =>
+      'Історія завдання недоступна: сервер не надав постійних ідентифікаторів рядків повідомлень.';
 
   @override
-  String get task_history_not_ready => 'Історія завдання ще недоступна (HTTP 404). Можливо, завдання ще не записало історію або вебпанель не підтримує її. Повторіть спробу.';
+  String get task_history_not_ready =>
+      'Історія завдання ще недоступна (HTTP 404). Можливо, завдання ще не записало історію або вебпанель не підтримує її. Повторіть спробу.';
 
   @override
-  String get task_refresh_failed => 'Не вдалося оновити історію завдання. Перевірте підключення й повторіть спробу.';
+  String get task_refresh_failed =>
+      'Не вдалося оновити історію завдання. Перевірте підключення й повторіть спробу.';
 
   @override
   String get task_status_interrupted => 'Перервано';
@@ -3303,10 +3624,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get activity_reconnecting => 'Перепідключення — перевірка стану ходу';
 
   @override
-  String get activity_outcome_unknown => 'Не вдалося підтвердити результат ходу. Відкрийте чат для перевірки.';
+  String get activity_outcome_unknown =>
+      'Не вдалося підтвердити результат ходу. Відкрийте чат для перевірки.';
 
   @override
-  String get activity_chat_updated_detail => 'Шлюз зафіксував активність чату; поточний стан роботи недоступний.';
+  String get activity_chat_updated_detail =>
+      'Шлюз зафіксував активність чату; поточний стан роботи недоступний.';
 
   @override
   String get activity_updated => 'Оновлено';
@@ -3315,31 +3638,38 @@ class AppLocalizationsUk extends AppLocalizations {
   String get activity_empty_title => 'Нещодавньої активності немає';
 
   @override
-  String get activity_empty_detail => 'Тут відображаються ходи, розпочаті в цьому застосунку, та чати шлюзу, оновлені за останні 7 днів.';
+  String get activity_empty_detail =>
+      'Тут відображаються ходи, розпочаті в цьому застосунку, та чати шлюзу, оновлені за останні 7 днів.';
 
   @override
-  String get activity_read_error => 'Не вдалося прочитати записи ходів або чати шлюзу. Перевірте підключення й повторіть спробу.';
+  String get activity_read_error =>
+      'Не вдалося прочитати записи ходів або чати шлюзу. Перевірте підключення й повторіть спробу.';
 
   @override
-  String get activity_chat_unavailable => 'Чат більше недоступний або немає зв’язку зі шлюзом.';
+  String get activity_chat_unavailable =>
+      'Чат більше недоступний або немає зв’язку зі шлюзом.';
 
   @override
   String get activity_partial_title => 'Активність завантажено частково';
 
   @override
-  String get activity_partial_detail => 'Показано обмежену частину активності шлюзу. Можуть існувати інші чати; потягніть для оновлення.';
+  String get activity_partial_detail =>
+      'Показано обмежену частину активності шлюзу. Можуть існувати інші чати; потягніть для оновлення.';
 
   @override
   String get provider_usage => 'Облік використання';
 
   @override
-  String get provider_usage_notice => 'Використання Hermes за останні 30 днів, а не баланс кредитів чи ціни моделей. Облікові дані провайдерів налаштовуються на сервері Hermes; застосунок не зберігає їхніх ключів API.';
+  String get provider_usage_notice =>
+      'Використання Hermes за останні 30 днів, а не баланс кредитів чи ціни моделей. Облікові дані провайдерів налаштовуються на сервері Hermes; застосунок не зберігає їхніх ключів API.';
 
   @override
-  String get provider_usage_failed => 'Не вдалося завантажити облік використання.';
+  String get provider_usage_failed =>
+      'Не вдалося завантажити облік використання.';
 
   @override
-  String get provider_usage_empty => 'Для цього провайдера немає записів використання.';
+  String get provider_usage_empty =>
+      'Для цього провайдера немає записів використання.';
 
   @override
   String provider_usage_counts(String sessions, String input, String output) {
@@ -3361,10 +3691,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get provider_quota_openai_api => 'Облік використання OpenAI API';
 
   @override
-  String get provider_quota_notice => 'Вікна передплати за даними провайдера, окремо від обліку Hermes та оплати API. Облікові записи показуються окремо; обмеження моделі не означає вичерпання всього облікового запису.';
+  String get provider_quota_notice =>
+      'Вікна передплати за даними провайдера, окремо від обліку Hermes та оплати API. Облікові записи показуються окремо; обмеження моделі не означає вичерпання всього облікового запису.';
 
   @override
-  String get provider_quota_windows_notice => 'Передплати Codex і Claude мають п’ятигодинні та тижневі обмеження. Показуються лише дані провайдера; відсутні межі й час скидання лишаються невідомими. Тижневі межі можуть стосуватися облікового запису або окремих моделей.';
+  String get provider_quota_windows_notice =>
+      'Передплати Codex і Claude мають п’ятигодинні та тижневі обмеження. Показуються лише дані провайдера; відсутні межі й час скидання лишаються невідомими. Тижневі межі можуть стосуватися облікового запису або окремих моделей.';
 
   @override
   String get provider_quota_five_hour_session => 'П’ятигодинна сесія';
@@ -3373,7 +3705,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get provider_quota_unavailable => 'Залишок передплати недоступний.';
 
   @override
-  String get provider_quota_failed => 'Не вдалося оновити залишок передплати. Збережені значення належать до попередньої перевірки.';
+  String get provider_quota_failed =>
+      'Не вдалося оновити залишок передплати. Збережені значення належать до попередньої перевірки.';
 
   @override
   String get provider_quota_account => 'Обліковий запис';
@@ -3408,46 +3741,57 @@ class AppLocalizationsUk extends AppLocalizations {
   String get auxiliary_models => 'Допоміжні моделі';
 
   @override
-  String get auxiliary_notice => 'Виберіть моделі для окремих завдань. Власними адресами сервісів керуйте на сервері. Автоматичний режим дотримується правил успадкування завдання.';
+  String get auxiliary_notice =>
+      'Виберіть моделі для окремих завдань. Власними адресами сервісів керуйте на сервері. Автоматичний режим дотримується правил успадкування завдання.';
 
   @override
   String get auxiliary_inherit => 'Автоматично (успадкувати)';
 
   @override
-  String get auxiliary_unavailable => 'Налаштування допоміжних моделей недоступні.';
+  String get auxiliary_unavailable =>
+      'Налаштування допоміжних моделей недоступні.';
 
   @override
   String get provider_oauth_title => 'Вхід до провайдера';
 
   @override
-  String get provider_oauth_more_subtitle => 'Керування входом до провайдера на сервері Hermes';
+  String get provider_oauth_more_subtitle =>
+      'Керування входом до провайдера на сервері Hermes';
 
   @override
-  String get provider_oauth_settings_subtitle => 'Вхід виконується на сервері Hermes; токени не зберігаються на цьому пристрої';
+  String get provider_oauth_settings_subtitle =>
+      'Вхід виконується на сервері Hermes; токени не зберігаються на цьому пристрої';
 
   @override
-  String get provider_oauth_intro => 'Увійдіть до провайдера в зовнішньому браузері. Токени зберігаються лише на сервері Hermes. Вхід не змінює модель чату в цьому застосунку.';
+  String get provider_oauth_intro =>
+      'Увійдіть до провайдера в зовнішньому браузері. Токени зберігаються лише на сервері Hermes. Вхід не змінює модель чату в цьому застосунку.';
 
   @override
-  String get provider_oauth_defaults_notice => 'Деякі серверні сценарії, зокрема заміна безкоштовного облікового запису Nous, можуть змінити типові налаштування. Перевірте їх на сервері після входу.';
+  String get provider_oauth_defaults_notice =>
+      'Деякі серверні сценарії, зокрема заміна безкоштовного облікового запису Nous, можуть змінити типові налаштування. Перевірте їх на сервері після входу.';
 
   @override
-  String get provider_oauth_transport_init_failed => 'Не вдалося ініціалізувати вибране захищене підключення до вебпанелі. Перевірте TLS і налаштування підключення.';
+  String get provider_oauth_transport_init_failed =>
+      'Не вдалося ініціалізувати вибране захищене підключення до вебпанелі. Перевірте TLS і налаштування підключення.';
 
   @override
-  String get provider_oauth_https_required => 'Для входу до провайдера потрібне HTTPS-підключення до вебпанелі Hermes.';
+  String get provider_oauth_https_required =>
+      'Для входу до провайдера потрібне HTTPS-підключення до вебпанелі Hermes.';
 
   @override
-  String get provider_oauth_auth_required => 'Перед входом налаштуйте авторизацію вебпанелі паролем або довіреним проксі.';
+  String get provider_oauth_auth_required =>
+      'Перед входом налаштуйте авторизацію вебпанелі паролем або довіреним проксі.';
 
   @override
-  String get provider_oauth_catalog_failed => 'Вхід до провайдера недоступний на цьому сервері. Перевірте авторизацію вебпанелі й оновіть сервер, якщо він не підтримує OAuth провайдера.';
+  String get provider_oauth_catalog_failed =>
+      'Вхід до провайдера недоступний на цьому сервері. Перевірте авторизацію вебпанелі й оновіть сервер, якщо він не підтримує OAuth провайдера.';
 
   @override
   String get provider_oauth_expired => 'Час входу минув. Почніть знову.';
 
   @override
-  String get provider_oauth_start_failed => 'Не вдалося почати захищений вхід до провайдера. Спробуйте ще раз.';
+  String get provider_oauth_start_failed =>
+      'Не вдалося почати захищений вхід до провайдера. Спробуйте ще раз.';
 
   @override
   String get provider_oauth_denied => 'Вхід відхилено. Почніть знову.';
@@ -3456,10 +3800,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get provider_oauth_cancelled => 'Вхід скасовано.';
 
   @override
-  String get provider_oauth_host_failed => 'Сервер не зміг завершити вхід. Почніть знову.';
+  String get provider_oauth_host_failed =>
+      'Сервер не зміг завершити вхід. Почніть знову.';
 
   @override
-  String get provider_oauth_poll_failed => 'Не вдалося перевірити стан входу. Почніть знову.';
+  String get provider_oauth_poll_failed =>
+      'Не вдалося перевірити стан входу. Почніть знову.';
 
   @override
   String provider_oauth_cancellation_unconfirmed(String message) {
@@ -3467,7 +3813,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get provider_oauth_browser_failed => 'Не вдалося відкрити зовнішній браузер. Повторіть спробу або скасуйте вхід.';
+  String get provider_oauth_browser_failed =>
+      'Не вдалося відкрити зовнішній браузер. Повторіть спробу або скасуйте вхід.';
 
   @override
   String get provider_oauth_retry => 'Повторити';
@@ -3478,10 +3825,12 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get provider_oauth_code_instruction => 'Введіть цей тимчасовий код на сторінці провайдера:';
+  String get provider_oauth_code_instruction =>
+      'Введіть цей тимчасовий код на сторінці провайдера:';
 
   @override
-  String get provider_oauth_waiting => 'Очікування дозволу. Сесія завершиться автоматично.';
+  String get provider_oauth_waiting =>
+      'Очікування дозволу. Сесія завершиться автоматично.';
 
   @override
   String get provider_oauth_open_browser => 'Відкрити провайдера в браузері';
@@ -3499,13 +3848,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get provider_oauth_sign_in => 'Увійти';
 
   @override
-  String get provider_oauth_cli_required => 'Увійдіть через CLI провайдера на сервері Hermes. Цей сервер не надає входу до цього провайдера із застосунку.';
+  String get provider_oauth_cli_required =>
+      'Увійдіть через CLI провайдера на сервері Hermes. Цей сервер не надає входу до цього провайдера із застосунку.';
 
   @override
-  String get provider_oauth_checking_account => 'Дозвіл отримано. Перевірка облікового запису на сервері…';
+  String get provider_oauth_checking_account =>
+      'Дозвіл отримано. Перевірка облікового запису на сервері…';
 
   @override
-  String get provider_oauth_verification_unavailable => 'Дозвіл отримано; перевірка облікового запису недоступна. Відкрийте «Використання», щоб оновити дані.';
+  String get provider_oauth_verification_unavailable =>
+      'Дозвіл отримано; перевірка облікового запису недоступна. Відкрийте «Використання», щоб оновити дані.';
 
   @override
   String provider_oauth_verified_account(String email) {
@@ -3513,10 +3865,12 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get provider_oauth_credentials_unverified => 'Сервер повідомляє про наявність облікових даних; особу облікового запису не підтверджено.';
+  String get provider_oauth_credentials_unverified =>
+      'Сервер повідомляє про наявність облікових даних; особу облікового запису не підтверджено.';
 
   @override
-  String get provider_oauth_account_status_unknown => 'Стан облікового запису на сервері недоступний.';
+  String get provider_oauth_account_status_unknown =>
+      'Стан облікового запису на сервері недоступний.';
 
   @override
   String get app_language => 'Мова застосунку';
@@ -3562,22 +3916,27 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get voice_recording_permission => 'Allow microphone access to record a voice message.';
+  String get voice_recording_permission =>
+      'Allow microphone access to record a voice message.';
 
   @override
-  String get voice_recording_limit => 'This recording has reached the ten-minute limit.';
+  String get voice_recording_limit =>
+      'This recording has reached the ten-minute limit.';
 
   @override
   String get voice_recording_empty => 'No audio was recorded. Try again.';
 
   @override
-  String get voice_recording_failed => 'Could not process the recording. Any saved fragments have been kept.';
+  String get voice_recording_failed =>
+      'Could not process the recording. Any saved fragments have been kept.';
 
   @override
-  String get voice_recording_unconfirmed => 'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
+  String get voice_recording_unconfirmed =>
+      'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
 
   @override
-  String get voice_recording_submit_failed => 'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
+  String get voice_recording_submit_failed =>
+      'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
 
   @override
   String get voice_recording_pause_playback => 'Pause playback';
@@ -3586,10 +3945,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get projects_root_title => 'Папка проєктів на сервері';
 
   @override
-  String get projects_root_more_subtitle => 'Де на сервері створюються нові папки проєктів';
+  String get projects_root_more_subtitle =>
+      'Де на сервері створюються нові папки проєктів';
 
   @override
-  String get projects_root_description => 'Проєкти, створені на цьому телефоні, отримують папку тут. Укажіть папку, яку використовує сам Hermes, щоб телефон і сервер бачили ті самі проєкти.';
+  String get projects_root_description =>
+      'Проєкти, створені на цьому телефоні, отримують папку тут. Укажіть папку, яку використовує сам Hermes, щоб телефон і сервер бачили ті самі проєкти.';
 
   @override
   String get projects_root_label => 'Кореневий шлях проєктів';
@@ -3603,7 +3964,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get projects_root_locked_title => 'Задано сервером';
 
   @override
-  String get projects_root_locked_explanation => 'Цей сервер обмежує доступ до файлів одним коренем, тому папку проєктів неможливо змінити з програми.';
+  String get projects_root_locked_explanation =>
+      'Цей сервер обмежує доступ до файлів одним коренем, тому папку проєктів неможливо змінити з програми.';
 
   @override
   String get projects_root_saved => 'Папку проєктів збережено.';
@@ -3615,16 +3977,20 @@ class AppLocalizationsUk extends AppLocalizations {
   String get projects_root_invalid_empty => 'Введіть шлях до папки.';
 
   @override
-  String get projects_root_invalid_absolute => 'Введіть абсолютний шлях, що починається з косої риски.';
+  String get projects_root_invalid_absolute =>
+      'Введіть абсолютний шлях, що починається з косої риски.';
 
   @override
-  String get projects_root_invalid_segments => 'Видаліть зі шляху точкові сегменти та керуючі символи.';
+  String get projects_root_invalid_segments =>
+      'Видаліть зі шляху точкові сегменти та керуючі символи.';
 
   @override
-  String get projects_root_unsupported => 'Не підтримується для цього підключення. Щоб прочитати або змінити папку проєктів на сервері, потрібне підключення Desktop Gateway з доступом до панелі керування.';
+  String get projects_root_unsupported =>
+      'Не підтримується для цього підключення. Щоб прочитати або змінити папку проєктів на сервері, потрібне підключення Desktop Gateway з доступом до панелі керування.';
 
   @override
-  String get projects_root_unavailable => 'Не вдалося прочитати папку проєктів на сервері. Перевірте підключення до панелі керування та повторіть спробу.';
+  String get projects_root_unavailable =>
+      'Не вдалося прочитати папку проєктів на сервері. Перевірте підключення до панелі керування та повторіть спробу.';
 
   @override
   String get adopt_folder_action => 'Додати наявну папку';
@@ -3643,7 +4009,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get adopt_folder_none => 'Усі папки за цим шляхом уже є проєктами.';
 
   @override
-  String get adopt_folder_unsupported => 'Це підключення не може отримати список папок сервера. Введіть абсолютний шлях до наявної папки.';
+  String get adopt_folder_unsupported =>
+      'Це підключення не може отримати список папок сервера. Введіть абсолютний шлях до наявної папки.';
 
   @override
   String adopt_folder_failed(String error) {
@@ -3692,13 +4059,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get slash_command_info_no_description => 'Опис недоступний.';
 
   @override
-  String get slash_command_info_arguments_options => 'Приймає один із фіксованих варіантів.';
+  String get slash_command_info_arguments_options =>
+      'Приймає один із фіксованих варіантів.';
 
   @override
-  String get slash_command_info_arguments_text => 'Приймає текст після команди.';
+  String get slash_command_info_arguments_text =>
+      'Приймає текст після команди.';
 
   @override
-  String get slash_command_info_arguments_mixed => 'Приймає варіант або текст після команди.';
+  String get slash_command_info_arguments_mixed =>
+      'Приймає варіант або текст після команди.';
 
   @override
   String get slash_command_output => 'Command output';
@@ -3707,28 +4077,33 @@ class AppLocalizationsUk extends AppLocalizations {
   String get slash_command_no_output => 'The command completed with no output.';
 
   @override
-  String get slash_command_delivery_unknown => 'The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.';
+  String get slash_command_delivery_unknown =>
+      'The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.';
 
   @override
   String get slash_command_failed => 'The command could not be run.';
 
   @override
-  String get slash_command_unsupported => 'Ця команда недоступна на цьому сервері.';
+  String get slash_command_unsupported =>
+      'Ця команда недоступна на цьому сервері.';
 
   @override
-  String get slash_sessions_inline => 'Відкрийте список сесій, щоб вибрати чат. Чернетку збережено.';
+  String get slash_sessions_inline =>
+      'Відкрийте список сесій, щоб вибрати чат. Чернетку збережено.';
 
   @override
   String get nextgen_toggle => 'Інтерфейс NextGen';
 
   @override
-  String get nextgen_toggle_subtitle => 'Новий дизайн з єдиним входом, живими чатами та пошуком у мережі. Шлюзи й чати спільні з цим інтерфейсом.';
+  String get nextgen_toggle_subtitle =>
+      'Новий дизайн з єдиним входом, живими чатами та пошуком у мережі. Шлюзи й чати спільні з цим інтерфейсом.';
 
   @override
   String get nextgen_single_login => 'Увійти з одним логіном';
 
   @override
-  String get nextgen_single_login_subtitle => 'Додайте шлюз лише за адресою панелі та одним входом.';
+  String get nextgen_single_login_subtitle =>
+      'Додайте шлюз лише за адресою панелі та одним входом.';
 
   @override
   String get ng_allow_this_command => 'Дозволити цю команду?';
@@ -3751,7 +4126,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_password_for_sudo => 'Пароль для sudo';
 
   @override
-  String get ng_hermes_needs_your_sudo_password_to => 'Hermes потрібен ваш пароль sudo, щоб виконати цю команду.';
+  String get ng_hermes_needs_your_sudo_password_to =>
+      'Hermes потрібен ваш пароль sudo, щоб виконати цю команду.';
 
   @override
   String get ng_a_secret_value => 'Конфіденційне значення';
@@ -3818,7 +4194,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_steer_rejected => 'запит, що виконується, цього не прийняв';
 
   @override
-  String get ng_turn_not_known_yet => 'запит, що виконується, ще невідомий; спробуйте ще раз за мить';
+  String get ng_turn_not_known_yet =>
+      'запит, що виконується, ще невідомий; спробуйте ще раз за мить';
 
   @override
   String ng_couldn_t_stop(Object error) {
@@ -3835,16 +4212,20 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_live_connection => 'З’єднання в реальному часі';
 
   @override
-  String get ng_check_that_tailscale_is_on_on => 'Переконайтеся, що Tailscale увімкнено і на цьому телефоні, і на сервері.';
+  String get ng_check_that_tailscale_is_on_on =>
+      'Переконайтеся, що Tailscale увімкнено і на цьому телефоні, і на сервері.';
 
   @override
-  String get ng_check_the_address_and_that_the => 'Перевірте адресу та переконайтеся, що проксі перенаправляє запити на панель керування.';
+  String get ng_check_the_address_and_that_the =>
+      'Перевірте адресу та переконайтеся, що проксі перенаправляє запити на панель керування.';
 
   @override
-  String get ng_use_the_same_network_as_the => 'Під’єднайтеся до тієї самої мережі, що й сервер, і запустіть панель керування з --host 0.0.0.0, щоб інші пристрої могли підключитися.';
+  String get ng_use_the_same_network_as_the =>
+      'Під’єднайтеся до тієї самої мережі, що й сервер, і запустіть панель керування з --host 0.0.0.0, щоб інші пристрої могли підключитися.';
 
   @override
-  String get ng_check_the_address_vpn_or_tailscale => 'Перевірте адресу, VPN або з’єднання Tailscale.';
+  String get ng_check_the_address_vpn_or_tailscale =>
+      'Перевірте адресу, VPN або з’єднання Tailscale.';
 
   @override
   String get ng_not_checked_yet => 'Ще не перевірено.';
@@ -3858,7 +4239,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_something_answered_but_not_a_hermes => 'Отримано відповідь, але це не панель керування Hermes.';
+  String get ng_something_answered_but_not_a_hermes =>
+      'Отримано відповідь, але це не панель керування Hermes.';
 
   @override
   String ng_something_answered_http_but_not_a(Object status) {
@@ -3866,28 +4248,36 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_use_the_dashboard_s_address_and => 'Використовуйте адресу й порт панелі керування (9119 за замовчуванням), а не API-сервера.';
+  String get ng_use_the_dashboard_s_address_and =>
+      'Використовуйте адресу й порт панелі керування (9119 за замовчуванням), а не API-сервера.';
 
   @override
-  String get ng_cloudflare_access_turned_the_service_token => 'Cloudflare Access відхилив токен сервісу.';
+  String get ng_cloudflare_access_turned_the_service_token =>
+      'Cloudflare Access відхилив токен сервісу.';
 
   @override
-  String get ng_cloudflare_access_is_in_front_of => 'Перед цією адресою встановлено Cloudflare Access.';
+  String get ng_cloudflare_access_is_in_front_of =>
+      'Перед цією адресою встановлено Cloudflare Access.';
 
   @override
-  String get ng_check_the_service_token_and_its => 'Перевірте токен сервісу та політику Service Auth.';
+  String get ng_check_the_service_token_and_its =>
+      'Перевірте токен сервісу та політику Service Auth.';
 
   @override
-  String get ng_add_a_cloudflare_access_service_token => 'Додайте токен сервісу Cloudflare Access для цієї адреси.';
+  String get ng_add_a_cloudflare_access_service_token =>
+      'Додайте токен сервісу Cloudflare Access для цієї адреси.';
 
   @override
-  String get ng_the_server_asks_for_a_client => 'Сервер запитує сертифікат клієнта.';
+  String get ng_the_server_asks_for_a_client =>
+      'Сервер запитує сертифікат клієнта.';
 
   @override
-  String get ng_pick_the_client_certificate_for_this => 'Виберіть сертифікат клієнта для цього шлюзу й перевірте ще раз.';
+  String get ng_pick_the_client_certificate_for_this =>
+      'Виберіть сертифікат клієнта для цього шлюзу й перевірте ще раз.';
 
   @override
-  String get ng_needs_server_access_first => 'Спочатку потрібен доступ до сервера.';
+  String get ng_needs_server_access_first =>
+      'Спочатку потрібен доступ до сервера.';
 
   @override
   String get ng_needs_a_sign_in_first => 'Спочатку потрібно увійти.';
@@ -3898,10 +4288,12 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_this_dashboard_doesn_t_need_a => 'Для цієї панелі керування вхід не потрібен.';
+  String get ng_this_dashboard_doesn_t_need_a =>
+      'Для цієї панелі керування вхід не потрібен.';
 
   @override
-  String get ng_the_saved_sign_in_has_expired => 'Термін дії збереженого входу минув.';
+  String get ng_the_saved_sign_in_has_expired =>
+      'Термін дії збереженого входу минув.';
 
   @override
   String get ng_sign_in_again => 'Увійдіть знову.';
@@ -3910,7 +4302,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_too_many_sign_in_attempts => 'Забагато спроб входу.';
 
   @override
-  String get ng_wait_a_minute_then_check_again => 'Зачекайте хвилину й перевірте ще раз.';
+  String get ng_wait_a_minute_then_check_again =>
+      'Зачекайте хвилину й перевірте ще раз.';
 
   @override
   String ng_the_gateway_answered(Object message) {
@@ -3918,7 +4311,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_sign_in_again_or_update_hermes => 'Увійдіть знову або оновіть Hermes.';
+  String get ng_sign_in_again_or_update_hermes =>
+      'Увійдіть знову або оновіть Hermes.';
 
   @override
   String ng_couldn_t_check_the_sign_in(Object error) {
@@ -3931,19 +4325,24 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_the_chat_connection_opened_and_the => 'З’єднання чату встановлено, шлюз повідомив, що готовий.';
+  String get ng_the_chat_connection_opened_and_the =>
+      'З’єднання чату встановлено, шлюз повідомив, що готовий.';
 
   @override
-  String get ng_the_gateway_never_said_it_was => 'Шлюз так і не повідомив про готовність.';
+  String get ng_the_gateway_never_said_it_was =>
+      'Шлюз так і не повідомив про готовність.';
 
   @override
-  String get ng_check_that_the_agent_is_running => 'Переконайтеся, що агент запущено на сервері.';
+  String get ng_check_that_the_agent_is_running =>
+      'Переконайтеся, що агент запущено на сервері.';
 
   @override
-  String get ng_the_gateway_refused_the_chat_connection => 'Шлюз відхилив з’єднання чату (HTTP 403).';
+  String get ng_the_gateway_refused_the_chat_connection =>
+      'Шлюз відхилив з’єднання чату (HTTP 403).';
 
   @override
-  String get ng_this_dashboard_has_no_chat_endpoint => 'У цієї панелі керування немає кінцевої точки чату (/api/ws).';
+  String get ng_this_dashboard_has_no_chat_endpoint =>
+      'У цієї панелі керування немає кінцевої точки чату (/api/ws).';
 
   @override
   String ng_the_chat_connection_failed(Object detail) {
@@ -3951,13 +4350,15 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_use_the_exact_address_the_dashboard => 'Використовуйте точну адресу, налаштовану для панелі керування.';
+  String get ng_use_the_exact_address_the_dashboard =>
+      'Використовуйте точну адресу, налаштовану для панелі керування.';
 
   @override
   String get ng_update_hermes => 'Оновіть Hermes.';
 
   @override
-  String get ng_make_sure_the_proxy_allows_websocket => 'Переконайтеся, що проксі дозволяє оновлення WebSocket на /api/ws.';
+  String get ng_make_sure_the_proxy_allows_websocket =>
+      'Переконайтеся, що проксі дозволяє оновлення WebSocket на /api/ws.';
 
   @override
   String get ng_offline => 'Офлайн';
@@ -3986,16 +4387,19 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_the_gateway_returned_no_websocket_ticket => 'Шлюз не надав квиток WebSocket.';
+  String get ng_the_gateway_returned_no_websocket_ticket =>
+      'Шлюз не надав квиток WebSocket.';
 
   @override
   String get ng_connection_lost => 'З’єднання втрачено';
 
   @override
-  String get ng_this_dashboard_has_no_chat_endpoint_2 => 'У цій панелі немає кінцевої точки чату (/api/ws). Оновіть Hermes.';
+  String get ng_this_dashboard_has_no_chat_endpoint_2 =>
+      'У цій панелі немає кінцевої точки чату (/api/ws). Оновіть Hermes.';
 
   @override
-  String get ng_the_gateway_refused_the_chat_connection_2 => 'Шлюз відхилив з’єднання з чатом. Перевірте, чи адреса відповідає налаштованому хосту панелі та чи ввімкнено вбудований чат.';
+  String get ng_the_gateway_refused_the_chat_connection_2 =>
+      'Шлюз відхилив з’єднання з чатом. Перевірте, чи адреса відповідає налаштованому хосту панелі та чи ввімкнено вбудований чат.';
 
   @override
   String ng_the_gateway_refused(Object method) {
@@ -4043,7 +4447,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_no_mcp_servers => 'Немає серверів MCP';
 
   @override
-  String get ng_that_file_is_too_large_to => 'Цей файл завеликий, щоб бути сертифікатом.';
+  String get ng_that_file_is_too_large_to =>
+      'Цей файл завеликий, щоб бути сертифікатом.';
 
   @override
   String ng_the_certificate_couldn_t_be_imported(Object error) {
@@ -4051,19 +4456,24 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_now_pick_its_private_key => 'Тепер виберіть відповідний приватний ключ.';
+  String get ng_now_pick_its_private_key =>
+      'Тепер виберіть відповідний приватний ключ.';
 
   @override
-  String get ng_now_pick_its_certificate => 'Тепер виберіть відповідний сертифікат.';
+  String get ng_now_pick_its_certificate =>
+      'Тепер виберіть відповідний сертифікат.';
 
   @override
-  String get ng_that_file_isn_t_a_certificate => 'Цей файл не є сертифікатом або приватним ключем.';
+  String get ng_that_file_isn_t_a_certificate =>
+      'Цей файл не є сертифікатом або приватним ключем.';
 
   @override
-  String get ng_if_a_proxy_in_front_of => 'Якщо проксі перед цією адресою запитує сертифікат клієнта, виберіть його тут, щоб перевірка, вхід і чат використовували його.';
+  String get ng_if_a_proxy_in_front_of =>
+      'Якщо проксі перед цією адресою запитує сертифікат клієнта, виберіть його тут, щоб перевірка, вхід і чат використовували його.';
 
   @override
-  String get ng_client_certificates_are_only_used_with => 'Сертифікати клієнта використовуються лише з адресами https://.';
+  String get ng_client_certificates_are_only_used_with =>
+      'Сертифікати клієнта використовуються лише з адресами https://.';
 
   @override
   String get ng_remove => 'Видалити';
@@ -4081,7 +4491,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_pick_a_different_certificate => 'Вибрати інший сертифікат';
 
   @override
-  String get ng_accepts_p12_pfx_or_pem_certificate => 'Підтримуються файли .p12/.pfx або файли сертифіката й ключа PEM. Ключ зберігається у приватному сховищі цього застосунку.';
+  String get ng_accepts_p12_pfx_or_pem_certificate =>
+      'Підтримуються файли .p12/.pfx або файли сертифіката й ключа PEM. Ключ зберігається у приватному сховищі цього застосунку.';
 
   @override
   String get ng_photos => 'Фотографії';
@@ -4114,19 +4525,22 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_steer => 'Скерувати';
 
   @override
-  String get ng_adds_this_to_the_running_turn => 'Додає це до поточного ходу на наступному кроці';
+  String get ng_adds_this_to_the_running_turn =>
+      'Додає це до поточного ходу на наступному кроці';
 
   @override
   String get ng_queue => 'У чергу';
 
   @override
-  String get ng_sends_it_when_the_turn_finishes => 'Надсилає це після завершення ходу';
+  String get ng_sends_it_when_the_turn_finishes =>
+      'Надсилає це після завершення ходу';
 
   @override
   String get ng_stop_and_send => 'Зупинити й надіслати';
 
   @override
-  String get ng_stops_the_turn_then_sends_this => 'Зупиняє хід, а потім надсилає це';
+  String get ng_stops_the_turn_then_sends_this =>
+      'Зупиняє хід, а потім надсилає це';
 
   @override
   String ng_dictation_stopped(Object message) {
@@ -4134,7 +4548,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_speech_recognition_isn_t_available => 'Розпізнавання мовлення недоступне.';
+  String get ng_speech_recognition_isn_t_available =>
+      'Розпізнавання мовлення недоступне.';
 
   @override
   String get ng_working => 'Працює';
@@ -4204,13 +4619,15 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_project_create_uncertain => 'Шлюз міг створити цей чат, але не підтвердив це. Перевірте список чатів, перш ніж починати новий. Запит не буде повторено автоматично.';
+  String get ng_project_create_uncertain =>
+      'Шлюз міг створити цей чат, але не підтвердив це. Перевірте список чатів, перш ніж починати новий. Запит не буде повторено автоматично.';
 
   @override
   String get ng_what_should_we_work_on => 'Над чим попрацюємо?';
 
   @override
-  String get ng_ask_hermes_anything_it_can_run => 'Запитайте Hermes про що завгодно. Він може запускати інструменти, переглядати вебсторінки й працювати з файлами на сервері.';
+  String get ng_ask_hermes_anything_it_can_run =>
+      'Запитайте Hermes про що завгодно. Він може запускати інструменти, переглядати вебсторінки й працювати з файлами на сервері.';
 
   @override
   String ng_working_2(Object frame) {
@@ -4224,7 +4641,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_listening => 'Слухаю…';
 
   @override
-  String get ng_steer_or_queue_a_message => 'Спрямуйте розмову або додайте повідомлення в чергу';
+  String get ng_steer_or_queue_a_message =>
+      'Спрямуйте розмову або додайте повідомлення в чергу';
 
   @override
   String get ng_message_hermes => 'Повідомлення для Hermes';
@@ -4253,16 +4671,19 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_slash_command_no_description => 'Опис недоступний.';
 
   @override
-  String get ng_slash_command_arguments_options => 'Приймає один із фіксованих варіантів.';
+  String get ng_slash_command_arguments_options =>
+      'Приймає один із фіксованих варіантів.';
 
   @override
   String get ng_slash_command_arguments_text => 'Приймає текст після команди.';
 
   @override
-  String get ng_slash_command_arguments_mixed => 'Приймає варіант або текст після команди.';
+  String get ng_slash_command_arguments_mixed =>
+      'Приймає варіант або текст після команди.';
 
   @override
-  String get ng_slash_command_sent_as_message => 'NextGen надсилає це Hermes як звичайне повідомлення; сама команда не виконується.';
+  String get ng_slash_command_sent_as_message =>
+      'NextGen надсилає це Hermes як звичайне повідомлення; сама команда не виконується.';
 
   @override
   String get ng_slash_command_output => 'Вивід команди';
@@ -4279,10 +4700,12 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_slash_command_refused => 'Hermes не може виконати цю команду тут.';
+  String get ng_slash_command_refused =>
+      'Hermes не може виконати цю команду тут.';
 
   @override
-  String get ng_slash_command_delivery_unknown => 'Команду надіслано, але відповідь не надійшла. Можливо, вона ще виконується на шлюзі, тому її не надіслано повторно, а чернетку збережено.';
+  String get ng_slash_command_delivery_unknown =>
+      'Команду надіслано, але відповідь не надійшла. Можливо, вона ще виконується на шлюзі, тому її не надіслано повторно, а чернетку збережено.';
 
   @override
   String get ng_slash_command_nothing_running => 'Нічого не виконується.';
@@ -4321,10 +4744,30 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_read_aloud => 'Прочитати вголос';
 
   @override
-  String get ng_the_gateway_connection_dropped_try_again => 'З’єднання зі шлюзом втрачено. Спробуйте ще раз.';
+  String get ng_the_gateway_connection_dropped_try_again =>
+      'З’єднання зі шлюзом втрачено. Спробуйте ще раз.';
 
   @override
   String get ng_allow_once => 'Дозволити один раз';
+
+  @override
+  String get ng_allow_until_sandbox_off => 'Доки пісочницю не буде вимкнено';
+
+  @override
+  String get ng_folder_access => 'Доступ до теки';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      'Шлюз не повідомив, чи доступ лише для читання, чи для читання й запису.';
+
+  @override
+  String get ng_folder_read_only => 'Лише для читання';
+
+  @override
+  String get ng_folder_read_write => 'Читання й запис';
+
+  @override
+  String get ng_website_access => 'Доступ до вебсайту';
 
   @override
   String get ng_allow_for_this_chat => 'Дозволити в цьому чаті';
@@ -4363,10 +4806,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_save => 'Зберегти';
 
   @override
-  String get ng_enter_both_the_client_id_and => 'Введіть ідентифікатор клієнта й секрет клієнта або не вводьте жодного.';
+  String get ng_enter_both_the_client_id_and =>
+      'Введіть ідентифікатор клієнта й секрет клієнта або не вводьте жодного.';
 
   @override
-  String get ng_enter_your_username_and_password => 'Введіть ім’я користувача й пароль.';
+  String get ng_enter_your_username_and_password =>
+      'Введіть ім’я користувача й пароль.';
 
   @override
   String ng_couldn_t_save_the_sign_in(Object error) {
@@ -4374,10 +4819,12 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_wrong_username_or_password => 'Неправильне ім’я користувача або пароль.';
+  String get ng_wrong_username_or_password =>
+      'Неправильне ім’я користувача або пароль.';
 
   @override
-  String get ng_too_many_attempts_wait_a_moment => 'Забагато спроб. Зачекайте трохи й повторіть.';
+  String get ng_too_many_attempts_wait_a_moment =>
+      'Забагато спроб. Зачекайте трохи й повторіть.';
 
   @override
   String get ng_welcome_to_hermes => 'Ласкаво просимо до Ares';
@@ -4386,10 +4833,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_add_a_gateway => 'Додати шлюз';
 
   @override
-  String get ng_connect_to_your_hermes_agent_dashboard => 'Під’єднайтеся до панелі Hermes Agent. Одна адреса й один вхід дають доступ до чатів, інструментів і налаштувань. Дані не надсилаються, доки ви не ввійдете.';
+  String get ng_connect_to_your_hermes_agent_dashboard =>
+      'Під’єднайтеся до панелі Hermes Agent. Одна адреса й один вхід дають доступ до чатів, інструментів і налаштувань. Дані не надсилаються, доки ви не ввійдете.';
 
   @override
-  String get ng_connect_to_another_hermes_agent_dashboard => 'Під’єднайтеся до іншої панелі Hermes Agent. Ви залишатиметеся в системі на збережених панелях.';
+  String get ng_connect_to_another_hermes_agent_dashboard =>
+      'Під’єднайтеся до іншої панелі Hermes Agent. Ви залишатиметеся в системі на збережених панелях.';
 
   @override
   String get ng_dashboard_address => 'Адреса панелі';
@@ -4401,7 +4850,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_test => 'Перевірити';
 
   @override
-  String get ng_where_your_hermes_dashboard_runs_lan => 'Адреса панелі Hermes у вашій мережі: LAN, Tailscale або HTTPS.';
+  String get ng_where_your_hermes_dashboard_runs_lan =>
+      'Адреса панелі Hermes у вашій мережі: LAN, Tailscale або HTTPS.';
 
   @override
   String get ng_find_on_my_network => 'Знайти в моїй мережі';
@@ -4416,19 +4866,23 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_need_a_client_certificate => 'Потрібен сертифікат клієнта?';
 
   @override
-  String get ng_this_address_isn_t_private_and => 'Ця адреса не є приватною та не використовує https://, тож ваш пароль і чати передаватимуться інтернетом без шифрування. Натомість використайте https://, Tailscale або власну мережу.';
+  String get ng_this_address_isn_t_private_and =>
+      'Ця адреса не є приватною та не використовує https://, тож ваш пароль і чати передаватимуться інтернетом без шифрування. Натомість використайте https://, Tailscale або власну мережу.';
 
   @override
   String get ng_continue_to_sign_in => 'Перейти до входу';
 
   @override
-  String get ng_use_the_classic_interface_instead => 'Натомість скористатися класичним інтерфейсом';
+  String get ng_use_the_classic_interface_instead =>
+      'Натомість скористатися класичним інтерфейсом';
 
   @override
-  String get ng_if_cloudflare_access_protects_this_address => 'Якщо цю адресу захищає Cloudflare Access, створіть сервісний токен у Cloudflare Zero Trust (Access, Service credentials) і додайте для нього політику Service Auth у застосунку Access.';
+  String get ng_if_cloudflare_access_protects_this_address =>
+      'Якщо цю адресу захищає Cloudflare Access, створіть сервісний токен у Cloudflare Zero Trust (Access, Service credentials) і додайте для нього політику Service Auth у застосунку Access.';
 
   @override
-  String get ng_a_service_token_is_saved_for => 'Для цієї адреси збережено сервісний токен';
+  String get ng_a_service_token_is_saved_for =>
+      'Для цієї адреси збережено сервісний токен';
 
   @override
   String get ng_forget => 'Забути';
@@ -4440,7 +4894,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_client_secret => 'Секрет клієнта';
 
   @override
-  String get ng_stored_encrypted_on_this_phone_and => 'Зберігається в зашифрованому вигляді на цьому телефоні й надсилається лише на цю адресу.';
+  String get ng_stored_encrypted_on_this_phone_and =>
+      'Зберігається в зашифрованому вигляді на цьому телефоні й надсилається лише на цю адресу.';
 
   @override
   String get ng_hermes_is_reachable => 'Hermes доступний';
@@ -4451,7 +4906,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_sign_in_is_tested_next_then => 'Спочатку перевіряється вхід, потім чат';
+  String get ng_sign_in_is_tested_next_then =>
+      'Спочатку перевіряється вхід, потім чат';
 
   @override
   String get ng_agent_gateway => 'Шлюз агента';
@@ -4475,13 +4931,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_profiles => 'Профілі';
 
   @override
-  String get ng_this_dashboard_offers_neither_a_username => 'Ця панель керування не підтримує вхід ні за ім’ям користувача й паролем, ні через браузер. Оновіть Hermes або налаштуйте на сервері провайдера входу за ім’ям користувача й паролем.';
+  String get ng_this_dashboard_offers_neither_a_username =>
+      'Ця панель керування не підтримує вхід ні за ім’ям користувача й паролем, ні через браузер. Оновіть Hermes або налаштуйте на сервері провайдера входу за ім’ям користувача й паролем.';
 
   @override
-  String get ng_the_auth_gate_is_off_on => 'Захист входу на цій панелі вимкнено. Будь-хто, хто має до неї доступ, може користуватися вашим агентом.';
+  String get ng_the_auth_gate_is_off_on =>
+      'Захист входу на цій панелі вимкнено. Будь-хто, хто має до неї доступ, може користуватися вашим агентом.';
 
   @override
-  String get ng_couldn_t_reach_the_dashboard => 'Не вдалося підключитися до панелі керування';
+  String get ng_couldn_t_reach_the_dashboard =>
+      'Не вдалося підключитися до панелі керування';
 
   @override
   String ng_check_the_address_and_port_9119(Object reason) {
@@ -4489,10 +4948,12 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_that_isn_t_a_hermes_dashboard => 'Це не панель керування Hermes';
+  String get ng_that_isn_t_a_hermes_dashboard =>
+      'Це не панель керування Hermes';
 
   @override
-  String get ng_something_answered_but_not_a_hermes_2 => 'Відповідь отримано, але це не панель керування Hermes. Використовуйте адресу панелі, а не API-сервера (порт 8642).';
+  String get ng_something_answered_but_not_a_hermes_2 =>
+      'Відповідь отримано, але це не панель керування Hermes. Використовуйте адресу панелі, а не API-сервера (порт 8642).';
 
   @override
   String ng_something_answered_http_but_not_a_2(Object status) {
@@ -4500,7 +4961,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_cloudflare_access_stopped_the_request => 'Cloudflare Access заблокував запит';
+  String get ng_cloudflare_access_stopped_the_request =>
+      'Cloudflare Access заблокував запит';
 
   @override
   String ng_cloudflare_access_turned_down_the_service(Object status) {
@@ -4508,16 +4970,20 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_add_a_cloudflare_access_service_token_2 => 'Додайте нижче токен служби Cloudflare Access і перевірте ще раз.';
+  String get ng_add_a_cloudflare_access_service_token_2 =>
+      'Додайте нижче токен служби Cloudflare Access і перевірте ще раз.';
 
   @override
-  String get ng_a_client_certificate_is_needed => 'Потрібен клієнтський сертифікат';
+  String get ng_a_client_certificate_is_needed =>
+      'Потрібен клієнтський сертифікат';
 
   @override
-  String get ng_this_server_asks_for_a_client => 'Цей сервер запитує клієнтський сертифікат для підключення. Виберіть нижче сертифікат, який вам видали, і спробуйте ще раз.';
+  String get ng_this_server_asks_for_a_client =>
+      'Цей сервер запитує клієнтський сертифікат для підключення. Виберіть нижче сертифікат, який вам видали, і спробуйте ще раз.';
 
   @override
-  String get ng_this_dashboard_doesn_t_ask_for => 'На цій панелі не потрібно входити.';
+  String get ng_this_dashboard_doesn_t_ask_for =>
+      'На цій панелі не потрібно входити.';
 
   @override
   String ng_use_the_dashboard_username_and_password(Object address) {
@@ -4561,34 +5027,41 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_sign_in_with_browser => 'Увійти через браузер';
 
   @override
-  String get ng_finish_signing_in_on_the_page => 'Завершіть вхід на відкритій сторінці. Hermes повернеться автоматично, коли ви закінчите.';
+  String get ng_finish_signing_in_on_the_page =>
+      'Завершіть вхід на відкритій сторінці. Hermes повернеться автоматично, коли ви закінчите.';
 
   @override
   String get ng_use_a_different_gateway => 'Використати інший шлюз';
 
   @override
-  String get ng_same_wi_fi_or_local_network => 'Та сама мережа Wi-Fi або локальна мережа';
+  String get ng_same_wi_fi_or_local_network =>
+      'Та сама мережа Wi-Fi або локальна мережа';
 
   @override
-  String get ng_use_the_server_s_local_address => 'Використовуйте локальну адресу й порт сервера, наприклад 192.168.1.20:9119. Запустіть панель із --host 0.0.0.0, щоб інші пристрої могли підключитися.';
+  String get ng_use_the_server_s_local_address =>
+      'Використовуйте локальну адресу й порт сервера, наприклад 192.168.1.20:9119. Запустіть панель із --host 0.0.0.0, щоб інші пристрої могли підключитися.';
 
   @override
   String get ng_tailscale => 'Tailscale';
 
   @override
-  String get ng_turn_on_tailscale_on_this_phone => 'Увімкніть Tailscale на цьому телефоні й використовуйте адресу Tailscale сервера, наприклад 100.64.0.1:9119 або його ім’я .ts.net. Працює і поза домом.';
+  String get ng_turn_on_tailscale_on_this_phone =>
+      'Увімкніть Tailscale на цьому телефоні й використовуйте адресу Tailscale сервера, наприклад 100.64.0.1:9119 або його ім’я .ts.net. Працює і поза домом.';
 
   @override
-  String get ng_use_your_https_address_when_the => 'Використовуйте адресу https://, якщо панель розміщена за проксі із сертифікатом. Проксі також має підтримувати оновлення WebSocket на /api/ws.';
+  String get ng_use_your_https_address_when_the =>
+      'Використовуйте адресу https://, якщо панель розміщена за проксі із сертифікатом. Проксі також має підтримувати оновлення WebSocket на /api/ws.';
 
   @override
-  String get ng_start_the_dashboard_on_the_server => 'Запустіть панель на сервері:';
+  String get ng_start_the_dashboard_on_the_server =>
+      'Запустіть панель на сервері:';
 
   @override
   String get ng_enter_a_port_from_1_to => 'Введіть порт від 1 до 65535.';
 
   @override
-  String get ng_looks_for_hermes_dashboards_on_port => 'Шукає панелі Hermes на порту 9119 у цій мережі Wi-Fi та перевіряє комп’ютери, які ви вже зберегли.';
+  String get ng_looks_for_hermes_dashboards_on_port =>
+      'Шукає панелі Hermes на порту 9119 у цій мережі Wi-Fi та перевіряє комп’ютери, які ви вже зберегли.';
 
   @override
   String ng_looks_for_hermes_dashboards_on_ports(Object port) {
@@ -4599,10 +5072,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_other_port_optional => 'Інший порт (необов’язково)';
 
   @override
-  String get ng_no_dashboards_answered_start_one_with => 'Жодна панель не відповіла. Запустіть її командою hermes dashboard --host 0.0.0.0 або введіть її адресу.';
+  String get ng_no_dashboards_answered_start_one_with =>
+      'Жодна панель не відповіла. Запустіть її командою hermes dashboard --host 0.0.0.0 або введіть її адресу.';
 
   @override
-  String get ng_using_tailscale_or_a_vpn_those => 'Користуєтеся Tailscale або VPN? Такі мережі не можна просканувати. Введіть адресу комп’ютера 100.x або його ім’я .ts.net.';
+  String get ng_using_tailscale_or_a_vpn_those =>
+      'Користуєтеся Tailscale або VPN? Такі мережі не можна просканувати. Введіть адресу комп’ютера 100.x або його ім’я .ts.net.';
 
   @override
   String get ng_search_again => 'Шукати знову';
@@ -4682,7 +5157,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_search_models => 'Пошук моделей';
 
   @override
-  String get ng_no_models_match => 'Немає моделей, що відповідають цим фільтрам.';
+  String get ng_no_models_match =>
+      'Немає моделей, що відповідають цим фільтрам.';
 
   @override
   String get privacy_policy => 'Політика конфіденційності';
@@ -4696,7 +5172,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_no_providers_are_set_up_on => 'На цьому шлюзі ще не налаштовано жодного провайдера.';
+  String get ng_no_providers_are_set_up_on =>
+      'На цьому шлюзі ще не налаштовано жодного провайдера.';
 
   @override
   String get ng_starred => 'Обране';
@@ -4714,7 +5191,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_projects => 'Проєкти';
 
   @override
-  String get ng_chats_grouped_by_project_and_workspace => 'Чати згруповано за проєктом і робочим простором';
+  String get ng_chats_grouped_by_project_and_workspace =>
+      'Чати згруповано за проєктом і робочим простором';
 
   @override
   String get ng_agent => 'Агент';
@@ -4729,19 +5207,22 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_skills_library => 'Бібліотека навичок';
 
   @override
-  String get ng_browse_and_read_installed_skills => 'Переглядайте й читайте встановлені навички';
+  String get ng_browse_and_read_installed_skills =>
+      'Переглядайте й читайте встановлені навички';
 
   @override
   String get ng_cron_editor => 'Редактор Cron';
 
   @override
-  String get ng_edit_schedules_prompts_and_delivery => 'Редагуйте розклади, запити й доставлення';
+  String get ng_edit_schedules_prompts_and_delivery =>
+      'Редагуйте розклади, запити й доставлення';
 
   @override
   String get ng_config_file => 'Файл конфігурації';
 
   @override
-  String get ng_edit_config_yaml_on_the_gateway => 'Редагуйте config.yaml на шлюзі';
+  String get ng_edit_config_yaml_on_the_gateway =>
+      'Редагуйте config.yaml на шлюзі';
 
   @override
   String get ng_models_and_providers => 'Моделі й провайдери';
@@ -4750,28 +5231,33 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_model_management => 'Керування моделями';
 
   @override
-  String get ng_default_fallback_and_auxiliary_models => 'Моделі за замовчуванням, резервні й допоміжні';
+  String get ng_default_fallback_and_auxiliary_models =>
+      'Моделі за замовчуванням, резервні й допоміжні';
 
   @override
   String get ng_provider_sign_in => 'Вхід у провайдера';
 
   @override
-  String get ng_connect_provider_accounts_with_oauth => 'Під’єднайте облікові записи провайдерів через OAuth';
+  String get ng_connect_provider_accounts_with_oauth =>
+      'Під’єднайте облікові записи провайдерів через OAuth';
 
   @override
   String get ng_nous_portal => 'Nous Portal';
 
   @override
-  String get ng_subscription_credits_and_usage => 'Підписка, кредити й використання';
+  String get ng_subscription_credits_and_usage =>
+      'Підписка, кредити й використання';
 
   @override
   String get ng_interface => 'Інтерфейс';
 
   @override
-  String get ng_switch_to_the_classic_interface => 'Перейти до класичного інтерфейсу';
+  String get ng_switch_to_the_classic_interface =>
+      'Перейти до класичного інтерфейсу';
 
   @override
-  String get ng_turns_nextgen_off_you_can_turn => 'Вимикає NextGen. Ви можете знову ввімкнути його в налаштуваннях.';
+  String get ng_turns_nextgen_off_you_can_turn =>
+      'Вимикає NextGen. Ви можете знову ввімкнути його в налаштуваннях.';
 
   @override
   String get ng_restored => 'Відновлено';
@@ -4780,7 +5266,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_archived => 'Заархівовано';
 
   @override
-  String get ng_couldn_t_load_archived_chats => 'Не вдалося завантажити архівовані чати';
+  String get ng_couldn_t_load_archived_chats =>
+      'Не вдалося завантажити архівовані чати';
 
   @override
   String get ng_nothing_archived => 'Немає архівованих чатів';
@@ -4789,7 +5276,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_restore => 'Відновити';
 
   @override
-  String get ng_saved_new_chats_use_it => 'Збережено. У нових чатах використовуватиметься цей варіант.';
+  String get ng_saved_new_chats_use_it =>
+      'Збережено. У нових чатах використовуватиметься цей варіант.';
 
   @override
   String ng_couldn_t_save(Object error) {
@@ -4832,13 +5320,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_new_job => 'Нове завдання';
 
   @override
-  String get ng_couldn_t_load_scheduled_jobs => 'Не вдалося завантажити заплановані завдання';
+  String get ng_couldn_t_load_scheduled_jobs =>
+      'Не вдалося завантажити заплановані завдання';
 
   @override
   String get ng_nothing_scheduled => 'Нічого не заплановано';
 
   @override
-  String get ng_ask_hermes_to_do_something_on => 'Попросіть Hermes виконувати щось за розкладом або додайте завдання тут.';
+  String get ng_ask_hermes_to_do_something_on =>
+      'Попросіть Hermes виконувати щось за розкладом або додайте завдання тут.';
 
   @override
   String get ng_active => 'Активне';
@@ -4873,7 +5363,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_delete_this_job => 'Видалити це завдання?';
 
   @override
-  String get ng_it_stops_running_past_runs_stay => 'Воно більше не запускатиметься. Попередні запуски залишаться у ваших чатах.';
+  String get ng_it_stops_running_past_runs_stay =>
+      'Воно більше не запускатиметься. Попередні запуски залишаться у ваших чатах.';
 
   @override
   String ng_next_run(Object when) {
@@ -4940,7 +5431,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_delete_this_chat => 'Видалити цей чат?';
 
   @override
-  String get ng_it_is_removed_from_the_gateway => 'Його буде видалено зі шлюзу на всіх пристроях.';
+  String get ng_it_is_removed_from_the_gateway =>
+      'Його буде видалено зі шлюзу на всіх пристроях.';
 
   @override
   String get ng_search_chats => 'Шукати чати';
@@ -4958,7 +5450,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_nothing_is_running => 'Нічого не виконується.';
 
   @override
-  String get ng_nothing_is_waiting_on_you => 'Немає запитів, що чекають на вас.';
+  String get ng_nothing_is_waiting_on_you =>
+      'Немає запитів, що чекають на вас.';
 
   @override
   String get ng_settings => 'Налаштування';
@@ -5039,22 +5532,26 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_pure_black => 'Чистий чорний';
 
   @override
-  String get ng_dark_theme_uses_true_black_oled => 'Темна тема використовує справжній чорний (OLED)';
+  String get ng_dark_theme_uses_true_black_oled =>
+      'Темна тема використовує справжній чорний (OLED)';
 
   @override
   String get ng_glow => 'Світіння';
 
   @override
-  String get ng_soft_accent_light_behind_each_screen => 'М’яке акцентне підсвічування за кожним екраном';
+  String get ng_soft_accent_light_behind_each_screen =>
+      'М’яке акцентне підсвічування за кожним екраном';
 
   @override
-  String get ng_the_new_interface_turn_off_to => 'Новий інтерфейс. Вимкніть, щоб повернутися до класичного; шлюзи й чати спільні.';
+  String get ng_the_new_interface_turn_off_to =>
+      'Новий інтерфейс. Вимкніть, щоб повернутися до класичного; шлюзи й чати спільні.';
 
   @override
   String get ng_more_settings => 'Інші налаштування';
 
   @override
-  String get ng_voice_notifications_language_backups_and_the => 'Голос, сповіщення, мова, резервні копії та конфігурація шлюзу';
+  String get ng_voice_notifications_language_backups_and_the =>
+      'Голос, сповіщення, мова, резервні копії та конфігурація шлюзу';
 
   @override
   String get ng_licences => 'Ліцензії';
@@ -5065,7 +5562,8 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get ng_this_gateway_and_its_saved_sign => 'Цей шлюз і збережені дані для входу буде видалено з цього телефона в обох інтерфейсах. Ваші чати залишаться на шлюзі.';
+  String get ng_this_gateway_and_its_saved_sign =>
+      'Цей шлюз і збережені дані для входу буде видалено з цього телефона в обох інтерфейсах. Ваші чати залишаться на шлюзі.';
 
   @override
   String get ng_password_or_browser => 'Пароль або браузер';
@@ -5089,13 +5587,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get classic_interface_only => 'Лише класичний інтерфейс';
 
   @override
-  String get classic_only_settings_hint => 'Розділи з позначкою «Лише класичний інтерфейс» змінюють класичний вигляд і чат, але не NextGen. У NextGen є власні параметри оформлення в налаштуваннях.';
+  String get classic_only_settings_hint =>
+      'Розділи з позначкою «Лише класичний інтерфейс» змінюють класичний вигляд і чат, але не NextGen. У NextGen є власні параметри оформлення в налаштуваннях.';
 
   @override
-  String get attachment_preview_too_large => 'Завеликий для попереднього перегляду. Збережіть файл або поділіться ним, щоб завантажити на телефон (до 1 ГБ).';
+  String get attachment_preview_too_large =>
+      'Завеликий для попереднього перегляду. Збережіть файл або поділіться ним, щоб завантажити на телефон (до 1 ГБ).';
 
   @override
-  String get attachment_over_phone_limit => 'Розмір цього файла перевищує ліміт завантаження на телефон — 1 ГБ. Відкрийте панель керування, щоб завантажити його.';
+  String get attachment_over_phone_limit =>
+      'Розмір цього файла перевищує ліміт завантаження на телефон — 1 ГБ. Відкрийте панель керування, щоб завантажити його.';
 
   @override
   String attachment_downloading_percent(int percent) {
@@ -5247,7 +5748,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_control_title => 'Ціль і автоматизація';
 
   @override
-  String get ng_control_subtitle => 'Над чим працює цей чат і що запускається автоматично.';
+  String get ng_control_subtitle =>
+      'Над чим працює цей чат і що запускається автоматично.';
 
   @override
   String get ng_contract_outcome => 'Результат';
@@ -5302,7 +5804,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_goal_clear_title => 'Очистити цю ціль?';
 
   @override
-  String get ng_goal_clear_message => 'Агент припинить працювати над нею. Її підцілі та перевірки також буде видалено.';
+  String get ng_goal_clear_message =>
+      'Агент припинить працювати над нею. Її підцілі та перевірки також буде видалено.';
 
   @override
   String get ng_subgoal_remove_title => 'Видалити цю підціль?';
@@ -5316,7 +5819,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_subgoals_clear_title => 'Очистити всі підцілі?';
 
   @override
-  String get ng_subgoals_clear_message => 'Назва цілі залишиться, але всі її підцілі буде видалено.';
+  String get ng_subgoals_clear_message =>
+      'Назва цілі залишиться, але всі її підцілі буде видалено.';
 
   @override
   String get ng_clear_all => 'Очистити все';
@@ -5427,31 +5931,37 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_notifications => 'Сповіщення';
 
   @override
-  String get ng_notifications_hint => 'Відповіді та запити, коли Ares працює у фоновому режимі';
+  String get ng_notifications_hint =>
+      'Відповіді та запити, коли Ares працює у фоновому режимі';
 
   @override
   String get ng_notify_replies => 'Відповіді';
 
   @override
-  String get ng_notify_replies_hint => 'Коли відповідь у відкритому чаті буде готова або не вдасться її надіслати';
+  String get ng_notify_replies_hint =>
+      'Коли відповідь у відкритому чаті буде готова або не вдасться її надіслати';
 
   @override
   String get ng_notify_requests => 'Підтвердження та запитання';
 
   @override
-  String get ng_notify_requests_hint => 'Сповіщення, коли агент чекає на вас. Кнопки «Дозволити один раз» і «Відхилити»';
+  String get ng_notify_requests_hint =>
+      'Сповіщення, коли агент чекає на вас. Кнопки «Дозволити один раз» і «Відхилити»';
 
   @override
-  String get ng_keep_running => 'Залишатися на зв’язку, поки готується відповідь';
+  String get ng_keep_running =>
+      'Залишатися на зв’язку, поки готується відповідь';
 
   @override
-  String get ng_keep_running_hint => 'Підтримує з’єднання у фоновому режимі, доки відповідь не буде готова, і показує тихе сповіщення';
+  String get ng_keep_running_hint =>
+      'Підтримує з’єднання у фоновому режимі, доки відповідь не буде готова, і показує тихе сповіщення';
 
   @override
   String get ng_battery_settings => 'Оптимізація акумулятора';
 
   @override
-  String get ng_battery_settings_hint => 'Дозвольте Ares працювати у фоновому режимі, щоб сповіщення надходили вчасно';
+  String get ng_battery_settings_hint =>
+      'Дозвольте Ares працювати у фоновому режимі, щоб сповіщення надходили вчасно';
 
   @override
   String get ng_send_test_notification => 'Надіслати тестове сповіщення';
@@ -5460,22 +5970,27 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_test_notification_title => 'Сповіщення Ares працюють';
 
   @override
-  String get ng_test_notification_body => 'Відповіді та запити матимуть такий вигляд.';
+  String get ng_test_notification_body =>
+      'Відповіді та запити матимуть такий вигляд.';
 
   @override
   String get ng_test_notification_sent => 'Тестове сповіщення надіслано';
 
   @override
-  String get ng_notifications_blocked => 'Сповіщення заблоковано. Дозвольте їх у налаштуваннях Android.';
+  String get ng_notifications_blocked =>
+      'Сповіщення заблоковано. Дозвольте їх у налаштуваннях Android.';
 
   @override
-  String get ng_notifications_off_hint => 'Сповіщення вимкнено, тому Ares не надсилатиме їх у фоновому режимі.';
+  String get ng_notifications_off_hint =>
+      'Сповіщення вимкнено, тому Ares не надсилатиме їх у фоновому режимі.';
 
   @override
-  String get ng_insights_building => 'Формуємо звіт. Під час першого створення звіту за тривалий період це може тривати до хвилини.';
+  String get ng_insights_building =>
+      'Формуємо звіт. Під час першого створення звіту за тривалий період це може тривати до хвилини.';
 
   @override
-  String get ng_insights_timed_out => 'Шлюзу не вдалося вчасно сформувати цей звіт. Спробуйте ще раз або виберіть коротший період.';
+  String get ng_insights_timed_out =>
+      'Шлюзу не вдалося вчасно сформувати цей звіт. Спробуйте ще раз або виберіть коротший період.';
 
   @override
   String get ng_dock_goal_active => 'Ціль активна';
@@ -5537,10 +6052,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_recent_notifications => 'Останні сповіщення';
 
   @override
-  String get ng_recent_notifications_hint => 'Що Ares намагався опублікувати та чи показав це Android';
+  String get ng_recent_notifications_hint =>
+      'Що Ares намагався опублікувати та чи показав це Android';
 
   @override
-  String get ng_recent_notifications_empty => 'Поки що нічого. Спроби з’являться тут, щойно відповідь, запитання або збій мали б надіслати вам сповіщення.';
+  String get ng_recent_notifications_empty =>
+      'Поки що нічого. Спроби з’являться тут, щойно відповідь, запитання або збій мали б надіслати вам сповіщення.';
 
   @override
   String get ng_notify_permission_granted => 'Дозвіл надано';
@@ -5561,7 +6078,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_models_change => 'Змінити';
 
   @override
-  String get ng_models_custom_endpoint => 'Працює через власну адресу сервісу. Змініть її на шлюзі.';
+  String get ng_models_custom_endpoint =>
+      'Працює через власну адресу сервісу. Змініть її на шлюзі.';
 
   @override
   String get ng_models_context_window => 'Контекстне вікно';
@@ -5639,7 +6157,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_models_discard => 'Скинути';
 
   @override
-  String get ng_models_aux_hint => 'Допоміжні завдання використовують типову модель, доки ви не призначите їм власну.';
+  String get ng_models_aux_hint =>
+      'Допоміжні завдання використовують типову модель, доки ви не призначите їм власну.';
 
   @override
   String get ng_models_uses_default => 'Використовує типову модель';
@@ -5663,13 +6182,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_aux_compression => 'Стиснення';
 
   @override
-  String get ng_aux_compression_hint => 'Скорочує довгий чат, щоб він уміщався в контекстне вікно';
+  String get ng_aux_compression_hint =>
+      'Скорочує довгий чат, щоб він уміщався в контекстне вікно';
 
   @override
   String get ng_aux_approval => 'Схвалення';
 
   @override
-  String get ng_aux_approval_hint => 'Вирішує, чи можна безпечно виконати команду без запиту';
+  String get ng_aux_approval_hint =>
+      'Вирішує, чи можна безпечно виконати команду без запиту';
 
   @override
   String get ng_aux_mcp => 'MCP';
@@ -5687,7 +6208,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_aux_review => 'Рев’ю';
 
   @override
-  String get ng_aux_review_hint => 'Перевіряє роботу, коли ви запускаєте /review';
+  String get ng_aux_review_hint =>
+      'Перевіряє роботу, коли ви запускаєте /review';
 
   @override
   String get ng_aux_voice_chat => 'Голосовий чат';
@@ -5699,19 +6221,22 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_aux_triage_specifier => 'Тріаж';
 
   @override
-  String get ng_aux_triage_specifier_hint => 'Розгортає однорядкову картку Kanban у специфікацію';
+  String get ng_aux_triage_specifier_hint =>
+      'Розгортає однорядкову картку Kanban у специфікацію';
 
   @override
   String get ng_aux_kanban_decomposer => 'Розбиття Kanban';
 
   @override
-  String get ng_aux_kanban_decomposer_hint => 'Ділить картку Kanban на менші завдання';
+  String get ng_aux_kanban_decomposer_hint =>
+      'Ділить картку Kanban на менші завдання';
 
   @override
   String get ng_aux_profile_describer => 'Описи профілів';
 
   @override
-  String get ng_aux_profile_describer_hint => 'Пише короткий опис кожного профілю';
+  String get ng_aux_profile_describer_hint =>
+      'Пише короткий опис кожного профілю';
 
   @override
   String get ng_aux_curator => 'Куратор';
@@ -5720,10 +6245,611 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_aux_curator_hint => 'Перевіряє, як використовуються навички';
 
   @override
+  String get appearance_save_failed => 'Could not save this change.';
+
+  @override
+  String get appearance_keep_which_theme => 'Keep which theme?';
+
+  @override
+  String get appearance_tour_back => 'Back';
+
+  @override
+  String get appearance_tour_finish => 'Finish';
+
+  @override
+  String get appearance_tour_next => 'Next';
+
+  @override
+  String get appearance_tour_close => 'Close tour';
+
+  @override
+  String get appearance_dismiss_tip => 'Dismiss tip';
+
+  @override
+  String get appearance_search_settings => 'Search settings';
+
+  @override
+  String get appearance_search_show => 'Show';
+
+  @override
+  String get appearance_no_matching_setting => 'No matching setting.';
+
+  @override
+  String get appearance_replay_tour => 'Replay tour';
+
+  @override
+  String get appearance_show_tips_again => 'Show tips again';
+
+  @override
+  String get appearance_window_translucency_unavailable =>
+      'Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.';
+
+  @override
+  String get appearance_imported_themes => 'Imported themes';
+
+  @override
+  String get appearance_import_theme_file => 'Import theme file';
+
+  @override
+  String get appearance_remove_theme => 'Remove theme';
+
+  @override
+  String get appearance_chat_font => 'Chat font';
+
+  @override
+  String get appearance_terminal_font => 'Terminal font';
+
+  @override
+  String get appearance_font_platform => 'Platform';
+
+  @override
+  String get appearance_automatic => 'Automatic';
+
+  @override
+  String get appearance_force_left_to_right => 'Force left to right';
+
+  @override
+  String get appearance_force_right_to_left => 'Force right to left';
+
+  @override
+  String get appearance_user_bubble_opacity => 'User bubble opacity';
+
+  @override
+  String get appearance_inline_embeds => 'Вбудований вміст';
+
+  @override
+  String get appearance_inline_embeds_hint =>
+      'Розширені попередні перегляди завантажуються зі сторонніх сайтів (YouTube, X, …). «Запитувати» показує заповнювач, доки ви не дозволите кожен; «Завжди» завантажує їх автоматично; «Вимк.» залишає звичайні посилання.';
+
+  @override
+  String get appearance_embeds_ask => 'Запитувати';
+
+  @override
+  String get appearance_embeds_always => 'Завжди';
+
+  @override
+  String get appearance_embeds_off => 'Вимк.';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Скинути $count дозволеного сервісу',
+      many: 'Скинути $count дозволених сервісів',
+      few: 'Скинути $count дозволені сервіси',
+      one: 'Скинути $count дозволений сервіс',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => 'Завантажити';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return 'Завжди дозволяти $service';
+  }
+
+  @override
+  String get appearance_embed_loading => 'Завантаження попереднього перегляду…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return 'Не вдалося завантажити зображення з $host. Торкніться, щоб відкрити.';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable =>
+      'Попередній перегляд недоступний';
+
+  @override
+  String get appearance_emoji_reactions => 'Emoji reactions';
+
+  @override
+  String get appearance_celebration_hearts => 'Celebration hearts';
+
+  @override
+  String get appearance_celebration_hearts_hint =>
+      'A heart plays when a reply arrives while you were away.';
+
+  @override
+  String get appearance_pop_out_companion => 'Pop out companion';
+
+  @override
+  String get appearance_mosskip => 'Mosskip';
+
+  @override
+  String get appearance_emberbun => 'Emberbun';
+
+  @override
+  String get appearance_tideling => 'Tideling';
+
+  @override
+  String get appearance_my_hatchling => 'My hatchling';
+
+  @override
+  String get appearance_at_rest => 'At rest';
+
+  @override
+  String get appearance_working => 'Working';
+
+  @override
+  String get appearance_thinking => 'Thinking';
+
+  @override
+  String get appearance_waiting_for_you => 'Waiting for you';
+
+  @override
+  String get appearance_reply_ready => 'Reply ready';
+
+  @override
+  String get appearance_turn_failed => 'Turn failed';
+
+  @override
+  String get appearance_small => 'Small';
+
+  @override
+  String get appearance_medium => 'Medium';
+
+  @override
+  String get appearance_large => 'Large';
+
+  @override
+  String get appearance_hello => 'Hello!';
+
+  @override
+  String get appearance_unread_reply => 'Unread reply';
+
+  @override
+  String get appearance_compose => 'Compose';
+
+  @override
+  String get appearance_say_hello => 'Say hello';
+
+  @override
+  String get appearance_pet_image_failed =>
+      'Could not open that image. Choose a smaller PNG or JPEG.';
+
+  @override
+  String get appearance_pet_companion => 'Pet companion';
+
+  @override
+  String get appearance_pet_companion_hint =>
+      'Show a companion while you chat.';
+
+  @override
+  String get appearance_adopt_a_companion => 'Adopt a companion';
+
+  @override
+  String get appearance_roam_when_idle => 'Roam when idle';
+
+  @override
+  String get appearance_pet_size => 'Pet size';
+
+  @override
+  String get appearance_hatch_from_a_local_picture =>
+      'Hatch from a local picture';
+
+  @override
+  String get appearance_pet_image_limits =>
+      'Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.';
+
+  @override
+  String get appearance_choose_picture => 'Choose picture';
+
+  @override
+  String get appearance_hatchling_preview => 'Hatchling preview';
+
+  @override
+  String get appearance_hatch_and_adopt => 'Hatch and adopt';
+
+  @override
+  String get appearance_discard_draft => 'Discard draft';
+
+  @override
+  String get appearance_forget_saved_hatchling => 'Forget saved hatchling';
+
+  @override
+  String get appearance_radio => 'Radio';
+
+  @override
+  String appearance_radio_hint(String stations) {
+    return 'Streams come straight from $stations and start only when you press Play. Station search stays on this device.';
+  }
+
+  @override
+  String get appearance_radio_save_failed =>
+      'Radio settings could not be saved.';
+
+  @override
+  String get appearance_choose_a_station => 'Choose a station';
+
+  @override
+  String get appearance_pause_radio => 'Pause radio';
+
+  @override
+  String get appearance_play_radio => 'Play radio';
+
+  @override
+  String get appearance_next_station => 'Next station';
+
+  @override
+  String get appearance_radio_trace_semantics =>
+      'Stream activity. Audio levels are unavailable, so this line stays flat.';
+
+  @override
+  String get appearance_radio_is_off => 'Radio is off';
+
+  @override
+  String get appearance_paused => 'Paused';
+
+  @override
+  String get appearance_connecting => 'Connecting…';
+
+  @override
+  String get appearance_live => 'Live';
+
+  @override
+  String get appearance_stream_unavailable => 'Stream unavailable';
+
+  @override
+  String appearance_now_playing(String credit) {
+    return 'Now playing: $credit';
+  }
+
+  @override
+  String get appearance_audio_only_waveform_unavailable =>
+      'Audio only · waveform unavailable';
+
+  @override
+  String get appearance_volume => 'Volume';
+
+  @override
+  String get appearance_search_presets => 'Search presets';
+
+  @override
+  String get appearance_no_stations_found => 'No stations found';
+
+  @override
+  String appearance_unpin_station(String station) {
+    return 'Unpin station: $station';
+  }
+
+  @override
+  String appearance_pin_station(String station) {
+    return 'Pin station: $station';
+  }
+
+  @override
+  String get appearance_radio_picker_metadata_notice =>
+      'While this picker is open, playing stations may share track details directly from the broadcaster.';
+
+  @override
+  String get appearance_message_from_your_companion =>
+      'Message from your companion';
+
+  @override
+  String get appearance_send_to_the_open_chat => 'Send to the open chat';
+
+  @override
+  String get appearance_tour_theme_body =>
+      'Import a VS Code colour theme from a file on this device, then choose which variant to keep.';
+
+  @override
+  String get appearance_tour_fonts_title => 'Reading fonts';
+
+  @override
+  String get appearance_tour_fonts_body =>
+      'Chat prose and terminal code use separate faces shipped with Ares.';
+
+  @override
+  String get appearance_tour_direction_title => 'Transcript direction';
+
+  @override
+  String get appearance_tour_direction_body =>
+      'Leave this on automatic, or force the transcript left to right or right to left.';
+
+  @override
+  String get appearance_tour_pet_title => 'Companion';
+
+  @override
+  String get appearance_tour_pet_body =>
+      'The companion is off until you adopt one. Pop-out adds a small composer.';
+
+  @override
+  String get appearance_tour_radio_body =>
+      'Radio stays off until you enable it. Play is what opens a stream.';
+
+  @override
+  String get appearance_tip_theme =>
+      'Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.';
+
+  @override
+  String get appearance_tip_pet =>
+      'The companion stores one small portrait on this device. It does not upload the picture you hatch from.';
+
+  @override
+  String get appearance_theme_import_failed =>
+      'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
+
+  @override
+  String get render_widget_file_truncated =>
+      'Прочитано лише початок цього файлу, тому віджет може бути неповним.';
+
+  @override
+  String get setup_beat_title => 'Налаштування';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return 'Використати $name';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Як Hermes має вас називати?';
+
+  @override
+  String get setup_beat_on_computer =>
+      'Цей крок виконується в Hermes на комп’ютері, де він працює. «Продовжити» зберігає те, що там уже налаштовано.';
+
+  @override
+  String get setup_beat_not_waiting =>
+      'Ця картка налаштування більше не чекає на відповідь.';
+
+  @override
+  String get catalog_kind_plugin => 'Плагін';
+
+  @override
+  String get catalog_kind_skill => 'Навичка';
+
+  @override
+  String get catalog_tier_official => 'Офіційний';
+
+  @override
+  String get catalog_tier_verified => 'Перевірений';
+
+  @override
+  String get catalog_tier_community => 'Спільнота';
+
+  @override
+  String get catalog_install => 'Встановити';
+
+  @override
+  String get catalog_waiting => 'Чекає на ваш вибір';
+
+  @override
+  String get catalog_installed => 'Встановлено';
+
+  @override
+  String get catalog_installed_off => 'Встановлено, не ввімкнено';
+
+  @override
+  String get catalog_skipped => 'Пропущено';
+
+  @override
+  String get catalog_not_installed => 'Не встановлено';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return 'Встановлюється в профіль $profile';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo, коміт $sha';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return 'Перевірка безпеки: $status. $summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return 'Потрібен Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return 'Навичка $name готова';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return 'Ще потрібно: $names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name не під’єднався: $error';
+  }
+
+  @override
+  String get catalog_send_failed => 'Ваш вибір не надіслано. Спробуйте ще раз.';
+
+  @override
+  String get attachment_video_speed => 'Швидкість відтворення';
+
+  @override
+  String get catalog_installing => 'Встановлення…';
+
+  @override
+  String get catalog_phase_downloading => 'Завантаження…';
+
+  @override
+  String get catalog_phase_python_packages => 'Встановлення пакетів Python…';
+
+  @override
+  String get catalog_phase_loading_tools => 'Завантаження інструментів…';
+
+  @override
+  String get setup_beat_send_failed =>
+      'Вашу відповідь не надіслано. Спробуйте ще раз.';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count інструмента',
+      many: '$count інструментів',
+      few: '$count інструменти',
+      one: '$count інструмент',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get render_svg_not_drawn => 'Цей SVG не намальовано.';
+
+  @override
+  String get render_notes_directive => 'Директива нотаток';
+
+  @override
+  String get render_maths_source => 'Вихідний текст формули';
+
+  @override
+  String get render_inline_maths_source => 'Вихідний текст вбудованої формули';
+
+  @override
+  String get render_sequence_outline => 'Схема послідовності';
+
+  @override
+  String get render_diagram_outline => 'Схема діаграми';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return 'Версія $index з $count';
+  }
+
+  @override
+  String get render_previous_revision => 'Попередня версія';
+
+  @override
+  String get render_next_revision => 'Наступна версія';
+
+  @override
+  String get render_show_rendered => 'Відображення';
+
+  @override
+  String get render_show_source => 'Вихідний код';
+
+  @override
+  String render_copied_file(String name) {
+    return '$name скопійовано';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return 'Копіювати $name';
+  }
+
+  @override
+  String get render_artifact_too_long =>
+      'Цей артефакт задовгий, щоб показати його тут як сторінку.';
+
+  @override
+  String get render_active_content_removed =>
+      'Скрипти, фрейми та зовнішні адреси видалено.';
+
+  @override
+  String render_widget_file(String file) {
+    return 'Віджет $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      'Працює як текст у цьому чаті. Скрипти та зовнішні фрейми видаляються.';
+
+  @override
+  String get render_load_widget => 'Завантажити віджет';
+
+  @override
+  String get render_not_html_widget => 'Цей файл не є HTML-віджетом.';
+
+  @override
+  String get render_widget_sent => 'Надіслано в цей чат';
+
+  @override
+  String get render_widget_not_sent => 'Не надіслано в цей чат';
+
+  @override
+  String get render_widget_throttled =>
+      'Зачекайте трохи перед повторним надсиланням';
+
+  @override
+  String get render_widget_too_long => 'Цей запит задовгий для надсилання';
+
+  @override
+  String get render_widget_no_gesture =>
+      'Щоб надіслати, торкніться елемента керування у віджеті';
+
+  @override
+  String get render_widget_invalid => 'Не вдалося надіслати цей запит';
+
+  @override
+  String get render_inspected_image => 'Переглянуте зображення';
+
+  @override
+  String get render_contributions => 'Доповнення';
+
+  @override
+  String get render_contributions_intro =>
+      'Доповнювати відповідь можуть лише доповнення, вбудовані в Ares. Текст чату не може їх зареєструвати, а дозвіл діє лише для цього підключення.';
+
+  @override
+  String render_grant_plugin(String name) {
+    return 'Дозволити $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return 'Відкликати $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return 'картки відповіді для ::$directive';
+  }
+
+  @override
+  String get render_plugin_notes => 'Нотатки';
+
+  @override
+  String get catalog_scan_passed => 'пройдено';
+
+  @override
+  String get catalog_scan_warnings => 'знайдено попередження';
+
+  @override
+  String get catalog_scan_failed => 'не пройдено';
+
+  @override
   String get deployment_token_label => 'Deployment token (optional)';
 
   @override
-  String get deployment_token_helper => 'For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.';
+  String get deployment_token_helper =>
+      'For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.';
 
   @override
   String get deployment_token_hint => 'Dashboard session token';
@@ -5732,7 +6858,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get custom_headers_label => 'Custom headers (optional)';
 
   @override
-  String get custom_headers_helper => 'One per line, e.g. X-Custom: value. Forbidden headers are rejected.';
+  String get custom_headers_helper =>
+      'One per line, e.g. X-Custom: value. Forbidden headers are rejected.';
 
   @override
   String get custom_headers_hint => 'e.g. X-Custom-Header: value';

@@ -1246,7 +1246,13 @@
   "ng_choose_project": "Projekt auswählen",
   "ng_project_cwd_fallback": "Der Projektordner war nicht verfügbar. Dieser Chat läuft daher in {path}.",
   "ng_project_create_uncertain": "Das Gateway hat diesen Chat möglicherweise erstellt, aber nicht bestätigt. Prüfe die Chats, bevor du einen weiteren startest. Diese Anfrage wird nicht automatisch wiederholt.",
-  "@ng_project_cwd_fallback": {"placeholders": {"path": {"type": "String"}}},
+  "@ng_project_cwd_fallback": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "ng_what_should_we_work_on": "Woran sollen wir arbeiten?",
   "ng_ask_hermes_anything_it_can_run": "Frag Hermes alles. Es kann Tools ausführen, im Web suchen und mit deinen Dateien auf dem Server arbeiten.",
   "ng_working_2": "Wird bearbeitet · {frame}",
@@ -1693,5 +1699,110 @@
   "ng_aux_profile_describer": "Profilbeschreibungen",
   "ng_aux_profile_describer_hint": "Schreibt die Kurzbeschreibung jedes Profils",
   "ng_aux_curator": "Kurator",
-  "ng_aux_curator_hint": "Prüft, wie Skills genutzt werden"
+  "ng_aux_curator_hint": "Prüft, wie Skills genutzt werden",
+  "ng_allow_until_sandbox_off": "Bis die Sandbox ausgeschaltet wird",
+  "ng_folder_access": "Ordnerzugriff",
+  "ng_folder_access_unspecified": "Das Gateway hat nicht angegeben, ob der Zugriff schreibgeschützt ist oder Lesen und Schreiben erlaubt.",
+  "ng_folder_read_only": "Schreibgeschützt",
+  "ng_folder_read_write": "Lesen und Schreiben",
+  "ng_website_access": "Websitezugriff",
+  "appearance_inline_embeds": "Eingebettete Inhalte",
+  "appearance_inline_embeds_hint": "Umfangreiche Vorschauen werden von Websites Dritter geladen (YouTube, X, …). „Fragen“ zeigt einen Platzhalter, bis du jede einzeln erlaubst; „Immer“ lädt sie automatisch; „Aus“ behält einfache Links.",
+  "appearance_embeds_ask": "Fragen",
+  "appearance_embeds_always": "Immer",
+  "appearance_embeds_off": "Aus",
+  "appearance_embeds_reset": "{count, plural, =1{1 erlaubten Dienst zurücksetzen} other{{count} erlaubte Dienste zurücksetzen}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "Laden",
+  "appearance_embed_always_allow": "{service} immer erlauben",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "Vorschau wird geladen…",
+  "appearance_embed_image_failed": "Das Bild von {host} konnte nicht geladen werden. Tippe, um es zu öffnen.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "Vorschau nicht verfügbar",
+  "render_widget_file_truncated": "Nur der Anfang dieser Datei wurde gelesen, daher ist das Widget möglicherweise unvollständig.",
+  "setup_beat_title": "Einrichtung",
+  "setup_beat_use_name": "{name} verwenden",
+  "setup_beat_name_hint": "Wie soll Hermes dich nennen?",
+  "setup_beat_on_computer": "Dieser Schritt erfolgt in Hermes auf dem Computer, auf dem es läuft. „Weiter“ behält, was dort eingerichtet ist.",
+  "setup_beat_not_waiting": "Diese Einrichtungskarte wartet nicht mehr auf eine Antwort.",
+  "catalog_kind_plugin": "Plugin",
+  "catalog_kind_skill": "Skill",
+  "catalog_tier_official": "Offiziell",
+  "catalog_tier_verified": "Geprüft",
+  "catalog_tier_community": "Community",
+  "catalog_install": "Installieren",
+  "catalog_waiting": "Wartet auf deine Wahl",
+  "catalog_installed": "Installiert",
+  "catalog_installed_off": "Installiert, nicht aktiviert",
+  "catalog_skipped": "Übersprungen",
+  "catalog_not_installed": "Nicht installiert",
+  "catalog_target_profile": "Wird im Profil {profile} installiert",
+  "catalog_source": "{repo} bei {sha}",
+  "catalog_scan": "Sicherheitsprüfung: {status}. {summary}",
+  "catalog_requires_hermes": "Benötigt Hermes {range}",
+  "catalog_skill_ready": "Skill {name} ist einsatzbereit",
+  "catalog_missing_env": "Benötigt noch: {names}",
+  "catalog_server_error": "{name} hat sich nicht verbunden: {error}",
+  "catalog_send_failed": "Deine Wahl wurde nicht gesendet. Versuche es erneut.",
+  "attachment_video_speed": "Wiedergabegeschwindigkeit",
+  "catalog_installing": "Wird installiert…",
+  "catalog_phase_downloading": "Wird heruntergeladen…",
+  "catalog_phase_python_packages": "Python-Pakete werden installiert…",
+  "catalog_phase_loading_tools": "Werkzeuge werden geladen…",
+  "setup_beat_send_failed": "Deine Antwort wurde nicht gesendet. Versuche es erneut.",
+  "catalog_tool_count": "{count, plural, =1{1 Tool} other{{count} Tools}}",
+  "render_svg_not_drawn": "Dieses SVG wurde nicht gezeichnet.",
+  "render_notes_directive": "Notiz-Direktive",
+  "render_maths_source": "Formelquelle",
+  "render_inline_maths_source": "Inline-Formelquelle",
+  "render_sequence_outline": "Ablaufübersicht",
+  "render_diagram_outline": "Diagrammübersicht",
+  "render_revision_of": "Revision {index} von {count}",
+  "render_previous_revision": "Vorherige Revision",
+  "render_next_revision": "Nächste Revision",
+  "render_show_rendered": "Dargestellt",
+  "render_show_source": "Quelltext",
+  "render_copied_file": "{name} kopiert",
+  "render_copy_file": "{name} kopieren",
+  "render_artifact_too_long": "Dieses Artefakt ist zu lang, um es hier als Seite anzuzeigen.",
+  "render_active_content_removed": "Skripte, Frames und externe Adressen wurden entfernt.",
+  "render_widget_file": "Widget-Datei {file}",
+  "render_widget_runs_as_text": "Läuft als Text in diesem Chat. Skripte und externe Frames werden entfernt.",
+  "render_load_widget": "Widget laden",
+  "render_not_html_widget": "Diese Datei ist kein HTML-Widget.",
+  "render_widget_sent": "An diesen Chat gesendet",
+  "render_widget_not_sent": "Nicht an diesen Chat gesendet",
+  "render_widget_throttled": "Warte kurz, bevor du erneut sendest",
+  "render_widget_too_long": "Diese Anfrage ist zu lang zum Senden",
+  "render_widget_no_gesture": "Tippe zum Senden auf ein Steuerelement im Widget",
+  "render_widget_invalid": "Diese Anfrage konnte nicht gesendet werden",
+  "render_inspected_image": "Untersuchtes Bild",
+  "render_contributions": "Beiträge",
+  "render_contributions_intro": "Nur in Ares eingebaute Beiträge können eine Antwort ergänzen. Chattext kann keinen registrieren, und eine Freigabe gilt nur für diese Verbindung.",
+  "render_grant_plugin": "{name} erlauben",
+  "render_revoke_plugin": "{name} entziehen",
+  "render_plugin_slots": "Antwortkarten für ::{directive}",
+  "render_plugin_notes": "Notizen",
+  "catalog_scan_passed": "bestanden",
+  "catalog_scan_warnings": "Warnungen gefunden",
+  "catalog_scan_failed": "fehlgeschlagen"
 }

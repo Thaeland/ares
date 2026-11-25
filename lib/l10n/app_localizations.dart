@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_ar.dart';
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
@@ -70,7 +71,8 @@ import 'app_localizations_zh.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -78,7 +80,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -90,15 +93,17 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
     Locale('de'),
     Locale('en'),
     Locale('es'),
@@ -110,7 +115,8 @@ abstract class AppLocalizations {
     Locale('ru'),
     Locale('uk'),
     Locale('zh'),
-    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans')
+    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
   ];
 
   /// No description provided for @workspace_workers.
@@ -1235,11 +1241,23 @@ abstract class AppLocalizations {
   /// **'Allow matching commands until this Hermes session ends.'**
   String get allow_matching_commands_until_this_hermes_session_ends;
 
+  /// No description provided for @allow_folder_until_sandbox_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow this folder until the sandbox is switched off.'**
+  String get allow_folder_until_sandbox_off;
+
   /// No description provided for @allow_once.
   ///
   /// In en, this message translates to:
   /// **'Allow once'**
   String get allow_once;
+
+  /// No description provided for @allow_website_until_sandbox_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow this website until the sandbox is switched off.'**
+  String get allow_website_until_sandbox_off;
 
   /// No description provided for @always_allow.
   ///
@@ -1869,7 +1887,10 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Could not reach/authenticate the dashboard at {host}:{dashboardPort}. Check the port and credentials.'**
-  String could_not_reach_authenticate_the_dashboard_at_check_the_port(Object dashboardPort, Object host);
+  String could_not_reach_authenticate_the_dashboard_at_check_the_port(
+    Object dashboardPort,
+    Object host,
+  );
 
   /// No description provided for @could_not_read_activity.
   ///
@@ -2217,7 +2238,9 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Delete \"{title}\" from the remote Hermes history? This cannot be undone.'**
-  String delete_from_the_remote_hermes_history_this_cannot_be_undone(Object title);
+  String delete_from_the_remote_hermes_history_this_cannot_be_undone(
+    Object title,
+  );
 
   /// No description provided for @delete_cron_job.
   ///
@@ -2433,7 +2456,8 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Explicit choices adjust Android accessibility text size; System leaves it unchanged.'**
-  String get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it;
+  String
+  get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it;
 
   /// No description provided for @export_label.
   ///
@@ -2469,13 +2493,17 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Extract the decisions, deadlines, owners, and actionable action items from the attached content.'**
-  String get extract_the_decisions_deadlines_owners_and_actionable_action_items_from;
+  String
+  get extract_the_decisions_deadlines_owners_and_actionable_action_items_from;
 
   /// No description provided for @extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2.
   ///
   /// In en, this message translates to:
   /// **'Extract the decisions, deadlines, owners, and actionable action items from this content:\n\n{text}'**
-  String extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(Object text);
+  String
+  extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(
+    Object text,
+  );
 
   /// No description provided for @failed_to_add_job.
   ///
@@ -3341,47 +3369,77 @@ abstract class AppLocalizations {
   /// **'What Ares submitted to Windows'**
   String get windows_notification_diagnostics;
 
-  /// No description provided for @windows_window_activity.
+  /// No description provided for @chat_activity_share.
   ///
   /// In en, this message translates to:
   /// **'Share chat activity'**
-  String get windows_window_activity;
+  String get chat_activity_share;
 
-  /// No description provided for @windows_window_activity_hint.
+  /// No description provided for @chat_activity_share_hint.
   ///
   /// In en, this message translates to:
   /// **'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.'**
-  String get windows_window_activity_hint;
+  String get chat_activity_share_hint;
 
-  /// No description provided for @windows_completion_sound.
+  /// No description provided for @completion_sound.
   ///
   /// In en, this message translates to:
   /// **'Completion sound'**
-  String get windows_completion_sound;
+  String get completion_sound;
 
-  /// No description provided for @windows_sound_default.
+  /// No description provided for @completion_sound_system.
   ///
   /// In en, this message translates to:
-  /// **'Windows default'**
-  String get windows_sound_default;
+  /// **'System default'**
+  String get completion_sound_system;
 
-  /// No description provided for @windows_sound_mail.
+  /// No description provided for @completion_sound_mail.
   ///
   /// In en, this message translates to:
   /// **'Mail'**
-  String get windows_sound_mail;
+  String get completion_sound_mail;
 
-  /// No description provided for @windows_sound_reminder.
+  /// No description provided for @completion_sound_reminder.
   ///
   /// In en, this message translates to:
   /// **'Reminder'**
-  String get windows_sound_reminder;
+  String get completion_sound_reminder;
 
-  /// No description provided for @windows_sound_silent.
+  /// No description provided for @completion_sound_silent.
   ///
   /// In en, this message translates to:
   /// **'Silent'**
-  String get windows_sound_silent;
+  String get completion_sound_silent;
+
+  /// No description provided for @completion_sound_scope.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.'**
+  String get completion_sound_scope;
+
+  /// No description provided for @completion_sound_scope_android.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.'**
+  String get completion_sound_scope_android;
+
+  /// No description provided for @notification_open_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get notification_open_action;
+
+  /// No description provided for @app_sounds_mute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute app sounds'**
+  String get app_sounds_mute;
+
+  /// No description provided for @app_sounds_mute_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.'**
+  String get app_sounds_mute_hint;
 
   /// No description provided for @notifications_permission_denied.
   ///
@@ -3543,7 +3601,9 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Profile default set to {selectedModel}. Chats with their own model keep that override.'**
-  String profile_default_set_to_chats_with_their_own_model_keep(Object selectedModel);
+  String profile_default_set_to_chats_with_their_own_model_keep(
+    Object selectedModel,
+  );
 
   /// No description provided for @profile_this_connection_chats_as_when_the_dashboard_serves_several.
   ///
@@ -3771,7 +3831,9 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Research this content, verify the important claims, and cite sources:\n\n{text}'**
-  String research_this_content_verify_the_important_claims_and_cite_sources(Object text);
+  String research_this_content_verify_the_important_claims_and_cite_sources(
+    Object text,
+  );
 
   /// No description provided for @reset_failed_the_secure_storage_may_need_reinstall.
   ///
@@ -4437,7 +4499,9 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'The local connection store looks damaged ({errorType}). You can reset the saved connections and start fresh. Chats on your gateway are not affected.'**
-  String the_local_connection_store_looks_damaged_you_can_reset_the(Object errorType);
+  String the_local_connection_store_looks_damaged_you_can_reset_the(
+    Object errorType,
+  );
 
   /// No description provided for @the_model_only_rewrites_your_question_into_a_short_full.
   ///
@@ -4689,7 +4753,9 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Use this content to identify and fill the relevant document or form fields. Ask before submitting anything:\n\n{text}'**
-  String use_this_content_to_identify_and_fill_the_relevant_document(Object text);
+  String use_this_content_to_identify_and_fill_the_relevant_document(
+    Object text,
+  );
 
   /// No description provided for @used_for_hosted_path_prefixes_and_for_the_settings_memory.
   ///
@@ -4893,7 +4959,10 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{linkedSessions} chats migrated · {createdProjects} projects created'**
-  String chats_migrated_projects_created(Object createdProjects, Object linkedSessions);
+  String chats_migrated_projects_created(
+    Object createdProjects,
+    Object linkedSessions,
+  );
 
   /// No description provided for @chats_stayed_in_local_spaces.
   ///
@@ -5613,7 +5682,8 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Compact removes the You and Hermes labels and trims bubble padding, spacing, and side margins.'**
-  String get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins;
+  String
+  get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins;
 
   /// No description provided for @client_certificate_mtls.
   ///
@@ -7876,6 +7946,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Allow once'**
   String get ng_allow_once;
+
+  /// No description provided for @ng_allow_until_sandbox_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Until the sandbox is switched off'**
+  String get ng_allow_until_sandbox_off;
+
+  /// No description provided for @ng_folder_access.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder access'**
+  String get ng_folder_access;
+
+  /// No description provided for @ng_folder_access_unspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not say whether this is read-only or read-write.'**
+  String get ng_folder_access_unspecified;
+
+  /// No description provided for @ng_folder_read_only.
+  ///
+  /// In en, this message translates to:
+  /// **'Read-only'**
+  String get ng_folder_read_only;
+
+  /// No description provided for @ng_folder_read_write.
+  ///
+  /// In en, this message translates to:
+  /// **'Read and write'**
+  String get ng_folder_read_write;
+
+  /// No description provided for @ng_website_access.
+  ///
+  /// In en, this message translates to:
+  /// **'Website access'**
+  String get ng_website_access;
 
   /// No description provided for @ng_allow_for_this_chat.
   ///
@@ -10343,6 +10449,1020 @@ abstract class AppLocalizations {
   /// **'Reviews how skills are used'**
   String get ng_aux_curator_hint;
 
+  /// No description provided for @appearance_save_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save this change.'**
+  String get appearance_save_failed;
+
+  /// No description provided for @appearance_keep_which_theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep which theme?'**
+  String get appearance_keep_which_theme;
+
+  /// No description provided for @appearance_tour_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get appearance_tour_back;
+
+  /// No description provided for @appearance_tour_finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get appearance_tour_finish;
+
+  /// No description provided for @appearance_tour_next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get appearance_tour_next;
+
+  /// No description provided for @appearance_tour_close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close tour'**
+  String get appearance_tour_close;
+
+  /// No description provided for @appearance_dismiss_tip.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss tip'**
+  String get appearance_dismiss_tip;
+
+  /// No description provided for @appearance_search_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Search settings'**
+  String get appearance_search_settings;
+
+  /// No description provided for @appearance_search_show.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get appearance_search_show;
+
+  /// No description provided for @appearance_no_matching_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching setting.'**
+  String get appearance_no_matching_setting;
+
+  /// No description provided for @appearance_replay_tour.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay tour'**
+  String get appearance_replay_tour;
+
+  /// No description provided for @appearance_show_tips_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Show tips again'**
+  String get appearance_show_tips_again;
+
+  /// No description provided for @appearance_window_translucency_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.'**
+  String get appearance_window_translucency_unavailable;
+
+  /// No description provided for @appearance_imported_themes.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported themes'**
+  String get appearance_imported_themes;
+
+  /// No description provided for @appearance_import_theme_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Import theme file'**
+  String get appearance_import_theme_file;
+
+  /// No description provided for @appearance_remove_theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove theme'**
+  String get appearance_remove_theme;
+
+  /// No description provided for @appearance_chat_font.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat font'**
+  String get appearance_chat_font;
+
+  /// No description provided for @appearance_terminal_font.
+  ///
+  /// In en, this message translates to:
+  /// **'Terminal font'**
+  String get appearance_terminal_font;
+
+  /// No description provided for @appearance_font_platform.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get appearance_font_platform;
+
+  /// No description provided for @appearance_automatic.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get appearance_automatic;
+
+  /// No description provided for @appearance_force_left_to_right.
+  ///
+  /// In en, this message translates to:
+  /// **'Force left to right'**
+  String get appearance_force_left_to_right;
+
+  /// No description provided for @appearance_force_right_to_left.
+  ///
+  /// In en, this message translates to:
+  /// **'Force right to left'**
+  String get appearance_force_right_to_left;
+
+  /// No description provided for @appearance_user_bubble_opacity.
+  ///
+  /// In en, this message translates to:
+  /// **'User bubble opacity'**
+  String get appearance_user_bubble_opacity;
+
+  /// No description provided for @appearance_inline_embeds.
+  ///
+  /// In en, this message translates to:
+  /// **'Inline embeds'**
+  String get appearance_inline_embeds;
+
+  /// No description provided for @appearance_inline_embeds_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Rich previews load from third-party sites (YouTube, X, …). Ask shows a placeholder until you allow each one; Always loads them automatically; Off keeps plain links.'**
+  String get appearance_inline_embeds_hint;
+
+  /// No description provided for @appearance_embeds_ask.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask'**
+  String get appearance_embeds_ask;
+
+  /// No description provided for @appearance_embeds_always.
+  ///
+  /// In en, this message translates to:
+  /// **'Always'**
+  String get appearance_embeds_always;
+
+  /// No description provided for @appearance_embeds_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get appearance_embeds_off;
+
+  /// No description provided for @appearance_embeds_reset.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Reset 1 allowed service} other{Reset {count} allowed services}}'**
+  String appearance_embeds_reset(int count);
+
+  /// No description provided for @appearance_embed_load.
+  ///
+  /// In en, this message translates to:
+  /// **'Load'**
+  String get appearance_embed_load;
+
+  /// No description provided for @appearance_embed_always_allow.
+  ///
+  /// In en, this message translates to:
+  /// **'Always allow {service}'**
+  String appearance_embed_always_allow(String service);
+
+  /// No description provided for @appearance_embed_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading preview…'**
+  String get appearance_embed_loading;
+
+  /// No description provided for @appearance_embed_image_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load the image from {host}. Tap to open it.'**
+  String appearance_embed_image_failed(String host);
+
+  /// No description provided for @appearance_embed_preview_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview unavailable'**
+  String get appearance_embed_preview_unavailable;
+
+  /// No description provided for @appearance_emoji_reactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Emoji reactions'**
+  String get appearance_emoji_reactions;
+
+  /// No description provided for @appearance_celebration_hearts.
+  ///
+  /// In en, this message translates to:
+  /// **'Celebration hearts'**
+  String get appearance_celebration_hearts;
+
+  /// No description provided for @appearance_celebration_hearts_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'A heart plays when a reply arrives while you were away.'**
+  String get appearance_celebration_hearts_hint;
+
+  /// No description provided for @appearance_pop_out_companion.
+  ///
+  /// In en, this message translates to:
+  /// **'Pop out companion'**
+  String get appearance_pop_out_companion;
+
+  /// No description provided for @appearance_mosskip.
+  ///
+  /// In en, this message translates to:
+  /// **'Mosskip'**
+  String get appearance_mosskip;
+
+  /// No description provided for @appearance_emberbun.
+  ///
+  /// In en, this message translates to:
+  /// **'Emberbun'**
+  String get appearance_emberbun;
+
+  /// No description provided for @appearance_tideling.
+  ///
+  /// In en, this message translates to:
+  /// **'Tideling'**
+  String get appearance_tideling;
+
+  /// No description provided for @appearance_my_hatchling.
+  ///
+  /// In en, this message translates to:
+  /// **'My hatchling'**
+  String get appearance_my_hatchling;
+
+  /// No description provided for @appearance_at_rest.
+  ///
+  /// In en, this message translates to:
+  /// **'At rest'**
+  String get appearance_at_rest;
+
+  /// No description provided for @appearance_working.
+  ///
+  /// In en, this message translates to:
+  /// **'Working'**
+  String get appearance_working;
+
+  /// No description provided for @appearance_thinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinking'**
+  String get appearance_thinking;
+
+  /// No description provided for @appearance_waiting_for_you.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for you'**
+  String get appearance_waiting_for_you;
+
+  /// No description provided for @appearance_reply_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply ready'**
+  String get appearance_reply_ready;
+
+  /// No description provided for @appearance_turn_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn failed'**
+  String get appearance_turn_failed;
+
+  /// No description provided for @appearance_small.
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get appearance_small;
+
+  /// No description provided for @appearance_medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get appearance_medium;
+
+  /// No description provided for @appearance_large.
+  ///
+  /// In en, this message translates to:
+  /// **'Large'**
+  String get appearance_large;
+
+  /// No description provided for @appearance_hello.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello!'**
+  String get appearance_hello;
+
+  /// No description provided for @appearance_unread_reply.
+  ///
+  /// In en, this message translates to:
+  /// **'Unread reply'**
+  String get appearance_unread_reply;
+
+  /// No description provided for @appearance_compose.
+  ///
+  /// In en, this message translates to:
+  /// **'Compose'**
+  String get appearance_compose;
+
+  /// No description provided for @appearance_say_hello.
+  ///
+  /// In en, this message translates to:
+  /// **'Say hello'**
+  String get appearance_say_hello;
+
+  /// No description provided for @appearance_pet_image_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open that image. Choose a smaller PNG or JPEG.'**
+  String get appearance_pet_image_failed;
+
+  /// No description provided for @appearance_pet_companion.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet companion'**
+  String get appearance_pet_companion;
+
+  /// No description provided for @appearance_pet_companion_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Show a companion while you chat.'**
+  String get appearance_pet_companion_hint;
+
+  /// No description provided for @appearance_adopt_a_companion.
+  ///
+  /// In en, this message translates to:
+  /// **'Adopt a companion'**
+  String get appearance_adopt_a_companion;
+
+  /// No description provided for @appearance_roam_when_idle.
+  ///
+  /// In en, this message translates to:
+  /// **'Roam when idle'**
+  String get appearance_roam_when_idle;
+
+  /// No description provided for @appearance_pet_size.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet size'**
+  String get appearance_pet_size;
+
+  /// No description provided for @appearance_hatch_from_a_local_picture.
+  ///
+  /// In en, this message translates to:
+  /// **'Hatch from a local picture'**
+  String get appearance_hatch_from_a_local_picture;
+
+  /// No description provided for @appearance_pet_image_limits.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.'**
+  String get appearance_pet_image_limits;
+
+  /// No description provided for @appearance_choose_picture.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose picture'**
+  String get appearance_choose_picture;
+
+  /// No description provided for @appearance_hatchling_preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Hatchling preview'**
+  String get appearance_hatchling_preview;
+
+  /// No description provided for @appearance_hatch_and_adopt.
+  ///
+  /// In en, this message translates to:
+  /// **'Hatch and adopt'**
+  String get appearance_hatch_and_adopt;
+
+  /// No description provided for @appearance_discard_draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard draft'**
+  String get appearance_discard_draft;
+
+  /// No description provided for @appearance_forget_saved_hatchling.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget saved hatchling'**
+  String get appearance_forget_saved_hatchling;
+
+  /// No description provided for @appearance_radio.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio'**
+  String get appearance_radio;
+
+  /// No description provided for @appearance_radio_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Streams come straight from {stations} and start only when you press Play. Station search stays on this device.'**
+  String appearance_radio_hint(String stations);
+
+  /// No description provided for @appearance_radio_save_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio settings could not be saved.'**
+  String get appearance_radio_save_failed;
+
+  /// No description provided for @appearance_choose_a_station.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a station'**
+  String get appearance_choose_a_station;
+
+  /// No description provided for @appearance_pause_radio.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause radio'**
+  String get appearance_pause_radio;
+
+  /// No description provided for @appearance_play_radio.
+  ///
+  /// In en, this message translates to:
+  /// **'Play radio'**
+  String get appearance_play_radio;
+
+  /// No description provided for @appearance_next_station.
+  ///
+  /// In en, this message translates to:
+  /// **'Next station'**
+  String get appearance_next_station;
+
+  /// No description provided for @appearance_radio_trace_semantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Stream activity. Audio levels are unavailable, so this line stays flat.'**
+  String get appearance_radio_trace_semantics;
+
+  /// No description provided for @appearance_radio_is_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio is off'**
+  String get appearance_radio_is_off;
+
+  /// No description provided for @appearance_paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get appearance_paused;
+
+  /// No description provided for @appearance_connecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting…'**
+  String get appearance_connecting;
+
+  /// No description provided for @appearance_live.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get appearance_live;
+
+  /// No description provided for @appearance_stream_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Stream unavailable'**
+  String get appearance_stream_unavailable;
+
+  /// No description provided for @appearance_now_playing.
+  ///
+  /// In en, this message translates to:
+  /// **'Now playing: {credit}'**
+  String appearance_now_playing(String credit);
+
+  /// No description provided for @appearance_audio_only_waveform_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio only · waveform unavailable'**
+  String get appearance_audio_only_waveform_unavailable;
+
+  /// No description provided for @appearance_volume.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get appearance_volume;
+
+  /// No description provided for @appearance_search_presets.
+  ///
+  /// In en, this message translates to:
+  /// **'Search presets'**
+  String get appearance_search_presets;
+
+  /// No description provided for @appearance_no_stations_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No stations found'**
+  String get appearance_no_stations_found;
+
+  /// No description provided for @appearance_unpin_station.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpin station: {station}'**
+  String appearance_unpin_station(String station);
+
+  /// No description provided for @appearance_pin_station.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin station: {station}'**
+  String appearance_pin_station(String station);
+
+  /// No description provided for @appearance_radio_picker_metadata_notice.
+  ///
+  /// In en, this message translates to:
+  /// **'While this picker is open, playing stations may share track details directly from the broadcaster.'**
+  String get appearance_radio_picker_metadata_notice;
+
+  /// No description provided for @appearance_message_from_your_companion.
+  ///
+  /// In en, this message translates to:
+  /// **'Message from your companion'**
+  String get appearance_message_from_your_companion;
+
+  /// No description provided for @appearance_send_to_the_open_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Send to the open chat'**
+  String get appearance_send_to_the_open_chat;
+
+  /// No description provided for @appearance_tour_theme_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a VS Code colour theme from a file on this device, then choose which variant to keep.'**
+  String get appearance_tour_theme_body;
+
+  /// No description provided for @appearance_tour_fonts_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading fonts'**
+  String get appearance_tour_fonts_title;
+
+  /// No description provided for @appearance_tour_fonts_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat prose and terminal code use separate faces shipped with Ares.'**
+  String get appearance_tour_fonts_body;
+
+  /// No description provided for @appearance_tour_direction_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Transcript direction'**
+  String get appearance_tour_direction_title;
+
+  /// No description provided for @appearance_tour_direction_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave this on automatic, or force the transcript left to right or right to left.'**
+  String get appearance_tour_direction_body;
+
+  /// No description provided for @appearance_tour_pet_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Companion'**
+  String get appearance_tour_pet_title;
+
+  /// No description provided for @appearance_tour_pet_body.
+  ///
+  /// In en, this message translates to:
+  /// **'The companion is off until you adopt one. Pop-out adds a small composer.'**
+  String get appearance_tour_pet_body;
+
+  /// No description provided for @appearance_tour_radio_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio stays off until you enable it. Play is what opens a stream.'**
+  String get appearance_tour_radio_body;
+
+  /// No description provided for @appearance_tip_theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.'**
+  String get appearance_tip_theme;
+
+  /// No description provided for @appearance_tip_pet.
+  ///
+  /// In en, this message translates to:
+  /// **'The companion stores one small portrait on this device. It does not upload the picture you hatch from.'**
+  String get appearance_tip_pet;
+
+  /// No description provided for @appearance_theme_import_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.'**
+  String get appearance_theme_import_failed;
+
+  /// No description provided for @render_widget_file_truncated.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the start of this file was read, so the widget may be incomplete.'**
+  String get render_widget_file_truncated;
+
+  /// No description provided for @setup_beat_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup'**
+  String get setup_beat_title;
+
+  /// No description provided for @setup_beat_use_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Use {name}'**
+  String setup_beat_use_name(String name);
+
+  /// No description provided for @setup_beat_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'What should Hermes call you?'**
+  String get setup_beat_name_hint;
+
+  /// No description provided for @setup_beat_on_computer.
+  ///
+  /// In en, this message translates to:
+  /// **'This step is done in Hermes on the computer it runs on. Continue keeps what is set up there.'**
+  String get setup_beat_on_computer;
+
+  /// No description provided for @setup_beat_not_waiting.
+  ///
+  /// In en, this message translates to:
+  /// **'This setup card is no longer waiting for an answer.'**
+  String get setup_beat_not_waiting;
+
+  /// No description provided for @catalog_kind_plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Plugin'**
+  String get catalog_kind_plugin;
+
+  /// No description provided for @catalog_kind_skill.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill'**
+  String get catalog_kind_skill;
+
+  /// No description provided for @catalog_tier_official.
+  ///
+  /// In en, this message translates to:
+  /// **'Official'**
+  String get catalog_tier_official;
+
+  /// No description provided for @catalog_tier_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get catalog_tier_verified;
+
+  /// No description provided for @catalog_tier_community.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get catalog_tier_community;
+
+  /// No description provided for @catalog_install.
+  ///
+  /// In en, this message translates to:
+  /// **'Install'**
+  String get catalog_install;
+
+  /// No description provided for @catalog_waiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for your choice'**
+  String get catalog_waiting;
+
+  /// No description provided for @catalog_installed.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed'**
+  String get catalog_installed;
+
+  /// No description provided for @catalog_installed_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed, not turned on'**
+  String get catalog_installed_off;
+
+  /// No description provided for @catalog_skipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get catalog_skipped;
+
+  /// No description provided for @catalog_not_installed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not installed'**
+  String get catalog_not_installed;
+
+  /// No description provided for @catalog_target_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Installs into the {profile} profile'**
+  String catalog_target_profile(String profile);
+
+  /// No description provided for @catalog_source.
+  ///
+  /// In en, this message translates to:
+  /// **'{repo} at {sha}'**
+  String catalog_source(String repo, String sha);
+
+  /// No description provided for @catalog_scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Security scan: {status}. {summary}'**
+  String catalog_scan(String status, String summary);
+
+  /// No description provided for @catalog_requires_hermes.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Hermes {range}'**
+  String catalog_requires_hermes(String range);
+
+  /// No description provided for @catalog_skill_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill {name} is ready to use'**
+  String catalog_skill_ready(String name);
+
+  /// No description provided for @catalog_missing_env.
+  ///
+  /// In en, this message translates to:
+  /// **'Still needs: {names}'**
+  String catalog_missing_env(String names);
+
+  /// No description provided for @catalog_server_error.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} did not connect: {error}'**
+  String catalog_server_error(String name, String error);
+
+  /// No description provided for @catalog_send_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your choice was not sent. Try again.'**
+  String get catalog_send_failed;
+
+  /// No description provided for @attachment_video_speed.
+  ///
+  /// In en, this message translates to:
+  /// **'Playback speed'**
+  String get attachment_video_speed;
+
+  /// No description provided for @catalog_installing.
+  ///
+  /// In en, this message translates to:
+  /// **'Installing…'**
+  String get catalog_installing;
+
+  /// No description provided for @catalog_phase_downloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading…'**
+  String get catalog_phase_downloading;
+
+  /// No description provided for @catalog_phase_python_packages.
+  ///
+  /// In en, this message translates to:
+  /// **'Installing Python packages…'**
+  String get catalog_phase_python_packages;
+
+  /// No description provided for @catalog_phase_loading_tools.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading its tools…'**
+  String get catalog_phase_loading_tools;
+
+  /// No description provided for @setup_beat_send_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your answer was not sent. Try again.'**
+  String get setup_beat_send_failed;
+
+  /// No description provided for @catalog_tool_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 tool} other{{count} tools}}'**
+  String catalog_tool_count(int count);
+
+  /// No description provided for @render_svg_not_drawn.
+  ///
+  /// In en, this message translates to:
+  /// **'This SVG was not drawn.'**
+  String get render_svg_not_drawn;
+
+  /// No description provided for @render_notes_directive.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes directive'**
+  String get render_notes_directive;
+
+  /// No description provided for @render_maths_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Maths source'**
+  String get render_maths_source;
+
+  /// No description provided for @render_inline_maths_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Inline maths source'**
+  String get render_inline_maths_source;
+
+  /// No description provided for @render_sequence_outline.
+  ///
+  /// In en, this message translates to:
+  /// **'Sequence outline'**
+  String get render_sequence_outline;
+
+  /// No description provided for @render_diagram_outline.
+  ///
+  /// In en, this message translates to:
+  /// **'Diagram outline'**
+  String get render_diagram_outline;
+
+  /// No description provided for @render_revision_of.
+  ///
+  /// In en, this message translates to:
+  /// **'Revision {index} of {count}'**
+  String render_revision_of(int index, int count);
+
+  /// No description provided for @render_previous_revision.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous revision'**
+  String get render_previous_revision;
+
+  /// No description provided for @render_next_revision.
+  ///
+  /// In en, this message translates to:
+  /// **'Next revision'**
+  String get render_next_revision;
+
+  /// No description provided for @render_show_rendered.
+  ///
+  /// In en, this message translates to:
+  /// **'Rendered'**
+  String get render_show_rendered;
+
+  /// No description provided for @render_show_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get render_show_source;
+
+  /// No description provided for @render_copied_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {name}'**
+  String render_copied_file(String name);
+
+  /// No description provided for @render_copy_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy {name}'**
+  String render_copy_file(String name);
+
+  /// No description provided for @render_artifact_too_long.
+  ///
+  /// In en, this message translates to:
+  /// **'This artefact is too long to show as a page here.'**
+  String get render_artifact_too_long;
+
+  /// No description provided for @render_active_content_removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Scripts, frames and external addresses were removed.'**
+  String get render_active_content_removed;
+
+  /// No description provided for @render_widget_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Widget {file}'**
+  String render_widget_file(String file);
+
+  /// No description provided for @render_widget_runs_as_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs as text in this chat. Scripts and external frames are removed.'**
+  String get render_widget_runs_as_text;
+
+  /// No description provided for @render_load_widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Load widget'**
+  String get render_load_widget;
+
+  /// No description provided for @render_not_html_widget.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is not an HTML widget.'**
+  String get render_not_html_widget;
+
+  /// No description provided for @render_widget_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to this chat'**
+  String get render_widget_sent;
+
+  /// No description provided for @render_widget_not_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sent to this chat'**
+  String get render_widget_not_sent;
+
+  /// No description provided for @render_widget_throttled.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait a moment before sending again'**
+  String get render_widget_throttled;
+
+  /// No description provided for @render_widget_too_long.
+  ///
+  /// In en, this message translates to:
+  /// **'This request is too long to send'**
+  String get render_widget_too_long;
+
+  /// No description provided for @render_widget_no_gesture.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a control in the widget to send'**
+  String get render_widget_no_gesture;
+
+  /// No description provided for @render_widget_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This request could not be sent'**
+  String get render_widget_invalid;
+
+  /// No description provided for @render_inspected_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Inspected image'**
+  String get render_inspected_image;
+
+  /// No description provided for @render_contributions.
+  ///
+  /// In en, this message translates to:
+  /// **'Contributions'**
+  String get render_contributions;
+
+  /// No description provided for @render_contributions_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Only contributions compiled into Ares can add to a reply. Chat text cannot register one, and a grant applies to this connection only.'**
+  String get render_contributions_intro;
+
+  /// No description provided for @render_grant_plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant {name}'**
+  String render_grant_plugin(String name);
+
+  /// No description provided for @render_revoke_plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke {name}'**
+  String render_revoke_plugin(String name);
+
+  /// No description provided for @render_plugin_slots.
+  ///
+  /// In en, this message translates to:
+  /// **'reply cards for ::{directive}'**
+  String render_plugin_slots(String directive);
+
+  /// No description provided for @render_plugin_notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get render_plugin_notes;
+
+  /// No description provided for @catalog_scan_passed.
+  ///
+  /// In en, this message translates to:
+  /// **'passed'**
+  String get catalog_scan_passed;
+
+  /// No description provided for @catalog_scan_warnings.
+  ///
+  /// In en, this message translates to:
+  /// **'found warnings'**
+  String get catalog_scan_warnings;
+
+  /// No description provided for @catalog_scan_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'failed'**
+  String get catalog_scan_failed;
+
   /// No description provided for @deployment_token_label.
   ///
   /// In en, this message translates to:
@@ -10380,7 +11500,8 @@ abstract class AppLocalizations {
   String get custom_headers_hint;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -10389,52 +11510,81 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['de', 'en', 'es', 'fr', 'ja', 'ko', 'pt', 'ru', 'uk', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'ar',
+    'de',
+    'en',
+    'es',
+    'fr',
+    'ja',
+    'ko',
+    'pt',
+    'ru',
+    'uk',
+    'zh',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
   // Lookup logic when language+script codes are specified.
   switch (locale.languageCode) {
-    case 'zh': {
-  switch (locale.scriptCode) {
-    case 'Hans': return AppLocalizationsZhHans();
-   }
-  break;
-   }
+    case 'zh':
+      {
+        switch (locale.scriptCode) {
+          case 'Hans':
+            return AppLocalizationsZhHans();
+          case 'Hant':
+            return AppLocalizationsZhHant();
+        }
+        break;
+      }
   }
 
   // Lookup logic when language+country codes are specified.
   switch (locale.languageCode) {
-    case 'pt': {
-  switch (locale.countryCode) {
-    case 'BR': return AppLocalizationsPtBr();
-   }
-  break;
-   }
+    case 'pt':
+      {
+        switch (locale.countryCode) {
+          case 'BR':
+            return AppLocalizationsPtBr();
+        }
+        break;
+      }
   }
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de': return AppLocalizationsDe();
-    case 'en': return AppLocalizationsEn();
-    case 'es': return AppLocalizationsEs();
-    case 'fr': return AppLocalizationsFr();
-    case 'ja': return AppLocalizationsJa();
-    case 'ko': return AppLocalizationsKo();
-    case 'pt': return AppLocalizationsPt();
-    case 'ru': return AppLocalizationsRu();
-    case 'uk': return AppLocalizationsUk();
-    case 'zh': return AppLocalizationsZh();
+    case 'ar':
+      return AppLocalizationsAr();
+    case 'de':
+      return AppLocalizationsDe();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'ja':
+      return AppLocalizationsJa();
+    case 'ko':
+      return AppLocalizationsKo();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'ru':
+      return AppLocalizationsRu();
+    case 'uk':
+      return AppLocalizationsUk();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }

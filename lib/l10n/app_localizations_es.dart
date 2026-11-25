@@ -12,28 +12,34 @@ class AppLocalizationsEs extends AppLocalizations {
   String get workspace_workers => 'Subagentes activos';
 
   @override
-  String get workers_unattached => 'Solo se muestran cantidades. Para dirigir un subagente, elige Subagentes activos en el chat principal conectado.';
+  String get workers_unattached =>
+      'Solo se muestran cantidades. Para dirigir un subagente, elige Subagentes activos en el chat principal conectado.';
 
   @override
-  String get slash_local_arguments => 'Este atajo no admite argumentos aquí. Usa los controles de la aplicación; se conservó tu borrador.';
+  String get slash_local_arguments =>
+      'Este atajo no admite argumentos aquí. Usa los controles de la aplicación; se conservó tu borrador.';
 
   @override
   String get fallback_title => 'Modelos de respaldo';
 
   @override
-  String get fallback_notice => 'Se prueban en orden cuando el modelo principal no está disponible. Los cambios solo afectan a este perfil; guarda explícitamente la lista completa.';
+  String get fallback_notice =>
+      'Se prueban en orden cuando el modelo principal no está disponible. Los cambios solo afectan a este perfil; guarda explícitamente la lista completa.';
 
   @override
-  String get fallback_unavailable => 'La configuración de respaldo no está disponible o no es válida. Revisa la conexión, el perfil seleccionado y la versión del servidor e inténtalo de nuevo.';
+  String get fallback_unavailable =>
+      'La configuración de respaldo no está disponible o no es válida. Revisa la conexión, el perfil seleccionado y la versión del servidor e inténtalo de nuevo.';
 
   @override
-  String get fallback_discovery_unavailable => 'No se pueden obtener los proveedores. Se conservan las entradas existentes; reintenta para elegir proveedores y modelos.';
+  String get fallback_discovery_unavailable =>
+      'No se pueden obtener los proveedores. Se conservan las entradas existentes; reintenta para elegir proveedores y modelos.';
 
   @override
   String get fallback_empty => 'No hay entradas en esta lista de respaldo.';
 
   @override
-  String get fallback_incomplete => 'Elige un proveedor y un modelo para cada entrada o elimina las entradas incompletas antes de guardar.';
+  String get fallback_incomplete =>
+      'Elige un proveedor y un modelo para cada entrada o elimina las entradas incompletas antes de guardar.';
 
   @override
   String get fallback_add => 'Añadir respaldo';
@@ -42,7 +48,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get fallback_save => 'Guardar lista de respaldo';
 
   @override
-  String get fallback_save_failed => 'No se pudo verificar la lista guardada. Se conserva el borrador. Vuelve a guardar o actualiza para cargar la configuración del servidor.';
+  String get fallback_save_failed =>
+      'No se pudo verificar la lista guardada. Se conserva el borrador. Vuelve a guardar o actualiza para cargar la configuración del servidor.';
 
   @override
   String get fallback_saved => 'Lista de respaldo guardada y verificada.';
@@ -51,7 +58,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get fallback_legacy_title => 'Respaldos antiguos (solo lectura)';
 
   @override
-  String get fallback_legacy_notice => 'El servidor también usa fallback_model después de esta lista y omite rutas duplicadas. Estas entradas antiguas se conservan aunque la lista de arriba esté vacía. Edítalas en el servidor.';
+  String get fallback_legacy_notice =>
+      'El servidor también usa fallback_model después de esta lista y omite rutas duplicadas. Estas entradas antiguas se conservan aunque la lista de arriba esté vacía. Edítalas en el servidor.';
 
   @override
   String fallback_priority(String position) {
@@ -65,19 +73,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String get fallback_move_down => 'Bajar';
 
   @override
-  String get fallback_routing_read_only => 'Se conservan los detalles de enrutamiento o un proveedor no listado. Edita este proveedor/modelo en el servidor; aquí puedes reordenar o eliminar la entrada.';
+  String get fallback_routing_read_only =>
+      'Se conservan los detalles de enrutamiento o un proveedor no listado. Edita este proveedor/modelo en el servidor; aquí puedes reordenar o eliminar la entrada.';
 
   @override
   String get cron_model_default => 'Seguir valor predeterminado';
 
   @override
-  String get cron_model_notice => 'Solo se aplica a esta tarea cron. Sin fijar un modelo, Hermes usa el predeterminado de cron y luego el principal. Gestiona los modelos personalizados en el servidor.';
+  String get cron_model_notice =>
+      'Solo se aplica a esta tarea cron. Sin fijar un modelo, Hermes usa el predeterminado de cron y luego el principal. Gestiona los modelos personalizados en el servidor.';
 
   @override
-  String get model_management_unavailable => 'No se pudieron cargar o guardar los ajustes del modelo. Actualiza e inténtalo de nuevo.';
+  String get model_management_unavailable =>
+      'No se pudieron cargar o guardar los ajustes del modelo. Actualiza e inténtalo de nuevo.';
 
   @override
-  String get model_management_subtitle => 'Modelos principal, de respaldo y auxiliares de este perfil';
+  String get model_management_subtitle =>
+      'Modelos principal, de respaldo y auxiliares de este perfil';
 
   @override
   String get usage => 'Uso';
@@ -89,7 +101,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get portal_menu_subtitle => 'Estado del gateway y uso registrado';
 
   @override
-  String get portal_read_only => 'Datos de solo lectura del gateway. Gestiona la autenticación de Nous en el host de Hermes. Estos endpoints no proporcionan saldos de suscripción ni créditos.';
+  String get portal_read_only =>
+      'Datos de solo lectura del gateway. Gestiona la autenticación de Nous en el host de Hermes. Estos endpoints no proporcionan saldos de suscripción ni créditos.';
 
   @override
   String get portal_status => 'Estado del Portal en el gateway';
@@ -110,7 +123,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get portal_recorded_usage => 'Uso registrado';
 
   @override
-  String get portal_all_providers => 'Todos los proveedores del perfil seleccionado del gateway. Un coste registrado de cero no significa que el modelo sea gratuito.';
+  String get portal_all_providers =>
+      'Todos los proveedores del perfil seleccionado del gateway. Un coste registrado de cero no significa que el modelo sea gratuito.';
 
   @override
   String portal_period(String days) {
@@ -139,10 +153,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get portal_no_models => 'No hay modelos registrados.';
 
   @override
-  String get portal_unavailable => 'No disponible. Comprueba la conexión, el perfil seleccionado y la versión del gateway e inténtalo de nuevo.';
+  String get portal_unavailable =>
+      'No disponible. Comprueba la conexión, el perfil seleccionado y la versión del gateway e inténtalo de nuevo.';
 
   @override
-  String get paste_attachment_failed_text_kept => 'No se pudo adjuntar el texto pegado. El texto se ha conservado en el mensaje.';
+  String get paste_attachment_failed_text_kept =>
+      'No se pudo adjuntar el texto pegado. El texto se ha conservado en el mensaje.';
 
   @override
   String get background_task_report => 'Tarea en segundo plano';
@@ -151,7 +167,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get background_process_report => 'Proceso en segundo plano';
 
   @override
-  String get background_report_issues => 'Se notificaron problemas; expande para ver los detalles.';
+  String get background_report_issues =>
+      'Se notificaron problemas; expande para ver los detalles.';
 
   @override
   String get background_report_expand => 'Expandir informe';
@@ -175,13 +192,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get setup_interface_nextgen => 'NextGen';
 
   @override
-  String get setup_interface_classic_description => 'El espacio de trabajo original de Ares, con todos los controles de conexión y ajustes de Classic.';
+  String get setup_interface_classic_description =>
+      'El espacio de trabajo original de Ares, con todos los controles de conexión y ajustes de Classic.';
 
   @override
-  String get setup_interface_nextgen_description => 'Un aspecto nuevo con un solo inicio de sesión en el dashboard, planes en vivo, subagentes y notificaciones.';
+  String get setup_interface_nextgen_description =>
+      'Un aspecto nuevo con un solo inicio de sesión en el dashboard, planes en vivo, subagentes y notificaciones.';
 
   @override
-  String get setup_interface_switch_later => 'Puedes cambiar en cualquier momento en Ajustes.';
+  String get setup_interface_switch_later =>
+      'Puedes cambiar en cualquier momento en Ajustes.';
 
   @override
   String get ng_confirm_model_switch => '¿Cambiar de modelo?';
@@ -190,7 +210,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_switch => 'Cambiar';
 
   @override
-  String get ng_model_confirmation_required => 'Este modelo necesita confirmación antes de seleccionarlo.';
+  String get ng_model_confirmation_required =>
+      'Este modelo necesita confirmación antes de seleccionarlo.';
 
   @override
   String ng_model_switches_next_turn(String model) {
@@ -198,7 +219,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_model_switch_not_connected => 'El chat no está listo para cambiar de modelo. Vuelve a abrirlo e inténtalo de nuevo.';
+  String get ng_model_switch_not_connected =>
+      'El chat no está listo para cambiar de modelo. Vuelve a abrirlo e inténtalo de nuevo.';
 
   @override
   String ng_gateway_kept_default_model(String model) {
@@ -246,34 +268,43 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get hands_free_short_disclosure => 'Solo con este chat abierto en primer plano. Activación sin conexión; la voz puede usar la red. Consume batería.';
+  String get hands_free_short_disclosure =>
+      'Solo con este chat abierto en primer plano. Activación sin conexión; la voz puede usar la red. Consume batería.';
 
   @override
-  String get hands_free_error_action => 'Revisa permiso de micrófono, servicio de voz, voz de respuesta y conexión. Pulsa Detener e Iniciar. No se reenvía nada.';
+  String get hands_free_error_action =>
+      'Revisa permiso de micrófono, servicio de voz, voz de respuesta y conexión. Pulsa Detener e Iniciar. No se reenvía nada.';
 
   @override
-  String get hands_free_disclosure => 'La activación funciona sin conexión en la CPU. El reconocimiento de Android, la voz elegida y el gateway pueden usar redes. Escuchar consume batería y puede haber activaciones falsas. Se detiene al cubrir o cerrar el chat o salir del primer plano; nunca se reinicia solo. El dictado manual sigue siendo un borrador editable.';
+  String get hands_free_disclosure =>
+      'La activación funciona sin conexión en la CPU. El reconocimiento de Android, la voz elegida y el gateway pueden usar redes. Escuchar consume batería y puede haber activaciones falsas. Se detiene al cubrir o cerrar el chat o salir del primer plano; nunca se reinicia solo. El dictado manual sigue siendo un borrador editable.';
 
   @override
-  String get hands_free_ready_cue => 'Di «Hey Hermes», espera a «Listo» y habla. Sin captura en la misma frase ni audio previo. Si el permiso te saca de la app, pulsa Iniciar otra vez tras concederlo.';
+  String get hands_free_ready_cue =>
+      'Di «Hey Hermes», espera a «Listo» y habla. Sin captura en la misma frase ni audio previo. Si el permiso te saca de la app, pulsa Iniciar otra vez tras concederlo.';
 
   @override
   String get hands_free_settings_title => 'Voz manos libres';
 
   @override
-  String get hands_free_settings_subtitle => 'Muestra el control de inicio «Hey Hermes» en los chats. Desactivarlo detiene cualquier sesión de manos libres en curso.';
+  String get hands_free_settings_subtitle =>
+      'Muestra el control de inicio «Hey Hermes» en los chats. Desactivarlo detiene cualquier sesión de manos libres en curso.';
 
   @override
-  String get hands_free_timing_limit => 'La ventana de seguimiento es un máximo, no un mínimo. Android puede detenerse antes. El silencio vuelve a la activación local sin reiniciar repetidamente el reconocimiento.';
+  String get hands_free_timing_limit =>
+      'La ventana de seguimiento es un máximo, no un mínimo. Android puede detenerse antes. El silencio vuelve a la activación local sin reiniciar repetidamente el reconocimiento.';
 
   @override
-  String get hands_free_followup_off => 'Seguimiento desactivado — di Hey Hermes para cada mensaje';
+  String get hands_free_followup_off =>
+      'Seguimiento desactivado — di Hey Hermes para cada mensaje';
 
   @override
-  String get hands_free_start_blocked => 'Se requiere borrador vacío, sin adjuntos, chat conectado sin actividad y respuestas habladas activadas. Termina primero cualquier acción de voz manual.';
+  String get hands_free_start_blocked =>
+      'Se requiere borrador vacío, sin adjuntos, chat conectado sin actividad y respuestas habladas activadas. Termina primero cualquier acción de voz manual.';
 
   @override
-  String get hands_free_setup_complete => 'Configuración de micrófono terminada. Pulsa Iniciar otra vez.';
+  String get hands_free_setup_complete =>
+      'Configuración de micrófono terminada. Pulsa Iniciar otra vez.';
 
   @override
   String message_time_recorded(String time) {
@@ -294,13 +325,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get stop_and_send => 'Detener y enviar';
 
   @override
-  String get message_queued_for_running_turn => 'Mensaje en cola para la ejecución actual.';
+  String get message_queued_for_running_turn =>
+      'Mensaje en cola para la ejecución actual.';
 
   @override
-  String get running_message_not_accepted => 'Hermes no pudo aceptar este mensaje. Se conservó tu borrador; detén la respuesta o espera y vuelve a enviarlo.';
+  String get running_message_not_accepted =>
+      'Hermes no pudo aceptar este mensaje. Se conservó tu borrador; detén la respuesta o espera y vuelve a enviarlo.';
 
   @override
-  String get running_message_delivery_unknown => 'No se pudo confirmar la entrega. Se conservó tu borrador. Revisa el chat antes de volver a intentarlo.';
+  String get running_message_delivery_unknown =>
+      'No se pudo confirmar la entrega. Se conservó tu borrador. Revisa el chat antes de volver a intentarlo.';
 
   @override
   String get attachment_tap_to_preview => 'Toca para ver la vista previa';
@@ -318,31 +352,40 @@ class AppLocalizationsEs extends AppLocalizations {
   String get attachment_save_cancelled => 'Guardado cancelado';
 
   @override
-  String get attachment_save_failed => 'No se pudo guardar este archivo. Inténtalo de nuevo.';
+  String get attachment_save_failed =>
+      'No se pudo guardar este archivo. Inténtalo de nuevo.';
 
   @override
-  String get attachment_share_failed => 'No se pudo compartir este archivo. Inténtalo de nuevo.';
+  String get attachment_share_failed =>
+      'No se pudo compartir este archivo. Inténtalo de nuevo.';
 
   @override
-  String get attachment_download_failed => 'No se pudo cargar este archivo. Comprueba la conexión e inténtalo de nuevo.';
+  String get attachment_download_failed =>
+      'No se pudo cargar este archivo. Comprueba la conexión e inténtalo de nuevo.';
 
   @override
-  String get attachment_no_inline_preview => 'No hay vista previa para este tipo de archivo. Guarda o comparte el archivo original para abrirlo en otra aplicación.';
+  String get attachment_no_inline_preview =>
+      'No hay vista previa para este tipo de archivo. Guarda o comparte el archivo original para abrirlo en otra aplicación.';
 
   @override
-  String get attachment_image_failed => 'No se pudo decodificar esta imagen. Aún puedes guardar o compartir el archivo original.';
+  String get attachment_image_failed =>
+      'No se pudo decodificar esta imagen. Aún puedes guardar o compartir el archivo original.';
 
   @override
-  String get attachment_text_truncated => 'Vista previa recortada. Guarda o comparte el archivo para leerlo completo.';
+  String get attachment_text_truncated =>
+      'Vista previa recortada. Guarda o comparte el archivo para leerlo completo.';
 
   @override
-  String get attachment_text_unavailable => 'No se pudo mostrar este archivo como texto. Guarda o comparte el archivo original.';
+  String get attachment_text_unavailable =>
+      'No se pudo mostrar este archivo como texto. Guarda o comparte el archivo original.';
 
   @override
-  String get attachment_pdf_failed => 'No se pudo mostrar la vista previa de este PDF. Guarda o comparte el archivo original.';
+  String get attachment_pdf_failed =>
+      'No se pudo mostrar la vista previa de este PDF. Guarda o comparte el archivo original.';
 
   @override
-  String get attachment_pdf_unavailable => 'Las vistas previas de PDF están disponibles en Android. Aún puedes guardar o compartir este archivo.';
+  String get attachment_pdf_unavailable =>
+      'Las vistas previas de PDF están disponibles en Android. Aún puedes guardar o compartir este archivo.';
 
   @override
   String attachment_pdf_page(int page, int total) {
@@ -359,16 +402,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get attachment_loading => 'Cargando vista previa…';
 
   @override
-  String get attachment_document_text_notice => 'Vista previa de texto. El diseño, las imágenes y el formato pueden diferir del original.';
+  String get attachment_document_text_notice =>
+      'Vista previa de texto. El diseño, las imágenes y el formato pueden diferir del original.';
 
   @override
-  String get attachment_document_failed => 'No se pudo mostrar la vista previa de este documento. Guarda o comparte el archivo original.';
+  String get attachment_document_failed =>
+      'No se pudo mostrar la vista previa de este documento. Guarda o comparte el archivo original.';
 
   @override
-  String get attachment_document_empty => 'No se encontró texto legible en este documento.';
+  String get attachment_document_empty =>
+      'No se encontró texto legible en este documento.';
 
   @override
-  String get attachment_video_failed => 'No se pudo reproducir este vídeo. Es posible que su formato o códec no sea compatible. Guarda o comparte el archivo original.';
+  String get attachment_video_failed =>
+      'No se pudo reproducir este vídeo. Es posible que su formato o códec no sea compatible. Guarda o comparte el archivo original.';
 
   @override
   String get attachment_video_play => 'Reproducir';
@@ -395,13 +442,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get saved_history_heading => 'Saved history';
 
   @override
-  String get received_output_heading => 'Received output — match to saved history unconfirmed';
+  String get received_output_heading =>
+      'Received output — match to saved history unconfirmed';
 
   @override
   String get received_output_details => 'About received output';
 
   @override
-  String get received_output_explanation => 'This may also appear in saved history. The app cannot confirm a match.';
+  String get received_output_explanation =>
+      'This may also appear in saved history. The app cannot confirm a match.';
 
   @override
   String get local_prompt_context => 'Local prompt context';
@@ -410,7 +459,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get received_output_badge => 'Received · match unconfirmed';
 
   @override
-  String get received_output_lifetime => 'Received output is kept temporarily in this app session and may be shortened or removed as limits are reached. It may not be available after the app or connection is closed.';
+  String get received_output_lifetime =>
+      'Received output is kept temporarily in this app session and may be shortened or removed as limits are reached. It may not be available after the app or connection is closed.';
 
   @override
   String get theme_palette => 'Tema de color';
@@ -446,16 +496,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get theme_palette_cyan => 'Cian';
 
   @override
-  String get assets_recent_subtitle => 'Encuentra archivos compartidos por Hermes en chats guardados';
+  String get assets_recent_subtitle =>
+      'Encuentra archivos compartidos por Hermes en chats guardados';
 
   @override
-  String get assets_scope_notice => 'Archivos generados que Hermes ha compartido explícitamente en respuestas guardadas. Esta es una vista parcial del historial de chats, no un catálogo completo de archivos o adjuntos. Es posible que los archivos referenciados ya no existan.';
+  String get assets_scope_notice =>
+      'Archivos generados que Hermes ha compartido explícitamente en respuestas guardadas. Esta es una vista parcial del historial de chats, no un catálogo completo de archivos o adjuntos. Es posible que los archivos referenciados ya no existan.';
 
   @override
-  String get assets_download_limit => 'Los archivos solo se cargan al tocarlos. Las vistas previas y las descargas tienen un límite de 25 MiB por archivo; usa el panel para archivos más grandes.';
+  String get assets_download_limit =>
+      'Los archivos solo se cargan al tocarlos. Las vistas previas y las descargas tienen un límite de 25 MiB por archivo; usa el panel para archivos más grandes.';
 
   @override
-  String get assets_search_hint => 'Buscar en los archivos encontrados o en los chats de origen';
+  String get assets_search_hint =>
+      'Buscar en los archivos encontrados o en los chats de origen';
 
   @override
   String get assets_all => 'Todos';
@@ -473,10 +527,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get assets_documents => 'Documentos y otros archivos';
 
   @override
-  String get assets_empty => 'No se encontraron recursos en los mensajes analizados';
+  String get assets_empty =>
+      'No se encontraron recursos en los mensajes analizados';
 
   @override
-  String get assets_empty_detail => 'Analiza más chats o mensajes más antiguos para consultar un periodo anterior. Los adjuntos normales y los archivos sin enlace no se indexan aquí.';
+  String get assets_empty_detail =>
+      'Analiza más chats o mensajes más antiguos para consultar un periodo anterior. Los adjuntos normales y los archivos sin enlace no se indexan aquí.';
 
   @override
   String get assets_no_matches => 'No hay recursos que coincidan';
@@ -488,13 +544,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get assets_load_older_messages => 'Analizar mensajes más antiguos';
 
   @override
-  String get assets_load_failed => 'No se pudo leer parte del historial. Los resultados están incompletos. Comprueba la conexión del panel y vuelve a intentarlo.';
+  String get assets_load_failed =>
+      'No se pudo leer parte del historial. Los resultados están incompletos. Comprueba la conexión del panel y vuelve a intentarlo.';
 
   @override
-  String get assets_retry_failed => 'Reintentar las lecturas fallidas del historial';
+  String get assets_retry_failed =>
+      'Reintentar las lecturas fallidas del historial';
 
   @override
-  String get assets_partial => 'El servidor ha indicado que el historial está incompleto. Comprueba el panel y actualiza después.';
+  String get assets_partial =>
+      'El servidor ha indicado que el historial está incompleto. Comprueba el panel y actualiza después.';
 
   @override
   String assets_scan_summary(int files, int chats) {
@@ -507,10 +566,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get assets_file_too_large => 'Este archivo supera el límite de descarga. Abre el panel para descargarlo.';
+  String get assets_file_too_large =>
+      'Este archivo supera el límite de descarga. Abre el panel para descargarlo.';
 
   @override
-  String get a_one_off_question_archives_itself_after_72_hours_anything => 'Una pregunta puntual. Se archiva sola a las 72 horas; lo que valga la pena conservar seguirá en la memoria.';
+  String get a_one_off_question_archives_itself_after_72_hours_anything =>
+      'Una pregunta puntual. Se archiva sola a las 72 horas; lo que valga la pena conservar seguirá en la memoria.';
 
   @override
   String get archive_chat => 'Archivar chat';
@@ -550,7 +611,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get api_key => 'Clave de API';
 
   @override
-  String get api_server_key_from_hermes_env => 'API_SERVER_KEY de ~/.hermes/.env';
+  String get api_server_key_from_hermes_env =>
+      'API_SERVER_KEY de ~/.hermes/.env';
 
   @override
   String get active => 'Activo';
@@ -559,7 +621,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get activity => 'Actividad';
 
   @override
-  String get activity_reads_the_durable_turn_journal_to_know_what_hermes => 'La actividad lee el diario de turnos persistente para saber qué está haciendo Hermes. Comprueba que el Gateway sea accesible y vuelve a intentarlo.';
+  String get activity_reads_the_durable_turn_journal_to_know_what_hermes =>
+      'La actividad lee el diario de turnos persistente para saber qué está haciendo Hermes. Comprueba que el Gateway sea accesible y vuelve a intentarlo.';
 
   @override
   String get add => 'Agregar';
@@ -574,7 +637,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get add_gateway_connection => 'Agregar conexión de Gateway';
 
   @override
-  String get add_and_update_connections_from_the_backup_keep_the_rest => 'Agregar y actualizar conexiones desde la copia de seguridad; conservar las demás.';
+  String get add_and_update_connections_from_the_backup_keep_the_rest =>
+      'Agregar y actualizar conexiones desde la copia de seguridad; conservar las demás.';
 
   @override
   String get add_attachment => 'Agregar adjunto';
@@ -589,16 +653,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String get all_chats => 'Todos los chats';
 
   @override
-  String get all_stored_message_content => 'Todo el contenido de mensajes almacenado';
+  String get all_stored_message_content =>
+      'Todo el contenido de mensajes almacenado';
 
   @override
   String get allow_for_this_session => 'Permitir durante esta sesión';
 
   @override
-  String get allow_matching_commands_until_this_hermes_session_ends => 'Permitir los comandos coincidentes hasta que finalice esta sesión de Hermes.';
+  String get allow_matching_commands_until_this_hermes_session_ends =>
+      'Permitir los comandos coincidentes hasta que finalice esta sesión de Hermes.';
+
+  @override
+  String get allow_folder_until_sandbox_off =>
+      'Allow this folder until the sandbox is switched off.';
 
   @override
   String get allow_once => 'Permitir una vez';
+
+  @override
+  String get allow_website_until_sandbox_off =>
+      'Allow this website until the sandbox is switched off.';
 
   @override
   String get always_allow => 'Permitir siempre';
@@ -610,7 +684,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get approval_needed => 'Se requiere aprobación';
 
   @override
-  String get approval_needed_description => 'Un comando espera tu aprobación o rechazo.';
+  String get approval_needed_description =>
+      'Un comando espera tu aprobación o rechazo.';
 
   @override
   String get approve => 'Aprobar';
@@ -635,22 +710,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String get archived => 'Archivado';
 
   @override
-  String get archived_conversations_appear_here => 'Aquí solo aparecen conversaciones archivadas. Los chats antiguos siguen en Todos los chats.';
+  String get archived_conversations_appear_here =>
+      'Aquí solo aparecen conversaciones archivadas. Los chats antiguos siguen en Todos los chats.';
 
   @override
   String get archived_quick_chats => 'Chats rápidos archivados';
 
   @override
-  String get artifacts_attachments_and_generated_media => 'Artefactos, adjuntos y contenido generado';
+  String get artifacts_attachments_and_generated_media =>
+      'Artefactos, adjuntos y contenido generado';
 
   @override
-  String get ask_ai_to_find_a_conversation => 'Pedir a la IA que busque una conversación';
+  String get ask_ai_to_find_a_conversation =>
+      'Pedir a la IA que busque una conversación';
 
   @override
   String get assets => 'Recursos';
 
   @override
-  String get assets_need_a_server_authoritative_assets_index_in_the_hermes => 'Los recursos necesitan un índice autoritativo del servidor en el Gateway de Hermes para poder mostrarse por proyecto.';
+  String get assets_need_a_server_authoritative_assets_index_in_the_hermes =>
+      'Los recursos necesitan un índice autoritativo del servidor en el Gateway de Hermes para poder mostrarse por proyecto.';
 
   @override
   String get assets_unavailable => 'Recursos no disponibles';
@@ -668,10 +747,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get undo_draft_recovery => 'Deshacer';
 
   @override
-  String get draft_session_exists => 'Este chat aún existe. Ábrelo para continuar con el borrador.';
+  String get draft_session_exists =>
+      'Este chat aún existe. Ábrelo para continuar con el borrador.';
 
   @override
-  String get draft_recovery_unavailable => 'No se pudo verificar el borrador. No se ha cambiado nada.';
+  String get draft_recovery_unavailable =>
+      'No se pudo verificar el borrador. No se ha cambiado nada.';
 
   @override
   String attachment_of(Object index, Object total) {
@@ -679,7 +760,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get auto_device_default => 'Automático (predeterminado del dispositivo)';
+  String get auto_device_default =>
+      'Automático (predeterminado del dispositivo)';
 
   @override
   String get agent => 'Agente';
@@ -688,13 +770,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get autonomous_agents => 'Agentes autónomos';
 
   @override
-  String get background_recovery_unavailable_legacy_transport => 'Recuperación en segundo plano no disponible: transporte heredado';
+  String get background_recovery_unavailable_legacy_transport =>
+      'Recuperación en segundo plano no disponible: transporte heredado';
 
   @override
   String get background_task_completed => 'Tarea en segundo plano completada';
 
   @override
-  String get background_task_completed_description => 'Un comando de terminal en segundo plano ha terminado.';
+  String get background_task_completed_description =>
+      'Un comando de terminal en segundo plano ha terminado.';
 
   @override
   String get backup_restore => 'Copia de seguridad y restauración';
@@ -708,7 +792,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get base_url => 'URL base';
 
   @override
-  String get binary_preview_is_unavailable_download_the_file_to_open_it => 'La vista previa binaria no está disponible. Descarga el archivo para abrirlo.';
+  String get binary_preview_is_unavailable_download_the_file_to_open_it =>
+      'La vista previa binaria no está disponible. Descarga el archivo para abrirlo.';
 
   @override
   String get branch => 'Rama';
@@ -717,16 +802,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get branch_chat => 'Bifurcar chat';
 
   @override
-  String get branch_created_in_hermes_history => 'Rama creada en el historial de Hermes.';
+  String get branch_created_in_hermes_history =>
+      'Rama creada en el historial de Hermes.';
 
   @override
-  String get browse_and_manage_your_hermes_agent_sessions_from_your_phone => 'Explora y administra tus sesiones de Hermes Agent desde el teléfono. Se conecta a un panel de Hermes que se ejecuta en tu red local.';
+  String get browse_and_manage_your_hermes_agent_sessions_from_your_phone =>
+      'Explora y administra tus sesiones de Hermes Agent desde el teléfono. Se conecta a un panel de Hermes que se ejecuta en tu red local.';
 
   @override
   String get browse_server_files => 'Explorar archivos del servidor';
 
   @override
-  String get browse_the_miniserver_folders_behind_your_projects => 'Explora las carpetas de miniserver detrás de tus proyectos';
+  String get browse_the_miniserver_folders_behind_your_projects =>
+      'Explora las carpetas de miniserver detrás de tus proyectos';
 
   @override
   String get cancel => 'Cancelar';
@@ -759,34 +847,44 @@ class AppLocalizationsEs extends AppLocalizations {
   String get chats => 'Chats';
 
   @override
-  String get chats_from_this_gateway_are_not_grouped_yet_grouping_stays => 'Los chats de este Gateway aún no se agrupan. La agrupación permanece en este teléfono hasta que el Gateway pueda alojar proyectos.';
+  String get chats_from_this_gateway_are_not_grouped_yet_grouping_stays =>
+      'Los chats de este Gateway aún no se agrupan. La agrupación permanece en este teléfono hasta que el Gateway pueda alojar proyectos.';
 
   @override
-  String get chats_in_this_project_will_show_their_state_and_last => 'Los chats de este proyecto mostrarán aquí su estado y su última actividad.';
+  String get chats_in_this_project_will_show_their_state_and_last =>
+      'Los chats de este proyecto mostrarán aquí su estado y su última actividad.';
 
   @override
-  String get chats_that_are_not_assigned_to_a_project => 'Chats que no están asignados a un proyecto';
+  String get chats_that_are_not_assigned_to_a_project =>
+      'Chats que no están asignados a un proyecto';
 
   @override
-  String get chats_you_start_in_this_project_will_appear_here_on => 'Los chats que inicies en este proyecto aparecerán aquí, en todos los dispositivos conectados a este Hermes.';
+  String get chats_you_start_in_this_project_will_appear_here_on =>
+      'Los chats que inicies en este proyecto aparecerán aquí, en todos los dispositivos conectados a este Hermes.';
 
   @override
-  String get check_that_the_gateway_is_running_and_reachable_then_try => 'Comprueba que el Gateway esté en ejecución y sea accesible, y vuelve a intentarlo.';
+  String get check_that_the_gateway_is_running_and_reachable_then_try =>
+      'Comprueba que el Gateway esté en ejecución y sea accesible, y vuelve a intentarlo.';
 
   @override
-  String get check_the_dashboard_connection_and_try_again => 'Comprueba la conexión del panel y vuelve a intentarlo.';
+  String get check_the_dashboard_connection_and_try_again =>
+      'Comprueba la conexión del panel y vuelve a intentarlo.';
 
   @override
-  String get check_the_connection_and_try_again => 'Comprueba la conexión y vuelve a intentarlo.';
+  String get check_the_connection_and_try_again =>
+      'Comprueba la conexión y vuelve a intentarlo.';
 
   @override
-  String get choose_a_small_model_to_rewrite_queries => 'Elige un modelo pequeño para reescribir las consultas';
+  String get choose_a_small_model_to_rewrite_queries =>
+      'Elige un modelo pequeño para reescribir las consultas';
 
   @override
-  String get choose_an_ai_search_model_before_using_ai_search => 'Elige un modelo de búsqueda con IA antes de usar la búsqueda con IA.';
+  String get choose_an_ai_search_model_before_using_ai_search =>
+      'Elige un modelo de búsqueda con IA antes de usar la búsqueda con IA.';
 
   @override
-  String get choose_an_active_project_next => 'A continuación, elige un proyecto activo';
+  String get choose_an_active_project_next =>
+      'A continuación, elige un proyecto activo';
 
   @override
   String get choose_chat_model => 'Elegir modelo del chat';
@@ -849,7 +947,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get compatibility_mode => 'Modo de compatibilidad';
 
   @override
-  String get configure_a_valid_desktop_gateway_url_before_attaching_files => 'Configura una URL válida del Desktop Gateway antes de adjuntar archivos.';
+  String get configure_a_valid_desktop_gateway_url_before_attaching_files =>
+      'Configura una URL válida del Desktop Gateway antes de adjuntar archivos.';
 
   @override
   String get confirm_always_allow => 'Confirmar permitir siempre';
@@ -866,10 +965,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get connection_issue => 'Problema de conexión';
 
   @override
-  String get connection_switched_the_running_reply_continues_on_the_server_and => 'Conexión cambiada: la respuesta en curso continúa en el servidor y se volverá a adjuntar automáticamente.';
+  String
+  get connection_switched_the_running_reply_continues_on_the_server_and =>
+      'Conexión cambiada: la respuesta en curso continúa en el servidor y se volverá a adjuntar automáticamente.';
 
   @override
-  String get connection_appearance_and_device_preferences => 'Conexión, apariencia y preferencias del dispositivo';
+  String get connection_appearance_and_device_preferences =>
+      'Conexión, apariencia y preferencias del dispositivo';
 
   @override
   String context_tokens(Object effectiveContextLength) {
@@ -912,7 +1014,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get could_not_load_conversations => 'No se pudieron cargar las conversaciones';
+  String get could_not_load_conversations =>
+      'No se pudieron cargar las conversaciones';
 
   @override
   String get could_not_load_files => 'No se pudieron cargar los archivos';
@@ -931,7 +1034,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get could_not_open_link => 'No se pudo abrir este enlace.';
 
   @override
-  String get could_not_open_the_hermes_dashboard => 'No se pudo abrir el panel de Hermes.';
+  String get could_not_open_the_hermes_dashboard =>
+      'No se pudo abrir el panel de Hermes.';
 
   @override
   String get could_not_open_this_project => 'No se pudo abrir este proyecto';
@@ -943,7 +1047,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get could_not_reach_hermes => 'No se pudo conectar con Hermes';
 
   @override
-  String could_not_reach_authenticate_the_dashboard_at_check_the_port(Object dashboardPort, Object host) {
+  String could_not_reach_authenticate_the_dashboard_at_check_the_port(
+    Object dashboardPort,
+    Object host,
+  ) {
     return 'No se pudo conectar o autenticar con el panel en $host:$dashboardPort. Comprueba el puerto y las credenciales.';
   }
 
@@ -961,7 +1068,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get could_not_skip_the_hermes_question => 'No se pudo omitir la pregunta de Hermes.';
+  String get could_not_skip_the_hermes_question =>
+      'No se pudo omitir la pregunta de Hermes.';
 
   @override
   String could_not_the_project(Object action, Object error) {
@@ -985,10 +1093,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get couldn_t_prepare_the_shared_files => 'No se pudieron preparar los archivos compartidos.';
+  String get couldn_t_prepare_the_shared_files =>
+      'No se pudieron preparar los archivos compartidos.';
 
   @override
-  String get couldn_t_promote_conversation => 'No se pudo promover la conversación';
+  String get couldn_t_promote_conversation =>
+      'No se pudo promover la conversación';
 
   @override
   String couldn_t_project(Object action) {
@@ -1002,10 +1112,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get create_a_project => 'Crear un proyecto';
 
   @override
-  String get create_a_project_first_then_chats_can_live_inside_it => 'Crea primero un proyecto; los chats podrán vivir dentro de él.';
+  String get create_a_project_first_then_chats_can_live_inside_it =>
+      'Crea primero un proyecto; los chats podrán vivir dentro de él.';
 
   @override
-  String get create_a_space_to_separate_related_conversations => 'Crea un espacio para separar conversaciones relacionadas.';
+  String get create_a_space_to_separate_related_conversations =>
+      'Crea un espacio para separar conversaciones relacionadas.';
 
   @override
   String get create_branch => 'Crear rama';
@@ -1014,7 +1126,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get credit_notifications => 'Notificaciones de crédito';
 
   @override
-  String get credit_notifications_description => 'El uso de crédito se detuvo o se restableció.';
+  String get credit_notifications_description =>
+      'El uso de crédito se detuvo o se restableció.';
 
   @override
   String get cron => 'Cron';
@@ -1023,7 +1136,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get crons => 'Crons';
 
   @override
-  String get cron_conversations_empty => 'Conversations from scheduled jobs appear here, including older runs.';
+  String get cron_conversations_empty =>
+      'Conversations from scheduled jobs appear here, including older runs.';
 
   @override
   String get search_cron_conversations => 'Search cron conversations';
@@ -1070,25 +1184,31 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cron_upcoming_empty_title => 'No hay tareas programadas';
 
   @override
-  String get cron_upcoming_empty_message => 'No hay nada programado para ejecutarse. Crea una tarea en Tareas de Cron o pide al agente que programe una.';
+  String get cron_upcoming_empty_message =>
+      'No hay nada programado para ejecutarse. Crea una tarea en Tareas de Cron o pide al agente que programe una.';
 
   @override
   String get cron_upcoming_unavailable => 'Tareas programadas no disponibles';
 
   @override
-  String get cron_upcoming_needs_dashboard => 'Las tareas programadas necesitan una conexión con el panel. Esta dirección no expone la programación de Cron. Comprueba la dirección del panel y la compatibilidad del servidor.';
+  String get cron_upcoming_needs_dashboard =>
+      'Las tareas programadas necesitan una conexión con el panel. Esta dirección no expone la programación de Cron. Comprueba la dirección del panel y la compatibilidad del servidor.';
 
   @override
-  String get cron_upcoming_needs_dashboard_auth => 'Las tareas programadas necesitan autenticación del panel. Añade el usuario y la contraseña del panel a esta conexión o activa el modo con proxy.';
+  String get cron_upcoming_needs_dashboard_auth =>
+      'Las tareas programadas necesitan autenticación del panel. Añade el usuario y la contraseña del panel a esta conexión o activa el modo con proxy.';
 
   @override
-  String get cron_upcoming_dashboard_unreachable => 'No se pudo conectar con el panel. Comprueba el host, el puerto del panel y la red, y vuelve a intentarlo.';
+  String get cron_upcoming_dashboard_unreachable =>
+      'No se pudo conectar con el panel. Comprueba el host, el puerto del panel y la red, y vuelve a intentarlo.';
 
   @override
-  String get cron_upcoming_load_failed => 'No se pudieron leer las tareas programadas. Comprueba la conexión del panel y vuelve a intentarlo.';
+  String get cron_upcoming_load_failed =>
+      'No se pudieron leer las tareas programadas. Comprueba la conexión del panel y vuelve a intentarlo.';
 
   @override
-  String get cron_upcoming_refresh_failed => 'No se pudo actualizar la programación. Se muestra la última lectura correcta.';
+  String get cron_upcoming_refresh_failed =>
+      'No se pudo actualizar la programación. Se muestra la última lectura correcta.';
 
   @override
   String get cron_job_added => 'Tarea de Cron agregada';
@@ -1100,13 +1220,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cron_run => 'Ejecución de Cron';
 
   @override
-  String get cross_device_ordering_and_reversible_bulk_organization => 'Ordenación entre dispositivos y organización masiva reversible';
+  String get cross_device_ordering_and_reversible_bulk_organization =>
+      'Ordenación entre dispositivos y organización masiva reversible';
 
   @override
-  String get current_profile_default => 'Valor predeterminado del perfil actual';
+  String get current_profile_default =>
+      'Valor predeterminado del perfil actual';
 
   @override
-  String get custom_proxy_and_dashboard_details => 'Detalles personalizados de proxy y panel';
+  String get custom_proxy_and_dashboard_details =>
+      'Detalles personalizados de proxy y panel';
 
   @override
   String get dark => 'Oscuro';
@@ -1121,7 +1244,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get dashboard_port => 'Puerto del panel';
 
   @override
-  String get dashboard_username_optional => 'Nombre de usuario del panel (opcional)';
+  String get dashboard_username_optional =>
+      'Nombre de usuario del panel (opcional)';
 
   @override
   String get dashboard_behind_proxy => 'Panel detrás de un proxy';
@@ -1143,7 +1267,9 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String delete_from_the_remote_hermes_history_this_cannot_be_undone(Object title) {
+  String delete_from_the_remote_hermes_history_this_cannot_be_undone(
+    Object title,
+  ) {
     return '¿Eliminar «$title» del historial remoto de Hermes? Esta acción no se puede deshacer.';
   }
 
@@ -1151,7 +1277,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get delete_cron_job => 'Eliminar tarea de Cron';
 
   @override
-  String get delete_connections_that_are_not_in_the_backup => 'Eliminar las conexiones que no estén en la copia de seguridad.';
+  String get delete_connections_that_are_not_in_the_backup =>
+      'Eliminar las conexiones que no estén en la copia de seguridad.';
 
   @override
   String delete_failed(Object error) {
@@ -1175,19 +1302,23 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get delivery_is_uncertain_recovering_without_resending => 'La entrega es incierta; se está recuperando sin reenviar…';
+  String get delivery_is_uncertain_recovering_without_resending =>
+      'La entrega es incierta; se está recuperando sin reenviar…';
 
   @override
-  String get desktop_gateway_url_optional => 'URL del Desktop Gateway (opcional)';
+  String get desktop_gateway_url_optional =>
+      'URL del Desktop Gateway (opcional)';
 
   @override
-  String get desktop_gateway_is_not_configured_for_this_connection => 'Desktop Gateway no está configurado para esta conexión.';
+  String get desktop_gateway_is_not_configured_for_this_connection =>
+      'Desktop Gateway no está configurado para esta conexión.';
 
   @override
   String get desktop_app => 'Aplicación de escritorio';
 
   @override
-  String get developer_tool_calls => 'Llamadas a herramientas del desarrollador';
+  String get developer_tool_calls =>
+      'Llamadas a herramientas del desarrollador';
 
   @override
   String get discord_chats => 'Chats de Discord';
@@ -1199,7 +1330,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get do_not_run_this_command => 'No ejecutes este comando.';
 
   @override
-  String get documents_archives_audio_video_or_data => 'Documentos, archivos comprimidos, audio, vídeo o datos';
+  String get documents_archives_audio_video_or_data =>
+      'Documentos, archivos comprimidos, audio, vídeo o datos';
 
   @override
   String get download => 'Descargar';
@@ -1210,10 +1342,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get durable_facts_hermes_keeps_about_you => 'Datos duraderos que Hermes guarda sobre ti';
+  String get durable_facts_hermes_keeps_about_you =>
+      'Datos duraderos que Hermes guarda sobre ti';
 
   @override
-  String get durable_work_inside_one_of_your_projects_shared_with_desktop => 'Trabajo duradero dentro de uno de tus proyectos, compartido con Desktop.';
+  String get durable_work_inside_one_of_your_projects_shared_with_desktop =>
+      'Trabajo duradero dentro de uno de tus proyectos, compartido con Desktop.';
 
   @override
   String get edit => 'Editar';
@@ -1234,10 +1368,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get enable_notifications => 'Activar notificaciones';
 
   @override
-  String get enable_notifications_description => 'Si lo desactivas, se desactivan todas las notificaciones siguientes.';
+  String get enable_notifications_description =>
+      'Si lo desactivas, se desactivan todas las notificaciones siguientes.';
 
   @override
-  String get enables_file_attachments_through_the_desktop_remote_gateway => 'Habilita los archivos adjuntos a través del Gateway remoto de Desktop.';
+  String get enables_file_attachments_through_the_desktop_remote_gateway =>
+      'Habilita los archivos adjuntos a través del Gateway remoto de Desktop.';
 
   @override
   String get enter_a_name => 'Escribe un nombre';
@@ -1246,16 +1382,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get enter_a_passphrase => 'Escribe una frase de contraseña.';
 
   @override
-  String get enter_the_passphrase_for_this_backup => 'Escribe la frase de contraseña de esta copia de seguridad.';
+  String get enter_the_passphrase_for_this_backup =>
+      'Escribe la frase de contraseña de esta copia de seguridad.';
 
   @override
-  String get every_conversation_is_already_assigned_to_a_project => 'Todas las conversaciones ya están asignadas a un proyecto.';
+  String get every_conversation_is_already_assigned_to_a_project =>
+      'Todas las conversaciones ya están asignadas a un proyecto.';
 
   @override
-  String get everything_not_yet_native_in_the_authenticated_web_dashboard => 'Todo lo que aún no es nativo, en el panel web autenticado';
+  String get everything_not_yet_native_in_the_authenticated_web_dashboard =>
+      'Todo lo que aún no es nativo, en el panel web autenticado';
 
   @override
-  String get explain_the_attached_content_clearly => 'Explica claramente el contenido adjunto.';
+  String get explain_the_attached_content_clearly =>
+      'Explica claramente el contenido adjunto.';
 
   @override
   String explain_this_content_clearly(Object text) {
@@ -1263,7 +1403,9 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it => 'Las opciones explícitas ajustan el tamaño de texto de accesibilidad de Android; «Sistema» lo deja sin cambios.';
+  String
+  get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it =>
+      'Las opciones explícitas ajustan el tamaño de texto de accesibilidad de Android; «Sistema» lo deja sin cambios.';
 
   @override
   String get export_label => 'Exportar';
@@ -1281,10 +1423,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get extract_tasks => 'Extraer tareas';
 
   @override
-  String get extract_the_decisions_deadlines_owners_and_actionable_action_items_from => 'Extrae del contenido adjunto las decisiones, los plazos, los responsables y las tareas accionables.';
+  String
+  get extract_the_decisions_deadlines_owners_and_actionable_action_items_from =>
+      'Extrae del contenido adjunto las decisiones, los plazos, los responsables y las tareas accionables.';
 
   @override
-  String extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(Object text) {
+  String
+  extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(
+    Object text,
+  ) {
     return 'Extrae de este contenido las decisiones, los plazos, los responsables y las tareas accionables:\n\n$text';
   }
 
@@ -1294,7 +1441,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get failed_to_load_cron_jobs => 'No se pudieron cargar las tareas de Cron';
+  String get failed_to_load_cron_jobs =>
+      'No se pudieron cargar las tareas de Cron';
 
   @override
   String get failed_to_load_memory => 'No se pudo cargar la memoria';
@@ -1319,10 +1467,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get file_attached_document_catalog_registration_is_pending => 'Archivo adjuntado; el registro en el catálogo de documentos está pendiente.';
+  String get file_attached_document_catalog_registration_is_pending =>
+      'Archivo adjuntado; el registro en el catálogo de documentos está pendiente.';
 
   @override
-  String get file_reference_added_to_chat => 'Referencia de archivo agregada al chat';
+  String get file_reference_added_to_chat =>
+      'Referencia de archivo agregada al chat';
 
   @override
   String get files => 'Archivos';
@@ -1343,7 +1493,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get gateway_api_access => 'Acceso a la API del Gateway';
 
   @override
-  String get gateway_connected_but_the_dashboard_could_not_be_reached_or => 'Gateway conectado, pero no se pudo alcanzar o autenticar el panel. Revisa los detalles del panel o bórralos para omitirlo.';
+  String get gateway_connected_but_the_dashboard_could_not_be_reached_or =>
+      'Gateway conectado, pero no se pudo alcanzar o autenticar el panel. Revisa los detalles del panel o bórralos para omitirlo.';
 
   @override
   String get gateway_path_prefix => 'Prefijo de ruta del Gateway';
@@ -1358,13 +1509,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get hermes_agent_for_android => 'Ares - formerly Hermes Android';
 
   @override
-  String get hermes_could_not_accept_the_answer_please_try_again => 'Hermes no pudo aceptar la respuesta. Inténtalo de nuevo.';
+  String get hermes_could_not_accept_the_answer_please_try_again =>
+      'Hermes no pudo aceptar la respuesta. Inténtalo de nuevo.';
 
   @override
-  String get hermes_could_not_load_your_saved_connections => 'Hermes no pudo cargar tus conexiones guardadas';
+  String get hermes_could_not_load_your_saved_connections =>
+      'Hermes no pudo cargar tus conexiones guardadas';
 
   @override
-  String get hermes_did_not_accept_the_response_please_try_again => 'Hermes no aceptó la respuesta. Inténtalo de nuevo.';
+  String get hermes_did_not_accept_the_response_please_try_again =>
+      'Hermes no aceptó la respuesta. Inténtalo de nuevo.';
 
   @override
   String get hermes_is_responding => 'Hermes está respondiendo…';
@@ -1373,7 +1527,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get hermes_is_waiting_for_input => 'Hermes está esperando tu entrada…';
 
   @override
-  String get hermes_keeps_android_accessibility_text_scaling_active => 'Ares mantiene activo el escalado de texto de accesibilidad de Android.';
+  String get hermes_keeps_android_accessibility_text_scaling_active =>
+      'Ares mantiene activo el escalado de texto de accesibilidad de Android.';
 
   @override
   String get hermes_needs_your_input => 'Hermes necesita tu entrada';
@@ -1382,7 +1537,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get hermes_profile_optional => 'Perfil de Hermes (opcional)';
 
   @override
-  String get hermes_profile_must_be_a_plain_profile_name_such_as => 'El perfil de Hermes debe ser un nombre de perfil simple como «sol», no una ruta.';
+  String get hermes_profile_must_be_a_plain_profile_name_such_as =>
+      'El perfil de Hermes debe ser un nombre de perfil simple como «sol», no una ruta.';
 
   @override
   String get hermes_reasoning_details => 'Detalles de razonamiento de Hermes';
@@ -1393,19 +1549,22 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get hermes_stopped_recovery_safely_no_prompt_was_resent => 'Hermes detuvo la recuperación de forma segura. No se reenvió ningún prompt.';
+  String get hermes_stopped_recovery_safely_no_prompt_was_resent =>
+      'Hermes detuvo la recuperación de forma segura. No se reenvió ningún prompt.';
 
   @override
   String get hide_passphrase => 'Ocultar frase de contraseña';
 
   @override
-  String get home_needs_your_recent_chats_to_know_what_deserves_your => 'El inicio necesita tus chats recientes para saber qué merece tu atención. Comprueba que el Gateway sea accesible y vuelve a intentarlo.';
+  String get home_needs_your_recent_chats_to_know_what_deserves_your =>
+      'El inicio necesita tus chats recientes para saber qué merece tu atención. Comprueba que el Gateway sea accesible y vuelve a intentarlo.';
 
   @override
   String get host => 'Host';
 
   @override
-  String get image_selection_was_interrupted_try_again => 'La selección de imagen se interrumpió. Inténtalo de nuevo.';
+  String get image_selection_was_interrupted_try_again =>
+      'La selección de imagen se interrumpió. Inténtalo de nuevo.';
 
   @override
   String get import_label => 'Importar';
@@ -1420,10 +1579,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get input_needed => 'Se necesita tu respuesta';
 
   @override
-  String get input_needed_description => 'Hermes hizo una pregunta o necesita una contraseña o secreto.';
+  String get input_needed_description =>
+      'Hermes hizo una pregunta o necesita una contraseña o secreto.';
 
   @override
-  String get insert_a_remote_file_reference => 'Insertar una referencia remota a @file';
+  String get insert_a_remote_file_reference =>
+      'Insertar una referencia remota a @file';
 
   @override
   String get invalid_port_number => 'Número de puerto no válido.';
@@ -1451,10 +1612,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get leave_blank_for_default_8642_443_with_https => 'Déjalo en blanco para usar el valor predeterminado (8642; 443 con https)';
+  String get leave_blank_for_default_8642_443_with_https =>
+      'Déjalo en blanco para usar el valor predeterminado (8642; 443 con https)';
 
   @override
-  String get leave_blank_for_default_9119 => 'Déjalo en blanco para usar el valor predeterminado (9119)';
+  String get leave_blank_for_default_9119 =>
+      'Déjalo en blanco para usar el valor predeterminado (9119)';
 
   @override
   String get light => 'Claro';
@@ -1479,7 +1642,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get location => 'Ubicación';
 
   @override
-  String get make_sure_the_gateway_api_server_is_running_hermes_gateway => 'Asegúrate de que el servidor de la API del Gateway esté en ejecución\n(hermes gateway status)';
+  String get make_sure_the_gateway_api_server_is_running_hermes_gateway =>
+      'Asegúrate de que el servidor de la API del Gateway esté en ejecución\n(hermes gateway status)';
 
   @override
   String matches(Object assigned, Object name) {
@@ -1496,28 +1660,35 @@ class AppLocalizationsEs extends AppLocalizations {
   String get memory_agent_notes => 'Notas del agente';
 
   @override
-  String get memory_builtin_scope => 'Datos guardados en USER.md y MEMORY.md de este perfil. Los proveedores de memoria externos (incluido MemPalace) no se muestran aquí.';
+  String get memory_builtin_scope =>
+      'Datos guardados en USER.md y MEMORY.md de este perfil. Los proveedores de memoria externos (incluido MemPalace) no se muestran aquí.';
 
   @override
-  String get memory_read_only => 'Solo lectura. Pide a Hermes en el chat que corrija u olvide un dato.';
+  String get memory_read_only =>
+      'Solo lectura. Pide a Hermes en el chat que corrija u olvide un dato.';
 
   @override
-  String get memory_unavailable => 'Este servidor o perfil no puede proporcionar datos guardados. Comprueba el perfil seleccionado y actualiza Hermes si es necesario.';
+  String get memory_unavailable =>
+      'Este servidor o perfil no puede proporcionar datos guardados. Comprueba el perfil seleccionado y actualiza Hermes si es necesario.';
 
   @override
-  String get memory_load_error => 'Comprueba la conexión y la autenticación del panel e inténtalo de nuevo.';
+  String get memory_load_error =>
+      'Comprueba la conexión y la autenticación del panel e inténtalo de nuevo.';
 
   @override
   String get memory_read_full_fact => 'Leer el dato completo';
 
   @override
-  String get memory_full_fact_requires_update => 'Los datos completos requieren un servidor Hermes más reciente. Actualiza Hermes y recarga la lista.';
+  String get memory_full_fact_requires_update =>
+      'Los datos completos requieren un servidor Hermes más reciente. Actualiza Hermes y recarga la lista.';
 
   @override
-  String get memory_fact_detail_error => 'No se pudo cargar el dato completo. Puede haber cambiado; actualiza la lista e inténtalo de nuevo.';
+  String get memory_fact_detail_error =>
+      'No se pudo cargar el dato completo. Puede haber cambiado; actualiza la lista e inténtalo de nuevo.';
 
   @override
-  String get memory_entries_are_cross_session_facts_the_agent_remembers_they => 'Los datos guardados aparecerán aquí cuando Hermes los recuerde.';
+  String get memory_entries_are_cross_session_facts_the_agent_remembers_they =>
+      'Los datos guardados aparecerán aquí cuando Hermes los recuerde.';
 
   @override
   String get merge => 'Combinar';
@@ -1541,7 +1712,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get migration_complete => 'Migración completada';
 
   @override
-  String get migration_failed_local_spaces_were_kept_unchanged => 'La migración falló. Los espacios locales no se modificaron.';
+  String get migration_failed_local_spaces_were_kept_unchanged =>
+      'La migración falló. Los espacios locales no se modificaron.';
 
   @override
   String get migration_incomplete => 'Migración incompleta';
@@ -1553,7 +1725,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get model => 'Modelo';
 
   @override
-  String get model_and_thinking_for_this_chat => 'Modelo y razonamiento para este chat';
+  String get model_and_thinking_for_this_chat =>
+      'Modelo y razonamiento para este chat';
 
   @override
   String model_was_not_changed(Object error) {
@@ -1590,7 +1763,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get name => 'Nombre';
 
   @override
-  String get name_prompt_and_schedule_are_required => 'El nombre, el prompt y la programación son obligatorios';
+  String get name_prompt_and_schedule_are_required =>
+      'El nombre, el prompt y la programación son obligatorios';
 
   @override
   String get nav_activity => 'Actividad';
@@ -1599,16 +1773,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get nav_projects => 'Proyectos';
 
   @override
-  String get needs_a_correction_aware_filing_contract_in_the_hermes_gateway => 'Requiere un contrato de archivado con corrección de errores en el Gateway de Hermes.';
+  String get needs_a_correction_aware_filing_contract_in_the_hermes_gateway =>
+      'Requiere un contrato de archivado con corrección de errores en el Gateway de Hermes.';
 
   @override
-  String get needs_a_reachable_hermes_dashboard_check_the_host_port_and => 'Requiere un panel de Hermes accesible. Comprueba el host, el puerto y las credenciales de esta conexión.';
+  String get needs_a_reachable_hermes_dashboard_check_the_host_port_and =>
+      'Requiere un panel de Hermes accesible. Comprueba el host, el puerto y las credenciales de esta conexión.';
 
   @override
-  String get needs_a_server_authoritative_assets_index_in_the_hermes_gateway => 'Requiere un índice de recursos autoritativo del servidor en el Gateway de Hermes.';
+  String get needs_a_server_authoritative_assets_index_in_the_hermes_gateway =>
+      'Requiere un índice de recursos autoritativo del servidor en el Gateway de Hermes.';
 
   @override
-  String get needs_durable_pin_ordering_batch_mutation_and_undo_contracts_in => 'Requiere contratos de orden de fijados, mutación por lotes y deshacer en el Gateway de Hermes.';
+  String get needs_durable_pin_ordering_batch_mutation_and_undo_contracts_in =>
+      'Requiere contratos de orden de fijados, mutación por lotes y deshacer en el Gateway de Hermes.';
 
   @override
   String get needs_you => 'Te necesita';
@@ -1639,19 +1817,23 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get nginx_injects_auth_app_sends_clean_requests => 'Nginx inyecta la autenticación; la aplicación envía solicitudes limpias';
+  String get nginx_injects_auth_app_sends_clean_requests =>
+      'Nginx inyecta la autenticación; la aplicación envía solicitudes limpias';
 
   @override
-  String get no_tts_voices_found_ninstall_google_text_to_speech_and => 'No se encontraron voces de TTS.\nInstala Google Text-to-Speech y descarga los datos de voz.';
+  String get no_tts_voices_found_ninstall_google_text_to_speech_and =>
+      'No se encontraron voces de TTS.\nInstala Google Text-to-Speech y descarga los datos de voz.';
 
   @override
-  String get no_active_projects_on_this_gateway => 'No hay proyectos activos en este Gateway';
+  String get no_active_projects_on_this_gateway =>
+      'No hay proyectos activos en este Gateway';
 
   @override
   String get no_activity_yet => 'Aún no hay actividad';
 
   @override
-  String get no_chat_is_blocked_running_or_waiting_to_be_resumed => 'Ningún chat está bloqueado, en ejecución o esperando reanudarse. Inicia uno nuevo cuando quieras.';
+  String get no_chat_is_blocked_running_or_waiting_to_be_resumed =>
+      'Ningún chat está bloqueado, en ejecución o esperando reanudarse. Inicia uno nuevo cuando quieras.';
 
   @override
   String no_chats_in_this_project_match(Object searchQuery) {
@@ -1659,7 +1841,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get no_chats_in_this_space_yet_tap_to_start_one => 'Aún no hay chats en este espacio. Toca + para iniciar uno.';
+  String get no_chats_in_this_space_yet_tap_to_start_one =>
+      'Aún no hay chats en este espacio. Toca + para iniciar uno.';
 
   @override
   String get no_chats_yet => 'Aún no hay chats';
@@ -1668,7 +1851,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get no_connections => 'Sin conexiones';
 
   @override
-  String get no_conversation_matches_this_view => 'Ninguna conversación coincide con esta vista.';
+  String get no_conversation_matches_this_view =>
+      'Ninguna conversación coincide con esta vista.';
 
   @override
   String get no_cron_jobs => 'No hay tareas de Cron';
@@ -1677,7 +1861,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get no_folders_yet => 'Aún no hay carpetas';
 
   @override
-  String get no_local_spaces_were_found_for_this_connection_so_projects => 'No se encontraron espacios locales para esta conexión, así que los proyectos ya son la única forma de organización en uso.';
+  String get no_local_spaces_were_found_for_this_connection_so_projects =>
+      'No se encontraron espacios locales para esta conexión, así que los proyectos ya son la única forma de organización en uso.';
 
   @override
   String get no_matches => 'Sin coincidencias';
@@ -1686,7 +1871,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get no_memory_entries => 'No hay entradas de memoria';
 
   @override
-  String get no_message_content_matches => 'No hay coincidencias en el contenido de los mensajes';
+  String get no_message_content_matches =>
+      'No hay coincidencias en el contenido de los mensajes';
 
   @override
   String get no_new_messages => 'No hay mensajes nuevos';
@@ -1715,19 +1901,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String get no_text_shared => 'No se compartió texto';
 
   @override
-  String get no_turn_is_blocked_in_flight_or_recently_finished_work => 'Ningún turno está bloqueado, en curso o finalizado recientemente. El trabajo que inicies aparecerá aquí.';
+  String get no_turn_is_blocked_in_flight_or_recently_finished_work =>
+      'Ningún turno está bloqueado, en curso o finalizado recientemente. El trabajo que inicies aparecerá aquí.';
 
   @override
-  String get no_turn_needs_your_input_or_has_failed => 'Ningún turno necesita tu entrada ni ha fallado.';
+  String get no_turn_needs_your_input_or_has_failed =>
+      'Ningún turno necesita tu entrada ni ha fallado.';
 
   @override
   String get no_unassigned_chats => 'No hay chats sin asignar.';
 
   @override
-  String get nothing_changed_in_the_last_seven_days => 'Nada cambió en los últimos siete días.';
+  String get nothing_changed_in_the_last_seven_days =>
+      'Nada cambió en los últimos siete días.';
 
   @override
-  String get nothing_has_moved_yet_this_is_only_what_a_migration => 'Todavía no se ha movido nada; esto es solo lo que haría una migración.';
+  String get nothing_has_moved_yet_this_is_only_what_a_migration =>
+      'Todavía no se ha movido nada; esto es solo lo que haría una migración.';
 
   @override
   String get nothing_here => 'No hay nada aquí';
@@ -1745,46 +1935,71 @@ class AppLocalizationsEs extends AppLocalizations {
   String get notifications => 'Notificaciones';
 
   @override
-  String get windows_notifications_blocked => 'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+  String get windows_notifications_blocked =>
+      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
 
   @override
-  String get windows_notification_diagnostics => 'What Ares submitted to Windows';
+  String get windows_notification_diagnostics =>
+      'What Ares submitted to Windows';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
+  String get chat_activity_share => 'Share chat activity';
 
   @override
-  String get windows_window_activity_hint => 'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+  String get chat_activity_share_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
 
   @override
-  String get windows_completion_sound => 'Completion sound';
+  String get completion_sound => 'Completion sound';
 
   @override
-  String get windows_sound_default => 'Windows default';
+  String get completion_sound_system => 'System default';
 
   @override
-  String get windows_sound_mail => 'Mail';
+  String get completion_sound_mail => 'Mail';
 
   @override
-  String get windows_sound_reminder => 'Reminder';
+  String get completion_sound_reminder => 'Reminder';
 
   @override
-  String get windows_sound_silent => 'Silent';
+  String get completion_sound_silent => 'Silent';
 
   @override
-  String get notifications_permission_denied => 'Las notificaciones están bloqueadas por el sistema. Actívalas para esta app en los ajustes de Android.';
+  String get completion_sound_scope =>
+      'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.';
+
+  @override
+  String get completion_sound_scope_android =>
+      'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.';
+
+  @override
+  String get notification_open_action => 'Open';
+
+  @override
+  String get app_sounds_mute => 'Mute app sounds';
+
+  @override
+  String get app_sounds_mute_hint =>
+      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
+
+  @override
+  String get notifications_permission_denied =>
+      'Las notificaciones están bloqueadas por el sistema. Actívalas para esta app en los ajustes de Android.';
 
   @override
   String get off_no_thinking => 'Desactivado (sin razonamiento)';
 
   @override
-  String get offline_showing_the_last_known_activity => 'Sin conexión: se muestra la última actividad conocida.';
+  String get offline_showing_the_last_known_activity =>
+      'Sin conexión: se muestra la última actividad conocida.';
 
   @override
-  String get offline_showing_the_last_known_chats => 'Sin conexión: se muestran los últimos chats conocidos';
+  String get offline_showing_the_last_known_chats =>
+      'Sin conexión: se muestran los últimos chats conocidos';
 
   @override
-  String get offline_showing_the_last_known_projects => 'Sin conexión: se muestran los últimos proyectos conocidos.';
+  String get offline_showing_the_last_known_projects =>
+      'Sin conexión: se muestran los últimos proyectos conocidos.';
 
   @override
   String get on_this_device => 'En este dispositivo';
@@ -1804,7 +2019,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get open_the_hermes_dashboard => 'Abrir el panel de Hermes';
 
   @override
-  String get optional_for_the_memory_cron_skills_settings_tabs_leave_blank => 'Opcional. Para las pestañas Memoria/Cron/Habilidades/Ajustes. Déjalo en blanco para usar el puerto predeterminado del panel (9119) sin inicio de sesión.';
+  String get optional_for_the_memory_cron_skills_settings_tabs_leave_blank =>
+      'Opcional. Para las pestañas Memoria/Cron/Habilidades/Ajustes. Déjalo en blanco para usar el puerto predeterminado del panel (9119) sin inicio de sesión.';
 
   @override
   String get organization => 'Organización';
@@ -1831,7 +2047,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get plugin_notifications => 'Notificaciones de complementos';
 
   @override
-  String get plugin_notifications_description => 'La puerta de enlace envió un aviso mientras la app estaba en segundo plano.';
+  String get plugin_notifications_description =>
+      'La puerta de enlace envió un aviso mientras la app estaba en segundo plano.';
 
   @override
   String get port => 'Puerto';
@@ -1852,12 +2069,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profile_default_model => 'Modelo predeterminado del perfil';
 
   @override
-  String profile_default_set_to_chats_with_their_own_model_keep(Object selectedModel) {
+  String profile_default_set_to_chats_with_their_own_model_keep(
+    Object selectedModel,
+  ) {
     return 'Valor predeterminado del perfil establecido en $selectedModel. Los chats con su propio modelo conservan esa anulación.';
   }
 
   @override
-  String get profile_this_connection_chats_as_when_the_dashboard_serves_several => 'Perfil con el que chatea esta conexión cuando el panel sirve varios perfiles. Déjalo en blanco para un panel aislado por perfil.';
+  String
+  get profile_this_connection_chats_as_when_the_dashboard_serves_several =>
+      'Perfil con el que chatea esta conexión cuando el panel sirve varios perfiles. Déjalo en blanco para un panel aislado por perfil.';
 
   @override
   String get project => 'Proyecto';
@@ -1875,16 +2096,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get projects => 'Proyectos';
 
   @override
-  String get projects_group_related_chats_files_and_activity_and_stay_in => 'Los proyectos agrupan chats, archivos y actividad relacionados, y se mantienen sincronizados con Hermes en tu computadora.';
+  String get projects_group_related_chats_files_and_activity_and_stay_in =>
+      'Los proyectos agrupan chats, archivos y actividad relacionados, y se mantienen sincronizados con Hermes en tu computadora.';
 
   @override
-  String get projects_need_a_desktop_gateway_connection_add_the_desktop_gateway => 'Los proyectos necesitan una conexión con Desktop Gateway. Agrega la URL del Desktop Gateway a esta conexión para organizar chats en todos tus dispositivos.';
+  String
+  get projects_need_a_desktop_gateway_connection_add_the_desktop_gateway =>
+      'Los proyectos necesitan una conexión con Desktop Gateway. Agrega la URL del Desktop Gateway a esta conexión para organizar chats en todos tus dispositivos.';
 
   @override
   String get projects_unavailable => 'Proyectos no disponibles';
 
   @override
-  String get projects_activity_new_navigation => 'Proyectos, Actividad: nueva navegación';
+  String get projects_activity_new_navigation =>
+      'Proyectos, Actividad: nueva navegación';
 
   @override
   String get promote_to_project => 'Promover a proyecto';
@@ -1899,19 +2124,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get provider => 'Proveedor';
 
   @override
-  String get proxy_injects_auth_app_sends_clean_requests => 'El proxy inyecta la autenticación; la aplicación envía solicitudes limpias';
+  String get proxy_injects_auth_app_sends_clean_requests =>
+      'El proxy inyecta la autenticación; la aplicación envía solicitudes limpias';
 
   @override
   String get quick_chat => 'Chat rápido';
 
   @override
-  String get quick_chats_appear_here_after_their_retention_period => 'Los chats rápidos aparecen aquí después de su período de retención.';
+  String get quick_chats_appear_here_after_their_retention_period =>
+      'Los chats rápidos aparecen aquí después de su período de retención.';
 
   @override
   String get read_aloud => 'Leer en voz alta';
 
   @override
-  String get read_aloud_is_unavailable_on_this_device => 'Leer en voz alta no está disponible en este dispositivo';
+  String get read_aloud_is_unavailable_on_this_device =>
+      'Leer en voz alta no está disponible en este dispositivo';
 
   @override
   String get reading_response_aloud => 'Leyendo la respuesta en voz alta';
@@ -1969,10 +2197,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get repositories => 'Repositorios';
 
   @override
-  String get research_the_attached_content_verify_the_important_claims_and_cite => 'Investiga el contenido adjunto, verifica las afirmaciones importantes y cita las fuentes.';
+  String
+  get research_the_attached_content_verify_the_important_claims_and_cite =>
+      'Investiga el contenido adjunto, verifica las afirmaciones importantes y cita las fuentes.';
 
   @override
-  String research_this_content_verify_the_important_claims_and_cite_sources(Object text) {
+  String research_this_content_verify_the_important_claims_and_cite_sources(
+    Object text,
+  ) {
     return 'Investiga este contenido, verifica las afirmaciones importantes y cita las fuentes:\n\n$text';
   }
 
@@ -1993,13 +2225,15 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get response_closed_locally_no_active_gateway_turn_was_found => 'Respuesta cerrada localmente; no se encontró ningún turno activo del Gateway.';
+  String get response_closed_locally_no_active_gateway_turn_was_found =>
+      'Respuesta cerrada localmente; no se encontró ningún turno activo del Gateway.';
 
   @override
   String get response_complete => 'Respuesta completada';
 
   @override
-  String get response_complete_description => 'Un turno se completó mientras la app estaba en segundo plano.';
+  String get response_complete_description =>
+      'Un turno se completó mientras la app estaba en segundo plano.';
 
   @override
   String get response_ready => 'Respuesta lista';
@@ -2036,7 +2270,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get review_local_spaces => 'Revisar espacios locales';
 
   @override
-  String get review_or_promote_quick_chats_past_their_retention_period => 'Revisar o promover chats rápidos que superaron su período de retención';
+  String get review_or_promote_quick_chats_past_their_retention_period =>
+      'Revisar o promover chats rápidos que superaron su período de retención';
 
   @override
   String get review_the_attached_content => 'Revisa el contenido adjunto.';
@@ -2054,10 +2289,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get save_changes => 'Guardar cambios';
 
   @override
-  String get save_a_permanent_rule_in_the_hermes_configuration => 'Guarda una regla permanente en la configuración de Hermes.';
+  String get save_a_permanent_rule_in_the_hermes_configuration =>
+      'Guarda una regla permanente en la configuración de Hermes.';
 
   @override
-  String get save_the_durable_facts_from_the_attached_content_to_memory => 'Guarda los datos duraderos del contenido adjunto en la memoria y confirma qué se conservó.';
+  String get save_the_durable_facts_from_the_attached_content_to_memory =>
+      'Guarda los datos duraderos del contenido adjunto en la memoria y confirma qué se conservó.';
 
   @override
   String save_the_durable_facts_from_this_content_to_memory_then(Object text) {
@@ -2065,7 +2302,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get save_your_connections_and_settings_to_an_encrypted_file_then => 'Guarda tus conexiones y ajustes en un archivo cifrado y restáuralos tras reinstalar o en otro dispositivo.';
+  String get save_your_connections_and_settings_to_an_encrypted_file_then =>
+      'Guarda tus conexiones y ajustes en un archivo cifrado y restáuralos tras reinstalar o en otro dispositivo.';
 
   @override
   String save_2(Object filename) {
@@ -2076,7 +2314,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get schedule => 'Programación';
 
   @override
-  String get scheduled_jobs_and_their_last_runs => 'Tareas programadas y sus últimas ejecuciones';
+  String get scheduled_jobs_and_their_last_runs =>
+      'Tareas programadas y sus últimas ejecuciones';
 
   @override
   String get scheduled_tasks => 'Tareas programadas';
@@ -2091,7 +2330,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get search_all_chats => 'Buscar en todos los chats';
 
   @override
-  String get search_all_message_content => 'Buscar en todo el contenido de los mensajes';
+  String get search_all_message_content =>
+      'Buscar en todo el contenido de los mensajes';
 
   @override
   String get search_chats => 'Buscar chats';
@@ -2106,10 +2346,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get search_mode => 'Modo de búsqueda';
 
   @override
-  String get select_one_option_or_enter_another_answer => 'Selecciona una opción o escribe otra respuesta.';
+  String get select_one_option_or_enter_another_answer =>
+      'Selecciona una opción o escribe otra respuesta.';
 
   @override
-  String get select_one_or_more_options_then_continue => 'Selecciona una o más opciones y continúa.';
+  String get select_one_or_more_options_then_continue =>
+      'Selecciona una o más opciones y continúa.';
 
   @override
   String get select_text => 'Seleccionar texto';
@@ -2137,7 +2379,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get session_sources => 'Fuentes de sesiones';
 
   @override
-  String get session_deleted_from_remote_hermes => 'Sesión eliminada del Hermes remoto.';
+  String get session_deleted_from_remote_hermes =>
+      'Sesión eliminada del Hermes remoto.';
 
   @override
   String session_search_failed(Object error) {
@@ -2157,7 +2400,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get show_passphrase => 'Mostrar frase de contraseña';
 
   @override
-  String get show_tool_calls_thinking_and_message_metadata => 'Mostrar llamadas a herramientas, razonamiento y metadatos de mensajes';
+  String get show_tool_calls_thinking_and_message_metadata =>
+      'Mostrar llamadas a herramientas, razonamiento y metadatos de mensajes';
 
   @override
   String get signal_messages => 'Mensajes de Signal';
@@ -2194,7 +2438,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get speak_to_hermes => 'Habla con Hermes';
 
   @override
-  String get speech_recognition_is_unavailable => 'El reconocimiento de voz no está disponible';
+  String get speech_recognition_is_unavailable =>
+      'El reconocimiento de voz no está disponible';
 
   @override
   String get spoken_replies => 'Respuestas habladas';
@@ -2206,7 +2451,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get spoken_replies_on => 'Respuestas habladas activadas';
 
   @override
-  String get stalled_no_update_from_hermes => 'Estancado: sin actualizaciones de Hermes';
+  String get stalled_no_update_from_hermes =>
+      'Estancado: sin actualizaciones de Hermes';
 
   @override
   String get start_something_new => 'Empezar algo nuevo';
@@ -2239,7 +2485,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get submitted_waiting_for_hermes => 'Enviado, esperando a Hermes';
 
   @override
-  String get suggest_projects_and_learn_from_your_corrections => 'Sugerir proyectos y aprender de tus correcciones';
+  String get suggest_projects_and_learn_from_your_corrections =>
+      'Sugerir proyectos y aprender de tus correcciones';
 
   @override
   String get summarize_the_attached_content => 'Resume el contenido adjunto.';
@@ -2259,10 +2506,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get take_photo => 'Tomar foto';
 
   @override
-  String get tap_to_add_a_remote_hermes_gateway_api_server_port => 'Toca + para agregar un Gateway de Hermes remoto\n(servidor de API, puerto 8642)';
+  String get tap_to_add_a_remote_hermes_gateway_api_server_port =>
+      'Toca + para agregar un Gateway de Hermes remoto\n(servidor de API, puerto 8642)';
 
   @override
-  String get tap_the_button_to_start_a_new_chat => 'Toca el botón + para iniciar un chat nuevo';
+  String get tap_the_button_to_start_a_new_chat =>
+      'Toca el botón + para iniciar un chat nuevo';
 
   @override
   String get telegram_messages => 'Mensajes de Telegram';
@@ -2271,7 +2520,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get terminal_sessions => 'Sesiones de terminal';
 
   @override
-  String get test_notification_body => 'Si ves esto, las notificaciones funcionan correctamente.';
+  String get test_notification_body =>
+      'Si ves esto, las notificaciones funcionan correctamente.';
 
   @override
   String get test_notification_sent => 'Notificación de prueba enviada.';
@@ -2280,7 +2530,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get test_notification_title => 'Prueba de notificaciones de Hermes';
 
   @override
-  String get test_notification_unsupported => 'No se pudo enviar la notificación; comprueba que el sistema permita notificaciones.';
+  String get test_notification_unsupported =>
+      'No se pudo enviar la notificación; comprueba que el sistema permita notificaciones.';
 
   @override
   String get text_size => 'Tamaño del texto';
@@ -2294,31 +2545,40 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get the_api_key_could_not_be_stored_securely => 'No se pudo almacenar la clave de API de forma segura.';
+  String get the_api_key_could_not_be_stored_securely =>
+      'No se pudo almacenar la clave de API de forma segura.';
 
   @override
-  String get the_project_will_move_to_archived_its_chats_and_files => 'El proyecto pasará a «Archivado». Sus chats y archivos se conservarán intactos y podrás restaurarlo cuando quieras.';
+  String get the_project_will_move_to_archived_its_chats_and_files =>
+      'El proyecto pasará a «Archivado». Sus chats y archivos se conservarán intactos y podrás restaurarlo cuando quieras.';
 
   @override
-  String get the_project_will_move_to_archived_its_chats_and_files_2 => 'El proyecto pasará a «Archivado». Sus chats y archivos se conservarán intactos y podrás restaurarlo más adelante.';
+  String get the_project_will_move_to_archived_its_chats_and_files_2 =>
+      'El proyecto pasará a «Archivado». Sus chats y archivos se conservarán intactos y podrás restaurarlo más adelante.';
 
   @override
-  String get the_active_profile_did_not_return_any_selectable_models => 'El perfil activo no devolvió ningún modelo seleccionable.';
+  String get the_active_profile_did_not_return_any_selectable_models =>
+      'El perfil activo no devolvió ningún modelo seleccionable.';
 
   @override
-  String get the_backup_could_not_be_exported => 'No se pudo exportar la copia de seguridad.';
+  String get the_backup_could_not_be_exported =>
+      'No se pudo exportar la copia de seguridad.';
 
   @override
-  String get the_backup_could_not_be_restored => 'No se pudo restaurar la copia de seguridad.';
+  String get the_backup_could_not_be_restored =>
+      'No se pudo restaurar la copia de seguridad.';
 
   @override
-  String get the_connection_could_not_be_deleted_safely => 'No se pudo eliminar la conexión de forma segura.';
+  String get the_connection_could_not_be_deleted_safely =>
+      'No se pudo eliminar la conexión de forma segura.';
 
   @override
-  String get the_connection_could_not_be_stored_securely => 'No se pudo almacenar la conexión de forma segura.';
+  String get the_connection_could_not_be_stored_securely =>
+      'No se pudo almacenar la conexión de forma segura.';
 
   @override
-  String get the_dashboard_credentials_could_not_be_stored_securely => 'No se pudieron almacenar las credenciales del panel de forma segura.';
+  String get the_dashboard_credentials_could_not_be_stored_securely =>
+      'No se pudieron almacenar las credenciales del panel de forma segura.';
 
   @override
   String get the_detached_reply_failed => 'La respuesta desacoplada falló.';
@@ -2329,60 +2589,76 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get the_file_contains_your_api_keys_and_dashboard_password_so => 'El archivo contiene tus claves de API y la contraseña del panel, por lo que está cifrado. Sin esta frase de contraseña no se puede restaurar la copia de seguridad.';
+  String get the_file_contains_your_api_keys_and_dashboard_password_so =>
+      'El archivo contiene tus claves de API y la contraseña del panel, por lo que está cifrado. Sin esta frase de contraseña no se puede restaurar la copia de seguridad.';
 
   @override
   String get the_last_turn_failed => 'El último turno falló';
 
   @override
-  String the_local_connection_store_looks_damaged_you_can_reset_the(Object errorType) {
+  String the_local_connection_store_looks_damaged_you_can_reset_the(
+    Object errorType,
+  ) {
     return 'El almacén local de conexiones parece dañado ($errorType). Puedes restablecer las conexiones guardadas y empezar de cero. Los chats de tu Gateway no se ven afectados.';
   }
 
   @override
-  String get the_model_only_rewrites_your_question_into_a_short_full => 'El modelo solo reescribe tu pregunta como una consulta breve de texto completo. Hermes usa las credenciales del proveedor ya configuradas en el host.';
+  String get the_model_only_rewrites_your_question_into_a_short_full =>
+      'El modelo solo reescribe tu pregunta como una consulta breve de texto completo. Hermes usa las credenciales del proveedor ya configuradas en el host.';
 
   @override
-  String get the_server_has_not_reported_folders_for_this_project_yet => 'El servidor aún no ha informado carpetas para este proyecto. Archivos globales sigue disponible en Más.';
+  String get the_server_has_not_reported_folders_for_this_project_yet =>
+      'El servidor aún no ha informado carpetas para este proyecto. Archivos globales sigue disponible en Más.';
 
   @override
   String get the_turn_failed => 'El turno falló';
 
   @override
-  String get the_two_passphrases_do_not_match => 'Las dos frases de contraseña no coinciden.';
+  String get the_two_passphrases_do_not_match =>
+      'Las dos frases de contraseña no coinciden.';
 
   @override
-  String get the_value_is_sent_directly_to_the_active_hermes_gateway => 'El valor se envía directamente al Gateway de Hermes activo y esta aplicación de Android no lo guarda.';
+  String get the_value_is_sent_directly_to_the_active_hermes_gateway =>
+      'El valor se envía directamente al Gateway de Hermes activo y esta aplicación de Android no lo guarda.';
 
   @override
-  String get there_are_no_visible_files_in_this_server_folder => 'No hay archivos visibles en esta carpeta del servidor.';
+  String get there_are_no_visible_files_in_this_server_folder =>
+      'No hay archivos visibles en esta carpeta del servidor.';
 
   @override
   String get thinking_effort => 'Esfuerzo de razonamiento';
 
   @override
-  String get this_hermes_gateway_does_not_support_opening_a_project_yet => 'Este Gateway de Hermes aún no admite abrir proyectos. Actualiza Hermes en el servidor para explorar un proyecto desde el teléfono.';
+  String get this_hermes_gateway_does_not_support_opening_a_project_yet =>
+      'Este Gateway de Hermes aún no admite abrir proyectos. Actualiza Hermes en el servidor para explorar un proyecto desde el teléfono.';
 
   @override
-  String get this_hermes_gateway_is_older_than_server_side_projects_so => 'Este Gateway de Hermes es anterior a los proyectos del servidor, por lo que los chats se agrupan solo en este dispositivo. Actualiza Hermes para compartir los mismos proyectos entre tus dispositivos.';
+  String get this_hermes_gateway_is_older_than_server_side_projects_so =>
+      'Este Gateway de Hermes es anterior a los proyectos del servidor, por lo que los chats se agrupan solo en este dispositivo. Actualiza Hermes para compartir los mismos proyectos entre tus dispositivos.';
 
   @override
-  String get this_project_has_no_folder_to_open_the_chat_in => 'Este proyecto necesita una carpeta antes de iniciar un chat en él. Agrega una carpeta e inténtalo de nuevo.';
+  String get this_project_has_no_folder_to_open_the_chat_in =>
+      'Este proyecto necesita una carpeta antes de iniciar un chat en él. Agrega una carpeta e inténtalo de nuevo.';
 
   @override
-  String get this_chat_has_no_messages_available_in_the_desktop_session => 'Este chat aún no tiene mensajes disponibles en la sesión de Desktop.';
+  String get this_chat_has_no_messages_available_in_the_desktop_session =>
+      'Este chat aún no tiene mensajes disponibles en la sesión de Desktop.';
 
   @override
-  String get this_creates_a_permanent_rule_in_hermes_review_the_full => 'Esto crea una regla permanente en Hermes. Revisa el comando completo antes de confirmar.';
+  String get this_creates_a_permanent_rule_in_hermes_review_the_full =>
+      'Esto crea una regla permanente en Hermes. Revisa el comando completo antes de confirmar.';
 
   @override
-  String get this_gateway_does_not_host_projects_yet_update_the_gateway => 'Este Gateway aún no aloja proyectos. Actualiza el Gateway para organizar chats en todos tus dispositivos.';
+  String get this_gateway_does_not_host_projects_yet_update_the_gateway =>
+      'Este Gateway aún no aloja proyectos. Actualiza el Gateway para organizar chats en todos tus dispositivos.';
 
   @override
-  String get this_permanently_deletes_the_project_chats_will_not_be_deleted => 'Esto elimina el proyecto de forma permanente. Los chats no se eliminarán; volverán a «Sin asignar».';
+  String get this_permanently_deletes_the_project_chats_will_not_be_deleted =>
+      'Esto elimina el proyecto de forma permanente. Los chats no se eliminarán; volverán a «Sin asignar».';
 
   @override
-  String get this_server_doesn_t_offer_background_recovery_chats_run_live => 'Este servidor no ofrece recuperación en segundo plano; los chats se ejecutan en vivo';
+  String get this_server_doesn_t_offer_background_recovery_chats_run_live =>
+      'Este servidor no ofrece recuperación en segundo plano; los chats se ejecutan en vivo';
 
   @override
   String get this_week => 'Esta semana';
@@ -2397,7 +2673,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get trigger_now => 'Ejecutar ahora';
 
   @override
-  String get received_outcome_unknown => 'Turno finalizado — resultado sin confirmar';
+  String get received_outcome_unknown =>
+      'Turno finalizado — resultado sin confirmar';
 
   @override
   String get turn_completed => 'Turno completado';
@@ -2406,16 +2683,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get turn_failed => 'Turno fallido';
 
   @override
-  String get turn_failed_description => 'Un turno en segundo plano terminó con un error.';
+  String get turn_failed_description =>
+      'Un turno en segundo plano terminó con un error.';
 
   @override
   String get turn_recovery_failed => 'Error en la recuperación del turno';
 
   @override
-  String get unable_to_prepare_this_file_try_another_one => 'No se pudo preparar este archivo. Prueba con otro.';
+  String get unable_to_prepare_this_file_try_another_one =>
+      'No se pudo preparar este archivo. Prueba con otro.';
 
   @override
-  String get unable_to_prepare_this_image_try_another_one => 'No se pudo preparar esta imagen. Prueba con otra.';
+  String get unable_to_prepare_this_image_try_another_one =>
+      'No se pudo preparar esta imagen. Prueba con otra.';
 
   @override
   String unable_to_prepare(Object name) {
@@ -2423,7 +2703,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get unable_to_read_the_selected_image_the_selection_was_kept => 'No se pudo leer la imagen seleccionada. La selección se conservó.';
+  String get unable_to_read_the_selected_image_the_selection_was_kept =>
+      'No se pudo leer la imagen seleccionada. La selección se conservó.';
 
   @override
   String get unassigned => 'Sin asignar';
@@ -2444,7 +2725,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get upload_failed => 'Error de subida';
 
   @override
-  String get upload_failed_tap_retry => 'Error de subida • toca para reintentar';
+  String get upload_failed_tap_retry =>
+      'Error de subida • toca para reintentar';
 
   @override
   String uploading(Object index, Object name, Object total) {
@@ -2458,21 +2740,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String get use_at_least_8_characters => 'Usa al menos 8 caracteres.';
 
   @override
-  String get use_for_cron_jobs_backed_by_scripts => 'Úsalo para tareas de Cron respaldadas por scripts.';
+  String get use_for_cron_jobs_backed_by_scripts =>
+      'Úsalo para tareas de Cron respaldadas por scripts.';
 
   @override
   String get use_on_device => 'Usar en el dispositivo';
 
   @override
-  String get use_the_attached_content_to_identify_and_fill_the_relevant => 'Usa el contenido adjunto para identificar y rellenar los campos relevantes del documento o formulario. Pregunta antes de enviar cualquier cosa.';
+  String get use_the_attached_content_to_identify_and_fill_the_relevant =>
+      'Usa el contenido adjunto para identificar y rellenar los campos relevantes del documento o formulario. Pregunta antes de enviar cualquier cosa.';
 
   @override
-  String use_this_content_to_identify_and_fill_the_relevant_document(Object text) {
+  String use_this_content_to_identify_and_fill_the_relevant_document(
+    Object text,
+  ) {
     return 'Usa este contenido para identificar y rellenar los campos relevantes del documento o formulario. Pregunta antes de enviar cualquier cosa:\n\n$text';
   }
 
   @override
-  String get used_for_hosted_path_prefixes_and_for_the_settings_memory => 'Se usa para prefijos de rutas alojadas y para las pestañas Ajustes, Memoria, Habilidades y Cron. Deja el usuario y la contraseña en blanco para un panel abierto, o activa el modo de proxy cuando tu proxy inverso inyecte la autenticación del panel.';
+  String get used_for_hosted_path_prefixes_and_for_the_settings_memory =>
+      'Se usa para prefijos de rutas alojadas y para las pestañas Ajustes, Memoria, Habilidades y Cron. Deja el usuario y la contraseña en blanco para un panel abierto, o activa el modo de proxy cuando tu proxy inverso inyecte la autenticación del panel.';
 
   @override
   String get username_optional => 'Nombre de usuario (opcional)';
@@ -2529,7 +2816,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get e_g_dashboard => 'p. ej., /dashboard';
 
   @override
-  String get e_g_dashboard_proxy_path_before_api => 'p. ej., /dashboard (ruta del proxy antes de /api/)';
+  String get e_g_dashboard_proxy_path_before_api =>
+      'p. ej., /dashboard (ruta del proxy antes de /api/)';
 
   @override
   String get e_g_profile_peter => 'p. ej., /profile/peter';
@@ -2559,10 +2847,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get example_host_hint => '192.168.1.50, 100.x.y.z o hermes-machine.tailnet.ts.net';
+  String get example_host_hint =>
+      '192.168.1.50, 100.x.y.z o hermes-machine.tailnet.ts.net';
 
   @override
-  String get example_profile_prefix_hint_full => 'p. ej., /profile/peter (ruta del proxy antes de /api/ y /v1/)';
+  String get example_profile_prefix_hint_full =>
+      'p. ej., /profile/peter (ruta del proxy antes de /api/ y /v1/)';
 
   @override
   String and_more(Object count) {
@@ -2611,7 +2901,10 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String chats_migrated_projects_created(Object createdProjects, Object linkedSessions) {
+  String chats_migrated_projects_created(
+    Object createdProjects,
+    Object linkedSessions,
+  ) {
     return '$linkedSessions chats migrados · $createdProjects proyectos creados';
   }
 
@@ -2772,7 +3065,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get text_size_extra_large => 'Muy grande';
 
   @override
-  String get text_size_use_system_description => 'Usar exactamente el tamaño de texto de accesibilidad de Android.';
+  String get text_size_use_system_description =>
+      'Usar exactamente el tamaño de texto de accesibilidad de Android.';
 
   @override
   String text_size_percent_description(Object percent) {
@@ -2943,10 +3237,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get hermes_response_ready => 'Respuesta de Hermes lista';
 
   @override
-  String get admin_password_needed => 'Se necesita la contraseña de administrador';
+  String get admin_password_needed =>
+      'Se necesita la contraseña de administrador';
 
   @override
-  String get hermes_needs_a_sudo_password_for_the_pending_terminal_command => 'Hermes necesita una contraseña de sudo para el comando de terminal pendiente.';
+  String get hermes_needs_a_sudo_password_for_the_pending_terminal_command =>
+      'Hermes necesita una contraseña de sudo para el comando de terminal pendiente.';
 
   @override
   String get sudo_password => 'Contraseña de sudo';
@@ -2955,7 +3251,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get secret_needed => 'Se necesita un secreto';
 
   @override
-  String get hermes_needs_a_secret_for_the_pending_skill => 'Hermes necesita un secreto para la habilidad pendiente.';
+  String get hermes_needs_a_secret_for_the_pending_skill =>
+      'Hermes necesita un secreto para la habilidad pendiente.';
 
   @override
   String get secret_value => 'Valor del secreto';
@@ -2978,7 +3275,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get could_not_save_chat_spaces => 'No se pudieron guardar los espacios de chat en este dispositivo';
+  String get could_not_save_chat_spaces =>
+      'No se pudieron guardar los espacios de chat en este dispositivo';
 
   @override
   String get update_available => 'Actualización disponible';
@@ -2993,13 +3291,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get update_downloading => 'Downloading and verifying update…';
 
   @override
-  String get update_allow_install => 'Allow Hermes to install this update, then return here and tap Install update.';
+  String get update_allow_install =>
+      'Allow Hermes to install this update, then return here and tap Install update.';
 
   @override
-  String get update_failed => 'The update could not be downloaded, verified, or opened. Try again or view the release page.';
+  String get update_failed =>
+      'The update could not be downloaded, verified, or opened. Try again or view the release page.';
 
   @override
-  String get a_newer_hermes_android_build_is_available_on_github => 'Hay una compilación más reciente de Ares en GitHub.';
+  String get a_newer_hermes_android_build_is_available_on_github =>
+      'Hay una compilación más reciente de Ares en GitHub.';
 
   @override
   String get release_notes => 'Notas de la versión';
@@ -3023,7 +3324,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get you_re_on_the_latest_version => 'Ya tienes la última versión.';
 
   @override
-  String get couldn_t_check_for_updates => 'No se pudieron buscar actualizaciones.';
+  String get couldn_t_check_for_updates =>
+      'No se pudieron buscar actualizaciones.';
 
   @override
   String get chat_density => 'Densidad del chat';
@@ -3040,10 +3342,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get chat_density_compact => 'Compacta';
 
   @override
-  String get chat_density_comfortable_description => 'Burbujas más amplias con una etiqueta de remitente sobre cada mensaje.';
+  String get chat_density_comfortable_description =>
+      'Burbujas más amplias con una etiqueta de remitente sobre cada mensaje.';
 
   @override
-  String get chat_density_compact_description => 'Burbujas más ajustadas y sin etiqueta para que quepan más mensajes en pantalla.';
+  String get chat_density_compact_description =>
+      'Burbujas más ajustadas y sin etiqueta para que quepan más mensajes en pantalla.';
 
   @override
   String chat_density_label_description(Object description, Object label) {
@@ -3051,16 +3355,20 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins => 'Compacta quita las etiquetas «You» y «Hermes» y reduce el relleno, el espaciado y los márgenes laterales de las burbujas.';
+  String
+  get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins =>
+      'Compacta quita las etiquetas «You» y «Hermes» y reduce el relleno, el espaciado y los márgenes laterales de las burbujas.';
 
   @override
   String get client_certificate_mtls => 'Client certificate (mTLS)';
 
   @override
-  String get client_certificate_mtls_description => 'Present a certificate when an HTTPS proxy requires mutual TLS.';
+  String get client_certificate_mtls_description =>
+      'Present a certificate when an HTTPS proxy requires mutual TLS.';
 
   @override
-  String get client_certificate_https_only => 'Client certificates are only used for HTTPS connections.';
+  String get client_certificate_https_only =>
+      'Client certificates are only used for HTTPS connections.';
 
   @override
   String get choose_certificate => 'Choose certificate';
@@ -3069,13 +3377,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get certificate_password => 'Certificate password';
 
   @override
-  String get this_certificate_is_password_protected => 'This certificate is password-protected. It opens as you type.';
+  String get this_certificate_is_password_protected =>
+      'This certificate is password-protected. It opens as you type.';
 
   @override
-  String get enter_the_certificate_password_to_finish_loading_it => 'Enter the certificate password to finish loading the certificate you chose.';
+  String get enter_the_certificate_password_to_finish_loading_it =>
+      'Enter the certificate password to finish loading the certificate you chose.';
 
   @override
-  String get client_certificate_required => 'Load a client certificate or turn off the client certificate option.';
+  String get client_certificate_required =>
+      'Load a client certificate or turn off the client certificate option.';
 
   @override
   String client_certificate_loaded(String label) {
@@ -3086,40 +3397,50 @@ class AppLocalizationsEs extends AppLocalizations {
   String get remove_certificate => 'Remove certificate';
 
   @override
-  String get certificate_import_failed => 'That certificate could not be loaded.';
+  String get certificate_import_failed =>
+      'That certificate could not be loaded.';
 
   @override
   String get background_work => 'Trabajo en segundo plano';
 
   @override
-  String get keep_chats_active_in_background => 'Mantener los chats activos en segundo plano';
+  String get keep_chats_active_in_background =>
+      'Mantener los chats activos en segundo plano';
 
   @override
-  String get background_work_description => 'Mantiene conectados los chats iniciados por el usuario mientras la app está en segundo plano. Las conexiones inactivas pueden desconectarse. Consume más batería y datos. Desactivarlo no detiene el trabajo en el servidor.';
+  String get background_work_description =>
+      'Mantiene conectados los chats iniciados por el usuario mientras la app está en segundo plano. Las conexiones inactivas pueden desconectarse. Consume más batería y datos. Desactivarlo no detiene el trabajo en el servidor.';
 
   @override
-  String get background_work_limits => 'Android aún puede suspender las conexiones durante Doze o finalizar el proceso de la app. Las notificaciones tras finalizar el proceso requieren configurar push por separado. No se admite Forzar detención.';
+  String get background_work_limits =>
+      'Android aún puede suspender las conexiones durante Doze o finalizar el proceso de la app. Las notificaciones tras finalizar el proceso requieren configurar push por separado. No se admite Forzar detención.';
 
   @override
-  String get background_work_disclosure => 'Mientras la protección en segundo plano esté activa, se muestra una notificación obligatoria del servicio, aunque las notificaciones opcionales de chat estén desactivadas.';
+  String get background_work_disclosure =>
+      'Mientras la protección en segundo plano esté activa, se muestra una notificación obligatoria del servicio, aunque las notificaciones opcionales de chat estén desactivadas.';
 
   @override
-  String get battery_optimisation_settings => 'Ajustes de optimización de batería';
+  String get battery_optimisation_settings =>
+      'Ajustes de optimización de batería';
 
   @override
-  String get battery_optimisation_description => 'Abre los ajustes de Android para revisar las restricciones de batería. No se solicita ninguna excepción automáticamente y cambiar los ajustes no garantiza la entrega.';
+  String get battery_optimisation_description =>
+      'Abre los ajustes de Android para revisar las restricciones de batería. No se solicita ninguna excepción automáticamente y cambiar los ajustes no garantiza la entrega.';
 
   @override
-  String get battery_settings_unavailable => 'No se pudieron abrir los ajustes de batería en este dispositivo.';
+  String get battery_settings_unavailable =>
+      'No se pudieron abrir los ajustes de batería en este dispositivo.';
 
   @override
-  String get background_work_save_failed => 'No se pudo guardar el ajuste de trabajo en segundo plano.';
+  String get background_work_save_failed =>
+      'No se pudo guardar el ajuste de trabajo en segundo plano.';
 
   @override
   String get ongoing_chat_channel_name => 'Chats activos';
 
   @override
-  String get ongoing_chat_channel_description => 'Actualizaciones silenciosas de chats iniciados por el usuario aún sin resolver';
+  String get ongoing_chat_channel_description =>
+      'Actualizaciones silenciosas de chats iniciados por el usuario aún sin resolver';
 
   @override
   String get task_timeline => 'Task timeline';
@@ -3131,7 +3452,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get task_live_preview => 'Live preview from parent events';
 
   @override
-  String get task_preview_explanation => 'Latest exposed preview only; not a recorded transcript row.';
+  String get task_preview_explanation =>
+      'Latest exposed preview only; not a recorded transcript row.';
 
   @override
   String get task_preview => 'Preview';
@@ -3143,7 +3465,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get task_loading_history => 'Loading task history…';
 
   @override
-  String get task_empty_history => 'No recorded messages yet. The task may not have flushed its history; this does not mean it produced no work.';
+  String get task_empty_history =>
+      'No recorded messages yet. The task may not have flushed its history; this does not mean it produced no work.';
 
   @override
   String get task_load_older => 'Load older';
@@ -3172,7 +3495,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get task_read_only_notice => 'Read-only · recorded history may appear after the task flushes. Refresh to check again.';
+  String get task_read_only_notice =>
+      'Read-only · recorded history may appear after the task flushes. Refresh to check again.';
 
   @override
   String task_row_label(Object id, Object role) {
@@ -3218,37 +3542,48 @@ class AppLocalizationsEs extends AppLocalizations {
   String get task_image_placeholder => '[image]';
 
   @override
-  String get task_invalid_reference => 'Task transcript unavailable: invalid stored session reference.';
+  String get task_invalid_reference =>
+      'Task transcript unavailable: invalid stored session reference.';
 
   @override
-  String get task_auth_required => 'Task transcript unavailable: configure Dashboard authentication for this gateway. The API-server key cannot read task reasoning.';
+  String get task_auth_required =>
+      'Task transcript unavailable: configure Dashboard authentication for this gateway. The API-server key cannot read task reasoning.';
 
   @override
-  String get task_auth_rejected => 'Task transcript unavailable: Dashboard authentication was rejected. Check this gateway’s Dashboard settings.';
+  String get task_auth_rejected =>
+      'Task transcript unavailable: Dashboard authentication was rejected. Check this gateway’s Dashboard settings.';
 
   @override
-  String get task_incompatible_history => 'Task transcript unavailable: this Dashboard does not provide compatible bounded raw history for the selected profile.';
+  String get task_incompatible_history =>
+      'Task transcript unavailable: this Dashboard does not provide compatible bounded raw history for the selected profile.';
 
   @override
-  String get task_identity_unproven => 'Task transcript unavailable: the Dashboard could not prove the exact stored session or its compression lineage. No transcript from another session is shown.';
+  String get task_identity_unproven =>
+      'Task transcript unavailable: the Dashboard could not prove the exact stored session or its compression lineage. No transcript from another session is shown.';
 
   @override
-  String get task_partial_compression => 'Partial history: this task continued after compression, but this gateway has not exposed a verifiable newer reference. The final reply may be missing. Automatic refresh is paused; use Refresh to retry.';
+  String get task_partial_compression =>
+      'Partial history: this task continued after compression, but this gateway has not exposed a verifiable newer reference. The final reply may be missing. Automatic refresh is paused; use Refresh to retry.';
 
   @override
-  String get task_partial_ancestors => 'Partial history: this gateway omits compression ancestors for this task. Earlier task segments may be missing. Known rows are retained; use Refresh to retry.';
+  String get task_partial_ancestors =>
+      'Partial history: this gateway omits compression ancestors for this task. Earlier task segments may be missing. Known rows are retained; use Refresh to retry.';
 
   @override
-  String get task_missing_reference => 'Task transcript unavailable: this server did not retain its session reference.';
+  String get task_missing_reference =>
+      'Task transcript unavailable: this server did not retain its session reference.';
 
   @override
-  String get task_missing_row_identity => 'Task transcript unavailable: this server did not supply durable message row identities.';
+  String get task_missing_row_identity =>
+      'Task transcript unavailable: this server did not supply durable message row identities.';
 
   @override
-  String get task_history_not_ready => 'Task history is not available yet (HTTP 404). The task may not have flushed, or this Dashboard may not support task history. Retry to check again.';
+  String get task_history_not_ready =>
+      'Task history is not available yet (HTTP 404). The task may not have flushed, or this Dashboard may not support task history. Retry to check again.';
 
   @override
-  String get task_refresh_failed => 'Could not refresh task history. Check the connection and retry.';
+  String get task_refresh_failed =>
+      'Could not refresh task history. Check the connection and retry.';
 
   @override
   String get task_status_interrupted => 'Interrupted';
@@ -3288,13 +3623,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get activity_recently_updated => 'Actualizado recientemente';
 
   @override
-  String get activity_reconnecting => 'Reconectando — comprobando el estado del turno';
+  String get activity_reconnecting =>
+      'Reconectando — comprobando el estado del turno';
 
   @override
-  String get activity_outcome_unknown => 'No se pudo confirmar el resultado del turno. Abre el chat para comprobarlo.';
+  String get activity_outcome_unknown =>
+      'No se pudo confirmar el resultado del turno. Abre el chat para comprobarlo.';
 
   @override
-  String get activity_chat_updated_detail => 'Actividad del chat registrada por el Gateway; el estado del turno en tiempo real no está disponible.';
+  String get activity_chat_updated_detail =>
+      'Actividad del chat registrada por el Gateway; el estado del turno en tiempo real no está disponible.';
 
   @override
   String get activity_updated => 'Actualizado';
@@ -3303,25 +3641,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get activity_empty_title => 'No hay actividad reciente';
 
   @override
-  String get activity_empty_detail => 'Aquí aparecen los turnos iniciados en esta app y los chats del Gateway actualizados en los últimos 7 días.';
+  String get activity_empty_detail =>
+      'Aquí aparecen los turnos iniciados en esta app y los chats del Gateway actualizados en los últimos 7 días.';
 
   @override
-  String get activity_read_error => 'Actividad no pudo leer sus registros de turnos o los chats del Gateway. Comprueba la conexión y vuelve a intentarlo.';
+  String get activity_read_error =>
+      'Actividad no pudo leer sus registros de turnos o los chats del Gateway. Comprueba la conexión y vuelve a intentarlo.';
 
   @override
-  String get activity_chat_unavailable => 'Este chat ya no está disponible o no se pudo acceder al Gateway.';
+  String get activity_chat_unavailable =>
+      'Este chat ya no está disponible o no se pudo acceder al Gateway.';
 
   @override
   String get activity_partial_title => 'Actividad cargada parcialmente';
 
   @override
-  String get activity_partial_detail => 'Se muestra un intervalo limitado de actividad de la pasarela. Puede haber más chats; desliza hacia abajo para actualizar.';
+  String get activity_partial_detail =>
+      'Se muestra un intervalo limitado de actividad de la pasarela. Puede haber más chats; desliza hacia abajo para actualizar.';
 
   @override
   String get provider_usage => 'Uso registrado';
 
   @override
-  String get provider_usage_notice => 'Uso de Hermes de los últimos 30 días, no saldo ni precios. Configura las credenciales en el servidor Hermes; esta app no almacena claves API de proveedores.';
+  String get provider_usage_notice =>
+      'Uso de Hermes de los últimos 30 días, no saldo ni precios. Configura las credenciales en el servidor Hermes; esta app no almacena claves API de proveedores.';
 
   @override
   String get provider_usage_failed => 'No se pudo cargar el uso registrado.';
@@ -3349,19 +3692,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String get provider_quota_openai_api => 'Uso registrado de la API de OpenAI';
 
   @override
-  String get provider_quota_notice => 'Periodos de la suscripción informados por el proveedor, separados del uso registrado en Hermes y de la facturación de la API. Las cuentas se muestran por separado; los límites de un modelo no significan que se haya agotado toda la cuota de la cuenta.';
+  String get provider_quota_notice =>
+      'Periodos de la suscripción informados por el proveedor, separados del uso registrado en Hermes y de la facturación de la API. Las cuentas se muestran por separado; los límites de un modelo no significan que se haya agotado toda la cuota de la cuenta.';
 
   @override
-  String get provider_quota_windows_notice => 'Las suscripciones a Codex y Claude tienen límites por sesión de cinco horas y por semana. Solo se muestran los periodos informados por el proveedor; los límites y las horas de restablecimiento no informados siguen sin estar disponibles. Los límites semanales pueden aplicarse a la cuenta o a modelos específicos.';
+  String get provider_quota_windows_notice =>
+      'Las suscripciones a Codex y Claude tienen límites por sesión de cinco horas y por semana. Solo se muestran los periodos informados por el proveedor; los límites y las horas de restablecimiento no informados siguen sin estar disponibles. Los límites semanales pueden aplicarse a la cuenta o a modelos específicos.';
 
   @override
   String get provider_quota_five_hour_session => 'Sesión de 5 horas';
 
   @override
-  String get provider_quota_unavailable => 'Cuota de la suscripción no disponible.';
+  String get provider_quota_unavailable =>
+      'Cuota de la suscripción no disponible.';
 
   @override
-  String get provider_quota_failed => 'No se pudo actualizar la cuota de la suscripción. Los valores conservados proceden de la consulta anterior.';
+  String get provider_quota_failed =>
+      'No se pudo actualizar la cuota de la suscripción. Los valores conservados proceden de la consulta anterior.';
 
   @override
   String get provider_quota_account => 'Cuenta';
@@ -3390,64 +3737,80 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get provider_quota_reset_unknown => 'Hora de restablecimiento no disponible.';
+  String get provider_quota_reset_unknown =>
+      'Hora de restablecimiento no disponible.';
 
   @override
   String get auxiliary_models => 'Modelos auxiliares';
 
   @override
-  String get auxiliary_notice => 'Elige modelos para cada tarea. Los endpoints personalizados se gestionan en el servidor. Auto sigue las reglas de herencia de la tarea.';
+  String get auxiliary_notice =>
+      'Elige modelos para cada tarea. Los endpoints personalizados se gestionan en el servidor. Auto sigue las reglas de herencia de la tarea.';
 
   @override
   String get auxiliary_inherit => 'Auto (heredar)';
 
   @override
-  String get auxiliary_unavailable => 'Los ajustes auxiliares no están disponibles.';
+  String get auxiliary_unavailable =>
+      'Los ajustes auxiliares no están disponibles.';
 
   @override
   String get provider_oauth_title => 'Inicio de sesión con proveedores';
 
   @override
-  String get provider_oauth_more_subtitle => 'Gestiona el inicio de sesión con proveedores en tu servidor Hermes';
+  String get provider_oauth_more_subtitle =>
+      'Gestiona el inicio de sesión con proveedores en tu servidor Hermes';
 
   @override
-  String get provider_oauth_settings_subtitle => 'Inicia sesión en tu servidor Hermes; los tokens del proveedor no se guardan en este dispositivo';
+  String get provider_oauth_settings_subtitle =>
+      'Inicia sesión en tu servidor Hermes; los tokens del proveedor no se guardan en este dispositivo';
 
   @override
-  String get provider_oauth_intro => 'Inicia sesión con tu proveedor en un navegador externo. Los tokens se guardan solo en tu servidor Hermes, no en este dispositivo. Iniciar sesión no selecciona un modelo de chat en esta aplicación.';
+  String get provider_oauth_intro =>
+      'Inicia sesión con tu proveedor en un navegador externo. Los tokens se guardan solo en tu servidor Hermes, no en este dispositivo. Iniciar sesión no selecciona un modelo de chat en esta aplicación.';
 
   @override
-  String get provider_oauth_defaults_notice => 'Algunos procesos del servidor, incluido el reemplazo de cuentas gratuitas de Nous, pueden cambiar los valores predeterminados del servidor. Revisa los ajustes del servidor después de iniciar sesión.';
+  String get provider_oauth_defaults_notice =>
+      'Algunos procesos del servidor, incluido el reemplazo de cuentas gratuitas de Nous, pueden cambiar los valores predeterminados del servidor. Revisa los ajustes del servidor después de iniciar sesión.';
 
   @override
-  String get provider_oauth_transport_init_failed => 'No se pudo inicializar la conexión segura seleccionada del panel. Comprueba su identidad TLS y los ajustes de conexión.';
+  String get provider_oauth_transport_init_failed =>
+      'No se pudo inicializar la conexión segura seleccionada del panel. Comprueba su identidad TLS y los ajustes de conexión.';
 
   @override
-  String get provider_oauth_https_required => 'El inicio de sesión con proveedores requiere una conexión HTTPS al panel de Hermes.';
+  String get provider_oauth_https_required =>
+      'El inicio de sesión con proveedores requiere una conexión HTTPS al panel de Hermes.';
 
   @override
-  String get provider_oauth_auth_required => 'Configura la autenticación por contraseña del panel o un proxy de confianza antes de iniciar sesión.';
+  String get provider_oauth_auth_required =>
+      'Configura la autenticación por contraseña del panel o un proxy de confianza antes de iniciar sesión.';
 
   @override
-  String get provider_oauth_catalog_failed => 'El inicio de sesión con proveedores no está disponible en este servidor. Comprueba la autenticación del panel y actualiza el servidor si no admite OAuth de proveedores.';
+  String get provider_oauth_catalog_failed =>
+      'El inicio de sesión con proveedores no está disponible en este servidor. Comprueba la autenticación del panel y actualiza el servidor si no admite OAuth de proveedores.';
 
   @override
-  String get provider_oauth_expired => 'El inicio de sesión ha caducado. Vuelve a empezar.';
+  String get provider_oauth_expired =>
+      'El inicio de sesión ha caducado. Vuelve a empezar.';
 
   @override
-  String get provider_oauth_start_failed => 'No se pudo iniciar el acceso seguro al proveedor. Inténtalo de nuevo.';
+  String get provider_oauth_start_failed =>
+      'No se pudo iniciar el acceso seguro al proveedor. Inténtalo de nuevo.';
 
   @override
-  String get provider_oauth_denied => 'Se denegó el inicio de sesión. Vuelve a empezar.';
+  String get provider_oauth_denied =>
+      'Se denegó el inicio de sesión. Vuelve a empezar.';
 
   @override
   String get provider_oauth_cancelled => 'Inicio de sesión cancelado.';
 
   @override
-  String get provider_oauth_host_failed => 'El servidor no pudo completar el inicio de sesión. Vuelve a empezar.';
+  String get provider_oauth_host_failed =>
+      'El servidor no pudo completar el inicio de sesión. Vuelve a empezar.';
 
   @override
-  String get provider_oauth_poll_failed => 'No se pudo comprobar el estado del inicio de sesión. Vuelve a empezar.';
+  String get provider_oauth_poll_failed =>
+      'No se pudo comprobar el estado del inicio de sesión. Vuelve a empezar.';
 
   @override
   String provider_oauth_cancellation_unconfirmed(String message) {
@@ -3455,7 +3818,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get provider_oauth_browser_failed => 'No se pudo abrir el navegador externo. Inténtalo de nuevo o cancela el inicio de sesión.';
+  String get provider_oauth_browser_failed =>
+      'No se pudo abrir el navegador externo. Inténtalo de nuevo o cancela el inicio de sesión.';
 
   @override
   String get provider_oauth_retry => 'Reintentar';
@@ -3466,10 +3830,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get provider_oauth_code_instruction => 'Introduce este código temporal en la página del proveedor:';
+  String get provider_oauth_code_instruction =>
+      'Introduce este código temporal en la página del proveedor:';
 
   @override
-  String get provider_oauth_waiting => 'Esperando aprobación. Esta sesión caduca automáticamente.';
+  String get provider_oauth_waiting =>
+      'Esperando aprobación. Esta sesión caduca automáticamente.';
 
   @override
   String get provider_oauth_open_browser => 'Abrir proveedor en el navegador';
@@ -3487,13 +3853,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get provider_oauth_sign_in => 'Iniciar sesión';
 
   @override
-  String get provider_oauth_cli_required => 'Inicia sesión con la CLI del proveedor en tu servidor Hermes. Este servidor no ofrece inicio de sesión en la aplicación para este proveedor.';
+  String get provider_oauth_cli_required =>
+      'Inicia sesión con la CLI del proveedor en tu servidor Hermes. Este servidor no ofrece inicio de sesión en la aplicación para este proveedor.';
 
   @override
-  String get provider_oauth_checking_account => 'Autorización recibida. Comprobando la cuenta del servidor…';
+  String get provider_oauth_checking_account =>
+      'Autorización recibida. Comprobando la cuenta del servidor…';
 
   @override
-  String get provider_oauth_verification_unavailable => 'Autorización recibida; no se puede verificar la cuenta. Abre Uso para actualizar el uso de la cuenta.';
+  String get provider_oauth_verification_unavailable =>
+      'Autorización recibida; no se puede verificar la cuenta. Abre Uso para actualizar el uso de la cuenta.';
 
   @override
   String provider_oauth_verified_account(String email) {
@@ -3501,10 +3870,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get provider_oauth_credentials_unverified => 'El servidor informa que hay credenciales disponibles; la identidad de la cuenta no está verificada.';
+  String get provider_oauth_credentials_unverified =>
+      'El servidor informa que hay credenciales disponibles; la identidad de la cuenta no está verificada.';
 
   @override
-  String get provider_oauth_account_status_unknown => 'Estado de la cuenta del servidor no disponible.';
+  String get provider_oauth_account_status_unknown =>
+      'Estado de la cuenta del servidor no disponible.';
 
   @override
   String get app_language => 'App language';
@@ -3550,22 +3921,27 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get voice_recording_permission => 'Allow microphone access to record a voice message.';
+  String get voice_recording_permission =>
+      'Allow microphone access to record a voice message.';
 
   @override
-  String get voice_recording_limit => 'This recording has reached the ten-minute limit.';
+  String get voice_recording_limit =>
+      'This recording has reached the ten-minute limit.';
 
   @override
   String get voice_recording_empty => 'No audio was recorded. Try again.';
 
   @override
-  String get voice_recording_failed => 'Could not process the recording. Any saved fragments have been kept.';
+  String get voice_recording_failed =>
+      'Could not process the recording. Any saved fragments have been kept.';
 
   @override
-  String get voice_recording_unconfirmed => 'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
+  String get voice_recording_unconfirmed =>
+      'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
 
   @override
-  String get voice_recording_submit_failed => 'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
+  String get voice_recording_submit_failed =>
+      'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
 
   @override
   String get voice_recording_pause_playback => 'Pause playback';
@@ -3574,10 +3950,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get projects_root_title => 'Carpeta de Proyectos en el servidor';
 
   @override
-  String get projects_root_more_subtitle => 'Dónde se crean las carpetas de Proyecto nuevas en el servidor';
+  String get projects_root_more_subtitle =>
+      'Dónde se crean las carpetas de Proyecto nuevas en el servidor';
 
   @override
-  String get projects_root_description => 'Los Proyectos que crees en este teléfono reciben su carpeta aquí. Apúntala a la carpeta que usa Hermes para que el teléfono y el servidor compartan los mismos Proyectos.';
+  String get projects_root_description =>
+      'Los Proyectos que crees en este teléfono reciben su carpeta aquí. Apúntala a la carpeta que usa Hermes para que el teléfono y el servidor compartan los mismos Proyectos.';
 
   @override
   String get projects_root_label => 'Ruta raíz de Proyectos';
@@ -3591,7 +3969,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get projects_root_locked_title => 'Definido por el servidor';
 
   @override
-  String get projects_root_locked_explanation => 'Este servidor limita el acceso a archivos a una sola raíz, así que la carpeta de Proyectos no se puede cambiar desde la aplicación.';
+  String get projects_root_locked_explanation =>
+      'Este servidor limita el acceso a archivos a una sola raíz, así que la carpeta de Proyectos no se puede cambiar desde la aplicación.';
 
   @override
   String get projects_root_saved => 'Carpeta de Proyectos guardada.';
@@ -3603,16 +3982,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get projects_root_invalid_empty => 'Introduce una ruta de carpeta.';
 
   @override
-  String get projects_root_invalid_absolute => 'Introduce una ruta absoluta que empiece por una barra.';
+  String get projects_root_invalid_absolute =>
+      'Introduce una ruta absoluta que empiece por una barra.';
 
   @override
-  String get projects_root_invalid_segments => 'Elimina los segmentos con puntos y los caracteres de control de la ruta.';
+  String get projects_root_invalid_segments =>
+      'Elimina los segmentos con puntos y los caracteres de control de la ruta.';
 
   @override
-  String get projects_root_unsupported => 'No se admite en esta conexión. Se necesita una conexión Desktop Gateway con acceso al Panel para leer o cambiar la carpeta de Proyectos del servidor.';
+  String get projects_root_unsupported =>
+      'No se admite en esta conexión. Se necesita una conexión Desktop Gateway con acceso al Panel para leer o cambiar la carpeta de Proyectos del servidor.';
 
   @override
-  String get projects_root_unavailable => 'No se pudo leer la carpeta de Proyectos del servidor. Comprueba la conexión con el Panel y vuelve a intentarlo.';
+  String get projects_root_unavailable =>
+      'No se pudo leer la carpeta de Proyectos del servidor. Comprueba la conexión con el Panel y vuelve a intentarlo.';
 
   @override
   String get adopt_folder_action => 'Añadir una carpeta existente';
@@ -3628,10 +4011,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get adopt_folder_none => 'Todas las carpetas de esta ruta ya son Proyectos.';
+  String get adopt_folder_none =>
+      'Todas las carpetas de esta ruta ya son Proyectos.';
 
   @override
-  String get adopt_folder_unsupported => 'Esta conexión no puede listar las carpetas del servidor. Introduce la ruta absoluta de una carpeta existente.';
+  String get adopt_folder_unsupported =>
+      'Esta conexión no puede listar las carpetas del servidor. Introduce la ruta absoluta de una carpeta existente.';
 
   @override
   String adopt_folder_failed(String error) {
@@ -3677,16 +4062,20 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get slash_command_info_no_description => 'No hay descripción disponible.';
+  String get slash_command_info_no_description =>
+      'No hay descripción disponible.';
 
   @override
-  String get slash_command_info_arguments_options => 'Admite una opción de una lista fija.';
+  String get slash_command_info_arguments_options =>
+      'Admite una opción de una lista fija.';
 
   @override
-  String get slash_command_info_arguments_text => 'Admite texto después del comando.';
+  String get slash_command_info_arguments_text =>
+      'Admite texto después del comando.';
 
   @override
-  String get slash_command_info_arguments_mixed => 'Admite una opción o texto después del comando.';
+  String get slash_command_info_arguments_mixed =>
+      'Admite una opción o texto después del comando.';
 
   @override
   String get slash_command_output => 'Command output';
@@ -3695,28 +4084,33 @@ class AppLocalizationsEs extends AppLocalizations {
   String get slash_command_no_output => 'The command completed with no output.';
 
   @override
-  String get slash_command_delivery_unknown => 'The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.';
+  String get slash_command_delivery_unknown =>
+      'The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.';
 
   @override
   String get slash_command_failed => 'The command could not be run.';
 
   @override
-  String get slash_command_unsupported => 'Este comando no está disponible en este servidor.';
+  String get slash_command_unsupported =>
+      'Este comando no está disponible en este servidor.';
 
   @override
-  String get slash_sessions_inline => 'Abre la lista de sesiones para elegir un chat. Se conservó tu borrador.';
+  String get slash_sessions_inline =>
+      'Abre la lista de sesiones para elegir un chat. Se conservó tu borrador.';
 
   @override
   String get nextgen_toggle => 'Interfaz NextGen';
 
   @override
-  String get nextgen_toggle_subtitle => 'Un diseño nuevo con un solo inicio de sesión, chats en directo y búsqueda en la red. Tus gateways y chats se comparten con esta interfaz.';
+  String get nextgen_toggle_subtitle =>
+      'Un diseño nuevo con un solo inicio de sesión, chats en directo y búsqueda en la red. Tus gateways y chats se comparten con esta interfaz.';
 
   @override
   String get nextgen_single_login => 'Conectar con un solo inicio de sesión';
 
   @override
-  String get nextgen_single_login_subtitle => 'Añade un gateway solo con la dirección de su panel y un inicio de sesión.';
+  String get nextgen_single_login_subtitle =>
+      'Añade un gateway solo con la dirección de su panel y un inicio de sesión.';
 
   @override
   String get ng_allow_this_command => '¿Permitir este comando?';
@@ -3739,7 +4133,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_password_for_sudo => 'Contraseña de sudo';
 
   @override
-  String get ng_hermes_needs_your_sudo_password_to => 'Hermes necesita tu contraseña de sudo para ejecutar este comando.';
+  String get ng_hermes_needs_your_sudo_password_to =>
+      'Hermes necesita tu contraseña de sudo para ejecutar este comando.';
 
   @override
   String get ng_a_secret_value => 'Un valor secreto';
@@ -3766,7 +4161,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_sign_in_code => 'Código de inicio de sesión';
 
   @override
-  String get ng_enter_the_sign_in_code => 'Introduce el código de inicio de sesión.';
+  String get ng_enter_the_sign_in_code =>
+      'Introduce el código de inicio de sesión.';
 
   @override
   String ng_enter_the_sign_in_code_for(Object site) {
@@ -3800,13 +4196,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_the_turn_failed => 'La respuesta ha fallado.';
 
   @override
-  String get ng_turn_changed => 'esa respuesta ya terminó o empezó una más reciente';
+  String get ng_turn_changed =>
+      'esa respuesta ya terminó o empezó una más reciente';
 
   @override
   String get ng_steer_rejected => 'la respuesta en curso no lo aceptó';
 
   @override
-  String get ng_turn_not_known_yet => 'aún no se conoce la respuesta en curso; inténtalo de nuevo en un momento';
+  String get ng_turn_not_known_yet =>
+      'aún no se conoce la respuesta en curso; inténtalo de nuevo en un momento';
 
   @override
   String ng_couldn_t_stop(Object error) {
@@ -3823,16 +4221,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_live_connection => 'Conexión en tiempo real';
 
   @override
-  String get ng_check_that_tailscale_is_on_on => 'Comprueba que Tailscale esté activado tanto en este teléfono como en el servidor.';
+  String get ng_check_that_tailscale_is_on_on =>
+      'Comprueba que Tailscale esté activado tanto en este teléfono como en el servidor.';
 
   @override
-  String get ng_check_the_address_and_that_the => 'Comprueba la dirección y que el proxy redirija al panel.';
+  String get ng_check_the_address_and_that_the =>
+      'Comprueba la dirección y que el proxy redirija al panel.';
 
   @override
-  String get ng_use_the_same_network_as_the => 'Conéctate a la misma red que el servidor e inicia el panel con --host 0.0.0.0 para que otros dispositivos puedan acceder.';
+  String get ng_use_the_same_network_as_the =>
+      'Conéctate a la misma red que el servidor e inicia el panel con --host 0.0.0.0 para que otros dispositivos puedan acceder.';
 
   @override
-  String get ng_check_the_address_vpn_or_tailscale => 'Comprueba la dirección y la conexión VPN o Tailscale.';
+  String get ng_check_the_address_vpn_or_tailscale =>
+      'Comprueba la dirección y la conexión VPN o Tailscale.';
 
   @override
   String get ng_not_checked_yet => 'Aún no se ha comprobado.';
@@ -3846,7 +4248,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_something_answered_but_not_a_hermes => 'Algo ha respondido, pero no es un panel de Hermes.';
+  String get ng_something_answered_but_not_a_hermes =>
+      'Algo ha respondido, pero no es un panel de Hermes.';
 
   @override
   String ng_something_answered_http_but_not_a(Object status) {
@@ -3854,28 +4257,36 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_use_the_dashboard_s_address_and => 'Usa la dirección y el puerto del panel (9119 de forma predeterminada), no los del servidor API.';
+  String get ng_use_the_dashboard_s_address_and =>
+      'Usa la dirección y el puerto del panel (9119 de forma predeterminada), no los del servidor API.';
 
   @override
-  String get ng_cloudflare_access_turned_the_service_token => 'Cloudflare Access ha rechazado el token de servicio.';
+  String get ng_cloudflare_access_turned_the_service_token =>
+      'Cloudflare Access ha rechazado el token de servicio.';
 
   @override
-  String get ng_cloudflare_access_is_in_front_of => 'Cloudflare Access está delante de esta dirección.';
+  String get ng_cloudflare_access_is_in_front_of =>
+      'Cloudflare Access está delante de esta dirección.';
 
   @override
-  String get ng_check_the_service_token_and_its => 'Comprueba el token de servicio y su política Service Auth.';
+  String get ng_check_the_service_token_and_its =>
+      'Comprueba el token de servicio y su política Service Auth.';
 
   @override
-  String get ng_add_a_cloudflare_access_service_token => 'Añade un token de servicio de Cloudflare Access para esta dirección.';
+  String get ng_add_a_cloudflare_access_service_token =>
+      'Añade un token de servicio de Cloudflare Access para esta dirección.';
 
   @override
-  String get ng_the_server_asks_for_a_client => 'El servidor solicita un certificado de cliente.';
+  String get ng_the_server_asks_for_a_client =>
+      'El servidor solicita un certificado de cliente.';
 
   @override
-  String get ng_pick_the_client_certificate_for_this => 'Selecciona el certificado de cliente para esta pasarela y vuelve a probar.';
+  String get ng_pick_the_client_certificate_for_this =>
+      'Selecciona el certificado de cliente para esta pasarela y vuelve a probar.';
 
   @override
-  String get ng_needs_server_access_first => 'Primero necesitas acceder al servidor.';
+  String get ng_needs_server_access_first =>
+      'Primero necesitas acceder al servidor.';
 
   @override
   String get ng_needs_a_sign_in_first => 'Primero tienes que iniciar sesión.';
@@ -3886,19 +4297,23 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_this_dashboard_doesn_t_need_a => 'Este panel no requiere iniciar sesión.';
+  String get ng_this_dashboard_doesn_t_need_a =>
+      'Este panel no requiere iniciar sesión.';
 
   @override
-  String get ng_the_saved_sign_in_has_expired => 'La sesión guardada ha caducado.';
+  String get ng_the_saved_sign_in_has_expired =>
+      'La sesión guardada ha caducado.';
 
   @override
   String get ng_sign_in_again => 'Vuelve a iniciar sesión.';
 
   @override
-  String get ng_too_many_sign_in_attempts => 'Demasiados intentos de inicio de sesión.';
+  String get ng_too_many_sign_in_attempts =>
+      'Demasiados intentos de inicio de sesión.';
 
   @override
-  String get ng_wait_a_minute_then_check_again => 'Espera un minuto y vuelve a comprobarlo.';
+  String get ng_wait_a_minute_then_check_again =>
+      'Espera un minuto y vuelve a comprobarlo.';
 
   @override
   String ng_the_gateway_answered(Object message) {
@@ -3906,7 +4321,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_sign_in_again_or_update_hermes => 'Vuelve a iniciar sesión o actualiza Hermes.';
+  String get ng_sign_in_again_or_update_hermes =>
+      'Vuelve a iniciar sesión o actualiza Hermes.';
 
   @override
   String ng_couldn_t_check_the_sign_in(Object error) {
@@ -3919,19 +4335,24 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_the_chat_connection_opened_and_the => 'Se ha establecido la conexión del chat y la pasarela indica que está lista.';
+  String get ng_the_chat_connection_opened_and_the =>
+      'Se ha establecido la conexión del chat y la pasarela indica que está lista.';
 
   @override
-  String get ng_the_gateway_never_said_it_was => 'La pasarela nunca indicó que estuviera lista.';
+  String get ng_the_gateway_never_said_it_was =>
+      'La pasarela nunca indicó que estuviera lista.';
 
   @override
-  String get ng_check_that_the_agent_is_running => 'Comprueba que el agente esté en ejecución en el servidor.';
+  String get ng_check_that_the_agent_is_running =>
+      'Comprueba que el agente esté en ejecución en el servidor.';
 
   @override
-  String get ng_the_gateway_refused_the_chat_connection => 'La pasarela ha rechazado la conexión del chat (HTTP 403).';
+  String get ng_the_gateway_refused_the_chat_connection =>
+      'La pasarela ha rechazado la conexión del chat (HTTP 403).';
 
   @override
-  String get ng_this_dashboard_has_no_chat_endpoint => 'Este panel no tiene un endpoint de chat (/api/ws).';
+  String get ng_this_dashboard_has_no_chat_endpoint =>
+      'Este panel no tiene un endpoint de chat (/api/ws).';
 
   @override
   String ng_the_chat_connection_failed(Object detail) {
@@ -3939,13 +4360,15 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_use_the_exact_address_the_dashboard => 'Usa la dirección exacta configurada para el panel.';
+  String get ng_use_the_exact_address_the_dashboard =>
+      'Usa la dirección exacta configurada para el panel.';
 
   @override
   String get ng_update_hermes => 'Actualiza Hermes.';
 
   @override
-  String get ng_make_sure_the_proxy_allows_websocket => 'Asegúrate de que el proxy permita las actualizaciones de WebSocket en /api/ws.';
+  String get ng_make_sure_the_proxy_allows_websocket =>
+      'Asegúrate de que el proxy permita las actualizaciones de WebSocket en /api/ws.';
 
   @override
   String get ng_offline => 'Sin conexión';
@@ -3966,7 +4389,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_connection_failed => 'Error de conexión';
 
   @override
-  String get ng_rate_limited_by_gateway => 'La pasarela ha limitado las solicitudes';
+  String get ng_rate_limited_by_gateway =>
+      'La pasarela ha limitado las solicitudes';
 
   @override
   String ng_couldn_t_open_the_chat_connection(Object message) {
@@ -3974,16 +4398,19 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_the_gateway_returned_no_websocket_ticket => 'La pasarela no ha devuelto ningún ticket de WebSocket.';
+  String get ng_the_gateway_returned_no_websocket_ticket =>
+      'La pasarela no ha devuelto ningún ticket de WebSocket.';
 
   @override
   String get ng_connection_lost => 'Conexión perdida';
 
   @override
-  String get ng_this_dashboard_has_no_chat_endpoint_2 => 'Este panel no tiene un endpoint de chat (/api/ws). Actualiza Hermes.';
+  String get ng_this_dashboard_has_no_chat_endpoint_2 =>
+      'Este panel no tiene un endpoint de chat (/api/ws). Actualiza Hermes.';
 
   @override
-  String get ng_the_gateway_refused_the_chat_connection_2 => 'La pasarela ha rechazado la conexión del chat. Comprueba que la dirección coincida con el host configurado en el panel y que el chat integrado esté activado.';
+  String get ng_the_gateway_refused_the_chat_connection_2 =>
+      'La pasarela ha rechazado la conexión del chat. Comprueba que la dirección coincida con el host configurado en el panel y que el chat integrado esté activado.';
 
   @override
   String ng_the_gateway_refused(Object method) {
@@ -4031,7 +4458,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_no_mcp_servers => 'No hay servidores MCP';
 
   @override
-  String get ng_that_file_is_too_large_to => 'El archivo es demasiado grande para ser un certificado.';
+  String get ng_that_file_is_too_large_to =>
+      'El archivo es demasiado grande para ser un certificado.';
 
   @override
   String ng_the_certificate_couldn_t_be_imported(Object error) {
@@ -4039,19 +4467,23 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_now_pick_its_private_key => 'Ahora selecciona su clave privada.';
+  String get ng_now_pick_its_private_key =>
+      'Ahora selecciona su clave privada.';
 
   @override
   String get ng_now_pick_its_certificate => 'Ahora selecciona su certificado.';
 
   @override
-  String get ng_that_file_isn_t_a_certificate => 'El archivo no es un certificado ni una clave privada.';
+  String get ng_that_file_isn_t_a_certificate =>
+      'El archivo no es un certificado ni una clave privada.';
 
   @override
-  String get ng_if_a_proxy_in_front_of => 'Si un proxy situado delante de esta dirección solicita un certificado de cliente, selecciónalo aquí para que la prueba, el inicio de sesión y el chat lo presenten.';
+  String get ng_if_a_proxy_in_front_of =>
+      'Si un proxy situado delante de esta dirección solicita un certificado de cliente, selecciónalo aquí para que la prueba, el inicio de sesión y el chat lo presenten.';
 
   @override
-  String get ng_client_certificates_are_only_used_with => 'Los certificados de cliente solo se usan con direcciones https://.';
+  String get ng_client_certificates_are_only_used_with =>
+      'Los certificados de cliente solo se usan con direcciones https://.';
 
   @override
   String get ng_remove => 'Eliminar';
@@ -4069,7 +4501,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_pick_a_different_certificate => 'Seleccionar otro certificado';
 
   @override
-  String get ng_accepts_p12_pfx_or_pem_certificate => 'Admite archivos .p12/.pfx o archivos PEM de certificado y clave. La clave se guarda en el almacenamiento privado de esta aplicación.';
+  String get ng_accepts_p12_pfx_or_pem_certificate =>
+      'Admite archivos .p12/.pfx o archivos PEM de certificado y clave. La clave se guarda en el almacenamiento privado de esta aplicación.';
 
   @override
   String get ng_photos => 'Fotos';
@@ -4102,19 +4535,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_steer => 'Guiar';
 
   @override
-  String get ng_adds_this_to_the_running_turn => 'Añade esto al turno en curso en el siguiente paso';
+  String get ng_adds_this_to_the_running_turn =>
+      'Añade esto al turno en curso en el siguiente paso';
 
   @override
   String get ng_queue => 'Encolar';
 
   @override
-  String get ng_sends_it_when_the_turn_finishes => 'Lo envía cuando termina el turno';
+  String get ng_sends_it_when_the_turn_finishes =>
+      'Lo envía cuando termina el turno';
 
   @override
   String get ng_stop_and_send => 'Detener y enviar';
 
   @override
-  String get ng_stops_the_turn_then_sends_this => 'Detiene el turno y luego envía esto';
+  String get ng_stops_the_turn_then_sends_this =>
+      'Detiene el turno y luego envía esto';
 
   @override
   String ng_dictation_stopped(Object message) {
@@ -4122,7 +4558,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_speech_recognition_isn_t_available => 'El reconocimiento de voz no está disponible.';
+  String get ng_speech_recognition_isn_t_available =>
+      'El reconocimiento de voz no está disponible.';
 
   @override
   String get ng_working => 'En curso';
@@ -4192,13 +4629,15 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_project_create_uncertain => 'Es posible que la pasarela haya creado este chat, pero no lo confirmó. Revisa los chats antes de iniciar otro; esta solicitud no se reintentará automáticamente.';
+  String get ng_project_create_uncertain =>
+      'Es posible que la pasarela haya creado este chat, pero no lo confirmó. Revisa los chats antes de iniciar otro; esta solicitud no se reintentará automáticamente.';
 
   @override
   String get ng_what_should_we_work_on => '¿En qué trabajamos?';
 
   @override
-  String get ng_ask_hermes_anything_it_can_run => 'Pregúntale lo que quieras a Hermes. Puede usar herramientas, navegar y trabajar con tus archivos en el servidor.';
+  String get ng_ask_hermes_anything_it_can_run =>
+      'Pregúntale lo que quieras a Hermes. Puede usar herramientas, navegar y trabajar con tus archivos en el servidor.';
 
   @override
   String ng_working_2(Object frame) {
@@ -4212,7 +4651,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_listening => 'Escuchando…';
 
   @override
-  String get ng_steer_or_queue_a_message => 'Envía una indicación o pon un mensaje en cola';
+  String get ng_steer_or_queue_a_message =>
+      'Envía una indicación o pon un mensaje en cola';
 
   @override
   String get ng_message_hermes => 'Escribe a Hermes';
@@ -4238,19 +4678,24 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_slash_command_no_description => 'No hay descripción disponible.';
+  String get ng_slash_command_no_description =>
+      'No hay descripción disponible.';
 
   @override
-  String get ng_slash_command_arguments_options => 'Admite una opción de una lista fija.';
+  String get ng_slash_command_arguments_options =>
+      'Admite una opción de una lista fija.';
 
   @override
-  String get ng_slash_command_arguments_text => 'Admite texto después del comando.';
+  String get ng_slash_command_arguments_text =>
+      'Admite texto después del comando.';
 
   @override
-  String get ng_slash_command_arguments_mixed => 'Admite una opción o texto después del comando.';
+  String get ng_slash_command_arguments_mixed =>
+      'Admite una opción o texto después del comando.';
 
   @override
-  String get ng_slash_command_sent_as_message => 'NextGen envía esto a Hermes como un mensaje normal; el comando en sí no se ejecuta.';
+  String get ng_slash_command_sent_as_message =>
+      'NextGen envía esto a Hermes como un mensaje normal; el comando en sí no se ejecuta.';
 
   @override
   String get ng_slash_command_output => 'Salida del comando';
@@ -4267,10 +4712,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_slash_command_refused => 'Hermes no puede ejecutar este comando aquí.';
+  String get ng_slash_command_refused =>
+      'Hermes no puede ejecutar este comando aquí.';
 
   @override
-  String get ng_slash_command_delivery_unknown => 'El comando se envió, pero no llegó ninguna respuesta. Puede que siga ejecutándose en el gateway, así que no se ha vuelto a enviar y se ha conservado tu borrador.';
+  String get ng_slash_command_delivery_unknown =>
+      'El comando se envió, pero no llegó ninguna respuesta. Puede que siga ejecutándose en el gateway, así que no se ha vuelto a enviar y se ha conservado tu borrador.';
 
   @override
   String get ng_slash_command_nothing_running => 'No hay nada en ejecución.';
@@ -4309,10 +4756,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_read_aloud => 'Leer en voz alta';
 
   @override
-  String get ng_the_gateway_connection_dropped_try_again => 'Se ha perdido la conexión con la pasarela. Inténtalo de nuevo.';
+  String get ng_the_gateway_connection_dropped_try_again =>
+      'Se ha perdido la conexión con la pasarela. Inténtalo de nuevo.';
 
   @override
   String get ng_allow_once => 'Permitir una vez';
+
+  @override
+  String get ng_allow_until_sandbox_off => 'Hasta que se desactive el sandbox';
+
+  @override
+  String get ng_folder_access => 'Acceso a carpetas';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      'El gateway no indicó si es de solo lectura o de lectura y escritura.';
+
+  @override
+  String get ng_folder_read_only => 'Solo lectura';
+
+  @override
+  String get ng_folder_read_write => 'Lectura y escritura';
+
+  @override
+  String get ng_website_access => 'Acceso a sitios web';
 
   @override
   String get ng_allow_for_this_chat => 'Permitir en este chat';
@@ -4351,10 +4818,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_save => 'Guardar';
 
   @override
-  String get ng_enter_both_the_client_id_and => 'Introduce el ID y el secreto del cliente, o ninguno de los dos.';
+  String get ng_enter_both_the_client_id_and =>
+      'Introduce el ID y el secreto del cliente, o ninguno de los dos.';
 
   @override
-  String get ng_enter_your_username_and_password => 'Introduce tu nombre de usuario y contraseña.';
+  String get ng_enter_your_username_and_password =>
+      'Introduce tu nombre de usuario y contraseña.';
 
   @override
   String ng_couldn_t_save_the_sign_in(Object error) {
@@ -4362,10 +4831,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_wrong_username_or_password => 'El nombre de usuario o la contraseña no son correctos.';
+  String get ng_wrong_username_or_password =>
+      'El nombre de usuario o la contraseña no son correctos.';
 
   @override
-  String get ng_too_many_attempts_wait_a_moment => 'Demasiados intentos. Espera un momento y vuelve a intentarlo.';
+  String get ng_too_many_attempts_wait_a_moment =>
+      'Demasiados intentos. Espera un momento y vuelve a intentarlo.';
 
   @override
   String get ng_welcome_to_hermes => 'Te damos la bienvenida a Ares';
@@ -4374,10 +4845,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_add_a_gateway => 'Añadir una pasarela';
 
   @override
-  String get ng_connect_to_your_hermes_agent_dashboard => 'Conéctate al panel de Hermes Agent. Una dirección y un inicio de sesión te dan acceso a tus chats, herramientas y ajustes. No se envía nada hasta que inicies sesión.';
+  String get ng_connect_to_your_hermes_agent_dashboard =>
+      'Conéctate al panel de Hermes Agent. Una dirección y un inicio de sesión te dan acceso a tus chats, herramientas y ajustes. No se envía nada hasta que inicies sesión.';
 
   @override
-  String get ng_connect_to_another_hermes_agent_dashboard => 'Conéctate a otro panel de Hermes Agent. Seguirás teniendo la sesión iniciada en los que ya guardaste.';
+  String get ng_connect_to_another_hermes_agent_dashboard =>
+      'Conéctate a otro panel de Hermes Agent. Seguirás teniendo la sesión iniciada en los que ya guardaste.';
 
   @override
   String get ng_dashboard_address => 'Dirección del panel';
@@ -4389,7 +4862,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_test => 'Comprobar';
 
   @override
-  String get ng_where_your_hermes_dashboard_runs_lan => 'Dónde se ejecuta tu panel de Hermes: en tu red local, Tailscale o HTTPS.';
+  String get ng_where_your_hermes_dashboard_runs_lan =>
+      'Dónde se ejecuta tu panel de Hermes: en tu red local, Tailscale o HTTPS.';
 
   @override
   String get ng_find_on_my_network => 'Buscar en mi red';
@@ -4398,13 +4872,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_which_address_do_i_use => '¿Qué dirección debo usar?';
 
   @override
-  String get ng_behind_cloudflare_access => '¿Está protegido por Cloudflare Access?';
+  String get ng_behind_cloudflare_access =>
+      '¿Está protegido por Cloudflare Access?';
 
   @override
-  String get ng_need_a_client_certificate => '¿Necesitas un certificado de cliente?';
+  String get ng_need_a_client_certificate =>
+      '¿Necesitas un certificado de cliente?';
 
   @override
-  String get ng_this_address_isn_t_private_and => 'Esta dirección no es privada y no usa https://, por lo que tu contraseña y tus chats viajarían por Internet sin cifrar. Usa https://, Tailscale o tu propia red.';
+  String get ng_this_address_isn_t_private_and =>
+      'Esta dirección no es privada y no usa https://, por lo que tu contraseña y tus chats viajarían por Internet sin cifrar. Usa https://, Tailscale o tu propia red.';
 
   @override
   String get ng_continue_to_sign_in => 'Continuar para iniciar sesión';
@@ -4413,10 +4890,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_use_the_classic_interface_instead => 'Usar la interfaz clásica';
 
   @override
-  String get ng_if_cloudflare_access_protects_this_address => 'Si Cloudflare Access protege esta dirección, crea un token de servicio en Cloudflare Zero Trust (Access, Service credentials) y añade una política Service Auth a la aplicación de Access.';
+  String get ng_if_cloudflare_access_protects_this_address =>
+      'Si Cloudflare Access protege esta dirección, crea un token de servicio en Cloudflare Zero Trust (Access, Service credentials) y añade una política Service Auth a la aplicación de Access.';
 
   @override
-  String get ng_a_service_token_is_saved_for => 'Hay un token de servicio guardado para esta dirección';
+  String get ng_a_service_token_is_saved_for =>
+      'Hay un token de servicio guardado para esta dirección';
 
   @override
   String get ng_forget => 'Olvidar';
@@ -4428,7 +4907,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_client_secret => 'Secreto de cliente';
 
   @override
-  String get ng_stored_encrypted_on_this_phone_and => 'Se guarda cifrado en este teléfono y solo se envía a esta dirección.';
+  String get ng_stored_encrypted_on_this_phone_and =>
+      'Se guarda cifrado en este teléfono y solo se envía a esta dirección.';
 
   @override
   String get ng_hermes_is_reachable => 'Hermes está disponible';
@@ -4439,7 +4919,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_sign_in_is_tested_next_then => 'A continuación se prueba el inicio de sesión y después el chat';
+  String get ng_sign_in_is_tested_next_then =>
+      'A continuación se prueba el inicio de sesión y después el chat';
 
   @override
   String get ng_agent_gateway => 'Pasarela del agente';
@@ -4463,10 +4944,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_profiles => 'Perfiles';
 
   @override
-  String get ng_this_dashboard_offers_neither_a_username => 'Este panel no ofrece inicio de sesión con usuario y contraseña ni en el navegador. Actualiza Hermes o configura el proveedor de usuario y contraseña en el servidor.';
+  String get ng_this_dashboard_offers_neither_a_username =>
+      'Este panel no ofrece inicio de sesión con usuario y contraseña ni en el navegador. Actualiza Hermes o configura el proveedor de usuario y contraseña en el servidor.';
 
   @override
-  String get ng_the_auth_gate_is_off_on => 'El control de acceso está desactivado en este panel. Cualquiera que pueda acceder a él puede usar tu agente.';
+  String get ng_the_auth_gate_is_off_on =>
+      'El control de acceso está desactivado en este panel. Cualquiera que pueda acceder a él puede usar tu agente.';
 
   @override
   String get ng_couldn_t_reach_the_dashboard => 'No se pudo acceder al panel';
@@ -4480,7 +4963,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_that_isn_t_a_hermes_dashboard => 'Eso no es un panel de Hermes';
 
   @override
-  String get ng_something_answered_but_not_a_hermes_2 => 'Hubo respuesta, pero no era un panel de Hermes. Usa la dirección del panel, no la del servidor de API (puerto 8642).';
+  String get ng_something_answered_but_not_a_hermes_2 =>
+      'Hubo respuesta, pero no era un panel de Hermes. Usa la dirección del panel, no la del servidor de API (puerto 8642).';
 
   @override
   String ng_something_answered_http_but_not_a_2(Object status) {
@@ -4488,7 +4972,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_cloudflare_access_stopped_the_request => 'Cloudflare Access bloqueó la solicitud';
+  String get ng_cloudflare_access_stopped_the_request =>
+      'Cloudflare Access bloqueó la solicitud';
 
   @override
   String ng_cloudflare_access_turned_down_the_service(Object status) {
@@ -4496,16 +4981,20 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_add_a_cloudflare_access_service_token_2 => 'Añade un token de servicio de Cloudflare Access abajo y vuelve a probar.';
+  String get ng_add_a_cloudflare_access_service_token_2 =>
+      'Añade un token de servicio de Cloudflare Access abajo y vuelve a probar.';
 
   @override
-  String get ng_a_client_certificate_is_needed => 'Se necesita un certificado de cliente';
+  String get ng_a_client_certificate_is_needed =>
+      'Se necesita un certificado de cliente';
 
   @override
-  String get ng_this_server_asks_for_a_client => 'Este servidor solicita un certificado de cliente antes de comunicarse. Selecciona abajo el certificado que te proporcionó y vuelve a probar.';
+  String get ng_this_server_asks_for_a_client =>
+      'Este servidor solicita un certificado de cliente antes de comunicarse. Selecciona abajo el certificado que te proporcionó y vuelve a probar.';
 
   @override
-  String get ng_this_dashboard_doesn_t_ask_for => 'Este panel no requiere iniciar sesión.';
+  String get ng_this_dashboard_doesn_t_ask_for =>
+      'Este panel no requiere iniciar sesión.';
 
   @override
   String ng_use_the_dashboard_username_and_password(Object address) {
@@ -4549,7 +5038,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_sign_in_with_browser => 'Iniciar sesión con el navegador';
 
   @override
-  String get ng_finish_signing_in_on_the_page => 'Termina de iniciar sesión en la página que se ha abierto. Hermes volverá automáticamente cuando hayas terminado.';
+  String get ng_finish_signing_in_on_the_page =>
+      'Termina de iniciar sesión en la página que se ha abierto. Hermes volverá automáticamente cuando hayas terminado.';
 
   @override
   String get ng_use_a_different_gateway => 'Usar otra pasarela';
@@ -4558,25 +5048,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_same_wi_fi_or_local_network => 'La misma red Wi-Fi o red local';
 
   @override
-  String get ng_use_the_server_s_local_address => 'Usa la dirección local y el puerto del servidor, como 192.168.1.20:9119. Inicia el panel con --host 0.0.0.0 para que otros dispositivos puedan acceder.';
+  String get ng_use_the_server_s_local_address =>
+      'Usa la dirección local y el puerto del servidor, como 192.168.1.20:9119. Inicia el panel con --host 0.0.0.0 para que otros dispositivos puedan acceder.';
 
   @override
   String get ng_tailscale => 'Tailscale';
 
   @override
-  String get ng_turn_on_tailscale_on_this_phone => 'Activa Tailscale en este teléfono y usa la dirección de Tailscale del servidor, como 100.64.0.1:9119 o su nombre .ts.net. También funciona fuera de casa.';
+  String get ng_turn_on_tailscale_on_this_phone =>
+      'Activa Tailscale en este teléfono y usa la dirección de Tailscale del servidor, como 100.64.0.1:9119 o su nombre .ts.net. También funciona fuera de casa.';
 
   @override
-  String get ng_use_your_https_address_when_the => 'Usa tu dirección https:// si el panel está detrás de un proxy con certificado. El proxy también debe permitir las actualizaciones de WebSocket en /api/ws.';
+  String get ng_use_your_https_address_when_the =>
+      'Usa tu dirección https:// si el panel está detrás de un proxy con certificado. El proxy también debe permitir las actualizaciones de WebSocket en /api/ws.';
 
   @override
-  String get ng_start_the_dashboard_on_the_server => 'Inicia el panel en el servidor:';
+  String get ng_start_the_dashboard_on_the_server =>
+      'Inicia el panel en el servidor:';
 
   @override
   String get ng_enter_a_port_from_1_to => 'Introduce un puerto del 1 al 65535.';
 
   @override
-  String get ng_looks_for_hermes_dashboards_on_port => 'Busca paneles de Hermes en el puerto 9119 de esta red Wi-Fi y comprueba los equipos que ya has guardado.';
+  String get ng_looks_for_hermes_dashboards_on_port =>
+      'Busca paneles de Hermes en el puerto 9119 de esta red Wi-Fi y comprueba los equipos que ya has guardado.';
 
   @override
   String ng_looks_for_hermes_dashboards_on_ports(Object port) {
@@ -4587,10 +5082,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_other_port_optional => 'Otro puerto (opcional)';
 
   @override
-  String get ng_no_dashboards_answered_start_one_with => 'Ningún panel respondió. Inicia uno con hermes dashboard --host 0.0.0.0 o introduce su dirección.';
+  String get ng_no_dashboards_answered_start_one_with =>
+      'Ningún panel respondió. Inicia uno con hermes dashboard --host 0.0.0.0 o introduce su dirección.';
 
   @override
-  String get ng_using_tailscale_or_a_vpn_those => '¿Usas Tailscale o una VPN? No se pueden buscar esas redes. Introduce la dirección 100.x del equipo o su nombre .ts.net.';
+  String get ng_using_tailscale_or_a_vpn_those =>
+      '¿Usas Tailscale o una VPN? No se pueden buscar esas redes. Introduce la dirección 100.x del equipo o su nombre .ts.net.';
 
   @override
   String get ng_search_again => 'Buscar de nuevo';
@@ -4599,7 +5096,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_insights => 'Estadísticas';
 
   @override
-  String get ng_couldn_t_load_insights => 'No se pudieron cargar las estadísticas';
+  String get ng_couldn_t_load_insights =>
+      'No se pudieron cargar las estadísticas';
 
   @override
   String get ng_sessions => 'Sesiones';
@@ -4684,7 +5182,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_no_providers_are_set_up_on => 'Aún no hay proveedores configurados en esta pasarela.';
+  String get ng_no_providers_are_set_up_on =>
+      'Aún no hay proveedores configurados en esta pasarela.';
 
   @override
   String get ng_starred => 'Destacados';
@@ -4702,7 +5201,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_projects => 'Proyectos';
 
   @override
-  String get ng_chats_grouped_by_project_and_workspace => 'Chats agrupados por proyecto y espacio de trabajo';
+  String get ng_chats_grouped_by_project_and_workspace =>
+      'Chats agrupados por proyecto y espacio de trabajo';
 
   @override
   String get ng_agent => 'Agente';
@@ -4711,25 +5211,29 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_memory => 'Memoria';
 
   @override
-  String get ng_what_hermes_remembers_about_you => 'Lo que Hermes recuerda sobre ti';
+  String get ng_what_hermes_remembers_about_you =>
+      'Lo que Hermes recuerda sobre ti';
 
   @override
   String get ng_skills_library => 'Biblioteca de habilidades';
 
   @override
-  String get ng_browse_and_read_installed_skills => 'Explora y lee las habilidades instaladas';
+  String get ng_browse_and_read_installed_skills =>
+      'Explora y lee las habilidades instaladas';
 
   @override
   String get ng_cron_editor => 'Editor de cron';
 
   @override
-  String get ng_edit_schedules_prompts_and_delivery => 'Edita horarios, instrucciones y entregas';
+  String get ng_edit_schedules_prompts_and_delivery =>
+      'Edita horarios, instrucciones y entregas';
 
   @override
   String get ng_config_file => 'Archivo de configuración';
 
   @override
-  String get ng_edit_config_yaml_on_the_gateway => 'Edita config.yaml en la pasarela';
+  String get ng_edit_config_yaml_on_the_gateway =>
+      'Edita config.yaml en la pasarela';
 
   @override
   String get ng_models_and_providers => 'Modelos y proveedores';
@@ -4738,13 +5242,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_model_management => 'Gestión de modelos';
 
   @override
-  String get ng_default_fallback_and_auxiliary_models => 'Modelos predeterminados, de reserva y auxiliares';
+  String get ng_default_fallback_and_auxiliary_models =>
+      'Modelos predeterminados, de reserva y auxiliares';
 
   @override
   String get ng_provider_sign_in => 'Inicio de sesión del proveedor';
 
   @override
-  String get ng_connect_provider_accounts_with_oauth => 'Conecta cuentas de proveedores con OAuth';
+  String get ng_connect_provider_accounts_with_oauth =>
+      'Conecta cuentas de proveedores con OAuth';
 
   @override
   String get ng_nous_portal => 'Nous Portal';
@@ -4756,10 +5262,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_interface => 'Interfaz';
 
   @override
-  String get ng_switch_to_the_classic_interface => 'Cambiar a la interfaz clásica';
+  String get ng_switch_to_the_classic_interface =>
+      'Cambiar a la interfaz clásica';
 
   @override
-  String get ng_turns_nextgen_off_you_can_turn => 'Desactiva NextGen. Puedes volver a activarlo en Ajustes.';
+  String get ng_turns_nextgen_off_you_can_turn =>
+      'Desactiva NextGen. Puedes volver a activarlo en Ajustes.';
 
   @override
   String get ng_restored => 'Restaurado';
@@ -4768,7 +5276,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_archived => 'Archivado';
 
   @override
-  String get ng_couldn_t_load_archived_chats => 'No se pudieron cargar los chats archivados';
+  String get ng_couldn_t_load_archived_chats =>
+      'No se pudieron cargar los chats archivados';
 
   @override
   String get ng_nothing_archived => 'No hay nada archivado';
@@ -4777,7 +5286,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_restore => 'Restaurar';
 
   @override
-  String get ng_saved_new_chats_use_it => 'Guardado. Los chats nuevos lo usarán.';
+  String get ng_saved_new_chats_use_it =>
+      'Guardado. Los chats nuevos lo usarán.';
 
   @override
   String ng_couldn_t_save(Object error) {
@@ -4820,13 +5330,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_new_job => 'Nueva tarea';
 
   @override
-  String get ng_couldn_t_load_scheduled_jobs => 'No se pudieron cargar las tareas programadas';
+  String get ng_couldn_t_load_scheduled_jobs =>
+      'No se pudieron cargar las tareas programadas';
 
   @override
   String get ng_nothing_scheduled => 'No hay nada programado';
 
   @override
-  String get ng_ask_hermes_to_do_something_on => 'Pide a Hermes que haga algo según un horario o añade una tarea aquí.';
+  String get ng_ask_hermes_to_do_something_on =>
+      'Pide a Hermes que haga algo según un horario o añade una tarea aquí.';
 
   @override
   String get ng_active => 'Activa';
@@ -4861,7 +5373,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_delete_this_job => '¿Eliminar esta tarea?';
 
   @override
-  String get ng_it_stops_running_past_runs_stay => 'Dejará de ejecutarse. Las ejecuciones anteriores seguirán en tus chats.';
+  String get ng_it_stops_running_past_runs_stay =>
+      'Dejará de ejecutarse. Las ejecuciones anteriores seguirán en tus chats.';
 
   @override
   String ng_next_run(Object when) {
@@ -4898,7 +5411,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_no_runs_yet => 'Aún no hay ejecuciones.';
 
   @override
-  String get ng_enter_a_schedule_and_a_prompt => 'Introduce una programación y una instrucción.';
+  String get ng_enter_a_schedule_and_a_prompt =>
+      'Introduce una programación y una instrucción.';
 
   @override
   String get ng_name_optional => 'Nombre (opcional)';
@@ -4928,7 +5442,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_delete_this_chat => '¿Eliminar este chat?';
 
   @override
-  String get ng_it_is_removed_from_the_gateway => 'Se eliminará de la pasarela en todos los dispositivos.';
+  String get ng_it_is_removed_from_the_gateway =>
+      'Se eliminará de la pasarela en todos los dispositivos.';
 
   @override
   String get ng_search_chats => 'Buscar chats';
@@ -5027,22 +5542,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_pure_black => 'Negro puro';
 
   @override
-  String get ng_dark_theme_uses_true_black_oled => 'El tema oscuro usa negro puro (OLED)';
+  String get ng_dark_theme_uses_true_black_oled =>
+      'El tema oscuro usa negro puro (OLED)';
 
   @override
   String get ng_glow => 'Resplandor';
 
   @override
-  String get ng_soft_accent_light_behind_each_screen => 'Luz de acento tenue detrás de cada pantalla';
+  String get ng_soft_accent_light_behind_each_screen =>
+      'Luz de acento tenue detrás de cada pantalla';
 
   @override
-  String get ng_the_new_interface_turn_off_to => 'La nueva interfaz. Desactívala para volver a la clásica; tus pasarelas y chats se comparten.';
+  String get ng_the_new_interface_turn_off_to =>
+      'La nueva interfaz. Desactívala para volver a la clásica; tus pasarelas y chats se comparten.';
 
   @override
   String get ng_more_settings => 'Más ajustes';
 
   @override
-  String get ng_voice_notifications_language_backups_and_the => 'Voz, notificaciones, idioma, copias de seguridad y configuración de la pasarela';
+  String get ng_voice_notifications_language_backups_and_the =>
+      'Voz, notificaciones, idioma, copias de seguridad y configuración de la pasarela';
 
   @override
   String get ng_licences => 'Licencias';
@@ -5053,7 +5572,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_this_gateway_and_its_saved_sign => 'Esta pasarela y sus credenciales guardadas se eliminarán de este teléfono, en ambas interfaces. Tus chats seguirán en la pasarela.';
+  String get ng_this_gateway_and_its_saved_sign =>
+      'Esta pasarela y sus credenciales guardadas se eliminarán de este teléfono, en ambas interfaces. Tus chats seguirán en la pasarela.';
 
   @override
   String get ng_password_or_browser => 'Contraseña o navegador';
@@ -5065,7 +5585,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_background_task_finished => 'Tarea en segundo plano finalizada';
 
   @override
-  String get ng_background_process_finished => 'Proceso en segundo plano finalizado';
+  String get ng_background_process_finished =>
+      'Proceso en segundo plano finalizado';
 
   @override
   String get ng_system_message => 'Mensaje del sistema';
@@ -5077,13 +5598,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get classic_interface_only => 'Solo para la interfaz clásica';
 
   @override
-  String get classic_only_settings_hint => 'Las secciones marcadas como «Solo para la interfaz clásica» cambian el aspecto y el chat clásicos, no NextGen. NextGen tiene sus propias opciones de apariencia en Ajustes.';
+  String get classic_only_settings_hint =>
+      'Las secciones marcadas como «Solo para la interfaz clásica» cambian el aspecto y el chat clásicos, no NextGen. NextGen tiene sus propias opciones de apariencia en Ajustes.';
 
   @override
-  String get attachment_preview_too_large => 'Demasiado grande para previsualizar aquí. Guardar o Compartir lo descarga en tu teléfono (hasta 1 GB).';
+  String get attachment_preview_too_large =>
+      'Demasiado grande para previsualizar aquí. Guardar o Compartir lo descarga en tu teléfono (hasta 1 GB).';
 
   @override
-  String get attachment_over_phone_limit => 'Este archivo supera 1 GB y excede el límite de descarga. Abre el panel para descargarlo.';
+  String get attachment_over_phone_limit =>
+      'Este archivo supera 1 GB y excede el límite de descarga. Abre el panel para descargarlo.';
 
   @override
   String attachment_downloading_percent(int percent) {
@@ -5233,7 +5757,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_control_title => 'Objetivos y automatización';
 
   @override
-  String get ng_control_subtitle => 'En qué trabaja este chat y qué se ejecuta automáticamente.';
+  String get ng_control_subtitle =>
+      'En qué trabaja este chat y qué se ejecuta automáticamente.';
 
   @override
   String get ng_contract_outcome => 'Resultado';
@@ -5288,7 +5813,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_goal_clear_title => '¿Borrar este objetivo?';
 
   @override
-  String get ng_goal_clear_message => 'El agente dejará de trabajar en él. También se borrarán sus subobjetivos y comprobaciones.';
+  String get ng_goal_clear_message =>
+      'El agente dejará de trabajar en él. También se borrarán sus subobjetivos y comprobaciones.';
 
   @override
   String get ng_subgoal_remove_title => '¿Quitar este subobjetivo?';
@@ -5302,7 +5828,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_subgoals_clear_title => '¿Borrar todos los subobjetivos?';
 
   @override
-  String get ng_subgoals_clear_message => 'El objetivo conservará el título, pero perderá todos sus subobjetivos.';
+  String get ng_subgoals_clear_message =>
+      'El objetivo conservará el título, pero perderá todos sus subobjetivos.';
 
   @override
   String get ng_clear_all => 'Borrar todo';
@@ -5331,7 +5858,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ng_loop_waits_for_goal => 'Espera mientras el objetivo está en curso.';
+  String get ng_loop_waits_for_goal =>
+      'Espera mientras el objetivo está en curso.';
 
   @override
   String get ng_loop_awaiting_reply => 'En espera de la respuesta del agente.';
@@ -5409,55 +5937,67 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_notifications => 'Notificaciones';
 
   @override
-  String get ng_notifications_hint => 'Respuestas y solicitudes mientras Ares está en segundo plano';
+  String get ng_notifications_hint =>
+      'Respuestas y solicitudes mientras Ares está en segundo plano';
 
   @override
   String get ng_notify_replies => 'Respuestas';
 
   @override
-  String get ng_notify_replies_hint => 'Cuando termina o falla una respuesta en el chat abierto';
+  String get ng_notify_replies_hint =>
+      'Cuando termina o falla una respuesta en el chat abierto';
 
   @override
   String get ng_notify_requests => 'Aprobaciones y preguntas';
 
   @override
-  String get ng_notify_requests_hint => 'Un aviso cuando el agente esté esperando tu respuesta, con las opciones «Permitir una vez» y «Denegar»';
+  String get ng_notify_requests_hint =>
+      'Un aviso cuando el agente esté esperando tu respuesta, con las opciones «Permitir una vez» y «Denegar»';
 
   @override
-  String get ng_keep_running => 'Mantener la conexión mientras se genera una respuesta';
+  String get ng_keep_running =>
+      'Mantener la conexión mientras se genera una respuesta';
 
   @override
-  String get ng_keep_running_hint => 'Mantiene la conexión abierta en segundo plano hasta que termine la respuesta, con una notificación silenciosa';
+  String get ng_keep_running_hint =>
+      'Mantiene la conexión abierta en segundo plano hasta que termine la respuesta, con una notificación silenciosa';
 
   @override
   String get ng_battery_settings => 'Optimización de batería';
 
   @override
-  String get ng_battery_settings_hint => 'Permite que Ares siga funcionando en segundo plano para que las notificaciones lleguen a tiempo';
+  String get ng_battery_settings_hint =>
+      'Permite que Ares siga funcionando en segundo plano para que las notificaciones lleguen a tiempo';
 
   @override
   String get ng_send_test_notification => 'Enviar una notificación de prueba';
 
   @override
-  String get ng_test_notification_title => 'Las notificaciones de Ares funcionan';
+  String get ng_test_notification_title =>
+      'Las notificaciones de Ares funcionan';
 
   @override
-  String get ng_test_notification_body => 'Las respuestas y solicitudes aparecerán así.';
+  String get ng_test_notification_body =>
+      'Las respuestas y solicitudes aparecerán así.';
 
   @override
   String get ng_test_notification_sent => 'Notificación de prueba enviada';
 
   @override
-  String get ng_notifications_blocked => 'Las notificaciones están bloqueadas. Permítelas en los ajustes de Android.';
+  String get ng_notifications_blocked =>
+      'Las notificaciones están bloqueadas. Permítelas en los ajustes de Android.';
 
   @override
-  String get ng_notifications_off_hint => 'Las notificaciones están desactivadas, así que no se mostrarán cuando Ares esté en segundo plano.';
+  String get ng_notifications_off_hint =>
+      'Las notificaciones están desactivadas, así que no se mostrarán cuando Ares esté en segundo plano.';
 
   @override
-  String get ng_insights_building => 'Generando el informe. La primera vez, un período largo puede tardar hasta un minuto.';
+  String get ng_insights_building =>
+      'Generando el informe. La primera vez, un período largo puede tardar hasta un minuto.';
 
   @override
-  String get ng_insights_timed_out => 'La pasarela tardó demasiado en generar este informe. Vuelve a intentarlo o elige un período más corto.';
+  String get ng_insights_timed_out =>
+      'La pasarela tardó demasiado en generar este informe. Vuelve a intentarlo o elige un período más corto.';
 
   @override
   String get ng_dock_goal_active => 'Objetivo activo';
@@ -5517,10 +6057,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_recent_notifications => 'Notificaciones recientes';
 
   @override
-  String get ng_recent_notifications_hint => 'Qué intentó publicar Ares y si Android lo mostró';
+  String get ng_recent_notifications_hint =>
+      'Qué intentó publicar Ares y si Android lo mostró';
 
   @override
-  String get ng_recent_notifications_empty => 'Todavía no hay nada. Los intentos aparecerán aquí cuando una respuesta, pregunta o fallo vaya a enviarte una notificación.';
+  String get ng_recent_notifications_empty =>
+      'Todavía no hay nada. Los intentos aparecerán aquí cuando una respuesta, pregunta o fallo vaya a enviarte una notificación.';
 
   @override
   String get ng_notify_permission_granted => 'Permiso concedido';
@@ -5541,7 +6083,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_models_change => 'Cambiar';
 
   @override
-  String get ng_models_custom_endpoint => 'Usa un endpoint personalizado. Cámbialo en la pasarela.';
+  String get ng_models_custom_endpoint =>
+      'Usa un endpoint personalizado. Cámbialo en la pasarela.';
 
   @override
   String get ng_models_context_window => 'Ventana de contexto';
@@ -5617,7 +6160,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_models_discard => 'Descartar';
 
   @override
-  String get ng_models_aux_hint => 'Las tareas auxiliares usan el modelo predeterminado salvo que les asignes uno propio.';
+  String get ng_models_aux_hint =>
+      'Las tareas auxiliares usan el modelo predeterminado salvo que les asignes uno propio.';
 
   @override
   String get ng_models_uses_default => 'Usa el modelo predeterminado';
@@ -5641,13 +6185,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_aux_compression => 'Compresión';
 
   @override
-  String get ng_aux_compression_hint => 'Resume un chat largo para que quepa en la ventana de contexto';
+  String get ng_aux_compression_hint =>
+      'Resume un chat largo para que quepa en la ventana de contexto';
 
   @override
   String get ng_aux_approval => 'Aprobación';
 
   @override
-  String get ng_aux_approval_hint => 'Decide si un comando se puede ejecutar sin preguntar';
+  String get ng_aux_approval_hint =>
+      'Decide si un comando se puede ejecutar sin preguntar';
 
   @override
   String get ng_aux_mcp => 'MCP';
@@ -5677,19 +6223,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_aux_triage_specifier => 'Triaje';
 
   @override
-  String get ng_aux_triage_specifier_hint => 'Convierte una tarjeta Kanban de una línea en una especificación';
+  String get ng_aux_triage_specifier_hint =>
+      'Convierte una tarjeta Kanban de una línea en una especificación';
 
   @override
   String get ng_aux_kanban_decomposer => 'Desglose de Kanban';
 
   @override
-  String get ng_aux_kanban_decomposer_hint => 'Divide una tarjeta Kanban en tareas más pequeñas';
+  String get ng_aux_kanban_decomposer_hint =>
+      'Divide una tarjeta Kanban en tareas más pequeñas';
 
   @override
   String get ng_aux_profile_describer => 'Descripciones de perfil';
 
   @override
-  String get ng_aux_profile_describer_hint => 'Escribe la descripción breve de cada perfil';
+  String get ng_aux_profile_describer_hint =>
+      'Escribe la descripción breve de cada perfil';
 
   @override
   String get ng_aux_curator => 'Curador';
@@ -5698,10 +6247,609 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_aux_curator_hint => 'Revisa cómo se usan las habilidades';
 
   @override
+  String get appearance_save_failed => 'Could not save this change.';
+
+  @override
+  String get appearance_keep_which_theme => 'Keep which theme?';
+
+  @override
+  String get appearance_tour_back => 'Back';
+
+  @override
+  String get appearance_tour_finish => 'Finish';
+
+  @override
+  String get appearance_tour_next => 'Next';
+
+  @override
+  String get appearance_tour_close => 'Close tour';
+
+  @override
+  String get appearance_dismiss_tip => 'Dismiss tip';
+
+  @override
+  String get appearance_search_settings => 'Search settings';
+
+  @override
+  String get appearance_search_show => 'Show';
+
+  @override
+  String get appearance_no_matching_setting => 'No matching setting.';
+
+  @override
+  String get appearance_replay_tour => 'Replay tour';
+
+  @override
+  String get appearance_show_tips_again => 'Show tips again';
+
+  @override
+  String get appearance_window_translucency_unavailable =>
+      'Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.';
+
+  @override
+  String get appearance_imported_themes => 'Imported themes';
+
+  @override
+  String get appearance_import_theme_file => 'Import theme file';
+
+  @override
+  String get appearance_remove_theme => 'Remove theme';
+
+  @override
+  String get appearance_chat_font => 'Chat font';
+
+  @override
+  String get appearance_terminal_font => 'Terminal font';
+
+  @override
+  String get appearance_font_platform => 'Platform';
+
+  @override
+  String get appearance_automatic => 'Automatic';
+
+  @override
+  String get appearance_force_left_to_right => 'Force left to right';
+
+  @override
+  String get appearance_force_right_to_left => 'Force right to left';
+
+  @override
+  String get appearance_user_bubble_opacity => 'User bubble opacity';
+
+  @override
+  String get appearance_inline_embeds => 'Contenido insertado';
+
+  @override
+  String get appearance_inline_embeds_hint =>
+      'Las vistas previas enriquecidas se cargan desde sitios de terceros (YouTube, X, …). Preguntar muestra un marcador hasta que permitas cada una; Siempre las carga automáticamente; Desactivado mantiene enlaces simples.';
+
+  @override
+  String get appearance_embeds_ask => 'Preguntar';
+
+  @override
+  String get appearance_embeds_always => 'Siempre';
+
+  @override
+  String get appearance_embeds_off => 'Desactivado';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Restablecer $count servicios permitidos',
+      one: 'Restablecer 1 servicio permitido',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => 'Cargar';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return 'Permitir siempre $service';
+  }
+
+  @override
+  String get appearance_embed_loading => 'Cargando vista previa…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return 'No se pudo cargar la imagen de $host. Toca para abrirla.';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable =>
+      'Vista previa no disponible';
+
+  @override
+  String get appearance_emoji_reactions => 'Emoji reactions';
+
+  @override
+  String get appearance_celebration_hearts => 'Celebration hearts';
+
+  @override
+  String get appearance_celebration_hearts_hint =>
+      'A heart plays when a reply arrives while you were away.';
+
+  @override
+  String get appearance_pop_out_companion => 'Pop out companion';
+
+  @override
+  String get appearance_mosskip => 'Mosskip';
+
+  @override
+  String get appearance_emberbun => 'Emberbun';
+
+  @override
+  String get appearance_tideling => 'Tideling';
+
+  @override
+  String get appearance_my_hatchling => 'My hatchling';
+
+  @override
+  String get appearance_at_rest => 'At rest';
+
+  @override
+  String get appearance_working => 'Working';
+
+  @override
+  String get appearance_thinking => 'Thinking';
+
+  @override
+  String get appearance_waiting_for_you => 'Waiting for you';
+
+  @override
+  String get appearance_reply_ready => 'Reply ready';
+
+  @override
+  String get appearance_turn_failed => 'Turn failed';
+
+  @override
+  String get appearance_small => 'Small';
+
+  @override
+  String get appearance_medium => 'Medium';
+
+  @override
+  String get appearance_large => 'Large';
+
+  @override
+  String get appearance_hello => 'Hello!';
+
+  @override
+  String get appearance_unread_reply => 'Unread reply';
+
+  @override
+  String get appearance_compose => 'Compose';
+
+  @override
+  String get appearance_say_hello => 'Say hello';
+
+  @override
+  String get appearance_pet_image_failed =>
+      'Could not open that image. Choose a smaller PNG or JPEG.';
+
+  @override
+  String get appearance_pet_companion => 'Pet companion';
+
+  @override
+  String get appearance_pet_companion_hint =>
+      'Show a companion while you chat.';
+
+  @override
+  String get appearance_adopt_a_companion => 'Adopt a companion';
+
+  @override
+  String get appearance_roam_when_idle => 'Roam when idle';
+
+  @override
+  String get appearance_pet_size => 'Pet size';
+
+  @override
+  String get appearance_hatch_from_a_local_picture =>
+      'Hatch from a local picture';
+
+  @override
+  String get appearance_pet_image_limits =>
+      'Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.';
+
+  @override
+  String get appearance_choose_picture => 'Choose picture';
+
+  @override
+  String get appearance_hatchling_preview => 'Hatchling preview';
+
+  @override
+  String get appearance_hatch_and_adopt => 'Hatch and adopt';
+
+  @override
+  String get appearance_discard_draft => 'Discard draft';
+
+  @override
+  String get appearance_forget_saved_hatchling => 'Forget saved hatchling';
+
+  @override
+  String get appearance_radio => 'Radio';
+
+  @override
+  String appearance_radio_hint(String stations) {
+    return 'Streams come straight from $stations and start only when you press Play. Station search stays on this device.';
+  }
+
+  @override
+  String get appearance_radio_save_failed =>
+      'Radio settings could not be saved.';
+
+  @override
+  String get appearance_choose_a_station => 'Choose a station';
+
+  @override
+  String get appearance_pause_radio => 'Pause radio';
+
+  @override
+  String get appearance_play_radio => 'Play radio';
+
+  @override
+  String get appearance_next_station => 'Next station';
+
+  @override
+  String get appearance_radio_trace_semantics =>
+      'Stream activity. Audio levels are unavailable, so this line stays flat.';
+
+  @override
+  String get appearance_radio_is_off => 'Radio is off';
+
+  @override
+  String get appearance_paused => 'Paused';
+
+  @override
+  String get appearance_connecting => 'Connecting…';
+
+  @override
+  String get appearance_live => 'Live';
+
+  @override
+  String get appearance_stream_unavailable => 'Stream unavailable';
+
+  @override
+  String appearance_now_playing(String credit) {
+    return 'Now playing: $credit';
+  }
+
+  @override
+  String get appearance_audio_only_waveform_unavailable =>
+      'Audio only · waveform unavailable';
+
+  @override
+  String get appearance_volume => 'Volume';
+
+  @override
+  String get appearance_search_presets => 'Search presets';
+
+  @override
+  String get appearance_no_stations_found => 'No stations found';
+
+  @override
+  String appearance_unpin_station(String station) {
+    return 'Unpin station: $station';
+  }
+
+  @override
+  String appearance_pin_station(String station) {
+    return 'Pin station: $station';
+  }
+
+  @override
+  String get appearance_radio_picker_metadata_notice =>
+      'While this picker is open, playing stations may share track details directly from the broadcaster.';
+
+  @override
+  String get appearance_message_from_your_companion =>
+      'Message from your companion';
+
+  @override
+  String get appearance_send_to_the_open_chat => 'Send to the open chat';
+
+  @override
+  String get appearance_tour_theme_body =>
+      'Import a VS Code colour theme from a file on this device, then choose which variant to keep.';
+
+  @override
+  String get appearance_tour_fonts_title => 'Reading fonts';
+
+  @override
+  String get appearance_tour_fonts_body =>
+      'Chat prose and terminal code use separate faces shipped with Ares.';
+
+  @override
+  String get appearance_tour_direction_title => 'Transcript direction';
+
+  @override
+  String get appearance_tour_direction_body =>
+      'Leave this on automatic, or force the transcript left to right or right to left.';
+
+  @override
+  String get appearance_tour_pet_title => 'Companion';
+
+  @override
+  String get appearance_tour_pet_body =>
+      'The companion is off until you adopt one. Pop-out adds a small composer.';
+
+  @override
+  String get appearance_tour_radio_body =>
+      'Radio stays off until you enable it. Play is what opens a stream.';
+
+  @override
+  String get appearance_tip_theme =>
+      'Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.';
+
+  @override
+  String get appearance_tip_pet =>
+      'The companion stores one small portrait on this device. It does not upload the picture you hatch from.';
+
+  @override
+  String get appearance_theme_import_failed =>
+      'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
+
+  @override
+  String get render_widget_file_truncated =>
+      'Solo se leyó el principio de este archivo, así que el widget puede estar incompleto.';
+
+  @override
+  String get setup_beat_title => 'Configuración';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return 'Usar $name';
+  }
+
+  @override
+  String get setup_beat_name_hint => '¿Cómo debe llamarte Hermes?';
+
+  @override
+  String get setup_beat_on_computer =>
+      'Este paso se hace en Hermes, en el ordenador donde se ejecuta. Continuar mantiene lo que ya está configurado allí.';
+
+  @override
+  String get setup_beat_not_waiting =>
+      'Esta tarjeta de configuración ya no espera respuesta.';
+
+  @override
+  String get catalog_kind_plugin => 'Plugin';
+
+  @override
+  String get catalog_kind_skill => 'Habilidad';
+
+  @override
+  String get catalog_tier_official => 'Oficial';
+
+  @override
+  String get catalog_tier_verified => 'Verificado';
+
+  @override
+  String get catalog_tier_community => 'Comunidad';
+
+  @override
+  String get catalog_install => 'Instalar';
+
+  @override
+  String get catalog_waiting => 'Esperando tu elección';
+
+  @override
+  String get catalog_installed => 'Instalado';
+
+  @override
+  String get catalog_installed_off => 'Instalado, sin activar';
+
+  @override
+  String get catalog_skipped => 'Omitido';
+
+  @override
+  String get catalog_not_installed => 'No instalado';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return 'Se instala en el perfil $profile';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo en $sha';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return 'Análisis de seguridad: $status. $summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return 'Requiere Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return 'La habilidad $name está lista';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return 'Aún necesita: $names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name no se conectó: $error';
+  }
+
+  @override
+  String get catalog_send_failed =>
+      'No se envió tu elección. Inténtalo de nuevo.';
+
+  @override
+  String get attachment_video_speed => 'Velocidad de reproducción';
+
+  @override
+  String get catalog_installing => 'Instalando…';
+
+  @override
+  String get catalog_phase_downloading => 'Descargando…';
+
+  @override
+  String get catalog_phase_python_packages => 'Instalando paquetes de Python…';
+
+  @override
+  String get catalog_phase_loading_tools => 'Cargando sus herramientas…';
+
+  @override
+  String get setup_beat_send_failed =>
+      'No se envió tu respuesta. Inténtalo de nuevo.';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count herramientas',
+      one: '1 herramienta',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get render_svg_not_drawn => 'Este SVG no se dibujó.';
+
+  @override
+  String get render_notes_directive => 'Directiva de notas';
+
+  @override
+  String get render_maths_source => 'Fuente de la fórmula';
+
+  @override
+  String get render_inline_maths_source => 'Fuente de la fórmula en línea';
+
+  @override
+  String get render_sequence_outline => 'Esquema de secuencia';
+
+  @override
+  String get render_diagram_outline => 'Esquema del diagrama';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return 'Revisión $index de $count';
+  }
+
+  @override
+  String get render_previous_revision => 'Revisión anterior';
+
+  @override
+  String get render_next_revision => 'Revisión siguiente';
+
+  @override
+  String get render_show_rendered => 'Renderizado';
+
+  @override
+  String get render_show_source => 'Código fuente';
+
+  @override
+  String render_copied_file(String name) {
+    return 'Se copió $name';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return 'Copiar $name';
+  }
+
+  @override
+  String get render_artifact_too_long =>
+      'Este artefacto es demasiado largo para mostrarlo aquí como página.';
+
+  @override
+  String get render_active_content_removed =>
+      'Se quitaron los scripts, los marcos y las direcciones externas.';
+
+  @override
+  String render_widget_file(String file) {
+    return 'Archivo de widget $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      'Se ejecuta como texto en este chat. Se quitan los scripts y los marcos externos.';
+
+  @override
+  String get render_load_widget => 'Cargar widget';
+
+  @override
+  String get render_not_html_widget => 'Este archivo no es un widget HTML.';
+
+  @override
+  String get render_widget_sent => 'Enviado a este chat';
+
+  @override
+  String get render_widget_not_sent => 'No se envió a este chat';
+
+  @override
+  String get render_widget_throttled =>
+      'Espera un momento antes de volver a enviar';
+
+  @override
+  String get render_widget_too_long =>
+      'Esta solicitud es demasiado larga para enviarla';
+
+  @override
+  String get render_widget_no_gesture =>
+      'Toca un control del widget para enviar';
+
+  @override
+  String get render_widget_invalid => 'No se pudo enviar esta solicitud';
+
+  @override
+  String get render_inspected_image => 'Imagen inspeccionada';
+
+  @override
+  String get render_contributions => 'Contribuciones';
+
+  @override
+  String get render_contributions_intro =>
+      'Solo las contribuciones compiladas en Ares pueden añadir algo a una respuesta. El texto del chat no puede registrar ninguna y un permiso solo se aplica a esta conexión.';
+
+  @override
+  String render_grant_plugin(String name) {
+    return 'Permitir $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return 'Revocar $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return 'tarjetas de respuesta para ::$directive';
+  }
+
+  @override
+  String get render_plugin_notes => 'Notas';
+
+  @override
+  String get catalog_scan_passed => 'superado';
+
+  @override
+  String get catalog_scan_warnings => 'encontró advertencias';
+
+  @override
+  String get catalog_scan_failed => 'falló';
+
+  @override
   String get deployment_token_label => 'Deployment token (optional)';
 
   @override
-  String get deployment_token_helper => 'For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.';
+  String get deployment_token_helper =>
+      'For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.';
 
   @override
   String get deployment_token_hint => 'Dashboard session token';
@@ -5710,7 +6858,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get custom_headers_label => 'Custom headers (optional)';
 
   @override
-  String get custom_headers_helper => 'One per line, e.g. X-Custom: value. Forbidden headers are rejected.';
+  String get custom_headers_helper =>
+      'One per line, e.g. X-Custom: value. Forbidden headers are rejected.';
 
   @override
   String get custom_headers_hint => 'e.g. X-Custom-Header: value';

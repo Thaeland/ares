@@ -1246,7 +1246,13 @@
   "ng_choose_project": "프로젝트 선택",
   "ng_project_cwd_fallback": "프로젝트 폴더를 사용할 수 없어 이 채팅은 {path}에서 실행됩니다.",
   "ng_project_create_uncertain": "게이트웨이가 채팅을 만들었을 수 있지만 확인하지 못했습니다. 새 채팅을 시작하기 전에 채팅 목록을 확인하세요. 이 요청은 자동으로 재시도되지 않습니다.",
-  "@ng_project_cwd_fallback": {"placeholders": {"path": {"type": "String"}}},
+  "@ng_project_cwd_fallback": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "ng_what_should_we_work_on": "무엇을 해볼까요?",
   "ng_ask_hermes_anything_it_can_run": "Hermes에 무엇이든 물어보세요. 도구를 실행하고, 웹을 탐색하고, 서버의 파일을 다룰 수 있어요.",
   "ng_working_2": "작업 중 · {frame}",
@@ -1693,5 +1699,110 @@
   "ng_aux_profile_describer": "프로필 설명",
   "ng_aux_profile_describer_hint": "각 프로필의 짧은 설명을 작성합니다",
   "ng_aux_curator": "큐레이터",
-  "ng_aux_curator_hint": "스킬 사용 현황을 검토합니다"
+  "ng_aux_curator_hint": "스킬 사용 현황을 검토합니다",
+  "ng_allow_until_sandbox_off": "샌드박스가 꺼질 때까지",
+  "ng_folder_access": "폴더 접근",
+  "ng_folder_access_unspecified": "게이트웨이가 읽기 전용인지 읽기 및 쓰기인지 알려 주지 않았습니다.",
+  "ng_folder_read_only": "읽기 전용",
+  "ng_folder_read_write": "읽기 및 쓰기",
+  "ng_website_access": "웹사이트 접근",
+  "appearance_inline_embeds": "인라인 임베드",
+  "appearance_inline_embeds_hint": "풍부한 미리보기는 외부 사이트(YouTube, X 등)에서 불러옵니다. ‘묻기’는 하나씩 허용할 때까지 자리표시자를 보여 주고, ‘항상’은 자동으로 불러오며, ‘끄기’는 일반 링크로 둡니다.",
+  "appearance_embeds_ask": "묻기",
+  "appearance_embeds_always": "항상",
+  "appearance_embeds_off": "끄기",
+  "appearance_embeds_reset": "{count, plural, =1{허용된 서비스 1개 초기화} other{허용된 서비스 {count}개 초기화}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "불러오기",
+  "appearance_embed_always_allow": "{service} 항상 허용",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "미리보기 불러오는 중…",
+  "appearance_embed_image_failed": "{host}에서 이미지를 불러오지 못했습니다. 탭하여 여세요.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "미리보기를 사용할 수 없음",
+  "render_widget_file_truncated": "이 파일의 앞부분만 읽었으므로 위젯이 불완전할 수 있습니다.",
+  "setup_beat_title": "설정",
+  "setup_beat_use_name": "{name} 사용",
+  "setup_beat_name_hint": "Hermes가 어떻게 불러 드릴까요?",
+  "setup_beat_on_computer": "이 단계는 Hermes가 실행 중인 컴퓨터에서 진행합니다. 계속하면 그곳에 설정된 내용이 유지됩니다.",
+  "setup_beat_not_waiting": "이 설정 카드는 더 이상 응답을 기다리지 않습니다.",
+  "catalog_kind_plugin": "플러그인",
+  "catalog_kind_skill": "스킬",
+  "catalog_tier_official": "공식",
+  "catalog_tier_verified": "검증됨",
+  "catalog_tier_community": "커뮤니티",
+  "catalog_install": "설치",
+  "catalog_waiting": "선택을 기다리는 중",
+  "catalog_installed": "설치됨",
+  "catalog_installed_off": "설치됨, 켜지지 않음",
+  "catalog_skipped": "건너뜀",
+  "catalog_not_installed": "설치되지 않음",
+  "catalog_target_profile": "{profile} 프로필에 설치됩니다",
+  "catalog_source": "{repo} ({sha})",
+  "catalog_scan": "보안 검사: {status}. {summary}",
+  "catalog_requires_hermes": "Hermes {range} 필요",
+  "catalog_skill_ready": "스킬 {name}을(를) 사용할 수 있습니다",
+  "catalog_missing_env": "아직 필요: {names}",
+  "catalog_server_error": "{name} 연결 실패: {error}",
+  "catalog_send_failed": "선택이 전송되지 않았습니다. 다시 시도하세요.",
+  "attachment_video_speed": "재생 속도",
+  "catalog_installing": "설치 중…",
+  "catalog_phase_downloading": "다운로드 중…",
+  "catalog_phase_python_packages": "Python 패키지 설치 중…",
+  "catalog_phase_loading_tools": "도구를 불러오는 중…",
+  "setup_beat_send_failed": "답변이 전송되지 않았습니다. 다시 시도하세요.",
+  "catalog_tool_count": "{count, plural, =1{도구 1개} other{도구 {count}개}}",
+  "render_svg_not_drawn": "이 SVG는 그려지지 않았습니다.",
+  "render_notes_directive": "메모 지시문",
+  "render_maths_source": "수식 원문",
+  "render_inline_maths_source": "인라인 수식 원문",
+  "render_sequence_outline": "시퀀스 개요",
+  "render_diagram_outline": "다이어그램 개요",
+  "render_revision_of": "리비전 {index}/{count}",
+  "render_previous_revision": "이전 리비전",
+  "render_next_revision": "다음 리비전",
+  "render_show_rendered": "렌더링",
+  "render_show_source": "소스",
+  "render_copied_file": "{name}을(를) 복사했습니다",
+  "render_copy_file": "{name} 복사",
+  "render_artifact_too_long": "이 결과물은 너무 길어 여기서 페이지로 표시할 수 없습니다.",
+  "render_active_content_removed": "스크립트, 프레임, 외부 주소가 제거되었습니다.",
+  "render_widget_file": "위젯 {file}",
+  "render_widget_runs_as_text": "이 채팅에서 텍스트로 실행됩니다. 스크립트와 외부 프레임은 제거됩니다.",
+  "render_load_widget": "위젯 불러오기",
+  "render_not_html_widget": "이 파일은 HTML 위젯이 아닙니다.",
+  "render_widget_sent": "이 채팅으로 보냈습니다",
+  "render_widget_not_sent": "이 채팅으로 보내지 않았습니다",
+  "render_widget_throttled": "잠시 후 다시 보내세요",
+  "render_widget_too_long": "이 요청은 너무 길어 보낼 수 없습니다",
+  "render_widget_no_gesture": "보내려면 위젯의 컨트롤을 탭하세요",
+  "render_widget_invalid": "이 요청을 보낼 수 없습니다",
+  "render_inspected_image": "검사한 이미지",
+  "render_contributions": "기여 항목",
+  "render_contributions_intro": "Ares에 포함된 기여 항목만 답장에 내용을 추가할 수 있습니다. 채팅 텍스트로는 등록할 수 없으며, 허용은 이 연결에만 적용됩니다.",
+  "render_grant_plugin": "{name} 허용",
+  "render_revoke_plugin": "{name} 허용 취소",
+  "render_plugin_slots": "::{directive} 답장 카드",
+  "render_plugin_notes": "메모",
+  "catalog_scan_passed": "통과",
+  "catalog_scan_warnings": "경고 발견",
+  "catalog_scan_failed": "실패"
 }

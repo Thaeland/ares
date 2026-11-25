@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart'
-    show MethodChannel, MissingPluginException;
+    show MethodChannel, MissingPluginException, PlatformException;
 import 'package:uuid/uuid.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../l10n/app_localizations.dart';
 import '../l10n/l10n.dart' show resolvePreferredLocale;
 import '../utils/platform_capabilities.dart';
+import 'completion_cue.dart';
 import 'notification_prefs.dart';
 import 'windows_toast_ledger.dart';
 import 'notification_approval_authority.dart';
@@ -113,6 +115,110 @@ class TurnNotification {
   });
 }
 
+/// Platform details for one notification.
+///
+/// Completion and test alerts follow [CompletionCue]. Every other kind keeps
+/// its previous sound. Android Auto conversation posts return before this and
+/// stay on their own native path.
+NotificationDetails turnNotificationDetails(TurnNotification notification) {
+  final strings = notificationStrings();
+  final cue = CompletionCue.resolve(
+    silent: notification.silent,
+    onlyAlertOnce: notification.onlyAlertOnce,
+    ongoing: notification.ongoing,
+    payload: notification.payload,
+    kind: notification.kind,
+  );
+  final (importance, priority) = switch (notification.importance) {
+    TurnNotificationImportance.high => (Importance.high, Priority.high),
+    TurnNotificationImportance.low => (Importance.low, Priority.low),
+    TurnNotificationImportance.defaultImportance => (
+      Importance.defaultImportance,
+      Priority.defaultPriority,
+    ),
+  };
+  final channel = notification.channel;
+  final suffix = cue.channelSuffix;
+  final androidDetails = AndroidNotificationDetails(
+    suffix.isEmpty ? channel.id : '${channel.id}_$suffix',
+    suffix.isEmpty
+        ? channel.name
+        : '${channel.name} (${_choiceLabel(strings, suffix)})',
+    channelDescription: channel.description,
+    // A white silhouette, as Android expects in the status bar; the
+    // launcher's adaptive icon shows as a blank circle there.
+    icon: 'ic_stat_mobile_push',
+    importance: importance,
+    priority: priority,
+    autoCancel: !notification.ongoing,
+    ongoing: notification.ongoing,
+    silent: notification.silent,
+    onlyAlertOnce: notification.onlyAlertOnce,
+    playSound: cue.audible,
+    enableVibration: cue.audible,
+    sound: cue.audible && cue.androidRaw != null
+        ? RawResourceAndroidNotificationSound(cue.androidRaw!)
+        : null,
+    actions: [
+      for (final action in notification.actions)
+        AndroidNotificationAction(
+          action.id,
+          action.label,
+          showsUserInterface: true,
+        ),
+    ],
+  );
+  final hasApprovalActions = notification.actions.any(
+    (action) => action.id == 'approve',
+  );
+  final darwinDetails = DarwinNotificationDetails(
+    presentAlert: !notification.silent,
+    presentBadge: !notification.silent,
+    presentSound: cue.audible,
+    sound: cue.audible ? cue.darwinFile : null,
+    categoryIdentifier: hasApprovalActions ? 'hermes_approval' : null,
+    interruptionLevel: notification.silent
+        ? InterruptionLevel.passive
+        : notification.importance == TurnNotificationImportance.high
+        ? InterruptionLevel.timeSensitive
+        : InterruptionLevel.active,
+  );
+  return NotificationDetails(
+    android: androidDetails,
+    iOS: darwinDetails,
+    macOS: darwinDetails,
+    linux: LinuxNotificationDetails(
+      suppressSound: !cue.audible,
+      sound: cue.audible && cue.linuxTheme != null
+          ? ThemeLinuxSound(cue.linuxTheme!)
+          : null,
+      defaultActionName: strings.notification_open_action,
+      actions: [
+        for (final action in notification.actions)
+          LinuxNotificationAction(key: action.id, label: action.label),
+      ],
+    ),
+  );
+}
+
+/// The app's strings for text the operating system shows outside any widget:
+/// channel names and notification actions follow the device language.
+AppLocalizations notificationStrings() => lookupAppLocalizations(
+  resolvePreferredLocale(
+    PlatformDispatcher.instance.locales,
+    AppLocalizations.supportedLocales,
+  ),
+);
+
+/// The completion choice a channel suffix belongs to, as the settings name it.
+String _choiceLabel(AppLocalizations strings, String suffix) =>
+    switch (suffix) {
+      'mail' => strings.completion_sound_mail,
+      'reminder' => strings.completion_sound_reminder,
+      'silent' => strings.completion_sound_silent,
+      _ => suffix,
+    };
+
 /// The platform seam [TurnNotificationService] posts through.
 ///
 /// The production implementation is [PluginTurnNotificationSink]; tests supply
@@ -143,6 +249,11 @@ abstract class TurnNotificationSink {
   Future<void> cancelAll();
 }
 
+/// A sink that can delete Android notification channels it created.
+abstract interface class TurnNotificationChannelCleaner {
+  Future<void> deleteChannel(String id);
+}
+
 /// Windows uses a runner channel; FLN v18 still owns Android and Darwin.
 TurnNotificationSink defaultTurnNotificationSink({
   FlutterLocalNotificationsPlugin? plugin,
@@ -151,11 +262,19 @@ TurnNotificationSink defaultTurnNotificationSink({
     : PluginTurnNotificationSink(plugin: plugin);
 
 /// Default sink backed by `flutter_local_notifications`.
-class PluginTurnNotificationSink implements TurnNotificationSink {
+class PluginTurnNotificationSink
+    implements TurnNotificationSink, TurnNotificationChannelCleaner {
   final FlutterLocalNotificationsPlugin _plugin;
 
   PluginTurnNotificationSink({FlutterLocalNotificationsPlugin? plugin})
     : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
+
+  @override
+  Future<void> deleteChannel(String id) async => _plugin
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >()
+      ?.deleteNotificationChannel(id);
 
   @override
   Future<void> initialize() async {
@@ -182,6 +301,13 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
       android: androidSettings,
       iOS: darwinSettings,
       macOS: darwinSettings,
+      // Linux previously threw on startup because this was omitted. The
+      // default sound is the desktop theme's message sound; a completion
+      // choice replaces it per notification.
+      linux: LinuxInitializationSettings(
+        defaultActionName: notificationStrings().notification_open_action,
+        defaultSound: ThemeLinuxSound('message'),
+      ),
     );
 
     await _plugin.initialize(
@@ -299,57 +425,7 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
       if (sent != true) throw StateError('Conversation authority unavailable');
       return;
     }
-    final (importance, priority) = switch (notification.importance) {
-      TurnNotificationImportance.high => (Importance.high, Priority.high),
-      TurnNotificationImportance.low => (Importance.low, Priority.low),
-      TurnNotificationImportance.defaultImportance => (
-        Importance.defaultImportance,
-        Priority.defaultPriority,
-      ),
-    };
-    final androidDetails = AndroidNotificationDetails(
-      notification.channel.id,
-      notification.channel.name,
-      channelDescription: notification.channel.description,
-      // A white silhouette, as Android expects in the status bar; the
-      // launcher's adaptive icon shows as a blank circle there.
-      icon: 'ic_stat_mobile_push',
-      importance: importance,
-      priority: priority,
-      autoCancel: !notification.ongoing,
-      ongoing: notification.ongoing,
-      silent: notification.silent,
-      onlyAlertOnce: notification.onlyAlertOnce,
-      playSound: !notification.silent,
-      enableVibration: !notification.silent,
-      actions: [
-        for (final action in notification.actions)
-          AndroidNotificationAction(
-            action.id,
-            action.label,
-            showsUserInterface: true,
-          ),
-      ],
-    );
-    final hasApprovalActions = notification.actions.any(
-      (action) => action.id == 'approve',
-    );
-    final darwinDetails = DarwinNotificationDetails(
-      presentAlert: !notification.silent,
-      presentBadge: !notification.silent,
-      presentSound: !notification.silent,
-      categoryIdentifier: hasApprovalActions ? 'hermes_approval' : null,
-      interruptionLevel: notification.silent
-          ? InterruptionLevel.passive
-          : notification.importance == TurnNotificationImportance.high
-          ? InterruptionLevel.timeSensitive
-          : InterruptionLevel.active,
-    );
-    final details = NotificationDetails(
-      android: androidDetails,
-      iOS: darwinDetails,
-      macOS: darwinDetails,
-    );
+    final details = turnNotificationDetails(notification);
 
     await _plugin.show(
       notification.id,
@@ -415,7 +491,7 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
 /// per-chat status entries. Initialization is headless-safe; only foreground
 /// callers explicitly opt in to requesting notification permission.
 /// One notification Ares tried to post, kept for Settings' "Recent
-/// notifications" so a missing one can be explained on the phone itself.
+/// notifications" so a missing one can be explained on the device itself.
 @immutable
 class NotificationAttempt {
   const NotificationAttempt({
@@ -424,28 +500,84 @@ class NotificationAttempt {
     required this.title,
     required this.outcome,
     this.detail,
+    this.id,
+    this.error,
   });
 
   final DateTime at;
   final String kind;
+
+  /// This run only: titles are never stored. Empty for earlier runs.
   final String title;
 
-  /// `posted`, `skipped` or `failed`.
+  /// `posted`, `skipped` or `failed`; Windows clicks are `opened`.
   final String outcome;
+
+  /// This run only: free text is never stored.
   final String? detail;
+
+  /// The platform notification id, when one was assigned.
+  final int? id;
+
+  /// The failure's type and platform code (see
+  /// [TurnNotificationService.errorClass]), never its message text.
+  final String? error;
+
+  /// Posted, or a Windows click that reached Ares.
+  bool get succeeded => const {'posted', 'opened', 'focused'}.contains(outcome);
+
+  /// `#id · error class`, empty when neither is known.
+  String get reference => [if (id != null) '#$id', ?error].join(' · ');
+
+  /// Stored fields only: no title, body or free-text detail.
+  Map<String, Object> toJson() => {
+    'at': at.millisecondsSinceEpoch,
+    'kind': kind,
+    'outcome': outcome,
+    'id': ?id,
+    'error': ?error,
+  };
+
+  static NotificationAttempt? fromJson(Object? json) {
+    if (json case {
+      'at': int at,
+      'kind': String kind,
+      'outcome': String outcome,
+    }) {
+      final id = json['id'], error = json['error'];
+      return NotificationAttempt(
+        at: DateTime.fromMillisecondsSinceEpoch(at),
+        kind: kind,
+        title: '',
+        outcome: outcome,
+        id: id is int ? id : null,
+        error: error is String ? error : null,
+      );
+    }
+    return null;
+  }
 }
 
 class TurnNotificationService {
-  /// The latest attempts, newest first (at most 30).
+  /// The latest attempts, newest first (at most [maxAttempts]), including
+  /// earlier runs' entries once [loadRecentAttempts] has read them.
   static final ValueNotifier<List<NotificationAttempt>> recentAttempts =
       ValueNotifier(const []);
+  static const maxAttempts = 50;
+
+  /// Kind, id, outcome and error class only; not in configuration backups.
+  static const attemptsStorageKey = 'notification_attempts_v1';
+  static Future<void>? _attemptsLoad;
+  static bool _attemptsDirty = false, _attemptsWriting = false;
 
   static void recordAttempt(
     String kind,
     String title,
-    String outcome, [
+    String outcome, {
     String? detail,
-  ]) {
+    int? id,
+    String? error,
+  }) {
     recentAttempts.value = [
       NotificationAttempt(
         at: DateTime.now(),
@@ -453,9 +585,96 @@ class TurnNotificationService {
         title: title,
         outcome: outcome,
         detail: detail,
+        id: id,
+        error: error,
       ),
-      ...recentAttempts.value.take(29),
+      ...recentAttempts.value.take(maxAttempts - 1),
     ];
+    _attemptsDirty = true;
+    if (_attemptsWriting) return;
+    _attemptsWriting = true;
+    unawaited(_writeAttempts());
+  }
+
+  /// Adds the stored attempts of earlier runs once per process, after any
+  /// recorded in this one. Diagnostics only: failures are ignored.
+  static Future<void> loadRecentAttempts() => _attemptsLoad ??= _readAttempts();
+
+  static Future<void> _readAttempts() async {
+    try {
+      final raw = (await SharedPreferences.getInstance()).getString(
+        attemptsStorageKey,
+      );
+      if (raw == null) return;
+      final stored = (jsonDecode(raw) as List)
+          .map(NotificationAttempt.fromJson)
+          .nonNulls;
+      recentAttempts.value = [
+        ...recentAttempts.value,
+        ...stored,
+      ].take(maxAttempts).toList(growable: false);
+    } catch (_) {
+      // A missing or unreadable log never affects notifications.
+    }
+  }
+
+  static Future<void> _writeAttempts() async {
+    try {
+      // Never replace an earlier run's log before it has been read.
+      await loadRecentAttempts();
+      while (_attemptsDirty) {
+        _attemptsDirty = false;
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(
+          attemptsStorageKey,
+          jsonEncode([
+            for (final attempt in recentAttempts.value.take(maxAttempts))
+              attempt.toJson(),
+          ]),
+        );
+      }
+    } catch (_) {
+      // Diagnostics only. The next attempt writes the whole log again.
+    } finally {
+      _attemptsWriting = false;
+    }
+  }
+
+  @visibleForTesting
+  static void debugResetAttempts() {
+    recentAttempts.value = const [];
+    _attemptsLoad = null;
+    _attemptsDirty = false;
+    _attemptsWriting = false;
+  }
+
+  /// Fixed sink errors whose message is a known, content-free reason.
+  static const _knownStateErrors = {
+    'Notification disabled',
+    'Notification superseded',
+    'Notification withdrawn',
+    'Toast ticket storage unavailable',
+    'Windows notifications are off',
+    'Ongoing notification bookkeeping unavailable',
+    'Notifications belong to the primary window.',
+  };
+  static final _windowsError = RegExp(r'^Windows notification error (-?\d+)$');
+
+  /// What kind of failure [error] was, without its message text, which on
+  /// some platforms can carry notification content. Windows runner errors
+  /// keep their HRESULT.
+  static String errorClass(Object error) {
+    switch (error) {
+      case PlatformException(:final code, :final message):
+        final hresult = _windowsError.firstMatch(message ?? '')?.group(1);
+        if (hresult == null) return 'PlatformException($code)';
+        final hex = (int.parse(hresult) & 0xffffffff).toRadixString(16);
+        return 'PlatformException($code 0x${hex.padLeft(8, '0')})';
+      case StateError(:final message) when _knownStateErrors.contains(message):
+        return 'StateError($message)';
+      default:
+        return error.runtimeType.toString();
+    }
   }
 
   /// Posts [notification], initialising first when an earlier start failed,
@@ -463,7 +682,14 @@ class TurnNotificationService {
   Future<bool> _post(String kind, TurnNotification notification) async {
     if (!_initialized) await ensureInitialized(refreshPermission: false);
     if (!_initialized) {
-      recordAttempt(kind, notification.title, 'failed', 'not initialised');
+      recordAttempt(
+        kind,
+        notification.title,
+        'failed',
+        detail: 'not initialised',
+        id: notification.id,
+        error: 'NotInitialised',
+      );
       return false;
     }
     try {
@@ -472,11 +698,19 @@ class TurnNotificationService {
         kind,
         notification.title,
         'posted',
-        _permissionGranted ? null : 'permission denied',
+        detail: _permissionGranted ? null : 'permission denied',
+        id: notification.id,
       );
       return true;
     } catch (e) {
-      recordAttempt(kind, notification.title, 'failed', '$e');
+      recordAttempt(
+        kind,
+        notification.title,
+        'failed',
+        detail: '$e',
+        id: notification.id,
+        error: errorClass(e),
+      );
       return false;
     }
   }
@@ -626,32 +860,45 @@ class TurnNotificationService {
       await _cancelOngoingId(id);
       return;
     }
-    await _sink.show(
-      TurnNotification(
-        kind: null,
-        windowsTarget: WindowsToastTarget.capture(
-          origin,
-          connectionId,
-          storedSessionId ?? localSessionId,
+    try {
+      await _sink.show(
+        TurnNotification(
+          kind: null,
+          windowsTarget: WindowsToastTarget.capture(
+            origin,
+            connectionId,
+            storedSessionId ?? localSessionId,
+          ),
+          id: id,
+          title: title,
+          body: status,
+          payload: jsonEncode({
+            'connectionId': connectionId,
+            'sessionId': storedSessionId?.isNotEmpty == true
+                ? storedSessionId
+                : localSessionId,
+            'localSessionId': localSessionId,
+            'turnId': turnId,
+          }),
+          channel: ongoingChannel,
+          importance: TurnNotificationImportance.low,
+          ongoing: true,
+          silent: true,
+          onlyAlertOnce: true,
         ),
+      );
+    } catch (e) {
+      recordAttempt(
+        'ongoing',
+        title,
+        'failed',
+        detail: '$e',
         id: id,
-        title: title,
-        body: status,
-        payload: jsonEncode({
-          'connectionId': connectionId,
-          'sessionId': storedSessionId?.isNotEmpty == true
-              ? storedSessionId
-              : localSessionId,
-          'localSessionId': localSessionId,
-          'turnId': turnId,
-        }),
-        channel: ongoingChannel,
-        importance: TurnNotificationImportance.low,
-        ongoing: true,
-        silent: true,
-        onlyAlertOnce: true,
-      ),
-    );
+        error: errorClass(e),
+      );
+      rethrow;
+    }
+    recordAttempt('ongoing', title, 'posted', id: id);
   });
 
   Future<void> cancelOngoingChat({
@@ -770,12 +1017,39 @@ class TurnNotificationService {
   }
 
   Future<void> _initialize() async {
+    unawaited(loadRecentAttempts());
     try {
       await _sink.initialize();
       await _cleanOrphanedOngoingChats();
       _initialized = true;
     } catch (_) {
       // Missing plugins must not break startup; a later call may retry.
+      return;
+    }
+    await pruneCompletionChannels();
+  }
+
+  /// Android locks a channel's sound when it is created, so each completion
+  /// choice posts on its own channel. Deletes the choice channels the current
+  /// choice does not use, so they do not pile up in the system settings.
+  /// Called when the choice changes and on startup.
+  Future<void> pruneCompletionChannels() async {
+    final sink = _sink;
+    if (sink is! TurnNotificationChannelCleaner ||
+        defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
+    final cleaner = sink as TurnNotificationChannelCleaner;
+    final keep = CompletionCue.channelSuffixFor(
+      notificationPrefs.value.completionSound,
+    );
+    for (final suffix in CompletionCue.choiceSuffixes) {
+      if (suffix == keep) continue;
+      try {
+        await cleaner.deleteChannel('${turnChannel.id}_$suffix');
+      } catch (_) {
+        // A channel that cannot be deleted now is retried next time.
+      }
     }
   }
 
@@ -860,7 +1134,7 @@ class TurnNotificationService {
     ConversationNotificationTarget? conversation,
   }) async {
     if (!notificationKindEnabled(HermesNotificationKind.turnDone)) {
-      recordAttempt('reply', title, 'skipped', 'replies are off');
+      recordAttempt('reply', title, 'skipped', detail: 'replies are off');
       return;
     }
     final identity = _turnIdentity(
@@ -916,7 +1190,7 @@ class TurnNotificationService {
     String? connectionId,
   }) async {
     if (!notificationKindEnabled(HermesNotificationKind.turnDone)) {
-      recordAttempt('reply', title, 'skipped', 'replies are off');
+      recordAttempt('reply', title, 'skipped', detail: 'replies are off');
       return true;
     }
     final identity = _turnIdentity(
@@ -978,11 +1252,21 @@ class TurnNotificationService {
         kind,
         notification.title,
         'posted',
-        _permissionGranted ? 'conversation' : 'conversation; permission denied',
+        detail: _permissionGranted
+            ? 'conversation'
+            : 'conversation; permission denied',
+        id: notification.id,
       );
       return _ConversationPost.posted;
     } catch (e) {
-      recordAttempt(kind, notification.title, 'failed', 'conversation: $e');
+      recordAttempt(
+        kind,
+        notification.title,
+        'failed',
+        detail: 'conversation: $e',
+        id: notification.id,
+        error: errorClass(e),
+      );
       return flight.superseded
           ? _ConversationPost.superseded
           : _ConversationPost.unavailable;
@@ -1058,7 +1342,7 @@ class TurnNotificationService {
     String? connectionId,
   }) async {
     if (!notificationKindEnabled(HermesNotificationKind.turnError)) {
-      recordAttempt('failure', title, 'skipped', 'failures are off');
+      recordAttempt('failure', title, 'skipped', detail: 'failures are off');
       return;
     }
     final identity = _turnIdentity(
@@ -1146,7 +1430,7 @@ class TurnNotificationService {
     bool Function()? windowsStillNeeded,
   }) async {
     if (!notificationKindEnabled(kind)) {
-      recordAttempt(kind.name, title, 'skipped', '${kind.name} is off');
+      recordAttempt(kind.name, title, 'skipped', detail: '${kind.name} is off');
       return false;
     }
 
@@ -1207,12 +1491,15 @@ class TurnNotificationService {
   }) async {
     await ensureInitialized(requestPermission: true, refreshPermission: false);
     await refreshAuthorization();
+    final id = notificationIdFor('hermes-notification-test');
     if (!_initialized || !_permissionGranted) {
       recordAttempt(
         'test',
         title,
         'failed',
-        _initialized ? 'permission denied' : 'not initialised',
+        detail: _initialized ? 'permission denied' : 'not initialised',
+        id: id,
+        error: _initialized ? 'PermissionDenied' : 'NotInitialised',
       );
       return false;
     }
@@ -1220,17 +1507,24 @@ class TurnNotificationService {
     try {
       await _sink.show(
         TurnNotification(
-          id: notificationIdFor('hermes-notification-test'),
+          id: id,
           title: title,
           body: body,
           payload: 'test',
           channel: turnChannel,
         ),
       );
-      recordAttempt('test', title, 'posted');
+      recordAttempt('test', title, 'posted', id: id);
       return true;
     } catch (e) {
-      recordAttempt('test', title, 'failed', '$e');
+      recordAttempt(
+        'test',
+        title,
+        'failed',
+        detail: '$e',
+        id: id,
+        error: errorClass(e),
+      );
       return false;
     }
   }

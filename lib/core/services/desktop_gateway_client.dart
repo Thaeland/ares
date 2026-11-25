@@ -799,6 +799,31 @@ class DesktopGatewayClient implements SlashCommandGateway {
   /// standing up a second unauthenticated HTTP client.
   DashboardClient get dashboard => _dashboard;
 
+  /// One control-plane JSON-RPC call on this connection's socket.
+  ///
+  /// Opens the socket when the workspace has not connected yet. The call stays
+  /// on this client, so a profile name cannot hop to another machine.
+  Future<Map<String, dynamic>> call(
+    String method,
+    Map<String, dynamic> params, {
+    Duration timeout = const Duration(seconds: 45),
+  }) async {
+    final client = await _ensureSocket();
+    final response = await client.send(method, params, timeout: timeout);
+    final error = response['error'];
+    if (error != null) {
+      throw JsonRpcError.fromGateway(
+        method,
+        error is Map ? Map<dynamic, dynamic>.from(error) : const {},
+        fallbackMessage: 'The gateway refused $method.',
+      );
+    }
+    final result = response['result'];
+    if (result is Map<String, dynamic>) return result;
+    if (result is Map) return Map<String, dynamic>.from(result);
+    return <String, dynamic>{};
+  }
+
   /// Server-owned Hermes Projects for this gateway.
   ///
   /// Projects are connection-scoped, not session-scoped, so this opens the
@@ -1041,7 +1066,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
 
   bool _handleServerRequest(WsClient client, GatewayServerRequest request) {
     if (_closed || !client.isConnected) return false;
-    const supported = {'clarify', 'approval', 'sudo', 'secret'};
+    const supported = {'clarify', 'approval', 'sudo', 'secret', 'setup_beat'};
     if (!supported.contains(request.method)) return false;
 
     final gatewaySessionId = request.params['session_id']?.toString();
@@ -1187,10 +1212,17 @@ class DesktopGatewayClient implements SlashCommandGateway {
     }
   }
 
-  /// Rejects requests that no mounted route can answer.
+  /// Rejects requests that no mounted route can answer. A `setup_beat` card
+  /// is not one of them: like the Desktop, which parks it per session and
+  /// shows it again on resume, it waits for its chat to be opened again
+  /// ([replayServerRequestsForSession]) until the backend withdraws it.
   void rejectServerRequestsForSession(String mobileSessionId) {
     final requestIds = _serverRequestMobileSessionIds.entries
-        .where((entry) => entry.value == mobileSessionId)
+        .where(
+          (entry) =>
+              entry.value == mobileSessionId &&
+              _serverRequests[entry.key]?.method != 'setup_beat',
+        )
         .map((entry) => entry.key)
         .toList(growable: false);
     for (final requestId in requestIds) {
@@ -1272,6 +1304,57 @@ class DesktopGatewayClient implements SlashCommandGateway {
   /// Whether this client owns an unresolved peer-to-peer request.
   bool ownsServerRequest(String requestId, String method) =>
       _serverRequests[requestId]?.method == method;
+
+  /// Answers a connection operation card (`manage_catalog` rows) for the
+  /// chat [sessionId] with `connection.respond`, owned by that chat's
+  /// runtime session. False, with nothing sent, when the chat has no bound
+  /// runtime session here; false too when the gateway does not say ok.
+  Future<bool> respondToConnection({
+    required String sessionId,
+    required String opId,
+    required Map<String, dynamic> result,
+  }) async {
+    if (_closed) return false;
+    final runtime = _gatewaySessionIds[sessionId];
+    if (runtime == null || runtime.isEmpty || opId.isEmpty) return false;
+    final reply = await call('connection.respond', {
+      'owner': {'type': 'session', 'session_id': runtime},
+      'op_id': opId,
+      'result': result,
+    });
+    return reply['status'] == 'ok';
+  }
+
+  /// Answers the `setup_beat` card [requestId] for the chat [sessionId] on
+  /// the socket it arrived on. False, and nothing is sent, when the request
+  /// is no longer open here (answered, withdrawn, its socket gone) or
+  /// belongs to another chat. An answer that did not go out leaves the
+  /// request held ([holdsSetupBeat]), so the card can be answered again.
+  bool respondToSetupBeat({
+    required String sessionId,
+    required String requestId,
+    required Map<String, dynamic> result,
+  }) {
+    if (_closed) return false;
+    final request = _serverRequests[requestId];
+    final client = _serverRequestClients[requestId];
+    if (request?.method != 'setup_beat' ||
+        _serverRequestMobileSessionIds[requestId] != sessionId ||
+        client == null ||
+        !client.isConnected) {
+      return false;
+    }
+    if (!request!.respond(result)) return false;
+    _forgetServerRequest(requestId);
+    return true;
+  }
+
+  /// Whether the `setup_beat` card [requestId] of the chat [sessionId] is
+  /// still open here.
+  bool holdsSetupBeat({required String sessionId, required String requestId}) =>
+      !_closed &&
+      _serverRequests[requestId]?.method == 'setup_beat' &&
+      _serverRequestMobileSessionIds[requestId] == sessionId;
 
   /// Whether this client owns the active approval for [sessionId].
   ///
@@ -1514,6 +1597,12 @@ class DesktopGatewayClient implements SlashCommandGateway {
       throw StateError('The Desktop gateway session is no longer connected');
     }
     return client;
+  }
+
+  /// One JSON-RPC call on the already connected gateway socket.
+  /// Billing and chat presets use this; it does not open a new session.
+  Future<Map<String, dynamic>> rpc(String method, Map<String, dynamic> params) {
+    return _connectedClient().send(method, params);
   }
 
   /// The profile-scoped catalog and default shown by Hermes Desktop.  Keeping

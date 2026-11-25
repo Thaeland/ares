@@ -1012,6 +1012,21 @@ class WsClient {
     return ready.future.timeout(timeout);
   }
 
+  /// An independent observer, never a replacement for the active turn reader.
+  void Function() watchSessionEvents(
+    String runtimeId,
+    StreamCallback listener,
+  ) {
+    final list = _sessionStreams.putIfAbsent(runtimeId, () => []);
+    list.add(listener);
+    return () {
+      list.remove(listener);
+      if (list.isEmpty && identical(_sessionStreams[runtimeId], list)) {
+        _sessionStreams.remove(runtimeId);
+      }
+    };
+  }
+
   void _dispatchEvent(StreamEvent event) {
     _noteExecutionGeneration(
       event.sessionId,

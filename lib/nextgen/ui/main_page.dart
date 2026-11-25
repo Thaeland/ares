@@ -12,7 +12,6 @@ import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/turn_notification_service.dart';
 import '../../core/utils/adaptive_layout.dart';
 import '../../core/utils/platform_capabilities.dart';
-import '../../core/widgets/windows_chat_presence.dart';
 import '../../core/widgets/desktop_shortcuts.dart';
 import '../../core/widgets/command_palette.dart';
 import '../../core/services/hermes_deeplink.dart';
@@ -527,7 +526,7 @@ class _NgMainPageState extends State<_NgMainContent>
         'reply',
         label,
         'skipped',
-        'Ares was on screen',
+        detail: 'Ares was on screen',
       );
       return;
     }
@@ -536,7 +535,7 @@ class _NgMainPageState extends State<_NgMainContent>
         'reply',
         label,
         'skipped',
-        'the turn was stopped',
+        detail: 'the turn was stopped',
       );
       return;
     }
@@ -801,20 +800,7 @@ class _NgMainPageState extends State<_NgMainContent>
             onNewChat: _newChat,
           );
 
-    final chatView = isWindowsPlatform
-        ? WindowsChatPresence(
-            target: () {
-              final socket = chat?.gateway.socket;
-              final runtime = chat?.runtimeId;
-              return socket != null &&
-                      runtime != null &&
-                      chat!.gateway.storedIdFor(runtime) == chat.storedId
-                  ? (socket, runtime)
-                  : null;
-            },
-            child: view,
-          )
-        : view;
+    final chatView = view;
 
     // Back opens the sidebar; back again with the sidebar open closes it.
     // Pushed pages (settings, scheduled...) still pop normally first.

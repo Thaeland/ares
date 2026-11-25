@@ -1,15 +1,17 @@
 // NextGen settings: the gateway you're signed in to (with Kyllene's staged
 // connection check), saved gateways, appearance, and the NextGen switch.
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
 import '../../core/models/connection.dart';
 import '../../core/screens/settings_screen.dart';
+import '../../core/presentation/presentation_settings.dart';
 import '../../core/services/app_licenses.dart';
 import '../../core/services/background_work_prefs.dart';
 import '../../core/services/notification_prefs.dart';
-import '../../core/widgets/windows_completion_sound_tile.dart';
+import '../../core/widgets/completion_sound_settings.dart';
 import '../../core/widgets/keep_awake_settings_card.dart';
 import '../../core/widgets/keyboard_shortcuts_settings_card.dart';
 import '../../core/utils/platform_capabilities.dart';
@@ -318,6 +320,7 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                     onChanged: (v) =>
                         NextGenPreferences.setGlow(scope.prefs, v),
                   ),
+                  PresentationSettingsPanel(preferences: scope.prefs),
                 ],
               ),
             ),
@@ -506,7 +509,7 @@ class NgNotificationSettings extends StatelessWidget {
                 value: on && all(_requestKinds),
                 onChanged: on ? (v) => _setKinds(_requestKinds, v) : null,
               ),
-              if (isWindowsPlatform) WindowsCompletionSoundTile(prefs: prefs),
+              CompletionSoundSettings(prefs: prefs),
               if (!isWindowsPlatform)
                 SwitchListTile(
                   key: const ValueKey('ng-keep-running'),
@@ -531,10 +534,13 @@ class NgNotificationSettings extends StatelessWidget {
                 subtitle: isWindowsPlatform
                     ? ngL.windows_notification_diagnostics
                     : ngL.ng_recent_notifications_hint,
-                onTap: () => showNgSheet<void>(
-                  context,
-                  builder: (_) => const NgRecentNotificationsSheet(),
-                ),
+                onTap: () {
+                  unawaited(TurnNotificationService.loadRecentAttempts());
+                  showNgSheet<void>(
+                    context,
+                    builder: (_) => const NgRecentNotificationsSheet(),
+                  );
+                },
               ),
               NgRow(
                 icon: Icons.notifications_active_outlined,
@@ -574,7 +580,8 @@ class NgNotificationSettings extends StatelessWidget {
 }
 
 /// What Ares tried to post lately and what came of it, so a notification
-/// that never showed can be explained on the phone.
+/// that never showed can be explained on the device. Earlier runs' entries
+/// keep only kind, id, outcome and error class.
 class NgRecentNotificationsSheet extends StatelessWidget {
   const NgRecentNotificationsSheet({super.key});
 
@@ -622,17 +629,21 @@ class NgRecentNotificationsSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(
-                        switch (a.outcome) {
-                          'posted' => Icons.check_circle_outline,
-                          'skipped' => Icons.remove_circle_outline,
-                          _ => Icons.error_outline,
-                        },
+                        a.succeeded
+                            ? Icons.check_circle_outline
+                            : switch (a.outcome) {
+                                'skipped' => Icons.remove_circle_outline,
+                                'unknown' => Icons.help_outline,
+                                _ => Icons.error_outline,
+                              },
                         size: 18,
-                        color: switch (a.outcome) {
-                          'posted' => c.success,
-                          'skipped' => c.text3,
-                          _ => c.danger,
-                        },
+                        color: a.succeeded
+                            ? c.success
+                            : switch (a.outcome) {
+                                'skipped' => c.text3,
+                                'unknown' => c.text2,
+                                _ => c.danger,
+                              },
                       ),
                       const SizedBox(width: 10),
                       Expanded(
@@ -643,12 +654,18 @@ class NgRecentNotificationsSheet extends StatelessWidget {
                               '${ngStamp(context, a.at, seconds: true)} · ${a.kind} · ${a.outcome}',
                               style: NgType.caption.copyWith(color: c.text3),
                             ),
-                            Text(
-                              a.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: NgType.bodySmall.copyWith(color: c.text),
-                            ),
+                            if (a.title.isNotEmpty)
+                              Text(
+                                a.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: NgType.bodySmall.copyWith(color: c.text),
+                              ),
+                            if (a.reference.isNotEmpty)
+                              Text(
+                                a.reference,
+                                style: NgType.caption.copyWith(color: c.text2),
+                              ),
                             if (a.detail != null)
                               Text(
                                 a.detail!,

@@ -375,6 +375,7 @@ class NextGenGateway extends ChangeNotifier {
   static const _backoff = [1, 2, 4, 8, 16, 30];
   static const answerableMethods = {
     'approval',
+    'setup_beat',
     'clarify',
     'sudo',
     'secret',
