@@ -98,6 +98,49 @@ void main() {
     await tester.pumpWidget(const SizedBox());
     expect(lease.current(), isFalse);
   });
+  testWidgets(
+    'a page pushed over the owner keeps its pop-outs; popping the owner ends them',
+    (tester) async {
+      // SAM-GAMING gate (242fa67c): opening search, or a notification opening
+      // another chat, killed the user's pop-out windows.
+      final keyed = GlobalKey();
+      final navigator = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(
+        MaterialApp(
+          navigatorKey: navigator,
+          home: const Scaffold(body: Text('root')),
+        ),
+      );
+      navigator.currentState!.push(
+        MaterialPageRoute<void>(
+          builder: (_) => ParallelWorkspaceEntryHost(
+            owner: _connection,
+            connection: _connection,
+            home: (_) => SizedBox(key: keyed),
+            workspace: (_) => const SizedBox(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final lease = ParallelWorkspaceEntryHost.popoutOwner(
+        keyed.currentContext!,
+      )!;
+      expect(lease.current(), isTrue);
+      navigator.currentState!.push(
+        MaterialPageRoute<void>(
+          builder: (_) => const Scaffold(body: Text('Search all chats')),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(lease.current(), isTrue, reason: 'covered, not gone');
+      navigator.currentState!.pop();
+      await tester.pumpAndSettle();
+      expect(lease.current(), isTrue);
+      navigator.currentState!.pop();
+      await tester.pumpAndSettle();
+      expect(lease.current(), isFalse, reason: 'owner route popped');
+    },
+  );
   test(
     'IPC carries the exact target only; malformed or extensible identities fail closed',
     () {
