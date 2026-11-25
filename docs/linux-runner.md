@@ -26,11 +26,30 @@ Smoke-only dependencies: `python3-venv`, `dbus-x11`, `gnome-keyring`, `xvfb`, `x
 
 ```sh
 python scripts/linux_fixture_smoke.py /path/to/unpacked/bundle/ares
+python scripts/linux_fixture_smoke.py --workspace /path/to/unpacked/bundle/ares
 ```
 
-The script uses the existing synthetic `fixture-copy` chat, not a live gateway. Its loopback-only adapter serves the dashboard read envelopes and accepts NextGen's ticket subprotocol with the fixture's single-use validator. Classic selects a roster row by rendered text; NextGen restores the saved chat. Both checks require an Ares GTK window, a successful WebSocket `session.resume` for that exact fixture ID, and OCR of transcript text, not just a running process. Unhandled Dart exceptions make the smoke fail even when a window stays up.
+The launch check uses the synthetic `fixture-copy` chat, not a live gateway. Its loopback-only adapter serves the dashboard read envelopes and accepts NextGen's ticket subprotocol with the fixture's single-use validator. Classic selects a roster row by rendered text; NextGen restores the saved chat. Both require an Ares GTK window, a successful WebSocket `session.resume` for that fixture ID, and OCR of transcript text. An unhandled Dart exception in the app log fails the check even when a window stays up.
 
-## Observed on Debian 12 / arm64
+`--workspace` starts each interface in a fresh home and adds a second synthetic chat. It clicks **More → Parallel workspace → Add chat**, selects **UI verification**, then uses **Workspace options → Dock another pane** to add **Companion chat**. It checks different transcripts at distinct horizontal positions before clicking **Workspace options → Open chat in new window**. The fixture does not launch the child, send a hand-off frame, or edit a saved layout. It checks both mapped GTK windows, their process relationship, the executable/marker, and a *new* successful resume on a socket inode owned by the child. It unmaps the parent before reading the child's pixels and terminates the parent to check the child exits. Child stderr is consumed privately by the production parent; this is not a child-log audit.
+
+### Integrated result: `918aa506c8bb39bcb4cdfcbfdc1240e8b12b8cc7`
+
+The complete `git archive` of this commit was compiled without app-source overlays. The host for the native build and the relocated package was Debian 12.15/aarch64, clang 14.0.6, CMake 3.25.1, GTK 3.24.38 and the Flutter/Dart versions above. `flutter pub get --enforce-lockfile` and `flutter build linux --release --no-pub` passed; the lock SHA-256 was unchanged after both. Flutter regenerated localizations and reported translation/plural warnings. No host install or published artifact.
+
+| Artifact in this run | SHA-256 |
+| --- | --- |
+| Source tar (`git archive --format=tar`) | `fecaf16fc0ace0a7e824ef7874e7c8c8b233e3ec16c20a136e8a71d0f2a4ffaf` |
+| `pubspec.lock` | `d2efee6b24d08b4dc9a8dcb263d0ddf5eeb640a21261eefcff98f47412a0ebcb` |
+| Release tar.gz (15,986,231 bytes) | `882ebf6c0bf21fb515ab172aecbc0f9215186b43de65597986dbe1b688f386e0` |
+| Extracted `ares` | `36484dea240b3eb2f811fe348d83a90aef6230d45564c406e14b34fb8c175523` |
+| Extracted `lib/libapp.so` | `f3c21f243b69be3090cebd5f89b00d9839573d04a6885fc1e33e7fa551f9346b` |
+
+- The relocated runner was an AArch64 ELF with `$ORIGIN/lib`; `ldd` found no missing dependency on it or the seven bundled `.so` files. The engine notice matched the SDK. The hashes identify this run, not a claim of bit-for-bit reproducibility.
+- **Classic and NextGen passed launch, side-by-side split and in-app OS pop-out.** Both child windows rendered the selected `fixture-copy` transcript and resumed it on their own loopback socket. The parent/launch logs did not report the historical Android image-picker exception. Parent termination removed the child window and retired its process in each interface.
+- This is X11/Xvfb and Mesa software GL: one virtual screen, not a physical second monitor, Wayland or a hardware GPU. No x64 run, distribution installer, real credential, live endpoint, model turn, audio capture, or release clearance is implied.
+
+### Historical baseline (before the integrated workspace and picker fix)
 
 - **Baseline:** `v5/shell` commit `cfebbfa8863e2186a894cd9041a791aeef574871`, with this runner and its Linux metadata added. Dart/ARB, assets, `pubspec.yaml` and lock came from the commit, not the concurrently edited worktree. Flutter regenerated the localisations in the disposable copy. Lock SHA-256 remained `6f7298e3be20cff359b3b0439b7df8b320446ed955b35440788fea57a9e7e131`.
 - **Build and relocation passed:** release ELF aarch64, `$ORIGIN/lib`, no missing `ldd` dependency on the executable or any of the seven bundled shared objects on this host. Extracted the local tarball into another directory before launch. Runner SHA-256 `efcbcbce7a7eeeda499ff9f180d3d67017543d2e293f63cb97714d0d84bdb42a`; baseline `libapp.so` SHA-256 `b121c1990f6ccef87f16ffe8322d586289dc151c06342c86ac45b7dc1a44873f`. No system install, public artifact or release.
@@ -38,7 +57,7 @@ The script uses the existing synthetic `fixture-copy` chat, not a live gateway. 
 - **NextGen:** restored `fixture-copy` from this layout's saved session preference, resumed it over WebSocket and rendered the Markdown reply. No unhandled Dart exception in this run. No inference, voice, live account or prompt submission was involved.
 - **Desktop conditions:** X11/Xvfb, Mesa software rendering, 1280×720 GTK window under `com.hermesagent.ares`. This does not qualify Wayland, GPU drivers, a physical second monitor, x64, desktop notifications, a distribution installer or the other applicable client workflows. **LNX stays open**.
 
-### Pop-out boundary
+#### Historical child-bootstrap-only check
 
 No additional GTK hook is needed for the shell's **separate-process** hand-off: the runner forwards the arguments after `argv[0]` (`fl_dart_project_set_dart_entrypoint_arguments`), keeps standard streams intact, and uses `G_APPLICATION_NON_UNIQUE`. The baseline binary predates the hand-off; this was tested separately:
 

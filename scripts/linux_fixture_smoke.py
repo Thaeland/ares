@@ -6,6 +6,7 @@ interface. No host D-Bus, X display, preference files, or keyring are used.
 See docs/linux-runner.md for prerequisites and scope.
 """
 import csv
+from contextvars import ContextVar
 import importlib
 import io
 import json
@@ -22,15 +23,27 @@ PORT = 18642
 OWNER = 'linux-fixture'
 
 
-def serve(home):
+def serve(home, workspace=False):
     from aiohttp import web
     sys.path.insert(0, str(ROOT))
     fixture = importlib.import_module('tools.fake_gateway.fake_gateway')
 
-    state = fixture.GatewayState('unused-fixture-key', home / 'events.jsonl')
+    peer = ContextVar('fixture_peer_port', default=None)
+
+    class DesktopState(fixture.GatewayState):
+        def log(self, event):
+            if event.get('method') == 'session.resume':
+                event = {**event, 'peer_port': peer.get()}
+            super().log(event)
+
+    state = DesktopState('unused-fixture-key', home / 'events.jsonl')
     app = fixture.create_app(state)
-    session = fixture.SESSIONS[0]
-    detail = f"/api/sessions/{session['id']}"
+    sessions = list(fixture.SESSIONS)
+    if workspace:
+        sessions.append(dict(sessions[0], id='fixture-split', title='Companion chat',
+                             preview='Separate synthetic history', message_count=2))
+        state.messages['fixture-split'] = [dict(role='user', content='Orchid compass witness.'),
+                                           dict(role='assistant', content='Magenta lantern witness.')]
 
     @web.middleware
     async def desktop_reads(request, handler):
@@ -38,11 +51,13 @@ def serve(home):
         # desktop client reads the same data using dashboard auth and keys.
         if request.method == 'GET' and fixture.dashboard_authorized(request):
             if request.path == '/api/sessions':
-                return web.json_response({'sessions': [session], 'total': 1})
-            if request.path == detail:
-                return web.json_response({'session': session})
-            if request.path == detail + '/messages':
-                return web.json_response({'messages': state.messages[session['id']]})
+                return web.json_response({'sessions': sessions, 'total': len(sessions)})
+            for session in sessions:
+                detail = f"/api/sessions/{session['id']}"
+                if request.path == detail:
+                    return web.json_response({'session': session})
+                if request.path == detail + '/messages':
+                    return web.json_response({'messages': state.messages[session['id']]})
         if request.path == '/api/ws' and not request.query:
             offered = request.headers.get('Sec-WebSocket-Protocol', '').split(',')
             prefix = 'hermes-gateway-ticket.'
@@ -56,6 +71,12 @@ def serve(home):
             request = request.clone(rel_url=request.rel_url.with_query(ticket=tickets[0]),
                                     headers=headers)
             request['linux_smoke_protocol'] = True
+        if request.path == '/api/ws':
+            token = peer.set(request.transport.get_extra_info('peername')[1])
+            try:
+                return await handler(request)
+            finally:
+                peer.reset(token)
         return await handler(request)
 
     async def select_protocol(request, response):
@@ -67,15 +88,16 @@ def serve(home):
     web.run_app(app, host='127.0.0.1', port=PORT, print=None, access_log=None)
 
 
-def capture(home):
+def capture(home, region=None):
     screenshot = home / 'screen.png'
-    sp.run(['scrot', '-o', screenshot], check=True, timeout=5)
+    crop = ['-a', ','.join(map(str, region))] if region else []
+    sp.run(['scrot', '-o', *crop, screenshot], check=True, timeout=5)
     raw = sp.check_output(['tesseract', screenshot, 'stdout', '--psm', '11', 'tsv'],
                           stderr=sp.DEVNULL, text=True, timeout=10)
     return [row for row in csv.DictReader(io.StringIO(raw), delimiter='\t') if row['text']]
 
 
-def exercise(layout, binary, home):
+def exercise(layout, binary, home, workspace=False):
     from urllib.request import urlopen
     url = f'http://127.0.0.1:{PORT}'
     with urlopen(url + '/health', timeout=2) as response:
@@ -98,6 +120,12 @@ def exercise(layout, binary, home):
     with log.open('w') as stream:
         app = sp.Popen([binary], stdout=stream, stderr=sp.STDOUT)
         try:
+            if workspace:
+                from linux_workspace_ui import check_workspace
+                check_workspace(layout, binary, home, app, capture)
+                if 'Unhandled Exception:' in log.read_text():
+                    raise RuntimeError(f'{layout}: unhandled exception in parent log')
+                return True
             clicked = False
             text = ''
             deadline = time.monotonic() + 30
@@ -139,17 +167,19 @@ def exercise(layout, binary, home):
             app.wait(timeout=5)
 
 
-def main(binary):
+def main(binary, workspace=False):
     failures = []
     for layout in ('classic', 'nextgen'):
         with tempfile.TemporaryDirectory(prefix='ares-linux-smoke-') as directory:
             home = Path(directory)
             runtime = home / 'run'
             runtime.mkdir(mode=0o700)
+            xauth = home / '.Xauthority'
+            xauth.touch(mode=0o600)
             env = dict(PATH='/usr/bin:/bin', HOME=directory, XDG_RUNTIME_DIR=str(runtime),
                        XDG_DATA_HOME=str(home / '.local/share'), LANG='C.UTF-8', LIBGL_ALWAYS_SOFTWARE='1')
             args = [sys.executable, str(Path(__file__).resolve())]
-            server = sp.Popen([*args, '--serve'], env=env)
+            server = sp.Popen([*args, '--serve', *(['workspace'] if workspace else [])], env=env)
             try:
                 from urllib.request import urlopen
                 for _ in range(40):
@@ -160,9 +190,10 @@ def main(binary):
                             break
                     except OSError:
                         time.sleep(.1)
-                proc = sp.run(['dbus-run-session', '--', 'xvfb-run', '-a', '-s',
-                               '-screen 0 1360x820x24 +extension GLX', *args, '--layout',
-                               layout, str(binary)], env=env, timeout=65)
+                proc = sp.run(['dbus-run-session', '--', 'xvfb-run', '-a', '-f', str(xauth), '-s',
+                               '-screen 0 1680x1020x24 +extension GLX -nolisten tcp',
+                               *args, '--layout', layout, str(binary),
+                               *(['workspace'] if workspace else [])], env=env, timeout=150)
                 if proc.returncode:
                     failures.append(layout)
             finally:
@@ -175,16 +206,22 @@ def main(binary):
 if __name__ == '__main__':
     if not sys.platform.startswith('linux') or set(os.listdir('/sys/class/net')) != {'lo'}:
         raise SystemExit('requires an isolated Linux network namespace with loopback only')
+    if os.geteuid() == 0:
+        raise SystemExit('run as an unprivileged fixture user')
     if sys.argv[1:2] in (['--serve'], ['--layout']) and not (
         Path.home().name.startswith('ares-linux-smoke-')
         and Path(os.environ.get('XDG_RUNTIME_DIR', '')) == Path.home() / 'run'
     ):
         raise SystemExit('internal modes require a disposable smoke home')
-    if sys.argv[1:] == ['--serve']:
-        serve(Path.home())
-    elif len(sys.argv) == 4 and sys.argv[1] == '--layout':
-        raise SystemExit(0 if exercise(sys.argv[2], sys.argv[3], Path.home()) else 1)
+    if sys.argv[1:] in (['--serve'], ['--serve', 'workspace']):
+        serve(Path.home(), workspace=sys.argv[-1] == 'workspace')
+    elif (len(sys.argv) >= 4 and sys.argv[1] == '--layout'
+          and sys.argv[2] in ('classic', 'nextgen') and sys.argv[4:] in ([], ['workspace'])):
+        raise SystemExit(0 if exercise(sys.argv[2], sys.argv[3], Path.home(),
+                                       workspace=sys.argv[4:] == ['workspace']) else 1)
+    elif len(sys.argv) == 3 and sys.argv[1] == '--workspace' and Path(sys.argv[2]).is_file():
+        main(Path(sys.argv[2]).resolve(), workspace=True)
     elif len(sys.argv) == 2 and Path(sys.argv[1]).is_file():
         main(Path(sys.argv[1]).resolve())
     else:
-        raise SystemExit(f'usage: {sys.argv[0]} path/to/bundle/ares')
+        raise SystemExit(f'usage: {sys.argv[0]} [--workspace] path/to/bundle/ares')

@@ -33,7 +33,9 @@ void main(List<String> args) {
     singleLogin: ng,
     dashboardProxied: ng,
     desktopGatewayUrl: ng ? 'http://127.0.0.1:$port' : null,
-    dashboardPortOverride: ng ? port : null,
+    // Keep optional Classic dashboard reads in this fixture too; never fall
+    // back to a service already listening on the standard dashboard port.
+    dashboardPortOverride: port,
   );
   // Synthetic storage only. The smoke target never loads a physical keychain.
   // ignore: invalid_use_of_visible_for_testing_member
