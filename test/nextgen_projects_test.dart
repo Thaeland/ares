@@ -244,14 +244,19 @@ Future<void> _app(
   await _frames(tester);
 }
 
-Future<void> _browse(WidgetTester tester, {bool main = false}) async {
-  if (main) {
-    final chat = tester.widget<NgChatView>(find.byType(NgChatView));
-    chat.onOpenSidebar();
-    await _frames(tester);
-    await tester.tap(find.text('More'));
+Future<void> _openMore(WidgetTester tester) async {
+  final more = find.text('More');
+  // The desktop sidebar is already docked; phones need to open the drawer.
+  if (more.hitTestable().evaluate().isEmpty) {
+    await tester.tap(find.byKey(const Key('ng-sidebar-button')));
     await _frames(tester);
   }
+  await tester.tap(more.hitTestable());
+  await _frames(tester);
+}
+
+Future<void> _browse(WidgetTester tester, {bool main = false}) async {
+  if (main) await _openMore(tester);
   await tester.tap(find.text('Projects'));
   await _frames(tester);
   expect(find.byType(ProjectsPane), findsOneWidget);
@@ -711,70 +716,76 @@ void main() {
     });
   }
 
+  final markdownLayouts = ValueVariant<Size>({
+    const Size(390, 844),
+    const Size(1150, 820),
+  });
   for (final entry in [
     'Files',
     'Assets',
     'project folder',
     'chat attachment',
   ]) {
-    testWidgets('NextGen $entry opens the same rich Markdown fixture', (
-      tester,
-    ) async {
-      // Distinct layouts exercise both phone and desktop route geometry.
-      await tester.binding.setSurfaceSize(
-        entry == 'Assets' || entry == 'project folder'
-            ? const Size(1150, 820)
-            : const Size(390, 844),
-      );
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-      final backend = MarkdownDashboardFixture();
-      final gateway = _Gateway(_connection(), markdown: backend);
-      final chat = entry == 'chat attachment';
-      final folder = entry == 'project folder';
-      await _app(tester, ValueNotifier(gateway), main: chat);
-      if (folder || chat) {
-        await _browse(tester, main: chat);
-        await _detail(tester, gateway);
-        if (folder) {
-          await tester.tap(find.text('Files'));
-          await _frames(tester);
-          await tester.tap(find.text(MarkdownDashboardFixture.directory));
+    testWidgets(
+      'NextGen $entry opens the same rich Markdown fixture',
+      (tester) async {
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = markdownLayouts.currentValue!;
+        addTearDown(tester.view.reset);
+        final backend = MarkdownDashboardFixture();
+        final gateway = _Gateway(_connection(), markdown: backend);
+        final chat = entry == 'chat attachment';
+        final folder = entry == 'project folder';
+        await _app(tester, ValueNotifier(gateway), main: true);
+        await _openMore(tester);
+        if (folder || chat) {
+          await _browse(tester);
+          await _detail(tester, gateway);
+          if (folder) {
+            await tester.tap(find.text('Files'));
+            await _frames(tester);
+            await tester.tap(find.text(MarkdownDashboardFixture.directory));
+          } else {
+            await tester.tap(find.text('Existing project conversation'));
+          }
         } else {
-          await tester.tap(find.text('Existing project conversation'));
+          await tester.tap(find.text(entry));
         }
-      } else {
-        await tester.tap(find.text(entry));
-      }
-      await _frames(tester);
-      final file = find.text(MarkdownDashboardFixture.filename);
-      await tester.ensureVisible(file);
-      expect(
-        backend.requests.where((uri) => uri.path.contains('/fs/download')),
-        isEmpty,
-      );
-      await tester.tap(file);
-      await _frames(tester);
-      if (chat || entry == 'Assets') await waitForMarkdownDownload(tester);
-      await verifyMarkdownPreview(tester);
-      final fs = backend.requests
-          .where((uri) => uri.path.contains('/fs/'))
-          .toList();
-      expect(
-        fs.every((uri) => uri.queryParameters['profile'] == 'work'),
-        isTrue,
-      );
-      if (chat || entry == 'Assets') {
+        await _frames(tester);
+        final file = find.text(MarkdownDashboardFixture.filename);
+        await tester.ensureVisible(file);
         expect(
-          fs.single.queryParameters['session_id'],
-          MarkdownDashboardFixture.session,
+          backend.requests.where((uri) => uri.path.contains('/fs/download')),
+          isEmpty,
         );
-        expect(fs.single.path, endsWith('/fs/download'));
-      } else {
-        expect(fs.last.path, endsWith('/fs/read-text'));
-        expect(fs.any((uri) => uri.path.endsWith('/fs/default-cwd')), !folder);
-      }
-      await _close(tester, [gateway]);
-    });
+        await tester.tap(file);
+        await _frames(tester);
+        if (chat || entry == 'Assets') await waitForMarkdownDownload(tester);
+        await verifyMarkdownPreview(tester);
+        final fs = backend.requests
+            .where((uri) => uri.path.contains('/fs/'))
+            .toList();
+        expect(
+          fs.every((uri) => uri.queryParameters['profile'] == 'work'),
+          isTrue,
+        );
+        if (chat || entry == 'Assets') {
+          expect(
+            fs.single.queryParameters['session_id'],
+            MarkdownDashboardFixture.session,
+          );
+          expect(fs.single.path, endsWith('/fs/download'));
+        } else {
+          expect(fs.last.path, endsWith('/fs/read-text'));
+          expect(
+            fs.any((uri) => uri.path.endsWith('/fs/default-cwd')),
+            !folder,
+          );
+        }
+        await _close(tester, [gateway]);
+      },
+      variant: markdownLayouts,
+    );
   }
 
   testWidgets('More browses Classic projects and refreshes counts on return', (
