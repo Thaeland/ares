@@ -8,8 +8,9 @@ class PreviewPeers {
       <String, ({Object token, String profile, PreviewAnswer answer})>{};
 
   void Function() attach(String runtime, String profile, PreviewAnswer answer) {
-    if (_entries.containsKey(runtime))
+    if (_entries.containsKey(runtime)) {
       throw StateError('Preview already shared');
+    }
     final token = Object();
     _entries[runtime] = (token: token, profile: profile, answer: answer);
     return () {
@@ -23,12 +24,14 @@ class PreviewPeers {
     Map<String, dynamic> params, {
     required bool replayed,
   }) {
-    if (replayed || method != 'preview.read' && method != 'preview.act')
+    if (replayed || method != 'preview.read' && method != 'preview.act') {
       return null;
+    }
     final entry = _entries[params['session_id']];
     if (entry == null ||
-        params.containsKey('profile') && params['profile'] != entry.profile)
+        params.containsKey('profile') && params['profile'] != entry.profile) {
       return null;
+    }
     final action = method == 'preview.read'
         ? PreviewAction.read
         : switch (params['action']) {

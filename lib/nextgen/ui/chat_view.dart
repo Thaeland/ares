@@ -12,6 +12,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/models/attachment_draft.dart';
+import '../../core/preview/chat_preview.dart';
 import '../../core/services/connection_manager.dart';
 import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
@@ -91,6 +92,7 @@ class _NgChatViewState extends State<NgChatView> {
 
   /// Files picked for the next message.
   final List<AttachmentDraft> _drafts = [];
+  final _preview = PreviewSlot();
   bool _preparing = false;
   final _imagePicker = ImagePicker();
 
@@ -132,6 +134,7 @@ class _NgChatViewState extends State<NgChatView> {
   void didUpdateWidget(covariant NgChatView old) {
     super.didUpdateWidget(old);
     if (old.chat != chat) {
+      _preview.close();
       old.chat.removeListener(_onChat);
       chat.addListener(_onChat);
       // A reply being read belongs to the chat we left.
@@ -539,6 +542,27 @@ class _NgChatViewState extends State<NgChatView> {
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
     final gateway = NgScope.of(context).gateway;
+    return _preview.layout(
+      chat: _buildChat(c, gateway),
+      storedId: chat.storedId,
+      service: chat.attachmentService,
+      existing: _drafts,
+      update: setState,
+      commit: (text, crops) {
+        if (_preparing || chat.running) {
+          throw const AttachmentDraftException(
+            'Wait for the composer to become available.',
+          );
+        }
+        setState(() {
+          _drafts.addAll(crops);
+          appendPreviewText(_input, text);
+        });
+      },
+    );
+  }
+
+  Widget _buildChat(NgColors c, NextGenGateway gateway) {
     return ListenableBuilder(
       listenable: gateway,
       builder: (context, _) {
@@ -603,6 +627,13 @@ class _NgChatViewState extends State<NgChatView> {
               ),
             ),
             actions: [
+              if (chat.storedId case final id?)
+                IconButton(
+                  tooltip: 'Open browser preview',
+                  icon: const Icon(Icons.web_asset),
+                  onPressed: () =>
+                      setState(() => _preview.open(chat.gateway.workspace, id)),
+                ),
               if (chat.usage != null)
                 IconButton(
                   tooltip: ngL.ng_usage,

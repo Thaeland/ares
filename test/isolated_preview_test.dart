@@ -1,7 +1,7 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hermes_android/core/preview/chat_preview.dart';
 import 'package:hermes_android/core/preview/reader_document.dart';
 import 'package:hermes_android/core/services/preview_peer.dart';
 
@@ -138,7 +138,7 @@ void main() {
         expect(ask('preview.read', p), isNull);
       }
       expect(ask('preview.read', {'session_id': 'rt'}, replay: true), isNull);
-      for (final a in ['vault', 'eval', 'type', 'open']) {
+      for (final a in ['vault', 'eval', 'type', 'click', 'press', 'open']) {
         expect(ask('preview.act', {'session_id': 'rt', 'action': a}), isNull);
       }
       release();
@@ -159,4 +159,28 @@ void main() {
       expect(count, 1);
     },
   );
+
+  test('console copy uses the selection, otherwise every retained line', () {
+    final log = PreviewConsoleLog();
+    expect(log.export(), isEmpty);
+    log.add('one');
+    log.add('two');
+    expect(log.export(), ['one', 'two']);
+    log.toggle(log.lines.last.id);
+    expect(log.export(), ['two']);
+    log.toggle(log.lines.last.id);
+    expect(log.export(), ['one', 'two']);
+    final doomed = log.lines.first.id;
+    log.toggle(doomed);
+    for (var i = 0; i < 60; i++) {
+      log.add('n$i');
+    }
+    expect(log.length, 50);
+    expect(log.selected, isEmpty);
+    expect(log.export().first, 'n10');
+    log.toggle(log.lines.first.id);
+    log.clear();
+    expect(log.isEmpty, isTrue);
+    expect(log.export(), isEmpty);
+  });
 }

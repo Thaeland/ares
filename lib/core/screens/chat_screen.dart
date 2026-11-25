@@ -48,6 +48,7 @@ import '../services/gateway_turn_coordinator.dart';
 import '../services/gateway_turn_recovery.dart';
 import '../services/gateway_turn_ui_projection.dart';
 import '../services/remote_files_client.dart';
+import '../preview/chat_preview.dart';
 import '../services/slash_command_errors.dart';
 import '../services/legal_links.dart';
 import '../services/turn_notification_service.dart';
@@ -626,6 +627,11 @@ class ChatScreen extends StatefulWidget {
   @visibleForTesting
   final TestDesktopConnectionHook? testDesktopConnectionHook;
 
+  /// Route disposal leaves the screen-owned gateway socket open. Tests that
+  /// bind a preview use this to close that socket and its heartbeat.
+  @visibleForTesting
+  final void Function(DesktopGatewayClient gateway)? testDesktopGateway;
+
   @visibleForTesting
   final TestDesktopAsyncEventHook? testDesktopAsyncEventHook;
 
@@ -691,6 +697,7 @@ class ChatScreen extends StatefulWidget {
     this.onClose,
     this.testTurnNotifications,
     this.testDesktopConnectionHook,
+    this.testDesktopGateway,
     this.testDesktopAsyncEventHook,
     this.testProjectOverviewLoader,
     this.testDesktopSessionEnsured,
@@ -827,6 +834,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   final _imagePicker = ImagePicker();
   final List<AttachmentDraft> _attachmentDrafts = [];
+  final _preview = PreviewSlot();
   String? _sessionModel;
   String? _sessionProvider;
   String? _sessionReasoningEffort;
@@ -1077,6 +1085,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         _attachNormalSession();
         final gateway = _normalSession!.client;
         _desktopGateway = gateway;
+        if (gateway != null) widget.testDesktopGateway?.call(gateway);
         // The catalogue is per connection: a bound transport invalidates any
         // failure recorded before the socket existed. An application session
         // can exist without a Desktop client (routing/test owners).
@@ -1751,6 +1760,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void didUpdateWidget(covariant ChatScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.connection != widget.connection ||
+        oldWidget.session.id != widget.session.id) {
+      _preview.close();
+    }
     if (_slashGateway case final gateway?) {
       _slashController.useRefusals(gateway.slashRefusals);
     }
@@ -7033,6 +7046,27 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     _syncComposerKeyboardEndScroll();
+    return _preview.layout(
+      chat: _buildChat(context),
+      storedId: _storedSessionId ?? _storedSessionKey,
+      service: _attachmentDraftService,
+      existing: _attachmentDrafts,
+      update: setState,
+      commit: (text, crops) {
+        if (_sending || _preparingSend || _pendingReattachResync) {
+          throw const AttachmentDraftException(
+            'Wait for the composer to become available.',
+          );
+        }
+        setState(() {
+          _attachmentDrafts.addAll(crops);
+          appendPreviewText(_textController, text);
+        });
+      },
+    );
+  }
+
+  Widget _buildChat(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -7071,6 +7105,17 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   key: ValueKey('chat-archive-progress'),
                   dimension: 20,
                   child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            ),
+          if (_desktopGateway case final gateway?)
+            IconButton(
+              tooltip: 'Open browser preview',
+              icon: const Icon(Icons.web_asset),
+              onPressed: () => setState(
+                () => _preview.open(
+                  gateway.workspace,
+                  _storedSessionId ?? _storedSessionKey,
                 ),
               ),
             ),

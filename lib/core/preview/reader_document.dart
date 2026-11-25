@@ -108,8 +108,9 @@ class ReaderDocument {
   /// Project only visible reader text and structural selectors. Never retain
   /// attribute values, input values, original markup or a page-defined style.
   factory ReaderDocument.parse(Uri location, String source) {
-    if (source.length > 256 * 1024)
+    if (source.length > 256 * 1024) {
       throw const PreviewError('Page exceeds the reader limit.');
+    }
     final doc = html.parse(source);
     final blocks = <PreviewBlock>[];
     var visited = 0;
@@ -120,11 +121,13 @@ class ReaderDocument {
           _excluded.contains(name) ||
           node.attributes.containsKey('hidden') ||
           node.attributes['aria-hidden'] == 'true' ||
-          node.attributes.containsKey('contenteditable'))
+          node.attributes.containsKey('contenteditable')) {
         return;
+      }
       if (_groups.contains(name)) tag = name;
-      if (name == 'a')
+      if (name == 'a') {
         link = location.tryResolvePreviewLink(node.attributes['href']);
+      }
       final buf = StringBuffer();
       void flush() {
         final text = buf.toString().replaceAll(RegExp(r'\s+'), ' ').trim();
@@ -217,29 +220,33 @@ class ReaderLoad {
       request.headers.set(HttpHeaders.acceptHeader, 'text/html, text/plain');
       final response = await request.close();
       check();
-      if (response.statusCode != 200)
+      if (response.statusCode != 200) {
         throw PreviewError(
           'HTTP ${response.statusCode}. No redirect or sign-in was followed.',
         );
+      }
       final mime = response.headers.contentType?.mimeType;
-      if (mime != 'text/html' && mime != 'text/plain')
+      if (mime != 'text/html' && mime != 'text/plain') {
         throw const PreviewError(
           'Only HTML and plain text can open in reader mode.',
         );
+      }
       final bytes = BytesBuilder(copy: false);
       await for (final chunk in response) {
         check();
-        if (bytes.length + chunk.length > 256 * 1024)
+        if (bytes.length + chunk.length > 256 * 1024) {
           throw const PreviewError('Page exceeds the reader limit.');
+        }
         bytes.add(chunk);
       }
       check();
       final text = utf8.decode(bytes.takeBytes(), allowMalformed: true);
-      if (mime == 'text/plain')
+      if (mime == 'text/plain') {
         return ReaderDocument.parse(
           url,
           '<pre>${const HtmlEscape().convert(text)}</pre>',
         );
+      }
       return ReaderDocument.parse(url, text);
     } on PreviewError {
       rethrow;
