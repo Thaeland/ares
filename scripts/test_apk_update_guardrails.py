@@ -76,7 +76,7 @@ class ApkUpdateGuardrailsTest(unittest.TestCase):
         activity = (
             ROOT / "android/app/src/main/kotlin/com/hermesagent/hermes_android/MainActivity.kt"
         ).read_text()
-        self.assertIn("if (!BuildConfig.PLAY_BUILD)", activity)
+        self.assertIn("if (!BuildConfig.PLAY_BUILD && !BuildConfig.PARKED_AUTOMOTIVE)", activity)
         updater = (ROOT / "lib/core/services/app_update_service.dart").read_text()
         self.assertIn("bool.fromEnvironment('ARES_PLAY_BUILD')", updater)
         self.assertIn("if (isPlayBuild)", updater)

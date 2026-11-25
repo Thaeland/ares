@@ -1,5 +1,6 @@
 import com.android.build.gradle.internal.api.ApkVariantOutputImpl
 import java.io.FileInputStream
+import java.util.Base64
 import java.util.Properties
 
 plugins {
@@ -16,7 +17,20 @@ val minimumInstalledVersionCode = 2127
 // Google Play builds use Play-managed updates. The ordinary GitHub release keeps
 // its verified APK updater. CI sets this only for the separate Play AAB.
 val playBuild = System.getenv("ARES_PLAY_BUILD") == "true"
-if (keystorePath.exists()) {
+// Read the same --dart-define that Flutter embeds. One switch selects both
+// the Dart capability policy and the isolated, non-publishable native package.
+val parkedDefine = "ARES_PARKED_AUTOMOTIVE="
+val parkedFlag = providers.gradleProperty("dart-defines").orNull.orEmpty()
+    .split(',').filter { it.isNotEmpty() }
+    .map { String(Base64.getDecoder().decode(it), Charsets.UTF_8) }
+    .filter { it.startsWith(parkedDefine) }.map { it.removePrefix(parkedDefine) }
+require(parkedFlag.size <= 1 && parkedFlag.all { it == "true" || it == "false" }) {
+    "Set ARES_PARKED_AUTOMOTIVE once, to true or false"
+}
+val parkedPreview = parkedFlag.singleOrNull() == "true"
+require(!parkedPreview || !playBuild) { "The local Automotive preview is not a Play build" }
+
+if (keystorePath.exists() && !parkedPreview) {
    keystoreProperties.load(FileInputStream(keystorePath))
 }
 
@@ -36,12 +50,13 @@ android {
                "$minimumInstalledVersionCode to upgrade the accepted Hermes APK"
        }
        applicationId = "com.hermesagent.hermes_android"
-       minSdk = 24
+       minSdk = if (parkedPreview) 33 else 24
        targetSdk = 36
        versionCode = flutter.versionCode
        versionName = flutter.versionName
        manifestPlaceholders["appLabel"] = "Ares"
        buildConfigField("boolean", "PLAY_BUILD", playBuild.toString())
+       buildConfigField("boolean", "PARKED_AUTOMOTIVE", parkedPreview.toString())
        }
 
        buildFeatures {
@@ -64,9 +79,9 @@ android {
            // The guarded Flutter versionCode is the base. The F-Droid ABI-split
            // block below derives per-ABI codes as base * 10 + ABI code; CI
            // verifies the packaged arm64 code against that scheme.
-           applicationIdSuffix = ".dev"
-           versionNameSuffix = "-dev"
-           manifestPlaceholders["appLabel"] = "Ares Dev"
+           applicationIdSuffix = if (parkedPreview) ".automotive.preview" else ".dev"
+           versionNameSuffix = if (parkedPreview) "-parked-preview" else "-dev"
+           manifestPlaceholders["appLabel"] = if (parkedPreview) "Ares Parked" else "Ares Dev"
        }
        release {
            isMinifyEnabled = true
@@ -86,6 +101,10 @@ android {
       jniLibs.useLegacyPackaging = false
    }
 
+   if (parkedPreview) {
+      sourceSets.getByName("debug").manifest.srcFile("src/parked/AndroidManifest.xml")
+   }
+
    if (playBuild) {
       // A build-invocation-specific overlay keeps the default GitHub release
       // unchanged without introducing flavour-specific APK names.
@@ -100,6 +119,11 @@ android {
        includeInApk = false
        includeInBundle = false
    }
+}
+
+// Do not accidentally sign or bundle this experiment as a release.
+androidComponents.beforeVariants { variant ->
+    if (parkedPreview && variant.buildType != "debug") variant.enable = false
 }
 
 kotlin {
