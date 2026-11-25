@@ -1812,5 +1812,21 @@
   "barge_in_title": "Hereinbrechen",
   "barge_in_subtitle": "Sprechen Sie beim Vorlesen etwas an, um es abzubrechen",
   "ng_barge_in_title": "Hereinbrechen",
-  "ng_barge_in_subtitle": "Sprechen Sie beim Vorlesen etwas an, um es abzubrechen"
+  "ng_barge_in_subtitle": "Sprechen Sie beim Vorlesen etwas an, um es abzubrechen",
+  "wake_word_title": "Aktivierungswort",
+  "wake_word_subtitle": "Freihändige Aktivierungswort-Erkennung über das Gateway. Standardmäßig aus; überträgt Mikrofon-Audio nur bei aktiver Geräteaufnahme.",
+  "wake_word_listening": "Hört auf Aktivierungswort „{phrase}“",
+  "wake_word_paused": "Aktivierungswort „{phrase}“ — pausiert",
+  "wake_word_off": "Aktivierungswort „{phrase}“ — aus",
+  "wake_word_arming": "Aktivierungswort wird vorbereitet…",
+  "wake_word_stop": "Aktivierungswort stoppen",
+  "wake_word_rearm": "Neu aktivieren",
+  "wake_word_capture_mode": "Aufnahmemodus",
+  "wake_word_capture_auto": "Automatisch",
+  "wake_word_capture_client": "Mikrofon dieses Geräts",
+  "wake_word_capture_local": "Mikrofon des Gateway-Hosts",
+  "wake_word_input_device": "Eingabemikrofon",
+  "wake_word_default_device": "Systemstandard",
+  "ng_wake_word_title": "Aktivierungswort",
+  "ng_wake_word_subtitle": "Freihändige Aktivierungswort-Erkennung über das Gateway. Standardmäßig aus."
 }

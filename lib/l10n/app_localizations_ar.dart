@@ -6838,4 +6838,60 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ng_barge_in_subtitle => 'تحدث أثناء قراءة الرد لإيقافها فورًا';
+
+  @override
+  String get wake_word_title => 'كلمة التنبيه';
+
+  @override
+  String get wake_word_subtitle =>
+      'اكتشاف كلمة التنبيه عبر البوابة بدون استخدام اليدين. متوقف افتراضيًا؛ يبث صوت الميكروفون فقط عند تفعيل التقاط الجهاز.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'جارٍ الاستماع لكلمة التنبيه \"$phrase\"';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'كلمة التنبيه \"$phrase\" — متوقفة مؤقتًا';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'كلمة التنبيه \"$phrase\" — متوقفة';
+  }
+
+  @override
+  String get wake_word_arming => 'جارٍ تفعيل كلمة التنبيه…';
+
+  @override
+  String get wake_word_stop => 'إيقاف كلمة التنبيه';
+
+  @override
+  String get wake_word_rearm => 'إعادة التفعيل';
+
+  @override
+  String get wake_word_capture_mode => 'وضع الالتقاط';
+
+  @override
+  String get wake_word_capture_auto => 'تلقائي';
+
+  @override
+  String get wake_word_capture_client => 'ميكروفون هذا الجهاز';
+
+  @override
+  String get wake_word_capture_local => 'ميكروفون مضيف البوابة';
+
+  @override
+  String get wake_word_input_device => 'ميكروفون الإدخال';
+
+  @override
+  String get wake_word_default_device => 'الافتراضي للنظام';
+
+  @override
+  String get ng_wake_word_title => 'كلمة التنبيه';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'اكتشاف كلمة التنبيه عبر البوابة بدون استخدام اليدين. متوقف افتراضيًا.';
 }

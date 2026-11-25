@@ -19,6 +19,7 @@ import '../../core/services/legal_links.dart';
 import '../data/connection_check.dart';
 import '../../core/services/auto_speak_replies.dart';
 import '../../core/services/barge_in_preference.dart';
+import '../../core/widgets/gateway_wake_controls.dart';
 import '../nextgen_preferences.dart';
 import '../theme/nextgen_theme.dart';
 import 'models_page.dart';
@@ -46,6 +47,10 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
 
   Future<void> _loadMe() async {
     final gateway = NgScope.of(context).gateway;
+    if (gateway.state.isConnected) {
+      unawaited(gateway.wakeWord.refreshStatus());
+      unawaited(gateway.wakeWord.refreshClientInputDevices());
+    }
     try {
       final res = await gateway.dashboard.apiRequest('GET', 'auth/me');
       if (res.statusCode == 200 && mounted) {
@@ -344,6 +349,16 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                       value: enabled,
                       onChanged: (v) =>
                           unawaited(BargeInPreferenceStore.setEnabled(v)),
+                    ),
+                  ),
+                  const Divider(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 4,
+                    ),
+                    child: GatewayWakeSettingsPanel(
+                      controller: scope.gateway.wakeWord,
                     ),
                   ),
                 ],

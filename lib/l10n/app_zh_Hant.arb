@@ -2879,5 +2879,21 @@
   "barge_in_title": "插話打斷",
   "barge_in_subtitle": "在朗讀回覆時開口即可中斷播放",
   "ng_barge_in_title": "插話打斷",
-  "ng_barge_in_subtitle": "在朗讀回覆時開口即可中斷播放"
+  "ng_barge_in_subtitle": "在朗讀回覆時開口即可中斷播放",
+  "wake_word_title": "喚醒詞",
+  "wake_word_subtitle": "由閘道器提供免持喚醒偵測。預設關閉；僅在啟用裝置麥克風擷取時傳送音訊。",
+  "wake_word_listening": "正在聆聽喚醒詞「{phrase}」",
+  "wake_word_paused": "喚醒詞「{phrase}」— 已暫停",
+  "wake_word_off": "喚醒詞「{phrase}」— 已關閉",
+  "wake_word_arming": "正在啟用喚醒詞…",
+  "wake_word_stop": "停止喚醒詞",
+  "wake_word_rearm": "重新啟用",
+  "wake_word_capture_mode": "擷取模式",
+  "wake_word_capture_auto": "自動",
+  "wake_word_capture_client": "此裝置麥克風",
+  "wake_word_capture_local": "閘道器主機麥克風",
+  "wake_word_input_device": "輸入麥克風",
+  "wake_word_default_device": "系統預設",
+  "ng_wake_word_title": "喚醒詞",
+  "ng_wake_word_subtitle": "由閘道器提供免持喚醒偵測。預設關閉。"
 }

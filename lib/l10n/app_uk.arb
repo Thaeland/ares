@@ -1965,5 +1965,21 @@
   "barge_in_title": "Перерватити",
   "barge_in_subtitle": "Скажіть щось під час читання, щоб зупинити його",
   "ng_barge_in_title": "Перерватити",
-  "ng_barge_in_subtitle": "Скажіть щось під час читання, щоб зупинити його"
+  "ng_barge_in_subtitle": "Скажіть щось під час читання, щоб зупинити його",
+  "wake_word_title": "Ключова фраза",
+  "wake_word_subtitle": "Розпізнавання ключової фрази на шлюзі. За замовчуванням вимкнено; передає аудіо лише під час клієнтського захоплення.",
+  "wake_word_listening": "Очікування ключової фрази «{phrase}»",
+  "wake_word_paused": "Ключова фраза «{phrase}» — призупинено",
+  "wake_word_off": "Ключова фраза «{phrase}» — вимкнено",
+  "wake_word_arming": "Увімкнення ключової фрази…",
+  "wake_word_stop": "Зупинити ключову фразу",
+  "wake_word_rearm": "Перезапустити",
+  "wake_word_capture_mode": "Режим захоплення",
+  "wake_word_capture_auto": "Автоматично",
+  "wake_word_capture_client": "Мікрофон цього пристрою",
+  "wake_word_capture_local": "Мікрофон хоста шлюзу",
+  "wake_word_input_device": "Вхідний мікрофон",
+  "wake_word_default_device": "Системний за замовчуванням",
+  "ng_wake_word_title": "Ключова фраза",
+  "ng_wake_word_subtitle": "Розпізнавання ключової фрази на шлюзі. За замовчуванням вимкнено."
 }

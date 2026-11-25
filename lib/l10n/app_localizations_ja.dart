@@ -6696,4 +6696,59 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ng_barge_in_subtitle => '読み上げ中に話して途中で止める';
+
+  @override
+  String get wake_word_title => 'ウェイクワード';
+
+  @override
+  String get wake_word_subtitle =>
+      'ゲートウェイでのハンズフリー起動語検出。既定ではオフ。クライアント収音が有効なときのみマイク音声を送信します。';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'ウェイクワード「$phrase」を待機中';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'ウェイクワード「$phrase」— 一時停止中';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'ウェイクワード「$phrase」— オフ';
+  }
+
+  @override
+  String get wake_word_arming => 'ウェイクワードを準備中…';
+
+  @override
+  String get wake_word_stop => 'ウェイクワードを停止';
+
+  @override
+  String get wake_word_rearm => '再待機';
+
+  @override
+  String get wake_word_capture_mode => '収音モード';
+
+  @override
+  String get wake_word_capture_auto => '自動';
+
+  @override
+  String get wake_word_capture_client => 'このデバイスのマイク';
+
+  @override
+  String get wake_word_capture_local => 'ゲートウェイホストのマイク';
+
+  @override
+  String get wake_word_input_device => '入力マイク';
+
+  @override
+  String get wake_word_default_device => 'システム既定';
+
+  @override
+  String get ng_wake_word_title => 'ウェイクワード';
+
+  @override
+  String get ng_wake_word_subtitle => 'ゲートウェイでのハンズフリー起動語検出。既定ではオフ。';
 }

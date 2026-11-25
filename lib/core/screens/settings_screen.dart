@@ -15,6 +15,9 @@ import '../services/config_backup_service.dart';
 import '../services/connection_manager.dart';
 import '../services/auto_speak_replies.dart';
 import '../services/barge_in_preference.dart';
+import '../services/desktop_gateway_client.dart';
+import '../services/gateway_wake_word.dart';
+import '../widgets/gateway_wake_controls.dart';
 import '../services/hands_free_preference.dart';
 import '../services/notification_prefs.dart';
 import '../widgets/background_work_settings.dart';
@@ -199,6 +202,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const _AutoSpeakToggle(),
         const SizedBox(height: 8),
         const _BargeInToggle(),
+        const SizedBox(height: 8),
+        _ClassicWakeSettings(connection: widget.connection),
         const SizedBox(height: 16),
 
         // ---- Section: Session Sources ----
@@ -591,6 +596,58 @@ class _BargeInToggle extends StatelessWidget {
           value: enabled,
           onChanged: (on) => unawaited(BargeInPreferenceStore.setEnabled(on)),
         ),
+      ),
+    );
+  }
+}
+
+/// Gateway-owned wake controls. Reuses the chat's controller when one exists
+/// so Settings never becomes a second owner of the microphone; otherwise a
+/// short-lived client connects on demand and is closed with the screen.
+class _ClassicWakeSettings extends StatefulWidget {
+  const _ClassicWakeSettings({required this.connection});
+
+  final SavedConnection connection;
+
+  @override
+  State<_ClassicWakeSettings> createState() => _ClassicWakeSettingsState();
+}
+
+class _ClassicWakeSettingsState extends State<_ClassicWakeSettings> {
+  DesktopGatewayClient? _ownedGateway;
+  GatewayWakeWordController? _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    final connection = widget.connection;
+    final hasGateway =
+        (connection.desktopGatewayUrl?.trim().isNotEmpty ?? false) ||
+        connection.hasDashboardAuth;
+    if (!hasGateway) return;
+    _controller = GatewayWakeWordController.sharedForConnection(connection.id);
+    if (_controller == null) {
+      _ownedGateway = DesktopGatewayClient.fromConnection(connection);
+      _controller = _ownedGateway!.wakeWord;
+    }
+    unawaited(_controller!.refreshStatus());
+    unawaited(_controller!.refreshClientInputDevices());
+  }
+
+  @override
+  void dispose() {
+    _ownedGateway?.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = _controller;
+    if (controller == null) return const SizedBox.shrink();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: GatewayWakeSettingsPanel(controller: controller),
       ),
     );
   }

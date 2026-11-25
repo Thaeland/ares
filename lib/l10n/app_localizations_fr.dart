@@ -6908,4 +6908,60 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get ng_barge_in_subtitle =>
       'Parlez par-dessus la réponse pour l’interrompre';
+
+  @override
+  String get wake_word_title => 'Mot d’activation';
+
+  @override
+  String get wake_word_subtitle =>
+      'Détection mains libres sur la passerelle. Désactivée par défaut ; ne diffuse le micro que lorsque la capture client est active.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'Écoute du mot d’activation « $phrase »';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'Mot d’activation « $phrase » — en pause';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'Mot d’activation « $phrase » — désactivé';
+  }
+
+  @override
+  String get wake_word_arming => 'Activation du mot d’activation…';
+
+  @override
+  String get wake_word_stop => 'Arrêter le mot d’activation';
+
+  @override
+  String get wake_word_rearm => 'Réarmer';
+
+  @override
+  String get wake_word_capture_mode => 'Mode de capture';
+
+  @override
+  String get wake_word_capture_auto => 'Automatique';
+
+  @override
+  String get wake_word_capture_client => 'Microphone de cet appareil';
+
+  @override
+  String get wake_word_capture_local => 'Microphone de l’hôte passerelle';
+
+  @override
+  String get wake_word_input_device => 'Microphone d’entrée';
+
+  @override
+  String get wake_word_default_device => 'Par défaut du système';
+
+  @override
+  String get ng_wake_word_title => 'Mot d’activation';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'Détection mains libres sur la passerelle. Désactivée par défaut.';
 }

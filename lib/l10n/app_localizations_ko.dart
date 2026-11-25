@@ -6702,4 +6702,59 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_barge_in_subtitle => '읽는 중에 말해 멈추게 하기';
+
+  @override
+  String get wake_word_title => '호출어';
+
+  @override
+  String get wake_word_subtitle =>
+      '게이트웨이의 핸즈프리 호출어 감지입니다. 기본값은 꺼짐이며 클라이언트 캡처가 활성화된 경우에만 마이크 오디오를 전송합니다.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return '호출어 \"$phrase\" 듣는 중';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return '호출어 \"$phrase\" — 일시 중지됨';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return '호출어 \"$phrase\" — 꺼짐';
+  }
+
+  @override
+  String get wake_word_arming => '호출어 준비 중…';
+
+  @override
+  String get wake_word_stop => '호출어 중지';
+
+  @override
+  String get wake_word_rearm => '다시 대기';
+
+  @override
+  String get wake_word_capture_mode => '캡처 모드';
+
+  @override
+  String get wake_word_capture_auto => '자동';
+
+  @override
+  String get wake_word_capture_client => '이 기기의 마이크';
+
+  @override
+  String get wake_word_capture_local => '게이트웨이 호스트 마이크';
+
+  @override
+  String get wake_word_input_device => '입력 마이크';
+
+  @override
+  String get wake_word_default_device => '시스템 기본값';
+
+  @override
+  String get ng_wake_word_title => '호출어';
+
+  @override
+  String get ng_wake_word_subtitle => '게이트웨이의 핸즈프리 호출어 감지입니다. 기본값은 꺼짐입니다.';
 }

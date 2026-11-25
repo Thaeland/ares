@@ -6839,4 +6839,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ng_barge_in_subtitle => 'Speak over the reply to cut it short';
+
+  @override
+  String get wake_word_title => 'Wake word';
+
+  @override
+  String get wake_word_subtitle =>
+      'Hands-free wake detection on the gateway. Off by default; streams microphone audio only when client capture is active.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'Listening for wake word \"$phrase\"';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'Wake word \"$phrase\" — paused';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'Wake word \"$phrase\" — off';
+  }
+
+  @override
+  String get wake_word_arming => 'Arming wake word…';
+
+  @override
+  String get wake_word_stop => 'Stop wake word';
+
+  @override
+  String get wake_word_rearm => 'Re-arm';
+
+  @override
+  String get wake_word_capture_mode => 'Capture mode';
+
+  @override
+  String get wake_word_capture_auto => 'Automatic';
+
+  @override
+  String get wake_word_capture_client => 'This device\'s microphone';
+
+  @override
+  String get wake_word_capture_local => 'Gateway host microphone';
+
+  @override
+  String get wake_word_input_device => 'Input microphone';
+
+  @override
+  String get wake_word_default_device => 'System default';
+
+  @override
+  String get ng_wake_word_title => 'Wake word';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'Hands-free wake detection on the gateway. Off by default.';
 }

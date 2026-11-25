@@ -1812,5 +1812,21 @@
   "barge_in_title": "Перебить",
   "barge_in_subtitle": "Скажите что-нибудь во время чтения, чтобы остановить его",
   "ng_barge_in_title": "Перебить",
-  "ng_barge_in_subtitle": "Скажите что-нибудь во время чтения, чтобы остановить его"
+  "ng_barge_in_subtitle": "Скажите что-нибудь во время чтения, чтобы остановить его",
+  "wake_word_title": "Кодовая фраза",
+  "wake_word_subtitle": "Распознавание кодовой фразы на шлюзе. По умолчанию выключено; передаёт звук с микрофона только при захвате на устройстве.",
+  "wake_word_listening": "Ожидание кодовой фразы «{phrase}»",
+  "wake_word_paused": "Кодовая фраза «{phrase}» — пауза",
+  "wake_word_off": "Кодовая фраза «{phrase}» — выкл.",
+  "wake_word_arming": "Включение кодовой фразы…",
+  "wake_word_stop": "Остановить кодовую фразу",
+  "wake_word_rearm": "Перезапустить",
+  "wake_word_capture_mode": "Режим захвата",
+  "wake_word_capture_auto": "Автоматически",
+  "wake_word_capture_client": "Микрофон этого устройства",
+  "wake_word_capture_local": "Микрофон хоста шлюза",
+  "wake_word_input_device": "Входной микрофон",
+  "wake_word_default_device": "По умолчанию системы",
+  "ng_wake_word_title": "Кодовая фраза",
+  "ng_wake_word_subtitle": "Распознавание кодовой фразы на шлюзе. По умолчанию выключено."
 }

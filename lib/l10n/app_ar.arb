@@ -2867,5 +2867,21 @@
   "barge_in_title": "المقاطعة بالحديث",
   "barge_in_subtitle": "تحدث أثناء قراءة الرد لإيقافها فورًا",
   "ng_barge_in_title": "المقاطعة بالحديث",
-  "ng_barge_in_subtitle": "تحدث أثناء قراءة الرد لإيقافها فورًا"
+  "ng_barge_in_subtitle": "تحدث أثناء قراءة الرد لإيقافها فورًا",
+  "wake_word_title": "كلمة التنبيه",
+  "wake_word_subtitle": "اكتشاف كلمة التنبيه عبر البوابة بدون استخدام اليدين. متوقف افتراضيًا؛ يبث صوت الميكروفون فقط عند تفعيل التقاط الجهاز.",
+  "wake_word_listening": "جارٍ الاستماع لكلمة التنبيه \"{phrase}\"",
+  "wake_word_paused": "كلمة التنبيه \"{phrase}\" — متوقفة مؤقتًا",
+  "wake_word_off": "كلمة التنبيه \"{phrase}\" — متوقفة",
+  "wake_word_arming": "جارٍ تفعيل كلمة التنبيه…",
+  "wake_word_stop": "إيقاف كلمة التنبيه",
+  "wake_word_rearm": "إعادة التفعيل",
+  "wake_word_capture_mode": "وضع الالتقاط",
+  "wake_word_capture_auto": "تلقائي",
+  "wake_word_capture_client": "ميكروفون هذا الجهاز",
+  "wake_word_capture_local": "ميكروفون مضيف البوابة",
+  "wake_word_input_device": "ميكروفون الإدخال",
+  "wake_word_default_device": "الافتراضي للنظام",
+  "ng_wake_word_title": "كلمة التنبيه",
+  "ng_wake_word_subtitle": "اكتشاف كلمة التنبيه عبر البوابة بدون استخدام اليدين. متوقف افتراضيًا."
 }

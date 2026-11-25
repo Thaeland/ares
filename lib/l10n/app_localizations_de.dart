@@ -6898,4 +6898,60 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get ng_barge_in_subtitle =>
       'Sprechen Sie beim Vorlesen etwas an, um es abzubrechen';
+
+  @override
+  String get wake_word_title => 'Aktivierungswort';
+
+  @override
+  String get wake_word_subtitle =>
+      'Freihändige Aktivierungswort-Erkennung über das Gateway. Standardmäßig aus; überträgt Mikrofon-Audio nur bei aktiver Geräteaufnahme.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'Hört auf Aktivierungswort „$phrase“';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'Aktivierungswort „$phrase“ — pausiert';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'Aktivierungswort „$phrase“ — aus';
+  }
+
+  @override
+  String get wake_word_arming => 'Aktivierungswort wird vorbereitet…';
+
+  @override
+  String get wake_word_stop => 'Aktivierungswort stoppen';
+
+  @override
+  String get wake_word_rearm => 'Neu aktivieren';
+
+  @override
+  String get wake_word_capture_mode => 'Aufnahmemodus';
+
+  @override
+  String get wake_word_capture_auto => 'Automatisch';
+
+  @override
+  String get wake_word_capture_client => 'Mikrofon dieses Geräts';
+
+  @override
+  String get wake_word_capture_local => 'Mikrofon des Gateway-Hosts';
+
+  @override
+  String get wake_word_input_device => 'Eingabemikrofon';
+
+  @override
+  String get wake_word_default_device => 'Systemstandard';
+
+  @override
+  String get ng_wake_word_title => 'Aktivierungswort';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'Freihändige Aktivierungswort-Erkennung über das Gateway. Standardmäßig aus.';
 }

@@ -48,6 +48,8 @@ import '../../core/widgets/git_review_pane.dart';
 import '../../core/models/turn_changed_files.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
 import '../../core/services/auto_speak_replies.dart';
+import '../../core/services/gateway_wake_word.dart';
+import '../../core/widgets/gateway_wake_controls.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
 import '../../core/services/attachment_draft_service.dart';
 import '../../core/widgets/client_held_queue_bar.dart';
@@ -78,6 +80,7 @@ class NgChatView extends StatefulWidget {
     this.sessions,
     this.onNewChat,
     this.readAloudFactory,
+    this.wakeController,
   });
 
   final NgChatController chat;
@@ -91,6 +94,10 @@ class NgChatView extends StatefulWidget {
   /// Test hook: supplies the read-aloud controller (e.g. a fake speaker).
   @visibleForTesting
   final NgReadAloud Function()? readAloudFactory;
+
+  /// Test hook: overrides `chat.gateway.wakeWord`.
+  @visibleForTesting
+  final GatewayWakeWordController? wakeController;
 
   @override
   State<NgChatView> createState() => _NgChatViewState();
@@ -275,6 +282,28 @@ class _NgChatViewState extends State<NgChatView>
   late final NgReadAloud _readAloud;
 
   NgChatController get chat => widget.chat;
+  GatewayWakeWordController get _wake =>
+      widget.wakeController ?? chat.gateway.wakeWord;
+
+  void _bindWake() {
+    _wake.bindSessionId(chat.storedId ?? chat.runtimeId);
+    _wake.onWakeDetected = _onWakeDetected;
+    _syncWakeVoicePause();
+  }
+
+  void _syncWakeVoicePause() {
+    _wake.setPausedForVoice(_listening || _readAloud.readingKey != null);
+  }
+
+  void _onWakeDetected(WakeDetectedEvent event) {
+    if (!mounted) return;
+    if (event.startNewSession && !chat.isNew && widget.onNewChat != null) {
+      widget.onNewChat!();
+    }
+    if (!_listening) {
+      unawaited(_toggleDictation());
+    }
+  }
 
   @override
   void initState() {
@@ -286,6 +315,7 @@ class _NgChatViewState extends State<NgChatView>
     chat.addListener(_onChat);
     _readAloud = (widget.readAloudFactory ?? NgReadAloud.new)();
     _readAloud.addListener(_onReadAloud);
+    _bindWake();
     _readAloud.onUnavailable = () {
       if (mounted) {
         ngToast(context, ngL.read_aloud_is_unavailable_on_this_device);
@@ -332,6 +362,9 @@ class _NgChatViewState extends State<NgChatView>
       chat.addListener(_onChat);
       // A reply being read belongs to the chat we left.
       unawaited(_readAloud.stop());
+      _bindWake();
+    } else if (old.wakeController != widget.wakeController) {
+      _bindWake();
     }
   }
 
@@ -344,11 +377,13 @@ class _NgChatViewState extends State<NgChatView>
       final voice = _voice;
       if (voice != null) unawaited(voice.stop());
     }
+    _syncWakeVoicePause();
     setState(() {});
   }
 
   void _onChat() {
     if (!mounted) return;
+    _wake.bindSessionId(chat.storedId ?? chat.runtimeId);
     if (_companionLeftDuringTurn && !chat.running) {
       _companionLeftDuringTurn = false;
       _companionUnread = true;
@@ -401,6 +436,10 @@ class _NgChatViewState extends State<NgChatView>
 
   @override
   void dispose() {
+    if (identical(_wake.onWakeDetected, _onWakeDetected)) {
+      _wake.onWakeDetected = null;
+    }
+    _wake.setPausedForVoice(false);
     WidgetsBinding.instance.removeObserver(this);
     CompanionDraft.pending.removeListener(_applyCompanionDraft);
     chat.removeListener(_onChat);
@@ -428,6 +467,7 @@ class _NgChatViewState extends State<NgChatView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    _wake.setAppForeground(state == AppLifecycleState.resumed);
     if (state != AppLifecycleState.resumed) {
       _checkpoint?.cancel();
       unawaited(_draftWriter.flush());
@@ -681,6 +721,40 @@ class _NgChatViewState extends State<NgChatView>
         _input.clear();
         await showNgModelSheet(context, chat);
         return true;
+      case 'wake':
+        final arg = command.arg.trim().toLowerCase();
+        _input.clear();
+        final sid = chat.storedId ?? chat.runtimeId;
+        switch (arg) {
+          case '' || 'toggle':
+            final ok = await _wake.toggle(sessionId: sid);
+            if (!ok && mounted && _wake.state.notice.isNotEmpty) {
+              ngToast(context, _wake.state.notice);
+            }
+          case 'on' || 'start':
+            final ok = await _wake.startExplicit(sessionId: sid);
+            if (!ok && mounted && _wake.state.notice.isNotEmpty) {
+              ngToast(context, _wake.state.notice);
+            }
+          case 'off' || 'stop':
+            await _wake.stopExplicit();
+          case 'status':
+            final st = await _wake.refreshStatus();
+            if (mounted) {
+              final detail = st.notice.isNotEmpty ? ' — ${st.notice}' : '';
+              ngToast(
+                context,
+                '${st.listening ? "Listening" : "Off"} ("${st.phrase}")$detail',
+              );
+            }
+          default:
+            await showGatewayWakeSheet(
+              context,
+              controller: _wake,
+              sessionId: sid,
+            );
+        }
+        return true;
     }
     final owner = chat;
     _decidingCommand = true;
@@ -808,27 +882,33 @@ class _NgChatViewState extends State<NgChatView>
     if (_listening) {
       await _voice?.stop();
       setState(() => _listening = false);
+      _syncWakeVoicePause();
       return;
     }
+    await _wake.pauseForVoice();
     final voice = _voice ??= createVoiceComposerAdapter();
     final ok = await voice.initialize(
       onStatus: (status) {
         if ((status == 'done' || status == 'notListening') && mounted) {
           setState(() => _listening = false);
+          _syncWakeVoicePause();
         }
       },
       onError: (message) {
         if (!mounted) return;
         setState(() => _listening = false);
+        _syncWakeVoicePause();
         ngToast(context, ngL.ng_dictation_stopped(message));
       },
     );
     if (!ok) {
+      _syncWakeVoicePause();
       if (mounted) ngToast(context, ngL.ng_speech_recognition_isn_t_available);
       return;
     }
     _beforeDictation = _input.text.trim();
     setState(() => _listening = true);
+    _syncWakeVoicePause();
     await voice.listen(
       onResult: ({required transcript, required isFinal}) {
         final joined = [
@@ -839,7 +919,10 @@ class _NgChatViewState extends State<NgChatView>
           text: joined,
           selection: TextSelection.collapsed(offset: joined.length),
         );
-        if (isFinal && mounted) setState(() => _listening = false);
+        if (isFinal && mounted) {
+          setState(() => _listening = false);
+          _syncWakeVoicePause();
+        }
       },
     );
   }
@@ -1026,6 +1109,11 @@ class _NgChatViewState extends State<NgChatView>
                       onPressed: () => setState(() => _showSessionFiles = true),
                     ),
                   if (!compactTools) ...[
+                    GatewayWakeToolbarButton(
+                      controller: _wake,
+                      sessionId: chat.storedId ?? chat.runtimeId,
+                      onNotice: (msg) => ngToast(context, msg),
+                    ),
                     if (chat.storedId case final id?)
                       IconButton(
                         tooltip: 'Open browser preview',
@@ -1046,60 +1134,76 @@ class _NgChatViewState extends State<NgChatView>
                         icon: const Icon(Icons.hub_outlined),
                         onPressed: () => workers.open(context),
                       ),
-                  ] else if (chat.storedId != null ||
-                      workers != null ||
-                      radio != null)
-                    // The radio's controls move here from the app bar.
-                    PopupMenuButton<String>(
-                      key: const ValueKey('chat-tools-menu'),
-                      tooltip: 'More chat tools',
-                      icon: const Icon(Icons.widgets_outlined),
-                      onSelected: (tool) {
-                        if (tool == radioToolValue) {
-                          final current = compactRadioTool(context);
-                          if (current != null) {
-                            unawaited(showAresRadioSheet(context, current));
+                  ] else
+                    // Narrow panes (< 480 px) fold chat tools into one menu.
+                    ListenableBuilder(
+                      listenable: _wake,
+                      builder: (context, _) => PopupMenuButton<String>(
+                        key: const ValueKey('chat-tools-menu'),
+                        tooltip: 'More chat tools',
+                        icon: const Icon(Icons.widgets_outlined),
+                        onSelected: (tool) async {
+                          if (tool == wakeWordToolValue) {
+                            final sid = chat.storedId ?? chat.runtimeId;
+                            final wasOn =
+                                _wake.state.listening ||
+                                (_wake.state.enabled && _wake.state.paused);
+                            final ok = await _wake.toggle(sessionId: sid);
+                            if (!ok &&
+                                !wasOn &&
+                                context.mounted &&
+                                _wake.state.notice.isNotEmpty) {
+                              ngToast(context, _wake.state.notice);
+                            }
+                            return;
                           }
-                          return;
-                        }
-                        final id = chat.storedId;
-                        if (tool == 'browser' && id != null) {
-                          setState(
-                            () => _preview.open(chat.gateway.workspace, id),
-                          );
-                        }
-                        if (tool == 'queue' && showQueue) {
-                          _openGatewayQueue(chat, parentId!);
-                        }
-                        if (tool == 'workers') workers?.open(context);
-                      },
-                      itemBuilder: (_) => [
-                        if (chat.storedId != null)
-                          const PopupMenuItem(
-                            value: 'browser',
-                            child: ListTile(
-                              leading: Icon(Icons.web_asset),
-                              title: Text('Open browser preview'),
+                          if (tool == radioToolValue) {
+                            final current = compactRadioTool(context);
+                            if (current != null) {
+                              unawaited(showAresRadioSheet(context, current));
+                            }
+                            return;
+                          }
+                          final id = chat.storedId;
+                          if (tool == 'browser' && id != null) {
+                            setState(
+                              () => _preview.open(chat.gateway.workspace, id),
+                            );
+                          }
+                          if (tool == 'queue' && showQueue) {
+                            _openGatewayQueue(chat, parentId!);
+                          }
+                          if (tool == 'workers') workers?.open(context);
+                        },
+                        itemBuilder: (_) => [
+                          wakeWordToolItem(context, _wake.state),
+                          if (chat.storedId != null)
+                            const PopupMenuItem(
+                              value: 'browser',
+                              child: ListTile(
+                                leading: Icon(Icons.web_asset),
+                                title: Text('Open browser preview'),
+                              ),
                             ),
-                          ),
-                        if (showQueue)
-                          const PopupMenuItem(
-                            value: 'queue',
-                            child: ListTile(
-                              leading: Icon(Icons.queue),
-                              title: Text('Gateway queue'),
+                          if (showQueue)
+                            const PopupMenuItem(
+                              value: 'queue',
+                              child: ListTile(
+                                leading: Icon(Icons.queue),
+                                title: Text('Gateway queue'),
+                              ),
                             ),
-                          ),
-                        if (workers != null)
-                          PopupMenuItem(
-                            value: 'workers',
-                            child: ListTile(
-                              leading: const Icon(Icons.hub_outlined),
-                              title: Text(ngL.workspace_workers),
+                          if (workers != null)
+                            PopupMenuItem(
+                              value: 'workers',
+                              child: ListTile(
+                                leading: const Icon(Icons.hub_outlined),
+                                title: Text(ngL.workspace_workers),
+                              ),
                             ),
-                          ),
-                        if (radio != null) radioToolItem(context),
-                      ],
+                          if (radio != null) radioToolItem(context),
+                        ],
+                      ),
                     ),
                   if (chat.usage != null)
                     IconButton(
@@ -1173,6 +1277,11 @@ class _NgChatViewState extends State<NgChatView>
                         ),
                       if (chat.error != null) _errorBar(c),
                       if (chat.queued.isNotEmpty) _queue(c),
+                      GatewayWakeListeningBanner(
+                        controller: _wake,
+                        available: body.maxHeight,
+                        sessionId: chat.storedId ?? chat.runtimeId,
+                      ),
                       if (chat.catalog case final operation?)
                         CatalogInstallCard(
                           key: ValueKey(operation.opId),

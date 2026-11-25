@@ -1812,5 +1812,21 @@
   "barge_in_title": "插话",
   "barge_in_subtitle": "朗读时开口说话即可提前停止",
   "ng_barge_in_title": "插话",
-  "ng_barge_in_subtitle": "朗读时开口说话即可提前停止"
+  "ng_barge_in_subtitle": "朗读时开口说话即可提前停止",
+  "wake_word_title": "唤醒词",
+  "wake_word_subtitle": "由网关提供免提唤醒检测。默认关闭；仅在启用设备麦克风采集时发送音频。",
+  "wake_word_listening": "正在监听唤醒词“{phrase}”",
+  "wake_word_paused": "唤醒词“{phrase}” — 已暂停",
+  "wake_word_off": "唤醒词“{phrase}” — 已关闭",
+  "wake_word_arming": "正在启用唤醒词…",
+  "wake_word_stop": "停止唤醒词",
+  "wake_word_rearm": "重新启用",
+  "wake_word_capture_mode": "采集模式",
+  "wake_word_capture_auto": "自动",
+  "wake_word_capture_client": "此设备麦克风",
+  "wake_word_capture_local": "网关主机麦克风",
+  "wake_word_input_device": "输入麦克风",
+  "wake_word_default_device": "系统默认",
+  "ng_wake_word_title": "唤醒词",
+  "ng_wake_word_subtitle": "由网关提供免提唤醒检测。默认关闭。"
 }

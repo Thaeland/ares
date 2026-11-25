@@ -1812,5 +1812,21 @@
   "barge_in_title": "Interrumpir",
   "barge_in_subtitle": "Hable sobre la respuesta para acortarla",
   "ng_barge_in_title": "Interrumpir",
-  "ng_barge_in_subtitle": "Hable sobre la respuesta para acortarla"
+  "ng_barge_in_subtitle": "Hable sobre la respuesta para acortarla",
+  "wake_word_title": "Palabra de activación",
+  "wake_word_subtitle": "Detección manos libres en la pasarela. Desactivada por defecto; solo transmite audio cuando la captura del dispositivo está activa.",
+  "wake_word_listening": "Escuchando la palabra de activación \"{phrase}\"",
+  "wake_word_paused": "Palabra de activación \"{phrase}\" — en pausa",
+  "wake_word_off": "Palabra de activación \"{phrase}\" — desactivada",
+  "wake_word_arming": "Activando palabra de activación…",
+  "wake_word_stop": "Detener palabra de activación",
+  "wake_word_rearm": "Reactivar",
+  "wake_word_capture_mode": "Modo de captura",
+  "wake_word_capture_auto": "Automático",
+  "wake_word_capture_client": "Micrófono de este dispositivo",
+  "wake_word_capture_local": "Micrófono del host de la pasarela",
+  "wake_word_input_device": "Micrófono de entrada",
+  "wake_word_default_device": "Predeterminado del sistema",
+  "ng_wake_word_title": "Palabra de activación",
+  "ng_wake_word_subtitle": "Detección manos libres en la pasarela. Desactivada por defecto."
 }

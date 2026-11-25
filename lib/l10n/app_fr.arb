@@ -1812,5 +1812,21 @@
   "barge_in_title": "Couper la lecture",
   "barge_in_subtitle": "Parlez par-dessus la réponse pour l’interrompre",
   "ng_barge_in_title": "Couper la lecture",
-  "ng_barge_in_subtitle": "Parlez par-dessus la réponse pour l’interrompre"
+  "ng_barge_in_subtitle": "Parlez par-dessus la réponse pour l’interrompre",
+  "wake_word_title": "Mot d’activation",
+  "wake_word_subtitle": "Détection mains libres sur la passerelle. Désactivée par défaut ; ne diffuse le micro que lorsque la capture client est active.",
+  "wake_word_listening": "Écoute du mot d’activation « {phrase} »",
+  "wake_word_paused": "Mot d’activation « {phrase} » — en pause",
+  "wake_word_off": "Mot d’activation « {phrase} » — désactivé",
+  "wake_word_arming": "Activation du mot d’activation…",
+  "wake_word_stop": "Arrêter le mot d’activation",
+  "wake_word_rearm": "Réarmer",
+  "wake_word_capture_mode": "Mode de capture",
+  "wake_word_capture_auto": "Automatique",
+  "wake_word_capture_client": "Microphone de cet appareil",
+  "wake_word_capture_local": "Microphone de l’hôte passerelle",
+  "wake_word_input_device": "Microphone d’entrée",
+  "wake_word_default_device": "Par défaut du système",
+  "ng_wake_word_title": "Mot d’activation",
+  "ng_wake_word_subtitle": "Détection mains libres sur la passerelle. Désactivée par défaut."
 }

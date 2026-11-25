@@ -10,6 +10,7 @@ import 'capability_registry.dart';
 import 'connection_manager.dart';
 import 'gateway_turn_coordinator.dart';
 import 'gateway_turn_journal.dart';
+import 'gateway_wake_word.dart';
 import 'projects_gateway_client.dart';
 import 'remote_workspace.dart';
 import 'ws_client.dart';
@@ -49,6 +50,13 @@ class DesktopGatewayClient implements SlashCommandGateway {
   final ClientCertificateConfig? _clientCertificate;
   WsClient? _ws;
   bool get sessionAuthority => _ws?.sessionAuthority == true;
+  bool get isSocketConnected => !_closed && _ws?.isConnected == true;
+  String get connectionId => _connectionId;
+  String? get gatewayProfile => _gatewayProfile;
+  final _gatewayEvents = StreamController<StreamEvent>.broadcast();
+  final _socketReady = StreamController<void>.broadcast();
+  Stream<StreamEvent> get gatewayEvents => _gatewayEvents.stream;
+  Stream<void> get socketReady => _socketReady.stream;
   Future<WsClient>? _socketInFlight;
   Timer? _reconnectTimer;
   int _reconnectAttempts = 0;
@@ -78,7 +86,14 @@ class DesktopGatewayClient implements SlashCommandGateway {
   GatewayTurnSessionBoundCallback? _sessionCreatedListener;
   GatewayTurnCoordinatorRegistry? _turnCoordinatorRegistry;
   ProjectsGatewayClient? _projects;
+  GatewayWakeWordController? _wakeWord;
   final CapabilityRegistry _capabilities = CapabilityRegistry();
+
+  /// Gateway-backed wake-word controller scoped to this connection/profile.
+  GatewayWakeWordController get wakeWord =>
+      _wakeWord ??= GatewayWakeWordController(
+        transport: GatewayWakeTransport.fromDesktop(this),
+      );
 
   static const _asyncEventTypes = {
     'background.complete',
@@ -994,7 +1009,9 @@ class DesktopGatewayClient implements SlashCommandGateway {
     _capabilities.bindTo(client);
     final gatewayReady = client.onGatewayReady;
     client.onGatewayReady = (frame) {
-      if (!_closed) gatewayReady?.call(frame);
+      if (_closed) return;
+      gatewayReady?.call(frame);
+      if (!_socketReady.isClosed) _socketReady.add(null);
     };
     _serverRequestClientOrdinals.putIfAbsent(
       client,
@@ -1004,6 +1021,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
     client.onConnectionClosed = () => _forgetServerRequestsFrom(client);
     client.onStreamEvent = (event) {
       if (_closed) return;
+      if (!_gatewayEvents.isClosed) _gatewayEvents.add(event);
       final ownerSessionId = _mobileSessionIdFor(
         event.sessionId ?? event.data['session_id']?.toString(),
       );
@@ -1672,6 +1690,8 @@ class DesktopGatewayClient implements SlashCommandGateway {
     // Idempotent: a double close must not re-enter or corrupt state.
     if (_closed) return;
     _closed = true;
+    unawaited(_gatewayEvents.close());
+    unawaited(_socketReady.close());
     workspace.close();
     slashRefusals.reset();
     _reconnectTimer?.cancel();
@@ -1683,6 +1703,8 @@ class DesktopGatewayClient implements SlashCommandGateway {
     _sessionCreatedListener = null;
     _connectionListener = null;
     _projects = null;
+    _wakeWord?.dispose();
+    _wakeWord = null;
     _ws?.close();
     _ws = null;
     _gatewaySessionIds.clear();

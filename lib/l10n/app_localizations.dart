@@ -11552,6 +11552,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Speak over the reply to cut it short'**
   String get ng_barge_in_subtitle;
+
+  /// No description provided for @wake_word_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake word'**
+  String get wake_word_title;
+
+  /// No description provided for @wake_word_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hands-free wake detection on the gateway. Off by default; streams microphone audio only when client capture is active.'**
+  String get wake_word_subtitle;
+
+  /// No description provided for @wake_word_listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening for wake word \"{phrase}\"'**
+  String wake_word_listening(String phrase);
+
+  /// No description provided for @wake_word_paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake word \"{phrase}\" — paused'**
+  String wake_word_paused(String phrase);
+
+  /// No description provided for @wake_word_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake word \"{phrase}\" — off'**
+  String wake_word_off(String phrase);
+
+  /// No description provided for @wake_word_arming.
+  ///
+  /// In en, this message translates to:
+  /// **'Arming wake word…'**
+  String get wake_word_arming;
+
+  /// No description provided for @wake_word_stop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop wake word'**
+  String get wake_word_stop;
+
+  /// No description provided for @wake_word_rearm.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-arm'**
+  String get wake_word_rearm;
+
+  /// No description provided for @wake_word_capture_mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Capture mode'**
+  String get wake_word_capture_mode;
+
+  /// No description provided for @wake_word_capture_auto.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get wake_word_capture_auto;
+
+  /// No description provided for @wake_word_capture_client.
+  ///
+  /// In en, this message translates to:
+  /// **'This device\'s microphone'**
+  String get wake_word_capture_client;
+
+  /// No description provided for @wake_word_capture_local.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway host microphone'**
+  String get wake_word_capture_local;
+
+  /// No description provided for @wake_word_input_device.
+  ///
+  /// In en, this message translates to:
+  /// **'Input microphone'**
+  String get wake_word_input_device;
+
+  /// No description provided for @wake_word_default_device.
+  ///
+  /// In en, this message translates to:
+  /// **'System default'**
+  String get wake_word_default_device;
+
+  /// No description provided for @ng_wake_word_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake word'**
+  String get ng_wake_word_title;
+
+  /// No description provided for @ng_wake_word_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hands-free wake detection on the gateway. Off by default.'**
+  String get ng_wake_word_subtitle;
 }
 
 class _AppLocalizationsDelegate

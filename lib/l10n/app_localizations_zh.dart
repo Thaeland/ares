@@ -6605,6 +6605,60 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ng_barge_in_subtitle => '朗读时开口说话即可提前停止';
+
+  @override
+  String get wake_word_title => '唤醒词';
+
+  @override
+  String get wake_word_subtitle => '由网关提供免提唤醒检测。默认关闭；仅在启用设备麦克风采集时发送音频。';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return '正在监听唤醒词“$phrase”';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return '唤醒词“$phrase” — 已暂停';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return '唤醒词“$phrase” — 已关闭';
+  }
+
+  @override
+  String get wake_word_arming => '正在启用唤醒词…';
+
+  @override
+  String get wake_word_stop => '停止唤醒词';
+
+  @override
+  String get wake_word_rearm => '重新启用';
+
+  @override
+  String get wake_word_capture_mode => '采集模式';
+
+  @override
+  String get wake_word_capture_auto => '自动';
+
+  @override
+  String get wake_word_capture_client => '此设备麦克风';
+
+  @override
+  String get wake_word_capture_local => '网关主机麦克风';
+
+  @override
+  String get wake_word_input_device => '输入麦克风';
+
+  @override
+  String get wake_word_default_device => '系统默认';
+
+  @override
+  String get ng_wake_word_title => '唤醒词';
+
+  @override
+  String get ng_wake_word_subtitle => '由网关提供免提唤醒检测。默认关闭。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -12638,6 +12692,60 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_barge_in_subtitle => '朗读时开口说话即可提前停止';
+
+  @override
+  String get wake_word_title => '唤醒词';
+
+  @override
+  String get wake_word_subtitle => '由网关提供免提唤醒检测。默认关闭；仅在启用设备麦克风采集时发送音频。';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return '正在监听唤醒词“$phrase”';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return '唤醒词“$phrase” — 已暂停';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return '唤醒词“$phrase” — 已关闭';
+  }
+
+  @override
+  String get wake_word_arming => '正在启用唤醒词…';
+
+  @override
+  String get wake_word_stop => '停止唤醒词';
+
+  @override
+  String get wake_word_rearm => '重新启用';
+
+  @override
+  String get wake_word_capture_mode => '采集模式';
+
+  @override
+  String get wake_word_capture_auto => '自动';
+
+  @override
+  String get wake_word_capture_client => '此设备麦克风';
+
+  @override
+  String get wake_word_capture_local => '网关主机麦克风';
+
+  @override
+  String get wake_word_input_device => '输入麦克风';
+
+  @override
+  String get wake_word_default_device => '系统默认';
+
+  @override
+  String get ng_wake_word_title => '唤醒词';
+
+  @override
+  String get ng_wake_word_subtitle => '由网关提供免提唤醒检测。默认关闭。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -19070,4 +19178,58 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get ng_barge_in_subtitle => '在朗讀回覆時開口即可中斷播放';
+
+  @override
+  String get wake_word_title => '喚醒詞';
+
+  @override
+  String get wake_word_subtitle => '由閘道器提供免持喚醒偵測。預設關閉；僅在啟用裝置麥克風擷取時傳送音訊。';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return '正在聆聽喚醒詞「$phrase」';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return '喚醒詞「$phrase」— 已暫停';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return '喚醒詞「$phrase」— 已關閉';
+  }
+
+  @override
+  String get wake_word_arming => '正在啟用喚醒詞…';
+
+  @override
+  String get wake_word_stop => '停止喚醒詞';
+
+  @override
+  String get wake_word_rearm => '重新啟用';
+
+  @override
+  String get wake_word_capture_mode => '擷取模式';
+
+  @override
+  String get wake_word_capture_auto => '自動';
+
+  @override
+  String get wake_word_capture_client => '此裝置麥克風';
+
+  @override
+  String get wake_word_capture_local => '閘道器主機麥克風';
+
+  @override
+  String get wake_word_input_device => '輸入麥克風';
+
+  @override
+  String get wake_word_default_device => '系統預設';
+
+  @override
+  String get ng_wake_word_title => '喚醒詞';
+
+  @override
+  String get ng_wake_word_subtitle => '由閘道器提供免持喚醒偵測。預設關閉。';
 }

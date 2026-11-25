@@ -16,6 +16,7 @@ import '../../core/services/remote_files_client.dart';
 import '../../core/services/remote_workspace.dart';
 import '../../core/services/chat_presentation_state.dart';
 import '../../core/services/connection_mutation_barrier.dart';
+import '../../core/services/gateway_wake_word.dart';
 import '../../core/services/ws_client.dart';
 import '../nextgen_l10n.dart';
 import 'nextgen_projects.dart';
@@ -110,9 +111,22 @@ class NextGenGateway extends ChangeNotifier {
   );
 
   NgProjects? _projects;
+  GatewayWakeWordController? _wakeWord;
 
   NgProjects projects(SharedPreferences preferences) =>
       _projects ??= NgProjects(this, preferences);
+
+  /// Gateway-backed wake-word controller scoped to this connection/profile.
+  GatewayWakeWordController get wakeWord =>
+      _wakeWord ??= GatewayWakeWordController(
+        transport: GatewayWakeTransport.fromNextGen(this),
+      );
+
+  @visibleForTesting
+  set debugWakeWord(GatewayWakeWordController? controller) {
+    _wakeWord?.dispose();
+    _wakeWord = controller;
+  }
 
   final SavedConnection connection;
   final GatewayUrl url;
@@ -667,6 +681,8 @@ class NextGenGateway extends ChangeNotifier {
 
   @override
   void dispose() {
+    _wakeWord?.dispose();
+    _wakeWord = null;
     workspace.close();
     draftPresentation.close();
     _projects?.close();

@@ -6896,4 +6896,60 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get ng_barge_in_subtitle =>
       'Скажите что-нибудь во время чтения, чтобы остановить его';
+
+  @override
+  String get wake_word_title => 'Кодовая фраза';
+
+  @override
+  String get wake_word_subtitle =>
+      'Распознавание кодовой фразы на шлюзе. По умолчанию выключено; передаёт звук с микрофона только при захвате на устройстве.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'Ожидание кодовой фразы «$phrase»';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'Кодовая фраза «$phrase» — пауза';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'Кодовая фраза «$phrase» — выкл.';
+  }
+
+  @override
+  String get wake_word_arming => 'Включение кодовой фразы…';
+
+  @override
+  String get wake_word_stop => 'Остановить кодовую фразу';
+
+  @override
+  String get wake_word_rearm => 'Перезапустить';
+
+  @override
+  String get wake_word_capture_mode => 'Режим захвата';
+
+  @override
+  String get wake_word_capture_auto => 'Автоматически';
+
+  @override
+  String get wake_word_capture_client => 'Микрофон этого устройства';
+
+  @override
+  String get wake_word_capture_local => 'Микрофон хоста шлюза';
+
+  @override
+  String get wake_word_input_device => 'Входной микрофон';
+
+  @override
+  String get wake_word_default_device => 'По умолчанию системы';
+
+  @override
+  String get ng_wake_word_title => 'Кодовая фраза';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'Распознавание кодовой фразы на шлюзе. По умолчанию выключено.';
 }

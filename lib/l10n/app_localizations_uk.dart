@@ -6893,4 +6893,60 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get ng_barge_in_subtitle =>
       'Скажіть щось під час читання, щоб зупинити його';
+
+  @override
+  String get wake_word_title => 'Ключова фраза';
+
+  @override
+  String get wake_word_subtitle =>
+      'Розпізнавання ключової фрази на шлюзі. За замовчуванням вимкнено; передає аудіо лише під час клієнтського захоплення.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'Очікування ключової фрази «$phrase»';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'Ключова фраза «$phrase» — призупинено';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'Ключова фраза «$phrase» — вимкнено';
+  }
+
+  @override
+  String get wake_word_arming => 'Увімкнення ключової фрази…';
+
+  @override
+  String get wake_word_stop => 'Зупинити ключову фразу';
+
+  @override
+  String get wake_word_rearm => 'Перезапустити';
+
+  @override
+  String get wake_word_capture_mode => 'Режим захоплення';
+
+  @override
+  String get wake_word_capture_auto => 'Автоматично';
+
+  @override
+  String get wake_word_capture_client => 'Мікрофон цього пристрою';
+
+  @override
+  String get wake_word_capture_local => 'Мікрофон хоста шлюзу';
+
+  @override
+  String get wake_word_input_device => 'Вхідний мікрофон';
+
+  @override
+  String get wake_word_default_device => 'Системний за замовчуванням';
+
+  @override
+  String get ng_wake_word_title => 'Ключова фраза';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'Розпізнавання ключової фрази на шлюзі. За замовчуванням вимкнено.';
 }

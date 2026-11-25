@@ -29,6 +29,8 @@ import '../services/android_voice_composer_adapter.dart';
 import '../services/hands_free_speech.dart';
 import '../services/hands_free_route_observer.dart';
 import '../services/connection_mutation_barrier.dart';
+import '../services/gateway_wake_word.dart';
+import '../widgets/gateway_wake_controls.dart';
 import '../widgets/hands_free_voice_controls.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -836,6 +838,7 @@ class _ChatScreenState extends State<ChatScreen>
   late final Future<ChatModelOverrideStore> _chatModelStore;
   late final Future<void> _sessionModelRestore;
   DesktopGatewayClient? _desktopGateway;
+  GatewayWakeWordController? get _wake => _desktopGateway?.wakeWord;
   GatewayTurnApplicationController? _localTurnController;
   NormalGatewayApplicationSession? _normalSession;
   bool _normalSessionReady = false;
@@ -1177,6 +1180,7 @@ class _ChatScreenState extends State<ChatScreen>
         final gateway = _normalSession!.client;
         _desktopGateway = gateway;
         if (gateway != null) widget.testDesktopGateway?.call(gateway);
+        if (gateway != null) _bindWake();
         // The catalogue is per connection: a bound transport invalidates any
         // failure recorded before the socket existed. An application session
         // can exist without a Desktop client (routing/test owners).
@@ -1901,12 +1905,30 @@ class _ChatScreenState extends State<ChatScreen>
     }
   }
 
+  /// The gateway owns wake detection. Bind this chat so a wake event starts
+  /// dictation on the active session, never on a neighbouring chat.
+  void _bindWake() {
+    final wake = _wake;
+    if (wake == null) return;
+    wake.bindSessionId(widget.session.id);
+    wake.onWakeDetected = _onWakeDetected;
+    wake.setAppForeground(_voiceElementActive && !_appInBackground);
+  }
+
+  void _onWakeDetected(WakeDetectedEvent event) {
+    if (!mounted || !_voiceElementActive) return;
+    if (!_voiceComposer.listening && !_voiceComposer.starting) {
+      unawaited(_startVoiceInput());
+    }
+  }
+
   @override
   void didUpdateWidget(covariant ChatScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.connection != widget.connection ||
         oldWidget.session.id != widget.session.id) {
       _preview.close();
+      _bindWake();
     }
     if (_slashGateway case final gateway?) {
       _slashController.useRefusals(gateway.slashRefusals);
@@ -1946,6 +1968,7 @@ class _ChatScreenState extends State<ChatScreen>
     // notifies the global observer. Revoke before leaving the active tree;
     // neither retained callbacks nor pending audio starts may borrow a reparent.
     _voiceElementActive = false;
+    _wake?.setAppForeground(false);
     handsFreeRouteObserver.removeListener(_onVoiceRouteChanged);
     _revokeVoice(HandsFreeStopReason.routeChanged);
     super.deactivate();
@@ -1956,6 +1979,7 @@ class _ChatScreenState extends State<ChatScreen>
     super.activate();
     _voiceElementActive = true;
     handsFreeRouteObserver.addListener(_onVoiceRouteChanged);
+    _bindWake();
     // Reactivation restores observation, never microphone consent.
   }
 
@@ -1966,6 +1990,11 @@ class _ChatScreenState extends State<ChatScreen>
       pendingSubmission.complete();
     }
     _manualAudioIntent++;
+    final wake = _wake;
+    if (wake != null) {
+      if (wake.onWakeDetected == _onWakeDetected) wake.onWakeDetected = null;
+      wake.setAppForeground(false);
+    }
     _composerFocus
       ..removeListener(_syncComposerKeyboardEndScroll)
       ..dispose();
@@ -2080,6 +2109,7 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     final foreground = state == AppLifecycleState.resumed;
+    _wake?.setAppForeground(foreground);
     if (_voiceForeground != foreground) _voiceForegroundEpoch++;
     _voiceForeground = foreground;
     if (!_voiceForeground) _revokeVoice(HandsFreeStopReason.background);
@@ -2845,6 +2875,15 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   void _onVoiceComposerChanged() {
+    // Wake stays silent while the mic is owned by dictation, so the engine
+    // never hears its own playback and a wake word cannot start a second mic.
+    if (_wake case final wake?) {
+      if (_voiceComposer.listening || _voiceComposer.starting) {
+        unawaited(wake.pauseForVoice());
+      } else {
+        wake.setPausedForVoice(false);
+      }
+    }
     if (_voiceBound &&
         _handsFree.active &&
         (_voiceRecording.recording ||
@@ -8706,6 +8745,12 @@ class _ChatScreenState extends State<ChatScreen>
                         onStop: () => unawaited(_voiceComposer.stop()),
                         onCancel: () => unawaited(_voiceComposer.cancel()),
                       ),
+                    if (_wake case final wake?)
+                      GatewayWakeListeningBanner(
+                        controller: wake,
+                        available: availableHeight,
+                        sessionId: widget.session.id,
+                      ),
                   ],
                 ),
               ),
@@ -8853,6 +8898,14 @@ class _ChatScreenState extends State<ChatScreen>
                       const SizedBox(width: 8),
                       if (!separateVoiceAction && handsFreeAction != null)
                         handsFreeAction,
+                      if (_wake case final wake?)
+                        GatewayWakeToolbarButton(
+                          controller: wake,
+                          sessionId: widget.session.id,
+                          onNotice: (msg) => ScaffoldMessenger.maybeOf(
+                            context,
+                          )?.showSnackBar(SnackBar(content: Text(msg))),
+                        ),
                       if (!_voiceComposer.listening && !_streaming)
                         VoiceComposerStartButton(
                           enabled:

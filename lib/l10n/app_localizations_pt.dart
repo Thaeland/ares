@@ -6893,6 +6893,62 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ng_barge_in_subtitle => 'Fale sobre a resposta para interrompê-la';
+
+  @override
+  String get wake_word_title => 'Palavra de ativação';
+
+  @override
+  String get wake_word_subtitle =>
+      'Deteção mãos-livres no gateway. Desativada por predefinição; transmite áudio apenas quando a captura no dispositivo está ativa.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'À escuta da palavra de ativação \"$phrase\"';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'Palavra de ativação \"$phrase\" — em pausa';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'Palavra de ativação \"$phrase\" — desligada';
+  }
+
+  @override
+  String get wake_word_arming => 'A ativar palavra de ativação…';
+
+  @override
+  String get wake_word_stop => 'Parar palavra de ativação';
+
+  @override
+  String get wake_word_rearm => 'Reativar';
+
+  @override
+  String get wake_word_capture_mode => 'Modo de captura';
+
+  @override
+  String get wake_word_capture_auto => 'Automático';
+
+  @override
+  String get wake_word_capture_client => 'Microfone deste dispositivo';
+
+  @override
+  String get wake_word_capture_local => 'Microfone do anfitrião do gateway';
+
+  @override
+  String get wake_word_input_device => 'Microfone de entrada';
+
+  @override
+  String get wake_word_default_device => 'Predefinição do sistema';
+
+  @override
+  String get ng_wake_word_title => 'Palavra de ativação';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'Deteção mãos-livres no gateway. Desativada por predefinição.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -13208,4 +13264,60 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get ng_barge_in_subtitle => 'Fale sobre a resposta para interrompê-la';
+
+  @override
+  String get wake_word_title => 'Palavra de ativação';
+
+  @override
+  String get wake_word_subtitle =>
+      'Detecção mãos-livres no gateway. Desativada por padrão; envia áudio apenas quando a captura no dispositivo está ativa.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'Ouvindo a palavra de ativação \"$phrase\"';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'Palavra de ativação \"$phrase\" — pausada';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'Palavra de ativação \"$phrase\" — desligada';
+  }
+
+  @override
+  String get wake_word_arming => 'Ativando palavra de ativação…';
+
+  @override
+  String get wake_word_stop => 'Parar palavra de ativação';
+
+  @override
+  String get wake_word_rearm => 'Reativar';
+
+  @override
+  String get wake_word_capture_mode => 'Modo de captura';
+
+  @override
+  String get wake_word_capture_auto => 'Automático';
+
+  @override
+  String get wake_word_capture_client => 'Microfone deste dispositivo';
+
+  @override
+  String get wake_word_capture_local => 'Microfone do host do gateway';
+
+  @override
+  String get wake_word_input_device => 'Microfone de entrada';
+
+  @override
+  String get wake_word_default_device => 'Padrão do sistema';
+
+  @override
+  String get ng_wake_word_title => 'Palavra de ativação';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'Detecção mãos-livres no gateway. Desativada por padrão.';
 }

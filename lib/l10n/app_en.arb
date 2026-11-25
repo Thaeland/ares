@@ -3042,5 +3042,42 @@
   "barge_in_title": "Barge in",
   "barge_in_subtitle": "Speak over the reply to cut it short",
   "ng_barge_in_title": "Barge in",
-  "ng_barge_in_subtitle": "Speak over the reply to cut it short"
+  "ng_barge_in_subtitle": "Speak over the reply to cut it short",
+  "wake_word_title": "Wake word",
+  "wake_word_subtitle": "Hands-free wake detection on the gateway. Off by default; streams microphone audio only when client capture is active.",
+  "wake_word_listening": "Listening for wake word \"{phrase}\"",
+  "@wake_word_listening": {
+    "placeholders": {
+      "phrase": {
+        "type": "String"
+      }
+    }
+  },
+  "wake_word_paused": "Wake word \"{phrase}\" — paused",
+  "@wake_word_paused": {
+    "placeholders": {
+      "phrase": {
+        "type": "String"
+      }
+    }
+  },
+  "wake_word_off": "Wake word \"{phrase}\" — off",
+  "@wake_word_off": {
+    "placeholders": {
+      "phrase": {
+        "type": "String"
+      }
+    }
+  },
+  "wake_word_arming": "Arming wake word…",
+  "wake_word_stop": "Stop wake word",
+  "wake_word_rearm": "Re-arm",
+  "wake_word_capture_mode": "Capture mode",
+  "wake_word_capture_auto": "Automatic",
+  "wake_word_capture_client": "This device's microphone",
+  "wake_word_capture_local": "Gateway host microphone",
+  "wake_word_input_device": "Input microphone",
+  "wake_word_default_device": "System default",
+  "ng_wake_word_title": "Wake word",
+  "ng_wake_word_subtitle": "Hands-free wake detection on the gateway. Off by default."
 }

@@ -1812,5 +1812,21 @@
   "barge_in_title": "Interromper a leitura",
   "barge_in_subtitle": "Fale sobre a resposta para interrompê-la",
   "ng_barge_in_title": "Interromper a leitura",
-  "ng_barge_in_subtitle": "Fale sobre a resposta para interrompê-la"
+  "ng_barge_in_subtitle": "Fale sobre a resposta para interrompê-la",
+  "wake_word_title": "Palavra de ativação",
+  "wake_word_subtitle": "Deteção mãos-livres no gateway. Desativada por predefinição; transmite áudio apenas quando a captura no dispositivo está ativa.",
+  "wake_word_listening": "À escuta da palavra de ativação \"{phrase}\"",
+  "wake_word_paused": "Palavra de ativação \"{phrase}\" — em pausa",
+  "wake_word_off": "Palavra de ativação \"{phrase}\" — desligada",
+  "wake_word_arming": "A ativar palavra de ativação…",
+  "wake_word_stop": "Parar palavra de ativação",
+  "wake_word_rearm": "Reativar",
+  "wake_word_capture_mode": "Modo de captura",
+  "wake_word_capture_auto": "Automático",
+  "wake_word_capture_client": "Microfone deste dispositivo",
+  "wake_word_capture_local": "Microfone do anfitrião do gateway",
+  "wake_word_input_device": "Microfone de entrada",
+  "wake_word_default_device": "Predefinição do sistema",
+  "ng_wake_word_title": "Palavra de ativação",
+  "ng_wake_word_subtitle": "Deteção mãos-livres no gateway. Desativada por predefinição."
 }

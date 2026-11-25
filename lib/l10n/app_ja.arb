@@ -1812,5 +1812,21 @@
   "barge_in_title": "割り込み",
   "barge_in_subtitle": "読み上げ中に話して途中で止める",
   "ng_barge_in_title": "割り込み",
-  "ng_barge_in_subtitle": "読み上げ中に話して途中で止める"
+  "ng_barge_in_subtitle": "読み上げ中に話して途中で止める",
+  "wake_word_title": "ウェイクワード",
+  "wake_word_subtitle": "ゲートウェイでのハンズフリー起動語検出。既定ではオフ。クライアント収音が有効なときのみマイク音声を送信します。",
+  "wake_word_listening": "ウェイクワード「{phrase}」を待機中",
+  "wake_word_paused": "ウェイクワード「{phrase}」— 一時停止中",
+  "wake_word_off": "ウェイクワード「{phrase}」— オフ",
+  "wake_word_arming": "ウェイクワードを準備中…",
+  "wake_word_stop": "ウェイクワードを停止",
+  "wake_word_rearm": "再待機",
+  "wake_word_capture_mode": "収音モード",
+  "wake_word_capture_auto": "自動",
+  "wake_word_capture_client": "このデバイスのマイク",
+  "wake_word_capture_local": "ゲートウェイホストのマイク",
+  "wake_word_input_device": "入力マイク",
+  "wake_word_default_device": "システム既定",
+  "ng_wake_word_title": "ウェイクワード",
+  "ng_wake_word_subtitle": "ゲートウェイでのハンズフリー起動語検出。既定ではオフ。"
 }
