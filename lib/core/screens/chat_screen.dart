@@ -10,6 +10,10 @@ import 'package:flutter/material.dart';
 import '../widgets/session_name_dialog.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import '../presentation/companion_draft.dart';
+import '../presentation/petdex.dart';
+import '../presentation/presentation_chrome.dart';
+import '../presentation/transcript_reading.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:uuid/uuid.dart';
 import '../controllers/hands_free_conversation_controller.dart';
@@ -838,6 +842,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   bool _changingModel = false;
   bool _sending = false;
   bool _streaming = false;
+  bool _companionLeftDuringTurn = false;
+  bool _companionUnread = false;
   bool _preparingSend = false;
   bool _midTurnSendInFlight = false;
   GatewayTurnStatus? _gatewayTurnStatus;
@@ -951,6 +957,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    CompanionDraft.pending.addListener(_applyCompanionDraft);
     _composerFocus.addListener(_syncComposerKeyboardEndScroll);
     _notificationApprovalOrigin = NotificationApprovalAuthority.origin(
       widget.connection,
@@ -1572,6 +1579,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _slashController.updateText(text);
   }
 
+  void _applyCompanionDraft() {
+    if (!mounted) return;
+    CompanionDraft.applyTo(_textController);
+  }
+
   void _onSlashCommandChanged() {
     if (mounted) setState(() {});
   }
@@ -1885,6 +1897,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _slashController
       ..removeListener(_onSlashCommandChanged)
       ..dispose();
+    CompanionDraft.pending.removeListener(_applyCompanionDraft);
     final draftSaved = _draftWriter.close();
     unawaited(draftSaved.then((_) => _localTurnController?.close()));
     _textController.dispose();
@@ -1928,12 +1941,18 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached) {
+      if (_sending || _streaming) _companionLeftDuringTurn = true;
       _appInBackground = true;
       _normalSession?.setLifecycle(background: true);
       // Persist the draft on the way out: a process kill must not lose it.
       unawaited(_draftWriter.flush());
     } else if (state == AppLifecycleState.resumed) {
       _appInBackground = false;
+      if (_companionLeftDuringTurn && !_sending && !_streaming) {
+        _companionLeftDuringTurn = false;
+        _companionUnread = true;
+        if (mounted) setState(() {});
+      }
       if (_normalChat?.snapshot.reconciling == true) {
         widget.testDesktopSessionEnsured?.call();
       }
@@ -7063,6 +7082,18 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ),
         ),
         actions: [
+          PresentationChrome(
+            activity: (_sending || _streaming)
+                ? PetActivity.working
+                : _companionUnread
+                ? PetActivity.completed
+                : PetActivity.idle,
+            unread: _companionUnread,
+            onCompose: () {
+              setState(() => _companionUnread = false);
+              _composerFocus.requestFocus();
+            },
+          ),
           if (_archiving)
             const Padding(
               padding: EdgeInsets.only(right: 8),
@@ -8709,8 +8740,12 @@ class MessageBubble extends StatelessWidget {
                       MarkdownBody(
                         data: block as String,
                         selectable: false,
-                        sizedImageBuilder: (image) =>
-                            Text(image.alt ?? image.title ?? ''),
+                        sizedImageBuilder: (image) => externalEmbed(
+                          dialogContext,
+                          uri: '${image.uri}',
+                          alt: image.alt ?? image.title,
+                          blocked: Text(image.alt ?? image.title ?? ''),
+                        ),
                         onTapLink: (_, href, _) => unawaited(
                           _openLink(
                             dialogContext,
@@ -8719,6 +8754,7 @@ class MessageBubble extends StatelessWidget {
                           ),
                         ),
                         styleSheet: _messageStyleSheet(
+                          dialogContext,
                           dialogTheme,
                           tokens,
                           isUser: false,
@@ -8793,19 +8829,26 @@ class MessageBubble extends StatelessWidget {
   }
 
   MarkdownStyleSheet _messageStyleSheet(
+    BuildContext context,
     ThemeData theme,
     HermesTokens tokens, {
     required bool isUser,
     required Color assistantTextColor,
   }) {
     final foreground = isUser ? tokens.onAccent : assistantTextColor;
-    final body = theme.textTheme.bodyMedium?.copyWith(color: foreground);
+    final body = chatTypeface(
+      context,
+      theme.textTheme.bodyMedium?.copyWith(color: foreground),
+    );
     final rule = isUser ? tokens.onAccent : tokens.border;
     return MarkdownStyleSheet(
       p: body,
-      code: tokens.typography.mono.copyWith(
-        backgroundColor: tokens.accentContainer,
-        color: tokens.onAccentContainer,
+      code: terminalTypeface(
+        context,
+        tokens.typography.mono.copyWith(
+          backgroundColor: tokens.accentContainer,
+          color: tokens.onAccentContainer,
+        ),
       ),
       a: TextStyle(
         color: isUser ? tokens.onAccent : tokens.accent,
@@ -8851,6 +8894,7 @@ class MessageBubble extends StatelessWidget {
     Color assistantTextColor,
   ) {
     final styleSheet = _messageStyleSheet(
+      context,
       Theme.of(context),
       tokens,
       isUser: isUser,
@@ -8883,7 +8927,12 @@ class MessageBubble extends StatelessWidget {
       styleSheet: styleSheet,
       // Local images become lazy file cards below. Never let Markdown load a
       // host path from the phone or contact an arbitrary image URL on render.
-      sizedImageBuilder: (image) => Text(image.alt ?? image.title ?? ''),
+      sizedImageBuilder: (image) => externalEmbed(
+        context,
+        uri: '${image.uri}',
+        alt: image.alt ?? image.title,
+        blocked: Text(image.alt ?? image.title ?? ''),
+      ),
       onTapLink: (_, href, _) => unawaited(_openLink(context, href)),
     );
 
@@ -9213,7 +9262,9 @@ class MessageBubble extends StatelessWidget {
         ),
         padding: density.bubblePadding,
         decoration: BoxDecoration(
-          color: isUser ? userBubbleColor : assistantBubbleColor,
+          color: isUser
+              ? userBubbleFill(context, userBubbleColor)
+              : assistantBubbleColor,
           borderRadius: BorderRadius.circular(density.bubbleRadius),
         ),
         child: Column(
@@ -9307,16 +9358,34 @@ class MessageBubble extends StatelessWidget {
 
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      // Compact drops the visible label, but the speaker is still information:
-      // keep it for screen readers instead of removing it from the tree.
-      child: density.showsSenderLabel
-          ? bubble
-          : Semantics(
-              container: true,
-              label: isUser ? 'You' : 'Hermes',
-              child: bubble,
-            ),
+      child: transcriptDirection(
+        context,
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: isUser
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
+          children: [
+            density.showsSenderLabel
+                ? bubble
+                : Semantics(
+                    container: true,
+                    label: isUser ? 'You' : 'Hermes',
+                    child: bubble,
+                  ),
+            MessageReaction(messageId: _reactionId),
+          ],
+        ),
+      ),
     );
+  }
+
+  String? get _reactionId {
+    final id = metadata['id'] ?? metadata['message_id'];
+    if (id is! String || id.isEmpty || id.length > 200 || id.contains('\n')) {
+      return null;
+    }
+    return id;
   }
 }
 

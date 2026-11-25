@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:highlight/highlight.dart' as syntax;
 
 import '../theme/hermes_theme.dart';
+import '../presentation/transcript_reading.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
 
@@ -149,10 +150,13 @@ class _MarkdownCodeBlockState extends State<MarkdownCodeBlock> {
       text: _nodes == null ? widget.code : null,
       children: _nodes?.map((node) => _span(node, tokens, scheme)).toList(),
     );
-    final style = tokens.typography.mono.copyWith(
-      fontSize: 13,
-      height: 1.45,
-      color: _readable(tokens.onSurface, tokens.raised),
+    final style = terminalTypeface(
+      context,
+      tokens.typography.mono.copyWith(
+        fontSize: 13,
+        height: 1.45,
+        color: _readable(tokens.onSurface, tokens.raised),
+      ),
     );
     // Inside a SelectionArea the code must be plain Text so it joins the
     // surrounding prose in one selection; a SelectableText would be its own
@@ -239,9 +243,7 @@ class _MarkdownCodeBlockState extends State<MarkdownCodeBlock> {
                         ),
                         style: TextButton.styleFrom(
                           minimumSize: const Size(64, 40),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           visualDensity: VisualDensity.compact,
                         ),
                       ),
