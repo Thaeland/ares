@@ -475,4 +475,128 @@ void main() {
     },
     variant: TargetPlatformVariant.only(TargetPlatform.macOS),
   );
+
+  testWidgets(
+    'PROBE-6 Classic: no Capture screen where the runner cannot capture',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final runner = _FakeCaptureRunner(
+        status: const {'supported': false, 'permission': 'not-required'},
+      );
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: ChatScreen(
+            connection: SavedConnection(
+              id: 'capture-classic-off',
+              label: 'Capture',
+              host: 'capture.invalid',
+              port: 8642,
+              apiKey: 'k',
+            ),
+            session: Session(
+              id: 'capture-classic-off-1',
+              title: 'Capture chat',
+              model: 'fixture-model',
+              source: 'test',
+              messageCount: 0,
+              isActive: true,
+              preview: '',
+              startedAt: 1,
+            ),
+            testApiClient: ApiClient(
+              baseUrl: 'http://capture.invalid',
+              apiKey: 'k',
+              httpClient: MockClient(
+                (_) async => http.Response('{"data":[]}', 200),
+              ),
+            ),
+            testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
+            screenCapture: _controller(root),
+          ),
+        ),
+      );
+      await pumpChatUpdates(tester);
+      await tester.tap(find.byTooltip('Attach image or file'));
+      for (var i = 0; i < 5; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      // The sheet is open (its other actions are there) but offers no
+      // capture: the runner said it cannot.
+      expect(find.text('Take photo'), findsOneWidget);
+      expect(
+        find.byKey(const Key('classic-attach-capture-screen')),
+        findsNothing,
+      );
+      expect(runner.calls, ['status']);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump(const Duration(seconds: 1));
+    },
+    variant: TargetPlatformVariant.only(TargetPlatform.linux),
+  );
+
+  testWidgets(
+    'PROBE-6 NextGen: no Capture screen where the runner cannot capture',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final runner = _FakeCaptureRunner(
+        status: const {'supported': false, 'permission': 'not-required'},
+      );
+      final g = _Ng(
+        SavedConnection(
+          id: 'capture-ng-off',
+          label: 'Capture',
+          host: '127.0.0.1',
+          port: 9,
+          apiKey: 'k',
+          dashboardProxied: true,
+          dashboardPortOverride: 9,
+        ),
+      );
+      final ng = NgChatController(g, sessionId: 'stored')..runtimeId = 'rt';
+      addTearDown(() {
+        ng.dispose();
+        g.dispose();
+      });
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: nextGenTheme(Brightness.dark, NextGenLook.instance),
+          home: NgScope(
+            connManager: ConnectionManager(
+              await SharedPreferences.getInstance(),
+            ),
+            gateway: g,
+            connections: [g.connection],
+            switchTo: (_) async {},
+            addGateway: () async {},
+            signOut: (_) async {},
+            reload: () async {},
+            signInAgain: () async {},
+            child: Scaffold(
+              body: NgChatView(
+                chat: ng,
+                onOpenSidebar: () {},
+                onNewChat: () {},
+                screenCapture: _controller(root),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.tap(find.byTooltip('Attach'));
+      for (var i = 0; i < 5; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(find.text('Photos'), findsOneWidget);
+      expect(find.byKey(const Key('ng-attach-capture-screen')), findsNothing);
+      expect(runner.calls, ['status']);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump(const Duration(seconds: 1));
+    },
+    variant: TargetPlatformVariant.only(TargetPlatform.linux),
+  );
 }

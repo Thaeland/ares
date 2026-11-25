@@ -174,6 +174,11 @@ void DesktopOs::HandleShell(
 void DesktopOs::HandleHotkey(
     const flutter::MethodCall<EncodableValue>& call, Result result) {
   const std::string& method = call.method_name();
+  if (method == "isSupported") {
+    // RegisterHotKey works in every interactive Windows session.
+    result->Success(EncodableValue(true));
+    return;
+  }
   if (method == "unregister") {
     UnregisterHotkey();
     result->Success();

@@ -151,6 +151,11 @@ class GlobalHotkeyController {
 
   final ValueNotifier<HotkeyStatus> status = ValueNotifier(HotkeyStatus.off);
 
+  /// Whether the runner can register a global shortcut on this desktop
+  /// (`isSupported`; false on Wayland and without a runner): null until it
+  /// answers. Settings offers the switch only when this is true.
+  final ValueNotifier<bool?> supported = ValueNotifier(null);
+
   /// Why the saved chord was rejected, when [status] is invalid.
   HotkeyCheck lastCheck = HotkeyCheck.ok;
 
@@ -183,7 +188,22 @@ class GlobalHotkeyController {
     _channel.setMethodCallHandler(_onCall);
     desktopOsPrefsChanges.addListener(_refresh);
     shortcutsStoreChanges.addListener(_refresh);
+    unawaited(querySupport());
     _refresh();
+  }
+
+  /// Asks the runner whether this desktop allows a global shortcut.
+  Future<bool> querySupport() async {
+    bool answer;
+    try {
+      answer = await _channel.invokeMethod<bool>('isSupported') == true;
+    } on MissingPluginException {
+      answer = false;
+    } on PlatformException {
+      answer = false;
+    }
+    if (!_disposed) supported.value = answer;
+    return answer;
   }
 
   void _refresh() => unawaited(sync());
@@ -241,6 +261,7 @@ class GlobalHotkeyController {
         status.value = HotkeyStatus.invalid;
       default:
         status.value = HotkeyStatus.unsupported;
+        supported.value = false;
     }
   }
 

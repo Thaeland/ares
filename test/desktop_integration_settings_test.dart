@@ -98,10 +98,96 @@ Future<_Ng> _pumpNextGen(WidgetTester tester) async {
   return g;
 }
 
+/// What the runner channels answer: tray and hotkey support.
+void _runner({required bool tray, required bool hotkey}) {
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+  messenger.setMockMethodCallHandler(
+    DesktopOsChannels.shell,
+    (call) async => switch (call.method) {
+      'isTraySupported' => tray,
+      'setTray' => false,
+      _ => null,
+    },
+  );
+  messenger.setMockMethodCallHandler(
+    DesktopOsChannels.hotkey,
+    (call) async => switch (call.method) {
+      'isSupported' => hotkey,
+      'register' => hotkey ? 'registered' : 'unsupported',
+      _ => null,
+    },
+  );
+}
+
+/// The integration the primary window's app root would run (NextGen tests
+/// mount Settings without the root).
+Future<DesktopIntegration> _integration(WidgetTester tester) async {
+  final integration = DesktopIntegration(
+    preferences: await SharedPreferences.getInstance(),
+  )..start();
+  addTearDown(() => unawaited(integration.dispose()));
+  return integration;
+}
+
+Future<void> _scrollToCard(WidgetTester tester) => tester.scrollUntilVisible(
+  find.byKey(_card),
+  300,
+  scrollable: find
+      .byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      )
+      .last,
+);
+
+void _expectOnlyHonestRows() {
+  // One disabled row each, with the reason; no switch that could only fail
+  // after it is turned on, and no Change button.
+  for (final key in [
+    'desktop-tray-switch',
+    'desktop-close-to-tray-switch',
+    'desktop-hotkey-switch',
+    'desktop-hotkey-change',
+  ]) {
+    expect(find.byKey(Key(key)), findsNothing, reason: key);
+  }
+  for (final key in [
+    'desktop-tray-unavailable',
+    'desktop-hotkey-unavailable',
+  ]) {
+    final row = find.byKey(Key(key));
+    expect(row, findsOneWidget, reason: key);
+    expect(
+      find.byWidgetPredicate(
+        (w) => w is ListTile && w.key == Key(key) && !w.enabled,
+      ),
+      findsOneWidget,
+    );
+  }
+  expect(
+    find.text('This desktop has no system tray Ares can use.'),
+    findsOneWidget,
+  );
+  expect(
+    find.text(
+      'This desktop does not let apps register a global shortcut (for example on Wayland).',
+    ),
+    findsOneWidget,
+  );
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  tearDown(() {
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    messenger.setMockMethodCallHandler(DesktopOsChannels.shell, null);
+    messenger.setMockMethodCallHandler(DesktopOsChannels.hotkey, null);
+  });
+
   setUp(() {
+    _runner(tray: true, hotkey: true);
     SharedPreferences.setMockInitialValues({});
     PackageInfo.setMockInitialValues(
       appName: 'Ares',
@@ -157,6 +243,7 @@ void main() {
   testWidgets(
     'NextGen Settings shows the card on desktop',
     (tester) async {
+      await _integration(tester);
       final g = await _pumpNextGen(tester);
       await tester.scrollUntilVisible(
         find.byKey(_card),
@@ -175,6 +262,30 @@ void main() {
     },
     variant: TargetPlatformVariant.only(TargetPlatform.linux),
   );
+
+  testWidgets('PROBE-6 Classic on a runner with no tray and no global hotkey '
+      '(Wayland): one disabled row each, never a switch', (tester) async {
+    _runner(tray: false, hotkey: false);
+    await _pumpClassic(tester);
+    await tester.pump();
+    await _scrollToCard(tester);
+    _expectOnlyHonestRows();
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 1));
+  }, variant: TargetPlatformVariant.only(TargetPlatform.linux));
+
+  testWidgets('PROBE-6 NextGen on a runner with no tray and no global hotkey '
+      '(Wayland): one disabled row each, never a switch', (tester) async {
+    _runner(tray: false, hotkey: false);
+    await _integration(tester);
+    final g = await _pumpNextGen(tester);
+    await tester.pump();
+    await _scrollToCard(tester);
+    _expectOnlyHonestRows();
+    await tester.pumpWidget(const SizedBox());
+    g.dispose();
+    await tester.pump(const Duration(seconds: 1));
+  }, variant: TargetPlatformVariant.only(TargetPlatform.linux));
 
   testWidgets(
     'phones never show the card',

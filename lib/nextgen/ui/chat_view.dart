@@ -68,7 +68,6 @@ import 'sessions_sidebar.dart';
 import 'slash_command_info.dart';
 import 'widgets.dart';
 import '../nextgen_l10n.dart';
-import '../../core/desktop/desktop_os.dart';
 import '../../core/desktop/screen_capture.dart';
 
 class NgChatView extends StatefulWidget {
@@ -470,6 +469,8 @@ class _NgChatViewState extends State<NgChatView>
   int get _slotsLeft => maxRemoteAttachmentDrafts - _drafts.length;
 
   Future<void> _attach() async {
+    final offerCapture = await screenCaptureOffered(widget.screenCapture);
+    if (!mounted) return;
     _imageDraftRevision++;
     final c = NgColors.of(context);
     final choice = await showNgSheet<String>(
@@ -493,7 +494,7 @@ class _NgChatViewState extends State<NgChatView>
               title: Text(ngL.ng_files),
               onTap: () => Navigator.pop(context, 'files'),
             ),
-            if (isDesktopOs)
+            if (offerCapture)
               ListTile(
                 key: const Key('ng-attach-capture-screen'),
                 leading: Icon(

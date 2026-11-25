@@ -130,75 +130,116 @@ class DesktopIntegrationCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                SwitchListTile(
-                  key: const Key('desktop-tray-switch'),
-                  title: Text(l.desktop_tray_setting),
-                  subtitle: Text(l.desktop_tray_setting_help),
-                  value: prefs.trayEnabled,
-                  onChanged: (value) => prefs.setTrayEnabled(value),
-                ),
-                SwitchListTile(
-                  key: const Key('desktop-close-to-tray-switch'),
-                  title: Text(l.desktop_close_to_tray_setting),
-                  value: prefs.closeToTray,
-                  onChanged: prefs.trayEnabled
-                      ? (value) => prefs.setCloseToTray(value)
-                      : null,
-                ),
-                if (running != null)
-                  ValueListenableBuilder<TrayStatus>(
-                    valueListenable: running.tray.status,
-                    builder: (context, status, _) =>
-                        status == TrayStatus.unsupported
-                        ? Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                            child: Text(
-                              l.desktop_tray_unsupported,
-                              key: const Key('desktop-tray-unsupported'),
-                              style: muted,
-                            ),
-                          )
-                        : const SizedBox.shrink(),
+                _supportGate(
+                  running?.tray.supported,
+                  supported: () => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SwitchListTile(
+                        key: const Key('desktop-tray-switch'),
+                        title: Text(l.desktop_tray_setting),
+                        subtitle: Text(l.desktop_tray_setting_help),
+                        value: prefs.trayEnabled,
+                        onChanged: (value) => prefs.setTrayEnabled(value),
+                      ),
+                      SwitchListTile(
+                        key: const Key('desktop-close-to-tray-switch'),
+                        title: Text(l.desktop_close_to_tray_setting),
+                        value: prefs.closeToTray,
+                        onChanged: prefs.trayEnabled
+                            ? (value) => prefs.setCloseToTray(value)
+                            : null,
+                      ),
+                      if (running != null)
+                        ValueListenableBuilder<TrayStatus>(
+                          valueListenable: running.tray.status,
+                          builder: (context, status, _) =>
+                              status == TrayStatus.unsupported
+                              ? Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    16,
+                                    0,
+                                    16,
+                                    8,
+                                  ),
+                                  child: Text(
+                                    l.desktop_tray_unsupported,
+                                    key: const Key('desktop-tray-unsupported'),
+                                    style: muted,
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                        ),
+                    ],
                   ),
+                  // One honest, disabled row instead of switches that could
+                  // only fail after being turned on.
+                  unsupported: () => ListTile(
+                    key: const Key('desktop-tray-unavailable'),
+                    enabled: false,
+                    leading: const Icon(Icons.block_outlined),
+                    title: Text(l.desktop_tray_setting),
+                    subtitle: Text(
+                      l.desktop_tray_unsupported,
+                      key: const Key('desktop-tray-unsupported'),
+                    ),
+                  ),
+                ),
                 const Divider(height: 16),
-                SwitchListTile(
-                  key: const Key('desktop-hotkey-switch'),
-                  title: Text(l.desktop_hotkey_setting),
-                  subtitle: hotkey == null
-                      ? Text(chordLabel)
-                      : ValueListenableBuilder<HotkeyStatus>(
-                          valueListenable: hotkey.status,
+                _supportGate(
+                  hotkey?.supported,
+                  supported: () => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SwitchListTile(
+                        key: const Key('desktop-hotkey-switch'),
+                        title: Text(l.desktop_hotkey_setting),
+                        subtitle: ValueListenableBuilder<HotkeyStatus>(
+                          valueListenable: hotkey!.status,
                           builder: (context, status, _) => Text(
                             hotkeyText(status),
                             key: Key('desktop-hotkey-status-${status.name}'),
                           ),
                         ),
-                  value: prefs.hotkeyEnabled,
-                  onChanged: (value) => prefs.setHotkeyEnabled(value),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Wrap(
-                    spacing: 8,
-                    children: [
-                      TextButton(
-                        key: const Key('desktop-hotkey-change'),
-                        onPressed: () => _changeHotkey(
-                          context,
-                          prefs,
-                          hotkey,
-                          chord,
-                          platform,
-                        ),
-                        child: Text(l.desktop_hotkey_change),
+                        value: prefs.hotkeyEnabled,
+                        onChanged: (value) => prefs.setHotkeyEnabled(value),
                       ),
-                      if (prefs.hotkeyChord != null)
-                        TextButton(
-                          key: const Key('desktop-hotkey-reset'),
-                          onPressed: () => prefs.setHotkeyChord(null),
-                          child: Text(l.desktop_hotkey_reset),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Wrap(
+                          spacing: 8,
+                          children: [
+                            TextButton(
+                              key: const Key('desktop-hotkey-change'),
+                              onPressed: () => _changeHotkey(
+                                context,
+                                prefs,
+                                hotkey,
+                                chord,
+                                platform,
+                              ),
+                              child: Text(l.desktop_hotkey_change),
+                            ),
+                            if (prefs.hotkeyChord != null)
+                              TextButton(
+                                key: const Key('desktop-hotkey-reset'),
+                                onPressed: () => prefs.setHotkeyChord(null),
+                                child: Text(l.desktop_hotkey_reset),
+                              ),
+                          ],
                         ),
+                      ),
                     ],
+                  ),
+                  unsupported: () => ListTile(
+                    key: const Key('desktop-hotkey-unavailable'),
+                    enabled: false,
+                    leading: const Icon(Icons.block_outlined),
+                    title: Text(l.desktop_hotkey_setting),
+                    subtitle: Text(
+                      l.desktop_hotkey_unsupported,
+                      key: const Key('desktop-hotkey-status-unsupported'),
+                    ),
                   ),
                 ),
               ],
@@ -206,6 +247,25 @@ class DesktopIntegrationCard extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+
+  /// Shows [supported] only once the runner has said it can do it, and one
+  /// disabled row with the reason when it cannot. Nothing while it has not
+  /// answered (or no integration runs in this window).
+  static Widget _supportGate(
+    ValueListenable<bool?>? support, {
+    required Widget Function() supported,
+    required Widget Function() unsupported,
+  }) {
+    if (support == null) return const SizedBox.shrink();
+    return ValueListenableBuilder<bool?>(
+      valueListenable: support,
+      builder: (context, value, _) => switch (value) {
+        true => supported(),
+        false => unsupported(),
+        null => const SizedBox.shrink(),
+      },
     );
   }
 }

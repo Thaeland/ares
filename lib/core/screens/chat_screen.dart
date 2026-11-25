@@ -137,7 +137,6 @@ import 'package:hermes_android/core/l10n/l10n.dart';
 import '../widgets/desktop_shortcuts.dart';
 import '../widgets/composer_prompt_recall.dart';
 import '../widgets/orphan_draft_recovery.dart';
-import '../desktop/desktop_os.dart';
 import '../desktop/screen_capture.dart';
 
 /// Recovery v2 opens a new server session and cannot yet target an existing
@@ -4091,6 +4090,8 @@ class _ChatScreenState extends State<ChatScreen>
         _pendingReattachResync) {
       return;
     }
+    final offerCapture = await screenCaptureOffered(widget.screenCapture);
+    if (!mounted) return;
 
     await showModalBottomSheet<void>(
       context: context,
@@ -4127,7 +4128,7 @@ class _ChatScreenState extends State<ChatScreen>
                 unawaited(_pickServerFile());
               },
             ),
-            if (isDesktopOs)
+            if (offerCapture)
               ListTile(
                 key: const Key('classic-attach-capture-screen'),
                 leading: const Icon(Icons.screenshot_monitor_outlined),

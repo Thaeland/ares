@@ -181,6 +181,16 @@ class ScreenCaptureController {
   }
 }
 
+/// Whether to offer **Capture screen** in an attach sheet: only where the
+/// runner reports capture as supported (`status().supported`), not merely
+/// on a desktop OS. A macOS permission that is still to be granted counts as
+/// supported; the action asks for it.
+Future<bool> screenCaptureOffered([ScreenCaptureController? controller]) async {
+  if (!isDesktopOs) return false;
+  final status = await (controller ?? ScreenCaptureController.shared).status();
+  return status.supported;
+}
+
 /// Runs the capture flow for a composer: permission explanation, capture,
 /// then [attach] with the PNG (which must copy it into a draft). Returns
 /// whether a draft was attached. Never sends.

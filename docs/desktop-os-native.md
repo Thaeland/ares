@@ -8,18 +8,20 @@ Dart: `lib/core/desktop/`. Settings: **Desktop integration** card in Classic Set
 
 | Direction | Method | Arguments | Result |
 | --- | --- | --- | --- |
-| Dart → runner | `setTray` | `{enabled, closeToTray, tooltip, items: [{id, label, checked?, separatorBefore?}]}` | `bool` icon shown |
+| Dart → runner | `setTray` | `{enabled, closeToTray, tooltip, items: [{id, label, checked?, separatorBefore?}]}` | `bool` icon actually shown |
 | Dart → runner | `showWindow` | — | — (show, restore, focus the primary window) |
 | Dart → runner | `quit` | — | — (runner closes the primary window after replying) |
-| Dart → runner | `isTraySupported` | — | `bool` |
+| Dart → runner | `isTraySupported` | — | `bool`: a tray host this runner can use is there now |
 | runner → Dart | `onTrayAction` | item `id` | — |
+| runner → Dart | `onTrayStatus` | `bool` shown | — (the icon appeared or went away after `setTray` answered) |
 
+- Settings asks `isTraySupported` (and the hotkey's `isSupported`) before offering anything: where the answer is no, the card shows one disabled row with the reason instead of the tray, close-to-tray and hotkey switches and the **Change** button, so no switch only fails after it is turned on. Nothing is shown for a control until its runner has answered. The same holds in Classic and NextGen Settings (one shared card).
 - Item ids are `[a-z-]{1,32}`; labels are cleaned of control characters and bounded (64 characters, tooltip 127). At most 16 items. Unknown ids from the runner are ignored by Dart.
 - Menu: Open Ares, New chat, Quick entry… (when available), Pause notifications (checked while the notification master switch is off), Quit Ares. A left click (Windows, Linux) shows the window; macOS opens the menu.
 - **Close to tray** is a second opt-in. It only applies while the icon is actually shown: Windows hides on `WM_CLOSE` only with an installed icon; Linux only while the XEmbed icon is embedded; macOS keeps the app running after the last window closes and a Dock click or the menu brings it back.
 - Windows: `Shell_NotifyIconW` (version 4), re-added after Explorer restarts (`TaskbarCreated`). The menu runs with `TrackPopupMenuEx`; no new activator, COM server or instance path. A second launch still focuses the hidden window through the existing mutex path.
 - macOS: `NSStatusItem` with a template SF Symbol.
-- Linux: `GtkStatusIcon` (XEmbed). It needs an X11 session with a tray host (KDE, Xfce, MATE, Cinnamon; GNOME needs a tray extension). On Wayland `setTray` returns `false` and Settings says the desktop has no usable tray. No new library is linked.
+- Linux: `GtkStatusIcon` (XEmbed). It needs an X11 session with a tray host (KDE, Xfce, MATE, Cinnamon; GNOME needs a tray extension): `isTraySupported` is true only while a `_NET_SYSTEM_TRAY_S<n>` selection owner exists. Embedding is asynchronous, so `setTray` answers `true` only once the host has embedded the icon (it waits at most 2.5 s, then answers `false`); a host that embeds it later is reported with `onTrayStatus`. On Wayland `setTray` returns `false` and Settings says the desktop has no usable tray. No new library is linked.
 
 ## Quick entry (HUD)
 
@@ -34,6 +36,7 @@ A small always-on-top window for typing a prompt into a chosen chat or a new one
 
 | Direction | Method | Arguments | Result |
 | --- | --- | --- | --- |
+| Dart → runner | `isSupported` | — | `bool`: this desktop lets an app register a global shortcut (Linux: X11 only) |
 | Dart → runner | `register` | `{key, meta, ctrl, alt, shift}` (`key` in `shortcuts_store` names, e.g. `space`, `keyK`) | `registered`, `conflict`, `unsupported` or `invalid` |
 | Dart → runner | `unregister` | — | — |
 | runner → Dart | `onHotKey` | — | — |
@@ -58,7 +61,7 @@ A small always-on-top window for typing a prompt into a chosen chat or a new one
 - The pause fails safe: it never outlives the user's return. Focus coming back to the primary window, a pointer press or a key press in it lifts the pause (`SystemSleepGate.noteUserActivity`), and every `resume` re-reads the lock state with `isLocked` (a definite `false` lifts the lock; `null` keeps it until the user is back in the window). So a lock whose unlock is never reported cannot leave the sockets paused until restart.
 - On resume a client that had a live socket reconnects; the new socket re-binds stored sessions with `session.resume`, and NextGen chats reattach through `reconnected`. Classic normal-chat recovery is held while paused and runs again on resume. **No prompt is sent again**: an in-flight submission is reconciled from history by the existing recovery journal. A NextGen socket the user stopped stays stopped; an idle Classic client dials lazily on its next call.
 - Keep-awake (Off / While working / Always): Windows `SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED)`; macOS `IOPMAssertionCreateWithName(kIOPMAssertionTypePreventUserIdleSystemSleep)`; Linux an xdg-desktop-portal `Inhibit` request with the *suspend* flag (released with `Request.Close`), or without a portal `org.freedesktop.ScreenSaver.Inhibit` (released with `UnInhibit`). None of the desktop ones keeps the display on. Android (`MainActivity`) sets `FLAG_KEEP_SCREEN_ON` and iOS (`SceneDelegate`) `UIApplication.isIdleTimerDisabled`, so phones and tablets call it **Keep screen on**. Runners release the request when the window goes away.
-- `isSupported` is true only where it works (Linux: a portal or a screensaver service is on the session bus); Settings (Classic and NextGen) shows the card, and its section header, only then.
+- `isSupported` is true only where it works; Settings (Classic and NextGen) shows the card, and its section header, only then. Linux answers asynchronously: true when the portal implements `org.freedesktop.portal.Inhibit` (its `version` property can be read, which also starts an activatable portal and fails without an Inhibit backend) or a service owns `org.freedesktop.ScreenSaver` right now. A name that is merely activatable does not count.
 - Dart (`KeepAwakeController`, owned by `HermesApp`) releases the request when the turn ends however it ends (finished, failed, cancelled), when the app is paused (background) or detached (exit), and takes it again on resume while still wanted. A minimised desktop window reports `hidden` and keeps it, so a long turn can finish while you are away.
 - It is also released while the computer sleeps or the session is locked (`SystemSleepGate`): the sockets are paused, so a turn that ends meanwhile is never seen and a "while working" request would otherwise stay held until unlock. After the pause it is taken again only once the turn is known to still run: chats that had a running turn when the pause started hold `SystemSleepGate.holdReconcile` (Classic `NormalGatewayChatOwner`, NextGen `NgChatController`) and release it once they have read their state again (Classic recovery's resume/history read or settlement; NextGen re-attach and catch-up), which bumps `SystemSleepGate.reconciled`. A turn seen to end or start after the pause also counts. "Always" has no turn to wait for and is taken again as soon as the pause lifts.
 - Windows: `WM_POWERBROADCAST` (`PBT_APMSUSPEND`, `PBT_APMRESUMESUSPEND`/`PBT_APMRESUMEAUTOMATIC`) and `WM_WTSSESSION_CHANGE` (`WTSRegisterSessionNotification`, links `wtsapi32.lib`).
@@ -88,7 +91,7 @@ Every runner only bounds a link (scheme `hermes:` in any case, at most 16 KiB, n
 | Dart → runner | `openSettings` | — | `bool` (macOS privacy pane) |
 | Dart → runner | `capture` | `{directory}` | PNG path inside `directory`; errors `cancelled`, `permission-denied`, `unsupported`, `failed` |
 
-- **Capture screen** in the attach sheet of both composers (Classic and NextGen, desktop only). The capture becomes an ordinary image draft through each composer's existing attachment path; the user reviews it and presses Send. **Never auto-sends.**
+- **Capture screen** in the attach sheet of both composers (Classic and NextGen), offered only where the runner's `status()` reports `supported` (asked when the sheet opens; `screenCaptureOffered`), not merely on a desktop OS. The capture becomes an ordinary image draft through each composer's existing attachment path; the user reviews it and presses Send. **Never auto-sends.**
 - Dart creates a private `ares-capture-*` folder, accepts only a non-empty PNG (signature checked, ≤ 25 MB) inside that folder, and removes the folder once the draft has its own copy or the capture is rejected.
 - macOS (14 or later): `CGPreflightScreenCaptureAccess`; the first request shows the system prompt (`CGRequestScreenCaptureAccess`); afterwards Ares explains the Screen Recording setting and opens it (`x-apple.systempreferences:…Privacy_ScreenCapture`). The capture is the frontmost on-screen window of another app (no Ares process: main, pop-out, companion, quick entry), or the main display without Ares' windows, via ScreenCaptureKit `SCScreenshotManager`. macOS 13 reports `unsupported`.
 - Windows: Windows Graphics Capture with the system `GraphicsCapturePicker` (the picker is the consent; the user chooses a window or display). One frame is copied to a staging texture on a worker thread, made opaque and written as PNG with WIC; results return to the UI thread as window messages. Links `d3d11`, `dxgi`, `windowscodecs`.

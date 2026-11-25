@@ -84,6 +84,11 @@ class TrayController {
 
   final ValueNotifier<TrayStatus> status = ValueNotifier(TrayStatus.off);
 
+  /// Whether the runner can show a tray icon on this desktop
+  /// (`isTraySupported`): null until it answers, false without a runner.
+  /// Settings offers the tray switches only when this is true.
+  final ValueNotifier<bool?> supported = ValueNotifier(null);
+
   Future<void> _queue = Future<void>.value();
   bool _started = false;
   bool _disposed = false;
@@ -95,7 +100,22 @@ class TrayController {
     _channel.setMethodCallHandler(_onCall);
     desktopOsPrefsChanges.addListener(_refresh);
     _refreshOn?.addListener(_refresh);
+    unawaited(querySupport());
     _refresh();
+  }
+
+  /// Asks the runner whether this desktop has a usable tray.
+  Future<bool> querySupport() async {
+    bool answer;
+    try {
+      answer = await _channel.invokeMethod<bool>('isTraySupported') == true;
+    } on MissingPluginException {
+      answer = false;
+    } on PlatformException {
+      answer = false;
+    }
+    if (!_disposed) supported.value = answer;
+    return answer;
   }
 
   void _refresh() => unawaited(sync());
@@ -158,7 +178,18 @@ class TrayController {
   }
 
   Future<Object?> _onCall(MethodCall call) async {
-    if (_disposed || call.method != 'onTrayAction') return null;
+    if (_disposed) return null;
+    if (call.method == 'onTrayStatus') {
+      // The icon appeared or went away after setTray answered (a tray host
+      // started late, or the desktop shell restarted).
+      if (!_prefs.trayEnabled) return null;
+      final shown = call.arguments == true;
+      _installed = shown;
+      status.value = shown ? TrayStatus.shown : TrayStatus.unsupported;
+      if (shown) supported.value = true;
+      return null;
+    }
+    if (call.method != 'onTrayAction') return null;
     final action = TrayAction.fromWire(call.arguments);
     // Unknown ids (or a quick-entry item that is not offered) do nothing.
     if (action == null) return null;

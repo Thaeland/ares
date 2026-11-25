@@ -242,6 +242,9 @@ final class AresDesktopOS: NSObject {
 
   private func handleHotkey(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
+    case "isSupported":
+      // Carbon hot keys work in every macOS session.
+      result(true)
     case "unregister":
       unregisterHotKey()
       result(nil)

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,11 +15,16 @@ const _channel = MethodChannel('test/desktop_shell');
 
 /// A fake runner for the shell channel: records calls and answers setTray.
 class _FakeShell {
-  _FakeShell({this.shows = true, this.missing = false}) {
+  _FakeShell({this.shows = true, this.missing = false, this.supported = true}) {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(_channel, (call) async {
-          calls.add(call);
           if (missing) throw MissingPluginException();
+          // The support query is kept out of [calls].
+          if (call.method == 'isTraySupported') {
+            supportQueries++;
+            return supported;
+          }
+          calls.add(call);
           if (call.method == 'setTray') {
             return (call.arguments as Map)['enabled'] == true && shows;
           }
@@ -28,6 +35,8 @@ class _FakeShell {
   final List<MethodCall> calls = [];
   bool shows;
   final bool missing;
+  bool supported;
+  int supportQueries = 0;
 
   List<MethodCall> named(String method) =>
       calls.where((c) => c.method == method).toList();
@@ -159,6 +168,58 @@ void main() {
       expect(tray.status.value, TrayStatus.unsupported);
       await tray.dispose();
     });
+
+    test('asks the runner whether this desktop has a usable tray', () async {
+      for (final (answer, missing) in [
+        (true, false),
+        (false, false),
+        (false, true),
+      ]) {
+        final shell = _FakeShell(supported: answer, missing: missing);
+        final tray = TrayController(
+          prefs: DesktopOsPrefs(await _prefs()),
+          labels: () => _labels,
+          onAction: (_) {},
+          notificationsPaused: () => false,
+          channel: _channel,
+        );
+        expect(tray.supported.value, isNull);
+        tray.start();
+        await pumpEventQueue();
+        expect(tray.supported.value, answer, reason: 'missing=$missing');
+        expect(shell.supportQueries, missing ? 0 : 1);
+        await tray.dispose();
+      }
+    });
+
+    test(
+      'a tray host that takes the icon later is reported by the runner',
+      () async {
+        final shell = _FakeShell(shows: false);
+        final prefs = DesktopOsPrefs(
+          await _prefs({DesktopOsPrefs.trayKey: true}),
+        );
+        final tray = TrayController(
+          prefs: prefs,
+          labels: () => _labels,
+          onAction: (_) {},
+          notificationsPaused: () => false,
+          channel: _channel,
+        )..start();
+        await tray.sync();
+        expect(tray.status.value, TrayStatus.unsupported);
+        await shell.send('onTrayStatus', true);
+        expect(tray.status.value, TrayStatus.shown);
+        await shell.send('onTrayStatus', false);
+        expect(tray.status.value, TrayStatus.unsupported);
+        // Turned off: a late report changes nothing.
+        await prefs.setTrayEnabled(false);
+        await tray.sync();
+        await shell.send('onTrayStatus', true);
+        expect(tray.status.value, TrayStatus.off);
+        await tray.dispose();
+      },
+    );
 
     test('a runner without the channel degrades to unsupported', () async {
       _FakeShell(missing: true);
@@ -300,18 +361,33 @@ void main() {
 
   group('DesktopIntegrationCard', () {
     testWidgets('edits the device-local tray preferences', (tester) async {
+      _FakeShell();
       final preferences = await _prefs();
+      final integration = DesktopIntegration(
+        preferences: preferences,
+        shell: const DesktopShell(_channel),
+        hotkeyChannel: const MethodChannel('test/desktop_tray_no_hotkey'),
+        notifications: ValueNotifier(NotificationPrefs.defaults),
+        strings: () => lookupAppLocalizations(const Locale('en')),
+      )..start();
+      addTearDown(() => unawaited(integration.dispose()));
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: ListView(
-              children: [DesktopIntegrationCard(preferences: preferences)],
+              children: [
+                DesktopIntegrationCard(
+                  preferences: preferences,
+                  integration: integration,
+                ),
+              ],
             ),
           ),
         ),
       );
+      await tester.pump();
       expect(find.text('Desktop integration'), findsOneWidget);
       SwitchListTile tile(String key) =>
           tester.widget<SwitchListTile>(find.byKey(Key(key)));

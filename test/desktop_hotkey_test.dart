@@ -16,13 +16,22 @@ import 'support/fake_child_process.dart';
 
 const _channel = MethodChannel('test/desktop_hotkey');
 
-/// A fake runner: answers register with [answer] and records calls.
+/// A fake runner: answers register with [answer] and records calls. The
+/// isSupported query is answered with [supported] and kept out of [calls].
 class _FakeHotkeyRunner {
-  _FakeHotkeyRunner({this.answer = 'registered', this.missing = false}) {
+  _FakeHotkeyRunner({
+    this.answer = 'registered',
+    this.missing = false,
+    this.supported = true,
+  }) {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(_channel, (call) async {
-          calls.add(call);
           if (missing) throw MissingPluginException();
+          if (call.method == 'isSupported') {
+            supportQueries++;
+            return supported;
+          }
+          calls.add(call);
           if (call.method == 'register') return answer;
           return null;
         });
@@ -31,6 +40,8 @@ class _FakeHotkeyRunner {
   final List<MethodCall> calls = [];
   String answer;
   final bool missing;
+  bool supported;
+  int supportQueries = 0;
 
   List<String> get methods => calls.map((c) => c.method).toList();
 
@@ -304,6 +315,52 @@ void main() {
       await second.dispose();
     });
 
+    test('asks the runner whether a global shortcut is possible', () async {
+      final runner = _FakeHotkeyRunner(supported: false);
+      final hotkey = GlobalHotkeyController(
+        prefs: DesktopOsPrefs(await _prefs()),
+        onPressed: () {},
+        channel: _channel,
+        platform: TargetPlatform.linux,
+      );
+      expect(hotkey.supported.value, isNull);
+      hotkey.start();
+      await pumpEventQueue();
+      expect(runner.supportQueries, 1);
+      expect(hotkey.supported.value, isFalse);
+      await hotkey.dispose();
+
+      _FakeHotkeyRunner(missing: true);
+      final missing = GlobalHotkeyController(
+        prefs: DesktopOsPrefs(await _prefs()),
+        onPressed: () {},
+        channel: _channel,
+        platform: TargetPlatform.linux,
+      )..start();
+      await pumpEventQueue();
+      expect(missing.supported.value, isFalse);
+      await missing.dispose();
+    });
+
+    test(
+      'a register answered unsupported marks the hotkey unsupported',
+      () async {
+        _FakeHotkeyRunner(answer: 'unsupported');
+        final hotkey = GlobalHotkeyController(
+          prefs: DesktopOsPrefs(
+            await _prefs({DesktopOsPrefs.hotkeyEnabledKey: true}),
+          ),
+          onPressed: () {},
+          channel: _channel,
+          platform: TargetPlatform.linux,
+        )..start();
+        await hotkey.sync();
+        expect(hotkey.status.value, HotkeyStatus.unsupported);
+        expect(hotkey.supported.value, isFalse);
+        await hotkey.dispose();
+      },
+    );
+
     test('exit unregisters a registered hotkey', () async {
       final runner = _FakeHotkeyRunner();
       final hotkey = GlobalHotkeyController(
@@ -367,6 +424,31 @@ void main() {
       DesktopIntegration? integration,
     }) async {
       final preferences = await _prefs(values);
+      if (integration == null) {
+        // A runner that supports the hotkey; the card offers the switch
+        // only once it has said so.
+        _FakeHotkeyRunner();
+        const shell = MethodChannel('test/desktop_hotkey_card_default_shell');
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+              shell,
+              (call) async => call.method == 'isTraySupported',
+            );
+        addTearDown(
+          () => TestDefaultBinaryMessengerBinding
+              .instance
+              .defaultBinaryMessenger
+              .setMockMethodCallHandler(shell, null),
+        );
+        final running = integration = DesktopIntegration(
+          preferences: preferences,
+          shell: const DesktopShell(shell),
+          hotkeyChannel: _channel,
+          notifications: ValueNotifier(NotificationPrefs.defaults),
+          strings: () => lookupAppLocalizations(const Locale('en')),
+        )..start();
+        addTearDown(() => unawaited(running.dispose()));
+      }
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -383,6 +465,7 @@ void main() {
           ),
         ),
       );
+      await tester.pump();
       return preferences;
     }
 
@@ -409,7 +492,11 @@ void main() {
           preferences.getString(DesktopOsPrefs.hotkeyChordKey),
           'ctrl+shift+keyJ',
         );
-        expect(find.text('Ctrl + Shift + J'), findsOneWidget);
+        // Registered on the runner now, so the status names the new chord.
+        expect(
+          find.text('Press Ctrl + Shift + J anywhere to open quick entry.'),
+          findsOneWidget,
+        );
       },
       variant: TargetPlatformVariant.only(TargetPlatform.windows),
     );
