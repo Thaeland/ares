@@ -7,6 +7,7 @@
 library;
 
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -79,6 +80,8 @@ import 'workspace_sessions_screen.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
 import '../widgets/desktop_shortcuts.dart';
+import '../widgets/command_palette.dart';
+import '../services/hermes_deeplink.dart';
 
 /// Builds the Projects repository for a connection. Injectable for tests.
 typedef ProjectsRepositoryFactory =
@@ -327,6 +330,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
 
   /// Desktop keyboard shortcut subscription (no-op on touch platforms).
   StreamSubscription<DesktopShortcut>? _desktopShortcutSub;
+  VoidCallback? _deepLinkListener;
   final _shellKey = GlobalKey<HermesShellState>();
 
   /// The last known attention/running signals. The compact attention section uses these; an
@@ -776,6 +780,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   void initState() {
     super.initState();
     _desktopShortcutSub = desktopShortcutBus.stream.listen(_onDesktopShortcut);
+    _deepLinkListener = _onPendingDeepLink;
+    HermesDeepLinkService.shared.pendingLink.addListener(_deepLinkListener!);
     _initialization = _initialize();
     _activityListener = _turnController.addTurnActivityListener(
       _onTurnActivityChanged,
@@ -948,6 +954,10 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   @override
   void dispose() {
     _desktopShortcutSub?.cancel();
+    final deepLinkListener = _deepLinkListener;
+    if (deepLinkListener != null) {
+      HermesDeepLinkService.shared.pendingLink.removeListener(deepLinkListener);
+    }
     _activityRead++;
     _activitySessionRead++;
     _activityDebounce?.cancel();
@@ -973,6 +983,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   void _onDesktopShortcut(DesktopShortcut shortcut) {
     if (!mounted) return;
     switch (shortcut) {
+      case DesktopShortcut.commandPalette:
+        _openCommandPalette();
       case DesktopShortcut.newChat:
         unawaited(_startNewChat());
       case DesktopShortcut.search:
@@ -987,6 +999,85 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         _shellKey.currentState?.select(HermesDestination.projects);
       case DesktopShortcut.tab4:
         _shellKey.currentState?.select(HermesDestination.activity);
+    }
+  }
+
+  /// Opens the shared app-wide command palette (Classic: same widget as NextGen).
+  void _openCommandPalette() {
+    showAppCommandPalette(
+      context,
+      actions: const [
+        PaletteAction(
+          id: 'new-chat',
+          label: 'New chat',
+          icon: Icons.add_comment_outlined,
+          keywords: ['compose', 'start', 'new'],
+        ),
+        PaletteAction(
+          id: 'search',
+          label: 'Search sessions',
+          icon: Icons.search,
+          keywords: ['find', 'sessions', 'chats'],
+        ),
+        PaletteAction(
+          id: 'settings',
+          label: 'Settings',
+          icon: Icons.settings,
+          keywords: ['preferences', 'options'],
+        ),
+      ],
+      onSelected: (action) {
+        if (!mounted) return;
+        switch (action.id) {
+          case 'new-chat':
+            unawaited(_startNewChat());
+          case 'search':
+            _openWorkspaceSessionView(WorkspaceSessionView.search);
+          case 'settings':
+            _push(SettingsScreen(connection: widget.connection));
+        }
+      },
+    );
+  }
+
+  /// Consumes a validated `hermes://` link. Never sends, never executes.
+  void _onPendingDeepLink() {
+    final link = HermesDeepLinkService.shared.takePendingLink();
+    if (link == null || !mounted || link.isIgnored) return;
+    switch (link.kind) {
+      case HermesDeepLinkKind.launch:
+        return; // focus-only; no route, no prefill
+      case HermesDeepLinkKind.settings:
+        // The settings destination routes to the app-wide Settings screen;
+        // the validated tab is advisory (the screen is not tab-paginated).
+        _push(SettingsScreen(connection: widget.connection));
+        return;
+      case HermesDeepLinkKind.open:
+        // In-app route only; never following an external/raw URL.
+        if (link.path != null && link.path!.startsWith('/settings')) {
+          _push(SettingsScreen(connection: widget.connection));
+        } else {
+          _shellKey.currentState?.select(HermesDestination.chats);
+        }
+        return;
+      case HermesDeepLinkKind.session:
+        final id = link.sessionId;
+        if (id == null) return;
+        final match = _knownSessions.where((s) => s.id == id).firstOrNull;
+        if (match == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text(
+                'Chat not found in the list. It may not have loaded yet.',
+              ),
+            ),
+          );
+          return;
+        }
+        _openSession(match, initialComposerText: link.prefill);
+        return;
+      case HermesDeepLinkKind.ignore:
+        return;
     }
   }
 
@@ -1302,6 +1393,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       password: widget.connection.dashboardPassword,
       clientCertificate: widget.connection.clientCertificate,
       gatewayProfile: widget.connection.gatewayProfile,
+      deploymentToken: widget.connection.deploymentToken,
+      customHeaders: widget.connection.customHeaders,
       httpClient:
           widget.testArchivedSessionsHttpClient ??
           widget.testDashboardHttpClient,

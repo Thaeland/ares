@@ -29,6 +29,9 @@ import 'core/services/connection_mutation_barrier.dart';
 import 'core/services/notification_prefs.dart';
 import 'core/services/hands_free_preference.dart';
 import 'core/services/hermes_sign_in.dart';
+import 'core/services/hermes_deeplink.dart';
+import 'core/services/keep_awake.dart';
+import 'core/services/shortcuts_store.dart';
 import 'core/services/locale_preference.dart';
 import 'core/services/lan_discovery_service.dart';
 import 'core/services/text_size_preference.dart';
@@ -406,6 +409,11 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
   /// notification.
   final ConnectionKeepAliveService _keepAlive = ConnectionKeepAliveService();
 
+  /// Opt-in "keep the computer awake" policy (Dart-side, device-local).
+  KeepAwakeController? _keepAwake;
+  ShortcutsStore? _shortcutsStore;
+  VoidCallback? _keepAwakePreferenceListener;
+
   Object? _keepAliveTurnActivityToken;
   bool _background = false;
   bool _closingTurnOwner = false;
@@ -462,6 +470,18 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     );
     notificationPrefs.addListener(_syncOngoingChats);
     _mobilePush.addListener(_onMobilePushChanged);
+    // Validated deep links: the primary window owns the channel; shells
+    // consume pendingLink and route/prefill without sending.
+    unawaited(HermesDeepLinkService.shared.initialize());
+    _keepAwake = KeepAwakeController(
+      adapter: const MethodChannelKeepAwakeAdapter(),
+      store: KeepAwakePolicyStore(widget.connManager.prefs),
+    );
+    _shortcutsStore = ShortcutsStore(widget.connManager.prefs);
+    _keepAwakePreferenceListener = () {
+      _keepAwake?.refreshFromStore();
+    };
+    keepAwakePolicyChanges.addListener(_keepAwakePreferenceListener!);
     _turnApplicationController.conversationTarget = (c, id) =>
         TurnNotificationService.conversationTarget(widget.connManager, c, id);
     _autoMessaging = AutoMessagingService(
@@ -604,6 +624,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     if (_closingTurnOwner) return;
     _keepAlive.onTurnActivityChanged(_hasActiveTurn);
     _syncOngoingChats();
+    _keepAwake?.setWorking(_hasActiveTurn);
   }
 
   void _onBackgroundWorkPolicyConfirmed() {
@@ -1324,6 +1345,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
             child: FleetScope(
               fleet: _fleet,
               child: DesktopShortcuts(
+                store: _shortcutsStore,
                 child: nextGen ? NgLocalizationScope(child: child!) : child!,
               ),
             ),
@@ -1373,6 +1395,12 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
       _turnApplicationController.removeTurnActivityListener(token);
       _keepAliveTurnActivityToken = null;
     }
+    final keepAwakeListener = _keepAwakePreferenceListener;
+    if (keepAwakeListener != null) {
+      keepAwakePolicyChanges.removeListener(keepAwakeListener);
+    }
+    _keepAwake?.dispose();
+    _keepAwake = null;
     // Belt for the detached case: if the widget tree tears down while the
     // service is up, the native side must not outlive its only controller.
     unawaited(_keepAlive.stop());

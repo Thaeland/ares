@@ -14,6 +14,8 @@ import '../../core/utils/adaptive_layout.dart';
 import '../../core/utils/platform_capabilities.dart';
 import '../../core/widgets/windows_chat_presence.dart';
 import '../../core/widgets/desktop_shortcuts.dart';
+import '../../core/widgets/command_palette.dart';
+import '../../core/services/hermes_deeplink.dart';
 import '../data/nextgen_gateway.dart';
 import '../data/chat_controller.dart';
 import '../nextgen_preferences.dart';
@@ -25,6 +27,7 @@ import 'more_page.dart';
 import 'nextgen_scope.dart';
 import 'scheduled_page.dart';
 import 'sessions_sidebar.dart';
+import 'widgets.dart';
 import 'settings_page.dart';
 import '../nextgen_l10n.dart';
 
@@ -59,6 +62,7 @@ class _NgMainPageState extends State<_NgMainContent>
 
   /// Desktop keyboard shortcut subscription (no-op on touch platforms).
   StreamSubscription<DesktopShortcut>? _desktopShortcutSub;
+  VoidCallback? _deepLinkListener;
 
   NgSessionsModel? _sessions;
   NgChatController? _chat;
@@ -77,6 +81,8 @@ class _NgMainPageState extends State<_NgMainContent>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _desktopShortcutSub = desktopShortcutBus.stream.listen(_onDesktopShortcut);
+    _deepLinkListener = _onPendingDeepLink;
+    HermesDeepLinkService.shared.pendingLink.addListener(_deepLinkListener!);
     nextGenOpenRequest.addListener(_onOpenRequest);
     nextGenNotificationAnswer.addListener(_onNotificationAnswer);
   }
@@ -84,6 +90,10 @@ class _NgMainPageState extends State<_NgMainContent>
   @override
   void dispose() {
     _desktopShortcutSub?.cancel();
+    final deepLinkListener = _deepLinkListener;
+    if (deepLinkListener != null) {
+      HermesDeepLinkService.shared.pendingLink.removeListener(deepLinkListener);
+    }
     nextGenOpenRequest.removeListener(_onOpenRequest);
     nextGenNotificationAnswer.removeListener(_onNotificationAnswer);
     _requestSub?.cancel();
@@ -203,6 +213,7 @@ class _NgMainPageState extends State<_NgMainContent>
     String title, {
     bool initial = false,
     String? workingDirectory,
+    String? initialText,
   }) {
     final scope = NgScope.of(context);
     final old = _chat;
@@ -224,6 +235,7 @@ class _NgMainPageState extends State<_NgMainContent>
         sessionId: id,
         title: title,
         workingDirectory: workingDirectory,
+        initialText: initialText,
         onCreated: (stored) {
           unawaited(
             NextGenPreferences.setLastSession(
@@ -582,6 +594,8 @@ class _NgMainPageState extends State<_NgMainContent>
   void _onDesktopShortcut(DesktopShortcut shortcut) {
     if (!mounted) return;
     switch (shortcut) {
+      case DesktopShortcut.commandPalette:
+        _openCommandPalette();
       case DesktopShortcut.newChat:
         _newChat();
       case DesktopShortcut.search:
@@ -606,6 +620,92 @@ class _NgMainPageState extends State<_NgMainContent>
         _go(NgDestination.insights);
       case DesktopShortcut.tab4:
         _go(NgDestination.capabilities);
+    }
+  }
+
+  /// Opens the shared app-wide command palette (same widget as Classic).
+  void _openCommandPalette() {
+    showAppCommandPalette(
+      context,
+      actions: const [
+        PaletteAction(
+          id: 'new-chat',
+          label: 'New chat',
+          icon: Icons.add_comment_outlined,
+          keywords: ['compose', 'start', 'new'],
+        ),
+        PaletteAction(
+          id: 'search',
+          label: 'Search sessions',
+          icon: Icons.search,
+          keywords: ['find', 'sessions', 'chats'],
+        ),
+        PaletteAction(
+          id: 'settings',
+          label: 'Settings',
+          icon: Icons.settings,
+          keywords: ['preferences', 'options'],
+        ),
+      ],
+      onSelected: (action) {
+        if (!mounted) return;
+        switch (action.id) {
+          case 'new-chat':
+            _newChat();
+          case 'search':
+            if (isExpandedWindow(context)) {
+              setState(() => _dockedSidebarCollapsed = false);
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) _sidebarKey.currentState?.focusSearch();
+              });
+            } else {
+              _focusDrawerSearch = true;
+              _scaffold.currentState?.openDrawer();
+            }
+          case 'settings':
+            _go(NgDestination.settings);
+        }
+      },
+    );
+  }
+
+  /// Consumes a validated `hermes://` link. Never sends, never executes.
+  void _onPendingDeepLink() {
+    final link = HermesDeepLinkService.shared.takePendingLink();
+    if (link == null || !mounted || link.isIgnored) return;
+    switch (link.kind) {
+      case HermesDeepLinkKind.launch:
+        return; // focus-only; no route, no prefill
+      case HermesDeepLinkKind.settings:
+        // The NextGen settings screen is a single destination; the validated
+        // tab is advisory.
+        _go(NgDestination.settings);
+        return;
+      case HermesDeepLinkKind.open:
+        if (link.path != null && link.path!.startsWith('/settings')) {
+          _go(NgDestination.settings);
+        }
+        return; // other paths are in-app routes we do not own
+      case HermesDeepLinkKind.session:
+        final id = link.sessionId;
+        if (id == null) return;
+        final sessions = _sessions;
+        final match = sessions?.sessions.where((s) => s.id == id).firstOrNull;
+        if (match == null) {
+          // A validated but unknown id must not create a chat — it would
+          // either silently open an empty chat or pretend the session
+          // exists. Surface honesty instead.
+          ngToast(
+            context,
+            'Chat not found in the list. It may not have loaded yet.',
+          );
+          unawaited(sessions?.refresh());
+          return;
+        }
+        _openId(id, ngSessionTitle(match), initialText: link.prefill);
+        return;
+      case HermesDeepLinkKind.ignore:
+        return;
     }
   }
 

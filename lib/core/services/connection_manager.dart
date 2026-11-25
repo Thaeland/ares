@@ -136,7 +136,7 @@ class _ConnectionCredentials {
 
   /// Password for an encrypted PEM client key. Persisted here (the platform
   /// secure store) rather than in the connection metadata preferences.
-    /// Deployment session token for the dashboard transport. Same contract as
+  /// Deployment session token for the dashboard transport. Same contract as
   /// [dashboardPassword]: never stored in plaintext metadata.
   final String? deploymentToken;
 
@@ -144,7 +144,7 @@ class _ConnectionCredentials {
   /// plaintext metadata.
   final Map<String, String> customHeaders;
 
-final String? clientKeyPassword;
+  final String? clientKeyPassword;
 
   const _ConnectionCredentials({
     required this.apiKey,
@@ -593,7 +593,8 @@ class ConnectionManager {
   }) => _withSavedListTransaction([], () async {
     final normalized = SavedConnection.normalizeHostAndPort(host, port);
     final profile = gatewayProfile?.trim();
-    final deploymentTokenValue = deploymentToken == null || deploymentToken.trim().isEmpty
+    final deploymentTokenValue =
+        deploymentToken == null || deploymentToken.trim().isEmpty
         ? null
         : deploymentToken.trim();
     final headers = normalizeRemoteHeaders(customHeaders);
@@ -651,6 +652,10 @@ class ConnectionManager {
     String? profile,
     ClientCertificateConfig? clientCertificate,
     bool clearClientCertificate = false,
+    String? deploymentToken,
+    Map<String, String> customHeaders = const <String, String>{},
+    bool clearDeploymentToken = false,
+    bool clearCustomHeaders = false,
   }) async {
     late SavedConnection saved;
     await _withSavedListTransaction([], () async {
@@ -665,6 +670,22 @@ class ConnectionManager {
       final cleanProfile = profile?.trim();
       final user = username?.trim();
       final pass = password?.trim();
+      final cleanToken = deploymentToken?.trim();
+      final resolvedHeaders = clearCustomHeaders
+          ? const <String, String>{}
+          : (customHeaders.isNotEmpty
+                ? normalizeRemoteHeaders(customHeaders)
+                : (existingIndex >= 0
+                      ? current[existingIndex].customHeaders
+                      : const <String, String>{}));
+      final resolvedToken =
+          signInMethod == 'token' && cleanToken != null && cleanToken.isNotEmpty
+          ? cleanToken
+          : (clearDeploymentToken || signInMethod != 'token'
+                ? null
+                : (existingIndex >= 0
+                      ? current[existingIndex].deploymentToken
+                      : null));
       final base = SavedConnection(
         id: existingIndex >= 0 ? current[existingIndex].id : _uuid.v4(),
         label: (label?.trim().isNotEmpty ?? false)
@@ -698,6 +719,8 @@ class ConnectionManager {
                       : null),
         singleLogin: true,
         signInMethod: signInMethod,
+        deploymentToken: resolvedToken,
+        customHeaders: resolvedHeaders,
         // Keep Cloud exclusions across a later manual login to the same URL.
         fleetKind:
             existingIndex >= 0 && current[existingIndex].fleetKind == 'cloud'
@@ -799,7 +822,8 @@ class ConnectionManager {
       clientCertificate: clientCertificate,
       clearClientCertificate: clearClientCertificate,
       deploymentToken: hasToken ? token : null,
-      clearDeploymentToken: clearDeploymentToken || (token != null && token.isEmpty),
+      clearDeploymentToken:
+          clearDeploymentToken || (token != null && token.isEmpty),
       customHeaders: headers,
       clearCustomHeaders: clearCustomHeaders || headers.isEmpty,
     );
@@ -2703,7 +2727,8 @@ class DashboardClient {
   }) : _proxied = proxied,
        _username = username,
        _password = password,
-       _deploymentToken = deploymentToken == null || deploymentToken.trim().isEmpty
+       _deploymentToken =
+           deploymentToken == null || deploymentToken.trim().isEmpty
            ? null
            : deploymentToken.trim(),
        _customHeaders = customHeaders,
@@ -3876,6 +3901,7 @@ class DashboardClient {
     if (!_proxied &&
         !_usesPasswordAuth &&
         !usesBrowserSignIn &&
+        _deploymentToken == null &&
         !{'localhost', '127.0.0.1', '::1'}.contains(uri.host)) {
       return OAuthTransportUnavailableReason.authenticationRequired;
     }

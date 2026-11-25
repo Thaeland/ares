@@ -722,12 +722,23 @@ String _connectionScopeKey(SavedConnection connection) {
       .convert(
         utf8.encode(
           // Preserve existing non-mTLS receipt namespaces across this upgrade.
-          certificate == null
+          certificate == null &&
+                  connection.deploymentToken == null &&
+                  connection.customHeaders.isEmpty
               ? '${connection.apiKey}\u0000${connection.dashboardPassword ?? ''}'
               : jsonEncode([
                   connection.apiKey,
                   connection.dashboardPassword,
-                  certificate.privateKeyPassword,
+                  certificate?.privateKeyPassword,
+                  if (connection.deploymentToken != null ||
+                      connection.customHeaders.isNotEmpty) ...[
+                    connection.deploymentToken,
+                    {
+                      for (final k
+                          in connection.customHeaders.keys.toList()..sort())
+                        k: connection.customHeaders[k],
+                    },
+                  ],
                 ]),
         ),
       )

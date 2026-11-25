@@ -22,6 +22,11 @@ String popoutOwnerProof(String nonce, SavedConnection connection) {
         connection.apiKey,
         connection.dashboardPassword,
         connection.clientCertificate?.privateKeyPassword,
+        connection.deploymentToken,
+        {
+          for (final k in connection.customHeaders.keys.toList()..sort())
+            k: connection.customHeaders[k],
+        },
         bearer?.toJson(),
         vault
             .accessTokenFor(Uri.tryParse(url)?.host ?? connection.host)

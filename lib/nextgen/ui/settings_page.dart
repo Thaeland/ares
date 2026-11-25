@@ -10,6 +10,8 @@ import '../../core/services/app_licenses.dart';
 import '../../core/services/background_work_prefs.dart';
 import '../../core/services/notification_prefs.dart';
 import '../../core/widgets/windows_completion_sound_tile.dart';
+import '../../core/widgets/keep_awake_settings_card.dart';
+import '../../core/widgets/keyboard_shortcuts_settings_card.dart';
 import '../../core/utils/platform_capabilities.dart';
 import '../../core/services/turn_notification_service.dart';
 import '../../core/services/hermes_sign_in.dart';
@@ -235,6 +237,11 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                 }
               },
             ),
+            NgSectionLabel(ngL.ng_interface),
+            KeepAwakeSettingsCard(preferences: scope.prefs),
+            const SizedBox(height: 12),
+            KeyboardShortcutsSettingsCard(preferences: scope.prefs),
+            const SizedBox(height: 12),
             NgSectionLabel(ngL.ng_appearance),
             NgCard(
               child: Column(

@@ -119,6 +119,7 @@ class SavedConnection {
   bool get hasDashboardAuth =>
       dashboardProxied ||
       singleLogin ||
+      deploymentToken?.trim().isNotEmpty == true ||
       (dashboardUsername?.trim().isNotEmpty == true &&
           dashboardPassword?.trim().isNotEmpty == true);
 

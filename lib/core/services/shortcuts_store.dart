@@ -9,8 +9,12 @@ library;
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+/// Broadcasts whenever [ShortcutsStore] persists or resets a key chord.
+final ValueNotifier<int> shortcutsStoreChanges = ValueNotifier<int>(0);
 
 /// A stable identifier for a bindable action.
 enum ShortcutAction {
@@ -103,8 +107,7 @@ class KeyChord {
       other.alt == alt;
 
   @override
-  int get hashCode =>
-      Object.hash(key, meta, ctrl, shift, alt);
+  int get hashCode => Object.hash(key, meta, ctrl, shift, alt);
 }
 
 /// Explicit name → key table. Anything not listed here cannot be serialized
@@ -185,6 +188,59 @@ String? _normalizedKeyName(LogicalKeyboardKey key) {
 /// Human-readable key names → LogicalKeyboardKey. Kept small and explicit.
 LogicalKeyboardKey? _keyByName(String name) {
   return _supportedKeys[name];
+}
+
+/// Read-only view of supported keys for UI chord pickers on touch/narrow devices.
+Map<String, LogicalKeyboardKey> get supportedShortcutKeys =>
+    Map<String, LogicalKeyboardKey>.unmodifiable(_supportedKeys);
+
+/// Formats a [KeyChord] for human-readable badges (e.g. `⌘ K` or `Ctrl + K`).
+String formatKeyChord(KeyChord chord, {bool appleSymbols = false}) {
+  final parts = <String>[];
+  if (chord.meta) parts.add(appleSymbols ? '⌘' : 'Cmd/Ctrl');
+  if (chord.ctrl) parts.add(appleSymbols ? '⌃' : 'Ctrl');
+  if (chord.alt) parts.add(appleSymbols ? '⌥' : 'Alt');
+  if (chord.shift) parts.add(appleSymbols ? '⇧' : 'Shift');
+  parts.add(formatShortcutKeyName(chord.keyName));
+  return appleSymbols ? parts.join(' ') : parts.join(' + ');
+}
+
+/// Human-friendly label for a canonical key name from [supportedShortcutKeys].
+String formatShortcutKeyName(String keyName) {
+  if (keyName.startsWith('key') && keyName.length == 4) {
+    return keyName.substring(3).toUpperCase();
+  }
+  if (keyName.startsWith('digit') && keyName.length == 6) {
+    return keyName.substring(5);
+  }
+  return switch (keyName) {
+    'comma' => ',',
+    'period' => '.',
+    'slash' => '/',
+    'semicolon' => ';',
+    'quoteSingle' => "'",
+    'backslash' => r'\',
+    'minus' => '-',
+    'equal' => '=',
+    'bracketLeft' => '[',
+    'bracketRight' => ']',
+    'backquote' => '`',
+    'enter' => 'Enter',
+    'space' => 'Space',
+    'escape' => 'Esc',
+    'tab' => 'Tab',
+    'arrowLeft' => '←',
+    'arrowRight' => '→',
+    'arrowUp' => '↑',
+    'arrowDown' => '↓',
+    'pageUp' => 'PgUp',
+    'pageDown' => 'PgDn',
+    'home' => 'Home',
+    'end' => 'End',
+    'insert' => 'Ins',
+    'delete' => 'Del',
+    _ => keyName,
+  };
 }
 
 /// Registry: the stable actions, their defaults, and their labels.
@@ -281,8 +337,7 @@ class ShortcutsStore {
   /// All bindings for the current action set, in display order.
   Map<ShortcutAction, KeyChord> allBindings() {
     return {
-      for (final action in ShortcutRegistry.actions)
-        action: chordFor(action),
+      for (final action in ShortcutRegistry.actions) action: chordFor(action),
     };
   }
 
@@ -290,10 +345,12 @@ class ShortcutsStore {
     final map = Map<String, String>.from(readMap());
     map[action.id] = chord.serialize();
     await _prefs.setString(preferenceKey, jsonEncode(map));
+    shortcutsStoreChanges.value++;
   }
 
   Future<void> resetToDefaults() async {
     await _prefs.remove(preferenceKey);
+    shortcutsStoreChanges.value++;
   }
 
   Future<void> resetAction(ShortcutAction action) async {
@@ -304,6 +361,7 @@ class ShortcutsStore {
     } else {
       await _prefs.setString(preferenceKey, jsonEncode(map));
     }
+    shortcutsStoreChanges.value++;
   }
 
   /// Finds chords that are shared across actions. The returned list is empty

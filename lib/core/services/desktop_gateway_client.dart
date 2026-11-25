@@ -47,6 +47,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
   /// let the server use its own. See [SavedConnection.gatewayProfile].
   final String? _gatewayProfile;
   final ClientCertificateConfig? _clientCertificate;
+  final Map<String, String> _customHeaders;
   WsClient? _ws;
   bool get sessionAuthority => _ws?.sessionAuthority == true;
   Future<WsClient>? _socketInFlight;
@@ -107,6 +108,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
     required this._dashboard,
     this._gatewayProfile,
     this._clientCertificate,
+    this._customHeaders = const <String, String>{},
   }) {
     workspace = RemoteWorkspaceOwner(
       connectionId: _connectionId,
@@ -224,9 +226,12 @@ class DesktopGatewayClient implements SlashCommandGateway {
         password: connection.dashboardPassword,
         gatewayProfile: connection.gatewayProfile,
         clientCertificate: connection.clientCertificate,
+        deploymentToken: connection.deploymentToken,
+        customHeaders: connection.customHeaders,
       ),
       gatewayProfile: connection.gatewayProfile,
       clientCertificate: connection.clientCertificate,
+      customHeaders: connection.customHeaders,
     );
   }
 
@@ -368,6 +373,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
       ticketInSubprotocol: true,
       profile: _gatewayProfile,
       clientCertificate: _clientCertificate,
+      customHeaders: _customHeaders,
     );
     _installAsyncEventBridge(client);
     final inheritedConnectionListener = client.onConnectionChanged;

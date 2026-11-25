@@ -202,6 +202,17 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _openDraft();
+    // Validated deep-link prefill: one-shot, never sent — it only populates
+    // the composer, which the user still edits before anything is sent.
+    // Setting the controller text before the restore draft runs means the
+    // restore keeps its own guard (non-empty composer wins).
+    final initial = chat.consumeInitialText();
+    if (initial != null) {
+      _input.value = TextEditingValue(
+        text: initial,
+        selection: TextSelection.collapsed(offset: initial.length),
+      );
+    }
     _input.addListener(_onDraftEdit);
     chat.addListener(_onChat);
     _readAloud = (widget.readAloudFactory ?? NgReadAloud.new)();

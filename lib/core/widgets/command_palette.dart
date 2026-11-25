@@ -12,6 +12,31 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/l10n.dart';
+
+/// Opens [CommandPalette] as a centered dialog on wide screens and a
+/// full-screen route on narrow panes (< 480 px).
+Future<void> showAppCommandPalette(
+  BuildContext context, {
+  required List<PaletteAction> actions,
+  required ValueChanged<PaletteAction> onSelected,
+}) {
+  final isNarrow = MediaQuery.sizeOf(context).width < 480;
+  if (isNarrow) {
+    return Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (_) =>
+            CommandPalette(actions: actions, onSelected: onSelected),
+      ),
+    );
+  }
+  return showDialog<void>(
+    context: context,
+    builder: (_) => CommandPalette(actions: actions, onSelected: onSelected),
+  );
+}
+
 /// One selectable action in the palette.
 class PaletteAction {
   const PaletteAction({
@@ -67,9 +92,10 @@ class CommandPaletteState extends State<CommandPalette> {
       _filtered = List<PaletteAction>.of(widget.actions);
     } else {
       _filtered = widget.actions.where((action) {
-        final haystack = <String>[action.label, ...action.keywords]
-            .join(' ')
-            .toLowerCase();
+        final haystack = <String>[
+          action.label,
+          ...action.keywords,
+        ].join(' ').toLowerCase();
         return haystack.contains(query);
       }).toList();
     }
@@ -94,12 +120,13 @@ class CommandPaletteState extends State<CommandPalette> {
   void _moveSelection(int delta) {
     if (_filtered.isEmpty) return;
     final next = (_selectedIndex + delta) % _filtered.length;
-    setState(() => _selectedIndex = next < 0
-        ? next + _filtered.length
-        : next);
+    setState(() => _selectedIndex = next < 0 ? next + _filtered.length : next);
   }
 
   KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
+      return KeyEventResult.ignored;
+    }
     switch (event.logicalKey) {
       case LogicalKeyboardKey.arrowDown:
         _moveSelection(1);
@@ -122,12 +149,15 @@ class CommandPaletteState extends State<CommandPalette> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isNarrow = MediaQuery.of(context).size.width < 480;
-    final body = _buildBody(theme);
+    final body = _buildBody(context, theme, isNarrow: isNarrow);
     return Focus(
       autofocus: true,
       onKeyEvent: _handleKey,
       child: isNarrow
-          ? Scaffold(backgroundColor: theme.colorScheme.surface, body: body)
+          ? Scaffold(
+              backgroundColor: theme.colorScheme.surface,
+              body: SafeArea(child: body),
+            )
           : Dialog(
               backgroundColor: theme.colorScheme.surface,
               shape: RoundedRectangleBorder(
@@ -144,63 +174,78 @@ class CommandPaletteState extends State<CommandPalette> {
     );
   }
 
-  Widget _buildBody(ThemeData theme) {
+  Widget _buildBody(
+    BuildContext context,
+    ThemeData theme, {
+    required bool isNarrow,
+  }) {
+    final list = _filtered.isEmpty
+        ? const Center(child: Text('No matching actions'))
+        : ListView.builder(
+            itemCount: _filtered.length,
+            itemBuilder: (context, index) {
+              final action = _filtered[index];
+              final selected = index == _selectedIndex;
+              return Material(
+                color: selected
+                    ? theme.colorScheme.surfaceContainerHighest
+                    : Colors.transparent,
+                child: InkWell(
+                  onTap: () => _select(action),
+                  onHover: (hovered) {
+                    if (hovered) {
+                      setState(() => _selectedIndex = index);
+                    }
+                  },
+                  child: ListTile(
+                    leading: Icon(action.icon),
+                    title: Text(action.label),
+                    subtitle: action.hint == null ? null : Text(action.hint!),
+                    trailing: selected ? const Icon(Icons.arrow_forward) : null,
+                  ),
+                ),
+              );
+            },
+          );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: isNarrow ? MainAxisSize.max : MainAxisSize.min,
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
-          child: TextField(
-            controller: _controller,
-            autofocus: true,
-            onChanged: _filter,
-            decoration: InputDecoration(
-              hintText: 'Type to filter actions…',
-              prefixIcon: const Icon(Icons.search),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 12,
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  key: const Key('app-command-palette-query'),
+                  controller: _controller,
+                  autofocus: true,
+                  onChanged: _filter,
+                  onSubmitted: (_) => _selectCurrent(),
+                  decoration: const InputDecoration(
+                    hintText: 'Type to filter actions…',
+                    prefixIcon: Icon(Icons.search),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 12,
+                    ),
+                  ),
+                ),
               ),
-            ),
+              if (isNarrow)
+                IconButton(
+                  tooltip: context.sharedL10n.close,
+                  icon: const Icon(Icons.close),
+                  onPressed: _close,
+                ),
+            ],
           ),
         ),
-        SizedBox(
-          height: 320,
-          child: _filtered.isEmpty
-              ? Center(child: Text('No matching actions'))
-              : ListView.builder(
-                  itemCount: _filtered.length,
-                  itemBuilder: (context, index) {
-                    final action = _filtered[index];
-                    final selected = index == _selectedIndex;
-                    return Material(
-                      color: selected
-                          ? theme.colorScheme.surfaceContainerHighest
-                          : Colors.transparent,
-                      child: InkWell(
-                        onTap: () => _select(action),
-                        onHover: (hovered) {
-                          if (hovered) {
-                            setState(() => _selectedIndex = index);
-                          }
-                        },
-                        child: ListTile(
-                          leading: Icon(action.icon),
-                          title: Text(action.label),
-                          subtitle: action.hint == null
-                              ? null
-                              : Text(action.hint!),
-                          trailing: selected
-                              ? const Icon(Icons.arrow_forward)
-                              : null,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-        ),
+        if (isNarrow)
+          Expanded(child: list)
+        else
+          SizedBox(height: 320, child: list),
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
           child: Wrap(

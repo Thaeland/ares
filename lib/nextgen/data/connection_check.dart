@@ -82,6 +82,7 @@ Future<ConnectionReport> runConnectionCheck(
   final probe = await GatewayProbe().probe(
     url,
     certificate: connection.clientCertificate,
+    customHeaders: connection.customHeaders,
   );
   switch (probe) {
     case ProbeReachable(:final status):
@@ -170,6 +171,36 @@ Future<ConnectionReport> runConnectionCheck(
             ngL.ng_this_dashboard_doesn_t_need_a,
           ),
         );
+      } else if (res.statusCode == 404 &&
+          connection.deploymentToken?.trim().isNotEmpty == true) {
+        final modelRes = await dashboard.apiRequest('GET', 'model-info');
+        if (modelRes.statusCode >= 200 && modelRes.statusCode < 300) {
+          record(
+            CheckStage.signIn,
+            StageResult(
+              CheckOutcome.passed,
+              ngL.ng_signed_in_as('deployment token'),
+            ),
+          );
+        } else if (modelRes.statusCode == 401 || modelRes.statusCode == 403) {
+          record(
+            CheckStage.signIn,
+            StageResult(
+              CheckOutcome.failed,
+              ngL.ng_the_saved_sign_in_has_expired,
+              ngL.ng_sign_in_again,
+            ),
+          );
+        } else {
+          record(
+            CheckStage.signIn,
+            StageResult(
+              CheckOutcome.failed,
+              ngL.ng_the_gateway_answered(dashboardErrorMessage(modelRes)),
+              ngL.ng_sign_in_again_or_update_hermes,
+            ),
+          );
+        }
       } else if (res.statusCode == 401) {
         record(
           CheckStage.signIn,
@@ -244,6 +275,7 @@ Future<ConnectionReport> runConnectionCheck(
         ticket: ticket,
         profile: connection.gatewayProfile,
         clientCertificate: connection.clientCertificate,
+        customHeaders: connection.customHeaders,
         ticketInSubprotocol: true,
       );
       await client.connect();

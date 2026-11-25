@@ -13,8 +13,19 @@ import 'package:flutter/foundation.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../services/shortcuts_store.dart' as shortcuts_store;
+
 /// Primary desktop actions exposed by the shells.
-enum DesktopShortcut { newChat, search, settings, tab1, tab2, tab3, tab4 }
+enum DesktopShortcut {
+  commandPalette,
+  newChat,
+  search,
+  settings,
+  tab1,
+  tab2,
+  tab3,
+  tab4,
+}
 
 /// Broadcast bus between [DesktopShortcuts] and the active shell.
 final StreamController<DesktopShortcut> desktopShortcutBus =
@@ -29,9 +40,15 @@ void fireDesktopShortcut(DesktopShortcut shortcut) {
 /// platform. Pass [forceEnabled] in tests to exercise the bindings without
 /// changing the process-wide target platform.
 class DesktopShortcuts extends StatelessWidget {
-  const DesktopShortcuts({required this.child, this.forceEnabled, super.key});
+  const DesktopShortcuts({
+    required this.child,
+    this.store,
+    this.forceEnabled,
+    super.key,
+  });
 
   final Widget child;
+  final shortcuts_store.ShortcutsStore? store;
 
   /// Overrides the platform gate. Null uses the real target platform.
   final bool? forceEnabled;
@@ -43,44 +60,122 @@ class DesktopShortcuts extends StatelessWidget {
 
   bool get _enabled => forceEnabled ?? _isDesktop(defaultTargetPlatform);
 
+  static DesktopShortcut _shortcutFor(shortcuts_store.ShortcutAction action) =>
+      switch (action) {
+        shortcuts_store.ShortcutAction.commandPalette =>
+          DesktopShortcut.commandPalette,
+        shortcuts_store.ShortcutAction.newChat => DesktopShortcut.newChat,
+        shortcuts_store.ShortcutAction.search => DesktopShortcut.search,
+        shortcuts_store.ShortcutAction.settings => DesktopShortcut.settings,
+        shortcuts_store.ShortcutAction.tab1 => DesktopShortcut.tab1,
+        shortcuts_store.ShortcutAction.tab2 => DesktopShortcut.tab2,
+        shortcuts_store.ShortcutAction.tab3 => DesktopShortcut.tab3,
+        shortcuts_store.ShortcutAction.tab4 => DesktopShortcut.tab4,
+      };
+
+  static SingleActivator _activatorFor(shortcuts_store.KeyChord chord) =>
+      SingleActivator(
+        chord.key,
+        meta: chord.meta,
+        control: chord.ctrl,
+        shift: chord.shift,
+        alt: chord.alt,
+      );
+
+  Map<ShortcutActivator, VoidCallback> _buildBindings() {
+    final shortcutsStore = store;
+    final customMap = shortcutsStore?.readMap() ?? const <String, String>{};
+    final conflictedChords = <String>{
+      if (shortcutsStore != null)
+        for (final entry in shortcutsStore.conflicts()) entry[2] as String,
+    };
+
+    final bindings = <ShortcutActivator, VoidCallback>{};
+    final usedSerialized = <String>{};
+
+    // First pass: resolve effective chord per action. If a custom chord caused
+    // a duplicate conflict, fall back to the action's default chord so a
+    // conflict never overwrites another action's shortcut.
+    final resolved =
+        <shortcuts_store.ShortcutAction, shortcuts_store.KeyChord>{};
+    for (final action in shortcuts_store.ShortcutRegistry.actions) {
+      final defaultChord = shortcuts_store.ShortcutRegistry.defaultChord(
+        action,
+      );
+      final configured = shortcutsStore?.chordFor(action) ?? defaultChord;
+      final isCustom = customMap.containsKey(action.id);
+      if (isCustom && conflictedChords.contains(configured.serialize())) {
+        resolved[action] = defaultChord;
+      } else {
+        resolved[action] = configured;
+      }
+    }
+
+    for (final action in shortcuts_store.ShortcutRegistry.actions) {
+      final chord = resolved[action]!;
+      final serialized = chord.serialize();
+      if (!usedSerialized.add(serialized)) continue;
+      final desktopShortcut = _shortcutFor(action);
+      bindings[_activatorFor(chord)] = () =>
+          fireDesktopShortcut(desktopShortcut);
+    }
+
+    // Platform convenience: for uncustomized default meta+<key> bindings, also
+    // accept Ctrl+<key> when that chord is not claimed by any binding, so
+    // Windows and Linux keyboards work with Ctrl out of the box.
+    for (final action in shortcuts_store.ShortcutRegistry.actions) {
+      if (customMap.containsKey(action.id)) continue;
+      final chord = resolved[action]!;
+      if (!chord.meta || chord.ctrl) continue;
+      final ctrlMirror = shortcuts_store.KeyChord(
+        key: chord.key,
+        ctrl: true,
+        shift: chord.shift,
+        alt: chord.alt,
+      );
+      if (usedSerialized.add(ctrlMirror.serialize())) {
+        final desktopShortcut = _shortcutFor(action);
+        bindings[_activatorFor(ctrlMirror)] = () =>
+            fireDesktopShortcut(desktopShortcut);
+      }
+    }
+
+    // Secondary alias: Shift+Cmd/Ctrl+F also triggers search when unclaimed.
+    if (!customMap.containsKey(shortcuts_store.ShortcutAction.search.id)) {
+      for (final alias in const [
+        shortcuts_store.KeyChord(
+          key: LogicalKeyboardKey.keyF,
+          meta: true,
+          shift: true,
+        ),
+        shortcuts_store.KeyChord(
+          key: LogicalKeyboardKey.keyF,
+          ctrl: true,
+          shift: true,
+        ),
+      ]) {
+        if (usedSerialized.add(alias.serialize())) {
+          bindings[_activatorFor(alias)] = () =>
+              fireDesktopShortcut(DesktopShortcut.search);
+        }
+      }
+    }
+
+    return bindings;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_enabled) return child;
 
-    final meta = <ShortcutActivator, VoidCallback>{
-      SingleActivator(LogicalKeyboardKey.keyN, meta: true): () =>
-          fireDesktopShortcut(DesktopShortcut.newChat),
-      SingleActivator(LogicalKeyboardKey.keyN, control: true): () =>
-          fireDesktopShortcut(DesktopShortcut.newChat),
-      SingleActivator(LogicalKeyboardKey.keyK, meta: true): () =>
-          fireDesktopShortcut(DesktopShortcut.search),
-      SingleActivator(LogicalKeyboardKey.keyF, meta: true, shift: true): () =>
-          fireDesktopShortcut(DesktopShortcut.search),
-      SingleActivator(
-        LogicalKeyboardKey.keyF,
-        control: true,
-        shift: true,
-      ): () =>
-          fireDesktopShortcut(DesktopShortcut.search),
-      SingleActivator(LogicalKeyboardKey.keyF, meta: true): () =>
-          fireDesktopShortcut(DesktopShortcut.search),
-      SingleActivator(LogicalKeyboardKey.keyF, control: true): () =>
-          fireDesktopShortcut(DesktopShortcut.search),
-      SingleActivator(LogicalKeyboardKey.comma, meta: true): () =>
-          fireDesktopShortcut(DesktopShortcut.settings),
-      SingleActivator(LogicalKeyboardKey.digit1, meta: true): () =>
-          fireDesktopShortcut(DesktopShortcut.tab1),
-      SingleActivator(LogicalKeyboardKey.digit2, meta: true): () =>
-          fireDesktopShortcut(DesktopShortcut.tab2),
-      SingleActivator(LogicalKeyboardKey.digit3, meta: true): () =>
-          fireDesktopShortcut(DesktopShortcut.tab3),
-      SingleActivator(LogicalKeyboardKey.digit4, meta: true): () =>
-          fireDesktopShortcut(DesktopShortcut.tab4),
-    };
-
-    return Focus(
-      autofocus: true,
-      child: CallbackShortcuts(bindings: meta, child: child),
+    return ValueListenableBuilder<int>(
+      valueListenable: shortcuts_store.shortcutsStoreChanges,
+      builder: (context, _, _) {
+        return Focus(
+          autofocus: true,
+          child: CallbackShortcuts(bindings: _buildBindings(), child: child),
+        );
+      },
     );
   }
 }

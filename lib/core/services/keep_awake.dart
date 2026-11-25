@@ -11,8 +11,12 @@ library;
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+/// Broadcasts whenever [KeepAwakePolicyStore.write] updates the saved policy.
+final ValueNotifier<int> keepAwakePolicyChanges = ValueNotifier<int>(0);
 
 /// How long the computer is kept awake while Ares is working.
 enum KeepAwakeMode {
@@ -46,6 +50,26 @@ class KeepAwakePolicyStore {
 
   Future<void> write(KeepAwakeMode mode) async {
     await _prefs.setString(preferenceKey, mode.name);
+    keepAwakePolicyChanges.value++;
+  }
+}
+
+/// Probes whether the current platform runner implements `com.hermesagent.ares/power`.
+///
+/// Returns `false` when the native channel is absent (degrading to a safe no-op
+/// while still persisting the user's device-local preference).
+Future<bool> isKeepAwakeChannelSupported([
+  MethodChannel channel = MethodChannelKeepAwakeAdapter.channel,
+]) async {
+  try {
+    final supported = await channel.invokeMethod<bool>('isSupported');
+    return supported ?? false;
+  } on MissingPluginException {
+    return false;
+  } on PlatformException {
+    return false;
+  } catch (_) {
+    return false;
   }
 }
 
@@ -90,10 +114,7 @@ class MethodChannelKeepAwakeAdapter implements KeepAwakeAdapter {
 /// Applies the policy for the active session. A single controller owns the
 /// OS-level wake flag: closing an old chat cannot release a newer chat's flag.
 class KeepAwakeController {
-  KeepAwakeController({
-    required this._adapter,
-    required this._store,
-  }) {
+  KeepAwakeController({required this._adapter, required this._store}) {
     final mode = _store?.read() ?? KeepAwakeMode.off;
     _apply(mode, working: false);
   }

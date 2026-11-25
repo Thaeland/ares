@@ -590,6 +590,7 @@ class NgChatController extends ChangeNotifier {
     this.onCreated,
     this.onTurnFinished,
     AttachmentDraftService? attachmentService,
+    String? initialText,
     // Keep the public named argument while the mutable field stays private.
     // ignore: prefer_initializing_formals
   }) : _workingDirectory = workingDirectory,
@@ -597,6 +598,7 @@ class NgChatController extends ChangeNotifier {
        storedId = sessionId,
        draftKey = sessionId ?? ComposerDraftStore.newLocalKey(),
        attachmentService = attachmentService ?? AttachmentDraftService() {
+    _initialText = initialText;
     _subs.add(gateway.events.listen(_onEvent));
     _subs.add(gateway.serverRequests.listen(_onServerRequest));
     _subs.add(gateway.reconnected.listen((_) => unawaited(_reattach())));
@@ -606,6 +608,17 @@ class NgChatController extends ChangeNotifier {
 
   final NextGenGateway gateway;
   final String draftKey;
+
+  /// One-shot composer prefill (used by validated `hermes://` deep links).
+  /// Consumed exactly once by the chat view on mount; never re-applied.
+  String? _initialText;
+  String? consumeInitialText() {
+    final value = _initialText;
+    _initialText = null;
+    if (value == null || value.trim().isEmpty) return null;
+    return value;
+  }
+
   bool get draftOwnerCurrent => !_disposed && gateway.draftAccountCurrent;
   final Object? _imageEpoch;
   PreparedImageTarget? get imageTarget {

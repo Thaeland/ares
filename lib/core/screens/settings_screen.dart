@@ -20,6 +20,8 @@ import '../widgets/config_backup_card.dart';
 import '../widgets/mobile_push_settings.dart';
 import '../widgets/chat_density_settings_card.dart';
 import '../widgets/text_size_settings_card.dart';
+import '../widgets/keep_awake_settings_card.dart';
+import '../widgets/keyboard_shortcuts_settings_card.dart';
 import '../widgets/theme_palette_picker.dart';
 import '../theme/hermes_theme.dart';
 import '../../main.dart';
@@ -159,6 +161,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
           onChanged: (preference) => context
               .findAncestorStateOfType<HermesAppState>()!
               .setTextSizePreference(preference),
+        ),
+        const SizedBox(height: 16),
+
+        // ---- Section: Desktop OS ----
+        _buildSectionHeader('Keep computer awake'),
+        KeepAwakeSettingsCard(
+          preferences: context
+              .findAncestorStateOfType<HermesAppState>()!
+              .widget
+              .connManager
+              .prefs,
+        ),
+        const SizedBox(height: 16),
+
+        _buildSectionHeader('Keyboard shortcuts'),
+        KeyboardShortcutsSettingsCard(
+          preferences: context
+              .findAncestorStateOfType<HermesAppState>()!
+              .widget
+              .connManager
+              .prefs,
         ),
         const SizedBox(height: 16),
 

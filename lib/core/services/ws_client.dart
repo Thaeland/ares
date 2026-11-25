@@ -16,6 +16,7 @@ import 'package:web_socket_channel/io.dart';
 
 import '../models/client_certificate.dart';
 import '../models/slash_command.dart';
+import 'gateway_headers.dart';
 import 'hermes_sign_in.dart';
 import 'tls_client_factory.dart';
 
@@ -403,6 +404,7 @@ class WsClient {
     String? ticket,
     String? profile,
     ClientCertificateConfig? clientCertificate,
+    Map<String, String> customHeaders = const <String, String>{},
     TlsClientFactory tlsClientFactory = const TlsClientFactory(),
     Duration heartbeatInterval = defaultHeartbeatInterval,
     Duration heartbeatDeadline = defaultHeartbeatDeadline,
@@ -414,6 +416,7 @@ class WsClient {
       ticket,
       profile,
       clientCertificate,
+      normalizeRemoteHeaders(customHeaders),
       tlsClientFactory,
       heartbeatInterval,
       heartbeatDeadline,
@@ -427,6 +430,7 @@ class WsClient {
     this._ticket,
     this._profile,
     this._clientCertificate,
+    this._customHeaders,
     this._tlsClientFactory,
     this.heartbeatInterval,
     this.heartbeatDeadline,
@@ -442,6 +446,7 @@ class WsClient {
   static const ticketProtocolPrefix = 'hermes-gateway-ticket.';
 
   final ClientCertificateConfig? _clientCertificate;
+  final Map<String, String> _customHeaders;
   final TlsClientFactory _tlsClientFactory;
 
   /// Keepalive cadence mirroring the desktop client
@@ -481,6 +486,10 @@ class WsClient {
     final accessHeaders = HermesSignInVault.instance.accessHeadersFor(
       Uri.parse(wsUrl),
     );
+    final upgradeHeaders = <String, String>{
+      ..._customHeaders,
+      ...accessHeaders,
+    };
     // Ticket-bearing upgrades require a no-redirect client even without mTLS.
     // Preserve platform trust and the exact configured client identity.
     final customClient = useProtocol || _clientCertificate != null
@@ -489,7 +498,7 @@ class WsClient {
     final channel = IOWebSocketChannel.connect(
       Uri.parse(wsUrl),
       customClient: customClient,
-      headers: accessHeaders.isEmpty ? null : accessHeaders,
+      headers: upgradeHeaders.isEmpty ? null : upgradeHeaders,
       protocols: useProtocol
           ? [gatewayProtocol, '$ticketProtocolPrefix$ticket']
           : null,

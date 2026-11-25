@@ -70,9 +70,22 @@ void main() {
           matching: find.byType(Scrollable),
         )
         .first;
+    debugPrint('scrollable found: ' + scroll.evaluate().length.toString());
+    final texts = <String>[];
+    for (final el in find.descendant(of: find.byType(SettingsScreen), matching: find.byType(Text)).evaluate()) {
+      final t = el.widget;
+      if (t is Text && t.data != null && texts.length < 80) texts.add(t.data!);
+    }
+    debugPrint('TEXTS: ' + texts.join(' | '));
     for (final section in ['Appearance', 'Voice', 'Session Sources']) {
       final chip = find.byKey(ValueKey('classic-only-$section'));
-      await tester.scrollUntilVisible(chip, 300, scrollable: scroll);
+      debugPrint('scrolling for section: ' + section + ' chips=' + chip.evaluate().length.toString());
+      for (final el in find.byWidgetPredicate((w) => w is KeyedSubtree && w.key?.toString().contains('classic-only-') == true).evaluate()) {
+        final k = el.widget;
+        print('   KEYED: ' + k.toString());
+      }
+      await tester.scrollUntilVisible(chip, 900, scrollable: scroll);
+      debugPrint('section ' + section + ' visible now');
       expect(chip, findsOneWidget, reason: section);
       expect(
         find.descendant(

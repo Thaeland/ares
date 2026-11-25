@@ -13,6 +13,9 @@
 ///    no I/O and no side effects.
 library;
 
+import 'package:flutter/foundation.dart' show ValueNotifier;
+import 'package:flutter/services.dart';
+
 /// Allowlisted deep-link routes.
 enum HermesDeepLinkKind { launch, open, settings, session, ignore }
 
@@ -28,21 +31,20 @@ class HermesDeepLink {
   });
 
   const HermesDeepLink.launch() : this._(kind: HermesDeepLinkKind.launch);
-  const HermesDeepLink.open(String path, {String? prefill, Map<String, String>? params})
-      : this._(
-          kind: HermesDeepLinkKind.open,
-          path: path,
-          prefill: prefill,
-          params: params ?? const {},
-        );
+  const HermesDeepLink.open(
+    String path, {
+    String? prefill,
+    Map<String, String>? params,
+  }) : this._(
+         kind: HermesDeepLinkKind.open,
+         path: path,
+         prefill: prefill,
+         params: params ?? const {},
+       );
   const HermesDeepLink.settings(String tab)
-      : this._(kind: HermesDeepLinkKind.settings, path: '/settings/$tab');
+    : this._(kind: HermesDeepLinkKind.settings, path: '/settings/$tab');
   const HermesDeepLink.session(String id, {String? prefill})
-      : this._(
-          kind: HermesDeepLinkKind.session,
-          sessionId: id,
-          prefill: prefill,
-        );
+    : this._(kind: HermesDeepLinkKind.session, sessionId: id, prefill: prefill);
   const HermesDeepLink.ignore() : this._(kind: HermesDeepLinkKind.ignore);
 
   final HermesDeepLinkKind kind;
@@ -78,12 +80,7 @@ const _knownSettingsTabs = {
 };
 
 /// Route params this build understands and allows through after validation.
-const _knownOpenParams = {
-  'prefill',
-  'session',
-  'archived',
-  'pinned',
-};
+const _knownOpenParams = {'prefill', 'session', 'archived', 'pinned'};
 
 /// Validates a path segment, returning it unchanged or null.
 String? _safeRouteSegment(String segment) {
@@ -139,10 +136,11 @@ HermesDeepLink? parseHermesDeepLink(String? raw) {
 
   // host part (up to the first '/'), lower-cased
   final slashIndex = afterScheme.indexOf('/');
-  final hostPart = (slashIndex < 0 ? afterScheme : afterScheme.substring(0, slashIndex))
-      .split('?')
-      .first
-      .toLowerCase();
+  final hostPart =
+      (slashIndex < 0 ? afterScheme : afterScheme.substring(0, slashIndex))
+          .split('?')
+          .first
+          .toLowerCase();
   final rawPath = (slashIndex < 0 ? '' : afterScheme.substring(slashIndex + 1))
       .split('?')
       .first;
@@ -171,7 +169,6 @@ HermesDeepLink? parseHermesDeepLink(String? raw) {
     return const HermesDeepLink.launch();
   }
 
-
   if (hostPart == 'open') {
     final params = queryParams();
     final prefill = _sanitizePrefill(params['prefill']);
@@ -193,9 +190,7 @@ HermesDeepLink? parseHermesDeepLink(String? raw) {
 
   if (hostPart == 'settings' || hostPart == 'settings/') {
     final params = queryParams();
-    final tab = rawPath.isNotEmpty
-        ? rawPath
-        : params['tab'];
+    final tab = rawPath.isNotEmpty ? rawPath : params['tab'];
     if (tab == null || tab.isEmpty) return const HermesDeepLink.ignore();
     if (!_knownSettingsTabs.contains(tab)) return const HermesDeepLink.ignore();
     return HermesDeepLink.settings(tab);
@@ -228,5 +223,92 @@ String describeHermesDeepLink(HermesDeepLink link) {
       return 'session';
     case HermesDeepLinkKind.ignore:
       return 'ignored';
+  }
+}
+
+/// Primary-window `hermes://` deep-link bridge.
+///
+/// Only the primary application shell owns this service (pop-out child windows
+/// exit before constructing the app root). Incoming URLs from either the
+/// `com.hermesagent.ares/deeplink` channel or Flutter's platform route observer
+/// are validated with [parseHermesDeepLink] before any UI state changes:
+///  - invalid or non-`hermes://` links are dropped;
+///  - `hermes://launch` focuses/opens only (never navigates or prefills);
+///  - `open`, `settings` and `session` links publish to [pendingLink] for the
+///    active Classic or NextGen shell to navigate and prefill without sending.
+class HermesDeepLinkService {
+  HermesDeepLinkService({MethodChannel? channel})
+    : _channel = channel ?? defaultChannel;
+
+  static const defaultChannel = MethodChannel('com.hermesagent.ares/deeplink');
+
+  /// Shared instance owned by the primary [HermesApp], or replaced in tests.
+  static HermesDeepLinkService shared = HermesDeepLinkService();
+
+  final MethodChannel _channel;
+  final ValueNotifier<HermesDeepLink?> pendingLink = ValueNotifier(null);
+  String? _lastDiagnostic;
+  int _launchCount = 0;
+  bool _initialized = false;
+
+  /// Safe diagnostic string from [describeHermesDeepLink]; never raw URLs/IDs.
+  String? get lastDiagnostic => _lastDiagnostic;
+
+  /// Number of `hermes://launch` focus-only links accepted in this session.
+  int get launchCount => _launchCount;
+
+  Future<void> initialize() async {
+    if (_initialized) return;
+    _initialized = true;
+    _channel.setMethodCallHandler(_handleMethodCall);
+    try {
+      final initial = await _channel.invokeMethod<String>('getInitialLink');
+      if (initial != null && initial.isNotEmpty) {
+        handleRawLink(initial);
+      }
+    } on MissingPluginException {
+      // Runner does not implement the custom deep-link channel yet.
+    } on PlatformException {
+      // Never block startup on a deep-link channel error.
+    }
+  }
+
+  Future<void> _handleMethodCall(MethodCall call) async {
+    if (call.method != 'onDeepLink' && call.method != 'deepLink') return;
+    final raw = switch (call.arguments) {
+      final String s => s,
+      final Map<Object?, Object?> m => m['url'] as String?,
+      _ => null,
+    };
+    handleRawLink(raw);
+  }
+
+  /// Validates [raw] and publishes only allowlisted navigation/prefill links.
+  /// Returns `true` when [raw] was recognized as a valid `hermes://` link
+  /// (including `launch`), `false` when ignored.
+  bool handleRawLink(String? raw) {
+    final parsed = parseHermesDeepLink(raw);
+    if (parsed == null || parsed.isIgnored) {
+      _lastDiagnostic = 'ignored';
+      return false;
+    }
+    _lastDiagnostic = describeHermesDeepLink(parsed);
+    if (parsed.kind == HermesDeepLinkKind.launch) {
+      _launchCount++;
+      return true;
+    }
+    pendingLink.value = parsed;
+    return true;
+  }
+
+  HermesDeepLink? takePendingLink() {
+    final link = pendingLink.value;
+    if (link != null) pendingLink.value = null;
+    return link;
+  }
+
+  void dispose() {
+    _channel.setMethodCallHandler(null);
+    pendingLink.dispose();
   }
 }
