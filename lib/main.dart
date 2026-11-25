@@ -1794,6 +1794,8 @@ class HomeScreenState extends State<HomeScreen> {
               gatewayProfile,
               clientCertificate,
               clearClientCertificate = false,
+              deploymentToken,
+              customHeaders = const <String, String>{},
             }) async {
               if (existing == null) {
                 await widget.connManager.saveConnection(
@@ -1810,6 +1812,8 @@ class HomeScreenState extends State<HomeScreen> {
                   dashboardPassword: dashboardPassword,
                   gatewayProfile: gatewayProfile,
                   clientCertificate: clientCertificate,
+                  deploymentToken: deploymentToken,
+                  customHeaders: customHeaders,
                 );
               } else {
                 await widget.connManager.updateConnection(
@@ -1828,6 +1832,10 @@ class HomeScreenState extends State<HomeScreen> {
                   gatewayProfile: gatewayProfile,
                   clientCertificate: clientCertificate,
                   clearClientCertificate: clearClientCertificate,
+                  deploymentToken: deploymentToken,
+                  customHeaders: customHeaders,
+                  clearDeploymentToken: deploymentToken == null,
+                  clearCustomHeaders: customHeaders.isEmpty,
                 );
               }
               _refresh();
@@ -2547,7 +2555,11 @@ class _AddDialogState extends State<_AddDialog> {
     );
     _gatewayProfile = TextEditingController(text: conn?.gatewayProfile ?? '');
     _deploymentToken = TextEditingController(text: conn?.deploymentToken ?? '');
-    _customHeaders = TextEditingController(text: headersBlockFromMap(conn?.customHeaders ?? const <String, String>{}));
+    _customHeaders = TextEditingController(
+      text: headersBlockFromMap(
+        conn?.customHeaders ?? const <String, String>{},
+      ),
+    );
     _certificateService = ClientCertificateService();
     _certificatePassword = TextEditingController();
     _certificatePassword.addListener(_onCertificatePasswordChanged);
@@ -2568,6 +2580,8 @@ class _AddDialogState extends State<_AddDialog> {
         conn?.dashboardPortOverride != null ||
         conn?.dashboardUsername?.isNotEmpty == true ||
         conn?.dashboardPassword?.isNotEmpty == true ||
+        conn?.deploymentToken?.isNotEmpty == true ||
+        conn?.customHeaders.isNotEmpty == true ||
         _dashboardProxied ||
         conn?.desktopGatewayUrl?.isNotEmpty == true;
   }
@@ -2950,6 +2964,15 @@ class _AddDialogState extends State<_AddDialog> {
       return;
     }
 
+    final parsedHeaders = parseRemoteHeadersBlock(_customHeaders.text);
+    if (parsedHeaders.problems.isNotEmpty) {
+      setState(() {
+        _error = parsedHeaders.problems.first;
+        _showDashboard = true;
+      });
+      return;
+    }
+
     setState(() {
       _validating = true;
       _error = null;
@@ -2970,6 +2993,7 @@ class _AddDialogState extends State<_AddDialog> {
         apiKey: apiKey,
         pathPrefix: gatewayPrefix,
         clientCertificate: clientCertificate,
+        customHeaders: parsedHeaders.headers,
       );
       final result = await client.checkHealth();
       client.close();
@@ -2990,7 +3014,6 @@ class _AddDialogState extends State<_AddDialog> {
       final desktopGatewayUrl = _desktopGatewayUrl.text.trim();
       final gatewayProfile = _gatewayProfile.text.trim();
       final deploymentToken = _deploymentToken.text.trim();
-      final customHeaders = parseRemoteHeadersBlock(_customHeaders.text);
       if (gatewayProfile.contains('/') ||
           gatewayProfile.contains(RegExp(r'\s'))) {
         setState(() {
@@ -3009,6 +3032,7 @@ class _AddDialogState extends State<_AddDialog> {
       if (dashPortText.isNotEmpty ||
           dashUser.isNotEmpty ||
           dashPass.isNotEmpty ||
+          deploymentToken.isNotEmpty ||
           desktopGatewayUrl.isNotEmpty ||
           dashboardPrefix.isNotEmpty ||
           _dashboardProxied) {
@@ -3029,7 +3053,7 @@ class _AddDialogState extends State<_AddDialog> {
             gatewayProfile: gatewayProfile,
             clientCertificate: clientCertificate,
             deploymentToken: deploymentToken.isEmpty ? null : deploymentToken,
-            customHeaders: customHeaders,
+            customHeaders: parsedHeaders.headers,
           ),
         );
         try {
@@ -3077,7 +3101,7 @@ class _AddDialogState extends State<_AddDialog> {
         clientCertificate: savedCertificate,
         clearClientCertificate: savedCertificate == null,
         deploymentToken: deploymentToken.isEmpty ? null : deploymentToken,
-        customHeaders: customHeaders,
+        customHeaders: parsedHeaders.headers,
       );
       _certificateSaved = true;
       if (mounted) Navigator.pop(context);
@@ -3536,6 +3560,8 @@ class _AddDialogState extends State<_AddDialog> {
     _dashPass.dispose();
     _desktopGatewayUrl.dispose();
     _gatewayProfile.dispose();
+    _deploymentToken.dispose();
+    _customHeaders.dispose();
     _certificatePassword.dispose();
     super.dispose();
   }
