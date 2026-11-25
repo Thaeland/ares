@@ -178,11 +178,12 @@ extension HostDashboardTransport on DashboardClient {
   Future<Object?> hostExchange(
     HostDashboardRequest request, {
     required void Function() check,
+    Future<void> Function()? beforeSend,
   }) {
-    final profile = gatewayProfile;
-    if (profile == null ||
-        profile == 'current' ||
-        !_hostProfileId.hasMatch(profile)) {
+    // A saved connection with no profile is the gateway's own default home.
+    final named = gatewayProfile;
+    final profile = named == null || named.isEmpty ? 'default' : named;
+    if (profile == 'current' || !_hostProfileId.hasMatch(profile)) {
       throw const FormatException('Invalid profile scope');
     }
     final plan = _hostPlan(profile, request);
@@ -195,6 +196,7 @@ extension HostDashboardTransport on DashboardClient {
       check: check,
       method: plan.method,
       body: plan.body,
+      beforeSend: beforeSend,
     );
   }
 }

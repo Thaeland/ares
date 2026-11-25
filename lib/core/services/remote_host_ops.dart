@@ -228,9 +228,10 @@ class MemoryProviderField {
     required this.kind,
     required this.isSet,
     required this.options,
+    this.value = '',
   });
 
-  final String key, label, kind;
+  final String key, label, kind, value;
   final bool isSet;
   final List<String> options;
 }
@@ -253,13 +254,44 @@ Map<String, dynamic> _hostObject(Object? data) {
 
 Future<Map<String, dynamic>> _hostCall(
   WorkspaceTarget target,
-  HostDashboardRequest request,
-) async {
+  HostDashboardRequest request, {
+  Future<void> Function()? beforeSend,
+}) async {
   final data = await target._owner._dashboard.hostExchange(
     request,
     check: target.checkCurrent,
+    beforeSend: beforeSend,
   );
   return _hostObject(data);
+}
+
+/// Nothing was sent. The caller may retry once the installation is idle.
+final class _HostUpdateHeld implements Exception {
+  const _HostUpdateHeld(this.launch);
+  final RemoteUpdateLaunch launch;
+}
+
+/// Busy or unidentified installations are not updated. active_sessions is
+/// the installation-wide count, and a missing install id blocks.
+Future<RemoteUpdateLaunch?> _hostUpdateAdmission(WorkspaceTarget target) async {
+  final map = await _hostCall(target, const HostStatusRead());
+  target.checkCurrent();
+  final install = map['install_id'];
+  final sessions = map['active_sessions'];
+  if (install is! String || install.isEmpty || sessions is! int) {
+    return const RemoteUpdateLaunch.refused(
+      'This installation is unknown, so the update was not sent',
+    );
+  }
+  final agents = map['active_agents'];
+  if (sessions > 0 ||
+      map['gateway_busy'] == true ||
+      (agents is int && agents > 0)) {
+    return const RemoteUpdateLaunch.refused(
+      'A chat on this installation is running',
+    );
+  }
+  return null;
 }
 
 bool _hostBool(Object? value) {
@@ -450,7 +482,24 @@ extension RemoteHostOps on WorkspaceTarget {
     final eligibility = await updateEligibility();
     checkCurrent();
     if (!hostUpdateMayStart(eligibility)) _fail(WorkspaceFailure.denied);
-    final map = await _hostCall(this, const HostUpdateStartRequest());
+    // Per installation, same rule as fleet 192dbc2e: a busy chat holds the
+    // update, and an unknown install blocks. Rechecked after auth, immediately
+    // before the POST leaves.
+    final held = await _hostUpdateAdmission(this);
+    if (held != null) return held;
+    final Map<String, dynamic> map;
+    try {
+      map = await _hostCall(
+        this,
+        const HostUpdateStartRequest(),
+        beforeSend: () async {
+          final again = await _hostUpdateAdmission(this);
+          if (again != null) throw _HostUpdateHeld(again);
+        },
+      );
+    } on _HostUpdateHeld catch (held) {
+      return held.launch;
+    }
     if (map['name'] != 'hermes-update') _fail(WorkspaceFailure.invalid);
     if (map['ok'] != true) {
       final message = map['message'];
@@ -473,17 +522,21 @@ extension RemoteHostOps on WorkspaceTarget {
     if (map['name'] != name) _fail(WorkspaceFailure.mismatch);
     final exitCode = map['exit_code'];
     if (exitCode != null && exitCode is! int) _fail(WorkspaceFailure.invalid);
+    final running = _hostBool(map['running']);
     final actionId = map['action_id'];
     if (actionId != null && actionId is! String) {
       _fail(WorkspaceFailure.invalid);
     }
     final receipt = _hostReceipt(map['receipt']);
-    if (receipt != null && receipt.actionId != actionId) {
+    // A live update omits action_id and still returns the previous run's
+    // receipt. That is waiting, not a substituted receipt. A status that
+    // names an action_id the receipt does not match still is.
+    if (receipt != null && actionId is String && receipt.actionId != actionId) {
       _fail(WorkspaceFailure.mismatch);
     }
     return RemoteActionStatus(
       name: name,
-      running: _hostBool(map['running']),
+      running: running,
       exitCode: exitCode as int?,
       lines: _hostLines(map['lines']),
       actionId: actionId as String?,
@@ -861,6 +914,13 @@ extension RemoteMemoryGraphOps on WorkspaceTarget {
                     ? _hostObject(row)['kind'] as String
                     : 'text',
                 isSet: _hostObject(row)['is_set'] == true,
+                value: () {
+                  final value = _hostObject(row)['value'];
+                  if (value != null && value is! String) {
+                    _fail(WorkspaceFailure.invalid);
+                  }
+                  return value is String ? value : '';
+                }(),
                 options: [
                   for (final option
                       in (_hostObject(row)['options'] as List? ?? []))

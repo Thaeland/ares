@@ -170,6 +170,7 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
           Text(_output, key: const Key('schedule-output')),
           for (final job in _jobs)
             Card(
+              key: ValueKey('${job.profile}/${job.id}'),
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(
@@ -256,6 +257,7 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
                             },
                     ),
                     _DeliveryEditor(
+                      key: ValueKey('delivery-${job.profile}-${job.id}'),
                       connection: widget.connection,
                       job: job,
                       busy: _busy,
@@ -315,6 +317,7 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
 
 class _DeliveryEditor extends StatefulWidget {
   const _DeliveryEditor({
+    super.key,
     required this.connection,
     required this.job,
     required this.busy,
@@ -338,6 +341,17 @@ class _DeliveryEditorState extends State<_DeliveryEditor> {
   void initState() {
     super.initState();
     _load();
+  }
+
+  @override
+  void didUpdateWidget(covariant _DeliveryEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.job.profile != widget.job.profile ||
+        oldWidget.job.id != widget.job.id) {
+      _targets = null;
+      _error = null;
+      _load();
+    }
   }
 
   Future<void> _load() async {
@@ -372,9 +386,13 @@ class _DeliveryEditorState extends State<_DeliveryEditor> {
             onSelected: widget.busy
                 ? null
                 : (_) {
-                    widget.onChanged(
-                      toggleDeliveryTarget(widget.job.deliver, target.id),
-                    );
+                    try {
+                      widget.onChanged(
+                        toggleDeliveryTarget(widget.job.deliver, target.id),
+                      );
+                    } on FormatException catch (error) {
+                      setState(() => _error = error.message);
+                    }
                   },
           ),
       ],

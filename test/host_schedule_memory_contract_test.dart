@@ -104,6 +104,11 @@ void main() {
         fixture.canApply = true;
         fixture.installMethod = 'git';
         fixture.updateAvailable = true;
+        final held = await target.startHostUpdate();
+        expect(held.actionId, isNull);
+        expect(held.refused, contains('running'));
+        expect(fixture.posted('/api/hermes/update'), isFalse);
+        fixture.activeSessions = 0;
         final launch = await target.startHostUpdate();
         expect(launch.actionId, 'a' * 32);
         expect(
@@ -266,6 +271,8 @@ class OpsFixture {
   var installMethod = 'docker';
   var updateAvailable = false;
   var receiptMatches = false;
+  var activeSessions = 2;
+  String? installId = 'ops-fixture';
   var removedPacking = false;
   final jobs = <String, Map<String, Object?>>{
     'nightly': {
@@ -419,7 +426,8 @@ class OpsFixture {
       return {
         'gateway_running': true,
         'version': '9.9.9',
-        'active_sessions': 2,
+        'active_sessions': activeSessions,
+        if (installId != null) 'install_id': installId,
         'gateway_state': 'running',
         'gateway_shared_with': ['work', 'alpha'],
       };

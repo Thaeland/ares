@@ -142,7 +142,16 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
   Future<void> _edit(MemoryGraphNode node) async {
     final target = _target;
     if (target == null) return;
-    final detail = await target.memoryNode(node.id);
+    final MemoryNodeDetail detail;
+    try {
+      detail = await target.memoryNode(node.id);
+    } on WorkspaceException catch (error) {
+      if (mounted) setState(() => _error = '$error');
+      return;
+    } on FormatException catch (error) {
+      if (mounted) setState(() => _error = error.message);
+      return;
+    }
     if (!mounted) return;
     final controller = TextEditingController(text: detail.content);
     final save = await showDialog<bool>(
@@ -213,7 +222,9 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
       }
       _providerValues.clear();
       for (final field in config.fields) {
-        _providerValues[field.key] = TextEditingController();
+        _providerValues[field.key] = TextEditingController(
+          text: field.kind == 'secret' ? '' : field.value,
+        );
       }
       _provider = config;
     });
@@ -225,8 +236,13 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
     final values = <String, String>{};
     for (final field in config.fields) {
       final text = _providerValues[field.key]?.text ?? '';
-      if (field.kind == 'secret' && text.isEmpty) continue;
-      if (text.isEmpty && !field.isSet) continue;
+      if (field.kind == 'secret') {
+        if (text.isNotEmpty) values[field.key] = text;
+        continue;
+      }
+      // Unchanged fields stay stored. A blank must not clear, falsify or
+      // default a value the user did not replace.
+      if (text == field.value || text.isEmpty) continue;
       values[field.key] = text;
     }
     await _guard(() async {

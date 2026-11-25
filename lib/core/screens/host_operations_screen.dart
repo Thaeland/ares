@@ -37,6 +37,7 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
   HostUpdateEligibility? _eligibility;
   RemoteComputerUse? _computer;
   RemoteCuratorStatus? _curator;
+  String? _launchedUpdate;
 
   @override
   void initState() {
@@ -130,28 +131,54 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
         _output = launch.refused!;
         return;
       }
-      final verdict = await target.hostUpdateVerdict(launch.actionId!);
-      _output = switch (verdict) {
-        HostUpdateVerdict.success => 'Update receipt succeeded.',
-        HostUpdateVerdict.partial =>
-          'Update committed, with follow-up steps still owed.',
-        HostUpdateVerdict.failed => 'Update receipt failed.',
-        HostUpdateVerdict.refused => 'Update receipt refused.',
-        HostUpdateVerdict.pending => 'Update is still running.',
-        HostUpdateVerdict.unknown =>
-          'Update outcome is unknown. A live gateway is not a successful update.',
-      };
+      await _readUpdate(target, launch.actionId!);
     });
+  }
+
+  Future<void> _recheckUpdate() async {
+    final actionId = _launchedUpdate;
+    if (actionId == null) return;
+    await _guard(() async {
+      await _readUpdate(await _bound(), actionId);
+    });
+  }
+
+  /// Reads the receipt for [actionId]. Does not send another update.
+  Future<void> _readUpdate(WorkspaceTarget target, String actionId) async {
+    final status = await target.actionStatus('hermes-update');
+    final verdict = judgeHostUpdate(
+      actionId: actionId,
+      running: status.running,
+      receipt: status.receipt,
+    );
+    final unmatched =
+        status.receipt == null || status.receipt!.actionId != actionId;
+    _launchedUpdate = actionId;
+    _output = unmatched && status.running
+        ? 'Awaiting matching receipt. Update is still running.'
+        : switch (verdict) {
+            HostUpdateVerdict.success => 'Update receipt succeeded.',
+            HostUpdateVerdict.partial =>
+              'Update committed, with follow-up steps still owed.',
+            HostUpdateVerdict.failed => 'Update receipt failed.',
+            HostUpdateVerdict.refused => 'Update receipt refused.',
+            HostUpdateVerdict.pending => 'Update is still running.',
+            HostUpdateVerdict.unknown =>
+              'Update outcome is unknown. A live gateway is not a successful update.',
+          };
   }
 
   Future<void> _restart() async {
     final shared = _status?.sharedWith ?? const <String>[];
+    final profile = widget.route.profile ?? 'the gateway default';
     final agreed = await _confirm(
       'Restart remote gateway',
       shared.length > 1
           ? 'This restarts the gateway shared by ${shared.join(', ')}. '
+                'Live turns on this gateway are interrupted. '
                 'Reconnect afterwards. Reachability is not proof the restart finished.'
-          : 'This restarts the remote gateway for ${widget.route.profile}. '
+          : 'This restarts the remote gateway for $profile. '
+                'Live turns on this gateway are interrupted. '
                 'Reconnect afterwards.',
     );
     if (!agreed) return;
@@ -253,7 +280,9 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           Text(
-            'These controls operate the remote gateway ${widget.connection.label} for ${widget.route.profile ?? 'its profile'}, not this device and not the Ares client update.',
+            'These controls operate the remote gateway ${widget.connection.label} for '
+            "${widget.route.profile ?? 'the gateway default'}"
+            ', not this device and not the Ares client update.',
             style: TextStyle(color: scheme.onSurfaceVariant),
           ),
           if (_error != null) Text(_error!, key: const Key('host-error')),
@@ -293,6 +322,12 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
           if (eligibility?.message != null)
             Text(eligibility!.message!, key: const Key('host-update-message')),
           Text(_output, key: const Key('host-output')),
+          if (_launchedUpdate != null)
+            OutlinedButton(
+              key: const Key('host-update-recheck'),
+              onPressed: _busy ? null : _recheckUpdate,
+              child: const Text('Check update receipt'),
+            ),
           const SizedBox(height: 12),
           const Text('Remote host logs'),
           Wrap(

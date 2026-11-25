@@ -2855,6 +2855,7 @@ class DashboardClient {
     required String method,
     Map<String, Object?>? body,
     bool mintHostTerminalTicket = false,
+    Future<void> Function()? beforeSend,
   }) async {
     if (segments.isEmpty ||
         segments.any(
@@ -2884,6 +2885,9 @@ class DashboardClient {
     final request = http.Request(method, uri)..followRedirects = false;
     if (body != null) request.bodyBytes = utf8.encode(jsonEncode(body));
     request.headers.addAll(await _authHeaders());
+    check();
+    // Last gate for a host update: nothing is sent when this throws.
+    if (beforeSend != null) await beforeSend();
     check();
     final response = await _http
         .send(request)
