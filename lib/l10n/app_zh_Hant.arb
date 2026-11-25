@@ -2771,7 +2771,14 @@
   "appearance_discard_draft": "捨棄草稿",
   "appearance_forget_saved_hatchling": "移除已儲存的孵化夥伴",
   "appearance_radio": "電台",
-  "appearance_radio_hint": "按下播放才會直接連線至廣播業者。搜尋電台只會在此裝置上進行。",
+  "appearance_radio_hint": "串流直接來自 {stations}，只有在你按下播放後才會開始。搜尋電台只會在此裝置上進行。",
+  "@appearance_radio_hint": {
+    "placeholders": {
+      "stations": {
+        "type": "String"
+      }
+    }
+  },
   "appearance_radio_save_failed": "無法儲存電台設定。",
   "appearance_choose_a_station": "選擇電台",
   "appearance_pause_radio": "暫停電台",

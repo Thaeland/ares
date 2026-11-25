@@ -10836,8 +10836,8 @@ abstract class AppLocalizations {
   /// No description provided for @appearance_radio_hint.
   ///
   /// In en, this message translates to:
-  /// **'Play connects directly to the broadcaster. Station search stays on this device.'**
-  String get appearance_radio_hint;
+  /// **'Streams come straight from {stations} and start only when you press Play. Station search stays on this device.'**
+  String appearance_radio_hint(String stations);
 
   /// No description provided for @appearance_radio_save_failed.
   ///

@@ -6184,8 +6184,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appearance_radio => 'Radio';
 
   @override
-  String get appearance_radio_hint =>
-      'Play connects directly to the broadcaster. Station search stays on this device.';
+  String appearance_radio_hint(String stations) {
+    return 'Streams come straight from $stations and start only when you press Play. Station search stays on this device.';
+  }
 
   @override
   String get appearance_radio_save_failed =>
@@ -18234,7 +18235,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get appearance_radio => '電台';
 
   @override
-  String get appearance_radio_hint => '按下播放才會直接連線至廣播業者。搜尋電台只會在此裝置上進行。';
+  String appearance_radio_hint(String stations) {
+    return '串流直接來自 $stations，只有在你按下播放後才會開始。搜尋電台只會在此裝置上進行。';
+  }
 
   @override
   String get appearance_radio_save_failed => '無法儲存電台設定。';

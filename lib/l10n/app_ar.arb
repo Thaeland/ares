@@ -2708,7 +2708,14 @@
   "appearance_discard_draft": "تجاهل المسودة",
   "appearance_forget_saved_hatchling": "حذف الرفيق المُفقس المحفوظ",
   "appearance_radio": "الراديو",
-  "appearance_radio_hint": "يتصل زر التشغيل بجهة البث مباشرةً. يبقى البحث عن المحطات على هذا الجهاز.",
+  "appearance_radio_hint": "يأتي البث مباشرةً من {stations}، ولا يبدأ إلا عند الضغط على تشغيل. يبقى البحث عن المحطات على هذا الجهاز.",
+  "@appearance_radio_hint": {
+    "placeholders": {
+      "stations": {
+        "type": "String"
+      }
+    }
+  },
   "appearance_radio_save_failed": "تعذّر حفظ إعدادات الراديو.",
   "appearance_choose_a_station": "اختيار محطة",
   "appearance_pause_radio": "إيقاف الراديو مؤقتًا",

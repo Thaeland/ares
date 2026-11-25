@@ -6410,8 +6410,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appearance_radio => 'الراديو';
 
   @override
-  String get appearance_radio_hint =>
-      'يتصل زر التشغيل بجهة البث مباشرةً. يبقى البحث عن المحطات على هذا الجهاز.';
+  String appearance_radio_hint(String stations) {
+    return 'يأتي البث مباشرةً من $stations، ولا يبدأ إلا عند الضغط على تشغيل. يبقى البحث عن المحطات على هذا الجهاز.';
+  }
 
   @override
   String get appearance_radio_save_failed => 'تعذّر حفظ إعدادات الراديو.';

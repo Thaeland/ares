@@ -6275,8 +6275,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appearance_radio => 'Radio';
 
   @override
-  String get appearance_radio_hint =>
-      'Play connects directly to the broadcaster. Station search stays on this device.';
+  String appearance_radio_hint(String stations) {
+    return 'Streams come straight from $stations and start only when you press Play. Station search stays on this device.';
+  }
 
   @override
   String get appearance_radio_save_failed =>

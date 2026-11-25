@@ -56,6 +56,11 @@ enum AresRadioStation {
   );
 
   const AresRadioStation(this.id, this.label, this.provider, this.streamUrl);
+
+  /// Every station's broadcaster, in list order: who a stream comes from.
+  static String get broadcasters =>
+      {for (final station in values) station.provider}.join(', ');
+
   final String id;
   final String label;
   final String provider;
@@ -473,7 +478,12 @@ class AresRadioSettingsBody extends StatelessWidget {
           value: radio.enabled,
           onChanged: radio.setEnabled,
           title: Text(context.sharedL10n.appearance_radio),
-          subtitle: Text(context.sharedL10n.appearance_radio_hint),
+          // Streams are hard-coded third-party URLs: name the stations.
+          subtitle: Text(
+            context.sharedL10n.appearance_radio_hint(
+              AresRadioStation.broadcasters,
+            ),
+          ),
         ),
         if (radio.enabled) AresRadioBar(radio: radio),
         if (radio._saveFailed)

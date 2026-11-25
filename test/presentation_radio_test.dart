@@ -412,6 +412,30 @@ void main() {
     },
   );
 
+  testWidgets(
+    'the hint names every broadcaster and says only Play starts a stream',
+    (tester) async {
+      final radio = create();
+      addTearDown(radio.dispose);
+      await mount(tester, radio);
+      final hint = find.textContaining('start only when you press Play');
+      expect(hint, findsOneWidget);
+      final text = tester.widget<Text>(hint).data!;
+      for (final broadcaster in [
+        'Nightride FM',
+        'Radio Paradise',
+        'GamingNow',
+      ]) {
+        expect(text, contains(broadcaster));
+      }
+      for (final station in AresRadioStation.values) {
+        expect(text, contains(station.provider));
+      }
+      expect(players, isEmpty);
+      expect(clients, isEmpty);
+    },
+  );
+
   for (final (locale, radioLabel, searchLabel) in [
     (const Locale('ar'), 'الراديو', 'البحث في المحطات المحفوظة مسبقًا'),
     (
@@ -427,6 +451,11 @@ void main() {
       addTearDown(radio.dispose);
       await mount(tester, radio, locale);
       expect(find.text(radioLabel), findsOneWidget);
+      expect(
+        find.textContaining(AresRadioStation.broadcasters),
+        findsOneWidget,
+        reason: 'the localised hint names the broadcasters',
+      );
       await tester.tap(find.byType(SwitchListTile));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Chillsynth'));

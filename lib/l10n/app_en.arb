@@ -2720,7 +2720,14 @@
   "appearance_discard_draft": "Discard draft",
   "appearance_forget_saved_hatchling": "Forget saved hatchling",
   "appearance_radio": "Radio",
-  "appearance_radio_hint": "Play connects directly to the broadcaster. Station search stays on this device.",
+  "appearance_radio_hint": "Streams come straight from {stations} and start only when you press Play. Station search stays on this device.",
+  "@appearance_radio_hint": {
+    "placeholders": {
+      "stations": {
+        "type": "String"
+      }
+    }
+  },
   "appearance_radio_save_failed": "Radio settings could not be saved.",
   "appearance_choose_a_station": "Choose a station",
   "appearance_pause_radio": "Pause radio",
