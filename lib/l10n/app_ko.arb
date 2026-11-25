@@ -786,6 +786,7 @@
   "hermes_heading": "## Hermes",
   "action_label": "작업",
   "destination_label": "대상",
+  "markdown_source": "원문",
   "preview_label": "미리보기",
   "share_action_summarize": "요약",
   "share_action_explain": "설명",

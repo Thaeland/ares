@@ -788,6 +788,7 @@
   "hermes_heading": "## Hermes",
   "action_label": "Ação",
   "destination_label": "Destino",
+  "markdown_source": "Código-fonte",
   "preview_label": "Pré-visualização",
   "share_action_summarize": "Resumir",
   "share_action_explain": "Explicar",

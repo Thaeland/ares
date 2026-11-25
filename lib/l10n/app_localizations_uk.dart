@@ -2955,6 +2955,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get destination_label => 'Призначення';
 
   @override
+  String get markdown_source => 'Вихідний текст';
+
+  @override
   String get preview_label => 'Перегляд';
 
   @override

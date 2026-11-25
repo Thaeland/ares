@@ -873,6 +873,7 @@
   "hermes_heading": "## Hermes",
   "action_label": "Дія",
   "destination_label": "Призначення",
+  "markdown_source": "Вихідний текст",
   "preview_label": "Перегляд",
   "share_action_summarize": "Підсумувати",
   "share_action_explain": "Пояснити",

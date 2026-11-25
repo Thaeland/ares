@@ -786,6 +786,7 @@
   "hermes_heading": "## Hermes",
   "action_label": "Action",
   "destination_label": "Destination",
+  "markdown_source": "Source",
   "preview_label": "Aperçu",
   "share_action_summarize": "Résumer",
   "share_action_explain": "Expliquer",
