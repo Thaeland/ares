@@ -19,6 +19,7 @@ import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
 import '../../core/utils/delivered_files.dart';
 import '../../core/utils/media_tags.dart';
+import '../../core/widgets/windows_chat_presence.dart';
 import '../../core/widgets/desktop_shortcuts.dart';
 import '../../core/widgets/transcript_reader.dart';
 import '../../core/widgets/transcript_body.dart';
@@ -722,23 +723,34 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
     final gateway = NgScope.of(context).gateway;
-    return _preview.layout(
-      chat: _buildChat(c, gateway),
-      storedId: chat.storedId,
-      service: chat.attachmentService,
-      existing: _drafts,
-      update: setState,
-      commit: (text, crops) {
-        if (_preparing || chat.running) {
-          throw const AttachmentDraftException(
-            'Wait for the composer to become available.',
-          );
-        }
-        setState(() {
-          _drafts.addAll(crops);
-          appendPreviewText(_input, text);
-        });
+    return WindowsChatPresence(
+      target: () {
+        final socket = chat.gateway.socket;
+        final runtime = chat.runtimeId;
+        return socket != null &&
+                runtime != null &&
+                chat.gateway.storedIdFor(runtime) == chat.storedId
+            ? (socket, runtime)
+            : null;
       },
+      child: _preview.layout(
+        chat: _buildChat(c, gateway),
+        storedId: chat.storedId,
+        service: chat.attachmentService,
+        existing: _drafts,
+        update: setState,
+        commit: (text, crops) {
+          if (_preparing || chat.running) {
+            throw const AttachmentDraftException(
+              'Wait for the composer to become available.',
+            );
+          }
+          setState(() {
+            _drafts.addAll(crops);
+            appendPreviewText(_input, text);
+          });
+        },
+      ),
     );
   }
 

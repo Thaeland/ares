@@ -629,7 +629,7 @@
   "windows_window_activity": "Share chat activity",
   "windows_window_activity_hint": "Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.",
   "windows_completion_sound": "Completion sound",
-  "windows_sound_default": "Windows default",
+  "windows_sound_default": "System default",
   "windows_sound_mail": "Mail",
   "windows_sound_reminder": "Reminder",
   "windows_sound_silent": "Silent",

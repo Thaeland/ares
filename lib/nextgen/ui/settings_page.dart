@@ -499,7 +499,7 @@ class NgNotificationSettings extends StatelessWidget {
                 value: on && all(_requestKinds),
                 onChanged: on ? (v) => _setKinds(_requestKinds, v) : null,
               ),
-              if (isWindowsPlatform) WindowsCompletionSoundTile(prefs: prefs),
+              WindowsCompletionSoundTile(prefs: prefs),
               if (!isWindowsPlatform)
                 SwitchListTile(
                   key: const ValueKey('ng-keep-running'),

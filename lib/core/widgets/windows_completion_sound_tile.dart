@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import '../l10n/l10n.dart';
+import '../services/completion_cue.dart';
 import '../services/notification_prefs.dart';
 
 /// Both settings surfaces already listen to NotificationPrefsStore.
+/// The same control is shown on every platform. Windows still plays the
+/// choice through its toast sink; other platforms use [CompletionCue].
 class WindowsCompletionSoundTile extends StatelessWidget {
   const WindowsCompletionSoundTile({super.key, required this.prefs});
   final NotificationPrefs prefs;
   @override
   Widget build(BuildContext context) {
-    final l = context.l10n;
+    final l = context.sharedL10n;
     return Column(
       children: [
         SwitchListTile(

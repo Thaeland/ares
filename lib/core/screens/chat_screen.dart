@@ -7504,13 +7504,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         });
       },
     );
-    return defaultTargetPlatform == TargetPlatform.windows
-        ? WindowsChatPresence(
-            target: () => (_desktopGateway ?? _normalSession?.client)
-                ?.presenceFor(_normalLocalSessionKey),
-            child: screen,
-          )
-        : screen;
+    return WindowsChatPresence(
+      target: () => (_desktopGateway ?? _normalSession?.client)?.presenceFor(
+        _normalLocalSessionKey,
+      ),
+      child: screen,
+    );
   }
 
   Widget _buildChat(BuildContext context) => LayoutBuilder(

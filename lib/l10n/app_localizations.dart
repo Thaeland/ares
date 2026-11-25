@@ -3375,7 +3375,7 @@ abstract class AppLocalizations {
   /// No description provided for @windows_sound_default.
   ///
   /// In en, this message translates to:
-  /// **'Windows default'**
+  /// **'System default'**
   String get windows_sound_default;
 
   /// No description provided for @windows_sound_mail.

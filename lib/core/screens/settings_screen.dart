@@ -889,7 +889,7 @@ class _NotificationSettingsState extends State<_NotificationSettings>
                 }
               },
             ),
-            if (isWindowsPlatform) WindowsCompletionSoundTile(prefs: prefs),
+            WindowsCompletionSoundTile(prefs: prefs),
             for (final kind in HermesNotificationKind.values) ...[
               const Divider(height: 1),
               SwitchListTile(

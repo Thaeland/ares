@@ -1949,7 +1949,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get windows_completion_sound => 'Completion sound';
 
   @override
-  String get windows_sound_default => 'Windows default';
+  String get windows_sound_default => 'System default';
 
   @override
   String get windows_sound_mail => 'Mail';

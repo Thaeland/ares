@@ -5,8 +5,10 @@ import '../services/notification_prefs.dart';
 import '../services/turn_notification_service.dart';
 import '../services/ws_client.dart';
 
-/// Page-level input evidence for `client.activity`. Never sample other apps or
-/// send keys, text, mouse coordinates, titles, configured hosts or credentials.
+/// Page-level input evidence for `client.activity`, on every platform.
+/// Never sample other apps or send keys, text, mouse coordinates, titles,
+/// configured hosts or credentials. Off until the user opts in, and silent
+/// unless this socket's gateway acknowledged `client_activity`.
 class WindowsChatPresence extends StatefulWidget {
   const WindowsChatPresence({
     super.key,

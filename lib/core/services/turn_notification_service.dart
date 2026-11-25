@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../l10n/app_localizations.dart';
 import '../l10n/l10n.dart' show resolvePreferredLocale;
 import '../utils/platform_capabilities.dart';
+import 'completion_cue.dart';
 import 'notification_prefs.dart';
 import 'windows_toast_ledger.dart';
 import 'notification_approval_authority.dart';
@@ -113,6 +114,89 @@ class TurnNotification {
   });
 }
 
+/// Platform details for one notification.
+///
+/// Completion and test alerts follow [CompletionCue]. Every other kind keeps
+/// its previous sound. Android Auto conversation posts return before this and
+/// stay on their own native path.
+NotificationDetails turnNotificationDetails(TurnNotification notification) {
+  final cue = CompletionCue.resolve(
+    silent: notification.silent,
+    onlyAlertOnce: notification.onlyAlertOnce,
+    ongoing: notification.ongoing,
+    payload: notification.payload,
+    kind: notification.kind,
+  );
+  final (importance, priority) = switch (notification.importance) {
+    TurnNotificationImportance.high => (Importance.high, Priority.high),
+    TurnNotificationImportance.low => (Importance.low, Priority.low),
+    TurnNotificationImportance.defaultImportance => (
+      Importance.defaultImportance,
+      Priority.defaultPriority,
+    ),
+  };
+  final channel = notification.channel;
+  final suffix = cue.channelSuffix;
+  final androidDetails = AndroidNotificationDetails(
+    suffix.isEmpty ? channel.id : '${channel.id}_$suffix',
+    suffix.isEmpty ? channel.name : '${channel.name} ($suffix)',
+    channelDescription: channel.description,
+    // A white silhouette, as Android expects in the status bar; the
+    // launcher's adaptive icon shows as a blank circle there.
+    icon: 'ic_stat_mobile_push',
+    importance: importance,
+    priority: priority,
+    autoCancel: !notification.ongoing,
+    ongoing: notification.ongoing,
+    silent: notification.silent,
+    onlyAlertOnce: notification.onlyAlertOnce,
+    playSound: cue.audible,
+    enableVibration: cue.audible,
+    sound: cue.audible && cue.androidRaw != null
+        ? RawResourceAndroidNotificationSound(cue.androidRaw!)
+        : null,
+    actions: [
+      for (final action in notification.actions)
+        AndroidNotificationAction(
+          action.id,
+          action.label,
+          showsUserInterface: true,
+        ),
+    ],
+  );
+  final hasApprovalActions = notification.actions.any(
+    (action) => action.id == 'approve',
+  );
+  final darwinDetails = DarwinNotificationDetails(
+    presentAlert: !notification.silent,
+    presentBadge: !notification.silent,
+    presentSound: cue.audible,
+    sound: cue.audible ? cue.darwinFile : null,
+    categoryIdentifier: hasApprovalActions ? 'hermes_approval' : null,
+    interruptionLevel: notification.silent
+        ? InterruptionLevel.passive
+        : notification.importance == TurnNotificationImportance.high
+        ? InterruptionLevel.timeSensitive
+        : InterruptionLevel.active,
+  );
+  return NotificationDetails(
+    android: androidDetails,
+    iOS: darwinDetails,
+    macOS: darwinDetails,
+    linux: LinuxNotificationDetails(
+      suppressSound: !cue.audible,
+      sound: cue.audible && cue.linuxTheme != null
+          ? ThemeLinuxSound(cue.linuxTheme!)
+          : null,
+      defaultActionName: 'Open',
+      actions: [
+        for (final action in notification.actions)
+          LinuxNotificationAction(key: action.id, label: action.label),
+      ],
+    ),
+  );
+}
+
 /// The platform seam [TurnNotificationService] posts through.
 ///
 /// The production implementation is [PluginTurnNotificationSink]; tests supply
@@ -182,6 +266,13 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
       android: androidSettings,
       iOS: darwinSettings,
       macOS: darwinSettings,
+      // Linux previously threw on startup because this was omitted. The
+      // default sound is the desktop theme's message sound; a completion
+      // choice replaces it per notification.
+      linux: LinuxInitializationSettings(
+        defaultActionName: 'Open',
+        defaultSound: ThemeLinuxSound('message'),
+      ),
     );
 
     await _plugin.initialize(
@@ -299,57 +390,7 @@ class PluginTurnNotificationSink implements TurnNotificationSink {
       if (sent != true) throw StateError('Conversation authority unavailable');
       return;
     }
-    final (importance, priority) = switch (notification.importance) {
-      TurnNotificationImportance.high => (Importance.high, Priority.high),
-      TurnNotificationImportance.low => (Importance.low, Priority.low),
-      TurnNotificationImportance.defaultImportance => (
-        Importance.defaultImportance,
-        Priority.defaultPriority,
-      ),
-    };
-    final androidDetails = AndroidNotificationDetails(
-      notification.channel.id,
-      notification.channel.name,
-      channelDescription: notification.channel.description,
-      // A white silhouette, as Android expects in the status bar; the
-      // launcher's adaptive icon shows as a blank circle there.
-      icon: 'ic_stat_mobile_push',
-      importance: importance,
-      priority: priority,
-      autoCancel: !notification.ongoing,
-      ongoing: notification.ongoing,
-      silent: notification.silent,
-      onlyAlertOnce: notification.onlyAlertOnce,
-      playSound: !notification.silent,
-      enableVibration: !notification.silent,
-      actions: [
-        for (final action in notification.actions)
-          AndroidNotificationAction(
-            action.id,
-            action.label,
-            showsUserInterface: true,
-          ),
-      ],
-    );
-    final hasApprovalActions = notification.actions.any(
-      (action) => action.id == 'approve',
-    );
-    final darwinDetails = DarwinNotificationDetails(
-      presentAlert: !notification.silent,
-      presentBadge: !notification.silent,
-      presentSound: !notification.silent,
-      categoryIdentifier: hasApprovalActions ? 'hermes_approval' : null,
-      interruptionLevel: notification.silent
-          ? InterruptionLevel.passive
-          : notification.importance == TurnNotificationImportance.high
-          ? InterruptionLevel.timeSensitive
-          : InterruptionLevel.active,
-    );
-    final details = NotificationDetails(
-      android: androidDetails,
-      iOS: darwinDetails,
-      macOS: darwinDetails,
-    );
+    final details = turnNotificationDetails(notification);
 
     await _plugin.show(
       notification.id,
