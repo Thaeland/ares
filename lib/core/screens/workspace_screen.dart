@@ -23,6 +23,7 @@ import '../services/chat_space_store.dart';
 import '../services/chat_assets_client.dart';
 import '../services/connection_manager.dart';
 import '../services/desktop_gateway_client.dart';
+import 'workspace_profiles_screen.dart';
 import '../services/gateway_turn_application_controller.dart';
 import '../services/gateway_turn_journal.dart';
 import '../services/local_chat_pin_store.dart';
@@ -1228,6 +1229,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           sections: buildMoreSections(
             providerIds: _providerIds,
             dashboardReachable: _dashboardReachable,
+            workspaceAvailable: _ownedGateway != null,
             l10n: context.l10n,
           ),
           onSelect: _openMoreEntry,
@@ -2190,6 +2192,16 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   void _openMoreEntry(MoreEntry entry) {
     final connection = widget.connection;
     switch (entry.id) {
+      case 'workspace-profiles':
+        final gateway = _ownedGateway;
+        if (gateway == null) return;
+        _push(
+          WorkspaceProfilesScreen(
+            owner: gateway.workspace,
+            label: connection.label,
+            route: gateway.workspace.route(),
+          ),
+        );
       case 'unassigned':
         _openWorkspaceSessionView(WorkspaceSessionView.unassigned);
       case 'files':

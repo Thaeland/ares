@@ -38,8 +38,10 @@ final class WorkspaceException implements Exception {
 
 Never _fail(WorkspaceFailure why) => throw WorkspaceException(why);
 
-/// Display/cache identity only. Never reconstruct a live target from this.
+/// Mint on the originating owner when rendering a row, not after a click or
+/// confirmation. The opaque issuer is intentionally not serialisable.
 typedef WorkspaceRoute = ({
+  Object issuer,
   String connectionId,
   String? profile,
   String? storedSessionId,
@@ -51,6 +53,7 @@ typedef _StoredWorkspace = ({String profile, String? cwd, int? generation});
 final class RemoteWorkspaceOwner {
   RemoteWorkspaceOwner({
     required this.connectionId,
+    required this.expectedBaseUrl,
     required String? profile,
     required this._dashboard,
     required this._connect,
@@ -60,6 +63,7 @@ final class RemoteWorkspaceOwner {
        _closed = ConnectionMutationBarrier.isPending(connectionId);
 
   final String connectionId;
+  final String expectedBaseUrl;
   final String? profile;
   final DashboardClient _dashboard;
   final Future<WsClient> Function() _connect;
@@ -69,6 +73,13 @@ final class RemoteWorkspaceOwner {
   bool _closed;
 
   WorkspacePane pane() => WorkspacePane._(this);
+  final Object _issuer = Object();
+  WorkspaceRoute route({String? storedSessionId}) => (
+    issuer: _issuer,
+    connectionId: connectionId,
+    profile: profile,
+    storedSessionId: storedSessionId,
+  );
   void close() => _closed = true;
 
   void _check() {
@@ -98,19 +109,23 @@ final class WorkspacePane {
   }) async {
     final selected = _selection = Object();
     WsClient? pinned;
+    int? epoch;
     void check() {
       _owner._check();
       if (_closed ||
           !identical(selected, _selection) ||
-          (pinned != null && !_owner._ownsSocket(pinned!))) {
+          (pinned != null &&
+              (pinned!.socketEpoch != epoch || !_owner._ownsSocket(pinned!)))) {
         _fail(WorkspaceFailure.stale);
       }
     }
 
     return _guard(check, () async {
-      if (route.connectionId != _owner.connectionId ||
+      if (!identical(route.issuer, _owner._issuer) ||
+          route.connectionId != _owner.connectionId ||
           route.profile != _owner.profile ||
-          route.profile != _owner._dashboard.gatewayProfile) {
+          route.profile != _owner._dashboard.gatewayProfile ||
+          _owner.expectedBaseUrl != _owner._dashboard.baseUrl) {
         _fail(WorkspaceFailure.mismatch);
       }
       final base = Uri.parse(_owner._dashboard.baseUrl);
@@ -136,6 +151,7 @@ final class WorkspacePane {
       }
       if (id == null && expectedCwd != null) _fail(WorkspaceFailure.unbound);
       final ws = pinned = await _owner._connect();
+      epoch = ws.socketEpoch;
       check();
       if (ws.baseUrl != _owner._dashboard.baseUrl) {
         _fail(WorkspaceFailure.mismatch);
@@ -143,11 +159,17 @@ final class WorkspacePane {
       final ready = await ws.waitForGatewayReady();
       check();
       Future<_StoredWorkspace> readRow() async {
-        final raw = await _owner._dashboard.workspaceJson(
-          ['sessions', id!],
-          query: {'profile': ?route.profile},
-          check: check,
-        );
+        final Object? raw;
+        try {
+          raw = await _owner._dashboard.workspaceJson(
+            ['sessions', id!],
+            query: {'profile': ?route.profile},
+            check: check,
+          );
+        } on DashboardHttpException catch (e) {
+          if (e.statusCode == 404) _fail(WorkspaceFailure.unbound);
+          rethrow;
+        }
         if (raw is! Map ||
             raw['id'] != id ||
             raw['profile'] is! String ||
@@ -170,7 +192,7 @@ final class WorkspacePane {
       if (expectedCwd != null && expectedCwd != row?.cwd) {
         _fail(WorkspaceFailure.mismatch);
       }
-      return WorkspaceTarget._(
+      final target = WorkspaceTarget._(
         _owner,
         route,
         ws,
@@ -180,6 +202,8 @@ final class WorkspacePane {
         readRow,
         WsClient.readyFrameHasSessionAuthority(ready),
       );
+      target.checkCurrent();
+      return target;
     });
   }
 }
@@ -208,9 +232,31 @@ final class WorkspaceTarget {
   final bool sessionAuthority;
   String? get canonicalCwd => _row?.cwd;
   String? get effectiveProfile => _row?.profile ?? route.profile;
+
+  /// Synchronous admission/consumer fence, including socket and live binding.
+  void checkCurrent() {
+    _check();
+    final id = route.storedSessionId;
+    if (id != null && !identical(_socket.workspaceBinding(id), _binding)) {
+      _fail(WorkspaceFailure.stale);
+    }
+    if (_binding != null &&
+        ((_binding.profile != null && _binding.profile != effectiveProfile) ||
+            (_binding.cwd != null && _binding.cwd != canonicalCwd))) {
+      _fail(WorkspaceFailure.mismatch);
+    }
+  }
+
+  /// Refresh the authenticated session owner before an independently confirmed
+  /// operation. Not a server-side CAS or authority to mutate anything.
+  Future<void> verifySession() => _guard(checkCurrent, () async {
+    if (_row == null) _fail(WorkspaceFailure.unbound);
+    if (await _readRow() != _row) _fail(WorkspaceFailure.mismatch);
+  });
+
   bool get isCurrent {
     try {
-      _check();
+      checkCurrent();
       return true;
     } on WorkspaceException {
       return false;
@@ -234,26 +280,13 @@ final class WorkspaceTarget {
         operation == WorkspaceRead.processes;
     final scoped = live || operation == WorkspaceRead.gitStatus;
     void check() {
-      _check();
+      checkCurrent();
       if (scoped && _row == null) _fail(WorkspaceFailure.unbound);
       if (live && runtimeSessionId == null) _fail(WorkspaceFailure.unbound);
-      if (scoped &&
-          !identical(
-            _socket.workspaceBinding(route.storedSessionId!),
-            _binding,
-          )) {
-        _fail(WorkspaceFailure.stale);
-      }
-      if (scoped &&
-          _binding != null &&
-          ((_binding.profile != null && _binding.profile != effectiveProfile) ||
-              (_binding.cwd != null && _binding.cwd != canonicalCwd))) {
-        _fail(WorkspaceFailure.mismatch);
-      }
     }
 
     Future<void> verifyRow() async {
-      if (scoped && await _readRow() != _row) _fail(WorkspaceFailure.mismatch);
+      if (scoped) await verifySession();
       check();
     }
 
@@ -280,7 +313,10 @@ final class WorkspaceTarget {
         if (error is Map && error['code'] == -32601) {
           _fail(WorkspaceFailure.unsupported);
         }
-        _fail(WorkspaceFailure.denied);
+        if (error is Map && const {401, 403}.contains(error['code'])) {
+          _fail(WorkspaceFailure.denied);
+        }
+        _fail(WorkspaceFailure.unavailable);
       }
       final result = response['result'];
       if (result is! Map<String, dynamic>) _fail(WorkspaceFailure.invalid);

@@ -76,6 +76,9 @@ class NextGenGateway extends ChangeNotifier {
     writes = DashboardSessionWrites(this.dashboard, profile: profile);
     workspace = RemoteWorkspaceOwner(
       connectionId: connection.id,
+      expectedBaseUrl: DesktopGatewayClient.normalizedGatewayBaseUrl(
+        connection,
+      ),
       profile: profile,
       dashboard: this.dashboard,
       connect: connected,

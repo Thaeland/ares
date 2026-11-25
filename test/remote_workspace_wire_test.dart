@@ -7,23 +7,44 @@ import 'package:hermes_android/core/models/connection.dart';
 import 'package:hermes_android/core/services/connection_mutation_barrier.dart';
 import 'package:hermes_android/core/services/desktop_gateway_client.dart';
 import 'package:hermes_android/core/services/remote_workspace.dart';
+import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:hermes_android/nextgen/data/nextgen_gateway.dart';
 
-const route = (
-  connectionId: 'fixture',
-  profile: 'work',
-  storedSessionId: 'stored',
-);
-const host = (connectionId: 'fixture', profile: 'work', storedSessionId: null);
 Matcher fails(WorkspaceFailure why) =>
     throwsA(isA<WorkspaceException>().having((e) => e.reason, 'reason', why));
 
 void main() {
+  test(
+    'ticket-bearing upgrade refuses a redirect before its destination',
+    () async {
+      final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      final paths = <String>[];
+      server.listen((request) async {
+        paths.add(request.uri.path);
+        request.response.statusCode = request.uri.path == '/api/ws' ? 302 : 404;
+        request.response.headers.set('Location', '/not-the-owner');
+        await request.response.close();
+      });
+      final ws = WsClient(
+        'http://127.0.0.1:${server.port}',
+        ticket: 'fixture',
+        ticketInSubprotocol: true,
+      );
+      try {
+        await expectLater(ws.connect(), throwsException);
+        expect(paths, ['/api/ws']);
+      } finally {
+        ws.close();
+        await server.close(force: true);
+      }
+    },
+  );
   for (final classic in [true, false]) {
     group(classic ? 'Classic' : 'NextGen', () {
       late _Fixture server;
       late RemoteWorkspaceOwner owner;
       late WorkspacePane pane;
+      late WorkspaceRoute route, host;
       late Future<void> Function() attach;
       late void Function() dispose;
       setUp(() async {
@@ -54,6 +75,8 @@ void main() {
           dispose = gateway.dispose;
         }
         pane = owner.pane();
+        route = owner.route(storedSessionId: 'stored');
+        host = owner.route();
       });
       tearDown(() async {
         pane.close();
@@ -77,6 +100,10 @@ void main() {
             'branch': null,
           });
           expect(await fleet.read(WorkspaceRead.hostTerminalTicket), true);
+          expect(await fleet.read(WorkspaceRead.terminalBackends), {
+            'active': 'local',
+            'backends': [],
+          });
           expect(
             await fleet.probe(WorkspaceRead.pendingApprovals),
             WorkspaceFailure.unbound,
@@ -138,8 +165,14 @@ void main() {
         'mismatched route/row/namespace or noncanonical cwd fails closed',
         () async {
           for (final bad in [
-            (connectionId: 'other', profile: 'work', storedSessionId: 'stored'),
             (
+              issuer: route.issuer,
+              connectionId: 'other',
+              profile: 'work',
+              storedSessionId: 'stored',
+            ),
+            (
+              issuer: route.issuer,
               connectionId: 'fixture',
               profile: 'other',
               storedSessionId: 'stored',
@@ -147,6 +180,18 @@ void main() {
           ]) {
             await expectLater(pane.bind(bad), fails(WorkspaceFailure.mismatch));
           }
+          expect(server.api, isEmpty);
+          final replacement = DesktopGatewayClient.fromConnection(
+            server.connection,
+          );
+          addTearDown(replacement.close);
+          final sameIds = replacement.workspace.route(
+            storedSessionId: 'stored',
+          );
+          await expectLater(
+            pane.bind(sameIds),
+            fails(WorkspaceFailure.mismatch),
+          );
           expect(server.api, isEmpty);
           await expectLater(
             pane.bind(route, expectedCwd: '/other'),
@@ -181,7 +226,7 @@ void main() {
       );
 
       test(
-        'held reply after A→B→A, later account edit, owner disposal',
+        'held reply after A→B→A, independent panes and later account edit',
         () async {
           final a = await pane.bind(host);
           server.hold = true;

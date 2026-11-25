@@ -90,6 +90,7 @@ class MoreSection {
 /// Usage stays discoverable regardless of empty, partial or alias-only catalogs.
 List<MoreSection> buildMoreSections({
   required bool dashboardReachable,
+  bool workspaceAvailable = false,
   required AppLocalizations l10n,
   Set<String> providerIds = const {},
 }) {
@@ -139,6 +140,18 @@ List<MoreSection> buildMoreSections({
     MoreSection(
       title: l10n.agent,
       entries: [
+        MoreEntry(
+          id: 'workspace-profiles',
+          title: l10n.ng_profiles,
+          subtitle: l10n.ng_agent_gateway,
+          icon: Icons.people_outline,
+          availability: workspaceAvailable
+              ? MoreEntryAvailability.available
+              : MoreEntryAvailability.unavailable,
+          unavailableReason: workspaceAvailable
+              ? null
+              : l10n.desktop_gateway_is_not_configured_for_this_connection,
+        ),
         MoreEntry(
           id: 'model',
           title: l10n.model,

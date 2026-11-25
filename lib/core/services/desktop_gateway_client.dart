@@ -109,6 +109,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
   }) {
     workspace = RemoteWorkspaceOwner(
       connectionId: _connectionId,
+      expectedBaseUrl: _baseUrl,
       profile: _gatewayProfile,
       dashboard: _dashboard,
       connect: _ensureSocket,

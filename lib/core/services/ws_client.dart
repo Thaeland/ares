@@ -6,6 +6,7 @@
 // a JSON-RPC response with the same id.
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:uuid/uuid.dart';
@@ -282,7 +283,22 @@ class GatewayServerRequest {
   }
 }
 
-/// WebSocket client for the Hermes JSON-RPC gateway.
+/// dart:io WebSocket.connect opens a GET through customClient.openUrl. Never
+/// forward its credential-bearing protocol/header set on an HTTP redirect.
+final class _UpgradeClient implements HttpClient {
+  _UpgradeClient(this.inner);
+  final HttpClient inner;
+  @override
+  Future<HttpClientRequest> openUrl(String method, Uri url) async =>
+      (await inner.openUrl(method, url))..followRedirects = false;
+  @override
+  void close({bool force = false}) => inner.close(force: force);
+  @override
+  dynamic noSuchMethod(Invocation invocation) =>
+      throw UnsupportedError('Not an upgrade operation');
+}
+
+/// A live binding observed on this exact socket, never a persisted locator.
 final class WorkspaceRuntime {
   WorkspaceRuntime._(this.runtimeId, this.profile, this.cwd, this.backend);
   final String runtimeId;
@@ -291,7 +307,9 @@ final class WorkspaceRuntime {
   final String? backend;
 }
 
+/// WebSocket client for the Hermes JSON-RPC gateway.
 class WsClient {
+  int get socketEpoch => _connectionGeneration;
   final _workspaceBindings = <String, WorkspaceRuntime>{};
   WorkspaceRuntime? workspaceBinding(String storedId) =>
       _workspaceBindings[storedId];
@@ -418,14 +436,11 @@ class WsClient {
     final accessHeaders = HermesSignInVault.instance.accessHeadersFor(
       Uri.parse(wsUrl),
     );
-    // Without a client certificate the platform WebSocket default is kept:
-    // flutter_test's binding replaces every freshly constructed HttpClient
-    // with a mock, and only the SDK's shared default (built before tests
-    // install that override) still reaches a real loopback server. A
-    // certificate always needs its own context, so that path constructs one.
-    final customClient = _clientCertificate == null
-        ? null
-        : _tlsClientFactory.createHttpClient(_clientCertificate);
+    // Ticket-bearing upgrades require a no-redirect client even without mTLS.
+    // Preserve platform trust and the exact configured client identity.
+    final customClient = useProtocol || _clientCertificate != null
+        ? _UpgradeClient(_tlsClientFactory.createHttpClient(_clientCertificate))
+        : null;
     final channel = IOWebSocketChannel.connect(
       Uri.parse(wsUrl),
       customClient: customClient,
@@ -466,6 +481,9 @@ class WsClient {
         // Preserve the original setup failure after closing this exact socket.
       }
       rethrow;
+    } finally {
+      // The upgraded socket has detached from this HTTP client.
+      customClient?.close();
     }
   }
 
@@ -1064,9 +1082,8 @@ class WsClient {
     if (result is! Map) return;
     final runtime = result['session_id'];
     final info = result['info'];
-    final stored =
-        result['stored_session_id'] ??
-        (info is Map ? info['stored_session_id'] : null);
+    final infoId = info is Map ? info['stored_session_id'] : null;
+    final stored = result['stored_session_id'] ?? infoId;
     if (runtime is! String || runtime.isEmpty) return;
     _workspaceBindings.removeWhere(
       (id, b) => b.runtimeId == runtime && id != stored,
@@ -1076,7 +1093,8 @@ class WsClient {
     final profile = reportedProfile ?? requestedProfile;
     final cwd = info is Map ? info['cwd'] : null;
     final backend = info is Map ? info['terminal_backend'] : null;
-    if ((requestedProfile != null &&
+    if ((infoId != null && stored != infoId) ||
+        (requestedProfile != null &&
             reportedProfile != null &&
             reportedProfile != requestedProfile) ||
         (expectedId != null && stored != expectedId) ||
@@ -1084,6 +1102,7 @@ class WsClient {
         (cwd != null && cwd is! String) ||
         (backend != null && backend is! String)) {
       _workspaceBindings.remove(stored);
+      _workspaceBindings.remove(expectedId);
       return;
     }
     final old = _workspaceBindings[stored];

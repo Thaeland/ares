@@ -14,6 +14,7 @@ import '../../core/screens/nous_portal_screen.dart';
 import '../../core/screens/projects_root_screen.dart';
 import '../../core/screens/provider_oauth_screen.dart';
 import '../../core/screens/skills_screen.dart';
+import '../../core/screens/workspace_profiles_screen.dart';
 import '../../core/services/dashboard_api_client.dart';
 import '../nextgen_preferences.dart';
 import '../theme/nextgen_theme.dart';
@@ -82,6 +83,18 @@ class NgMorePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             child: Column(
               children: [
+                NgRow(
+                  icon: Icons.people_outline,
+                  title: ngL.ng_profiles,
+                  subtitle: ngL.ng_agent_gateway,
+                  onTap: () => push(
+                    WorkspaceProfilesScreen(
+                      owner: scope.gateway.workspace,
+                      label: conn.label,
+                      route: scope.gateway.workspace.route(),
+                    ),
+                  ),
+                ),
                 NgRow(
                   icon: Icons.memory,
                   title: ngL.ng_memory,

@@ -2637,23 +2637,38 @@ class DashboardClient {
     return future;
   }
 
+  // Credential acquisition is single-origin. A proxy redirect cannot receive
+  // Cloudflare headers or decide where a password, cookie or ticket goes.
+  Future<http.Response> _authRequest(
+    String method,
+    Uri uri, {
+    required Map<String, String> headers,
+    String? body,
+  }) async {
+    final request = http.Request(method, uri)..followRedirects = false;
+    request.headers.addAll(headers);
+    if (body != null) request.body = body;
+    return http.Response.fromStream(
+      await _http.send(request).timeout(ApiClient.requestTimeout),
+    ).timeout(ApiClient.requestTimeout);
+  }
+
   /// Logs in against the `basic` password provider and caches the session
   /// cookie. Throws on failure (bad credentials → 401, etc.).
   Future<String> _login() async {
-    final res = await _http
-        .post(
-          Uri.parse('$_baseUrl/auth/password-login'),
-          headers: {
-            'Content-Type': 'application/json',
-            ...HermesSignInVault.instance.accessHeadersFor(Uri.parse(_baseUrl)),
-          },
-          body: jsonEncode({
-            'provider': 'basic',
-            'username': _username,
-            'password': _password,
-          }),
-        )
-        .timeout(ApiClient.requestTimeout);
+    final res = await _authRequest(
+      'POST',
+      Uri.parse('$_baseUrl/auth/password-login'),
+      headers: {
+        'Content-Type': 'application/json',
+        ...HermesSignInVault.instance.accessHeadersFor(Uri.parse(_baseUrl)),
+      },
+      body: jsonEncode({
+        'provider': 'basic',
+        'username': _username,
+        'password': _password,
+      }),
+    );
     if (res.statusCode == 401) {
       throw Exception('Dashboard login failed: invalid username or password');
     }
@@ -2710,14 +2725,11 @@ class DashboardClient {
   }
 
   Future<String> _fetchToken() async {
-    final res = await _http
-        .get(
-          Uri.parse('$_baseUrl/'),
-          headers: HermesSignInVault.instance.accessHeadersFor(
-            Uri.parse(_baseUrl),
-          ),
-        )
-        .timeout(ApiClient.requestTimeout);
+    final res = await _authRequest(
+      'GET',
+      Uri.parse('$_baseUrl/'),
+      headers: HermesSignInVault.instance.accessHeadersFor(Uri.parse(_baseUrl)),
+    );
     if (res.statusCode != 200) {
       throw DashboardAuthUnavailableException(
         'Dashboard not reachable',
@@ -2799,6 +2811,7 @@ class DashboardClient {
       '$_baseUrl/api/$endpoint',
     ).replace(queryParameters: queryParameters);
     final request = http.Request(method, uri)..headers.addAll(headers);
+    if (endpoint == 'auth/ws-ticket') request.followRedirects = false;
     if (body != null) request.body = body is String ? body : jsonEncode(body);
     final res = await http.Response.fromStream(
       await _http.send(request).timeout(timeout),
@@ -2900,9 +2913,11 @@ class DashboardClient {
   Future<String> mintWebSocketTicket({bool retried = false}) async {
     final authGeneration = _authGeneration;
     final headers = await _authHeaders();
-    final res = await _http
-        .post(Uri.parse('$_baseUrl/api/auth/ws-ticket'), headers: headers)
-        .timeout(ApiClient.requestTimeout);
+    final res = await _authRequest(
+      'POST',
+      Uri.parse('$_baseUrl/api/auth/ws-ticket'),
+      headers: headers,
+    );
     if (res.statusCode == 401 && !retried) {
       _resetAuth(ifGeneration: authGeneration);
       return mintWebSocketTicket(retried: true);
