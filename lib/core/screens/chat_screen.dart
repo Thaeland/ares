@@ -4820,7 +4820,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       return '';
     }
     final revision = _composerRevision;
-    final unsupportedText = context.l10n.slash_command_unsupported;
+    final l10n = context.l10n;
+    final unsupportedText = l10n.slash_command_unsupported;
     final sessionId = widget.session.id;
     final gateway = _slashGateway;
     final generation = _slashController.generation;
@@ -4888,7 +4889,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       }
       if (bareName == 'model') {
         if (_slashCommandArgument(text).isNotEmpty) {
-          _appendSlashCommandNotice(text, context.l10n.slash_local_arguments);
+          _appendSlashCommandNotice(text, l10n.slash_local_arguments);
         } else {
           unawaited(
             _showModelSelector(
@@ -5027,6 +5028,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     String sessionId,
     String platform,
   ) async {
+    final sharedL10n = context.sharedL10n;
     final deadline = DateTime.now().millisecondsSinceEpoch + 60000;
     while (mounted && DateTime.now().millisecondsSinceEpoch < deadline) {
       await Future<void>.delayed(const Duration(milliseconds: 800));
@@ -5044,7 +5046,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         if (phase == HandoffPhase.completed) {
           _appendSlashCommandNotice(
             '/handoff $platform',
-            context.sharedL10n.composer_handoff_done(platform),
+            sharedL10n.composer_handoff_done(platform),
           );
           return;
         }
@@ -5053,7 +5055,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           _appendSlashCommandNotice(
             '/handoff $platform',
             error == null || error.isEmpty
-                ? context.sharedL10n.composer_handoff_failed
+                ? sharedL10n.composer_handoff_failed
                 : error,
           );
           return;
@@ -5064,15 +5066,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     try {
       await gateway.requestSessionRpc(
         'handoff.fail',
-        handoffFailParams(
-          sessionId,
-          context.sharedL10n.composer_handoff_timeout,
-        ),
+        handoffFailParams(sessionId, sharedL10n.composer_handoff_timeout),
       );
     } catch (_) {}
     _appendSlashCommandNotice(
       '/handoff $platform',
-      context.sharedL10n.composer_handoff_timeout,
+      sharedL10n.composer_handoff_timeout,
     );
   }
 
@@ -6332,12 +6331,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       return;
     }
     if (event.type == 'error' || event.type == 'turn.error') {
-      final data = event.data;
-      if (data is Map<String, dynamic>) {
-        _noteRecovery(data);
-      } else if (data is Map) {
-        _noteRecovery(Map<String, dynamic>.from(data));
-      }
+      _noteRecovery(event.data);
       return;
     }
     if (const {'message.complete', 'turn.end'}.contains(event.type)) {

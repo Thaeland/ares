@@ -220,11 +220,11 @@ class _ComposerReferenceAssistState extends State<ComposerReferenceAssist> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: Text(l10n.composerReferenceCopy),
+              title: Text(l10n.composer_reference_copy),
               onTap: () => Navigator.pop(context, 'copy'),
             ),
             ListTile(
-              title: Text(l10n.composerReferenceRemove),
+              title: Text(l10n.composer_reference_remove),
               onTap: () => Navigator.pop(context, 'remove'),
             ),
           ],

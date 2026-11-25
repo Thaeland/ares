@@ -1,5 +1,3 @@
-import 'emoji_completion.dart';
-
 const kReferenceKinds = ['file', 'folder', 'url', 'image', 'tool', 'git'];
 const kSimpleReferences = ['diff', 'staged'];
 

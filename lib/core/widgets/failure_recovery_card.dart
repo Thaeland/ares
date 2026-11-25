@@ -98,12 +98,8 @@ class _FailureRecoveryCardState extends State<FailureRecoveryCard> {
                     child: Text(l10n.composer_failure_hide_details),
                   )
                 else ...[
-                  if (_button(widget.recovery.primary, primary: true)
-                      case final button?)
-                    button,
-                  if (_button(widget.recovery.secondary, primary: false)
-                      case final button?)
-                    button,
+                  ?_button(widget.recovery.primary, primary: true),
+                  ?_button(widget.recovery.secondary, primary: false),
                 ],
               ],
             ),

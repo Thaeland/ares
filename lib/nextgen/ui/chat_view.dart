@@ -31,6 +31,7 @@ import '../../core/composer/composer_commands.dart';
 import '../../core/composer/composer_drag.dart';
 import '../../core/composer/composer_intake.dart';
 import '../../core/composer/context_status.dart';
+import '../../core/composer/reference_completion.dart';
 import '../../core/composer/failure_recovery.dart';
 import '../../core/widgets/composer_context_status.dart';
 import '../../core/widgets/composer_drop_surface.dart';
@@ -565,6 +566,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
             ResumeCandidate(id: row.id, title: row.title, preview: row.preview),
         ],
       );
+      if (!mounted) return true;
       if (picked != null) {
         final open = widget.onResume;
         if (open == null) {
@@ -813,6 +815,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
   /// [text] is ordinary text to send as a prompt.
   Future<bool> _runCommand(NgSlashLine command, String text) async {
     if (await _runDedicated(command)) return true;
+    if (!mounted) return true;
     switch (command.name) {
       case 'new' || 'reset':
         if (widget.onNewChat == null) {
@@ -1822,10 +1825,12 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                   },
                   completeSlash: (text) async {
                     final sessionId = chat.runtimeId ?? chat.storedId;
-                    final result = await chat.gateway.call('complete.slash', {
-                      'text': text,
-                      if (sessionId != null) 'session_id': sessionId,
-                    });
+                    final params = <String, dynamic>{'text': text};
+                    if (sessionId != null) params['session_id'] = sessionId;
+                    final result = await chat.gateway.call(
+                      'complete.slash',
+                      params,
+                    );
                     return parseArgumentHints(result);
                   },
                 ),
