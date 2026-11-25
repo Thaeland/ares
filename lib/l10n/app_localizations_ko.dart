@@ -1885,26 +1885,44 @@ class AppLocalizationsKo extends AppLocalizations {
       'What Ares submitted to Windows';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
+  String get chat_activity_share => 'Share chat activity';
 
   @override
-  String get windows_window_activity_hint =>
+  String get chat_activity_share_hint =>
       'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
 
   @override
-  String get windows_completion_sound => 'Completion sound';
+  String get completion_sound => 'Completion sound';
 
   @override
-  String get windows_sound_default => 'Windows default';
+  String get completion_sound_system => 'System default';
 
   @override
-  String get windows_sound_mail => 'Mail';
+  String get completion_sound_mail => 'Mail';
 
   @override
-  String get windows_sound_reminder => 'Reminder';
+  String get completion_sound_reminder => 'Reminder';
 
   @override
-  String get windows_sound_silent => 'Silent';
+  String get completion_sound_silent => 'Silent';
+
+  @override
+  String get completion_sound_scope =>
+      'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.';
+
+  @override
+  String get completion_sound_scope_android =>
+      'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.';
+
+  @override
+  String get notification_open_action => 'Open';
+
+  @override
+  String get app_sounds_mute => 'Mute app sounds';
+
+  @override
+  String get app_sounds_mute_hint =>
+      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
 
   @override
   String get notifications_permission_denied =>
@@ -6047,6 +6065,617 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => '스킬 사용 현황을 검토합니다';
+
+  @override
+  String get appearance_save_failed => 'Could not save this change.';
+
+  @override
+  String get appearance_keep_which_theme => 'Keep which theme?';
+
+  @override
+  String get appearance_tour_back => 'Back';
+
+  @override
+  String get appearance_tour_finish => 'Finish';
+
+  @override
+  String get appearance_tour_next => 'Next';
+
+  @override
+  String get appearance_tour_close => 'Close tour';
+
+  @override
+  String get appearance_dismiss_tip => 'Dismiss tip';
+
+  @override
+  String get appearance_search_settings => 'Search settings';
+
+  @override
+  String get appearance_search_show => 'Show';
+
+  @override
+  String get appearance_no_matching_setting => 'No matching setting.';
+
+  @override
+  String get appearance_replay_tour => 'Replay tour';
+
+  @override
+  String get appearance_show_tips_again => 'Show tips again';
+
+  @override
+  String get appearance_window_translucency_unavailable =>
+      'Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.';
+
+  @override
+  String get appearance_imported_themes => 'Imported themes';
+
+  @override
+  String get appearance_import_theme_file => 'Import theme file';
+
+  @override
+  String get appearance_remove_theme => 'Remove theme';
+
+  @override
+  String get appearance_chat_font => 'Chat font';
+
+  @override
+  String get appearance_terminal_font => 'Terminal font';
+
+  @override
+  String get appearance_font_platform => 'Platform';
+
+  @override
+  String get appearance_automatic => 'Automatic';
+
+  @override
+  String get appearance_force_left_to_right => 'Force left to right';
+
+  @override
+  String get appearance_force_right_to_left => 'Force right to left';
+
+  @override
+  String get appearance_user_bubble_opacity => 'User bubble opacity';
+
+  @override
+  String get appearance_inline_embeds => '인라인 임베드';
+
+  @override
+  String get appearance_inline_embeds_hint =>
+      '풍부한 미리보기는 외부 사이트(YouTube, X 등)에서 불러옵니다. ‘묻기’는 하나씩 허용할 때까지 자리표시자를 보여 주고, ‘항상’은 자동으로 불러오며, ‘끄기’는 일반 링크로 둡니다.';
+
+  @override
+  String get appearance_embeds_ask => '묻기';
+
+  @override
+  String get appearance_embeds_always => '항상';
+
+  @override
+  String get appearance_embeds_off => '끄기';
+
+  @override
+  String appearance_embeds_reset(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '허용된 서비스 $count개 초기화',
+      one: '허용된 서비스 1개 초기화',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appearance_embed_load => '불러오기';
+
+  @override
+  String appearance_embed_always_allow(String service) {
+    return '$service 항상 허용';
+  }
+
+  @override
+  String get appearance_embed_loading => '미리보기 불러오는 중…';
+
+  @override
+  String appearance_embed_image_failed(String host) {
+    return '$host에서 이미지를 불러오지 못했습니다. 탭하여 여세요.';
+  }
+
+  @override
+  String get appearance_embed_preview_unavailable => '미리보기를 사용할 수 없음';
+
+  @override
+  String get appearance_emoji_reactions => 'Emoji reactions';
+
+  @override
+  String get appearance_celebration_hearts => 'Celebration hearts';
+
+  @override
+  String get appearance_celebration_hearts_hint =>
+      'A heart plays when a reply arrives while you were away.';
+
+  @override
+  String get appearance_pop_out_companion => 'Pop out companion';
+
+  @override
+  String get appearance_mosskip => 'Mosskip';
+
+  @override
+  String get appearance_emberbun => 'Emberbun';
+
+  @override
+  String get appearance_tideling => 'Tideling';
+
+  @override
+  String get appearance_my_hatchling => 'My hatchling';
+
+  @override
+  String get appearance_at_rest => 'At rest';
+
+  @override
+  String get appearance_working => 'Working';
+
+  @override
+  String get appearance_thinking => 'Thinking';
+
+  @override
+  String get appearance_waiting_for_you => 'Waiting for you';
+
+  @override
+  String get appearance_reply_ready => 'Reply ready';
+
+  @override
+  String get appearance_turn_failed => 'Turn failed';
+
+  @override
+  String get appearance_small => 'Small';
+
+  @override
+  String get appearance_medium => 'Medium';
+
+  @override
+  String get appearance_large => 'Large';
+
+  @override
+  String get appearance_hello => 'Hello!';
+
+  @override
+  String get appearance_unread_reply => 'Unread reply';
+
+  @override
+  String get appearance_compose => 'Compose';
+
+  @override
+  String get appearance_say_hello => 'Say hello';
+
+  @override
+  String get appearance_pet_image_failed =>
+      'Could not open that image. Choose a smaller PNG or JPEG.';
+
+  @override
+  String get appearance_pet_companion => 'Pet companion';
+
+  @override
+  String get appearance_pet_companion_hint =>
+      'Show a companion while you chat.';
+
+  @override
+  String get appearance_adopt_a_companion => 'Adopt a companion';
+
+  @override
+  String get appearance_roam_when_idle => 'Roam when idle';
+
+  @override
+  String get appearance_pet_size => 'Pet size';
+
+  @override
+  String get appearance_hatch_from_a_local_picture =>
+      'Hatch from a local picture';
+
+  @override
+  String get appearance_pet_image_limits =>
+      'Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.';
+
+  @override
+  String get appearance_choose_picture => 'Choose picture';
+
+  @override
+  String get appearance_hatchling_preview => 'Hatchling preview';
+
+  @override
+  String get appearance_hatch_and_adopt => 'Hatch and adopt';
+
+  @override
+  String get appearance_discard_draft => 'Discard draft';
+
+  @override
+  String get appearance_forget_saved_hatchling => 'Forget saved hatchling';
+
+  @override
+  String get appearance_radio => 'Radio';
+
+  @override
+  String appearance_radio_hint(String stations) {
+    return 'Streams come straight from $stations and start only when you press Play. Station search stays on this device.';
+  }
+
+  @override
+  String get appearance_radio_save_failed =>
+      'Radio settings could not be saved.';
+
+  @override
+  String get appearance_choose_a_station => 'Choose a station';
+
+  @override
+  String get appearance_pause_radio => 'Pause radio';
+
+  @override
+  String get appearance_play_radio => 'Play radio';
+
+  @override
+  String get appearance_next_station => 'Next station';
+
+  @override
+  String get appearance_radio_trace_semantics =>
+      'Stream activity. Audio levels are unavailable, so this line stays flat.';
+
+  @override
+  String get appearance_radio_is_off => 'Radio is off';
+
+  @override
+  String get appearance_paused => 'Paused';
+
+  @override
+  String get appearance_connecting => 'Connecting…';
+
+  @override
+  String get appearance_live => 'Live';
+
+  @override
+  String get appearance_stream_unavailable => 'Stream unavailable';
+
+  @override
+  String appearance_now_playing(String credit) {
+    return 'Now playing: $credit';
+  }
+
+  @override
+  String get appearance_audio_only_waveform_unavailable =>
+      'Audio only · waveform unavailable';
+
+  @override
+  String get appearance_volume => 'Volume';
+
+  @override
+  String get appearance_search_presets => 'Search presets';
+
+  @override
+  String get appearance_no_stations_found => 'No stations found';
+
+  @override
+  String appearance_unpin_station(String station) {
+    return 'Unpin station: $station';
+  }
+
+  @override
+  String appearance_pin_station(String station) {
+    return 'Pin station: $station';
+  }
+
+  @override
+  String get appearance_radio_picker_metadata_notice =>
+      'While this picker is open, playing stations may share track details directly from the broadcaster.';
+
+  @override
+  String get appearance_message_from_your_companion =>
+      'Message from your companion';
+
+  @override
+  String get appearance_send_to_the_open_chat => 'Send to the open chat';
+
+  @override
+  String get appearance_tour_theme_body =>
+      'Import a VS Code colour theme from a file on this device, then choose which variant to keep.';
+
+  @override
+  String get appearance_tour_fonts_title => 'Reading fonts';
+
+  @override
+  String get appearance_tour_fonts_body =>
+      'Chat prose and terminal code use separate faces shipped with Ares.';
+
+  @override
+  String get appearance_tour_direction_title => 'Transcript direction';
+
+  @override
+  String get appearance_tour_direction_body =>
+      'Leave this on automatic, or force the transcript left to right or right to left.';
+
+  @override
+  String get appearance_tour_pet_title => 'Companion';
+
+  @override
+  String get appearance_tour_pet_body =>
+      'The companion is off until you adopt one. Pop-out adds a small composer.';
+
+  @override
+  String get appearance_tour_radio_body =>
+      'Radio stays off until you enable it. Play is what opens a stream.';
+
+  @override
+  String get appearance_tip_theme =>
+      'Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.';
+
+  @override
+  String get appearance_tip_pet =>
+      'The companion stores one small portrait on this device. It does not upload the picture you hatch from.';
+
+  @override
+  String get appearance_theme_import_failed =>
+      'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
+
+  @override
+  String get render_widget_file_truncated =>
+      '이 파일의 앞부분만 읽었으므로 위젯이 불완전할 수 있습니다.';
+
+  @override
+  String get setup_beat_title => '설정';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return '$name 사용';
+  }
+
+  @override
+  String get setup_beat_name_hint => 'Hermes가 어떻게 불러 드릴까요?';
+
+  @override
+  String get setup_beat_on_computer =>
+      '이 단계는 Hermes가 실행 중인 컴퓨터에서 진행합니다. 계속하면 그곳에 설정된 내용이 유지됩니다.';
+
+  @override
+  String get setup_beat_not_waiting => '이 설정 카드는 더 이상 응답을 기다리지 않습니다.';
+
+  @override
+  String get catalog_kind_plugin => '플러그인';
+
+  @override
+  String get catalog_kind_skill => '스킬';
+
+  @override
+  String get catalog_tier_official => '공식';
+
+  @override
+  String get catalog_tier_verified => '검증됨';
+
+  @override
+  String get catalog_tier_community => '커뮤니티';
+
+  @override
+  String get catalog_install => '설치';
+
+  @override
+  String get catalog_waiting => '선택을 기다리는 중';
+
+  @override
+  String get catalog_installed => '설치됨';
+
+  @override
+  String get catalog_installed_off => '설치됨, 켜지지 않음';
+
+  @override
+  String get catalog_skipped => '건너뜀';
+
+  @override
+  String get catalog_not_installed => '설치되지 않음';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return '$profile 프로필에 설치됩니다';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo ($sha)';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return '보안 검사: $status. $summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return 'Hermes $range 필요';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return '스킬 $name을(를) 사용할 수 있습니다';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return '아직 필요: $names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name 연결 실패: $error';
+  }
+
+  @override
+  String get catalog_send_failed => '선택이 전송되지 않았습니다. 다시 시도하세요.';
+
+  @override
+  String get attachment_video_speed => '재생 속도';
+
+  @override
+  String get catalog_installing => '설치 중…';
+
+  @override
+  String get catalog_phase_downloading => '다운로드 중…';
+
+  @override
+  String get catalog_phase_python_packages => 'Python 패키지 설치 중…';
+
+  @override
+  String get catalog_phase_loading_tools => '도구를 불러오는 중…';
+
+  @override
+  String get setup_beat_send_failed => '답변이 전송되지 않았습니다. 다시 시도하세요.';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '도구 $count개',
+      one: '도구 1개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get render_svg_not_drawn => '이 SVG는 그려지지 않았습니다.';
+
+  @override
+  String get render_notes_directive => '메모 지시문';
+
+  @override
+  String get render_maths_source => '수식 원문';
+
+  @override
+  String get render_inline_maths_source => '인라인 수식 원문';
+
+  @override
+  String get render_sequence_outline => '시퀀스 개요';
+
+  @override
+  String get render_diagram_outline => '다이어그램 개요';
+
+  @override
+  String render_revision_of(int index, int count) {
+    return '리비전 $index/$count';
+  }
+
+  @override
+  String get render_previous_revision => '이전 리비전';
+
+  @override
+  String get render_next_revision => '다음 리비전';
+
+  @override
+  String get render_show_rendered => '렌더링';
+
+  @override
+  String get render_show_source => '소스';
+
+  @override
+  String render_copied_file(String name) {
+    return '$name을(를) 복사했습니다';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return '$name 복사';
+  }
+
+  @override
+  String get render_artifact_too_long => '이 결과물은 너무 길어 여기서 페이지로 표시할 수 없습니다.';
+
+  @override
+  String get render_active_content_removed => '스크립트, 프레임, 외부 주소가 제거되었습니다.';
+
+  @override
+  String render_widget_file(String file) {
+    return '위젯 $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text =>
+      '이 채팅에서 텍스트로 실행됩니다. 스크립트와 외부 프레임은 제거됩니다.';
+
+  @override
+  String get render_load_widget => '위젯 불러오기';
+
+  @override
+  String get render_not_html_widget => '이 파일은 HTML 위젯이 아닙니다.';
+
+  @override
+  String get render_widget_sent => '이 채팅으로 보냈습니다';
+
+  @override
+  String get render_widget_not_sent => '이 채팅으로 보내지 않았습니다';
+
+  @override
+  String get render_widget_throttled => '잠시 후 다시 보내세요';
+
+  @override
+  String get render_widget_too_long => '이 요청은 너무 길어 보낼 수 없습니다';
+
+  @override
+  String get render_widget_no_gesture => '보내려면 위젯의 컨트롤을 탭하세요';
+
+  @override
+  String get render_widget_invalid => '이 요청을 보낼 수 없습니다';
+
+  @override
+  String get render_inspected_image => '검사한 이미지';
+
+  @override
+  String get render_contributions => '기여 항목';
+
+  @override
+  String get render_contributions_intro =>
+      'Ares에 포함된 기여 항목만 답장에 내용을 추가할 수 있습니다. 채팅 텍스트로는 등록할 수 없으며, 허용은 이 연결에만 적용됩니다.';
+
+  @override
+  String render_grant_plugin(String name) {
+    return '$name 허용';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return '$name 허용 취소';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return '::$directive 답장 카드';
+  }
+
+  @override
+  String get render_plugin_notes => '메모';
+
+  @override
+  String get catalog_scan_passed => '통과';
+
+  @override
+  String get catalog_scan_warnings => '경고 발견';
+
+  @override
+  String get catalog_scan_failed => '실패';
+
+  @override
+  String get windows_window_activity => 'Share chat activity';
+
+  @override
+  String get windows_window_activity_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+
+  @override
+  String get windows_completion_sound => 'Completion sound';
+
+  @override
+  String get windows_sound_default => 'Windows default';
+
+  @override
+  String get windows_sound_mail => 'Mail';
+
+  @override
+  String get windows_sound_reminder => 'Reminder';
+
+  @override
+  String get windows_sound_silent => 'Silent';
 
   @override
   String get auto_speak_replies_title => '답변을 자동으로 읽기';

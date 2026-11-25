@@ -1,0 +1,2883 @@
+{
+  "slash_local_arguments": "此處的快捷指令不支援參數。請使用應用程式中的控制項；草稿已保留。",
+  "fallback_title": "備用模型",
+  "fallback_notice": "主模型無法使用時，會依序嘗試清單中的模型。變更只適用於此設定檔；編輯後請儲存整份清單。",
+  "fallback_unavailable": "無法使用備用模型設定，或設定無效。請檢查連線、所選設定檔和主機版本後重試。",
+  "fallback_discovery_unavailable": "無法取得供應商清單。現有項目會保留；重試後可選擇供應商和模型。",
+  "fallback_empty": "尚未設定備用模型。",
+  "fallback_incomplete": "儲存前，請為每個項目選擇供應商和模型，或移除尚未填完的項目。",
+  "fallback_add": "新增備用模型",
+  "fallback_save": "儲存備用清單",
+  "fallback_save_failed": "無法驗證已儲存的備用清單。草稿已保留。請重新儲存，或重新整理以重新載入主機設定。",
+  "fallback_saved": "備用模型清單已儲存並通過驗證。",
+  "fallback_legacy_title": "舊版備用設定（唯讀）",
+  "fallback_legacy_notice": "嘗試完清單中的模型後，主機還會使用 fallback_model，並略過重複的路由。即使上方清單是空的，這些舊版項目仍會保留。請在主機上編輯。",
+  "fallback_priority": "優先順序 {position}",
+  "fallback_move_up": "上移",
+  "fallback_move_down": "下移",
+  "fallback_routing_read_only": "路由詳細資料或未列出的供應商已保留。請在主機上編輯此供應商／模型；此處仍可調整順序或刪除項目。",
+  "@fallback_priority": {
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  },
+  "cron_model_default": "使用預設設定",
+  "cron_model_notice": "僅適用於此 cron 任務。未固定模型時，Hermes 先使用 cron 預設模型，再使用主模型。請在主機上管理自訂模型。",
+  "model_management_unavailable": "無法載入或儲存模型設定。請重新整理後重試。",
+  "model_management_subtitle": "此設定檔的主模型、備用模型和輔助模型",
+  "usage": "用量",
+  "nous_portal": "Nous Portal",
+  "portal_menu_subtitle": "閘道狀態和已記錄用量",
+  "portal_read_only": "這些閘道資料僅供檢視。請在 Hermes 主機上管理 Nous 身分驗證。這些端點不提供訂閱餘額或點數。",
+  "portal_status": "閘道的 Nous Portal 狀態",
+  "portal_free_tier": "免費方案（未登入帳戶）",
+  "portal_signed_in": "已登入",
+  "portal_signed_out": "未登入",
+  "portal_account_tier": "帳戶等級",
+  "portal_recorded_usage": "已記錄用量",
+  "portal_all_providers": "涵蓋所選閘道設定檔中的所有供應商。記錄的費用為零，不代表模型免費。",
+  "portal_period": "最近 {days} 天",
+  "portal_sessions": "工作階段",
+  "portal_input": "輸入令牌",
+  "portal_output": "輸出令牌",
+  "portal_estimated": "已記錄的預估費用",
+  "portal_actual": "已記錄的實際費用",
+  "portal_recorded_models": "已記錄模型",
+  "portal_no_models": "沒有已記錄模型。",
+  "portal_unavailable": "無法取得資料。請檢查連線、所選設定檔和閘道版本後重試。",
+  "@portal_period": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "paste_attachment_failed_text_kept": "無法將貼上的文字加為附件，文字已保留在訊息中。",
+  "background_task_report": "背景任務",
+  "background_process_report": "背景程序",
+  "background_report_issues": "已報告問題，展開查看詳細資料。",
+  "background_report_expand": "展開報告",
+  "background_report_collapse": "收合報告",
+  "@@locale": "zh_Hant",
+  "workspace_workers": "即時工作者",
+  "workers_unattached": "僅顯示數量。若要引導工作者，請在其所屬的上層聊天中選擇「即時工作者」。",
+  "copy_session_id": "複製工作階段 ID",
+  "copy_session_id_failed": "無法複製工作階段 ID。",
+  "setup_interface_title": "選擇介面",
+  "setup_interface_classic": "經典版",
+  "setup_interface_nextgen": "NextGen",
+  "setup_interface_classic_description": "原有的 Ares 工作區，提供完整的連線控制選項和所有經典版設定。",
+  "setup_interface_nextgen_description": "全新介面，只需登入儀表板一次，即可查看即時計畫、子代理和通知。",
+  "setup_interface_switch_later": "你可以隨時在「設定」中切換。",
+  "ng_confirm_model_switch": "切換模型？",
+  "ng_switch": "切換",
+  "ng_model_confirmation_required": "選擇此模型前需要確認。",
+  "ng_model_switches_next_turn": "將在下一輪切換到 {model}。",
+  "ng_model_switch_not_connected": "聊天尚未準備好切換模型。請重新開啟後再試。",
+  "ng_gateway_kept_default_model": "閘道在此聊天中保留了 {model}。請在傳送前重新選擇模型。",
+  "@ng_model_switches_next_turn": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      }
+    }
+  },
+  "@ng_gateway_kept_default_model": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      }
+    }
+  },
+  "hands_free_title": "免持對話",
+  "hands_free_start": "開始免持",
+  "hands_free_stop": "停止免持",
+  "hands_free_preparing": "正在準備語音功能，請等候就緒提示",
+  "hands_free_listening": "請說「Hey Hermes」",
+  "hands_free_recording": "已就緒，請說話",
+  "hands_free_waiting": "等待 Hermes 回覆",
+  "hands_free_speaking": "正在朗讀 — 麥克風已關閉",
+  "hands_free_followup": "最多聆聽 {seconds} 秒",
+  "hands_free_error": "免持已停止",
+  "hands_free_setup": "免持設定",
+  "hands_free_preview": "語音預覽：{transcript}",
+  "hands_free_short_disclosure": "只有在前景開啟此聊天時才會聆聽。喚醒詞偵測不需連網，但語音功能可能會使用網路。聆聽會消耗電力。",
+  "hands_free_error_action": "請檢查麥克風權限、語音服務、朗讀聲音和連線，先點選「停止」，再點選「開始」重試。先前的內容不會重新傳送。",
+  "hands_free_disclosure": "喚醒詞由 CPU 離線偵測。Android 語音辨識、所選的朗讀聲音和閘道可能會使用網路。持續聆聽會耗電，也可能誤觸發。聊天畫面遭遮住、關閉或離開前景時，聆聽就會停止；重新開啟聊天也不會自動恢復。手動語音輸入的內容仍可在草稿中編輯。",
+  "hands_free_ready_cue": "請說「Hey Hermes」，等到「已就緒，請說話」再開口。緊接在喚醒詞後的話，以及就緒前的聲音，都不會錄下。如果設定權限時離開了應用程式，請在授權後再點選「開始」。",
+  "hands_free_settings_title": "免持語音",
+  "hands_free_settings_subtitle": "在聊天中顯示「Hey Hermes」啟動控制項。關閉會停止正在進行的免持工作階段。",
+  "hands_free_timing_limit": "後續聆聽時間是上限，Android 可能提早停止。若未偵測到聲音，就會回到本機喚醒詞偵測，不會反覆重新啟動語音辨識。",
+  "hands_free_followup_off": "後續聆聽已關閉 — 每次提問請說 Hey Hermes",
+  "hands_free_start_blocked": "請先清空草稿、移除附件並結束手動語音操作。聊天必須已連線、沒有正在處理的回覆，且已開啟語音回覆，才能開始免持對話。",
+  "hands_free_setup_complete": "麥克風設定完成。請再次點選開始。",
+  "@hands_free_followup": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "@hands_free_preview": {
+    "placeholders": {
+      "transcript": {
+        "type": "String"
+      }
+    }
+  },
+  "message_time_recorded": "伺服器記錄的時間：{time}（當地時間）",
+  "@message_time_recorded": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "message_time_sent": "此裝置偵測到送出的時間：{time}（當地時間）",
+  "@message_time_sent": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "message_time_received": "此裝置首次收到的時間：{time}（當地時間）",
+  "@message_time_received": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "stop_and_send": "停止並傳送",
+  "message_queued_for_running_turn": "訊息已加入目前回合的佇列。",
+  "running_message_not_accepted": "Hermes 無法接受這則訊息。草稿已保留；請停止回覆或等候回覆結束，再重新傳送。",
+  "running_message_delivery_unknown": "無法確認訊息是否送達。草稿已保留。請先檢查聊天記錄，再重試。",
+  "attachment_tap_to_preview": "點選以預覽",
+  "attachment_save": "儲存",
+  "attachment_share": "分享",
+  "attachment_saved": "檔案已儲存",
+  "attachment_save_cancelled": "已取消儲存",
+  "attachment_save_failed": "無法儲存此檔案，請重試。",
+  "attachment_share_failed": "無法分享此檔案，請重試。",
+  "attachment_download_failed": "無法載入此檔案，請檢查連線後重試。",
+  "attachment_no_inline_preview": "此檔案類型不支援內嵌預覽。請儲存或分享原始檔案，以便在其他應用程式中開啟。",
+  "attachment_image_failed": "無法解碼這張圖片。你仍可儲存或分享原始檔案。",
+  "attachment_text_truncated": "預覽內容已截短。請儲存或分享檔案以閱讀完整內容。",
+  "attachment_text_unavailable": "無法將此檔案顯示為文字。請儲存或分享原始檔案。",
+  "attachment_pdf_failed": "無法預覽此 PDF。請儲存或分享原始檔案。",
+  "attachment_pdf_unavailable": "PDF 預覽只在 Android 上可用。你仍可儲存或分享這個檔案。",
+  "attachment_pdf_page": "第 {page} 頁，共 {total} 頁",
+  "attachment_previous_page": "上一頁",
+  "attachment_next_page": "下一頁",
+  "attachment_loading": "正在載入預覽…",
+  "attachment_document_text_notice": "這是純文字預覽，版面配置、圖片和格式可能與原始檔案不同。",
+  "attachment_document_failed": "無法預覽此文件。請儲存或分享原始檔案。",
+  "attachment_document_empty": "這份文件中沒有可讀取的文字。",
+  "attachment_video_failed": "無法播放此影片。其格式或編解碼器可能不受支援。請儲存或分享原始檔案。",
+  "attachment_video_play": "播放",
+  "attachment_video_pause": "暫停",
+  "attachment_video_mute": "靜音",
+  "attachment_video_unmute": "取消靜音",
+  "attachment_video_seek": "影片進度",
+  "attachment_close": "關閉預覽",
+  "attachment_retry": "重試",
+  "@attachment_pdf_page": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "saved_history_heading": "已儲存的記錄",
+  "received_output_heading": "已收到的輸出（尚未確認是否與已儲存的記錄相符）",
+  "received_output_details": "關於已收到的輸出",
+  "received_output_explanation": "已儲存的記錄中可能也有這段內容，但應用程式無法確認兩者是否相符。",
+  "local_prompt_context": "本機提示詞上下文",
+  "received_output_badge": "已收到 · 尚未確認是否相符",
+  "received_output_lifetime": "這些輸出只會暫存在本次使用期間。達到上限時，內容可能會縮短或移除。關閉應用程式或中斷連線後，可能無法再查看。",
+  "theme_palette": "顏色主題",
+  "theme_palette_gold": "金色",
+  "theme_palette_purple": "紫色",
+  "theme_palette_orange": "橙色",
+  "theme_palette_green": "綠色",
+  "theme_palette_blue": "藍色",
+  "theme_palette_red": "紅色",
+  "theme_palette_teal": "青綠色",
+  "theme_palette_pink": "粉色",
+  "theme_palette_indigo": "靛藍色",
+  "theme_palette_cyan": "青色",
+  "assets_recent_subtitle": "尋找 Hermes 在已儲存的聊天中分享的檔案",
+  "assets_scope_notice": "這裡只顯示 Hermes 在已儲存的回覆中明確分享的生成檔案。內容取自部分聊天記錄，不是完整的檔案或附件目錄。參照的檔案可能已不存在。",
+  "assets_download_limit": "點選檔案才會載入。預覽和下載的單檔上限均為 25 MiB；較大的檔案請從儀表板下載。",
+  "assets_search_hint": "搜尋找到的檔案或來源聊天",
+  "assets_all": "全部",
+  "assets_images": "圖片",
+  "assets_audio": "音訊",
+  "assets_video": "影片",
+  "assets_documents": "文件和其他檔案",
+  "assets_empty": "在已掃描的訊息中未找到資產",
+  "assets_empty_detail": "掃描更多聊天或更早的訊息，以查看更早的記錄。一般附件和未連結的檔案不會在這裡建立索引。",
+  "assets_no_matches": "找不到相符的資產",
+  "assets_load_more_chats": "掃描更多聊天",
+  "assets_load_older_messages": "掃描更早的訊息",
+  "assets_load_failed": "部分歷史記錄無法讀取。結果不完整。請檢查儀表板連線並重試。",
+  "assets_retry_failed": "重試讀取失敗的歷史記錄",
+  "assets_partial": "伺服器報告歷史記錄不完整。請檢查儀表板後重新整理。",
+  "assets_scan_summary": "已掃描 {chats} 個聊天，找到 {files} 筆檔案參照",
+  "@assets_scan_summary": {
+    "placeholders": {
+      "files": {
+        "type": "int"
+      },
+      "chats": {
+        "type": "int"
+      }
+    }
+  },
+  "assets_open_chat": "開啟聊天：{title}",
+  "@assets_open_chat": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "assets_file_too_large": "此檔案超出下載容量上限。請開啟儀表板進行下載。",
+  "a_one_off_question_archives_itself_after_72_hours_anything": "適合只問一次的問題。聊天會在 72 小時後自動封存，值得保留的內容仍會記住。",
+  "archive_chat": "封存聊天",
+  "unarchive_chat": "取消封存聊天",
+  "chat_archived": "聊天已封存",
+  "chat_unarchived": "聊天已取消封存",
+  "could_not_update_chat_archive": "無法更新聊天封存狀態：{error}",
+  "@could_not_update_chat_archive": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "quick_chat_description": "只想問一個問題時使用。",
+  "ai_full_text": "AI + 全文",
+  "ai_search_model": "AI 搜尋模型",
+  "ai_searched_for": "AI 已搜尋：{aiRewrittenQuery}",
+  "ai_assisted_filing": "AI 輔助封存",
+  "api_key": "API 金鑰",
+  "api_server_key_from_hermes_env": "來自 ~/.hermes/.env 的 API_SERVER_KEY",
+  "active": "活躍",
+  "activity": "活動",
+  "activity_reads_the_durable_turn_journal_to_know_what_hermes": "「活動」會讀取已儲存的回合記錄，顯示 Hermes 正在做什麼。請確認閘道可連線後再試一次。",
+  "add": "新增",
+  "add_connection": "新增連線",
+  "add_cron_job": "新增 Cron 任務",
+  "add_gateway_connection": "新增閘道連線",
+  "add_and_update_connections_from_the_backup_keep_the_rest": "從備份中新增和更新連線，其餘保持不變。",
+  "add_attachment": "新增附件",
+  "add_new_cron_job": "新增新 Cron 任務",
+  "add_to_chat": "新增到聊天",
+  "all_chats": "所有聊天",
+  "all_stored_message_content": "所有已儲存的訊息內容",
+  "allow_for_this_session": "本次工作階段允許",
+  "allow_matching_commands_until_this_hermes_session_ends": "允許符合此規則的指令，直到本次 Hermes 工作階段結束。",
+  "allow_folder_until_sandbox_off": "允許此資料夾，直到關閉沙箱為止。",
+  "allow_once": "允許一次",
+  "allow_website_until_sandbox_off": "允許此網站，直到關閉沙箱為止。",
+  "always_allow": "一律允許",
+  "apply_to_this_chat": "套用至此聊天",
+  "approval_needed": "需要核准",
+  "approval_needed_description": "有指令正在等候你核准或拒絕。",
+  "approve": "核准",
+  "archive": "封存",
+  "archive_project": "封存專案",
+  "archive_2": "封存 {projectName}？",
+  "archive_3": "封存 {name}？",
+  "archived": "已封存",
+  "archived_conversations_appear_here": "這裡只顯示已封存的對話。舊聊天仍保留在「所有聊天」中。",
+  "archived_quick_chats": "已封存的快速聊天",
+  "artifacts_attachments_and_generated_media": "工作成果、附件及產生的媒體檔案",
+  "ask_ai_to_find_a_conversation": "讓 AI 尋找對話",
+  "assets": "資產",
+  "assets_need_a_server_authoritative_assets_index_in_the_hermes": "Hermes 閘道必須提供由伺服器統一維護的資產索引，才能依專案顯示資產。",
+  "assets_unavailable": "資產不可用",
+  "attach_image_or_file": "附加圖片或檔案",
+  "attachment_drafts": "附件草稿",
+  "recover_text_draft": "找回文字草稿",
+  "undo_draft_recovery": "復原",
+  "draft_session_exists": "此聊天仍然存在。開啟後即可繼續編輯草稿。",
+  "draft_recovery_unavailable": "無法驗證此草稿，未做任何變更。",
+  "attachment_of": "附件 {index} / {total}",
+  "auto_device_default": "自動（裝置預設）",
+  "agent": "代理程式",
+  "@agent": {
+    "description": "More menu section containing Cron, Skills and Memory."
+  },
+  "autonomous_agents": "自主代理程式",
+  "background_recovery_unavailable_legacy_transport": "無法使用背景復原 — 舊版傳輸",
+  "background_task_completed": "背景任務完成",
+  "background_task_completed_description": "背景終端機指令已完成。",
+  "backup_restore": "備份與還原",
+  "backup_exported": "備份已匯出 — {destination}",
+  "base_url": "基礎 URL",
+  "binary_preview_is_unavailable_download_the_file_to_open_it": "二進位預覽不可用。請下載檔案後開啟。",
+  "branch": "分支",
+  "branch_chat": "從聊天建立分支",
+  "branch_created_in_hermes_history": "已在 Hermes 歷史記錄中建立分支。",
+  "browse_and_manage_your_hermes_agent_sessions_from_your_phone": "透過手機瀏覽和管理你的 Hermes Agent 工作階段。連線至在區域網路上執行的 Hermes 儀表板。",
+  "browse_server_files": "瀏覽伺服器檔案",
+  "browse_the_miniserver_folders_behind_your_projects": "瀏覽各專案使用的 miniserver 資料夾",
+  "cancel": "取消",
+  "cancel_voice_input": "取消語音輸入",
+  "cannot_reach": "無法連線至 {host}:{port}。",
+  "cannot_reach_check_the_host_and_port": "無法連線至 {host}:{port}。請檢查主機和連接埠。",
+  "change_ai_search_model": "更改 AI 搜尋模型",
+  "changes_the_default_for_use_the_selector_in_a_chat": "更改 {label} 的預設值。在聊天中使用選擇器可僅覆寫目前對話。",
+  "chat_actions": "聊天操作",
+  "chats": "聊天",
+  "chats_from_this_gateway_are_not_grouped_yet_grouping_stays": "此閘道中的聊天尚未分組。分組狀態將保留在此手機上，直到閘道能夠代管專案。",
+  "chats_in_this_project_will_show_their_state_and_last": "此專案中的聊天將在此處顯示其狀態和最後活動。",
+  "chats_that_are_not_assigned_to_a_project": "未分配至專案的聊天",
+  "chats_you_start_in_this_project_will_appear_here_on": "你在此專案中發起的聊天將顯示在此處，並同步到登入此 Hermes 的所有裝置上。",
+  "check_that_the_gateway_is_running_and_reachable_then_try": "請檢查閘道是否正在執行且可達，然後重試。",
+  "check_the_dashboard_connection_and_try_again": "請檢查儀表板連線並重試。",
+  "check_the_connection_and_try_again": "請檢查連線並重試。",
+  "choose_a_small_model_to_rewrite_queries": "選擇一個小模型來重寫查詢",
+  "choose_an_ai_search_model_before_using_ai_search": "請在使用 AI 搜尋前選擇一個 AI 搜尋模型。",
+  "choose_an_active_project_next": "接下來請選擇使用中的專案",
+  "choose_chat_model": "選擇聊天模型",
+  "choose_files": "選擇檔案",
+  "choose_image": "選擇圖片",
+  "choose_images": "選擇圖片",
+  "choose_its_destination_space": "選擇其目標空間",
+  "clear_search": "清除搜尋",
+  "close": "關閉",
+  "code_copied": "程式碼已複製",
+  "code_format": "程式碼",
+  "coming_next": "敬請期待",
+  "command": "指令",
+  "command_palette": "指令面板",
+  "command_palette_hint": "輸入指令",
+  "command_palette_no_results": "找不到符合的指令",
+  "command_palette_new_chat": "新增聊天",
+  "command_palette_search_chats": "搜尋聊天",
+  "command_palette_toggle_theme": "切換主題",
+  "command_palette_copy_last_code": "複製最後一個程式碼區塊",
+  "command_line_chats": "命令列聊天",
+  "compatibility_mode": "相容模式",
+  "configure_a_valid_desktop_gateway_url_before_attaching_files": "在附加檔案前，請先設定有效的 Desktop Gateway URL。",
+  "confirm_always_allow": "確認一律允許",
+  "confirm_passphrase": "確認密碼片語",
+  "connecting_to": "正在連線至 {baseUrl}...",
+  "connection_issue": "連線問題",
+  "connection_switched_the_running_reply_continues_on_the_server_and": "已切換連線。伺服器仍在產生回覆，應用程式會自動重新接上。",
+  "connection_appearance_and_device_preferences": "連線、外觀和裝置偏好設定",
+  "context_tokens": "上下文：{effectiveContextLength} 令牌",
+  "continue_label": "繼續",
+  "continue_working": "繼續工作",
+  "conversations_in_this_project": "此專案中的對話",
+  "copy_code": "複製程式碼",
+  "copy_message": "複製訊息",
+  "could_not_branch_chat": "無法建立聊天分支：{error}",
+  "could_not_delete_session": "無法刪除工作階段：{error}",
+  "could_not_deny_the_command": "無法拒絕該指令：{error}",
+  "could_not_load_ai_search_models": "無法載入 AI 搜尋模型：{error}",
+  "could_not_load_conversations": "無法載入對話",
+  "could_not_load_files": "無法載入檔案",
+  "could_not_load_models_for_this_profile": "無法為該設定檔載入模型：{error}",
+  "could_not_load_more_chats": "無法載入更多聊天：{error}",
+  "could_not_open_link": "無法開啟這個連結。",
+  "could_not_open_the_hermes_dashboard": "無法開啟 Hermes 儀表板。",
+  "could_not_open_this_project": "無法開啟此專案",
+  "could_not_preview_file": "無法預覽檔案",
+  "could_not_reach_hermes": "無法連線至 Hermes",
+  "could_not_reach_authenticate_the_dashboard_at_check_the_port": "無法連線至 {host}:{dashboardPort} 的儀表板，或未通過驗證。請檢查連接埠和登入資訊。",
+  "could_not_read_activity": "無法讀取活動",
+  "could_not_rename_chat": "無法重新命名聊天：{error}",
+  "could_not_send_the_approval": "無法傳送核准：{error}",
+  "could_not_skip_the_hermes_question": "無法跳過 Hermes 的問題。",
+  "could_not_the_project": "無法{action}此專案：{error}",
+  "couldn_t_delete_project": "無法刪除專案",
+  "couldn_t_load_runs": "無法載入執行記錄：{error}",
+  "couldn_t_move_conversation": "無法移動對話",
+  "couldn_t_move_to": "無法移動至 {label}：{reason}",
+  "couldn_t_prepare_the_shared_files": "無法準備共用檔案。",
+  "couldn_t_promote_conversation": "無法提升工作階段",
+  "couldn_t_project": "無法{action}專案",
+  "create": "建立",
+  "create_a_project": "建立專案",
+  "create_a_project_first_then_chats_can_live_inside_it": "請先建立一個專案，聊天內容即可存放在其中。",
+  "create_a_space_to_separate_related_conversations": "建立一個空間以區分相關的聊天。",
+  "create_branch": "建立分支",
+  "credit_notifications": "額度通知",
+  "credit_notifications_description": "額度使用已停止或恢復。",
+  "cron": "Cron",
+  "crons": "排程任務",
+  "cron_conversations_empty": "排程任務的對話會顯示在這裡，包括先前執行時的對話。",
+  "search_cron_conversations": "搜尋排程任務的對話",
+  "cron_jobs": "Cron 任務",
+  "cron_schedule_timezone": "排程時區：{zone}",
+  "crons_upcoming": "即將執行",
+  "crons_history": "執行歷史",
+  "cron_time_with_zone": "{time}（{zone}）",
+  "cron_time_zone_unknown": "{time}（時區未知）",
+  "cron_no_next_run": "未安排下次執行",
+  "cron_status_scheduled": "已排程",
+  "cron_status_paused": "已暫停",
+  "cron_delivers_to": "投遞至 {target}",
+  "cron_upcoming_empty_title": "目前沒有已排程任務",
+  "cron_upcoming_empty_message": "目前沒有待執行的排程。你可以前往「Cron 任務」新增，或請代理程式安排。",
+  "cron_upcoming_unavailable": "無法顯示已排程任務",
+  "cron_upcoming_needs_dashboard": "排程任務需要連線至儀表板。此位址未提供 Cron 排程；請檢查儀表板位址，並確認主機支援這項功能。",
+  "cron_upcoming_needs_dashboard_auth": "排程任務需要通過儀表板驗證。請在此連線中填寫儀表板使用者名稱和密碼，或啟用代理伺服器模式。",
+  "cron_upcoming_dashboard_unreachable": "無法連線至儀表板。請檢查主機、儀表板連接埠和網路，然後重試。",
+  "cron_upcoming_load_failed": "無法讀取已排程任務。請檢查儀表板連線並重試。",
+  "cron_upcoming_refresh_failed": "無法重新整理排程。正在顯示上次成功讀取的結果。",
+  "cron_job_added": "Cron 任務已新增",
+  "cron_job_updated": "Cron 任務已更新",
+  "cron_run": "Cron 執行",
+  "cross_device_ordering_and_reversible_bulk_organization": "跨裝置排序與可復原的批次整理",
+  "current_profile_default": "目前設定檔預設值",
+  "custom_proxy_and_dashboard_details": "自訂代理伺服器與儀表板詳細資料",
+  "dark": "深色",
+  "dashboard_proxy_settings": "儀表板 / 代理伺服器設定",
+  "dashboard_password_optional": "儀表板密碼（選填）",
+  "dashboard_port": "儀表板連接埠",
+  "dashboard_username_optional": "儀表板使用者名稱（選填）",
+  "dashboard_behind_proxy": "位於代理伺服器後的儀表板",
+  "dashboard_path_prefix": "儀表板路徑前置字串",
+  "delegated_task": "委派任務：{goal}",
+  "delete": "刪除",
+  "delete_2": "刪除「{name}」？",
+  "delete_from_the_remote_hermes_history_this_cannot_be_undone": "從遠端 Hermes 歷史記錄中刪除「{title}」？此操作不可復原。",
+  "delete_cron_job": "刪除 Cron 任務",
+  "delete_connections_that_are_not_in_the_backup": "刪除不在備份中的連線。",
+  "delete_failed": "刪除失敗：{error}",
+  "delete_project": "刪除專案",
+  "delete_session": "刪除工作階段？",
+  "delete_3": "刪除 {projectName}？",
+  "deleted": "已刪除「{name}」",
+  "delivery_is_uncertain_recovering_without_resending": "尚無法確認是否送達。正在復原連線，不會重新傳送…",
+  "desktop_gateway_url_optional": "Desktop Gateway URL（選填）",
+  "desktop_gateway_is_not_configured_for_this_connection": "此連線未設定 Desktop Gateway。",
+  "desktop_app": "桌面應用程式",
+  "developer_tool_calls": "開發者工具呼叫",
+  "discord_chats": "Discord 聊天",
+  "dismiss": "忽略",
+  "do_not_run_this_command": "請勿執行此指令。",
+  "documents_archives_audio_video_or_data": "文件、壓縮檔、音訊、影片或資料",
+  "download": "下載",
+  "download_failed": "下載失敗：{error}",
+  "durable_facts_hermes_keeps_about_you": "Hermes 長期記得的關於你的事",
+  "durable_work_inside_one_of_your_projects_shared_with_desktop": "將工作內容長期保留在專案中，並與桌面版共用。",
+  "edit": "編輯",
+  "edit_connection": "編輯連線",
+  "edit_cron_job": "編輯 Cron 任務",
+  "edit_gateway_connection": "編輯閘道連線",
+  "edit_and_resend": "編輯並重發",
+  "enable_notifications": "啟用通知",
+  "enable_notifications_description": "關閉後將停用以下所有通知。",
+  "enables_file_attachments_through_the_desktop_remote_gateway": "允許透過 Desktop 遠端閘道傳送檔案附件。",
+  "enter_a_name": "輸入名稱",
+  "enter_a_passphrase": "請輸入密碼片語。",
+  "enter_the_passphrase_for_this_backup": "請輸入此備份的密碼片語。",
+  "every_conversation_is_already_assigned_to_a_project": "所有對話均已分配至某個專案。",
+  "everything_not_yet_native_in_the_authenticated_web_dashboard": "應用程式尚未內建的功能，可登入網頁版儀表板使用",
+  "explain_the_attached_content_clearly": "清晰解釋附件內容。",
+  "explain_this_content_clearly": "清晰解釋此內容：\n\n{text}",
+  "explicit_choices_adjust_android_accessibility_text_size_system_leaves_it": "選擇指定大小會調整 Android 的無障礙文字大小；選擇「系統」則維持原有大小。",
+  "export_label": "匯出",
+  "export_share": "匯出 / 分享",
+  "external_api_clients": "外部 API 用戶端",
+  "extra_high": "極高",
+  "extract_tasks": "提取任務",
+  "extract_the_decisions_deadlines_owners_and_actionable_action_items_from": "從附件內容中提取決策、截止日期、負責人以及可執行的待辦事項。",
+  "extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2": "從以下內容中提取決策、截止日期、負責人以及可執行的待辦事項：\n\n{text}",
+  "failed_to_add_job": "新增任務失敗：{error}",
+  "failed_to_load_cron_jobs": "載入 Cron 任務失敗",
+  "failed_to_load_memory": "載入記憶失敗",
+  "failed_to_load_messages": "載入訊息失敗",
+  "failed_to_load_settings": "載入設定失敗",
+  "failed_to_load_skills": "載入技能失敗",
+  "failed_to_update_job": "更新任務失敗：{error}",
+  "failed": "失敗：{error}",
+  "file_attached_document_catalog_registration_is_pending": "已附加檔案，文件目錄尚未登記完成。",
+  "file_reference_added_to_chat": "檔案參照已新增至聊天",
+  "files": "檔案",
+  "fill_from_document": "從文件填入",
+  "folder_is_empty": "這個資料夾是空的",
+  "folders": "資料夾",
+  "full_text": "全文",
+  "gateway_api_access": "閘道 API 存取",
+  "gateway_connected_but_the_dashboard_could_not_be_reached_or": "閘道已連線，但無法存取儀表板或未能通過身分驗證。請檢查儀表板詳細資訊，或清除它們以跳過。",
+  "gateway_path_prefix": "閘道路徑前置字串",
+  "go_to_end": "轉到末尾",
+  "hermes_agent": "Ares（原名 Hermes Android）",
+  "hermes_agent_for_android": "Ares（原名 Hermes Android）",
+  "hermes_could_not_accept_the_answer_please_try_again": "Hermes 無法接受此回答，請重試。",
+  "hermes_could_not_load_your_saved_connections": "Hermes 無法載入你儲存的連線",
+  "hermes_did_not_accept_the_response_please_try_again": "Hermes 未能接受此回應，請重試。",
+  "hermes_is_responding": "Hermes 正在回應…",
+  "hermes_is_waiting_for_input": "Hermes 正在等待輸入…",
+  "hermes_keeps_android_accessibility_text_scaling_active": "Ares 會保留 Android 無障礙設定中的文字縮放比例。",
+  "hermes_needs_your_input": "Hermes 需要你的輸入",
+  "hermes_profile_optional": "Hermes 設定檔（選填）",
+  "hermes_profile_must_be_a_plain_profile_name_such_as": "請輸入 Hermes 設定檔名稱（例如 sol），而不是路徑。",
+  "hermes_reasoning_details": "Hermes 推理詳細資料",
+  "hermes_recovery_is_unavailable": "無法復原 Hermes：{error}",
+  "hermes_stopped_recovery_safely_no_prompt_was_resent": "Hermes 已安全停止復原。沒有重新傳送任何提示詞。",
+  "hide_passphrase": "隱藏密碼片語",
+  "home_needs_your_recent_chats_to_know_what_deserves_your": "首頁需要你最近的聊天記錄來瞭解哪些內容值得你關注。請檢查閘道是否可達，然後重試。",
+  "host": "主機",
+  "image_selection_was_interrupted_try_again": "圖片選擇被中斷，請重試。",
+  "import_label": "匯入",
+  "inbox": "收件匣",
+  "inbox_is_clear": "沒有待處理項目",
+  "input_needed": "需要輸入",
+  "input_needed_description": "Hermes 提出了問題，或需要密碼或金鑰。",
+  "insert_a_remote_file_reference": "插入遠端 @file 引用",
+  "invalid_port_number": "無效的連接埠號碼。",
+  "job_paused": "任務已暫停",
+  "job_resumed": "任務已繼續",
+  "job_triggered": "任務已觸發",
+  "label": "標籤",
+  "last_activity": "最後活動於 {year}年{month}月{day}日",
+  "last": "最後執行：{lastRun}",
+  "leave_blank_for_default_8642_443_with_https": "留空則使用預設值（8642；使用 https 時為 443）",
+  "leave_blank_for_default_9119": "留空則使用預設值 (9119)",
+  "light": "淺色",
+  "listening": "正在聆聽 • {elapsed}",
+  "listening_elapsed": "正在聆聽，已耗時 {elapsed}",
+  "load_more": "載入更多…",
+  "loading": "正在載入",
+  "location": "位置",
+  "make_sure_the_gateway_api_server_is_running_hermes_gateway": "請確認閘道的 API 伺服器正在執行\n(hermes gateway status)",
+  "matches": "符合 {name} · {assigned}",
+  "memory": "記憶",
+  "memory_about_you": "關於你",
+  "memory_agent_notes": "助手筆記",
+  "memory_builtin_scope": "此設定檔的 USER.md 和 MEMORY.md 中儲存的事實。這裡不顯示外部記憶服務（包括 MemPalace）的內容。",
+  "memory_read_only": "僅供查看。可在聊天中請 Hermes 更正或忘記某條事實。",
+  "memory_unavailable": "此閘道或設定檔無法提供已儲存的事實。請檢查所選設定檔，並在需要時更新 Hermes。",
+  "memory_load_error": "請檢查儀表板連線和身分驗證，然後重試。",
+  "memory_read_full_fact": "閱讀完整事實",
+  "memory_full_fact_requires_update": "查看完整事實需要更新的 Hermes 閘道。請更新 Hermes 並重新整理清單。",
+  "memory_fact_detail_error": "無法載入完整事實。它可能已更改；請重新整理清單後重試。",
+  "memory_entries_are_cross_session_facts_the_agent_remembers_they": "Hermes 記住的事實會顯示在這裡。",
+  "merge": "合併",
+  "message": "訊息",
+  "message_hermes": "給 Hermes 傳送訊息…",
+  "message_actions": "訊息操作",
+  "message_copied": "已複製訊息",
+  "migrating": "正在遷移…",
+  "migration_complete": "遷移完成",
+  "migration_failed_local_spaces_were_kept_unchanged": "遷移失敗。本機空間保持不變。",
+  "migration_incomplete": "遷移未完成",
+  "migration_preview": "遷移預覽",
+  "model": "模型",
+  "model_and_thinking_for_this_chat": "此聊天的模型和思考狀態",
+  "model_was_not_changed": "模型未更改：{error}",
+  "move_attachment_next": "將附件往後移一位",
+  "move_attachment_previous": "將附件往前移一位",
+  "move_chat": "移動聊天",
+  "move_conversation": "移動工作階段",
+  "move_to_project": "移動到專案",
+  "move_to_space": "移動到空間",
+  "moved_to_a_project": "已移動到專案",
+  "moved_to": "已移動到 {label}",
+  "name": "名稱",
+  "name_prompt_and_schedule_are_required": "名稱、提示詞和排程均為必填項",
+  "nav_activity": "活動",
+  "nav_projects": "專案",
+  "needs_a_correction_aware_filing_contract_in_the_hermes_gateway": "Hermes 閘道必須支援可依使用者更正來調整的歸類機制。",
+  "needs_a_reachable_hermes_dashboard_check_the_host_port_and": "需要可存取的 Hermes 儀表板。請檢查此連線的主機、連接埠和驗證資訊。",
+  "needs_a_server_authoritative_assets_index_in_the_hermes_gateway": "Hermes 閘道必須提供由伺服器統一維護的資產索引。",
+  "needs_durable_pin_ordering_batch_mutation_and_undo_contracts_in": "Hermes 閘道必須能儲存置頂順序，並支援批次變更與復原。",
+  "needs_you": "需要你",
+  "new_label": "新",
+  "new_chat": "新增聊天",
+  "new_chat_2": "新增聊天",
+  "new_chat_3": "新增聊天 · {projectName}",
+  "new_project": "新增專案",
+  "new_space": "新增空間",
+  "next": "下次執行：{nextRun}",
+  "nginx_injects_auth_app_sends_clean_requests": "由 Nginx 加入驗證資訊，應用程式送出要求時不附驗證資訊",
+  "no_tts_voices_found_ninstall_google_text_to_speech_and": "未找到 TTS 語音。\n請安裝 Google Text-to-Speech 並下載語音資料。",
+  "no_active_projects_on_this_gateway": "此閘道目前沒有使用中的專案",
+  "no_activity_yet": "目前沒有活動",
+  "no_chat_is_blocked_running_or_waiting_to_be_resumed": "沒有受阻、正在執行或等待繼續的聊天。準備好後可以開始新的聊天。",
+  "no_chats_in_this_project_match": "此專案中找不到符合「{searchQuery}」的聊天。",
+  "no_chats_in_this_space_yet_tap_to_start_one": "此空間目前沒有聊天。點選 + 開始聊天。",
+  "no_chats_yet": "目前沒有聊天",
+  "no_connections": "無連線",
+  "no_conversation_matches_this_view": "沒有符合目前篩選條件的對話。",
+  "no_cron_jobs": "目前沒有 Cron 任務",
+  "no_folders_yet": "目前沒有資料夾",
+  "no_local_spaces_were_found_for_this_connection_so_projects": "在此連線中未找到本機空間，因此專案已是此處的唯一組織方式。",
+  "no_matches": "無相符項目",
+  "no_memory_entries": "目前沒有記憶項目",
+  "no_message_content_matches": "無符合的訊息內容",
+  "no_new_messages": "目前沒有新訊息",
+  "no_projects_yet": "目前沒有專案",
+  "no_runs_yet": "目前沒有執行記錄。",
+  "no_server_project_matches_this_name": "伺服器上沒有同名的專案 · {assigned}",
+  "no_sessions_yet": "目前沒有工作階段",
+  "no_skills_found": "未找到技能",
+  "no_spaces_on_this_device": "此裝置上無空間",
+  "no_text_shared": "未共用文字",
+  "no_turn_is_blocked_in_flight_or_recently_finished_work": "沒有受阻、進行中或最近完成的回合。你開始的工作會顯示在這裡。",
+  "no_turn_needs_your_input_or_has_failed": "沒有需要你輸入或失敗的回合。",
+  "no_unassigned_chats": "目前沒有未分配的聊天。",
+  "nothing_changed_in_the_last_seven_days": "最近七天無更改。",
+  "nothing_has_moved_yet_this_is_only_what_a_migration": "尚未移動任何內容 — 這只是遷移將執行的操作。",
+  "nothing_here": "這裡什麼也沒有",
+  "nothing_is_running": "沒有正在執行的內容",
+  "nothing_needs_you": "一切正常，不必處理",
+  "nothing_to_migrate": "不必遷移",
+  "notifications": "通知",
+  "windows_notifications_blocked": "無法使用通知。請使用已安裝的 Ares 應用程式，並檢查 Windows 的「設定」→「系統」→「通知」。",
+  "windows_notification_diagnostics": "Ares 傳送給 Windows 的內容",
+  "chat_activity_share": "分享聊天活動",
+  "chat_activity_share_hint": "在你使用此聊天時告知相容的已連線閘道，讓其手機通知外掛程式避免重複提醒。不會傳送任何金鑰或訊息內容。",
+  "completion_sound": "完成提示音",
+  "completion_sound_mail": "郵件",
+  "completion_sound_reminder": "提醒",
+  "completion_sound_silent": "靜音",
+  "notifications_permission_denied": "系統已阻止通知。請在 Android 設定中允許此應用程式傳送通知。",
+  "off_no_thinking": "關閉（無思考）",
+  "offline_showing_the_last_known_activity": "離線 — 顯示最後已知的活動。",
+  "offline_showing_the_last_known_chats": "離線 — 顯示最後已知的聊天",
+  "offline_showing_the_last_known_projects": "離線 — 正在顯示最後已知的專案。",
+  "on_this_device": "此裝置上",
+  "on_device": "裝置端",
+  "open_inbox": "開啟收件匣",
+  "open_inbox_2": "開啟收件匣（{count}）",
+  "open_the_hermes_dashboard": "開啟 Hermes 儀表板",
+  "optional_for_the_memory_cron_skills_settings_tabs_leave_blank": "選填。用於「記憶」、「Cron」、「技能」、「設定」分頁。留空則使用預設儀表板連接埠（9119）且不必登入。",
+  "organization": "組織",
+  "other_answer": "其他回答",
+  "overview": "概覽",
+  "passphrase": "密碼片語",
+  "password_optional": "密碼（選填）",
+  "phone_or_tablet": "手機或平板電腦",
+  "pin_batch_and_undo": "置頂、批次操作與復原",
+  "plugin_notifications": "外掛程式通知",
+  "plugin_notifications_description": "應用程式在背景時，閘道發來了通知。",
+  "port": "連接埠",
+  "preparing_attachments": "正在準備附件…",
+  "preview_truncated": "預覽已截斷",
+  "preview_unavailable": "預覽不可用",
+  "profile": "設定檔",
+  "profile_default_model": "設定檔預設模型",
+  "profile_default_set_to_chats_with_their_own_model_keep": "此設定檔的預設模型已設為 {selectedModel}。已個別指定模型的聊天不受影響。",
+  "profile_this_connection_chats_as_when_the_dashboard_serves_several": "如果儀表板提供多個設定檔，請指定此連線聊天時使用哪一個。若儀表板只供單一設定檔使用，請留白。",
+  "project": "專案",
+  "project_actions": "專案操作",
+  "project_chat": "專案聊天",
+  "project_chats_unavailable": "專案聊天不可用",
+  "projects": "專案",
+  "projects_group_related_chats_files_and_activity_and_stay_in": "專案將相關的聊天、檔案和活動進行分組，並與你電腦上的 Hermes 保持同步。",
+  "projects_need_a_desktop_gateway_connection_add_the_desktop_gateway": "專案需要 Desktop Gateway 連線。請將 Desktop Gateway URL 新增到此連線，以便跨裝置管理聊天。",
+  "projects_unavailable": "專案不可用",
+  "projects_activity_new_navigation": "專案、活動 — 新導覽",
+  "promote_to_project": "提升為專案",
+  "prompt": "提示詞",
+  "protect_this_backup": "保護此備份",
+  "provider": "供應商",
+  "proxy_injects_auth_app_sends_clean_requests": "由代理伺服器加入驗證資訊，應用程式送出要求時不附驗證資訊",
+  "quick_chat": "快速聊天",
+  "quick_chats_appear_here_after_their_retention_period": "快速聊天將在保留期過後顯示在此處。",
+  "read_aloud": "朗讀",
+  "read_aloud_is_unavailable_on_this_device": "此裝置不支援朗讀功能",
+  "reading_response_aloud": "正在朗讀回覆",
+  "ready_to_upload": "準備上傳",
+  "reasoning": "推理",
+  "recently_completed": "最近完成",
+  "recently_active": "最近活躍",
+  "recovering_hermes": "正在復原 Hermes…",
+  "refresh": "重新整理",
+  "regenerate_response": "重新生成回覆",
+  "remove_attachment": "移除附件",
+  "rename": "重新命名",
+  "rename_chat": "重新命名聊天",
+  "rename_project": "重新命名專案",
+  "rename_space": "重新命名空間",
+  "rename_2": "重新命名 {projectName}",
+  "rename_3": "重新命名 {name}",
+  "replace": "替換",
+  "repositories": "程式碼儲存庫",
+  "research_the_attached_content_verify_the_important_claims_and_cite": "研究附件內容，核實重要主張並引用來源。",
+  "research_this_content_verify_the_important_claims_and_cite_sources": "研究此內容，核實重要主張並引用來源：\n\n{text}",
+  "reset_failed_the_secure_storage_may_need_reinstall": "重設失敗：{retryError}。安全儲存可能需要重新安裝。",
+  "reset_saved_connections": "重設已儲存的連線",
+  "responding": "正在回應…",
+  "response_closed_locally_gateway_stop_failed": "回應已在本機關閉；閘道停止失敗：{error}",
+  "response_closed_locally_no_active_gateway_turn_was_found": "回應已在本機關閉；未找到活動的閘道回合。",
+  "response_complete": "回應完成",
+  "response_complete_description": "應用程式在背景時，一輪對話已完成。",
+  "response_ready": "回覆就緒",
+  "response_stopped": "回覆已停止。",
+  "restore": "還原",
+  "restore_configuration": "還原設定",
+  "restore_project": "還原專案",
+  "retry": "重試",
+  "retry_failed_for_the_draft_and_prompt_were_kept": "{name} 重試失敗。草稿和提示詞已保留。",
+  "retry_upload": "重試上傳",
+  "retrying": "正在重試 {name}…",
+  "review_local_spaces": "檢查本機空間",
+  "review_or_promote_quick_chats_past_their_retention_period": "查看或提升超出保留期限的快速聊天",
+  "review_the_attached_content": "查看附件內容。",
+  "run_only_this_command": "僅執行此指令。",
+  "running_now": "正在執行",
+  "save": "儲存",
+  "save_changes": "儲存更改",
+  "save_a_permanent_rule_in_the_hermes_configuration": "在 Hermes 設定中儲存永久規則。",
+  "save_the_durable_facts_from_the_attached_content_to_memory": "將附件內容中的持久事實儲存到記憶中，然後確認保留的內容。",
+  "save_the_durable_facts_from_this_content_to_memory_then": "將此內容中的持久事實儲存到記憶中，然後確認保留的內容：\n\n{text}",
+  "save_your_connections_and_settings_to_an_encrypted_file_then": "將連線和設定儲存為加密檔案，重新安裝後或換用其他裝置時即可還原。",
+  "save_2": "儲存 {filename}",
+  "schedule": "排程",
+  "scheduled_jobs_and_their_last_runs": "排程任務及其最近執行情況",
+  "scheduled_tasks": "排程任務",
+  "script_only_no_agent": "僅執行指令稿（不使用代理程式）",
+  "scroll_horizontally": "水平捲動",
+  "search_all_chats": "搜尋所有聊天",
+  "search_all_message_content": "搜尋所有訊息內容",
+  "search_chats": "搜尋聊天",
+  "search_conversations": "搜尋對話",
+  "search_loaded_chats": "搜尋已載入的聊天",
+  "search_mode": "搜尋模式",
+  "select_one_option_or_enter_another_answer": "選擇一個選項，或輸入其他答案。",
+  "select_one_or_more_options_then_continue": "選擇一個或多個選項，然後繼續。",
+  "select_text": "選擇文字",
+  "send": "傳送",
+  "send_failed": "傳送失敗：{error}",
+  "send_failed_api_only_permission_denied": "傳送失敗：{error}。伺服器拒絕了以 API 金鑰身分進行的寫入。如果這個工作階段屬於儀表板，為此連線填寫儀表板使用者名稱和密碼或許就能傳送；伺服器也可能是刻意拒絕這項操作。",
+  "send_message": "傳送訊息",
+  "send_test_notification": "傳送測試通知",
+  "session_sources": "工作階段來源",
+  "session_deleted_from_remote_hermes": "已從遠端 Hermes 中刪除工作階段。",
+  "session_search_failed": "工作階段搜尋失敗：{error}",
+  "set_profile_default": "設為此設定檔的預設模型",
+  "settings": "設定",
+  "share_to_hermes": "分享到 Hermes",
+  "show_passphrase": "顯示密碼片語",
+  "show_tool_calls_thinking_and_message_metadata": "顯示工具呼叫、思考過程和訊息中繼資料",
+  "signal_messages": "Signal 訊息",
+  "skills": "技能",
+  "skills_2": "技能（{count}）",
+  "skills_and_tools": "技能與工具",
+  "skip": "跳過",
+  "slack_chats": "Slack 聊天",
+  "source": "來源：{source}",
+  "space_actions": "空間操作",
+  "spaces": "空間",
+  "speak_to_hermes": "對 Hermes 說話",
+  "speech_recognition_is_unavailable": "語音辨識不可用",
+  "spoken_replies": "語音回覆",
+  "spoken_replies_off": "語音回覆已關閉",
+  "spoken_replies_on": "語音回覆已開啟",
+  "stalled_no_update_from_hermes": "已停滯 — 未收到來自 Hermes 的更新",
+  "start_something_new": "開啟新任務",
+  "start_voice_input": "開始語音輸入",
+  "starting_hermes": "正在啟動 Hermes…",
+  "media_card_download": "下載檔案",
+  "media_card_tap_to_download": "點選即可下載",
+  "still_loading_your_projects": "正在載入你的專案。",
+  "stop": "停止",
+  "stop_response": "停止回應",
+  "stop_voice_input": "停止語音輸入",
+  "submitted_waiting_for_hermes": "已送出，等待 Hermes 回應",
+  "suggest_projects_and_learn_from_your_corrections": "建議專案並從你的更正中學習",
+  "summarize_the_attached_content": "摘要附件內容。",
+  "summarize_this_content": "摘要此內容：\n\n{text}",
+  "switch_profile": "切換設定檔",
+  "system": "系統",
+  "take_photo": "拍照",
+  "tap_to_add_a_remote_hermes_gateway_api_server_port": "點選 + 新增遠端 Hermes 閘道\n（API 伺服器，連接埠 8642）",
+  "tap_the_button_to_start_a_new_chat": "點選 + 按鈕開始新的聊天",
+  "telegram_messages": "Telegram 訊息",
+  "terminal_sessions": "終端機工作階段",
+  "test_notification_body": "如果你能看到這條通知，說明通知功能正常。",
+  "test_notification_sent": "已傳送測試通知。",
+  "test_notification_title": "Hermes 通知測試",
+  "test_notification_unsupported": "無法傳送通知——請檢查系統是否允許通知。",
+  "text_size": "文字大小",
+  "text_size_preview": "文字大小預覽",
+  "text_size_2": "文字大小：{label}",
+  "the_api_key_could_not_be_stored_securely": "無法安全儲存 API 金鑰。",
+  "the_project_will_move_to_archived_its_chats_and_files": "專案會移至「已封存」，聊天和檔案都會保留。你可以隨時還原專案。",
+  "the_project_will_move_to_archived_its_chats_and_files_2": "專案會移至「已封存」，聊天和檔案都會保留。你可以稍後還原專案。",
+  "the_active_profile_did_not_return_any_selectable_models": "目前的設定檔未傳回任何可供選擇的模型。",
+  "the_backup_could_not_be_exported": "無法匯出備份。",
+  "the_backup_could_not_be_restored": "無法還原備份。",
+  "the_connection_could_not_be_deleted_safely": "無法安全刪除連線。",
+  "the_connection_could_not_be_stored_securely": "無法安全儲存連線。",
+  "the_dashboard_credentials_could_not_be_stored_securely": "無法安全儲存儀表板驗證資訊。",
+  "the_detached_reply_failed": "已分離的回覆失敗。",
+  "the_detached_reply_failed_2": "已分離的回覆失敗：{error}",
+  "the_file_contains_your_api_keys_and_dashboard_password_so": "這份檔案包含你的 API 金鑰和儀表板密碼，因此已加密。沒有密碼片語就無法還原備份。",
+  "the_last_turn_failed": "上一輪對話失敗",
+  "the_local_connection_store_looks_damaged_you_can_reset_the": "本機連線儲存似乎已損壞 ({errorType})。你可以重設已儲存的連線並重新開始。閘道上的聊天記錄不受影響。",
+  "the_model_only_rewrites_your_question_into_a_short_full": "該模型僅將你的問題重寫為簡短的全文查詢。Hermes 使用已在主機上設定的供應商驗證資訊。",
+  "the_server_has_not_reported_folders_for_this_project_yet": "伺服器尚未報告此專案的資料夾。全局檔案仍可在「更多」中查看。",
+  "the_turn_failed": "本輪對話失敗",
+  "the_two_passphrases_do_not_match": "兩次輸入的密碼片語不一致。",
+  "the_value_is_sent_directly_to_the_active_hermes_gateway": "該值將直接傳送至目前活動的 Hermes 閘道，不會被此 Android 應用程式儲存。",
+  "there_are_no_visible_files_in_this_server_folder": "此伺服器資料夾中沒有可見檔案。",
+  "thinking_effort": "思考強度",
+  "this_hermes_gateway_does_not_support_opening_a_project_yet": "此 Hermes 閘道尚不支援開啟專案。請更新伺服器上的 Hermes 以在手機上瀏覽專案。",
+  "this_hermes_gateway_is_older_than_server_side_projects_so": "此 Hermes 閘道版本舊於伺服器端專案功能，因此聊天僅在此裝置上分組。請更新 Hermes 以在多台裝置間共用相同專案。",
+  "this_project_has_no_folder_to_open_the_chat_in": "此專案需要先新增資料夾才能在其中開始聊天。新增資料夾後請重試。",
+  "this_chat_has_no_messages_available_in_the_desktop_session": "桌面版的工作階段中尚無此聊天的訊息。",
+  "this_creates_a_permanent_rule_in_hermes_review_the_full": "這將在 Hermes 中建立永久規則。確認前請仔細檢查完整指令。",
+  "this_gateway_does_not_host_projects_yet_update_the_gateway": "此閘道尚不支援代管專案。請更新閘道以在各裝置間整理聊天。",
+  "this_permanently_deletes_the_project_chats_will_not_be_deleted": "這將永久刪除該專案。聊天記錄不會被刪除；它們將返回至未分配狀態。",
+  "this_server_doesn_t_offer_background_recovery_chats_run_live": "此伺服器不提供背景復原 — 聊天只在連線時即時進行",
+  "this_week": "本週",
+  "titles_previews_and_models": "標題、預覽與模型",
+  "tool_activity": "工具活動",
+  "trigger_now": "立即觸發",
+  "received_outcome_unknown": "本輪對話已結束 — 結果未確認",
+  "turn_completed": "本輪對話已完成",
+  "turn_failed": "對話失敗",
+  "turn_failed_description": "背景對話以錯誤結束。",
+  "turn_recovery_failed": "無法復原這個回合",
+  "unable_to_prepare_this_file_try_another_one": "無法準備此檔案，請嘗試其他檔案。",
+  "unable_to_prepare_this_image_try_another_one": "無法準備此圖片，請嘗試其他圖片。",
+  "unable_to_prepare": "無法準備 {name}。",
+  "unable_to_read_the_selected_image_the_selection_was_kept": "無法讀取所選圖片，已保留目前選擇。",
+  "unassigned": "未分配",
+  "unassigned_chats": "未分配的聊天",
+  "untitled_chat": "未命名聊天",
+  "untitled_session": "未命名工作階段",
+  "update_api_key": "更新 API 金鑰",
+  "upload_failed": "上傳失敗",
+  "upload_failed_tap_retry": "上傳失敗 • 點選重試",
+  "uploading": "正在上傳 {index}/{total}：{name}",
+  "use_as_is": "直接使用",
+  "use_at_least_8_characters": "請使用至少 8 個字元。",
+  "use_for_cron_jobs_backed_by_scripts": "用於由腳本支援的 Cron 任務。",
+  "use_on_device": "使用裝置端",
+  "use_the_attached_content_to_identify_and_fill_the_relevant": "使用附件內容辨識並填寫相關文件或表單欄位。送出任何內容前請先詢問。",
+  "use_this_content_to_identify_and_fill_the_relevant_document": "使用此內容辨識並填寫相關文件或表單欄位。送出任何內容前請先詢問：\n\n{text}",
+  "used_for_hosted_path_prefixes_and_for_the_settings_memory": "用於代管服務的路徑前綴，以及「設定」、「記憶」、「技能」和「Cron」分頁。如果儀表板不需登入，請將使用者名稱和密碼留白；如果由反向代理伺服器加入驗證資訊，請啟用代理伺服器模式。",
+  "username_optional": "使用者名稱（選填）",
+  "using": "正在使用 {displayName}…",
+  "verbose_mode": "詳細模式",
+  "message_metadata": "訊息詳細資料",
+  "voice": "語音",
+  "voice_setup_failed": "語音設定失敗：{error}",
+  "waiting_for_your_input": "等待你的輸入",
+  "what_hermes_knows_how_to_do": "Hermes 能夠做的事情",
+  "what_should_the_agent_do": "要讓代理程式做什麼？",
+  "whatsapp_messages": "WhatsApp 訊息",
+  "which_project": "哪個專案？",
+  "workspace": "工作區",
+  "wrap_lines": "自動換行",
+  "you_can_attach_up_to_items": "最多可附加 {maxRemoteAttachmentDrafts} 個項目。",
+  "your_answer": "你的回答",
+  "e_g_dashboard": "例如 /dashboard",
+  "e_g_dashboard_proxy_path_before_api": "例如 /dashboard（/api/ 之前的代理伺服器路徑）",
+  "e_g_profile_peter": "例如 /profile/peter",
+  "e_g_sol": "例如 sol",
+  "e_g_0_9_or_every_2h": "例如 0 9 * * * 或 every 2h",
+  "e_g_daily_backup": "例如每日備份",
+  "downloaded": "已下載 {filename}",
+  "activity_name_status": "{displayName}：{statusLabel}",
+  "connection_status_label": "{connectionLabel} {label}",
+  "example_host_hint": "192.168.1.50、100.x.y.z 或 hermes-machine.tailnet.ts.net",
+  "example_profile_prefix_hint_full": "例如 /profile/peter（/api/ 和 /v1/ 之前的代理伺服器路徑）",
+  "and_more": "另外 {count} 個",
+  "chats_count": "{count, plural, one{{count} 個聊天} other{{count} 個聊天}}",
+  "on_this_device_only": "{chats} · 僅在此裝置上",
+  "spaces_count": "{count, plural, one{{count} 個空間} other{{count} 個空間}}",
+  "no_new_projects_needed": "不必建立新專案",
+  "projects_to_create": "{count, plural, one{待建立 {count} 個專案} other{待建立 {count} 個專案}}",
+  "chats_migrated_projects_created": "已遷移 {linkedSessions} 個聊天 · 已建立 {createdProjects} 個專案",
+  "chats_stayed_in_local_spaces": "{unlinkedSessions} 個聊天保留在本機空間中，可安全重試。",
+  "model_recommended": "{provider} • 推薦：小巧且經濟",
+  "session_meta": "{count} 則訊息 • {model} • {time}",
+  "model_scope_label": "{model} • {scope}",
+  "this_chat": "此聊天",
+  "profile_default": "設定檔預設值",
+  "minutes_ago": "{count} 分鐘前",
+  "hours_ago": "{count} 小時前",
+  "days_ago": "{count} 天前",
+  "now_label": "剛剛",
+  "latest_label": "最新",
+  "new_count_indicator": "{count} 則新訊息",
+  "new_messages": "{count, plural, one{{count} 則新訊息} other{{count} 則新訊息}}",
+  "activity_failed_summary": "{failures} 個失敗 • 共 {total} 個",
+  "activity_completed_summary": "已完成 {count} 個",
+  "tool_start_observed": "偵測到開始的時間：{time}（當地時間）",
+  "tool_last_observed": "最後一次偵測到的時間：{time}（當地時間）",
+  "tool_result_recorded": "結果記錄時間：{time}（當地時間）",
+  "tool_time_unavailable": "時間不可用",
+  "hermes_is_using_a_tool": "Hermes 正在使用工具",
+  "hermes_is_using_tools": "Hermes 正在使用 {count} 個工具",
+  "delegated_tasks_completed": "已完成 {count} 個委派任務",
+  "delegated_tasks_active": "{count} 個委派任務進行中",
+  "branch_main": "{label} · main",
+  "you_heading": "## 你",
+  "hermes_heading": "## Hermes",
+  "action_label": "操作",
+  "destination_label": "目標",
+  "markdown_source": "原始碼",
+  "preview_label": "預覽",
+  "share_action_summarize": "摘要",
+  "share_action_explain": "解釋",
+  "share_action_research": "研究",
+  "share_action_remember": "記住",
+  "text_size_small": "小",
+  "text_size_default": "預設",
+  "text_size_large": "大",
+  "text_size_extra_large": "特大",
+  "text_size_use_system_description": "完全使用 Android 無障礙文字大小。",
+  "text_size_percent_description": "Android 文字大小的 {percent}%。",
+  "text_size_label_description": "{label} — {description}",
+  "files_skipped": "已跳過 {count} 個檔案：超出限制、大小超限、無法讀取或檔名包含敏感資訊。",
+  "model_scope_applied": "{model} • {effort} 現僅套用至此聊天。",
+  "reasoning_minimal": "極簡",
+  "reasoning_low": "低",
+  "reasoning_medium": "中",
+  "reasoning_high": "高",
+  "reasoning_max": "最大",
+  "reasoning_ultra": "極致",
+  "status_running": "執行中",
+  "status_failed": "已失敗",
+  "status_done": "完成",
+  "status_idle": "空閒",
+  "upload_status_uploading": "正在上傳",
+  "upload_status_uploaded": "已上傳",
+  "attachment_count": "{count, plural, one{{count} 個附件} other{{count} 個附件}}",
+  "action_create": "建立",
+  "action_rename": "重新命名",
+  "action_archive": "封存",
+  "action_restore": "還原",
+  "action_delete": "刪除",
+  "migrate": "遷移",
+  "assigned_chats": "{count, plural, one{{count} 個已指派的聊天} other{{count} 個已指派的聊天}}",
+  "date_today": "今天",
+  "date_yesterday": "昨天",
+  "date_earlier": "更早",
+  "nav_home": "首頁",
+  "nav_more": "更多",
+  "status_completed": "已完成",
+  "filter_all": "全部",
+  "filter_recent": "最近",
+  "connection_address_key": "{address}  •  金鑰：{status}",
+  "model_via_provider": "{model}  \n透過 `{provider}`",
+  "deny": "拒絕",
+  "connect": "連線",
+  "appearance": "外觀",
+  "connection_section": "連線",
+  "about": "關於",
+  "version_label": "版本 {version}",
+  "matched": "相符",
+  "search": "搜尋",
+  "on": "開",
+  "off": "關",
+  "reasoning_off": "關",
+  "hermes_response_ready": "Hermes 回覆已就緒",
+  "admin_password_needed": "需要管理員密碼",
+  "hermes_needs_a_sudo_password_for_the_pending_terminal_command": "Hermes 需要 sudo 密碼來執行待執行的終端機指令。",
+  "sudo_password": "sudo 密碼",
+  "secret_needed": "需要金鑰",
+  "hermes_needs_a_secret_for_the_pending_skill": "Hermes 需要為待處理的技能提供一個金鑰。",
+  "secret_value": "金鑰值",
+  "attached_file": "已附加檔案",
+  "pin_chat": "置頂聊天",
+  "unpin_chat": "取消置頂",
+  "pinned_chats": "已置頂",
+  "could_not_update_chat_pin": "無法更新聊天置頂：{error}",
+  "@could_not_update_chat_pin": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "could_not_save_chat_spaces": "無法在此裝置上儲存聊天空間",
+  "update_available": "有可用更新",
+  "update_now": "立即更新",
+  "update_install": "安裝更新",
+  "update_downloading": "正在下載並驗證更新…",
+  "update_allow_install": "請允許 Hermes 安裝這項更新，然後回到這裡點選「安裝更新」。",
+  "update_failed": "無法下載、驗證或開啟更新。請重試，或前往版本發布頁面。",
+  "a_newer_hermes_android_build_is_available_on_github": "GitHub 上已有更新的 Ares 版本。",
+  "release_notes": "發行說明",
+  "view_release": "查看發行版",
+  "skip_this_version": "跳過此版本",
+  "later": "稍後",
+  "check_for_updates": "檢查更新",
+  "check_for_updates_on_launch": "啟動時檢查更新",
+  "you_re_on_the_latest_version": "已是最新版本。",
+  "couldn_t_check_for_updates": "無法檢查更新。",
+  "chat_density": "聊天密度",
+  "chat_density_2": "聊天密度：{label}",
+  "chat_density_comfortable": "舒適",
+  "chat_density_compact": "緊湊",
+  "chat_density_comfortable_description": "訊息泡泡的留白較多，每則訊息上方也會顯示傳送者名稱。",
+  "chat_density_compact_description": "訊息泡泡較緊湊，不顯示傳送者名稱，讓螢幕能容納更多訊息。",
+  "chat_density_label_description": "{label} — {description}",
+  "compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins": "緊湊模式不顯示「你」和「Hermes」標籤，並縮小訊息泡泡的內距、間距及兩側留白。",
+  "client_certificate_mtls": "用戶端憑證（mTLS）",
+  "client_certificate_mtls_description": "HTTPS 代理伺服器要求雙向 TLS 驗證時，出示用戶端憑證。",
+  "client_certificate_https_only": "只有 HTTPS 連線會使用用戶端憑證。",
+  "choose_certificate": "選擇憑證",
+  "certificate_password": "憑證密碼",
+  "this_certificate_is_password_protected": "這張憑證受密碼保護。輸入正確密碼後就會自動開啟。",
+  "enter_the_certificate_password_to_finish_loading_it": "請輸入密碼，以完成載入所選的憑證。",
+  "client_certificate_required": "請載入用戶端憑證，或關閉用戶端憑證選項。",
+  "client_certificate_loaded": "已載入：{label}",
+  "@client_certificate_loaded": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "remove_certificate": "移除憑證",
+  "certificate_import_failed": "無法載入這張憑證。",
+  "background_work": "背景執行",
+  "keep_chats_active_in_background": "在背景保持聊天連線",
+  "background_work_description": "應用程式在背景時，你開啟的聊天仍會保持連線。閒置的連線可能會中斷。這會增加耗電量和網路用量。關閉此功能不會停止伺服器上的工作。",
+  "background_work_limits": "在 Doze 模式下，Android 仍可能暫停連線或終止應用程式。程式終止後，必須另外設定推播才能收到通知；強制停止後則不支援通知。",
+  "background_work_disclosure": "背景保護開啟時，即使關閉了可選的聊天通知，仍會顯示必需的服務通知。",
+  "battery_optimisation_settings": "電池優化設定",
+  "battery_optimisation_description": "開啟 Android 設定以查看電池限制。不會自動申請豁免，更改設定也不能保證通知送達。",
+  "battery_settings_unavailable": "無法在此裝置上開啟電池設定。",
+  "background_work_save_failed": "無法儲存背景執行設定。",
+  "ongoing_chat_channel_name": "進行中的聊天",
+  "ongoing_chat_channel_description": "以無聲通知顯示你發起但尚未結束的聊天狀態",
+  "task_timeline": "任務時間軸",
+  "task_refresh_history": "重新整理任務記錄",
+  "task_live_preview": "來自上層任務事件的即時預覽",
+  "task_preview_explanation": "這裡只顯示最新提供的預覽，不是已儲存的對話記錄。",
+  "task_preview": "預覽",
+  "task_recorded_history": "已儲存的任務記錄",
+  "task_loading_history": "正在載入任務記錄…",
+  "task_empty_history": "目前沒有已儲存的訊息。任務可能還沒寫入記錄，不代表它沒有執行任何工作。",
+  "task_load_older": "載入較早的記錄",
+  "task_default_goal": "委派任務",
+  "task_status": "狀態：{status}",
+  "task_identity": "任務：{id}",
+  "task_stored_session": "已儲存的工作階段：{id}",
+  "task_delegation": "委派作業：{id}",
+  "task_read_only_notice": "唯讀。任務寫入記錄後，內容才可能出現。請重新整理以查看最新記錄。",
+  "task_row_label": "{role} · 記錄列 {id}",
+  "task_role_assistant": "助理",
+  "task_role_user": "使用者",
+  "task_role_tool": "工具",
+  "task_tool_call": "工具呼叫 · {name}",
+  "task_tool_result": "工具結果 · {name}",
+  "task_call_details": "呼叫識別碼：{id}\n引數\n{arguments}",
+  "task_result_details": "呼叫識別碼：{id}\n結果\n{result}",
+  "task_not_supplied": "未提供",
+  "task_missing_arguments": "伺服器未保留呼叫引數。",
+  "task_image_placeholder": "[圖片]",
+  "task_invalid_reference": "無法顯示任務對話記錄：已儲存的工作階段參照無效。",
+  "task_auth_required": "無法顯示任務對話記錄：請為此閘道設定儀表板驗證。API 伺服器金鑰無法讀取任務的推理內容。",
+  "task_auth_rejected": "無法顯示任務對話記錄：儀表板驗證遭拒。請檢查此閘道的儀表板設定。",
+  "task_incompatible_history": "無法顯示任務對話記錄：此儀表板不支援依指定範圍讀取所選設定檔的原始記錄。",
+  "task_identity_unproven": "無法顯示任務對話記錄：儀表板無法確認對應的已儲存工作階段，或其壓縮前後的關聯，因此不會顯示其他工作階段的記錄。",
+  "task_partial_compression": "記錄不完整：任務在壓縮後繼續執行，但閘道尚未提供可驗證的新參照。記錄可能缺少最後的回覆。自動重新整理已暫停；請點選「重新整理」再試一次。",
+  "task_partial_ancestors": "記錄不完整：閘道未提供此任務壓縮前的工作階段，可能缺少較早的任務片段。現有記錄仍會保留；請點選「重新整理」再試一次。",
+  "task_missing_reference": "無法顯示任務對話記錄：伺服器未保留此任務的工作階段參照。",
+  "task_missing_row_identity": "無法顯示任務對話記錄：伺服器未提供可持續識別各筆訊息的識別碼。",
+  "task_history_not_ready": "目前無法取得任務記錄（HTTP 404）。任務可能尚未寫入記錄，或儀表板不支援此功能。請稍後重試。",
+  "task_refresh_failed": "無法重新整理任務記錄。請檢查連線後重試。",
+  "task_status_interrupted": "已中斷",
+  "task_status_cancelled": "已取消",
+  "task_status_requested": "已提出請求",
+  "task_status_thinking": "思考中",
+  "task_status_tool": "正在使用工具",
+  "task_status_pending": "待處理",
+  "task_status_dispatched": "已指派",
+  "task_status_unknown": "未知狀態：{status}",
+  "task_tasks_finished": "已完成 {count} 個委派任務",
+  "activity_status_unconfirmed": "狀態未確認",
+  "activity_recently_updated": "最近更新",
+  "activity_reconnecting": "正在重新連線 — 正在檢查回合狀態",
+  "activity_outcome_unknown": "無法確認本輪對話的結果。請開啟聊天查看。",
+  "activity_chat_updated_detail": "閘道已記錄聊天活動；無法取得回合的即時狀態。",
+  "activity_updated": "已更新",
+  "activity_empty_title": "目前沒有近期活動",
+  "activity_empty_detail": "在此應用程式開始的回合，以及過去 7 天內更新過的閘道聊天，都會顯示在這裡。",
+  "activity_read_error": "活動功能無法讀取回合記錄或閘道聊天。請檢查連線後重試。",
+  "activity_chat_unavailable": "此聊天已不可用，或無法連線至閘道。",
+  "activity_partial_title": "活動已部分載入",
+  "activity_partial_detail": "目前僅顯示閘道活動的有限範圍。可能還有更多聊天，請下拉重新整理。",
+  "provider_usage": "使用記錄",
+  "provider_usage_notice": "這是 Hermes 最近 30 天的用量，不代表帳戶點數或模型定價。請在 Hermes 伺服器上設定供應商的驗證資訊；此應用程式不會儲存供應商的 API 金鑰。",
+  "provider_usage_failed": "無法載入使用記錄。",
+  "provider_usage_empty": "此供應商目前沒有使用記錄。",
+  "provider_usage_counts": "{sessions} 個工作階段 · 輸入：{input} · 輸出：{output}",
+  "@provider_usage_counts": {
+    "placeholders": {
+      "sessions": {
+        "type": "String"
+      },
+      "input": {
+        "type": "String"
+      },
+      "output": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_usage_costs": "預估費用：{estimated} · 回報費用：{actual}",
+  "@provider_usage_costs": {
+    "placeholders": {
+      "estimated": {
+        "type": "String"
+      },
+      "actual": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_quota_codex": "OpenAI Codex 訂閱",
+  "provider_quota_claude": "Claude 訂閱",
+  "provider_quota_openai_api": "OpenAI API 已記錄用量",
+  "provider_quota_notice": "由供應商報告的訂閱用量週期，與 Hermes 記錄的用量及 API 計費分開顯示。各帳戶單獨列出；達到模型限額並不代表整個帳戶的配額已耗盡。",
+  "provider_quota_windows_notice": "Codex 和 Claude 訂閱設有五小時工作階段限額和每週限額。僅顯示供應商報告的週期；未報告的限額和重設時間仍不可用。每週限額可能適用於整個帳戶或特定模型。",
+  "provider_quota_five_hour_session": "5 小時工作階段",
+  "provider_quota_unavailable": "訂閱配額不可用。",
+  "provider_quota_failed": "無法重新整理訂閱配額。保留的數值來自上次查詢。",
+  "provider_quota_account": "帳戶",
+  "provider_quota_unknown": "未知",
+  "provider_quota_state": "帳戶狀態：{state}",
+  "@provider_quota_state": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_quota_scope": "適用範圍：{scope}",
+  "@provider_quota_scope": {
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_quota_percent": "已用 {used}% · 剩餘 {remaining}%",
+  "@provider_quota_percent": {
+    "placeholders": {
+      "used": {
+        "type": "String"
+      },
+      "remaining": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_quota_reset": "重設時間：{reset}",
+  "@provider_quota_reset": {
+    "placeholders": {
+      "reset": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_quota_reset_unknown": "重設時間不可用。",
+  "auxiliary_models": "輔助模型",
+  "auxiliary_notice": "為各任務選擇模型。自訂端點必須在伺服器管理。自動模式遵循任務的繼承規則。",
+  "auxiliary_inherit": "自動（繼承）",
+  "auxiliary_unavailable": "輔助設定不可用。",
+  "provider_oauth_title": "供應商登入",
+  "provider_oauth_more_subtitle": "管理 Hermes 主機上的供應商登入",
+  "provider_oauth_settings_subtitle": "在 Hermes 主機上登入；供應商令牌不會儲存在此裝置上",
+  "provider_oauth_intro": "請在外部瀏覽器登入供應商帳戶。令牌只會儲存在 Hermes 主機上，不會留在此裝置。登入不會變更此應用程式選用的聊天模型。",
+  "provider_oauth_defaults_notice": "某些主機流程（包括替換 Nous 免費方案帳戶）可能會更新主機預設設定。登入後請檢查主機設定。",
+  "provider_oauth_transport_init_failed": "無法初始化所選的安全儀表板連線。請檢查其 TLS 身分和連線設定。",
+  "provider_oauth_https_required": "供應商登入需要透過 HTTPS 連線至 Hermes 儀表板。",
+  "provider_oauth_auth_required": "登入前請設定儀表板密碼驗證或受信任的代理伺服器。",
+  "provider_oauth_catalog_failed": "目前無法在此主機上登入供應商帳戶。請檢查儀表板驗證設定；如果主機不支援供應商 OAuth，請更新主機。",
+  "provider_oauth_expired": "登入已過期。請重新開始。",
+  "provider_oauth_start_failed": "無法啟動安全的供應商登入。請重試。",
+  "provider_oauth_denied": "登入被拒絕。請重新開始。",
+  "provider_oauth_cancelled": "登入已取消。",
+  "provider_oauth_host_failed": "主機無法完成登入。請重新開始。",
+  "provider_oauth_poll_failed": "無法檢查登入狀態。請重新開始。",
+  "provider_oauth_cancellation_unconfirmed": "{message} 無法確認取消；主機工作階段可能會持續到過期為止。",
+  "@provider_oauth_cancellation_unconfirmed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_oauth_browser_failed": "無法開啟外部瀏覽器。請重試或取消登入。",
+  "provider_oauth_retry": "重試",
+  "provider_oauth_complete": "完成 {provider} 的登入",
+  "@provider_oauth_complete": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "provider_oauth_code_instruction": "請在供應商的頁面輸入這組臨時驗證碼：",
+  "provider_oauth_waiting": "正在等待核准。此工作階段將自動過期。",
+  "provider_oauth_open_browser": "在瀏覽器中開啟供應商",
+  "provider_oauth_cancel": "取消登入",
+  "provider_oauth_signed_out": "未在主機上登入",
+  "provider_oauth_sign_in_again": "重新登入",
+  "provider_oauth_sign_in": "登入",
+  "provider_oauth_cli_required": "請在 Hermes 主機上使用供應商 CLI 登入。此主機不支援該供應商的應用程式內登入。",
+  "provider_oauth_checking_account": "已收到授權。正在檢查主機帳戶…",
+  "provider_oauth_verification_unavailable": "已收到授權；無法驗證帳戶。請開啟用量頁面以重新整理帳戶用量。",
+  "provider_oauth_verified_account": "已在 Hermes 主機上以 {email} 登入。請開啟用量頁面以重新整理帳戶用量。",
+  "provider_oauth_credentials_unverified": "主機報告驗證資訊可用；帳戶身分尚未驗證。",
+  "provider_oauth_account_status_unknown": "無法取得主機帳戶狀態。",
+  "@provider_oauth_verified_account": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "app_language": "應用程式語言",
+  "app_language_system": "與手機相同",
+  "auto_archives_after_72_hours": "72 小時後自動封存",
+  "automation": "自動化",
+  "voice_recording_start": "錄製語音訊息",
+  "voice_recording_pause": "暫停錄音",
+  "voice_recording_preview": "播放錄音",
+  "voice_recording_resume": "繼續錄音",
+  "voice_recording_send": "傳送語音訊息",
+  "voice_recording_discard": "捨棄錄音",
+  "voice_recording_processing": "正在準備語音訊息…",
+  "voice_recording_elapsed": "錄音中 {time}",
+  "@voice_recording_elapsed": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "voice_recording_draft": "語音訊息 {time}",
+  "@voice_recording_draft": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "voice_recording_permission": "請允許使用麥克風，以便錄製語音訊息。",
+  "voice_recording_limit": "錄音已達 10 分鐘上限。",
+  "voice_recording_empty": "未錄到聲音，請再試一次。",
+  "voice_recording_failed": "無法處理錄音。已儲存的錄音片段仍會保留。",
+  "voice_recording_unconfirmed": "無法確認語音訊息是否送達。錄音已儲存，請先查看聊天記錄再重試。",
+  "voice_recording_submit_failed": "無法傳送語音訊息。錄音已儲存，請檢查網路連線、儀表板存取權及伺服器的語音轉文字設定。",
+  "voice_recording_pause_playback": "暫停播放",
+  "projects_root_title": "伺服器上的專案資料夾",
+  "projects_root_more_subtitle": "伺服器上新增專案資料夾的位置",
+  "projects_root_description": "從這部手機建立專案時，專案資料夾會放在這裡。選擇 Hermes 使用的同一個資料夾，手機和伺服器就能共用同一批專案。",
+  "projects_root_label": "專案根路徑",
+  "projects_root_default_hint": "伺服器預設值：{path}",
+  "@projects_root_default_hint": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "projects_root_locked_title": "由伺服器設定",
+  "projects_root_locked_explanation": "此伺服器將檔案存取限制在單一根目錄內，因此無法在應用程式中更改專案資料夾。",
+  "projects_root_saved": "已儲存專案資料夾。",
+  "projects_root_reset": "使用伺服器預設值",
+  "projects_root_invalid_empty": "請輸入資料夾路徑。",
+  "projects_root_invalid_absolute": "請輸入以斜線開頭的絕對路徑。",
+  "projects_root_invalid_segments": "請從路徑中移除點號片段和控制字元。",
+  "projects_root_unsupported": "此連線不支援。讀取或更改伺服器上的專案資料夾需要具有儀表板存取權限的 Desktop Gateway 連線。",
+  "projects_root_unavailable": "無法讀取伺服器上的專案資料夾。請檢查儀表板連線後重試。",
+  "adopt_folder_action": "新增現有資料夾",
+  "adopt_folder_description": "{root} 下尚未註冊為專案的資料夾。",
+  "@adopt_folder_description": {
+    "placeholders": {
+      "root": {
+        "type": "String"
+      }
+    }
+  },
+  "adopt_folder_registered": "已是專案：{name}",
+  "@adopt_folder_registered": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adopt_folder_none": "此路徑下的所有資料夾都已是專案。",
+  "adopt_folder_unsupported": "此連線無法列出伺服器資料夾。請改為輸入現有資料夾的絕對路徑。",
+  "adopt_folder_failed": "無法列出伺服器資料夾：{error}",
+  "@adopt_folder_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "adopt_folder_manual_label": "現有資料夾路徑",
+  "adopt_folder_name_label": "專案名稱",
+  "adopt_folder_add": "新增為專案",
+  "adopt_folder_added": "{name} 現在使用 {path}",
+  "@adopt_folder_added": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "adopt_folder_error": "無法新增該資料夾：{error}",
+  "@adopt_folder_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "adopt_folder_folderless": "已建立 {name}，但未關聯資料夾。請在伺服器上的 Hermes 中關聯。",
+  "@adopt_folder_folderless": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "slash_commands": "斜線指令",
+  "slash_commands_loading": "正在載入指令…",
+  "slash_commands_empty": "找不到符合的指令",
+  "slash_command_info_alias": "{alias} 是 {command} 的別名",
+  "@slash_command_info_alias": {
+    "placeholders": {
+      "alias": {
+        "type": "String"
+      },
+      "command": {
+        "type": "String"
+      }
+    }
+  },
+  "slash_command_info_no_description": "目前沒有說明。",
+  "slash_command_info_arguments_options": "接受固定選項中的一個。",
+  "slash_command_info_arguments_text": "在指令後接受文字。",
+  "slash_command_info_arguments_mixed": "在指令後接受選項或文字。",
+  "slash_command_output": "指令輸出",
+  "slash_command_no_output": "指令已執行完畢，沒有任何輸出。",
+  "slash_command_delivery_unknown": "指令已送出，但未收到回覆。指令可能仍在閘道上執行，因此已保留草稿。請先查看閘道狀態再重試。",
+  "slash_command_failed": "無法執行指令。",
+  "slash_command_unsupported": "此指令在此伺服器上不可用。",
+  "slash_sessions_inline": "請開啟工作階段清單選擇聊天。草稿已保留。",
+  "nextgen_toggle": "NextGen 介面",
+  "nextgen_toggle_subtitle": "全新設計：一次登入、即時聊天和網路發現。你的閘道和聊天與此介面共用。",
+  "nextgen_single_login": "使用單一登入",
+  "nextgen_single_login_subtitle": "只需儀表板位址和一次登入即可新增閘道。",
+  "ng_allow_this_command": "允許執行此指令？",
+  "ng_hermes_wants_to_run_this_with": "Hermes 想使用 {tool} 執行此操作。",
+  "@ng_hermes_wants_to_run_this_with": {
+    "placeholders": {
+      "tool": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_hermes_wants_to_run_this": "Hermes 想執行此操作。",
+  "ng_hermes_has_a_question": "Hermes 有一個問題",
+  "ng_hermes_has_questions": "Hermes 有幾個問題",
+  "ng_password_for_sudo": "sudo 密碼",
+  "ng_hermes_needs_your_sudo_password_to": "Hermes 需要你的 sudo 密碼來執行此指令。",
+  "ng_a_secret_value": "機密值",
+  "ng_value_for": "{variable} 的值",
+  "@ng_value_for": {
+    "placeholders": {
+      "variable": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_your_password_manager": "你的密碼管理器",
+  "ng_unlock": "解鎖 {name}",
+  "@ng_unlock": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_hermes_needs_unlocked_to_sign_in": "Hermes 需要先解鎖 {name}，才能為你登入。",
+  "@ng_hermes_needs_unlocked_to_sign_in": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_sign_in_code": "登入驗證碼",
+  "ng_enter_the_sign_in_code": "輸入登入驗證碼。",
+  "ng_enter_the_sign_in_code_for": "輸入 {site} 的登入驗證碼。",
+  "@ng_enter_the_sign_in_code_for": {
+    "placeholders": {
+      "site": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_save_a_login": "儲存登入資訊？",
+  "ng_save_your_login": "儲存你的 {site} 登入資訊？",
+  "@ng_save_your_login": {
+    "placeholders": {
+      "site": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_couldn_t_load_this_chat": "無法載入此聊天：{error}",
+  "@ng_couldn_t_load_this_chat": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_live_updates_are_unavailable": "即時更新不可用：{error}",
+  "@ng_live_updates_are_unavailable": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_preparing": "正在準備 {name}…",
+  "@ng_preparing": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_the_turn_failed": "本輪對話失敗。",
+  "ng_turn_changed": "該輪對話已結束或已開始新一輪",
+  "@ng_turn_changed": {
+    "description": "Why Stop or Steer did nothing: the turn the user saw is no longer the running one."
+  },
+  "ng_steer_rejected": "正在進行的對話未接受此內容",
+  "@ng_steer_rejected": {
+    "description": "Why a Steer was not delivered: the running turn refused it."
+  },
+  "ng_turn_not_known_yet": "尚不清楚正在進行的對話；請稍後再試",
+  "@ng_turn_not_known_yet": {
+    "description": "Why Stop or Steer was not sent: the app has not learned the running turn yet."
+  },
+  "ng_couldn_t_stop": "無法停止：{error}",
+  "@ng_couldn_t_stop": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_server_access": "伺服器存取",
+  "ng_sign_in": "登入",
+  "ng_live_connection": "即時連線",
+  "ng_check_that_tailscale_is_on_on": "請確認此手機和伺服器上的 Tailscale 均已開啟。",
+  "ng_check_the_address_and_that_the": "請檢查位址，並確認代理伺服器已轉發到儀表板。",
+  "ng_use_the_same_network_as_the": "請使用與伺服器相同的網路，並使用 --host 0.0.0.0 啟動儀表板，以便其他裝置存取。",
+  "ng_check_the_address_vpn_or_tailscale": "請檢查位址、VPN 或 Tailscale 連線。",
+  "ng_not_checked_yet": "尚未檢查。",
+  "ng_checking": "正在檢查…",
+  "ng_hermes_answers_at": "Hermes {version} 可透過 {address} 存取。",
+  "@ng_hermes_answers_at": {
+    "placeholders": {
+      "version": {
+        "type": "Object"
+      },
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_something_answered_but_not_a_hermes": "有服務回應，但不是 Hermes 儀表板。",
+  "ng_something_answered_http_but_not_a": "有服務回應（HTTP {status}），但不是 Hermes 儀表板。",
+  "@ng_something_answered_http_but_not_a": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_use_the_dashboard_s_address_and": "請使用儀表板的位址和連接埠（預設為 9119），而不是 API 伺服器的位址和連接埠。",
+  "ng_cloudflare_access_turned_the_service_token": "Cloudflare Access 拒絕了服務令牌。",
+  "ng_cloudflare_access_is_in_front_of": "此位址前方設定了 Cloudflare Access。",
+  "ng_check_the_service_token_and_its": "請檢查服務令牌和對應的 Service Auth 原則。",
+  "ng_add_a_cloudflare_access_service_token": "為此位址新增 Cloudflare Access 服務令牌。",
+  "ng_the_server_asks_for_a_client": "伺服器要求提供用戶端憑證。",
+  "ng_pick_the_client_certificate_for_this": "為此閘道選擇用戶端憑證，然後再次測試。",
+  "ng_needs_server_access_first": "請先連線伺服器。",
+  "ng_needs_a_sign_in_first": "請先登入。",
+  "ng_signed_in_as": "已登入為 {name}。",
+  "@ng_signed_in_as": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_this_dashboard_doesn_t_need_a": "此儀表板不必登入。",
+  "ng_the_saved_sign_in_has_expired": "已儲存的登入資訊已過期。",
+  "ng_sign_in_again": "重新登入。",
+  "ng_too_many_sign_in_attempts": "登入嘗試次數過多。",
+  "ng_wait_a_minute_then_check_again": "請稍等一分鐘後再試。",
+  "ng_the_gateway_answered": "閘道返回：{message}。",
+  "@ng_the_gateway_answered": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_sign_in_again_or_update_hermes": "請重新登入，或更新 Hermes。",
+  "ng_couldn_t_check_the_sign_in": "無法檢查登入狀態：{error}",
+  "@ng_couldn_t_check_the_sign_in": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_the_gateway_wouldn_t_issue_a": "閘道無法核發聊天憑證（{message}）。",
+  "@ng_the_gateway_wouldn_t_issue_a": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_the_chat_connection_opened_and_the": "聊天連線已建立，閘道已確認就緒。",
+  "ng_the_gateway_never_said_it_was": "閘道始終未確認就緒。",
+  "ng_check_that_the_agent_is_running": "請確認伺服器上的代理程式正在執行。",
+  "ng_the_gateway_refused_the_chat_connection": "閘道拒絕了聊天連線（HTTP 403）。",
+  "ng_this_dashboard_has_no_chat_endpoint": "此儀表板沒有聊天端點（/api/ws）。",
+  "ng_the_chat_connection_failed": "聊天連線失敗：{detail}",
+  "@ng_the_chat_connection_failed": {
+    "placeholders": {
+      "detail": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_use_the_exact_address_the_dashboard": "請使用儀表板設定的完整位址。",
+  "ng_update_hermes": "更新 Hermes。",
+  "ng_make_sure_the_proxy_allows_websocket": "請確認代理伺服器允許在 /api/ws 上進行 WebSocket 升級。",
+  "ng_offline": "離線",
+  "ng_connecting": "正在連線…",
+  "ng_connected": "已連線",
+  "ng_reconnecting": "正在重新連線…",
+  "ng_signed_out": "已登出登入",
+  "ng_connection_failed": "連線失敗",
+  "ng_rate_limited_by_gateway": "已觸發閘道限流",
+  "ng_couldn_t_open_the_chat_connection": "無法建立聊天連線：{message}",
+  "@ng_couldn_t_open_the_chat_connection": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_the_gateway_returned_no_websocket_ticket": "閘道未返回 WebSocket 票據。",
+  "ng_connection_lost": "連線已中斷",
+  "ng_this_dashboard_has_no_chat_endpoint_2": "此儀表板沒有聊天端點（/api/ws）。請更新 Hermes。",
+  "ng_the_gateway_refused_the_chat_connection_2": "閘道拒絕了聊天連線。請檢查位址是否與儀表板設定的主機相符，並確認已啟用內嵌聊天。",
+  "ng_the_gateway_refused": "閘道拒絕了 {method}。",
+  "@ng_the_gateway_refused": {
+    "placeholders": {
+      "method": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_couldn_t_read_your_saved_gateways": "無法讀取已儲存的閘道：{error}",
+  "@ng_couldn_t_read_your_saved_gateways": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_applies_to_new_chats": "僅套用至新聊天",
+  "ng_couldn_t_change": "無法更改{label}：{error}",
+  "@ng_couldn_t_change": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      },
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_capabilities": "功能",
+  "ng_skills": "技能",
+  "ng_toolsets": "工具集",
+  "ng_search": "搜尋",
+  "ng_couldn_t_load": "無法載入",
+  "ng_try_again": "重試",
+  "ng_no_skills": "沒有技能",
+  "ng_no_toolsets": "沒有工具集",
+  "ng_no_mcp_servers": "沒有 MCP 伺服器",
+  "ng_that_file_is_too_large_to": "該檔案太大，無法作為憑證使用。",
+  "ng_the_certificate_couldn_t_be_imported": "無法匯入憑證：{error}",
+  "@ng_the_certificate_couldn_t_be_imported": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_now_pick_its_private_key": "現在選擇對應的私密金鑰。",
+  "ng_now_pick_its_certificate": "現在選擇對應的憑證。",
+  "ng_that_file_isn_t_a_certificate": "該檔案不是憑證或私密金鑰。",
+  "ng_if_a_proxy_in_front_of": "如果此位址前的代理伺服器要求用戶端憑證，請在此選擇憑證，以便測試、登入和聊天時都能出示。",
+  "ng_client_certificates_are_only_used_with": "用戶端憑證僅用於 https:// 位址。",
+  "ng_remove": "移除",
+  "ng_certificate_password": "憑證密碼",
+  "ng_importing": "正在匯入…",
+  "ng_pick_certificate": "選擇憑證",
+  "ng_pick_a_different_certificate": "選擇其他憑證",
+  "ng_accepts_p12_pfx_or_pem_certificate": "支援 .p12/.pfx 檔案，或 PEM 憑證和金鑰檔案。金鑰會儲存在此應用程式的私有儲存空間中。",
+  "ng_photos": "照片",
+  "ng_camera": "相機",
+  "ng_files": "檔案",
+  "ng_you_can_attach_up_to_files": "最多可附加 {count} 個檔案。",
+  "@ng_you_can_attach_up_to_files": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_couldn_t_read": "無法讀取 {name}。",
+  "@ng_couldn_t_read": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_couldn_t_prepare_that_file": "無法處理該檔案：{error}",
+  "@ng_couldn_t_prepare_that_file": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_hermes_is_still_working": "Hermes 仍在處理中",
+  "ng_steer": "引導",
+  "ng_adds_this_to_the_running_turn": "在目前回合的下一步中新增此內容",
+  "ng_queue": "排入佇列",
+  "ng_sends_it_when_the_turn_finishes": "目前回合結束後傳送",
+  "ng_stop_and_send": "停止並傳送",
+  "ng_stops_the_turn_then_sends_this": "停止目前回合，然後傳送此內容",
+  "ng_dictation_stopped": "聽寫已停止：{message}",
+  "@ng_dictation_stopped": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_speech_recognition_isn_t_available": "語音辨識不可用。",
+  "ng_working": "處理中",
+  "ng_ready": "就緒",
+  "ng_chats": "聊天",
+  "ng_new_chat": "新增聊天",
+  "ng_usage": "用量",
+  "ng_rename_chat": "重新命名聊天",
+  "ng_couldn_t_rename": "無法重新命名：{error}",
+  "@ng_couldn_t_rename": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_this_chat": "此聊天",
+  "ng_input_tokens": "輸入令牌",
+  "ng_output_tokens": "輸出令牌",
+  "ng_reasoning_tokens": "推理令牌",
+  "ng_cache_reads": "快取讀取",
+  "ng_api_calls": "API 呼叫",
+  "ng_cost": "費用",
+  "ng_context": "上下文",
+  "ng_your_sign_in_expired": "登入已過期。",
+  "ng_sign_in_2": "登入",
+  "ng_retry": "重試",
+  "ng_project_home": "首頁",
+  "ng_choose_project": "選擇專案",
+  "ng_project_cwd_fallback": "專案資料夾不可用，因此此聊天在 {path} 中執行。",
+  "ng_project_create_uncertain": "閘道可能已建立此聊天，但未確認。開始新聊天前請檢查聊天清單；此要求不會自動重試。",
+  "@ng_project_cwd_fallback": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_what_should_we_work_on": "我們要做些什麼？",
+  "ng_ask_hermes_anything_it_can_run": "向 Hermes 提問。它可以執行工具、瀏覽網頁，還能處理伺服器上的檔案。",
+  "ng_working_2": "正在處理 · {frame}",
+  "@ng_working_2": {
+    "placeholders": {
+      "frame": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_default_model": "預設模型",
+  "ng_listening": "正在聆聽…",
+  "ng_steer_or_queue_a_message": "引導，或將訊息排入佇列",
+  "ng_message_hermes": "給 Hermes 傳送訊息",
+  "ng_attach": "新增附件",
+  "ng_stop_dictation": "停止聽寫",
+  "ng_dictate": "語音輸入",
+  "ng_stop": "停止",
+  "ng_send": "傳送",
+  "ng_slash_command_alias": "{alias} 是 {command} 的別名",
+  "@ng_slash_command_alias": {
+    "placeholders": {
+      "alias": {
+        "type": "String"
+      },
+      "command": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_slash_command_no_description": "目前沒有說明。",
+  "ng_slash_command_arguments_options": "接受固定選項中的一個。",
+  "ng_slash_command_arguments_text": "在指令後接受文字。",
+  "ng_slash_command_arguments_mixed": "在指令後接受選項或文字。",
+  "ng_slash_command_sent_as_message": "NextGen 會將此作為普通訊息傳送給 Hermes，不會執行該指令。",
+  "ng_slash_command_output": "指令輸出",
+  "ng_slash_command_running": "正在執行指令…",
+  "ng_slash_command_done": "完成。",
+  "ng_slash_command_failed": "無法執行指令：{error}",
+  "@ng_slash_command_failed": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_slash_command_refused": "Hermes 無法在此執行此指令。",
+  "ng_slash_command_delivery_unknown": "指令已傳送，但未收到回覆。它可能仍在閘道上執行，因此沒有重新傳送，並保留了你的草稿。",
+  "ng_slash_command_nothing_running": "目前沒有正在執行的任務。",
+  "ng_steered": "已調整指示",
+  "ng_copied": "已複製",
+  "ng_not_sent": "未傳送：{reason}",
+  "@ng_not_sent": {
+    "placeholders": {
+      "reason": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_thinking": "正在思考…",
+  "ng_thought": "思考",
+  "ng_used": "已使用 {name}",
+  "@ng_used": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_used_tools": "已使用 {count} 個工具",
+  "@ng_used_tools": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_copy": "複製",
+  "ng_read_aloud": "朗讀",
+  "ng_the_gateway_connection_dropped_try_again": "閘道連線已中斷，請重試。",
+  "ng_allow_once": "允許一次",
+  "ng_allow_until_sandbox_off": "直到關閉沙箱為止",
+  "ng_folder_access": "資料夾存取權",
+  "ng_folder_access_unspecified": "閘道未說明這是唯讀還是可讀寫。",
+  "ng_folder_read_only": "唯讀",
+  "ng_folder_read_write": "讀取與寫入",
+  "ng_website_access": "網站存取權",
+  "ng_allow_for_this_chat": "在此聊天中允許",
+  "ng_always_allow": "一律允許",
+  "ng_deny": "拒絕",
+  "ng_your_answer": "你的回答",
+  "ng_or_type_an_answer": "或輸入回答",
+  "ng_skip": "跳過",
+  "ng_answer": "回答",
+  "ng_cancel": "取消",
+  "ng_username_or_email": "使用者名稱或電子郵件地址",
+  "ng_password": "密碼",
+  "ng_not_now": "暫不",
+  "ng_save": "儲存",
+  "ng_enter_both_the_client_id_and": "請同時填寫用戶端識別碼和用戶端密鑰，或將兩者留白。",
+  "ng_enter_your_username_and_password": "請輸入使用者名稱和密碼。",
+  "ng_couldn_t_save_the_sign_in": "無法儲存登入資訊：{error}",
+  "@ng_couldn_t_save_the_sign_in": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_wrong_username_or_password": "使用者名稱或密碼錯誤。",
+  "ng_too_many_attempts_wait_a_moment": "嘗試次數過多，請稍等片刻再試。",
+  "ng_welcome_to_hermes": "歡迎使用 Ares",
+  "ng_add_a_gateway": "新增閘道",
+  "ng_connect_to_your_hermes_agent_dashboard": "連線至你的 Hermes Agent 儀表板。使用一個位址和一次登入，即可存取聊天、工具和設定。登入前不會傳送任何內容。",
+  "ng_connect_to_another_hermes_agent_dashboard": "連線至另一個 Hermes Agent 儀表板。先前儲存的儀表板仍會維持登入狀態。",
+  "ng_dashboard_address": "儀表板位址",
+  "ng_testing": "正在測試…",
+  "ng_test": "測試",
+  "ng_where_your_hermes_dashboard_runs_lan": "Hermes 儀表板的位址：可以是區域網路（LAN）、Tailscale 或 HTTPS 位址。",
+  "ng_find_on_my_network": "在我的網路中尋找",
+  "ng_which_address_do_i_use": "我應該使用哪個位址？",
+  "ng_behind_cloudflare_access": "使用 Cloudflare Access 保護？",
+  "ng_need_a_client_certificate": "需要用戶端憑證？",
+  "ng_this_address_isn_t_private_and": "此位址不是私有位址，且未使用 https://，因此你的密碼和聊天內容會以未加密的形式透過網際網路傳輸。請改用 https://、Tailscale 或你自己的網路。",
+  "ng_continue_to_sign_in": "繼續登入",
+  "ng_use_the_classic_interface_instead": "改用經典介面",
+  "ng_if_cloudflare_access_protects_this_address": "如果此位址受 Cloudflare Access 保護，請在 Cloudflare Zero Trust 的 Access → Service credentials 中建立服務令牌，再為 Access 應用程式新增對應的 Service Auth 原則。",
+  "ng_a_service_token_is_saved_for": "已為此位址儲存服務令牌",
+  "ng_forget": "移除",
+  "ng_client_id": "用戶端識別碼（Client ID）",
+  "ng_client_secret": "用戶端密鑰（Client Secret）",
+  "ng_stored_encrypted_on_this_phone_and": "加密儲存在此手機上，且只傳送到此位址。",
+  "ng_hermes_is_reachable": "已連線至 Hermes",
+  "ng_hermes_is_reachable_2": "已連線至 Hermes {version}",
+  "@ng_hermes_is_reachable_2": {
+    "placeholders": {
+      "version": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_sign_in_is_tested_next_then": "接下來測試登入，然後測試聊天",
+  "ng_agent_gateway": "代理程式閘道",
+  "ng_running": "執行中",
+  "ng_stopped": "已停止",
+  "ng_username_password": "使用者名稱和密碼",
+  "ng_browser": "瀏覽器",
+  "ng_in_the_browser_sso": "在瀏覽器中（SSO）",
+  "ng_profiles": "設定檔",
+  "ng_this_dashboard_offers_neither_a_username": "此儀表板既未提供使用者名稱和密碼登入，也未提供瀏覽器登入。請更新 Hermes，或在伺服器上設定使用者名稱和密碼登入。",
+  "ng_the_auth_gate_is_off_on": "此儀表板未啟用身分驗證。任何能連線的人都能使用你的代理程式。",
+  "ng_couldn_t_reach_the_dashboard": "無法連線至儀表板",
+  "ng_check_the_address_and_port_9119": "{reason}\n\n請檢查位址和連接埠（預設為 9119）。如果儀表板尚未執行，請在伺服器上執行：\nhermes dashboard --host 0.0.0.0",
+  "@ng_check_the_address_and_port_9119": {
+    "placeholders": {
+      "reason": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_that_isn_t_a_hermes_dashboard": "這不是 Hermes 儀表板",
+  "ng_something_answered_but_not_a_hermes_2": "伺服器有回應，但不是 Hermes 儀表板。請使用儀表板的位址，而不是 API 伺服器的位址（連接埠 8642）。",
+  "ng_something_answered_http_but_not_a_2": "伺服器有回應（HTTP {status}），但不是 Hermes 儀表板。請使用儀表板的位址，而不是 API 伺服器的位址（連接埠 8642）。",
+  "@ng_something_answered_http_but_not_a_2": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_cloudflare_access_stopped_the_request": "Cloudflare Access 已攔截此要求",
+  "ng_cloudflare_access_turned_down_the_service": "Cloudflare Access 拒絕了服務令牌（HTTP {status}）。請檢查用戶端識別碼、用戶端密鑰及 Service Auth 原則。",
+  "@ng_cloudflare_access_turned_down_the_service": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_add_a_cloudflare_access_service_token_2": "請在下方新增 Cloudflare Access 服務令牌，然後重新測試。",
+  "ng_a_client_certificate_is_needed": "需要用戶端憑證",
+  "ng_this_server_asks_for_a_client": "此伺服器要求先提供用戶端憑證。請在下方選擇伺服器提供的憑證，然後重新測試。",
+  "ng_this_dashboard_doesn_t_ask_for": "此儀表板不需要登入。",
+  "ng_use_the_dashboard_username_and_password": "請使用 {address} 上設定的儀表板使用者名稱和密碼，或在瀏覽器中登入。",
+  "@ng_use_the_dashboard_username_and_password": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_use_the_dashboard_username_and_password_2": "請使用 {address} 上設定的儀表板使用者名稱和密碼。",
+  "@ng_use_the_dashboard_username_and_password_2": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_sign_in_to_in_your_browser": "請在瀏覽器中登入 {address}，並使用該儀表板所用的帳號。",
+  "@ng_sign_in_to_in_your_browser": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_gateway": "閘道 {address}",
+  "@ng_gateway": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_profile": "設定檔",
+  "ng_server_default": "伺服器預設設定",
+  "ng_continue": "繼續",
+  "ng_username": "使用者名稱",
+  "ng_signing_in": "正在登入…",
+  "ng_waiting_for_the_browser": "正在等待瀏覽器…",
+  "ng_sign_in_with_browser": "使用瀏覽器登入",
+  "ng_finish_signing_in_on_the_page": "請在開啟的頁面上完成登入。完成後 Hermes 會自動返回。",
+  "ng_use_a_different_gateway": "使用其他閘道",
+  "ng_same_wi_fi_or_local_network": "同一 Wi-Fi 或區域網路",
+  "ng_use_the_server_s_local_address": "請輸入伺服器的區域網路位址和連接埠，例如 192.168.1.20:9119。啟動儀表板時加上 --host 0.0.0.0，其他裝置才能連線。",
+  "ng_tailscale": "Tailscale",
+  "ng_turn_on_tailscale_on_this_phone": "在這部手機上啟用 Tailscale，然後使用伺服器的 Tailscale 位址，例如 100.64.0.1:9119 或其 .ts.net 網域名稱。離開家也能使用。",
+  "ng_use_your_https_address_when_the": "如果儀表板位於帶憑證的代理伺服器後面，請使用你的 https:// 位址。代理伺服器還必須支援 /api/ws 上的 WebSocket 升級。",
+  "ng_start_the_dashboard_on_the_server": "在伺服器上啟動儀表板：",
+  "ng_enter_a_port_from_1_to": "請輸入 1 到 65535 之間的連接埠。",
+  "ng_looks_for_hermes_dashboards_on_port": "在此 Wi-Fi 網路上搜尋連接埠 9119 的 Hermes 儀表板，並檢查已儲存的電腦。",
+  "ng_looks_for_hermes_dashboards_on_ports": "在此 Wi-Fi 網路上搜尋連接埠 9119 和 {port} 的 Hermes 儀表板，並檢查已儲存的電腦。",
+  "@ng_looks_for_hermes_dashboards_on_ports": {
+    "placeholders": {
+      "port": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_other_port_optional": "其他連接埠（選填）",
+  "ng_no_dashboards_answered_start_one_with": "沒有儀表板回應。請執行 hermes dashboard --host 0.0.0.0 啟動，或輸入其位址。",
+  "ng_using_tailscale_or_a_vpn_those": "正在使用 Tailscale 或 VPN？無法搜尋這些網路。請改為輸入電腦的 100.x 位址或 .ts.net 網域名稱。",
+  "ng_search_again": "重新搜尋",
+  "ng_insights": "使用量分析",
+  "ng_couldn_t_load_insights": "無法載入使用量分析",
+  "ng_sessions": "工作階段",
+  "ng_tokens": "令牌",
+  "ng_est_cost": "預估費用",
+  "ng_daily_tokens": "每日令牌用量",
+  "ng_models": "模型",
+  "ng_tools": "工具",
+  "ng_hermes_is_waiting_for_you": "Hermes 正在等你。",
+  "ng_hermes_replied": "Hermes 已回覆",
+  "ng_the_turn_finished": "本輪已完成。",
+  "ng_off": "關閉",
+  "ng_minimal": "最低",
+  "ng_low": "低",
+  "ng_medium": "中",
+  "ng_high": "高",
+  "ng_extra_high": "極高",
+  "ng_max": "最高",
+  "ng_ultra": "超強",
+  "ng_default": "預設",
+  "ng_couldn_t_switch_model": "無法切換模型：{error}",
+  "@ng_couldn_t_switch_model": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_model": "模型",
+  "ng_thinking_2": "思考",
+  "ng_search_models": "搜尋模型",
+  "ng_no_models_match": "沒有符合這些篩選條件的模型。",
+  "privacy_policy": "隱私政策",
+  "report_ai_output": "舉報 AI 輸出",
+  "ng_couldn_t_load_models": "無法載入模型：{error}",
+  "@ng_couldn_t_load_models": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_no_providers_are_set_up_on": "此閘道尚未設定任何供應商。",
+  "ng_starred": "已加星號",
+  "ng_recent": "最近",
+  "ng_more": "更多",
+  "ng_archived_chats": "已封存聊天",
+  "ng_projects": "專案",
+  "ng_chats_grouped_by_project_and_workspace": "按專案和工作區分組的聊天",
+  "ng_agent": "代理程式",
+  "ng_memory": "記憶",
+  "ng_what_hermes_remembers_about_you": "Hermes 對你的記憶",
+  "ng_skills_library": "技能庫",
+  "ng_browse_and_read_installed_skills": "瀏覽並閱讀已安裝的技能",
+  "ng_cron_editor": "Cron 編輯器",
+  "ng_edit_schedules_prompts_and_delivery": "編輯排程、提示詞和傳送方式",
+  "ng_config_file": "設定檔",
+  "ng_edit_config_yaml_on_the_gateway": "在閘道上編輯 config.yaml",
+  "ng_models_and_providers": "模型和供應商",
+  "ng_model_management": "模型管理",
+  "ng_default_fallback_and_auxiliary_models": "預設、備用和輔助模型",
+  "ng_provider_sign_in": "供應商登入",
+  "ng_connect_provider_accounts_with_oauth": "透過 OAuth 連線供應商帳號",
+  "ng_nous_portal": "Nous Portal",
+  "ng_subscription_credits_and_usage": "訂閱、額度和使用情況",
+  "ng_interface": "介面",
+  "ng_switch_to_the_classic_interface": "切換到經典介面",
+  "ng_turns_nextgen_off_you_can_turn": "關閉 NextGen。你可以在設定中重新開啟。",
+  "ng_restored": "已還原",
+  "ng_archived": "已封存",
+  "ng_couldn_t_load_archived_chats": "無法載入已封存的聊天",
+  "ng_nothing_archived": "沒有已封存的內容",
+  "ng_restore": "還原",
+  "ng_saved_new_chats_use_it": "已儲存。新聊天將使用此設定。",
+  "ng_couldn_t_save": "無法儲存：{error}",
+  "@ng_couldn_t_save": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_saving": "正在儲存…",
+  "ng_today": "今天 {time}",
+  "@ng_today": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_mon": "週一",
+  "ng_tue": "週二",
+  "ng_wed": "週三",
+  "ng_thu": "週四",
+  "ng_fri": "週五",
+  "ng_sat": "週六",
+  "ng_sun": "週日",
+  "ng_scheduled": "排程任務",
+  "ng_new_job": "新增任務",
+  "ng_couldn_t_load_scheduled_jobs": "無法載入排程任務",
+  "ng_nothing_scheduled": "沒有排程任務",
+  "ng_ask_hermes_to_do_something_on": "讓 Hermes 按排程執行任務，或在此處新增任務。",
+  "ng_active": "執行中",
+  "ng_paused": "已暫停",
+  "ng_next": "下次 {when}",
+  "@ng_next": {
+    "placeholders": {
+      "when": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_last": "上次 {when}",
+  "@ng_last": {
+    "placeholders": {
+      "when": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_last_2": "上次 {when} · {result}",
+  "@ng_last_2": {
+    "placeholders": {
+      "when": {
+        "type": "Object"
+      },
+      "result": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_job": "任務 {id}",
+  "@ng_job": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_delete": "刪除",
+  "ng_delete_this_job": "刪除此任務？",
+  "ng_it_stops_running_past_runs_stay": "刪除後將停止執行。以往的執行記錄仍會保留在聊天中。",
+  "ng_next_run": "下次執行：{when}",
+  "@ng_next_run": {
+    "placeholders": {
+      "when": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_delivers_to": "傳送至 {target}",
+  "@ng_delivers_to": {
+    "placeholders": {
+      "target": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_run_now": "立即執行",
+  "ng_started": "已啟動",
+  "ng_pause": "暫停",
+  "ng_resume": "繼續",
+  "ng_resumed": "已繼續",
+  "ng_prompt": "提示詞",
+  "ng_runs": "執行記錄",
+  "ng_no_runs_yet": "目前沒有執行記錄。",
+  "ng_enter_a_schedule_and_a_prompt": "請填寫排程和提示詞。",
+  "ng_name_optional": "名稱（選填）",
+  "ng_schedule": "排程",
+  "ng_every_1h_0_9_or_30m": "例如 every 1h、0 9 * * * 或 30m",
+  "ng_create": "建立",
+  "ng_unpin": "取消置頂",
+  "ng_pin": "置頂",
+  "ng_rename": "重新命名",
+  "ng_archive": "封存",
+  "ng_delete_this_chat": "刪除此聊天？",
+  "ng_it_is_removed_from_the_gateway": "此聊天會從閘道中刪除，並從所有裝置上移除。",
+  "ng_search_chats": "搜尋聊天",
+  "ng_pinned": "已置頂",
+  "ng_no_chats_match": "沒有符合的聊天。",
+  "ng_no_chats_yet": "目前沒有聊天。",
+  "ng_nothing_is_running": "目前沒有執行中的任務。",
+  "ng_nothing_is_waiting_on_you": "目前沒有待你處理的事項。",
+  "ng_settings": "設定",
+  "ng_all": "全部",
+  "ng_needs_you": "需要你處理 · {count}",
+  "@ng_needs_you": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_needs_you_2": "需要你處理",
+  "ng_gateways": "閘道",
+  "ng_classic_connection": "{address} · 經典連線",
+  "@ng_classic_connection": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_gateway_2": "閘道",
+  "ng_signed_in": "已登入",
+  "ng_classic_connection_2": "經典連線",
+  "ng_in_the_browser": "在瀏覽器中",
+  "ng_in_the_browser_as": "以 {name} 身分在瀏覽器中",
+  "@ng_in_the_browser_as": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_not_required": "不需要",
+  "ng_test_connection": "測試連線",
+  "ng_sign_in_again_2": "重新登入",
+  "ng_sign_out": "登出",
+  "ng_saved_gateways": "已儲存的閘道",
+  "ng_in_use": "使用中",
+  "ng_appearance": "外觀",
+  "ng_theme": "主題",
+  "ng_system": "跟隨系統",
+  "ng_light": "淺色",
+  "ng_dark": "深色",
+  "ng_accent": "強調色",
+  "ng_pure_black": "純黑",
+  "ng_dark_theme_uses_true_black_oled": "深色主題使用純黑（OLED）",
+  "ng_glow": "光暈",
+  "ng_soft_accent_light_behind_each_screen": "在每個畫面背景加上柔和的強調色光暈",
+  "ng_the_new_interface_turn_off_to": "新版介面。關閉後可切回經典介面；閘道和聊天記錄會共用。",
+  "ng_more_settings": "更多設定",
+  "ng_voice_notifications_language_backups_and_the": "語音、通知、語言、備份和閘道設定",
+  "ng_licences": "授權條款",
+  "ng_sign_out_of": "要登出 {name} 嗎？",
+  "@ng_sign_out_of": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_this_gateway_and_its_saved_sign": "此閘道及其已儲存的登入資訊會從這部手機的兩個介面中移除。聊天記錄仍保留在閘道上。",
+  "ng_password_or_browser": "密碼或瀏覽器",
+  "ng_unsupported": "不支援",
+  "ng_background_task_finished": "背景任務已完成",
+  "ng_background_process_finished": "背景程序已結束",
+  "ng_system_message": "系統訊息",
+  "ng_summary": "摘要",
+  "classic_interface_only": "僅限經典介面",
+  "classic_only_settings_hint": "標記為「僅限經典介面」的部分只會更改經典介面的外觀和聊天設定，不會影響 NextGen。NextGen 在其「設定」中有自己的外觀選項。",
+  "attachment_preview_too_large": "檔案太大，無法在此預覽。儲存或分享即可將其下載到手機（最大 1 GB）。",
+  "attachment_over_phone_limit": "此檔案超過 1 GB，超出下載限制。請開啟儀表板下載。",
+  "attachment_downloading_percent": "正在下載…{percent}%",
+  "@attachment_downloading_percent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "attachment_downloading_mb": "正在下載…{megabytes} MB",
+  "@attachment_downloading_mb": {
+    "placeholders": {
+      "megabytes": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_attachment_too_large_for_gateway": "{name} 超過 12 MB，超出此閘道的接收上限。更新 Hermes 後即可傳送最大 100 MB 的檔案。",
+  "@ng_attachment_too_large_for_gateway": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_couldn_t_upload": "無法上傳 {name}。",
+  "@ng_couldn_t_upload": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_uploading_percent": "正在上傳…{percent}%",
+  "@ng_uploading_percent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_show_tasks": "顯示任務",
+  "ng_hide_tasks": "隱藏任務",
+  "ng_goal": "目標",
+  "ng_loop": "循環",
+  "ng_heartbeat": "心跳",
+  "ng_goal_working": "進行中",
+  "ng_goal_waiting": "等待中",
+  "ng_goal_blocked": "受阻",
+  "ng_goal_done": "已完成",
+  "ng_goal_turns_of": "第 {used} 輪，共 {max} 輪",
+  "@ng_goal_turns_of": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_goal_turn": "第 {used} 輪",
+  "@ng_goal_turn": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_loop_held": "因目標暫停",
+  "ng_loop_finished": "已結束",
+  "ng_loop_running": "執行中",
+  "ng_loop_runs_of": "已執行 {fired} 次，共 {times} 次",
+  "@ng_loop_runs_of": {
+    "placeholders": {
+      "fired": {
+        "type": "int"
+      },
+      "times": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_loop_runs": "{count, plural, =1{執行 1 次} other{執行 {count} 次}}",
+  "@ng_loop_runs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_loop_next": "下次 {time}",
+  "@ng_loop_next": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_loop_due_now": "現在執行",
+  "ng_every_seconds": "每 {seconds} 秒",
+  "@ng_every_seconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_every_minutes": "每 {minutes} 分鐘",
+  "@ng_every_minutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_every_hours": "每 {hours} 小時",
+  "@ng_every_hours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_every_hours_minutes": "每 {hours} 小時 {minutes} 分鐘",
+  "@ng_every_hours_minutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_heartbeat_fired": "已觸發 {count} 次",
+  "@ng_heartbeat_fired": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_heartbeat_last_fired": "上次觸發時間：{time}",
+  "@ng_heartbeat_last_fired": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_wait_until": "等待至 {time}",
+  "@ng_wait_until": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_wait_resume": "等待繼續",
+  "ng_wait_other_chat": "等待另一個聊天",
+  "ng_wait_process": "等待程序 {pid}",
+  "@ng_wait_process": {
+    "placeholders": {
+      "pid": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_control_open": "開啟目標與自動化",
+  "ng_control_title": "目標與自動化",
+  "ng_control_subtitle": "此聊天正在努力實現的目標，以及自動執行的內容。",
+  "ng_contract_outcome": "預期結果",
+  "ng_contract_verification": "驗證方式",
+  "ng_contract_constraints": "約束條件",
+  "ng_contract_boundaries": "邊界",
+  "ng_contract_stop_when": "停止條件",
+  "ng_subgoals": "子目標",
+  "ng_subgoal_add_placeholder": "新增子目標",
+  "ng_add": "新增",
+  "ng_subgoal_remove": "移除子目標",
+  "ng_goal_checks": "檢查項",
+  "ng_gate_not_run": "尚未執行",
+  "ng_gate_attempts": "已嘗試 {attempts} 次，共 {tries} 次",
+  "@ng_gate_attempts": {
+    "placeholders": {
+      "attempts": {
+        "type": "int"
+      },
+      "tries": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_gate_exit": "結束代碼 {code}",
+  "@ng_gate_exit": {
+    "placeholders": {
+      "code": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_resume_now": "立即繼續",
+  "ng_goal_clear": "清除目標",
+  "ng_goal_clear_title": "清除此目標？",
+  "ng_goal_clear_message": "代理程式會停止執行這個目標，相關的子目標和檢查項目也會一併清除。",
+  "ng_subgoal_remove_title": "移除此子目標？",
+  "ng_subgoal_remove_message": "「{text}」將不再屬於此目標。",
+  "@ng_subgoal_remove_message": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_subgoals_clear_title": "清除所有子目標？",
+  "ng_subgoals_clear_message": "目標標題將保留，但所有子目標都會被清除。",
+  "ng_clear_all": "全部清除",
+  "ng_clear": "清除",
+  "ng_dismiss": "關閉",
+  "ng_loop_stop_title": "停止此循環？",
+  "ng_heartbeat_clear_title": "清除此心跳？",
+  "ng_wont_fire_again": "此後將不再觸發。",
+  "ng_loop_self_paced": "自主節奏",
+  "ng_loop_until": "持續至：{condition}",
+  "@ng_loop_until": {
+    "placeholders": {
+      "condition": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_loop_waits_for_goal": "目標進行期間會等待。",
+  "ng_loop_awaiting_reply": "正在等待代理程式回覆。",
+  "ng_loop_stopped_reason": "已停止：{reason}",
+  "@ng_loop_stopped_reason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_hide_subagents": "隱藏子代理",
+  "ng_show_subagents": "顯示子代理",
+  "ng_subagent": "子代理",
+  "ng_subagent_queued": "佇列中",
+  "ng_subagent_starting": "啟動中…",
+  "ng_subagent_running": "執行中",
+  "ng_subagent_done": "已完成",
+  "ng_subagent_failed": "失敗",
+  "ng_subagent_stopped": "已停止",
+  "ng_subagent_stop": "停止子代理",
+  "ng_subagent_tools": "{count, plural, =1{1 個工具} other{{count} 個工具}}",
+  "@ng_subagent_tools": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_mark_as_read": "標記為已讀",
+  "ng_mark_as_unread": "標記為未讀",
+  "ng_chats_unread": "{count, plural, =1{聊天，1 則未讀訊息} other{聊天，{count} 則未讀訊息}}",
+  "@ng_chats_unread": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_unread_finished": "已完成，回覆未讀",
+  "ng_unread_updates": "正在執行，有未讀更新",
+  "ng_notifications": "通知",
+  "ng_notifications_hint": "Ares 在背景執行時接收回覆和要求通知",
+  "ng_notify_replies": "回覆",
+  "ng_notify_replies_hint": "目前開啟的聊天中，一輪對話完成或失敗時通知",
+  "ng_notify_requests": "核准和問題",
+  "ng_notify_requests_hint": "代理程式等待你處理時提醒你，並提供「允許一次」和「拒絕」選項",
+  "ng_keep_running": "回覆生成期間保持連線",
+  "ng_keep_running_hint": "在背景保持連線，直到回覆完成，並顯示一條靜默通知",
+  "ng_battery_settings": "電池優化",
+  "ng_battery_settings_hint": "允許 Ares 在背景執行，以便及時收到通知",
+  "ng_send_test_notification": "傳送測試通知",
+  "ng_test_notification_title": "Ares 通知功能正常",
+  "ng_test_notification_body": "回覆和要求通知會以這種形式顯示。",
+  "ng_test_notification_sent": "測試通知已傳送",
+  "ng_notifications_blocked": "通知已被封鎖。請在 Android 設定中允許通知。",
+  "ng_notifications_off_hint": "通知已關閉，因此 Ares 在背景執行時不會傳送通知。",
+  "ng_insights_building": "正在產生報告。首次產生涵蓋較長期間的報告時，最多可能需要一分鐘。",
+  "ng_insights_timed_out": "閘道生成此報告逾時。請重試，或選擇更短的時間段。",
+  "ng_dock_goal_active": "目標進行中",
+  "ng_dock_goal_paused": "目標已暫停",
+  "ng_dock_goal_waiting": "目標等待中",
+  "ng_dock_goal_blocked": "目標受阻",
+  "ng_dock_goal_done": "目標已完成",
+  "ng_dock_turn_of": "第 {used}/{max} 輪",
+  "ng_dock_turn": "第 {used} 輪",
+  "ng_dock_subagents": "{count, plural, =1{1 個子代理} other{{count} 個子代理}}",
+  "ng_dock_subagents_done": "{count} 個已完成",
+  "ng_dock_tasks": "任務 {done}/{total}",
+  "ng_dock_previous_tasks": "上輪任務 {done}/{total}",
+  "ng_dock_manage": "管理",
+  "@ng_dock_turn_of": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "@ng_dock_turn": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      }
+    }
+  },
+  "@ng_dock_subagents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@ng_dock_subagents_done": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@ng_dock_tasks": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@ng_dock_previous_tasks": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_recent_notifications": "最近通知",
+  "ng_recent_notifications_hint": "Ares 嘗試發布的內容，以及 Android 是否顯示了通知",
+  "ng_recent_notifications_empty": "目前還沒有。當回覆、問題或失敗會觸發通知時，相關嘗試會顯示在這裡。",
+  "ng_notify_permission_granted": "已獲得通知權限",
+  "ng_notify_permission_denied": "通知權限已被拒絕",
+  "ng_notify_master_on": "通知已開啟",
+  "ng_notify_master_off": "通知已關閉",
+  "ng_models_default": "預設模型",
+  "ng_models_change": "更改",
+  "ng_models_custom_endpoint": "使用自訂端點。請在閘道上更改。",
+  "ng_models_context_window": "上下文視窗",
+  "ng_models_token_count": "{count} 個令牌",
+  "@ng_models_token_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_models_context_override": "已在閘道上設定。自動偵測：{count} 令牌。",
+  "@ng_models_context_override": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_models_max_output": "最大輸出",
+  "ng_models_input_price": "輸入價格",
+  "ng_models_output_price": "輸出價格",
+  "ng_models_cache_price": "快取輸入價格",
+  "ng_models_per_million": "每百萬令牌 {price}",
+  "@ng_models_per_million": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_models_price_pair": "每百萬令牌：輸入 {input} · 輸出 {output}",
+  "@ng_models_price_pair": {
+    "placeholders": {
+      "input": {
+        "type": "String"
+      },
+      "output": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_models_free": "免費",
+  "ng_models_vision": "視覺",
+  "ng_models_reasoning": "推理",
+  "ng_models_fast": "快速模式",
+  "ng_models_in_use": "使用中",
+  "ng_models_count": "{count, plural, one{{count} 個模型} other{{count} 個模型}}",
+  "@ng_models_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_models_rate_limited": "已限流",
+  "ng_models_plan_locked": "你的方案不包含此模型",
+  "ng_models_unsaved": "未儲存的更改",
+  "ng_models_discard": "捨棄變更",
+  "ng_models_aux_hint": "輔助任務使用預設模型，除非你為其單獨指定。",
+  "ng_models_uses_default": "使用預設模型",
+  "ng_models_thinking_level": "思考等級",
+  "ng_models_providers": "供應商",
+  "ng_models_saved": "已儲存",
+  "ng_aux_vision": "視覺",
+  "ng_aux_vision_hint": "讀取圖片和螢幕截圖",
+  "ng_aux_compression": "壓縮",
+  "ng_aux_compression_hint": "壓縮較長的聊天，使其適應上下文視窗",
+  "ng_aux_approval": "核准",
+  "ng_aux_approval_hint": "判斷指令是否可以不經詢問安全執行",
+  "ng_aux_mcp": "MCP",
+  "ng_aux_mcp_hint": "選擇要使用的 MCP 工具",
+  "ng_aux_title_generation": "聊天標題",
+  "ng_aux_title_generation_hint": "為新聊天命名",
+  "ng_aux_review": "審查",
+  "ng_aux_review_hint": "執行 /review 時檢查工作成果",
+  "ng_aux_voice_chat": "語音聊天",
+  "ng_aux_voice_chat_hint": "在語音模式下回覆",
+  "ng_aux_triage_specifier": "任務分類",
+  "ng_aux_triage_specifier_hint": "將一行的看板卡片擴展為規格說明",
+  "ng_aux_kanban_decomposer": "看板拆解",
+  "ng_aux_kanban_decomposer_hint": "將看板卡片拆分為更小的任務",
+  "ng_aux_profile_describer": "設定檔描述",
+  "ng_aux_profile_describer_hint": "為每個設定檔撰寫簡短描述",
+  "ng_aux_curator": "技能維護",
+  "ng_aux_curator_hint": "審查技能的使用情況",
+  "appearance_save_failed": "無法儲存這項變更。",
+  "appearance_keep_which_theme": "要保留哪個佈景主題？",
+  "appearance_tour_back": "上一步",
+  "appearance_tour_finish": "完成",
+  "appearance_tour_next": "下一步",
+  "appearance_tour_close": "關閉導覽",
+  "appearance_dismiss_tip": "關閉提示",
+  "appearance_search_settings": "搜尋設定",
+  "appearance_search_show": "顯示",
+  "appearance_no_matching_setting": "找不到相符的設定。",
+  "appearance_replay_tour": "再看一次導覽",
+  "appearance_show_tips_again": "再次顯示提示",
+  "appearance_window_translucency_unavailable": "此主機無法使用視窗透明度。Linux 不支援，Apple 與 Windows 執行程式繪製的是不透明的 Flutter 視窗。",
+  "appearance_imported_themes": "匯入的佈景主題",
+  "appearance_import_theme_file": "匯入佈景主題檔",
+  "appearance_remove_theme": "移除佈景主題",
+  "appearance_chat_font": "聊天字型",
+  "appearance_terminal_font": "終端機字型",
+  "appearance_font_platform": "系統字型",
+  "appearance_automatic": "自動",
+  "appearance_force_left_to_right": "強制由左至右",
+  "appearance_force_right_to_left": "強制由右至左",
+  "appearance_user_bubble_opacity": "自己的訊息氣泡透明度",
+  "appearance_inline_embeds": "內嵌內容",
+  "appearance_inline_embeds_hint": "豐富預覽會從第三方網站載入（YouTube、X 等）。「詢問」會先顯示預留位置，直到你逐一允許；「一律」會自動載入；「關閉」只保留一般連結。",
+  "appearance_embeds_ask": "詢問",
+  "appearance_embeds_always": "一律",
+  "appearance_embeds_off": "關閉",
+  "appearance_embeds_reset": "{count, plural, =1{重設 1 個已允許的服務} other{重設 {count} 個已允許的服務}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "載入",
+  "appearance_embed_always_allow": "一律允許 {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "正在載入預覽…",
+  "appearance_embed_image_failed": "無法從 {host} 載入圖片。輕觸即可開啟。",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "無法預覽",
+  "appearance_emoji_reactions": "表情回應",
+  "appearance_celebration_hearts": "慶祝愛心",
+  "appearance_celebration_hearts_hint": "你離開時若有回覆送達，會播放一顆愛心。",
+  "appearance_pop_out_companion": "將夥伴彈出視窗",
+  "appearance_mosskip": "苔躍蛙",
+  "appearance_emberbun": "餘燼兔",
+  "appearance_tideling": "潮汐靈",
+  "appearance_my_hatchling": "我的孵化夥伴",
+  "appearance_at_rest": "休息中",
+  "appearance_working": "工作中",
+  "appearance_thinking": "思考中",
+  "appearance_waiting_for_you": "等你回應",
+  "appearance_reply_ready": "回覆已就緒",
+  "appearance_turn_failed": "本次回應失敗",
+  "appearance_small": "小",
+  "appearance_medium": "中",
+  "appearance_large": "大",
+  "appearance_hello": "你好！",
+  "appearance_unread_reply": "有未讀回覆",
+  "appearance_compose": "撰寫訊息",
+  "appearance_say_hello": "打個招呼",
+  "appearance_pet_image_failed": "無法開啟圖片，請選擇較小的 PNG 或 JPEG。",
+  "appearance_pet_companion": "寵物夥伴",
+  "appearance_pet_companion_hint": "在聊天時顯示夥伴。",
+  "appearance_adopt_a_companion": "領養夥伴",
+  "appearance_roam_when_idle": "閒置時漫步",
+  "appearance_pet_size": "夥伴大小",
+  "appearance_hatch_from_a_local_picture": "從本機圖片孵化",
+  "appearance_pet_image_limits": "選擇 PNG 或 JPEG（最多 4 MiB、每邊 4096 像素且不超過 8 百萬像素）。先預覽，孵化後只儲存一張 24 × 24 像素的肖像，並取代上一次的孵化夥伴。",
+  "appearance_choose_picture": "選擇圖片",
+  "appearance_hatchling_preview": "預覽孵化夥伴",
+  "appearance_hatch_and_adopt": "孵化並領養",
+  "appearance_discard_draft": "捨棄草稿",
+  "appearance_forget_saved_hatchling": "移除已儲存的孵化夥伴",
+  "appearance_radio": "電台",
+  "appearance_radio_hint": "串流直接來自 {stations}，只有在你按下播放後才會開始。搜尋電台只會在此裝置上進行。",
+  "@appearance_radio_hint": {
+    "placeholders": {
+      "stations": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_radio_save_failed": "無法儲存電台設定。",
+  "appearance_choose_a_station": "選擇電台",
+  "appearance_pause_radio": "暫停電台",
+  "appearance_play_radio": "播放電台",
+  "appearance_next_station": "下一個電台",
+  "appearance_radio_trace_semantics": "串流活動。無法取得音量，所以這條線保持平直。",
+  "appearance_radio_is_off": "電台已關閉",
+  "appearance_paused": "已暫停",
+  "appearance_connecting": "正在連線…",
+  "appearance_live": "直播中",
+  "appearance_stream_unavailable": "無法播放串流",
+  "appearance_now_playing": "目前播放：{credit}",
+  "@appearance_now_playing": {
+    "placeholders": {
+      "credit": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_audio_only_waveform_unavailable": "僅播放音訊 · 無法顯示波形",
+  "appearance_volume": "音量",
+  "appearance_search_presets": "搜尋預設電台",
+  "appearance_no_stations_found": "找不到電台",
+  "appearance_unpin_station": "取消釘選電台：{station}",
+  "@appearance_unpin_station": {
+    "placeholders": {
+      "station": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_pin_station": "釘選電台：{station}",
+  "@appearance_pin_station": {
+    "placeholders": {
+      "station": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_radio_picker_metadata_notice": "開啟此面板並播放時，會向支援此功能的廣播業者取得曲目資訊。",
+  "appearance_message_from_your_companion": "來自夥伴的訊息",
+  "appearance_send_to_the_open_chat": "送到目前的聊天",
+  "appearance_tour_theme_body": "從這台裝置上的檔案匯入 VS Code 色彩佈景主題，再選擇要保留的版本。",
+  "appearance_tour_fonts_title": "閱讀字型",
+  "appearance_tour_fonts_body": "聊天內文和終端機程式碼使用 Ares 內建的不同字型。",
+  "appearance_tour_direction_title": "文字方向",
+  "appearance_tour_direction_body": "保持自動，或強制對話文字由左至右或由右至左。",
+  "appearance_tour_pet_title": "夥伴",
+  "appearance_tour_pet_body": "領養之前不會顯示夥伴。彈出視窗會附上一個小撰寫框。",
+  "appearance_tour_radio_body": "啟用之前不會播放電台。按下播放才會開啟串流。",
+  "appearance_tip_theme": "匯入的佈景主題會取代內建配色，直到你取消選擇。只會保留色彩。",
+  "appearance_tip_pet": "夥伴只在這台裝置上儲存一張小肖像，不會上傳你用來孵化的圖片。",
+  "appearance_theme_import_failed": "無法匯入這個佈景主題。請選擇以 .vsix、.json 或 .jsonc 檔案儲存的 VS Code 色彩佈景主題。",
+  "completion_sound_system": "系統預設",
+  "completion_sound_scope": "會在回覆完成、測試通知及應用程式內播放。核准和其他提醒維持原本的音效。",
+  "completion_sound_scope_android": "會在回覆完成、測試通知及應用程式內播放。核准、其他提醒、伺服器的背景通知和 Android Auto 訊息維持原本的音效。",
+  "notification_open_action": "開啟",
+  "app_sounds_mute": "將應用程式音效設為靜音",
+  "app_sounds_mute_hint": "停止 Ares 開啟時播放的完成提示音。通知會保留自己的音效。",
+  "render_svg_not_drawn": "未繪製此 SVG。",
+  "render_notes_directive": "筆記指令",
+  "render_maths_source": "數學原始碼",
+  "render_inline_maths_source": "行內數學原始碼",
+  "render_sequence_outline": "序列大綱",
+  "render_diagram_outline": "圖表大綱",
+  "render_revision_of": "第 {index} 版，共 {count} 版",
+  "render_previous_revision": "上一版",
+  "render_next_revision": "下一版",
+  "render_show_rendered": "呈現結果",
+  "render_show_source": "原始碼",
+  "render_copied_file": "已複製 {name}",
+  "render_copy_file": "複製 {name}",
+  "render_artifact_too_long": "此成品太長，無法在此以頁面顯示。",
+  "render_active_content_removed": "已移除指令碼、框架和外部位址。",
+  "render_widget_file": "小工具 {file}",
+  "render_widget_runs_as_text": "在此聊天中以文字執行。已移除指令碼和外部框架。",
+  "render_load_widget": "載入小工具",
+  "render_not_html_widget": "此檔案不是 HTML 小工具。",
+  "render_widget_sent": "已傳送至此聊天",
+  "render_widget_not_sent": "未傳送至此聊天",
+  "render_widget_throttled": "請稍候再傳送",
+  "render_widget_too_long": "此要求太長，無法傳送",
+  "render_widget_no_gesture": "點選小工具中的控制項以傳送",
+  "render_widget_invalid": "無法傳送此要求",
+  "render_inspected_image": "已檢查的圖片",
+  "render_contributions": "擴充內容",
+  "render_contributions_intro": "只有編譯進 Ares 的擴充內容能加入回覆。聊天文字無法註冊擴充內容，而授權僅適用於此連線。",
+  "render_grant_plugin": "授權 {name}",
+  "render_revoke_plugin": "撤銷 {name}",
+  "render_plugin_slots": "::{directive} 的回覆卡片",
+  "render_plugin_notes": "筆記",
+  "catalog_scan_passed": "通過",
+  "catalog_scan_warnings": "發現警告",
+  "catalog_scan_failed": "失敗",
+  "auto_speak_replies_title": "自動朗讀回覆",
+  "auto_speak_replies_subtitle": "回合完成後自動朗讀每則新回覆。預設關閉；單一對話的語音回覆開關仍然有效。",
+  "ng_auto_read_replies_title": "自動朗讀回覆",
+  "ng_auto_read_replies_subtitle": "回合完成後自動朗讀每則新回覆。預設關閉。",
+  "barge_in_title": "插話打斷",
+  "barge_in_subtitle": "在朗讀回覆時開口即可中斷播放",
+  "ng_barge_in_title": "插話打斷",
+  "ng_barge_in_subtitle": "在朗讀回覆時開口即可中斷播放"
+}

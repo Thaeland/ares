@@ -30,11 +30,16 @@ class NotificationPrefs {
 
   final WindowsCompletionSound completionSound;
   final bool shareWindowActivity;
+
+  /// Silences the completion sound Ares plays in the app while it is in
+  /// front (Desktop's "Mute interface sounds"). Notifications keep theirs.
+  final bool muteAppSounds;
   const NotificationPrefs({
     required this.enabled,
     required this.kinds,
     this.completionSound = WindowsCompletionSound.system,
     this.shareWindowActivity = false,
+    this.muteAppSounds = false,
   });
 
   static const defaults = NotificationPrefs(
@@ -60,6 +65,7 @@ class NotificationPrefs {
     bool? kindValue,
     WindowsCompletionSound? completionSound,
     bool? shareWindowActivity,
+    bool? muteAppSounds,
   }) {
     final nextKinds = Map<HermesNotificationKind, bool>.from(kinds);
     if (kind != null && kindValue != null) {
@@ -70,6 +76,7 @@ class NotificationPrefs {
       kinds: nextKinds,
       completionSound: completionSound ?? this.completionSound,
       shareWindowActivity: shareWindowActivity ?? this.shareWindowActivity,
+      muteAppSounds: muteAppSounds ?? this.muteAppSounds,
     );
   }
 
@@ -88,6 +95,7 @@ class NotificationPrefs {
       enabled: json['enabled'] is bool ? json['enabled'] as bool : true,
       kinds: kinds,
       shareWindowActivity: json['shareWindowActivity'] == true,
+      muteAppSounds: json['muteAppSounds'] == true,
       completionSound:
           WindowsCompletionSound.values
               .where((s) => s.name == json['windowsSound'])
@@ -99,6 +107,7 @@ class NotificationPrefs {
   Map<String, dynamic> toJson() => {
     'enabled': enabled,
     if (shareWindowActivity) 'shareWindowActivity': true,
+    if (muteAppSounds) 'muteAppSounds': true,
     if (completionSound != WindowsCompletionSound.system)
       'windowsSound': completionSound.name,
     'kinds': {for (final entry in kinds.entries) entry.key.name: entry.value},
@@ -143,6 +152,12 @@ abstract final class NotificationPrefsStore {
 
   static Future<void> setShareWindowActivity(bool value) async {
     final next = notificationPrefs.value.copyWith(shareWindowActivity: value);
+    notificationPrefs.value = next;
+    await _persist(next);
+  }
+
+  static Future<void> setMuteAppSounds(bool value) async {
+    final next = notificationPrefs.value.copyWith(muteAppSounds: value);
     notificationPrefs.value = next;
     await _persist(next);
   }

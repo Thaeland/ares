@@ -77,8 +77,20 @@
   "ng_model_switches_next_turn": "Switches to {model} at the next turn.",
   "ng_model_switch_not_connected": "The chat is not ready for a model switch. Reopen it and try again.",
   "ng_gateway_kept_default_model": "The gateway kept {model} for this chat. Pick the model again before sending.",
-  "@ng_model_switches_next_turn": {"placeholders": {"model": {"type": "String"}}},
-  "@ng_gateway_kept_default_model": {"placeholders": {"model": {"type": "String"}}},
+  "@ng_model_switches_next_turn": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      }
+    }
+  },
+  "@ng_gateway_kept_default_model": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      }
+    }
+  },
   "hands_free_title": "Hands-free",
   "hands_free_start": "Start hands-free",
   "hands_free_stop": "Stop hands-free",
@@ -628,13 +640,18 @@
   "notifications": "Notifications",
   "windows_notifications_blocked": "Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.",
   "windows_notification_diagnostics": "What Ares submitted to Windows",
-  "windows_window_activity": "Share chat activity",
-  "windows_window_activity_hint": "Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.",
-  "windows_completion_sound": "Completion sound",
-  "windows_sound_default": "Windows default",
-  "windows_sound_mail": "Mail",
-  "windows_sound_reminder": "Reminder",
-  "windows_sound_silent": "Silent",
+  "chat_activity_share": "Share chat activity",
+  "chat_activity_share_hint": "Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.",
+  "completion_sound": "Completion sound",
+  "completion_sound_system": "System default",
+  "completion_sound_mail": "Mail",
+  "completion_sound_reminder": "Reminder",
+  "completion_sound_silent": "Silent",
+  "completion_sound_scope": "Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.",
+  "completion_sound_scope_android": "Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.",
+  "notification_open_action": "Open",
+  "app_sounds_mute": "Mute app sounds",
+  "app_sounds_mute_hint": "Stops the completion sound Ares plays while it is open. Notifications keep their own sound.",
   "notifications_permission_denied": "Notifications are blocked at the OS level. Enable them for this app in Android settings.",
   "off_no_thinking": "Off (no thinking)",
   "offline_showing_the_last_known_activity": "Offline — showing the last known activity.",
@@ -1717,7 +1734,13 @@
   "ng_choose_project": "Choose a project",
   "ng_project_cwd_fallback": "The project folder wasn't available, so this chat runs in {path}.",
   "ng_project_create_uncertain": "The gateway may have created this chat, but did not confirm it. Check Chats before starting another; this request will not be retried automatically.",
-  "@ng_project_cwd_fallback": {"placeholders": {"path": {"type": "String"}}},
+  "@ng_project_cwd_fallback": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "ng_what_should_we_work_on": "What should we work on?",
   "ng_ask_hermes_anything_it_can_run": "Ask Hermes anything. It can run tools, browse and work in your files on the server.",
   "ng_working_2": "Working · {frame}",
@@ -2581,24 +2604,57 @@
   "ng_models_custom_endpoint": "Runs on a custom endpoint. Change it on the gateway.",
   "ng_models_context_window": "Context window",
   "ng_models_token_count": "{count} tokens",
-  "@ng_models_token_count": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_models_token_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_models_context_override": "Set on the gateway. Auto-detected: {count} tokens.",
-  "@ng_models_context_override": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_models_context_override": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_models_max_output": "Max output",
   "ng_models_input_price": "Input price",
   "ng_models_output_price": "Output price",
   "ng_models_cache_price": "Cached input price",
   "ng_models_per_million": "{price} per 1M tokens",
-  "@ng_models_per_million": {"placeholders": {"price": {"type": "String"}}},
+  "@ng_models_per_million": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "ng_models_price_pair": "{input} in · {output} out per 1M tokens",
-  "@ng_models_price_pair": {"placeholders": {"input": {"type": "String"}, "output": {"type": "String"}}},
+  "@ng_models_price_pair": {
+    "placeholders": {
+      "input": {
+        "type": "String"
+      },
+      "output": {
+        "type": "String"
+      }
+    }
+  },
   "ng_models_free": "Free",
   "ng_models_vision": "Vision",
   "ng_models_reasoning": "Reasoning",
   "ng_models_fast": "Fast mode",
   "ng_models_in_use": "In use",
   "ng_models_count": "{count, plural, one{{count} model} other{{count} models}}",
-  "@ng_models_count": {"placeholders": {"count": {"type": "int"}}},
+  "@ng_models_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_models_rate_limited": "Rate-limited",
   "ng_models_plan_locked": "Not on your plan",
   "ng_models_unsaved": "Unsaved changes",
@@ -2630,6 +2686,355 @@
   "ng_aux_profile_describer_hint": "Writes each profile's short description",
   "ng_aux_curator": "Curator",
   "ng_aux_curator_hint": "Reviews how skills are used",
+  "appearance_save_failed": "Could not save this change.",
+  "appearance_keep_which_theme": "Keep which theme?",
+  "appearance_tour_back": "Back",
+  "appearance_tour_finish": "Finish",
+  "appearance_tour_next": "Next",
+  "appearance_tour_close": "Close tour",
+  "appearance_dismiss_tip": "Dismiss tip",
+  "appearance_search_settings": "Search settings",
+  "appearance_search_show": "Show",
+  "appearance_no_matching_setting": "No matching setting.",
+  "appearance_replay_tour": "Replay tour",
+  "appearance_show_tips_again": "Show tips again",
+  "appearance_window_translucency_unavailable": "Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.",
+  "appearance_imported_themes": "Imported themes",
+  "appearance_import_theme_file": "Import theme file",
+  "appearance_remove_theme": "Remove theme",
+  "appearance_chat_font": "Chat font",
+  "appearance_terminal_font": "Terminal font",
+  "appearance_font_platform": "Platform",
+  "appearance_automatic": "Automatic",
+  "appearance_force_left_to_right": "Force left to right",
+  "appearance_force_right_to_left": "Force right to left",
+  "appearance_user_bubble_opacity": "User bubble opacity",
+  "appearance_inline_embeds": "Inline embeds",
+  "appearance_inline_embeds_hint": "Rich previews load from third-party sites (YouTube, X, …). Ask shows a placeholder until you allow each one; Always loads them automatically; Off keeps plain links.",
+  "appearance_embeds_ask": "Ask",
+  "appearance_embeds_always": "Always",
+  "appearance_embeds_off": "Off",
+  "appearance_embeds_reset": "{count, plural, =1{Reset 1 allowed service} other{Reset {count} allowed services}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "Load",
+  "appearance_embed_always_allow": "Always allow {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "Loading preview…",
+  "appearance_embed_image_failed": "Couldn't load the image from {host}. Tap to open it.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "Preview unavailable",
+  "appearance_emoji_reactions": "Emoji reactions",
+  "appearance_celebration_hearts": "Celebration hearts",
+  "appearance_celebration_hearts_hint": "A heart plays when a reply arrives while you were away.",
+  "appearance_pop_out_companion": "Pop out companion",
+  "appearance_mosskip": "Mosskip",
+  "appearance_emberbun": "Emberbun",
+  "appearance_tideling": "Tideling",
+  "appearance_my_hatchling": "My hatchling",
+  "appearance_at_rest": "At rest",
+  "appearance_working": "Working",
+  "appearance_thinking": "Thinking",
+  "appearance_waiting_for_you": "Waiting for you",
+  "appearance_reply_ready": "Reply ready",
+  "appearance_turn_failed": "Turn failed",
+  "appearance_small": "Small",
+  "appearance_medium": "Medium",
+  "appearance_large": "Large",
+  "appearance_hello": "Hello!",
+  "appearance_unread_reply": "Unread reply",
+  "appearance_compose": "Compose",
+  "appearance_say_hello": "Say hello",
+  "appearance_pet_image_failed": "Could not open that image. Choose a smaller PNG or JPEG.",
+  "appearance_pet_companion": "Pet companion",
+  "appearance_pet_companion_hint": "Show a companion while you chat.",
+  "appearance_adopt_a_companion": "Adopt a companion",
+  "appearance_roam_when_idle": "Roam when idle",
+  "appearance_pet_size": "Pet size",
+  "appearance_hatch_from_a_local_picture": "Hatch from a local picture",
+  "appearance_pet_image_limits": "Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.",
+  "appearance_choose_picture": "Choose picture",
+  "appearance_hatchling_preview": "Hatchling preview",
+  "appearance_hatch_and_adopt": "Hatch and adopt",
+  "appearance_discard_draft": "Discard draft",
+  "appearance_forget_saved_hatchling": "Forget saved hatchling",
+  "appearance_radio": "Radio",
+  "appearance_radio_hint": "Streams come straight from {stations} and start only when you press Play. Station search stays on this device.",
+  "@appearance_radio_hint": {
+    "placeholders": {
+      "stations": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_radio_save_failed": "Radio settings could not be saved.",
+  "appearance_choose_a_station": "Choose a station",
+  "appearance_pause_radio": "Pause radio",
+  "appearance_play_radio": "Play radio",
+  "appearance_next_station": "Next station",
+  "appearance_radio_trace_semantics": "Stream activity. Audio levels are unavailable, so this line stays flat.",
+  "appearance_radio_is_off": "Radio is off",
+  "appearance_paused": "Paused",
+  "appearance_connecting": "Connecting…",
+  "appearance_live": "Live",
+  "appearance_stream_unavailable": "Stream unavailable",
+  "appearance_now_playing": "Now playing: {credit}",
+  "@appearance_now_playing": {
+    "placeholders": {
+      "credit": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_audio_only_waveform_unavailable": "Audio only · waveform unavailable",
+  "appearance_volume": "Volume",
+  "appearance_search_presets": "Search presets",
+  "appearance_no_stations_found": "No stations found",
+  "appearance_unpin_station": "Unpin station: {station}",
+  "@appearance_unpin_station": {
+    "placeholders": {
+      "station": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_pin_station": "Pin station: {station}",
+  "@appearance_pin_station": {
+    "placeholders": {
+      "station": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_radio_picker_metadata_notice": "While this picker is open, playing stations may share track details directly from the broadcaster.",
+  "appearance_message_from_your_companion": "Message from your companion",
+  "appearance_send_to_the_open_chat": "Send to the open chat",
+  "appearance_tour_theme_body": "Import a VS Code colour theme from a file on this device, then choose which variant to keep.",
+  "appearance_tour_fonts_title": "Reading fonts",
+  "appearance_tour_fonts_body": "Chat prose and terminal code use separate faces shipped with Ares.",
+  "appearance_tour_direction_title": "Transcript direction",
+  "appearance_tour_direction_body": "Leave this on automatic, or force the transcript left to right or right to left.",
+  "appearance_tour_pet_title": "Companion",
+  "appearance_tour_pet_body": "The companion is off until you adopt one. Pop-out adds a small composer.",
+  "appearance_tour_radio_body": "Radio stays off until you enable it. Play is what opens a stream.",
+  "appearance_tip_theme": "Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.",
+  "appearance_tip_pet": "The companion stores one small portrait on this device. It does not upload the picture you hatch from.",
+  "appearance_theme_import_failed": "Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.",
+  "render_widget_file_truncated": "Only the start of this file was read, so the widget may be incomplete.",
+  "setup_beat_title": "Setup",
+  "setup_beat_use_name": "Use {name}",
+  "@setup_beat_use_name": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "setup_beat_name_hint": "What should Hermes call you?",
+  "setup_beat_on_computer": "This step is done in Hermes on the computer it runs on. Continue keeps what is set up there.",
+  "setup_beat_not_waiting": "This setup card is no longer waiting for an answer.",
+  "catalog_kind_plugin": "Plugin",
+  "catalog_kind_skill": "Skill",
+  "catalog_tier_official": "Official",
+  "catalog_tier_verified": "Verified",
+  "catalog_tier_community": "Community",
+  "catalog_install": "Install",
+  "catalog_waiting": "Waiting for your choice",
+  "catalog_installed": "Installed",
+  "catalog_installed_off": "Installed, not turned on",
+  "catalog_skipped": "Skipped",
+  "catalog_not_installed": "Not installed",
+  "catalog_target_profile": "Installs into the {profile} profile",
+  "@catalog_target_profile": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "catalog_source": "{repo} at {sha}",
+  "@catalog_source": {
+    "placeholders": {
+      "repo": {
+        "type": "String"
+      },
+      "sha": {
+        "type": "String"
+      }
+    }
+  },
+  "catalog_scan": "Security scan: {status}. {summary}",
+  "@catalog_scan": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "catalog_requires_hermes": "Needs Hermes {range}",
+  "@catalog_requires_hermes": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "catalog_skill_ready": "Skill {name} is ready to use",
+  "@catalog_skill_ready": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "catalog_missing_env": "Still needs: {names}",
+  "@catalog_missing_env": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "catalog_server_error": "{name} did not connect: {error}",
+  "@catalog_server_error": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "catalog_send_failed": "Your choice was not sent. Try again.",
+  "attachment_video_speed": "Playback speed",
+  "catalog_installing": "Installing…",
+  "catalog_phase_downloading": "Downloading…",
+  "catalog_phase_python_packages": "Installing Python packages…",
+  "catalog_phase_loading_tools": "Loading its tools…",
+  "setup_beat_send_failed": "Your answer was not sent. Try again.",
+  "catalog_tool_count": "{count, plural, =1{1 tool} other{{count} tools}}",
+  "@catalog_tool_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "render_svg_not_drawn": "This SVG was not drawn.",
+  "render_notes_directive": "Notes directive",
+  "render_maths_source": "Maths source",
+  "render_inline_maths_source": "Inline maths source",
+  "render_sequence_outline": "Sequence outline",
+  "render_diagram_outline": "Diagram outline",
+  "render_revision_of": "Revision {index} of {count}",
+  "@render_revision_of": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "render_previous_revision": "Previous revision",
+  "render_next_revision": "Next revision",
+  "render_show_rendered": "Rendered",
+  "render_show_source": "Source",
+  "render_copied_file": "Copied {name}",
+  "@render_copied_file": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "render_copy_file": "Copy {name}",
+  "@render_copy_file": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "render_artifact_too_long": "This artefact is too long to show as a page here.",
+  "render_active_content_removed": "Scripts, frames and external addresses were removed.",
+  "render_widget_file": "Widget {file}",
+  "@render_widget_file": {
+    "placeholders": {
+      "file": {
+        "type": "String"
+      }
+    }
+  },
+  "render_widget_runs_as_text": "Runs as text in this chat. Scripts and external frames are removed.",
+  "render_load_widget": "Load widget",
+  "render_not_html_widget": "This file is not an HTML widget.",
+  "render_widget_sent": "Sent to this chat",
+  "render_widget_not_sent": "Not sent to this chat",
+  "render_widget_throttled": "Wait a moment before sending again",
+  "render_widget_too_long": "This request is too long to send",
+  "render_widget_no_gesture": "Tap a control in the widget to send",
+  "render_widget_invalid": "This request could not be sent",
+  "render_inspected_image": "Inspected image",
+  "render_contributions": "Contributions",
+  "render_contributions_intro": "Only contributions compiled into Ares can add to a reply. Chat text cannot register one, and a grant applies to this connection only.",
+  "render_grant_plugin": "Grant {name}",
+  "@render_grant_plugin": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "render_revoke_plugin": "Revoke {name}",
+  "@render_revoke_plugin": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "render_plugin_slots": "reply cards for ::{directive}",
+  "@render_plugin_slots": {
+    "placeholders": {
+      "directive": {
+        "type": "String"
+      }
+    }
+  },
+  "render_plugin_notes": "Notes",
+  "catalog_scan_passed": "passed",
+  "catalog_scan_warnings": "found warnings",
+  "catalog_scan_failed": "failed",
+  "windows_window_activity": "Share chat activity",
+  "windows_window_activity_hint": "Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.",
+  "windows_completion_sound": "Completion sound",
+  "windows_sound_default": "Windows default",
+  "windows_sound_mail": "Mail",
+  "windows_sound_reminder": "Reminder",
+  "windows_sound_silent": "Silent",
   "auto_speak_replies_title": "Auto-read replies aloud",
   "auto_speak_replies_subtitle": "Reads each new reply aloud when a turn completes. Off by default; the per-chat spoken-replies toggle still applies.",
   "ng_auto_read_replies_title": "Auto-read replies",

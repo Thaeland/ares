@@ -1399,7 +1399,13 @@
   "ng_choose_project": "Вибрати проєкт",
   "ng_project_cwd_fallback": "Папка проєкту недоступна, тому цей чат працює в {path}.",
   "ng_project_create_uncertain": "Шлюз міг створити цей чат, але не підтвердив це. Перевірте список чатів, перш ніж починати новий. Запит не буде повторено автоматично.",
-  "@ng_project_cwd_fallback": {"placeholders": {"path": {"type": "String"}}},
+  "@ng_project_cwd_fallback": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "ng_what_should_we_work_on": "Над чим попрацюємо?",
   "ng_ask_hermes_anything_it_can_run": "Запитайте Hermes про що завгодно. Він може запускати інструменти, переглядати вебсторінки й працювати з файлами на сервері.",
   "ng_working_2": "Працює · {frame}",
@@ -1853,6 +1859,105 @@
   "ng_folder_read_only": "Лише для читання",
   "ng_folder_read_write": "Читання й запис",
   "ng_website_access": "Доступ до вебсайту",
+  "appearance_inline_embeds": "Вбудований вміст",
+  "appearance_inline_embeds_hint": "Розширені попередні перегляди завантажуються зі сторонніх сайтів (YouTube, X, …). «Запитувати» показує заповнювач, доки ви не дозволите кожен; «Завжди» завантажує їх автоматично; «Вимк.» залишає звичайні посилання.",
+  "appearance_embeds_ask": "Запитувати",
+  "appearance_embeds_always": "Завжди",
+  "appearance_embeds_off": "Вимк.",
+  "appearance_embeds_reset": "{count, plural, =1{Скинути 1 дозволений сервіс} one{Скинути {count} дозволений сервіс} few{Скинути {count} дозволені сервіси} many{Скинути {count} дозволених сервісів} other{Скинути {count} дозволеного сервісу}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "Завантажити",
+  "appearance_embed_always_allow": "Завжди дозволяти {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "Завантаження попереднього перегляду…",
+  "appearance_embed_image_failed": "Не вдалося завантажити зображення з {host}. Торкніться, щоб відкрити.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "Попередній перегляд недоступний",
+  "render_widget_file_truncated": "Прочитано лише початок цього файлу, тому віджет може бути неповним.",
+  "setup_beat_title": "Налаштування",
+  "setup_beat_use_name": "Використати {name}",
+  "setup_beat_name_hint": "Як Hermes має вас називати?",
+  "setup_beat_on_computer": "Цей крок виконується в Hermes на комп’ютері, де він працює. «Продовжити» зберігає те, що там уже налаштовано.",
+  "setup_beat_not_waiting": "Ця картка налаштування більше не чекає на відповідь.",
+  "catalog_kind_plugin": "Плагін",
+  "catalog_kind_skill": "Навичка",
+  "catalog_tier_official": "Офіційний",
+  "catalog_tier_verified": "Перевірений",
+  "catalog_tier_community": "Спільнота",
+  "catalog_install": "Встановити",
+  "catalog_waiting": "Чекає на ваш вибір",
+  "catalog_installed": "Встановлено",
+  "catalog_installed_off": "Встановлено, не ввімкнено",
+  "catalog_skipped": "Пропущено",
+  "catalog_not_installed": "Не встановлено",
+  "catalog_target_profile": "Встановлюється в профіль {profile}",
+  "catalog_source": "{repo}, коміт {sha}",
+  "catalog_scan": "Перевірка безпеки: {status}. {summary}",
+  "catalog_requires_hermes": "Потрібен Hermes {range}",
+  "catalog_skill_ready": "Навичка {name} готова",
+  "catalog_missing_env": "Ще потрібно: {names}",
+  "catalog_server_error": "{name} не під’єднався: {error}",
+  "catalog_send_failed": "Ваш вибір не надіслано. Спробуйте ще раз.",
+  "attachment_video_speed": "Швидкість відтворення",
+  "catalog_installing": "Встановлення…",
+  "catalog_phase_downloading": "Завантаження…",
+  "catalog_phase_python_packages": "Встановлення пакетів Python…",
+  "catalog_phase_loading_tools": "Завантаження інструментів…",
+  "setup_beat_send_failed": "Вашу відповідь не надіслано. Спробуйте ще раз.",
+  "catalog_tool_count": "{count, plural, one{{count} інструмент} few{{count} інструменти} many{{count} інструментів} other{{count} інструмента}}",
+  "render_svg_not_drawn": "Цей SVG не намальовано.",
+  "render_notes_directive": "Директива нотаток",
+  "render_maths_source": "Вихідний текст формули",
+  "render_inline_maths_source": "Вихідний текст вбудованої формули",
+  "render_sequence_outline": "Схема послідовності",
+  "render_diagram_outline": "Схема діаграми",
+  "render_revision_of": "Версія {index} з {count}",
+  "render_previous_revision": "Попередня версія",
+  "render_next_revision": "Наступна версія",
+  "render_show_rendered": "Відображення",
+  "render_show_source": "Вихідний код",
+  "render_copied_file": "{name} скопійовано",
+  "render_copy_file": "Копіювати {name}",
+  "render_artifact_too_long": "Цей артефакт задовгий, щоб показати його тут як сторінку.",
+  "render_active_content_removed": "Скрипти, фрейми та зовнішні адреси видалено.",
+  "render_widget_file": "Віджет {file}",
+  "render_widget_runs_as_text": "Працює як текст у цьому чаті. Скрипти та зовнішні фрейми видаляються.",
+  "render_load_widget": "Завантажити віджет",
+  "render_not_html_widget": "Цей файл не є HTML-віджетом.",
+  "render_widget_sent": "Надіслано в цей чат",
+  "render_widget_not_sent": "Не надіслано в цей чат",
+  "render_widget_throttled": "Зачекайте трохи перед повторним надсиланням",
+  "render_widget_too_long": "Цей запит задовгий для надсилання",
+  "render_widget_no_gesture": "Щоб надіслати, торкніться елемента керування у віджеті",
+  "render_widget_invalid": "Не вдалося надіслати цей запит",
+  "render_inspected_image": "Переглянуте зображення",
+  "render_contributions": "Доповнення",
+  "render_contributions_intro": "Доповнювати відповідь можуть лише доповнення, вбудовані в Ares. Текст чату не може їх зареєструвати, а дозвіл діє лише для цього підключення.",
+  "render_grant_plugin": "Дозволити {name}",
+  "render_revoke_plugin": "Відкликати {name}",
+  "render_plugin_slots": "картки відповіді для ::{directive}",
+  "render_plugin_notes": "Нотатки",
+  "catalog_scan_passed": "пройдено",
+  "catalog_scan_warnings": "знайдено попередження",
+  "catalog_scan_failed": "не пройдено",
   "auto_speak_replies_title": "Читати відповіді вголос",
   "auto_speak_replies_subtitle": "Читає кожен новий відгук уголос після завершення ходу. За замовчуванням вимкнено; перемикач «Spoken replies» у чаті все ще застосовується.",
   "ng_auto_read_replies_title": "Auto-read replies",

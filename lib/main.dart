@@ -4,6 +4,7 @@ import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/material.dart';
+import 'core/services/completion_cue_player.dart';
 import 'core/services/hands_free_route_observer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,6 +39,8 @@ import 'core/services/turn_notification_service.dart';
 import 'core/screens/chat_screen.dart';
 import 'core/workspace/popout_bootstrap.dart';
 import 'core/workspace/popout_protocol.dart';
+import 'core/presentation/pet_window.dart';
+import 'core/presentation/presentation_scope.dart';
 import 'core/screens/workspace_screen.dart';
 import 'core/screens/fleet_screen.dart';
 import 'core/services/gateway_fleet.dart';
@@ -60,8 +63,13 @@ import 'nextgen/theme/nextgen_theme.dart';
 
 void main([List<String> args = const []]) {
   WidgetsFlutterBinding.ensureInitialized();
+  CompletionCuePlayer.instance.useDeviceAudio();
   if (args.contains(workspacePopoutMarker)) {
     runWorkspacePopoutChild(args);
+    return;
+  }
+  if (args.contains(petWindowMarker)) {
+    unawaited(runPetCompanionChild());
     return;
   }
   // Remove any private key left behind by a cancelled connection import.
@@ -1319,15 +1327,18 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
         final preference = HermesApp.getTextSizePreference(
           widget.connManager.prefs,
         );
-        return HermesSystemUi(
-          child: MediaQuery(
-            data: systemMediaQuery.copyWith(
-              textScaler: preference.applyTo(systemMediaQuery.textScaler),
-            ),
-            child: FleetScope(
-              fleet: _fleet,
-              child: DesktopShortcuts(
-                child: nextGen ? NgLocalizationScope(child: child!) : child!,
+        return PresentationRoot(
+          preferences: widget.connManager.prefs,
+          child: HermesSystemUi(
+            child: MediaQuery(
+              data: systemMediaQuery.copyWith(
+                textScaler: preference.applyTo(systemMediaQuery.textScaler),
+              ),
+              child: FleetScope(
+                fleet: _fleet,
+                child: DesktopShortcuts(
+                  child: nextGen ? NgLocalizationScope(child: child!) : child!,
+                ),
               ),
             ),
           ),

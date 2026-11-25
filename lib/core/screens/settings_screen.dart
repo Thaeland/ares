@@ -6,8 +6,8 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/app_licenses.dart';
 import '../utils/platform_capabilities.dart';
+import '../widgets/completion_sound_settings.dart';
 import '../widgets/recent_notifications_sheet.dart';
-import '../widgets/windows_completion_sound_tile.dart';
 import '../services/locale_preference.dart';
 import 'provider_oauth_screen.dart';
 import '../services/config_backup_io.dart';
@@ -25,6 +25,7 @@ import '../widgets/chat_density_settings_card.dart';
 import '../widgets/text_size_settings_card.dart';
 import '../widgets/theme_palette_picker.dart';
 import '../theme/hermes_theme.dart';
+import '../presentation/presentation_settings.dart';
 import '../../main.dart';
 import '../../nextgen/nextgen_preferences.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -145,6 +146,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           preferences: app.widget.connManager.prefs,
           onChanged: app.refreshAppearancePreferences,
         ),
+        PresentationSettingsPanel(preferences: app.widget.connManager.prefs),
         const SizedBox(height: 8),
         _buildChatDensityCard(),
         const SizedBox(height: 8),
@@ -936,7 +938,7 @@ class _NotificationSettingsState extends State<_NotificationSettings>
                 }
               },
             ),
-            if (isWindowsPlatform) WindowsCompletionSoundTile(prefs: prefs),
+            CompletionSoundSettings(prefs: prefs),
             for (final kind in HermesNotificationKind.values) ...[
               const Divider(height: 1),
               SwitchListTile(

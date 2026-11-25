@@ -1246,7 +1246,13 @@
   "ng_choose_project": "Выбрать проект",
   "ng_project_cwd_fallback": "Папка проекта недоступна, поэтому этот чат работает в {path}.",
   "ng_project_create_uncertain": "Шлюз мог создать этот чат, но не подтвердил это. Проверьте список чатов, прежде чем начинать новый. Запрос не будет повторён автоматически.",
-  "@ng_project_cwd_fallback": {"placeholders": {"path": {"type": "String"}}},
+  "@ng_project_cwd_fallback": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "ng_what_should_we_work_on": "Над чем поработаем?",
   "ng_ask_hermes_anything_it_can_run": "Спросите Hermes о чём угодно. Он умеет запускать инструменты, просматривать сайты и работать с файлами на сервере.",
   "ng_working_2": "Работает · {frame}",
@@ -1700,6 +1706,105 @@
   "ng_folder_read_only": "Только чтение",
   "ng_folder_read_write": "Чтение и запись",
   "ng_website_access": "Доступ к сайту",
+  "appearance_inline_embeds": "Встроенный контент",
+  "appearance_inline_embeds_hint": "Расширенные превью загружаются со сторонних сайтов (YouTube, X, …). «Спрашивать» показывает заглушку, пока вы не разрешите каждое; «Всегда» загружает их автоматически; «Выкл.» оставляет обычные ссылки.",
+  "appearance_embeds_ask": "Спрашивать",
+  "appearance_embeds_always": "Всегда",
+  "appearance_embeds_off": "Выкл.",
+  "appearance_embeds_reset": "{count, plural, =1{Сбросить 1 разрешённый сервис} one{Сбросить {count} разрешённый сервис} few{Сбросить {count} разрешённых сервиса} many{Сбросить {count} разрешённых сервисов} other{Сбросить {count} разрешённого сервиса}}",
+  "@appearance_embeds_reset": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearance_embed_load": "Загрузить",
+  "appearance_embed_always_allow": "Всегда разрешать {service}",
+  "@appearance_embed_always_allow": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_loading": "Загрузка превью…",
+  "appearance_embed_image_failed": "Не удалось загрузить изображение с {host}. Нажмите, чтобы открыть.",
+  "@appearance_embed_image_failed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_embed_preview_unavailable": "Превью недоступно",
+  "render_widget_file_truncated": "Прочитано только начало этого файла, поэтому виджет может быть неполным.",
+  "setup_beat_title": "Настройка",
+  "setup_beat_use_name": "Использовать {name}",
+  "setup_beat_name_hint": "Как Hermes должен вас называть?",
+  "setup_beat_on_computer": "Этот шаг выполняется в Hermes на компьютере, где он работает. «Продолжить» сохраняет то, что там уже настроено.",
+  "setup_beat_not_waiting": "Эта карточка настройки больше не ждёт ответа.",
+  "catalog_kind_plugin": "Плагин",
+  "catalog_kind_skill": "Навык",
+  "catalog_tier_official": "Официальный",
+  "catalog_tier_verified": "Проверенный",
+  "catalog_tier_community": "Сообщество",
+  "catalog_install": "Установить",
+  "catalog_waiting": "Ждёт вашего решения",
+  "catalog_installed": "Установлено",
+  "catalog_installed_off": "Установлено, не включено",
+  "catalog_skipped": "Пропущено",
+  "catalog_not_installed": "Не установлено",
+  "catalog_target_profile": "Устанавливается в профиль {profile}",
+  "catalog_source": "{repo}, коммит {sha}",
+  "catalog_scan": "Проверка безопасности: {status}. {summary}",
+  "catalog_requires_hermes": "Нужен Hermes {range}",
+  "catalog_skill_ready": "Навык {name} готов",
+  "catalog_missing_env": "Ещё нужно: {names}",
+  "catalog_server_error": "{name} не подключился: {error}",
+  "catalog_send_failed": "Ваш выбор не отправлен. Попробуйте ещё раз.",
+  "attachment_video_speed": "Скорость воспроизведения",
+  "catalog_installing": "Установка…",
+  "catalog_phase_downloading": "Загрузка…",
+  "catalog_phase_python_packages": "Установка пакетов Python…",
+  "catalog_phase_loading_tools": "Загрузка инструментов…",
+  "setup_beat_send_failed": "Ваш ответ не отправлен. Попробуйте ещё раз.",
+  "catalog_tool_count": "{count, plural, one{{count} инструмент} few{{count} инструмента} many{{count} инструментов} other{{count} инструмента}}",
+  "render_svg_not_drawn": "Этот SVG не отрисован.",
+  "render_notes_directive": "Директива заметок",
+  "render_maths_source": "Исходный текст формулы",
+  "render_inline_maths_source": "Исходный текст встроенной формулы",
+  "render_sequence_outline": "Схема последовательности",
+  "render_diagram_outline": "Схема диаграммы",
+  "render_revision_of": "Версия {index} из {count}",
+  "render_previous_revision": "Предыдущая версия",
+  "render_next_revision": "Следующая версия",
+  "render_show_rendered": "Отображение",
+  "render_show_source": "Исходный код",
+  "render_copied_file": "{name} скопирован",
+  "render_copy_file": "Копировать {name}",
+  "render_artifact_too_long": "Этот артефакт слишком длинный, чтобы показать его здесь как страницу.",
+  "render_active_content_removed": "Скрипты, фреймы и внешние адреса удалены.",
+  "render_widget_file": "Виджет {file}",
+  "render_widget_runs_as_text": "Работает как текст в этом чате. Скрипты и внешние фреймы удаляются.",
+  "render_load_widget": "Загрузить виджет",
+  "render_not_html_widget": "Этот файл не является HTML-виджетом.",
+  "render_widget_sent": "Отправлено в этот чат",
+  "render_widget_not_sent": "Не отправлено в этот чат",
+  "render_widget_throttled": "Подождите немного перед повторной отправкой",
+  "render_widget_too_long": "Этот запрос слишком длинный для отправки",
+  "render_widget_no_gesture": "Чтобы отправить, нажмите элемент управления в виджете",
+  "render_widget_invalid": "Не удалось отправить этот запрос",
+  "render_inspected_image": "Просмотренное изображение",
+  "render_contributions": "Дополнения",
+  "render_contributions_intro": "Дополнять ответ могут только дополнения, встроенные в Ares. Текст чата не может их зарегистрировать, а разрешение действует только для этого подключения.",
+  "render_grant_plugin": "Разрешить {name}",
+  "render_revoke_plugin": "Отозвать {name}",
+  "render_plugin_slots": "карточки ответа для ::{directive}",
+  "render_plugin_notes": "Заметки",
+  "catalog_scan_passed": "пройдена",
+  "catalog_scan_warnings": "найдены предупреждения",
+  "catalog_scan_failed": "не пройдена",
   "auto_speak_replies_title": "Читать ответы вслух",
   "auto_speak_replies_subtitle": "Читает каждую новую реплику вслух после завершения хода. По умолчанию выключено; тоггл «Spoken replies» в чате по-прежнему действует.",
   "ng_auto_read_replies_title": "Auto-read replies",
