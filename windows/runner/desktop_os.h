@@ -20,6 +20,7 @@ class FlutterEngine;
 //
 //   com.hermesagent.ares/shell   setTray, showWindow, quit; onTrayAction
 //   com.hermesagent.ares/hotkey  register, unregister; onHotKey
+//   com.hermesagent.ares/power   isSupported, setAwake; onPowerEvent
 //
 // Created only for the primary window. Pop-out, companion and quick-entry
 // children never construct it, so they own no tray icon. Activation stays
@@ -44,6 +45,8 @@ class DesktopOs {
   void HandleHotkey(const flutter::MethodCall<flutter::EncodableValue>& call,
                     Result result);
   void UnregisterHotkey();
+  void HandlePower(const flutter::MethodCall<flutter::EncodableValue>& call,
+                   Result result);
   bool InstallTray();
   void RemoveTray();
   void ShowMenu(int x, int y);
@@ -53,6 +56,9 @@ class DesktopOs {
   std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> shell_;
   std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> hotkey_;
   bool hotkey_registered_ = false;
+  std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> power_;
+  ares::desktop::AwakeOwners awake_;
+  bool session_notifications_ = false;
 
   bool tray_installed_ = false;
   bool close_to_tray_ = false;

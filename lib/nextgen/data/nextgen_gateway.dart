@@ -19,6 +19,7 @@ import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/ws_client.dart';
 import '../nextgen_l10n.dart';
 import 'nextgen_projects.dart';
+import '../../core/services/system_sleep_gate.dart';
 
 enum NgConnectionPhase {
   idle,
@@ -88,6 +89,26 @@ class NextGenGateway extends ChangeNotifier {
       connect: connected,
       ownsSocket: (ws) => !_disposed && identical(ws, _ws) && ws.isConnected,
     );
+    SystemSleepGate.instance.addListener(_onSystemSleep);
+  }
+
+  /// The socket was stopped because the computer slept or the session
+  /// locked; it restarts when [SystemSleepGate] clears. Open chats resume
+  /// through [reconnected]; nothing is sent again.
+  bool _pausedForSleep = false;
+
+  void _onSystemSleep() {
+    if (_disposed) return;
+    if (SystemSleepGate.instance.value) {
+      if (!_running) return;
+      stop();
+      _pausedForSleep = true;
+      return;
+    }
+    if (!_pausedForSleep) return;
+    _pausedForSleep = false;
+    _attempt = 0;
+    start();
   }
 
   late final RemoteWorkspaceOwner workspace;
@@ -390,9 +411,14 @@ class NextGenGateway extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Starts keeping the socket alive. Safe to call repeatedly.
+  /// Starts keeping the socket alive. Safe to call repeatedly. While the
+  /// computer sleeps or the session is locked it waits for the wake.
   void start() {
     if (_running || _disposed) return;
+    if (SystemSleepGate.instance.value) {
+      _pausedForSleep = true;
+      return;
+    }
     _running = true;
     unawaited(_loop());
   }
@@ -651,6 +677,8 @@ class NextGenGateway extends ChangeNotifier {
   }
 
   void stop() {
+    // An explicit stop also cancels a wake-up restart.
+    _pausedForSleep = false;
     _running = false;
     for (final pending in _connectionWaits.toList()) {
       if (!pending.isCompleted) {
@@ -668,6 +696,7 @@ class NextGenGateway extends ChangeNotifier {
 
   @override
   void dispose() {
+    SystemSleepGate.instance.removeListener(_onSystemSleep);
     workspace.close();
     draftPresentation.close();
     _projects?.close();

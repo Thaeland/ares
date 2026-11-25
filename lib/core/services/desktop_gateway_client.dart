@@ -13,6 +13,7 @@ import 'gateway_turn_journal.dart';
 import 'projects_gateway_client.dart';
 import 'remote_workspace.dart';
 import 'ws_client.dart';
+import 'system_sleep_gate.dart';
 
 typedef DesktopAsyncEventCallback =
     void Function(String mobileSessionId, StreamEvent event);
@@ -118,9 +119,57 @@ class DesktopGatewayClient implements SlashCommandGateway {
       connect: _ensureSocket,
       ownsSocket: _ownsSocket,
     );
+    SystemSleepGate.instance.addListener(_onSystemSleep);
   }
 
   late final RemoteWorkspaceOwner workspace;
+
+  /// True while the computer sleeps or the session is locked: the socket is
+  /// closed and nothing reconnects until [SystemSleepGate] clears.
+  bool _systemPaused = false;
+  bool _reconnectAfterPause = false;
+
+  void _onSystemSleep() {
+    if (_closed) return;
+    final paused = SystemSleepGate.instance.value;
+    if (paused == _systemPaused) return;
+    _systemPaused = paused;
+    if (paused) {
+      // Only a client that had a live socket reconnects on its own later;
+      // an idle client reconnects lazily on its next call.
+      _reconnectAfterPause =
+          _ws?.isConnected == true ||
+          _socketInFlight != null ||
+          _reconnectTimer != null;
+      _reconnectTimer?.cancel();
+      _reconnectTimer = null;
+      _reconnectAttempts = 0;
+      final ws = _ws;
+      if (ws != null) {
+        // Report the drop like a lost connection; stored session ids stay,
+        // so the next socket re-binds each with session.resume.
+        _ws = null;
+        _gatewaySessionIds.clear();
+        ws.close();
+        _connectionListener?.call(DesktopConnectionState.disconnected);
+      }
+      return;
+    }
+    // A background policy that holds reconnects keeps the request until
+    // setReconnectAllowed(true).
+    if (!_reconnectAfterPause || !_reconnectAllowed) return;
+    _reconnectAfterPause = false;
+    _reconnectNow();
+  }
+
+  void _reconnectNow() {
+    _ensureSocket().then<void>(
+      (_) {},
+      onError: (Object _) {
+        if (!_closed && !_systemPaused) _scheduleReconnect();
+      },
+    );
+  }
 
   /// The terminal executor reported by the live resume binding, if any.
   String? boundTerminalBackend(String storedSessionId) =>
@@ -322,6 +371,11 @@ class DesktopGatewayClient implements SlashCommandGateway {
   /// bridge attached.
   Future<WsClient> _ensureSocket({Future<bool> Function()? beforeRequest}) {
     _checkOpen();
+    if (_systemPaused) {
+      // No network while the computer sleeps or the session is locked; a
+      // caller retries after resume instead of racing the suspend.
+      return Future.error(StateError('Paused while the computer sleeps.'));
+    }
     final existing = _ws;
     if (existing != null && existing.isConnected) {
       return Future.value(existing);
@@ -436,7 +490,12 @@ class DesktopGatewayClient implements SlashCommandGateway {
   /// detached-turn recovery has no safe deadline after which a reply may be
   /// abandoned. The delay remains capped so a long outage does not spin.
   void _scheduleReconnect() {
-    if (_closed || !_reconnectAllowed || _reconnectTimer != null) return;
+    if (_closed ||
+        _systemPaused ||
+        !_reconnectAllowed ||
+        _reconnectTimer != null) {
+      return;
+    }
     _reconnectAttempts++;
     final exponent = _reconnectAttempts.clamp(1, 5);
     final delay = Duration(seconds: (1 << (exponent - 1)).clamp(2, 30));
@@ -782,6 +841,9 @@ class DesktopGatewayClient implements SlashCommandGateway {
     if (!allowed) {
       _reconnectTimer?.cancel();
       _reconnectTimer = null;
+    } else if (_reconnectAfterPause && !_systemPaused) {
+      _reconnectAfterPause = false;
+      _reconnectNow();
     }
   }
 
@@ -1679,6 +1741,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
     // Idempotent: a double close must not re-enter or corrupt state.
     if (_closed) return;
     _closed = true;
+    SystemSleepGate.instance.removeListener(_onSystemSleep);
     workspace.close();
     slashRefusals.reset();
     _reconnectTimer?.cancel();

@@ -28,6 +28,7 @@ import 'completion_cue_player.dart';
 import 'notification_approval_authority.dart';
 import 'connection_mutation_barrier.dart';
 import 'ws_client.dart';
+import 'system_sleep_gate.dart';
 
 typedef NormalGatewayPromptSubmit =
     Future<void> Function({
@@ -245,6 +246,7 @@ class NormalGatewayApplicationSession {
       }
     }, acceptsSession: _aliases.containsKey);
     client?.setConnectionListener(connectionChanged);
+    SystemSleepGate.instance.addListener(_onSystemSleep);
     ready = _restore();
     ready.ignore();
     unawaited(this.notifications.ensureInitialized());
@@ -535,11 +537,26 @@ class NormalGatewayApplicationSession {
     if (backgroundWorkEnabled != null) {
       _backgroundWorkEnabled = backgroundWorkEnabled;
     }
-    if (returning) {
+    if (returning && !SystemSleepGate.instance.value) {
       // A legacy gateway never says a request was answered on another
       // device; ask which are still open (no answer is sent).
       unawaited(client?.revalidateServerRequests());
     }
+    _applyRecoveryPolicy();
+  }
+
+  /// The computer slept or the session locked (the client closes its
+  /// socket), or it is back: recovery resumes from history and the stored
+  /// session ids, never by sending a prompt again.
+  void _onSystemSleep() {
+    if (_closed) return;
+    if (!SystemSleepGate.instance.value) {
+      unawaited(client?.revalidateServerRequests());
+    }
+    _applyRecoveryPolicy();
+  }
+
+  void _applyRecoveryPolicy() {
     client?.setReconnectAllowed(_canRecover);
     if (_canRecover) {
       _retryRetirements();
@@ -557,7 +574,10 @@ class NormalGatewayApplicationSession {
     }
   }
 
-  bool get _canRecover => !_closed && (!_background || _backgroundWorkEnabled);
+  bool get _canRecover =>
+      !_closed &&
+      !SystemSleepGate.instance.value &&
+      (!_background || _backgroundWorkEnabled);
 
   void _retirePreWireMarker(NormalGatewayPendingMarker marker) {
     _retiringMarkers[marker.key] = marker;
@@ -763,6 +783,7 @@ class NormalGatewayApplicationSession {
   Future<void> close() async {
     if (_closed) return;
     _closed = true; // synchronous fence before any resource cleanup
+    SystemSleepGate.instance.removeListener(_onSystemSleep);
     prunePendingNotificationApprovals();
     _retirementTimer?.cancel();
     _retirementTimer = null;

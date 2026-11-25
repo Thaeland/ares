@@ -1,5 +1,8 @@
 #include "desktop_os.h"
 
+#include <unistd.h>
+
+#include <algorithm>
 #include <cstring>
 #include <string>
 #include <vector>
@@ -78,6 +81,17 @@ struct _AresDesktopOs {
   unsigned hotkey_keycode = 0;
   unsigned hotkey_modifiers = 0;
   bool hotkey_filter = false;
+  // Power: logind PrepareForSleep (system bus), the session's Lock/Unlock
+  // and LockedHint, and screensaver ActiveChanged (session bus). Keep-awake
+  // holds an xdg-desktop-portal Inhibit request (suspend only).
+  FlMethodChannel* power = nullptr;
+  GCancellable* cancellable = nullptr;
+  GDBusConnection* system_bus = nullptr;
+  GDBusConnection* session_bus = nullptr;
+  std::vector<guint> system_signals;
+  std::vector<guint> session_signals;
+  std::vector<std::string> awake_owners;
+  std::string inhibit_handle;
 };
 
 namespace {
@@ -287,6 +301,188 @@ void HotkeyCallCb(FlMethodChannel*, FlMethodCall* call, gpointer user_data) {
   Respond(call, response);
 }
 
+void EmitPower(AresDesktopOs* self, const char* event) {
+  if (self->power == nullptr) return;
+  g_autoptr(FlValue) value = fl_value_new_string(event);
+  fl_method_channel_invoke_method(self->power, "onPowerEvent", value, nullptr,
+                                  nullptr, nullptr);
+}
+
+void PrepareForSleepCb(GDBusConnection*, const gchar*, const gchar*,
+                       const gchar*, const gchar*, GVariant* parameters,
+                       gpointer user_data) {
+  if (!g_variant_is_of_type(parameters, G_VARIANT_TYPE("(b)"))) return;
+  gboolean starting = FALSE;
+  g_variant_get(parameters, "(b)", &starting);
+  EmitPower(static_cast<AresDesktopOs*>(user_data),
+            starting ? "suspend" : "resume");
+}
+
+void SessionLockCb(GDBusConnection*, const gchar*, const gchar*,
+                   const gchar*, const gchar* signal, GVariant*,
+                   gpointer user_data) {
+  auto* self = static_cast<AresDesktopOs*>(user_data);
+  if (g_strcmp0(signal, "Lock") == 0) EmitPower(self, "lock");
+  if (g_strcmp0(signal, "Unlock") == 0) EmitPower(self, "unlock");
+}
+
+void LockedHintCb(GDBusConnection*, const gchar*, const gchar*, const gchar*,
+                  const gchar*, GVariant* parameters, gpointer user_data) {
+  if (!g_variant_is_of_type(parameters, G_VARIANT_TYPE("(sa{sv}as)"))) return;
+  g_autoptr(GVariant) changed = g_variant_get_child_value(parameters, 1);
+  gboolean locked = FALSE;
+  if (g_variant_lookup(changed, "LockedHint", "b", &locked)) {
+    EmitPower(static_cast<AresDesktopOs*>(user_data),
+              locked ? "lock" : "unlock");
+  }
+}
+
+void ScreenSaverCb(GDBusConnection*, const gchar*, const gchar*, const gchar*,
+                   const gchar*, GVariant* parameters, gpointer user_data) {
+  if (!g_variant_is_of_type(parameters, G_VARIANT_TYPE("(b)"))) return;
+  gboolean active = FALSE;
+  g_variant_get(parameters, "(b)", &active);
+  EmitPower(static_cast<AresDesktopOs*>(user_data), active ? "lock" : "unlock");
+}
+
+// logind names this process's session; its lock signals are per session.
+void SessionPathCb(GObject* source, GAsyncResult* result, gpointer user_data) {
+  g_autoptr(GError) error = nullptr;
+  g_autoptr(GVariant) reply = g_dbus_connection_call_finish(
+      G_DBUS_CONNECTION(source), result, &error);
+  if (reply == nullptr) return;  // Cancelled (window gone) or no session.
+  auto* self = static_cast<AresDesktopOs*>(user_data);
+  const gchar* path = nullptr;
+  g_variant_get(reply, "(&o)", &path);
+  if (path == nullptr || self->system_bus == nullptr) return;
+  self->system_signals.push_back(g_dbus_connection_signal_subscribe(
+      self->system_bus, "org.freedesktop.login1",
+      "org.freedesktop.login1.Session", nullptr, path, nullptr,
+      G_DBUS_SIGNAL_FLAGS_NONE, SessionLockCb, self, nullptr));
+  self->system_signals.push_back(g_dbus_connection_signal_subscribe(
+      self->system_bus, "org.freedesktop.login1",
+      "org.freedesktop.DBus.Properties", "PropertiesChanged", path,
+      "org.freedesktop.login1.Session", G_DBUS_SIGNAL_FLAGS_NONE,
+      LockedHintCb, self, nullptr));
+}
+
+void WatchPower(AresDesktopOs* self) {
+  self->cancellable = g_cancellable_new();
+  self->system_bus = g_bus_get_sync(G_BUS_TYPE_SYSTEM, nullptr, nullptr);
+  if (self->system_bus != nullptr) {
+    self->system_signals.push_back(g_dbus_connection_signal_subscribe(
+        self->system_bus, "org.freedesktop.login1",
+        "org.freedesktop.login1.Manager", "PrepareForSleep",
+        "/org/freedesktop/login1", nullptr, G_DBUS_SIGNAL_FLAGS_NONE,
+        PrepareForSleepCb, self, nullptr));
+    g_dbus_connection_call(
+        self->system_bus, "org.freedesktop.login1", "/org/freedesktop/login1",
+        "org.freedesktop.login1.Manager", "GetSessionByPID",
+        g_variant_new("(u)", static_cast<guint32>(getpid())),
+        G_VARIANT_TYPE("(o)"), G_DBUS_CALL_FLAGS_NONE, 5000,
+        self->cancellable, SessionPathCb, self);
+  }
+  self->session_bus = g_bus_get_sync(G_BUS_TYPE_SESSION, nullptr, nullptr);
+  if (self->session_bus != nullptr) {
+    for (const char* iface :
+         {"org.freedesktop.ScreenSaver", "org.gnome.ScreenSaver"}) {
+      self->session_signals.push_back(g_dbus_connection_signal_subscribe(
+          self->session_bus, nullptr, iface, "ActiveChanged", nullptr, nullptr,
+          G_DBUS_SIGNAL_FLAGS_NONE, ScreenSaverCb, self, nullptr));
+    }
+  }
+}
+
+void ReleaseInhibit(AresDesktopOs* self) {
+  if (self->inhibit_handle.empty()) return;
+  if (self->session_bus != nullptr) {
+    g_dbus_connection_call(self->session_bus, "org.freedesktop.portal.Desktop",
+                           self->inhibit_handle.c_str(),
+                           "org.freedesktop.portal.Request", "Close", nullptr,
+                           nullptr, G_DBUS_CALL_FLAGS_NONE, -1, nullptr,
+                           nullptr, nullptr);
+  }
+  self->inhibit_handle.clear();
+}
+
+// Asks the desktop not to suspend (the display may still sleep). Returns
+// false when no portal answers.
+bool TakeInhibit(AresDesktopOs* self) {
+  if (!self->inhibit_handle.empty()) return true;
+  if (self->session_bus == nullptr) return false;
+  GVariantBuilder options;
+  g_variant_builder_init(&options, G_VARIANT_TYPE_VARDICT);
+  g_variant_builder_add(&options, "{sv}", "reason",
+                        g_variant_new_string("Ares is working on a reply"));
+  g_autoptr(GError) error = nullptr;
+  g_autoptr(GVariant) reply = g_dbus_connection_call_sync(
+      self->session_bus, "org.freedesktop.portal.Desktop",
+      "/org/freedesktop/portal/desktop", "org.freedesktop.portal.Inhibit",
+      "Inhibit", g_variant_new("(sua{sv})", "", 4u, &options),
+      G_VARIANT_TYPE("(o)"), G_DBUS_CALL_FLAGS_NONE, 2000, nullptr, &error);
+  if (reply == nullptr) return false;
+  const gchar* handle = nullptr;
+  g_variant_get(reply, "(&o)", &handle);
+  if (handle != nullptr) self->inhibit_handle = handle;
+  return !self->inhibit_handle.empty();
+}
+
+void PowerCallCb(FlMethodChannel*, FlMethodCall* call, gpointer user_data) {
+  auto* self = static_cast<AresDesktopOs*>(user_data);
+  const gchar* method = fl_method_call_get_name(call);
+  FlValue* args = fl_method_call_get_args(call);
+  g_autoptr(FlMethodResponse) response = nullptr;
+  if (strcmp(method, "isSupported") == 0) {
+    g_autoptr(FlValue) value = fl_value_new_bool(self->session_bus != nullptr);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(value));
+  } else if (strcmp(method, "setAwake") == 0) {
+    const std::string owner = StringArg(args, "owner");
+    if (owner.empty() || owner.size() > 128) {
+      response = FL_METHOD_RESPONSE(fl_method_error_response_new(
+          "bad-args", "setAwake expects {owner, enabled}", nullptr));
+    } else {
+      auto& owners = self->awake_owners;
+      owners.erase(std::remove(owners.begin(), owners.end(), owner),
+                   owners.end());
+      if (BoolArg(args, "enabled") && owners.size() < 32) {
+        owners.push_back(owner);
+      }
+      if (owners.empty()) {
+        ReleaseInhibit(self);
+      } else {
+        TakeInhibit(self);
+      }
+      response = FL_METHOD_RESPONSE(fl_method_success_response_new(nullptr));
+    }
+  } else {
+    response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
+  }
+  Respond(call, response);
+}
+
+void StopPower(AresDesktopOs* self) {
+  if (self->cancellable != nullptr) {
+    g_cancellable_cancel(self->cancellable);
+    g_clear_object(&self->cancellable);
+  }
+  ReleaseInhibit(self);
+  for (guint id : self->system_signals) {
+    g_dbus_connection_signal_unsubscribe(self->system_bus, id);
+  }
+  for (guint id : self->session_signals) {
+    g_dbus_connection_signal_unsubscribe(self->session_bus, id);
+  }
+  self->system_signals.clear();
+  self->session_signals.clear();
+  g_clear_object(&self->system_bus);
+  g_clear_object(&self->session_bus);
+  if (self->power != nullptr) {
+    fl_method_channel_set_method_call_handler(self->power, nullptr, nullptr,
+                                              nullptr);
+    g_clear_object(&self->power);
+  }
+}
+
 gboolean QuitIdleCb(gpointer user_data) {
   g_application_quit(G_APPLICATION(user_data));
   g_object_unref(user_data);
@@ -337,7 +533,8 @@ namespace {
 // The integration lives exactly as long as the primary window.
 void WindowDestroyCb(GtkWidget*, gpointer user_data) {
   auto* self = static_cast<AresDesktopOs*>(user_data);
-  // Exit releases the hotkey even if Dart never got to unregister it.
+  // Exit releases the hotkey and keep-awake even if Dart never got to.
+  StopPower(self);
   UngrabHotkey(self);
 #ifdef GDK_WINDOWING_X11
   if (self->hotkey_filter) {
@@ -374,6 +571,11 @@ void ares_desktop_os_attach(FlView* view, GtkWindow* window) {
                                        FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(self->hotkey, HotkeyCallCb, self,
                                             nullptr);
+  self->power = fl_method_channel_new(messenger, "com.hermesagent.ares/power",
+                                      FL_METHOD_CODEC(codec));
+  fl_method_channel_set_method_call_handler(self->power, PowerCallCb, self,
+                                            nullptr);
+  WatchPower(self);
   g_signal_connect(window, "delete-event", G_CALLBACK(DeleteEventCb), self);
   g_signal_connect(window, "destroy", G_CALLBACK(WindowDestroyCb), self);
 }

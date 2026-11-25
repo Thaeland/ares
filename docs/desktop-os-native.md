@@ -45,6 +45,21 @@ A small always-on-top window for typing a prompt into a chosen chat or a new one
 - macOS: Carbon `RegisterEventHotKey` (no Accessibility permission needed; `eventHotKeyExistsErr` → conflict).
 - Linux: a passive `XGrabKey` on the X11 root window, also covering Caps Lock and Num Lock (`BadAccess` → conflict). libX11 (MIT), already a GTK 3 dependency, is linked directly. Wayland has no app-registered global shortcut, so `register` returns `unsupported` and Settings says so; the XDG GlobalShortcuts portal is not used.
 
+## Wake / sleep and keep-awake — `com.hermesagent.ares/power`
+
+| Direction | Method | Arguments | Result |
+| --- | --- | --- | --- |
+| Dart → runner | `isSupported` | — | `bool` |
+| Dart → runner | `setAwake` | `{owner, enabled}` | — |
+| runner → Dart | `onPowerEvent` | `suspend`, `resume`, `lock` or `unlock` | — |
+
+- Events feed `SystemSleepGate` (`lib/core/services/system_sleep_gate.dart`). While the computer sleeps **or** the session is locked, every `DesktopGatewayClient` (Classic) and `NextGenGateway` closes its live socket and stops redialling; calls fail fast instead of dialling. Waking onto the lock screen keeps the pause until unlock.
+- On resume a client that had a live socket reconnects; the new socket re-binds stored sessions with `session.resume`, and NextGen chats reattach through `reconnected`. Classic normal-chat recovery is held while paused and runs again on resume. **No prompt is sent again**: an in-flight submission is reconciled from history by the existing recovery journal. A NextGen socket the user stopped stays stopped; an idle Classic client dials lazily on its next call.
+- Keep-awake (the Dart part's Off / While working / Always setting) now has runner support, so Settings no longer shows the capability note: Windows `SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED)`; macOS `IOPMAssertionCreateWithName(kIOPMAssertionTypePreventUserIdleSystemSleep)`; Linux an xdg-desktop-portal `Inhibit` request with the *suspend* flag (released with `Request.Close`). None of them keeps the display on. Runners release the request when the window goes away.
+- Windows: `WM_POWERBROADCAST` (`PBT_APMSUSPEND`, `PBT_APMRESUMESUSPEND`/`PBT_APMRESUMEAUTOMATIC`) and `WM_WTSSESSION_CHANGE` (`WTSRegisterSessionNotification`, links `wtsapi32.lib`).
+- macOS: `NSWorkspace` will-sleep/did-wake and session resign/become active, plus the `com.apple.screenIsLocked`/`Unlocked` distributed notifications.
+- Linux: logind `PrepareForSleep` (system bus), the session's `Lock`/`Unlock` signals and `LockedHint` (session found with `GetSessionByPID`), and `ActiveChanged` from `org.freedesktop.ScreenSaver` / `org.gnome.ScreenSaver` (session bus). GIO only; no new library.
+
 ## Checks without an app build
 
 - `tool/native_tests/run.sh` — host C++17 unit tests (`clang++ -std=c++17 -Wall -Wextra -Werror -pedantic`) for the platform-free headers `windows/runner/desktop_os_logic.h` and `linux/runner/desktop_os_logic.h`.

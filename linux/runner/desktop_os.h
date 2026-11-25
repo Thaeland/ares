@@ -8,6 +8,7 @@
 //
 //   com.hermesagent.ares/shell   setTray, showWindow, quit; onTrayAction
 //   com.hermesagent.ares/hotkey  register, unregister; onHotKey (X11)
+//   com.hermesagent.ares/power   isSupported, setAwake; onPowerEvent
 //
 // Created only for the primary window; child window processes never own a
 // tray icon.

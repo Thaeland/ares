@@ -179,4 +179,58 @@ inline std::optional<HotkeyRequest> HotkeyFor(std::string_view key, bool meta,
   return HotkeyRequest{*vk, modifiers};
 }
 
+// ---- Power ---------------------------------------------------------------
+
+inline constexpr unsigned kWmPowerBroadcast = 0x0218;
+inline constexpr unsigned kWmWtsSessionChange = 0x02B1;
+inline constexpr unsigned long long kPbtApmSuspend = 0x0004;
+inline constexpr unsigned long long kPbtApmResumeSuspend = 0x0007;
+inline constexpr unsigned long long kPbtApmResumeAutomatic = 0x0012;
+inline constexpr unsigned long long kWtsSessionLock = 0x7;
+inline constexpr unsigned long long kWtsSessionUnlock = 0x8;
+
+// The onPowerEvent name for a window message, or nullptr when the message
+// is not a suspend/resume or lock/unlock notification.
+inline const char* PowerEventName(unsigned message, unsigned long long wparam) {
+  if (message == kWmPowerBroadcast) {
+    if (wparam == kPbtApmSuspend) return "suspend";
+    if (wparam == kPbtApmResumeSuspend || wparam == kPbtApmResumeAutomatic) {
+      return "resume";
+    }
+  }
+  if (message == kWmWtsSessionChange) {
+    if (wparam == kWtsSessionLock) return "lock";
+    if (wparam == kWtsSessionUnlock) return "unlock";
+  }
+  return nullptr;
+}
+
+// Keep-awake requests by owner. The OS flag is on while any owner wants it.
+class AwakeOwners {
+ public:
+  // Records [owner]'s wish; returns true when the combined state changed.
+  bool Set(const std::string& owner, bool enabled) {
+    const bool before = Any();
+    if (enabled) {
+      bool known = false;
+      for (const auto& o : owners_) known = known || o == owner;
+      if (!known && owners_.size() < 32) owners_.push_back(owner);
+    } else {
+      std::vector<std::string> kept;
+      for (const auto& o : owners_) {
+        if (o != owner) kept.push_back(o);
+      }
+      owners_.swap(kept);
+    }
+    return Any() != before;
+  }
+
+  bool Any() const { return !owners_.empty(); }
+
+  void Clear() { owners_.clear(); }
+
+ private:
+  std::vector<std::string> owners_;
+};
+
 }  // namespace ares::desktop

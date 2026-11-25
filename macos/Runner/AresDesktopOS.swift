@@ -3,6 +3,7 @@
 //
 //   com.hermesagent.ares/shell   setTray, showWindow, quit; onTrayAction
 //   com.hermesagent.ares/hotkey  register, unregister; onHotKey
+//   com.hermesagent.ares/power   isSupported, setAwake; onPowerEvent
 //
 // Only the primary process creates this. Pop-out, companion and quick-entry
 // children are separate processes started with a marker argument and never
@@ -11,6 +12,7 @@
 import Carbon.HIToolbox
 import Cocoa
 import FlutterMacOS
+import IOKit.pwr_mgt
 
 /// True when this process is a child window (pop-out chat, companion or
 /// quick entry), started by the primary with a marker argument.
@@ -34,6 +36,11 @@ final class AresDesktopOS: NSObject {
   private var hotKeyRef: EventHotKeyRef?
   private var hotKeyHandler: EventHandlerRef?
 
+  private let powerChannel: FlutterMethodChannel
+  private var powerObservers: [(NotificationCenter, NSObjectProtocol)] = []
+  private var awakeOwners = Set<String>()
+  private var awakeAssertion: IOPMAssertionID?
+
   private var statusItem: NSStatusItem?
   private var trayItemIds: [String] = []
 
@@ -49,6 +56,10 @@ final class AresDesktopOS: NSObject {
       name: "com.hermesagent.ares/hotkey",
       binaryMessenger: messenger
     )
+    powerChannel = FlutterMethodChannel(
+      name: "com.hermesagent.ares/power",
+      binaryMessenger: messenger
+    )
     self.window = window
     super.init()
     // A hidden window must be shown again, not recreated.
@@ -59,6 +70,10 @@ final class AresDesktopOS: NSObject {
     hotkeyChannel.setMethodCallHandler { [weak self] call, result in
       self?.handleHotkey(call, result: result)
     }
+    powerChannel.setMethodCallHandler { [weak self] call, result in
+      self?.handlePower(call, result: result)
+    }
+    observePower()
   }
 
   func shutdown() {
@@ -69,8 +84,80 @@ final class AresDesktopOS: NSObject {
       hotKeyHandler = nil
     }
     removeStatusItem()
+    for (center, token) in powerObservers {
+      center.removeObserver(token)
+    }
+    powerObservers = []
+    awakeOwners.removeAll()
+    updateAwakeAssertion()
     shellChannel.setMethodCallHandler(nil)
     hotkeyChannel.setMethodCallHandler(nil)
+    powerChannel.setMethodCallHandler(nil)
+  }
+
+  // MARK: - Power: sleep/wake, lock/unlock, keep-awake
+
+  private func observePower() {
+    let workspace = NSWorkspace.shared.notificationCenter
+    let distributed = DistributedNotificationCenter.default()
+    let events: [(NotificationCenter, Notification.Name, String)] = [
+      (workspace, NSWorkspace.willSleepNotification, "suspend"),
+      (workspace, NSWorkspace.didWakeNotification, "resume"),
+      // Fast user switching away is a lock for this session.
+      (workspace, NSWorkspace.sessionDidResignActiveNotification, "lock"),
+      (workspace, NSWorkspace.sessionDidBecomeActiveNotification, "unlock"),
+      (distributed, Notification.Name("com.apple.screenIsLocked"), "lock"),
+      (distributed, Notification.Name("com.apple.screenIsUnlocked"), "unlock"),
+    ]
+    for (center, name, event) in events {
+      let token = center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+        self?.powerChannel.invokeMethod("onPowerEvent", arguments: event)
+      }
+      powerObservers.append((center, token))
+    }
+  }
+
+  private func handlePower(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    switch call.method {
+    case "isSupported":
+      result(true)
+    case "setAwake":
+      guard let args = call.arguments as? [String: Any],
+            let owner = args["owner"] as? String, (1...128).contains(owner.count)
+      else {
+        result(FlutterError(code: "bad-args", message: "setAwake expects {owner, enabled}", details: nil))
+        return
+      }
+      if args["enabled"] as? Bool == true {
+        if awakeOwners.count < 32 { awakeOwners.insert(owner) }
+      } else {
+        awakeOwners.remove(owner)
+      }
+      updateAwakeAssertion()
+      result(nil)
+    default:
+      result(FlutterMethodNotImplemented)
+    }
+  }
+
+  /// Prevents idle system sleep (not display sleep) while any owner asks.
+  private func updateAwakeAssertion() {
+    if awakeOwners.isEmpty {
+      if let id = awakeAssertion {
+        IOPMAssertionRelease(id)
+        awakeAssertion = nil
+      }
+      return
+    }
+    guard awakeAssertion == nil else { return }
+    var id = IOPMAssertionID(0)
+    let status = IOPMAssertionCreateWithName(
+      kIOPMAssertionTypePreventUserIdleSystemSleep as CFString,
+      IOPMAssertionLevel(kIOPMAssertionLevelOn),
+      "Ares is working on a reply" as CFString,
+      &id
+    )
+    if status == kIOReturnSuccess { awakeAssertion = id }
   }
 
   // MARK: - Global hotkey (Carbon; needs no Accessibility permission)

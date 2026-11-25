@@ -18,6 +18,7 @@ import '../services/turn_notification_service.dart' show notificationStrings;
 import '../widgets/desktop_shortcuts.dart';
 import 'desktop_os.dart';
 import 'global_hotkey.dart';
+import 'power_events.dart';
 import 'quick_entry.dart';
 import 'tray_controller.dart';
 
@@ -32,6 +33,7 @@ class DesktopIntegration {
     List<QuickEntryChat> Function()? quickEntryChats,
     QuickEntrySpawn? quickEntrySpawn,
     MethodChannel hotkeyChannel = DesktopOsChannels.hotkey,
+    MethodChannel powerChannel = DesktopOsChannels.power,
     TargetPlatform? platform,
     this._strings,
   }) : prefs = DesktopOsPrefs(preferences),
@@ -46,6 +48,7 @@ class DesktopIntegration {
       onPrefill: _routePrefill,
       spawn: quickEntrySpawn,
     );
+    power = PowerEventsListener(channel: powerChannel);
     hotkey = GlobalHotkeyController(
       prefs: prefs,
       shortcuts: ShortcutsStore(preferences),
@@ -81,6 +84,9 @@ class DesktopIntegration {
   late final QuickEntryLauncher quickEntry;
   late final GlobalHotkeyController hotkey;
 
+  /// Suspend/lock events that pause the gateway sockets.
+  late final PowerEventsListener power;
+
   bool _disposed = false;
 
   static void _fireNewChat() => fireDesktopShortcut(DesktopShortcut.newChat);
@@ -90,6 +96,7 @@ class DesktopIntegration {
     current = this;
     tray.start();
     hotkey.start();
+    power.start();
   }
 
   AppLocalizations strings() {
@@ -158,6 +165,7 @@ class DesktopIntegration {
     _disposed = true;
     if (identical(current, this)) current = null;
     quickEntry.dispose();
+    power.dispose();
     await hotkey.dispose();
     await tray.dispose();
   }

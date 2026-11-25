@@ -2,6 +2,7 @@
 
 #include <shellapi.h>
 #include <windowsx.h>
+#include <wtsapi32.h>
 
 #include <flutter/flutter_engine.h>
 #include <flutter/standard_method_codec.h>
@@ -58,12 +59,26 @@ DesktopOs::DesktopOs(HWND window, flutter::FlutterEngine* engine)
   hotkey_->SetMethodCallHandler([this](const auto& call, auto result) {
     HandleHotkey(call, std::move(result));
   });
+  power_ = std::make_unique<flutter::MethodChannel<EncodableValue>>(
+      engine->messenger(), "com.hermesagent.ares/power",
+      &flutter::StandardMethodCodec::GetInstance());
+  power_->SetMethodCallHandler([this](const auto& call, auto result) {
+    HandlePower(call, std::move(result));
+  });
+  // Lock/unlock arrive as WM_WTSSESSION_CHANGE; suspend/resume as
+  // WM_POWERBROADCAST, which every top-level window receives.
+  session_notifications_ =
+      ::WTSRegisterSessionNotification(window_, NOTIFY_FOR_THIS_SESSION) !=
+      FALSE;
 }
 
 DesktopOs::~DesktopOs() {
   // Exit releases the hotkey even if Dart never got to unregister it.
   UnregisterHotkey();
   RemoveTray();
+  if (session_notifications_) ::WTSUnRegisterSessionNotification(window_);
+  if (awake_.Any()) ::SetThreadExecutionState(ES_CONTINUOUS);
+  if (power_) power_->SetMethodCallHandler(nullptr);
   if (hotkey_) hotkey_->SetMethodCallHandler(nullptr);
   if (shell_) shell_->SetMethodCallHandler(nullptr);
   if (tray_icon_) ::DestroyIcon(tray_icon_);
@@ -168,6 +183,32 @@ void DesktopOs::HandleHotkey(
   const DWORD error = ::GetLastError();
   result->Success(EncodableValue(
       error == ERROR_HOTKEY_ALREADY_REGISTERED ? "conflict" : "unsupported"));
+}
+
+void DesktopOs::HandlePower(
+    const flutter::MethodCall<EncodableValue>& call, Result result) {
+  const std::string& method = call.method_name();
+  if (method == "isSupported") {
+    result->Success(EncodableValue(true));
+    return;
+  }
+  if (method != "setAwake") {
+    result->NotImplemented();
+    return;
+  }
+  const auto* args = std::get_if<EncodableMap>(call.arguments());
+  const std::string owner = args ? StringField(*args, "owner") : std::string();
+  if (owner.empty() || owner.size() > 128) {
+    result->Error("bad-args", "setAwake expects {owner, enabled}");
+    return;
+  }
+  if (awake_.Set(owner, BoolField(*args, "enabled"))) {
+    // Keeps the system (not the display) awake while any owner asks.
+    ::SetThreadExecutionState(awake_.Any()
+                                  ? (ES_CONTINUOUS | ES_SYSTEM_REQUIRED)
+                                  : ES_CONTINUOUS);
+  }
+  result->Success();
 }
 
 void DesktopOs::UnregisterHotkey() {
@@ -277,6 +318,14 @@ std::optional<LRESULT> DesktopOs::HandleMessage(HWND, UINT message,
       InstallTray();
     }
     return std::nullopt;
+  }
+  if (const char* event = ares::desktop::PowerEventName(
+          message, static_cast<unsigned long long>(wparam))) {
+    if (power_) {
+      power_->InvokeMethod("onPowerEvent",
+                           std::make_unique<EncodableValue>(event));
+    }
+    return std::nullopt;  // Default handling still applies.
   }
   if (message == WM_HOTKEY &&
       wparam == static_cast<WPARAM>(ares::desktop::kHotkeyId)) {

@@ -92,12 +92,41 @@ void TestHotkey() {
   CHECK(!HotkeyFor("f13", false, true, false, false));
 }
 
+void TestPower() {
+  using ares::desktop::AwakeOwners;
+  using ares::desktop::PowerEventName;
+  auto name = [](unsigned message, unsigned long long wparam) {
+    const char* event = PowerEventName(message, wparam);
+    return std::string(event ? event : "");
+  };
+  CHECK(name(0x0218, 0x0004) == "suspend");
+  CHECK(name(0x0218, 0x0007) == "resume");
+  CHECK(name(0x0218, 0x0012) == "resume");
+  CHECK(name(0x0218, 0x000A).empty());  // PBT_APMPOWERSTATUSCHANGE
+  CHECK(name(0x02B1, 0x7) == "lock");
+  CHECK(name(0x02B1, 0x8) == "unlock");
+  CHECK(name(0x02B1, 0x5).empty());  // WTS_SESSION_LOGON
+  CHECK(name(0x0312, 0x7).empty());  // WM_HOTKEY
+
+  AwakeOwners owners;
+  CHECK(!owners.Any());
+  CHECK(owners.Set("keep-awake-1", true));    // off -> on
+  CHECK(!owners.Set("keep-awake-1", true));   // repeat: no change
+  CHECK(!owners.Set("keep-awake-2", true));   // still on
+  CHECK(!owners.Set("keep-awake-1", false));  // 2 still wants it
+  CHECK(owners.Any());
+  CHECK(owners.Set("keep-awake-2", false));   // on -> off
+  CHECK(!owners.Set("unknown", false));
+  CHECK(!owners.Any());
+}
+
 }  // namespace
 
 int main() {
   TestMenuText();
   TestTrayItems();
   TestHotkey();
+  TestPower();
   std::printf("windows desktop_os_logic: %d checks, %d failures\n", checks,
               failures);
   return failures == 0 ? 0 : 1;
