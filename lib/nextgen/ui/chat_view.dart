@@ -2636,6 +2636,22 @@ class _InputPanelState extends State<_InputPanel> {
     _ => choice,
   };
 
+  Widget _choiceChild(String choice) {
+    final grant = widget.request.request.params['kind']?.toString();
+    final sandboxGrant = grant == 'access' || grant == 'network';
+    if (choice != 'once' || !sandboxGrant) {
+      return Text(_choiceLabel(choice));
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(_choiceLabel(choice)),
+        Text(ngL.ng_allow_until_sandbox_off),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
@@ -2715,7 +2731,7 @@ class _InputPanelState extends State<_InputPanel> {
                         ),
                         onPressed: () =>
                             _done(widget.chat.answerApproval(choice)),
-                        child: Text(_choiceLabel(choice)),
+                        child: _choiceChild(choice),
                       )
                     : FilledButton(
                         style: FilledButton.styleFrom(
@@ -2729,7 +2745,7 @@ class _InputPanelState extends State<_InputPanel> {
                         ),
                         onPressed: () =>
                             _done(widget.chat.answerApproval(choice)),
-                        child: Text(_choiceLabel(choice)),
+                        child: _choiceChild(choice),
                       ),
             ],
           ),

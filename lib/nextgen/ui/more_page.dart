@@ -18,6 +18,8 @@ import '../../core/screens/parallel_workspace_entry.dart';
 import '../../core/screens/projects_root_screen.dart';
 import '../../core/screens/provider_oauth_screen.dart';
 import '../../core/screens/skills_screen.dart';
+import '../../core/capabilities/capability_admin.dart';
+import '../../core/capabilities/capability_pages.dart';
 import '../../core/screens/workspace_profiles_screen.dart';
 import '../../core/services/chat_assets_client.dart';
 import '../../core/screens/workspace_workers_screen.dart';
@@ -33,6 +35,18 @@ import 'scheduled_page.dart';
 import 'sessions_sidebar.dart';
 import 'widgets.dart';
 import '../nextgen_l10n.dart';
+
+CapabilityAdmin _capabilityAdmin(BuildContext context) {
+  final gateway = NgScope.of(context).gateway;
+  return CapabilityAdmin.fromDashboard(
+    gateway.dashboard,
+    profile: gateway.profile,
+    rpc: (method, params) async {
+      await gateway.connected();
+      return gateway.call(method, params, timeout: const Duration(seconds: 45));
+    },
+  );
+}
 
 class NgMorePage extends StatelessWidget {
   const NgMorePage({
@@ -188,6 +202,32 @@ class NgMorePage extends StatelessWidget {
                   title: ngL.ng_skills_library,
                   subtitle: ngL.ng_browse_and_read_installed_skills,
                   onTap: () => push(SkillsScreen(connection: conn)),
+                ),
+                NgRow(
+                  icon: Icons.extension_outlined,
+                  title: 'Capabilities',
+                  subtitle:
+                      'Install and govern skills, plugins, connectors and tool backends',
+                  onTap: () => push(
+                    CapabilityAdminScreen(admin: _capabilityAdmin(context)),
+                  ),
+                ),
+                NgRow(
+                  icon: Icons.vpn_key_outlined,
+                  title: 'Browser vault',
+                  subtitle:
+                      'Site logins, addresses, cards and credential sources',
+                  onTap: () => push(
+                    BrowserVaultScreen(admin: _capabilityAdmin(context)),
+                  ),
+                ),
+                NgRow(
+                  icon: Icons.admin_panel_settings_outlined,
+                  title: 'Agent policy',
+                  subtitle:
+                      'Approvals, checkpoints, browser access and shared metrics',
+                  onTap: () =>
+                      push(AgentPolicyScreen(admin: _capabilityAdmin(context))),
                 ),
                 NgRow(
                   icon: Icons.event_repeat,

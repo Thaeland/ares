@@ -23,6 +23,8 @@ import '../services/chat_space_store.dart';
 import '../services/chat_assets_client.dart';
 import '../services/connection_manager.dart';
 import '../services/desktop_gateway_client.dart';
+import '../capabilities/capability_admin.dart';
+import '../capabilities/capability_pages.dart';
 import 'workspace_profiles_screen.dart';
 import 'fleet_screen.dart';
 import 'workspace_workers_screen.dart';
@@ -2261,6 +2263,33 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     }
   }
 
+  void _openCapability(String id) {
+    final connection = widget.connection;
+    final gateway = _ownedGateway;
+    final owned = gateway == null
+        ? DashboardClient.fromConnection(connection)
+        : null;
+    final admin = CapabilityAdmin.fromDashboard(
+      gateway?.dashboard ?? owned!,
+      profile: connection.gatewayProfile,
+      rpc: gateway == null
+          ? null
+          : (method, params) => gateway.call(method, params),
+    );
+    final page = switch (id) {
+      'browser-vault' => BrowserVaultScreen(admin: admin),
+      'agent-policy' => AgentPolicyScreen(admin: admin),
+      _ => CapabilityAdminScreen(admin: admin),
+    };
+    unawaited(
+      pushAndRelease(
+        context,
+        ProfileTheme(connection: connection, nextGen: false, child: page),
+        owned?.close,
+      ),
+    );
+  }
+
   void _openMoreEntry(MoreEntry entry) {
     final connection = widget.connection;
     switch (entry.id) {
@@ -2294,6 +2323,10 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         _openCronJobs();
       case 'skills':
         _push(SkillsScreen(connection: connection));
+      case 'capability-admin':
+      case 'browser-vault':
+      case 'agent-policy':
+        _openCapability(entry.id);
       case 'memory':
         _push(MemoryScreen(connection: connection));
       case 'provider-sign-in':

@@ -209,6 +209,35 @@ List<MoreSection> buildMoreSections({
           unavailableReason: dashboardReason(),
         ),
         MoreEntry(
+          id: 'capability-admin',
+          title: 'Capabilities',
+          subtitle:
+              'Install and govern skills, plugins, connectors and tool backends',
+          icon: Icons.extension_outlined,
+          availability: dashboardBacked(),
+          unavailableReason: dashboardReason(),
+        ),
+        MoreEntry(
+          id: 'browser-vault',
+          title: 'Browser vault',
+          subtitle: 'Site logins, addresses, cards and credential sources',
+          icon: Icons.vpn_key_outlined,
+          availability: workspaceAvailable
+              ? MoreEntryAvailability.available
+              : MoreEntryAvailability.unavailable,
+          unavailableReason: workspaceAvailable
+              ? null
+              : l10n.desktop_gateway_is_not_configured_for_this_connection,
+        ),
+        MoreEntry(
+          id: 'agent-policy',
+          title: 'Agent policy',
+          subtitle: 'Approvals, checkpoints, browser access and shared metrics',
+          icon: Icons.admin_panel_settings_outlined,
+          availability: dashboardBacked(),
+          unavailableReason: dashboardReason(),
+        ),
+        MoreEntry(
           id: 'memory',
           title: l10n.memory,
           subtitle: l10n.durable_facts_hermes_keeps_about_you,

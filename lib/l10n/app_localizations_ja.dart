@@ -648,7 +648,15 @@ class AppLocalizationsJa extends AppLocalizations {
       'このHermesセッションが終了するまで、一致するコマンドを許可します。';
 
   @override
+  String get allow_folder_until_sandbox_off =>
+      'Allow this folder until the sandbox is switched off.';
+
+  @override
   String get allow_once => '1回だけ許可';
+
+  @override
+  String get allow_website_until_sandbox_off =>
+      'Allow this website until the sandbox is switched off.';
 
   @override
   String get always_allow => '常に許可';
@@ -4597,6 +4605,25 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ng_allow_once => '今回のみ許可';
+
+  @override
+  String get ng_allow_until_sandbox_off => 'Until the sandbox is switched off';
+
+  @override
+  String get ng_folder_access => 'Folder access';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      'The gateway did not say whether this is read-only or read-write.';
+
+  @override
+  String get ng_folder_read_only => 'Read-only';
+
+  @override
+  String get ng_folder_read_write => 'Read and write';
+
+  @override
+  String get ng_website_access => 'Website access';
 
   @override
   String get ng_allow_for_this_chat => 'このチャットで許可';
