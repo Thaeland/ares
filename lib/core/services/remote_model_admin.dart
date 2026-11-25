@@ -353,17 +353,57 @@ class RemoteModelAdmin {
   Future<Map<String, dynamic>> subscriptionState() =>
       _call('subscription.state', {});
 
-  Future<Map<String, dynamic>> buyCredits(String amount) {
+  Future<Map<String, dynamic>> buyCredits(
+    String amount, {
+    String? idempotencyKey,
+  }) {
     final selected = amount.trim();
     if (selected.isEmpty) {
       throw const ModelAdminException(
         'Choose one of the offered credit amounts.',
       );
     }
+    final supplied = idempotencyKey?.trim() ?? '';
+    final key = supplied.isEmpty ? newIdempotencyKey() : supplied;
     return _call('billing.charge', {
       'amount_usd': selected,
-      'idempotency_key': newIdempotencyKey(),
-    });
+      'idempotency_key': key,
+    }).then((result) => {...result, 'idempotency_key': key});
+  }
+
+  Future<Map<String, dynamic>> chargeStatus(String chargeId) {
+    final id = chargeId.trim();
+    if (id.isEmpty) {
+      throw const ModelAdminException('That charge could not be checked.');
+    }
+    return _call('billing.charge_status', {'charge_id': id});
+  }
+
+  /// Poll `billing.charge_status` the way Desktop does: every 2 seconds, for
+  /// at most 5 minutes, honouring a retry_after on a retryable refusal.
+  /// A timeout or transport error stops as unknown so the same charge can be
+  /// retried without minting another one.
+  Future<Map<String, dynamic>> watchCharge(String chargeId) async {
+    final started = DateTime.now();
+    while (true) {
+      Map<String, dynamic> status;
+      try {
+        status = await chargeStatus(chargeId);
+      } catch (error) {
+        if (chargeSendIsAmbiguous(error)) {
+          return {'outcome': 'unknown'};
+        }
+        rethrow;
+      }
+      final outcome = classifyChargeStatus(status);
+      if (outcome == 'settled' || outcome == 'failed' || outcome == 'unknown') {
+        return {...status, 'outcome': outcome};
+      }
+      if (DateTime.now().difference(started) >= chargePollCap) {
+        return {...status, 'outcome': 'unknown'};
+      }
+      await Future<void>.delayed(chargeStatusWait(status));
+    }
   }
 
   Future<Map<String, dynamic>> setAutoReload({

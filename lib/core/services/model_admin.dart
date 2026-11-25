@@ -200,6 +200,30 @@ class EndpointDraft {
   });
 }
 
+const endpointCredentialQueryKeys = <String>{
+  'api_key',
+  'token',
+  'key',
+  'secret',
+  'password',
+};
+
+/// Query credentials are rejected the same way `user:pass@` is: the draft is
+/// not saved. A query that cannot be decoded is rejected too, because a
+/// credential could be hiding in it.
+bool endpointQueryHasCredential(Uri uri) {
+  try {
+    for (final name in uri.queryParameters.keys) {
+      if (endpointCredentialQueryKeys.contains(name.toLowerCase())) {
+        return true;
+      }
+    }
+  } on FormatException {
+    return true;
+  }
+  return false;
+}
+
 void validateEndpointDraft(EndpointDraft draft) {
   final name = draft.name.trim();
   final model = draft.model.trim();
@@ -223,6 +247,7 @@ void validateEndpointDraft(EndpointDraft draft) {
       !uri.hasScheme ||
       host.isEmpty ||
       uri.userInfo.isNotEmpty ||
+      endpointQueryHasCredential(uri) ||
       (uri.scheme != 'https' && !(uri.scheme == 'http' && loopback))) {
     throw const ModelAdminException(
       'Use HTTPS for a remote endpoint, or HTTP on localhost.',
@@ -522,21 +547,136 @@ Object? _jsonValue(Object? value) {
   return value;
 }
 
-bool creditsPurchasable(Map<String, dynamic> state) {
+/// Desktop allows a charge only when the account is signed in, remote
+/// spending is on, and a card or payment method is on file.
+bool chargeAccountReady(Map<String, dynamic> state) {
   if (state['ok'] != true ||
       state['logged_in'] != true ||
       state['can_charge'] != true ||
       state['cli_billing_enabled'] != true) {
     return false;
   }
-  final hasMethod = state['payment_method'] is Map || state['card'] is Map;
+  return state['payment_method'] is Map || state['card'] is Map;
+}
+
+bool creditsPurchasable(Map<String, dynamic> state) {
+  if (!chargeAccountReady(state)) return false;
   final presets = state['charge_presets'];
-  return hasMethod &&
-      presets is List &&
+  return presets is List &&
       presets.any((amount) => amount is String && amount.isNotEmpty);
 }
 
+/// In-app auto-reload edits use the same charge gates. A distinct saved card
+/// stays on the portal, matching Desktop.
+bool autoReloadEditable(Map<String, dynamic> state) {
+  if (!chargeAccountReady(state)) return false;
+  final reload = state['auto_reload'];
+  if (reload is Map) {
+    final card = reload['card'];
+    if (card is Map && card['kind'] == 'distinct') return false;
+  }
+  return true;
+}
+
+const fallbackBillingPortalUrl = 'https://portal.nousresearch.com/billing';
+
+String billingPortalUrl(Map<String, dynamic>? state) {
+  final raw = state?['portal_url']?.toString().trim() ?? '';
+  final uri = Uri.tryParse(raw);
+  if (uri == null ||
+      !uri.hasScheme ||
+      uri.scheme != 'https' ||
+      uri.host.isEmpty ||
+      uri.userInfo.isNotEmpty ||
+      endpointQueryHasCredential(uri)) {
+    return fallbackBillingPortalUrl;
+  }
+  return uri.toString();
+}
+
 bool planChangeCanCommit(String? effect) => effect == 'scheduled';
+
+/// Team plans are changed on the portal. Personal plans still need the
+/// gateway's can_change_plan flag.
+bool plansChangeInApp(Map<String, dynamic>? subscription) {
+  return subscription?['can_change_plan'] == true &&
+      subscription?['context'] != 'team';
+}
+
+const chargePollInterval = Duration(seconds: 2);
+const chargePollCap = Duration(minutes: 5);
+const chargePollMaxRetryAfter = Duration(seconds: 30);
+
+const chargeOutcomeUnknownMessage =
+    'Charge outcome unknown. It may still settle. Check the portal before retrying.';
+
+const _ambiguousChargeErrors = <String>{
+  'insufficient_scope',
+  'remote_spending_revoked',
+  'session_revoked',
+};
+
+const _retryChargeErrors = <String>{
+  'endpoint_unavailable',
+  'internal_error',
+  'network_error',
+  'rate_limited',
+  'stripe_unavailable',
+  'temporarily_unavailable',
+};
+
+/// A thrown timeout or transport error means the charge may have been
+/// accepted. A typed gateway refusal is a definite answer.
+bool chargeSendIsAmbiguous(Object error) {
+  if (error is ModelAdminException) return false;
+  final text = error.toString().toLowerCase();
+  return text.contains('timeout') ||
+      text.contains('timed out') ||
+      text.contains('socketexception') ||
+      text.contains('clientexception') ||
+      text.contains('connection closed') ||
+      text.contains('connection reset') ||
+      text.contains('connection refused') ||
+      text.contains('failed host lookup') ||
+      text.contains('handshakeexception') ||
+      text.contains('network is unreachable');
+}
+
+/// `settled` and `failed` are terminal. `unknown` must not start a second
+/// charge. `pending` keeps polling.
+String classifyChargeStatus(Map<String, dynamic> status) {
+  if (status['ok'] == false) {
+    final error = (status['error'] ?? '').toString();
+    if (_ambiguousChargeErrors.contains(error)) return 'unknown';
+    if (_retryChargeErrors.contains(error)) return 'pending';
+    return 'failed';
+  }
+  switch (status['status']?.toString()) {
+    case 'settled':
+      return 'settled';
+    case 'failed':
+      return 'failed';
+    default:
+      return 'pending';
+  }
+}
+
+Duration chargeStatusWait(Map<String, dynamic> status) {
+  if (status['ok'] == false &&
+      _retryChargeErrors.contains((status['error'] ?? '').toString())) {
+    final raw = status['retry_after'];
+    final seconds = raw is num
+        ? raw.toDouble()
+        : double.tryParse('${raw ?? ''}') ?? 5;
+    final milliseconds = (seconds * 1000).round();
+    if (milliseconds <= 0) return Duration.zero;
+    if (milliseconds > chargePollMaxRetryAfter.inMilliseconds) {
+      return chargePollMaxRetryAfter;
+    }
+    return Duration(milliseconds: milliseconds);
+  }
+  return chargePollInterval;
+}
 
 String safeBillingMessage(Object? message) {
   final text = message?.toString().trim() ?? '';

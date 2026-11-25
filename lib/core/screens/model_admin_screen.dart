@@ -181,6 +181,12 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
   String? _amount;
   String? _previewEffect;
   String? _previewTier;
+  String? _previewName;
+  String? _previewPrice;
+  String? _previewWhen;
+  String? _chargeKey;
+  String? _chargeAmount;
+  bool _chargeUnknown = false;
 
   @override
   void initState() {
@@ -269,6 +275,9 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
             _subscription = subscription;
             _previewEffect = null;
             _previewTier = null;
+            _previewName = null;
+            _previewPrice = null;
+            _previewWhen = null;
             final presets = _amounts(state);
             _amount = presets.contains(_amount) ? _amount : presets.firstOrNull;
           });
@@ -1118,6 +1127,131 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
     ),
   ];
 
+  void _clearPreview() {
+    _previewTier = null;
+    _previewEffect = null;
+    _previewName = null;
+    _previewPrice = null;
+    _previewWhen = null;
+  }
+
+  String? _nonEmpty(Object? value) {
+    final text = value?.toString().trim() ?? '';
+    return text.isEmpty ? null : text;
+  }
+
+  String _usdLabel(Object? display, Object? raw) {
+    const dollar = r'$';
+    final shown = display?.toString().trim() ?? '';
+    var base = shown;
+    if (base.isEmpty) {
+      final amount = raw?.toString().trim() ?? '';
+      if (amount.isEmpty) return '';
+      base = amount.startsWith(dollar) ? amount : '$dollar$amount';
+    }
+    if (base.toUpperCase().contains('USD')) return base;
+    return '$base USD';
+  }
+
+  String _autoReloadConfirm(bool enabled, Map<dynamic, dynamic> reload) {
+    final threshold = _usdLabel(
+      reload['threshold_display'],
+      reload['threshold_usd'],
+    );
+    final amount = _usdLabel(
+      reload['reload_to_display'],
+      reload['reload_to_usd'],
+    );
+    if (enabled) {
+      return 'Turn on auto-reload and charge $amount when the balance falls '
+          'below $threshold?';
+    }
+    return 'Turn off auto-reload? It currently charges $amount when the '
+        'balance falls below $threshold.';
+  }
+
+  String _planConfirmBody() {
+    final name = (_previewName ?? _previewTier ?? 'this plan').trim();
+    final price = (_previewPrice ?? '').trim();
+    final when = (_previewWhen ?? '').trim();
+    final priceText = price.isEmpty ? '' : ' at $price';
+    final whenText = when.isEmpty
+        ? ' It is scheduled for the end of the current period.'
+        : ' It takes effect $when.';
+    return 'Schedule $name$priceText.$whenText No charge is made now.';
+  }
+
+  Future<void> _buyCredits(String amount, {required bool retry}) async {
+    if (_chargeUnknown && !retry) return;
+    final stored = _chargeKey?.trim() ?? '';
+    final key = retry && stored.isNotEmpty ? stored : newIdempotencyKey();
+    if (mounted) {
+      setState(() {
+        _chargeKey = key;
+        _chargeAmount = amount;
+      });
+    }
+    try {
+      final result = await _admin.buyCredits(amount, idempotencyKey: key);
+      if (!mounted) return;
+      final chargeId = result['charge_id']?.toString().trim() ?? '';
+      if (chargeId.isNotEmpty) {
+        final watched = await _admin.watchCharge(chargeId);
+        if (!mounted) return;
+        setState(() => _applyWatchedCharge(watched, key, amount));
+        return;
+      }
+      setState(() {
+        _chargeUnknown = false;
+        _chargeKey = null;
+        _notice = result['ok'] == true
+            ? 'Credit purchase submitted.'
+            : safeBillingMessage(result['message'] ?? result['error']);
+      });
+    } catch (error) {
+      if (!chargeSendIsAmbiguous(error)) {
+        if (mounted) {
+          setState(() {
+            _chargeUnknown = false;
+            _chargeKey = null;
+          });
+        }
+        rethrow;
+      }
+      if (!mounted) return;
+      setState(() {
+        _chargeUnknown = true;
+        _chargeKey = key;
+        _chargeAmount = amount;
+      });
+    }
+  }
+
+  void _applyWatchedCharge(
+    Map<String, dynamic> watched,
+    String key,
+    String amount,
+  ) {
+    final outcome = watched['outcome']?.toString();
+    if (outcome == 'settled') {
+      _chargeUnknown = false;
+      _chargeKey = null;
+      _notice = 'Credit purchase settled.';
+      return;
+    }
+    if (outcome == 'unknown') {
+      _chargeUnknown = true;
+      _chargeKey = key;
+      _chargeAmount = amount;
+      return;
+    }
+    _chargeUnknown = false;
+    _chargeKey = null;
+    _notice = safeBillingMessage(
+      watched['message'] ?? watched['reason'] ?? watched['error'],
+    );
+  }
+
   List<Widget> _billingSection() {
     final billing = _billing;
     final subscription = _subscription;
@@ -1148,7 +1282,7 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
         ),
         FilledButton(
           key: const Key('billing-buy'),
-          onPressed: _busy || _amount == null
+          onPressed: _busy || _amount == null || _chargeUnknown
               ? null
               : () => _run(() async {
                   final amount = _amount!;
@@ -1157,18 +1291,30 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
                     'Charge \$$amount to the payment method on this Nous account. This spends real money.',
                   );
                   if (!agreed) return;
-                  final result = await _admin.buyCredits(amount);
-                  if (!mounted) return;
-                  setState(() {
-                    _notice = result['ok'] == true
-                        ? 'Credit purchase submitted.'
-                        : safeBillingMessage(
-                            result['message'] ?? result['error'],
-                          );
-                  });
+                  await _buyCredits(amount, retry: false);
                 }),
           child: const Text('Buy credits'),
         ),
+        if (_chargeUnknown) ...[
+          const Text(
+            chargeOutcomeUnknownMessage,
+            key: Key('billing-charge-unknown'),
+          ),
+          TextButton(
+            key: const Key('billing-charge-retry'),
+            onPressed: _busy || _chargeKey == null || _chargeAmount == null
+                ? null
+                : () => _run(() async {
+                    final agreed = await _confirm(
+                      'Retry same charge',
+                      'Retry the same credit charge. This does not start a second purchase.',
+                    );
+                    if (!agreed) return;
+                    await _buyCredits(_chargeAmount!, retry: true);
+                  }),
+            child: const Text('Retry same charge'),
+          ),
+        ],
       ] else if (billing != null)
         const Text(
           'Credit purchases are not available for this account.',
@@ -1176,19 +1322,20 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
         ),
       if (reload is Map &&
           reload['threshold_usd'] is String &&
-          reload['reload_to_usd'] is String)
+          reload['reload_to_usd'] is String) ...[
         SwitchListTile(
           key: const Key('billing-auto-reload'),
           title: const Text('Auto-reload'),
+          subtitle: billing != null && autoReloadEditable(billing)
+              ? null
+              : const Text('Read-only until this account can charge.'),
           value: reload['enabled'] == true,
-          onChanged: _busy
+          onChanged: _busy || billing == null || !autoReloadEditable(billing)
               ? null
               : (enabled) => _run(() async {
                   final agreed = await _confirm(
                     'Auto-reload',
-                    enabled
-                        ? 'Turn on auto-reload using the amounts already on this account?'
-                        : 'Turn off auto-reload for this account?',
+                    _autoReloadConfirm(enabled, reload),
                   );
                   if (!agreed) return;
                   final result = await _admin.setAutoReload(
@@ -1206,6 +1353,12 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
                   });
                 }),
         ),
+        if (billing == null || !autoReloadEditable(billing))
+          Text(
+            'Change auto-reload on the portal: ${billingPortalUrl(billing)}',
+            key: const Key('billing-portal'),
+          ),
+      ],
       if (keepGoing is bool)
         SwitchListTile(
           key: const Key('billing-keep-going'),
@@ -1232,7 +1385,7 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
                   });
                 }),
         ),
-      if (subscription?['can_change_plan'] == true)
+      if (plansChangeInApp(subscription))
         for (final tier in tiers)
           if (tier['is_enabled'] == true &&
               tier['is_current'] != true &&
@@ -1247,23 +1400,47 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
                     ? null
                     : () => _run(() async {
                         final id = tier['tier_id'] as String;
+                        if (mounted) setState(_clearPreview);
                         final preview = await _admin.previewPlan(id);
                         if (!mounted) return;
+                        final effect = preview['effect']?.toString();
+                        final committable =
+                            preview['ok'] == true &&
+                            planChangeCanCommit(effect);
                         setState(() {
+                          if (!committable) {
+                            _clearPreview();
+                            _notice = preview['ok'] == true
+                                ? 'This plan change is not confirmed from Ares.'
+                                : safeBillingMessage(
+                                    preview['message'] ?? preview['error'],
+                                  );
+                            return;
+                          }
                           _previewTier = id;
-                          _previewEffect = preview['effect']?.toString();
-                          _notice = preview['ok'] == true
-                              ? (planChangeCanCommit(_previewEffect)
-                                    ? 'This change is scheduled. Confirm to apply it.'
-                                    : 'This plan change is not confirmed from Ares.')
-                              : safeBillingMessage(
-                                  preview['message'] ?? preview['error'],
-                                );
+                          _previewEffect = effect;
+                          _previewName =
+                              _nonEmpty(preview['target_tier_name']) ??
+                              _nonEmpty(tier['name']) ??
+                              id;
+                          _previewPrice = _nonEmpty(
+                            tier['dollars_per_month_display'],
+                          );
+                          _previewWhen =
+                              _nonEmpty(preview['effective_display']) ??
+                              _nonEmpty(preview['effective_at']);
+                          _notice =
+                              'This change is scheduled. Confirm to apply it.';
                         });
                       }),
                 child: const Text('Preview plan'),
               ),
             ),
+      if (subscription?['context'] == 'team')
+        Text(
+          'Team subscriptions are changed on the portal: ${billingPortalUrl(billing)}',
+          key: const Key('plan-portal'),
+        ),
       if (planChangeCanCommit(_previewEffect) && _previewTier != null)
         FilledButton(
           key: const Key('plan-confirm'),
@@ -1272,7 +1449,7 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
               : () => _run(() async {
                   final agreed = await _confirm(
                     'Schedule plan change',
-                    'Schedule this plan change for the end of the current period?',
+                    _planConfirmBody(),
                   );
                   if (!agreed) return;
                   final result = await _admin.schedulePlan(
@@ -1281,7 +1458,7 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _previewEffect = null;
+                    _clearPreview();
                     _notice = result['ok'] == true
                         ? 'Plan change scheduled.'
                         : safeBillingMessage(
