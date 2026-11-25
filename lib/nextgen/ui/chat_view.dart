@@ -29,6 +29,7 @@ import '../../core/widgets/markdown_code_block.dart';
 import '../../core/widgets/media_artifact_card.dart';
 import '../../core/widgets/slash_command_highlight.dart';
 import '../../core/widgets/session_files_view.dart';
+import '../../core/widgets/session_history_page.dart';
 import '../../core/widgets/git_review_pane.dart';
 import '../../core/models/turn_changed_files.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
@@ -859,6 +860,13 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                         icon: const Icon(Icons.hub_outlined),
                         onPressed: () => workers.open(context),
                       ),
+                    if (chat.storedId case final id?)
+                      IconButton(
+                        key: const ValueKey('session-history'),
+                        tooltip: 'Session history',
+                        icon: const Icon(Icons.account_tree_outlined),
+                        onPressed: () => _openHistory(id),
+                      ),
                   ] else if (chat.storedId != null || workers != null)
                     PopupMenuButton<String>(
                       key: const ValueKey('chat-tools-menu'),
@@ -875,6 +883,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                           _openGatewayQueue(chat, parentId!);
                         }
                         if (tool == 'workers') workers?.open(context);
+                        if (tool == 'history' && id != null) _openHistory(id);
                       },
                       itemBuilder: (_) => [
                         if (chat.storedId != null)
@@ -899,6 +908,14 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                             child: ListTile(
                               leading: const Icon(Icons.hub_outlined),
                               title: Text(ngL.workspace_workers),
+                            ),
+                          ),
+                        if (chat.storedId != null)
+                          const PopupMenuItem(
+                            value: 'history',
+                            child: ListTile(
+                              leading: Icon(Icons.account_tree_outlined),
+                              title: Text('Session history'),
                             ),
                           ),
                       ],
@@ -1008,6 +1025,22 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     } catch (e) {
       if (mounted) ngToast(context, ngL.ng_couldn_t_rename(e));
     }
+  }
+
+  void _openHistory(String storedId) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => SessionHistoryPage(
+          owner: chat.gateway.workspace,
+          storedSessionId: storedId,
+          onRewound: (text) {
+            if (!mounted) return;
+            _input.text = text;
+            _input.selection = TextSelection.collapsed(offset: text.length);
+          },
+        ),
+      ),
+    );
   }
 
   void _showUsage() {

@@ -12,6 +12,9 @@ import 'connection_mutation_barrier.dart';
 import 'portable_profile_bundle.dart';
 import 'ws_client.dart';
 import 'preview_peer.dart';
+import '../history/foreign_file.dart';
+import '../history/fork_lineage.dart';
+import '../history/transcript_redaction.dart';
 
 part 'remote_preview.dart';
 
@@ -26,6 +29,7 @@ part 'remote_agent_transfer.dart';
 
 part 'workspace_workers.dart';
 part 'workspace_queue.dart';
+part 'session_history.dart';
 
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {

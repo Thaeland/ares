@@ -96,6 +96,7 @@ import '../utils/turn_recovery_fallback.dart';
 import '../theme/hermes_theme.dart';
 import 'files_screen.dart';
 import '../widgets/session_files_view.dart';
+import '../widgets/session_history_page.dart';
 import 'workspace_workers_screen.dart';
 import 'gateway_queue_screen.dart';
 import '../widgets/git_review_pane.dart';
@@ -2334,6 +2335,24 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
     await SharePlus.instance.share(
       ShareParams(subject: _sessionTitle, text: buffer.toString().trim()),
+    );
+  }
+
+  void _openHistory() {
+    final gateway = _desktopGateway;
+    final id = _fileSessionId;
+    if (gateway == null || id == null || !mounted) return;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => SessionHistoryPage(
+          owner: gateway.workspace,
+          storedSessionId: id,
+          onRewound: (text) {
+            if (!mounted) return;
+            _editComposerAsUser(text);
+          },
+        ),
+      ),
     );
   }
 
@@ -7661,6 +7680,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                     openGatewayQueue(fresh);
                   }
                 }
+                if (tool == 'history') _openHistory();
               },
               itemBuilder: (_) => [
                 if (_desktopGateway != null)
@@ -7685,6 +7705,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                     child: ListTile(
                       leading: const Icon(Icons.hub_outlined),
                       title: Text(context.l10n.workspace_workers),
+                    ),
+                  ),
+                if (_desktopGateway != null && _fileSessionId != null)
+                  const PopupMenuItem(
+                    value: 'history',
+                    child: ListTile(
+                      leading: Icon(Icons.account_tree_outlined),
+                      title: Text('Session history'),
                     ),
                   ),
               ],
@@ -7732,6 +7760,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   _fetchMessages(focusSavedHistory: true);
                 }
                 if (action == 'export') _exportConversation();
+                if (action == 'history') _openHistory();
                 if (action == 'received-output-info') {
                   unawaited(_showReceivedOutputDetails());
                 }
@@ -7795,6 +7824,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                     title: Text(context.l10n.export_share),
                   ),
                 ),
+                if (_desktopGateway != null && _fileSessionId != null)
+                  const PopupMenuItem(
+                    value: 'history',
+                    child: ListTile(
+                      leading: Icon(Icons.account_tree_outlined),
+                      title: Text('Session history'),
+                    ),
+                  ),
                 if (_hasReceivedOutput)
                   PopupMenuItem(
                     value: 'received-output-info',
