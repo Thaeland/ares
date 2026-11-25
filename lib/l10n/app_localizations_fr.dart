@@ -4117,6 +4117,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ng_the_turn_failed => 'Le tour a échoué.';
 
   @override
+  String get ng_turn_changed =>
+      'ce tour est déjà terminé ou un tour plus récent a commencé';
+
+  @override
+  String get ng_steer_rejected => 'le tour en cours ne l’a pas accepté';
+
+  @override
+  String get ng_turn_not_known_yet =>
+      'le tour en cours n’est pas encore connu ; réessayez dans un instant';
+
+  @override
   String ng_couldn_t_stop(Object error) {
     return 'Impossible d\'arrêter : $error';
   }

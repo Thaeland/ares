@@ -4109,6 +4109,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String get ng_the_turn_failed => 'Не удалось выполнить запрос.';
 
   @override
+  String get ng_turn_changed =>
+      'этот запрос уже завершился или начался более новый';
+
+  @override
+  String get ng_steer_rejected => 'выполняющийся запрос не принял это';
+
+  @override
+  String get ng_turn_not_known_yet =>
+      'выполняющийся запрос пока неизвестен; повторите попытку через мгновение';
+
+  @override
   String ng_couldn_t_stop(Object error) {
     return 'Не удалось остановить: $error';
   }

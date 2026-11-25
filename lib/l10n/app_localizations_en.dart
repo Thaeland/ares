@@ -4080,6 +4080,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ng_the_turn_failed => 'The turn failed.';
 
   @override
+  String get ng_turn_changed =>
+      'that turn already ended or a newer one started';
+
+  @override
+  String get ng_steer_rejected => 'the running turn didn\'t accept it';
+
+  @override
+  String get ng_turn_not_known_yet =>
+      'the running turn isn\'t known yet; try again in a moment';
+
+  @override
   String ng_couldn_t_stop(Object error) {
     return 'Couldn\'t stop: $error';
   }
