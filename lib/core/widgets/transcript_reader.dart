@@ -480,6 +480,10 @@ class TranscriptReaderState extends State<TranscriptReader> {
       (h) => h.id == _selectedId && h.occurrence == _occurrence,
     );
     final selected = rows.where((e) => e.id == _selectedId).firstOrNull;
+    // The active layout's scheme (Classic or NextGen), never a fixed brand.
+    final highlight = Theme.of(
+      context,
+    ).colorScheme.tertiary.withValues(alpha: 0.33);
     return Column(
       children: [
         if (_open)
@@ -574,7 +578,7 @@ class TranscriptReaderState extends State<TranscriptReader> {
                         final glyphs = _glyphs(row);
                         final box = glyphs?.box ?? row;
                         final transform = box.getTransformTo(root);
-                        final paint = Paint()..color = const Color(0x55ffa600);
+                        final paint = Paint()..color = highlight;
                         for (final rect
                             in glyphs?.rects ??
                                 [Rect.fromLTWH(0, 0, 4, row.size.height)]) {
