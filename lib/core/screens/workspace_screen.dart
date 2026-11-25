@@ -1004,6 +1004,19 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     super.dispose();
   }
 
+  /// Shows a shell destination. A chat or another screen pushed on top of the
+  /// shell (the narrow layout pushes chats) is popped first; switching only
+  /// the hidden tab underneath would look like nothing happened.
+  void _showShellDestination(HermesDestination destination) {
+    if (!mounted) return;
+    final route = ModalRoute.of(context);
+    final navigator = Navigator.maybeOf(context);
+    if (route != null && navigator != null && !route.isCurrent) {
+      navigator.popUntil((candidate) => candidate == route);
+    }
+    _shellKey.currentState?.select(destination);
+  }
+
   /// Handles desktop keyboard shortcuts routed from the app root.
   void _onDesktopShortcut(DesktopShortcut shortcut) {
     if (!mounted) return;
@@ -1017,13 +1030,13 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       case DesktopShortcut.settings:
         _push(SettingsScreen(connection: widget.connection));
       case DesktopShortcut.tab1:
-        _shellKey.currentState?.select(HermesDestination.chats);
+        _showShellDestination(HermesDestination.chats);
       case DesktopShortcut.tab2:
-        _shellKey.currentState?.select(HermesDestination.crons);
+        _showShellDestination(HermesDestination.crons);
       case DesktopShortcut.tab3:
-        _shellKey.currentState?.select(HermesDestination.projects);
+        _showShellDestination(HermesDestination.projects);
       case DesktopShortcut.tab4:
-        _shellKey.currentState?.select(HermesDestination.activity);
+        _showShellDestination(HermesDestination.activity);
     }
   }
 
@@ -1147,13 +1160,13 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           case 'quick-entry':
             unawaited(_openQuickEntry());
           case 'nav-chats':
-            _shellKey.currentState?.select(HermesDestination.chats);
+            _showShellDestination(HermesDestination.chats);
           case 'nav-crons':
-            _shellKey.currentState?.select(HermesDestination.crons);
+            _showShellDestination(HermesDestination.crons);
           case 'nav-projects':
-            _shellKey.currentState?.select(HermesDestination.projects);
+            _showShellDestination(HermesDestination.projects);
           case 'nav-activity':
-            _shellKey.currentState?.select(HermesDestination.activity);
+            _showShellDestination(HermesDestination.activity);
           case 'capabilities':
             _openCapability('capability-admin');
           case 'settings':
@@ -1212,18 +1225,18 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         } else if (path == '/crons' ||
             path == '/scheduled' ||
             path == '/cron') {
-          _shellKey.currentState?.select(HermesDestination.crons);
+          _showShellDestination(HermesDestination.crons);
         } else if (path == '/projects') {
-          _shellKey.currentState?.select(HermesDestination.projects);
+          _showShellDestination(HermesDestination.projects);
         } else if (path == '/activity' || path == '/insights') {
-          _shellKey.currentState?.select(HermesDestination.activity);
+          _showShellDestination(HermesDestination.activity);
         } else if (path == '/capabilities' ||
             path == '/skills' ||
             path == '/plugins' ||
             path == '/mcp') {
           _openCapability('capability-admin');
         } else {
-          _shellKey.currentState?.select(HermesDestination.chats);
+          _showShellDestination(HermesDestination.chats);
           if (link.prefill != null) {
             _openPrefilledDraft(link.prefill!);
           }
