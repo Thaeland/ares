@@ -3,6 +3,8 @@
 //   RC3a two drops arriving before the first one finished both passed the
 //        free-slot check: 9 drafts + 2 drops gave 11 tiles, and Send then
 //        refused the whole draft
+//   Switch to: the failure card's suggested model fell back to the picker;
+//        Classic never switched and retried as NextGen and Desktop do
 //   keyboard: the Classic composer under every keyboard, text size, draft
 //        length and status combination (a guard alongside NextGen's)
 import 'dart:convert';
@@ -17,9 +19,11 @@ import 'package:hermes_android/core/screens/chat_screen.dart';
 import 'package:hermes_android/core/services/attachment_draft_service.dart';
 import 'package:hermes_android/core/services/composer_session_rpc.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
+import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:hermes_android/core/theme/hermes_theme.dart';
 import 'package:hermes_android/core/widgets/attachment_draft_tile.dart';
 import 'package:hermes_android/core/widgets/composer_drop_surface.dart';
+import 'package:hermes_android/core/widgets/failure_recovery_card.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -267,6 +271,131 @@ void main() {
       final text = _composer(tester);
       expect(text, anyOf('see ', 'see ${pasted.path}'));
       expect(sent, isEmpty);
+    });
+  });
+
+  group('failure card Switch to', () {
+    Map<String, dynamic> usageLimit({String? provider}) => {
+      'message': 'Usage limit reached',
+      'surface': {
+        'layer': 'provider',
+        'code': 'usage_window',
+        'message': 'Usage limit reached',
+        'usage_limit': {
+          'suggestions': [
+            {
+              'model': 'gpt-5-mini',
+              'label': 'GPT-5 mini',
+              'provider': ?provider,
+            },
+          ],
+        },
+      },
+    };
+
+    ({ChatScreen screen, List<http.Request> writes}) chat(
+      TestDesktopAsyncEventHook hook,
+      String connId,
+    ) {
+      final writes = <http.Request>[];
+      final screen = ChatScreen(
+        connection: _conn(connId),
+        session: _session,
+        testApiClient: ApiClient(
+          baseUrl: 'http://recheck.fixture',
+          apiKey: 'fixture',
+          httpClient: MockClient((request) async {
+            if (request.method != 'GET') {
+              writes.add(request);
+              return http.Response(jsonEncode({'ok': true}), 200);
+            }
+            return http.Response(
+              jsonEncode({
+                'data': [
+                  {'id': 1, 'role': 'user', 'content': 'Earlier question'},
+                  {'id': 2, 'role': 'assistant', 'content': 'Earlier answer'},
+                ],
+              }),
+              200,
+            );
+          }),
+        ),
+        testDesktopAsyncEventHook: hook,
+        testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
+      );
+      return (screen: screen, writes: writes);
+    }
+
+    testWidgets('switches this chat to the suggested model, then runs the '
+        'failed turn again; a newer draft stays', (tester) async {
+      await tester.binding.setSurfaceSize(const Size(800, 1400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final hook = TestDesktopAsyncEventHook();
+      final c = chat(hook, 'switch-retry');
+      await tester.pumpWidget(_app(c.screen));
+      await pumpChatUpdates(tester);
+      hook.handler!(
+        StreamEvent(
+          type: 'error',
+          data: usageLimit(provider: 'openai'),
+        ),
+      );
+      await pumpChatUpdates(tester);
+      expect(find.byType(FailureRecoveryCard), findsOneWidget);
+      await tester.enterText(find.byKey(_composerKey), 'my newer draft');
+      await tester.pump();
+
+      await tester.tap(find.text('Switch to GPT-5 mini'));
+      await pumpChatUpdates(tester);
+      expect(find.text('Switch this chat to GPT-5 mini?'), findsOneWidget);
+      await tester.tap(
+        find.descendant(
+          of: find.byType(AlertDialog),
+          matching: find.widgetWithText(FilledButton, 'Switch model'),
+        ),
+      );
+      await pumpChatUpdates(tester);
+
+      final model = c.writes.singleWhere(
+        (r) => r.url.path == '/api/sessions/recheck-parent/model',
+      );
+      expect(jsonDecode(model.body), {
+        'provider': 'openai',
+        'model': 'gpt-5-mini',
+        'require_model_lock': true,
+      });
+      // Then the retry: on this REST connection Retry cannot replace the
+      // turn, so it says so and sends nothing again.
+      expect(
+        find.textContaining('Retry cannot replace a turn'),
+        findsOneWidget,
+      );
+      expect(c.writes, hasLength(1));
+      expect(find.byType(FailureRecoveryCard), findsNothing);
+      expect(_composer(tester), 'my newer draft');
+    });
+
+    testWidgets('a suggestion with no provider (and none known) opens the '
+        'model picker and switches nothing', (tester) async {
+      await tester.binding.setSurfaceSize(const Size(800, 1400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final hook = TestDesktopAsyncEventHook();
+      final c = chat(hook, 'switch-picker');
+      await tester.pumpWidget(_app(c.screen));
+      await pumpChatUpdates(tester);
+      hook.handler!(StreamEvent(type: 'error', data: usageLimit()));
+      await pumpChatUpdates(tester);
+      await tester.tap(find.text('Switch to GPT-5 mini'));
+      await pumpChatUpdates(tester);
+      await tester.tap(
+        find.descendant(
+          of: find.byType(AlertDialog),
+          matching: find.widgetWithText(FilledButton, 'Switch model'),
+        ),
+      );
+      await pumpChatUpdates(tester);
+      expect(c.writes, isEmpty);
+      expect(find.textContaining('Retry cannot replace a turn'), findsNothing);
     });
   });
 

@@ -437,7 +437,10 @@ class _ChatModelPickerSheetState extends State<_ChatModelPickerSheet> {
 
 class _ModelSelection {
   final _ModelChoice choice;
-  final String reasoningEffort;
+
+  /// Null keeps the chat's current reasoning effort (a suggested model
+  /// from the failure card switches the model only).
+  final String? reasoningEffort;
 
   const _ModelSelection({required this.choice, required this.reasoningEffort});
 }
@@ -4889,10 +4892,12 @@ class _ChatScreenState extends State<ChatScreen>
     return choices.isEmpty ? null : choices.first;
   }
 
-  Future<void> _setSessionModel(_ModelSelection selection) async {
+  /// Applies [selection] to this chat. True once the gateway took it.
+  Future<bool> _setSessionModel(_ModelSelection selection) async {
     final desktopGateway = _desktopGateway;
-    if (_changingModel || _pendingReattachResync) return;
+    if (_changingModel || _pendingReattachResync) return false;
     final choice = selection.choice;
+    final effort = selection.reasoningEffort;
     setState(() => _changingModel = true);
     try {
       if (desktopGateway != null) {
@@ -4901,11 +4906,13 @@ class _ChatScreenState extends State<ChatScreen>
           provider: choice.provider,
           model: choice.model,
         );
-        if (!mounted || _pendingReattachResync) return;
-        await desktopGateway.setSessionReasoning(
-          sessionId: _normalLocalSessionKey,
-          effort: selection.reasoningEffort,
-        );
+        if (!mounted || _pendingReattachResync) return false;
+        if (effort != null) {
+          await desktopGateway.setSessionReasoning(
+            sessionId: _normalLocalSessionKey,
+            effort: effort,
+          );
+        }
       } else {
         // The API Server owns this session, so persist the same per-session
         // lock over :8642 instead of activating the Dashboard transport.
@@ -4923,34 +4930,69 @@ class _ChatScreenState extends State<ChatScreen>
         sessionId: widget.session.id,
         provider: choice.provider,
         model: choice.model,
-        reasoningEffort: selection.reasoningEffort,
+        reasoningEffort: effort ?? _sessionReasoningEffort,
       );
-      if (!mounted) return;
+      if (!mounted) return false;
       setState(() {
         _sessionModel = choice.model;
         _sessionProvider = choice.provider;
-        _sessionReasoningEffort = selection.reasoningEffort;
-        _sessionReasoningWire = '';
+        if (effort != null) {
+          _sessionReasoningEffort = effort;
+          _sessionReasoningWire = '';
+        }
         _sessionModelOverride = true;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            context.l10n.model_scope_applied(
-              _reasoningEffortLabel(context, selection.reasoningEffort),
-              choice.model,
+      // With no effort chosen or known, the model row shows the switch.
+      final shownEffort = effort ?? _sessionReasoningEffort;
+      if (shownEffort != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              context.l10n.model_scope_applied(
+                _reasoningEffortLabel(context, shownEffort),
+                choice.model,
+              ),
             ),
           ),
-        ),
-      );
+        );
+      }
+      return true;
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted) return false;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(context.l10n.model_was_not_changed(error))),
       );
+      return false;
     } finally {
       if (mounted) setState(() => _changingModel = false);
     }
+  }
+
+  /// The failure card's Switch to (model): Desktop's switchAndRetry and
+  /// NextGen's. The suggested model becomes this chat's model, then the
+  /// failed turn runs again on it (Retry's regenerate; a newer draft
+  /// stays). With no provider to pair the model with, the picker opens.
+  Future<void> _switchToSuggested(ModelSuggestion suggestion) async {
+    final provider = suggestion.provider?.trim().isNotEmpty == true
+        ? suggestion.provider!.trim()
+        : _sessionProvider?.trim() ?? '';
+    if (provider.isEmpty) {
+      await _showModelSelector();
+      return;
+    }
+    final prompt = _lastPromptText;
+    final switched = await _setSessionModel(
+      _ModelSelection(
+        choice: _ModelChoice(provider: provider, model: suggestion.model),
+        reasoningEffort: null,
+      ),
+    );
+    if (!switched || !mounted) return;
+    setState(() {
+      _recoveryMessage = null;
+      _recoverySurface = null;
+    });
+    if (prompt != null) await _retryPrompt(prompt);
   }
 
   /// Send message via SSE streaming (Gateway API Server).
@@ -9173,6 +9215,7 @@ class _ChatScreenState extends State<ChatScreen>
                               ? null
                               : _compressClassicChat,
                           onChooseModel: () => _showModelSelector(),
+                          onSwitchTo: _switchToSuggested,
                           onNewSession: widget.singleSession
                               ? null
                               : () => unawaited(_openFreshDraftChat('')),
