@@ -294,7 +294,10 @@ class _NgMainPageState extends State<_NgMainContent>
   NextGenGateway? _watchedGateway;
 
   /// Requests posted, by request id: what to cancel once each is gone.
-  final Map<String, ({HermesNotificationKind kind, String? sessionId})>
+  final Map<
+    String,
+    ({HermesNotificationKind kind, String? sessionId, String connectionId})
+  >
   _postedRequests = {};
 
   /// Every request already notified (most recent last). Each one alerts at
@@ -352,7 +355,24 @@ class _NgMainPageState extends State<_NgMainContent>
     while (_notifiedRequests.length > _maxNotifiedRequests) {
       _notifiedRequests.remove(_notifiedRequests.first);
     }
-    final stored = _storedFor(scope, raw.sessionId);
+    // A missing session or unmapped runtime is not proof of the visible chat.
+    // Keep the native alert, but make its activation focus-only in that case.
+    final runtime = raw.sessionId;
+    final stored = isWindowsPlatform
+        ? (runtime == null ? null : scope.gateway.storedIdFor(runtime))
+        : _storedFor(scope, runtime);
+    final turn = _lifecycleTurn;
+    bool stillNeeded() =>
+        mounted &&
+        !_foreground &&
+        turn == _lifecycleTurn &&
+        identical(_watchedGateway, scope.gateway) &&
+        (!isWindowsPlatform ||
+            ConnectionMutationBarrier.isCurrent(
+              scope.connection.id,
+              _notificationMutation,
+            )) &&
+        scope.gateway.awaitsAnswer(raw.id);
     final approval = input.kind == NgRequestKind.approval;
     final kind = approval
         ? HermesNotificationKind.approval
@@ -365,6 +385,7 @@ class _NgMainPageState extends State<_NgMainContent>
           ? input.body
           : (input.command ?? ngL.ng_hermes_is_waiting_for_you),
       eventId: raw.id,
+      windowsStillNeeded: isWindowsPlatform ? stillNeeded : null,
       sessionId: stored,
       connectionId: scope.connection.id,
       actions: approval
@@ -380,11 +401,22 @@ class _NgMainPageState extends State<_NgMainContent>
       }),
     );
     if (!posted) return;
-    _postedRequests[raw.id] = (kind: kind, sessionId: stored);
-    // Settled while the notification was being posted.
-    if (!mounted || !scope.gateway.awaitsAnswer(raw.id)) {
-      _cancelRequest(raw.id);
+    // Re-check after the last await. Cancel on the issuing connection, not a
+    // replacement scope, even if the route has already been disposed.
+    if (!stillNeeded()) {
+      await TurnNotificationService.shared.cancelKind(
+        kind: kind,
+        eventId: raw.id,
+        sessionId: stored,
+        connectionId: scope.connection.id,
+      );
+      return;
     }
+    _postedRequests[raw.id] = (
+      kind: kind,
+      sessionId: stored,
+      connectionId: scope.connection.id,
+    );
   }
 
   /// A request redelivered after a reconnect may be the one an approval
@@ -399,7 +431,7 @@ class _NgMainPageState extends State<_NgMainContent>
         kind: posted.kind,
         eventId: id,
         sessionId: posted.sessionId,
-        connectionId: NgScope.of(context).connection.id,
+        connectionId: posted.connectionId,
       ),
     );
   }

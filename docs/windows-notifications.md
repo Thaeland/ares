@@ -38,6 +38,12 @@ The production source at `9a6a4f07` was archived, SHA-256 checked on the Windows
 
 On the Mac, `flutter analyze --no-pub --fatal-infos` was clean and the focused notification, navigation, permission, presence, NextGen and socket suites passed (188 tests). On Windows, the four Windows-specific Flutter suites passed (10 tests); the strict URI parser also passed as a standalone MSVC test. The Flutter tests use synthetic services and are separate from the real Windows history and shell evidence above. The release-wide, all-platform test matrix was not run in this lane. `pubspec.lock` and the Android, iOS and macOS runners are unchanged.
 
+## Routing repairs after the native probe
+
+An account edit now revokes its outstanding Windows navigation tickets **before** credentials or metadata are changed. Restoring the previous credential value does not restore the tickets. An alert without a confirmed runtime-to-stored-session mapping is focus-only. A Windows attention post that finishes after the user returns to the app withdraws its ticket and OS notification rather than opening an obsolete chat.
+
+The focused Dart tests are `test/windows_toast_attention_regression_test.dart` and `test/windows_toast_sink_test.dart`. Run `python3 tool/windows_notification_tests/verify_cold_activation.py` for separate issuing and consuming Flutter processes: a synthetic unchanged account may navigate after restart, an edited-and-restored account cannot. These use synthetic preferences/channel state, not a Windows shell. The native artifact hashes above remain historical evidence for **9a6a4f07**, not for the repaired source.
+
 ## Remaining release gate
 
 On a Windows desktop with an existing trusted test-install path and a visible notification center, use two disposable connections/profiles with overlapping session IDs. For **both** installed forms and **both** layouts, physically select the test session's toast while Ares is active, minimized and closed. Confirm one correct session, focus on the correct window, no action taken, and no route from a repeated, withdrawn, expired or edited-account ticket. Repeat with Windows notifications blocked (and restored by the tester), master off, category off, a quiet completion sound, and an attention event. Check OS history separately from banners (Do Not Disturb can suppress banners). Confirm the optional phone plugin reacts to activity on the intended test gateway only. Do not sign, ship, or mark WIN/F36 fully verified from the fixture or widget results above.

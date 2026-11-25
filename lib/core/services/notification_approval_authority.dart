@@ -32,6 +32,23 @@ class NotificationApprovalAuthority {
     'approvalMutation': _originMutation(connection.id),
   };
 
+  // Only accept the current process/epoch at issuance. At cold consumption an
+  // old-process ticket may be adopted only after durable revocation checks.
+  static bool isCurrentIssuer(String id, String mutation) =>
+      !ConnectionMutationBarrier.isPending(id) &&
+      mutation == _originMutation(id);
+
+  static String? adoptWindowsMutation(String id, String mutation) {
+    if (ConnectionMutationBarrier.isPending(id) ||
+        !_originPattern.hasMatch(mutation)) {
+      return null;
+    }
+    final current = _originMutation(id);
+    return mutation.startsWith('$_process:') && mutation != current
+        ? null
+        : current;
+  }
+
   static bool matchesOrigin(
     SavedConnection connection,
     String? account,

@@ -8,6 +8,8 @@ import 'package:hermes_android/core/services/notification_prefs.dart';
 import 'package:hermes_android/core/services/turn_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'helpers/notification_approval_fixture.dart';
+import 'helpers/windows_receipt_credentials.dart';
+import 'package:hermes_android/core/services/connection_manager.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -140,6 +142,52 @@ void main() {
       expect(focuses, 0);
     },
   );
+  test(
+    'edits durably revoke only this account, even after restoring its credentials',
+    () async {
+      final edit = fixtureApprovalConnection('edit');
+      await prefs.setStringList('saved_connections', [
+        jsonEncode(edit.toMap()),
+        jsonEncode(c.toMap()),
+      ]);
+      final manager = ConnectionManager(
+        prefs,
+        credentialStore: WindowsReceiptCredentials(),
+      );
+      final survivingTicket = await show();
+      final captured = WindowsToastTarget.capture(edit, edit.id, 'old')!;
+      final notification = TurnNotification(
+        id: 99,
+        title: 'example',
+        body: 'example',
+        payload: '',
+        kind: HermesNotificationKind.input,
+        channel: TurnNotificationService.attentionChannel,
+        windowsTarget: captured,
+      );
+      await sink.show(notification);
+      final revokedTicket = posted['ticket'];
+      await manager.updateApiKey(edit.id, 'temporary-fixture-value');
+      await manager.updateApiKey(edit.id, edit.apiKey);
+      await prefs.reload();
+      expect(
+        (jsonDecode(prefs.getString(WindowsToastSink.ledgerKey)!) as Map).keys,
+        [survivingTicket],
+      );
+      await expectLater(
+        WindowsToastSink().show(notification),
+        throwsStateError,
+      );
+      initial = revokedTicket;
+      expect(await WindowsToastSink().takeInitialLaunchResponse(), isNull);
+      initial = survivingTicket;
+      final response =
+          await WindowsToastSink().takeInitialLaunchResponse()
+              as WindowsToastResponse;
+      expect(response.target.matches(c), isTrue);
+    },
+  );
+
   test(
     'OS refusal is not recorded as delivery and does not leave a live ticket',
     () async {

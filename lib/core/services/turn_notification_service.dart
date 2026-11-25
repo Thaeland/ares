@@ -11,6 +11,7 @@ import '../../l10n/app_localizations.dart';
 import '../l10n/l10n.dart' show resolvePreferredLocale;
 import '../utils/platform_capabilities.dart';
 import 'notification_prefs.dart';
+import 'windows_toast_ledger.dart';
 import 'notification_approval_authority.dart';
 import 'auto_messaging_service.dart';
 import 'connection_manager.dart';
@@ -90,6 +91,8 @@ class TurnNotification {
   final bool onlyAlertOnce;
   final HermesNotificationKind? kind;
   final WindowsToastTarget? windowsTarget;
+  // Live producer state is never serialised into a ticket or sent to Windows.
+  final bool Function()? windowsStillNeeded;
   final ConversationNotificationTarget? conversation;
 
   const TurnNotification({
@@ -105,6 +108,7 @@ class TurnNotification {
     this.onlyAlertOnce = false,
     this.conversation,
     this.windowsTarget,
+    this.windowsStillNeeded,
     this.kind,
   });
 }
@@ -1139,6 +1143,7 @@ class TurnNotificationService {
     List<TurnNotificationAction> actions = const [],
     String? payload,
     bool onlyAlertOnce = false,
+    bool Function()? windowsStillNeeded,
   }) async {
     if (!notificationKindEnabled(kind)) {
       recordAttempt(kind.name, title, 'skipped', '${kind.name} is off');
@@ -1167,6 +1172,7 @@ class TurnNotificationService {
         title: title,
         body: body,
         payload: payload ?? '',
+        windowsStillNeeded: windowsStillNeeded,
         channel: channelFor(kind),
         actions: actions,
         importance: importanceFor(kind),

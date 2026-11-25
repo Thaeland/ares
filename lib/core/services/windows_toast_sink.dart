@@ -77,16 +77,12 @@ class WindowsToastResponse extends NotificationResponse {
 
 class WindowsToastSink implements TurnNotificationSink {
   static const channel = MethodChannel('ares/windows_toast');
-  static const ledgerKey = 'windows_toast_tickets_v1';
+  static const ledgerKey = WindowsToastLedger.key;
   static final _ticket = RegExp(r'^[a-f0-9]{32}$');
   static const retention = Duration(days: 3);
   static const maxEntries = 256;
-  Future<void> _tail = Future.value();
-  Future<T> _serialized<T>(Future<T> Function() op) {
-    final next = _tail.then((_) => op());
-    _tail = next.then<void>((_) {}, onError: (Object _) {});
-    return next;
-  }
+  Future<T> _serialized<T>(Future<T> Function() op) =>
+      WindowsToastLedger.serialized(op);
 
   @override
   Future<void> initialize() async {}
@@ -156,6 +152,15 @@ class WindowsToastSink implements TurnNotificationSink {
             ? strings.test_notification_body
             : strings.ongoing_chat_channel_name,
     };
+    final target = n.windowsTarget;
+    if (n.windowsStillNeeded?.call() == false ||
+        (target != null &&
+            !NotificationApprovalAuthority.isCurrentIssuer(
+              target.connectionId,
+              target.mutation,
+            ))) {
+      throw StateError('Notification superseded');
+    }
     entries[token] = {
       'id': n.id,
       'expires': DateTime.now().add(retention).millisecondsSinceEpoch,
@@ -165,6 +170,9 @@ class WindowsToastSink implements TurnNotificationSink {
     };
     await _save(prefs, entries);
     try {
+      if (n.windowsStillNeeded?.call() == false) {
+        throw StateError('Notification withdrawn');
+      }
       await channel.invokeMethod<void>('show', {
         'id': n.id,
         'ticket': token,
@@ -179,6 +187,14 @@ class WindowsToastSink implements TurnNotificationSink {
             ? notificationPrefs.value.completionSound.name
             : 'system',
       });
+      // A click can already be queued behind the OS acknowledgement. Withdraw
+      // while still holding the ledger, before that activation can consume it.
+      if (n.windowsStillNeeded?.call() == false) {
+        entries.remove(token);
+        await _save(prefs, entries);
+        await channel.invokeMethod<void>('cancel', n.id);
+        throw StateError('Notification withdrawn');
+      }
     } catch (_) {
       entries.remove(token);
       await _save(prefs, entries);
@@ -208,9 +224,23 @@ class WindowsToastSink implements TurnNotificationSink {
                   )))) {
         return null;
       }
-      await channel.invokeMethod<void>('focus');
       final target = WindowsToastTarget.decode(row['target']);
-      return target == null ? null : WindowsToastResponse(target);
+      final mutation = target == null
+          ? null
+          : NotificationApprovalAuthority.adoptWindowsMutation(
+              target.connectionId,
+              target.mutation,
+            );
+      await channel.invokeMethod<void>('focus');
+      if (target == null || mutation == null) return null;
+      return WindowsToastResponse(
+        WindowsToastTarget(
+          target.connectionId,
+          target.sessionId,
+          target.account,
+          mutation,
+        ),
+      );
     });
   }
 

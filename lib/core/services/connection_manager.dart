@@ -17,6 +17,8 @@ import '../models/session.dart';
 import '../models/provider_oauth.dart';
 import '../models/fallback_config.dart';
 import '../utils/android_prompt_context.dart';
+import '../utils/platform_capabilities.dart' show isWindowsPlatform;
+import 'windows_toast_ledger.dart';
 import 'client_certificate_service.dart';
 import 'connection_mutation_barrier.dart';
 import 'dashboard_api_client.dart';
@@ -1014,6 +1016,15 @@ class ConnectionManager {
     };
     final native = _nativePushSupported;
     try {
+      if (isWindowsPlatform) {
+        try {
+          await WindowsToastLedger.revokeConnections(lease.connections);
+        } catch (_) {
+          throw const CredentialStorageException(
+            'Windows notification tickets could not be invalidated. Connection unchanged.',
+          );
+        }
+      }
       if (native) {
         try {
           await finishPendingMobilePushChanges();
