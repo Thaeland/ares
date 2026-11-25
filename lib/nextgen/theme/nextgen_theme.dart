@@ -336,9 +336,49 @@ abstract final class NgType {
 /// Builds the NextGen [ThemeData] for [brightness]. It keeps the classic
 /// [HermesTokens] extension (re-tinted to NextGen's palette) so every classic
 /// screen opened from NextGen still renders correctly.
-ThemeData nextGenTheme(Brightness brightness, NextGenLook look) {
-  final c = NgColors.build(brightness, look.accent, look.pureBlack, look.glow);
-  final base = hermesTheme(brightness);
+ThemeData nextGenTheme(
+  Brightness brightness,
+  NextGenLook look, {
+  ColorScheme? profileScheme,
+}) {
+  final base = hermesTheme(brightness, profileScheme: profileScheme);
+  final hermesThemeStatus = base.extension<HermesTokens>()!;
+  final s = profileScheme;
+  final c = s == null
+      ? NgColors.build(brightness, look.accent, look.pureBlack, look.glow)
+      : NgColors(
+          background: s.surface,
+          surface: s.surfaceContainerLow,
+          surface2: s.surfaceContainer,
+          surface3: s.surfaceContainerHigh,
+          well: s.surfaceContainerLowest,
+          thumb: s.surfaceContainerHighest,
+          sheet: s.surfaceContainerLow,
+          input: s.surfaceContainerLow,
+          sidebar: s.surfaceContainerLow,
+          userBubble: s.primary,
+          onUserBubble: s.onPrimary,
+          text: s.onSurface,
+          text2: s.onSurface,
+          text3: s.onSurfaceVariant,
+          textMuted: s.onSurfaceVariant,
+          accent: s.primary,
+          onAccent: s.onPrimary,
+          accentText: s.primary,
+          accentSoft: s.primaryContainer,
+          inverse: s.inverseSurface,
+          onInverse: s.onInverseSurface,
+          stroke: s.outlineVariant,
+          strokeStrong: s.outline,
+          danger: s.error,
+          success: hermesThemeStatus.success,
+          warning: hermesThemeStatus.warning,
+          dangerSoft: s.errorContainer,
+          successSoft: hermesThemeStatus.success.withValues(alpha: 0.13),
+          warningSoft: hermesThemeStatus.warning.withValues(alpha: 0.13),
+          glow: look.glow,
+        );
+
   final scheme = base.colorScheme.copyWith(
     brightness: brightness,
     primary: c.accent,

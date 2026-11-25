@@ -2,6 +2,7 @@
 // Uses REST endpoints: POST /api/sessions/{id}/chat and
 // GET /api/sessions/{id}/messages.
 import 'dart:async';
+import '../widgets/windows_chat_presence.dart';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -37,11 +38,18 @@ import '../widgets/delegated_task_timeline.dart';
 import '../widgets/delegated_task_labels.dart';
 import '../services/connection_manager.dart';
 import '../services/attachment_draft_service.dart';
+import '../services/client_held_queue.dart';
+import '../services/composer_draft_store.dart';
+import '../services/prepared_image_store.dart';
+import '../widgets/client_held_queue_bar.dart';
+import '../widgets/image_recovery_capability_notice.dart';
+import '../widgets/prepared_image_recovery.dart';
 import '../services/chat_presentation_state.dart';
 import '../services/chat_model_override_store.dart';
 import '../services/chat_density_preference.dart';
 import '../services/chat_history_window.dart';
 import '../services/desktop_gateway_client.dart';
+import '../services/remote_workspace.dart';
 import '../services/gateway_turn_application_controller.dart';
 import '../services/normal_gateway_application_session.dart';
 import '../services/gateway_turn_coordinator.dart';
@@ -81,11 +89,18 @@ import '../models/chat_message_time.dart';
 import '../utils/rest_chat_reply_retention.dart';
 import '../utils/android_prompt_context.dart';
 import '../utils/chat_history_scroll.dart';
+import '../widgets/transcript_reader.dart';
+import '../widgets/transcript_body.dart';
 import '../utils/message_content.dart';
 import '../utils/responsive.dart';
 import '../utils/turn_recovery_fallback.dart';
 import '../theme/hermes_theme.dart';
 import 'files_screen.dart';
+import '../widgets/session_files_view.dart';
+import 'workspace_workers_screen.dart';
+import 'gateway_queue_screen.dart';
+import '../widgets/git_review_pane.dart';
+import '../models/turn_changed_files.dart';
 import '../widgets/background_report_card.dart';
 import '../widgets/gateway_activity_card.dart';
 import '../widgets/chat_context_header.dart';
@@ -108,6 +123,8 @@ import '../widgets/voice_composer_controls.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
 import '../widgets/desktop_shortcuts.dart';
+import '../widgets/composer_prompt_recall.dart';
+import '../widgets/orphan_draft_recovery.dart';
 
 /// Recovery v2 opens a new server session and cannot yet target an existing
 /// Gateway session. Keep it confined to locally-created drafts; a session from
@@ -841,12 +858,49 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   String? _sessionReasoningEffort;
   String? _projectName;
   String? _storedSessionId;
+  bool _showSessionFiles = false;
+  bool _openGit = false;
+  String? _gitFocus;
+
+  String? get _fileSessionId =>
+      _storedSessionId ??
+      (widget.session.isLocalDraft
+          ? _normalChat?.storedSessionId
+          : _storedSessionKey);
+
+  /// The session tree needs a stored chat whose live binding is not a remote
+  /// terminal. Drafts and non-local backends keep the earlier file browser.
+  bool get _sessionScopedFiles {
+    final id = _fileSessionId;
+    final gateway = _desktopGateway;
+    if (gateway == null || id == null) return false;
+    final backend = gateway.boundTerminalBackend(id);
+    return backend == null || backend == 'local';
+  }
+
+  void _noteGitTurnStarted() {
+    final owner = _desktopGateway?.workspace;
+    final session = _fileSessionId;
+    if (owner == null || session == null || session.isEmpty) return;
+    unawaited(captureGitTurnBaseline(owner: owner, sessionId: session));
+  }
+
+  List<TurnChangedFile> get _turnChangedFiles {
+    if (_desktopGateway == null || _fileSessionId == null) return const [];
+    return changedFilesInLatestTurn(_messages);
+  }
+
   int _projectNameRefreshGeneration = 0;
   bool _sessionModelOverride = false;
   bool _loadingModelOptions = false;
   bool _changingModel = false;
   bool _sending = false;
   bool _streaming = false;
+  final _held = ClientHeldQueue();
+  bool _heldDrainBusy = false;
+  bool _heldTouched = false;
+  String? _editingHeldId;
+  bool _parkHeldOnStop = true;
   bool _preparingSend = false;
   bool _midTurnSendInFlight = false;
   GatewayTurnStatus? _gatewayTurnStatus;
@@ -938,10 +992,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   ChatDensity _chatDensity = chatDensitySelection.value;
 
   // Scroll management
+  final _reader = GlobalKey<TranscriptReaderState>();
   final _scrollController = ScrollController();
   final _scrollCoordinator = ChatScrollCoordinator();
   final _endAffordanceController = ChatEndAffordanceController();
   final _composerFocus = FocusNode();
+  final _promptRecall = ComposerPromptRecall();
   bool _keyboardEndScrollDone = false;
   bool _streamFollowScheduled = false;
   bool _initialEndFrameScheduled = false;
@@ -1156,6 +1212,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
     _scrollController.addListener(_onScroll);
     if (_desktopGateway != null) unawaited(_ensureDesktopSession());
+    unawaited(_restoreHeldQueue());
   }
 
   void _attachNormalSession() {
@@ -1338,12 +1395,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         _registerMaterializedAssistantMessage();
       }
     }
+    final wasSending = _sending;
     setState(() {
       _desktopConnectionState = snapshot.connectionState;
       if (snapshot.turnId != null || snapshot.displayRows.isNotEmpty) {
         _loading = false;
       }
       _sending = snapshot.hasActiveTurn && !snapshot.reconciling;
+      if (!wasSending && _sending) scheduleMicrotask(_noteGitTurnStarted);
       _streaming =
           snapshot.hasActiveTurn &&
           !snapshot.reconciling &&
@@ -1569,6 +1628,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       '$_connectionIdentity|${widget.session.id}';
 
   void _onComposerChanged() {
+    _promptRecall.editorChanged();
     if (_voiceBound && _handsFree.active) {
       _handsFree.revoke(HandsFreeStopReason.composerEdited);
     }
@@ -1584,6 +1644,31 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   void _onSlashCommandChanged() {
     if (mounted) setState(() {});
+  }
+
+  bool get _composerOwnerCurrent =>
+      mounted &&
+      widget.active &&
+      _draftWriter.isCurrent &&
+      identical(_presentationRegistry, _reasoningRegistry) &&
+      identical(_presentation, _reasoningPresentation) &&
+      ConnectionMutationBarrier.isCurrent(
+        widget.connection.id,
+        _voiceAccountEpoch,
+      ) &&
+      _voiceAccountCurrent();
+
+  Iterable<String> _sentPrompts() sync* {
+    final items = _normalChat == null
+        ? buildConversationAttachmentItems(messages: _messages)
+        : _normalDisplaySections(
+            verbose: false,
+          ).expand((section) => section.items);
+    for (final row in items.whereType<Map<String, dynamic>>()) {
+      if (row['role'] == 'user') {
+        if (row['_display_content'] case final String text) yield text;
+      }
+    }
   }
 
   /// Replaces the draft with the chosen command and a trailing space. The
@@ -1939,7 +2024,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (_voiceForeground != foreground) _voiceForegroundEpoch++;
     _voiceForeground = foreground;
     if (!_voiceForeground) _revokeVoice(HandsFreeStopReason.background);
-    if (state == AppLifecycleState.paused ||
+    if ((defaultTargetPlatform == TargetPlatform.windows &&
+            state == AppLifecycleState.inactive) ||
+        state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached) {
       _appInBackground = true;
@@ -2794,6 +2881,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     unawaited(
       completed
           ? _turnNotifications.showTurnCompleted(
+              origin: widget.connection,
               title: context.l10n.hermes_response_ready,
               turnSummary: '$_sessionTitle: $summary',
               turnId: turnId,
@@ -2801,6 +2889,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               connectionId: widget.connection.id,
             )
           : _turnNotifications.showTurnFailed(
+              origin: widget.connection,
               title: context.l10n.the_turn_failed,
               turnSummary: '$_sessionTitle: $summary',
               turnId: turnId,
@@ -2820,6 +2909,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     const body = 'Open the chat to review the requested action.';
     unawaited(
       _turnNotifications.showKind(
+        origin: widget.connection,
         kind: HermesNotificationKind.approval,
         title: '${context.l10n.approval_needed} — $_sessionTitle',
         body: body,
@@ -2849,6 +2939,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     const noticeBody = 'Open the chat to respond.';
     unawaited(
       _turnNotifications.showKind(
+        origin: widget.connection,
         kind: HermesNotificationKind.input,
         title: '${context.l10n.input_needed} — $_sessionTitle',
         body: noticeBody,
@@ -2877,6 +2968,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         notification.key == 'credits.restored';
     unawaited(
       _turnNotifications.showKind(
+        origin: widget.connection,
         kind: isCredits
             ? HermesNotificationKind.credits
             : HermesNotificationKind.plugin,
@@ -2907,6 +2999,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final isBackground = notice.kind == GatewayNoticeKind.background;
     unawaited(
       _turnNotifications.showKind(
+        origin: widget.connection,
         kind: isBackground
             ? HermesNotificationKind.backgroundDone
             : HermesNotificationKind.plugin,
@@ -2993,6 +3086,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   void _goToEnd() {
+    _reader.currentState?.rememberLatest();
+    _scrollCoordinator.updateFromUserScroll(isNearEnd: true);
     if (_canFocusSavedRecovery && _retainIdleRecoveryForPresentation()) {
       setState(() {});
       _scheduleScrollTarget(const ChatScrollTarget.end());
@@ -3646,6 +3741,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     } else {
       _scheduleScrollTarget(_scrollCoordinator.endStreaming());
       unawaited(_refreshDeferredHistoryIfIdle());
+      if (projection.isFailClosed ||
+          projection.status == GatewayRecoveryTurnStatus.failed) {
+        _held.park();
+      }
+      unawaited(_drainHeldIfIdle());
     }
   }
 
@@ -3915,6 +4015,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final testPicker = widget.testServerFilePicker;
     if (testPicker != null) {
       path = await testPicker();
+    } else if (_desktopGateway != null && _sessionScopedFiles) {
+      setState(() => _showSessionFiles = true);
+      return;
     } else {
       final files = RemoteFilesClient.fromConnection(widget.connection);
       try {
@@ -3934,7 +4037,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
     if (!mounted || path == null || path.trim().isEmpty) return;
     final current = _textController.text.trimRight();
-    final reference = '@file ${path.trim()} ';
+    final reference =
+        '${gatewayContextReference(folder: false, path: path.trim())} ';
     final next = current.isEmpty ? reference : '$current\n$reference';
     _textController.value = TextEditingValue(
       text: next,
@@ -4548,6 +4652,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (_streaming) {
       if (text.isNotEmpty) {
         await _sendWhileWorking(text);
+      } else if (handsFreePrompt == null &&
+          textOverride == null &&
+          _attachmentDrafts.isEmpty &&
+          !_usesNormalInputOwner &&
+          _held.entries.isNotEmpty) {
+        // Empty Enter while busy is Desktop's double-send. The head is
+        // admitted once after the interrupt. Nothing queued does not stop.
+        await _sendHeldNow(_held.entries.first.id);
       } else if (_attachmentDrafts.isNotEmpty) {
         // Active-turn guidance is text-only. Do not silently drop an explicit
         // attachments-only Send, interrupt work, or consume the staged files.
@@ -4560,7 +4672,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final attachments = handsFreePrompt == null && textOverride == null
         ? List<AttachmentDraft>.from(_attachmentDrafts)
         : <AttachmentDraft>[];
-    if (text.isEmpty && attachments.isEmpty) return;
+    if (text.isEmpty && attachments.isEmpty) {
+      if (!_usesNormalInputOwner && _held.entries.isNotEmpty) {
+        _held.unpark();
+        if (mounted) setState(() {});
+        await _drainHeldIfIdle();
+      }
+      return;
+    }
     if (_sending || _streaming || _pendingReattachResync) return;
     if (_transcriptLoadBlocksComposer) return;
     // Once sent, all failures are handled by slash dispatch itself. Null is
@@ -5003,6 +5122,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     var ownsHandoff = true;
     _clearComposerForSend(text);
     try {
+      _parkHeldOnStop = false;
       final stopped = await _stopResponse();
       if (!mounted) return;
       if (!stopped) {
@@ -5053,6 +5173,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     bool preserveComposer = false,
     VoidCallback? onAccepted,
     bool hiddenIntent = false,
+    bool heldUntilAccepted = false,
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     // A remote-gateway profile uses one transport for every prompt. Images and
@@ -5066,6 +5187,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         preserveComposer: keepComposer,
         onAccepted: onAccepted,
         hiddenIntent: hiddenIntent,
+        heldUntilAccepted: heldUntilAccepted,
       );
       return;
     }
@@ -5077,6 +5199,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         voiceBinding: voiceBinding,
         preserveComposer: keepComposer,
         onAccepted: onAccepted,
+        heldUntilAccepted: heldUntilAccepted,
       );
       return;
     }
@@ -5090,7 +5213,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       } catch (_) {
         if (mounted) setState(() => _sending = false);
         if (!mounted) return;
-        _restoreComposerAfterRejectedSend(text);
+        if (!heldUntilAccepted) _restoreComposerAfterRejectedSend(text);
         _showAttachmentError(
           context.l10n.unable_to_read_the_selected_image_the_selection_was_kept,
         );
@@ -5317,6 +5440,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               });
             }
           }
+          await _drainHeldIfIdle();
         },
         onError: (error) {
           if (!mounted || responseGeneration != _responseGeneration) return;
@@ -5333,12 +5457,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               _messages.removeLast();
             }
           });
-          if (!hadContent && !keepComposer) {
+          if (!hadContent && !keepComposer && !heldUntilAccepted) {
             _restoreComposerAfterRejectedSend(text);
           }
           if (voiceBinding != null) {
             _finishVoiceTurn(voiceBinding, HandsFreeTurnStatus.failed);
           }
+          _held.park();
+          if (mounted) setState(() {});
           _handleSendError(error, removePendingUserMessage: true);
         },
       );
@@ -5347,6 +5473,77 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
   }
 
+  String _clearedImageText = '';
+
+  PreparedImageTarget? get _imageTarget {
+    if (!_usesNormalInputOwner ||
+        _desktopGateway == null ||
+        _normalSession?.hasCurrentAccount != true) {
+      return null;
+    }
+    final stored =
+        _normalChat?.storedSessionId ??
+        _desktopGateway?.storedSessionKeyFor(_normalLocalSessionKey) ??
+        (widget.session.isLocalDraft ? null : widget.session.id);
+    return stored == null
+        ? null
+        : PreparedImageTarget(
+            widget.connection,
+            stored,
+            PreparedImageTransport.classicRefs,
+          );
+  }
+
+  ImageRecoveryGap? get _imageRecoveryGap {
+    if (_usesNormalInputOwner) return null;
+    if (_turnApplicationSession != null && !_legacyTransportFallback) {
+      return ImageRecoveryGap.recoveryV2;
+    }
+    return ImageRecoveryGap.restSse;
+  }
+
+  bool get _quietEmptyComposer =>
+      mounted &&
+      widget.active &&
+      _draftWriter.isCurrent &&
+      !_sending &&
+      !_streaming &&
+      !_preparingSend &&
+      !_preparingPaste &&
+      !_pendingReattachResync &&
+      !_voiceRecording.hasDraft &&
+      !_voiceRecording.recording &&
+      !_voiceRecording.busy &&
+      !_voiceComposer.listening &&
+      !_startingVoiceInput &&
+      _textController.text.isEmpty &&
+      _attachmentDrafts.isEmpty;
+
+  Object? _imageRestoreRevision() =>
+      mounted &&
+          widget.active &&
+          _draftWriter.isCurrent &&
+          !_sending &&
+          !_streaming &&
+          !_preparingSend &&
+          !_preparingPaste &&
+          !_pendingReattachResync &&
+          !_voiceRecording.hasDraft &&
+          !_voiceRecording.recording &&
+          !_voiceRecording.busy &&
+          !_voiceComposer.listening &&
+          !_startingVoiceInput &&
+          _textController.text.isEmpty &&
+          _attachmentDrafts.isEmpty &&
+          _imageTarget != null
+      ? (
+          _normalChat,
+          _imageTarget!.key,
+          _composerRevision,
+          _draftWriter.revision,
+        )
+      : null;
+
   Future<void> _sendDesktopGatewayMessage({
     required String text,
     required List<AttachmentDraft> attachments,
@@ -5354,6 +5551,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _HandsFreeTurnBinding? voiceBinding,
     bool preserveComposer = false,
     VoidCallback? onAccepted,
+    bool heldUntilAccepted = false,
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     final chat = _normalChat;
@@ -5365,6 +5563,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       return;
     }
     _normalReservation = reservation;
+    _noteGitTurnStarted();
     final desktopGateway = _desktopGateway;
     final responseGeneration = _responseGeneration;
     final pastedIds = attachments
@@ -5372,6 +5571,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         .map((draft) => draft.id)
         .toSet();
     final recoveryText = keepComposer ? text : _composerTextWithPastes(text);
+    final imageText = _clearedImageText;
+    final journalImages =
+        !keepComposer &&
+        desktopGateway != null &&
+        PreparedImageStore.supports(imageText, attachments);
+    PreparedImageCapture? capture;
     var handedOff = false;
     _awaitingVoiceReply = speakResponse && _voiceReplyEnabled;
     try {
@@ -5394,8 +5599,31 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         await _applySessionModelOverride(desktopGateway);
       }
       if (!mounted || responseGeneration != _responseGeneration) return;
+      if (journalImages &&
+          _imageTarget == null &&
+          widget.session.isLocalDraft) {
+        await desktopGateway.ensureSession(_normalLocalSessionKey);
+        if (!mounted || responseGeneration != _responseGeneration) return;
+      }
+      final beforeUpload = _imageTarget;
+      final adopted = journalImages && beforeUpload != null
+          ? await PreparedImageStore.shared.adopt(
+              beforeUpload,
+              imageText,
+              attachments,
+            )
+          : null;
+      if (journalImages && adopted == null) {
+        if (beforeUpload == null) throw const PreparedImageException();
+        capture = await PreparedImageStore.shared.capture(
+          attachments,
+          beforeUpload: (target: beforeUpload, text: imageText),
+        );
+      }
+      if (!mounted || responseGeneration != _responseGeneration) return;
       await _attachmentSendCoordinator.uploadThenSubmit(
-        drafts: attachments,
+        drafts: adopted == null ? capture?.drafts ?? attachments : const [],
+        retainUploadedFiles: capture != null,
         upload: ({required draft, required dataUrl}) async {
           if (!mounted || responseGeneration != _responseGeneration) {
             throw StateError('Attachment preparation was cancelled.');
@@ -5425,10 +5653,31 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             voiceBinding.finish(HandsFreeTurnStatus.unknown);
             return;
           }
-          final prompt = [
-            text,
-            refTexts.join('\n'),
-          ].where((part) => part.trim().isNotEmpty).join('\n\n');
+          final prompt =
+              adopted?.entry.prompt ??
+              [
+                text,
+                refTexts.join('\n'),
+              ].where((part) => part.trim().isNotEmpty).join('\n\n');
+          final target = _imageTarget;
+          PreparedImageAttempt? attempt = adopted;
+          if (journalImages) {
+            if (target == null ||
+                (adopted != null && adopted.entry.target.key != target.key)) {
+              throw const PreparedImageException();
+            }
+            attempt ??= await PreparedImageStore.shared.prepare(
+              target,
+              imageText,
+              capture!,
+              prompt: prompt,
+            );
+            if (!mounted ||
+                responseGeneration != _responseGeneration ||
+                _imageTarget?.key != target.key) {
+              return;
+            }
+          }
           final labels = attachments
               .map((file) => '[${context.l10n.attached_file}: ${file.name}]')
               .join('\n');
@@ -5454,6 +5703,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           // app owner. This await's UI continuation is fenced on reattachment.
           final submitted = chat.submitPrepared(
             reservation: reservation,
+            imageAttempt: attempt,
             onAccepted: onAccepted,
             text: prompt,
             localContent: localContent,
@@ -5469,6 +5719,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           );
           final submittedTurn = chat.snapshot.turnId;
           await submitted;
+          // submitPrepared throws for definitely pre-wire failures (the catch
+          // below keeps the originals). Otherwise the journal owns recovery.
+          if (attempt != null) {
+            await _attachmentDraftService.removeAll(attachments);
+          }
           final terminal = chat.snapshot.terminal;
           if (terminal?.turnId == submittedTurn &&
               terminal?.completed == true) {
@@ -5493,7 +5748,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               );
           });
         }
-        if (!keepComposer) {
+        if (!keepComposer && !heldUntilAccepted) {
           _restoreComposerAfterRejectedSend(handedOff ? recoveryText : text);
         }
         voiceBinding?.finish(HandsFreeTurnStatus.failed);
@@ -5506,6 +5761,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         voiceBinding?.finish(HandsFreeTurnStatus.failed);
       }
       if (identical(_normalReservation, reservation)) _normalReservation = null;
+      await capture?.close();
     }
   }
 
@@ -5517,10 +5773,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     bool preserveComposer = false,
     VoidCallback? onAccepted,
     bool hiddenIntent = false,
+    bool heldUntilAccepted = false,
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     final turnSession = _turnApplicationSession;
     if (turnSession == null) return;
+    _noteGitTurnStarted();
     _awaitingVoiceReply = speakResponse && _voiceReplyEnabled;
     final responseGeneration = ++_responseGeneration;
     _activeResponseTransport = _ResponseTransport.desktop;
@@ -5602,7 +5860,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ..status = AttachmentDraftStatus.ready
           ..error = null;
       }
-      _restoreComposerAfterRejectedSend(text);
+      if (!heldUntilAccepted) _restoreComposerAfterRejectedSend(text);
       _handleSendError(error);
       unawaited(_refreshDeferredHistoryIfIdle());
       return;
@@ -5698,7 +5956,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               ..addAll(attachments);
           }
         });
-        if (!keepComposer) _restoreComposerAfterRejectedSend(text);
+        if (!keepComposer && !heldUntilAccepted) {
+          _restoreComposerAfterRejectedSend(text);
+        }
         _handleSendError(error);
         unawaited(_refreshDeferredHistoryIfIdle());
         return;
@@ -6818,13 +7078,192 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       }
       return false;
     } finally {
-      if (mounted) setState(() => _stopResponseInFlight = false);
+      _finishStopInFlight();
       unawaited(_refreshDeferredHistoryIfIdle());
     }
   }
 
+  bool get _heldIdle =>
+      mounted &&
+      !_usesNormalInputOwner &&
+      !_held.parked &&
+      _held.entries.isNotEmpty &&
+      !_streaming &&
+      !_sending &&
+      !_preparingSend &&
+      !_midTurnSendInFlight &&
+      !_stopResponseInFlight &&
+      !_pendingReattachResync;
+
+  Future<void> _persistHeldQueue() {
+    if (_usesNormalInputOwner) return Future<void>.value();
+    if (!_heldTouched && _held.entries.isEmpty) return Future<void>.value();
+    final handle = _draftWriter.draftHandle;
+    return ComposerDraftStore.saveHeldPrompts(
+      connectionId: handle.connectionId,
+      sessionId: handle.sessionId,
+      texts: [for (final entry in _held.entries) entry.text],
+    );
+  }
+
+  Future<void> _restoreHeldQueue() async {
+    if (_usesNormalInputOwner) return;
+    final handle = _draftWriter.draftHandle;
+    final texts = await ComposerDraftStore.readHeldPrompts(
+      connectionId: handle.connectionId,
+      sessionId: handle.sessionId,
+    );
+    if (!mounted || _heldTouched || texts.isEmpty || _held.entries.isNotEmpty) {
+      return;
+    }
+    setState(() => _held.restoreParked(texts));
+  }
+
+  void _keepRefusedHeldPrompt(String id) {
+    _held.promote(id);
+    _held.park();
+    if (!mounted) return;
+    setState(() {
+      _terminalTurnNotice ??= context.l10n.send_failed(
+        'The queued prompt was not sent.',
+      );
+    });
+  }
+
+  void _finishStopInFlight() {
+    if (mounted) {
+      setState(() => _stopResponseInFlight = false);
+    } else {
+      _stopResponseInFlight = false;
+    }
+    unawaited(_drainHeldIfIdle());
+  }
+
+  Future<void> _drainHeldIfIdle() async {
+    if (_heldDrainBusy || !_heldIdle) return;
+    final next = _held.peekAuto(skipId: _editingHeldId);
+    if (next == null) return;
+    _heldDrainBusy = true;
+    if (mounted) setState(() {});
+    var accepted = false;
+    try {
+      await _submitMessage(
+        text: next.text,
+        attachments: const [],
+        speakResponse: false,
+        heldUntilAccepted: true,
+        onAccepted: () {
+          if (accepted) return;
+          accepted = true;
+          _heldTouched = true;
+          _held.remove(next.id);
+          unawaited(_persistHeldQueue());
+          if (mounted) setState(() {});
+        },
+      );
+    } catch (_) {
+      accepted = false;
+    } finally {
+      _heldDrainBusy = false;
+    }
+    if (!mounted) return;
+    if (!accepted && _held.entries.any((entry) => entry.id == next.id)) {
+      _keepRefusedHeldPrompt(next.id);
+    }
+  }
+
+  void _queueHeldFromComposer() {
+    if (_usesNormalInputOwner || !_streaming) return;
+    final text = _textController.text.trim();
+    if (text.isEmpty) return;
+    _heldTouched = true;
+    setState(() {
+      _held.enqueue(text);
+      _textController.clear();
+    });
+    _draftWriter.edit('');
+    unawaited(_draftWriter.save(''));
+    unawaited(_persistHeldQueue());
+  }
+
+  Future<void> _sendHeldNow(String id) async {
+    if (!_held.promote(id)) return;
+    if (_streaming) {
+      _parkHeldOnStop = false;
+      await _stopResponse();
+    } else {
+      _held.unpark();
+      if (mounted) setState(() {});
+    }
+    await _drainHeldIfIdle();
+  }
+
+  Future<void> _editHeld(String id) async {
+    final index = _held.entries.indexWhere((entry) => entry.id == id);
+    if (index < 0) {
+      _reportMissingHeldEdit();
+      return;
+    }
+    var draft = _held.entries[index].text;
+    _editingHeldId = id;
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit unsent prompt'),
+        content: TextFormField(
+          initialValue: draft,
+          onChanged: (value) => draft = value,
+          maxLines: 4,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, draft),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    try {
+      if (!mounted || result == null) return;
+      final saved = _held.edit(id, result);
+      if (!saved) {
+        _reportMissingHeldEdit();
+        return;
+      }
+      _heldTouched = true;
+      unawaited(_persistHeldQueue());
+      if (mounted) setState(() {});
+    } finally {
+      if (_editingHeldId == id) _editingHeldId = null;
+      if (mounted) unawaited(_drainHeldIfIdle());
+    }
+  }
+
+  void _reportMissingHeldEdit() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text(heldPromptMissingMessage)));
+  }
+
   Future<bool> _stopResponse() async {
+    final parkHeld = _parkHeldOnStop;
+    _parkHeldOnStop = true;
+    // A row send unparks even when Stop is already in flight. Returning
+    // first used to consume that request and leave the list parked.
+    if (!_usesNormalInputOwner && !parkHeld) {
+      _held.unpark();
+      if (mounted) setState(() {});
+    }
     if (!_streaming || _stopResponseInFlight) return false;
+    if (!_usesNormalInputOwner && parkHeld) {
+      _held.park();
+      if (mounted) setState(() {});
+    }
     if (_turnApplicationSession != null && !_legacyTransportFallback) {
       return _stopRecoverableGatewayResponse();
     }
@@ -6858,7 +7297,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           );
         }
       } finally {
-        if (mounted) setState(() => _stopResponseInFlight = false);
+        _finishStopInFlight();
       }
       return false;
     }
@@ -6933,7 +7372,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       );
       return false;
     } finally {
-      if (mounted) setState(() => _stopResponseInFlight = false);
+      _finishStopInFlight();
       unawaited(_refreshDeferredHistoryIfIdle());
     }
   }
@@ -6941,6 +7380,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   /// Clear the visible draft immediately but retain the unsent prompt through
   /// cancellable setup. Leaving during an upload must not silently lose it.
   void _clearComposerForSend(String text) {
+    _clearedImageText = _attachmentDrafts.isEmpty ? '' : _textController.text;
     _setRestoredComposer('');
     _clearedComposerRevision = _composerRevision;
     final recovery = _composerTextWithPastes(text);
@@ -7074,7 +7514,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     _syncComposerKeyboardEndScroll();
-    return _preview.layout(
+    final screen = _preview.layout(
       chat: _buildChat(context),
       storedId: _storedSessionId ?? _storedSessionKey,
       service: _attachmentDraftService,
@@ -7092,10 +7532,73 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         });
       },
     );
+    return defaultTargetPlatform == TargetPlatform.windows
+        ? WindowsChatPresence(
+            target: () => (_desktopGateway ?? _normalSession?.client)
+                ?.presenceFor(_normalLocalSessionKey),
+            child: screen,
+          )
+        : screen;
   }
 
-  Widget _buildChat(BuildContext context) {
-    return Scaffold(
+  Widget _buildChat(BuildContext context) => LayoutBuilder(
+    // Measure the pane, not the window: a phone, split view or parallel
+    // workspace pane gets compact chrome so the app bar never overflows.
+    builder: (context, box) => _buildChatScaffold(context, box.maxWidth),
+  );
+
+  Widget _buildChatScaffold(BuildContext context, double paneWidth) {
+    final compactTools = paneWidth < 480;
+    final fileOwner = _desktopGateway?.workspace;
+    final fileId = _fileSessionId;
+    final gateway = _desktopGateway;
+    // Captured per build so a menu selection uses the owner shown when it
+    // is chosen (a capture from an earlier build may have been superseded).
+    WorkspaceWorkersScreen? captureWorkers() {
+      final gateway = _desktopGateway;
+      final parentId = gateway?.storedSessionKeyFor(_normalLocalSessionKey);
+      return _usesNormalInputOwner && gateway != null && parentId != null
+          ? WorkspaceWorkersScreen.capture(
+              gateway.workspace,
+              widget.connection.label,
+              storedSessionId: parentId,
+            )
+          : null;
+    }
+
+    final workers = captureWorkers();
+    final showQueue = workers != null && gateway?.sessionAuthority == true;
+    void openGatewayQueue([WorkspaceWorkersScreen? fresh]) {
+      final target = fresh ?? workers!;
+      final writer = _draftWriter, revision = _composerRevision;
+      final text = _attachmentDrafts.isEmpty ? _textController.text : '';
+      GatewayQueueScreen.open(
+        context,
+        target.owner,
+        target.route,
+        draft: text,
+        onAdmitted: (sent) {
+          if (mounted &&
+              writer == _draftWriter &&
+              writer.isCurrent &&
+              revision == _composerRevision &&
+              sent == text &&
+              text.isNotEmpty &&
+              _attachmentDrafts.isEmpty) {
+            _setRestoredComposer('');
+            _commitComposerForSend();
+          }
+        },
+      );
+    }
+
+    void openBrowserPreview() => setState(
+      () => _preview.open(
+        _desktopGateway!.workspace,
+        _storedSessionId ?? _storedSessionKey,
+      ),
+    );
+    final chat = Scaffold(
       appBar: AppBar(
         centerTitle: false,
         automaticallyImplyLeading: widget.onClose == null,
@@ -7125,6 +7628,17 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ),
         ),
         actions: [
+          IconButton(
+            tooltip: 'Find in transcript',
+            icon: const Icon(Icons.find_in_page_outlined),
+            onPressed: () => _reader.currentState?.open(),
+          ),
+          if (fileOwner != null && fileId != null && !_showSessionFiles)
+            IconButton(
+              tooltip: 'Session files',
+              icon: const Icon(Icons.account_tree_outlined),
+              onPressed: () => setState(() => _showSessionFiles = true),
+            ),
           if (_archiving)
             const Padding(
               padding: EdgeInsets.only(right: 8),
@@ -7136,23 +7650,79 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 ),
               ),
             ),
-          if (_desktopGateway case final gateway?)
-            IconButton(
-              tooltip: 'Open browser preview',
-              icon: const Icon(Icons.web_asset),
-              onPressed: () => setState(
-                () => _preview.open(
-                  gateway.workspace,
-                  _storedSessionId ?? _storedSessionKey,
-                ),
+          if (!compactTools) ...[
+            if (_desktopGateway != null)
+              IconButton(
+                tooltip: 'Open browser preview',
+                icon: const Icon(Icons.web_asset),
+                onPressed: openBrowserPreview,
               ),
+            if (showQueue)
+              IconButton(
+                tooltip: 'Gateway queue',
+                icon: const Icon(Icons.queue),
+                onPressed: openGatewayQueue,
+              ),
+            if (workers != null)
+              IconButton(
+                tooltip: context.l10n.workspace_workers,
+                icon: const Icon(Icons.hub_outlined),
+                onPressed: () => workers.open(context),
+              ),
+          ] else if (_desktopGateway != null || workers != null)
+            // One always-visible menu on narrow panes, also while a reply
+            // streams (the gateway queue matters most then).
+            PopupMenuButton<String>(
+              key: const ValueKey('chat-tools-menu'),
+              tooltip: 'More chat tools',
+              icon: const Icon(Icons.widgets_outlined),
+              onSelected: (tool) {
+                if (tool == 'browser' && _desktopGateway != null) {
+                  openBrowserPreview();
+                }
+                if (tool == 'queue' || tool == 'workers') {
+                  final fresh = captureWorkers();
+                  if (fresh == null) return;
+                  if (tool == 'workers') fresh.open(context);
+                  if (tool == 'queue' &&
+                      _desktopGateway?.sessionAuthority == true) {
+                    openGatewayQueue(fresh);
+                  }
+                }
+              },
+              itemBuilder: (_) => [
+                if (_desktopGateway != null)
+                  const PopupMenuItem(
+                    value: 'browser',
+                    child: ListTile(
+                      leading: Icon(Icons.web_asset),
+                      title: Text('Open browser preview'),
+                    ),
+                  ),
+                if (showQueue)
+                  const PopupMenuItem(
+                    value: 'queue',
+                    child: ListTile(
+                      leading: Icon(Icons.queue),
+                      title: Text('Gateway queue'),
+                    ),
+                  ),
+                if (workers != null)
+                  PopupMenuItem(
+                    value: 'workers',
+                    child: ListTile(
+                      leading: const Icon(Icons.hub_outlined),
+                      title: Text(context.l10n.workspace_workers),
+                    ),
+                  ),
+              ],
             ),
           if (_streaming)
             Padding(
               padding: EdgeInsets.only(right: 8),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxWidth: MediaQuery.sizeOf(context).width * 0.45,
+                  maxWidth: paneWidth * (compactTools ? 0.3 : 0.45),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -7194,6 +7764,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   unawaited(_showReceivedOutputDetails());
                 }
                 if (action == 'rename') unawaited(_renameSession());
+
                 if (action == 'archive') unawaited(_setSessionArchived(true));
                 if (action == 'unarchive') {
                   unawaited(_setSessionArchived(false));
@@ -7265,92 +7836,127 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ],
         ],
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: Responsive.isTablet(context) ? 800 : double.infinity,
-          ),
-          child: Column(
-            children: [
-              if (_verboseMode)
-                for (final notification in _gatewayNotifications.values)
-                  _buildGatewayNotification(notification),
-              if (_verboseMode && _legacyTransportFallback)
-                Container(
-                  key: const ValueKey('legacy-transport-notice'),
-                  width: double.infinity,
-                  color: Theme.of(context).colorScheme.tertiaryContainer,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                  child: Text(
-                    _stockGatewayFallback
-                        ? context
-                              .l10n
-                              .this_server_doesn_t_offer_background_recovery_chats_run_live
-                        : context
-                              .l10n
-                              .background_recovery_unavailable_legacy_transport,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
-                      fontWeight: FontWeight.w600,
+      body: SessionFilesLayout(
+        files: !_showSessionFiles || fileOwner == null || fileId == null
+            ? null
+            : SessionFilesView(
+                owner: fileOwner,
+                route: fileOwner.route(storedSessionId: fileId),
+                startOnGit: _openGit,
+                focusGitFile: _gitFocus,
+                onGitClosed: () => setState(() => _openGit = false),
+                onHandOff: (text) {
+                  final current = _textController.text.trim();
+                  _textController.text = current.isEmpty
+                      ? text
+                      : '$current\n$text';
+                  setState(() {
+                    _openGit = false;
+                    _showSessionFiles = false;
+                  });
+                },
+                onClose: () => setState(() => _showSessionFiles = false),
+                onReference: (ref) {
+                  if (fileOwner != _desktopGateway?.workspace ||
+                      fileId != _fileSessionId) {
+                    return;
+                  }
+                  appendWorkspaceReference(_textController, ref);
+                  setState(() => _showSessionFiles = false);
+                },
+              ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: Responsive.isTablet(context) ? 800 : double.infinity,
+            ),
+            child: Column(
+              children: [
+                if (_verboseMode)
+                  for (final notification in _gatewayNotifications.values)
+                    _buildGatewayNotification(notification),
+                if (_verboseMode && _legacyTransportFallback)
+                  Container(
+                    key: const ValueKey('legacy-transport-notice'),
+                    width: double.infinity,
+                    color: Theme.of(context).colorScheme.tertiaryContainer,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    child: Text(
+                      _stockGatewayFallback
+                          ? context
+                                .l10n
+                                .this_server_doesn_t_offer_background_recovery_chats_run_live
+                          : context
+                                .l10n
+                                .background_recovery_unavailable_legacy_transport,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onTertiaryContainer,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (context, viewport) {
-                    final slashOpen = _slashDropdownVisible;
-                    final slashMax = (viewport.maxHeight * 0.4)
-                        .clamp(0.0, 180.0)
-                        .toDouble();
-                    final slashHeight = slashOpen ? slashMax : 0.0;
-                    return Column(
-                      children: [
-                        Expanded(
-                          child: Stack(
-                            children: [
-                              Positioned.fill(child: _buildBody()),
-                              if (_endAffordanceController.isVisible ||
-                                  _canFocusSavedRecovery)
-                                Positioned(
-                                  right: 12,
-                                  bottom: 12,
-                                  child: ChatEndAffordance(
-                                    newMessageCount: _endAffordanceController
-                                        .newMessageCount,
-                                    onPressed: _goToEnd,
-                                    label: _canFocusSavedRecovery
-                                        ? context.l10n.saved_history_heading
-                                        : null,
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, viewport) {
+                      final slashOpen = _slashDropdownVisible;
+                      final slashMax = (viewport.maxHeight * 0.4)
+                          .clamp(0.0, 180.0)
+                          .toDouble();
+                      final slashHeight = slashOpen ? slashMax : 0.0;
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: Stack(
+                              children: [
+                                Positioned.fill(child: _buildBody()),
+                                if (_endAffordanceController.isVisible ||
+                                    _canFocusSavedRecovery)
+                                  Positioned(
+                                    right: 12,
+                                    bottom: 12,
+                                    child: ChatEndAffordance(
+                                      newMessageCount: _endAffordanceController
+                                          .newMessageCount,
+                                      onPressed: _goToEnd,
+                                      label: _canFocusSavedRecovery
+                                          ? context.l10n.saved_history_heading
+                                          : null,
+                                    ),
                                   ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        if (slashOpen)
-                          ConstrainedBox(
-                            constraints: BoxConstraints(maxHeight: slashHeight),
-                            child: SlashCommandDropdown(
-                              controller: _slashController,
-                              onSelected: _applySlashCommand,
+                              ],
                             ),
                           ),
-                        _buildInputBar(
-                          availableHeight: viewport.maxHeight - slashHeight,
-                        ),
-                      ],
-                    );
-                  },
+                          if (slashOpen)
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight: slashHeight,
+                              ),
+                              child: SlashCommandDropdown(
+                                controller: _slashController,
+                                onSelected: _applySlashCommand,
+                              ),
+                            ),
+                          _buildInputBar(
+                            availableHeight: viewport.maxHeight - slashHeight,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
+    return transcriptShortcuts(_reader, chat);
   }
 
   Widget _buildGatewayNotification(GatewayNotification notification) {
@@ -7479,6 +8085,55 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                             !_pendingReattachResync &&
                             !_voiceComposer.listening,
                         onSend: () => unawaited(_sendRecordedVoice()),
+                      ),
+                    if (_imageRestoreRevision() != null)
+                      PreparedImageRecovery(
+                        target: _imageTarget!,
+                        revision: () => _draftWriter.hasConfirmedEmptyDraft
+                            ? _imageRestoreRevision()
+                            : null,
+                        install: (text, drafts) {
+                          setState(() => _attachmentDrafts.addAll(drafts));
+                          _editComposerAsUser(text);
+                        },
+                      )
+                    else if (_quietEmptyComposer && _imageRecoveryGap != null)
+                      ImageRecoveryCapabilityNotice(gap: _imageRecoveryGap!),
+                    if (!_usesNormalInputOwner && _held.entries.isNotEmpty)
+                      ClientHeldQueueBar(
+                        count: _held.entries.length,
+                        parked: _held.parked,
+                        rows: [
+                          for (final entry in _held.entries)
+                            ClientHeldQueueRow(id: entry.id, text: entry.text),
+                        ],
+                        onResume: () {
+                          _held.unpark();
+                          setState(() {});
+                          unawaited(_drainHeldIfIdle());
+                        },
+                        onSend: (id) => unawaited(_sendHeldNow(id)),
+                        onRemove: (id) {
+                          _heldTouched = true;
+                          setState(() => _held.remove(id));
+                          unawaited(_persistHeldQueue());
+                        },
+                        onEdit: (id) => unawaited(_editHeld(id)),
+                      ),
+                    if (!_hasStoredArchiveTarget &&
+                        _attachmentDrafts.isEmpty &&
+                        !_sending &&
+                        !_streaming)
+                      OrphanDraftRecovery(
+                        writer: _draftWriter,
+                        editor: _textController,
+                        lookup: _client.getSession,
+                        isCurrent: () =>
+                            _composerOwnerCurrent &&
+                            !_hasStoredArchiveTarget &&
+                            _attachmentDrafts.isEmpty &&
+                            !_sending &&
+                            !_streaming,
                       ),
                     if (_currentActivityText case final activity?)
                       ChatActivityBar(text: activity)
@@ -7703,6 +8358,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                             ),
                             child: SendOnEnter(
                               enabled: sendEnabled,
+                              onNavigate: (event) =>
+                                  _composerOwnerCurrent &&
+                                      _attachmentDrafts.isEmpty &&
+                                      !_slashDropdownVisible
+                                  ? _promptRecall.handle(
+                                      event,
+                                      _textController,
+                                      _sentPrompts,
+                                    )
+                                  : KeyEventResult.ignored,
                               onSend: () => unawaited(_sendMessage()),
                               child: TextField(
                                 key: const Key('chat-message-composer'),
@@ -7786,6 +8451,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   ),
                   const SizedBox(width: 4),
                   if (_streaming) ...[
+                    if (!_usesNormalInputOwner)
+                      _buildComposerAction(
+                        key: const Key('chat-queue-held'),
+                        label: 'Queue',
+                        tooltip: 'Queue until this turn finishes',
+                        icon: Icons.queue,
+                        onPressed: _queueHeldFromComposer,
+                      ),
                     _buildComposerAction(
                       key: const Key('chat-stop-response'),
                       label: context.l10n.stop_response,
@@ -7818,8 +8491,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       child: CallbackShortcuts(
         // Physical Esc closes the list without touching the draft.
         bindings: {
-          const SingleActivator(LogicalKeyboardKey.escape):
-              _slashController.close,
+          const SingleActivator(LogicalKeyboardKey.escape): () {
+            if (_slashDropdownVisible || _slashController.isOpen) {
+              _slashController.close();
+              return;
+            }
+            if (_streaming && !_stopResponseInFlight) {
+              unawaited(_stopResponse());
+            }
+          },
         },
         child: ChatComposerSlashInfo(
           controller: _textController,
@@ -8220,6 +8900,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         maxDownloadBytes: maxAttachmentDownloadBytes,
       );
 
+  String _transcriptText(Map<String, dynamic> msg) =>
+      (msg['_display_content'] as String?) ??
+      stripToolResultText(
+        messageContentToText(
+          AndroidPromptContext.displayContent(msg, msg['content']),
+        ),
+      );
+
   Widget _buildDisplayItem(
     dynamic item, {
     ChatDisplaySource? source,
@@ -8325,13 +9013,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       );
     }
     final role = (msg['role'] as String?) ?? 'assistant';
-    final content =
-        (msg['_display_content'] as String?) ??
-        stripToolResultText(
-          messageContentToText(
-            AndroidPromptContext.displayContent(msg, msg['content']),
-          ),
-        );
+    final content = _transcriptText(msg);
     final isUser = role == 'user';
 
     return MessageBubble(
@@ -8559,6 +9241,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             ),
           ),
         if (_loading) const LinearProgressIndicator(),
+        if (_turnChangedFiles case final changed when changed.isNotEmpty)
+          TurnChangedFilesCard(
+            files: changed,
+            onOpen: (file) => setState(() {
+              _showSessionFiles = true;
+              _openGit = true;
+              _gitFocus = file.path;
+            }),
+          ),
         if (_error != null)
           MaterialBanner(
             content: Text(context.l10n.failed_to_load_messages),
@@ -8569,7 +9260,40 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               ),
             ],
           ),
-        Expanded(child: list),
+        Expanded(
+          child: TranscriptReader(
+            key: _reader,
+            owner: (_reasoningRegistry, widget.session.id),
+            scroll: _scrollController,
+            onLatest: _goToEnd,
+            storageKey: widget.session.isLocalDraft && _storedSessionId == null
+                ? null
+                : readingPositionKey(
+                    'classic',
+                    widget.connection.id,
+                    widget.connection.gatewayProfile,
+                    _storedSessionId ?? _storedSessionKey,
+                  ),
+            onNavigate: () {
+              _openingScrollInterrupted = true;
+              _initialEndFramesRemaining = 0;
+              ++_automaticScrollGeneration;
+              _scrollCoordinator.updateFromUserScroll(isNearEnd: false);
+            },
+            entries: () => [
+              for (final (i, cell) in cells.indexed)
+                if (cell.item case final Map<String, dynamic> msg
+                    when msg['role'] == 'user' || msg['role'] == 'assistant')
+                  (
+                    id: (cell.source, chatDisplayItemIdentity(msg)),
+                    index: i + (_historyWindow.hasOlder ? 1 : 0),
+                    text: _transcriptText(msg),
+                    prompt: msg['role'] == 'user',
+                  ),
+            ],
+            child: list,
+          ),
+        ),
       ],
     );
   }
@@ -8966,14 +9690,16 @@ class MessageBubble extends StatelessWidget {
         }
       }
     }
-    Widget prose(String text) => MarkdownBody(
-      data: text,
-      selectable: false,
-      styleSheet: styleSheet,
-      // Local images become lazy file cards below. Never let Markdown load a
-      // host path from the phone or contact an arbitrary image URL on render.
-      sizedImageBuilder: (image) => Text(image.alt ?? image.title ?? ''),
-      onTapLink: (_, href, _) => unawaited(_openLink(context, href)),
+    Widget prose(String text) => transcriptBody(
+      MarkdownBody(
+        data: text,
+        selectable: false,
+        styleSheet: styleSheet,
+        // Local images become lazy file cards below. Never let Markdown load a
+        // host path from the phone or contact an arbitrary image URL on render.
+        sizedImageBuilder: (image) => Text(image.alt ?? image.title ?? ''),
+        onTapLink: (_, href, _) => unawaited(_openLink(context, href)),
+      ),
     );
 
     final parseMedia = filesClient != null;

@@ -82,6 +82,7 @@ class AttachmentDraftSendCoordinator {
 
   Future<void> uploadThenSubmit({
     required Iterable<AttachmentDraft> drafts,
+    bool retainUploadedFiles = false,
     required AttachmentUploadCallback upload,
     required AttachmentPromptSubmit submitPrompt,
     AttachmentDraftChanged? onChanged,
@@ -89,6 +90,7 @@ class AttachmentDraftSendCoordinator {
     final snapshot = drafts.toList(growable: false);
     await draftService.uploadSequential(
       drafts: snapshot,
+      retainUploadedFiles: retainUploadedFiles,
       upload: upload,
       onChanged: onChanged,
     );
@@ -444,6 +446,7 @@ class AttachmentDraftService {
 
   Future<List<AttachmentUploadReceipt>> uploadSequential({
     required Iterable<AttachmentDraft> drafts,
+    bool retainUploadedFiles = false,
     required AttachmentUploadCallback upload,
     AttachmentDraftChanged? onChanged,
   }) async {
@@ -462,7 +465,12 @@ class AttachmentDraftService {
         continue;
       }
       receipts.add(
-        await _uploadOne(draft, upload: upload, onChanged: onChanged),
+        await _uploadOne(
+          draft,
+          upload: upload,
+          onChanged: onChanged,
+          retainUploadedFile: retainUploadedFiles,
+        ),
       );
     }
     return receipts;
@@ -485,6 +493,7 @@ class AttachmentDraftService {
 
   Future<AttachmentUploadReceipt> _uploadOne(
     AttachmentDraft draft, {
+    bool retainUploadedFile = false,
     required AttachmentUploadCallback upload,
     AttachmentDraftChanged? onChanged,
   }) async {
@@ -501,7 +510,7 @@ class AttachmentDraftService {
         ..refText = receipt.refText
         ..atlasIntakeAccepted = receipt.atlasIntakeAccepted;
       dataUrl = null;
-      await removeCachedFile(draft);
+      if (!retainUploadedFile) await removeCachedFile(draft);
       onChanged?.call(draft);
       return receipt;
     } catch (error) {

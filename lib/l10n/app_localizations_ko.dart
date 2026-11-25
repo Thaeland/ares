@@ -9,6 +9,13 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get workspace_workers => '실행 중인 하위 에이전트';
+
+  @override
+  String get workers_unattached =>
+      '개수만 표시됩니다. 지시를 보내려면 연결된 상위 채팅에서 ‘실행 중인 하위 에이전트’를 선택하세요.';
+
+  @override
   String get slash_local_arguments =>
       '이 바로 가기는 여기서 인수를 지원하지 않습니다. 앱의 컨트롤을 사용하세요. 초안은 보관되었습니다.';
 
@@ -704,6 +711,18 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get attachment_drafts => '첨부 파일 초안';
+
+  @override
+  String get recover_text_draft => '텍스트 초안 복구';
+
+  @override
+  String get undo_draft_recovery => '실행 취소';
+
+  @override
+  String get draft_session_exists => '이 채팅은 아직 존재합니다. 채팅을 열어 초안을 이어서 작성하세요.';
+
+  @override
+  String get draft_recovery_unavailable => '초안을 확인할 수 없습니다. 변경된 내용이 없습니다.';
 
   @override
   String attachment_of(Object index, Object total) {
@@ -1850,6 +1869,36 @@ class AppLocalizationsKo extends AppLocalizations {
   String get notifications => '알림';
 
   @override
+  String get windows_notifications_blocked =>
+      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+
+  @override
+  String get windows_notification_diagnostics =>
+      'What Ares submitted to Windows';
+
+  @override
+  String get windows_window_activity => 'Share chat activity';
+
+  @override
+  String get windows_window_activity_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+
+  @override
+  String get windows_completion_sound => 'Completion sound';
+
+  @override
+  String get windows_sound_default => 'Windows default';
+
+  @override
+  String get windows_sound_mail => 'Mail';
+
+  @override
+  String get windows_sound_reminder => 'Reminder';
+
+  @override
+  String get windows_sound_silent => 'Silent';
+
+  @override
   String get notifications_permission_denied =>
       'OS 수준에서 알림이 차단되어 있습니다. Android 설정에서 이 앱의 알림을 허용하세요.';
 
@@ -2880,6 +2929,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get destination_label => '대상';
+
+  @override
+  String get markdown_source => '원문';
 
   @override
   String get preview_label => '미리보기';

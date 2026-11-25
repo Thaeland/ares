@@ -24,6 +24,8 @@ import '../services/chat_assets_client.dart';
 import '../services/connection_manager.dart';
 import '../services/desktop_gateway_client.dart';
 import 'workspace_profiles_screen.dart';
+import 'fleet_screen.dart';
+import 'workspace_workers_screen.dart';
 import '../services/gateway_turn_application_controller.dart';
 import '../services/gateway_turn_journal.dart';
 import '../services/local_chat_pin_store.dart';
@@ -38,7 +40,10 @@ import '../services/session_archive_ledger.dart';
 import '../services/remote_files_client.dart';
 import '../services/shared_attachment_preparer.dart';
 import '../services/session_browser_loader.dart';
+import '../services/session_search_client.dart';
+import '../models/session_search_hit.dart';
 import '../theme/hermes_theme.dart';
+import '../workspace/profile_presentation_store.dart';
 import '../utils/activity_feed.dart';
 import '../utils/adaptive_layout.dart';
 import '../utils/operational_activity_feed.dart';
@@ -1081,6 +1086,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       case HermesDestination.chats:
         final chatsList = WorkspaceSessionsScreen(
           key: _chatsKey,
+          searchMessages: _searchMessages,
+          searchScope: widget.connection,
           title: context.l10n.chats,
           view: WorkspaceSessionView.all,
           embedded: true,
@@ -1167,6 +1174,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           ),
           history: WorkspaceSessionsScreen(
             key: _cronsKey,
+            searchMessages: _searchMessages,
+            searchScope: widget.connection,
             archiveSurfaceVisible: _cronsView == CronsView.history,
             title: context.l10n.crons,
             kind: WorkspaceSessionKind.crons,
@@ -1217,6 +1226,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           );
         }
         return ProjectsPane(
+          workspace: _ownedGateway?.workspace,
           repository: repository,
           onProjectSelected: (projectId) => _openProject(repository, projectId),
           spaceStore: _spaceStore,
@@ -1231,6 +1241,13 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           onOpenItem: _openActivityItem,
         );
       case HermesDestination.more:
+        final gateway = _ownedGateway;
+        final workers = gateway == null
+            ? null
+            : WorkspaceWorkersScreen.capture(
+                gateway.workspace,
+                widget.connection.label,
+              );
         return MorePane(
           sections: buildMoreSections(
             providerIds: _providerIds,
@@ -1241,9 +1258,15 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
             workspaceAvailable: _ownedGateway != null,
             l10n: context.l10n,
           ),
-          onSelect: (entry) => entry.id == 'parallel-workspace'
-              ? openParallel()
-              : _openMoreEntry(entry),
+          onSelect: (entry) {
+            if (entry.id == 'parallel-workspace') {
+              openParallel();
+            } else if (entry.id == 'workspace-workers') {
+              workers?.open(context);
+            } else {
+              _openMoreEntry(entry);
+            }
+          },
         );
     }
   }
@@ -1251,6 +1274,15 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   /// The dashboard only exists when the connection names a host to reach it
   /// on. Without one, every dashboard-backed entry is disabled *with a reason*
   /// rather than hidden, per the roadmap's capability-discovery rule.
+  Future<List<SessionSearchHit>> _searchMessages(
+    String term,
+    bool Function() maySend,
+  ) => SessionSearchClient.searchDashboard(
+    _dashboardClient,
+    term,
+    maySend: maySend,
+  );
+
   bool get _dashboardReachable => widget.connection.host.trim().isNotEmpty;
 
   /// The dashboard origin, which is not the gateway chat origin: it has its
@@ -1313,7 +1345,12 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   }
 
   void _push(Widget screen) {
-    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
+    final themed = ProfileTheme(
+      connection: widget.connection,
+      nextGen: false,
+      child: screen,
+    );
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => themed));
   }
 
   /// Clears the inline detail pane on a wide window.
@@ -1388,26 +1425,30 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     final builder = widget.sessionScreenBuilder;
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) =>
-            builder?.call(session) ??
-            buildWorkspaceChatScreen(
-              connection: widget.connection,
-              session: session,
-              projectName: projectName,
-              projectWorkingDirectory: projectWorkingDirectory,
-              initialComposerText: initialComposerText,
-              initialAttachmentDrafts: initialAttachmentDrafts,
-              turnApplicationController: widget.turnApplicationController,
-              sessionArchiver: (storedId, archived) async {
-                final saved = await _archiveSession(
-                  session.withStoredId(storedId),
-                  archived,
-                );
-                onArchiveCommitted?.call();
-                return saved;
-              },
-              testApiClient: widget.testChatApiClientFactory?.call(),
-            ),
+        builder: (_) => ProfileTheme(
+          connection: widget.connection,
+          nextGen: false,
+          child:
+              builder?.call(session) ??
+              buildWorkspaceChatScreen(
+                connection: widget.connection,
+                session: session,
+                projectName: projectName,
+                projectWorkingDirectory: projectWorkingDirectory,
+                initialComposerText: initialComposerText,
+                initialAttachmentDrafts: initialAttachmentDrafts,
+                turnApplicationController: widget.turnApplicationController,
+                sessionArchiver: (storedId, archived) async {
+                  final saved = await _archiveSession(
+                    session.withStoredId(storedId),
+                    archived,
+                  );
+                  onArchiveCommitted?.call();
+                  return saved;
+                },
+                testApiClient: widget.testChatApiClientFactory?.call(),
+              ),
+        ),
       ),
     );
     if (!mounted) return;
@@ -1441,6 +1482,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         .where((project) => project.id == projectId)
         .firstOrNull;
 
+    final connection = widget.connection;
+    final projectOwner = _ownedGateway?.workspace;
     final project =
         known ??
         HermesProject(
@@ -1452,8 +1495,17 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => ProjectDetailScreen(
+          workspace: projectOwner,
+          onNewLaneChat: (path) {
+            if (mounted &&
+                projectOwner != null &&
+                identical(projectOwner, _ownedGateway?.workspace)) {
+              _startProjectChat(project.inLane(path));
+            }
+          },
           projectId: projectId,
           projectName: project.name,
+          createFilesClient: () => _createFilesClient(connection),
           loadSessions: ({required bool refresh}) =>
               repository.projectSessions(projectId, refresh: refresh),
           onOpenSession: (session) => _openSession(
@@ -1990,6 +2042,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     _push(
       WorkspaceSessionsScreen(
         key: key,
+        searchMessages: _searchMessages,
+        searchScope: widget.connection,
         title: title,
         view: view,
         onPin: _pinSession,
@@ -2140,20 +2194,24 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     }
   }
 
+  RemoteFilesClient _createFilesClient(
+    SavedConnection connection, {
+    String? sessionId,
+    int? maxDownloadBytes,
+  }) => RemoteFilesClient.fromConnection(
+    connection,
+    sessionId: sessionId,
+    maxDownloadBytes: maxDownloadBytes,
+    httpClient: widget.testDashboardHttpClient,
+  );
+
   Future<void> _openFiles() async {
     final builder = widget.filesScreenBuilder;
     if (builder != null) {
       _push(builder(widget.connection));
       return;
     }
-    final files = RemoteFilesClient.fromConnection(widget.connection);
-    try {
-      await Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => FilesScreen(files: files)),
-      );
-    } finally {
-      files.close();
-    }
+    await FilesScreen.open(context, _createFilesClient(widget.connection));
   }
 
   /// Opens the full cron manager, which owns every schedule mutation.
@@ -2180,13 +2238,16 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     final factory = widget.assetsSourceFactory;
     final source =
         factory?.call(connection) ??
-        ChatAssetsClient.fromConnection(connection);
+        ChatAssetsClient.fromConnection(
+          connection,
+          httpClient: widget.testDashboardHttpClient,
+        );
     try {
       await Navigator.of(context).push<void>(
         MaterialPageRoute<void>(
           builder: (_) => AssetsScreen(
             source: source,
-            filesClient: (session) => RemoteFilesClient.fromConnection(
+            filesClient: (session) => _createFilesClient(
               connection,
               sessionId: session.id,
               maxDownloadBytes: maxAttachmentDownloadBytes,
@@ -2203,12 +2264,20 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   void _openMoreEntry(MoreEntry entry) {
     final connection = widget.connection;
     switch (entry.id) {
+      case 'gateway-fleet':
+        _push(
+          FleetScreen(
+            serving: _ownedGateway?.workspace,
+            label: connection.label,
+          ),
+        );
       case 'workspace-profiles':
         final gateway = _ownedGateway;
         if (gateway == null) return;
         _push(
           WorkspaceProfilesScreen(
             owner: gateway.workspace,
+            connection: connection,
             label: connection.label,
             route: gateway.workspace.route(),
           ),
@@ -2284,15 +2353,20 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     }
     _wasExpanded = expanded;
 
-    return ParallelWorkspaceEntryHost(
-      owner: widget.connection,
+    return ProfileTheme(
       connection: widget.connection,
-      workspace: (_) => ClassicParallelWorkspace(
+      nextGen: false,
+      child: ParallelWorkspaceEntryHost(
+        owner: widget.connection,
         connection: widget.connection,
-        turnController: widget.turnApplicationController,
-        clientFactory: widget.testChatApiClientFactory,
+        workspace: (_) => ClassicParallelWorkspace(
+          connection: widget.connection,
+          turnController: widget.turnApplicationController,
+          clientFactory: widget.testChatApiClientFactory,
+        ),
+        home: (openParallel) =>
+            Builder(builder: (ctx) => _buildHome(ctx, openParallel)),
       ),
-      home: (openParallel) => _buildHome(context, openParallel),
     );
   }
 

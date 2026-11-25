@@ -319,6 +319,21 @@ class WsClient {
   final _workspaceReceipt = <String, int>{};
   WorkspaceRuntime? workspaceBinding(String storedId) =>
       _workspaceBindings[storedId];
+
+  /// Replace only the cwd of a binding this socket already holds, after a
+  /// confirmed workspace mutate for that same stored session. A missing
+  /// binding is left missing: this never invents authority.
+  void adoptConfirmedWorkspaceCwd(String storedId, String cwd) {
+    final old = _workspaceBindings[storedId];
+    if (old == null || old.cwd == cwd) return;
+    _workspaceBindings[storedId] = WorkspaceRuntime._(
+      old.runtimeId,
+      old.profile,
+      cwd,
+      old.backend,
+    );
+  }
+
   final String baseUrl;
   final String? _token;
   final String? _ticket;
@@ -340,6 +355,27 @@ class WsClient {
   /// streamed response.
   final Map<String, List<StreamCallback>> _sessionStreams = {};
 
+  /// An invalidation only: never pass an event's contents across profile
+  /// boundaries on a multiplexed socket. Consumers read the scoped snapshot.
+  void Function() observeQueueChanges(String session, void Function() changed) {
+    final listeners = _sessionStreams.putIfAbsent(session, () => []);
+    void notify(StreamEvent event) {
+      if (event.type == 'session.info' && event.data['pending'] is List) {
+        changed();
+      }
+    }
+
+    listeners.add(notify);
+    final close = _addConnectionClosedListener(changed);
+    return () {
+      _removeConnectionClosedListener(close);
+      listeners.remove(notify);
+      if (listeners.isEmpty && identical(listeners, _sessionStreams[session])) {
+        _sessionStreams.remove(session);
+      }
+    };
+  }
+
   /// Canonical session authority: the newest execution generation this
   /// socket admitted per runtime session (resume/create snapshot, submit
   /// receipt, or an event's stamp). Stop and Steer name it; it is never
@@ -351,6 +387,8 @@ class WsClient {
   String? _gatewayReadyCanonical;
   JsonRpcError? _gatewayReadyFailure;
   bool _serverRequestsAdvertised = false;
+  bool _activityAccepted = false;
+  bool get acceptsWindowActivity => _connected && _activityAccepted;
 
   /// Global stream listener (receives all untargeted events).
   StreamCallback? onStreamEvent;
@@ -429,6 +467,7 @@ class WsClient {
     _gatewayReadyCanonical = null;
     _gatewayReadyFailure = null;
     _serverRequestsAdvertised = false;
+    _activityAccepted = false;
     final readyCompleter = Completer<Map<String, dynamic>>();
     _gatewayReadyCompleter = readyCompleter;
     // A transport can close before a caller starts waiting for gateway.ready.
@@ -745,10 +784,18 @@ class WsClient {
     _serverRequestsAdvertised = true;
     // This method is connection-scoped, not profile-scoped. Older gateways
     // answer -32601; deliberately ignore that response so they keep working.
+    final generation = _connectionGeneration;
     unawaited(
       send('client.capabilities', const {
         'server_requests': true,
-      }, includeProfile: false).then<void>((_) {}, onError: (_, _) {}),
+      }, includeProfile: false).then<void>((reply) {
+        if (_connectionGeneration == generation) {
+          _activityAccepted = switch (reply['result']) {
+            {'client_activity': true} => true,
+            _ => false,
+          };
+        }
+      }, onError: (_, _) {}),
     );
   }
 
@@ -1218,6 +1265,8 @@ class WsClient {
     bool Function()? maySend,
     Future<bool> Function()? beforeSend,
     String? submissionId,
+    Future<void> Function()? beforeLegacy,
+    Future<void> Function(Object?, String)? onReceipt,
     Duration timeout = const Duration(minutes: 10),
   }) async {
     final source = _channel;
@@ -1310,6 +1359,7 @@ class WsClient {
           fallbackMessage: 'Unknown error',
         );
         if (isRejectedSubmissionIdError(rpcError)) {
+          if (beforeLegacy != null) await beforeLegacy();
           // The refusal crossed an async boundary: re-validate admission and
           // socket ownership before the compatibility retry writes again, so
           // a stale owner or a replacement socket never receives the prompt.
@@ -1342,6 +1392,7 @@ class WsClient {
       // Stock typed voice controls acknowledge without starting an agent turn
       // or emitting a terminal frame. Do not wait ten minutes for one.
       final result = response['result'];
+      if (onReceipt != null) await onReceipt(result, sessionId);
       if (result is Map) {
         // A canonical receipt names the execution its admission started.
         _noteExecutionGeneration(sessionId, result['execution_generation']);
@@ -1642,10 +1693,10 @@ class WsClient {
     if (rawPayload is! Map) {
       throw StateError('session.resume succeeded without a result payload.');
     }
-    if (rawPayload.containsKey('stored_session_id') &&
-        rawPayload['stored_session_id'] != sessionId) {
-      throw StateError('session.resume returned a different stored chat.');
-    }
+    // A different stored_session_id is not a different chat: the gateway
+    // follows a compressed chat to its lineage tip (tui_gateway
+    // methods_session._resume_follow_tip), so resuming the original id
+    // legitimately returns the continuation's id.
     final payload = Map<String, dynamic>.from(rawPayload);
     final runtimeSessionId = payload['session_id'] as String?;
     if (runtimeSessionId == null || runtimeSessionId.isEmpty) {

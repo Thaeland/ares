@@ -9,6 +9,13 @@ class AppLocalizationsPt extends AppLocalizations {
   AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
+  String get workspace_workers => 'Subagentes ativos';
+
+  @override
+  String get workers_unattached =>
+      'Apenas contagens. Para orientar um subagente, escolha Subagentes ativos na conversa principal ligada.';
+
+  @override
   String get slash_local_arguments =>
       'Este atalho não aceita argumentos aqui. Use os controlos da aplicação; o rascunho foi mantido.';
 
@@ -725,6 +732,20 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get attachment_drafts => 'Rascunhos de anexos';
+
+  @override
+  String get recover_text_draft => 'Recuperar um rascunho de texto';
+
+  @override
+  String get undo_draft_recovery => 'Desfazer';
+
+  @override
+  String get draft_session_exists =>
+      'Esta conversa ainda existe. Abra-a para continuar o rascunho.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Não foi possível verificar o rascunho. Nada foi alterado.';
 
   @override
   String attachment_of(Object index, Object total) {
@@ -1906,6 +1927,36 @@ class AppLocalizationsPt extends AppLocalizations {
   String get notifications => 'Notificações';
 
   @override
+  String get windows_notifications_blocked =>
+      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+
+  @override
+  String get windows_notification_diagnostics =>
+      'What Ares submitted to Windows';
+
+  @override
+  String get windows_window_activity => 'Share chat activity';
+
+  @override
+  String get windows_window_activity_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+
+  @override
+  String get windows_completion_sound => 'Completion sound';
+
+  @override
+  String get windows_sound_default => 'Windows default';
+
+  @override
+  String get windows_sound_mail => 'Mail';
+
+  @override
+  String get windows_sound_reminder => 'Reminder';
+
+  @override
+  String get windows_sound_silent => 'Silent';
+
+  @override
   String get notifications_permission_denied =>
       'As notificações estão bloqueadas pelo sistema. Ative-as para este app nas configurações do Android.';
 
@@ -2957,6 +3008,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get destination_label => 'Destino';
+
+  @override
+  String get markdown_source => 'Código-fonte';
 
   @override
   String get preview_label => 'Pré-visualização';
@@ -6155,6 +6209,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   AppLocalizationsPtBr() : super('pt_BR');
 
   @override
+  String get workspace_workers => 'Subagentes ativos';
+
+  @override
+  String get workers_unattached =>
+      'Apenas contagens. Para orientar um subagente, selecione Subagentes ativos na conversa principal conectada.';
+
+  @override
   String get slash_local_arguments =>
       'Este atalho não aceita argumentos aqui. Use os controles do aplicativo; seu rascunho foi mantido.';
 
@@ -6831,6 +6892,20 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get attachment_drafts => 'Rascunhos de anexos';
+
+  @override
+  String get recover_text_draft => 'Recuperar um rascunho de texto';
+
+  @override
+  String get undo_draft_recovery => 'Desfazer';
+
+  @override
+  String get draft_session_exists =>
+      'Esta conversa ainda existe. Abra-a para continuar o rascunho.';
+
+  @override
+  String get draft_recovery_unavailable =>
+      'Não foi possível verificar o rascunho. Nada foi alterado.';
 
   @override
   String attachment_of(Object index, Object total) {
@@ -9020,6 +9095,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get destination_label => 'Destino';
+
+  @override
+  String get markdown_source => 'Código-fonte';
 
   @override
   String get preview_label => 'Pré-visualização';

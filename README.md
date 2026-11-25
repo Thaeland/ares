@@ -915,10 +915,12 @@ What is specific to Windows:
   joining it after pause/resume uses the `ffmpeg.exe` and `ffprobe.exe` that
   ship in an `ffmpeg` folder beside `ares.exe`. Ares only ever runs that
   bundled copy.
-- **Notifications**: Windows does not post notifications yet, and the
-  notification settings are hidden there. The notification plugin Ares pins
-  has no Windows support; adding it means a major upgrade of that plugin on
-  every platform.
+- **Notifications (5.0 development)**: Classic and NextGen use Windows toasts
+  for background replies and requests. Settings includes category controls, a
+  test notification, a completion sound, and optional chat activity sharing.
+  Turn notifications on or off in Windows **Settings → System → Notifications**.
+  Use an installed build: a loose copy does not own the installer's click handler.
+  [Native verification and remaining gates](docs/windows-notifications.md).
 - **Android-only settings** (mobile push and background work) are hidden.
 
 ### Build

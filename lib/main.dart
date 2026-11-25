@@ -37,6 +37,8 @@ import 'core/screens/chat_screen.dart';
 import 'core/workspace/popout_bootstrap.dart';
 import 'core/workspace/popout_protocol.dart';
 import 'core/screens/workspace_screen.dart';
+import 'core/screens/fleet_screen.dart';
+import 'core/services/gateway_fleet.dart';
 import 'core/theme/hermes_theme.dart';
 import 'core/utils/responsive.dart';
 import 'core/widgets/config_backup_card.dart';
@@ -111,6 +113,9 @@ class _StartupAppState extends State<StartupApp> {
       () async {
         prefs = await SharedPreferences.getInstance();
         NextGenPreferences.load(prefs);
+        if (defaultTargetPlatform == TargetPlatform.windows) {
+          await NotificationPrefsStore.load();
+        }
         try {
           // Browser sign-ins and Cloudflare Access tokens, shared by both
           // interfaces; a Keystore fault only costs those sign-ins.
@@ -327,12 +332,14 @@ class _NotificationNavigationIntent {
   final MobilePushRoute? pushRoute;
   final int generation;
   final Object? mutationEpoch;
+  final WindowsToastTarget? windowsTarget;
 
   _NotificationNavigationIntent(
     this.connection,
     this.sessionId,
     MobilePushRoute? pushRoute,
     this.generation,
+    this.windowsTarget,
   ) : mutationEpoch = ConnectionMutationBarrier.capture(connection.id),
       pushRoute = pushRoute == null
           ? null
@@ -343,14 +350,20 @@ class _NotificationNavigationIntent {
               Map<String, dynamic>.unmodifiable(pushRoute.authority),
             );
 
-  bool canCoalesceAuthority(MobilePushRoute? incomingPush) {
+  bool canCoalesceAuthority(
+    MobilePushRoute? incomingPush,
+    WindowsToastTarget? incomingWindows,
+  ) {
     // Ordinary taps share account authority. Push proofs can differ in event,
     // consent revision or expiry; target equality cannot establish equivalence.
-    return pushRoute == null && incomingPush == null;
+    return pushRoute == null &&
+        incomingPush == null &&
+        (windowsTarget == null) == (incomingWindows == null);
   }
 }
 
 class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
+  late final _fleet = GatewayFleet(widget.connManager)..restore().ignore();
   late final GatewayTurnApplicationController _turnApplicationController;
   late final AutoMessagingService _autoMessaging;
   late final TurnNotificationService _notifications;
@@ -658,6 +671,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
             _ongoingChats.add(key);
             try {
               await service.showOngoingChat(
+                origin: _connectionById(activity.connectionId),
                 connectionId: activity.connectionId,
                 localSessionId: activity.localSessionId,
                 storedSessionId: activity.storedSessionId,
@@ -795,6 +809,28 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
   /// every response lands the user on the session the notification was about.
   void _handleNotificationResponse(NotificationResponse response) {
     if (!mounted || _closingTurnOwner) return;
+    if (response is WindowsToastResponse) {
+      final target = response.target;
+      final connection = _connectionById(target.connectionId);
+      if (connection == null || !target.matches(connection)) return;
+      void open() {
+        if (!target.matches(_connectionById(connection.id))) return;
+        unawaited(
+          _openNotificationSession(
+            connection,
+            target.sessionId,
+            windowsTarget: target,
+          ).catchError((Object _) {}),
+        );
+      }
+
+      if (_background || !_rootFrameReady) {
+        _pendingNormalResponse = open;
+      } else {
+        open();
+      }
+      return;
+    }
     _pruneApprovalActions();
     final route = NotificationRoute.fromResponse(response);
     final hasExplicitConnection =
@@ -998,6 +1034,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     SavedConnection connection,
     String? sessionId, {
     MobilePushRoute? pushRoute,
+    WindowsToastTarget? windowsTarget,
   }) async {
     if (!mounted ||
         _closingTurnOwner ||
@@ -1005,13 +1042,19 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
         !_connectionIsCurrent(connection)) {
       return;
     }
-    if (routeNotificationToNextGen(connection.id, sessionId)) return;
+    if (routeNotificationToNextGen(
+      connection.id,
+      sessionId,
+      target: windowsTarget,
+    )) {
+      return;
+    }
     final identity = _notificationChatIdentity(connection, sessionId);
     final activeIntent = _routingIntent;
     if (_routingIdentity == identity &&
         activeIntent != null &&
         activeIntent.generation == _notificationGeneration &&
-        activeIntent.canCoalesceAuthority(pushRoute)) {
+        activeIntent.canCoalesceAuthority(pushRoute, windowsTarget)) {
       return;
     }
     if (pushRoute == null &&
@@ -1029,6 +1072,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
       sessionId,
       pushRoute,
       generation,
+      windowsTarget,
     );
     _pendingNavigation = intent;
     await _runNotificationNavigation(intent);
@@ -1142,7 +1186,10 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
       if (!await current() || !currentSync()) return;
       // Push has no legacy workspace/draft fallback: only the authenticated
       // existing session named by the reconciled event is eligible.
-      if (pushRoute != null && session == null) return;
+      if ((pushRoute != null || intent.windowsTarget != null) &&
+          session == null) {
+        return;
+      }
       // Binding may have converged while the authenticated detail read awaited.
       if (session != null && _focusNotificationChat(connection, session.id)) {
         return;
@@ -1273,8 +1320,11 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
             data: systemMediaQuery.copyWith(
               textScaler: preference.applyTo(systemMediaQuery.textScaler),
             ),
-            child: DesktopShortcuts(
-              child: nextGen ? NgLocalizationScope(child: child!) : child!,
+            child: FleetScope(
+              fleet: _fleet,
+              child: DesktopShortcuts(
+                child: nextGen ? NgLocalizationScope(child: child!) : child!,
+              ),
             ),
           ),
         );
@@ -1295,6 +1345,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     final token = _keepAliveTurnActivityToken;
     _closingTurnOwner = true;
+    _fleet.dispose();
     _autoMessaging.dispose();
     _pendingNormalResponse = null;
     _pendingApprovalResponses.clear();
@@ -1608,17 +1659,28 @@ class HomeScreenState extends State<HomeScreen> {
         widget.launchIntents?.pendingQuickChat.value == true) {
       return;
     }
-    final lastId = widget.connManager.prefs.getString(_lastConnectionKey);
+    final primary = GatewayFleet.primaryId(widget.connManager, _connections);
+    final lastId =
+        primary ?? widget.connManager.prefs.getString(_lastConnectionKey);
     if (lastId == null) return;
     final conn = _connections.where((c) => c.id == lastId).firstOrNull;
     if (conn == null) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _navigateToWorkspace(conn);
+      // Launching on the primary is routing, not a last-used choice: share
+      // and quick-chat keep following the account the user last opened.
+      if (mounted) {
+        _navigateToWorkspace(conn, rememberLastUsed: primary == null);
+      }
     });
   }
 
-  void _navigateToWorkspace(SavedConnection conn) {
-    widget.connManager.prefs.setString(_lastConnectionKey, conn.id);
+  void _navigateToWorkspace(
+    SavedConnection conn, {
+    bool rememberLastUsed = true,
+  }) {
+    if (rememberLastUsed) {
+      widget.connManager.prefs.setString(_lastConnectionKey, conn.id);
+    }
     final sharedPayload = widget.shareIntents?.takePendingShare();
     final initialQuickChat =
         widget.launchIntents?.takePendingQuickChat() == true &&

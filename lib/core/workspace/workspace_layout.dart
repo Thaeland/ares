@@ -5,6 +5,12 @@ import 'dart:convert';
 typedef PaneRef = ({String sessionId, String page});
 PaneRef chatPane(String sessionId) => (sessionId: sessionId, page: '');
 
+// Reserved local-only, unbound slots. Registry IDs cannot start with a colon.
+const firstWorkspaceSlot = (sessionId: '', page: ':choose-first');
+const secondWorkspaceSlot = (sessionId: '', page: ':choose-second');
+bool isWorkspaceSlot(PaneRef ref) =>
+    ref == firstWorkspaceSlot || ref == secondWorkspaceSlot;
+
 class WorkspaceLayout {
   static const maxTabs = 16;
   static const maxLayouts = 12;
@@ -15,6 +21,33 @@ class WorkspaceLayout {
   PaneRef? secondary;
   bool stacked = false;
   int percent = 50;
+
+  factory WorkspaceLayout.unbound({
+    required bool paired,
+    required bool stacked,
+    required int percent,
+  }) {
+    final layout = WorkspaceLayout()
+      ..stacked = stacked
+      ..percent = percent
+      ..open(firstWorkspaceSlot);
+    if (paired) layout.open(secondWorkspaceSlot, split: true);
+    return layout;
+  }
+
+  void fillSlot(PaneRef slot, String selectedId) {
+    final index = tabs.indexOf(slot), chat = chatPane(selectedId);
+    if (!isWorkspaceSlot(slot) ||
+        index < 0 ||
+        selectedId.isEmpty ||
+        tabs.contains(chat)) {
+      return;
+    }
+    tabs[index] = chat;
+    if (primary == slot) primary = chat;
+    if (secondary == slot) secondary = chat;
+    closed.remove(chat);
+  }
 
   bool open(PaneRef pane, {bool split = false}) {
     if (!tabs.contains(pane)) {

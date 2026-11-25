@@ -11,6 +11,8 @@ import '../../core/services/notification_prefs.dart';
 import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/turn_notification_service.dart';
 import '../../core/utils/adaptive_layout.dart';
+import '../../core/utils/platform_capabilities.dart';
+import '../../core/widgets/windows_chat_presence.dart';
 import '../../core/widgets/desktop_shortcuts.dart';
 import '../data/nextgen_gateway.dart';
 import '../data/chat_controller.dart';
@@ -48,7 +50,8 @@ class _NgMainPageState extends State<_NgMainContent>
   /// Keeps the sidebar's search/filter/scroll state alive when it moves
   /// between the modal drawer (compact) and the docked pane (wide) as the
   /// window crosses the expanded breakpoint.
-  final _sidebarKey = GlobalKey();
+  final _sidebarKey = GlobalKey<NgSessionsSidebarState>();
+  bool _focusDrawerSearch = false;
 
   /// Whether the user collapsed the docked sidebar on a wide window. Reset
   /// implicitly when the window leaves the expanded class.
@@ -105,7 +108,21 @@ class _NgMainPageState extends State<_NgMainContent>
   String? _takeOpenRequest(String connectionId) {
     final request = nextGenOpenRequest.value;
     if (request == null || request.connectionId != connectionId) return null;
+    final target = pendingWindowsToastTarget;
+    pendingWindowsToastTarget = null;
     nextGenOpenRequest.value = null;
+    if (target != null) {
+      final scope = NgScope.of(context);
+      if (!target.matches(scope.connection) ||
+          !target.matches(
+            scope.connManager
+                .getConnections()
+                .where((c) => c.id == connectionId)
+                .firstOrNull,
+          )) {
+        return null;
+      }
+    }
     return request.sessionId;
   }
 
@@ -133,9 +150,11 @@ class _NgMainPageState extends State<_NgMainContent>
     if (sessions == null) {
       _sessions = NgSessionsModel(scope);
       unawaited(_sessions!.refresh());
-      final last =
-          _takeOpenRequest(scope.connection.id) ??
-          NextGenPreferences.lastSession(scope.prefs, scope.connection.id);
+      final last = NextGenPreferences.launchSession(
+        scope.prefs,
+        scope.connection.id,
+        requested: _takeOpenRequest(scope.connection.id),
+      );
       _openId(last, '', initial: true);
       _listenForRequests(scope);
     } else {
@@ -149,7 +168,7 @@ class _NgMainPageState extends State<_NgMainContent>
     // In sight while resumed or only covered (the notification shade).
     _foreground =
         state == AppLifecycleState.resumed ||
-        state == AppLifecycleState.inactive;
+        (!isWindowsPlatform && state == AppLifecycleState.inactive);
     final chat = _chat;
     if (!_foreground && wasForeground && chat != null) {
       // Out of sight: what arrives from now on is news when the user is back.
@@ -278,7 +297,10 @@ class _NgMainPageState extends State<_NgMainContent>
   NextGenGateway? _watchedGateway;
 
   /// Requests posted, by request id: what to cancel once each is gone.
-  final Map<String, ({HermesNotificationKind kind, String? sessionId})>
+  final Map<
+    String,
+    ({HermesNotificationKind kind, String? sessionId, String connectionId})
+  >
   _postedRequests = {};
 
   /// Every request already notified (most recent last). Each one alerts at
@@ -336,18 +358,37 @@ class _NgMainPageState extends State<_NgMainContent>
     while (_notifiedRequests.length > _maxNotifiedRequests) {
       _notifiedRequests.remove(_notifiedRequests.first);
     }
-    final stored = _storedFor(scope, raw.sessionId);
+    // A missing session or unmapped runtime is not proof of the visible chat.
+    // Keep the native alert, but make its activation focus-only in that case.
+    final runtime = raw.sessionId;
+    final stored = isWindowsPlatform
+        ? (runtime == null ? null : scope.gateway.storedIdFor(runtime))
+        : _storedFor(scope, runtime);
+    final turn = _lifecycleTurn;
+    bool stillNeeded() =>
+        mounted &&
+        !_foreground &&
+        turn == _lifecycleTurn &&
+        identical(_watchedGateway, scope.gateway) &&
+        (!isWindowsPlatform ||
+            ConnectionMutationBarrier.isCurrent(
+              scope.connection.id,
+              _notificationMutation,
+            )) &&
+        scope.gateway.awaitsAnswer(raw.id);
     final approval = input.kind == NgRequestKind.approval;
     final kind = approval
         ? HermesNotificationKind.approval
         : HermesNotificationKind.input;
     final posted = await TurnNotificationService.shared.showKind(
+      origin: scope.connection,
       kind: kind,
       title: input.title,
       body: input.body.isNotEmpty
           ? input.body
           : (input.command ?? ngL.ng_hermes_is_waiting_for_you),
       eventId: raw.id,
+      windowsStillNeeded: isWindowsPlatform ? stillNeeded : null,
       sessionId: stored,
       connectionId: scope.connection.id,
       actions: approval
@@ -363,11 +404,22 @@ class _NgMainPageState extends State<_NgMainContent>
       }),
     );
     if (!posted) return;
-    _postedRequests[raw.id] = (kind: kind, sessionId: stored);
-    // Settled while the notification was being posted.
-    if (!mounted || !scope.gateway.awaitsAnswer(raw.id)) {
-      _cancelRequest(raw.id);
+    // Re-check after the last await. Cancel on the issuing connection, not a
+    // replacement scope, even if the route has already been disposed.
+    if (!stillNeeded()) {
+      await TurnNotificationService.shared.cancelKind(
+        kind: kind,
+        eventId: raw.id,
+        sessionId: stored,
+        connectionId: scope.connection.id,
+      );
+      return;
     }
+    _postedRequests[raw.id] = (
+      kind: kind,
+      sessionId: stored,
+      connectionId: scope.connection.id,
+    );
   }
 
   /// A request redelivered after a reconnect may be the one an approval
@@ -382,7 +434,7 @@ class _NgMainPageState extends State<_NgMainContent>
         kind: posted.kind,
         eventId: id,
         sessionId: posted.sessionId,
-        connectionId: NgScope.of(context).connection.id,
+        connectionId: posted.connectionId,
       ),
     );
   }
@@ -506,6 +558,7 @@ class _NgMainPageState extends State<_NgMainContent>
     unawaited(
       failed
           ? notifications.showTurnFailed(
+              origin: chat.gateway.connection,
               title: title,
               turnSummary: body,
               turnId: _replyTurnId,
@@ -513,6 +566,7 @@ class _NgMainPageState extends State<_NgMainContent>
               connectionId: connectionId,
             )
           : notifications.showTurnCompleted(
+              origin: chat.gateway.connection,
               title: title,
               turnSummary: body,
               turnId: _replyTurnId,
@@ -531,7 +585,17 @@ class _NgMainPageState extends State<_NgMainContent>
       case DesktopShortcut.newChat:
         _newChat();
       case DesktopShortcut.search:
-        if (!isExpandedWindow(context)) _scaffold.currentState?.openDrawer();
+        if (isExpandedWindow(context)) {
+          setState(() => _dockedSidebarCollapsed = false);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _sidebarKey.currentState?.focusSearch();
+          });
+        } else if (_scaffold.currentState?.isDrawerOpen ?? false) {
+          _sidebarKey.currentState?.focusSearch();
+        } else {
+          _focusDrawerSearch = true;
+          _scaffold.currentState?.openDrawer();
+        }
       case DesktopShortcut.settings:
         _go(NgDestination.settings);
       case DesktopShortcut.tab1:
@@ -627,7 +691,7 @@ class _NgMainPageState extends State<_NgMainContent>
       }
     }
 
-    final chatView = chat == null
+    final view = chat == null
         ? const SizedBox.shrink()
         : NgChatView(
             key: ObjectKey(chat),
@@ -636,6 +700,21 @@ class _NgMainPageState extends State<_NgMainContent>
             sessions: _sessions,
             onNewChat: _newChat,
           );
+
+    final chatView = isWindowsPlatform
+        ? WindowsChatPresence(
+            target: () {
+              final socket = chat?.gateway.socket;
+              final runtime = chat?.runtimeId;
+              return socket != null &&
+                      runtime != null &&
+                      chat!.gateway.storedIdFor(runtime) == chat.storedId
+                  ? (socket, runtime)
+                  : null;
+            },
+            child: view,
+          )
+        : view;
 
     // Back opens the sidebar; back again with the sidebar open closes it.
     // Pushed pages (settings, scheduled...) still pop normally first.
@@ -647,7 +726,11 @@ class _NgMainPageState extends State<_NgMainContent>
         drawerEdgeDragWidth: 48,
         onDrawerChanged: (open) {
           _sessions?.drawerOpen = open || docked;
-          if (open) unawaited(_sessions?.refresh());
+          if (open) {
+            if (_focusDrawerSearch) _sidebarKey.currentState?.focusSearch();
+            _focusDrawerSearch = false;
+            unawaited(_sessions?.refresh());
+          }
         },
         drawer: docked ? null : sidebar,
         body: docked

@@ -9,6 +9,13 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get workspace_workers => '実行中のサブエージェント';
+
+  @override
+  String get workers_unattached =>
+      '件数のみ表示しています。指示を送るには、接続中の親チャットで「実行中のサブエージェント」を選んでください。';
+
+  @override
   String get slash_local_arguments =>
       'ここではこのショートカットに引数を指定できません。アプリの操作画面を使用してください。下書きは保持されています。';
 
@@ -705,6 +712,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get attachment_drafts => '添付ドラフト';
+
+  @override
+  String get recover_text_draft => 'テキストの下書きを復元';
+
+  @override
+  String get undo_draft_recovery => '元に戻す';
+
+  @override
+  String get draft_session_exists => 'このチャットはまだ存在します。開いて下書きの編集を続けてください。';
+
+  @override
+  String get draft_recovery_unavailable => '下書きを確認できませんでした。変更はありません。';
 
   @override
   String attachment_of(Object index, Object total) {
@@ -1855,6 +1874,36 @@ class AppLocalizationsJa extends AppLocalizations {
   String get notifications => '通知';
 
   @override
+  String get windows_notifications_blocked =>
+      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+
+  @override
+  String get windows_notification_diagnostics =>
+      'What Ares submitted to Windows';
+
+  @override
+  String get windows_window_activity => 'Share chat activity';
+
+  @override
+  String get windows_window_activity_hint =>
+      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+
+  @override
+  String get windows_completion_sound => 'Completion sound';
+
+  @override
+  String get windows_sound_default => 'Windows default';
+
+  @override
+  String get windows_sound_mail => 'Mail';
+
+  @override
+  String get windows_sound_reminder => 'Reminder';
+
+  @override
+  String get windows_sound_silent => 'Silent';
+
+  @override
   String get notifications_permission_denied =>
       '通知がOS側で許可されていません。Androidの設定からこのアプリの通知を有効にしてください。';
 
@@ -2879,6 +2928,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get destination_label => '移動先';
+
+  @override
+  String get markdown_source => 'ソース';
 
   @override
   String get preview_label => 'プレビュー';

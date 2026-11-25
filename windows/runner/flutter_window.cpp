@@ -4,9 +4,10 @@
 
 #include "flutter/generated_plugin_registrant.h"
 #include "ares_platform.h"
+#include "toast_activation.h"
 
-FlutterWindow::FlutterWindow(const flutter::DartProject& project)
-    : project_(project) {}
+FlutterWindow::FlutterWindow(const flutter::DartProject& project, std::string initial_toast, bool accepts_toasts)
+    : project_(project), initial_toast_(std::move(initial_toast)), accepts_toasts_(accepts_toasts) {}
 
 FlutterWindow::~FlutterWindow() {}
 
@@ -28,6 +29,10 @@ bool FlutterWindow::OnCreate() {
   RegisterPlugins(flutter_controller_->engine());
   platform_ = std::make_unique<AresPlatform>(GetHandle(),
                                              flutter_controller_->engine());
+  if (accepts_toasts_) {
+    toasts_ = std::make_unique<ToastChannel>(flutter_controller_->engine(),
+        std::move(initial_toast_), GetHandle());
+  }
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
   flutter_controller_->engine()->SetNextFrameCallback([&]() {
@@ -44,6 +49,7 @@ bool FlutterWindow::OnCreate() {
 
 void FlutterWindow::OnDestroy() {
   // Release the channels before the engine they speak through.
+  toasts_ = nullptr;
   platform_ = nullptr;
   if (flutter_controller_) {
     flutter_controller_ = nullptr;
@@ -56,6 +62,17 @@ LRESULT
 FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
                               WPARAM const wparam,
                               LPARAM const lparam) noexcept {
+  if (message == WM_COPYDATA) {
+    if (!accepts_toasts_) return FALSE;
+    const auto* data = reinterpret_cast<const COPYDATASTRUCT*>(lparam);
+    if (!data || data->dwData != 0x41524553 || !data->lpData ||
+        data->cbData != ares::toast::kTokenSize) return FALSE;
+    std::string token(static_cast<const char*>(data->lpData), data->cbData);
+    if (!ares::toast::ValidToken(token)) return FALSE;
+    if (toasts_) toasts_->Activate(std::move(token));
+    else initial_toast_ = std::move(token);
+    return TRUE;
+  }
   // Give Flutter, including plugins, an opportunity to handle window messages.
   if (flutter_controller_) {
     std::optional<LRESULT> result =

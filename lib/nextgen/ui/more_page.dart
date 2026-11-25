@@ -11,6 +11,8 @@ import '../../core/models/session.dart';
 import '../../core/render/contributions_page.dart';
 import '../../core/screens/assets_screen.dart';
 import '../../core/screens/cron_screen.dart';
+import '../../core/screens/files_screen.dart';
+import '../../core/screens/fleet_screen.dart';
 import '../../core/screens/memory_screen.dart';
 import '../../core/screens/nous_portal_screen.dart';
 import '../../core/screens/parallel_workspace_entry.dart';
@@ -19,6 +21,7 @@ import '../../core/screens/provider_oauth_screen.dart';
 import '../../core/screens/skills_screen.dart';
 import '../../core/screens/workspace_profiles_screen.dart';
 import '../../core/services/chat_assets_client.dart';
+import '../../core/screens/workspace_workers_screen.dart';
 import '../../core/services/dashboard_api_client.dart';
 import '../../core/services/remote_files_client.dart';
 import '../nextgen_preferences.dart';
@@ -54,6 +57,10 @@ class NgMorePage extends StatelessWidget {
 
   Widget _menu(BuildContext context, NgScope scope, VoidCallback openParallel) {
     final conn = scope.connection;
+    final workers = WorkspaceWorkersScreen.capture(
+      scope.gateway.workspace,
+      conn.label,
+    );
     void push(Widget page) => Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(builder: (_) => page));
@@ -87,6 +94,43 @@ class NgMorePage extends StatelessWidget {
                     NgProjectsPage(
                       onOpenSession: onOpenSession,
                       onNewProjectChat: onNewProjectChat,
+                    ),
+                  ),
+                ),
+                NgRow(
+                  icon: Icons.folder_open_outlined,
+                  title: context.l10n.files,
+                  onTap: () => FilesScreen.open(
+                    context,
+                    scope.gateway.createFilesClient(),
+                  ),
+                ),
+                NgRow(
+                  icon: Icons.perm_media_outlined,
+                  title: context.l10n.assets,
+                  onTap: () => push(
+                    AssetsScreen(
+                      source: ChatAssetsClient(
+                        dashboard: scope.gateway.dashboard,
+                        profile: scope.gateway.profile,
+                      ),
+                      filesClient: (session) => scope.gateway.createFilesClient(
+                        sessionId: session.id,
+                        maxDownloadBytes: maxAttachmentDownloadBytes,
+                      ),
+                      onOpenSession: (session) {
+                        if (!context.mounted ||
+                            !identical(
+                              NgScope.of(context).gateway,
+                              scope.gateway,
+                            )) {
+                          return;
+                        }
+                        Navigator.of(
+                          context,
+                        ).popUntil((route) => route.isFirst);
+                        onOpenSession(session);
+                      },
                     ),
                   ),
                 ),
@@ -137,15 +181,33 @@ class NgMorePage extends StatelessWidget {
               children: [
                 NgRow(
                   icon: Icons.people_outline,
+                  title: 'Gateway fleet',
+                  onTap: () => push(
+                    FleetScreen(
+                      serving: scope.gateway.workspace,
+                      label: conn.label,
+                    ),
+                  ),
+                ),
+                NgRow(
+                  icon: Icons.people_outline,
                   title: ngL.ng_profiles,
                   subtitle: ngL.ng_agent_gateway,
                   onTap: () => push(
                     WorkspaceProfilesScreen(
+                      nextGen: true,
                       owner: scope.gateway.workspace,
+                      connection: conn,
                       label: conn.label,
                       route: scope.gateway.workspace.route(),
                     ),
                   ),
+                ),
+                NgRow(
+                  icon: Icons.account_tree_outlined,
+                  title: ngL.workspace_workers,
+                  subtitle: ngL.ng_show_subagents,
+                  onTap: () => workers.open(context),
                 ),
                 NgRow(
                   icon: Icons.memory,

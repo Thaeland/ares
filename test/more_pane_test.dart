@@ -83,12 +83,14 @@ void main() {
       expect(
         ids,
         unorderedEquals(<String>[
+          'gateway-fleet',
           'files',
           'projects-root',
           'assets',
           'unassigned',
           'parallel-workspace',
           'workspace-profiles',
+          'workspace-workers',
           'model',
           'cron',
           'skills',
@@ -360,6 +362,7 @@ void main() {
           expect(agent.title, titles[locale.toString()], reason: '$locale');
           expect(agent.entries.map((entry) => entry.id), [
             'workspace-profiles',
+            'workspace-workers',
             'model',
             'cron',
             'skills',

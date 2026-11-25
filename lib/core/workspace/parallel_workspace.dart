@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,6 +7,7 @@ import '../models/connection.dart';
 import '../models/session.dart';
 import '../services/connection_mutation_barrier.dart';
 import 'workspace_layout.dart';
+import 'profile_presentation_store.dart';
 import 'workspace_pane.dart';
 import 'workspace_picker.dart';
 import 'workspace_popout.dart';
@@ -63,7 +62,7 @@ class _WorkspaceState extends State<ParallelWorkspace> {
   SharedPreferences? _prefs;
   Map<String, Session> _roster = {};
   late final _epoch = ConnectionMutationBarrier.capture(widget.connection.id);
-  late final _key = _storageKey();
+  late String _key;
   bool _loading = true, _failed = false, _focus = false;
   PaneRef? _lastTouched;
   bool get _current =>
@@ -72,30 +71,47 @@ class _WorkspaceState extends State<ParallelWorkspace> {
   WorkspaceRegistry get _registry => widget.registry ?? aresWorkspaceRegistry;
   PaneRef? get _primary => _layout.primary;
 
-  String _storageKey() {
-    final c = widget.connection;
-    // No secrets in preference keys or values. A renamed connection keeps
-    // its layout; different transports, accounts, and profiles do not.
-    final id = jsonEncode([
-      c.id,
-      c.baseUrl,
-      c.gatewayPrefix,
-      c.desktopGatewayUrl,
-      c.dashboardPort,
-      c.dashboardPrefix,
-      c.dashboardProxied,
-      c.singleLogin,
-      c.signInMethod,
-      c.dashboardUsername,
-      c.gatewayProfile,
-      widget.nextGen,
-    ]);
-    return 'parallel.workspace.v1.${sha256.convert(utf8.encode(id))}';
+  void _readLayout(SharedPreferences prefs) {
+    final installed = ProfilePresentationStore(prefs).read(widget.connection);
+    _key = workspaceLayoutKey(widget.connection, widget.nextGen, installed);
+    final raw = prefs.get(_key), g = installed?.style.geometry;
+    _layout = raw is String
+        ? WorkspaceLayout.decode(raw)
+        : g == null
+        ? WorkspaceLayout()
+        : WorkspaceLayout.unbound(
+            paired: g.paired,
+            stacked: g.stacked,
+            percent: g.percent,
+          );
+  }
+
+  void _presentationChanged() {
+    final prefs = _prefs;
+    if (!_current || prefs == null) return;
+    final installed = ProfilePresentationStore(prefs).read(widget.connection);
+    if (workspaceLayoutKey(widget.connection, widget.nextGen, installed) ==
+        _key) {
+      return;
+    }
+    setState(() {
+      _versions.clear();
+      _focus = false;
+      _lastTouched = null;
+      _readLayout(prefs);
+    });
+  }
+
+  @override
+  void dispose() {
+    ProfilePresentationStore.revision.removeListener(_presentationChanged);
+    super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    ProfilePresentationStore.revision.addListener(_presentationChanged);
     unawaited(_load());
   }
 
@@ -106,10 +122,9 @@ class _WorkspaceState extends State<ParallelWorkspace> {
       if (_prefs == null) {
         final prefs = await SharedPreferences.getInstance();
         if (!_current) return;
-        final raw = prefs.get(_key);
         setState(() {
           _prefs = prefs;
-          _layout = WorkspaceLayout.decode(raw is String ? raw : null);
+          _readLayout(prefs);
         });
       }
       final rows = await widget.loadSessions();
@@ -170,6 +185,9 @@ class _WorkspaceState extends State<ParallelWorkspace> {
   }
 
   String _title(PaneRef ref) {
+    if (isWorkspaceSlot(ref)) {
+      return ref == firstWorkspaceSlot ? 'First pane' : 'Second pane';
+    }
     if (ref.page.isNotEmpty) {
       return _registry.page(ref.page)?.label ?? 'Unavailable page';
     }
@@ -428,7 +446,39 @@ class _WorkspaceState extends State<ParallelWorkspace> {
     );
   }
 
+  Future<void> _chooseForSlot(PaneRef slot) async {
+    final version = _version(slot);
+    final rows = {
+      for (final r in _roster.values)
+        if (!_layout.tabs.contains(chatPane(r.id))) r.id: r,
+    };
+    final selected = await pickWorkspaceItem(
+      context,
+      'Choose a chat for this pane',
+      [
+        for (final r in rows.values)
+          (value: r.id, label: r.title, detail: r.id),
+      ],
+    );
+    if (!_current ||
+        selected == null ||
+        !identical(rows[selected], _roster[selected]) ||
+        !identical(_versions[slot], version)) {
+      return;
+    }
+    _edit(() => _layout.fillSlot(slot, selected));
+  }
+
   Widget _content(BuildContext context, PaneRef ref) {
+    if (isWorkspaceSlot(ref)) {
+      return Center(
+        child: TextButton.icon(
+          onPressed: () => _chooseForSlot(ref),
+          icon: const Icon(Icons.add_comment_outlined),
+          label: Text('Choose chat for ${_title(ref).toLowerCase()}'),
+        ),
+      );
+    }
     final row = _roster[ref.sessionId];
     if (ref.page.isEmpty && row != null) {
       return widget.buildChat(context, row, () => _close(ref));

@@ -17,6 +17,8 @@ import '../models/session.dart';
 import '../models/provider_oauth.dart';
 import '../models/fallback_config.dart';
 import '../utils/android_prompt_context.dart';
+import '../utils/platform_capabilities.dart' show isWindowsPlatform;
+import 'windows_toast_ledger.dart';
 import 'client_certificate_service.dart';
 import 'connection_mutation_barrier.dart';
 import 'dashboard_api_client.dart';
@@ -28,6 +30,8 @@ import 'main_model_route.dart';
 // Re-export for convenience
 export '../models/connection.dart';
 export '../models/session.dart';
+
+part 'profile_dashboard_transport.dart';
 
 /// Injectable secret storage boundary used by [ConnectionManager].
 ///
@@ -319,12 +323,36 @@ class ConnectionManager {
   });
 
   /// Synchronous UI projection. Credentials are only as fresh as this store's
-  /// last read-back; mutations/export/push must refresh before using authority.
+  /// last read-back. Fleet startup uses [readFleetConnection] instead.
   List<SavedConnection> getConnections() {
     return _connectionsFromMaps(
       _readConnectionMaps(),
     ).map(_hydrateFromCachedCredentials).toList();
   }
+
+  Future<SavedConnection?> readFleetConnection(String id) =>
+      _withSavedListTransaction([], () async {
+        final c = _connectionsFromMaps(
+          _readConnectionMaps(),
+        ).where((c) => c.id == id).singleOrNull;
+        if (c == null) return null;
+        final encoded = await _readEncodedCredentials(id);
+        return encoded == null
+            ? c
+            : _applyCredentials(c, _ConnectionCredentials.decode(encoded));
+      });
+
+  Future<void> setFleetReconnect(String id, Object? epoch, bool enabled) =>
+      _withSavedListTransaction([], () async {
+        if (!ConnectionMutationBarrier.isCurrent(id, epoch)) {
+          throw StateError('Fleet account changed');
+        }
+        final list = _connectionsFromMaps(_readConnectionMaps());
+        final i = list.indexWhere((c) => c.id == id);
+        if (i < 0) throw StateError('Fleet account removed');
+        list[i] = list[i].copyWith(fleetReconnect: enabled);
+        await _saveAll(list);
+      });
 
   /// Returns every saved connection with its secrets read back from the secure
   /// store, rather than from the in-memory cache used by [getConnections].
@@ -409,7 +437,10 @@ class ConnectionManager {
     List<SavedConnection> incoming, {
     required bool replaceExisting,
   }) {
-    final ordered = List<SavedConnection>.of(incoming);
+    // A backup is not consent to start a socket on this device.
+    final ordered = [
+      for (final c in incoming) c.copyWith(fleetReconnect: false),
+    ];
     return _withSavedListTransaction(ordered.map((c) => c.id), () async {
       final current = await _loadConnectionsWithSecrets();
       final previousMetadata = prefs.getStringList(_key);
@@ -564,6 +595,7 @@ class ConnectionManager {
   Future<SavedConnection> saveSingleLoginConnection({
     required GatewayUrl url,
     required String signInMethod,
+    String? fleetKind,
     String? label,
     String? username,
     String? password,
@@ -617,6 +649,14 @@ class ConnectionManager {
                       : null),
         singleLogin: true,
         signInMethod: signInMethod,
+        // Keep Cloud exclusions across a later manual login to the same URL.
+        fleetKind:
+            existingIndex >= 0 && current[existingIndex].fleetKind == 'cloud'
+            ? 'cloud'
+            : fleetKind ??
+                  (existingIndex >= 0
+                      ? current[existingIndex].fleetKind
+                      : null),
       );
       final previousCredentials = existingIndex >= 0
           ? _ConnectionCredentials.fromConnection(current[existingIndex])
@@ -676,6 +716,7 @@ class ConnectionManager {
 
     current[idx] = current[idx].copyWith(
       label: label,
+      fleetReconnect: false,
       host: normalized.host,
       port: normalized.port,
       apiKey: apiKey,
@@ -734,6 +775,7 @@ class ConnectionManager {
     final gateway = gatewayPrefix?.trim();
     final dashboard = dashboardPrefix?.trim();
     current[idx] = current[idx].copyWith(
+      fleetReconnect: false,
       gatewayPrefix: gateway == null || gateway.isEmpty ? null : gateway,
       clearGatewayPrefix: gateway != null && gateway.isEmpty,
       dashboardPrefix: dashboard == null || dashboard.isEmpty
@@ -766,7 +808,10 @@ class ConnectionManager {
           current[idx],
         );
         final previousConnections = List<SavedConnection>.of(current);
-        current[idx] = current[idx].copyWith(apiKey: apiKey);
+        current[idx] = current[idx].copyWith(
+          apiKey: apiKey,
+          fleetReconnect: false,
+        );
         await _commitCredentialAndMetadata(
           connectionId: connId,
           previousCredentials: previousCredentials,
@@ -1014,6 +1059,15 @@ class ConnectionManager {
     };
     final native = _nativePushSupported;
     try {
+      if (isWindowsPlatform) {
+        try {
+          await WindowsToastLedger.revokeConnections(lease.connections);
+        } catch (_) {
+          throw const CredentialStorageException(
+            'Windows notification tickets could not be invalidated. Connection unchanged.',
+          );
+        }
+      }
       if (native) {
         try {
           await finishPendingMobilePushChanges();
@@ -1268,7 +1322,13 @@ class SessionListPage {
   final List<Session> sessions;
   final bool hasMore;
 
-  const SessionListPage({required this.sessions, required this.hasMore});
+  final Map<String, String> searchExcerpts;
+
+  const SessionListPage({
+    required this.sessions,
+    required this.hasMore,
+    this.searchExcerpts = const {},
+  });
 }
 
 /// HTTP client for the Hermes Gateway API Server (port 8642).
@@ -2569,8 +2629,9 @@ class DashboardClient {
          '${Uri(scheme: useHttps ? 'https' : 'http', host: host)}:$port',
          pathPrefix,
        ),
-       _http =
-           httpClient ?? tlsClientFactory.createRestClient(clientCertificate);
+       _http = NoGatewayRedirects(
+         httpClient ?? tlsClientFactory.createRestClient(clientCertificate),
+       );
 
   /// Builds every dashboard consumer from the same origin as the WebSocket.
   /// API-server Bearer credentials are deliberately not part of this client.
@@ -2804,14 +2865,18 @@ class DashboardClient {
     Map<String, String>? queryParameters,
     Duration timeout = ApiClient.requestTimeout,
     bool retried = false,
+    bool Function()? maySend,
   }) async {
     final authGeneration = _authGeneration;
     final headers = await _authHeaders();
+    // Search consent may have been revoked while signing in or after a 401.
+    if (maySend != null && !maySend()) throw StateError('Request superseded');
     final uri = Uri.parse(
       '$_baseUrl/api/$endpoint',
     ).replace(queryParameters: queryParameters);
     final request = http.Request(method, uri)..headers.addAll(headers);
-    if (endpoint == 'auth/ws-ticket') request.followRedirects = false;
+    // History reads carry the same credentials as the ticket request.
+    request.followRedirects = false;
     if (body != null) request.body = body is String ? body : jsonEncode(body);
     final res = await http.Response.fromStream(
       await _http.send(request).timeout(timeout),
@@ -2823,6 +2888,7 @@ class DashboardClient {
         endpoint,
         body: body,
         queryParameters: queryParameters,
+        maySend: maySend,
         timeout: timeout,
         retried: true,
       );
@@ -2837,6 +2903,138 @@ class DashboardClient {
     required Map<String, String> query,
     required void Function() check,
     bool mintHostTerminalTicket = false,
+    // Only typed fleet writes; no generic method/body override.
+    String? webappDirection,
+    bool makeWebappPrimary = false,
+    bool startFleetUpdate = false,
+    // Last admission gate, run after every await and immediately before the
+    // request leaves. It may throw; nothing is sent when it does.
+    void Function()? beforeSend,
+  }) => _workspaceJson(
+    segments,
+    query: query,
+    check: check,
+    mintHostTerminalTicket: mintHostTerminalTicket,
+    webappDirection: webappDirection,
+    makeWebappPrimary: makeWebappPrimary,
+    startFleetUpdate: startFleetUpdate,
+    beforeSend: beforeSend,
+  );
+
+  /// Never forward this content to `/fs/write-text`: the old route ignores
+  /// preconditions. A distinct URL makes old gateways fail closed.
+  Future<Object?> workspaceReplaceText({
+    required String profile,
+    required String sessionId,
+    required String cwd,
+    required String path,
+    required String expectedHash,
+    required String content,
+    required void Function() check,
+  }) => _workspaceJson(
+    ['fs', 'replace-text-v1'],
+    query: {'profile': profile},
+    check: check,
+    fileReplacement: {
+      'session_id': sessionId,
+      'cwd': cwd,
+      'path': path,
+      'expected_sha256': expectedHash,
+      'content': content,
+    },
+  );
+
+  /// An empty body cannot be a save. 400/413/415 means the route exists and
+  /// refused the probe; 404 means a stock gateway has no such route.
+  Future<int> workspaceReplaceTextProbe({
+    required String profile,
+    required void Function() check,
+  }) async {
+    try {
+      await _workspaceJson(
+        ['fs', 'replace-text-v1'],
+        query: {'profile': profile},
+        check: check,
+        fileReplacement: const <String, String>{},
+      );
+      return 200;
+    } on DashboardHttpException catch (error) {
+      return error.statusCode;
+    }
+  }
+
+  Future<Object?> _workspaceExchange(
+    List<String> segments, {
+    required Map<String, String> query,
+    required void Function() check,
+    required String method,
+    Map<String, Object?>? body,
+  }) => _workspaceJson(
+    segments,
+    query: query,
+    check: check,
+    profileMethod: method,
+    profileBody: body,
+  );
+
+  /// Posts one named Git mutation. The operation selects the route; callers
+  /// cannot supply a URL, a git executable or an argument vector.
+  Future<Object?> workspaceGitPost({
+    required String operation,
+    required Map<String, Object?> body,
+    required String? profile,
+    required void Function() check,
+  }) {
+    const allowed = <String, Set<String>>{
+      'review/stage': {'path', 'file'},
+      'review/unstage': {'path', 'file'},
+      'review/revert': {'path', 'file'},
+      'review/commit': {'path', 'message', 'push'},
+      'review/push': {'path'},
+      'review/create-pr': {'path'},
+      'worktree/add': {'path', 'name', 'branch', 'base', 'existingBranch'},
+      'worktree/remove': {'path', 'worktreePath', 'force'},
+      'branch/switch': {'path', 'branch'},
+    };
+    final fields = allowed[operation];
+    final segments = operation.split('/');
+    if (fields == null ||
+        segments.length < 2 ||
+        body['path'] is! String ||
+        (body['path'] as String).isEmpty ||
+        body.keys.any((key) => !fields.contains(key)) ||
+        segments.any(
+          (segment) =>
+              segment.isEmpty ||
+              segment == '.' ||
+              segment == '..' ||
+              RegExp(r'[/\\%?#\x00-\x1f]').hasMatch(segment),
+        )) {
+      throw const FormatException('Unsupported git operation');
+    }
+    return _workspaceJson(
+      ['git', ...segments],
+      query: {'profile': ?profile},
+      check: check,
+      gitPost: {for (final entry in body.entries) entry.key: ?entry.value},
+    );
+  }
+
+  Future<Object?> _workspaceJson(
+    List<String> segments, {
+    required Map<String, String> query,
+    required void Function() check,
+    bool mintHostTerminalTicket = false,
+    Map<String, String>? fileReplacement,
+    String? webappDirection,
+    bool makeWebappPrimary = false,
+    bool startFleetUpdate = false,
+    void Function()? beforeSend,
+    // Profile administration only: a closed catalogue (ProfileDashboardOp)
+    // chooses the method; nothing else may.
+    String? profileMethod,
+    Map<String, Object?>? profileBody,
+    Map<String, Object>? gitPost,
   }) async {
     if (segments.isEmpty ||
         segments.any(
@@ -2853,6 +3051,12 @@ class DashboardClient {
             query['socket'] != 'host-terminal')) {
       throw const FormatException('Invalid ticket route');
     }
+    if ((mintHostTerminalTicket ? 1 : 0) +
+            (fileReplacement != null ? 1 : 0) +
+            (gitPost != null ? 1 : 0) >
+        1) {
+      throw const FormatException('Invalid workspace route');
+    }
     check();
     final base = Uri.parse(_baseUrl);
     final uri = base.replace(
@@ -2863,10 +3067,97 @@ class DashboardClient {
       ],
       queryParameters: query.isEmpty ? null : query,
     );
-    final request = http.Request(mintHostTerminalTicket ? 'POST' : 'GET', uri)
-      ..followRedirects = false;
+    final patchDirection = webappDirection != null;
+    if (startFleetUpdate &&
+        (segments.join('/') != 'hermes/update' ||
+            query.isNotEmpty ||
+            patchDirection ||
+            makeWebappPrimary ||
+            mintHostTerminalTicket)) {
+      throw const FormatException('Invalid remote update operation');
+    }
+    if ((patchDirection &&
+            (segments.join('/') != 'ui-preferences' ||
+                !const {'auto', 'ltr', 'rtl'}.contains(webappDirection))) ||
+        (makeWebappPrimary &&
+            (segments.length != 3 ||
+                segments.first != 'gateway-connections' ||
+                segments.last != 'primary')) ||
+        ((patchDirection || makeWebappPrimary) &&
+            (query.isNotEmpty || mintHostTerminalTicket))) {
+      throw const FormatException('Invalid Webapp operation');
+    }
+    final fileWrite = fileReplacement != null;
+    // A named Git mutation goes only to a git/ route and never rides along
+    // with a Webapp, fleet or profile operation.
+    if (gitPost != null &&
+        (segments.first != 'git' ||
+            patchDirection ||
+            makeWebappPrimary ||
+            startFleetUpdate ||
+            profileMethod != null ||
+            profileBody != null)) {
+      throw const FormatException('Invalid git operation');
+    }
+    if (fileWrite &&
+        (segments.join('/') != 'fs/replace-text-v1' ||
+            patchDirection ||
+            makeWebappPrimary ||
+            startFleetUpdate ||
+            mintHostTerminalTicket)) {
+      throw const FormatException('Invalid file replacement operation');
+    }
+    if (profileMethod != null &&
+        (!const {
+              'GET',
+              'POST',
+              'PUT',
+              'PATCH',
+              'DELETE',
+            }.contains(profileMethod) ||
+            fileWrite ||
+            patchDirection ||
+            makeWebappPrimary ||
+            startFleetUpdate ||
+            mintHostTerminalTicket)) {
+      throw const FormatException('Invalid profile operation');
+    }
+    final request = http.Request(
+      profileMethod ??
+          (patchDirection
+              ? 'PATCH'
+              : mintHostTerminalTicket ||
+                    makeWebappPrimary ||
+                    startFleetUpdate ||
+                    fileWrite ||
+                    gitPost != null
+              ? 'POST'
+              : 'GET'),
+      uri,
+    )..followRedirects = false;
+    if (profileBody != null) {
+      request.bodyBytes = utf8.encode(jsonEncode(profileBody));
+    }
     request.headers.addAll(await _authHeaders());
+    if (fileWrite || gitPost != null) {
+      request.headers['Content-Type'] = 'application/json';
+      request.bodyBytes = utf8.encode(jsonEncode(fileReplacement ?? gitPost));
+    } else if (patchDirection || makeWebappPrimary || startFleetUpdate) {
+      request.headers['Origin'] = base.origin;
+      request.headers['Content-Type'] = 'application/json';
+      request.body = patchDirection
+          ? jsonEncode({
+              'values': {
+                'hermes.desktop.textDirection': webappDirection == 'auto'
+                    ? null
+                    : webappDirection,
+              },
+              'seed': false,
+            })
+          : '{}';
+    }
     check();
+    beforeSend?.call();
     final response = await _http
         .send(request)
         .timeout(ApiClient.requestTimeout);

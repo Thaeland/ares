@@ -231,9 +231,31 @@ class PopoutChatApp extends StatefulWidget {
   State<PopoutChatApp> createState() => _PopoutChatAppState();
 }
 
+/// A child window has no notification authority. Only the primary window
+/// posts/dismisses OS alerts and consumes startup or live activations.
+class _PopoutNotificationSink implements TurnNotificationSink {
+  const _PopoutNotificationSink();
+
+  @override
+  Future<void> initialize() async {}
+  @override
+  Future<bool> checkPermission() async => false;
+  @override
+  Future<bool> requestPermission() async => false;
+  @override
+  Future<Null> takeInitialLaunchResponse() async => null;
+  @override
+  Future<void> show(TurnNotification notification) async =>
+      throw StateError('Notifications belong to the primary window.');
+  @override
+  Future<void> cancel(int id) async {}
+  @override
+  Future<void> cancelAll() async {}
+}
+
 class _PopoutChatAppState extends State<PopoutChatApp> {
   final notifications = TurnNotificationService(
-    sink: const SilentTurnNotificationSink(),
+    sink: const _PopoutNotificationSink(),
   );
   @override
   void initState() {
