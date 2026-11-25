@@ -335,16 +335,19 @@ abstract final class NgType {
 
 /// Builds the NextGen [ThemeData] for [brightness]. It keeps the classic
 /// [HermesTokens] extension (re-tinted to NextGen's palette) so every classic
-/// screen opened from NextGen still renders correctly.
+/// screen opened from NextGen still renders correctly. [colors], when given,
+/// is a complete NextGen palette (an imported theme) and every component is
+/// derived from it instead of from [look] or [profileScheme].
 ThemeData nextGenTheme(
   Brightness brightness,
   NextGenLook look, {
   ColorScheme? profileScheme,
+  NgColors? colors,
 }) {
   final base = hermesTheme(brightness, profileScheme: profileScheme);
   final hermesThemeStatus = base.extension<HermesTokens>()!;
   final s = profileScheme;
-  final c = s == null
+  final fromLook = s == null
       ? NgColors.build(brightness, look.accent, look.pureBlack, look.glow)
       : NgColors(
           background: s.surface,
@@ -378,6 +381,7 @@ ThemeData nextGenTheme(
           warningSoft: hermesThemeStatus.warning.withValues(alpha: 0.13),
           glow: look.glow,
         );
+  final c = colors ?? fromLook;
 
   final scheme = base.colorScheme.copyWith(
     brightness: brightness,

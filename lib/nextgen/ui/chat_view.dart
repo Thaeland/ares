@@ -31,6 +31,8 @@ import '../../core/widgets/slash_command_highlight.dart';
 import '../../core/presentation/companion_draft.dart';
 import '../../core/presentation/petdex.dart';
 import '../../core/presentation/presentation_chrome.dart';
+import '../../core/presentation/radio.dart' show showAresRadioSheet;
+import '../../core/presentation/reading_controls.dart';
 import '../../core/presentation/transcript_reading.dart';
 import '../../core/widgets/session_files_view.dart';
 import '../../core/widgets/git_review_pane.dart';
@@ -775,7 +777,11 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
 
   Widget _buildChat(NgColors c, NextGenGateway gateway) {
     final view = ListenableBuilder(
-      listenable: gateway,
+      // The radio switching on or off adds or drops its narrow-pane entry.
+      listenable: Listenable.merge([
+        gateway,
+        presentationToolsListenable(context),
+      ]),
       builder: (context, _) {
         final state = gateway.state;
         final fileChat = chat;
@@ -797,6 +803,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
         return LayoutBuilder(
           builder: (context, box) {
             final compactTools = box.maxWidth < 480;
+            final radio = compactTools ? compactRadioTool(context) : null;
             return Scaffold(
               backgroundColor: c.background,
               appBar: AppBar(
@@ -858,6 +865,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                 ),
                 actions: [
                   PresentationChrome(
+                    compact: compactTools,
                     activity: chat.running
                         ? PetActivity.working
                         : _companionUnread
@@ -902,12 +910,22 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                         icon: const Icon(Icons.hub_outlined),
                         onPressed: () => workers.open(context),
                       ),
-                  ] else if (chat.storedId != null || workers != null)
+                  ] else if (chat.storedId != null ||
+                      workers != null ||
+                      radio != null)
+                    // The radio's controls move here from the app bar.
                     PopupMenuButton<String>(
                       key: const ValueKey('chat-tools-menu'),
                       tooltip: 'More chat tools',
                       icon: const Icon(Icons.widgets_outlined),
                       onSelected: (tool) {
+                        if (tool == radioToolValue) {
+                          final current = compactRadioTool(context);
+                          if (current != null) {
+                            unawaited(showAresRadioSheet(context, current));
+                          }
+                          return;
+                        }
                         final id = chat.storedId;
                         if (tool == 'browser' && id != null) {
                           setState(
@@ -944,6 +962,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                               title: Text(ngL.workspace_workers),
                             ),
                           ),
+                        if (radio != null) radioToolItem(context),
                       ],
                     ),
                   if (chat.usage != null)
@@ -1036,7 +1055,9 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
         );
       },
     );
-    return transcriptShortcuts(_reader, view);
+    // Item keys restart in every chat controller, so reactions live with
+    // this chat's controller and never in a map shared by all chats.
+    return ReactionScope(chat: chat, child: transcriptShortcuts(_reader, view));
   }
 
   Future<void> _rename() async {
@@ -2145,14 +2166,19 @@ class _AssistantBlockState extends State<_AssistantBlock> {
     // Theme.of can hand back an equal but new ThemeData on each build, so
     // the cache keys on what the style sheet below reads.
     final theme = Theme.of(context);
+    final reading = ReadingControls.maybeOf(context);
     final look = Object.hash(
       theme.brightness,
       theme.textTheme.bodyMedium,
       c.text,
+      c.text3,
       c.accentText,
       c.well,
       c.stroke,
       c.strokeStrong,
+      reading?.chatFont,
+      reading?.terminalFont,
+      reading?.externalEmbeds,
     );
     if (look != _proseLook) {
       _prose.clear();
@@ -2165,6 +2191,18 @@ class _AssistantBlockState extends State<_AssistantBlock> {
       // across paragraphs and code fences; a SelectableText here would be
       // its own island and confine the selection to a single block.
       selectable: false,
+      // Never fetch a remote image while drawing the transcript. With
+      // external embeds off the alt text stays; with them on, a card opens
+      // the https address in the browser. Classic follows the same rule.
+      sizedImageBuilder: (image) => externalEmbed(
+        context,
+        uri: '${image.uri}',
+        alt: image.alt ?? image.title,
+        blocked: Text(
+          image.alt ?? image.title ?? '',
+          style: NgType.body.copyWith(color: c.text3),
+        ),
+      ),
       onTapLink: (_, href, _) {
         if (_openDelivered(href)) return;
         final uri = href == null ? null : Uri.tryParse(href);

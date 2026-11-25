@@ -9,7 +9,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'presentation_label.dart';
+import '../l10n/l10n.dart';
+import '../theme/hermes_theme.dart';
 
 /// Only coarse, transient signals enter the pet. No messages or session IDs.
 enum PetActivity { idle, working, thinking, waiting, completed, failed }
@@ -267,43 +268,23 @@ class PetdexController extends ChangeNotifier {
 }
 
 String _name(BuildContext c, PetSpecies pet) => switch (pet) {
-  PetSpecies.mosskip => presentationLabel(c, 'Mosskip', 'موسكيب', '苔躍蛙'),
-  PetSpecies.emberbun => presentationLabel(c, 'Emberbun', 'إمبربن', '餘燼兔'),
-  PetSpecies.tideling => presentationLabel(c, 'Tideling', 'تايدلينغ', '潮汐靈'),
-  PetSpecies.hatchling => presentationLabel(
-    c,
-    'My hatchling',
-    'رفيقي الصغير',
-    '我的孵化夥伴',
-  ),
+  PetSpecies.mosskip => c.sharedL10n.appearance_mosskip,
+  PetSpecies.emberbun => c.sharedL10n.appearance_emberbun,
+  PetSpecies.tideling => c.sharedL10n.appearance_tideling,
+  PetSpecies.hatchling => c.sharedL10n.appearance_my_hatchling,
 };
 String _status(BuildContext c, PetActivity activity) => switch (activity) {
-  PetActivity.idle => presentationLabel(c, 'At rest', 'يستريح', '休息中'),
-  PetActivity.working => presentationLabel(c, 'Working', 'يعمل', '工作中'),
-  PetActivity.thinking => presentationLabel(c, 'Thinking', 'يفكّر', '思考中'),
-  PetActivity.waiting => presentationLabel(
-    c,
-    'Waiting for you',
-    'ينتظرك',
-    '等你回應',
-  ),
-  PetActivity.completed => presentationLabel(
-    c,
-    'Reply ready',
-    'الرد جاهز',
-    '回覆已就緒',
-  ),
-  PetActivity.failed => presentationLabel(
-    c,
-    'Turn failed',
-    'تعذّر إكمال الدور',
-    '本次回應失敗',
-  ),
+  PetActivity.idle => c.sharedL10n.appearance_at_rest,
+  PetActivity.working => c.sharedL10n.appearance_working,
+  PetActivity.thinking => c.sharedL10n.appearance_thinking,
+  PetActivity.waiting => c.sharedL10n.appearance_waiting_for_you,
+  PetActivity.completed => c.sharedL10n.appearance_reply_ready,
+  PetActivity.failed => c.sharedL10n.appearance_turn_failed,
 };
 String _sizeName(BuildContext c, PetSize size) => switch (size) {
-  PetSize.small => presentationLabel(c, 'Small', 'صغير', '小'),
-  PetSize.medium => presentationLabel(c, 'Medium', 'متوسط', '中'),
-  PetSize.large => presentationLabel(c, 'Large', 'كبير', '大'),
+  PetSize.small => c.sharedL10n.appearance_small,
+  PetSize.medium => c.sharedL10n.appearance_medium,
+  PetSize.large => c.sharedL10n.appearance_large,
 };
 
 /// Original little pixel silhouettes, drawn locally, not gateway sprite assets.
@@ -344,21 +325,54 @@ const _tide = [
   '..dd.dd.dd..',
 ];
 
+/// The built-in pets are drawn in the active theme's inks, so they stay
+/// visible on any surface: an outline in the body text colour, the status
+/// greens, ambers and blues for bodies, and a highlight that contrasts with
+/// the outline. A hatchling keeps the user's own picture colours.
+class _PetInks {
+  _PetInks(HermesTokens t)
+    : outline = t.onSurface,
+      green = t.success,
+      amber = t.warning,
+      blue = t.running,
+      highlight = foregroundFor(t.onSurface),
+      belly = Color.lerp(t.success, foregroundFor(t.onSurface), 0.45)!;
+
+  final Color outline, green, amber, blue, highlight, belly;
+
+  Color? operator [](String code) => switch (code) {
+    'd' => outline,
+    'g' => green,
+    'o' => amber,
+    'w' => highlight,
+    'b' => blue,
+    't' => belly,
+    _ => null,
+  };
+
+  @override
+  bool operator ==(Object other) =>
+      other is _PetInks &&
+      other.outline == outline &&
+      other.green == green &&
+      other.amber == amber &&
+      other.blue == blue &&
+      other.highlight == highlight &&
+      other.belly == belly;
+
+  @override
+  int get hashCode =>
+      Object.hash(outline, green, amber, blue, highlight, belly);
+}
+
 class _PortraitPainter extends CustomPainter {
-  const _PortraitPainter(this.pet, this.draft);
+  const _PortraitPainter(this.pet, this.draft, this.inks);
   final PetSpecies pet;
   final PetDraft? draft;
+  final _PetInks inks;
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..isAntiAlias = false;
-    const palette = {
-      'd': Color(0xff2b3542),
-      'g': Color(0xff88bf70),
-      'o': Color(0xfffa9964),
-      'w': Color(0xffffefbf),
-      'b': Color(0xff6bc8d8),
-      't': Color(0xffbce7ad),
-    };
     final custom = pet == PetSpecies.hatchling ? draft : null;
     final rows = switch (pet) {
       PetSpecies.emberbun => _ember,
@@ -381,7 +395,7 @@ class _PortraitPainter extends CustomPainter {
             index % 6 * 51,
           );
         } else {
-          final color = palette[rows[y][x]];
+          final color = inks[rows[y][x]];
           if (color == null) continue;
           paint.color = color;
         }
@@ -395,16 +409,26 @@ class _PortraitPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_PortraitPainter old) =>
-      pet != old.pet || draft != old.draft;
+      pet != old.pet || draft != old.draft || inks != old.inks;
 }
 
-Widget _art(PetSpecies species, PetDraft? draft, double side) =>
-    RepaintBoundary(
-      child: SizedBox.square(
-        dimension: side,
-        child: CustomPaint(painter: _PortraitPainter(species, draft)),
+Widget _art(
+  BuildContext context,
+  PetSpecies species,
+  PetDraft? draft,
+  double side,
+) => RepaintBoundary(
+  child: SizedBox.square(
+    dimension: side,
+    child: CustomPaint(
+      painter: _PortraitPainter(
+        species,
+        draft,
+        _PetInks(HermesTokens.of(context)),
       ),
-    );
+    ),
+  ),
+);
 
 /// Both views disappear when disabled. The compact view is a 48dp toolbar
 /// target. The full view takes up to 280dp width and should be given natural
@@ -507,25 +531,10 @@ class _AwakePetState extends State<_AwakePet>
   Widget build(BuildContext context) {
     final name = _name(context, widget.species);
     final status = _status(context, widget.activity);
-    final hello = presentationLabel(context, 'Hello!', 'مرحبًا!', '你好！');
-    final unread = presentationLabel(
-      context,
-      'Unread reply',
-      'رد غير مقروء',
-      '有未讀回覆',
-    );
-    final compose = presentationLabel(
-      context,
-      'Compose',
-      'كتابة رسالة',
-      '撰寫訊息',
-    );
-    final greet = presentationLabel(
-      context,
-      'Say hello',
-      'إلقاء التحية',
-      '打個招呼',
-    );
+    final hello = context.sharedL10n.appearance_hello;
+    final unread = context.sharedL10n.appearance_unread_reply;
+    final compose = context.sharedL10n.appearance_compose;
+    final greet = context.sharedL10n.appearance_say_hello;
     final compact = widget.compact;
     final hint = compact && widget.onCompose != null ? compose : greet;
     final action = compact ? widget.onCompose ?? _greet : _greet;
@@ -583,7 +592,12 @@ class _AwakePetState extends State<_AwakePet>
                         return Center(
                           child: AnimatedBuilder(
                             animation: _clock,
-                            child: _art(widget.species, widget.draft, artSize),
+                            child: _art(
+                              context,
+                              widget.species,
+                              widget.draft,
+                              artSize,
+                            ),
                             builder: (context, child) {
                               final t = still
                                   ? 0.0
@@ -737,18 +751,8 @@ class _PetdexSettingsState extends State<PetdexSettings> {
     } catch (_) {
       if (!mounted || owner != widget.controller) return;
       _error = picking
-          ? presentationLabel(
-              context,
-              'Could not open that image. Choose a smaller PNG or JPEG.',
-              'تعذّر فتح الصورة. اختر صورة PNG أو JPEG أصغر.',
-              '無法開啟圖片，請選擇較小的 PNG 或 JPEG。',
-            )
-          : presentationLabel(
-              context,
-              'Could not save this change.',
-              'تعذّر حفظ هذا التغيير.',
-              '無法儲存這項變更。',
-            );
+          ? context.sharedL10n.appearance_pet_image_failed
+          : context.sharedL10n.appearance_save_failed;
     } finally {
       if (mounted && owner == widget.controller) setState(() => _busy = false);
     }
@@ -757,8 +761,6 @@ class _PetdexSettingsState extends State<PetdexSettings> {
   @override
   Widget build(BuildContext context) {
     final c = widget.controller;
-    String l(String en, String ar, String zh) =>
-        presentationLabel(context, en, ar, zh);
     return ListenableBuilder(
       listenable: c,
       builder: (context, _) => Column(
@@ -767,19 +769,13 @@ class _PetdexSettingsState extends State<PetdexSettings> {
         children: [
           SwitchListTile.adaptive(
             contentPadding: EdgeInsets.zero,
-            title: Text(l('Pet companion', 'الرفيق الصغير', '寵物夥伴')),
-            subtitle: Text(
-              l(
-                'Show a companion while you chat.',
-                'أظهر رفيقًا أثناء الدردشة.',
-                '在聊天時顯示夥伴。',
-              ),
-            ),
+            title: Text(context.sharedL10n.appearance_pet_companion),
+            subtitle: Text(context.sharedL10n.appearance_pet_companion_hint),
             value: c.enabled,
             onChanged: _busy ? null : (v) => _run(() => c.setEnabled(v)),
           ),
           Text(
-            l('Adopt a companion', 'تبنَّ رفيقًا', '領養夥伴'),
+            context.sharedL10n.appearance_adopt_a_companion,
             style: Theme.of(context).textTheme.titleSmall,
           ),
           Wrap(
@@ -788,7 +784,7 @@ class _PetdexSettingsState extends State<PetdexSettings> {
               for (final pet in PetSpecies.values)
                 if (pet != PetSpecies.hatchling || c.hasHatch)
                   ChoiceChip(
-                    avatar: _art(pet, c._state.draft, 22),
+                    avatar: _art(context, pet, c._state.draft, 22),
                     label: Text(_name(context, pet)),
                     selected: c.enabled && c.species == pet,
                     onSelected: _busy ? null : (_) => _run(() => c.adopt(pet)),
@@ -797,12 +793,12 @@ class _PetdexSettingsState extends State<PetdexSettings> {
           ),
           SwitchListTile.adaptive(
             contentPadding: EdgeInsets.zero,
-            title: Text(l('Roam when idle', 'التجوّل أثناء الراحة', '閒置時漫步')),
+            title: Text(context.sharedL10n.appearance_roam_when_idle),
             value: c.roaming,
             onChanged: _busy ? null : (v) => _run(() => c.setRoaming(v)),
           ),
           Text(
-            l('Pet size', 'حجم الرفيق', '夥伴大小'),
+            context.sharedL10n.appearance_pet_size,
             style: Theme.of(context).textTheme.titleSmall,
           ),
           Wrap(
@@ -818,24 +814,14 @@ class _PetdexSettingsState extends State<PetdexSettings> {
           ),
           const SizedBox(height: 12),
           Text(
-            l(
-              'Hatch from a local picture',
-              'فقس رفيق من صورة محلية',
-              '從本機圖片孵化',
-            ),
+            context.sharedL10n.appearance_hatch_from_a_local_picture,
             style: Theme.of(context).textTheme.titleSmall,
           ),
-          Text(
-            l(
-              'Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.',
-              'اختر صورة PNG أو JPEG (حتى ٤ ميبيبايت و٤٠٩٦ بكسل للضلع و٨ ميغابكسل). عاينها أولًا. يحفظ الفقس صورة ٢٤ × ٢٤ بكسل بدلًا من رفيقك المُفقس السابق.',
-              '選擇 PNG 或 JPEG（最多 4 MiB、每邊 4096 像素且不超過 8 百萬像素）。先預覽，孵化後只儲存一張 24 × 24 像素的肖像，並取代上一次的孵化夥伴。',
-            ),
-          ),
+          Text(context.sharedL10n.appearance_pet_image_limits),
           if (_pending == null)
             OutlinedButton.icon(
               icon: const Icon(Icons.add_photo_alternate_outlined),
-              label: Text(l('Choose picture', 'اختيار صورة', '選擇圖片')),
+              label: Text(context.sharedL10n.appearance_choose_picture),
               onPressed: _busy
                   ? null
                   : () => _run(() async {
@@ -848,8 +834,8 @@ class _PetdexSettingsState extends State<PetdexSettings> {
           if (_pending case final draft?) ...[
             Semantics(
               image: true,
-              label: l('Hatchling preview', 'معاينة الرفيق', '預覽孵化夥伴'),
-              child: _art(PetSpecies.hatchling, draft, 72),
+              label: context.sharedL10n.appearance_hatchling_preview,
+              child: _art(context, PetSpecies.hatchling, draft, 72),
             ),
             Wrap(
               spacing: 8,
@@ -863,13 +849,13 @@ class _PetdexSettingsState extends State<PetdexSettings> {
                             _pending = null;
                           }
                         }),
-                  child: Text(l('Hatch and adopt', 'فقس وتبنٍّ', '孵化並領養')),
+                  child: Text(context.sharedL10n.appearance_hatch_and_adopt),
                 ),
                 TextButton(
                   onPressed: _busy
                       ? null
                       : () => setState(() => _pending = null),
-                  child: Text(l('Discard draft', 'تجاهل المسودة', '捨棄草稿')),
+                  child: Text(context.sharedL10n.appearance_discard_draft),
                 ),
               ],
             ),
@@ -877,13 +863,7 @@ class _PetdexSettingsState extends State<PetdexSettings> {
           if (c.hasHatch)
             TextButton(
               onPressed: _busy ? null : () => _run(c.forgetHatch),
-              child: Text(
-                l(
-                  'Forget saved hatchling',
-                  'حذف الرفيق المُفقس المحفوظ',
-                  '移除已儲存的孵化夥伴',
-                ),
-              ),
+              child: Text(context.sharedL10n.appearance_forget_saved_hatchling),
             ),
           if (_error case final message?)
             Semantics(

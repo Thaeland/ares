@@ -18,6 +18,14 @@ void main() {
     // Data colours with a documented reason, by exact file and line. Stale
     // entries fail below, so an exception cannot outlive its code.
     const dataExceptions = {
+      'lib/core/presentation/imported_theme.dart': {
+        // The one constructor for an imported VS Code theme's own colours.
+        'Color _imported(int argb) => Color(argb);',
+      },
+      'lib/core/presentation/petdex.dart': {
+        // A hatchling's pixels: the user's picture reduced to a colour cube.
+        'paint.color = Color.fromARGB(',
+      },
       'lib/core/screens/profile_admin_panel.dart': {
         // A scannable QR code needs black modules on a white quiet zone.
         'canvas.drawRect(Offset.zero & size, Paint()..color = Colors.white);',

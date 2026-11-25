@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'presentation_label.dart';
+import '../l10n/l10n.dart';
+import '../theme/hermes_theme.dart';
 
 /// Only preset IDs are stored. Preferences cannot supply a URL to the player.
 enum AresRadioStation {
@@ -471,26 +472,12 @@ class AresRadioSettingsBody extends StatelessWidget {
         SwitchListTile(
           value: radio.enabled,
           onChanged: radio.setEnabled,
-          title: Text(presentationLabel(context, 'Radio', 'الراديو', '電台')),
-          subtitle: Text(
-            presentationLabel(
-              context,
-              'Play connects directly to the broadcaster. Station search stays on this device.',
-              'يتصل زر التشغيل بجهة البث مباشرةً. يبقى البحث عن المحطات على هذا الجهاز.',
-              '按下播放才會直接連線至廣播業者。搜尋電台只會在此裝置上進行。',
-            ),
-          ),
+          title: Text(context.sharedL10n.appearance_radio),
+          subtitle: Text(context.sharedL10n.appearance_radio_hint),
         ),
         if (radio.enabled) AresRadioBar(radio: radio),
         if (radio._saveFailed)
-          Text(
-            presentationLabel(
-              context,
-              'Radio settings could not be saved.',
-              'تعذّر حفظ إعدادات الراديو.',
-              '無法儲存電台設定。',
-            ),
-          ),
+          Text(context.sharedL10n.appearance_radio_save_failed),
       ],
     ),
   );
@@ -512,12 +499,7 @@ class AresRadioBar extends StatelessWidget {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 148),
               child: Tooltip(
-                message: presentationLabel(
-                  context,
-                  'Choose a station',
-                  'اختيار محطة',
-                  '選擇電台',
-                ),
+                message: context.sharedL10n.appearance_choose_a_station,
                 child: TextButton(
                   onPressed: () => showAresRadioSheet(context, radio),
                   child: Text(
@@ -543,13 +525,8 @@ class _PlayButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
     tooltip: radio.active
-        ? presentationLabel(
-            context,
-            'Pause radio',
-            'إيقاف الراديو مؤقتًا',
-            '暫停電台',
-          )
-        : presentationLabel(context, 'Play radio', 'تشغيل الراديو', '播放電台'),
+        ? context.sharedL10n.appearance_pause_radio
+        : context.sharedL10n.appearance_play_radio,
     onPressed: radio.active ? radio.pause : radio.play,
     icon: Icon(radio.active ? Icons.pause : Icons.play_arrow),
   );
@@ -560,12 +537,7 @@ class _NextButton extends StatelessWidget {
   final AresRadio radio;
   @override
   Widget build(BuildContext context) => IconButton(
-    tooltip: presentationLabel(
-      context,
-      'Next station',
-      'المحطة التالية',
-      '下一個電台',
-    ),
+    tooltip: context.sharedL10n.appearance_next_station,
     onPressed: radio.next,
     icon: const Icon(Icons.skip_next),
   );
@@ -590,19 +562,21 @@ Future<void> showAresRadioSheet(BuildContext context, AresRadio radio) async {
 }
 
 class _FlatTrace extends CustomPainter {
-  const _FlatTrace();
+  const _FlatTrace(this.color);
+
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFF6BC8D8)
+      ..color = color
       ..strokeWidth = 2;
     final y = size.height / 2;
     canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
   }
 
   @override
-  bool shouldRepaint(_FlatTrace oldDelegate) => false;
+  bool shouldRepaint(_FlatTrace oldDelegate) => oldDelegate.color != color;
 }
 
 /// A flat trace. Playback does not expose PCM here, so the line does not
@@ -613,16 +587,13 @@ class RadioActivityTrace extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: presentationLabel(
-        context,
-        'Stream activity. Audio levels are unavailable, so this line stays flat.',
-        'نشاط البث. مستويات الصوت غير متاحة، لذا يبقى الخط مستويًا.',
-        '串流活動。無法取得音量，所以這條線保持平直。',
-      ),
-      child: const SizedBox(
+      label: context.sharedL10n.appearance_radio_trace_semantics,
+      child: SizedBox(
         height: 18,
         width: 120,
-        child: CustomPaint(painter: _FlatTrace()),
+        child: CustomPaint(
+          painter: _FlatTrace(HermesTokens.of(context).accent),
+        ),
       ),
     );
   }
@@ -640,8 +611,6 @@ class _RadioSheetState extends State<_RadioSheet> {
   @override
   Widget build(BuildContext context) {
     final radio = widget.radio;
-    String t(String en, String ar, String zh) =>
-        presentationLabel(context, en, ar, zh);
     return SafeArea(
       top: false,
       child: Padding(
@@ -653,23 +622,17 @@ class _RadioSheetState extends State<_RadioSheet> {
           builder: (context, _) {
             if (!radio.enabled || radio._closed) {
               return ListTile(
-                title: Text(t('Radio is off', 'الراديو متوقف', '電台已關閉')),
+                title: Text(context.sharedL10n.appearance_radio_is_off),
               );
             }
             final results = radio.search(query);
             final status = switch (radio.status) {
-              AresRadioStatus.paused => t('Paused', 'متوقف مؤقتًا', '已暫停'),
-              AresRadioStatus.connecting => t(
-                'Connecting…',
-                'جارٍ الاتصال…',
-                '正在連線…',
-              ),
-              AresRadioStatus.playing => t('Live', 'بث مباشر', '直播中'),
-              AresRadioStatus.unavailable => t(
-                'Stream unavailable',
-                'البث غير متاح',
-                '無法播放串流',
-              ),
+              AresRadioStatus.paused => context.sharedL10n.appearance_paused,
+              AresRadioStatus.connecting =>
+                context.sharedL10n.appearance_connecting,
+              AresRadioStatus.playing => context.sharedL10n.appearance_live,
+              AresRadioStatus.unavailable =>
+                context.sharedL10n.appearance_stream_unavailable,
             };
             final credit = radio.nowPlaying;
             return ConstrainedBox(
@@ -702,16 +665,14 @@ class _RadioSheetState extends State<_RadioSheet> {
                     child: Text('$status · ${radio.station.provider}'),
                   ),
                   if (credit != null)
-                    Text('${t('Now playing', 'يُبث الآن', '目前播放')}：$credit'),
+                    Text(context.sharedL10n.appearance_now_playing(credit)),
                   if (radio.status == AresRadioStatus.playing)
                     const RadioActivityTrace(),
                   if (radio.status == AresRadioStatus.playing)
                     Text(
-                      t(
-                        'Audio only · waveform unavailable',
-                        'صوت فقط · شكل الموجة غير متاح',
-                        '僅播放音訊 · 無法顯示波形',
-                      ),
+                      context
+                          .sharedL10n
+                          .appearance_audio_only_waveform_unavailable,
                     ),
                   Row(
                     children: [
@@ -720,7 +681,7 @@ class _RadioSheetState extends State<_RadioSheet> {
                       ),
                       Expanded(
                         child: Semantics(
-                          label: t('Volume', 'مستوى الصوت', '音量'),
+                          label: context.sharedL10n.appearance_volume,
                           child: Slider(
                             value: radio.volume,
                             onChanged: radio.setVolume,
@@ -733,17 +694,13 @@ class _RadioSheetState extends State<_RadioSheet> {
                     onChanged: (v) => setState(() => query = v),
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.search),
-                      labelText: t(
-                        'Search presets',
-                        'البحث في المحطات المحفوظة مسبقًا',
-                        '搜尋預設電台',
-                      ),
+                      labelText: context.sharedL10n.appearance_search_presets,
                     ),
                   ),
                   if (results.isEmpty)
                     ListTile(
                       title: Text(
-                        t('No stations found', 'لم يُعثر على محطات', '找不到電台'),
+                        context.sharedL10n.appearance_no_stations_found,
                       ),
                     ),
                   for (final station in results)
@@ -758,17 +715,18 @@ class _RadioSheetState extends State<_RadioSheet> {
                               ? Icons.push_pin
                               : Icons.push_pin_outlined,
                         ),
-                        tooltip:
-                            '${radio.isPinned(station) ? t('Unpin station', 'إلغاء تثبيت المحطة', '取消釘選電台') : t('Pin station', 'تثبيت المحطة', '釘選電台')}: ${station.label}',
+                        tooltip: radio.isPinned(station)
+                            ? context.sharedL10n.appearance_unpin_station(
+                                station.label,
+                              )
+                            : context.sharedL10n.appearance_pin_station(
+                                station.label,
+                              ),
                         onPressed: () => radio.togglePin(station),
                       ),
                     ),
                   Text(
-                    t(
-                      'While this picker is open, playing stations may share track details directly from the broadcaster.',
-                      'عندما تكون هذه القائمة مفتوحة، قد تُعرض معلومات المقطع من جهة البث مباشرةً أثناء التشغيل.',
-                      '開啟此面板並播放時，會向支援此功能的廣播業者取得曲目資訊。',
-                    ),
+                    context.sharedL10n.appearance_radio_picker_metadata_notice,
                   ),
                 ],
               ),

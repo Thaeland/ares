@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -46,6 +47,35 @@ void main() {
     expect(again.bubbleOpacity, ReadingControls.minBubbleOpacity);
     expect(again.externalEmbeds, isTrue);
   });
+
+  test(
+    'Pop out reuses the companion window that is open or starting',
+    () async {
+      var launches = 0;
+      final exits = <Completer<void>>[];
+      final ready = Completer<void>();
+      final slot = PetWindowSlot(() async {
+        launches++;
+        await ready.future;
+        final exit = Completer<void>();
+        exits.add(exit);
+        return (exited: exit.future);
+      });
+      final first = slot.open();
+      final second = slot.open();
+      ready.complete();
+      await Future.wait([first, second]);
+      expect(launches, 1);
+      await slot.open();
+      expect(launches, 1);
+      expect(slot.isOpen, isTrue);
+      exits.single.complete();
+      await pumpEventQueue();
+      expect(slot.isOpen, isFalse);
+      await slot.open();
+      expect(launches, 2);
+    },
+  );
 
   testWidgets('search jumps to the radio control in a narrow RTL pane', (
     tester,

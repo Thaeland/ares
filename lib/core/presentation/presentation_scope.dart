@@ -15,12 +15,21 @@ class PresentationHost {
     : reading = ReadingControls(preferences),
       pet = PetdexController(preferences),
       radio = AresRadio.fromPreferences(preferences),
-      themes = ImportedThemeStore(preferences);
+      themes = ImportedThemeStore(preferences) {
+    radioEnabled.value = radio.enabled;
+    radio.addListener(_syncRadioEnabled);
+  }
 
   final ReadingControls reading;
   final PetdexController pet;
   final AresRadio radio;
   final ImportedThemeStore themes;
+
+  /// Changes only when the radio is switched on or off, so a chat's tools
+  /// menu need not rebuild for every station or playback update.
+  final radioEnabled = ValueNotifier<bool>(false);
+
+  void _syncRadioEnabled() => radioEnabled.value = radio.enabled;
 
   /// Bumps when the saved import selection changes. Reading and playback
   /// have their own listeners and must not repaint the whole theme.
@@ -29,10 +38,12 @@ class PresentationHost {
   void themeChanged() => themeRevision.value++;
 
   void dispose() {
+    radio.removeListener(_syncRadioEnabled);
     reading.dispose();
     pet.dispose();
     radio.dispose();
     themeRevision.dispose();
+    radioEnabled.dispose();
   }
 }
 

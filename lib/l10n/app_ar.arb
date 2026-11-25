@@ -14,6 +14,13 @@
   "fallback_legacy_title": "النماذج الاحتياطية القديمة (للقراءة فقط)",
   "fallback_legacy_notice": "يستخدم المضيف أيضًا fallback_model بعد هذه القائمة، ويتخطى المسارات المكررة. تظل الإدخالات القديمة محفوظة حتى لو كانت القائمة أعلاه فارغة. يمكنك تعديلها على المضيف.",
   "fallback_priority": "الأولوية: {position}",
+  "@fallback_priority": {
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  },
   "fallback_move_up": "نقل لأعلى",
   "fallback_move_down": "نقل لأسفل",
   "fallback_routing_read_only": "يحتفظ التطبيق بتفاصيل التوجيه أو بالمزوّد غير المدرج. عدّل المزوّد أو النموذج على المضيف. لا يزال بإمكانك تغيير ترتيب الإدخال أو إزالته.",
@@ -33,6 +40,13 @@
   "portal_recorded_usage": "الاستخدام المسجّل",
   "portal_all_providers": "يشمل جميع المزوّدين في الملف الشخصي المحدد للبوابة. تسجيل تكلفة قدرها صفر لا يعني أن النموذج مجاني.",
   "portal_period": "آخر {days} يومًا",
+  "@portal_period": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
   "portal_sessions": "الجلسات",
   "portal_input": "رموز الإدخال",
   "portal_output": "رموز الإخراج",
@@ -59,8 +73,10 @@
   "ng_switch": "تبديل",
   "ng_model_confirmation_required": "يلزم التأكيد قبل اختيار هذا النموذج.",
   "ng_model_switches_next_turn": "سيُستخدم {model} في الجولة التالية.",
+  "@ng_model_switches_next_turn": {"placeholders": {"model": {"type": "String"}}},
   "ng_model_switch_not_connected": "الدردشة غير جاهزة لتبديل النموذج. افتحها مجددًا وأعد المحاولة.",
   "ng_gateway_kept_default_model": "أبقت البوابة على {model} لهذه الدردشة. أعد اختيار النموذج قبل الإرسال.",
+  "@ng_gateway_kept_default_model": {"placeholders": {"model": {"type": "String"}}},
   "hands_free_title": "الاستخدام دون لمس",
   "hands_free_start": "بدء الاستخدام دون لمس",
   "hands_free_stop": "إيقاف الاستخدام دون لمس",
@@ -70,9 +86,23 @@
   "hands_free_waiting": "في انتظار Hermes",
   "hands_free_speaking": "جارٍ نطق الرد — الميكروفون مغلق",
   "hands_free_followup": "الاستماع لمدة تصل إلى {seconds} ثانية",
+  "@hands_free_followup": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "hands_free_error": "توقف وضع الاستخدام دون لمس",
   "hands_free_setup": "إعداد الاستخدام دون لمس",
   "hands_free_preview": "معاينة الإملاء الصوتي: {transcript}",
+  "@hands_free_preview": {
+    "placeholders": {
+      "transcript": {
+        "type": "String"
+      }
+    }
+  },
   "hands_free_short_disclosure": "يعمل هذا الوضع فقط عندما تكون هذه الدردشة مفتوحة في الواجهة. لا يتطلب رصد عبارة التنبيه اتصالًا، لكن الخدمات الصوتية قد تستخدم الشبكة. يستهلك الاستماع طاقة البطارية.",
   "hands_free_error_action": "تحقق من إذن الميكروفون وخدمة الكلام وصوت الرد والاتصال، ثم اضغط على زر الإيقاف يليه زر البدء لإعادة المحاولة. لن يُعاد إرسال أي شيء.",
   "hands_free_disclosure": "تُرصد عبارة التنبيه على وحدة المعالجة المركزية (CPU) دون اتصال. قد تستخدم خدمة التعرّف على الكلام في Android وصوت الرد المحدد والبوابة اتصالات الشبكة. يستهلك الاستماع طاقة البطارية وقد يتنشط الميكروفون بالخطأ. يتوقف الوضع إذا غطّت شاشة أخرى الدردشة أو أُغلقت أو انتقلت إلى الخلفية. لا يُستأنف تلقائيًا عند فتحها مجددًا. يبقى النص الذي تمليه يدويًا مسودة قابلة للتعديل.",
@@ -84,8 +114,29 @@
   "hands_free_start_blocked": "للبدء، يجب أن تكون المسودة فارغة وبلا مرفقات، وأن تكون الدردشة متصلة ولا تنفذ أي طلب، وأن تكون الردود المنطوقة مفعّلة. أنهِ أولًا أي إجراء صوتي بدأته يدويًا.",
   "hands_free_setup_complete": "اكتمل إعداد الميكروفون. اضغط على زر البدء مجددًا.",
   "message_time_recorded": "وقت التسجيل على الخادم: {time} (بالتوقيت المحلي)",
+  "@message_time_recorded": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "message_time_sent": "وقت رصد الإرسال على هذا الجهاز: {time} (بالتوقيت المحلي)",
+  "@message_time_sent": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "message_time_received": "وقت أول استلام على هذا الجهاز: {time} (بالتوقيت المحلي)",
+  "@message_time_received": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "stop_and_send": "إيقاف وإرسال",
   "message_queued_for_running_turn": "أُضيفت الرسالة إلى قائمة انتظار التنفيذ الجاري.",
   "running_message_not_accepted": "تعذّر على Hermes قبول هذه الرسالة. ما زالت مسودتك محفوظة. أوقف الرد أو انتظر انتهاءه، ثم أعد الإرسال.",
@@ -105,6 +156,16 @@
   "attachment_pdf_failed": "تعذّرت معاينة ملف PDF هذا. احفظ الملف الأصلي أو شاركه.",
   "attachment_pdf_unavailable": "تتوفر معاينة ملفات PDF على Android. لا يزال بإمكانك حفظ هذا الملف أو مشاركته.",
   "attachment_pdf_page": "الصفحة {page} من {total}",
+  "@attachment_pdf_page": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "attachment_previous_page": "الصفحة السابقة",
   "attachment_next_page": "الصفحة التالية",
   "attachment_loading": "جارٍ تحميل المعاينة…",
@@ -155,7 +216,24 @@
   "assets_retry_failed": "إعادة محاولة قراءة الأجزاء المتعذّرة من السجل",
   "assets_partial": "أفاد الخادم بأن السجل غير مكتمل. تحقق من لوحة التحكم ثم حدّث النتائج.",
   "assets_scan_summary": "عدد الإشارات إلى الملفات: {files}، وعدد الدردشات المفحوصة: {chats}",
+  "@assets_scan_summary": {
+    "placeholders": {
+      "files": {
+        "type": "int"
+      },
+      "chats": {
+        "type": "int"
+      }
+    }
+  },
   "assets_open_chat": "فتح الدردشة: {title}",
+  "@assets_open_chat": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "assets_file_too_large": "يتجاوز هذا الملف حد التنزيل. افتح لوحة التحكم لتنزيله.",
   "a_one_off_question_archives_itself_after_72_hours_anything": "دردشة لسؤال واحد تُؤرشف تلقائيًا بعد 72 ساعة، ويظل ما يستحق الاحتفاظ به في الذاكرة.",
   "archive_chat": "أرشفة الدردشة",
@@ -163,6 +241,13 @@
   "chat_archived": "أُرشفت الدردشة",
   "chat_unarchived": "أُعيدت الدردشة من الأرشيف",
   "could_not_update_chat_archive": "تعذّر تحديث حالة أرشفة الدردشة: {error}",
+  "@could_not_update_chat_archive": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "quick_chat_description": "دردشة لسؤال واحد.",
   "ai_full_text": "الذكاء الاصطناعي والبحث في النص الكامل",
   "ai_search_model": "نموذج البحث بالذكاء الاصطناعي",
@@ -307,7 +392,7 @@
   "credit_notifications": "إشعارات الرصيد",
   "credit_notifications_description": "تنبيهات عند إيقاف استخدام الرصيد أو استئنافه.",
   "cron": "Cron",
-  "crons": "المهام المجدولة",
+  "crons": "الجدولة",
   "cron_conversations_empty": "تظهر هنا محادثات المهام المجدولة، بما فيها محادثات مرات التشغيل السابقة.",
   "search_cron_conversations": "البحث في محادثات مهام cron",
   "cron_jobs": "مهام cron",
@@ -877,6 +962,13 @@
   "unpin_chat": "إلغاء تثبيت المحادثة",
   "pinned_chats": "المحادثات المثبّتة",
   "could_not_update_chat_pin": "تعذّر تحديث حالة تثبيت المحادثة: {error}",
+  "@could_not_update_chat_pin": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "could_not_save_chat_spaces": "تعذّر حفظ مساحات المحادثات على هذا الجهاز",
   "update_available": "يتوفر تحديث",
   "update_now": "تحديث الآن",
@@ -910,6 +1002,13 @@
   "enter_the_certificate_password_to_finish_loading_it": "أدخل كلمة مرور الشهادة التي اخترتها لإكمال تحميلها.",
   "client_certificate_required": "حمّل شهادة عميل أو عطّل خيار شهادة العميل.",
   "client_certificate_loaded": "الشهادة المحمّلة: {label}",
+  "@client_certificate_loaded": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
   "remove_certificate": "إزالة الشهادة",
   "certificate_import_failed": "تعذّر تحميل تلك الشهادة.",
   "background_work": "العمل في الخلفية",
@@ -986,7 +1085,30 @@
   "provider_usage_failed": "تعذّر تحميل بيانات الاستخدام المسجّل.",
   "provider_usage_empty": "لا يوجد استخدام مسجّل لهذا المزوّد.",
   "provider_usage_counts": "الجلسات: {sessions} · المدخلات: {input} · المخرجات: {output}",
+  "@provider_usage_counts": {
+    "placeholders": {
+      "sessions": {
+        "type": "String"
+      },
+      "input": {
+        "type": "String"
+      },
+      "output": {
+        "type": "String"
+      }
+    }
+  },
   "provider_usage_costs": "التكلفة المقدّرة: {estimated} · التكلفة المُبلّغ عنها: {actual}",
+  "@provider_usage_costs": {
+    "placeholders": {
+      "estimated": {
+        "type": "String"
+      },
+      "actual": {
+        "type": "String"
+      }
+    }
+  },
   "provider_quota_codex": "اشتراك OpenAI Codex",
   "provider_quota_claude": "اشتراك Claude",
   "provider_quota_openai_api": "الاستخدام المسجّل لواجهة OpenAI API",
@@ -998,9 +1120,40 @@
   "provider_quota_account": "الحساب",
   "provider_quota_unknown": "غير معروف",
   "provider_quota_state": "حالة الحساب: {state}",
+  "@provider_quota_state": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
   "provider_quota_scope": "النطاق: {scope}",
+  "@provider_quota_scope": {
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
   "provider_quota_percent": "المُستخدَم: {used}% · المتبقي: {remaining}%",
+  "@provider_quota_percent": {
+    "placeholders": {
+      "used": {
+        "type": "String"
+      },
+      "remaining": {
+        "type": "String"
+      }
+    }
+  },
   "provider_quota_reset": "موعد تجديد الحصة: {reset}",
+  "@provider_quota_reset": {
+    "placeholders": {
+      "reset": {
+        "type": "String"
+      }
+    }
+  },
   "provider_quota_reset_unknown": "موعد تجديد الحصة غير متاح.",
   "auxiliary_models": "النماذج المساعدة",
   "auxiliary_notice": "اختر نموذجًا لكل مهمة. يجب إدارة نقاط الاتصال المخصّصة على الخادم. يتّبع الخيار «تلقائي» قواعد توارث الإعدادات الخاصة بالمهمة.",
@@ -1022,9 +1175,23 @@
   "provider_oauth_host_failed": "تعذّر على المضيف إكمال تسجيل الدخول. ابدأ من جديد.",
   "provider_oauth_poll_failed": "تعذّر التحقق من حالة تسجيل الدخول. ابدأ من جديد.",
   "provider_oauth_cancellation_unconfirmed": "{message} تعذّر تأكيد الإلغاء؛ قد تبقى الجلسة نشطة على المضيف حتى تنتهي صلاحيتها.",
+  "@provider_oauth_cancellation_unconfirmed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
   "provider_oauth_browser_failed": "تعذّر فتح المتصفح الخارجي. أعد المحاولة أو ألغِ تسجيل الدخول.",
   "provider_oauth_retry": "إعادة المحاولة",
   "provider_oauth_complete": "إكمال تسجيل الدخول إلى {provider}",
+  "@provider_oauth_complete": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
   "provider_oauth_code_instruction": "أدخل هذا الرمز المؤقت في صفحة المزوّد:",
   "provider_oauth_waiting": "بانتظار الموافقة. تنتهي صلاحية هذه الجلسة تلقائيًا.",
   "provider_oauth_open_browser": "فتح صفحة المزوّد في المتصفح",
@@ -1036,6 +1203,13 @@
   "provider_oauth_checking_account": "وصلت الموافقة. جارٍ التحقق من الحساب على المضيف…",
   "provider_oauth_verification_unavailable": "وصلت الموافقة، لكن التحقق من الحساب غير متاح. افتح «الاستخدام» لتحديث بيانات استخدام الحساب.",
   "provider_oauth_verified_account": "سجّلت الدخول إلى مضيف Hermes بالحساب {email}. افتح «الاستخدام» لتحديث بيانات استخدام الحساب.",
+  "@provider_oauth_verified_account": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
   "provider_oauth_credentials_unverified": "يشير المضيف إلى توفّر بيانات الاعتماد، لكن لم يجرِ التحقق من هوية الحساب.",
   "provider_oauth_account_status_unknown": "حالة الحساب على المضيف غير متاحة.",
   "app_language": "لغة التطبيق",
@@ -1050,7 +1224,21 @@
   "voice_recording_discard": "تجاهل التسجيل",
   "voice_recording_processing": "جارٍ تجهيز الرسالة الصوتية…",
   "voice_recording_elapsed": "جارٍ التسجيل: {time}",
+  "@voice_recording_elapsed": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "voice_recording_draft": "رسالة صوتية: {time}",
+  "@voice_recording_draft": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "voice_recording_permission": "اسمح بالوصول إلى الميكروفون لتسجيل رسالة صوتية.",
   "voice_recording_limit": "بلغ التسجيل مدته القصوى وهي عشر دقائق.",
   "voice_recording_empty": "لم يُسجَّل أي صوت. أعد المحاولة.",
@@ -1063,6 +1251,13 @@
   "projects_root_description": "يُنشأ هنا مجلد لكل مشروع تنشئه على هذا الهاتف. حدّد المجلد الذي يستخدمه Hermes نفسه لتتمكن من الوصول إلى المشاريع نفسها من الهاتف والخادم.",
   "projects_root_label": "مسار المجلد الجذر للمشاريع",
   "projects_root_default_hint": "المسار الافتراضي للخادم: {path}",
+  "@projects_root_default_hint": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "projects_root_locked_title": "يحدّده الخادم",
   "projects_root_locked_explanation": "يقصر هذا الخادم الوصول إلى الملفات على مجلد جذر واحد، لذا لا يمكنك تغيير مجلد المشاريع من التطبيق.",
   "projects_root_saved": "حُفظ مجلد المشاريع.",
@@ -1074,20 +1269,75 @@
   "projects_root_unavailable": "تعذّرت قراءة مجلد المشاريع على الخادم. تحقّق من الاتصال بلوحة التحكم، ثم أعد المحاولة.",
   "adopt_folder_action": "إضافة مجلد موجود",
   "adopt_folder_description": "المجلدات الموجودة ضمن {root} التي لم تُسجَّل كمشاريع بعد.",
+  "@adopt_folder_description": {
+    "placeholders": {
+      "root": {
+        "type": "String"
+      }
+    }
+  },
   "adopt_folder_registered": "مسجّل بالفعل كمشروع: {name}",
+  "@adopt_folder_registered": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "adopt_folder_none": "كل مجلد ضمن هذا المسار مسجّل بالفعل كمشروع.",
   "adopt_folder_unsupported": "لا يتيح هذا الاتصال عرض مجلدات الخادم. أدخل بدلًا من ذلك المسار المطلق لمجلد موجود.",
   "adopt_folder_failed": "تعذّر عرض مجلدات الخادم: {error}",
+  "@adopt_folder_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "adopt_folder_manual_label": "مسار المجلد الموجود",
   "adopt_folder_name_label": "اسم المشروع",
   "adopt_folder_add": "إضافة كمشروع",
   "adopt_folder_added": "يستخدم {name} الآن المسار {path}",
+  "@adopt_folder_added": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "adopt_folder_error": "تعذّرت إضافة المجلد: {error}",
+  "@adopt_folder_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "adopt_folder_folderless": "أُنشئ المشروع {name}، لكن لم يُربط به المجلد. اربطه من خلال Hermes على الخادم.",
+  "@adopt_folder_folderless": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "slash_commands": "أوامر الشرطة المائلة",
   "slash_commands_loading": "جارٍ تحميل الأوامر…",
   "slash_commands_empty": "لا توجد أوامر مطابقة",
   "slash_command_info_alias": "{alias} اسم بديل للأمر {command}",
+  "@slash_command_info_alias": {
+    "placeholders": {
+      "alias": {
+        "type": "String"
+      },
+      "command": {
+        "type": "String"
+      }
+    }
+  },
   "slash_command_info_no_description": "لا يوجد وصف متاح.",
   "slash_command_info_arguments_options": "يقبل خيارًا واحدًا من قائمة محدّدة.",
   "slash_command_info_arguments_text": "يقبل نصًا بعد الأمر.",
@@ -1104,6 +1354,13 @@
   "nextgen_single_login_subtitle": "لإضافة بوابة، يكفي إدخال عنوان لوحة التحكم وتسجيل الدخول مرة واحدة.",
   "ng_allow_this_command": "هل تسمح بتنفيذ هذا الأمر؟",
   "ng_hermes_wants_to_run_this_with": "يريد Hermes تنفيذ هذا الأمر باستخدام {tool}.",
+  "@ng_hermes_wants_to_run_this_with": {
+    "placeholders": {
+      "tool": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_hermes_wants_to_run_this": "يريد Hermes تنفيذ هذا الأمر.",
   "ng_hermes_has_a_question": "لدى Hermes سؤال",
   "ng_hermes_has_questions": "لدى Hermes أسئلة",
@@ -1111,22 +1368,85 @@
   "ng_hermes_needs_your_sudo_password_to": "يحتاج Hermes إلى كلمة مرور sudo الخاصة بك لتنفيذ هذا الأمر.",
   "ng_a_secret_value": "قيمة سرية",
   "ng_value_for": "قيمة {variable}",
+  "@ng_value_for": {
+    "placeholders": {
+      "variable": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_your_password_manager": "مدير كلمات المرور لديك",
   "ng_unlock": "فتح قفل {name}",
+  "@ng_unlock": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_hermes_needs_unlocked_to_sign_in": "يحتاج Hermes إلى فتح قفل {name} لتسجيل الدخول نيابةً عنك.",
+  "@ng_hermes_needs_unlocked_to_sign_in": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_sign_in_code": "رمز تسجيل الدخول",
   "ng_enter_the_sign_in_code": "أدخل رمز تسجيل الدخول.",
   "ng_enter_the_sign_in_code_for": "أدخل رمز تسجيل الدخول إلى {site}.",
+  "@ng_enter_the_sign_in_code_for": {
+    "placeholders": {
+      "site": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_save_a_login": "هل تريد حفظ بيانات تسجيل الدخول؟",
   "ng_save_your_login": "هل تريد حفظ بيانات تسجيل دخولك إلى {site}؟",
+  "@ng_save_your_login": {
+    "placeholders": {
+      "site": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_couldn_t_load_this_chat": "تعذّر تحميل هذه المحادثة: {error}",
+  "@ng_couldn_t_load_this_chat": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_live_updates_are_unavailable": "التحديثات المباشرة غير متاحة: {error}",
+  "@ng_live_updates_are_unavailable": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_preparing": "جارٍ تجهيز {name}…",
+  "@ng_preparing": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_the_turn_failed": "فشلت معالجة الطلب.",
   "ng_turn_changed": "انتهت معالجة ذلك الطلب أو بدأت معالجة طلب أحدث",
   "ng_steer_rejected": "لم تُقبل الرسالة أثناء معالجة الطلب الحالي",
   "ng_turn_not_known_yet": "لم يُحدَّد الطلب الجاري بعد؛ أعد المحاولة بعد قليل",
   "ng_couldn_t_stop": "تعذّر الإيقاف: {error}",
+  "@ng_couldn_t_stop": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_server_access": "الوصول إلى الخادم",
   "ng_sign_in": "تسجيل الدخول",
   "ng_live_connection": "الاتصال المباشر",
@@ -1137,8 +1457,25 @@
   "ng_not_checked_yet": "لم يجرِ التحقق بعد.",
   "ng_checking": "جارٍ التحقق…",
   "ng_hermes_answers_at": "يستجيب Hermes {version} على العنوان {address}.",
+  "@ng_hermes_answers_at": {
+    "placeholders": {
+      "version": {
+        "type": "Object"
+      },
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_something_answered_but_not_a_hermes": "وصل ردّ، لكنه ليس من لوحة تحكم Hermes.",
   "ng_something_answered_http_but_not_a": "وصل ردّ (HTTP {status})، لكنه ليس من لوحة تحكم Hermes.",
+  "@ng_something_answered_http_but_not_a": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_use_the_dashboard_s_address_and": "استخدم عنوان لوحة التحكم ومنفذها (9119 افتراضيًا)، وليس عنوان خادم API ومنفذه.",
   "ng_cloudflare_access_turned_the_service_token": "رفضت Cloudflare Access رمز الخدمة.",
   "ng_cloudflare_access_is_in_front_of": "هذا العنوان محميّ بواسطة Cloudflare Access.",
@@ -1149,21 +1486,56 @@
   "ng_needs_server_access_first": "يلزم الوصول إلى الخادم أولًا.",
   "ng_needs_a_sign_in_first": "يلزم تسجيل الدخول أولًا.",
   "ng_signed_in_as": "سجّلت الدخول باسم {name}.",
+  "@ng_signed_in_as": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_this_dashboard_doesn_t_need_a": "لا تتطلب لوحة التحكم هذه تسجيل الدخول.",
   "ng_the_saved_sign_in_has_expired": "انتهت صلاحية جلسة الدخول المحفوظة.",
   "ng_sign_in_again": "سجّل الدخول مجددًا.",
   "ng_too_many_sign_in_attempts": "تجاوزت الحد المسموح به لمحاولات تسجيل الدخول.",
   "ng_wait_a_minute_then_check_again": "انتظر دقيقة ثم تحقّق مجددًا.",
   "ng_the_gateway_answered": "ردّت البوابة: {message}.",
+  "@ng_the_gateway_answered": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_sign_in_again_or_update_hermes": "سجّل الدخول مجددًا أو حدّث Hermes.",
   "ng_couldn_t_check_the_sign_in": "تعذّر التحقق من تسجيل الدخول: {error}",
+  "@ng_couldn_t_check_the_sign_in": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_the_gateway_wouldn_t_issue_a": "رفضت البوابة إصدار تذكرة اتصال بالمحادثة ({message}).",
+  "@ng_the_gateway_wouldn_t_issue_a": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_the_chat_connection_opened_and_the": "فُتح اتصال المحادثة وأكّدت البوابة جاهزيتها.",
   "ng_the_gateway_never_said_it_was": "لم تؤكّد البوابة جاهزيتها.",
   "ng_check_that_the_agent_is_running": "تأكّد من أن الوكيل يعمل على الخادم.",
   "ng_the_gateway_refused_the_chat_connection": "رفضت البوابة اتصال المحادثة (HTTP 403).",
   "ng_this_dashboard_has_no_chat_endpoint": "لا توفّر لوحة التحكم هذه نقطة اتصال للمحادثة (/api/ws).",
   "ng_the_chat_connection_failed": "فشل اتصال المحادثة: {detail}",
+  "@ng_the_chat_connection_failed": {
+    "placeholders": {
+      "detail": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_use_the_exact_address_the_dashboard": "استخدم العنوان المحدّد في إعدادات لوحة التحكم كما هو.",
   "ng_update_hermes": "حدّث Hermes.",
   "ng_make_sure_the_proxy_allows_websocket": "تأكّد من أن الوكيل يسمح بترقية الاتصال إلى WebSocket على المسار /api/ws.",
@@ -1175,14 +1547,45 @@
   "ng_connection_failed": "فشل الاتصال",
   "ng_rate_limited_by_gateway": "فرضت البوابة حدًّا على معدل الطلبات",
   "ng_couldn_t_open_the_chat_connection": "تعذّر فتح اتصال المحادثة: {message}",
+  "@ng_couldn_t_open_the_chat_connection": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_the_gateway_returned_no_websocket_ticket": "لم تُرسل البوابة تذكرة WebSocket.",
   "ng_connection_lost": "انقطع الاتصال",
   "ng_this_dashboard_has_no_chat_endpoint_2": "لا توفّر لوحة التحكم هذه نقطة اتصال للمحادثة (/api/ws). حدّث Hermes.",
   "ng_the_gateway_refused_the_chat_connection_2": "رفضت البوابة اتصال المحادثة. تأكّد من أن العنوان يطابق المضيف المحدّد في إعدادات لوحة التحكم وأن المحادثة المضمّنة مفعّلة.",
   "ng_the_gateway_refused": "رفضت البوابة {method}.",
+  "@ng_the_gateway_refused": {
+    "placeholders": {
+      "method": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_couldn_t_read_your_saved_gateways": "تعذّرت قراءة بواباتك المحفوظة: {error}",
+  "@ng_couldn_t_read_your_saved_gateways": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_applies_to_new_chats": "يسري على المحادثات الجديدة",
   "ng_couldn_t_change": "تعذّر تغيير {label}: {error}",
+  "@ng_couldn_t_change": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      },
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_capabilities": "الإمكانات",
   "ng_skills": "المهارات",
   "ng_toolsets": "مجموعات الأدوات",
@@ -1194,6 +1597,13 @@
   "ng_no_mcp_servers": "لا توجد خوادم MCP",
   "ng_that_file_is_too_large_to": "هذا الملف أكبر من الحجم المتوقع لملف شهادة.",
   "ng_the_certificate_couldn_t_be_imported": "تعذّر استيراد الشهادة: {error}",
+  "@ng_the_certificate_couldn_t_be_imported": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_now_pick_its_private_key": "اختر الآن المفتاح الخاص بالشهادة.",
   "ng_now_pick_its_certificate": "اختر الآن الشهادة المرتبطة بالمفتاح.",
   "ng_that_file_isn_t_a_certificate": "هذا الملف ليس شهادة ولا مفتاحًا خاصًا.",
@@ -1209,8 +1619,29 @@
   "ng_camera": "الكاميرا",
   "ng_files": "الملفات",
   "ng_you_can_attach_up_to_files": "الحد الأقصى لعدد الملفات التي يمكنك إرفاقها هو {count}.",
+  "@ng_you_can_attach_up_to_files": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_couldn_t_read": "تعذّرت قراءة {name}.",
+  "@ng_couldn_t_read": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_couldn_t_prepare_that_file": "تعذّر تجهيز الملف: {error}",
+  "@ng_couldn_t_prepare_that_file": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_hermes_is_still_working": "لا يزال Hermes يعمل",
   "ng_steer": "توجيه",
   "ng_adds_this_to_the_running_turn": "يضيف هذه الرسالة إلى الطلب الجاري عند خطوته التالية",
@@ -1219,6 +1650,13 @@
   "ng_stop_and_send": "إيقاف وإرسال",
   "ng_stops_the_turn_then_sends_this": "يوقف معالجة الطلب الجاري ثم يرسل هذه الرسالة",
   "ng_dictation_stopped": "توقّف الإملاء: {message}",
+  "@ng_dictation_stopped": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_speech_recognition_isn_t_available": "التعرّف على الكلام غير متاح.",
   "ng_working": "جارٍ العمل",
   "ng_ready": "جاهز",
@@ -1227,6 +1665,13 @@
   "ng_usage": "الاستخدام",
   "ng_rename_chat": "إعادة تسمية المحادثة",
   "ng_couldn_t_rename": "تعذّرت إعادة التسمية: {error}",
+  "@ng_couldn_t_rename": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_this_chat": "هذه المحادثة",
   "ng_input_tokens": "رموز الإدخال",
   "ng_output_tokens": "رموز الإخراج",
@@ -1241,10 +1686,18 @@
   "ng_project_home": "الرئيسية",
   "ng_choose_project": "اختيار مشروع",
   "ng_project_cwd_fallback": "مجلد المشروع غير متاح، لذا تعمل هذه المحادثة في {path}.",
+  "@ng_project_cwd_fallback": {"placeholders": {"path": {"type": "String"}}},
   "ng_project_create_uncertain": "ربما أنشأت البوابة هذه المحادثة، لكنها لم تؤكّد ذلك. تحقّق من «المحادثات» قبل بدء محادثة أخرى. لن يُعاد إرسال الطلب تلقائيًا.",
   "ng_what_should_we_work_on": "ما الذي تودّ أن نعمل عليه؟",
   "ng_ask_hermes_anything_it_can_run": "اسأل Hermes عمّا تشاء. يمكنه تشغيل الأدوات والتصفّح والعمل على ملفاتك الموجودة على الخادم.",
   "ng_working_2": "جارٍ العمل · {frame}",
+  "@ng_working_2": {
+    "placeholders": {
+      "frame": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_default_model": "النموذج الافتراضي",
   "ng_listening": "جارٍ الاستماع…",
   "ng_steer_or_queue_a_message": "أرسل توجيهًا أو أضف رسالة إلى قائمة الانتظار",
@@ -1255,6 +1708,16 @@
   "ng_stop": "إيقاف",
   "ng_send": "إرسال",
   "ng_slash_command_alias": "{alias} اسم بديل للأمر {command}",
+  "@ng_slash_command_alias": {
+    "placeholders": {
+      "alias": {
+        "type": "String"
+      },
+      "command": {
+        "type": "String"
+      }
+    }
+  },
   "ng_slash_command_no_description": "لا يوجد وصف متاح.",
   "ng_slash_command_arguments_options": "يقبل خيارًا واحدًا من قائمة محدّدة.",
   "ng_slash_command_arguments_text": "يقبل نصًا بعد الأمر.",
@@ -1264,16 +1727,44 @@
   "ng_slash_command_running": "جارٍ تنفيذ الأمر…",
   "ng_slash_command_done": "تمّ.",
   "ng_slash_command_failed": "تعذّر تنفيذ الأمر: {error}",
+  "@ng_slash_command_failed": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_slash_command_refused": "لا يستطيع Hermes تنفيذ هذا الأمر هنا.",
   "ng_slash_command_delivery_unknown": "أُرسل الأمر لكن لم يصل ردّ. قد يظلّ قيد التنفيذ على البوابة، لذا لم يُرسَل مجددًا واحتفظنا بمسودتك.",
   "ng_slash_command_nothing_running": "لا شيء قيد التنفيذ.",
   "ng_steered": "أُرسل التوجيه",
   "ng_copied": "نُسخ",
   "ng_not_sent": "لم يُرسَل: {reason}",
+  "@ng_not_sent": {
+    "placeholders": {
+      "reason": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_thinking": "جارٍ التفكير…",
   "ng_thought": "التفكير",
   "ng_used": "استخدم {name}",
+  "@ng_used": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_used_tools": "عدد الأدوات المستخدمة: {count}",
+  "@ng_used_tools": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_copy": "نسخ",
   "ng_read_aloud": "قراءة بصوت عالٍ",
   "ng_the_gateway_connection_dropped_try_again": "انقطع الاتصال بالبوابة. أعد المحاولة.",
@@ -1293,6 +1784,13 @@
   "ng_enter_both_the_client_id_and": "أدخل معرّف العميل (Client ID) وسرّ العميل (Client Secret) معًا، أو اترك الحقلين فارغين.",
   "ng_enter_your_username_and_password": "أدخل اسم المستخدم وكلمة المرور.",
   "ng_couldn_t_save_the_sign_in": "تعذّر حفظ بيانات تسجيل الدخول: {error}",
+  "@ng_couldn_t_save_the_sign_in": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_wrong_username_or_password": "اسم المستخدم أو كلمة المرور غير صحيحة.",
   "ng_too_many_attempts_wait_a_moment": "تجاوزت الحد المسموح به للمحاولات. انتظر قليلًا ثم أعد المحاولة.",
   "ng_welcome_to_hermes": "مرحبًا بك في Ares",
@@ -1318,6 +1816,13 @@
   "ng_stored_encrypted_on_this_phone_and": "تُحفظ هذه البيانات مشفّرة على هذا الهاتف ولا تُرسَل إلا إلى هذا العنوان.",
   "ng_hermes_is_reachable": "يمكن الوصول إلى Hermes",
   "ng_hermes_is_reachable_2": "يمكن الوصول إلى Hermes {version}",
+  "@ng_hermes_is_reachable_2": {
+    "placeholders": {
+      "version": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_sign_in_is_tested_next_then": "الخطوة التالية هي اختبار تسجيل الدخول، ثم المحادثة",
   "ng_agent_gateway": "بوابة الوكيل",
   "ng_running": "قيد التشغيل",
@@ -1330,19 +1835,68 @@
   "ng_the_auth_gate_is_off_on": "التحقق من الهوية معطّل في لوحة التحكم هذه. يمكن لأي شخص يصل إليها استخدام وكيلك.",
   "ng_couldn_t_reach_the_dashboard": "تعذّر الوصول إلى لوحة التحكم",
   "ng_check_the_address_and_port_9119": "{reason}\n\nتحقّق من العنوان والمنفذ (9119 افتراضيًا). إذا لم تكن لوحة التحكم قيد التشغيل بعد، فنفّذ هذا الأمر على الخادم:\nhermes dashboard --host 0.0.0.0",
+  "@ng_check_the_address_and_port_9119": {
+    "placeholders": {
+      "reason": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_that_isn_t_a_hermes_dashboard": "هذه ليست لوحة تحكم Hermes",
   "ng_something_answered_but_not_a_hermes_2": "وصل ردّ، لكنه ليس من لوحة تحكم Hermes. استخدم عنوان لوحة التحكم، لا عنوان خادم API (المنفذ 8642).",
   "ng_something_answered_http_but_not_a_2": "وصل ردّ (HTTP {status})، لكنه ليس من لوحة تحكم Hermes. استخدم عنوان لوحة التحكم، لا عنوان خادم API (المنفذ 8642).",
+  "@ng_something_answered_http_but_not_a_2": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_cloudflare_access_stopped_the_request": "أوقف Cloudflare Access الطلب",
   "ng_cloudflare_access_turned_down_the_service": "رفض Cloudflare Access رمز الخدمة (HTTP {status}). تحقّق من معرّف العميل (Client ID) وسرّه (Client Secret) ومن سياسة Service Auth.",
+  "@ng_cloudflare_access_turned_down_the_service": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_add_a_cloudflare_access_service_token_2": "أضف رمز خدمة Cloudflare Access أدناه، ثم أعد الاختبار.",
   "ng_a_client_certificate_is_needed": "يلزم تقديم شهادة عميل",
   "ng_this_server_asks_for_a_client": "يطلب هذا الخادم شهادة عميل قبل أن يستجيب. اختر أدناه الشهادة التي منحك إياها، ثم أعد الاختبار.",
   "ng_this_dashboard_doesn_t_ask_for": "لا تطلب لوحة التحكم هذه تسجيل الدخول.",
   "ng_use_the_dashboard_username_and_password": "استخدم اسم المستخدم وكلمة المرور المحدّدين للوحة التحكم على {address}، أو سجّل الدخول عبر المتصفح.",
+  "@ng_use_the_dashboard_username_and_password": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_use_the_dashboard_username_and_password_2": "استخدم اسم المستخدم وكلمة المرور المحدّدين للوحة التحكم على {address}.",
+  "@ng_use_the_dashboard_username_and_password_2": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_sign_in_to_in_your_browser": "سجّل الدخول إلى {address} عبر المتصفح باستخدام الحساب الذي تستخدمه لوحة التحكم هناك.",
+  "@ng_sign_in_to_in_your_browser": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_gateway": "البوابة: {address}",
+  "@ng_gateway": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_profile": "الملف الشخصي",
   "ng_server_default": "الإعداد الافتراضي للخادم",
   "ng_continue": "متابعة",
@@ -1361,6 +1915,13 @@
   "ng_enter_a_port_from_1_to": "أدخل رقم منفذ من 1 إلى 65535.",
   "ng_looks_for_hermes_dashboards_on_port": "يبحث عن لوحات تحكم Hermes على المنفذ 9119 في شبكة Wi-Fi هذه، ويفحص أيضًا أجهزة الكمبيوتر التي حفظتها سابقًا.",
   "ng_looks_for_hermes_dashboards_on_ports": "يبحث عن لوحات تحكم Hermes على المنفذين 9119 و{port} في شبكة Wi-Fi هذه، ويتحقق أيضًا من أجهزة الكمبيوتر التي حفظتها سابقًا.",
+  "@ng_looks_for_hermes_dashboards_on_ports": {
+    "placeholders": {
+      "port": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_other_port_optional": "منفذ آخر (اختياري)",
   "ng_no_dashboards_answered_start_one_with": "لم تستجب أي لوحة تحكم. شغّل إحداها بالأمر hermes dashboard --host 0.0.0.0، أو أدخل عنوانها.",
   "ng_using_tailscale_or_a_vpn_those": "هل تستخدم Tailscale أو شبكة VPN؟ لا يمكن البحث في هذه الشبكات. أدخل بدلًا من ذلك عنوان جهاز الكمبيوتر الذي يبدأ بـ 100.x أو اسمه المنتهي بـ .ts.net.",
@@ -1386,6 +1947,13 @@
   "ng_ultra": "فائق",
   "ng_default": "افتراضي",
   "ng_couldn_t_switch_model": "تعذّر تبديل النموذج: {error}",
+  "@ng_couldn_t_switch_model": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_model": "النموذج",
   "ng_thinking_2": "التفكير",
   "ng_search_models": "البحث عن نموذج",
@@ -1393,6 +1961,13 @@
   "privacy_policy": "سياسة الخصوصية",
   "report_ai_output": "الإبلاغ عن محتوى أنشأه الذكاء الاصطناعي",
   "ng_couldn_t_load_models": "تعذّر تحميل النماذج: {error}",
+  "@ng_couldn_t_load_models": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_no_providers_are_set_up_on": "لم يُضبط أي مزوّد على هذه البوابة بعد.",
   "ng_starred": "المميّزة بنجمة",
   "ng_recent": "الأخيرة",
@@ -1426,8 +2001,22 @@
   "ng_restore": "استعادة",
   "ng_saved_new_chats_use_it": "حُفظ الإعداد. ستستخدمه المحادثات الجديدة.",
   "ng_couldn_t_save": "تعذّر الحفظ: {error}",
+  "@ng_couldn_t_save": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_saving": "جارٍ الحفظ…",
   "ng_today": "اليوم، {time}",
+  "@ng_today": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_mon": "الاثنين",
   "ng_tue": "الثلاثاء",
   "ng_wed": "الأربعاء",
@@ -1443,14 +2032,59 @@
   "ng_active": "نشطة",
   "ng_paused": "متوقفة مؤقتًا",
   "ng_next": "التشغيل التالي: {when}",
+  "@ng_next": {
+    "placeholders": {
+      "when": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_last": "آخر تشغيل: {when}",
+  "@ng_last": {
+    "placeholders": {
+      "when": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_last_2": "آخر تشغيل: {when} · {result}",
+  "@ng_last_2": {
+    "placeholders": {
+      "when": {
+        "type": "Object"
+      },
+      "result": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_job": "المهمة {id}",
+  "@ng_job": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_delete": "حذف",
   "ng_delete_this_job": "هل تريد حذف هذه المهمة؟",
   "ng_it_stops_running_past_runs_stay": "لن تُشغّل هذه المهمة مجددًا. تبقى نتائج التشغيل السابقة في محادثاتك.",
   "ng_next_run": "التشغيل التالي: {when}",
+  "@ng_next_run": {
+    "placeholders": {
+      "when": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_delivers_to": "تُرسَل النتائج إلى {target}",
+  "@ng_delivers_to": {
+    "placeholders": {
+      "target": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_run_now": "تشغيل الآن",
   "ng_started": "بدأ التشغيل",
   "ng_pause": "إيقاف مؤقت",
@@ -1479,14 +2113,35 @@
   "ng_settings": "الإعدادات",
   "ng_all": "الكل",
   "ng_needs_you": "بانتظار تدخّلك · {count}",
+  "@ng_needs_you": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_needs_you_2": "بانتظار تدخّلك",
   "ng_gateways": "البوابات",
   "ng_classic_connection": "{address} · اتصال كلاسيكي",
+  "@ng_classic_connection": {
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_gateway_2": "البوابة",
   "ng_signed_in": "تم تسجيل الدخول",
   "ng_classic_connection_2": "اتصال كلاسيكي",
   "ng_in_the_browser": "في المتصفّح",
   "ng_in_the_browser_as": "في المتصفّح باسم {name}",
+  "@ng_in_the_browser_as": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_not_required": "غير مطلوب",
   "ng_test_connection": "اختبار الاتصال",
   "ng_sign_in_again_2": "تسجيل الدخول مجددًا",
@@ -1508,6 +2163,13 @@
   "ng_voice_notifications_language_backups_and_the": "الصوت والإشعارات واللغة والنُسخ الاحتياطية وإعدادات البوابة",
   "ng_licences": "التراخيص",
   "ng_sign_out_of": "هل تريد تسجيل الخروج من {name}؟",
+  "@ng_sign_out_of": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
   "ng_this_gateway_and_its_saved_sign": "ستُزال هذه البوابة وبيانات الدخول المحفوظة لها من هذا الهاتف في كلتا الواجهتين. ستبقى محادثاتك على البوابة.",
   "ng_password_or_browser": "كلمة المرور أو المتصفّح",
   "ng_unsupported": "غير مدعوم",
@@ -1520,10 +2182,45 @@
   "attachment_preview_too_large": "الملف أكبر من أن يُعايَن هنا. اختر «حفظ» أو «مشاركة» لتنزيله على هاتفك (حتى 1 GB).",
   "attachment_over_phone_limit": "يتجاوز حجم الملف حدّ التنزيل البالغ 1 GB. افتح لوحة التحكم لتنزيله.",
   "attachment_downloading_percent": "جارٍ التنزيل… {percent}%",
+  "@attachment_downloading_percent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
   "attachment_downloading_mb": "جارٍ التنزيل… {megabytes} MB",
+  "@attachment_downloading_mb": {
+    "placeholders": {
+      "megabytes": {
+        "type": "int"
+      }
+    }
+  },
   "ng_attachment_too_large_for_gateway": "يتجاوز حجم {name} حدّ هذه البوابة البالغ 12 MB. حدّث Hermes لإرسال ملفات يصل حجمها إلى 100 MB.",
+  "@ng_attachment_too_large_for_gateway": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "ng_couldn_t_upload": "تعذّر رفع {name}.",
+  "@ng_couldn_t_upload": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "ng_uploading_percent": "جارٍ الرفع… {percent}%",
+  "@ng_uploading_percent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
   "ng_show_tasks": "إظهار المهام",
   "ng_hide_tasks": "إخفاء المهام",
   "ng_goal": "الهدف",
@@ -1534,24 +2231,124 @@
   "ng_goal_blocked": "متعذّر التقدّم",
   "ng_goal_done": "مكتمل",
   "ng_goal_turns_of": "الجولات: {used} من {max}",
+  "@ng_goal_turns_of": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "ng_goal_turn": "الجولة {used}",
+  "@ng_goal_turn": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      }
+    }
+  },
   "ng_loop_held": "معلّقة بانتظار الهدف",
   "ng_loop_finished": "انتهت",
   "ng_loop_running": "قيد التشغيل",
   "ng_loop_runs_of": "مرّات التشغيل: {fired} من {times}",
+  "@ng_loop_runs_of": {
+    "placeholders": {
+      "fired": {
+        "type": "int"
+      },
+      "times": {
+        "type": "int"
+      }
+    }
+  },
   "ng_loop_runs": "{count, plural, =1{تشغيل واحد} other{عدد مرّات التشغيل: {count}}}",
+  "@ng_loop_runs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_loop_next": "الموعد التالي: {time}",
+  "@ng_loop_next": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "ng_loop_due_now": "حان موعد التشغيل",
   "ng_every_seconds": "كل {seconds} s",
+  "@ng_every_seconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "ng_every_minutes": "كل {minutes} min",
+  "@ng_every_minutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
   "ng_every_hours": "كل {hours} h",
+  "@ng_every_hours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
   "ng_every_hours_minutes": "كل {hours} h و{minutes} min",
+  "@ng_every_hours_minutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
   "ng_heartbeat_fired": "عدد النبضات: {count}",
+  "@ng_heartbeat_fired": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_heartbeat_last_fired": "آخر نبضة: {time}",
+  "@ng_heartbeat_last_fired": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "ng_wait_until": "بانتظار حلول {time}",
+  "@ng_wait_until": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "ng_wait_resume": "بانتظار الاستئناف",
   "ng_wait_other_chat": "بانتظار محادثة أخرى",
   "ng_wait_process": "بانتظار العملية {pid}",
+  "@ng_wait_process": {
+    "placeholders": {
+      "pid": {
+        "type": "String"
+      }
+    }
+  },
   "ng_control_open": "فتح لوحة الهدف والأتمتة",
   "ng_control_title": "الهدف والأتمتة",
   "ng_control_subtitle": "الهدف الذي تسعى إليه هذه المحادثة والمهام التي تعمل تلقائيًا.",
@@ -1567,13 +2364,37 @@
   "ng_goal_checks": "الفحوصات",
   "ng_gate_not_run": "لم يُنفّذ بعد",
   "ng_gate_attempts": "المحاولات: {attempts} من {tries}",
+  "@ng_gate_attempts": {
+    "placeholders": {
+      "attempts": {
+        "type": "int"
+      },
+      "tries": {
+        "type": "int"
+      }
+    }
+  },
   "ng_gate_exit": "رمز الخروج: {code}",
+  "@ng_gate_exit": {
+    "placeholders": {
+      "code": {
+        "type": "int"
+      }
+    }
+  },
   "ng_resume_now": "استئناف الآن",
   "ng_goal_clear": "مسح الهدف",
   "ng_goal_clear_title": "هل تريد مسح هذا الهدف؟",
   "ng_goal_clear_message": "سيتوقّف الوكيل عن العمل على هذا الهدف، وستُحذف أهدافه الفرعية وفحوصاته أيضًا.",
   "ng_subgoal_remove_title": "هل تريد إزالة هذا الهدف الفرعي؟",
   "ng_subgoal_remove_message": "لن يعود «{text}» جزءًا من الهدف.",
+  "@ng_subgoal_remove_message": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
   "ng_subgoals_clear_title": "هل تريد مسح كل الأهداف الفرعية؟",
   "ng_subgoals_clear_message": "سيبقى عنوان الهدف، لكن ستُحذف كل أهدافه الفرعية.",
   "ng_clear_all": "مسح الكل",
@@ -1584,9 +2405,23 @@
   "ng_wont_fire_again": "لن يتكرّر التشغيل.",
   "ng_loop_self_paced": "بوتيرة تلقائية",
   "ng_loop_until": "حتى يتحقّق الشرط: {condition}",
+  "@ng_loop_until": {
+    "placeholders": {
+      "condition": {
+        "type": "String"
+      }
+    }
+  },
   "ng_loop_waits_for_goal": "تنتظر الحلقة ما دام العمل على الهدف جاريًا.",
   "ng_loop_awaiting_reply": "بانتظار ردّ الوكيل.",
   "ng_loop_stopped_reason": "توقّفت: {reason}",
+  "@ng_loop_stopped_reason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "ng_hide_subagents": "إخفاء الوكلاء الفرعيين",
   "ng_show_subagents": "إظهار الوكلاء الفرعيين",
   "ng_subagent": "وكيل فرعي",
@@ -1598,9 +2433,23 @@
   "ng_subagent_stopped": "متوقّف",
   "ng_subagent_stop": "إيقاف الوكيل الفرعي",
   "ng_subagent_tools": "{count, plural, =1{أداة واحدة} other{عدد الأدوات: {count}}}",
+  "@ng_subagent_tools": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_mark_as_read": "وضع علامة «مقروءة»",
   "ng_mark_as_unread": "وضع علامة «غير مقروءة»",
   "ng_chats_unread": "{count, plural, =1{المحادثات، محادثة واحدة غير مقروءة} other{المحادثات، عدد المحادثات غير المقروءة: {count}}}",
+  "@ng_chats_unread": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_unread_finished": "انتهى التشغيل، وهناك ردّ غير مقروء",
   "ng_unread_updates": "التشغيل جارٍ، وهناك تحديثات غير مقروءة",
   "ng_notifications": "الإشعارات",
@@ -1627,11 +2476,62 @@
   "ng_dock_goal_blocked": "تعذّر التقدّم نحو الهدف",
   "ng_dock_goal_done": "اكتمل الهدف",
   "ng_dock_turn_of": "الجولة {used}/{max}",
+  "@ng_dock_turn_of": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "ng_dock_turn": "الجولة {used}",
+  "@ng_dock_turn": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      }
+    }
+  },
   "ng_dock_subagents": "{count, plural, =1{وكيل فرعي واحد} other{عدد الوكلاء الفرعيين: {count}}}",
+  "@ng_dock_subagents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_dock_subagents_done": "عدد من أنهوا العمل: {count}",
+  "@ng_dock_subagents_done": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_dock_tasks": "المهام: {done}/{total}",
+  "@ng_dock_tasks": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "ng_dock_previous_tasks": "المهام السابقة: {done}/{total}",
+  "@ng_dock_previous_tasks": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "ng_dock_manage": "إدارة",
   "ng_recent_notifications": "الإشعارات الأخيرة",
   "ng_recent_notifications_hint": "الإشعارات التي حاول Ares إرسالها وما إذا كان Android قد عرضها",
@@ -1645,19 +2545,24 @@
   "ng_models_custom_endpoint": "يعمل عبر نقطة اتصال مخصّصة. يمكنك تغييرها على البوابة.",
   "ng_models_context_window": "نافذة السياق",
   "ng_models_token_count": "عدد الرموز النصية: {count}",
+  "@ng_models_token_count": {"placeholders": {"count": {"type": "String"}}},
   "ng_models_context_override": "ضُبطت نافذة السياق على البوابة. عدد الرموز المكتشف تلقائيًا: {count}.",
+  "@ng_models_context_override": {"placeholders": {"count": {"type": "String"}}},
   "ng_models_max_output": "الحدّ الأقصى للمخرجات",
   "ng_models_input_price": "سعر الإدخال",
   "ng_models_output_price": "سعر الإخراج",
   "ng_models_cache_price": "سعر المدخلات المخزّنة مؤقتًا",
   "ng_models_per_million": "{price} لكل مليون رمز نصي",
+  "@ng_models_per_million": {"placeholders": {"price": {"type": "String"}}},
   "ng_models_price_pair": "{input} للإدخال · {output} للإخراج لكل مليون رمز نصي",
+  "@ng_models_price_pair": {"placeholders": {"input": {"type": "String"}, "output": {"type": "String"}}},
   "ng_models_free": "مجاني",
   "ng_models_vision": "الرؤية",
   "ng_models_reasoning": "الاستدلال",
   "ng_models_fast": "الوضع السريع",
   "ng_models_in_use": "قيد الاستخدام",
   "ng_models_count": "{count, plural, one{عدد النماذج: {count}} other{عدد النماذج: {count}}}",
+  "@ng_models_count": {"placeholders": {"count": {"type": "int"}}},
   "ng_models_rate_limited": "معدّل الطلبات مقيّد",
   "ng_models_plan_locked": "غير مشمول في خطتك",
   "ng_models_unsaved": "تغييرات غير محفوظة",
@@ -1688,5 +2593,120 @@
   "ng_aux_profile_describer": "أوصاف الملفات الشخصية",
   "ng_aux_profile_describer_hint": "يكتب وصفًا موجزًا لكل ملف شخصي",
   "ng_aux_curator": "منسّق المهارات",
-  "ng_aux_curator_hint": "يراجع كيفية استخدام المهارات"
+  "ng_aux_curator_hint": "يراجع كيفية استخدام المهارات",
+  "appearance_save_failed": "تعذّر حفظ هذا التغيير.",
+  "appearance_keep_which_theme": "أي سمة نُبقي؟",
+  "appearance_tour_back": "رجوع",
+  "appearance_tour_finish": "إنهاء",
+  "appearance_tour_next": "التالي",
+  "appearance_tour_close": "إغلاق الجولة",
+  "appearance_dismiss_tip": "إخفاء التلميح",
+  "appearance_search_settings": "البحث في الإعدادات",
+  "appearance_search_show": "إظهار",
+  "appearance_no_matching_setting": "لا يوجد إعداد مطابق.",
+  "appearance_replay_tour": "إعادة الجولة",
+  "appearance_show_tips_again": "أظهر التلميحات مجددًا",
+  "appearance_window_translucency_unavailable": "شفافية النافذة غير متاحة على هذا الجهاز. لا يدعمها لينكس، وترسم إصدارات آبل وويندوز نافذة Flutter معتمة.",
+  "appearance_imported_themes": "السمات المستوردة",
+  "appearance_import_theme_file": "استيراد ملف سمة",
+  "appearance_remove_theme": "حذف السمة",
+  "appearance_chat_font": "خط الدردشة",
+  "appearance_terminal_font": "خط الطرفية",
+  "appearance_font_platform": "خط الجهاز",
+  "appearance_automatic": "تلقائي",
+  "appearance_force_left_to_right": "إجبار من اليسار",
+  "appearance_force_right_to_left": "إجبار من اليمين",
+  "appearance_user_bubble_opacity": "شفافية فقاعة رسائلك",
+  "appearance_external_embeds": "المحتوى المضمّن الخارجي",
+  "appearance_external_embeds_hint": "أظهر بطاقة لصور https. لا يُنزَّل شيء حتى تفتحه.",
+  "appearance_emoji_reactions": "تفاعلات الإيموجي",
+  "appearance_celebration_hearts": "قلوب الاحتفال",
+  "appearance_celebration_hearts_hint": "يظهر قلب عندما يصل رد وأنت بعيد.",
+  "appearance_pop_out_companion": "افتح الرفيق في نافذة",
+  "appearance_mosskip": "موسكيب",
+  "appearance_emberbun": "إمبربن",
+  "appearance_tideling": "تايدلينغ",
+  "appearance_my_hatchling": "رفيقي الصغير",
+  "appearance_at_rest": "يستريح",
+  "appearance_working": "يعمل",
+  "appearance_thinking": "يفكّر",
+  "appearance_waiting_for_you": "ينتظرك",
+  "appearance_reply_ready": "الرد جاهز",
+  "appearance_turn_failed": "تعذّر إكمال الدور",
+  "appearance_small": "صغير",
+  "appearance_medium": "متوسط",
+  "appearance_large": "كبير",
+  "appearance_hello": "مرحبًا!",
+  "appearance_unread_reply": "رد غير مقروء",
+  "appearance_compose": "كتابة رسالة",
+  "appearance_say_hello": "إلقاء التحية",
+  "appearance_pet_image_failed": "تعذّر فتح الصورة. اختر صورة PNG أو JPEG أصغر.",
+  "appearance_pet_companion": "الرفيق الصغير",
+  "appearance_pet_companion_hint": "أظهر رفيقًا أثناء الدردشة.",
+  "appearance_adopt_a_companion": "تبنَّ رفيقًا",
+  "appearance_roam_when_idle": "التجوّل أثناء الراحة",
+  "appearance_pet_size": "حجم الرفيق",
+  "appearance_hatch_from_a_local_picture": "فقس رفيق من صورة محلية",
+  "appearance_pet_image_limits": "اختر صورة PNG أو JPEG (حتى ٤ ميبيبايت و٤٠٩٦ بكسل للضلع و٨ ميغابكسل). عاينها أولًا. يحفظ الفقس صورة ٢٤ × ٢٤ بكسل بدلًا من رفيقك المُفقس السابق.",
+  "appearance_choose_picture": "اختيار صورة",
+  "appearance_hatchling_preview": "معاينة الرفيق",
+  "appearance_hatch_and_adopt": "فقس وتبنٍّ",
+  "appearance_discard_draft": "تجاهل المسودة",
+  "appearance_forget_saved_hatchling": "حذف الرفيق المُفقس المحفوظ",
+  "appearance_radio": "الراديو",
+  "appearance_radio_hint": "يتصل زر التشغيل بجهة البث مباشرةً. يبقى البحث عن المحطات على هذا الجهاز.",
+  "appearance_radio_save_failed": "تعذّر حفظ إعدادات الراديو.",
+  "appearance_choose_a_station": "اختيار محطة",
+  "appearance_pause_radio": "إيقاف الراديو مؤقتًا",
+  "appearance_play_radio": "تشغيل الراديو",
+  "appearance_next_station": "المحطة التالية",
+  "appearance_radio_trace_semantics": "نشاط البث. مستويات الصوت غير متاحة، لذا يبقى الخط مستويًا.",
+  "appearance_radio_is_off": "الراديو متوقف",
+  "appearance_paused": "متوقف مؤقتًا",
+  "appearance_connecting": "جارٍ الاتصال…",
+  "appearance_live": "بث مباشر",
+  "appearance_stream_unavailable": "البث غير متاح",
+  "appearance_now_playing": "يُبث الآن: {credit}",
+  "@appearance_now_playing": {
+    "placeholders": {
+      "credit": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_audio_only_waveform_unavailable": "صوت فقط · شكل الموجة غير متاح",
+  "appearance_volume": "مستوى الصوت",
+  "appearance_search_presets": "البحث في المحطات المحفوظة مسبقًا",
+  "appearance_no_stations_found": "لم يُعثر على محطات",
+  "appearance_unpin_station": "إلغاء تثبيت المحطة: {station}",
+  "@appearance_unpin_station": {
+    "placeholders": {
+      "station": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_pin_station": "تثبيت المحطة: {station}",
+  "@appearance_pin_station": {
+    "placeholders": {
+      "station": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance_radio_picker_metadata_notice": "عندما تكون هذه القائمة مفتوحة، قد تُعرض معلومات المقطع من جهة البث مباشرةً أثناء التشغيل.",
+  "appearance_message_from_your_companion": "رسالة من رفيقك",
+  "appearance_send_to_the_open_chat": "أرسل إلى الدردشة المفتوحة",
+  "appearance_open_embed": "فتح المحتوى المضمّن",
+  "appearance_tour_theme_body": "استورد سمة ألوان من ملف على هذا الجهاز، ثم اختر النسخة التي تريد إبقاءها.",
+  "appearance_tour_fonts_title": "خطوط القراءة",
+  "appearance_tour_fonts_body": "يستخدم نص الدردشة وشفرة الطرفية خطين منفصلين مدمجين مع آريس.",
+  "appearance_tour_direction_title": "اتجاه النص",
+  "appearance_tour_direction_body": "اتركه تلقائيًا، أو أجبر نص المحادثة من اليسار أو من اليمين.",
+  "appearance_tour_pet_title": "الرفيق",
+  "appearance_tour_pet_body": "يبقى الرفيق متوقفًا حتى تتبناه. النافذة المنبثقة تضيف مربع كتابة صغيرًا.",
+  "appearance_tour_radio_body": "يبقى الراديو متوقفًا حتى تفعّله. زر التشغيل هو ما يفتح البث.",
+  "appearance_tip_theme": "تحل السمات المستوردة محل لوحة الألوان المدمجة حتى تلغي الاختيار. تُحفظ الألوان فقط.",
+  "appearance_tip_pet": "يحفظ الرفيق صورة صغيرة واحدة على هذا الجهاز. لا يرفع الصورة التي تفقس منها.",
+  "appearance_theme_import_failed": "تعذّر استيراد هذه السمة. اختر سمة ألوان من VS Code محفوظة في ملف بامتداد vsix أو json أو jsonc."
 }

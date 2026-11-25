@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'presentation_label.dart';
+import '../l10n/l10n.dart';
+import '../theme/hermes_theme.dart';
 import 'reading_controls.dart';
 
 /// Chat face for prose. Missing scope keeps the surrounding theme.
@@ -68,12 +69,7 @@ class _EmbedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final open = presentationLabel(
-      context,
-      'Open embed',
-      'فتح الضمن',
-      '開啟嵌入內容',
-    );
+    final open = context.sharedL10n.appearance_open_embed;
     return Semantics(
       link: true,
       label: '$label, $host',
@@ -86,8 +82,43 @@ class _EmbedCard extends StatelessWidget {
   }
 }
 
-/// One reaction from a fixed set. Stored only for a caller-supplied id that
-/// already belongs to the message; otherwise it lasts for this visit.
+/// The chat a transcript's reactions belong to. Message ids are only unique
+/// inside one chat (NextGen numbers every chat's rows from the same
+/// sequence), so reactions are kept per chat, never in one shared map.
+///
+/// [chat] is either a string that names a stored chat on one connection and
+/// profile (Classic), or the object that owns one visit to a chat (NextGen's
+/// chat controller): those reactions last as long as that object.
+class ReactionScope extends InheritedWidget {
+  const ReactionScope({super.key, required this.chat, required super.child});
+
+  final Object chat;
+
+  static Object? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<ReactionScope>()?.chat;
+
+  @override
+  bool updateShouldNotify(ReactionScope oldWidget) => oldWidget.chat != chat;
+}
+
+abstract final class _ReactionStore {
+  /// Most recently used stored chats; an old chat's reactions age out.
+  static const maxChats = 64;
+  static final _byName = <String, Map<String, String>>{};
+  static final _byOwner = Expando<Map<String, String>>('message reactions');
+
+  static Map<String, String> of(Object chat) {
+    if (chat is! String) return _byOwner[chat] ??= <String, String>{};
+    final bucket = _byName.remove(chat) ?? <String, String>{};
+    _byName[chat] = bucket;
+    if (_byName.length > maxChats) _byName.remove(_byName.keys.first);
+    return bucket;
+  }
+}
+
+/// One reaction from a fixed set, kept for the message [messageId] in the
+/// surrounding [ReactionScope]. Without a scope or an id it lasts only as
+/// long as this widget.
 class MessageReaction extends StatefulWidget {
   const MessageReaction({super.key, required this.messageId});
 
@@ -100,33 +131,32 @@ class MessageReaction extends StatefulWidget {
 }
 
 class _MessageReactionState extends State<MessageReaction> {
-  static final _saved = <String, String>{};
   String? _local;
-
-  String? get _selected =>
-      widget.messageId == null ? _local : _saved[widget.messageId!];
 
   @override
   Widget build(BuildContext context) {
     if (!(ReadingControls.maybeOf(context)?.emojiReactions ?? false)) {
       return const SizedBox.shrink();
     }
+    final chat = ReactionScope.maybeOf(context);
+    final id = widget.messageId;
+    final saved = chat == null || id == null ? null : _ReactionStore.of(chat);
+    final selected = saved == null ? _local : saved[id];
     return Wrap(
       spacing: 4,
       children: [
         for (final emoji in MessageReaction.choices)
           ChoiceChip(
             label: Text(emoji),
-            selected: _selected == emoji,
+            selected: selected == emoji,
             onSelected: (_) => setState(() {
-              final next = _selected == emoji ? null : emoji;
-              final id = widget.messageId;
-              if (id == null) {
+              final next = selected == emoji ? null : emoji;
+              if (saved == null) {
                 _local = next;
               } else if (next == null) {
-                _saved.remove(id);
+                saved.remove(id);
               } else {
-                _saved[id] = next;
+                saved[id!] = next;
               }
             }),
           ),
@@ -195,10 +225,14 @@ class _CelebrationHeartsState extends State<CelebrationHearts>
       height: 28,
       child: AnimatedBuilder(
         animation: _clock,
+        // The active theme's danger red; an imported theme's error colour
+        // when one is selected.
         builder: (context, _) => Icon(
           Icons.favorite,
           size: 16 + 8 * (1 - _clock.value),
-          color: const Color(0xFFE25563).withValues(alpha: 1 - _clock.value),
+          color: HermesTokens.of(
+            context,
+          ).danger.withValues(alpha: 1 - _clock.value),
         ),
       ),
     );

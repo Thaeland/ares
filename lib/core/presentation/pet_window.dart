@@ -11,7 +11,6 @@ import '../l10n/l10n.dart';
 import '../services/locale_preference.dart';
 import 'companion_draft.dart';
 import 'petdex.dart';
-import 'presentation_label.dart';
 
 /// Command-line marker for the companion process. It carries no account data.
 const petWindowMarker = '--ares-pet-companion-v1';
@@ -41,7 +40,7 @@ Future<void> openPetCompanion(
     return;
   }
   try {
-    await _spawnPetWindow();
+    await _petWindow.open();
   } catch (_) {
     if (!context.mounted) return;
     await showCompanionOverlay(context, controller);
@@ -50,15 +49,53 @@ Future<void> openPetCompanion(
 
 bool get _runningTests => Platform.environment.containsKey('FLUTTER_TEST');
 
-Future<void> _spawnPetWindow() async {
+/// At most one companion window. Pop out while one is open, or still
+/// starting, reuses it instead of starting another process.
+class PetWindowSlot {
+  PetWindowSlot(this._launch);
+
+  /// Starts a window. Completes once it is ready; `exited` completes when
+  /// the window's process ends.
+  final Future<({Future<void> exited})> Function() _launch;
+  Future<void>? _starting;
+  var _open = false;
+
+  bool get isOpen => _open;
+
+  Future<void> open() {
+    if (_open) return Future<void>.value();
+    return _starting ??= _start();
+  }
+
+  Future<void> _start() async {
+    try {
+      final (:exited) = await _launch();
+      _open = true;
+      unawaited(
+        exited.then<void>((_) {}, onError: (Object _) {}).whenComplete(() {
+          _open = false;
+        }),
+      );
+    } finally {
+      _starting = null;
+    }
+  }
+}
+
+final _petWindow = PetWindowSlot(_spawnPetWindow);
+
+Future<({Future<void> exited})> _spawnPetWindow() async {
   Directory? directory;
+  Process? started;
   try {
     final cache = await getTemporaryDirectory();
     await cache.create(recursive: true);
     directory = await cache.createTemp('ares-pet-');
-    final process = await Process.start(Platform.resolvedExecutable, const [
-      petWindowMarker,
-    ], workingDirectory: directory.path);
+    final process = started = await Process.start(
+      Platform.resolvedExecutable,
+      const [petWindowMarker],
+      workingDirectory: directory.path,
+    );
     final ready = Completer<void>();
     process.stdout
         .transform(const Utf8Decoder(allowMalformed: true))
@@ -88,7 +125,10 @@ Future<void> _spawnPetWindow() async {
       }),
     );
     await ready.future.timeout(const Duration(seconds: 45));
+    return (exited: process.exitCode.then<void>((_) {}));
   } catch (_) {
+    // A window that never became ready must not linger behind the overlay.
+    started?.kill();
     try {
       await directory?.delete(recursive: true);
     } on FileSystemException {
@@ -210,12 +250,7 @@ class _CompanionComposerState extends State<_CompanionComposer> {
 
   @override
   Widget build(BuildContext context) {
-    final hint = presentationLabel(
-      context,
-      'Message from your companion',
-      'رسالة من رفيقك',
-      '來自夥伴的訊息',
-    );
+    final hint = context.sharedL10n.appearance_message_from_your_companion;
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
@@ -237,14 +272,7 @@ class _CompanionComposerState extends State<_CompanionComposer> {
             alignment: AlignmentDirectional.centerEnd,
             child: FilledButton(
               onPressed: _send,
-              child: Text(
-                presentationLabel(
-                  context,
-                  'Send to the open chat',
-                  'أرسل إلى الدردشة المفتوحة',
-                  '送到目前的聊天',
-                ),
-              ),
+              child: Text(context.sharedL10n.appearance_send_to_the_open_chat),
             ),
           ),
         ],

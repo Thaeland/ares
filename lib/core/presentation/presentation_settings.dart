@@ -8,7 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'imported_theme.dart';
 import 'pet_window.dart';
 import 'petdex.dart';
-import 'presentation_label.dart';
+import '../../l10n/app_localizations.dart';
+import '../l10n/l10n.dart';
 import 'presentation_scope.dart';
 import 'radio.dart';
 import 'reading_controls.dart';
@@ -36,72 +37,44 @@ class PresentationSettingsPanel extends StatefulWidget {
 }
 
 class _GuideStep {
-  const _GuideStep(
-    this.id,
-    this.en,
-    this.ar,
-    this.zh,
-    this.bodyEn,
-    this.bodyAr,
-    this.bodyZh,
-  );
+  const _GuideStep(this.id, this.title, this.body);
 
   final String id;
-  final String en;
-  final String ar;
-  final String zh;
-  final String bodyEn;
-  final String bodyAr;
-  final String bodyZh;
+  final String Function(AppLocalizations l) title;
+  final String Function(AppLocalizations l) body;
 }
 
-const _steps = <_GuideStep>[
+final _steps = <_GuideStep>[
   _GuideStep(
     'theme',
-    'Imported themes',
-    'السمات المستوردة',
-    '匯入的佈景主題',
-    'Import a VS Code colour theme from a file on this device, then choose which variant to keep.',
-    'استورد سمة ألوان من ملف على هذا الجهاز، ثم اختر النسخة التي تريد إبقاءها.',
-    '從這台裝置上的檔案匯入 VS Code 色彩佈景主題，再選擇要保留的版本。',
+    (l) => l.appearance_imported_themes,
+    (l) => l.appearance_tour_theme_body,
   ),
   _GuideStep(
     'fonts',
-    'Reading fonts',
-    'خطوط القراءة',
-    '閱讀字型',
-    'Chat prose and terminal code use separate faces shipped with Ares.',
-    'يستخدم نص الدردشة وشفرة الطرفية خطين منفصلين مدمجين مع آريس.',
-    '聊天內文和終端機程式碼使用 Ares 內建的不同字型。',
+    (l) => l.appearance_tour_fonts_title,
+    (l) => l.appearance_tour_fonts_body,
   ),
   _GuideStep(
     'direction',
-    'Transcript direction',
-    'اتجاه النص',
-    '文字方向',
-    'Leave this on automatic, or force the transcript left to right or right to left.',
-    'اتركه تلقائيًا، أو أجبر نص المحادثة من اليسار أو من اليمين.',
-    '保持自動，或強制對話文字由左至右或由右至左。',
+    (l) => l.appearance_tour_direction_title,
+    (l) => l.appearance_tour_direction_body,
   ),
   _GuideStep(
     'pet',
-    'Companion',
-    'الرفيق',
-    '夥伴',
-    'The companion is off until you adopt one. Pop-out adds a small composer.',
-    'يبقى الرفيق متوقفًا حتى تتبناه. النافذة المنبثقة تضيف مربع كتابة صغيرًا.',
-    '領養之前不會顯示夥伴。彈出視窗會附上一個小撰寫框。',
+    (l) => l.appearance_tour_pet_title,
+    (l) => l.appearance_tour_pet_body,
   ),
   _GuideStep(
     'radio',
-    'Radio',
-    'الراديو',
-    '電台',
-    'Radio stays off until you enable it. Play is what opens a stream.',
-    'يبقى الراديو متوقفًا حتى تفعّله. زر التشغيل هو ما يفتح البث.',
-    '啟用之前不會播放電台。按下播放才會開啟串流。',
+    (l) => l.appearance_radio,
+    (l) => l.appearance_tour_radio_body,
   ),
 ];
+
+/// English stays searchable in every locale: a reader following an English
+/// guide can still find the control.
+final _english = lookupAppLocalizations(const Locale('en'));
 
 class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
   final _search = TextEditingController();
@@ -155,19 +128,15 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
     super.dispose();
   }
 
-  String _t(String en, String ar, String zh) =>
-      presentationLabel(context, en, ar, zh);
-
   bool _visible(_GuideStep step) {
     final query = _query.trim().toLowerCase();
     if (query.isEmpty) return true;
+    final l = context.sharedL10n;
     return [
-      step.en,
-      step.ar,
-      step.zh,
-      step.bodyEn,
-      step.bodyAr,
-      step.bodyZh,
+      step.title(l),
+      step.body(l),
+      step.title(_english),
+      step.body(_english),
     ].any((text) => text.toLowerCase().contains(query));
   }
 
@@ -229,13 +198,10 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
     } catch (error) {
       if (!mounted) return;
       setState(() {
+        // A parser's reason is English; the reader gets a localised one.
         _error = error is FormatException
-            ? error.message
-            : _t(
-                'Could not save this change.',
-                'تعذّر حفظ هذا التغيير.',
-                '無法儲存這項變更。',
-              );
+            ? context.sharedL10n.appearance_theme_import_failed
+            : context.sharedL10n.appearance_save_failed;
       });
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -274,12 +240,14 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
     final chosen = await showDialog<ImportedTheme>(
       context: context,
       builder: (context) => SimpleDialog(
-        title: Text(_t('Keep which theme?', 'أي سمة نُبقي؟', '要保留哪個佈景主題？')),
+        title: Text(context.sharedL10n.appearance_keep_which_theme),
         children: [
           for (final theme in variants)
             SimpleDialogOption(
               onPressed: () => Navigator.pop(context, theme),
-              child: Text('${theme.label} · ${theme.brightness.name}'),
+              child: Text(
+                '${theme.label} · ${theme.brightness == Brightness.dark ? context.sharedL10n.dark : context.sharedL10n.light}',
+              ),
             ),
         ],
       ),
@@ -326,28 +294,28 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
           if (step != null) ...[
             const SizedBox(height: 8),
             Text(
-              _t(step.en, step.ar, step.zh),
+              step.title(context.sharedL10n),
               style: Theme.of(context).textTheme.titleSmall,
             ),
-            Text(_t(step.bodyEn, step.bodyAr, step.bodyZh)),
+            Text(step.body(context.sharedL10n)),
             Wrap(
               spacing: 8,
               children: [
                 TextButton(
                   onPressed: () => _moveTour(-1),
-                  child: Text(_t('Back', 'رجوع', '上一步')),
+                  child: Text(context.sharedL10n.appearance_tour_back),
                 ),
                 TextButton(
                   onPressed: () => _moveTour(1),
                   child: Text(
                     _tour == _steps.length - 1
-                        ? _t('Finish', 'إنهاء', '完成')
-                        : _t('Next', 'التالي', '下一步'),
+                        ? context.sharedL10n.appearance_tour_finish
+                        : context.sharedL10n.appearance_tour_next,
                   ),
                 ),
                 TextButton(
                   onPressed: () => setState(() => _tour = null),
-                  child: Text(_t('Close tour', 'إغلاق الجولة', '關閉導覽')),
+                  child: Text(context.sharedL10n.appearance_tour_close),
                 ),
               ],
             ),
@@ -357,14 +325,14 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
     );
   }
 
-  Widget _tip(String id, String en, String ar, String zh) {
+  Widget _tip(String id, String text) {
     if (_dismissedTips.contains(id)) return const SizedBox.shrink();
     return MaterialBanner(
-      content: Text(_t(en, ar, zh)),
+      content: Text(text),
       actions: [
         TextButton(
           onPressed: () => _dismissTip(id),
-          child: Text(_t('Dismiss tip', 'إخفاء التلميح', '關閉提示')),
+          child: Text(context.sharedL10n.appearance_dismiss_tip),
         ),
       ],
     );
@@ -384,19 +352,19 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
           onChanged: (value) => setState(() => _query = value),
           decoration: InputDecoration(
             prefixIcon: const Icon(Icons.search),
-            labelText: _t('Search settings', 'البحث في الإعدادات', '搜尋設定'),
+            labelText: context.sharedL10n.appearance_search_settings,
           ),
         ),
         if (_query.trim().isNotEmpty)
           for (final step in matches)
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text(_t(step.en, step.ar, step.zh)),
-              trailing: Text(_t('Show', 'إظهار', '顯示')),
+              title: Text(step.title(context.sharedL10n)),
+              trailing: Text(context.sharedL10n.appearance_search_show),
               onTap: () => _jump(step),
             ),
         if (_query.trim().isNotEmpty && matches.isEmpty)
-          Text(_t('No matching setting.', 'لا يوجد إعداد مطابق.', '找不到相符的設定。')),
+          Text(context.sharedL10n.appearance_no_matching_setting),
         Wrap(
           spacing: 8,
           children: [
@@ -404,35 +372,22 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
               key: const ValueKey('presentation-replay-tour'),
               onPressed: _startTour,
               icon: const Icon(Icons.tour_outlined),
-              label: Text(_t('Replay tour', 'إعادة الجولة', '再看一次導覽')),
+              label: Text(context.sharedL10n.appearance_replay_tour),
             ),
             TextButton(
               onPressed: _restoreTips,
-              child: Text(
-                _t('Show tips again', 'أظهر التلميحات مجددًا', '再次顯示提示'),
-              ),
+              child: Text(context.sharedL10n.appearance_show_tips_again),
             ),
           ],
         ),
-        _tip(
-          'theme',
-          'Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.',
-          'تحل السمات المستوردة محل لوحة الألوان المدمجة حتى تلغي الاختيار. تُحفظ الألوان فقط.',
-          '匯入的佈景主題會取代內建配色，直到你取消選擇。只會保留色彩。',
-        ),
+        _tip('theme', context.sharedL10n.appearance_tip_theme),
         if (_visible(_steps[0])) _section('theme', _themeSection(library)),
         if (_visible(_steps[1])) _section('fonts', _fontSection()),
         if (_visible(_steps[2])) _section('direction', _directionSection()),
         _section('reading', _readingToggles()),
         _section(
           'window',
-          Text(
-            _t(
-              'Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.',
-              'شفافية النافذة غير متاحة على هذا الجهاز. لا يدعمها لينكس، وترسم إصدارات آبل وويندوز نافذة Flutter معتمة.',
-              '此主機無法使用視窗透明度。Linux 不支援，Apple 與 Windows 執行程式繪製的是不透明的 Flutter 視窗。',
-            ),
-          ),
+          Text(context.sharedL10n.appearance_window_translucency_unavailable),
         ),
         if (_visible(_steps[3])) _section('pet', _petSection()),
         if (_visible(_steps[4]))
@@ -451,14 +406,14 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          _t('Imported themes', 'السمات المستوردة', '匯入的佈景主題'),
+          context.sharedL10n.appearance_imported_themes,
           style: Theme.of(context).textTheme.titleSmall,
         ),
         OutlinedButton.icon(
           key: const ValueKey('presentation-import-theme'),
           onPressed: _busy ? null : _import,
           icon: const Icon(Icons.palette_outlined),
-          label: Text(_t('Import theme file', 'استيراد ملف سمة', '匯入佈景主題檔')),
+          label: Text(context.sharedL10n.appearance_import_theme_file),
         ),
         for (final theme in library.themes)
           ListTile(
@@ -482,7 +437,7 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
                     });
                   },
             trailing: IconButton(
-              tooltip: _t('Remove theme', 'حذف السمة', '移除佈景主題'),
+              tooltip: context.sharedL10n.appearance_remove_theme,
               onPressed: _busy
                   ? null
                   : () {
@@ -508,7 +463,7 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _t('Chat font', 'خط الدردشة', '聊天字型'),
+            context.sharedL10n.appearance_chat_font,
             style: Theme.of(context).textTheme.titleSmall,
           ),
           DropdownButton<AresTypeface>(
@@ -526,7 +481,7 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
                   },
           ),
           Text(
-            _t('Terminal font', 'خط الطرفية', '終端機字型'),
+            context.sharedL10n.appearance_terminal_font,
             style: Theme.of(context).textTheme.titleSmall,
           ),
           DropdownButton<AresTypeface>(
@@ -551,7 +506,7 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
   }
 
   String _face(AresTypeface face) => switch (face) {
-    AresTypeface.platform => _t('Platform', 'خط الجهاز', '系統字型'),
+    AresTypeface.platform => context.sharedL10n.appearance_font_platform,
     AresTypeface.geist => 'Geist',
     AresTypeface.geistMono => 'Geist Mono',
     AresTypeface.cinzel => 'Cinzel',
@@ -570,19 +525,15 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
             items: [
               DropdownMenuItem(
                 value: TranscriptDirection.automatic,
-                child: Text(_t('Automatic', 'تلقائي', '自動')),
+                child: Text(context.sharedL10n.appearance_automatic),
               ),
               DropdownMenuItem(
                 value: TranscriptDirection.leftToRight,
-                child: Text(
-                  _t('Force left to right', 'إجبار من اليسار', '強制由左至右'),
-                ),
+                child: Text(context.sharedL10n.appearance_force_left_to_right),
               ),
               DropdownMenuItem(
                 value: TranscriptDirection.rightToLeft,
-                child: Text(
-                  _t('Force right to left', 'إجبار من اليمين', '強制由右至左'),
-                ),
+                child: Text(context.sharedL10n.appearance_force_right_to_left),
               ),
             ],
             onChanged: _busy
@@ -591,13 +542,9 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
                     if (value != null) _run(() => reading.setDirection(value));
                   },
           ),
-          Text(_t('User bubble opacity', 'شفافية فقاعة رسائلك', '自己的訊息氣泡透明度')),
+          Text(context.sharedL10n.appearance_user_bubble_opacity),
           Semantics(
-            label: _t(
-              'User bubble opacity',
-              'شفافية فقاعة رسائلك',
-              '自己的訊息氣泡透明度',
-            ),
+            label: context.sharedL10n.appearance_user_bubble_opacity,
             child: Slider(
               key: const ValueKey('presentation-bubble-opacity'),
               min: ReadingControls.minBubbleOpacity,
@@ -622,16 +569,8 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             key: const ValueKey('presentation-embeds'),
-            title: Text(
-              _t('External embeds', 'المحتوى المضمّن الخارجي', '外部嵌入內容'),
-            ),
-            subtitle: Text(
-              _t(
-                'Show a card for https images. Nothing is downloaded until you open it.',
-                'أظهر بطاقة لصور https. لا يُنزَّل شيء حتى تفتحه.',
-                '為 https 圖片顯示卡片。開啟之前不會下載。',
-              ),
-            ),
+            title: Text(context.sharedL10n.appearance_external_embeds),
+            subtitle: Text(context.sharedL10n.appearance_external_embeds_hint),
             value: reading.externalEmbeds,
             onChanged: _busy
                 ? null
@@ -640,7 +579,7 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             key: const ValueKey('presentation-reactions'),
-            title: Text(_t('Emoji reactions', 'تفاعلات الإيموجي', '表情回應')),
+            title: Text(context.sharedL10n.appearance_emoji_reactions),
             value: reading.emojiReactions,
             onChanged: _busy
                 ? null
@@ -649,13 +588,9 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             key: const ValueKey('presentation-hearts'),
-            title: Text(_t('Celebration hearts', 'قلوب الاحتفال', '慶祝愛心')),
+            title: Text(context.sharedL10n.appearance_celebration_hearts),
             subtitle: Text(
-              _t(
-                'A heart plays when a reply arrives while you were away.',
-                'يظهر قلب عندما يصل رد وأنت بعيد.',
-                '你離開時若有回覆送達，會播放一顆愛心。',
-              ),
+              context.sharedL10n.appearance_celebration_hearts_hint,
             ),
             value: reading.celebrationHearts,
             onChanged: _busy
@@ -672,12 +607,7 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _tip(
-          'pet',
-          'The companion stores one small portrait on this device. It does not upload the picture you hatch from.',
-          'يحفظ الرفيق صورة صغيرة واحدة على هذا الجهاز. لا يرفع الصورة التي تفقس منها.',
-          '夥伴只在這台裝置上儲存一張小肖像，不會上傳你用來孵化的圖片。',
-        ),
+        _tip('pet', context.sharedL10n.appearance_tip_pet),
         PetdexSettings(
           controller: pet,
           pickDraft: widget.pickDraft ?? PetDraft.pick,
@@ -686,9 +616,7 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
           key: const ValueKey('presentation-pet-popout'),
           onPressed: () => openPetCompanion(context, pet),
           icon: const Icon(Icons.open_in_new),
-          label: Text(
-            _t('Pop out companion', 'افتح الرفيق في نافذة', '將夥伴彈出視窗'),
-          ),
+          label: Text(context.sharedL10n.appearance_pop_out_companion),
         ),
       ],
     );

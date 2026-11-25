@@ -1119,7 +1119,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cron => 'Cron';
 
   @override
-  String get crons => 'المهام المجدولة';
+  String get crons => 'الجدولة';
 
   @override
   String get cron_conversations_empty =>
@@ -6158,4 +6158,309 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => 'يراجع كيفية استخدام المهارات';
+
+  @override
+  String get appearance_save_failed => 'تعذّر حفظ هذا التغيير.';
+
+  @override
+  String get appearance_keep_which_theme => 'أي سمة نُبقي؟';
+
+  @override
+  String get appearance_tour_back => 'رجوع';
+
+  @override
+  String get appearance_tour_finish => 'إنهاء';
+
+  @override
+  String get appearance_tour_next => 'التالي';
+
+  @override
+  String get appearance_tour_close => 'إغلاق الجولة';
+
+  @override
+  String get appearance_dismiss_tip => 'إخفاء التلميح';
+
+  @override
+  String get appearance_search_settings => 'البحث في الإعدادات';
+
+  @override
+  String get appearance_search_show => 'إظهار';
+
+  @override
+  String get appearance_no_matching_setting => 'لا يوجد إعداد مطابق.';
+
+  @override
+  String get appearance_replay_tour => 'إعادة الجولة';
+
+  @override
+  String get appearance_show_tips_again => 'أظهر التلميحات مجددًا';
+
+  @override
+  String get appearance_window_translucency_unavailable =>
+      'شفافية النافذة غير متاحة على هذا الجهاز. لا يدعمها لينكس، وترسم إصدارات آبل وويندوز نافذة Flutter معتمة.';
+
+  @override
+  String get appearance_imported_themes => 'السمات المستوردة';
+
+  @override
+  String get appearance_import_theme_file => 'استيراد ملف سمة';
+
+  @override
+  String get appearance_remove_theme => 'حذف السمة';
+
+  @override
+  String get appearance_chat_font => 'خط الدردشة';
+
+  @override
+  String get appearance_terminal_font => 'خط الطرفية';
+
+  @override
+  String get appearance_font_platform => 'خط الجهاز';
+
+  @override
+  String get appearance_automatic => 'تلقائي';
+
+  @override
+  String get appearance_force_left_to_right => 'إجبار من اليسار';
+
+  @override
+  String get appearance_force_right_to_left => 'إجبار من اليمين';
+
+  @override
+  String get appearance_user_bubble_opacity => 'شفافية فقاعة رسائلك';
+
+  @override
+  String get appearance_external_embeds => 'المحتوى المضمّن الخارجي';
+
+  @override
+  String get appearance_external_embeds_hint =>
+      'أظهر بطاقة لصور https. لا يُنزَّل شيء حتى تفتحه.';
+
+  @override
+  String get appearance_emoji_reactions => 'تفاعلات الإيموجي';
+
+  @override
+  String get appearance_celebration_hearts => 'قلوب الاحتفال';
+
+  @override
+  String get appearance_celebration_hearts_hint =>
+      'يظهر قلب عندما يصل رد وأنت بعيد.';
+
+  @override
+  String get appearance_pop_out_companion => 'افتح الرفيق في نافذة';
+
+  @override
+  String get appearance_mosskip => 'موسكيب';
+
+  @override
+  String get appearance_emberbun => 'إمبربن';
+
+  @override
+  String get appearance_tideling => 'تايدلينغ';
+
+  @override
+  String get appearance_my_hatchling => 'رفيقي الصغير';
+
+  @override
+  String get appearance_at_rest => 'يستريح';
+
+  @override
+  String get appearance_working => 'يعمل';
+
+  @override
+  String get appearance_thinking => 'يفكّر';
+
+  @override
+  String get appearance_waiting_for_you => 'ينتظرك';
+
+  @override
+  String get appearance_reply_ready => 'الرد جاهز';
+
+  @override
+  String get appearance_turn_failed => 'تعذّر إكمال الدور';
+
+  @override
+  String get appearance_small => 'صغير';
+
+  @override
+  String get appearance_medium => 'متوسط';
+
+  @override
+  String get appearance_large => 'كبير';
+
+  @override
+  String get appearance_hello => 'مرحبًا!';
+
+  @override
+  String get appearance_unread_reply => 'رد غير مقروء';
+
+  @override
+  String get appearance_compose => 'كتابة رسالة';
+
+  @override
+  String get appearance_say_hello => 'إلقاء التحية';
+
+  @override
+  String get appearance_pet_image_failed =>
+      'تعذّر فتح الصورة. اختر صورة PNG أو JPEG أصغر.';
+
+  @override
+  String get appearance_pet_companion => 'الرفيق الصغير';
+
+  @override
+  String get appearance_pet_companion_hint => 'أظهر رفيقًا أثناء الدردشة.';
+
+  @override
+  String get appearance_adopt_a_companion => 'تبنَّ رفيقًا';
+
+  @override
+  String get appearance_roam_when_idle => 'التجوّل أثناء الراحة';
+
+  @override
+  String get appearance_pet_size => 'حجم الرفيق';
+
+  @override
+  String get appearance_hatch_from_a_local_picture => 'فقس رفيق من صورة محلية';
+
+  @override
+  String get appearance_pet_image_limits =>
+      'اختر صورة PNG أو JPEG (حتى ٤ ميبيبايت و٤٠٩٦ بكسل للضلع و٨ ميغابكسل). عاينها أولًا. يحفظ الفقس صورة ٢٤ × ٢٤ بكسل بدلًا من رفيقك المُفقس السابق.';
+
+  @override
+  String get appearance_choose_picture => 'اختيار صورة';
+
+  @override
+  String get appearance_hatchling_preview => 'معاينة الرفيق';
+
+  @override
+  String get appearance_hatch_and_adopt => 'فقس وتبنٍّ';
+
+  @override
+  String get appearance_discard_draft => 'تجاهل المسودة';
+
+  @override
+  String get appearance_forget_saved_hatchling => 'حذف الرفيق المُفقس المحفوظ';
+
+  @override
+  String get appearance_radio => 'الراديو';
+
+  @override
+  String get appearance_radio_hint =>
+      'يتصل زر التشغيل بجهة البث مباشرةً. يبقى البحث عن المحطات على هذا الجهاز.';
+
+  @override
+  String get appearance_radio_save_failed => 'تعذّر حفظ إعدادات الراديو.';
+
+  @override
+  String get appearance_choose_a_station => 'اختيار محطة';
+
+  @override
+  String get appearance_pause_radio => 'إيقاف الراديو مؤقتًا';
+
+  @override
+  String get appearance_play_radio => 'تشغيل الراديو';
+
+  @override
+  String get appearance_next_station => 'المحطة التالية';
+
+  @override
+  String get appearance_radio_trace_semantics =>
+      'نشاط البث. مستويات الصوت غير متاحة، لذا يبقى الخط مستويًا.';
+
+  @override
+  String get appearance_radio_is_off => 'الراديو متوقف';
+
+  @override
+  String get appearance_paused => 'متوقف مؤقتًا';
+
+  @override
+  String get appearance_connecting => 'جارٍ الاتصال…';
+
+  @override
+  String get appearance_live => 'بث مباشر';
+
+  @override
+  String get appearance_stream_unavailable => 'البث غير متاح';
+
+  @override
+  String appearance_now_playing(String credit) {
+    return 'يُبث الآن: $credit';
+  }
+
+  @override
+  String get appearance_audio_only_waveform_unavailable =>
+      'صوت فقط · شكل الموجة غير متاح';
+
+  @override
+  String get appearance_volume => 'مستوى الصوت';
+
+  @override
+  String get appearance_search_presets => 'البحث في المحطات المحفوظة مسبقًا';
+
+  @override
+  String get appearance_no_stations_found => 'لم يُعثر على محطات';
+
+  @override
+  String appearance_unpin_station(String station) {
+    return 'إلغاء تثبيت المحطة: $station';
+  }
+
+  @override
+  String appearance_pin_station(String station) {
+    return 'تثبيت المحطة: $station';
+  }
+
+  @override
+  String get appearance_radio_picker_metadata_notice =>
+      'عندما تكون هذه القائمة مفتوحة، قد تُعرض معلومات المقطع من جهة البث مباشرةً أثناء التشغيل.';
+
+  @override
+  String get appearance_message_from_your_companion => 'رسالة من رفيقك';
+
+  @override
+  String get appearance_send_to_the_open_chat => 'أرسل إلى الدردشة المفتوحة';
+
+  @override
+  String get appearance_open_embed => 'فتح المحتوى المضمّن';
+
+  @override
+  String get appearance_tour_theme_body =>
+      'استورد سمة ألوان من ملف على هذا الجهاز، ثم اختر النسخة التي تريد إبقاءها.';
+
+  @override
+  String get appearance_tour_fonts_title => 'خطوط القراءة';
+
+  @override
+  String get appearance_tour_fonts_body =>
+      'يستخدم نص الدردشة وشفرة الطرفية خطين منفصلين مدمجين مع آريس.';
+
+  @override
+  String get appearance_tour_direction_title => 'اتجاه النص';
+
+  @override
+  String get appearance_tour_direction_body =>
+      'اتركه تلقائيًا، أو أجبر نص المحادثة من اليسار أو من اليمين.';
+
+  @override
+  String get appearance_tour_pet_title => 'الرفيق';
+
+  @override
+  String get appearance_tour_pet_body =>
+      'يبقى الرفيق متوقفًا حتى تتبناه. النافذة المنبثقة تضيف مربع كتابة صغيرًا.';
+
+  @override
+  String get appearance_tour_radio_body =>
+      'يبقى الراديو متوقفًا حتى تفعّله. زر التشغيل هو ما يفتح البث.';
+
+  @override
+  String get appearance_tip_theme =>
+      'تحل السمات المستوردة محل لوحة الألوان المدمجة حتى تلغي الاختيار. تُحفظ الألوان فقط.';
+
+  @override
+  String get appearance_tip_pet =>
+      'يحفظ الرفيق صورة صغيرة واحدة على هذا الجهاز. لا يرفع الصورة التي تفقس منها.';
+
+  @override
+  String get appearance_theme_import_failed =>
+      'تعذّر استيراد هذه السمة. اختر سمة ألوان من VS Code محفوظة في ملف بامتداد vsix أو json أو jsonc.';
 }

@@ -14,6 +14,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import '../presentation/companion_draft.dart';
 import '../presentation/petdex.dart';
 import '../presentation/presentation_chrome.dart';
+import '../presentation/radio.dart' show showAresRadioSheet;
 import '../presentation/transcript_reading.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:uuid/uuid.dart';
@@ -7532,11 +7533,27 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         : screen;
   }
 
-  Widget _buildChat(BuildContext context) => LayoutBuilder(
-    // Measure the pane, not the window: a phone, split view or parallel
-    // workspace pane gets compact chrome so the app bar never overflows.
-    builder: (context, box) => _buildChatScaffold(context, box.maxWidth),
+  Widget _buildChat(BuildContext context) => ReactionScope(
+    chat: _reactionChat,
+    // Switching the radio on or off adds or drops its narrow-pane menu entry.
+    child: ListenableBuilder(
+      listenable: presentationToolsListenable(context),
+      builder: (context, _) => LayoutBuilder(
+        // Measure the pane, not the window: a phone, split view or parallel
+        // workspace pane gets compact chrome so the app bar never overflows.
+        builder: (context, box) => _buildChatScaffold(context, box.maxWidth),
+      ),
+    ),
   );
+
+  /// Reactions belong to this stored chat on this connection and profile:
+  /// another chat or gateway can reuse the same message id.
+  String get _reactionChat => [
+    'classic',
+    widget.connection.id,
+    widget.connection.gatewayProfile ?? '',
+    _storedSessionId ?? _storedSessionKey,
+  ].join('\u0000');
 
   Widget _buildChatScaffold(BuildContext context, double paneWidth) {
     final compactTools = paneWidth < 480;
@@ -7559,6 +7576,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
     final workers = captureWorkers();
     final showQueue = workers != null && gateway?.sessionAuthority == true;
+    final radio = compactTools ? compactRadioTool(context) : null;
     void openGatewayQueue([WorkspaceWorkersScreen? fresh]) {
       final target = fresh ?? workers!;
       final writer = _draftWriter, revision = _composerRevision;
@@ -7620,6 +7638,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         ),
         actions: [
           PresentationChrome(
+            compact: compactTools,
             activity: (_sending || _streaming)
                 ? PetActivity.working
                 : _companionUnread
@@ -7672,14 +7691,24 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 icon: const Icon(Icons.hub_outlined),
                 onPressed: () => workers.open(context),
               ),
-          ] else if (_desktopGateway != null || workers != null)
+          ] else if (_desktopGateway != null ||
+              workers != null ||
+              radio != null)
             // One always-visible menu on narrow panes, also while a reply
-            // streams (the gateway queue matters most then).
+            // streams (the gateway queue matters most then). The radio's
+            // controls move here from the app bar.
             PopupMenuButton<String>(
               key: const ValueKey('chat-tools-menu'),
               tooltip: 'More chat tools',
               icon: const Icon(Icons.widgets_outlined),
               onSelected: (tool) {
+                if (tool == radioToolValue) {
+                  final current = compactRadioTool(context);
+                  if (current != null) {
+                    unawaited(showAresRadioSheet(context, current));
+                  }
+                  return;
+                }
                 if (tool == 'browser' && _desktopGateway != null) {
                   openBrowserPreview();
                 }
@@ -7718,6 +7747,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                       title: Text(context.l10n.workspace_workers),
                     ),
                   ),
+                if (radio != null) radioToolItem(context),
               ],
             ),
           if (_streaming)

@@ -10370,6 +10370,570 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reviews how skills are used'**
   String get ng_aux_curator_hint;
+
+  /// No description provided for @appearance_save_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save this change.'**
+  String get appearance_save_failed;
+
+  /// No description provided for @appearance_keep_which_theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep which theme?'**
+  String get appearance_keep_which_theme;
+
+  /// No description provided for @appearance_tour_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get appearance_tour_back;
+
+  /// No description provided for @appearance_tour_finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get appearance_tour_finish;
+
+  /// No description provided for @appearance_tour_next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get appearance_tour_next;
+
+  /// No description provided for @appearance_tour_close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close tour'**
+  String get appearance_tour_close;
+
+  /// No description provided for @appearance_dismiss_tip.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss tip'**
+  String get appearance_dismiss_tip;
+
+  /// No description provided for @appearance_search_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Search settings'**
+  String get appearance_search_settings;
+
+  /// No description provided for @appearance_search_show.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get appearance_search_show;
+
+  /// No description provided for @appearance_no_matching_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching setting.'**
+  String get appearance_no_matching_setting;
+
+  /// No description provided for @appearance_replay_tour.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay tour'**
+  String get appearance_replay_tour;
+
+  /// No description provided for @appearance_show_tips_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Show tips again'**
+  String get appearance_show_tips_again;
+
+  /// No description provided for @appearance_window_translucency_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.'**
+  String get appearance_window_translucency_unavailable;
+
+  /// No description provided for @appearance_imported_themes.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported themes'**
+  String get appearance_imported_themes;
+
+  /// No description provided for @appearance_import_theme_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Import theme file'**
+  String get appearance_import_theme_file;
+
+  /// No description provided for @appearance_remove_theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove theme'**
+  String get appearance_remove_theme;
+
+  /// No description provided for @appearance_chat_font.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat font'**
+  String get appearance_chat_font;
+
+  /// No description provided for @appearance_terminal_font.
+  ///
+  /// In en, this message translates to:
+  /// **'Terminal font'**
+  String get appearance_terminal_font;
+
+  /// No description provided for @appearance_font_platform.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get appearance_font_platform;
+
+  /// No description provided for @appearance_automatic.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get appearance_automatic;
+
+  /// No description provided for @appearance_force_left_to_right.
+  ///
+  /// In en, this message translates to:
+  /// **'Force left to right'**
+  String get appearance_force_left_to_right;
+
+  /// No description provided for @appearance_force_right_to_left.
+  ///
+  /// In en, this message translates to:
+  /// **'Force right to left'**
+  String get appearance_force_right_to_left;
+
+  /// No description provided for @appearance_user_bubble_opacity.
+  ///
+  /// In en, this message translates to:
+  /// **'User bubble opacity'**
+  String get appearance_user_bubble_opacity;
+
+  /// No description provided for @appearance_external_embeds.
+  ///
+  /// In en, this message translates to:
+  /// **'External embeds'**
+  String get appearance_external_embeds;
+
+  /// No description provided for @appearance_external_embeds_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Show a card for https images. Nothing is downloaded until you open it.'**
+  String get appearance_external_embeds_hint;
+
+  /// No description provided for @appearance_emoji_reactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Emoji reactions'**
+  String get appearance_emoji_reactions;
+
+  /// No description provided for @appearance_celebration_hearts.
+  ///
+  /// In en, this message translates to:
+  /// **'Celebration hearts'**
+  String get appearance_celebration_hearts;
+
+  /// No description provided for @appearance_celebration_hearts_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'A heart plays when a reply arrives while you were away.'**
+  String get appearance_celebration_hearts_hint;
+
+  /// No description provided for @appearance_pop_out_companion.
+  ///
+  /// In en, this message translates to:
+  /// **'Pop out companion'**
+  String get appearance_pop_out_companion;
+
+  /// No description provided for @appearance_mosskip.
+  ///
+  /// In en, this message translates to:
+  /// **'Mosskip'**
+  String get appearance_mosskip;
+
+  /// No description provided for @appearance_emberbun.
+  ///
+  /// In en, this message translates to:
+  /// **'Emberbun'**
+  String get appearance_emberbun;
+
+  /// No description provided for @appearance_tideling.
+  ///
+  /// In en, this message translates to:
+  /// **'Tideling'**
+  String get appearance_tideling;
+
+  /// No description provided for @appearance_my_hatchling.
+  ///
+  /// In en, this message translates to:
+  /// **'My hatchling'**
+  String get appearance_my_hatchling;
+
+  /// No description provided for @appearance_at_rest.
+  ///
+  /// In en, this message translates to:
+  /// **'At rest'**
+  String get appearance_at_rest;
+
+  /// No description provided for @appearance_working.
+  ///
+  /// In en, this message translates to:
+  /// **'Working'**
+  String get appearance_working;
+
+  /// No description provided for @appearance_thinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinking'**
+  String get appearance_thinking;
+
+  /// No description provided for @appearance_waiting_for_you.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for you'**
+  String get appearance_waiting_for_you;
+
+  /// No description provided for @appearance_reply_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply ready'**
+  String get appearance_reply_ready;
+
+  /// No description provided for @appearance_turn_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn failed'**
+  String get appearance_turn_failed;
+
+  /// No description provided for @appearance_small.
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get appearance_small;
+
+  /// No description provided for @appearance_medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get appearance_medium;
+
+  /// No description provided for @appearance_large.
+  ///
+  /// In en, this message translates to:
+  /// **'Large'**
+  String get appearance_large;
+
+  /// No description provided for @appearance_hello.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello!'**
+  String get appearance_hello;
+
+  /// No description provided for @appearance_unread_reply.
+  ///
+  /// In en, this message translates to:
+  /// **'Unread reply'**
+  String get appearance_unread_reply;
+
+  /// No description provided for @appearance_compose.
+  ///
+  /// In en, this message translates to:
+  /// **'Compose'**
+  String get appearance_compose;
+
+  /// No description provided for @appearance_say_hello.
+  ///
+  /// In en, this message translates to:
+  /// **'Say hello'**
+  String get appearance_say_hello;
+
+  /// No description provided for @appearance_pet_image_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open that image. Choose a smaller PNG or JPEG.'**
+  String get appearance_pet_image_failed;
+
+  /// No description provided for @appearance_pet_companion.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet companion'**
+  String get appearance_pet_companion;
+
+  /// No description provided for @appearance_pet_companion_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Show a companion while you chat.'**
+  String get appearance_pet_companion_hint;
+
+  /// No description provided for @appearance_adopt_a_companion.
+  ///
+  /// In en, this message translates to:
+  /// **'Adopt a companion'**
+  String get appearance_adopt_a_companion;
+
+  /// No description provided for @appearance_roam_when_idle.
+  ///
+  /// In en, this message translates to:
+  /// **'Roam when idle'**
+  String get appearance_roam_when_idle;
+
+  /// No description provided for @appearance_pet_size.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet size'**
+  String get appearance_pet_size;
+
+  /// No description provided for @appearance_hatch_from_a_local_picture.
+  ///
+  /// In en, this message translates to:
+  /// **'Hatch from a local picture'**
+  String get appearance_hatch_from_a_local_picture;
+
+  /// No description provided for @appearance_pet_image_limits.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.'**
+  String get appearance_pet_image_limits;
+
+  /// No description provided for @appearance_choose_picture.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose picture'**
+  String get appearance_choose_picture;
+
+  /// No description provided for @appearance_hatchling_preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Hatchling preview'**
+  String get appearance_hatchling_preview;
+
+  /// No description provided for @appearance_hatch_and_adopt.
+  ///
+  /// In en, this message translates to:
+  /// **'Hatch and adopt'**
+  String get appearance_hatch_and_adopt;
+
+  /// No description provided for @appearance_discard_draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard draft'**
+  String get appearance_discard_draft;
+
+  /// No description provided for @appearance_forget_saved_hatchling.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget saved hatchling'**
+  String get appearance_forget_saved_hatchling;
+
+  /// No description provided for @appearance_radio.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio'**
+  String get appearance_radio;
+
+  /// No description provided for @appearance_radio_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Play connects directly to the broadcaster. Station search stays on this device.'**
+  String get appearance_radio_hint;
+
+  /// No description provided for @appearance_radio_save_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio settings could not be saved.'**
+  String get appearance_radio_save_failed;
+
+  /// No description provided for @appearance_choose_a_station.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a station'**
+  String get appearance_choose_a_station;
+
+  /// No description provided for @appearance_pause_radio.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause radio'**
+  String get appearance_pause_radio;
+
+  /// No description provided for @appearance_play_radio.
+  ///
+  /// In en, this message translates to:
+  /// **'Play radio'**
+  String get appearance_play_radio;
+
+  /// No description provided for @appearance_next_station.
+  ///
+  /// In en, this message translates to:
+  /// **'Next station'**
+  String get appearance_next_station;
+
+  /// No description provided for @appearance_radio_trace_semantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Stream activity. Audio levels are unavailable, so this line stays flat.'**
+  String get appearance_radio_trace_semantics;
+
+  /// No description provided for @appearance_radio_is_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio is off'**
+  String get appearance_radio_is_off;
+
+  /// No description provided for @appearance_paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get appearance_paused;
+
+  /// No description provided for @appearance_connecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting…'**
+  String get appearance_connecting;
+
+  /// No description provided for @appearance_live.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get appearance_live;
+
+  /// No description provided for @appearance_stream_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Stream unavailable'**
+  String get appearance_stream_unavailable;
+
+  /// No description provided for @appearance_now_playing.
+  ///
+  /// In en, this message translates to:
+  /// **'Now playing: {credit}'**
+  String appearance_now_playing(String credit);
+
+  /// No description provided for @appearance_audio_only_waveform_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio only · waveform unavailable'**
+  String get appearance_audio_only_waveform_unavailable;
+
+  /// No description provided for @appearance_volume.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get appearance_volume;
+
+  /// No description provided for @appearance_search_presets.
+  ///
+  /// In en, this message translates to:
+  /// **'Search presets'**
+  String get appearance_search_presets;
+
+  /// No description provided for @appearance_no_stations_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No stations found'**
+  String get appearance_no_stations_found;
+
+  /// No description provided for @appearance_unpin_station.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpin station: {station}'**
+  String appearance_unpin_station(String station);
+
+  /// No description provided for @appearance_pin_station.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin station: {station}'**
+  String appearance_pin_station(String station);
+
+  /// No description provided for @appearance_radio_picker_metadata_notice.
+  ///
+  /// In en, this message translates to:
+  /// **'While this picker is open, playing stations may share track details directly from the broadcaster.'**
+  String get appearance_radio_picker_metadata_notice;
+
+  /// No description provided for @appearance_message_from_your_companion.
+  ///
+  /// In en, this message translates to:
+  /// **'Message from your companion'**
+  String get appearance_message_from_your_companion;
+
+  /// No description provided for @appearance_send_to_the_open_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Send to the open chat'**
+  String get appearance_send_to_the_open_chat;
+
+  /// No description provided for @appearance_open_embed.
+  ///
+  /// In en, this message translates to:
+  /// **'Open embed'**
+  String get appearance_open_embed;
+
+  /// No description provided for @appearance_tour_theme_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a VS Code colour theme from a file on this device, then choose which variant to keep.'**
+  String get appearance_tour_theme_body;
+
+  /// No description provided for @appearance_tour_fonts_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading fonts'**
+  String get appearance_tour_fonts_title;
+
+  /// No description provided for @appearance_tour_fonts_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat prose and terminal code use separate faces shipped with Ares.'**
+  String get appearance_tour_fonts_body;
+
+  /// No description provided for @appearance_tour_direction_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Transcript direction'**
+  String get appearance_tour_direction_title;
+
+  /// No description provided for @appearance_tour_direction_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave this on automatic, or force the transcript left to right or right to left.'**
+  String get appearance_tour_direction_body;
+
+  /// No description provided for @appearance_tour_pet_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Companion'**
+  String get appearance_tour_pet_title;
+
+  /// No description provided for @appearance_tour_pet_body.
+  ///
+  /// In en, this message translates to:
+  /// **'The companion is off until you adopt one. Pop-out adds a small composer.'**
+  String get appearance_tour_pet_body;
+
+  /// No description provided for @appearance_tour_radio_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio stays off until you enable it. Play is what opens a stream.'**
+  String get appearance_tour_radio_body;
+
+  /// No description provided for @appearance_tip_theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.'**
+  String get appearance_tip_theme;
+
+  /// No description provided for @appearance_tip_pet.
+  ///
+  /// In en, this message translates to:
+  /// **'The companion stores one small portrait on this device. It does not upload the picture you hatch from.'**
+  String get appearance_tip_pet;
+
+  /// No description provided for @appearance_theme_import_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.'**
+  String get appearance_theme_import_failed;
 }
 
 class _AppLocalizationsDelegate

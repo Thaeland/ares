@@ -12,6 +12,8 @@ import 'package:crypto/crypto.dart' show sha256;
 import 'package:flutter/foundation.dart' show compute, immutable;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../theme/hermes_theme.dart' show ImportedThemeSeeds, foregroundFor;
+
 /// Opaque, flattened sRGB colours. The role names are also storage keys.
 enum ImportedThemeColor {
   background,
@@ -369,11 +371,18 @@ Color? _hex(Object? raw) {
   var rgb = s.substring(1);
   if (rgb.length <= 4) rgb = rgb.split('').map((c) => '$c$c').join();
   if (rgb.length == 6) rgb += 'ff';
-  return Color(int.parse(rgb.substring(6) + rgb.substring(0, 6), radix: 16));
+  return _imported(
+    int.parse(rgb.substring(6) + rgb.substring(0, 6), radix: 16),
+  );
 }
 
+/// The one constructor for imported colours. Every value it builds is user
+/// data: a hex code from the theme file, a blend of two of its colours, or a
+/// colour read back from the saved import.
+Color _imported(int argb) => Color(argb);
+
 Color _mix(Color a, Color b, double amount) =>
-    Color(Color.lerp(a, b, amount)!.toARGB32());
+    _imported(Color.lerp(a, b, amount)!.toARGB32());
 Color _readableAccent(Color accent, Color sidebar) {
   final bg = sidebar.computeLuminance() + 0.05;
   bool passes(Color c) {
@@ -382,9 +391,7 @@ Color _readableAccent(Color accent, Color sidebar) {
   }
 
   if (passes(accent)) return accent;
-  final target = 1.05 / bg > bg / 0.05
-      ? const Color(0xffffffff)
-      : const Color(0xff000000);
+  final target = foregroundFor(sidebar);
   for (var i = 1; i < 32; i++) {
     final c = _mix(accent, target, i / 32);
     if (passes(c)) return c;
@@ -417,28 +424,27 @@ ImportedTheme _convert(
   if (hits.isEmpty) {
     throw const FormatException('Theme has no supported workbench colours.');
   }
-  const black = Color(0xff000000);
   final backgroundHit = hits[ImportedThemeColor.background];
   final opaqueBg = backgroundHit == null
       ? null
-      : Color.alphaBlend(backgroundHit, black);
+      : Color.alphaBlend(backgroundHit, ImportedThemeSeeds.backdrop);
   final mode = type ?? _text(raw['type']);
   final dark = switch (mode?.toLowerCase()) {
     'vs' || 'light' || 'hc-light' => false,
     'vs-dark' || 'dark' || 'hc' || 'hc-black' => true,
     _ => (opaqueBg?.computeLuminance() ?? 0) < 0.4,
   };
-  final bg = opaqueBg ?? Color(dark ? 0xff1e1e1e : 0xffffffff);
+  final bg = opaqueBg ?? ImportedThemeSeeds.background(dark: dark);
   Color take(ImportedThemeColor role, Color fallback) {
     final picked = hits[role];
     return picked == null
         ? fallback
-        : Color(Color.alphaBlend(picked, bg).toARGB32());
+        : _imported(Color.alphaBlend(picked, bg).toARGB32());
   }
 
   final fg = take(
     ImportedThemeColor.foreground,
-    Color(dark ? 0xffd4d4d4 : 0xff1f1f1f),
+    ImportedThemeSeeds.foreground(dark: dark),
   );
   final sidebar = take(
     ImportedThemeColor.sidebar,
@@ -474,7 +480,7 @@ ImportedTheme _convert(
     ),
     ImportedThemeColor.error: take(
       ImportedThemeColor.error,
-      const Color(0xffe25563),
+      ImportedThemeSeeds.error,
     ),
   };
   final name =
@@ -843,7 +849,7 @@ final class ImportedThemeStore {
       for (final r in ImportedThemeColor.values) {
         final n = colors[r.name];
         if (n is! int || n < 0xff000000 || n > 0xffffffff) throw invalid;
-        palette[r] = Color(n);
+        palette[r] = _imported(n);
       }
       items.add(ImportedTheme._(id, label, source, brightness, palette));
     }

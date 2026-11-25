@@ -157,6 +157,26 @@ void main() {
     },
   );
   test(
+    'a pop-out gets the imported theme and reading choices, not the pet',
+    () {
+      final copied = popoutPreferences({
+        'flutter.saved_connections': <String>[jsonEncode(_connection.toMap())],
+        'flutter.imported_vscode_themes_v1': '{"version":1}',
+        'flutter.presentation.reading.v1': '{"externalEmbeds":false}',
+        'flutter.presentation.petdex.v1': '{"enabled":true}',
+        'flutter.presentation.radio.enabled': true,
+      }, _target);
+      expect(
+        copied.keys,
+        unorderedEquals([
+          'flutter.saved_connections',
+          'flutter.imported_vscode_themes_v1',
+          'flutter.presentation.reading.v1',
+        ]),
+      );
+    },
+  );
+  test(
     'selects one migrated account and no shared chat data; writes stay in RAM',
     () async {
       final source = <String, Object>{

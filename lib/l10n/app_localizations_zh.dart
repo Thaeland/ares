@@ -5930,6 +5930,315 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => '审查技能的使用情况';
+
+  @override
+  String get appearance_save_failed => 'Could not save this change.';
+
+  @override
+  String get appearance_keep_which_theme => 'Keep which theme?';
+
+  @override
+  String get appearance_tour_back => 'Back';
+
+  @override
+  String get appearance_tour_finish => 'Finish';
+
+  @override
+  String get appearance_tour_next => 'Next';
+
+  @override
+  String get appearance_tour_close => 'Close tour';
+
+  @override
+  String get appearance_dismiss_tip => 'Dismiss tip';
+
+  @override
+  String get appearance_search_settings => 'Search settings';
+
+  @override
+  String get appearance_search_show => 'Show';
+
+  @override
+  String get appearance_no_matching_setting => 'No matching setting.';
+
+  @override
+  String get appearance_replay_tour => 'Replay tour';
+
+  @override
+  String get appearance_show_tips_again => 'Show tips again';
+
+  @override
+  String get appearance_window_translucency_unavailable =>
+      'Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.';
+
+  @override
+  String get appearance_imported_themes => 'Imported themes';
+
+  @override
+  String get appearance_import_theme_file => 'Import theme file';
+
+  @override
+  String get appearance_remove_theme => 'Remove theme';
+
+  @override
+  String get appearance_chat_font => 'Chat font';
+
+  @override
+  String get appearance_terminal_font => 'Terminal font';
+
+  @override
+  String get appearance_font_platform => 'Platform';
+
+  @override
+  String get appearance_automatic => 'Automatic';
+
+  @override
+  String get appearance_force_left_to_right => 'Force left to right';
+
+  @override
+  String get appearance_force_right_to_left => 'Force right to left';
+
+  @override
+  String get appearance_user_bubble_opacity => 'User bubble opacity';
+
+  @override
+  String get appearance_external_embeds => 'External embeds';
+
+  @override
+  String get appearance_external_embeds_hint =>
+      'Show a card for https images. Nothing is downloaded until you open it.';
+
+  @override
+  String get appearance_emoji_reactions => 'Emoji reactions';
+
+  @override
+  String get appearance_celebration_hearts => 'Celebration hearts';
+
+  @override
+  String get appearance_celebration_hearts_hint =>
+      'A heart plays when a reply arrives while you were away.';
+
+  @override
+  String get appearance_pop_out_companion => 'Pop out companion';
+
+  @override
+  String get appearance_mosskip => 'Mosskip';
+
+  @override
+  String get appearance_emberbun => 'Emberbun';
+
+  @override
+  String get appearance_tideling => 'Tideling';
+
+  @override
+  String get appearance_my_hatchling => 'My hatchling';
+
+  @override
+  String get appearance_at_rest => 'At rest';
+
+  @override
+  String get appearance_working => 'Working';
+
+  @override
+  String get appearance_thinking => 'Thinking';
+
+  @override
+  String get appearance_waiting_for_you => 'Waiting for you';
+
+  @override
+  String get appearance_reply_ready => 'Reply ready';
+
+  @override
+  String get appearance_turn_failed => 'Turn failed';
+
+  @override
+  String get appearance_small => 'Small';
+
+  @override
+  String get appearance_medium => 'Medium';
+
+  @override
+  String get appearance_large => 'Large';
+
+  @override
+  String get appearance_hello => 'Hello!';
+
+  @override
+  String get appearance_unread_reply => 'Unread reply';
+
+  @override
+  String get appearance_compose => 'Compose';
+
+  @override
+  String get appearance_say_hello => 'Say hello';
+
+  @override
+  String get appearance_pet_image_failed =>
+      'Could not open that image. Choose a smaller PNG or JPEG.';
+
+  @override
+  String get appearance_pet_companion => 'Pet companion';
+
+  @override
+  String get appearance_pet_companion_hint =>
+      'Show a companion while you chat.';
+
+  @override
+  String get appearance_adopt_a_companion => 'Adopt a companion';
+
+  @override
+  String get appearance_roam_when_idle => 'Roam when idle';
+
+  @override
+  String get appearance_pet_size => 'Pet size';
+
+  @override
+  String get appearance_hatch_from_a_local_picture =>
+      'Hatch from a local picture';
+
+  @override
+  String get appearance_pet_image_limits =>
+      'Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.';
+
+  @override
+  String get appearance_choose_picture => 'Choose picture';
+
+  @override
+  String get appearance_hatchling_preview => 'Hatchling preview';
+
+  @override
+  String get appearance_hatch_and_adopt => 'Hatch and adopt';
+
+  @override
+  String get appearance_discard_draft => 'Discard draft';
+
+  @override
+  String get appearance_forget_saved_hatchling => 'Forget saved hatchling';
+
+  @override
+  String get appearance_radio => 'Radio';
+
+  @override
+  String get appearance_radio_hint =>
+      'Play connects directly to the broadcaster. Station search stays on this device.';
+
+  @override
+  String get appearance_radio_save_failed =>
+      'Radio settings could not be saved.';
+
+  @override
+  String get appearance_choose_a_station => 'Choose a station';
+
+  @override
+  String get appearance_pause_radio => 'Pause radio';
+
+  @override
+  String get appearance_play_radio => 'Play radio';
+
+  @override
+  String get appearance_next_station => 'Next station';
+
+  @override
+  String get appearance_radio_trace_semantics =>
+      'Stream activity. Audio levels are unavailable, so this line stays flat.';
+
+  @override
+  String get appearance_radio_is_off => 'Radio is off';
+
+  @override
+  String get appearance_paused => 'Paused';
+
+  @override
+  String get appearance_connecting => 'Connecting…';
+
+  @override
+  String get appearance_live => 'Live';
+
+  @override
+  String get appearance_stream_unavailable => 'Stream unavailable';
+
+  @override
+  String appearance_now_playing(String credit) {
+    return 'Now playing: $credit';
+  }
+
+  @override
+  String get appearance_audio_only_waveform_unavailable =>
+      'Audio only · waveform unavailable';
+
+  @override
+  String get appearance_volume => 'Volume';
+
+  @override
+  String get appearance_search_presets => 'Search presets';
+
+  @override
+  String get appearance_no_stations_found => 'No stations found';
+
+  @override
+  String appearance_unpin_station(String station) {
+    return 'Unpin station: $station';
+  }
+
+  @override
+  String appearance_pin_station(String station) {
+    return 'Pin station: $station';
+  }
+
+  @override
+  String get appearance_radio_picker_metadata_notice =>
+      'While this picker is open, playing stations may share track details directly from the broadcaster.';
+
+  @override
+  String get appearance_message_from_your_companion =>
+      'Message from your companion';
+
+  @override
+  String get appearance_send_to_the_open_chat => 'Send to the open chat';
+
+  @override
+  String get appearance_open_embed => 'Open embed';
+
+  @override
+  String get appearance_tour_theme_body =>
+      'Import a VS Code colour theme from a file on this device, then choose which variant to keep.';
+
+  @override
+  String get appearance_tour_fonts_title => 'Reading fonts';
+
+  @override
+  String get appearance_tour_fonts_body =>
+      'Chat prose and terminal code use separate faces shipped with Ares.';
+
+  @override
+  String get appearance_tour_direction_title => 'Transcript direction';
+
+  @override
+  String get appearance_tour_direction_body =>
+      'Leave this on automatic, or force the transcript left to right or right to left.';
+
+  @override
+  String get appearance_tour_pet_title => 'Companion';
+
+  @override
+  String get appearance_tour_pet_body =>
+      'The companion is off until you adopt one. Pop-out adds a small composer.';
+
+  @override
+  String get appearance_tour_radio_body =>
+      'Radio stays off until you enable it. Play is what opens a stream.';
+
+  @override
+  String get appearance_tip_theme =>
+      'Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.';
+
+  @override
+  String get appearance_tip_pet =>
+      'The companion stores one small portrait on this device. It does not upload the picture you hatch from.';
+
+  @override
+  String get appearance_theme_import_failed =>
+      'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -17501,4 +17810,297 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get ng_aux_curator_hint => '審查技能的使用情況';
+
+  @override
+  String get appearance_save_failed => '無法儲存這項變更。';
+
+  @override
+  String get appearance_keep_which_theme => '要保留哪個佈景主題？';
+
+  @override
+  String get appearance_tour_back => '上一步';
+
+  @override
+  String get appearance_tour_finish => '完成';
+
+  @override
+  String get appearance_tour_next => '下一步';
+
+  @override
+  String get appearance_tour_close => '關閉導覽';
+
+  @override
+  String get appearance_dismiss_tip => '關閉提示';
+
+  @override
+  String get appearance_search_settings => '搜尋設定';
+
+  @override
+  String get appearance_search_show => '顯示';
+
+  @override
+  String get appearance_no_matching_setting => '找不到相符的設定。';
+
+  @override
+  String get appearance_replay_tour => '再看一次導覽';
+
+  @override
+  String get appearance_show_tips_again => '再次顯示提示';
+
+  @override
+  String get appearance_window_translucency_unavailable =>
+      '此主機無法使用視窗透明度。Linux 不支援，Apple 與 Windows 執行程式繪製的是不透明的 Flutter 視窗。';
+
+  @override
+  String get appearance_imported_themes => '匯入的佈景主題';
+
+  @override
+  String get appearance_import_theme_file => '匯入佈景主題檔';
+
+  @override
+  String get appearance_remove_theme => '移除佈景主題';
+
+  @override
+  String get appearance_chat_font => '聊天字型';
+
+  @override
+  String get appearance_terminal_font => '終端機字型';
+
+  @override
+  String get appearance_font_platform => '系統字型';
+
+  @override
+  String get appearance_automatic => '自動';
+
+  @override
+  String get appearance_force_left_to_right => '強制由左至右';
+
+  @override
+  String get appearance_force_right_to_left => '強制由右至左';
+
+  @override
+  String get appearance_user_bubble_opacity => '自己的訊息氣泡透明度';
+
+  @override
+  String get appearance_external_embeds => '外部嵌入內容';
+
+  @override
+  String get appearance_external_embeds_hint => '為 https 圖片顯示卡片。開啟之前不會下載。';
+
+  @override
+  String get appearance_emoji_reactions => '表情回應';
+
+  @override
+  String get appearance_celebration_hearts => '慶祝愛心';
+
+  @override
+  String get appearance_celebration_hearts_hint => '你離開時若有回覆送達，會播放一顆愛心。';
+
+  @override
+  String get appearance_pop_out_companion => '將夥伴彈出視窗';
+
+  @override
+  String get appearance_mosskip => '苔躍蛙';
+
+  @override
+  String get appearance_emberbun => '餘燼兔';
+
+  @override
+  String get appearance_tideling => '潮汐靈';
+
+  @override
+  String get appearance_my_hatchling => '我的孵化夥伴';
+
+  @override
+  String get appearance_at_rest => '休息中';
+
+  @override
+  String get appearance_working => '工作中';
+
+  @override
+  String get appearance_thinking => '思考中';
+
+  @override
+  String get appearance_waiting_for_you => '等你回應';
+
+  @override
+  String get appearance_reply_ready => '回覆已就緒';
+
+  @override
+  String get appearance_turn_failed => '本次回應失敗';
+
+  @override
+  String get appearance_small => '小';
+
+  @override
+  String get appearance_medium => '中';
+
+  @override
+  String get appearance_large => '大';
+
+  @override
+  String get appearance_hello => '你好！';
+
+  @override
+  String get appearance_unread_reply => '有未讀回覆';
+
+  @override
+  String get appearance_compose => '撰寫訊息';
+
+  @override
+  String get appearance_say_hello => '打個招呼';
+
+  @override
+  String get appearance_pet_image_failed => '無法開啟圖片，請選擇較小的 PNG 或 JPEG。';
+
+  @override
+  String get appearance_pet_companion => '寵物夥伴';
+
+  @override
+  String get appearance_pet_companion_hint => '在聊天時顯示夥伴。';
+
+  @override
+  String get appearance_adopt_a_companion => '領養夥伴';
+
+  @override
+  String get appearance_roam_when_idle => '閒置時漫步';
+
+  @override
+  String get appearance_pet_size => '夥伴大小';
+
+  @override
+  String get appearance_hatch_from_a_local_picture => '從本機圖片孵化';
+
+  @override
+  String get appearance_pet_image_limits =>
+      '選擇 PNG 或 JPEG（最多 4 MiB、每邊 4096 像素且不超過 8 百萬像素）。先預覽，孵化後只儲存一張 24 × 24 像素的肖像，並取代上一次的孵化夥伴。';
+
+  @override
+  String get appearance_choose_picture => '選擇圖片';
+
+  @override
+  String get appearance_hatchling_preview => '預覽孵化夥伴';
+
+  @override
+  String get appearance_hatch_and_adopt => '孵化並領養';
+
+  @override
+  String get appearance_discard_draft => '捨棄草稿';
+
+  @override
+  String get appearance_forget_saved_hatchling => '移除已儲存的孵化夥伴';
+
+  @override
+  String get appearance_radio => '電台';
+
+  @override
+  String get appearance_radio_hint => '按下播放才會直接連線至廣播業者。搜尋電台只會在此裝置上進行。';
+
+  @override
+  String get appearance_radio_save_failed => '無法儲存電台設定。';
+
+  @override
+  String get appearance_choose_a_station => '選擇電台';
+
+  @override
+  String get appearance_pause_radio => '暫停電台';
+
+  @override
+  String get appearance_play_radio => '播放電台';
+
+  @override
+  String get appearance_next_station => '下一個電台';
+
+  @override
+  String get appearance_radio_trace_semantics => '串流活動。無法取得音量，所以這條線保持平直。';
+
+  @override
+  String get appearance_radio_is_off => '電台已關閉';
+
+  @override
+  String get appearance_paused => '已暫停';
+
+  @override
+  String get appearance_connecting => '正在連線…';
+
+  @override
+  String get appearance_live => '直播中';
+
+  @override
+  String get appearance_stream_unavailable => '無法播放串流';
+
+  @override
+  String appearance_now_playing(String credit) {
+    return '目前播放：$credit';
+  }
+
+  @override
+  String get appearance_audio_only_waveform_unavailable => '僅播放音訊 · 無法顯示波形';
+
+  @override
+  String get appearance_volume => '音量';
+
+  @override
+  String get appearance_search_presets => '搜尋預設電台';
+
+  @override
+  String get appearance_no_stations_found => '找不到電台';
+
+  @override
+  String appearance_unpin_station(String station) {
+    return '取消釘選電台：$station';
+  }
+
+  @override
+  String appearance_pin_station(String station) {
+    return '釘選電台：$station';
+  }
+
+  @override
+  String get appearance_radio_picker_metadata_notice =>
+      '開啟此面板並播放時，會向支援此功能的廣播業者取得曲目資訊。';
+
+  @override
+  String get appearance_message_from_your_companion => '來自夥伴的訊息';
+
+  @override
+  String get appearance_send_to_the_open_chat => '送到目前的聊天';
+
+  @override
+  String get appearance_open_embed => '開啟嵌入內容';
+
+  @override
+  String get appearance_tour_theme_body =>
+      '從這台裝置上的檔案匯入 VS Code 色彩佈景主題，再選擇要保留的版本。';
+
+  @override
+  String get appearance_tour_fonts_title => '閱讀字型';
+
+  @override
+  String get appearance_tour_fonts_body => '聊天內文和終端機程式碼使用 Ares 內建的不同字型。';
+
+  @override
+  String get appearance_tour_direction_title => '文字方向';
+
+  @override
+  String get appearance_tour_direction_body => '保持自動，或強制對話文字由左至右或由右至左。';
+
+  @override
+  String get appearance_tour_pet_title => '夥伴';
+
+  @override
+  String get appearance_tour_pet_body => '領養之前不會顯示夥伴。彈出視窗會附上一個小撰寫框。';
+
+  @override
+  String get appearance_tour_radio_body => '啟用之前不會播放電台。按下播放才會開啟串流。';
+
+  @override
+  String get appearance_tip_theme => '匯入的佈景主題會取代內建配色，直到你取消選擇。只會保留色彩。';
+
+  @override
+  String get appearance_tip_pet => '夥伴只在這台裝置上儲存一張小肖像，不會上傳你用來孵化的圖片。';
+
+  @override
+  String get appearance_theme_import_failed =>
+      '無法匯入這個佈景主題。請選擇以 .vsix、.json 或 .jsonc 檔案儲存的 VS Code 色彩佈景主題。';
 }
