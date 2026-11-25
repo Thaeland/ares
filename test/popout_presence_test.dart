@@ -150,6 +150,32 @@ void main() {
     },
   );
 
+  test(
+    'an opt-out line changes only the live value, never stored prefs',
+    () async {
+      // It can arrive before the child installs its in-memory store, when the
+      // platform store is still the main app's real one.
+      final stored = jsonEncode(
+        NotificationPrefs.defaults
+            .copyWith(completionSound: WindowsCompletionSound.reminder)
+            .toJson(),
+      );
+      final real = InMemorySharedPreferencesStore.withData({
+        'flutter.${NotificationPrefsStore.storageKey}': stored,
+      });
+      SharedPreferencesStorePlatform.instance = real;
+      notificationPrefs.value = NotificationPrefs.defaults.copyWith(
+        shareWindowActivity: true,
+      );
+      stopPopoutActivity();
+      await pumpEventQueue();
+      expect(notificationPrefs.value.shareWindowActivity, isFalse);
+      expect(await real.getAll(), {
+        'flutter.${NotificationPrefsStore.storageKey}': stored,
+      });
+    },
+  );
+
   test('the main window forwards every opt-out to an open pop-out', () async {
     final written = StreamController<List<int>>();
     final lines = <String>[];

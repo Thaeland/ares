@@ -13,6 +13,14 @@ abstract interface class CompletionCueOutput {
   Future<void> play(Uint8List wav);
 }
 
+/// Plays nothing: the default until an app entry point installs device
+/// audio, so widget tests and hosts without the audio plugin stay quiet.
+class _NoCueOutput implements CompletionCueOutput {
+  const _NoCueOutput();
+  @override
+  Future<void> play(Uint8List wav) async {}
+}
+
 /// Plays through audioplayers without taking audio focus, as a short UI
 /// sound: it mixes with music, dictation and spoken replies.
 class _AudioplayersCueOutput implements CompletionCueOutput {
@@ -61,14 +69,21 @@ class CompletionCuePlayer {
   /// `message.complete` then `turn.end`, or two owners) plays once.
   static const dedupeWindow = Duration(seconds: 5);
 
-  CompletionCueOutput _output = _AudioplayersCueOutput();
+  CompletionCueOutput _output = const _NoCueOutput();
   final _clock = Stopwatch()..start();
   final _recent = <String, Duration>{};
   final _bytes = <CompletionTone, Uint8List>{};
 
+  /// Plays cues on the device. Called once by the app's entry points
+  /// (`main` and the pop-out child); until then cues are silent, since
+  /// creating an audio player needs the platform plugin.
+  void useDeviceAudio() {
+    if (_output is _NoCueOutput) _output = _AudioplayersCueOutput();
+  }
+
   @visibleForTesting
   set debugOutput(CompletionCueOutput? output) {
-    _output = output ?? _AudioplayersCueOutput();
+    _output = output ?? const _NoCueOutput();
     _recent.clear();
   }
 

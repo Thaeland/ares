@@ -66,9 +66,7 @@ void runWorkspacePopoutChild(List<String> args) {
           }
           final app = await preparePopout(target, nonce, proof, directory);
           // An opt-out that arrived while the copied preference loaded wins.
-          if (activityStopped) {
-            await NotificationPrefsStore.setShareWindowActivity(false);
-          }
+          if (activityStopped) stopPopoutActivity();
           timeout.cancel();
           runApp(app);
           WidgetsBinding.instance.addPostFrameCallback(
@@ -83,11 +81,18 @@ void runWorkspacePopoutChild(List<String> args) {
       onRevoked: () => exit(0),
       onStopActivity: () {
         activityStopped = true;
-        unawaited(NotificationPrefsStore.setShareWindowActivity(false));
+        stopPopoutActivity();
       },
     ),
   );
 }
+
+/// The parent turned activity sharing off. Only the live value changes:
+/// this can arrive before the child's in-memory store is installed, and a
+/// write then would land in the main app's real preferences.
+@visibleForTesting
+void stopPopoutActivity() => notificationPrefs.value = notificationPrefs.value
+    .copyWith(shareWindowActivity: false);
 
 const _carriedKeys = {
   LocalePreference.key,

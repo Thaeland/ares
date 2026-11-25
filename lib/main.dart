@@ -4,6 +4,7 @@ import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/material.dart';
+import 'core/services/completion_cue_player.dart';
 import 'core/services/hands_free_route_observer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,6 +59,7 @@ import 'nextgen/theme/nextgen_theme.dart';
 
 void main([List<String> args = const []]) {
   WidgetsFlutterBinding.ensureInitialized();
+  CompletionCuePlayer.instance.useDeviceAudio();
   if (args.contains(workspacePopoutMarker)) {
     runWorkspacePopoutChild(args);
     return;
