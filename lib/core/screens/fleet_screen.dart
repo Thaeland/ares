@@ -7,6 +7,7 @@ import '../../nextgen/ui/connect_screen.dart';
 import '../services/gateway_fleet.dart';
 import '../services/remote_workspace.dart';
 import 'fleet_webapp_screen.dart';
+import 'fleet_ssh_screen.dart';
 
 /// Owned above navigation: switching visible gateways doesn't reroute or close
 /// an attached conversation. Only explicit disconnect/account edits end it.
@@ -77,6 +78,17 @@ class _FleetScreenState extends State<FleetScreen> {
         builder: (context, _) => ListView(
           padding: const EdgeInsets.all(12),
           children: [
+            ListTile(
+              leading: const Icon(Icons.key_outlined),
+              title: const Text('Verified SSH'),
+              subtitle: const Text(
+                'Confirm a host key, inspect a remote service or open its shell',
+              ),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(builder: (_) => const FleetSshScreen()),
+              ),
+            ),
             if (widget.serving case final owner?)
               ListTile(
                 leading: const Icon(Icons.dns_outlined),

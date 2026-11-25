@@ -1,0 +1,265 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:crypto/crypto.dart';
+
+/// Direct OpenSSH channels. No TCP listener, proxy, `ssh -D`, inherited jump
+/// command, remote command string, forwarded agent or saved gateway bearer.
+/// A remote shell is a distinct, explicit user action and has its own child.
+class FleetSshException implements Exception {
+  const FleetSshException(this.message);
+  final String message;
+  @override
+  String toString() => message;
+}
+
+Never _refuse(String message) => throw FleetSshException(message);
+
+class SshDestination {
+  SshDestination(this.host, this.port, this.user) {
+    final dns = RegExp(r'^[A-Za-z0-9][A-Za-z0-9.-]{0,252}$');
+    if ((!dns.hasMatch(host) &&
+            InternetAddress.tryParse(host)?.type != InternetAddressType.IPv6) ||
+        host.trim() != host ||
+        host.contains('%') ||
+        !RegExp(r'^[a-zA-Z0-9_][a-zA-Z0-9._-]{0,63}$').hasMatch(user) ||
+        port < 1 ||
+        port > 65535) {
+      _refuse('Invalid SSH host, port or user.');
+    }
+  }
+  final String host, user;
+  final int port;
+  String get label => '$user@$host:$port';
+  String get pinKey =>
+      sha256.convert(utf8.encode('${host.toLowerCase()}:$port')).toString();
+}
+
+class SshPublicKey {
+  SshPublicKey._(this.encoded, this.fingerprint);
+  final String encoded, fingerprint;
+  factory SshPublicKey.parse(String input) {
+    final parts = input.trim().split(RegExp(r'\s+'));
+    // A complete OpenSSH ed25519 public key from an independent source;
+    // accepting only its canonical binary representation prevents injection of
+    // markers, host patterns or options into the known_hosts file.
+    if (parts.length < 2 ||
+        parts[0] != 'ssh-ed25519' ||
+        !RegExp(r'^[A-Za-z0-9+/]{68}$').hasMatch(parts[1])) {
+      _refuse('An OpenSSH Ed25519 public host key is required.');
+    }
+    final bytes = base64.decode(parts[1]);
+    final prefix = [0, 0, 0, 11, ...ascii.encode('ssh-ed25519'), 0, 0, 0, 32];
+    if (bytes.length != 51 ||
+        !List.generate(
+          prefix.length,
+          (i) => bytes[i] == prefix[i],
+        ).every((b) => b)) {
+      _refuse('Invalid Ed25519 host key.');
+    }
+    return SshPublicKey._(
+      parts[1],
+      'SHA256:${base64.encode(sha256.convert(bytes).bytes).replaceAll('=', '')}',
+    );
+  }
+  String get line => 'ares-pinned ssh-ed25519 $encoded\n';
+}
+
+class FleetSsh {
+  FleetSsh(this.directory);
+  final Directory directory;
+  static bool get supported =>
+      Platform.isMacOS || Platform.isLinux || Platform.isWindows;
+  String get _binary => Platform.isWindows
+      ? '${Platform.environment['SystemRoot']}\\System32\\OpenSSH\\ssh.exe'
+      : '/usr/bin/ssh';
+  Directory _dir(SshDestination d) =>
+      Directory.fromUri(directory.uri.resolve('${d.pinKey}/'));
+  File _pin(SshDestination d) => File.fromUri(_dir(d).uri.resolve('host.pin'));
+  Future<SshPublicKey?> enrolled(SshDestination d) async {
+    final f = _pin(d);
+    if (!await f.exists()) return null;
+    final s = await f.readAsString();
+    if (!s.startsWith('ares-pinned ')) _refuse('Invalid saved host key.');
+    final key = SshPublicKey.parse(s.substring('ares-pinned '.length));
+    if (s != key.line) _refuse('Invalid saved host key.');
+    return key;
+  }
+
+  /// Called only after the user compares the displayed fingerprint and agrees.
+  /// Exclusive creation, no rotation-on-connect or overwrite-on-mismatch.
+  Future<void> enroll(SshDestination d, SshPublicKey key) async {
+    final dir = _dir(d);
+    await dir.create(recursive: true);
+    final f = _pin(d);
+    try {
+      await f.create(exclusive: true);
+    } on FileSystemException {
+      if ((await enrolled(d))?.encoded == key.encoded) return;
+      _refuse(
+        'A different key is already pinned. Verify the change separately.',
+      );
+    }
+    await f.writeAsString(key.line, flush: true);
+    if ((await enrolled(d))?.encoded != key.encoded) {
+      _refuse('Could not verify host-key enrollment.');
+    }
+  }
+
+  Future<Process> _start(
+    SshDestination d,
+    List<String> mode, {
+    String? identity,
+  }) async {
+    if (!supported || !await File(_binary).exists()) {
+      _refuse('System OpenSSH is unavailable.');
+    }
+    if (await enrolled(d) == null) {
+      _refuse('Confirm the host key before connecting.');
+    }
+    if (identity != null &&
+        (!File(identity).isAbsolute ||
+            identity.contains(RegExp(r'[\x00-\x1f%]')))) {
+      _refuse('Select an absolute identity file.');
+    }
+    final env = Platform.environment;
+    return Process.start(
+      _binary,
+      [
+        '-F',
+        'none',
+        '-o',
+        'BatchMode=yes',
+        '-o',
+        'StrictHostKeyChecking=yes',
+        '-o',
+        'HostKeyAlias=ares-pinned',
+        '-o',
+        'HostKeyAlgorithms=ssh-ed25519',
+        '-o',
+        'UserKnownHostsFile=host.pin',
+        '-o',
+        'GlobalKnownHostsFile=none',
+        '-o',
+        'UpdateHostKeys=no',
+        '-o',
+        'VerifyHostKeyDNS=no',
+        '-o',
+        'ForwardAgent=no',
+        '-o',
+        'ForwardX11=no',
+        '-o',
+        'ClearAllForwardings=yes',
+        '-o',
+        'ControlMaster=no',
+        '-o',
+        'ControlPath=none',
+        '-o',
+        'ConnectTimeout=8',
+        '-o',
+        'ConnectionAttempts=1',
+        '-o',
+        'ServerAliveInterval=15',
+        '-o',
+        'ServerAliveCountMax=2',
+        '-o',
+        'IdentityFile=none',
+        if (identity != null) ...['-o', 'IdentitiesOnly=yes', '-i', identity],
+        '-l',
+        d.user,
+        '-p',
+        '${d.port}',
+        ...mode,
+        '--',
+        d.host,
+      ],
+      workingDirectory: _dir(d).path,
+      runInShell: false,
+      includeParentEnvironment: false,
+      environment: {
+        'SSH_AUTH_SOCK': ?env['SSH_AUTH_SOCK'],
+        'SystemRoot': ?env['SystemRoot'],
+        'TERM': 'dumb',
+        'LC_ALL': 'C',
+      },
+    );
+  }
+
+  /// Open one direct-tcpip stream to a remote loopback service. Only the
+  /// fixed GET below is sent; responses never execute, redirect or fetch URLs.
+  Future<String> readLoopback(
+    SshDestination d, {
+    required bool preview,
+    required int port,
+    String? identity,
+  }) async {
+    if (port < 1 || port > 65535) _refuse('Invalid remote port.');
+    final p = await _start(d, [
+      '-T',
+      '-W',
+      '127.0.0.1:$port',
+    ], identity: identity);
+    final bytes = BytesBuilder(copy: false);
+    final stderr = p.stderr.drain<void>();
+    final timer = Timer(const Duration(seconds: 15), p.kill);
+    try {
+      p.stdin.write(
+        'GET ${preview ? '/' : '/api/health'} HTTP/1.0\r\nHost: 127.0.0.1:$port\r\nAccept-Encoding: identity\r\nConnection: close\r\n\r\n',
+      );
+      await p.stdin.flush();
+      await for (final chunk in p.stdout) {
+        if (bytes.length + chunk.length > 65536) {
+          _refuse('Preview exceeds the 64 KiB limit.');
+        }
+        bytes.add(chunk);
+      }
+      if (await p.exitCode != 0) {
+        _refuse(
+          'SSH connection refused. Check the enrolled host key, identity and service.',
+        );
+      }
+      final raw = bytes.takeBytes();
+      final s = latin1.decode(raw);
+      final i = s.indexOf('\r\n\r\n');
+      if (i < 0 ||
+          i > 8192 ||
+          !RegExp(r'^HTTP/1\.[01] 200(?: |\r)').hasMatch(s)) {
+        _refuse('The remote service did not return HTTP 200.');
+      }
+      final headers = s.substring(0, i).toLowerCase().split('\r\n');
+      if (headers.any(
+        (l) =>
+            l.startsWith('transfer-encoding:') ||
+            l.startsWith('content-encoding:'),
+      )) {
+        _refuse('Encoded responses are not supported by this preview.');
+      }
+      final body = utf8.decode(raw.sublist(i + 4));
+      if (preview) {
+        if (!headers.any(
+          (l) => RegExp(
+            r'^content-type:\s*text/(plain|html)(?:\s*;|$)',
+          ).hasMatch(l),
+        )) {
+          _refuse('Only text and HTML source can be previewed.');
+        }
+        return body;
+      }
+      final value = jsonDecode(body);
+      if (value is! Map || value['ok'] != true) {
+        _refuse('The service did not confirm gateway health.');
+      }
+      return 'Gateway is responding on remote loopback port $port.';
+    } finally {
+      timer.cancel();
+      p.kill();
+      await p.exitCode;
+      await stderr;
+    }
+  }
+
+  Future<Process> shell(SshDestination d, {String? identity}) =>
+      _start(d, ['-tt'], identity: identity);
+}
