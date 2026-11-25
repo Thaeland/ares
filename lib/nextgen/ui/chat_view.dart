@@ -48,6 +48,8 @@ import '../../core/widgets/git_review_pane.dart';
 import '../../core/models/turn_changed_files.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
 import '../../core/services/auto_speak_replies.dart';
+import '../../core/services/client_direct_voice.dart';
+import '../../core/services/client_direct_voice_speaker.dart';
 import '../../core/services/gateway_wake_word.dart';
 import '../../core/widgets/gateway_wake_controls.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
@@ -313,7 +315,23 @@ class _NgChatViewState extends State<NgChatView>
     _openDraft();
     _input.addListener(_onDraftEdit);
     chat.addListener(_onChat);
-    _readAloud = (widget.readAloudFactory ?? NgReadAloud.new)();
+    final gateway = chat.gateway;
+    final scopeKey = '${gateway.connection.id}::${gateway.profile ?? ''}';
+    _readAloud =
+        (widget.readAloudFactory ??
+        () {
+          return NgReadAloud(
+            directSpeakerFactory: (fallback) => ClientDirectVoiceReplySpeaker(
+              store: VoiceClientRuntime.storeFor(
+                gateway.connection,
+                connectionId: gateway.connection.id,
+                profile: gateway.profile,
+              ),
+              scopeKey: scopeKey,
+              fallback: fallback,
+            ),
+          );
+        })();
     _readAloud.addListener(_onReadAloud);
     _bindWake();
     _readAloud.onUnavailable = () {

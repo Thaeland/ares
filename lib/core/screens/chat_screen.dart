@@ -29,6 +29,8 @@ import '../services/android_voice_composer_adapter.dart';
 import '../services/hands_free_speech.dart';
 import '../services/hands_free_route_observer.dart';
 import '../services/connection_mutation_barrier.dart';
+import '../services/client_direct_voice.dart';
+import '../services/client_direct_voice_speaker.dart';
 import '../services/gateway_wake_word.dart';
 import '../widgets/gateway_wake_controls.dart';
 import '../widgets/hands_free_voice_controls.dart';
@@ -1143,7 +1145,17 @@ class _ChatScreenState extends State<ChatScreen>
     )..addListener(_onVoiceComposerChanged);
     unawaited(_voiceRecording.ready);
     _replySpeaker =
-        widget.testVoiceReplySpeaker ?? FlutterVoiceReplySpeaker(_flutterTts);
+        widget.testVoiceReplySpeaker ??
+        ClientDirectVoiceReplySpeaker(
+          store: VoiceClientRuntime.storeFor(
+            widget.connection,
+            connectionId: widget.connection.id,
+            profile: widget.connection.gatewayProfile,
+          ),
+          scopeKey:
+              '${widget.connection.id}::${widget.connection.gatewayProfile ?? ''}',
+          fallback: FlutterVoiceReplySpeaker(_flutterTts),
+        );
     _handsFree = HandsFreeConversationController(
       platform:
           widget.testHandsFreePlatform ??
@@ -4751,12 +4763,7 @@ class _ChatScreenState extends State<ChatScreen>
         final transcribe = widget.testVoiceTranscription;
         final transcript = transcribe != null
             ? await transcribe(path)
-            : await transcribeVoiceRecording(
-                _voiceDashboard ??= DashboardClient.fromConnection(
-                  widget.connection,
-                ),
-                path,
-              );
+            : await _transcribeWithClientDirectFallback(path);
         if (!_isVoiceAuthorityCurrent(authority) || transcript.trim().isEmpty) {
           return;
         }
@@ -4773,6 +4780,37 @@ class _ChatScreenState extends State<ChatScreen>
         // transport continues owning the response. No transport write is retried.
         await Future.any([sending, receipt.future]);
       },
+    );
+  }
+
+  /// Provider-direct transcription when the gateway's profile config says the
+  /// client may call it; otherwise the existing authenticated audio relay.
+  /// Provider rejections are surfaced, never retried through the relay.
+  Future<String> _transcribeWithClientDirectFallback(String path) async {
+    final connection = widget.connection;
+    final store = VoiceClientRuntime.storeFor(
+      connection,
+      connectionId: connection.id,
+      profile: connection.gatewayProfile,
+    );
+    try {
+      final direct = await store.transcribe(
+        path,
+        fileName: 'recording.m4a',
+        mimeType: 'audio/mp4',
+      );
+      if (direct != null) return direct;
+    } on ClientDirectVoiceException catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+          SnackBar(content: Text(error.message)),
+        );
+      }
+      throw const VoiceTranscriptionException();
+    }
+    return transcribeVoiceRecording(
+      _voiceDashboard ??= DashboardClient.fromConnection(connection),
+      path,
     );
   }
 

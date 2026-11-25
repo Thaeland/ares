@@ -28,14 +28,23 @@ class NgReadAloud extends ChangeNotifier {
     Future<SharedPreferences> Function()? prefs,
     bool? android,
     BargeInMonitor Function()? bargeInMonitor,
+    VoiceReplySpeaker? Function(VoiceReplySpeaker fallback)?
+    directSpeakerFactory,
   }) : _tts = tts ?? FlutterTts(),
        _bargeInMonitor = bargeInMonitor ?? SpeechToTextBargeInMonitor.new,
        _prefs = prefs ?? SharedPreferences.getInstance,
        _android =
            android ??
            (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-    _speaker = speaker ?? (_android ? FlutterVoiceReplySpeaker(_tts) : null);
-    if (_speaker == null) {
+    final relaySpeaker = FlutterVoiceReplySpeaker(_tts);
+    _speaker =
+        speaker ??
+        (directSpeakerFactory != null
+            ? directSpeakerFactory(relaySpeaker)
+            : _android
+            ? relaySpeaker
+            : null);
+    if (_speaker == null || identical(_speaker, relaySpeaker)) {
       _tts.setCompletionHandler(
         () => _terminal(HandsFreeSpeechOutcome.completed),
       );
