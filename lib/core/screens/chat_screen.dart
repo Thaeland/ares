@@ -2340,8 +2340,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   void _openHistory() {
     final gateway = _desktopGateway;
+    if (gateway == null || !mounted) return;
     final id = _fileSessionId;
-    if (gateway == null || id == null || !mounted) return;
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) => SessionHistoryPage(
@@ -2349,8 +2349,57 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           storedSessionId: id,
           onRewound: (text) {
             if (!mounted) return;
+            unawaited(_fetchMessages(focusSavedHistory: true));
             _editComposerAsUser(text);
           },
+          onOpenSession: _openStoredSessionFromHistory,
+        ),
+      ),
+    );
+  }
+
+  void _openStoredSessionFromHistory(String sessionId, {String? title}) {
+    if (!mounted || widget.singleSession) return;
+    final now = DateTime.now().millisecondsSinceEpoch / 1000.0;
+    final target = Session(
+      id: sessionId,
+      title: (title == null || title.trim().isEmpty) ? sessionId : title.trim(),
+      model: widget.session.model,
+      source: 'desktop',
+      messageCount: 1,
+      isActive: false,
+      preview: '',
+      startedAt: now,
+      isLocalDraft: false,
+    );
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => ChatScreen(
+          connection: widget.connection,
+          session: target,
+          projectName: widget.projectName,
+          projectWorkingDirectory: widget.projectWorkingDirectory,
+          turnApplicationController: widget.turnApplicationController,
+          onArchiveChanged: widget.onArchiveChanged,
+          sessionArchiver: widget.sessionArchiver,
+          testTurnApplicationSession: widget.testTurnApplicationSession,
+          testApiClient: widget.testApiClient,
+          testAttachmentDraftService: widget.testAttachmentDraftService,
+          testRemotePromptSubmit: widget.testRemotePromptSubmit,
+          testNormalResume: widget.testNormalResume,
+          testServerFilePicker: widget.testServerFilePicker,
+          testRemoteAttachmentUpload: widget.testRemoteAttachmentUpload,
+          testComposerDraftReader: widget.testComposerDraftReader,
+          testVoiceComposerAdapter: widget.testVoiceComposerAdapter,
+          testVoiceRecorder: widget.testVoiceRecorder,
+          testVoiceTranscription: widget.testVoiceTranscription,
+          testHandsFreePlatform: widget.testHandsFreePlatform,
+          testVoiceReplySpeaker: widget.testVoiceReplySpeaker,
+          testTurnNotifications: widget.testTurnNotifications,
+          testProjectOverviewLoader: widget.testProjectOverviewLoader,
+          testMediaFilesClient: widget.testMediaFilesClient,
+          testTaskHistorySource: widget.testTaskHistorySource,
+          testSlashGateway: widget.testSlashGateway,
         ),
       ),
     );
@@ -7707,12 +7756,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                       title: Text(context.l10n.workspace_workers),
                     ),
                   ),
-                if (_desktopGateway != null && _fileSessionId != null)
-                  const PopupMenuItem(
+                if (_desktopGateway != null)
+                  PopupMenuItem(
                     value: 'history',
                     child: ListTile(
-                      leading: Icon(Icons.account_tree_outlined),
-                      title: Text('Session history'),
+                      leading: const Icon(Icons.account_tree_outlined),
+                      title: Text(
+                        _fileSessionId == null
+                            ? 'Import Claude or Codex'
+                            : 'Session history',
+                      ),
                     ),
                   ),
               ],
@@ -7824,12 +7877,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                     title: Text(context.l10n.export_share),
                   ),
                 ),
-                if (_desktopGateway != null && _fileSessionId != null)
-                  const PopupMenuItem(
+                if (_desktopGateway != null)
+                  PopupMenuItem(
                     value: 'history',
                     child: ListTile(
-                      leading: Icon(Icons.account_tree_outlined),
-                      title: Text('Session history'),
+                      leading: const Icon(Icons.account_tree_outlined),
+                      title: Text(
+                        _fileSessionId == null
+                            ? 'Import Claude or Codex'
+                            : 'Session history',
+                      ),
                     ),
                   ),
                 if (_hasReceivedOutput)

@@ -76,6 +76,9 @@ class ForeignSessionSummary {
     required this.label,
     required this.title,
     required this.turns,
+    this.cwd,
+    this.excerpt = '',
+    this.mtime = 0,
   });
 
   final String id;
@@ -83,6 +86,9 @@ class ForeignSessionSummary {
   final String label;
   final String title;
   final int turns;
+  final String? cwd;
+  final String excerpt;
+  final double mtime;
 }
 
 class ForeignSessionPage {
@@ -105,12 +111,14 @@ class ForeignPreviewView {
     required this.total,
     required this.truncated,
     this.alreadyImported,
+    this.cwd,
   });
 
   final List<ForeignTurn> messages;
   final int total;
   final bool truncated;
   final String? alreadyImported;
+  final String? cwd;
 }
 
 class ForeignImportReceipt {
@@ -370,7 +378,7 @@ extension SessionHistory on WorkspaceTarget {
       unreadable: unreadable is int ? unreadable : 0,
       nextOffset: next is int ? next : null,
     );
-  }, session: true);
+  }, session: route.storedSessionId != null);
 
   Future<ForeignPreviewView> previewForeign(String id) => _withOwner(() async {
     _requireHandle(id);
@@ -391,6 +399,13 @@ extension SessionHistory on WorkspaceTarget {
       messages.add(ForeignTurn(role: role, text: text));
     }
     final existing = result['already_imported'];
+    final cwd = result['cwd'];
+    final safeCwd = cwd is String && cwd.trim().isNotEmpty
+        ? redactSecrets(cwd.trim())
+        : null;
+    if (safeCwd != null && containsSecret(safeCwd)) {
+      _fail(WorkspaceFailure.invalid);
+    }
     return ForeignPreviewView(
       messages: messages,
       total: total,
@@ -398,14 +413,15 @@ extension SessionHistory on WorkspaceTarget {
       alreadyImported: existing is String && _sessionId(existing)
           ? existing
           : null,
+      cwd: safeCwd,
     );
-  }, session: true);
+  }, session: route.storedSessionId != null);
 
   Future<ForeignImportReceipt> importForeign(String id) => _withOwner(() async {
     _requireHandle(id);
     final result = await _rpc('session.foreign.import', {'id': id});
     return _importReceipt(result);
-  }, session: true);
+  }, session: route.storedSessionId != null);
 
   Future<({int revision, int generation})> _readFences() async {
     final id = route.storedSessionId!;
@@ -517,12 +533,24 @@ ForeignSessionSummary? _foreignSummary(Object? row) {
   final turns = row['turn_count'];
   final safeTitle = redactSecrets(title);
   if (containsSecret(safeTitle)) return null;
+  final rawCwd = row['cwd'];
+  final safeCwd = rawCwd is String && rawCwd.trim().isNotEmpty
+      ? redactSecrets(rawCwd.trim())
+      : null;
+  if (safeCwd != null && containsSecret(safeCwd)) return null;
+  final rawExcerpt = row['excerpt'];
+  final safeExcerpt = rawExcerpt is String ? redactSecrets(rawExcerpt) : '';
+  if (containsSecret(safeExcerpt)) return null;
+  final mtime = row['mtime'];
   return ForeignSessionSummary(
     id: id,
     source: source,
     label: redactSecrets(label),
     title: safeTitle,
     turns: turns is int ? turns : 0,
+    cwd: safeCwd,
+    excerpt: safeExcerpt,
+    mtime: mtime is num ? mtime.toDouble() : 0,
   );
 }
 

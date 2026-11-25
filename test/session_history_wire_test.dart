@@ -41,7 +41,7 @@ void main() {
           final target = await pane.bind(
             owner.route(storedSessionId: HistoryGateway.session),
           );
-          await _exercise(target, gateway);
+          await _exercise(target, owner, gateway);
         } finally {
           pane.close();
           dispose();
@@ -52,7 +52,11 @@ void main() {
   }
 }
 
-Future<void> _exercise(WorkspaceTarget target, HistoryGateway gateway) async {
+Future<void> _exercise(
+  WorkspaceTarget target,
+  RemoteWorkspaceOwner owner,
+  HistoryGateway gateway,
+) async {
   final fences = await target.historyFences();
   await expectLater(
     target.branchAtMessage(
@@ -150,8 +154,50 @@ Future<void> _exercise(WorkspaceTarget target, HistoryGateway gateway) async {
     throwsA(isA<WorkspaceException>()),
   );
   final page = await target.foreignSessions(source: 'claude');
+  expect(gateway.foreignLists.last['profile'], HistoryGateway.profile);
+  expect(page.sessions.single.cwd, '/srv/claude');
   final preview = await target.previewForeign(page.sessions.single.id);
+  expect(gateway.foreignPreviews.last['profile'], HistoryGateway.profile);
+  expect(preview.cwd, '/srv/claude');
   expect(preview.messages.single.text, isNot(contains(HistoryGateway.secret)));
   final imported = await target.importForeign(page.sessions.single.id);
+  expect(gateway.imports.last['profile'], HistoryGateway.profile);
   expect(imported.sessionId, 'imported-host');
+
+  // Session-less owner route (fresh draft / session browser) still binds
+  // profile and paginates + imports host sessions, and surfaces unsupported
+  // when an older gateway lacks session.foreign.*.
+  final profilePane = owner.pane();
+  try {
+    final profileTarget = await profilePane.bind(owner.route());
+    final firstPage = await profileTarget.foreignSessions();
+    expect(firstPage.nextOffset, 25);
+    expect(gateway.foreignLists.last['profile'], HistoryGateway.profile);
+    final secondPage = await profileTarget.foreignSessions(
+      offset: firstPage.nextOffset!,
+    );
+    expect(secondPage.sessions.single.source, 'codex');
+    expect(
+      secondPage.sessions.single.excerpt,
+      isNot(contains(HistoryGateway.secret)),
+    );
+    final profileImported = await profileTarget.importForeign(
+      secondPage.sessions.single.id,
+    );
+    expect(profileImported.sessionId, 'imported-host');
+
+    gateway.foreignSupported = false;
+    await expectLater(
+      profileTarget.foreignSessions(),
+      throwsA(
+        isA<WorkspaceException>().having(
+          (error) => error.reason,
+          'reason',
+          WorkspaceFailure.unsupported,
+        ),
+      ),
+    );
+  } finally {
+    profilePane.close();
+  }
 }

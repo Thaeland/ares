@@ -12,12 +12,17 @@ class HistoryGateway {
   final mutations = <Map<String, dynamic>>[];
   final exports = <Map<String, dynamic>>[];
   final restores = <Map<String, dynamic>>[];
+  final foreignLists = <Map<String, dynamic>>[];
+  final foreignPreviews = <Map<String, dynamic>>[];
   final imports = <Map<String, dynamic>>[];
+  bool foreignSupported = true;
   static const session = 'stored-history';
   static const profile = 'field-work';
   static const cwd = '/srv/history';
   static const handle =
       'abababababababababababababababababababababababababababababababab';
+  static const secondHandle =
+      'cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd';
   static const secret = 'sk-ant-api03-SECRETVALUE12';
   int revision = 4;
   final generation = 9;
@@ -198,21 +203,51 @@ class HistoryGateway {
           'content': 'note ghp_ABCDEFGH12345678 end',
         };
       case 'session.foreign.list':
+        if (!foreignSupported) return null;
+        foreignLists.add(params);
+        final offset = params['offset'] is int ? params['offset'] as int : 0;
+        final source = params['source'] as String?;
+        if (offset > 0) {
+          return {
+            'sessions': [
+              if (source == null || source == 'codex')
+                {
+                  'id': secondHandle,
+                  'source': 'codex',
+                  'label': 'Codex',
+                  'title': 'Audit migration',
+                  'cwd': '/srv/codex',
+                  'mtime': 1700000100.0,
+                  'turn_count': 4,
+                  'excerpt': 'Inspect schema $secret',
+                },
+            ],
+            'host': 'fixture',
+            'unreadable': 1,
+            'next_offset': null,
+          };
+        }
         return {
           'sessions': [
-            {
-              'id': handle,
-              'source': 'claude',
-              'label': 'Claude Code',
-              'title': 'Plan the release',
-              'turn_count': 2,
-            },
+            if (source == null || source == 'claude')
+              {
+                'id': handle,
+                'source': 'claude',
+                'label': 'Claude Code',
+                'title': 'Plan the release',
+                'cwd': '/srv/claude',
+                'mtime': 1700000200.0,
+                'turn_count': 2,
+                'excerpt': 'Draft checklist',
+              },
           ],
           'host': 'fixture',
           'unreadable': 0,
-          'next_offset': null,
+          'next_offset': source == null ? 25 : null,
         };
       case 'session.foreign.preview':
+        if (!foreignSupported) return null;
+        foreignPreviews.add(params);
         return {
           'messages': [
             {'role': 'user', 'content': 'token $secret'},
@@ -220,8 +255,10 @@ class HistoryGateway {
           'total': 1,
           'truncated': false,
           'already_imported': null,
+          'cwd': '/srv/claude',
         };
       case 'session.foreign.import':
+        if (!foreignSupported) return null;
         imports.add(params);
         return {'session_id': 'imported-host', 'already_imported': false};
       default:

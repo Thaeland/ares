@@ -62,6 +62,7 @@ class NgChatView extends StatefulWidget {
     this.onClose,
     this.sessions,
     this.onNewChat,
+    this.onOpenSessionId,
     this.readAloudFactory,
   });
 
@@ -72,6 +73,7 @@ class NgChatView extends StatefulWidget {
   /// The sidebar's list, for a dot on its button while other chats are unread.
   final NgSessionsModel? sessions;
   final VoidCallback? onNewChat;
+  final void Function(String sessionId, {String? title})? onOpenSessionId;
 
   /// Test hook: supplies the read-aloud controller (e.g. a fake speaker).
   @visibleForTesting
@@ -860,14 +862,15 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                         icon: const Icon(Icons.hub_outlined),
                         onPressed: () => workers.open(context),
                       ),
-                    if (chat.storedId case final id?)
-                      IconButton(
-                        key: const ValueKey('session-history'),
-                        tooltip: 'Session history',
-                        icon: const Icon(Icons.account_tree_outlined),
-                        onPressed: () => _openHistory(id),
-                      ),
-                  ] else if (chat.storedId != null || workers != null)
+                    IconButton(
+                      key: const ValueKey('session-history'),
+                      tooltip: chat.storedId == null
+                          ? 'Import Claude or Codex'
+                          : 'Session history',
+                      icon: const Icon(Icons.account_tree_outlined),
+                      onPressed: () => _openHistory(chat.storedId),
+                    ),
+                  ] else
                     PopupMenuButton<String>(
                       key: const ValueKey('chat-tools-menu'),
                       tooltip: 'More chat tools',
@@ -883,7 +886,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                           _openGatewayQueue(chat, parentId!);
                         }
                         if (tool == 'workers') workers?.open(context);
-                        if (tool == 'history' && id != null) _openHistory(id);
+                        if (tool == 'history') _openHistory(id);
                       },
                       itemBuilder: (_) => [
                         if (chat.storedId != null)
@@ -910,14 +913,17 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                               title: Text(ngL.workspace_workers),
                             ),
                           ),
-                        if (chat.storedId != null)
-                          const PopupMenuItem(
-                            value: 'history',
-                            child: ListTile(
-                              leading: Icon(Icons.account_tree_outlined),
-                              title: Text('Session history'),
+                        PopupMenuItem(
+                          value: 'history',
+                          child: ListTile(
+                            leading: const Icon(Icons.account_tree_outlined),
+                            title: Text(
+                              chat.storedId == null
+                                  ? 'Import Claude or Codex'
+                                  : 'Session history',
                             ),
                           ),
+                        ),
                       ],
                     ),
                   if (chat.usage != null)
@@ -1027,7 +1033,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     }
   }
 
-  void _openHistory(String storedId) {
+  void _openHistory(String? storedId) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) => SessionHistoryPage(
@@ -1035,9 +1041,16 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
           storedSessionId: storedId,
           onRewound: (text) {
             if (!mounted) return;
+            chat.resync();
             _input.text = text;
             _input.selection = TextSelection.collapsed(offset: text.length);
           },
+          onOpenSession: widget.onOpenSessionId == null
+              ? null
+              : (sessionId, {title}) {
+                  unawaited(widget.sessions?.refresh());
+                  widget.onOpenSessionId!(sessionId, title: title);
+                },
         ),
       ),
     );
