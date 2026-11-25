@@ -75,10 +75,22 @@
   "ng_switch": "تبديل",
   "ng_model_confirmation_required": "يلزم التأكيد قبل اختيار هذا النموذج.",
   "ng_model_switches_next_turn": "سيُستخدم {model} في الجولة التالية.",
-  "@ng_model_switches_next_turn": {"placeholders": {"model": {"type": "String"}}},
+  "@ng_model_switches_next_turn": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      }
+    }
+  },
   "ng_model_switch_not_connected": "الدردشة غير جاهزة لتبديل النموذج. افتحها مجددًا وأعد المحاولة.",
   "ng_gateway_kept_default_model": "أبقت البوابة على {model} لهذه الدردشة. أعد اختيار النموذج قبل الإرسال.",
-  "@ng_gateway_kept_default_model": {"placeholders": {"model": {"type": "String"}}},
+  "@ng_gateway_kept_default_model": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      }
+    }
+  },
   "hands_free_title": "الاستخدام دون لمس",
   "hands_free_start": "بدء الاستخدام دون لمس",
   "hands_free_stop": "إيقاف الاستخدام دون لمس",
@@ -625,13 +637,12 @@
   "notifications": "الإشعارات",
   "windows_notifications_blocked": "الإشعارات غير متاحة. استخدم تطبيق Ares المثبّت وتحقق من الإعدادات ← النظام ← الإشعارات في Windows.",
   "windows_notification_diagnostics": "ما أرسله Ares إلى Windows",
-  "windows_window_activity": "مشاركة نشاط المحادثة",
-  "windows_window_activity_hint": "أبلِغ البوابة المتصلة المتوافقة عندما تستخدم هذه المحادثة، حتى يتجنّب ملحق إشعارات الهاتف فيها التنبيهات المكررة. لا تُرسَل أي مفاتيح أو نصوص رسائل.",
-  "windows_completion_sound": "صوت الاكتمال",
-  "windows_sound_default": "الافتراضي في Windows",
-  "windows_sound_mail": "البريد",
-  "windows_sound_reminder": "تذكير",
-  "windows_sound_silent": "صامت",
+  "chat_activity_share": "مشاركة نشاط المحادثة",
+  "chat_activity_share_hint": "أبلِغ البوابة المتصلة المتوافقة عندما تستخدم هذه المحادثة، حتى يتجنّب ملحق إشعارات الهاتف فيها التنبيهات المكررة. لا تُرسَل أي مفاتيح أو نصوص رسائل.",
+  "completion_sound": "صوت الاكتمال",
+  "completion_sound_mail": "البريد",
+  "completion_sound_reminder": "تذكير",
+  "completion_sound_silent": "صامت",
   "notifications_permission_denied": "يحظر نظام التشغيل الإشعارات. فعّل إشعارات هذا التطبيق في إعدادات Android.",
   "off_no_thinking": "متوقف (دون تفكير)",
   "offline_showing_the_last_known_activity": "غير متصل — يُعرض آخر نشاط معروف.",
@@ -1704,7 +1715,13 @@
   "ng_project_home": "الرئيسية",
   "ng_choose_project": "اختيار مشروع",
   "ng_project_cwd_fallback": "مجلد المشروع غير متاح، لذا تعمل هذه المحادثة في {path}.",
-  "@ng_project_cwd_fallback": {"placeholders": {"path": {"type": "String"}}},
+  "@ng_project_cwd_fallback": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "ng_project_create_uncertain": "ربما أنشأت البوابة هذه المحادثة، لكنها لم تؤكّد ذلك. تحقّق من «المحادثات» قبل بدء محادثة أخرى. لن يُعاد إرسال الطلب تلقائيًا.",
   "ng_what_should_we_work_on": "ما الذي تودّ أن نعمل عليه؟",
   "ng_ask_hermes_anything_it_can_run": "اسأل Hermes عمّا تشاء. يمكنه تشغيل الأدوات والتصفّح والعمل على ملفاتك الموجودة على الخادم.",
@@ -2569,24 +2586,57 @@
   "ng_models_custom_endpoint": "يعمل عبر نقطة اتصال مخصّصة. يمكنك تغييرها على البوابة.",
   "ng_models_context_window": "نافذة السياق",
   "ng_models_token_count": "عدد الرموز النصية: {count}",
-  "@ng_models_token_count": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_models_token_count": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_models_context_override": "ضُبطت نافذة السياق على البوابة. عدد الرموز المكتشف تلقائيًا: {count}.",
-  "@ng_models_context_override": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_models_context_override": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_models_max_output": "الحدّ الأقصى للمخرجات",
   "ng_models_input_price": "سعر الإدخال",
   "ng_models_output_price": "سعر الإخراج",
   "ng_models_cache_price": "سعر المدخلات المخزّنة مؤقتًا",
   "ng_models_per_million": "{price} لكل مليون رمز نصي",
-  "@ng_models_per_million": {"placeholders": {"price": {"type": "String"}}},
+  "@ng_models_per_million": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "ng_models_price_pair": "{input} للإدخال · {output} للإخراج لكل مليون رمز نصي",
-  "@ng_models_price_pair": {"placeholders": {"input": {"type": "String"}, "output": {"type": "String"}}},
+  "@ng_models_price_pair": {
+    "placeholders": {
+      "input": {
+        "type": "String"
+      },
+      "output": {
+        "type": "String"
+      }
+    }
+  },
   "ng_models_free": "مجاني",
   "ng_models_vision": "الرؤية",
   "ng_models_reasoning": "الاستدلال",
   "ng_models_fast": "الوضع السريع",
   "ng_models_in_use": "قيد الاستخدام",
   "ng_models_count": "{count, plural, one{عدد النماذج: {count}} other{عدد النماذج: {count}}}",
-  "@ng_models_count": {"placeholders": {"count": {"type": "int"}}},
+  "@ng_models_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_models_rate_limited": "معدّل الطلبات مقيّد",
   "ng_models_plan_locked": "غير مشمول في خطتك",
   "ng_models_unsaved": "تغييرات غير محفوظة",
@@ -2768,5 +2818,46 @@
   "appearance_tour_radio_body": "يبقى الراديو متوقفًا حتى تفعّله. زر التشغيل هو ما يفتح البث.",
   "appearance_tip_theme": "تحل السمات المستوردة محل لوحة الألوان المدمجة حتى تلغي الاختيار. تُحفظ الألوان فقط.",
   "appearance_tip_pet": "يحفظ الرفيق صورة صغيرة واحدة على هذا الجهاز. لا يرفع الصورة التي تفقس منها.",
-  "appearance_theme_import_failed": "تعذّر استيراد هذه السمة. اختر سمة ألوان من VS Code محفوظة في ملف بامتداد vsix أو json أو jsonc."
+  "appearance_theme_import_failed": "تعذّر استيراد هذه السمة. اختر سمة ألوان من VS Code محفوظة في ملف بامتداد vsix أو json أو jsonc.",
+  "completion_sound_system": "الافتراضي للنظام",
+  "completion_sound_scope": "يُشغَّل للردود المكتملة والإشعار التجريبي وداخل التطبيق. تحتفظ الموافقات والتنبيهات الأخرى بصوتها المعتاد.",
+  "completion_sound_scope_android": "يُشغَّل للردود المكتملة والإشعار التجريبي وداخل التطبيق. تحتفظ الموافقات والتنبيهات الأخرى وإشعارات الخلفية من الخادم ورسائل Android Auto بصوتها المعتاد.",
+  "notification_open_action": "فتح",
+  "app_sounds_mute": "كتم أصوات التطبيق",
+  "app_sounds_mute_hint": "يوقف صوت الاكتمال الذي يشغّله Ares أثناء فتحه. تحتفظ الإشعارات بصوتها الخاص.",
+  "render_svg_not_drawn": "لم تُرسَم صورة SVG هذه.",
+  "render_notes_directive": "توجيه الملاحظات",
+  "render_maths_source": "مصدر الرياضيات",
+  "render_inline_maths_source": "مصدر الرياضيات المضمّنة",
+  "render_sequence_outline": "مخطط التسلسل",
+  "render_diagram_outline": "مخطط الرسم البياني",
+  "render_revision_of": "المراجعة {index} من {count}",
+  "render_previous_revision": "المراجعة السابقة",
+  "render_next_revision": "المراجعة التالية",
+  "render_show_rendered": "المعروض",
+  "render_show_source": "المصدر",
+  "render_copied_file": "تم نسخ {name}",
+  "render_copy_file": "نسخ {name}",
+  "render_artifact_too_long": "هذا المحتوى أطول من أن يُعرض كصفحة هنا.",
+  "render_active_content_removed": "أُزيلت النصوص البرمجية والإطارات والعناوين الخارجية.",
+  "render_widget_file": "الأداة {file}",
+  "render_widget_runs_as_text": "تعمل كنص في هذه الدردشة. تُزال النصوص البرمجية والإطارات الخارجية.",
+  "render_load_widget": "تحميل الأداة",
+  "render_not_html_widget": "هذا الملف ليس أداة HTML.",
+  "render_widget_sent": "أُرسل إلى هذه الدردشة",
+  "render_widget_not_sent": "لم يُرسل إلى هذه الدردشة",
+  "render_widget_throttled": "انتظر قليلًا قبل الإرسال مرة أخرى",
+  "render_widget_too_long": "هذا الطلب أطول من أن يُرسل",
+  "render_widget_no_gesture": "اضغط على عنصر تحكم في الأداة للإرسال",
+  "render_widget_invalid": "تعذّر إرسال هذا الطلب",
+  "render_inspected_image": "الصورة المفحوصة",
+  "render_contributions": "المساهمات",
+  "render_contributions_intro": "يمكن فقط للمساهمات المضمّنة في Ares أن تضيف إلى الرد. لا يمكن لنص الدردشة تسجيل مساهمة، والإذن يسري على هذا الاتصال فقط.",
+  "render_grant_plugin": "منح {name}",
+  "render_revoke_plugin": "إلغاء {name}",
+  "render_plugin_slots": "بطاقات الرد لـ ::{directive}",
+  "render_plugin_notes": "الملاحظات",
+  "catalog_scan_passed": "نجح",
+  "catalog_scan_warnings": "وُجدت تحذيرات",
+  "catalog_scan_failed": "فشل"
 }

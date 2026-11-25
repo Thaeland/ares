@@ -11061,48 +11061,6 @@ abstract class AppLocalizations {
   /// **'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.'**
   String get appearance_theme_import_failed;
 
-  /// No description provided for @windows_window_activity.
-  ///
-  /// In en, this message translates to:
-  /// **'Share chat activity'**
-  String get windows_window_activity;
-
-  /// No description provided for @windows_window_activity_hint.
-  ///
-  /// In en, this message translates to:
-  /// **'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.'**
-  String get windows_window_activity_hint;
-
-  /// No description provided for @windows_completion_sound.
-  ///
-  /// In en, this message translates to:
-  /// **'Completion sound'**
-  String get windows_completion_sound;
-
-  /// No description provided for @windows_sound_default.
-  ///
-  /// In en, this message translates to:
-  /// **'Windows default'**
-  String get windows_sound_default;
-
-  /// No description provided for @windows_sound_mail.
-  ///
-  /// In en, this message translates to:
-  /// **'Mail'**
-  String get windows_sound_mail;
-
-  /// No description provided for @windows_sound_reminder.
-  ///
-  /// In en, this message translates to:
-  /// **'Reminder'**
-  String get windows_sound_reminder;
-
-  /// No description provided for @windows_sound_silent.
-  ///
-  /// In en, this message translates to:
-  /// **'Silent'**
-  String get windows_sound_silent;
-
   /// No description provided for @render_widget_file_truncated.
   ///
   /// In en, this message translates to:

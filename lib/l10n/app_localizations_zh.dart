@@ -6322,28 +6322,6 @@ class AppLocalizationsZh extends AppLocalizations {
       'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
-
-  @override
-  String get windows_window_activity_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
-
-  @override
-  String get windows_completion_sound => 'Completion sound';
-
-  @override
-  String get windows_sound_default => 'Windows default';
-
-  @override
-  String get windows_sound_mail => 'Mail';
-
-  @override
-  String get windows_sound_reminder => 'Reminder';
-
-  @override
-  String get windows_sound_silent => 'Silent';
-
-  @override
   String get render_widget_file_truncated => '只读取了此文件的开头部分，因此小组件可能不完整。';
 
   @override
@@ -14437,6 +14415,44 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get windows_notification_diagnostics => 'Ares 傳送給 Windows 的內容';
 
   @override
+  String get chat_activity_share => '分享聊天活動';
+
+  @override
+  String get chat_activity_share_hint =>
+      '在你使用此聊天時告知相容的已連線閘道，讓其手機通知外掛程式避免重複提醒。不會傳送任何金鑰或訊息內容。';
+
+  @override
+  String get completion_sound => '完成提示音';
+
+  @override
+  String get completion_sound_system => '系統預設';
+
+  @override
+  String get completion_sound_mail => '郵件';
+
+  @override
+  String get completion_sound_reminder => '提醒';
+
+  @override
+  String get completion_sound_silent => '靜音';
+
+  @override
+  String get completion_sound_scope => '會在回覆完成、測試通知及應用程式內播放。核准和其他提醒維持原本的音效。';
+
+  @override
+  String get completion_sound_scope_android =>
+      '會在回覆完成、測試通知及應用程式內播放。核准、其他提醒、伺服器的背景通知和 Android Auto 訊息維持原本的音效。';
+
+  @override
+  String get notification_open_action => '開啟';
+
+  @override
+  String get app_sounds_mute => '將應用程式音效設為靜音';
+
+  @override
+  String get app_sounds_mute_hint => '停止 Ares 開啟時播放的完成提示音。通知會保留自己的音效。';
+
+  @override
   String get notifications_permission_denied =>
       '系統已阻止通知。請在 Android 設定中允許此應用程式傳送通知。';
 
@@ -18841,24 +18857,122 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
       '無法匯入這個佈景主題。請選擇以 .vsix、.json 或 .jsonc 檔案儲存的 VS Code 色彩佈景主題。';
 
   @override
-  String get windows_window_activity => '分享聊天活動';
+  String get render_svg_not_drawn => '未繪製此 SVG。';
 
   @override
-  String get windows_window_activity_hint =>
-      '在你使用此聊天時告知相容的已連線閘道，讓其手機通知外掛程式避免重複提醒。不會傳送任何金鑰或訊息內容。';
+  String get render_notes_directive => '筆記指令';
 
   @override
-  String get windows_completion_sound => '完成提示音';
+  String get render_maths_source => '數學原始碼';
 
   @override
-  String get windows_sound_default => 'Windows 預設';
+  String get render_inline_maths_source => '行內數學原始碼';
 
   @override
-  String get windows_sound_mail => '郵件';
+  String get render_sequence_outline => '序列大綱';
 
   @override
-  String get windows_sound_reminder => '提醒';
+  String get render_diagram_outline => '圖表大綱';
 
   @override
-  String get windows_sound_silent => '靜音';
+  String render_revision_of(int index, int count) {
+    return '第 $index 版，共 $count 版';
+  }
+
+  @override
+  String get render_previous_revision => '上一版';
+
+  @override
+  String get render_next_revision => '下一版';
+
+  @override
+  String get render_show_rendered => '呈現結果';
+
+  @override
+  String get render_show_source => '原始碼';
+
+  @override
+  String render_copied_file(String name) {
+    return '已複製 $name';
+  }
+
+  @override
+  String render_copy_file(String name) {
+    return '複製 $name';
+  }
+
+  @override
+  String get render_artifact_too_long => '此成品太長，無法在此以頁面顯示。';
+
+  @override
+  String get render_active_content_removed => '已移除指令碼、框架和外部位址。';
+
+  @override
+  String render_widget_file(String file) {
+    return '小工具 $file';
+  }
+
+  @override
+  String get render_widget_runs_as_text => '在此聊天中以文字執行。已移除指令碼和外部框架。';
+
+  @override
+  String get render_load_widget => '載入小工具';
+
+  @override
+  String get render_not_html_widget => '此檔案不是 HTML 小工具。';
+
+  @override
+  String get render_widget_sent => '已傳送至此聊天';
+
+  @override
+  String get render_widget_not_sent => '未傳送至此聊天';
+
+  @override
+  String get render_widget_throttled => '請稍候再傳送';
+
+  @override
+  String get render_widget_too_long => '此要求太長，無法傳送';
+
+  @override
+  String get render_widget_no_gesture => '點選小工具中的控制項以傳送';
+
+  @override
+  String get render_widget_invalid => '無法傳送此要求';
+
+  @override
+  String get render_inspected_image => '已檢查的圖片';
+
+  @override
+  String get render_contributions => '擴充內容';
+
+  @override
+  String get render_contributions_intro =>
+      '只有編譯進 Ares 的擴充內容能加入回覆。聊天文字無法註冊擴充內容，而授權僅適用於此連線。';
+
+  @override
+  String render_grant_plugin(String name) {
+    return '授權 $name';
+  }
+
+  @override
+  String render_revoke_plugin(String name) {
+    return '撤銷 $name';
+  }
+
+  @override
+  String render_plugin_slots(String directive) {
+    return '::$directive 的回覆卡片';
+  }
+
+  @override
+  String get render_plugin_notes => '筆記';
+
+  @override
+  String get catalog_scan_passed => '通過';
+
+  @override
+  String get catalog_scan_warnings => '發現警告';
+
+  @override
+  String get catalog_scan_failed => '失敗';
 }

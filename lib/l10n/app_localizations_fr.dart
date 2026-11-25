@@ -6608,28 +6608,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
-
-  @override
-  String get windows_window_activity_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
-
-  @override
-  String get windows_completion_sound => 'Completion sound';
-
-  @override
-  String get windows_sound_default => 'Windows default';
-
-  @override
-  String get windows_sound_mail => 'Mail';
-
-  @override
-  String get windows_sound_reminder => 'Reminder';
-
-  @override
-  String get windows_sound_silent => 'Silent';
-
-  @override
   String get render_widget_file_truncated =>
       'Seul le début de ce fichier a été lu : le widget peut être incomplet.';
 

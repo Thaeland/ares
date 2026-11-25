@@ -1931,44 +1931,44 @@ class AppLocalizationsAr extends AppLocalizations {
   String get windows_notification_diagnostics => 'ما أرسله Ares إلى Windows';
 
   @override
-  String get chat_activity_share => 'Share chat activity';
+  String get chat_activity_share => 'مشاركة نشاط المحادثة';
 
   @override
   String get chat_activity_share_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+      'أبلِغ البوابة المتصلة المتوافقة عندما تستخدم هذه المحادثة، حتى يتجنّب ملحق إشعارات الهاتف فيها التنبيهات المكررة. لا تُرسَل أي مفاتيح أو نصوص رسائل.';
 
   @override
-  String get completion_sound => 'Completion sound';
+  String get completion_sound => 'صوت الاكتمال';
 
   @override
-  String get completion_sound_system => 'System default';
+  String get completion_sound_system => 'الافتراضي للنظام';
 
   @override
-  String get completion_sound_mail => 'Mail';
+  String get completion_sound_mail => 'البريد';
 
   @override
-  String get completion_sound_reminder => 'Reminder';
+  String get completion_sound_reminder => 'تذكير';
 
   @override
-  String get completion_sound_silent => 'Silent';
+  String get completion_sound_silent => 'صامت';
 
   @override
   String get completion_sound_scope =>
-      'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.';
+      'يُشغَّل للردود المكتملة والإشعار التجريبي وداخل التطبيق. تحتفظ الموافقات والتنبيهات الأخرى بصوتها المعتاد.';
 
   @override
   String get completion_sound_scope_android =>
-      'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.';
+      'يُشغَّل للردود المكتملة والإشعار التجريبي وداخل التطبيق. تحتفظ الموافقات والتنبيهات الأخرى وإشعارات الخلفية من الخادم ورسائل Android Auto بصوتها المعتاد.';
 
   @override
-  String get notification_open_action => 'Open';
+  String get notification_open_action => 'فتح';
 
   @override
-  String get app_sounds_mute => 'Mute app sounds';
+  String get app_sounds_mute => 'كتم أصوات التطبيق';
 
   @override
   String get app_sounds_mute_hint =>
-      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
+      'يوقف صوت الاكتمال الذي يشغّله Ares أثناء فتحه. تحتفظ الإشعارات بصوتها الخاص.';
 
   @override
   String get notifications_permission_denied =>
@@ -6546,28 +6546,6 @@ class AppLocalizationsAr extends AppLocalizations {
       'تعذّر استيراد هذه السمة. اختر سمة ألوان من VS Code محفوظة في ملف بامتداد vsix أو json أو jsonc.';
 
   @override
-  String get windows_window_activity => 'مشاركة نشاط المحادثة';
-
-  @override
-  String get windows_window_activity_hint =>
-      'أبلِغ البوابة المتصلة المتوافقة عندما تستخدم هذه المحادثة، حتى يتجنّب ملحق إشعارات الهاتف فيها التنبيهات المكررة. لا تُرسَل أي مفاتيح أو نصوص رسائل.';
-
-  @override
-  String get windows_completion_sound => 'صوت الاكتمال';
-
-  @override
-  String get windows_sound_default => 'الافتراضي في Windows';
-
-  @override
-  String get windows_sound_mail => 'البريد';
-
-  @override
-  String get windows_sound_reminder => 'تذكير';
-
-  @override
-  String get windows_sound_silent => 'صامت';
-
-  @override
   String get render_widget_file_truncated =>
       'Only the start of this file was read, so the widget may be incomplete.';
 
@@ -6691,125 +6669,125 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get render_svg_not_drawn => 'This SVG was not drawn.';
+  String get render_svg_not_drawn => 'لم تُرسَم صورة SVG هذه.';
 
   @override
-  String get render_notes_directive => 'Notes directive';
+  String get render_notes_directive => 'توجيه الملاحظات';
 
   @override
-  String get render_maths_source => 'Maths source';
+  String get render_maths_source => 'مصدر الرياضيات';
 
   @override
-  String get render_inline_maths_source => 'Inline maths source';
+  String get render_inline_maths_source => 'مصدر الرياضيات المضمّنة';
 
   @override
-  String get render_sequence_outline => 'Sequence outline';
+  String get render_sequence_outline => 'مخطط التسلسل';
 
   @override
-  String get render_diagram_outline => 'Diagram outline';
+  String get render_diagram_outline => 'مخطط الرسم البياني';
 
   @override
   String render_revision_of(int index, int count) {
-    return 'Revision $index of $count';
+    return 'المراجعة $index من $count';
   }
 
   @override
-  String get render_previous_revision => 'Previous revision';
+  String get render_previous_revision => 'المراجعة السابقة';
 
   @override
-  String get render_next_revision => 'Next revision';
+  String get render_next_revision => 'المراجعة التالية';
 
   @override
-  String get render_show_rendered => 'Rendered';
+  String get render_show_rendered => 'المعروض';
 
   @override
-  String get render_show_source => 'Source';
+  String get render_show_source => 'المصدر';
 
   @override
   String render_copied_file(String name) {
-    return 'Copied $name';
+    return 'تم نسخ $name';
   }
 
   @override
   String render_copy_file(String name) {
-    return 'Copy $name';
+    return 'نسخ $name';
   }
 
   @override
   String get render_artifact_too_long =>
-      'This artefact is too long to show as a page here.';
+      'هذا المحتوى أطول من أن يُعرض كصفحة هنا.';
 
   @override
   String get render_active_content_removed =>
-      'Scripts, frames and external addresses were removed.';
+      'أُزيلت النصوص البرمجية والإطارات والعناوين الخارجية.';
 
   @override
   String render_widget_file(String file) {
-    return 'Widget $file';
+    return 'الأداة $file';
   }
 
   @override
   String get render_widget_runs_as_text =>
-      'Runs as text in this chat. Scripts and external frames are removed.';
+      'تعمل كنص في هذه الدردشة. تُزال النصوص البرمجية والإطارات الخارجية.';
 
   @override
-  String get render_load_widget => 'Load widget';
+  String get render_load_widget => 'تحميل الأداة';
 
   @override
-  String get render_not_html_widget => 'This file is not an HTML widget.';
+  String get render_not_html_widget => 'هذا الملف ليس أداة HTML.';
 
   @override
-  String get render_widget_sent => 'Sent to this chat';
+  String get render_widget_sent => 'أُرسل إلى هذه الدردشة';
 
   @override
-  String get render_widget_not_sent => 'Not sent to this chat';
+  String get render_widget_not_sent => 'لم يُرسل إلى هذه الدردشة';
 
   @override
-  String get render_widget_throttled => 'Wait a moment before sending again';
+  String get render_widget_throttled => 'انتظر قليلًا قبل الإرسال مرة أخرى';
 
   @override
-  String get render_widget_too_long => 'This request is too long to send';
+  String get render_widget_too_long => 'هذا الطلب أطول من أن يُرسل';
 
   @override
-  String get render_widget_no_gesture => 'Tap a control in the widget to send';
+  String get render_widget_no_gesture => 'اضغط على عنصر تحكم في الأداة للإرسال';
 
   @override
-  String get render_widget_invalid => 'This request could not be sent';
+  String get render_widget_invalid => 'تعذّر إرسال هذا الطلب';
 
   @override
-  String get render_inspected_image => 'Inspected image';
+  String get render_inspected_image => 'الصورة المفحوصة';
 
   @override
-  String get render_contributions => 'Contributions';
+  String get render_contributions => 'المساهمات';
 
   @override
   String get render_contributions_intro =>
-      'Only contributions compiled into Ares can add to a reply. Chat text cannot register one, and a grant applies to this connection only.';
+      'يمكن فقط للمساهمات المضمّنة في Ares أن تضيف إلى الرد. لا يمكن لنص الدردشة تسجيل مساهمة، والإذن يسري على هذا الاتصال فقط.';
 
   @override
   String render_grant_plugin(String name) {
-    return 'Grant $name';
+    return 'منح $name';
   }
 
   @override
   String render_revoke_plugin(String name) {
-    return 'Revoke $name';
+    return 'إلغاء $name';
   }
 
   @override
   String render_plugin_slots(String directive) {
-    return 'reply cards for ::$directive';
+    return 'بطاقات الرد لـ ::$directive';
   }
 
   @override
-  String get render_plugin_notes => 'Notes';
+  String get render_plugin_notes => 'الملاحظات';
 
   @override
-  String get catalog_scan_passed => 'passed';
+  String get catalog_scan_passed => 'نجح';
 
   @override
-  String get catalog_scan_warnings => 'found warnings';
+  String get catalog_scan_warnings => 'وُجدت تحذيرات';
 
   @override
-  String get catalog_scan_failed => 'failed';
+  String get catalog_scan_failed => 'فشل';
 }
