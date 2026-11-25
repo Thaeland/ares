@@ -111,6 +111,53 @@ void main() {
     },
   );
 
+  testWidgets(
+    'soft-keyboard edits and composer focus count as input; restored text does not',
+    (t) async {
+      await NotificationPrefsStore.setShareWindowActivity(true);
+      final a = PresenceSocket(capable: true),
+          b = PresenceSocket(capable: true);
+      var target = (a, 'a');
+      final focus = FocusNode();
+      final controller = TextEditingController();
+      addTearDown(focus.dispose);
+      addTearDown(controller.dispose);
+      t.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await t.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ChatPresence(
+              target: () => target,
+              child: ChatPresenceComposer(
+                builder: (_, input) => TextField(
+                  focusNode: focus,
+                  controller: controller,
+                  onChanged: (_) => input(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      // A restored draft is not the user.
+      controller.text = 'Restored draft';
+      await t.pump();
+      expect(a.reports, isEmpty);
+      // Focus alone (no pointer, no key event) is input.
+      focus.requestFocus();
+      await t.pump();
+      expect(a.reports.single['sessions'], ['a']);
+      // A soft keyboard edit is input: no pointer, no hardware key event.
+      target = (b, 'b');
+      t.testTextInput.enterText('typed on a phone');
+      await t.pump();
+      expect(controller.text, 'typed on a phone');
+      expect(b.reports.single['sessions'], ['b']);
+      expect(a.reports.last['sessions'], isEmpty);
+      await t.pumpWidget(const SizedBox());
+    },
+  );
+
   testWidgets('a pushed route withdraws at once, without waiting for a tick', (
     t,
   ) async {

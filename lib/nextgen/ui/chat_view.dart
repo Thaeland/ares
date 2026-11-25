@@ -1518,33 +1518,42 @@ class _NgChatViewState extends State<NgChatView>
                               .map((item) => item.text),
                         ),
                   onSend: () => unawaited(_send()),
-                  child: TextField(
-                    key: const ValueKey('ng-composer-field'),
-                    controller: _input,
-                    focusNode: _focus,
-                    onTap: () {
-                      // Android can hide the keyboard with Back while this node
-                      // retains focus. Explicitly show it on every composer tap.
-                      _focus.requestFocus();
-                      unawaited(
-                        SystemChannels.textInput.invokeMethod<void>(
-                          'TextInput.show',
+                  child: ChatPresenceComposer(
+                    builder: (_, input) => TextField(
+                      key: const ValueKey('ng-composer-field'),
+                      onChanged: (_) => input(),
+                      controller: _input,
+                      focusNode: _focus,
+                      onTap: () {
+                        // Android can hide the keyboard with Back while this
+                        // node retains focus. Explicitly show it on every
+                        // composer tap.
+                        _focus.requestFocus();
+                        unawaited(
+                          SystemChannels.textInput.invokeMethod<void>(
+                            'TextInput.show',
+                          ),
+                        );
+                      },
+                      minLines: 1,
+                      maxLines: 8,
+                      textCapitalization: TextCapitalization.sentences,
+                      style: NgType.body.copyWith(color: c.text),
+                      decoration: InputDecoration(
+                        hintText: _listening
+                            ? ngL.ng_listening
+                            : chat.running
+                            ? ngL.ng_steer_or_queue_a_message
+                            : ngL.ng_message_hermes,
+                        hintStyle: NgType.body.copyWith(color: c.textMuted),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.fromLTRB(
+                          12,
+                          12,
+                          12,
+                          6,
                         ),
-                      );
-                    },
-                    minLines: 1,
-                    maxLines: 8,
-                    textCapitalization: TextCapitalization.sentences,
-                    style: NgType.body.copyWith(color: c.text),
-                    decoration: InputDecoration(
-                      hintText: _listening
-                          ? ngL.ng_listening
-                          : chat.running
-                          ? ngL.ng_steer_or_queue_a_message
-                          : ngL.ng_message_hermes,
-                      hintStyle: NgType.body.copyWith(color: c.textMuted),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
+                      ),
                     ),
                   ),
                 ),

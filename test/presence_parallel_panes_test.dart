@@ -294,4 +294,108 @@ void main() {
       expect(g.presence.reports.last['sessions'], isEmpty);
     },
   );
+
+  testWidgets('NextGen composer typing claims the pane without a pointer', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    await NotificationPrefsStore.setShareWindowActivity(true);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    final manager = ConnectionManager(await SharedPreferences.getInstance());
+    final fixture = ParallelFixture(dashboard: true, profile: 'pane-test');
+    final g = _PresenceGateway(fixture);
+    addTearDown(g.dispose);
+    final rows = (await g.api.getSessionsPage()).sessions;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: nextGenTheme(Brightness.dark, NextGenLook.instance),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: NgScope(
+          connManager: manager,
+          gateway: g,
+          connections: [fixture.connection],
+          switchTo: (_) async {},
+          addGateway: () async {},
+          signOut: (_) async {},
+          reload: () async {},
+          signInAgain: () async {},
+          child: NgParallelChatPane(
+            gateway: g,
+            session: rows.first,
+            close: () {},
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(g.presence.reports, isEmpty);
+    await tester.showKeyboard(find.byKey(const ValueKey('ng-composer-field')));
+    await tester.pump();
+    final claims = g.presence.reports.length;
+    expect(claims, 1, reason: 'focusing the composer is input');
+    tester.testTextInput.enterText('typed on a phone');
+    await tester.pump();
+    expect(g.presence.reports.single['sessions'], ['runtime-${rows.first.id}']);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('Classic composer typing claims the pane without a pointer', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({'verbose_mode': true});
+    await NotificationPrefsStore.setShareWindowActivity(true);
+    const picker = MethodChannel('plugins.flutter.io/image_picker');
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      picker,
+      (_) async => null,
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        picker,
+        null,
+      ),
+    );
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    final server = (await tester.runAsync(_PresenceServer.start))!;
+    final controller = GatewayTurnApplicationController();
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: ClassicParallelChatPane(
+          connection: server.connection,
+          session: Session(
+            id: 'alpha',
+            title: 'Pane alpha',
+            model: 'fixture',
+            source: 'test',
+            messageCount: 0,
+            isActive: false,
+            preview: '',
+            startedAt: 1,
+          ),
+          controller: controller,
+          close: () {},
+        ),
+      ),
+    );
+    await _until(tester, () => server.resumes.isNotEmpty);
+    expect(server.reports, isEmpty);
+    final composer = find.byKey(const Key('chat-message-composer'));
+    await tester.showKeyboard(composer);
+    await _until(tester, () => server.reports.isNotEmpty);
+    tester.testTextInput.enterText('typed on a phone');
+    await tester.pump();
+    expect(server.reports.single['sessions'], ['runtime-alpha']);
+    await tester.pumpWidget(const SizedBox());
+    await _until(
+      tester,
+      () => (server.reports.last['sessions'] as List).isEmpty,
+    );
+    await controller.close();
+    await tester.runAsync(server.close);
+    await tester.pump(const Duration(seconds: 16));
+  });
 }

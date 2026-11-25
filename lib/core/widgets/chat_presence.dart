@@ -101,6 +101,27 @@ class _ChatPresenceState extends State<ChatPresence> {
   );
 }
 
+/// Wraps a pane's composer. A phone's soft keyboard produces no hardware key
+/// events, so gaining focus and each user text edit count as input: [builder]
+/// passes `input` for the field's `onChanged`, which only user edits call
+/// (a restored draft or a cleared field does not).
+class ChatPresenceComposer extends StatelessWidget {
+  const ChatPresenceComposer({super.key, required this.builder});
+
+  final Widget Function(BuildContext context, VoidCallback input) builder;
+
+  @override
+  Widget build(BuildContext context) => Focus(
+    canRequestFocus: false,
+    skipTraversal: true,
+    includeSemantics: false,
+    onFocusChange: (focused) {
+      if (focused) ChatPresence.noteInput(context);
+    },
+    child: builder(context, () => ChatPresence.noteInput(context)),
+  );
+}
+
 /// What one socket was last told: a claim for [session], or a withdrawal.
 class _Statement {
   const _Statement({

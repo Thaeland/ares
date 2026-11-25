@@ -31,12 +31,12 @@ class PresenceSocket implements WsClient {
     void Function()? onSent,
     bool includeProfile = true,
   }) async {
-    if (method != 'client.activity') {
+    // A report names no profile (gateway/session_presence.py): one that does
+    // is not counted. No expect() here: reports also go out during pump().
+    if (method != 'client.activity' || includeProfile) {
       other.add(method);
       return {};
     }
-    // A report names no profile (gateway/session_presence.py).
-    expect(includeProfile, isFalse);
     reports.add(params);
     at.add(clock.elapsed);
     return {};

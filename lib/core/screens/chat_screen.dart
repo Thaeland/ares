@@ -8383,32 +8383,35 @@ class _ChatScreenState extends State<ChatScreen>
                                         )
                                       : KeyEventResult.ignored,
                                   onSend: () => unawaited(_sendMessage()),
-                                  child: TextField(
-                                    key: const Key('chat-message-composer'),
-                                    focusNode: _composerFocus,
-                                    controller: _textController,
-                                    inputFormatters: [_largePasteFormatter],
-                                    decoration: InputDecoration(
-                                      hintText: context.l10n.message_hermes,
-                                      filled: true,
-                                      fillColor: Colors.transparent,
-                                      border: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 8,
-                                          ),
-                                      isDense: true,
+                                  child: ChatPresenceComposer(
+                                    builder: (_, input) => TextField(
+                                      key: const Key('chat-message-composer'),
+                                      onChanged: (_) => input(),
+                                      focusNode: _composerFocus,
+                                      controller: _textController,
+                                      inputFormatters: [_largePasteFormatter],
+                                      decoration: InputDecoration(
+                                        hintText: context.l10n.message_hermes,
+                                        filled: true,
+                                        fillColor: Colors.transparent,
+                                        border: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                              horizontal: 12,
+                                              vertical: 8,
+                                            ),
+                                        isDense: true,
+                                      ),
+                                      minLines: 1,
+                                      maxLines: 5,
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      keyboardType: TextInputType.multiline,
+                                      textInputAction: TextInputAction.newline,
+                                      enabled: !_transcriptLoadBlocksComposer,
                                     ),
-                                    minLines: 1,
-                                    maxLines: 5,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    keyboardType: TextInputType.multiline,
-                                    textInputAction: TextInputAction.newline,
-                                    enabled: !_transcriptLoadBlocksComposer,
                                   ),
                                 ),
                               ),
