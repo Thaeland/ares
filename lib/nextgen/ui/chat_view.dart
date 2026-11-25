@@ -91,6 +91,7 @@ class NgChatView extends StatefulWidget {
     this.onOpenSidebar,
     this.onClose,
     this.sessions,
+    this.loadSessions,
     this.onNewChat,
     this.onResume,
     this.readAloudFactory,
@@ -102,6 +103,10 @@ class NgChatView extends StatefulWidget {
 
   /// The sidebar's list, for a dot on its button while other chats are unread.
   final NgSessionsModel? sessions;
+
+  /// The connection's chats for `/resume`, read when the picker opens, for a
+  /// view with no sidebar list of its own (a parallel pane, a pop-out).
+  final Future<List<Session>> Function()? loadSessions;
   final VoidCallback? onNewChat;
   final void Function(String id, String title)? onResume;
 
@@ -776,12 +781,16 @@ class _NgChatViewState extends State<NgChatView>
   Future<void> _resume(String query, String text) async {
     _input.clear();
     final writer = _draftWriter, cleared = writer.revision;
+    final loadSessions = widget.loadSessions;
     final picked = await showResumePicker(
       context: context,
       initialQuery: query,
-      listAvailable: widget.sessions != null,
+      listAvailable: widget.sessions != null || loadSessions != null,
       load: (_) async => [
-        for (final row in widget.sessions?.sessions ?? const <Session>[])
+        for (final row
+            in loadSessions != null
+                ? await loadSessions()
+                : widget.sessions?.sessions ?? const <Session>[])
           ResumeCandidate(id: row.id, title: row.title, preview: row.preview),
       ],
     );

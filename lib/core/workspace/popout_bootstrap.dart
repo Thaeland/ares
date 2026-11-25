@@ -382,6 +382,37 @@ class _PopoutChatAppState extends State<PopoutChatApp> {
     unawaited(navigator.push(resumableChatRoute(picked, _classicChat)));
   }
 
+  /// A NextGen pop-out's chat: as the Classic one, `/resume` from the
+  /// window's own chat opens the pick over it, and from a picked chat in its
+  /// place. A picked chat closes back to the window's own.
+  Widget _nextGenChat(
+    NextGenGateway gateway,
+    Session session,
+    Future<void> Function(Session picked) onOpenSession, {
+    VoidCallback? onClose,
+  }) => NgParallelChatPane(
+    gateway: gateway,
+    session: session,
+    close: onClose ?? () => _navigator.currentState?.maybePop(),
+    onOpenSession: onOpenSession,
+  );
+
+  Future<void> _openPickedNextGen(
+    NextGenGateway gateway,
+    Session picked,
+  ) async {
+    final navigator = _navigator.currentState;
+    if (navigator == null) return;
+    unawaited(
+      navigator.push(
+        resumableChatRoute(
+          picked,
+          (session, open) => _nextGenChat(gateway, session, open),
+        ),
+      ),
+    );
+  }
+
   Future<void> mainOnly() async {
     _messenger.currentState?.showSnackBar(
       const SnackBar(
@@ -423,10 +454,11 @@ class _PopoutChatAppState extends State<PopoutChatApp> {
               (picked) => _openPicked(picked),
               onClose: () => exit(0),
             )
-          : NgParallelChatPane(
-              gateway: gateway,
-              session: widget.session,
-              close: () => exit(0),
+          : _nextGenChat(
+              gateway,
+              widget.session,
+              (picked) => _openPickedNextGen(gateway, picked),
+              onClose: () => exit(0),
             ),
     );
     if (gateway == null) return app;
