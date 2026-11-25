@@ -1857,26 +1857,27 @@ class _NgChatViewState extends State<NgChatView>
                 ),
                 ComposerReferenceAssist(
                   controller: _input,
+                  cacheScope: (chat.gateway, chat.storedId),
                   completePath: (query) async {
-                    final result = await chat.gateway.call(
+                    final owner = chat;
+                    final result = await owner.gateway.call(
                       'complete.path',
                       pathCompletionParams(
                         query: query,
-                        sessionId: chat.runtimeId ?? chat.storedId,
+                        sessionId: await owner.liveSessionId(),
                       ),
                     );
                     final rows = parseReferenceCompletions(result);
                     return rows.isEmpty ? starterSuggestions(query) : rows;
                   },
                   completeSlash: (text) async {
-                    final sessionId = chat.runtimeId ?? chat.storedId;
-                    final params = <String, dynamic>{'text': text};
-                    if (sessionId != null) params['session_id'] = sessionId;
-                    final result = await chat.gateway.call(
-                      'complete.slash',
-                      params,
-                    );
-                    return parseArgumentHints(result);
+                    final owner = chat;
+                    final sessionId = await owner.liveSessionId();
+                    final result = await owner.gateway.call('complete.slash', {
+                      'text': text,
+                      'session_id': ?sessionId,
+                    });
+                    return parseArgumentCompletion(result);
                   },
                 ),
                 SendOnEnter(

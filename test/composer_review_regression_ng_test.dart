@@ -398,7 +398,26 @@ void main() {
     await tester.tap(find.text('friendly').first);
     await _settle(tester);
     expect(_composer(tester), '/personality friendly');
-  }, skip: _pendingArgument);
+    expect(tester.takeException(), isNull, reason: 'ListTile needs Material');
+  });
+
+  testWidgets('argument rows are cached per prefix: typing back over a '
+      'prefix does not ask again', (tester) async {
+    final h = await pump(tester, storedId: 'stored-1', runtimeId: 'rt-1');
+    h.gateway.handlers['complete.slash'] = (p) => {
+      'items': [
+        {'text': 'friendly'},
+      ],
+      'replace_from': 13,
+    };
+    await _type(tester, '/personality f');
+    await _type(tester, '/personality fr');
+    await _type(tester, '/personality f');
+    expect(h.gateway.of('complete.slash').map((c) => c.params['text']), [
+      '/personality f',
+      '/personality fr',
+    ]);
+  });
 
   testWidgets('PROBE NG5 pasting a device directory path is not rewritten into '
       'a gateway @folder: reference', (tester) async {
@@ -473,5 +492,4 @@ void main() {
 }
 
 // Each flag goes once its review item lands (one commit per item).
-const _pendingArgument = true;
 const _pendingKeyboard = true;

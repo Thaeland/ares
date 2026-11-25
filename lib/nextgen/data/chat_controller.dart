@@ -3039,6 +3039,22 @@ class NgChatController extends ChangeNotifier {
     return _execute(card, command, runtime, followAlias: true);
   }
 
+  /// The live runtime id for a session-scoped call (completions, Compress,
+  /// the context breakdown). A stored chat that is not attached yet attaches
+  /// first: a stored id is never sent where a runtime id belongs. A new chat
+  /// is created only when [create] (Desktop's `ensureSessionId`); otherwise
+  /// it has no session yet and the answer is null.
+  Future<String?> liveSessionId({bool create = false}) async {
+    final live = runtimeId;
+    if (live != null) return live;
+    if (storedId == null && !create) return null;
+    try {
+      return await _ensureCommandSession();
+    } catch (_) {
+      return null;
+    }
+  }
+
   /// The live session a command runs in: a new chat is created as a prompt
   /// would create it; a stored chat that is not attached yet attaches
   /// rather than starting another session.

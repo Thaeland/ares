@@ -224,6 +224,23 @@ void main() {
     });
   });
 
+  test('an argument replaces from replace_from and keeps the command', () {
+    final completion = parseArgumentCompletion({
+      'items': [
+        {'text': 'friendly', 'display': 'friendly'},
+      ],
+      'replace_from': 13,
+    });
+    expect(completion.replaceFrom, 13);
+    expect(
+      completion.apply('/personality fr', completion.hints.single),
+      '/personality friendly',
+    );
+    // No offset: the last word is the argument, never the whole line.
+    const bare = ArgumentCompletion([ArgumentHint('on', 'on')]);
+    expect(bare.apply('/yolo o', bare.hints.single), '/yolo on');
+  });
+
   test('side answers carry Desktop headers and drop empty events', () {
     final btw = SideAnswer.fromEvent('btw.complete', const {
       'task_id': 'b1',

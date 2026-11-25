@@ -375,6 +375,36 @@ class ArgumentHint {
   final String label;
 }
 
+/// A `complete.slash` answer: its rows and where they replace the typed
+/// line (`replace_from`, command_discovery.py): an argument row like
+/// `friendly` for `/personality fr` replaces from the argument's start, so
+/// the command stays.
+class ArgumentCompletion {
+  const ArgumentCompletion(this.hints, {this.replaceFrom});
+
+  static const empty = ArgumentCompletion([]);
+
+  final List<ArgumentHint> hints;
+  final int? replaceFrom;
+
+  /// [line] (the text sent as `text`) with [hint] in place of the part
+  /// from `replace_from` on. Without a usable offset, the last word.
+  String apply(String line, ArgumentHint hint) {
+    var from = replaceFrom;
+    if (from == null || from < 0 || from > line.length) {
+      final space = line.lastIndexOf(' ');
+      from = space < 0 ? line.length : space + 1;
+    }
+    return line.replaceRange(from, line.length, hint.text);
+  }
+}
+
+ArgumentCompletion parseArgumentCompletion(Object? result) {
+  final hints = parseArgumentHints(result);
+  final raw = result is Map ? result['replace_from'] : null;
+  return ArgumentCompletion(hints, replaceFrom: raw is int ? raw : null);
+}
+
 /// Rows from `complete.slash`. An empty or unrecognised payload is no hints,
 /// not a locally invented argument list.
 List<ArgumentHint> parseArgumentHints(Object? result) {
