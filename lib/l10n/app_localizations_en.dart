@@ -170,6 +170,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get background_report_collapse => 'Collapse report';
 
   @override
+  String get copy_session_id => 'Copy session ID';
+
+  @override
+  String get copy_session_id_failed => 'Could not copy the session ID.';
+
+  @override
   String get setup_interface_title => 'Choose your interface';
 
   @override

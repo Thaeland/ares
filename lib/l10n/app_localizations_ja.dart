@@ -168,6 +168,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get background_report_collapse => 'レポートを折りたたむ';
 
   @override
+  String get copy_session_id => 'セッション ID をコピー';
+
+  @override
+  String get copy_session_id_failed => 'セッション ID をコピーできませんでした。';
+
+  @override
   String get setup_interface_title => 'インターフェースを選択';
 
   @override

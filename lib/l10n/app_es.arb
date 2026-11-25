@@ -47,6 +47,8 @@
   "background_report_expand": "Expandir informe",
   "background_report_collapse": "Contraer informe",
   "@@locale": "es",
+  "copy_session_id": "Copiar ID de sesión",
+  "copy_session_id_failed": "No se pudo copiar el ID de sesión.",
   "setup_interface_title": "Elige tu interfaz",
   "setup_interface_classic": "Classic",
   "setup_interface_nextgen": "NextGen",

@@ -159,6 +159,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get background_report_collapse => '收起报告';
 
   @override
+  String get copy_session_id => '复制会话 ID';
+
+  @override
+  String get copy_session_id_failed => '无法复制会话 ID。';
+
+  @override
   String get setup_interface_title => '选择界面';
 
   @override
@@ -6028,6 +6034,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get background_report_collapse => '收起报告';
+
+  @override
+  String get copy_session_id => '复制会话 ID';
+
+  @override
+  String get copy_session_id_failed => '无法复制会话 ID。';
 
   @override
   String get setup_interface_title => '选择界面';

@@ -171,6 +171,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get background_report_collapse => 'Recolher relatório';
 
   @override
+  String get copy_session_id => 'Copiar ID da sessão';
+
+  @override
+  String get copy_session_id_failed =>
+      'Não foi possível copiar o ID da sessão.';
+
+  @override
   String get setup_interface_title => 'Escolha a sua interface';
 
   @override
@@ -6307,6 +6314,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get background_report_collapse => 'Recolher relatório';
+
+  @override
+  String get copy_session_id => 'Copiar ID da sessão';
+
+  @override
+  String get copy_session_id_failed =>
+      'Não foi possível copiar o ID da sessão.';
 
   @override
   String get setup_interface_title => 'Escolha sua interface';

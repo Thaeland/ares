@@ -249,6 +249,27 @@ Future<void> _closeMenu(WidgetTester tester) async {
 }
 
 void main() {
+  testWidgets('Copy session ID copies the selected row, not the open chat', (
+    tester,
+  ) async {
+    final h = await _pump(tester);
+    String? copied;
+    final messenger = tester.binding.defaultBinaryMessenger;
+    messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+      if (call.method == 'Clipboard.setData')
+        copied = (call.arguments as Map)['text'] as String?;
+      return null;
+    });
+    addTearDown(
+      () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+    );
+    await _rightClick(tester, 'Alpha');
+    await tester.tap(_menuItem('Copy session ID'));
+    await _settle(tester);
+    expect(copied, 'a');
+    expect(h.opened, isEmpty);
+    await h.dispose(tester);
+  });
   const desktops = [TargetPlatform.windows, TargetPlatform.macOS];
 
   for (final platform in desktops) {
@@ -263,6 +284,7 @@ void main() {
           expect(_menuLabels(tester), [
             'Pin',
             'Mark as unread',
+            'Copy session ID',
             'Rename',
             'Archive',
             'Delete',
@@ -349,6 +371,7 @@ void main() {
           expect(_menuLabels(tester), [
             'Pin',
             'Mark as read',
+            'Copy session ID',
             'Rename',
             'Archive',
             'Delete',
@@ -377,7 +400,13 @@ void main() {
         await _on(platform, () async {
           final h = await _pump(tester);
           await _rightClick(tester, 'On screen');
-          expect(_menuLabels(tester), ['Pin', 'Rename', 'Archive', 'Delete']);
+          expect(_menuLabels(tester), [
+            'Pin',
+            'Copy session ID',
+            'Rename',
+            'Archive',
+            'Delete',
+          ]);
           await _closeMenu(tester);
 
           await _rightClick(tester, 'Alpha');
@@ -444,6 +473,7 @@ void main() {
           expect(_sheetLabels(tester), [
             'Pin',
             'Mark as unread',
+            'Copy session ID',
             'Rename',
             'Archive',
             'Delete',
@@ -469,7 +499,14 @@ void main() {
       await tester.longPress(find.text('Daily report'));
       await _settle(tester);
       final sheet = _sheetLabels(tester);
-      expect(sheet, ['Pin', 'Mark as unread', 'Rename', 'Archive', 'Delete']);
+      expect(sheet, [
+        'Pin',
+        'Mark as unread',
+        'Copy session ID',
+        'Rename',
+        'Archive',
+        'Delete',
+      ]);
       await tester.tapAt(const Offset(1000, 20));
       await _settle(tester);
       expect(find.byType(BottomSheet), findsNothing);
@@ -533,6 +570,7 @@ void main() {
       expect(_sheetLabels(tester), [
         'Pin',
         'Mark as unread',
+        'Copy session ID',
         'Rename',
         'Archive',
         'Delete',

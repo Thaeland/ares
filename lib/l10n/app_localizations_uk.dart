@@ -171,6 +171,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get background_report_collapse => 'Згорнути звіт';
 
   @override
+  String get copy_session_id => 'Копіювати ID сеансу';
+
+  @override
+  String get copy_session_id_failed => 'Не вдалося скопіювати ID сеансу.';
+
+  @override
   String get setup_interface_title => 'Виберіть інтерфейс';
 
   @override

@@ -47,6 +47,8 @@
   "background_report_expand": "Развернуть отчёт",
   "background_report_collapse": "Свернуть отчёт",
   "@@locale": "ru",
+  "copy_session_id": "Скопировать ID сеанса",
+  "copy_session_id_failed": "Не удалось скопировать ID сеанса.",
   "setup_interface_title": "Выберите интерфейс",
   "setup_interface_classic": "Classic",
   "setup_interface_nextgen": "NextGen",

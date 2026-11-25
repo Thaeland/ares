@@ -47,6 +47,8 @@
   "background_report_expand": "レポートを展開",
   "background_report_collapse": "レポートを折りたたむ",
   "@@locale": "ja",
+  "copy_session_id": "セッション ID をコピー",
+  "copy_session_id_failed": "セッション ID をコピーできませんでした。",
   "setup_interface_title": "インターフェースを選択",
   "setup_interface_classic": "Classic",
   "setup_interface_nextgen": "NextGen",

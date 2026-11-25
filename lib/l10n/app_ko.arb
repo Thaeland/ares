@@ -47,6 +47,8 @@
   "background_report_expand": "보고서 펼치기",
   "background_report_collapse": "보고서 접기",
   "@@locale": "ko",
+  "copy_session_id": "세션 ID 복사",
+  "copy_session_id_failed": "세션 ID를 복사하지 못했습니다.",
   "setup_interface_title": "인터페이스 선택",
   "setup_interface_classic": "Classic",
   "setup_interface_nextgen": "NextGen",

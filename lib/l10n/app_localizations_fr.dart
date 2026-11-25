@@ -171,6 +171,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get background_report_collapse => 'Réduire le rapport';
 
   @override
+  String get copy_session_id => 'Copier l’identifiant de session';
+
+  @override
+  String get copy_session_id_failed =>
+      'Impossible de copier l’identifiant de session.';
+
+  @override
   String get setup_interface_title => 'Choisissez votre interface';
 
   @override

@@ -47,6 +47,8 @@
   "background_report_expand": "Expandir relatório",
   "background_report_collapse": "Recolher relatório",
   "@@locale": "pt",
+  "copy_session_id": "Copiar ID da sessão",
+  "copy_session_id_failed": "Não foi possível copiar o ID da sessão.",
   "setup_interface_title": "Escolha a sua interface",
   "setup_interface_classic": "Classic",
   "setup_interface_nextgen": "NextGen",

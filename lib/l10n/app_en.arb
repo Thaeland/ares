@@ -61,6 +61,8 @@
   "background_report_expand": "Expand report",
   "background_report_collapse": "Collapse report",
   "@@locale": "en",
+  "copy_session_id": "Copy session ID",
+  "copy_session_id_failed": "Could not copy the session ID.",
   "setup_interface_title": "Choose your interface",
   "setup_interface_classic": "Classic",
   "setup_interface_nextgen": "NextGen",

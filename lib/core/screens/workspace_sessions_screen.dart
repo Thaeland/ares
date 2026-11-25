@@ -9,6 +9,7 @@ import '../theme/hermes_theme.dart';
 import '../utils/relative_time.dart';
 import '../utils/session_sources.dart';
 import '../widgets/chat_attention_section.dart';
+import '../widgets/copy_session_id.dart';
 import '../widgets/hermes_components.dart';
 import '../widgets/hermes_shell.dart';
 import '../widgets/session_name_dialog.dart';
@@ -1757,7 +1758,8 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
               dimension: 24,
               child: CircularProgressIndicator(strokeWidth: 2),
             ),
-          if (widget.onPin != null ||
+          if (canCopySessionId(session) ||
+              widget.onPin != null ||
               widget.onRename != null ||
               widget.onPromote != null ||
               widget.onArchive != null)
@@ -1765,6 +1767,8 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
               tooltip: context.l10n.chat_actions,
               onSelected: (action) {
                 switch (action) {
+                  case 'copyId':
+                    unawaited(copySessionId(context, session));
                   case 'archive':
                     unawaited(_setArchived(session, !isArchived));
                   case 'rename':
@@ -1776,6 +1780,11 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
                 }
               },
               itemBuilder: (_) => [
+                if (canCopySessionId(session))
+                  PopupMenuItem(
+                    value: 'copyId',
+                    child: Text(context.l10n.copy_session_id),
+                  ),
                 if (widget.onArchive != null)
                   PopupMenuItem(
                     value: 'archive',

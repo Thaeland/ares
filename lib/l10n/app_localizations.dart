@@ -398,6 +398,18 @@ abstract class AppLocalizations {
   /// **'Collapse report'**
   String get background_report_collapse;
 
+  /// No description provided for @copy_session_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy session ID'**
+  String get copy_session_id;
+
+  /// No description provided for @copy_session_id_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not copy the session ID.'**
+  String get copy_session_id_failed;
+
   /// No description provided for @setup_interface_title.
   ///
   /// In en, this message translates to:

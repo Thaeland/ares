@@ -170,6 +170,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get background_report_collapse => 'Bericht zuklappen';
 
   @override
+  String get copy_session_id => 'Sitzungs-ID kopieren';
+
+  @override
+  String get copy_session_id_failed =>
+      'Die Sitzungs-ID konnte nicht kopiert werden.';
+
+  @override
   String get setup_interface_title => 'Oberfläche wählen';
 
   @override

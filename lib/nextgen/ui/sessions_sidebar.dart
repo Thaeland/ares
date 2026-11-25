@@ -11,6 +11,7 @@ import 'package:hermes_android/core/l10n/l10n.dart';
 import '../../core/models/session.dart';
 import '../../core/services/dashboard_api_client.dart';
 import '../../core/utils/session_sources.dart';
+import '../../core/widgets/copy_session_id.dart';
 import '../data/seen_chats.dart';
 import '../theme/nextgen_theme.dart';
 import 'nextgen_scope.dart';
@@ -486,6 +487,13 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
           label: unread ? ngL.ng_mark_as_read : ngL.ng_mark_as_unread,
           danger: false,
         ),
+      if (canCopySessionId(s))
+        (
+          value: 'copyId',
+          icon: Icons.copy_outlined,
+          label: ngL.copy_session_id,
+          danger: false,
+        ),
       (
         value: 'rename',
         icon: Icons.edit_outlined,
@@ -523,28 +531,30 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
     return showNgSheet<String>(
       context,
       builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
-              child: Text(
-                ngSessionTitle(s),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: NgType.heading.copyWith(color: c.text),
-              ),
-            ),
-            for (final a in _actionItems(s))
-              ListTile(
-                leading: Icon(a.icon, color: a.danger ? c.danger : null),
-                title: Text(
-                  a.label,
-                  style: a.danger ? TextStyle(color: c.danger) : null,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+                child: Text(
+                  ngSessionTitle(s),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: NgType.heading.copyWith(color: c.text),
                 ),
-                onTap: () => Navigator.pop(context, a.value),
               ),
-          ],
+              for (final a in _actionItems(s))
+                ListTile(
+                  leading: Icon(a.icon, color: a.danger ? c.danger : null),
+                  title: Text(
+                    a.label,
+                    style: a.danger ? TextStyle(color: c.danger) : null,
+                  ),
+                  onTap: () => Navigator.pop(context, a.value),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -598,6 +608,8 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
   ) async {
     try {
       switch (choice) {
+        case 'copyId':
+          await copySessionId(context, s);
         case 'read':
           if (widget.model.isUnread(s)) {
             widget.model.markRead(s.id);

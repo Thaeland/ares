@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/models/session.dart';
 import 'package:hermes_android/core/screens/workspace_sessions_screen.dart';
@@ -529,6 +530,44 @@ void main() {
       );
       await tester.pumpAndSettle();
     }
+
+    testWidgets(
+      'Copy session ID copies a stored ID but is hidden for a local draft',
+      (tester) async {
+        await pumpBrowser(tester, onRename: (_, _) async => 'unused');
+        await tester.tap(find.byTooltip(l10n.chat_actions));
+        await tester.pumpAndSettle();
+        expect(find.text('Copy session ID'), findsNothing);
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        await tester.pumpWidget(const SizedBox());
+        await pumpBrowser(
+          tester,
+          onRename: (_, _) async => 'unused',
+          data: WorkspaceSessionsData(
+            sessions: [richSession.withStoredId('server-417')],
+          ),
+        );
+        String? copied;
+        final messenger = tester.binding.defaultBinaryMessenger;
+        messenger.setMockMethodCallHandler(SystemChannels.platform, (
+          call,
+        ) async {
+          if (call.method == 'Clipboard.setData')
+            copied = (call.arguments as Map)['text'] as String?;
+          return null;
+        });
+        addTearDown(
+          () =>
+              messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+        );
+        await tester.tap(find.byTooltip(l10n.chat_actions));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Copy session ID'));
+        await tester.pumpAndSettle();
+        expect(copied, 'server-417');
+      },
+    );
 
     Future<void> openRename(WidgetTester tester, {String? rowTitle}) async {
       final menu = rowTitle == null

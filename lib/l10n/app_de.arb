@@ -47,6 +47,8 @@
   "background_report_expand": "Bericht aufklappen",
   "background_report_collapse": "Bericht zuklappen",
   "@@locale": "de",
+  "copy_session_id": "Sitzungs-ID kopieren",
+  "copy_session_id_failed": "Die Sitzungs-ID konnte nicht kopiert werden.",
   "setup_interface_title": "Oberfläche wählen",
   "setup_interface_classic": "Classic",
   "setup_interface_nextgen": "NextGen",

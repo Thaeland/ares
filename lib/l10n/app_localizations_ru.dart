@@ -172,6 +172,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get background_report_collapse => 'Свернуть отчёт';
 
   @override
+  String get copy_session_id => 'Скопировать ID сеанса';
+
+  @override
+  String get copy_session_id_failed => 'Не удалось скопировать ID сеанса.';
+
+  @override
   String get setup_interface_title => 'Выберите интерфейс';
 
   @override

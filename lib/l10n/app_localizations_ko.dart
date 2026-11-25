@@ -168,6 +168,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get background_report_collapse => '보고서 접기';
 
   @override
+  String get copy_session_id => '세션 ID 복사';
+
+  @override
+  String get copy_session_id_failed => '세션 ID를 복사하지 못했습니다.';
+
+  @override
   String get setup_interface_title => '인터페이스 선택';
 
   @override

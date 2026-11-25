@@ -49,6 +49,8 @@
   "background_report_expand": "展开报告",
   "background_report_collapse": "收起报告",
   "@@locale": "zh_Hans",
+  "copy_session_id": "复制会话 ID",
+  "copy_session_id_failed": "无法复制会话 ID。",
   "setup_interface_title": "选择界面",
   "setup_interface_classic": "Classic",
   "setup_interface_nextgen": "NextGen",
