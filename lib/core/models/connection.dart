@@ -68,6 +68,10 @@ class SavedConnection {
   /// `none` (an open dashboard). Null for classic connections.
   final String? signInMethod;
 
+  /// Explicit enrollment provenance. Older/imported unknown entries may be
+  /// used for chat but are never implicitly eligible for a fleet update.
+  final String? fleetKind;
+
   SavedConnection({
     required this.id,
     required this.label,
@@ -86,6 +90,7 @@ class SavedConnection {
     this.clientCertificate,
     this.singleLogin = false,
     this.signInMethod,
+    this.fleetKind,
   });
 
   /// The dashboard address of a [singleLogin] connection.
@@ -209,6 +214,7 @@ class SavedConnection {
     }
     if (singleLogin) {
       m['single_login'] = true;
+      if (fleetKind != null) m['fleet_kind'] = fleetKind;
       if (signInMethod != null) m['sign_in_method'] = signInMethod;
     }
     return m;
@@ -245,6 +251,7 @@ class SavedConnection {
       },
       singleLogin: (map['single_login'] as bool?) ?? false,
       signInMethod: nonEmpty(map['sign_in_method']),
+      fleetKind: nonEmpty(map['fleet_kind']),
     );
   }
 
@@ -311,6 +318,7 @@ class SavedConnection {
           : (clientCertificate ?? this.clientCertificate),
       singleLogin: singleLogin ?? this.singleLogin,
       signInMethod: signInMethod ?? this.signInMethod,
+      fleetKind: fleetKind,
     );
   }
 }

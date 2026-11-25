@@ -564,6 +564,7 @@ class ConnectionManager {
   Future<SavedConnection> saveSingleLoginConnection({
     required GatewayUrl url,
     required String signInMethod,
+    String? fleetKind,
     String? label,
     String? username,
     String? password,
@@ -617,6 +618,14 @@ class ConnectionManager {
                       : null),
         singleLogin: true,
         signInMethod: signInMethod,
+        // Keep Cloud exclusions across a later manual login to the same URL.
+        fleetKind:
+            existingIndex >= 0 && current[existingIndex].fleetKind == 'cloud'
+            ? 'cloud'
+            : fleetKind ??
+                  (existingIndex >= 0
+                      ? current[existingIndex].fleetKind
+                      : null),
       );
       final previousCredentials = existingIndex >= 0
           ? _ConnectionCredentials.fromConnection(current[existingIndex])
@@ -2569,8 +2578,9 @@ class DashboardClient {
          '${Uri(scheme: useHttps ? 'https' : 'http', host: host)}:$port',
          pathPrefix,
        ),
-       _http =
-           httpClient ?? tlsClientFactory.createRestClient(clientCertificate);
+       _http = NoGatewayRedirects(
+         httpClient ?? tlsClientFactory.createRestClient(clientCertificate),
+       );
 
   /// Builds every dashboard consumer from the same origin as the WebSocket.
   /// API-server Bearer credentials are deliberately not part of this client.
@@ -2838,10 +2848,10 @@ class DashboardClient {
     required Map<String, String> query,
     required void Function() check,
     bool mintHostTerminalTicket = false,
-    // The only fleet writes admitted by this transport are a single display
-    // key and a registry primary selection. No generic method/body override.
+    // Only typed fleet writes; no generic method/body override.
     String? webappDirection,
     bool makeWebappPrimary = false,
+    bool startFleetUpdate = false,
   }) async {
     if (segments.isEmpty ||
         segments.any(
@@ -2869,6 +2879,14 @@ class DashboardClient {
       queryParameters: query.isEmpty ? null : query,
     );
     final patchDirection = webappDirection != null;
+    if (startFleetUpdate &&
+        (segments.join('/') != 'hermes/update' ||
+            query.isNotEmpty ||
+            patchDirection ||
+            makeWebappPrimary ||
+            mintHostTerminalTicket)) {
+      throw const FormatException('Invalid remote update operation');
+    }
     if ((patchDirection &&
             (segments.join('/') != 'ui-preferences' ||
                 !const {'auto', 'ltr', 'rtl'}.contains(webappDirection))) ||
@@ -2883,13 +2901,13 @@ class DashboardClient {
     final request = http.Request(
       patchDirection
           ? 'PATCH'
-          : mintHostTerminalTicket || makeWebappPrimary
+          : mintHostTerminalTicket || makeWebappPrimary || startFleetUpdate
           ? 'POST'
           : 'GET',
       uri,
     )..followRedirects = false;
     request.headers.addAll(await _authHeaders());
-    if (patchDirection || makeWebappPrimary) {
+    if (patchDirection || makeWebappPrimary || startFleetUpdate) {
       request.headers['Origin'] = base.origin;
       request.headers['Content-Type'] = 'application/json';
       request.body = patchDirection

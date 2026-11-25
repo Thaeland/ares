@@ -19,6 +19,8 @@ typedef WebappRegistry = ({
 
 enum WebappDirection { auto, rtl, ltr }
 
+typedef FleetUpdateCheck = ({String install, String version, bool eligible});
+
 String _fleetText(Object? raw, {int max = 256}) {
   if (raw is! String ||
       raw.isEmpty ||
@@ -78,6 +80,67 @@ Uri? _cloudAddress(Object? raw) {
 }
 
 extension FleetWorkspace on WorkspaceTarget {
+  Future<FleetUpdateCheck> checkFleetUpdate() => _withOwner(() async {
+    final roster = await read(WorkspaceRead.profiles) as Map;
+    final install = _fleetId(roster['install_id']);
+    final raw = await _get(['hermes', 'update', 'check']);
+    if (raw is! Map ||
+        raw['can_apply'] is! bool ||
+        raw['update_available'] is! bool) {
+      _fail(WorkspaceFailure.invalid);
+    }
+    return (
+      install: install,
+      version: _fleetText(raw['current_version']),
+      eligible:
+          raw['install_method'] == 'git' &&
+          raw['can_apply'] == true &&
+          raw['update_available'] == true,
+    );
+  });
+  Future<String?> startFleetUpdate(FleetUpdateCheck reviewed) => _withOwner(
+    () async {
+      if (!reviewed.eligible || await checkFleetUpdate() != reviewed) {
+        _fail(WorkspaceFailure.mismatch);
+      }
+      final raw = await _owner._dashboard.workspaceJson(
+        ['hermes', 'update'],
+        query: const {},
+        check: checkCurrent,
+        startFleetUpdate: true,
+      );
+      if (raw is! Map || raw['ok'] != true || raw['name'] != 'hermes-update') {
+        _fail(WorkspaceFailure.denied);
+      }
+      final id = raw['action_id'];
+      return id is String && RegExp(r'^[0-9a-f]{32}$').hasMatch(id) ? id : null;
+    },
+  );
+  Future<String> fleetUpdateOutcome(String actionId, String install) =>
+      _withOwner(() async {
+        final roster = await read(WorkspaceRead.profiles) as Map;
+        if (roster['install_id'] != install) _fail(WorkspaceFailure.mismatch);
+        final raw = await _get(
+          ['actions', 'hermes-update', 'status'],
+          {'lines': '1'},
+        );
+        if (raw is! Map || raw['name'] != 'hermes-update') {
+          _fail(WorkspaceFailure.invalid);
+        }
+        final receipt = raw['receipt'];
+        if (receipt is! Map || receipt['action_id'] != actionId) {
+          return 'Awaiting matching receipt';
+        }
+        return switch (receipt['outcome']) {
+          'success' when (receipt['followups'] as List?)?.isNotEmpty == true =>
+            'Updated; follow-up required',
+          'success' => 'Updated',
+          'partial' => 'Partially updated',
+          'failed' => 'Update failed',
+          _ => 'Not confirmed',
+        };
+      });
+
   /// One deliberate send on the exact socket holding the resume receipt.
   /// Never repeat the write after an ambiguous response or reconnect.
   Future<Map<String, dynamic>> submitFleetText(

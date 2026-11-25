@@ -1609,7 +1609,9 @@ class HomeScreenState extends State<HomeScreen> {
         widget.launchIntents?.pendingQuickChat.value == true) {
       return;
     }
-    final lastId = widget.connManager.prefs.getString(_lastConnectionKey);
+    final lastId =
+        GatewayFleet.primaryId(widget.connManager, _connections) ??
+        widget.connManager.prefs.getString(_lastConnectionKey);
     if (lastId == null) return;
     final conn = _connections.where((c) => c.id == lastId).firstOrNull;
     if (conn == null) return;

@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:crypto/crypto.dart';
 
 import '../../nextgen/data/chat_controller.dart';
 import '../../nextgen/data/nextgen_gateway.dart';
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 import 'remote_workspace.dart';
+
+part 'fleet_updates.dart';
 
 /// A user's explicit attachment to a saved account. The gateway, all of its
 /// chats and their listeners outlive the currently visible route, but never
@@ -24,6 +28,30 @@ final class FleetHost extends ChangeNotifier {
   late final WorkspacePane _pane;
   late final StreamSubscription<void> _reconnect;
   final _chats = <String, NgChatController>{};
+  bool get busyChat => _chats.values.any((c) => c.running);
+  final _profiles = <String, FleetHost>{};
+  Iterable<FleetHost> get attachedProfiles => _profiles.values;
+  bool get busyInstallation =>
+      busyChat || attachedProfiles.any((p) => p.busyChat);
+  void attachProfile(String name, WorkspaceTarget displayed) {
+    displayed.checkCurrent();
+    if (!identical(displayed, target) ||
+        !profiles.contains(name) ||
+        name == gateway.profile ||
+        !RegExp(r'^[a-zA-Z0-9_][a-zA-Z0-9._-]{0,127}$').hasMatch(name)) {
+      throw const WorkspaceException(WorkspaceFailure.mismatch);
+    }
+    _profiles.putIfAbsent(name, () {
+      final h = FleetHost._(
+        gateway.connection.copyWith(gatewayProfile: name),
+        _epoch,
+      );
+      unawaited(h.refresh());
+      return h;
+    });
+    notifyListeners();
+  }
+
   WorkspaceTarget? _target;
   WorkspaceTarget? get target =>
       current && _target?.isCurrent == true ? _target : null;
@@ -34,6 +62,8 @@ final class FleetHost extends ChangeNotifier {
   List<String> profiles = const [];
   List<FleetSession> sessions = const [];
   int total = 0;
+  int _nextOffset = 0;
+  bool hasMore = false;
   WorkspaceFailure? failure;
   Object _flight = Object();
   bool loading = false;
@@ -57,7 +87,8 @@ final class FleetHost extends ChangeNotifier {
     try {
       final host = await _pane.bind(gateway.workspace.route());
       final roster = await host.read(WorkspaceRead.profiles) as Map;
-      final page = await host.fleetSessions(offset: previous.length);
+      final offset = more ? _nextOffset : 0;
+      final page = await host.fleetSessions(offset: offset);
       host.checkCurrent();
       if (!identical(flight, _flight) || !current) return;
       _target = host;
@@ -71,6 +102,8 @@ final class FleetHost extends ChangeNotifier {
         }.values,
       );
       total = page.total;
+      _nextOffset = offset + page.rows.length;
+      hasMore = page.rows.isNotEmpty && _nextOffset < total;
     } catch (e) {
       if (!identical(flight, _flight) || !current) return;
       failure = e is WorkspaceException
@@ -79,6 +112,7 @@ final class FleetHost extends ChangeNotifier {
       profiles = const [];
       sessions = const [];
       total = 0;
+      hasMore = false;
     } finally {
       if (identical(flight, _flight) && current) {
         loading = false;
@@ -93,7 +127,9 @@ final class FleetHost extends ChangeNotifier {
   ) async {
     _check();
     source.checkCurrent();
-    if (!identical(source, _target) || !sessions.contains(row)) {
+    if (gateway.profile == null ||
+        !identical(source, _target) ||
+        !sessions.contains(row)) {
       throw const WorkspaceException(WorkspaceFailure.stale);
     }
     final pane = gateway.workspace.pane();
@@ -151,6 +187,10 @@ final class FleetHost extends ChangeNotifier {
   void dispose() {
     _closed = true;
     _pane.close();
+    for (final h in _profiles.values) {
+      h.dispose();
+    }
+    _profiles.clear();
     _reconnect.cancel();
     gateway.removeListener(_stateChanged);
     for (final c in _chats.values) {
@@ -167,8 +207,36 @@ final class GatewayFleet extends ChangeNotifier {
     ConnectionMutationBarrier.addListener(_prune);
   }
   final ConnectionManager manager;
+  static const _primaryKey = 'ares.fleet.primary.v1';
+  static String _principal(SavedConnection c) =>
+      sha256.convert(utf8.encode(jsonEncode(c.toMap()))).toString();
+  static String? primaryId(
+    ConnectionManager manager,
+    Iterable<SavedConnection> saved,
+  ) {
+    final primary = manager.prefs.getString(_primaryKey);
+    if (primary == null) return null;
+    return saved.where((c) => _principal(c) == primary).singleOrNull?.id;
+  }
+
+  Future<void> togglePrimary(FleetHost h) async {
+    if (!identical(host(h.gateway.connection.id), h) || !h.current) {
+      throw const WorkspaceException(WorkspaceFailure.stale);
+    }
+    final value = _principal(h.gateway.connection);
+    final clear = manager.prefs.getString(_primaryKey) == value;
+    final ok = clear
+        ? await manager.prefs.remove(_primaryKey)
+        : await manager.prefs.setString(_primaryKey, value);
+    if (!ok || manager.prefs.getString(_primaryKey) != (clear ? null : value)) {
+      throw const WorkspaceException(WorkspaceFailure.unavailable);
+    }
+    if (!_closed) notifyListeners();
+  }
+
   final _hosts = <String, FleetHost>{};
   FleetHost? host(String id) => _hosts[id];
+  final _updates = <FleetHost, FleetUpdateRow>{};
   bool _closed = false;
   void _prune() {
     for (final id in _hosts.keys.toList()) {
@@ -197,6 +265,7 @@ final class GatewayFleet extends ChangeNotifier {
   void detach(String id) {
     final removed = _hosts.remove(id);
     if (removed == null) return;
+    _updates.remove(removed);
     removed.dispose();
     notifyListeners();
   }

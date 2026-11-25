@@ -179,7 +179,7 @@ class FleetSsh {
       runInShell: false,
       includeParentEnvironment: false,
       environment: {
-        'SSH_AUTH_SOCK': ?env['SSH_AUTH_SOCK'],
+        if (identity == null) 'SSH_AUTH_SOCK': ?env['SSH_AUTH_SOCK'],
         'SystemRoot': ?env['SystemRoot'],
         'TERM': 'dumb',
         'LC_ALL': 'C',

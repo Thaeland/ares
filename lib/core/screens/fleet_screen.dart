@@ -8,6 +8,7 @@ import '../services/gateway_fleet.dart';
 import '../services/remote_workspace.dart';
 import 'fleet_webapp_screen.dart';
 import 'fleet_ssh_screen.dart';
+import 'fleet_updates_screen.dart';
 
 /// Owned above navigation: switching visible gateways doesn't reroute or close
 /// an attached conversation. Only explicit disconnect/account edits end it.
@@ -50,6 +51,7 @@ Future<void> enrollFleetAddress(
       builder: (ctx) => NgConnectScreen(
         connManager: fleet.manager,
         firstRun: false,
+        fleetEnrollment: true,
         initialAddress: address,
         initialLabel: label,
         onCancel: () => Navigator.pop(ctx),
@@ -117,6 +119,16 @@ class _FleetScreenState extends State<FleetScreen> {
               },
             ),
             const Divider(),
+            ListTile(
+              title: const Text('Fleet updates'),
+              leading: const Icon(Icons.system_update_alt),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (_) => FleetUpdatesScreen(fleet: fleet),
+                ),
+              ),
+            ),
             for (final c in fleet.manager.getConnections())
               if (fleet.host(c.id) case final h?)
                 _GatewayGroup(key: ObjectKey(h), host: h, fleet: fleet)
@@ -145,7 +157,13 @@ class _FleetScreenState extends State<FleetScreen> {
 }
 
 class _GatewayGroup extends StatelessWidget {
-  const _GatewayGroup({super.key, required this.host, required this.fleet});
+  const _GatewayGroup({
+    super.key,
+    required this.host,
+    required this.fleet,
+    this.childProfile = false,
+  });
+  final bool childProfile;
   final FleetHost host;
   final GatewayFleet fleet;
   @override
@@ -170,16 +188,34 @@ class _GatewayGroup extends StatelessWidget {
                     onPressed: host.loading ? null : host.refresh,
                     icon: const Icon(Icons.refresh),
                   ),
-                  IconButton(
-                    tooltip: 'Disconnect ${c.label}',
-                    onPressed: () => fleet.detach(c.id),
-                    icon: const Icon(Icons.link_off),
-                  ),
+                  if (!childProfile)
+                    IconButton(
+                      tooltip: 'Disconnect ${c.label}',
+                      onPressed: () => fleet.detach(c.id),
+                      icon: const Icon(Icons.link_off),
+                    ),
                 ],
               ),
             ),
             if (host.loading)
               const LinearProgressIndicator()
+            else if (!childProfile)
+              CheckboxListTile(
+                title: const Text('Open this gateway on launch'),
+                subtitle: const Text(
+                  'Primary for Ares; does not change the last-used gateway.',
+                ),
+                value: GatewayFleet.primaryId(fleet.manager, [c]) == c.id,
+                onChanged: (_) async {
+                  try {
+                    await fleet.togglePrimary(host);
+                  } catch (e) {
+                    if (context.mounted) _notice(context, e);
+                  }
+                },
+              ),
+            if (host.loading)
+              const SizedBox.shrink()
             else if (host.failure case final why?)
               Padding(
                 padding: const EdgeInsets.all(12),
@@ -188,7 +224,25 @@ class _GatewayGroup extends StatelessWidget {
             else if (target != null) ...[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text('Profiles: ${host.profiles.join(', ')}'),
+                child: childProfile
+                    ? Text(c.gatewayProfile!)
+                    : Wrap(
+                        children: [
+                          for (final name in host.profiles)
+                            ActionChip(
+                              label: Text(name),
+                              onPressed: name == c.gatewayProfile
+                                  ? null
+                                  : () {
+                                      try {
+                                        host.attachProfile(name, target);
+                                      } catch (e) {
+                                        _notice(context, e);
+                                      }
+                                    },
+                            ),
+                        ],
+                      ),
               ),
               for (final r in host.sessions)
                 ListTile(
@@ -197,6 +251,12 @@ class _GatewayGroup extends StatelessWidget {
                   subtitle: Text(r.profile),
                   onTap: () async {
                     try {
+                      // The default profile can change on the server. Attach a
+                      // named owner before opening any conversation on it.
+                      if (c.gatewayProfile == null) {
+                        host.attachProfile(r.profile, target);
+                        return;
+                      }
                       final chat = await host.openSession(r, target);
                       if (context.mounted && host.current) {
                         await Navigator.push(
@@ -218,12 +278,20 @@ class _GatewayGroup extends StatelessWidget {
                 ),
               if (host.sessions.isEmpty)
                 const ListTile(title: Text('No sessions for this profile.')),
-              if (host.sessions.length < host.total)
+              if (host.hasMore)
                 TextButton(
                   onPressed: () => host.refresh(more: true),
                   child: const Text('More sessions'),
                 ),
             ],
+            if (!childProfile)
+              for (final p in host.attachedProfiles)
+                _GatewayGroup(
+                  key: ObjectKey(p),
+                  host: p,
+                  fleet: fleet,
+                  childProfile: true,
+                ),
           ],
         ),
       );

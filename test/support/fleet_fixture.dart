@@ -16,6 +16,8 @@ class FleetFixture {
   final tickets = <String>{};
   int issued = 0;
   String primary = 'local';
+  String receipt = '0' * 32;
+  bool mayUpdate = true;
   String? direction;
   int revision = 0;
   final writes =
@@ -115,6 +117,7 @@ class FleetFixture {
           'profiles.list' => {
             'profiles': [
               {'name': 'work'},
+              {'name': 'studio'},
             ],
             'install_id': 'fixture-$name',
           },
@@ -122,7 +125,7 @@ class FleetFixture {
             'session_id': 'runtime',
             'stored_session_id': 'same',
             'running': false,
-            'info': {'profile_name': 'work', 'cwd': '/fixture'},
+            'info': {'profile_name': params['profile'], 'cwd': '/fixture'},
           },
           'prompt.submit' => {'status': 'streaming'},
           _ => <String, Object?>{},
@@ -161,15 +164,42 @@ class FleetFixture {
                 },
               ],
             };
+    } else if (path == '/api/hermes/update/check') {
+      body = {
+        'install_method': 'git',
+        'current_version': '1.2.3',
+        'can_apply': mayUpdate,
+        'update_available': true,
+      };
+    } else if (path == '/api/hermes/update' &&
+        req.method == 'POST' &&
+        !req.uri.hasQuery) {
+      body = {
+        'ok': true,
+        'name': 'hermes-update',
+        'pid': 42,
+        'action_id': '1' * 32,
+      };
+    } else if (path == '/api/actions/hermes-update/status') {
+      body = {
+        'name': 'hermes-update',
+        'receipt': {
+          'action_id': receipt,
+          'outcome': 'success',
+          'followups': [],
+        },
+      };
     } else if (path == '/api/sessions' &&
-        req.uri.queryParameters['profile'] == 'work') {
+        const {'work', 'studio'}.contains(req.uri.queryParameters['profile'])) {
       body = {
         'offset': 0,
         'total': 1,
-        'sessions': [row],
+        'sessions': [
+          {...row, 'profile': req.uri.queryParameters['profile']},
+        ],
       };
     } else if (path == '/api/sessions/same') {
-      body = row;
+      body = {...row, 'profile': req.uri.queryParameters['profile']};
     } else if (path == '/api/sessions/same/messages') {
       body = {'messages': [], 'total': 0};
     } else if (path == '/api/gateway-connections' && req.method == 'GET') {
