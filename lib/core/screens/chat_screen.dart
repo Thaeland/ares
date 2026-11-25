@@ -50,6 +50,7 @@ import '../services/chat_model_override_store.dart';
 import '../services/chat_density_preference.dart';
 import '../services/chat_history_window.dart';
 import '../services/desktop_gateway_client.dart';
+import '../services/composer_session_rpc.dart';
 import '../services/remote_workspace.dart';
 import '../services/gateway_turn_application_controller.dart';
 import '../services/normal_gateway_application_session.dart';
@@ -128,6 +129,10 @@ import '../widgets/composer_prompt_recall.dart';
 import '../composer/composer_commands.dart';
 import '../composer/failure_recovery.dart';
 import '../composer/regenerate.dart';
+import '../composer/composer_drag.dart';
+import '../composer/composer_intake.dart';
+import '../composer/os_intake.dart';
+import '../widgets/composer_drop_surface.dart';
 import '../composer/context_status.dart';
 import '../composer/reference_completion.dart';
 import '../widgets/composer_context_status.dart';
@@ -698,6 +703,10 @@ class ChatScreen extends StatefulWidget {
   @visibleForTesting
   final SlashCommandGateway? testSlashGateway;
 
+  /// The composer's gateway calls (completion, context breakdown, compress)
+  /// without a socket. Production uses the Desktop gateway client.
+  final ComposerSessionRpc? testComposerRpc;
+
   const ChatScreen({
     required this.connection,
     required this.session,
@@ -735,6 +744,7 @@ class ChatScreen extends StatefulWidget {
     this.testMediaFilesClient,
     this.testTaskHistorySource,
     this.testSlashGateway,
+    this.testComposerRpc,
     this.onArchiveChanged,
     this.sessionArchiver,
     this.onOpenSession,
@@ -924,7 +934,16 @@ class _ChatScreenState extends State<ChatScreen>
   bool _loadingModelOptions = false;
   bool _changingModel = false;
   bool _sending = false;
-  bool _streaming = false;
+  bool _streamingNow = false;
+  bool get _streaming => _streamingNow;
+
+  /// Every end of a turn passes here, however the turn ended, even when it
+  /// starts and ends between two frames.
+  set _streaming(bool value) {
+    if (_streamingNow && !value) _statusAfterTurn();
+    _streamingNow = value;
+  }
+
   final _held = ClientHeldQueue();
   bool _heldDrainBusy = false;
   bool _heldTouched = false;
@@ -1664,6 +1683,14 @@ class _ChatScreenState extends State<ChatScreen>
     _composerRevision += 1;
     _normalChat?.invalidateDraftRecovery();
     final text = _textController.text;
+    final pathPaste = _pendingPathPaste;
+    _pendingPathPaste = null;
+    if (pathPaste != null &&
+        !_restoringComposer &&
+        text.contains(pathPaste.text)) {
+      // The pasted path is committed now; intake may remove it safely.
+      unawaited(_consumePathPaste(pathPaste));
+    }
     if (!_restoringComposer && text != _lastComposerText) {
       _draftWriter.edit(_composerTextWithPastes(text));
     }
@@ -4205,9 +4232,11 @@ class _ChatScreenState extends State<ChatScreen>
     await _preparePickedImages(_desktopGateway == null ? [files.first] : files);
   }
 
-  Future<void> _preparePickedImages(List<XFile> images) async {
+  /// Returns how many images became drafts. [remote] says whether the
+  /// gateway takes several drafts (by default, a Desktop gateway does).
+  Future<int> _preparePickedImages(List<XFile> images, {bool? remote}) async {
     final l10n = context.l10n;
-    final isRemote = _desktopGateway != null;
+    final isRemote = remote ?? _desktopGateway != null;
     final prepared = <AttachmentDraft>[];
     final errors = <String>[];
     for (final image in images) {
@@ -4232,7 +4261,7 @@ class _ChatScreenState extends State<ChatScreen>
     }
     if (!mounted) {
       await _attachmentDraftService.removeAll(prepared);
-      return;
+      return 0;
     }
     if (prepared.isNotEmpty) {
       if (isRemote) {
@@ -4250,6 +4279,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (errors.isNotEmpty) {
       _showAttachmentError(errors.first);
     }
+    return prepared.length;
   }
 
   Future<void> _pickFiles() async {
@@ -4312,6 +4342,202 @@ class _ChatScreenState extends State<ChatScreen>
         context.l10n.unable_to_prepare_this_file_try_another_one,
       );
     }
+  }
+
+  /// Attach, and the OS intake that feeds it, is open whenever the Attach
+  /// button is.
+  bool get _attachIntakeOpen =>
+      !_transcriptLoadBlocksComposer &&
+      !_preparingPaste &&
+      !_streaming &&
+      !_sending &&
+      !_pendingReattachResync;
+
+  /// Drafts beyond one REST image need a gateway that uploads them.
+  bool get _remoteDraftsAllowed =>
+      _desktopGateway != null ||
+      widget.testRemotePromptSubmit != null ||
+      (_turnApplicationSession != null && !_legacyTransportFallback);
+
+  /// Files from the OS (dropped, pasted as files or as a path, or dragged
+  /// from the session files panel). Images take the photo path, other files
+  /// the Choose files path, with the same draft count and size limits. Each
+  /// becomes a draft; nothing is sent. Returns how many were staged.
+  Future<int> _intakeLocalFiles(List<OsIntakeFile> files) async {
+    var staged = 0;
+    var folders = false;
+    for (final file in files) {
+      if (!mounted) break;
+      if (!_attachIntakeOpen) {
+        _showAttachmentError(context.sharedL10n.composer_attach_busy);
+        break;
+      }
+      if (file.directory) {
+        folders = true;
+        continue;
+      }
+      final image = looksLikeImagePath(file.path);
+      if (!image && !_remoteDraftsAllowed) {
+        _showAttachmentError(
+          context
+              .l10n
+              .configure_a_valid_desktop_gateway_url_before_attaching_files,
+        );
+        continue;
+      }
+      // REST takes one image, replacing the last; the gateway counts drafts.
+      final restImage = image && !_remoteDraftsAllowed;
+      if (!restImage && _attachmentDrafts.length >= maxRemoteAttachmentDrafts) {
+        _showAttachmentError(
+          context.l10n.you_can_attach_up_to_items(maxRemoteAttachmentDrafts),
+        );
+        break;
+      }
+      staged += await withDroppedFileAccess(
+        file,
+        () => image
+            ? _preparePickedImages([
+                XFile(file.path, name: file.name),
+              ], remote: _remoteDraftsAllowed)
+            : _prepareLocalFile(file.path, file.name),
+      );
+      if (restImage) break;
+    }
+    if (folders && mounted) {
+      _showAttachmentError(context.sharedL10n.composer_drop_folder_unsupported);
+    }
+    return staged;
+  }
+
+  /// One local non-image file as a draft, as Choose files prepares it.
+  Future<int> _prepareLocalFile(String path, String name) async {
+    try {
+      final draft = await _attachmentDraftService.prepareGenericFile(
+        sourcePath: path,
+        displayName: name,
+        existingDrafts: List<AttachmentDraft>.of(_attachmentDrafts),
+      );
+      if (!mounted) {
+        await _attachmentDraftService.removeAll([draft]);
+        return 0;
+      }
+      setState(() => _attachmentDrafts.add(draft));
+      return 1;
+    } on AttachmentDraftException catch (error) {
+      _showAttachmentError(error.message);
+    } catch (_) {
+      if (mounted) _showAttachmentError(context.l10n.unable_to_prepare(name));
+    }
+    return 0;
+  }
+
+  /// Cmd/Ctrl+V with files or an image on the clipboard.
+  Future<void> _intakeClipboard(ClipboardAttachment found) async {
+    final image = found.image;
+    if (image != null) {
+      await _intakeImageBytes(image, 'image/png');
+      return;
+    }
+    await _intakeLocalFiles(await osIntakeFilesFor(found.files));
+  }
+
+  /// A pasted or keyboard-inserted image (Android keyboards insert images
+  /// through contentInsertionConfiguration).
+  Future<void> _intakeImageBytes(Uint8List bytes, String mimeType) async {
+    if (!mounted) return;
+    if (!_attachIntakeOpen) {
+      _showAttachmentError(context.sharedL10n.composer_attach_busy);
+      return;
+    }
+    final String path;
+    try {
+      path = await stageComposerImageBytes(bytes, mimeType: mimeType);
+    } catch (_) {
+      if (mounted) {
+        _showAttachmentError(
+          context.l10n.unable_to_prepare_this_image_try_another_one,
+        );
+      }
+      return;
+    }
+    try {
+      if (mounted) await _intakeLocalFiles([OsIntakeFile(path)]);
+    } finally {
+      // The draft holds its own sanitised copy (or there is no draft).
+      await discardStagedComposerImage(path);
+    }
+  }
+
+  /// A file or folder dragged from the session files panel: gateway paths
+  /// and folders become references, a file on this device a draft.
+  Future<void> _intakeComposerDrag(ComposerDrag drag) async {
+    final plan = classifyDrag(drag);
+    final path = plan.path ?? '';
+    if (plan.kind == LocalIntake.reference) {
+      appendWorkspaceReference(
+        _textController,
+        gatewayContextReference(folder: plan.directory, path: path),
+      );
+      return;
+    }
+    final local = await localFileForPastedPath(path);
+    if (!mounted) return;
+    if (local == null) {
+      _showAttachmentError(context.sharedL10n.composer_file_missing);
+      return;
+    }
+    await _intakeLocalFiles([local]);
+  }
+
+  /// A short paste the editor's formatter saw, handled once the text is in
+  /// the controller ([_onComposerChanged]): a formatter must not edit the
+  /// field. Large pastes have their own path ([_onLargePaste]).
+  PastedChunk? _pendingPathPaste;
+
+  late final TextInputFormatter _pathPasteFormatter =
+      TextInputFormatter.withFunction((oldValue, newValue) {
+        final selection = oldValue.selection;
+        if (!selection.isValid || !oldValue.composing.isCollapsed) {
+          return newValue;
+        }
+        final chunk = PastedChunk.detect(
+          oldValue.text,
+          selection.start,
+          selection.end,
+          newValue.text,
+        );
+        _pendingPathPaste =
+            chunk != null &&
+                chunk.text.length <= largePasteAttachmentThreshold &&
+                clipboardPath(chunk.text) != null
+            ? chunk
+            : null;
+        return newValue;
+      });
+
+  /// A pasted path to a file on this device becomes a draft and leaves the
+  /// draft text. Folders, missing paths and gateway paths stay text.
+  Future<void> _consumePathPaste(PastedChunk chunk) async {
+    final path = clipboardPath(chunk.text);
+    if (path == null || !_attachIntakeOpen) return;
+    final file = await localFileForPastedPath(path);
+    if (file == null || !mounted) return;
+    if (!looksLikeImagePath(path) && !_remoteDraftsAllowed) return;
+    final staged = await _intakeLocalFiles([file]);
+    if (staged == 0 || !mounted) return;
+    final text = _textController.text;
+    final at =
+        chunk.caret + chunk.text.length <= text.length &&
+            text.substring(chunk.caret, chunk.caret + chunk.text.length) ==
+                chunk.text
+        ? chunk.caret
+        : text.indexOf(chunk.text);
+    if (at < 0) return;
+    // Edits since the paste stay; only the pasted path leaves.
+    _textController.value = TextEditingValue(
+      text: text.replaceRange(at, at + chunk.text.length, ''),
+      selection: TextSelection.collapsed(offset: at),
+    );
   }
 
   void _showAttachmentError(String message) {
@@ -5212,9 +5438,29 @@ class _ChatScreenState extends State<ChatScreen>
     if (layout.visible('context-usage')) unawaited(_loadStatusBreakdown());
   }
 
+  /// Where the composer's gateway calls go: the Desktop gateway client.
+  ComposerSessionRpc? get _composerGateway =>
+      widget.testComposerRpc ?? _desktopGateway;
+
+  bool _statusRefreshQueued = false;
+
+  /// Reads the breakdown again once each turn ends, as NextGen does. Turns
+  /// end inside setState, so the read waits for the frame.
+  void _statusAfterTurn() {
+    if (_statusRefreshQueued || !_statusLayout.visible('context-usage')) {
+      return;
+    }
+    _statusRefreshQueued = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _statusRefreshQueued = false;
+      if (mounted) unawaited(_loadStatusBreakdown());
+    });
+    WidgetsBinding.instance.scheduleFrame();
+  }
+
   Future<void> _loadStatusBreakdown() async {
     if (!_statusLayout.visible('context-usage')) return;
-    final gateway = _desktopGateway;
+    final gateway = _composerGateway;
     if (gateway == null || !gateway.hasLiveSession(widget.session.id)) {
       setState(() => _statusBreakdown = ContextReading.empty);
       return;
@@ -5245,7 +5491,7 @@ class _ChatScreenState extends State<ChatScreen>
     String method,
     Map<String, dynamic> params,
   ) {
-    final gateway = _desktopGateway;
+    final gateway = _composerGateway;
     if (gateway == null) throw StateError('No Desktop gateway');
     if (gateway.hasLiveSession(widget.session.id)) {
       return gateway.requestSessionRpc(method, {
@@ -5259,7 +5505,7 @@ class _ChatScreenState extends State<ChatScreen>
   /// The failure card's Compress: the gateway's session.compress, then the
   /// transcript again. A failure is shown, never swallowed.
   Future<void> _compressClassicChat() async {
-    final gateway = _desktopGateway;
+    final gateway = _composerGateway;
     final shared = context.sharedL10n;
     if (gateway == null || !gateway.hasLiveSession(widget.session.id)) {
       _showRetryNotice(shared.composer_command_needs_gateway_session);
@@ -8634,8 +8880,8 @@ class _ChatScreenState extends State<ChatScreen>
                       child: SingleChildScrollView(
                         child: ComposerReferenceAssist(
                           controller: _textController,
-                          cacheScope: (_desktopGateway, widget.session.id),
-                          completePath: _desktopGateway == null
+                          cacheScope: (_composerGateway, widget.session.id),
+                          completePath: _composerGateway == null
                               ? null
                               : (query) async {
                                   final result = await _composerRpc(
@@ -8649,7 +8895,7 @@ class _ChatScreenState extends State<ChatScreen>
                                       ? starterSuggestions(query)
                                       : rows;
                                 },
-                          completeSlash: _desktopGateway == null
+                          completeSlash: _composerGateway == null
                               ? null
                               : (text) async => parseArgumentCompletion(
                                   await _composerRpc('complete.slash', {
@@ -8823,52 +9069,77 @@ class _ChatScreenState extends State<ChatScreen>
                                       : _composerFormatRow(context),
                                 ),
                               if (!keyboardOpen) const SizedBox(height: 4),
-                              ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxHeight: (availableHeight * 0.30).clamp(
-                                    48.0,
-                                    160.0,
-                                  ),
-                                ),
-                                child: SendOnEnter(
-                                  enabled: sendEnabled,
-                                  onNavigate: (event) =>
-                                      _composerOwnerCurrent &&
-                                          _attachmentDrafts.isEmpty &&
-                                          !_slashDropdownVisible
-                                      ? _promptRecall.handle(
-                                          event,
-                                          _textController,
-                                          _sentPrompts,
-                                        )
-                                      : KeyEventResult.ignored,
-                                  onSend: () => unawaited(_sendMessage()),
-                                  child: TextField(
-                                    key: const Key('chat-message-composer'),
-                                    focusNode: _composerFocus,
-                                    controller: _textController,
-                                    inputFormatters: [_largePasteFormatter],
-                                    decoration: InputDecoration(
-                                      hintText: context.l10n.message_hermes,
-                                      filled: true,
-                                      fillColor: Colors.transparent,
-                                      border: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 8,
+                              // Files from the OS, the clipboard, a keyboard
+                              // or the files panel become drafts, never sends.
+                              OsFileDropTarget(
+                                enabled: _attachIntakeOpen,
+                                onFiles: (files) =>
+                                    unawaited(_intakeLocalFiles(files)),
+                                child: ClipboardAttachmentPaste(
+                                  enabled: _attachIntakeOpen,
+                                  onAttachment: _intakeClipboard,
+                                  child: ComposerDropSurface(
+                                    onDrop: (drag) =>
+                                        unawaited(_intakeComposerDrag(drag)),
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        maxHeight: (availableHeight * 0.30)
+                                            .clamp(48.0, 160.0),
+                                      ),
+                                      child: SendOnEnter(
+                                        enabled: sendEnabled,
+                                        onNavigate: (event) =>
+                                            _composerOwnerCurrent &&
+                                                _attachmentDrafts.isEmpty &&
+                                                !_slashDropdownVisible
+                                            ? _promptRecall.handle(
+                                                event,
+                                                _textController,
+                                                _sentPrompts,
+                                              )
+                                            : KeyEventResult.ignored,
+                                        onSend: () => unawaited(_sendMessage()),
+                                        child: TextField(
+                                          key: const Key(
+                                            'chat-message-composer',
                                           ),
-                                      isDense: true,
+                                          focusNode: _composerFocus,
+                                          controller: _textController,
+                                          inputFormatters: [
+                                            _largePasteFormatter,
+                                            _pathPasteFormatter,
+                                          ],
+                                          contentInsertionConfiguration:
+                                              composerImageInsertion(
+                                                _intakeImageBytes,
+                                              ),
+                                          decoration: InputDecoration(
+                                            hintText:
+                                                context.l10n.message_hermes,
+                                            filled: true,
+                                            fillColor: Colors.transparent,
+                                            border: InputBorder.none,
+                                            enabledBorder: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                  horizontal: 12,
+                                                  vertical: 8,
+                                                ),
+                                            isDense: true,
+                                          ),
+                                          minLines: 1,
+                                          maxLines: 5,
+                                          textCapitalization:
+                                              TextCapitalization.sentences,
+                                          keyboardType: TextInputType.multiline,
+                                          textInputAction:
+                                              TextInputAction.newline,
+                                          enabled:
+                                              !_transcriptLoadBlocksComposer,
+                                        ),
+                                      ),
                                     ),
-                                    minLines: 1,
-                                    maxLines: 5,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    keyboardType: TextInputType.multiline,
-                                    textInputAction: TextInputAction.newline,
-                                    enabled: !_transcriptLoadBlocksComposer,
                                   ),
                                 ),
                               ),

@@ -977,10 +977,7 @@ class _NgChatViewState extends State<NgChatView>
       await _acceptImageBytes(image, 'image/png');
       return;
     }
-    await _acceptOsFiles([
-      for (final path in found.files)
-        OsIntakeFile(path, directory: FileSystemEntity.isDirectorySync(path)),
-    ]);
+    await _acceptOsFiles(await osIntakeFilesFor(found.files));
   }
 
   /// A pasted or keyboard-inserted image.
@@ -994,12 +991,11 @@ class _NgChatViewState extends State<NgChatView>
       }
       return;
     }
-    if (!mounted) return;
-    final staged = await _stageLocal(LocalIntake.imageFile, path);
-    if (!staged) {
-      try {
-        await File(path).delete();
-      } catch (_) {}
+    try {
+      if (mounted) await _stageLocal(LocalIntake.imageFile, path);
+    } finally {
+      // The draft holds its own sanitised copy (or there is no draft).
+      await discardStagedComposerImage(path);
     }
   }
 

@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../models/client_certificate.dart';
 import '../models/slash_command.dart';
 import 'capability_registry.dart';
+import 'composer_session_rpc.dart';
 import 'connection_manager.dart';
 import 'gateway_turn_coordinator.dart';
 import 'gateway_turn_journal.dart';
@@ -32,7 +33,7 @@ enum DesktopConnectionState {
 /// The mobile OpenAI-compatible endpoint remains available for legacy
 /// profiles. When a connection supplies [SavedConnection.desktopGatewayUrl],
 /// chat writes and interactive events use this one Desktop session transport.
-class DesktopGatewayClient implements SlashCommandGateway {
+class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
   static final _localServerRequestKey = RegExp(
     r'^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}\.[0-9]+\.[0-9]+:',
   );
@@ -799,6 +800,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
   ///
   /// Opens the socket when the workspace has not connected yet. The call stays
   /// on this client, so a profile name cannot hop to another machine.
+  @override
   Future<Map<String, dynamic>> call(
     String method,
     Map<String, dynamic> params, {
@@ -1366,6 +1368,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
 
   /// Whether [mobileSessionId] is bound to a gateway session on the live
   /// socket, so a session-scoped RPC ([requestSessionRpc]) can reach it.
+  @override
   bool hasLiveSession(String mobileSessionId) {
     final client = _ws;
     if (_closed || client == null || !client.isConnected) return false;
@@ -1376,6 +1379,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
   /// One session-scoped JSON-RPC. The local session id in [params] is
   /// replaced with the bound gateway id. Missing methods surface as
   /// [JsonRpcError] `-32601` so the caller can fall back to slash.exec.
+  @override
   Future<Map<String, dynamic>> requestSessionRpc(
     String method,
     Map<String, dynamic> params,

@@ -1465,6 +1465,7 @@
   "composer_handoff_timeout": "Handoff did not finish. It may still be running on the gateway.",
   "composer_compress_done": "Compressed this chat.",
   "composer_file_missing": "That file is not on this device.",
+  "composer_attach_busy": "Attachments can be added when this reply finishes.",
   "nextgen_toggle": "NextGen interface",
   "nextgen_toggle_subtitle": "A new design with one sign-in, live chats and network discovery. Your gateways and chats are shared with this interface.",
   "nextgen_single_login": "Sign in with one login",

@@ -7200,6 +7200,12 @@ abstract class AppLocalizations {
   /// **'That file is not on this device.'**
   String get composer_file_missing;
 
+  /// No description provided for @composer_attach_busy.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachments can be added when this reply finishes.'**
+  String get composer_attach_busy;
+
   /// No description provided for @nextgen_toggle.
   ///
   /// In en, this message translates to:

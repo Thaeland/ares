@@ -4306,6 +4306,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get composer_file_missing => 'That file is not on this device.';
 
   @override
+  String get composer_attach_busy =>
+      'Attachments can be added when this reply finishes.';
+
+  @override
   String get nextgen_toggle => 'NextGen-Oberfläche';
 
   @override
