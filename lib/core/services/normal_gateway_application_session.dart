@@ -1923,6 +1923,7 @@ class NormalGatewayChatOwner {
       'notification.show',
       'notification.clear',
       'background.complete',
+      'btw.complete',
       'review.summary',
     }.contains(event.type)) {
       _auxiliaryEvents.add(event);

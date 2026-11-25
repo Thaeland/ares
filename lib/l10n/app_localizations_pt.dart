@@ -4241,6 +4241,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'This command needs an open chat.';
 
   @override
+  String get composer_command_needs_gateway_session =>
+      'This chat has no gateway session yet. Send a message first, then run the command again.';
+
+  @override
   String get composer_side_question =>
       'btw — answering from a conversation snapshot';
 

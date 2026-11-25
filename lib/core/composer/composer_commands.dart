@@ -1,8 +1,66 @@
+import 'package:flutter/widgets.dart' show Locale;
+
+import '../../l10n/app_localizations.dart';
 import '../services/ws_client.dart';
 
 /// Commands the composer runs itself, the way Desktop does, instead of
 /// sending them as an ordinary prompt.
 enum DedicatedSlash { sideQuestion, background, handoff, resume }
+
+AppLocalizations _english() => lookupAppLocalizations(const Locale('en'));
+
+/// A finished side question (`btw.complete`) or background task
+/// (`background.complete`), shown in the chat the way Desktop's gateway
+/// event dispatcher shows it: a header naming the task, then the answer.
+class SideAnswer {
+  const SideAnswer({
+    required this.kind,
+    required this.text,
+    this.taskId = '',
+    this.question = '',
+  });
+
+  final DedicatedSlash kind;
+  final String text;
+  final String taskId;
+  final String question;
+
+  /// Desktop's `[btw "q" (id)]` / `[bg id]` line, without the brackets.
+  String get header => switch (kind) {
+    DedicatedSlash.sideQuestion =>
+      'btw${question.isEmpty ? '' : ' "$question"'}'
+          '${taskId.isEmpty ? '' : ' ($taskId)'}',
+    _ => taskId.isEmpty ? 'bg' : 'bg $taskId',
+  };
+
+  /// Same task, same answer: a replayed event, not a second answer.
+  String get identity => '${kind.name}|$taskId|$text';
+
+  /// Parses the gateway event; null for other events and empty answers.
+  static SideAnswer? fromEvent(String type, Map<String, dynamic> data) {
+    final kind = switch (type) {
+      'btw.complete' => DedicatedSlash.sideQuestion,
+      'background.complete' => DedicatedSlash.background,
+      _ => null,
+    };
+    if (kind == null) return null;
+    final text = _line(data['text']);
+    if (text.isEmpty) return null;
+    return SideAnswer(
+      kind: kind,
+      text: text,
+      taskId: _line(data['task_id']),
+      question: kind == DedicatedSlash.sideQuestion
+          ? _line(data['question'])
+          : '',
+    );
+  }
+
+  static String _line(Object? value) =>
+      (value is String ? value : value?.toString() ?? '')
+          .replaceAll('\u0000', '')
+          .trim();
+}
 
 DedicatedSlash? dedicatedSlash(String name) {
   return switch (name.toLowerCase()) {
@@ -43,9 +101,11 @@ CommandPlan planDedicated({
   required String name,
   required String arg,
   required String? sessionId,
+  AppLocalizations? l10n,
 }) {
   final kind = dedicatedSlash(name);
   if (kind == null) return const CommandPlan();
+  final strings = l10n ?? _english();
   final trimmed = arg.trim();
   if (kind == DedicatedSlash.resume) {
     return CommandPlan(consumed: true, openResume: true, resumeQuery: trimmed);
@@ -54,21 +114,18 @@ CommandPlan planDedicated({
     return CommandPlan(
       consumed: true,
       notice: switch (kind) {
-        DedicatedSlash.sideQuestion =>
-          'Usage: /btw <question> \u2014 answered from a snapshot of this conversation without interrupting it.',
-        DedicatedSlash.background =>
-          'Usage: /background <prompt> \u2014 the task runs separately and the result comes back here.',
-        DedicatedSlash.handoff =>
-          'Usage: /handoff <platform> \u2014 transfer this chat to that messaging platform.',
+        DedicatedSlash.sideQuestion => strings.composer_btw_usage,
+        DedicatedSlash.background => strings.composer_background_usage,
+        DedicatedSlash.handoff => strings.composer_handoff_usage,
         DedicatedSlash.resume => '',
       },
     );
   }
   final session = sessionId?.trim() ?? '';
   if (session.isEmpty) {
-    return const CommandPlan(
+    return CommandPlan(
       consumed: true,
-      notice: 'This command needs an open chat.',
+      notice: strings.composer_command_needs_session,
     );
   }
   final method = switch (kind) {
@@ -89,12 +146,20 @@ class CommandAnswer {
     required this.fallbackToExec,
     this.notice = '',
     this.watchHandoff = false,
+    this.failed = false,
+    this.taskId = '',
   });
 
   /// The gateway has no dedicated method. The existing slash.exec path runs.
   final bool fallbackToExec;
   final String notice;
   final bool watchHandoff;
+
+  /// The gateway refused or the call failed; [notice] says why.
+  final bool failed;
+
+  /// The side question or background task the gateway started, if named.
+  final String taskId;
 }
 
 bool missingRpcMethod(Object error) =>
@@ -104,25 +169,29 @@ CommandAnswer interpretCommandResult({
   required DedicatedSlash kind,
   required String arg,
   required Map<String, dynamic> result,
+  AppLocalizations? l10n,
 }) {
+  final strings = l10n ?? _english();
   final id = result['task_id']?.toString().trim() ?? '';
   return switch (kind) {
     DedicatedSlash.sideQuestion => CommandAnswer(
       fallbackToExec: false,
+      taskId: id,
       notice: id.isEmpty
-          ? 'btw \u2014 answering from a conversation snapshot'
-          : 'btw $id \u2014 answering from a conversation snapshot',
+          ? strings.composer_side_question
+          : strings.composer_side_question_id(id),
     ),
     DedicatedSlash.background => CommandAnswer(
       fallbackToExec: false,
+      taskId: id,
       notice: id.isEmpty
-          ? 'Background task started. You can keep chatting. The result will appear here.'
-          : 'Background task $id started. You can keep chatting. The result will appear here.',
+          ? strings.composer_background_started
+          : strings.composer_background_started_id(id),
     ),
     DedicatedSlash.handoff => CommandAnswer(
       fallbackToExec: false,
       watchHandoff: true,
-      notice: 'Handoff to ${arg.trim()} requested.',
+      notice: strings.composer_handoff_requested(arg.trim()),
     ),
     DedicatedSlash.resume => const CommandAnswer(fallbackToExec: false),
   };
@@ -133,7 +202,7 @@ CommandAnswer interpretCommandError(Object error) {
     return const CommandAnswer(fallbackToExec: true);
   }
   final message = error is JsonRpcError ? error.message : error.toString();
-  return CommandAnswer(fallbackToExec: false, notice: message);
+  return CommandAnswer(fallbackToExec: false, failed: true, notice: message);
 }
 
 class DedicatedRun {
@@ -155,9 +224,15 @@ Future<DedicatedRun?> runDedicatedCommand({
     Map<String, dynamic> params,
   )?
   rpc,
+  AppLocalizations? l10n,
 }) async {
   if (dedicatedSlash(name) == null) return null;
-  final plan = planDedicated(name: name, arg: arg, sessionId: sessionId);
+  final plan = planDedicated(
+    name: name,
+    arg: arg,
+    sessionId: sessionId,
+    l10n: l10n,
+  );
   final request = plan.request;
   if (request == null) return DedicatedRun(plan, null);
   if (rpc == null) {
@@ -171,6 +246,7 @@ Future<DedicatedRun?> runDedicatedCommand({
         kind: dedicatedSlash(name)!,
         arg: arg,
         result: result,
+        l10n: l10n,
       ),
     );
   } catch (error) {
@@ -201,6 +277,69 @@ Map<String, dynamic> handoffFailParams(String sessionId, String error) => {
   'session_id': sessionId,
   'error': error,
 };
+
+class HandoffOutcome {
+  const HandoffOutcome(this.phase, [this.error = '']);
+
+  final HandoffPhase phase;
+
+  /// The gateway's reason for a failed handoff, when it gave one.
+  final String error;
+}
+
+/// Watches a requested handoff to a terminal state, as Desktop does: poll
+/// `handoff.state`; at the deadline `handoff.fail`, and if that answers that
+/// the handoff completed meanwhile, it completed. [alive] false stops the
+/// watch quietly (the chat closed); the result is then [HandoffPhase.pending].
+Future<HandoffOutcome> watchHandoff({
+  required Future<Map<String, dynamic>> Function(
+    String method,
+    Map<String, dynamic> params,
+  )
+  rpc,
+  required String sessionId,
+  required String timeoutMessage,
+  required bool Function() alive,
+  Duration interval = const Duration(milliseconds: 800),
+  Duration limit = const Duration(seconds: 60),
+  int Function()? clock,
+}) async {
+  final now = clock ?? () => DateTime.now().millisecondsSinceEpoch;
+  final deadline = now() + limit.inMilliseconds;
+  while (now() < deadline) {
+    await Future<void>.delayed(interval);
+    if (!alive()) return const HandoffOutcome(HandoffPhase.pending);
+    Map<String, dynamic> record;
+    try {
+      record = await rpc('handoff.state', handoffStateParams(sessionId));
+    } catch (_) {
+      continue;
+    }
+    if (!alive()) return const HandoffOutcome(HandoffPhase.pending);
+    final phase = readHandoffPhase(
+      state: record['state'],
+      nowMs: now(),
+      deadlineMs: deadline,
+    );
+    if (phase == HandoffPhase.completed) return HandoffOutcome(phase);
+    if (phase == HandoffPhase.failed) {
+      return HandoffOutcome(phase, record['error']?.toString().trim() ?? '');
+    }
+    if (phase == HandoffPhase.timedOut) break;
+  }
+  if (!alive()) return const HandoffOutcome(HandoffPhase.pending);
+  Map<String, dynamic>? cleanup;
+  try {
+    cleanup = await rpc(
+      'handoff.fail',
+      handoffFailParams(sessionId, timeoutMessage),
+    );
+  } catch (_) {}
+  if (cleanup?['state'] == 'completed') {
+    return const HandoffOutcome(HandoffPhase.completed);
+  }
+  return const HandoffOutcome(HandoffPhase.timedOut);
+}
 
 class ResumeCandidate {
   const ResumeCandidate({

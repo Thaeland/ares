@@ -82,6 +82,8 @@ class DesktopGatewayClient implements SlashCommandGateway {
 
   static const _asyncEventTypes = {
     'background.complete',
+    // The answer to /btw arrives only as this event (Desktop's dispatcher).
+    'btw.complete',
     'review.summary',
     'notification.show',
     'notification.clear',
@@ -1358,6 +1360,15 @@ class DesktopGatewayClient implements SlashCommandGateway {
       throw StateError('The Desktop gateway session is no longer connected');
     }
     return client.slashExec(gatewaySessionId, command, onSent: onSent);
+  }
+
+  /// Whether [mobileSessionId] is bound to a gateway session on the live
+  /// socket, so a session-scoped RPC ([requestSessionRpc]) can reach it.
+  bool hasLiveSession(String mobileSessionId) {
+    final client = _ws;
+    if (_closed || client == null || !client.isConnected) return false;
+    return _gatewaySessionIds.containsKey(mobileSessionId) ||
+        _gatewaySessionIds.containsValue(mobileSessionId);
   }
 
   /// One session-scoped JSON-RPC. The local session id in [params] is

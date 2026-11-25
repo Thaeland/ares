@@ -4880,27 +4880,37 @@ class _ChatScreenState extends State<ChatScreen>
           bareName == 'background' ||
           bareName == 'handoff') {
         if (gateway is DesktopGatewayClient) {
+          final arg = _slashCommandArgument(text);
+          final shared = context.sharedL10n;
+          if (arg.isNotEmpty && !gateway.hasLiveSession(sessionId)) {
+            // Classic binds the gateway session with the first message; a
+            // side question needs that session, so say so and keep the line.
+            _appendSlashCommandNotice(
+              text,
+              shared.composer_command_needs_gateway_session,
+            );
+            return '';
+          }
           final run = await runDedicatedCommand(
             name: bareName,
-            arg: _slashCommandArgument(text),
+            arg: arg,
             sessionId: sessionId,
+            l10n: shared,
             rpc: gateway.requestSessionRpc,
           );
           if (!current()) return '';
-          if (run?.answer?.fallbackToExec != true) {
-            final notice = run?.answer?.notice ?? run?.plan.notice;
+          final answer = run?.answer;
+          if (answer?.fallbackToExec != true) {
+            final notice = answer?.notice ?? run?.plan.notice;
             if (notice != null && notice.isNotEmpty) {
               _appendSlashCommandNotice(text, notice);
             }
-            consume();
-            if (run?.answer?.watchHandoff == true) {
-              unawaited(
-                _watchClassicHandoff(
-                  gateway,
-                  sessionId,
-                  _slashCommandArgument(text),
-                ),
-              );
+            if (answer != null && answer.taskId.isNotEmpty) {
+              _startedSideTasks.add(answer.taskId);
+            }
+            if (answer?.failed != true) consume();
+            if (answer?.watchHandoff == true) {
+              unawaited(_watchClassicHandoff(gateway, sessionId, arg));
             }
             return '';
           }
@@ -5058,50 +5068,54 @@ class _ChatScreenState extends State<ChatScreen>
     String platform,
   ) async {
     final sharedL10n = context.sharedL10n;
-    final deadline = DateTime.now().millisecondsSinceEpoch + 60000;
-    while (mounted && DateTime.now().millisecondsSinceEpoch < deadline) {
-      await Future<void>.delayed(const Duration(milliseconds: 800));
-      if (!mounted) return;
-      try {
-        final state = await gateway.requestSessionRpc(
-          'handoff.state',
-          handoffStateParams(sessionId),
-        );
-        final phase = readHandoffPhase(
-          state: state['state'],
-          nowMs: DateTime.now().millisecondsSinceEpoch,
-          deadlineMs: deadline,
-        );
-        if (phase == HandoffPhase.completed) {
-          _appendSlashCommandNotice(
-            '/handoff $platform',
-            sharedL10n.composer_handoff_done(platform),
-          );
-          return;
-        }
-        if (phase == HandoffPhase.failed) {
-          final error = state['error']?.toString().trim();
-          _appendSlashCommandNotice(
-            '/handoff $platform',
-            error == null || error.isEmpty
-                ? sharedL10n.composer_handoff_failed
-                : error,
-          );
-          return;
-        }
-      } catch (_) {}
-    }
-    if (!mounted) return;
-    try {
-      await gateway.requestSessionRpc(
-        'handoff.fail',
-        handoffFailParams(sessionId, sharedL10n.composer_handoff_timeout),
-      );
-    } catch (_) {}
-    _appendSlashCommandNotice(
-      '/handoff $platform',
-      sharedL10n.composer_handoff_timeout,
+    final outcome = await watchHandoff(
+      rpc: gateway.requestSessionRpc,
+      sessionId: sessionId,
+      timeoutMessage: sharedL10n.composer_handoff_timeout,
+      alive: () => mounted && widget.session.id == sessionId,
     );
+    final text = switch (outcome.phase) {
+      HandoffPhase.pending => null,
+      HandoffPhase.completed => sharedL10n.composer_handoff_done(platform),
+      HandoffPhase.failed =>
+        outcome.error.isEmpty
+            ? sharedL10n.composer_handoff_failed
+            : outcome.error,
+      HandoffPhase.timedOut => sharedL10n.composer_handoff_timeout,
+    };
+    if (text == null || !mounted) return;
+    _appendSlashCommandNotice('/handoff $platform', text);
+  }
+
+  /// Side questions and background tasks this chat started (`/btw`,
+  /// `/background`): their answers belong in this transcript.
+  final Set<String> _startedSideTasks = {};
+
+  /// Desktop's dispatcher shows the answer to `/btw` and to a `/background`
+  /// task this chat started as a persistent line in the chat. Classic shows
+  /// it the way it shows command output: in quiet and verbose chat alike.
+  bool _showSideAnswer(StreamEvent event) {
+    final answer = SideAnswer.fromEvent(event.type, event.data);
+    if (answer == null) return false;
+    if (answer.kind == DedicatedSlash.background &&
+        !_startedSideTasks.contains(answer.taskId)) {
+      return false; // someone else's task: the gateway notice path shows it
+    }
+    if (answer.kind == DedicatedSlash.background) {
+      _notifyBackgroundNotice(
+        GatewayNotice(
+          kind: GatewayNoticeKind.background,
+          text: answer.text,
+          taskId: answer.taskId.isEmpty ? null : answer.taskId,
+        ),
+      );
+    }
+    final seen = _slashNotices.any(
+      (notice) =>
+          notice.command == answer.header && notice.output == answer.text,
+    );
+    if (!seen) _appendSlashCommandNotice(answer.header, answer.text);
+    return true;
   }
 
   void _noteRecovery(Map<String, dynamic> data) {
@@ -6428,6 +6442,7 @@ class _ChatScreenState extends State<ChatScreen>
       _upsertSubagent(event.type, event.data);
       return;
     }
+    if (_showSideAnswer(event)) return;
     final notice = GatewayNotice.fromGatewayEvent(event.type, event.data);
     if (notice == null) return;
     if (_gatewayNotices.any((item) => item.identity == notice.identity)) return;

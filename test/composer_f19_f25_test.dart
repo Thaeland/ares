@@ -161,6 +161,52 @@ void main() {
     );
   });
 
+  test('a handoff that handoff.fail reports completed is completed', () async {
+    final calls = <String>[];
+    var clock = 0;
+    final outcome = await watchHandoff(
+      rpc: (method, params) async {
+        calls.add(method);
+        clock += 30000;
+        return method == 'handoff.fail'
+            ? {'state': 'completed'}
+            : {'state': 'pending'};
+      },
+      sessionId: 's',
+      timeoutMessage: 'timed out',
+      alive: () => true,
+      interval: Duration.zero,
+      clock: () => clock,
+    );
+    expect(outcome.phase, HandoffPhase.completed);
+    expect(calls.last, 'handoff.fail');
+    final failed = await watchHandoff(
+      rpc: (method, params) async => {'state': 'failed', 'error': 'no bot'},
+      sessionId: 's',
+      timeoutMessage: 'timed out',
+      alive: () => true,
+      interval: Duration.zero,
+    );
+    expect(failed.phase, HandoffPhase.failed);
+    expect(failed.error, 'no bot');
+  });
+
+  test('side answers carry Desktop headers and drop empty events', () {
+    final btw = SideAnswer.fromEvent('btw.complete', const {
+      'task_id': 'b1',
+      'question': 'why',
+      'text': 'because',
+    })!;
+    expect(btw.header, 'btw "why" (b1)');
+    final bg = SideAnswer.fromEvent('background.complete', const {
+      'task_id': 'g1',
+      'text': 'done',
+    })!;
+    expect(bg.header, 'bg g1');
+    expect(SideAnswer.fromEvent('btw.complete', const {'text': '  '}), isNull);
+    expect(SideAnswer.fromEvent('review.summary', const {'text': 'x'}), isNull);
+  });
+
   test('drops and pastes do not attach a path that is not on the device', () {
     expect(
       classifyDrag(

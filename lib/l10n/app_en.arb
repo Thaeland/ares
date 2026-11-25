@@ -1431,6 +1431,7 @@
   "composer_background_usage": "Usage: /background <prompt> \u2014 the task runs separately and the result comes back here.",
   "composer_handoff_usage": "Usage: /handoff <platform> \u2014 transfer this chat to that messaging platform.",
   "composer_command_needs_session": "This command needs an open chat.",
+  "composer_command_needs_gateway_session": "This chat has no gateway session yet. Send a message first, then run the command again.",
   "composer_side_question": "btw \u2014 answering from a conversation snapshot",
   "composer_side_question_id": "btw {id} \u2014 answering from a conversation snapshot",
   "@composer_side_question_id": {

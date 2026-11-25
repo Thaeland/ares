@@ -553,92 +553,97 @@ class _NgChatViewState extends State<NgChatView>
     await chat.send(text);
   }
 
-  Future<bool> _runDedicated(NgSlashLine command) async {
-    final sessionId = chat.runtimeId ?? chat.storedId;
-    final run = await runDedicatedCommand(
-      name: command.name,
-      arg: command.arg,
-      sessionId: sessionId,
-      rpc: (method, params) => chat.gateway.call(
-        method,
-        params,
-        timeout: const Duration(minutes: 2),
-      ),
-    );
-    if (run == null) return false;
-    if (!mounted) return true;
-    if (run.plan.openResume) {
-      _input.clear();
-      final picked = await showResumePicker(
-        context: context,
-        initialQuery: run.plan.resumeQuery,
-        listAvailable: widget.sessions != null,
-        load: (_) async => [
-          for (final row in widget.sessions?.sessions ?? const <Session>[])
-            ResumeCandidate(id: row.id, title: row.title, preview: row.preview),
-        ],
-      );
-      if (!mounted) return true;
-      if (picked != null) {
-        final open = widget.onResume;
-        if (open == null) {
-          chat.showCommandNotice(
-            context.sharedL10n.composer_resume_unavailable,
-          );
-        } else {
-          open(picked.id, picked.title);
-        }
+  /// `/resume`, `/btw`, `/background` and `/handoff`, run the way Desktop
+  /// runs them. False when [command] is none of these, or the gateway has
+  /// no dedicated method (the ordinary command path then runs it).
+  Future<bool> _runDedicated(NgSlashLine command, String text) async {
+    final kind = dedicatedSlash(command.name);
+    if (kind == null) return false;
+    if (kind == DedicatedSlash.resume) {
+      await _resume(command.arg.trim(), text);
+      return true;
+    }
+    final owner = chat;
+    _input.clear();
+    final writer = _draftWriter, cleared = writer.revision;
+    final result = await owner.runDedicated(command);
+    if (!mounted || !identical(owner, widget.chat)) return true;
+    if (result == null) {
+      // No dedicated method on this gateway: the ordinary path runs it,
+      // provided nobody typed meanwhile.
+      if (writer == _draftWriter &&
+          writer.revision == cleared &&
+          _input.text.isEmpty) {
+        _setComposer(text);
+        return false;
       }
       return true;
     }
-    if (run.answer?.fallbackToExec == true) return false;
-    final notice = run.answer?.notice ?? run.plan.notice;
-    _input.clear();
-    if (notice != null && notice.isNotEmpty) chat.showCommandNotice(notice);
-    if (run.answer?.watchHandoff == true && sessionId != null) {
-      unawaited(_watchHandoff(sessionId, command.arg.trim()));
+    final session = result.handoffSession;
+    if (session != null) {
+      unawaited(_watchHandoff(owner, result.card, session, command.arg.trim()));
     }
     return true;
   }
 
-  Future<void> _watchHandoff(String sessionId, String platform) async {
-    final l10n = context.sharedL10n;
-    final deadline = DateTime.now().millisecondsSinceEpoch + 60000;
-    while (mounted && DateTime.now().millisecondsSinceEpoch < deadline) {
-      await Future<void>.delayed(const Duration(milliseconds: 800));
-      if (!mounted) return;
-      try {
-        final state = await chat.gateway.call('handoff.state', {
-          'session_id': sessionId,
-        });
-        final phase = readHandoffPhase(
-          state: state['state'],
-          nowMs: DateTime.now().millisecondsSinceEpoch,
-          deadlineMs: deadline,
-        );
-        if (phase == HandoffPhase.completed) {
-          chat.showCommandNotice(l10n.composer_handoff_done(platform));
-          return;
-        }
-        if (phase == HandoffPhase.failed) {
-          final error = state['error']?.toString().trim();
-          chat.showCommandNotice(
-            error == null || error.isEmpty
-                ? l10n.composer_handoff_failed
-                : error,
-          );
-          return;
-        }
-      } catch (_) {}
-    }
+  /// Desktop's resume picker. Cancelling it gives back the typed command.
+  Future<void> _resume(String query, String text) async {
+    _input.clear();
+    final writer = _draftWriter, cleared = writer.revision;
+    final picked = await showResumePicker(
+      context: context,
+      initialQuery: query,
+      listAvailable: widget.sessions != null,
+      load: (_) async => [
+        for (final row in widget.sessions?.sessions ?? const <Session>[])
+          ResumeCandidate(id: row.id, title: row.title, preview: row.preview),
+      ],
+    );
     if (!mounted) return;
-    try {
-      await chat.gateway.call(
-        'handoff.fail',
-        handoffFailParams(sessionId, l10n.composer_handoff_timeout),
-      );
-    } catch (_) {}
-    chat.showCommandNotice(l10n.composer_handoff_timeout);
+    final open = widget.onResume;
+    if (picked != null && open != null) {
+      open(picked.id, picked.title);
+      return;
+    }
+    if (picked != null) {
+      chat.showCommandNotice(context.sharedL10n.composer_resume_unavailable);
+    }
+    // Cancelled (or nowhere to open it): the typed command comes back,
+    // unless the user has typed something else since.
+    if (writer == _draftWriter &&
+        writer.revision == cleared &&
+        _input.text.isEmpty) {
+      _setComposer(text);
+    }
+  }
+
+  Future<void> _watchHandoff(
+    NgChatController owner,
+    NgCommandItem card,
+    String sessionId,
+    String platform,
+  ) async {
+    final l10n = context.sharedL10n;
+    final outcome = await watchHandoff(
+      rpc: (method, params) => owner.gateway.call(method, params),
+      sessionId: sessionId,
+      timeoutMessage: l10n.composer_handoff_timeout,
+      alive: () => mounted && identical(owner, widget.chat),
+    );
+    switch (outcome.phase) {
+      case HandoffPhase.pending:
+        return;
+      case HandoffPhase.completed:
+        owner.settleHandoff(card, l10n.composer_handoff_done(platform));
+      case HandoffPhase.failed:
+        owner.settleHandoff(
+          card,
+          outcome.error.isEmpty ? l10n.composer_handoff_failed : outcome.error,
+          failed: true,
+        );
+      case HandoffPhase.timedOut:
+        owner.settleHandoff(card, l10n.composer_handoff_timeout, failed: true);
+    }
   }
 
   Future<void> _compressChat() async {
@@ -826,8 +831,8 @@ class _NgChatViewState extends State<NgChatView>
   /// run there (see [NgSlashCatalog.runsOnGateway]). Returns false when
   /// [text] is ordinary text to send as a prompt.
   Future<bool> _runCommand(NgSlashLine command, String text) async {
-    if (await _runDedicated(command)) return true;
-    if (!mounted) return true;
+    if (await _runDedicated(command, text)) return true;
+    if (!mounted || _input.text.trim() != text) return true;
     switch (command.name) {
       case 'new' || 'reset':
         if (widget.onNewChat == null) {

@@ -21,6 +21,7 @@ import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/prepared_image_store.dart';
 import '../../core/services/slash_command_errors.dart';
 import '../../core/services/ws_client.dart';
+import '../../core/composer/composer_commands.dart';
 import '../../core/composer/failure_recovery.dart';
 import 'history_rows.dart';
 import 'nextgen_gateway.dart';
@@ -318,6 +319,15 @@ NgSystemItem? ngSystemItemFor(String key, Map<String, dynamic> row) {
 /// Short notices stay a centred line; long or multi-line ones collapse.
 bool ngNoticeIsLong(String text) =>
     text.length > 160 || text.trim().contains('\n');
+
+/// What [NgChatController.runDedicated] did: the card it answered under,
+/// and the live session to watch when it requested a handoff.
+class NgDedicatedResult {
+  const NgDedicatedResult(this.card, {this.handoffSession});
+
+  final NgCommandItem card;
+  final String? handoffSession;
+}
 
 /// A queued prompt, sent when the running turn ends.
 class NgQueued {
@@ -1976,6 +1986,17 @@ class NgChatController extends ChangeNotifier {
           gateway.forgetRequest(id);
           if (request?.request.id == id) request = null;
         }
+      case 'btw.complete' || 'background.complete':
+        // Desktop's dispatcher: the answer to /btw or /background arrives
+        // only as this event on the session that asked, so it is the one
+        // place it can be shown. A replay of the same answer is not another.
+        final answer = SideAnswer.fromEvent(event.type, p);
+        if (answer == null || !_sideAnswers.add(answer.identity)) return;
+        items.add(
+          NgCommandItem(_key('c'), answer.header, time: DateTime.now())
+            ..output = answer.text
+            ..running = false,
+        );
       default:
         return;
     }
@@ -1990,6 +2011,8 @@ class NgChatController extends ChangeNotifier {
           'session.updated' ||
           'session.info' ||
           'session.title' ||
+          'btw.complete' ||
+          'background.complete' ||
           'notice':
         _changedNow();
       default:
@@ -2870,6 +2893,91 @@ class NgChatController extends ChangeNotifier {
   }
 
   // ── Slash commands (Kyllene's ChatSession.runCommand) ─────────────────
+
+  /// Side answers already shown (a replayed event is not a second answer).
+  final Set<String> _sideAnswers = {};
+
+  /// Runs `/btw`, `/background` (`/bg`) or `/handoff` through its own RPC,
+  /// the way Desktop does, under a command card: never through
+  /// `slash.exec` (whose capture window closes before the answer) and never
+  /// as a prompt. A new chat is created and a stored chat attached first,
+  /// as Desktop's `ensureSessionId` does, so the RPC never names a stale id.
+  /// Returns null when [command] is not one of these, or the gateway has no
+  /// such method: the ordinary command path then runs it.
+  Future<NgDedicatedResult?> runDedicated(NgSlashLine command) async {
+    final kind = dedicatedSlash(command.name);
+    if (kind == null || kind == DedicatedSlash.resume) return null;
+    final card = NgCommandItem(_key('c'), command.label, time: DateTime.now());
+    items.add(card);
+    error = null;
+    _changedNow();
+    final usage = planDedicated(
+      name: command.name,
+      arg: command.arg,
+      sessionId: 'unused',
+      l10n: ngL,
+    );
+    if (usage.request == null) {
+      card
+        ..output = usage.notice ?? ''
+        ..running = false;
+      _changedNow();
+      return NgDedicatedResult(card);
+    }
+    final String runtime;
+    try {
+      runtime = await _ensureCommandSession();
+    } catch (e) {
+      _commandFailed(
+        card,
+        NgCommandResult.failed,
+        ngL.ng_slash_command_failed(_clean(e)),
+      );
+      return NgDedicatedResult(card);
+    }
+    if (_disposed) return NgDedicatedResult(card);
+    final run = await runDedicatedCommand(
+      name: command.name,
+      arg: command.arg,
+      sessionId: runtime,
+      l10n: ngL,
+      rpc: (method, params) =>
+          gateway.call(method, params, timeout: kNgSlashCommandTimeout),
+    );
+    final answer = run?.answer;
+    if (answer == null || answer.fallbackToExec) {
+      items.remove(card);
+      _changedNow();
+      return null;
+    }
+    if (answer.failed) {
+      _commandFailed(
+        card,
+        NgCommandResult.failed,
+        ngL.ng_slash_command_failed(answer.notice),
+      );
+      return NgDedicatedResult(card);
+    }
+    card
+      ..output = answer.notice
+      ..running = false;
+    _changedNow();
+    return NgDedicatedResult(
+      card,
+      handoffSession: answer.watchHandoff ? runtime : null,
+    );
+  }
+
+  /// Shows how a watched handoff ended on its command card.
+  void settleHandoff(NgCommandItem card, String text, {bool failed = false}) {
+    if (_disposed) return;
+    if (!items.contains(card)) items.add(card);
+    card
+      ..output = card.output.isEmpty ? text : '${card.output}\n$text'
+      ..running = false
+      ..failed = failed;
+    _changedNow();
+  }
 
   /// Whether this connection said it has no `slash.exec` (an older gateway).
   bool get slashExecUnsupported =>

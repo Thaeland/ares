@@ -7116,6 +7116,12 @@ abstract class AppLocalizations {
   /// **'This command needs an open chat.'**
   String get composer_command_needs_session;
 
+  /// No description provided for @composer_command_needs_gateway_session.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat has no gateway session yet. Send a message first, then run the command again.'**
+  String get composer_command_needs_gateway_session;
+
   /// No description provided for @composer_side_question.
   ///
   /// In en, this message translates to:
