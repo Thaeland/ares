@@ -294,15 +294,20 @@ ThemeData _base(String layout, Brightness app) => layout == 'classic'
     ? hermesTheme(app)
     : nextGenTheme(app, NextGenLook.instance);
 
+/// Preferences holding [theme] as the import, or none for a built-in look.
 Future<SharedPreferences> _prefsWith(
-  ImportedTheme theme, [
+  ImportedTheme? theme, [
   Map<String, Object> extra = const {},
 ]) async {
   SharedPreferences.setMockInitialValues(extra);
   final prefs = await SharedPreferences.getInstance();
-  await ImportedThemeStore(prefs).save(theme);
+  if (theme != null) await ImportedThemeStore(prefs).save(theme);
   return prefs;
 }
+
+/// The real NextGen views are also walked with no import: the built-in
+/// NextGen tokens have to clear 4.5:1 as well.
+const _builtIn = 'the built-in look';
 
 NextGenGateway _gateway() => NextGenGateway(
   SavedConnection(
@@ -890,9 +895,9 @@ void main() {
 
   // ------------------------------------------- real NextGen chat view -----
   for (final app in Brightness.values) {
-    for (final name in _themes.keys) {
+    for (final name in [..._themes.keys, _builtIn]) {
       testWidgets('NgChatView $name over ${app.name}', (tester) async {
-        final theme = _themes[name]!();
+        final theme = _themes[name]?.call();
         final prefs = await _prefsWith(theme);
         tester.view.physicalSize = const Size(1000, 3000);
         tester.view.devicePixelRatio = 1;
@@ -952,9 +957,9 @@ void main() {
 
   // -------------------------------------------- real NextGen sidebar ------
   for (final app in Brightness.values) {
-    for (final name in _themes.keys) {
+    for (final name in [..._themes.keys, _builtIn]) {
       testWidgets('NgSessionsSidebar $name over ${app.name}', (tester) async {
-        final theme = _themes[name]!();
+        final theme = _themes[name]?.call();
         tester.view.physicalSize = const Size(1280, 800);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.reset);
@@ -1214,5 +1219,215 @@ void main() {
       await tester.pump(const Duration(seconds: 1));
       expect(report.lowRuns, isEmpty, reason: report.label);
     });
+  }
+
+  // ------------------------------------------ built-in NextGen tokens -----
+  // Every built-in NextGen ink clears 4.5:1 where it is drawn: every ink on
+  // every plain surface (the segmented thumb carries only `text`); body
+  // inks also on the accent and status washes that tint sidebar rows and
+  // pills; accentText on its own wash; each status ink on its own badge
+  // wash. Every accent, both brightnesses, and pure black.
+  test('built-in NextGen tokens clear 4.5:1 where each ink is drawn', () {
+    final low = <String, String>{};
+    for (final brightness in Brightness.values) {
+      for (final pureBlack in [false, true]) {
+        for (final accent in NgAccent.values) {
+          final c = NgColors.build(brightness, accent, pureBlack, true);
+          final look =
+              '${brightness.name}${pureBlack ? ' pure black' : ''} '
+              '${accent.name}';
+          void check(String ink, Color color, String surface, Color fill) {
+            final ratio = _ratio(color, fill);
+            if (ratio < 4.5) {
+              low['$look: $ink on $surface'] = ratio.toStringAsFixed(2);
+            }
+          }
+
+          final plain = {
+            'background': c.background,
+            'surface': c.surface,
+            'surface2': c.surface2,
+            'surface3': c.surface3,
+            'well': c.well,
+            'sheet': c.sheet,
+            'input': c.input,
+            'sidebar': c.sidebar,
+          };
+          final washes = {
+            'accentSoft': c.accentSoft,
+            'dangerSoft': c.dangerSoft,
+            'successSoft': c.successSoft,
+            'warningSoft': c.warningSoft,
+          };
+          final inks = {
+            'text': c.text,
+            'text2': c.text2,
+            'text3': c.text3,
+            'textMuted': c.textMuted,
+            'accentText': c.accentText,
+            'danger': c.danger,
+            'success': c.success,
+            'warning': c.warning,
+          };
+          check('text', c.text, 'thumb', c.thumb);
+          for (final surface in plain.entries) {
+            for (final ink in inks.entries) {
+              check(ink.key, ink.value, surface.key, surface.value);
+            }
+            for (final wash in washes.entries) {
+              final tinted = Color.alphaBlend(wash.value, surface.value);
+              for (final body in ['text', 'text2', 'text3']) {
+                check(body, inks[body]!, '${wash.key}/${surface.key}', tinted);
+              }
+            }
+            for (final (ink, wash) in [
+              ('accentText', 'accentSoft'),
+              ('danger', 'dangerSoft'),
+              ('success', 'successSoft'),
+              ('warning', 'warningSoft'),
+            ]) {
+              check(
+                ink,
+                inks[ink]!,
+                '$wash/${surface.key}',
+                Color.alphaBlend(washes[wash]!, surface.value),
+              );
+            }
+          }
+          check('onAccent', c.onAccent, 'accent', c.accent);
+          check('onUserBubble', c.onUserBubble, 'userBubble', c.userBubble);
+          check('onInverse', c.onInverse, 'inverse', c.inverse);
+        }
+      }
+    }
+    expect(low, isEmpty);
+  });
+
+  // ------------------------- the embed UI on the built-in looks -----------
+  const embedReply =
+      'Embeds:\n\n![chart](https://images.example.org/chart.png)\n\n'
+      'https://youtu.be/dQw4w9WgXcQ\n\n'
+      'https://maps.google.com/maps?q=Sydney+Opera+House\n';
+  for (final layout in ['classic', 'nextgen']) {
+    for (final app in Brightness.values) {
+      for (final mode in InlineEmbedMode.values) {
+        testWidgets('embed UI on the built-in $layout ${app.name} look, '
+            '${mode.name}', (tester) async {
+          SharedPreferences.setMockInitialValues({
+            ReadingControls.preferenceKey: jsonEncode({
+              'chatFont': 'platform',
+              'terminalFont': 'geistMono',
+              'direction': 'automatic',
+              'bubbleOpacity': 1,
+              'embedMode': mode.name,
+              'allowedEmbeds': <String>[],
+              'emojiReactions': false,
+              'celebrationHearts': false,
+            }),
+          });
+          final prefs = await SharedPreferences.getInstance();
+          tester.view.physicalSize = const Size(1000, 3000);
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.reset);
+          if (layout == 'nextgen') {
+            _forbidNetwork();
+            final gateway = _gateway();
+            final chat = NgChatController(gateway, sessionId: 's')
+              ..runtimeId = 'runtime-s'
+              ..debugApplyHistory([
+                {'role': 'user', 'content': 'User words here'},
+                {'role': 'assistant', 'content': embedReply},
+              ]);
+            addTearDown(() {
+              chat.dispose();
+              gateway.dispose();
+            });
+            await tester.pumpWidget(
+              MaterialApp(
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                supportedLocales: AppLocalizations.supportedLocales,
+                theme: _base('nextgen', app),
+                builder: (context, child) =>
+                    PresentationRoot(preferences: prefs, child: child!),
+                home: NgScope(
+                  connManager: ConnectionManager(prefs),
+                  gateway: gateway,
+                  connections: [gateway.connection],
+                  switchTo: (_) async {},
+                  addGateway: () async {},
+                  signOut: (_) async {},
+                  reload: () async {},
+                  signInAgain: () async {},
+                  child: Scaffold(
+                    body: NgChatView(
+                      key: ObjectKey(chat),
+                      chat: chat,
+                      onOpenSidebar: () {},
+                      onNewChat: () {},
+                    ),
+                  ),
+                ),
+              ),
+            );
+          } else {
+            mockChatImageRecovery();
+            final rows = [
+              {'id': '1', 'role': 'user', 'content': 'User words here'},
+              {
+                'id': '2',
+                'role': 'assistant',
+                'content': embedReply,
+                'completed': true,
+              },
+            ];
+            await tester.pumpWidget(
+              MaterialApp(
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                supportedLocales: preferredSupportedLocales(),
+                localeListResolutionCallback: resolvePreferredLocale,
+                theme: _base('classic', app),
+                builder: (context, child) =>
+                    PresentationRoot(preferences: prefs, child: child!),
+                home: ChatScreen(
+                  connection: SavedConnection(
+                    id: 'home',
+                    label: 'Fixture',
+                    host: 'contrast.fixture',
+                    port: 8642,
+                    apiKey: 'k',
+                  ),
+                  session: Session(
+                    id: 'contrast',
+                    title: 'Fixture',
+                    model: 'fixture-model',
+                    source: 'api_server',
+                    messageCount: rows.length,
+                    isActive: false,
+                    preview: '',
+                    startedAt: 1,
+                  ),
+                  testApiClient: ApiClient(
+                    baseUrl: 'http://contrast.fixture',
+                    apiKey: 'k',
+                    httpClient: _History(rows),
+                  ),
+                  testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
+                ),
+              ),
+            );
+            _forbidNetwork();
+            await pumpChatUpdates(tester);
+          }
+          for (var i = 0; i < 8; i++) {
+            await tester.pump(const Duration(milliseconds: 50));
+          }
+          final report = _Report('embed UI $layout ${app.name} ${mode.name}');
+          report.add(_measureAll(tester), 'embeds');
+          await tester.pumpWidget(const SizedBox());
+          await tester.pump(const Duration(seconds: 1));
+          expect(report.lowRuns, isEmpty, reason: report.label);
+        });
+      }
+    }
   }
 }
