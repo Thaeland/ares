@@ -18,6 +18,7 @@ class NgSlashCommandInfo extends StatefulWidget {
     required this.controller,
     required this.focusNode,
     required this.child,
+    this.showsSentAsMessageNote = true,
     this.catalog,
   });
 
@@ -25,6 +26,11 @@ class NgSlashCommandInfo extends StatefulWidget {
   final SlashCommandHighlightController controller;
   final FocusNode focusNode;
   final Widget child;
+
+  /// NextGen sends a `/command` draft as an ordinary prompt; the card says so.
+  /// The single switch for that line, pending a decision on whether NextGen
+  /// should run commands itself.
+  final bool showsSentAsMessageNote;
 
   /// Test hook: a reader with custom timing.
   final NgSlashCatalog? catalog;
@@ -94,10 +100,14 @@ class _NgSlashCommandInfoState extends State<NgSlashCommandInfo> {
         textStyle: NgType.bodySmall,
         radius: NgRadii.md,
       ),
-      note: ngL.ng_slash_command_sent_as_message,
+      note: widget.showsSentAsMessageNote
+          ? ngL.ng_slash_command_sent_as_message
+          : null,
       scope: widget.chat,
       refresh: _catalog,
       onToken: _onToken,
+      // The composer's input container is 4 dp inside this child.
+      gap: 2,
       child: widget.child,
     );
   }

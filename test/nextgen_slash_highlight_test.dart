@@ -3,6 +3,7 @@
 // only public NextGen APIs and keys, so the same file runs (red) against a
 // build without the feature. Sending is unchanged: the draft goes out as an
 // ordinary prompt.
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -160,15 +161,51 @@ Future<void> _type(WidgetTester tester, String text) async {
   await tester.pump();
 }
 
-Future<void> _tapText(WidgetTester tester, int start, int end) async {
+Future<void> _tapText(
+  WidgetTester tester,
+  int start,
+  int end, {
+  PointerDeviceKind kind = PointerDeviceKind.touch,
+}) async {
   await tester.pump(kDoubleTapTimeout + const Duration(milliseconds: 50));
   final editable = _editable(tester).renderEditable;
   final box = editable
       .getBoxesForSelection(TextSelection(baseOffset: start, extentOffset: end))
       .first;
-  await tester.tapAt(editable.localToGlobal(box.toRect().center));
+  await tester.tapAt(editable.localToGlobal(box.toRect().center), kind: kind);
   await tester.pump();
   await tester.pump();
+}
+
+Rect _editableRect(WidgetTester tester) {
+  final editable = _editable(tester).renderEditable;
+  return editable.localToGlobal(Offset.zero) & editable.size;
+}
+
+/// The composer's rounded input container (the field's nearest decorated
+/// Container ancestor).
+Rect _inputContainerRect(WidgetTester tester) {
+  final container = find
+      .ancestor(of: find.byKey(_fieldKey), matching: find.byType(Container))
+      .evaluate()
+      .map((element) => element.widget as Container)
+      .firstWhere((widget) => widget.decoration is BoxDecoration);
+  return tester.getRect(find.byWidget(container));
+}
+
+Map<String, Rect> _controlRects(WidgetTester tester) {
+  final finders = <String, Finder>{
+    'attach': find.byTooltip('Attach'),
+    'model': find.byKey(const ValueKey('ng-model-picker')),
+    'dictate': find.byTooltip('Dictate'),
+    'send': find.byTooltip('Send'),
+    'stop': find.byTooltip('Stop'),
+  };
+  return {
+    for (final entry in finders.entries)
+      if (entry.value.evaluate().isNotEmpty)
+        entry.key: tester.getRect(entry.value.first),
+  };
 }
 
 void main() {
@@ -313,5 +350,71 @@ void main() {
       (c) => c.method == 'prompt.submit',
     );
     expect(submit.params['text'], '/help me now');
+  });
+
+  group('card placement', () {
+    for (final (label, size, platform, kind) in [
+      (
+        'phone 412x760',
+        const Size(412, 760),
+        TargetPlatform.android,
+        PointerDeviceKind.touch,
+      ),
+      (
+        'windows 1280x800',
+        const Size(1280, 800),
+        TargetPlatform.windows,
+        PointerDeviceKind.mouse,
+      ),
+      (
+        'macOS 1280x800',
+        const Size(1280, 800),
+        TargetPlatform.macOS,
+        PointerDeviceKind.mouse,
+      ),
+    ]) {
+      for (final draft in [
+        '/title Trip planning',
+        '/title Trip planning\nsecond line\nthird line',
+      ]) {
+        final lines = '\n'.allMatches(draft).length + 1;
+        testWidgets('$label, $lines-line draft: the small card clears the '
+            'field and every composer control', (tester) async {
+          tester.view.physicalSize = size;
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.reset);
+          debugDefaultTargetPlatformOverride = platform;
+          try {
+            await pump(tester);
+            await _type(tester, draft);
+            await _tapText(tester, 1, 5, kind: kind);
+            expect(find.byKey(_infoKey), findsOneWidget);
+
+            final card = tester.getRect(find.byKey(_infoKey));
+            expect(card.width, lessThanOrEqualTo(280));
+            expect(card.left, greaterThanOrEqualTo(0));
+            expect(card.right, lessThanOrEqualTo(size.width));
+            final field = _editableRect(tester);
+            expect(card.overlaps(field), isFalse, reason: '$card vs $field');
+            final controls = _controlRects(tester);
+            for (final name in ['attach', 'model', 'dictate', 'send']) {
+              expect(controls, contains(name));
+            }
+            for (final MapEntry(key: name, value: rect) in controls.entries) {
+              expect(
+                card.overlaps(rect),
+                isFalse,
+                reason: '$name $rect vs $card',
+              );
+            }
+            final input = _inputContainerRect(tester);
+            expect(card.bottom, lessThanOrEqualTo(input.top));
+            expect(input.top - card.bottom, lessThanOrEqualTo(12));
+          } finally {
+            debugDefaultTargetPlatformOverride = null;
+          }
+        });
+      }
+    }
   });
 }
