@@ -113,7 +113,7 @@ class NativeCiConfigurationTest(unittest.TestCase):
         self.assertIn(marker, workflow)
         cache = workflow.split(marker, 1)[1]
         cache = cache.split("      - name:", 1)[0]
-        self.assertIn("uses: actions/cache@v4", cache)
+        self.assertIn("uses: actions/cache@v6", cache)
         self.assertIn("path: ~/.m2/repository/org/robolectric/android-all-instrumented", cache)
         self.assertIn("key: robolectric-${{ runner.os }}-", cache)
         for source in (
