@@ -4,6 +4,7 @@
 /// Pure helpers only — no UI, no I/O except the injectable [requestGateway].
 /// Callers decide when to interrupt a live turn and which transport to use;
 /// this file owns the exact wire shape of a truncating `prompt.submit`.
+library;
 
 /// Mirror of rewind.ts isSyntheticRendererId. Renderer-synthetic message ids
 /// (`timestamp-index-role` from chat-messages/hydration.ts, plus older
@@ -31,8 +32,7 @@ Map<String, dynamic> truncateSubmitParams(
   int? truncateRowId, {
   bool confirmDeepTruncate = false,
 }) {
-  final hasOrdinal =
-      truncateOrdinal != null && truncateOrdinal >= 0;
+  final hasOrdinal = truncateOrdinal != null && truncateOrdinal >= 0;
   final hasRowId = truncateRowId != null;
   final hasMessageId =
       truncateMessageId != null &&
@@ -63,8 +63,11 @@ Map<String, dynamic> truncateSubmitParams(
 /// message is by definition the newest). Anything else returns undefined and
 /// the caller degrades to a plain resubmit, never a guessed cut.
 Future<int?> resolveDurableRowId(
-  Future<Map<String, dynamic>?> Function(String method, Map<String, dynamic> params)
-      requestGateway,
+  Future<Map<String, dynamic>?> Function(
+    String method,
+    Map<String, dynamic> params,
+  )
+  requestGateway,
   String sessionId,
   String sourceText,
   int? expectedOrdinal,
@@ -78,17 +81,21 @@ Future<int?> resolveDurableRowId(
       'session_id': sessionId,
     });
     final raw = result?['messages'];
-    messages = raw is List ? raw.whereType<Map<String, dynamic>>().toList() : [];
+    messages = raw is List
+        ? raw.whereType<Map<String, dynamic>>().toList()
+        : [];
   } catch (_) {
     return null;
   }
 
   final durableUsers = messages
-      .where((m) =>
-          m['role'] == 'user' &&
-          m['display_kind'] == null &&
-          m['row_id'] is int &&
-          (m['text'] == null || m['text'] is String))
+      .where(
+        (m) =>
+            m['role'] == 'user' &&
+            m['display_kind'] == null &&
+            m['row_id'] is int &&
+            (m['text'] == null || m['text'] is String),
+      )
       .toList();
 
   final matches = durableUsers
@@ -137,8 +144,10 @@ class RewindPlan {
   /// else content-resolved row id. Never a synthetic renderer id.
   static Future<RewindPlan> resolve({
     required Future<Map<String, dynamic>?> Function(
-            String method, Map<String, dynamic> params)
-        requestGateway,
+      String method,
+      Map<String, dynamic> params,
+    )
+    requestGateway,
     required String sessionId,
     required int? truncateOrdinal,
     required String? truncateMessageId,
@@ -147,7 +156,8 @@ class RewindPlan {
   }) async {
     final hasOrdinal = truncateOrdinal != null && truncateOrdinal >= 0;
     final hasRowId = truncateRowId != null;
-    final hasMessageId = truncateMessageId != null &&
+    final hasMessageId =
+        truncateMessageId != null &&
         truncateMessageId.isNotEmpty &&
         !isSyntheticRendererId(truncateMessageId);
     final wantsTruncation = hasOrdinal || hasRowId || hasMessageId;
@@ -181,7 +191,11 @@ class RewindPlan {
     final resolvedRowId = sourceText.trim().isEmpty
         ? null
         : await resolveDurableRowId(
-            requestGateway, sessionId, sourceText, truncateOrdinal);
+            requestGateway,
+            sessionId,
+            sourceText,
+            truncateOrdinal,
+          );
     return RewindPlan._(
       truncateOrdinal: null,
       truncateMessageId: null,
@@ -192,7 +206,8 @@ class RewindPlan {
   }
 
   @override
-  String toString() => 'RewindPlan(rowId: $truncateRowId, ordinal: $truncateOrdinal, messageId: $truncateMessageId)';
+  String toString() =>
+      'RewindPlan(rowId: $truncateRowId, ordinal: $truncateOrdinal, messageId: $truncateMessageId)';
 }
 
 /// Builds the params for the ONE truncating submit of a rewind.
