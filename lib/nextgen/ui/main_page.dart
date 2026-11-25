@@ -514,7 +514,7 @@ class _NgMainPageState extends State<_NgMainContent>
         'reply',
         label,
         'skipped',
-        'Ares was on screen',
+        detail: 'Ares was on screen',
       );
       return;
     }
@@ -523,7 +523,7 @@ class _NgMainPageState extends State<_NgMainContent>
         'reply',
         label,
         'skipped',
-        'the turn was stopped',
+        detail: 'the turn was stopped',
       );
       return;
     }
