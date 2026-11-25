@@ -97,12 +97,6 @@ abstract final class ComposerDraftStore {
     r'^local-draft/[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$',
   ).hasMatch(id);
 
-  // Named profiles never hydrate or migrate another profile's draft. Keep the
-  // original default-profile bucket for backwards-compatible exact-chat reads.
-  static String namespace(String connectionId, String? profile) =>
-      profile == null || profile.trim().isEmpty
-      ? connectionId
-      : '$connectionId\u0000profile:${base64Url.encode(utf8.encode(profile.trim()))}';
   static Future<void>? _tail;
   static int _nextOwner = 0;
   static final Map<String, int> _owners = {};

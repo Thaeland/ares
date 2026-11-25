@@ -1693,5 +1693,11 @@
   "ng_aux_profile_describer": "Descriptions de profil",
   "ng_aux_profile_describer_hint": "Rédige la courte description de chaque profil",
   "ng_aux_curator": "Curateur",
-  "ng_aux_curator_hint": "Examine l’utilisation des compétences"
+  "ng_aux_curator_hint": "Examine l’utilisation des compétences",
+  "ng_allow_until_sandbox_off": "Jusqu’à la désactivation du bac à sable",
+  "ng_folder_access": "Accès au dossier",
+  "ng_folder_access_unspecified": "La passerelle n’a pas indiqué si l’accès est en lecture seule ou en lecture et écriture.",
+  "ng_folder_read_only": "Lecture seule",
+  "ng_folder_read_write": "Lecture et écriture",
+  "ng_website_access": "Accès au site web"
 }

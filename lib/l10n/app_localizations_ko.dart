@@ -646,7 +646,15 @@ class AppLocalizationsKo extends AppLocalizations {
       '이 Hermes 세션이 끝날 때까지 일치하는 명령을 허용합니다.';
 
   @override
+  String get allow_folder_until_sandbox_off =>
+      'Allow this folder until the sandbox is switched off.';
+
+  @override
   String get allow_once => '한 번 허용';
+
+  @override
+  String get allow_website_until_sandbox_off =>
+      'Allow this website until the sandbox is switched off.';
 
   @override
   String get always_allow => '항상 허용';
@@ -3961,6 +3969,225 @@ class AppLocalizationsKo extends AppLocalizations {
   String get slash_sessions_inline => '세션 목록을 열어 채팅을 선택하세요. 초안은 보관되었습니다.';
 
   @override
+  String get composer_snippets => 'Prompt snippets';
+
+  @override
+  String get composer_snippets_description =>
+      'Pick a starter prompt to drop into the composer.';
+
+  @override
+  String get composer_snippet_review => 'Code review';
+
+  @override
+  String get composer_snippet_review_body =>
+      'Audit the current change for regressions, dropped edge cases and missing tests.';
+
+  @override
+  String get composer_snippet_review_text =>
+      'Please review this for bugs, regressions and missing tests.';
+
+  @override
+  String get composer_snippet_plan => 'Implementation plan';
+
+  @override
+  String get composer_snippet_plan_body =>
+      'Outline an approach before touching code so the diff stays focused.';
+
+  @override
+  String get composer_snippet_plan_text =>
+      'Please make a concise implementation plan before changing code.';
+
+  @override
+  String get composer_snippet_explain => 'Explain this';
+
+  @override
+  String get composer_snippet_explain_body =>
+      'Walk through how the selected code works and point to the key files.';
+
+  @override
+  String get composer_snippet_explain_text =>
+      'Please explain how this works and point me to the key files.';
+
+  @override
+  String get composer_status => 'Status';
+
+  @override
+  String get composer_status_context => 'Context';
+
+  @override
+  String get composer_status_cache => 'Cache hit';
+
+  @override
+  String get composer_status_throughput => 'Output tokens/sec';
+
+  @override
+  String get composer_status_running => 'Running';
+
+  @override
+  String get composer_status_session => 'Session';
+
+  @override
+  String get composer_status_not_reported => 'Not reported';
+
+  @override
+  String get composer_status_empty => 'No context breakdown was reported.';
+
+  @override
+  String get composer_status_loading => 'Loading context breakdown';
+
+  @override
+  String get composer_status_reset => 'Reset status bar';
+
+  @override
+  String get composer_resume_title => 'Resume a chat';
+
+  @override
+  String get composer_resume_search => 'Search titles and ids';
+
+  @override
+  String get composer_resume_empty => 'No chats match.';
+
+  @override
+  String get composer_resume_unavailable =>
+      'This pane has no chat list to search.';
+
+  @override
+  String get composer_failure_retry => 'Retry';
+
+  @override
+  String composer_failure_retry_at(String time) {
+    return 'Retry at $time';
+  }
+
+  @override
+  String get composer_failure_compress => 'Compress';
+
+  @override
+  String get composer_failure_switch_model => 'Switch model';
+
+  @override
+  String composer_failure_switch_to(String model) {
+    return 'Switch to $model';
+  }
+
+  @override
+  String get composer_failure_new_chat => 'New chat';
+
+  @override
+  String get composer_failure_edit => 'Edit message';
+
+  @override
+  String get composer_failure_details => 'Details';
+
+  @override
+  String get composer_failure_hide_details => 'Hide details';
+
+  @override
+  String get composer_failure_copy => 'Copy diagnostics';
+
+  @override
+  String get composer_failure_account =>
+      'The other fix is on the gateway account. This chat cannot do it.';
+
+  @override
+  String get composer_failure_account_only =>
+      'This has to be fixed on the gateway account. This chat cannot do it.';
+
+  @override
+  String get composer_failure_confirm_compress =>
+      'Compress this chat? The gateway will shorten the transcript.';
+
+  @override
+  String composer_failure_confirm_model(String model) {
+    return 'Switch this chat to $model?';
+  }
+
+  @override
+  String get composer_drop_attach => 'Drop to attach';
+
+  @override
+  String get composer_drop_folder_unsupported =>
+      'Folders can\'t be attached. Drop the files instead.';
+
+  @override
+  String get composer_drop_reference => 'Drop to reference';
+
+  @override
+  String get composer_reference_copy => 'Copy reference';
+
+  @override
+  String get composer_reference_remove => 'Remove reference';
+
+  @override
+  String get composer_btw_usage =>
+      'Usage: /btw <question> — answered from a snapshot of this conversation without interrupting it.';
+
+  @override
+  String get composer_background_usage =>
+      'Usage: /background <prompt> — the task runs separately and the result comes back here.';
+
+  @override
+  String get composer_handoff_usage =>
+      'Usage: /handoff <platform> — transfer this chat to that messaging platform.';
+
+  @override
+  String get composer_command_needs_session =>
+      'This command needs an open chat.';
+
+  @override
+  String get composer_retry_not_found =>
+      'This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.';
+
+  @override
+  String get composer_retry_unavailable =>
+      'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
+
+  @override
+  String get composer_command_needs_gateway_session =>
+      'This chat has no gateway session yet. Send a message first, then run the command again.';
+
+  @override
+  String get composer_side_question =>
+      'btw — answering from a conversation snapshot';
+
+  @override
+  String composer_side_question_id(String id) {
+    return 'btw $id — answering from a conversation snapshot';
+  }
+
+  @override
+  String get composer_background_started =>
+      'Background task started. You can keep chatting. The result will appear here.';
+
+  @override
+  String composer_background_started_id(String id) {
+    return 'Background task $id started. You can keep chatting. The result will appear here.';
+  }
+
+  @override
+  String composer_handoff_requested(String platform) {
+    return 'Handoff to $platform requested.';
+  }
+
+  @override
+  String composer_handoff_done(String platform) {
+    return 'Handed this chat to $platform.';
+  }
+
+  @override
+  String get composer_handoff_failed => 'Handoff failed.';
+
+  @override
+  String get composer_handoff_timeout =>
+      'Handoff did not finish. It may still be running on the gateway.';
+
+  @override
+  String get composer_compress_done => 'Compressed this chat.';
+
+  @override
+  String get composer_file_missing => 'That file is not on this device.';
+
+  @override
   String get nextgen_toggle => 'NextGen 인터페이스';
 
   @override
@@ -4597,6 +4824,25 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_allow_once => '한 번 허용';
+
+  @override
+  String get ng_allow_until_sandbox_off => '샌드박스가 꺼질 때까지';
+
+  @override
+  String get ng_folder_access => '폴더 접근';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      '게이트웨이가 읽기 전용인지 읽기 및 쓰기인지 알려 주지 않았습니다.';
+
+  @override
+  String get ng_folder_read_only => '읽기 전용';
+
+  @override
+  String get ng_folder_read_write => '읽기 및 쓰기';
+
+  @override
+  String get ng_website_access => '웹사이트 접근';
 
   @override
   String get ng_allow_for_this_chat => '이 채팅에서 허용';

@@ -3,6 +3,7 @@
 // GET /api/sessions/{id}/messages.
 import 'dart:async';
 import '../widgets/windows_chat_presence.dart';
+import '../workspace/terminal_chat_link.dart';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -65,6 +66,7 @@ import '../services/notification_prefs.dart';
 import '../services/voice_composer_adapter.dart';
 import '../services/ws_client.dart';
 import '../utils/media_tags.dart';
+import '../utils/session_sources.dart';
 import '../utils/large_paste.dart';
 import '../utils/delivered_files.dart';
 import '../utils/generated_media.dart';
@@ -124,6 +126,16 @@ import '../widgets/voice_composer_controls.dart';
 import 'package:hermes_android/core/l10n/l10n.dart';
 import '../widgets/desktop_shortcuts.dart';
 import '../widgets/composer_prompt_recall.dart';
+import '../composer/composer_commands.dart';
+import '../composer/failure_recovery.dart';
+import '../composer/regenerate.dart';
+import '../composer/context_status.dart';
+import '../composer/reference_completion.dart';
+import '../widgets/composer_context_status.dart';
+import '../widgets/composer_reference_assist.dart';
+import '../widgets/failure_recovery_card.dart';
+import '../widgets/prompt_snippet_sheet.dart';
+import '../widgets/resume_session_picker.dart';
 import '../widgets/orphan_draft_recovery.dart';
 
 /// Recovery v2 opens a new server session and cannot yet target an existing
@@ -726,8 +738,16 @@ class ChatScreen extends StatefulWidget {
     this.testSlashGateway,
     this.onArchiveChanged,
     this.sessionArchiver,
+    this.onOpenSession,
     super.key,
   });
+
+  /// The host's own way of opening a chat (the one its session list uses),
+  /// for `/resume`: it keeps the host, its turn controller, project context,
+  /// archive callbacks and notifications. Null where the host has none (a
+  /// parallel pane, a pop-out, a notification route): `/resume` then says
+  /// so and keeps the line, and never replaces the route itself.
+  final Future<void> Function(Session session)? onOpenSession;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -754,7 +774,16 @@ class _HandsFreeTurnBinding {
   }
 }
 
-class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
+class _ChatScreenState extends State<ChatScreen>
+    with WidgetsBindingObserver, TerminalComposerAttachment<ChatScreen> {
+  @override
+  SavedConnection get terminalConnection => widget.connection;
+  @override
+  String get terminalSession => widget.session.id;
+  @override
+  RemoteWorkspaceOwner? get terminalOwner => _desktopGateway?.workspace;
+  @override
+  TextEditingController get terminalComposer => _textController;
   List<Map<String, dynamic>> _messages = [];
   ChatTimeline _timeline = const ChatTimeline();
   RestChatReplyRetention? _restReplyRetention;
@@ -856,6 +885,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   String? _sessionModel;
   String? _sessionProvider;
   String? _sessionReasoningEffort;
+  String? _sessionReasoningWire;
   String? _projectName;
   String? _storedSessionId;
   bool _showSessionFiles = false;
@@ -1798,6 +1828,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       _sessionModel = override.model;
       _sessionProvider = override.provider;
       _sessionReasoningEffort = override.reasoningEffort;
+      _sessionReasoningWire = '';
       _sessionModelOverride = true;
     });
   }
@@ -1907,6 +1938,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (pendingSubmission != null && !pendingSubmission.isCompleted) {
       pendingSubmission.complete();
     }
+    // The resume picker's own client (never the injected one).
+    _ownedResumeClient?.close();
+    _ownedResumeClient = null;
     _manualAudioIntent++;
     _composerFocus
       ..removeListener(_syncComposerKeyboardEndScroll)
@@ -2109,16 +2143,70 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     FocusScope.of(context).nextFocus();
   }
 
+  /// Whether Retry can regenerate here: only the Desktop gateway's stock
+  /// owner path truncates (Desktop's `runReload`).
+  bool get _canRegenerate =>
+      _desktopGateway != null &&
+      _normalChat != null &&
+      (_turnApplicationSession == null || _legacyTransportFallback);
+
+  /// Retry of a turn the gateway accepted, as Desktop's regenerate: the same
+  /// prompt with `confirm_truncate` and the turn's durable row, so it
+  /// replaces the failed turn instead of appending a duplicate. Never
+  /// touches the composer (a newer draft stays), and never falls back to a
+  /// plain resend: without a durable row it says so and sends nothing.
   Future<void> _retryPrompt(String text) async {
     if (_archiving ||
         _sending ||
         _streaming ||
+        _preparingSend ||
         _pendingReattachResync ||
         text.trim().isEmpty) {
       return;
     }
-    _editAndResend(text);
-    await _sendMessage();
+    final l10n = context.sharedL10n;
+    final gateway = _desktopGateway;
+    final session = _normalLocalSessionKey;
+    if (!_canRegenerate || !gateway!.hasLiveSession(session)) {
+      _showRetryNotice(l10n.composer_retry_unavailable);
+      return;
+    }
+    final row = await resolveRegenerateRow(
+      rpc: gateway.requestSessionRpc,
+      sessionId: session,
+      text: text,
+    );
+    if (!mounted) return;
+    if (row == null) {
+      _showRetryNotice(l10n.composer_retry_not_found);
+      return;
+    }
+    if (_sending || _streaming || _preparingSend) return;
+    await _sendMessage(
+      textOverride: text.trim(),
+      promptParams: regenerateSubmitParams(row),
+    );
+  }
+
+  void _showRetryNotice(String text) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  /// The newest prompt the person sent here, for Retry.
+  String? get _lastPromptText {
+    for (final rows in [
+      _normalSnapshot?.displayRows ?? const <Map<String, dynamic>>[],
+      _messages,
+    ]) {
+      for (final row in rows.reversed) {
+        if (row['role'] != 'user') continue;
+        final text = row['content']?.toString().trim() ?? '';
+        if (text.isNotEmpty) return text;
+      }
+    }
+    return null;
   }
 
   bool get _canRename =>
@@ -4059,6 +4147,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 unawaited(_pickServerFile());
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.notes_outlined),
+              title: Text(context.sharedL10n.composer_snippets),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                unawaited(
+                  showPromptSnippets(context: context, editor: _textController),
+                );
+              },
+            ),
             if (_desktopGateway != null)
               ListTile(
                 leading: const Icon(Icons.description_outlined),
@@ -4604,6 +4702,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         _sessionModel = choice.model;
         _sessionProvider = choice.provider;
         _sessionReasoningEffort = selection.reasoningEffort;
+        _sessionReasoningWire = '';
         _sessionModelOverride = true;
       });
       ScaffoldMessenger.of(context).showSnackBar(
@@ -4687,6 +4786,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     VoidCallback? onAccepted,
     HandsFreePrompt? handsFreePrompt,
     _HandsFreeTurnBinding? voiceBinding,
+    Map<String, Object?> promptParams = const {},
   }) async {
     final keepComposer = textOverride != null || voiceBinding != null;
     if (textOverride == null &&
@@ -4817,7 +4917,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (_turnApplicationSession == null || _legacyTransportFallback) {
       voiceBinding?.admitted.complete(true);
     }
-    setState(() => _sending = true);
+    setState(() {
+      _sending = true;
+      // A new turn supersedes the last failure's recovery card.
+      _recoveryMessage = null;
+      _recoverySurface = null;
+    });
     if (!keepComposer) _clearComposerForSend(text);
     try {
       await _sessionModelRestore;
@@ -4850,6 +4955,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       voiceBinding: voiceBinding,
       preserveComposer: keepComposer,
       onAccepted: onAccepted,
+      promptParams: promptParams,
     );
   }
 
@@ -4873,7 +4979,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       return '';
     }
     final revision = _composerRevision;
-    final unsupportedText = context.l10n.slash_command_unsupported;
+    final l10n = context.l10n;
+    final unsupportedText = l10n.slash_command_unsupported;
     final sessionId = widget.session.id;
     final gateway = _slashGateway;
     final generation = _slashController.generation;
@@ -4899,42 +5006,73 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     try {
       // These are classic ChatScreen surfaces, not NextGen routes. Argument
       // forms are not implemented locally: preserve the exact requested line.
-      if (bareName == 'model' ||
+      if (bareName == 'resume' ||
           bareName == 'sessions' ||
-          bareName == 'resume') {
+          bareName == 'switch') {
+        final query = _slashCommandArgument(text);
+        _slashController.close();
+        final open = widget.onOpenSession;
+        if (open == null) {
+          // No host path to open a chat from here: never replace the route
+          // blindly. Say so and keep the line, arguments included.
+          _appendSlashCommandNotice(text, l10n.slash_sessions_inline);
+          return '';
+        }
+        consume();
+        unawaited(_openResumePicker(text, query, open));
+        return '';
+      }
+      if (bareName == 'btw' ||
+          bareName == 'bg' ||
+          bareName == 'background' ||
+          bareName == 'handoff') {
+        if (gateway is DesktopGatewayClient) {
+          final arg = _slashCommandArgument(text);
+          final shared = context.sharedL10n;
+          if (arg.isNotEmpty && !gateway.hasLiveSession(sessionId)) {
+            // Classic binds the gateway session with the first message; a
+            // side question needs that session, so say so and keep the line.
+            _appendSlashCommandNotice(
+              text,
+              shared.composer_command_needs_gateway_session,
+            );
+            return '';
+          }
+          final run = await runDedicatedCommand(
+            name: bareName,
+            arg: arg,
+            sessionId: sessionId,
+            l10n: shared,
+            rpc: gateway.requestSessionRpc,
+          );
+          if (!current()) return '';
+          final answer = run?.answer;
+          if (answer?.fallbackToExec != true) {
+            final notice = answer?.notice ?? run?.plan.notice;
+            if (notice != null && notice.isNotEmpty) {
+              _appendSlashCommandNotice(text, notice);
+            }
+            if (answer != null && answer.taskId.isNotEmpty) {
+              _startedSideTasks.add(answer.taskId);
+            }
+            if (answer?.failed != true) consume();
+            if (answer?.watchHandoff == true) {
+              unawaited(_watchClassicHandoff(gateway, sessionId, arg));
+            }
+            return '';
+          }
+        }
+      }
+      if (bareName == 'model') {
         if (_slashCommandArgument(text).isNotEmpty) {
-          _appendSlashCommandNotice(text, context.l10n.slash_local_arguments);
-        } else if (bareName == 'model') {
-          // Do not hold the send lock for the lifetime of the modal. The
-          // callback consumes only when discovery really opens it.
+          _appendSlashCommandNotice(text, l10n.slash_local_arguments);
+        } else {
           unawaited(
             _showModelSelector(
               onOpened: consume,
               canOpen: () => current() && _voiceRoute?.isCurrent != false,
             ),
           );
-        } else {
-          _slashController.close();
-          // A pop is safe only when the caller explicitly named a browser
-          // route. Other callers include crons, notification/deep-link chats
-          // and a /new chat stacked over another chat: never pop blindly.
-          final route = ModalRoute.of(context);
-          if (route?.settings.name == '/classic-session-chat') {
-            final navigator = Navigator.of(context);
-            final inlineText = context.l10n.slash_sessions_inline;
-            // Keep the send flight through navigation: two taps must not pop
-            // both the chat and its browser while PopScope is rebuilding.
-            await WidgetsBinding.instance.endOfFrame;
-            if (!current() || revision != _composerRevision) return '';
-            final popped = await navigator.maybePop();
-            if (popped) {
-              consume();
-            } else if (current()) {
-              _appendSlashCommandNotice(text, inlineText);
-            }
-          } else {
-            _appendSlashCommandNotice(text, context.l10n.slash_sessions_inline);
-          }
         }
         return '';
       }
@@ -5013,6 +5151,281 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     } finally {
       _preparingSend = false;
     }
+  }
+
+  ApiClient? _ownedResumeClient;
+  String? _recoveryMessage;
+  FailureSurface? _recoverySurface;
+
+  /// Desktop's resume picker over the chats Desktop lists (no cron, kanban,
+  /// one-shot, tool or subagent runs, nor this chat). The pick opens through
+  /// [open], the host's own path; cancelling gives back [typed].
+  Future<void> _openResumePicker(
+    String typed,
+    String query,
+    Future<void> Function(Session session) open,
+  ) async {
+    if (!mounted) return;
+    final loaded = <Session>[];
+    final picked = await showResumePicker(
+      context: context,
+      initialQuery: query,
+      listAvailable: true,
+      load: (q) async {
+        final client =
+            widget.testApiClient ??
+            (_ownedResumeClient ??= ApiClient.forConnection(widget.connection));
+        final page = await client.getSessionsPage(
+          limit: 50,
+          title: q.trim().isEmpty ? null : q.trim(),
+        );
+        final rows = [
+          for (final row in page.sessions)
+            if (!isMachineSession(row) &&
+                !isInternalListingSession(row, showSubagents: false) &&
+                row.id != widget.session.id &&
+                row.id != _storedSessionKey)
+              row,
+        ];
+        loaded
+          ..clear()
+          ..addAll(rows);
+        return [
+          for (final row in rows)
+            ResumeCandidate(id: row.id, title: row.title, preview: row.preview),
+        ];
+      },
+    );
+    if (!mounted) return;
+    if (picked == null) {
+      // Cancelled: the typed command comes back to an empty composer.
+      if (_draftWriter.isCurrent && _textController.text.isEmpty) {
+        _editComposerAsUser(typed);
+      }
+      return;
+    }
+    Session? session;
+    for (final row in loaded) {
+      if (row.id == picked.id) session = row;
+    }
+    if (session == null) return;
+    await open(session);
+  }
+
+  Future<void> _watchClassicHandoff(
+    DesktopGatewayClient gateway,
+    String sessionId,
+    String platform,
+  ) async {
+    final sharedL10n = context.sharedL10n;
+    final outcome = await watchHandoff(
+      rpc: gateway.requestSessionRpc,
+      sessionId: sessionId,
+      timeoutMessage: sharedL10n.composer_handoff_timeout,
+      alive: () => mounted && widget.session.id == sessionId,
+    );
+    final text = switch (outcome.phase) {
+      HandoffPhase.pending => null,
+      HandoffPhase.completed => sharedL10n.composer_handoff_done(platform),
+      HandoffPhase.failed =>
+        outcome.error.isEmpty
+            ? sharedL10n.composer_handoff_failed
+            : outcome.error,
+      HandoffPhase.timedOut => sharedL10n.composer_handoff_timeout,
+    };
+    if (text == null || !mounted) return;
+    _appendSlashCommandNotice('/handoff $platform', text);
+  }
+
+  /// Side questions and background tasks this chat started (`/btw`,
+  /// `/background`): their answers belong in this transcript.
+  final Set<String> _startedSideTasks = {};
+
+  /// Desktop's dispatcher shows the answer to `/btw` and to a `/background`
+  /// task this chat started as a persistent line in the chat. Classic shows
+  /// it the way it shows command output: in quiet and verbose chat alike.
+  bool _showSideAnswer(StreamEvent event) {
+    final answer = SideAnswer.fromEvent(event.type, event.data);
+    if (answer == null) return false;
+    if (answer.kind == DedicatedSlash.background &&
+        !_startedSideTasks.contains(answer.taskId)) {
+      return false; // someone else's task: the gateway notice path shows it
+    }
+    if (answer.kind == DedicatedSlash.background) {
+      _notifyBackgroundNotice(
+        GatewayNotice(
+          kind: GatewayNoticeKind.background,
+          text: answer.text,
+          taskId: answer.taskId.isEmpty ? null : answer.taskId,
+        ),
+      );
+    }
+    final seen = _slashNotices.any(
+      (notice) =>
+          notice.command == answer.header && notice.output == answer.text,
+    );
+    if (!seen) _appendSlashCommandNotice(answer.header, answer.text);
+    return true;
+  }
+
+  StatusBarLayout _statusLayout = StatusBarLayout.defaults();
+  ContextReading? _statusBreakdown;
+  bool _statusBreakdownLoading = false;
+  bool _statusLayoutLoaded = false;
+
+  /// Applies and keeps the status bar choice (shared with NextGen).
+  void _setStatusLayout(StatusBarLayout layout) {
+    setState(() => _statusLayout = layout);
+    unawaited(saveStatusLayout(layout));
+    if (layout.visible('context-usage')) unawaited(_loadStatusBreakdown());
+  }
+
+  Future<void> _loadStatusBreakdown() async {
+    if (!_statusLayout.visible('context-usage')) return;
+    final gateway = _desktopGateway;
+    if (gateway == null || !gateway.hasLiveSession(widget.session.id)) {
+      setState(() => _statusBreakdown = ContextReading.empty);
+      return;
+    }
+    setState(() => _statusBreakdownLoading = true);
+    try {
+      final result = await gateway.requestSessionRpc(
+        'session.context_breakdown',
+        {'session_id': widget.session.id},
+      );
+      if (!mounted) return;
+      setState(() {
+        _statusBreakdown = parseContextBreakdown(result);
+        _statusBreakdownLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _statusBreakdown = ContextReading.empty;
+        _statusBreakdownLoading = false;
+      });
+    }
+  }
+
+  /// A composer RPC: session-scoped once the chat has a live gateway
+  /// session, otherwise connection-level (never a stored id in its place).
+  Future<Map<String, dynamic>> _composerRpc(
+    String method,
+    Map<String, dynamic> params,
+  ) {
+    final gateway = _desktopGateway;
+    if (gateway == null) throw StateError('No Desktop gateway');
+    if (gateway.hasLiveSession(widget.session.id)) {
+      return gateway.requestSessionRpc(method, {
+        ...params,
+        'session_id': widget.session.id,
+      });
+    }
+    return gateway.call(method, params);
+  }
+
+  /// The failure card's Compress: the gateway's session.compress, then the
+  /// transcript again. A failure is shown, never swallowed.
+  Future<void> _compressClassicChat() async {
+    final gateway = _desktopGateway;
+    final shared = context.sharedL10n;
+    if (gateway == null || !gateway.hasLiveSession(widget.session.id)) {
+      _showRetryNotice(shared.composer_command_needs_gateway_session);
+      return;
+    }
+    try {
+      await gateway.requestSessionRpc('session.compress', {
+        'session_id': widget.session.id,
+      });
+      if (!mounted) return;
+      setState(() {
+        _recoveryMessage = null;
+        _recoverySurface = null;
+      });
+      _appendSlashCommandNotice('/compress', shared.composer_compress_done);
+      unawaited(_loadStatusBreakdown());
+    } catch (error) {
+      if (!mounted) return;
+      _showRetryNotice(
+        error is JsonRpcError ? error.message : error.toString(),
+      );
+    }
+  }
+
+  Widget _modelRowButton(BuildContext context) {
+    if (!_statusLayoutLoaded) {
+      _statusLayoutLoaded = true;
+      unawaited(
+        loadStatusLayout().then((layout) {
+          if (!mounted) return;
+          setState(() => _statusLayout = layout);
+          if (layout.visible('context-usage')) {
+            unawaited(_loadStatusBreakdown());
+          }
+        }),
+      );
+    }
+    final busy =
+        _sending ||
+        _streaming ||
+        _pendingReattachResync ||
+        _loadingModelOptions ||
+        _changingModel;
+    return Semantics(
+      label: context.l10n.choose_chat_model,
+      value: _sessionModel ?? widget.session.model,
+      button: true,
+      enabled: !busy,
+      excludeSemantics: true,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 48),
+        child: TextButton.icon(
+          onPressed: busy ? null : _showModelSelector,
+          icon: _loadingModelOptions || _changingModel
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.tune, size: 18),
+          label: Text(
+            context.l10n.model_scope_label(
+              _sessionModel ?? widget.session.model,
+              _sessionModelOverride
+                  ? context.l10n.this_chat
+                  : context.l10n.profile_default,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// A turn is live on this screen: being prepared, sent, streamed,
+  /// recovered or owned by the stock application owner.
+  bool get _hasLiveTurn =>
+      _sending ||
+      _streaming ||
+      _preparingSend ||
+      _recoveringTurn ||
+      _pendingReattachResync ||
+      _normalChat?.snapshot.hasActiveTurn == true;
+
+  void _noteRecovery(Map<String, dynamic> data) {
+    final message = data['message']?.toString().trim();
+    final surface = FailureSurface.parse(
+      data['surface'] ?? data['error_surface'] ?? data,
+    );
+    final text = message == null || message.isEmpty
+        ? surface?.message
+        : message;
+    if (text == null || text.isEmpty) return;
+    setState(() {
+      _recoveryMessage = text;
+      _recoverySurface = surface;
+    });
   }
 
   static const Set<String> _localNewSessionNames = {'new', 'reset'};
@@ -5218,6 +5631,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     bool preserveComposer = false,
     VoidCallback? onAccepted,
     bool heldUntilAccepted = false,
+    Map<String, Object?> promptParams = const {},
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     // A remote-gateway profile uses one transport for every prompt. Images and
@@ -5243,9 +5657,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         preserveComposer: keepComposer,
         onAccepted: onAccepted,
         heldUntilAccepted: heldUntilAccepted,
+        promptParams: promptParams,
       );
       return;
     }
+    // Only the Desktop gateway truncates: _retryPrompt never sends a
+    // regenerate down another transport.
+    assert(promptParams.isEmpty);
 
     final pendingImage = attachments.firstOrNull;
     String? imageDataUrl;
@@ -5594,6 +6012,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     bool preserveComposer = false,
     VoidCallback? onAccepted,
     bool heldUntilAccepted = false,
+    Map<String, Object?> promptParams = const {},
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     final chat = _normalChat;
@@ -5758,6 +6177,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             maySubmit: voiceBinding == null
                 ? null
                 : () => _handsFree.isCurrent(voiceBinding.prompt.authority),
+            promptParams: promptParams,
           );
           final submittedTurn = chat.snapshot.turnId;
           await submitted;
@@ -6020,8 +6440,33 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
   }
 
+  void _adoptRouteEffort(Map<String, dynamic> data) {
+    final info = data['info'] is Map
+        ? Map<String, dynamic>.from(data['info'] as Map)
+        : data;
+    if (!info.containsKey('reasoning_effort') &&
+        !info.containsKey('reasoning_effort_wire')) {
+      return;
+    }
+    setState(() {
+      final effort = info['reasoning_effort']?.toString();
+      if (effort != null && effort.isNotEmpty) {
+        _sessionReasoningEffort = effort;
+      }
+      if (info.containsKey('reasoning_effort_wire')) {
+        _sessionReasoningWire = info['reasoning_effort_wire']?.toString() ?? '';
+      } else if (info.containsKey('reasoning_effort')) {
+        _sessionReasoningWire = '';
+      }
+    });
+  }
+
   void _handleDesktopGatewayEvent(StreamEvent event, int responseGeneration) {
     if (!mounted || responseGeneration != _responseGeneration) return;
+    if (event.type == 'session.info') {
+      _adoptRouteEffort(event.data);
+      return;
+    }
     final reasoning = GatewayReasoningUpdate.fromGatewayEvent(
       event.type,
       event.data,
@@ -6255,12 +6700,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       _handleDesktopGatewayEvent(event, _responseGeneration);
       return;
     }
-    if (const {
-      'message.complete',
-      'turn.end',
-      'turn.error',
-      'error',
-    }.contains(event.type)) {
+    if (event.type == 'error' || event.type == 'turn.error') {
+      // The client hands every terminal frame to this async path BEFORE the
+      // live turn's own stream, which reports and settles it: while a turn
+      // is live here the frame is that duplicate. Only a frame with no live
+      // turn (a detached turn settling later) is news for the failure card.
+      if (!_hasLiveTurn) _noteRecovery(event.data);
+      return;
+    }
+    if (const {'message.complete', 'turn.end'}.contains(event.type)) {
       return;
     }
     if (event.type == 'notification.show') {
@@ -6300,6 +6748,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       _upsertSubagent(event.type, event.data);
       return;
     }
+    if (_showSideAnswer(event)) return;
     final notice = GatewayNotice.fromGatewayEvent(event.type, event.data);
     if (notice == null) return;
     if (_gatewayNotices.any((item) => item.identity == notice.identity)) return;
@@ -7663,6 +8112,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             projectName: _projectName,
             model: _sessionModel ?? widget.session.model,
             reasoningEffort: _sessionReasoningEffort ?? 'default',
+            reasoningEffortWire: _sessionReasoningWire,
             connectionLabel: widget.connection.label,
             connectionStatus: _chatConnectionStatus,
           ),
@@ -8165,6 +8615,42 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                       )
                     else if (_quietEmptyComposer && _imageRecoveryGap != null)
                       ImageRecoveryCapabilityNotice(gap: _imageRecoveryGap!),
+                    if (_recoveryMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                        child: FailureRecoveryCard(
+                          message: _recoveryMessage!,
+                          recovery: presentRecovery(
+                            _recoverySurface,
+                            nowMs: DateTime.now().millisecondsSinceEpoch,
+                          ),
+                          diagnosticsText: formatErrorDiagnostics(
+                            errorText: _recoveryMessage!,
+                            surface: _recoverySurface,
+                          ),
+                          showDiagnostics: showsDiagnostics(_recoverySurface),
+                          resetsAt: _recoverySurface?.resetsAt,
+                          onDismiss: () => setState(() {
+                            _recoveryMessage = null;
+                            _recoverySurface = null;
+                          }),
+                          onRetry: () {
+                            final prompt = _lastPromptText;
+                            setState(() {
+                              _recoveryMessage = null;
+                              _recoverySurface = null;
+                            });
+                            if (prompt != null) unawaited(_retryPrompt(prompt));
+                          },
+                          onCompress: _desktopGateway == null
+                              ? null
+                              : _compressClassicChat,
+                          onChooseModel: () => _showModelSelector(),
+                          onNewSession: widget.singleSession
+                              ? null
+                              : () => unawaited(_openFreshDraftChat('')),
+                        ),
+                      ),
                     if (!_usesNormalInputOwner && _held.entries.isNotEmpty)
                       ClientHeldQueueBar(
                         count: _held.entries.length,
@@ -8205,53 +8691,65 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                       ChatActivityBar(text: activity)
                     else if (_terminalNoticeText case final notice?)
                       ChatActivityBar(text: notice, isTerminalNotice: true),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(4, 2, 4, 4),
-                        child: Semantics(
-                          label: context.l10n.choose_chat_model,
-                          value: _sessionModel ?? widget.session.model,
-                          button: true,
-                          enabled:
-                              !(_sending ||
-                                  _streaming ||
-                                  _pendingReattachResync ||
-                                  _loadingModelOptions ||
-                                  _changingModel),
-                          excludeSemantics: true,
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(minHeight: 48),
-                            child: TextButton.icon(
-                              onPressed:
-                                  (_sending ||
-                                      _streaming ||
-                                      _pendingReattachResync ||
-                                      _loadingModelOptions ||
-                                      _changingModel)
-                                  ? null
-                                  : _showModelSelector,
-                              icon: _loadingModelOptions || _changingModel
-                                  ? const SizedBox(
-                                      width: 16,
-                                      height: 16,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : const Icon(Icons.tune, size: 18),
-                              label: Text(
-                                context.l10n.model_scope_label(
-                                  _sessionModel ?? widget.session.model,
-                                  _sessionModelOverride
-                                      ? context.l10n.this_chat
-                                      : context.l10n.profile_default,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(4, 2, 4, 4),
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: _modelRowButton(context),
                             ),
                           ),
+                          // Status shares the model row: no extra height.
+                          ComposerStatusMenu(
+                            layout: _statusLayout,
+                            usage: const UsageReading(),
+                            breakdown: _statusBreakdown,
+                            onLayout: _setStatusLayout,
+                          ),
+                        ],
+                      ),
+                    ),
+                    ComposerContextStatus(
+                      layout: _statusLayout,
+                      usage: const UsageReading(),
+                      breakdown: _statusBreakdown,
+                      breakdownLoading: _statusBreakdownLoading,
+                      showMenu: false,
+                      compact: MediaQuery.sizeOf(context).width < 480,
+                      maxHeight: availableHeight * (keyboardOpen ? 0.15 : 0.25),
+                      onLayout: _setStatusLayout,
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: availableHeight * (keyboardOpen ? 0.2 : 0.3),
+                      ),
+                      child: SingleChildScrollView(
+                        child: ComposerReferenceAssist(
+                          controller: _textController,
+                          cacheScope: (_desktopGateway, widget.session.id),
+                          completePath: _desktopGateway == null
+                              ? null
+                              : (query) async {
+                                  final result = await _composerRpc(
+                                    'complete.path',
+                                    pathCompletionParams(query: query),
+                                  );
+                                  final rows = parseReferenceCompletions(
+                                    result,
+                                  );
+                                  return rows.isEmpty
+                                      ? starterSuggestions(query)
+                                      : rows;
+                                },
+                          completeSlash: _desktopGateway == null
+                              ? null
+                              : (text) async => parseArgumentCompletion(
+                                  await _composerRpc('complete.slash', {
+                                    'text': text,
+                                  }),
+                                ),
                         ),
                       ),
                     ),
@@ -8364,177 +8862,192 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   ),
                 ],
               ),
-              child: Row(
-                children: [
-                  Semantics(
-                    label: context.l10n.add_attachment,
-                    button: true,
-                    enabled:
-                        !_transcriptLoadBlocksComposer &&
-                        !_preparingPaste &&
-                        !_streaming &&
-                        !_sending &&
-                        !_pendingReattachResync,
-                    excludeSemantics: true,
-                    child: IconButton(
-                      icon: const Icon(Icons.attach_file),
-                      onPressed:
-                          (!_transcriptLoadBlocksComposer &&
+              child: LayoutBuilder(
+                builder: (context, box) {
+                  // While a turn runs, Attach is disabled anyway; on a narrow
+                  // row it steps aside for Queue so the editor keeps its
+                  // width. It returns when the turn ends.
+                  final showQueueHeld = _streaming && !_usesNormalInputOwner;
+                  final showAttach = !(showQueueHeld && box.maxWidth < 360);
+                  return Row(
+                    children: [
+                      if (showAttach)
+                        Semantics(
+                          label: context.l10n.add_attachment,
+                          button: true,
+                          enabled:
+                              !_transcriptLoadBlocksComposer &&
                               !_preparingPaste &&
                               !_streaming &&
                               !_sending &&
-                              !_pendingReattachResync)
-                          ? _showAttachmentPicker
-                          : null,
-                      tooltip: context.l10n.attach_image_or_file,
-                      constraints: const BoxConstraints.tightFor(
-                        width: 48,
-                        height: 48,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Semantics(
-                      label: context.l10n.message,
-                      textField: true,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Formatting is a writing aid, not chrome: keep it
-                          // out of the compact pill until there is a draft.
-                          if (!keyboardOpen)
-                            ValueListenableBuilder<TextEditingValue>(
-                              valueListenable: _textController,
-                              builder: (context, value, _) =>
-                                  value.text.trim().isEmpty
-                                  ? const SizedBox.shrink()
-                                  : _composerFormatRow(context),
-                            ),
-                          if (!keyboardOpen) const SizedBox(height: 4),
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxHeight: (availableHeight * 0.30).clamp(
-                                48.0,
-                                160.0,
-                              ),
-                            ),
-                            child: SendOnEnter(
-                              enabled: sendEnabled,
-                              onNavigate: (event) =>
-                                  _composerOwnerCurrent &&
-                                      _attachmentDrafts.isEmpty &&
-                                      !_slashDropdownVisible
-                                  ? _promptRecall.handle(
-                                      event,
-                                      _textController,
-                                      _sentPrompts,
-                                    )
-                                  : KeyEventResult.ignored,
-                              onSend: () => unawaited(_sendMessage()),
-                              child: TextField(
-                                key: const Key('chat-message-composer'),
-                                focusNode: _composerFocus,
-                                controller: _textController,
-                                inputFormatters: [_largePasteFormatter],
-                                decoration: InputDecoration(
-                                  hintText: context.l10n.message_hermes,
-                                  filled: true,
-                                  fillColor: Colors.transparent,
-                                  border: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
-                                  ),
-                                  isDense: true,
-                                ),
-                                minLines: 1,
-                                maxLines: 5,
-                                textCapitalization:
-                                    TextCapitalization.sentences,
-                                keyboardType: TextInputType.multiline,
-                                textInputAction: TextInputAction.newline,
-                                enabled: !_transcriptLoadBlocksComposer,
-                              ),
+                              !_pendingReattachResync,
+                          excludeSemantics: true,
+                          child: IconButton(
+                            icon: const Icon(Icons.attach_file),
+                            onPressed:
+                                (!_transcriptLoadBlocksComposer &&
+                                    !_preparingPaste &&
+                                    !_streaming &&
+                                    !_sending &&
+                                    !_pendingReattachResync)
+                                ? _showAttachmentPicker
+                                : null,
+                            tooltip: context.l10n.attach_image_or_file,
+                            constraints: const BoxConstraints.tightFor(
+                              width: 48,
+                              height: 48,
                             ),
                           ),
-                        ],
+                        ),
+                      Expanded(
+                        child: Semantics(
+                          label: context.l10n.message,
+                          textField: true,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Formatting is a writing aid, not chrome: keep it
+                              // out of the compact pill until there is a draft.
+                              if (!keyboardOpen)
+                                ValueListenableBuilder<TextEditingValue>(
+                                  valueListenable: _textController,
+                                  builder: (context, value, _) =>
+                                      value.text.trim().isEmpty
+                                      ? const SizedBox.shrink()
+                                      : _composerFormatRow(context),
+                                ),
+                              if (!keyboardOpen) const SizedBox(height: 4),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxHeight: (availableHeight * 0.30).clamp(
+                                    48.0,
+                                    160.0,
+                                  ),
+                                ),
+                                child: SendOnEnter(
+                                  enabled: sendEnabled,
+                                  onNavigate: (event) =>
+                                      _composerOwnerCurrent &&
+                                          _attachmentDrafts.isEmpty &&
+                                          !_slashDropdownVisible
+                                      ? _promptRecall.handle(
+                                          event,
+                                          _textController,
+                                          _sentPrompts,
+                                        )
+                                      : KeyEventResult.ignored,
+                                  onSend: () => unawaited(_sendMessage()),
+                                  child: TextField(
+                                    key: const Key('chat-message-composer'),
+                                    focusNode: _composerFocus,
+                                    controller: _textController,
+                                    inputFormatters: [_largePasteFormatter],
+                                    decoration: InputDecoration(
+                                      hintText: context.l10n.message_hermes,
+                                      filled: true,
+                                      fillColor: Colors.transparent,
+                                      border: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 8,
+                                          ),
+                                      isDense: true,
+                                    ),
+                                    minLines: 1,
+                                    maxLines: 5,
+                                    textCapitalization:
+                                        TextCapitalization.sentences,
+                                    keyboardType: TextInputType.multiline,
+                                    textInputAction: TextInputAction.newline,
+                                    enabled: !_transcriptLoadBlocksComposer,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  if (!separateVoiceAction && handsFreeAction != null)
-                    handsFreeAction,
-                  if (!_voiceComposer.listening && !_streaming)
-                    VoiceComposerStartButton(
-                      enabled:
-                          !_transcriptLoadBlocksComposer &&
-                          !_preparingPaste &&
-                          !_startingVoiceInput &&
-                          !_streaming &&
-                          !_sending &&
-                          !_pendingReattachResync,
-                      onPressed: _startVoiceInput,
-                    ),
-                  Semantics(
-                    label: context.l10n.spoken_replies,
-                    value: _voiceReplyEnabled
-                        ? context.l10n.on
-                        : context.l10n.off,
-                    toggled: _voiceReplyEnabled,
-                    button: true,
-                    excludeSemantics: true,
-                    child: IconButton(
-                      icon: Icon(
-                        _voiceReplyEnabled ? Icons.volume_up : Icons.volume_off,
+                      const SizedBox(width: 8),
+                      if (!separateVoiceAction && handsFreeAction != null)
+                        handsFreeAction,
+                      if (!_voiceComposer.listening && !_streaming)
+                        VoiceComposerStartButton(
+                          enabled:
+                              !_transcriptLoadBlocksComposer &&
+                              !_preparingPaste &&
+                              !_startingVoiceInput &&
+                              !_streaming &&
+                              !_sending &&
+                              !_pendingReattachResync,
+                          onPressed: _startVoiceInput,
+                        ),
+                      Semantics(
+                        label: context.l10n.spoken_replies,
+                        value: _voiceReplyEnabled
+                            ? context.l10n.on
+                            : context.l10n.off,
+                        toggled: _voiceReplyEnabled,
+                        button: true,
+                        excludeSemantics: true,
+                        child: IconButton(
+                          icon: Icon(
+                            _voiceReplyEnabled
+                                ? Icons.volume_up
+                                : Icons.volume_off,
+                          ),
+                          onPressed: () {
+                            setState(
+                              () => _voiceReplyEnabled = !_voiceReplyEnabled,
+                            );
+                            if (!_voiceReplyEnabled) {
+                              _handsFree.revoke(
+                                HandsFreeStopReason.voiceReplyDisabled,
+                              );
+                              unawaited(
+                                _replySpeaker.stop().catchError((Object _) {}),
+                              );
+                            }
+                          },
+                          tooltip: _voiceReplyEnabled
+                              ? context.l10n.spoken_replies_on
+                              : context.l10n.spoken_replies_off,
+                          constraints: const BoxConstraints.tightFor(
+                            width: 48,
+                            height: 48,
+                          ),
+                        ),
                       ),
-                      onPressed: () {
-                        setState(
-                          () => _voiceReplyEnabled = !_voiceReplyEnabled,
-                        );
-                        if (!_voiceReplyEnabled) {
-                          _handsFree.revoke(
-                            HandsFreeStopReason.voiceReplyDisabled,
-                          );
-                          unawaited(
-                            _replySpeaker.stop().catchError((Object _) {}),
-                          );
-                        }
-                      },
-                      tooltip: _voiceReplyEnabled
-                          ? context.l10n.spoken_replies_on
-                          : context.l10n.spoken_replies_off,
-                      constraints: const BoxConstraints.tightFor(
-                        width: 48,
-                        height: 48,
+                      const SizedBox(width: 4),
+                      if (_streaming) ...[
+                        if (showQueueHeld)
+                          _buildComposerAction(
+                            key: const Key('chat-queue-held'),
+                            label: 'Queue',
+                            tooltip: 'Queue until this turn finishes',
+                            icon: Icons.queue,
+                            onPressed: _queueHeldFromComposer,
+                          ),
+                        _buildComposerAction(
+                          key: const Key('chat-stop-response'),
+                          label: context.l10n.stop_response,
+                          tooltip: context.l10n.stop_response,
+                          icon: Icons.stop_rounded,
+                          onPressed: _stopResponseInFlight
+                              ? null
+                              : _stopResponse,
+                        ),
+                        const SizedBox(width: 4),
+                      ],
+                      _buildSendFab(
+                        sendEnabled: sendEnabled,
+                        sendTooltip: sendTooltip,
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  if (_streaming) ...[
-                    if (!_usesNormalInputOwner)
-                      _buildComposerAction(
-                        key: const Key('chat-queue-held'),
-                        label: 'Queue',
-                        tooltip: 'Queue until this turn finishes',
-                        icon: Icons.queue,
-                        onPressed: _queueHeldFromComposer,
-                      ),
-                    _buildComposerAction(
-                      key: const Key('chat-stop-response'),
-                      label: context.l10n.stop_response,
-                      tooltip: context.l10n.stop_response,
-                      icon: Icons.stop_rounded,
-                      onPressed: _stopResponseInFlight ? null : _stopResponse,
-                    ),
-                    const SizedBox(width: 4),
-                  ],
-                  _buildSendFab(
-                    sendEnabled: sendEnabled,
-                    sendTooltip: sendTooltip,
-                  ),
-                ],
+                    ],
+                  );
+                },
               ),
             ),
           ],
@@ -9095,7 +9608,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ? null
           : () => _readAssistantText(content, announce: true),
       onEdit: isUser ? () => _editAndResend(content) : null,
-      onRetry: isUser
+      // Regenerate needs a transport that truncates; elsewhere Retry would
+      // only append the same turn again.
+      onRetry: isUser || !_canRegenerate
           ? null
           : () => _retryPrompt(msg['_retry_prompt']?.toString() ?? ''),
       showQuickActions:

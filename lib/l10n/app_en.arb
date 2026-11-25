@@ -272,7 +272,9 @@
   "all_stored_message_content": "All stored message content",
   "allow_for_this_session": "Allow for this session",
   "allow_matching_commands_until_this_hermes_session_ends": "Allow matching commands until this Hermes session ends.",
+  "allow_folder_until_sandbox_off": "Allow this folder until the sandbox is switched off.",
   "allow_once": "Allow once",
+  "allow_website_until_sandbox_off": "Allow this website until the sandbox is switched off.",
   "always_allow": "Always allow",
   "apply_to_this_chat": "Apply to this chat",
   "approval_needed": "Approval needed",
@@ -1367,6 +1369,102 @@
   "slash_command_failed": "The command could not be run.",
   "slash_command_unsupported": "This command is not available on this server.",
   "slash_sessions_inline": "Open the session list to choose a chat. Your draft was kept.",
+  "composer_snippets": "Prompt snippets",
+  "composer_snippets_description": "Pick a starter prompt to drop into the composer.",
+  "composer_snippet_review": "Code review",
+  "composer_snippet_review_body": "Audit the current change for regressions, dropped edge cases and missing tests.",
+  "composer_snippet_review_text": "Please review this for bugs, regressions and missing tests.",
+  "composer_snippet_plan": "Implementation plan",
+  "composer_snippet_plan_body": "Outline an approach before touching code so the diff stays focused.",
+  "composer_snippet_plan_text": "Please make a concise implementation plan before changing code.",
+  "composer_snippet_explain": "Explain this",
+  "composer_snippet_explain_body": "Walk through how the selected code works and point to the key files.",
+  "composer_snippet_explain_text": "Please explain how this works and point me to the key files.",
+  "composer_status": "Status",
+  "composer_status_context": "Context",
+  "composer_status_cache": "Cache hit",
+  "composer_status_throughput": "Output tokens/sec",
+  "composer_status_running": "Running",
+  "composer_status_session": "Session",
+  "composer_status_not_reported": "Not reported",
+  "composer_status_empty": "No context breakdown was reported.",
+  "composer_status_loading": "Loading context breakdown",
+  "composer_status_reset": "Reset status bar",
+  "composer_resume_title": "Resume a chat",
+  "composer_resume_search": "Search titles and ids",
+  "composer_resume_empty": "No chats match.",
+  "composer_resume_unavailable": "This pane has no chat list to search.",
+  "composer_failure_retry": "Retry",
+  "composer_failure_retry_at": "Retry at {time}",
+  "@composer_failure_retry_at": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "composer_failure_compress": "Compress",
+  "composer_failure_switch_model": "Switch model",
+  "composer_failure_switch_to": "Switch to {model}",
+  "@composer_failure_switch_to": {
+    "placeholders": {
+      "model": {"type": "String"}
+    }
+  },
+  "composer_failure_new_chat": "New chat",
+  "composer_failure_edit": "Edit message",
+  "composer_failure_details": "Details",
+  "composer_failure_hide_details": "Hide details",
+  "composer_failure_copy": "Copy diagnostics",
+  "composer_failure_account": "The other fix is on the gateway account. This chat cannot do it.",
+  "composer_failure_account_only": "This has to be fixed on the gateway account. This chat cannot do it.",
+  "composer_failure_confirm_compress": "Compress this chat? The gateway will shorten the transcript.",
+  "composer_failure_confirm_model": "Switch this chat to {model}?",
+  "@composer_failure_confirm_model": {
+    "placeholders": {
+      "model": {"type": "String"}
+    }
+  },
+  "composer_drop_attach": "Drop to attach",
+  "composer_drop_folder_unsupported": "Folders can't be attached. Drop the files instead.",
+  "composer_drop_reference": "Drop to reference",
+  "composer_reference_copy": "Copy reference",
+  "composer_reference_remove": "Remove reference",
+  "composer_btw_usage": "Usage: /btw <question> \u2014 answered from a snapshot of this conversation without interrupting it.",
+  "composer_background_usage": "Usage: /background <prompt> \u2014 the task runs separately and the result comes back here.",
+  "composer_handoff_usage": "Usage: /handoff <platform> \u2014 transfer this chat to that messaging platform.",
+  "composer_command_needs_session": "This command needs an open chat.",
+  "composer_retry_not_found": "This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.",
+  "composer_retry_unavailable": "Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.",
+  "composer_command_needs_gateway_session": "This chat has no gateway session yet. Send a message first, then run the command again.",
+  "composer_side_question": "btw \u2014 answering from a conversation snapshot",
+  "composer_side_question_id": "btw {id} \u2014 answering from a conversation snapshot",
+  "@composer_side_question_id": {
+    "placeholders": {
+      "id": {"type": "String"}
+    }
+  },
+  "composer_background_started": "Background task started. You can keep chatting. The result will appear here.",
+  "composer_background_started_id": "Background task {id} started. You can keep chatting. The result will appear here.",
+  "@composer_background_started_id": {
+    "placeholders": {
+      "id": {"type": "String"}
+    }
+  },
+  "composer_handoff_requested": "Handoff to {platform} requested.",
+  "@composer_handoff_requested": {
+    "placeholders": {
+      "platform": {"type": "String"}
+    }
+  },
+  "composer_handoff_done": "Handed this chat to {platform}.",
+  "@composer_handoff_done": {
+    "placeholders": {
+      "platform": {"type": "String"}
+    }
+  },
+  "composer_handoff_failed": "Handoff failed.",
+  "composer_handoff_timeout": "Handoff did not finish. It may still be running on the gateway.",
+  "composer_compress_done": "Compressed this chat.",
+  "composer_file_missing": "That file is not on this device.",
   "nextgen_toggle": "NextGen interface",
   "nextgen_toggle_subtitle": "A new design with one sign-in, live chats and network discovery. Your gateways and chats are shared with this interface.",
   "nextgen_single_login": "Sign in with one login",
@@ -1797,6 +1895,12 @@
   "ng_read_aloud": "Read aloud",
   "ng_the_gateway_connection_dropped_try_again": "The gateway connection dropped. Try again.",
   "ng_allow_once": "Allow once",
+  "ng_allow_until_sandbox_off": "Until the sandbox is switched off",
+  "ng_folder_access": "Folder access",
+  "ng_folder_access_unspecified": "The gateway did not say whether this is read-only or read-write.",
+  "ng_folder_read_only": "Read-only",
+  "ng_folder_read_write": "Read and write",
+  "ng_website_access": "Website access",
   "ng_allow_for_this_chat": "Allow for this chat",
   "ng_always_allow": "Always allow",
   "ng_deny": "Deny",

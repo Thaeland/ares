@@ -355,10 +355,7 @@ class NormalGatewayApplicationSession {
     _aliases[stored] = owner;
     unawaited(
       ComposerDraftStore.bind(
-        connectionId: ComposerDraftStore.namespace(
-          connection.id,
-          connection.gatewayProfile,
-        ),
+        connectionId: connection.id,
         localSessionId: owner.localSessionId,
         storedSessionId: stored,
       ),
@@ -369,10 +366,7 @@ class NormalGatewayApplicationSession {
     if (localAlias != null && localAlias != owner.localSessionId) {
       unawaited(
         ComposerDraftStore.bind(
-          connectionId: ComposerDraftStore.namespace(
-            connection.id,
-            connection.gatewayProfile,
-          ),
+          connectionId: connection.id,
           localSessionId: localAlias,
           storedSessionId: stored,
         ),
@@ -1652,6 +1646,7 @@ class NormalGatewayChatOwner {
     bool Function()? maySubmit,
     Future<bool> Function()? beforeSend,
     void Function()? onAccepted,
+    Map<String, Object?> promptParams = const {},
   }) async {
     if (_redirect != null) {
       return _root.submitPrepared(
@@ -1667,6 +1662,7 @@ class NormalGatewayChatOwner {
         maySubmit: maySubmit,
         beforeSend: beforeSend,
         onAccepted: onAccepted,
+        promptParams: promptParams,
       );
     }
     if (!identical(_reservation, reservation) ||
@@ -1800,6 +1796,7 @@ class NormalGatewayChatOwner {
                   submissionId: imageAttempt?.id,
                   beforeLegacy: imageAttempt?.beforeLegacy,
                   onReceipt: imageAttempt?.receipt,
+                  extraParams: promptParams,
                   text: text,
                   onEvent: onEvent,
                   onSent: onSent,
@@ -1929,6 +1926,7 @@ class NormalGatewayChatOwner {
       'notification.show',
       'notification.clear',
       'background.complete',
+      'btw.complete',
       'review.summary',
     }.contains(event.type)) {
       _auxiliaryEvents.add(event);
@@ -2651,10 +2649,7 @@ class NormalGatewayChatOwner {
         await (handle != null
             ? _restoreDraft(handle, _draftToRestore!, canRestore)
             : ComposerDraftStore.save(
-                connectionId: ComposerDraftStore.namespace(
-                  _session.connection.id,
-                  _session.connection.gatewayProfile,
-                ),
+                connectionId: _session.connection.id,
                 sessionId: localSessionId,
                 text: _draftToRestore!,
                 isCurrent: canRestore,

@@ -23,9 +23,14 @@ import '../services/chat_space_store.dart';
 import '../services/chat_assets_client.dart';
 import '../services/connection_manager.dart';
 import '../services/desktop_gateway_client.dart';
+import '../capabilities/capability_admin.dart';
+import '../capabilities/capability_pages.dart';
 import 'workspace_profiles_screen.dart';
 import 'fleet_screen.dart';
 import 'workspace_workers_screen.dart';
+import 'host_operations_screen.dart';
+import 'schedule_desk_screen.dart';
+import 'memory_graph_screen.dart';
 import '../services/gateway_turn_application_controller.dart';
 import '../services/gateway_turn_journal.dart';
 import '../services/local_chat_pin_store.dart';
@@ -69,6 +74,7 @@ import 'memory_screen.dart';
 import 'settings_screen.dart';
 import 'model_management_screen.dart';
 import 'open_router_screen.dart';
+import 'model_admin_screen.dart';
 import 'nous_portal_screen.dart';
 import 'provider_oauth_screen.dart';
 import 'provider_screen.dart';
@@ -142,6 +148,7 @@ Widget buildWorkspaceChatScreen({
   Future<bool> Function(String sessionId, bool archived)? sessionArchiver,
   ApiClient? testApiClient,
   VoidCallback? onClose,
+  Future<void> Function(Session session)? onOpenSession,
 }) {
   return ChatScreen(
     connection: connection,
@@ -155,6 +162,7 @@ Widget buildWorkspaceChatScreen({
     sessionArchiver: sessionArchiver,
     testApiClient: testApiClient,
     onClose: onClose,
+    onOpenSession: onOpenSession,
   );
 }
 
@@ -1150,6 +1158,11 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                           testApiClient: widget.testChatApiClientFactory
                               ?.call(),
                           onClose: _closeDetail,
+                          // /resume swaps the detail pane, keeping the list.
+                          onOpenSession: (picked) => _openSession(
+                            picked,
+                            projectName: _chatProjectLabels[picked.id],
+                          ),
                         ),
                       ),
               ),
@@ -1423,34 +1436,43 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     }
 
     final builder = widget.sessionScreenBuilder;
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => ProfileTheme(
-          connection: widget.connection,
-          nextGen: false,
-          child:
-              builder?.call(session) ??
-              buildWorkspaceChatScreen(
-                connection: widget.connection,
-                session: session,
-                projectName: projectName,
-                projectWorkingDirectory: projectWorkingDirectory,
-                initialComposerText: initialComposerText,
-                initialAttachmentDrafts: initialAttachmentDrafts,
-                turnApplicationController: widget.turnApplicationController,
-                sessionArchiver: (storedId, archived) async {
-                  final saved = await _archiveSession(
-                    session.withStoredId(storedId),
-                    archived,
-                  );
-                  onArchiveCommitted?.call();
-                  return saved;
-                },
-                testApiClient: widget.testChatApiClientFactory?.call(),
-              ),
-        ),
+    late final MaterialPageRoute<void> route;
+    route = MaterialPageRoute<void>(
+      builder: (_) => ProfileTheme(
+        connection: widget.connection,
+        nextGen: false,
+        child:
+            builder?.call(session) ??
+            buildWorkspaceChatScreen(
+              connection: widget.connection,
+              session: session,
+              projectName: projectName,
+              projectWorkingDirectory: projectWorkingDirectory,
+              initialComposerText: initialComposerText,
+              initialAttachmentDrafts: initialAttachmentDrafts,
+              turnApplicationController: widget.turnApplicationController,
+              sessionArchiver: (storedId, archived) async {
+                final saved = await _archiveSession(
+                  session.withStoredId(storedId),
+                  archived,
+                );
+                onArchiveCommitted?.call();
+                return saved;
+              },
+              testApiClient: widget.testChatApiClientFactory?.call(),
+              // /resume opens the pick here, in place of this chat route.
+              onOpenSession: (picked) async {
+                if (!mounted) return;
+                if (route.isActive) Navigator.of(context).removeRoute(route);
+                await _openSession(
+                  picked,
+                  projectName: _chatProjectLabels[picked.id],
+                );
+              },
+            ),
       ),
     );
+    await Navigator.of(context).push(route);
     if (!mounted) return;
     if (refreshBrowser != null) {
       unawaited(refreshBrowser());
@@ -2261,6 +2283,33 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     }
   }
 
+  void _openCapability(String id) {
+    final connection = widget.connection;
+    final gateway = _ownedGateway;
+    final owned = gateway == null
+        ? DashboardClient.fromConnection(connection)
+        : null;
+    final admin = CapabilityAdmin.fromDashboard(
+      gateway?.dashboard ?? owned!,
+      profile: connection.gatewayProfile,
+      rpc: gateway == null
+          ? null
+          : (method, params) => gateway.call(method, params),
+    );
+    final page = switch (id) {
+      'browser-vault' => BrowserVaultScreen(admin: admin),
+      'agent-policy' => AgentPolicyScreen(admin: admin),
+      _ => CapabilityAdminScreen(admin: admin),
+    };
+    unawaited(
+      pushAndRelease(
+        context,
+        ProfileTheme(connection: connection, nextGen: false, child: page),
+        owned?.close,
+      ),
+    );
+  }
+
   void _openMoreEntry(MoreEntry entry) {
     final connection = widget.connection;
     switch (entry.id) {
@@ -2294,12 +2343,58 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         _openCronJobs();
       case 'skills':
         _push(SkillsScreen(connection: connection));
+      case 'capability-admin':
+      case 'browser-vault':
+      case 'agent-policy':
+        _openCapability(entry.id);
       case 'memory':
         _push(MemoryScreen(connection: connection));
+      case 'host-operations':
+        final host = _ownedGateway;
+        if (host == null) return;
+        _push(
+          HostOperationsScreen(
+            owner: host.workspace,
+            route: host.workspace.route(),
+            connection: connection,
+          ),
+        );
+      case 'schedule-desk':
+        final schedules = _ownedGateway;
+        if (schedules == null) return;
+        _push(
+          ScheduleDeskScreen(
+            owner: schedules.workspace,
+            route: schedules.workspace.route(),
+            connection: connection,
+          ),
+        );
+      case 'memory-graph':
+        final memory = _ownedGateway;
+        if (memory == null) return;
+        _push(
+          MemoryGraphScreen(
+            owner: memory.workspace,
+            route: memory.workspace.route(),
+            connection: connection,
+          ),
+        );
       case 'provider-sign-in':
         _push(ProviderOAuthScreen(connection: connection));
       case 'nous-portal':
         _push(NousPortalScreen(connection: connection));
+      case 'provider-admin':
+        _push(
+          ModelAdminScreen(connection: connection, rpc: _ownedGateway?.rpc),
+        );
+      case 'nous-billing':
+        _push(
+          ModelAdminScreen(
+            connection: connection,
+            initialSection: ModelAdminSection.billing,
+            rpc: _ownedGateway?.rpc,
+          ),
+        );
       case 'openrouter':
         _push(OpenRouterScreen(connection: widget.connection));
       case 'openai':

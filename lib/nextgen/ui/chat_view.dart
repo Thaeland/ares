@@ -2,6 +2,10 @@
 // thinking and tool rows), status line, inline approval/question panel and the
 // pill composer (model chip, dictation, send/stop, steer or queue while busy).
 import 'dart:async';
+import 'dart:io';
+import '../../core/workspace/terminal_chat_link.dart';
+import '../../core/services/connection_manager.dart';
+import '../../core/services/remote_workspace.dart' show RemoteWorkspaceOwner;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +27,22 @@ import '../../core/widgets/desktop_shortcuts.dart';
 import '../../core/widgets/transcript_reader.dart';
 import '../../core/widgets/transcript_body.dart';
 import '../../core/services/chat_presentation_state.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/widgets/composer_prompt_recall.dart';
+import '../../core/composer/composer_commands.dart';
+import '../../core/composer/composer_drag.dart';
+import '../../core/composer/composer_intake.dart';
+import '../../core/composer/os_intake.dart';
+import '../../core/services/ws_client.dart' show JsonRpcError;
+import '../../core/composer/context_status.dart';
+import '../../core/composer/reference_completion.dart';
+import '../../core/composer/failure_recovery.dart';
+import '../../core/widgets/composer_context_status.dart';
+import '../../core/widgets/composer_drop_surface.dart';
+import '../../core/widgets/composer_reference_assist.dart';
+import '../../core/widgets/failure_recovery_card.dart';
+import '../../core/widgets/prompt_snippet_sheet.dart';
+import '../../core/widgets/resume_session_picker.dart';
 import '../../core/widgets/orphan_draft_recovery.dart';
 import '../../core/widgets/markdown_code_block.dart';
 import '../../core/widgets/media_artifact_card.dart';
@@ -63,6 +82,7 @@ class NgChatView extends StatefulWidget {
     this.sessions,
     this.onNewChat,
     this.onOpenSessionId,
+    this.onResume,
     this.readAloudFactory,
   });
 
@@ -74,6 +94,7 @@ class NgChatView extends StatefulWidget {
   final NgSessionsModel? sessions;
   final VoidCallback? onNewChat;
   final void Function(String sessionId, {String? title})? onOpenSessionId;
+  final void Function(String id, String title)? onResume;
 
   /// Test hook: supplies the read-aloud controller (e.g. a fake speaker).
   @visibleForTesting
@@ -83,7 +104,17 @@ class NgChatView extends StatefulWidget {
   State<NgChatView> createState() => _NgChatViewState();
 }
 
-class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
+class _NgChatViewState extends State<NgChatView>
+    with WidgetsBindingObserver, TerminalComposerAttachment<NgChatView> {
+  @override
+  SavedConnection get terminalConnection => chat.gateway.connection;
+  @override
+  String? get terminalSession => chat.storedId;
+  @override
+  RemoteWorkspaceOwner get terminalOwner => chat.gateway.workspace;
+  @override
+  TextEditingController get terminalComposer => _input;
+
   /// A fresh files client per card: cards close theirs when done, so they
   /// must not share the gateway's own dashboard connection.
   RemoteFilesDataSource _filesClient() {
@@ -96,6 +127,9 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
   final _input = SlashCommandHighlightController();
   bool _showSessionFiles = false;
   final _promptRecall = ComposerPromptRecall();
+  StatusBarLayout _status = StatusBarLayout.defaults();
+  ContextReading? _breakdown;
+  bool _breakdownLoading = false;
   late ComposerDraftWriter _draftWriter;
   String _lastText = '';
   bool _hydrating = false;
@@ -137,6 +171,12 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
 
   void _onDraftEdit() {
     _promptRecall.editorChanged();
+    final paste = _pendingPaste;
+    _pendingPaste = null;
+    if (paste != null && !_hydrating && _input.text.contains(paste.text)) {
+      // The pasted text is committed now; intake may replace it safely.
+      unawaited(_consumePaste(paste));
+    }
     final text = _input.text;
     if (text == _lastText) return;
     _lastText = text;
@@ -207,6 +247,14 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     _openDraft();
     _input.addListener(_onDraftEdit);
     chat.addListener(_onChat);
+    _wasRunning = chat.running;
+    unawaited(
+      loadStatusLayout().then((layout) {
+        if (!mounted) return;
+        setState(() => _status = layout);
+        if (layout.visible('context-usage')) unawaited(_loadBreakdown());
+      }),
+    );
     _readAloud = (widget.readAloudFactory ?? NgReadAloud.new)();
     _readAloud.addListener(_onReadAloud);
     _readAloud.onUnavailable = () {
@@ -278,8 +326,46 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     if (reading != null && !chat.items.any((item) => item.key == reading)) {
       unawaited(_readAloud.stop());
     }
+    // Each finished turn changes the context: read the breakdown again.
+    final ended = _wasRunning && !chat.running;
+    _wasRunning = chat.running;
+    if (ended && _status.visible('context-usage')) {
+      unawaited(_loadBreakdown());
+    }
     setState(() {});
   }
+
+  bool _wasRunning = false;
+
+  /// Applies and keeps the person's status bar choice.
+  void _setStatus(StatusBarLayout layout) {
+    setState(() => _status = layout);
+    unawaited(saveStatusLayout(layout));
+    if (layout.visible('context-usage')) unawaited(_loadBreakdown());
+  }
+
+  Future<void> _openStatusSheet() => showComposerStatusSheet(
+    context: context,
+    layout: _status,
+    usage: _usageReading,
+    breakdown: _breakdown,
+    runningSinceMs: _runningSinceMs,
+    sessionSinceMs: null,
+    onLayout: _setStatus,
+  );
+
+  UsageReading get _usageReading => UsageReading(
+    cacheHitPct: chat.usage?.cacheHitPct,
+    avgTps: chat.usage?.avgTps,
+    contextUsed: chat.usage?.contextUsed,
+    contextMax: chat.usage?.contextMax,
+    estimated: chat.usage?.contextEstimated ?? false,
+    compressions: chat.usage?.compressions,
+  );
+
+  int? get _runningSinceMs => chat.running && chat.turnStartedAt != null
+      ? chat.turnStartedAt!.millisecondsSinceEpoch
+      : null;
 
   /// The transcript is reversed, so its top is the scroll's far end: fetch
   /// the page before when the reader gets near it.
@@ -326,30 +412,52 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     final c = NgColors.of(context);
     final choice = await showNgSheet<String>(
       context,
+      // Scrolls: at large text on a small phone the rows outgrow the sheet.
       builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: Icon(Icons.photo_library_outlined, color: c.text2),
-              title: Text(ngL.ng_photos),
-              onTap: () => Navigator.pop(context, 'photos'),
-            ),
-            ListTile(
-              leading: Icon(Icons.photo_camera_outlined, color: c.text2),
-              title: Text(ngL.ng_camera),
-              onTap: () => Navigator.pop(context, 'camera'),
-            ),
-            ListTile(
-              leading: Icon(Icons.attach_file, color: c.text2),
-              title: Text(ngL.ng_files),
-              onTap: () => Navigator.pop(context, 'files'),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.photo_library_outlined, color: c.text2),
+                title: Text(ngL.ng_photos),
+                onTap: () => Navigator.pop(context, 'photos'),
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_camera_outlined, color: c.text2),
+                title: Text(ngL.ng_camera),
+                onTap: () => Navigator.pop(context, 'camera'),
+              ),
+              ListTile(
+                leading: Icon(Icons.attach_file, color: c.text2),
+                title: Text(ngL.ng_files),
+                onTap: () => Navigator.pop(context, 'files'),
+              ),
+              ListTile(
+                leading: Icon(Icons.notes_outlined, color: c.text2),
+                title: Text(context.sharedL10n.composer_snippets),
+                onTap: () => Navigator.pop(context, 'snippets'),
+              ),
+              ListTile(
+                key: const ValueKey('ng-composer-status'),
+                leading: Icon(Icons.tune, color: c.text2),
+                title: Text(context.sharedL10n.composer_status),
+                onTap: () => Navigator.pop(context, 'status'),
+              ),
+            ],
+          ),
         ),
       ),
     );
     if (choice == null || !mounted) return;
+    if (choice == 'snippets') {
+      await showPromptSnippets(context: context, editor: _input);
+      return;
+    }
+    if (choice == 'status') {
+      await _openStatusSheet();
+      return;
+    }
     if (_slotsLeft <= 0) {
       ngToast(
         context,
@@ -515,11 +623,396 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     await chat.send(text);
   }
 
+  /// `/resume`, `/btw`, `/background` and `/handoff`, run the way Desktop
+  /// runs them. False when [command] is none of these, or the gateway has
+  /// no dedicated method (the ordinary command path then runs it).
+  Future<bool> _runDedicated(NgSlashLine command, String text) async {
+    final kind = dedicatedSlash(command.name);
+    if (kind == null) return false;
+    if (kind == DedicatedSlash.resume) {
+      await _resume(command.arg.trim(), text);
+      return true;
+    }
+    final owner = chat;
+    _input.clear();
+    final writer = _draftWriter, cleared = writer.revision;
+    final result = await owner.runDedicated(command);
+    if (!mounted || !identical(owner, widget.chat)) return true;
+    if (result == null) {
+      // No dedicated method on this gateway: the ordinary path runs it,
+      // provided nobody typed meanwhile.
+      if (writer == _draftWriter &&
+          writer.revision == cleared &&
+          _input.text.isEmpty) {
+        _setComposer(text);
+        return false;
+      }
+      return true;
+    }
+    final session = result.handoffSession;
+    if (session != null) {
+      unawaited(_watchHandoff(owner, result.card, session, command.arg.trim()));
+    }
+    return true;
+  }
+
+  /// Desktop's resume picker. Cancelling it gives back the typed command.
+  Future<void> _resume(String query, String text) async {
+    _input.clear();
+    final writer = _draftWriter, cleared = writer.revision;
+    final picked = await showResumePicker(
+      context: context,
+      initialQuery: query,
+      listAvailable: widget.sessions != null,
+      load: (_) async => [
+        for (final row in widget.sessions?.sessions ?? const <Session>[])
+          ResumeCandidate(id: row.id, title: row.title, preview: row.preview),
+      ],
+    );
+    if (!mounted) return;
+    final open = widget.onResume;
+    if (picked != null && open != null) {
+      open(picked.id, picked.title);
+      return;
+    }
+    if (picked != null) {
+      chat.showCommandNotice(context.sharedL10n.composer_resume_unavailable);
+    }
+    // Cancelled (or nowhere to open it): the typed command comes back,
+    // unless the user has typed something else since.
+    if (writer == _draftWriter &&
+        writer.revision == cleared &&
+        _input.text.isEmpty) {
+      _setComposer(text);
+    }
+  }
+
+  Future<void> _watchHandoff(
+    NgChatController owner,
+    NgCommandItem card,
+    String sessionId,
+    String platform,
+  ) async {
+    final l10n = context.sharedL10n;
+    final outcome = await watchHandoff(
+      rpc: (method, params) => owner.gateway.call(method, params),
+      sessionId: sessionId,
+      timeoutMessage: l10n.composer_handoff_timeout,
+      alive: () => mounted && identical(owner, widget.chat),
+    );
+    switch (outcome.phase) {
+      case HandoffPhase.pending:
+        return;
+      case HandoffPhase.completed:
+        owner.settleHandoff(card, l10n.composer_handoff_done(platform));
+      case HandoffPhase.failed:
+        owner.settleHandoff(
+          card,
+          outcome.error.isEmpty ? l10n.composer_handoff_failed : outcome.error,
+          failed: true,
+        );
+      case HandoffPhase.timedOut:
+        owner.settleHandoff(card, l10n.composer_handoff_timeout, failed: true);
+    }
+  }
+
+  /// Compress from the failure card: on the live session (a stored chat
+  /// attaches first). A failure is shown, never swallowed.
+  Future<void> _compressChat() async {
+    final owner = chat;
+    final shared = context.sharedL10n;
+    final id = await owner.liveSessionId();
+    if (!mounted) return;
+    if (id == null) {
+      ngToast(context, shared.composer_command_needs_session);
+      return;
+    }
+    try {
+      await owner.gateway.call('session.compress', {
+        'session_id': id,
+      }, timeout: const Duration(minutes: 2));
+      await owner.reloadTranscript();
+    } catch (error) {
+      if (!mounted) return;
+      owner.showCommandNotice(
+        ngL.ng_slash_command_failed(
+          error is JsonRpcError ? error.message : error.toString(),
+        ),
+      );
+      return;
+    }
+    if (!mounted) return;
+    owner.showCommandNotice(shared.composer_compress_done);
+    await _loadBreakdown();
+  }
+
+  Future<void> _switchToSuggested(ModelSuggestion suggestion) async {
+    final provider = suggestion.provider ?? chat.provider;
+    if (provider == null || provider.isEmpty) {
+      await showNgModelSheet(context, chat);
+      return;
+    }
+    final result = await chat.setModel(
+      provider: provider,
+      model: suggestion.model,
+    );
+    if (!mounted) return;
+    if (result is NgModelSwitchNeedsConfirmation) {
+      final again = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: Text(result.message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(context.sharedL10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(context.sharedL10n.composer_failure_switch_model),
+            ),
+          ],
+        ),
+      );
+      if (again != true) return;
+      final confirmed = await chat.setModel(
+        provider: provider,
+        model: suggestion.model,
+        confirm: true,
+      );
+      if (!mounted) return;
+      if (confirmed is NgModelSwitchFailed) {
+        chat.showCommandNotice(confirmed.message);
+        return;
+      }
+      if (confirmed is NgModelSwitchDone) await _retry();
+    } else if (result is NgModelSwitchFailed) {
+      chat.showCommandNotice(result.message);
+    } else if (result is NgModelSwitchDone) {
+      // Desktop's switchAndRetry: the failed turn runs again on the model.
+      await _retry();
+    }
+  }
+
+  void _editFailedPrompt() {
+    final last = chat.items.whereType<NgUserItem>().lastOrNull;
+    final text = last?.sentText ?? last?.text;
+    if (text == null || text.trim().isEmpty) return;
+    _setComposer(text);
+  }
+
+  Future<void> _loadBreakdown() async {
+    if (!_status.visible('context-usage')) return;
+    final id = await chat.liveSessionId();
+    if (!mounted) return;
+    if (id == null) {
+      setState(() => _breakdown = ContextReading.empty);
+      return;
+    }
+    setState(() => _breakdownLoading = true);
+    try {
+      final result = await chat.gateway.call('session.context_breakdown', {
+        'session_id': id,
+      });
+      if (!mounted) return;
+      setState(() {
+        _breakdown = parseContextBreakdown(result);
+        _breakdownLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _breakdown = ContextReading.empty;
+        _breakdownLoading = false;
+      });
+    }
+  }
+
+  Future<void> _acceptDrop(ComposerDrag drag) async {
+    final plan = classifyDrag(drag);
+    final path = plan.path ?? '';
+    if (plan.kind == LocalIntake.reference) {
+      appendWorkspaceReference(
+        _input,
+        gatewayContextReference(folder: plan.directory, path: path),
+      );
+      return;
+    }
+    if (!File(path).existsSync()) {
+      ngToast(context, context.sharedL10n.composer_file_missing);
+      return;
+    }
+    await _stageLocal(plan.kind, path);
+  }
+
+  /// The paste the editor's formatter saw, handled once the text is in the
+  /// controller (see [_onDraftEdit]): a formatter must not edit the field.
+  PastedChunk? _pendingPaste;
+
+  Future<void> _consumePaste(PastedChunk chunk) async {
+    final path = clipboardPath(chunk.text);
+    var exists = false;
+    var directory = false;
+    if (path != null) {
+      final type = FileSystemEntity.typeSync(path);
+      exists = type != FileSystemEntityType.notFound;
+      directory = type == FileSystemEntityType.directory;
+    }
+    final plan = classifyPaste(
+      chunk.text,
+      pathExists: exists,
+      directory: directory,
+    );
+    // A folder on this device is not a folder on the gateway: the pasted
+    // path stays text rather than becoming a gateway @folder: reference.
+    if (plan.kind == LocalIntake.leaveText ||
+        plan.kind == LocalIntake.reference) {
+      return;
+    }
+    if (plan.kind == LocalIntake.pastedText) {
+      try {
+        final draft = await chat.attachmentService.preparePastedText(
+          text: chunk.text,
+          existingDrafts: _drafts,
+        );
+        if (!mounted) return;
+        _removePasted(chunk);
+        setState(() => _drafts.add(draft));
+      } on AttachmentDraftException catch (error) {
+        if (mounted) ngToast(context, error.message);
+      }
+      return;
+    }
+    final staged = plan.path;
+    if (staged == null) return;
+    _removePasted(chunk);
+    await _stageLocal(plan.kind, staged);
+  }
+
+  void _removePasted(PastedChunk chunk) {
+    final text = _input.text;
+    final index = text.indexOf(chunk.text);
+    if (index < 0) return;
+    final next = text.replaceRange(index, index + chunk.text.length, '');
+    _input.value = TextEditingValue(
+      text: next,
+      selection: TextSelection.collapsed(
+        offset: next.length.clamp(0, next.length),
+      ),
+    );
+  }
+
+  /// Stages one local file as an attachment draft: never sent until the
+  /// person sends, within the draft count and size limits the Attach button
+  /// uses.
+  Future<bool> _stageLocal(LocalIntake kind, String path) async {
+    if (_slotsLeft <= 0) {
+      if (mounted) {
+        ngToast(
+          context,
+          ngL.ng_you_can_attach_up_to_files(maxRemoteAttachmentDrafts),
+        );
+      }
+      return false;
+    }
+    try {
+      final name = path.split(RegExp(r'[\\/]')).where((p) => p.isNotEmpty).last;
+      final draft = kind == LocalIntake.imageFile
+          ? await chat.attachmentService.prepareImage(
+              sourcePath: path,
+              displayName: name,
+              existingDrafts: _drafts,
+              mode: AttachmentDraftMode.remoteGateway,
+              maxTotalBytes: maxNextGenAttachmentDraftBytes,
+            )
+          : await chat.attachmentService.prepareGenericFile(
+              sourcePath: path,
+              displayName: name,
+              mediaType:
+                  attachmentMimeType(
+                    name.contains('.')
+                        ? name.split('.').last.toLowerCase()
+                        : '',
+                  ) ??
+                  'application/octet-stream',
+              existingDrafts: _drafts,
+              maxFileBytes: maxNextGenAttachmentBytes,
+              maxTotalBytes: maxNextGenAttachmentDraftBytes,
+            );
+      if (!mounted) {
+        await chat.attachmentService.removeAll([draft]);
+        return false;
+      }
+      setState(() => _drafts.add(draft));
+      return true;
+    } on AttachmentDraftException catch (error) {
+      if (mounted) ngToast(context, error.message);
+      return false;
+    } catch (_) {
+      if (mounted) ngToast(context, ngL.ng_couldn_t_read(path));
+      return false;
+    }
+  }
+
+  /// Files dropped from the OS: each file becomes a draft; a folder cannot.
+  Future<void> _acceptOsFiles(List<OsIntakeFile> files) async {
+    for (final file in files) {
+      if (!mounted) return;
+      if (file.directory) {
+        ngToast(context, context.sharedL10n.composer_drop_folder_unsupported);
+        continue;
+      }
+      final kind = looksLikeImagePath(file.path)
+          ? LocalIntake.imageFile
+          : LocalIntake.genericFile;
+      final staged = await withDroppedFileAccess(
+        file,
+        () => _stageLocal(kind, file.path),
+      );
+      if (!staged && _slotsLeft <= 0) return;
+    }
+  }
+
+  /// Cmd/Ctrl+V with files or an image on the clipboard.
+  Future<void> _acceptClipboard(ClipboardAttachment found) async {
+    final image = found.image;
+    if (image != null) {
+      await _acceptImageBytes(image, 'image/png');
+      return;
+    }
+    await _acceptOsFiles([
+      for (final path in found.files)
+        OsIntakeFile(path, directory: FileSystemEntity.isDirectorySync(path)),
+    ]);
+  }
+
+  /// A pasted or keyboard-inserted image.
+  Future<void> _acceptImageBytes(Uint8List bytes, String mimeType) async {
+    final String path;
+    try {
+      path = await stageComposerImageBytes(bytes, mimeType: mimeType);
+    } catch (_) {
+      if (mounted) {
+        ngToast(context, ngL.ng_couldn_t_prepare_that_file('image'));
+      }
+      return;
+    }
+    if (!mounted) return;
+    final staged = await _stageLocal(LocalIntake.imageFile, path);
+    if (!staged) {
+      try {
+        await File(path).delete();
+      } catch (_) {}
+    }
+  }
+
   /// Runs a typed `/command`, the way Kyllene does: NextGen's own `/new`,
   /// `/reset`, `/stop` and bare `/model` here, anything the gateway would
   /// run there (see [NgSlashCatalog.runsOnGateway]). Returns false when
   /// [text] is ordinary text to send as a prompt.
   Future<bool> _runCommand(NgSlashLine command, String text) async {
+    if (await _runDedicated(command, text)) return true;
+    if (!mounted || _input.text.trim() != text) return true;
     switch (command.name) {
       case 'new' || 'reset':
         if (widget.onNewChat == null) {
@@ -974,41 +1467,49 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                           setState(() => _showSessionFiles = false);
                         },
                       ),
-                child: Column(
-                  children: [
-                    if (!state.isConnected) _connectionBanner(c, gateway),
-                    Expanded(child: _transcript(c)),
-                    NgSessionDock(chat: chat),
-                    if (chat.canPickProject && _drafts.isEmpty && !_preparing)
-                      OrphanDraftRecovery(
-                        key: ObjectKey(_draftWriter),
-                        writer: _draftWriter,
-                        editor: _input,
-                        lookup: chat.gateway.api.getSession,
-                        isCurrent: () =>
-                            chat.draftOwnerCurrent &&
-                            identical(chat.gateway, gateway) &&
-                            chat.canPickProject &&
-                            _drafts.isEmpty &&
-                            !_preparing &&
-                            !_listening,
-                      ),
-                    if (chat.error != null) _errorBar(c),
-                    if (chat.queued.isNotEmpty) _queue(c),
-                    if (chat.request != null)
-                      _InputPanel(chat: chat, request: chat.request!)
-                    else
-                      NgSlashCommandInfo(
-                        chat: chat,
-                        controller: _input,
-                        focusNode: _focus,
-                        catalog: _slashCatalog,
-                        // Commands run here now, so the card no longer says they
-                        // are sent as a message.
-                        showsSentAsMessageNote: false,
-                        child: _composer(c, state),
-                      ),
-                  ],
+                // The body's real height: Scaffold has already taken the
+                // keyboard off it, so cards above the composer size from it.
+                child: LayoutBuilder(
+                  builder: (context, body) => Column(
+                    children: [
+                      if (!state.isConnected) _connectionBanner(c, gateway),
+                      Expanded(child: _transcript(c)),
+                      NgSessionDock(chat: chat, available: body.maxHeight),
+                      if (chat.canPickProject && _drafts.isEmpty && !_preparing)
+                        OrphanDraftRecovery(
+                          key: ObjectKey(_draftWriter),
+                          writer: _draftWriter,
+                          editor: _input,
+                          lookup: chat.gateway.api.getSession,
+                          isCurrent: () =>
+                              chat.draftOwnerCurrent &&
+                              identical(chat.gateway, gateway) &&
+                              chat.canPickProject &&
+                              _drafts.isEmpty &&
+                              !_preparing &&
+                              !_listening,
+                        ),
+                      if (chat.error != null) _errorBar(c),
+                      if (chat.queued.isNotEmpty) _queue(c),
+                      if (chat.request != null)
+                        _InputPanel(
+                          chat: chat,
+                          request: chat.request!,
+                          available: body.maxHeight,
+                        )
+                      else
+                        NgSlashCommandInfo(
+                          chat: chat,
+                          controller: _input,
+                          focusNode: _focus,
+                          catalog: _slashCatalog,
+                          // Commands run here now, so the card no longer says they
+                          // are sent as a message.
+                          showsSentAsMessageNote: false,
+                          child: _composer(c, state),
+                        ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -1146,29 +1647,68 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     );
   }
 
-  Widget _errorBar(NgColors c) => Container(
-    width: double.infinity,
-    margin: const EdgeInsets.fromLTRB(12, 0, 12, 6),
-    padding: const EdgeInsets.fromLTRB(14, 8, 4, 8),
-    decoration: BoxDecoration(
-      color: c.dangerSoft,
-      borderRadius: BorderRadius.circular(NgRadii.md),
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: Text(
-            chat.error!,
-            style: NgType.bodySmall.copyWith(color: c.text),
-          ),
+  /// Retry, the way Desktop retries (see [NgChatController.retryLast]).
+  /// When an accepted turn has no durable row to replace, nothing is sent:
+  /// the prompt comes back to an empty composer so the person can send it
+  /// deliberately, and newer typing is never replaced.
+  Future<void> _retry() async {
+    final owner = chat;
+    final last = owner.items
+        .whereType<NgUserItem>()
+        .where((item) => !item.steered)
+        .lastOrNull;
+    final result = await owner.retryLast();
+    if (!mounted || !identical(owner, widget.chat)) return;
+    if (result != NgRetryResult.notFound) return;
+    ngToast(context, context.sharedL10n.composer_retry_not_found);
+    final text = last?.sentText ?? last?.text;
+    if (text != null && _input.text.trim().isEmpty && _drafts.isEmpty) {
+      _setComposer(text);
+    }
+  }
+
+  Widget _errorBar(NgColors c) {
+    final message = chat.error ?? '';
+    final surface = chat.turnFailure;
+    final aligned =
+        surface != null &&
+            (surface.message == null || surface.message == message)
+        ? surface
+        : null;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    return Padding(
+      key: ValueKey(c.dangerSoft),
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
+      child: FailureRecoveryCard(
+        message: message,
+        recovery: presentRecovery(aligned, nowMs: now),
+        diagnosticsText: formatErrorDiagnostics(
+          errorText: message,
+          surface: aligned,
+          model: chat.model,
+          provider: chat.provider,
         ),
-        IconButton(
-          icon: const Icon(Icons.close, size: 18),
-          onPressed: () => setState(() => chat.error = null),
-        ),
-      ],
-    ),
-  );
+        showDiagnostics: showsDiagnostics(aligned),
+        resetsAt: aligned?.resetsAt,
+        onDismiss: () => setState(() {
+          chat.error = null;
+          chat.turnFailure = null;
+        }),
+        onRetry: () {
+          setState(() {
+            chat.error = null;
+            chat.turnFailure = null;
+          });
+          unawaited(_retry());
+        },
+        onCompress: _compressChat,
+        onChooseModel: () => showNgModelSheet(context, chat),
+        onSwitchTo: _switchToSuggested,
+        onNewSession: widget.onNewChat,
+        onEdit: _editFailedPrompt,
+      ),
+    );
+  }
 
   Future<void> _editLocal(NgQueued row) async {
     final source = chat;
@@ -1349,7 +1889,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
       NgUserItem() => _UserBubble(
         item: item,
         onRetry: i == lastUserIndex && !chat.running && !item.recoverInComposer
-            ? chat.retryLast
+            ? () => unawaited(_retry())
             : null,
       ),
       NgAssistantItem() => Column(
@@ -1361,7 +1901,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
             filesIdentity: (NgScope.of(context).gateway, chat.storedId),
             last: i == items.length - 1,
             onRetry: i == items.length - 1 && !chat.running
-                ? chat.retryLast
+                ? () => unawaited(_retry())
                 : null,
             readAloud: _readAloud,
           ),
@@ -1440,7 +1980,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     final modelLabel = [
       chat.model == null ? ngL.ng_default_model : _shortModel(chat.model!),
       if (chat.reasoningEffort != null && chat.reasoningEffort!.isNotEmpty)
-        ngEffortLabel(chat.reasoningEffort),
+        ngRouteEffortLabel(chat.reasoningEffort, chat.reasoningEffortWire),
     ].join(' · ');
     return CallbackShortcuts(
       bindings: {
@@ -1516,6 +2056,63 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                       ],
                     ),
                   ),
+                // Stacked above the editor: bounded by the keyboard-aware
+                // share and scrolling inside, so the editor stays above the
+                // keyboard. Status lives in the composer menu (no extra row
+                // until an item is on); a narrow pane folds the breakdown.
+                LayoutBuilder(
+                  builder: (context, box) => ComposerContextStatus(
+                    layout: _status,
+                    usage: _usageReading,
+                    breakdown: _breakdown,
+                    breakdownLoading: _breakdownLoading,
+                    runningSinceMs: _runningSinceMs,
+                    showMenu: false,
+                    compact: box.maxWidth < 480,
+                    maxHeight: ngAboveComposerMaxHeight(
+                      context,
+                      fraction: 0.25,
+                      withKeyboard: 0.15,
+                    ),
+                    onLayout: _setStatus,
+                  ),
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: ngAboveComposerMaxHeight(
+                      context,
+                      fraction: 0.35,
+                      withKeyboard: 0.2,
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: ComposerReferenceAssist(
+                      controller: _input,
+                      cacheScope: (chat.gateway, chat.storedId),
+                      completePath: (query) async {
+                        final owner = chat;
+                        final result = await owner.gateway.call(
+                          'complete.path',
+                          pathCompletionParams(
+                            query: query,
+                            sessionId: await owner.liveSessionId(),
+                          ),
+                        );
+                        final rows = parseReferenceCompletions(result);
+                        return rows.isEmpty ? starterSuggestions(query) : rows;
+                      },
+                      completeSlash: (text) async {
+                        final owner = chat;
+                        final sessionId = await owner.liveSessionId();
+                        final result = await owner.gateway.call(
+                          'complete.slash',
+                          {'text': text, 'session_id': ?sessionId},
+                        );
+                        return parseArgumentCompletion(result);
+                      },
+                    ),
+                  ),
+                ),
                 SendOnEnter(
                   enabled:
                       _input.text.trim().isNotEmpty ||
@@ -1539,33 +2136,68 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                               .map((item) => item.text),
                         ),
                   onSend: () => unawaited(_send()),
-                  child: TextField(
-                    key: const ValueKey('ng-composer-field'),
-                    controller: _input,
-                    focusNode: _focus,
-                    onTap: () {
-                      // Android can hide the keyboard with Back while this node
-                      // retains focus. Explicitly show it on every composer tap.
-                      _focus.requestFocus();
-                      unawaited(
-                        SystemChannels.textInput.invokeMethod<void>(
-                          'TextInput.show',
+                  child: OsFileDropTarget(
+                    onFiles: (files) => unawaited(_acceptOsFiles(files)),
+                    child: ClipboardAttachmentPaste(
+                      onAttachment: _acceptClipboard,
+                      child: ComposerDropSurface(
+                        onDrop: (drag) => unawaited(_acceptDrop(drag)),
+                        child: TextField(
+                          key: const ValueKey('ng-composer-field'),
+                          controller: _input,
+                          focusNode: _focus,
+                          contentInsertionConfiguration: composerImageInsertion(
+                            _acceptImageBytes,
+                          ),
+                          inputFormatters: [
+                            // Detects a paste only; it is handled after the text
+                            // is committed ([_onDraftEdit]), never from here.
+                            TextInputFormatter.withFunction((
+                              oldValue,
+                              newValue,
+                            ) {
+                              final selection = oldValue.selection;
+                              if (!selection.isValid) return newValue;
+                              _pendingPaste = PastedChunk.detect(
+                                oldValue.text,
+                                selection.start,
+                                selection.end,
+                                newValue.text,
+                              );
+                              return newValue;
+                            }),
+                          ],
+                          onTap: () {
+                            // Android can hide the keyboard with Back while this node
+                            // retains focus. Explicitly show it on every composer tap.
+                            _focus.requestFocus();
+                            unawaited(
+                              SystemChannels.textInput.invokeMethod<void>(
+                                'TextInput.show',
+                              ),
+                            );
+                          },
+                          minLines: 1,
+                          maxLines: 8,
+                          textCapitalization: TextCapitalization.sentences,
+                          style: NgType.body.copyWith(color: c.text),
+                          decoration: InputDecoration(
+                            hintText: _listening
+                                ? ngL.ng_listening
+                                : chat.running
+                                ? ngL.ng_steer_or_queue_a_message
+                                : ngL.ng_message_hermes,
+                            hintStyle: NgType.body.copyWith(color: c.textMuted),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.fromLTRB(
+                              12,
+                              12,
+                              12,
+                              6,
+                            ),
+                          ),
                         ),
-                      );
-                    },
-                    minLines: 1,
-                    maxLines: 8,
-                    textCapitalization: TextCapitalization.sentences,
-                    style: NgType.body.copyWith(color: c.text),
-                    decoration: InputDecoration(
-                      hintText: _listening
-                          ? ngL.ng_listening
-                          : chat.running
-                          ? ngL.ng_steer_or_queue_a_message
-                          : ngL.ng_message_hermes,
-                      hintStyle: NgType.body.copyWith(color: c.textMuted),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
+                      ),
                     ),
                   ),
                 ),
@@ -2618,9 +3250,16 @@ class _ToolRowState extends State<_ToolRow> {
 
 /// What the agent is waiting on: approval, a question or a secret.
 class _InputPanel extends StatefulWidget {
-  const _InputPanel({required this.chat, required this.request});
+  const _InputPanel({
+    required this.chat,
+    required this.request,
+    this.available = double.infinity,
+  });
   final NgChatController chat;
   final NgInputRequest request;
+
+  /// The chat body's height (keyboard already removed).
+  final double available;
 
   @override
   State<_InputPanel> createState() => _InputPanelState();
@@ -2682,6 +3321,22 @@ class _InputPanelState extends State<_InputPanel> {
     _ => choice,
   };
 
+  Widget _choiceChild(String choice) {
+    final grant = widget.request.request.params['kind']?.toString();
+    final sandboxGrant = grant == 'access' || grant == 'network';
+    if (choice != 'once' || !sandboxGrant) {
+      return Text(_choiceLabel(choice));
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(_choiceLabel(choice)),
+        Text(ngL.ng_allow_until_sandbox_off),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
@@ -2696,8 +3351,14 @@ class _InputPanelState extends State<_InputPanel> {
           borderRadius: BorderRadius.circular(NgRadii.xl),
           border: Border.all(color: c.accent.withValues(alpha: 0.5)),
         ),
+        // A share of the space above the keyboard, so the answer field
+        // stays in sight while typing.
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.sizeOf(context).height * 0.6,
+          maxHeight: ngAboveComposerMaxHeight(
+            context,
+            available: widget.available,
+            fraction: 0.6,
+          ),
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -2761,7 +3422,7 @@ class _InputPanelState extends State<_InputPanel> {
                         ),
                         onPressed: () =>
                             _done(widget.chat.answerApproval(choice)),
-                        child: Text(_choiceLabel(choice)),
+                        child: _choiceChild(choice),
                       )
                     : FilledButton(
                         style: FilledButton.styleFrom(
@@ -2775,7 +3436,7 @@ class _InputPanelState extends State<_InputPanel> {
                         ),
                         onPressed: () =>
                             _done(widget.chat.answerApproval(choice)),
-                        child: Text(_choiceLabel(choice)),
+                        child: _choiceChild(choice),
                       ),
             ],
           ),

@@ -1693,5 +1693,11 @@
   "ng_aux_profile_describer": "Descrições de perfil",
   "ng_aux_profile_describer_hint": "Escreve a descrição curta de cada perfil",
   "ng_aux_curator": "Curador",
-  "ng_aux_curator_hint": "Analisa a utilização das competências"
+  "ng_aux_curator_hint": "Analisa a utilização das competências",
+  "ng_allow_until_sandbox_off": "Até a sandbox ser desativada",
+  "ng_folder_access": "Acesso à pasta",
+  "ng_folder_access_unspecified": "O gateway não indicou se é só de leitura ou de leitura e escrita.",
+  "ng_folder_read_only": "Só de leitura",
+  "ng_folder_read_write": "Leitura e escrita",
+  "ng_website_access": "Acesso ao site"
 }

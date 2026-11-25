@@ -515,7 +515,7 @@ class _NgMainPageState extends State<_NgMainContent>
         'reply',
         label,
         'skipped',
-        'Ares was on screen',
+        detail: 'Ares was on screen',
       );
       return;
     }
@@ -524,7 +524,7 @@ class _NgMainPageState extends State<_NgMainContent>
         'reply',
         label,
         'skipped',
-        'the turn was stopped',
+        detail: 'the turn was stopped',
       );
       return;
     }
@@ -703,6 +703,7 @@ class _NgMainPageState extends State<_NgMainContent>
               unawaited(_sessions?.refresh());
               _openId(id, title ?? '');
             },
+            onResume: (id, title) => _openId(id, title),
           );
 
     final chatView = isWindowsPlatform

@@ -2,7 +2,9 @@
 /// docs/remote-workspace-contract.md before adding an operation.
 library;
 
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
@@ -10,11 +12,14 @@ import 'package:uuid/uuid.dart';
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 import 'portable_profile_bundle.dart';
+import 'host_operations.dart';
 import 'ws_client.dart';
 import 'preview_peer.dart';
 import '../history/foreign_session.dart';
 import '../history/fork_lineage.dart';
 import '../history/transcript_redaction.dart';
+
+export 'host_operations.dart';
 
 part 'remote_preview.dart';
 
@@ -23,13 +28,15 @@ part 'workspace_discovery.dart';
 part 'workspace_project_settings.dart';
 part 'workspace_files.dart';
 part 'workspace_git.dart';
-
 part 'remote_profile_admin.dart';
 part 'remote_agent_transfer.dart';
+part 'remote_host_ops.dart';
 
 part 'workspace_workers.dart';
 part 'workspace_queue.dart';
 part 'session_history.dart';
+
+part 'remote_workspace_terminal.dart';
 
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {

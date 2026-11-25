@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../composer/composer_drag.dart';
 import '../services/connection_mutation_barrier.dart';
 import '../services/remote_workspace.dart';
 import 'git_review_pane.dart';
@@ -572,12 +573,25 @@ class _FilesState extends State<SessionFilesView> {
                       child: ListTile(
                         dense: true,
                         enabled: !_busy,
-                        leading: Icon(
-                          n.directory
-                              ? (_expanded.contains(n.path)
-                                    ? Icons.folder_open
-                                    : Icons.folder_outlined)
-                              : Icons.description_outlined,
+                        leading: LongPressDraggable<ComposerDrag>(
+                          data: ComposerDrag(
+                            path: n.path,
+                            directory: n.directory,
+                            onGateway: true,
+                          ),
+                          feedback: Material(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Text(n.name),
+                            ),
+                          ),
+                          child: Icon(
+                            n.directory
+                                ? (_expanded.contains(n.path)
+                                      ? Icons.folder_open
+                                      : Icons.folder_outlined)
+                                : Icons.description_outlined,
+                          ),
                         ),
                         title: Text(n.name),
                         subtitle: _changed.contains(n.path)

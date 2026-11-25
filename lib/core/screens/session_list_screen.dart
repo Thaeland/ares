@@ -1250,10 +1250,7 @@ class _SessionListScreenState extends State<SessionListScreen> {
       await _client.deleteSession(session.id);
       // A deleted session must not leave an orphaned draft behind.
       await ComposerDraftStore.remove(
-        connectionId: ComposerDraftStore.namespace(
-          widget.connection.id,
-          widget.connection.gatewayProfile,
-        ),
+        connectionId: widget.connection.id,
         sessionId: session.id,
       );
       await _spaceStore?.assignSession(session.id, null);
@@ -1292,21 +1289,27 @@ class _SessionListScreenState extends State<SessionListScreen> {
       return saved;
     }
 
-    await Navigator.push<void>(
-      context,
-      MaterialPageRoute(
-        settings: const RouteSettings(name: '/classic-session-chat'),
-        builder: (_) =>
-            widget.testSessionScreenBuilder?.call(session) ??
-            widget.testChatScreenBuilder?.call(session, archive) ??
-            ChatScreen(
-              connection: widget.connection,
-              session: session,
-              turnApplicationController: widget.turnApplicationController,
-              sessionArchiver: archive,
-            ),
-      ),
+    late final MaterialPageRoute<void> route;
+    route = MaterialPageRoute(
+      settings: const RouteSettings(name: '/classic-session-chat'),
+      builder: (_) =>
+          widget.testSessionScreenBuilder?.call(session) ??
+          widget.testChatScreenBuilder?.call(session, archive) ??
+          ChatScreen(
+            connection: widget.connection,
+            session: session,
+            turnApplicationController: widget.turnApplicationController,
+            sessionArchiver: archive,
+            // /resume opens the pick the way this list opens a row: in
+            // place of this chat, with the same controller and archive path.
+            onOpenSession: (picked) async {
+              if (!mounted) return;
+              if (route.isActive) Navigator.of(context).removeRoute(route);
+              await _openSession(picked);
+            },
+          ),
     );
+    await Navigator.push<void>(context, route);
     routeOpen = false;
     if (!mounted) return;
     await _refreshSessionProjections();

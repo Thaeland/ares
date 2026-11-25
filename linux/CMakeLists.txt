@@ -99,7 +99,10 @@ install(FILES "${ARES_FLUTTER_SDK}/bin/cache/pkg/sky_engine/LICENSE"
   DESTINATION "${INSTALL_BUNDLE_DATA_DIR}/licenses" RENAME flutter-engine.txt
   COMPONENT Runtime)
 
-install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
+add_executable(ares-pty ../native/terminal/pty_posix.cc)
+target_link_libraries(ares-pty PRIVATE util)
+add_dependencies(${BINARY_NAME} ares-pty)
+install(TARGETS ares-pty ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
   COMPONENT Runtime)
 
 install(FILES "${FLUTTER_ICU_DATA_FILE}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"

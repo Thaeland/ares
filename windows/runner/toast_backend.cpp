@@ -39,8 +39,8 @@ bool AllowsSubmission(const ToastNotifier& notifier) {
 }
 }
 bool Enabled() { return OwnsProtocol() && AllowsSubmission(Notifier()); }
-void Show(int id, const std::string& token, const std::string& body,
-          const std::string& sound, bool suppress_popup) {
+Delivery Show(int id, const std::string& token, const std::string& body,
+              const std::string& sound, bool suppress_popup) {
   if (!ValidToken(token)) throw hresult_invalid_argument();
   auto notifier = Notifier();
   if (!AllowsSubmission(notifier)) throw hresult_access_denied();
@@ -60,8 +60,11 @@ void Show(int id, const std::string& token, const std::string& body,
   toast.Tag(to_hstring(id));
   toast.SuppressPopup(suppress_popup);
   notifier.Show(toast);
-  // Now that the sender exists, report the actual policy, not optimistic success.
-  if (notifier.Setting() != NotificationSetting::Enabled) throw hresult_access_denied();
+  // Now that the sender exists, report the actual policy, not optimistic
+  // success. The caller withdraws a toast Windows will not display.
+  return AfterShow([&notifier] {
+    return notifier.Setting() == NotificationSetting::Enabled;
+  });
 }
 void Cancel(int id) {
   if (!OwnsProtocol()) return;
