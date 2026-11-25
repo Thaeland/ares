@@ -80,13 +80,14 @@ Future<void> _resume(WidgetTester tester, Finder composer) async {
   await _settle(tester);
 }
 
-/// Each `ChatScreen(...)` constructed in [source], as written.
-List<String> _chatScreenCalls(String source) {
+/// Each `[name](...)` (default `ChatScreen(...)`) in [source], as written.
+List<String> _chatScreenCalls(String source, {String name = 'ChatScreen'}) {
   final calls = <String>[];
+  final pattern = RegExp('\\b$name\\(');
   for (
-    var at = source.indexOf(RegExp(r'\bChatScreen\('));
+    var at = source.indexOf(pattern);
     at >= 0;
-    at = source.indexOf(RegExp(r'\bChatScreen\('), at + 1)
+    at = source.indexOf(pattern, at + 1)
   ) {
     var depth = 0;
     final open = source.indexOf('(', at);
@@ -107,19 +108,49 @@ void main() {
     mockChatImageRecovery();
   });
 
-  test('every host that builds a Classic chat gives it an open path', () {
-    for (final path in [
-      'lib/core/screens/cron_screen.dart',
-      'lib/main.dart',
-      'lib/core/workspace/popout_bootstrap.dart',
-      'lib/core/screens/classic_parallel_chat_pane.dart',
-    ]) {
-      final calls = _chatScreenCalls(File(path).readAsStringSync());
-      expect(calls, isNotEmpty, reason: path);
-      for (final call in calls) {
-        expect(call, contains('onOpenSession:'), reason: '$path: $call');
+  test('every ChatScreen built anywhere in lib/ gets an open path', () {
+    // A chat built without onOpenSession answers /resume with a notice
+    // instead of the picker. Every construction in lib/ passes one, unless
+    // it is listed here with the reason it cannot (none today).
+    const allowlist = <String, String>{
+      // 'lib/path/to/file.dart': 'why this chat has nowhere to open a pick',
+    };
+    final checked = <String>[];
+    for (final file
+        in Directory('lib')
+            .listSync(recursive: true)
+            .whereType<File>()
+            .where((f) => f.path.endsWith('.dart'))) {
+      final path = file.path.replaceAll(r'\', '/');
+      // Whole-line comments may name ChatScreen( in prose.
+      final source = file
+          .readAsLinesSync()
+          .where((line) => !line.trimLeft().startsWith('//'))
+          .join('\n');
+      for (final name in ['ChatScreen', 'buildWorkspaceChatScreen']) {
+        for (final call in _chatScreenCalls(source, name: name)) {
+          // The declarations themselves (named parameters follow `({`).
+          if (call.startsWith('$name({')) continue;
+          checked.add(path);
+          if (allowlist.containsKey(path)) continue;
+          expect(call, contains('onOpenSession:'), reason: '$path: $call');
+        }
       }
     }
+    // The scan really reads the hosts (pane, pop-out, cron, notifications,
+    // session lists, the /new and failure-card New chat draft).
+    expect(
+      checked.toSet(),
+      containsAll([
+        'lib/core/screens/chat_screen.dart',
+        'lib/core/screens/classic_parallel_chat_pane.dart',
+        'lib/core/screens/cron_screen.dart',
+        'lib/core/screens/session_list_screen.dart',
+        'lib/core/screens/workspace_screen.dart',
+        'lib/core/workspace/popout_bootstrap.dart',
+        'lib/main.dart',
+      ]),
+    );
   });
 
   testWidgets('a Classic parallel pane opens the pick as another pane; the '

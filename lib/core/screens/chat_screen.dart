@@ -5884,10 +5884,21 @@ class _ChatScreenState extends State<ChatScreen>
       startedAt: now.millisecondsSinceEpoch / 1000.0,
       isLocalDraft: true,
     );
+    // /resume in the new chat opens the pick the way this chat's host opens
+    // one: the new chat's route leaves first, so the pick takes the place
+    // the host gives a pick from this chat (a pane, this route, the window).
+    final hostOpen = widget.onOpenSession;
+    late final MaterialPageRoute<void> route;
+    Future<void> openFromDraft(Session picked) async {
+      final navigator = route.navigator;
+      if (navigator != null && route.isActive) navigator.removeRoute(route);
+      await hostOpen!(picked);
+    }
+
     // Pushed, not awaited: the returned Future completes when the new chat
     // is popped, and the command is already handled.
     Navigator.of(context).push<void>(
-      MaterialPageRoute<void>(
+      route = MaterialPageRoute<void>(
         // The draft is the same product surface, so it inherits the parent's
         // archive ownership and the test seams that are safe to share. The
         // desktop connection/async-event hooks are deliberately NOT
@@ -5902,6 +5913,7 @@ class _ChatScreenState extends State<ChatScreen>
           projectName: widget.projectName,
           projectWorkingDirectory: widget.projectWorkingDirectory,
           turnApplicationController: widget.turnApplicationController,
+          onOpenSession: hostOpen == null ? null : openFromDraft,
           onArchiveChanged: widget.onArchiveChanged,
           sessionArchiver: widget.sessionArchiver,
           testTurnApplicationSession: widget.testTurnApplicationSession,
