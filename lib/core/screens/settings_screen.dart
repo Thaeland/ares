@@ -6,7 +6,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/app_licenses.dart';
 import '../utils/platform_capabilities.dart';
-import '../widgets/windows_completion_sound_tile.dart';
+import '../widgets/completion_sound_settings.dart';
 import '../services/locale_preference.dart';
 import 'provider_oauth_screen.dart';
 import '../services/config_backup_io.dart';
@@ -889,7 +889,7 @@ class _NotificationSettingsState extends State<_NotificationSettings>
                 }
               },
             ),
-            WindowsCompletionSoundTile(prefs: prefs),
+            CompletionSoundSettings(prefs: prefs),
             for (final kind in HermesNotificationKind.values) ...[
               const Divider(height: 1),
               SwitchListTile(

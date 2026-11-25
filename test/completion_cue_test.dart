@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/completion_cue.dart';
 import 'package:hermes_android/core/services/notification_prefs.dart';
 import 'package:hermes_android/core/services/turn_notification_service.dart';
-import 'package:hermes_android/core/widgets/windows_completion_sound_tile.dart';
+import 'package:hermes_android/core/widgets/completion_sound_settings.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -176,7 +176,7 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const Scaffold(
-          body: WindowsCompletionSoundTile(prefs: NotificationPrefs.defaults),
+          body: CompletionSoundSettings(prefs: NotificationPrefs.defaults),
         ),
       ),
     );
