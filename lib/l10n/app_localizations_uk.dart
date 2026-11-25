@@ -662,7 +662,15 @@ class AppLocalizationsUk extends AppLocalizations {
       'Дозволяти відповідні команди до завершення цієї сесії Hermes.';
 
   @override
+  String get allow_folder_until_sandbox_off =>
+      'Allow this folder until the sandbox is switched off.';
+
+  @override
   String get allow_once => 'Дозволити один раз';
+
+  @override
+  String get allow_website_until_sandbox_off =>
+      'Allow this website until the sandbox is switched off.';
 
   @override
   String get always_allow => 'Завжди дозволяти';
@@ -4723,6 +4731,25 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get ng_allow_once => 'Дозволити один раз';
+
+  @override
+  String get ng_allow_until_sandbox_off => 'Доки пісочницю не буде вимкнено';
+
+  @override
+  String get ng_folder_access => 'Доступ до теки';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      'Шлюз не повідомив, чи доступ лише для читання, чи для читання й запису.';
+
+  @override
+  String get ng_folder_read_only => 'Лише для читання';
+
+  @override
+  String get ng_folder_read_write => 'Читання й запис';
+
+  @override
+  String get ng_website_access => 'Доступ до вебсайту';
 
   @override
   String get ng_allow_for_this_chat => 'Дозволити в цьому чаті';

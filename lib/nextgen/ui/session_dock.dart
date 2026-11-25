@@ -2,6 +2,7 @@
 // on (the goal with its loop and heartbeat, running subagents, the agent's
 // task list), each opening to its details.
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -14,8 +15,11 @@ import 'widgets.dart';
 /// The card above the composer: a row each for the goal, running subagents
 /// and the task list, when there is one. Each row folds open to its details.
 class NgSessionDock extends StatelessWidget {
-  const NgSessionDock({super.key, required this.chat});
+  const NgSessionDock({super.key, required this.chat, this.available});
   final NgChatController chat;
+
+  /// The chat body's height (keyboard already removed), when known.
+  final double? available;
 
   @override
   Widget build(BuildContext context) => NgDock(
@@ -26,6 +30,7 @@ class NgSessionDock extends StatelessWidget {
     onOpenControl: () =>
         showNgSheet<void>(context, builder: (_) => NgControlSheet(chat: chat)),
     onStopSubagent: chat.stopSubagent,
+    available: available,
   );
 }
 
@@ -40,8 +45,11 @@ class NgDock extends StatefulWidget {
     this.subagents = const [],
     required this.onOpenControl,
     required this.onStopSubagent,
+    this.available,
   });
 
+  /// The chat body's height (keyboard already removed), when known.
+  final double? available;
   final NgSessionControl? control;
   final NgTodoList? todos;
   final bool todosLive;
@@ -71,31 +79,46 @@ class _NgDockState extends State<NgDock> {
       if (agents.isNotEmpty) _subagentSection(c, agents),
       if (todos != null && todos.items.isNotEmpty) _taskSection(c, todos),
     ];
-    // Never more than about half the screen, so the transcript stays usable
-    // on a small phone at large text; the dock scrolls beyond that.
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 200),
-      alignment: Alignment.bottomCenter,
-      child: sections.isEmpty
-          ? const SizedBox(width: double.infinity)
-          : Padding(
-              padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
-              child: Container(
-                key: const ValueKey('ng-dock'),
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.sizeOf(context).height * 0.45,
-                ),
-                decoration: _panelDecoration(c),
-                clipBehavior: Clip.antiAlias,
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: sections,
+    // Never more than about half the visible screen, so the transcript stays
+    // usable on a small phone at large text; the dock scrolls beyond that.
+    // With the keyboard up it takes at most a quarter of what is left above
+    // the keyboard, so the composer is never pushed underneath it.
+    final cap = ngAboveComposerMaxHeight(
+      context,
+      available: widget.available ?? double.infinity,
+      fraction: 0.45,
+      withKeyboard: 0.25,
+    );
+    // Folding and unfolding animate; the cap does not. AnimatedSize would
+    // keep the old height for the first frame after the keyboard opens and
+    // overflow the chat column, so the cap sits outside it and applies at
+    // once.
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: sections.isEmpty ? double.infinity : cap + 6,
+      ),
+      child: AnimatedSize(
+        duration: const Duration(milliseconds: 200),
+        alignment: Alignment.bottomCenter,
+        child: sections.isEmpty
+            ? const SizedBox(width: double.infinity)
+            : Padding(
+                padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+                child: Container(
+                  key: const ValueKey('ng-dock'),
+                  constraints: BoxConstraints(maxHeight: cap),
+                  decoration: _panelDecoration(c),
+                  clipBehavior: Clip.antiAlias,
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: sections,
+                    ),
                   ),
                 ),
               ),
-            ),
+      ),
     );
   }
 
@@ -1242,4 +1265,31 @@ class _NgControlSheetState extends State<NgControlSheet> {
       ),
     ]);
   }
+}
+
+/// The tallest a card stacked above the composer may be.
+///
+/// [available] is the height the chat body really has: Scaffold has already
+/// taken the on-screen keyboard off it. Never use the window height: it does
+/// not shrink when the keyboard opens, and Scaffold also removes the keyboard
+/// from the MediaQuery its body sees, so a share of the window pushed the
+/// composer under the keyboard. The keyboard itself is read from the View,
+/// which Scaffold leaves untouched. With no bounded [available] (a card shown
+/// on its own), the window less the keyboard and status bar is used.
+double ngAboveComposerMaxHeight(
+  BuildContext context, {
+  double available = double.infinity,
+  required double fraction,
+  double? withKeyboard,
+}) {
+  final media = MediaQuery.of(context);
+  final view = View.maybeOf(context);
+  final viewKeyboard = view == null
+      ? 0.0
+      : view.viewInsets.bottom / view.devicePixelRatio;
+  final keyboard = math.max(media.viewInsets.bottom, viewKeyboard);
+  final height = available.isFinite
+      ? available
+      : math.max(0.0, media.size.height - keyboard - media.padding.top);
+  return height * (keyboard > 0 ? (withKeyboard ?? fraction) : fraction);
 }

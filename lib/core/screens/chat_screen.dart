@@ -3,6 +3,7 @@
 // GET /api/sessions/{id}/messages.
 import 'dart:async';
 import '../widgets/windows_chat_presence.dart';
+import '../workspace/terminal_chat_link.dart';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -753,7 +754,16 @@ class _HandsFreeTurnBinding {
   }
 }
 
-class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
+class _ChatScreenState extends State<ChatScreen>
+    with WidgetsBindingObserver, TerminalComposerAttachment<ChatScreen> {
+  @override
+  SavedConnection get terminalConnection => widget.connection;
+  @override
+  String get terminalSession => widget.session.id;
+  @override
+  RemoteWorkspaceOwner? get terminalOwner => _desktopGateway?.workspace;
+  @override
+  TextEditingController get terminalComposer => _textController;
   List<Map<String, dynamic>> _messages = [];
   ChatTimeline _timeline = const ChatTimeline();
   RestChatReplyRetention? _restReplyRetention;
@@ -855,6 +865,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   String? _sessionModel;
   String? _sessionProvider;
   String? _sessionReasoningEffort;
+  String? _sessionReasoningWire;
   String? _projectName;
   String? _storedSessionId;
   bool _showSessionFiles = false;
@@ -1797,6 +1808,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       _sessionModel = override.model;
       _sessionProvider = override.provider;
       _sessionReasoningEffort = override.reasoningEffort;
+      _sessionReasoningWire = '';
       _sessionModelOverride = true;
     });
   }
@@ -4536,6 +4548,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         _sessionModel = choice.model;
         _sessionProvider = choice.provider;
         _sessionReasoningEffort = selection.reasoningEffort;
+        _sessionReasoningWire = '';
         _sessionModelOverride = true;
       });
       ScaffoldMessenger.of(context).showSnackBar(
@@ -5952,8 +5965,33 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
   }
 
+  void _adoptRouteEffort(Map<String, dynamic> data) {
+    final info = data['info'] is Map
+        ? Map<String, dynamic>.from(data['info'] as Map)
+        : data;
+    if (!info.containsKey('reasoning_effort') &&
+        !info.containsKey('reasoning_effort_wire')) {
+      return;
+    }
+    setState(() {
+      final effort = info['reasoning_effort']?.toString();
+      if (effort != null && effort.isNotEmpty) {
+        _sessionReasoningEffort = effort;
+      }
+      if (info.containsKey('reasoning_effort_wire')) {
+        _sessionReasoningWire = info['reasoning_effort_wire']?.toString() ?? '';
+      } else if (info.containsKey('reasoning_effort')) {
+        _sessionReasoningWire = '';
+      }
+    });
+  }
+
   void _handleDesktopGatewayEvent(StreamEvent event, int responseGeneration) {
     if (!mounted || responseGeneration != _responseGeneration) return;
+    if (event.type == 'session.info') {
+      _adoptRouteEffort(event.data);
+      return;
+    }
     final reasoning = GatewayReasoningUpdate.fromGatewayEvent(
       event.type,
       event.data,
@@ -7595,6 +7633,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             projectName: _projectName,
             model: _sessionModel ?? widget.session.model,
             reasoningEffort: _sessionReasoningEffort ?? 'default',
+            reasoningEffortWire: _sessionReasoningWire,
             connectionLabel: widget.connection.label,
             connectionStatus: _chatConnectionStatus,
           ),
@@ -8270,177 +8309,192 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   ),
                 ],
               ),
-              child: Row(
-                children: [
-                  Semantics(
-                    label: context.l10n.add_attachment,
-                    button: true,
-                    enabled:
-                        !_transcriptLoadBlocksComposer &&
-                        !_preparingPaste &&
-                        !_streaming &&
-                        !_sending &&
-                        !_pendingReattachResync,
-                    excludeSemantics: true,
-                    child: IconButton(
-                      icon: const Icon(Icons.attach_file),
-                      onPressed:
-                          (!_transcriptLoadBlocksComposer &&
+              child: LayoutBuilder(
+                builder: (context, box) {
+                  // While a turn runs, Attach is disabled anyway; on a narrow
+                  // row it steps aside for Queue so the editor keeps its
+                  // width. It returns when the turn ends.
+                  final showQueueHeld = _streaming && !_usesNormalInputOwner;
+                  final showAttach = !(showQueueHeld && box.maxWidth < 360);
+                  return Row(
+                    children: [
+                      if (showAttach)
+                        Semantics(
+                          label: context.l10n.add_attachment,
+                          button: true,
+                          enabled:
+                              !_transcriptLoadBlocksComposer &&
                               !_preparingPaste &&
                               !_streaming &&
                               !_sending &&
-                              !_pendingReattachResync)
-                          ? _showAttachmentPicker
-                          : null,
-                      tooltip: context.l10n.attach_image_or_file,
-                      constraints: const BoxConstraints.tightFor(
-                        width: 48,
-                        height: 48,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Semantics(
-                      label: context.l10n.message,
-                      textField: true,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Formatting is a writing aid, not chrome: keep it
-                          // out of the compact pill until there is a draft.
-                          if (!keyboardOpen)
-                            ValueListenableBuilder<TextEditingValue>(
-                              valueListenable: _textController,
-                              builder: (context, value, _) =>
-                                  value.text.trim().isEmpty
-                                  ? const SizedBox.shrink()
-                                  : _composerFormatRow(context),
-                            ),
-                          if (!keyboardOpen) const SizedBox(height: 4),
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxHeight: (availableHeight * 0.30).clamp(
-                                48.0,
-                                160.0,
-                              ),
-                            ),
-                            child: SendOnEnter(
-                              enabled: sendEnabled,
-                              onNavigate: (event) =>
-                                  _composerOwnerCurrent &&
-                                      _attachmentDrafts.isEmpty &&
-                                      !_slashDropdownVisible
-                                  ? _promptRecall.handle(
-                                      event,
-                                      _textController,
-                                      _sentPrompts,
-                                    )
-                                  : KeyEventResult.ignored,
-                              onSend: () => unawaited(_sendMessage()),
-                              child: TextField(
-                                key: const Key('chat-message-composer'),
-                                focusNode: _composerFocus,
-                                controller: _textController,
-                                inputFormatters: [_largePasteFormatter],
-                                decoration: InputDecoration(
-                                  hintText: context.l10n.message_hermes,
-                                  filled: true,
-                                  fillColor: Colors.transparent,
-                                  border: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
-                                  ),
-                                  isDense: true,
-                                ),
-                                minLines: 1,
-                                maxLines: 5,
-                                textCapitalization:
-                                    TextCapitalization.sentences,
-                                keyboardType: TextInputType.multiline,
-                                textInputAction: TextInputAction.newline,
-                                enabled: !_transcriptLoadBlocksComposer,
-                              ),
+                              !_pendingReattachResync,
+                          excludeSemantics: true,
+                          child: IconButton(
+                            icon: const Icon(Icons.attach_file),
+                            onPressed:
+                                (!_transcriptLoadBlocksComposer &&
+                                    !_preparingPaste &&
+                                    !_streaming &&
+                                    !_sending &&
+                                    !_pendingReattachResync)
+                                ? _showAttachmentPicker
+                                : null,
+                            tooltip: context.l10n.attach_image_or_file,
+                            constraints: const BoxConstraints.tightFor(
+                              width: 48,
+                              height: 48,
                             ),
                           ),
-                        ],
+                        ),
+                      Expanded(
+                        child: Semantics(
+                          label: context.l10n.message,
+                          textField: true,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Formatting is a writing aid, not chrome: keep it
+                              // out of the compact pill until there is a draft.
+                              if (!keyboardOpen)
+                                ValueListenableBuilder<TextEditingValue>(
+                                  valueListenable: _textController,
+                                  builder: (context, value, _) =>
+                                      value.text.trim().isEmpty
+                                      ? const SizedBox.shrink()
+                                      : _composerFormatRow(context),
+                                ),
+                              if (!keyboardOpen) const SizedBox(height: 4),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxHeight: (availableHeight * 0.30).clamp(
+                                    48.0,
+                                    160.0,
+                                  ),
+                                ),
+                                child: SendOnEnter(
+                                  enabled: sendEnabled,
+                                  onNavigate: (event) =>
+                                      _composerOwnerCurrent &&
+                                          _attachmentDrafts.isEmpty &&
+                                          !_slashDropdownVisible
+                                      ? _promptRecall.handle(
+                                          event,
+                                          _textController,
+                                          _sentPrompts,
+                                        )
+                                      : KeyEventResult.ignored,
+                                  onSend: () => unawaited(_sendMessage()),
+                                  child: TextField(
+                                    key: const Key('chat-message-composer'),
+                                    focusNode: _composerFocus,
+                                    controller: _textController,
+                                    inputFormatters: [_largePasteFormatter],
+                                    decoration: InputDecoration(
+                                      hintText: context.l10n.message_hermes,
+                                      filled: true,
+                                      fillColor: Colors.transparent,
+                                      border: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 8,
+                                          ),
+                                      isDense: true,
+                                    ),
+                                    minLines: 1,
+                                    maxLines: 5,
+                                    textCapitalization:
+                                        TextCapitalization.sentences,
+                                    keyboardType: TextInputType.multiline,
+                                    textInputAction: TextInputAction.newline,
+                                    enabled: !_transcriptLoadBlocksComposer,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  if (!separateVoiceAction && handsFreeAction != null)
-                    handsFreeAction,
-                  if (!_voiceComposer.listening && !_streaming)
-                    VoiceComposerStartButton(
-                      enabled:
-                          !_transcriptLoadBlocksComposer &&
-                          !_preparingPaste &&
-                          !_startingVoiceInput &&
-                          !_streaming &&
-                          !_sending &&
-                          !_pendingReattachResync,
-                      onPressed: _startVoiceInput,
-                    ),
-                  Semantics(
-                    label: context.l10n.spoken_replies,
-                    value: _voiceReplyEnabled
-                        ? context.l10n.on
-                        : context.l10n.off,
-                    toggled: _voiceReplyEnabled,
-                    button: true,
-                    excludeSemantics: true,
-                    child: IconButton(
-                      icon: Icon(
-                        _voiceReplyEnabled ? Icons.volume_up : Icons.volume_off,
+                      const SizedBox(width: 8),
+                      if (!separateVoiceAction && handsFreeAction != null)
+                        handsFreeAction,
+                      if (!_voiceComposer.listening && !_streaming)
+                        VoiceComposerStartButton(
+                          enabled:
+                              !_transcriptLoadBlocksComposer &&
+                              !_preparingPaste &&
+                              !_startingVoiceInput &&
+                              !_streaming &&
+                              !_sending &&
+                              !_pendingReattachResync,
+                          onPressed: _startVoiceInput,
+                        ),
+                      Semantics(
+                        label: context.l10n.spoken_replies,
+                        value: _voiceReplyEnabled
+                            ? context.l10n.on
+                            : context.l10n.off,
+                        toggled: _voiceReplyEnabled,
+                        button: true,
+                        excludeSemantics: true,
+                        child: IconButton(
+                          icon: Icon(
+                            _voiceReplyEnabled
+                                ? Icons.volume_up
+                                : Icons.volume_off,
+                          ),
+                          onPressed: () {
+                            setState(
+                              () => _voiceReplyEnabled = !_voiceReplyEnabled,
+                            );
+                            if (!_voiceReplyEnabled) {
+                              _handsFree.revoke(
+                                HandsFreeStopReason.voiceReplyDisabled,
+                              );
+                              unawaited(
+                                _replySpeaker.stop().catchError((Object _) {}),
+                              );
+                            }
+                          },
+                          tooltip: _voiceReplyEnabled
+                              ? context.l10n.spoken_replies_on
+                              : context.l10n.spoken_replies_off,
+                          constraints: const BoxConstraints.tightFor(
+                            width: 48,
+                            height: 48,
+                          ),
+                        ),
                       ),
-                      onPressed: () {
-                        setState(
-                          () => _voiceReplyEnabled = !_voiceReplyEnabled,
-                        );
-                        if (!_voiceReplyEnabled) {
-                          _handsFree.revoke(
-                            HandsFreeStopReason.voiceReplyDisabled,
-                          );
-                          unawaited(
-                            _replySpeaker.stop().catchError((Object _) {}),
-                          );
-                        }
-                      },
-                      tooltip: _voiceReplyEnabled
-                          ? context.l10n.spoken_replies_on
-                          : context.l10n.spoken_replies_off,
-                      constraints: const BoxConstraints.tightFor(
-                        width: 48,
-                        height: 48,
+                      const SizedBox(width: 4),
+                      if (_streaming) ...[
+                        if (showQueueHeld)
+                          _buildComposerAction(
+                            key: const Key('chat-queue-held'),
+                            label: 'Queue',
+                            tooltip: 'Queue until this turn finishes',
+                            icon: Icons.queue,
+                            onPressed: _queueHeldFromComposer,
+                          ),
+                        _buildComposerAction(
+                          key: const Key('chat-stop-response'),
+                          label: context.l10n.stop_response,
+                          tooltip: context.l10n.stop_response,
+                          icon: Icons.stop_rounded,
+                          onPressed: _stopResponseInFlight
+                              ? null
+                              : _stopResponse,
+                        ),
+                        const SizedBox(width: 4),
+                      ],
+                      _buildSendFab(
+                        sendEnabled: sendEnabled,
+                        sendTooltip: sendTooltip,
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  if (_streaming) ...[
-                    if (!_usesNormalInputOwner)
-                      _buildComposerAction(
-                        key: const Key('chat-queue-held'),
-                        label: 'Queue',
-                        tooltip: 'Queue until this turn finishes',
-                        icon: Icons.queue,
-                        onPressed: _queueHeldFromComposer,
-                      ),
-                    _buildComposerAction(
-                      key: const Key('chat-stop-response'),
-                      label: context.l10n.stop_response,
-                      tooltip: context.l10n.stop_response,
-                      icon: Icons.stop_rounded,
-                      onPressed: _stopResponseInFlight ? null : _stopResponse,
-                    ),
-                    const SizedBox(width: 4),
-                  ],
-                  _buildSendFab(
-                    sendEnabled: sendEnabled,
-                    sendTooltip: sendTooltip,
-                  ),
-                ],
+                    ],
+                  );
+                },
               ),
             ),
           ],
