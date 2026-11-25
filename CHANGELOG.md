@@ -21,6 +21,21 @@ Publication correction: tag v4.0.6 has no published APK assets; its release
 workflow failed the identity gate because the tag preceded the version bump.
 The paging change it names (#284) first ships in the published 4.0.7 APKs.
 
+## [4.0.17] - 2026-11-26
+
+Stable release `4.0.17+3073`, with release APK codes `30731`, `30732` and
+`30733`. Each split exceeds the published 4.0.16 stable splits (`30723`).
+Installs over the existing app.
+
+### Added
+
+- **Parked Android Automotive preview (#376).** Isolated packaging for the
+  Android Automotive target under the existing Ares application id, with
+  driver-display checks, a text-first preview across media and update
+  boundaries, and CI-verified Play-bundle checks (rejection controls run
+  before signing). The phone release package and the Play listing are
+  unchanged; the preview is parked and is not published to either Play track.
+
 ## [4.0.16] - 2026-11-25
 
 Stable release `4.0.16+3072`, with release APK codes `30721`, `30722` and
