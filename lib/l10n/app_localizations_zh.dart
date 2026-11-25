@@ -3911,6 +3911,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_the_turn_failed => '本轮对话失败。';
 
   @override
+  String get ng_turn_changed => '该轮对话已结束或已开始新一轮';
+
+  @override
+  String get ng_steer_rejected => '正在进行的对话未接受此内容';
+
+  @override
+  String get ng_turn_not_known_yet => '尚不清楚正在进行的对话；请稍后再试';
+
+  @override
   String ng_couldn_t_stop(Object error) {
     return '无法停止：$error';
   }
@@ -9508,6 +9517,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_the_turn_failed => '本轮对话失败。';
+
+  @override
+  String get ng_turn_changed => '该轮对话已结束或已开始新一轮';
+
+  @override
+  String get ng_steer_rejected => '正在进行的对话未接受此内容';
+
+  @override
+  String get ng_turn_not_known_yet => '尚不清楚正在进行的对话；请稍后再试';
 
   @override
   String ng_couldn_t_stop(Object error) {

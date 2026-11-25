@@ -7,6 +7,9 @@ plugins {
    id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Shared by app and flutter_tts native regressions.
+val robolectricVersion = providers.gradleProperty("robolectricVersion").get()
+
 val keystoreProperties = Properties()
 val keystorePath = rootProject.projectDir.parentFile.resolve("key.properties")
 val minimumInstalledVersionCode = 2127
@@ -176,7 +179,7 @@ dependencies {
        require(replacement.isFile && replacement.extension == "aar") { "embeddedPushAar must name an existing .aar" }
        implementation(files(replacement))
        implementation("org.jetbrains.kotlin:kotlin-stdlib:2.4.21")
-       implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.10.2")
+       implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.11.0")
    }
    implementation("org.unifiedpush.android:connector:3.3.6") {
        // flutter_secure_storage already uses tink-android. The JVM artifact
@@ -185,6 +188,6 @@ dependencies {
    }
    implementation("com.google.crypto.tink:tink-android:1.24.0")
    testImplementation("junit:junit:4.13.2")
-   testImplementation("org.robolectric:robolectric:4.18.1")
+   testImplementation("org.robolectric:robolectric:$robolectricVersion")
    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
