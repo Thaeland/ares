@@ -335,7 +335,7 @@ class SlashCommandInfoCard extends StatelessWidget {
     required this.strings,
     required this.style,
     this.note,
-    this.maxWidth = 360,
+    this.maxWidth = 280,
   });
 
   final SlashCommandTokenInfo info;
@@ -345,6 +345,15 @@ class SlashCommandInfoCard extends StatelessWidget {
   /// An extra line under the details (e.g. how this composer sends commands).
   final String? note;
   final double maxWidth;
+
+  /// Whether [description] carries the gateway's usage clause for
+  /// [command]. Every localized `slash.shared.usage_suffix` template embeds
+  /// `/{name} {args_hint}`.
+  @visibleForTesting
+  static bool describesUsage(String description, String command) => RegExp(
+    '/${RegExp.escape(command)}(?=[\\s)\uFF09]|\$)',
+    caseSensitive: false,
+  ).hasMatch(description);
 
   @override
   Widget build(BuildContext context) {
@@ -357,7 +366,11 @@ class SlashCommandInfoCard extends StatelessWidget {
       fontSize: (base.fontSize ?? 14) - 1,
     );
     final description = info.description.trim();
-    final hint = strings.argumentHint(info.argumentMode);
+    // Registry descriptions already end in a localized usage clause
+    // (`… (usage: /title <name>)`); the coarser argument hint would repeat it.
+    final hint = describesUsage(description, info.canonical)
+        ? null
+        : strings.argumentHint(info.argumentMode);
     return Semantics(
       container: true,
       liveRegion: true,
@@ -451,6 +464,7 @@ class SlashCommandInfoAnchor extends StatefulWidget {
     this.refresh,
     this.onToken,
     this.timeout = const Duration(seconds: 8),
+    this.gap = 6,
   });
 
   final SlashCommandHighlightController controller;
@@ -478,7 +492,12 @@ class SlashCommandInfoAnchor extends StatefulWidget {
 
   final Duration timeout;
 
-  /// The composer; must contain the [EditableText] driven by [controller].
+  /// Space between the card's bottom edge and the top of [child].
+  final double gap;
+
+  /// The composer's input container, including every control the card must
+  /// leave uncovered; it must contain the [EditableText] driven by
+  /// [controller]. The card sits above its top edge, near the token.
   final Widget child;
 
   @override
@@ -766,8 +785,9 @@ class _SlashCommandInfoAnchorState extends State<SlashCommandInfoAnchor> {
     if (event is PointerDownEvent) _hide();
   }
 
-  /// Where the card's bottom-left sits relative to this anchor: just above
-  /// the token's first line, clamped to stay on screen.
+  /// Where the card's bottom-left sits relative to this anchor: above the
+  /// whole input container (so it never covers the field or a composer
+  /// control), horizontally at the token, clamped to stay on screen.
   Offset? _anchorOffset(SlashCommandToken token) {
     final editable = _findEditable()?.renderEditable;
     final anchor = context.findRenderObject();
@@ -782,20 +802,20 @@ class _SlashCommandInfoAnchorState extends State<SlashCommandInfoAnchor> {
     );
     if (boxes.isEmpty) return null;
     final first = boxes.first;
-    final topLeft = anchor.globalToLocal(
-      editable.localToGlobal(Offset(first.left, first.top)),
-    );
+    final tokenLeft = anchor
+        .globalToLocal(editable.localToGlobal(Offset(first.left, first.top)))
+        .dx;
     final screen = MediaQuery.sizeOf(context).width;
     final origin = anchor.localToGlobal(Offset.zero).dx;
     final width = _maxWidth(context);
     const margin = 8.0;
     final minLeft = margin - origin;
     final maxLeft = math.max(minLeft, screen - margin - width - origin);
-    return Offset(topLeft.dx.clamp(minLeft, maxLeft), topLeft.dy - 6);
+    return Offset(tokenLeft.clamp(minLeft, maxLeft), -widget.gap);
   }
 
   double _maxWidth(BuildContext context) =>
-      math.max(160.0, math.min(360.0, MediaQuery.sizeOf(context).width - 16));
+      math.max(0.0, math.min(280.0, MediaQuery.sizeOf(context).width - 16));
 
   EditableTextState? _findEditable() {
     final cached = _editable;

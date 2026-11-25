@@ -6,8 +6,10 @@ import 'package:hermes_android/core/controllers/slash_command_controller.dart';
 import 'package:hermes_android/core/models/slash_command.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/widgets/slash_command_highlight.dart';
+import 'package:hermes_android/nextgen/data/chat_controller.dart';
 import 'package:hermes_android/nextgen/data/nextgen_gateway.dart';
 import 'package:hermes_android/nextgen/data/slash_catalog.dart';
+import 'package:hermes_android/nextgen/ui/slash_command_info.dart';
 
 /// The real `commands.catalog` shape, as in the dropdown tests.
 Map<String, Object?> _wireCatalog() => {
@@ -125,6 +127,10 @@ class _CatalogGateway extends NextGenGateway {
 
   bool online;
   final calls = <Map<String, dynamic>>[];
+  final reconnects = StreamController<void>.broadcast();
+
+  @override
+  Stream<void> get reconnected => reconnects.stream;
   Object? failure;
   Completer<Map<String, dynamic>>? hold;
 
@@ -494,5 +500,177 @@ void main() {
       expect(gateway.calls, hasLength(1));
       reader.dispose();
     });
+  });
+
+  group('NgSlashCatalog reconnects', () {
+    test(
+      'a reconnect marks answers stale; they show until refetched',
+      () async {
+        final gateway = _CatalogGateway();
+        final reader = NgSlashCatalog()..scopeTo(gateway);
+        await reader.ensureLoaded();
+        await reader.ensureLoaded();
+        expect(gateway.calls, hasLength(1));
+        final before = reader.lookup;
+
+        gateway.reconnects.add(null);
+        await Future<void>.delayed(Duration.zero);
+        expect(identical(reader.lookup, before), isTrue, reason: 'no flicker');
+        gateway.hold = Completer();
+        final refetch = reader.ensureLoaded();
+        expect(gateway.calls, hasLength(2));
+        expect(reader.resolve('help'), isNotNull, reason: 'still highlighted');
+        gateway.hold!.complete({
+          'pairs': [
+            ['/help', 'Show help'],
+            ['/fresh', 'Added after the restart'],
+          ],
+        });
+        await refetch;
+        expect(reader.resolve('fresh')!.description, 'Added after the restart');
+        await reader.ensureLoaded();
+        expect(gateway.calls, hasLength(2), reason: 'fresh again');
+        reader.dispose();
+      },
+    );
+  });
+
+  group('SlashCommandInfoCard', () {
+    test('detects the localized usage clause the gateway appends', () {
+      for (final description in [
+        'Set the chat title (usage: /title <name>)',
+        'Titel setzen (Verwendung: /title <name>)',
+        'タイトルを設定（使い方: /title <name>）',
+        'Set the title. Try /TITLE',
+      ]) {
+        expect(
+          SlashCommandInfoCard.describesUsage(description, 'title'),
+          isTrue,
+          reason: description,
+        );
+      }
+      for (final description in [
+        'Set the chat title',
+        'See /titles for more',
+        '',
+      ]) {
+        expect(
+          SlashCommandInfoCard.describesUsage(description, 'title'),
+          isFalse,
+          reason: description,
+        );
+      }
+    });
+
+    Future<void> card(WidgetTester tester, SlashCommandTokenInfo info) =>
+        tester.pumpWidget(
+          MaterialApp(
+            home: Center(
+              child: SlashCommandInfoCard(
+                info: info,
+                strings: SlashCommandInfoStrings(
+                  noDescription: 'none',
+                  loading: 'loading',
+                  aliasOf: (alias, command) => '$alias → $command',
+                  argumentsOptions: 'options hint',
+                  argumentsText: 'text hint',
+                  argumentsMixed: 'mixed hint',
+                ),
+                style: const SlashCommandInfoStyle(
+                  background: Colors.black,
+                  foreground: Colors.white,
+                  muted: Colors.grey,
+                  accent: _accent,
+                  border: Colors.grey,
+                ),
+              ),
+            ),
+          ),
+        );
+
+    testWidgets('drops the argument hint when the description has usage', (
+      tester,
+    ) async {
+      await card(
+        tester,
+        const SlashCommandTokenInfo(
+          typed: 't',
+          canonical: 'title',
+          description: 'Set the chat title (usage: /title <name>)',
+          argumentMode: 'text',
+        ),
+      );
+      expect(find.text('text hint'), findsNothing);
+      expect(find.text('/t → /title'), findsOneWidget, reason: 'alias kept');
+      expect(tester.getSize(find.byType(SlashCommandInfoCard)).width, 280);
+
+      await card(
+        tester,
+        const SlashCommandTokenInfo(
+          typed: 'model',
+          canonical: 'model',
+          description: 'Choose a model',
+          argumentMode: 'options',
+        ),
+      );
+      expect(find.text('options hint'), findsOneWidget);
+      expect(
+        tester.getSize(find.byType(SlashCommandInfoCard)).width,
+        lessThanOrEqualTo(280),
+      );
+    });
+  });
+
+  group('NgSlashCommandInfo note flag', () {
+    for (final shows in [true, false]) {
+      testWidgets('showsSentAsMessageNote: $shows', (tester) async {
+        final gateway = _CatalogGateway();
+        final chat = NgChatController(gateway);
+        final input = SlashCommandHighlightController();
+        final focus = FocusNode();
+        addTearDown(() {
+          chat.dispose();
+          gateway.dispose();
+          input.dispose();
+          focus.dispose();
+        });
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Align(
+                alignment: Alignment.bottomCenter,
+                child: NgSlashCommandInfo(
+                  chat: chat,
+                  controller: input,
+                  focusNode: focus,
+                  showsSentAsMessageNote: shows,
+                  child: TextField(controller: input, focusNode: focus),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.enterText(find.byType(TextField), '/help me');
+        await tester.pump();
+        await tester.pump();
+        final editable = tester
+            .state<EditableTextState>(find.byType(EditableText))
+            .renderEditable;
+        final box = editable
+            .getBoxesForSelection(
+              const TextSelection(baseOffset: 1, extentOffset: 4),
+            )
+            .first;
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.tapAt(editable.localToGlobal(box.toRect().center));
+        await tester.pump();
+        await tester.pump();
+        expect(find.text('Show help'), findsOneWidget);
+        expect(
+          find.textContaining('NextGen sends this to Hermes'),
+          shows ? findsOneWidget : findsNothing,
+        );
+      });
+    }
   });
 }

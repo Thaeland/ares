@@ -14,7 +14,8 @@ import 'nextgen_gateway.dart';
 /// session, since the server binds skills to the session's profile and
 /// workspace. One request is in flight per scope; a failure leaves the
 /// composer working with no highlight and is retried no sooner than
-/// [retryAfter], on the next typed slash.
+/// [retryAfter], on the next typed slash. A reconnect marks cached answers
+/// stale so a restarted gateway's new commands appear.
 class NgSlashCatalog extends ChangeNotifier {
   NgSlashCatalog({this.retryAfter = const Duration(seconds: 30)});
 
@@ -24,9 +25,28 @@ class NgSlashCatalog extends ChangeNotifier {
     'nextgen slash catalogue',
   );
 
-  /// Forgets every cached answer for [gateway] (tests, reconnects).
+  static final Expando<StreamSubscription<void>> _reconnects = Expando(
+    'nextgen slash catalogue reconnects',
+  );
+
+  /// Forgets every cached answer for [gateway].
   @visibleForTesting
   static void clearCache(NextGenGateway gateway) => _cache[gateway] = null;
+
+  /// The cache for [gateway]. A (re)connection may be a restarted gateway
+  /// with new plugins or skills, so each one marks that gateway's answers
+  /// stale: they keep highlighting until the next typed slash refetches.
+  static Map<String, _NgCatalogEntry> _entriesFor(NextGenGateway gateway) {
+    _reconnects[gateway] ??= gateway.reconnected.listen((_) {
+      for (final entry
+          in _cache[gateway]?.values ?? const <_NgCatalogEntry>[]) {
+        entry
+          ..stale = true
+          ..failedAt = null;
+      }
+    });
+    return _cache[gateway] ??= <String, _NgCatalogEntry>{};
+  }
 
   NextGenGateway? _gateway;
   String? _sessionId;
@@ -63,12 +83,11 @@ class NgSlashCatalog extends ChangeNotifier {
     if (gateway == null || _disposed || !gateway.state.isConnected) {
       return Future<void>.value();
     }
-    final entries = _cache[gateway] ??= <String, _NgCatalogEntry>{};
-    final entry = entries[_key] ??= _NgCatalogEntry();
+    final entry = _entriesFor(gateway)[_key] ??= _NgCatalogEntry();
     final flight = entry.flight;
     if (flight != null) return flight;
     final failedAt = entry.failedAt;
-    if (entry.lookup != null ||
+    if ((entry.lookup != null && !entry.stale) ||
         (failedAt != null &&
             DateTime.now().difference(failedAt) < retryAfter)) {
       return Future<void>.value();
@@ -93,6 +112,7 @@ class NgSlashCatalog extends ChangeNotifier {
       });
       entry
         ..lookup = SlashCommandLookup.fromCatalogResult(result)
+        ..stale = false
         ..failedAt = null;
     } catch (_) {
       entry.failedAt = DateTime.now();
@@ -116,6 +136,9 @@ class NgSlashCatalog extends ChangeNotifier {
 
 class _NgCatalogEntry {
   SlashCommandLookup? lookup;
+
+  /// Loaded before the latest reconnect: still shown, refetched on demand.
+  bool stale = false;
   Future<void>? flight;
   DateTime? failedAt;
 }

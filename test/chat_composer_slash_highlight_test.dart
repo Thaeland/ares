@@ -3,6 +3,7 @@
 // keys, so the same file runs (red) against a build without the feature.
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -157,15 +158,52 @@ Future<void> _type(WidgetTester tester, String text) async {
 
 /// Taps the middle of the characters [start, end) of the draft, as a fresh
 /// single tap (past the double-tap window of any previous tap).
-Future<void> _tapText(WidgetTester tester, int start, int end) async {
+Future<void> _tapText(
+  WidgetTester tester,
+  int start,
+  int end, {
+  PointerDeviceKind kind = PointerDeviceKind.touch,
+}) async {
   await tester.pump(kDoubleTapTimeout + const Duration(milliseconds: 50));
   final editable = _editable(tester).renderEditable;
   final box = editable
       .getBoxesForSelection(TextSelection(baseOffset: start, extentOffset: end))
       .first;
-  await tester.tapAt(editable.localToGlobal(box.toRect().center));
+  await tester.tapAt(editable.localToGlobal(box.toRect().center), kind: kind);
   await tester.pump();
   await tester.pump();
+}
+
+Rect _editableRect(WidgetTester tester) {
+  final editable = _editable(tester).renderEditable;
+  return editable.localToGlobal(Offset.zero) & editable.size;
+}
+
+/// Every composer control the card must leave uncovered, by name.
+Map<String, Rect> _controlRects(WidgetTester tester) {
+  final finders = <String, Finder>{
+    'attach': find.byTooltip('Attach image or file'),
+    'model': find.ancestor(
+      of: find.byIcon(Icons.tune),
+      matching: find.byType(TextButton),
+    ),
+    'voice input': find.byTooltip('Speak to Hermes'),
+    'hands-free start': find.byKey(const Key('hands-free-start')),
+    'hands-free stop': find.byKey(const Key('hands-free-quick-stop')),
+    'spoken replies': find.byWidgetPredicate(
+      (widget) =>
+          widget is Tooltip &&
+          (widget.message == 'Spoken replies off' ||
+              widget.message == 'Spoken replies on'),
+    ),
+    'send': find.byTooltip('Send'),
+    'stop': find.byKey(const Key('chat-stop-response')),
+  };
+  return {
+    for (final entry in finders.entries)
+      if (entry.value.evaluate().isNotEmpty)
+        entry.key: tester.getRect(entry.value.first),
+  };
 }
 
 String _draft(WidgetTester tester) =>
@@ -359,5 +397,76 @@ void main() {
     expect(_highlighted(tester), isEmpty);
     await _type(tester, '/new Trip plans');
     expect(_highlighted(tester), '/new');
+  });
+
+  group('card placement', () {
+    for (final (label, size, platform, kind) in [
+      (
+        'phone 412x760',
+        const Size(412, 760),
+        TargetPlatform.android,
+        PointerDeviceKind.touch,
+      ),
+      (
+        'windows 1280x800',
+        const Size(1280, 800),
+        TargetPlatform.windows,
+        PointerDeviceKind.mouse,
+      ),
+      (
+        'macOS 1280x800',
+        const Size(1280, 800),
+        TargetPlatform.macOS,
+        PointerDeviceKind.mouse,
+      ),
+    ]) {
+      for (final draft in [
+        '/title Trip planning',
+        '/title Trip planning\nsecond line\nthird line',
+      ]) {
+        final lines = '\n'.allMatches(draft).length + 1;
+        testWidgets('$label, $lines-line draft: the small card clears the '
+            'field and every composer control', (tester) async {
+          tester.view.physicalSize = size;
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.reset);
+          debugDefaultTargetPlatformOverride = platform;
+          try {
+            await _pump(tester, _Gateway());
+            await _type(tester, draft);
+            await _tapText(tester, 1, 5, kind: kind);
+            expect(find.byKey(_infoKey), findsOneWidget);
+
+            final card = tester.getRect(find.byKey(_infoKey));
+            expect(card.width, lessThanOrEqualTo(280));
+            expect(card.left, greaterThanOrEqualTo(0));
+            expect(card.right, lessThanOrEqualTo(size.width));
+            final field = _editableRect(tester);
+            expect(card.overlaps(field), isFalse, reason: '$card vs $field');
+            final controls = _controlRects(tester);
+            for (final name in ['attach', 'voice input', 'spoken replies']) {
+              expect(controls, contains(name));
+            }
+            expect(
+              controls.containsKey('send') || controls.containsKey('stop'),
+              isTrue,
+            );
+            for (final MapEntry(key: name, value: rect) in controls.entries) {
+              expect(
+                card.overlaps(rect),
+                isFalse,
+                reason: '$name $rect vs $card',
+              );
+            }
+            // Above the whole input container, a small gap away.
+            final bar = tester.getRect(find.byKey(const Key('chat-input-bar')));
+            expect(card.bottom, lessThanOrEqualTo(bar.top));
+            expect(bar.top - card.bottom, lessThanOrEqualTo(12));
+          } finally {
+            debugDefaultTargetPlatformOverride = null;
+          }
+        });
+      }
+    }
   });
 }
