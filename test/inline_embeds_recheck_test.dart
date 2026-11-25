@@ -766,6 +766,154 @@ void main() {
     }
   }
 
+  // E7: an allowed image host that redirects. Redirects are followed only
+  // over https, to the same host or to a host that is itself allowed (in
+  // Always, every https image host is), and never past three hops. Load
+  // once allows only the host the reader chose.
+  group('E7 image redirects', () {
+    const tracker = 'https://tracker.example/pixel.png';
+    const moved = 'https://img-a.example.org/moved.png';
+    for (final layout in ['nextgen', 'classic']) {
+      testWidgets('$layout: Always allow for a host does not reach another', (
+        tester,
+      ) async {
+        SharedPreferences.setMockInitialValues(
+          _reading(InlineEmbedMode.ask, allowed: {'image:img-a.example.org'}),
+        );
+        final prefs = await SharedPreferences.getInstance();
+        final net = _record();
+        net.redirects[_imgA] = tracker;
+        await _pumpChat(tester, layout, prefs, '![first]($_imgA)\n');
+        await _settle(tester);
+        expect(net.requests.map((u) => '$u'), [_imgA]);
+        expect(net.hosts.contains('tracker.example'), isFalse);
+        expect(
+          find.descendant(
+            of: _k('embed-link-$_imgA'),
+            matching: find.textContaining("Couldn't load the image"),
+          ),
+          findsOneWidget,
+        );
+        await tester.pumpWidget(const SizedBox());
+      });
+
+      testWidgets('$layout: Load once does not follow to another host', (
+        tester,
+      ) async {
+        SharedPreferences.setMockInitialValues(_reading(InlineEmbedMode.ask));
+        final prefs = await SharedPreferences.getInstance();
+        final net = _record();
+        net.redirects[_imgA] = tracker;
+        await _pumpChat(tester, layout, prefs, '![first]($_imgA)\n');
+        await _settle(tester);
+        expect(net.requests, isEmpty);
+        await tester.tap(_k('embed-load-image:img-a.example.org'));
+        await _settle(tester);
+        expect(net.requests.map((u) => '$u'), [_imgA]);
+        await tester.pumpWidget(const SizedBox());
+      });
+
+      testWidgets('$layout: the same host, or another allowed host, is '
+          'followed', (tester) async {
+        SharedPreferences.setMockInitialValues(
+          _reading(
+            InlineEmbedMode.ask,
+            allowed: {'image:img-a.example.org', 'image:img-b.example.org'},
+          ),
+        );
+        final prefs = await SharedPreferences.getInstance();
+        final net = _record();
+        net.redirects[_imgA] = moved;
+        net.redirects[moved] = _imgB;
+        await _pumpChat(tester, layout, prefs, '![first]($_imgA)\n');
+        await _settle(tester);
+        expect(net.requests.map((u) => '$u'), [_imgA, moved, _imgB]);
+        expect(_k('embed-remote-image-$_imgA'), findsOneWidget);
+        expect(_k('embed-link-$_imgA'), findsNothing);
+        await tester.pumpWidget(const SizedBox());
+      });
+
+      testWidgets('$layout: Always follows https only', (tester) async {
+        SharedPreferences.setMockInitialValues(
+          _reading(InlineEmbedMode.always),
+        );
+        final prefs = await SharedPreferences.getInstance();
+        final net = _record();
+        net.redirects[_imgA] = tracker;
+        net.redirects[_imgB] = 'http://img-b.example.org/b.png';
+        await _pumpChat(
+          tester,
+          layout,
+          prefs,
+          '![first]($_imgA)\n\n![second]($_imgB)\n',
+        );
+        await _settle(tester);
+        // Always allows every https image host, the redirect's included.
+        expect(net.requests.map((u) => '$u'), containsAll([_imgA, tracker]));
+        // Plain http is never requested, even as a redirect.
+        expect(net.requests.where((u) => u.scheme != 'https'), isEmpty);
+        expect(net.requests.map((u) => '$u'), contains(_imgB));
+        await tester.pumpWidget(const SizedBox());
+      });
+    }
+
+    test('gives up after three hops', () async {
+      final net = _record();
+      final hops = [
+        for (var i = 0; i <= 4; i++) 'https://img-a.example.org/hop$i.png',
+      ];
+      for (var i = 0; i < 4; i++) {
+        net.redirects[hops[i]] = hops[i + 1];
+      }
+      bool sameHost(Uri uri) => uri.host == 'img-a.example.org';
+      await expectLater(
+        fetchCappedHttps(Uri.parse(hops[0]), maxBytes: 1024, allowed: sameHost),
+        throwsStateError,
+      );
+      // The first request and three hops; the fourth redirect is refused.
+      expect(net.requests.map((u) => '$u'), hops.take(4));
+
+      net.requests.clear();
+      final bytes = await fetchCappedHttps(
+        Uri.parse(hops[1]),
+        maxBytes: 1024,
+        allowed: sameHost,
+      );
+      expect(bytes, isNotEmpty);
+      expect(net.requests.map((u) => '$u'), hops.skip(1));
+    });
+
+    testWidgets('an image provider follows only its own host by default', (
+      tester,
+    ) async {
+      final net = _record();
+      net.redirects[_imgA] = tracker;
+      final outcome = await tester.runAsync(() async {
+        final done = Completer<String>();
+        final stream = CappedHttpsImage(
+          Uri.parse(_imgA),
+        ).resolve(ImageConfiguration.empty);
+        final listener = ImageStreamListener(
+          (info, _) {
+            if (!done.isCompleted) done.complete('loaded');
+            info.dispose();
+          },
+          onError: (Object error, _) {
+            if (!done.isCompleted) done.complete('refused');
+          },
+        );
+        stream.addListener(listener);
+        try {
+          return await done.future.timeout(const Duration(seconds: 20));
+        } finally {
+          stream.removeListener(listener);
+        }
+      });
+      expect(outcome, 'refused');
+      expect(net.hosts, {'img-a.example.org'});
+    });
+  });
+
   testWidgets('E8 caps: decoded size and bytes, default limits', (
     tester,
   ) async {

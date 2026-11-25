@@ -378,8 +378,9 @@ const _maxSourcePixels = 40 * 1000 * 1000;
 const _redirects = 3;
 
 /// One https GET with no cookies, at most [maxBytes], following up to three
-/// redirects only to https URLs [allowed] accepts. Every request goes
-/// through dart:io's [HttpClient], so [HttpOverrides] sees it.
+/// redirects only to https URLs [allowed] accepts (the first request is
+/// checked too). A fourth redirect is refused. Every request goes through
+/// dart:io's [HttpClient], so [HttpOverrides] sees it.
 @visibleForTesting
 Future<Uint8List> fetchCappedHttps(
   Uri uri, {
@@ -448,7 +449,8 @@ Future<Uint8List> _readCapped(Stream<List<int>> body, int maxBytes) async {
 }
 
 /// A remote https image, downloaded with a byte cap and decoded no larger
-/// than [maxEdge] pixels on its longer side.
+/// than [maxEdge] pixels on its longer side. Redirects stay on [uri]'s host
+/// unless [allowed] says otherwise.
 @immutable
 class CappedHttpsImage extends ImageProvider<CappedHttpsImage> {
   const CappedHttpsImage(
@@ -462,7 +464,8 @@ class CappedHttpsImage extends ImageProvider<CappedHttpsImage> {
   final int maxBytes;
   final int maxEdge;
 
-  /// Hosts a provider thumbnail may come from; any https host otherwise.
+  /// Where a request may go: a provider thumbnail's CDN, or the hosts the
+  /// reader allows for a Markdown image. Only [uri]'s own host otherwise.
   final bool Function(Uri uri)? allowed;
 
   @override
@@ -483,7 +486,7 @@ class CappedHttpsImage extends ImageProvider<CappedHttpsImage> {
     final bytes = await fetchCappedHttps(
       uri,
       maxBytes: maxBytes,
-      allowed: allowed ?? (_) => true,
+      allowed: allowed ?? (target) => target.host == uri.host,
       accept: 'image/*',
     );
     final buffer = await ui.ImmutableBuffer.fromUint8List(bytes);
@@ -820,6 +823,17 @@ class _RemoteImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = context.sharedL10n;
+    // The reader chose this host (Load, Always allow, or Always). A redirect
+    // may stay on it or go to a host that is itself allowed, never to an
+    // unknown one: Always allow for one image host is not consent to the
+    // tracker it forwards to.
+    final reading = ReadingControls.maybeOf(context);
+    final always = _modeOf(reading) == InlineEmbedMode.always;
+    final allowedHosts = {...?reading?.allowedEmbeds};
+    bool follows(Uri target) =>
+        target.host == uri.host ||
+        always ||
+        allowedHosts.contains(imageEmbedService(target.host));
     return Semantics(
       link: true,
       label: alt ?? uri.host,
@@ -829,7 +843,7 @@ class _RemoteImage extends StatelessWidget {
           constraints: const BoxConstraints(maxHeight: 320),
           child: Image(
             key: ValueKey('embed-remote-image-$uri'),
-            image: CappedHttpsImage(uri),
+            image: CappedHttpsImage(uri, allowed: follows),
             fit: BoxFit.scaleDown,
             alignment: AlignmentDirectional.centerStart,
             gaplessPlayback: true,
