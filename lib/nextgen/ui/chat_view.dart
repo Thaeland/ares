@@ -942,7 +942,7 @@ class _NgChatViewState extends State<NgChatView> {
     final modelLabel = [
       chat.model == null ? ngL.ng_default_model : _shortModel(chat.model!),
       if (chat.reasoningEffort != null && chat.reasoningEffort!.isNotEmpty)
-        ngEffortLabel(chat.reasoningEffort),
+        ngRouteEffortLabel(chat.reasoningEffort, chat.reasoningEffortWire),
     ].join(' · ');
     return SafeArea(
       top: false,

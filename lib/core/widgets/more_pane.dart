@@ -219,6 +219,22 @@ List<MoreSection> buildMoreSections({
           availability: dashboardBacked(),
           unavailableReason: dashboardReason(),
         ),
+        MoreEntry(
+          id: 'provider-admin',
+          title: 'Providers and routes',
+          subtitle: 'Keys, endpoints, delegation and mixtures',
+          icon: Icons.key_outlined,
+          availability: dashboardBacked(),
+          unavailableReason: dashboardReason(),
+        ),
+        MoreEntry(
+          id: 'nous-billing',
+          title: 'Credits and plans',
+          subtitle: 'Consented Nous billing when the account allows it',
+          icon: Icons.account_balance_wallet_outlined,
+          availability: dashboardBacked(),
+          unavailableReason: dashboardReason(),
+        ),
         // Account usage capability is independent of the current model catalog.
         // Keep a stable list even when discovery fails or only returns aliases
         // such as openai-codex; route OpenAI through the canonical openai ID.

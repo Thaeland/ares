@@ -10,6 +10,7 @@ import '../../core/models/hermes_project.dart';
 import '../../core/models/session.dart';
 import '../../core/screens/cron_screen.dart';
 import '../../core/screens/memory_screen.dart';
+import '../../core/screens/model_admin_screen.dart';
 import '../../core/screens/nous_portal_screen.dart';
 import '../../core/screens/parallel_workspace_entry.dart';
 import '../../core/screens/projects_root_screen.dart';
@@ -168,6 +169,41 @@ class NgMorePage extends StatelessWidget {
                   title: ngL.ng_nous_portal,
                   subtitle: ngL.ng_subscription_credits_and_usage,
                   onTap: () => push(NousPortalScreen(connection: conn)),
+                ),
+                NgRow(
+                  icon: Icons.key_outlined,
+                  title: 'Providers and routes',
+                  subtitle: 'Keys, endpoints, delegation and mixtures',
+                  onTap: () {
+                    final socket = scope.gateway.socket;
+                    push(
+                      ModelAdminScreen(
+                        connection: conn,
+                        dashboard: scope.gateway.dashboard,
+                        rpc: socket != null && socket.isConnected
+                            ? socket.send
+                            : null,
+                      ),
+                    );
+                  },
+                ),
+                NgRow(
+                  icon: Icons.payments_outlined,
+                  title: 'Credits and plans',
+                  subtitle: 'Consented Nous billing when the account allows it',
+                  onTap: () {
+                    final socket = scope.gateway.socket;
+                    push(
+                      ModelAdminScreen(
+                        connection: conn,
+                        dashboard: scope.gateway.dashboard,
+                        initialSection: ModelAdminSection.billing,
+                        rpc: socket != null && socket.isConnected
+                            ? socket.send
+                            : null,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

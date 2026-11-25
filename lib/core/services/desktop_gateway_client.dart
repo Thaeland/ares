@@ -1492,6 +1492,12 @@ class DesktopGatewayClient implements SlashCommandGateway {
     return client;
   }
 
+  /// One JSON-RPC call on the already connected gateway socket.
+  /// Billing and chat presets use this; it does not open a new session.
+  Future<Map<String, dynamic>> rpc(String method, Map<String, dynamic> params) {
+    return _connectedClient().send(method, params);
+  }
+
   /// The profile-scoped catalog and default shown by Hermes Desktop.  Keeping
   /// these reads on the Dashboard endpoint means Android never guesses model
   /// names or providers from the OpenAI-compatible API.
