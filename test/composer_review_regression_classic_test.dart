@@ -166,7 +166,7 @@ void main() {
     );
     expect(starters, greaterThan(0), reason: '@ completion missing');
     expect(status, greaterThan(0), reason: 'status bar missing');
-  }, skip: _pendingClassicParity);
+  });
 
   testWidgets('PROBE C3 /resume from a chat embedded in a shell route never '
       'replaces the shell', (tester) async {
@@ -321,6 +321,3 @@ void main() {
     expect(find.textContaining('session list'), findsOneWidget);
   });
 }
-
-// Each flag goes once its review item lands (one commit per item).
-const _pendingClassicParity = true;

@@ -128,6 +128,10 @@ import '../widgets/composer_prompt_recall.dart';
 import '../composer/composer_commands.dart';
 import '../composer/failure_recovery.dart';
 import '../composer/regenerate.dart';
+import '../composer/context_status.dart';
+import '../composer/reference_completion.dart';
+import '../widgets/composer_context_status.dart';
+import '../widgets/composer_reference_assist.dart';
 import '../widgets/failure_recovery_card.dart';
 import '../widgets/prompt_snippet_sheet.dart';
 import '../widgets/resume_session_picker.dart';
@@ -5196,6 +5200,141 @@ class _ChatScreenState extends State<ChatScreen>
     return true;
   }
 
+  StatusBarLayout _statusLayout = StatusBarLayout.defaults();
+  ContextReading? _statusBreakdown;
+  bool _statusBreakdownLoading = false;
+  bool _statusLayoutLoaded = false;
+
+  /// Applies and keeps the status bar choice (shared with NextGen).
+  void _setStatusLayout(StatusBarLayout layout) {
+    setState(() => _statusLayout = layout);
+    unawaited(saveStatusLayout(layout));
+    if (layout.visible('context-usage')) unawaited(_loadStatusBreakdown());
+  }
+
+  Future<void> _loadStatusBreakdown() async {
+    if (!_statusLayout.visible('context-usage')) return;
+    final gateway = _desktopGateway;
+    if (gateway == null || !gateway.hasLiveSession(widget.session.id)) {
+      setState(() => _statusBreakdown = ContextReading.empty);
+      return;
+    }
+    setState(() => _statusBreakdownLoading = true);
+    try {
+      final result = await gateway.requestSessionRpc(
+        'session.context_breakdown',
+        {'session_id': widget.session.id},
+      );
+      if (!mounted) return;
+      setState(() {
+        _statusBreakdown = parseContextBreakdown(result);
+        _statusBreakdownLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _statusBreakdown = ContextReading.empty;
+        _statusBreakdownLoading = false;
+      });
+    }
+  }
+
+  /// A composer RPC: session-scoped once the chat has a live gateway
+  /// session, otherwise connection-level (never a stored id in its place).
+  Future<Map<String, dynamic>> _composerRpc(
+    String method,
+    Map<String, dynamic> params,
+  ) {
+    final gateway = _desktopGateway;
+    if (gateway == null) throw StateError('No Desktop gateway');
+    if (gateway.hasLiveSession(widget.session.id)) {
+      return gateway.requestSessionRpc(method, {
+        ...params,
+        'session_id': widget.session.id,
+      });
+    }
+    return gateway.call(method, params);
+  }
+
+  /// The failure card's Compress: the gateway's session.compress, then the
+  /// transcript again. A failure is shown, never swallowed.
+  Future<void> _compressClassicChat() async {
+    final gateway = _desktopGateway;
+    final shared = context.sharedL10n;
+    if (gateway == null || !gateway.hasLiveSession(widget.session.id)) {
+      _showRetryNotice(shared.composer_command_needs_gateway_session);
+      return;
+    }
+    try {
+      await gateway.requestSessionRpc('session.compress', {
+        'session_id': widget.session.id,
+      });
+      if (!mounted) return;
+      setState(() {
+        _recoveryMessage = null;
+        _recoverySurface = null;
+      });
+      _appendSlashCommandNotice('/compress', shared.composer_compress_done);
+      unawaited(_loadStatusBreakdown());
+    } catch (error) {
+      if (!mounted) return;
+      _showRetryNotice(
+        error is JsonRpcError ? error.message : error.toString(),
+      );
+    }
+  }
+
+  Widget _modelRowButton(BuildContext context) {
+    if (!_statusLayoutLoaded) {
+      _statusLayoutLoaded = true;
+      unawaited(
+        loadStatusLayout().then((layout) {
+          if (!mounted) return;
+          setState(() => _statusLayout = layout);
+          if (layout.visible('context-usage')) {
+            unawaited(_loadStatusBreakdown());
+          }
+        }),
+      );
+    }
+    final busy =
+        _sending ||
+        _streaming ||
+        _pendingReattachResync ||
+        _loadingModelOptions ||
+        _changingModel;
+    return Semantics(
+      label: context.l10n.choose_chat_model,
+      value: _sessionModel ?? widget.session.model,
+      button: true,
+      enabled: !busy,
+      excludeSemantics: true,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 48),
+        child: TextButton.icon(
+          onPressed: busy ? null : _showModelSelector,
+          icon: _loadingModelOptions || _changingModel
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.tune, size: 18),
+          label: Text(
+            context.l10n.model_scope_label(
+              _sessionModel ?? widget.session.model,
+              _sessionModelOverride
+                  ? context.l10n.this_chat
+                  : context.l10n.profile_default,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    );
+  }
+
   /// A turn is live on this screen: being prepared, sent, streamed,
   /// recovered or owned by the stock application owner.
   bool get _hasLiveTurn =>
@@ -8409,6 +8548,9 @@ class _ChatScreenState extends State<ChatScreen>
                             });
                             if (prompt != null) unawaited(_retryPrompt(prompt));
                           },
+                          onCompress: _desktopGateway == null
+                              ? null
+                              : _compressClassicChat,
                           onChooseModel: () => _showModelSelector(),
                           onNewSession: widget.singleSession
                               ? null
@@ -8455,53 +8597,65 @@ class _ChatScreenState extends State<ChatScreen>
                       ChatActivityBar(text: activity)
                     else if (_terminalNoticeText case final notice?)
                       ChatActivityBar(text: notice, isTerminalNotice: true),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(4, 2, 4, 4),
-                        child: Semantics(
-                          label: context.l10n.choose_chat_model,
-                          value: _sessionModel ?? widget.session.model,
-                          button: true,
-                          enabled:
-                              !(_sending ||
-                                  _streaming ||
-                                  _pendingReattachResync ||
-                                  _loadingModelOptions ||
-                                  _changingModel),
-                          excludeSemantics: true,
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(minHeight: 48),
-                            child: TextButton.icon(
-                              onPressed:
-                                  (_sending ||
-                                      _streaming ||
-                                      _pendingReattachResync ||
-                                      _loadingModelOptions ||
-                                      _changingModel)
-                                  ? null
-                                  : _showModelSelector,
-                              icon: _loadingModelOptions || _changingModel
-                                  ? const SizedBox(
-                                      width: 16,
-                                      height: 16,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : const Icon(Icons.tune, size: 18),
-                              label: Text(
-                                context.l10n.model_scope_label(
-                                  _sessionModel ?? widget.session.model,
-                                  _sessionModelOverride
-                                      ? context.l10n.this_chat
-                                      : context.l10n.profile_default,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(4, 2, 4, 4),
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: _modelRowButton(context),
                             ),
                           ),
+                          // Status shares the model row: no extra height.
+                          ComposerStatusMenu(
+                            layout: _statusLayout,
+                            usage: const UsageReading(),
+                            breakdown: _statusBreakdown,
+                            onLayout: _setStatusLayout,
+                          ),
+                        ],
+                      ),
+                    ),
+                    ComposerContextStatus(
+                      layout: _statusLayout,
+                      usage: const UsageReading(),
+                      breakdown: _statusBreakdown,
+                      breakdownLoading: _statusBreakdownLoading,
+                      showMenu: false,
+                      compact: MediaQuery.sizeOf(context).width < 480,
+                      maxHeight: availableHeight * (keyboardOpen ? 0.15 : 0.25),
+                      onLayout: _setStatusLayout,
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: availableHeight * (keyboardOpen ? 0.2 : 0.3),
+                      ),
+                      child: SingleChildScrollView(
+                        child: ComposerReferenceAssist(
+                          controller: _textController,
+                          cacheScope: (_desktopGateway, widget.session.id),
+                          completePath: _desktopGateway == null
+                              ? null
+                              : (query) async {
+                                  final result = await _composerRpc(
+                                    'complete.path',
+                                    pathCompletionParams(query: query),
+                                  );
+                                  final rows = parseReferenceCompletions(
+                                    result,
+                                  );
+                                  return rows.isEmpty
+                                      ? starterSuggestions(query)
+                                      : rows;
+                                },
+                          completeSlash: _desktopGateway == null
+                              ? null
+                              : (text) async => parseArgumentCompletion(
+                                  await _composerRpc('complete.slash', {
+                                    'text': text,
+                                  }),
+                                ),
                         ),
                       ),
                     ),

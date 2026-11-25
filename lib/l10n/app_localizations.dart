@@ -7074,6 +7074,12 @@ abstract class AppLocalizations {
   /// **'Drop to attach'**
   String get composer_drop_attach;
 
+  /// No description provided for @composer_drop_folder_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Folders can\'t be attached. Drop the files instead.'**
+  String get composer_drop_folder_unsupported;
+
   /// No description provided for @composer_drop_reference.
   ///
   /// In en, this message translates to:

@@ -32,6 +32,7 @@ import '../../core/widgets/composer_prompt_recall.dart';
 import '../../core/composer/composer_commands.dart';
 import '../../core/composer/composer_drag.dart';
 import '../../core/composer/composer_intake.dart';
+import '../../core/composer/os_intake.dart';
 import '../../core/composer/context_status.dart';
 import '../../core/composer/reference_completion.dart';
 import '../../core/composer/failure_recovery.dart';
@@ -166,6 +167,12 @@ class _NgChatViewState extends State<NgChatView>
 
   void _onDraftEdit() {
     _promptRecall.editorChanged();
+    final paste = _pendingPaste;
+    _pendingPaste = null;
+    if (paste != null && !_hydrating && _input.text.contains(paste.text)) {
+      // The pasted text is committed now; intake may replace it safely.
+      unawaited(_consumePaste(paste));
+    }
     final text = _input.text;
     if (text == _lastText) return;
     _lastText = text;
@@ -807,6 +814,10 @@ class _NgChatViewState extends State<NgChatView>
     await _stageLocal(plan.kind, path);
   }
 
+  /// The paste the editor's formatter saw, handled once the text is in the
+  /// controller (see [_onDraftEdit]): a formatter must not edit the field.
+  PastedChunk? _pendingPaste;
+
   Future<void> _consumePaste(PastedChunk chunk) async {
     final path = clipboardPath(chunk.text);
     var exists = false;
@@ -821,13 +832,10 @@ class _NgChatViewState extends State<NgChatView>
       pathExists: exists,
       directory: directory,
     );
-    if (plan.kind == LocalIntake.leaveText) return;
-    if (plan.kind == LocalIntake.reference) {
-      _removePasted(chunk);
-      appendWorkspaceReference(
-        _input,
-        gatewayContextReference(folder: true, path: plan.path ?? ''),
-      );
+    // A folder on this device is not a folder on the gateway: the pasted
+    // path stays text rather than becoming a gateway @folder: reference.
+    if (plan.kind == LocalIntake.leaveText ||
+        plan.kind == LocalIntake.reference) {
       return;
     }
     if (plan.kind == LocalIntake.pastedText) {
@@ -863,7 +871,19 @@ class _NgChatViewState extends State<NgChatView>
     );
   }
 
-  Future<void> _stageLocal(LocalIntake kind, String path) async {
+  /// Stages one local file as an attachment draft: never sent until the
+  /// person sends, within the draft count and size limits the Attach button
+  /// uses.
+  Future<bool> _stageLocal(LocalIntake kind, String path) async {
+    if (_slotsLeft <= 0) {
+      if (mounted) {
+        ngToast(
+          context,
+          ngL.ng_you_can_attach_up_to_files(maxRemoteAttachmentDrafts),
+        );
+      }
+      return false;
+    }
     try {
       final name = path.split(RegExp(r'[\\/]')).where((p) => p.isNotEmpty).last;
       final draft = kind == LocalIntake.imageFile
@@ -877,11 +897,81 @@ class _NgChatViewState extends State<NgChatView>
           : await chat.attachmentService.prepareGenericFile(
               sourcePath: path,
               displayName: name,
+              mediaType:
+                  attachmentMimeType(
+                    name.contains('.')
+                        ? name.split('.').last.toLowerCase()
+                        : '',
+                  ) ??
+                  'application/octet-stream',
               existingDrafts: _drafts,
+              maxFileBytes: maxNextGenAttachmentBytes,
+              maxTotalBytes: maxNextGenAttachmentDraftBytes,
             );
-      if (mounted) setState(() => _drafts.add(draft));
+      if (!mounted) {
+        await chat.attachmentService.removeAll([draft]);
+        return false;
+      }
+      setState(() => _drafts.add(draft));
+      return true;
     } on AttachmentDraftException catch (error) {
       if (mounted) ngToast(context, error.message);
+      return false;
+    } catch (_) {
+      if (mounted) ngToast(context, ngL.ng_couldn_t_read(path));
+      return false;
+    }
+  }
+
+  /// Files dropped from the OS: each file becomes a draft; a folder cannot.
+  Future<void> _acceptOsFiles(List<OsIntakeFile> files) async {
+    for (final file in files) {
+      if (!mounted) return;
+      if (file.directory) {
+        ngToast(context, context.sharedL10n.composer_drop_folder_unsupported);
+        continue;
+      }
+      final kind = looksLikeImagePath(file.path)
+          ? LocalIntake.imageFile
+          : LocalIntake.genericFile;
+      final staged = await withDroppedFileAccess(
+        file,
+        () => _stageLocal(kind, file.path),
+      );
+      if (!staged && _slotsLeft <= 0) return;
+    }
+  }
+
+  /// Cmd/Ctrl+V with files or an image on the clipboard.
+  Future<void> _acceptClipboard(ClipboardAttachment found) async {
+    final image = found.image;
+    if (image != null) {
+      await _acceptImageBytes(image, 'image/png');
+      return;
+    }
+    await _acceptOsFiles([
+      for (final path in found.files)
+        OsIntakeFile(path, directory: FileSystemEntity.isDirectorySync(path)),
+    ]);
+  }
+
+  /// A pasted or keyboard-inserted image.
+  Future<void> _acceptImageBytes(Uint8List bytes, String mimeType) async {
+    final String path;
+    try {
+      path = await stageComposerImageBytes(bytes, mimeType: mimeType);
+    } catch (_) {
+      if (mounted) {
+        ngToast(context, ngL.ng_couldn_t_prepare_that_file('image'));
+      }
+      return;
+    }
+    if (!mounted) return;
+    final staged = await _stageLocal(LocalIntake.imageFile, path);
+    if (!staged) {
+      try {
+        await File(path).delete();
+      } catch (_) {}
     }
   }
 
@@ -1972,53 +2062,66 @@ class _NgChatViewState extends State<NgChatView>
                               .map((item) => item.text),
                         ),
                   onSend: () => unawaited(_send()),
-                  child: ComposerDropSurface(
-                    onDrop: (drag) => unawaited(_acceptDrop(drag)),
-                    child: TextField(
-                      key: const ValueKey('ng-composer-field'),
-                      controller: _input,
-                      focusNode: _focus,
-                      inputFormatters: [
-                        TextInputFormatter.withFunction((oldValue, newValue) {
-                          final selection = oldValue.selection;
-                          if (!selection.isValid) return newValue;
-                          final chunk = PastedChunk.detect(
-                            oldValue.text,
-                            selection.start,
-                            selection.end,
-                            newValue.text,
-                          );
-                          if (chunk != null) unawaited(_consumePaste(chunk));
-                          return newValue;
-                        }),
-                      ],
-                      onTap: () {
-                        // Android can hide the keyboard with Back while this node
-                        // retains focus. Explicitly show it on every composer tap.
-                        _focus.requestFocus();
-                        unawaited(
-                          SystemChannels.textInput.invokeMethod<void>(
-                            'TextInput.show',
+                  child: OsFileDropTarget(
+                    onFiles: (files) => unawaited(_acceptOsFiles(files)),
+                    child: ClipboardAttachmentPaste(
+                      onAttachment: _acceptClipboard,
+                      child: ComposerDropSurface(
+                        onDrop: (drag) => unawaited(_acceptDrop(drag)),
+                        child: TextField(
+                          key: const ValueKey('ng-composer-field'),
+                          controller: _input,
+                          focusNode: _focus,
+                          contentInsertionConfiguration: composerImageInsertion(
+                            _acceptImageBytes,
                           ),
-                        );
-                      },
-                      minLines: 1,
-                      maxLines: 8,
-                      textCapitalization: TextCapitalization.sentences,
-                      style: NgType.body.copyWith(color: c.text),
-                      decoration: InputDecoration(
-                        hintText: _listening
-                            ? ngL.ng_listening
-                            : chat.running
-                            ? ngL.ng_steer_or_queue_a_message
-                            : ngL.ng_message_hermes,
-                        hintStyle: NgType.body.copyWith(color: c.textMuted),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.fromLTRB(
-                          12,
-                          12,
-                          12,
-                          6,
+                          inputFormatters: [
+                            // Detects a paste only; it is handled after the text
+                            // is committed ([_onDraftEdit]), never from here.
+                            TextInputFormatter.withFunction((
+                              oldValue,
+                              newValue,
+                            ) {
+                              final selection = oldValue.selection;
+                              if (!selection.isValid) return newValue;
+                              _pendingPaste = PastedChunk.detect(
+                                oldValue.text,
+                                selection.start,
+                                selection.end,
+                                newValue.text,
+                              );
+                              return newValue;
+                            }),
+                          ],
+                          onTap: () {
+                            // Android can hide the keyboard with Back while this node
+                            // retains focus. Explicitly show it on every composer tap.
+                            _focus.requestFocus();
+                            unawaited(
+                              SystemChannels.textInput.invokeMethod<void>(
+                                'TextInput.show',
+                              ),
+                            );
+                          },
+                          minLines: 1,
+                          maxLines: 8,
+                          textCapitalization: TextCapitalization.sentences,
+                          style: NgType.body.copyWith(color: c.text),
+                          decoration: InputDecoration(
+                            hintText: _listening
+                                ? ngL.ng_listening
+                                : chat.running
+                                ? ngL.ng_steer_or_queue_a_message
+                                : ngL.ng_message_hermes,
+                            hintStyle: NgType.body.copyWith(color: c.textMuted),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.fromLTRB(
+                              12,
+                              12,
+                              12,
+                              6,
+                            ),
+                          ),
                         ),
                       ),
                     ),

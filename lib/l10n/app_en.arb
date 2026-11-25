@@ -1424,6 +1424,7 @@
     }
   },
   "composer_drop_attach": "Drop to attach",
+  "composer_drop_folder_unsupported": "Folders can't be attached. Drop the files instead.",
   "composer_drop_reference": "Drop to reference",
   "composer_reference_copy": "Copy reference",
   "composer_reference_remove": "Remove reference",

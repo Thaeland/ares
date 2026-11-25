@@ -110,6 +110,71 @@ Future<void> showComposerStatusSheet({
   );
 }
 
+/// The Status control on its own, for a row the composer already has (the
+/// Classic model row), so it adds no height.
+class ComposerStatusMenu extends StatelessWidget {
+  const ComposerStatusMenu({
+    super.key,
+    required this.layout,
+    required this.usage,
+    required this.onLayout,
+    this.breakdown,
+    this.runningSinceMs,
+    this.sessionSinceMs,
+  });
+
+  final StatusBarLayout layout;
+  final UsageReading usage;
+  final ContextReading? breakdown;
+  final int? runningSinceMs;
+  final int? sessionSinceMs;
+  final ValueChanged<StatusBarLayout> onLayout;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.sharedL10n;
+    return PopupMenuButton<String>(
+      key: const ValueKey('composer-status-menu'),
+      tooltip: l10n.composer_status,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 48),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: Align(
+            widthFactor: 1,
+            child: Text(l10n.composer_status, overflow: TextOverflow.fade),
+          ),
+        ),
+      ),
+      itemBuilder: (context) => [
+        for (final item in _statusItems(
+          l10n,
+          usage: usage,
+          breakdown: breakdown,
+          runningSinceMs: runningSinceMs,
+          sessionSinceMs: sessionSinceMs,
+        ))
+          PopupMenuItem(
+            value: item.id,
+            child: Text(
+              '${item.label} ${layout.visible(item.id) ? '\u2713' : ''}'
+              '${item.reported ? '' : ' \u00b7 ${l10n.composer_status_not_reported}'}',
+            ),
+          ),
+        const PopupMenuDivider(),
+        PopupMenuItem(value: 'reset', child: Text(l10n.composer_status_reset)),
+      ],
+      onSelected: (id) {
+        if (id == 'reset') {
+          onLayout(layout.reset());
+          return;
+        }
+        onLayout(layout.setVisible(id, !layout.visible(id)));
+      },
+    );
+  }
+}
+
 typedef _StatusItem = ({String id, String label, bool reported});
 
 /// The Status choices. The session timer is offered only when the gateway
@@ -265,44 +330,14 @@ class _ComposerContextStatusState extends State<ComposerContextStatus> {
     );
   }
 
-  Widget _menu(AppLocalizations l10n) => PopupMenuButton<String>(
-    key: const ValueKey('composer-status-menu'),
-    tooltip: l10n.composer_status,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      child: Text(l10n.composer_status),
-    ),
-    itemBuilder: (context) => [
-      for (final item in _statusItems(
-        l10n,
-        usage: widget.usage,
-        breakdown: widget.breakdown,
-        runningSinceMs: widget.runningSinceMs,
-        sessionSinceMs: widget.sessionSinceMs,
-      ))
-        _item(item.id, item.label, item.reported),
-      const PopupMenuDivider(),
-      PopupMenuItem(value: 'reset', child: Text(l10n.composer_status_reset)),
-    ],
-    onSelected: (id) {
-      if (id == 'reset') {
-        widget.onLayout(widget.layout.reset());
-        return;
-      }
-      widget.onLayout(widget.layout.setVisible(id, !widget.layout.visible(id)));
-    },
+  Widget _menu(AppLocalizations l10n) => ComposerStatusMenu(
+    layout: widget.layout,
+    usage: widget.usage,
+    breakdown: widget.breakdown,
+    runningSinceMs: widget.runningSinceMs,
+    sessionSinceMs: widget.sessionSinceMs,
+    onLayout: widget.onLayout,
   );
-
-  PopupMenuItem<String> _item(String id, String label, bool reported) {
-    final l10n = context.sharedL10n;
-    final on = widget.layout.visible(id);
-    return PopupMenuItem(
-      value: id,
-      child: Text(
-        '$label ${on ? '\u2713' : ''}${reported ? '' : ' \u00b7 ${l10n.composer_status_not_reported}'}',
-      ),
-    );
-  }
 
   Widget _breakdown(AppLocalizations l10n) {
     final breakdown = widget.breakdown;

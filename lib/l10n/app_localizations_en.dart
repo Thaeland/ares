@@ -4189,6 +4189,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get composer_drop_attach => 'Drop to attach';
 
   @override
+  String get composer_drop_folder_unsupported =>
+      'Folders can\'t be attached. Drop the files instead.';
+
+  @override
   String get composer_drop_reference => 'Drop to reference';
 
   @override
