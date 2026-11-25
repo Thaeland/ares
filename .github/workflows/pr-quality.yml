@@ -105,6 +105,9 @@ jobs:
           flutter test --no-pub --dart-define=ARES_PLAY_BUILD=true test_play/play_distribution_test.dart 2>&1 | tee play_test_output.txt
           exit ${PIPESTATUS[0]}
 
+      - name: Test the parked Automotive capability policy
+        run: flutter test --no-pub --dart-define=ARES_PARKED_AUTOMOTIVE=true test_automotive
+
       # ── Step 3: Summary & failure report ─────────────────
       - name: Failure summary
         if: steps.analyze.outcome != 'success' || steps.test.outcome != 'success' || steps.play_test.outcome != 'success'
