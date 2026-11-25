@@ -62,6 +62,7 @@ class CatalogRow {
     this.approvedForce = false,
     this.approvedEnable = true,
     this.approvedRef,
+    this.phase,
   });
 
   final String name;
@@ -92,8 +93,19 @@ class CatalogRow {
   final bool approvedEnable;
   final String? approvedRef;
 
+  /// The install step while the row is installing (`InstallPhase`:
+  /// downloading, python_packages, loading_tools); the card words it.
+  final String? phase;
+
   String get title => (display?.trim().isNotEmpty ?? false) ? display! : name;
-  bool get waiting => state == 'pending' || state == 'initiated';
+
+  /// The row waits on the user's Install or Skip.
+  bool get waiting => state == 'pending';
+
+  /// The host is installing the row (`initiated`). It offers no Install or
+  /// Skip: the host takes initiated -> skipped from the user and then drops
+  /// the finished install, so a Skip here would hide a plugin that lands.
+  bool get installing => state == 'initiated';
 
   static String? _string(Object? value) =>
       value is String && value.trim().isNotEmpty ? value.trim() : null;
@@ -154,6 +166,7 @@ class CatalogRow {
       approvedForce: approved is Map && approved['force'] == true,
       approvedEnable: !(approved is Map && approved['enable'] == false),
       approvedRef: approved is Map ? _string(approved['ref']) : null,
+      phase: _string(raw['phase']),
     );
   }
 }
@@ -348,14 +361,29 @@ class _CatalogInstallCardState extends State<CatalogInstallCard> {
     });
   }
 
-  String _state(CatalogRow row) {
+  String _state(CatalogRow row, {required bool settled}) {
     final l = context.sharedL10n;
     return switch (row.state) {
       'connected' =>
         row.enabled == false ? l.catalog_installed_off : l.catalog_installed,
       'skipped' => l.catalog_skipped,
       'failed' || 'expired' || 'not_connected' => l.catalog_not_installed,
+      // A settled operation installs nothing more.
+      _ when settled => l.catalog_not_installed,
+      'initiated' => l.catalog_installing,
       _ => l.catalog_waiting,
+    };
+  }
+
+  /// The host's install step, worded; null for a step this build does not
+  /// know.
+  String? _phase(CatalogRow row) {
+    final l = context.sharedL10n;
+    return switch (row.phase) {
+      'downloading' => l.catalog_phase_downloading,
+      'python_packages' => l.catalog_phase_python_packages,
+      'loading_tools' => l.catalog_phase_loading_tools,
+      _ => null,
     };
   }
 
@@ -368,6 +396,8 @@ class _CatalogInstallCardState extends State<CatalogInstallCard> {
         _retrying.contains(row.name);
     final retried = _retried[row.name];
     final canAnswer = !operation.settled && row.waiting;
+    final installing = !operation.settled && row.installing;
+    final phase = installing ? _phase(row) : null;
     final failed = row.state == 'failed' && retried?.ok != true;
     final small = theme.textTheme.bodySmall;
     return Padding(
@@ -439,10 +469,22 @@ class _CatalogInstallCardState extends State<CatalogInstallCard> {
               ),
           const SizedBox(height: 4),
           Text(
-            retried?.ok == true ? l.catalog_installed : _state(row),
+            retried?.ok == true
+                ? l.catalog_installed
+                : _state(row, settled: operation.settled),
             key: Key('catalog-state-${row.name}'),
             style: theme.textTheme.labelLarge,
           ),
+          if (installing) ...[
+            const SizedBox(height: 4),
+            LinearProgressIndicator(
+              key: Key('catalog-progress-${row.name}'),
+              minHeight: 2,
+              semanticsLabel: l.catalog_installing,
+            ),
+            if (phase != null)
+              Text(phase, key: Key('catalog-phase-${row.name}'), style: small),
+          ],
           if (row.detail != null && retried == null)
             Text(row.detail!, key: Key('catalog-detail-${row.name}')),
           if (retried?.message != null)

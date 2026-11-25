@@ -10571,6 +10571,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Playback speed'**
   String get attachment_video_speed;
+
+  /// No description provided for @catalog_installing.
+  ///
+  /// In en, this message translates to:
+  /// **'Installing…'**
+  String get catalog_installing;
+
+  /// No description provided for @catalog_phase_downloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading…'**
+  String get catalog_phase_downloading;
+
+  /// No description provided for @catalog_phase_python_packages.
+  ///
+  /// In en, this message translates to:
+  /// **'Installing Python packages…'**
+  String get catalog_phase_python_packages;
+
+  /// No description provided for @catalog_phase_loading_tools.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading its tools…'**
+  String get catalog_phase_loading_tools;
 }
 
 class _AppLocalizationsDelegate

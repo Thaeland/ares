@@ -6139,4 +6139,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get attachment_video_speed => '再生速度';
+
+  @override
+  String get catalog_installing => 'インストール中…';
+
+  @override
+  String get catalog_phase_downloading => 'ダウンロード中…';
+
+  @override
+  String get catalog_phase_python_packages => 'Python パッケージをインストール中…';
+
+  @override
+  String get catalog_phase_loading_tools => 'ツールを読み込み中…';
 }

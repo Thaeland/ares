@@ -6325,4 +6325,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get attachment_video_speed => 'Velocidad de reproducción';
+
+  @override
+  String get catalog_installing => 'Instalando…';
+
+  @override
+  String get catalog_phase_downloading => 'Descargando…';
+
+  @override
+  String get catalog_phase_python_packages => 'Instalando paquetes de Python…';
+
+  @override
+  String get catalog_phase_loading_tools => 'Cargando sus herramientas…';
 }

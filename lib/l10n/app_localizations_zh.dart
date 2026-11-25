@@ -6050,6 +6050,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get attachment_video_speed => '播放速度';
+
+  @override
+  String get catalog_installing => '正在安装…';
+
+  @override
+  String get catalog_phase_downloading => '正在下载…';
+
+  @override
+  String get catalog_phase_python_packages => '正在安装 Python 包…';
+
+  @override
+  String get catalog_phase_loading_tools => '正在加载工具…';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -11868,4 +11880,16 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get attachment_video_speed => '播放速度';
+
+  @override
+  String get catalog_installing => '正在安装…';
+
+  @override
+  String get catalog_phase_downloading => '正在下载…';
+
+  @override
+  String get catalog_phase_python_packages => '正在安装 Python 包…';
+
+  @override
+  String get catalog_phase_loading_tools => '正在加载工具…';
 }

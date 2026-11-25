@@ -6327,6 +6327,18 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get attachment_video_speed => 'Velocidade de reprodução';
+
+  @override
+  String get catalog_installing => 'A instalar…';
+
+  @override
+  String get catalog_phase_downloading => 'A transferir…';
+
+  @override
+  String get catalog_phase_python_packages => 'A instalar pacotes Python…';
+
+  @override
+  String get catalog_phase_loading_tools => 'A carregar as ferramentas…';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -12416,4 +12428,16 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get attachment_video_speed => 'Velocidade de reprodução';
+
+  @override
+  String get catalog_installing => 'Instalando…';
+
+  @override
+  String get catalog_phase_downloading => 'Baixando…';
+
+  @override
+  String get catalog_phase_python_packages => 'Instalando pacotes Python…';
+
+  @override
+  String get catalog_phase_loading_tools => 'Carregando as ferramentas…';
 }

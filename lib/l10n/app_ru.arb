@@ -1725,5 +1725,9 @@
   "catalog_missing_env": "Ещё нужно: {names}",
   "catalog_server_error": "{name} не подключился: {error}",
   "catalog_send_failed": "Ваш выбор не отправлен. Попробуйте ещё раз.",
-  "attachment_video_speed": "Скорость воспроизведения"
+  "attachment_video_speed": "Скорость воспроизведения",
+  "catalog_installing": "Установка…",
+  "catalog_phase_downloading": "Загрузка…",
+  "catalog_phase_python_packages": "Установка пакетов Python…",
+  "catalog_phase_loading_tools": "Загрузка инструментов…"
 }

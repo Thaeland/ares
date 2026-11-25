@@ -33,6 +33,7 @@ Map<String, dynamic> _blender({
   String state = 'pending',
   String? detail,
   bool? enabled,
+  String? phase,
 }) => {
   'name': 'blender',
   'kind': 'plugin',
@@ -48,6 +49,7 @@ Map<String, dynamic> _blender({
   'target_profile': 'work',
   'detail': ?detail,
   'enabled': ?enabled,
+  'phase': ?phase,
 };
 
 Map<String, dynamic> _pdf({String state = 'pending'}) => {
@@ -511,6 +513,135 @@ void main() {
       await tester.pump();
       expect(find.text('Blender'), findsNothing);
       expect(onY.answers, isEmpty);
+    });
+  });
+
+  // While the host installs a row (state `initiated`, contract.py:62), the
+  // card shows Installing… with progress and offers neither Install nor
+  // Skip: the host accepts initiated -> skipped from the user and then drops
+  // the finished install (catalog.py:289), as Desktop's
+  // catalog-install-tool.tsx guards at its `initiated || sending` branch.
+  group('initiated', () {
+    String stateText(WidgetTester tester) => tester
+        .widget<Text>(find.byKey(const Key('catalog-state-blender')))
+        .data!;
+
+    void expectInstalling(WidgetTester tester, String phase) {
+      expect(stateText(tester), 'Installing…');
+      expect(find.byKey(const Key('catalog-progress-blender')), findsOneWidget);
+      expect(
+        tester
+            .widget<Text>(find.byKey(const Key('catalog-phase-blender')))
+            .data,
+        phase,
+      );
+      expect(find.byKey(const Key('catalog-install-blender')), findsNothing);
+      expect(find.byKey(const Key('catalog-skip-blender')), findsNothing);
+      expect(
+        find.byKey(const Key('catalog-retry-button-blender')),
+        findsNothing,
+      );
+    }
+
+    void expectInstalled(WidgetTester tester) {
+      expect(stateText(tester), 'Installed');
+      expect(find.byKey(const Key('catalog-progress-blender')), findsNothing);
+      expect(find.byKey(const Key('catalog-install-blender')), findsNothing);
+      expect(find.byKey(const Key('catalog-skip-blender')), findsNothing);
+    }
+
+    testWidgets('NextGen: pending, then initiated, then connected', (
+      tester,
+    ) async {
+      final gateway = _Gateway('c1');
+      addTearDown(gateway.dispose);
+      final chat = _ngChat(gateway, 'chat-a');
+      await _pumpNg(tester, gateway, chat);
+      gateway.frame('rt-chat-a', 'connection.request', _frame(1, [_blender()]));
+      await tester.pump();
+      await tester.pump();
+      expect(stateText(tester), 'Waiting for your choice');
+      await _tapKey(tester, 'catalog-install-blender');
+      expect(gateway.calls.single.$2['result'], {
+        'targets': [
+          {'name': 'blender', 'status': 'approved'},
+        ],
+      });
+
+      gateway.frame(
+        'rt-chat-a',
+        'connection.update',
+        _frame(2, [_blender(state: 'initiated', phase: 'downloading')]),
+      );
+      await tester.pump();
+      expectInstalling(tester, 'Downloading…');
+      gateway.frame(
+        'rt-chat-a',
+        'connection.update',
+        _frame(3, [_blender(state: 'initiated', phase: 'python_packages')]),
+      );
+      await tester.pump();
+      expectInstalling(tester, 'Installing Python packages…');
+      gateway.frame(
+        'rt-chat-a',
+        'connection.update',
+        _frame(4, [_blender(state: 'initiated', phase: 'loading_tools')]),
+      );
+      await tester.pump();
+      expectInstalling(tester, 'Loading its tools…');
+
+      gateway.frame(
+        'rt-chat-a',
+        'connection.update',
+        _frame(5, [_blender(state: 'connected', enabled: true)]),
+      );
+      await tester.pump();
+      expectInstalled(tester);
+      // Only the approval was ever sent: nothing could skip the install.
+      expect(gateway.calls.map((call) => call.$1), ['connection.respond']);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('Classic: pending, then initiated, then connected', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(900, 1400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final session = _Session();
+      await tester.pumpWidget(_classic('cx', 'chat-a', session));
+      await pumpChatUpdates(tester);
+      session.frame('chat-a', 'connection.request', _frame(1, [_blender()]));
+      await tester.pump();
+      expect(stateText(tester), 'Waiting for your choice');
+      await _tapKey(tester, 'catalog-install-blender');
+      await tester.pump();
+      expect(session.answers, [
+        'chat-a|op-1|{"targets":[{"name":"blender","status":"approved"}]}',
+      ]);
+
+      session.frame(
+        'chat-a',
+        'connection.update',
+        _frame(2, [_blender(state: 'initiated', phase: 'downloading')]),
+      );
+      await tester.pump();
+      expectInstalling(tester, 'Downloading…');
+      session.frame(
+        'chat-a',
+        'connection.update',
+        _frame(3, [_blender(state: 'initiated', phase: 'python_packages')]),
+      );
+      await tester.pump();
+      expectInstalling(tester, 'Installing Python packages…');
+
+      session.frame(
+        'chat-a',
+        'connection.update',
+        _frame(4, [_blender(state: 'connected', enabled: true)]),
+      );
+      await tester.pump();
+      expectInstalled(tester);
+      expect(session.answers, hasLength(1));
     });
   });
 }

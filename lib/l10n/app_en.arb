@@ -2663,5 +2663,9 @@
   "catalog_server_error": "{name} did not connect: {error}",
   "@catalog_server_error": {"placeholders": {"name": {"type": "String"}, "error": {"type": "String"}}},
   "catalog_send_failed": "Your choice was not sent. Try again.",
-  "attachment_video_speed": "Playback speed"
+  "attachment_video_speed": "Playback speed",
+  "catalog_installing": "Installing…",
+  "catalog_phase_downloading": "Downloading…",
+  "catalog_phase_python_packages": "Installing Python packages…",
+  "catalog_phase_loading_tools": "Loading its tools…"
 }

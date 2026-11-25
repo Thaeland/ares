@@ -6325,4 +6325,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get attachment_video_speed => 'Скорость воспроизведения';
+
+  @override
+  String get catalog_installing => 'Установка…';
+
+  @override
+  String get catalog_phase_downloading => 'Загрузка…';
+
+  @override
+  String get catalog_phase_python_packages => 'Установка пакетов Python…';
+
+  @override
+  String get catalog_phase_loading_tools => 'Загрузка инструментов…';
 }

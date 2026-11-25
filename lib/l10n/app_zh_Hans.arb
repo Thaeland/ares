@@ -1725,5 +1725,9 @@
   "catalog_missing_env": "仍需要：{names}",
   "catalog_server_error": "{name} 未能连接：{error}",
   "catalog_send_failed": "你的选择未发送，请重试。",
-  "attachment_video_speed": "播放速度"
+  "attachment_video_speed": "播放速度",
+  "catalog_installing": "正在安装…",
+  "catalog_phase_downloading": "正在下载…",
+  "catalog_phase_python_packages": "正在安装 Python 包…",
+  "catalog_phase_loading_tools": "正在加载工具…"
 }

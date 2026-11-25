@@ -1725,5 +1725,9 @@
   "catalog_missing_env": "Ainda precisa de: {names}",
   "catalog_server_error": "{name} não ligou: {error}",
   "catalog_send_failed": "A sua escolha não foi enviada. Tente novamente.",
-  "attachment_video_speed": "Velocidade de reprodução"
+  "attachment_video_speed": "Velocidade de reprodução",
+  "catalog_installing": "A instalar…",
+  "catalog_phase_downloading": "A transferir…",
+  "catalog_phase_python_packages": "A instalar pacotes Python…",
+  "catalog_phase_loading_tools": "A carregar as ferramentas…"
 }

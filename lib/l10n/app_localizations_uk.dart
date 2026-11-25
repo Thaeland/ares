@@ -6322,4 +6322,16 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get attachment_video_speed => 'Швидкість відтворення';
+
+  @override
+  String get catalog_installing => 'Встановлення…';
+
+  @override
+  String get catalog_phase_downloading => 'Завантаження…';
+
+  @override
+  String get catalog_phase_python_packages => 'Встановлення пакетів Python…';
+
+  @override
+  String get catalog_phase_loading_tools => 'Завантаження інструментів…';
 }

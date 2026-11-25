@@ -6143,4 +6143,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get attachment_video_speed => '재생 속도';
+
+  @override
+  String get catalog_installing => '설치 중…';
+
+  @override
+  String get catalog_phase_downloading => '다운로드 중…';
+
+  @override
+  String get catalog_phase_python_packages => 'Python 패키지 설치 중…';
+
+  @override
+  String get catalog_phase_loading_tools => '도구를 불러오는 중…';
 }
