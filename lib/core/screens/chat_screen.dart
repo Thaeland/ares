@@ -37,6 +37,8 @@ import '../widgets/delegated_task_timeline.dart';
 import '../widgets/delegated_task_labels.dart';
 import '../services/connection_manager.dart';
 import '../services/attachment_draft_service.dart';
+import '../services/prepared_image_store.dart';
+import '../widgets/prepared_image_recovery.dart';
 import '../services/chat_presentation_state.dart';
 import '../services/chat_model_override_store.dart';
 import '../services/chat_density_preference.dart';
@@ -5315,6 +5317,52 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
   }
 
+  String _clearedImageText = '';
+
+  PreparedImageTarget? get _imageTarget {
+    if (!_usesNormalInputOwner ||
+        _desktopGateway == null ||
+        _normalSession?.hasCurrentAccount != true) {
+      return null;
+    }
+    final stored =
+        _normalChat?.storedSessionId ??
+        _desktopGateway?.storedSessionKeyFor(_normalLocalSessionKey) ??
+        (widget.session.isLocalDraft ? null : widget.session.id);
+    return stored == null
+        ? null
+        : PreparedImageTarget(
+            widget.connection,
+            stored,
+            PreparedImageTransport.classicRefs,
+          );
+  }
+
+  Object? _imageRestoreRevision() =>
+      mounted &&
+          widget.active &&
+          _draftWriter.isCurrent &&
+          !_sending &&
+          !_streaming &&
+          !_preparingSend &&
+          !_preparingPaste &&
+          !_pendingReattachResync &&
+          !_voiceRecording.hasDraft &&
+          !_voiceRecording.recording &&
+          !_voiceRecording.busy &&
+          !_voiceComposer.listening &&
+          !_startingVoiceInput &&
+          _textController.text.isEmpty &&
+          _attachmentDrafts.isEmpty &&
+          _imageTarget != null
+      ? (
+          _normalChat,
+          _imageTarget!.key,
+          _composerRevision,
+          _draftWriter.revision,
+        )
+      : null;
+
   Future<void> _sendDesktopGatewayMessage({
     required String text,
     required List<AttachmentDraft> attachments,
@@ -5340,6 +5388,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         .map((draft) => draft.id)
         .toSet();
     final recoveryText = keepComposer ? text : _composerTextWithPastes(text);
+    final imageText = _clearedImageText;
+    final journalImages =
+        !keepComposer &&
+        desktopGateway != null &&
+        PreparedImageStore.supports(imageText, attachments);
+    PreparedImageCapture? capture;
     var handedOff = false;
     _awaitingVoiceReply = speakResponse && _voiceReplyEnabled;
     try {
@@ -5362,8 +5416,21 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         await _applySessionModelOverride(desktopGateway);
       }
       if (!mounted || responseGeneration != _responseGeneration) return;
+      final beforeUpload = _imageTarget;
+      final adopted = journalImages && beforeUpload != null
+          ? await PreparedImageStore.shared.adopt(
+              beforeUpload,
+              imageText,
+              attachments,
+            )
+          : null;
+      if (journalImages && adopted == null) {
+        capture = await PreparedImageStore.shared.capture(attachments);
+      }
+      if (!mounted || responseGeneration != _responseGeneration) return;
       await _attachmentSendCoordinator.uploadThenSubmit(
-        drafts: attachments,
+        drafts: adopted == null ? capture?.drafts ?? attachments : const [],
+        retainUploadedFiles: capture != null,
         upload: ({required draft, required dataUrl}) async {
           if (!mounted || responseGeneration != _responseGeneration) {
             throw StateError('Attachment preparation was cancelled.');
@@ -5393,10 +5460,31 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             voiceBinding.finish(HandsFreeTurnStatus.unknown);
             return;
           }
-          final prompt = [
-            text,
-            refTexts.join('\n'),
-          ].where((part) => part.trim().isNotEmpty).join('\n\n');
+          final prompt =
+              adopted?.entry.prompt ??
+              [
+                text,
+                refTexts.join('\n'),
+              ].where((part) => part.trim().isNotEmpty).join('\n\n');
+          final target = _imageTarget;
+          PreparedImageAttempt? attempt = adopted;
+          if (journalImages) {
+            if (target == null ||
+                (adopted != null && adopted.entry.target.key != target.key)) {
+              throw const PreparedImageException();
+            }
+            attempt ??= await PreparedImageStore.shared.prepare(
+              target,
+              imageText,
+              capture!,
+              prompt: prompt,
+            );
+            if (!mounted ||
+                responseGeneration != _responseGeneration ||
+                _imageTarget?.key != target.key) {
+              return;
+            }
+          }
           final labels = attachments
               .map((file) => '[${context.l10n.attached_file}: ${file.name}]')
               .join('\n');
@@ -5422,6 +5510,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           // app owner. This await's UI continuation is fenced on reattachment.
           final submitted = chat.submitPrepared(
             reservation: reservation,
+            imageAttempt: attempt,
             onAccepted: onAccepted,
             text: prompt,
             localContent: localContent,
@@ -5437,6 +5526,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           );
           final submittedTurn = chat.snapshot.turnId;
           await submitted;
+          // submitPrepared throws for definitely pre-wire failures (the catch
+          // below keeps the originals). Otherwise the journal owns recovery.
+          if (attempt != null) {
+            await _attachmentDraftService.removeAll(attachments);
+          }
           final terminal = chat.snapshot.terminal;
           if (terminal?.turnId == submittedTurn &&
               terminal?.completed == true) {
@@ -5474,6 +5568,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         voiceBinding?.finish(HandsFreeTurnStatus.failed);
       }
       if (identical(_normalReservation, reservation)) _normalReservation = null;
+      await capture?.close();
     }
   }
 
@@ -6911,6 +7006,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   /// Clear the visible draft immediately but retain the unsent prompt through
   /// cancellable setup. Leaving during an upload must not silently lose it.
   void _clearComposerForSend(String text) {
+    _clearedImageText = _attachmentDrafts.isEmpty ? '' : _textController.text;
     _setRestoredComposer('');
     _clearedComposerRevision = _composerRevision;
     final recovery = _composerTextWithPastes(text);
@@ -7432,6 +7528,17 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                             !_pendingReattachResync &&
                             !_voiceComposer.listening,
                         onSend: () => unawaited(_sendRecordedVoice()),
+                      ),
+                    if (_imageRestoreRevision() != null)
+                      PreparedImageRecovery(
+                        target: _imageTarget!,
+                        revision: () => _draftWriter.hasConfirmedEmptyDraft
+                            ? _imageRestoreRevision()
+                            : null,
+                        install: (text, drafts) {
+                          setState(() => _attachmentDrafts.addAll(drafts));
+                          _editComposerAsUser(text);
+                        },
                       ),
                     if (!_hasStoredArchiveTarget &&
                         _attachmentDrafts.isEmpty &&

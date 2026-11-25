@@ -20,6 +20,7 @@ import 'chat_history_window.dart';
 import 'chat_presentation_state.dart';
 import 'desktop_gateway_client.dart';
 import 'normal_gateway_pending_store.dart';
+import 'prepared_image_store.dart';
 import 'operational_activity_store.dart';
 import 'notification_prefs.dart';
 import 'turn_notification_service.dart';
@@ -1640,6 +1641,7 @@ class NormalGatewayChatOwner {
   /// cannot drop callbacks, clear activity or close the client.
   Future<void> submitPrepared({
     required Object reservation,
+    PreparedImageAttempt? imageAttempt,
     required String text,
     required String localContent,
     NormalGatewayPromptSubmit? submit,
@@ -1654,6 +1656,7 @@ class NormalGatewayChatOwner {
     if (_redirect != null) {
       return _root.submitPrepared(
         reservation: reservation,
+        imageAttempt: imageAttempt,
         text: text,
         localContent: localContent,
         submit: submit,
@@ -1794,6 +1797,9 @@ class NormalGatewayChatOwner {
                   required void Function() onSent,
                 }) => _session.client!.submitPrompt(
                   sessionId: sessionId,
+                  submissionId: imageAttempt?.id,
+                  beforeLegacy: imageAttempt?.beforeLegacy,
+                  onReceipt: imageAttempt?.receipt,
                   text: text,
                   onEvent: onEvent,
                   onSent: onSent,
@@ -1803,6 +1809,15 @@ class NormalGatewayChatOwner {
                   beforeSend: beforeSend,
                   maySend: () =>
                       _current(generation) &&
+                      (imageAttempt == null ||
+                          (_session.hasCurrentAccount &&
+                              storedSessionId != null &&
+                              PreparedImageTarget(
+                                    _session.connection,
+                                    storedSessionId!,
+                                    PreparedImageTransport.classicRefs,
+                                  ).key ==
+                                  imageAttempt.entry.target.key)) &&
                       snapshot.hasActiveTurn &&
                       maySubmit?.call() != false,
                 ));

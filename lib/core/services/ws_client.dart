@@ -1201,6 +1201,8 @@ class WsClient {
     bool Function()? maySend,
     Future<bool> Function()? beforeSend,
     String? submissionId,
+    Future<void> Function()? beforeLegacy,
+    Future<void> Function(Object?, String)? onReceipt,
     Duration timeout = const Duration(minutes: 10),
   }) async {
     final source = _channel;
@@ -1293,6 +1295,7 @@ class WsClient {
           fallbackMessage: 'Unknown error',
         );
         if (isRejectedSubmissionIdError(rpcError)) {
+          if (beforeLegacy != null) await beforeLegacy();
           // The refusal crossed an async boundary: re-validate admission and
           // socket ownership before the compatibility retry writes again, so
           // a stale owner or a replacement socket never receives the prompt.
@@ -1325,6 +1328,7 @@ class WsClient {
       // Stock typed voice controls acknowledge without starting an agent turn
       // or emitting a terminal frame. Do not wait ten minutes for one.
       final result = response['result'];
+      if (onReceipt != null) await onReceipt(result, sessionId);
       if (result is Map) {
         // A canonical receipt names the execution its admission started.
         _noteExecutionGeneration(sessionId, result['execution_generation']);

@@ -16,6 +16,8 @@ import '../../core/models/legacy_lcm_summary.dart';
 import '../../core/models/slash_command.dart';
 import '../../core/services/attachment_draft_service.dart';
 import '../../core/services/composer_draft_store.dart';
+import '../../core/services/connection_mutation_barrier.dart';
+import '../../core/services/prepared_image_store.dart';
 import '../../core/services/slash_command_errors.dart';
 import '../../core/services/ws_client.dart';
 import 'history_rows.dart';
@@ -186,7 +188,9 @@ class NgUserItem extends NgItem {
   final List<String> files;
 
   /// Client-generated UUID for `prompt.submit` idempotency on modern gateways.
-  final String? submissionId;
+  String? submissionId;
+  bool recoverInComposer = false;
+  final String? composerImageText;
 
   /// The model-facing prompt when the bubble shows something else: a
   /// command's send/skill directive shows its `display` line in [text] and
@@ -202,6 +206,7 @@ class NgUserItem extends NgItem {
     this.attachments = const [],
     this.files = const [],
     this.submissionId,
+    this.composerImageText,
     this.sentText,
   });
 }
@@ -587,6 +592,7 @@ class NgChatController extends ChangeNotifier {
     // Keep the public named argument while the mutable field stays private.
     // ignore: prefer_initializing_formals
   }) : _workingDirectory = workingDirectory,
+       _imageEpoch = ConnectionMutationBarrier.capture(gateway.connection.id),
        storedId = sessionId,
        draftKey = sessionId ?? ComposerDraftStore.newLocalKey(),
        attachmentService = attachmentService ?? AttachmentDraftService() {
@@ -600,6 +606,26 @@ class NgChatController extends ChangeNotifier {
   final NextGenGateway gateway;
   final String draftKey;
   bool get draftOwnerCurrent => !_disposed && gateway.draftAccountCurrent;
+  final Object? _imageEpoch;
+  PreparedImageTarget? get imageTarget {
+    final stored = storedId;
+    if (_disposed ||
+        stored == null ||
+        !ConnectionMutationBarrier.isCurrent(
+          gateway.connection.id,
+          _imageEpoch,
+        )) {
+      return null;
+    }
+    return PreparedImageTarget(
+      gateway.connection,
+      stored,
+      gateway.sessionAuthority
+          ? PreparedImageTransport.nextgenCanonical
+          : PreparedImageTransport.nextgenPending,
+    );
+  }
+
   String? _workingDirectory;
   String? get workingDirectory => _workingDirectory;
   bool _creatingSession = false;
@@ -2180,7 +2206,12 @@ class NgChatController extends ChangeNotifier {
   /// * any other file up to that size goes inline with `file.attach`;
   /// * anything larger streams over HTTP to `/api/files/upload-stream` (up
   ///   to 100 MB) and is attached by its path there, then removed.
-  Future<String?> _upload(AttachmentDraft draft, List<String> queued) async {
+  Future<String?> _upload(
+    AttachmentDraft draft,
+    List<String> queued,
+    List<Map<String, String>> canonicalImages,
+    void Function() checkOwner,
+  ) async {
     draft.status = AttachmentDraftStatus.uploading;
     draft.error = null;
     _changed();
@@ -2193,7 +2224,9 @@ class NgChatController extends ChangeNotifier {
         return ref;
       }
       if (draft.isImage) {
+        final staged = gateway.sessionAuthority;
         final bytes = await File(draft.cachedPath).readAsBytes();
+        checkOwner();
         final result = await gateway.call('image.attach_bytes', {
           'session_id': runtimeId,
           'content_base64': base64Encode(bytes),
@@ -2206,7 +2239,18 @@ class NgChatController extends ChangeNotifier {
           );
         }
         final path = result['path']?.toString();
-        if (path != null && path.isNotEmpty) queued.add(path);
+        if (staged) {
+          // gateway/session_images.py stages only on the session authority.
+          // Legacy image.attach_bytes instead queues onto the next turn.
+          if (path == null ||
+              path.isEmpty ||
+              result['mime'] != draft.mediaType) {
+            throw const PreparedImageException();
+          }
+          canonicalImages.add({'path': path, 'mime': draft.mediaType});
+        } else if (path != null && path.isNotEmpty) {
+          queued.add(path);
+        }
         draft.status = AttachmentDraftStatus.attached;
         return null;
       }
@@ -2368,12 +2412,17 @@ class NgChatController extends ChangeNotifier {
   Future<bool> send(
     String text, {
     List<AttachmentDraft> attachments = const [],
+    String? composerImageText,
     String? submissionId,
     String? display,
   }) async {
     final trimmed = text.trim();
     if (trimmed.isEmpty && attachments.isEmpty) return false;
     final shown = display?.trim() ?? '';
+    if (composerImageText != null &&
+        (composerImageText.trim() != trimmed || shown.isNotEmpty)) {
+      return false;
+    }
     final effectiveSubmissionId = submissionId ?? const Uuid().v4();
     final item = NgUserItem(
       _key('u'),
@@ -2382,6 +2431,7 @@ class NgChatController extends ChangeNotifier {
       pending: true,
       attachments: List.of(attachments),
       submissionId: effectiveSubmissionId,
+      composerImageText: composerImageText,
       sentText: shown.isEmpty ? null : trimmed,
     );
     items.add(item);
@@ -2390,29 +2440,95 @@ class NgChatController extends ChangeNotifier {
     turnStartedAt = DateTime.now();
     _changed();
     final queued = <String>[];
+    PreparedImageCapture? capture;
+    var mayHaveSubmitted = false;
+    bool Function()? sameUploadOwner;
     try {
       await _ensureSession();
-      final refs = <String>[];
-      try {
-        for (final draft in item.attachments) {
-          final ref = draft.refText ?? await _upload(draft, queued);
-          if (ref != null) refs.add(ref);
+      final journal =
+          composerImageText != null &&
+          PreparedImageStore.supports(composerImageText, attachments);
+      final target = journal ? imageTarget : null;
+      final live = runtimeId;
+      final socket = gateway.socket;
+      final epoch = socket?.socketEpoch;
+      sameUploadOwner = () =>
+          !_disposed &&
+          live == runtimeId &&
+          identical(socket, gateway.socket) &&
+          epoch == socket?.socketEpoch &&
+          ConnectionMutationBarrier.isCurrent(
+            gateway.connection.id,
+            _imageEpoch,
+          );
+      void checkOwner() {
+        if (!sameUploadOwner!() ||
+            (journal && (target == null || imageTarget?.key != target.key))) {
+          throw const PreparedImageException();
         }
-      } catch (_) {
-        await _detach(queued);
-        _resetQueuedImages(item.attachments);
-        rethrow;
+      }
+
+      checkOwner();
+      final adopted = journal
+          ? await PreparedImageStore.shared.adopt(
+              target!,
+              composerImageText,
+              attachments,
+            )
+          : null;
+      if (journal && adopted == null) {
+        capture = await PreparedImageStore.shared.capture(attachments);
+      }
+      checkOwner();
+      final refs = <String>[];
+      final wireImages = <Map<String, String>>[];
+      for (final draft in capture?.drafts ?? item.attachments) {
+        if (adopted != null) break;
+        checkOwner();
+        final ref =
+            draft.refText ??
+            await _upload(draft, queued, wireImages, checkOwner);
+        if (ref != null) refs.add(ref);
       }
       // Like Desktop and Kyllene: the file references first, then the text.
-      final prompt = [
-        refs.join('\n'),
-        trimmed,
-      ].where((part) => part.trim().isNotEmpty).join('\n\n');
+      final prompt =
+          adopted?.entry.prompt ??
+          [
+            refs.join('\n'),
+            trimmed,
+          ].where((part) => part.trim().isNotEmpty).join('\n\n');
+      checkOwner();
+      final attempt =
+          adopted ??
+          (journal
+              ? await PreparedImageStore.shared.prepare(
+                  target!,
+                  composerImageText,
+                  capture!,
+                  prompt: prompt,
+                  wireImages: wireImages,
+                  copyOnly: !gateway.sessionAuthority,
+                )
+              : null);
+      checkOwner();
+      if (attempt != null) {
+        item.submissionId = attempt.id;
+        item.recoverInComposer = true;
+      }
+      final explicitImages = adopted?.entry.wireImages ?? wireImages;
       _clearRetainedModelMutation();
-      final result = await _submitPromptWithCompatibility({
-        'session_id': runtimeId,
-        'text': prompt,
-      }, submissionId: effectiveSubmissionId);
+      mayHaveSubmitted = true;
+      final result = await _submitPromptWithCompatibility(
+        {
+          'session_id': runtimeId,
+          'text': prompt,
+          if (explicitImages.isNotEmpty) 'attachments': explicitImages,
+        },
+        submissionId: item.submissionId!,
+        attempt: attempt,
+        checkOwner: checkOwner,
+      );
+      if (attempt != null) await attempt.receipt(result, live!);
       item.pending = false;
       // A canonical receipt names the execution its admission started.
       _adoptExecutionGeneration(result['execution_generation']);
@@ -2424,12 +2540,21 @@ class NgChatController extends ChangeNotifier {
       }
       return true;
     } catch (e) {
+      if (!mayHaveSubmitted && sameUploadOwner?.call() == true) {
+        await _detach(queued);
+        _resetQueuedImages(item.attachments);
+      }
+      if (item.recoverInComposer) {
+        await attachmentService.removeAll(item.attachments);
+      }
       item.pending = false;
       item.failure = _clean(e);
       running = false;
       turnStartedAt = null;
       _changed();
       return false;
+    } finally {
+      await capture?.close();
     }
   }
 
@@ -2768,6 +2893,8 @@ class NgChatController extends ChangeNotifier {
   Future<Map<String, dynamic>> _submitPromptWithCompatibility(
     Map<String, dynamic> baseParams, {
     required String submissionId,
+    PreparedImageAttempt? attempt,
+    required void Function() checkOwner,
   }) async {
     try {
       return await gateway.call('prompt.submit', {
@@ -2776,6 +2903,8 @@ class NgChatController extends ChangeNotifier {
       }, timeout: const Duration(seconds: 60));
     } on JsonRpcError catch (e) {
       if (!isRejectedSubmissionIdError(e)) rethrow;
+      if (attempt != null) await attempt.beforeLegacy();
+      checkOwner();
       return gateway.call(
         'prompt.submit',
         baseParams,
@@ -2788,12 +2917,14 @@ class NgChatController extends ChangeNotifier {
   Future<void> retryLast() async {
     final last = items.whereType<NgUserItem>().lastOrNull;
     if (last == null) return;
+    if (last.failure != null && last.recoverInComposer) return;
     if (last.failure != null) {
       items.remove(last);
     }
     await send(
       last.sentText ?? last.text,
       attachments: last.failure != null ? last.attachments : const [],
+      composerImageText: last.failure != null ? last.composerImageText : null,
       submissionId: last.failure != null ? last.submissionId : null,
       display: last.sentText == null ? null : last.text,
     );

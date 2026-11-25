@@ -28,6 +28,8 @@ import '../../core/widgets/slash_command_highlight.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
 import '../../core/services/attachment_draft_service.dart';
+import '../../core/widgets/prepared_image_recovery.dart';
+import '../../core/services/prepared_image_store.dart';
 import '../../core/services/voice_composer_adapter.dart';
 import '../data/chat_controller.dart';
 import '../data/nextgen_gateway.dart';
@@ -154,6 +156,22 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
 
   /// Files picked for the next message.
   final List<AttachmentDraft> _drafts = [];
+  int _imageDraftRevision = 0;
+  Object? _imageRestoreRevision() =>
+      mounted &&
+          !_preparing &&
+          !_listening &&
+          !chat.running &&
+          _drafts.isEmpty &&
+          _input.text.isEmpty &&
+          chat.imageTarget != null
+      ? (
+          chat,
+          chat.imageTarget!.key,
+          _imageDraftRevision,
+          _draftWriter.revision,
+        )
+      : null;
   bool _preparing = false;
   final _imagePicker = ImagePicker();
 
@@ -181,7 +199,11 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
         ngToast(context, ngL.read_aloud_is_unavailable_on_this_device);
       }
     };
-    _input.addListener(() => setState(() {}));
+    _input.addListener(
+      () => setState(() {
+        _imageDraftRevision++;
+      }),
+    );
     _scroll.addListener(() {
       if (_scroll.hasClients &&
           _scroll.position.userScrollDirection != ScrollDirection.idle) {
@@ -198,6 +220,13 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
   void didUpdateWidget(covariant NgChatView old) {
     super.didUpdateWidget(old);
     if (old.chat != chat) {
+      _imageDraftRevision++;
+      final recovered = _drafts.where(PreparedImageStore.isRestored).toList();
+      if (recovered.isNotEmpty) {
+        _drafts.removeWhere(PreparedImageStore.isRestored);
+        _input.clear();
+        unawaited(old.chat.attachmentService.removeAll(recovered));
+      }
       old.chat.removeListener(_onChat);
       _checkpoint?.cancel();
       unawaited(_draftWriter.close());
@@ -276,6 +305,7 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
   int get _slotsLeft => maxRemoteAttachmentDrafts - _drafts.length;
 
   Future<void> _attach() async {
+    _imageDraftRevision++;
     final c = NgColors.of(context);
     final choice = await showNgSheet<String>(
       context,
@@ -404,11 +434,12 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
       if (!mounted || _input.text.trim() != text) return;
     }
     if (_drafts.isNotEmpty && !chat.running) {
+      final raw = _input.text;
       final drafts = List.of(_drafts);
       _input.clear();
       setState(_drafts.clear);
       // A refused prompt keeps its files on the message for Retry.
-      await chat.send(text, attachments: drafts);
+      await chat.send(text, attachments: drafts, composerImageText: raw);
       return;
     }
     if (text.isEmpty) return;
@@ -976,7 +1007,9 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     return switch (item) {
       NgUserItem() => _UserBubble(
         item: item,
-        onRetry: i == lastUserIndex && !chat.running ? chat.retryLast : null,
+        onRetry: i == lastUserIndex && !chat.running && !item.recoverInComposer
+            ? chat.retryLast
+            : null,
       ),
       NgAssistantItem() => _AssistantBlock(
         item: item,
@@ -1052,6 +1085,17 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (_imageRestoreRevision() != null)
+                PreparedImageRecovery(
+                  target: chat.imageTarget!,
+                  revision: () => _draftWriter.hasConfirmedEmptyDraft
+                      ? _imageRestoreRevision()
+                      : null,
+                  install: (text, drafts) {
+                    setState(() => _drafts.addAll(drafts));
+                    _setComposer(text);
+                  },
+                ),
               if (_drafts.isNotEmpty || _preparing)
                 SizedBox(
                   height: 44,
