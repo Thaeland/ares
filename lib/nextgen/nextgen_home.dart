@@ -38,16 +38,34 @@ class _NextGenHomeState extends State<NextGenHome> {
     unawaited(_reload());
   }
 
+  String? _pendingConnection(List<SavedConnection> list) {
+    final request = nextGenOpenRequest.value;
+    if (request == null) return null;
+    final saved = list.where((c) => c.id == request.connectionId).firstOrNull;
+    final scope = pendingWindowsToastTarget;
+    if (saved == null ||
+        (scope != null &&
+            (!scope.matches(saved) ||
+                !scope.matches(
+                  _manager
+                      .getConnections()
+                      .where((c) => c.id == saved.id)
+                      .firstOrNull,
+                )))) {
+      pendingWindowsToastTarget = null;
+      nextGenOpenRequest.value = null;
+      return null;
+    }
+    return saved.id;
+  }
+
   /// A notification named a chat: switch to its connection first; the main
   /// page opens the chat once that connection is showing.
   void _onOpenRequest() {
     final request = nextGenOpenRequest.value;
     final connections = _connections;
     if (request == null || connections == null) return;
-    if (!connections.any((c) => c.id == request.connectionId)) {
-      nextGenOpenRequest.value = null;
-      return;
-    }
+    if (_pendingConnection(connections) == null) return;
     if (_gateway?.connection.id != request.connectionId) {
       unawaited(_switchTo(request.connectionId));
     } else {
@@ -66,7 +84,7 @@ class _NextGenHomeState extends State<NextGenHome> {
     try {
       final list = await _manager.loadConnectionsWithSecrets();
       if (!mounted) return;
-      final pending = nextGenOpenRequest.value?.connectionId;
+      final pending = _pendingConnection(list);
       final wanted =
           select ??
           (list.any((c) => c.id == pending) ? pending : null) ??

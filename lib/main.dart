@@ -342,10 +342,15 @@ class _NotificationNavigationIntent {
               Map<String, dynamic>.unmodifiable(pushRoute.authority),
             );
 
-  bool canCoalesceAuthority(MobilePushRoute? incomingPush) {
+  bool canCoalesceAuthority(
+    MobilePushRoute? incomingPush,
+    WindowsToastTarget? incomingWindows,
+  ) {
     // Ordinary taps share account authority. Push proofs can differ in event,
     // consent revision or expiry; target equality cannot establish equivalence.
-    return pushRoute == null && incomingPush == null;
+    return pushRoute == null &&
+        incomingPush == null &&
+        (windowsTarget == null) == (incomingWindows == null);
   }
 }
 
@@ -1040,7 +1045,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     if (_routingIdentity == identity &&
         activeIntent != null &&
         activeIntent.generation == _notificationGeneration &&
-        activeIntent.canCoalesceAuthority(pushRoute)) {
+        activeIntent.canCoalesceAuthority(pushRoute, windowsTarget)) {
       return;
     }
     if (pushRoute == null &&

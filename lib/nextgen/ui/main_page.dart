@@ -110,8 +110,17 @@ class _NgMainPageState extends State<_NgMainContent>
     final target = pendingWindowsToastTarget;
     pendingWindowsToastTarget = null;
     nextGenOpenRequest.value = null;
-    if (target != null && !target.matches(NgScope.of(context).connection)) {
-      return null;
+    if (target != null) {
+      final scope = NgScope.of(context);
+      if (!target.matches(scope.connection) ||
+          !target.matches(
+            scope.connManager
+                .getConnections()
+                .where((c) => c.id == connectionId)
+                .firstOrNull,
+          )) {
+        return null;
+      }
     }
     return request.sessionId;
   }
