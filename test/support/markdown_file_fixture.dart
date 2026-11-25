@@ -1,9 +1,22 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/widgets/markdown_file_preview.dart';
 import 'package:http/http.dart' as http;
+
+const markdownPlatforms = TargetPlatformVariant({
+  TargetPlatform.android,
+  TargetPlatform.iOS,
+  TargetPlatform.macOS,
+  TargetPlatform.windows,
+});
+
+Size get markdownViewport => switch (defaultTargetPlatform) {
+  TargetPlatform.android || TargetPlatform.iOS => const Size(390, 844),
+  _ => const Size(1150, 820),
+};
 
 // The same UTF-8 document must survive every route, not just the chat renderer.
 const markdownFixture =

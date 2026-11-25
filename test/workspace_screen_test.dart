@@ -1480,6 +1480,7 @@ void main() {
       final backend = MarkdownDashboardFixture();
       await _pump(
         tester,
+        size: markdownViewport,
         connection: _connection(
           desktopGatewayUrl: 'https://fixture.invalid',
         ).copyWith(dashboardProxied: true),
@@ -1522,7 +1523,7 @@ void main() {
             .length,
         projectFolder || assets ? 0 : 1,
       );
-    });
+    }, variant: markdownPlatforms);
   }
 
   testWidgets('More opens the native Files screen', (tester) async {

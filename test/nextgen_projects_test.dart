@@ -716,10 +716,6 @@ void main() {
     });
   }
 
-  final markdownLayouts = ValueVariant<Size>({
-    const Size(390, 844),
-    const Size(1150, 820),
-  });
   for (final entry in [
     'Files',
     'Assets',
@@ -730,7 +726,7 @@ void main() {
       'NextGen $entry opens the same rich Markdown fixture',
       (tester) async {
         tester.view.devicePixelRatio = 1;
-        tester.view.physicalSize = markdownLayouts.currentValue!;
+        tester.view.physicalSize = markdownViewport;
         addTearDown(tester.view.reset);
         final backend = MarkdownDashboardFixture();
         final gateway = _Gateway(_connection(), markdown: backend);
@@ -784,7 +780,7 @@ void main() {
         }
         await _close(tester, [gateway]);
       },
-      variant: markdownLayouts,
+      variant: markdownPlatforms,
     );
   }
 

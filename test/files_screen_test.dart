@@ -119,12 +119,7 @@ void main() {
 
       expect(references, ['/srv/project/README.md']);
     },
-    variant: const TargetPlatformVariant({
-      TargetPlatform.android,
-      TargetPlatform.iOS,
-      TargetPlatform.macOS,
-      TargetPlatform.windows,
-    }),
+    variant: markdownPlatforms,
   );
 
   testWidgets('plain text stays literal despite server markdown metadata', (

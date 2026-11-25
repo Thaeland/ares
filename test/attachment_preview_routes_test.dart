@@ -218,10 +218,9 @@ void main() {
     testWidgets(
       '$surface opens Markdown, toggles original source and saves original bytes',
       (tester) async {
-        await tester.binding.setSurfaceSize(
-          surface == 'Chat' ? const Size(390, 844) : const Size(1100, 860),
-        );
-        addTearDown(() => tester.binding.setSurfaceSize(null));
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = markdownViewport;
+        addTearDown(tester.view.reset);
         const path = '/gateway/field report.MaRkDoWn';
         final files = _Files(utf8.encode(markdownFixture));
         await _open(tester, surface, path, files);
@@ -242,6 +241,7 @@ void main() {
         await tester.pumpAndSettle();
         await tester.pumpWidget(const SizedBox.shrink());
       },
+      variant: markdownPlatforms,
     );
     for (final extension in ['docx', 'mp4']) {
       testWidgets(
