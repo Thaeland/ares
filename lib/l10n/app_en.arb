@@ -2621,5 +2621,11 @@
   "ng_aux_profile_describer": "Profile descriptions",
   "ng_aux_profile_describer_hint": "Writes each profile's short description",
   "ng_aux_curator": "Curator",
-  "ng_aux_curator_hint": "Reviews how skills are used"
+  "ng_aux_curator_hint": "Reviews how skills are used",
+  "deployment_token_label": "Deployment token (optional)",
+  "deployment_token_helper": "For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.",
+  "deployment_token_hint": "Dashboard session token",
+  "custom_headers_label": "Custom headers (optional)",
+  "custom_headers_helper": "One per line, e.g. X-Custom: value. Forbidden headers are rejected.",
+  "custom_headers_hint": "e.g. X-Custom-Header: value"
 }

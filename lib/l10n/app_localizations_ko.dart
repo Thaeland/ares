@@ -12,34 +12,28 @@ class AppLocalizationsKo extends AppLocalizations {
   String get workspace_workers => '실행 중인 하위 에이전트';
 
   @override
-  String get workers_unattached =>
-      '개수만 표시됩니다. 지시를 보내려면 연결된 상위 채팅에서 ‘실행 중인 하위 에이전트’를 선택하세요.';
+  String get workers_unattached => '개수만 표시됩니다. 지시를 보내려면 연결된 상위 채팅에서 ‘실행 중인 하위 에이전트’를 선택하세요.';
 
   @override
-  String get slash_local_arguments =>
-      '이 바로 가기는 여기서 인수를 지원하지 않습니다. 앱의 컨트롤을 사용하세요. 초안은 보관되었습니다.';
+  String get slash_local_arguments => '이 바로 가기는 여기서 인수를 지원하지 않습니다. 앱의 컨트롤을 사용하세요. 초안은 보관되었습니다.';
 
   @override
   String get fallback_title => '대체 모델';
 
   @override
-  String get fallback_notice =>
-      '기본 모델을 사용할 수 없을 때 순서대로 시도합니다. 변경은 이 프로필에만 적용됩니다. 전체 목록을 명시적으로 저장하세요.';
+  String get fallback_notice => '기본 모델을 사용할 수 없을 때 순서대로 시도합니다. 변경은 이 프로필에만 적용됩니다. 전체 목록을 명시적으로 저장하세요.';
 
   @override
-  String get fallback_unavailable =>
-      '대체 설정을 사용할 수 없거나 올바르지 않습니다. 연결, 선택한 프로필 및 호스트 버전을 확인한 후 다시 시도하세요.';
+  String get fallback_unavailable => '대체 설정을 사용할 수 없거나 올바르지 않습니다. 연결, 선택한 프로필 및 호스트 버전을 확인한 후 다시 시도하세요.';
 
   @override
-  String get fallback_discovery_unavailable =>
-      '공급자 목록을 불러올 수 없습니다. 기존 항목은 유지됩니다. 공급자와 모델을 선택하려면 다시 시도하세요.';
+  String get fallback_discovery_unavailable => '공급자 목록을 불러올 수 없습니다. 기존 항목은 유지됩니다. 공급자와 모델을 선택하려면 다시 시도하세요.';
 
   @override
   String get fallback_empty => '이 대체 목록에 항목이 없습니다.';
 
   @override
-  String get fallback_incomplete =>
-      '저장하기 전에 모든 항목의 공급자와 모델을 선택하거나 미완성 항목을 삭제하세요.';
+  String get fallback_incomplete => '저장하기 전에 모든 항목의 공급자와 모델을 선택하거나 미완성 항목을 삭제하세요.';
 
   @override
   String get fallback_add => '대체 모델 추가';
@@ -48,8 +42,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fallback_save => '대체 목록 저장';
 
   @override
-  String get fallback_save_failed =>
-      '저장된 대체 목록을 확인할 수 없습니다. 초안은 유지됩니다. 다시 저장하거나 새로고침하여 호스트 설정을 불러오세요.';
+  String get fallback_save_failed => '저장된 대체 목록을 확인할 수 없습니다. 초안은 유지됩니다. 다시 저장하거나 새로고침하여 호스트 설정을 불러오세요.';
 
   @override
   String get fallback_saved => '대체 목록을 저장하고 확인했습니다.';
@@ -58,8 +51,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fallback_legacy_title => '이전 대체 설정(읽기 전용)';
 
   @override
-  String get fallback_legacy_notice =>
-      '호스트는 이 목록 다음에 fallback_model도 사용하며 중복 경로는 건너뜁니다. 위 목록이 비어 있어도 이전 항목은 유지됩니다. 호스트에서 편집하세요.';
+  String get fallback_legacy_notice => '호스트는 이 목록 다음에 fallback_model도 사용하며 중복 경로는 건너뜁니다. 위 목록이 비어 있어도 이전 항목은 유지됩니다. 호스트에서 편집하세요.';
 
   @override
   String fallback_priority(String position) {
@@ -73,19 +65,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fallback_move_down => '아래로 이동';
 
   @override
-  String get fallback_routing_read_only =>
-      '라우팅 세부 정보 또는 목록에 없는 공급자가 유지됩니다. 이 공급자/모델은 호스트에서 편집하세요. 여기서는 순서 변경과 삭제가 가능합니다.';
+  String get fallback_routing_read_only => '라우팅 세부 정보 또는 목록에 없는 공급자가 유지됩니다. 이 공급자/모델은 호스트에서 편집하세요. 여기서는 순서 변경과 삭제가 가능합니다.';
 
   @override
   String get cron_model_default => '기본값 따르기';
 
   @override
-  String get cron_model_notice =>
-      '이 cron 작업에만 적용됩니다. 고정하지 않으면 Hermes는 cron 기본값을 사용한 다음 주 모델을 사용합니다. 사용자 지정 모델은 호스트에서 관리하세요.';
+  String get cron_model_notice => '이 cron 작업에만 적용됩니다. 고정하지 않으면 Hermes는 cron 기본값을 사용한 다음 주 모델을 사용합니다. 사용자 지정 모델은 호스트에서 관리하세요.';
 
   @override
-  String get model_management_unavailable =>
-      '모델 설정을 불러오거나 저장하지 못했습니다. 새로고침한 후 다시 시도하세요.';
+  String get model_management_unavailable => '모델 설정을 불러오거나 저장하지 못했습니다. 새로고침한 후 다시 시도하세요.';
 
   @override
   String get model_management_subtitle => '이 프로필의 기본, 대체 및 보조 모델';
@@ -100,8 +89,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get portal_menu_subtitle => '게이트웨이 상태 및 기록된 사용량';
 
   @override
-  String get portal_read_only =>
-      '게이트웨이의 읽기 전용 데이터입니다. Hermes 호스트에서 Nous 인증을 관리하세요. 이 엔드포인트는 구독 잔액이나 크레딧을 제공하지 않습니다.';
+  String get portal_read_only => '게이트웨이의 읽기 전용 데이터입니다. Hermes 호스트에서 Nous 인증을 관리하세요. 이 엔드포인트는 구독 잔액이나 크레딧을 제공하지 않습니다.';
 
   @override
   String get portal_status => '게이트웨이 Portal 상태';
@@ -122,8 +110,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get portal_recorded_usage => '기록된 사용량';
 
   @override
-  String get portal_all_providers =>
-      '선택한 게이트웨이 프로필의 모든 제공업체입니다. 기록된 비용이 0이어도 모델이 무료라는 뜻은 아닙니다.';
+  String get portal_all_providers => '선택한 게이트웨이 프로필의 모든 제공업체입니다. 기록된 비용이 0이어도 모델이 무료라는 뜻은 아닙니다.';
 
   @override
   String portal_period(String days) {
@@ -152,12 +139,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get portal_no_models => '기록된 모델이 없습니다.';
 
   @override
-  String get portal_unavailable =>
-      '사용할 수 없습니다. 연결, 선택한 프로필 및 게이트웨이 버전을 확인한 후 다시 시도하세요.';
+  String get portal_unavailable => '사용할 수 없습니다. 연결, 선택한 프로필 및 게이트웨이 버전을 확인한 후 다시 시도하세요.';
 
   @override
-  String get paste_attachment_failed_text_kept =>
-      '붙여넣은 텍스트를 첨부하지 못했습니다. 텍스트는 메시지에 유지됩니다.';
+  String get paste_attachment_failed_text_kept => '붙여넣은 텍스트를 첨부하지 못했습니다. 텍스트는 메시지에 유지됩니다.';
 
   @override
   String get background_task_report => '백그라운드 작업';
@@ -190,12 +175,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get setup_interface_nextgen => 'NextGen';
 
   @override
-  String get setup_interface_classic_description =>
-      '모든 연결 설정과 Classic 설정을 갖춘 기존 Ares 작업 공간입니다.';
+  String get setup_interface_classic_description => '모든 연결 설정과 Classic 설정을 갖춘 기존 Ares 작업 공간입니다.';
 
   @override
-  String get setup_interface_nextgen_description =>
-      '한 번의 대시보드 로그인, 실시간 계획, 하위 에이전트, 알림을 제공하는 새로운 인터페이스입니다.';
+  String get setup_interface_nextgen_description => '한 번의 대시보드 로그인, 실시간 계획, 하위 에이전트, 알림을 제공하는 새로운 인터페이스입니다.';
 
   @override
   String get setup_interface_switch_later => '설정에서 언제든지 전환할 수 있습니다.';
@@ -215,8 +198,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get ng_model_switch_not_connected =>
-      '채팅에서 모델을 전환할 준비가 되지 않았습니다. 채팅을 다시 열고 시도하세요.';
+  String get ng_model_switch_not_connected => '채팅에서 모델을 전환할 준비가 되지 않았습니다. 채팅을 다시 열고 시도하세요.';
 
   @override
   String ng_gateway_kept_default_model(String model) {
@@ -264,38 +246,31 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get hands_free_short_disclosure =>
-      '이 채팅이 전면에 열려 있을 때만 동작합니다. 호출 감지는 오프라인이며 음성은 네트워크를 사용할 수 있습니다. 배터리를 소모합니다.';
+  String get hands_free_short_disclosure => '이 채팅이 전면에 열려 있을 때만 동작합니다. 호출 감지는 오프라인이며 음성은 네트워크를 사용할 수 있습니다. 배터리를 소모합니다.';
 
   @override
-  String get hands_free_error_action =>
-      '마이크 권한, 음성 서비스, 응답 음성 및 연결을 확인한 후 중지하고 다시 시작하세요. 자동 재전송하지 않습니다.';
+  String get hands_free_error_action => '마이크 권한, 음성 서비스, 응답 음성 및 연결을 확인한 후 중지하고 다시 시작하세요. 자동 재전송하지 않습니다.';
 
   @override
-  String get hands_free_disclosure =>
-      '호출 감지는 CPU에서 오프라인으로 동작합니다. Android 음성 인식, 선택한 음성 및 게이트웨이는 네트워크를 사용할 수 있습니다. 배터리를 소모하고 오작동할 수 있습니다. 채팅이 가려지거나 닫히거나 전면을 떠나면 중지하며 자동 재개하지 않습니다. 수동 받아쓰기는 편집 가능한 초안으로 남습니다.';
+  String get hands_free_disclosure => '호출 감지는 CPU에서 오프라인으로 동작합니다. Android 음성 인식, 선택한 음성 및 게이트웨이는 네트워크를 사용할 수 있습니다. 배터리를 소모하고 오작동할 수 있습니다. 채팅이 가려지거나 닫히거나 전면을 떠나면 중지하며 자동 재개하지 않습니다. 수동 받아쓰기는 편집 가능한 초안으로 남습니다.';
 
   @override
-  String get hands_free_ready_cue =>
-      '“Hey Hermes”라고 말하고 준비 완료를 기다린 후 말씀하세요. 한 번에 이어 말하기나 사전 녹음은 지원하지 않습니다. 권한 설정으로 앱을 떠난 경우 허용 후 다시 시작하세요.';
+  String get hands_free_ready_cue => '“Hey Hermes”라고 말하고 준비 완료를 기다린 후 말씀하세요. 한 번에 이어 말하기나 사전 녹음은 지원하지 않습니다. 권한 설정으로 앱을 떠난 경우 허용 후 다시 시작하세요.';
 
   @override
   String get hands_free_settings_title => '핸즈프리 음성';
 
   @override
-  String get hands_free_settings_subtitle =>
-      '채팅에 \"Hey Hermes\" 시작 컨트롤을 표시합니다. 끄면 실행 중인 핸즈프리 세션이 중지됩니다.';
+  String get hands_free_settings_subtitle => '채팅에 \"Hey Hermes\" 시작 컨트롤을 표시합니다. 끄면 실행 중인 핸즈프리 세션이 중지됩니다.';
 
   @override
-  String get hands_free_timing_limit =>
-      '후속 입력 시간은 최댓값이며 최솟값이 아닙니다. Android가 더 일찍 중지할 수 있습니다. 무음이면 인식을 반복하지 않고 로컬 호출 대기로 돌아갑니다.';
+  String get hands_free_timing_limit => '후속 입력 시간은 최댓값이며 최솟값이 아닙니다. Android가 더 일찍 중지할 수 있습니다. 무음이면 인식을 반복하지 않고 로컬 호출 대기로 돌아갑니다.';
 
   @override
   String get hands_free_followup_off => '후속 입력 꺼짐 — 입력할 때마다 Hey Hermes라고 말하세요';
 
   @override
-  String get hands_free_start_blocked =>
-      '빈 초안, 첨부 없음, 작업 중이 아닌 연결된 채팅 및 응답 읽기 켜짐이 필요합니다. 수동 음성 작업을 먼저 마치세요.';
+  String get hands_free_start_blocked => '빈 초안, 첨부 없음, 작업 중이 아닌 연결된 채팅 및 응답 읽기 켜짐이 필요합니다. 수동 음성 작업을 먼저 마치세요.';
 
   @override
   String get hands_free_setup_complete => '마이크 설정이 끝났습니다. 다시 시작하세요.';
@@ -322,12 +297,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get message_queued_for_running_turn => '현재 실행에 메시지를 대기열로 추가했습니다.';
 
   @override
-  String get running_message_not_accepted =>
-      'Hermes가 이 메시지를 수락하지 못했습니다. 초안은 유지됩니다. 응답을 중지하거나 기다린 후 다시 보내세요.';
+  String get running_message_not_accepted => 'Hermes가 이 메시지를 수락하지 못했습니다. 초안은 유지됩니다. 응답을 중지하거나 기다린 후 다시 보내세요.';
 
   @override
-  String get running_message_delivery_unknown =>
-      '메시지 전달을 확인하지 못했습니다. 초안은 유지됩니다. 다시 시도하기 전에 채팅을 확인하세요.';
+  String get running_message_delivery_unknown => '메시지 전달을 확인하지 못했습니다. 초안은 유지됩니다. 다시 시도하기 전에 채팅을 확인하세요.';
 
   @override
   String get attachment_tap_to_preview => '탭하여 미리 보기';
@@ -351,31 +324,25 @@ class AppLocalizationsKo extends AppLocalizations {
   String get attachment_share_failed => '이 파일을 공유하지 못했습니다. 다시 시도해 주세요.';
 
   @override
-  String get attachment_download_failed =>
-      '이 파일을 불러오지 못했습니다. 연결을 확인하고 다시 시도해 주세요.';
+  String get attachment_download_failed => '이 파일을 불러오지 못했습니다. 연결을 확인하고 다시 시도해 주세요.';
 
   @override
-  String get attachment_no_inline_preview =>
-      '이 파일 형식은 미리 볼 수 없습니다. 원본 파일을 저장하거나 공유하여 다른 앱에서 여세요.';
+  String get attachment_no_inline_preview => '이 파일 형식은 미리 볼 수 없습니다. 원본 파일을 저장하거나 공유하여 다른 앱에서 여세요.';
 
   @override
-  String get attachment_image_failed =>
-      '이 이미지를 디코딩하지 못했습니다. 원본 파일은 저장하거나 공유할 수 있습니다.';
+  String get attachment_image_failed => '이 이미지를 디코딩하지 못했습니다. 원본 파일은 저장하거나 공유할 수 있습니다.';
 
   @override
-  String get attachment_text_truncated =>
-      '미리 보기가 축약되었습니다. 전체 내용을 읽으려면 파일을 저장하거나 공유하세요.';
+  String get attachment_text_truncated => '미리 보기가 축약되었습니다. 전체 내용을 읽으려면 파일을 저장하거나 공유하세요.';
 
   @override
-  String get attachment_text_unavailable =>
-      '이 파일을 텍스트로 표시하지 못했습니다. 원본 파일을 저장하거나 공유하세요.';
+  String get attachment_text_unavailable => '이 파일을 텍스트로 표시하지 못했습니다. 원본 파일을 저장하거나 공유하세요.';
 
   @override
   String get attachment_pdf_failed => '이 PDF를 미리 볼 수 없습니다. 원본 파일을 저장하거나 공유하세요.';
 
   @override
-  String get attachment_pdf_unavailable =>
-      'PDF 미리 보기는 Android에서 사용할 수 있습니다. 이 파일은 저장하거나 공유할 수 있습니다.';
+  String get attachment_pdf_unavailable => 'PDF 미리 보기는 Android에서 사용할 수 있습니다. 이 파일은 저장하거나 공유할 수 있습니다.';
 
   @override
   String attachment_pdf_page(int page, int total) {
@@ -392,19 +359,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get attachment_loading => '미리 보기 불러오는 중…';
 
   @override
-  String get attachment_document_text_notice =>
-      '텍스트 미리 보기입니다. 레이아웃, 이미지 및 서식이 원본과 다를 수 있습니다.';
+  String get attachment_document_text_notice => '텍스트 미리 보기입니다. 레이아웃, 이미지 및 서식이 원본과 다를 수 있습니다.';
 
   @override
-  String get attachment_document_failed =>
-      '이 문서를 미리 볼 수 없습니다. 원본 파일을 저장하거나 공유하세요.';
+  String get attachment_document_failed => '이 문서를 미리 볼 수 없습니다. 원본 파일을 저장하거나 공유하세요.';
 
   @override
   String get attachment_document_empty => '이 문서에서 읽을 수 있는 텍스트를 찾지 못했습니다.';
 
   @override
-  String get attachment_video_failed =>
-      '이 동영상을 재생할 수 없습니다. 형식이나 코덱이 지원되지 않을 수 있습니다. 원본 파일을 저장하거나 공유하세요.';
+  String get attachment_video_failed => '이 동영상을 재생할 수 없습니다. 형식이나 코덱이 지원되지 않을 수 있습니다. 원본 파일을 저장하거나 공유하세요.';
 
   @override
   String get attachment_video_play => '재생';
@@ -431,15 +395,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get saved_history_heading => 'Saved history';
 
   @override
-  String get received_output_heading =>
-      'Received output — match to saved history unconfirmed';
+  String get received_output_heading => 'Received output — match to saved history unconfirmed';
 
   @override
   String get received_output_details => 'About received output';
 
   @override
-  String get received_output_explanation =>
-      'This may also appear in saved history. The app cannot confirm a match.';
+  String get received_output_explanation => 'This may also appear in saved history. The app cannot confirm a match.';
 
   @override
   String get local_prompt_context => 'Local prompt context';
@@ -448,8 +410,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get received_output_badge => 'Received · match unconfirmed';
 
   @override
-  String get received_output_lifetime =>
-      'Received output is kept temporarily in this app session and may be shortened or removed as limits are reached. It may not be available after the app or connection is closed.';
+  String get received_output_lifetime => 'Received output is kept temporarily in this app session and may be shortened or removed as limits are reached. It may not be available after the app or connection is closed.';
 
   @override
   String get theme_palette => '색상 테마';
@@ -488,12 +449,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get assets_recent_subtitle => '저장된 채팅에서 Hermes가 공유한 파일 찾기';
 
   @override
-  String get assets_scope_notice =>
-      '저장된 답변에서 Hermes가 명시적으로 공유한 생성된 파일입니다. 채팅 기록의 일부만 보여 주며, 모든 파일이나 첨부 파일을 망라한 목록은 아닙니다. 참조된 파일이 더 이상 존재하지 않을 수 있습니다.';
+  String get assets_scope_notice => '저장된 답변에서 Hermes가 명시적으로 공유한 생성된 파일입니다. 채팅 기록의 일부만 보여 주며, 모든 파일이나 첨부 파일을 망라한 목록은 아닙니다. 참조된 파일이 더 이상 존재하지 않을 수 있습니다.';
 
   @override
-  String get assets_download_limit =>
-      '파일은 탭할 때만 불러옵니다. 미리보기와 다운로드는 각각 파일당 25 MiB로 제한됩니다. 더 큰 파일은 대시보드를 이용하세요.';
+  String get assets_download_limit => '파일은 탭할 때만 불러옵니다. 미리보기와 다운로드는 각각 파일당 25 MiB로 제한됩니다. 더 큰 파일은 대시보드를 이용하세요.';
 
   @override
   String get assets_search_hint => '찾은 파일이나 원본 채팅 검색';
@@ -517,8 +476,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get assets_empty => '살펴본 메시지에서 에셋을 찾지 못했습니다';
 
   @override
-  String get assets_empty_detail =>
-      '채팅을 더 살펴보거나 이전 메시지를 살펴보면 더 오래된 기록을 확인할 수 있습니다. 일반 첨부 파일과 링크가 없는 파일은 여기에 색인되지 않습니다.';
+  String get assets_empty_detail => '채팅을 더 살펴보거나 이전 메시지를 살펴보면 더 오래된 기록을 확인할 수 있습니다. 일반 첨부 파일과 링크가 없는 파일은 여기에 색인되지 않습니다.';
 
   @override
   String get assets_no_matches => '일치하는 에셋 없음';
@@ -530,8 +488,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get assets_load_older_messages => '이전 메시지 살펴보기';
 
   @override
-  String get assets_load_failed =>
-      '일부 기록을 읽지 못했습니다. 결과가 불완전합니다. 대시보드 연결을 확인하고 다시 시도하세요.';
+  String get assets_load_failed => '일부 기록을 읽지 못했습니다. 결과가 불완전합니다. 대시보드 연결을 확인하고 다시 시도하세요.';
 
   @override
   String get assets_retry_failed => '읽지 못한 기록 다시 불러오기';
@@ -550,12 +507,10 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get assets_file_too_large =>
-      '이 파일은 다운로드 크기 제한을 초과합니다. 대시보드를 열어 다운로드하세요.';
+  String get assets_file_too_large => '이 파일은 다운로드 크기 제한을 초과합니다. 대시보드를 열어 다운로드하세요.';
 
   @override
-  String get a_one_off_question_archives_itself_after_72_hours_anything =>
-      '일회성 질문입니다. 72시간 후에 자동으로 보관 처리되며, 보관할 가치가 있는 내용은 기억에 유지됩니다.';
+  String get a_one_off_question_archives_itself_after_72_hours_anything => '일회성 질문입니다. 72시간 후에 자동으로 보관 처리되며, 보관할 가치가 있는 내용은 기억에 유지됩니다.';
 
   @override
   String get archive_chat => '채팅 보관';
@@ -604,8 +559,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get activity => '활동';
 
   @override
-  String get activity_reads_the_durable_turn_journal_to_know_what_hermes =>
-      '활동 기능은 영구 턴 저널을 읽어 Hermes의 작업 내용을 파악합니다. 게이트웨이 연결 상태를 확인한 후 다시 시도하세요.';
+  String get activity_reads_the_durable_turn_journal_to_know_what_hermes => '활동 기능은 영구 턴 저널을 읽어 Hermes의 작업 내용을 파악합니다. 게이트웨이 연결 상태를 확인한 후 다시 시도하세요.';
 
   @override
   String get add => '추가';
@@ -620,8 +574,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get add_gateway_connection => '게이트웨이 연결 추가';
 
   @override
-  String get add_and_update_connections_from_the_backup_keep_the_rest =>
-      '백업에서 연결을 추가 및 업데이트하고 나머지는 유지합니다.';
+  String get add_and_update_connections_from_the_backup_keep_the_rest => '백업에서 연결을 추가 및 업데이트하고 나머지는 유지합니다.';
 
   @override
   String get add_attachment => '첨부 파일 추가';
@@ -642,8 +595,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get allow_for_this_session => '이번 세션 동안 허용';
 
   @override
-  String get allow_matching_commands_until_this_hermes_session_ends =>
-      '이 Hermes 세션이 끝날 때까지 일치하는 명령을 허용합니다.';
+  String get allow_matching_commands_until_this_hermes_session_ends => '이 Hermes 세션이 끝날 때까지 일치하는 명령을 허용합니다.';
 
   @override
   String get allow_once => '한 번 허용';
@@ -683,15 +635,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get archived => '보관됨';
 
   @override
-  String get archived_conversations_appear_here =>
-      '보관한 대화만 여기에 표시됩니다. 이전 채팅은 모든 채팅에 남아 있습니다.';
+  String get archived_conversations_appear_here => '보관한 대화만 여기에 표시됩니다. 이전 채팅은 모든 채팅에 남아 있습니다.';
 
   @override
   String get archived_quick_chats => '보관된 빠른 채팅';
 
   @override
-  String get artifacts_attachments_and_generated_media =>
-      '아티팩트, 첨부 파일, 생성된 미디어';
+  String get artifacts_attachments_and_generated_media => '아티팩트, 첨부 파일, 생성된 미디어';
 
   @override
   String get ask_ai_to_find_a_conversation => 'AI에게 대화 찾기 요청';
@@ -700,8 +650,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get assets => '에셋';
 
   @override
-  String get assets_need_a_server_authoritative_assets_index_in_the_hermes =>
-      '에셋을 프로젝트별로 표시하려면 Hermes 게이트웨이에 서버 권한 에셋 색인이 필요합니다.';
+  String get assets_need_a_server_authoritative_assets_index_in_the_hermes => '에셋을 프로젝트별로 표시하려면 Hermes 게이트웨이에 서버 권한 에셋 색인이 필요합니다.';
 
   @override
   String get assets_unavailable => '에셋을 사용할 수 없음';
@@ -739,8 +688,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get autonomous_agents => '자율 에이전트';
 
   @override
-  String get background_recovery_unavailable_legacy_transport =>
-      '백그라운드 복구를 사용할 수 없음 — 레거시 전송';
+  String get background_recovery_unavailable_legacy_transport => '백그라운드 복구를 사용할 수 없음 — 레거시 전송';
 
   @override
   String get background_task_completed => '백그라운드 작업 완료';
@@ -760,8 +708,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get base_url => '기본 URL';
 
   @override
-  String get binary_preview_is_unavailable_download_the_file_to_open_it =>
-      '이진 미리보기를 사용할 수 없습니다. 파일을 다운로드하여 여세요.';
+  String get binary_preview_is_unavailable_download_the_file_to_open_it => '이진 미리보기를 사용할 수 없습니다. 파일을 다운로드하여 여세요.';
 
   @override
   String get branch => '분기';
@@ -773,15 +720,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get branch_created_in_hermes_history => 'Hermes 기록에 분기가 생성되었습니다.';
 
   @override
-  String get browse_and_manage_your_hermes_agent_sessions_from_your_phone =>
-      '휴대전화에서 Hermes Agent 세션을 탐색하고 관리하세요. 로컬 네트워크에서 실행 중인 Hermes 대시보드에 연결합니다.';
+  String get browse_and_manage_your_hermes_agent_sessions_from_your_phone => '휴대전화에서 Hermes Agent 세션을 탐색하고 관리하세요. 로컬 네트워크에서 실행 중인 Hermes 대시보드에 연결합니다.';
 
   @override
   String get browse_server_files => '서버 파일 찾아보기';
 
   @override
-  String get browse_the_miniserver_folders_behind_your_projects =>
-      '프로젝트 뒤에 있는 miniserver 폴더 찾아보기';
+  String get browse_the_miniserver_folders_behind_your_projects => '프로젝트 뒤에 있는 miniserver 폴더 찾아보기';
 
   @override
   String get cancel => '취소';
@@ -814,27 +759,22 @@ class AppLocalizationsKo extends AppLocalizations {
   String get chats => '채팅';
 
   @override
-  String get chats_from_this_gateway_are_not_grouped_yet_grouping_stays =>
-      '이 게이트웨이의 채팅은 아직 그룹화되지 않았습니다. 그룹화는 게이트웨이가 프로젝트를 호스팅할 수 있을 때까지 이 휴대전화에 유지됩니다.';
+  String get chats_from_this_gateway_are_not_grouped_yet_grouping_stays => '이 게이트웨이의 채팅은 아직 그룹화되지 않았습니다. 그룹화는 게이트웨이가 프로젝트를 호스팅할 수 있을 때까지 이 휴대전화에 유지됩니다.';
 
   @override
-  String get chats_in_this_project_will_show_their_state_and_last =>
-      '이 프로젝트의 채팅은 여기에 상태와 마지막 활동을 표시합니다.';
+  String get chats_in_this_project_will_show_their_state_and_last => '이 프로젝트의 채팅은 여기에 상태와 마지막 활동을 표시합니다.';
 
   @override
   String get chats_that_are_not_assigned_to_a_project => '프로젝트에 할당되지 않은 채팅';
 
   @override
-  String get chats_you_start_in_this_project_will_appear_here_on =>
-      '이 프로젝트에서 시작한 채팅은 이 Hermes에 로그인된 모든 기기에 여기에 표시됩니다.';
+  String get chats_you_start_in_this_project_will_appear_here_on => '이 프로젝트에서 시작한 채팅은 이 Hermes에 로그인된 모든 기기에 여기에 표시됩니다.';
 
   @override
-  String get check_that_the_gateway_is_running_and_reachable_then_try =>
-      '게이트웨이가 실행 중이고 도달 가능한지 확인한 후 다시 시도하세요.';
+  String get check_that_the_gateway_is_running_and_reachable_then_try => '게이트웨이가 실행 중이고 도달 가능한지 확인한 후 다시 시도하세요.';
 
   @override
-  String get check_the_dashboard_connection_and_try_again =>
-      '대시보드 연결을 확인하고 다시 시도하세요.';
+  String get check_the_dashboard_connection_and_try_again => '대시보드 연결을 확인하고 다시 시도하세요.';
 
   @override
   String get check_the_connection_and_try_again => '연결을 확인하고 다시 시도하세요.';
@@ -843,8 +783,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get choose_a_small_model_to_rewrite_queries => '쿼리를 재작성할 소형 모델을 선택하세요';
 
   @override
-  String get choose_an_ai_search_model_before_using_ai_search =>
-      'AI 검색을 사용하기 전에 AI 검색 모델을 선택하세요.';
+  String get choose_an_ai_search_model_before_using_ai_search => 'AI 검색을 사용하기 전에 AI 검색 모델을 선택하세요.';
 
   @override
   String get choose_an_active_project_next => '다음으로 활성 프로젝트 선택';
@@ -910,8 +849,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get compatibility_mode => '호환성 모드';
 
   @override
-  String get configure_a_valid_desktop_gateway_url_before_attaching_files =>
-      '파일을 첨부하기 전에 올바른 Desktop Gateway URL을 설정하세요.';
+  String get configure_a_valid_desktop_gateway_url_before_attaching_files => '파일을 첨부하기 전에 올바른 Desktop Gateway URL을 설정하세요.';
 
   @override
   String get confirm_always_allow => '항상 허용 확인';
@@ -928,9 +866,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get connection_issue => '연결 문제';
 
   @override
-  String
-  get connection_switched_the_running_reply_continues_on_the_server_and =>
-      '연결이 전환되었습니다. 실행 중인 응답은 서버에서 계속 진행되며 자동으로 다시 연결됩니다.';
+  String get connection_switched_the_running_reply_continues_on_the_server_and => '연결이 전환되었습니다. 실행 중인 응답은 서버에서 계속 진행되며 자동으로 다시 연결됩니다.';
 
   @override
   String get connection_appearance_and_device_preferences => '연결, 외관 및 기기 환경설정';
@@ -1007,10 +943,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get could_not_reach_hermes => 'Hermes에 연결할 수 없습니다';
 
   @override
-  String could_not_reach_authenticate_the_dashboard_at_check_the_port(
-    Object dashboardPort,
-    Object host,
-  ) {
+  String could_not_reach_authenticate_the_dashboard_at_check_the_port(Object dashboardPort, Object host) {
     return '$host:$dashboardPort의 대시보드에 연결하거나 인증할 수 없습니다. 포트와 자격 증명을 확인하세요.';
   }
 
@@ -1069,12 +1002,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get create_a_project => '프로젝트 만들기';
 
   @override
-  String get create_a_project_first_then_chats_can_live_inside_it =>
-      '프로젝트를 먼저 만들면 그 안에 채팅을 보관할 수 있습니다.';
+  String get create_a_project_first_then_chats_can_live_inside_it => '프로젝트를 먼저 만들면 그 안에 채팅을 보관할 수 있습니다.';
 
   @override
-  String get create_a_space_to_separate_related_conversations =>
-      '관련 대화를 분리할 스페이스를 만드세요.';
+  String get create_a_space_to_separate_related_conversations => '관련 대화를 분리할 스페이스를 만드세요.';
 
   @override
   String get create_branch => '분기 만들기';
@@ -1092,8 +1023,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get crons => 'Crons';
 
   @override
-  String get cron_conversations_empty =>
-      'Conversations from scheduled jobs appear here, including older runs.';
+  String get cron_conversations_empty => 'Conversations from scheduled jobs appear here, including older runs.';
 
   @override
   String get search_cron_conversations => 'Search cron conversations';
@@ -1140,31 +1070,25 @@ class AppLocalizationsKo extends AppLocalizations {
   String get cron_upcoming_empty_title => '예정된 작업 없음';
 
   @override
-  String get cron_upcoming_empty_message =>
-      '실행 예정인 작업이 없습니다. Cron 작업에서 만들거나 에이전트에게 일정을 요청하세요.';
+  String get cron_upcoming_empty_message => '실행 예정인 작업이 없습니다. Cron 작업에서 만들거나 에이전트에게 일정을 요청하세요.';
 
   @override
   String get cron_upcoming_unavailable => '예정된 작업을 사용할 수 없음';
 
   @override
-  String get cron_upcoming_needs_dashboard =>
-      '예정된 작업에는 대시보드 연결이 필요합니다. 이 주소는 Cron 일정을 제공하지 않습니다. 대시보드 주소와 호스트의 지원 여부를 확인하세요.';
+  String get cron_upcoming_needs_dashboard => '예정된 작업에는 대시보드 연결이 필요합니다. 이 주소는 Cron 일정을 제공하지 않습니다. 대시보드 주소와 호스트의 지원 여부를 확인하세요.';
 
   @override
-  String get cron_upcoming_needs_dashboard_auth =>
-      '예정된 작업에는 대심부드 인증이 필요합니다. 이 연결에 대심부드 사용자 이름과 바밀번호를 추가하거나 프록시 모드를 사용하세요.';
+  String get cron_upcoming_needs_dashboard_auth => '예정된 작업에는 대심부드 인증이 필요합니다. 이 연결에 대심부드 사용자 이름과 바밀번호를 추가하거나 프록시 모드를 사용하세요.';
 
   @override
-  String get cron_upcoming_dashboard_unreachable =>
-      '대심부드에 연결할 수 없어요. 호스트, 대심부드 포트, 네트워크를 확인하고 다시 시도하세요.';
+  String get cron_upcoming_dashboard_unreachable => '대심부드에 연결할 수 없어요. 호스트, 대심부드 포트, 네트워크를 확인하고 다시 시도하세요.';
 
   @override
-  String get cron_upcoming_load_failed =>
-      '예정된 작업을 불러올 수 없습니다. 대심부드 연결을 확인하고 다시 시도하세요.';
+  String get cron_upcoming_load_failed => '예정된 작업을 불러올 수 없습니다. 대심부드 연결을 확인하고 다시 시도하세요.';
 
   @override
-  String get cron_upcoming_refresh_failed =>
-      '일정을 새로 고칠 수 없습니다. 마지막으로 성공한 조회 결과를 표시합니다.';
+  String get cron_upcoming_refresh_failed => '일정을 새로 고칠 수 없습니다. 마지막으로 성공한 조회 결과를 표시합니다.';
 
   @override
   String get cron_job_added => 'Cron 작업이 추가되었습니다';
@@ -1176,8 +1100,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get cron_run => 'Cron 실행';
 
   @override
-  String get cross_device_ordering_and_reversible_bulk_organization =>
-      '기기 간 정렬 및 되돌리기 가능한 일괄 정리';
+  String get cross_device_ordering_and_reversible_bulk_organization => '기기 간 정렬 및 되돌리기 가능한 일괄 정리';
 
   @override
   String get current_profile_default => '현재 프로필 기본값';
@@ -1220,9 +1143,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String delete_from_the_remote_hermes_history_this_cannot_be_undone(
-    Object title,
-  ) {
+  String delete_from_the_remote_hermes_history_this_cannot_be_undone(Object title) {
     return '원격 Hermes 기록에서 \"$title\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.';
   }
 
@@ -1230,8 +1151,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get delete_cron_job => 'Cron 작업 삭제';
 
   @override
-  String get delete_connections_that_are_not_in_the_backup =>
-      '백업에 없는 연결을 삭제합니다.';
+  String get delete_connections_that_are_not_in_the_backup => '백업에 없는 연결을 삭제합니다.';
 
   @override
   String delete_failed(Object error) {
@@ -1255,15 +1175,13 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get delivery_is_uncertain_recovering_without_resending =>
-      '전송 상태가 불확실합니다. 재전송하지 않고 복구하는 중…';
+  String get delivery_is_uncertain_recovering_without_resending => '전송 상태가 불확실합니다. 재전송하지 않고 복구하는 중…';
 
   @override
   String get desktop_gateway_url_optional => 'Desktop Gateway URL (선택 사항)';
 
   @override
-  String get desktop_gateway_is_not_configured_for_this_connection =>
-      '이 연결에는 Desktop Gateway가 구성되어 있지 않습니다.';
+  String get desktop_gateway_is_not_configured_for_this_connection => '이 연결에는 Desktop Gateway가 구성되어 있지 않습니다.';
 
   @override
   String get desktop_app => '데스크톱 앱';
@@ -1281,8 +1199,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get do_not_run_this_command => '이 명령을 실행하지 마세요.';
 
   @override
-  String get documents_archives_audio_video_or_data =>
-      '문서, 아카이브, 오디오, 비디오 또는 데이터';
+  String get documents_archives_audio_video_or_data => '문서, 아카이브, 오디오, 비디오 또는 데이터';
 
   @override
   String get download => '다운로드';
@@ -1296,8 +1213,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get durable_facts_hermes_keeps_about_you => 'Hermes가 기억하는 지속적인 정보';
 
   @override
-  String get durable_work_inside_one_of_your_projects_shared_with_desktop =>
-      'Desktop과 공유되는 프로젝트 내의 지속적인 작업입니다.';
+  String get durable_work_inside_one_of_your_projects_shared_with_desktop => 'Desktop과 공유되는 프로젝트 내의 지속적인 작업입니다.';
 
   @override
   String get edit => '편집';
@@ -1321,8 +1237,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get enable_notifications_description => '끄면 아래의 모든 알림이 비활성화됩니다.';
 
   @override
-  String get enables_file_attachments_through_the_desktop_remote_gateway =>
-      'Desktop 원격 게이트웨이를 통한 파일 첨부를 활성화합니다.';
+  String get enables_file_attachments_through_the_desktop_remote_gateway => 'Desktop 원격 게이트웨이를 통한 파일 첨부를 활성화합니다.';
 
   @override
   String get enter_a_name => '이름을 입력하세요';
@@ -1334,12 +1249,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get enter_the_passphrase_for_this_backup => '이 백업의 패스프레이즈를 입력하세요.';
 
   @override
-  String get every_conversation_is_already_assigned_to_a_project =>
-      '모든 대화가 이미 프로젝트에 할당되어 있습니다.';
+  String get every_conversation_is_already_assigned_to_a_project => '모든 대화가 이미 프로젝트에 할당되어 있습니다.';
 
   @override
-  String get everything_not_yet_native_in_the_authenticated_web_dashboard =>
-      '아직 네이티브로 구현되지 않은 모든 기능은 인증된 웹 대시보드에서 확인하세요.';
+  String get everything_not_yet_native_in_the_authenticated_web_dashboard => '아직 네이티브로 구현되지 않은 모든 기능은 인증된 웹 대시보드에서 확인하세요.';
 
   @override
   String get explain_the_attached_content_clearly => '첨부된 내용을 명확하게 설명하세요.';
@@ -1350,9 +1263,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String
-  get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it =>
-      '직접 선택하여 Android 접근성 텍스트 크기를 조정하거나, 시스템 설정을 따르세요.';
+  String get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it => '직접 선택하여 Android 접근성 텍스트 크기를 조정하거나, 시스템 설정을 따르세요.';
 
   @override
   String get export_label => '내보내기';
@@ -1370,15 +1281,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get extract_tasks => '작업 추출';
 
   @override
-  String
-  get extract_the_decisions_deadlines_owners_and_actionable_action_items_from =>
-      '첨부된 내용에서 결정 사항, 마감 기한, 담당자 및 실행 가능한 작업 항목을 추출하세요.';
+  String get extract_the_decisions_deadlines_owners_and_actionable_action_items_from => '첨부된 내용에서 결정 사항, 마감 기한, 담당자 및 실행 가능한 작업 항목을 추출하세요.';
 
   @override
-  String
-  extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(
-    Object text,
-  ) {
+  String extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(Object text) {
     return '이 내용에서 결정 사항, 마감 기한, 담당자 및 실행 가능한 작업 항목을 추출하세요:\n\n$text';
   }
 
@@ -1413,8 +1319,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get file_attached_document_catalog_registration_is_pending =>
-      '파일이 첨부되었습니다. 문서 카탈로그 등록이 진행 중입니다.';
+  String get file_attached_document_catalog_registration_is_pending => '파일이 첨부되었습니다. 문서 카탈로그 등록이 진행 중입니다.';
 
   @override
   String get file_reference_added_to_chat => '채팅에 파일 참조가 추가되었습니다';
@@ -1438,8 +1343,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get gateway_api_access => '게이트웨이 API 액세스';
 
   @override
-  String get gateway_connected_but_the_dashboard_could_not_be_reached_or =>
-      '게이트웨이에 연결되었으나 대시보드에 도달할 수 없거나 인증되지 않았습니다. 대시보드 세부 정보를 확인하거나, 건너뛰려면 지우세요.';
+  String get gateway_connected_but_the_dashboard_could_not_be_reached_or => '게이트웨이에 연결되었으나 대시보드에 도달할 수 없거나 인증되지 않았습니다. 대시보드 세부 정보를 확인하거나, 건너뛰려면 지우세요.';
 
   @override
   String get gateway_path_prefix => '게이트웨이 경로 접두사';
@@ -1454,16 +1358,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hermes_agent_for_android => 'Ares - formerly Hermes Android';
 
   @override
-  String get hermes_could_not_accept_the_answer_please_try_again =>
-      'Hermes가 답변을 수락하지 못했습니다. 다시 시도해 주세요.';
+  String get hermes_could_not_accept_the_answer_please_try_again => 'Hermes가 답변을 수락하지 못했습니다. 다시 시도해 주세요.';
 
   @override
-  String get hermes_could_not_load_your_saved_connections =>
-      'Hermes가 저장된 연결을 불러올 수 없습니다';
+  String get hermes_could_not_load_your_saved_connections => 'Hermes가 저장된 연결을 불러올 수 없습니다';
 
   @override
-  String get hermes_did_not_accept_the_response_please_try_again =>
-      'Hermes가 응답을 수락하지 않았습니다. 다시 시도해 주세요.';
+  String get hermes_did_not_accept_the_response_please_try_again => 'Hermes가 응답을 수락하지 않았습니다. 다시 시도해 주세요.';
 
   @override
   String get hermes_is_responding => 'Hermes가 응답 중입니다…';
@@ -1472,8 +1373,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hermes_is_waiting_for_input => 'Hermes가 입력을 기다리는 중입니다…';
 
   @override
-  String get hermes_keeps_android_accessibility_text_scaling_active =>
-      'Ares는 Android 접근성 텍스트 크기 조정을 활성 상태로 유지합니다.';
+  String get hermes_keeps_android_accessibility_text_scaling_active => 'Ares는 Android 접근성 텍스트 크기 조정을 활성 상태로 유지합니다.';
 
   @override
   String get hermes_needs_your_input => 'Hermes에 입력이 필요합니다';
@@ -1482,8 +1382,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hermes_profile_optional => 'Hermes 프로필 (선택 사항)';
 
   @override
-  String get hermes_profile_must_be_a_plain_profile_name_such_as =>
-      'Hermes 프로필은 경로가 아닌 \"sol\"과 같은 일반적인 프로필 이름이어야 합니다.';
+  String get hermes_profile_must_be_a_plain_profile_name_such_as => 'Hermes 프로필은 경로가 아닌 \"sol\"과 같은 일반적인 프로필 이름이어야 합니다.';
 
   @override
   String get hermes_reasoning_details => 'Hermes 추론 세부 정보';
@@ -1494,22 +1393,19 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get hermes_stopped_recovery_safely_no_prompt_was_resent =>
-      'Hermes가 안전하게 복구를 중단했습니다. 프롬프트가 다시 전송되지 않았습니다.';
+  String get hermes_stopped_recovery_safely_no_prompt_was_resent => 'Hermes가 안전하게 복구를 중단했습니다. 프롬프트가 다시 전송되지 않았습니다.';
 
   @override
   String get hide_passphrase => '패스프레이즈 숨기기';
 
   @override
-  String get home_needs_your_recent_chats_to_know_what_deserves_your =>
-      '홈 화면에서 주의가 필요한 항목을 파악하려면 최근 채팅이 필요합니다. 게이트웨이에 연결할 수 있는지 확인한 후 다시 시도하세요.';
+  String get home_needs_your_recent_chats_to_know_what_deserves_your => '홈 화면에서 주의가 필요한 항목을 파악하려면 최근 채팅이 필요합니다. 게이트웨이에 연결할 수 있는지 확인한 후 다시 시도하세요.';
 
   @override
   String get host => '호스트';
 
   @override
-  String get image_selection_was_interrupted_try_again =>
-      '이미지 선택이 중단되었습니다. 다시 시도하세요.';
+  String get image_selection_was_interrupted_try_again => '이미지 선택이 중단되었습니다. 다시 시도하세요.';
 
   @override
   String get import_label => '가져오기';
@@ -1555,8 +1451,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get leave_blank_for_default_8642_443_with_https =>
-      '기본값(8642; https 사용 시 443)을 사용하려면 비워 두세요';
+  String get leave_blank_for_default_8642_443_with_https => '기본값(8642; https 사용 시 443)을 사용하려면 비워 두세요';
 
   @override
   String get leave_blank_for_default_9119 => '기본값(9119)을 사용하려면 비워 두세요';
@@ -1584,8 +1479,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get location => '위치';
 
   @override
-  String get make_sure_the_gateway_api_server_is_running_hermes_gateway =>
-      '게이트웨이 API 서버가 실행 중인지 확인하세요\n(hermes gateway status)';
+  String get make_sure_the_gateway_api_server_is_running_hermes_gateway => '게이트웨이 API 서버가 실행 중인지 확인하세요\n(hermes gateway status)';
 
   @override
   String matches(Object assigned, Object name) {
@@ -1602,16 +1496,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get memory_agent_notes => '에이전트 메모';
 
   @override
-  String get memory_builtin_scope =>
-      '이 프로필의 USER.md 및 MEMORY.md에 저장된 정보입니다. MemPalace를 포함한 외부 메모리 제공업체의 정보는 표시되지 않습니다.';
+  String get memory_builtin_scope => '이 프로필의 USER.md 및 MEMORY.md에 저장된 정보입니다. MemPalace를 포함한 외부 메모리 제공업체의 정보는 표시되지 않습니다.';
 
   @override
-  String get memory_read_only =>
-      '읽기 전용입니다. 채팅에서 Hermes에게 정보를 수정하거나 잊어 달라고 요청하세요.';
+  String get memory_read_only => '읽기 전용입니다. 채팅에서 Hermes에게 정보를 수정하거나 잊어 달라고 요청하세요.';
 
   @override
-  String get memory_unavailable =>
-      '이 게이트웨이 또는 프로필에서 저장된 정보를 가져올 수 없습니다. 선택한 프로필을 확인하고 필요한 경우 Hermes를 업데이트하세요.';
+  String get memory_unavailable => '이 게이트웨이 또는 프로필에서 저장된 정보를 가져올 수 없습니다. 선택한 프로필을 확인하고 필요한 경우 Hermes를 업데이트하세요.';
 
   @override
   String get memory_load_error => '대시보드 연결과 인증을 확인한 후 다시 시도하세요.';
@@ -1620,16 +1511,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get memory_read_full_fact => '전체 정보 읽기';
 
   @override
-  String get memory_full_fact_requires_update =>
-      '전체 정보를 보려면 더 최신 Hermes 게이트웨이가 필요합니다. Hermes를 업데이트하고 새로고침하세요.';
+  String get memory_full_fact_requires_update => '전체 정보를 보려면 더 최신 Hermes 게이트웨이가 필요합니다. Hermes를 업데이트하고 새로고침하세요.';
 
   @override
-  String get memory_fact_detail_error =>
-      '전체 정보를 불러올 수 없습니다. 정보가 변경되었을 수 있습니다. 목록을 새로고침하고 다시 시도하세요.';
+  String get memory_fact_detail_error => '전체 정보를 불러올 수 없습니다. 정보가 변경되었을 수 있습니다. 목록을 새로고침하고 다시 시도하세요.';
 
   @override
-  String get memory_entries_are_cross_session_facts_the_agent_remembers_they =>
-      'Hermes가 기억한 정보가 여기에 표시됩니다.';
+  String get memory_entries_are_cross_session_facts_the_agent_remembers_they => 'Hermes가 기억한 정보가 여기에 표시됩니다.';
 
   @override
   String get merge => '병합';
@@ -1653,8 +1541,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get migration_complete => '마이그레이션 완료';
 
   @override
-  String get migration_failed_local_spaces_were_kept_unchanged =>
-      '마이그레이션에 실패했습니다. 로컬 스페이스는 변경되지 않았습니다.';
+  String get migration_failed_local_spaces_were_kept_unchanged => '마이그레이션에 실패했습니다. 로컬 스페이스는 변경되지 않았습니다.';
 
   @override
   String get migration_incomplete => '마이그레이션이 완료되지 않았습니다';
@@ -1712,20 +1599,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get nav_projects => '프로젝트';
 
   @override
-  String get needs_a_correction_aware_filing_contract_in_the_hermes_gateway =>
-      'Hermes 게이트웨이에 수정 인식 파일링 계약이 필요합니다.';
+  String get needs_a_correction_aware_filing_contract_in_the_hermes_gateway => 'Hermes 게이트웨이에 수정 인식 파일링 계약이 필요합니다.';
 
   @override
-  String get needs_a_reachable_hermes_dashboard_check_the_host_port_and =>
-      '연결 가능한 Hermes 대시보드가 필요합니다. 이 연결의 호스트, 포트 및 자격 증명을 확인하세요.';
+  String get needs_a_reachable_hermes_dashboard_check_the_host_port_and => '연결 가능한 Hermes 대시보드가 필요합니다. 이 연결의 호스트, 포트 및 자격 증명을 확인하세요.';
 
   @override
-  String get needs_a_server_authoritative_assets_index_in_the_hermes_gateway =>
-      'Hermes 게이트웨이에 서버 권한 자산 인덱스가 필요합니다.';
+  String get needs_a_server_authoritative_assets_index_in_the_hermes_gateway => 'Hermes 게이트웨이에 서버 권한 자산 인덱스가 필요합니다.';
 
   @override
-  String get needs_durable_pin_ordering_batch_mutation_and_undo_contracts_in =>
-      'Hermes 게이트웨이에 영구 고정 순서 지정, 일괄 변경 및 실행 취소 계약이 필요합니다.';
+  String get needs_durable_pin_ordering_batch_mutation_and_undo_contracts_in => 'Hermes 게이트웨이에 영구 고정 순서 지정, 일괄 변경 및 실행 취소 계약이 필요합니다.';
 
   @override
   String get needs_you => '확인 필요';
@@ -1756,12 +1639,10 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get nginx_injects_auth_app_sends_clean_requests =>
-      'Nginx가 인증을 주입합니다 — 앱은 깔끔한 요청을 보냅니다';
+  String get nginx_injects_auth_app_sends_clean_requests => 'Nginx가 인증을 주입합니다 — 앱은 깔끔한 요청을 보냅니다';
 
   @override
-  String get no_tts_voices_found_ninstall_google_text_to_speech_and =>
-      '사용 가능한 TTS 음성이 없습니다.\nGoogle Text-to-Speech를 설치하고 음성 데이터를 다운로드하세요.';
+  String get no_tts_voices_found_ninstall_google_text_to_speech_and => '사용 가능한 TTS 음성이 없습니다.\nGoogle Text-to-Speech를 설치하고 음성 데이터를 다운로드하세요.';
 
   @override
   String get no_active_projects_on_this_gateway => '이 게이트웨이에 활성 프로젝트가 없습니다';
@@ -1770,8 +1651,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get no_activity_yet => '아직 활동이 없습니다';
 
   @override
-  String get no_chat_is_blocked_running_or_waiting_to_be_resumed =>
-      '차단되었거나 실행 중이거나 재개 대기 중인 채팅이 없습니다. 준비되면 언제든 새 채팅을 시작하세요.';
+  String get no_chat_is_blocked_running_or_waiting_to_be_resumed => '차단되었거나 실행 중이거나 재개 대기 중인 채팅이 없습니다. 준비되면 언제든 새 채팅을 시작하세요.';
 
   @override
   String no_chats_in_this_project_match(Object searchQuery) {
@@ -1779,8 +1659,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get no_chats_in_this_space_yet_tap_to_start_one =>
-      '이 스페이스에 아직 채팅이 없습니다. +를 눌러 시작하세요.';
+  String get no_chats_in_this_space_yet_tap_to_start_one => '이 스페이스에 아직 채팅이 없습니다. +를 눌러 시작하세요.';
 
   @override
   String get no_chats_yet => '아직 채팅이 없습니다';
@@ -1798,8 +1677,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get no_folders_yet => '아직 폴더가 없습니다';
 
   @override
-  String get no_local_spaces_were_found_for_this_connection_so_projects =>
-      '이 연결에서 로컬 스페이스를 찾지 못했으므로 프로젝트가 이미 여기서 사용되는 유일한 정리 방식입니다.';
+  String get no_local_spaces_were_found_for_this_connection_so_projects => '이 연결에서 로컬 스페이스를 찾지 못했으므로 프로젝트가 이미 여기서 사용되는 유일한 정리 방식입니다.';
 
   @override
   String get no_matches => '일치하는 항목 없음';
@@ -1837,8 +1715,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get no_text_shared => '공유된 텍스트 없음';
 
   @override
-  String get no_turn_is_blocked_in_flight_or_recently_finished_work =>
-      '차단되었거나, 진행 중이거나, 최근에 완료된 턴이 없습니다. 작업을 시작하면 여기에 표시됩니다.';
+  String get no_turn_is_blocked_in_flight_or_recently_finished_work => '차단되었거나, 진행 중이거나, 최근에 완료된 턴이 없습니다. 작업을 시작하면 여기에 표시됩니다.';
 
   @override
   String get no_turn_needs_your_input_or_has_failed => '입력이 필요하거나 실패한 턴이 없습니다.';
@@ -1850,8 +1727,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get nothing_changed_in_the_last_seven_days => '지난 7일 동안 변경된 내용이 없습니다.';
 
   @override
-  String get nothing_has_moved_yet_this_is_only_what_a_migration =>
-      '아직 이동된 항목이 없습니다 — 마이그레이션이 수행할 작업의 미리보기입니다.';
+  String get nothing_has_moved_yet_this_is_only_what_a_migration => '아직 이동된 항목이 없습니다 — 마이그레이션이 수행할 작업의 미리보기입니다.';
 
   @override
   String get nothing_here => '항목이 없습니다';
@@ -1869,19 +1745,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get notifications => '알림';
 
   @override
-  String get windows_notifications_blocked =>
-      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+  String get windows_notifications_blocked => 'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
 
   @override
-  String get windows_notification_diagnostics =>
-      'What Ares submitted to Windows';
+  String get windows_notification_diagnostics => 'What Ares submitted to Windows';
 
   @override
   String get windows_window_activity => 'Share chat activity';
 
   @override
-  String get windows_window_activity_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+  String get windows_window_activity_hint => 'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
 
   @override
   String get windows_completion_sound => 'Completion sound';
@@ -1899,23 +1772,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get windows_sound_silent => 'Silent';
 
   @override
-  String get notifications_permission_denied =>
-      'OS 수준에서 알림이 차단되어 있습니다. Android 설정에서 이 앱의 알림을 허용하세요.';
+  String get notifications_permission_denied => 'OS 수준에서 알림이 차단되어 있습니다. Android 설정에서 이 앱의 알림을 허용하세요.';
 
   @override
   String get off_no_thinking => '끔 (추론 없음)';
 
   @override
-  String get offline_showing_the_last_known_activity =>
-      '오프라인 — 마지막으로 확인된 활동을 표시하는 중입니다.';
+  String get offline_showing_the_last_known_activity => '오프라인 — 마지막으로 확인된 활동을 표시하는 중입니다.';
 
   @override
-  String get offline_showing_the_last_known_chats =>
-      '오프라인 — 마지막으로 확인된 채팅을 표시하는 중입니다';
+  String get offline_showing_the_last_known_chats => '오프라인 — 마지막으로 확인된 채팅을 표시하는 중입니다';
 
   @override
-  String get offline_showing_the_last_known_projects =>
-      '오프라인 — 마지막으로 확인된 프로젝트를 표시합니다.';
+  String get offline_showing_the_last_known_projects => '오프라인 — 마지막으로 확인된 프로젝트를 표시합니다.';
 
   @override
   String get on_this_device => '이 기기';
@@ -1935,8 +1804,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get open_the_hermes_dashboard => 'Hermes 대시보드 열기';
 
   @override
-  String get optional_for_the_memory_cron_skills_settings_tabs_leave_blank =>
-      '선택 사항입니다. 메모리/Cron/스킬/설정 탭에 사용됩니다. 기본 대시보드 포트(9119)를 로그인 없이 사용하려면 비워 두세요.';
+  String get optional_for_the_memory_cron_skills_settings_tabs_leave_blank => '선택 사항입니다. 메모리/Cron/스킬/설정 탭에 사용됩니다. 기본 대시보드 포트(9119)를 로그인 없이 사용하려면 비워 두세요.';
 
   @override
   String get organization => '조직';
@@ -1963,8 +1831,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get plugin_notifications => '플러그인 알림';
 
   @override
-  String get plugin_notifications_description =>
-      '앱이 백그라운드일 때 게이트웨이가 알림을 보냈습니다.';
+  String get plugin_notifications_description => '앱이 백그라운드일 때 게이트웨이가 알림을 보냈습니다.';
 
   @override
   String get port => '포트';
@@ -1985,16 +1852,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get profile_default_model => '프로필 기본 모델';
 
   @override
-  String profile_default_set_to_chats_with_their_own_model_keep(
-    Object selectedModel,
-  ) {
+  String profile_default_set_to_chats_with_their_own_model_keep(Object selectedModel) {
     return '프로필 기본값이 $selectedModel(으)로 설정되었습니다. 자체 모델을 사용하는 채팅은 해당 설정을 유지합니다.';
   }
 
   @override
-  String
-  get profile_this_connection_chats_as_when_the_dashboard_serves_several =>
-      '대시보드가 여러 프로필을 제공할 때 이 연결이 채팅할 프로필입니다. 프로필별로 분리된 대시보드를 사용하려면 비워 두세요.';
+  String get profile_this_connection_chats_as_when_the_dashboard_serves_several => '대시보드가 여러 프로필을 제공할 때 이 연결이 채팅할 프로필입니다. 프로필별로 분리된 대시보드를 사용하려면 비워 두세요.';
 
   @override
   String get project => '프로젝트';
@@ -2012,13 +1875,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get projects => '프로젝트';
 
   @override
-  String get projects_group_related_chats_files_and_activity_and_stay_in =>
-      '프로젝트는 관련 채팅, 파일, 활동을 그룹화하며 컴퓨터의 Hermes와 동기화 상태를 유지합니다.';
+  String get projects_group_related_chats_files_and_activity_and_stay_in => '프로젝트는 관련 채팅, 파일, 활동을 그룹화하며 컴퓨터의 Hermes와 동기화 상태를 유지합니다.';
 
   @override
-  String
-  get projects_need_a_desktop_gateway_connection_add_the_desktop_gateway =>
-      '프로젝트를 사용하려면 Desktop Gateway 연결이 필요합니다. 기기 간 채팅을 정리하려면 이 연결에 Desktop Gateway URL을 추가하세요.';
+  String get projects_need_a_desktop_gateway_connection_add_the_desktop_gateway => '프로젝트를 사용하려면 Desktop Gateway 연결이 필요합니다. 기기 간 채팅을 정리하려면 이 연결에 Desktop Gateway URL을 추가하세요.';
 
   @override
   String get projects_unavailable => '프로젝트를 사용할 수 없습니다';
@@ -2039,22 +1899,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get provider => '제공자';
 
   @override
-  String get proxy_injects_auth_app_sends_clean_requests =>
-      '프록시가 인증을 주입하며, 앱은 정리된 요청을 보냅니다';
+  String get proxy_injects_auth_app_sends_clean_requests => '프록시가 인증을 주입하며, 앱은 정리된 요청을 보냅니다';
 
   @override
   String get quick_chat => '빠른 채팅';
 
   @override
-  String get quick_chats_appear_here_after_their_retention_period =>
-      '빠른 채팅은 보관 기간이 지나면 여기에 나타납니다.';
+  String get quick_chats_appear_here_after_their_retention_period => '빠른 채팅은 보관 기간이 지나면 여기에 나타납니다.';
 
   @override
   String get read_aloud => '소리 내어 읽기';
 
   @override
-  String get read_aloud_is_unavailable_on_this_device =>
-      '이 기기에서는 소리 내어 읽기를 사용할 수 없습니다';
+  String get read_aloud_is_unavailable_on_this_device => '이 기기에서는 소리 내어 읽기를 사용할 수 없습니다';
 
   @override
   String get reading_response_aloud => '응답을 소리 내어 읽는 중';
@@ -2112,14 +1969,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get repositories => '저장소';
 
   @override
-  String
-  get research_the_attached_content_verify_the_important_claims_and_cite =>
-      '첨부된 콘텐츠를 조사하고, 중요한 주장을 검증한 뒤 출처를 인용하세요.';
+  String get research_the_attached_content_verify_the_important_claims_and_cite => '첨부된 콘텐츠를 조사하고, 중요한 주장을 검증한 뒤 출처를 인용하세요.';
 
   @override
-  String research_this_content_verify_the_important_claims_and_cite_sources(
-    Object text,
-  ) {
+  String research_this_content_verify_the_important_claims_and_cite_sources(Object text) {
     return '이 콘텐츠를 조사하고, 중요한 주장을 검증한 뒤 출처를 인용하세요:\n\n$text';
   }
 
@@ -2140,8 +1993,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get response_closed_locally_no_active_gateway_turn_was_found =>
-      '로컬에서 응답이 종료되었습니다. 활성 게이트웨이 턴을 찾을 수 없습니다.';
+  String get response_closed_locally_no_active_gateway_turn_was_found => '로컬에서 응답이 종료되었습니다. 활성 게이트웨이 턴을 찾을 수 없습니다.';
 
   @override
   String get response_complete => '응답 완료';
@@ -2184,8 +2036,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get review_local_spaces => '로컬 스페이스 검토';
 
   @override
-  String get review_or_promote_quick_chats_past_their_retention_period =>
-      '보존 기간이 지난 빠른 채팅을 검토하거나 승격하세요';
+  String get review_or_promote_quick_chats_past_their_retention_period => '보존 기간이 지난 빠른 채팅을 검토하거나 승격하세요';
 
   @override
   String get review_the_attached_content => '첨부된 콘텐츠를 검토하세요.';
@@ -2203,12 +2054,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get save_changes => '변경 사항 저장';
 
   @override
-  String get save_a_permanent_rule_in_the_hermes_configuration =>
-      'Hermes 구성에 영구 규칙을 저장하세요.';
+  String get save_a_permanent_rule_in_the_hermes_configuration => 'Hermes 구성에 영구 규칙을 저장하세요.';
 
   @override
-  String get save_the_durable_facts_from_the_attached_content_to_memory =>
-      '첨부된 콘텐츠에서 지속적인 사실을 메모리에 저장한 다음, 무엇이 보존되었는지 확인하세요.';
+  String get save_the_durable_facts_from_the_attached_content_to_memory => '첨부된 콘텐츠에서 지속적인 사실을 메모리에 저장한 다음, 무엇이 보존되었는지 확인하세요.';
 
   @override
   String save_the_durable_facts_from_this_content_to_memory_then(Object text) {
@@ -2216,8 +2065,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get save_your_connections_and_settings_to_an_encrypted_file_then =>
-      '연결 및 설정을 암호화된 파일로 저장한 후, 재설치 시 또는 다른 기기에서 복원하세요.';
+  String get save_your_connections_and_settings_to_an_encrypted_file_then => '연결 및 설정을 암호화된 파일로 저장한 후, 재설치 시 또는 다른 기기에서 복원하세요.';
 
   @override
   String save_2(Object filename) {
@@ -2258,12 +2106,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get search_mode => '검색 모드';
 
   @override
-  String get select_one_option_or_enter_another_answer =>
-      '옵션 중 하나를 선택하거나 다른 답변을 입력하세요.';
+  String get select_one_option_or_enter_another_answer => '옵션 중 하나를 선택하거나 다른 답변을 입력하세요.';
 
   @override
-  String get select_one_or_more_options_then_continue =>
-      '하나 이상의 옵션을 선택한 후 계속하세요.';
+  String get select_one_or_more_options_then_continue => '하나 이상의 옵션을 선택한 후 계속하세요.';
 
   @override
   String get select_text => '텍스트 선택';
@@ -2311,8 +2157,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get show_passphrase => '패스프레이즈 표시';
 
   @override
-  String get show_tool_calls_thinking_and_message_metadata =>
-      '도구 호출, 추론 및 메시지 메타데이터 표시';
+  String get show_tool_calls_thinking_and_message_metadata => '도구 호출, 추론 및 메시지 메타데이터 표시';
 
   @override
   String get signal_messages => 'Signal 메시지';
@@ -2394,8 +2239,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get submitted_waiting_for_hermes => '전송됨, Hermes 대기 중';
 
   @override
-  String get suggest_projects_and_learn_from_your_corrections =>
-      '프로젝트 제안 및 수정 사항 학습';
+  String get suggest_projects_and_learn_from_your_corrections => '프로젝트 제안 및 수정 사항 학습';
 
   @override
   String get summarize_the_attached_content => '첨부된 콘텐츠 요약하기';
@@ -2415,8 +2259,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get take_photo => '사진 촬영';
 
   @override
-  String get tap_to_add_a_remote_hermes_gateway_api_server_port =>
-      '+를 눌러 원격 Hermes 게이트웨이 추가\n(API 서버, 포트 8642)';
+  String get tap_to_add_a_remote_hermes_gateway_api_server_port => '+를 눌러 원격 Hermes 게이트웨이 추가\n(API 서버, 포트 8642)';
 
   @override
   String get tap_the_button_to_start_a_new_chat => '+ 버튼을 눌러 새 채팅 시작하기';
@@ -2437,8 +2280,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get test_notification_title => 'Hermes 알림 테스트';
 
   @override
-  String get test_notification_unsupported =>
-      '알림을 보낼 수 없습니다. OS에서 알림이 허용되어 있는지 확인하세요.';
+  String get test_notification_unsupported => '알림을 보낼 수 없습니다. OS에서 알림이 허용되어 있는지 확인하세요.';
 
   @override
   String get text_size => '텍스트 크기';
@@ -2452,20 +2294,16 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get the_api_key_could_not_be_stored_securely =>
-      'API 키를 안전하게 저장할 수 없습니다.';
+  String get the_api_key_could_not_be_stored_securely => 'API 키를 안전하게 저장할 수 없습니다.';
 
   @override
-  String get the_project_will_move_to_archived_its_chats_and_files =>
-      '프로젝트가 \'보관됨\'으로 이동합니다. 채팅과 파일은 그대로 유지되며 언제든지 복원할 수 있습니다.';
+  String get the_project_will_move_to_archived_its_chats_and_files => '프로젝트가 \'보관됨\'으로 이동합니다. 채팅과 파일은 그대로 유지되며 언제든지 복원할 수 있습니다.';
 
   @override
-  String get the_project_will_move_to_archived_its_chats_and_files_2 =>
-      '프로젝트가 \'보관됨\'으로 이동합니다. 채팅과 파일은 그대로 유지되며 나중에 복원할 수 있습니다.';
+  String get the_project_will_move_to_archived_its_chats_and_files_2 => '프로젝트가 \'보관됨\'으로 이동합니다. 채팅과 파일은 그대로 유지되며 나중에 복원할 수 있습니다.';
 
   @override
-  String get the_active_profile_did_not_return_any_selectable_models =>
-      '활성 프로필에서 선택 가능한 모델을 찾을 수 없습니다.';
+  String get the_active_profile_did_not_return_any_selectable_models => '활성 프로필에서 선택 가능한 모델을 찾을 수 없습니다.';
 
   @override
   String get the_backup_could_not_be_exported => '백업을 내보낼 수 없습니다.';
@@ -2474,16 +2312,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get the_backup_could_not_be_restored => '백업을 복원할 수 없습니다.';
 
   @override
-  String get the_connection_could_not_be_deleted_safely =>
-      '연결을 안전하게 삭제할 수 없습니다.';
+  String get the_connection_could_not_be_deleted_safely => '연결을 안전하게 삭제할 수 없습니다.';
 
   @override
-  String get the_connection_could_not_be_stored_securely =>
-      '연결 정보를 안전하게 저장할 수 없습니다.';
+  String get the_connection_could_not_be_stored_securely => '연결 정보를 안전하게 저장할 수 없습니다.';
 
   @override
-  String get the_dashboard_credentials_could_not_be_stored_securely =>
-      '대시보드 자격 증명을 안전하게 저장할 수 없습니다.';
+  String get the_dashboard_credentials_could_not_be_stored_securely => '대시보드 자격 증명을 안전하게 저장할 수 없습니다.';
 
   @override
   String get the_detached_reply_failed => '분리된 응답에 실패했습니다.';
@@ -2494,26 +2329,21 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get the_file_contains_your_api_keys_and_dashboard_password_so =>
-      '이 파일에는 API 키와 대시보드 비밀번호가 포함되어 있어 암호화되어 있습니다. 이 패스프레이즈 없이는 백업을 복원할 수 없습니다.';
+  String get the_file_contains_your_api_keys_and_dashboard_password_so => '이 파일에는 API 키와 대시보드 비밀번호가 포함되어 있어 암호화되어 있습니다. 이 패스프레이즈 없이는 백업을 복원할 수 없습니다.';
 
   @override
   String get the_last_turn_failed => '마지막 턴이 실패했습니다';
 
   @override
-  String the_local_connection_store_looks_damaged_you_can_reset_the(
-    Object errorType,
-  ) {
+  String the_local_connection_store_looks_damaged_you_can_reset_the(Object errorType) {
     return '로컬 연결 저장소가 손상된 것으로 보입니다 ($errorType). 저장된 연결을 초기화하고 새로 시작할 수 있습니다. 게이트웨이의 채팅은 영향을 받지 않습니다.';
   }
 
   @override
-  String get the_model_only_rewrites_your_question_into_a_short_full =>
-      '모델이 질문을 짧은 전체 텍스트 쿼리로 다시 작성하기만 합니다. Hermes는 호스트에 이미 구성된 제공자 자격 증명을 사용합니다.';
+  String get the_model_only_rewrites_your_question_into_a_short_full => '모델이 질문을 짧은 전체 텍스트 쿼리로 다시 작성하기만 합니다. Hermes는 호스트에 이미 구성된 제공자 자격 증명을 사용합니다.';
 
   @override
-  String get the_server_has_not_reported_folders_for_this_project_yet =>
-      '서버가 아직 이 프로젝트의 폴더를 보고하지 않았습니다. \'더 보기\'에서 전체 파일을 계속 사용할 수 있습니다.';
+  String get the_server_has_not_reported_folders_for_this_project_yet => '서버가 아직 이 프로젝트의 폴더를 보고하지 않았습니다. \'더 보기\'에서 전체 파일을 계속 사용할 수 있습니다.';
 
   @override
   String get the_turn_failed => '턴이 실패했습니다';
@@ -2522,47 +2352,37 @@ class AppLocalizationsKo extends AppLocalizations {
   String get the_two_passphrases_do_not_match => '두 패스프레이즈가 일치하지 않습니다.';
 
   @override
-  String get the_value_is_sent_directly_to_the_active_hermes_gateway =>
-      '이 값은 활성 Hermes 게이트웨이로 직접 전송되며 이 Android 앱에는 저장되지 않습니다.';
+  String get the_value_is_sent_directly_to_the_active_hermes_gateway => '이 값은 활성 Hermes 게이트웨이로 직접 전송되며 이 Android 앱에는 저장되지 않습니다.';
 
   @override
-  String get there_are_no_visible_files_in_this_server_folder =>
-      '이 서버 폴더에 표시되는 파일이 없습니다.';
+  String get there_are_no_visible_files_in_this_server_folder => '이 서버 폴더에 표시되는 파일이 없습니다.';
 
   @override
   String get thinking_effort => '추론 수준';
 
   @override
-  String get this_hermes_gateway_does_not_support_opening_a_project_yet =>
-      '이 Hermes 게이트웨이는 아직 프로젝트 열기를 지원하지 않습니다. 휴대폰에서 프로젝트를 탐색하려면 서버의 Hermes를 업데이트하세요.';
+  String get this_hermes_gateway_does_not_support_opening_a_project_yet => '이 Hermes 게이트웨이는 아직 프로젝트 열기를 지원하지 않습니다. 휴대폰에서 프로젝트를 탐색하려면 서버의 Hermes를 업데이트하세요.';
 
   @override
-  String get this_hermes_gateway_is_older_than_server_side_projects_so =>
-      '이 Hermes 게이트웨이는 서버 측 프로젝트보다 구버전이므로 채팅이 이 기기에만 그룹화됩니다. 기기 간에 동일한 프로젝트를 공유하려면 Hermes를 업데이트하세요.';
+  String get this_hermes_gateway_is_older_than_server_side_projects_so => '이 Hermes 게이트웨이는 서버 측 프로젝트보다 구버전이므로 채팅이 이 기기에만 그룹화됩니다. 기기 간에 동일한 프로젝트를 공유하려면 Hermes를 업데이트하세요.';
 
   @override
-  String get this_project_has_no_folder_to_open_the_chat_in =>
-      '이 프로젝트에서 채팅을 시작하려면 폴더가 필요합니다. 폴더를 추가한 후 다시 시도하세요.';
+  String get this_project_has_no_folder_to_open_the_chat_in => '이 프로젝트에서 채팅을 시작하려면 폴더가 필요합니다. 폴더를 추가한 후 다시 시도하세요.';
 
   @override
-  String get this_chat_has_no_messages_available_in_the_desktop_session =>
-      '이 채팅에는 아직 Desktop 세션에서 사용할 수 있는 메시지가 없습니다.';
+  String get this_chat_has_no_messages_available_in_the_desktop_session => '이 채팅에는 아직 Desktop 세션에서 사용할 수 있는 메시지가 없습니다.';
 
   @override
-  String get this_creates_a_permanent_rule_in_hermes_review_the_full =>
-      '이 작업은 Hermes에 영구적인 규칙을 생성합니다. 확인하기 전에 전체 명령을 검토하세요.';
+  String get this_creates_a_permanent_rule_in_hermes_review_the_full => '이 작업은 Hermes에 영구적인 규칙을 생성합니다. 확인하기 전에 전체 명령을 검토하세요.';
 
   @override
-  String get this_gateway_does_not_host_projects_yet_update_the_gateway =>
-      '이 게이트웨이는 아직 프로젝트를 호스팅하지 않습니다. 기기 간에 채팅을 정리하려면 게이트웨이를 업데이트하세요.';
+  String get this_gateway_does_not_host_projects_yet_update_the_gateway => '이 게이트웨이는 아직 프로젝트를 호스팅하지 않습니다. 기기 간에 채팅을 정리하려면 게이트웨이를 업데이트하세요.';
 
   @override
-  String get this_permanently_deletes_the_project_chats_will_not_be_deleted =>
-      '이 프로젝트를 영구적으로 삭제합니다. 채팅은 삭제되지 않으며 미할당 상태로 돌아갑니다.';
+  String get this_permanently_deletes_the_project_chats_will_not_be_deleted => '이 프로젝트를 영구적으로 삭제합니다. 채팅은 삭제되지 않으며 미할당 상태로 돌아갑니다.';
 
   @override
-  String get this_server_doesn_t_offer_background_recovery_chats_run_live =>
-      '이 서버는 백그라운드 복구를 제공하지 않습니다 — 채팅이 실시간으로 실행됩니다';
+  String get this_server_doesn_t_offer_background_recovery_chats_run_live => '이 서버는 백그라운드 복구를 제공하지 않습니다 — 채팅이 실시간으로 실행됩니다';
 
   @override
   String get this_week => '이번 주';
@@ -2592,12 +2412,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get turn_recovery_failed => '턴 복구 실패';
 
   @override
-  String get unable_to_prepare_this_file_try_another_one =>
-      '이 파일을 준비할 수 없습니다. 다른 파일을 시도하세요.';
+  String get unable_to_prepare_this_file_try_another_one => '이 파일을 준비할 수 없습니다. 다른 파일을 시도하세요.';
 
   @override
-  String get unable_to_prepare_this_image_try_another_one =>
-      '이 이미지를 준비할 수 없습니다. 다른 이미지를 시도하세요.';
+  String get unable_to_prepare_this_image_try_another_one => '이 이미지를 준비할 수 없습니다. 다른 이미지를 시도하세요.';
 
   @override
   String unable_to_prepare(Object name) {
@@ -2605,8 +2423,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get unable_to_read_the_selected_image_the_selection_was_kept =>
-      '선택한 이미지를 읽을 수 없습니다. 선택 항목은 유지되었습니다.';
+  String get unable_to_read_the_selected_image_the_selection_was_kept => '선택한 이미지를 읽을 수 없습니다. 선택 항목은 유지되었습니다.';
 
   @override
   String get unassigned => '미할당';
@@ -2647,19 +2464,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get use_on_device => '기기 내 사용';
 
   @override
-  String get use_the_attached_content_to_identify_and_fill_the_relevant =>
-      '첨부된 콘텐츠를 사용하여 관련 문서 또는 양식 필드를 식별하고 채우세요. 제출하기 전에 확인하세요.';
+  String get use_the_attached_content_to_identify_and_fill_the_relevant => '첨부된 콘텐츠를 사용하여 관련 문서 또는 양식 필드를 식별하고 채우세요. 제출하기 전에 확인하세요.';
 
   @override
-  String use_this_content_to_identify_and_fill_the_relevant_document(
-    Object text,
-  ) {
+  String use_this_content_to_identify_and_fill_the_relevant_document(Object text) {
     return '이 콘텐츠를 사용하여 관련 문서 또는 양식 필드를 식별하고 채우세요. 제출하기 전에 확인하세요:\n\n$text';
   }
 
   @override
-  String get used_for_hosted_path_prefixes_and_for_the_settings_memory =>
-      '호스팅된 경로 접두사와 설정, 메모리, 스킬 및 Cron 탭에 사용됩니다. 대시보드를 공개하려면 사용자 이름/비밀번호를 비워두거나, 리버스 프록시가 대시보드 인증을 주입할 때 프록시 모드를 활성화하세요.';
+  String get used_for_hosted_path_prefixes_and_for_the_settings_memory => '호스팅된 경로 접두사와 설정, 메모리, 스킬 및 Cron 탭에 사용됩니다. 대시보드를 공개하려면 사용자 이름/비밀번호를 비워두거나, 리버스 프록시가 대시보드 인증을 주입할 때 프록시 모드를 활성화하세요.';
 
   @override
   String get username_optional => '사용자 이름 (선택 사항)';
@@ -2716,8 +2529,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get e_g_dashboard => '예: /dashboard';
 
   @override
-  String get e_g_dashboard_proxy_path_before_api =>
-      '예: /dashboard (/api/ 이전의 프록시 경로)';
+  String get e_g_dashboard_proxy_path_before_api => '예: /dashboard (/api/ 이전의 프록시 경로)';
 
   @override
   String get e_g_profile_peter => '예: /profile/peter';
@@ -2747,12 +2559,10 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get example_host_hint =>
-      '192.168.1.50, 100.x.y.z 또는 hermes-machine.tailnet.ts.net';
+  String get example_host_hint => '192.168.1.50, 100.x.y.z 또는 hermes-machine.tailnet.ts.net';
 
   @override
-  String get example_profile_prefix_hint_full =>
-      '예: /profile/peter (/api/ 및 /v1/ 이전의 프록시 경로)';
+  String get example_profile_prefix_hint_full => '예: /profile/peter (/api/ 및 /v1/ 이전의 프록시 경로)';
 
   @override
   String and_more(Object count) {
@@ -2798,10 +2608,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String chats_migrated_projects_created(
-    Object createdProjects,
-    Object linkedSessions,
-  ) {
+  String chats_migrated_projects_created(Object createdProjects, Object linkedSessions) {
     return '채팅 $linkedSessions개 마이그레이션됨 · 프로젝트 $createdProjects개 생성됨';
   }
 
@@ -2961,8 +2768,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get text_size_extra_large => '아주 크게';
 
   @override
-  String get text_size_use_system_description =>
-      'Android 접근성 텍스트 크기를 그대로 사용합니다.';
+  String get text_size_use_system_description => 'Android 접근성 텍스트 크기를 그대로 사용합니다.';
 
   @override
   String text_size_percent_description(Object percent) {
@@ -3134,8 +2940,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get admin_password_needed => '관리자 비밀번호 필요';
 
   @override
-  String get hermes_needs_a_sudo_password_for_the_pending_terminal_command =>
-      '대기 중인 터미널 명령을 실행하려면 Hermes에 sudo 비밀번호가 필요합니다.';
+  String get hermes_needs_a_sudo_password_for_the_pending_terminal_command => '대기 중인 터미널 명령을 실행하려면 Hermes에 sudo 비밀번호가 필요합니다.';
 
   @override
   String get sudo_password => 'sudo 비밀번호';
@@ -3144,8 +2949,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get secret_needed => '시크릿 필요';
 
   @override
-  String get hermes_needs_a_secret_for_the_pending_skill =>
-      'Hermes가 보류 중인 스킬을 위해 시크릿이 필요합니다.';
+  String get hermes_needs_a_secret_for_the_pending_skill => 'Hermes가 보류 중인 스킬을 위해 시크릿이 필요합니다.';
 
   @override
   String get secret_value => '시크릿 값';
@@ -3183,16 +2987,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get update_downloading => 'Downloading and verifying update…';
 
   @override
-  String get update_allow_install =>
-      'Allow Hermes to install this update, then return here and tap Install update.';
+  String get update_allow_install => 'Allow Hermes to install this update, then return here and tap Install update.';
 
   @override
-  String get update_failed =>
-      'The update could not be downloaded, verified, or opened. Try again or view the release page.';
+  String get update_failed => 'The update could not be downloaded, verified, or opened. Try again or view the release page.';
 
   @override
-  String get a_newer_hermes_android_build_is_available_on_github =>
-      'GitHub에 더 새로운 Ares 빌드가 있습니다.';
+  String get a_newer_hermes_android_build_is_available_on_github => 'GitHub에 더 새로운 Ares 빌드가 있습니다.';
 
   @override
   String get release_notes => '릴리스 노트';
@@ -3233,12 +3034,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get chat_density_compact => '컴팩트';
 
   @override
-  String get chat_density_comfortable_description =>
-      '각 메시지 위에 발신자 라벨이 있는 넉넉한 말풍선.';
+  String get chat_density_comfortable_description => '각 메시지 위에 발신자 라벨이 있는 넉넉한 말풍선.';
 
   @override
-  String get chat_density_compact_description =>
-      '라벨이 없는 촘촘한 말풍선으로 더 많은 메시지를 볼 수 있습니다.';
+  String get chat_density_compact_description => '라벨이 없는 촘촘한 말풍선으로 더 많은 메시지를 볼 수 있습니다.';
 
   @override
   String chat_density_label_description(Object description, Object label) {
@@ -3246,20 +3045,16 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String
-  get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins =>
-      '컴팩트는 You 및 Hermes 라벨을 없애고 말풍선 여백, 간격, 좌우 여백을 줄입니다.';
+  String get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins => '컴팩트는 You 및 Hermes 라벨을 없애고 말풍선 여백, 간격, 좌우 여백을 줄입니다.';
 
   @override
   String get client_certificate_mtls => 'Client certificate (mTLS)';
 
   @override
-  String get client_certificate_mtls_description =>
-      'Present a certificate when an HTTPS proxy requires mutual TLS.';
+  String get client_certificate_mtls_description => 'Present a certificate when an HTTPS proxy requires mutual TLS.';
 
   @override
-  String get client_certificate_https_only =>
-      'Client certificates are only used for HTTPS connections.';
+  String get client_certificate_https_only => 'Client certificates are only used for HTTPS connections.';
 
   @override
   String get choose_certificate => 'Choose certificate';
@@ -3268,16 +3063,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get certificate_password => 'Certificate password';
 
   @override
-  String get this_certificate_is_password_protected =>
-      'This certificate is password-protected. It opens as you type.';
+  String get this_certificate_is_password_protected => 'This certificate is password-protected. It opens as you type.';
 
   @override
-  String get enter_the_certificate_password_to_finish_loading_it =>
-      'Enter the certificate password to finish loading the certificate you chose.';
+  String get enter_the_certificate_password_to_finish_loading_it => 'Enter the certificate password to finish loading the certificate you chose.';
 
   @override
-  String get client_certificate_required =>
-      'Load a client certificate or turn off the client certificate option.';
+  String get client_certificate_required => 'Load a client certificate or turn off the client certificate option.';
 
   @override
   String client_certificate_loaded(String label) {
@@ -3288,8 +3080,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get remove_certificate => 'Remove certificate';
 
   @override
-  String get certificate_import_failed =>
-      'That certificate could not be loaded.';
+  String get certificate_import_failed => 'That certificate could not be loaded.';
 
   @override
   String get background_work => '백그라운드 작업';
@@ -3298,23 +3089,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get keep_chats_active_in_background => '백그라운드에서 채팅 연결 유지';
 
   @override
-  String get background_work_description =>
-      '앱이 백그라운드에 있는 동안 사용자가 시작한 채팅의 연결을 유지합니다. 유휴 연결은 끊어질 수 있습니다. 배터리와 데이터 사용량이 늘어납니다. 꺼도 서버의 작업은 중단되지 않습니다.';
+  String get background_work_description => '앱이 백그라운드에 있는 동안 사용자가 시작한 채팅의 연결을 유지합니다. 유휴 연결은 끊어질 수 있습니다. 배터리와 데이터 사용량이 늘어납니다. 꺼도 서버의 작업은 중단되지 않습니다.';
 
   @override
-  String get background_work_limits =>
-      'Android는 Doze 모드에서 연결을 일시 중지하거나 앱 프로세스를 종료할 수 있습니다. 프로세스 종료 후 알림을 받으려면 별도로 푸시를 설정해야 합니다. 강제 종료는 지원하지 않습니다.';
+  String get background_work_limits => 'Android는 Doze 모드에서 연결을 일시 중지하거나 앱 프로세스를 종료할 수 있습니다. 프로세스 종료 후 알림을 받으려면 별도로 푸시를 설정해야 합니다. 강제 종료는 지원하지 않습니다.';
 
   @override
-  String get background_work_disclosure =>
-      '백그라운드 보호가 활성화된 동안에는 선택적 채팅 알림을 꺼도 필수 서비스 알림이 표시됩니다.';
+  String get background_work_disclosure => '백그라운드 보호가 활성화된 동안에는 선택적 채팅 알림을 꺼도 필수 서비스 알림이 표시됩니다.';
 
   @override
   String get battery_optimisation_settings => '배터리 최적화 설정';
 
   @override
-  String get battery_optimisation_description =>
-      'Android 설정을 열어 배터리 제한을 확인합니다. 최적화 예외를 자동으로 요청하지 않으며 설정 변경이 알림 전달을 보장하지는 않습니다.';
+  String get battery_optimisation_description => 'Android 설정을 열어 배터리 제한을 확인합니다. 최적화 예외를 자동으로 요청하지 않으며 설정 변경이 알림 전달을 보장하지는 않습니다.';
 
   @override
   String get battery_settings_unavailable => '이 기기에서 배터리 설정을 열 수 없습니다.';
@@ -3338,8 +3125,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get task_live_preview => 'Live preview from parent events';
 
   @override
-  String get task_preview_explanation =>
-      'Latest exposed preview only; not a recorded transcript row.';
+  String get task_preview_explanation => 'Latest exposed preview only; not a recorded transcript row.';
 
   @override
   String get task_preview => 'Preview';
@@ -3351,8 +3137,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get task_loading_history => 'Loading task history…';
 
   @override
-  String get task_empty_history =>
-      'No recorded messages yet. The task may not have flushed its history; this does not mean it produced no work.';
+  String get task_empty_history => 'No recorded messages yet. The task may not have flushed its history; this does not mean it produced no work.';
 
   @override
   String get task_load_older => 'Load older';
@@ -3381,8 +3166,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get task_read_only_notice =>
-      'Read-only · recorded history may appear after the task flushes. Refresh to check again.';
+  String get task_read_only_notice => 'Read-only · recorded history may appear after the task flushes. Refresh to check again.';
 
   @override
   String task_row_label(Object id, Object role) {
@@ -3428,48 +3212,37 @@ class AppLocalizationsKo extends AppLocalizations {
   String get task_image_placeholder => '[image]';
 
   @override
-  String get task_invalid_reference =>
-      'Task transcript unavailable: invalid stored session reference.';
+  String get task_invalid_reference => 'Task transcript unavailable: invalid stored session reference.';
 
   @override
-  String get task_auth_required =>
-      'Task transcript unavailable: configure Dashboard authentication for this gateway. The API-server key cannot read task reasoning.';
+  String get task_auth_required => 'Task transcript unavailable: configure Dashboard authentication for this gateway. The API-server key cannot read task reasoning.';
 
   @override
-  String get task_auth_rejected =>
-      'Task transcript unavailable: Dashboard authentication was rejected. Check this gateway’s Dashboard settings.';
+  String get task_auth_rejected => 'Task transcript unavailable: Dashboard authentication was rejected. Check this gateway’s Dashboard settings.';
 
   @override
-  String get task_incompatible_history =>
-      'Task transcript unavailable: this Dashboard does not provide compatible bounded raw history for the selected profile.';
+  String get task_incompatible_history => 'Task transcript unavailable: this Dashboard does not provide compatible bounded raw history for the selected profile.';
 
   @override
-  String get task_identity_unproven =>
-      'Task transcript unavailable: the Dashboard could not prove the exact stored session or its compression lineage. No transcript from another session is shown.';
+  String get task_identity_unproven => 'Task transcript unavailable: the Dashboard could not prove the exact stored session or its compression lineage. No transcript from another session is shown.';
 
   @override
-  String get task_partial_compression =>
-      'Partial history: this task continued after compression, but this gateway has not exposed a verifiable newer reference. The final reply may be missing. Automatic refresh is paused; use Refresh to retry.';
+  String get task_partial_compression => 'Partial history: this task continued after compression, but this gateway has not exposed a verifiable newer reference. The final reply may be missing. Automatic refresh is paused; use Refresh to retry.';
 
   @override
-  String get task_partial_ancestors =>
-      'Partial history: this gateway omits compression ancestors for this task. Earlier task segments may be missing. Known rows are retained; use Refresh to retry.';
+  String get task_partial_ancestors => 'Partial history: this gateway omits compression ancestors for this task. Earlier task segments may be missing. Known rows are retained; use Refresh to retry.';
 
   @override
-  String get task_missing_reference =>
-      'Task transcript unavailable: this server did not retain its session reference.';
+  String get task_missing_reference => 'Task transcript unavailable: this server did not retain its session reference.';
 
   @override
-  String get task_missing_row_identity =>
-      'Task transcript unavailable: this server did not supply durable message row identities.';
+  String get task_missing_row_identity => 'Task transcript unavailable: this server did not supply durable message row identities.';
 
   @override
-  String get task_history_not_ready =>
-      'Task history is not available yet (HTTP 404). The task may not have flushed, or this Dashboard may not support task history. Retry to check again.';
+  String get task_history_not_ready => 'Task history is not available yet (HTTP 404). The task may not have flushed, or this Dashboard may not support task history. Retry to check again.';
 
   @override
-  String get task_refresh_failed =>
-      'Could not refresh task history. Check the connection and retry.';
+  String get task_refresh_failed => 'Could not refresh task history. Check the connection and retry.';
 
   @override
   String get task_status_interrupted => 'Interrupted';
@@ -3515,8 +3288,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get activity_outcome_unknown => '턴의 결과를 확인할 수 없었습니다. 채팅을 열어 확인하세요.';
 
   @override
-  String get activity_chat_updated_detail =>
-      '게이트웨이에 기록된 채팅 활동입니다. 턴의 실시간 상태는 확인할 수 없습니다.';
+  String get activity_chat_updated_detail => '게이트웨이에 기록된 채팅 활동입니다. 턴의 실시간 상태는 확인할 수 없습니다.';
 
   @override
   String get activity_updated => '업데이트됨';
@@ -3525,30 +3297,25 @@ class AppLocalizationsKo extends AppLocalizations {
   String get activity_empty_title => '최근 활동 없음';
 
   @override
-  String get activity_empty_detail =>
-      '이 앱에서 시작한 턴과 지난 7일 동안 업데이트된 게이트웨이 채팅이 여기에 표시됩니다.';
+  String get activity_empty_detail => '이 앱에서 시작한 턴과 지난 7일 동안 업데이트된 게이트웨이 채팅이 여기에 표시됩니다.';
 
   @override
-  String get activity_read_error =>
-      '활동에서 턴 기록이나 게이트웨이 채팅을 읽을 수 없었습니다. 연결을 확인한 후 다시 시도하세요.';
+  String get activity_read_error => '활동에서 턴 기록이나 게이트웨이 채팅을 읽을 수 없었습니다. 연결을 확인한 후 다시 시도하세요.';
 
   @override
-  String get activity_chat_unavailable =>
-      '이 채팅은 더 이상 사용할 수 없거나 게이트웨이에 연결할 수 없습니다.';
+  String get activity_chat_unavailable => '이 채팅은 더 이상 사용할 수 없거나 게이트웨이에 연결할 수 없습니다.';
 
   @override
   String get activity_partial_title => '활동이 일부만 로드됨';
 
   @override
-  String get activity_partial_detail =>
-      '게이트웨이 활동의 제한된 범위가 표시됩니다. 다른 채팅이 더 있을 수 있습니다. 아래로 당겨 새로고침하세요.';
+  String get activity_partial_detail => '게이트웨이 활동의 제한된 범위가 표시됩니다. 다른 채팅이 더 있을 수 있습니다. 아래로 당겨 새로고침하세요.';
 
   @override
   String get provider_usage => '기록된 사용량';
 
   @override
-  String get provider_usage_notice =>
-      '최근 30일간의 Hermes 사용량이며 계정 잔액이나 모델 가격이 아닙니다. 인증 정보는 Hermes 서버에서 설정하세요. 이 앱은 공급자 API 키를 저장하지 않습니다.';
+  String get provider_usage_notice => '최근 30일간의 Hermes 사용량이며 계정 잔액이나 모델 가격이 아닙니다. 인증 정보는 Hermes 서버에서 설정하세요. 이 앱은 공급자 API 키를 저장하지 않습니다.';
 
   @override
   String get provider_usage_failed => '기록된 사용량을 불러올 수 없습니다.';
@@ -3576,12 +3343,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get provider_quota_openai_api => 'OpenAI API 기록된 사용량';
 
   @override
-  String get provider_quota_notice =>
-      '제공업체가 보고한 구독 사용 구간으로, Hermes에 기록된 사용량 및 API 청구와는 별개입니다. 계정은 개별적으로 표시되며, 모델 한도에 도달했다고 해서 계정 전체의 할당량을 소진한 것은 아닙니다.';
+  String get provider_quota_notice => '제공업체가 보고한 구독 사용 구간으로, Hermes에 기록된 사용량 및 API 청구와는 별개입니다. 계정은 개별적으로 표시되며, 모델 한도에 도달했다고 해서 계정 전체의 할당량을 소진한 것은 아닙니다.';
 
   @override
-  String get provider_quota_windows_notice =>
-      'Codex 및 Claude 구독에는 5시간 세션별 한도와 주간 한도가 있습니다. 제공업체가 보고한 구간만 표시되며, 보고되지 않은 한도와 초기화 시간은 확인할 수 없습니다. 주간 한도는 계정 전체 또는 특정 모델에 적용될 수 있습니다.';
+  String get provider_quota_windows_notice => 'Codex 및 Claude 구독에는 5시간 세션별 한도와 주간 한도가 있습니다. 제공업체가 보고한 구간만 표시되며, 보고되지 않은 한도와 초기화 시간은 확인할 수 없습니다. 주간 한도는 계정 전체 또는 특정 모델에 적용될 수 있습니다.';
 
   @override
   String get provider_quota_five_hour_session => '5시간 세션';
@@ -3590,8 +3355,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get provider_quota_unavailable => '구독 할당량을 확인할 수 없습니다.';
 
   @override
-  String get provider_quota_failed =>
-      '구독 할당량을 새로고침하지 못했습니다. 유지된 값은 이전 조회 결과입니다.';
+  String get provider_quota_failed => '구독 할당량을 새로고침하지 못했습니다. 유지된 값은 이전 조회 결과입니다.';
 
   @override
   String get provider_quota_account => '계정';
@@ -3626,8 +3390,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get auxiliary_models => '보조 모델';
 
   @override
-  String get auxiliary_notice =>
-      '작업별 모델을 선택합니다. 사용자 지정 엔드포인트는 서버에서 관리하세요. 자동은 작업의 상속 규칙을 따릅니다.';
+  String get auxiliary_notice => '작업별 모델을 선택합니다. 사용자 지정 엔드포인트는 서버에서 관리하세요. 자동은 작업의 상속 규칙을 따릅니다.';
 
   @override
   String get auxiliary_inherit => '자동 (상속)';
@@ -3642,39 +3405,31 @@ class AppLocalizationsKo extends AppLocalizations {
   String get provider_oauth_more_subtitle => 'Hermes 호스트에서 제공업체 로그인 관리';
 
   @override
-  String get provider_oauth_settings_subtitle =>
-      'Hermes 호스트에 로그인합니다. 제공업체 토큰은 이 기기에 저장되지 않습니다';
+  String get provider_oauth_settings_subtitle => 'Hermes 호스트에 로그인합니다. 제공업체 토큰은 이 기기에 저장되지 않습니다';
 
   @override
-  String get provider_oauth_intro =>
-      '외부 브라우저에서 제공업체에 로그인하세요. 토큰은 이 기기가 아닌 Hermes 호스트에만 저장됩니다. 로그인해도 이 앱의 채팅 모델은 선택되지 않습니다.';
+  String get provider_oauth_intro => '외부 브라우저에서 제공업체에 로그인하세요. 토큰은 이 기기가 아닌 Hermes 호스트에만 저장됩니다. 로그인해도 이 앱의 채팅 모델은 선택되지 않습니다.';
 
   @override
-  String get provider_oauth_defaults_notice =>
-      'Nous 무료 계정 교체를 비롯한 일부 호스트 절차는 호스트 기본값을 변경할 수 있습니다. 로그인 후 호스트 설정을 확인하세요.';
+  String get provider_oauth_defaults_notice => 'Nous 무료 계정 교체를 비롯한 일부 호스트 절차는 호스트 기본값을 변경할 수 있습니다. 로그인 후 호스트 설정을 확인하세요.';
 
   @override
-  String get provider_oauth_transport_init_failed =>
-      '선택한 보안 대시보드 연결을 초기화할 수 없습니다. TLS ID와 연결 설정을 확인하세요.';
+  String get provider_oauth_transport_init_failed => '선택한 보안 대시보드 연결을 초기화할 수 없습니다. TLS ID와 연결 설정을 확인하세요.';
 
   @override
-  String get provider_oauth_https_required =>
-      '제공업체 로그인에는 Hermes 대시보드에 대한 HTTPS 연결이 필요합니다.';
+  String get provider_oauth_https_required => '제공업체 로그인에는 Hermes 대시보드에 대한 HTTPS 연결이 필요합니다.';
 
   @override
-  String get provider_oauth_auth_required =>
-      '로그인하기 전에 대시보드 비밀번호 인증 또는 신뢰할 수 있는 프록시를 설정하세요.';
+  String get provider_oauth_auth_required => '로그인하기 전에 대시보드 비밀번호 인증 또는 신뢰할 수 있는 프록시를 설정하세요.';
 
   @override
-  String get provider_oauth_catalog_failed =>
-      '이 호스트에서는 제공업체 로그인을 사용할 수 없습니다. 대시보드 인증을 확인하고 제공업체 OAuth를 지원하지 않는 경우 호스트를 업데이트하세요.';
+  String get provider_oauth_catalog_failed => '이 호스트에서는 제공업체 로그인을 사용할 수 없습니다. 대시보드 인증을 확인하고 제공업체 OAuth를 지원하지 않는 경우 호스트를 업데이트하세요.';
 
   @override
   String get provider_oauth_expired => '로그인이 만료되었습니다. 다시 시작하세요.';
 
   @override
-  String get provider_oauth_start_failed =>
-      '보안 제공업체 로그인을 시작할 수 없습니다. 다시 시도하세요.';
+  String get provider_oauth_start_failed => '보안 제공업체 로그인을 시작할 수 없습니다. 다시 시도하세요.';
 
   @override
   String get provider_oauth_denied => '로그인이 거부되었습니다. 다시 시작하세요.';
@@ -3694,8 +3449,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get provider_oauth_browser_failed =>
-      '외부 브라우저를 열 수 없습니다. 다시 시도하거나 로그인을 취소하세요.';
+  String get provider_oauth_browser_failed => '외부 브라우저를 열 수 없습니다. 다시 시도하거나 로그인을 취소하세요.';
 
   @override
   String get provider_oauth_retry => '다시 시도';
@@ -3727,15 +3481,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get provider_oauth_sign_in => '로그인';
 
   @override
-  String get provider_oauth_cli_required =>
-      'Hermes 호스트에서 제공업체 CLI를 사용하여 로그인하세요. 이 호스트는 이 제공업체의 앱 내 로그인을 지원하지 않습니다.';
+  String get provider_oauth_cli_required => 'Hermes 호스트에서 제공업체 CLI를 사용하여 로그인하세요. 이 호스트는 이 제공업체의 앱 내 로그인을 지원하지 않습니다.';
 
   @override
   String get provider_oauth_checking_account => '승인을 받았습니다. 호스트 계정 확인 중…';
 
   @override
-  String get provider_oauth_verification_unavailable =>
-      '승인을 받았지만 계정을 검증할 수 없습니다. 사용량을 열어 계정 사용량을 새로고침하세요.';
+  String get provider_oauth_verification_unavailable => '승인을 받았지만 계정을 검증할 수 없습니다. 사용량을 열어 계정 사용량을 새로고침하세요.';
 
   @override
   String provider_oauth_verified_account(String email) {
@@ -3743,8 +3495,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get provider_oauth_credentials_unverified =>
-      '호스트에서 인증 정보를 사용할 수 있다고 보고했지만 계정 신원은 검증되지 않았습니다.';
+  String get provider_oauth_credentials_unverified => '호스트에서 인증 정보를 사용할 수 있다고 보고했지만 계정 신원은 검증되지 않았습니다.';
 
   @override
   String get provider_oauth_account_status_unknown => '호스트 계정 상태를 확인할 수 없습니다.';
@@ -3793,27 +3544,22 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get voice_recording_permission =>
-      'Allow microphone access to record a voice message.';
+  String get voice_recording_permission => 'Allow microphone access to record a voice message.';
 
   @override
-  String get voice_recording_limit =>
-      'This recording has reached the ten-minute limit.';
+  String get voice_recording_limit => 'This recording has reached the ten-minute limit.';
 
   @override
   String get voice_recording_empty => 'No audio was recorded. Try again.';
 
   @override
-  String get voice_recording_failed =>
-      'Could not process the recording. Any saved fragments have been kept.';
+  String get voice_recording_failed => 'Could not process the recording. Any saved fragments have been kept.';
 
   @override
-  String get voice_recording_unconfirmed =>
-      'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
+  String get voice_recording_unconfirmed => 'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
 
   @override
-  String get voice_recording_submit_failed =>
-      'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
+  String get voice_recording_submit_failed => 'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
 
   @override
   String get voice_recording_pause_playback => 'Pause playback';
@@ -3825,8 +3571,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get projects_root_more_subtitle => '서버에서 새 프로젝트 폴더가 생성되는 위치';
 
   @override
-  String get projects_root_description =>
-      '이 휴대폰에서 만든 프로젝트의 폴더가 여기에 생성됩니다. Hermes가 직접 사용하는 폴더로 지정하면 휴대폰과 서버가 같은 프로젝트를 공유합니다.';
+  String get projects_root_description => '이 휴대폰에서 만든 프로젝트의 폴더가 여기에 생성됩니다. Hermes가 직접 사용하는 폴더로 지정하면 휴대폰과 서버가 같은 프로젝트를 공유합니다.';
 
   @override
   String get projects_root_label => '프로젝트 루트 경로';
@@ -3840,8 +3585,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get projects_root_locked_title => '서버에서 설정됨';
 
   @override
-  String get projects_root_locked_explanation =>
-      '이 서버는 파일 접근을 하나의 루트로 제한하므로 앱에서 프로젝트 폴더를 변경할 수 없습니다.';
+  String get projects_root_locked_explanation => '이 서버는 파일 접근을 하나의 루트로 제한하므로 앱에서 프로젝트 폴더를 변경할 수 없습니다.';
 
   @override
   String get projects_root_saved => '프로젝트 폴더를 저장했습니다.';
@@ -3859,12 +3603,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get projects_root_invalid_segments => '경로에서 점 세그먼트와 제어 문자를 제거하세요.';
 
   @override
-  String get projects_root_unsupported =>
-      '이 연결에서는 지원되지 않습니다. 서버의 프로젝트 폴더를 읽거나 변경하려면 대시보드에 접근할 수 있는 Desktop Gateway 연결이 필요합니다.';
+  String get projects_root_unsupported => '이 연결에서는 지원되지 않습니다. 서버의 프로젝트 폴더를 읽거나 변경하려면 대시보드에 접근할 수 있는 Desktop Gateway 연결이 필요합니다.';
 
   @override
-  String get projects_root_unavailable =>
-      '서버의 프로젝트 폴더를 읽을 수 없습니다. 대시보드 연결을 확인한 후 다시 시도하세요.';
+  String get projects_root_unavailable => '서버의 프로젝트 폴더를 읽을 수 없습니다. 대시보드 연결을 확인한 후 다시 시도하세요.';
 
   @override
   String get adopt_folder_action => '기존 폴더 추가';
@@ -3883,8 +3625,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get adopt_folder_none => '이 경로 아래의 모든 폴더가 이미 프로젝트입니다.';
 
   @override
-  String get adopt_folder_unsupported =>
-      '이 연결에서는 서버 폴더를 나열할 수 없습니다. 대신 기존 폴더의 절대 경로를 입력하세요.';
+  String get adopt_folder_unsupported => '이 연결에서는 서버 폴더를 나열할 수 없습니다. 대신 기존 폴더의 절대 경로를 입력하세요.';
 
   @override
   String adopt_folder_failed(String error) {
@@ -3948,8 +3689,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get slash_command_no_output => 'The command completed with no output.';
 
   @override
-  String get slash_command_delivery_unknown =>
-      'The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.';
+  String get slash_command_delivery_unknown => 'The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.';
 
   @override
   String get slash_command_failed => 'The command could not be run.';
@@ -3964,15 +3704,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get nextgen_toggle => 'NextGen 인터페이스';
 
   @override
-  String get nextgen_toggle_subtitle =>
-      '한 번의 로그인, 실시간 채팅, 네트워크 검색을 갖춘 새로운 디자인입니다. 게이트웨이와 채팅은 이 인터페이스와 공유됩니다.';
+  String get nextgen_toggle_subtitle => '한 번의 로그인, 실시간 채팅, 네트워크 검색을 갖춘 새로운 디자인입니다. 게이트웨이와 채팅은 이 인터페이스와 공유됩니다.';
 
   @override
   String get nextgen_single_login => '하나의 로그인으로 연결';
 
   @override
-  String get nextgen_single_login_subtitle =>
-      '대시보드 주소와 한 번의 로그인만으로 게이트웨이를 추가합니다.';
+  String get nextgen_single_login_subtitle => '대시보드 주소와 한 번의 로그인만으로 게이트웨이를 추가합니다.';
 
   @override
   String get ng_allow_this_command => '이 명령을 허용할까요?';
@@ -3995,8 +3733,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_password_for_sudo => 'sudo 비밀번호';
 
   @override
-  String get ng_hermes_needs_your_sudo_password_to =>
-      '이 명령을 실행하려면 sudo 비밀번호가 필요합니다.';
+  String get ng_hermes_needs_your_sudo_password_to => '이 명령을 실행하려면 sudo 비밀번호가 필요합니다.';
 
   @override
   String get ng_a_secret_value => '비밀 값';
@@ -4080,20 +3817,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_live_connection => '실시간 연결';
 
   @override
-  String get ng_check_that_tailscale_is_on_on =>
-      '이 휴대폰과 서버에서 Tailscale이 켜져 있는지 확인하세요.';
+  String get ng_check_that_tailscale_is_on_on => '이 휴대폰과 서버에서 Tailscale이 켜져 있는지 확인하세요.';
 
   @override
-  String get ng_check_the_address_and_that_the =>
-      '주소가 올바른지, 프록시가 대시보드로 연결되도록 설정되어 있는지 확인하세요.';
+  String get ng_check_the_address_and_that_the => '주소가 올바른지, 프록시가 대시보드로 연결되도록 설정되어 있는지 확인하세요.';
 
   @override
-  String get ng_use_the_same_network_as_the =>
-      '서버와 같은 네트워크를 사용하고, 다른 기기에서 접속할 수 있도록 대시보드를 --host 0.0.0.0으로 실행하세요.';
+  String get ng_use_the_same_network_as_the => '서버와 같은 네트워크를 사용하고, 다른 기기에서 접속할 수 있도록 대시보드를 --host 0.0.0.0으로 실행하세요.';
 
   @override
-  String get ng_check_the_address_vpn_or_tailscale =>
-      '주소, VPN 또는 Tailscale 연결을 확인하세요.';
+  String get ng_check_the_address_vpn_or_tailscale => '주소, VPN 또는 Tailscale 연결을 확인하세요.';
 
   @override
   String get ng_not_checked_yet => '아직 확인하지 않았습니다.';
@@ -4107,8 +3840,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get ng_something_answered_but_not_a_hermes =>
-      '응답은 있지만 Hermes 대시보드가 아닙니다.';
+  String get ng_something_answered_but_not_a_hermes => '응답은 있지만 Hermes 대시보드가 아닙니다.';
 
   @override
   String ng_something_answered_http_but_not_a(Object status) {
@@ -4116,31 +3848,25 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get ng_use_the_dashboard_s_address_and =>
-      'API 서버 주소가 아닌 대시보드 주소와 포트를 사용하세요(기본값 9119).';
+  String get ng_use_the_dashboard_s_address_and => 'API 서버 주소가 아닌 대시보드 주소와 포트를 사용하세요(기본값 9119).';
 
   @override
-  String get ng_cloudflare_access_turned_the_service_token =>
-      'Cloudflare Access에서 서비스 토큰을 거부했습니다.';
+  String get ng_cloudflare_access_turned_the_service_token => 'Cloudflare Access에서 서비스 토큰을 거부했습니다.';
 
   @override
-  String get ng_cloudflare_access_is_in_front_of =>
-      '이 주소 앞에 Cloudflare Access가 있습니다.';
+  String get ng_cloudflare_access_is_in_front_of => '이 주소 앞에 Cloudflare Access가 있습니다.';
 
   @override
-  String get ng_check_the_service_token_and_its =>
-      '서비스 토큰과 Service Auth 정책을 확인하세요.';
+  String get ng_check_the_service_token_and_its => '서비스 토큰과 Service Auth 정책을 확인하세요.';
 
   @override
-  String get ng_add_a_cloudflare_access_service_token =>
-      '이 주소에 Cloudflare Access 서비스 토큰을 추가하세요.';
+  String get ng_add_a_cloudflare_access_service_token => '이 주소에 Cloudflare Access 서비스 토큰을 추가하세요.';
 
   @override
   String get ng_the_server_asks_for_a_client => '서버에서 클라이언트 인증서를 요청합니다.';
 
   @override
-  String get ng_pick_the_client_certificate_for_this =>
-      '이 게이트웨이에 사용할 클라이언트 인증서를 선택한 다음 다시 테스트하세요.';
+  String get ng_pick_the_client_certificate_for_this => '이 게이트웨이에 사용할 클라이언트 인증서를 선택한 다음 다시 테스트하세요.';
 
   @override
   String get ng_needs_server_access_first => '먼저 서버에 연결해야 합니다.';
@@ -4187,8 +3913,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get ng_the_chat_connection_opened_and_the =>
-      '채팅 연결이 열렸고 게이트웨이가 준비되었다고 알렸습니다.';
+  String get ng_the_chat_connection_opened_and_the => '채팅 연결이 열렸고 게이트웨이가 준비되었다고 알렸습니다.';
 
   @override
   String get ng_the_gateway_never_said_it_was => '게이트웨이에서 준비되었다는 응답이 없습니다.';
@@ -4197,12 +3922,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_check_that_the_agent_is_running => '서버에서 에이전트가 실행 중인지 확인하세요.';
 
   @override
-  String get ng_the_gateway_refused_the_chat_connection =>
-      '게이트웨이에서 채팅 연결을 거부했습니다(HTTP 403).';
+  String get ng_the_gateway_refused_the_chat_connection => '게이트웨이에서 채팅 연결을 거부했습니다(HTTP 403).';
 
   @override
-  String get ng_this_dashboard_has_no_chat_endpoint =>
-      '이 대시보드에는 채팅 엔드포인트(/api/ws)가 없습니다.';
+  String get ng_this_dashboard_has_no_chat_endpoint => '이 대시보드에는 채팅 엔드포인트(/api/ws)가 없습니다.';
 
   @override
   String ng_the_chat_connection_failed(Object detail) {
@@ -4210,15 +3933,13 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get ng_use_the_exact_address_the_dashboard =>
-      '대시보드에 설정된 정확한 주소를 사용하세요.';
+  String get ng_use_the_exact_address_the_dashboard => '대시보드에 설정된 정확한 주소를 사용하세요.';
 
   @override
   String get ng_update_hermes => 'Hermes를 업데이트하세요.';
 
   @override
-  String get ng_make_sure_the_proxy_allows_websocket =>
-      '프록시에서 /api/ws의 WebSocket 업그레이드를 허용하는지 확인하세요.';
+  String get ng_make_sure_the_proxy_allows_websocket => '프록시에서 /api/ws의 WebSocket 업그레이드를 허용하는지 확인하세요.';
 
   @override
   String get ng_offline => '오프라인';
@@ -4247,19 +3968,16 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get ng_the_gateway_returned_no_websocket_ticket =>
-      '게이트웨이가 WebSocket 티켓을 반환하지 않았습니다.';
+  String get ng_the_gateway_returned_no_websocket_ticket => '게이트웨이가 WebSocket 티켓을 반환하지 않았습니다.';
 
   @override
   String get ng_connection_lost => '연결 끊김';
 
   @override
-  String get ng_this_dashboard_has_no_chat_endpoint_2 =>
-      '이 대시보드에 채팅 엔드포인트(/api/ws)가 없습니다. Hermes를 업데이트하세요.';
+  String get ng_this_dashboard_has_no_chat_endpoint_2 => '이 대시보드에 채팅 엔드포인트(/api/ws)가 없습니다. Hermes를 업데이트하세요.';
 
   @override
-  String get ng_the_gateway_refused_the_chat_connection_2 =>
-      '게이트웨이가 채팅 연결을 거부했습니다. 주소가 대시보드에 설정된 호스트와 일치하는지, 임베디드 채팅이 활성화되어 있는지 확인하세요.';
+  String get ng_the_gateway_refused_the_chat_connection_2 => '게이트웨이가 채팅 연결을 거부했습니다. 주소가 대시보드에 설정된 호스트와 일치하는지, 임베디드 채팅이 활성화되어 있는지 확인하세요.';
 
   @override
   String ng_the_gateway_refused(Object method) {
@@ -4324,12 +4042,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_that_file_isn_t_a_certificate => '인증서 또는 개인 키 파일이 아닙니다.';
 
   @override
-  String get ng_if_a_proxy_in_front_of =>
-      '이 주소 앞의 프록시가 클라이언트 인증서를 요청하면, 테스트와 로그인, 채팅에서 인증서를 사용할 수 있도록 여기서 선택하세요.';
+  String get ng_if_a_proxy_in_front_of => '이 주소 앞의 프록시가 클라이언트 인증서를 요청하면, 테스트와 로그인, 채팅에서 인증서를 사용할 수 있도록 여기서 선택하세요.';
 
   @override
-  String get ng_client_certificates_are_only_used_with =>
-      '클라이언트 인증서는 https:// 주소에서만 사용됩니다.';
+  String get ng_client_certificates_are_only_used_with => '클라이언트 인증서는 https:// 주소에서만 사용됩니다.';
 
   @override
   String get ng_remove => '삭제';
@@ -4347,8 +4063,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_pick_a_different_certificate => '다른 인증서 선택';
 
   @override
-  String get ng_accepts_p12_pfx_or_pem_certificate =>
-      '.p12/.pfx 파일 또는 PEM 인증서와 키 파일을 지원합니다. 키는 이 앱의 비공개 저장소에 보관됩니다.';
+  String get ng_accepts_p12_pfx_or_pem_certificate => '.p12/.pfx 파일 또는 PEM 인증서와 키 파일을 지원합니다. 키는 이 앱의 비공개 저장소에 보관됩니다.';
 
   @override
   String get ng_photos => '사진';
@@ -4471,15 +4186,13 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get ng_project_create_uncertain =>
-      '게이트웨이가 채팅을 만들었을 수 있지만 확인하지 못했습니다. 새 채팅을 시작하기 전에 채팅 목록을 확인하세요. 이 요청은 자동으로 재시도되지 않습니다.';
+  String get ng_project_create_uncertain => '게이트웨이가 채팅을 만들었을 수 있지만 확인하지 못했습니다. 새 채팅을 시작하기 전에 채팅 목록을 확인하세요. 이 요청은 자동으로 재시도되지 않습니다.';
 
   @override
   String get ng_what_should_we_work_on => '무엇을 해볼까요?';
 
   @override
-  String get ng_ask_hermes_anything_it_can_run =>
-      'Hermes에 무엇이든 물어보세요. 도구를 실행하고, 웹을 탐색하고, 서버의 파일을 다룰 수 있어요.';
+  String get ng_ask_hermes_anything_it_can_run => 'Hermes에 무엇이든 물어보세요. 도구를 실행하고, 웹을 탐색하고, 서버의 파일을 다룰 수 있어요.';
 
   @override
   String ng_working_2(Object frame) {
@@ -4531,8 +4244,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_slash_command_arguments_mixed => '명령 뒤에 옵션이나 텍스트를 받습니다.';
 
   @override
-  String get ng_slash_command_sent_as_message =>
-      'NextGen에서는 이 내용이 일반 메시지로 Hermes에 전송되며, 명령 자체는 실행되지 않습니다.';
+  String get ng_slash_command_sent_as_message => 'NextGen에서는 이 내용이 일반 메시지로 Hermes에 전송되며, 명령 자체는 실행되지 않습니다.';
 
   @override
   String get ng_slash_command_output => '명령 출력';
@@ -4552,8 +4264,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_slash_command_refused => 'Hermes는 여기에서 이 명령을 실행할 수 없습니다.';
 
   @override
-  String get ng_slash_command_delivery_unknown =>
-      '명령을 보냈지만 응답이 오지 않았습니다. 게이트웨이에서 아직 실행 중일 수 있으므로 다시 보내지 않았고 초안은 그대로 두었습니다.';
+  String get ng_slash_command_delivery_unknown => '명령을 보냈지만 응답이 오지 않았습니다. 게이트웨이에서 아직 실행 중일 수 있으므로 다시 보내지 않았고 초안은 그대로 두었습니다.';
 
   @override
   String get ng_slash_command_nothing_running => '실행 중인 작업이 없습니다.';
@@ -4592,8 +4303,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_read_aloud => '소리 내어 읽기';
 
   @override
-  String get ng_the_gateway_connection_dropped_try_again =>
-      '게이트웨이 연결이 끊겼어요. 다시 시도해 주세요.';
+  String get ng_the_gateway_connection_dropped_try_again => '게이트웨이 연결이 끊겼어요. 다시 시도해 주세요.';
 
   @override
   String get ng_allow_once => '한 번 허용';
@@ -4635,8 +4345,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_save => '저장';
 
   @override
-  String get ng_enter_both_the_client_id_and =>
-      'Client ID와 Client Secret을 모두 입력하거나, 둘 다 입력하지 마세요.';
+  String get ng_enter_both_the_client_id_and => 'Client ID와 Client Secret을 모두 입력하거나, 둘 다 입력하지 마세요.';
 
   @override
   String get ng_enter_your_username_and_password => '사용자 이름과 비밀번호를 입력하세요.';
@@ -4650,8 +4359,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_wrong_username_or_password => '사용자 이름 또는 비밀번호가 올바르지 않아요.';
 
   @override
-  String get ng_too_many_attempts_wait_a_moment =>
-      '시도 횟수가 너무 많아요. 잠시 후 다시 시도하세요.';
+  String get ng_too_many_attempts_wait_a_moment => '시도 횟수가 너무 많아요. 잠시 후 다시 시도하세요.';
 
   @override
   String get ng_welcome_to_hermes => 'Ares에 오신 것을 환영해요';
@@ -4660,12 +4368,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_add_a_gateway => '게이트웨이 추가';
 
   @override
-  String get ng_connect_to_your_hermes_agent_dashboard =>
-      'Hermes Agent 대시보드에 연결하세요. 주소 하나와 로그인 한 번으로 채팅, 도구, 설정을 이용할 수 있어요. 로그인하기 전에는 아무것도 전송되지 않아요.';
+  String get ng_connect_to_your_hermes_agent_dashboard => 'Hermes Agent 대시보드에 연결하세요. 주소 하나와 로그인 한 번으로 채팅, 도구, 설정을 이용할 수 있어요. 로그인하기 전에는 아무것도 전송되지 않아요.';
 
   @override
-  String get ng_connect_to_another_hermes_agent_dashboard =>
-      '다른 Hermes Agent 대시보드에 연결하세요. 저장한 대시보드에는 계속 로그인된 상태로 유지돼요.';
+  String get ng_connect_to_another_hermes_agent_dashboard => '다른 Hermes Agent 대시보드에 연결하세요. 저장한 대시보드에는 계속 로그인된 상태로 유지돼요.';
 
   @override
   String get ng_dashboard_address => '대시보드 주소';
@@ -4677,8 +4383,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_test => '테스트';
 
   @override
-  String get ng_where_your_hermes_dashboard_runs_lan =>
-      'Hermes 대시보드가 실행되는 주소예요. LAN, Tailscale 또는 HTTPS를 사용하세요.';
+  String get ng_where_your_hermes_dashboard_runs_lan => 'Hermes 대시보드가 실행되는 주소예요. LAN, Tailscale 또는 HTTPS를 사용하세요.';
 
   @override
   String get ng_find_on_my_network => '내 네트워크에서 찾기';
@@ -4693,8 +4398,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_need_a_client_certificate => '클라이언트 인증서가 필요한가요?';
 
   @override
-  String get ng_this_address_isn_t_private_and =>
-      '이 주소는 비공개가 아니고 https://도 사용하지 않아 비밀번호와 채팅 내용이 암호화되지 않은 채 인터넷을 통해 전송돼요. https://, Tailscale 또는 자체 네트워크를 사용하세요.';
+  String get ng_this_address_isn_t_private_and => '이 주소는 비공개가 아니고 https://도 사용하지 않아 비밀번호와 채팅 내용이 암호화되지 않은 채 인터넷을 통해 전송돼요. https://, Tailscale 또는 자체 네트워크를 사용하세요.';
 
   @override
   String get ng_continue_to_sign_in => '로그인 계속하기';
@@ -4703,8 +4407,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_use_the_classic_interface_instead => '대신 클래식 인터페이스 사용';
 
   @override
-  String get ng_if_cloudflare_access_protects_this_address =>
-      '이 주소가 Cloudflare Access로 보호되는 경우, Cloudflare Zero Trust에서 서비스 토큰(Access, Service credentials)을 만들고 Access 애플리케이션에 해당 토큰용 Service Auth 정책을 추가하세요.';
+  String get ng_if_cloudflare_access_protects_this_address => '이 주소가 Cloudflare Access로 보호되는 경우, Cloudflare Zero Trust에서 서비스 토큰(Access, Service credentials)을 만들고 Access 애플리케이션에 해당 토큰용 Service Auth 정책을 추가하세요.';
 
   @override
   String get ng_a_service_token_is_saved_for => '이 주소의 서비스 토큰이 저장되어 있어요';
@@ -4719,8 +4422,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_client_secret => 'Client Secret';
 
   @override
-  String get ng_stored_encrypted_on_this_phone_and =>
-      '이 휴대폰에 암호화되어 저장되며, 이 주소로만 전송돼요.';
+  String get ng_stored_encrypted_on_this_phone_and => '이 휴대폰에 암호화되어 저장되며, 이 주소로만 전송돼요.';
 
   @override
   String get ng_hermes_is_reachable => 'Hermes에 연결할 수 있어요';
@@ -4755,12 +4457,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_profiles => '프로필';
 
   @override
-  String get ng_this_dashboard_offers_neither_a_username =>
-      '이 대시보드는 사용자 이름/비밀번호 로그인과 브라우저 로그인을 모두 지원하지 않습니다. Hermes를 업데이트하거나 서버에서 사용자 이름/비밀번호 로그인을 설정하세요.';
+  String get ng_this_dashboard_offers_neither_a_username => '이 대시보드는 사용자 이름/비밀번호 로그인과 브라우저 로그인을 모두 지원하지 않습니다. Hermes를 업데이트하거나 서버에서 사용자 이름/비밀번호 로그인을 설정하세요.';
 
   @override
-  String get ng_the_auth_gate_is_off_on =>
-      '이 대시보드의 인증이 꺼져 있습니다. 대시보드에 접속할 수 있는 누구나 에이전트를 사용할 수 있습니다.';
+  String get ng_the_auth_gate_is_off_on => '이 대시보드의 인증이 꺼져 있습니다. 대시보드에 접속할 수 있는 누구나 에이전트를 사용할 수 있습니다.';
 
   @override
   String get ng_couldn_t_reach_the_dashboard => '대시보드에 연결할 수 없습니다';
@@ -4774,8 +4474,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_that_isn_t_a_hermes_dashboard => 'Hermes 대시보드가 아닙니다';
 
   @override
-  String get ng_something_answered_but_not_a_hermes_2 =>
-      '응답은 있었지만 Hermes 대시보드가 아닙니다. API 서버 주소(포트 8642)가 아닌 대시보드 주소를 사용하세요.';
+  String get ng_something_answered_but_not_a_hermes_2 => '응답은 있었지만 Hermes 대시보드가 아닙니다. API 서버 주소(포트 8642)가 아닌 대시보드 주소를 사용하세요.';
 
   @override
   String ng_something_answered_http_but_not_a_2(Object status) {
@@ -4783,8 +4482,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get ng_cloudflare_access_stopped_the_request =>
-      'Cloudflare Access가 요청을 차단했습니다';
+  String get ng_cloudflare_access_stopped_the_request => 'Cloudflare Access가 요청을 차단했습니다';
 
   @override
   String ng_cloudflare_access_turned_down_the_service(Object status) {
@@ -4792,15 +4490,13 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get ng_add_a_cloudflare_access_service_token_2 =>
-      '아래에 Cloudflare Access 서비스 토큰을 추가한 뒤 다시 테스트하세요.';
+  String get ng_add_a_cloudflare_access_service_token_2 => '아래에 Cloudflare Access 서비스 토큰을 추가한 뒤 다시 테스트하세요.';
 
   @override
   String get ng_a_client_certificate_is_needed => '클라이언트 인증서가 필요합니다';
 
   @override
-  String get ng_this_server_asks_for_a_client =>
-      '이 서버는 통신 전에 클라이언트 인증서를 요구합니다. 아래에서 발급받은 인증서를 선택한 뒤 다시 테스트하세요.';
+  String get ng_this_server_asks_for_a_client => '이 서버는 통신 전에 클라이언트 인증서를 요구합니다. 아래에서 발급받은 인증서를 선택한 뒤 다시 테스트하세요.';
 
   @override
   String get ng_this_dashboard_doesn_t_ask_for => '이 대시보드는 로그인을 요구하지 않습니다.';
@@ -4847,8 +4543,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_sign_in_with_browser => '브라우저로 로그인';
 
   @override
-  String get ng_finish_signing_in_on_the_page =>
-      '열린 페이지에서 로그인을 완료하세요. 완료되면 Hermes가 자동으로 돌아옵니다.';
+  String get ng_finish_signing_in_on_the_page => '열린 페이지에서 로그인을 완료하세요. 완료되면 Hermes가 자동으로 돌아옵니다.';
 
   @override
   String get ng_use_a_different_gateway => '다른 게이트웨이 사용';
@@ -4857,19 +4552,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_same_wi_fi_or_local_network => '같은 Wi-Fi 또는 로컬 네트워크';
 
   @override
-  String get ng_use_the_server_s_local_address =>
-      '서버의 로컬 주소와 포트를 입력하세요. 예: 192.168.1.20:9119. 다른 기기에서 접속할 수 있도록 --host 0.0.0.0 옵션으로 대시보드를 시작하세요.';
+  String get ng_use_the_server_s_local_address => '서버의 로컬 주소와 포트를 입력하세요. 예: 192.168.1.20:9119. 다른 기기에서 접속할 수 있도록 --host 0.0.0.0 옵션으로 대시보드를 시작하세요.';
 
   @override
   String get ng_tailscale => 'Tailscale';
 
   @override
-  String get ng_turn_on_tailscale_on_this_phone =>
-      '이 휴대폰에서 Tailscale을 켜고 서버의 Tailscale 주소를 사용하세요. 예: 100.64.0.1:9119 또는 .ts.net 이름. 집 밖에서도 사용할 수 있습니다.';
+  String get ng_turn_on_tailscale_on_this_phone => '이 휴대폰에서 Tailscale을 켜고 서버의 Tailscale 주소를 사용하세요. 예: 100.64.0.1:9119 또는 .ts.net 이름. 집 밖에서도 사용할 수 있습니다.';
 
   @override
-  String get ng_use_your_https_address_when_the =>
-      '인증서가 있는 프록시 뒤에서 대시보드를 실행한다면 https:// 주소를 사용하세요. 프록시는 /api/ws의 WebSocket 업그레이드도 전달해야 합니다.';
+  String get ng_use_your_https_address_when_the => '인증서가 있는 프록시 뒤에서 대시보드를 실행한다면 https:// 주소를 사용하세요. 프록시는 /api/ws의 WebSocket 업그레이드도 전달해야 합니다.';
 
   @override
   String get ng_start_the_dashboard_on_the_server => '서버에서 대시보드를 시작하세요:';
@@ -4878,8 +4570,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_enter_a_port_from_1_to => '1~65535 사이의 포트를 입력하세요.';
 
   @override
-  String get ng_looks_for_hermes_dashboards_on_port =>
-      '이 Wi-Fi 네트워크에서 포트 9119의 Hermes 대시보드를 찾고, 저장된 컴퓨터도 확인합니다.';
+  String get ng_looks_for_hermes_dashboards_on_port => '이 Wi-Fi 네트워크에서 포트 9119의 Hermes 대시보드를 찾고, 저장된 컴퓨터도 확인합니다.';
 
   @override
   String ng_looks_for_hermes_dashboards_on_ports(Object port) {
@@ -4890,12 +4581,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_other_port_optional => '다른 포트 (선택사항)';
 
   @override
-  String get ng_no_dashboards_answered_start_one_with =>
-      '응답한 대시보드가 없습니다. hermes dashboard --host 0.0.0.0으로 시작하거나 주소를 입력하세요.';
+  String get ng_no_dashboards_answered_start_one_with => '응답한 대시보드가 없습니다. hermes dashboard --host 0.0.0.0으로 시작하거나 주소를 입력하세요.';
 
   @override
-  String get ng_using_tailscale_or_a_vpn_those =>
-      'Tailscale 또는 VPN을 사용 중인가요? 해당 네트워크는 검색할 수 없습니다. 컴퓨터의 100.x 주소나 .ts.net 이름을 입력하세요.';
+  String get ng_using_tailscale_or_a_vpn_those => 'Tailscale 또는 VPN을 사용 중인가요? 해당 네트워크는 검색할 수 없습니다. 컴퓨터의 100.x 주소나 .ts.net 이름을 입력하세요.';
 
   @override
   String get ng_search_again => '다시 검색';
@@ -5064,8 +4753,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_switch_to_the_classic_interface => '클래식 인터페이스로 전환';
 
   @override
-  String get ng_turns_nextgen_off_you_can_turn =>
-      'NextGen을 끕니다. 설정에서 다시 켤 수 있어요.';
+  String get ng_turns_nextgen_off_you_can_turn => 'NextGen을 끕니다. 설정에서 다시 켤 수 있어요.';
 
   @override
   String get ng_restored => '복원됨';
@@ -5132,8 +4820,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_nothing_scheduled => '예약된 작업이 없어요';
 
   @override
-  String get ng_ask_hermes_to_do_something_on =>
-      'Hermes에게 정기 작업을 요청하거나 여기서 작업을 추가하세요.';
+  String get ng_ask_hermes_to_do_something_on => 'Hermes에게 정기 작업을 요청하거나 여기서 작업을 추가하세요.';
 
   @override
   String get ng_active => '활성';
@@ -5168,8 +4855,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_delete_this_job => '이 작업을 삭제할까요?';
 
   @override
-  String get ng_it_stops_running_past_runs_stay =>
-      '작업 실행이 중지돼요. 이전 실행 기록은 채팅에 남아요.';
+  String get ng_it_stops_running_past_runs_stay => '작업 실행이 중지돼요. 이전 실행 기록은 채팅에 남아요.';
 
   @override
   String ng_next_run(Object when) {
@@ -5335,26 +5021,22 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_pure_black => '순수 검정';
 
   @override
-  String get ng_dark_theme_uses_true_black_oled =>
-      '다크 테마에서 OLED용 완전한 검은색을 사용합니다.';
+  String get ng_dark_theme_uses_true_black_oled => '다크 테마에서 OLED용 완전한 검은색을 사용합니다.';
 
   @override
   String get ng_glow => '글로우';
 
   @override
-  String get ng_soft_accent_light_behind_each_screen =>
-      '화면 뒤에 은은한 강조색 조명을 표시합니다.';
+  String get ng_soft_accent_light_behind_each_screen => '화면 뒤에 은은한 강조색 조명을 표시합니다.';
 
   @override
-  String get ng_the_new_interface_turn_off_to =>
-      '새 인터페이스입니다. 끄면 클래식 인터페이스로 돌아갑니다. 게이트웨이와 채팅은 두 인터페이스에서 공유됩니다.';
+  String get ng_the_new_interface_turn_off_to => '새 인터페이스입니다. 끄면 클래식 인터페이스로 돌아갑니다. 게이트웨이와 채팅은 두 인터페이스에서 공유됩니다.';
 
   @override
   String get ng_more_settings => '추가 설정';
 
   @override
-  String get ng_voice_notifications_language_backups_and_the =>
-      '음성, 알림, 언어, 백업 및 게이트웨이 설정';
+  String get ng_voice_notifications_language_backups_and_the => '음성, 알림, 언어, 백업 및 게이트웨이 설정';
 
   @override
   String get ng_licences => '라이선스';
@@ -5365,8 +5047,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get ng_this_gateway_and_its_saved_sign =>
-      '이 게이트웨이와 저장된 로그인 정보가 두 인터페이스 모두에서 이 휴대폰에서 삭제됩니다. 채팅은 게이트웨이에 남아 있습니다.';
+  String get ng_this_gateway_and_its_saved_sign => '이 게이트웨이와 저장된 로그인 정보가 두 인터페이스 모두에서 이 휴대폰에서 삭제됩니다. 채팅은 게이트웨이에 남아 있습니다.';
 
   @override
   String get ng_password_or_browser => '비밀번호 또는 브라우저';
@@ -5390,16 +5071,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get classic_interface_only => '클래식 인터페이스 전용';
 
   @override
-  String get classic_only_settings_hint =>
-      '클래식 인터페이스 전용으로 표시된 섹션은 클래식 화면과 채팅만 변경하며 NextGen에는 적용되지 않습니다. NextGen에는 설정에 별도의 화면 옵션이 있습니다.';
+  String get classic_only_settings_hint => '클래식 인터페이스 전용으로 표시된 섹션은 클래식 화면과 채팅만 변경하며 NextGen에는 적용되지 않습니다. NextGen에는 설정에 별도의 화면 옵션이 있습니다.';
 
   @override
-  String get attachment_preview_too_large =>
-      '여기에서 미리보기에는 파일이 너무 큽니다. 저장 또는 공유를 누르면 휴대폰에 다운로드됩니다(최대 1GB).';
+  String get attachment_preview_too_large => '여기에서 미리보기에는 파일이 너무 큽니다. 저장 또는 공유를 누르면 휴대폰에 다운로드됩니다(최대 1GB).';
 
   @override
-  String get attachment_over_phone_limit =>
-      '이 파일은 1GB를 초과하여 다운로드할 수 없습니다. 대시보드를 열어 다운로드하세요.';
+  String get attachment_over_phone_limit => '이 파일은 1GB를 초과하여 다운로드할 수 없습니다. 대시보드를 열어 다운로드하세요.';
 
   @override
   String attachment_downloading_percent(int percent) {
@@ -5604,8 +5282,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_goal_clear_title => '이 목표를 지울까요?';
 
   @override
-  String get ng_goal_clear_message =>
-      '에이전트가 이 목표를 향한 작업을 중단합니다. 하위 목표와 검증 항목도 함께 삭제됩니다.';
+  String get ng_goal_clear_message => '에이전트가 이 목표를 향한 작업을 중단합니다. 하위 목표와 검증 항목도 함께 삭제됩니다.';
 
   @override
   String get ng_subgoal_remove_title => '이 하위 목표를 삭제할까요?';
@@ -5738,22 +5415,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_notify_requests => '승인 및 질문';
 
   @override
-  String get ng_notify_requests_hint =>
-      '에이전트가 사용자의 응답을 기다리면 한 번 허용 또는 거부할 수 있도록 알립니다';
+  String get ng_notify_requests_hint => '에이전트가 사용자의 응답을 기다리면 한 번 허용 또는 거부할 수 있도록 알립니다';
 
   @override
   String get ng_keep_running => '응답이 진행되는 동안 연결 유지';
 
   @override
-  String get ng_keep_running_hint =>
-      '응답이 완료될 때까지 백그라운드에서 연결을 유지하며 조용한 알림을 표시합니다';
+  String get ng_keep_running_hint => '응답이 완료될 때까지 백그라운드에서 연결을 유지하며 조용한 알림을 표시합니다';
 
   @override
   String get ng_battery_settings => '배터리 최적화';
 
   @override
-  String get ng_battery_settings_hint =>
-      '알림을 제때 받을 수 있도록 Ares가 백그라운드에서 실행되게 합니다';
+  String get ng_battery_settings_hint => '알림을 제때 받을 수 있도록 Ares가 백그라운드에서 실행되게 합니다';
 
   @override
   String get ng_send_test_notification => '테스트 알림 보내기';
@@ -5771,16 +5445,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_notifications_blocked => '알림이 차단되어 있습니다. Android 설정에서 허용하세요.';
 
   @override
-  String get ng_notifications_off_hint =>
-      '알림이 꺼져 있어 Ares가 백그라운드에 있을 때 알림이 표시되지 않습니다.';
+  String get ng_notifications_off_hint => '알림이 꺼져 있어 Ares가 백그라운드에 있을 때 알림이 표시되지 않습니다.';
 
   @override
-  String get ng_insights_building =>
-      '보고서를 생성하고 있습니다. 처음 생성할 때는 기간이 길면 최대 1분까지 걸릴 수 있습니다.';
+  String get ng_insights_building => '보고서를 생성하고 있습니다. 처음 생성할 때는 기간이 길면 최대 1분까지 걸릴 수 있습니다.';
 
   @override
-  String get ng_insights_timed_out =>
-      '게이트웨이에서 보고서를 생성하는 데 시간이 너무 오래 걸렸습니다. 다시 시도하거나 더 짧은 기간을 선택하세요.';
+  String get ng_insights_timed_out => '게이트웨이에서 보고서를 생성하는 데 시간이 너무 오래 걸렸습니다. 다시 시도하거나 더 짧은 기간을 선택하세요.';
 
   @override
   String get ng_dock_goal_active => '목표 진행 중';
@@ -5840,12 +5511,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_recent_notifications => '최근 알림';
 
   @override
-  String get ng_recent_notifications_hint =>
-      'Ares가 게시하려 한 내용과 Android에 표시되었는지 여부';
+  String get ng_recent_notifications_hint => 'Ares가 게시하려 한 내용과 Android에 표시되었는지 여부';
 
   @override
-  String get ng_recent_notifications_empty =>
-      '아직 없습니다. 답변, 질문 또는 실패로 알림이 발생하면 시도가 여기에 표시됩니다.';
+  String get ng_recent_notifications_empty => '아직 없습니다. 답변, 질문 또는 실패로 알림이 발생하면 시도가 여기에 표시됩니다.';
 
   @override
   String get ng_notify_permission_granted => '권한 허용됨';
@@ -6020,4 +5689,22 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => '스킬 사용 현황을 검토합니다';
+
+  @override
+  String get deployment_token_label => 'Deployment token (optional)';
+
+  @override
+  String get deployment_token_helper => 'For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.';
+
+  @override
+  String get deployment_token_hint => 'Dashboard session token';
+
+  @override
+  String get custom_headers_label => 'Custom headers (optional)';
+
+  @override
+  String get custom_headers_helper => 'One per line, e.g. X-Custom: value. Forbidden headers are rejected.';
+
+  @override
+  String get custom_headers_hint => 'e.g. X-Custom-Header: value';
 }

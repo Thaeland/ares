@@ -19,6 +19,7 @@ import 'core/services/config_backup_service.dart';
 import 'core/services/connection_keepalive_service.dart';
 import 'core/services/connection_manager.dart';
 import 'core/services/desktop_gateway_client.dart';
+import 'core/services/gateway_headers.dart';
 import 'core/services/background_work_prefs.dart';
 import 'core/services/gateway_turn_application_controller.dart';
 import 'core/services/local_chat_pin_store.dart';
@@ -2443,6 +2444,8 @@ class _AddDialog extends StatefulWidget {
     String? gatewayProfile,
     ClientCertificateConfig? clientCertificate,
     bool clearClientCertificate,
+    String? deploymentToken,
+    Map<String, String> customHeaders,
   })
   onSave;
   final String? initialHost;
@@ -2474,6 +2477,8 @@ class _AddDialogState extends State<_AddDialog> {
   late final TextEditingController _dashPass;
   late final TextEditingController _desktopGatewayUrl;
   late final TextEditingController _gatewayProfile;
+  late final TextEditingController _deploymentToken;
+  late final TextEditingController _customHeaders;
   late final TextEditingController _certificatePassword;
   late final ClientCertificateService _certificateService;
   final _certificateFileLease = ClientCertificateFileLease();
@@ -2541,6 +2546,8 @@ class _AddDialogState extends State<_AddDialog> {
       text: conn?.desktopGatewayUrl ?? '',
     );
     _gatewayProfile = TextEditingController(text: conn?.gatewayProfile ?? '');
+    _deploymentToken = TextEditingController(text: conn?.deploymentToken ?? '');
+    _customHeaders = TextEditingController(text: headersBlockFromMap(conn?.customHeaders ?? const <String, String>{}));
     _certificateService = ClientCertificateService();
     _certificatePassword = TextEditingController();
     _certificatePassword.addListener(_onCertificatePasswordChanged);
@@ -2982,6 +2989,8 @@ class _AddDialogState extends State<_AddDialog> {
       final dashPass = _dashPass.text.trim();
       final desktopGatewayUrl = _desktopGatewayUrl.text.trim();
       final gatewayProfile = _gatewayProfile.text.trim();
+      final deploymentToken = _deploymentToken.text.trim();
+      final customHeaders = parseRemoteHeadersBlock(_customHeaders.text);
       if (gatewayProfile.contains('/') ||
           gatewayProfile.contains(RegExp(r'\s'))) {
         setState(() {
@@ -3019,6 +3028,8 @@ class _AddDialogState extends State<_AddDialog> {
             desktopGatewayUrl: desktopGatewayUrl,
             gatewayProfile: gatewayProfile,
             clientCertificate: clientCertificate,
+            deploymentToken: deploymentToken.isEmpty ? null : deploymentToken,
+            customHeaders: customHeaders,
           ),
         );
         try {
@@ -3065,6 +3076,8 @@ class _AddDialogState extends State<_AddDialog> {
         gatewayProfile: gatewayProfile.isEmpty ? null : gatewayProfile,
         clientCertificate: savedCertificate,
         clearClientCertificate: savedCertificate == null,
+        deploymentToken: deploymentToken.isEmpty ? null : deploymentToken,
+        customHeaders: customHeaders,
       );
       _certificateSaved = true;
       if (mounted) Navigator.pop(context);
@@ -3280,6 +3293,34 @@ class _AddDialogState extends State<_AddDialog> {
                       .profile_this_connection_chats_as_when_the_dashboard_serves_several,
                   helperMaxLines: 3,
                 ),
+                autocorrect: false,
+              ),
+            ],
+            if (_showDashboard) ...[
+              const SizedBox(height: 8),
+              TextField(
+                controller: _deploymentToken,
+                decoration: InputDecoration(
+                  labelText: context.l10n.deployment_token_label,
+                  hintText: context.l10n.deployment_token_hint,
+                  helperText: context.l10n.deployment_token_helper,
+                  helperMaxLines: 2,
+                ),
+                obscureText: true,
+                autocorrect: false,
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                key: const Key('connection_custom_headers_field'),
+                controller: _customHeaders,
+                decoration: InputDecoration(
+                  labelText: context.l10n.custom_headers_label,
+                  hintText: context.l10n.custom_headers_hint,
+                  helperText: context.l10n.custom_headers_helper,
+                  helperMaxLines: 3,
+                ),
+                maxLines: 4,
+                minLines: 2,
                 autocorrect: false,
               ),
             ],

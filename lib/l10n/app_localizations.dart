@@ -70,8 +70,7 @@ import 'app_localizations_zh.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -79,8 +78,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -92,13 +90,12 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
@@ -113,7 +110,7 @@ abstract class AppLocalizations {
     Locale('ru'),
     Locale('uk'),
     Locale('zh'),
-    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans')
   ];
 
   /// No description provided for @workspace_workers.
@@ -1872,10 +1869,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Could not reach/authenticate the dashboard at {host}:{dashboardPort}. Check the port and credentials.'**
-  String could_not_reach_authenticate_the_dashboard_at_check_the_port(
-    Object dashboardPort,
-    Object host,
-  );
+  String could_not_reach_authenticate_the_dashboard_at_check_the_port(Object dashboardPort, Object host);
 
   /// No description provided for @could_not_read_activity.
   ///
@@ -2223,9 +2217,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Delete \"{title}\" from the remote Hermes history? This cannot be undone.'**
-  String delete_from_the_remote_hermes_history_this_cannot_be_undone(
-    Object title,
-  );
+  String delete_from_the_remote_hermes_history_this_cannot_be_undone(Object title);
 
   /// No description provided for @delete_cron_job.
   ///
@@ -2441,8 +2433,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Explicit choices adjust Android accessibility text size; System leaves it unchanged.'**
-  String
-  get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it;
+  String get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it;
 
   /// No description provided for @export_label.
   ///
@@ -2478,17 +2469,13 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Extract the decisions, deadlines, owners, and actionable action items from the attached content.'**
-  String
-  get extract_the_decisions_deadlines_owners_and_actionable_action_items_from;
+  String get extract_the_decisions_deadlines_owners_and_actionable_action_items_from;
 
   /// No description provided for @extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2.
   ///
   /// In en, this message translates to:
   /// **'Extract the decisions, deadlines, owners, and actionable action items from this content:\n\n{text}'**
-  String
-  extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(
-    Object text,
-  );
+  String extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(Object text);
 
   /// No description provided for @failed_to_add_job.
   ///
@@ -3556,9 +3543,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Profile default set to {selectedModel}. Chats with their own model keep that override.'**
-  String profile_default_set_to_chats_with_their_own_model_keep(
-    Object selectedModel,
-  );
+  String profile_default_set_to_chats_with_their_own_model_keep(Object selectedModel);
 
   /// No description provided for @profile_this_connection_chats_as_when_the_dashboard_serves_several.
   ///
@@ -3786,9 +3771,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Research this content, verify the important claims, and cite sources:\n\n{text}'**
-  String research_this_content_verify_the_important_claims_and_cite_sources(
-    Object text,
-  );
+  String research_this_content_verify_the_important_claims_and_cite_sources(Object text);
 
   /// No description provided for @reset_failed_the_secure_storage_may_need_reinstall.
   ///
@@ -4454,9 +4437,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'The local connection store looks damaged ({errorType}). You can reset the saved connections and start fresh. Chats on your gateway are not affected.'**
-  String the_local_connection_store_looks_damaged_you_can_reset_the(
-    Object errorType,
-  );
+  String the_local_connection_store_looks_damaged_you_can_reset_the(Object errorType);
 
   /// No description provided for @the_model_only_rewrites_your_question_into_a_short_full.
   ///
@@ -4708,9 +4689,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Use this content to identify and fill the relevant document or form fields. Ask before submitting anything:\n\n{text}'**
-  String use_this_content_to_identify_and_fill_the_relevant_document(
-    Object text,
-  );
+  String use_this_content_to_identify_and_fill_the_relevant_document(Object text);
 
   /// No description provided for @used_for_hosted_path_prefixes_and_for_the_settings_memory.
   ///
@@ -4914,10 +4893,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{linkedSessions} chats migrated · {createdProjects} projects created'**
-  String chats_migrated_projects_created(
-    Object createdProjects,
-    Object linkedSessions,
-  );
+  String chats_migrated_projects_created(Object createdProjects, Object linkedSessions);
 
   /// No description provided for @chats_stayed_in_local_spaces.
   ///
@@ -5637,8 +5613,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Compact removes the You and Hermes labels and trims bubble padding, spacing, and side margins.'**
-  String
-  get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins;
+  String get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins;
 
   /// No description provided for @client_certificate_mtls.
   ///
@@ -10367,10 +10342,45 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reviews how skills are used'**
   String get ng_aux_curator_hint;
+
+  /// No description provided for @deployment_token_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Deployment token (optional)'**
+  String get deployment_token_label;
+
+  /// No description provided for @deployment_token_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.'**
+  String get deployment_token_helper;
+
+  /// No description provided for @deployment_token_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard session token'**
+  String get deployment_token_hint;
+
+  /// No description provided for @custom_headers_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom headers (optional)'**
+  String get custom_headers_label;
+
+  /// No description provided for @custom_headers_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'One per line, e.g. X-Custom: value. Forbidden headers are rejected.'**
+  String get custom_headers_helper;
+
+  /// No description provided for @custom_headers_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. X-Custom-Header: value'**
+  String get custom_headers_hint;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -10379,76 +10389,52 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) => <String>[
-    'de',
-    'en',
-    'es',
-    'fr',
-    'ja',
-    'ko',
-    'pt',
-    'ru',
-    'uk',
-    'zh',
-  ].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['de', 'en', 'es', 'fr', 'ja', 'ko', 'pt', 'ru', 'uk', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
   // Lookup logic when language+script codes are specified.
   switch (locale.languageCode) {
-    case 'zh':
-      {
-        switch (locale.scriptCode) {
-          case 'Hans':
-            return AppLocalizationsZhHans();
-        }
-        break;
-      }
+    case 'zh': {
+  switch (locale.scriptCode) {
+    case 'Hans': return AppLocalizationsZhHans();
+   }
+  break;
+   }
   }
 
   // Lookup logic when language+country codes are specified.
   switch (locale.languageCode) {
-    case 'pt':
-      {
-        switch (locale.countryCode) {
-          case 'BR':
-            return AppLocalizationsPtBr();
-        }
-        break;
-      }
+    case 'pt': {
+  switch (locale.countryCode) {
+    case 'BR': return AppLocalizationsPtBr();
+   }
+  break;
+   }
   }
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de':
-      return AppLocalizationsDe();
-    case 'en':
-      return AppLocalizationsEn();
-    case 'es':
-      return AppLocalizationsEs();
-    case 'fr':
-      return AppLocalizationsFr();
-    case 'ja':
-      return AppLocalizationsJa();
-    case 'ko':
-      return AppLocalizationsKo();
-    case 'pt':
-      return AppLocalizationsPt();
-    case 'ru':
-      return AppLocalizationsRu();
-    case 'uk':
-      return AppLocalizationsUk();
-    case 'zh':
-      return AppLocalizationsZh();
+    case 'de': return AppLocalizationsDe();
+    case 'en': return AppLocalizationsEn();
+    case 'es': return AppLocalizationsEs();
+    case 'fr': return AppLocalizationsFr();
+    case 'ja': return AppLocalizationsJa();
+    case 'ko': return AppLocalizationsKo();
+    case 'pt': return AppLocalizationsPt();
+    case 'ru': return AppLocalizationsRu();
+    case 'uk': return AppLocalizationsUk();
+    case 'zh': return AppLocalizationsZh();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

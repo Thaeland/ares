@@ -27,8 +27,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fallback_unavailable => '备用设置不可用或无效。请检查连接、所选配置和主机版本，然后重试。';
 
   @override
-  String get fallback_discovery_unavailable =>
-      '无法获取提供商列表。现有条目会保留；重试后可选择提供商和模型。';
+  String get fallback_discovery_unavailable => '无法获取提供商列表。现有条目会保留；重试后可选择提供商和模型。';
 
   @override
   String get fallback_empty => '此备用列表中没有条目。';
@@ -52,8 +51,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fallback_legacy_title => '旧版备用设置（只读）';
 
   @override
-  String get fallback_legacy_notice =>
-      '主机还会在此列表之后使用 fallback_model，并跳过重复路由。即使上方列表为空，这些旧版条目也会保留。请在主机上编辑。';
+  String get fallback_legacy_notice => '主机还会在此列表之后使用 fallback_model，并跳过重复路由。即使上方列表为空，这些旧版条目也会保留。请在主机上编辑。';
 
   @override
   String fallback_priority(String position) {
@@ -67,15 +65,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fallback_move_down => '下移';
 
   @override
-  String get fallback_routing_read_only =>
-      '路由详情或未列出的提供商已保留。请在主机上编辑此提供商／模型；此处仍可调整顺序或删除条目。';
+  String get fallback_routing_read_only => '路由详情或未列出的提供商已保留。请在主机上编辑此提供商／模型；此处仍可调整顺序或删除条目。';
 
   @override
   String get cron_model_default => '使用默认设置';
 
   @override
-  String get cron_model_notice =>
-      '仅适用于此 cron 任务。未固定模型时，Hermes 先使用 cron 默认模型，再使用主模型。请在主机上管理自定义模型。';
+  String get cron_model_notice => '仅适用于此 cron 任务。未固定模型时，Hermes 先使用 cron 默认模型，再使用主模型。请在主机上管理自定义模型。';
 
   @override
   String get model_management_unavailable => '无法加载或保存模型设置。请刷新后重试。';
@@ -93,8 +89,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get portal_menu_subtitle => '网关状态和已记录用量';
 
   @override
-  String get portal_read_only =>
-      '网关只读数据。请在 Hermes 主机上管理 Nous 身份验证。这些端点不提供订阅余额或积分。';
+  String get portal_read_only => '网关只读数据。请在 Hermes 主机上管理 Nous 身份验证。这些端点不提供订阅余额或积分。';
 
   @override
   String get portal_status => '网关 Portal 状态';
@@ -180,12 +175,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get setup_interface_nextgen => 'NextGen';
 
   @override
-  String get setup_interface_classic_description =>
-      '原有的 Ares 工作区，提供完整的连接控制和所有 Classic 设置。';
+  String get setup_interface_classic_description => '原有的 Ares 工作区，提供完整的连接控制和所有 Classic 设置。';
 
   @override
-  String get setup_interface_nextgen_description =>
-      '全新界面，只需登录仪表盘一次，并提供实时计划、子代理和通知。';
+  String get setup_interface_nextgen_description => '全新界面，只需登录仪表盘一次，并提供实时计划、子代理和通知。';
 
   @override
   String get setup_interface_switch_later => '你可以随时在“设置”中切换。';
@@ -253,38 +246,31 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get hands_free_short_disclosure =>
-      '仅在此聊天于前台打开时运行。唤醒检测离线；语音可能使用网络。会消耗电量。';
+  String get hands_free_short_disclosure => '仅在此聊天于前台打开时运行。唤醒检测离线；语音可能使用网络。会消耗电量。';
 
   @override
-  String get hands_free_error_action =>
-      '请检查麦克风权限、语音服务、回复声音和连接，再点击停止并重新开始。不会自动重发。';
+  String get hands_free_error_action => '请检查麦克风权限、语音服务、回复声音和连接，再点击停止并重新开始。不会自动重发。';
 
   @override
-  String get hands_free_disclosure =>
-      '唤醒检测在 CPU 上离线运行。Android 语音识别、所选声音和网关可能使用网络。聆听会消耗电量，也可能误触发。聊天被遮挡、关闭或离开前台时停止，返回后不会自动重启。手动听写仍是可编辑的草稿。';
+  String get hands_free_disclosure => '唤醒检测在 CPU 上离线运行。Android 语音识别、所选声音和网关可能使用网络。聆听会消耗电量，也可能误触发。聊天被遮挡、关闭或离开前台时停止，返回后不会自动重启。手动听写仍是可编辑的草稿。';
 
   @override
-  String get hands_free_ready_cue =>
-      '说“Hey Hermes”，等待就绪提示后再说话。不支持一口气连续输入或预录音。如果授权对话框使应用离开前台，授权后请再次点击开始。';
+  String get hands_free_ready_cue => '说“Hey Hermes”，等待就绪提示后再说话。不支持一口气连续输入或预录音。如果授权对话框使应用离开前台，授权后请再次点击开始。';
 
   @override
   String get hands_free_settings_title => '免提语音';
 
   @override
-  String get hands_free_settings_subtitle =>
-      '在聊天中显示“Hey Hermes”启动控件。关闭会停止正在进行的免提会话。';
+  String get hands_free_settings_subtitle => '在聊天中显示“Hey Hermes”启动控件。关闭会停止正在进行的免提会话。';
 
   @override
-  String get hands_free_timing_limit =>
-      '后续聆听时间是上限，不是下限。Android 可能提前结束。无语音时返回本地唤醒检测，不会反复重启识别。';
+  String get hands_free_timing_limit => '后续聆听时间是上限，不是下限。Android 可能提前结束。无语音时返回本地唤醒检测，不会反复重启识别。';
 
   @override
   String get hands_free_followup_off => '后续聆听已关闭 — 每次提问请说 Hey Hermes';
 
   @override
-  String get hands_free_start_blocked =>
-      '需要空草稿、无附件、空闲且已连接的聊天，并启用语音回复。请先结束手动语音操作。';
+  String get hands_free_start_blocked => '需要空草稿、无附件、空闲且已连接的聊天，并启用语音回复。请先结束手动语音操作。';
 
   @override
   String get hands_free_setup_complete => '麦克风设置完成。请再次点击开始。';
@@ -311,12 +297,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get message_queued_for_running_turn => '消息已加入当前运行的队列。';
 
   @override
-  String get running_message_not_accepted =>
-      'Hermes 无法接受此消息。草稿已保留；请停止回复或等待，然后重新发送。';
+  String get running_message_not_accepted => 'Hermes 无法接受此消息。草稿已保留；请停止回复或等待，然后重新发送。';
 
   @override
-  String get running_message_delivery_unknown =>
-      '无法确认消息是否送达。草稿已保留。请先检查聊天记录，再重试。';
+  String get running_message_delivery_unknown => '无法确认消息是否送达。草稿已保留。请先检查聊天记录，再重试。';
 
   @override
   String get attachment_tap_to_preview => '点按以预览';
@@ -343,8 +327,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get attachment_download_failed => '无法加载此文件，请检查连接后重试。';
 
   @override
-  String get attachment_no_inline_preview =>
-      '此文件类型不支持内嵌预览。请保存或分享原始文件，以便在其他应用中打开。';
+  String get attachment_no_inline_preview => '此文件类型不支持内嵌预览。请保存或分享原始文件，以便在其他应用中打开。';
 
   @override
   String get attachment_image_failed => '无法解码此图片。您仍可保存或分享原始文件。';
@@ -412,15 +395,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get saved_history_heading => 'Saved history';
 
   @override
-  String get received_output_heading =>
-      'Received output — match to saved history unconfirmed';
+  String get received_output_heading => 'Received output — match to saved history unconfirmed';
 
   @override
   String get received_output_details => 'About received output';
 
   @override
-  String get received_output_explanation =>
-      'This may also appear in saved history. The app cannot confirm a match.';
+  String get received_output_explanation => 'This may also appear in saved history. The app cannot confirm a match.';
 
   @override
   String get local_prompt_context => 'Local prompt context';
@@ -429,8 +410,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get received_output_badge => 'Received · match unconfirmed';
 
   @override
-  String get received_output_lifetime =>
-      'Received output is kept temporarily in this app session and may be shortened or removed as limits are reached. It may not be available after the app or connection is closed.';
+  String get received_output_lifetime => 'Received output is kept temporarily in this app session and may be shortened or removed as limits are reached. It may not be available after the app or connection is closed.';
 
   @override
   String get theme_palette => '颜色主题';
@@ -469,12 +449,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get assets_recent_subtitle => '查找 Hermes 在已保存的聊天中分享的文件';
 
   @override
-  String get assets_scope_notice =>
-      '仅显示 Hermes 在已保存的回复中明确分享的已生成文件。这里只展示部分聊天历史，并非完整的文件或附件目录。引用的文件可能已不存在。';
+  String get assets_scope_notice => '仅显示 Hermes 在已保存的回复中明确分享的已生成文件。这里只展示部分聊天历史，并非完整的文件或附件目录。引用的文件可能已不存在。';
 
   @override
-  String get assets_download_limit =>
-      '文件仅在点按时加载。预览和下载的单个文件大小上限均为 25 MiB；更大的文件请通过仪表盘获取。';
+  String get assets_download_limit => '文件仅在点按时加载。预览和下载的单个文件大小上限均为 25 MiB；更大的文件请通过仪表盘获取。';
 
   @override
   String get assets_search_hint => '搜索找到的文件或来源聊天';
@@ -498,8 +476,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get assets_empty => '在已扫描的消息中未找到资产';
 
   @override
-  String get assets_empty_detail =>
-      '扫描更多聊天或更早的消息，以查看更早的历史。普通附件和未链接的文件不会在此建立索引。';
+  String get assets_empty_detail => '扫描更多聊天或更早的消息，以查看更早的历史。普通附件和未链接的文件不会在此建立索引。';
 
   @override
   String get assets_no_matches => '未找到匹配的资产';
@@ -533,8 +510,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get assets_file_too_large => '此文件超出下载大小上限。请打开仪表盘进行下载。';
 
   @override
-  String get a_one_off_question_archives_itself_after_72_hours_anything =>
-      '一次性问题。将在 72 小时后自动归档；任何值得保留的内容都会被记住。';
+  String get a_one_off_question_archives_itself_after_72_hours_anything => '一次性问题。将在 72 小时后自动归档；任何值得保留的内容都会被记住。';
 
   @override
   String get archive_chat => '归档聊天';
@@ -574,8 +550,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get api_key => 'API 密钥';
 
   @override
-  String get api_server_key_from_hermes_env =>
-      '来自 ~/.hermes/.env 的 API_SERVER_KEY';
+  String get api_server_key_from_hermes_env => '来自 ~/.hermes/.env 的 API_SERVER_KEY';
 
   @override
   String get active => '活跃';
@@ -584,8 +559,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get activity => '活动';
 
   @override
-  String get activity_reads_the_durable_turn_journal_to_know_what_hermes =>
-      '活动功能会读取持久化轮次日志以了解 Hermes 正在执行的操作。请检查网关是否可访问，然后重试。';
+  String get activity_reads_the_durable_turn_journal_to_know_what_hermes => '活动功能会读取持久化轮次日志以了解 Hermes 正在执行的操作。请检查网关是否可访问，然后重试。';
 
   @override
   String get add => '添加';
@@ -600,8 +574,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get add_gateway_connection => '添加网关连接';
 
   @override
-  String get add_and_update_connections_from_the_backup_keep_the_rest =>
-      '从备份中添加和更新连接，其余保持不变。';
+  String get add_and_update_connections_from_the_backup_keep_the_rest => '从备份中添加和更新连接，其余保持不变。';
 
   @override
   String get add_attachment => '添加附件';
@@ -622,8 +595,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get allow_for_this_session => '本次会话允许';
 
   @override
-  String get allow_matching_commands_until_this_hermes_session_ends =>
-      '在此 Hermes 会话结束前允许匹配的命令。';
+  String get allow_matching_commands_until_this_hermes_session_ends => '在此 Hermes 会话结束前允许匹配的命令。';
 
   @override
   String get allow_once => '允许一次';
@@ -663,8 +635,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get archived => '已归档';
 
   @override
-  String get archived_conversations_appear_here =>
-      '这里只显示已归档的对话。旧聊天仍保留在“所有聊天”中。';
+  String get archived_conversations_appear_here => '这里只显示已归档的对话。旧聊天仍保留在“所有聊天”中。';
 
   @override
   String get archived_quick_chats => '已归档的快速聊天';
@@ -679,8 +650,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get assets => '资产';
 
   @override
-  String get assets_need_a_server_authoritative_assets_index_in_the_hermes =>
-      '资产需要在 Hermes 网关中建立服务器权威资产索引，然后才能按项目显示。';
+  String get assets_need_a_server_authoritative_assets_index_in_the_hermes => '资产需要在 Hermes 网关中建立服务器权威资产索引，然后才能按项目显示。';
 
   @override
   String get assets_unavailable => '资产不可用';
@@ -718,8 +688,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get autonomous_agents => '自主智能体';
 
   @override
-  String get background_recovery_unavailable_legacy_transport =>
-      '后台恢复不可用 — 旧版传输';
+  String get background_recovery_unavailable_legacy_transport => '后台恢复不可用 — 旧版传输';
 
   @override
   String get background_task_completed => '后台任务完成';
@@ -739,8 +708,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get base_url => '基础 URL';
 
   @override
-  String get binary_preview_is_unavailable_download_the_file_to_open_it =>
-      '二进制预览不可用。请下载文件后打开。';
+  String get binary_preview_is_unavailable_download_the_file_to_open_it => '二进制预览不可用。请下载文件后打开。';
 
   @override
   String get branch => '分支';
@@ -752,15 +720,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get branch_created_in_hermes_history => '已在 Hermes 历史记录中创建分支。';
 
   @override
-  String get browse_and_manage_your_hermes_agent_sessions_from_your_phone =>
-      '通过手机浏览和管理你的 Hermes Agent 会话。连接至运行在本地网络上的 Hermes 仪表盘。';
+  String get browse_and_manage_your_hermes_agent_sessions_from_your_phone => '通过手机浏览和管理你的 Hermes Agent 会话。连接至运行在本地网络上的 Hermes 仪表盘。';
 
   @override
   String get browse_server_files => '浏览服务器文件';
 
   @override
-  String get browse_the_miniserver_folders_behind_your_projects =>
-      '浏览项目背后的 miniserver 文件夹';
+  String get browse_the_miniserver_folders_behind_your_projects => '浏览项目背后的 miniserver 文件夹';
 
   @override
   String get cancel => '取消';
@@ -793,23 +759,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chats => '聊天';
 
   @override
-  String get chats_from_this_gateway_are_not_grouped_yet_grouping_stays =>
-      '此网关中的聊天尚未分组。分组状态将保留在此手机上，直到网关能够托管项目。';
+  String get chats_from_this_gateway_are_not_grouped_yet_grouping_stays => '此网关中的聊天尚未分组。分组状态将保留在此手机上，直到网关能够托管项目。';
 
   @override
-  String get chats_in_this_project_will_show_their_state_and_last =>
-      '此项目中的聊天将在此处显示其状态和最后活动。';
+  String get chats_in_this_project_will_show_their_state_and_last => '此项目中的聊天将在此处显示其状态和最后活动。';
 
   @override
   String get chats_that_are_not_assigned_to_a_project => '未分配至项目的聊天';
 
   @override
-  String get chats_you_start_in_this_project_will_appear_here_on =>
-      '你在此项目中发起的聊天将显示在此处，并同步到登录此 Hermes 的所有设备上。';
+  String get chats_you_start_in_this_project_will_appear_here_on => '你在此项目中发起的聊天将显示在此处，并同步到登录此 Hermes 的所有设备上。';
 
   @override
-  String get check_that_the_gateway_is_running_and_reachable_then_try =>
-      '请检查网关是否正在运行且可达，然后重试。';
+  String get check_that_the_gateway_is_running_and_reachable_then_try => '请检查网关是否正在运行且可达，然后重试。';
 
   @override
   String get check_the_dashboard_connection_and_try_again => '请检查仪表盘连接并重试。';
@@ -821,8 +783,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get choose_a_small_model_to_rewrite_queries => '选择一个小模型来重写查询';
 
   @override
-  String get choose_an_ai_search_model_before_using_ai_search =>
-      '请在使用 AI 搜索前选择一个 AI 搜索模型。';
+  String get choose_an_ai_search_model_before_using_ai_search => '请在使用 AI 搜索前选择一个 AI 搜索模型。';
 
   @override
   String get choose_an_active_project_next => '接下来选择一个活动项目';
@@ -888,8 +849,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get compatibility_mode => '兼容模式';
 
   @override
-  String get configure_a_valid_desktop_gateway_url_before_attaching_files =>
-      '在附加文件前，请先配置有效的 Desktop Gateway URL。';
+  String get configure_a_valid_desktop_gateway_url_before_attaching_files => '在附加文件前，请先配置有效的 Desktop Gateway URL。';
 
   @override
   String get confirm_always_allow => '确认始终允许';
@@ -906,9 +866,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get connection_issue => '连接问题';
 
   @override
-  String
-  get connection_switched_the_running_reply_continues_on_the_server_and =>
-      '连接已切换 — 正在进行的回复将在服务器上继续，并会自动重新附加。';
+  String get connection_switched_the_running_reply_continues_on_the_server_and => '连接已切换 — 正在进行的回复将在服务器上继续，并会自动重新附加。';
 
   @override
   String get connection_appearance_and_device_preferences => '连接、外观和设备偏好设置';
@@ -985,10 +943,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get could_not_reach_hermes => '无法连接至 Hermes';
 
   @override
-  String could_not_reach_authenticate_the_dashboard_at_check_the_port(
-    Object dashboardPort,
-    Object host,
-  ) {
+  String could_not_reach_authenticate_the_dashboard_at_check_the_port(Object dashboardPort, Object host) {
     return '无法连接/验证位于 $host:$dashboardPort 的仪表盘。请检查端口和凭据。';
   }
 
@@ -1047,12 +1002,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get create_a_project => '创建项目';
 
   @override
-  String get create_a_project_first_then_chats_can_live_inside_it =>
-      '请先创建一个项目，聊天内容即可存放在其中。';
+  String get create_a_project_first_then_chats_can_live_inside_it => '请先创建一个项目，聊天内容即可存放在其中。';
 
   @override
-  String get create_a_space_to_separate_related_conversations =>
-      '创建一个空间以区分相关的聊天。';
+  String get create_a_space_to_separate_related_conversations => '创建一个空间以区分相关的聊天。';
 
   @override
   String get create_branch => '创建分支';
@@ -1070,8 +1023,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get crons => 'Crons';
 
   @override
-  String get cron_conversations_empty =>
-      'Conversations from scheduled jobs appear here, including older runs.';
+  String get cron_conversations_empty => 'Conversations from scheduled jobs appear here, including older runs.';
 
   @override
   String get search_cron_conversations => 'Search cron conversations';
@@ -1118,23 +1070,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cron_upcoming_empty_title => '暂无已排程任务';
 
   @override
-  String get cron_upcoming_empty_message =>
-      '当前没有待运行的任务。请在 Cron 任务中创建，或让智能体安排一个。';
+  String get cron_upcoming_empty_message => '当前没有待运行的任务。请在 Cron 任务中创建，或让智能体安排一个。';
 
   @override
   String get cron_upcoming_unavailable => '无法显示已排程任务';
 
   @override
-  String get cron_upcoming_needs_dashboard =>
-      '已排程任务需要仪表盘连接。此地址不提供 Cron 排程。请检查仪表盘地址和主机支持情况。';
+  String get cron_upcoming_needs_dashboard => '已排程任务需要仪表盘连接。此地址不提供 Cron 排程。请检查仪表盘地址和主机支持情况。';
 
   @override
-  String get cron_upcoming_needs_dashboard_auth =>
-      '已排程任务需要仪表盘认证。请为此连接添加仪表盘用户名和密码，或启用代理模式。';
+  String get cron_upcoming_needs_dashboard_auth => '已排程任务需要仪表盘认证。请为此连接添加仪表盘用户名和密码，或启用代理模式。';
 
   @override
-  String get cron_upcoming_dashboard_unreachable =>
-      '无法连接到仪表盘。请检查主机、仪表盘端口和网络，然后重试。';
+  String get cron_upcoming_dashboard_unreachable => '无法连接到仪表盘。请检查主机、仪表盘端口和网络，然后重试。';
 
   @override
   String get cron_upcoming_load_failed => '无法读取已排程任务。请检查仪表盘连接并重试。';
@@ -1152,8 +1100,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cron_run => 'Cron 运行';
 
   @override
-  String get cross_device_ordering_and_reversible_bulk_organization =>
-      '跨设备排序与可撤销的批量整理';
+  String get cross_device_ordering_and_reversible_bulk_organization => '跨设备排序与可撤销的批量整理';
 
   @override
   String get current_profile_default => '当前配置档案默认值';
@@ -1196,9 +1143,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String delete_from_the_remote_hermes_history_this_cannot_be_undone(
-    Object title,
-  ) {
+  String delete_from_the_remote_hermes_history_this_cannot_be_undone(Object title) {
     return '从远程 Hermes 历史记录中删除“$title”？此操作不可撤销。';
   }
 
@@ -1230,15 +1175,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get delivery_is_uncertain_recovering_without_resending =>
-      '发送状态不确定；正在恢复且不重新发送……';
+  String get delivery_is_uncertain_recovering_without_resending => '发送状态不确定；正在恢复且不重新发送……';
 
   @override
   String get desktop_gateway_url_optional => 'Desktop Gateway URL（可选）';
 
   @override
-  String get desktop_gateway_is_not_configured_for_this_connection =>
-      '此连接未配置 Desktop Gateway。';
+  String get desktop_gateway_is_not_configured_for_this_connection => '此连接未配置 Desktop Gateway。';
 
   @override
   String get desktop_app => '桌面应用';
@@ -1270,8 +1213,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get durable_facts_hermes_keeps_about_you => 'Hermes 记录的关于你的持久事实';
 
   @override
-  String get durable_work_inside_one_of_your_projects_shared_with_desktop =>
-      '项目内的持久工作内容，已与 Desktop 共享。';
+  String get durable_work_inside_one_of_your_projects_shared_with_desktop => '项目内的持久工作内容，已与 Desktop 共享。';
 
   @override
   String get edit => '编辑';
@@ -1295,8 +1237,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get enable_notifications_description => '关闭后将禁用以下所有通知。';
 
   @override
-  String get enables_file_attachments_through_the_desktop_remote_gateway =>
-      '允许通过 Desktop 远程网关发送文件附件。';
+  String get enables_file_attachments_through_the_desktop_remote_gateway => '允许通过 Desktop 远程网关发送文件附件。';
 
   @override
   String get enter_a_name => '输入名称';
@@ -1308,12 +1249,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get enter_the_passphrase_for_this_backup => '请输入此备份的密码短语。';
 
   @override
-  String get every_conversation_is_already_assigned_to_a_project =>
-      '所有对话均已分配至某个项目。';
+  String get every_conversation_is_already_assigned_to_a_project => '所有对话均已分配至某个项目。';
 
   @override
-  String get everything_not_yet_native_in_the_authenticated_web_dashboard =>
-      '所有尚未原生支持的功能，均可在已认证的 Web 仪表盘中查看';
+  String get everything_not_yet_native_in_the_authenticated_web_dashboard => '所有尚未原生支持的功能，均可在已认证的 Web 仪表盘中查看';
 
   @override
   String get explain_the_attached_content_clearly => '清晰解释附件内容。';
@@ -1324,9 +1263,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String
-  get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it =>
-      '显式选择将调整 Android 无障碍文字大小；选择“系统”则保持不变。';
+  String get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it => '显式选择将调整 Android 无障碍文字大小；选择“系统”则保持不变。';
 
   @override
   String get export_label => '导出';
@@ -1344,15 +1281,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get extract_tasks => '提取任务';
 
   @override
-  String
-  get extract_the_decisions_deadlines_owners_and_actionable_action_items_from =>
-      '从附件内容中提取决策、截止日期、负责人以及可执行的操作项。';
+  String get extract_the_decisions_deadlines_owners_and_actionable_action_items_from => '从附件内容中提取决策、截止日期、负责人以及可执行的操作项。';
 
   @override
-  String
-  extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(
-    Object text,
-  ) {
+  String extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(Object text) {
     return '从以下内容中提取决策、截止日期、负责人以及可执行的操作项：\n\n$text';
   }
 
@@ -1387,8 +1319,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get file_attached_document_catalog_registration_is_pending =>
-      '已添加文件附件；文档目录注册正在等待处理。';
+  String get file_attached_document_catalog_registration_is_pending => '已添加文件附件；文档目录注册正在等待处理。';
 
   @override
   String get file_reference_added_to_chat => '文件引用已添加至聊天';
@@ -1412,8 +1343,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get gateway_api_access => '网关 API 访问';
 
   @override
-  String get gateway_connected_but_the_dashboard_could_not_be_reached_or =>
-      '网关已连接，但无法访问仪表盘或未能通过身份验证。请检查仪表盘详细信息，或清除它们以跳过。';
+  String get gateway_connected_but_the_dashboard_could_not_be_reached_or => '网关已连接，但无法访问仪表盘或未能通过身份验证。请检查仪表盘详细信息，或清除它们以跳过。';
 
   @override
   String get gateway_path_prefix => '网关路径前缀';
@@ -1428,16 +1358,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hermes_agent_for_android => 'Ares - formerly Hermes Android';
 
   @override
-  String get hermes_could_not_accept_the_answer_please_try_again =>
-      'Hermes 无法接受此回答，请重试。';
+  String get hermes_could_not_accept_the_answer_please_try_again => 'Hermes 无法接受此回答，请重试。';
 
   @override
-  String get hermes_could_not_load_your_saved_connections =>
-      'Hermes 无法加载你保存的连接';
+  String get hermes_could_not_load_your_saved_connections => 'Hermes 无法加载你保存的连接';
 
   @override
-  String get hermes_did_not_accept_the_response_please_try_again =>
-      'Hermes 未能接受此响应，请重试。';
+  String get hermes_did_not_accept_the_response_please_try_again => 'Hermes 未能接受此响应，请重试。';
 
   @override
   String get hermes_is_responding => 'Hermes 正在响应…';
@@ -1446,8 +1373,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hermes_is_waiting_for_input => 'Hermes 正在等待输入…';
 
   @override
-  String get hermes_keeps_android_accessibility_text_scaling_active =>
-      'Ares 保持 Android 辅助功能文字缩放处于活动状态。';
+  String get hermes_keeps_android_accessibility_text_scaling_active => 'Ares 保持 Android 辅助功能文字缩放处于活动状态。';
 
   @override
   String get hermes_needs_your_input => 'Hermes 需要你的输入';
@@ -1456,8 +1382,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hermes_profile_optional => 'Hermes 配置档案（可选）';
 
   @override
-  String get hermes_profile_must_be_a_plain_profile_name_such_as =>
-      'Hermes 配置档案必须是纯粹的档案名称（例如 “sol”），而不能是路径。';
+  String get hermes_profile_must_be_a_plain_profile_name_such_as => 'Hermes 配置档案必须是纯粹的档案名称（例如 “sol”），而不能是路径。';
 
   @override
   String get hermes_reasoning_details => 'Hermes 推理详情';
@@ -1468,15 +1393,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get hermes_stopped_recovery_safely_no_prompt_was_resent =>
-      'Hermes 已安全停止恢复。未重新发送任何提示词。';
+  String get hermes_stopped_recovery_safely_no_prompt_was_resent => 'Hermes 已安全停止恢复。未重新发送任何提示词。';
 
   @override
   String get hide_passphrase => '隐藏密码短语';
 
   @override
-  String get home_needs_your_recent_chats_to_know_what_deserves_your =>
-      '首页需要你最近的聊天记录来了解哪些内容值得你关注。请检查网关是否可达，然后重试。';
+  String get home_needs_your_recent_chats_to_know_what_deserves_your => '首页需要你最近的聊天记录来了解哪些内容值得你关注。请检查网关是否可达，然后重试。';
 
   @override
   String get host => '主机';
@@ -1528,8 +1451,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get leave_blank_for_default_8642_443_with_https =>
-      '留空则使用默认值（8642；使用 https 时为 443）';
+  String get leave_blank_for_default_8642_443_with_https => '留空则使用默认值（8642；使用 https 时为 443）';
 
   @override
   String get leave_blank_for_default_9119 => '留空则使用默认值 (9119)';
@@ -1557,8 +1479,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get location => '位置';
 
   @override
-  String get make_sure_the_gateway_api_server_is_running_hermes_gateway =>
-      '请确保网关 API Server 正在运行\n(hermes gateway status)';
+  String get make_sure_the_gateway_api_server_is_running_hermes_gateway => '请确保网关 API Server 正在运行\n(hermes gateway status)';
 
   @override
   String matches(Object assigned, Object name) {
@@ -1575,15 +1496,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get memory_agent_notes => '助手笔记';
 
   @override
-  String get memory_builtin_scope =>
-      '此配置档案的 USER.md 和 MEMORY.md 中保存的事实。这里不显示外部记忆服务（包括 MemPalace）的内容。';
+  String get memory_builtin_scope => '此配置档案的 USER.md 和 MEMORY.md 中保存的事实。这里不显示外部记忆服务（包括 MemPalace）的内容。';
 
   @override
   String get memory_read_only => '仅供查看。可在聊天中请 Hermes 更正或忘记某条事实。';
 
   @override
-  String get memory_unavailable =>
-      '此网关或配置档案无法提供已保存的事实。请检查所选配置档案，并在需要时更新 Hermes。';
+  String get memory_unavailable => '此网关或配置档案无法提供已保存的事实。请检查所选配置档案，并在需要时更新 Hermes。';
 
   @override
   String get memory_load_error => '请检查仪表盘连接和身份验证，然后重试。';
@@ -1592,15 +1511,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get memory_read_full_fact => '阅读完整事实';
 
   @override
-  String get memory_full_fact_requires_update =>
-      '查看完整事实需要更新的 Hermes 网关。请更新 Hermes 并刷新列表。';
+  String get memory_full_fact_requires_update => '查看完整事实需要更新的 Hermes 网关。请更新 Hermes 并刷新列表。';
 
   @override
   String get memory_fact_detail_error => '无法加载完整事实。它可能已更改；请刷新列表后重试。';
 
   @override
-  String get memory_entries_are_cross_session_facts_the_agent_remembers_they =>
-      'Hermes 记住的事实会显示在这里。';
+  String get memory_entries_are_cross_session_facts_the_agent_remembers_they => 'Hermes 记住的事实会显示在这里。';
 
   @override
   String get merge => '合并';
@@ -1624,8 +1541,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get migration_complete => '迁移完成';
 
   @override
-  String get migration_failed_local_spaces_were_kept_unchanged =>
-      '迁移失败。本地空间保持不变。';
+  String get migration_failed_local_spaces_were_kept_unchanged => '迁移失败。本地空间保持不变。';
 
   @override
   String get migration_incomplete => '迁移未完成';
@@ -1683,20 +1599,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get nav_projects => '项目';
 
   @override
-  String get needs_a_correction_aware_filing_contract_in_the_hermes_gateway =>
-      'Hermes 网关中需要具备支持纠错感知的文件归档契约。';
+  String get needs_a_correction_aware_filing_contract_in_the_hermes_gateway => 'Hermes 网关中需要具备支持纠错感知的文件归档契约。';
 
   @override
-  String get needs_a_reachable_hermes_dashboard_check_the_host_port_and =>
-      '需要可访问的 Hermes 仪表盘。请检查此连接的主机、端口和凭据。';
+  String get needs_a_reachable_hermes_dashboard_check_the_host_port_and => '需要可访问的 Hermes 仪表盘。请检查此连接的主机、端口和凭据。';
 
   @override
-  String get needs_a_server_authoritative_assets_index_in_the_hermes_gateway =>
-      'Hermes 网关中需要具备服务端权威的资产索引。';
+  String get needs_a_server_authoritative_assets_index_in_the_hermes_gateway => 'Hermes 网关中需要具备服务端权威的资产索引。';
 
   @override
-  String get needs_durable_pin_ordering_batch_mutation_and_undo_contracts_in =>
-      'Hermes 网关中需要具备持久化的置顶排序、批量变更和撤销契约。';
+  String get needs_durable_pin_ordering_batch_mutation_and_undo_contracts_in => 'Hermes 网关中需要具备持久化的置顶排序、批量变更和撤销契约。';
 
   @override
   String get needs_you => '需要你';
@@ -1727,12 +1639,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get nginx_injects_auth_app_sends_clean_requests =>
-      'Nginx 注入认证 — 应用发送干净请求';
+  String get nginx_injects_auth_app_sends_clean_requests => 'Nginx 注入认证 — 应用发送干净请求';
 
   @override
-  String get no_tts_voices_found_ninstall_google_text_to_speech_and =>
-      '未找到 TTS 语音。\n请安装 Google Text-to-Speech 并下载语音数据。';
+  String get no_tts_voices_found_ninstall_google_text_to_speech_and => '未找到 TTS 语音。\n请安装 Google Text-to-Speech 并下载语音数据。';
 
   @override
   String get no_active_projects_on_this_gateway => '此网关上暂无活动项目';
@@ -1741,8 +1651,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get no_activity_yet => '暂无活动';
 
   @override
-  String get no_chat_is_blocked_running_or_waiting_to_be_resumed =>
-      '没有被阻塞、运行中或等待恢复的聊天。准备好后随时可以开始新聊天。';
+  String get no_chat_is_blocked_running_or_waiting_to_be_resumed => '没有被阻塞、运行中或等待恢复的聊天。准备好后随时可以开始新聊天。';
 
   @override
   String no_chats_in_this_project_match(Object searchQuery) {
@@ -1750,8 +1659,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get no_chats_in_this_space_yet_tap_to_start_one =>
-      '此空间暂无聊天。轻点 + 开始聊天。';
+  String get no_chats_in_this_space_yet_tap_to_start_one => '此空间暂无聊天。轻点 + 开始聊天。';
 
   @override
   String get no_chats_yet => '暂无聊天';
@@ -1769,8 +1677,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get no_folders_yet => '暂无文件夹';
 
   @override
-  String get no_local_spaces_were_found_for_this_connection_so_projects =>
-      '在此连接中未找到本地空间，因此项目已是此处的唯一组织方式。';
+  String get no_local_spaces_were_found_for_this_connection_so_projects => '在此连接中未找到本地空间，因此项目已是此处的唯一组织方式。';
 
   @override
   String get no_matches => '无匹配项';
@@ -1808,8 +1715,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get no_text_shared => '未共享文本';
 
   @override
-  String get no_turn_is_blocked_in_flight_or_recently_finished_work =>
-      '没有被阻塞、进行中或最近完成的轮次。你开始的工作会显示在这里。';
+  String get no_turn_is_blocked_in_flight_or_recently_finished_work => '没有被阻塞、进行中或最近完成的轮次。你开始的工作会显示在这里。';
 
   @override
   String get no_turn_needs_your_input_or_has_failed => '没有需要你输入或失败的轮次。';
@@ -1821,8 +1727,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get nothing_changed_in_the_last_seven_days => '最近七天无更改。';
 
   @override
-  String get nothing_has_moved_yet_this_is_only_what_a_migration =>
-      '尚未移动任何内容 — 这只是迁移将执行的操作。';
+  String get nothing_has_moved_yet_this_is_only_what_a_migration => '尚未移动任何内容 — 这只是迁移将执行的操作。';
 
   @override
   String get nothing_here => '这里什么也没有';
@@ -1840,19 +1745,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notifications => '通知';
 
   @override
-  String get windows_notifications_blocked =>
-      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+  String get windows_notifications_blocked => 'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
 
   @override
-  String get windows_notification_diagnostics =>
-      'What Ares submitted to Windows';
+  String get windows_notification_diagnostics => 'What Ares submitted to Windows';
 
   @override
   String get windows_window_activity => 'Share chat activity';
 
   @override
-  String get windows_window_activity_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+  String get windows_window_activity_hint => 'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
 
   @override
   String get windows_completion_sound => 'Completion sound';
@@ -1870,8 +1772,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get windows_sound_silent => 'Silent';
 
   @override
-  String get notifications_permission_denied =>
-      '系统已阻止通知。请在 Android 设置中允许此应用发送通知。';
+  String get notifications_permission_denied => '系统已阻止通知。请在 Android 设置中允许此应用发送通知。';
 
   @override
   String get off_no_thinking => '关闭（无思考）';
@@ -1903,8 +1804,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get open_the_hermes_dashboard => '打开 Hermes 仪表盘';
 
   @override
-  String get optional_for_the_memory_cron_skills_settings_tabs_leave_blank =>
-      '可选。用于“记忆”、“Cron”、“技能”、“设置”标签页。留空则使用默认仪表盘端口（9119）且无需登录。';
+  String get optional_for_the_memory_cron_skills_settings_tabs_leave_blank => '可选。用于“记忆”、“Cron”、“技能”、“设置”标签页。留空则使用默认仪表盘端口（9119）且无需登录。';
 
   @override
   String get organization => '组织';
@@ -1952,16 +1852,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profile_default_model => '配置档案默认模型';
 
   @override
-  String profile_default_set_to_chats_with_their_own_model_keep(
-    Object selectedModel,
-  ) {
+  String profile_default_set_to_chats_with_their_own_model_keep(Object selectedModel) {
     return '配置档案默认值已设为 $selectedModel。拥有独立模型的聊天将保留该覆盖设置。';
   }
 
   @override
-  String
-  get profile_this_connection_chats_as_when_the_dashboard_serves_several =>
-      '当仪表盘服务于多个配置档案时，为此连接的聊天指定配置档案。留空则使用独立的单配置档案仪表盘。';
+  String get profile_this_connection_chats_as_when_the_dashboard_serves_several => '当仪表盘服务于多个配置档案时，为此连接的聊天指定配置档案。留空则使用独立的单配置档案仪表盘。';
 
   @override
   String get project => '项目';
@@ -1979,13 +1875,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get projects => '项目';
 
   @override
-  String get projects_group_related_chats_files_and_activity_and_stay_in =>
-      '项目将相关的聊天、文件和活动进行分组，并与你电脑上的 Hermes 保持同步。';
+  String get projects_group_related_chats_files_and_activity_and_stay_in => '项目将相关的聊天、文件和活动进行分组，并与你电脑上的 Hermes 保持同步。';
 
   @override
-  String
-  get projects_need_a_desktop_gateway_connection_add_the_desktop_gateway =>
-      '项目需要 Desktop Gateway 连接。请将 Desktop Gateway URL 添加到此连接，以便跨设备管理聊天。';
+  String get projects_need_a_desktop_gateway_connection_add_the_desktop_gateway => '项目需要 Desktop Gateway 连接。请将 Desktop Gateway URL 添加到此连接，以便跨设备管理聊天。';
 
   @override
   String get projects_unavailable => '项目不可用';
@@ -2012,8 +1905,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get quick_chat => '快速聊天';
 
   @override
-  String get quick_chats_appear_here_after_their_retention_period =>
-      '快速聊天将在保留期过后显示在此处。';
+  String get quick_chats_appear_here_after_their_retention_period => '快速聊天将在保留期过后显示在此处。';
 
   @override
   String get read_aloud => '朗读';
@@ -2077,14 +1969,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get repositories => '代码库';
 
   @override
-  String
-  get research_the_attached_content_verify_the_important_claims_and_cite =>
-      '研究附件内容，核实重要主张并引用来源。';
+  String get research_the_attached_content_verify_the_important_claims_and_cite => '研究附件内容，核实重要主张并引用来源。';
 
   @override
-  String research_this_content_verify_the_important_claims_and_cite_sources(
-    Object text,
-  ) {
+  String research_this_content_verify_the_important_claims_and_cite_sources(Object text) {
     return '研究此内容，核实重要主张并引用来源：\n\n$text';
   }
 
@@ -2105,8 +1993,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get response_closed_locally_no_active_gateway_turn_was_found =>
-      '响应已在本地关闭；未找到活动的网关轮次。';
+  String get response_closed_locally_no_active_gateway_turn_was_found => '响应已在本地关闭；未找到活动的网关轮次。';
 
   @override
   String get response_complete => '响应完成';
@@ -2149,8 +2036,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get review_local_spaces => '检查本地空间';
 
   @override
-  String get review_or_promote_quick_chats_past_their_retention_period =>
-      '查看或提升超出保留期限的快速聊天';
+  String get review_or_promote_quick_chats_past_their_retention_period => '查看或提升超出保留期限的快速聊天';
 
   @override
   String get review_the_attached_content => '查看附件内容。';
@@ -2168,12 +2054,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get save_changes => '保存更改';
 
   @override
-  String get save_a_permanent_rule_in_the_hermes_configuration =>
-      '在 Hermes 配置中保存永久规则。';
+  String get save_a_permanent_rule_in_the_hermes_configuration => '在 Hermes 配置中保存永久规则。';
 
   @override
-  String get save_the_durable_facts_from_the_attached_content_to_memory =>
-      '将附件内容中的持久事实保存到记忆中，然后确认保留的内容。';
+  String get save_the_durable_facts_from_the_attached_content_to_memory => '将附件内容中的持久事实保存到记忆中，然后确认保留的内容。';
 
   @override
   String save_the_durable_facts_from_this_content_to_memory_then(Object text) {
@@ -2181,8 +2065,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get save_your_connections_and_settings_to_an_encrypted_file_then =>
-      '将连接与设置保存到加密文件中，以便在重新安装或在其他设备上时恢复它们。';
+  String get save_your_connections_and_settings_to_an_encrypted_file_then => '将连接与设置保存到加密文件中，以便在重新安装或在其他设备上时恢复它们。';
 
   @override
   String save_2(Object filename) {
@@ -2274,8 +2157,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get show_passphrase => '显示密码短语';
 
   @override
-  String get show_tool_calls_thinking_and_message_metadata =>
-      '显示工具调用、思考过程和消息元数据';
+  String get show_tool_calls_thinking_and_message_metadata => '显示工具调用、思考过程和消息元数据';
 
   @override
   String get signal_messages => 'Signal 消息';
@@ -2357,8 +2239,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get submitted_waiting_for_hermes => '已提交，等待 Hermes 响应';
 
   @override
-  String get suggest_projects_and_learn_from_your_corrections =>
-      '建议项目并从你的更正中学习';
+  String get suggest_projects_and_learn_from_your_corrections => '建议项目并从你的更正中学习';
 
   @override
   String get summarize_the_attached_content => '总结附件内容。';
@@ -2378,8 +2259,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get take_photo => '拍照';
 
   @override
-  String get tap_to_add_a_remote_hermes_gateway_api_server_port =>
-      '点击 + 添加远程 Hermes 网关\n(API Server，端口 8642)';
+  String get tap_to_add_a_remote_hermes_gateway_api_server_port => '点击 + 添加远程 Hermes 网关\n(API Server，端口 8642)';
 
   @override
   String get tap_the_button_to_start_a_new_chat => '点击 + 按钮开始新的聊天';
@@ -2417,16 +2297,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get the_api_key_could_not_be_stored_securely => '无法安全存储 API 密钥。';
 
   @override
-  String get the_project_will_move_to_archived_its_chats_and_files =>
-      '该项目将移至“已归档”。其聊天和文件将保持完整，你可以随时恢复它。';
+  String get the_project_will_move_to_archived_its_chats_and_files => '该项目将移至“已归档”。其聊天和文件将保持完整，你可以随时恢复它。';
 
   @override
-  String get the_project_will_move_to_archived_its_chats_and_files_2 =>
-      '该项目将移至“已归档”。其聊天和文件将保持完整，你可以稍后恢复它。';
+  String get the_project_will_move_to_archived_its_chats_and_files_2 => '该项目将移至“已归档”。其聊天和文件将保持完整，你可以稍后恢复它。';
 
   @override
-  String get the_active_profile_did_not_return_any_selectable_models =>
-      '当前配置档案未返回任何可选模型。';
+  String get the_active_profile_did_not_return_any_selectable_models => '当前配置档案未返回任何可选模型。';
 
   @override
   String get the_backup_could_not_be_exported => '无法导出备份。';
@@ -2441,8 +2318,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get the_connection_could_not_be_stored_securely => '无法安全存储连接。';
 
   @override
-  String get the_dashboard_credentials_could_not_be_stored_securely =>
-      '无法安全存储仪表盘凭据。';
+  String get the_dashboard_credentials_could_not_be_stored_securely => '无法安全存储仪表盘凭据。';
 
   @override
   String get the_detached_reply_failed => '已分离的回复失败。';
@@ -2453,26 +2329,21 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get the_file_contains_your_api_keys_and_dashboard_password_so =>
-      '该文件包含你的 API 密钥和仪表盘密码，因此已加密。没有此密码短语，备份将无法恢复。';
+  String get the_file_contains_your_api_keys_and_dashboard_password_so => '该文件包含你的 API 密钥和仪表盘密码，因此已加密。没有此密码短语，备份将无法恢复。';
 
   @override
   String get the_last_turn_failed => '上一轮对话失败';
 
   @override
-  String the_local_connection_store_looks_damaged_you_can_reset_the(
-    Object errorType,
-  ) {
+  String the_local_connection_store_looks_damaged_you_can_reset_the(Object errorType) {
     return '本地连接存储似乎已损坏 ($errorType)。你可以重置已保存的连接并重新开始。网关上的聊天记录不受影响。';
   }
 
   @override
-  String get the_model_only_rewrites_your_question_into_a_short_full =>
-      '该模型仅将你的问题重写为简短的全文查询。Hermes 使用已在主机上配置的提供方凭据。';
+  String get the_model_only_rewrites_your_question_into_a_short_full => '该模型仅将你的问题重写为简短的全文查询。Hermes 使用已在主机上配置的提供方凭据。';
 
   @override
-  String get the_server_has_not_reported_folders_for_this_project_yet =>
-      '服务器尚未报告此项目的文件夹。全局文件仍可在“更多”中查看。';
+  String get the_server_has_not_reported_folders_for_this_project_yet => '服务器尚未报告此项目的文件夹。全局文件仍可在“更多”中查看。';
 
   @override
   String get the_turn_failed => '本轮对话失败';
@@ -2481,47 +2352,37 @@ class AppLocalizationsZh extends AppLocalizations {
   String get the_two_passphrases_do_not_match => '两次输入的密码短语不匹配。';
 
   @override
-  String get the_value_is_sent_directly_to_the_active_hermes_gateway =>
-      '该值将直接发送至当前活动的 Hermes 网关，不会被此 Android 应用保存。';
+  String get the_value_is_sent_directly_to_the_active_hermes_gateway => '该值将直接发送至当前活动的 Hermes 网关，不会被此 Android 应用保存。';
 
   @override
-  String get there_are_no_visible_files_in_this_server_folder =>
-      '此服务器文件夹中没有可见文件。';
+  String get there_are_no_visible_files_in_this_server_folder => '此服务器文件夹中没有可见文件。';
 
   @override
   String get thinking_effort => '思考强度';
 
   @override
-  String get this_hermes_gateway_does_not_support_opening_a_project_yet =>
-      '此 Hermes 网关尚不支持打开项目。请更新服务器上的 Hermes 以在手机上浏览项目。';
+  String get this_hermes_gateway_does_not_support_opening_a_project_yet => '此 Hermes 网关尚不支持打开项目。请更新服务器上的 Hermes 以在手机上浏览项目。';
 
   @override
-  String get this_hermes_gateway_is_older_than_server_side_projects_so =>
-      '此 Hermes 网关版本旧于服务端项目功能，因此聊天仅在此设备上分组。请更新 Hermes 以在多台设备间共享相同项目。';
+  String get this_hermes_gateway_is_older_than_server_side_projects_so => '此 Hermes 网关版本旧于服务端项目功能，因此聊天仅在此设备上分组。请更新 Hermes 以在多台设备间共享相同项目。';
 
   @override
-  String get this_project_has_no_folder_to_open_the_chat_in =>
-      '此项目需要先添加文件夹才能在其中开始聊天。添加文件夹后请重试。';
+  String get this_project_has_no_folder_to_open_the_chat_in => '此项目需要先添加文件夹才能在其中开始聊天。添加文件夹后请重试。';
 
   @override
-  String get this_chat_has_no_messages_available_in_the_desktop_session =>
-      '此聊天在 Desktop 会话中暂无可用消息。';
+  String get this_chat_has_no_messages_available_in_the_desktop_session => '此聊天在 Desktop 会话中暂无可用消息。';
 
   @override
-  String get this_creates_a_permanent_rule_in_hermes_review_the_full =>
-      '这将在 Hermes 中创建永久规则。确认前请仔细检查完整命令。';
+  String get this_creates_a_permanent_rule_in_hermes_review_the_full => '这将在 Hermes 中创建永久规则。确认前请仔细检查完整命令。';
 
   @override
-  String get this_gateway_does_not_host_projects_yet_update_the_gateway =>
-      '此网关尚不支持托管项目。请更新网关以在各设备间整理聊天。';
+  String get this_gateway_does_not_host_projects_yet_update_the_gateway => '此网关尚不支持托管项目。请更新网关以在各设备间整理聊天。';
 
   @override
-  String get this_permanently_deletes_the_project_chats_will_not_be_deleted =>
-      '这将永久删除该项目。聊天记录不会被删除；它们将返回至未分配状态。';
+  String get this_permanently_deletes_the_project_chats_will_not_be_deleted => '这将永久删除该项目。聊天记录不会被删除；它们将返回至未分配状态。';
 
   @override
-  String get this_server_doesn_t_offer_background_recovery_chats_run_live =>
-      '此服务器不提供后台恢复功能 —— 聊天实时运行';
+  String get this_server_doesn_t_offer_background_recovery_chats_run_live => '此服务器不提供后台恢复功能 —— 聊天实时运行';
 
   @override
   String get this_week => '本周';
@@ -2562,8 +2423,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get unable_to_read_the_selected_image_the_selection_was_kept =>
-      '无法读取所选图片，已保留当前选择。';
+  String get unable_to_read_the_selected_image_the_selection_was_kept => '无法读取所选图片，已保留当前选择。';
 
   @override
   String get unassigned => '未分配';
@@ -2604,19 +2464,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get use_on_device => '使用设备端';
 
   @override
-  String get use_the_attached_content_to_identify_and_fill_the_relevant =>
-      '使用附件内容识别并填写相关文档或表单字段。提交任何内容前请先询问。';
+  String get use_the_attached_content_to_identify_and_fill_the_relevant => '使用附件内容识别并填写相关文档或表单字段。提交任何内容前请先询问。';
 
   @override
-  String use_this_content_to_identify_and_fill_the_relevant_document(
-    Object text,
-  ) {
+  String use_this_content_to_identify_and_fill_the_relevant_document(Object text) {
     return '使用此内容识别并填写相关文档或表单字段。提交任何内容前请先询问：\n\n$text';
   }
 
   @override
-  String get used_for_hosted_path_prefixes_and_for_the_settings_memory =>
-      '用于托管路径前缀以及“设置”、“记忆”、“技能”和“Cron”标签页。若需开放仪表盘，可将用户名/密码留空；若反向代理已注入仪表盘认证，请启用代理模式。';
+  String get used_for_hosted_path_prefixes_and_for_the_settings_memory => '用于托管路径前缀以及“设置”、“记忆”、“技能”和“Cron”标签页。若需开放仪表盘，可将用户名/密码留空；若反向代理已注入仪表盘认证，请启用代理模式。';
 
   @override
   String get username_optional => '用户名（可选）';
@@ -2673,8 +2529,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get e_g_dashboard => '例如 /dashboard';
 
   @override
-  String get e_g_dashboard_proxy_path_before_api =>
-      '例如 /dashboard（/api/ 之前的代理路径）';
+  String get e_g_dashboard_proxy_path_before_api => '例如 /dashboard（/api/ 之前的代理路径）';
 
   @override
   String get e_g_profile_peter => '例如 /profile/peter';
@@ -2704,12 +2559,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get example_host_hint =>
-      '192.168.1.50、100.x.y.z 或 hermes-machine.tailnet.ts.net';
+  String get example_host_hint => '192.168.1.50、100.x.y.z 或 hermes-machine.tailnet.ts.net';
 
   @override
-  String get example_profile_prefix_hint_full =>
-      '例如 /profile/peter（/api/ 和 /v1/ 之前的代理路径）';
+  String get example_profile_prefix_hint_full => '例如 /profile/peter（/api/ 和 /v1/ 之前的代理路径）';
 
   @override
   String and_more(Object count) {
@@ -2755,10 +2608,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String chats_migrated_projects_created(
-    Object createdProjects,
-    Object linkedSessions,
-  ) {
+  String chats_migrated_projects_created(Object createdProjects, Object linkedSessions) {
     return '已迁移 $linkedSessions 个聊天 · 已创建 $createdProjects 个项目';
   }
 
@@ -3090,8 +2940,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get admin_password_needed => '需要管理员密码';
 
   @override
-  String get hermes_needs_a_sudo_password_for_the_pending_terminal_command =>
-      'Hermes 需要 sudo 密码来执行挂起的终端命令。';
+  String get hermes_needs_a_sudo_password_for_the_pending_terminal_command => 'Hermes 需要 sudo 密码来执行挂起的终端命令。';
 
   @override
   String get sudo_password => 'sudo 密码';
@@ -3100,8 +2949,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get secret_needed => '需要密钥';
 
   @override
-  String get hermes_needs_a_secret_for_the_pending_skill =>
-      'Hermes 需要为待处理的技能提供一个密钥。';
+  String get hermes_needs_a_secret_for_the_pending_skill => 'Hermes 需要为待处理的技能提供一个密钥。';
 
   @override
   String get secret_value => '密钥值';
@@ -3139,16 +2987,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get update_downloading => 'Downloading and verifying update…';
 
   @override
-  String get update_allow_install =>
-      'Allow Hermes to install this update, then return here and tap Install update.';
+  String get update_allow_install => 'Allow Hermes to install this update, then return here and tap Install update.';
 
   @override
-  String get update_failed =>
-      'The update could not be downloaded, verified, or opened. Try again or view the release page.';
+  String get update_failed => 'The update could not be downloaded, verified, or opened. Try again or view the release page.';
 
   @override
-  String get a_newer_hermes_android_build_is_available_on_github =>
-      'GitHub 上已有更新的 Ares 版本。';
+  String get a_newer_hermes_android_build_is_available_on_github => 'GitHub 上已有更新的 Ares 版本。';
 
   @override
   String get release_notes => '发行说明';
@@ -3200,20 +3045,16 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String
-  get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins =>
-      '紧凑模式会去掉 You 和 Hermes 标签，并缩小气泡内边距、间距和两侧边距。';
+  String get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins => '紧凑模式会去掉 You 和 Hermes 标签，并缩小气泡内边距、间距和两侧边距。';
 
   @override
   String get client_certificate_mtls => 'Client certificate (mTLS)';
 
   @override
-  String get client_certificate_mtls_description =>
-      'Present a certificate when an HTTPS proxy requires mutual TLS.';
+  String get client_certificate_mtls_description => 'Present a certificate when an HTTPS proxy requires mutual TLS.';
 
   @override
-  String get client_certificate_https_only =>
-      'Client certificates are only used for HTTPS connections.';
+  String get client_certificate_https_only => 'Client certificates are only used for HTTPS connections.';
 
   @override
   String get choose_certificate => 'Choose certificate';
@@ -3222,16 +3063,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get certificate_password => 'Certificate password';
 
   @override
-  String get this_certificate_is_password_protected =>
-      'This certificate is password-protected. It opens as you type.';
+  String get this_certificate_is_password_protected => 'This certificate is password-protected. It opens as you type.';
 
   @override
-  String get enter_the_certificate_password_to_finish_loading_it =>
-      'Enter the certificate password to finish loading the certificate you chose.';
+  String get enter_the_certificate_password_to_finish_loading_it => 'Enter the certificate password to finish loading the certificate you chose.';
 
   @override
-  String get client_certificate_required =>
-      'Load a client certificate or turn off the client certificate option.';
+  String get client_certificate_required => 'Load a client certificate or turn off the client certificate option.';
 
   @override
   String client_certificate_loaded(String label) {
@@ -3242,8 +3080,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get remove_certificate => 'Remove certificate';
 
   @override
-  String get certificate_import_failed =>
-      'That certificate could not be loaded.';
+  String get certificate_import_failed => 'That certificate could not be loaded.';
 
   @override
   String get background_work => '后台运行';
@@ -3252,12 +3089,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get keep_chats_active_in_background => '在后台保持聊天连接';
 
   @override
-  String get background_work_description =>
-      '应用在后台时，保持用户发起的聊天连接。空闲连接可能会断开。此功能会增加电量和流量消耗。关闭后不会停止服务器上的任务。';
+  String get background_work_description => '应用在后台时，保持用户发起的聊天连接。空闲连接可能会断开。此功能会增加电量和流量消耗。关闭后不会停止服务器上的任务。';
 
   @override
-  String get background_work_limits =>
-      'Android 仍可能在 Doze 模式下暂停连接或结束应用进程。进程结束后的通知需要单独设置推送。不支持强行停止后的通知。';
+  String get background_work_limits => 'Android 仍可能在 Doze 模式下暂停连接或结束应用进程。进程结束后的通知需要单独设置推送。不支持强行停止后的通知。';
 
   @override
   String get background_work_disclosure => '后台保护开启时，即使关闭了可选的聊天通知，仍会显示必需的服务通知。';
@@ -3266,8 +3101,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get battery_optimisation_settings => '电池优化设置';
 
   @override
-  String get battery_optimisation_description =>
-      '打开 Android 设置以查看电池限制。不会自动申请豁免，更改设置也不能保证通知送达。';
+  String get battery_optimisation_description => '打开 Android 设置以查看电池限制。不会自动申请豁免，更改设置也不能保证通知送达。';
 
   @override
   String get battery_settings_unavailable => '无法在此设备上打开电池设置。';
@@ -3291,8 +3125,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get task_live_preview => 'Live preview from parent events';
 
   @override
-  String get task_preview_explanation =>
-      'Latest exposed preview only; not a recorded transcript row.';
+  String get task_preview_explanation => 'Latest exposed preview only; not a recorded transcript row.';
 
   @override
   String get task_preview => 'Preview';
@@ -3304,8 +3137,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get task_loading_history => 'Loading task history…';
 
   @override
-  String get task_empty_history =>
-      'No recorded messages yet. The task may not have flushed its history; this does not mean it produced no work.';
+  String get task_empty_history => 'No recorded messages yet. The task may not have flushed its history; this does not mean it produced no work.';
 
   @override
   String get task_load_older => 'Load older';
@@ -3334,8 +3166,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get task_read_only_notice =>
-      'Read-only · recorded history may appear after the task flushes. Refresh to check again.';
+  String get task_read_only_notice => 'Read-only · recorded history may appear after the task flushes. Refresh to check again.';
 
   @override
   String task_row_label(Object id, Object role) {
@@ -3381,48 +3212,37 @@ class AppLocalizationsZh extends AppLocalizations {
   String get task_image_placeholder => '[image]';
 
   @override
-  String get task_invalid_reference =>
-      'Task transcript unavailable: invalid stored session reference.';
+  String get task_invalid_reference => 'Task transcript unavailable: invalid stored session reference.';
 
   @override
-  String get task_auth_required =>
-      'Task transcript unavailable: configure Dashboard authentication for this gateway. The API-server key cannot read task reasoning.';
+  String get task_auth_required => 'Task transcript unavailable: configure Dashboard authentication for this gateway. The API-server key cannot read task reasoning.';
 
   @override
-  String get task_auth_rejected =>
-      'Task transcript unavailable: Dashboard authentication was rejected. Check this gateway’s Dashboard settings.';
+  String get task_auth_rejected => 'Task transcript unavailable: Dashboard authentication was rejected. Check this gateway’s Dashboard settings.';
 
   @override
-  String get task_incompatible_history =>
-      'Task transcript unavailable: this Dashboard does not provide compatible bounded raw history for the selected profile.';
+  String get task_incompatible_history => 'Task transcript unavailable: this Dashboard does not provide compatible bounded raw history for the selected profile.';
 
   @override
-  String get task_identity_unproven =>
-      'Task transcript unavailable: the Dashboard could not prove the exact stored session or its compression lineage. No transcript from another session is shown.';
+  String get task_identity_unproven => 'Task transcript unavailable: the Dashboard could not prove the exact stored session or its compression lineage. No transcript from another session is shown.';
 
   @override
-  String get task_partial_compression =>
-      'Partial history: this task continued after compression, but this gateway has not exposed a verifiable newer reference. The final reply may be missing. Automatic refresh is paused; use Refresh to retry.';
+  String get task_partial_compression => 'Partial history: this task continued after compression, but this gateway has not exposed a verifiable newer reference. The final reply may be missing. Automatic refresh is paused; use Refresh to retry.';
 
   @override
-  String get task_partial_ancestors =>
-      'Partial history: this gateway omits compression ancestors for this task. Earlier task segments may be missing. Known rows are retained; use Refresh to retry.';
+  String get task_partial_ancestors => 'Partial history: this gateway omits compression ancestors for this task. Earlier task segments may be missing. Known rows are retained; use Refresh to retry.';
 
   @override
-  String get task_missing_reference =>
-      'Task transcript unavailable: this server did not retain its session reference.';
+  String get task_missing_reference => 'Task transcript unavailable: this server did not retain its session reference.';
 
   @override
-  String get task_missing_row_identity =>
-      'Task transcript unavailable: this server did not supply durable message row identities.';
+  String get task_missing_row_identity => 'Task transcript unavailable: this server did not supply durable message row identities.';
 
   @override
-  String get task_history_not_ready =>
-      'Task history is not available yet (HTTP 404). The task may not have flushed, or this Dashboard may not support task history. Retry to check again.';
+  String get task_history_not_ready => 'Task history is not available yet (HTTP 404). The task may not have flushed, or this Dashboard may not support task history. Retry to check again.';
 
   @override
-  String get task_refresh_failed =>
-      'Could not refresh task history. Check the connection and retry.';
+  String get task_refresh_failed => 'Could not refresh task history. Check the connection and retry.';
 
   @override
   String get task_status_interrupted => 'Interrupted';
@@ -3495,8 +3315,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get provider_usage => '使用记录';
 
   @override
-  String get provider_usage_notice =>
-      'Hermes最近30天的使用量，并非账户余额或模型定价。请在Hermes服务器配置凭据；此应用不保存提供商API密钥。';
+  String get provider_usage_notice => 'Hermes最近30天的使用量，并非账户余额或模型定价。请在Hermes服务器配置凭据；此应用不保存提供商API密钥。';
 
   @override
   String get provider_usage_failed => '无法加载使用记录。';
@@ -3524,12 +3343,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get provider_quota_openai_api => 'OpenAI API 已记录用量';
 
   @override
-  String get provider_quota_notice =>
-      '由提供商报告的订阅用量周期，与 Hermes 记录的用量及 API 计费分开显示。各账户单独列出；达到模型限额并不代表整个账户的配额已耗尽。';
+  String get provider_quota_notice => '由提供商报告的订阅用量周期，与 Hermes 记录的用量及 API 计费分开显示。各账户单独列出；达到模型限额并不代表整个账户的配额已耗尽。';
 
   @override
-  String get provider_quota_windows_notice =>
-      'Codex 和 Claude 订阅设有五小时会话限额和每周限额。仅显示提供商报告的周期；未报告的限额和重置时间仍不可用。每周限额可能适用于整个账户或特定模型。';
+  String get provider_quota_windows_notice => 'Codex 和 Claude 订阅设有五小时会话限额和每周限额。仅显示提供商报告的周期；未报告的限额和重置时间仍不可用。每周限额可能适用于整个账户或特定模型。';
 
   @override
   String get provider_quota_five_hour_session => '5小时会话';
@@ -3588,20 +3405,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get provider_oauth_more_subtitle => '管理 Hermes 主机上的提供商登录';
 
   @override
-  String get provider_oauth_settings_subtitle =>
-      '在 Hermes 主机上登录；提供商令牌不会保存在此设备上';
+  String get provider_oauth_settings_subtitle => '在 Hermes 主机上登录；提供商令牌不会保存在此设备上';
 
   @override
-  String get provider_oauth_intro =>
-      '在外部浏览器中登录提供商。令牌仅存储在 Hermes 主机上，不会保存在此设备上。登录不会选择此应用中的聊天模型。';
+  String get provider_oauth_intro => '在外部浏览器中登录提供商。令牌仅存储在 Hermes 主机上，不会保存在此设备上。登录不会选择此应用中的聊天模型。';
 
   @override
-  String get provider_oauth_defaults_notice =>
-      '某些主机流程（包括替换 Nous 免费套餐账户）可能会更新主机默认设置。登录后请检查主机设置。';
+  String get provider_oauth_defaults_notice => '某些主机流程（包括替换 Nous 免费套餐账户）可能会更新主机默认设置。登录后请检查主机设置。';
 
   @override
-  String get provider_oauth_transport_init_failed =>
-      '无法初始化所选的安全仪表板连接。请检查其 TLS 身份和连接设置。';
+  String get provider_oauth_transport_init_failed => '无法初始化所选的安全仪表板连接。请检查其 TLS 身份和连接设置。';
 
   @override
   String get provider_oauth_https_required => '提供商登录需要通过 HTTPS 连接到 Hermes 仪表板。';
@@ -3610,8 +3423,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get provider_oauth_auth_required => '登录前请配置仪表板密码验证或可信代理。';
 
   @override
-  String get provider_oauth_catalog_failed =>
-      '此主机不支持提供商登录。请检查仪表板身份验证；如果主机不支持提供商 OAuth，请更新主机。';
+  String get provider_oauth_catalog_failed => '此主机不支持提供商登录。请检查仪表板身份验证；如果主机不支持提供商 OAuth，请更新主机。';
 
   @override
   String get provider_oauth_expired => '登录已过期。请重新开始。';
@@ -3669,15 +3481,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get provider_oauth_sign_in => '登录';
 
   @override
-  String get provider_oauth_cli_required =>
-      '请在 Hermes 主机上使用提供商 CLI 登录。此主机不支持该提供商的应用内登录。';
+  String get provider_oauth_cli_required => '请在 Hermes 主机上使用提供商 CLI 登录。此主机不支持该提供商的应用内登录。';
 
   @override
   String get provider_oauth_checking_account => '已收到授权。正在检查主机账户…';
 
   @override
-  String get provider_oauth_verification_unavailable =>
-      '已收到授权；无法验证账户。请打开用量页面以刷新账户用量。';
+  String get provider_oauth_verification_unavailable => '已收到授权；无法验证账户。请打开用量页面以刷新账户用量。';
 
   @override
   String provider_oauth_verified_account(String email) {
@@ -3734,27 +3544,22 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get voice_recording_permission =>
-      'Allow microphone access to record a voice message.';
+  String get voice_recording_permission => 'Allow microphone access to record a voice message.';
 
   @override
-  String get voice_recording_limit =>
-      'This recording has reached the ten-minute limit.';
+  String get voice_recording_limit => 'This recording has reached the ten-minute limit.';
 
   @override
   String get voice_recording_empty => 'No audio was recorded. Try again.';
 
   @override
-  String get voice_recording_failed =>
-      'Could not process the recording. Any saved fragments have been kept.';
+  String get voice_recording_failed => 'Could not process the recording. Any saved fragments have been kept.';
 
   @override
-  String get voice_recording_unconfirmed =>
-      'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
+  String get voice_recording_unconfirmed => 'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
 
   @override
-  String get voice_recording_submit_failed =>
-      'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
+  String get voice_recording_submit_failed => 'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
 
   @override
   String get voice_recording_pause_playback => 'Pause playback';
@@ -3766,8 +3571,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get projects_root_more_subtitle => '服务器上新建项目文件夹的位置';
 
   @override
-  String get projects_root_description =>
-      '在此手机上创建的项目会在这里获得文件夹。将其指向 Hermes 自身使用的文件夹，手机和服务器就能共享同一批项目。';
+  String get projects_root_description => '在此手机上创建的项目会在这里获得文件夹。将其指向 Hermes 自身使用的文件夹，手机和服务器就能共享同一批项目。';
 
   @override
   String get projects_root_label => '项目根路径';
@@ -3781,8 +3585,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get projects_root_locked_title => '由服务器设定';
 
   @override
-  String get projects_root_locked_explanation =>
-      '此服务器将文件访问限制在单一根目录内，因此无法在应用中更改项目文件夹。';
+  String get projects_root_locked_explanation => '此服务器将文件访问限制在单一根目录内，因此无法在应用中更改项目文件夹。';
 
   @override
   String get projects_root_saved => '已保存项目文件夹。';
@@ -3800,8 +3603,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get projects_root_invalid_segments => '请从路径中移除点号片段和控制字符。';
 
   @override
-  String get projects_root_unsupported =>
-      '此连接不支持。读取或更改服务器上的项目文件夹需要具有仪表板访问权限的 Desktop Gateway 连接。';
+  String get projects_root_unsupported => '此连接不支持。读取或更改服务器上的项目文件夹需要具有仪表板访问权限的 Desktop Gateway 连接。';
 
   @override
   String get projects_root_unavailable => '无法读取服务器上的项目文件夹。请检查仪表板连接后重试。';
@@ -3887,8 +3689,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get slash_command_no_output => 'The command completed with no output.';
 
   @override
-  String get slash_command_delivery_unknown =>
-      'The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.';
+  String get slash_command_delivery_unknown => 'The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.';
 
   @override
   String get slash_command_failed => 'The command could not be run.';
@@ -3932,8 +3733,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_password_for_sudo => 'sudo 密码';
 
   @override
-  String get ng_hermes_needs_your_sudo_password_to =>
-      'Hermes 需要你的 sudo 密码来运行此命令。';
+  String get ng_hermes_needs_your_sudo_password_to => 'Hermes 需要你的 sudo 密码来运行此命令。';
 
   @override
   String get ng_a_secret_value => '机密值';
@@ -4023,12 +3823,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_check_the_address_and_that_the => '请检查地址，并确认代理已转发到仪表盘。';
 
   @override
-  String get ng_use_the_same_network_as_the =>
-      '请使用与服务器相同的网络，并使用 --host 0.0.0.0 启动仪表盘，以便其他设备访问。';
+  String get ng_use_the_same_network_as_the => '请使用与服务器相同的网络，并使用 --host 0.0.0.0 启动仪表盘，以便其他设备访问。';
 
   @override
-  String get ng_check_the_address_vpn_or_tailscale =>
-      '请检查地址、VPN 或 Tailscale 连接。';
+  String get ng_check_the_address_vpn_or_tailscale => '请检查地址、VPN 或 Tailscale 连接。';
 
   @override
   String get ng_not_checked_yet => '尚未检查。';
@@ -4050,23 +3848,19 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get ng_use_the_dashboard_s_address_and =>
-      '请使用仪表盘的地址和端口（默认为 9119），而不是 API 服务器的地址和端口。';
+  String get ng_use_the_dashboard_s_address_and => '请使用仪表盘的地址和端口（默认为 9119），而不是 API 服务器的地址和端口。';
 
   @override
-  String get ng_cloudflare_access_turned_the_service_token =>
-      'Cloudflare Access 拒绝了服务令牌。';
+  String get ng_cloudflare_access_turned_the_service_token => 'Cloudflare Access 拒绝了服务令牌。';
 
   @override
-  String get ng_cloudflare_access_is_in_front_of =>
-      '此地址前方配置了 Cloudflare Access。';
+  String get ng_cloudflare_access_is_in_front_of => '此地址前方配置了 Cloudflare Access。';
 
   @override
   String get ng_check_the_service_token_and_its => '请检查服务令牌及其 Service Auth 策略。';
 
   @override
-  String get ng_add_a_cloudflare_access_service_token =>
-      '为此地址添加 Cloudflare Access 服务令牌。';
+  String get ng_add_a_cloudflare_access_service_token => '为此地址添加 Cloudflare Access 服务令牌。';
 
   @override
   String get ng_the_server_asks_for_a_client => '服务器要求提供客户端证书。';
@@ -4128,8 +3922,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_check_that_the_agent_is_running => '请确认服务器上的代理正在运行。';
 
   @override
-  String get ng_the_gateway_refused_the_chat_connection =>
-      '网关拒绝了聊天连接（HTTP 403）。';
+  String get ng_the_gateway_refused_the_chat_connection => '网关拒绝了聊天连接（HTTP 403）。';
 
   @override
   String get ng_this_dashboard_has_no_chat_endpoint => '此仪表盘没有聊天端点（/api/ws）。';
@@ -4146,8 +3939,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_update_hermes => '更新 Hermes。';
 
   @override
-  String get ng_make_sure_the_proxy_allows_websocket =>
-      '请确认代理允许在 /api/ws 上进行 WebSocket 升级。';
+  String get ng_make_sure_the_proxy_allows_websocket => '请确认代理允许在 /api/ws 上进行 WebSocket 升级。';
 
   @override
   String get ng_offline => '离线';
@@ -4176,19 +3968,16 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get ng_the_gateway_returned_no_websocket_ticket =>
-      '网关未返回 WebSocket 票据。';
+  String get ng_the_gateway_returned_no_websocket_ticket => '网关未返回 WebSocket 票据。';
 
   @override
   String get ng_connection_lost => '连接已断开';
 
   @override
-  String get ng_this_dashboard_has_no_chat_endpoint_2 =>
-      '此仪表板没有聊天端点（/api/ws）。请更新 Hermes。';
+  String get ng_this_dashboard_has_no_chat_endpoint_2 => '此仪表板没有聊天端点（/api/ws）。请更新 Hermes。';
 
   @override
-  String get ng_the_gateway_refused_the_chat_connection_2 =>
-      '网关拒绝了聊天连接。请检查地址是否与仪表板配置的主机匹配，并确认已启用嵌入式聊天。';
+  String get ng_the_gateway_refused_the_chat_connection_2 => '网关拒绝了聊天连接。请检查地址是否与仪表板配置的主机匹配，并确认已启用嵌入式聊天。';
 
   @override
   String ng_the_gateway_refused(Object method) {
@@ -4253,12 +4042,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_that_file_isn_t_a_certificate => '该文件不是证书或私钥。';
 
   @override
-  String get ng_if_a_proxy_in_front_of =>
-      '如果此地址前的代理要求客户端证书，请在此选择证书，以便测试、登录和聊天时都能出示。';
+  String get ng_if_a_proxy_in_front_of => '如果此地址前的代理要求客户端证书，请在此选择证书，以便测试、登录和聊天时都能出示。';
 
   @override
-  String get ng_client_certificates_are_only_used_with =>
-      '客户端证书仅用于 https:// 地址。';
+  String get ng_client_certificates_are_only_used_with => '客户端证书仅用于 https:// 地址。';
 
   @override
   String get ng_remove => '移除';
@@ -4276,8 +4063,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_pick_a_different_certificate => '选择其他证书';
 
   @override
-  String get ng_accepts_p12_pfx_or_pem_certificate =>
-      '支持 .p12/.pfx 文件，或 PEM 证书和密钥文件。密钥会保存在此应用的私有存储空间中。';
+  String get ng_accepts_p12_pfx_or_pem_certificate => '支持 .p12/.pfx 文件，或 PEM 证书和密钥文件。密钥会保存在此应用的私有存储空间中。';
 
   @override
   String get ng_photos => '照片';
@@ -4400,15 +4186,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get ng_project_create_uncertain =>
-      '网关可能已创建此聊天，但未确认。开始新聊天前请检查聊天列表；此请求不会自动重试。';
+  String get ng_project_create_uncertain => '网关可能已创建此聊天，但未确认。开始新聊天前请检查聊天列表；此请求不会自动重试。';
 
   @override
   String get ng_what_should_we_work_on => '我们要做些什么？';
 
   @override
-  String get ng_ask_hermes_anything_it_can_run =>
-      '向 Hermes 提问。它可以运行工具、浏览网页，还能处理服务器上的文件。';
+  String get ng_ask_hermes_anything_it_can_run => '向 Hermes 提问。它可以运行工具、浏览网页，还能处理服务器上的文件。';
 
   @override
   String ng_working_2(Object frame) {
@@ -4460,8 +4244,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_slash_command_arguments_mixed => '在命令后接受选项或文本。';
 
   @override
-  String get ng_slash_command_sent_as_message =>
-      'NextGen 会将此作为普通消息发送给 Hermes，不会执行该命令。';
+  String get ng_slash_command_sent_as_message => 'NextGen 会将此作为普通消息发送给 Hermes，不会执行该命令。';
 
   @override
   String get ng_slash_command_output => '命令输出';
@@ -4481,8 +4264,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_slash_command_refused => 'Hermes 无法在此运行此命令。';
 
   @override
-  String get ng_slash_command_delivery_unknown =>
-      '命令已发送，但未收到回复。它可能仍在网关上运行，因此没有重新发送，并保留了你的草稿。';
+  String get ng_slash_command_delivery_unknown => '命令已发送，但未收到回复。它可能仍在网关上运行，因此没有重新发送，并保留了你的草稿。';
 
   @override
   String get ng_slash_command_nothing_running => '当前没有正在运行的任务。';
@@ -4563,8 +4345,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_save => '保存';
 
   @override
-  String get ng_enter_both_the_client_id_and =>
-      '请同时填写 Client ID 和 Client Secret，或都留空。';
+  String get ng_enter_both_the_client_id_and => '请同时填写 Client ID 和 Client Secret，或都留空。';
 
   @override
   String get ng_enter_your_username_and_password => '请输入用户名和密码。';
@@ -4587,12 +4368,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_add_a_gateway => '添加网关';
 
   @override
-  String get ng_connect_to_your_hermes_agent_dashboard =>
-      '连接到你的 Hermes Agent 控制面板。使用一个地址和一次登录，即可访问聊天、工具和设置。登录前不会发送任何内容。';
+  String get ng_connect_to_your_hermes_agent_dashboard => '连接到你的 Hermes Agent 控制面板。使用一个地址和一次登录，即可访问聊天、工具和设置。登录前不会发送任何内容。';
 
   @override
-  String get ng_connect_to_another_hermes_agent_dashboard =>
-      '连接到另一个 Hermes Agent 控制面板。你仍会登录已保存的控制面板。';
+  String get ng_connect_to_another_hermes_agent_dashboard => '连接到另一个 Hermes Agent 控制面板。你仍会登录已保存的控制面板。';
 
   @override
   String get ng_dashboard_address => '控制面板地址';
@@ -4604,8 +4383,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_test => '测试';
 
   @override
-  String get ng_where_your_hermes_dashboard_runs_lan =>
-      '你的 Hermes 控制面板所在的位置：局域网、Tailscale 或 HTTPS。';
+  String get ng_where_your_hermes_dashboard_runs_lan => '你的 Hermes 控制面板所在的位置：局域网、Tailscale 或 HTTPS。';
 
   @override
   String get ng_find_on_my_network => '在我的网络中查找';
@@ -4620,8 +4398,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_need_a_client_certificate => '需要客户端证书？';
 
   @override
-  String get ng_this_address_isn_t_private_and =>
-      '此地址不是私有地址，且未使用 https://，因此你的密码和聊天内容会以未加密的形式通过互联网传输。请改用 https://、Tailscale 或你自己的网络。';
+  String get ng_this_address_isn_t_private_and => '此地址不是私有地址，且未使用 https://，因此你的密码和聊天内容会以未加密的形式通过互联网传输。请改用 https://、Tailscale 或你自己的网络。';
 
   @override
   String get ng_continue_to_sign_in => '继续登录';
@@ -4630,8 +4407,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_use_the_classic_interface_instead => '改用经典界面';
 
   @override
-  String get ng_if_cloudflare_access_protects_this_address =>
-      '如果此地址受 Cloudflare Access 保护，请在 Cloudflare Zero Trust（Access，Service credentials）中创建服务令牌，并为对应的 Access 应用添加 Service Auth 策略。';
+  String get ng_if_cloudflare_access_protects_this_address => '如果此地址受 Cloudflare Access 保护，请在 Cloudflare Zero Trust（Access，Service credentials）中创建服务令牌，并为对应的 Access 应用添加 Service Auth 策略。';
 
   @override
   String get ng_a_service_token_is_saved_for => '已为此地址保存服务令牌';
@@ -4681,12 +4457,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_profiles => '配置文件';
 
   @override
-  String get ng_this_dashboard_offers_neither_a_username =>
-      '此控制面板既未提供用户名和密码登录，也未提供浏览器登录。请更新 Hermes，或在服务器上配置用户名和密码登录。';
+  String get ng_this_dashboard_offers_neither_a_username => '此控制面板既未提供用户名和密码登录，也未提供浏览器登录。请更新 Hermes，或在服务器上配置用户名和密码登录。';
 
   @override
-  String get ng_the_auth_gate_is_off_on =>
-      '此控制面板未启用身份验证。任何能访问它的人都可以使用你的 Agent。';
+  String get ng_the_auth_gate_is_off_on => '此控制面板未启用身份验证。任何能访问它的人都可以使用你的 Agent。';
 
   @override
   String get ng_couldn_t_reach_the_dashboard => '无法连接到控制面板';
@@ -4700,8 +4474,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_that_isn_t_a_hermes_dashboard => '这不是 Hermes 控制面板';
 
   @override
-  String get ng_something_answered_but_not_a_hermes_2 =>
-      '服务器有响应，但不是 Hermes 控制面板。请使用控制面板的地址，而不是 API 服务器的地址（端口 8642）。';
+  String get ng_something_answered_but_not_a_hermes_2 => '服务器有响应，但不是 Hermes 控制面板。请使用控制面板的地址，而不是 API 服务器的地址（端口 8642）。';
 
   @override
   String ng_something_answered_http_but_not_a_2(Object status) {
@@ -4709,8 +4482,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get ng_cloudflare_access_stopped_the_request =>
-      'Cloudflare Access 已拦截此请求';
+  String get ng_cloudflare_access_stopped_the_request => 'Cloudflare Access 已拦截此请求';
 
   @override
   String ng_cloudflare_access_turned_down_the_service(Object status) {
@@ -4718,15 +4490,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get ng_add_a_cloudflare_access_service_token_2 =>
-      '请在下方添加 Cloudflare Access 服务令牌，然后重新测试。';
+  String get ng_add_a_cloudflare_access_service_token_2 => '请在下方添加 Cloudflare Access 服务令牌，然后重新测试。';
 
   @override
   String get ng_a_client_certificate_is_needed => '需要客户端证书';
 
   @override
-  String get ng_this_server_asks_for_a_client =>
-      '此服务器要求先提供客户端证书。请在下方选择服务器提供的证书，然后重新测试。';
+  String get ng_this_server_asks_for_a_client => '此服务器要求先提供客户端证书。请在下方选择服务器提供的证书，然后重新测试。';
 
   @override
   String get ng_this_dashboard_doesn_t_ask_for => '此控制面板不需要登录。';
@@ -4773,8 +4543,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_sign_in_with_browser => '使用浏览器登录';
 
   @override
-  String get ng_finish_signing_in_on_the_page =>
-      '请在打开的页面上完成登录。完成后 Hermes 会自动返回。';
+  String get ng_finish_signing_in_on_the_page => '请在打开的页面上完成登录。完成后 Hermes 会自动返回。';
 
   @override
   String get ng_use_a_different_gateway => '使用其他网关';
@@ -4783,19 +4552,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_same_wi_fi_or_local_network => '同一 Wi-Fi 或本地网络';
 
   @override
-  String get ng_use_the_server_s_local_address =>
-      '使用服务器的本地地址和端口，例如 192.168.1.20:9119。启动控制面板时请添加 --host 0.0.0.0，以便其他设备访问。';
+  String get ng_use_the_server_s_local_address => '使用服务器的本地地址和端口，例如 192.168.1.20:9119。启动控制面板时请添加 --host 0.0.0.0，以便其他设备访问。';
 
   @override
   String get ng_tailscale => 'Tailscale';
 
   @override
-  String get ng_turn_on_tailscale_on_this_phone =>
-      '在这部手机上启用 Tailscale，然后使用服务器的 Tailscale 地址，例如 100.64.0.1:9119 或其 .ts.net 域名。离开家也能使用。';
+  String get ng_turn_on_tailscale_on_this_phone => '在这部手机上启用 Tailscale，然后使用服务器的 Tailscale 地址，例如 100.64.0.1:9119 或其 .ts.net 域名。离开家也能使用。';
 
   @override
-  String get ng_use_your_https_address_when_the =>
-      '如果控制面板位于带证书的代理后面，请使用你的 https:// 地址。代理还必须支持 /api/ws 上的 WebSocket 升级。';
+  String get ng_use_your_https_address_when_the => '如果控制面板位于带证书的代理后面，请使用你的 https:// 地址。代理还必须支持 /api/ws 上的 WebSocket 升级。';
 
   @override
   String get ng_start_the_dashboard_on_the_server => '在服务器上启动控制面板：';
@@ -4804,8 +4570,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_enter_a_port_from_1_to => '请输入 1 到 65535 之间的端口。';
 
   @override
-  String get ng_looks_for_hermes_dashboards_on_port =>
-      '在此 Wi-Fi 网络上搜索端口 9119 的 Hermes 控制面板，并检查已保存的电脑。';
+  String get ng_looks_for_hermes_dashboards_on_port => '在此 Wi-Fi 网络上搜索端口 9119 的 Hermes 控制面板，并检查已保存的电脑。';
 
   @override
   String ng_looks_for_hermes_dashboards_on_ports(Object port) {
@@ -4816,12 +4581,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_other_port_optional => '其他端口（可选）';
 
   @override
-  String get ng_no_dashboards_answered_start_one_with =>
-      '没有控制面板响应。请运行 hermes dashboard --host 0.0.0.0 启动，或输入其地址。';
+  String get ng_no_dashboards_answered_start_one_with => '没有控制面板响应。请运行 hermes dashboard --host 0.0.0.0 启动，或输入其地址。';
 
   @override
-  String get ng_using_tailscale_or_a_vpn_those =>
-      '正在使用 Tailscale 或 VPN？无法搜索这些网络。请改为输入电脑的 100.x 地址或 .ts.net 域名。';
+  String get ng_using_tailscale_or_a_vpn_those => '正在使用 Tailscale 或 VPN？无法搜索这些网络。请改为输入电脑的 100.x 地址或 .ts.net 域名。';
 
   @override
   String get ng_search_again => '重新搜索';
@@ -5273,8 +5036,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_more_settings => '更多设置';
 
   @override
-  String get ng_voice_notifications_language_backups_and_the =>
-      '语音、通知、语言、备份和网关配置';
+  String get ng_voice_notifications_language_backups_and_the => '语音、通知、语言、备份和网关配置';
 
   @override
   String get ng_licences => '许可证';
@@ -5285,8 +5047,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get ng_this_gateway_and_its_saved_sign =>
-      '此网关及其已保存的登录信息会从这部手机的两个界面中移除。聊天记录仍保留在网关上。';
+  String get ng_this_gateway_and_its_saved_sign => '此网关及其已保存的登录信息会从这部手机的两个界面中移除。聊天记录仍保留在网关上。';
 
   @override
   String get ng_password_or_browser => '密码或浏览器';
@@ -5310,12 +5071,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get classic_interface_only => '仅限经典界面';
 
   @override
-  String get classic_only_settings_hint =>
-      '标记为“仅限经典界面”的部分只会更改经典版的外观和聊天，不会影响 NextGen。NextGen 在其设置中有自己的外观选项。';
+  String get classic_only_settings_hint => '标记为“仅限经典界面”的部分只会更改经典版的外观和聊天，不会影响 NextGen。NextGen 在其设置中有自己的外观选项。';
 
   @override
-  String get attachment_preview_too_large =>
-      '文件过大，无法在此预览。保存或分享即可将其下载到手机（最高 1 GB）。';
+  String get attachment_preview_too_large => '文件过大，无法在此预览。保存或分享即可将其下载到手机（最高 1 GB）。';
 
   @override
   String get attachment_over_phone_limit => '此文件超过 1 GB，超出下载限制。请打开控制面板下载。';
@@ -5754,8 +5513,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_recent_notifications_hint => 'Ares 嘗試發布的內容，以及 Android 是否顯示了通知';
 
   @override
-  String get ng_recent_notifications_empty =>
-      '目前還沒有。當回覆、問題或失敗事件會觸發通知時，相關嘗試就會顯示在這裡。';
+  String get ng_recent_notifications_empty => '目前還沒有。當回覆、問題或失敗事件會觸發通知時，相關嘗試就會顯示在這裡。';
 
   @override
   String get ng_notify_permission_granted => '已授予權限';
@@ -5930,11 +5688,29 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ng_aux_curator_hint => '审查技能的使用情况';
+
+  @override
+  String get deployment_token_label => 'Deployment token (optional)';
+
+  @override
+  String get deployment_token_helper => 'For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.';
+
+  @override
+  String get deployment_token_hint => 'Dashboard session token';
+
+  @override
+  String get custom_headers_label => 'Custom headers (optional)';
+
+  @override
+  String get custom_headers_helper => 'One per line, e.g. X-Custom: value. Forbidden headers are rejected.';
+
+  @override
+  String get custom_headers_hint => 'e.g. X-Custom-Header: value';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
 class AppLocalizationsZhHans extends AppLocalizationsZh {
-  AppLocalizationsZhHans() : super('zh_Hans');
+  AppLocalizationsZhHans(): super('zh_Hans');
 
   @override
   String get workspace_workers => '运行中的子代理';
@@ -5955,8 +5731,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get fallback_unavailable => '备用设置不可用或无效。请检查连接、所选配置和主机版本，然后重试。';
 
   @override
-  String get fallback_discovery_unavailable =>
-      '无法获取提供商列表。现有条目会保留；重试后可选择提供商和模型。';
+  String get fallback_discovery_unavailable => '无法获取提供商列表。现有条目会保留；重试后可选择提供商和模型。';
 
   @override
   String get fallback_empty => '此备用列表中没有条目。';
@@ -5980,8 +5755,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get fallback_legacy_title => '旧版备用设置（只读）';
 
   @override
-  String get fallback_legacy_notice =>
-      '主机还会在此列表之后使用 fallback_model，并跳过重复路由。即使上方列表为空，这些旧版条目也会保留。请在主机上编辑。';
+  String get fallback_legacy_notice => '主机还会在此列表之后使用 fallback_model，并跳过重复路由。即使上方列表为空，这些旧版条目也会保留。请在主机上编辑。';
 
   @override
   String fallback_priority(String position) {
@@ -5995,15 +5769,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get fallback_move_down => '下移';
 
   @override
-  String get fallback_routing_read_only =>
-      '路由详情或未列出的提供商已保留。请在主机上编辑此提供商／模型；此处仍可调整顺序或删除条目。';
+  String get fallback_routing_read_only => '路由详情或未列出的提供商已保留。请在主机上编辑此提供商／模型；此处仍可调整顺序或删除条目。';
 
   @override
   String get cron_model_default => '使用默认设置';
 
   @override
-  String get cron_model_notice =>
-      '仅适用于此 cron 任务。未固定模型时，Hermes 先使用 cron 默认模型，再使用主模型。请在主机上管理自定义模型。';
+  String get cron_model_notice => '仅适用于此 cron 任务。未固定模型时，Hermes 先使用 cron 默认模型，再使用主模型。请在主机上管理自定义模型。';
 
   @override
   String get model_management_unavailable => '无法加载或保存模型设置。请刷新后重试。';
@@ -6021,8 +5793,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get portal_menu_subtitle => '网关状态和已记录用量';
 
   @override
-  String get portal_read_only =>
-      '网关只读数据。请在 Hermes 主机上管理 Nous 身份验证。这些端点不提供订阅余额或积分。';
+  String get portal_read_only => '网关只读数据。请在 Hermes 主机上管理 Nous 身份验证。这些端点不提供订阅余额或积分。';
 
   @override
   String get portal_status => '网关 Portal 状态';
@@ -6108,12 +5879,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get setup_interface_nextgen => 'NextGen';
 
   @override
-  String get setup_interface_classic_description =>
-      '原有的 Ares 工作区，提供完整的连接控制和所有 Classic 设置。';
+  String get setup_interface_classic_description => '原有的 Ares 工作区，提供完整的连接控制和所有 Classic 设置。';
 
   @override
-  String get setup_interface_nextgen_description =>
-      '全新界面，只需登录仪表盘一次，并提供实时计划、子代理和通知。';
+  String get setup_interface_nextgen_description => '全新界面，只需登录仪表盘一次，并提供实时计划、子代理和通知。';
 
   @override
   String get setup_interface_switch_later => '你可以随时在“设置”中切换。';
@@ -6181,38 +5950,31 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get hands_free_short_disclosure =>
-      '仅在此聊天于前台打开时运行。唤醒检测离线；语音可能使用网络。会消耗电量。';
+  String get hands_free_short_disclosure => '仅在此聊天于前台打开时运行。唤醒检测离线；语音可能使用网络。会消耗电量。';
 
   @override
-  String get hands_free_error_action =>
-      '请检查麦克风权限、语音服务、回复声音和连接，再点击停止并重新开始。不会自动重发。';
+  String get hands_free_error_action => '请检查麦克风权限、语音服务、回复声音和连接，再点击停止并重新开始。不会自动重发。';
 
   @override
-  String get hands_free_disclosure =>
-      '唤醒检测在 CPU 上离线运行。Android 语音识别、所选声音和网关可能使用网络。聆听会消耗电量，也可能误触发。聊天被遮挡、关闭或离开前台时停止，返回后不会自动重启。手动听写仍是可编辑的草稿。';
+  String get hands_free_disclosure => '唤醒检测在 CPU 上离线运行。Android 语音识别、所选声音和网关可能使用网络。聆听会消耗电量，也可能误触发。聊天被遮挡、关闭或离开前台时停止，返回后不会自动重启。手动听写仍是可编辑的草稿。';
 
   @override
-  String get hands_free_ready_cue =>
-      '说“Hey Hermes”，等待就绪提示后再说话。不支持一口气连续输入或预录音。如果授权对话框使应用离开前台，授权后请再次点击开始。';
+  String get hands_free_ready_cue => '说“Hey Hermes”，等待就绪提示后再说话。不支持一口气连续输入或预录音。如果授权对话框使应用离开前台，授权后请再次点击开始。';
 
   @override
   String get hands_free_settings_title => '免提语音';
 
   @override
-  String get hands_free_settings_subtitle =>
-      '在聊天中显示“Hey Hermes”启动控件。关闭会停止正在进行的免提会话。';
+  String get hands_free_settings_subtitle => '在聊天中显示“Hey Hermes”启动控件。关闭会停止正在进行的免提会话。';
 
   @override
-  String get hands_free_timing_limit =>
-      '后续聆听时间是上限，不是下限。Android 可能提前结束。无语音时返回本地唤醒检测，不会反复重启识别。';
+  String get hands_free_timing_limit => '后续聆听时间是上限，不是下限。Android 可能提前结束。无语音时返回本地唤醒检测，不会反复重启识别。';
 
   @override
   String get hands_free_followup_off => '后续聆听已关闭 — 每次提问请说 Hey Hermes';
 
   @override
-  String get hands_free_start_blocked =>
-      '需要空草稿、无附件、空闲且已连接的聊天，并启用语音回复。请先结束手动语音操作。';
+  String get hands_free_start_blocked => '需要空草稿、无附件、空闲且已连接的聊天，并启用语音回复。请先结束手动语音操作。';
 
   @override
   String get hands_free_setup_complete => '麦克风设置完成。请再次点击开始。';
@@ -6224,12 +5986,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get message_queued_for_running_turn => '消息已加入当前运行的队列。';
 
   @override
-  String get running_message_not_accepted =>
-      'Hermes 无法接受此消息。草稿已保留；请停止回复或等待，然后重新发送。';
+  String get running_message_not_accepted => 'Hermes 无法接受此消息。草稿已保留；请停止回复或等待，然后重新发送。';
 
   @override
-  String get running_message_delivery_unknown =>
-      '无法确认消息是否送达。草稿已保留。请先检查聊天记录，再重试。';
+  String get running_message_delivery_unknown => '无法确认消息是否送达。草稿已保留。请先检查聊天记录，再重试。';
 
   @override
   String get attachment_tap_to_preview => '点按以预览';
@@ -6256,8 +6016,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get attachment_download_failed => '无法加载此文件，请检查连接后重试。';
 
   @override
-  String get attachment_no_inline_preview =>
-      '此文件类型不支持内嵌预览。请保存或分享原始文件，以便在其他应用中打开。';
+  String get attachment_no_inline_preview => '此文件类型不支持内嵌预览。请保存或分享原始文件，以便在其他应用中打开。';
 
   @override
   String get attachment_image_failed => '无法解码此图片。您仍可保存或分享原始文件。';
@@ -6358,12 +6117,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get assets_recent_subtitle => '查找 Hermes 在已保存的聊天中分享的文件';
 
   @override
-  String get assets_scope_notice =>
-      '仅显示 Hermes 在已保存的回复中明确分享的已生成文件。这里只展示部分聊天历史，并非完整的文件或附件目录。引用的文件可能已不存在。';
+  String get assets_scope_notice => '仅显示 Hermes 在已保存的回复中明确分享的已生成文件。这里只展示部分聊天历史，并非完整的文件或附件目录。引用的文件可能已不存在。';
 
   @override
-  String get assets_download_limit =>
-      '文件仅在点按时加载。预览和下载的单个文件大小上限均为 25 MiB；更大的文件请通过仪表盘获取。';
+  String get assets_download_limit => '文件仅在点按时加载。预览和下载的单个文件大小上限均为 25 MiB；更大的文件请通过仪表盘获取。';
 
   @override
   String get assets_search_hint => '搜索找到的文件或来源聊天';
@@ -6387,8 +6144,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get assets_empty => '在已扫描的消息中未找到资产';
 
   @override
-  String get assets_empty_detail =>
-      '扫描更多聊天或更早的消息，以查看更早的历史。普通附件和未链接的文件不会在此建立索引。';
+  String get assets_empty_detail => '扫描更多聊天或更早的消息，以查看更早的历史。普通附件和未链接的文件不会在此建立索引。';
 
   @override
   String get assets_no_matches => '未找到匹配的资产';
@@ -6422,8 +6178,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get assets_file_too_large => '此文件超出下载大小上限。请打开仪表盘进行下载。';
 
   @override
-  String get a_one_off_question_archives_itself_after_72_hours_anything =>
-      '一次性问题。将在 72 小时后自动归档；任何值得保留的内容都会被记住。';
+  String get a_one_off_question_archives_itself_after_72_hours_anything => '一次性问题。将在 72 小时后自动归档；任何值得保留的内容都会被记住。';
 
   @override
   String get archive_chat => '归档聊天';
@@ -6463,8 +6218,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get api_key => 'API 密钥';
 
   @override
-  String get api_server_key_from_hermes_env =>
-      '来自 ~/.hermes/.env 的 API_SERVER_KEY';
+  String get api_server_key_from_hermes_env => '来自 ~/.hermes/.env 的 API_SERVER_KEY';
 
   @override
   String get active => '活跃';
@@ -6473,8 +6227,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get activity => '活动';
 
   @override
-  String get activity_reads_the_durable_turn_journal_to_know_what_hermes =>
-      '活动功能会读取持久化轮次日志以了解 Hermes 正在执行的操作。请检查网关是否可访问，然后重试。';
+  String get activity_reads_the_durable_turn_journal_to_know_what_hermes => '活动功能会读取持久化轮次日志以了解 Hermes 正在执行的操作。请检查网关是否可访问，然后重试。';
 
   @override
   String get add => '添加';
@@ -6489,8 +6242,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get add_gateway_connection => '添加网关连接';
 
   @override
-  String get add_and_update_connections_from_the_backup_keep_the_rest =>
-      '从备份中添加和更新连接，其余保持不变。';
+  String get add_and_update_connections_from_the_backup_keep_the_rest => '从备份中添加和更新连接，其余保持不变。';
 
   @override
   String get add_attachment => '添加附件';
@@ -6511,8 +6263,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get allow_for_this_session => '本次会话允许';
 
   @override
-  String get allow_matching_commands_until_this_hermes_session_ends =>
-      '在此 Hermes 会话结束前允许匹配的命令。';
+  String get allow_matching_commands_until_this_hermes_session_ends => '在此 Hermes 会话结束前允许匹配的命令。';
 
   @override
   String get allow_once => '允许一次';
@@ -6552,8 +6303,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get archived => '已归档';
 
   @override
-  String get archived_conversations_appear_here =>
-      '这里只显示已归档的对话。旧聊天仍保留在“所有聊天”中。';
+  String get archived_conversations_appear_here => '这里只显示已归档的对话。旧聊天仍保留在“所有聊天”中。';
 
   @override
   String get archived_quick_chats => '已归档的快速聊天';
@@ -6568,8 +6318,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get assets => '资产';
 
   @override
-  String get assets_need_a_server_authoritative_assets_index_in_the_hermes =>
-      '资产需要在 Hermes 网关中建立服务器权威资产索引，然后才能按项目显示。';
+  String get assets_need_a_server_authoritative_assets_index_in_the_hermes => '资产需要在 Hermes 网关中建立服务器权威资产索引，然后才能按项目显示。';
 
   @override
   String get assets_unavailable => '资产不可用';
@@ -6607,8 +6356,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get autonomous_agents => '自主智能体';
 
   @override
-  String get background_recovery_unavailable_legacy_transport =>
-      '后台恢复不可用 — 旧版传输';
+  String get background_recovery_unavailable_legacy_transport => '后台恢复不可用 — 旧版传输';
 
   @override
   String get background_task_completed => '后台任务完成';
@@ -6628,8 +6376,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get base_url => '基础 URL';
 
   @override
-  String get binary_preview_is_unavailable_download_the_file_to_open_it =>
-      '二进制预览不可用。请下载文件后打开。';
+  String get binary_preview_is_unavailable_download_the_file_to_open_it => '二进制预览不可用。请下载文件后打开。';
 
   @override
   String get branch => '分支';
@@ -6641,15 +6388,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get branch_created_in_hermes_history => '已在 Hermes 历史记录中创建分支。';
 
   @override
-  String get browse_and_manage_your_hermes_agent_sessions_from_your_phone =>
-      '通过手机浏览和管理你的 Hermes Agent 会话。连接至运行在本地网络上的 Hermes 仪表盘。';
+  String get browse_and_manage_your_hermes_agent_sessions_from_your_phone => '通过手机浏览和管理你的 Hermes Agent 会话。连接至运行在本地网络上的 Hermes 仪表盘。';
 
   @override
   String get browse_server_files => '浏览服务器文件';
 
   @override
-  String get browse_the_miniserver_folders_behind_your_projects =>
-      '浏览项目背后的 miniserver 文件夹';
+  String get browse_the_miniserver_folders_behind_your_projects => '浏览项目背后的 miniserver 文件夹';
 
   @override
   String get cancel => '取消';
@@ -6682,23 +6427,19 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get chats => '聊天';
 
   @override
-  String get chats_from_this_gateway_are_not_grouped_yet_grouping_stays =>
-      '此网关中的聊天尚未分组。分组状态将保留在此手机上，直到网关能够托管项目。';
+  String get chats_from_this_gateway_are_not_grouped_yet_grouping_stays => '此网关中的聊天尚未分组。分组状态将保留在此手机上，直到网关能够托管项目。';
 
   @override
-  String get chats_in_this_project_will_show_their_state_and_last =>
-      '此项目中的聊天将在此处显示其状态和最后活动。';
+  String get chats_in_this_project_will_show_their_state_and_last => '此项目中的聊天将在此处显示其状态和最后活动。';
 
   @override
   String get chats_that_are_not_assigned_to_a_project => '未分配至项目的聊天';
 
   @override
-  String get chats_you_start_in_this_project_will_appear_here_on =>
-      '你在此项目中发起的聊天将显示在此处，并同步到登录此 Hermes 的所有设备上。';
+  String get chats_you_start_in_this_project_will_appear_here_on => '你在此项目中发起的聊天将显示在此处，并同步到登录此 Hermes 的所有设备上。';
 
   @override
-  String get check_that_the_gateway_is_running_and_reachable_then_try =>
-      '请检查网关是否正在运行且可达，然后重试。';
+  String get check_that_the_gateway_is_running_and_reachable_then_try => '请检查网关是否正在运行且可达，然后重试。';
 
   @override
   String get check_the_dashboard_connection_and_try_again => '请检查仪表盘连接并重试。';
@@ -6710,8 +6451,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get choose_a_small_model_to_rewrite_queries => '选择一个小模型来重写查询';
 
   @override
-  String get choose_an_ai_search_model_before_using_ai_search =>
-      '请在使用 AI 搜索前选择一个 AI 搜索模型。';
+  String get choose_an_ai_search_model_before_using_ai_search => '请在使用 AI 搜索前选择一个 AI 搜索模型。';
 
   @override
   String get choose_an_active_project_next => '接下来选择一个活动项目';
@@ -6753,8 +6493,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get compatibility_mode => '兼容模式';
 
   @override
-  String get configure_a_valid_desktop_gateway_url_before_attaching_files =>
-      '在附加文件前，请先配置有效的 Desktop Gateway URL。';
+  String get configure_a_valid_desktop_gateway_url_before_attaching_files => '在附加文件前，请先配置有效的 Desktop Gateway URL。';
 
   @override
   String get confirm_always_allow => '确认始终允许';
@@ -6771,9 +6510,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get connection_issue => '连接问题';
 
   @override
-  String
-  get connection_switched_the_running_reply_continues_on_the_server_and =>
-      '连接已切换 — 正在进行的回复将在服务器上继续，并会自动重新附加。';
+  String get connection_switched_the_running_reply_continues_on_the_server_and => '连接已切换 — 正在进行的回复将在服务器上继续，并会自动重新附加。';
 
   @override
   String get connection_appearance_and_device_preferences => '连接、外观和设备偏好设置';
@@ -6850,10 +6587,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get could_not_reach_hermes => '无法连接至 Hermes';
 
   @override
-  String could_not_reach_authenticate_the_dashboard_at_check_the_port(
-    Object dashboardPort,
-    Object host,
-  ) {
+  String could_not_reach_authenticate_the_dashboard_at_check_the_port(Object dashboardPort, Object host) {
     return '无法连接/验证位于 $host:$dashboardPort 的仪表盘。请检查端口和凭据。';
   }
 
@@ -6912,12 +6646,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get create_a_project => '创建项目';
 
   @override
-  String get create_a_project_first_then_chats_can_live_inside_it =>
-      '请先创建一个项目，聊天内容即可存放在其中。';
+  String get create_a_project_first_then_chats_can_live_inside_it => '请先创建一个项目，聊天内容即可存放在其中。';
 
   @override
-  String get create_a_space_to_separate_related_conversations =>
-      '创建一个空间以区分相关的聊天。';
+  String get create_a_space_to_separate_related_conversations => '创建一个空间以区分相关的聊天。';
 
   @override
   String get create_branch => '创建分支';
@@ -6973,23 +6705,19 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get cron_upcoming_empty_title => '暂无已排程任务';
 
   @override
-  String get cron_upcoming_empty_message =>
-      '当前没有待运行的任务。请在 Cron 任务中创建，或让智能体安排一个。';
+  String get cron_upcoming_empty_message => '当前没有待运行的任务。请在 Cron 任务中创建，或让智能体安排一个。';
 
   @override
   String get cron_upcoming_unavailable => '无法显示已排程任务';
 
   @override
-  String get cron_upcoming_needs_dashboard =>
-      '已排程任务需要仪表盘连接。此地址不提供 Cron 排程。请检查仪表盘地址和主机支持情况。';
+  String get cron_upcoming_needs_dashboard => '已排程任务需要仪表盘连接。此地址不提供 Cron 排程。请检查仪表盘地址和主机支持情况。';
 
   @override
-  String get cron_upcoming_needs_dashboard_auth =>
-      '已排程任务需要仪表盘认证。请为此连接添加仪表盘用户名和密码，或启用代理模式。';
+  String get cron_upcoming_needs_dashboard_auth => '已排程任务需要仪表盘认证。请为此连接添加仪表盘用户名和密码，或启用代理模式。';
 
   @override
-  String get cron_upcoming_dashboard_unreachable =>
-      '无法连接到仪表盘。请检查主机、仪表盘端口和网络，然后重试。';
+  String get cron_upcoming_dashboard_unreachable => '无法连接到仪表盘。请检查主机、仪表盘端口和网络，然后重试。';
 
   @override
   String get cron_upcoming_load_failed => '无法读取已排程任务。请检查仪表盘连接并重试。';
@@ -7007,8 +6735,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get cron_run => 'Cron 运行';
 
   @override
-  String get cross_device_ordering_and_reversible_bulk_organization =>
-      '跨设备排序与可撤销的批量整理';
+  String get cross_device_ordering_and_reversible_bulk_organization => '跨设备排序与可撤销的批量整理';
 
   @override
   String get current_profile_default => '当前配置档案默认值';
@@ -7051,9 +6778,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String delete_from_the_remote_hermes_history_this_cannot_be_undone(
-    Object title,
-  ) {
+  String delete_from_the_remote_hermes_history_this_cannot_be_undone(Object title) {
     return '从远程 Hermes 历史记录中删除“$title”？此操作不可撤销。';
   }
 
@@ -7085,15 +6810,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get delivery_is_uncertain_recovering_without_resending =>
-      '发送状态不确定；正在恢复且不重新发送……';
+  String get delivery_is_uncertain_recovering_without_resending => '发送状态不确定；正在恢复且不重新发送……';
 
   @override
   String get desktop_gateway_url_optional => 'Desktop Gateway URL（可选）';
 
   @override
-  String get desktop_gateway_is_not_configured_for_this_connection =>
-      '此连接未配置 Desktop Gateway。';
+  String get desktop_gateway_is_not_configured_for_this_connection => '此连接未配置 Desktop Gateway。';
 
   @override
   String get desktop_app => '桌面应用';
@@ -7125,8 +6848,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get durable_facts_hermes_keeps_about_you => 'Hermes 记录的关于你的持久事实';
 
   @override
-  String get durable_work_inside_one_of_your_projects_shared_with_desktop =>
-      '项目内的持久工作内容，已与 Desktop 共享。';
+  String get durable_work_inside_one_of_your_projects_shared_with_desktop => '项目内的持久工作内容，已与 Desktop 共享。';
 
   @override
   String get edit => '编辑';
@@ -7150,8 +6872,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get enable_notifications_description => '关闭后将禁用以下所有通知。';
 
   @override
-  String get enables_file_attachments_through_the_desktop_remote_gateway =>
-      '允许通过 Desktop 远程网关发送文件附件。';
+  String get enables_file_attachments_through_the_desktop_remote_gateway => '允许通过 Desktop 远程网关发送文件附件。';
 
   @override
   String get enter_a_name => '输入名称';
@@ -7163,12 +6884,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get enter_the_passphrase_for_this_backup => '请输入此备份的密码短语。';
 
   @override
-  String get every_conversation_is_already_assigned_to_a_project =>
-      '所有对话均已分配至某个项目。';
+  String get every_conversation_is_already_assigned_to_a_project => '所有对话均已分配至某个项目。';
 
   @override
-  String get everything_not_yet_native_in_the_authenticated_web_dashboard =>
-      '所有尚未原生支持的功能，均可在已认证的 Web 仪表盘中查看';
+  String get everything_not_yet_native_in_the_authenticated_web_dashboard => '所有尚未原生支持的功能，均可在已认证的 Web 仪表盘中查看';
 
   @override
   String get explain_the_attached_content_clearly => '清晰解释附件内容。';
@@ -7179,9 +6898,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String
-  get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it =>
-      '显式选择将调整 Android 无障碍文字大小；选择“系统”则保持不变。';
+  String get explicit_choices_adjust_android_accessibility_text_size_system_leaves_it => '显式选择将调整 Android 无障碍文字大小；选择“系统”则保持不变。';
 
   @override
   String get export_label => '导出';
@@ -7199,15 +6916,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get extract_tasks => '提取任务';
 
   @override
-  String
-  get extract_the_decisions_deadlines_owners_and_actionable_action_items_from =>
-      '从附件内容中提取决策、截止日期、负责人以及可执行的操作项。';
+  String get extract_the_decisions_deadlines_owners_and_actionable_action_items_from => '从附件内容中提取决策、截止日期、负责人以及可执行的操作项。';
 
   @override
-  String
-  extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(
-    Object text,
-  ) {
+  String extract_the_decisions_deadlines_owners_and_actionable_action_items_from_2(Object text) {
     return '从以下内容中提取决策、截止日期、负责人以及可执行的操作项：\n\n$text';
   }
 
@@ -7242,8 +6954,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get file_attached_document_catalog_registration_is_pending =>
-      '已添加文件附件；文档目录注册正在等待处理。';
+  String get file_attached_document_catalog_registration_is_pending => '已添加文件附件；文档目录注册正在等待处理。';
 
   @override
   String get file_reference_added_to_chat => '文件引用已添加至聊天';
@@ -7267,8 +6978,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get gateway_api_access => '网关 API 访问';
 
   @override
-  String get gateway_connected_but_the_dashboard_could_not_be_reached_or =>
-      '网关已连接，但无法访问仪表盘或未能通过身份验证。请检查仪表盘详细信息，或清除它们以跳过。';
+  String get gateway_connected_but_the_dashboard_could_not_be_reached_or => '网关已连接，但无法访问仪表盘或未能通过身份验证。请检查仪表盘详细信息，或清除它们以跳过。';
 
   @override
   String get gateway_path_prefix => '网关路径前缀';
@@ -7283,16 +6993,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get hermes_agent_for_android => 'Ares - formerly Hermes Android';
 
   @override
-  String get hermes_could_not_accept_the_answer_please_try_again =>
-      'Hermes 无法接受此回答，请重试。';
+  String get hermes_could_not_accept_the_answer_please_try_again => 'Hermes 无法接受此回答，请重试。';
 
   @override
-  String get hermes_could_not_load_your_saved_connections =>
-      'Hermes 无法加载你保存的连接';
+  String get hermes_could_not_load_your_saved_connections => 'Hermes 无法加载你保存的连接';
 
   @override
-  String get hermes_did_not_accept_the_response_please_try_again =>
-      'Hermes 未能接受此响应，请重试。';
+  String get hermes_did_not_accept_the_response_please_try_again => 'Hermes 未能接受此响应，请重试。';
 
   @override
   String get hermes_is_responding => 'Hermes 正在响应…';
@@ -7301,8 +7008,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get hermes_is_waiting_for_input => 'Hermes 正在等待输入…';
 
   @override
-  String get hermes_keeps_android_accessibility_text_scaling_active =>
-      'Ares 保持 Android 辅助功能文字缩放处于活动状态。';
+  String get hermes_keeps_android_accessibility_text_scaling_active => 'Ares 保持 Android 辅助功能文字缩放处于活动状态。';
 
   @override
   String get hermes_needs_your_input => 'Hermes 需要你的输入';
@@ -7311,8 +7017,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get hermes_profile_optional => 'Hermes 配置档案（可选）';
 
   @override
-  String get hermes_profile_must_be_a_plain_profile_name_such_as =>
-      'Hermes 配置档案必须是纯粹的档案名称（例如 “sol”），而不能是路径。';
+  String get hermes_profile_must_be_a_plain_profile_name_such_as => 'Hermes 配置档案必须是纯粹的档案名称（例如 “sol”），而不能是路径。';
 
   @override
   String get hermes_reasoning_details => 'Hermes 推理详情';
@@ -7323,15 +7028,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get hermes_stopped_recovery_safely_no_prompt_was_resent =>
-      'Hermes 已安全停止恢复。未重新发送任何提示词。';
+  String get hermes_stopped_recovery_safely_no_prompt_was_resent => 'Hermes 已安全停止恢复。未重新发送任何提示词。';
 
   @override
   String get hide_passphrase => '隐藏密码短语';
 
   @override
-  String get home_needs_your_recent_chats_to_know_what_deserves_your =>
-      '首页需要你最近的聊天记录来了解哪些内容值得你关注。请检查网关是否可达，然后重试。';
+  String get home_needs_your_recent_chats_to_know_what_deserves_your => '首页需要你最近的聊天记录来了解哪些内容值得你关注。请检查网关是否可达，然后重试。';
 
   @override
   String get host => '主机';
@@ -7383,8 +7086,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get leave_blank_for_default_8642_443_with_https =>
-      '留空则使用默认值（8642；使用 https 时为 443）';
+  String get leave_blank_for_default_8642_443_with_https => '留空则使用默认值（8642；使用 https 时为 443）';
 
   @override
   String get leave_blank_for_default_9119 => '留空则使用默认值 (9119)';
@@ -7412,8 +7114,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get location => '位置';
 
   @override
-  String get make_sure_the_gateway_api_server_is_running_hermes_gateway =>
-      '请确保网关 API Server 正在运行\n(hermes gateway status)';
+  String get make_sure_the_gateway_api_server_is_running_hermes_gateway => '请确保网关 API Server 正在运行\n(hermes gateway status)';
 
   @override
   String matches(Object assigned, Object name) {
@@ -7430,15 +7131,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get memory_agent_notes => '助手笔记';
 
   @override
-  String get memory_builtin_scope =>
-      '此配置档案的 USER.md 和 MEMORY.md 中保存的事实。这里不显示外部记忆服务（包括 MemPalace）的内容。';
+  String get memory_builtin_scope => '此配置档案的 USER.md 和 MEMORY.md 中保存的事实。这里不显示外部记忆服务（包括 MemPalace）的内容。';
 
   @override
   String get memory_read_only => '仅供查看。可在聊天中请 Hermes 更正或忘记某条事实。';
 
   @override
-  String get memory_unavailable =>
-      '此网关或配置档案无法提供已保存的事实。请检查所选配置档案，并在需要时更新 Hermes。';
+  String get memory_unavailable => '此网关或配置档案无法提供已保存的事实。请检查所选配置档案，并在需要时更新 Hermes。';
 
   @override
   String get memory_load_error => '请检查仪表盘连接和身份验证，然后重试。';
@@ -7447,15 +7146,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get memory_read_full_fact => '阅读完整事实';
 
   @override
-  String get memory_full_fact_requires_update =>
-      '查看完整事实需要更新的 Hermes 网关。请更新 Hermes 并刷新列表。';
+  String get memory_full_fact_requires_update => '查看完整事实需要更新的 Hermes 网关。请更新 Hermes 并刷新列表。';
 
   @override
   String get memory_fact_detail_error => '无法加载完整事实。它可能已更改；请刷新列表后重试。';
 
   @override
-  String get memory_entries_are_cross_session_facts_the_agent_remembers_they =>
-      'Hermes 记住的事实会显示在这里。';
+  String get memory_entries_are_cross_session_facts_the_agent_remembers_they => 'Hermes 记住的事实会显示在这里。';
 
   @override
   String get merge => '合并';
@@ -7479,8 +7176,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get migration_complete => '迁移完成';
 
   @override
-  String get migration_failed_local_spaces_were_kept_unchanged =>
-      '迁移失败。本地空间保持不变。';
+  String get migration_failed_local_spaces_were_kept_unchanged => '迁移失败。本地空间保持不变。';
 
   @override
   String get migration_incomplete => '迁移未完成';
@@ -7538,20 +7234,16 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get nav_projects => '项目';
 
   @override
-  String get needs_a_correction_aware_filing_contract_in_the_hermes_gateway =>
-      'Hermes 网关中需要具备支持纠错感知的文件归档契约。';
+  String get needs_a_correction_aware_filing_contract_in_the_hermes_gateway => 'Hermes 网关中需要具备支持纠错感知的文件归档契约。';
 
   @override
-  String get needs_a_reachable_hermes_dashboard_check_the_host_port_and =>
-      '需要可访问的 Hermes 仪表盘。请检查此连接的主机、端口和凭据。';
+  String get needs_a_reachable_hermes_dashboard_check_the_host_port_and => '需要可访问的 Hermes 仪表盘。请检查此连接的主机、端口和凭据。';
 
   @override
-  String get needs_a_server_authoritative_assets_index_in_the_hermes_gateway =>
-      'Hermes 网关中需要具备服务端权威的资产索引。';
+  String get needs_a_server_authoritative_assets_index_in_the_hermes_gateway => 'Hermes 网关中需要具备服务端权威的资产索引。';
 
   @override
-  String get needs_durable_pin_ordering_batch_mutation_and_undo_contracts_in =>
-      'Hermes 网关中需要具备持久化的置顶排序、批量变更和撤销契约。';
+  String get needs_durable_pin_ordering_batch_mutation_and_undo_contracts_in => 'Hermes 网关中需要具备持久化的置顶排序、批量变更和撤销契约。';
 
   @override
   String get needs_you => '需要你';
@@ -7582,12 +7274,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get nginx_injects_auth_app_sends_clean_requests =>
-      'Nginx 注入认证 — 应用发送干净请求';
+  String get nginx_injects_auth_app_sends_clean_requests => 'Nginx 注入认证 — 应用发送干净请求';
 
   @override
-  String get no_tts_voices_found_ninstall_google_text_to_speech_and =>
-      '未找到 TTS 语音。\n请安装 Google Text-to-Speech 并下载语音数据。';
+  String get no_tts_voices_found_ninstall_google_text_to_speech_and => '未找到 TTS 语音。\n请安装 Google Text-to-Speech 并下载语音数据。';
 
   @override
   String get no_active_projects_on_this_gateway => '此网关上暂无活动项目';
@@ -7596,8 +7286,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get no_activity_yet => '暂无活动';
 
   @override
-  String get no_chat_is_blocked_running_or_waiting_to_be_resumed =>
-      '没有被阻塞、运行中或等待恢复的聊天。准备好后随时可以开始新聊天。';
+  String get no_chat_is_blocked_running_or_waiting_to_be_resumed => '没有被阻塞、运行中或等待恢复的聊天。准备好后随时可以开始新聊天。';
 
   @override
   String no_chats_in_this_project_match(Object searchQuery) {
@@ -7605,8 +7294,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get no_chats_in_this_space_yet_tap_to_start_one =>
-      '此空间暂无聊天。轻点 + 开始聊天。';
+  String get no_chats_in_this_space_yet_tap_to_start_one => '此空间暂无聊天。轻点 + 开始聊天。';
 
   @override
   String get no_chats_yet => '暂无聊天';
@@ -7624,8 +7312,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get no_folders_yet => '暂无文件夹';
 
   @override
-  String get no_local_spaces_were_found_for_this_connection_so_projects =>
-      '在此连接中未找到本地空间，因此项目已是此处的唯一组织方式。';
+  String get no_local_spaces_were_found_for_this_connection_so_projects => '在此连接中未找到本地空间，因此项目已是此处的唯一组织方式。';
 
   @override
   String get no_matches => '无匹配项';
@@ -7663,8 +7350,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get no_text_shared => '未共享文本';
 
   @override
-  String get no_turn_is_blocked_in_flight_or_recently_finished_work =>
-      '没有被阻塞、进行中或最近完成的轮次。你开始的工作会显示在这里。';
+  String get no_turn_is_blocked_in_flight_or_recently_finished_work => '没有被阻塞、进行中或最近完成的轮次。你开始的工作会显示在这里。';
 
   @override
   String get no_turn_needs_your_input_or_has_failed => '没有需要你输入或失败的轮次。';
@@ -7676,8 +7362,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get nothing_changed_in_the_last_seven_days => '最近七天无更改。';
 
   @override
-  String get nothing_has_moved_yet_this_is_only_what_a_migration =>
-      '尚未移动任何内容 — 这只是迁移将执行的操作。';
+  String get nothing_has_moved_yet_this_is_only_what_a_migration => '尚未移动任何内容 — 这只是迁移将执行的操作。';
 
   @override
   String get nothing_here => '这里什么也没有';
@@ -7695,8 +7380,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get notifications => '通知';
 
   @override
-  String get notifications_permission_denied =>
-      '系统已阻止通知。请在 Android 设置中允许此应用发送通知。';
+  String get notifications_permission_denied => '系统已阻止通知。请在 Android 设置中允许此应用发送通知。';
 
   @override
   String get off_no_thinking => '关闭（无思考）';
@@ -7728,8 +7412,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get open_the_hermes_dashboard => '打开 Hermes 仪表盘';
 
   @override
-  String get optional_for_the_memory_cron_skills_settings_tabs_leave_blank =>
-      '可选。用于“记忆”、“Cron”、“技能”、“设置”标签页。留空则使用默认仪表盘端口（9119）且无需登录。';
+  String get optional_for_the_memory_cron_skills_settings_tabs_leave_blank => '可选。用于“记忆”、“Cron”、“技能”、“设置”标签页。留空则使用默认仪表盘端口（9119）且无需登录。';
 
   @override
   String get organization => '组织';
@@ -7777,16 +7460,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get profile_default_model => '配置档案默认模型';
 
   @override
-  String profile_default_set_to_chats_with_their_own_model_keep(
-    Object selectedModel,
-  ) {
+  String profile_default_set_to_chats_with_their_own_model_keep(Object selectedModel) {
     return '配置档案默认值已设为 $selectedModel。拥有独立模型的聊天将保留该覆盖设置。';
   }
 
   @override
-  String
-  get profile_this_connection_chats_as_when_the_dashboard_serves_several =>
-      '当仪表盘服务于多个配置档案时，为此连接的聊天指定配置档案。留空则使用独立的单配置档案仪表盘。';
+  String get profile_this_connection_chats_as_when_the_dashboard_serves_several => '当仪表盘服务于多个配置档案时，为此连接的聊天指定配置档案。留空则使用独立的单配置档案仪表盘。';
 
   @override
   String get project => '项目';
@@ -7804,13 +7483,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get projects => '项目';
 
   @override
-  String get projects_group_related_chats_files_and_activity_and_stay_in =>
-      '项目将相关的聊天、文件和活动进行分组，并与你电脑上的 Hermes 保持同步。';
+  String get projects_group_related_chats_files_and_activity_and_stay_in => '项目将相关的聊天、文件和活动进行分组，并与你电脑上的 Hermes 保持同步。';
 
   @override
-  String
-  get projects_need_a_desktop_gateway_connection_add_the_desktop_gateway =>
-      '项目需要 Desktop Gateway 连接。请将 Desktop Gateway URL 添加到此连接，以便跨设备管理聊天。';
+  String get projects_need_a_desktop_gateway_connection_add_the_desktop_gateway => '项目需要 Desktop Gateway 连接。请将 Desktop Gateway URL 添加到此连接，以便跨设备管理聊天。';
 
   @override
   String get projects_unavailable => '项目不可用';
@@ -7837,8 +7513,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get quick_chat => '快速聊天';
 
   @override
-  String get quick_chats_appear_here_after_their_retention_period =>
-      '快速聊天将在保留期过后显示在此处。';
+  String get quick_chats_appear_here_after_their_retention_period => '快速聊天将在保留期过后显示在此处。';
 
   @override
   String get read_aloud => '朗读';
@@ -7902,14 +7577,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get repositories => '代码库';
 
   @override
-  String
-  get research_the_attached_content_verify_the_important_claims_and_cite =>
-      '研究附件内容，核实重要主张并引用来源。';
+  String get research_the_attached_content_verify_the_important_claims_and_cite => '研究附件内容，核实重要主张并引用来源。';
 
   @override
-  String research_this_content_verify_the_important_claims_and_cite_sources(
-    Object text,
-  ) {
+  String research_this_content_verify_the_important_claims_and_cite_sources(Object text) {
     return '研究此内容，核实重要主张并引用来源：\n\n$text';
   }
 
@@ -7930,8 +7601,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get response_closed_locally_no_active_gateway_turn_was_found =>
-      '响应已在本地关闭；未找到活动的网关轮次。';
+  String get response_closed_locally_no_active_gateway_turn_was_found => '响应已在本地关闭；未找到活动的网关轮次。';
 
   @override
   String get response_complete => '响应完成';
@@ -7974,8 +7644,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get review_local_spaces => '检查本地空间';
 
   @override
-  String get review_or_promote_quick_chats_past_their_retention_period =>
-      '查看或提升超出保留期限的快速聊天';
+  String get review_or_promote_quick_chats_past_their_retention_period => '查看或提升超出保留期限的快速聊天';
 
   @override
   String get review_the_attached_content => '查看附件内容。';
@@ -7993,12 +7662,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get save_changes => '保存更改';
 
   @override
-  String get save_a_permanent_rule_in_the_hermes_configuration =>
-      '在 Hermes 配置中保存永久规则。';
+  String get save_a_permanent_rule_in_the_hermes_configuration => '在 Hermes 配置中保存永久规则。';
 
   @override
-  String get save_the_durable_facts_from_the_attached_content_to_memory =>
-      '将附件内容中的持久事实保存到记忆中，然后确认保留的内容。';
+  String get save_the_durable_facts_from_the_attached_content_to_memory => '将附件内容中的持久事实保存到记忆中，然后确认保留的内容。';
 
   @override
   String save_the_durable_facts_from_this_content_to_memory_then(Object text) {
@@ -8006,8 +7673,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get save_your_connections_and_settings_to_an_encrypted_file_then =>
-      '将连接与设置保存到加密文件中，以便在重新安装或在其他设备上时恢复它们。';
+  String get save_your_connections_and_settings_to_an_encrypted_file_then => '将连接与设置保存到加密文件中，以便在重新安装或在其他设备上时恢复它们。';
 
   @override
   String save_2(Object filename) {
@@ -8099,8 +7765,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get show_passphrase => '显示密码短语';
 
   @override
-  String get show_tool_calls_thinking_and_message_metadata =>
-      '显示工具调用、思考过程和消息元数据';
+  String get show_tool_calls_thinking_and_message_metadata => '显示工具调用、思考过程和消息元数据';
 
   @override
   String get signal_messages => 'Signal 消息';
@@ -8176,8 +7841,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get submitted_waiting_for_hermes => '已提交，等待 Hermes 响应';
 
   @override
-  String get suggest_projects_and_learn_from_your_corrections =>
-      '建议项目并从你的更正中学习';
+  String get suggest_projects_and_learn_from_your_corrections => '建议项目并从你的更正中学习';
 
   @override
   String get summarize_the_attached_content => '总结附件内容。';
@@ -8197,8 +7861,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get take_photo => '拍照';
 
   @override
-  String get tap_to_add_a_remote_hermes_gateway_api_server_port =>
-      '点击 + 添加远程 Hermes 网关\n(API Server，端口 8642)';
+  String get tap_to_add_a_remote_hermes_gateway_api_server_port => '点击 + 添加远程 Hermes 网关\n(API Server，端口 8642)';
 
   @override
   String get tap_the_button_to_start_a_new_chat => '点击 + 按钮开始新的聊天';
@@ -8236,16 +7899,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get the_api_key_could_not_be_stored_securely => '无法安全存储 API 密钥。';
 
   @override
-  String get the_project_will_move_to_archived_its_chats_and_files =>
-      '该项目将移至“已归档”。其聊天和文件将保持完整，你可以随时恢复它。';
+  String get the_project_will_move_to_archived_its_chats_and_files => '该项目将移至“已归档”。其聊天和文件将保持完整，你可以随时恢复它。';
 
   @override
-  String get the_project_will_move_to_archived_its_chats_and_files_2 =>
-      '该项目将移至“已归档”。其聊天和文件将保持完整，你可以稍后恢复它。';
+  String get the_project_will_move_to_archived_its_chats_and_files_2 => '该项目将移至“已归档”。其聊天和文件将保持完整，你可以稍后恢复它。';
 
   @override
-  String get the_active_profile_did_not_return_any_selectable_models =>
-      '当前配置档案未返回任何可选模型。';
+  String get the_active_profile_did_not_return_any_selectable_models => '当前配置档案未返回任何可选模型。';
 
   @override
   String get the_backup_could_not_be_exported => '无法导出备份。';
@@ -8260,8 +7920,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get the_connection_could_not_be_stored_securely => '无法安全存储连接。';
 
   @override
-  String get the_dashboard_credentials_could_not_be_stored_securely =>
-      '无法安全存储仪表盘凭据。';
+  String get the_dashboard_credentials_could_not_be_stored_securely => '无法安全存储仪表盘凭据。';
 
   @override
   String get the_detached_reply_failed => '已分离的回复失败。';
@@ -8272,26 +7931,21 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get the_file_contains_your_api_keys_and_dashboard_password_so =>
-      '该文件包含你的 API 密钥和仪表盘密码，因此已加密。没有此密码短语，备份将无法恢复。';
+  String get the_file_contains_your_api_keys_and_dashboard_password_so => '该文件包含你的 API 密钥和仪表盘密码，因此已加密。没有此密码短语，备份将无法恢复。';
 
   @override
   String get the_last_turn_failed => '上一轮对话失败';
 
   @override
-  String the_local_connection_store_looks_damaged_you_can_reset_the(
-    Object errorType,
-  ) {
+  String the_local_connection_store_looks_damaged_you_can_reset_the(Object errorType) {
     return '本地连接存储似乎已损坏 ($errorType)。你可以重置已保存的连接并重新开始。网关上的聊天记录不受影响。';
   }
 
   @override
-  String get the_model_only_rewrites_your_question_into_a_short_full =>
-      '该模型仅将你的问题重写为简短的全文查询。Hermes 使用已在主机上配置的提供方凭据。';
+  String get the_model_only_rewrites_your_question_into_a_short_full => '该模型仅将你的问题重写为简短的全文查询。Hermes 使用已在主机上配置的提供方凭据。';
 
   @override
-  String get the_server_has_not_reported_folders_for_this_project_yet =>
-      '服务器尚未报告此项目的文件夹。全局文件仍可在“更多”中查看。';
+  String get the_server_has_not_reported_folders_for_this_project_yet => '服务器尚未报告此项目的文件夹。全局文件仍可在“更多”中查看。';
 
   @override
   String get the_turn_failed => '本轮对话失败';
@@ -8300,47 +7954,37 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get the_two_passphrases_do_not_match => '两次输入的密码短语不匹配。';
 
   @override
-  String get the_value_is_sent_directly_to_the_active_hermes_gateway =>
-      '该值将直接发送至当前活动的 Hermes 网关，不会被此 Android 应用保存。';
+  String get the_value_is_sent_directly_to_the_active_hermes_gateway => '该值将直接发送至当前活动的 Hermes 网关，不会被此 Android 应用保存。';
 
   @override
-  String get there_are_no_visible_files_in_this_server_folder =>
-      '此服务器文件夹中没有可见文件。';
+  String get there_are_no_visible_files_in_this_server_folder => '此服务器文件夹中没有可见文件。';
 
   @override
   String get thinking_effort => '思考强度';
 
   @override
-  String get this_hermes_gateway_does_not_support_opening_a_project_yet =>
-      '此 Hermes 网关尚不支持打开项目。请更新服务器上的 Hermes 以在手机上浏览项目。';
+  String get this_hermes_gateway_does_not_support_opening_a_project_yet => '此 Hermes 网关尚不支持打开项目。请更新服务器上的 Hermes 以在手机上浏览项目。';
 
   @override
-  String get this_hermes_gateway_is_older_than_server_side_projects_so =>
-      '此 Hermes 网关版本旧于服务端项目功能，因此聊天仅在此设备上分组。请更新 Hermes 以在多台设备间共享相同项目。';
+  String get this_hermes_gateway_is_older_than_server_side_projects_so => '此 Hermes 网关版本旧于服务端项目功能，因此聊天仅在此设备上分组。请更新 Hermes 以在多台设备间共享相同项目。';
 
   @override
-  String get this_project_has_no_folder_to_open_the_chat_in =>
-      '此项目需要先添加文件夹才能在其中开始聊天。添加文件夹后请重试。';
+  String get this_project_has_no_folder_to_open_the_chat_in => '此项目需要先添加文件夹才能在其中开始聊天。添加文件夹后请重试。';
 
   @override
-  String get this_chat_has_no_messages_available_in_the_desktop_session =>
-      '此聊天在 Desktop 会话中暂无可用消息。';
+  String get this_chat_has_no_messages_available_in_the_desktop_session => '此聊天在 Desktop 会话中暂无可用消息。';
 
   @override
-  String get this_creates_a_permanent_rule_in_hermes_review_the_full =>
-      '这将在 Hermes 中创建永久规则。确认前请仔细检查完整命令。';
+  String get this_creates_a_permanent_rule_in_hermes_review_the_full => '这将在 Hermes 中创建永久规则。确认前请仔细检查完整命令。';
 
   @override
-  String get this_gateway_does_not_host_projects_yet_update_the_gateway =>
-      '此网关尚不支持托管项目。请更新网关以在各设备间整理聊天。';
+  String get this_gateway_does_not_host_projects_yet_update_the_gateway => '此网关尚不支持托管项目。请更新网关以在各设备间整理聊天。';
 
   @override
-  String get this_permanently_deletes_the_project_chats_will_not_be_deleted =>
-      '这将永久删除该项目。聊天记录不会被删除；它们将返回至未分配状态。';
+  String get this_permanently_deletes_the_project_chats_will_not_be_deleted => '这将永久删除该项目。聊天记录不会被删除；它们将返回至未分配状态。';
 
   @override
-  String get this_server_doesn_t_offer_background_recovery_chats_run_live =>
-      '此服务器不提供后台恢复功能 —— 聊天实时运行';
+  String get this_server_doesn_t_offer_background_recovery_chats_run_live => '此服务器不提供后台恢复功能 —— 聊天实时运行';
 
   @override
   String get this_week => '本周';
@@ -8381,8 +8025,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get unable_to_read_the_selected_image_the_selection_was_kept =>
-      '无法读取所选图片，已保留当前选择。';
+  String get unable_to_read_the_selected_image_the_selection_was_kept => '无法读取所选图片，已保留当前选择。';
 
   @override
   String get unassigned => '未分配';
@@ -8423,19 +8066,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get use_on_device => '使用设备端';
 
   @override
-  String get use_the_attached_content_to_identify_and_fill_the_relevant =>
-      '使用附件内容识别并填写相关文档或表单字段。提交任何内容前请先询问。';
+  String get use_the_attached_content_to_identify_and_fill_the_relevant => '使用附件内容识别并填写相关文档或表单字段。提交任何内容前请先询问。';
 
   @override
-  String use_this_content_to_identify_and_fill_the_relevant_document(
-    Object text,
-  ) {
+  String use_this_content_to_identify_and_fill_the_relevant_document(Object text) {
     return '使用此内容识别并填写相关文档或表单字段。提交任何内容前请先询问：\n\n$text';
   }
 
   @override
-  String get used_for_hosted_path_prefixes_and_for_the_settings_memory =>
-      '用于托管路径前缀以及“设置”、“记忆”、“技能”和“Cron”标签页。若需开放仪表盘，可将用户名/密码留空；若反向代理已注入仪表盘认证，请启用代理模式。';
+  String get used_for_hosted_path_prefixes_and_for_the_settings_memory => '用于托管路径前缀以及“设置”、“记忆”、“技能”和“Cron”标签页。若需开放仪表盘，可将用户名/密码留空；若反向代理已注入仪表盘认证，请启用代理模式。';
 
   @override
   String get username_optional => '用户名（可选）';
@@ -8489,8 +8128,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get e_g_dashboard => '例如 /dashboard';
 
   @override
-  String get e_g_dashboard_proxy_path_before_api =>
-      '例如 /dashboard（/api/ 之前的代理路径）';
+  String get e_g_dashboard_proxy_path_before_api => '例如 /dashboard（/api/ 之前的代理路径）';
 
   @override
   String get e_g_profile_peter => '例如 /profile/peter';
@@ -8520,12 +8158,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get example_host_hint =>
-      '192.168.1.50、100.x.y.z 或 hermes-machine.tailnet.ts.net';
+  String get example_host_hint => '192.168.1.50、100.x.y.z 或 hermes-machine.tailnet.ts.net';
 
   @override
-  String get example_profile_prefix_hint_full =>
-      '例如 /profile/peter（/api/ 和 /v1/ 之前的代理路径）';
+  String get example_profile_prefix_hint_full => '例如 /profile/peter（/api/ 和 /v1/ 之前的代理路径）';
 
   @override
   String and_more(Object count) {
@@ -8571,10 +8207,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String chats_migrated_projects_created(
-    Object createdProjects,
-    Object linkedSessions,
-  ) {
+  String chats_migrated_projects_created(Object createdProjects, Object linkedSessions) {
     return '已迁移 $linkedSessions 个聊天 · 已创建 $createdProjects 个项目';
   }
 
@@ -8906,8 +8539,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get admin_password_needed => '需要管理员密码';
 
   @override
-  String get hermes_needs_a_sudo_password_for_the_pending_terminal_command =>
-      'Hermes 需要 sudo 密码来执行挂起的终端命令。';
+  String get hermes_needs_a_sudo_password_for_the_pending_terminal_command => 'Hermes 需要 sudo 密码来执行挂起的终端命令。';
 
   @override
   String get sudo_password => 'sudo 密码';
@@ -8916,8 +8548,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get secret_needed => '需要密钥';
 
   @override
-  String get hermes_needs_a_secret_for_the_pending_skill =>
-      'Hermes 需要为待处理的技能提供一个密钥。';
+  String get hermes_needs_a_secret_for_the_pending_skill => 'Hermes 需要为待处理的技能提供一个密钥。';
 
   @override
   String get secret_value => '密钥值';
@@ -8955,16 +8586,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get update_downloading => 'Downloading and verifying update…';
 
   @override
-  String get update_allow_install =>
-      'Allow Hermes to install this update, then return here and tap Install update.';
+  String get update_allow_install => 'Allow Hermes to install this update, then return here and tap Install update.';
 
   @override
-  String get update_failed =>
-      'The update could not be downloaded, verified, or opened. Try again or view the release page.';
+  String get update_failed => 'The update could not be downloaded, verified, or opened. Try again or view the release page.';
 
   @override
-  String get a_newer_hermes_android_build_is_available_on_github =>
-      'GitHub 上已有更新的 Ares 版本。';
+  String get a_newer_hermes_android_build_is_available_on_github => 'GitHub 上已有更新的 Ares 版本。';
 
   @override
   String get release_notes => '发行说明';
@@ -9016,9 +8644,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String
-  get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins =>
-      '紧凑模式会去掉 You 和 Hermes 标签，并缩小气泡内边距、间距和两侧边距。';
+  String get compact_removes_the_you_and_hermes_labels_and_trims_bubble_padding_spacing_and_side_margins => '紧凑模式会去掉 You 和 Hermes 标签，并缩小气泡内边距、间距和两侧边距。';
 
   @override
   String get background_work => '后台运行';
@@ -9027,12 +8653,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get keep_chats_active_in_background => '在后台保持聊天连接';
 
   @override
-  String get background_work_description =>
-      '应用在后台时，保持用户发起的聊天连接。空闲连接可能会断开。此功能会增加电量和流量消耗。关闭后不会停止服务器上的任务。';
+  String get background_work_description => '应用在后台时，保持用户发起的聊天连接。空闲连接可能会断开。此功能会增加电量和流量消耗。关闭后不会停止服务器上的任务。';
 
   @override
-  String get background_work_limits =>
-      'Android 仍可能在 Doze 模式下暂停连接或结束应用进程。进程结束后的通知需要单独设置推送。不支持强行停止后的通知。';
+  String get background_work_limits => 'Android 仍可能在 Doze 模式下暂停连接或结束应用进程。进程结束后的通知需要单独设置推送。不支持强行停止后的通知。';
 
   @override
   String get background_work_disclosure => '后台保护开启时，即使关闭了可选的聊天通知，仍会显示必需的服务通知。';
@@ -9041,8 +8665,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get battery_optimisation_settings => '电池优化设置';
 
   @override
-  String get battery_optimisation_description =>
-      '打开 Android 设置以查看电池限制。不会自动申请豁免，更改设置也不能保证通知送达。';
+  String get battery_optimisation_description => '打开 Android 设置以查看电池限制。不会自动申请豁免，更改设置也不能保证通知送达。';
 
   @override
   String get battery_settings_unavailable => '无法在此设备上打开电池设置。';
@@ -9066,8 +8689,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get task_live_preview => 'Live preview from parent events';
 
   @override
-  String get task_preview_explanation =>
-      'Latest exposed preview only; not a recorded transcript row.';
+  String get task_preview_explanation => 'Latest exposed preview only; not a recorded transcript row.';
 
   @override
   String get task_preview => 'Preview';
@@ -9079,8 +8701,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get task_loading_history => 'Loading task history…';
 
   @override
-  String get task_empty_history =>
-      'No recorded messages yet. The task may not have flushed its history; this does not mean it produced no work.';
+  String get task_empty_history => 'No recorded messages yet. The task may not have flushed its history; this does not mean it produced no work.';
 
   @override
   String get task_load_older => 'Load older';
@@ -9109,8 +8730,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get task_read_only_notice =>
-      'Read-only · recorded history may appear after the task flushes. Refresh to check again.';
+  String get task_read_only_notice => 'Read-only · recorded history may appear after the task flushes. Refresh to check again.';
 
   @override
   String task_row_label(Object id, Object role) {
@@ -9156,48 +8776,37 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get task_image_placeholder => '[image]';
 
   @override
-  String get task_invalid_reference =>
-      'Task transcript unavailable: invalid stored session reference.';
+  String get task_invalid_reference => 'Task transcript unavailable: invalid stored session reference.';
 
   @override
-  String get task_auth_required =>
-      'Task transcript unavailable: configure Dashboard authentication for this gateway. The API-server key cannot read task reasoning.';
+  String get task_auth_required => 'Task transcript unavailable: configure Dashboard authentication for this gateway. The API-server key cannot read task reasoning.';
 
   @override
-  String get task_auth_rejected =>
-      'Task transcript unavailable: Dashboard authentication was rejected. Check this gateway’s Dashboard settings.';
+  String get task_auth_rejected => 'Task transcript unavailable: Dashboard authentication was rejected. Check this gateway’s Dashboard settings.';
 
   @override
-  String get task_incompatible_history =>
-      'Task transcript unavailable: this Dashboard does not provide compatible bounded raw history for the selected profile.';
+  String get task_incompatible_history => 'Task transcript unavailable: this Dashboard does not provide compatible bounded raw history for the selected profile.';
 
   @override
-  String get task_identity_unproven =>
-      'Task transcript unavailable: the Dashboard could not prove the exact stored session or its compression lineage. No transcript from another session is shown.';
+  String get task_identity_unproven => 'Task transcript unavailable: the Dashboard could not prove the exact stored session or its compression lineage. No transcript from another session is shown.';
 
   @override
-  String get task_partial_compression =>
-      'Partial history: this task continued after compression, but this gateway has not exposed a verifiable newer reference. The final reply may be missing. Automatic refresh is paused; use Refresh to retry.';
+  String get task_partial_compression => 'Partial history: this task continued after compression, but this gateway has not exposed a verifiable newer reference. The final reply may be missing. Automatic refresh is paused; use Refresh to retry.';
 
   @override
-  String get task_partial_ancestors =>
-      'Partial history: this gateway omits compression ancestors for this task. Earlier task segments may be missing. Known rows are retained; use Refresh to retry.';
+  String get task_partial_ancestors => 'Partial history: this gateway omits compression ancestors for this task. Earlier task segments may be missing. Known rows are retained; use Refresh to retry.';
 
   @override
-  String get task_missing_reference =>
-      'Task transcript unavailable: this server did not retain its session reference.';
+  String get task_missing_reference => 'Task transcript unavailable: this server did not retain its session reference.';
 
   @override
-  String get task_missing_row_identity =>
-      'Task transcript unavailable: this server did not supply durable message row identities.';
+  String get task_missing_row_identity => 'Task transcript unavailable: this server did not supply durable message row identities.';
 
   @override
-  String get task_history_not_ready =>
-      'Task history is not available yet (HTTP 404). The task may not have flushed, or this Dashboard may not support task history. Retry to check again.';
+  String get task_history_not_ready => 'Task history is not available yet (HTTP 404). The task may not have flushed, or this Dashboard may not support task history. Retry to check again.';
 
   @override
-  String get task_refresh_failed =>
-      'Could not refresh task history. Check the connection and retry.';
+  String get task_refresh_failed => 'Could not refresh task history. Check the connection and retry.';
 
   @override
   String get task_status_interrupted => 'Interrupted';
@@ -9270,8 +8879,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get provider_usage => '使用记录';
 
   @override
-  String get provider_usage_notice =>
-      'Hermes最近30天的使用量，并非账户余额或模型定价。请在Hermes服务器配置凭据；此应用不保存提供商API密钥。';
+  String get provider_usage_notice => 'Hermes最近30天的使用量，并非账户余额或模型定价。请在Hermes服务器配置凭据；此应用不保存提供商API密钥。';
 
   @override
   String get provider_usage_failed => '无法加载使用记录。';
@@ -9299,12 +8907,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get provider_quota_openai_api => 'OpenAI API 已记录用量';
 
   @override
-  String get provider_quota_notice =>
-      '由提供商报告的订阅用量周期，与 Hermes 记录的用量及 API 计费分开显示。各账户单独列出；达到模型限额并不代表整个账户的配额已耗尽。';
+  String get provider_quota_notice => '由提供商报告的订阅用量周期，与 Hermes 记录的用量及 API 计费分开显示。各账户单独列出；达到模型限额并不代表整个账户的配额已耗尽。';
 
   @override
-  String get provider_quota_windows_notice =>
-      'Codex 和 Claude 订阅设有五小时会话限额和每周限额。仅显示提供商报告的周期；未报告的限额和重置时间仍不可用。每周限额可能适用于整个账户或特定模型。';
+  String get provider_quota_windows_notice => 'Codex 和 Claude 订阅设有五小时会话限额和每周限额。仅显示提供商报告的周期；未报告的限额和重置时间仍不可用。每周限额可能适用于整个账户或特定模型。';
 
   @override
   String get provider_quota_five_hour_session => '5小时会话';
@@ -9363,20 +8969,16 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get provider_oauth_more_subtitle => '管理 Hermes 主机上的提供商登录';
 
   @override
-  String get provider_oauth_settings_subtitle =>
-      '在 Hermes 主机上登录；提供商令牌不会保存在此设备上';
+  String get provider_oauth_settings_subtitle => '在 Hermes 主机上登录；提供商令牌不会保存在此设备上';
 
   @override
-  String get provider_oauth_intro =>
-      '在外部浏览器中登录提供商。令牌仅存储在 Hermes 主机上，不会保存在此设备上。登录不会选择此应用中的聊天模型。';
+  String get provider_oauth_intro => '在外部浏览器中登录提供商。令牌仅存储在 Hermes 主机上，不会保存在此设备上。登录不会选择此应用中的聊天模型。';
 
   @override
-  String get provider_oauth_defaults_notice =>
-      '某些主机流程（包括替换 Nous 免费套餐账户）可能会更新主机默认设置。登录后请检查主机设置。';
+  String get provider_oauth_defaults_notice => '某些主机流程（包括替换 Nous 免费套餐账户）可能会更新主机默认设置。登录后请检查主机设置。';
 
   @override
-  String get provider_oauth_transport_init_failed =>
-      '无法初始化所选的安全仪表板连接。请检查其 TLS 身份和连接设置。';
+  String get provider_oauth_transport_init_failed => '无法初始化所选的安全仪表板连接。请检查其 TLS 身份和连接设置。';
 
   @override
   String get provider_oauth_https_required => '提供商登录需要通过 HTTPS 连接到 Hermes 仪表板。';
@@ -9385,8 +8987,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get provider_oauth_auth_required => '登录前请配置仪表板密码验证或可信代理。';
 
   @override
-  String get provider_oauth_catalog_failed =>
-      '此主机不支持提供商登录。请检查仪表板身份验证；如果主机不支持提供商 OAuth，请更新主机。';
+  String get provider_oauth_catalog_failed => '此主机不支持提供商登录。请检查仪表板身份验证；如果主机不支持提供商 OAuth，请更新主机。';
 
   @override
   String get provider_oauth_expired => '登录已过期。请重新开始。';
@@ -9444,15 +9045,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get provider_oauth_sign_in => '登录';
 
   @override
-  String get provider_oauth_cli_required =>
-      '请在 Hermes 主机上使用提供商 CLI 登录。此主机不支持该提供商的应用内登录。';
+  String get provider_oauth_cli_required => '请在 Hermes 主机上使用提供商 CLI 登录。此主机不支持该提供商的应用内登录。';
 
   @override
   String get provider_oauth_checking_account => '已收到授权。正在检查主机账户…';
 
   @override
-  String get provider_oauth_verification_unavailable =>
-      '已收到授权；无法验证账户。请打开用量页面以刷新账户用量。';
+  String get provider_oauth_verification_unavailable => '已收到授权；无法验证账户。请打开用量页面以刷新账户用量。';
 
   @override
   String provider_oauth_verified_account(String email) {
@@ -9472,8 +9071,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get projects_root_more_subtitle => '服务器上新建项目文件夹的位置';
 
   @override
-  String get projects_root_description =>
-      '在此手机上创建的项目会在这里获得文件夹。将其指向 Hermes 自身使用的文件夹，手机和服务器就能共享同一批项目。';
+  String get projects_root_description => '在此手机上创建的项目会在这里获得文件夹。将其指向 Hermes 自身使用的文件夹，手机和服务器就能共享同一批项目。';
 
   @override
   String get projects_root_label => '项目根路径';
@@ -9487,8 +9085,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get projects_root_locked_title => '由服务器设定';
 
   @override
-  String get projects_root_locked_explanation =>
-      '此服务器将文件访问限制在单一根目录内，因此无法在应用中更改项目文件夹。';
+  String get projects_root_locked_explanation => '此服务器将文件访问限制在单一根目录内，因此无法在应用中更改项目文件夹。';
 
   @override
   String get projects_root_saved => '已保存项目文件夹。';
@@ -9506,8 +9103,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get projects_root_invalid_segments => '请从路径中移除点号片段和控制字符。';
 
   @override
-  String get projects_root_unsupported =>
-      '此连接不支持。读取或更改服务器上的项目文件夹需要具有仪表板访问权限的 Desktop Gateway 连接。';
+  String get projects_root_unsupported => '此连接不支持。读取或更改服务器上的项目文件夹需要具有仪表板访问权限的 Desktop Gateway 连接。';
 
   @override
   String get projects_root_unavailable => '无法读取服务器上的项目文件夹。请检查仪表板连接后重试。';
@@ -9593,8 +9189,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get slash_command_no_output => 'The command completed with no output.';
 
   @override
-  String get slash_command_delivery_unknown =>
-      'The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.';
+  String get slash_command_delivery_unknown => 'The command was sent but its reply never arrived. It may still be running on the gateway, so your draft was kept. Check the gateway before retrying.';
 
   @override
   String get slash_command_failed => 'The command could not be run.';
@@ -9638,8 +9233,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_password_for_sudo => 'sudo 密码';
 
   @override
-  String get ng_hermes_needs_your_sudo_password_to =>
-      'Hermes 需要你的 sudo 密码来运行此命令。';
+  String get ng_hermes_needs_your_sudo_password_to => 'Hermes 需要你的 sudo 密码来运行此命令。';
 
   @override
   String get ng_a_secret_value => '机密值';
@@ -9729,12 +9323,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_check_the_address_and_that_the => '请检查地址，并确认代理已转发到仪表盘。';
 
   @override
-  String get ng_use_the_same_network_as_the =>
-      '请使用与服务器相同的网络，并使用 --host 0.0.0.0 启动仪表盘，以便其他设备访问。';
+  String get ng_use_the_same_network_as_the => '请使用与服务器相同的网络，并使用 --host 0.0.0.0 启动仪表盘，以便其他设备访问。';
 
   @override
-  String get ng_check_the_address_vpn_or_tailscale =>
-      '请检查地址、VPN 或 Tailscale 连接。';
+  String get ng_check_the_address_vpn_or_tailscale => '请检查地址、VPN 或 Tailscale 连接。';
 
   @override
   String get ng_not_checked_yet => '尚未检查。';
@@ -9756,23 +9348,19 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get ng_use_the_dashboard_s_address_and =>
-      '请使用仪表盘的地址和端口（默认为 9119），而不是 API 服务器的地址和端口。';
+  String get ng_use_the_dashboard_s_address_and => '请使用仪表盘的地址和端口（默认为 9119），而不是 API 服务器的地址和端口。';
 
   @override
-  String get ng_cloudflare_access_turned_the_service_token =>
-      'Cloudflare Access 拒绝了服务令牌。';
+  String get ng_cloudflare_access_turned_the_service_token => 'Cloudflare Access 拒绝了服务令牌。';
 
   @override
-  String get ng_cloudflare_access_is_in_front_of =>
-      '此地址前方配置了 Cloudflare Access。';
+  String get ng_cloudflare_access_is_in_front_of => '此地址前方配置了 Cloudflare Access。';
 
   @override
   String get ng_check_the_service_token_and_its => '请检查服务令牌及其 Service Auth 策略。';
 
   @override
-  String get ng_add_a_cloudflare_access_service_token =>
-      '为此地址添加 Cloudflare Access 服务令牌。';
+  String get ng_add_a_cloudflare_access_service_token => '为此地址添加 Cloudflare Access 服务令牌。';
 
   @override
   String get ng_the_server_asks_for_a_client => '服务器要求提供客户端证书。';
@@ -9834,8 +9422,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_check_that_the_agent_is_running => '请确认服务器上的代理正在运行。';
 
   @override
-  String get ng_the_gateway_refused_the_chat_connection =>
-      '网关拒绝了聊天连接（HTTP 403）。';
+  String get ng_the_gateway_refused_the_chat_connection => '网关拒绝了聊天连接（HTTP 403）。';
 
   @override
   String get ng_this_dashboard_has_no_chat_endpoint => '此仪表盘没有聊天端点（/api/ws）。';
@@ -9852,8 +9439,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_update_hermes => '更新 Hermes。';
 
   @override
-  String get ng_make_sure_the_proxy_allows_websocket =>
-      '请确认代理允许在 /api/ws 上进行 WebSocket 升级。';
+  String get ng_make_sure_the_proxy_allows_websocket => '请确认代理允许在 /api/ws 上进行 WebSocket 升级。';
 
   @override
   String get ng_offline => '离线';
@@ -9882,19 +9468,16 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get ng_the_gateway_returned_no_websocket_ticket =>
-      '网关未返回 WebSocket 票据。';
+  String get ng_the_gateway_returned_no_websocket_ticket => '网关未返回 WebSocket 票据。';
 
   @override
   String get ng_connection_lost => '连接已断开';
 
   @override
-  String get ng_this_dashboard_has_no_chat_endpoint_2 =>
-      '此仪表板没有聊天端点（/api/ws）。请更新 Hermes。';
+  String get ng_this_dashboard_has_no_chat_endpoint_2 => '此仪表板没有聊天端点（/api/ws）。请更新 Hermes。';
 
   @override
-  String get ng_the_gateway_refused_the_chat_connection_2 =>
-      '网关拒绝了聊天连接。请检查地址是否与仪表板配置的主机匹配，并确认已启用嵌入式聊天。';
+  String get ng_the_gateway_refused_the_chat_connection_2 => '网关拒绝了聊天连接。请检查地址是否与仪表板配置的主机匹配，并确认已启用嵌入式聊天。';
 
   @override
   String ng_the_gateway_refused(Object method) {
@@ -9959,12 +9542,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_that_file_isn_t_a_certificate => '该文件不是证书或私钥。';
 
   @override
-  String get ng_if_a_proxy_in_front_of =>
-      '如果此地址前的代理要求客户端证书，请在此选择证书，以便测试、登录和聊天时都能出示。';
+  String get ng_if_a_proxy_in_front_of => '如果此地址前的代理要求客户端证书，请在此选择证书，以便测试、登录和聊天时都能出示。';
 
   @override
-  String get ng_client_certificates_are_only_used_with =>
-      '客户端证书仅用于 https:// 地址。';
+  String get ng_client_certificates_are_only_used_with => '客户端证书仅用于 https:// 地址。';
 
   @override
   String get ng_remove => '移除';
@@ -9982,8 +9563,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_pick_a_different_certificate => '选择其他证书';
 
   @override
-  String get ng_accepts_p12_pfx_or_pem_certificate =>
-      '支持 .p12/.pfx 文件，或 PEM 证书和密钥文件。密钥会保存在此应用的私有存储空间中。';
+  String get ng_accepts_p12_pfx_or_pem_certificate => '支持 .p12/.pfx 文件，或 PEM 证书和密钥文件。密钥会保存在此应用的私有存储空间中。';
 
   @override
   String get ng_photos => '照片';
@@ -10106,15 +9686,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get ng_project_create_uncertain =>
-      '网关可能已创建此聊天，但未确认。开始新聊天前请检查聊天列表；此请求不会自动重试。';
+  String get ng_project_create_uncertain => '网关可能已创建此聊天，但未确认。开始新聊天前请检查聊天列表；此请求不会自动重试。';
 
   @override
   String get ng_what_should_we_work_on => '我们要做些什么？';
 
   @override
-  String get ng_ask_hermes_anything_it_can_run =>
-      '向 Hermes 提问。它可以运行工具、浏览网页，还能处理服务器上的文件。';
+  String get ng_ask_hermes_anything_it_can_run => '向 Hermes 提问。它可以运行工具、浏览网页，还能处理服务器上的文件。';
 
   @override
   String ng_working_2(Object frame) {
@@ -10166,8 +9744,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_slash_command_arguments_mixed => '在命令后接受选项或文本。';
 
   @override
-  String get ng_slash_command_sent_as_message =>
-      'NextGen 会将此作为普通消息发送给 Hermes，不会执行该命令。';
+  String get ng_slash_command_sent_as_message => 'NextGen 会将此作为普通消息发送给 Hermes，不会执行该命令。';
 
   @override
   String get ng_slash_command_output => '命令输出';
@@ -10187,8 +9764,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_slash_command_refused => 'Hermes 无法在此运行此命令。';
 
   @override
-  String get ng_slash_command_delivery_unknown =>
-      '命令已发送，但未收到回复。它可能仍在网关上运行，因此没有重新发送，并保留了你的草稿。';
+  String get ng_slash_command_delivery_unknown => '命令已发送，但未收到回复。它可能仍在网关上运行，因此没有重新发送，并保留了你的草稿。';
 
   @override
   String get ng_slash_command_nothing_running => '当前没有正在运行的任务。';
@@ -10269,8 +9845,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_save => '保存';
 
   @override
-  String get ng_enter_both_the_client_id_and =>
-      '请同时填写 Client ID 和 Client Secret，或都留空。';
+  String get ng_enter_both_the_client_id_and => '请同时填写 Client ID 和 Client Secret，或都留空。';
 
   @override
   String get ng_enter_your_username_and_password => '请输入用户名和密码。';
@@ -10293,12 +9868,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_add_a_gateway => '添加网关';
 
   @override
-  String get ng_connect_to_your_hermes_agent_dashboard =>
-      '连接到你的 Hermes Agent 控制面板。使用一个地址和一次登录，即可访问聊天、工具和设置。登录前不会发送任何内容。';
+  String get ng_connect_to_your_hermes_agent_dashboard => '连接到你的 Hermes Agent 控制面板。使用一个地址和一次登录，即可访问聊天、工具和设置。登录前不会发送任何内容。';
 
   @override
-  String get ng_connect_to_another_hermes_agent_dashboard =>
-      '连接到另一个 Hermes Agent 控制面板。你仍会登录已保存的控制面板。';
+  String get ng_connect_to_another_hermes_agent_dashboard => '连接到另一个 Hermes Agent 控制面板。你仍会登录已保存的控制面板。';
 
   @override
   String get ng_dashboard_address => '控制面板地址';
@@ -10310,8 +9883,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_test => '测试';
 
   @override
-  String get ng_where_your_hermes_dashboard_runs_lan =>
-      '你的 Hermes 控制面板所在的位置：局域网、Tailscale 或 HTTPS。';
+  String get ng_where_your_hermes_dashboard_runs_lan => '你的 Hermes 控制面板所在的位置：局域网、Tailscale 或 HTTPS。';
 
   @override
   String get ng_find_on_my_network => '在我的网络中查找';
@@ -10326,8 +9898,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_need_a_client_certificate => '需要客户端证书？';
 
   @override
-  String get ng_this_address_isn_t_private_and =>
-      '此地址不是私有地址，且未使用 https://，因此你的密码和聊天内容会以未加密的形式通过互联网传输。请改用 https://、Tailscale 或你自己的网络。';
+  String get ng_this_address_isn_t_private_and => '此地址不是私有地址，且未使用 https://，因此你的密码和聊天内容会以未加密的形式通过互联网传输。请改用 https://、Tailscale 或你自己的网络。';
 
   @override
   String get ng_continue_to_sign_in => '继续登录';
@@ -10336,8 +9907,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_use_the_classic_interface_instead => '改用经典界面';
 
   @override
-  String get ng_if_cloudflare_access_protects_this_address =>
-      '如果此地址受 Cloudflare Access 保护，请在 Cloudflare Zero Trust（Access，Service credentials）中创建服务令牌，并为对应的 Access 应用添加 Service Auth 策略。';
+  String get ng_if_cloudflare_access_protects_this_address => '如果此地址受 Cloudflare Access 保护，请在 Cloudflare Zero Trust（Access，Service credentials）中创建服务令牌，并为对应的 Access 应用添加 Service Auth 策略。';
 
   @override
   String get ng_a_service_token_is_saved_for => '已为此地址保存服务令牌';
@@ -10387,12 +9957,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_profiles => '配置文件';
 
   @override
-  String get ng_this_dashboard_offers_neither_a_username =>
-      '此控制面板既未提供用户名和密码登录，也未提供浏览器登录。请更新 Hermes，或在服务器上配置用户名和密码登录。';
+  String get ng_this_dashboard_offers_neither_a_username => '此控制面板既未提供用户名和密码登录，也未提供浏览器登录。请更新 Hermes，或在服务器上配置用户名和密码登录。';
 
   @override
-  String get ng_the_auth_gate_is_off_on =>
-      '此控制面板未启用身份验证。任何能访问它的人都可以使用你的 Agent。';
+  String get ng_the_auth_gate_is_off_on => '此控制面板未启用身份验证。任何能访问它的人都可以使用你的 Agent。';
 
   @override
   String get ng_couldn_t_reach_the_dashboard => '无法连接到控制面板';
@@ -10406,8 +9974,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_that_isn_t_a_hermes_dashboard => '这不是 Hermes 控制面板';
 
   @override
-  String get ng_something_answered_but_not_a_hermes_2 =>
-      '服务器有响应，但不是 Hermes 控制面板。请使用控制面板的地址，而不是 API 服务器的地址（端口 8642）。';
+  String get ng_something_answered_but_not_a_hermes_2 => '服务器有响应，但不是 Hermes 控制面板。请使用控制面板的地址，而不是 API 服务器的地址（端口 8642）。';
 
   @override
   String ng_something_answered_http_but_not_a_2(Object status) {
@@ -10415,8 +9982,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get ng_cloudflare_access_stopped_the_request =>
-      'Cloudflare Access 已拦截此请求';
+  String get ng_cloudflare_access_stopped_the_request => 'Cloudflare Access 已拦截此请求';
 
   @override
   String ng_cloudflare_access_turned_down_the_service(Object status) {
@@ -10424,15 +9990,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get ng_add_a_cloudflare_access_service_token_2 =>
-      '请在下方添加 Cloudflare Access 服务令牌，然后重新测试。';
+  String get ng_add_a_cloudflare_access_service_token_2 => '请在下方添加 Cloudflare Access 服务令牌，然后重新测试。';
 
   @override
   String get ng_a_client_certificate_is_needed => '需要客户端证书';
 
   @override
-  String get ng_this_server_asks_for_a_client =>
-      '此服务器要求先提供客户端证书。请在下方选择服务器提供的证书，然后重新测试。';
+  String get ng_this_server_asks_for_a_client => '此服务器要求先提供客户端证书。请在下方选择服务器提供的证书，然后重新测试。';
 
   @override
   String get ng_this_dashboard_doesn_t_ask_for => '此控制面板不需要登录。';
@@ -10479,8 +10043,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_sign_in_with_browser => '使用浏览器登录';
 
   @override
-  String get ng_finish_signing_in_on_the_page =>
-      '请在打开的页面上完成登录。完成后 Hermes 会自动返回。';
+  String get ng_finish_signing_in_on_the_page => '请在打开的页面上完成登录。完成后 Hermes 会自动返回。';
 
   @override
   String get ng_use_a_different_gateway => '使用其他网关';
@@ -10489,19 +10052,16 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_same_wi_fi_or_local_network => '同一 Wi-Fi 或本地网络';
 
   @override
-  String get ng_use_the_server_s_local_address =>
-      '使用服务器的本地地址和端口，例如 192.168.1.20:9119。启动控制面板时请添加 --host 0.0.0.0，以便其他设备访问。';
+  String get ng_use_the_server_s_local_address => '使用服务器的本地地址和端口，例如 192.168.1.20:9119。启动控制面板时请添加 --host 0.0.0.0，以便其他设备访问。';
 
   @override
   String get ng_tailscale => 'Tailscale';
 
   @override
-  String get ng_turn_on_tailscale_on_this_phone =>
-      '在这部手机上启用 Tailscale，然后使用服务器的 Tailscale 地址，例如 100.64.0.1:9119 或其 .ts.net 域名。离开家也能使用。';
+  String get ng_turn_on_tailscale_on_this_phone => '在这部手机上启用 Tailscale，然后使用服务器的 Tailscale 地址，例如 100.64.0.1:9119 或其 .ts.net 域名。离开家也能使用。';
 
   @override
-  String get ng_use_your_https_address_when_the =>
-      '如果控制面板位于带证书的代理后面，请使用你的 https:// 地址。代理还必须支持 /api/ws 上的 WebSocket 升级。';
+  String get ng_use_your_https_address_when_the => '如果控制面板位于带证书的代理后面，请使用你的 https:// 地址。代理还必须支持 /api/ws 上的 WebSocket 升级。';
 
   @override
   String get ng_start_the_dashboard_on_the_server => '在服务器上启动控制面板：';
@@ -10510,8 +10070,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_enter_a_port_from_1_to => '请输入 1 到 65535 之间的端口。';
 
   @override
-  String get ng_looks_for_hermes_dashboards_on_port =>
-      '在此 Wi-Fi 网络上搜索端口 9119 的 Hermes 控制面板，并检查已保存的电脑。';
+  String get ng_looks_for_hermes_dashboards_on_port => '在此 Wi-Fi 网络上搜索端口 9119 的 Hermes 控制面板，并检查已保存的电脑。';
 
   @override
   String ng_looks_for_hermes_dashboards_on_ports(Object port) {
@@ -10522,12 +10081,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_other_port_optional => '其他端口（可选）';
 
   @override
-  String get ng_no_dashboards_answered_start_one_with =>
-      '没有控制面板响应。请运行 hermes dashboard --host 0.0.0.0 启动，或输入其地址。';
+  String get ng_no_dashboards_answered_start_one_with => '没有控制面板响应。请运行 hermes dashboard --host 0.0.0.0 启动，或输入其地址。';
 
   @override
-  String get ng_using_tailscale_or_a_vpn_those =>
-      '正在使用 Tailscale 或 VPN？无法搜索这些网络。请改为输入电脑的 100.x 地址或 .ts.net 域名。';
+  String get ng_using_tailscale_or_a_vpn_those => '正在使用 Tailscale 或 VPN？无法搜索这些网络。请改为输入电脑的 100.x 地址或 .ts.net 域名。';
 
   @override
   String get ng_search_again => '重新搜索';
@@ -10979,8 +10536,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_more_settings => '更多设置';
 
   @override
-  String get ng_voice_notifications_language_backups_and_the =>
-      '语音、通知、语言、备份和网关配置';
+  String get ng_voice_notifications_language_backups_and_the => '语音、通知、语言、备份和网关配置';
 
   @override
   String get ng_licences => '许可证';
@@ -10991,8 +10547,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get ng_this_gateway_and_its_saved_sign =>
-      '此网关及其已保存的登录信息会从这部手机的两个界面中移除。聊天记录仍保留在网关上。';
+  String get ng_this_gateway_and_its_saved_sign => '此网关及其已保存的登录信息会从这部手机的两个界面中移除。聊天记录仍保留在网关上。';
 
   @override
   String get ng_password_or_browser => '密码或浏览器';
@@ -11016,12 +10571,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get classic_interface_only => '仅限经典界面';
 
   @override
-  String get classic_only_settings_hint =>
-      '标记为“仅限经典界面”的部分只会更改经典界面的外观和聊天设置，不会影响 NextGen。NextGen 在其“设置”中有自己的外观选项。';
+  String get classic_only_settings_hint => '标记为“仅限经典界面”的部分只会更改经典界面的外观和聊天设置，不会影响 NextGen。NextGen 在其“设置”中有自己的外观选项。';
 
   @override
-  String get attachment_preview_too_large =>
-      '文件太大，无法在此预览。保存或分享即可将其下载到手机（最大 1 GB）。';
+  String get attachment_preview_too_large => '文件太大，无法在此预览。保存或分享即可将其下载到手机（最大 1 GB）。';
 
   @override
   String get attachment_over_phone_limit => '此文件超过 1 GB，超出下载限制。请打开控制面板下载。';
@@ -11460,8 +11013,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_recent_notifications_hint => 'Ares 尝试发布的内容，以及 Android 是否显示了通知';
 
   @override
-  String get ng_recent_notifications_empty =>
-      '目前还没有。当回复、问题或失败会触发通知时，相关尝试会显示在这里。';
+  String get ng_recent_notifications_empty => '目前还没有。当回复、问题或失败会触发通知时，相关尝试会显示在这里。';
 
   @override
   String get ng_notify_permission_granted => '已获得通知权限';
