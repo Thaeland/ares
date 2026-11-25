@@ -149,7 +149,8 @@ class _Statement {
 ///
 /// * the socket claims only the on-screen pane with the newest input, while
 ///   that input is younger than [active], at most once per [refresh] unless
-///   the claimed session changes;
+///   the claimed session changes or the input the socket last heard about
+///   has aged past [active] (input after an idle spell is claimed at once);
 /// * a claim is withdrawn (`sessions: []`) as soon as its session is no longer
 ///   the one in view on that socket: another pane's newer input, a pushed
 ///   route, a hidden pane, the app leaving the screen, or the opt-in being
@@ -285,9 +286,15 @@ class ChatPresenceCoordinator with WidgetsBindingObserver {
           notificationKindEnabled(HermesNotificationKind.turnDone) &&
           TurnNotificationService.shared.permissionGranted;
       if (now - input < active) {
+        // The input the socket last heard about. Once it is [active] old the
+        // gateway counts the user as gone, so fresh input is news at once
+        // (Desktop's `!wasActive`), not at the next refresh.
+        final heard = last?.input;
         if (last == null ||
             last.session != session ||
             last.canAlert != canAlert ||
+            heard == null ||
+            now - heard >= active ||
             now - last.at >= refresh) {
           _claim(socket, session, input, canAlert, now);
         }

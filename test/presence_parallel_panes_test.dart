@@ -398,4 +398,132 @@ void main() {
     await tester.runAsync(server.close);
     await tester.pump(const Duration(seconds: 16));
   });
+
+  // Review re-check of 5eedcb09: input at t=0, nothing for 63 s, input
+  // again. The claim at t=45 still named the same session, so the fresh
+  // input waited for the next 45 s refresh (t=90) while the gateway had aged
+  // the t=0 input out at t=60. a8108fc9 and Desktop claim it at once.
+  testWidgets(
+    'NextGen: input after an idle spell is claimed at once, not at the next refresh',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      await NotificationPrefsStore.setShareWindowActivity(true);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      final manager = ConnectionManager(await SharedPreferences.getInstance());
+      final fixture = ParallelFixture(dashboard: true, profile: 'pane-test');
+      final g = _PresenceGateway(fixture);
+      addTearDown(g.dispose);
+      final rows = (await g.api.getSessionsPage()).sessions;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: nextGenTheme(Brightness.dark, NextGenLook.instance),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: NgScope(
+            connManager: manager,
+            gateway: g,
+            connections: [fixture.connection],
+            switchTo: (_) async {},
+            addGateway: () async {},
+            signOut: (_) async {},
+            reload: () async {},
+            signInAgain: () async {},
+            child: NgParallelChatPane(
+              gateway: g,
+              session: rows.first,
+              close: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      final session = 'runtime-${rows.first.id}';
+      final pane = find.byType(NgParallelChatPane);
+      await tester.tap(pane);
+      await tester.pump();
+      expect(g.presence.reports.single['sessions'], [session]);
+      await waitRealSeconds(tester, 63);
+      final since = g.presence.clock.elapsed;
+      await tester.tap(pane);
+      await tester.pump();
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 300)),
+      );
+      await tester.pump();
+      expectClaimedAtOnce(g.presence, since: since, session: session);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+      expect(g.presence.reports.last['sessions'], isEmpty);
+    },
+  );
+
+  testWidgets(
+    'Classic: input after an idle spell is claimed at once, not at the next refresh',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({'verbose_mode': true});
+      await NotificationPrefsStore.setShareWindowActivity(true);
+      const picker = MethodChannel('plugins.flutter.io/image_picker');
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        picker,
+        (_) async => null,
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          picker,
+          null,
+        ),
+      );
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      final server = (await tester.runAsync(_PresenceServer.start))!;
+      final controller = GatewayTurnApplicationController();
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: ClassicParallelChatPane(
+            connection: server.connection,
+            session: Session(
+              id: 'alpha',
+              title: 'Pane alpha',
+              model: 'fixture',
+              source: 'test',
+              messageCount: 0,
+              isActive: false,
+              preview: '',
+              startedAt: 1,
+            ),
+            controller: controller,
+            close: () {},
+          ),
+        ),
+      );
+      await _until(tester, () => server.resumes.isNotEmpty);
+      final pane = find.byType(ClassicParallelChatPane);
+      await tester.tap(pane);
+      await _until(tester, () => server.reports.isNotEmpty);
+      expect(server.reports.single['sessions'], ['runtime-alpha']);
+      await waitRealSeconds(tester, 63);
+      final since = server.clock.elapsed;
+      final before = server.reports.length;
+      await tester.tap(pane);
+      await tester.pump();
+      // Wire round trip, bounded: the oracle checks the arrival time.
+      for (var i = 0; i < 15 && server.reports.length == before; i++) {
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 100)),
+        );
+        await tester.pump();
+      }
+      expectClaimedAtOnce(server.log, since: since, session: 'runtime-alpha');
+      await tester.pumpWidget(const SizedBox());
+      await _until(
+        tester,
+        () => (server.reports.last['sessions'] as List).isEmpty,
+      );
+      await controller.close();
+      await tester.runAsync(server.close);
+      await tester.pump(const Duration(seconds: 16));
+    },
+  );
 }

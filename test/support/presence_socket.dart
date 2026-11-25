@@ -62,6 +62,31 @@ Future<void> waitRealSeconds(WidgetTester tester, int seconds) async {
   }
 }
 
+/// Fresh input at [since], after a spell longer than the active window, is
+/// claimed for [session] at once with idle 0: the gateway's record of the
+/// earlier input has aged out, so waiting for the next 45 s refresh would
+/// leave the user counted as away while they type.
+void expectClaimedAtOnce(
+  PresenceSocket socket, {
+  required Duration since,
+  required String session,
+}) {
+  final log = socket.log();
+  final first = [
+    for (var i = 0; i < socket.reports.length; i++)
+      if (socket.at[i] >= since) i,
+  ];
+  expect(first, isNotEmpty, reason: 'nothing after t=$since:\n$log');
+  final i = first.first;
+  expect(socket.reports[i]['sessions'], [session], reason: log);
+  expect(socket.reports[i]['idle_seconds'], 0, reason: log);
+  expect(
+    socket.at[i] - since,
+    lessThan(const Duration(milliseconds: 1500)),
+    reason: log,
+  );
+}
+
 /// The review probe's oracle, after input in [older] at t=0, in [newer] at
 /// t=3 and a wait past 60 s: the socket claimed [older] once, then only
 /// [newer]; the 45 s refresh re-claimed [newer] with its real idle time; and
