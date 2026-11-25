@@ -6834,6 +6834,24 @@ abstract class AppLocalizations {
   /// **'The turn failed.'**
   String get ng_the_turn_failed;
 
+  /// Why Stop or Steer did nothing: the turn the user saw is no longer the running one.
+  ///
+  /// In en, this message translates to:
+  /// **'that turn already ended or a newer one started'**
+  String get ng_turn_changed;
+
+  /// Why a Steer was not delivered: the running turn refused it.
+  ///
+  /// In en, this message translates to:
+  /// **'the running turn didn\'t accept it'**
+  String get ng_steer_rejected;
+
+  /// Why Stop or Steer was not sent: the app has not learned the running turn yet.
+  ///
+  /// In en, this message translates to:
+  /// **'the running turn isn\'t known yet; try again in a moment'**
+  String get ng_turn_not_known_yet;
+
   /// No description provided for @ng_couldn_t_stop.
   ///
   /// In en, this message translates to:

@@ -1422,6 +1422,18 @@
     }
   },
   "ng_the_turn_failed": "The turn failed.",
+  "ng_turn_changed": "that turn already ended or a newer one started",
+  "@ng_turn_changed": {
+    "description": "Why Stop or Steer did nothing: the turn the user saw is no longer the running one."
+  },
+  "ng_steer_rejected": "the running turn didn't accept it",
+  "@ng_steer_rejected": {
+    "description": "Why a Steer was not delivered: the running turn refused it."
+  },
+  "ng_turn_not_known_yet": "the running turn isn't known yet; try again in a moment",
+  "@ng_turn_not_known_yet": {
+    "description": "Why Stop or Steer was not sent: the app has not learned the running turn yet."
+  },
   "ng_couldn_t_stop": "Couldn't stop: {error}",
   "@ng_couldn_t_stop": {
     "placeholders": {

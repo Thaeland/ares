@@ -3981,6 +3981,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get ng_the_turn_failed => '応答の生成に失敗しました。';
 
   @override
+  String get ng_turn_changed => 'その応答はすでに終了したか、新しい応答が始まりました';
+
+  @override
+  String get ng_steer_rejected => '実行中の応答が受け付けませんでした';
+
+  @override
+  String get ng_turn_not_known_yet => '実行中の応答をまだ確認できません。少し待ってからもう一度お試しください';
+
+  @override
   String ng_couldn_t_stop(Object error) {
     return '停止できませんでした: $error';
   }

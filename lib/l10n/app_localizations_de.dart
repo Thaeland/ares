@@ -4093,6 +4093,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get ng_the_turn_failed => 'Der Durchlauf ist fehlgeschlagen.';
 
   @override
+  String get ng_turn_changed =>
+      'dieser Durchlauf ist bereits beendet oder ein neuerer hat begonnen';
+
+  @override
+  String get ng_steer_rejected =>
+      'der laufende Durchlauf hat es nicht angenommen';
+
+  @override
+  String get ng_turn_not_known_yet =>
+      'der laufende Durchlauf ist noch nicht bekannt; versuche es gleich noch einmal';
+
+  @override
   String ng_couldn_t_stop(Object error) {
     return 'Konnte nicht gestoppt werden: $error';
   }
