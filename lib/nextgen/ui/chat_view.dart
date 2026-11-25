@@ -32,6 +32,7 @@ import '../data/slash_exec.dart';
 import '../theme/nextgen_theme.dart';
 import 'model_sheet.dart';
 import 'nextgen_scope.dart';
+import 'project_greeting.dart';
 import 'session_dock.dart';
 import 'sessions_sidebar.dart';
 import 'slash_command_info.dart';
@@ -806,6 +807,9 @@ class _NgChatViewState extends State<NgChatView> {
         child: NgEmpty(
           icon: Icons.auto_awesome,
           title: chat.historyError ?? ngL.ng_what_should_we_work_on,
+          titleWidget: chat.canPickProject && chat.historyError == null
+              ? NgProjectGreeting(chat: chat)
+              : null,
           body: chat.historyError == null
               ? ngL.ng_ask_hermes_anything_it_can_run
               : null,

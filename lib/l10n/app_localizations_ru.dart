@@ -4527,6 +4527,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get ng_retry => 'Повторить';
 
   @override
+  String get ng_project_home => 'Главная';
+
+  @override
+  String get ng_choose_project => 'Выбрать проект';
+
+  @override
+  String ng_project_cwd_fallback(String path) {
+    return 'Папка проекта недоступна, поэтому этот чат работает в $path.';
+  }
+
+  @override
+  String get ng_project_create_uncertain =>
+      'Шлюз мог создать этот чат, но не подтвердил это. Проверьте список чатов, прежде чем начинать новый. Запрос не будет повторён автоматически.';
+
+  @override
   String get ng_what_should_we_work_on => 'Над чем поработаем?';
 
   @override

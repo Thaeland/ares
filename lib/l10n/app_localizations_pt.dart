@@ -4530,6 +4530,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ng_retry => 'Tentar novamente';
 
   @override
+  String get ng_project_home => 'Início';
+
+  @override
+  String get ng_choose_project => 'Escolher um projeto';
+
+  @override
+  String ng_project_cwd_fallback(String path) {
+    return 'A pasta do projeto não estava disponível, por isso esta conversa é executada em $path.';
+  }
+
+  @override
+  String get ng_project_create_uncertain =>
+      'O gateway pode ter criado esta conversa, mas não a confirmou. Verifique as conversas antes de iniciar outra; este pedido não será repetido automaticamente.';
+
+  @override
   String get ng_what_should_we_work_on => 'Em que vamos trabalhar?';
 
   @override
@@ -10457,6 +10472,21 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get ng_retry => 'Tentar novamente';
+
+  @override
+  String get ng_project_home => 'Início';
+
+  @override
+  String get ng_choose_project => 'Escolher um projeto';
+
+  @override
+  String ng_project_cwd_fallback(String path) {
+    return 'A pasta do projeto não estava disponível, então esta conversa é executada em $path.';
+  }
+
+  @override
+  String get ng_project_create_uncertain =>
+      'O gateway pode ter criado esta conversa, mas não a confirmou. Verifique as conversas antes de iniciar outra; esta solicitação não será repetida automaticamente.';
 
   @override
   String get ng_what_should_we_work_on => 'No que vamos trabalhar?';

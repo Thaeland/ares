@@ -5,8 +5,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../../core/models/hermes_project.dart';
 import '../../core/models/session.dart';
 import '../../core/services/notification_prefs.dart';
+import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/turn_notification_service.dart';
 import '../data/nextgen_gateway.dart';
 import '../data/chat_controller.dart';
@@ -21,18 +23,29 @@ import 'sessions_sidebar.dart';
 import 'settings_page.dart';
 import '../nextgen_l10n.dart';
 
-class NgMainPage extends StatefulWidget {
+class NgMainPage extends StatelessWidget {
   const NgMainPage({super.key});
 
   @override
-  State<NgMainPage> createState() => _NgMainPageState();
+  Widget build(BuildContext context) =>
+      _NgMainContent(key: ObjectKey(NgScope.of(context).gateway));
 }
 
-class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
+class _NgMainContent extends StatefulWidget {
+  const _NgMainContent({super.key});
+
+  @override
+  State<_NgMainContent> createState() => _NgMainPageState();
+}
+
+class _NgMainPageState extends State<_NgMainContent>
+    with WidgetsBindingObserver {
   final _scaffold = GlobalKey<ScaffoldState>();
   NgSessionsModel? _sessions;
   NgChatController? _chat;
   bool _foreground = true;
+  NextGenGateway? _notificationGateway;
+  Object? _notificationMutation;
 
   /// LRU cache of recently-viewed chat controllers. Keeps parsed transcripts
   /// in memory so switching back doesn't re-fetch multi-MB history pages.
@@ -61,7 +74,8 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     _chat?.dispose();
     for (final c in _cache.values) {
-      c.dispose();
+      // A just-created Project chat may already be indexed by its stored id.
+      if (!identical(c, _chat)) c.dispose();
     }
     _cache.clear();
     _sessions?.dispose();
@@ -91,6 +105,12 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final scope = NgScope.of(context);
+    if (!identical(_notificationGateway, scope.gateway)) {
+      _notificationGateway = scope.gateway;
+      _notificationMutation = ConnectionMutationBarrier.capture(
+        scope.connection.id,
+      );
+    }
     final sessions = _sessions;
     if (sessions == null) {
       _sessions = NgSessionsModel(scope);
@@ -141,7 +161,12 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
     }
   }
 
-  void _openId(String? id, String title, {bool initial = false}) {
+  void _openId(
+    String? id,
+    String title, {
+    bool initial = false,
+    String? workingDirectory,
+  }) {
     final scope = NgScope.of(context);
     final old = _chat;
 
@@ -161,6 +186,7 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
         scope.gateway,
         sessionId: id,
         title: title,
+        workingDirectory: workingDirectory,
         onCreated: (stored) {
           unawaited(
             NextGenPreferences.setLastSession(
@@ -443,7 +469,21 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
         : text.length > 180
         ? '${text.substring(0, 180)}…'
         : text;
-    final connectionId = NgScope.of(context).connection.id;
+    final scope = NgScope.of(context);
+    final connectionId = chat.gateway.connection.id;
+    final conversation =
+        identical(chat.gateway, scope.gateway) &&
+            ConnectionMutationBarrier.isCurrent(
+              connectionId,
+              _notificationMutation,
+            ) &&
+            text.isNotEmpty
+        ? TurnNotificationService.conversationTarget(
+            scope.connManager,
+            chat.gateway.connection,
+            stored,
+          )
+        : null;
     final notifications = TurnNotificationService.shared;
     unawaited(
       failed
@@ -460,6 +500,7 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
               turnId: _replyTurnId,
               sessionId: stored,
               connectionId: connectionId,
+              conversation: conversation,
             ),
     );
     if (stored != null) _postedReplies.add(stored);
@@ -486,8 +527,20 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
 
   void _newChat() {
     _scaffold.currentState?.closeDrawer();
-    if (_chat?.isNew == true && _chat!.items.isEmpty) return;
+    if (_chat?.isNew == true &&
+        _chat!.items.isEmpty &&
+        _chat!.workingDirectory == null) {
+      return;
+    }
     _openId(null, '');
+  }
+
+  void _newProjectChat(HermesProject project) {
+    // Never let a stale/folderless Project silently become an unassigned chat.
+    final cwd = project.workingDirectory;
+    if (cwd == null || cwd.trim().isEmpty) return;
+    _scaffold.currentState?.closeDrawer();
+    _openId(null, '', workingDirectory: cwd);
   }
 
   void _go(NgDestination d) {
@@ -497,7 +550,10 @@ class _NgMainPageState extends State<NgMainPage> with WidgetsBindingObserver {
       NgDestination.insights => const NgInsightsPage(),
       NgDestination.capabilities => const NgCapabilitiesPage(),
       NgDestination.archived => NgArchivedPage(onOpenSession: _open),
-      NgDestination.more => NgMorePage(onOpenSession: _open),
+      NgDestination.more => NgMorePage(
+        onOpenSession: _open,
+        onNewProjectChat: _newProjectChat,
+      ),
       NgDestination.settings => const NgSettingsPage(),
     };
     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));

@@ -1068,11 +1068,15 @@ class WsClient {
     void Function()? onSent,
     void Function()? onAccepted,
     bool Function()? maySend,
+    Future<bool> Function()? beforeSend,
     String? submissionId,
     Duration timeout = const Duration(minutes: 10),
   }) async {
     final source = _channel;
     final promptText = await _androidPromptText(message);
+    if (beforeSend != null && !await beforeSend()) {
+      throw StateError('Notification admission revoked');
+    }
     // The read-only configuration lookup is an async boundary, not admission
     // authority. Never lend its result to a replacement socket or stale owner.
     if (!_connected || !identical(source, _channel)) {
@@ -1161,6 +1165,9 @@ class WsClient {
           // The refusal crossed an async boundary: re-validate admission and
           // socket ownership before the compatibility retry writes again, so
           // a stale owner or a replacement socket never receives the prompt.
+          if (beforeSend != null && !await beforeSend()) {
+            throw StateError('Notification admission revoked');
+          }
           if (!_connected || !identical(source, _channel)) {
             throw JsonRpcError(
               'prompt.submit',
