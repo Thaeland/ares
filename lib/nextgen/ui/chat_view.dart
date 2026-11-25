@@ -33,6 +33,7 @@ import '../../core/composer/composer_commands.dart';
 import '../../core/composer/composer_drag.dart';
 import '../../core/composer/composer_intake.dart';
 import '../../core/composer/os_intake.dart';
+import '../../core/services/ws_client.dart' show JsonRpcError;
 import '../../core/composer/context_status.dart';
 import '../../core/composer/reference_completion.dart';
 import '../../core/composer/failure_recovery.dart';
@@ -712,15 +713,33 @@ class _NgChatViewState extends State<NgChatView>
     }
   }
 
+  /// Compress from the failure card: on the live session (a stored chat
+  /// attaches first). A failure is shown, never swallowed.
   Future<void> _compressChat() async {
-    final id = chat.runtimeId ?? chat.storedId;
-    if (id == null) return;
-    await chat.gateway.call('session.compress', {
-      'session_id': id,
-    }, timeout: const Duration(minutes: 2));
-    await chat.reloadTranscript();
+    final owner = chat;
+    final shared = context.sharedL10n;
+    final id = await owner.liveSessionId();
     if (!mounted) return;
-    chat.showCommandNotice(context.sharedL10n.composer_compress_done);
+    if (id == null) {
+      ngToast(context, shared.composer_command_needs_session);
+      return;
+    }
+    try {
+      await owner.gateway.call('session.compress', {
+        'session_id': id,
+      }, timeout: const Duration(minutes: 2));
+      await owner.reloadTranscript();
+    } catch (error) {
+      if (!mounted) return;
+      owner.showCommandNotice(
+        ngL.ng_slash_command_failed(
+          error is JsonRpcError ? error.message : error.toString(),
+        ),
+      );
+      return;
+    }
+    if (!mounted) return;
+    owner.showCommandNotice(shared.composer_compress_done);
     await _loadBreakdown();
   }
 
@@ -743,7 +762,7 @@ class _NgChatViewState extends State<NgChatView>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(context.sharedL10n.composer_failure_hide_details),
+              child: Text(context.sharedL10n.cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, true),
@@ -752,15 +771,23 @@ class _NgChatViewState extends State<NgChatView>
           ],
         ),
       );
-      if (again == true) {
-        await chat.setModel(
-          provider: provider,
-          model: suggestion.model,
-          confirm: true,
-        );
+      if (again != true) return;
+      final confirmed = await chat.setModel(
+        provider: provider,
+        model: suggestion.model,
+        confirm: true,
+      );
+      if (!mounted) return;
+      if (confirmed is NgModelSwitchFailed) {
+        chat.showCommandNotice(confirmed.message);
+        return;
       }
+      if (confirmed is NgModelSwitchDone) await _retry();
     } else if (result is NgModelSwitchFailed) {
       chat.showCommandNotice(result.message);
+    } else if (result is NgModelSwitchDone) {
+      // Desktop's switchAndRetry: the failed turn runs again on the model.
+      await _retry();
     }
   }
 
@@ -773,7 +800,8 @@ class _NgChatViewState extends State<NgChatView>
 
   Future<void> _loadBreakdown() async {
     if (!_status.visible('context-usage')) return;
-    final id = chat.runtimeId ?? chat.storedId;
+    final id = await chat.liveSessionId();
+    if (!mounted) return;
     if (id == null) {
       setState(() => _breakdown = ContextReading.empty);
       return;

@@ -74,7 +74,7 @@ class _FailureRecoveryCardState extends State<FailureRecoveryCard> {
                 Expanded(child: Text(widget.message)),
                 if (widget.onDismiss != null)
                   IconButton(
-                    tooltip: l10n.composer_failure_hide_details,
+                    tooltip: l10n.dismiss,
                     onPressed: widget.onDismiss,
                     icon: const Icon(Icons.close, size: 18),
                   ),
@@ -95,7 +95,7 @@ class _FailureRecoveryCardState extends State<FailureRecoveryCard> {
                       _retry?.cancel();
                       setState(() => _firesAt = null);
                     },
-                    child: Text(l10n.composer_failure_hide_details),
+                    child: Text(l10n.cancel),
                   )
                 else ...[
                   ?_button(widget.recovery.primary, primary: true),
@@ -206,7 +206,7 @@ class _FailureRecoveryCardState extends State<FailureRecoveryCard> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.composer_failure_hide_details),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
@@ -233,7 +233,7 @@ class _FailureRecoveryCardState extends State<FailureRecoveryCard> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.composer_failure_hide_details),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
