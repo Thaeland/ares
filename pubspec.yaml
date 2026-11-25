@@ -1,7 +1,7 @@
 name: hermes_android
 description: "Hermes Agent — chat with your Hermes Gateway API Server over LAN. SSE streaming, Bearer auth, session management."
 publish_to: 'none'
-version: 4.0.15+3071
+version: 5.0.0+5000
 
 environment:
   sdk: ^3.12.0
@@ -129,7 +129,7 @@ msix_config:
   publisher_display_name: Sam Russell
   identity_name: com.hermesagent.ares
   publisher: CN=Sam Russell
-  msix_version: 4.0.10.0
+  msix_version: 5.0.0.0
   logo_path: assets/icon/icon.png
   capabilities: internetClient, microphone
   languages: en-us
