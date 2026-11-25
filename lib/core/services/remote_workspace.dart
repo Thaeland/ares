@@ -9,10 +9,14 @@ import 'package:crypto/crypto.dart' show sha256;
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 import 'portable_profile_bundle.dart';
+import 'host_operations.dart';
 import 'ws_client.dart';
+
+export 'host_operations.dart';
 
 part 'remote_profile_admin.dart';
 part 'remote_agent_transfer.dart';
+part 'remote_host_ops.dart';
 
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {
