@@ -4753,23 +4753,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ng_allow_once => 'Autoriser une fois';
 
   @override
-  String get ng_allow_until_sandbox_off => 'Until the sandbox is switched off';
+  String get ng_allow_until_sandbox_off =>
+      'Jusqu’à la désactivation du bac à sable';
 
   @override
-  String get ng_folder_access => 'Folder access';
+  String get ng_folder_access => 'Accès au dossier';
 
   @override
   String get ng_folder_access_unspecified =>
-      'The gateway did not say whether this is read-only or read-write.';
+      'La passerelle n’a pas indiqué si l’accès est en lecture seule ou en lecture et écriture.';
 
   @override
-  String get ng_folder_read_only => 'Read-only';
+  String get ng_folder_read_only => 'Lecture seule';
 
   @override
-  String get ng_folder_read_write => 'Read and write';
+  String get ng_folder_read_write => 'Lecture et écriture';
 
   @override
-  String get ng_website_access => 'Website access';
+  String get ng_website_access => 'Accès au site web';
 
   @override
   String get ng_allow_for_this_chat => 'Autoriser pour cette conversation';

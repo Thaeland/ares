@@ -4745,23 +4745,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_allow_once => 'Permitir una vez';
 
   @override
-  String get ng_allow_until_sandbox_off => 'Until the sandbox is switched off';
+  String get ng_allow_until_sandbox_off => 'Hasta que se desactive el sandbox';
 
   @override
-  String get ng_folder_access => 'Folder access';
+  String get ng_folder_access => 'Acceso a carpetas';
 
   @override
   String get ng_folder_access_unspecified =>
-      'The gateway did not say whether this is read-only or read-write.';
+      'El gateway no indicó si es de solo lectura o de lectura y escritura.';
 
   @override
-  String get ng_folder_read_only => 'Read-only';
+  String get ng_folder_read_only => 'Solo lectura';
 
   @override
-  String get ng_folder_read_write => 'Read and write';
+  String get ng_folder_read_write => 'Lectura y escritura';
 
   @override
-  String get ng_website_access => 'Website access';
+  String get ng_website_access => 'Acceso a sitios web';
 
   @override
   String get ng_allow_for_this_chat => 'Permitir en este chat';

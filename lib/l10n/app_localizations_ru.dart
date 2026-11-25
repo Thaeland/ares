@@ -4739,23 +4739,23 @@ class AppLocalizationsRu extends AppLocalizations {
   String get ng_allow_once => 'Разрешить один раз';
 
   @override
-  String get ng_allow_until_sandbox_off => 'Until the sandbox is switched off';
+  String get ng_allow_until_sandbox_off => 'Пока песочница не будет отключена';
 
   @override
-  String get ng_folder_access => 'Folder access';
+  String get ng_folder_access => 'Доступ к папке';
 
   @override
   String get ng_folder_access_unspecified =>
-      'The gateway did not say whether this is read-only or read-write.';
+      'Шлюз не сообщил, доступ только для чтения или для чтения и записи.';
 
   @override
-  String get ng_folder_read_only => 'Read-only';
+  String get ng_folder_read_only => 'Только чтение';
 
   @override
-  String get ng_folder_read_write => 'Read and write';
+  String get ng_folder_read_write => 'Чтение и запись';
 
   @override
-  String get ng_website_access => 'Website access';
+  String get ng_website_access => 'Доступ к сайту';
 
   @override
   String get ng_allow_for_this_chat => 'Разрешить в этом чате';

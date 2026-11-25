@@ -4607,23 +4607,23 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_allow_once => '한 번 허용';
 
   @override
-  String get ng_allow_until_sandbox_off => 'Until the sandbox is switched off';
+  String get ng_allow_until_sandbox_off => '샌드박스가 꺼질 때까지';
 
   @override
-  String get ng_folder_access => 'Folder access';
+  String get ng_folder_access => '폴더 접근';
 
   @override
   String get ng_folder_access_unspecified =>
-      'The gateway did not say whether this is read-only or read-write.';
+      '게이트웨이가 읽기 전용인지 읽기 및 쓰기인지 알려 주지 않았습니다.';
 
   @override
-  String get ng_folder_read_only => 'Read-only';
+  String get ng_folder_read_only => '읽기 전용';
 
   @override
-  String get ng_folder_read_write => 'Read and write';
+  String get ng_folder_read_write => '읽기 및 쓰기';
 
   @override
-  String get ng_website_access => 'Website access';
+  String get ng_website_access => '웹사이트 접근';
 
   @override
   String get ng_allow_for_this_chat => '이 채팅에서 허용';

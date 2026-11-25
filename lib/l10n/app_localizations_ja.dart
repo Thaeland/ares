@@ -4607,23 +4607,22 @@ class AppLocalizationsJa extends AppLocalizations {
   String get ng_allow_once => '今回のみ許可';
 
   @override
-  String get ng_allow_until_sandbox_off => 'Until the sandbox is switched off';
+  String get ng_allow_until_sandbox_off => 'サンドボックスがオフになるまで';
 
   @override
-  String get ng_folder_access => 'Folder access';
+  String get ng_folder_access => 'フォルダーへのアクセス';
 
   @override
-  String get ng_folder_access_unspecified =>
-      'The gateway did not say whether this is read-only or read-write.';
+  String get ng_folder_access_unspecified => '読み取り専用か読み書き可能かがゲートウェイから示されていません。';
 
   @override
-  String get ng_folder_read_only => 'Read-only';
+  String get ng_folder_read_only => '読み取り専用';
 
   @override
-  String get ng_folder_read_write => 'Read and write';
+  String get ng_folder_read_write => '読み書き';
 
   @override
-  String get ng_website_access => 'Website access';
+  String get ng_website_access => 'ウェブサイトへのアクセス';
 
   @override
   String get ng_allow_for_this_chat => 'このチャットで許可';

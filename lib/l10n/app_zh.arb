@@ -1693,5 +1693,11 @@
   "ng_aux_profile_describer": "配置档案描述",
   "ng_aux_profile_describer_hint": "为每个配置档案撰写简短描述",
   "ng_aux_curator": "维护器",
-  "ng_aux_curator_hint": "审查技能的使用情况"
+  "ng_aux_curator_hint": "审查技能的使用情况",
+  "ng_allow_until_sandbox_off": "直到关闭沙盒",
+  "ng_folder_access": "文件夹访问",
+  "ng_folder_access_unspecified": "网关未说明是只读还是可读写。",
+  "ng_folder_read_only": "只读",
+  "ng_folder_read_write": "可读写",
+  "ng_website_access": "网站访问"
 }

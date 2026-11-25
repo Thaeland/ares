@@ -4743,23 +4743,23 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ng_allow_once => 'Permitir uma vez';
 
   @override
-  String get ng_allow_until_sandbox_off => 'Until the sandbox is switched off';
+  String get ng_allow_until_sandbox_off => 'Até a sandbox ser desativada';
 
   @override
-  String get ng_folder_access => 'Folder access';
+  String get ng_folder_access => 'Acesso à pasta';
 
   @override
   String get ng_folder_access_unspecified =>
-      'The gateway did not say whether this is read-only or read-write.';
+      'O gateway não indicou se é só de leitura ou de leitura e escrita.';
 
   @override
-  String get ng_folder_read_only => 'Read-only';
+  String get ng_folder_read_only => 'Só de leitura';
 
   @override
-  String get ng_folder_read_write => 'Read and write';
+  String get ng_folder_read_write => 'Leitura e escrita';
 
   @override
-  String get ng_website_access => 'Website access';
+  String get ng_website_access => 'Acesso ao site';
 
   @override
   String get ng_allow_for_this_chat => 'Permitir nesta conversa';
@@ -10735,6 +10735,25 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get ng_allow_once => 'Permitir uma vez';
+
+  @override
+  String get ng_allow_until_sandbox_off => 'Até a sandbox ser desativada';
+
+  @override
+  String get ng_folder_access => 'Acesso à pasta';
+
+  @override
+  String get ng_folder_access_unspecified =>
+      'O gateway não informou se é somente leitura ou leitura e gravação.';
+
+  @override
+  String get ng_folder_read_only => 'Somente leitura';
+
+  @override
+  String get ng_folder_read_write => 'Leitura e gravação';
+
+  @override
+  String get ng_website_access => 'Acesso ao site';
 
   @override
   String get ng_allow_for_this_chat => 'Permitir neste chat';

@@ -4535,23 +4535,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_allow_once => '允许一次';
 
   @override
-  String get ng_allow_until_sandbox_off => 'Until the sandbox is switched off';
+  String get ng_allow_until_sandbox_off => '直到关闭沙盒';
 
   @override
-  String get ng_folder_access => 'Folder access';
+  String get ng_folder_access => '文件夹访问';
 
   @override
-  String get ng_folder_access_unspecified =>
-      'The gateway did not say whether this is read-only or read-write.';
+  String get ng_folder_access_unspecified => '网关未说明是只读还是可读写。';
 
   @override
-  String get ng_folder_read_only => 'Read-only';
+  String get ng_folder_read_only => '只读';
 
   @override
-  String get ng_folder_read_write => 'Read and write';
+  String get ng_folder_read_write => '可读写';
 
   @override
-  String get ng_website_access => 'Website access';
+  String get ng_website_access => '网站访问';
 
   @override
   String get ng_allow_for_this_chat => '在此聊天中允许';
@@ -10258,6 +10257,24 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_allow_once => '允许一次';
+
+  @override
+  String get ng_allow_until_sandbox_off => '直到关闭沙盒';
+
+  @override
+  String get ng_folder_access => '文件夹访问';
+
+  @override
+  String get ng_folder_access_unspecified => '网关未说明是只读还是可读写。';
+
+  @override
+  String get ng_folder_read_only => '只读';
+
+  @override
+  String get ng_folder_read_write => '可读写';
+
+  @override
+  String get ng_website_access => '网站访问';
 
   @override
   String get ng_allow_for_this_chat => '在此聊天中允许';

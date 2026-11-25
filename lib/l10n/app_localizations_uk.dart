@@ -4733,23 +4733,23 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_allow_once => 'Дозволити один раз';
 
   @override
-  String get ng_allow_until_sandbox_off => 'Until the sandbox is switched off';
+  String get ng_allow_until_sandbox_off => 'Доки пісочницю не буде вимкнено';
 
   @override
-  String get ng_folder_access => 'Folder access';
+  String get ng_folder_access => 'Доступ до теки';
 
   @override
   String get ng_folder_access_unspecified =>
-      'The gateway did not say whether this is read-only or read-write.';
+      'Шлюз не повідомив, чи доступ лише для читання, чи для читання й запису.';
 
   @override
-  String get ng_folder_read_only => 'Read-only';
+  String get ng_folder_read_only => 'Лише для читання';
 
   @override
-  String get ng_folder_read_write => 'Read and write';
+  String get ng_folder_read_write => 'Читання й запис';
 
   @override
-  String get ng_website_access => 'Website access';
+  String get ng_website_access => 'Доступ до вебсайту';
 
   @override
   String get ng_allow_for_this_chat => 'Дозволити в цьому чаті';
