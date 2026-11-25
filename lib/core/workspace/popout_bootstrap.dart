@@ -358,6 +358,30 @@ class _PopoutChatAppState extends State<PopoutChatApp> {
   }
 
   final _messenger = GlobalKey<ScaffoldMessengerState>();
+  final _navigator = GlobalKey<NavigatorState>();
+
+  /// A Classic pop-out's chat. `/resume` from the window's own chat opens
+  /// the pick over it; from a picked chat, in its place. The window and its
+  /// own chat stay.
+  Widget _classicChat(
+    Session session,
+    Future<void> Function(Session picked) onOpenSession, {
+    VoidCallback? onClose,
+  }) => ChatScreen(
+    connection: widget.connection,
+    session: session,
+    singleSession: true,
+    notifications: notifications,
+    onClose: onClose,
+    onOpenSession: onOpenSession,
+  );
+
+  Future<void> _openPicked(Session picked) async {
+    final navigator = _navigator.currentState;
+    if (navigator == null) return;
+    unawaited(navigator.push(resumableChatRoute(picked, _classicChat)));
+  }
+
   Future<void> mainOnly() async {
     _messenger.currentState?.showSnackBar(
       const SnackBar(
@@ -376,6 +400,7 @@ class _PopoutChatAppState extends State<PopoutChatApp> {
       debugShowCheckedModeBanner: false,
       title: 'Ares — Chat',
       scaffoldMessengerKey: _messenger,
+      navigatorKey: _navigator,
       supportedLocales: preferredSupportedLocales(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       localeListResolutionCallback: resolvePreferredLocale,
@@ -393,11 +418,9 @@ class _PopoutChatAppState extends State<PopoutChatApp> {
         child: NgLocalizationScope(child: child!),
       ),
       home: gateway == null
-          ? ChatScreen(
-              connection: widget.connection,
-              session: widget.session,
-              singleSession: true,
-              notifications: notifications,
+          ? _classicChat(
+              widget.session,
+              (picked) => _openPicked(picked),
               onClose: () => exit(0),
             )
           : NgParallelChatPane(

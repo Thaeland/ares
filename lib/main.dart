@@ -1217,26 +1217,37 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
         );
         return;
       }
-      final route = MaterialPageRoute<void>(
-        builder: (_) => ChatScreen(
+      void track(Route<void> route, Session opened, Future<void> closed) {
+        _notificationChatRoutes.add((
           connection: connection,
-          session: session!,
+          sessionId: opened.id,
+          openedAsStoredSession: !opened.isLocalDraft,
+          route: route,
+        ));
+        unawaited(
+          closed.whenComplete(() {
+            _notificationChatRoutes.removeWhere(
+              (entry) => entry.route == route,
+            );
+          }),
+        );
+      }
+
+      // `/resume` opens the pick in place of this chat (and is tracked the
+      // same way); the shell under it stays.
+      final route = resumableChatRoute(
+        session,
+        (opened, onOpenSession) => ChatScreen(
+          connection: connection,
+          session: opened,
           turnApplicationController: _turnApplicationController,
+          onOpenSession: onOpenSession,
         ),
+        onReplaced: track,
       );
       final navigator = _navigatorKey.currentState;
       if (navigator == null || !navigator.mounted) return;
-      _notificationChatRoutes.add((
-        connection: connection,
-        sessionId: session.id,
-        openedAsStoredSession: !session.isLocalDraft,
-        route: route,
-      ));
-      unawaited(
-        navigator.push(route).whenComplete(() {
-          _notificationChatRoutes.removeWhere((entry) => entry.route == route);
-        }),
-      );
+      track(route, session, navigator.push(route));
     } finally {
       if (!deferred && identical(_pendingNavigation, intent)) {
         _pendingNavigation = null;

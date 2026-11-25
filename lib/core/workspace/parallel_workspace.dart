@@ -28,8 +28,26 @@ class ParallelWorkspace extends StatefulWidget {
   final Widget Function(BuildContext, Session, VoidCallback) buildChat;
   final WorkspaceRegistry? registry;
 
+  /// The workspace's own way of opening a chat, for a pane's `/resume`: the
+  /// pick opens as a pane of this workspace, which stays. Null outside one.
+  static Future<void> Function(Session session)? openSessionOf(
+    BuildContext context,
+  ) => context
+      .dependOnInheritedWidgetOfExactType<_WorkspaceOpener>()
+      ?.openSession;
+
   @override
   State<ParallelWorkspace> createState() => _WorkspaceState();
+}
+
+class _WorkspaceOpener extends InheritedWidget {
+  const _WorkspaceOpener({required this.openSession, required super.child});
+
+  final Future<void> Function(Session session) openSession;
+
+  @override
+  bool updateShouldNotify(_WorkspaceOpener old) =>
+      openSession != old.openSession;
 }
 
 enum _Command {
@@ -207,6 +225,15 @@ class _WorkspaceState extends State<ParallelWorkspace> {
       _message('Close a tab first (maximum ${WorkspaceLayout.maxTabs}).');
     }
   });
+
+  /// `/resume` from a pane: the picked chat opens as a pane here.
+  Future<void> _openSession(Session session) async {
+    if (!_current || session.id.isEmpty || session.isLocalDraft) return;
+    // The pick may be outside the live roster this pane was chosen from.
+    _roster = {..._roster, session.id: session};
+    _open(chatPane(session.id));
+  }
+
   void _close(PaneRef pane) => _edit(() {
     _layout.close(pane);
     _versions.remove(pane);
@@ -573,7 +600,10 @@ class _WorkspaceState extends State<ParallelWorkspace> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) =>
+      _WorkspaceOpener(openSession: _openSession, child: _build(context));
+
+  Widget _build(BuildContext context) {
     final p = _primary;
     return Scaffold(
       appBar: AppBar(

@@ -577,6 +577,46 @@ class _PendingClarifyPrompt {
   const _PendingClarifyPrompt(this.request, this.responseGeneration);
 }
 
+/// A pushed chat route whose `/resume` opens the pick in this route's place,
+/// for a host with no session list of its own (a cron run, a notification,
+/// a pop-out window). The routes under it, the host shell among them, stay.
+/// [build] makes the chat for a session and must pass it [onOpenSession];
+/// [onReplaced] sees each route that takes a previous one's place, with the
+/// future that completes when it closes (a host tracking its routes keeps
+/// it).
+MaterialPageRoute<void> resumableChatRoute(
+  Session session,
+  Widget Function(
+    Session session,
+    Future<void> Function(Session picked) onOpenSession,
+  )
+  build, {
+  void Function(
+    MaterialPageRoute<void> route,
+    Session session,
+    Future<void> closed,
+  )?
+  onReplaced,
+}) {
+  late final MaterialPageRoute<void> route;
+  route = MaterialPageRoute<void>(
+    builder: (_) => build(session, (picked) async {
+      final navigator = route.navigator;
+      if (navigator == null || !route.isActive) return;
+      final next = resumableChatRoute(picked, build, onReplaced: onReplaced);
+      final Future<void> closed;
+      if (route.isCurrent) {
+        closed = navigator.pushReplacement<void, void>(next);
+      } else {
+        navigator.removeRoute(route);
+        closed = navigator.push<void>(next);
+      }
+      onReplaced?.call(next, picked, closed);
+    }),
+  );
+  return route;
+}
+
 class ChatScreen extends StatefulWidget {
   final SavedConnection connection;
   final Session session;
@@ -767,9 +807,11 @@ class ChatScreen extends StatefulWidget {
 
   /// The host's own way of opening a chat (the one its session list uses),
   /// for `/resume`: it keeps the host, its turn controller, project context,
-  /// archive callbacks and notifications. Null where the host has none (a
-  /// parallel pane, a pop-out, a notification route): `/resume` then says
-  /// so and keeps the line, and never replaces the route itself.
+  /// archive callbacks and notifications. A parallel pane opens the pick as
+  /// another pane; a cron run, a notification or a pop-out opens it in the
+  /// chat route's place ([resumableChatRoute]). Null only where a host has
+  /// no path at all: `/resume` then says so and keeps the line, and never
+  /// replaces the route itself.
   final Future<void> Function(Session session)? onOpenSession;
 
   @override
