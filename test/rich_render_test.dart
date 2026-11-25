@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/models/gateway_activity.dart';
-import 'package:hermes_android/core/models/session.dart';
 import 'package:hermes_android/core/render/artifact_library.dart';
-import 'package:hermes_android/core/render/contributions_page.dart';
 import 'package:hermes_android/core/render/playback_bar.dart';
 import 'package:hermes_android/core/render/plugin_slots.dart';
 import 'package:hermes_android/core/render/render_contract.dart';
@@ -16,11 +14,11 @@ import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/remote_files_client.dart';
 import 'package:hermes_android/core/theme/hermes_theme.dart';
 import 'package:hermes_android/core/utils/generated_media.dart';
-import 'package:hermes_android/core/utils/media_tags.dart';
 import 'package:hermes_android/core/widgets/gateway_activity_card.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:hermes_android/nextgen/data/chat_controller.dart';
 import 'package:hermes_android/nextgen/data/nextgen_gateway.dart';
+import 'package:hermes_android/nextgen/nextgen_preferences.dart';
 import 'package:hermes_android/nextgen/theme/nextgen_theme.dart';
 import 'package:hermes_android/nextgen/ui/chat_view.dart';
 import 'package:hermes_android/nextgen/ui/nextgen_scope.dart';
@@ -120,16 +118,32 @@ void main() {
         data: {
           'type': intentMessageType,
           'token': token,
-          'prompt': 'x' * (maxIntentLength + 1),
+          'prompt': 'continue please',
         },
         token: token,
-        nowMs: 6000,
+        nowMs: 5500,
         lastAcceptedAtMs: 5000,
         userGesture: true,
         origin: origin,
         expectedOrigin: origin,
       ),
       isA<IntentRejected>().having((d) => d.error, 'error', 'throttled'),
+    );
+    expect(
+      evaluateWidgetIntent(
+        data: {
+          'type': intentMessageType,
+          'token': token,
+          'prompt': 'x' * (maxIntentLength + 1),
+        },
+        token: token,
+        nowMs: 8000,
+        lastAcceptedAtMs: 5000,
+        userGesture: true,
+        origin: origin,
+        expectedOrigin: origin,
+      ),
+      isA<IntentRejected>().having((d) => d.error, 'error', 'too_long'),
     );
     expect(
       isPublicDeliveryMessage({
@@ -176,37 +190,52 @@ void main() {
     );
     expect(
       indexed.map((item) => item.value),
-      containsAll([
-        'https://example.com/docs',
-        '/tmp/shot.png',
-      ]),
+      containsAll(['https://example.com/docs', '/tmp/shot.png']),
     );
     expect(indexed.any((item) => item.value.endsWith('.whl')), isFalse);
 
-    final diagram = parseMermaid('flowchart TD\n  Start[Begin] --> EndNode[Finish]');
+    final diagram = parseMermaid(
+      'flowchart TD\n  Start[Begin] --> EndNode[Finish]',
+    );
     expect(diagram?.nodes.map((node) => node.label), ['Begin', 'Finish']);
     expect(
-      parseSafeSvg('<svg><script>alert(1)</script><rect width="1" height="1"/></svg>'),
+      parseSafeSvg(
+        '<svg><script>alert(1)</script><rect width="1" height="1"/></svg>',
+      ),
       isNull,
     );
-    expect(parseSafeSvg('<svg viewBox="0 0 10 10"><rect width="4" height="4"/></svg>'),
-        isNotNull);
-    expect(parseListings('{"address":"12 River Road"}').single.address, '12 River Road');
+    expect(
+      parseSafeSvg(
+        '<svg viewBox="0 0 10 10"><rect width="4" height="4"/></svg>',
+      ),
+      isNotNull,
+    );
+    expect(
+      parseListings('{"address":"12 River Road"}').single.address,
+      '12 River Road',
+    );
     expect(
       detectProviderEmbed('https://www.youtube.com/watch?v=abc123')?.provider,
       'youtube',
     );
-    expect(parseSandboxedHtml('<p>Safe</p><script>alert(1)</script>')?.text, 'Safe');
     expect(
-      parseSandboxedHtml('<p>Safe</p><script>alert(1)</script>')
-          ?.droppedActiveContent,
+      parseSandboxedHtml('<p>Safe</p><script>alert(1)</script>')?.text,
+      'Safe',
+    );
+    expect(
+      parseSandboxedHtml(
+        '<p>Safe</p><script>alert(1)</script>',
+      )?.droppedActiveContent,
       isTrue,
     );
   });
 
   test('an unreviewed package cannot receive a slot', () {
     expect(pluginGrants.grant('remote.example'), isFalse);
-    expect(catalogDecisions.install('remote.example').outcome, CatalogOutcome.refused);
+    expect(
+      catalogDecisions.install('remote.example').outcome,
+      CatalogOutcome.refused,
+    );
     expect(catalogDecisions.install('notes').outcome, CatalogOutcome.installed);
     expect(pluginGrants.showsDirective('notes'), isTrue);
     previewScriptConsent.decide(
@@ -319,6 +348,7 @@ void main() {
     await tester.pumpWidget(
       _app(
         theme: nextGenTheme(Brightness.light, NextGenLook.instance),
+        bounded: true,
         child: NgScope(
           connManager: ConnectionManager(prefs),
           gateway: gateway,
@@ -337,7 +367,13 @@ void main() {
     expect(find.text('Begin'), findsOneWidget);
     expect(find.text('Widget draft'), findsOneWidget);
     expect(find.text('Load once'), findsOneWidget);
-    await tester.tap(find.text('vision_analyze'));
+    final used = find.text('Used vision_analyze');
+    await tester.ensureVisible(used);
+    await tester.tap(used);
+    await tester.pump();
+    final tool = find.text('vision_analyze');
+    await tester.ensureVisible(tool);
+    await tester.tap(tool);
     await tester.pump();
     expect(find.text('Inspected image'), findsOneWidget);
     expect(find.text('shot.png'), findsOneWidget);
@@ -376,7 +412,10 @@ void main() {
       ),
     );
     final before = tester.getSize(find.byKey(const Key('table-col-0'))).width;
-    await tester.drag(find.byKey(const Key('table-resize-0')), const Offset(40, 0));
+    await tester.drag(
+      find.byKey(const Key('table-resize-0')),
+      const Offset(40, 0),
+    );
     await tester.pump();
     expect(
       tester.getSize(find.byKey(const Key('table-col-0'))).width,
@@ -404,59 +443,62 @@ void main() {
     expect(find.text('shot.png'), findsOneWidget);
   });
 
-  testWidgets('Assets indexes ordinary links and contributions can be granted', (
-    tester,
-  ) async {
-    final session = Session(
-      id: 's1',
-      title: 'Notes',
-      model: 'test',
-      source: 'cli',
-      messageCount: 1,
-      isActive: false,
-      preview: '',
-      startedAt: 10,
-    );
-    await tester.pumpWidget(
-      _app(
-        theme: hermesTheme(Brightness.light),
-        child: AssetsScreen(
-          source: _Source(
-            sessions: [session],
-            messages: {
-              's1': [
-                {
-                  'role': 'assistant',
-                  'content': 'Read https://example.com/docs',
-                  'timestamp': 20,
-                },
-              ],
-            },
+  testWidgets(
+    'Assets indexes ordinary links and contributions can be granted',
+    (tester) async {
+      final session = Session(
+        id: 's1',
+        title: 'Notes',
+        model: 'test',
+        source: 'cli',
+        messageCount: 1,
+        isActive: false,
+        preview: '',
+        startedAt: 10,
+      );
+      await tester.pumpWidget(
+        _app(
+          theme: hermesTheme(Brightness.light),
+          bounded: true,
+          child: AssetsScreen(
+            source: _Source(
+              sessions: [session],
+              messages: {
+                's1': [
+                  {
+                    'role': 'assistant',
+                    'content': 'Read https://example.com/docs',
+                    'timestamp': 20,
+                  },
+                ],
+              },
+            ),
+            filesClient: (_) => _Files(),
+            onOpenSession: (_) {},
           ),
-          filesClient: (_) => _Files(),
-          onOpenSession: (_) {},
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.text('example.com'), findsNothing);
-    expect(find.text('docs'), findsOneWidget);
-    await tester.tap(find.text('Links'));
-    await tester.pump();
-    expect(find.text('https://example.com/docs'), findsOneWidget);
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('example.com'), findsNothing);
+      expect(find.text('docs'), findsOneWidget);
+      await tester.ensureVisible(find.text('Links'));
+      await tester.tap(find.text('Links'));
+      await tester.pump();
+      expect(find.text('https://example.com/docs'), findsOneWidget);
 
-    await tester.tap(find.byTooltip('Contributions'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Grant Notes'));
-    await tester.pump();
-    expect(find.byKey(const Key('plugin-pane-notes')), findsOneWidget);
-    await tester.tap(find.text('Allow this site'));
-    await tester.pump();
-    expect(find.text('Notes may read https://example.test'), findsOneWidget);
-    await tester.tap(find.text('Install remote.example'));
-    await tester.pump();
-    expect(find.textContaining('will not run it'), findsOneWidget);
-  });
+      await tester.tap(find.byTooltip('Contributions'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Grant Notes'));
+      await tester.pump();
+      expect(find.byKey(const Key('plugin-pane-notes')), findsOneWidget);
+      await tester.tap(find.text('Allow this site'));
+      await tester.pump();
+      expect(find.text('Notes may read https://example.test'), findsOneWidget);
+      await tester.tap(find.text('Install remote.example'));
+      await tester.pump();
+      expect(find.textContaining('will not run it'), findsOneWidget);
+    },
+  );
 
   testWidgets('a granted directive and composer action appear in both themes', (
     tester,
@@ -486,12 +528,16 @@ void main() {
   });
 }
 
-Widget _app({required ThemeData theme, required Widget child}) {
+Widget _app({
+  required ThemeData theme,
+  required Widget child,
+  bool bounded = false,
+}) {
   return MaterialApp(
     theme: theme,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
-    home: Scaffold(body: SingleChildScrollView(child: child)),
+    home: Scaffold(body: bounded ? child : SingleChildScrollView(child: child)),
   );
 }
 
@@ -530,8 +576,7 @@ class _Source implements ChatAssetsDataSource {
 
 class _Files implements RemoteFilesDataSource {
   @override
-  Future<RemoteDirectory> defaultDirectory() =>
-      throw UnimplementedError();
+  Future<RemoteDirectory> defaultDirectory() => throw UnimplementedError();
 
   @override
   Future<RemoteFileDownload> download(String path) =>
@@ -542,6 +587,5 @@ class _Files implements RemoteFilesDataSource {
       throw UnimplementedError();
 
   @override
-  Future<RemoteTextPreview> readText(String path) =>
-      throw UnimplementedError();
+  Future<RemoteTextPreview> readText(String path) => throw UnimplementedError();
 }

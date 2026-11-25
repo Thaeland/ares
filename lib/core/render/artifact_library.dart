@@ -80,7 +80,6 @@ final _filenameComment = RegExp(
   caseSensitive: false,
 );
 
-const _htmlDocumentMinChars = 160;
 const _htmlFragmentMinChars = 1200;
 const _svgMinChars = 2000;
 const _codeMinLines = 48;
@@ -110,8 +109,10 @@ bool isLikelyProseCodeBlock(String language, String code) {
   return prose >= 2 && signals <= 1;
 }
 
-String _stripTags(String value) =>
-    value.replaceAll(RegExp(r'<[^>]*>'), ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
+String _stripTags(String value) => value
+    .replaceAll(RegExp(r'<[^>]*>'), ' ')
+    .replaceAll(RegExp(r'\s+'), ' ')
+    .trim();
 
 String _titleFromTag(String content, String tag) {
   final match = RegExp(
@@ -149,11 +150,11 @@ GeneratedArtifact? detectArtifact(String? language, String? code) {
   final clean = sanitizeLanguageTag(language);
   if (_htmlLanguages.contains(clean)) {
     final document = _htmlDocument.hasMatch(trimmed);
+    // A fenced HTML document is one artefact even when the draft is short.
+    // Fragments still have to be large so a tag example stays a code fence.
     final substantial =
-        (document && trimmed.length >= _htmlDocumentMinChars) ||
-        (!document &&
-            trimmed.length >= _htmlFragmentMinChars &&
-            _htmlTag.hasMatch(trimmed));
+        document ||
+        (trimmed.length >= _htmlFragmentMinChars && _htmlTag.hasMatch(trimmed));
     if (!substantial) return null;
     final title = _titleFromTag(trimmed, 'title');
     return GeneratedArtifact(
@@ -240,16 +241,16 @@ const _downloadExtensions = {
 };
 
 String artifactDownloadName(GeneratedArtifact detection) {
-  final base =
-      detection.title
-          .replaceAll(RegExp(r'[^A-Za-z0-9._ -]+'), '')
-          .trim()
-          .replaceAll(RegExp(r'\s+'), '-')
-          .replaceAll(RegExp(r'^-+|-+$'), '');
-  final clipped = (base.isEmpty
-          ? 'artifact'
-          : (base.length > 60 ? base.substring(0, 60) : base))
-      .replaceAll(RegExp(r'[ .]+$'), '');
+  final base = detection.title
+      .replaceAll(RegExp(r'[^A-Za-z0-9._ -]+'), '')
+      .trim()
+      .replaceAll(RegExp(r'\s+'), '-')
+      .replaceAll(RegExp(r'^-+|-+$'), '');
+  final clipped =
+      (base.isEmpty
+              ? 'artifact'
+              : (base.length > 60 ? base.substring(0, 60) : base))
+          .replaceAll(RegExp(r'[ .]+$'), '');
   if (RegExp(r'\.[a-z0-9]{1,8}$', caseSensitive: false).hasMatch(clipped)) {
     return clipped;
   }
@@ -279,10 +280,7 @@ class ArtifactRevision {
 }
 
 class VersionedArtifact {
-  const VersionedArtifact({
-    required this.slug,
-    required this.revisions,
-  });
+  const VersionedArtifact({required this.slug, required this.revisions});
 
   final String slug;
   final List<ArtifactRevision> revisions;
@@ -348,9 +346,7 @@ class IndexedArtifact {
 final _markdownImage = RegExp(r'!\[([^\]]*)\]\(([^)\s]+)\)');
 final _markdownLink = RegExp(r'\[([^\]]+)\]\(([^)\s]+)\)');
 final _bareUrl = RegExp(r'''https?://[^\s<>"'`)]+''');
-final _unixPath = RegExp(
-  r'''(^|[\s("'`)])((?:/|~/|\.\.?/)[^\s"'`<>]+)''',
-);
+final _unixPath = RegExp(r'''(^|[\s("'`)])((?:/|~/|\.\.?/)[^\s"'`<>]+)''');
 final _imageExt = RegExp(
   r'\.(?:png|jpe?g|gif|webp|svg|bmp)(?:\?.*)?$',
   caseSensitive: false,
@@ -385,10 +381,9 @@ String _cleanArtifactValue(String value) {
     }
     break;
   }
-  return trimmed.replaceAll(RegExp(r'[`*]+$'), '').replaceAll(
-    RegExp(r'[),.;]+$'),
-    '',
-  );
+  return trimmed
+      .replaceAll(RegExp(r'[`*]+$'), '')
+      .replaceAll(RegExp(r'[),.;]+$'), '');
 }
 
 IndexedArtifactKind? _kindFor(String value, {required bool explicit}) {
@@ -529,7 +524,8 @@ List<IndexedArtifact> indexArtifactsFromMessages({
         .toString()
         .trim()
         .toLowerCase();
-    final producer = _producerTool.hasMatch(name) || name.startsWith('bfl_flux3_');
+    final producer =
+        _producerTool.hasMatch(name) || name.startsWith('bfl_flux3_');
     final terminal = name == 'terminal';
     if (text.isNotEmpty && (producer || terminal)) {
       _fromProse(
@@ -622,10 +618,8 @@ class PreviewSuggestionStore extends ChangeNotifier {
     final match = list.where((item) => item.target == target).toList();
     if (match.isEmpty) return;
     list.removeWhere((item) => item.target == target);
-    _dismissedCompletion.putIfAbsent(
-      sessionId,
-      () => {},
-    )[target] = match.first.completionId;
+    _dismissedCompletion.putIfAbsent(sessionId, () => {})[target] =
+        match.first.completionId;
     notifyListeners();
   }
 

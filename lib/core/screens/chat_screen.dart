@@ -5039,10 +5039,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   Future<void> _deliverWidgetIntent(String prompt) async {
-    if (_sending ||
-        _streaming ||
-        _preparingSend ||
-        _voiceComposer.listening) {
+    if (_sending || _streaming || _preparingSend || _voiceComposer.listening) {
       throw StateError('undelivered');
     }
     await _sendMessage(textOverride: prompt, hiddenIntent: true);
@@ -5068,6 +5065,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         voiceBinding: voiceBinding,
         preserveComposer: keepComposer,
         onAccepted: onAccepted,
+        hiddenIntent: hiddenIntent,
       );
       return;
     }
@@ -5518,6 +5516,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _HandsFreeTurnBinding? voiceBinding,
     bool preserveComposer = false,
     VoidCallback? onAccepted,
+    bool hiddenIntent = false,
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     final turnSession = _turnApplicationSession;

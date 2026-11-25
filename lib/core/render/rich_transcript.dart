@@ -36,7 +36,8 @@ class _PreviewOfferHookState extends State<PreviewOfferHook> {
   @override
   void didUpdateWidget(PreviewOfferHook oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.text != widget.text || oldWidget.sessionId != widget.sessionId) {
+    if (oldWidget.text != widget.text ||
+        oldWidget.sessionId != widget.sessionId) {
       _publish();
     }
   }
@@ -190,10 +191,7 @@ class RichFence extends StatelessWidget {
       if (drawing != null) return SafeSvgView(drawing: drawing);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text('This SVG was not drawn.'),
-          fallback,
-        ],
+        children: [const Text('This SVG was not drawn.'), fallback],
       );
     }
     if (clean == 'listing') {
@@ -260,10 +258,7 @@ class _GrantedDirective extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Notes directive'),
-            Text(text),
-          ],
+          children: [const Text('Notes directive'), Text(text)],
         ),
       ),
     );
@@ -337,14 +332,17 @@ class ResizableMarkdownTable extends StatefulWidget {
   final TablePiece table;
 
   @override
-  State<ResizableMarkdownTable> createState() =>
-      _ResizableMarkdownTableState();
+  State<ResizableMarkdownTable> createState() => _ResizableMarkdownTableState();
 }
 
 class _ResizableMarkdownTableState extends State<ResizableMarkdownTable> {
-  late List<double> _widths = [
-    for (final _ in widget.table.headers) 96,
-  ];
+  late final List<double> _widths;
+
+  @override
+  void initState() {
+    super.initState();
+    _widths = [for (final _ in widget.table.headers) 96];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -377,7 +375,12 @@ class _ResizableMarkdownTableState extends State<ResizableMarkdownTable> {
     );
   }
 
-  Widget _cell(int index, String text, {bool header = false, bool resize = false}) {
+  Widget _cell(
+    int index,
+    String text, {
+    bool header = false,
+    bool resize = false,
+  }) {
     return SizedBox(
       key: header ? Key('table-col-$index') : null,
       width: _widths[index],
@@ -386,7 +389,9 @@ class _ResizableMarkdownTableState extends State<ResizableMarkdownTable> {
           Expanded(
             child: Text(
               text,
-              style: header ? const TextStyle(fontWeight: FontWeight.w700) : null,
+              style: header
+                  ? const TextStyle(fontWeight: FontWeight.w700)
+                  : null,
             ),
           ),
           if (resize)
@@ -494,10 +499,7 @@ class SafeSvgView extends StatelessWidget {
       height: 160,
       width: double.infinity,
       child: CustomPaint(
-        painter: _SvgPainter(
-          drawing,
-          Theme.of(context).colorScheme.primary,
-        ),
+        painter: _SvgPainter(drawing, Theme.of(context).colorScheme.primary),
       ),
     );
   }
@@ -678,7 +680,9 @@ class _ArtifactRevisionCardState extends State<ArtifactRevisionCard> {
                     );
                     if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Copied ${revision.downloadName}')),
+                      SnackBar(
+                        content: Text('Copied ${revision.downloadName}'),
+                      ),
                     );
                   },
                   child: Text('Copy ${revision.downloadName}'),
@@ -809,10 +813,7 @@ class _SandboxPreviewCardState extends State<SandboxPreviewCard> {
               'Runs as text in this chat. Scripts and external frames are removed.',
             ),
             if (!_loaded)
-              TextButton(
-                onPressed: _load,
-                child: const Text('Load widget'),
-              )
+              TextButton(onPressed: _load, child: const Text('Load widget'))
             else if (_missing)
               const Text('This file is not an HTML widget.')
             else if (document != null) ...[
@@ -910,10 +911,7 @@ class InteractiveToolCard extends StatelessWidget {
                 ],
               ),
               Text(notes.reason ?? 'Notes is not installed.'),
-              Text(
-                foreign.reason ?? '',
-                key: const Key('catalog-foreign'),
-              ),
+              Text(foreign.reason ?? '', key: const Key('catalog-foreign')),
             ],
           );
         }
@@ -929,11 +927,13 @@ class InteractiveToolCard extends StatelessWidget {
               spacing: 8,
               children: [
                 FilledButton(
-                  onPressed: () => setupAnswers.settle(callId, 'Named the agent'),
+                  onPressed: () =>
+                      setupAnswers.settle(callId, 'Named the agent'),
                   child: const Text('Name the agent'),
                 ),
                 OutlinedButton(
-                  onPressed: () => setupAnswers.settle(callId, 'Kept the default'),
+                  onPressed: () =>
+                      setupAnswers.settle(callId, 'Kept the default'),
                   child: const Text('Keep the default'),
                 ),
               ],

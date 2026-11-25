@@ -93,10 +93,8 @@ class _ContributionsPageState extends State<ContributionsPage> {
                       child: const Text('Allow this site'),
                     ),
                     OutlinedButton(
-                      onPressed: () => previewScriptConsent.revoke(
-                        plugin.id,
-                        _origin,
-                      ),
+                      onPressed: () =>
+                          previewScriptConsent.revoke(plugin.id, _origin),
                       child: const Text('Deny this site'),
                     ),
                   ],

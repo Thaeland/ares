@@ -326,24 +326,28 @@ class _AssetsScreenState extends State<AssetsScreen> {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: HermesSpacing.lg),
         child: Wrap(
-      spacing: HermesSpacing.sm,
-      runSpacing: HermesSpacing.sm,
-      children: [
-        if (_moreSessions || _recent.isNotEmpty)
-          OutlinedButton.icon(
-            key: const Key('assets-more-chats'),
-            onPressed: _loading ? null : () => unawaited(_scan(_Scan.chats)),
-            icon: const Icon(Icons.forum_outlined),
-            label: Text(context.l10n.assets_load_more_chats),
-          ),
-        if (_older.isNotEmpty)
-          OutlinedButton.icon(
-            key: const Key('assets-older-messages'),
-            onPressed: _loading ? null : () => unawaited(_scan(_Scan.older)),
-            icon: const Icon(Icons.history),
-            label: Text(context.l10n.assets_load_older_messages),
-          ),
-      ],
+          spacing: HermesSpacing.sm,
+          runSpacing: HermesSpacing.sm,
+          children: [
+            if (_moreSessions || _recent.isNotEmpty)
+              OutlinedButton.icon(
+                key: const Key('assets-more-chats'),
+                onPressed: _loading
+                    ? null
+                    : () => unawaited(_scan(_Scan.chats)),
+                icon: const Icon(Icons.forum_outlined),
+                label: Text(context.l10n.assets_load_more_chats),
+              ),
+            if (_older.isNotEmpty)
+              OutlinedButton.icon(
+                key: const Key('assets-older-messages'),
+                onPressed: _loading
+                    ? null
+                    : () => unawaited(_scan(_Scan.older)),
+                icon: const Icon(Icons.history),
+                label: Text(context.l10n.assets_load_older_messages),
+              ),
+          ],
         ),
       ),
     ],

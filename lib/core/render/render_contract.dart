@@ -74,11 +74,7 @@ IntentDecision? evaluateWidgetIntent({
     return IntentRejected('invalid', id: id);
   }
   if (prompt.length > maxIntentLength) {
-    return IntentRejected(
-      'too_long',
-      id: id,
-      maxLength: maxIntentLength,
-    );
+    return IntentRejected('too_long', id: id, maxLength: maxIntentLength);
   }
   if (lastAcceptedAtMs > 0) {
     final elapsed = nowMs - lastAcceptedAtMs;

@@ -35,7 +35,9 @@ class DiagramModel {
   final List<DiagramEdge> edges;
 }
 
-final _nodeShape = RegExp(r'^([A-Za-z0-9_]+)(?:\[([^\]]+)\]|\{([^}]+)\]|\(([^)]+)\))?$');
+final _nodeShape = RegExp(
+  r'^([A-Za-z0-9_]+)(?:\[([^\]]+)\]|\{([^}]+)\]|\(([^)]+)\))?$',
+);
 
 DiagramNode? _node(String raw) {
   final match = _nodeShape.firstMatch(raw.trim());
@@ -315,11 +317,15 @@ SandboxDocument? parseSandboxedHtml(String source) {
       final send = attrs['data-hermes-send'];
       if (send != null && send.trim().isNotEmpty) {
         controls.add(SandboxControl(send.trim(), node.text.trim()));
+        return;
       }
       for (final child in node.nodes) {
         walk(child);
       }
-      if (name == 'p' || name == 'div' || name == 'br' || name.startsWith('h')) {
+      if (name == 'p' ||
+          name == 'div' ||
+          name == 'br' ||
+          name.startsWith('h')) {
         text.write('\n');
       }
       return;
@@ -373,9 +379,8 @@ List<String> _cells(String line) => line
     .map((cell) => cell.trim())
     .toList();
 
-bool _separator(String line) => RegExp(
-  r'^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$',
-).hasMatch(line);
+bool _separator(String line) =>
+    RegExp(r'^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$').hasMatch(line);
 
 EmbedPiece? detectProviderEmbed(String raw) {
   final uri = Uri.tryParse(raw.trim());
@@ -428,7 +433,9 @@ List<ListingCard> parseListings(String code) {
   final cards = <ListingCard>[];
   for (final entry in entries.take(12)) {
     if (entry is! Map) continue;
-    final address = (entry['address'] ?? entry['title'] ?? '').toString().trim();
+    final address = (entry['address'] ?? entry['title'] ?? '')
+        .toString()
+        .trim();
     if (address.isEmpty) continue;
     double? count(Object? value) {
       final parsed = value is num
@@ -540,7 +547,9 @@ List<TranscriptPiece> _piecesFromProse(String text) {
     }
     final trimmed = lines[row].trim();
     final embed = detectProviderEmbed(trimmed);
-    if (embed != null && trimmed == lines[row].trim() && !trimmed.contains('](')) {
+    if (embed != null &&
+        trimmed == lines[row].trim() &&
+        !trimmed.contains('](')) {
       final start = text.indexOf(trimmed, offset);
       if (start >= 0) {
         matches.add(_Hit(start, start + trimmed.length, embed));

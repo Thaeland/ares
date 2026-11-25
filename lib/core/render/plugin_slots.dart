@@ -3,14 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'artifact_library.dart';
 import 'rich_blocks.dart';
 
-enum PluginSlot {
-  pane,
-  page,
-  composerAction,
-  command,
-  directive,
-  toolMedia,
-}
+enum PluginSlot { pane, page, composerAction, command, directive, toolMedia }
 
 /// A contribution compiled into the client. Chat text and downloaded packages
 /// cannot add one of these.
@@ -145,10 +138,7 @@ class PreviewScriptConsent extends ChangeNotifier {
 final previewScriptConsent = PreviewScriptConsent();
 
 /// Allowing a site names the plugin and origin. It does not execute page script.
-bool pluginMaySeePreview({
-  required String pluginId,
-  required String origin,
-}) {
+bool pluginMaySeePreview({required String pluginId, required String origin}) {
   if (!pluginGrants.granted(pluginId)) return false;
   return previewScriptConsent.choice(pluginId, origin) ==
       PreviewScriptChoice.allowed;
