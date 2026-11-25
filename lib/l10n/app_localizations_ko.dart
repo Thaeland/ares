@@ -3867,6 +3867,23 @@ class AppLocalizationsKo extends AppLocalizations {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias은(는) $command의 별칭입니다';
+  }
+
+  @override
+  String get slash_command_info_no_description => '설명이 없습니다.';
+
+  @override
+  String get slash_command_info_arguments_options => '정해진 옵션 중 하나를 받습니다.';
+
+  @override
+  String get slash_command_info_arguments_text => '명령 뒤에 텍스트를 받습니다.';
+
+  @override
+  String get slash_command_info_arguments_mixed => '명령 뒤에 옵션이나 텍스트를 받습니다.';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -4437,6 +4454,51 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_send => '보내기';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias은(는) $command의 별칭입니다';
+  }
+
+  @override
+  String get ng_slash_command_no_description => '설명이 없습니다.';
+
+  @override
+  String get ng_slash_command_arguments_options => '정해진 옵션 중 하나를 받습니다.';
+
+  @override
+  String get ng_slash_command_arguments_text => '명령 뒤에 텍스트를 받습니다.';
+
+  @override
+  String get ng_slash_command_arguments_mixed => '명령 뒤에 옵션이나 텍스트를 받습니다.';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'NextGen에서는 이 내용이 일반 메시지로 Hermes에 전송되며, 명령 자체는 실행되지 않습니다.';
+
+  @override
+  String get ng_slash_command_output => '명령 출력';
+
+  @override
+  String get ng_slash_command_running => '명령 실행 중…';
+
+  @override
+  String get ng_slash_command_done => '완료되었습니다.';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return '명령을 실행하지 못했습니다: $error';
+  }
+
+  @override
+  String get ng_slash_command_refused => 'Hermes는 여기에서 이 명령을 실행할 수 없습니다.';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      '명령을 보냈지만 응답이 오지 않았습니다. 게이트웨이에서 아직 실행 중일 수 있으므로 다시 보내지 않았고 초안은 그대로 두었습니다.';
+
+  @override
+  String get ng_slash_command_nothing_running => '실행 중인 작업이 없습니다.';
 
   @override
   String get ng_steered => '지시 반영됨';

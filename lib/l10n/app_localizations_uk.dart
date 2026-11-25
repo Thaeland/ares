@@ -3965,6 +3965,26 @@ class AppLocalizationsUk extends AppLocalizations {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias — псевдонім для $command';
+  }
+
+  @override
+  String get slash_command_info_no_description => 'Опис недоступний.';
+
+  @override
+  String get slash_command_info_arguments_options =>
+      'Приймає один із фіксованих варіантів.';
+
+  @override
+  String get slash_command_info_arguments_text =>
+      'Приймає текст після команди.';
+
+  @override
+  String get slash_command_info_arguments_mixed =>
+      'Приймає варіант або текст після команди.';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -4555,6 +4575,54 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get ng_send => 'Надіслати';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias — псевдонім для $command';
+  }
+
+  @override
+  String get ng_slash_command_no_description => 'Опис недоступний.';
+
+  @override
+  String get ng_slash_command_arguments_options =>
+      'Приймає один із фіксованих варіантів.';
+
+  @override
+  String get ng_slash_command_arguments_text => 'Приймає текст після команди.';
+
+  @override
+  String get ng_slash_command_arguments_mixed =>
+      'Приймає варіант або текст після команди.';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'NextGen надсилає це Hermes як звичайне повідомлення; сама команда не виконується.';
+
+  @override
+  String get ng_slash_command_output => 'Вивід команди';
+
+  @override
+  String get ng_slash_command_running => 'Виконується команда…';
+
+  @override
+  String get ng_slash_command_done => 'Готово.';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return 'Не вдалося виконати команду: $error';
+  }
+
+  @override
+  String get ng_slash_command_refused =>
+      'Hermes не може виконати цю команду тут.';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      'Команду надіслано, але відповідь не надійшла. Можливо, вона ще виконується на шлюзі, тому її не надіслано повторно, а чернетку збережено.';
+
+  @override
+  String get ng_slash_command_nothing_running => 'Нічого не виконується.';
 
   @override
   String get ng_steered => 'Спрямовано';

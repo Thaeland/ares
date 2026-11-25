@@ -3971,6 +3971,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get slash_commands_empty => 'No matching commands';
 
   @override
+  String slash_command_info_alias(String alias, String command) {
+    return '$alias es un alias de $command';
+  }
+
+  @override
+  String get slash_command_info_no_description =>
+      'No hay descripción disponible.';
+
+  @override
+  String get slash_command_info_arguments_options =>
+      'Admite una opción de una lista fija.';
+
+  @override
+  String get slash_command_info_arguments_text =>
+      'Admite texto después del comando.';
+
+  @override
+  String get slash_command_info_arguments_mixed =>
+      'Admite una opción o texto después del comando.';
+
+  @override
   String get slash_command_output => 'Command output';
 
   @override
@@ -4564,6 +4585,56 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ng_send => 'Enviar';
+
+  @override
+  String ng_slash_command_alias(String alias, String command) {
+    return '$alias es un alias de $command';
+  }
+
+  @override
+  String get ng_slash_command_no_description =>
+      'No hay descripción disponible.';
+
+  @override
+  String get ng_slash_command_arguments_options =>
+      'Admite una opción de una lista fija.';
+
+  @override
+  String get ng_slash_command_arguments_text =>
+      'Admite texto después del comando.';
+
+  @override
+  String get ng_slash_command_arguments_mixed =>
+      'Admite una opción o texto después del comando.';
+
+  @override
+  String get ng_slash_command_sent_as_message =>
+      'NextGen envía esto a Hermes como un mensaje normal; el comando en sí no se ejecuta.';
+
+  @override
+  String get ng_slash_command_output => 'Salida del comando';
+
+  @override
+  String get ng_slash_command_running => 'Ejecutando el comando…';
+
+  @override
+  String get ng_slash_command_done => 'Hecho.';
+
+  @override
+  String ng_slash_command_failed(Object error) {
+    return 'No se ha podido ejecutar el comando: $error';
+  }
+
+  @override
+  String get ng_slash_command_refused =>
+      'Hermes no puede ejecutar este comando aquí.';
+
+  @override
+  String get ng_slash_command_delivery_unknown =>
+      'El comando se envió, pero no llegó ninguna respuesta. Puede que siga ejecutándose en el gateway, así que no se ha vuelto a enviar y se ha conservado tu borrador.';
+
+  @override
+  String get ng_slash_command_nothing_running => 'No hay nada en ejecución.';
 
   @override
   String get ng_steered => 'Indicación enviada';
