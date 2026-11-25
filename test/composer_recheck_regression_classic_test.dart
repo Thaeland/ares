@@ -5,6 +5,7 @@
 //        refused the whole draft
 //   keyboard: the Classic composer under every keyboard, text size, draft
 //        length and status combination (a guard alongside NextGen's)
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:hermes_android/core/composer/composer_drag.dart';
 import 'package:hermes_android/core/composer/os_intake.dart';
 import 'package:hermes_android/core/screens/chat_screen.dart';
 import 'package:hermes_android/core/services/attachment_draft_service.dart';
+import 'package:hermes_android/core/services/composer_session_rpc.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/theme/hermes_theme.dart';
 import 'package:hermes_android/core/widgets/attachment_draft_tile.dart';
@@ -65,6 +67,46 @@ class _Paths extends PathProviderPlatform {
   final Directory dir;
   @override
   Future<String?> getTemporaryPath() async => dir.path;
+}
+
+/// A live session whose context breakdown has [categories] rows.
+class _Rpc implements ComposerSessionRpc {
+  int categories = 1;
+  final calls = <String>[];
+
+  @override
+  bool hasLiveSession(String mobileSessionId) => true;
+
+  Map<String, dynamic> _answer(String method) {
+    calls.add(method);
+    if (method != 'session.context_breakdown') return const {};
+    return {
+      'categories': [
+        for (var i = 0; i < categories; i++)
+          {
+            'id': 'c$i',
+            'label': 'Category $i',
+            'tokens': 1000 * (i + 1),
+            'color': '#888888',
+          },
+      ],
+      'context_max': 200000,
+      'context_used': 36000,
+      'context_percent': 18,
+    };
+  }
+
+  @override
+  Future<Map<String, dynamic>> requestSessionRpc(
+    String method,
+    Map<String, dynamic> params,
+  ) async => _answer(method);
+
+  @override
+  Future<Map<String, dynamic>> call(
+    String method,
+    Map<String, dynamic> params,
+  ) async => _answer(method);
 }
 
 /// Lets real file I/O finish and render without moving the clock. Stops
@@ -227,4 +269,81 @@ void main() {
       expect(sent, isEmpty);
     });
   });
+
+  // Every keyboard, text size, draft length and status combination: the
+  // field and the send button sit above the keyboard and take taps.
+  final longDraft = List.filled(14, 'a long draft line that wraps').join('\n');
+  for (final keyboard in [260.0, 340.0]) {
+    for (final scale in [1.0, 2.0]) {
+      for (final long in [false, true]) {
+        for (final status in [false, true]) {
+          final name =
+              'keyboard ${keyboard.toInt()} x$scale '
+              '${long ? 'long' : 'short'} draft, status '
+              '${status ? 'on' : 'off'}';
+          testWidgets('Classic 320x640 $name: field and send above the '
+              'keyboard and hit-testable', (tester) async {
+            SharedPreferences.setMockInitialValues({
+              'verbose_mode': true,
+              if (status) 'composer_status_hidden_v1': <String>[],
+            });
+            tester.view.physicalSize = const Size(320, 640);
+            tester.view.devicePixelRatio = 1.0;
+            addTearDown(tester.view.reset);
+            tester.platformDispatcher.textScaleFactorTestValue = scale;
+            addTearDown(
+              tester.platformDispatcher.clearTextScaleFactorTestValue,
+            );
+            final rpc = _Rpc()..categories = 20;
+            final screen = ChatScreen(
+              connection: _conn('kb-$name'),
+              session: _session,
+              testApiClient: ApiClient(
+                baseUrl: 'http://recheck.fixture',
+                apiKey: 'fixture',
+                httpClient: MockClient(
+                  (_) async => http.Response(jsonEncode({'data': []}), 200),
+                ),
+              ),
+              testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
+              testComposerRpc: rpc,
+              testRemotePromptSubmit: completedStockTurn(({
+                required sessionId,
+                required text,
+                required onEvent,
+                required onSent,
+              }) async {
+                onSent();
+              }),
+            );
+            await tester.pumpWidget(_app(screen));
+            await pumpChatUpdates(tester);
+            tester.view.viewInsets = FakeViewPadding(bottom: keyboard);
+            await pumpChatUpdates(tester);
+            await tester.enterText(
+              find.byKey(_composerKey),
+              long ? longDraft : 'steer this please',
+            );
+            await pumpChatUpdates(tester);
+            final errors = <Object>[];
+            Object? e;
+            while ((e = tester.takeException()) != null) {
+              errors.add(e!);
+            }
+            expect(errors, isEmpty);
+            final top = 640 - keyboard;
+            final field = tester.getRect(find.byKey(_composerKey));
+            final send = tester.getRect(find.byTooltip('Send'));
+            expect(field.top, greaterThanOrEqualTo(0));
+            expect(field.bottom, lessThanOrEqualTo(top));
+            expect(field.width, greaterThanOrEqualTo(80));
+            expect(send.top, greaterThanOrEqualTo(0));
+            expect(send.bottom, lessThanOrEqualTo(top));
+            expect(find.byKey(_composerKey).hitTestable(), findsOneWidget);
+            expect(find.byTooltip('Send').hitTestable(), findsOneWidget);
+          });
+        }
+      }
+    }
+  }
 }

@@ -1644,59 +1644,17 @@ class _NgChatViewState extends State<NgChatView>
                     children: [
                       if (!state.isConnected) _connectionBanner(c, gateway),
                       Expanded(child: _transcript(c)),
-                      NgSessionDock(chat: chat, available: body.maxHeight),
-                      if (chat.canPickProject && _drafts.isEmpty && !_preparing)
-                        OrphanDraftRecovery(
-                          key: ObjectKey(_draftWriter),
-                          writer: _draftWriter,
-                          editor: _input,
-                          lookup: chat.gateway.api.getSession,
-                          isCurrent: () =>
-                              chat.draftOwnerCurrent &&
-                              identical(chat.gateway, gateway) &&
-                              chat.canPickProject &&
-                              _drafts.isEmpty &&
-                              !_preparing &&
-                              !_listening,
+                      // Everything under the transcript shares one strip
+                      // bounded by the body (which the keyboard has already
+                      // shrunk): the cards keep their own caps and the
+                      // composer takes what is left, so it is never pushed
+                      // under the keyboard.
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: ngComposerStripMaxHeight(body.maxHeight),
                         ),
-                      if (chat.error != null) _errorBar(c),
-                      if (chat.queued.isNotEmpty) _queue(c),
-                      if (chat.catalog case final operation?)
-                        CatalogInstallCard(
-                          key: ValueKey(operation.opId),
-                          operation: operation,
-                          respond: (answer) =>
-                              chat.respondCatalog(operation, answer),
-                          retry: _retryCatalogRow,
-                          onDismiss: () => chat.dismissCatalog(operation.opId),
-                        ),
-                      // The composer stays below a setup card: a message
-                      // sent instead of an answer closes the card.
-                      if (chat.request?.setupBeat case final card?)
-                        SetupBeatCard(
-                          key: ValueKey(card.requestId),
-                          request: card,
-                          onAnswer: (result) async =>
-                              chat.sendSetupBeat(card.requestId, result),
-                        ),
-                      if (chat.request != null &&
-                          chat.request!.kind != NgRequestKind.setupBeat)
-                        _InputPanel(
-                          chat: chat,
-                          request: chat.request!,
-                          available: body.maxHeight,
-                        )
-                      else
-                        NgSlashCommandInfo(
-                          chat: chat,
-                          controller: _input,
-                          focusNode: _focus,
-                          catalog: _slashCatalog,
-                          // Commands run here now, so the card no longer says they
-                          // are sent as a message.
-                          showsSentAsMessageNote: false,
-                          child: _composer(c, state),
-                        ),
+                        child: _bottomStrip(c, state, gateway, body.maxHeight),
+                      ),
                     ],
                   ),
                 ),
@@ -1709,6 +1667,73 @@ class _NgChatViewState extends State<NgChatView>
     // Item keys restart in every chat controller, so reactions live with
     // this chat's controller and never in a map shared by all chats.
     return ReactionScope(chat: chat, child: transcriptShortcuts(_reader, view));
+  }
+
+  /// The dock, the cards and the composer below the transcript. The
+  /// composer is flexible within the strip when the strip is bounded.
+  Widget _bottomStrip(
+    NgColors c,
+    NgConnectionState state,
+    NextGenGateway gateway,
+    double available,
+  ) {
+    final bounded = available.isFinite;
+    final composer = NgSlashCommandInfo(
+      chat: chat,
+      controller: _input,
+      focusNode: _focus,
+      catalog: _slashCatalog,
+      // Commands run here now, so the card no longer says they are sent as
+      // a message.
+      showsSentAsMessageNote: false,
+      child: _composer(c, state),
+    );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        NgSessionDock(chat: chat, available: available),
+        if (chat.canPickProject && _drafts.isEmpty && !_preparing)
+          OrphanDraftRecovery(
+            key: ObjectKey(_draftWriter),
+            writer: _draftWriter,
+            editor: _input,
+            lookup: chat.gateway.api.getSession,
+            isCurrent: () =>
+                chat.draftOwnerCurrent &&
+                identical(chat.gateway, gateway) &&
+                chat.canPickProject &&
+                _drafts.isEmpty &&
+                !_preparing &&
+                !_listening,
+          ),
+        if (chat.error != null) _errorBar(c),
+        if (chat.queued.isNotEmpty) _queue(c),
+        if (chat.catalog case final operation?)
+          CatalogInstallCard(
+            key: ValueKey(operation.opId),
+            operation: operation,
+            respond: (answer) => chat.respondCatalog(operation, answer),
+            retry: _retryCatalogRow,
+            onDismiss: () => chat.dismissCatalog(operation.opId),
+          ),
+        // The composer stays below a setup card: a message
+        // sent instead of an answer closes the card.
+        if (chat.request?.setupBeat case final card?)
+          SetupBeatCard(
+            key: ValueKey(card.requestId),
+            request: card,
+            onAnswer: (result) async =>
+                chat.sendSetupBeat(card.requestId, result),
+          ),
+        if (chat.request != null &&
+            chat.request!.kind != NgRequestKind.setupBeat)
+          _InputPanel(chat: chat, request: chat.request!, available: available)
+        else if (bounded)
+          Flexible(child: composer)
+        else
+          composer,
+      ],
+    );
   }
 
   Future<void> _rename() async {
@@ -2171,119 +2196,125 @@ class _NgChatViewState extends State<NgChatView>
               border: Border.all(color: c.stroke),
             ),
             padding: const EdgeInsets.fromLTRB(6, 4, 6, 6),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (_imageRestoreRevision() != null)
-                  PreparedImageRecovery(
-                    target: chat.imageTarget!,
-                    revision: () => _draftWriter.hasConfirmedEmptyDraft
-                        ? _imageRestoreRevision()
-                        : null,
-                    install: (text, drafts) {
-                      setState(() => _drafts.addAll(drafts));
-                      _setComposer(text);
-                    },
-                  ),
-                if (_drafts.isNotEmpty || _preparing)
-                  SizedBox(
-                    height: 44,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.fromLTRB(6, 6, 6, 0),
-                      children: [
-                        for (final d in _drafts)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 6),
-                            child: InputChip(
-                              avatar: Icon(
-                                d.kind == AttachmentDraftKind.image
-                                    ? Icons.image_outlined
-                                    : Icons.insert_drive_file_outlined,
-                                size: 16,
-                              ),
-                              label: ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  maxWidth: 160,
-                                ),
-                                child: Text(
-                                  d.name,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              onDeleted: () => _removeDraft(d),
-                            ),
-                          ),
-                        if (_preparing)
-                          const Padding(
-                            padding: EdgeInsets.all(10),
-                            child: SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                // Stacked above the editor: bounded by the keyboard-aware
-                // share and scrolling inside, so the editor stays above the
-                // keyboard. Status lives in the composer menu (no extra row
-                // until an item is on); a narrow pane folds the breakdown.
-                LayoutBuilder(
-                  builder: (context, box) => ComposerContextStatus(
-                    layout: _status,
-                    usage: _usageReading,
-                    breakdown: _breakdown,
-                    breakdownLoading: _breakdownLoading,
-                    runningSinceMs: _runningSinceMs,
-                    showMenu: false,
-                    compact: box.maxWidth < 480,
-                    maxHeight: ngAboveComposerMaxHeight(
-                      context,
-                      fraction: 0.25,
-                      withKeyboard: 0.15,
-                    ),
-                    onLayout: _setStatus,
-                  ),
-                ),
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: ngAboveComposerMaxHeight(
-                      context,
-                      fraction: 0.35,
-                      withKeyboard: 0.2,
-                    ),
-                  ),
-                  child: SingleChildScrollView(
-                    child: ComposerReferenceAssist(
-                      controller: _input,
-                      cacheScope: (chat.gateway, chat.storedId),
-                      completePath: (query) async {
-                        final owner = chat;
-                        final result = await owner.gateway.call(
-                          'complete.path',
-                          pathCompletionParams(
-                            query: query,
-                            sessionId: await owner.liveSessionId(),
-                          ),
-                        );
-                        final rows = parseReferenceCompletions(result);
-                        return rows.isEmpty ? starterSuggestions(query) : rows;
-                      },
-                      completeSlash: (text) async {
-                        final owner = chat;
-                        final sessionId = await owner.liveSessionId();
-                        final result = await owner.gateway.call(
-                          'complete.slash',
-                          {'text': text, 'session_id': ?sessionId},
-                        );
-                        return parseArgumentCompletion(result);
+            child: LayoutBuilder(
+              builder: (context, box) => _composerColumn(
+                box.maxHeight,
+                extras: [
+                  if (_imageRestoreRevision() != null)
+                    PreparedImageRecovery(
+                      target: chat.imageTarget!,
+                      revision: () => _draftWriter.hasConfirmedEmptyDraft
+                          ? _imageRestoreRevision()
+                          : null,
+                      install: (text, drafts) {
+                        setState(() => _drafts.addAll(drafts));
+                        _setComposer(text);
                       },
                     ),
+                  if (_drafts.isNotEmpty || _preparing)
+                    SizedBox(
+                      height: 44,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.fromLTRB(6, 6, 6, 0),
+                        children: [
+                          for (final d in _drafts)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 6),
+                              child: InputChip(
+                                avatar: Icon(
+                                  d.kind == AttachmentDraftKind.image
+                                      ? Icons.image_outlined
+                                      : Icons.insert_drive_file_outlined,
+                                  size: 16,
+                                ),
+                                label: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 160,
+                                  ),
+                                  child: Text(
+                                    d.name,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                onDeleted: () => _removeDraft(d),
+                              ),
+                            ),
+                          if (_preparing)
+                            const Padding(
+                              padding: EdgeInsets.all(10),
+                              child: SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  // Stacked above the editor: bounded by the keyboard-aware
+                  // share and scrolling inside, so the editor stays above the
+                  // keyboard. Status lives in the composer menu (no extra row
+                  // until an item is on); a narrow pane folds the breakdown.
+                  LayoutBuilder(
+                    builder: (context, box) => ComposerContextStatus(
+                      layout: _status,
+                      usage: _usageReading,
+                      breakdown: _breakdown,
+                      breakdownLoading: _breakdownLoading,
+                      runningSinceMs: _runningSinceMs,
+                      showMenu: false,
+                      compact: box.maxWidth < 480,
+                      maxHeight: ngAboveComposerMaxHeight(
+                        context,
+                        fraction: 0.25,
+                        withKeyboard: 0.15,
+                      ),
+                      onLayout: _setStatus,
+                    ),
                   ),
-                ),
-                SendOnEnter(
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: ngAboveComposerMaxHeight(
+                        context,
+                        fraction: 0.35,
+                        withKeyboard: 0.2,
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      child: ComposerReferenceAssist(
+                        controller: _input,
+                        cacheScope: (chat.gateway, chat.storedId),
+                        completePath: (query) async {
+                          final owner = chat;
+                          final result = await owner.gateway.call(
+                            'complete.path',
+                            pathCompletionParams(
+                              query: query,
+                              sessionId: await owner.liveSessionId(),
+                            ),
+                          );
+                          final rows = parseReferenceCompletions(result);
+                          return rows.isEmpty
+                              ? starterSuggestions(query)
+                              : rows;
+                        },
+                        completeSlash: (text) async {
+                          final owner = chat;
+                          final sessionId = await owner.liveSessionId();
+                          final result = await owner.gateway.call(
+                            'complete.slash',
+                            {'text': text, 'session_id': ?sessionId},
+                          );
+                          return parseArgumentCompletion(result);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+                editor: SendOnEnter(
                   enabled:
                       _input.text.trim().isNotEmpty ||
                       (!_listening &&
@@ -2312,63 +2343,71 @@ class _NgChatViewState extends State<NgChatView>
                       onAttachment: _acceptClipboard,
                       child: ComposerDropSurface(
                         onDrop: (drag) => unawaited(_acceptDrop(drag)),
-                        child: ChatPresenceComposer(
-                          builder: (_, input) => TextField(
-                            key: const ValueKey('ng-composer-field'),
-                            onChanged: (_) => input(),
-                            controller: _input,
-                            focusNode: _focus,
-                            contentInsertionConfiguration:
-                                composerImageInsertion(_acceptImageBytes),
-                            inputFormatters: [
-                              // Detects a paste only; it is handled after the
-                              // text is committed ([_onDraftEdit]), never from
-                              // here.
-                              TextInputFormatter.withFunction((
-                                oldValue,
-                                newValue,
-                              ) {
-                                final selection = oldValue.selection;
-                                if (!selection.isValid) return newValue;
-                                _pendingPaste = PastedChunk.detect(
-                                  oldValue.text,
-                                  selection.start,
-                                  selection.end,
-                                  newValue.text,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: ngComposerEditorMaxHeight(box.maxHeight),
+                          ),
+                          child: ChatPresenceComposer(
+                            builder: (_, input) => TextField(
+                              key: const ValueKey('ng-composer-field'),
+                              onChanged: (_) => input(),
+                              controller: _input,
+                              focusNode: _focus,
+                              contentInsertionConfiguration:
+                                  composerImageInsertion(_acceptImageBytes),
+                              inputFormatters: [
+                                // Detects a paste only; it is handled after the
+                                // text is committed ([_onDraftEdit]), never from
+                                // here.
+                                TextInputFormatter.withFunction((
+                                  oldValue,
+                                  newValue,
+                                ) {
+                                  final selection = oldValue.selection;
+                                  if (!selection.isValid) return newValue;
+                                  _pendingPaste = PastedChunk.detect(
+                                    oldValue.text,
+                                    selection.start,
+                                    selection.end,
+                                    newValue.text,
+                                  );
+                                  return newValue;
+                                }),
+                              ],
+                              onTap: () {
+                                // Android can hide the keyboard with Back while
+                                // this node retains focus. Explicitly show it on
+                                // every composer tap.
+                                _focus.requestFocus();
+                                unawaited(
+                                  SystemChannels.textInput.invokeMethod<void>(
+                                    'TextInput.show',
+                                  ),
                                 );
-                                return newValue;
-                              }),
-                            ],
-                            onTap: () {
-                              // Android can hide the keyboard with Back while
-                              // this node retains focus. Explicitly show it on
-                              // every composer tap.
-                              _focus.requestFocus();
-                              unawaited(
-                                SystemChannels.textInput.invokeMethod<void>(
-                                  'TextInput.show',
+                              },
+                              minLines: 1,
+                              maxLines: 8,
+                              textCapitalization: TextCapitalization.sentences,
+                              style: NgType.body.copyWith(color: c.text),
+                              decoration: InputDecoration(
+                                hintText: _listening
+                                    ? ngL.ng_listening
+                                    : chat.running
+                                    ? ngL.ng_steer_or_queue_a_message
+                                    : ngL.ng_message_hermes,
+                                // One line: at large text a wrapped hint made
+                                // an empty composer two lines tall.
+                                hintMaxLines: 1,
+                                hintStyle: NgType.body.copyWith(
+                                  color: c.textMuted,
                                 ),
-                              );
-                            },
-                            minLines: 1,
-                            maxLines: 8,
-                            textCapitalization: TextCapitalization.sentences,
-                            style: NgType.body.copyWith(color: c.text),
-                            decoration: InputDecoration(
-                              hintText: _listening
-                                  ? ngL.ng_listening
-                                  : chat.running
-                                  ? ngL.ng_steer_or_queue_a_message
-                                  : ngL.ng_message_hermes,
-                              hintStyle: NgType.body.copyWith(
-                                color: c.textMuted,
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.fromLTRB(
-                                12,
-                                12,
-                                12,
-                                6,
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.fromLTRB(
+                                  12,
+                                  12,
+                                  12,
+                                  6,
+                                ),
                               ),
                             ),
                           ),
@@ -2377,7 +2416,7 @@ class _NgChatViewState extends State<NgChatView>
                     ),
                   ),
                 ),
-                Row(
+                actions: Row(
                   children: [
                     IconButton(
                       tooltip: ngL.ng_attach,
@@ -2434,11 +2473,45 @@ class _NgChatViewState extends State<NgChatView>
                       ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  /// The composer's rows within [maxHeight], the space the strip under the
+  /// transcript left it (the keyboard is already off it). The send row
+  /// always shows; the editor (bounded by [ngComposerEditorMaxHeight] where
+  /// it is built) scrolls inside; the rows above it (chips, status, completions) share
+  /// what is left and scroll, the row nearest the editor in view first.
+  Widget _composerColumn(
+    double maxHeight, {
+    required List<Widget> extras,
+    required Widget editor,
+    required Widget actions,
+  }) {
+    if (!maxHeight.isFinite) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [...extras, editor, actions],
+      );
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (extras.isNotEmpty)
+          Flexible(
+            child: SingleChildScrollView(
+              key: const ValueKey('ng-composer-extras'),
+              reverse: true,
+              child: Column(mainAxisSize: MainAxisSize.min, children: extras),
+            ),
+          ),
+        editor,
+        actions,
+      ],
     );
   }
 

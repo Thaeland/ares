@@ -380,4 +380,149 @@ void main() {
       expect(_composer(tester), 'was ${file.path} now ');
     });
   });
+
+  // Every keyboard, text size, draft length and status combination: the
+  // field and the send button sit above the keyboard and take taps.
+  final longDraft = List.filled(14, 'a long draft line that wraps').join('\n');
+  for (final keyboard in [260.0, 340.0]) {
+    for (final scale in [1.0, 2.0]) {
+      for (final long in [false, true]) {
+        for (final status in [false, true]) {
+          final name =
+              'keyboard ${keyboard.toInt()} x$scale '
+              '${long ? 'long' : 'short'} draft, status '
+              '${status ? 'on' : 'off'}';
+          testWidgets('NextGen 320x640 $name: field and send above the '
+              'keyboard and hit-testable', (tester) async {
+            SharedPreferences.setMockInitialValues({
+              if (status) 'composer_status_hidden_v1': <String>[],
+            });
+            tester.view.physicalSize = const Size(320, 640);
+            tester.view.devicePixelRatio = 1.0;
+            addTearDown(tester.view.reset);
+            final h = await pump(tester, textScale: scale);
+            h.gateway.handlers['session.context_breakdown'] = (p) => {
+              'categories': [
+                for (var i = 0; i < 20; i++)
+                  {
+                    'id': 'c$i',
+                    'label': 'Category number $i',
+                    'tokens': 900 * (i + 1),
+                    'color': '#888888',
+                  },
+              ],
+              'context_max': 200000,
+              'context_used': 189000,
+              'context_percent': 94,
+            };
+            tester.view.viewInsets = FakeViewPadding(bottom: keyboard);
+            await tester.enterText(
+              find.byKey(_fieldKey),
+              long ? longDraft : 'steer this please',
+            );
+            await _settle(tester);
+            final errors = <Object>[];
+            Object? e;
+            while ((e = tester.takeException()) != null) {
+              errors.add(e!);
+            }
+            expect(errors, isEmpty);
+            final top = 640 - keyboard;
+            final field = tester.getRect(find.byKey(_fieldKey));
+            final send = tester.getRect(find.byTooltip('Send'));
+            expect(field.top, greaterThanOrEqualTo(0));
+            expect(field.bottom, lessThanOrEqualTo(top));
+            expect(field.width, greaterThanOrEqualTo(80));
+            expect(send.top, greaterThanOrEqualTo(0));
+            expect(send.bottom, lessThanOrEqualTo(top));
+            expect(find.byKey(_fieldKey).hitTestable(), findsOneWidget);
+            expect(find.byTooltip('Send').hitTestable(), findsOneWidget);
+            expect(find.byTooltip('Attach').hitTestable(), findsOneWidget);
+          });
+        }
+      }
+    }
+  }
+
+  // The re-check's own shape: a running turn, status on via the Attach
+  // menu, the breakdown open.
+  for (final v in [
+    'V1-no-status-long',
+    'V2-status-long',
+    'V3-status-short-expanded',
+    'V4-status-long-expanded',
+  ]) {
+    testWidgets('RNG5 $v 320x640 x2.0 keyboard 260, running: composer above '
+        'the keyboard, no overflow', (tester) async {
+      tester.view.physicalSize = const Size(320, 640);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      final h = await pump(tester, textScale: 2.0);
+      h.gateway.handlers['session.context_breakdown'] = (p) => {
+        'categories': [
+          for (var i = 0; i < 20; i++)
+            {
+              'id': 'c$i',
+              'label': 'Category number $i',
+              'tokens': 900 * (i + 1),
+              'color': '#888888',
+            },
+        ],
+        'context_max': 200000,
+        'context_used': 189000,
+        'context_percent': 94,
+      };
+      final status = !v.startsWith('V1');
+      final long = v.contains('long');
+      if (status) {
+        await tester.tap(find.byTooltip('Attach'));
+        await _settle(tester);
+        final st = find.byKey(const ValueKey('ng-composer-status'));
+        await tester.ensureVisible(st);
+        await _settle(tester);
+        await tester.tap(st);
+        await _settle(tester);
+        final ctx = find.byKey(const ValueKey('composer-status-context-usage'));
+        await tester.ensureVisible(ctx);
+        await _settle(tester);
+        await tester.tap(ctx);
+        await _settle(tester);
+        await tester.tapAt(const Offset(5, 5));
+        await _settle(tester);
+        if (v.contains('expanded')) {
+          await tester.tap(
+            find.byKey(const ValueKey('composer-context-breakdown-toggle')),
+          );
+          await _settle(tester);
+          expect(
+            find.byKey(const ValueKey('composer-context-breakdown')),
+            findsOneWidget,
+          );
+        }
+      }
+      h.chat.running = true;
+      h.chat.turnStartedAt = DateTime.now();
+      tester.view.viewInsets = const FakeViewPadding(bottom: 260);
+      await tester.enterText(
+        find.byKey(_fieldKey),
+        long
+            ? 'a long steer line that wraps over several lines at this size'
+            : 'steer this please',
+      );
+      await _settle(tester);
+      final errors = <Object>[];
+      Object? e;
+      while ((e = tester.takeException()) != null) {
+        errors.add(e!);
+      }
+      expect(errors, isEmpty);
+      final field = tester.getRect(find.byKey(_fieldKey));
+      expect(field.width, greaterThanOrEqualTo(80));
+      expect(field.bottom, lessThanOrEqualTo(640 - 260));
+      expect(field.top, greaterThanOrEqualTo(0));
+      expect(find.byKey(_fieldKey).hitTestable(), findsOneWidget);
+      final send = tester.getRect(find.byTooltip('Send'));
+      expect(send.bottom, lessThanOrEqualTo(640 - 260));
+    });
+  }
 }
