@@ -1,6 +1,7 @@
 // Device settings, appearance, connection information and app info.
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -171,13 +172,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const SizedBox(height: 16),
 
         // ---- Section: Desktop OS ----
-        _buildSectionHeader('Keep computer awake'),
+        // Shown (with its header) only where the runner keeps the device
+        // awake; the card hides itself otherwise.
         KeepAwakeSettingsCard(
           preferences: context
               .findAncestorStateOfType<HermesAppState>()!
               .widget
               .connManager
               .prefs,
+          header: _buildSectionHeader(
+            defaultTargetPlatform == TargetPlatform.android ||
+                    defaultTargetPlatform == TargetPlatform.iOS
+                ? context.l10n.keep_awake_title_mobile
+                : context.l10n.keep_awake_title,
+          ),
         ),
         const SizedBox(height: 16),
 

@@ -1,28 +1,41 @@
 /// Shared "Keep computer awake" settings card for Classic and NextGen.
+///
+/// The card exists only where the runner actually keeps the device awake:
+/// it asks `com.hermesagent.ares/power` `isSupported` on mount and renders
+/// nothing (not even its section [header]) until the runner says yes. A
+/// platform without a working mechanism therefore never offers a setting
+/// that would do nothing.
 library;
 
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../l10n/l10n.dart';
 import '../services/keep_awake.dart';
 
 class KeepAwakeSettingsCard extends StatefulWidget {
   const KeepAwakeSettingsCard({
     required this.preferences,
     this.powerChannel = MethodChannelKeepAwakeAdapter.channel,
+    this.header,
     super.key,
   });
 
   final SharedPreferences preferences;
   final MethodChannel powerChannel;
 
+  /// Optional section header shown above the card, and hidden with it.
+  final Widget? header;
+
   @override
   State<KeepAwakeSettingsCard> createState() => _KeepAwakeSettingsCardState();
 }
 
 class _KeepAwakeSettingsCardState extends State<KeepAwakeSettingsCard> {
-  bool? _runnerSupported;
+  bool _runnerSupported = false;
 
   @override
   void initState() {
@@ -32,31 +45,44 @@ class _KeepAwakeSettingsCardState extends State<KeepAwakeSettingsCard> {
 
   Future<void> _probeRunner() async {
     final supported = await isKeepAwakeChannelSupported(widget.powerChannel);
-    if (mounted) {
+    if (mounted && supported != _runnerSupported) {
       setState(() => _runnerSupported = supported);
     }
   }
 
-  static String _modeLabel(KeepAwakeMode mode) => switch (mode) {
-    KeepAwakeMode.off => 'Off',
-    KeepAwakeMode.whileWorking => 'While working',
-    KeepAwakeMode.always => 'Always',
-  };
+  /// Phones and tablets keep the screen on; desktops keep the system awake.
+  static bool get _screenOnly =>
+      defaultTargetPlatform == TargetPlatform.android ||
+      defaultTargetPlatform == TargetPlatform.iOS;
 
-  static String _modeDescription(KeepAwakeMode mode) => switch (mode) {
-    KeepAwakeMode.off =>
-      'Never block system sleep (default, opt-in power policy).',
-    KeepAwakeMode.whileWorking =>
-      'Prevent idle sleep only while an agent turn is actively running.',
-    KeepAwakeMode.always =>
-      'Prevent idle sleep while Ares remains open on this device.',
-  };
+  static String _modeLabel(AppLocalizations l10n, KeepAwakeMode mode) =>
+      switch (mode) {
+        KeepAwakeMode.off => l10n.keep_awake_mode_off,
+        KeepAwakeMode.whileWorking => l10n.keep_awake_mode_while_working,
+        KeepAwakeMode.always => l10n.keep_awake_mode_always,
+      };
+
+  static String _modeDescription(AppLocalizations l10n, KeepAwakeMode mode) =>
+      _screenOnly
+      ? switch (mode) {
+          KeepAwakeMode.off => l10n.keep_awake_off_help_mobile,
+          KeepAwakeMode.whileWorking =>
+            l10n.keep_awake_while_working_help_mobile,
+          KeepAwakeMode.always => l10n.keep_awake_always_help_mobile,
+        }
+      : switch (mode) {
+          KeepAwakeMode.off => l10n.keep_awake_off_help,
+          KeepAwakeMode.whileWorking => l10n.keep_awake_while_working_help,
+          KeepAwakeMode.always => l10n.keep_awake_always_help,
+        };
 
   @override
   Widget build(BuildContext context) {
+    if (!_runnerSupported) return const SizedBox.shrink();
+    final l10n = context.sharedL10n;
     final theme = Theme.of(context);
     final store = KeepAwakePolicyStore(widget.preferences);
-    return Card(
+    final card = Card(
       key: const Key('keep-awake-settings-card'),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -69,14 +95,13 @@ class _KeepAwakeSettingsCardState extends State<KeepAwakeSettingsCard> {
               children: [
                 Row(
                   children: [
-                    Icon(
-                      Icons.bolt_outlined,
-                      color: theme.colorScheme.primary,
-                    ),
+                    Icon(Icons.bolt_outlined, color: theme.colorScheme.primary),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        'Keep computer awake',
+                        _screenOnly
+                            ? l10n.keep_awake_title_mobile
+                            : l10n.keep_awake_title,
                         style: theme.textTheme.titleMedium,
                       ),
                     ),
@@ -84,7 +109,7 @@ class _KeepAwakeSettingsCardState extends State<KeepAwakeSettingsCard> {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  _modeDescription(selected),
+                  _modeDescription(l10n, selected),
                   style: theme.textTheme.bodySmall,
                 ),
                 const SizedBox(height: 12),
@@ -95,27 +120,24 @@ class _KeepAwakeSettingsCardState extends State<KeepAwakeSettingsCard> {
                     for (final mode in KeepAwakeMode.values)
                       ChoiceChip(
                         key: Key('keep-awake-mode-${mode.name}'),
-                        label: Text(_modeLabel(mode)),
+                        label: Text(_modeLabel(l10n, mode)),
                         selected: selected == mode,
                         onSelected: (_) => store.write(mode),
                       ),
                   ],
                 ),
-                if (_runnerSupported == false) ...[
-                  const SizedBox(height: 10),
-                  Text(
-                    'OS sleep inhibition is not active on this platform runner yet; your preference is saved on this device.',
-                    key: const Key('keep-awake-capability-note'),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
               ],
             );
           },
         ),
       ),
+    );
+    final header = widget.header;
+    if (header == null) return card;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [header, card],
     );
   }
 }

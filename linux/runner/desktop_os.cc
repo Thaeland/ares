@@ -83,7 +83,8 @@ struct _AresDesktopOs {
   bool hotkey_filter = false;
   // Power: logind PrepareForSleep (system bus), the session's Lock/Unlock
   // and LockedHint, and screensaver ActiveChanged (session bus). Keep-awake
-  // holds an xdg-desktop-portal Inhibit request (suspend only).
+  // holds an xdg-desktop-portal Inhibit request (suspend only), or, without
+  // a portal, an org.freedesktop.ScreenSaver Inhibit cookie (idle).
   FlMethodChannel* power = nullptr;
   GCancellable* cancellable = nullptr;
   GDBusConnection* system_bus = nullptr;
@@ -92,6 +93,7 @@ struct _AresDesktopOs {
   std::vector<guint> session_signals;
   std::vector<std::string> awake_owners;
   std::string inhibit_handle;
+  guint32 screensaver_cookie = 0;
   // Screen capture through the xdg-desktop-portal Screenshot dialog, which
   // is also the user's consent. One capture at a time.
   FlMethodChannel* capture = nullptr;
@@ -403,21 +405,74 @@ void WatchPower(AresDesktopOs* self) {
 }
 
 void ReleaseInhibit(AresDesktopOs* self) {
-  if (self->inhibit_handle.empty()) return;
-  if (self->session_bus != nullptr) {
+  if (self->session_bus != nullptr && !self->inhibit_handle.empty()) {
     g_dbus_connection_call(self->session_bus, "org.freedesktop.portal.Desktop",
                            self->inhibit_handle.c_str(),
                            "org.freedesktop.portal.Request", "Close", nullptr,
                            nullptr, G_DBUS_CALL_FLAGS_NONE, -1, nullptr,
                            nullptr, nullptr);
   }
+  if (self->session_bus != nullptr && self->screensaver_cookie != 0) {
+    g_dbus_connection_call(
+        self->session_bus, "org.freedesktop.ScreenSaver",
+        "/org/freedesktop/ScreenSaver", "org.freedesktop.ScreenSaver",
+        "UnInhibit", g_variant_new("(u)", self->screensaver_cookie), nullptr,
+        G_DBUS_CALL_FLAGS_NONE, -1, nullptr, nullptr, nullptr);
+  }
   self->inhibit_handle.clear();
+  self->screensaver_cookie = 0;
+}
+
+// True when |name| has an owner on |bus| or D-Bus can start it.
+bool BusNameAvailable(GDBusConnection* bus, const char* name) {
+  g_autoptr(GVariant) owned = g_dbus_connection_call_sync(
+      bus, "org.freedesktop.DBus", "/org/freedesktop/DBus",
+      "org.freedesktop.DBus", "NameHasOwner", g_variant_new("(s)", name),
+      G_VARIANT_TYPE("(b)"), G_DBUS_CALL_FLAGS_NONE, 1000, nullptr, nullptr);
+  gboolean has_owner = FALSE;
+  if (owned != nullptr) g_variant_get(owned, "(b)", &has_owner);
+  if (has_owner) return true;
+  g_autoptr(GVariant) activatable = g_dbus_connection_call_sync(
+      bus, "org.freedesktop.DBus", "/org/freedesktop/DBus",
+      "org.freedesktop.DBus", "ListActivatableNames", nullptr,
+      G_VARIANT_TYPE("(as)"), G_DBUS_CALL_FLAGS_NONE, 1000, nullptr, nullptr);
+  if (activatable == nullptr) return false;
+  g_autofree const gchar** names = nullptr;
+  g_variant_get(activatable, "(^a&s)", &names);
+  for (const gchar** it = names; it != nullptr && *it != nullptr; ++it) {
+    if (strcmp(*it, name) == 0) return true;
+  }
+  return false;
+}
+
+// Keep-awake works only with a portal or a screensaver service to ask.
+bool KeepAwakeAvailable(AresDesktopOs* self) {
+  if (self->session_bus == nullptr) return false;
+  return BusNameAvailable(self->session_bus,
+                          "org.freedesktop.portal.Desktop") ||
+         BusNameAvailable(self->session_bus, "org.freedesktop.ScreenSaver");
+}
+
+// Without a portal: org.freedesktop.ScreenSaver.Inhibit (KDE, GNOME, Xfce
+// and others), which blocks idle blanking and idle suspend until UnInhibit or
+// until this connection closes.
+bool TakeScreenSaverInhibit(AresDesktopOs* self) {
+  g_autoptr(GVariant) reply = g_dbus_connection_call_sync(
+      self->session_bus, "org.freedesktop.ScreenSaver",
+      "/org/freedesktop/ScreenSaver", "org.freedesktop.ScreenSaver", "Inhibit",
+      g_variant_new("(ss)", "Ares", "Ares is working on a reply"),
+      G_VARIANT_TYPE("(u)"), G_DBUS_CALL_FLAGS_NONE, 2000, nullptr, nullptr);
+  if (reply == nullptr) return false;
+  g_variant_get(reply, "(u)", &self->screensaver_cookie);
+  return self->screensaver_cookie != 0;
 }
 
 // Asks the desktop not to suspend (the display may still sleep). Returns
-// false when no portal answers.
+// false when neither the portal nor a screensaver service answers.
 bool TakeInhibit(AresDesktopOs* self) {
-  if (!self->inhibit_handle.empty()) return true;
+  if (!self->inhibit_handle.empty() || self->screensaver_cookie != 0) {
+    return true;
+  }
   if (self->session_bus == nullptr) return false;
   GVariantBuilder options;
   g_variant_builder_init(&options, G_VARIANT_TYPE_VARDICT);
@@ -429,11 +484,13 @@ bool TakeInhibit(AresDesktopOs* self) {
       "/org/freedesktop/portal/desktop", "org.freedesktop.portal.Inhibit",
       "Inhibit", g_variant_new("(sua{sv})", "", 4u, &options),
       G_VARIANT_TYPE("(o)"), G_DBUS_CALL_FLAGS_NONE, 2000, nullptr, &error);
-  if (reply == nullptr) return false;
-  const gchar* handle = nullptr;
-  g_variant_get(reply, "(&o)", &handle);
-  if (handle != nullptr) self->inhibit_handle = handle;
-  return !self->inhibit_handle.empty();
+  if (reply != nullptr) {
+    const gchar* handle = nullptr;
+    g_variant_get(reply, "(&o)", &handle);
+    if (handle != nullptr) self->inhibit_handle = handle;
+  }
+  if (!self->inhibit_handle.empty()) return true;
+  return TakeScreenSaverInhibit(self);
 }
 
 void PowerCallCb(FlMethodChannel*, FlMethodCall* call, gpointer user_data) {
@@ -442,7 +499,7 @@ void PowerCallCb(FlMethodChannel*, FlMethodCall* call, gpointer user_data) {
   FlValue* args = fl_method_call_get_args(call);
   g_autoptr(FlMethodResponse) response = nullptr;
   if (strcmp(method, "isSupported") == 0) {
-    g_autoptr(FlValue) value = fl_value_new_bool(self->session_bus != nullptr);
+    g_autoptr(FlValue) value = fl_value_new_bool(KeepAwakeAvailable(self));
     response = FL_METHOD_RESPONSE(fl_method_success_response_new(value));
   } else if (strcmp(method, "setAwake") == 0) {
     const std::string owner = StringArg(args, "owner");

@@ -11690,6 +11690,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open System Settings'**
   String get capture_open_settings;
+
+  /// No description provided for @keep_awake_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep computer awake'**
+  String get keep_awake_title;
+
+  /// No description provided for @keep_awake_title_mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep screen on'**
+  String get keep_awake_title_mobile;
+
+  /// No description provided for @keep_awake_mode_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get keep_awake_mode_off;
+
+  /// No description provided for @keep_awake_mode_while_working.
+  ///
+  /// In en, this message translates to:
+  /// **'While working'**
+  String get keep_awake_mode_while_working;
+
+  /// No description provided for @keep_awake_mode_always.
+  ///
+  /// In en, this message translates to:
+  /// **'Always'**
+  String get keep_awake_mode_always;
+
+  /// No description provided for @keep_awake_off_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Never block system sleep (default).'**
+  String get keep_awake_off_help;
+
+  /// No description provided for @keep_awake_while_working_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Prevent idle sleep only while an agent turn is running.'**
+  String get keep_awake_while_working_help;
+
+  /// No description provided for @keep_awake_always_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Prevent idle sleep while Ares is open on this device.'**
+  String get keep_awake_always_help;
+
+  /// No description provided for @keep_awake_off_help_mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Let the screen turn off as usual (default).'**
+  String get keep_awake_off_help_mobile;
+
+  /// No description provided for @keep_awake_while_working_help_mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the screen on while an agent turn is running and Ares is open.'**
+  String get keep_awake_while_working_help_mobile;
+
+  /// No description provided for @keep_awake_always_help_mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the screen on while Ares is open.'**
+  String get keep_awake_always_help_mobile;
 }
 
 class _AppLocalizationsDelegate

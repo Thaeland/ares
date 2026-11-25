@@ -6977,4 +6977,42 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get capture_open_settings => 'Abrir Ajustes del Sistema';
+
+  @override
+  String get keep_awake_title => 'Keep computer awake';
+
+  @override
+  String get keep_awake_title_mobile => 'Keep screen on';
+
+  @override
+  String get keep_awake_mode_off => 'Off';
+
+  @override
+  String get keep_awake_mode_while_working => 'While working';
+
+  @override
+  String get keep_awake_mode_always => 'Always';
+
+  @override
+  String get keep_awake_off_help => 'Never block system sleep (default).';
+
+  @override
+  String get keep_awake_while_working_help =>
+      'Prevent idle sleep only while an agent turn is running.';
+
+  @override
+  String get keep_awake_always_help =>
+      'Prevent idle sleep while Ares is open on this device.';
+
+  @override
+  String get keep_awake_off_help_mobile =>
+      'Let the screen turn off as usual (default).';
+
+  @override
+  String get keep_awake_while_working_help_mobile =>
+      'Keep the screen on while an agent turn is running and Ares is open.';
+
+  @override
+  String get keep_awake_always_help_mobile =>
+      'Keep the screen on while Ares is open.';
 }

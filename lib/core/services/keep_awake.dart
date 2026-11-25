@@ -1,12 +1,19 @@
 /// Opt-in "keep the computer awake" policy.
 ///
 /// The policy is device-local, off by default, and documented as opt-in by
-/// the user in Settings. The current release keeps the Dart-side policy and
-/// the adapter seam; native runners are expected to implement the
-/// `com.hermesagent.ares/power` MethodChannel contract documented here. A
-/// runner that does not implement the channel degrades to a no-op — the
-/// policy is still read and stored, and the UI explains that wake control is
-/// unavailable on this platform.
+/// the user in Settings. Every runner implements the
+/// `com.hermesagent.ares/power` MethodChannel (`isSupported`, `setAwake`):
+///
+///  - Windows: `SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED)`;
+///  - macOS: an `IOPMAssertion` (PreventUserIdleSystemSleep);
+///  - Linux: the xdg-desktop-portal `Inhibit` request (suspend), or
+///    `org.freedesktop.ScreenSaver.Inhibit` without a portal; unsupported
+///    when neither answers;
+///  - Android: `FLAG_KEEP_SCREEN_ON` on the activity window;
+///  - iOS: `UIApplication.isIdleTimerDisabled`.
+///
+/// Settings shows the card only when the runner answers `isSupported` with
+/// true, so a platform without a working mechanism never offers it.
 library;
 
 import 'dart:async';
@@ -114,7 +121,11 @@ class MethodChannelKeepAwakeAdapter implements KeepAwakeAdapter {
 /// Applies the policy for the active session. A single controller owns the
 /// OS-level wake flag: closing an old chat cannot release a newer chat's flag.
 class KeepAwakeController {
-  KeepAwakeController({required this._adapter, required this._store}) {
+  KeepAwakeController({
+    required this._adapter,
+    required this._store,
+    this._background = false,
+  }) {
     final mode = _store?.read() ?? KeepAwakeMode.off;
     _apply(mode, working: false);
   }
@@ -124,6 +135,7 @@ class KeepAwakeController {
   final String _owner = 'keep-awake-${DateTime.now().microsecondsSinceEpoch}';
   bool _awake = false;
   bool _busy = false;
+  bool _background;
 
   /// Current policy, mirroring the store.
   KeepAwakeMode get mode => _store?.read() ?? KeepAwakeMode.off;
@@ -131,8 +143,20 @@ class KeepAwakeController {
   /// Whether the OS is currently told to stay awake.
   bool get isAwake => _awake;
 
+  /// Whether the app is in the background (mobile `paused`, or the app is
+  /// going away). A backgrounded app never holds the wake request; it is
+  /// taken again on resume if the policy and the work still call for it.
+  /// A minimised desktop window is `hidden`, not `paused`, and keeps it: the
+  /// point of the setting is that a long turn finishes while you are away.
+  void setBackground(bool background) {
+    if (_background == background) return;
+    _background = background;
+    _apply(_store?.read() ?? KeepAwakeMode.off, working: _busy);
+  }
+
   /// Begin/end a turn. A turn in flight keeps the computer awake when the
-  /// policy is `whileWorking` or `always`.
+  /// policy is `whileWorking` or `always`. Every way a turn ends (finished,
+  /// failed, cancelled or interrupted) reports `false` here and releases it.
   void setWorking(bool working) {
     if (_busy == working) return;
     _busy = working;
@@ -151,11 +175,13 @@ class KeepAwakeController {
   }
 
   void _apply(KeepAwakeMode mode, {required bool working}) {
-    final shouldAwake = switch (mode) {
-      KeepAwakeMode.off => false,
-      KeepAwakeMode.whileWorking => working,
-      KeepAwakeMode.always => true,
-    };
+    final shouldAwake =
+        !_background &&
+        switch (mode) {
+          KeepAwakeMode.off => false,
+          KeepAwakeMode.whileWorking => working,
+          KeepAwakeMode.always => true,
+        };
     if (_awake == shouldAwake) return;
     _awake = shouldAwake;
     _adapter.setAwake(owner: _owner, enabled: shouldAwake);

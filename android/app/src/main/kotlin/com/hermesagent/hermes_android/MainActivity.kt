@@ -18,6 +18,8 @@ class MainActivity : FlutterActivity() {
     private val launchChannelName = "com.hermesagent.hermes_android/launch"
     private val keepAliveChannelName = "com.hermesagent.hermes_android/keepalive"
     private val recordingScreenOwners = mutableSetOf<String>()
+    // Keep-awake (Settings → Keep screen on): owners on com.hermesagent.ares/power.
+    private val keepAwakeOwners = mutableSetOf<String>()
     private val quickChatAction = "com.hermesagent.hermes_android.action.QUICK_CHAT"
     private val maxSharedItems = 10
     private val maxSharedBytes = 64L * 1024L * 1024L
@@ -52,13 +54,35 @@ class MainActivity : FlutterActivity() {
                     result.error("invalid_arguments", "Recording owner and enabled are required", null)
                 } else {
                     if (enabled) recordingScreenOwners.add(owner) else recordingScreenOwners.remove(owner)
-                    if (recordingScreenOwners.isEmpty()) {
-                        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                    } else {
-                        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                    }
+                    updateKeepScreenOn()
                     result.success(null)
                 }
+            }
+        }
+        // Same contract as the desktop runners: isSupported, setAwake {owner, enabled}.
+        // Android keeps the screen on while this window is visible; the flag has no
+        // effect once the activity is in the background, and Dart also releases it
+        // when the app is paused.
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger,
+            "com.hermesagent.ares/power").setMethodCallHandler { call, result ->
+            when (call.method) {
+                "isSupported" -> result.success(true)
+                "setAwake" -> {
+                    val owner = call.argument<String>("owner")
+                    val enabled = call.argument<Boolean>("enabled")
+                    if (owner.isNullOrBlank() || owner.length > 128 || enabled == null) {
+                        result.error("bad-args", "setAwake expects {owner, enabled}", null)
+                    } else {
+                        if (enabled) {
+                            if (keepAwakeOwners.size < 32) keepAwakeOwners.add(owner)
+                        } else {
+                            keepAwakeOwners.remove(owner)
+                        }
+                        updateKeepScreenOn()
+                        result.success(null)
+                    }
+                }
+                else -> result.notImplemented()
             }
         }
         attachmentPdfPreview?.close()
@@ -128,8 +152,17 @@ class MainActivity : FlutterActivity() {
         super.cleanUpFlutterEngine(flutterEngine)
     }
 
+    private fun updateKeepScreenOn() {
+        if (recordingScreenOwners.isEmpty() && keepAwakeOwners.isEmpty()) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+    }
+
     override fun onDestroy() {
         recordingScreenOwners.clear()
+        keepAwakeOwners.clear()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         handsFreeVoice?.setForeground(false)
         attachmentPdfPreview?.close()

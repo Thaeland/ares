@@ -493,6 +493,9 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     _keepAwake = KeepAwakeController(
       adapter: const MethodChannelKeepAwakeAdapter(),
       store: KeepAwakePolicyStore(widget.connManager.prefs),
+      background:
+          lifecycle == AppLifecycleState.paused ||
+          lifecycle == AppLifecycleState.detached,
     )..setWorking(_hasActiveTurn);
     _shortcutsStore = ShortcutsStore(widget.connManager.prefs);
     // Native tray, quick entry, hotkey and power events: desktop primary
@@ -601,6 +604,15 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     );
     _syncOngoingChats();
     _keepAlive.onAppLifecycleState(state, hasActiveTurn: _hasActiveTurn);
+    // Keep-awake is released in the background (paused) and on exit
+    // (detached), and taken again on resume if still wanted. A minimised
+    // desktop window reports hidden and keeps it.
+    if (state == AppLifecycleState.resumed) {
+      _keepAwake?.setBackground(false);
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      _keepAwake?.setBackground(true);
+    }
   }
 
   void _pruneApprovalActions() {

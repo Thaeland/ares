@@ -691,6 +691,20 @@ void main() {
           final previousOverrides = HttpOverrides.current;
           HttpOverrides.global = null;
           addTearDown(() => HttpOverrides.global = previousOverrides);
+          // A runner that keeps the device awake (the card is hidden
+          // otherwise).
+          final messenger =
+              TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+          messenger.setMockMethodCallHandler(
+            MethodChannelKeepAwakeAdapter.channel,
+            (call) async => call.method == 'isSupported' ? true : null,
+          );
+          addTearDown(
+            () => messenger.setMockMethodCallHandler(
+              MethodChannelKeepAwakeAdapter.channel,
+              null,
+            ),
+          );
 
           final fixture = (await tester.runAsync(_ShellGatewayFixture.start))!;
           addTearDown(fixture.close);

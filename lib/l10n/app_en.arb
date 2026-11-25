@@ -3068,5 +3068,16 @@
   "capture_screen_failed": "Couldn't capture the screen. Try again.",
   "capture_permission_title": "Allow screen recording",
   "capture_permission_body": "To capture a window, Ares needs the Screen Recording permission. Turn on Ares in System Settings > Privacy & Security > Screen Recording, then try again.",
-  "capture_open_settings": "Open System Settings"
+  "capture_open_settings": "Open System Settings",
+  "keep_awake_title": "Keep computer awake",
+  "keep_awake_title_mobile": "Keep screen on",
+  "keep_awake_mode_off": "Off",
+  "keep_awake_mode_while_working": "While working",
+  "keep_awake_mode_always": "Always",
+  "keep_awake_off_help": "Never block system sleep (default).",
+  "keep_awake_while_working_help": "Prevent idle sleep only while an agent turn is running.",
+  "keep_awake_always_help": "Prevent idle sleep while Ares is open on this device.",
+  "keep_awake_off_help_mobile": "Let the screen turn off as usual (default).",
+  "keep_awake_while_working_help_mobile": "Keep the screen on while an agent turn is running and Ares is open.",
+  "keep_awake_always_help_mobile": "Keep the screen on while Ares is open."
 }
