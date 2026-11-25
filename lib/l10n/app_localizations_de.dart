@@ -4536,6 +4536,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get ng_retry => 'Erneut versuchen';
 
   @override
+  String get ng_project_home => 'Home';
+
+  @override
+  String get ng_choose_project => 'Projekt auswählen';
+
+  @override
+  String ng_project_cwd_fallback(String path) {
+    return 'Der Projektordner war nicht verfügbar. Dieser Chat läuft daher in $path.';
+  }
+
+  @override
+  String get ng_project_create_uncertain =>
+      'Das Gateway hat diesen Chat möglicherweise erstellt, aber nicht bestätigt. Prüfe die Chats, bevor du einen weiteren startest. Diese Anfrage wird nicht automatisch wiederholt.';
+
+  @override
   String get ng_what_should_we_work_on => 'Woran sollen wir arbeiten?';
 
   @override

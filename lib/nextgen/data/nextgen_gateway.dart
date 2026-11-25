@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/services/connection_manager.dart';
 import '../../core/services/dashboard_api_client.dart';
@@ -13,6 +14,7 @@ import '../../core/services/desktop_gateway_client.dart';
 import '../../core/services/hermes_sign_in.dart';
 import '../../core/services/ws_client.dart';
 import '../nextgen_l10n.dart';
+import 'nextgen_projects.dart';
 
 enum NgConnectionPhase {
   idle,
@@ -72,6 +74,11 @@ class NextGenGateway extends ChangeNotifier {
     api = DashboardApiClient.withDashboard(this.dashboard, profile: profile);
     writes = DashboardSessionWrites(this.dashboard, profile: profile);
   }
+
+  NgProjects? _projects;
+
+  NgProjects projects(SharedPreferences preferences) =>
+      _projects ??= NgProjects(this, preferences);
 
   final SavedConnection connection;
   final GatewayUrl url;
@@ -141,6 +148,7 @@ class NextGenGateway extends ChangeNotifier {
   int _attempt = 0;
   int _ticketRejections = 0;
   Completer<void>? _wake;
+  final _connectionWaits = <Completer<WsClient>>{};
   DateTime? _connectedAt;
 
   static const _backoff = [1, 2, 4, 8, 16, 30];
@@ -219,7 +227,7 @@ class NextGenGateway extends ChangeNotifier {
           }
           rethrow;
         }
-        if (ticket == null) return;
+        if (ticket == null || !_running || _disposed) return;
         client = WsClient(
           dashboard.baseUrl,
           ticket: ticket,
@@ -236,7 +244,12 @@ class NextGenGateway extends ChangeNotifier {
           if (!closed.isCompleted) closed.complete();
         };
         await client.connect();
-        readyFrame = await client.waitForGatewayReady();
+        final ready = await client.waitForGatewayReady();
+        if (!_running || _disposed) {
+          client.close();
+          return;
+        }
+        readyFrame = ready;
         _ws = client;
         _connectedAt = DateTime.now();
         _ticketRejections = 0;
@@ -255,6 +268,7 @@ class NextGenGateway extends ChangeNotifier {
         await _backoffWait(ngL.ng_connection_lost);
       } on _Retry catch (e) {
         client?.close();
+        if (!_running || _disposed) return;
         await _backoffWait(e.message);
       } catch (e) {
         client?.close();
@@ -311,10 +325,14 @@ class NextGenGateway extends ChangeNotifier {
       ),
     );
     final wake = _wake = Completer<void>();
-    await Future.any([
-      wake.future,
-      Future<void>.delayed(Duration(seconds: seconds)),
-    ]);
+    final timer = Timer(Duration(seconds: seconds), () {
+      if (!wake.isCompleted) wake.complete();
+    });
+    try {
+      await wake.future;
+    } finally {
+      timer.cancel();
+    }
   }
 
   /// Sends one JSON-RPC call on the live socket and returns its `result`.
@@ -352,7 +370,11 @@ class NextGenGateway extends ChangeNotifier {
     if (ws != null && ws.isConnected) return ws;
     start();
     retry();
+    if (_disposed) {
+      throw StateError(ngL.ng_the_gateway_connection_dropped_try_again);
+    }
     final done = Completer<WsClient>();
+    _connectionWaits.add(done);
     void check() {
       final current = _ws;
       if (current != null && current.isConnected && !done.isCompleted) {
@@ -371,6 +393,7 @@ class NextGenGateway extends ChangeNotifier {
     } on TimeoutException {
       throw StateError(_state.reason ?? "Couldn't reach the gateway.");
     } finally {
+      _connectionWaits.remove(done);
       removeListener(check);
     }
   }
@@ -404,6 +427,13 @@ class NextGenGateway extends ChangeNotifier {
 
   void stop() {
     _running = false;
+    for (final pending in _connectionWaits.toList()) {
+      if (!pending.isCompleted) {
+        pending.completeError(
+          StateError(ngL.ng_the_gateway_connection_dropped_try_again),
+        );
+      }
+    }
     final wake = _wake;
     if (wake != null && !wake.isCompleted) wake.complete();
     _ws?.close();
@@ -413,6 +443,7 @@ class NextGenGateway extends ChangeNotifier {
 
   @override
   void dispose() {
+    _projects?.close();
     stop();
     _disposed = true;
     _events.close();

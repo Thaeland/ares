@@ -4498,6 +4498,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ng_retry => 'Retry';
 
   @override
+  String get ng_project_home => 'Home';
+
+  @override
+  String get ng_choose_project => 'Choose a project';
+
+  @override
+  String ng_project_cwd_fallback(String path) {
+    return 'The project folder wasn\'t available, so this chat runs in $path.';
+  }
+
+  @override
+  String get ng_project_create_uncertain =>
+      'The gateway may have created this chat, but did not confirm it. Check Chats before starting another; this request will not be retried automatically.';
+
+  @override
   String get ng_what_should_we_work_on => 'What should we work on?';
 
   @override

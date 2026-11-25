@@ -4539,6 +4539,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ng_retry => 'Réessayer';
 
   @override
+  String get ng_project_home => 'Accueil';
+
+  @override
+  String get ng_choose_project => 'Choisir un projet';
+
+  @override
+  String ng_project_cwd_fallback(String path) {
+    return 'Le dossier du projet n’était pas disponible ; cette conversation s’exécute donc dans $path.';
+  }
+
+  @override
+  String get ng_project_create_uncertain =>
+      'La passerelle a peut-être créé cette conversation sans le confirmer. Vérifiez les conversations avant d’en démarrer une autre ; cette demande ne sera pas relancée automatiquement.';
+
+  @override
   String get ng_what_should_we_work_on => 'Sur quoi voulez-vous travailler ?';
 
   @override

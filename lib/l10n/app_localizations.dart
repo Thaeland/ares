@@ -7554,6 +7554,30 @@ abstract class AppLocalizations {
   /// **'Retry'**
   String get ng_retry;
 
+  /// No description provided for @ng_project_home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get ng_project_home;
+
+  /// No description provided for @ng_choose_project.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a project'**
+  String get ng_choose_project;
+
+  /// No description provided for @ng_project_cwd_fallback.
+  ///
+  /// In en, this message translates to:
+  /// **'The project folder wasn\'t available, so this chat runs in {path}.'**
+  String ng_project_cwd_fallback(String path);
+
+  /// No description provided for @ng_project_create_uncertain.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway may have created this chat, but did not confirm it. Check Chats before starting another; this request will not be retried automatically.'**
+  String get ng_project_create_uncertain;
+
   /// No description provided for @ng_what_should_we_work_on.
   ///
   /// In en, this message translates to:
