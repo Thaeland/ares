@@ -1054,11 +1054,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         hasDashboardAuth) {
       try {
         _attachNormalSession();
-        _desktopGateway = _normalSession!.client;
+        final gateway = _normalSession!.client;
+        _desktopGateway = gateway;
         // The catalogue is per connection: a bound transport invalidates any
-        // failure recorded before the socket existed.
-        _slashController.useRefusals(_desktopGateway!.slashRefusals);
-        _slashController.invalidate();
+        // failure recorded before the socket existed. An application session
+        // can exist without a Desktop client (routing/test owners).
+        if (gateway != null) {
+          _slashController.useRefusals(gateway.slashRefusals);
+          _slashController.invalidate();
+        }
       } on ArgumentError {
         // The regular mobile chat remains usable; selection surfaces the
         // actionable configuration error when Desktop attachments are needed.
