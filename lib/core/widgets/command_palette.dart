@@ -70,7 +70,12 @@ class CommandPalette extends StatefulWidget {
 }
 
 class CommandPaletteState extends State<CommandPalette> {
+  /// Tallest the dialog's action list grows on a roomy screen.
+  static const double maxListHeight = 320;
+
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scroll = ScrollController();
+  final GlobalKey _selectedKey = GlobalKey();
   List<PaletteAction> _filtered = const [];
   int _selectedIndex = 0;
 
@@ -83,6 +88,7 @@ class CommandPaletteState extends State<CommandPalette> {
   @override
   void dispose() {
     _controller.dispose();
+    _scroll.dispose();
     super.dispose();
   }
 
@@ -124,6 +130,35 @@ class CommandPaletteState extends State<CommandPalette> {
     if (_filtered.isEmpty) return;
     final next = (_selectedIndex + delta) % _filtered.length;
     setState(() => _selectedIndex = next < 0 ? next + _filtered.length : next);
+    // The list can be short (landscape phone, keyboard up): keep the
+    // keyboard selection on screen.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _revealSelection());
+  }
+
+  void _revealSelection() {
+    if (!mounted || !_scroll.hasClients) return;
+    final item = _selectedKey.currentContext;
+    if (item != null) {
+      Scrollable.ensureVisible(
+        item,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+      Scrollable.ensureVisible(
+        item,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+      );
+      return;
+    }
+    // Not built yet (lazy list): jump near it, then align precisely.
+    final position = _scroll.position;
+    final fraction = _filtered.length <= 1
+        ? 0.0
+        : _selectedIndex / (_filtered.length - 1);
+    _scroll.jumpTo(position.maxScrollExtent * fraction);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final built = _selectedKey.currentContext;
+      if (mounted && built != null) Scrollable.ensureVisible(built);
+    });
   }
 
   KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
@@ -185,11 +220,14 @@ class CommandPaletteState extends State<CommandPalette> {
     final list = _filtered.isEmpty
         ? const Center(child: Text('No matching actions'))
         : ListView.builder(
+            key: const Key('app-command-palette-list'),
+            controller: _scroll,
             itemCount: _filtered.length,
             itemBuilder: (context, index) {
               final action = _filtered[index];
               final selected = index == _selectedIndex;
               return Material(
+                key: selected ? _selectedKey : null,
                 color: selected
                     ? theme.colorScheme.surfaceContainerHighest
                     : Colors.transparent,
@@ -210,58 +248,96 @@ class CommandPaletteState extends State<CommandPalette> {
               );
             },
           );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: isNarrow ? MainAxisSize.max : MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  key: const Key('app-command-palette-query'),
-                  controller: _controller,
-                  autofocus: true,
-                  onChanged: _filter,
-                  onSubmitted: (_) => _selectCurrent(),
-                  decoration: const InputDecoration(
-                    hintText: 'Type to filter actions…',
-                    prefixIcon: Icon(Icons.search),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 12,
-                    ),
-                  ),
+    final header = Padding(
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              key: const Key('app-command-palette-query'),
+              controller: _controller,
+              autofocus: true,
+              onChanged: _filter,
+              onSubmitted: (_) => _selectCurrent(),
+              decoration: const InputDecoration(
+                hintText: 'Type to filter actions…',
+                prefixIcon: Icon(Icons.search),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 12,
                 ),
               ),
-              if (isNarrow)
-                IconButton(
-                  tooltip: context.sharedL10n.close,
-                  icon: const Icon(Icons.close),
-                  onPressed: _close,
-                ),
-            ],
+            ),
           ),
-        ),
-        if (isNarrow)
-          Expanded(child: list)
-        else
-          SizedBox(height: 320, child: list),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 2,
-            children: const [
-              Text('↑↓ to move', style: TextStyle(fontSize: 12)),
-              Text('Enter to run', style: TextStyle(fontSize: 12)),
-              Text('Esc to close', style: TextStyle(fontSize: 12)),
-            ],
-          ),
-        ),
-      ],
+          if (isNarrow)
+            IconButton(
+              tooltip: context.sharedL10n.close,
+              icon: const Icon(Icons.close),
+              onPressed: _close,
+            ),
+        ],
+      ),
+    );
+    final footer = Padding(
+      padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
+      child: Wrap(
+        spacing: 10,
+        runSpacing: 2,
+        children: const [
+          Text('↑↓ to move', style: TextStyle(fontSize: 12)),
+          Text('Enter to run', style: TextStyle(fontSize: 12)),
+          Text('Esc to close', style: TextStyle(fontSize: 12)),
+        ],
+      ),
+    );
+    if (isNarrow) {
+      // Full-screen takeover: the Scaffold already resizes above the
+      // keyboard, so the list takes whatever is left.
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          header,
+          Expanded(child: list),
+          footer,
+        ],
+      );
+    }
+    // Dialog: it already sits above the keyboard (Dialog pads by the
+    // MediaQuery view insets), so size the list from the height that is left
+    // instead of a fixed 320 px. Landscape phones and tablets with the
+    // keyboard up get a shorter, scrolling list; very short windows drop the
+    // key hints and, at worst, scroll the whole palette.
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final height = constraints.maxHeight;
+        if (height.isFinite && height < 120) {
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                header,
+                SizedBox(height: 96, child: list),
+              ],
+            ),
+          );
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            header,
+            Flexible(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: maxListHeight),
+                child: list,
+              ),
+            ),
+            if (!height.isFinite || height >= 240) footer,
+          ],
+        );
+      },
     );
   }
 }
