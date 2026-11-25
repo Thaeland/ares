@@ -3,14 +3,18 @@
 // consent, R3 open-fence revisions). The probes are the re-check's own
 // inputs, kept as permanent tests. Only APIs that existed before each fix are
 // used, so every group shows red on the tree before its commit.
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/render/artifact_library.dart';
 import 'package:hermes_android/core/render/plugin_slots.dart';
 import 'package:hermes_android/core/render/rich_blocks.dart';
 import 'package:hermes_android/core/render/rich_transcript.dart';
+import 'package:hermes_android/core/screens/chat_screen.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/hermes_sign_in.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
@@ -21,8 +25,10 @@ import 'package:hermes_android/nextgen/nextgen_preferences.dart';
 import 'package:hermes_android/nextgen/theme/nextgen_theme.dart';
 import 'package:hermes_android/nextgen/ui/chat_view.dart';
 import 'package:hermes_android/nextgen/ui/nextgen_scope.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'support/fake_voice_composer_adapter.dart';
 import 'support/pump_chat_updates.dart';
 
 /// Per call, on the re-check's inputs.
@@ -105,6 +111,166 @@ void _emit(
 ]) => gateway.debugEmit(
   StreamEvent(type: type, data: data ?? const {}, sessionId: runtime),
 );
+
+SavedConnection _classicConnection(String id) => SavedConnection(
+  id: id,
+  label: 'Fixture $id',
+  host: 'fixture.invalid',
+  port: 8642,
+  apiKey: 'fixture-key',
+);
+
+/// A Classic REST gateway: stored history plus one controllable SSE stream
+/// per prompt.
+class _Rest extends http.BaseClient {
+  _Rest(this.rows);
+
+  List<Map<String, dynamic>> rows;
+  final streams = <StreamController<List<int>>>[];
+  final prompts = <String>[];
+
+  http.StreamedResponse _json(Object body) => http.StreamedResponse(
+    Stream.value(utf8.encode(jsonEncode(body))),
+    200,
+    headers: {'content-type': 'application/json'},
+  );
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    final path = request.url.path;
+    if (request.method == 'POST' && path.endsWith('/v1/chat/completions')) {
+      final body =
+          jsonDecode(await request.finalize().bytesToString())
+              as Map<String, dynamic>;
+      final messages = (body['messages'] as List?) ?? const [];
+      prompts.add(
+        messages.isEmpty ? '' : '${(messages.last as Map)['content']}',
+      );
+      final stream = StreamController<List<int>>();
+      streams.add(stream);
+      return http.StreamedResponse(
+        stream.stream,
+        200,
+        headers: {'content-type': 'text/event-stream'},
+      );
+    }
+    if (request.method == 'GET' && path.endsWith('/messages')) {
+      final offset = int.parse(request.url.queryParameters['offset'] ?? '0');
+      return _json({'data': offset == 0 ? rows : const []});
+    }
+    if (request.method == 'GET' && path.startsWith('/api/sessions/')) {
+      return _json({
+        'session': {'id': path.split('/').last, 'archived': false},
+      });
+    }
+    return http.StreamedResponse(Stream.value(utf8.encode('{}')), 404);
+  }
+
+  void delta(int i, String text) => streams[i].add(
+    utf8.encode(
+      'data: ${jsonEncode({
+        'choices': [
+          {
+            'delta': {'content': text},
+          },
+        ],
+      })}\n\n',
+    ),
+  );
+
+  void finish(int i) {
+    streams[i].add(utf8.encode('data: [DONE]\n\n'));
+    unawaited(streams[i].close());
+  }
+}
+
+Widget _classicChat(SavedConnection connection, String sessionId, _Rest rest) =>
+    MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: ChatScreen(
+        key: ValueKey('${connection.id}/$sessionId'),
+        connection: connection,
+        session: Session(
+          id: sessionId,
+          title: 'Chat $sessionId',
+          model: 'fixture',
+          source: 'api_server',
+          messageCount: rest.rows.length,
+          isActive: false,
+          preview: '',
+          startedAt: 1,
+        ),
+        testApiClient: ApiClient(
+          baseUrl: 'http://fixture.invalid',
+          apiKey: 'fixture-key',
+          httpClient: rest,
+        ),
+        testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
+      ),
+    );
+
+/// True when some rendered span containing [needle] has a tap recogniser,
+/// as an ordinary Markdown link does.
+bool _tappableLink(WidgetTester tester, String needle) {
+  var found = false;
+  for (final rich in tester.widgetList<RichText>(find.byType(RichText))) {
+    rich.text.visitChildren((span) {
+      if (span is TextSpan &&
+          span.recognizer is TapGestureRecognizer &&
+          (span.text ?? '').contains(needle)) {
+        found = true;
+      }
+      return true;
+    });
+  }
+  return found;
+}
+
+const _launcher = MethodChannel('plugins.flutter.io/url_launcher');
+
+/// Records url_launcher launches and reports each as opened.
+List<String> _captureLaunches(WidgetTester tester) {
+  final launched = <String>[];
+  tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(_launcher, (
+    call,
+  ) async {
+    if (call.method == 'launch') {
+      launched.add('${(call.arguments as Map)['url']}');
+      return true;
+    }
+    return call.method == 'canLaunch';
+  });
+  addTearDown(
+    () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      _launcher,
+      null,
+    ),
+  );
+  return launched;
+}
+
+/// Taps the link span that contains [needle], as a user tap would.
+Future<void> _tapLink(WidgetTester tester, String needle) async {
+  for (final rich in tester.widgetList<RichText>(find.byType(RichText))) {
+    TapGestureRecognizer? hit;
+    rich.text.visitChildren((span) {
+      if (span is TextSpan &&
+          span.recognizer is TapGestureRecognizer &&
+          (span.text ?? '').contains(needle)) {
+        hit = span.recognizer as TapGestureRecognizer;
+        return false;
+      }
+      return true;
+    });
+    if (hit != null) {
+      hit!.onTap!();
+      await tester.pump();
+      return;
+    }
+  }
+  fail('no tappable link contains $needle');
+}
 
 String _base64(int length) =>
     List.generate(length, (i) => 'ABCDEFGHabcdefgh0123+/'[i % 22]).join();
@@ -406,6 +572,75 @@ void main() {
       expect(ms, lessThan(_frameBudgetMs), reason: 'expand frame ${ms}ms');
       expect(find.text('cat.png'), findsOneWidget);
       await tester.pumpWidget(const SizedBox());
+    });
+  });
+
+  group('R2 provider URLs are ordinary tappable links', () {
+    const providers = [
+      'https://www.youtube.com/watch?v=abc123',
+      'https://www.tiktok.com/@a/video/1',
+      'https://maps.google.com/?q=cafe',
+    ];
+    final reply =
+        'Video:\n\n${providers[0]}\n\nClip:\n\n${providers[1]}\n\n'
+        'Map:\n\n${providers[2]}\n\n'
+        'Also [the clip](https://youtu.be/xyz) and '
+        'https://eviltiktok.com/@a/video/1\n';
+
+    void expectPlainLinks(WidgetTester tester) {
+      for (final url in [...providers, 'eviltiktok.com']) {
+        expect(_tappableLink(tester, url), isTrue, reason: url);
+      }
+      expect(_tappableLink(tester, 'the clip'), isTrue);
+      expect(find.text('Load once'), findsNothing);
+      expect(find.textContaining('Always allow'), findsNothing);
+      expect(find.textContaining('card?'), findsNothing);
+    }
+
+    testWidgets('NextGen: each provider URL opens like any link', (
+      tester,
+    ) async {
+      final launched = _captureLaunches(tester);
+      final gateway = NextGenGateway(_ngConnection('c1'));
+      addTearDown(gateway.dispose);
+      final chat = _ngChat(gateway, 'chat-a', [
+        {'role': 'user', 'content': 'find'},
+        {'role': 'assistant', 'content': reply},
+      ]);
+      await _pumpNg(tester, gateway, chat);
+      expectPlainLinks(tester);
+      for (final url in providers) {
+        await _tapLink(tester, url);
+      }
+      await _tapLink(tester, 'the clip');
+      expect(launched, [...providers, 'https://youtu.be/xyz']);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('Classic: each provider URL opens like any link', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(900, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final launched = _captureLaunches(tester);
+      await tester.pumpWidget(
+        _classicChat(
+          _classicConnection('cx'),
+          'chat-a',
+          _Rest([
+            {'id': 1, 'role': 'user', 'content': 'find'},
+            {'id': 2, 'role': 'assistant', 'content': reply},
+          ]),
+        ),
+      );
+      await pumpChatUpdates(tester);
+      expectPlainLinks(tester);
+      for (final url in providers) {
+        await _tapLink(tester, url);
+      }
+      await _tapLink(tester, 'the clip');
+      await pumpChatUpdates(tester);
+      expect(launched, [...providers, 'https://youtu.be/xyz']);
     });
   });
 }

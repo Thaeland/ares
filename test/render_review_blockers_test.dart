@@ -2,7 +2,6 @@
 // Each group names the review blocker it covers. The file uses only APIs that
 // existed before the fix, so the same cases show red on the reviewed tree.
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,10 +28,8 @@ import 'package:hermes_android/nextgen/nextgen_preferences.dart';
 import 'package:hermes_android/nextgen/theme/nextgen_theme.dart';
 import 'package:hermes_android/nextgen/ui/chat_view.dart';
 import 'package:hermes_android/nextgen/ui/nextgen_scope.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'support/fake_voice_composer_adapter.dart';
 import 'support/pump_chat_updates.dart';
 
 const _frameBudgetMs = 50;
@@ -174,66 +171,6 @@ const _finalDash =
     'Here it is:\n\n```html\n<!doctype html><html><head>'
     '<title>Dash</title></head><body><p>Part one</p>'
     '<p>FINAL PART</p></body></html>\n```\n';
-
-/// Serves one Classic chat's history over the REST fixture.
-class _History extends http.BaseClient {
-  _History(this.rows);
-
-  final List<Map<String, dynamic>> rows;
-
-  http.StreamedResponse _json(Object body) => http.StreamedResponse(
-    Stream.value(utf8.encode(jsonEncode(body))),
-    200,
-    headers: {'content-type': 'application/json'},
-  );
-
-  @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) async {
-    final path = request.url.path;
-    if (request.method == 'GET' && path.endsWith('/messages')) {
-      final offset = int.parse(request.url.queryParameters['offset'] ?? '0');
-      return _json({'data': offset == 0 ? rows : const []});
-    }
-    if (request.method == 'GET' && path.startsWith('/api/sessions/')) {
-      return _json({
-        'session': {'id': path.split('/').last, 'archived': false},
-      });
-    }
-    return http.StreamedResponse(Stream.value(utf8.encode('{}')), 404);
-  }
-}
-
-Widget _classicChat(String sessionId, List<Map<String, dynamic>> rows) =>
-    MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: ChatScreen(
-        key: ValueKey(sessionId),
-        connection: SavedConnection(
-          id: 'classic-fixture',
-          label: 'Fixture',
-          host: 'fixture.invalid',
-          port: 8642,
-          apiKey: 'fixture-key',
-        ),
-        session: Session(
-          id: sessionId,
-          title: 'Chat $sessionId',
-          model: 'fixture',
-          source: 'api_server',
-          messageCount: rows.length,
-          isActive: false,
-          preview: '',
-          startedAt: 1,
-        ),
-        testApiClient: ApiClient(
-          baseUrl: 'http://fixture.invalid',
-          apiKey: 'fixture-key',
-          httpClient: _History(rows),
-        ),
-        testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
-      ),
-    );
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -693,82 +630,8 @@ void main() {
   });
 
   group('B5 chat choices stay in their chat', () {
-    testWidgets('NextGen: always-allow in chat A is not consent in chat B', (
-      tester,
-    ) async {
-      final prefs = await SharedPreferences.getInstance();
-      final gateway = NextGenGateway(_connection('c1'));
-      NgChatController open(String id) {
-        final chat = NgChatController(gateway, sessionId: id)
-          ..runtimeId = 'rt-$id';
-        chat.debugApplyHistory([
-          {'role': 'user', 'content': 'Find it'},
-          {
-            'role': 'assistant',
-            'content': 'Here:\n\nhttps://www.tiktok.com/@a/video/1\n',
-          },
-        ]);
-        addTearDown(chat.dispose);
-        return chat;
-      }
-
-      final a = open('chat-a');
-      final b = open('chat-b');
-      addTearDown(gateway.dispose);
-      await _pumpNg(tester, prefs, gateway, a);
-      await tester.tap(find.textContaining('Always allow tiktok'));
-      await tester.pump();
-      expect(find.text('tiktok /@a/video/1'), findsOneWidget);
-
-      await _pumpNg(tester, prefs, gateway, b);
-      expect(find.text('Load once'), findsOneWidget);
-      expect(find.text('tiktok /@a/video/1'), findsNothing);
-
-      await tester.tap(find.text('Load once'));
-      await tester.pump();
-      await _pumpNg(tester, prefs, gateway, a);
-      expect(find.text('tiktok /@a/video/1'), findsOneWidget);
-      await tester.pumpWidget(const SizedBox());
-    });
-
-    testWidgets('Classic: always-allow in chat A is not consent in chat B', (
-      tester,
-    ) async {
-      await tester.binding.setSurfaceSize(const Size(900, 1400));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-      SharedPreferences.setMockInitialValues({'verbose_mode': true});
-      final rows = [
-        {'id': 1, 'role': 'user', 'content': 'Find it'},
-        {
-          'id': 2,
-          'role': 'assistant',
-          'content':
-              'Here:\n\nhttps://www.youtube.com/watch?v=abc123\n\n'
-              'Preview at http://localhost:3000/ when ready.',
-        },
-      ];
-      await tester.pumpWidget(_classicChat('chat-a', rows));
-      await pumpChatUpdates(tester);
-      expect(find.text('Load once'), findsOneWidget);
-      await tester.tap(find.textContaining('Always allow youtube'));
-      await pumpChatUpdates(tester);
-      expect(find.text('youtube abc123'), findsOneWidget);
-
-      await tester.pumpWidget(_classicChat('chat-b', rows));
-      await pumpChatUpdates(tester);
-      expect(find.text('Load once'), findsOneWidget);
-      expect(find.text('youtube abc123'), findsNothing);
-
-      await tester.pumpWidget(_classicChat('chat-a', rows));
-      await pumpChatUpdates(tester);
-      expect(find.text('youtube abc123'), findsOneWidget);
-      // B4: a dev-server link in the reply is not a dead composer chip.
-      expect(
-        find.byKey(const Key('preview-suggestion-http://localhost:3000/')),
-        findsNothing,
-      );
-    });
-
+    // Embed consent per chat was removed with the consent card itself
+    // (render_recheck_blockers_test.dart R2): provider URLs are plain links.
     testWidgets('a contribution granted for one connection is not another', (
       tester,
     ) async {
@@ -789,71 +652,6 @@ void main() {
       await tester.pumpWidget(open('c2'));
       expect(find.text('Grant Notes'), findsOneWidget);
       expect(find.text('Revoke Notes'), findsNothing);
-    });
-  });
-
-  group('B6 embed providers match exact https hosts', () {
-    test('look-alike and plain-http hosts are ordinary links', () {
-      for (final url in [
-        'https://eviltiktok.com/@a/video/1',
-        'https://maps.google.evil.example/x',
-        'https://tiktok.com.evil.example/@a/video/1',
-        'https://google.com.evil.example/maps/x',
-        'http://www.youtube.com/watch?v=abc123',
-        'http://www.tiktok.com/@a/video/1',
-        'https://www.youtube.com:8443/watch?v=abc123',
-      ]) {
-        expect(detectProviderEmbed(url), isNull, reason: url);
-      }
-      expect(
-        detectProviderEmbed('https://www.tiktok.com/@a/video/1')?.provider,
-        'tiktok',
-      );
-      expect(
-        detectProviderEmbed('https://vm.tiktok.com/x')?.provider,
-        'tiktok',
-      );
-      expect(
-        detectProviderEmbed('https://maps.google.com/?q=cafe')?.provider,
-        'maps',
-      );
-      expect(
-        detectProviderEmbed('https://www.google.com/maps/place/x')?.provider,
-        'maps',
-      );
-      expect(
-        detectProviderEmbed('https://youtu.be/abc123')?.externalId,
-        'abc123',
-      );
-    });
-
-    testWidgets('a look-alike does not inherit an always-allow', (
-      tester,
-    ) async {
-      final prefs = await SharedPreferences.getInstance();
-      final gateway = NextGenGateway(_connection('c1'));
-      final chat = NgChatController(gateway, sessionId: 's')..runtimeId = 'rt';
-      chat.debugApplyHistory([
-        {'role': 'user', 'content': 'Find them'},
-        {
-          'role': 'assistant',
-          'content':
-              'Real:\n\nhttps://www.tiktok.com/@a/video/1\n\n'
-              'Fake:\n\nhttps://eviltiktok.com/@a/video/1\n\n'
-              'Map:\n\nhttps://maps.google.evil.example/@a/video/1\n',
-        },
-      ]);
-      addTearDown(() {
-        chat.dispose();
-        gateway.dispose();
-      });
-      await _pumpNg(tester, prefs, gateway, chat);
-      expect(find.text('Load once'), findsOneWidget);
-      await tester.tap(find.textContaining('Always allow tiktok'));
-      await tester.pump();
-      expect(find.text('tiktok /@a/video/1'), findsOneWidget);
-      expect(find.textContaining('maps /'), findsNothing);
-      await tester.pumpWidget(const SizedBox());
     });
   });
 }

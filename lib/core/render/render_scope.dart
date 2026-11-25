@@ -6,10 +6,10 @@ import '../models/connection.dart';
 String renderConnectionKey(SavedConnection connection) =>
     '${connection.id}\u0000${connection.gatewayProfile ?? ''}';
 
-/// Names the chat that rich transcript pieces render for. Embed choices are
-/// kept per chat and contribution grants per connection, so nothing chosen
-/// in one chat (or on one gateway) shows up in another. Classic and NextGen
-/// wrap each chat view in one.
+/// Names the chat that rich transcript pieces render for. Per-chat render
+/// state is keyed by [chatKey] and contribution grants by [connection], so
+/// nothing chosen in one chat (or on one gateway) shows up in another.
+/// Classic and NextGen wrap each chat view in one.
 class RenderScope extends InheritedWidget {
   const RenderScope({
     super.key,

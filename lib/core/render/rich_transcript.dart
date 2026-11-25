@@ -111,7 +111,6 @@ class RichPieceView extends StatelessWidget {
     if (value is AlertPiece) return AlertBanner(alert: value);
     if (value is MathPiece) return MathBlock(piece: value);
     if (value is TablePiece) return ResizableMarkdownTable(table: value);
-    if (value is EmbedPiece) return ConsentEmbed(embed: value);
     if (value is DirectivePiece) {
       if (value.name == 'preview') {
         return SandboxPreviewCard(
@@ -302,68 +301,6 @@ class _ResizableMarkdownTableState extends State<ResizableMarkdownTable> {
             ),
         ],
       ),
-    );
-  }
-}
-
-/// Embed consent belongs to the chat in the enclosing [RenderScope]. Outside
-/// a chat scope a choice lasts only as long as this card.
-class ConsentEmbed extends StatefulWidget {
-  const ConsentEmbed({super.key, required this.embed});
-
-  final EmbedPiece embed;
-
-  @override
-  State<ConsentEmbed> createState() => _ConsentEmbedState();
-}
-
-class _ConsentEmbedState extends State<ConsentEmbed> {
-  static var _cards = 0;
-  final _local = 'card:${_cards++}';
-
-  @override
-  Widget build(BuildContext context) {
-    final embed = widget.embed;
-    final chat = RenderScope.maybeOf(context)?.chatKey ?? _local;
-    return ListenableBuilder(
-      listenable: embedConsent,
-      builder: (context, _) {
-        if (embedConsent.mode == EmbedMode.off) {
-          return Text(embed.url);
-        }
-        if (!embedConsent.fetches(embed, chat: chat)) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(embed.url),
-              Text('Load this ${embed.provider} card?'),
-              Wrap(
-                spacing: 8,
-                children: [
-                  TextButton(
-                    onPressed: () => embedConsent.loadOnce(embed, chat: chat),
-                    child: const Text('Load once'),
-                  ),
-                  TextButton(
-                    onPressed: () =>
-                        embedConsent.allowProvider(embed.provider, chat: chat),
-                    child: Text('Always allow ${embed.provider} in this chat'),
-                  ),
-                ],
-              ),
-            ],
-          );
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${embed.provider} ${embed.externalId}'),
-            const Text(
-              'This card stays inside Ares and does not load the provider page.',
-            ),
-          ],
-        );
-      },
     );
   }
 }

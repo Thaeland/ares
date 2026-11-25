@@ -80,7 +80,6 @@ final pluginGrants = PluginGrants();
 
 /// Clears every renderer store and parse cache. Tests call it between cases.
 void resetSandboxedRenderer() {
-  embedConsent.reset();
   pluginGrants.reset();
   resetArtifactCaches();
   resetRichBlockCaches();

@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/models/gateway_activity.dart';
@@ -50,6 +51,22 @@ flowchart TD
 
 ::preview{file="note.html"}
 ''';
+
+/// True when a rendered span containing [needle] has a tap recogniser.
+bool _tappableLink(WidgetTester tester, String needle) {
+  var found = false;
+  for (final rich in tester.widgetList<RichText>(find.byType(RichText))) {
+    rich.text.visitChildren((span) {
+      if (span is TextSpan &&
+          span.recognizer is TapGestureRecognizer &&
+          (span.text ?? '').contains(needle)) {
+        found = true;
+      }
+      return true;
+    });
+  }
+  return found;
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -214,9 +231,10 @@ void main() {
       parseListings('{"address":"12 River Road"}').single.address,
       '12 River Road',
     );
+    // Provider links are ordinary prose: Ares embeds no third-party player.
     expect(
-      detectProviderEmbed('https://www.youtube.com/watch?v=abc123')?.provider,
-      'youtube',
+      splitRichProse('https://www.youtube.com/watch?v=abc123').single,
+      isA<ProsePiece>(),
     );
     expect(
       parseSandboxedHtml('<p>Safe</p><script>alert(1)</script>')?.text,
@@ -264,12 +282,9 @@ void main() {
     expect(find.text('Begin'), findsOneWidget);
     expect(find.text('Widget draft'), findsOneWidget);
     expect(find.text('12 River Road'), findsOneWidget);
-    expect(find.text('Load once'), findsOneWidget);
+    expect(find.text('Load once'), findsNothing);
+    expect(_tappableLink(tester, 'youtube.com/watch?v=abc123'), isTrue);
     expect(find.text('alert(1)'), findsNothing);
-
-    await tester.tap(find.text('Load once'));
-    await tester.pump();
-    expect(find.text('youtube abc123'), findsOneWidget);
 
     await tester.ensureVisible(find.text('Load widget'));
     await tester.tap(find.text('Load widget'));
@@ -351,7 +366,8 @@ void main() {
     expect(find.text('Check the gate'), findsOneWidget);
     expect(find.text('Begin'), findsOneWidget);
     expect(find.text('Widget draft'), findsOneWidget);
-    expect(find.text('Load once'), findsOneWidget);
+    expect(find.text('Load once'), findsNothing);
+    expect(_tappableLink(tester, 'youtube.com/watch?v=abc123'), isTrue);
     final used = find.text('Used vision_analyze');
     await tester.ensureVisible(used);
     await tester.tap(used);

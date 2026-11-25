@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
 import 'package:xml/xml.dart';
@@ -273,14 +272,6 @@ class TablePiece {
   final List<List<String>> rows;
 }
 
-class EmbedPiece {
-  const EmbedPiece(this.url, this.provider, this.externalId);
-
-  final String url;
-  final String provider;
-  final String externalId;
-}
-
 class DirectivePiece {
   const DirectivePiece(this.name, this.attrs, this.raw);
 
@@ -543,54 +534,6 @@ bool _separator(String line) {
   return true;
 }
 
-/// [host] is [domain] or one of its subdomains. A name that merely contains
-/// or starts with [domain] (eviltiktok.com, maps.google.evil.example) is not.
-bool hostWithin(String host, String domain) =>
-    host == domain || host.endsWith('.$domain');
-
-/// A provider card for an https link on that provider's own registrable
-/// domain. Plain http, look-alike names and other ports are ordinary links.
-EmbedPiece? detectProviderEmbed(String raw) {
-  final uri = Uri.tryParse(raw.trim());
-  if (uri == null ||
-      uri.scheme != 'https' ||
-      uri.userInfo.isNotEmpty ||
-      (uri.hasPort && uri.port != 443)) {
-    return null;
-  }
-  final host = uri.host.toLowerCase();
-  if (host.isEmpty || host.endsWith('.')) return null;
-  String? provider;
-  String id = uri.path;
-  if (host == 'youtu.be') {
-    provider = 'youtube';
-    id = uri.pathSegments.isEmpty ? '' : uri.pathSegments.first;
-  } else if (hostWithin(host, 'youtube.com')) {
-    provider = 'youtube';
-    id = uri.queryParameters['v'] ?? uri.pathSegments.lastOrNull ?? '';
-  } else if (hostWithin(host, 'vimeo.com')) {
-    provider = 'vimeo';
-    id = uri.pathSegments.lastOrNull ?? '';
-  } else if (hostWithin(host, 'instagram.com')) {
-    provider = 'instagram';
-  } else if (hostWithin(host, 'pinterest.com')) {
-    provider = 'pinterest';
-  } else if (hostWithin(host, 'tiktok.com')) {
-    provider = 'tiktok';
-  } else if (hostWithin(host, 'twitter.com') || hostWithin(host, 'x.com')) {
-    provider = 'twitter';
-  } else if (host == 'open.spotify.com') {
-    provider = 'spotify';
-  } else if (hostWithin(host, 'maps.google.com') ||
-      host == 'maps.app.goo.gl' ||
-      ((host == 'google.com' || host == 'www.google.com') &&
-          (uri.path == '/maps' || uri.path.startsWith('/maps/')))) {
-    provider = 'maps';
-  }
-  if (provider == null || id.isEmpty) return null;
-  return EmbedPiece(raw.trim(), provider, id);
-}
-
 List<ListingCard> parseListings(String code) {
   Object? data;
   try {
@@ -705,16 +648,8 @@ List<TranscriptPiece> _piecesFromProse(String text) {
       offset = end + 1;
       continue;
     }
-    final trimmed = lines[row].trim();
-    final embed = detectProviderEmbed(trimmed);
-    if (embed != null &&
-        trimmed == lines[row].trim() &&
-        !trimmed.contains('](')) {
-      final start = text.indexOf(trimmed, offset);
-      if (start >= 0) {
-        matches.add(_Hit(start, start + trimmed.length, embed));
-      }
-    }
+    // Provider links (YouTube, TikTok, Maps…) stay ordinary Markdown links:
+    // Ares embeds no third-party player, so there is nothing to consent to.
     offset += lines[row].length + 1;
     row++;
   }
@@ -812,47 +747,3 @@ List<TranscriptPiece> splitRichProse(String text) => _prosePieces.lookup(
   text,
   () => List<TranscriptPiece>.unmodifiable(_piecesFromProse(text)),
 );
-
-enum EmbedMode { always, ask, off }
-
-/// Embed choices for one chat. [chat] is the render scope's chat key
-/// (connection, profile and stored chat), so a choice in one chat is not
-/// a choice in another, even when two chats reuse the same message ids.
-class EmbedConsent extends ChangeNotifier {
-  EmbedMode mode = EmbedMode.ask;
-  final _allowedProviders = <String, Set<String>>{};
-  final _loadedOnce = <String, Set<String>>{};
-
-  bool fetches(EmbedPiece embed, {required String chat}) {
-    if (mode == EmbedMode.off) return false;
-    if (mode == EmbedMode.always ||
-        (_allowedProviders[chat]?.contains(embed.provider) ?? false)) {
-      return true;
-    }
-    return _loadedOnce[chat]?.contains(embed.url) ?? false;
-  }
-
-  void loadOnce(EmbedPiece embed, {required String chat}) {
-    if ((_loadedOnce[chat] ??= <String>{}).add(embed.url)) notifyListeners();
-  }
-
-  void allowProvider(String provider, {required String chat}) {
-    if ((_allowedProviders[chat] ??= <String>{}).add(provider)) {
-      notifyListeners();
-    }
-  }
-
-  void setMode(EmbedMode value) {
-    mode = value;
-    notifyListeners();
-  }
-
-  void reset() {
-    mode = EmbedMode.ask;
-    _allowedProviders.clear();
-    _loadedOnce.clear();
-    notifyListeners();
-  }
-}
-
-final embedConsent = EmbedConsent();
