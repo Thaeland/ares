@@ -162,6 +162,12 @@ class DesktopGatewayClient implements SlashCommandGateway {
     _reconnectNow();
   }
 
+  void _checkNotPaused() {
+    if (_systemPaused) {
+      throw StateError('Paused while the computer sleeps.');
+    }
+  }
+
   void _reconnectNow() {
     _ensureSocket().then<void>(
       (_) {},
@@ -424,6 +430,10 @@ class DesktopGatewayClient implements SlashCommandGateway {
       throw StateError('Notification admission revoked');
     }
     _checkOpen();
+    // The computer slept or the session locked while the ticket was minted:
+    // do not open a socket during the pause. The pause remembered this dial
+    // and reconnects when it lifts.
+    _checkNotPaused();
     final client = _socketClient(
       deploymentToken: deploymentToken,
       ticket: ticket,
@@ -473,6 +483,9 @@ class DesktopGatewayClient implements SlashCommandGateway {
         client.close();
         throw StateError('DesktopGatewayClient is closed.');
       }
+      // A dial in flight when the pause began must not leave a live socket
+      // behind it: close it and let the wake reconnect.
+      _checkNotPaused();
       _ws = client;
       return client;
     } catch (_) {

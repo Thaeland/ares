@@ -24,6 +24,12 @@ class _Gateway {
   final methods = <String>[];
   int opened = 0;
   int closed = 0;
+  int ticketRequests = 0;
+  int upgradeRequests = 0;
+
+  /// Holds the ws-ticket answer, or the WebSocket upgrade, until completed.
+  Completer<void>? holdTicket;
+  Completer<void>? holdUpgrade;
   final _changes = StreamController<void>.broadcast();
 
   String get baseUrl => 'http://127.0.0.1:${server.port}';
@@ -37,6 +43,10 @@ class _Gateway {
     server.listen((req) async {
       if (req.uri.path == '/api/ws' &&
           WebSocketTransformer.isUpgradeRequest(req)) {
+        gateway.upgradeRequests++;
+        gateway._changes.add(null);
+        final upgrade = gateway.holdUpgrade;
+        if (upgrade != null) await upgrade.future;
         final ws = await WebSocketTransformer.upgrade(
           req,
           protocolSelector: (protocols) =>
@@ -86,6 +96,12 @@ class _Gateway {
           },
         );
         return;
+      }
+      if (req.uri.path == '/api/auth/ws-ticket') {
+        gateway.ticketRequests++;
+        gateway._changes.add(null);
+        final ticket = gateway.holdTicket;
+        if (ticket != null) await ticket.future;
       }
       req.response.headers.contentType = ContentType.json;
       req.response.write(
@@ -474,6 +490,50 @@ void main() {
       await client.call('projects.list', {});
       expect(gateway.promptSubmissions, 0);
     });
+
+    for (final stage in ['ticket', 'upgrade']) {
+      test('PROBE-1 a Classic dial in flight when the lock lands (held at the '
+          '$stage) leaves no live socket during the pause and reconnects on '
+          'unlock', () async {
+        final gateway = await _Gateway.start();
+        addTearDown(gateway.close);
+        final client = DesktopGatewayClient.fromConnection(
+          gateway.connection(),
+        );
+        addTearDown(client.close);
+        final hold = Completer<void>();
+        if (stage == 'ticket') {
+          gateway.holdTicket = hold;
+        } else {
+          gateway.holdUpgrade = hold;
+        }
+        final call = client.call('projects.list', {});
+        await gateway.until(
+          () => stage == 'ticket'
+              ? gateway.ticketRequests == 1
+              : gateway.upgradeRequests == 1,
+        );
+        // The session locks while the dial is outstanding.
+        SystemSleepGate.instance.apply(PowerEvent.lock);
+        gateway.holdTicket = null;
+        gateway.holdUpgrade = null;
+        hold.complete();
+        await expectLater(call, throwsA(isA<StateError>()));
+        await Future<void>.delayed(const Duration(milliseconds: 300));
+        expect(SystemSleepGate.instance.value, isTrue);
+        await gateway.until(() => gateway.live == 0);
+        expect(gateway.live, 0, reason: 'no live socket while locked');
+        final openedDuringPause = gateway.opened;
+
+        // The dial was live intent: the unlock reconnects on its own.
+        SystemSleepGate.instance.apply(PowerEvent.unlock);
+        await gateway.until(
+          () => gateway.live == 1 && gateway.opened == openedDuringPause + 1,
+        );
+        await client.call('projects.list', {});
+        expect(gateway.promptSubmissions, 0);
+      });
+    }
 
     test(
       'an idle Classic client stays idle on wake and dials lazily',
