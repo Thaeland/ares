@@ -319,12 +319,36 @@ class ConnectionManager {
   });
 
   /// Synchronous UI projection. Credentials are only as fresh as this store's
-  /// last read-back; mutations/export/push must refresh before using authority.
+  /// last read-back. Fleet startup uses [readFleetConnection] instead.
   List<SavedConnection> getConnections() {
     return _connectionsFromMaps(
       _readConnectionMaps(),
     ).map(_hydrateFromCachedCredentials).toList();
   }
+
+  Future<SavedConnection?> readFleetConnection(String id) =>
+      _withSavedListTransaction([], () async {
+        final c = _connectionsFromMaps(
+          _readConnectionMaps(),
+        ).where((c) => c.id == id).singleOrNull;
+        if (c == null) return null;
+        final encoded = await _readEncodedCredentials(id);
+        return encoded == null
+            ? c
+            : _applyCredentials(c, _ConnectionCredentials.decode(encoded));
+      });
+
+  Future<void> setFleetReconnect(String id, Object? epoch, bool enabled) =>
+      _withSavedListTransaction([], () async {
+        if (!ConnectionMutationBarrier.isCurrent(id, epoch)) {
+          throw StateError('Fleet account changed');
+        }
+        final list = _connectionsFromMaps(_readConnectionMaps());
+        final i = list.indexWhere((c) => c.id == id);
+        if (i < 0) throw StateError('Fleet account removed');
+        list[i] = list[i].copyWith(fleetReconnect: enabled);
+        await _saveAll(list);
+      });
 
   /// Returns every saved connection with its secrets read back from the secure
   /// store, rather than from the in-memory cache used by [getConnections].
@@ -409,7 +433,10 @@ class ConnectionManager {
     List<SavedConnection> incoming, {
     required bool replaceExisting,
   }) {
-    final ordered = List<SavedConnection>.of(incoming);
+    // A backup is not consent to start a socket on this device.
+    final ordered = [
+      for (final c in incoming) c.copyWith(fleetReconnect: false),
+    ];
     return _withSavedListTransaction(ordered.map((c) => c.id), () async {
       final current = await _loadConnectionsWithSecrets();
       final previousMetadata = prefs.getStringList(_key);
@@ -564,6 +591,7 @@ class ConnectionManager {
   Future<SavedConnection> saveSingleLoginConnection({
     required GatewayUrl url,
     required String signInMethod,
+    String? fleetKind,
     String? label,
     String? username,
     String? password,
@@ -617,6 +645,14 @@ class ConnectionManager {
                       : null),
         singleLogin: true,
         signInMethod: signInMethod,
+        // Keep Cloud exclusions across a later manual login to the same URL.
+        fleetKind:
+            existingIndex >= 0 && current[existingIndex].fleetKind == 'cloud'
+            ? 'cloud'
+            : fleetKind ??
+                  (existingIndex >= 0
+                      ? current[existingIndex].fleetKind
+                      : null),
       );
       final previousCredentials = existingIndex >= 0
           ? _ConnectionCredentials.fromConnection(current[existingIndex])
@@ -676,6 +712,7 @@ class ConnectionManager {
 
     current[idx] = current[idx].copyWith(
       label: label,
+      fleetReconnect: false,
       host: normalized.host,
       port: normalized.port,
       apiKey: apiKey,
@@ -734,6 +771,7 @@ class ConnectionManager {
     final gateway = gatewayPrefix?.trim();
     final dashboard = dashboardPrefix?.trim();
     current[idx] = current[idx].copyWith(
+      fleetReconnect: false,
       gatewayPrefix: gateway == null || gateway.isEmpty ? null : gateway,
       clearGatewayPrefix: gateway != null && gateway.isEmpty,
       dashboardPrefix: dashboard == null || dashboard.isEmpty
@@ -766,7 +804,10 @@ class ConnectionManager {
           current[idx],
         );
         final previousConnections = List<SavedConnection>.of(current);
-        current[idx] = current[idx].copyWith(apiKey: apiKey);
+        current[idx] = current[idx].copyWith(
+          apiKey: apiKey,
+          fleetReconnect: false,
+        );
         await _commitCredentialAndMetadata(
           connectionId: connId,
           previousCredentials: previousCredentials,
@@ -2569,8 +2610,9 @@ class DashboardClient {
          '${Uri(scheme: useHttps ? 'https' : 'http', host: host)}:$port',
          pathPrefix,
        ),
-       _http =
-           httpClient ?? tlsClientFactory.createRestClient(clientCertificate);
+       _http = NoGatewayRedirects(
+         httpClient ?? tlsClientFactory.createRestClient(clientCertificate),
+       );
 
   /// Builds every dashboard consumer from the same origin as the WebSocket.
   /// API-server Bearer credentials are deliberately not part of this client.
@@ -2811,7 +2853,8 @@ class DashboardClient {
       '$_baseUrl/api/$endpoint',
     ).replace(queryParameters: queryParameters);
     final request = http.Request(method, uri)..headers.addAll(headers);
-    if (endpoint == 'auth/ws-ticket') request.followRedirects = false;
+    // History reads carry the same credentials as the ticket request.
+    request.followRedirects = false;
     if (body != null) request.body = body is String ? body : jsonEncode(body);
     final res = await http.Response.fromStream(
       await _http.send(request).timeout(timeout),
@@ -2837,6 +2880,10 @@ class DashboardClient {
     required Map<String, String> query,
     required void Function() check,
     bool mintHostTerminalTicket = false,
+    // Only typed fleet writes; no generic method/body override.
+    String? webappDirection,
+    bool makeWebappPrimary = false,
+    bool startFleetUpdate = false,
   }) async {
     if (segments.isEmpty ||
         segments.any(
@@ -2863,9 +2910,49 @@ class DashboardClient {
       ],
       queryParameters: query.isEmpty ? null : query,
     );
-    final request = http.Request(mintHostTerminalTicket ? 'POST' : 'GET', uri)
-      ..followRedirects = false;
+    final patchDirection = webappDirection != null;
+    if (startFleetUpdate &&
+        (segments.join('/') != 'hermes/update' ||
+            query.isNotEmpty ||
+            patchDirection ||
+            makeWebappPrimary ||
+            mintHostTerminalTicket)) {
+      throw const FormatException('Invalid remote update operation');
+    }
+    if ((patchDirection &&
+            (segments.join('/') != 'ui-preferences' ||
+                !const {'auto', 'ltr', 'rtl'}.contains(webappDirection))) ||
+        (makeWebappPrimary &&
+            (segments.length != 3 ||
+                segments.first != 'gateway-connections' ||
+                segments.last != 'primary')) ||
+        ((patchDirection || makeWebappPrimary) &&
+            (query.isNotEmpty || mintHostTerminalTicket))) {
+      throw const FormatException('Invalid Webapp operation');
+    }
+    final request = http.Request(
+      patchDirection
+          ? 'PATCH'
+          : mintHostTerminalTicket || makeWebappPrimary || startFleetUpdate
+          ? 'POST'
+          : 'GET',
+      uri,
+    )..followRedirects = false;
     request.headers.addAll(await _authHeaders());
+    if (patchDirection || makeWebappPrimary || startFleetUpdate) {
+      request.headers['Origin'] = base.origin;
+      request.headers['Content-Type'] = 'application/json';
+      request.body = patchDirection
+          ? jsonEncode({
+              'values': {
+                'hermes.desktop.textDirection': webappDirection == 'auto'
+                    ? null
+                    : webappDirection,
+              },
+              'seed': false,
+            })
+          : '{}';
+    }
     check();
     final response = await _http
         .send(request)

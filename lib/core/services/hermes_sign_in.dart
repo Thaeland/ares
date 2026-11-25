@@ -616,7 +616,7 @@ class HermesSignInVault extends ChangeNotifier {
       );
     }
     final future = () async {
-      final owned = client ?? http.Client();
+      final owned = NoGatewayRedirects(client ?? http.Client());
       try {
         final response = await owned
             .post(
@@ -666,6 +666,22 @@ class HermesSignInVault extends ChangeNotifier {
 /// certificate when the connection has one.
 http.Client signInHttpClient(ClientCertificateConfig? certificate) =>
     const TlsClientFactory().createRestClient(certificate);
+
+/// Authenticated calls are a transaction with one origin. In particular,
+/// dart:io may retain credentials on a redirect to a related hostname or a
+/// different port. Surface that response instead of following even one hop.
+final class NoGatewayRedirects extends http.BaseClient {
+  NoGatewayRedirects(this._client);
+  final http.Client _client;
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    request.followRedirects = false;
+    return _client.send(request);
+  }
+
+  @override
+  void close() => _client.close();
+}
 
 /// Public liveness probe used by "Test connection" before any sign-in.
 class GatewayProbe {
@@ -820,7 +836,7 @@ class HermesSignIn {
     ClientCertificateConfig? certificate,
     Future<T> Function(http.Client) body,
   ) async {
-    final client = _client ?? signInHttpClient(certificate);
+    final client = NoGatewayRedirects(_client ?? signInHttpClient(certificate));
     try {
       return await body(client);
     } finally {

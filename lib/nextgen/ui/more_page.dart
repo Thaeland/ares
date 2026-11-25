@@ -9,6 +9,7 @@ import '../../core/l10n/l10n.dart';
 import '../../core/models/hermes_project.dart';
 import '../../core/models/session.dart';
 import '../../core/screens/cron_screen.dart';
+import '../../core/screens/fleet_screen.dart';
 import '../../core/screens/memory_screen.dart';
 import '../../core/screens/nous_portal_screen.dart';
 import '../../core/screens/parallel_workspace_entry.dart';
@@ -100,6 +101,16 @@ class NgMorePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             child: Column(
               children: [
+                NgRow(
+                  icon: Icons.people_outline,
+                  title: 'Gateway fleet',
+                  onTap: () => push(
+                    FleetScreen(
+                      serving: scope.gateway.workspace,
+                      label: conn.label,
+                    ),
+                  ),
+                ),
                 NgRow(
                   icon: Icons.people_outline,
                   title: ngL.ng_profiles,

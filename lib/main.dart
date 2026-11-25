@@ -37,6 +37,8 @@ import 'core/screens/chat_screen.dart';
 import 'core/workspace/popout_bootstrap.dart';
 import 'core/workspace/popout_protocol.dart';
 import 'core/screens/workspace_screen.dart';
+import 'core/screens/fleet_screen.dart';
+import 'core/services/gateway_fleet.dart';
 import 'core/theme/hermes_theme.dart';
 import 'core/utils/responsive.dart';
 import 'core/widgets/config_backup_card.dart';
@@ -351,6 +353,7 @@ class _NotificationNavigationIntent {
 }
 
 class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
+  late final _fleet = GatewayFleet(widget.connManager)..restore().ignore();
   late final GatewayTurnApplicationController _turnApplicationController;
   late final AutoMessagingService _autoMessaging;
   late final TurnNotificationService _notifications;
@@ -1273,8 +1276,11 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
             data: systemMediaQuery.copyWith(
               textScaler: preference.applyTo(systemMediaQuery.textScaler),
             ),
-            child: DesktopShortcuts(
-              child: nextGen ? NgLocalizationScope(child: child!) : child!,
+            child: FleetScope(
+              fleet: _fleet,
+              child: DesktopShortcuts(
+                child: nextGen ? NgLocalizationScope(child: child!) : child!,
+              ),
             ),
           ),
         );
@@ -1295,6 +1301,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     final token = _keepAliveTurnActivityToken;
     _closingTurnOwner = true;
+    _fleet.dispose();
     _autoMessaging.dispose();
     _pendingNormalResponse = null;
     _pendingApprovalResponses.clear();
@@ -1608,7 +1615,9 @@ class HomeScreenState extends State<HomeScreen> {
         widget.launchIntents?.pendingQuickChat.value == true) {
       return;
     }
-    final lastId = widget.connManager.prefs.getString(_lastConnectionKey);
+    final lastId =
+        GatewayFleet.primaryId(widget.connManager, _connections) ??
+        widget.connManager.prefs.getString(_lastConnectionKey);
     if (lastId == null) return;
     final conn = _connections.where((c) => c.id == lastId).firstOrNull;
     if (conn == null) return;

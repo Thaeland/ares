@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../core/services/connection_manager.dart';
+import '../core/services/gateway_fleet.dart';
 import '../core/services/hermes_sign_in.dart';
 import 'data/nextgen_gateway.dart';
 import 'nextgen_preferences.dart';
@@ -77,6 +78,7 @@ class _NextGenHomeState extends State<NextGenHome> {
           select ??
           (list.any((c) => c.id == pending) ? pending : null) ??
           _gateway?.connection.id ??
+          GatewayFleet.primaryId(_manager, list) ??
           NextGenPreferences.currentConnectionId(_manager.prefs);
       final pick =
           list.where((c) => c.id == wanted).firstOrNull ??
