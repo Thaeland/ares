@@ -7110,7 +7110,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         : screen;
   }
 
-  Widget _buildChat(BuildContext context) {
+  Widget _buildChat(BuildContext context) => LayoutBuilder(
+    // On a narrow pane (phone, split view or parallel workspace) the browser
+    // preview moves into Chat actions, so the app bar never overflows.
+    builder: (context, box) => _buildChatScaffold(context, box.maxWidth < 480),
+  );
+
+  Widget _buildChatScaffold(BuildContext context, bool compactTools) {
     final fileOwner = _desktopGateway?.workspace;
     final fileId = _fileSessionId;
     final chat = Scaffold(
@@ -7165,7 +7171,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 ),
               ),
             ),
-          if (_desktopGateway case final gateway?)
+          if (_desktopGateway case final gateway? when !compactTools)
             IconButton(
               tooltip: 'Open browser preview',
               icon: const Icon(Icons.web_asset),
@@ -7223,12 +7229,28 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   unawaited(_showReceivedOutputDetails());
                 }
                 if (action == 'rename') unawaited(_renameSession());
+                if (action == 'browser' && _desktopGateway != null) {
+                  setState(
+                    () => _preview.open(
+                      _desktopGateway!.workspace,
+                      _storedSessionId ?? _storedSessionKey,
+                    ),
+                  );
+                }
                 if (action == 'archive') unawaited(_setSessionArchived(true));
                 if (action == 'unarchive') {
                   unawaited(_setSessionArchived(false));
                 }
               },
               itemBuilder: (_) => [
+                if (compactTools && _desktopGateway != null)
+                  const PopupMenuItem(
+                    value: 'browser',
+                    child: ListTile(
+                      leading: Icon(Icons.web_asset),
+                      title: Text('Open browser preview'),
+                    ),
+                  ),
                 PopupMenuItem(
                   value: 'record-voice',
                   enabled:

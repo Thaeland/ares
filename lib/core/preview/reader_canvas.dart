@@ -183,7 +183,10 @@ class _ReaderCanvasState extends State<ReaderCanvas> {
                       rect: Rect.fromPoints(_start!, _end!),
                       child: DecoratedBox(
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.orange, width: 2),
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.tertiary,
+                            width: 2,
+                          ),
                         ),
                       ),
                     ),

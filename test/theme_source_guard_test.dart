@@ -15,6 +15,23 @@ void main() {
       'final foreground = image ? Colors.white : scheme.onSurface;',
       'backgroundColor: image ? Colors.black : scheme.surface,',
     };
+    // Data colours with a documented reason, by exact file and line. Stale
+    // entries fail below, so an exception cannot outlive its code.
+    const dataExceptions = {
+      'lib/core/screens/profile_admin_panel.dart': {
+        // A scannable QR code needs black modules on a white quiet zone.
+        'canvas.drawRect(Offset.zero & size, Paint()..color = Colors.white);',
+        '..color = Colors.black',
+      },
+      'lib/core/workspace/profile_presentation.dart': {
+        // The user's own profile colours (#RRGGBB) and the black/white ink
+        // that keeps text on them readable; not app branding.
+        '? Color(0xff000000 | int.parse(s.substring(1), radix: 16))',
+        'bg.computeLuminance() > 0.179 ? Colors.black : Colors.white;',
+        'c.primary.computeLuminance() > 0.179 ? Colors.black : Colors.white,',
+      },
+    };
+    final dataSeen = <String>{};
     final literalColor = RegExp(
       r'\b(?:Color|MaterialColor|MaterialAccentColor)\s*\('
       r'|\bColor\.(?:fromARGB|fromRGBO)\s*\('
@@ -47,6 +64,10 @@ void main() {
       for (var index = 0; index < lines.length; index++) {
         final line = lines[index].trim();
         if (line.startsWith('//')) continue;
+        if (dataExceptions[path]?.contains(line) == true) {
+          dataSeen.add('$path|$line');
+          continue;
+        }
         if (path == mediaViewer && mediaExceptions.contains(line)) {
           exceptionsSeen.update(line, (count) => count + 1, ifAbsent: () => 1);
           continue;
@@ -66,5 +87,9 @@ void main() {
           'keep media-only exceptions narrow and documented.\n${violations.join('\n')}',
     );
     expect(exceptionsSeen, {for (final line in mediaExceptions) line: 1});
+    expect(dataSeen, {
+      for (final entry in dataExceptions.entries)
+        for (final line in entry.value) '${entry.key}|$line',
+    });
   });
 }

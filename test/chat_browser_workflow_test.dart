@@ -155,13 +155,19 @@ class _Servers {
 
 void main() {
   setUp(mockChatImageRecovery);
-  for (final classic in [true, false]) {
+  // 390 is a phone: Classic keeps the app bar from overflowing by moving the
+  // browser preview into Chat actions.
+  for (final (classic, width) in [
+    (true, 480.0),
+    (true, 390.0),
+    (false, 1240.0),
+  ]) {
     testWidgets(
-      '${classic ? 'Classic narrow' : 'NextGen wide'}: real chat → authorised preview → rendered comment and crop in draft',
+      '${classic ? 'Classic narrow' : 'NextGen wide'} at $width: real chat → authorised preview → rendered comment and crop in draft',
       (t) async {
         SharedPreferences.setMockInitialValues({});
         t.view.devicePixelRatio = 1;
-        t.view.physicalSize = Size(classic ? 480 : 1240, 960);
+        t.view.physicalSize = Size(width, 960);
         addTearDown(t.view.reset);
         final servers = _Servers();
         late final Directory dir;
@@ -225,6 +231,18 @@ void main() {
           await t.pump();
         }
 
+        // A phone-width Classic pane offers the preview from Chat actions.
+        Future<void> openPreview() async {
+          if (find.byTooltip('Open browser preview').evaluate().isNotEmpty) {
+            return tap(find.byTooltip('Open browser preview'));
+          }
+          await tap(find.byTooltip('Chat actions'));
+          // Only the menu animation; settling would run the fixture clocks.
+          await t.pump(const Duration(milliseconds: 400));
+          await tap(find.text('Open browser preview'));
+          await t.pump(const Duration(milliseconds: 400));
+        }
+
         Future<void> shown(String text) =>
             until(() => find.text(text).evaluate().isNotEmpty, text);
 
@@ -284,7 +302,7 @@ void main() {
           );
           await t.pump();
           if (!classic) await t.enterText(composer, 'Keep me');
-          await tap(find.byTooltip('Open browser preview'));
+          await openPreview();
           final address = find.byKey(const Key('preview-address'));
           await until(() {
             final fields = t.widgetList<TextField>(address);
@@ -332,7 +350,7 @@ void main() {
             expect(servers.replies['srq-vault']!['error'], isNotNull);
           }
           await tap(find.byTooltip('Hide preview'));
-          await tap(find.byTooltip('Open browser preview'));
+          await openPreview();
           expect(find.text('Painted /first'), findsOneWidget);
           await tap(find.byTooltip('Annotate element or region'));
           await t.pump();
@@ -379,7 +397,7 @@ void main() {
             await t.runAsync(() => (files.single as File).length()),
             greaterThan(64),
           );
-          await tap(find.byTooltip('Open browser preview'));
+          await openPreview();
           final lease = ConnectionMutationBarrier.begin([c.id]);
           lease.release();
           await t.pump();
