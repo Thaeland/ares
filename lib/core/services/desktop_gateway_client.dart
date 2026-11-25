@@ -809,6 +809,13 @@ class DesktopGatewayClient implements SlashCommandGateway {
   /// gateway instead of failing.
   CapabilityRegistry get capabilities => _capabilities;
 
+  /// Presence never starts a connection or creates a missing chat.
+  (WsClient, String)? presenceFor(String localSessionId) {
+    final ws = _ws;
+    final id = _gatewaySessionIds[localSessionId];
+    return ws != null && _ownsSocket(ws) && id != null ? (ws, id) : null;
+  }
+
   /// Opens (or reuses) the gateway socket without binding it to a session.
   Future<WsClient> _connectControl() => _ensureSocket();
 

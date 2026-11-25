@@ -2748,6 +2748,7 @@ class NormalGatewayChatOwner {
                 conversation: conversation,
               )) {
             await _session.notifications.showKind(
+              origin: _session.connection,
               kind: kind,
               title: completed ? 'Hermes response ready' : 'Hermes turn failed',
               body: settledTitle,
@@ -2795,6 +2796,7 @@ class NormalGatewayChatOwner {
     unawaited(
       _session.notifications
           .showKind(
+            origin: _session.connection,
             kind: kind,
             title: 'Hermes — $title',
             body: notification?.text ?? notice!.text,
@@ -2844,6 +2846,7 @@ class NormalGatewayChatOwner {
     final sessionId = storedSessionId ?? localSessionId;
     final shown = _session.notifications
         .showKind(
+          origin: _session.connection,
           kind: kind,
           title: approval
               ? 'Approval needed — $title'

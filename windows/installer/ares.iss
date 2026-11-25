@@ -71,8 +71,16 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 ; helpers and the licence texts. MSIX package metadata is not part of the app.
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Excludes: "AppxManifest.xml,AppxBlockMap.xml,AppxSignature.p7x,[Content_Types].xml,resources*.pri,\Images\*,\AppxMetadata\*"; Flags: ignoreversion recursesubdirs
 
+[Registry]
+; Only a fixed opaque toast ticket is accepted by the runner. The shell never
+; evaluates or expands it. A distinct scheme is used by the MSIX manifest.
+Root: HKCU; Subkey: "Software\Classes\ares-notification"; ValueType: string; ValueData: "URL:Ares notification"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\ares-notification"; ValueName: "URL Protocol"; ValueType: string; ValueData: ""
+Root: HKCU; Subkey: "Software\Classes\ares-notification\shell\open\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+; Protocol-only activation uses Microsoft's stub-CLSID desktop toast model.
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; AppUserModelID: "com.hermesagent.ares"; AppUserModelToastActivatorCLSID: "F2BCD1C8-EDAB-4F31-A09F-39C2ED0F2A37"
 Name: "{group}\Uninstall {#MyAppName}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 

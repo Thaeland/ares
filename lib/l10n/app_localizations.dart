@@ -3306,6 +3306,60 @@ abstract class AppLocalizations {
   /// **'Notifications'**
   String get notifications;
 
+  /// No description provided for @windows_notifications_blocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.'**
+  String get windows_notifications_blocked;
+
+  /// No description provided for @windows_notification_diagnostics.
+  ///
+  /// In en, this message translates to:
+  /// **'What Ares submitted to Windows'**
+  String get windows_notification_diagnostics;
+
+  /// No description provided for @windows_window_activity.
+  ///
+  /// In en, this message translates to:
+  /// **'Share chat activity'**
+  String get windows_window_activity;
+
+  /// No description provided for @windows_window_activity_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.'**
+  String get windows_window_activity_hint;
+
+  /// No description provided for @windows_completion_sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion sound'**
+  String get windows_completion_sound;
+
+  /// No description provided for @windows_sound_default.
+  ///
+  /// In en, this message translates to:
+  /// **'Windows default'**
+  String get windows_sound_default;
+
+  /// No description provided for @windows_sound_mail.
+  ///
+  /// In en, this message translates to:
+  /// **'Mail'**
+  String get windows_sound_mail;
+
+  /// No description provided for @windows_sound_reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder'**
+  String get windows_sound_reminder;
+
+  /// No description provided for @windows_sound_silent.
+  ///
+  /// In en, this message translates to:
+  /// **'Silent'**
+  String get windows_sound_silent;
+
   /// No description provided for @notifications_permission_denied.
   ///
   /// In en, this message translates to:
