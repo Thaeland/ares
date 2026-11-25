@@ -71,6 +71,7 @@ import 'memory_screen.dart';
 import 'settings_screen.dart';
 import 'model_management_screen.dart';
 import 'open_router_screen.dart';
+import 'model_admin_screen.dart';
 import 'nous_portal_screen.dart';
 import 'provider_oauth_screen.dart';
 import 'provider_screen.dart';
@@ -2333,6 +2334,18 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         _push(ProviderOAuthScreen(connection: connection));
       case 'nous-portal':
         _push(NousPortalScreen(connection: connection));
+      case 'provider-admin':
+        _push(
+          ModelAdminScreen(connection: connection, rpc: _ownedGateway?.rpc),
+        );
+      case 'nous-billing':
+        _push(
+          ModelAdminScreen(
+            connection: connection,
+            initialSection: ModelAdminSection.billing,
+            rpc: _ownedGateway?.rpc,
+          ),
+        );
       case 'openrouter':
         _push(OpenRouterScreen(connection: widget.connection));
       case 'openai':

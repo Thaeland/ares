@@ -100,6 +100,8 @@ void main() {
           'memory',
           'provider-sign-in',
           'nous-portal',
+          'provider-admin',
+          'nous-billing',
           'openrouter',
           'openai',
           'anthropic',
@@ -133,6 +135,8 @@ void main() {
           expect(usage.entries.map((e) => e.id), [
             'provider-sign-in',
             'nous-portal',
+            'provider-admin',
+            'nous-billing',
             'openrouter',
             'openai',
             'anthropic',
@@ -141,6 +145,8 @@ void main() {
           expect(usage.entries.map((e) => e.title), [
             'Provider sign-in',
             'Nous Portal',
+            'Providers and routes',
+            'Credits and plans',
             'OpenRouter',
             'OpenAI',
             'Claude (Anthropic)',
@@ -422,7 +428,7 @@ void main() {
 
     testWidgets('renders every section title and entry', (tester) async {
       final built = sections();
-      await _pumpPane(tester, sections: built);
+      await _pumpPane(tester, sections: built, size: const Size(360, 4000));
 
       for (final section in built) {
         await tester.scrollUntilVisible(

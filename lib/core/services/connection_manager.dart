@@ -3831,6 +3831,16 @@ class DashboardClient {
     }
   }
 
+  /// Removes a provider account the gateway says can be disconnected.
+  /// The request stays on the authenticated OAuth transport; no token is read.
+  Future<void> disconnectProviderOAuth(String providerId) async {
+    _validateOAuthId(providerId);
+    final result = await _oauthRequest('DELETE', '/$providerId');
+    if (result['ok'] == false) {
+      throw StateError('OAuth disconnect not confirmed');
+    }
+  }
+
   static void _validateOAuthId(String value) {
     if (!RegExp(r'^[a-zA-Z0-9_-]{1,256}$').hasMatch(value)) {
       throw ArgumentError('Invalid OAuth identifier');

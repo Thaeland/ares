@@ -742,6 +742,9 @@ class NgChatController extends ChangeNotifier {
   String? model;
   String? provider;
   String? reasoningEffort;
+
+  /// What the route actually sends. Empty until session.info stamps it.
+  String? reasoningEffortWire;
   NgUsage? usage;
   DateTime? turnStartedAt;
 
@@ -973,6 +976,12 @@ class NgChatController extends ChangeNotifier {
     if (raw.containsKey('reasoning_effort')) {
       final r = raw['reasoning_effort']?.toString() ?? '';
       reasoningEffort = r.isEmpty ? null : r;
+      if (!raw.containsKey('reasoning_effort_wire')) {
+        reasoningEffortWire = '';
+      }
+    }
+    if (raw.containsKey('reasoning_effort_wire')) {
+      reasoningEffortWire = raw['reasoning_effort_wire']?.toString() ?? '';
     }
     final t = raw['title']?.toString();
     if (t != null && t.trim().isNotEmpty) title = t;
@@ -3416,7 +3425,9 @@ class NgChatController extends ChangeNotifier {
   /// Switches this chat's thinking level.
   Future<void> setReasoning(String effort) async {
     final previous = reasoningEffort;
+    final previousWire = reasoningEffortWire;
     reasoningEffort = effort;
+    reasoningEffortWire = '';
     _changed();
     if (runtimeId == null && storedId == null) {
       _pickedEffort = effort;
@@ -3425,6 +3436,7 @@ class NgChatController extends ChangeNotifier {
     if (runtimeId == null) await _attach();
     if (runtimeId == null) {
       reasoningEffort = previous;
+      reasoningEffortWire = previousWire;
       _changed();
       throw StateError(ngL.ng_model_switch_not_connected);
     }
@@ -3436,6 +3448,7 @@ class NgChatController extends ChangeNotifier {
       });
     } catch (_) {
       reasoningEffort = previous;
+      reasoningEffortWire = previousWire;
       _changed();
       rethrow;
     }
