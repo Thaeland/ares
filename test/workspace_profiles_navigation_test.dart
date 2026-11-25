@@ -7,6 +7,7 @@ import 'package:hermes_android/core/screens/workspace_screen.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/connection_mutation_barrier.dart';
 import 'package:hermes_android/core/theme/hermes_theme.dart';
+import 'package:hermes_android/core/widgets/more_pane.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:hermes_android/nextgen/data/nextgen_gateway.dart';
 import 'package:hermes_android/nextgen/nextgen_l10n.dart';
@@ -156,6 +157,16 @@ void main() {
           if (classic) {
             await tester.tap(find.text('More').last);
             await tester.pumpAndSettle();
+            // The phone's More list builds rows lazily. Use the actual scroll
+            // gesture before expecting the Profiles row to have an element.
+            await tester.scrollUntilVisible(
+              find.text('Profiles'),
+              180,
+              scrollable: find.descendant(
+                of: find.byType(MorePane),
+                matching: find.byType(Scrollable),
+              ),
+            );
           }
           await tester.ensureVisible(find.text('Profiles'));
           await tester.tap(find.text('Profiles'));

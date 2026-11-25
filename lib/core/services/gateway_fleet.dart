@@ -18,8 +18,15 @@ part 'fleet_updates.dart';
 final class FleetHost extends ChangeNotifier {
   FleetHost._(SavedConnection c, this._epoch) : gateway = NextGenGateway(c) {
     _pane = gateway.workspace.pane();
+    var sawConnection = false;
     _reconnect = gateway.reconnected.listen((_) {
-      if (_target != null && !_target!.isCurrent) unawaited(refresh());
+      // The initial refresh already waits for the first socket. A later
+      // connection must also recover a failed first read, when there is no
+      // previous target to invalidate. Never retry by resending a chat turn.
+      final needsRoster =
+          current && target == null && (sawConnection || !loading);
+      sawConnection = true;
+      if (needsRoster) unawaited(refresh());
     });
     gateway.addListener(_stateChanged);
   }

@@ -15,6 +15,8 @@ class FleetFixture {
   final prompts = <String>[];
   final tickets = <String>{};
   int issued = 0;
+  bool refuseRoster = false;
+  int rosterRequests = 0;
   String primary = 'local';
   String receipt = '0' * 32;
   bool mayUpdate = true;
@@ -113,6 +115,22 @@ class FleetFixture {
         if (ws.readyState != WebSocket.open) return;
         final msg = jsonDecode(raw as String) as Map;
         final params = msg['params'] as Map;
+        if (msg['method'] == 'profiles.list') {
+          rosterRequests++;
+          if (refuseRoster) {
+            ws.add(
+              jsonEncode({
+                'jsonrpc': '2.0',
+                'id': msg['id'],
+                'error': {
+                  'code': -32000,
+                  'message': 'Fixture temporarily unavailable',
+                },
+              }),
+            );
+            return;
+          }
+        }
         final data = switch (msg['method']) {
           'profiles.list' => {
             'profiles': [

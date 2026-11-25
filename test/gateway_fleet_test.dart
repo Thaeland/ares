@@ -165,6 +165,32 @@ void main() {
     }),
   );
   test(
+    'reconnect recovers a gateway whose first roster read failed',
+    () => withPlatformTrust(() async {
+      a.refuseRoster = true;
+      final [ha, hb] = await Future.wait([attach('A'), attach('B')]);
+      await until(() => ha.failure != null && !ha.loading && hb.target != null);
+      expect(ha.target, isNull);
+      expect(ha.sessions, isEmpty);
+      expect(
+        a.rosterRequests,
+        1,
+        reason: 'No polling loop on a healthy socket',
+      );
+      final siblingTarget = hb.target!;
+      a.refuseRoster = false;
+      await a.sockets.single.close();
+      await until(() => a.sockets.length == 2 && ha.target != null);
+      expect(ha.failure, isNull);
+      expect(ha.sessions.single.title, 'Session on A');
+      expect(a.rosterRequests, 2);
+      expect(hb.target, same(siblingTarget));
+      expect(b.rosterRequests, 1);
+      expect(a.prompts, isEmpty);
+      expect(b.prompts, isEmpty);
+    }),
+  );
+  test(
     'two peers with colliding IDs keep separate transcripts and reconnect without resubmitting',
     () => withPlatformTrust(() async {
       final [ha, hb] = await Future.wait([attach('A'), attach('B')]);
