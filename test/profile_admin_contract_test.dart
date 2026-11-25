@@ -2,7 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:archive/archive.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:hermes_android/core/screens/profile_bundle_screen.dart';
 import 'package:hermes_android/core/services/portable_profile_bundle.dart';
+import 'package:hermes_android/core/workspace/profile_presentation_store.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
@@ -10,6 +15,43 @@ import 'package:hermes_android/core/services/remote_workspace.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+
+import 'support/profile_bundle_picker.dart';
+
+Future<void> _checkTile(WidgetTester tester, String title) async {
+  final box = find.descendant(
+    of: find.widgetWithText(CheckboxListTile, title),
+    matching: find.byType(Checkbox),
+  );
+  await tester.scrollUntilVisible(
+    box,
+    160,
+    scrollable: find.byType(Scrollable).first,
+  );
+  await tester.pumpAndSettle();
+  await tester.tap(box.hitTestable());
+  await tester.pump();
+}
+
+Future<void> _shown(WidgetTester tester, Finder finder) async {
+  // Dashboard futures and their timeouts are real async; the widget binding's
+  // fake clock does not complete them.
+  for (var attempt = 0; attempt < 40 && finder.evaluate().isEmpty; attempt++) {
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 25)),
+    );
+    await tester.pump();
+  }
+  if (finder.evaluate().isEmpty) {
+    final visible = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((text) => text.data)
+        .whereType<String>()
+        .join(' | ');
+    final busy = find.byType(LinearProgressIndicator).evaluate().isNotEmpty;
+    fail('Missing widget. busy=$busy Visible text: $visible');
+  }
+}
 
 class _RosterSocket extends Fake implements WsClient {
   _RosterSocket(this.baseUrl, this.machine, this.names);
@@ -562,5 +604,287 @@ void main() {
         await expectLater(op.undo('agent-1', () {}), rejected);
       }
     });
+  }
+  testWidgets(
+    'bundle review replaces a host overlay and omits its pane identifiers',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(800, 1400);
+      addTearDown(tester.view.reset);
+      final dir = Directory.systemTemp.createTempSync('profile-bundle-');
+      addTearDown(() => dir.deleteSync(recursive: true));
+      final saved = File('${dir.path}/reviewed.tar.gz');
+      FilePicker? previous;
+      try {
+        previous = FilePicker.platform;
+      } on Object {
+        previous = null;
+      }
+      FilePicker.platform = ProfileBundlePicker(saved);
+      addTearDown(() {
+        if (previous != null) FilePicker.platform = previous;
+      });
+      const archive = '/private/profile-exports/qa-20261125-120000.tar.gz';
+      final foreign = jsonEncode({
+        'version': 1,
+        'skin': 'catppuccin',
+        'mode': 'dark',
+        'layoutTree': {
+          'type': 'group',
+          'id': 'foreign',
+          'panes': ['private-session'],
+          'active': 'private-session',
+        },
+      });
+      final hosted = gzip.encode(
+        TarEncoder().encodeBytes(
+          Archive()
+            ..addFile(ArchiveFile.string('qa/desktop.json', foreign))
+            ..addFile(ArchiveFile.string('qa/SOUL.md', 'persona')),
+        ),
+      );
+      final admin = await _fixture(
+        'source.invalid',
+        'qa',
+        'src',
+        {'qa': ''},
+        (path, method, body, query) {
+          expect(path, '/api/profiles/qa/export');
+          return {'ok': true, 'archive': archive};
+        },
+        binary: (req) async {
+          if (req.url.path != '/api/files/download') return null;
+          expect(req.url.queryParameters, {'path': archive});
+          return http.Response.bytes(hosted, 200);
+        },
+      );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ProfileBundleScreen(
+            admin: admin,
+            gateway: 'Fixture',
+            connection: SavedConnection(
+              id: 'ui-fixture',
+              label: 'Fixture',
+              host: '127.0.0.1',
+              port: 9,
+              apiKey: '',
+              gatewayProfile: 'qa',
+            ),
+            nextGen: false,
+          ),
+        ),
+      );
+      await tester.tap(find.text('Prepare profile export'));
+      await _shown(tester, find.text('desktop.json'));
+      expect(find.textContaining('private-session'), findsNothing);
+      await tester.ensureVisible(find.text('desktop.json'));
+      await tester.tap(find.text('desktop.json'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('ares-gold'), findsOneWidget);
+      await _checkTile(tester, 'Include this reviewed file');
+      await tester.ensureVisible(find.text('Save selected files to device'));
+      await tester.tap(
+        find.text('Save selected files to device').hitTestable(),
+      );
+      await _shown(tester, find.text('Profile bundle saved.'));
+      final reviewed = await PortableProfileBundle.inspect(
+        saved.readAsBytesSync(),
+      );
+      expect(reviewed.files.keys, ['desktop.json']);
+      expect(reviewed.files['desktop.json'], contains('ares-gold'));
+      expect(
+        reviewed.files['desktop.json'],
+        isNot(contains('private-session')),
+      );
+      expect(reviewed.files['desktop.json'], isNot(contains('persona')));
+    },
+    timeout: const Timeout(Duration(seconds: 30)),
+  );
+  for (final confirmed in [true, false]) {
+    testWidgets(
+      confirmed
+          ? 'import applies the reviewed appearance only after the gateway confirms it'
+          : 'a substituted import receipt does not change this device',
+      (tester) async {
+        SharedPreferences.setMockInitialValues({});
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(800, 1600);
+        addTearDown(tester.view.reset);
+        final dir = Directory.systemTemp.createTempSync('profile-import-');
+        addTearDown(() => dir.deleteSync(recursive: true));
+        final incoming = File('${dir.path}/incoming.tar.gz');
+        incoming.writeAsBytesSync(
+          gzip.encode(
+            TarEncoder().encodeBytes(
+              Archive()..addFile(
+                ArchiveFile.string(
+                  'qa/desktop.json',
+                  jsonEncode({
+                    'version': 1,
+                    'skin': 'catppuccin',
+                    'mode': 'dark',
+                    'profileColor': '#123456',
+                    'customCSS':
+                        'body{background:url(https://fixture.invalid)}',
+                    'layoutTree': {
+                      'type': 'split',
+                      'id': 'foreign-layout',
+                      'orientation': 'column',
+                      'weights': [1, 1],
+                      'children': [
+                        {
+                          'type': 'group',
+                          'id': 'one',
+                          'panes': ['private-session'],
+                          'active': 'private-session',
+                        },
+                        {
+                          'type': 'group',
+                          'id': 'two',
+                          'panes': ['plugin.secret'],
+                          'active': 'plugin.secret',
+                        },
+                      ],
+                    },
+                  }),
+                ),
+              ),
+            ),
+          ),
+        );
+        FilePicker? previous;
+        try {
+          previous = FilePicker.platform;
+        } on Object {
+          previous = null;
+        }
+        FilePicker.platform = ProfileBundlePicker(incoming);
+        addTearDown(() {
+          if (previous != null) FilePicker.platform = previous;
+        });
+        Object? reviewed;
+        const staged =
+            '/fixture/qa/uploads/web-aaaaaaaaaaaaaaaa-profile.tar.gz';
+        final names = {'qa': ''};
+        final admin = await _fixture(
+          'source.invalid',
+          'qa',
+          'src',
+          names,
+          (path, method, body, query) {
+            expect(path, '/api/profiles/import');
+            expect(body, {'archive': staged, 'name': 'received'});
+            names['received'] = '';
+            return {
+              'ok': true,
+              'name': 'received',
+              'desktop': confirmed
+                  ? reviewed
+                  : {'version': 1, 'skin': 'mono', 'mode': 'light'},
+            };
+          },
+          binary: (req) async {
+            if (req.url.path != '/api/chat/file-upload') return null;
+            final raw = latin1.decode(req.bodyBytes);
+            final start = raw.indexOf('\r\n\r\n') + 4;
+            final end = raw.lastIndexOf('\r\n--');
+            final payload = Uint8List.fromList(
+              latin1.encode(raw.substring(start, end)),
+            );
+            final bundle = await PortableProfileBundle.inspect(payload);
+            final overlay = bundle.files['desktop.json']!;
+            expect(overlay, isNot(contains('private-session')));
+            expect(overlay, isNot(contains('plugin.secret')));
+            expect(overlay, isNot(contains('fixture.invalid')));
+            expect(overlay, contains('catppuccin'));
+            reviewed = jsonDecode(overlay);
+            return http.Response(
+              jsonEncode({
+                'ok': true,
+                'path': staged,
+                'size': payload.length,
+                'staged_upload': {
+                  'install_id': 'src',
+                  'path': staged,
+                  'profile_home': '/fixture/qa',
+                },
+              }),
+              200,
+            );
+          },
+        );
+        final connection = SavedConnection(
+          id: 'ui-fixture',
+          label: 'Fixture',
+          host: '127.0.0.1',
+          port: 9,
+          apiKey: '',
+          gatewayProfile: 'qa',
+        );
+        await tester.pumpWidget(
+          MaterialApp(
+            home: ProfileBundleScreen(
+              admin: admin,
+              gateway: 'Fixture',
+              connection: connection,
+              nextGen: false,
+            ),
+          ),
+        );
+        await tester.tap(find.text('Open .tar.gz from this device'));
+        await _shown(tester, find.text('desktop.json'));
+        expect(find.textContaining('private-session'), findsNothing);
+        expect(find.textContaining('plugin.secret'), findsNothing);
+        await tester.ensureVisible(find.text('desktop.json'));
+        await tester.tap(find.text('desktop.json'));
+        await tester.pumpAndSettle();
+        expect(find.textContaining('catppuccin'), findsOneWidget);
+        await _checkTile(tester, 'Include this reviewed file');
+        await _checkTile(
+          tester,
+          'Apply appearance to the new profile on this device',
+        );
+        await tester.enterText(find.byType(TextField), 'received');
+        await tester.ensureVisible(find.text('Import selected files'));
+        await tester.tap(find.text('Import selected files').hitTestable());
+        await _shown(
+          tester,
+          find.textContaining(
+            confirmed ? 'Appearance applied' : 'did not confirm',
+          ),
+        );
+        final store = ProfilePresentationStore(
+          await SharedPreferences.getInstance(),
+        );
+        final installed = store.read(
+          connection.copyWith(gatewayProfile: 'received'),
+        );
+        if (confirmed) {
+          expect(
+            find.textContaining('Appearance applied on this device.'),
+            findsOneWidget,
+          );
+          expect(installed!.style.skin, 'catppuccin');
+          expect(installed.style.mode, ThemeMode.dark);
+          expect(installed.style.geometry, (
+            paired: true,
+            stacked: true,
+            percent: 50,
+          ));
+        } else {
+          expect(find.textContaining('did not confirm'), findsOneWidget);
+          expect(installed, isNull);
+        }
+        expect(store.read(connection), isNull);
+        final prefs = await SharedPreferences.getInstance();
+        expect(
+          prefs.getKeys().map((key) => prefs.get(key)).join(),
+          isNot(contains('private-session')),
+        );
+      },
+      timeout: const Timeout(Duration(seconds: 30)),
+    );
   }
 }
