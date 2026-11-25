@@ -838,4 +838,63 @@ void main() {
       );
     });
   });
+
+  group('Item 4 no preview chip ships without a working preview', () {
+    const reply = 'Running at [the app](http://localhost:3000/) now.';
+
+    testWidgets('NextGen: a dev-server link stays a link, with no chip', (
+      tester,
+    ) async {
+      final gateway = NextGenGateway(_ngConnection('c1'));
+      addTearDown(gateway.dispose);
+      final chat = _ngChat(gateway, 'chat-a', [
+        {'role': 'user', 'content': 'start it'},
+        {'role': 'assistant', 'content': reply},
+      ]);
+      await _pumpNg(tester, gateway, chat);
+      expect(_tappableLink(tester, 'the app'), isTrue);
+      expect(find.byType(InputChip), findsNothing);
+      expect(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget.key is ValueKey<String> &&
+              (widget.key as ValueKey<String>).value.startsWith(
+                'preview-suggestion',
+              ),
+        ),
+        findsNothing,
+      );
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('Classic: a dev-server link stays a link, with no chip', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(900, 1400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        _classicChat(
+          _classicConnection('cx'),
+          'chat-a',
+          _Rest([
+            {'id': 1, 'role': 'user', 'content': 'start it'},
+            {'id': 2, 'role': 'assistant', 'content': reply},
+          ]),
+        ),
+      );
+      await pumpChatUpdates(tester);
+      expect(_tappableLink(tester, 'the app'), isTrue);
+      expect(find.byType(InputChip), findsNothing);
+      expect(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget.key is ValueKey<String> &&
+              (widget.key as ValueKey<String>).value.startsWith(
+                'preview-suggestion',
+              ),
+        ),
+        findsNothing,
+      );
+    });
+  });
 }
