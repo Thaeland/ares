@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/l10n.dart';
 import '../services/shortcuts_store.dart' as shortcuts_store;
+import 'desktop_shortcuts.dart' show desktopShortcutsAvailable;
 
 class KeyboardShortcutsSettingsCard extends StatelessWidget {
   const KeyboardShortcutsSettingsCard({required this.preferences, super.key});
@@ -49,6 +50,8 @@ class KeyboardShortcutsSettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Bindings only fire on the desktop runners; never show a dead control.
+    if (!desktopShortcutsAvailable()) return const SizedBox.shrink();
     final theme = Theme.of(context);
     final store = shortcuts_store.ShortcutsStore(preferences);
     final apple = _appleSymbols;

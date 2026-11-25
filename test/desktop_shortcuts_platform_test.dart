@@ -4,6 +4,8 @@
 // PROBE-4: on Windows/Linux the automatic Ctrl twin of a default takes part
 // in the conflict check, so rebinding the palette to Ctrl+N is reported and
 // New chat keeps Ctrl+N.
+// PROBE-10: Android and iOS have no shortcut bindings (DesktopShortcuts is a
+// passthrough), so the Keyboard shortcuts card must not be offered there.
 // PROBE-5: macOS gets no automatic Ctrl twins, so Ctrl+K in a text field stays
 // Cocoa's delete-to-end-of-line instead of opening the palette.
 import 'dart:async';
@@ -13,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/shortcuts_store.dart';
 import 'package:hermes_android/core/widgets/desktop_shortcuts.dart';
+import 'package:hermes_android/core/widgets/keyboard_shortcuts_settings_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<List<DesktopShortcut>> _press(
@@ -245,4 +248,76 @@ void main() {
       expect(isTextEditingChord(KeyChord.parse(raw)!), isFalse, reason: raw);
     }
   });
+
+  testWidgets(
+    'Android and iOS: the Keyboard shortcuts card is not offered (PROBE-10)',
+    (tester) async {
+      final prefs = await SharedPreferences.getInstance();
+      final fired = <DesktopShortcut>[];
+      final sub = desktopShortcutBus.stream.listen(fired.add);
+      addTearDown(() => unawaited(sub.cancel()));
+      await tester.pumpWidget(
+        MaterialApp(
+          builder: (context, child) =>
+              DesktopShortcuts(store: ShortcutsStore(prefs), child: child!),
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: KeyboardShortcutsSettingsCard(preferences: prefs),
+            ),
+          ),
+        ),
+      );
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyK);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+      await tester.pump();
+      expect(fired, isEmpty, reason: 'DesktopShortcuts is a passthrough');
+      expect(
+        find.byKey(const Key('keyboard-shortcuts-settings-card')),
+        findsNothing,
+      );
+      expect(desktopShortcutsAvailable(), isFalse);
+    },
+    variant: TargetPlatformVariant.only(TargetPlatform.android),
+  );
+
+  testWidgets(
+    'iOS: no Keyboard shortcuts card either (PROBE-10)',
+    (tester) async {
+      final prefs = await SharedPreferences.getInstance();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: KeyboardShortcutsSettingsCard(preferences: prefs),
+          ),
+        ),
+      );
+      expect(
+        find.byKey(const Key('keyboard-shortcuts-settings-card')),
+        findsNothing,
+      );
+    },
+    variant: TargetPlatformVariant.only(TargetPlatform.iOS),
+  );
+
+  testWidgets(
+    'desktop: the card is offered where the bindings fire',
+    (tester) async {
+      final prefs = await SharedPreferences.getInstance();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: KeyboardShortcutsSettingsCard(preferences: prefs),
+            ),
+          ),
+        ),
+      );
+      expect(
+        find.byKey(const Key('keyboard-shortcuts-settings-card')),
+        findsOneWidget,
+      );
+    },
+    variant: TargetPlatformVariant.only(TargetPlatform.windows),
+  );
 }

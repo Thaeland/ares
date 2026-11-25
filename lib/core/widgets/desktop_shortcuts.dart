@@ -36,6 +36,18 @@ void fireDesktopShortcut(DesktopShortcut shortcut) {
   if (!desktopShortcutBus.isClosed) desktopShortcutBus.add(shortcut);
 }
 
+/// Whether the in-app keyboard shortcuts fire on [platform]: the desktop
+/// runners only. On Android and iOS [DesktopShortcuts] is a passthrough, so
+/// Settings hides the shortcuts card there instead of offering bindings that
+/// can never fire.
+bool desktopShortcutsAvailable([TargetPlatform? platform]) =>
+    switch (platform ?? defaultTargetPlatform) {
+      TargetPlatform.macOS ||
+      TargetPlatform.linux ||
+      TargetPlatform.windows => true,
+      _ => false,
+    };
+
 /// Wraps [child] with desktop shortcut bindings when running on a desktop
 /// platform. Pass [forceEnabled] in tests to exercise the bindings without
 /// changing the process-wide target platform.
@@ -53,12 +65,7 @@ class DesktopShortcuts extends StatelessWidget {
   /// Overrides the platform gate. Null uses the real target platform.
   final bool? forceEnabled;
 
-  static bool _isDesktop(TargetPlatform platform) =>
-      platform == TargetPlatform.macOS ||
-      platform == TargetPlatform.linux ||
-      platform == TargetPlatform.windows;
-
-  bool get _enabled => forceEnabled ?? _isDesktop(defaultTargetPlatform);
+  bool get _enabled => forceEnabled ?? desktopShortcutsAvailable();
 
   static DesktopShortcut _shortcutFor(shortcuts_store.ShortcutAction action) =>
       switch (action) {

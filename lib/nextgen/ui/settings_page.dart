@@ -13,6 +13,8 @@ import '../../core/services/background_work_prefs.dart';
 import '../../core/services/notification_prefs.dart';
 import '../../core/widgets/completion_sound_settings.dart';
 import '../../core/widgets/keep_awake_settings_card.dart';
+import '../../core/widgets/desktop_shortcuts.dart'
+    show desktopShortcutsAvailable;
 import '../../core/widgets/keyboard_shortcuts_settings_card.dart';
 import '../../core/utils/platform_capabilities.dart';
 import '../../core/services/turn_notification_service.dart';
@@ -248,8 +250,10 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
               DesktopIntegrationCard(preferences: scope.prefs),
               const SizedBox(height: 12),
             ],
-            KeyboardShortcutsSettingsCard(preferences: scope.prefs),
-            const SizedBox(height: 12),
+            if (desktopShortcutsAvailable()) ...[
+              KeyboardShortcutsSettingsCard(preferences: scope.prefs),
+              const SizedBox(height: 12),
+            ],
             NgSectionLabel(ngL.ng_appearance),
             NgCard(
               child: Column(

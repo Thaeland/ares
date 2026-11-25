@@ -749,6 +749,22 @@ void main() {
             find.byKey(const Key('keep-awake-settings-card')),
             findsOneWidget,
           );
+          // On desktop the Desktop integration card sits above it, so the
+          // lazily built list may need a scroll.
+          await tester.scrollUntilVisible(
+            find.byKey(const Key('keyboard-shortcuts-settings-card')),
+            200,
+            scrollable: find
+                .descendant(
+                  of: find.byType(NgSettingsPage),
+                  matching: find.byWidgetPredicate(
+                    (w) =>
+                        w is Scrollable &&
+                        w.axisDirection == AxisDirection.down,
+                  ),
+                )
+                .first,
+          );
           expect(
             find.byKey(const Key('keyboard-shortcuts-settings-card')),
             findsOneWidget,
@@ -780,6 +796,8 @@ void main() {
 
           await unmountNextGen(tester, gateway);
         },
+        // The shortcuts card only exists where the bindings fire.
+        variant: TargetPlatformVariant.only(TargetPlatform.linux),
       );
 
       testWidgets(

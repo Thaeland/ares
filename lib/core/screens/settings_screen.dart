@@ -22,6 +22,7 @@ import '../widgets/mobile_push_settings.dart';
 import '../widgets/chat_density_settings_card.dart';
 import '../widgets/text_size_settings_card.dart';
 import '../widgets/keep_awake_settings_card.dart';
+import '../widgets/desktop_shortcuts.dart' show desktopShortcutsAvailable;
 import '../widgets/keyboard_shortcuts_settings_card.dart';
 import '../widgets/theme_palette_picker.dart';
 import '../theme/hermes_theme.dart';
@@ -192,15 +193,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
         ],
 
-        _buildSectionHeader('Keyboard shortcuts'),
-        KeyboardShortcutsSettingsCard(
-          preferences: context
-              .findAncestorStateOfType<HermesAppState>()!
-              .widget
-              .connManager
-              .prefs,
-        ),
-        const SizedBox(height: 16),
+        if (desktopShortcutsAvailable()) ...[
+          _buildSectionHeader('Keyboard shortcuts'),
+          KeyboardShortcutsSettingsCard(
+            preferences: context
+                .findAncestorStateOfType<HermesAppState>()!
+                .widget
+                .connManager
+                .prefs,
+          ),
+          const SizedBox(height: 16),
+        ],
 
         // ---- Section: Notifications ----
         // Hidden where the app cannot post notifications (Windows).
