@@ -91,6 +91,7 @@ class _CapturingDashboard extends DashboardClient {
     Map<String, String>? queryParameters,
     Duration timeout = ApiClient.requestTimeout,
     bool retried = false,
+    bool Function()? maySend,
   }) async {
     lastQuery = queryParameters;
     return http.Response('{"messages": []}', 200);
@@ -183,9 +184,10 @@ void main() {
         {
           'id': 'a',
           'role': 'assistant',
-          'content':
-              List.filled(45, 'Ordinary paragraph.').join('\n\n') +
-              '\n\nThe terminal result.',
+          'content': [
+            ...List.filled(45, 'Ordinary paragraph.'),
+            'The terminal result.',
+          ].join('\n\n'),
         },
       ]);
       expect(

@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../models/session.dart';
+import '../models/connection.dart';
+import '../services/session_search_preferences.dart';
+import '../widgets/session_search_mode_menu.dart';
 import '../models/session_search_hit.dart';
 import '../services/session_search_client.dart';
 import '../services/session_search_projection.dart';
@@ -422,8 +425,12 @@ class WorkspaceSessionsScreen extends StatefulWidget {
   final WorkspaceSessionView view;
   final WorkspaceSessionKind kind;
   final WorkspaceSessionsLoader load;
-  final Future<List<SessionSearchHit>> Function(String)? searchMessages;
-  final Object? searchScope;
+  final Future<List<SessionSearchHit>> Function(
+    String,
+    bool Function() maySend,
+  )?
+  searchMessages;
+  final SavedConnection? searchScope;
   final WorkspaceSessionsProgressiveLoader? loadProgressively;
 
   /// [loadProgressively] minus the server-archive authority.
@@ -515,12 +522,33 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
   List<SessionSearchHit> _hits = const [];
   String? _searchError;
   bool _searching = false;
+  SessionSearchAccess? _access;
+  int _accessGeneration = 0;
+
+  Future<void> _bindSearchAccess() async {
+    final generation = ++_accessGeneration;
+    _access?.dispose();
+    _access = null;
+    final scope = widget.searchScope;
+    if (scope == null || widget.searchMessages == null) return;
+    try {
+      final prefs = await SessionSearchPreferences.open();
+      if (!mounted || generation != _accessGeneration) return;
+      _access = SessionSearchAccess(prefs, sessionSearchIdentity(scope))
+        ..addListener(_modeChanged);
+      _modeChanged();
+    } catch (_) {
+      // No readable preference: stay local.
+    }
+  }
+
+  void _modeChanged() => _queryChanged(_query);
 
   void _queryChanged(String value) {
     final term = value.trim();
     final request = ++_searchGeneration;
     _searchTimer?.cancel();
-    final search = widget.searchMessages;
+    final search = _access?.value == true ? widget.searchMessages : null;
     setState(() {
       _query = term;
       _hits = const [];
@@ -532,7 +560,11 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
       _searchTitleRevision = _titleRevision;
       _searchArchiveRevision = _archiveChanges.revision;
       try {
-        final hits = await search(term);
+        final hits = await search(
+          term,
+          () =>
+              mounted && request == _searchGeneration && _access?.value == true,
+        );
         if (!mounted || request != _searchGeneration) return;
         setState(() {
           _hits = hits;
@@ -637,6 +669,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
   @override
   void initState() {
     super.initState();
+    unawaited(_bindSearchAccess());
     _data = widget.initialData;
     _activeFullyLoaded = _data != null && !_data!.isPartial;
     _archivesFullyLoaded = _data != null && !_data!.archivedIsPartial;
@@ -649,6 +682,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.searchScope != widget.searchScope ||
         oldWidget.kind != widget.kind) {
+      unawaited(_bindSearchAccess());
       _queryField.clear();
       _queryChanged('');
     }
@@ -729,6 +763,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
 
   @override
   void dispose() {
+    _access?.dispose();
     _queryField.dispose();
     _searchTimer?.cancel();
     ++_searchGeneration;
@@ -1643,7 +1678,9 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
               hintText: widget.kind == WorkspaceSessionKind.crons
                   ? context.l10n.search_cron_conversations
                   : context.l10n.search_conversations,
-              prefixIcon: const Icon(Icons.search),
+              prefixIcon: _access == null
+                  ? const Icon(Icons.search)
+                  : SessionSearchModeMenu(_access!),
               suffixIcon: _query.isEmpty
                   ? null
                   : IconButton(

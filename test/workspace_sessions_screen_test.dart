@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hermes_android/core/models/connection.dart';
+import 'package:hermes_android/core/services/session_search_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/models/session.dart';
@@ -52,6 +55,18 @@ void main() {
   testWidgets(
     'active Classic search merges current content hits and ignores superseded replies',
     (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final connection = SavedConnection(
+        id: 'search',
+        label: 'Search',
+        host: 'test.invalid',
+        port: 8642,
+        apiKey: '',
+      );
+      await (await SessionSearchPreferences.open()).saveMode(
+        connectionIdentity: sessionSearchIdentity(connection),
+        mode: SessionSearchMode.server,
+      );
       final held = Completer<List<SessionSearchHit>>();
       Session? opened;
       await tester.pumpWidget(
@@ -66,7 +81,8 @@ void main() {
               load: () async => WorkspaceSessionsData(
                 sessions: [_session('a', 'Pinned title', pinned: true)],
               ),
-              searchMessages: (q) => q == 'old'
+              searchScope: connection,
+              searchMessages: (q, _) => q == 'old'
                   ? held.future
                   : Future.value([
                       SessionSearchHit(

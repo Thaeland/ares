@@ -241,9 +241,7 @@ class _SessionListScreenState extends State<SessionListScreen> {
   /// Namespaces stored search preferences, matching the chat model override
   /// convention so two connections to the same host stay independent.
   String get _searchConnectionIdentity =>
-      '${widget.connection.baseUrl}|'
-      '${widget.connection.gatewayPrefix ?? ''}|'
-      '${widget.connection.desktopGatewayUrl ?? ''}';
+      sessionSearchIdentity(widget.connection);
 
   /// Server search reaches the dashboard, which the gateway connection alone
   /// does not guarantee is reachable.
@@ -283,11 +281,19 @@ class _SessionListScreenState extends State<SessionListScreen> {
       _serverQuery = '';
       _aiRewrittenQuery = null;
     });
-    await _searchPreferences?.saveMode(
-      connectionIdentity: _searchConnectionIdentity,
-      mode: mode,
-    );
-    if (mode != SessionSearchMode.local) {
+    try {
+      await _searchPreferences?.saveMode(
+        connectionIdentity: _searchConnectionIdentity,
+        mode: mode,
+      );
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not save search mode.')),
+        );
+      }
+    }
+    if (mounted && _searchMode == mode && mode != SessionSearchMode.local) {
       _onSearchChanged(_searchController.text);
     }
   }

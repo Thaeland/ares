@@ -365,6 +365,7 @@ class DashboardApiClient extends ApiClient {
     int offset = 0,
     String? title,
     String? excludeSources,
+    bool Function()? maySendSearch,
     Duration timeout = ApiClient.requestTimeout,
   }) async {
     if (title != null && title.trim().isNotEmpty) {
@@ -373,6 +374,7 @@ class DashboardApiClient extends ApiClient {
         title,
         profile: _profile,
         limit: limit,
+        maySend: maySendSearch,
         timeout: timeout,
       );
       return SessionListPage(

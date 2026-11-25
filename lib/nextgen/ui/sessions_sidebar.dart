@@ -11,6 +11,8 @@ import 'package:hermes_android/core/l10n/l10n.dart';
 import '../../core/models/session.dart';
 import '../../core/models/session_search_hit.dart';
 import '../../core/services/session_search_projection.dart';
+import '../../core/services/session_search_preferences.dart';
+import '../../core/widgets/session_search_mode_menu.dart';
 import '../../core/services/session_search_client.dart';
 import '../../core/services/dashboard_api_client.dart';
 import '../../core/utils/session_sources.dart';
@@ -41,7 +43,24 @@ enum NgDestination {
 /// Holds the sidebar's session list so it survives the drawer closing.
 class NgSessionsModel extends ChangeNotifier {
   NgSessionsModel(NgScope scope) : _scope = scope {
+    _bindSearchAccess();
     _listen();
+  }
+
+  late SessionSearchAccess searchAccess;
+  void _bindSearchAccess() {
+    searchAccess = SessionSearchAccess(
+      SessionSearchPreferences(scope.prefs),
+      sessionSearchIdentity(scope.connection),
+    )..addListener(_modeChanged);
+  }
+
+  void _modeChanged() {
+    if (query.isNotEmpty) {
+      search(query);
+    } else {
+      notifyListeners();
+    }
   }
 
   NgScope _scope;
@@ -53,7 +72,9 @@ class NgSessionsModel extends ChangeNotifier {
       return;
     }
     _generation++;
+    searchAccess.dispose();
     _scope = value;
+    _bindSearchAccess();
     _seen = null;
     _showSubagents = null;
     _debounce?.cancel();
@@ -270,8 +291,17 @@ class NgSessionsModel extends ChangeNotifier {
     notifyListeners();
     try {
       if (query.isNotEmpty) {
+        if (!searchAccess.value) {
+          _projectSearch(const []);
+          hasMore = false;
+          return;
+        }
         // Search is one server-side read; it does not page.
-        final page = await api.getSessionsPage(limit: _pageSize, title: query);
+        final page = await api.getSessionsPage(
+          limit: _pageSize,
+          title: query,
+          maySendSearch: () => generation == _generation && searchAccess.value,
+        );
         if (generation != _generation) return;
         _projectSearch([
           for (final row in page.sessions)
@@ -396,7 +426,7 @@ class NgSessionsModel extends ChangeNotifier {
     ++_generation; // Invalidate in-flight hits before the debounce fires.
     query = value.trim();
     error = null;
-    loading = true;
+    loading = query.isEmpty || searchAccess.value;
     hasMore = false;
     if (query.isEmpty) {
       sessions = _browseRows;
@@ -406,7 +436,7 @@ class NgSessionsModel extends ChangeNotifier {
     }
     notifyListeners();
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), refresh);
+    if (loading) _debounce = Timer(const Duration(milliseconds: 300), refresh);
   }
 
   void clearSearch() {
@@ -433,8 +463,9 @@ class NgSessionsModel extends ChangeNotifier {
     if (removed != null) {
       removed.add(id);
       for (final row in [...sessions, ..._browseRows]) {
-        if (row.id == id && row.lineageRootId != null)
+        if (row.id == id && row.lineageRootId != null) {
           removed.add(row.lineageRootId!);
+        }
       }
     }
     excerpts.remove(id);
@@ -445,6 +476,7 @@ class NgSessionsModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    searchAccess.dispose();
     _generation++;
     _refreshPending = false;
     _debounce?.cancel();
@@ -792,7 +824,9 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
                     isDense: true,
                     filled: true,
                     fillColor: c.input,
-                    prefixIcon: Icon(Icons.search, color: c.text3, size: 20),
+                    prefixIcon: SessionSearchModeMenu(
+                      widget.model.searchAccess,
+                    ),
                     suffixIcon: _search.text.isEmpty
                         ? null
                         : IconButton(

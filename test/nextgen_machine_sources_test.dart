@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hermes_android/core/services/session_search_client.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
@@ -18,6 +17,8 @@ import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/mtls_fixture.dart';
+import 'support/session_search_controls.dart';
+import 'package:hermes_android/core/services/session_search_preferences.dart';
 
 const _excluded = 'oneshot,subagent,kanban,tool';
 const _internal = ['oneshot', 'subagent', 'kanban', 'tool'];
@@ -53,6 +54,7 @@ class _Fixture {
       httpClient: MockClient((request) async {
         requests.add(request);
         if (request.url.path == '/hermes/auth/password-login') {
+          await heldLogin?.future;
           return http.Response(
             '{}',
             200,
@@ -116,6 +118,7 @@ class _Fixture {
   final requests = <http.Request>[];
   final pages = <int, List<Map<String, dynamic>>>{};
   List<Map<String, dynamic>>? serverRows;
+  Completer<void>? heldLogin;
   Completer<http.Response>? heldSearch;
   http.Response? searchReply;
   Completer<http.Response>? heldConfig;
@@ -125,7 +128,7 @@ class _Fixture {
   late final SavedConnection connection;
   late final DashboardClient dashboard;
   late final NextGenGateway gateway;
-  late final NgSessionsModel model;
+  late NgSessionsModel model;
 
   List<http.Request> get listing =>
       requests.where((r) => r.url.path == '/hermes/api/sessions').toList();
@@ -180,10 +183,107 @@ Future<_Fixture> _fixture({
 }
 
 void main() {
+  for (final savedLocal in [false, true]) {
+    testWidgets(
+      'NextGen sends no local queries and revokes held search (saved: $savedLocal)',
+      (t) async {
+        final f = await _fixture();
+        final prefs = SessionSearchPreferences(f.prefs);
+        final identity = sessionSearchIdentity(f.connection);
+        if (savedLocal) {
+          await prefs.saveMode(
+            connectionIdentity: identity,
+            mode: SessionSearchMode.local,
+          );
+          f.model.dispose();
+          f.model = NgSessionsModel(f.scope(const SizedBox()));
+        }
+        f.pages[0] = [_row('local')];
+        await f.model.refresh();
+        await t.pumpWidget(f.widget);
+        final field = find.byKey(const Key('ng-session-search'));
+        List<String?> queries() => [
+          for (final r in f.requests)
+            if (r.url.path.endsWith('/sessions/search'))
+              r.url.queryParameters['q'],
+        ];
+        await t.enterText(field, 'local');
+        await t.pump(const Duration(milliseconds: 350));
+        await f.model.refresh();
+        expect(queries(), isEmpty);
+        expect(find.text('Row local'), findsOneWidget);
+        final held = f.heldSearch = Completer();
+        await chooseGatewaySearch(t, enable: true);
+        await t.pump(const Duration(milliseconds: 350));
+        expect(queries(), ['local']);
+        expect(f.model.loading, isTrue);
+        await chooseGatewaySearch(t, enable: false);
+        expect(find.text('Row local'), findsOneWidget);
+        expect(f.model.loading, isFalse);
+        held.complete(
+          _json({
+            'results': [
+              {'id': 'buried', 'snippet': 'secret excerpt'},
+            ],
+          }),
+        );
+        await t.pumpAndSettle();
+        expect(find.text('secret excerpt'), findsNothing);
+        await t.enterText(field, 'private again');
+        await t.pump(const Duration(milliseconds: 350));
+        expect(queries(), ['local']);
+        expect(
+          prefs.readMode(connectionIdentity: identity),
+          SessionSearchMode.local,
+        );
+        await t.pumpWidget(const SizedBox());
+      },
+    );
+  }
+  for (final after401 in [false, true]) {
+    test(
+      'revocation during dashboard login blocks query dispatch (retry: $after401)',
+      () async {
+        final f = await _fixture();
+        await f.model.searchAccess.setServer(true);
+        f.model.query = 'private';
+        if (after401) {
+          f.heldSearch = Completer();
+        } else {
+          f.heldLogin = Completer();
+        }
+        final refresh = f.model.refresh();
+        await pumpEventQueue();
+        final expected = after401 ? 1 : 0;
+        int searches() => f.requests
+            .where((r) => r.url.path.endsWith('/sessions/search'))
+            .length;
+        expect(searches(), expected);
+        if (after401) {
+          f.heldLogin = Completer();
+          f.heldSearch!.complete(http.Response('{}', 401));
+          await pumpEventQueue();
+        }
+        expect(
+          f.requests
+              .where((r) => r.url.path.endsWith('/password-login'))
+              .length,
+          after401 ? 2 : 1,
+        );
+        await f.model.searchAccess.setServer(false);
+        f.heldLogin!.complete();
+        await refresh;
+        expect(searches(), expected);
+        expect(f.model.error, isNull);
+        expect(f.model.loading, isFalse);
+      },
+    );
+  }
   testWidgets('same-query refresh must drop FTS-only rows on fallback', (
     t,
   ) async {
     final f = await _fixture();
+    await f.model.searchAccess.setServer(true);
     f.pages[0] = [_row('local')];
     await f.model.refresh();
     await t.pumpWidget(f.widget);
@@ -210,6 +310,7 @@ void main() {
   });
   testWidgets('archive read-back wins over older held search', (t) async {
     final f = await _fixture();
+    await f.model.searchAccess.setServer(true);
     await f.model.refresh();
     await t.pumpWidget(f.widget);
     f.searchRows = [
@@ -283,6 +384,7 @@ void main() {
     'active NextGen search resolves stored IDs, shows excerpts, and distinguishes wrong scope and unsupported from empty',
     (tester) async {
       final f = await _fixture();
+      await f.model.searchAccess.setServer(true);
       f.pages[0] = [_row('local')];
       f.total = 1;
       await f.model.refresh();
@@ -558,6 +660,7 @@ void main() {
     'Crons and search keep their unfiltered request and presentation scope',
     (tester) async {
       final f = await _fixture();
+      await f.model.searchAccess.setServer(true);
       f.pages[0] = [_row('human'), _row('cron', source: 'cron')];
       f.total = 2;
       await f.model.refresh();

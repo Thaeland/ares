@@ -96,6 +96,7 @@ class SessionSearchClient {
     String query, {
     String? profile,
     int limit = 60,
+    bool Function()? maySend,
     Duration timeout = ApiClient.requestTimeout,
   }) async {
     final term = query.trim();
@@ -107,6 +108,7 @@ class SessionSearchClient {
       'sessions/search',
       queryParameters: {'q': term, 'limit': '$safeLimit', 'profile': ?selected},
       timeout: timeout,
+      maySend: maySend,
     );
     return _readResponse(response, term, selected, safeLimit);
   }

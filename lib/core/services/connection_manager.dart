@@ -2798,9 +2798,12 @@ class DashboardClient {
     Map<String, String>? queryParameters,
     Duration timeout = ApiClient.requestTimeout,
     bool retried = false,
+    bool Function()? maySend,
   }) async {
     final authGeneration = _authGeneration;
     final headers = await _authHeaders();
+    // Search consent may have been revoked while signing in or after a 401.
+    if (maySend != null && !maySend()) throw StateError('Request superseded');
     final uri = Uri.parse(
       '$_baseUrl/api/$endpoint',
     ).replace(queryParameters: queryParameters);
@@ -2816,6 +2819,7 @@ class DashboardClient {
         endpoint,
         body: body,
         queryParameters: queryParameters,
+        maySend: maySend,
         timeout: timeout,
         retried: true,
       );

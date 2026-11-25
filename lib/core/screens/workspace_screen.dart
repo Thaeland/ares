@@ -1244,8 +1244,14 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
   /// The dashboard only exists when the connection names a host to reach it
   /// on. Without one, every dashboard-backed entry is disabled *with a reason*
   /// rather than hidden, per the roadmap's capability-discovery rule.
-  Future<List<SessionSearchHit>> _searchMessages(String term) =>
-      SessionSearchClient.searchDashboard(_dashboardClient, term);
+  Future<List<SessionSearchHit>> _searchMessages(
+    String term,
+    bool Function() maySend,
+  ) => SessionSearchClient.searchDashboard(
+    _dashboardClient,
+    term,
+    maySend: maySend,
+  );
 
   bool get _dashboardReachable => widget.connection.host.trim().isNotEmpty;
 
