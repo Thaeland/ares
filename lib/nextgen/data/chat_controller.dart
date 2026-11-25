@@ -662,6 +662,8 @@ class NgChatController extends ChangeNotifier {
   String title;
   final List<NgItem> items = [];
   final List<NgQueued> queued = [];
+  bool localQueuePaused = false;
+  bool _drainScheduled = false;
   bool running = false;
   bool loadingHistory = false;
 
@@ -2062,12 +2064,44 @@ class NgChatController extends ChangeNotifier {
     onTurnFinished?.call();
     // The goal's judge runs after the turn; pick up its verdict.
     if (control?.goal != null) unawaited(refreshControl());
-    if (queued.isNotEmpty && !failed) {
-      final next = queued.removeAt(0);
-      scheduleMicrotask(
-        () => unawaited(send(next.text, display: next.display)),
-      );
+    if (failed && queued.isNotEmpty) localQueuePaused = true;
+    _scheduleLocalDrain();
+  }
+
+  // These are this client's unsent entries, never admissions copied back
+  // from the owner. Recheck at dispatch: a pause/removal may win the tick.
+  void _scheduleLocalDrain() {
+    if (_drainScheduled || localQueuePaused || running || queued.isEmpty) {
+      return;
     }
+    _drainScheduled = true;
+    scheduleMicrotask(() {
+      _drainScheduled = false;
+      if (!draftOwnerCurrent || localQueuePaused || running || queued.isEmpty) {
+        return;
+      }
+      final next = queued.removeAt(0);
+      unawaited(send(next.text, display: next.display));
+    });
+  }
+
+  void setLocalQueuePaused(bool paused) {
+    if (!draftOwnerCurrent) return;
+    localQueuePaused = paused;
+    if (!paused) _scheduleLocalDrain();
+    _changed();
+  }
+
+  void editLocalQueue(NgQueued original, String text) {
+    final index = queued.indexOf(original);
+    if (!draftOwnerCurrent ||
+        index < 0 ||
+        text.trim().isEmpty ||
+        original.display != null) {
+      return;
+    }
+    queued[index] = NgQueued(original.key, text.trim());
+    _changed();
   }
 
   /// Drops the request [id] once it was answered elsewhere (a notification,
@@ -2629,7 +2663,8 @@ class NgChatController extends ChangeNotifier {
   /// names the exact execution the user saw ([_executionGeneration] now): a
   /// later claim is never stopped by it, and `stale_generation` is reported,
   /// not retried against the newer turn. Legacy gateways get their own shape.
-  Future<void> stop() async {
+  Future<void> stop({bool parkLocalQueue = true}) async {
+    if (parkLocalQueue && queued.isNotEmpty) setLocalQueuePaused(true);
     final id = runtimeId;
     if (id == null) return;
     final canonical = gateway.sessionAuthority;
@@ -2653,7 +2688,8 @@ class NgChatController extends ChangeNotifier {
   /// Stops the running turn, then sends [text].
   Future<void> stopAndSend(String text) async {
     queued.insert(0, NgQueued(_key('q'), text.trim()));
-    await stop();
+    localQueuePaused = false;
+    await stop(parkLocalQueue: false);
   }
 
   // ── Slash commands (Kyllene's ChatSession.runCommand) ─────────────────

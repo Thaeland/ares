@@ -6,7 +6,7 @@ Select an attached group, or choose **Live workers** in the toolbar of an attach
 
 ## Gateway contract
 
-Source: pinned Hermes [`methods_subagents.py`](https://github.com/NousResearch/hermes-agent/blob/b7ee21c14e38316273f88d8ed112491ba1c87d15/tui_gateway/methods_subagents.py) and [`methods_session.py`](https://github.com/NousResearch/hermes-agent/blob/b7ee21c14e38316273f88d8ed112491ba1c87d15/tui_gateway/methods_session.py). Ares uses the existing [workspace owner](remote-workspace-contract.md), not a new chat or a global dispatcher.
+Canonical sockets dispatch list/steer to the [session authority's child handlers](https://github.com/NousResearch/hermes-agent/blob/b7ee21c14e38316273f88d8ed112491ba1c87d15/gateway/session_ancillary.py). The host rechecks the selected agent object under the live-child registry lock; `queued` is not a delivery acknowledgement. Profile-wide roster discovery is a sessionless handler, not a list of permissions. Sidecar source: pinned Hermes [`methods_subagents.py`](https://github.com/NousResearch/hermes-agent/blob/b7ee21c14e38316273f88d8ed112491ba1c87d15/tui_gateway/methods_subagents.py) and [`methods_session.py`](https://github.com/NousResearch/hermes-agent/blob/b7ee21c14e38316273f88d8ed112491ba1c87d15/tui_gateway/methods_session.py). Ares uses the existing [workspace owner](remote-workspace-contract.md), not a new chat or a global dispatcher.
 
 | Typed operation | Wire scope | Guard |
 |---|---|---|

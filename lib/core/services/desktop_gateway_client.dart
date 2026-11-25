@@ -48,6 +48,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
   final String? _gatewayProfile;
   final ClientCertificateConfig? _clientCertificate;
   WsClient? _ws;
+  bool get sessionAuthority => _ws?.sessionAuthority == true;
   Future<WsClient>? _socketInFlight;
   Timer? _reconnectTimer;
   int _reconnectAttempts = 0;

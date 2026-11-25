@@ -87,6 +87,7 @@ import '../utils/turn_recovery_fallback.dart';
 import '../theme/hermes_theme.dart';
 import 'files_screen.dart';
 import 'workspace_workers_screen.dart';
+import 'gateway_queue_screen.dart';
 import '../widgets/background_report_card.dart';
 import '../widgets/gateway_activity_card.dart';
 import '../widgets/chat_context_header.dart';
@@ -7189,6 +7190,35 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ),
         ),
         actions: [
+          if (workers != null && gateway?.sessionAuthority == true)
+            IconButton(
+              tooltip: 'Gateway queue',
+              icon: const Icon(Icons.queue),
+              onPressed: () {
+                final writer = _draftWriter, revision = _composerRevision;
+                final text = _attachmentDrafts.isEmpty
+                    ? _textController.text
+                    : '';
+                GatewayQueueScreen.open(
+                  context,
+                  workers.owner,
+                  workers.route,
+                  draft: text,
+                  onAdmitted: (sent) {
+                    if (mounted &&
+                        writer == _draftWriter &&
+                        writer.isCurrent &&
+                        revision == _composerRevision &&
+                        sent == text &&
+                        text.isNotEmpty &&
+                        _attachmentDrafts.isEmpty) {
+                      _setRestoredComposer('');
+                      _commitComposerForSend();
+                    }
+                  },
+                );
+              },
+            ),
           if (workers != null)
             IconButton(
               tooltip: context.l10n.workspace_workers,

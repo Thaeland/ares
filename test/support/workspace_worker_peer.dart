@@ -14,10 +14,12 @@ class WorkerPeer {
   final tickets = <String>{};
   final held = Completer<void>(), release = Completer<void>();
   String? holdMethod;
+  bool dropHeldReply = false;
   int backgroundB = 3;
   bool _closing = false;
   String runtime = 'runtime-A', receipt = 'queued', rowProfile = 'work';
   final replies = <String, Map<String, Object?>>{};
+  Map<String, Object?>? Function(String, Map)? handle;
   final rows = <Map<String, Object?>>[
     for (final id in ['first', 'second'])
       {
@@ -132,16 +134,18 @@ class WorkerPeer {
       },
       _ => <String, Object?>{},
     };
+    final override = handle?.call(method, params) ?? replies[method];
     final response = jsonEncode({
       'jsonrpc': '2.0',
       'id': frame['id'],
-      ...?replies[method],
-      if (!replies.containsKey(method)) 'result': result,
+      ...?override,
+      if (override == null) 'result': result,
     });
     if (method == holdMethod) {
       holdMethod = null;
       held.complete();
       await release.future;
+      if (dropHeldReply) return;
     }
     if (!_closing && ws.readyState == WebSocket.open) ws.add(response);
   }

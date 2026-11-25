@@ -21,6 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'support/fake_voice_composer_adapter.dart';
 import 'support/mtls_fixture.dart';
 import 'support/workspace_worker_peer.dart';
+import 'support/queue_ledger.dart';
 
 Future<void> visible(WidgetTester tester, Finder finder) async {
   final elapsed = Stopwatch()..start();
@@ -40,6 +41,8 @@ void main() {
     'NextGen More',
     'Classic parent chat',
     'NextGen parent chat',
+    'Classic queue chat',
+    'NextGen queue chat',
   ]) {
     testWidgets(
       '$entry: use the displayed owner, not a transcript or active chat',
@@ -62,6 +65,9 @@ void main() {
           ),
         );
         final peer = (await tester.runAsync(WorkerPeer.start))!;
+        final ledger = entry.contains('queue') ? QueueLedger(peer) : null;
+        ledger?.add('Lost input', state: 'unknown');
+        ledger?.add('Other client queued this');
         final c = peer.connection;
         final prefs = await SharedPreferences.getInstance();
         NextGenGateway? ng;
@@ -137,6 +143,45 @@ void main() {
               ),
             );
             await tester.pump();
+            if (ledger != null) {
+              await visible(tester, find.byTooltip('Gateway queue'));
+              await tester.tap(find.byTooltip('Gateway queue'));
+              await visible(tester, find.text('Queue paused: unknown outcome'));
+              expect(find.text('Other client queued this'), findsOneWidget);
+              expect(peer.calls('prompt.submit'), isEmpty);
+              await tester.tap(find.text('Edit'));
+              await tester.pump();
+              await tester.enterText(
+                find.byType(TextField).last,
+                'my edited row',
+              );
+              await tester.tap(find.text('Save at queue end'));
+              await visible(
+                tester,
+                find.text('Edited entry admitted at the end of the queue.'),
+              );
+              await visible(tester, find.text('Next prompt'));
+              expect(find.text('my edited row'), findsOneWidget);
+              await tester.tap(find.text('Discard…'));
+              await tester.pumpAndSettle();
+              await tester.tap(find.text('Discard and resume'));
+              await visible(
+                tester,
+                find.text('Lost admission resolved; it was not resent.'),
+              );
+              ledger.add('Arrived while open');
+              ledger.notify();
+              await visible(tester, find.text('Arrived while open'));
+              expect(find.text('Queue paused: unknown outcome'), findsNothing);
+              expect(peer.calls('prompt.submit'), isEmpty);
+              ConnectionMutationBarrier.begin([c.id]).release();
+              await visible(
+                tester,
+                find.text('This connection changed. Reopen its chat.'),
+              );
+              expect(find.text('my edited row'), findsNothing);
+              return;
+            }
             if (parentChat) {
               await visible(tester, find.byTooltip('Live workers'));
               await tester.tap(find.byTooltip('Live workers'));

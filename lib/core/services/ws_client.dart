@@ -337,6 +337,27 @@ class WsClient {
   /// streamed response.
   final Map<String, List<StreamCallback>> _sessionStreams = {};
 
+  /// An invalidation only: never pass an event's contents across profile
+  /// boundaries on a multiplexed socket. Consumers read the scoped snapshot.
+  void Function() observeQueueChanges(String session, void Function() changed) {
+    final listeners = _sessionStreams.putIfAbsent(session, () => []);
+    void notify(StreamEvent event) {
+      if (event.type == 'session.info' && event.data['pending'] is List) {
+        changed();
+      }
+    }
+
+    listeners.add(notify);
+    final close = _addConnectionClosedListener(changed);
+    return () {
+      _removeConnectionClosedListener(close);
+      listeners.remove(notify);
+      if (listeners.isEmpty && identical(listeners, _sessionStreams[session])) {
+        _sessionStreams.remove(session);
+      }
+    };
+  }
+
   /// Canonical session authority: the newest execution generation this
   /// socket admitted per runtime session (resume/create snapshot, submit
   /// receipt, or an event's stamp). Stop and Steer name it; it is never

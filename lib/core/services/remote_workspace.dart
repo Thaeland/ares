@@ -7,6 +7,7 @@ import 'connection_mutation_barrier.dart';
 import 'ws_client.dart';
 
 part 'workspace_workers.dart';
+part 'workspace_queue.dart';
 
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {

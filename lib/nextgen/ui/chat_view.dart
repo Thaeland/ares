@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/models/attachment_draft.dart';
 import '../../core/screens/workspace_workers_screen.dart';
+import '../../core/screens/gateway_queue_screen.dart';
 import '../../core/services/connection_manager.dart';
 import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
@@ -444,8 +445,30 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     }
     if (text.isEmpty) return;
     if (chat.running) {
+      final source = chat;
+      final writer = _draftWriter, revision = writer.revision;
+      final stored = source.storedId;
       final choice = await _busyChoice();
-      if (choice == null) return;
+      if (!mounted ||
+          choice == null ||
+          source != chat ||
+          writer != _draftWriter ||
+          writer.revision != revision ||
+          stored != source.storedId ||
+          !source.draftOwnerCurrent) {
+        return;
+      }
+      if (choice == 'queue' && source.gateway.sessionAuthority) {
+        if (stored == null || _drafts.isNotEmpty) {
+          ngToast(
+            context,
+            'The gateway queue needs an attached chat and a text-only prompt.',
+          );
+          return;
+        }
+        _openGatewayQueue(source, stored);
+        return;
+      }
       _input.clear();
       switch (choice) {
         case 'steer':
@@ -539,6 +562,31 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     _input.value = TextEditingValue(
       text: text,
       selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+
+  void _openGatewayQueue(NgChatController source, String stored) {
+    final writer = _draftWriter, revision = writer.revision;
+    final text = _drafts.isEmpty ? _input.text : '';
+    final owner = source.gateway.workspace;
+    GatewayQueueScreen.open(
+      context,
+      owner,
+      owner.route(storedSessionId: stored),
+      draft: text,
+      onAdmitted: (sent) {
+        if (mounted &&
+            chat == source &&
+            writer == _draftWriter &&
+            source.draftOwnerCurrent &&
+            source.storedId == stored &&
+            writer.revision == revision &&
+            sent == text &&
+            text.isNotEmpty &&
+            _drafts.isEmpty) {
+          _input.clear();
+        }
+      },
     );
   }
 
@@ -709,6 +757,12 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
               ),
             ),
             actions: [
+              if (workers != null && gateway.sessionAuthority)
+                IconButton(
+                  tooltip: 'Gateway queue',
+                  icon: const Icon(Icons.queue),
+                  onPressed: () => _openGatewayQueue(chat, parentId!),
+                ),
               if (workers != null)
                 IconButton(
                   tooltip: ngL.workspace_workers,
@@ -897,11 +951,49 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
     ),
   );
 
+  Future<void> _editLocal(NgQueued row) async {
+    final source = chat;
+    var draft = row.text;
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit unsent prompt'),
+        content: TextFormField(
+          initialValue: draft,
+          onChanged: (v) => draft = v,
+          maxLines: 4,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, draft),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    if (mounted && source == chat && result != null) {
+      source.editLocalQueue(row, result);
+    }
+  }
+
   Widget _queue(NgColors c) => Padding(
     padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        TextButton.icon(
+          onPressed: () => chat.setLocalQueuePaused(!chat.localQueuePaused),
+          icon: Icon(chat.localQueuePaused ? Icons.play_arrow : Icons.pause),
+          label: Text(
+            chat.localQueuePaused
+                ? 'Resume device queue'
+                : 'Pause device queue',
+          ),
+        ),
         for (final q in chat.queued)
           Padding(
             padding: const EdgeInsets.only(bottom: 4),
@@ -925,6 +1017,13 @@ class _NgChatViewState extends State<NgChatView> with WidgetsBindingObserver {
                   ),
                   IconButton(
                     visualDensity: VisualDensity.compact,
+                    tooltip: 'Edit unsent prompt',
+                    icon: const Icon(Icons.edit_outlined, size: 16),
+                    onPressed: q.display == null ? () => _editLocal(q) : null,
+                  ),
+                  IconButton(
+                    visualDensity: VisualDensity.compact,
+                    tooltip: 'Remove unsent prompt',
                     icon: const Icon(Icons.close, size: 16),
                     onPressed: () => chat.unqueue(q),
                   ),
