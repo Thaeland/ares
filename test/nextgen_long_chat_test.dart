@@ -363,6 +363,95 @@ void main() {
       expect(tool.output!.length, lessThanOrEqualTo(ngStoredToolChars + 1));
     });
 
+    for (final width in [390.0, 1050.0]) {
+      testWidgets('NextGen mounted transcript find and prompt jump at $width', (
+        tester,
+      ) async {
+        await tester.binding.setSurfaceSize(Size(width, 780));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+        SharedPreferences.setMockInitialValues({});
+        final prefs = await SharedPreferences.getInstance();
+        chat.debugApplyHistory([
+          for (int i = 0; i < 22; i++) ...[
+            {
+              'id': i * 2 + 1,
+              'role': 'user',
+              'content': i == 0
+                  ? 'Target first Target'
+                  : i == 21
+                  ? 'Target last'
+                  : 'Prompt $i',
+            },
+            {'id': i * 2 + 2, 'role': 'assistant', 'content': 'Reply $i'},
+          ],
+        ]);
+        final view = MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: nextGenTheme(Brightness.light, NextGenLook.instance),
+          home: NgScope(
+            connManager: ConnectionManager(prefs),
+            gateway: gateway,
+            connections: [gateway.connection],
+            switchTo: (_) async {},
+            addGateway: () async {},
+            signOut: (_) async {},
+            reload: () async {},
+            signInAgain: () async {},
+            child: NgChatView(
+              chat: chat,
+              onOpenSidebar: () {},
+              onNewChat: () {},
+            ),
+          ),
+        );
+        await tester.pumpWidget(view);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byTooltip('Find in transcript'));
+        await tester.pumpAndSettle();
+        await tester.enterText(
+          find.byKey(const Key('transcript-query')),
+          'Target',
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('1/3'), findsOneWidget);
+        expect(find.text('Target first Target').hitTestable(), findsOneWidget);
+        await tester.tap(find.byTooltip('Next match'));
+        await tester.pumpAndSettle();
+        expect(find.text('2/3'), findsOneWidget);
+        await tester.tap(find.byTooltip('Next match'));
+        await tester.pumpAndSettle();
+        expect(find.text('3/3'), findsOneWidget);
+        expect(find.text('Target last').hitTestable(), findsOneWidget);
+        await tester.tap(find.byTooltip('Previous match'));
+        await tester.pumpAndSettle();
+        expect(find.text('Target first Target').hitTestable(), findsOneWidget);
+        await tester.tap(find.byTooltip('Prompt timeline'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(ListTile, 'Prompt 2'));
+        await tester.pumpAndSettle();
+        expect(find.text('Prompt 2').hitTestable(), findsOneWidget);
+        await tester.tap(find.byTooltip('Close find'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('transcript-query')), findsNothing);
+        final scroll = tester
+            .widget<ListView>(find.byKey(const ValueKey('ng-transcript')))
+            .controller!;
+        final previous = scroll.offset;
+        expect(previous, greaterThan(0));
+        await tester.pumpWidget(const SizedBox());
+        await tester.pumpWidget(view);
+        await tester.pumpAndSettle();
+        expect(
+          tester
+              .widget<ListView>(find.byKey(const ValueKey('ng-transcript')))
+              .controller!
+              .offset,
+          closeTo(previous, 1),
+        );
+        await tester.pumpWidget(const SizedBox());
+      });
+    }
     testWidgets('scrolling to the top of a long chat loads the page before', (
       tester,
     ) async {

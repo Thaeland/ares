@@ -79,6 +79,7 @@ import '../models/chat_message_time.dart';
 import '../utils/rest_chat_reply_retention.dart';
 import '../utils/android_prompt_context.dart';
 import '../utils/chat_history_scroll.dart';
+import '../widgets/transcript_reader.dart';
 import '../utils/message_content.dart';
 import '../utils/responsive.dart';
 import '../utils/turn_recovery_fallback.dart';
@@ -920,6 +921,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   ChatDensity _chatDensity = chatDensitySelection.value;
 
   // Scroll management
+  final _reader = GlobalKey<TranscriptReaderState>();
   final _scrollController = ScrollController();
   final _scrollCoordinator = ChatScrollCoordinator();
   final _endAffordanceController = ChatEndAffordanceController();
@@ -2962,6 +2964,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   void _goToEnd() {
+    _reader.currentState?.rememberLatest();
+    _scrollCoordinator.updateFromUserScroll(isNearEnd: true);
     if (_canFocusSavedRecovery && _retainIdleRecoveryForPresentation()) {
       setState(() {});
       _scheduleScrollTarget(const ChatScrollTarget.end());
@@ -7014,7 +7018,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     _syncComposerKeyboardEndScroll();
-    return Scaffold(
+    final chat = Scaffold(
       appBar: AppBar(
         centerTitle: false,
         automaticallyImplyLeading: widget.onClose == null,
@@ -7044,6 +7048,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ),
         ),
         actions: [
+          IconButton(
+            tooltip: 'Find in transcript',
+            icon: const Icon(Icons.find_in_page_outlined),
+            onPressed: () => _reader.currentState?.open(),
+          ),
           if (_archiving)
             const Padding(
               padding: EdgeInsets.only(right: 8),
@@ -7259,6 +7268,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         ),
       ),
     );
+    return transcriptShortcuts(_reader, chat);
   }
 
   Widget _buildGatewayNotification(GatewayNotification notification) {
@@ -8121,6 +8131,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         maxDownloadBytes: maxAttachmentDownloadBytes,
       );
 
+  String _transcriptText(Map<String, dynamic> msg) =>
+      (msg['_display_content'] as String?) ??
+      stripToolResultText(
+        messageContentToText(
+          AndroidPromptContext.displayContent(msg, msg['content']),
+        ),
+      );
+
   Widget _buildDisplayItem(
     dynamic item, {
     ChatDisplaySource? source,
@@ -8226,13 +8244,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       );
     }
     final role = (msg['role'] as String?) ?? 'assistant';
-    final content =
-        (msg['_display_content'] as String?) ??
-        stripToolResultText(
-          messageContentToText(
-            AndroidPromptContext.displayContent(msg, msg['content']),
-          ),
-        );
+    final content = _transcriptText(msg);
     final isUser = role == 'user';
 
     return MessageBubble(
@@ -8467,7 +8479,39 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               ),
             ],
           ),
-        Expanded(child: list),
+        Expanded(
+          child: TranscriptReader(
+            key: _reader,
+            scroll: _scrollController,
+            onLatest: _goToEnd,
+            storageKey: widget.session.isLocalDraft
+                ? null
+                : readingPositionKey(
+                    'classic',
+                    widget.connection.id,
+                    widget.connection.gatewayProfile,
+                    _storedSessionKey,
+                  ),
+            onNavigate: () {
+              _openingScrollInterrupted = true;
+              _initialEndFramesRemaining = 0;
+              ++_automaticScrollGeneration;
+              _scrollCoordinator.updateFromUserScroll(isNearEnd: false);
+            },
+            entries: () => [
+              for (final (i, cell) in cells.indexed)
+                if (cell.item case final Map<String, dynamic> msg
+                    when msg['role'] == 'user' || msg['role'] == 'assistant')
+                  (
+                    id: (cell.source, chatDisplayItemIdentity(msg)),
+                    index: i + (_historyWindow.hasOlder ? 1 : 0),
+                    text: _transcriptText(msg),
+                    prompt: msg['role'] == 'user',
+                  ),
+            ],
+            child: list,
+          ),
+        ),
       ],
     );
   }

@@ -438,7 +438,7 @@ DateTime? ngSessionTime(Session s) {
   return DateTime.fromMillisecondsSinceEpoch((t * 1000).round());
 }
 
-/// One of a chat row's actions: the value [_NgSessionsSidebarState] runs,
+/// One of a chat row's actions: the value [NgSessionsSidebarState] runs,
 /// and how both the long-press sheet and the desktop menu show it.
 typedef _NgChatAction = ({
   String value,
@@ -481,10 +481,11 @@ class NgSessionsSidebar extends StatefulWidget {
   final bool docked;
 
   @override
-  State<NgSessionsSidebar> createState() => _NgSessionsSidebarState();
+  State<NgSessionsSidebar> createState() => NgSessionsSidebarState();
 }
 
-class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
+class NgSessionsSidebarState extends State<NgSessionsSidebar> {
+  void focusSearch() => _searchFocus.requestFocus();
   final _search = TextEditingController();
   final _searchFocus = FocusNode();
   final _scroll = ScrollController();
