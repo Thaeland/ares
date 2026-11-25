@@ -34,6 +34,8 @@ import 'core/services/text_size_preference.dart';
 import 'core/services/theme_preference.dart';
 import 'core/services/turn_notification_service.dart';
 import 'core/screens/chat_screen.dart';
+import 'core/workspace/popout_bootstrap.dart';
+import 'core/workspace/popout_protocol.dart';
 import 'core/screens/workspace_screen.dart';
 import 'core/theme/hermes_theme.dart';
 import 'core/utils/responsive.dart';
@@ -52,8 +54,12 @@ import 'nextgen/nextgen_l10n.dart';
 import 'nextgen/nextgen_preferences.dart';
 import 'nextgen/theme/nextgen_theme.dart';
 
-void main() {
+void main([List<String> args = const []]) {
   WidgetsFlutterBinding.ensureInitialized();
+  if (args.contains(workspacePopoutMarker)) {
+    runWorkspacePopoutChild(args);
+    return;
+  }
   // Remove any private key left behind by a cancelled connection import.
   unawaited(ClientCertificateService().cleanupStaging());
   runApp(const StartupApp());

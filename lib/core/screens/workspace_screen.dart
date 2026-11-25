@@ -50,6 +50,8 @@ import '../widgets/crons_pane.dart';
 import '../widgets/hermes_components.dart';
 import '../widgets/hermes_shell.dart';
 import '../widgets/more_pane.dart';
+import 'classic_parallel_workspace.dart';
+import 'parallel_workspace_entry.dart';
 import 'projects_root_screen.dart';
 import '../widgets/new_chat_sheet.dart';
 import '../widgets/project_detail_screen.dart';
@@ -1069,7 +1071,11 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     }
   }
 
-  Widget _pane(BuildContext context, HermesDestination destination) {
+  Widget _pane(
+    BuildContext context,
+    HermesDestination destination,
+    VoidCallback openParallel,
+  ) {
     final tokens = HermesTokens.of(context);
     switch (destination) {
       case HermesDestination.chats:
@@ -1228,11 +1234,16 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         return MorePane(
           sections: buildMoreSections(
             providerIds: _providerIds,
+            profileScopedHistory:
+                widget.connection.singleLogin ||
+                (widget.connection.gatewayProfile?.trim().isEmpty ?? true),
             dashboardReachable: _dashboardReachable,
             workspaceAvailable: _ownedGateway != null,
             l10n: context.l10n,
           ),
-          onSelect: _openMoreEntry,
+          onSelect: (entry) => entry.id == 'parallel-workspace'
+              ? openParallel()
+              : _openMoreEntry(entry),
         );
     }
   }
@@ -2244,7 +2255,6 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final tokens = HermesTokens.of(context);
     final expanded = isExpandedWindow(context);
     // Folding a wide window back to compact re-homes an open inline detail
     // chat as a full-screen route so the conversation is not lost. The list
@@ -2275,6 +2285,20 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     }
     _wasExpanded = expanded;
 
+    return ParallelWorkspaceEntryHost(
+      owner: widget.connection,
+      connection: widget.connection,
+      workspace: (_) => ClassicParallelWorkspace(
+        connection: widget.connection,
+        turnController: widget.turnApplicationController,
+        clientFactory: widget.testChatApiClientFactory,
+      ),
+      home: (openParallel) => _buildHome(context, openParallel),
+    );
+  }
+
+  Widget _buildHome(BuildContext context, VoidCallback openParallel) {
+    final tokens = HermesTokens.of(context);
     return Scaffold(
       // The nested HermesShell owns keyboard resizing and the bottom navigation.
       resizeToAvoidBottomInset: false,
@@ -2342,7 +2366,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                 label: Text(context.l10n.new_label),
               )
             : null,
-        builder: _pane,
+        builder: (context, destination) =>
+            _pane(context, destination, openParallel),
       ),
     );
   }

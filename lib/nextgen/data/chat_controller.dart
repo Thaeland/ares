@@ -812,6 +812,8 @@ class NgChatController extends ChangeNotifier {
         // The canonical resume model forbids inline_images (#291).
         if (!gateway.sessionAuthority) 'inline_images': false,
       });
+      if (_disposed || storedId != id) return;
+      _checkStoredResume(result, id);
       _withAuthority(result);
       // The first canonical attach starts the cursor at the snapshot's
       // watermark. A later one (a poll, a re-attach after a replay) keeps the
@@ -1556,6 +1558,7 @@ class NgChatController extends ChangeNotifier {
           // The canonical resume model forbids inline_images (#291).
           if (!canonical) 'inline_images': false,
         });
+        _checkStoredResume(snapshot, id);
       }
       if (_disposed) return;
       final nowRunning = snapshot == null
@@ -2060,11 +2063,27 @@ class NgChatController extends ChangeNotifier {
 
   // ── Actions ─────────────────────────────────────────────────────────
 
+  static void _checkStoredResume(Map<String, dynamic> result, String id) {
+    if (result.containsKey('stored_session_id') &&
+        result['stored_session_id'] != id) {
+      throw StateError('The gateway returned a different stored chat.');
+    }
+  }
+
   Future<void> _ensureSession() async {
     if (_disposed) {
       throw StateError(ngL.ng_the_gateway_connection_dropped_try_again);
     }
     if (runtimeId != null && storedId != null) return;
+    // A missing or refused runtime binding is never permission to create a
+    // different chat. This also joins an initial attach still in flight.
+    if (storedId != null) {
+      await _attach();
+      if (_disposed || runtimeId == null) {
+        throw StateError(ngL.ng_the_gateway_connection_dropped_try_again);
+      }
+      return;
+    }
     if (_createUncertain) throw StateError(ngL.ng_project_create_uncertain);
     if (_creatingSession) {
       throw StateError(ngL.ng_connecting);

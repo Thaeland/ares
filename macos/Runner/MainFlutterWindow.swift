@@ -3,7 +3,17 @@ import FlutterMacOS
 
 class MainFlutterWindow: NSWindow {
   override func awakeFromNib() {
-    let flutterViewController = FlutterViewController()
+    let arguments = Array(CommandLine.arguments.dropFirst())
+    let flutterViewController: FlutterViewController
+    if arguments.contains("--ares-workspace-chat-v1") {
+      let project = FlutterDartProject()
+      project.dartEntrypointArguments = arguments
+      flutterViewController = FlutterViewController(project: project)
+      self.title = "Ares — Chat"
+      self.isRestorable = false
+    } else {
+      flutterViewController = FlutterViewController()
+    }
     let windowFrame = self.frame
     self.contentViewController = flutterViewController
     self.setFrame(windowFrame, display: true)

@@ -16,8 +16,14 @@ import 'ui/nextgen_scope.dart';
 import 'nextgen_l10n.dart';
 
 class NextGenHome extends StatefulWidget {
-  const NextGenHome({super.key, required this.connManager});
+  const NextGenHome({
+    super.key,
+    required this.connManager,
+    this.testGatewayFactory,
+  });
   final ConnectionManager connManager;
+  @visibleForTesting
+  final NextGenGateway Function(SavedConnection)? testGatewayFactory;
 
   @override
   State<NextGenHome> createState() => _NextGenHomeState();
@@ -102,7 +108,10 @@ class _NextGenHomeState extends State<NextGenHome> {
         _sameAccess(current.connection, connection)) {
       return;
     }
-    final next = NextGenGateway(connection)..start();
+    final next =
+        (widget.testGatewayFactory?.call(connection) ??
+              NextGenGateway(connection))
+          ..start();
     setState(() {
       _gateway = next;
       // A different gateway starts from a fresh navigator and chat.
@@ -115,6 +124,16 @@ class _NextGenHomeState extends State<NextGenHome> {
   }
 
   static bool _sameAccess(SavedConnection a, SavedConnection b) =>
+      a.host == b.host &&
+      a.port == b.port &&
+      a.useHttps == b.useHttps &&
+      a.gatewayPrefix == b.gatewayPrefix &&
+      a.dashboardPrefix == b.dashboardPrefix &&
+      a.dashboardPortOverride == b.dashboardPortOverride &&
+      a.dashboardProxied == b.dashboardProxied &&
+      a.singleLogin == b.singleLogin &&
+      a.apiKey == b.apiKey &&
+      a.clientCertificate == b.clientCertificate &&
       a.desktopGatewayUrl == b.desktopGatewayUrl &&
       a.dashboardUsername == b.dashboardUsername &&
       a.dashboardPassword == b.dashboardPassword &&

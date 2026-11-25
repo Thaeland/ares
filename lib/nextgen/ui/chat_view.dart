@@ -44,18 +44,20 @@ class NgChatView extends StatefulWidget {
   const NgChatView({
     super.key,
     required this.chat,
-    required this.onOpenSidebar,
+    this.onOpenSidebar,
+    this.onClose,
     this.sessions,
-    required this.onNewChat,
+    this.onNewChat,
     this.readAloudFactory,
   });
 
   final NgChatController chat;
-  final VoidCallback onOpenSidebar;
+  final VoidCallback? onOpenSidebar;
+  final VoidCallback? onClose;
 
   /// The sidebar's list, for a dot on its button while other chats are unread.
   final NgSessionsModel? sessions;
-  final VoidCallback onNewChat;
+  final VoidCallback? onNewChat;
 
   /// Test hook: supplies the read-aloud controller (e.g. a fake speaker).
   @visibleForTesting
@@ -359,8 +361,12 @@ class _NgChatViewState extends State<NgChatView> {
   Future<bool> _runCommand(NgSlashLine command, String text) async {
     switch (command.name) {
       case 'new' || 'reset':
+        if (widget.onNewChat == null) {
+          ngToast(context, 'Start a new chat from the main chat screen.');
+          return true;
+        }
         _input.clear();
-        widget.onNewChat();
+        widget.onNewChat!();
         return true;
       case 'stop':
         _input.clear();
@@ -542,32 +548,37 @@ class _NgChatViewState extends State<NgChatView> {
           appBar: AppBar(
             backgroundColor: c.background,
             surfaceTintColor: Colors.transparent,
-            leading: ListenableBuilder(
-              listenable: widget.sessions == null
-                  ? const _NoListenable()
-                  : Listenable.merge([widget.sessions, gateway]),
-              builder: (context, _) {
-                final unread = widget.sessions?.unreadCount ?? 0;
-                final dot = switch (widget.sessions?.topAttention) {
-                  NgChatAttention.waiting => c.warning,
-                  NgChatAttention.finished => c.success,
-                  _ => c.accent,
-                };
-                return IconButton(
-                  key: const ValueKey('ng-sidebar-button'),
-                  tooltip: unread > 0
-                      ? ngL.ng_chats_unread(unread)
-                      : ngL.ng_chats,
-                  icon: Badge(
-                    isLabelVisible: unread > 0,
-                    smallSize: 8,
-                    backgroundColor: dot,
-                    child: const Icon(Icons.view_sidebar_outlined),
+            automaticallyImplyLeading: false,
+            leading: widget.onClose != null
+                ? CloseButton(onPressed: widget.onClose)
+                : widget.onOpenSidebar == null
+                ? null
+                : ListenableBuilder(
+                    listenable: widget.sessions == null
+                        ? const _NoListenable()
+                        : Listenable.merge([widget.sessions, gateway]),
+                    builder: (context, _) {
+                      final unread = widget.sessions?.unreadCount ?? 0;
+                      final dot = switch (widget.sessions?.topAttention) {
+                        NgChatAttention.waiting => c.warning,
+                        NgChatAttention.finished => c.success,
+                        _ => c.accent,
+                      };
+                      return IconButton(
+                        key: const ValueKey('ng-sidebar-button'),
+                        tooltip: unread > 0
+                            ? ngL.ng_chats_unread(unread)
+                            : ngL.ng_chats,
+                        icon: Badge(
+                          isLabelVisible: unread > 0,
+                          smallSize: 8,
+                          backgroundColor: dot,
+                          child: const Icon(Icons.view_sidebar_outlined),
+                        ),
+                        onPressed: widget.onOpenSidebar,
+                      );
+                    },
                   ),
-                  onPressed: widget.onOpenSidebar,
-                );
-              },
-            ),
             titleSpacing: 0,
             title: GestureDetector(
               onTap: chat.isNew ? null : _rename,
@@ -598,11 +609,12 @@ class _NgChatViewState extends State<NgChatView> {
                   icon: const Icon(Icons.data_usage),
                   onPressed: _showUsage,
                 ),
-              IconButton(
-                tooltip: ngL.ng_new_chat,
-                icon: const Icon(Icons.edit_square),
-                onPressed: widget.onNewChat,
-              ),
+              if (widget.onNewChat != null)
+                IconButton(
+                  tooltip: ngL.ng_new_chat,
+                  icon: const Icon(Icons.edit_square),
+                  onPressed: widget.onNewChat,
+                ),
             ],
           ),
           body: Column(
@@ -638,7 +650,7 @@ class _NgChatViewState extends State<NgChatView> {
       title: ngL.ng_rename_chat,
       initial: chat.title,
     );
-    if (title == null || title.trim().isEmpty) return;
+    if (!mounted || title == null || title.trim().isEmpty) return;
     try {
       await chat.rename(title);
     } catch (e) {
