@@ -226,7 +226,12 @@ void main() {
       );
       await tester.tap(find.text('Compress'));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(FilledButton, 'Compress'));
+      await tester.tap(
+        find.descendant(
+          of: find.byType(AlertDialog),
+          matching: find.widgetWithText(FilledButton, 'Compress'),
+        ),
+      );
       await tester.pump();
       expect(compressed, isTrue);
       expect(find.text('Open billing'), findsNothing);

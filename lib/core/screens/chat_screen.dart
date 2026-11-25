@@ -4852,6 +4852,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           bareName == 'switch') {
         final query = _slashCommandArgument(text);
         _slashController.close();
+        if (!_canShowResumePicker()) {
+          // A pane without a session-list route is never replaced blindly:
+          // fall open with a notice and keep the draft.
+          _appendSlashCommandNotice(text, l10n.composer_resume_unavailable);
+          return '';
+        }
         consume();
         unawaited(_openResumePicker(query));
         return '';
@@ -4981,10 +4987,21 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   String? _recoveryMessage;
   FailureSurface? _recoverySurface;
 
+  /// The picker may open when this chat is the single-pane pane or a chat
+  /// pushed from a session list. An unrelated pushed route must never be
+  /// replaced blindly, so it falls open instead.
+  bool _canShowResumePicker() {
+    final route = ModalRoute.of(context);
+    if (route?.settings.name == '/classic-session-chat') return true;
+    final navigator = Navigator.maybeOf(context);
+    return navigator != null && !navigator.canPop();
+  }
+
   Future<void> _openResumePicker(String query) async {
     if (!mounted) return;
     final testClient = widget.testApiClient;
-    final available = testClient != null || widget.testSlashGateway == null;
+    final available =
+        testClient == null && widget.testSlashGateway == null;
     final loaded = <Session>[];
     final picked = await showResumePicker(
       context: context,
