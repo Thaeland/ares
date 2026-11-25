@@ -1969,6 +1969,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get windows_sound_silent => 'Silent';
 
   @override
+  String get completion_sound_scope =>
+      'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.';
+
+  @override
+  String get completion_sound_scope_android =>
+      'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.';
+
+  @override
   String get app_sounds_mute => 'Mute app sounds';
 
   @override

@@ -36,6 +36,19 @@ class CompletionCue {
   /// sound at creation.
   final String channelSuffix;
 
+  /// Android channel suffixes a completion choice can create. The historical
+  /// channel (no suffix) also carries failures, so it is never deleted.
+  static const choiceSuffixes = {'mail', 'reminder', 'silent'};
+
+  /// The channel suffix a completion or test alert uses for [sound].
+  static String channelSuffixFor(WindowsCompletionSound sound) =>
+      switch (sound) {
+        WindowsCompletionSound.system => '',
+        WindowsCompletionSound.mail => 'mail',
+        WindowsCompletionSound.reminder => 'reminder',
+        WindowsCompletionSound.silent => 'silent',
+      };
+
   /// The Windows toast rule for a completion or test, and the historical
   /// rule for every other kind: the picker never changes approvals, errors
   /// or background alerts.

@@ -227,6 +227,11 @@ abstract class TurnNotificationSink {
   Future<void> cancelAll();
 }
 
+/// A sink that can delete Android notification channels it created.
+abstract interface class TurnNotificationChannelCleaner {
+  Future<void> deleteChannel(String id);
+}
+
 /// Windows uses a runner channel; FLN v18 still owns Android and Darwin.
 TurnNotificationSink defaultTurnNotificationSink({
   FlutterLocalNotificationsPlugin? plugin,
@@ -235,11 +240,19 @@ TurnNotificationSink defaultTurnNotificationSink({
     : PluginTurnNotificationSink(plugin: plugin);
 
 /// Default sink backed by `flutter_local_notifications`.
-class PluginTurnNotificationSink implements TurnNotificationSink {
+class PluginTurnNotificationSink
+    implements TurnNotificationSink, TurnNotificationChannelCleaner {
   final FlutterLocalNotificationsPlugin _plugin;
 
   PluginTurnNotificationSink({FlutterLocalNotificationsPlugin? plugin})
     : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
+
+  @override
+  Future<void> deleteChannel(String id) async => _plugin
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >()
+      ?.deleteNotificationChannel(id);
 
   @override
   Future<void> initialize() async {
@@ -817,6 +830,32 @@ class TurnNotificationService {
       _initialized = true;
     } catch (_) {
       // Missing plugins must not break startup; a later call may retry.
+      return;
+    }
+    await pruneCompletionChannels();
+  }
+
+  /// Android locks a channel's sound when it is created, so each completion
+  /// choice posts on its own channel. Deletes the choice channels the current
+  /// choice does not use, so they do not pile up in the system settings.
+  /// Called when the choice changes and on startup.
+  Future<void> pruneCompletionChannels() async {
+    final sink = _sink;
+    if (sink is! TurnNotificationChannelCleaner ||
+        defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
+    final cleaner = sink as TurnNotificationChannelCleaner;
+    final keep = CompletionCue.channelSuffixFor(
+      notificationPrefs.value.completionSound,
+    );
+    for (final suffix in CompletionCue.choiceSuffixes) {
+      if (suffix == keep) continue;
+      try {
+        await cleaner.deleteChannel('${turnChannel.id}_$suffix');
+      } catch (_) {
+        // A channel that cannot be deleted now is retried next time.
+      }
     }
   }
 

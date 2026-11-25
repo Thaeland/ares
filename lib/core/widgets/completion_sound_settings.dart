@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../l10n/l10n.dart';
 import '../services/notification_prefs.dart';
+import '../services/turn_notification_service.dart';
 
 /// Activity sharing and the completion sound, shared by the Classic and
 /// NextGen notification settings (both already listen to
@@ -20,6 +24,11 @@ class CompletionSoundSettings extends StatelessWidget {
         WindowsCompletionSound.reminder => l.windows_sound_reminder,
         WindowsCompletionSound.silent => l.windows_sound_silent,
       };
+
+  static Future<void> _choose(WindowsCompletionSound sound) async {
+    await NotificationPrefsStore.setWindowsSound(sound);
+    await TurnNotificationService.shared.pruneCompletionChannels();
+  }
 
   Future<void> _pick(BuildContext context) {
     final l = context.sharedL10n;
@@ -43,9 +52,7 @@ class CompletionSoundSettings extends StatelessWidget {
                 RadioGroup<WindowsCompletionSound>(
                   groupValue: prefs.completionSound,
                   onChanged: (value) {
-                    if (value != null) {
-                      NotificationPrefsStore.setWindowsSound(value);
-                    }
+                    if (value != null) unawaited(_choose(value));
                     Navigator.of(sheet).pop();
                   },
                   child: Column(
@@ -82,7 +89,18 @@ class CompletionSoundSettings extends StatelessWidget {
         ListTile(
           key: const ValueKey('completion-sound'),
           title: Text(l.windows_completion_sound),
-          subtitle: Text(soundLabel(l, prefs.completionSound)),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(soundLabel(l, prefs.completionSound)),
+              Text(
+                defaultTargetPlatform == TargetPlatform.android
+                    ? l.completion_sound_scope_android
+                    : l.completion_sound_scope,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
           trailing: const Icon(Icons.arrow_drop_down),
           onTap: () => _pick(context),
         ),

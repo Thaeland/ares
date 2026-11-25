@@ -635,6 +635,8 @@
   "windows_sound_mail": "Mail",
   "windows_sound_reminder": "Reminder",
   "windows_sound_silent": "Silent",
+  "completion_sound_scope": "Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.",
+  "completion_sound_scope_android": "Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.",
   "app_sounds_mute": "Mute app sounds",
   "app_sounds_mute_hint": "Stops the completion sound Ares plays while it is open. Notifications keep their own sound.",
   "notifications_permission_denied": "Notifications are blocked at the OS level. Enable them for this app in Android settings.",

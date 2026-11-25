@@ -3408,6 +3408,18 @@ abstract class AppLocalizations {
   /// **'Silent'**
   String get windows_sound_silent;
 
+  /// No description provided for @completion_sound_scope.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.'**
+  String get completion_sound_scope;
+
+  /// No description provided for @completion_sound_scope_android.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.'**
+  String get completion_sound_scope_android;
+
   /// No description provided for @app_sounds_mute.
   ///
   /// In en, this message translates to:
