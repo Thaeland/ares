@@ -84,6 +84,25 @@ class WindowsToastSink implements TurnNotificationSink {
   Future<T> _serialized<T>(Future<T> Function() op) =>
       WindowsToastLedger.serialized(op);
 
+  /// Kind, id, outcome and error class only, never a ticket or text.
+  static void _record(
+    String kind,
+    String outcome, {
+    int? id,
+    String? detail,
+    Object? error,
+    String? errorClass,
+  }) => TurnNotificationService.recordAttempt(
+    kind,
+    '',
+    outcome,
+    detail: detail,
+    id: id,
+    error:
+        errorClass ??
+        (error == null ? null : TurnNotificationService.errorClass(error)),
+  );
+
   @override
   Future<void> initialize() async {}
   @override
@@ -107,6 +126,17 @@ class WindowsToastSink implements TurnNotificationSink {
     return entries;
   }
 
+  /// Starts every read/modify/write from accepted state, under the lock.
+  /// Other stores reload the same process-wide preferences cache outside this
+  /// lock: a reload whose snapshot predates a ledger write can complete after
+  /// it and roll the new ticket out of the cache, so the next write would
+  /// persist the ledger without it. The platform store keeps every accepted
+  /// write, so reread it first.
+  Future<Map<String, dynamic>> _load(SharedPreferences prefs) async {
+    await prefs.reload();
+    return _read(prefs);
+  }
+
   Future<void> _save(
     SharedPreferences prefs,
     Map<String, dynamic> entries,
@@ -116,14 +146,54 @@ class WindowsToastSink implements TurnNotificationSink {
     }
   }
 
+  /// Best effort: puts tickets back for a toast Windows may still show.
+  Future<void> _restore(
+    SharedPreferences prefs,
+    Map<String, dynamic> rows,
+  ) async {
+    if (rows.isEmpty) return;
+    try {
+      await _save(prefs, (await _load(prefs))..addAll(rows));
+    } catch (_) {
+      // Nothing more to do; the next ledger write starts from disk again.
+    }
+  }
+
+  /// Takes [rows] out of the ledger, then toast [id] off the screen. The ledger
+  /// goes first so a click queued behind this lock cannot use a withdrawn
+  /// ticket. If Windows cannot confirm the removal the toast may still be
+  /// visible, so its ticket goes back rather than leaving a dead toast.
+  Future<void> _withdraw(
+    SharedPreferences prefs,
+    Map<String, dynamic> rows,
+    int id, {
+    required bool native,
+  }) async {
+    try {
+      final entries = await _load(prefs)
+        ..removeWhere((token, _) => rows.containsKey(token));
+      try {
+        await _save(prefs, entries);
+      } catch (_) {
+        // Revocation is idempotent: retry the same snapshot once if storage
+        // rejected or lost the write.
+        await _save(prefs, entries);
+      }
+    } finally {
+      if (native) {
+        try {
+          await channel.invokeMethod<void>('cancel', id);
+        } catch (error) {
+          _record('cancel', 'failed', id: id, error: error);
+          await _restore(prefs, rows);
+        }
+      }
+    }
+  }
+
   @override
   Future<void> show(TurnNotification n) => _serialized(() async {
     final prefs = await SharedPreferences.getInstance();
-    final entries = _read(prefs)..removeWhere((_, e) => e['id'] == n.id);
-    while (entries.length >= maxEntries) {
-      entries.remove(entries.keys.first);
-    }
-    final token = const Uuid().v4().replaceAll('-', '');
     final kind = n.kind;
     final test = n.payload == 'test' && kind == null && !n.ongoing;
     if (!test &&
@@ -161,6 +231,16 @@ class WindowsToastSink implements TurnNotificationSink {
             ))) {
       throw StateError('Notification superseded');
     }
+    final entries = await _load(prefs);
+    // Windows replaces a toast with the same tag, and its ticket goes with it.
+    final replaced = entries.values.any((e) => e['id'] == n.id);
+    entries.removeWhere((_, e) => e['id'] == n.id);
+    final evicted = <int>{};
+    while (entries.length >= maxEntries) {
+      final row = entries.remove(entries.keys.first);
+      if (row is Map && row['id'] is int) evicted.add(row['id'] as int);
+    }
+    final token = const Uuid().v4().replaceAll('-', '');
     entries[token] = {
       'id': n.id,
       'expires': DateTime.now().add(retention).millisecondsSinceEpoch,
@@ -169,12 +249,24 @@ class WindowsToastSink implements TurnNotificationSink {
       if (n.windowsTarget != null) 'target': n.windowsTarget!.toJson(),
     };
     await _save(prefs, entries);
-    var acknowledged = false;
+    // A toast whose ticket fell off the bounded ledger would be dead.
+    for (final id in evicted) {
+      if (entries.values.any((e) => e['id'] == id)) continue;
+      try {
+        await channel.invokeMethod<void>('cancel', id);
+      } catch (_) {
+        // Cancelling by id is idempotent; nothing else depends on it.
+      }
+    }
+    // Once 'show' is invoked, Windows may have posted the toast even if the
+    // call then fails. A replaced toast has likewise lost its ticket.
+    var posted = replaced;
     try {
       if (n.windowsStillNeeded?.call() == false) {
         throw StateError('Notification withdrawn');
       }
-      await channel.invokeMethod<void>('show', {
+      posted = true;
+      final delivery = await channel.invokeMethod<String>('show', {
         'id': n.id,
         'ticket': token,
         'body': message,
@@ -188,22 +280,31 @@ class WindowsToastSink implements TurnNotificationSink {
             ? notificationPrefs.value.completionSound.name
             : 'system',
       });
-      acknowledged = true;
+      // Windows accepted the toast, but its notification setting will not
+      // display it: report a failure, not delivery. An unreadable setting
+      // ('unknown') keeps the toast and its live ticket.
+      if (delivery == 'blocked') {
+        throw StateError('Windows notifications are off');
+      }
+      if (delivery == 'unknown') {
+        _record(
+          'setting',
+          'unknown',
+          id: n.id,
+          detail: 'Windows did not report its notification setting',
+          errorClass: 'SettingUnreadable',
+        );
+      }
       if (n.windowsStillNeeded?.call() == false) {
         throw StateError('Notification withdrawn');
       }
     } catch (_) {
-      // Keep queued activations behind cleanup. Revocation is idempotent, so
-      // retry the same snapshot once if storage rejected or lost the write.
-      entries.remove(token);
+      // Keep queued activations behind cleanup, and never leave a visible
+      // toast without its ticket. Dismiss this exact id, never a sibling.
       try {
-        await _save(prefs, entries);
+        await _withdraw(prefs, {token: entries[token]}, n.id, native: posted);
       } catch (_) {
-        await _save(prefs, entries);
-      } finally {
-        // Native dismissal is independent of ticket storage. Only dismiss the
-        // exact toast Windows acknowledged; never remove a sibling or all.
-        if (acknowledged) await channel.invokeMethod<void>('cancel', n.id);
+        // Report why the post failed, not a secondary cleanup failure.
       }
       rethrow;
     }
@@ -215,9 +316,15 @@ class WindowsToastSink implements TurnNotificationSink {
     }
     return _serialized(() async {
       final prefs = await SharedPreferences.getInstance();
-      final entries = _read(prefs);
+      final entries = await _load(prefs);
       final row = entries.remove(token);
-      if (row is! Map) return null;
+      if (row is! Map) {
+        // A click Windows delivered that no live ticket backs: consumed,
+        // expired, revoked, or never stored. The ticket itself is not kept.
+        _record('activation', 'failed', errorClass: 'UnknownTicket');
+        return null;
+      }
+      final id = row['id'] is int ? row['id'] as int : null;
       await _save(
         prefs,
         entries,
@@ -229,6 +336,12 @@ class WindowsToastSink implements TurnNotificationSink {
                   !HermesNotificationKind.values.any(
                     (k) => k.name == kind && notificationKindEnabled(k),
                   )))) {
+        _record(
+          'activation',
+          'skipped',
+          id: id,
+          detail: 'notifications are off',
+        );
         return null;
       }
       final target = WindowsToastTarget.decode(row['target']);
@@ -239,7 +352,9 @@ class WindowsToastSink implements TurnNotificationSink {
               target.mutation,
             );
       await channel.invokeMethod<void>('focus');
-      if (target == null || mutation == null) return null;
+      final opens = target != null && mutation != null;
+      _record('activation', opens ? 'opened' : 'focused', id: id);
+      if (!opens) return null;
       return WindowsToastResponse(
         WindowsToastTarget(
           target.connectionId,
@@ -264,14 +379,34 @@ class WindowsToastSink implements TurnNotificationSink {
   @override
   Future<void> cancel(int id) => _serialized(() async {
     final prefs = await SharedPreferences.getInstance();
-    final entries = _read(prefs)..removeWhere((_, e) => e['id'] == id);
-    await _save(prefs, entries);
-    await channel.invokeMethod<void>('cancel', id);
+    final entries = await _load(prefs);
+    final rows = {
+      for (final MapEntry(:key, :value) in entries.entries)
+        if (value['id'] == id) key: value,
+    };
+    if (rows.isNotEmpty) {
+      entries.removeWhere((token, _) => rows.containsKey(token));
+      await _save(prefs, entries);
+    }
+    try {
+      await channel.invokeMethod<void>('cancel', id);
+    } catch (error) {
+      _record('cancel', 'failed', id: id, error: error);
+      await _restore(prefs, rows);
+      rethrow;
+    }
   });
   @override
   Future<void> cancelAll() => _serialized(() async {
     final prefs = await SharedPreferences.getInstance();
+    final rows = await _load(prefs);
     await _save(prefs, {});
-    await channel.invokeMethod<void>('cancelAll');
+    try {
+      await channel.invokeMethod<void>('cancelAll');
+    } catch (error) {
+      _record('cancel', 'failed', error: error);
+      await _restore(prefs, rows);
+      rethrow;
+    }
   });
 }

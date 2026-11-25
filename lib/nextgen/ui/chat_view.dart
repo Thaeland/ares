@@ -1033,57 +1033,65 @@ class _NgChatViewState extends State<NgChatView>
                           setState(() => _showSessionFiles = false);
                         },
                       ),
-                child: Column(
-                  children: [
-                    if (!state.isConnected) _connectionBanner(c, gateway),
-                    Expanded(child: _transcript(c)),
-                    NgSessionDock(chat: chat),
-                    if (chat.canPickProject && _drafts.isEmpty && !_preparing)
-                      OrphanDraftRecovery(
-                        key: ObjectKey(_draftWriter),
-                        writer: _draftWriter,
-                        editor: _input,
-                        lookup: chat.gateway.api.getSession,
-                        isCurrent: () =>
-                            chat.draftOwnerCurrent &&
-                            identical(chat.gateway, gateway) &&
-                            chat.canPickProject &&
-                            _drafts.isEmpty &&
-                            !_preparing &&
-                            !_listening,
-                      ),
-                    if (chat.error != null) _errorBar(c),
-                    if (chat.queued.isNotEmpty) _queue(c),
-                    if (chat.catalog case final operation?)
-                      CatalogInstallCard(
-                        key: ValueKey(operation.opId),
-                        operation: operation,
-                        respond: (answer) =>
-                            chat.respondCatalog(operation, answer),
-                        retry: _retryCatalogRow,
-                        onDismiss: () => chat.dismissCatalog(operation.opId),
-                      ),
-                    if (chat.request?.setupBeat case final card?)
-                      SetupBeatCard(
-                        key: ValueKey(card.requestId),
-                        request: card,
-                        onAnswer: (result) async =>
-                            chat.answerSetupBeat(card.requestId, result),
-                      )
-                    else if (chat.request != null)
-                      _InputPanel(chat: chat, request: chat.request!)
-                    else
-                      NgSlashCommandInfo(
-                        chat: chat,
-                        controller: _input,
-                        focusNode: _focus,
-                        catalog: _slashCatalog,
-                        // Commands run here now, so the card no longer says they
-                        // are sent as a message.
-                        showsSentAsMessageNote: false,
-                        child: _composer(c, state),
-                      ),
-                  ],
+                // The body's real height: Scaffold has already taken the
+                // keyboard off it, so cards above the composer size from it.
+                child: LayoutBuilder(
+                  builder: (context, body) => Column(
+                    children: [
+                      if (!state.isConnected) _connectionBanner(c, gateway),
+                      Expanded(child: _transcript(c)),
+                      NgSessionDock(chat: chat, available: body.maxHeight),
+                      if (chat.canPickProject && _drafts.isEmpty && !_preparing)
+                        OrphanDraftRecovery(
+                          key: ObjectKey(_draftWriter),
+                          writer: _draftWriter,
+                          editor: _input,
+                          lookup: chat.gateway.api.getSession,
+                          isCurrent: () =>
+                              chat.draftOwnerCurrent &&
+                              identical(chat.gateway, gateway) &&
+                              chat.canPickProject &&
+                              _drafts.isEmpty &&
+                              !_preparing &&
+                              !_listening,
+                        ),
+                      if (chat.error != null) _errorBar(c),
+                      if (chat.queued.isNotEmpty) _queue(c),
+                      if (chat.catalog case final operation?)
+                        CatalogInstallCard(
+                          key: ValueKey(operation.opId),
+                          operation: operation,
+                          respond: (answer) =>
+                              chat.respondCatalog(operation, answer),
+                          retry: _retryCatalogRow,
+                          onDismiss: () => chat.dismissCatalog(operation.opId),
+                        ),
+                      if (chat.request?.setupBeat case final card?)
+                        SetupBeatCard(
+                          key: ValueKey(card.requestId),
+                          request: card,
+                          onAnswer: (result) async =>
+                              chat.answerSetupBeat(card.requestId, result),
+                        )
+                      else if (chat.request != null)
+                        _InputPanel(
+                          chat: chat,
+                          request: chat.request!,
+                          available: body.maxHeight,
+                        )
+                      else
+                        NgSlashCommandInfo(
+                          chat: chat,
+                          controller: _input,
+                          focusNode: _focus,
+                          catalog: _slashCatalog,
+                          // Commands run here now, so the card no longer says they
+                          // are sent as a message.
+                          showsSentAsMessageNote: false,
+                          child: _composer(c, state),
+                        ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -2698,9 +2706,16 @@ class _ToolRowState extends State<_ToolRow> {
 
 /// What the agent is waiting on: approval, a question or a secret.
 class _InputPanel extends StatefulWidget {
-  const _InputPanel({required this.chat, required this.request});
+  const _InputPanel({
+    required this.chat,
+    required this.request,
+    this.available = double.infinity,
+  });
   final NgChatController chat;
   final NgInputRequest request;
+
+  /// The chat body's height (keyboard already removed).
+  final double available;
 
   @override
   State<_InputPanel> createState() => _InputPanelState();
@@ -2792,8 +2807,14 @@ class _InputPanelState extends State<_InputPanel> {
           borderRadius: BorderRadius.circular(NgRadii.xl),
           border: Border.all(color: c.accent.withValues(alpha: 0.5)),
         ),
+        // A share of the space above the keyboard, so the answer field
+        // stays in sight while typing.
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.sizeOf(context).height * 0.6,
+          maxHeight: ngAboveComposerMaxHeight(
+            context,
+            available: widget.available,
+            fraction: 0.6,
+          ),
         ),
         child: SingleChildScrollView(
           child: Column(
