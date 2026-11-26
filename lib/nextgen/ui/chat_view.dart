@@ -2034,7 +2034,9 @@ class _NgChatViewState extends State<NgChatView>
                   : ngL.ng_wake_status_off(st.phrase);
               ngToast(
                 context,
-                st.notice.isNotEmpty ? '$status — ${st.notice}' : status,
+                st.notice.isNotEmpty
+                    ? ngL.ng_rel_chat_wake_status_notice(status, st.notice)
+                    : status,
               );
             }
           default:
@@ -2834,14 +2836,19 @@ class _NgChatViewState extends State<NgChatView>
                 row(ngL.ng_cache_reads, ngCompactNumber(u.cacheRead)),
               if (u.calls > 0) row(ngL.ng_api_calls, '${u.calls}'),
               if (u.cost != null)
-                row(ngL.ng_cost, '\$${u.cost!.toStringAsFixed(4)}'),
+                row(
+                  ngL.ng_cost,
+                  ngL.ng_rel_chat_cost_amount(u.cost!.toStringAsFixed(4)),
+                ),
               if (u.contextUsed != null &&
                   u.contextMax != null &&
                   u.contextMax! > 0) ...[
                 row(
                   ngL.ng_context,
-                  '${ngCompactNumber(u.contextUsed!)} / '
-                  '${ngCompactNumber(u.contextMax!)}',
+                  ngL.ng_rel_chat_context_ratio(
+                    ngCompactNumber(u.contextUsed!),
+                    ngCompactNumber(u.contextMax!),
+                  ),
                 ),
                 const SizedBox(height: 6),
                 LinearProgressIndicator(
@@ -2872,7 +2879,10 @@ class _NgChatViewState extends State<NgChatView>
                   ? ngL.ng_your_sign_in_expired
                   : state.reason == null
                   ? state.label
-                  : '${state.label} ${state.reason}',
+                  : ngL.ng_rel_chat_connection_reason(
+                      state.label,
+                      state.reason!,
+                    ),
               style: NgType.bodySmall.copyWith(color: c.text),
             ),
           ),
@@ -3250,7 +3260,10 @@ class _NgChatViewState extends State<NgChatView>
           Text(
             item.time == null
                 ? item.text
-                : '${item.text} · ${ngStamp(context, item.time!)}',
+                : ngL.ng_rel_chat_notice_time(
+                    item.text,
+                    ngStamp(context, item.time!),
+                  ),
             textAlign: TextAlign.center,
             style: NgType.caption.copyWith(
               color: item.error ? c.danger : c.text3,
@@ -3995,7 +4008,12 @@ class _UserBubble extends StatelessWidget {
                       NgPill(
                         a.uploadProgress == null
                             ? a.name
-                            : '${a.name} · ${ngL.ng_uploading_percent((a.uploadProgress! * 100).round())}',
+                            : ngL.ng_rel_chat_attachment_progress(
+                                a.name,
+                                ngL.ng_uploading_percent(
+                                  (a.uploadProgress! * 100).round(),
+                                ),
+                              ),
                         icon: a.status == AttachmentDraftStatus.failed
                             ? Icons.error_outline
                             : a.kind == AttachmentDraftKind.image
@@ -4451,7 +4469,12 @@ class _AssistantBlockState extends State<_AssistantBlock> {
               _Disclosure(
                 icon: Icons.build_outlined,
                 label: runningTool != null
-                    ? '${runningTool.name}${runningTool.detail == null ? '' : ' · ${runningTool.detail}'}'
+                    ? runningTool.detail == null
+                          ? runningTool.name
+                          : ngL.ng_rel_chat_tool_detail(
+                              runningTool.name,
+                              runningTool.detail!,
+                            )
                     : tools.length == 1
                     ? ngL.ng_used(tools.first.name)
                     : ngL.ng_used_tools(tools.length),
