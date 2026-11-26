@@ -13168,4 +13168,259 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get rel_ops_ssh_disconnect => 'Відключити оболонку';
+
+  @override
+  String get rel_ops_host_cancel => 'Скасувати';
+
+  @override
+  String get rel_ops_host_confirm => 'Підтвердити';
+
+  @override
+  String get rel_ops_host_title => 'Хост';
+
+  @override
+  String get rel_ops_host_refresh => 'Оновити';
+
+  @override
+  String get rel_ops_host_update => 'Оновити Hermes на віддаленому хості';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return 'Це запустить оновлення наявного встановлення на хості шлюзу для $profile. Ares на цьому пристрої не буде оновлено. Успіх засвідчує відповідне підтвердження оновлення, а не те, що хост залишається доступним.';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting =>
+      'Очікування відповідного підтвердження. Оновлення ще триває.';
+
+  @override
+  String get rel_ops_host_receipt_success =>
+      'Підтвердження оновлення вказує на успіх.';
+
+  @override
+  String get rel_ops_host_receipt_partial =>
+      'Оновлення застосовано, але ще потрібні подальші дії.';
+
+  @override
+  String get rel_ops_host_receipt_failed =>
+      'Підтвердження оновлення вказує на збій.';
+
+  @override
+  String get rel_ops_host_receipt_refused =>
+      'Підтвердження оновлення вказує на відмову.';
+
+  @override
+  String get rel_ops_host_update_running => 'Оновлення ще триває.';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      'Результат оновлення невідомий. Робота шлюзу не означає успішного оновлення.';
+
+  @override
+  String get rel_ops_host_default_profile => 'типовий профіль шлюзу';
+
+  @override
+  String get rel_ops_host_restart => 'Перезапустити віддалений шлюз';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return 'Це перезапустить шлюз, спільний для $profiles. Поточні ходи на цьому шлюзі буде перервано. Потім підключіться знову. Доступність не доводить, що перезапуск завершився.';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return 'Це перезапустить віддалений шлюз для $profile. Поточні ходи на цьому шлюзі буде перервано. Потім підключіться знову.';
+  }
+
+  @override
+  String get rel_ops_host_restart_running =>
+      'Команда перезапуску ще виконується.';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      'Команду перезапуску завершено. Підключіться до хоста знову вручну.';
+
+  @override
+  String get rel_ops_host_restart_failed =>
+      'Команда перезапуску завершилася помилкою.';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name ще виконується';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name: виконання завершено';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name: збій виконання';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => 'Куратора призупинено.';
+
+  @override
+  String get rel_ops_host_curator_resumed_result =>
+      'Роботу Куратора відновлено.';
+
+  @override
+  String get rel_ops_host_reset => 'Скинути віддалені файли пам’яті';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return 'Видалити файл пам’яті $targetName у $profile? Цю дію не можна скасувати з Ares.';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return 'Виконано скидання $targetName. Видалено віддалених файлів: $count.';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      'Хост не підтвердив вилучення конфіденційних даних із пакета. Посилання не відображається.';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return 'Ці елементи керування діють на віддалений шлюз $connection для $profile, а не на цей пристрій чи оновлення клієнта Ares.';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return 'Процес шлюзу працює $version · Сеансів: $count';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return 'Процес шлюзу зупинено $version · Сеансів: $count';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return 'Сигнал активності хоста застарів ($seconds с).';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'Запустити Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => 'Аудит безпеки';
+
+  @override
+  String get rel_ops_host_check_receipt => 'Перевірити підтвердження оновлення';
+
+  @override
+  String get rel_ops_host_logs => 'Журнали віддаленого хоста';
+
+  @override
+  String get rel_ops_host_search_logs => 'Пошук у журналах хоста';
+
+  @override
+  String get rel_ops_host_driver => 'Драйвер віддаленого хоста';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      'Готовність керування комп’ютером визначають драйвер і дозволи ОС на машині шлюзу, а не на цьому пристрої.';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · встановлено: $installed · готово: $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => 'немає даних';
+
+  @override
+  String get rel_ops_host_true => 'так';
+
+  @override
+  String get rel_ops_host_false => 'ні';
+
+  @override
+  String get rel_ops_host_curator => 'Куратор';
+
+  @override
+  String get rel_ops_host_curator_paused => 'Куратора призупинено';
+
+  @override
+  String get rel_ops_host_curator_running => 'Куратор працює';
+
+  @override
+  String get rel_ops_host_no_run => 'Немає завершених запусків';
+
+  @override
+  String get rel_ops_host_run_curator => 'Запустити Куратора зараз';
+
+  @override
+  String get rel_ops_host_reset_memory => 'Скинути файл пам’яті';
+
+  @override
+  String get rel_ops_host_reset_user => 'Скинути файл користувача';
+
+  @override
+  String get rel_ops_host_reset_both => 'Скинути обидва файли';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      'Я погоджуюся завантажити діагностичний пакет із віддаленого хоста з вилученими конфіденційними даними';
+
+  @override
+  String get rel_ops_host_share =>
+      'Поділитися діагностикою без конфіденційних даних';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      'Це встановлення невідоме, тому запит на оновлення не надіслано';
+
+  @override
+  String get rel_ops_host_update_busy_installation =>
+      'На цьому встановленні виконується чат';
+
+  @override
+  String get rel_ops_host_update_refused => 'Віддалене оновлення відхилено';
+
+  @override
+  String get rel_ops_host_error_stale => 'Віддалена робоча область: застаріла';
+
+  @override
+  String get rel_ops_host_error_mismatch =>
+      'Віддалена робоча область: невідповідність';
+
+  @override
+  String get rel_ops_host_error_unbound =>
+      'Віддалена робоча область: не прив’язана';
+
+  @override
+  String get rel_ops_host_error_unsupported =>
+      'Віддалена робоча область: не підтримується';
+
+  @override
+  String get rel_ops_host_error_denied =>
+      'Віддалена робоча область: доступ заборонено';
+
+  @override
+  String get rel_ops_host_error_ineligible =>
+      'Віддалена робоча область: не підходить для операції';
+
+  @override
+  String get rel_ops_host_error_unavailable =>
+      'Віддалена робоча область: недоступна';
+
+  @override
+  String get rel_ops_host_error_invalid =>
+      'Віддалена робоча область: некоректні дані';
+
+  @override
+  String get rel_ops_host_error_insecure =>
+      'Віддалена робоча область: незахищене з’єднання';
+
+  @override
+  String get rel_ops_host_error_request => 'Не вдалося виконати запит.';
 }

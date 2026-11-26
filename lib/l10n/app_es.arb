@@ -4664,5 +4664,359 @@
   "rel_ops_ssh_disconnect": "Desconectar shell",
   "@rel_ops_ssh_disconnect": {
     "description": "Terminate the active SSH shell subprocess."
+  },
+  "rel_ops_host_cancel": "Cancelar",
+  "@rel_ops_host_cancel": {
+    "description": "Cancel a remote host operation confirmation."
+  },
+  "rel_ops_host_confirm": "Confirmar",
+  "@rel_ops_host_confirm": {
+    "description": "Confirm a remote host operation."
+  },
+  "rel_ops_host_title": "Host",
+  "@rel_ops_host_title": {
+    "description": "Remote host operations screen title."
+  },
+  "rel_ops_host_refresh": "Actualizar",
+  "@rel_ops_host_refresh": {
+    "description": "Refresh remote host status and logs."
+  },
+  "rel_ops_host_update": "Actualizar Hermes remoto",
+  "@rel_ops_host_update": {
+    "description": "Start an update on the remote gateway host, not the Ares client."
+  },
+  "rel_ops_host_update_confirmation": "Esto inicia una actualización de la instalación existente en el host de la pasarela para {profile}. No actualiza Ares en este dispositivo. El éxito se acredita con el comprobante de actualización correspondiente, no con que el host siga accesible.",
+  "@rel_ops_host_update_confirmation": {
+    "description": "Remote Hermes update confirmation. Preserve the profile identifier verbatim.",
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_update_awaiting": "Esperando el comprobante correspondiente. La actualización sigue en curso.",
+  "@rel_ops_host_update_awaiting": {
+    "description": "Update is running but no matching receipt has arrived."
+  },
+  "rel_ops_host_receipt_success": "El comprobante de actualización indica que se completó correctamente.",
+  "@rel_ops_host_receipt_success": {
+    "description": "Matching remote update receipt reports success."
+  },
+  "rel_ops_host_receipt_partial": "La actualización se ha aplicado, pero aún quedan pasos pendientes.",
+  "@rel_ops_host_receipt_partial": {
+    "description": "Remote update committed but still requires follow-up work."
+  },
+  "rel_ops_host_receipt_failed": "El comprobante de actualización indica un fallo.",
+  "@rel_ops_host_receipt_failed": {
+    "description": "Matching remote update receipt reports failure."
+  },
+  "rel_ops_host_receipt_refused": "El comprobante de actualización indica un rechazo.",
+  "@rel_ops_host_receipt_refused": {
+    "description": "Matching remote update receipt reports refusal."
+  },
+  "rel_ops_host_update_running": "La actualización sigue en curso.",
+  "@rel_ops_host_update_running": {
+    "description": "Remote update remains in progress."
+  },
+  "rel_ops_host_update_unknown": "Se desconoce el resultado de la actualización. Que la pasarela esté activa no significa que la actualización haya tenido éxito.",
+  "@rel_ops_host_update_unknown": {
+    "description": "No matching receipt verifies the remote update outcome."
+  },
+  "rel_ops_host_default_profile": "el perfil predeterminado de la pasarela",
+  "@rel_ops_host_default_profile": {
+    "description": "Display name for an unspecified gateway profile, not a wire identifier."
+  },
+  "rel_ops_host_restart": "Reiniciar pasarela remota",
+  "@rel_ops_host_restart": {
+    "description": "Restart the gateway on the remote host."
+  },
+  "rel_ops_host_restart_shared_confirmation": "Esto reinicia la pasarela compartida por {profiles}. Se interrumpirán los turnos en curso en esta pasarela. Vuelve a conectarte después. Que sea accesible no demuestra que haya finalizado el reinicio.",
+  "@rel_ops_host_restart_shared_confirmation": {
+    "description": "Warn that restarting a shared gateway interrupts all listed profiles. Keep profile identifiers unchanged.",
+    "placeholders": {
+      "profiles": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_restart_confirmation": "Esto reinicia la pasarela remota para {profile}. Se interrumpirán los turnos en curso en esta pasarela. Vuelve a conectarte después.",
+  "@rel_ops_host_restart_confirmation": {
+    "description": "Remote gateway restart confirmation.",
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_restart_running": "El comando de reinicio sigue en ejecución.",
+  "@rel_ops_host_restart_running": {
+    "description": "Remote restart command is still running."
+  },
+  "rel_ops_host_restart_finished": "El comando de reinicio ha finalizado. Vuelve a conectarte al host manualmente.",
+  "@rel_ops_host_restart_finished": {
+    "description": "Remote restart command exited successfully; reconnection remains manual."
+  },
+  "rel_ops_host_restart_failed": "El comando de reinicio ha fallado.",
+  "@rel_ops_host_restart_failed": {
+    "description": "Remote restart command exited unsuccessfully."
+  },
+  "rel_ops_host_maintenance_running": "{name} sigue en ejecución",
+  "@rel_ops_host_maintenance_running": {
+    "description": "Remote maintenance command status. The name is a command identifier such as doctor, security-audit or curator-run; do not translate it.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_maintenance_finished": "{name} ha finalizado",
+  "@rel_ops_host_maintenance_finished": {
+    "description": "Remote maintenance command succeeded. Keep the command identifier unchanged.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_maintenance_failed": "{name} ha fallado",
+  "@rel_ops_host_maintenance_failed": {
+    "description": "Remote maintenance command failed. Keep the command identifier unchanged.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_curator_paused_result": "Curador en pausa.",
+  "@rel_ops_host_curator_paused_result": {
+    "description": "Confirmation that the remote Curator was paused."
+  },
+  "rel_ops_host_curator_resumed_result": "Curador reanudado.",
+  "@rel_ops_host_curator_resumed_result": {
+    "description": "Confirmation that the remote Curator was resumed."
+  },
+  "rel_ops_host_reset": "Restablecer archivos de memoria remotos",
+  "@rel_ops_host_reset": {
+    "description": "Remote memory file reset section and confirmation title."
+  },
+  "rel_ops_host_reset_confirmation": "¿Eliminar el archivo de memoria {targetName} en {profile}? Esta acción no se puede deshacer desde Ares.",
+  "@rel_ops_host_reset_confirmation": {
+    "description": "Destructive remote memory reset warning. Preserve the target token (memory, user or all) and profile identifier.",
+    "placeholders": {
+      "targetName": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_reset_result": "Se ha restablecido {targetName}. Se han eliminado {count} archivo(s) remoto(s).",
+  "@rel_ops_host_reset_result": {
+    "description": "Remote memory reset result. Preserve the target token unchanged.",
+    "placeholders": {
+      "targetName": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_host_share_not_redacted": "El host no confirmó que se hubieran ocultado los datos sensibles del paquete. No se muestra ningún enlace.",
+  "@rel_ops_host_share_not_redacted": {
+    "description": "Diagnostic sharing is blocked without server confirmation of redaction."
+  },
+  "rel_ops_host_scope": "Estos controles operan sobre la pasarela remota {connection} para {profile}, no sobre este dispositivo ni sobre la actualización del cliente Ares.",
+  "@rel_ops_host_scope": {
+    "description": "Explain that controls target the named remote connection and profile, never this device. Preserve the connection label and profile identifier.",
+    "placeholders": {
+      "connection": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_health_running": "Proceso de la pasarela en ejecución {version} · {count} sesiones",
+  "@rel_ops_host_health_running": {
+    "description": "Remote gateway health with running process, server version and active session count.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_host_health_stopped": "Proceso de la pasarela detenido {version} · {count} sesiones",
+  "@rel_ops_host_health_stopped": {
+    "description": "Remote gateway health with stopped process, server version and active session count.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_host_heartbeat_stale": "La señal de actividad del host está desactualizada ({seconds} s).",
+  "@rel_ops_host_heartbeat_stale": {
+    "description": "Remote host heartbeat age in seconds; the gateway may return fractional seconds.",
+    "placeholders": {
+      "seconds": {
+        "type": "num"
+      }
+    }
+  },
+  "rel_ops_host_doctor": "Ejecutar Doctor",
+  "@rel_ops_host_doctor": {
+    "description": "Run remote host diagnostics using the Doctor command."
+  },
+  "rel_ops_host_security_audit": "Auditoría de seguridad",
+  "@rel_ops_host_security_audit": {
+    "description": "Run the remote host security audit."
+  },
+  "rel_ops_host_check_receipt": "Comprobar el comprobante de actualización",
+  "@rel_ops_host_check_receipt": {
+    "description": "Read the receipt for the already-started remote update, without starting another."
+  },
+  "rel_ops_host_logs": "Registros del host remoto",
+  "@rel_ops_host_logs": {
+    "description": "Remote gateway logs section heading."
+  },
+  "rel_ops_host_search_logs": "Buscar en los registros del host",
+  "@rel_ops_host_search_logs": {
+    "description": "Search field label for remote host logs."
+  },
+  "rel_ops_host_driver": "Controlador del host remoto",
+  "@rel_ops_host_driver": {
+    "description": "Remote Computer Use driver section heading."
+  },
+  "rel_ops_host_driver_scope": "La disponibilidad del control del ordenador depende del controlador y de los permisos del sistema operativo del equipo de la pasarela, no de este dispositivo.",
+  "@rel_ops_host_driver_scope": {
+    "description": "Clarify that driver readiness and OS permissions refer only to the remote gateway machine."
+  },
+  "rel_ops_host_computer_status": "{platform} · instalado {installed} · listo {ready}",
+  "@rel_ops_host_computer_status": {
+    "description": "Computer Use driver status. Platform is a server identifier; installed and ready are localized boolean display values.",
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "installed": {
+        "type": "String"
+      },
+      "ready": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_null": "no disponible",
+  "@rel_ops_host_null": {
+    "description": "Human-readable unavailable readiness value from a nullable remote driver status; never sent over the wire."
+  },
+  "rel_ops_host_true": "sí",
+  "@rel_ops_host_true": {
+    "description": "Human-readable affirmative boolean in remote driver status; never sent over the wire."
+  },
+  "rel_ops_host_false": "no",
+  "@rel_ops_host_false": {
+    "description": "Human-readable negative boolean in remote driver status; never sent over the wire."
+  },
+  "rel_ops_host_curator": "Curador",
+  "@rel_ops_host_curator": {
+    "description": "Remote Curator section heading."
+  },
+  "rel_ops_host_curator_paused": "Curador en pausa",
+  "@rel_ops_host_curator_paused": {
+    "description": "Remote Curator paused status label."
+  },
+  "rel_ops_host_curator_running": "Curador en ejecución",
+  "@rel_ops_host_curator_running": {
+    "description": "Remote Curator running status label."
+  },
+  "rel_ops_host_no_run": "Ninguna ejecución completada",
+  "@rel_ops_host_no_run": {
+    "description": "No completed remote Curator run timestamp is available."
+  },
+  "rel_ops_host_run_curator": "Ejecutar Curador ahora",
+  "@rel_ops_host_run_curator": {
+    "description": "Start a remote Curator maintenance run immediately."
+  },
+  "rel_ops_host_reset_memory": "Restablecer archivo de memoria",
+  "@rel_ops_host_reset_memory": {
+    "description": "Delete the remote memory file after confirmation."
+  },
+  "rel_ops_host_reset_user": "Restablecer archivo de usuario",
+  "@rel_ops_host_reset_user": {
+    "description": "Delete the remote user memory file after confirmation."
+  },
+  "rel_ops_host_reset_both": "Restablecer ambos archivos",
+  "@rel_ops_host_reset_both": {
+    "description": "Delete both remote memory files after confirmation."
+  },
+  "rel_ops_host_share_consent": "Acepto subir un paquete de diagnóstico del host remoto con los datos sensibles ocultos",
+  "@rel_ops_host_share_consent": {
+    "description": "Explicit consent to upload a redacted remote host diagnostic bundle; do not weaken the consent or remote-host scope."
+  },
+  "rel_ops_host_share": "Compartir diagnósticos con datos sensibles ocultos",
+  "@rel_ops_host_share": {
+    "description": "Upload redacted remote diagnostic bundle after explicit consent."
+  },
+  "rel_ops_host_update_unknown_installation": "Se desconoce esta instalación, por lo que no se envió la actualización",
+  "@rel_ops_host_update_unknown_installation": {
+    "description": "Local admission refusal when the gateway installation cannot be identified."
+  },
+  "rel_ops_host_update_busy_installation": "Hay un chat en curso en esta instalación",
+  "@rel_ops_host_update_busy_installation": {
+    "description": "Local admission refusal when an active chat or agent blocks the remote update."
+  },
+  "rel_ops_host_update_refused": "Actualización remota rechazada",
+  "@rel_ops_host_update_refused": {
+    "description": "Local fallback when the server refuses an update without a message."
+  },
+  "rel_ops_host_error_stale": "Espacio de trabajo remoto: desactualizado",
+  "@rel_ops_host_error_stale": {
+    "description": "Workspace failure: the remote owner or connection is no longer current."
+  },
+  "rel_ops_host_error_mismatch": "Espacio de trabajo remoto: no coincide",
+  "@rel_ops_host_error_mismatch": {
+    "description": "Workspace failure: remote owner or action result does not match the requested target."
+  },
+  "rel_ops_host_error_unbound": "Espacio de trabajo remoto: sin vincular",
+  "@rel_ops_host_error_unbound": {
+    "description": "Workspace failure: no authenticated remote target has been bound."
+  },
+  "rel_ops_host_error_unsupported": "Espacio de trabajo remoto: no compatible",
+  "@rel_ops_host_error_unsupported": {
+    "description": "Workspace failure: the gateway does not support this operation."
+  },
+  "rel_ops_host_error_denied": "Espacio de trabajo remoto: acceso denegado",
+  "@rel_ops_host_error_denied": {
+    "description": "Workspace failure: the remote host operation was denied."
+  },
+  "rel_ops_host_error_ineligible": "Espacio de trabajo remoto: no apto",
+  "@rel_ops_host_error_ineligible": {
+    "description": "Workspace failure: the remote target is not eligible for this operation."
+  },
+  "rel_ops_host_error_unavailable": "Espacio de trabajo remoto: no disponible",
+  "@rel_ops_host_error_unavailable": {
+    "description": "Workspace failure: the remote host operation is unavailable."
+  },
+  "rel_ops_host_error_invalid": "Espacio de trabajo remoto: no válido",
+  "@rel_ops_host_error_invalid": {
+    "description": "Workspace failure: the request or gateway response was invalid."
+  },
+  "rel_ops_host_error_insecure": "Espacio de trabajo remoto: no seguro",
+  "@rel_ops_host_error_insecure": {
+    "description": "Workspace failure: the remote connection does not meet security requirements."
+  },
+  "rel_ops_host_error_request": "No se pudo completar la solicitud.",
+  "@rel_ops_host_error_request": {
+    "description": "Safe host-operation failure fallback when no structured reason is available. Do not expose client-authored service exception prose."
   }
 }

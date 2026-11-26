@@ -12453,6 +12453,238 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rel_ops_ssh_disconnect => '断开 shell 连接';
+
+  @override
+  String get rel_ops_host_cancel => '取消';
+
+  @override
+  String get rel_ops_host_confirm => '确认';
+
+  @override
+  String get rel_ops_host_title => '主机';
+
+  @override
+  String get rel_ops_host_refresh => '刷新';
+
+  @override
+  String get rel_ops_host_update => '更新远程 Hermes';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return '这将在网关主机上为 $profile 执行就地更新，不会更新此设备上的 Ares。更新是否成功以匹配的更新回执为准，而不是以主机是否保持可访问为准。';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting => '正在等待匹配的回执。更新仍在进行中。';
+
+  @override
+  String get rel_ops_host_receipt_success => '更新回执显示成功。';
+
+  @override
+  String get rel_ops_host_receipt_partial => '更新已应用，但仍有后续步骤需要完成。';
+
+  @override
+  String get rel_ops_host_receipt_failed => '更新回执显示失败。';
+
+  @override
+  String get rel_ops_host_receipt_refused => '更新回执显示已拒绝。';
+
+  @override
+  String get rel_ops_host_update_running => '更新仍在进行中。';
+
+  @override
+  String get rel_ops_host_update_unknown => '更新结果未知。网关正常运行并不代表更新成功。';
+
+  @override
+  String get rel_ops_host_default_profile => '网关默认配置档案';
+
+  @override
+  String get rel_ops_host_restart => '重启远程网关';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return '这将重启 $profiles 共享的网关。此网关上正在进行的轮次会被中断。请随后重新连接。可以访问网关并不能证明重启已完成。';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return '这将重启 $profile 的远程网关。此网关上正在进行的轮次会被中断。请随后重新连接。';
+  }
+
+  @override
+  String get rel_ops_host_restart_running => '重启命令仍在运行。';
+
+  @override
+  String get rel_ops_host_restart_finished => '重启命令已结束。请手动重新连接主机。';
+
+  @override
+  String get rel_ops_host_restart_failed => '重启命令失败。';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name 仍在运行';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name 已完成';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name 失败';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => '维护器已暂停。';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => '维护器已恢复。';
+
+  @override
+  String get rel_ops_host_reset => '重置远程记忆文件';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return '删除 $profile 上的 $targetName 记忆文件？此操作无法通过 Ares 撤销。';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return '已重置 $targetName。已删除 $count 个远程文件。';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted => '主机未确认诊断包已隐去敏感信息，因此不显示链接。';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return '这些控件操作的是 $profile 的远程网关 $connection，而不是此设备，也不用于更新 Ares 客户端。';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return '网关进程正在运行 $version · $count 个会话';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return '网关进程已停止 $version · $count 个会话';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return '主机心跳已过期（$seconds 秒）。';
+  }
+
+  @override
+  String get rel_ops_host_doctor => '运行 Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => '安全审计';
+
+  @override
+  String get rel_ops_host_check_receipt => '检查更新回执';
+
+  @override
+  String get rel_ops_host_logs => '远程主机日志';
+
+  @override
+  String get rel_ops_host_search_logs => '搜索主机日志';
+
+  @override
+  String get rel_ops_host_driver => '远程主机驱动程序';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      '计算机操作功能的就绪状态取决于网关机器上的驱动程序和操作系统权限，而不是此设备。';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · 已安装 $installed · 已就绪 $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => '不可用';
+
+  @override
+  String get rel_ops_host_true => '是';
+
+  @override
+  String get rel_ops_host_false => '否';
+
+  @override
+  String get rel_ops_host_curator => '维护器';
+
+  @override
+  String get rel_ops_host_curator_paused => '维护器已暂停';
+
+  @override
+  String get rel_ops_host_curator_running => '维护器正在运行';
+
+  @override
+  String get rel_ops_host_no_run => '尚无已完成的运行';
+
+  @override
+  String get rel_ops_host_run_curator => '立即运行维护器';
+
+  @override
+  String get rel_ops_host_reset_memory => '重置记忆文件';
+
+  @override
+  String get rel_ops_host_reset_user => '重置用户文件';
+
+  @override
+  String get rel_ops_host_reset_both => '重置两个文件';
+
+  @override
+  String get rel_ops_host_share_consent => '我同意从远程主机上传已隐去敏感信息的诊断包';
+
+  @override
+  String get rel_ops_host_share => '分享已隐去敏感信息的诊断数据';
+
+  @override
+  String get rel_ops_host_update_unknown_installation => '无法识别此安装，因此未发送更新请求';
+
+  @override
+  String get rel_ops_host_update_busy_installation => '此安装上有聊天正在运行';
+
+  @override
+  String get rel_ops_host_update_refused => '远程更新被拒绝';
+
+  @override
+  String get rel_ops_host_error_stale => '远程工作区：已过期';
+
+  @override
+  String get rel_ops_host_error_mismatch => '远程工作区：不匹配';
+
+  @override
+  String get rel_ops_host_error_unbound => '远程工作区：未绑定';
+
+  @override
+  String get rel_ops_host_error_unsupported => '远程工作区：不支持';
+
+  @override
+  String get rel_ops_host_error_denied => '远程工作区：访问被拒绝';
+
+  @override
+  String get rel_ops_host_error_ineligible => '远程工作区：不符合操作条件';
+
+  @override
+  String get rel_ops_host_error_unavailable => '远程工作区：不可用';
+
+  @override
+  String get rel_ops_host_error_invalid => '远程工作区：无效';
+
+  @override
+  String get rel_ops_host_error_insecure => '远程工作区：不安全';
+
+  @override
+  String get rel_ops_host_error_request => '无法完成该请求。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -24904,6 +25136,238 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get rel_ops_ssh_disconnect => '断开 shell 连接';
+
+  @override
+  String get rel_ops_host_cancel => '取消';
+
+  @override
+  String get rel_ops_host_confirm => '确认';
+
+  @override
+  String get rel_ops_host_title => '主机';
+
+  @override
+  String get rel_ops_host_refresh => '刷新';
+
+  @override
+  String get rel_ops_host_update => '更新远程 Hermes';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return '这将在网关主机上为 $profile 执行就地更新，不会更新此设备上的 Ares。更新是否成功以匹配的更新回执为准，而不是以主机是否保持可访问为准。';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting => '正在等待匹配的回执。更新仍在进行中。';
+
+  @override
+  String get rel_ops_host_receipt_success => '更新回执显示成功。';
+
+  @override
+  String get rel_ops_host_receipt_partial => '更新已应用，但仍有后续步骤需要完成。';
+
+  @override
+  String get rel_ops_host_receipt_failed => '更新回执显示失败。';
+
+  @override
+  String get rel_ops_host_receipt_refused => '更新回执显示已拒绝。';
+
+  @override
+  String get rel_ops_host_update_running => '更新仍在进行中。';
+
+  @override
+  String get rel_ops_host_update_unknown => '更新结果未知。网关正常运行并不代表更新成功。';
+
+  @override
+  String get rel_ops_host_default_profile => '网关默认配置档案';
+
+  @override
+  String get rel_ops_host_restart => '重启远程网关';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return '这将重启 $profiles 共享的网关。此网关上正在进行的轮次会被中断。请随后重新连接。可以访问网关并不能证明重启已完成。';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return '这将重启 $profile 的远程网关。此网关上正在进行的轮次会被中断。请随后重新连接。';
+  }
+
+  @override
+  String get rel_ops_host_restart_running => '重启命令仍在运行。';
+
+  @override
+  String get rel_ops_host_restart_finished => '重启命令已结束。请手动重新连接主机。';
+
+  @override
+  String get rel_ops_host_restart_failed => '重启命令失败。';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name 仍在运行';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name 已完成';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name 失败';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => '维护器已暂停。';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => '维护器已恢复。';
+
+  @override
+  String get rel_ops_host_reset => '重置远程记忆文件';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return '删除 $profile 上的 $targetName 记忆文件？此操作无法通过 Ares 撤销。';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return '已重置 $targetName。已删除 $count 个远程文件。';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted => '主机未确认诊断包已隐去敏感信息，因此不显示链接。';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return '这些控件操作的是 $profile 的远程网关 $connection，而不是此设备，也不用于更新 Ares 客户端。';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return '网关进程正在运行 $version · $count 个会话';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return '网关进程已停止 $version · $count 个会话';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return '主机心跳已过期（$seconds 秒）。';
+  }
+
+  @override
+  String get rel_ops_host_doctor => '运行 Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => '安全审计';
+
+  @override
+  String get rel_ops_host_check_receipt => '检查更新回执';
+
+  @override
+  String get rel_ops_host_logs => '远程主机日志';
+
+  @override
+  String get rel_ops_host_search_logs => '搜索主机日志';
+
+  @override
+  String get rel_ops_host_driver => '远程主机驱动程序';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      '计算机操作功能的就绪状态取决于网关机器上的驱动程序和操作系统权限，而不是此设备。';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · 已安装 $installed · 已就绪 $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => '不可用';
+
+  @override
+  String get rel_ops_host_true => '是';
+
+  @override
+  String get rel_ops_host_false => '否';
+
+  @override
+  String get rel_ops_host_curator => '维护器';
+
+  @override
+  String get rel_ops_host_curator_paused => '维护器已暂停';
+
+  @override
+  String get rel_ops_host_curator_running => '维护器正在运行';
+
+  @override
+  String get rel_ops_host_no_run => '尚无已完成的运行';
+
+  @override
+  String get rel_ops_host_run_curator => '立即运行维护器';
+
+  @override
+  String get rel_ops_host_reset_memory => '重置记忆文件';
+
+  @override
+  String get rel_ops_host_reset_user => '重置用户文件';
+
+  @override
+  String get rel_ops_host_reset_both => '重置两个文件';
+
+  @override
+  String get rel_ops_host_share_consent => '我同意从远程主机上传已隐去敏感信息的诊断包';
+
+  @override
+  String get rel_ops_host_share => '分享已隐去敏感信息的诊断数据';
+
+  @override
+  String get rel_ops_host_update_unknown_installation => '无法识别此安装，因此未发送更新请求';
+
+  @override
+  String get rel_ops_host_update_busy_installation => '此安装上有聊天正在运行';
+
+  @override
+  String get rel_ops_host_update_refused => '远程更新被拒绝';
+
+  @override
+  String get rel_ops_host_error_stale => '远程工作区：已过期';
+
+  @override
+  String get rel_ops_host_error_mismatch => '远程工作区：不匹配';
+
+  @override
+  String get rel_ops_host_error_unbound => '远程工作区：未绑定';
+
+  @override
+  String get rel_ops_host_error_unsupported => '远程工作区：不支持';
+
+  @override
+  String get rel_ops_host_error_denied => '远程工作区：访问被拒绝';
+
+  @override
+  String get rel_ops_host_error_ineligible => '远程工作区：不符合操作条件';
+
+  @override
+  String get rel_ops_host_error_unavailable => '远程工作区：不可用';
+
+  @override
+  String get rel_ops_host_error_invalid => '远程工作区：无效';
+
+  @override
+  String get rel_ops_host_error_insecure => '远程工作区：不安全';
+
+  @override
+  String get rel_ops_host_error_request => '无法完成该请求。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -37360,4 +37824,236 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get rel_ops_ssh_disconnect => '中斷 shell 連線';
+
+  @override
+  String get rel_ops_host_cancel => '取消';
+
+  @override
+  String get rel_ops_host_confirm => '確認';
+
+  @override
+  String get rel_ops_host_title => '主機';
+
+  @override
+  String get rel_ops_host_refresh => '重新整理';
+
+  @override
+  String get rel_ops_host_update => '更新遠端 Hermes';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return '這將在閘道主機上為 $profile 執行就地更新，不會更新此裝置上的 Ares。更新是否成功以相符的更新回條為準，而不是以主機是否持續可存取為準。';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting => '正在等候相符的回條。更新仍在進行中。';
+
+  @override
+  String get rel_ops_host_receipt_success => '更新回條顯示成功。';
+
+  @override
+  String get rel_ops_host_receipt_partial => '更新已套用，但仍有後續步驟需要完成。';
+
+  @override
+  String get rel_ops_host_receipt_failed => '更新回條顯示失敗。';
+
+  @override
+  String get rel_ops_host_receipt_refused => '更新回條顯示已拒絕。';
+
+  @override
+  String get rel_ops_host_update_running => '更新仍在進行中。';
+
+  @override
+  String get rel_ops_host_update_unknown => '更新結果不明。閘道正常運作並不代表更新成功。';
+
+  @override
+  String get rel_ops_host_default_profile => '閘道預設設定檔';
+
+  @override
+  String get rel_ops_host_restart => '重新啟動遠端閘道';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return '這將重新啟動 $profiles 共用的閘道。此閘道上正在進行的回合會被中斷。請隨後重新連線。可以存取閘道並不能證明重新啟動已完成。';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return '這將重新啟動 $profile 的遠端閘道。此閘道上正在進行的回合會被中斷。請隨後重新連線。';
+  }
+
+  @override
+  String get rel_ops_host_restart_running => '重新啟動指令仍在執行。';
+
+  @override
+  String get rel_ops_host_restart_finished => '重新啟動指令已結束。請手動重新連線至主機。';
+
+  @override
+  String get rel_ops_host_restart_failed => '重新啟動指令失敗。';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name 仍在執行';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name 已完成';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name 失敗';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => '技能維護已暫停。';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => '技能維護已恢復。';
+
+  @override
+  String get rel_ops_host_reset => '重設遠端記憶檔案';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return '刪除 $profile 上的 $targetName 記憶檔案？此操作無法透過 Ares 復原。';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return '已重設 $targetName。已刪除 $count 個遠端檔案。';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted => '主機未確認診斷套件已隱去敏感資訊，因此不顯示連結。';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return '這些控制項操作的是 $profile 的遠端閘道 $connection，而不是此裝置，也不用於更新 Ares 用戶端。';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return '閘道程序正在執行 $version · $count 個工作階段';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return '閘道程序已停止 $version · $count 個工作階段';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return '主機心跳已過期（$seconds 秒）。';
+  }
+
+  @override
+  String get rel_ops_host_doctor => '執行 Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => '安全性稽核';
+
+  @override
+  String get rel_ops_host_check_receipt => '檢查更新回條';
+
+  @override
+  String get rel_ops_host_logs => '遠端主機記錄';
+
+  @override
+  String get rel_ops_host_search_logs => '搜尋主機記錄';
+
+  @override
+  String get rel_ops_host_driver => '遠端主機驅動程式';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      '電腦操作功能的就緒狀態取決於閘道機器上的驅動程式和作業系統權限，而不是此裝置。';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · 已安裝 $installed · 已就緒 $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => '無法使用';
+
+  @override
+  String get rel_ops_host_true => '是';
+
+  @override
+  String get rel_ops_host_false => '否';
+
+  @override
+  String get rel_ops_host_curator => '技能維護';
+
+  @override
+  String get rel_ops_host_curator_paused => '技能維護已暫停';
+
+  @override
+  String get rel_ops_host_curator_running => '技能維護正在執行';
+
+  @override
+  String get rel_ops_host_no_run => '尚無已完成的執行';
+
+  @override
+  String get rel_ops_host_run_curator => '立即執行技能維護';
+
+  @override
+  String get rel_ops_host_reset_memory => '重設記憶檔案';
+
+  @override
+  String get rel_ops_host_reset_user => '重設使用者檔案';
+
+  @override
+  String get rel_ops_host_reset_both => '重設兩個檔案';
+
+  @override
+  String get rel_ops_host_share_consent => '我同意從遠端主機上傳已隱去敏感資訊的診斷套件';
+
+  @override
+  String get rel_ops_host_share => '分享已隱去敏感資訊的診斷資料';
+
+  @override
+  String get rel_ops_host_update_unknown_installation => '無法識別此安裝，因此未傳送更新請求';
+
+  @override
+  String get rel_ops_host_update_busy_installation => '此安裝上有聊天正在執行';
+
+  @override
+  String get rel_ops_host_update_refused => '遠端更新遭拒';
+
+  @override
+  String get rel_ops_host_error_stale => '遠端工作區：已過期';
+
+  @override
+  String get rel_ops_host_error_mismatch => '遠端工作區：不相符';
+
+  @override
+  String get rel_ops_host_error_unbound => '遠端工作區：未綁定';
+
+  @override
+  String get rel_ops_host_error_unsupported => '遠端工作區：不支援';
+
+  @override
+  String get rel_ops_host_error_denied => '遠端工作區：存取遭拒';
+
+  @override
+  String get rel_ops_host_error_ineligible => '遠端工作區：不符合操作條件';
+
+  @override
+  String get rel_ops_host_error_unavailable => '遠端工作區：無法使用';
+
+  @override
+  String get rel_ops_host_error_invalid => '遠端工作區：無效';
+
+  @override
+  String get rel_ops_host_error_insecure => '遠端工作區：不安全';
+
+  @override
+  String get rel_ops_host_error_request => '無法完成該請求。';
 }

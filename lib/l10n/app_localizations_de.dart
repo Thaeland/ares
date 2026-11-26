@@ -13190,4 +13190,255 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get rel_ops_ssh_disconnect => 'Shell-Verbindung trennen';
+
+  @override
+  String get rel_ops_host_cancel => 'Abbrechen';
+
+  @override
+  String get rel_ops_host_confirm => 'Bestätigen';
+
+  @override
+  String get rel_ops_host_title => 'Host';
+
+  @override
+  String get rel_ops_host_refresh => 'Aktualisieren';
+
+  @override
+  String get rel_ops_host_update => 'Hermes auf dem Remote-Host aktualisieren';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return 'Dies startet für $profile ein Update der bestehenden Installation auf dem Gateway-Host. Ares auf diesem Gerät wird dadurch nicht aktualisiert. Erfolg wird durch die passende Update-Bestätigung belegt, nicht dadurch, dass der Host erreichbar bleibt.';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting =>
+      'Warte auf passende Bestätigung. Das Update läuft noch.';
+
+  @override
+  String get rel_ops_host_receipt_success =>
+      'Die Update-Bestätigung meldet Erfolg.';
+
+  @override
+  String get rel_ops_host_receipt_partial =>
+      'Update übernommen; weitere Schritte stehen noch aus.';
+
+  @override
+  String get rel_ops_host_receipt_failed =>
+      'Die Update-Bestätigung meldet einen Fehler.';
+
+  @override
+  String get rel_ops_host_receipt_refused =>
+      'Die Update-Bestätigung meldet eine Ablehnung.';
+
+  @override
+  String get rel_ops_host_update_running => 'Das Update läuft noch.';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      'Das Ergebnis des Updates ist unbekannt. Ein laufendes Gateway bedeutet kein erfolgreiches Update.';
+
+  @override
+  String get rel_ops_host_default_profile => 'das Standardprofil des Gateways';
+
+  @override
+  String get rel_ops_host_restart => 'Remote-Gateway neu starten';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return 'Dies startet das von $profiles gemeinsam genutzte Gateway neu. Laufende Turns auf diesem Gateway werden unterbrochen. Verbinde dich danach erneut. Erreichbarkeit ist kein Nachweis für einen abgeschlossenen Neustart.';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return 'Dies startet das Remote-Gateway für $profile neu. Laufende Turns auf diesem Gateway werden unterbrochen. Verbinde dich danach erneut.';
+  }
+
+  @override
+  String get rel_ops_host_restart_running => 'Der Neustartbefehl läuft noch.';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      'Neustartbefehl abgeschlossen. Verbinde dich selbst erneut mit dem Host.';
+
+  @override
+  String get rel_ops_host_restart_failed => 'Neustartbefehl fehlgeschlagen.';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name läuft noch';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name abgeschlossen';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name fehlgeschlagen';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => 'Kurator pausiert.';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => 'Kurator fortgesetzt.';
+
+  @override
+  String get rel_ops_host_reset => 'Remote-Gedächtnisdateien zurücksetzen';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return 'Die Gedächtnisdatei $targetName für $profile löschen? Dies lässt sich in Ares nicht rückgängig machen.';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return '$targetName zurückgesetzt. $count Datei(en) auf dem Remote-Host entfernt.';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      'Der Host hat die Schwärzung vertraulicher Daten im Paket nicht bestätigt. Es wird kein Link angezeigt.';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return 'Diese Steuerelemente bedienen das Remote-Gateway $connection für $profile, nicht dieses Gerät und nicht das Ares-Client-Update.';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return 'Gateway-Prozess läuft $version · $count Sitzungen';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return 'Gateway-Prozess gestoppt $version · $count Sitzungen';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return 'Das Lebenszeichen des Hosts ist veraltet ($seconds s).';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'Doctor ausführen';
+
+  @override
+  String get rel_ops_host_security_audit => 'Sicherheitsaudit';
+
+  @override
+  String get rel_ops_host_check_receipt => 'Update-Bestätigung prüfen';
+
+  @override
+  String get rel_ops_host_logs => 'Remote-Host-Protokolle';
+
+  @override
+  String get rel_ops_host_search_logs => 'Host-Protokolle durchsuchen';
+
+  @override
+  String get rel_ops_host_driver => 'Remote-Host-Treiber';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      'Die Einsatzbereitschaft der Computersteuerung bezieht sich auf Treiber und Betriebssystemberechtigungen des Gateway-Rechners, nicht auf dieses Gerät.';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · installiert $installed · bereit $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => 'nicht verfügbar';
+
+  @override
+  String get rel_ops_host_true => 'ja';
+
+  @override
+  String get rel_ops_host_false => 'nein';
+
+  @override
+  String get rel_ops_host_curator => 'Kurator';
+
+  @override
+  String get rel_ops_host_curator_paused => 'Kurator pausiert';
+
+  @override
+  String get rel_ops_host_curator_running => 'Kurator läuft';
+
+  @override
+  String get rel_ops_host_no_run => 'Kein abgeschlossener Durchlauf';
+
+  @override
+  String get rel_ops_host_run_curator => 'Kurator jetzt ausführen';
+
+  @override
+  String get rel_ops_host_reset_memory => 'Gedächtnisdatei zurücksetzen';
+
+  @override
+  String get rel_ops_host_reset_user => 'Benutzerdatei zurücksetzen';
+
+  @override
+  String get rel_ops_host_reset_both => 'Beide Dateien zurücksetzen';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      'Ich stimme zu, ein Diagnosepaket mit geschwärzten vertraulichen Daten vom Remote-Host hochzuladen';
+
+  @override
+  String get rel_ops_host_share =>
+      'Diagnosedaten mit geschwärzten vertraulichen Daten teilen';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      'Diese Installation ist unbekannt, daher wurde das Update nicht gesendet';
+
+  @override
+  String get rel_ops_host_update_busy_installation =>
+      'Auf dieser Installation läuft ein Chat';
+
+  @override
+  String get rel_ops_host_update_refused => 'Remote-Update abgelehnt';
+
+  @override
+  String get rel_ops_host_error_stale => 'Remote-Arbeitsbereich: veraltet';
+
+  @override
+  String get rel_ops_host_error_mismatch =>
+      'Remote-Arbeitsbereich: stimmt nicht überein';
+
+  @override
+  String get rel_ops_host_error_unbound =>
+      'Remote-Arbeitsbereich: nicht gebunden';
+
+  @override
+  String get rel_ops_host_error_unsupported =>
+      'Remote-Arbeitsbereich: nicht unterstützt';
+
+  @override
+  String get rel_ops_host_error_denied =>
+      'Remote-Arbeitsbereich: Zugriff verweigert';
+
+  @override
+  String get rel_ops_host_error_ineligible =>
+      'Remote-Arbeitsbereich: nicht berechtigt';
+
+  @override
+  String get rel_ops_host_error_unavailable =>
+      'Remote-Arbeitsbereich: nicht verfügbar';
+
+  @override
+  String get rel_ops_host_error_invalid => 'Remote-Arbeitsbereich: ungültig';
+
+  @override
+  String get rel_ops_host_error_insecure => 'Remote-Arbeitsbereich: unsicher';
+
+  @override
+  String get rel_ops_host_error_request =>
+      'Die Anfrage konnte nicht abgeschlossen werden.';
 }

@@ -13028,4 +13028,245 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rel_ops_ssh_disconnect => 'Disconnect shell';
+
+  @override
+  String get rel_ops_host_cancel => 'Cancel';
+
+  @override
+  String get rel_ops_host_confirm => 'Confirm';
+
+  @override
+  String get rel_ops_host_title => 'Host';
+
+  @override
+  String get rel_ops_host_refresh => 'Refresh';
+
+  @override
+  String get rel_ops_host_update => 'Update remote Hermes';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return 'This starts an in-place update on the gateway host for $profile. It does not update Ares on this device. Success is the matching update receipt, not the host staying reachable.';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting =>
+      'Awaiting matching receipt. Update is still running.';
+
+  @override
+  String get rel_ops_host_receipt_success => 'Update receipt succeeded.';
+
+  @override
+  String get rel_ops_host_receipt_partial =>
+      'Update committed, with follow-up steps still owed.';
+
+  @override
+  String get rel_ops_host_receipt_failed => 'Update receipt failed.';
+
+  @override
+  String get rel_ops_host_receipt_refused => 'Update receipt refused.';
+
+  @override
+  String get rel_ops_host_update_running => 'Update is still running.';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      'Update outcome is unknown. A live gateway is not a successful update.';
+
+  @override
+  String get rel_ops_host_default_profile => 'the gateway default';
+
+  @override
+  String get rel_ops_host_restart => 'Restart remote gateway';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return 'This restarts the gateway shared by $profiles. Live turns on this gateway are interrupted. Reconnect afterwards. Reachability is not proof the restart finished.';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return 'This restarts the remote gateway for $profile. Live turns on this gateway are interrupted. Reconnect afterwards.';
+  }
+
+  @override
+  String get rel_ops_host_restart_running =>
+      'Restart command is still running.';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      'Restart command finished. Reconnect to the host yourself.';
+
+  @override
+  String get rel_ops_host_restart_failed => 'Restart command failed.';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name is still running';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name finished';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name failed';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => 'Curator paused.';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => 'Curator resumed.';
+
+  @override
+  String get rel_ops_host_reset => 'Reset remote memory files';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return 'Delete the $targetName memory file on $profile? This cannot be undone from Ares.';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return 'Reset $targetName. Removed $count remote file(s).';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      'The host did not confirm the bundle was redacted. No link is shown.';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return 'These controls operate the remote gateway $connection for $profile, not this device and not the Ares client update.';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return 'Gateway process running $version · $count sessions';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return 'Gateway process stopped $version · $count sessions';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return 'Host heartbeat is stale (${seconds}s).';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'Run Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => 'Security audit';
+
+  @override
+  String get rel_ops_host_check_receipt => 'Check update receipt';
+
+  @override
+  String get rel_ops_host_logs => 'Remote host logs';
+
+  @override
+  String get rel_ops_host_search_logs => 'Search host logs';
+
+  @override
+  String get rel_ops_host_driver => 'Remote host driver';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      'Computer Use readiness is the gateway machine\'s driver and OS permissions, not this device.';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · installed $installed · ready $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => 'null';
+
+  @override
+  String get rel_ops_host_true => 'true';
+
+  @override
+  String get rel_ops_host_false => 'false';
+
+  @override
+  String get rel_ops_host_curator => 'Curator';
+
+  @override
+  String get rel_ops_host_curator_paused => 'Curator paused';
+
+  @override
+  String get rel_ops_host_curator_running => 'Curator running';
+
+  @override
+  String get rel_ops_host_no_run => 'No completed run';
+
+  @override
+  String get rel_ops_host_run_curator => 'Run Curator now';
+
+  @override
+  String get rel_ops_host_reset_memory => 'Reset memory file';
+
+  @override
+  String get rel_ops_host_reset_user => 'Reset user file';
+
+  @override
+  String get rel_ops_host_reset_both => 'Reset both files';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      'I agree to upload a redacted diagnostic bundle from the remote host';
+
+  @override
+  String get rel_ops_host_share => 'Share redacted diagnostics';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      'This installation is unknown, so the update was not sent';
+
+  @override
+  String get rel_ops_host_update_busy_installation =>
+      'A chat on this installation is running';
+
+  @override
+  String get rel_ops_host_update_refused => 'Remote update refused';
+
+  @override
+  String get rel_ops_host_error_stale => 'Remote workspace: stale';
+
+  @override
+  String get rel_ops_host_error_mismatch => 'Remote workspace: mismatch';
+
+  @override
+  String get rel_ops_host_error_unbound => 'Remote workspace: unbound';
+
+  @override
+  String get rel_ops_host_error_unsupported => 'Remote workspace: unsupported';
+
+  @override
+  String get rel_ops_host_error_denied => 'Remote workspace: denied';
+
+  @override
+  String get rel_ops_host_error_ineligible => 'Remote workspace: ineligible';
+
+  @override
+  String get rel_ops_host_error_unavailable => 'Remote workspace: unavailable';
+
+  @override
+  String get rel_ops_host_error_invalid => 'Remote workspace: invalid';
+
+  @override
+  String get rel_ops_host_error_insecure => 'Remote workspace: insecure';
+
+  @override
+  String get rel_ops_host_error_request => 'Could not complete that request.';
 }

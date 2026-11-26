@@ -13018,4 +13018,248 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get rel_ops_ssh_disconnect => 'قطع اتصال الصدفة';
+
+  @override
+  String get rel_ops_host_cancel => 'إلغاء';
+
+  @override
+  String get rel_ops_host_confirm => 'تأكيد';
+
+  @override
+  String get rel_ops_host_title => 'المضيف';
+
+  @override
+  String get rel_ops_host_refresh => 'تحديث';
+
+  @override
+  String get rel_ops_host_update => 'تحديث Hermes البعيد';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return 'سيبدأ هذا تحديثًا موضعيًا على مضيف البوابة للملف الشخصي $profile. لن يُحدّث Ares على هذا الجهاز. يُثبت النجاح إيصال التحديث المطابق، وليس استمرار إمكانية الوصول إلى المضيف.';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting =>
+      'بانتظار الإيصال المطابق. ما زال التحديث جاريًا.';
+
+  @override
+  String get rel_ops_host_receipt_success => 'يشير إيصال التحديث إلى النجاح.';
+
+  @override
+  String get rel_ops_host_receipt_partial =>
+      'تم تطبيق التحديث، ولا تزال هناك خطوات متابعة مطلوبة.';
+
+  @override
+  String get rel_ops_host_receipt_failed => 'يشير إيصال التحديث إلى الفشل.';
+
+  @override
+  String get rel_ops_host_receipt_refused => 'يشير إيصال التحديث إلى الرفض.';
+
+  @override
+  String get rel_ops_host_update_running => 'ما زال التحديث جاريًا.';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      'نتيجة التحديث غير معروفة. عمل البوابة لا يعني نجاح التحديث.';
+
+  @override
+  String get rel_ops_host_default_profile => 'الملف الشخصي الافتراضي للبوابة';
+
+  @override
+  String get rel_ops_host_restart => 'إعادة تشغيل البوابة البعيدة';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return 'سيؤدي هذا إلى إعادة تشغيل البوابة المشتركة بين $profiles. ستنقطع الجولات الجارية على هذه البوابة. أعد الاتصال بعد ذلك. إمكانية الوصول لا تثبت اكتمال إعادة التشغيل.';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return 'سيؤدي هذا إلى إعادة تشغيل البوابة البعيدة للملف الشخصي $profile. ستنقطع الجولات الجارية على هذه البوابة. أعد الاتصال بعد ذلك.';
+  }
+
+  @override
+  String get rel_ops_host_restart_running => 'ما زال أمر إعادة التشغيل جاريًا.';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      'اكتمل أمر إعادة التشغيل. أعد الاتصال بالمضيف بنفسك.';
+
+  @override
+  String get rel_ops_host_restart_failed => 'فشل أمر إعادة التشغيل.';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return 'ما زال $name جاريًا';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return 'اكتمل $name';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return 'فشل $name';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result =>
+      'تم إيقاف منسّق المهارات مؤقتًا.';
+
+  @override
+  String get rel_ops_host_curator_resumed_result =>
+      'تم استئناف منسّق المهارات.';
+
+  @override
+  String get rel_ops_host_reset => 'إعادة ضبط ملفات الذاكرة البعيدة';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return 'هل تريد حذف ملف الذاكرة $targetName على $profile؟ لا يمكن التراجع عن هذا من Ares.';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return 'تمت إعادة ضبط $targetName. عدد الملفات البعيدة المحذوفة: $count.';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      'لم يؤكّد المضيف إخفاء المعلومات الحساسة في الحزمة. لن يُعرض أي رابط.';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return 'تتحكم هذه الأدوات في البوابة البعيدة $connection للملف الشخصي $profile، وليس في هذا الجهاز أو تحديث تطبيق Ares.';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return 'عملية البوابة قيد التشغيل $version · عدد الجلسات: $count';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return 'عملية البوابة متوقفة $version · عدد الجلسات: $count';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return 'إشارة نبض المضيف قديمة ($seconds ث).';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'تشغيل Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => 'تدقيق الأمان';
+
+  @override
+  String get rel_ops_host_check_receipt => 'التحقق من إيصال التحديث';
+
+  @override
+  String get rel_ops_host_logs => 'سجلات المضيف البعيد';
+
+  @override
+  String get rel_ops_host_search_logs => 'البحث في سجلات المضيف';
+
+  @override
+  String get rel_ops_host_driver => 'برنامج تشغيل المضيف البعيد';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      'تعتمد جاهزية استخدام الحاسوب على برنامج التشغيل وأذونات نظام التشغيل على جهاز البوابة، وليس هذا الجهاز.';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · مثبّت: $installed · جاهز: $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => 'غير متاح';
+
+  @override
+  String get rel_ops_host_true => 'نعم';
+
+  @override
+  String get rel_ops_host_false => 'لا';
+
+  @override
+  String get rel_ops_host_curator => 'منسّق المهارات';
+
+  @override
+  String get rel_ops_host_curator_paused => 'منسّق المهارات متوقف مؤقتًا';
+
+  @override
+  String get rel_ops_host_curator_running => 'منسّق المهارات قيد التشغيل';
+
+  @override
+  String get rel_ops_host_no_run => 'لا توجد عملية تشغيل مكتملة';
+
+  @override
+  String get rel_ops_host_run_curator => 'تشغيل منسّق المهارات الآن';
+
+  @override
+  String get rel_ops_host_reset_memory => 'إعادة ضبط ملف الذاكرة';
+
+  @override
+  String get rel_ops_host_reset_user => 'إعادة ضبط ملف المستخدم';
+
+  @override
+  String get rel_ops_host_reset_both => 'إعادة ضبط الملفين';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      'أوافق على رفع حزمة تشخيصية بعد إخفاء معلوماتها الحساسة من المضيف البعيد';
+
+  @override
+  String get rel_ops_host_share =>
+      'مشاركة بيانات تشخيصية بعد إخفاء المعلومات الحساسة';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      'هذا التثبيت غير معروف، لذا لم يُرسَل طلب التحديث';
+
+  @override
+  String get rel_ops_host_update_busy_installation =>
+      'توجد محادثة جارية على هذا التثبيت';
+
+  @override
+  String get rel_ops_host_update_refused => 'رُفض التحديث البعيد';
+
+  @override
+  String get rel_ops_host_error_stale => 'مساحة العمل البعيدة: قديمة';
+
+  @override
+  String get rel_ops_host_error_mismatch => 'مساحة العمل البعيدة: غير متطابقة';
+
+  @override
+  String get rel_ops_host_error_unbound => 'مساحة العمل البعيدة: غير مرتبطة';
+
+  @override
+  String get rel_ops_host_error_unsupported =>
+      'مساحة العمل البعيدة: غير مدعومة';
+
+  @override
+  String get rel_ops_host_error_denied => 'مساحة العمل البعيدة: رُفض الوصول';
+
+  @override
+  String get rel_ops_host_error_ineligible => 'مساحة العمل البعيدة: غير مؤهلة';
+
+  @override
+  String get rel_ops_host_error_unavailable => 'مساحة العمل البعيدة: غير متاحة';
+
+  @override
+  String get rel_ops_host_error_invalid => 'مساحة العمل البعيدة: غير صالحة';
+
+  @override
+  String get rel_ops_host_error_insecure => 'مساحة العمل البعيدة: غير آمنة';
+
+  @override
+  String get rel_ops_host_error_request => 'تعذّر إكمال هذا الطلب.';
 }

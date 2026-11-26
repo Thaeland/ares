@@ -13190,4 +13190,261 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get rel_ops_ssh_disconnect => 'Desconectar shell';
+
+  @override
+  String get rel_ops_host_cancel => 'Cancelar';
+
+  @override
+  String get rel_ops_host_confirm => 'Confirmar';
+
+  @override
+  String get rel_ops_host_title => 'Host';
+
+  @override
+  String get rel_ops_host_refresh => 'Actualizar';
+
+  @override
+  String get rel_ops_host_update => 'Actualizar Hermes remoto';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return 'Esto inicia una actualización de la instalación existente en el host de la pasarela para $profile. No actualiza Ares en este dispositivo. El éxito se acredita con el comprobante de actualización correspondiente, no con que el host siga accesible.';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting =>
+      'Esperando el comprobante correspondiente. La actualización sigue en curso.';
+
+  @override
+  String get rel_ops_host_receipt_success =>
+      'El comprobante de actualización indica que se completó correctamente.';
+
+  @override
+  String get rel_ops_host_receipt_partial =>
+      'La actualización se ha aplicado, pero aún quedan pasos pendientes.';
+
+  @override
+  String get rel_ops_host_receipt_failed =>
+      'El comprobante de actualización indica un fallo.';
+
+  @override
+  String get rel_ops_host_receipt_refused =>
+      'El comprobante de actualización indica un rechazo.';
+
+  @override
+  String get rel_ops_host_update_running => 'La actualización sigue en curso.';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      'Se desconoce el resultado de la actualización. Que la pasarela esté activa no significa que la actualización haya tenido éxito.';
+
+  @override
+  String get rel_ops_host_default_profile =>
+      'el perfil predeterminado de la pasarela';
+
+  @override
+  String get rel_ops_host_restart => 'Reiniciar pasarela remota';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return 'Esto reinicia la pasarela compartida por $profiles. Se interrumpirán los turnos en curso en esta pasarela. Vuelve a conectarte después. Que sea accesible no demuestra que haya finalizado el reinicio.';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return 'Esto reinicia la pasarela remota para $profile. Se interrumpirán los turnos en curso en esta pasarela. Vuelve a conectarte después.';
+  }
+
+  @override
+  String get rel_ops_host_restart_running =>
+      'El comando de reinicio sigue en ejecución.';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      'El comando de reinicio ha finalizado. Vuelve a conectarte al host manualmente.';
+
+  @override
+  String get rel_ops_host_restart_failed =>
+      'El comando de reinicio ha fallado.';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name sigue en ejecución';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name ha finalizado';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name ha fallado';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => 'Curador en pausa.';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => 'Curador reanudado.';
+
+  @override
+  String get rel_ops_host_reset => 'Restablecer archivos de memoria remotos';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return '¿Eliminar el archivo de memoria $targetName en $profile? Esta acción no se puede deshacer desde Ares.';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return 'Se ha restablecido $targetName. Se han eliminado $count archivo(s) remoto(s).';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      'El host no confirmó que se hubieran ocultado los datos sensibles del paquete. No se muestra ningún enlace.';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return 'Estos controles operan sobre la pasarela remota $connection para $profile, no sobre este dispositivo ni sobre la actualización del cliente Ares.';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return 'Proceso de la pasarela en ejecución $version · $count sesiones';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return 'Proceso de la pasarela detenido $version · $count sesiones';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return 'La señal de actividad del host está desactualizada ($seconds s).';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'Ejecutar Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => 'Auditoría de seguridad';
+
+  @override
+  String get rel_ops_host_check_receipt =>
+      'Comprobar el comprobante de actualización';
+
+  @override
+  String get rel_ops_host_logs => 'Registros del host remoto';
+
+  @override
+  String get rel_ops_host_search_logs => 'Buscar en los registros del host';
+
+  @override
+  String get rel_ops_host_driver => 'Controlador del host remoto';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      'La disponibilidad del control del ordenador depende del controlador y de los permisos del sistema operativo del equipo de la pasarela, no de este dispositivo.';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · instalado $installed · listo $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => 'no disponible';
+
+  @override
+  String get rel_ops_host_true => 'sí';
+
+  @override
+  String get rel_ops_host_false => 'no';
+
+  @override
+  String get rel_ops_host_curator => 'Curador';
+
+  @override
+  String get rel_ops_host_curator_paused => 'Curador en pausa';
+
+  @override
+  String get rel_ops_host_curator_running => 'Curador en ejecución';
+
+  @override
+  String get rel_ops_host_no_run => 'Ninguna ejecución completada';
+
+  @override
+  String get rel_ops_host_run_curator => 'Ejecutar Curador ahora';
+
+  @override
+  String get rel_ops_host_reset_memory => 'Restablecer archivo de memoria';
+
+  @override
+  String get rel_ops_host_reset_user => 'Restablecer archivo de usuario';
+
+  @override
+  String get rel_ops_host_reset_both => 'Restablecer ambos archivos';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      'Acepto subir un paquete de diagnóstico del host remoto con los datos sensibles ocultos';
+
+  @override
+  String get rel_ops_host_share =>
+      'Compartir diagnósticos con datos sensibles ocultos';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      'Se desconoce esta instalación, por lo que no se envió la actualización';
+
+  @override
+  String get rel_ops_host_update_busy_installation =>
+      'Hay un chat en curso en esta instalación';
+
+  @override
+  String get rel_ops_host_update_refused => 'Actualización remota rechazada';
+
+  @override
+  String get rel_ops_host_error_stale =>
+      'Espacio de trabajo remoto: desactualizado';
+
+  @override
+  String get rel_ops_host_error_mismatch =>
+      'Espacio de trabajo remoto: no coincide';
+
+  @override
+  String get rel_ops_host_error_unbound =>
+      'Espacio de trabajo remoto: sin vincular';
+
+  @override
+  String get rel_ops_host_error_unsupported =>
+      'Espacio de trabajo remoto: no compatible';
+
+  @override
+  String get rel_ops_host_error_denied =>
+      'Espacio de trabajo remoto: acceso denegado';
+
+  @override
+  String get rel_ops_host_error_ineligible =>
+      'Espacio de trabajo remoto: no apto';
+
+  @override
+  String get rel_ops_host_error_unavailable =>
+      'Espacio de trabajo remoto: no disponible';
+
+  @override
+  String get rel_ops_host_error_invalid =>
+      'Espacio de trabajo remoto: no válido';
+
+  @override
+  String get rel_ops_host_error_insecure =>
+      'Espacio de trabajo remoto: no seguro';
+
+  @override
+  String get rel_ops_host_error_request => 'No se pudo completar la solicitud.';
 }

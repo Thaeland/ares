@@ -13229,4 +13229,264 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rel_ops_ssh_disconnect => 'Déconnecter le shell';
+
+  @override
+  String get rel_ops_host_cancel => 'Annuler';
+
+  @override
+  String get rel_ops_host_confirm => 'Confirmer';
+
+  @override
+  String get rel_ops_host_title => 'Hôte';
+
+  @override
+  String get rel_ops_host_refresh => 'Actualiser';
+
+  @override
+  String get rel_ops_host_update => 'Mettre à jour Hermes à distance';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return 'Ceci lance une mise à jour sur place sur l’hôte de la passerelle pour $profile. Ares ne sera pas mis à jour sur cet appareil. La réussite est attestée par le compte rendu de mise à jour correspondant, et non par le fait que l’hôte reste joignable.';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting =>
+      'En attente du compte rendu correspondant. La mise à jour est toujours en cours.';
+
+  @override
+  String get rel_ops_host_receipt_success =>
+      'Le compte rendu de mise à jour indique une réussite.';
+
+  @override
+  String get rel_ops_host_receipt_partial =>
+      'Mise à jour appliquée ; des étapes de suivi restent à effectuer.';
+
+  @override
+  String get rel_ops_host_receipt_failed =>
+      'Le compte rendu de mise à jour indique un échec.';
+
+  @override
+  String get rel_ops_host_receipt_refused =>
+      'Le compte rendu de mise à jour indique un refus.';
+
+  @override
+  String get rel_ops_host_update_running =>
+      'La mise à jour est toujours en cours.';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      'Le résultat de la mise à jour est inconnu. Une passerelle active ne signifie pas que la mise à jour a réussi.';
+
+  @override
+  String get rel_ops_host_default_profile =>
+      'le profil par défaut de la passerelle';
+
+  @override
+  String get rel_ops_host_restart => 'Redémarrer la passerelle distante';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return 'Ceci redémarre la passerelle partagée par $profiles. Les tours en cours sur cette passerelle seront interrompus. Reconnectez-vous ensuite. Le fait qu’elle soit joignable ne prouve pas que le redémarrage est terminé.';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return 'Ceci redémarre la passerelle distante pour $profile. Les tours en cours sur cette passerelle seront interrompus. Reconnectez-vous ensuite.';
+  }
+
+  @override
+  String get rel_ops_host_restart_running =>
+      'La commande de redémarrage est toujours en cours.';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      'La commande de redémarrage est terminée. Reconnectez-vous à l’hôte manuellement.';
+
+  @override
+  String get rel_ops_host_restart_failed =>
+      'La commande de redémarrage a échoué.';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name est toujours en cours';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name est terminé';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name a échoué';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => 'Curateur en pause.';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => 'Curateur relancé.';
+
+  @override
+  String get rel_ops_host_reset =>
+      'Réinitialiser les fichiers de mémoire distants';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return 'Supprimer le fichier de mémoire $targetName sur $profile ? Cette action ne peut pas être annulée depuis Ares.';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return '$targetName réinitialisé. $count fichier(s) distant(s) supprimé(s).';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      'L’hôte n’a pas confirmé le masquage des données sensibles dans l’archive. Aucun lien n’est affiché.';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return 'Ces commandes agissent sur la passerelle distante $connection pour $profile, pas sur cet appareil ni sur la mise à jour du client Ares.';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return 'Processus de passerelle en cours $version · $count sessions';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return 'Processus de passerelle arrêté $version · $count sessions';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return 'Le signal de présence de l’hôte est ancien ($seconds s).';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'Exécuter Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => 'Audit de sécurité';
+
+  @override
+  String get rel_ops_host_check_receipt =>
+      'Vérifier le compte rendu de mise à jour';
+
+  @override
+  String get rel_ops_host_logs => 'Journaux de l’hôte distant';
+
+  @override
+  String get rel_ops_host_search_logs =>
+      'Rechercher dans les journaux de l’hôte';
+
+  @override
+  String get rel_ops_host_driver => 'Pilote de l’hôte distant';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      'La disponibilité du contrôle de l’ordinateur dépend du pilote et des autorisations du système d’exploitation de la machine de la passerelle, pas de cet appareil.';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · installé $installed · prêt $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => 'indisponible';
+
+  @override
+  String get rel_ops_host_true => 'oui';
+
+  @override
+  String get rel_ops_host_false => 'non';
+
+  @override
+  String get rel_ops_host_curator => 'Curateur';
+
+  @override
+  String get rel_ops_host_curator_paused => 'Curateur en pause';
+
+  @override
+  String get rel_ops_host_curator_running => 'Curateur en cours d’exécution';
+
+  @override
+  String get rel_ops_host_no_run => 'Aucune exécution terminée';
+
+  @override
+  String get rel_ops_host_run_curator => 'Exécuter le Curateur maintenant';
+
+  @override
+  String get rel_ops_host_reset_memory => 'Réinitialiser le fichier de mémoire';
+
+  @override
+  String get rel_ops_host_reset_user => 'Réinitialiser le fichier utilisateur';
+
+  @override
+  String get rel_ops_host_reset_both => 'Réinitialiser les deux fichiers';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      'J’accepte d’envoyer une archive de diagnostic de l’hôte distant dont les données sensibles ont été masquées';
+
+  @override
+  String get rel_ops_host_share =>
+      'Partager les diagnostics avec les données sensibles masquées';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      'Cette installation est inconnue ; la mise à jour n’a donc pas été envoyée';
+
+  @override
+  String get rel_ops_host_update_busy_installation =>
+      'Une conversation est en cours sur cette installation';
+
+  @override
+  String get rel_ops_host_update_refused => 'Mise à jour distante refusée';
+
+  @override
+  String get rel_ops_host_error_stale => 'Espace de travail distant : obsolète';
+
+  @override
+  String get rel_ops_host_error_mismatch =>
+      'Espace de travail distant : discordance';
+
+  @override
+  String get rel_ops_host_error_unbound =>
+      'Espace de travail distant : non associé';
+
+  @override
+  String get rel_ops_host_error_unsupported =>
+      'Espace de travail distant : non pris en charge';
+
+  @override
+  String get rel_ops_host_error_denied =>
+      'Espace de travail distant : accès refusé';
+
+  @override
+  String get rel_ops_host_error_ineligible =>
+      'Espace de travail distant : non admissible';
+
+  @override
+  String get rel_ops_host_error_unavailable =>
+      'Espace de travail distant : indisponible';
+
+  @override
+  String get rel_ops_host_error_invalid =>
+      'Espace de travail distant : invalide';
+
+  @override
+  String get rel_ops_host_error_insecure =>
+      'Espace de travail distant : non sécurisé';
+
+  @override
+  String get rel_ops_host_error_request =>
+      'Impossible de terminer cette demande.';
 }

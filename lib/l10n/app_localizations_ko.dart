@@ -12693,4 +12693,242 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get rel_ops_ssh_disconnect => '셸 연결 해제';
+
+  @override
+  String get rel_ops_host_cancel => '취소';
+
+  @override
+  String get rel_ops_host_confirm => '확인';
+
+  @override
+  String get rel_ops_host_title => '호스트';
+
+  @override
+  String get rel_ops_host_refresh => '새로고침';
+
+  @override
+  String get rel_ops_host_update => '원격 Hermes 업데이트';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return '$profile의 게이트웨이 호스트에서 기존 설치를 업데이트합니다. 이 기기의 Ares는 업데이트되지 않습니다. 성공 여부는 일치하는 업데이트 처리 기록으로 확인하며, 호스트에 계속 연결할 수 있다는 것만으로는 성공을 의미하지 않습니다.';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting =>
+      '일치하는 처리 기록을 기다리는 중입니다. 업데이트가 아직 실행 중입니다.';
+
+  @override
+  String get rel_ops_host_receipt_success => '업데이트 처리 기록에 성공으로 표시되어 있습니다.';
+
+  @override
+  String get rel_ops_host_receipt_partial => '업데이트가 적용되었지만 후속 단계가 아직 남아 있습니다.';
+
+  @override
+  String get rel_ops_host_receipt_failed => '업데이트 처리 기록에 실패로 표시되어 있습니다.';
+
+  @override
+  String get rel_ops_host_receipt_refused => '업데이트 처리 기록에 거부로 표시되어 있습니다.';
+
+  @override
+  String get rel_ops_host_update_running => '업데이트가 아직 실행 중입니다.';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      '업데이트 결과를 알 수 없습니다. 게이트웨이가 실행 중이라고 해서 업데이트가 성공한 것은 아닙니다.';
+
+  @override
+  String get rel_ops_host_default_profile => '게이트웨이 기본 프로필';
+
+  @override
+  String get rel_ops_host_restart => '원격 게이트웨이 다시 시작';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return '$profiles에서 공유하는 게이트웨이를 다시 시작합니다. 이 게이트웨이에서 진행 중인 턴이 중단됩니다. 이후 다시 연결하세요. 연결할 수 있다는 것만으로 다시 시작이 완료되었다고 볼 수는 없습니다.';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return '$profile의 원격 게이트웨이를 다시 시작합니다. 이 게이트웨이에서 진행 중인 턴이 중단됩니다. 이후 다시 연결하세요.';
+  }
+
+  @override
+  String get rel_ops_host_restart_running => '다시 시작 명령이 아직 실행 중입니다.';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      '다시 시작 명령이 완료되었습니다. 호스트에 직접 다시 연결하세요.';
+
+  @override
+  String get rel_ops_host_restart_failed => '다시 시작 명령이 실패했습니다.';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name이(가) 아직 실행 중입니다';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name 완료';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name 실패';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => '큐레이터가 일시 중지되었습니다.';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => '큐레이터가 재개되었습니다.';
+
+  @override
+  String get rel_ops_host_reset => '원격 메모리 파일 초기화';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return '$profile의 $targetName 메모리 파일을 삭제할까요? Ares에서는 이 작업을 되돌릴 수 없습니다.';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return '$targetName을(를) 초기화했습니다. 원격 파일 $count개를 삭제했습니다.';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      '호스트에서 진단 묶음의 민감 정보가 가려졌는지 확인하지 않았습니다. 링크가 표시되지 않습니다.';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return '이 컨트롤은 $profile의 원격 게이트웨이 $connection을(를) 조작합니다. 이 기기나 Ares 클라이언트 업데이트에는 적용되지 않습니다.';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return '게이트웨이 프로세스 실행 중 $version · 세션 $count개';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return '게이트웨이 프로세스 중지됨 $version · 세션 $count개';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return '호스트의 하트비트가 오래되었습니다($seconds초).';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'Doctor 실행';
+
+  @override
+  String get rel_ops_host_security_audit => '보안 감사';
+
+  @override
+  String get rel_ops_host_check_receipt => '업데이트 처리 기록 확인';
+
+  @override
+  String get rel_ops_host_logs => '원격 호스트 로그';
+
+  @override
+  String get rel_ops_host_search_logs => '호스트 로그 검색';
+
+  @override
+  String get rel_ops_host_driver => '원격 호스트 드라이버';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      '컴퓨터 제어 준비 상태는 이 기기가 아니라 게이트웨이 컴퓨터의 드라이버 및 운영 체제 권한에 관한 것입니다.';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · 설치됨 $installed · 준비됨 $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => '확인 불가';
+
+  @override
+  String get rel_ops_host_true => '예';
+
+  @override
+  String get rel_ops_host_false => '아니요';
+
+  @override
+  String get rel_ops_host_curator => '큐레이터';
+
+  @override
+  String get rel_ops_host_curator_paused => '큐레이터 일시 중지됨';
+
+  @override
+  String get rel_ops_host_curator_running => '큐레이터 실행 중';
+
+  @override
+  String get rel_ops_host_no_run => '완료된 실행 없음';
+
+  @override
+  String get rel_ops_host_run_curator => '지금 큐레이터 실행';
+
+  @override
+  String get rel_ops_host_reset_memory => '메모리 파일 초기화';
+
+  @override
+  String get rel_ops_host_reset_user => '사용자 파일 초기화';
+
+  @override
+  String get rel_ops_host_reset_both => '두 파일 모두 초기화';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      '원격 호스트에서 민감 정보를 가린 진단 묶음을 업로드하는 데 동의합니다';
+
+  @override
+  String get rel_ops_host_share => '민감 정보를 가린 진단 정보 공유';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      '이 설치를 식별할 수 없어 업데이트를 보내지 않았습니다';
+
+  @override
+  String get rel_ops_host_update_busy_installation => '이 설치에서 채팅이 실행 중입니다';
+
+  @override
+  String get rel_ops_host_update_refused => '원격 업데이트 거부됨';
+
+  @override
+  String get rel_ops_host_error_stale => '원격 작업 공간: 오래된 상태';
+
+  @override
+  String get rel_ops_host_error_mismatch => '원격 작업 공간: 불일치';
+
+  @override
+  String get rel_ops_host_error_unbound => '원격 작업 공간: 연결 대상 미지정';
+
+  @override
+  String get rel_ops_host_error_unsupported => '원격 작업 공간: 지원되지 않음';
+
+  @override
+  String get rel_ops_host_error_denied => '원격 작업 공간: 접근 거부됨';
+
+  @override
+  String get rel_ops_host_error_ineligible => '원격 작업 공간: 작업 대상 부적격';
+
+  @override
+  String get rel_ops_host_error_unavailable => '원격 작업 공간: 사용 불가';
+
+  @override
+  String get rel_ops_host_error_invalid => '원격 작업 공간: 유효하지 않음';
+
+  @override
+  String get rel_ops_host_error_insecure => '원격 작업 공간: 안전하지 않음';
+
+  @override
+  String get rel_ops_host_error_request => '요청을 완료하지 못했습니다.';
 }

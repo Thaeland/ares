@@ -12690,4 +12690,241 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get rel_ops_ssh_disconnect => 'シェルを切断';
+
+  @override
+  String get rel_ops_host_cancel => 'キャンセル';
+
+  @override
+  String get rel_ops_host_confirm => '確認';
+
+  @override
+  String get rel_ops_host_title => 'ホスト';
+
+  @override
+  String get rel_ops_host_refresh => '更新';
+
+  @override
+  String get rel_ops_host_update => 'リモートの Hermes を更新';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return '$profile のゲートウェイホストで既存のインストールを更新します。このデバイスの Ares は更新されません。成功を示すのは対応する更新の実施記録であり、ホストに接続できる状態が続くことではありません。';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting => '対応する実施記録を待っています。更新はまだ実行中です。';
+
+  @override
+  String get rel_ops_host_receipt_success => '更新の実施記録は成功を示しています。';
+
+  @override
+  String get rel_ops_host_receipt_partial => '更新は適用されましたが、追加の手順がまだ必要です。';
+
+  @override
+  String get rel_ops_host_receipt_failed => '更新の実施記録は失敗を示しています。';
+
+  @override
+  String get rel_ops_host_receipt_refused => '更新の実施記録は拒否を示しています。';
+
+  @override
+  String get rel_ops_host_update_running => '更新はまだ実行中です。';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      '更新の結果は不明です。ゲートウェイが稼働していても、更新の成功を意味しません。';
+
+  @override
+  String get rel_ops_host_default_profile => 'ゲートウェイのデフォルトプロファイル';
+
+  @override
+  String get rel_ops_host_restart => 'リモートゲートウェイを再起動';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return '$profiles が共有するゲートウェイを再起動します。このゲートウェイで実行中のターンは中断されます。その後、再接続してください。接続できることは、再起動完了の証明にはなりません。';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return '$profile のリモートゲートウェイを再起動します。このゲートウェイで実行中のターンは中断されます。その後、再接続してください。';
+  }
+
+  @override
+  String get rel_ops_host_restart_running => '再起動コマンドはまだ実行中です。';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      '再起動コマンドが終了しました。ホストに手動で再接続してください。';
+
+  @override
+  String get rel_ops_host_restart_failed => '再起動コマンドが失敗しました。';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name はまだ実行中です';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name が完了しました';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name が失敗しました';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => 'キュレーターを一時停止しました。';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => 'キュレーターを再開しました。';
+
+  @override
+  String get rel_ops_host_reset => 'リモートのメモリファイルをリセット';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return '$profile のメモリファイル $targetName を削除しますか？この操作は Ares からは元に戻せません。';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return '$targetName をリセットしました。リモートファイルを $count 個削除しました。';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      'ホストが診断パッケージの機密情報のマスキングを確認していません。リンクは表示されません。';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return 'これらの操作の対象は $profile のリモートゲートウェイ $connection です。このデバイスや Ares クライアントの更新は対象ではありません。';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return 'ゲートウェイプロセス稼働中 $version · $count セッション';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return 'ゲートウェイプロセス停止中 $version · $count セッション';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return 'ホストのハートビートが古くなっています（$seconds 秒）。';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'Doctor を実行';
+
+  @override
+  String get rel_ops_host_security_audit => 'セキュリティ監査';
+
+  @override
+  String get rel_ops_host_check_receipt => '更新の実施記録を確認';
+
+  @override
+  String get rel_ops_host_logs => 'リモートホストのログ';
+
+  @override
+  String get rel_ops_host_search_logs => 'ホストのログを検索';
+
+  @override
+  String get rel_ops_host_driver => 'リモートホストのドライバー';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      'コンピューター操作の準備状況は、ゲートウェイマシンのドライバーと OS の権限に関するもので、このデバイスのものではありません。';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · インストール済み $installed · 準備完了 $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => '利用不可';
+
+  @override
+  String get rel_ops_host_true => 'はい';
+
+  @override
+  String get rel_ops_host_false => 'いいえ';
+
+  @override
+  String get rel_ops_host_curator => 'キュレーター';
+
+  @override
+  String get rel_ops_host_curator_paused => 'キュレーターは一時停止中';
+
+  @override
+  String get rel_ops_host_curator_running => 'キュレーターは実行中';
+
+  @override
+  String get rel_ops_host_no_run => '完了した実行はありません';
+
+  @override
+  String get rel_ops_host_run_curator => 'キュレーターを今すぐ実行';
+
+  @override
+  String get rel_ops_host_reset_memory => 'メモリファイルをリセット';
+
+  @override
+  String get rel_ops_host_reset_user => 'ユーザーファイルをリセット';
+
+  @override
+  String get rel_ops_host_reset_both => '両方のファイルをリセット';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      'リモートホストから機密情報をマスキングした診断パッケージをアップロードすることに同意します';
+
+  @override
+  String get rel_ops_host_share => '機密情報をマスキングした診断情報を共有';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      'このインストールは不明なため、更新は送信されませんでした';
+
+  @override
+  String get rel_ops_host_update_busy_installation => 'このインストールでチャットが実行中です';
+
+  @override
+  String get rel_ops_host_update_refused => 'リモート更新が拒否されました';
+
+  @override
+  String get rel_ops_host_error_stale => 'リモートワークスペース：古い状態';
+
+  @override
+  String get rel_ops_host_error_mismatch => 'リモートワークスペース：不一致';
+
+  @override
+  String get rel_ops_host_error_unbound => 'リモートワークスペース：未関連付け';
+
+  @override
+  String get rel_ops_host_error_unsupported => 'リモートワークスペース：未対応';
+
+  @override
+  String get rel_ops_host_error_denied => 'リモートワークスペース：アクセス拒否';
+
+  @override
+  String get rel_ops_host_error_ineligible => 'リモートワークスペース：対象外';
+
+  @override
+  String get rel_ops_host_error_unavailable => 'リモートワークスペース：利用不可';
+
+  @override
+  String get rel_ops_host_error_invalid => 'リモートワークスペース：無効';
+
+  @override
+  String get rel_ops_host_error_insecure => 'リモートワークスペース：安全でない接続';
+
+  @override
+  String get rel_ops_host_error_request => 'リクエストを完了できませんでした。';
 }

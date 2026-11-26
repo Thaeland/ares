@@ -13172,4 +13172,259 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get rel_ops_ssh_disconnect => 'Отключить оболочку';
+
+  @override
+  String get rel_ops_host_cancel => 'Отмена';
+
+  @override
+  String get rel_ops_host_confirm => 'Подтвердить';
+
+  @override
+  String get rel_ops_host_title => 'Хост';
+
+  @override
+  String get rel_ops_host_refresh => 'Обновить';
+
+  @override
+  String get rel_ops_host_update => 'Обновить Hermes на удалённом хосте';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return 'Это запустит обновление существующей установки на хосте шлюза для $profile. Ares на этом устройстве обновлён не будет. Успех подтверждается соответствующим отчётом об обновлении, а не тем, что хост остаётся доступным.';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting =>
+      'Ожидание соответствующего отчёта. Обновление ещё выполняется.';
+
+  @override
+  String get rel_ops_host_receipt_success =>
+      'Отчёт об обновлении подтверждает успех.';
+
+  @override
+  String get rel_ops_host_receipt_partial =>
+      'Обновление применено, но ещё требуются дополнительные действия.';
+
+  @override
+  String get rel_ops_host_receipt_failed =>
+      'Отчёт об обновлении указывает на сбой.';
+
+  @override
+  String get rel_ops_host_receipt_refused =>
+      'Отчёт об обновлении указывает на отказ.';
+
+  @override
+  String get rel_ops_host_update_running => 'Обновление ещё выполняется.';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      'Результат обновления неизвестен. Работающий шлюз не означает успешного обновления.';
+
+  @override
+  String get rel_ops_host_default_profile => 'профиль шлюза по умолчанию';
+
+  @override
+  String get rel_ops_host_restart => 'Перезапустить удалённый шлюз';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return 'Это перезапустит шлюз, общий для $profiles. Выполняемые на этом шлюзе ходы будут прерваны. Затем подключитесь заново. Доступность не доказывает, что перезапуск завершён.';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return 'Это перезапустит удалённый шлюз для $profile. Выполняемые на этом шлюзе ходы будут прерваны. Затем подключитесь заново.';
+  }
+
+  @override
+  String get rel_ops_host_restart_running =>
+      'Команда перезапуска ещё выполняется.';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      'Команда перезапуска завершена. Подключитесь к хосту заново вручную.';
+
+  @override
+  String get rel_ops_host_restart_failed =>
+      'Команда перезапуска завершилась с ошибкой.';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name ещё выполняется';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name: выполнение завершено';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name: сбой выполнения';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => 'Куратор приостановлен.';
+
+  @override
+  String get rel_ops_host_curator_resumed_result =>
+      'Работа Куратора возобновлена.';
+
+  @override
+  String get rel_ops_host_reset => 'Сбросить удалённые файлы памяти';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return 'Удалить файл памяти $targetName в $profile? Это действие нельзя отменить из Ares.';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return 'Выполнен сброс $targetName. Удалено файлов на удалённом хосте: $count.';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      'Хост не подтвердил удаление конфиденциальных данных из пакета. Ссылка не отображается.';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return 'Эти элементы управления действуют на удалённый шлюз $connection для $profile, а не на это устройство и не на обновление клиента Ares.';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return 'Процесс шлюза работает $version · Сеансов: $count';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return 'Процесс шлюза остановлен $version · Сеансов: $count';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return 'Сигнал активности хоста устарел ($seconds с).';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'Запустить Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => 'Аудит безопасности';
+
+  @override
+  String get rel_ops_host_check_receipt => 'Проверить отчёт об обновлении';
+
+  @override
+  String get rel_ops_host_logs => 'Журналы удалённого хоста';
+
+  @override
+  String get rel_ops_host_search_logs => 'Поиск в журналах хоста';
+
+  @override
+  String get rel_ops_host_driver => 'Драйвер удалённого хоста';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      'Готовность управления компьютером определяется драйвером и разрешениями ОС на машине шлюза, а не на этом устройстве.';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · установлен: $installed · готов: $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => 'нет данных';
+
+  @override
+  String get rel_ops_host_true => 'да';
+
+  @override
+  String get rel_ops_host_false => 'нет';
+
+  @override
+  String get rel_ops_host_curator => 'Куратор';
+
+  @override
+  String get rel_ops_host_curator_paused => 'Куратор приостановлен';
+
+  @override
+  String get rel_ops_host_curator_running => 'Куратор работает';
+
+  @override
+  String get rel_ops_host_no_run => 'Нет завершённых запусков';
+
+  @override
+  String get rel_ops_host_run_curator => 'Запустить Куратора сейчас';
+
+  @override
+  String get rel_ops_host_reset_memory => 'Сбросить файл памяти';
+
+  @override
+  String get rel_ops_host_reset_user => 'Сбросить файл пользователя';
+
+  @override
+  String get rel_ops_host_reset_both => 'Сбросить оба файла';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      'Я соглашаюсь загрузить диагностический пакет с удалённого хоста с удалёнными конфиденциальными данными';
+
+  @override
+  String get rel_ops_host_share =>
+      'Поделиться диагностикой без конфиденциальных данных';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      'Эта установка неизвестна, поэтому запрос на обновление не был отправлен';
+
+  @override
+  String get rel_ops_host_update_busy_installation =>
+      'На этой установке выполняется чат';
+
+  @override
+  String get rel_ops_host_update_refused => 'Удалённое обновление отклонено';
+
+  @override
+  String get rel_ops_host_error_stale => 'Удалённая рабочая область: устарела';
+
+  @override
+  String get rel_ops_host_error_mismatch =>
+      'Удалённая рабочая область: несоответствие';
+
+  @override
+  String get rel_ops_host_error_unbound =>
+      'Удалённая рабочая область: не привязана';
+
+  @override
+  String get rel_ops_host_error_unsupported =>
+      'Удалённая рабочая область: не поддерживается';
+
+  @override
+  String get rel_ops_host_error_denied =>
+      'Удалённая рабочая область: доступ запрещён';
+
+  @override
+  String get rel_ops_host_error_ineligible =>
+      'Удалённая рабочая область: не подходит для операции';
+
+  @override
+  String get rel_ops_host_error_unavailable =>
+      'Удалённая рабочая область: недоступна';
+
+  @override
+  String get rel_ops_host_error_invalid =>
+      'Удалённая рабочая область: недопустимые данные';
+
+  @override
+  String get rel_ops_host_error_insecure =>
+      'Удалённая рабочая область: небезопасное соединение';
+
+  @override
+  String get rel_ops_host_error_request => 'Не удалось выполнить запрос.';
 }

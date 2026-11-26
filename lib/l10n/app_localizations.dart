@@ -21382,6 +21382,412 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Disconnect shell'**
   String get rel_ops_ssh_disconnect;
+
+  /// Cancel a remote host operation confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get rel_ops_host_cancel;
+
+  /// Confirm a remote host operation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get rel_ops_host_confirm;
+
+  /// Remote host operations screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Host'**
+  String get rel_ops_host_title;
+
+  /// Refresh remote host status and logs.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get rel_ops_host_refresh;
+
+  /// Start an update on the remote gateway host, not the Ares client.
+  ///
+  /// In en, this message translates to:
+  /// **'Update remote Hermes'**
+  String get rel_ops_host_update;
+
+  /// Remote Hermes update confirmation. Preserve the profile identifier verbatim.
+  ///
+  /// In en, this message translates to:
+  /// **'This starts an in-place update on the gateway host for {profile}. It does not update Ares on this device. Success is the matching update receipt, not the host staying reachable.'**
+  String rel_ops_host_update_confirmation(String profile);
+
+  /// Update is running but no matching receipt has arrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting matching receipt. Update is still running.'**
+  String get rel_ops_host_update_awaiting;
+
+  /// Matching remote update receipt reports success.
+  ///
+  /// In en, this message translates to:
+  /// **'Update receipt succeeded.'**
+  String get rel_ops_host_receipt_success;
+
+  /// Remote update committed but still requires follow-up work.
+  ///
+  /// In en, this message translates to:
+  /// **'Update committed, with follow-up steps still owed.'**
+  String get rel_ops_host_receipt_partial;
+
+  /// Matching remote update receipt reports failure.
+  ///
+  /// In en, this message translates to:
+  /// **'Update receipt failed.'**
+  String get rel_ops_host_receipt_failed;
+
+  /// Matching remote update receipt reports refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Update receipt refused.'**
+  String get rel_ops_host_receipt_refused;
+
+  /// Remote update remains in progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Update is still running.'**
+  String get rel_ops_host_update_running;
+
+  /// No matching receipt verifies the remote update outcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Update outcome is unknown. A live gateway is not a successful update.'**
+  String get rel_ops_host_update_unknown;
+
+  /// Display name for an unspecified gateway profile, not a wire identifier.
+  ///
+  /// In en, this message translates to:
+  /// **'the gateway default'**
+  String get rel_ops_host_default_profile;
+
+  /// Restart the gateway on the remote host.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart remote gateway'**
+  String get rel_ops_host_restart;
+
+  /// Warn that restarting a shared gateway interrupts all listed profiles. Keep profile identifiers unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'This restarts the gateway shared by {profiles}. Live turns on this gateway are interrupted. Reconnect afterwards. Reachability is not proof the restart finished.'**
+  String rel_ops_host_restart_shared_confirmation(String profiles);
+
+  /// Remote gateway restart confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'This restarts the remote gateway for {profile}. Live turns on this gateway are interrupted. Reconnect afterwards.'**
+  String rel_ops_host_restart_confirmation(String profile);
+
+  /// Remote restart command is still running.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart command is still running.'**
+  String get rel_ops_host_restart_running;
+
+  /// Remote restart command exited successfully; reconnection remains manual.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart command finished. Reconnect to the host yourself.'**
+  String get rel_ops_host_restart_finished;
+
+  /// Remote restart command exited unsuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart command failed.'**
+  String get rel_ops_host_restart_failed;
+
+  /// Remote maintenance command status. The name is a command identifier such as doctor, security-audit or curator-run; do not translate it.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is still running'**
+  String rel_ops_host_maintenance_running(String name);
+
+  /// Remote maintenance command succeeded. Keep the command identifier unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} finished'**
+  String rel_ops_host_maintenance_finished(String name);
+
+  /// Remote maintenance command failed. Keep the command identifier unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} failed'**
+  String rel_ops_host_maintenance_failed(String name);
+
+  /// Confirmation that the remote Curator was paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Curator paused.'**
+  String get rel_ops_host_curator_paused_result;
+
+  /// Confirmation that the remote Curator was resumed.
+  ///
+  /// In en, this message translates to:
+  /// **'Curator resumed.'**
+  String get rel_ops_host_curator_resumed_result;
+
+  /// Remote memory file reset section and confirmation title.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset remote memory files'**
+  String get rel_ops_host_reset;
+
+  /// Destructive remote memory reset warning. Preserve the target token (memory, user or all) and profile identifier.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the {targetName} memory file on {profile}? This cannot be undone from Ares.'**
+  String rel_ops_host_reset_confirmation(String targetName, String profile);
+
+  /// Remote memory reset result. Preserve the target token unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset {targetName}. Removed {count} remote file(s).'**
+  String rel_ops_host_reset_result(String targetName, int count);
+
+  /// Diagnostic sharing is blocked without server confirmation of redaction.
+  ///
+  /// In en, this message translates to:
+  /// **'The host did not confirm the bundle was redacted. No link is shown.'**
+  String get rel_ops_host_share_not_redacted;
+
+  /// Explain that controls target the named remote connection and profile, never this device. Preserve the connection label and profile identifier.
+  ///
+  /// In en, this message translates to:
+  /// **'These controls operate the remote gateway {connection} for {profile}, not this device and not the Ares client update.'**
+  String rel_ops_host_scope(String connection, String profile);
+
+  /// Remote gateway health with running process, server version and active session count.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway process running {version} · {count} sessions'**
+  String rel_ops_host_health_running(String version, int count);
+
+  /// Remote gateway health with stopped process, server version and active session count.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway process stopped {version} · {count} sessions'**
+  String rel_ops_host_health_stopped(String version, int count);
+
+  /// Remote host heartbeat age in seconds; the gateway may return fractional seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Host heartbeat is stale ({seconds}s).'**
+  String rel_ops_host_heartbeat_stale(num seconds);
+
+  /// Run remote host diagnostics using the Doctor command.
+  ///
+  /// In en, this message translates to:
+  /// **'Run Doctor'**
+  String get rel_ops_host_doctor;
+
+  /// Run the remote host security audit.
+  ///
+  /// In en, this message translates to:
+  /// **'Security audit'**
+  String get rel_ops_host_security_audit;
+
+  /// Read the receipt for the already-started remote update, without starting another.
+  ///
+  /// In en, this message translates to:
+  /// **'Check update receipt'**
+  String get rel_ops_host_check_receipt;
+
+  /// Remote gateway logs section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote host logs'**
+  String get rel_ops_host_logs;
+
+  /// Search field label for remote host logs.
+  ///
+  /// In en, this message translates to:
+  /// **'Search host logs'**
+  String get rel_ops_host_search_logs;
+
+  /// Remote Computer Use driver section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote host driver'**
+  String get rel_ops_host_driver;
+
+  /// Clarify that driver readiness and OS permissions refer only to the remote gateway machine.
+  ///
+  /// In en, this message translates to:
+  /// **'Computer Use readiness is the gateway machine\'s driver and OS permissions, not this device.'**
+  String get rel_ops_host_driver_scope;
+
+  /// Computer Use driver status. Platform is a server identifier; installed and ready are localized boolean display values.
+  ///
+  /// In en, this message translates to:
+  /// **'{platform} · installed {installed} · ready {ready}'**
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  );
+
+  /// Human-readable unavailable readiness value from a nullable remote driver status; never sent over the wire.
+  ///
+  /// In en, this message translates to:
+  /// **'null'**
+  String get rel_ops_host_null;
+
+  /// Human-readable affirmative boolean in remote driver status; never sent over the wire.
+  ///
+  /// In en, this message translates to:
+  /// **'true'**
+  String get rel_ops_host_true;
+
+  /// Human-readable negative boolean in remote driver status; never sent over the wire.
+  ///
+  /// In en, this message translates to:
+  /// **'false'**
+  String get rel_ops_host_false;
+
+  /// Remote Curator section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Curator'**
+  String get rel_ops_host_curator;
+
+  /// Remote Curator paused status label.
+  ///
+  /// In en, this message translates to:
+  /// **'Curator paused'**
+  String get rel_ops_host_curator_paused;
+
+  /// Remote Curator running status label.
+  ///
+  /// In en, this message translates to:
+  /// **'Curator running'**
+  String get rel_ops_host_curator_running;
+
+  /// No completed remote Curator run timestamp is available.
+  ///
+  /// In en, this message translates to:
+  /// **'No completed run'**
+  String get rel_ops_host_no_run;
+
+  /// Start a remote Curator maintenance run immediately.
+  ///
+  /// In en, this message translates to:
+  /// **'Run Curator now'**
+  String get rel_ops_host_run_curator;
+
+  /// Delete the remote memory file after confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset memory file'**
+  String get rel_ops_host_reset_memory;
+
+  /// Delete the remote user memory file after confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset user file'**
+  String get rel_ops_host_reset_user;
+
+  /// Delete both remote memory files after confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset both files'**
+  String get rel_ops_host_reset_both;
+
+  /// Explicit consent to upload a redacted remote host diagnostic bundle; do not weaken the consent or remote-host scope.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree to upload a redacted diagnostic bundle from the remote host'**
+  String get rel_ops_host_share_consent;
+
+  /// Upload redacted remote diagnostic bundle after explicit consent.
+  ///
+  /// In en, this message translates to:
+  /// **'Share redacted diagnostics'**
+  String get rel_ops_host_share;
+
+  /// Local admission refusal when the gateway installation cannot be identified.
+  ///
+  /// In en, this message translates to:
+  /// **'This installation is unknown, so the update was not sent'**
+  String get rel_ops_host_update_unknown_installation;
+
+  /// Local admission refusal when an active chat or agent blocks the remote update.
+  ///
+  /// In en, this message translates to:
+  /// **'A chat on this installation is running'**
+  String get rel_ops_host_update_busy_installation;
+
+  /// Local fallback when the server refuses an update without a message.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote update refused'**
+  String get rel_ops_host_update_refused;
+
+  /// Workspace failure: the remote owner or connection is no longer current.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: stale'**
+  String get rel_ops_host_error_stale;
+
+  /// Workspace failure: remote owner or action result does not match the requested target.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: mismatch'**
+  String get rel_ops_host_error_mismatch;
+
+  /// Workspace failure: no authenticated remote target has been bound.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: unbound'**
+  String get rel_ops_host_error_unbound;
+
+  /// Workspace failure: the gateway does not support this operation.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: unsupported'**
+  String get rel_ops_host_error_unsupported;
+
+  /// Workspace failure: the remote host operation was denied.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: denied'**
+  String get rel_ops_host_error_denied;
+
+  /// Workspace failure: the remote target is not eligible for this operation.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: ineligible'**
+  String get rel_ops_host_error_ineligible;
+
+  /// Workspace failure: the remote host operation is unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: unavailable'**
+  String get rel_ops_host_error_unavailable;
+
+  /// Workspace failure: the request or gateway response was invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: invalid'**
+  String get rel_ops_host_error_invalid;
+
+  /// Workspace failure: the remote connection does not meet security requirements.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: insecure'**
+  String get rel_ops_host_error_insecure;
+
+  /// Safe host-operation failure fallback when no structured reason is available. Do not expose client-authored service exception prose.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not complete that request.'**
+  String get rel_ops_host_error_request;
 }
 
 class _AppLocalizationsDelegate
