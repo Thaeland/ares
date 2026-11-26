@@ -282,14 +282,11 @@ class _BotsScreenState extends State<BotsScreen> {
 
   void _scheduleThumbnail(WorkspaceTarget target) {
     _cancelThumbnail();
-    _thumbnailTimer = Timer.periodic(
-      const Duration(seconds: 4),
-      (_) {
-        if (mounted && _tab == _BotsTab.screen) {
-          unawaited(_refreshThumbnail(target));
-        }
-      },
-    );
+    _thumbnailTimer = Timer.periodic(const Duration(seconds: 4), (_) {
+      if (mounted && _tab == _BotsTab.screen) {
+        unawaited(_refreshThumbnail(target));
+      }
+    });
   }
 
   Future<void> _startInstalling() async {
@@ -300,9 +297,11 @@ class _BotsScreenState extends State<BotsScreen> {
     try {
       final result = await target.displayInstall(profile);
       if (!mounted) return;
-      _toast(result.started
-          ? 'Installing screen (${result.command ?? 'process launched'})'
-          : 'Install declined: ${result.command ?? 'unknown reason'}');
+      _toast(
+        result.started
+            ? 'Installing screen (${result.command ?? 'process launched'})'
+            : 'Install declined: ${result.command ?? 'unknown reason'}',
+      );
       await _loadScreen(target);
     } catch (e) {
       if (mounted) _toast('Install failed: $e');
@@ -371,8 +370,11 @@ class _BotsScreenState extends State<BotsScreen> {
         _toast('Screen is not up yet. Start it, then take over.');
         return;
       }
-      final lease = await target.displayLeaseAcquire(profile, viewerId,
-          reason: 'Take over from the bots workspace');
+      final lease = await target.displayLeaseAcquire(
+        profile,
+        viewerId,
+        reason: 'Take over from the bots workspace',
+      );
       if (!mounted) return;
       setState(() {
         if (_display != null) {
@@ -417,7 +419,10 @@ class _BotsScreenState extends State<BotsScreen> {
     if (target == null || profile == null) return;
     setState(() => _screenBusy = true);
     try {
-      final status = await target.displaySwitchSandboxImage(profile, approve: true);
+      final status = await target.displaySwitchSandboxImage(
+        profile,
+        approve: true,
+      );
       if (!mounted) return;
       setState(() => _display = status);
     } catch (e) {
@@ -433,7 +438,10 @@ class _BotsScreenState extends State<BotsScreen> {
     if (target == null || profile == null) return;
     setState(() => _screenBusy = true);
     try {
-      final status = await target.displaySwitchSandboxImage(profile, approve: false);
+      final status = await target.displaySwitchSandboxImage(
+        profile,
+        approve: false,
+      );
       if (!mounted) return;
       setState(() => _display = status);
     } catch (e) {
@@ -508,19 +516,37 @@ class _BotsScreenState extends State<BotsScreen> {
             padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
             child: SegmentedButton<_BotsTab>(
               segments: const [
-                ButtonSegment(value: _BotsTab.roster, label: Text('Roster'), icon: Icon(Icons.people_outline)),
-                ButtonSegment(value: _BotsTab.rooms, label: Text('Rooms'), icon: Icon(Icons.groups_outlined)),
-                ButtonSegment(value: _BotsTab.screen, label: Text('Screen'), icon: Icon(Icons.desktop_windows_outlined)),
-                ButtonSegment(value: _BotsTab.routines, label: Text('Routines'), icon: Icon(Icons.schedule_outlined)),
-                ButtonSegment(value: _BotsTab.relay, label: Text('Relay'), icon: Icon(Icons.send_outlined)),
+                ButtonSegment(
+                  value: _BotsTab.roster,
+                  label: Text('Roster'),
+                  icon: Icon(Icons.people_outline),
+                ),
+                ButtonSegment(
+                  value: _BotsTab.rooms,
+                  label: Text('Rooms'),
+                  icon: Icon(Icons.groups_outlined),
+                ),
+                ButtonSegment(
+                  value: _BotsTab.screen,
+                  label: Text('Screen'),
+                  icon: Icon(Icons.desktop_windows_outlined),
+                ),
+                ButtonSegment(
+                  value: _BotsTab.routines,
+                  label: Text('Routines'),
+                  icon: Icon(Icons.schedule_outlined),
+                ),
+                ButtonSegment(
+                  value: _BotsTab.relay,
+                  label: Text('Relay'),
+                  icon: Icon(Icons.send_outlined),
+                ),
               ],
               selected: {_tab},
               onSelectionChanged: (s) => _onTabChanged(s.single),
             ),
           ),
-          Expanded(
-            child: _loadBody(isNarrow),
-          ),
+          Expanded(child: _loadBody(isNarrow)),
         ],
       ),
     );
@@ -558,8 +584,10 @@ class _BotsScreenState extends State<BotsScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Bots unavailable (${_failure!.name})',
-                  style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                'Bots unavailable (${_failure!.name})',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: 8),
               Text(
                 _failure == WorkspaceFailure.stale
@@ -624,9 +652,13 @@ class _BotsScreenState extends State<BotsScreen> {
     final needle = _search.toLowerCase();
     return _roster.where((p) {
       if (needle.isEmpty) return true;
-      return [p.name, p.displayName, p.description, p.model, p.provider]
-          .where((s) => s.isNotEmpty)
-          .any((s) => s.toLowerCase().contains(needle));
+      return [
+        p.name,
+        p.displayName,
+        p.description,
+        p.model,
+        p.provider,
+      ].where((s) => s.isNotEmpty).any((s) => s.toLowerCase().contains(needle));
     }).toList();
   }
 
@@ -658,7 +690,10 @@ class _BotsScreenState extends State<BotsScreen> {
                   bot.hasAvatar ? Icons.smart_toy : Icons.person_outline,
                 ),
               ),
-              title: Text(bot.title, style: const TextStyle(fontWeight: FontWeight.w600)),
+              title: Text(
+                bot.title,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
               subtitle: Text(
                 [
                   bot.model.isNotEmpty ? bot.model : 'no model',
@@ -744,7 +779,9 @@ class _BotsScreenState extends State<BotsScreen> {
           Card(
             margin: const EdgeInsets.only(bottom: 8),
             child: ListTile(
-              leading: Icon(room.disbanded ? Icons.block : Icons.groups_outlined),
+              leading: Icon(
+                room.disbanded ? Icons.block : Icons.groups_outlined,
+              ),
               title: Text(room.name),
               subtitle: Text(
                 '${room.members.length} member${room.members.length == 1 ? '' : 's'}'
@@ -770,8 +807,8 @@ class _BotsScreenState extends State<BotsScreen> {
           driver
               ? 'Rooms are owned by the gateway. Methods: ${caps.methods.join(', ')}.'
               : (caps.persistentProcess
-                  ? 'Rooms may not be seated by this gateway (persistent process required).'
-                  : 'Classic fallback: the Desktop drives the group rounds (not newly created here).'),
+                    ? 'Rooms may not be seated by this gateway (persistent process required).'
+                    : 'Classic fallback: the Desktop drives the group rounds (not newly created here).'),
         ),
         trailing: Text(
           'v${caps.protocolVersion}',
@@ -863,7 +900,8 @@ class _BotsScreenState extends State<BotsScreen> {
         DropdownButtonFormField<String>(
           initialValue: profiles.contains(selected) ? selected : null,
           items: [
-            for (final n in profiles) DropdownMenuItem(value: n, child: Text(n)),
+            for (final n in profiles)
+              DropdownMenuItem(value: n, child: Text(n)),
           ],
           decoration: const InputDecoration(
             labelText: 'Bot',
@@ -918,23 +956,26 @@ class _BotsScreenState extends State<BotsScreen> {
           unsupported
               ? Icons.block_outlined
               : installed
-                  ? (status.running ? Icons.desktop_windows : Icons.desktop_windows_outlined)
-                  : Icons.download_outlined,
+              ? (status.running
+                    ? Icons.desktop_windows
+                    : Icons.desktop_windows_outlined)
+              : Icons.download_outlined,
         ),
         title: Text(
           !unsupported
               ? installed
-                  ? status.running
-                      ? 'Running'
-                      : 'Stopped'
-                  : 'Not installed'
+                    ? status.running
+                          ? 'Running'
+                          : 'Stopped'
+                    : 'Not installed'
               : 'Unsupported host',
         ),
         subtitle: Text(
           [
             if (installed) '${status.geometry} · ${status.placement}',
             if (status.pid != null) 'pid ${status.pid}',
-            if (status.missing.isNotEmpty) 'missing: ${status.missing.join(', ')}',
+            if (status.missing.isNotEmpty)
+              'missing: ${status.missing.join(', ')}',
             if (blocked != null) 'blocked: $blocked',
             if (!unsupported && !installed && status.missing.isEmpty)
               'No sandbox image switch is pending.',
@@ -944,7 +985,9 @@ class _BotsScreenState extends State<BotsScreen> {
         ),
         trailing: status.running
             ? Text(
-                status.lease.isAgent ? 'agent holds' : '${status.lease.holder} holds',
+                status.lease.isAgent
+                    ? 'agent holds'
+                    : '${status.lease.holder} holds',
                 style: Theme.of(context).textTheme.bodySmall,
               )
             : null,
@@ -1009,7 +1052,8 @@ class _BotsScreenState extends State<BotsScreen> {
             ],
             if (status.missing.isNotEmpty && !unsupported)
               Tooltip(
-                message: 'The gateway reported missing pieces: ${status.missing.join(', ')}',
+                message:
+                    'The gateway reported missing pieces: ${status.missing.join(', ')}',
                 child: TextButton(
                   onPressed: _screenBusy ? null : _startInstalling,
                   child: const Text('Install missing pieces'),
@@ -1073,7 +1117,8 @@ class _BotsScreenState extends State<BotsScreen> {
         DropdownButtonFormField<String>(
           initialValue: profiles.contains(selected) ? selected : null,
           items: [
-            for (final n in profiles) DropdownMenuItem(value: n, child: Text(n)),
+            for (final n in profiles)
+              DropdownMenuItem(value: n, child: Text(n)),
           ],
           decoration: const InputDecoration(
             labelText: 'Bot',
@@ -1123,9 +1168,7 @@ class _BotsScreenState extends State<BotsScreen> {
         else if (_routines.isEmpty)
           const Padding(
             padding: EdgeInsets.only(top: 32),
-            child: Center(
-              child: Text('No routines for this bot.'),
-            ),
+            child: Center(child: Text('No routines for this bot.')),
           ),
         for (final job in _routines) _routineTile(job),
         const SizedBox(height: 16),
@@ -1142,7 +1185,9 @@ class _BotsScreenState extends State<BotsScreen> {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
-        leading: Icon(job.enabled ? Icons.schedule : Icons.pause_circle_outline),
+        leading: Icon(
+          job.enabled ? Icons.schedule : Icons.pause_circle_outline,
+        ),
         title: Text(
           tagged.title.isNotEmpty ? tagged.title : job.name,
           style: const TextStyle(fontWeight: FontWeight.w600),
@@ -1252,7 +1297,8 @@ class _BotsScreenState extends State<BotsScreen> {
         DropdownButtonFormField<String>(
           initialValue: profiles.contains(selected) ? selected : null,
           items: [
-            for (final n in profiles) DropdownMenuItem(value: n, child: Text(n)),
+            for (final n in profiles)
+              DropdownMenuItem(value: n, child: Text(n)),
           ],
           decoration: const InputDecoration(
             labelText: 'Target bot',
@@ -1290,9 +1336,11 @@ class _BotsScreenState extends State<BotsScreen> {
               ? null
               : () => _sendRelay(),
           icon: const Icon(Icons.send),
-          label: Text(isCurrent
-              ? '${context.sharedL10n.send} to this bot'
-              : '${context.sharedL10n.send} to @${botHandleFor(selected!)}'),
+          label: Text(
+            isCurrent
+                ? '${context.sharedL10n.send} to this bot'
+                : '${context.sharedL10n.send} to @${botHandleFor(selected!)}',
+          ),
         ),
         const SizedBox(height: 16),
         if (_relayResult != null)
@@ -1329,7 +1377,6 @@ class _BotsScreenState extends State<BotsScreen> {
     final target = _target;
     final profile = _relayProfile;
     final text = _relayInput.text.trim();
-    debugPrint('DEBUG relay: target=${target != null} profile=$profile text=${text.isEmpty ? "EMPTY" : "set"} busy=$_relayBusy');
     if (target == null || profile == null || text.isEmpty) return;
     setState(() {
       _relayBusy = true;
@@ -1358,27 +1405,27 @@ class _BotsScreenState extends State<BotsScreen> {
 
   String get _effectiveProfile =>
       _target?.effectiveProfile?.trim().isNotEmpty == true
-          ? _target!.effectiveProfile!
-          : (_roster.firstOrNull?.name ?? 'default');
+      ? _target!.effectiveProfile!
+      : (_roster.firstOrNull?.name ?? 'default');
 }
 
 extension on DisplayStatus {
   DisplayStatus copyWith({DisplayLease? lease}) => DisplayStatus(
-        profile: profile,
-        supported: supported,
-        installed: installed,
-        missing: missing,
-        running: running,
-        pid: pid,
-        geometry: geometry,
-        placement: placement,
-        blocker: blocker,
-        memoryAvailableMb: memoryAvailableMb,
-        memoryLimitMb: memoryLimitMb,
-        imageSwitch: imageSwitch,
-        lease: lease ?? this.lease,
-        profileKey: profileKey,
-      );
+    profile: profile,
+    supported: supported,
+    installed: installed,
+    missing: missing,
+    running: running,
+    pid: pid,
+    geometry: geometry,
+    placement: placement,
+    blocker: blocker,
+    memoryAvailableMb: memoryAvailableMb,
+    memoryLimitMb: memoryLimitMb,
+    imageSwitch: imageSwitch,
+    lease: lease ?? this.lease,
+    profileKey: profileKey,
+  );
 }
 
 class _RosterDetailSheet extends StatelessWidget {
@@ -1409,7 +1456,9 @@ class _RosterDetailSheet extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 22,
-                  child: Icon(bot.hasAvatar ? Icons.smart_toy : Icons.person_outline),
+                  child: Icon(
+                    bot.hasAvatar ? Icons.smart_toy : Icons.person_outline,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -1437,7 +1486,10 @@ class _RosterDetailSheet extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             if (bot.description.isNotEmpty)
-              Text(bot.description, style: Theme.of(context).textTheme.bodyMedium),
+              Text(
+                bot.description,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
             if (bot.description.isNotEmpty) const SizedBox(height: 8),
             Text(
               'Path: ${bot.path} · ${bot.skillCount} skills'
@@ -1446,8 +1498,10 @@ class _RosterDetailSheet extends StatelessWidget {
             ),
             if (bot.lastSessionPreview != null) ...[
               const SizedBox(height: 8),
-              Text('Last session: ${bot.lastSessionPreview}',
-                  style: Theme.of(context).textTheme.bodySmall),
+              Text(
+                'Last session: ${bot.lastSessionPreview}',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ],
             const SizedBox(height: 16),
             Align(
@@ -1490,7 +1544,12 @@ class _CreateRoomSheet extends StatefulWidget {
   const _CreateRoomSheet({required this.roster, required this.onCreate});
 
   final List<BotRosterProfile> roster;
-  final Future<void> Function(String name, String roomId, List<RoomMember> members) onCreate;
+  final Future<void> Function(
+    String name,
+    String roomId,
+    List<RoomMember> members,
+  )
+  onCreate;
 
   @override
   State<_CreateRoomSheet> createState() => _CreateRoomSheetState();
@@ -1533,77 +1592,88 @@ class _CreateRoomSheetState extends State<_CreateRoomSheet> {
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.fromLTRB(
-          20, 20, 20, MediaQuery.of(context).padding.bottom + 20,
+          20,
+          20,
+          20,
+          MediaQuery.of(context).padding.bottom + 20,
         ),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxHeight: 480),
           child: SingleChildScrollView(
             child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
-                  child: Text(
-                    'Create room',
-                    style: Theme.of(context).textTheme.titleLarge,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Create room',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: 'Close',
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _nameInput,
+                  decoration: const InputDecoration(
+                    labelText: 'Room name',
+                    border: OutlineInputBorder(),
                   ),
                 ),
-                IconButton(
-                  tooltip: 'Close',
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.of(context).pop(),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final bot in widget.roster)
+                      FilterChip(
+                        label: Text(bot.title),
+                        selected: _selected.contains(bot.name),
+                        onSelected: (v) {
+                          setState(() {
+                            if (v) {
+                              _selected.add(bot.name);
+                            } else {
+                              _selected.remove(bot.name);
+                            }
+                          });
+                        },
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                if (members.isEmpty)
+                  const Text(
+                    'Select at least one member.',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                const SizedBox(height: 8),
+                FilledButton(
+                  onPressed:
+                      _busy || _nameInput.text.trim().isEmpty || members.isEmpty
+                      ? null
+                      : () async {
+                          setState(() => _busy = true);
+                          final roomId =
+                              'room-${_nameInput.text.trim().toLowerCase().replaceAll(RegExp(r'[^a-z0-9_-]+'), '-')}';
+                          await widget.onCreate(
+                            _nameInput.text.trim(),
+                            roomId,
+                            members,
+                          );
+                          if (mounted) setState(() => _busy = false);
+                        },
+                  child: _busy
+                      ? const CircularProgressIndicator()
+                      : const Text('Create room'),
                 ),
               ],
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _nameInput,
-              decoration: const InputDecoration(
-                labelText: 'Room name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final bot in widget.roster)
-                  FilterChip(
-                    label: Text(bot.title),
-                    selected: _selected.contains(bot.name),
-                    onSelected: (v) {
-                      setState(() {
-                        if (v) {
-                          _selected.add(bot.name);
-                        } else {
-                          _selected.remove(bot.name);
-                        }
-                      });
-                    },
-                  ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            if (members.isEmpty)
-              const Text(
-                'Select at least one member.',
-                style: TextStyle(color: Colors.grey),
-              ),
-            const SizedBox(height: 8),
-            FilledButton(
-              onPressed: _busy || _nameInput.text.trim().isEmpty || members.isEmpty
-                  ? null
-                  : () async {
-                      setState(() => _busy = true);
-                      final roomId = 'room-${_nameInput.text.trim().toLowerCase().replaceAll(RegExp(r'[^a-z0-9_-]+'), '-')}';
-                      await widget.onCreate(_nameInput.text.trim(), roomId, members);
-                      if (mounted) setState(() => _busy = false);
-                    },
-              child: _busy ? const CircularProgressIndicator() : const Text('Create room'),
-            ),
-          ],
             ),
           ),
         ),
@@ -1616,7 +1686,13 @@ class _RoutineDialog extends StatefulWidget {
   const _RoutineDialog({required this.defaultProfile, required this.onAdd});
 
   final String defaultProfile;
-  final Future<void> Function(String title, String schedule, String instruction, int? repeat) onAdd;
+  final Future<void> Function(
+    String title,
+    String schedule,
+    String instruction,
+    int? repeat,
+  )
+  onAdd;
 
   @override
   State<_RoutineDialog> createState() => _RoutineDialogState();
@@ -1653,26 +1729,38 @@ class _RoutineDialogState extends State<_RoutineDialog> {
             const SizedBox(height: 8),
             TextField(
               controller: _titleInput,
-              decoration: const InputDecoration(labelText: 'Title', border: OutlineInputBorder()),
+              decoration: const InputDecoration(
+                labelText: 'Title',
+                border: OutlineInputBorder(),
+              ),
               autofocus: true,
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _scheduleInput,
-              decoration: const InputDecoration(labelText: 'Schedule', border: OutlineInputBorder()),
+              decoration: const InputDecoration(
+                labelText: 'Schedule',
+                border: OutlineInputBorder(),
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _instructionInput,
               minLines: 2,
               maxLines: 6,
-              decoration: const InputDecoration(labelText: 'Instruction', border: OutlineInputBorder()),
+              decoration: const InputDecoration(
+                labelText: 'Instruction',
+                border: OutlineInputBorder(),
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _repeatInput,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Repeat (days)', border: OutlineInputBorder()),
+              decoration: const InputDecoration(
+                labelText: 'Repeat (days)',
+                border: OutlineInputBorder(),
+              ),
             ),
           ],
         ),
@@ -1683,7 +1771,10 @@ class _RoutineDialogState extends State<_RoutineDialog> {
           child: Text(context.sharedL10n.cancel),
         ),
         FilledButton(
-          onPressed: _busy || _titleInput.text.trim().isEmpty || _instructionInput.text.trim().isEmpty
+          onPressed:
+              _busy ||
+                  _titleInput.text.trim().isEmpty ||
+                  _instructionInput.text.trim().isEmpty
               ? null
               : () async {
                   setState(() => _busy = true);
@@ -1696,7 +1787,9 @@ class _RoutineDialogState extends State<_RoutineDialog> {
                   );
                   if (context.mounted) Navigator.of(context).pop();
                 },
-          child: _busy ? const CircularProgressIndicator() : Text(context.sharedL10n.add),
+          child: _busy
+              ? const CircularProgressIndicator()
+              : Text(context.sharedL10n.add),
         ),
       ],
     );
@@ -1767,25 +1860,20 @@ class _BotChatPageState extends State<BotChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('${widget.title} · ${widget.profile}'),
-      ),
+      appBar: AppBar(title: Text('${widget.title} · ${widget.profile}')),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _failure != null
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Text(
-                      'Could not open Bot Chat: $_failure',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
-              : NgChatView(
-                  key: ObjectKey(_chat),
-                  chat: _chat!,
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  'Could not open Bot Chat: $_failure',
+                  textAlign: TextAlign.center,
                 ),
+              ),
+            )
+          : NgChatView(key: ObjectKey(_chat), chat: _chat!),
     );
   }
 }
@@ -1953,61 +2041,69 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Text(_error!, textAlign: TextAlign.center),
-                ))
-              : ListView(
-                  padding: const EdgeInsets.all(16),
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(_error!, textAlign: TextAlign.center),
+              ),
+            )
+          : ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                _roomHeaderCard(room, driver),
+                const SizedBox(height: 12),
+                _membersCard(room),
+                const SizedBox(height: 12),
+                _contextCard(),
+                const SizedBox(height: 16),
+                const Text(
+                  'Send a message',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _messageInput,
+                  maxLines: 4,
+                  maxLength: 65536,
+                  decoration: const InputDecoration(
+                    hintText: 'Message the room (mention members with @handle)',
+                    border: OutlineInputBorder(),
+                    alignLabelWithHint: true,
+                    counterText: '',
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
                   children: [
-                    _roomHeaderCard(room, driver),
-                    const SizedBox(height: 12),
-                    _membersCard(room),
-                    const SizedBox(height: 12),
-                    _contextCard(),
-                    const SizedBox(height: 16),
-                    const Text('Send a message', style: TextStyle(fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _messageInput,
-                      maxLines: 4,
-                      maxLength: 65536,
-                      decoration: const InputDecoration(
-                        hintText: 'Message the room (mention members with @handle)',
-                        border: OutlineInputBorder(),
-                        alignLabelWithHint: true,
-                        counterText: '',
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _sending ? null : _send,
+                        icon: const Icon(Icons.send),
+                        label: Text(context.sharedL10n.send),
                       ),
                     ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: _sending ? null : _send,
-                            icon: const Icon(Icons.send),
-                            label: Text(context.sharedL10n.send),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    const Text('History', style: TextStyle(fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 8),
-                    for (final ev in _log)
-                      ListTile(
-                        dense: true,
-                        leading: Icon(
-                          ev.kind.startsWith('message')
-                              ? Icons.chat_bubble_outline
-                              : Icons.circle_outlined,
-                          size: 18,
-                        ),
-                        title: Text(ev.kind),
-                        subtitle: Text('#${ev.seq} · ${ev.actor}'),
-                      ),
                   ],
                 ),
+                const SizedBox(height: 16),
+                const Text(
+                  'History',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8),
+                for (final ev in _log)
+                  ListTile(
+                    dense: true,
+                    leading: Icon(
+                      ev.kind.startsWith('message')
+                          ? Icons.chat_bubble_outline
+                          : Icons.circle_outlined,
+                      size: 18,
+                    ),
+                    title: Text(ev.kind),
+                    subtitle: Text('#${ev.seq} · ${ev.actor}'),
+                  ),
+              ],
+            ),
     );
   }
 
@@ -2015,11 +2111,15 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
     final status = driver == null
         ? 'unknown'
         : driver.running
-            ? (driver.blocked ? 'blocked' : (driver.working ? 'working' : 'running'))
-            : 'idle';
+        ? (driver.blocked
+              ? 'blocked'
+              : (driver.working ? 'working' : 'running'))
+        : 'idle';
     return Card(
       child: ListTile(
-        leading: Icon(driver?.running == true ? Icons.sync : Icons.pause_circle_outline),
+        leading: Icon(
+          driver?.running == true ? Icons.sync : Icons.pause_circle_outline,
+        ),
         title: Text(
           '${room.name} — $status',
           style: const TextStyle(fontWeight: FontWeight.w600),
@@ -2028,7 +2128,9 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
           [
             '${room.revision} revision',
             if (driver != null && driver.counts.isNotEmpty)
-              driver.counts.entries.map((e) => '${e.key}: ${e.value}').join(', '),
+              driver.counts.entries
+                  .map((e) => '${e.key}: ${e.value}')
+                  .join(', '),
             if (driver?.lastError != null) 'last error: ${driver!.lastError}',
             if (room.disbanded) 'disbanded',
           ].join(' · '),
@@ -2087,4 +2189,3 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
     );
   }
 }
-

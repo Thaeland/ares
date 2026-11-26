@@ -55,25 +55,16 @@ void main() {
 
       // Switch to Relay and send a message through the wire.
       await tester.tap(find.text('Relay'));
-      await _shown(
-        tester,
-        find.textContaining('Message to the target bot'),
-      );
+      await _shown(tester, find.textContaining('Message to the target bot'));
       await tester.enterText(
         find.byType(TextField),
         'Please summarize the room',
       );
       final sendFinder = find.byType(ElevatedButton);
-      debugPrint('send finder: ${sendFinder.evaluate().length}');
-      final btn = tester.widget<ElevatedButton>(sendFinder.last);
-      debugPrint('onPressed null? ${btn.onPressed == null}');
-      debugPrint('ctrl text len: ${tester.widget<TextField>(find.byType(TextField)).controller?.text.length}');
       await tester.ensureVisible(sendFinder.last);
       await _step(tester);
       await tester.tap(sendFinder.last, warnIfMissed: true);
       await _step(tester);
-      debugPrint('AFTER SEND: calls=${api.calls.map((c) => c.method).join(",")}');
-      debugPrint('SCREEN TEXT: ${find.byType(Text).evaluate().map((w) => (w.widget as Text).data).where((d) => d != null && d.isNotEmpty).join(" | ")}');
       await _shown(tester, find.textContaining('Delivery: settled'));
 
       final relayCall = api.calls.singleWhere(
@@ -124,14 +115,8 @@ void main() {
       // Take over: observe mints viewer id, then the lease acquire.
       await tester.tap(find.text('Take over'));
       await _step(tester);
-      expect(
-        api.calls.any((c) => c.method == 'display.observe'),
-        isTrue,
-      );
-      expect(
-        api.calls.any((c) => c.method == 'display.lease.acquire'),
-        isTrue,
-      );
+      expect(api.calls.any((c) => c.method == 'display.observe'), isTrue);
+      expect(api.calls.any((c) => c.method == 'display.lease.acquire'), isTrue);
 
       // Hand back: viewerId is carried, so the release carries it.
       await _shown(tester, find.text('Hand back'));
@@ -181,22 +166,22 @@ void main() {
       await _shown(tester, find.text('Ops Room'));
       await tester.tap(find.textContaining('Create room'));
       await _shown(tester, find.text('Room name'));
+      await _step(tester);
       await tester.enterText(find.byType(TextField), 'QA Room');
-      final workChip = find.text('WorkBot').last;
+      await _step(tester);
+      final workChip = find.widgetWithText(FilterChip, 'WorkBot');
       await tester.ensureVisible(workChip);
       await tester.tap(workChip);
-      final researchChip = find.text('ResearchBot').last;
+      await tester.pump();
+      final researchChip = find.widgetWithText(FilterChip, 'ResearchBot');
       await tester.ensureVisible(researchChip);
       await tester.tap(researchChip);
-      final createBtn = find.byType(FilledButton);
-      debugPrint('create btn found: ${createBtn.evaluate().length}');
-      final btn = tester.widget<FilledButton>(createBtn.last);
-      debugPrint('create onPressed null? ${btn.onPressed == null}');
-      await tester.ensureVisible(createBtn.last);
+      await tester.pump();
+      final createBtn = find.widgetWithText(FilledButton, 'Create room');
+      await tester.ensureVisible(createBtn);
       await _step(tester);
-      await tester.tap(createBtn.last, warnIfMissed: true);
+      await tester.tap(createBtn, warnIfMissed: true);
       await _step(tester);
-      debugPrint('create calls: ${api.calls.map((c) => c.method).join(",")}');
 
       final createCall = api.calls.singleWhere(
         (c) => c.method == 'groups.create',
@@ -343,7 +328,7 @@ class _BotsFixtureApi {
             ],
             'bot_mode_protocol': true,
             'install_id': 'fixture-install-1',
-          }
+          },
         };
       case 'session.list':
         return {
@@ -351,7 +336,7 @@ class _BotsFixtureApi {
             'sessions': [
               {'id': 'sess-canonical-workbot', 'title': 'Bot Chat'},
             ],
-          }
+          },
         };
       case 'groups.capabilities':
         return {
@@ -372,7 +357,7 @@ class _BotsFixtureApi {
             ],
             'max_log_limit': 500,
             'seatable_profiles': ['workbot', 'researchbot'],
-          }
+          },
         };
       case 'groups.list':
         return {
@@ -397,7 +382,7 @@ class _BotsFixtureApi {
               },
             ],
             'next_offset': null,
-          }
+          },
         };
       case 'groups.state':
         return {
@@ -424,11 +409,8 @@ class _BotsFixtureApi {
               'working': true,
               'counts': {'active': 2},
             },
-            'context': {
-              'purpose': 'Ship v5',
-              'routing': 'everyone',
-            },
-          }
+            'context': {'purpose': 'Ship v5', 'routing': 'everyone'},
+          },
         };
       case 'groups.create':
         return {
@@ -438,23 +420,28 @@ class _BotsFixtureApi {
               'name': params['name'],
               'members': params['members'],
               'revision': 1,
-            }
-          }
+            },
+          },
         };
       case 'groups.log':
         return {
           'result': {
             'events': [
-              {'seq': 1, 'event_id': 'ev-1', 'kind': 'message', 'actor': 'workbot'},
+              {
+                'seq': 1,
+                'event_id': 'ev-1',
+                'kind': 'message',
+                'actor': 'workbot',
+              },
             ],
             'cursor': 1,
             'latest_seq': 1,
             'has_more': false,
-          }
+          },
         };
       case 'groups.send':
         return {
-          'result': {'client_event_id': 'evt-1', 'accepted': true}
+          'result': {'client_event_id': 'evt-1', 'accepted': true},
         };
       case 'cron.manage':
         final action = params['action'] as String? ?? 'list';
@@ -471,10 +458,12 @@ class _BotsFixtureApi {
                 },
               ],
               'scoped': 'profile:workbot',
-            }
+            },
           };
         }
-        return {'result': {'ok': true}};
+        return {
+          'result': {'ok': true},
+        };
       case 'display.status':
         return {
           'result': {
@@ -487,7 +476,7 @@ class _BotsFixtureApi {
             'geometry': '1280x800',
             'placement': 'gateway',
             'lease': {'holder': 'agent', 'since': 1, 'epoch': 1, 'reason': ''},
-          }
+          },
         };
       case 'display.start':
         return {
@@ -501,7 +490,7 @@ class _BotsFixtureApi {
             'geometry': '1280x800',
             'placement': 'gateway',
             'lease': {'holder': 'agent', 'since': 1, 'epoch': 1, 'reason': ''},
-          }
+          },
         };
       case 'display.stop':
         return {
@@ -512,7 +501,7 @@ class _BotsFixtureApi {
             'missing': const <String>[],
             'running': false,
             'lease': {'holder': 'agent', 'since': 1, 'epoch': 2, 'reason': ''},
-          }
+          },
         };
       case 'display.observe':
         return {
@@ -529,10 +518,12 @@ class _BotsFixtureApi {
             'ticket': 'ticket-fixture',
             'path': '/api/display/ws',
             'viewer_id': 'viewer-fixture-1',
-          }
+          },
         };
       case 'display.thumbnail':
-        return {'result': {'data_url': null, 'suppressed': null}};
+        return {
+          'result': {'data_url': null, 'suppressed': null},
+        };
       case 'display.lease.acquire':
         return {
           'result': {
@@ -542,19 +533,14 @@ class _BotsFixtureApi {
               'since': 2,
               'epoch': 3,
               'reason': params['reason'] ?? '',
-            }
-          }
+            },
+          },
         };
       case 'display.lease.release':
         return {
           'result': {
-            'lease': {
-              'holder': 'agent',
-              'since': 3,
-              'epoch': 4,
-              'reason': '',
-            }
-          }
+            'lease': {'holder': 'agent', 'since': 3, 'epoch': 4, 'reason': ''},
+          },
         };
       case 'display.install':
         return {
@@ -562,7 +548,7 @@ class _BotsFixtureApi {
             'started': true,
             'command': 'fake install',
             'profile_key': 'fixture',
-          }
+          },
         };
       case 'display.switchSandboxImage':
         return {
@@ -574,7 +560,7 @@ class _BotsFixtureApi {
             'running': true,
             'lease': {'holder': 'agent', 'since': 1, 'epoch': 1, 'reason': ''},
             'image_switch': null,
-          }
+          },
         };
       case 'bot_relay.deliver':
         return {
@@ -584,10 +570,12 @@ class _BotsFixtureApi {
             'admission_id': null,
             'refused': false,
             'reply': 'Summary reply',
-          }
+          },
         };
       default:
-        return {'result': {'ok': true}};
+        return {
+          'result': {'ok': true},
+        };
     }
   }
 }

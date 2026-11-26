@@ -59,14 +59,18 @@ final class BotRosterProfile {
       model: raw['model'] as String? ?? '',
       provider: raw['provider'] as String? ?? '',
       description: raw['description'] as String? ?? '',
-      displayName: raw['display_name'] as String? ?? raw['displayName'] as String? ?? '',
+      displayName:
+          raw['display_name'] as String? ?? raw['displayName'] as String? ?? '',
       skillCount: (raw['skill_count'] as num?)?.toInt() ?? 0,
       hasAvatar: raw['has_avatar'] == true,
       canonicalSessionId: canonical is Map
-          ? (canonical['id'] as String?) ?? (canonical['resolved_id'] as String?)
+          ? (canonical['id'] as String?) ??
+                (canonical['resolved_id'] as String?)
           : null,
       workerSessionId: worker is Map ? worker['id'] as String? : null,
-      lastSessionPreview: lastSession is Map ? lastSession['preview'] as String? : null,
+      lastSessionPreview: lastSession is Map
+          ? lastSession['preview'] as String?
+          : null,
     );
   }
 }
@@ -85,9 +89,8 @@ final class BotRoster {
   final bool botModeProtocol;
   final String? installId;
 
-  BotRosterProfile? find(String? name) => name == null
-      ? null
-      : profiles.where((p) => p.name == name).singleOrNull;
+  BotRosterProfile? find(String? name) =>
+      name == null ? null : profiles.where((p) => p.name == name).singleOrNull;
 
   factory BotRoster.fromJson(Map raw) {
     final rawProfiles = raw['profiles'];
@@ -152,8 +155,10 @@ final class RoutineJob {
 
   /// `[bot:<name>] <title>` → (bot, title). Untagged jobs keep an empty bot.
   static ({String bot, String title}) splitTags(String rawName) {
-    final match = RegExp(r'^\[bot:([a-z0-9][a-z0-9_-]*)\]\s*(.*)$', caseSensitive: false)
-        .firstMatch(rawName.trim());
+    final match = RegExp(
+      r'^\[bot:([a-z0-9][a-z0-9_-]*)\]\s*(.*)$',
+      caseSensitive: false,
+    ).firstMatch(rawName.trim());
     if (match == null) return (bot: '', title: rawName.trim());
     return (bot: match.group(1)!.toLowerCase(), title: match.group(2)!.trim());
   }
@@ -181,7 +186,8 @@ final class RoutineJob {
       enabled: raw['enabled'] != false && raw['state'] != 'paused',
       state: raw['state'] as String? ?? '',
       repeat: (raw['repeat'] as num?)?.toInt(),
-      promptPreview: raw['prompt_preview'] as String? ?? raw['prompt'] as String? ?? '',
+      promptPreview:
+          raw['prompt_preview'] as String? ?? raw['prompt'] as String? ?? '',
       deliver: raw['deliver'] as String? ?? '',
     );
   }
@@ -202,8 +208,9 @@ final class RoomMember {
   final String displayName;
   final String? target;
 
-  String get title =>
-      displayName.isNotEmpty ? displayName : (handle.isNotEmpty ? handle : profile);
+  String get title => displayName.isNotEmpty
+      ? displayName
+      : (handle.isNotEmpty ? handle : profile);
 
   factory RoomMember.fromJson(Map raw) {
     final profile = raw['profile'];
@@ -251,7 +258,9 @@ final class RoomCapabilities {
       driver: raw['driver'] == true,
       persistentProcess: raw['persistent_process'] == true,
       authorityGatewayId: raw['authority_gateway_id'] as String? ?? '',
-      roomLink: raw['room_link'] is Map ? Map<String, dynamic>.from(raw['room_link']) : const {},
+      roomLink: raw['room_link'] is Map
+          ? Map<String, dynamic>.from(raw['room_link'])
+          : const {},
       features: (raw['features'] is List ? raw['features'] as List : const [])
           .whereType<String>()
           .toList(),
@@ -300,7 +309,10 @@ final class RoomSummary {
       roomId: roomId,
       name: raw['name'] as String? ?? roomId,
       members: raw['members'] is List
-          ? [for (final m in raw['members'] as List) if (m is Map) RoomMember.fromJson(m)]
+          ? [
+              for (final m in raw['members'] as List)
+                if (m is Map) RoomMember.fromJson(m),
+            ]
           : const [],
       authorityGatewayId: raw['authority_gateway_id'] as String? ?? '',
       revision: (raw['revision'] as num?)?.toInt() ?? 0,
@@ -362,11 +374,11 @@ final class RoomContext {
   final String leadMemberId;
 
   factory RoomContext.fromJson(Map raw) => RoomContext(
-        purpose: raw['purpose'] as String? ?? '',
-        notes: raw['notes'] as String? ?? '',
-        routing: raw['routing'] as String? ?? 'everyone',
-        leadMemberId: raw['lead_member_id'] as String? ?? '',
-      );
+    purpose: raw['purpose'] as String? ?? '',
+    notes: raw['notes'] as String? ?? '',
+    routing: raw['routing'] as String? ?? 'everyone',
+    leadMemberId: raw['lead_member_id'] as String? ?? '',
+  );
 }
 
 final class RoomReadResult {
@@ -393,27 +405,40 @@ final class RoomReadResult {
       context: raw['context'] is Map
           ? RoomContext.fromJson(raw['context'] as Map)
           : null,
-      changeEvents: raw['change_events'] is bool ? raw['change_events'] as bool : null,
+      changeEvents: raw['change_events'] is bool
+          ? raw['change_events'] as bool
+          : null,
     );
   }
 }
 
 final class RoomSendResult {
-  const RoomSendResult({required this.clientEventId, required this.accepted, this.driverStarted});
+  const RoomSendResult({
+    required this.clientEventId,
+    required this.accepted,
+    this.driverStarted,
+  });
 
   final String? clientEventId;
   final bool accepted;
   final bool? driverStarted;
 
   factory RoomSendResult.fromJson(Map raw) => RoomSendResult(
-        clientEventId: raw['client_event_id'] as String?,
-        accepted: raw['accepted'] != false,
-        driverStarted: raw['driver_started'] is bool ? raw['driver_started'] as bool : null,
-      );
+    clientEventId: raw['client_event_id'] as String?,
+    accepted: raw['accepted'] != false,
+    driverStarted: raw['driver_started'] is bool
+        ? raw['driver_started'] as bool
+        : null,
+  );
 }
 
 final class RoomLogEvent {
-  const RoomLogEvent({required this.seq, required this.eventId, required this.kind, this.actor = ''});
+  const RoomLogEvent({
+    required this.seq,
+    required this.eventId,
+    required this.kind,
+    this.actor = '',
+  });
 
   final int seq;
   final String eventId;
@@ -421,15 +446,22 @@ final class RoomLogEvent {
   final String actor;
 
   factory RoomLogEvent.fromJson(Map raw) => RoomLogEvent(
-        seq: (raw['seq'] as num?)?.toInt() ?? 0,
-        eventId: raw['event_id'] as String? ?? '',
-        kind: raw['kind'] as String? ?? '',
-        actor: raw['actor'] is Map ? raw['actor']['id'] as String? ?? '' : raw['actor'] as String? ?? '',
-      );
+    seq: (raw['seq'] as num?)?.toInt() ?? 0,
+    eventId: raw['event_id'] as String? ?? '',
+    kind: raw['kind'] as String? ?? '',
+    actor: raw['actor'] is Map
+        ? raw['actor']['id'] as String? ?? ''
+        : raw['actor'] as String? ?? '',
+  );
 }
 
 final class RoomLog {
-  const RoomLog({required this.events, required this.cursor, required this.latestSeq, required this.hasMore});
+  const RoomLog({
+    required this.events,
+    required this.cursor,
+    required this.latestSeq,
+    required this.hasMore,
+  });
 
   final List<RoomLogEvent> events;
   final int cursor;
@@ -482,12 +514,12 @@ final class DisplayLease {
   }
 
   static DisplayLease agent() => const DisplayLease(
-        holder: 'agent',
-        viewerHash: null,
-        since: 0,
-        epoch: 0,
-        reason: '',
-      );
+    holder: 'agent',
+    viewerHash: null,
+    since: 0,
+    epoch: 0,
+    reason: '',
+  );
 }
 
 final class DisplayStatus {
@@ -529,7 +561,9 @@ final class DisplayStatus {
       profile: raw['profile'] as String? ?? '',
       supported: raw['supported'] == true,
       installed: raw['installed'] == true,
-      missing: missing is List ? List<String>.from(missing.whereType<String>()) : const [],
+      missing: missing is List
+          ? List<String>.from(missing.whereType<String>())
+          : const [],
       running: raw['running'] == true,
       pid: (raw['pid'] as num?)?.toInt(),
       geometry: raw['geometry'] as String? ?? '',
@@ -578,9 +612,9 @@ final class DisplayThumbnail {
   final String? suppressed;
 
   factory DisplayThumbnail.fromJson(Map raw) => DisplayThumbnail(
-        dataUrl: raw['data_url'] as String?,
-        suppressed: raw['suppressed'] as String?,
-      );
+    dataUrl: raw['data_url'] as String?,
+    suppressed: raw['suppressed'] as String?,
+  );
 }
 
 final class RelayDelivery {
@@ -605,62 +639,69 @@ final class RelayDelivery {
   bool get settled => status == 'settled';
 
   factory RelayDelivery.fromJson(Map raw) => RelayDelivery(
-        status: raw['status'] as String? ?? '',
-        deliveryId: raw['delivery_id'] as String?,
-        admissionId: raw['admission_id'] as String?,
-        refused: raw['refused'] == true ? true : (raw['refused'] == false ? false : null),
-        reply: raw['reply'] as String?,
-        error: raw['error'] as String?,
-        reason: raw['reason'] as String?,
-      );
+    status: raw['status'] as String? ?? '',
+    deliveryId: raw['delivery_id'] as String?,
+    admissionId: raw['admission_id'] as String?,
+    refused: raw['refused'] == true
+        ? true
+        : (raw['refused'] == false ? false : null),
+    reply: raw['reply'] as String?,
+    error: raw['error'] as String?,
+    reason: raw['reason'] as String?,
+  );
 }
 
 extension WorkspaceBots on WorkspaceTarget {
   /// Launch-home scoped JSON-RPC call (no `profile` param). Refusals are mapped
   /// through the same fences as workspace calls.
-  Future<Map<String, dynamic>> _rpcLaunch(String method, Map<String, dynamic> params) =>
-      _guard(checkCurrent, () async {
-        checkCurrent();
-        final response = await _socket.send(method, params, includeProfile: false);
-        checkCurrent();
-        final error = response['error'];
-        if (error != null) {
-          if (error is Map && error['code'] == -32601) {
-            _fail(WorkspaceFailure.unsupported);
-          }
-          if (error is Map && const {401, 403}.contains(error['code'])) {
-            _fail(WorkspaceFailure.denied);
-          }
-          _fail(WorkspaceFailure.unavailable);
-        }
-        final result = response['result'];
-        if (result is! Map<String, dynamic>) _fail(WorkspaceFailure.invalid);
-        return result;
-      });
+  Future<Map<String, dynamic>> _rpcLaunch(
+    String method,
+    Map<String, dynamic> params,
+  ) => _guard(checkCurrent, () async {
+    checkCurrent();
+    final response = await _socket.send(method, params, includeProfile: false);
+    checkCurrent();
+    final error = response['error'];
+    if (error != null) {
+      if (error is Map && error['code'] == -32601) {
+        _fail(WorkspaceFailure.unsupported);
+      }
+      if (error is Map && const {401, 403}.contains(error['code'])) {
+        _fail(WorkspaceFailure.denied);
+      }
+      _fail(WorkspaceFailure.unavailable);
+    }
+    final result = response['result'];
+    if (result is! Map<String, dynamic>) _fail(WorkspaceFailure.invalid);
+    return result;
+  });
 
   /// Target-profile scoped JSON-RPC call (profile param rewritten to the bot).
-  Future<Map<String, dynamic>> _rpcBot(String? profile, String method, Map<String, dynamic> params) =>
-      _guard(checkCurrent, () async {
-        checkCurrent();
-        final response = await _socket.send(method, {
-          ...params,
-          'profile': ?profile,
-        }, includeProfile: false);
-        checkCurrent();
-        final error = response['error'];
-        if (error != null) {
-          if (error is Map && error['code'] == -32601) {
-            _fail(WorkspaceFailure.unsupported);
-          }
-          if (error is Map && const {401, 403}.contains(error['code'])) {
-            _fail(WorkspaceFailure.denied);
-          }
-          _fail(WorkspaceFailure.unavailable);
-        }
-        final result = response['result'];
-        if (result is! Map<String, dynamic>) _fail(WorkspaceFailure.invalid);
-        return result;
-      });
+  Future<Map<String, dynamic>> _rpcBot(
+    String? profile,
+    String method,
+    Map<String, dynamic> params,
+  ) => _guard(checkCurrent, () async {
+    checkCurrent();
+    final response = await _socket.send(method, {
+      ...params,
+      'profile': ?profile,
+    }, includeProfile: false);
+    checkCurrent();
+    final error = response['error'];
+    if (error != null) {
+      if (error is Map && error['code'] == -32601) {
+        _fail(WorkspaceFailure.unsupported);
+      }
+      if (error is Map && const {401, 403}.contains(error['code'])) {
+        _fail(WorkspaceFailure.denied);
+      }
+      _fail(WorkspaceFailure.unavailable);
+    }
+    final result = response['result'];
+    if (result is! Map<String, dynamic>) _fail(WorkspaceFailure.invalid);
+    return result;
+  });
 
   // ── Roster ─────────────────────────────────────────────────────────────
 
@@ -745,7 +786,9 @@ extension WorkspaceBots on WorkspaceTarget {
 
   // ── Routines (per-bot cron) ─────────────────────────────────────────────
 
-  Future<({List<RoutineJob> jobs, String? scoped})> botRoutines(String profile) async {
+  Future<({List<RoutineJob> jobs, String? scoped})> botRoutines(
+    String profile,
+  ) async {
     final raw = await _rpcBot(profile, 'cron.manage', {
       'action': 'list',
       'include_disabled': true,
@@ -757,14 +800,13 @@ extension WorkspaceBots on WorkspaceTarget {
       for (final item in jobs)
         if (item is Map) RoutineJob.fromJson(item),
     ];
-    return (
-      jobs: List<RoutineJob>.unmodifiable(parsed),
-      scoped: scoped,
-    );
+    return (jobs: List<RoutineJob>.unmodifiable(parsed), scoped: scoped);
   }
 
   /// Force-pauses legacy delegated routines on load and returns the cleaned list.
-  Future<({List<RoutineJob> jobs, String? scoped})> botRoutinesWithLegacyPause(String profile) async {
+  Future<({List<RoutineJob> jobs, String? scoped})> botRoutinesWithLegacyPause(
+    String profile,
+  ) async {
     final raw = await botRoutines(profile);
     final pausedIds = <String>{};
     await Future.wait([
@@ -803,10 +845,7 @@ extension WorkspaceBots on WorkspaceTarget {
         else
           job,
     ];
-    return (
-      jobs: List<RoutineJob>.unmodifiable(jobs),
-      scoped: raw.scoped,
-    );
+    return (jobs: List<RoutineJob>.unmodifiable(jobs), scoped: raw.scoped);
   }
 
   Future<RoutineJob> botRoutineAdd({
@@ -834,36 +873,40 @@ extension WorkspaceBots on WorkspaceTarget {
       for (final j in listed.jobs) {
         if (j.jobId == job || job == j.name) return j;
       }
-      return RoutineJob(jobId: job, name: '[bot:$bot] $title', schedule: schedule);
+      return RoutineJob(
+        jobId: job,
+        name: '[bot:$bot] $title',
+        schedule: schedule,
+      );
     }
     final jobId = raw['job_id'] ?? raw['id'];
     if (jobId is String && jobId.isNotEmpty) {
-      return RoutineJob(jobId: jobId, name: '[bot:$bot] $title', schedule: schedule);
+      return RoutineJob(
+        jobId: jobId,
+        name: '[bot:$bot] $title',
+        schedule: schedule,
+      );
     }
     _fail(WorkspaceFailure.invalid);
   }
 
   Future<void> botRoutinePause(String profile, String jobId) => _guard(
-      checkCurrent,
-      () async {
-        await _rpcBot(profile, 'cron.manage', {
-          'action': 'pause',
-          'name': jobId,
-        });
-      });
+    checkCurrent,
+    () async {
+      await _rpcBot(profile, 'cron.manage', {'action': 'pause', 'name': jobId});
+    },
+  );
 
-  Future<void> botRoutineResume(String profile, String jobId) => _guard(
-      checkCurrent,
-      () async {
+  Future<void> botRoutineResume(String profile, String jobId) =>
+      _guard(checkCurrent, () async {
         await _rpcBot(profile, 'cron.manage', {
           'action': 'resume',
           'name': jobId,
         });
       });
 
-  Future<void> botRoutineRemove(String profile, String jobId) => _guard(
-      checkCurrent,
-      () async {
+  Future<void> botRoutineRemove(String profile, String jobId) =>
+      _guard(checkCurrent, () async {
         await _rpcBot(profile, 'cron.manage', {
           'action': 'remove',
           'name': jobId,
@@ -889,9 +932,7 @@ extension WorkspaceBots on WorkspaceTarget {
     });
     final rooms = raw['rooms'];
     if (rooms is! List) _fail(WorkspaceFailure.invalid);
-    return List.unmodifiable(
-      rooms.whereType<Map>().map(RoomSummary.fromJson),
-    );
+    return List.unmodifiable(rooms.whereType<Map>().map(RoomSummary.fromJson));
   }
 
   Future<RoomReadResult> roomState(String roomId) async {
@@ -923,7 +964,11 @@ extension WorkspaceBots on WorkspaceTarget {
     return RoomSummary.fromJson(room);
   }
 
-  Future<RoomSummary> roomRename(String roomId, String eventId, String name) async {
+  Future<RoomSummary> roomRename(
+    String roomId,
+    String eventId,
+    String name,
+  ) async {
     final raw = await _rpcLaunch('groups.rename', {
       'room_id': roomId,
       'event_id': eventId,
@@ -934,7 +979,11 @@ extension WorkspaceBots on WorkspaceTarget {
     return RoomSummary.fromJson(room);
   }
 
-  Future<RoomSendResult> roomSend(String roomId, Map<String, dynamic> payload, {String? eventId}) async {
+  Future<RoomSendResult> roomSend(
+    String roomId,
+    Map<String, dynamic> payload, {
+    String? eventId,
+  }) async {
     final raw = await _rpcLaunch('groups.send', {
       'room_id': roomId,
       'event_id': ?eventId,
@@ -964,7 +1013,11 @@ extension WorkspaceBots on WorkspaceTarget {
     return RoomContext.fromJson(context);
   }
 
-  Future<RoomLog> roomLog(String roomId, {int? sinceSeq, int limit = 100}) async {
+  Future<RoomLog> roomLog(
+    String roomId, {
+    int? sinceSeq,
+    int limit = 100,
+  }) async {
     final raw = await _rpcLaunch('groups.log', {
       'room_id': roomId,
       'since_seq': ?sinceSeq,
@@ -990,14 +1043,20 @@ extension WorkspaceBots on WorkspaceTarget {
     return DisplayStatus.fromJson(raw);
   }
 
-  Future<DisplayStatus> displayStop(String? profile, {bool force = false}) async {
+  Future<DisplayStatus> displayStop(
+    String? profile, {
+    bool force = false,
+  }) async {
     final raw = await _rpcBot(profile, 'display.stop', {
       if (force) 'force': true,
     });
     return DisplayStatus.fromJson(raw);
   }
 
-  Future<DisplayObserveResult> displayObserve(String? profile, {String? viewerId}) async {
+  Future<DisplayObserveResult> displayObserve(
+    String? profile, {
+    String? viewerId,
+  }) async {
     final raw = await _rpcBot(profile, 'display.observe', {
       'viewer_id': ?viewerId,
     });
@@ -1010,7 +1069,9 @@ extension WorkspaceBots on WorkspaceTarget {
   }
 
   /// Kick off the gateway's install flow and report the command it launched.
-  Future<({bool started, String? command, String? profileKey})> displayInstall(String? profile) async {
+  Future<({bool started, String? command, String? profileKey})> displayInstall(
+    String? profile,
+  ) async {
     final raw = await _rpcBot(profile, 'display.install', {});
     return (
       started: raw['started'] == true,
@@ -1047,7 +1108,10 @@ extension WorkspaceBots on WorkspaceTarget {
     return DisplayLease.fromJson(lease);
   }
 
-  Future<DisplayStatus> displaySwitchSandboxImage(String? profile, {bool approve = true}) async {
+  Future<DisplayStatus> displaySwitchSandboxImage(
+    String? profile, {
+    bool approve = true,
+  }) async {
     final raw = await _rpcBot(profile, 'display.switchSandboxImage', {
       'approve': approve,
     });
