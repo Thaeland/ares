@@ -12,8 +12,8 @@ for the exact English expressions that still need work.
 - Filled all **2,615 initially missing translations**: de, es, fr, ja, ko, pt,
   pt_BR, ru, zh and zh_Hans: 224 each; uk: 187; ar and zh_Hant: 94 each.
 - Extracted **607 additional messages** with descriptions and typed placeholder
-  metadata: shared discovery/admin/files/workspace (461), NextGen-only (44),
-  chat (35), preview (59) and application shell (8).
+  metadata: shared discovery/admin/files/workspace (461), NextGen navigation
+  and status (44), chat (35), preview (59) and application shell (8).
 - Translated all extracted messages into every one of the **13 locales**.
   Each catalogue now has **3,234 messages**, in the English source's order.
 - Preserved every original English value and metadata entry byte-for-byte as
@@ -118,7 +118,18 @@ listed in the residual inventory.
   provenance/chooser expectations, retained specific file/delivery refusals,
   compact navigation labels, an embedded-sheet l10n fallback and responsive tip
   banner actions.
-- A fresh full-suite result on the corrected fixed source is recorded in the
-  final handoff; it must not be inferred by adding focused/regression totals.
-  The prescribed SSH, PTY/Python and ffmpeg/ffprobe fixtures and worktree-local
-  `TMPDIR` are used. No local Hermes service or model inference is started.
+- Fresh full-suite rerun: **8,357 passed, 0 failed**, 641 non-perf test files,
+  on fixed app source `95035859a66f07eaefb6795ab5239a821ba4d37f` (26m 40.809s).
+  `done.success` is true and the process returned 0. Counts come from unique,
+  non-hidden JSON `testDone` events; two legitimate test names start with
+  “loading” and must not be mistaken for hidden loader events. The command was
+  `flutter test --no-pub -j2 --exclude-tags perf --reporter json`.
+- [Machine-readable validation evidence](l10n-release-validation.json) records
+  the commands, exact source commit, fixture environment, catalogue inventory
+  and raw-log paths. The prescribed SSH, PTY/Python and ffmpeg/ffprobe fixtures
+  and worktree-local `TMPDIR` were used. No local Hermes service or model
+  inference was started. Only documentation changed during the full rerun.
+- This green suite does **not** close the remaining legacy extraction work.
+  All current catalogue keys are translated, but the additional client-authored
+  English inventoried in `l10n-release-remaining.md` still requires extraction
+  and translation into all 13 locales before the entire task can be completed.
