@@ -6,8 +6,9 @@ import '../models/attachment_draft.dart';
 import '../services/attachment_draft_service.dart';
 import '../services/prepared_image_store.dart';
 
-/// Read the journal only on a gesture. Choosing a row fills the composer;
-/// neither opening the chooser nor restoring a row submits anything.
+/// Read only this chat's journal folder on mount, target/store/revision changes,
+/// and store notifications. Choosing a row fills the composer; neither opening
+/// the chooser nor restoring a row submits anything.
 class PreparedImageRecovery extends StatefulWidget {
   const PreparedImageRecovery({
     super.key,
@@ -26,6 +27,51 @@ class PreparedImageRecovery extends StatefulWidget {
 
 class _PreparedImageRecoveryState extends State<PreparedImageRecovery> {
   bool busy = false;
+  bool _recoverable = false;
+  String? _checkedTarget;
+  Object? _checkedRevision;
+  int _checkGeneration = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    PreparedImageStore.changes.addListener(_check);
+    _check();
+  }
+
+  @override
+  void didUpdateWidget(PreparedImageRecovery oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.target.key != widget.target.key ||
+        oldWidget.store != widget.store ||
+        _checkedRevision != widget.revision()) {
+      _recoverable = false;
+      _check();
+    }
+  }
+
+  void _check() async {
+    final generation = ++_checkGeneration;
+    final target = widget.target;
+    _checkedRevision = widget.revision();
+    final found = await (widget.store ?? PreparedImageStore.shared)
+        .hasRecoverable(target);
+    if (!mounted ||
+        generation != _checkGeneration ||
+        widget.target.key != target.key)
+      return;
+    setState(() {
+      _checkedTarget = target.key;
+      _recoverable = found;
+    });
+  }
+
+  @override
+  void dispose() {
+    PreparedImageStore.changes.removeListener(_check);
+    super.dispose();
+  }
+
   Future<void> open() async {
     final l10n = context.sharedL10n;
     if (busy) return;
@@ -157,13 +203,16 @@ class _PreparedImageRecoveryState extends State<PreparedImageRecovery> {
   }
 
   @override
-  Widget build(BuildContext context) => TextButton.icon(
-    onPressed: busy ? null : open,
-    icon: const Icon(Icons.restore, size: 18),
-    label: Text(
-      context
-          .sharedL10n
-          .release_core_prepared_image_recovery_recover_image_draft,
-    ),
-  );
+  Widget build(BuildContext context) =>
+      !busy && (!_recoverable || _checkedTarget != widget.target.key)
+      ? const SizedBox.shrink()
+      : TextButton.icon(
+          onPressed: busy ? null : open,
+          icon: const Icon(Icons.restore, size: 18),
+          label: Text(
+            context
+                .sharedL10n
+                .release_core_prepared_image_recovery_recover_image_draft,
+          ),
+        );
 }

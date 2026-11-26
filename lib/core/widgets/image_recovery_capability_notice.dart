@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 /// and the composer says so instead of offering a control that cannot work.
 enum ImageRecoveryGap { restSse, recoveryV2 }
 
-/// One line above an empty composer; tap for the full explanation. On a
+/// One line above a composer holding an image; tap for the full explanation. On a
 /// phone with large text a full paragraph pushed the composer, its model
 /// chip and the hands-free controls off the usable area.
 class ImageRecoveryCapabilityNotice extends StatefulWidget {
