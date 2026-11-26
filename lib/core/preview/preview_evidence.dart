@@ -46,8 +46,12 @@ Future<void> stagePreviewEvidence({
   }
 }
 
-String annotationPrompt(String origin, List<PreviewPin> pins) => [
-  'Review these comments on the preview of $origin. The attached crops are numbered in the same order.',
+String annotationPrompt(
+  String origin,
+  List<PreviewPin> pins, {
+  required String Function(String origin) introduction,
+}) => [
+  introduction(origin),
   for (final p in pins)
     '#${p.number} · ${p.selector} · ${p.rect.left.round()},${p.rect.top.round()} (${p.rect.width.round()} × ${p.rect.height.round()}): ${p.note}',
 ].join('\n');

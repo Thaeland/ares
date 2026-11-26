@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/l10n.dart';
 import '../models/attachment_draft.dart';
 import '../services/attachment_draft_service.dart';
 import '../services/connection_mutation_barrier.dart';
 import '../services/preview_peer.dart';
 import '../services/remote_workspace.dart';
 import 'preview_evidence.dart';
+import 'preview_messages.dart';
 import 'reader_canvas.dart';
 import 'reader_document.dart';
 
@@ -152,7 +154,7 @@ class _ChatPreviewState extends State<ChatPreview> {
   WorkspaceTarget? _target;
   ReaderDocument? _document;
   Timer? _monitor;
-  String? _status;
+  Object? _status;
   int _index = -1, _pin = 0, _revision = 0;
   bool _busy = false, _annotate = false, _console = false;
   VoidCallback? _release;
@@ -172,7 +174,7 @@ class _ChatPreviewState extends State<ChatPreview> {
     if (_target?.isCurrent == false) {
       setState(() {
         _clear();
-        _status = 'Chat changed. Reconnect the preview to continue.';
+        _status = PreviewNotice.chatChanged;
       });
     }
   }
@@ -215,7 +217,7 @@ class _ChatPreviewState extends State<ChatPreview> {
     final rev = ++_revision;
     setState(() {
       _busy = true;
-      _status = 'Authenticating chat…';
+      _status = PreviewNotice.authenticating;
     });
     try {
       if (widget.route.storedSessionId == null) {
@@ -230,7 +232,7 @@ class _ChatPreviewState extends State<ChatPreview> {
       });
     } on WorkspaceException catch (e) {
       if (mounted && _revision == rev) {
-        setState(() => _status = 'Preview unavailable: ${e.reason.name}.');
+        setState(() => _status = e);
       }
     } finally {
       if (mounted && _revision == rev) setState(() => _busy = false);
@@ -248,14 +250,7 @@ class _ChatPreviewState extends State<ChatPreview> {
     if (!mounted || rev != _revision) return;
     _revokeStale();
     if (rev != _revision) return;
-    setState(
-      () => _status = switch (e) {
-        PreviewError() => e.message,
-        WorkspaceException() => 'Preview unavailable: ${e.reason.name}.',
-        AttachmentDraftException() => e.message,
-        _ => 'Preview operation failed.',
-      },
-    );
+    setState(() => _status = e);
   }
 
   Future<void> _open(
@@ -279,18 +274,18 @@ class _ChatPreviewState extends State<ChatPreview> {
         final ok = await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('Open this site?'),
+            title: Text(ctx.sharedL10n.release_preview_open_site_title),
             content: Text(
-              '${url.origin}\n\nReader mode loads only this document. It does not share cookies, sign-in details or the page with Hermes.',
+              ctx.sharedL10n.release_preview_open_site_body(url.origin),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel'),
+                child: Text(ctx.sharedL10n.cancel),
               ),
               FilledButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Open site'),
+                child: Text(ctx.sharedL10n.release_preview_open_site),
               ),
             ],
           ),
@@ -302,15 +297,15 @@ class _ChatPreviewState extends State<ChatPreview> {
         final ok = await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text('Discard unstaged pins?'),
+            title: Text(ctx.sharedL10n.release_preview_discard_pins_title),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Keep pins'),
+                child: Text(ctx.sharedL10n.release_preview_keep_pins),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Discard'),
+                child: Text(ctx.sharedL10n.ng_models_discard),
               ),
             ],
           ),
@@ -344,9 +339,7 @@ class _ChatPreviewState extends State<ChatPreview> {
         _pin = 0;
         _annotate = false;
         _status = null;
-        _log.add(
-          'HTTP 200 · ${url.origin} · ${next.blocks.length} reader elements',
-        );
+        _log.addRequest(url.origin, next.blocks.length);
       });
     } catch (e) {
       _fail(e, rev);
@@ -368,18 +361,18 @@ class _ChatPreviewState extends State<ChatPreview> {
       final accepted = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Share this page with this chat?'),
+          title: Text(ctx.sharedL10n.release_preview_share_page_title),
           content: Text(
-            'Hermes can read the displayed text and element list from ${doc.url.origin}, and scroll this pane. Navigation ends sharing. Forms and credentials are not shared.',
+            ctx.sharedL10n.release_preview_share_page_body(doc.url.origin),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel'),
+              child: Text(ctx.sharedL10n.cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Share page'),
+              child: Text(ctx.sharedL10n.release_preview_share_page),
             ),
           ],
         ),
@@ -467,7 +460,7 @@ class _ChatPreviewState extends State<ChatPreview> {
       final accept = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text('Comment #${_pin + 1}'),
+          title: Text(ctx.sharedL10n.release_preview_comment_number(_pin + 1)),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -476,7 +469,9 @@ class _ChatPreviewState extends State<ChatPreview> {
                 TextField(
                   autofocus: true,
                   maxLength: 500,
-                  decoration: const InputDecoration(labelText: 'Note'),
+                  decoration: InputDecoration(
+                    labelText: ctx.sharedL10n.release_preview_note,
+                  ),
                   onChanged: (v) => note = v,
                 ),
               ],
@@ -485,11 +480,11 @@ class _ChatPreviewState extends State<ChatPreview> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel'),
+              child: Text(ctx.sharedL10n.cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Keep pin'),
+              child: Text(ctx.sharedL10n.release_preview_keep_pin),
             ),
           ],
         ),
@@ -524,7 +519,7 @@ class _ChatPreviewState extends State<ChatPreview> {
       _check(rev);
       setState(() {
         if (pins.isNotEmpty) _pins.clear();
-        _status = 'Added to draft. Nothing sent.';
+        _status = PreviewNotice.addedToDraft;
       });
       widget.hide();
     } catch (e) {
@@ -536,6 +531,7 @@ class _ChatPreviewState extends State<ChatPreview> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.sharedL10n;
     final doc = _document;
     Widget tool(String label, IconData icon, VoidCallback? action) =>
         IconButton(tooltip: label, onPressed: action, icon: Icon(icon));
@@ -546,9 +542,17 @@ class _ChatPreviewState extends State<ChatPreview> {
           Row(
             children: [
               const SizedBox(width: 8),
-              const Expanded(child: Text('Browser preview')),
-              tool('Hide preview', Icons.visibility_off_outlined, widget.hide),
-              tool('Close and forget page', Icons.close, widget.close),
+              Expanded(child: Text(l10n.release_preview_title)),
+              tool(
+                l10n.release_preview_hide,
+                Icons.visibility_off_outlined,
+                widget.hide,
+              ),
+              tool(
+                l10n.release_preview_close_and_forget,
+                Icons.close,
+                widget.close,
+              ),
             ],
           ),
           Row(
@@ -562,12 +566,14 @@ class _ChatPreviewState extends State<ChatPreview> {
                   autocorrect: false,
                   enableSuggestions: false,
                   keyboardType: TextInputType.url,
-                  decoration: const InputDecoration(labelText: 'Site address'),
+                  decoration: InputDecoration(
+                    labelText: l10n.release_preview_site_address,
+                  ),
                   onSubmitted: (v) => _open(v, typed: true),
                 ),
               ),
               tool(
-                'Go to address',
+                l10n.release_preview_go_to_address,
                 Icons.arrow_forward,
                 _busy || _target == null
                     ? null
@@ -581,7 +587,7 @@ class _ChatPreviewState extends State<ChatPreview> {
               child: Row(
                 children: [
                   tool(
-                    'Back',
+                    MaterialLocalizations.of(context).backButtonTooltip,
                     Icons.arrow_back,
                     _busy || _index < 1
                         ? null
@@ -591,7 +597,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                           ),
                   ),
                   tool(
-                    'Forward',
+                    l10n.release_preview_forward,
                     Icons.arrow_forward,
                     _busy || _index + 1 >= _history.length
                         ? null
@@ -601,7 +607,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                           ),
                   ),
                   tool(
-                    'Reload',
+                    l10n.release_preview_reload,
                     Icons.refresh,
                     _busy
                         ? null
@@ -609,15 +615,15 @@ class _ChatPreviewState extends State<ChatPreview> {
                   ),
                   tool(
                     _release == null
-                        ? 'Share page with Hermes'
-                        : 'Stop sharing page',
+                        ? l10n.release_preview_share_with_hermes
+                        : l10n.release_preview_stop_sharing,
                     _release == null
                         ? Icons.visibility_outlined
                         : Icons.visibility,
                     _busy ? null : _share,
                   ),
                   tool(
-                    'Annotate element or region',
+                    l10n.release_preview_annotate,
                     _annotate ? Icons.edit : Icons.edit_outlined,
                     _busy
                         ? null
@@ -627,7 +633,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                           }),
                   ),
                   tool(
-                    'Reader console',
+                    l10n.release_preview_reader_console,
                     Icons.terminal,
                     _busy ? null : () => setState(() => _console = !_console),
                   ),
@@ -635,36 +641,36 @@ class _ChatPreviewState extends State<ChatPreview> {
               ),
             ),
           if (_busy) const LinearProgressIndicator(),
-          if (_status != null) Text(_status!),
+          if (_status != null) Text(previewNoticeText(l10n, _status!)),
           if (!_busy && _target == null)
             TextButton(
               onPressed: _bind,
-              child: const Text('Reconnect preview'),
+              child: Text(l10n.release_preview_reconnect),
             ),
           if (doc == null)
-            const Expanded(
+            Expanded(
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    'Reader mode: HTML and text. No scripts, embedded resources or signed-in browser profile.',
-                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: Text(l10n.release_preview_reader_mode_help),
                 ),
               ),
             )
           else ...[
             if (_release != null)
-              Text('Sharing reader with this chat: ${doc.url.origin}'),
+              Text(l10n.release_preview_sharing_origin(doc.url.origin)),
             if (_annotate && !_console)
-              const Text('Tap an element or drag a region to comment.'),
+              Text(l10n.release_preview_annotation_help),
             Expanded(
               child: _console
                   ? Column(
                       children: [
                         Text(
                           _log.selected.isEmpty
-                              ? 'Reader requests (JavaScript is off)'
-                              : '${_log.selected.length} selected · JavaScript is off',
+                              ? l10n.release_preview_reader_requests
+                              : l10n.release_preview_selected_requests(
+                                  _log.selected.length,
+                                ),
                         ),
                         Expanded(
                           child: ListView(
@@ -675,7 +681,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                                   selected: _log.selected.contains(line.id),
                                   onTap: () =>
                                       setState(() => _log.toggle(line.id)),
-                                  title: Text(line.text),
+                                  title: Text(_log.lineText(line, l10n)),
                                 ),
                             ],
                           ),
@@ -687,29 +693,35 @@ class _ChatPreviewState extends State<ChatPreview> {
                                   ? null
                                   : () => Clipboard.setData(
                                       ClipboardData(
-                                        text: _log.export().join('\n'),
+                                        text: _log
+                                            .export(l10n: l10n)
+                                            .join('\n'),
                                       ),
                                     ),
                               child: Text(
                                 _log.selected.isEmpty
-                                    ? 'Copy all'
-                                    : 'Copy selected',
+                                    ? l10n.release_preview_copy_all
+                                    : l10n.release_preview_copy_selected,
                               ),
                             ),
                             TextButton(
                               onPressed: _log.isEmpty
                                   ? null
                                   : () => setState(_log.clear),
-                              child: const Text('Clear'),
+                              child: Text(l10n.ng_clear),
                             ),
                             TextButton(
                               onPressed: _busy || _log.isEmpty
                                   ? null
                                   : () => _stage(
-                                      'Reader requests:\n${_log.export().join('\n')}',
+                                      l10n.release_preview_requests_draft(
+                                        _log.export(l10n: l10n).join('\n'),
+                                      ),
                                       const [],
                                     ),
-                              child: const Text('Add log to draft'),
+                              child: Text(
+                                l10n.release_preview_add_log_to_draft,
+                              ),
                             ),
                           ],
                         ),
@@ -723,7 +735,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                       onLink: (url) => _open(url.toString()),
                       onCrop: _addPin,
                       onError: () => _fail(
-                        const PreviewError('Could not capture these pixels.'),
+                        const PreviewError(PreviewFailure.capture),
                         _revision,
                       ),
                     ),
@@ -737,10 +749,17 @@ class _ChatPreviewState extends State<ChatPreview> {
                       onPressed: _busy
                           ? null
                           : () => _stage(
-                              annotationPrompt(doc.url.origin, _pins),
+                              annotationPrompt(
+                                doc.url.origin,
+                                _pins,
+                                introduction:
+                                    l10n.release_preview_annotation_intro,
+                              ),
                               List.of(_pins),
                             ),
-                      child: Text('Add ${_pins.length} to draft'),
+                      child: Text(
+                        l10n.release_preview_add_pins_to_draft(_pins.length),
+                      ),
                     ),
                     for (final p in _pins)
                       InputChip(
@@ -762,18 +781,28 @@ class _ChatPreviewState extends State<ChatPreview> {
   }
 }
 
-/// Reader-request log. Selection follows display order; an empty selection
-/// exports every retained line. Dropped lines leave the selection with them.
+/// A retained row with typed metadata for client-authored reader log copy.
+typedef PreviewConsoleLine = ({
+  int id,
+  String text,
+  ({String origin, int count})? request,
+});
+
 class PreviewConsoleLog {
-  final lines = <({int id, String text})>[];
+  final lines = <PreviewConsoleLine>[];
   final selected = <int>{};
   var _next = 0;
 
   bool get isEmpty => lines.isEmpty;
   int get length => lines.length;
 
-  void add(String text) {
-    lines.add((id: _next++, text: text));
+  void add(String text) => _add(text, null);
+
+  void addRequest(String origin, int count) =>
+      _add('HTTP 200 · $origin · $count', (origin: origin, count: count));
+
+  void _add(String text, ({String origin, int count})? request) {
+    lines.add((id: _next++, text: text, request: request));
     if (lines.length > 50) {
       selected.remove(lines.first.id);
       lines.removeAt(0);
@@ -789,12 +818,21 @@ class PreviewConsoleLog {
     selected.clear();
   }
 
-  List<String> export() {
+  String lineText(PreviewConsoleLine line, AppLocalizations l10n) {
+    final request = line.request;
+    return request == null
+        ? line.text
+        : l10n.release_preview_request_loaded(request.origin, request.count);
+  }
+
+  List<String> export({AppLocalizations? l10n}) {
+    String text(PreviewConsoleLine line) =>
+        l10n == null ? line.text : lineText(line, l10n);
     final picked = [
       for (final line in lines)
-        if (selected.contains(line.id)) line.text,
+        if (selected.contains(line.id)) text(line),
     ];
     if (picked.isNotEmpty) return picked;
-    return [for (final line in lines) line.text];
+    return [for (final line in lines) text(line)];
   }
 }

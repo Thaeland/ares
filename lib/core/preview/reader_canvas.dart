@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../l10n/l10n.dart';
 import 'preview_evidence.dart';
 import 'reader_document.dart';
 
@@ -212,7 +213,10 @@ class _ReaderCanvasState extends State<ReaderCanvas> {
                   _end = null;
                 });
                 if (a != null && b != null) {
-                  _capture(Rect.fromPoints(a, b), 'reader region');
+                  _capture(
+                    Rect.fromPoints(a, b),
+                    context.sharedL10n.release_preview_reader_region,
+                  );
                 }
               },
             ),

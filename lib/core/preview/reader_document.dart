@@ -33,17 +33,43 @@ class PreviewPolicy {
             _loopback.contains(_gateway.host) &&
             u.port == _gateway.port) ||
         (requiredOrigin != null && u.origin != requiredOrigin)) {
-      throw const PreviewError(
-        'This address is outside the approved preview origin.',
-      );
+      throw const PreviewError(PreviewFailure.address);
     }
     return u;
   }
 }
 
+enum PreviewFailure {
+  address,
+  pageLimit,
+  unreadable,
+  complex,
+  http,
+  contentType,
+  secureLoad,
+  capture,
+}
+
 class PreviewError implements Exception {
-  const PreviewError(this.message);
-  final String message;
+  const PreviewError(this.reason, {this.statusCode});
+  final PreviewFailure reason;
+  final int? statusCode;
+
+  /// Diagnostic compatibility for parser clients. Never render this English
+  /// value: the preview maps [reason] through the current locale at build time.
+  String get message => switch (reason) {
+    PreviewFailure.address =>
+      'This address is outside the approved preview origin.',
+    PreviewFailure.pageLimit => 'Page exceeds the reader limit.',
+    PreviewFailure.unreadable => 'The page could not be read.',
+    PreviewFailure.complex => 'This page is too complex for reader mode.',
+    PreviewFailure.http =>
+      'HTTP $statusCode. No redirect or sign-in was followed.',
+    PreviewFailure.contentType =>
+      'Only HTML and plain text can open in reader mode.',
+    PreviewFailure.secureLoad => 'The site could not be loaded securely.',
+    PreviewFailure.capture => 'Could not capture these pixels.',
+  };
 }
 
 class PreviewBlock {
@@ -115,7 +141,7 @@ class ReaderDocument {
     Duration timeout = const Duration(seconds: 6),
   }) async {
     if (source.length > limit) {
-      throw const PreviewError('Page exceeds the reader limit.');
+      throw const PreviewError(PreviewFailure.pageLimit);
     }
     final replies = ReceivePort();
     Isolate? worker;
@@ -129,9 +155,9 @@ class ReaderDocument {
       final reply = await replies.first.timeout(timeout);
       if (reply is ReaderDocument) return reply;
       if (reply is PreviewError) throw reply;
-      throw const PreviewError('The page could not be read.');
+      throw const PreviewError(PreviewFailure.unreadable);
     } on TimeoutException {
-      throw const PreviewError('This page is too complex for reader mode.');
+      throw const PreviewError(PreviewFailure.complex);
     } finally {
       worker?.kill(priority: Isolate.immediate);
       replies.close();
@@ -147,7 +173,7 @@ class ReaderDocument {
     } on PreviewError catch (error) {
       port.send(error);
     } catch (_) {
-      port.send(const PreviewError('The page could not be read.'));
+      port.send(const PreviewError(PreviewFailure.unreadable));
     }
   }
 
@@ -159,7 +185,7 @@ class ReaderDocument {
     int limit = 256 * 1024,
   }) {
     if (source.length > limit) {
-      throw const PreviewError('Page exceeds the reader limit.');
+      throw const PreviewError(PreviewFailure.pageLimit);
     }
     final doc = html.parse(source);
     final blocks = <PreviewBlock>[];
@@ -272,20 +298,19 @@ class ReaderLoad {
       check();
       if (response.statusCode != 200) {
         throw PreviewError(
-          'HTTP ${response.statusCode}. No redirect or sign-in was followed.',
+          PreviewFailure.http,
+          statusCode: response.statusCode,
         );
       }
       final mime = response.headers.contentType?.mimeType;
       if (mime != 'text/html' && mime != 'text/plain') {
-        throw const PreviewError(
-          'Only HTML and plain text can open in reader mode.',
-        );
+        throw const PreviewError(PreviewFailure.contentType);
       }
       final bytes = BytesBuilder(copy: false);
       await for (final chunk in response) {
         check();
         if (bytes.length + chunk.length > 256 * 1024) {
-          throw const PreviewError('Page exceeds the reader limit.');
+          throw const PreviewError(PreviewFailure.pageLimit);
         }
         bytes.add(chunk);
       }
@@ -307,7 +332,7 @@ class ReaderLoad {
       rethrow;
     } catch (_) {
       check();
-      throw const PreviewError('The site could not be loaded securely.');
+      throw const PreviewError(PreviewFailure.secureLoad);
     } finally {
       deadline.cancel();
       client.close(force: true);
