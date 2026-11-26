@@ -331,23 +331,25 @@ void main() {
       expect(gateway.writes, isEmpty);
     });
 
-    test(
-      'a raw send (NextGen gateway.call) is redirected the same way',
-      () async {
-        final gateway = FakeAuthorityGateway();
-        final client = await gateway.connect();
-        final reply = await client.send('prompt.submit', {
-          'session_id': gateway.sessionId,
-          'text': 'Edited probe',
-          'submission_id': 'sub-1',
-          ..._probeEditParams,
-        });
-        expect(reply['error'], isNull);
-        expect((reply['result'] as Map)['status'], 'started');
-        expect(gateway.writes, ['session.mutate', 'prompt.submit']);
-        expect(gateway.refusals, isEmpty);
-      },
-    );
+    test('a raw send (NextGen gateway.call) is redirected the same way, with '
+        'fences learned from its own raw session.resume', () async {
+      final gateway = FakeAuthorityGateway();
+      final client = await gateway.connect(attach: false);
+      final resumed = await client.send('session.resume', {
+        'session_id': gateway.sessionId,
+      });
+      expect(resumed['error'], isNull);
+      final reply = await client.send('prompt.submit', {
+        'session_id': gateway.sessionId,
+        'text': 'Edited probe',
+        'submission_id': 'sub-1',
+        ..._probeEditParams,
+      });
+      expect(reply['error'], isNull);
+      expect((reply['result'] as Map)['status'], 'started');
+      expect(gateway.writes, ['session.mutate', 'prompt.submit']);
+      expect(gateway.refusals, isEmpty);
+    });
   });
 
   group('legacy sidecar socket', () {

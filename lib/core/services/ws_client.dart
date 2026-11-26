@@ -1093,7 +1093,19 @@ class WsClient {
   /// and a fence refusal names the owner's current revision and generation
   /// (Desktop's `CanonicalDesktopProtocol.result` / `failure`).
   void _noteSessionFences(_Pending pending, Map<String, dynamic> reply) {
-    _sessionRevisions.noteResult(pending.method, reply['result']);
+    final result = reply['result'];
+    _sessionRevisions.noteResult(pending.method, result);
+    if (result is Map) {
+      // A snapshot or receipt names its session and the execution it
+      // belongs to; an admission receipt names the session in `ref`. A
+      // caller that sends these verbs raw (NextGen) learns them here.
+      final ref = result['ref'];
+      final sessionId =
+          result['session_id'] ?? (ref is Map ? ref['session_id'] : null);
+      if (sessionId is String) {
+        _noteExecutionGeneration(sessionId, result['execution_generation']);
+      }
+    }
     final error = reply['error'];
     final data = error is Map ? error['data'] : null;
     if (data is! Map || !isFenceRefusal(data)) return;
@@ -1596,6 +1608,9 @@ class WsClient {
                 'queued',
                 'steered',
                 'interrupted',
+                // The canonical admission receipt: the turn was admitted
+                // and its execution started (`AdmissionStatus.status`).
+                'started',
               }.contains(result['status']))) {
         try {
           onAccepted?.call();
