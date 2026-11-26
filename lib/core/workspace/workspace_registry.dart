@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import '../l10n/l10n.dart';
+import '../l10n/service_strings.dart';
 import 'package:flutter/services.dart';
 
 import '../models/connection.dart';
@@ -43,13 +46,22 @@ sealed class WorkspaceContribution {
   });
   final String id;
   final String label;
+  String localizedLabel(AppLocalizations l10n) => switch (id) {
+    'chat.terminals' => l10n.release_core_workspace_label_terminals,
+    'chat.details' => l10n.release_core_workspace_registry_chat_details,
+    'chat.copy-id' => l10n.release_core_workspace_label_copy_id,
+    'extensions.contributions' =>
+      l10n.release_core_workspace_label_contributions,
+    _ => label,
+  };
   final IconData icon;
   final bool requiresSession;
   final WorkspaceAvailability? unavailable;
-  String? reason(WorkspaceTarget target) => !target.current()
-      ? 'This workspace owner is no longer active.'
+  String? reason(WorkspaceTarget target, [AppLocalizations? strings]) =>
+      !target.current()
+      ? (strings ?? serviceStrings).release_core_workspace_owner_inactive
       : requiresSession && target.session == null
-      ? 'Select a chat first.'
+      ? (strings ?? serviceStrings).release_core_workspace_select_chat
       : unavailable?.call(target);
 }
 
@@ -101,11 +113,14 @@ class WorkspaceRegistry {
 }
 
 Future<void> _copySession(BuildContext context, WorkspaceTarget target) async {
+  final l10n = context.sharedL10n;
   await Clipboard.setData(ClipboardData(text: target.session!.id));
   if (context.mounted && target.current()) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Session ID copied.')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n.release_core_workspace_registry_session_id_copied),
+      ),
+    );
   }
 }
 
@@ -114,15 +129,23 @@ Widget _sessionDetails(BuildContext context, WorkspaceTarget target) {
   return ListView(
     padding: const EdgeInsets.all(16),
     children: [
-      Text('Chat details', style: Theme.of(context).textTheme.titleLarge),
+      Text(
+        context.sharedL10n.release_core_workspace_registry_chat_details,
+        style: Theme.of(context).textTheme.titleLarge,
+      ),
       for (final field in [
-        ('Connection', target.connection.label),
-        ('Profile', target.connection.gatewayProfile ?? 'Server default'),
-        ('Session ID', row.id),
-        ('Title', row.title),
-        ('Model', row.model),
-        ('Source', row.source),
-        if (row.hasKnownMessageCount) ('Messages', '${row.messageCount}'),
+        (context.sharedL10n.connection_section, target.connection.label),
+        (
+          context.sharedL10n.profile,
+          target.connection.gatewayProfile ??
+              context.sharedL10n.release_core_workspace_registry_server_default,
+        ),
+        (context.sharedL10n.release_core_workspace_registry_session_id, row.id),
+        (context.sharedL10n.release_core_workspace_registry_title, row.title),
+        (context.sharedL10n.model, row.model),
+        (context.sharedL10n.markdown_source, row.source),
+        if (row.hasKnownMessageCount)
+          (context.sharedL10n.history_messages, '${row.messageCount}'),
       ])
         if (field.$2.isNotEmpty)
           ListTile(title: Text(field.$1), subtitle: SelectableText(field.$2)),

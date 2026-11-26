@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+
 /// Always use the workspace navigator: an account change removes both the
 /// owner and any unfinished choice, even if IDs are reused by the new owner.
 Future<T?> pickWorkspaceItem<T>(
@@ -26,12 +28,22 @@ Future<T?> pickWorkspaceItem<T>(
             child: Column(
               children: [
                 TextField(
-                  decoration: const InputDecoration(labelText: 'Filter'),
+                  decoration: InputDecoration(
+                    labelText: context
+                        .sharedL10n
+                        .release_core_memory_graph_screen_filter,
+                  ),
                   onChanged: (s) => setState(() => query = s.toLowerCase()),
                 ),
                 Expanded(
                   child: matches.isEmpty
-                      ? const Center(child: Text('No matching items.'))
+                      ? Center(
+                          child: Text(
+                            context
+                                .sharedL10n
+                                .release_core_workspace_picker_no_matching_items,
+                          ),
+                        )
                       : ListView.builder(
                           itemCount: matches.length,
                           itemBuilder: (context, i) {
@@ -52,7 +64,7 @@ Future<T?> pickWorkspaceItem<T>(
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(context.sharedL10n.cancel),
             ),
           ],
         );
@@ -68,11 +80,16 @@ Future<String?> nameWorkspaceLayout(BuildContext context) {
     useRootNavigator: false,
     builder: (context) => StatefulBuilder(
       builder: (context, setState) => AlertDialog(
-        title: const Text('Save layout'),
+        title: Text(
+          context.sharedL10n.release_core_workspace_picker_save_layout,
+        ),
         content: TextField(
           autofocus: true,
           maxLength: 64,
-          decoration: const InputDecoration(labelText: 'Layout name'),
+          decoration: InputDecoration(
+            labelText:
+                context.sharedL10n.release_core_workspace_picker_layout_name,
+          ),
           onChanged: (s) => setState(() => name = s.trim()),
           onSubmitted: (_) {
             if (name.isNotEmpty) Navigator.pop(context, name);
@@ -81,11 +98,11 @@ Future<String?> nameWorkspaceLayout(BuildContext context) {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(context.sharedL10n.cancel),
           ),
           FilledButton(
             onPressed: name.isEmpty ? null : () => Navigator.pop(context, name),
-            child: const Text('Save'),
+            child: Text(context.sharedL10n.save),
           ),
         ],
       ),
