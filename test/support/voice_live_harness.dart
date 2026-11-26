@@ -51,8 +51,12 @@ class HarnessConversation implements LiveConversation {
   @override
   Future<bool> start({List<Map<String, dynamic>>? history}) async {
     starts++;
+    final closesBefore = forcedCloses.length + gracefulCloses;
     await startGate;
-    if (disposed || forcedCloses.isNotEmpty) return false;
+    // Torn down while the prompt was up: this start is cancelled.
+    if (disposed || forcedCloses.length + gracefulCloses != closesBefore) {
+      return false;
+    }
     _active = true;
     return true;
   }
@@ -197,6 +201,9 @@ class ClassicLiveFixture {
 
   final HarnessConversation conversation;
   final transport = HarnessLiveTransport();
+
+  /// The chained dictation microphone; untouched while GPT-Live is the mode.
+  final dictation = FakeVoiceComposerAdapter();
   late final mode = VoiceLiveModeController(
     connectionId: harnessClassicConnection.id,
     transport: transport,
@@ -233,7 +240,7 @@ class ClassicLiveFixture {
         apiKey: 'synthetic-key',
         httpClient: _NotFoundHttp(),
       ),
-      testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
+      testVoiceComposerAdapter: dictation,
       testVoiceReplySpeaker: HarnessReplySpeaker(),
       testVoiceLiveMode: mode,
       testVoiceLiveEngineFactory: engineFactory,

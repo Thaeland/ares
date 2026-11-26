@@ -478,6 +478,17 @@ class _NgChatViewState extends State<NgChatView>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // ModalRoute makes this depend on visibility. As Classic's _revokeVoice:
+    // once another route covers the chat (a pushed page, a sheet, a dialog,
+    // a menu), it may not keep a live microphone behind it.
+    if (ModalRoute.isCurrentOf(context) == false) {
+      _teardownLiveVoice('routeChanged');
+    }
+  }
+
+  @override
   void didUpdateWidget(covariant NgChatView old) {
     super.didUpdateWidget(old);
     if (old.chat != chat) {

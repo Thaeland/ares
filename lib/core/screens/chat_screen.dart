@@ -3237,6 +3237,13 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   void _revokeVoice(HandsFreeStopReason reason) {
+    // GPT-Live follows hands-free: a chat that is offstage (active: false),
+    // covered by another route, switched or leaving the tree may not keep a
+    // live microphone. The app lifecycle is handled where it arrives,
+    // because `inactive` alone (the OS microphone prompt) is no background.
+    if (reason != HandsFreeStopReason.background) {
+      _teardownLiveVoice(reason.name);
+    }
     if (!_voiceRouteCurrent ||
         !_voiceForeground ||
         !_voiceAccountCurrent() ||

@@ -180,4 +180,136 @@ void main() {
       await unmountLive(tester);
     });
   });
+
+  group('hidden and covered chats', () {
+    Future<void> cover(
+      WidgetTester tester,
+      GlobalKey<NavigatorState> navigator,
+    ) async {
+      unawaited(
+        navigator.currentState!.push(
+          MaterialPageRoute<void>(
+            builder: (_) => const Scaffold(body: Text('another page')),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    }
+
+    testWidgets('Classic: a pane that goes offstage (active: false) ends the '
+        'live session (review probe U1)', (tester) async {
+      final fixture = ClassicLiveFixture();
+      await tester.pumpWidget(fixture.app());
+      await settleLive(tester);
+      await startLiveFromComposer(tester);
+      expect(fixture.conversation.active, isTrue);
+
+      await tester.pumpWidget(fixture.app(active: false));
+      await settleLive(tester);
+
+      expect(fixture.conversation.active, isFalse);
+      expect(fixture.conversation.ended, isTrue);
+
+      // Back onstage: nothing restarts by itself, Start is offered again.
+      await tester.pumpWidget(fixture.app());
+      await settleLive(tester);
+      expect(fixture.conversation.starts, 1);
+      expect(fixture.conversation.active, isFalse);
+      await startLiveFromComposer(tester);
+      expect(fixture.conversation.starts, 2);
+      expect(fixture.conversation.active, isTrue);
+      await unmountLive(tester);
+    });
+
+    testWidgets('Classic: another route over the chat ends the live session '
+        '(review probe U2)', (tester) async {
+      final fixture = ClassicLiveFixture();
+      final navigator = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(fixture.app(navigatorKey: navigator));
+      await settleLive(tester);
+      await startLiveFromComposer(tester);
+      expect(fixture.conversation.active, isTrue);
+
+      await cover(tester, navigator);
+
+      expect(fixture.conversation.active, isFalse);
+      expect(fixture.conversation.ended, isTrue);
+
+      navigator.currentState!.pop();
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+      expect(fixture.conversation.starts, 1);
+      expect(fixture.conversation.active, isFalse);
+      expect(find.byKey(const ValueKey('voice-live-start')), findsOneWidget);
+      await unmountLive(tester);
+    });
+
+    testWidgets('Classic: a start still waiting on the microphone when the '
+        'chat is covered is cancelled, with no fallback to dictation', (
+      tester,
+    ) async {
+      final fixture = ClassicLiveFixture();
+      final navigator = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(fixture.app(navigatorKey: navigator));
+      await settleLive(tester);
+      final prompt = Completer<void>();
+      fixture.conversation.startGate = prompt.future;
+      await startLiveFromComposer(tester);
+      expect(fixture.conversation.starts, 1);
+
+      await cover(tester, navigator);
+      prompt.complete();
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+
+      expect(fixture.conversation.active, isFalse);
+      expect(fixture.dictation.listenCount, 0);
+      expect(find.byType(SnackBar), findsNothing);
+      navigator.currentState!.pop();
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+      await unmountLive(tester);
+    });
+
+    testWidgets('NextGen: another route over the chat ends the live session '
+        '(review probe U3)', (tester) async {
+      final fixture = NextGenLiveFixture();
+      final navigator = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(await fixture.app(navigatorKey: navigator));
+      await settleLive(tester);
+      await startLiveFromComposer(tester);
+      expect(fixture.conversation.active, isTrue);
+
+      await cover(tester, navigator);
+
+      expect(fixture.conversation.active, isFalse);
+      expect(fixture.conversation.ended, isTrue);
+
+      navigator.currentState!.pop();
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+      expect(fixture.conversation.starts, 1);
+      expect(fixture.conversation.active, isFalse);
+      expect(find.byKey(const ValueKey('voice-live-start')), findsOneWidget);
+      await unmountLive(tester);
+    });
+
+    testWidgets('NextGen: a start still waiting on the microphone when the '
+        'chat is covered is cancelled', (tester) async {
+      final fixture = NextGenLiveFixture();
+      final navigator = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(await fixture.app(navigatorKey: navigator));
+      await settleLive(tester);
+      final prompt = Completer<void>();
+      fixture.conversation.startGate = prompt.future;
+      await startLiveFromComposer(tester);
+      expect(fixture.conversation.starts, 1);
+
+      await cover(tester, navigator);
+      prompt.complete();
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+
+      expect(fixture.conversation.active, isFalse);
+      expect(fixture.conversation.ended, isTrue);
+      navigator.currentState!.pop();
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+      await unmountLive(tester);
+    });
+  });
 }
