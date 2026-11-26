@@ -2612,6 +2612,8 @@ class NgChatController extends ChangeNotifier {
     String? display,
     bool hidden = false,
     WorkspaceTarget? fleetTarget,
+    String? surface,
+    String? voiceContext,
   }) async {
     final trimmed = text.trim();
     // A fleet send is text only, on the exact bound route and runtime.
@@ -2751,6 +2753,8 @@ class NgChatController extends ChangeNotifier {
                 'session_id': runtimeId,
                 'text': prompt,
                 if (explicitImages.isNotEmpty) 'attachments': explicitImages,
+                if (surface?.isNotEmpty ?? false) 'surface': surface,
+                if (voiceContext?.isNotEmpty ?? false) 'voice_context': voiceContext,
               },
               submissionId: wireSubmissionId,
               attempt: attempt,

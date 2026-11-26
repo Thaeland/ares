@@ -35,6 +35,8 @@ typedef NormalGatewayPromptSubmit =
       required String text,
       required StreamCallback onEvent,
       required void Function() onSent,
+      String? surface,
+      String? voiceContext,
     });
 typedef NormalGatewayResume =
     Future<ResumedGatewaySession> Function({
@@ -1695,6 +1697,8 @@ class NormalGatewayChatOwner {
     bool Function()? maySubmit,
     Future<bool> Function()? beforeSend,
     void Function()? onAccepted,
+    String? surface,
+    String? voiceContext,
   }) async {
     if (_redirect != null) {
       return _root.submitPrepared(
@@ -1710,6 +1714,8 @@ class NormalGatewayChatOwner {
         maySubmit: maySubmit,
         beforeSend: beforeSend,
         onAccepted: onAccepted,
+        surface: surface,
+        voiceContext: voiceContext,
       );
     }
     if (!identical(_reservation, reservation) ||
@@ -1838,6 +1844,8 @@ class NormalGatewayChatOwner {
                   required String text,
                   required StreamCallback onEvent,
                   required void Function() onSent,
+                  String? surface,
+                  String? voiceContext,
                 }) => _session.client!.submitPrompt(
                   sessionId: sessionId,
                   submissionId: imageAttempt?.id,
@@ -1850,6 +1858,8 @@ class NormalGatewayChatOwner {
                     if (_current(generation)) onAccepted?.call();
                   },
                   beforeSend: beforeSend,
+                  surface: surface,
+                  voiceContext: voiceContext,
                   maySend: () =>
                       _current(generation) &&
                       (imageAttempt == null ||
@@ -1874,6 +1884,8 @@ class NormalGatewayChatOwner {
             : (event) {
                 if (_current(generation)) _event(event);
               },
+        surface: surface,
+        voiceContext: voiceContext,
         onSent: () {
           if (!_current(generation) || !snapshot.hasActiveTurn) return;
           wireEmitted = true;

@@ -232,11 +232,32 @@ class GptLiveGatewayTransport implements GptLiveTransport {
   void dispose() => _dashboard.close();
 }
 
+/// Minimal interface over the live conversation so callers can inject fakes in
+/// tests without a real WebRTC peer.
+abstract class LiveConversation {
+  bool get active;
+  String? get sessionId;
+  String? get delegationId;
+
+  Future<bool> start({List<Map<String, dynamic>>? history});
+  void speak(String text, {String? delegationId});
+  void think(String text, {String? delegationId});
+  void instruct(String text);
+  void setMuted(bool muted);
+  Future<void> close();
+  Future<void> forceClose(String reason, [int? usageSeconds]);
+  void dispose();
+
+  set onDelegation(void Function(String id, Map<String, String> prompt)? callback);
+  set onError(void Function(String message, bool fatal)? callback);
+  set onClosed(void Function(String reason, int? usageSeconds)? callback);
+}
+
 /// Full-duplex GPT-Live conversation. Owns the WebRTC media session and the
 /// `oai-events` data channel; a delegation is handed to the caller as a prompt
 /// plus spoken context, and the caller streams Hermes' answer back with
 /// [speak]. The vendor key stays on the gateway host.
-class GptLiveConversation extends ChangeNotifier {
+class GptLiveConversation extends ChangeNotifier implements LiveConversation {
   GptLiveConversation({
     required this.transport,
     this.onDelegation,
@@ -244,14 +265,23 @@ class GptLiveConversation extends ChangeNotifier {
     this.onError,
     this.onClosed,
     this.peerConnectionFactory,
+    this.microphoneFactory,
   });
 
   final GptLiveTransport transport;
-  final void Function(String id, Map<String, String> prompt)? onDelegation;
-  final void Function(LiveFragment fragment)? onTranscript;
-  final void Function(String message, bool fatal)? onError;
-  final void Function(String reason, int? usageSeconds)? onClosed;
   final Future<RTCPeerConnection> Function()? peerConnectionFactory;
+  final Future<MediaStream> Function()? microphoneFactory;
+
+  /// LiveConversation-facing callbacks (plain fields; auto-getters/setters).
+  void Function(String id, Map<String, String> prompt)? onDelegation;
+  void Function(String message, bool fatal)? onError;
+  void Function(String reason, int? usageSeconds)? onClosed;
+
+  /// Deltas, user or assistant.
+  void Function(LiveFragment fragment)? onTranscript;
+
+  /// Fires when the vendor pauses the audio stream without closing.
+  void Function()? onGap;
 
   RTCPeerConnection? _peer;
   RTCDataChannel? _events;
@@ -263,8 +293,12 @@ class GptLiveConversation extends ChangeNotifier {
   String? _sessionId;
   bool _closed = false;
 
+  @override
   bool get active => _active;
+  @override
   String? get sessionId => _sessionId;
+  @override
+  String? get delegationId => _delegationId;
   List<LiveFragment> get transcript => List.unmodifiable(_transcript);
 
   Future<GptLiveStatus?> refreshStatus() async {
@@ -273,6 +307,7 @@ class GptLiveConversation extends ChangeNotifier {
     return status;
   }
 
+  @override
   Future<bool> start({
     List<Map<String, dynamic>>? history,
     Duration iceTimeout = const Duration(seconds: 10),
@@ -283,14 +318,7 @@ class GptLiveConversation extends ChangeNotifier {
     try {
       final peer = await (peerConnectionFactory ?? _createPeer)();
       _peer = peer;
-      final microphone = await RTCFactoryNative.instance.navigator.mediaDevices
-          .getUserMedia({
-            'audio': {
-              'autoGainControl': true,
-              'echoCancellation': true,
-              'noiseSuppression': true,
-            },
-          });
+      final microphone = await (microphoneFactory ?? _defaultGetUserMedia)();
       _microphone = microphone;
       for (final track in microphone.getAudioTracks()) {
         peer.addTrack(track, microphone);
@@ -329,6 +357,15 @@ class GptLiveConversation extends ChangeNotifier {
 
   Future<RTCPeerConnection> _createPeer() =>
       createPeerConnection(<String, dynamic>{}, <String, dynamic>{});
+
+  Future<MediaStream> _defaultGetUserMedia() =>
+      RTCFactoryNative.instance.navigator.mediaDevices.getUserMedia({
+        'audio': {
+          'autoGainControl': true,
+          'echoCancellation': true,
+          'noiseSuppression': true,
+        },
+      });
 
   Future<void> _waitForIce(RTCPeerConnection peer, Duration timeout) async {
     final deadline = DateTime.now().add(timeout);
@@ -395,6 +432,10 @@ class GptLiveConversation extends ChangeNotifier {
               : 'GPT-Live error';
           onError?.call(message, false);
         }
+      case 'gap':
+        // Vendor pauses the stream without closing the session. Surface it so
+        // the caller can keep the conversation alive.
+        onGap?.call();
       case 'session.closed':
         final usage = event['usage'];
         forceClose(
@@ -417,6 +458,7 @@ class GptLiveConversation extends ChangeNotifier {
     }
   }
 
+  @override
   /// Streams an Hermes answer back to the voice model for paraphrasing.
   void speak(String text, {String? delegationId}) {
     final id = delegationId ?? _delegationId;
@@ -430,6 +472,7 @@ class GptLiveConversation extends ChangeNotifier {
     }
   }
 
+  @override
   void think(String text, {String? delegationId}) {
     final clean = text.replaceAll(RegExp(r'\s+'), ' ').trim();
     if (clean.isEmpty) return;
@@ -441,6 +484,19 @@ class GptLiveConversation extends ChangeNotifier {
     });
   }
 
+  @override
+  /// Instruction back to the model (e.g. "finish and respond now").
+  void instruct(String text) {
+    final clean = text.replaceAll(RegExp(r'\s+'), ' ').trim();
+    if (clean.isEmpty) return;
+    _send({
+      'type': 'session.instruct',
+      'text': clean,
+      'event_id': _nextEventId('instruct'),
+    });
+  }
+
+  @override
   void setMuted(bool muted) {
     for (final track in _microphone?.getAudioTracks() ?? const []) {
       track.enabled = !muted;
@@ -451,6 +507,7 @@ class GptLiveConversation extends ChangeNotifier {
     });
   }
 
+  @override
   Future<void> close() async {
     if (_closed) return;
     if (!_send({'type': 'session.close'})) {
@@ -458,6 +515,7 @@ class GptLiveConversation extends ChangeNotifier {
     }
   }
 
+  @override
   Future<void> forceClose(String reason, [int? usageSeconds]) async {
     if (_closed) return;
     _closed = true;
