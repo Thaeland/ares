@@ -7269,5 +7269,15 @@
         "type": "String"
       }
     }
-  }
+  },
+  "fleet_managed_ssh_title": "SSH gerenciado pelo gateway",
+  "fleet_managed_ssh_intro": "Gerencie os hosts SSH já salvos neste gateway a partir de qualquer dispositivo. O Hermes já deve estar instalado no host remoto. Esta operação inicia um serviço remoto pertencente ao gateway ou se conecta a esse serviço, não estabelece uma conexão de chat do Ares. Atualizações gerenciadas e recuperação estão disponíveis apenas no aplicativo nativo para desktop.",
+  "fleet_managed_ssh_read": "Ler hosts SSH salvos",
+  "fleet_managed_ssh_trust": "Nesta primeira conexão, o gateway confiará na chave SSH deste host e a memorizará. Qualquer alteração posterior da chave será sinalizada e bloqueada. O gateway não informa a impressão digital da chave, então o Ares não pode exibi-la nem armazená-la. Continue apenas se confiar nesta primeira conexão.",
+  "fleet_managed_ssh_changed": "A chave SSH deste host mudou. Conexão bloqueada. Alguém com acesso ao host do gateway deve verificar de forma independente a impressão digital da nova chave e remover a antiga chave confiável nesse host. Tente novamente apenas após essa verificação e correção. O Ares não substitui a chave confiável.",
+  "fleet_managed_ssh_disconnect_warning": "Desconectar o túnel SSH e parar o serviço remoto pertencente a este gateway? Isso pode interromper outros clientes que usam esse serviço.",
+  "fleet_managed_ssh_verify": "Verificar a chave pessoalmente em vez disso",
+  "fleet_managed_ssh_pending": "Aguardando o gateway: {seconds} s. Sair desta página não cancela a inicialização. Se a solicitação falhar, verifique o status antes de tentar novamente.",
+  "fleet_managed_ssh_status": "Host: {host}\nPorta de loopback do gateway: {localPort}\nPorta de loopback remota: {remotePort}\nHermes: {version}\nReutilizado: {reused}",
+  "fleet_managed_ssh_disconnect": "Desconectar"
 }

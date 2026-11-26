@@ -7269,5 +7269,15 @@
         "type": "String"
       }
     }
-  }
+  },
+  "fleet_managed_ssh_title": "SSH gerido pelo gateway",
+  "fleet_managed_ssh_intro": "Gira os anfitriões SSH já guardados neste gateway a partir de qualquer dispositivo. O Hermes tem de estar instalado no anfitrião remoto. Esta operação inicia um serviço remoto pertencente ao gateway ou liga-se a esse serviço, não estabelece uma ligação de conversa do Ares. As atualizações geridas e a recuperação só estão disponíveis na aplicação nativa de computador.",
+  "fleet_managed_ssh_read": "Ler anfitriões SSH guardados",
+  "fleet_managed_ssh_trust": "Nesta primeira ligação, o gateway irá confiar na chave SSH deste anfitrião e memorizá-la. Uma alteração posterior da chave será assinalada e bloqueada. O gateway não comunica a impressão digital da chave, pelo que o Ares não a pode apresentar nem guardar. Continue apenas se confiar nesta primeira ligação.",
+  "fleet_managed_ssh_changed": "A chave SSH deste anfitrião foi alterada. Ligação bloqueada. Alguém com acesso ao anfitrião do gateway tem de verificar de forma independente a impressão digital da nova chave e remover aí a antiga chave de confiança. Tente novamente apenas após essa verificação e reparação. O Ares não substitui a chave de confiança.",
+  "fleet_managed_ssh_disconnect_warning": "Desligar o túnel SSH e parar o serviço remoto pertencente a este gateway? Isto pode interromper outros clientes que utilizem esse serviço.",
+  "fleet_managed_ssh_verify": "Verificar a chave pessoalmente em alternativa",
+  "fleet_managed_ssh_pending": "A aguardar o gateway: {seconds} s. Sair desta página não cancela a inicialização. Se o pedido falhar, verifique o estado antes de tentar novamente.",
+  "fleet_managed_ssh_status": "Anfitrião: {host}\nPorta de loopback do gateway: {localPort}\nPorta de loopback remota: {remotePort}\nHermes: {version}\nReutilizado: {reused}",
+  "fleet_managed_ssh_disconnect": "Desligar"
 }

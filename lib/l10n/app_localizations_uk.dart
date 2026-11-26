@@ -15667,4 +15667,48 @@ class AppLocalizationsUk extends AppLocalizations {
   String ng_rel_chat_tool_detail(String name, String detail) {
     return '$name · $detail';
   }
+
+  @override
+  String get fleet_managed_ssh_title => 'SSH під керуванням шлюзу';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      'Керуйте SSH-хостами, уже збереженими на цьому шлюзі, з будь-якого пристрою. На віддаленому хості вже має бути встановлено Hermes. Ця операція запускає віддалений сервіс, що належить шлюзу, або під’єднується до нього, а не створює з’єднання з чатом Ares. Керовані оновлення та відновлення доступні лише в нативному настільному застосунку.';
+
+  @override
+  String get fleet_managed_ssh_read => 'Прочитати збережені SSH-хости';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      'Під час цього першого з’єднання шлюз довірятиме SSH-ключу цього хоста та запам’ятає його. Подальшу зміну ключа буде виявлено, а з’єднання заблоковано. Шлюз не повідомляє відбиток ключа, тому Ares не може його показати чи зберегти. Продовжуйте, лише якщо довіряєте цьому першому з’єднанню.';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      'SSH-ключ цього хоста змінився. З’єднання заблоковано. Людина з доступом до хоста шлюзу має незалежно перевірити відбиток нового ключа та видалити там старий довірений ключ. Повторюйте спробу лише після цієї перевірки та виправлення. Ares не замінює довірений ключ.';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      'Від’єднати SSH-тунель і зупинити віддалений сервіс, що належить цьому шлюзу? Це може перервати роботу інших клієнтів, які використовують цей сервіс.';
+
+  @override
+  String get fleet_managed_ssh_verify => 'Натомість перевірити ключ самостійно';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return 'Очікування шлюзу: $seconds с. Вихід із цієї сторінки не скасовує початкове налаштування. Якщо запит завершиться помилкою, перевірте стан перед повторною спробою.';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return 'Хост: $host\nПорт петльового інтерфейсу шлюзу: $localPort\nПорт віддаленого петльового інтерфейсу: $remotePort\nHermes: $version\nПовторне використання: $reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => 'Від’єднати';
 }

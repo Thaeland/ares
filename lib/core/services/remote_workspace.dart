@@ -28,6 +28,7 @@ export 'host_operations.dart';
 part 'remote_preview.dart';
 
 part 'remote_workspace_fleet.dart';
+part 'remote_managed_ssh.dart';
 part 'workspace_discovery.dart';
 part 'workspace_project_settings.dart';
 part 'workspace_files.dart';

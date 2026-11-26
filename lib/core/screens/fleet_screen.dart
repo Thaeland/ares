@@ -10,6 +10,7 @@ import '../../nextgen/data/chat_controller.dart';
 import '../../nextgen/ui/connect_screen.dart';
 import '../services/gateway_fleet.dart';
 import '../services/remote_workspace.dart';
+import 'fleet_managed_ssh_screen.dart';
 import 'fleet_webapp_screen.dart';
 import 'fleet_ssh_screen.dart';
 import 'fleet_updates_screen.dart';
@@ -106,6 +107,21 @@ class _FleetScreenState extends State<FleetScreen> {
                 MaterialPageRoute<void>(builder: (_) => const FleetSshScreen()),
               ),
             ),
+            if (widget.serving case final owner?)
+              ListTile(
+                leading: const Icon(Icons.cloud_sync_outlined),
+                title: Text(context.sharedL10n.fleet_managed_ssh_title),
+                subtitle: Text(widget.label),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => FleetManagedSshScreen(
+                      owner: owner,
+                      label: widget.label,
+                    ),
+                  ),
+                ),
+              ),
             if (widget.serving case final owner?)
               ListTile(
                 leading: const Icon(Icons.dns_outlined),

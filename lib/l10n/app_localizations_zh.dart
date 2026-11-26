@@ -14771,6 +14771,50 @@ class AppLocalizationsZh extends AppLocalizations {
   String ng_rel_chat_tool_detail(String name, String detail) {
     return '$name · $detail';
   }
+
+  @override
+  String get fleet_managed_ssh_title => '网关管理的 SSH';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      '从任意设备管理已保存在此网关上的 SSH 主机。远程主机上必须已安装 Hermes。此操作会启动或连接到归此网关所有的远程服务，而不是建立 Ares 聊天连接。托管更新和恢复仅在原生桌面应用中可用。';
+
+  @override
+  String get fleet_managed_ssh_read => '读取已保存的 SSH 主机';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      '首次连接时，网关会信任并记住此主机的 SSH 密钥。之后若密钥发生变化，将会被标记并阻止连接。网关不提供密钥指纹，因此 Ares 无法显示或存储指纹。仅在信任此次首次连接时才继续。';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      '此主机的 SSH 密钥已更改。连接已被阻止。有权访问网关主机的人必须独立核实新密钥的指纹，并在网关主机上移除旧的受信任密钥。仅在完成核实和修复后才重试。Ares 不会替换受信任的密钥。';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      '断开 SSH 隧道并停止归此网关所有的远程服务？这可能会中断其他正在使用该服务的客户端。';
+
+  @override
+  String get fleet_managed_ssh_verify => '改为自行验证密钥';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return '正在等待网关：$seconds 秒。离开此页面不会取消初始化。如果请求失败，请先检查状态再重试。';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return '主机：$host\n网关回环端口：$localPort\n远程回环端口：$remotePort\nHermes：$version\n已复用：$reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => '断开连接';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -29540,6 +29584,50 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String ng_rel_chat_tool_detail(String name, String detail) {
     return '$name · $detail';
   }
+
+  @override
+  String get fleet_managed_ssh_title => '网关管理的 SSH';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      '从任意设备管理已保存在此网关上的 SSH 主机。远程主机上必须已安装 Hermes。此操作会启动或连接到归此网关所有的远程服务，而不是建立 Ares 聊天连接。托管更新和恢复仅在原生桌面应用中可用。';
+
+  @override
+  String get fleet_managed_ssh_read => '读取已保存的 SSH 主机';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      '首次连接时，网关会信任并记住此主机的 SSH 密钥。之后若密钥发生变化，将会被标记并阻止连接。网关不提供密钥指纹，因此 Ares 无法显示或存储指纹。仅在信任此次首次连接时才继续。';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      '此主机的 SSH 密钥已更改。连接已被阻止。有权访问网关主机的人必须独立核实新密钥的指纹，并在网关主机上移除旧的受信任密钥。仅在完成核实和修复后才重试。Ares 不会替换受信任的密钥。';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      '断开 SSH 隧道并停止归此网关所有的远程服务？这可能会中断其他正在使用该服务的客户端。';
+
+  @override
+  String get fleet_managed_ssh_verify => '改为自行验证密钥';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return '正在等待网关：$seconds 秒。离开此页面不会取消初始化。如果请求失败，请先检查状态再重试。';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return '主机：$host\n网关回环端口：$localPort\n远程回环端口：$remotePort\nHermes：$version\n已复用：$reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => '断开连接';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -44315,4 +44403,48 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String ng_rel_chat_tool_detail(String name, String detail) {
     return '$name · $detail';
   }
+
+  @override
+  String get fleet_managed_ssh_title => '閘道管理的 SSH';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      '從任何裝置管理已儲存在此閘道上的 SSH 主機。遠端主機上必須已安裝 Hermes。此操作會啟動或連接至此閘道所擁有的遠端服務，而非建立 Ares 聊天連線。受管理的更新與復原僅適用於原生桌面應用程式。';
+
+  @override
+  String get fleet_managed_ssh_read => '讀取已儲存的 SSH 主機';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      '首次連線時，閘道會信任並記住此主機的 SSH 金鑰。之後若金鑰發生變更，將會被標記並封鎖連線。閘道不提供金鑰指紋，因此 Ares 無法顯示或儲存指紋。只有在信任此次首次連線時才繼續。';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      '此主機的 SSH 金鑰已變更。連線已遭封鎖。有權存取閘道主機的人必須獨立驗證新金鑰的指紋，並在閘道主機上移除舊的受信任金鑰。只有在完成驗證與修復後才重試。Ares 不會取代受信任的金鑰。';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      '中斷 SSH 通道並停止此閘道所擁有的遠端服務？這可能會中斷其他正在使用該服務的用戶端。';
+
+  @override
+  String get fleet_managed_ssh_verify => '改為自行驗證金鑰';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return '正在等待閘道：$seconds 秒。離開此頁面不會取消初始化。如果請求失敗，請先檢查狀態再重試。';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return '主機：$host\n閘道回環連接埠：$localPort\n遠端回環連接埠：$remotePort\nHermes：$version\n已重用：$reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => '中斷連線';
 }

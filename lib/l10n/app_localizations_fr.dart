@@ -15761,4 +15761,48 @@ class AppLocalizationsFr extends AppLocalizations {
   String ng_rel_chat_tool_detail(String name, String detail) {
     return '$name · $detail';
   }
+
+  @override
+  String get fleet_managed_ssh_title => 'SSH géré par la passerelle';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      'Gérez les hôtes SSH déjà enregistrés sur cette passerelle depuis n’importe quel appareil. Hermes doit déjà être installé sur l’hôte distant. Cette opération démarre un service distant appartenant à la passerelle ou s’y rattache, et non une connexion de discussion Ares. Les mises à jour gérées et la récupération ne sont disponibles que dans l’application de bureau native.';
+
+  @override
+  String get fleet_managed_ssh_read => 'Lire les hôtes SSH enregistrés';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      'Lors de cette première connexion, la passerelle fera confiance à la clé SSH de cet hôte et la mémorisera. Toute modification ultérieure de la clé sera signalée et bloquée. La passerelle ne communique pas l’empreinte de la clé ; Ares ne peut donc ni l’afficher ni l’enregistrer. Ne continuez que si vous faites confiance à cette première connexion.';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      'La clé SSH de cet hôte a changé. Connexion bloquée. Une personne ayant accès à l’hôte de la passerelle doit vérifier indépendamment l’empreinte de la nouvelle clé et y supprimer l’ancienne clé de confiance. Ne réessayez qu’après cette vérification et cette réparation. Ares ne remplace pas la clé de confiance.';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      'Déconnecter le tunnel SSH et arrêter le service distant appartenant à cette passerelle ? Cela peut interrompre d’autres clients utilisant ce service.';
+
+  @override
+  String get fleet_managed_ssh_verify => 'Vérifier plutôt la clé vous-même';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return 'En attente de la passerelle : $seconds s. Quitter cette page n’annule pas l’initialisation. Si la requête échoue, vérifiez l’état avant de réessayer.';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return 'Hôte : $host\nPort de bouclage de la passerelle : $localPort\nPort de bouclage distant : $remotePort\nHermes : $version\nRéutilisé : $reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => 'Déconnecter';
 }

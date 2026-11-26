@@ -15067,4 +15067,48 @@ class AppLocalizationsKo extends AppLocalizations {
   String ng_rel_chat_tool_detail(String name, String detail) {
     return '$name · $detail';
   }
+
+  @override
+  String get fleet_managed_ssh_title => '게이트웨이 관리 SSH';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      '이 게이트웨이에 이미 저장된 SSH 호스트를 모든 기기에서 관리하세요. 원격 호스트에 Hermes가 이미 설치되어 있어야 합니다. 이 작업은 게이트웨이가 소유한 원격 서비스를 시작하거나 해당 서비스에 연결하며, Ares 채팅 연결이 아닙니다. 관리형 업데이트 및 복구는 네이티브 데스크톱 앱에서만 사용할 수 있습니다.';
+
+  @override
+  String get fleet_managed_ssh_read => '저장된 SSH 호스트 읽기';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      '이 첫 연결에서 게이트웨이는 이 호스트의 SSH 키를 신뢰하고 기억합니다. 이후 키가 변경되면 이를 감지하고 연결을 차단합니다. 게이트웨이는 키 지문을 제공하지 않으므로 Ares는 이를 표시하거나 저장할 수 없습니다. 이 첫 연결을 신뢰하는 경우에만 계속하세요.';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      '이 호스트의 SSH 키가 변경되었습니다. 연결이 차단되었습니다. 게이트웨이 호스트에 접근할 수 있는 사람이 새 키의 지문을 독립적으로 확인하고 해당 호스트에서 기존의 신뢰된 키를 제거해야 합니다. 확인 및 복구가 완료된 후에만 다시 시도하세요. Ares는 신뢰된 키를 교체하지 않습니다.';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      'SSH 터널 연결을 끊고 이 게이트웨이가 소유한 원격 서비스를 중지할까요? 해당 서비스를 사용하는 다른 클라이언트의 작동이 중단될 수 있습니다.';
+
+  @override
+  String get fleet_managed_ssh_verify => '대신 직접 키 확인';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return '게이트웨이 대기 중: $seconds초. 이 페이지를 떠나도 초기 설정은 취소되지 않습니다. 요청이 실패하면 다시 시도하기 전에 상태를 확인하세요.';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return '호스트: $host\n게이트웨이 루프백 포트: $localPort\n원격 루프백 포트: $remotePort\nHermes: $version\n재사용: $reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => '연결 끊기';
 }
