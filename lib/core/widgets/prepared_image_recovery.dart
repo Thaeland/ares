@@ -58,8 +58,9 @@ class _PreparedImageRecoveryState extends State<PreparedImageRecovery> {
         .hasRecoverable(target);
     if (!mounted ||
         generation != _checkGeneration ||
-        widget.target.key != target.key)
+        widget.target.key != target.key) {
       return;
+    }
     setState(() {
       _checkedTarget = target.key;
       _recoverable = found;

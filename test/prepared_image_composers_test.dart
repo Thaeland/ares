@@ -176,6 +176,8 @@ void main() {
     await root.delete(recursive: true);
   });
   for (final mode in [
+    'classic-empty',
+    'nextgen-empty',
     'classic-first',
     'classic-restore',
     'nextgen-restore',
@@ -204,7 +206,8 @@ void main() {
         await peer.close();
       });
       final classic = mode.startsWith('classic'),
-          restore = !mode.endsWith('first'),
+          empty = mode.endsWith('empty'),
+          restore = !mode.endsWith('first') && !mode.endsWith('empty'),
           edited = mode.endsWith('edited');
       final target = PreparedImageTarget(
         peer.connection,
@@ -271,8 +274,8 @@ void main() {
                   ),
                   turnApplicationController: c,
                   testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
-                  initialAttachmentDrafts: restore ? [] : [image],
-                  initialComposerText: restore ? null : caption,
+                  initialAttachmentDrafts: restore || empty ? [] : [image],
+                  initialComposerText: restore || empty ? null : caption,
                 )
               : NgScope(
                   connManager: ConnectionManager(
@@ -295,6 +298,21 @@ void main() {
                 ),
         ),
       );
+      if (empty) {
+        await pumpChatUpdates(t);
+        for (var i = 0; i < 30; i++) {
+          await t.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 5)),
+          );
+          await t.pump();
+        }
+        expect(find.text('Recover image draft…'), findsNothing);
+        expect(find.byType(TextField), findsWidgets);
+        await t.pumpWidget(const SizedBox());
+        await c.close();
+        await t.pump(const Duration(minutes: 1));
+        return;
+      }
       final field = find.byType(TextField).first;
       String text() => t.widget<TextField>(field).controller!.text;
       final calls = classic ? peer.prompts : g.prompts;
