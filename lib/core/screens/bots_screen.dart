@@ -322,9 +322,21 @@ class _BotsScreenState extends State<BotsScreen> {
     final target = _target;
     final profile = _screenProfile;
     if (target == null || profile == null) return;
+    // The gateway refuses to stop a screen a person is driving unless told
+    // to (methods_display.py); say so before asking.
+    final humanHeld = _display?.lease.isAgent == false;
+    final confirmed = await _confirm(
+      title: 'Stop Bot Desktop for $profile?',
+      message: humanHeld
+          ? 'Someone is controlling this screen. Stopping it ends their '
+                'session and closes everything open on it.'
+          : 'Everything open on the bot’s screen is closed.',
+      confirmLabel: 'Stop',
+    );
+    if (!confirmed || !mounted) return;
     setState(() => _screenBusy = true);
     try {
-      final status = await target.displayStop(profile);
+      final status = await target.displayStop(profile, force: humanHeld);
       if (!mounted) return;
       _cancelThumbnail();
       setState(() => _display = status);
@@ -405,6 +417,17 @@ class _BotsScreenState extends State<BotsScreen> {
     final target = _target;
     final profile = _screenProfile;
     if (target == null || profile == null) return;
+    final pending = _display?.imageSwitch;
+    final confirmed = await _confirm(
+      title: 'Adopt the new sandbox image?',
+      message:
+          '$profile moves from ${pending?['current_image'] ?? '?'} to '
+          '${pending?['target_image'] ?? '?'}. Its container is recreated '
+          'on the next terminal call; anything kept only in the current '
+          'container is lost.',
+      confirmLabel: 'Adopt image',
+    );
+    if (!confirmed || !mounted) return;
     setState(() => _screenBusy = true);
     try {
       final status = await target.displaySwitchSandboxImage(
@@ -437,6 +460,37 @@ class _BotsScreenState extends State<BotsScreen> {
     } finally {
       if (mounted) setState(() => _screenBusy = false);
     }
+  }
+
+  /// Asks before stopping, replacing or removing something a bot is using.
+  /// False on Cancel or dismissal: the caller then sends nothing.
+  Future<bool> _confirm({
+    required String title,
+    required String message,
+    required String confirmLabel,
+  }) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        key: const Key('bots-confirm-dialog'),
+        scrollable: true,
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            key: const Key('bots-confirm-cancel'),
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(ctx.sharedL10n.cancel),
+          ),
+          FilledButton(
+            key: const Key('bots-confirm-ok'),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(confirmLabel),
+          ),
+        ],
+      ),
+    );
+    return ok == true;
   }
 
   void _toast(String message) {
@@ -1212,6 +1266,17 @@ class _BotsScreenState extends State<BotsScreen> {
     final target = _target;
     final profile = _routinesProfile;
     if (target == null || profile == null) return;
+    if (action == 'remove') {
+      final title = RoutineJob.splitTags(job.name).title;
+      final confirmed = await _confirm(
+        title: 'Remove routine ${title.isEmpty ? job.name : title}?',
+        message:
+            'The routine is deleted from $profile’s schedule. '
+            'This cannot be undone.',
+        confirmLabel: 'Remove',
+      );
+      if (!confirmed || !mounted) return;
+    }
     setState(() => _routinesLoading = true);
     try {
       switch (action) {

@@ -62,6 +62,40 @@ class KanbanBoardScreen extends StatefulWidget {
   State<KanbanBoardScreen> createState() => _KanbanBoardScreenState();
 }
 
+/// Asks before an action that stops a worker or takes work off the board.
+/// False on Cancel or dismissal: the caller then sends nothing.
+Future<bool> _confirmKanbanAction(
+  BuildContext context, {
+  required String title,
+  required String message,
+  required String confirmLabel,
+}) async {
+  final ok = await showDialog<bool>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      key: const Key('kanban-confirm-dialog'),
+      scrollable: true,
+      title: Text(title),
+      content: Text(message),
+      actions: [
+        TextButton(
+          key: const Key('kanban-confirm-cancel'),
+          onPressed: () => Navigator.pop(ctx, false),
+          child: Text(ctx.sharedL10n.cancel),
+        ),
+        FilledButton(
+          key: const Key('kanban-confirm-ok'),
+          onPressed: () => Navigator.pop(ctx, true),
+          child: Text(confirmLabel),
+        ),
+      ],
+    ),
+  );
+  return ok == true;
+}
+
+String _kanbanCardCount(int count) => count == 1 ? '1 card' : '$count cards';
+
 class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
   WorkspacePane? _pane;
   WorkspaceTarget? _target;
@@ -537,30 +571,25 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     required String title,
     required String message,
     required String confirmLabel,
-  }) async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(ctx.sharedL10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(confirmLabel),
-          ),
-        ],
-      ),
-    );
-    return ok == true;
-  }
+  }) => _confirmKanbanAction(
+    context,
+    title: title,
+    message: message,
+    confirmLabel: confirmLabel,
+  );
 
   Future<void> _runBulkMove(String targetStatus) async {
     final ids = _selectedIds.toList();
     if (ids.isEmpty) return;
+    final label = kanbanColumnLabels[targetStatus] ?? targetStatus;
+    final confirmed = await _confirmDestructive(
+      title: 'Move ${_kanbanCardCount(ids.length)} to $label?',
+      message:
+          'Every selected card on $_effectiveSlug changes column. '
+          'A card that is running stops running.',
+      confirmLabel: 'Move',
+    );
+    if (!confirmed || !mounted) return;
     try {
       final target = await _bound();
       final results = await target.kanbanBulkUpdate(
@@ -579,6 +608,17 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
   Future<void> _runBulkAssign(String assignee) async {
     final ids = _selectedIds.toList();
     if (ids.isEmpty) return;
+    // The request carries reclaim_first: a running card's worker is stopped.
+    final confirmed = await _confirmDestructive(
+      title: assignee.isEmpty
+          ? 'Unassign ${_kanbanCardCount(ids.length)}?'
+          : 'Assign ${_kanbanCardCount(ids.length)} to @$assignee?',
+      message:
+          'Cards that are running are reclaimed first: '
+          'their workers are stopped.',
+      confirmLabel: assignee.isEmpty ? 'Unassign' : 'Assign',
+    );
+    if (!confirmed || !mounted) return;
     try {
       final target = await _bound();
       final results = await target.kanbanBulkUpdate(
@@ -601,6 +641,14 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
   Future<void> _runBulkArchive() async {
     final ids = _selectedIds.toList();
     if (ids.isEmpty) return;
+    final confirmed = await _confirmDestructive(
+      title: 'Archive ${_kanbanCardCount(ids.length)}?',
+      message:
+          'Archived cards leave $_effectiveSlug. '
+          'Turn on Archived to see them again.',
+      confirmLabel: 'Archive',
+    );
+    if (!confirmed || !mounted) return;
     try {
       final target = await _bound();
       final results = await target.kanbanBulkUpdate(
@@ -1979,6 +2027,17 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
                               await widget.onExportBoard(board.slug, '');
                               if (context.mounted) Navigator.pop(context);
                             } else if (action == 'archive') {
+                              final confirmed = await _confirmKanbanAction(
+                                context,
+                                title: 'Archive board ${board.slug}?',
+                                message:
+                                    'The board and its '
+                                    '${_kanbanCardCount(board.total)} leave '
+                                    'the board list. The gateway keeps an '
+                                    'archive on its host.',
+                                confirmLabel: 'Archive',
+                              );
+                              if (!confirmed || !context.mounted) return;
                               await widget.onArchiveBoard(board.slug);
                               if (context.mounted) Navigator.pop(context);
                             } else if (action == 'left' && pinned) {
@@ -2614,6 +2673,9 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
   String _reasoningEffort = '';
   bool _seededEditors = false;
 
+  /// Bumped to rebuild the assignee dropdown after a cancelled reassign.
+  int _assigneeRevision = 0;
+
   @override
   void initState() {
     super.initState();
@@ -2721,9 +2783,34 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
     }
   }
 
+  /// Stopping a worker is never silent.
+  Future<bool> _confirmRequeue() => _confirmKanbanAction(
+    context,
+    title: 'Requeue ${widget.taskId}?',
+    message:
+        'A worker running this card is stopped and the card goes back '
+        'to the queue.',
+    confirmLabel: 'Requeue',
+  );
+
   Future<void> _changeAssignee(String profile) async {
     final current = _detail?.task;
     if (current == null) return;
+    if (current.status == 'running' && profile.isNotEmpty) {
+      // Reassigning a running card reclaims it first.
+      final confirmed = await _confirmKanbanAction(
+        context,
+        title: 'Reassign ${widget.taskId} to @$profile?',
+        message: 'This card is running: its worker is stopped first.',
+        confirmLabel: 'Reassign',
+      );
+      if (!mounted) return;
+      if (!confirmed) {
+        // Put the dropdown back on the assignee the card still has.
+        setState(() => _assigneeRevision++);
+        return;
+      }
+    }
     try {
       final target = await widget.boundTarget();
       if (current.status == 'running' && profile.isNotEmpty) {
@@ -2781,6 +2868,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
   Future<void> _postComment({required bool requeueAfter}) async {
     final text = _commentCtrl.text.trim();
     if (text.isEmpty) return;
+    if (requeueAfter && (!await _confirmRequeue() || !mounted)) return;
     try {
       final target = await widget.boundTarget();
       await target.kanbanAddComment(
@@ -2807,6 +2895,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
   }
 
   Future<void> _reclaimOnly() async {
+    if (!await _confirmRequeue() || !mounted) return;
     try {
       final target = await widget.boundTarget();
       await target.kanbanReclaimTask(
@@ -3086,25 +3175,31 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: DropdownButtonFormField<String>(
-                key: const Key('kanban-detail-assignee'),
-                isExpanded: true,
-                initialValue: task.assignee ?? '',
-                decoration: const InputDecoration(labelText: 'Assignee'),
-                items: [
-                  const DropdownMenuItem(
-                    value: '',
-                    child: Text('Unassigned', overflow: TextOverflow.ellipsis),
-                  ),
-                  for (final name in profileNames)
-                    DropdownMenuItem(
-                      value: name,
-                      child: Text('@$name', overflow: TextOverflow.ellipsis),
+              child: KeyedSubtree(
+                key: ValueKey('kanban-assignee-$_assigneeRevision'),
+                child: DropdownButtonFormField<String>(
+                  key: const Key('kanban-detail-assignee'),
+                  isExpanded: true,
+                  initialValue: task.assignee ?? '',
+                  decoration: const InputDecoration(labelText: 'Assignee'),
+                  items: [
+                    const DropdownMenuItem(
+                      value: '',
+                      child: Text(
+                        'Unassigned',
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                ],
-                onChanged: (v) {
-                  if (v != null) unawaited(_changeAssignee(v));
-                },
+                    for (final name in profileNames)
+                      DropdownMenuItem(
+                        value: name,
+                        child: Text('@$name', overflow: TextOverflow.ellipsis),
+                      ),
+                  ],
+                  onChanged: (v) {
+                    if (v != null) unawaited(_changeAssignee(v));
+                  },
+                ),
               ),
             ),
           ],

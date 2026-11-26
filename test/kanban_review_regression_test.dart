@@ -76,4 +76,162 @@ void main() {
       expect(find.byKey(const Key('kanban-detail-error')), findsNothing);
     });
   });
+
+  group('destructive Kanban actions ask first; Cancel sends nothing', () {
+    Future<KanbanReviewApi> openBoard(WidgetTester tester) async {
+      tester.view.physicalSize = const Size(1280, 900);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      final api = KanbanReviewApi();
+      final owner = kanbanReviewOwner(api.client);
+      addTearDown(owner.close);
+      await tester.pumpWidget(kanbanReviewApp(owner));
+      await kanbanShown(tester, find.byKey(const Key('kanban-card-t_ready_0')));
+      await kanbanStep(tester);
+      return api;
+    }
+
+    final dialog = find.byKey(const Key('kanban-confirm-dialog'));
+    Future<void> answer(WidgetTester tester, {required bool ok}) async {
+      expect(dialog, findsOneWidget);
+      await tester.tap(
+        find.byKey(Key(ok ? 'kanban-confirm-ok' : 'kanban-confirm-cancel')),
+      );
+      await kanbanStep(tester);
+      expect(dialog, findsNothing);
+    }
+
+    List<Map<String, dynamic>?> bulks(KanbanReviewApi api) => [
+      for (final c in api.calls)
+        if (c.path.endsWith('/tasks/bulk')) c.body,
+    ];
+
+    Future<void> selectTwo(WidgetTester tester) async {
+      await tester.longPress(find.byKey(const Key('kanban-card-t_ready_0')));
+      await kanbanStep(tester);
+      await tester.tap(find.byKey(const Key('kanban-card-t_ready_1')));
+      await kanbanStep(tester);
+      expect(find.text('2 selected'), findsOneWidget);
+    }
+
+    testWidgets('K1 archive board', (tester) async {
+      final api = await openBoard(tester);
+      await tester.tap(find.byKey(const Key('kanban-board-switcher')));
+      await kanbanStep(tester);
+      Future<void> pickArchive() async {
+        await tester.tap(find.byKey(const Key('kanban-board-menu-ops-board')));
+        await kanbanStep(tester);
+        await tester.tap(find.text('Archive board'));
+        await kanbanStep(tester);
+      }
+
+      await pickArchive();
+      expect(find.textContaining('Archive board ops-board?'), findsOneWidget);
+      expect(api.count('DELETE', '/boards/ops-board'), 0);
+      await answer(tester, ok: false);
+      expect(api.count('DELETE', '/boards/ops-board'), 0);
+      await pickArchive();
+      await answer(tester, ok: true);
+      expect(api.count('DELETE', '/boards/ops-board'), 1);
+    });
+
+    testWidgets('K2 bulk move, bulk archive and bulk assign', (tester) async {
+      final api = await openBoard(tester);
+      await selectTwo(tester);
+
+      Future<void> pickMove() async {
+        await tester.tap(find.byKey(const Key('kanban-bulk-move')));
+        await kanbanStep(tester);
+        await tester.tap(find.text('Move to Triage').last);
+        await kanbanStep(tester);
+      }
+
+      await pickMove();
+      expect(find.text('Move 2 cards to Triage?'), findsOneWidget);
+      await answer(tester, ok: false);
+      expect(bulks(api), isEmpty);
+      expect(find.text('2 selected'), findsOneWidget);
+      await pickMove();
+      await answer(tester, ok: true);
+      expect(bulks(api).single, {
+        'ids': ['t_ready_0', 't_ready_1'],
+        'status': 'triage',
+      });
+
+      await selectTwo(tester);
+      await tester.tap(find.byKey(const Key('kanban-bulk-archive')));
+      await kanbanStep(tester);
+      expect(find.text('Archive 2 cards?'), findsOneWidget);
+      await answer(tester, ok: false);
+      expect(bulks(api), hasLength(1));
+      await tester.tap(find.byKey(const Key('kanban-bulk-archive')));
+      await kanbanStep(tester);
+      await answer(tester, ok: true);
+      expect(bulks(api).last, containsPair('archive', true));
+
+      await selectTwo(tester);
+      Future<void> pickAssign() async {
+        await tester.tap(find.byKey(const Key('kanban-bulk-assign')));
+        await kanbanStep(tester);
+        await tester.tap(find.text('@reviewer').last);
+        await kanbanStep(tester);
+      }
+
+      await pickAssign();
+      expect(find.text('Assign 2 cards to @reviewer?'), findsOneWidget);
+      expect(find.textContaining('workers are stopped'), findsOneWidget);
+      await answer(tester, ok: false);
+      expect(bulks(api), hasLength(2));
+      await pickAssign();
+      await answer(tester, ok: true);
+      expect(bulks(api).last, containsPair('assignee', 'reviewer'));
+      expect(bulks(api).last, containsPair('reclaim_first', true));
+    });
+
+    testWidgets('K3 requeue, and reassigning a running card', (tester) async {
+      final api = await openRunningCard(tester);
+      Future<void> pickRequeue() async {
+        await tester.ensureVisible(
+          find.byKey(const Key('kanban-detail-reclaim')),
+        );
+        await tester.tap(find.byKey(const Key('kanban-detail-reclaim')));
+        await kanbanStep(tester);
+      }
+
+      await pickRequeue();
+      expect(find.text('Requeue t_run_1?'), findsOneWidget);
+      await answer(tester, ok: false);
+      expect(api.count('POST', '/tasks/t_run_1/reclaim'), 0);
+      await pickRequeue();
+      await answer(tester, ok: true);
+      expect(api.count('POST', '/tasks/t_run_1/reclaim'), 1);
+
+      Future<void> pickReviewer() async {
+        await tester.tap(find.byKey(const Key('kanban-detail-assignee')));
+        await kanbanStep(tester);
+        await tester.tap(find.text('@reviewer').last);
+        await kanbanStep(tester);
+      }
+
+      await pickReviewer();
+      expect(find.text('Reassign t_run_1 to @reviewer?'), findsOneWidget);
+      await answer(tester, ok: false);
+      expect(api.count('POST', '/tasks/t_run_1/reassign'), 0);
+      // The dropdown is back on the assignee the card still has.
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('kanban-detail-assignee')),
+          matching: find.text('@work'),
+        ),
+        findsOneWidget,
+      );
+      await pickReviewer();
+      await answer(tester, ok: true);
+      final reassign = api.calls.singleWhere(
+        (c) => c.path.endsWith('/tasks/t_run_1/reassign'),
+      );
+      expect(reassign.body, containsPair('profile', 'reviewer'));
+      expect(reassign.body, containsPair('reclaim_first', true));
+    });
+  });
 }

@@ -142,6 +142,8 @@ void main() {
       await tester.tap(find.byKey(const Key('kanban-bulk-assign')));
       await _step(tester);
       await tester.tap(find.text('@researcher').last);
+      await _step(tester);
+      await tester.tap(find.byKey(const Key('kanban-confirm-ok')));
       await _shown(tester, find.textContaining('1 of 2 failed'));
       expect(find.text('1 selected'), findsOneWidget);
       await tester.tap(find.text('Clear'));
@@ -155,6 +157,8 @@ void main() {
       await tester.tap(find.byKey(const Key('kanban-detail-assignee')));
       await _step(tester);
       await tester.tap(find.text('@researcher').last);
+      await _step(tester);
+      await tester.tap(find.byKey(const Key('kanban-confirm-ok')));
       await _step(tester);
       expect(
         api.calls.any(
@@ -191,6 +195,8 @@ void main() {
         'Check edge cases before retry',
       );
       await tester.tap(find.byKey(const Key('kanban-comment-requeue')));
+      await _step(tester);
+      await tester.tap(find.byKey(const Key('kanban-confirm-ok')));
       await _step(tester);
       expect(
         api.calls.any(

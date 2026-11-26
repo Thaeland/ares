@@ -174,4 +174,91 @@ void main() {
       );
     });
   });
+
+  group('destructive bot actions ask first; Cancel sends nothing', () {
+    final dialog = find.byKey(const Key('bots-confirm-dialog'));
+    Future<void> answer(WidgetTester tester, {required bool ok}) async {
+      expect(dialog, findsOneWidget);
+      await tester.tap(
+        find.byKey(Key(ok ? 'bots-confirm-ok' : 'bots-confirm-cancel')),
+      );
+      await botsStep(tester);
+      expect(dialog, findsNothing);
+    }
+
+    Future<BotsReviewGateway> open(
+      WidgetTester tester, {
+      Map<String, dynamic>? display,
+      bool routines = false,
+    }) async {
+      wide(tester, const Size(900, 900));
+      final gateway = BotsReviewGateway()..displayOverride = display;
+      final owner = botsReviewOwner(gateway);
+      addTearDown(owner.close);
+      await tester.pumpWidget(botsReviewApp(owner));
+      await (routines
+          ? openBotsRoutinesTab(tester)
+          : openBotsScreenTab(tester));
+      return gateway;
+    }
+
+    testWidgets('B2 Stop Bot Desktop', (tester) async {
+      final gateway = await open(tester);
+      await tester.tap(find.text('Stop'));
+      await botsStep(tester, 3);
+      expect(find.text('Stop Bot Desktop for workbot?'), findsOneWidget);
+      expect(gateway.named('display.stop'), isEmpty);
+      await answer(tester, ok: false);
+      expect(gateway.named('display.stop'), isEmpty);
+      expect(find.text('Running'), findsOneWidget);
+      await tester.tap(find.text('Stop'));
+      await botsStep(tester, 3);
+      await answer(tester, ok: true);
+      expect(gateway.named('display.stop'), hasLength(1));
+      await botsShown(tester, find.text('Stopped'));
+      expect(gateway.refusals, isEmpty);
+    });
+
+    testWidgets('B3 Adopt sandbox image', (tester) async {
+      final gateway = await open(
+        tester,
+        display: {
+          'image_switch': {'current_image': 'a:1', 'target_image': 'b:2'},
+        },
+      );
+      await botsShown(tester, find.text('Adopt image'));
+      await tester.tap(find.text('Adopt image'));
+      await botsStep(tester, 3);
+      expect(find.text('Adopt the new sandbox image?'), findsOneWidget);
+      expect(find.textContaining('a:1 to b:2'), findsOneWidget);
+      await answer(tester, ok: false);
+      expect(gateway.named('display.switchSandboxImage'), isEmpty);
+      await tester.tap(find.text('Adopt image'));
+      await botsStep(tester, 3);
+      await answer(tester, ok: true);
+      final call = gateway.named('display.switchSandboxImage').single;
+      expect(call.params['approve'], isTrue);
+      expect(call.params['profile'], 'workbot');
+      expect(gateway.refusals, isEmpty);
+    });
+
+    testWidgets('B4 Remove routine', (tester) async {
+      final gateway = await open(tester, routines: true);
+      Iterable<BotsReviewCall> removes() => gateway
+          .named('cron.manage')
+          .where((c) => c.params['action'] == 'remove');
+      await tester.tap(find.byTooltip('Remove'));
+      await botsStep(tester, 3);
+      expect(find.text('Remove routine Stand-up?'), findsOneWidget);
+      await answer(tester, ok: false);
+      expect(removes(), isEmpty);
+      expect(find.text('Stand-up'), findsOneWidget);
+      await tester.tap(find.byTooltip('Remove'));
+      await botsStep(tester, 3);
+      await answer(tester, ok: true);
+      expect(removes().single.params, containsPair('name', 'job-standup'));
+      await botsShown(tester, find.text('No routines for this bot.'));
+      expect(gateway.refusals, isEmpty);
+    });
+  });
 }
