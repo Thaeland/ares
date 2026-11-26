@@ -13336,4 +13336,154 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get rel_admin_state_fatal => 'критическая ошибка';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      'Неподдерживаемый или слишком большой архив профиля.';
+
+  @override
+  String get rel_admin_current_layout => 'Текущая компоновка';
+
+  @override
+  String get rel_admin_one_pane => 'Одна панель';
+
+  @override
+  String get rel_admin_stacked => 'Вертикально';
+
+  @override
+  String get rel_admin_side_by_side => 'Рядом';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      'В этом профиле нет поддерживаемого оформления.';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      'Проверить оформление, сохранённое с этим профилем';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      'Применяется только к этому именованному профилю на этом устройстве. Импортированная компоновка начинается с пустых панелей; выберите чаты сами.';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device =>
+      'Применить к этому профилю на этом устройстве';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      'Экспорт подготавливает .tar.gz на шлюзе. Проверьте переносимые файлы перед сохранением копии здесь. Импорт открывает локальный архив для проверки; само открытие ничего не загружает.';
+
+  @override
+  String get rel_admin_prepare_profile_export => 'Подготовить экспорт профиля';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device =>
+      'Открыть .tar.gz с этого устройства';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      'Переносятся только выбранные текстовые файлы. Проверьте их на секреты и личные данные. Конфигурация, навыки и расписания могут изменить поведение нового профиля.';
+
+  @override
+  String get rel_admin_include_this_reviewed_file =>
+      'Включить этот проверенный файл';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      'Применить оформление к новому профилю на этом устройстве';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      'Импортирует цвета и размеры панелей, но не чаты, инструменты или ID сеансов.';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      'Шлюз сохраняет закрытую промежуточную копию. Импорт создаёт новый профиль и не заменяет существующий.';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' Оформление не применено: шлюз не подтвердил проверенное наложение.';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device =>
+      ' Оформление применено на этом устройстве.';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device =>
+      ' Оформление не сохранено на этом устройстве.';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle =>
+      'Сохранить проверенный пакет профиля';
+
+  @override
+  String get rel_admin_profile_bundle_saved => 'Пакет профиля сохранён.';
+
+  @override
+  String get rel_admin_import_selected_files => 'Импортировать выбранные файлы';
+
+  @override
+  String get rel_admin_save_selected_files_to_device =>
+      'Сохранить выбранные файлы на устройство';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · $percent% первая панель';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return 'Тема: $skin · Режим: $mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return 'Оформление применено к $gateway / $profile.';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return 'Пакет: $profile · файлов для проверки: $count · пропущено: $omitted';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return '$name импортирован на $gateway.';
+  }
+
+  @override
+  String get rel_admin_unchanged => 'без изменений';
+
+  @override
+  String get rel_admin_mode_system => 'системный';
+
+  @override
+  String get rel_admin_mode_light => 'светлый';
+
+  @override
+  String get rel_admin_mode_dark => 'тёмный';
+
+  @override
+  String get rel_admin_skin_classic => 'классическая';
+
+  @override
+  String get rel_admin_skin_midnight => 'полночь';
+
+  @override
+  String get rel_admin_skin_ember => 'угли';
+
+  @override
+  String get rel_admin_skin_mono => 'монохромная';
+
+  @override
+  String get rel_admin_skin_cyberpunk => 'киберпанк';
+
+  @override
+  String get rel_admin_skin_slate => 'сланец';
 }

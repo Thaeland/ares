@@ -4900,5 +4900,207 @@
   "rel_admin_state_fatal": "严重错误",
   "@rel_admin_state_fatal": {
     "description": "Release administration: fatal"
+  },
+  "rel_admin_unsupported_or_oversized_profile_archive": "不支持的配置文件归档或归档过大。",
+  "@rel_admin_unsupported_or_oversized_profile_archive": {
+    "description": "Release administration: Unsupported or oversized profile archive."
+  },
+  "rel_admin_current_layout": "当前布局",
+  "@rel_admin_current_layout": {
+    "description": "Release administration: Current layout"
+  },
+  "rel_admin_one_pane": "单窗格",
+  "@rel_admin_one_pane": {
+    "description": "Release administration: One pane"
+  },
+  "rel_admin_stacked": "上下堆叠",
+  "@rel_admin_stacked": {
+    "description": "Release administration: Stacked"
+  },
+  "rel_admin_side_by_side": "并排",
+  "@rel_admin_side_by_side": {
+    "description": "Release administration: Side by side"
+  },
+  "rel_admin_no_supported_appearance_in_this_profile": "此配置文件中没有受支持的外观。",
+  "@rel_admin_no_supported_appearance_in_this_profile": {
+    "description": "Release administration: No supported appearance in this profile."
+  },
+  "rel_admin_review_appearance_saved_with_this_profile": "查看随此配置文件保存的外观",
+  "@rel_admin_review_appearance_saved_with_this_profile": {
+    "description": "Release administration: Review appearance saved with this profile"
+  },
+  "rel_admin_applies_only_to_this_named_profile_on_this_device": "仅应用于此设备上的此命名配置文件。导入的布局从空窗格开始，请自行选择聊天。",
+  "@rel_admin_applies_only_to_this_named_profile_on_this_device": {
+    "description": "Release administration: Applies only to this named profile on this device. An imported arrangement starts with empty panes; choose its chats yourself."
+  },
+  "rel_admin_apply_to_this_profile_on_this_device": "应用于此设备上的此配置文件",
+  "@rel_admin_apply_to_this_profile_on_this_device": {
+    "description": "Release administration: Apply to this profile on this device"
+  },
+  "rel_admin_export_prepares_a_tar_gz_on_the_gateway_review": "导出会在网关上准备 .tar.gz。保存副本到此处前，请查看其中的可移植文件。导入会打开本地归档供查看；仅打开不会上传任何内容。",
+  "@rel_admin_export_prepares_a_tar_gz_on_the_gateway_review": {
+    "description": "Release administration: Export prepares a .tar.gz on the gateway. Review its portable files before saving a copy here. Import opens a local archive for review; opening alone uploads nothing."
+  },
+  "rel_admin_prepare_profile_export": "准备导出配置文件",
+  "@rel_admin_prepare_profile_export": {
+    "description": "Release administration: Prepare profile export"
+  },
+  "rel_admin_open_tar_gz_from_this_device": "打开此设备上的 .tar.gz",
+  "@rel_admin_open_tar_gz_from_this_device": {
+    "description": "Release administration: Open .tar.gz from this device"
+  },
+  "rel_admin_only_selected_text_files_travel_review_for_secrets_and": "仅传输所选文本文件。请检查是否含有密钥和私人信息。配置、技能和计划可能改变新配置文件的行为。",
+  "@rel_admin_only_selected_text_files_travel_review_for_secrets_and": {
+    "description": "Release administration: Only selected text files travel. Review for secrets and private information. Config, skills and schedules can change what the new profile does."
+  },
+  "rel_admin_include_this_reviewed_file": "包含此已查看文件",
+  "@rel_admin_include_this_reviewed_file": {
+    "description": "Release administration: Include this reviewed file"
+  },
+  "rel_admin_apply_appearance_to_the_new_profile_on_this_device": "将外观应用于此设备上的新配置文件",
+  "@rel_admin_apply_appearance_to_the_new_profile_on_this_device": {
+    "description": "Release administration: Apply appearance to the new profile on this device"
+  },
+  "rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids": "导入颜色和窗格大小，绝不导入聊天、工具或会话 ID。",
+  "@rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids": {
+    "description": "Release administration: Imports colours and pane sizes, never chats, tools or session IDs."
+  },
+  "rel_admin_the_gateway_retains_a_private_staged_copy_import_creates": "网关保留私有暂存副本。导入会创建新配置文件，不会替换现有配置文件。",
+  "@rel_admin_the_gateway_retains_a_private_staged_copy_import_creates": {
+    "description": "Release administration: The gateway retains a private staged copy. Import creates a new profile; it will not replace an existing one."
+  },
+  "rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the": " 外观未应用：网关未确认已查看的叠加配置。",
+  "@rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the": {
+    "description": "Release administration:  Appearance not applied: the gateway did not confirm the reviewed overlay."
+  },
+  "rel_admin_appearance_applied_on_this_device": " 外观已应用于此设备。",
+  "@rel_admin_appearance_applied_on_this_device": {
+    "description": "Release administration:  Appearance applied on this device."
+  },
+  "rel_admin_appearance_was_not_saved_on_this_device": " 外观未保存到此设备。",
+  "@rel_admin_appearance_was_not_saved_on_this_device": {
+    "description": "Release administration:  Appearance was not saved on this device."
+  },
+  "rel_admin_save_reviewed_profile_bundle": "保存已查看的配置文件包",
+  "@rel_admin_save_reviewed_profile_bundle": {
+    "description": "Release administration: Save reviewed profile bundle"
+  },
+  "rel_admin_profile_bundle_saved": "配置文件包已保存。",
+  "@rel_admin_profile_bundle_saved": {
+    "description": "Release administration: Profile bundle saved."
+  },
+  "rel_admin_import_selected_files": "导入所选文件",
+  "@rel_admin_import_selected_files": {
+    "description": "Release administration: Import selected files"
+  },
+  "rel_admin_save_selected_files_to_device": "将所选文件保存到设备",
+  "@rel_admin_save_selected_files_to_device": {
+    "description": "Release administration: Save selected files to device"
+  },
+  "rel_admin_layout_first_pane": "{layout} · 首个窗格 {percent}%",
+  "@rel_admin_layout_first_pane": {
+    "description": "Release administration: {layout} · {percent}% first pane",
+    "placeholders": {
+      "layout": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_appearance_summary": "皮肤：{skin} · 模式：{mode} · {layout}",
+  "@rel_admin_appearance_summary": {
+    "description": "Release administration: Skin: {skin} · Mode: {mode} · {layout}",
+    "placeholders": {
+      "skin": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      },
+      "layout": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_appearance_applied": "外观已应用于 {gateway} / {profile}。",
+  "@rel_admin_appearance_applied": {
+    "description": "Release administration: Appearance applied to {gateway} / {profile}.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_bundle_summary": "包：{profile} · {count} 个可查看文件 · 已省略 {omitted} 个",
+  "@rel_admin_bundle_summary": {
+    "description": "Release administration: Bundle: {profile} · {count} reviewable files · {omitted} omitted",
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      },
+      "omitted": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_imported_on": "已在 {gateway} 上导入 {name}。",
+  "@rel_admin_imported_on": {
+    "description": "Release administration: Imported {name} on {gateway}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_unchanged": "不变",
+  "@rel_admin_unchanged": {
+    "description": "Release administration: unchanged"
+  },
+  "rel_admin_mode_system": "系统",
+  "@rel_admin_mode_system": {
+    "description": "Release administration: system"
+  },
+  "rel_admin_mode_light": "浅色",
+  "@rel_admin_mode_light": {
+    "description": "Release administration: light"
+  },
+  "rel_admin_mode_dark": "深色",
+  "@rel_admin_mode_dark": {
+    "description": "Release administration: dark"
+  },
+  "rel_admin_skin_classic": "经典",
+  "@rel_admin_skin_classic": {
+    "description": "Release administration: classic"
+  },
+  "rel_admin_skin_midnight": "午夜",
+  "@rel_admin_skin_midnight": {
+    "description": "Release administration: midnight"
+  },
+  "rel_admin_skin_ember": "余烬",
+  "@rel_admin_skin_ember": {
+    "description": "Release administration: ember"
+  },
+  "rel_admin_skin_mono": "单色",
+  "@rel_admin_skin_mono": {
+    "description": "Release administration: mono"
+  },
+  "rel_admin_skin_cyberpunk": "赛博朋克",
+  "@rel_admin_skin_cyberpunk": {
+    "description": "Release administration: cyberpunk"
+  },
+  "rel_admin_skin_slate": "石板",
+  "@rel_admin_skin_slate": {
+    "description": "Release administration: slate"
   }
 }

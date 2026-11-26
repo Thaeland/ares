@@ -12600,6 +12600,149 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rel_admin_state_fatal => '严重错误';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      '不支持的配置文件归档或归档过大。';
+
+  @override
+  String get rel_admin_current_layout => '当前布局';
+
+  @override
+  String get rel_admin_one_pane => '单窗格';
+
+  @override
+  String get rel_admin_stacked => '上下堆叠';
+
+  @override
+  String get rel_admin_side_by_side => '并排';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      '此配置文件中没有受支持的外观。';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      '查看随此配置文件保存的外观';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      '仅应用于此设备上的此命名配置文件。导入的布局从空窗格开始，请自行选择聊天。';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device => '应用于此设备上的此配置文件';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      '导出会在网关上准备 .tar.gz。保存副本到此处前，请查看其中的可移植文件。导入会打开本地归档供查看；仅打开不会上传任何内容。';
+
+  @override
+  String get rel_admin_prepare_profile_export => '准备导出配置文件';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device => '打开此设备上的 .tar.gz';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      '仅传输所选文本文件。请检查是否含有密钥和私人信息。配置、技能和计划可能改变新配置文件的行为。';
+
+  @override
+  String get rel_admin_include_this_reviewed_file => '包含此已查看文件';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      '将外观应用于此设备上的新配置文件';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      '导入颜色和窗格大小，绝不导入聊天、工具或会话 ID。';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      '网关保留私有暂存副本。导入会创建新配置文件，不会替换现有配置文件。';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' 外观未应用：网关未确认已查看的叠加配置。';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device => ' 外观已应用于此设备。';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device => ' 外观未保存到此设备。';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle => '保存已查看的配置文件包';
+
+  @override
+  String get rel_admin_profile_bundle_saved => '配置文件包已保存。';
+
+  @override
+  String get rel_admin_import_selected_files => '导入所选文件';
+
+  @override
+  String get rel_admin_save_selected_files_to_device => '将所选文件保存到设备';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · 首个窗格 $percent%';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return '皮肤：$skin · 模式：$mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return '外观已应用于 $gateway / $profile。';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return '包：$profile · $count 个可查看文件 · 已省略 $omitted 个';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return '已在 $gateway 上导入 $name。';
+  }
+
+  @override
+  String get rel_admin_unchanged => '不变';
+
+  @override
+  String get rel_admin_mode_system => '系统';
+
+  @override
+  String get rel_admin_mode_light => '浅色';
+
+  @override
+  String get rel_admin_mode_dark => '深色';
+
+  @override
+  String get rel_admin_skin_classic => '经典';
+
+  @override
+  String get rel_admin_skin_midnight => '午夜';
+
+  @override
+  String get rel_admin_skin_ember => '余烬';
+
+  @override
+  String get rel_admin_skin_mono => '单色';
+
+  @override
+  String get rel_admin_skin_cyberpunk => '赛博朋克';
+
+  @override
+  String get rel_admin_skin_slate => '石板';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -25198,6 +25341,149 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get rel_admin_state_fatal => '严重错误';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      '不支持的配置文件归档或归档过大。';
+
+  @override
+  String get rel_admin_current_layout => '当前布局';
+
+  @override
+  String get rel_admin_one_pane => '单窗格';
+
+  @override
+  String get rel_admin_stacked => '上下堆叠';
+
+  @override
+  String get rel_admin_side_by_side => '并排';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      '此配置文件中没有受支持的外观。';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      '查看随此配置文件保存的外观';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      '仅应用于此设备上的此命名配置文件。导入的布局从空窗格开始，请自行选择聊天。';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device => '应用于此设备上的此配置文件';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      '导出会在网关上准备 .tar.gz。保存副本到此处前，请查看其中的可移植文件。导入会打开本地归档供查看；仅打开不会上传任何内容。';
+
+  @override
+  String get rel_admin_prepare_profile_export => '准备导出配置文件';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device => '打开此设备上的 .tar.gz';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      '仅传输所选文本文件。请检查是否含有密钥和私人信息。配置、技能和计划可能改变新配置文件的行为。';
+
+  @override
+  String get rel_admin_include_this_reviewed_file => '包含此已查看文件';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      '将外观应用于此设备上的新配置文件';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      '导入颜色和窗格大小，绝不导入聊天、工具或会话 ID。';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      '网关保留私有暂存副本。导入会创建新配置文件，不会替换现有配置文件。';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' 外观未应用：网关未确认已查看的叠加配置。';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device => ' 外观已应用于此设备。';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device => ' 外观未保存到此设备。';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle => '保存已查看的配置文件包';
+
+  @override
+  String get rel_admin_profile_bundle_saved => '配置文件包已保存。';
+
+  @override
+  String get rel_admin_import_selected_files => '导入所选文件';
+
+  @override
+  String get rel_admin_save_selected_files_to_device => '将所选文件保存到设备';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · 首个窗格 $percent%';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return '皮肤：$skin · 模式：$mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return '外观已应用于 $gateway / $profile。';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return '包：$profile · $count 个可查看文件 · 已省略 $omitted 个';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return '已在 $gateway 上导入 $name。';
+  }
+
+  @override
+  String get rel_admin_unchanged => '不变';
+
+  @override
+  String get rel_admin_mode_system => '系统';
+
+  @override
+  String get rel_admin_mode_light => '浅色';
+
+  @override
+  String get rel_admin_mode_dark => '深色';
+
+  @override
+  String get rel_admin_skin_classic => '经典';
+
+  @override
+  String get rel_admin_skin_midnight => '午夜';
+
+  @override
+  String get rel_admin_skin_ember => '余烬';
+
+  @override
+  String get rel_admin_skin_mono => '单色';
+
+  @override
+  String get rel_admin_skin_cyberpunk => '赛博朋克';
+
+  @override
+  String get rel_admin_skin_slate => '石板';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -37800,4 +38086,147 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get rel_admin_state_fatal => '嚴重錯誤';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      '不支援的設定檔封存檔或封存檔過大。';
+
+  @override
+  String get rel_admin_current_layout => '目前配置';
+
+  @override
+  String get rel_admin_one_pane => '單一窗格';
+
+  @override
+  String get rel_admin_stacked => '上下堆疊';
+
+  @override
+  String get rel_admin_side_by_side => '並排';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      '此設定檔中沒有支援的外觀。';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      '檢視隨此設定檔儲存的外觀';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      '僅套用至此裝置上的此具名設定檔。匯入的配置從空窗格開始，請自行選擇聊天。';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device => '套用至此裝置上的此設定檔';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      '匯出會在閘道上準備 .tar.gz。儲存副本到此處前，請檢視其中的可攜式檔案。匯入會開啟本機封存檔供檢視；僅開啟不會上傳任何內容。';
+
+  @override
+  String get rel_admin_prepare_profile_export => '準備匯出設定檔';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device => '開啟此裝置上的 .tar.gz';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      '僅傳輸所選文字檔案。請檢查是否含有密鑰和私人資訊。設定、技能和排程可能改變新設定檔的行為。';
+
+  @override
+  String get rel_admin_include_this_reviewed_file => '包含此已檢視檔案';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      '將外觀套用至此裝置上的新設定檔';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      '匯入色彩和窗格大小，絕不匯入聊天、工具或工作階段 ID。';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      '閘道保留私人暫存副本。匯入會建立新設定檔，不會取代現有設定檔。';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' 外觀未套用：閘道未確認已檢視的疊加設定。';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device => ' 外觀已套用至此裝置。';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device => ' 外觀未儲存至此裝置。';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle => '儲存已檢視的設定檔套件';
+
+  @override
+  String get rel_admin_profile_bundle_saved => '設定檔套件已儲存。';
+
+  @override
+  String get rel_admin_import_selected_files => '匯入所選檔案';
+
+  @override
+  String get rel_admin_save_selected_files_to_device => '將所選檔案儲存至裝置';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · 第一個窗格 $percent%';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return '外觀：$skin · 模式：$mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return '外觀已套用至 $gateway / $profile。';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return '套件：$profile · $count 個可檢視檔案 · 已省略 $omitted 個';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return '已在 $gateway 上匯入 $name。';
+  }
+
+  @override
+  String get rel_admin_unchanged => '不變';
+
+  @override
+  String get rel_admin_mode_system => '系統';
+
+  @override
+  String get rel_admin_mode_light => '淺色';
+
+  @override
+  String get rel_admin_mode_dark => '深色';
+
+  @override
+  String get rel_admin_skin_classic => '經典';
+
+  @override
+  String get rel_admin_skin_midnight => '午夜';
+
+  @override
+  String get rel_admin_skin_ember => '餘燼';
+
+  @override
+  String get rel_admin_skin_mono => '單色';
+
+  @override
+  String get rel_admin_skin_cyberpunk => '賽博龐克';
+
+  @override
+  String get rel_admin_skin_slate => '石板';
 }

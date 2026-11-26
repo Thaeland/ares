@@ -12837,4 +12837,150 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get rel_admin_state_fatal => '치명적 오류';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      '지원되지 않거나 너무 큰 프로필 압축 파일입니다.';
+
+  @override
+  String get rel_admin_current_layout => '현재 레이아웃';
+
+  @override
+  String get rel_admin_one_pane => '패널 하나';
+
+  @override
+  String get rel_admin_stacked => '위아래로';
+
+  @override
+  String get rel_admin_side_by_side => '나란히';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      '이 프로필에 지원되는 모양이 없습니다.';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      '이 프로필에 저장된 모양 검토';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      '이 기기의 이 명명된 프로필에만 적용됩니다. 가져온 배치는 빈 패널로 시작하며 채팅은 직접 선택해야 합니다.';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device =>
+      '이 기기의 이 프로필에 적용';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      '내보내기는 게이트웨이에 .tar.gz를 준비합니다. 여기에 사본을 저장하기 전에 이동 가능한 파일을 검토하세요. 가져오기는 검토를 위해 로컬 압축 파일을 열며, 열기만으로는 아무것도 업로드하지 않습니다.';
+
+  @override
+  String get rel_admin_prepare_profile_export => '프로필 내보내기 준비';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device => '이 기기에서 .tar.gz 열기';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      '선택한 텍스트 파일만 전송됩니다. 비밀 정보와 개인 정보가 있는지 검토하세요. 설정, 스킬 및 일정은 새 프로필의 동작을 바꿀 수 있습니다.';
+
+  @override
+  String get rel_admin_include_this_reviewed_file => '검토한 이 파일 포함';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      '이 기기의 새 프로필에 모양 적용';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      '색상과 패널 크기를 가져오며 채팅, 도구 또는 세션 ID는 가져오지 않습니다.';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      '게이트웨이는 비공개 임시 사본을 보관합니다. 가져오기는 새 프로필을 만들며 기존 프로필을 대체하지 않습니다.';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' 모양을 적용하지 않았습니다. 게이트웨이가 검토한 오버레이를 확인하지 않았습니다.';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device =>
+      ' 이 기기에 모양을 적용했습니다.';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device =>
+      ' 이 기기에 모양을 저장하지 못했습니다.';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle => '검토한 프로필 번들 저장';
+
+  @override
+  String get rel_admin_profile_bundle_saved => '프로필 번들을 저장했습니다.';
+
+  @override
+  String get rel_admin_import_selected_files => '선택한 파일 가져오기';
+
+  @override
+  String get rel_admin_save_selected_files_to_device => '선택한 파일을 기기에 저장';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · 첫 패널 $percent%';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return '스킨: $skin · 모드: $mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return '$gateway / $profile에 모양을 적용했습니다.';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return '번들: $profile · 검토 가능한 파일 $count개 · 제외 $omitted개';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return '$gateway에서 $name을(를) 가져왔습니다.';
+  }
+
+  @override
+  String get rel_admin_unchanged => '변경 없음';
+
+  @override
+  String get rel_admin_mode_system => '시스템';
+
+  @override
+  String get rel_admin_mode_light => '밝게';
+
+  @override
+  String get rel_admin_mode_dark => '어둡게';
+
+  @override
+  String get rel_admin_skin_classic => '클래식';
+
+  @override
+  String get rel_admin_skin_midnight => '한밤중';
+
+  @override
+  String get rel_admin_skin_ember => '불씨';
+
+  @override
+  String get rel_admin_skin_mono => '단색';
+
+  @override
+  String get rel_admin_skin_cyberpunk => '사이버펑크';
+
+  @override
+  String get rel_admin_skin_slate => '슬레이트';
 }

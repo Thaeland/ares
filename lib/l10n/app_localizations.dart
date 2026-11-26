@@ -21619,6 +21619,241 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'fatal'**
   String get rel_admin_state_fatal;
+
+  /// Release administration: Unsupported or oversized profile archive.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported or oversized profile archive.'**
+  String get rel_admin_unsupported_or_oversized_profile_archive;
+
+  /// Release administration: Current layout
+  ///
+  /// In en, this message translates to:
+  /// **'Current layout'**
+  String get rel_admin_current_layout;
+
+  /// Release administration: One pane
+  ///
+  /// In en, this message translates to:
+  /// **'One pane'**
+  String get rel_admin_one_pane;
+
+  /// Release administration: Stacked
+  ///
+  /// In en, this message translates to:
+  /// **'Stacked'**
+  String get rel_admin_stacked;
+
+  /// Release administration: Side by side
+  ///
+  /// In en, this message translates to:
+  /// **'Side by side'**
+  String get rel_admin_side_by_side;
+
+  /// Release administration: No supported appearance in this profile.
+  ///
+  /// In en, this message translates to:
+  /// **'No supported appearance in this profile.'**
+  String get rel_admin_no_supported_appearance_in_this_profile;
+
+  /// Release administration: Review appearance saved with this profile
+  ///
+  /// In en, this message translates to:
+  /// **'Review appearance saved with this profile'**
+  String get rel_admin_review_appearance_saved_with_this_profile;
+
+  /// Release administration: Applies only to this named profile on this device. An imported arrangement starts with empty panes; choose its chats yourself.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies only to this named profile on this device. An imported arrangement starts with empty panes; choose its chats yourself.'**
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device;
+
+  /// Release administration: Apply to this profile on this device
+  ///
+  /// In en, this message translates to:
+  /// **'Apply to this profile on this device'**
+  String get rel_admin_apply_to_this_profile_on_this_device;
+
+  /// Release administration: Export prepares a .tar.gz on the gateway. Review its portable files before saving a copy here. Import opens a local archive for review; opening alone uploads nothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Export prepares a .tar.gz on the gateway. Review its portable files before saving a copy here. Import opens a local archive for review; opening alone uploads nothing.'**
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review;
+
+  /// Release administration: Prepare profile export
+  ///
+  /// In en, this message translates to:
+  /// **'Prepare profile export'**
+  String get rel_admin_prepare_profile_export;
+
+  /// Release administration: Open .tar.gz from this device
+  ///
+  /// In en, this message translates to:
+  /// **'Open .tar.gz from this device'**
+  String get rel_admin_open_tar_gz_from_this_device;
+
+  /// Release administration: Only selected text files travel. Review for secrets and private information. Config, skills and schedules can change what the new profile does.
+  ///
+  /// In en, this message translates to:
+  /// **'Only selected text files travel. Review for secrets and private information. Config, skills and schedules can change what the new profile does.'**
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and;
+
+  /// Release administration: Include this reviewed file
+  ///
+  /// In en, this message translates to:
+  /// **'Include this reviewed file'**
+  String get rel_admin_include_this_reviewed_file;
+
+  /// Release administration: Apply appearance to the new profile on this device
+  ///
+  /// In en, this message translates to:
+  /// **'Apply appearance to the new profile on this device'**
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device;
+
+  /// Release administration: Imports colours and pane sizes, never chats, tools or session IDs.
+  ///
+  /// In en, this message translates to:
+  /// **'Imports colours and pane sizes, never chats, tools or session IDs.'**
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids;
+
+  /// Release administration: The gateway retains a private staged copy. Import creates a new profile; it will not replace an existing one.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway retains a private staged copy. Import creates a new profile; it will not replace an existing one.'**
+  String get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates;
+
+  /// Release administration:  Appearance not applied: the gateway did not confirm the reviewed overlay.
+  ///
+  /// In en, this message translates to:
+  /// **' Appearance not applied: the gateway did not confirm the reviewed overlay.'**
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the;
+
+  /// Release administration:  Appearance applied on this device.
+  ///
+  /// In en, this message translates to:
+  /// **' Appearance applied on this device.'**
+  String get rel_admin_appearance_applied_on_this_device;
+
+  /// Release administration:  Appearance was not saved on this device.
+  ///
+  /// In en, this message translates to:
+  /// **' Appearance was not saved on this device.'**
+  String get rel_admin_appearance_was_not_saved_on_this_device;
+
+  /// Release administration: Save reviewed profile bundle
+  ///
+  /// In en, this message translates to:
+  /// **'Save reviewed profile bundle'**
+  String get rel_admin_save_reviewed_profile_bundle;
+
+  /// Release administration: Profile bundle saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile bundle saved.'**
+  String get rel_admin_profile_bundle_saved;
+
+  /// Release administration: Import selected files
+  ///
+  /// In en, this message translates to:
+  /// **'Import selected files'**
+  String get rel_admin_import_selected_files;
+
+  /// Release administration: Save selected files to device
+  ///
+  /// In en, this message translates to:
+  /// **'Save selected files to device'**
+  String get rel_admin_save_selected_files_to_device;
+
+  /// Release administration: {layout} · {percent}% first pane
+  ///
+  /// In en, this message translates to:
+  /// **'{layout} · {percent}% first pane'**
+  String rel_admin_layout_first_pane(String layout, String percent);
+
+  /// Release administration: Skin: {skin} · Mode: {mode} · {layout}
+  ///
+  /// In en, this message translates to:
+  /// **'Skin: {skin} · Mode: {mode} · {layout}'**
+  String rel_admin_appearance_summary(String skin, String mode, String layout);
+
+  /// Release administration: Appearance applied to {gateway} / {profile}.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance applied to {gateway} / {profile}.'**
+  String rel_admin_appearance_applied(String gateway, String profile);
+
+  /// Release administration: Bundle: {profile} · {count} reviewable files · {omitted} omitted
+  ///
+  /// In en, this message translates to:
+  /// **'Bundle: {profile} · {count} reviewable files · {omitted} omitted'**
+  String rel_admin_bundle_summary(String profile, String count, String omitted);
+
+  /// Release administration: Imported {name} on {gateway}.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported {name} on {gateway}.'**
+  String rel_admin_imported_on(String name, String gateway);
+
+  /// Release administration: unchanged
+  ///
+  /// In en, this message translates to:
+  /// **'unchanged'**
+  String get rel_admin_unchanged;
+
+  /// Release administration: system
+  ///
+  /// In en, this message translates to:
+  /// **'system'**
+  String get rel_admin_mode_system;
+
+  /// Release administration: light
+  ///
+  /// In en, this message translates to:
+  /// **'light'**
+  String get rel_admin_mode_light;
+
+  /// Release administration: dark
+  ///
+  /// In en, this message translates to:
+  /// **'dark'**
+  String get rel_admin_mode_dark;
+
+  /// Release administration: classic
+  ///
+  /// In en, this message translates to:
+  /// **'classic'**
+  String get rel_admin_skin_classic;
+
+  /// Release administration: midnight
+  ///
+  /// In en, this message translates to:
+  /// **'midnight'**
+  String get rel_admin_skin_midnight;
+
+  /// Release administration: ember
+  ///
+  /// In en, this message translates to:
+  /// **'ember'**
+  String get rel_admin_skin_ember;
+
+  /// Release administration: mono
+  ///
+  /// In en, this message translates to:
+  /// **'mono'**
+  String get rel_admin_skin_mono;
+
+  /// Release administration: cyberpunk
+  ///
+  /// In en, this message translates to:
+  /// **'cyberpunk'**
+  String get rel_admin_skin_cyberpunk;
+
+  /// Release administration: slate
+  ///
+  /// In en, this message translates to:
+  /// **'slate'**
+  String get rel_admin_skin_slate;
 }
 
 class _AppLocalizationsDelegate

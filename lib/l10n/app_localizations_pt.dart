@@ -13359,6 +13359,158 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get rel_admin_state_fatal => 'erro fatal';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      'Arquivo de perfil não suportado ou demasiado grande.';
+
+  @override
+  String get rel_admin_current_layout => 'Disposição atual';
+
+  @override
+  String get rel_admin_one_pane => 'Um painel';
+
+  @override
+  String get rel_admin_stacked => 'Empilhado';
+
+  @override
+  String get rel_admin_side_by_side => 'Lado a lado';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      'Não existe uma aparência suportada neste perfil.';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      'Rever a aparência guardada com este perfil';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      'Aplica-se apenas a este perfil nomeado neste dispositivo. Uma disposição importada começa com painéis vazios; escolha as conversas.';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device =>
+      'Aplicar a este perfil neste dispositivo';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      'A exportação prepara um .tar.gz no gateway. Reveja os ficheiros portáteis antes de guardar uma cópia aqui. A importação abre um arquivo local para revisão; só abrir não carrega nada.';
+
+  @override
+  String get rel_admin_prepare_profile_export =>
+      'Preparar exportação de perfil';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device =>
+      'Abrir .tar.gz deste dispositivo';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      'Só são transferidos os ficheiros de texto selecionados. Verifique se contêm segredos e informação privada. A configuração, as competências e os agendamentos podem alterar o comportamento do novo perfil.';
+
+  @override
+  String get rel_admin_include_this_reviewed_file =>
+      'Incluir este ficheiro revisto';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      'Aplicar a aparência ao novo perfil neste dispositivo';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      'Importa cores e tamanhos dos painéis, nunca conversas, ferramentas ou IDs de sessão.';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      'O gateway mantém uma cópia privada preparada. A importação cria um novo perfil; não substitui um existente.';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' Aparência não aplicada: o gateway não confirmou a sobreposição revista.';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device =>
+      ' Aparência aplicada neste dispositivo.';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device =>
+      ' A aparência não foi guardada neste dispositivo.';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle =>
+      'Guardar pacote de perfil revisto';
+
+  @override
+  String get rel_admin_profile_bundle_saved => 'Pacote de perfil guardado.';
+
+  @override
+  String get rel_admin_import_selected_files =>
+      'Importar ficheiros selecionados';
+
+  @override
+  String get rel_admin_save_selected_files_to_device =>
+      'Guardar ficheiros selecionados no dispositivo';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · $percent% primeiro painel';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return 'Tema: $skin · Modo: $mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return 'Aparência aplicada a $gateway / $profile.';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return 'Pacote: $profile · $count ficheiros para revisão · $omitted omitidos';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return '$name importado em $gateway.';
+  }
+
+  @override
+  String get rel_admin_unchanged => 'inalterado';
+
+  @override
+  String get rel_admin_mode_system => 'sistema';
+
+  @override
+  String get rel_admin_mode_light => 'claro';
+
+  @override
+  String get rel_admin_mode_dark => 'escuro';
+
+  @override
+  String get rel_admin_skin_classic => 'clássico';
+
+  @override
+  String get rel_admin_skin_midnight => 'meia-noite';
+
+  @override
+  String get rel_admin_skin_ember => 'brasa';
+
+  @override
+  String get rel_admin_skin_mono => 'monocromático';
+
+  @override
+  String get rel_admin_skin_cyberpunk => 'ciberpunk';
+
+  @override
+  String get rel_admin_skin_slate => 'ardósia';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -26694,4 +26846,156 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get rel_admin_state_fatal => 'erro fatal';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      'Arquivo de perfil não suportado ou grande demais.';
+
+  @override
+  String get rel_admin_current_layout => 'Layout atual';
+
+  @override
+  String get rel_admin_one_pane => 'Um painel';
+
+  @override
+  String get rel_admin_stacked => 'Empilhado';
+
+  @override
+  String get rel_admin_side_by_side => 'Lado a lado';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      'Não há aparência suportada neste perfil.';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      'Revisar a aparência salva com este perfil';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      'Aplica-se apenas a este perfil nomeado neste dispositivo. Um layout importado começa com painéis vazios; escolha as conversas.';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device =>
+      'Aplicar a este perfil neste dispositivo';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      'A exportação prepara um .tar.gz no gateway. Revise os arquivos portáteis antes de salvar uma cópia aqui. A importação abre um arquivo local para revisão; apenas abrir não envia nada.';
+
+  @override
+  String get rel_admin_prepare_profile_export =>
+      'Preparar exportação de perfil';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device =>
+      'Abrir .tar.gz deste dispositivo';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      'Somente os arquivos de texto selecionados são transferidos. Verifique se contêm segredos e informações privadas. A configuração, as habilidades e os agendamentos podem alterar o comportamento do novo perfil.';
+
+  @override
+  String get rel_admin_include_this_reviewed_file =>
+      'Incluir este arquivo revisado';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      'Aplicar a aparência ao novo perfil neste dispositivo';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      'Importa cores e tamanhos dos painéis, nunca conversas, ferramentas ou IDs de sessão.';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      'O gateway mantém uma cópia privada preparada. A importação cria um novo perfil; não substitui um existente.';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' Aparência não aplicada: o gateway não confirmou a sobreposição revisada.';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device =>
+      ' Aparência aplicada neste dispositivo.';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device =>
+      ' A aparência não foi salva neste dispositivo.';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle =>
+      'Salvar pacote de perfil revisado';
+
+  @override
+  String get rel_admin_profile_bundle_saved => 'Pacote de perfil salvo.';
+
+  @override
+  String get rel_admin_import_selected_files =>
+      'Importar arquivos selecionados';
+
+  @override
+  String get rel_admin_save_selected_files_to_device =>
+      'Salvar arquivos selecionados no dispositivo';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · $percent% primeiro painel';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return 'Tema: $skin · Modo: $mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return 'Aparência aplicada a $gateway / $profile.';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return 'Pacote: $profile · $count arquivos para revisão · $omitted omitidos';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return '$name importado em $gateway.';
+  }
+
+  @override
+  String get rel_admin_unchanged => 'inalterado';
+
+  @override
+  String get rel_admin_mode_system => 'sistema';
+
+  @override
+  String get rel_admin_mode_light => 'claro';
+
+  @override
+  String get rel_admin_mode_dark => 'escuro';
+
+  @override
+  String get rel_admin_skin_classic => 'clássico';
+
+  @override
+  String get rel_admin_skin_midnight => 'meia-noite';
+
+  @override
+  String get rel_admin_skin_ember => 'brasa';
+
+  @override
+  String get rel_admin_skin_mono => 'monocromático';
+
+  @override
+  String get rel_admin_skin_cyberpunk => 'cyberpunk';
+
+  @override
+  String get rel_admin_skin_slate => 'ardósia';
 }

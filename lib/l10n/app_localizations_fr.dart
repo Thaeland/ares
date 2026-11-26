@@ -13395,4 +13395,155 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rel_admin_state_fatal => 'erreur fatale';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      'Archive de profil non prise en charge ou trop volumineuse.';
+
+  @override
+  String get rel_admin_current_layout => 'Disposition actuelle';
+
+  @override
+  String get rel_admin_one_pane => 'Un volet';
+
+  @override
+  String get rel_admin_stacked => 'Empilé';
+
+  @override
+  String get rel_admin_side_by_side => 'Côte à côte';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      'Aucune apparence prise en charge dans ce profil.';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      'Examiner l’apparence enregistrée avec ce profil';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      'S’applique uniquement à ce profil nommé sur cet appareil. Une disposition importée commence avec des volets vides ; choisissez vous-même ses chats.';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device =>
+      'Appliquer à ce profil sur cet appareil';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      'L’export prépare un .tar.gz sur la passerelle. Examinez ses fichiers portables avant d’enregistrer une copie ici. L’import ouvre une archive locale pour examen ; l’ouverture seule ne téléverse rien.';
+
+  @override
+  String get rel_admin_prepare_profile_export => 'Préparer l’export du profil';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device =>
+      'Ouvrir un .tar.gz de cet appareil';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      'Seuls les fichiers texte sélectionnés sont transférés. Vérifiez l’absence de secrets et d’informations privées. La configuration, les compétences et les programmations peuvent modifier le comportement du nouveau profil.';
+
+  @override
+  String get rel_admin_include_this_reviewed_file =>
+      'Inclure ce fichier examiné';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      'Appliquer l’apparence au nouveau profil sur cet appareil';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      'Importe les couleurs et tailles des volets, jamais les chats, outils ou identifiants de session.';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      'La passerelle conserve une copie privée préparée. L’import crée un nouveau profil ; il ne remplace pas un profil existant.';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' Apparence non appliquée : la passerelle n’a pas confirmé la surcouche examinée.';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device =>
+      ' Apparence appliquée sur cet appareil.';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device =>
+      ' L’apparence n’a pas été enregistrée sur cet appareil.';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle =>
+      'Enregistrer le paquet de profil examiné';
+
+  @override
+  String get rel_admin_profile_bundle_saved => 'Paquet de profil enregistré.';
+
+  @override
+  String get rel_admin_import_selected_files =>
+      'Importer les fichiers sélectionnés';
+
+  @override
+  String get rel_admin_save_selected_files_to_device =>
+      'Enregistrer les fichiers sélectionnés sur l’appareil';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · $percent% premier volet';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return 'Thème : $skin · Mode : $mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return 'Apparence appliquée à $gateway / $profile.';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return 'Paquet : $profile · $count fichiers examinables · $omitted omis';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return '$name importé sur $gateway.';
+  }
+
+  @override
+  String get rel_admin_unchanged => 'inchangé';
+
+  @override
+  String get rel_admin_mode_system => 'système';
+
+  @override
+  String get rel_admin_mode_light => 'clair';
+
+  @override
+  String get rel_admin_mode_dark => 'sombre';
+
+  @override
+  String get rel_admin_skin_classic => 'classique';
+
+  @override
+  String get rel_admin_skin_midnight => 'minuit';
+
+  @override
+  String get rel_admin_skin_ember => 'braise';
+
+  @override
+  String get rel_admin_skin_mono => 'monochrome';
+
+  @override
+  String get rel_admin_skin_cyberpunk => 'cyberpunk';
+
+  @override
+  String get rel_admin_skin_slate => 'ardoise';
 }

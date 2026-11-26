@@ -4900,5 +4900,207 @@
   "rel_admin_state_fatal": "критическая ошибка",
   "@rel_admin_state_fatal": {
     "description": "Release administration: fatal"
+  },
+  "rel_admin_unsupported_or_oversized_profile_archive": "Неподдерживаемый или слишком большой архив профиля.",
+  "@rel_admin_unsupported_or_oversized_profile_archive": {
+    "description": "Release administration: Unsupported or oversized profile archive."
+  },
+  "rel_admin_current_layout": "Текущая компоновка",
+  "@rel_admin_current_layout": {
+    "description": "Release administration: Current layout"
+  },
+  "rel_admin_one_pane": "Одна панель",
+  "@rel_admin_one_pane": {
+    "description": "Release administration: One pane"
+  },
+  "rel_admin_stacked": "Вертикально",
+  "@rel_admin_stacked": {
+    "description": "Release administration: Stacked"
+  },
+  "rel_admin_side_by_side": "Рядом",
+  "@rel_admin_side_by_side": {
+    "description": "Release administration: Side by side"
+  },
+  "rel_admin_no_supported_appearance_in_this_profile": "В этом профиле нет поддерживаемого оформления.",
+  "@rel_admin_no_supported_appearance_in_this_profile": {
+    "description": "Release administration: No supported appearance in this profile."
+  },
+  "rel_admin_review_appearance_saved_with_this_profile": "Проверить оформление, сохранённое с этим профилем",
+  "@rel_admin_review_appearance_saved_with_this_profile": {
+    "description": "Release administration: Review appearance saved with this profile"
+  },
+  "rel_admin_applies_only_to_this_named_profile_on_this_device": "Применяется только к этому именованному профилю на этом устройстве. Импортированная компоновка начинается с пустых панелей; выберите чаты сами.",
+  "@rel_admin_applies_only_to_this_named_profile_on_this_device": {
+    "description": "Release administration: Applies only to this named profile on this device. An imported arrangement starts with empty panes; choose its chats yourself."
+  },
+  "rel_admin_apply_to_this_profile_on_this_device": "Применить к этому профилю на этом устройстве",
+  "@rel_admin_apply_to_this_profile_on_this_device": {
+    "description": "Release administration: Apply to this profile on this device"
+  },
+  "rel_admin_export_prepares_a_tar_gz_on_the_gateway_review": "Экспорт подготавливает .tar.gz на шлюзе. Проверьте переносимые файлы перед сохранением копии здесь. Импорт открывает локальный архив для проверки; само открытие ничего не загружает.",
+  "@rel_admin_export_prepares_a_tar_gz_on_the_gateway_review": {
+    "description": "Release administration: Export prepares a .tar.gz on the gateway. Review its portable files before saving a copy here. Import opens a local archive for review; opening alone uploads nothing."
+  },
+  "rel_admin_prepare_profile_export": "Подготовить экспорт профиля",
+  "@rel_admin_prepare_profile_export": {
+    "description": "Release administration: Prepare profile export"
+  },
+  "rel_admin_open_tar_gz_from_this_device": "Открыть .tar.gz с этого устройства",
+  "@rel_admin_open_tar_gz_from_this_device": {
+    "description": "Release administration: Open .tar.gz from this device"
+  },
+  "rel_admin_only_selected_text_files_travel_review_for_secrets_and": "Переносятся только выбранные текстовые файлы. Проверьте их на секреты и личные данные. Конфигурация, навыки и расписания могут изменить поведение нового профиля.",
+  "@rel_admin_only_selected_text_files_travel_review_for_secrets_and": {
+    "description": "Release administration: Only selected text files travel. Review for secrets and private information. Config, skills and schedules can change what the new profile does."
+  },
+  "rel_admin_include_this_reviewed_file": "Включить этот проверенный файл",
+  "@rel_admin_include_this_reviewed_file": {
+    "description": "Release administration: Include this reviewed file"
+  },
+  "rel_admin_apply_appearance_to_the_new_profile_on_this_device": "Применить оформление к новому профилю на этом устройстве",
+  "@rel_admin_apply_appearance_to_the_new_profile_on_this_device": {
+    "description": "Release administration: Apply appearance to the new profile on this device"
+  },
+  "rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids": "Импортирует цвета и размеры панелей, но не чаты, инструменты или ID сеансов.",
+  "@rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids": {
+    "description": "Release administration: Imports colours and pane sizes, never chats, tools or session IDs."
+  },
+  "rel_admin_the_gateway_retains_a_private_staged_copy_import_creates": "Шлюз сохраняет закрытую промежуточную копию. Импорт создаёт новый профиль и не заменяет существующий.",
+  "@rel_admin_the_gateway_retains_a_private_staged_copy_import_creates": {
+    "description": "Release administration: The gateway retains a private staged copy. Import creates a new profile; it will not replace an existing one."
+  },
+  "rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the": " Оформление не применено: шлюз не подтвердил проверенное наложение.",
+  "@rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the": {
+    "description": "Release administration:  Appearance not applied: the gateway did not confirm the reviewed overlay."
+  },
+  "rel_admin_appearance_applied_on_this_device": " Оформление применено на этом устройстве.",
+  "@rel_admin_appearance_applied_on_this_device": {
+    "description": "Release administration:  Appearance applied on this device."
+  },
+  "rel_admin_appearance_was_not_saved_on_this_device": " Оформление не сохранено на этом устройстве.",
+  "@rel_admin_appearance_was_not_saved_on_this_device": {
+    "description": "Release administration:  Appearance was not saved on this device."
+  },
+  "rel_admin_save_reviewed_profile_bundle": "Сохранить проверенный пакет профиля",
+  "@rel_admin_save_reviewed_profile_bundle": {
+    "description": "Release administration: Save reviewed profile bundle"
+  },
+  "rel_admin_profile_bundle_saved": "Пакет профиля сохранён.",
+  "@rel_admin_profile_bundle_saved": {
+    "description": "Release administration: Profile bundle saved."
+  },
+  "rel_admin_import_selected_files": "Импортировать выбранные файлы",
+  "@rel_admin_import_selected_files": {
+    "description": "Release administration: Import selected files"
+  },
+  "rel_admin_save_selected_files_to_device": "Сохранить выбранные файлы на устройство",
+  "@rel_admin_save_selected_files_to_device": {
+    "description": "Release administration: Save selected files to device"
+  },
+  "rel_admin_layout_first_pane": "{layout} · {percent}% первая панель",
+  "@rel_admin_layout_first_pane": {
+    "description": "Release administration: {layout} · {percent}% first pane",
+    "placeholders": {
+      "layout": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_appearance_summary": "Тема: {skin} · Режим: {mode} · {layout}",
+  "@rel_admin_appearance_summary": {
+    "description": "Release administration: Skin: {skin} · Mode: {mode} · {layout}",
+    "placeholders": {
+      "skin": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      },
+      "layout": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_appearance_applied": "Оформление применено к {gateway} / {profile}.",
+  "@rel_admin_appearance_applied": {
+    "description": "Release administration: Appearance applied to {gateway} / {profile}.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_bundle_summary": "Пакет: {profile} · файлов для проверки: {count} · пропущено: {omitted}",
+  "@rel_admin_bundle_summary": {
+    "description": "Release administration: Bundle: {profile} · {count} reviewable files · {omitted} omitted",
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      },
+      "omitted": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_imported_on": "{name} импортирован на {gateway}.",
+  "@rel_admin_imported_on": {
+    "description": "Release administration: Imported {name} on {gateway}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_unchanged": "без изменений",
+  "@rel_admin_unchanged": {
+    "description": "Release administration: unchanged"
+  },
+  "rel_admin_mode_system": "системный",
+  "@rel_admin_mode_system": {
+    "description": "Release administration: system"
+  },
+  "rel_admin_mode_light": "светлый",
+  "@rel_admin_mode_light": {
+    "description": "Release administration: light"
+  },
+  "rel_admin_mode_dark": "тёмный",
+  "@rel_admin_mode_dark": {
+    "description": "Release administration: dark"
+  },
+  "rel_admin_skin_classic": "классическая",
+  "@rel_admin_skin_classic": {
+    "description": "Release administration: classic"
+  },
+  "rel_admin_skin_midnight": "полночь",
+  "@rel_admin_skin_midnight": {
+    "description": "Release administration: midnight"
+  },
+  "rel_admin_skin_ember": "угли",
+  "@rel_admin_skin_ember": {
+    "description": "Release administration: ember"
+  },
+  "rel_admin_skin_mono": "монохромная",
+  "@rel_admin_skin_mono": {
+    "description": "Release administration: mono"
+  },
+  "rel_admin_skin_cyberpunk": "киберпанк",
+  "@rel_admin_skin_cyberpunk": {
+    "description": "Release administration: cyberpunk"
+  },
+  "rel_admin_skin_slate": "сланец",
+  "@rel_admin_skin_slate": {
+    "description": "Release administration: slate"
   }
 }

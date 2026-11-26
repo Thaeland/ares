@@ -13187,4 +13187,154 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rel_admin_state_fatal => 'fatal';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      'Unsupported or oversized profile archive.';
+
+  @override
+  String get rel_admin_current_layout => 'Current layout';
+
+  @override
+  String get rel_admin_one_pane => 'One pane';
+
+  @override
+  String get rel_admin_stacked => 'Stacked';
+
+  @override
+  String get rel_admin_side_by_side => 'Side by side';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      'No supported appearance in this profile.';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      'Review appearance saved with this profile';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      'Applies only to this named profile on this device. An imported arrangement starts with empty panes; choose its chats yourself.';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device =>
+      'Apply to this profile on this device';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      'Export prepares a .tar.gz on the gateway. Review its portable files before saving a copy here. Import opens a local archive for review; opening alone uploads nothing.';
+
+  @override
+  String get rel_admin_prepare_profile_export => 'Prepare profile export';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device =>
+      'Open .tar.gz from this device';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      'Only selected text files travel. Review for secrets and private information. Config, skills and schedules can change what the new profile does.';
+
+  @override
+  String get rel_admin_include_this_reviewed_file =>
+      'Include this reviewed file';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      'Apply appearance to the new profile on this device';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      'Imports colours and pane sizes, never chats, tools or session IDs.';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      'The gateway retains a private staged copy. Import creates a new profile; it will not replace an existing one.';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' Appearance not applied: the gateway did not confirm the reviewed overlay.';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device =>
+      ' Appearance applied on this device.';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device =>
+      ' Appearance was not saved on this device.';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle =>
+      'Save reviewed profile bundle';
+
+  @override
+  String get rel_admin_profile_bundle_saved => 'Profile bundle saved.';
+
+  @override
+  String get rel_admin_import_selected_files => 'Import selected files';
+
+  @override
+  String get rel_admin_save_selected_files_to_device =>
+      'Save selected files to device';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · $percent% first pane';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return 'Skin: $skin · Mode: $mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return 'Appearance applied to $gateway / $profile.';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return 'Bundle: $profile · $count reviewable files · $omitted omitted';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return 'Imported $name on $gateway.';
+  }
+
+  @override
+  String get rel_admin_unchanged => 'unchanged';
+
+  @override
+  String get rel_admin_mode_system => 'system';
+
+  @override
+  String get rel_admin_mode_light => 'light';
+
+  @override
+  String get rel_admin_mode_dark => 'dark';
+
+  @override
+  String get rel_admin_skin_classic => 'classic';
+
+  @override
+  String get rel_admin_skin_midnight => 'midnight';
+
+  @override
+  String get rel_admin_skin_ember => 'ember';
+
+  @override
+  String get rel_admin_skin_mono => 'mono';
+
+  @override
+  String get rel_admin_skin_cyberpunk => 'cyberpunk';
+
+  @override
+  String get rel_admin_skin_slate => 'slate';
 }

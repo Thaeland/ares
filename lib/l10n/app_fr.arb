@@ -4900,5 +4900,207 @@
   "rel_admin_state_fatal": "erreur fatale",
   "@rel_admin_state_fatal": {
     "description": "Release administration: fatal"
+  },
+  "rel_admin_unsupported_or_oversized_profile_archive": "Archive de profil non prise en charge ou trop volumineuse.",
+  "@rel_admin_unsupported_or_oversized_profile_archive": {
+    "description": "Release administration: Unsupported or oversized profile archive."
+  },
+  "rel_admin_current_layout": "Disposition actuelle",
+  "@rel_admin_current_layout": {
+    "description": "Release administration: Current layout"
+  },
+  "rel_admin_one_pane": "Un volet",
+  "@rel_admin_one_pane": {
+    "description": "Release administration: One pane"
+  },
+  "rel_admin_stacked": "Empilé",
+  "@rel_admin_stacked": {
+    "description": "Release administration: Stacked"
+  },
+  "rel_admin_side_by_side": "Côte à côte",
+  "@rel_admin_side_by_side": {
+    "description": "Release administration: Side by side"
+  },
+  "rel_admin_no_supported_appearance_in_this_profile": "Aucune apparence prise en charge dans ce profil.",
+  "@rel_admin_no_supported_appearance_in_this_profile": {
+    "description": "Release administration: No supported appearance in this profile."
+  },
+  "rel_admin_review_appearance_saved_with_this_profile": "Examiner l’apparence enregistrée avec ce profil",
+  "@rel_admin_review_appearance_saved_with_this_profile": {
+    "description": "Release administration: Review appearance saved with this profile"
+  },
+  "rel_admin_applies_only_to_this_named_profile_on_this_device": "S’applique uniquement à ce profil nommé sur cet appareil. Une disposition importée commence avec des volets vides ; choisissez vous-même ses chats.",
+  "@rel_admin_applies_only_to_this_named_profile_on_this_device": {
+    "description": "Release administration: Applies only to this named profile on this device. An imported arrangement starts with empty panes; choose its chats yourself."
+  },
+  "rel_admin_apply_to_this_profile_on_this_device": "Appliquer à ce profil sur cet appareil",
+  "@rel_admin_apply_to_this_profile_on_this_device": {
+    "description": "Release administration: Apply to this profile on this device"
+  },
+  "rel_admin_export_prepares_a_tar_gz_on_the_gateway_review": "L’export prépare un .tar.gz sur la passerelle. Examinez ses fichiers portables avant d’enregistrer une copie ici. L’import ouvre une archive locale pour examen ; l’ouverture seule ne téléverse rien.",
+  "@rel_admin_export_prepares_a_tar_gz_on_the_gateway_review": {
+    "description": "Release administration: Export prepares a .tar.gz on the gateway. Review its portable files before saving a copy here. Import opens a local archive for review; opening alone uploads nothing."
+  },
+  "rel_admin_prepare_profile_export": "Préparer l’export du profil",
+  "@rel_admin_prepare_profile_export": {
+    "description": "Release administration: Prepare profile export"
+  },
+  "rel_admin_open_tar_gz_from_this_device": "Ouvrir un .tar.gz de cet appareil",
+  "@rel_admin_open_tar_gz_from_this_device": {
+    "description": "Release administration: Open .tar.gz from this device"
+  },
+  "rel_admin_only_selected_text_files_travel_review_for_secrets_and": "Seuls les fichiers texte sélectionnés sont transférés. Vérifiez l’absence de secrets et d’informations privées. La configuration, les compétences et les programmations peuvent modifier le comportement du nouveau profil.",
+  "@rel_admin_only_selected_text_files_travel_review_for_secrets_and": {
+    "description": "Release administration: Only selected text files travel. Review for secrets and private information. Config, skills and schedules can change what the new profile does."
+  },
+  "rel_admin_include_this_reviewed_file": "Inclure ce fichier examiné",
+  "@rel_admin_include_this_reviewed_file": {
+    "description": "Release administration: Include this reviewed file"
+  },
+  "rel_admin_apply_appearance_to_the_new_profile_on_this_device": "Appliquer l’apparence au nouveau profil sur cet appareil",
+  "@rel_admin_apply_appearance_to_the_new_profile_on_this_device": {
+    "description": "Release administration: Apply appearance to the new profile on this device"
+  },
+  "rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids": "Importe les couleurs et tailles des volets, jamais les chats, outils ou identifiants de session.",
+  "@rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids": {
+    "description": "Release administration: Imports colours and pane sizes, never chats, tools or session IDs."
+  },
+  "rel_admin_the_gateway_retains_a_private_staged_copy_import_creates": "La passerelle conserve une copie privée préparée. L’import crée un nouveau profil ; il ne remplace pas un profil existant.",
+  "@rel_admin_the_gateway_retains_a_private_staged_copy_import_creates": {
+    "description": "Release administration: The gateway retains a private staged copy. Import creates a new profile; it will not replace an existing one."
+  },
+  "rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the": " Apparence non appliquée : la passerelle n’a pas confirmé la surcouche examinée.",
+  "@rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the": {
+    "description": "Release administration:  Appearance not applied: the gateway did not confirm the reviewed overlay."
+  },
+  "rel_admin_appearance_applied_on_this_device": " Apparence appliquée sur cet appareil.",
+  "@rel_admin_appearance_applied_on_this_device": {
+    "description": "Release administration:  Appearance applied on this device."
+  },
+  "rel_admin_appearance_was_not_saved_on_this_device": " L’apparence n’a pas été enregistrée sur cet appareil.",
+  "@rel_admin_appearance_was_not_saved_on_this_device": {
+    "description": "Release administration:  Appearance was not saved on this device."
+  },
+  "rel_admin_save_reviewed_profile_bundle": "Enregistrer le paquet de profil examiné",
+  "@rel_admin_save_reviewed_profile_bundle": {
+    "description": "Release administration: Save reviewed profile bundle"
+  },
+  "rel_admin_profile_bundle_saved": "Paquet de profil enregistré.",
+  "@rel_admin_profile_bundle_saved": {
+    "description": "Release administration: Profile bundle saved."
+  },
+  "rel_admin_import_selected_files": "Importer les fichiers sélectionnés",
+  "@rel_admin_import_selected_files": {
+    "description": "Release administration: Import selected files"
+  },
+  "rel_admin_save_selected_files_to_device": "Enregistrer les fichiers sélectionnés sur l’appareil",
+  "@rel_admin_save_selected_files_to_device": {
+    "description": "Release administration: Save selected files to device"
+  },
+  "rel_admin_layout_first_pane": "{layout} · {percent}% premier volet",
+  "@rel_admin_layout_first_pane": {
+    "description": "Release administration: {layout} · {percent}% first pane",
+    "placeholders": {
+      "layout": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_appearance_summary": "Thème : {skin} · Mode : {mode} · {layout}",
+  "@rel_admin_appearance_summary": {
+    "description": "Release administration: Skin: {skin} · Mode: {mode} · {layout}",
+    "placeholders": {
+      "skin": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      },
+      "layout": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_appearance_applied": "Apparence appliquée à {gateway} / {profile}.",
+  "@rel_admin_appearance_applied": {
+    "description": "Release administration: Appearance applied to {gateway} / {profile}.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_bundle_summary": "Paquet : {profile} · {count} fichiers examinables · {omitted} omis",
+  "@rel_admin_bundle_summary": {
+    "description": "Release administration: Bundle: {profile} · {count} reviewable files · {omitted} omitted",
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      },
+      "omitted": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_imported_on": "{name} importé sur {gateway}.",
+  "@rel_admin_imported_on": {
+    "description": "Release administration: Imported {name} on {gateway}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_unchanged": "inchangé",
+  "@rel_admin_unchanged": {
+    "description": "Release administration: unchanged"
+  },
+  "rel_admin_mode_system": "système",
+  "@rel_admin_mode_system": {
+    "description": "Release administration: system"
+  },
+  "rel_admin_mode_light": "clair",
+  "@rel_admin_mode_light": {
+    "description": "Release administration: light"
+  },
+  "rel_admin_mode_dark": "sombre",
+  "@rel_admin_mode_dark": {
+    "description": "Release administration: dark"
+  },
+  "rel_admin_skin_classic": "classique",
+  "@rel_admin_skin_classic": {
+    "description": "Release administration: classic"
+  },
+  "rel_admin_skin_midnight": "minuit",
+  "@rel_admin_skin_midnight": {
+    "description": "Release administration: midnight"
+  },
+  "rel_admin_skin_ember": "braise",
+  "@rel_admin_skin_ember": {
+    "description": "Release administration: ember"
+  },
+  "rel_admin_skin_mono": "monochrome",
+  "@rel_admin_skin_mono": {
+    "description": "Release administration: mono"
+  },
+  "rel_admin_skin_cyberpunk": "cyberpunk",
+  "@rel_admin_skin_cyberpunk": {
+    "description": "Release administration: cyberpunk"
+  },
+  "rel_admin_skin_slate": "ardoise",
+  "@rel_admin_skin_slate": {
+    "description": "Release administration: slate"
   }
 }

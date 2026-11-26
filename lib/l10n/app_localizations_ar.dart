@@ -13187,4 +13187,154 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get rel_admin_state_fatal => 'خطأ فادح';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      'أرشيف ملف تعريف غير مدعوم أو كبير جدًا.';
+
+  @override
+  String get rel_admin_current_layout => 'التخطيط الحالي';
+
+  @override
+  String get rel_admin_one_pane => 'لوحة واحدة';
+
+  @override
+  String get rel_admin_stacked => 'مكدّس';
+
+  @override
+  String get rel_admin_side_by_side => 'جنبًا إلى جنب';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      'لا يوجد مظهر مدعوم في هذا الملف التعريفي.';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      'مراجعة المظهر المحفوظ مع هذا الملف التعريفي';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      'ينطبق فقط على هذا الملف التعريفي المسمى على هذا الجهاز. يبدأ الترتيب المستورد بلوحات فارغة؛ اختر محادثاته بنفسك.';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device =>
+      'تطبيق على هذا الملف التعريفي على هذا الجهاز';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      'يُجهّز التصدير ملف .tar.gz على البوابة. راجع ملفاته المحمولة قبل حفظ نسخة هنا. يفتح الاستيراد أرشيفًا محليًا للمراجعة؛ الفتح وحده لا يرفع أي شيء.';
+
+  @override
+  String get rel_admin_prepare_profile_export => 'تجهيز تصدير الملف التعريفي';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device =>
+      'فتح .tar.gz من هذا الجهاز';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      'تُنقل الملفات النصية المحددة فقط. راجعها بحثًا عن الأسرار والمعلومات الخاصة. قد تغيّر الإعدادات والمهارات والجداول ما يفعله الملف التعريفي الجديد.';
+
+  @override
+  String get rel_admin_include_this_reviewed_file =>
+      'تضمين هذا الملف الذي تمت مراجعته';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      'تطبيق المظهر على الملف التعريفي الجديد على هذا الجهاز';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      'يستورد الألوان وأحجام اللوحات، وليس المحادثات أو الأدوات أو معرّفات الجلسات.';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      'تحتفظ البوابة بنسخة مرحلية خاصة. ينشئ الاستيراد ملف تعريف جديدًا؛ ولا يستبدل ملفًا موجودًا.';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' لم يُطبّق المظهر: لم تؤكد البوابة التراكب الذي تمت مراجعته.';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device =>
+      ' طُبّق المظهر على هذا الجهاز.';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device =>
+      ' لم يُحفظ المظهر على هذا الجهاز.';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle =>
+      'حفظ حزمة الملف التعريفي التي تمت مراجعتها';
+
+  @override
+  String get rel_admin_profile_bundle_saved => 'حُفظت حزمة الملف التعريفي.';
+
+  @override
+  String get rel_admin_import_selected_files => 'استيراد الملفات المحددة';
+
+  @override
+  String get rel_admin_save_selected_files_to_device =>
+      'حفظ الملفات المحددة على الجهاز';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · $percent% للوحة الأولى';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return 'السمة: $skin · الوضع: $mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return 'طُبّق المظهر على $gateway / $profile.';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return 'الحزمة: $profile · $count ملفات قابلة للمراجعة · $omitted مستبعدة';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return 'استُورد $name على $gateway.';
+  }
+
+  @override
+  String get rel_admin_unchanged => 'دون تغيير';
+
+  @override
+  String get rel_admin_mode_system => 'النظام';
+
+  @override
+  String get rel_admin_mode_light => 'فاتح';
+
+  @override
+  String get rel_admin_mode_dark => 'داكن';
+
+  @override
+  String get rel_admin_skin_classic => 'كلاسيكي';
+
+  @override
+  String get rel_admin_skin_midnight => 'منتصف الليل';
+
+  @override
+  String get rel_admin_skin_ember => 'جمر';
+
+  @override
+  String get rel_admin_skin_mono => 'أحادي اللون';
+
+  @override
+  String get rel_admin_skin_cyberpunk => 'سايبربانك';
+
+  @override
+  String get rel_admin_skin_slate => 'أردوازي';
 }

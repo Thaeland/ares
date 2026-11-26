@@ -4900,5 +4900,207 @@
   "rel_admin_state_fatal": "致命的エラー",
   "@rel_admin_state_fatal": {
     "description": "Release administration: fatal"
+  },
+  "rel_admin_unsupported_or_oversized_profile_archive": "未対応またはサイズが大きすぎるプロファイルアーカイブです。",
+  "@rel_admin_unsupported_or_oversized_profile_archive": {
+    "description": "Release administration: Unsupported or oversized profile archive."
+  },
+  "rel_admin_current_layout": "現在のレイアウト",
+  "@rel_admin_current_layout": {
+    "description": "Release administration: Current layout"
+  },
+  "rel_admin_one_pane": "1ペイン",
+  "@rel_admin_one_pane": {
+    "description": "Release administration: One pane"
+  },
+  "rel_admin_stacked": "上下配置",
+  "@rel_admin_stacked": {
+    "description": "Release administration: Stacked"
+  },
+  "rel_admin_side_by_side": "左右配置",
+  "@rel_admin_side_by_side": {
+    "description": "Release administration: Side by side"
+  },
+  "rel_admin_no_supported_appearance_in_this_profile": "このプロファイルに対応した外観はありません。",
+  "@rel_admin_no_supported_appearance_in_this_profile": {
+    "description": "Release administration: No supported appearance in this profile."
+  },
+  "rel_admin_review_appearance_saved_with_this_profile": "このプロファイルに保存された外観を確認",
+  "@rel_admin_review_appearance_saved_with_this_profile": {
+    "description": "Release administration: Review appearance saved with this profile"
+  },
+  "rel_admin_applies_only_to_this_named_profile_on_this_device": "このデバイス上のこの名前付きプロファイルにのみ適用されます。インポートした配置は空のペインから始まります。チャットは自分で選択してください。",
+  "@rel_admin_applies_only_to_this_named_profile_on_this_device": {
+    "description": "Release administration: Applies only to this named profile on this device. An imported arrangement starts with empty panes; choose its chats yourself."
+  },
+  "rel_admin_apply_to_this_profile_on_this_device": "このデバイスのこのプロファイルに適用",
+  "@rel_admin_apply_to_this_profile_on_this_device": {
+    "description": "Release administration: Apply to this profile on this device"
+  },
+  "rel_admin_export_prepares_a_tar_gz_on_the_gateway_review": "エクスポートはゲートウェイ上に.tar.gzを準備します。ここにコピーを保存する前に、移行可能なファイルを確認してください。インポートは確認用にローカルアーカイブを開きます。開くだけではアップロードされません。",
+  "@rel_admin_export_prepares_a_tar_gz_on_the_gateway_review": {
+    "description": "Release administration: Export prepares a .tar.gz on the gateway. Review its portable files before saving a copy here. Import opens a local archive for review; opening alone uploads nothing."
+  },
+  "rel_admin_prepare_profile_export": "プロファイルのエクスポートを準備",
+  "@rel_admin_prepare_profile_export": {
+    "description": "Release administration: Prepare profile export"
+  },
+  "rel_admin_open_tar_gz_from_this_device": "このデバイスの.tar.gzを開く",
+  "@rel_admin_open_tar_gz_from_this_device": {
+    "description": "Release administration: Open .tar.gz from this device"
+  },
+  "rel_admin_only_selected_text_files_travel_review_for_secrets_and": "選択したテキストファイルのみ転送されます。シークレットや個人情報が含まれていないか確認してください。設定、スキル、スケジュールによって新しいプロファイルの動作が変わる可能性があります。",
+  "@rel_admin_only_selected_text_files_travel_review_for_secrets_and": {
+    "description": "Release administration: Only selected text files travel. Review for secrets and private information. Config, skills and schedules can change what the new profile does."
+  },
+  "rel_admin_include_this_reviewed_file": "確認済みのこのファイルを含める",
+  "@rel_admin_include_this_reviewed_file": {
+    "description": "Release administration: Include this reviewed file"
+  },
+  "rel_admin_apply_appearance_to_the_new_profile_on_this_device": "このデバイスの新しいプロファイルに外観を適用",
+  "@rel_admin_apply_appearance_to_the_new_profile_on_this_device": {
+    "description": "Release administration: Apply appearance to the new profile on this device"
+  },
+  "rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids": "色とペインのサイズをインポートします。チャット、ツール、セッションIDはインポートしません。",
+  "@rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids": {
+    "description": "Release administration: Imports colours and pane sizes, never chats, tools or session IDs."
+  },
+  "rel_admin_the_gateway_retains_a_private_staged_copy_import_creates": "ゲートウェイは非公開のステージングコピーを保持します。インポートでは新しいプロファイルを作成し、既存のものは置き換えません。",
+  "@rel_admin_the_gateway_retains_a_private_staged_copy_import_creates": {
+    "description": "Release administration: The gateway retains a private staged copy. Import creates a new profile; it will not replace an existing one."
+  },
+  "rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the": " 外観は適用されませんでした。ゲートウェイが確認済みのオーバーレイを承認しませんでした。",
+  "@rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the": {
+    "description": "Release administration:  Appearance not applied: the gateway did not confirm the reviewed overlay."
+  },
+  "rel_admin_appearance_applied_on_this_device": " このデバイスに外観を適用しました。",
+  "@rel_admin_appearance_applied_on_this_device": {
+    "description": "Release administration:  Appearance applied on this device."
+  },
+  "rel_admin_appearance_was_not_saved_on_this_device": " このデバイスに外観は保存されませんでした。",
+  "@rel_admin_appearance_was_not_saved_on_this_device": {
+    "description": "Release administration:  Appearance was not saved on this device."
+  },
+  "rel_admin_save_reviewed_profile_bundle": "確認済みプロファイルバンドルを保存",
+  "@rel_admin_save_reviewed_profile_bundle": {
+    "description": "Release administration: Save reviewed profile bundle"
+  },
+  "rel_admin_profile_bundle_saved": "プロファイルバンドルを保存しました。",
+  "@rel_admin_profile_bundle_saved": {
+    "description": "Release administration: Profile bundle saved."
+  },
+  "rel_admin_import_selected_files": "選択したファイルをインポート",
+  "@rel_admin_import_selected_files": {
+    "description": "Release administration: Import selected files"
+  },
+  "rel_admin_save_selected_files_to_device": "選択したファイルをデバイスに保存",
+  "@rel_admin_save_selected_files_to_device": {
+    "description": "Release administration: Save selected files to device"
+  },
+  "rel_admin_layout_first_pane": "{layout} · 最初のペイン{percent}%",
+  "@rel_admin_layout_first_pane": {
+    "description": "Release administration: {layout} · {percent}% first pane",
+    "placeholders": {
+      "layout": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_appearance_summary": "スキン：{skin} · モード：{mode} · {layout}",
+  "@rel_admin_appearance_summary": {
+    "description": "Release administration: Skin: {skin} · Mode: {mode} · {layout}",
+    "placeholders": {
+      "skin": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      },
+      "layout": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_appearance_applied": "{gateway} / {profile}に外観を適用しました。",
+  "@rel_admin_appearance_applied": {
+    "description": "Release administration: Appearance applied to {gateway} / {profile}.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_bundle_summary": "バンドル：{profile} · 確認可能なファイル{count}件 · 除外{omitted}件",
+  "@rel_admin_bundle_summary": {
+    "description": "Release administration: Bundle: {profile} · {count} reviewable files · {omitted} omitted",
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      },
+      "omitted": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_imported_on": "{gateway}に{name}をインポートしました。",
+  "@rel_admin_imported_on": {
+    "description": "Release administration: Imported {name} on {gateway}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_unchanged": "変更なし",
+  "@rel_admin_unchanged": {
+    "description": "Release administration: unchanged"
+  },
+  "rel_admin_mode_system": "システム",
+  "@rel_admin_mode_system": {
+    "description": "Release administration: system"
+  },
+  "rel_admin_mode_light": "ライト",
+  "@rel_admin_mode_light": {
+    "description": "Release administration: light"
+  },
+  "rel_admin_mode_dark": "ダーク",
+  "@rel_admin_mode_dark": {
+    "description": "Release administration: dark"
+  },
+  "rel_admin_skin_classic": "クラシック",
+  "@rel_admin_skin_classic": {
+    "description": "Release administration: classic"
+  },
+  "rel_admin_skin_midnight": "ミッドナイト",
+  "@rel_admin_skin_midnight": {
+    "description": "Release administration: midnight"
+  },
+  "rel_admin_skin_ember": "残り火",
+  "@rel_admin_skin_ember": {
+    "description": "Release administration: ember"
+  },
+  "rel_admin_skin_mono": "モノクロ",
+  "@rel_admin_skin_mono": {
+    "description": "Release administration: mono"
+  },
+  "rel_admin_skin_cyberpunk": "サイバーパンク",
+  "@rel_admin_skin_cyberpunk": {
+    "description": "Release administration: cyberpunk"
+  },
+  "rel_admin_skin_slate": "スレート",
+  "@rel_admin_skin_slate": {
+    "description": "Release administration: slate"
   }
 }

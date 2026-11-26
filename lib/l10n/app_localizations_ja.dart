@@ -12829,4 +12829,150 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get rel_admin_state_fatal => '致命的エラー';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      '未対応またはサイズが大きすぎるプロファイルアーカイブです。';
+
+  @override
+  String get rel_admin_current_layout => '現在のレイアウト';
+
+  @override
+  String get rel_admin_one_pane => '1ペイン';
+
+  @override
+  String get rel_admin_stacked => '上下配置';
+
+  @override
+  String get rel_admin_side_by_side => '左右配置';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      'このプロファイルに対応した外観はありません。';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      'このプロファイルに保存された外観を確認';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      'このデバイス上のこの名前付きプロファイルにのみ適用されます。インポートした配置は空のペインから始まります。チャットは自分で選択してください。';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device =>
+      'このデバイスのこのプロファイルに適用';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      'エクスポートはゲートウェイ上に.tar.gzを準備します。ここにコピーを保存する前に、移行可能なファイルを確認してください。インポートは確認用にローカルアーカイブを開きます。開くだけではアップロードされません。';
+
+  @override
+  String get rel_admin_prepare_profile_export => 'プロファイルのエクスポートを準備';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device => 'このデバイスの.tar.gzを開く';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      '選択したテキストファイルのみ転送されます。シークレットや個人情報が含まれていないか確認してください。設定、スキル、スケジュールによって新しいプロファイルの動作が変わる可能性があります。';
+
+  @override
+  String get rel_admin_include_this_reviewed_file => '確認済みのこのファイルを含める';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      'このデバイスの新しいプロファイルに外観を適用';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      '色とペインのサイズをインポートします。チャット、ツール、セッションIDはインポートしません。';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      'ゲートウェイは非公開のステージングコピーを保持します。インポートでは新しいプロファイルを作成し、既存のものは置き換えません。';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' 外観は適用されませんでした。ゲートウェイが確認済みのオーバーレイを承認しませんでした。';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device =>
+      ' このデバイスに外観を適用しました。';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device =>
+      ' このデバイスに外観は保存されませんでした。';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle => '確認済みプロファイルバンドルを保存';
+
+  @override
+  String get rel_admin_profile_bundle_saved => 'プロファイルバンドルを保存しました。';
+
+  @override
+  String get rel_admin_import_selected_files => '選択したファイルをインポート';
+
+  @override
+  String get rel_admin_save_selected_files_to_device => '選択したファイルをデバイスに保存';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · 最初のペイン$percent%';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return 'スキン：$skin · モード：$mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return '$gateway / $profileに外観を適用しました。';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return 'バンドル：$profile · 確認可能なファイル$count件 · 除外$omitted件';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return '$gatewayに$nameをインポートしました。';
+  }
+
+  @override
+  String get rel_admin_unchanged => '変更なし';
+
+  @override
+  String get rel_admin_mode_system => 'システム';
+
+  @override
+  String get rel_admin_mode_light => 'ライト';
+
+  @override
+  String get rel_admin_mode_dark => 'ダーク';
+
+  @override
+  String get rel_admin_skin_classic => 'クラシック';
+
+  @override
+  String get rel_admin_skin_midnight => 'ミッドナイト';
+
+  @override
+  String get rel_admin_skin_ember => '残り火';
+
+  @override
+  String get rel_admin_skin_mono => 'モノクロ';
+
+  @override
+  String get rel_admin_skin_cyberpunk => 'サイバーパンク';
+
+  @override
+  String get rel_admin_skin_slate => 'スレート';
 }
