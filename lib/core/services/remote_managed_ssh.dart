@@ -87,7 +87,10 @@ extension ManagedSshWorkspace on WorkspaceTarget {
       localPort: port('localPort'),
       remotePort: port('remotePort'),
       reused: data['reused'] as bool,
-      version: _fleetText(data['hermesVersion']),
+      // A failed non-essential --version probe is legitimately empty upstream.
+      version: data['hermesVersion'] == ''
+          ? ''
+          : _fleetText(data['hermesVersion']),
     );
   });
 }

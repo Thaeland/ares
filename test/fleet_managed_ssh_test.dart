@@ -31,6 +31,8 @@ void main() {
         expect(connected?.remotePort, 9119);
         expect(connected?.reused, true);
         expect(connected?.version, '1.2.3');
+        f.sshVersion = '';
+        expect((await t.managedSsh(row))?.version, '');
         expect(f.sshWrites.single, (
           method: 'POST',
           body: '',

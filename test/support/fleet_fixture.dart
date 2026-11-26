@@ -22,6 +22,7 @@ class FleetFixture {
   bool mayUpdate = true;
   bool includeSsh = false;
   String sshHost = 'fixture.invalid';
+  String sshVersion = '1.2.3';
   String? sshErrorKind;
   bool sshConnected = false;
   Completer<void>? holdSsh;
@@ -210,7 +211,7 @@ class FleetFixture {
             'localPort': 40001,
             'remotePort': 9119,
             'pid': 42,
-            'hermesVersion': '1.2.3',
+            'hermesVersion': sshVersion,
             'reused': true,
           },
         };
