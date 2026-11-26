@@ -218,8 +218,10 @@ class _KanbanDockRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = context.sharedL10n;
+    final status = kanbanStatusLabel(l, card.status);
+    // A card nothing has reported on yet has no status to show.
     final meta = [
-      kanbanStatusLabel(l, card.status),
+      if (status.isNotEmpty) status,
       if (card.assignee case final assignee?) '@$assignee',
     ].join(' · ');
     return Row(
@@ -228,7 +230,7 @@ class _KanbanDockRow extends StatelessWidget {
           child: Semantics(
             button: true,
             label: l.ng_kanban_open_card(card.title),
-            value: meta,
+            value: meta.isEmpty ? null : meta,
             onTap: onOpen,
             excludeSemantics: true,
             child: InkWell(
@@ -265,13 +267,14 @@ class _KanbanDockRow extends StatelessWidget {
                               color: card.settled ? style.dim : style.text,
                             ),
                           ),
-                          Text(
-                            meta,
-                            key: ValueKey('kanban-dock-meta-${card.id}'),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: style.meta.copyWith(color: style.dim),
-                          ),
+                          if (meta.isNotEmpty)
+                            Text(
+                              meta,
+                              key: ValueKey('kanban-dock-meta-${card.id}'),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: style.meta.copyWith(color: style.dim),
+                            ),
                         ],
                       ),
                     ),

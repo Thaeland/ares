@@ -211,7 +211,8 @@ class ChatKanbanCard {
   final String title;
 
   /// `triage`, `todo`, `scheduled`, `ready`, `running`, `blocked`, `review`,
-  /// `done` or `archived`.
+  /// `done` or `archived`; empty while nothing has said (a linked card the
+  /// board has not reported yet).
   final String status;
   final String? assignee;
   final bool archived;
@@ -343,7 +344,7 @@ class _Entry {
   final String id;
   String? board;
   String title = '';
-  String status = 'todo';
+  String status = '';
   String? assignee;
   bool archived = false;
   bool linked = false;
@@ -405,6 +406,10 @@ class ChatKanbanDockController extends ChangeNotifier {
   final Future<SharedPreferences> Function() _preferences;
 
   final List<_Entry> _entries = [];
+
+  /// Cards the board said it does not have (deleted). The transcript still
+  /// names them on every reload; they must not come back as rows.
+  final Set<String> _gone = {};
   final Set<String> _sessionIds = {};
   final Set<String> _dismissed = {};
   String? _primaryId;
@@ -489,6 +494,9 @@ class ChatKanbanDockController extends ChangeNotifier {
     if (_views != 1) return;
     _noStream.clear();
     _closes.clear();
+    // Follow from the board as it is now, not from where an earlier visit
+    // stopped: the read that comes first already covers what happened since.
+    _cursors.clear();
     scheduleMicrotask(() => unawaited(refresh()));
   }
 
@@ -549,6 +557,7 @@ class ChatKanbanDockController extends ChangeNotifier {
     var added = false;
     var changed = false;
     for (final seed in seeds) {
+      if (_gone.contains(seed.taskId)) continue;
       var entry = _find(seed.taskId, seed.board);
       if (entry == null) {
         entry = _Entry(seed.taskId)..linked = seed.linked;
@@ -694,7 +703,9 @@ class ChatKanbanDockController extends ChangeNotifier {
         } on KanbanBoardNotFoundException {
           if (stale()) return;
           // The board was archived or deleted with its cards.
-          _entries.removeWhere((e) => e.board == board);
+          for (final e in _entries.where((e) => e.board == board).toList()) {
+            _forget(e);
+          }
           continue;
         }
         if (stale()) return;
@@ -705,6 +716,7 @@ class ChatKanbanDockController extends ChangeNotifier {
           var entry = _find(task.id, board);
           if (entry == null) {
             if (!mine) continue;
+            _gone.remove(task.id);
             entry = _Entry(task.id);
             _add(entry);
           }
@@ -727,7 +739,7 @@ class ChatKanbanDockController extends ChangeNotifier {
           if (task != null) {
             _take(entry, board, task);
           } else if (entry.board == board) {
-            _entries.remove(entry);
+            _forget(entry);
           } else {
             entry.misses++;
           }
@@ -751,6 +763,13 @@ class ChatKanbanDockController extends ChangeNotifier {
       if (stale()) return;
       _blocked(ChatKanbanBlock.unreachable);
     }
+  }
+
+  /// The board has no such card any more.
+  void _forget(_Entry entry) {
+    _entries.remove(entry);
+    _gone.add(entry.id);
+    if (_gone.length > _maxEntries) _gone.remove(_gone.first);
   }
 
   void _take(_Entry entry, String board, KanbanTaskCard task) {

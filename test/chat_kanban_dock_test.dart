@@ -379,6 +379,42 @@ void main() {
       await pumpEventQueue();
       expect(dock.cards, isEmpty);
       expect(source.watching, isEmpty);
+
+      // The transcript still names it on every reload: it stays gone, and
+      // nothing more is asked of the board for it.
+      final reads = source.requests.length;
+      dock.observeHistoryRows(kanbanCreateRows(toolId: 'c1', taskId: 't_1'));
+      await pumpEventQueue();
+      expect(dock.cards, isEmpty);
+      expect(source.requests, hasLength(reads));
+    });
+
+    test('a linked card shows no status until the board reports one', () async {
+      final source = FakeKanbanSource()
+        ..put('default', _task('t_parent', title: 'Parent', status: 'running'));
+      final dock = _dock(source, session: null);
+      dock.observeToolCall(
+        name: 'kanban_link',
+        args: const {'parent_id': 't_parent', 'child_id': 't_child'},
+        result: const {
+          'ok': true,
+          'parent_id': 't_parent',
+          'child_id': 't_child',
+        },
+      );
+      await pumpEventQueue();
+      expect(_ids(dock), ['t_parent', 't_child']);
+      expect(dock.cards.every((card) => card.linked), isTrue);
+      expect(dock.cards.first.status, isEmpty);
+      expect(dock.cards.first.title, 't_parent');
+
+      dock.attach();
+      await pumpEventQueue();
+      expect(dock.cards.first.title, 'Parent');
+      expect(dock.cards.first.status, 'running');
+      // Not on the current board, and no board was named: left as it is.
+      expect(dock.cards.last.status, isEmpty);
+      expect(dock.cards.last.confirmed, isFalse);
     });
   });
 
