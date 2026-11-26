@@ -2364,6 +2364,27 @@ class _RoutineDialogState extends State<_RoutineDialog> {
 /// Each layout shows it with its own chat: inside NextGen (an [NgScope] is
 /// above) the NextGen chat view, on a gateway and scope of its own for the
 /// bot's profile; in Classic the Classic chat screen on [chatConnection].
+/// Classic Bot Chat: a chat on the bot's own connection. /resume opens the
+/// pick in place of it, on that same connection, as the session list does.
+Widget _botClassicChat(SavedConnection connection, Session session) => Builder(
+  builder: (context) => ChatScreen(
+    connection: connection,
+    session: session,
+    singleSession: true,
+    onOpenSession: (picked) async {
+      if (!context.mounted) return;
+      unawaited(
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute<void>(
+            builder: (_) => _botClassicChat(connection, picked),
+          ),
+        ),
+      );
+    },
+    onClose: () => Navigator.of(context).maybePop(),
+  ),
+);
+
 class BotChatPage extends StatefulWidget {
   const BotChatPage({
     super.key,
@@ -2470,12 +2491,7 @@ class _BotChatPageState extends State<BotChatPage> {
       );
       final build = widget.classicChatBuilder;
       if (build != null) return build(widget.chatConnection, session);
-      return ChatScreen(
-        connection: widget.chatConnection,
-        session: session,
-        singleSession: true,
-        onClose: () => Navigator.of(context).maybePop(),
-      );
+      return _botClassicChat(widget.chatConnection, session);
     }
     final chat = _chat;
     final gateway = _gateway;
