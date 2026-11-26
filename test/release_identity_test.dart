@@ -15,10 +15,10 @@ void main() {
       expect(match!.group(1), '5.0.0');
       final baseCode = int.parse(match.group(2)!);
       expect(baseCode, 5000);
-      expect(baseCode, greaterThan(3074));
-      // Every split must upgrade the highest published 4.0.18 stable split.
+      expect(baseCode, greaterThan(3075));
+      // Every split must upgrade the highest published 4.0.19 stable split.
       for (final abiCode in [1, 2, 3]) {
-        expect(baseCode * 10 + abiCode, greaterThan(30743));
+        expect(baseCode * 10 + abiCode, greaterThan(30753));
       }
       expect(
         [
