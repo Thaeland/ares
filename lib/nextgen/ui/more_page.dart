@@ -103,8 +103,8 @@ class NgMorePage extends StatelessWidget {
                 ),
                 NgRow(
                   icon: Icons.view_week_outlined,
-                  title: parallelWorkspaceEntryTitle,
-                  subtitle: parallelWorkspaceEntrySubtitle,
+                  title: ngL.ng_release_more_parallel_workspace,
+                  subtitle: ngL.ng_release_more_parallel_workspace_subtitle,
                   onTap: openParallel,
                 ),
                 NgRow(
@@ -163,8 +163,8 @@ class NgMorePage extends StatelessWidget {
                 ),
                 NgRow(
                   icon: Icons.extension_outlined,
-                  title: 'Contributions',
-                  subtitle: 'Reviewed reply cards for this connection',
+                  title: ngL.render_contributions,
+                  subtitle: ngL.ng_release_more_contributions_subtitle,
                   onTap: () => push(
                     ContributionsPage(
                       scope: renderConnectionKey(scope.gateway.connection),
@@ -181,7 +181,7 @@ class NgMorePage extends StatelessWidget {
               children: [
                 NgRow(
                   icon: Icons.people_outline,
-                  title: 'Gateway fleet',
+                  title: ngL.ng_release_more_gateway_fleet,
                   onTap: () => push(
                     FleetScreen(
                       serving: scope.gateway.workspace,
@@ -241,8 +241,8 @@ class NgMorePage extends StatelessWidget {
                 ),
                 NgRow(
                   icon: Icons.hub_outlined,
-                  title: 'Memory graph',
-                  subtitle: 'Timeline, edits and memory providers',
+                  title: ngL.ng_release_more_memory_graph,
+                  subtitle: ngL.ng_release_more_memory_graph_subtitle,
                   onTap: () => push(
                     MemoryGraphScreen(
                       owner: scope.gateway.workspace,
@@ -259,27 +259,24 @@ class NgMorePage extends StatelessWidget {
                 ),
                 NgRow(
                   icon: Icons.extension_outlined,
-                  title: 'Capabilities',
-                  subtitle:
-                      'Install and govern skills, plugins, connectors and tool backends',
+                  title: ngL.ng_capabilities,
+                  subtitle: ngL.ng_release_more_capabilities_subtitle,
                   onTap: () => push(
                     CapabilityAdminScreen(admin: _capabilityAdmin(context)),
                   ),
                 ),
                 NgRow(
                   icon: Icons.vpn_key_outlined,
-                  title: 'Browser vault',
-                  subtitle:
-                      'Site logins, addresses, cards and credential sources',
+                  title: ngL.ng_release_more_browser_vault,
+                  subtitle: ngL.ng_release_more_browser_vault_subtitle,
                   onTap: () => push(
                     BrowserVaultScreen(admin: _capabilityAdmin(context)),
                   ),
                 ),
                 NgRow(
                   icon: Icons.admin_panel_settings_outlined,
-                  title: 'Agent policy',
-                  subtitle:
-                      'Approvals, checkpoints, browser access and shared metrics',
+                  title: ngL.ng_release_more_agent_policy,
+                  subtitle: ngL.ng_release_more_agent_policy_subtitle,
                   onTap: () =>
                       push(AgentPolicyScreen(admin: _capabilityAdmin(context))),
                 ),
@@ -291,8 +288,8 @@ class NgMorePage extends StatelessWidget {
                 ),
                 NgRow(
                   icon: Icons.event_note_outlined,
-                  title: 'Schedules',
-                  subtitle: 'All profiles, blueprints, catch-up and stop',
+                  title: ngL.ng_release_more_schedules,
+                  subtitle: ngL.ng_release_more_schedules_subtitle,
                   onTap: () => push(
                     ScheduleDeskScreen(
                       owner: scope.gateway.workspace,
@@ -303,8 +300,8 @@ class NgMorePage extends StatelessWidget {
                 ),
                 NgRow(
                   icon: Icons.monitor_heart_outlined,
-                  title: 'Host',
-                  subtitle: 'Remote logs, health, maintenance and update',
+                  title: ngL.host,
+                  subtitle: ngL.ng_release_more_host_subtitle,
                   onTap: () => push(
                     HostOperationsScreen(
                       owner: scope.gateway.workspace,
@@ -352,8 +349,8 @@ class NgMorePage extends StatelessWidget {
                 ),
                 NgRow(
                   icon: Icons.key_outlined,
-                  title: 'Providers and routes',
-                  subtitle: 'Keys, endpoints, delegation and mixtures',
+                  title: ngL.ng_release_more_providers_routes,
+                  subtitle: ngL.ng_release_more_providers_routes_subtitle,
                   onTap: () {
                     final socket = scope.gateway.socket;
                     push(
@@ -369,8 +366,8 @@ class NgMorePage extends StatelessWidget {
                 ),
                 NgRow(
                   icon: Icons.payments_outlined,
-                  title: 'Credits and plans',
-                  subtitle: 'Consented Nous billing when the account allows it',
+                  title: ngL.ng_release_more_credits_plans,
+                  subtitle: ngL.ng_release_more_credits_plans_subtitle,
                   onTap: () {
                     final socket = scope.gateway.socket;
                     push(

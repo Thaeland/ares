@@ -1221,7 +1221,7 @@ class NgChatController extends ChangeNotifier {
             if (part is String) return part;
             if (part is Map) {
               final type = part['type']?.toString() ?? '';
-              if (type.contains('image')) return '[image]';
+              if (type.contains('image')) return ngL.task_image_placeholder;
               // Only plain text: a structured `text` value (Kyllene #419)
               // is skipped rather than shown as a Dart map.
               final text = part['text'];
@@ -2470,7 +2470,7 @@ class NgChatController extends ChangeNotifier {
     final index = queued.indexOf(original);
     if (index < 0) {
       if (!queued.any((row) => row.key == original.key)) {
-        error = 'That unsent prompt is no longer in the queue.';
+        error = ngL.ng_release_unsent_prompt_gone;
         _changed();
       }
       return;
@@ -2655,7 +2655,7 @@ class NgChatController extends ChangeNotifier {
         if (result['attached'] != true) {
           throw StateError(
             result['message']?.toString() ??
-                'The gateway did not attach ${draft.name}.',
+                ngL.ng_release_attachment_not_attached(draft.name),
           );
         }
         final path = result['path']?.toString();
@@ -2683,7 +2683,7 @@ class NgChatController extends ChangeNotifier {
       }, timeout: const Duration(minutes: 2));
       final ref = result['ref_text']?.toString() ?? '';
       if (result['attached'] != true || ref.isEmpty) {
-        throw StateError('The gateway did not attach ${draft.name}.');
+        throw StateError(ngL.ng_release_attachment_not_attached(draft.name));
       }
       draft
         ..status = AttachmentDraftStatus.attached
@@ -2791,7 +2791,7 @@ class NgChatController extends ChangeNotifier {
           : result['path']?.toString() == staged;
       final ref = result['ref_text']?.toString() ?? '';
       if (result['attached'] != true || ref.isEmpty) {
-        throw StateError('The gateway did not attach ${draft.name}.');
+        throw StateError(ngL.ng_release_attachment_not_attached(draft.name));
       }
       return ref;
     } finally {

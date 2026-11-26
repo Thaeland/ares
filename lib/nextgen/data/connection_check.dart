@@ -157,7 +157,7 @@ Future<ConnectionReport> runConnectionCheck(
         final me = jsonDecode(res.body);
         final who = me is Map<String, dynamic>
             ? AuthUser.fromJson(me).label
-            : 'you';
+            : ngL.ng_release_signed_in_you;
         record(
           CheckStage.signIn,
           StageResult(CheckOutcome.passed, ngL.ng_signed_in_as(who)),

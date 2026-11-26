@@ -638,7 +638,7 @@ class NextGenGateway extends ChangeNotifier {
   }) async {
     final ws = _ws;
     if (ws == null || !ws.isConnected) {
-      throw StateError('Not connected to the gateway yet.');
+      throw StateError(ngL.ng_release_gateway_not_connected);
     }
     final response = await ws.send(method, params, timeout: timeout);
     final error = response['error'];
@@ -686,7 +686,7 @@ class NextGenGateway extends ChangeNotifier {
     try {
       return await done.future.timeout(timeout);
     } on TimeoutException {
-      throw StateError(_state.reason ?? "Couldn't reach the gateway.");
+      throw StateError(_state.reason ?? ngL.ng_release_gateway_unreachable);
     } finally {
       _connectionWaits.remove(done);
       removeListener(check);

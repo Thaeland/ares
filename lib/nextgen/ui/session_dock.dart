@@ -722,7 +722,9 @@ class _SubagentRowState extends State<_SubagentRow> {
         a.durationSeconds?.round() ??
         (a.finishedAt ?? DateTime.now()).difference(a.startedAt).inSeconds;
     final s = seconds < 0 ? 0 : seconds;
-    return s >= 60 ? '${s ~/ 60}m ${s % 60}s' : '${s}s';
+    return s >= 60
+        ? ngL.ng_release_elapsed_minutes_seconds(s ~/ 60, s % 60)
+        : ngL.ng_release_elapsed_seconds(s);
   }
 
   @override
