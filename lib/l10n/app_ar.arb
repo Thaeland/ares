@@ -1008,21 +1008,6 @@
     }
   },
   "could_not_save_chat_spaces": "تعذّر حفظ مساحات المحادثات على هذا الجهاز",
-  "update_available": "يتوفر تحديث",
-  "update_now": "تحديث الآن",
-  "update_install": "تثبيت التحديث",
-  "update_downloading": "جارٍ تنزيل التحديث والتحقق منه…",
-  "update_allow_install": "اسمح لتطبيق Hermes بتثبيت هذا التحديث، ثم عُد إلى هنا واضغط على «تثبيت التحديث».",
-  "update_failed": "تعذّر تنزيل التحديث أو التحقق منه أو فتحه. حاول مجددًا أو راجع صفحة الإصدار.",
-  "a_newer_hermes_android_build_is_available_on_github": "يتوفر إصدار أحدث من Ares على GitHub.",
-  "release_notes": "ملاحظات الإصدار",
-  "view_release": "عرض الإصدار",
-  "skip_this_version": "تخطّي هذا الإصدار",
-  "later": "لاحقًا",
-  "check_for_updates": "التحقق من وجود تحديثات",
-  "check_for_updates_on_launch": "التحقق من وجود تحديثات عند بدء التشغيل",
-  "you_re_on_the_latest_version": "أنت تستخدم أحدث إصدار.",
-  "couldn_t_check_for_updates": "تعذّر التحقق من وجود تحديثات.",
   "chat_density": "كثافة عرض المحادثة",
   "chat_density_2": "كثافة عرض المحادثة: {label}",
   "chat_density_comfortable": "مريح",
@@ -4260,5 +4245,9 @@
   "release_misc_gateway_unreachable": "يتعذّر الوصول إلى نقطة اتصال البوابة {endpoint}.",
   "release_core_schedule_invalid_delivery_target": "وجهة التسليم غير صالحة",
   "release_core_file_save_direct_only": "لا يمكن حفظ إلا ملف موجود مباشرة في دليل العمل.",
-  "release_core_file_save_hidden": "لا يمكن للبوابة حفظ الملفات المخفية."
+  "release_core_file_save_hidden": "لا يمكن للبوابة حفظ الملفات المخفية.",
+  "ng_slash_suggestions_loading": "جارٍ تحميل الأوامر…",
+  "ng_slash_suggestions_empty": "لا توجد أوامر مطابقة",
+  "ng_slash_suggestions_label": "اقتراحات الأوامر",
+  "ng_slash_suggestions_skill": "مهارة"
 }

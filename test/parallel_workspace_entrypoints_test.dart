@@ -34,7 +34,6 @@ Widget _classic(_Fixture f) => MaterialApp(
     testChatApiClientFactory: f.api,
     testDashboardHttpClient: f.client(),
     turnSignalsLoader: (_) async => HomeTurnSignals.empty,
-    installedVersionLoader: () async => null,
   ),
 );
 

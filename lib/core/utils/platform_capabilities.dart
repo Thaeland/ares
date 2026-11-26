@@ -1,7 +1,7 @@
 /// Platform capability reporting for features that only exist on Android.
 ///
 /// Apple builds keep the shared chat/gateway code but must not offer Android
-/// foreground services, battery-optimisation prompts, APK self-update, or the
+/// foreground services, battery-optimisation prompts, or the
 /// embedded Android push bridge. Nothing here changes Android behaviour.
 library;
 
@@ -21,10 +21,6 @@ bool get supportsLocalNotifications => true;
 
 /// Android foreground service / battery-optimisation background work.
 bool get supportsAndroidBackgroundWork =>
-    defaultTargetPlatform == TargetPlatform.android;
-
-/// APK self-update is meaningless on Apple platforms (App Store / ad-hoc).
-bool get supportsApkSelfUpdate =>
     defaultTargetPlatform == TargetPlatform.android;
 
 /// Embedded FCM / companion push app is an Android-only transport.

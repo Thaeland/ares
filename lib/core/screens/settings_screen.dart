@@ -248,20 +248,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
         // ---- Section: Voice ----
         if (!isParkedAutomotive) ...[
-        _buildSectionHeader(context.l10n.voice, classicOnly: true),
-        _VoicePicker(),
-        const SizedBox(height: 8),
-        const _HandsFreeToggle(),
-        const SizedBox(height: 8),
-        const _AutoSpeakToggle(),
-        const SizedBox(height: 8),
-        const _BargeInToggle(),
-        const SizedBox(height: 8),
-        _ClassicWakeSettings(
-          connection: widget.connection,
-          dashboardClient: widget.dashboardClient,
-        ),
-        const SizedBox(height: 16),
+          _buildSectionHeader(context.l10n.voice, classicOnly: true),
+          _VoicePicker(),
+          const SizedBox(height: 8),
+          const _HandsFreeToggle(),
+          const SizedBox(height: 8),
+          const _AutoSpeakToggle(),
+          const SizedBox(height: 8),
+          const _BargeInToggle(),
+          const SizedBox(height: 8),
+          _ClassicWakeSettings(
+            connection: widget.connection,
+            dashboardClient: widget.dashboardClient,
+          ),
+          const SizedBox(height: 16),
         ],
 
         // ---- Section: Session Sources ----

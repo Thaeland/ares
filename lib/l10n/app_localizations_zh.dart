@@ -34376,4 +34376,16 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get release_core_file_save_hidden => '閘道無法儲存隱藏檔案。';
+
+  @override
+  String get ng_slash_suggestions_loading => '正在載入指令…';
+
+  @override
+  String get ng_slash_suggestions_empty => '沒有相符的指令';
+
+  @override
+  String get ng_slash_suggestions_label => '指令建議';
+
+  @override
+  String get ng_slash_suggestions_skill => '技能';
 }

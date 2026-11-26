@@ -2701,8 +2701,13 @@ class _NgChatViewState extends State<NgChatView>
       showsSentAsMessageNote: false,
       suppressed: _suggestionsOpen,
       child: NgSlashSuggestions(
-        chat: chat, controller: _input, focusNode: _focus, catalog: _slashCatalog,
-        onOpenChanged: (open) { if (mounted) setState(() => _suggestionsOpen = open); },
+        chat: chat,
+        controller: _input,
+        focusNode: _focus,
+        catalog: _slashCatalog,
+        onOpenChanged: (open) {
+          if (mounted) setState(() => _suggestionsOpen = open);
+        },
         child: _composer(c, state),
       ),
     );
@@ -3591,16 +3596,17 @@ class _NgChatViewState extends State<NgChatView>
                           onPressed: canSend ? _send : null,
                         ),
                     ] else ...[
-                      if (!isParkedAutomotive) IconButton(
-                        tooltip: _listening
-                            ? ngL.ng_stop_dictation
-                            : ngL.ng_dictate,
-                        icon: Icon(
-                          _listening ? Icons.mic : Icons.mic_none,
-                          color: _listening ? c.accent : c.text2,
+                      if (!isParkedAutomotive)
+                        IconButton(
+                          tooltip: _listening
+                              ? ngL.ng_stop_dictation
+                              : ngL.ng_dictate,
+                          icon: Icon(
+                            _listening ? Icons.mic : Icons.mic_none,
+                            color: _listening ? c.accent : c.text2,
+                          ),
+                          onPressed: _toggleDictation,
                         ),
-                        onPressed: _toggleDictation,
-                      ),
                       if (_voiceMode.hasStatus &&
                           !chat.running &&
                           !hasText &&
@@ -4499,19 +4505,22 @@ class _AssistantBlockState extends State<_AssistantBlock> {
                         ngToast(context, ngL.ng_copied);
                       },
                     ),
-                    if (!isParkedAutomotive) _ActionIcon(
-                      icon: reading
-                          ? Icons.stop_circle_outlined
-                          : Icons.volume_up_outlined,
-                      tooltip: reading ? ngL.ng_stop : ngL.ng_read_aloud,
-                      onTap: () {
-                        if (reading) {
-                          unawaited(widget.readAloud.stop());
-                        } else {
-                          unawaited(widget.readAloud.read(item.key, item.text));
-                        }
-                      },
-                    ),
+                    if (!isParkedAutomotive)
+                      _ActionIcon(
+                        icon: reading
+                            ? Icons.stop_circle_outlined
+                            : Icons.volume_up_outlined,
+                        tooltip: reading ? ngL.ng_stop : ngL.ng_read_aloud,
+                        onTap: () {
+                          if (reading) {
+                            unawaited(widget.readAloud.stop());
+                          } else {
+                            unawaited(
+                              widget.readAloud.read(item.key, item.text),
+                            );
+                          }
+                        },
+                      ),
                     _ActionIcon(
                       icon: Icons.flag_outlined,
                       tooltip: ngL.report_ai_output,

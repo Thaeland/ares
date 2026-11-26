@@ -273,7 +273,11 @@ class NgReadAloud extends ChangeNotifier {
     final speaker = _speaker;
     final owned = _ownedDirect;
     _ownedDirect = null;
-    final stopping = isParkedAutomotive ? Future<void>.value() : speaker != null ? speaker.stop() : _tts.stop();
+    final stopping = isParkedAutomotive
+        ? Future<void>.value()
+        : speaker != null
+        ? speaker.stop()
+        : _tts.stop();
     unawaited(
       stopping.catchError((Object _) {}).whenComplete(() => owned?.dispose()),
     );

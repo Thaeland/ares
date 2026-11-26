@@ -10963,10 +10963,11 @@ class _ChatScreenState extends State<ChatScreen>
                         onAnswer: (result) =>
                             _answerSetupBeat(_setupBeat!, result),
                       ),
-                    if (!isParkedAutomotive && (_voiceRecording.recording ||
-                        _voiceRecording.hasDraft ||
-                        _voiceRecording.busy ||
-                        _voiceRecording.error != null))
+                    if (!isParkedAutomotive &&
+                        (_voiceRecording.recording ||
+                            _voiceRecording.hasDraft ||
+                            _voiceRecording.busy ||
+                            _voiceRecording.error != null))
                       VoiceRecordingControls(
                         controller: _voiceRecording,
                         canSend:
@@ -11410,7 +11411,8 @@ class _ChatScreenState extends State<ChatScreen>
                             context,
                           )?.showSnackBar(SnackBar(content: Text(msg))),
                         ),
-                      if (!isParkedAutomotive && !_voiceComposer.listening &&
+                      if (!isParkedAutomotive &&
+                          !_voiceComposer.listening &&
                           !_streaming &&
                           _liveEngine?.active != true)
                         VoiceComposerStartButton(
@@ -11423,42 +11425,45 @@ class _ChatScreenState extends State<ChatScreen>
                               !_pendingReattachResync,
                           onPressed: _startVoiceInput,
                         ),
-                      if (!isParkedAutomotive) Semantics(
-                        label: context.l10n.spoken_replies,
-                        value: _voiceReplyEnabled
-                            ? context.l10n.on
-                            : context.l10n.off,
-                        toggled: _voiceReplyEnabled,
-                        button: true,
-                        excludeSemantics: true,
-                        child: IconButton(
-                          icon: Icon(
-                            _voiceReplyEnabled
-                                ? Icons.volume_up
-                                : Icons.volume_off,
-                          ),
-                          onPressed: () {
-                            setState(
-                              () => _voiceReplyEnabled = !_voiceReplyEnabled,
-                            );
-                            if (!_voiceReplyEnabled) {
-                              _handsFree.revoke(
-                                HandsFreeStopReason.voiceReplyDisabled,
+                      if (!isParkedAutomotive)
+                        Semantics(
+                          label: context.l10n.spoken_replies,
+                          value: _voiceReplyEnabled
+                              ? context.l10n.on
+                              : context.l10n.off,
+                          toggled: _voiceReplyEnabled,
+                          button: true,
+                          excludeSemantics: true,
+                          child: IconButton(
+                            icon: Icon(
+                              _voiceReplyEnabled
+                                  ? Icons.volume_up
+                                  : Icons.volume_off,
+                            ),
+                            onPressed: () {
+                              setState(
+                                () => _voiceReplyEnabled = !_voiceReplyEnabled,
                               );
-                              unawaited(
-                                _replySpeaker.stop().catchError((Object _) {}),
-                              );
-                            }
-                          },
-                          tooltip: _voiceReplyEnabled
-                              ? context.l10n.spoken_replies_on
-                              : context.l10n.spoken_replies_off,
-                          constraints: const BoxConstraints.tightFor(
-                            width: 48,
-                            height: 48,
+                              if (!_voiceReplyEnabled) {
+                                _handsFree.revoke(
+                                  HandsFreeStopReason.voiceReplyDisabled,
+                                );
+                                unawaited(
+                                  _replySpeaker.stop().catchError(
+                                    (Object _) {},
+                                  ),
+                                );
+                              }
+                            },
+                            tooltip: _voiceReplyEnabled
+                                ? context.l10n.spoken_replies_on
+                                : context.l10n.spoken_replies_off,
+                            constraints: const BoxConstraints.tightFor(
+                              width: 48,
+                              height: 48,
+                            ),
                           ),
                         ),
-                      ),
                       const SizedBox(width: 4),
                       if (_streaming) ...[
                         if (showQueueHeld)

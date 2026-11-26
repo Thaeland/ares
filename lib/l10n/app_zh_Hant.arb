@@ -1011,21 +1011,6 @@
     }
   },
   "could_not_save_chat_spaces": "無法在此裝置上儲存聊天空間",
-  "update_available": "有可用更新",
-  "update_now": "立即更新",
-  "update_install": "安裝更新",
-  "update_downloading": "正在下載並驗證更新…",
-  "update_allow_install": "請允許 Hermes 安裝這項更新，然後回到這裡點選「安裝更新」。",
-  "update_failed": "無法下載、驗證或開啟更新。請重試，或前往版本發布頁面。",
-  "a_newer_hermes_android_build_is_available_on_github": "GitHub 上已有更新的 Ares 版本。",
-  "release_notes": "發行說明",
-  "view_release": "查看發行版",
-  "skip_this_version": "跳過此版本",
-  "later": "稍後",
-  "check_for_updates": "檢查更新",
-  "check_for_updates_on_launch": "啟動時檢查更新",
-  "you_re_on_the_latest_version": "已是最新版本。",
-  "couldn_t_check_for_updates": "無法檢查更新。",
   "chat_density": "聊天密度",
   "chat_density_2": "聊天密度：{label}",
   "chat_density_comfortable": "舒適",
@@ -4272,5 +4257,9 @@
   "release_misc_gateway_unreachable": "無法連線至閘道端點 {endpoint}。",
   "release_core_schedule_invalid_delivery_target": "無效的傳送目標",
   "release_core_file_save_direct_only": "只能儲存工作目錄直屬的檔案。",
-  "release_core_file_save_hidden": "閘道無法儲存隱藏檔案。"
+  "release_core_file_save_hidden": "閘道無法儲存隱藏檔案。",
+  "ng_slash_suggestions_loading": "正在載入指令…",
+  "ng_slash_suggestions_empty": "沒有相符的指令",
+  "ng_slash_suggestions_label": "指令建議",
+  "ng_slash_suggestions_skill": "技能"
 }

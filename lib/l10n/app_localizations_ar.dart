@@ -11978,14 +11978,14 @@ class AppLocalizationsAr extends AppLocalizations {
       'لا يمكن للبوابة حفظ الملفات المخفية.';
 
   @override
-  String get ng_slash_suggestions_loading => 'Loading commands…';
+  String get ng_slash_suggestions_loading => 'جارٍ تحميل الأوامر…';
 
   @override
-  String get ng_slash_suggestions_empty => 'No matching commands';
+  String get ng_slash_suggestions_empty => 'لا توجد أوامر مطابقة';
 
   @override
-  String get ng_slash_suggestions_label => 'Command suggestions';
+  String get ng_slash_suggestions_label => 'اقتراحات الأوامر';
 
   @override
-  String get ng_slash_suggestions_skill => 'Skill';
+  String get ng_slash_suggestions_skill => 'مهارة';
 }
