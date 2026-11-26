@@ -118,6 +118,41 @@ void main() {
     expect(sink.played, isNull);
   });
 
+  test(
+    'a warmed relay answer speaks without asking the gateway again',
+    () async {
+      var fetches = 0;
+      final relayStore = VoiceClientConfigStore(
+        fetchConfig: () async {
+          fetches++;
+          return null; // An older backend answers 404: relay.
+        },
+        httpClient: MockClient((_) async => http.Response('', 200)),
+      );
+      addTearDown(relayStore.dispose);
+      final relaySpeaker = ClientDirectVoiceReplySpeaker(
+        store: relayStore,
+        scopeKey: 'test',
+        fallback: fallback,
+        sink: sink,
+      );
+      relaySpeaker.warm();
+      await Future<void>.delayed(Duration.zero);
+      expect(fetches, 1);
+
+      expect(
+        await relaySpeaker.speak('Hello.', isCurrent: () => true),
+        HandsFreeSpeechOutcome.completed,
+      );
+      expect(
+        await relaySpeaker.speak('Again.', isCurrent: () => true),
+        HandsFreeSpeechOutcome.completed,
+      );
+      expect(fetches, 1);
+      expect(fallback.calls, 2);
+    },
+  );
+
   test('stop cancels playback and the delegate', () async {
     final future = speaker.speak('Hello.', isCurrent: () => true);
     await Future<void>.delayed(Duration.zero);

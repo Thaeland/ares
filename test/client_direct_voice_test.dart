@@ -242,6 +242,32 @@ void main() {
     },
   );
 
+  test(
+    'a relay answer is kept for the TTL; a failed fetch is retried',
+    () async {
+      var fetches = 0;
+      var fail = false;
+      final store = VoiceClientConfigStore(
+        fetchConfig: () async {
+          fetches++;
+          if (fail) throw const SocketException('unreachable');
+          return null; // An older backend: 404, so relay.
+        },
+        httpClient: MockClient((_) async => http.Response('ok', 200)),
+      );
+      addTearDown(store.dispose);
+      expect(await store.configFor('conn::profile'), isNull);
+      expect(await store.configFor('conn::profile'), isNull);
+      expect(fetches, 1);
+
+      store.clear();
+      fail = true;
+      expect(await store.configFor('conn::profile'), isNull);
+      expect(await store.configFor('conn::profile'), isNull);
+      expect(fetches, 3);
+    },
+  );
+
   test('scope switch never reuses another profile\'s credentials', () async {
     var key = 'first';
     final store = VoiceClientConfigStore(

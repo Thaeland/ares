@@ -4067,6 +4067,15 @@ class _ChatScreenState extends State<ChatScreen>
     if (mounted && _voiceElementActive) setState(() {});
   }
 
+  /// Marks whether this send's reply is to be spoken. A spoken reply's voice
+  /// config is resolved while the turn runs, not after the reply lands.
+  void _expectVoiceReply(bool speakResponse) {
+    _awaitingVoiceReply = speakResponse && _voiceReplyEnabled;
+    if (_awaitingVoiceReply || autoSpeakRepliesEnabled.value) {
+      _ownedDirectSpeaker?.warm();
+    }
+  }
+
   Future<void> _speakAssistantText(String text) async {
     if (!_voiceReplyEnabled) return;
     await _readAssistantText(text);
@@ -7404,7 +7413,7 @@ class _ChatScreenState extends State<ChatScreen>
           ];
 
     if (!keepComposer) _commitComposerForSend();
-    _awaitingVoiceReply = speakResponse && _voiceReplyEnabled;
+    _expectVoiceReply(speakResponse);
     final responseGeneration = ++_responseGeneration;
     voiceBinding?.responseGeneration = responseGeneration;
     _activeResponseTransport = _ResponseTransport.rest;
@@ -7779,7 +7788,7 @@ class _ChatScreenState extends State<ChatScreen>
         PreparedImageStore.supports(imageText, attachments);
     PreparedImageCapture? capture;
     var handedOff = false;
-    _awaitingVoiceReply = speakResponse && _voiceReplyEnabled;
+    _expectVoiceReply(speakResponse);
     try {
       final projectCwd = widget.projectWorkingDirectory?.trim();
       if (widget.session.isLocalDraft && projectCwd?.isNotEmpty == true) {
@@ -7981,7 +7990,7 @@ class _ChatScreenState extends State<ChatScreen>
     final turnSession = _turnApplicationSession;
     if (turnSession == null) return;
     _noteGitTurnStarted();
-    _awaitingVoiceReply = speakResponse && _voiceReplyEnabled;
+    _expectVoiceReply(speakResponse);
     final responseGeneration = ++_responseGeneration;
     _activeResponseTransport = _ResponseTransport.desktop;
     final staged = <GatewayTurnAttachmentReceipt>[];

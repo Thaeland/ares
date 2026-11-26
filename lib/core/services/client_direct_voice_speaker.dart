@@ -102,8 +102,16 @@ class ClientDirectVoiceReplySpeaker implements VoiceReplySpeaker {
 
   DirectVoiceAudioSink get _sink => _injectedSink ?? _ownedSink!;
 
+  /// Resolves this scope's voice config ahead of the reply, so speaking it
+  /// does not wait on a gateway round trip once it lands. Call when a spoken
+  /// reply becomes expected; a failed read is retried when the reply comes.
+  void warm() => unawaited(store.configFor(scopeKey));
+
   @override
-  Future<bool> prepare() => fallback.prepare();
+  Future<bool> prepare() {
+    warm();
+    return fallback.prepare();
+  }
 
   @override
   Future<HandsFreeSpeechOutcome> speak(

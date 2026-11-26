@@ -359,11 +359,14 @@ class VoiceClientConfigStore {
     _inFlight = null;
   }
 
+  /// The scope's config, or null to relay. A backend's answer is kept for
+  /// [ttl] whichever way it went: a backend that relays (an older one, or no
+  /// client-callable provider) is not asked again before every spoken reply.
+  /// A failed fetch is not an answer and is retried on the next call.
   Future<VoiceClientConfig?> configFor(String scopeKey) async {
     if (_disposed) return null;
     final now = DateTime.now();
-    if (_cached != null &&
-        _scopeKey == scopeKey &&
+    if (_scopeKey == scopeKey &&
         _cachedAt != null &&
         now.difference(_cachedAt!).compareTo(ttl) < 0) {
       return _cached;
