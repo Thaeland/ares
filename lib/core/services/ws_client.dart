@@ -13,6 +13,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:uuid/uuid.dart';
 import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../models/client_certificate.dart';
 import '../models/slash_command.dart';
@@ -20,6 +21,9 @@ import 'canonical_wire.dart';
 import 'gateway_headers.dart';
 import 'hermes_sign_in.dart';
 import 'tls_client_factory.dart';
+import '../history/canonical_rewind.dart';
+import '../history/rewind_submit.dart'
+    show isRejectedDeepTruncatePayload, stripRejectedDeepTruncate;
 
 Object? _deepFreezeJson(Object? value) {
   if (value is Map) {
@@ -305,6 +309,16 @@ final class _UpgradeClient implements HttpClient {
 /// A live binding observed on this exact socket, never a persisted locator.
 final class WorkspaceRuntime {
   WorkspaceRuntime._(this.runtimeId, this.profile, this.cwd, this.backend);
+
+  /// A binding for a fake socket in tests; a real one is only ever made by
+  /// the socket that received the resume receipt.
+  @visibleForTesting
+  WorkspaceRuntime.forTest(
+    this.runtimeId, {
+    this.profile,
+    this.cwd,
+    this.backend,
+  });
   final String runtimeId;
   final String? profile;
   final String? cwd;
@@ -340,7 +354,13 @@ class WsClient {
   final String? _token;
   final String? _ticket;
   final String? _profile;
-  IOWebSocketChannel? _channel;
+  WebSocketChannel? _channel;
+
+  /// Test seam: dials the gateway socket in place of the platform
+  /// WebSocket, so a test can put an in-memory gateway under the real
+  /// transport. Null (always, outside tests) dials the platform socket.
+  @visibleForTesting
+  static WebSocketChannel Function(Uri uri)? debugDial;
   bool _connected = false;
   int _nextId = 1;
   int _connectionGeneration = 0;
@@ -390,6 +410,11 @@ class WsClient {
   late CanonicalWire _canonical = _newCanonicalWire();
   CanonicalWire _newCanonicalWire() =>
       CanonicalWire(generationFor: (id) => _executionGenerations[id]);
+
+  /// The CAS revision this socket was last told for each session on the
+  /// canonical session authority: a fenced mutation (rewind) presents it.
+  final CanonicalSessionRevisions _sessionRevisions =
+      CanonicalSessionRevisions();
   final Map<int, _ConnectionClosedListener> _connectionClosedListeners = {};
   Completer<Map<String, dynamic>>? _gatewayReadyCompleter;
   Map<String, dynamic>? _gatewayReadyFrame;
@@ -504,14 +529,17 @@ class WsClient {
         useProtocol || _clientCertificate != null || upgradeHeaders.isNotEmpty
         ? _UpgradeClient(_tlsClientFactory.createHttpClient(_clientCertificate))
         : null;
-    final channel = IOWebSocketChannel.connect(
-      Uri.parse(wsUrl),
-      customClient: customClient,
-      headers: upgradeHeaders.isEmpty ? null : upgradeHeaders,
-      protocols: useProtocol
-          ? [gatewayProtocol, '$ticketProtocolPrefix$ticket']
-          : null,
-    );
+    final dial = debugDial;
+    final WebSocketChannel channel = dial != null
+        ? dial(Uri.parse(wsUrl))
+        : IOWebSocketChannel.connect(
+            Uri.parse(wsUrl),
+            customClient: customClient,
+            headers: upgradeHeaders.isEmpty ? null : upgradeHeaders,
+            protocols: useProtocol
+                ? [gatewayProtocol, '$ticketProtocolPrefix$ticket']
+                : null,
+          );
     _channel = channel;
     channel.stream.listen(
       (message) => _handleMessage(message, generation),
@@ -602,6 +630,7 @@ class WsClient {
     _sessionStreams.clear();
     _executionGenerations.clear();
     _canonical = _newCanonicalWire();
+    _sessionRevisions.clear();
     for (final listener in listenersToNotify) {
       try {
         listener();
@@ -777,6 +806,7 @@ class WsClient {
           if (method == null || params == null) {
             _streams.remove(id);
           }
+          _noteSessionFences(pending, data);
           pending.completer.complete(data);
           // Internal request state is terminal before observers see the final
           // stream event. Observer failures cannot retain a pending request.
@@ -1091,6 +1121,7 @@ class WsClient {
       event.sessionId,
       event.envelope['execution_generation'],
     );
+    _sessionRevisions.noteEvent(event.type, event.sessionId, event.data);
     if (sessionAuthority) {
       final canonical = _canonical;
       canonical.noteEvent(event.type, event.sessionId, event.data);
@@ -1170,6 +1201,34 @@ class WsClient {
     }
   }
 
+  /// The revision this socket was last told for [sessionId] on the canonical
+  /// session authority, or null when none was seen.
+  int? sessionRevisionFor(String sessionId) => _sessionRevisions.of(sessionId);
+
+  /// A reply's fences: a snapshot or receipt names the session's revision,
+  /// and a fence refusal names the owner's current revision and generation
+  /// (Desktop's `CanonicalDesktopProtocol.result` / `failure`).
+  void _noteSessionFences(_Pending pending, Map<String, dynamic> reply) {
+    final result = reply['result'];
+    _sessionRevisions.noteResult(pending.method, result);
+    if (result is Map) {
+      // A snapshot or receipt names its session and the execution it
+      // belongs to; an admission receipt names the session in `ref`. A
+      // caller that sends these verbs raw (NextGen) learns them here.
+      final ref = result['ref'];
+      final sessionId =
+          result['session_id'] ?? (ref is Map ? ref['session_id'] : null);
+      if (sessionId is String) {
+        _noteExecutionGeneration(sessionId, result['execution_generation']);
+      }
+    }
+    final error = reply['error'];
+    final data = error is Map ? error['data'] : null;
+    if (data is! Map || !isFenceRefusal(data)) return;
+    _sessionRevisions.noteRefusal(pending.sessionId, data);
+    _noteExecutionGeneration(pending.sessionId, data['execution_generation']);
+  }
+
   /// The generation a canonical Stop/Steer for [sessionId] must carry,
   /// captured before anything awaits; null on a legacy gateway, whose strict
   /// params refuse the key. A canonical socket that has admitted no
@@ -1207,11 +1266,14 @@ class WsClient {
 
   /// Send a JSON-RPC method call and wait for response.
   ///
-  /// On a session-authority socket the request first goes through the
-  /// canonical guard ([CanonicalWire]): a legacy shape the owner has a
-  /// canonical form for is translated, and one it has none for is answered
-  /// here with a [canonicalRefusalCode] error, never sent. A legacy socket
-  /// sends [params] as given.
+  /// On a session-authority socket a truncating `prompt.submit` (edit,
+  /// regenerate, restore) is first split as Hermes Desktop's
+  /// `canonicalRedirect` does: the owner's rewind, then the plain submit.
+  /// Every other request goes through the canonical guard
+  /// ([CanonicalWire]): a legacy shape the owner has a canonical form for
+  /// is translated, and one it has none for is answered here with a
+  /// [canonicalRefusalCode] error, never sent. A legacy socket sends
+  /// [params] as given.
   Future<Map<String, dynamic>> send(
     String method,
     Map<String, dynamic> params, {
@@ -1227,6 +1289,28 @@ class WsClient {
         onSent: onSent,
         includeProfile: includeProfile,
       );
+    }
+    if (method == 'prompt.submit') {
+      final RewindSubmitSplit? split;
+      try {
+        split = splitRewindSubmit(params);
+      } on RewindTargetUnsaved {
+        return Future.error(
+          JsonRpcError(
+            method,
+            rewindTargetUnsavedMessage,
+            reason: rewindTargetUnsavedReason,
+          ),
+        );
+      }
+      if (split != null) {
+        return _sendRewindSubmit(
+          split,
+          timeout: timeout,
+          onSent: onSent,
+          includeProfile: includeProfile,
+        );
+      }
     }
     return _sendCanonical(
       method,
@@ -1267,6 +1351,59 @@ class WsClient {
     );
   }
 
+  /// Desktop's `canonicalRedirect` for a truncating submit: its
+  /// `session.rewind` (on the wire a `session.mutate` with operation
+  /// `rewind`, fenced by the session's revision and generation), then the
+  /// submit without any truncation key. A refused rewind wrote nothing and
+  /// is returned as the answer: the prompt is not submitted after it.
+  Future<Map<String, dynamic>> _sendRewindSubmit(
+    RewindSubmitSplit split, {
+    required Duration timeout,
+    required void Function()? onSent,
+    required bool includeProfile,
+  }) async {
+    final rewind = split.rewind;
+    if (rewind != null) {
+      final sessionId = rewind['session_id'];
+      final revision = sessionId is String
+          ? _sessionRevisions.of(sessionId)
+          : null;
+      final generation = sessionId is String
+          ? _executionGenerations[sessionId]
+          : null;
+      if (revision == null || generation == null) {
+        // Never a guessed fence: the owner would refuse it, or worse, a
+        // stale one could cut a transcript another viewer has moved on.
+        throw JsonRpcError(
+          'session.rewind',
+          rewindFencesUnknownMessage,
+          reason: rewindFencesUnknownReason,
+        );
+      }
+      final cut = await _sendRequest(
+        'session.mutate',
+        rewindMutation(
+          rewind,
+          requestId: const Uuid().v4(),
+          revision: revision,
+          generation: generation,
+        ),
+        timeout: timeout,
+        includeProfile: includeProfile,
+      );
+      if (cut['error'] != null) return cut;
+    }
+    // The plain submit still goes through the guard (it is identified
+    // input on the owner: a submission id is added when missing).
+    return _sendCanonical(
+      'prompt.submit',
+      split.submit,
+      timeout: timeout,
+      onSent: onSent,
+      includeProfile: includeProfile,
+    );
+  }
+
   Future<Map<String, dynamic>> _sendRequest(
     String method,
     Map<String, dynamic> params, {
@@ -1292,7 +1429,12 @@ class WsClient {
       }
     });
 
-    _pending[id] = _Pending(method, completer, timer);
+    _pending[id] = _Pending(
+      method,
+      completer,
+      timer,
+      sessionId: requestedId is String ? requestedId : null,
+    );
     try {
       _channel!.sink.add(
         jsonEncode({
@@ -1553,7 +1695,33 @@ class WsClient {
           error,
           fallbackMessage: 'Unknown error',
         );
-        if (isRejectedSubmissionIdError(rpcError)) {
+        // Backends predating confirm_deep_truncate reject it at contract
+        // admission (4000, handler never runs). The user already confirmed
+        // the deep cut, so retry once without only that field — mirror of
+        // Desktop's runRewindSubmit (rewind.ts).
+        final sent = <String, dynamic>{
+          ...baseParams,
+          'submission_id': effectiveSubmissionId,
+        };
+        if (isRejectedDeepTruncatePayload(
+          code: rpcError.code,
+          message: rpcError.message,
+          sentParams: sent,
+        )) {
+          response = await send(
+            'prompt.submit',
+            stripRejectedDeepTruncate(sent),
+            onSent: onSent,
+          );
+          error = response['error'];
+          if (error != null) {
+            throw _gatewayResponseError(
+              'prompt.submit',
+              error,
+              fallbackMessage: 'Unknown error',
+            );
+          }
+        } else if (isRejectedSubmissionIdError(rpcError)) {
           if (beforeLegacy != null) await beforeLegacy();
           // The refusal crossed an async boundary: re-validate admission and
           // socket ownership before the compatibility retry writes again, so
@@ -1599,6 +1767,9 @@ class WsClient {
                 'queued',
                 'steered',
                 'interrupted',
+                // The canonical admission receipt: the turn was admitted
+                // and its execution started (`AdmissionStatus.status`).
+                'started',
               }.contains(result['status']))) {
         try {
           onAccepted?.call();
@@ -2231,7 +2402,10 @@ class _Pending {
   final String method;
   final Completer<Map<String, dynamic>> completer;
   final Timer? timer;
-  _Pending(this.method, this.completer, this.timer);
+
+  /// The session the request named, for a refusal that carries its fences.
+  final String? sessionId;
+  _Pending(this.method, this.completer, this.timer, {this.sessionId});
 }
 
 class _ConnectionClosedListener {

@@ -12410,6 +12410,480 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not available on the shared gateway yet'**
   String get ng_wire_not_available;
+
+  /// No description provided for @edit_turn_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit this prompt?'**
+  String get edit_turn_title;
+
+  /// No description provided for @edit_turn_body.
+  ///
+  /// In en, this message translates to:
+  /// **'The prompt will be re-run from here. Later turns are archived.'**
+  String get edit_turn_body;
+
+  /// No description provided for @edit_turn_send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get edit_turn_send;
+
+  /// No description provided for @restore_turn_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore to this checkpoint?'**
+  String get restore_turn_title;
+
+  /// No description provided for @restore_turn_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything after this prompt is removed from the conversation, and the prompt runs again from here.'**
+  String get restore_turn_body;
+
+  /// No description provided for @restore_turn_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore & rerun'**
+  String get restore_turn_confirm;
+
+  /// No description provided for @edit_turn_later_turns_body.
+  ///
+  /// In en, this message translates to:
+  /// **'This will archive later turns from the conversation. Continue?'**
+  String get edit_turn_later_turns_body;
+
+  /// No description provided for @session_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Session history'**
+  String get session_history;
+
+  /// No description provided for @import_claude_or_codex.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Claude or Codex'**
+  String get import_claude_or_codex;
+
+  /// No description provided for @ng_session_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Session history'**
+  String get ng_session_history;
+
+  /// No description provided for @ng_import_claude_or_codex.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Claude or Codex'**
+  String get ng_import_claude_or_codex;
+
+  /// No description provided for @ng_edit_and_resend.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit and resend'**
+  String get ng_edit_and_resend;
+
+  /// No description provided for @ng_restore_turn_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore & rerun'**
+  String get ng_restore_turn_confirm;
+
+  /// No description provided for @rewind_target_unsaved.
+  ///
+  /// In en, this message translates to:
+  /// **'This message is not saved yet. Wait for it to settle, then edit it again.'**
+  String get rewind_target_unsaved;
+
+  /// No description provided for @rewind_turn_busy.
+  ///
+  /// In en, this message translates to:
+  /// **'The current reply has not stopped yet, so nothing was sent. Try again in a moment.'**
+  String get rewind_turn_busy;
+
+  /// No description provided for @rewind_session_changed.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat changed since it was opened here, so nothing was removed or sent. Reopen it, then try again.'**
+  String get rewind_session_changed;
+
+  /// No description provided for @history_lineage.
+  ///
+  /// In en, this message translates to:
+  /// **'Related chats'**
+  String get history_lineage;
+
+  /// No description provided for @history_lineage_none.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat has no forks or sibling branches.'**
+  String get history_lineage_none;
+
+  /// No description provided for @history_lineage_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Related chats could not be read from this gateway.'**
+  String get history_lineage_unavailable;
+
+  /// No description provided for @history_lineage_parent.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent'**
+  String get history_lineage_parent;
+
+  /// No description provided for @history_lineage_sibling.
+  ///
+  /// In en, this message translates to:
+  /// **'Sibling'**
+  String get history_lineage_sibling;
+
+  /// No description provided for @history_lineage_fork.
+  ///
+  /// In en, this message translates to:
+  /// **'Fork'**
+  String get history_lineage_fork;
+
+  /// No description provided for @history_messages.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get history_messages;
+
+  /// No description provided for @history_messages_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a saved message to branch or rewind there.'**
+  String get history_messages_hint;
+
+  /// No description provided for @history_messages_none.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved messages yet.'**
+  String get history_messages_none;
+
+  /// No description provided for @history_messages_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The saved messages could not be read. Open this chat, then refresh.'**
+  String get history_messages_unavailable;
+
+  /// No description provided for @history_role_user.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get history_role_user;
+
+  /// No description provided for @history_role_assistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Hermes'**
+  String get history_role_assistant;
+
+  /// No description provided for @history_branch_here.
+  ///
+  /// In en, this message translates to:
+  /// **'Branch from here'**
+  String get history_branch_here;
+
+  /// No description provided for @history_rewind_here.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewind to here'**
+  String get history_rewind_here;
+
+  /// No description provided for @history_branch_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Branch from this message'**
+  String get history_branch_title;
+
+  /// No description provided for @history_branch_body.
+  ///
+  /// In en, this message translates to:
+  /// **'This creates a new chat containing history through the selected message. The current chat stays as it is.'**
+  String get history_branch_body;
+
+  /// No description provided for @history_rewind_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewind to this message'**
+  String get history_rewind_title;
+
+  /// No description provided for @history_rewind_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages from the selected one onward are removed from this chat. Files on the computer are not changed. Restoring those is a separate checkpoint action.'**
+  String get history_rewind_body;
+
+  /// No description provided for @history_branched.
+  ///
+  /// In en, this message translates to:
+  /// **'Branched as {id}'**
+  String history_branched(String id);
+
+  /// No description provided for @history_open_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Open chat'**
+  String get history_open_chat;
+
+  /// No description provided for @history_mutate_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Branch and rewind need Hermes 0.23 or newer on this gateway.'**
+  String get history_mutate_unsupported;
+
+  /// No description provided for @history_checkpoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkpoints'**
+  String get history_checkpoints;
+
+  /// No description provided for @history_checkpoints_none.
+  ///
+  /// In en, this message translates to:
+  /// **'This session has no filesystem checkpoints.'**
+  String get history_checkpoints_none;
+
+  /// No description provided for @history_checkpoints_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkpoints are not available on this gateway.'**
+  String get history_checkpoints_unavailable;
+
+  /// No description provided for @history_diff_none.
+  ///
+  /// In en, this message translates to:
+  /// **'No differences.'**
+  String get history_diff_none;
+
+  /// No description provided for @history_diff_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading the changes…'**
+  String get history_diff_loading;
+
+  /// No description provided for @history_diff_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The changes could not be loaded, so this checkpoint cannot be restored yet.'**
+  String get history_diff_failed;
+
+  /// No description provided for @history_restore_checkpoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore checkpoint'**
+  String get history_restore_checkpoint;
+
+  /// No description provided for @history_restore_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore this checkpoint'**
+  String get history_restore_title;
+
+  /// No description provided for @history_restore_body.
+  ///
+  /// In en, this message translates to:
+  /// **'The files the agent changed since this checkpoint go back to how they were then. Changes you made yourself are kept. Later chat messages can be removed as well. The conversation is not branched.'**
+  String get history_restore_body;
+
+  /// No description provided for @history_restore_body_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Every file in the session folder goes back to this checkpoint, including changes you made yourself. Later chat messages can be removed as well. The conversation is not branched.'**
+  String get history_restore_body_all;
+
+  /// No description provided for @history_restore_own_edits.
+  ///
+  /// In en, this message translates to:
+  /// **'Also revert my own edits'**
+  String get history_restore_own_edits;
+
+  /// No description provided for @history_restored.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkpoint restored.'**
+  String get history_restored;
+
+  /// No description provided for @history_restored_removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkpoint restored. {count} chat messages were removed.'**
+  String history_restored_removed(int count);
+
+  /// No description provided for @history_export.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get history_export;
+
+  /// No description provided for @history_export_redact.
+  ///
+  /// In en, this message translates to:
+  /// **'Redact tokens'**
+  String get history_export_redact;
+
+  /// No description provided for @history_export_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Export transcript'**
+  String get history_export_action;
+
+  /// No description provided for @history_export_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Transcript saved.'**
+  String get history_export_saved;
+
+  /// No description provided for @history_export_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Export needs Hermes 0.23 or newer on this gateway.'**
+  String get history_export_unsupported;
+
+  /// No description provided for @history_import_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Claude and Codex import is not supported by this gateway.'**
+  String get history_import_unsupported;
+
+  /// No description provided for @history_import_destination.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination profile: {profile}.'**
+  String history_import_destination(String profile);
+
+  /// No description provided for @history_import_reading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading from {host} · Destination profile: {profile}. {count} logs could not be read.'**
+  String history_import_reading(String host, String profile, int count);
+
+  /// No description provided for @history_import_all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get history_import_all;
+
+  /// No description provided for @history_import_scan_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not scan host sessions: {reason}'**
+  String history_import_scan_failed(String reason);
+
+  /// No description provided for @history_import_none.
+  ///
+  /// In en, this message translates to:
+  /// **'No Claude Code or Codex sessions found on this host.'**
+  String get history_import_none;
+
+  /// No description provided for @history_import_no_match.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching host sessions.'**
+  String get history_import_no_match;
+
+  /// No description provided for @history_import_preview_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not preview session: {reason}'**
+  String history_import_preview_failed(String reason);
+
+  /// No description provided for @history_import_open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open imported session'**
+  String get history_import_open;
+
+  /// No description provided for @history_import_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Import selected session'**
+  String get history_import_action;
+
+  /// No description provided for @history_import_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Import this session'**
+  String get history_import_title;
+
+  /// No description provided for @history_import_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy this Claude or Codex session into profile \"{profile}\" on this gateway.'**
+  String history_import_body(String profile);
+
+  /// No description provided for @history_import_body_existing.
+  ///
+  /// In en, this message translates to:
+  /// **'This session was already imported into \"{profile}\". Continue with the existing copy.'**
+  String history_import_body_existing(String profile);
+
+  /// No description provided for @history_imported.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported as {id}'**
+  String history_imported(String id);
+
+  /// No description provided for @history_imported_already.
+  ///
+  /// In en, this message translates to:
+  /// **'Already imported as {id}'**
+  String history_imported_already(String id);
+
+  /// No description provided for @history_import_directory.
+  ///
+  /// In en, this message translates to:
+  /// **'Directory: {path}'**
+  String history_import_directory(String path);
+
+  /// No description provided for @history_import_preview_partial.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview shows {shown} of {total}.'**
+  String history_import_preview_partial(int shown, int total);
+
+  /// No description provided for @history_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not finish: {reason}'**
+  String history_failed(String reason);
+
+  /// No description provided for @history_error_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway could not do this right now. Try again.'**
+  String get history_error_unavailable;
+
+  /// No description provided for @history_error_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway does not support this.'**
+  String get history_error_unsupported;
+
+  /// No description provided for @history_error_denied.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway refused the request.'**
+  String get history_error_denied;
+
+  /// No description provided for @history_error_changed.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat changed while this page was open. Refresh, then try again.'**
+  String get history_error_changed;
+
+  /// No description provided for @history_error_unbound.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat is not open on the gateway. Open it, then try again.'**
+  String get history_error_unbound;
+
+  /// No description provided for @history_error_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway sent an answer this app could not read.'**
+  String get history_error_invalid;
 }
 
 class _AppLocalizationsDelegate

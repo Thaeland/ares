@@ -970,6 +970,10 @@ class _NgMainPageState extends State<_NgMainContent>
             onOpenSidebar: toggleSidebar,
             sessions: _sessions,
             onNewChat: _newChat,
+            onOpenSessionId: (id, {title}) {
+              unawaited(_sessions?.refresh());
+              _openId(id, title ?? '');
+            },
             onResume: (id, title) => _openId(id, title),
             onOpenCommandPalette: _openCommandPalette,
           );

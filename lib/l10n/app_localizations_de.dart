@@ -7426,4 +7426,295 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get ng_wire_not_available =>
       'Über das gemeinsame Gateway noch nicht verfügbar';
+
+  @override
+  String get edit_turn_title => 'Diese Eingabe bearbeiten?';
+
+  @override
+  String get edit_turn_body =>
+      'Die Eingabe wird ab hier erneut ausgeführt. Spätere Runden werden archiviert.';
+
+  @override
+  String get edit_turn_send => 'Senden';
+
+  @override
+  String get restore_turn_title => 'Auf diesen Sicherungspunkt zurücksetzen?';
+
+  @override
+  String get restore_turn_body =>
+      'Alles nach dieser Eingabe wird aus dem Gespräch entfernt und die Eingabe ab hier erneut ausgeführt.';
+
+  @override
+  String get restore_turn_confirm => 'Zurücksetzen & neu starten';
+
+  @override
+  String get edit_turn_later_turns_body =>
+      'Dadurch werden spätere Runden aus dem Gespräch archiviert. Fortfahren?';
+
+  @override
+  String get session_history => 'Sitzungsverlauf';
+
+  @override
+  String get import_claude_or_codex => 'Claude oder Codex importieren';
+
+  @override
+  String get ng_session_history => 'Sitzungsverlauf';
+
+  @override
+  String get ng_import_claude_or_codex => 'Claude oder Codex importieren';
+
+  @override
+  String get ng_edit_and_resend => 'Bearbeiten und erneut senden';
+
+  @override
+  String get ng_restore_turn_confirm => 'Zurücksetzen & neu starten';
+
+  @override
+  String get rewind_target_unsaved =>
+      'Diese Nachricht ist noch nicht gespeichert. Warte, bis sie abgeschlossen ist, und bearbeite sie dann erneut.';
+
+  @override
+  String get rewind_turn_busy =>
+      'Die aktuelle Antwort wurde noch nicht gestoppt, daher wurde nichts gesendet. Versuche es gleich noch einmal.';
+
+  @override
+  String get rewind_session_changed =>
+      'Dieser Chat hat sich geändert, seit er hier geöffnet wurde, daher wurde nichts entfernt oder gesendet. Öffne ihn erneut und versuche es noch einmal.';
+
+  @override
+  String get history_lineage => 'Verwandte Chats';
+
+  @override
+  String get history_lineage_none =>
+      'Dieser Chat hat keine Abzweigungen oder Geschwisterzweige.';
+
+  @override
+  String get history_lineage_unavailable =>
+      'Verwandte Chats konnten von diesem Gateway nicht gelesen werden.';
+
+  @override
+  String get history_lineage_parent => 'Ursprung';
+
+  @override
+  String get history_lineage_sibling => 'Geschwister';
+
+  @override
+  String get history_lineage_fork => 'Abzweigung';
+
+  @override
+  String get history_messages => 'Nachrichten';
+
+  @override
+  String get history_messages_hint =>
+      'Wähle eine gespeicherte Nachricht, um dort abzuzweigen oder zurückzuspulen.';
+
+  @override
+  String get history_messages_none => 'Noch keine gespeicherten Nachrichten.';
+
+  @override
+  String get history_messages_unavailable =>
+      'Die gespeicherten Nachrichten konnten nicht gelesen werden. Öffne diesen Chat und aktualisiere dann.';
+
+  @override
+  String get history_role_user => 'Du';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => 'Hier abzweigen';
+
+  @override
+  String get history_rewind_here => 'Bis hierher zurückspulen';
+
+  @override
+  String get history_branch_title => 'Von dieser Nachricht abzweigen';
+
+  @override
+  String get history_branch_body =>
+      'Dadurch entsteht ein neuer Chat mit dem Verlauf bis zur ausgewählten Nachricht. Der aktuelle Chat bleibt unverändert.';
+
+  @override
+  String get history_rewind_title => 'Bis zu dieser Nachricht zurückspulen';
+
+  @override
+  String get history_rewind_body =>
+      'Nachrichten ab der ausgewählten werden aus diesem Chat entfernt. Dateien auf dem Computer bleiben unverändert. Sie werden separat über einen Sicherungspunkt wiederhergestellt.';
+
+  @override
+  String history_branched(String id) {
+    return 'Abgezweigt als $id';
+  }
+
+  @override
+  String get history_open_chat => 'Chat öffnen';
+
+  @override
+  String get history_mutate_unsupported =>
+      'Abzweigen und Zurückspulen erfordern Hermes 0.23 oder neuer auf diesem Gateway.';
+
+  @override
+  String get history_checkpoints => 'Sicherungspunkte';
+
+  @override
+  String get history_checkpoints_none =>
+      'Diese Sitzung hat keine Dateisystem-Sicherungspunkte.';
+
+  @override
+  String get history_checkpoints_unavailable =>
+      'Sicherungspunkte sind auf diesem Gateway nicht verfügbar.';
+
+  @override
+  String get history_diff_none => 'Keine Unterschiede.';
+
+  @override
+  String get history_diff_loading => 'Änderungen werden geladen…';
+
+  @override
+  String get history_diff_failed =>
+      'Die Änderungen konnten nicht geladen werden, daher kann dieser Sicherungspunkt noch nicht wiederhergestellt werden.';
+
+  @override
+  String get history_restore_checkpoint => 'Sicherungspunkt wiederherstellen';
+
+  @override
+  String get history_restore_title => 'Diesen Sicherungspunkt wiederherstellen';
+
+  @override
+  String get history_restore_body =>
+      'Die Dateien, die der Agent seit diesem Sicherungspunkt geändert hat, werden auf den damaligen Stand zurückgesetzt. Deine eigenen Änderungen bleiben erhalten. Spätere Chat-Nachrichten können ebenfalls entfernt werden. Die Unterhaltung wird nicht abgezweigt.';
+
+  @override
+  String get history_restore_body_all =>
+      'Jede Datei im Sitzungsordner wird auf diesen Sicherungspunkt zurückgesetzt, auch deine eigenen Änderungen. Spätere Chat-Nachrichten können ebenfalls entfernt werden. Die Unterhaltung wird nicht abgezweigt.';
+
+  @override
+  String get history_restore_own_edits =>
+      'Auch meine eigenen Änderungen zurücksetzen';
+
+  @override
+  String get history_restored => 'Sicherungspunkt wiederhergestellt.';
+
+  @override
+  String history_restored_removed(int count) {
+    return 'Sicherungspunkt wiederhergestellt. $count Chat-Nachrichten wurden entfernt.';
+  }
+
+  @override
+  String get history_export => 'Exportieren';
+
+  @override
+  String get history_export_redact => 'Tokens schwärzen';
+
+  @override
+  String get history_export_action => 'Transkript exportieren';
+
+  @override
+  String get history_export_saved => 'Transkript gespeichert.';
+
+  @override
+  String get history_export_unsupported =>
+      'Der Export erfordert Hermes 0.23 oder neuer auf diesem Gateway.';
+
+  @override
+  String get history_import_unsupported =>
+      'Der Import aus Claude und Codex wird von diesem Gateway nicht unterstützt.';
+
+  @override
+  String history_import_destination(String profile) {
+    return 'Zielprofil: $profile.';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return 'Gelesen von $host · Zielprofil: $profile. $count Protokolle konnten nicht gelesen werden.';
+  }
+
+  @override
+  String get history_import_all => 'Alle';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return 'Host-Sitzungen konnten nicht durchsucht werden: $reason';
+  }
+
+  @override
+  String get history_import_none =>
+      'Auf diesem Host wurden keine Claude-Code- oder Codex-Sitzungen gefunden.';
+
+  @override
+  String get history_import_no_match => 'Keine passenden Host-Sitzungen.';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return 'Sitzungsvorschau nicht möglich: $reason';
+  }
+
+  @override
+  String get history_import_open => 'Importierte Sitzung öffnen';
+
+  @override
+  String get history_import_action => 'Ausgewählte Sitzung importieren';
+
+  @override
+  String get history_import_title => 'Diese Sitzung importieren';
+
+  @override
+  String history_import_body(String profile) {
+    return 'Diese Claude- oder Codex-Sitzung in das Profil „$profile“ auf diesem Gateway kopieren.';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return 'Diese Sitzung wurde bereits in „$profile“ importiert. Mit der vorhandenen Kopie fortfahren.';
+  }
+
+  @override
+  String history_imported(String id) {
+    return 'Importiert als $id';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return 'Bereits importiert als $id';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return 'Verzeichnis: $path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return 'Die Vorschau zeigt $shown von $total.';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return 'Nicht abgeschlossen: $reason';
+  }
+
+  @override
+  String get history_error_unavailable =>
+      'Das Gateway konnte das gerade nicht ausführen. Versuche es erneut.';
+
+  @override
+  String get history_error_unsupported =>
+      'Dieses Gateway unterstützt das nicht.';
+
+  @override
+  String get history_error_denied =>
+      'Dieses Gateway hat die Anfrage abgelehnt.';
+
+  @override
+  String get history_error_changed =>
+      'Dieser Chat hat sich geändert, während diese Seite geöffnet war. Aktualisiere und versuche es erneut.';
+
+  @override
+  String get history_error_unbound =>
+      'Dieser Chat ist auf dem Gateway nicht geöffnet. Öffne ihn und versuche es erneut.';
+
+  @override
+  String get history_error_invalid =>
+      'Das Gateway hat eine Antwort gesendet, die diese App nicht lesen konnte.';
 }

@@ -27,6 +27,15 @@ import '../../core/services/slash_command_errors.dart';
 import '../../core/services/ws_client.dart';
 import '../../core/composer/composer_commands.dart';
 import '../../core/composer/failure_recovery.dart';
+import '../../core/history/canonical_rewind.dart'
+    show rewindFencesUnknownReason, rewindTargetUnsavedReason;
+import '../../core/history/rewind_submit.dart'
+    show
+        RewindHistory,
+        RewindPlan,
+        buildRewindParams,
+        isRejectedDeepTruncatePayload,
+        stripRejectedDeepTruncate;
 import '../../core/composer/regenerate.dart';
 import 'history_rows.dart';
 import 'nextgen_gateway.dart';
@@ -209,9 +218,15 @@ class NgUserItem extends NgItem {
   /// again unchanged with the same submission id when the send is retried.
   final Map<String, Object> promptParams;
 
+  /// The saved row behind a stored prompt (the gateway's `row_id`): the
+  /// durable address an edit or restore cuts at. Null for a prompt of this
+  /// visit, until history covers it.
+  final int? rowId;
+
   NgUserItem(
     super.key,
     this.text, {
+    this.rowId,
     this.time,
     this.steered = false,
     this.pending = false,
@@ -223,6 +238,17 @@ class NgUserItem extends NgItem {
     this.promptParams = const {},
   });
 }
+
+/// Where an edit or restore of a stored turn cuts
+/// ([NgChatController.rewindTargetFor]): the durable row (null is Desktop's
+/// plain resubmit), whether later user turns are archived, the turn's place
+/// among the user turns, and the transcript's newest row.
+typedef NgRewindTarget = ({
+  int? rowId,
+  bool laterTurns,
+  int ordinal,
+  int? maxRowId,
+});
 
 /// What [NgChatController.retryLast] did.
 enum NgRetryResult {
@@ -1094,7 +1120,16 @@ class NgChatController extends ChangeNotifier {
     }
   }
 
-  static String _clean(Object e) => e
+  static String _clean(Object e) => switch (e) {
+    // The transport's own refusals, in the user's language.
+    JsonRpcError(reason: rewindTargetUnsavedReason) =>
+      ngL.rewind_target_unsaved,
+    JsonRpcError(reason: rewindFencesUnknownReason) =>
+      ngL.rewind_session_changed,
+    _ => _cleanText(e),
+  };
+
+  static String _cleanText(Object e) => e
       .toString()
       .replaceFirst('Bad state: ', '')
       .replaceFirst('Exception: ', '')
@@ -1394,10 +1429,12 @@ class NgChatController extends ChangeNotifier {
         reply?.open = false;
         reply = null;
         final (body, files) = splitFileRefs(text);
+        final rawId = m['id'];
         items.add(
           NgUserItem(
             _key('u'),
             body,
+            rowId: rawId is int && rawId > 0 ? rawId : null,
             time: _time(m['timestamp']),
             steered: displayKind == 'steer',
             files: files,
@@ -3396,12 +3433,32 @@ class NgChatController extends ChangeNotifier {
     PreparedImageAttempt? attempt,
     required void Function() checkOwner,
   }) async {
+    final sent = <String, dynamic>{
+      ...baseParams,
+      'submission_id': submissionId,
+    };
     try {
-      return await gateway.call('prompt.submit', {
-        ...baseParams,
-        'submission_id': submissionId,
-      }, timeout: const Duration(seconds: 60));
+      return await gateway.call(
+        'prompt.submit',
+        sent,
+        timeout: const Duration(seconds: 60),
+      );
     } on JsonRpcError catch (e) {
+      // Backends predating confirm_deep_truncate reject it at contract
+      // admission (4000, handler never runs). The user already confirmed, so
+      // retry once without only that field — mirror of Desktop's
+      // runRewindSubmit (rewind.ts).
+      if (isRejectedDeepTruncatePayload(
+        code: e.code,
+        message: e.message,
+        sentParams: sent,
+      )) {
+        return gateway.call(
+          'prompt.submit',
+          stripRejectedDeepTruncate(sent),
+          timeout: const Duration(seconds: 60),
+        );
+      }
       if (!isRejectedSubmissionIdError(e)) rethrow;
       if (attempt != null) await attempt.beforeLegacy();
       checkOwner();
@@ -3485,6 +3542,120 @@ class NgChatController extends ChangeNotifier {
       _changedNow();
     }
     return sent ? NgRetryResult.regenerated : NgRetryResult.failed;
+  }
+
+  /// Where an edit or restore of [item] cuts, from the session's full saved
+  /// transcript (`session.history`): the durable row (the bubble's own row
+  /// id first, as Desktop's `source.rowId`) and whether later user turns are
+  /// archived. The items on screen are a paged window and cannot answer
+  /// either. Null when the saved transcript does not hold the turn yet:
+  /// a cut would be a guess, so nothing may be sent.
+  Future<NgRewindTarget?> rewindTargetFor(NgUserItem item) async {
+    final users = items
+        .whereType<NgUserItem>()
+        .where((entry) => !entry.steered)
+        .toList();
+    final index = users.indexOf(item);
+    final ordinal = index < 0 ? users.length : index;
+    final shownLater = index >= 0 && index < users.length - 1;
+    final String runtime;
+    try {
+      runtime = await _ensureCommandSession();
+    } catch (_) {
+      return null;
+    }
+    final history = await RewindHistory.read(
+      (method, params) => gateway.call(method, params),
+      runtime,
+    );
+    if (_disposed) return null;
+    if (history == null) {
+      // The transcript cannot be read (an old gateway): the bubble's own
+      // row, or Desktop's plain resubmit.
+      return (
+        rowId: item.rowId,
+        laterTurns: shownLater,
+        ordinal: ordinal,
+        maxRowId: null,
+      );
+    }
+    final rowId = history.rowFor(
+      bubbleRowId: item.rowId,
+      sourceText: item.text,
+      expectedOrdinal: ordinal,
+    );
+    if (rowId == null && history.hasRowIds) return null;
+    return (
+      rowId: rowId,
+      laterTurns: rowId == null ? shownLater : history.laterUserTurns(rowId),
+      ordinal: ordinal,
+      maxRowId: history.maxRowId,
+    );
+  }
+
+  /// Edit or restore a stored user turn (F17, Desktop rewind semantics):
+  /// a live turn is interrupted first, then exactly ONE truncating
+  /// `prompt.submit` goes out for [target] through the same owned path Retry
+  /// uses. The archived turns leave the view at once (Desktop's
+  /// `applyRewindOptimistic`) and come back if the send fails. The composer
+  /// is never consumed.
+  Future<bool> rewindUserTurn({
+    required NgUserItem item,
+    required String text,
+    required NgRewindTarget target,
+  }) async {
+    final runtime = runtimeId;
+    if (runtime == null) return false;
+    if (running) {
+      await stop(parkLocalQueue: false);
+      for (var i = 0; i < 50 && running && !_disposed; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+      if (_disposed || running) return false;
+    } else {
+      // Best-effort interrupt before the rewind, matching Classic and Desktop's
+      // runRewindSubmit when a detached/remote turn may still be running.
+      try {
+        await gateway.call('session.interrupt', {
+          'session_id': runtime,
+          if (gateway.sessionAuthority)
+            'execution_generation': ?_executionGeneration,
+        });
+      } catch (_) {
+        // The submit path still gates on the gateway's own busy state.
+      }
+      if (_disposed) return false;
+    }
+    final index = target.rowId == null ? -1 : items.indexOf(item);
+    final archived = index < 0 ? const <NgItem>[] : items.sublist(index);
+    if (index >= 0) {
+      items.removeRange(index, items.length);
+      _changedNow();
+    }
+    final sent = await send(
+      text,
+      promptParams: Map<String, Object>.from(
+        buildRewindParams(
+          RewindPlan.resolved(
+            rowId: target.rowId,
+            sourceText: item.text,
+            originalOrdinal: target.ordinal,
+          ),
+          confirmDeepTruncate: target.laterTurns,
+        ),
+      ),
+    );
+    if (!sent && !_disposed && archived.isNotEmpty) {
+      // Desktop's rollback: the transcript as it was, and why.
+      final failed = items.whereType<NgUserItem>().lastOrNull;
+      if (failed != null && failed.failure != null) {
+        error = failed.failure;
+        items.remove(failed);
+      }
+      items.insertAll(index.clamp(0, items.length), archived);
+      _changedNow();
+    }
+    return sent;
   }
 
   bool _answer(Map<String, dynamic> result) {

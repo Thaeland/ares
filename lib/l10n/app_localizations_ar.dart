@@ -7361,4 +7361,292 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ng_wire_not_available => 'غير متاح بعد على البوابة المشتركة';
+
+  @override
+  String get edit_turn_title => 'هل تريد تعديل هذه الرسالة؟';
+
+  @override
+  String get edit_turn_body =>
+      'سيُعاد تشغيل الرسالة من هنا، وتُؤرشف الأدوار اللاحقة.';
+
+  @override
+  String get edit_turn_send => 'إرسال';
+
+  @override
+  String get restore_turn_title => 'الاستعادة إلى نقطة الحفظ هذه؟';
+
+  @override
+  String get restore_turn_body =>
+      'سيُزال كل ما يلي هذه الرسالة من المحادثة، وتُشغَّل الرسالة من جديد بدءًا من هنا.';
+
+  @override
+  String get restore_turn_confirm => 'استعادة وإعادة تشغيل';
+
+  @override
+  String get edit_turn_later_turns_body =>
+      'سيؤدي هذا إلى أرشفة الأدوار اللاحقة من المحادثة. هل تريد المتابعة؟';
+
+  @override
+  String get session_history => 'سجل الجلسة';
+
+  @override
+  String get import_claude_or_codex => 'استيراد Claude أو Codex';
+
+  @override
+  String get ng_session_history => 'سجل الجلسة';
+
+  @override
+  String get ng_import_claude_or_codex => 'استيراد Claude أو Codex';
+
+  @override
+  String get ng_edit_and_resend => 'تعديل وإعادة إرسال';
+
+  @override
+  String get ng_restore_turn_confirm => 'استعادة وإعادة تشغيل';
+
+  @override
+  String get rewind_target_unsaved =>
+      'لم تُحفظ هذه الرسالة بعد. انتظر حتى تستقر ثم عدّلها مرة أخرى.';
+
+  @override
+  String get rewind_turn_busy =>
+      'لم يتوقف الرد الحالي بعد، لذلك لم يُرسل شيء. حاول مرة أخرى بعد لحظة.';
+
+  @override
+  String get rewind_session_changed =>
+      'تغيّرت هذه المحادثة منذ فتحها هنا، لذلك لم يُحذف أو يُرسل شيء. أعد فتحها ثم حاول مرة أخرى.';
+
+  @override
+  String get history_lineage => 'المحادثات المرتبطة';
+
+  @override
+  String get history_lineage_none =>
+      'لا توجد تفرعات أو فروع شقيقة لهذه المحادثة.';
+
+  @override
+  String get history_lineage_unavailable =>
+      'تعذّرت قراءة المحادثات المرتبطة من هذه البوابة.';
+
+  @override
+  String get history_lineage_parent => 'الأصل';
+
+  @override
+  String get history_lineage_sibling => 'شقيق';
+
+  @override
+  String get history_lineage_fork => 'تفرع';
+
+  @override
+  String get history_messages => 'الرسائل';
+
+  @override
+  String get history_messages_hint =>
+      'اختر رسالة محفوظة للتفرع منها أو الرجوع إليها.';
+
+  @override
+  String get history_messages_none => 'لا توجد رسائل محفوظة بعد.';
+
+  @override
+  String get history_messages_unavailable =>
+      'تعذّرت قراءة الرسائل المحفوظة. افتح هذه المحادثة ثم حدّث.';
+
+  @override
+  String get history_role_user => 'أنت';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => 'تفرع من هنا';
+
+  @override
+  String get history_rewind_here => 'الرجوع إلى هنا';
+
+  @override
+  String get history_branch_title => 'تفرع من هذه الرسالة';
+
+  @override
+  String get history_branch_body =>
+      'ينشئ هذا محادثة جديدة تحتوي السجل حتى الرسالة المحددة. تبقى المحادثة الحالية كما هي.';
+
+  @override
+  String get history_rewind_title => 'الرجوع إلى هذه الرسالة';
+
+  @override
+  String get history_rewind_body =>
+      'تُزال الرسائل من الرسالة المحددة فصاعدًا من هذه المحادثة. لا تتغير الملفات على الحاسوب. استعادتها إجراء منفصل عبر نقاط الحفظ.';
+
+  @override
+  String history_branched(String id) {
+    return 'تم التفرع باسم $id';
+  }
+
+  @override
+  String get history_open_chat => 'فتح المحادثة';
+
+  @override
+  String get history_mutate_unsupported =>
+      'يتطلب التفرع والرجوع Hermes 0.23 أو أحدث على هذه البوابة.';
+
+  @override
+  String get history_checkpoints => 'نقاط الحفظ';
+
+  @override
+  String get history_checkpoints_none =>
+      'لا توجد نقاط حفظ للملفات في هذه الجلسة.';
+
+  @override
+  String get history_checkpoints_unavailable =>
+      'نقاط الحفظ غير متاحة على هذه البوابة.';
+
+  @override
+  String get history_diff_none => 'لا توجد اختلافات.';
+
+  @override
+  String get history_diff_loading => 'جارٍ تحميل التغييرات…';
+
+  @override
+  String get history_diff_failed =>
+      'تعذّر تحميل التغييرات، لذا لا يمكن استعادة نقطة الحفظ هذه بعد.';
+
+  @override
+  String get history_restore_checkpoint => 'استعادة نقطة الحفظ';
+
+  @override
+  String get history_restore_title => 'استعادة نقطة الحفظ هذه';
+
+  @override
+  String get history_restore_body =>
+      'تعود الملفات التي غيّرها الوكيل منذ نقطة الحفظ هذه إلى حالتها حينها. تبقى تغييراتك أنت. قد تُزال أيضًا رسائل المحادثة اللاحقة. لا يتم تفريع المحادثة.';
+
+  @override
+  String get history_restore_body_all =>
+      'يعود كل ملف في مجلد الجلسة إلى نقطة الحفظ هذه، بما في ذلك تغييراتك أنت. قد تُزال أيضًا رسائل المحادثة اللاحقة. لا يتم تفريع المحادثة.';
+
+  @override
+  String get history_restore_own_edits => 'التراجع عن تعديلاتي أيضًا';
+
+  @override
+  String get history_restored => 'تمت استعادة نقطة الحفظ.';
+
+  @override
+  String history_restored_removed(int count) {
+    return 'تمت استعادة نقطة الحفظ. أُزيلت $count من رسائل المحادثة.';
+  }
+
+  @override
+  String get history_export => 'تصدير';
+
+  @override
+  String get history_export_redact => 'إخفاء الرموز السرية';
+
+  @override
+  String get history_export_action => 'تصدير النص';
+
+  @override
+  String get history_export_saved => 'تم حفظ النص.';
+
+  @override
+  String get history_export_unsupported =>
+      'يتطلب التصدير Hermes 0.23 أو أحدث على هذه البوابة.';
+
+  @override
+  String get history_import_unsupported =>
+      'استيراد Claude و Codex غير مدعوم على هذه البوابة.';
+
+  @override
+  String history_import_destination(String profile) {
+    return 'ملف التعريف الوجهة: $profile.';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return 'القراءة من $host · ملف التعريف الوجهة: $profile. تعذّرت قراءة $count من السجلات.';
+  }
+
+  @override
+  String get history_import_all => 'الكل';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return 'تعذّر فحص جلسات المضيف: $reason';
+  }
+
+  @override
+  String get history_import_none =>
+      'لم يُعثر على جلسات Claude Code أو Codex على هذا المضيف.';
+
+  @override
+  String get history_import_no_match => 'لا توجد جلسات مضيف مطابقة.';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return 'تعذّرت معاينة الجلسة: $reason';
+  }
+
+  @override
+  String get history_import_open => 'فتح الجلسة المستوردة';
+
+  @override
+  String get history_import_action => 'استيراد الجلسة المحددة';
+
+  @override
+  String get history_import_title => 'استيراد هذه الجلسة';
+
+  @override
+  String history_import_body(String profile) {
+    return 'نسخ جلسة Claude أو Codex هذه إلى ملف التعريف \"$profile\" على هذه البوابة.';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return 'سبق استيراد هذه الجلسة إلى \"$profile\". تابع بالنسخة الموجودة.';
+  }
+
+  @override
+  String history_imported(String id) {
+    return 'تم الاستيراد باسم $id';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return 'سبق الاستيراد باسم $id';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return 'المجلد: $path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return 'تعرض المعاينة $shown من $total.';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return 'تعذّر الإكمال: $reason';
+  }
+
+  @override
+  String get history_error_unavailable =>
+      'تعذّر على البوابة تنفيذ ذلك الآن. حاول مرة أخرى.';
+
+  @override
+  String get history_error_unsupported => 'هذه البوابة لا تدعم ذلك.';
+
+  @override
+  String get history_error_denied => 'رفضت هذه البوابة الطلب.';
+
+  @override
+  String get history_error_changed =>
+      'تغيّرت هذه المحادثة أثناء فتح هذه الصفحة. حدّث ثم حاول مرة أخرى.';
+
+  @override
+  String get history_error_unbound =>
+      'هذه المحادثة غير مفتوحة على البوابة. افتحها ثم حاول مرة أخرى.';
+
+  @override
+  String get history_error_invalid =>
+      'أرسلت البوابة ردًا تعذّر على التطبيق قراءته.';
 }

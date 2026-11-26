@@ -85,3 +85,17 @@ Classic chat and NextGen chat both open this review from the shared session-file
 **Verification scope:** `test/git_review_operations_test.dart` drives both production adapters against a loopback gateway that shells to real `git` in a temporary repository and a private bare remote. It covers a last-turn diff, stage, unstage, revert, commit, branch switch, worktree create/remove, follow, push and a local pull-request record. The executable list is only `git`. `test/turn_changed_files_test.dart` covers the turn card derivation. These are macOS-hosted Flutter tests, not packaged or on-device Android, Apple, Linux or Windows gates, and not a hosted Hermes or an external forge.
 
 **Verification scope:** `test/remote_workspace_wire_test.dart` exercises both production adapters with disposable password/cookie/ticket servers. `test/workspace_profiles_navigation_test.dart` taps both production More entries, refreshes the visible roster and verifies revocation. The pinned upstream `web_git.repo_status` was also executed independently on a throwaway repository: one untracked `hello.txt`, `changed:1`, `added:1`. These are client/handler tests, not a deployed multi-service Hermes installation, native device run, PTY session or release acceptance. No dependency or lockfile change, new licence obligation, backend installation, or local inference.
+
+## Session history
+
+History operations are named methods on `SessionHistory`, the extension of `WorkspaceTarget` in `session_history.dart`. The bound stored session is the only id. A caller cannot pass a profile override, a filesystem path, or an arbitrary RPC name.
+
+Branch and rewind use `session.mutate` with `operation` `branch` or `rewind`, the snapshot's revision and generation, and the selected saved `row_id` (`through_message_id` or `target_message_id`). The row must be in the `session.history` result read in that same owner turn. Neither call is sent until the user confirms. Rewind changes the conversation only. It does not restore files.
+
+Lineage comes from `session.list`. A row with `_reset_from` is a new conversation. A row with `_branched_from`, or a legacy `parent_session_id` and no reset, is a fork. Rows that share `_lineage_root_id` are one compressed conversation, not siblings.
+
+`rollback.list` and `rollback.diff` describe filesystem checkpoints. `rollback.restore` is sent only after a second confirmation. A restore without a file sets `all: true` and can also remove later chat messages. Diff text is redacted before it is shown.
+
+`session.export` asks the owner for the complete JSON, Markdown or HTML transcript. With redaction on, this device removes token-shaped text again before the share sheet sees it.
+
+`session.foreign.list`, `preview` and `import` use the host's opaque 64-character handle on the bound owner and profile (`session: route.storedSessionId != null`). A path is rejected before it is sent. Metadata (`title`, `cwd`, `excerpt`) and preview turns are redacted before the page can show them. Importing happens on the host: the page provides source filtering, search, `next_offset` pagination, a redacted preview, explicit import confirmation and opening the resulting session, and reports a clear unsupported state when a gateway refuses the method (`-32601`). No filesystem path or device-picked file is sent. `test/session_history_wire_test.dart` and `test/foreign_import_widget_test.dart` cover both Classic and NextGen. These are macOS-hosted Flutter tests, not on-device Android, Apple, Linux or Windows gates.
