@@ -6441,28 +6441,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ng_aux_curator_hint => 'Examine l’utilisation des compétences';
 
   @override
-  String get edit_turn_title => 'Edit this prompt?';
+  String get edit_turn_title => 'Modifier cette invite ?';
 
   @override
   String get edit_turn_body =>
-      'The prompt will be re-run from here. Later turns are archived.';
+      'L’invite sera relancée à partir d’ici. Les tours suivants seront archivés.';
 
   @override
-  String get edit_turn_send => 'Send';
+  String get edit_turn_send => 'Envoyer';
 
   @override
-  String get restore_turn_title => 'Restore to this checkpoint?';
+  String get restore_turn_title => 'Restaurer à ce point de contrôle ?';
 
   @override
   String get restore_turn_body =>
-      'Everything after this prompt is removed from the conversation, and the prompt runs again from here.';
+      'Tout ce qui suit cette invite sera retiré de la conversation et l’invite sera relancée à partir d’ici.';
 
   @override
-  String get restore_turn_confirm => 'Restore & rerun';
+  String get restore_turn_confirm => 'Restaurer et relancer';
 
   @override
   String get edit_turn_later_turns_body =>
-      'This will archive later turns from the conversation. Continue?';
+      'Cela archivera les tours suivants de la conversation. Continuer ?';
 
   @override
   String get chat_activity_share => 'Share chat activity';
@@ -7101,4 +7101,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => 'échoué';
+
+  @override
+  String get session_history => 'Historique de la session';
+
+  @override
+  String get import_claude_or_codex => 'Importer Claude ou Codex';
+
+  @override
+  String get ng_session_history => 'Historique de la session';
+
+  @override
+  String get ng_import_claude_or_codex => 'Importer Claude ou Codex';
+
+  @override
+  String get ng_edit_and_resend => 'Modifier et renvoyer';
+
+  @override
+  String get ng_restore_turn_confirm => 'Restaurer et relancer';
 }

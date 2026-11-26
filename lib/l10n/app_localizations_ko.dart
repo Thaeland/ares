@@ -6246,28 +6246,25 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_aux_curator_hint => '스킬 사용 현황을 검토합니다';
 
   @override
-  String get edit_turn_title => 'Edit this prompt?';
+  String get edit_turn_title => '이 프롬프트를 편집할까요?';
 
   @override
-  String get edit_turn_body =>
-      'The prompt will be re-run from here. Later turns are archived.';
+  String get edit_turn_body => '여기서부터 프롬프트를 다시 실행합니다. 이후 대화 차례는 보관됩니다.';
 
   @override
-  String get edit_turn_send => 'Send';
+  String get edit_turn_send => '보내기';
 
   @override
-  String get restore_turn_title => 'Restore to this checkpoint?';
+  String get restore_turn_title => '이 체크포인트로 복원할까요?';
 
   @override
-  String get restore_turn_body =>
-      'Everything after this prompt is removed from the conversation, and the prompt runs again from here.';
+  String get restore_turn_body => '이 프롬프트 이후의 대화 내용을 제거하고 여기서부터 다시 실행합니다.';
 
   @override
-  String get restore_turn_confirm => 'Restore & rerun';
+  String get restore_turn_confirm => '복원 및 다시 실행';
 
   @override
-  String get edit_turn_later_turns_body =>
-      'This will archive later turns from the conversation. Continue?';
+  String get edit_turn_later_turns_body => '이후 대화 차례가 보관 처리됩니다. 계속할까요?';
 
   @override
   String get chat_activity_share => 'Share chat activity';
@@ -6897,4 +6894,22 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => '실패';
+
+  @override
+  String get session_history => '세션 기록';
+
+  @override
+  String get import_claude_or_codex => 'Claude 또는 Codex 가져오기';
+
+  @override
+  String get ng_session_history => '세션 기록';
+
+  @override
+  String get ng_import_claude_or_codex => 'Claude 또는 Codex 가져오기';
+
+  @override
+  String get ng_edit_and_resend => '편집 후 다시 보내기';
+
+  @override
+  String get ng_restore_turn_confirm => '복원 및 다시 실행';
 }

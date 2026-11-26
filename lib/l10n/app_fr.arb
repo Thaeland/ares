@@ -1804,5 +1804,18 @@
   "render_plugin_notes": "Notes",
   "catalog_scan_passed": "réussi",
   "catalog_scan_warnings": "avertissements trouvés",
-  "catalog_scan_failed": "échoué"
+  "catalog_scan_failed": "échoué",
+  "session_history": "Historique de la session",
+  "import_claude_or_codex": "Importer Claude ou Codex",
+  "edit_turn_title": "Modifier cette invite ?",
+  "edit_turn_body": "L’invite sera relancée à partir d’ici. Les tours suivants seront archivés.",
+  "edit_turn_send": "Envoyer",
+  "restore_turn_title": "Restaurer à ce point de contrôle ?",
+  "restore_turn_body": "Tout ce qui suit cette invite sera retiré de la conversation et l’invite sera relancée à partir d’ici.",
+  "restore_turn_confirm": "Restaurer et relancer",
+  "edit_turn_later_turns_body": "Cela archivera les tours suivants de la conversation. Continuer ?",
+  "ng_session_history": "Historique de la session",
+  "ng_import_claude_or_codex": "Importer Claude ou Codex",
+  "ng_edit_and_resend": "Modifier et renvoyer",
+  "ng_restore_turn_confirm": "Restaurer et relancer"
 }

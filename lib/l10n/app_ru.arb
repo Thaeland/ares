@@ -1804,5 +1804,18 @@
   "render_plugin_notes": "Заметки",
   "catalog_scan_passed": "пройдена",
   "catalog_scan_warnings": "найдены предупреждения",
-  "catalog_scan_failed": "не пройдена"
+  "catalog_scan_failed": "не пройдена",
+  "session_history": "История сессии",
+  "import_claude_or_codex": "Импорт из Claude или Codex",
+  "edit_turn_title": "Изменить этот запрос?",
+  "edit_turn_body": "Запрос будет выполнен заново с этого места. Последующие ходы будут архивированы.",
+  "edit_turn_send": "Отправить",
+  "restore_turn_title": "Восстановить до этой контрольной точки?",
+  "restore_turn_body": "Всё после этого запроса будет удалено из диалога, и запрос выполнится заново с этого места.",
+  "restore_turn_confirm": "Восстановить и повторить",
+  "edit_turn_later_turns_body": "Последующие ходы диалога будут архивированы. Продолжить?",
+  "ng_session_history": "История сессии",
+  "ng_import_claude_or_codex": "Импорт из Claude или Codex",
+  "ng_edit_and_resend": "Изменить и отправить снова",
+  "ng_restore_turn_confirm": "Восстановить и повторить"
 }

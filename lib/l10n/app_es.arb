@@ -1804,5 +1804,18 @@
   "render_plugin_notes": "Notas",
   "catalog_scan_passed": "superado",
   "catalog_scan_warnings": "encontró advertencias",
-  "catalog_scan_failed": "falló"
+  "catalog_scan_failed": "falló",
+  "session_history": "Historial de la sesión",
+  "import_claude_or_codex": "Importar Claude o Codex",
+  "edit_turn_title": "¿Editar este mensaje?",
+  "edit_turn_body": "El mensaje se volverá a ejecutar desde aquí. Los turnos posteriores se archivan.",
+  "edit_turn_send": "Enviar",
+  "restore_turn_title": "¿Restaurar a este punto de control?",
+  "restore_turn_body": "Se eliminará de la conversación todo lo posterior a este mensaje y volverá a ejecutarse desde aquí.",
+  "restore_turn_confirm": "Restaurar y reejecutar",
+  "edit_turn_later_turns_body": "Esto archivará los turnos posteriores de la conversación. ¿Continuar?",
+  "ng_session_history": "Historial de la sesión",
+  "ng_import_claude_or_codex": "Importar Claude o Codex",
+  "ng_edit_and_resend": "Editar y reenviar",
+  "ng_restore_turn_confirm": "Restaurar y reejecutar"
 }

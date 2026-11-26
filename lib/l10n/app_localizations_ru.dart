@@ -6426,28 +6426,28 @@ class AppLocalizationsRu extends AppLocalizations {
   String get ng_aux_curator_hint => 'Проверяет, как используются навыки';
 
   @override
-  String get edit_turn_title => 'Edit this prompt?';
+  String get edit_turn_title => 'Изменить этот запрос?';
 
   @override
   String get edit_turn_body =>
-      'The prompt will be re-run from here. Later turns are archived.';
+      'Запрос будет выполнен заново с этого места. Последующие ходы будут архивированы.';
 
   @override
-  String get edit_turn_send => 'Send';
+  String get edit_turn_send => 'Отправить';
 
   @override
-  String get restore_turn_title => 'Restore to this checkpoint?';
+  String get restore_turn_title => 'Восстановить до этой контрольной точки?';
 
   @override
   String get restore_turn_body =>
-      'Everything after this prompt is removed from the conversation, and the prompt runs again from here.';
+      'Всё после этого запроса будет удалено из диалога, и запрос выполнится заново с этого места.';
 
   @override
-  String get restore_turn_confirm => 'Restore & rerun';
+  String get restore_turn_confirm => 'Восстановить и повторить';
 
   @override
   String get edit_turn_later_turns_body =>
-      'This will archive later turns from the conversation. Continue?';
+      'Последующие ходы диалога будут архивированы. Продолжить?';
 
   @override
   String get chat_activity_share => 'Share chat activity';
@@ -7089,4 +7089,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => 'не пройдена';
+
+  @override
+  String get session_history => 'История сессии';
+
+  @override
+  String get import_claude_or_codex => 'Импорт из Claude или Codex';
+
+  @override
+  String get ng_session_history => 'История сессии';
+
+  @override
+  String get ng_import_claude_or_codex => 'Импорт из Claude или Codex';
+
+  @override
+  String get ng_edit_and_resend => 'Изменить и отправить снова';
+
+  @override
+  String get ng_restore_turn_confirm => 'Восстановить и повторить';
 }

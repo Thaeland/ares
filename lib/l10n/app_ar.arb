@@ -2859,5 +2859,18 @@
   "render_plugin_notes": "الملاحظات",
   "catalog_scan_passed": "نجح",
   "catalog_scan_warnings": "وُجدت تحذيرات",
-  "catalog_scan_failed": "فشل"
+  "catalog_scan_failed": "فشل",
+  "session_history": "سجل الجلسة",
+  "import_claude_or_codex": "استيراد Claude أو Codex",
+  "edit_turn_title": "هل تريد تعديل هذه الرسالة؟",
+  "edit_turn_body": "سيُعاد تشغيل الرسالة من هنا، وتُؤرشف الأدوار اللاحقة.",
+  "edit_turn_send": "إرسال",
+  "restore_turn_title": "الاستعادة إلى نقطة الحفظ هذه؟",
+  "restore_turn_body": "سيُزال كل ما يلي هذه الرسالة من المحادثة، وتُشغَّل الرسالة من جديد بدءًا من هنا.",
+  "restore_turn_confirm": "استعادة وإعادة تشغيل",
+  "edit_turn_later_turns_body": "سيؤدي هذا إلى أرشفة الأدوار اللاحقة من المحادثة. هل تريد المتابعة؟",
+  "ng_session_history": "سجل الجلسة",
+  "ng_import_claude_or_codex": "استيراد Claude أو Codex",
+  "ng_edit_and_resend": "تعديل وإعادة إرسال",
+  "ng_restore_turn_confirm": "استعادة وإعادة تشغيل"
 }

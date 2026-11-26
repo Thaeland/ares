@@ -3144,5 +3144,11 @@
   "render_plugin_notes": "Notes",
   "catalog_scan_passed": "passed",
   "catalog_scan_warnings": "found warnings",
-  "catalog_scan_failed": "failed"
+  "catalog_scan_failed": "failed",
+  "session_history": "Session history",
+  "import_claude_or_codex": "Import Claude or Codex",
+  "ng_session_history": "Session history",
+  "ng_import_claude_or_codex": "Import Claude or Codex",
+  "ng_edit_and_resend": "Edit and resend",
+  "ng_restore_turn_confirm": "Restore & rerun"
 }

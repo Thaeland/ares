@@ -6432,28 +6432,28 @@ class AppLocalizationsDe extends AppLocalizations {
   String get ng_aux_curator_hint => 'Prüft, wie Skills genutzt werden';
 
   @override
-  String get edit_turn_title => 'Edit this prompt?';
+  String get edit_turn_title => 'Diese Eingabe bearbeiten?';
 
   @override
   String get edit_turn_body =>
-      'The prompt will be re-run from here. Later turns are archived.';
+      'Die Eingabe wird ab hier erneut ausgeführt. Spätere Runden werden archiviert.';
 
   @override
-  String get edit_turn_send => 'Send';
+  String get edit_turn_send => 'Senden';
 
   @override
-  String get restore_turn_title => 'Restore to this checkpoint?';
+  String get restore_turn_title => 'Auf diesen Sicherungspunkt zurücksetzen?';
 
   @override
   String get restore_turn_body =>
-      'Everything after this prompt is removed from the conversation, and the prompt runs again from here.';
+      'Alles nach dieser Eingabe wird aus dem Gespräch entfernt und die Eingabe ab hier erneut ausgeführt.';
 
   @override
-  String get restore_turn_confirm => 'Restore & rerun';
+  String get restore_turn_confirm => 'Zurücksetzen & neu starten';
 
   @override
   String get edit_turn_later_turns_body =>
-      'This will archive later turns from the conversation. Continue?';
+      'Dadurch werden spätere Runden aus dem Gespräch archiviert. Fortfahren?';
 
   @override
   String get chat_activity_share => 'Share chat activity';
@@ -7091,4 +7091,22 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => 'fehlgeschlagen';
+
+  @override
+  String get session_history => 'Sitzungsverlauf';
+
+  @override
+  String get import_claude_or_codex => 'Claude oder Codex importieren';
+
+  @override
+  String get ng_session_history => 'Sitzungsverlauf';
+
+  @override
+  String get ng_import_claude_or_codex => 'Claude oder Codex importieren';
+
+  @override
+  String get ng_edit_and_resend => 'Bearbeiten und erneut senden';
+
+  @override
+  String get ng_restore_turn_confirm => 'Zurücksetzen & neu starten';
 }

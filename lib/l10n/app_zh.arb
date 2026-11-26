@@ -1804,5 +1804,18 @@
   "render_plugin_notes": "笔记",
   "catalog_scan_passed": "已通过",
   "catalog_scan_warnings": "发现警告",
-  "catalog_scan_failed": "未通过"
+  "catalog_scan_failed": "未通过",
+  "session_history": "会话历史",
+  "import_claude_or_codex": "导入 Claude 或 Codex",
+  "edit_turn_title": "编辑此提示？",
+  "edit_turn_body": "将从此处重新运行该提示，后续轮次会被归档。",
+  "edit_turn_send": "发送",
+  "restore_turn_title": "恢复到此检查点？",
+  "restore_turn_body": "此提示之后的所有内容将从对话中移除，并从此处重新运行该提示。",
+  "restore_turn_confirm": "恢复并重跑",
+  "edit_turn_later_turns_body": "这会将对话中的后续轮次归档。要继续吗？",
+  "ng_session_history": "会话历史",
+  "ng_import_claude_or_codex": "导入 Claude 或 Codex",
+  "ng_edit_and_resend": "编辑并重发",
+  "ng_restore_turn_confirm": "恢复并重跑"
 }

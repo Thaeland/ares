@@ -6428,28 +6428,28 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ng_aux_curator_hint => 'Analisa a utilização das competências';
 
   @override
-  String get edit_turn_title => 'Edit this prompt?';
+  String get edit_turn_title => 'Editar este pedido?';
 
   @override
   String get edit_turn_body =>
-      'The prompt will be re-run from here. Later turns are archived.';
+      'O pedido será executado novamente a partir daqui. Os turnos seguintes são arquivados.';
 
   @override
-  String get edit_turn_send => 'Send';
+  String get edit_turn_send => 'Enviar';
 
   @override
-  String get restore_turn_title => 'Restore to this checkpoint?';
+  String get restore_turn_title => 'Restaurar para este ponto de restauro?';
 
   @override
   String get restore_turn_body =>
-      'Everything after this prompt is removed from the conversation, and the prompt runs again from here.';
+      'Tudo após este pedido é removido da conversa e o pedido volta a ser executado a partir daqui.';
 
   @override
-  String get restore_turn_confirm => 'Restore & rerun';
+  String get restore_turn_confirm => 'Restaurar e repetir';
 
   @override
   String get edit_turn_later_turns_body =>
-      'This will archive later turns from the conversation. Continue?';
+      'Isto irá arquivar os turnos seguintes da conversa. Continuar?';
 
   @override
   String get chat_activity_share => 'Share chat activity';
@@ -7088,6 +7088,24 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => 'falhou';
+
+  @override
+  String get session_history => 'Histórico da sessão';
+
+  @override
+  String get import_claude_or_codex => 'Importar Claude ou Codex';
+
+  @override
+  String get ng_session_history => 'Histórico da sessão';
+
+  @override
+  String get ng_import_claude_or_codex => 'Importar Claude ou Codex';
+
+  @override
+  String get ng_edit_and_resend => 'Editar e reenviar';
+
+  @override
+  String get ng_restore_turn_confirm => 'Restaurar e repetir';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -13081,6 +13099,30 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get ng_aux_curator_hint => 'Analisa como as habilidades são usadas';
 
   @override
+  String get edit_turn_title => 'Editar este prompt?';
+
+  @override
+  String get edit_turn_body =>
+      'O prompt será executado novamente a partir daqui. Os turnos seguintes serão arquivados.';
+
+  @override
+  String get edit_turn_send => 'Enviar';
+
+  @override
+  String get restore_turn_title => 'Restaurar para este ponto de verificação?';
+
+  @override
+  String get restore_turn_body =>
+      'Tudo após este prompt será removido da conversa e o prompt será executado novamente a partir daqui.';
+
+  @override
+  String get restore_turn_confirm => 'Restaurar e reexecutar';
+
+  @override
+  String get edit_turn_later_turns_body =>
+      'Isso arquivará os turnos seguintes da conversa. Continuar?';
+
+  @override
   String get appearance_inline_embeds => 'Conteúdo incorporado';
 
   @override
@@ -13377,4 +13419,22 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get catalog_scan_failed => 'falhou';
+
+  @override
+  String get session_history => 'Histórico da sessão';
+
+  @override
+  String get import_claude_or_codex => 'Importar Claude ou Codex';
+
+  @override
+  String get ng_session_history => 'Histórico da sessão';
+
+  @override
+  String get ng_import_claude_or_codex => 'Importar Claude ou Codex';
+
+  @override
+  String get ng_edit_and_resend => 'Editar e reenviar';
+
+  @override
+  String get ng_restore_turn_confirm => 'Restaurar e reexecutar';
 }

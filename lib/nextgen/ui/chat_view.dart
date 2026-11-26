@@ -1512,8 +1512,8 @@ class _NgChatViewState extends State<NgChatView>
                     IconButton(
                       key: const ValueKey('session-history'),
                       tooltip: chat.storedId == null
-                          ? 'Import Claude or Codex'
-                          : 'Session history',
+                          ? ngL.ng_import_claude_or_codex
+                          : ngL.ng_session_history,
                       icon: const Icon(Icons.account_tree_outlined),
                       onPressed: () => _openHistory(chat.storedId),
                     ),
@@ -1574,8 +1574,8 @@ class _NgChatViewState extends State<NgChatView>
                             leading: const Icon(Icons.account_tree_outlined),
                             title: Text(
                               chat.storedId == null
-                                  ? 'Import Claude or Codex'
-                                  : 'Session history',
+                                  ? ngL.ng_import_claude_or_codex
+                                  : ngL.ng_session_history,
                             ),
                           ),
                         ),
@@ -2859,13 +2859,13 @@ class _UserBubble extends StatelessWidget {
                       TextButton(
                         key: const Key('ng-user-edit'),
                         onPressed: onEdit,
-                        child: Text(context.l10n.edit_and_resend),
+                        child: Text(ngL.ng_edit_and_resend),
                       ),
                     if (onRestore != null)
                       TextButton(
                         key: const Key('ng-user-restore'),
                         onPressed: onRestore,
-                        child: Text(context.l10n.restore_turn_confirm),
+                        child: Text(ngL.ng_restore_turn_confirm),
                       ),
                   ],
                 ),

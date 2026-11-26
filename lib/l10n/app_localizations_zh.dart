@@ -6155,28 +6155,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_aux_curator_hint => '审查技能的使用情况';
 
   @override
-  String get edit_turn_title => 'Edit this prompt?';
+  String get edit_turn_title => '编辑此提示？';
 
   @override
-  String get edit_turn_body =>
-      'The prompt will be re-run from here. Later turns are archived.';
+  String get edit_turn_body => '将从此处重新运行该提示，后续轮次会被归档。';
 
   @override
-  String get edit_turn_send => 'Send';
+  String get edit_turn_send => '发送';
 
   @override
-  String get restore_turn_title => 'Restore to this checkpoint?';
+  String get restore_turn_title => '恢复到此检查点？';
 
   @override
-  String get restore_turn_body =>
-      'Everything after this prompt is removed from the conversation, and the prompt runs again from here.';
+  String get restore_turn_body => '此提示之后的所有内容将从对话中移除，并从此处重新运行该提示。';
 
   @override
-  String get restore_turn_confirm => 'Restore & rerun';
+  String get restore_turn_confirm => '恢复并重跑';
 
   @override
-  String get edit_turn_later_turns_body =>
-      'This will archive later turns from the conversation. Continue?';
+  String get edit_turn_later_turns_body => '这会将对话中的后续轮次归档。要继续吗？';
 
   @override
   String get chat_activity_share => 'Share chat activity';
@@ -6802,6 +6799,24 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => '未通过';
+
+  @override
+  String get session_history => '会话历史';
+
+  @override
+  String get import_claude_or_codex => '导入 Claude 或 Codex';
+
+  @override
+  String get ng_session_history => '会话历史';
+
+  @override
+  String get ng_import_claude_or_codex => '导入 Claude 或 Codex';
+
+  @override
+  String get ng_edit_and_resend => '编辑并重发';
+
+  @override
+  String get ng_restore_turn_confirm => '恢复并重跑';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -12528,6 +12543,27 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_aux_curator_hint => '审查技能的使用情况';
 
   @override
+  String get edit_turn_title => '编辑此提示？';
+
+  @override
+  String get edit_turn_body => '将从此处重新运行该提示，后续轮次会被归档。';
+
+  @override
+  String get edit_turn_send => '发送';
+
+  @override
+  String get restore_turn_title => '恢复到此检查点？';
+
+  @override
+  String get restore_turn_body => '此提示之后的所有内容将从对话中移除，并从此处重新运行该提示。';
+
+  @override
+  String get restore_turn_confirm => '恢复并重跑';
+
+  @override
+  String get edit_turn_later_turns_body => '这会将对话中的后续轮次归档。要继续吗？';
+
+  @override
   String get appearance_inline_embeds => '内嵌内容';
 
   @override
@@ -12811,6 +12847,24 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get catalog_scan_failed => '未通过';
+
+  @override
+  String get session_history => '会话历史';
+
+  @override
+  String get import_claude_or_codex => '导入 Claude 或 Codex';
+
+  @override
+  String get ng_session_history => '会话历史';
+
+  @override
+  String get ng_import_claude_or_codex => '导入 Claude 或 Codex';
+
+  @override
+  String get ng_edit_and_resend => '编辑并重发';
+
+  @override
+  String get ng_restore_turn_confirm => '恢复并重跑';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -18730,6 +18784,27 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get ng_aux_curator_hint => '審查技能的使用情況';
 
   @override
+  String get edit_turn_title => '編輯此提示？';
+
+  @override
+  String get edit_turn_body => '將從此處重新執行該提示，後續輪次會被封存。';
+
+  @override
+  String get edit_turn_send => '傳送';
+
+  @override
+  String get restore_turn_title => '還原至此檢查點？';
+
+  @override
+  String get restore_turn_body => '此提示之後的所有內容將從對話中移除，並從此處重新執行該提示。';
+
+  @override
+  String get restore_turn_confirm => '還原並重新執行';
+
+  @override
+  String get edit_turn_later_turns_body => '這會將對話中的後續輪次封存。要繼續嗎？';
+
+  @override
   String get chat_activity_share => '分享聊天活動';
 
   @override
@@ -19218,4 +19293,22 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get catalog_scan_failed => '失敗';
+
+  @override
+  String get session_history => '工作階段紀錄';
+
+  @override
+  String get import_claude_or_codex => '匯入 Claude 或 Codex';
+
+  @override
+  String get ng_session_history => '工作階段紀錄';
+
+  @override
+  String get ng_import_claude_or_codex => '匯入 Claude 或 Codex';
+
+  @override
+  String get ng_edit_and_resend => '編輯並重發';
+
+  @override
+  String get ng_restore_turn_confirm => '還原並重新執行';
 }

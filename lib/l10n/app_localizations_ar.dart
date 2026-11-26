@@ -6383,28 +6383,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ng_aux_curator_hint => 'يراجع كيفية استخدام المهارات';
 
   @override
-  String get edit_turn_title => 'Edit this prompt?';
+  String get edit_turn_title => 'هل تريد تعديل هذه الرسالة؟';
 
   @override
   String get edit_turn_body =>
-      'The prompt will be re-run from here. Later turns are archived.';
+      'سيُعاد تشغيل الرسالة من هنا، وتُؤرشف الأدوار اللاحقة.';
 
   @override
-  String get edit_turn_send => 'Send';
+  String get edit_turn_send => 'إرسال';
 
   @override
-  String get restore_turn_title => 'Restore to this checkpoint?';
+  String get restore_turn_title => 'الاستعادة إلى نقطة الحفظ هذه؟';
 
   @override
   String get restore_turn_body =>
-      'Everything after this prompt is removed from the conversation, and the prompt runs again from here.';
+      'سيُزال كل ما يلي هذه الرسالة من المحادثة، وتُشغَّل الرسالة من جديد بدءًا من هنا.';
 
   @override
-  String get restore_turn_confirm => 'Restore & rerun';
+  String get restore_turn_confirm => 'استعادة وإعادة تشغيل';
 
   @override
   String get edit_turn_later_turns_body =>
-      'This will archive later turns from the conversation. Continue?';
+      'سيؤدي هذا إلى أرشفة الأدوار اللاحقة من المحادثة. هل تريد المتابعة؟';
 
   @override
   String get chat_activity_share => 'مشاركة نشاط المحادثة';
@@ -7033,4 +7033,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => 'فشل';
+
+  @override
+  String get session_history => 'سجل الجلسة';
+
+  @override
+  String get import_claude_or_codex => 'استيراد Claude أو Codex';
+
+  @override
+  String get ng_session_history => 'سجل الجلسة';
+
+  @override
+  String get ng_import_claude_or_codex => 'استيراد Claude أو Codex';
+
+  @override
+  String get ng_edit_and_resend => 'تعديل وإعادة إرسال';
+
+  @override
+  String get ng_restore_turn_confirm => 'استعادة وإعادة تشغيل';
 }

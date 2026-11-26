@@ -480,7 +480,9 @@ class _SessionHistoryPageState extends State<SessionHistoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _hasStoredSession ? 'Session history' : 'Import Claude or Codex',
+          _hasStoredSession
+              ? l10n.session_history
+              : l10n.import_claude_or_codex,
         ),
         actions: [
           IconButton(
@@ -620,7 +622,7 @@ class _SessionHistoryPageState extends State<SessionHistoryPage> {
                   const SizedBox(height: 16),
                 ],
                 Text(
-                  'Import Claude or Codex',
+                  l10n.import_claude_or_codex,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 if (_foreignUnsupported)

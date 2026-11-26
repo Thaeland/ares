@@ -1957,5 +1957,18 @@
   "render_plugin_notes": "Нотатки",
   "catalog_scan_passed": "пройдено",
   "catalog_scan_warnings": "знайдено попередження",
-  "catalog_scan_failed": "не пройдено"
+  "catalog_scan_failed": "не пройдено",
+  "session_history": "Історія сесії",
+  "import_claude_or_codex": "Імпортувати Claude або Codex",
+  "edit_turn_title": "Редагувати цей запит?",
+  "edit_turn_body": "Запит буде повторно виконано звідси. Наступні ходи буде заархівовано.",
+  "edit_turn_send": "Надіслати",
+  "restore_turn_title": "Відновити до цієї контрольної точки?",
+  "restore_turn_body": "Усе після цього запиту буде вилучено з розмови, а запит виконається знову звідси.",
+  "restore_turn_confirm": "Відновити й запустити знову",
+  "edit_turn_later_turns_body": "Це заархівує наступні ходи розмови. Продовжити?",
+  "ng_session_history": "Історія сесії",
+  "ng_import_claude_or_codex": "Імпортувати Claude або Codex",
+  "ng_edit_and_resend": "Редагувати й надіслати знову",
+  "ng_restore_turn_confirm": "Відновити й запустити знову"
 }

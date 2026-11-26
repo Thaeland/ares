@@ -2871,5 +2871,18 @@
   "render_plugin_notes": "筆記",
   "catalog_scan_passed": "通過",
   "catalog_scan_warnings": "發現警告",
-  "catalog_scan_failed": "失敗"
+  "catalog_scan_failed": "失敗",
+  "session_history": "工作階段紀錄",
+  "import_claude_or_codex": "匯入 Claude 或 Codex",
+  "edit_turn_title": "編輯此提示？",
+  "edit_turn_body": "將從此處重新執行該提示，後續輪次會被封存。",
+  "edit_turn_send": "傳送",
+  "restore_turn_title": "還原至此檢查點？",
+  "restore_turn_body": "此提示之後的所有內容將從對話中移除，並從此處重新執行該提示。",
+  "restore_turn_confirm": "還原並重新執行",
+  "edit_turn_later_turns_body": "這會將對話中的後續輪次封存。要繼續嗎？",
+  "ng_session_history": "工作階段紀錄",
+  "ng_import_claude_or_codex": "匯入 Claude 或 Codex",
+  "ng_edit_and_resend": "編輯並重發",
+  "ng_restore_turn_confirm": "還原並重新執行"
 }

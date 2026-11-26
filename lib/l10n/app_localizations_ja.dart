@@ -6242,28 +6242,25 @@ class AppLocalizationsJa extends AppLocalizations {
   String get ng_aux_curator_hint => 'スキルの使われ方を確認します';
 
   @override
-  String get edit_turn_title => 'Edit this prompt?';
+  String get edit_turn_title => 'このプロンプトを編集しますか？';
 
   @override
-  String get edit_turn_body =>
-      'The prompt will be re-run from here. Later turns are archived.';
+  String get edit_turn_body => 'ここからプロンプトを再実行します。以降のターンはアーカイブされます。';
 
   @override
-  String get edit_turn_send => 'Send';
+  String get edit_turn_send => '送信';
 
   @override
-  String get restore_turn_title => 'Restore to this checkpoint?';
+  String get restore_turn_title => 'このチェックポイントに復元しますか？';
 
   @override
-  String get restore_turn_body =>
-      'Everything after this prompt is removed from the conversation, and the prompt runs again from here.';
+  String get restore_turn_body => 'このプロンプト以降の内容を会話から削除し、ここから再度実行します。';
 
   @override
-  String get restore_turn_confirm => 'Restore & rerun';
+  String get restore_turn_confirm => '復元して再実行';
 
   @override
-  String get edit_turn_later_turns_body =>
-      'This will archive later turns from the conversation. Continue?';
+  String get edit_turn_later_turns_body => '以降のターンは会話からアーカイブされます。続行しますか？';
 
   @override
   String get chat_activity_share => 'Share chat activity';
@@ -6892,4 +6889,22 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => '不合格';
+
+  @override
+  String get session_history => 'セッション履歴';
+
+  @override
+  String get import_claude_or_codex => 'Claude または Codex をインポート';
+
+  @override
+  String get ng_session_history => 'セッション履歴';
+
+  @override
+  String get ng_import_claude_or_codex => 'Claude または Codex をインポート';
+
+  @override
+  String get ng_edit_and_resend => '編集して再送信';
+
+  @override
+  String get ng_restore_turn_confirm => '復元して再実行';
 }

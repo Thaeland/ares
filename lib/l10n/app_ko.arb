@@ -1804,5 +1804,18 @@
   "render_plugin_notes": "메모",
   "catalog_scan_passed": "통과",
   "catalog_scan_warnings": "경고 발견",
-  "catalog_scan_failed": "실패"
+  "catalog_scan_failed": "실패",
+  "session_history": "세션 기록",
+  "import_claude_or_codex": "Claude 또는 Codex 가져오기",
+  "edit_turn_title": "이 프롬프트를 편집할까요?",
+  "edit_turn_body": "여기서부터 프롬프트를 다시 실행합니다. 이후 대화 차례는 보관됩니다.",
+  "edit_turn_send": "보내기",
+  "restore_turn_title": "이 체크포인트로 복원할까요?",
+  "restore_turn_body": "이 프롬프트 이후의 대화 내용을 제거하고 여기서부터 다시 실행합니다.",
+  "restore_turn_confirm": "복원 및 다시 실행",
+  "edit_turn_later_turns_body": "이후 대화 차례가 보관 처리됩니다. 계속할까요?",
+  "ng_session_history": "세션 기록",
+  "ng_import_claude_or_codex": "Claude 또는 Codex 가져오기",
+  "ng_edit_and_resend": "편집 후 다시 보내기",
+  "ng_restore_turn_confirm": "복원 및 다시 실행"
 }

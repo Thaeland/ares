@@ -8643,8 +8643,8 @@ class _ChatScreenState extends State<ChatScreen>
                       leading: const Icon(Icons.account_tree_outlined),
                       title: Text(
                         _fileSessionId == null
-                            ? 'Import Claude or Codex'
-                            : 'Session history',
+                            ? context.l10n.import_claude_or_codex
+                            : context.l10n.session_history,
                       ),
                     ),
                   ),
@@ -8765,8 +8765,8 @@ class _ChatScreenState extends State<ChatScreen>
                       leading: const Icon(Icons.account_tree_outlined),
                       title: Text(
                         _fileSessionId == null
-                            ? 'Import Claude or Codex'
-                            : 'Session history',
+                            ? context.l10n.import_claude_or_codex
+                            : context.l10n.session_history,
                       ),
                     ),
                   ),

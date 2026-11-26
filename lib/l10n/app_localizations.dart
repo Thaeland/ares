@@ -11870,6 +11870,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'failed'**
   String get catalog_scan_failed;
+
+  /// No description provided for @session_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Session history'**
+  String get session_history;
+
+  /// No description provided for @import_claude_or_codex.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Claude or Codex'**
+  String get import_claude_or_codex;
+
+  /// No description provided for @ng_session_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Session history'**
+  String get ng_session_history;
+
+  /// No description provided for @ng_import_claude_or_codex.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Claude or Codex'**
+  String get ng_import_claude_or_codex;
+
+  /// No description provided for @ng_edit_and_resend.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit and resend'**
+  String get ng_edit_and_resend;
+
+  /// No description provided for @ng_restore_turn_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore & rerun'**
+  String get ng_restore_turn_confirm;
 }
 
 class _AppLocalizationsDelegate

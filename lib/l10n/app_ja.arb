@@ -1804,5 +1804,18 @@
   "render_plugin_notes": "メモ",
   "catalog_scan_passed": "合格",
   "catalog_scan_warnings": "警告あり",
-  "catalog_scan_failed": "不合格"
+  "catalog_scan_failed": "不合格",
+  "session_history": "セッション履歴",
+  "import_claude_or_codex": "Claude または Codex をインポート",
+  "edit_turn_title": "このプロンプトを編集しますか？",
+  "edit_turn_body": "ここからプロンプトを再実行します。以降のターンはアーカイブされます。",
+  "edit_turn_send": "送信",
+  "restore_turn_title": "このチェックポイントに復元しますか？",
+  "restore_turn_body": "このプロンプト以降の内容を会話から削除し、ここから再度実行します。",
+  "restore_turn_confirm": "復元して再実行",
+  "edit_turn_later_turns_body": "以降のターンは会話からアーカイブされます。続行しますか？",
+  "ng_session_history": "セッション履歴",
+  "ng_import_claude_or_codex": "Claude または Codex をインポート",
+  "ng_edit_and_resend": "編集して再送信",
+  "ng_restore_turn_confirm": "復元して再実行"
 }

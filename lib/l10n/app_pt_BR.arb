@@ -1804,5 +1804,18 @@
   "render_plugin_notes": "Notas",
   "catalog_scan_passed": "aprovado",
   "catalog_scan_warnings": "encontrou avisos",
-  "catalog_scan_failed": "falhou"
+  "catalog_scan_failed": "falhou",
+  "session_history": "Histórico da sessão",
+  "import_claude_or_codex": "Importar Claude ou Codex",
+  "edit_turn_title": "Editar este prompt?",
+  "edit_turn_body": "O prompt será executado novamente a partir daqui. Os turnos seguintes serão arquivados.",
+  "edit_turn_send": "Enviar",
+  "restore_turn_title": "Restaurar para este ponto de verificação?",
+  "restore_turn_body": "Tudo após este prompt será removido da conversa e o prompt será executado novamente a partir daqui.",
+  "restore_turn_confirm": "Restaurar e reexecutar",
+  "edit_turn_later_turns_body": "Isso arquivará os turnos seguintes da conversa. Continuar?",
+  "ng_session_history": "Histórico da sessão",
+  "ng_import_claude_or_codex": "Importar Claude ou Codex",
+  "ng_edit_and_resend": "Editar e reenviar",
+  "ng_restore_turn_confirm": "Restaurar e reexecutar"
 }

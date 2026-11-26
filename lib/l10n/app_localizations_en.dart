@@ -7034,4 +7034,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => 'failed';
+
+  @override
+  String get session_history => 'Session history';
+
+  @override
+  String get import_claude_or_codex => 'Import Claude or Codex';
+
+  @override
+  String get ng_session_history => 'Session history';
+
+  @override
+  String get ng_import_claude_or_codex => 'Import Claude or Codex';
+
+  @override
+  String get ng_edit_and_resend => 'Edit and resend';
+
+  @override
+  String get ng_restore_turn_confirm => 'Restore & rerun';
 }

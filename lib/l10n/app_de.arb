@@ -1804,5 +1804,18 @@
   "render_plugin_notes": "Notizen",
   "catalog_scan_passed": "bestanden",
   "catalog_scan_warnings": "Warnungen gefunden",
-  "catalog_scan_failed": "fehlgeschlagen"
+  "catalog_scan_failed": "fehlgeschlagen",
+  "session_history": "Sitzungsverlauf",
+  "import_claude_or_codex": "Claude oder Codex importieren",
+  "edit_turn_title": "Diese Eingabe bearbeiten?",
+  "edit_turn_body": "Die Eingabe wird ab hier erneut ausgeführt. Spätere Runden werden archiviert.",
+  "edit_turn_send": "Senden",
+  "restore_turn_title": "Auf diesen Sicherungspunkt zurücksetzen?",
+  "restore_turn_body": "Alles nach dieser Eingabe wird aus dem Gespräch entfernt und die Eingabe ab hier erneut ausgeführt.",
+  "restore_turn_confirm": "Zurücksetzen & neu starten",
+  "edit_turn_later_turns_body": "Dadurch werden spätere Runden aus dem Gespräch archiviert. Fortfahren?",
+  "ng_session_history": "Sitzungsverlauf",
+  "ng_import_claude_or_codex": "Claude oder Codex importieren",
+  "ng_edit_and_resend": "Bearbeiten und erneut senden",
+  "ng_restore_turn_confirm": "Zurücksetzen & neu starten"
 }

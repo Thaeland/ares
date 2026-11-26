@@ -33,7 +33,7 @@ class _EditTurnDialogState extends State<EditTurnDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
+    final l10n = context.sharedL10n;
     return AlertDialog(
       title: Text(l10n.edit_turn_title),
       content: SizedBox(
@@ -77,7 +77,7 @@ Future<bool> showRestoreTurnConfirm(BuildContext context) async {
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (dialogContext) {
-      final l10n = dialogContext.l10n;
+      final l10n = dialogContext.sharedL10n;
       return AlertDialog(
         title: Text(l10n.restore_turn_title),
         content: Text(l10n.restore_turn_body),
