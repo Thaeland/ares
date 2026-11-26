@@ -10,6 +10,8 @@ import 'package:hermes_android/core/services/remote_workspace.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:hermes_android/nextgen/data/nextgen_gateway.dart';
 
+import 'support/strict_authority_gateway.dart';
+
 Matcher fails(WorkspaceFailure why) =>
     throwsA(isA<WorkspaceException>().having((e) => e.reason, 'reason', why));
 
@@ -449,6 +451,11 @@ class _Fixture {
         final frame = jsonDecode(raw as String) as Map<String, dynamic>;
         rpc.add(frame);
         final method = frame['method'];
+        final refused = strictAuthorityFrame(frame);
+        if (refused != null) {
+          ws.add(refused);
+          return;
+        }
         if (hold && method == 'profiles.list') {
           if (!waiting.isCompleted) waiting.complete();
           await release.future;

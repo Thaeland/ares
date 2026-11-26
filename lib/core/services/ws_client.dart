@@ -1243,121 +1243,28 @@ class WsClient {
     required Duration timeout,
     required void Function()? onSent,
     required bool includeProfile,
-  }) async {
+  }) {
     if (!_connected || _channel == null) {
-      throw Exception('Not connected');
+      return Future.error(Exception('Not connected'));
     }
     final canonical = _canonical;
-    CanonicalRequest request;
-    try {
-      request = await _prepareCanonical(
-        canonical,
-        method,
-        params,
+    return canonical.run(
+      method,
+      params,
+      // The caller's own request reports when it was written; a read the
+      // guard adds first (the session's fences) does not.
+      wire: (wireMethod, wireParams, {required bool own}) => _sendWire(
+        wireMethod,
+        wireParams,
         timeout: timeout,
+        onSent: own ? onSent : null,
         includeProfile: includeProfile,
-      );
-    } on CanonicalWireRefusal catch (refusal) {
-      // Nothing was sent: a definite refusal, in the reply shape every
-      // caller already reads.
-      return {'jsonrpc': '2.0', 'error': refusal.toError()};
-    }
-    var reply = await _sendWire(
-      request.method,
-      request.params,
-      timeout: timeout,
-      onSent: onSent,
-      includeProfile: includeProfile,
+      ),
+      noteGeneration: _noteExecutionGeneration,
+      // A replaced socket starts with no canonical state: an answer from
+      // the old one is passed through untouched.
+      current: () => identical(canonical, _canonical),
     );
-    if (reply['error'] != null &&
-        identical(canonical, _canonical) &&
-        canonical.retryableFence(request, reply['error'])) {
-      // The owner named its current fences on the refusal: a value pick is
-      // presented once more at them.
-      _noteCanonicalFailure(canonical, request, reply['error']);
-      try {
-        request = canonical.prepare(method, params);
-      } on Object {
-        return reply;
-      }
-      reply = await _sendWire(
-        request.method,
-        request.params,
-        timeout: timeout,
-        includeProfile: includeProfile,
-      );
-    }
-    if (!identical(canonical, _canonical)) return reply;
-    final error = reply['error'];
-    if (error != null) {
-      _noteCanonicalFailure(canonical, request, error);
-      return reply;
-    }
-    final result = reply['result'];
-    if (result is Map) {
-      final sessionId = result['session_id'];
-      if (sessionId is String) {
-        _noteExecutionGeneration(sessionId, result['execution_generation']);
-      }
-    }
-    final adapted = canonical.adaptResult(request, result);
-    return identical(adapted, result) ? reply : {...reply, 'result': adapted};
-  }
-
-  void _noteCanonicalFailure(
-    CanonicalWire canonical,
-    CanonicalRequest request,
-    Object? error,
-  ) {
-    canonical.noteFailure(request, error);
-    final data = error is Map ? error['data'] : null;
-    final sessionId = request.params['session_id'];
-    if (data is Map && sessionId is String) {
-      _noteExecutionGeneration(sessionId, data['execution_generation']);
-    }
-  }
-
-  /// A fenced edit names the session's revision (and, for most, its
-  /// execution generation). A socket that has not learned them reads the
-  /// session once (`session.resume`, no transcript) instead of refusing.
-  Future<CanonicalRequest> _prepareCanonical(
-    CanonicalWire canonical,
-    String method,
-    Map<String, dynamic> params, {
-    required Duration timeout,
-    required bool includeProfile,
-  }) async {
-    try {
-      return canonical.prepare(method, params);
-    } on CanonicalFencesNeeded catch (needed) {
-      final resume = canonical.prepare('session.resume', {
-        'session_id': needed.sessionId,
-        'omit_messages': true,
-        'defer_history': true,
-        if (params['profile'] != null) 'profile': params['profile'],
-      });
-      final reply = await _sendWire(
-        resume.method,
-        resume.params,
-        timeout: timeout,
-        includeProfile: includeProfile,
-      );
-      final result = reply['result'];
-      if (reply['error'] == null &&
-          result is Map &&
-          identical(canonical, _canonical)) {
-        final sessionId = result['session_id'];
-        if (sessionId is String) {
-          _noteExecutionGeneration(sessionId, result['execution_generation']);
-        }
-        canonical.adaptResult(resume, result);
-      }
-      try {
-        return canonical.prepare(method, params);
-      } on CanonicalFencesNeeded catch (still) {
-        throw still.refusal;
-      }
-    }
   }
 
   Future<Map<String, dynamic>> _sendWire(

@@ -3,6 +3,8 @@ import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/remote_workspace.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
 
+import 'support/strict_authority_gateway.dart';
+
 const _url = 'https://cwd.example.invalid';
 
 class _Dashboard extends Fake implements DashboardClient {
@@ -85,6 +87,10 @@ class _Socket extends Fake implements WsClient {
   }) async {
     expect(includeProfile, isFalse);
     calls.add({'method': method, ...params});
+    // This fake stands for the socket of a session authority: a frame the
+    // pinned gateway refuses is refused here too.
+    final refused = strictAuthorityReply(null, method, params);
+    if (refused != null) return refused;
     if (method != 'session.mutate') throw StateError(method);
     cwd = (params['payload'] as Map)['cwd'] as String;
     revision = (params['expected_revision'] as int) + 1;

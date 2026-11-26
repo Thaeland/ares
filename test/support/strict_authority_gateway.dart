@@ -15,6 +15,8 @@
 // * [strictAuthorityCheck]: inside a fake that overrides
 //   `NextGenGateway.call` (strict_nextgen_gateway.dart wraps it with the
 //   client's own guard).
+import 'dart:convert';
+
 import 'package:hermes_android/core/services/ws_client.dart';
 
 import 'canonical_wire_contracts.g.dart';
@@ -114,6 +116,19 @@ Map<String, dynamic>? strictAuthorityReply(
 ) {
   final error = strictAuthorityRefusal(method, params);
   return error == null ? null : {'jsonrpc': '2.0', 'id': id, 'error': error};
+}
+
+/// For a fake socket's frame handler: the encoded reply to write back when
+/// the pinned gateway refuses [frame], or null when [frame] is not a request
+/// (a response to a server request) or the gateway accepts its shape.
+String? strictAuthorityFrame(Object? frame) {
+  if (frame is! Map || frame['method'] is! String) return null;
+  final reply = strictAuthorityReply(
+    frame['id'],
+    frame['method'] as String,
+    frame['params'] ?? const <String, dynamic>{},
+  );
+  return reply == null ? null : jsonEncode(reply);
 }
 
 /// For a fake that overrides `NextGenGateway.call`: throws the error the

@@ -24,6 +24,7 @@ import 'support/fake_hands_free_voice.dart';
 import 'support/fake_voice_composer_adapter.dart';
 import 'support/mtls_fixture.dart';
 import 'support/pump_chat_updates.dart';
+import 'support/strict_authority_gateway.dart';
 
 class _IdleRecorder implements VoiceRecorder {
   @override
@@ -97,6 +98,11 @@ class _Servers {
             return;
           }
           calls.add(f['method']);
+          final refused = strictAuthorityFrame(f);
+          if (refused != null) {
+            ws.add(refused);
+            return;
+          }
           ws.add(
             jsonEncode({
               'jsonrpc': '2.0',

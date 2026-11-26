@@ -5,6 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:hermes_android/core/models/connection.dart';
 
 import 'markdown_file_fixture.dart';
+import 'strict_authority_gateway.dart';
 
 /// A stored chat and its host filesystem, served only on an ephemeral loopback
 /// port. No widget, workspace owner, gateway client or chat route is faked.
@@ -134,6 +135,11 @@ class SessionFilesGateway {
           final method = frame['method'] as String?;
           if (method == null) return;
           methods.add(method);
+          final refused = strictAuthorityFrame(frame);
+          if (refused != null) {
+            ws.add(refused);
+            return;
+          }
           final result = switch (method) {
             'session.resume' when frame['params']['session_id'] == session => {
               'session_id': 'live-field-chat',

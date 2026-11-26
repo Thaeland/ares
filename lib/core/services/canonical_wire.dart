@@ -875,6 +875,97 @@ class CanonicalWire {
             data['reason'] == 'stale_generation');
   }
 
+  /// Sends [method] through the guard over [wire] and returns the JSON-RPC
+  /// reply in the shape the producer's own method answers with.
+  ///
+  /// [wire] writes one frame and returns its reply (`own` is false for a
+  /// read the guard adds itself). A request with no canonical form is not
+  /// sent: the reply is a [canonicalRefusalCode] error. A fenced edit whose
+  /// revision or generation is unknown first reads the session
+  /// (`session.resume`, no transcript). A value pick refused on a stale
+  /// fence is presented once more at the fences the owner named.
+  Future<Map<String, dynamic>> run(
+    String method,
+    Map<String, dynamic> params, {
+    required Future<Map<String, dynamic>> Function(
+      String method,
+      Map<String, dynamic> params, {
+      required bool own,
+    })
+    wire,
+    required void Function(String sessionId, Object? generation) noteGeneration,
+    bool Function()? current,
+    AppLocalizations? strings,
+  }) async {
+    bool live() => current?.call() ?? true;
+    void adoptGeneration(Object? value) {
+      if (value is! Map) return;
+      final sessionId = value['session_id'];
+      if (sessionId is String) {
+        noteGeneration(sessionId, value['execution_generation']);
+      }
+    }
+
+    void failed(CanonicalRequest request, Object? error) {
+      noteFailure(request, error);
+      final data = error is Map ? error['data'] : null;
+      final sessionId = request.params['session_id'];
+      if (data is Map && sessionId is String) {
+        noteGeneration(sessionId, data['execution_generation']);
+      }
+    }
+
+    CanonicalRequest request;
+    try {
+      try {
+        request = prepare(method, params);
+      } on CanonicalFencesNeeded catch (needed) {
+        final resume = prepare('session.resume', {
+          'session_id': needed.sessionId,
+          'omit_messages': true,
+          'defer_history': true,
+          if (params['profile'] != null) 'profile': params['profile'],
+        });
+        final reply = await wire(resume.method, resume.params, own: false);
+        if (reply['error'] == null && live()) {
+          adoptGeneration(reply['result']);
+          adaptResult(resume, reply['result']);
+        }
+        try {
+          request = prepare(method, params);
+        } on CanonicalFencesNeeded catch (still) {
+          throw still.refusal;
+        }
+      }
+    } on CanonicalWireRefusal catch (refusal) {
+      // Nothing was sent: a definite refusal, in the reply shape every
+      // caller already reads.
+      return {'jsonrpc': '2.0', 'error': refusal.toError(strings)};
+    }
+    var reply = await wire(request.method, request.params, own: true);
+    if (reply['error'] != null &&
+        live() &&
+        retryableFence(request, reply['error'])) {
+      failed(request, reply['error']);
+      try {
+        request = prepare(method, params);
+      } on Object {
+        return reply;
+      }
+      reply = await wire(request.method, request.params, own: false);
+    }
+    if (!live()) return reply;
+    final error = reply['error'];
+    if (error != null) {
+      failed(request, error);
+      return reply;
+    }
+    final result = reply['result'];
+    adoptGeneration(result);
+    final adapted = adaptResult(request, result);
+    return identical(adapted, result) ? reply : {...reply, 'result': adapted};
+  }
+
   /// The owner's result for [request], in the shape the producer's own
   /// method answered with on a legacy gateway.
   Object? adaptResult(CanonicalRequest request, Object? value) {

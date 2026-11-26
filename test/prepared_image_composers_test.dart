@@ -22,6 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'normal_gateway_alias_handoff_wire_test.dart' show widgetUntil;
 import 'support/fake_voice_composer_adapter.dart';
 import 'support/pump_chat_updates.dart';
+import 'support/strict_nextgen_gateway.dart';
 
 class _Paths extends PathProviderPlatform {
   _Paths(this.dir);
@@ -129,12 +130,22 @@ class _Ng extends NextGenGateway {
   NgConnectionState get state =>
       const NgConnectionState(NgConnectionPhase.connected);
   final prompts = <Map>[];
+
+  /// On an authority gateway the call goes through the client's guard and
+  /// the strict contract check, as the real socket does.
   @override
   Future<Map<String, dynamic>> call(
     String method,
     Map<String, dynamic> params, {
     Duration timeout = const Duration(seconds: 30),
-  }) async {
+  }) => sessionAuthority
+      ? strictCall(this, method, params, _answer)
+      : _answer(method, params);
+
+  Future<Map<String, dynamic>> _answer(
+    String method,
+    Map<String, dynamic> params,
+  ) async {
     if (method == 'prompt.submit') {
       prompts.add(Map.of(params));
       return {'submission_id': params['submission_id'], 'status': 'started'};
