@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:uuid/uuid.dart';
 
 import 'client_direct_voice.dart';
 import '../controllers/hands_free_conversation_controller.dart';
@@ -14,25 +15,36 @@ abstract interface class DirectVoiceAudioSink {
   Future<void> stop();
 }
 
+/// Plays through one audioplayers player, opened on the first playback and
+/// never before: a chat that is only shown (or a test platform without the
+/// plugin) has no player at all. Each sink's player has an id of its own, so
+/// two chats never drive the same native player.
 class FlutterDirectVoiceAudioSink implements DirectVoiceAudioSink {
-  FlutterDirectVoiceAudioSink({AudioPlayer? player})
-    : _player = player ?? AudioPlayer(playerId: 'ares-direct-voice');
+  FlutterDirectVoiceAudioSink({AudioPlayer Function(String playerId)? create})
+    : _create = create ?? ((id) => AudioPlayer(playerId: id));
 
-  final AudioPlayer _player;
+  final AudioPlayer Function(String playerId) _create;
+  AudioPlayer? _player;
+  bool _disposed = false;
   Completer<HandsFreeSpeechOutcome>? _active;
   StreamSubscription<void>? _subscription;
+
+  AudioPlayer _ensurePlayer() =>
+      _player ??= _create('ares-direct-voice-${const Uuid().v4()}');
 
   @override
   Future<HandsFreeSpeechOutcome> play(Uint8List bytes) async {
     await stop();
+    if (_disposed) return HandsFreeSpeechOutcome.canceled;
+    final player = _ensurePlayer();
     final completer = Completer<HandsFreeSpeechOutcome>();
     _active = completer;
-    _subscription = _player.onPlayerComplete.listen((_) {
+    _subscription = player.onPlayerComplete.listen((_) {
       if (!completer.isCompleted) {
         completer.complete(HandsFreeSpeechOutcome.completed);
       }
     });
-    await _player.play(BytesSource(bytes, mimeType: 'audio/mpeg'));
+    await player.play(BytesSource(bytes, mimeType: 'audio/mpeg'));
     return completer.future;
   }
 
@@ -42,10 +54,27 @@ class FlutterDirectVoiceAudioSink implements DirectVoiceAudioSink {
     _active = null;
     await _subscription?.cancel();
     _subscription = null;
-    await _player.stop();
+    // Nothing played yet: there is no player to stop, and none is opened.
+    await _player?.stop();
     if (active != null && !active.isCompleted) {
       active.complete(HandsFreeSpeechOutcome.canceled);
     }
+  }
+
+  /// Ends playback and releases the native player, if one was opened.
+  Future<void> dispose() async {
+    if (_disposed) return;
+    _disposed = true;
+    final player = _player;
+    _player = null;
+    final active = _active;
+    _active = null;
+    await _subscription?.cancel();
+    _subscription = null;
+    if (active != null && !active.isCompleted) {
+      active.complete(HandsFreeSpeechOutcome.canceled);
+    }
+    if (player != null) await player.dispose();
   }
 }
 
@@ -59,12 +88,19 @@ class ClientDirectVoiceReplySpeaker implements VoiceReplySpeaker {
     required this.scopeKey,
     required this.fallback,
     DirectVoiceAudioSink? sink,
-  }) : _sink = sink ?? FlutterDirectVoiceAudioSink();
+  }) : _ownedSink = sink == null ? FlutterDirectVoiceAudioSink() : null,
+       _injectedSink = sink;
 
   final VoiceClientConfigStore store;
   final String scopeKey;
   final VoiceReplySpeaker fallback;
-  final DirectVoiceAudioSink _sink;
+
+  /// The sink this speaker made, and so disposes. An injected sink belongs
+  /// to whoever injected it.
+  final FlutterDirectVoiceAudioSink? _ownedSink;
+  final DirectVoiceAudioSink? _injectedSink;
+
+  DirectVoiceAudioSink get _sink => _injectedSink ?? _ownedSink!;
 
   @override
   Future<bool> prepare() => fallback.prepare();
@@ -96,5 +132,15 @@ class ClientDirectVoiceReplySpeaker implements VoiceReplySpeaker {
   Future<void> stop() async {
     await _sink.stop();
     await fallback.stop();
+  }
+
+  /// Ends playback and releases the player this speaker opened. The relay
+  /// fallback is the caller's: its flutter_tts engine outlives this speaker.
+  Future<void> dispose() async {
+    try {
+      await _ownedSink?.dispose();
+    } catch (_) {
+      // Releasing a player that never finished opening is best effort.
+    }
   }
 }

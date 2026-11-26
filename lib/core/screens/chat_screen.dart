@@ -1168,6 +1168,10 @@ class _ChatScreenState extends State<ChatScreen>
   DashboardClient? _voiceDashboard;
   late final HandsFreeConversationController _handsFree;
   late final VoiceReplySpeaker _replySpeaker;
+
+  /// The client-direct speaker this screen made (null when a test injects
+  /// one): disposed with the screen so its audio player is released.
+  ClientDirectVoiceReplySpeaker? _ownedDirectSpeaker;
   late final Future<void> _voiceSetup;
   final Object _voiceRouteToken = Object();
   ModalRoute<dynamic>? _voiceRoute;
@@ -1319,9 +1323,11 @@ class _ChatScreenState extends State<ChatScreen>
           ),
     )..addListener(_onVoiceComposerChanged);
     unawaited(_voiceRecording.ready);
+    // The direct speaker opens its audio player on first playback only, and
+    // this screen releases it on dispose.
     _replySpeaker =
         widget.testVoiceReplySpeaker ??
-        ClientDirectVoiceReplySpeaker(
+        (_ownedDirectSpeaker = ClientDirectVoiceReplySpeaker(
           store: VoiceClientRuntime.storeFor(
             widget.connection,
             connectionId: widget.connection.id,
@@ -1330,7 +1336,7 @@ class _ChatScreenState extends State<ChatScreen>
           scopeKey:
               '${widget.connection.id}::${widget.connection.gatewayProfile ?? ''}',
           fallback: FlutterVoiceReplySpeaker(_flutterTts),
-        );
+        ));
     _handsFree = HandsFreeConversationController(
       platform:
           widget.testHandsFreePlatform ??
@@ -2735,7 +2741,14 @@ class _ChatScreenState extends State<ChatScreen>
     _disposeLiveVoice();
     _voiceTurn?.finish(HandsFreeTurnStatus.unknown);
     _voiceTurn = null;
-    unawaited(_replySpeaker.stop().catchError((Object _) {}));
+    final ownedSpeaker = _ownedDirectSpeaker;
+    _ownedDirectSpeaker = null;
+    unawaited(
+      _replySpeaker
+          .stop()
+          .catchError((Object _) {})
+          .whenComplete(() => ownedSpeaker?.dispose()),
+    );
     final normalChat = _normalChat;
     final reservation = _normalReservation;
     final subscription = _normalSubscription;

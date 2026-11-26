@@ -19,6 +19,7 @@ import '../../core/controllers/hands_free_conversation_controller.dart'
     show HandsFreeSpeechOutcome;
 import '../../core/services/barge_in_monitor.dart';
 import '../../core/services/barge_in_preference.dart';
+import '../../core/services/client_direct_voice_speaker.dart';
 import '../../core/services/hands_free_speech.dart';
 
 class NgReadAloud extends ChangeNotifier {
@@ -37,10 +38,15 @@ class NgReadAloud extends ChangeNotifier {
            android ??
            (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     final relaySpeaker = FlutterVoiceReplySpeaker(_tts);
+    final direct = speaker == null && directSpeakerFactory != null
+        ? directSpeakerFactory(relaySpeaker)
+        : null;
+    // A client-direct speaker made here is this controller's to release.
+    if (direct is ClientDirectVoiceReplySpeaker) _ownedDirect = direct;
     _speaker =
         speaker ??
         (directSpeakerFactory != null
-            ? directSpeakerFactory(relaySpeaker)
+            ? direct
             : _android
             ? relaySpeaker
             : null);
@@ -58,6 +64,7 @@ class NgReadAloud extends ChangeNotifier {
   final Future<SharedPreferences> Function() _prefs;
   final bool _android;
   late final VoiceReplySpeaker? _speaker;
+  ClientDirectVoiceReplySpeaker? _ownedDirect;
   bool _prepared = false;
   bool _disposed = false;
   int _generation = 0;
@@ -227,8 +234,12 @@ class NgReadAloud extends ChangeNotifier {
     _generation++;
     _readingKey = null;
     final speaker = _speaker;
+    final owned = _ownedDirect;
+    _ownedDirect = null;
     final stopping = speaker != null ? speaker.stop() : _tts.stop();
-    unawaited(stopping.catchError((Object _) {}));
+    unawaited(
+      stopping.catchError((Object _) {}).whenComplete(() => owned?.dispose()),
+    );
     super.dispose();
   }
 }
