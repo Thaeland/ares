@@ -203,8 +203,8 @@ void main() {
             return ['/fixture/a.png', '', '/fixture/b.jpg'];
           }
           if (call.method == 'image') {
-            // The existing plugin returns PNG bytes on macOS/Linux and a temporary
-            // PNG path on Windows. Match the real host's Dart plugin branch.
+            // The plugin returns encoded bytes on macOS/Linux and a temporary
+            // BMP path on Windows (format normalization is tested separately).
             if (Platform.isWindows) {
               final dir = await Directory.systemTemp.createTemp(
                 'clipboard-channel-',

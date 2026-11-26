@@ -11,6 +11,7 @@ import 'package:pasteboard/pasteboard.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../l10n/l10n.dart';
+import 'windows_clipboard_image.dart';
 
 /// Desktop targets, where windows take OS drops and Cmd/Ctrl+V can carry
 /// files or an image. Mobile pastes images through the keyboard instead
@@ -74,7 +75,11 @@ Future<ClipboardAttachment?> readClipboardAttachment() async {
   try {
     final image = await Pasteboard.image;
     if (image != null && image.isNotEmpty) {
-      return ClipboardAttachment(image: image);
+      return ClipboardAttachment(
+        image: defaultTargetPlatform == TargetPlatform.windows
+            ? normalizeWindowsClipboardImage(image)
+            : image,
+      );
     }
   } catch (_) {}
   return null;
