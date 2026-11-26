@@ -40,9 +40,7 @@ import '../presentation/presentation_settings.dart';
 import '../../main.dart';
 import '../../nextgen/nextgen_preferences.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import '../services/app_update_service.dart';
 import '../services/legal_links.dart';
-import '../widgets/update_available_dialog.dart';
 import '../desktop/desktop_integration_card.dart';
 import '../desktop/desktop_os.dart';
 
@@ -412,15 +410,11 @@ class _AboutCard extends StatefulWidget {
 
 class _AboutCardState extends State<_AboutCard> {
   String _version = '';
-  bool _checking = false;
-  bool _checkOnLaunch = true;
-  String? _updateStatus;
 
   @override
   void initState() {
     super.initState();
     _loadVersion();
-    _loadUpdatePreference();
   }
 
   Future<void> _loadVersion() async {
@@ -431,57 +425,6 @@ class _AboutCardState extends State<_AboutCard> {
     } catch (_) {
       if (!mounted) return;
       setState(() => _version = 'unknown');
-    }
-  }
-
-  Future<void> _loadUpdatePreference() async {
-    final enabled = await AppUpdateService().checkOnLaunchEnabled();
-    if (!mounted) return;
-    setState(() => _checkOnLaunch = enabled);
-  }
-
-  Future<void> _setCheckOnLaunch(bool enabled) async {
-    setState(() => _checkOnLaunch = enabled);
-    await AppUpdateService().setCheckOnLaunchEnabled(enabled);
-  }
-
-  /// The manual path: always a real check, and always an answer — the
-  /// launch-time prompt is the one that stays quiet when GitHub cannot be
-  /// reached, because there the user did not ask.
-  Future<void> _checkForUpdates() async {
-    setState(() {
-      _checking = true;
-      _updateStatus = null;
-    });
-    final service = AppUpdateService();
-    AppUpdateResult result;
-    try {
-      final current = await installedAppVersion() ?? _version;
-      result = await service.checkForUpdate(
-        currentVersion: current,
-        force: true,
-      );
-    } catch (_) {
-      result = const AppUpdateResult(AppUpdateOutcome.failed);
-    }
-    if (!mounted) return;
-    setState(() => _checking = false);
-    final l10n = context.l10n;
-    switch (result.outcome) {
-      case AppUpdateOutcome.updateAvailable:
-        final release = result.release!;
-        final action = await showUpdateAvailableDialog(
-          context,
-          release: release,
-        );
-        if (action == UpdatePromptAction.skipVersion) {
-          await service.skipVersion(release.version);
-        }
-      case AppUpdateOutcome.upToDate:
-        setState(() => _updateStatus = l10n.you_re_on_the_latest_version);
-      case AppUpdateOutcome.throttled:
-      case AppUpdateOutcome.failed:
-        setState(() => _updateStatus = l10n.couldn_t_check_for_updates);
     }
   }
 
@@ -529,30 +472,6 @@ class _AboutCardState extends State<_AboutCard> {
                 );
               },
             ),
-            // APK self-update is Android-only and off in Play and parked
-            // Automotive builds; Apple builds update through their stores.
-            if (supportsApkSelfUpdate &&
-                AppUpdateService.selfUpdatesEnabled) ...[
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(context.l10n.check_for_updates),
-                subtitle: _updateStatus == null ? null : Text(_updateStatus!),
-                trailing: _checking
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.refresh),
-                onTap: _checking ? null : _checkForUpdates,
-              ),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(context.l10n.check_for_updates_on_launch),
-                value: _checkOnLaunch,
-                onChanged: _setCheckOnLaunch,
-              ),
-            ],
           ],
         ),
       ),

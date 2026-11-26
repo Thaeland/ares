@@ -18,7 +18,7 @@ void main() {
       expect(baseCode, greaterThan(3071));
       // Every split must upgrade the highest published 4.0.15 stable split.
       for (final abiCode in [1, 2, 3]) {
-        expect(baseCode * 10 + abiCode, greaterThan(30713));
+        expect(baseCode * 10 + abiCode, greaterThan(30733));
       }
       expect(
         [

@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'core/services/completion_cue_player.dart';
 import 'core/services/hands_free_route_observer.dart';
+import 'core/services/retired_preferences.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/models/client_certificate.dart';
@@ -139,6 +140,7 @@ class _StartupAppState extends State<StartupApp> {
         if (defaultTargetPlatform == TargetPlatform.windows) {
           await NotificationPrefsStore.load();
         }
+        unawaited(clearRetiredPreferences(prefs));
         try {
           // Browser sign-ins and Cloudflare Access tokens, shared by both
           // interfaces; a Keystore fault only costs those sign-ins.

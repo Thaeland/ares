@@ -3154,54 +3154,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get could_not_save_chat_spaces => '无法在此设备上保存聊天空间';
 
   @override
-  String get update_available => '有可用更新';
-
-  @override
-  String get update_now => 'Update now';
-
-  @override
-  String get update_install => 'Install update';
-
-  @override
-  String get update_downloading => 'Downloading and verifying update…';
-
-  @override
-  String get update_allow_install =>
-      'Allow Hermes to install this update, then return here and tap Install update.';
-
-  @override
-  String get update_failed =>
-      'The update could not be downloaded, verified, or opened. Try again or view the release page.';
-
-  @override
-  String get a_newer_hermes_android_build_is_available_on_github =>
-      'GitHub 上已有更新的 Ares 版本。';
-
-  @override
-  String get release_notes => '发行说明';
-
-  @override
-  String get view_release => '查看发行版';
-
-  @override
-  String get skip_this_version => '跳过此版本';
-
-  @override
-  String get later => '稍后';
-
-  @override
-  String get check_for_updates => '检查更新';
-
-  @override
-  String get check_for_updates_on_launch => '启动时检查更新';
-
-  @override
-  String get you_re_on_the_latest_version => '已是最新版本。';
-
-  @override
-  String get couldn_t_check_for_updates => '无法检查更新。';
-
-  @override
   String get chat_density => '聊天密度';
 
   @override
@@ -14660,54 +14612,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get could_not_save_chat_spaces => '无法在此设备上保存聊天空间';
-
-  @override
-  String get update_available => '有可用更新';
-
-  @override
-  String get update_now => 'Update now';
-
-  @override
-  String get update_install => 'Install update';
-
-  @override
-  String get update_downloading => 'Downloading and verifying update…';
-
-  @override
-  String get update_allow_install =>
-      'Allow Hermes to install this update, then return here and tap Install update.';
-
-  @override
-  String get update_failed =>
-      'The update could not be downloaded, verified, or opened. Try again or view the release page.';
-
-  @override
-  String get a_newer_hermes_android_build_is_available_on_github =>
-      'GitHub 上已有更新的 Ares 版本。';
-
-  @override
-  String get release_notes => '发行说明';
-
-  @override
-  String get view_release => '查看发行版';
-
-  @override
-  String get skip_this_version => '跳过此版本';
-
-  @override
-  String get later => '稍后';
-
-  @override
-  String get check_for_updates => '检查更新';
-
-  @override
-  String get check_for_updates_on_launch => '启动时检查更新';
-
-  @override
-  String get you_re_on_the_latest_version => '已是最新版本。';
-
-  @override
-  String get couldn_t_check_for_updates => '无法检查更新。';
 
   @override
   String get chat_density => '聊天密度';
@@ -26174,52 +26078,6 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get could_not_save_chat_spaces => '無法在此裝置上儲存聊天空間';
-
-  @override
-  String get update_available => '有可用更新';
-
-  @override
-  String get update_now => '立即更新';
-
-  @override
-  String get update_install => '安裝更新';
-
-  @override
-  String get update_downloading => '正在下載並驗證更新…';
-
-  @override
-  String get update_allow_install => '請允許 Hermes 安裝這項更新，然後回到這裡點選「安裝更新」。';
-
-  @override
-  String get update_failed => '無法下載、驗證或開啟更新。請重試，或前往版本發布頁面。';
-
-  @override
-  String get a_newer_hermes_android_build_is_available_on_github =>
-      'GitHub 上已有更新的 Ares 版本。';
-
-  @override
-  String get release_notes => '發行說明';
-
-  @override
-  String get view_release => '查看發行版';
-
-  @override
-  String get skip_this_version => '跳過此版本';
-
-  @override
-  String get later => '稍後';
-
-  @override
-  String get check_for_updates => '檢查更新';
-
-  @override
-  String get check_for_updates_on_launch => '啟動時檢查更新';
-
-  @override
-  String get you_re_on_the_latest_version => '已是最新版本。';
-
-  @override
-  String get couldn_t_check_for_updates => '無法檢查更新。';
 
   @override
   String get chat_density => '聊天密度';
