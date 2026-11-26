@@ -1,3 +1,6 @@
+import '../l10n/l10n.dart';
+import '../l10n/service_strings.dart';
+
 /// Prompts this client has not admitted yet.
 ///
 /// Desktop 0.23.4 keeps this list in the composer and parks it on Stop or
@@ -100,8 +103,16 @@ final class ClientHeldQueue {
   }
 }
 
-String clientHeldQueueLabel({required int count, required bool parked}) =>
-    parked ? '$count queued \u2014 paused' : '$count queued';
+String clientHeldQueueLabel({
+  required int count,
+  required bool parked,
+  AppLocalizations? strings,
+}) {
+  final l10n = strings ?? serviceStrings;
+  return parked
+      ? l10n.release_core_client_queue_paused_count(count)
+      : l10n.release_core_client_queue_count(count);
+}
 
 const heldPromptMissingMessage =
     'That unsent prompt is no longer in the queue.';

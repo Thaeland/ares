@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+
 import '../services/client_held_queue.dart';
 
 class ClientHeldQueueRow {
@@ -41,7 +43,11 @@ class ClientHeldQueueBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final label = clientHeldQueueLabel(count: count, parked: parked);
+    final label = clientHeldQueueLabel(
+      count: count,
+      parked: parked,
+      strings: context.sharedL10n,
+    );
     return Padding(
       key: const ValueKey('client-held-queue'),
       padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
@@ -58,7 +64,14 @@ class ClientHeldQueueBar extends StatelessWidget {
                 ),
               ),
               if (parked)
-                TextButton(onPressed: onResume, child: const Text('Resume')),
+                TextButton(
+                  onPressed: onResume,
+                  child: Text(
+                    context
+                        .sharedL10n
+                        .release_core_client_held_queue_bar_resume,
+                  ),
+                ),
             ],
           ),
           for (final row in rows)
@@ -75,20 +88,26 @@ class ClientHeldQueueBar extends StatelessWidget {
                 ),
                 IconButton(
                   visualDensity: VisualDensity.compact,
-                  tooltip: 'Send queued prompt',
+                  tooltip: context
+                      .sharedL10n
+                      .release_core_client_held_queue_bar_send_queued_prompt,
                   icon: const Icon(Icons.send, size: 16),
                   onPressed: () => onSend(row.id),
                 ),
                 if (onEdit != null)
                   IconButton(
                     visualDensity: VisualDensity.compact,
-                    tooltip: 'Edit unsent prompt',
+                    tooltip: context
+                        .sharedL10n
+                        .release_core_client_held_queue_bar_edit_unsent_prompt,
                     icon: const Icon(Icons.edit_outlined, size: 16),
                     onPressed: row.canEdit ? () => onEdit!(row.id) : null,
                   ),
                 IconButton(
                   visualDensity: VisualDensity.compact,
-                  tooltip: 'Remove unsent prompt',
+                  tooltip: context
+                      .sharedL10n
+                      .release_core_client_held_queue_bar_remove_unsent_prompt,
                   icon: const Icon(Icons.close, size: 16),
                   onPressed: () => onRemove(row.id),
                 ),
