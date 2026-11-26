@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/screens/fleet_managed_ssh_screen.dart';
 import 'package:hermes_android/core/services/remote_workspace.dart';
@@ -238,6 +239,12 @@ void main() {
               findsOneWidget,
             );
             await tap(find.text('Cancel'));
+            expect(f.sshWrites, isEmpty);
+            await tap(button('Connect'));
+            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+            await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+            await tester.pumpAndSettle();
+            expect(find.byType(AlertDialog), findsNothing);
             expect(f.sshWrites, isEmpty);
             f.sshErrorKind = 'host-key-changed';
             await tap(button('Connect'));
