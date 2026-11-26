@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+import '../l10n/service_strings.dart';
+
 /// Why this composer cannot restore an image together with its text.
 ///
 /// Stock canonical sends keep a frozen receipt. These two transports do not,
@@ -14,15 +17,11 @@ class ImageRecoveryCapabilityNotice extends StatefulWidget {
 
   final ImageRecoveryGap gap;
 
-  static const restExplanation =
-      'Image and text recovery is not available on Classic REST/SSE. '
-      'An unacknowledged image send cannot be restored on this connection, '
-      'and nothing is sent again automatically.';
+  static String get restExplanation =>
+      serviceStrings.rel_svc_misc_image_recovery_rest_gap;
 
-  static const recoveryExplanation =
-      'Image and text recovery is not available on companion recovery. '
-      'An unacknowledged image send cannot be restored on this connection, '
-      'and nothing is sent again automatically.';
+  static String get recoveryExplanation =>
+      serviceStrings.rel_svc_misc_image_recovery_companion_gap;
 
   @override
   State<ImageRecoveryCapabilityNotice> createState() =>
@@ -35,10 +34,11 @@ class _ImageRecoveryCapabilityNoticeState
 
   @override
   Widget build(BuildContext context) {
+    final l = context.sharedL10n;
     final text = switch (widget.gap) {
-      ImageRecoveryGap.restSse => ImageRecoveryCapabilityNotice.restExplanation,
+      ImageRecoveryGap.restSse => l.rel_svc_misc_image_recovery_rest_gap,
       ImageRecoveryGap.recoveryV2 =>
-        ImageRecoveryCapabilityNotice.recoveryExplanation,
+        l.rel_svc_misc_image_recovery_companion_gap,
     };
     final style = Theme.of(context).textTheme.bodySmall;
     return Semantics(

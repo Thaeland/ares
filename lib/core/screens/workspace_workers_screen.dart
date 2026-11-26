@@ -108,7 +108,7 @@ class _WorkspaceWorkersScreenState extends State<WorkspaceWorkersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l = context.l10n;
+    final l = context.sharedL10n;
     return PopScope<void>(
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) _pane.close();
@@ -242,7 +242,7 @@ class _WorkerSelectionState extends State<_WorkerSelection> {
     if (_sending || !identical(row, _selected) || _draft.text.trim().isEmpty) {
       return;
     }
-    final l = context.l10n;
+    final l = context.sharedL10n;
     setState(() {
       _sending = true;
       _notice = null;
@@ -277,14 +277,14 @@ class _WorkerSelectionState extends State<_WorkerSelection> {
 
   @override
   Widget build(BuildContext context) {
-    final l = context.l10n;
+    final l = context.sharedL10n;
     return Column(
       children: [
         for (final w in widget.workers) ...[
           ListTile(
             title: Text(w.goal?.isNotEmpty == true ? w.goal! : l.ng_subagent),
             subtitle: Text(
-              '${l.task_identity(w.id)} · ${l.task_status(w.status ?? l.task_not_supplied)}',
+              '${l.task_identity(w.id)} · ${l.task_status(_workerStatusLabel(l, w.status))}',
             ),
             selected: identical(w, _selected),
             trailing: w.canSteer ? const Icon(Icons.edit_outlined) : null,
@@ -315,3 +315,17 @@ class _WorkerSelectionState extends State<_WorkerSelection> {
     );
   }
 }
+
+String _workerStatusLabel(AppLocalizations l10n, String? status) =>
+    switch (status) {
+      null || '' => l10n.task_not_supplied,
+      'queued' || 'requested' => l10n.ng_subagent_queued,
+      'running' || 'thinking' || 'tool' => l10n.ng_subagent_running,
+      'completed' || 'done' => l10n.ng_subagent_done,
+      'failed' || 'error' => l10n.ng_subagent_failed,
+      'interrupted' ||
+      'cancelled' ||
+      'canceled' ||
+      'stopped' => l10n.ng_subagent_stopped,
+      _ => status,
+    };

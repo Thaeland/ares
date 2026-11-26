@@ -651,11 +651,8 @@ class NgNotificationSettings extends StatelessWidget {
 class NgRecentNotificationsSheet extends StatelessWidget {
   const NgRecentNotificationsSheet({super.key});
 
-  static String _detail(String detail) => switch (detail) {
-    'Ares was on screen' => ngL.ng_release_notification_foreground,
-    'the turn was stopped' => ngL.ng_release_notification_stopped,
-    _ => detail,
-  };
+  static String _detail(String detail) =>
+      TurnNotificationService.localizedAttemptDetail(ngL, detail);
 
   @override
   Widget build(BuildContext context) {

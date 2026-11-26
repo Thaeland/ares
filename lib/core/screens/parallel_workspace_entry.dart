@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../models/connection.dart';
+import '../l10n/l10n.dart';
+import '../l10n/service_strings.dart';
 import '../services/connection_mutation_barrier.dart';
 
-const parallelWorkspaceEntryTitle = 'Parallel workspace';
-const parallelWorkspaceEntrySubtitle =
-    'Open multiple chats in tabs or side by side.';
+String get parallelWorkspaceEntryTitle =>
+    serviceStrings.release_core_parallel_workspace_parallel_workspace;
+String get parallelWorkspaceEntrySubtitle =>
+    serviceStrings.ng_release_more_parallel_workspace_subtitle;
 
 /// Keeps the workspace and its child routes inside the entry owner's lifetime.
 /// A route pushed onto the app navigator would outlive an in-place profile
@@ -83,9 +86,11 @@ class _EntryHostState extends State<ParallelWorkspaceEntryHost> {
     if (!mounted || _open) return;
     if (!_current) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'The connection changed. Reopen it to use the workspace.',
+            context
+                .sharedL10n
+                .rel_svc_misc_parallel_workspace_connection_changed,
           ),
         ),
       );

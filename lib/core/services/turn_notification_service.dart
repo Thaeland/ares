@@ -281,6 +281,7 @@ class PluginTurnNotificationSink
     const androidSettings = AndroidInitializationSettings(
       'ic_stat_mobile_push',
     );
+    final strings = notificationStrings();
     final darwinSettings = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
@@ -291,8 +292,8 @@ class PluginTurnNotificationSink
         DarwinNotificationCategory(
           'hermes_approval',
           actions: [
-            DarwinNotificationAction.plain('approve', 'Approve'),
-            DarwinNotificationAction.plain('reject', 'Deny'),
+            DarwinNotificationAction.plain('approve', strings.approve),
+            DarwinNotificationAction.plain('reject', strings.deny),
           ],
         ),
       ],
@@ -715,33 +716,80 @@ class TurnNotificationService {
     }
   }
 
-  static const turnChannel = TurnNotificationChannel(
-    id: 'hermes_turn_notifications',
-    name: 'Ares Turns',
-    description: 'Notifications for completed background turns',
-  );
+  static TurnNotificationChannel get turnChannel {
+    final strings = notificationStrings();
+    return TurnNotificationChannel(
+      id: 'hermes_turn_notifications',
+      name: strings.rel_svc_push_channel_turns_name,
+      description: strings.rel_svc_push_channel_turns_description,
+    );
+  }
 
   /// Attention kinds get their own high-importance channel so approvals and
   /// input requests can surface as heads-up cards while the app is away.
-  static const attentionChannel = TurnNotificationChannel(
-    id: 'hermes_attention',
-    name: 'Ares Attention',
-    description: 'Approvals and input requests that need you',
-  );
+  static TurnNotificationChannel get attentionChannel {
+    final strings = notificationStrings();
+    return TurnNotificationChannel(
+      id: 'hermes_attention',
+      name: strings.rel_svc_push_channel_attention_name,
+      description: strings.rel_svc_push_channel_attention_description,
+    );
+  }
 
   /// Finished background work: quiet by design.
-  static const backgroundChannel = TurnNotificationChannel(
-    id: 'hermes_background',
-    name: 'Ares Background',
-    description: 'Background task completions',
-  );
+  static TurnNotificationChannel get backgroundChannel {
+    final strings = notificationStrings();
+    return TurnNotificationChannel(
+      id: 'hermes_background',
+      name: strings.rel_svc_push_channel_background_name,
+      description: strings.rel_svc_push_channel_background_description,
+    );
+  }
 
   /// Gateway notices: credits and plugin messages.
-  static const noticesChannel = TurnNotificationChannel(
-    id: 'hermes_notices',
-    name: 'Ares Notices',
-    description: 'Credit and plugin notices',
-  );
+  static TurnNotificationChannel get noticesChannel {
+    final strings = notificationStrings();
+    return TurnNotificationChannel(
+      id: 'hermes_notices',
+      name: strings.rel_svc_push_channel_notices_name,
+      description: strings.rel_svc_push_channel_notices_description,
+    );
+  }
+
+  /// Diagnostic details retain stable reason tokens, not translated text.
+  /// Resolve them when rendering so retained attempts follow locale changes.
+  /// Unknown platform/server text stays raw rather than being misclassified.
+  static String localizedAttemptDetail(
+    AppLocalizations strings,
+    String detail,
+  ) {
+    if (detail.startsWith('conversation: ')) {
+      return strings.rel_svc_push_diag_conversation_error(
+        detail.substring('conversation: '.length),
+      );
+    }
+    if (detail.endsWith(' is off')) {
+      final kind = detail.substring(0, detail.length - ' is off'.length);
+      if (HermesNotificationKind.values.any((value) => value.name == kind)) {
+        return strings.rel_svc_push_diag_kind_off(kind);
+      }
+    }
+    return switch (detail) {
+      'not initialised' => strings.rel_svc_push_diag_not_initialised,
+      'permission denied' => strings.rel_svc_notification_permission_denied,
+      'replies are off' => strings.rel_svc_push_diag_replies_off,
+      'conversation' => strings.rel_svc_push_diag_conversation,
+      'conversation; permission denied' =>
+        strings.rel_svc_push_diag_conversation_permission_denied,
+      'failures are off' => strings.rel_svc_push_diag_failures_off,
+      'Windows did not report its notification setting' =>
+        strings.rel_svc_push_diag_windows_setting_unknown,
+      'notifications are off' => strings.rel_svc_notifications_off,
+      'Ares was on screen' => strings.ng_release_notification_foreground,
+      'the turn was stopped' => strings.ng_release_notification_stopped,
+      _ => detail,
+    };
+  }
 
   /// The app-wide instance used outside tests, so every dispatcher shares one
   /// plugin, one initialisation and one tap handler.

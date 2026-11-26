@@ -14055,6 +14055,677 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rel_ops_host_error_request => '无法完成该请求。';
+
+  @override
+  String get rel_svc_push_api_select_sessions =>
+      '请选择 1–128 个持久会话 ID，每个 ID 包含 1–200 个 ASCII 字符，且只能使用字母、数字、_ . : @ 或 -。请移除空白 ID 和空格。';
+
+  @override
+  String get rel_svc_push_api_unavailable => '此服务器无法使用移动推送。';
+
+  @override
+  String get rel_svc_push_api_invalid_vapid => '服务器 VAPID 公钥无效。';
+
+  @override
+  String get rel_svc_push_api_update_plugin =>
+      '此服务器需要更新 mobile-push 插件才能使用自动订阅。';
+
+  @override
+  String get rel_svc_push_status_android_only => '仅限 Android';
+
+  @override
+  String get rel_svc_push_native_prefs_sync_failed => '无法同步原生通知偏好设置。';
+
+  @override
+  String get rel_svc_push_choose_android_connection => '请先在 Android 上选择已保存的连接。';
+
+  @override
+  String get rel_svc_push_status_checking_authorization => '正在检查服务器授权';
+
+  @override
+  String get rel_svc_push_revoke_persist_failed => '无法保存撤销状态。请在离开应用前再次尝试停用。';
+
+  @override
+  String get rel_svc_push_status_off_api_ready => '已关闭；服务器 API 已就绪';
+
+  @override
+  String get rel_svc_push_status_off_revoke_pending => '已关闭；等待服务器撤销';
+
+  @override
+  String get rel_svc_push_status_off_connection_changed => '已关闭；已保存的连接已更改';
+
+  @override
+  String get rel_svc_push_status_pending_endpoint => '正在等待分发器端点';
+
+  @override
+  String get rel_svc_push_status_registering => '正在注册';
+
+  @override
+  String get rel_svc_push_status_pending_challenge => '加密质询待处理（正在等待静默服务器验证推送）';
+
+  @override
+  String get rel_svc_push_allow_android_notifications_retry =>
+      '请在系统设置中允许 Android 通知，然后重试。';
+
+  @override
+  String get rel_svc_push_plugin_invalid =>
+      '服务器 mobile-push 插件不可用、版本过旧或返回了无效的订阅响应。请让管理员更新该插件，然后重试。';
+
+  @override
+  String get rel_svc_push_transport_unavailable =>
+      '没有可用的推送传输方式。内置传送需要正常工作的 Google Play 服务；也可安装 UnifiedPush 分发器后重试。';
+
+  @override
+  String get rel_svc_push_transport_choice =>
+      '有多个 UnifiedPush 分发器可用。请在“高级传输”中选择一个，然后重试。';
+
+  @override
+  String get rel_svc_push_transport_missing =>
+      '所选 UnifiedPush 分发器不可用。请恢复它，或在“高级传输”中选择其他分发器。';
+
+  @override
+  String get rel_svc_push_companion_unavailable =>
+      '服务器 mobile-push 配套组件不可用。它可能未安装、已停用，或此连接可能指向错误的控制面板。请在服务器上安装或启用该组件，检查控制面板连接，然后刷新。请参阅上方的服务器设置指南。';
+
+  @override
+  String get rel_svc_push_server_denied => '服务器拒绝了移动推送。请让管理员授权此主体和这些会话。';
+
+  @override
+  String get rel_svc_push_not_ready => '移动推送尚未就绪。请检查服务器插件授权、分发器和网络，然后重试。';
+
+  @override
+  String get rel_svc_push_availability_read_failed =>
+      '无法读取 Android 推送可用性。请在下方重试。';
+
+  @override
+  String get rel_svc_push_setup_failed =>
+      '推送设置失败。请检查 Android 权限、服务器授权和传输方式，然后重试。';
+
+  @override
+  String rel_svc_push_status(String status) {
+    return '状态：$status';
+  }
+
+  @override
+  String rel_svc_push_status_bound(
+    String bound,
+    String connection,
+    String status,
+  ) {
+    return '状态：已绑定到 $bound（对 $connection 未启用；握手：$status）';
+  }
+
+  @override
+  String get rel_svc_push_another_saved_connection => '另一个已保存的连接';
+
+  @override
+  String get rel_svc_push_background_notifications => '后台通知';
+
+  @override
+  String rel_svc_push_bound_subtitle(String bound, String connection) {
+    return '已绑定到 $bound — 请先在下方撤销该绑定，再为 $connection 启用';
+  }
+
+  @override
+  String rel_svc_push_private_activity(String connection) {
+    return '$connection 的私密服务器活动';
+  }
+
+  @override
+  String rel_svc_push_bound_warning_named(String bound) {
+    return '已绑定到另一个已保存的连接（$bound）。请先停用并撤销该绑定，再为此连接启用。';
+  }
+
+  @override
+  String get rel_svc_push_bound_warning => '已绑定到另一个已保存的连接。请先停用并撤销该绑定，再为此连接启用。';
+
+  @override
+  String get rel_svc_push_local_notifications_muted =>
+      '上方已关闭本地通知。后台通知授权不变，但在开启“启用通知”之前，普通后台活动提示会保持静音。';
+
+  @override
+  String rel_svc_push_legacy_subscription(int count) {
+    return '旧版订阅：仅限 $count 个已选会话。它不会自动扩展。请先关闭再开启，以选择加入服务器授权的会话。';
+  }
+
+  @override
+  String get rel_svc_push_authorized_binding =>
+      '仅绑定到此已保存的连接和配置文件。会话访问权限遵循当前服务器授权。';
+
+  @override
+  String get rel_svc_push_revocation_pending =>
+      '服务器撤销待处理。本地传送已关闭；请在原始已保存登录仍可用时重试。';
+
+  @override
+  String get rel_svc_push_refresh_retry => '刷新 / 重试';
+
+  @override
+  String rel_svc_push_disable_named(String bound) {
+    return '停用并撤销 $bound';
+  }
+
+  @override
+  String get rel_svc_push_other_connection => '其他连接';
+
+  @override
+  String get rel_svc_push_disable => '停用并撤销';
+
+  @override
+  String get rel_svc_push_refresh_explanation =>
+      '刷新 / 重试会在服务器设置后重新检查可用性；它无法安装配套组件。启用通知仍是单独的选择。';
+
+  @override
+  String get rel_svc_push_companion_required =>
+      '后台通知需要另外安装并启用服务器端 mobile-push 配套组件。Android 无法安装它。仅更新 APK 不会完成服务器设置。';
+
+  @override
+  String get rel_svc_push_server_setup_guide => '服务器设置指南';
+
+  @override
+  String get rel_svc_push_enable_disclosure =>
+      '启用后将请求 Android 通知权限，并与此服务器共享本次安装的端点和加密密钥。加密的活动提示不包含聊天内容。仅包括服务器登录授权的会话。';
+
+  @override
+  String get rel_svc_push_transport_disclosure =>
+      '内置传送使用 Google 推送传输并需要 Google Play 服务，但不包含 Firebase SDK。也可改用可选的 UnifiedPush 分发器。传送为尽力而为；请重新打开 Hermes 进行协调。';
+
+  @override
+  String get rel_svc_push_advanced_transport => '高级传输';
+
+  @override
+  String get rel_svc_push_automatic_explanation =>
+      '自动模式会保留现有分发器选择；否则在可用时使用内置 Google 传送。更改传输方式前请先停用。';
+
+  @override
+  String get rel_svc_push_transport_label => '推送传输';
+
+  @override
+  String get rel_svc_push_automatic_recommended => '自动（推荐）';
+
+  @override
+  String get rel_svc_push_selected_unavailable => '所选分发器（不可用）';
+
+  @override
+  String get rel_svc_push_no_transport_detected =>
+      '未检测到可用的传输方式。内置传送需要 Google Play 服务；若没有，请安装并配置 UnifiedPush 分发器，然后刷新。';
+
+  @override
+  String get rel_svc_push_channel_turns_name => 'Ares 轮次';
+
+  @override
+  String get rel_svc_push_channel_turns_description => '后台轮次完成通知';
+
+  @override
+  String get rel_svc_push_channel_attention_name => 'Ares 待处理';
+
+  @override
+  String get rel_svc_push_channel_attention_description => '需要您处理的审批和输入请求';
+
+  @override
+  String get rel_svc_push_channel_background_name => 'Ares 后台';
+
+  @override
+  String get rel_svc_push_channel_background_description => '后台任务完成';
+
+  @override
+  String get rel_svc_push_channel_notices_name => 'Ares 通知';
+
+  @override
+  String get rel_svc_push_channel_notices_description => '额度和插件通知';
+
+  @override
+  String get rel_svc_push_diag_not_initialised => '未初始化';
+
+  @override
+  String get rel_svc_push_diag_replies_off => '回复通知已关闭';
+
+  @override
+  String get rel_svc_push_diag_conversation => '对话';
+
+  @override
+  String get rel_svc_push_diag_conversation_permission_denied => '对话；权限被拒绝';
+
+  @override
+  String rel_svc_push_diag_conversation_error(String error) {
+    return '对话：$error';
+  }
+
+  @override
+  String get rel_svc_push_diag_failures_off => '失败通知已关闭';
+
+  @override
+  String rel_svc_push_diag_kind_off(String kind) {
+    return '$kind 已关闭';
+  }
+
+  @override
+  String get rel_svc_push_diag_windows_setting_unknown => 'Windows 未报告其通知设置';
+
+  @override
+  String get rel_svc_backup_not_hermes_configuration_backup =>
+      '此文件不是 Hermes 配置备份。';
+
+  @override
+  String get rel_svc_backup_newer_version_cannot_import =>
+      '此备份由较新版本的应用创建，无法导入。';
+
+  @override
+  String get rel_svc_backup_missing_client_certificate =>
+      '此备份声明某个连接使用客户端证书，但并未包含该证书，因此无法完整恢复。';
+
+  @override
+  String get rel_svc_backup_damaged_unreadable => '此备份文件已损坏，无法读取。';
+
+  @override
+  String get rel_svc_backup_unsupported_preference_type =>
+      '某项已保存的偏好设置类型不受支持，无法导出。';
+
+  @override
+  String get rel_svc_backup_choose_passphrase_api_keys =>
+      '请选择密码短语 — 备份包含您的 API 密钥。';
+
+  @override
+  String get rel_svc_backup_could_not_protect_safely => '无法安全保护备份。';
+
+  @override
+  String get rel_svc_backup_unsupported_encryption => '此备份使用不受支持的加密方案。';
+
+  @override
+  String get rel_svc_backup_wrong_passphrase_or_altered => '密码短语错误，或此备份文件已被篡改。';
+
+  @override
+  String get rel_svc_backup_share_subject => 'Hermes 配置备份';
+
+  @override
+  String get rel_svc_backup_selected_file_unreadable => '无法读取该文件。';
+
+  @override
+  String rel_svc_backup_connections_added(int count) {
+    return '已添加 $count 个';
+  }
+
+  @override
+  String rel_svc_backup_connections_updated(int count) {
+    return '已更新 $count 个';
+  }
+
+  @override
+  String rel_svc_backup_connections_removed(int count) {
+    return '已移除 $count 个';
+  }
+
+  @override
+  String get rel_svc_backup_no_connection_changes => '连接无更改';
+
+  @override
+  String rel_svc_backup_connections_summary(String changes) {
+    return '连接：$changes';
+  }
+
+  @override
+  String rel_svc_backup_restore_summary(String connections, int count) {
+    return '$connections · 已恢复 $count 项设置';
+  }
+
+  @override
+  String rel_svc_backup_certificate_not_included(String label, String error) {
+    return '无法将“$label”的客户端证书包含在此备份中：$error';
+  }
+
+  @override
+  String get rel_svc_backup_certificate_password_needed =>
+      '此证书需要密码。在下方输入后，证书将自动打开。';
+
+  @override
+  String get rel_svc_backup_certificate_password_or_corrupt => '证书密码错误，或文件已损坏。';
+
+  @override
+  String get rel_svc_backup_certificate_password_incorrect => '证书密码错误。';
+
+  @override
+  String get rel_svc_backup_certificate_unsupported_encryption =>
+      '此证书使用了应用无法读取的加密方式。';
+
+  @override
+  String get rel_svc_backup_certificate_unreadable_pkcs12 =>
+      '所选文件不是可读取的 PKCS#12（.p12/.pfx）证书。';
+
+  @override
+  String get rel_svc_backup_certificate_unreadable => '无法读取所选证书。';
+
+  @override
+  String get rel_svc_backup_not_certificate_file =>
+      '该文件不是证书：请选择 .p12/.pfx 容器，或 PEM 证书和密钥文件。';
+
+  @override
+  String get rel_svc_backup_not_pem_certificate => '所选证书不是 PEM 证书。';
+
+  @override
+  String get rel_svc_backup_not_pem_private_key => '所选私钥不是 PEM 私钥。';
+
+  @override
+  String get rel_svc_backup_certificate_pair_unloadable => '无法加载所选证书和私钥。';
+
+  @override
+  String get rel_svc_backup_saved_certificate_files_unreadable =>
+      '无法读取已保存的客户端证书文件。';
+
+  @override
+  String get rel_svc_backup_client_certificate_storage_failed =>
+      '无法将客户端证书安全地存储在此设备上。';
+
+  @override
+  String get rel_svc_backup_certificate_storage_failed => '无法将证书安全地存储在此设备上。';
+
+  @override
+  String get rel_svc_backup_client_certificate_label => '客户端证书';
+
+  @override
+  String rel_svc_backup_search_dashboard_unreachable(String error) {
+    return '无法连接到仪表板：$error';
+  }
+
+  @override
+  String get rel_svc_backup_search_credentials_rejected =>
+      '仪表板拒绝了已保存的凭据。请检查此连接的仪表板用户名和密码。';
+
+  @override
+  String get rel_svc_backup_search_not_supported =>
+      '此仪表板未提供会话搜索。请更新主机上的 Hermes，或切换回设备端搜索。';
+
+  @override
+  String rel_svc_backup_search_redirected(int statusCode) {
+    return '仪表板重定向了会话搜索（HTTP $statusCode）。Ares 不会携带已保存的凭据跟随重定向；请检查连接地址。';
+  }
+
+  @override
+  String rel_svc_backup_search_http_failed(int statusCode) {
+    return '会话搜索失败，HTTP $statusCode。';
+  }
+
+  @override
+  String get rel_svc_backup_search_malformed_response => '仪表板返回了格式错误的搜索响应。';
+
+  @override
+  String get rel_svc_backup_search_unexpected_response => '仪表板返回了意外的搜索响应。';
+
+  @override
+  String get rel_svc_backup_search_too_many_results => '仪表板返回的搜索结果多于请求数量。';
+
+  @override
+  String get rel_svc_backup_message_search_unexpected_response => '消息搜索响应异常。';
+
+  @override
+  String get rel_svc_backup_message_search_unexpected_result => '消息搜索结果异常。';
+
+  @override
+  String get rel_svc_backup_ai_search_api_key_rejected =>
+      'Hermes API 拒绝了已保存的 API 密钥。';
+
+  @override
+  String rel_svc_backup_ai_search_http_failed(int statusCode) {
+    return 'AI 查询改写失败，HTTP $statusCode。';
+  }
+
+  @override
+  String get rel_svc_backup_ai_search_no_usable_query => '所选模型未返回可用的搜索查询。';
+
+  @override
+  String get rel_svc_backup_ai_search_malformed_response =>
+      'Hermes 返回了格式错误的 AI 改写响应。';
+
+  @override
+  String get rel_svc_backup_space_name_already_exists => '已存在同名空间';
+
+  @override
+  String get rel_svc_backup_space_name_length_invalid => '空间名称必须为 1–80 个字符';
+
+  @override
+  String get ng_rel_svc_backup_gateway_address_required => '输入您的 Hermes 仪表板地址。';
+
+  @override
+  String ng_rel_svc_backup_gateway_address_scheme(String scheme) {
+    return '地址必须以 http:// 或 https:// 开头（收到 $scheme）。';
+  }
+
+  @override
+  String get ng_rel_svc_backup_gateway_address_invalid => '该地址无效。';
+
+  @override
+  String get ng_rel_svc_backup_gateway_address_no_host => '地址中没有主机名。';
+
+  @override
+  String get ng_rel_svc_backup_sign_in_main_window => '请在主窗口中登录。';
+
+  @override
+  String get rel_svc_backup_sign_in_renewal_failed => '网关目前无法续订登录。';
+
+  @override
+  String get rel_svc_backup_sign_in_provider_unreachable =>
+      '网关无法续订登录：登录提供商不可访问。';
+
+  @override
+  String get rel_svc_backup_sign_in_renewal_timed_out => '续订登录超时。';
+
+  @override
+  String get rel_svc_backup_sign_in_no_tokens => '网关未返回登录令牌。';
+
+  @override
+  String get ng_rel_svc_backup_probe_timed_out =>
+      '请求超时。请检查地址、VPN 或 Tailscale 连接。';
+
+  @override
+  String ng_rel_svc_backup_probe_tls_failed(String error) {
+    return 'TLS 握手失败：$error';
+  }
+
+  @override
+  String ng_rel_svc_backup_gateway_answered_http(int statusCode) {
+    return '网关返回了 HTTP $statusCode。';
+  }
+
+  @override
+  String get ng_rel_svc_backup_gateway_answer_timed_out => '网关响应时间过长。';
+
+  @override
+  String ng_rel_svc_backup_browser_callback_not_ready(String error) {
+    return '无法准备接收浏览器回调：$error';
+  }
+
+  @override
+  String get ng_rel_svc_backup_browser_signed_in_body => '现在可以返回 Hermes。';
+
+  @override
+  String get ng_rel_svc_backup_browser_waiting_title => '正在等待登录';
+
+  @override
+  String get ng_rel_svc_backup_browser_not_current => '此页面不属于当前登录流程。';
+
+  @override
+  String get ng_rel_svc_backup_browser_open_failed => '无法打开浏览器进行登录。';
+
+  @override
+  String get ng_rel_svc_backup_browser_sign_in_timed_out => '登录用时过长。请重试。';
+
+  @override
+  String ng_rel_svc_backup_gateway_refused_sign_in(int statusCode) {
+    return '网关拒绝了登录（HTTP $statusCode）。';
+  }
+
+  @override
+  String get rel_svc_misc_alert_caution => '注意';
+
+  @override
+  String get rel_svc_misc_alert_important => '重要';
+
+  @override
+  String get rel_svc_misc_alert_tip => '提示';
+
+  @override
+  String get rel_svc_misc_alert_warning => '警告';
+
+  @override
+  String get rel_svc_misc_allow_folder_session => '在会话结束前允许访问此文件夹。';
+
+  @override
+  String get rel_svc_misc_allow_website_session => '在会话结束前允许访问此网站。';
+
+  @override
+  String rel_svc_misc_approval_needed_title(String title) {
+    return '需要批准 — $title';
+  }
+
+  @override
+  String get rel_svc_misc_attach_file_reference => '附加文件引用';
+
+  @override
+  String get rel_svc_misc_attach_folder_reference => '附加文件夹引用';
+
+  @override
+  String get rel_svc_misc_attach_git_context => '附加 git 上下文';
+
+  @override
+  String get rel_svc_misc_attach_image_reference => '附加图像引用';
+
+  @override
+  String get rel_svc_misc_attach_staged_diff => '附加已暂存的差异';
+
+  @override
+  String get rel_svc_misc_attach_tool_reference => '附加工具引用';
+
+  @override
+  String get rel_svc_misc_attach_unstaged_diff => '附加未暂存的差异';
+
+  @override
+  String get rel_svc_misc_attach_url_reference => '附加 URL 引用';
+
+  @override
+  String get rel_svc_misc_background_task_completed => '后台任务已完成';
+
+  @override
+  String rel_svc_misc_background_task_named_completed(String taskId) {
+    return '后台任务 $taskId 已完成';
+  }
+
+  @override
+  String get rel_svc_misc_chat => '聊天';
+
+  @override
+  String get rel_svc_misc_compacting_context => '正在压缩对话上下文…';
+
+  @override
+  String rel_svc_misc_completed_in(String duration) {
+    return '在 $duration 内完成';
+  }
+
+  @override
+  String get rel_svc_misc_context_compacted => '对话上下文已压缩';
+
+  @override
+  String get rel_svc_misc_cron_readback_mismatch => 'Cron 模型回读不匹配';
+
+  @override
+  String get rel_svc_misc_cron_update_rejected => 'Cron 更新被拒绝';
+
+  @override
+  String get rel_svc_misc_deny_folder_grant => '不授予对此文件夹的访问权限。';
+
+  @override
+  String get rel_svc_misc_deny_website_grant => '不授予对此网站的访问权限。';
+
+  @override
+  String rel_svc_misc_failed_after(String duration) {
+    return '在 $duration 后失败';
+  }
+
+  @override
+  String get rel_svc_misc_gateway_folder_unnamed => '网关未指定文件夹。';
+
+  @override
+  String get rel_svc_misc_gateway_idle_unconfirmed => '网关处于空闲状态。无法确认上一轮的结果。';
+
+  @override
+  String get rel_svc_misc_gateway_turn_failed => '网关轮次失败';
+
+  @override
+  String rel_svc_misc_gateway_turn_status(String status) {
+    return '网关轮次：$status';
+  }
+
+  @override
+  String get rel_svc_misc_gateway_website_unnamed => '网关未指定网站。';
+
+  @override
+  String get rel_svc_misc_hermes_review => 'Hermes 审查';
+
+  @override
+  String get rel_svc_misc_hermes_turn_failed => 'Hermes 轮次失败';
+
+  @override
+  String get rel_svc_misc_image_recovery_companion_gap =>
+      '配套恢复不支持图像和文本恢复。此连接无法恢复未获确认的图像发送，也不会自动重新发送任何内容。';
+
+  @override
+  String get rel_svc_misc_image_recovery_rest_gap =>
+      'Classic REST/SSE 不支持图像和文本恢复。此连接无法恢复未获确认的图像发送，也不会自动重新发送任何内容。';
+
+  @override
+  String rel_svc_misc_input_needed_title(String title) {
+    return '需要输入 — $title';
+  }
+
+  @override
+  String get rel_svc_misc_parallel_workspace_connection_changed =>
+      '连接已更改。请重新打开以使用工作区。';
+
+  @override
+  String get rel_svc_misc_preparing => '正在准备';
+
+  @override
+  String get rel_svc_misc_save_folder_grant => '保存此文件夹授权以供后续请求使用。';
+
+  @override
+  String get rel_svc_misc_save_website_grant => '保存此网站授权以供后续请求使用。';
+
+  @override
+  String get rel_svc_misc_stored_identity_turn_conflict =>
+      '在另一个轮次已获准时，此聊天通过其存储的身份打开。未发送的提示未被发送；请在该轮次结束后明确重试。';
+
+  @override
+  String get rel_svc_misc_untitled => '无标题';
+
+  @override
+  String get rel_svc_misc_wake_capture_silent =>
+      '客户端唤醒采集只检测到静音 — 请检查操作系统的麦克风访问权限，并重新开关唤醒词。';
+
+  @override
+  String get rel_svc_misc_wake_capture_stalled => '客户端唤醒采集停滞：未收到麦克风音频回调。';
+
+  @override
+  String rel_svc_misc_wake_feed_refused(int count, String detail) {
+    return '唤醒词音频流拒绝了连续 $count 个帧$detail — 请重新开关唤醒词以重新启用。';
+  }
+
+  @override
+  String rel_svc_misc_wake_microphone_failed(String error) {
+    return '客户端唤醒麦克风流失败：$error';
+  }
+
+  @override
+  String get rel_svc_misc_wake_track_ended =>
+      '唤醒词采集期间麦克风轨道已结束 — 请重新开关唤醒词以重新启用。';
+
+  @override
+  String get rel_svc_misc_website => '网站';
+
+  @override
+  String get rel_svc_lan_timeout => '局域网发现超时';
+
+  @override
+  String get rel_svc_notification_permission_denied => '权限被拒绝';
+
+  @override
+  String get rel_svc_notifications_off => '通知已关闭';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -28108,6 +28779,677 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get rel_ops_host_error_request => '无法完成该请求。';
+
+  @override
+  String get rel_svc_push_api_select_sessions =>
+      '请选择 1–128 个持久会话 ID，每个 ID 包含 1–200 个 ASCII 字符，且只能使用字母、数字、_ . : @ 或 -。请移除空白 ID 和空格。';
+
+  @override
+  String get rel_svc_push_api_unavailable => '此服务器无法使用移动推送。';
+
+  @override
+  String get rel_svc_push_api_invalid_vapid => '服务器 VAPID 公钥无效。';
+
+  @override
+  String get rel_svc_push_api_update_plugin =>
+      '此服务器需要更新 mobile-push 插件才能使用自动订阅。';
+
+  @override
+  String get rel_svc_push_status_android_only => '仅限 Android';
+
+  @override
+  String get rel_svc_push_native_prefs_sync_failed => '无法同步原生通知偏好设置。';
+
+  @override
+  String get rel_svc_push_choose_android_connection => '请先在 Android 上选择已保存的连接。';
+
+  @override
+  String get rel_svc_push_status_checking_authorization => '正在检查服务器授权';
+
+  @override
+  String get rel_svc_push_revoke_persist_failed => '无法保存撤销状态。请在离开应用前再次尝试停用。';
+
+  @override
+  String get rel_svc_push_status_off_api_ready => '已关闭；服务器 API 已就绪';
+
+  @override
+  String get rel_svc_push_status_off_revoke_pending => '已关闭；等待服务器撤销';
+
+  @override
+  String get rel_svc_push_status_off_connection_changed => '已关闭；已保存的连接已更改';
+
+  @override
+  String get rel_svc_push_status_pending_endpoint => '正在等待分发器端点';
+
+  @override
+  String get rel_svc_push_status_registering => '正在注册';
+
+  @override
+  String get rel_svc_push_status_pending_challenge => '加密质询待处理（正在等待静默服务器验证推送）';
+
+  @override
+  String get rel_svc_push_allow_android_notifications_retry =>
+      '请在系统设置中允许 Android 通知，然后重试。';
+
+  @override
+  String get rel_svc_push_plugin_invalid =>
+      '服务器 mobile-push 插件不可用、版本过旧或返回了无效的订阅响应。请让管理员更新该插件，然后重试。';
+
+  @override
+  String get rel_svc_push_transport_unavailable =>
+      '没有可用的推送传输方式。内置传送需要正常工作的 Google Play 服务；也可安装 UnifiedPush 分发器后重试。';
+
+  @override
+  String get rel_svc_push_transport_choice =>
+      '有多个 UnifiedPush 分发器可用。请在“高级传输”中选择一个，然后重试。';
+
+  @override
+  String get rel_svc_push_transport_missing =>
+      '所选 UnifiedPush 分发器不可用。请恢复它，或在“高级传输”中选择其他分发器。';
+
+  @override
+  String get rel_svc_push_companion_unavailable =>
+      '服务器 mobile-push 配套组件不可用。它可能未安装、已停用，或此连接可能指向错误的控制面板。请在服务器上安装或启用该组件，检查控制面板连接，然后刷新。请参阅上方的服务器设置指南。';
+
+  @override
+  String get rel_svc_push_server_denied => '服务器拒绝了移动推送。请让管理员授权此主体和这些会话。';
+
+  @override
+  String get rel_svc_push_not_ready => '移动推送尚未就绪。请检查服务器插件授权、分发器和网络，然后重试。';
+
+  @override
+  String get rel_svc_push_availability_read_failed =>
+      '无法读取 Android 推送可用性。请在下方重试。';
+
+  @override
+  String get rel_svc_push_setup_failed =>
+      '推送设置失败。请检查 Android 权限、服务器授权和传输方式，然后重试。';
+
+  @override
+  String rel_svc_push_status(String status) {
+    return '状态：$status';
+  }
+
+  @override
+  String rel_svc_push_status_bound(
+    String bound,
+    String connection,
+    String status,
+  ) {
+    return '状态：已绑定到 $bound（对 $connection 未启用；握手：$status）';
+  }
+
+  @override
+  String get rel_svc_push_another_saved_connection => '另一个已保存的连接';
+
+  @override
+  String get rel_svc_push_background_notifications => '后台通知';
+
+  @override
+  String rel_svc_push_bound_subtitle(String bound, String connection) {
+    return '已绑定到 $bound — 请先在下方撤销该绑定，再为 $connection 启用';
+  }
+
+  @override
+  String rel_svc_push_private_activity(String connection) {
+    return '$connection 的私密服务器活动';
+  }
+
+  @override
+  String rel_svc_push_bound_warning_named(String bound) {
+    return '已绑定到另一个已保存的连接（$bound）。请先停用并撤销该绑定，再为此连接启用。';
+  }
+
+  @override
+  String get rel_svc_push_bound_warning => '已绑定到另一个已保存的连接。请先停用并撤销该绑定，再为此连接启用。';
+
+  @override
+  String get rel_svc_push_local_notifications_muted =>
+      '上方已关闭本地通知。后台通知授权不变，但在开启“启用通知”之前，普通后台活动提示会保持静音。';
+
+  @override
+  String rel_svc_push_legacy_subscription(int count) {
+    return '旧版订阅：仅限 $count 个已选会话。它不会自动扩展。请先关闭再开启，以选择加入服务器授权的会话。';
+  }
+
+  @override
+  String get rel_svc_push_authorized_binding =>
+      '仅绑定到此已保存的连接和配置文件。会话访问权限遵循当前服务器授权。';
+
+  @override
+  String get rel_svc_push_revocation_pending =>
+      '服务器撤销待处理。本地传送已关闭；请在原始已保存登录仍可用时重试。';
+
+  @override
+  String get rel_svc_push_refresh_retry => '刷新 / 重试';
+
+  @override
+  String rel_svc_push_disable_named(String bound) {
+    return '停用并撤销 $bound';
+  }
+
+  @override
+  String get rel_svc_push_other_connection => '其他连接';
+
+  @override
+  String get rel_svc_push_disable => '停用并撤销';
+
+  @override
+  String get rel_svc_push_refresh_explanation =>
+      '刷新 / 重试会在服务器设置后重新检查可用性；它无法安装配套组件。启用通知仍是单独的选择。';
+
+  @override
+  String get rel_svc_push_companion_required =>
+      '后台通知需要另外安装并启用服务器端 mobile-push 配套组件。Android 无法安装它。仅更新 APK 不会完成服务器设置。';
+
+  @override
+  String get rel_svc_push_server_setup_guide => '服务器设置指南';
+
+  @override
+  String get rel_svc_push_enable_disclosure =>
+      '启用后将请求 Android 通知权限，并与此服务器共享本次安装的端点和加密密钥。加密的活动提示不包含聊天内容。仅包括服务器登录授权的会话。';
+
+  @override
+  String get rel_svc_push_transport_disclosure =>
+      '内置传送使用 Google 推送传输并需要 Google Play 服务，但不包含 Firebase SDK。也可改用可选的 UnifiedPush 分发器。传送为尽力而为；请重新打开 Hermes 进行协调。';
+
+  @override
+  String get rel_svc_push_advanced_transport => '高级传输';
+
+  @override
+  String get rel_svc_push_automatic_explanation =>
+      '自动模式会保留现有分发器选择；否则在可用时使用内置 Google 传送。更改传输方式前请先停用。';
+
+  @override
+  String get rel_svc_push_transport_label => '推送传输';
+
+  @override
+  String get rel_svc_push_automatic_recommended => '自动（推荐）';
+
+  @override
+  String get rel_svc_push_selected_unavailable => '所选分发器（不可用）';
+
+  @override
+  String get rel_svc_push_no_transport_detected =>
+      '未检测到可用的传输方式。内置传送需要 Google Play 服务；若没有，请安装并配置 UnifiedPush 分发器，然后刷新。';
+
+  @override
+  String get rel_svc_push_channel_turns_name => 'Ares 轮次';
+
+  @override
+  String get rel_svc_push_channel_turns_description => '后台轮次完成通知';
+
+  @override
+  String get rel_svc_push_channel_attention_name => 'Ares 待处理';
+
+  @override
+  String get rel_svc_push_channel_attention_description => '需要您处理的审批和输入请求';
+
+  @override
+  String get rel_svc_push_channel_background_name => 'Ares 后台';
+
+  @override
+  String get rel_svc_push_channel_background_description => '后台任务完成';
+
+  @override
+  String get rel_svc_push_channel_notices_name => 'Ares 通知';
+
+  @override
+  String get rel_svc_push_channel_notices_description => '额度和插件通知';
+
+  @override
+  String get rel_svc_push_diag_not_initialised => '未初始化';
+
+  @override
+  String get rel_svc_push_diag_replies_off => '回复通知已关闭';
+
+  @override
+  String get rel_svc_push_diag_conversation => '对话';
+
+  @override
+  String get rel_svc_push_diag_conversation_permission_denied => '对话；权限被拒绝';
+
+  @override
+  String rel_svc_push_diag_conversation_error(String error) {
+    return '对话：$error';
+  }
+
+  @override
+  String get rel_svc_push_diag_failures_off => '失败通知已关闭';
+
+  @override
+  String rel_svc_push_diag_kind_off(String kind) {
+    return '$kind 已关闭';
+  }
+
+  @override
+  String get rel_svc_push_diag_windows_setting_unknown => 'Windows 未报告其通知设置';
+
+  @override
+  String get rel_svc_backup_not_hermes_configuration_backup =>
+      '此文件不是 Hermes 配置备份。';
+
+  @override
+  String get rel_svc_backup_newer_version_cannot_import =>
+      '此备份由较新版本的应用创建，无法导入。';
+
+  @override
+  String get rel_svc_backup_missing_client_certificate =>
+      '此备份声明某个连接使用客户端证书，但并未包含该证书，因此无法完整恢复。';
+
+  @override
+  String get rel_svc_backup_damaged_unreadable => '此备份文件已损坏，无法读取。';
+
+  @override
+  String get rel_svc_backup_unsupported_preference_type =>
+      '某项已保存的偏好设置类型不受支持，无法导出。';
+
+  @override
+  String get rel_svc_backup_choose_passphrase_api_keys =>
+      '请选择密码短语 — 备份包含您的 API 密钥。';
+
+  @override
+  String get rel_svc_backup_could_not_protect_safely => '无法安全保护备份。';
+
+  @override
+  String get rel_svc_backup_unsupported_encryption => '此备份使用不受支持的加密方案。';
+
+  @override
+  String get rel_svc_backup_wrong_passphrase_or_altered => '密码短语错误，或此备份文件已被篡改。';
+
+  @override
+  String get rel_svc_backup_share_subject => 'Hermes 配置备份';
+
+  @override
+  String get rel_svc_backup_selected_file_unreadable => '无法读取该文件。';
+
+  @override
+  String rel_svc_backup_connections_added(int count) {
+    return '已添加 $count 个';
+  }
+
+  @override
+  String rel_svc_backup_connections_updated(int count) {
+    return '已更新 $count 个';
+  }
+
+  @override
+  String rel_svc_backup_connections_removed(int count) {
+    return '已移除 $count 个';
+  }
+
+  @override
+  String get rel_svc_backup_no_connection_changes => '连接无更改';
+
+  @override
+  String rel_svc_backup_connections_summary(String changes) {
+    return '连接：$changes';
+  }
+
+  @override
+  String rel_svc_backup_restore_summary(String connections, int count) {
+    return '$connections · 已恢复 $count 项设置';
+  }
+
+  @override
+  String rel_svc_backup_certificate_not_included(String label, String error) {
+    return '无法将“$label”的客户端证书包含在此备份中：$error';
+  }
+
+  @override
+  String get rel_svc_backup_certificate_password_needed =>
+      '此证书需要密码。在下方输入后，证书将自动打开。';
+
+  @override
+  String get rel_svc_backup_certificate_password_or_corrupt => '证书密码错误，或文件已损坏。';
+
+  @override
+  String get rel_svc_backup_certificate_password_incorrect => '证书密码错误。';
+
+  @override
+  String get rel_svc_backup_certificate_unsupported_encryption =>
+      '此证书使用了应用无法读取的加密方式。';
+
+  @override
+  String get rel_svc_backup_certificate_unreadable_pkcs12 =>
+      '所选文件不是可读取的 PKCS#12（.p12/.pfx）证书。';
+
+  @override
+  String get rel_svc_backup_certificate_unreadable => '无法读取所选证书。';
+
+  @override
+  String get rel_svc_backup_not_certificate_file =>
+      '该文件不是证书：请选择 .p12/.pfx 容器，或 PEM 证书和密钥文件。';
+
+  @override
+  String get rel_svc_backup_not_pem_certificate => '所选证书不是 PEM 证书。';
+
+  @override
+  String get rel_svc_backup_not_pem_private_key => '所选私钥不是 PEM 私钥。';
+
+  @override
+  String get rel_svc_backup_certificate_pair_unloadable => '无法加载所选证书和私钥。';
+
+  @override
+  String get rel_svc_backup_saved_certificate_files_unreadable =>
+      '无法读取已保存的客户端证书文件。';
+
+  @override
+  String get rel_svc_backup_client_certificate_storage_failed =>
+      '无法将客户端证书安全地存储在此设备上。';
+
+  @override
+  String get rel_svc_backup_certificate_storage_failed => '无法将证书安全地存储在此设备上。';
+
+  @override
+  String get rel_svc_backup_client_certificate_label => '客户端证书';
+
+  @override
+  String rel_svc_backup_search_dashboard_unreachable(String error) {
+    return '无法连接到仪表板：$error';
+  }
+
+  @override
+  String get rel_svc_backup_search_credentials_rejected =>
+      '仪表板拒绝了已保存的凭据。请检查此连接的仪表板用户名和密码。';
+
+  @override
+  String get rel_svc_backup_search_not_supported =>
+      '此仪表板未提供会话搜索。请更新主机上的 Hermes，或切换回设备端搜索。';
+
+  @override
+  String rel_svc_backup_search_redirected(int statusCode) {
+    return '仪表板重定向了会话搜索（HTTP $statusCode）。Ares 不会携带已保存的凭据跟随重定向；请检查连接地址。';
+  }
+
+  @override
+  String rel_svc_backup_search_http_failed(int statusCode) {
+    return '会话搜索失败，HTTP $statusCode。';
+  }
+
+  @override
+  String get rel_svc_backup_search_malformed_response => '仪表板返回了格式错误的搜索响应。';
+
+  @override
+  String get rel_svc_backup_search_unexpected_response => '仪表板返回了意外的搜索响应。';
+
+  @override
+  String get rel_svc_backup_search_too_many_results => '仪表板返回的搜索结果多于请求数量。';
+
+  @override
+  String get rel_svc_backup_message_search_unexpected_response => '消息搜索响应异常。';
+
+  @override
+  String get rel_svc_backup_message_search_unexpected_result => '消息搜索结果异常。';
+
+  @override
+  String get rel_svc_backup_ai_search_api_key_rejected =>
+      'Hermes API 拒绝了已保存的 API 密钥。';
+
+  @override
+  String rel_svc_backup_ai_search_http_failed(int statusCode) {
+    return 'AI 查询改写失败，HTTP $statusCode。';
+  }
+
+  @override
+  String get rel_svc_backup_ai_search_no_usable_query => '所选模型未返回可用的搜索查询。';
+
+  @override
+  String get rel_svc_backup_ai_search_malformed_response =>
+      'Hermes 返回了格式错误的 AI 改写响应。';
+
+  @override
+  String get rel_svc_backup_space_name_already_exists => '已存在同名空间';
+
+  @override
+  String get rel_svc_backup_space_name_length_invalid => '空间名称必须为 1–80 个字符';
+
+  @override
+  String get ng_rel_svc_backup_gateway_address_required => '输入您的 Hermes 仪表板地址。';
+
+  @override
+  String ng_rel_svc_backup_gateway_address_scheme(String scheme) {
+    return '地址必须以 http:// 或 https:// 开头（收到 $scheme）。';
+  }
+
+  @override
+  String get ng_rel_svc_backup_gateway_address_invalid => '该地址无效。';
+
+  @override
+  String get ng_rel_svc_backup_gateway_address_no_host => '地址中没有主机名。';
+
+  @override
+  String get ng_rel_svc_backup_sign_in_main_window => '请在主窗口中登录。';
+
+  @override
+  String get rel_svc_backup_sign_in_renewal_failed => '网关目前无法续订登录。';
+
+  @override
+  String get rel_svc_backup_sign_in_provider_unreachable =>
+      '网关无法续订登录：登录提供商不可访问。';
+
+  @override
+  String get rel_svc_backup_sign_in_renewal_timed_out => '续订登录超时。';
+
+  @override
+  String get rel_svc_backup_sign_in_no_tokens => '网关未返回登录令牌。';
+
+  @override
+  String get ng_rel_svc_backup_probe_timed_out =>
+      '请求超时。请检查地址、VPN 或 Tailscale 连接。';
+
+  @override
+  String ng_rel_svc_backup_probe_tls_failed(String error) {
+    return 'TLS 握手失败：$error';
+  }
+
+  @override
+  String ng_rel_svc_backup_gateway_answered_http(int statusCode) {
+    return '网关返回了 HTTP $statusCode。';
+  }
+
+  @override
+  String get ng_rel_svc_backup_gateway_answer_timed_out => '网关响应时间过长。';
+
+  @override
+  String ng_rel_svc_backup_browser_callback_not_ready(String error) {
+    return '无法准备接收浏览器回调：$error';
+  }
+
+  @override
+  String get ng_rel_svc_backup_browser_signed_in_body => '现在可以返回 Hermes。';
+
+  @override
+  String get ng_rel_svc_backup_browser_waiting_title => '正在等待登录';
+
+  @override
+  String get ng_rel_svc_backup_browser_not_current => '此页面不属于当前登录流程。';
+
+  @override
+  String get ng_rel_svc_backup_browser_open_failed => '无法打开浏览器进行登录。';
+
+  @override
+  String get ng_rel_svc_backup_browser_sign_in_timed_out => '登录用时过长。请重试。';
+
+  @override
+  String ng_rel_svc_backup_gateway_refused_sign_in(int statusCode) {
+    return '网关拒绝了登录（HTTP $statusCode）。';
+  }
+
+  @override
+  String get rel_svc_misc_alert_caution => '注意';
+
+  @override
+  String get rel_svc_misc_alert_important => '重要';
+
+  @override
+  String get rel_svc_misc_alert_tip => '提示';
+
+  @override
+  String get rel_svc_misc_alert_warning => '警告';
+
+  @override
+  String get rel_svc_misc_allow_folder_session => '在会话结束前允许访问此文件夹。';
+
+  @override
+  String get rel_svc_misc_allow_website_session => '在会话结束前允许访问此网站。';
+
+  @override
+  String rel_svc_misc_approval_needed_title(String title) {
+    return '需要批准 — $title';
+  }
+
+  @override
+  String get rel_svc_misc_attach_file_reference => '附加文件引用';
+
+  @override
+  String get rel_svc_misc_attach_folder_reference => '附加文件夹引用';
+
+  @override
+  String get rel_svc_misc_attach_git_context => '附加 git 上下文';
+
+  @override
+  String get rel_svc_misc_attach_image_reference => '附加图像引用';
+
+  @override
+  String get rel_svc_misc_attach_staged_diff => '附加已暂存的差异';
+
+  @override
+  String get rel_svc_misc_attach_tool_reference => '附加工具引用';
+
+  @override
+  String get rel_svc_misc_attach_unstaged_diff => '附加未暂存的差异';
+
+  @override
+  String get rel_svc_misc_attach_url_reference => '附加 URL 引用';
+
+  @override
+  String get rel_svc_misc_background_task_completed => '后台任务已完成';
+
+  @override
+  String rel_svc_misc_background_task_named_completed(String taskId) {
+    return '后台任务 $taskId 已完成';
+  }
+
+  @override
+  String get rel_svc_misc_chat => '聊天';
+
+  @override
+  String get rel_svc_misc_compacting_context => '正在压缩对话上下文…';
+
+  @override
+  String rel_svc_misc_completed_in(String duration) {
+    return '在 $duration 内完成';
+  }
+
+  @override
+  String get rel_svc_misc_context_compacted => '对话上下文已压缩';
+
+  @override
+  String get rel_svc_misc_cron_readback_mismatch => 'Cron 模型回读不匹配';
+
+  @override
+  String get rel_svc_misc_cron_update_rejected => 'Cron 更新被拒绝';
+
+  @override
+  String get rel_svc_misc_deny_folder_grant => '不授予对此文件夹的访问权限。';
+
+  @override
+  String get rel_svc_misc_deny_website_grant => '不授予对此网站的访问权限。';
+
+  @override
+  String rel_svc_misc_failed_after(String duration) {
+    return '在 $duration 后失败';
+  }
+
+  @override
+  String get rel_svc_misc_gateway_folder_unnamed => '网关未指定文件夹。';
+
+  @override
+  String get rel_svc_misc_gateway_idle_unconfirmed => '网关处于空闲状态。无法确认上一轮的结果。';
+
+  @override
+  String get rel_svc_misc_gateway_turn_failed => '网关轮次失败';
+
+  @override
+  String rel_svc_misc_gateway_turn_status(String status) {
+    return '网关轮次：$status';
+  }
+
+  @override
+  String get rel_svc_misc_gateway_website_unnamed => '网关未指定网站。';
+
+  @override
+  String get rel_svc_misc_hermes_review => 'Hermes 审查';
+
+  @override
+  String get rel_svc_misc_hermes_turn_failed => 'Hermes 轮次失败';
+
+  @override
+  String get rel_svc_misc_image_recovery_companion_gap =>
+      '配套恢复不支持图像和文本恢复。此连接无法恢复未获确认的图像发送，也不会自动重新发送任何内容。';
+
+  @override
+  String get rel_svc_misc_image_recovery_rest_gap =>
+      'Classic REST/SSE 不支持图像和文本恢复。此连接无法恢复未获确认的图像发送，也不会自动重新发送任何内容。';
+
+  @override
+  String rel_svc_misc_input_needed_title(String title) {
+    return '需要输入 — $title';
+  }
+
+  @override
+  String get rel_svc_misc_parallel_workspace_connection_changed =>
+      '连接已更改。请重新打开以使用工作区。';
+
+  @override
+  String get rel_svc_misc_preparing => '正在准备';
+
+  @override
+  String get rel_svc_misc_save_folder_grant => '保存此文件夹授权以供后续请求使用。';
+
+  @override
+  String get rel_svc_misc_save_website_grant => '保存此网站授权以供后续请求使用。';
+
+  @override
+  String get rel_svc_misc_stored_identity_turn_conflict =>
+      '在另一个轮次已获准时，此聊天通过其存储的身份打开。未发送的提示未被发送；请在该轮次结束后明确重试。';
+
+  @override
+  String get rel_svc_misc_untitled => '无标题';
+
+  @override
+  String get rel_svc_misc_wake_capture_silent =>
+      '客户端唤醒采集只检测到静音 — 请检查操作系统的麦克风访问权限，并重新开关唤醒词。';
+
+  @override
+  String get rel_svc_misc_wake_capture_stalled => '客户端唤醒采集停滞：未收到麦克风音频回调。';
+
+  @override
+  String rel_svc_misc_wake_feed_refused(int count, String detail) {
+    return '唤醒词音频流拒绝了连续 $count 个帧$detail — 请重新开关唤醒词以重新启用。';
+  }
+
+  @override
+  String rel_svc_misc_wake_microphone_failed(String error) {
+    return '客户端唤醒麦克风流失败：$error';
+  }
+
+  @override
+  String get rel_svc_misc_wake_track_ended =>
+      '唤醒词采集期间麦克风轨道已结束 — 请重新开关唤醒词以重新启用。';
+
+  @override
+  String get rel_svc_misc_website => '网站';
+
+  @override
+  String get rel_svc_lan_timeout => '局域网发现超时';
+
+  @override
+  String get rel_svc_notification_permission_denied => '权限被拒绝';
+
+  @override
+  String get rel_svc_notifications_off => '通知已关闭';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -42166,4 +43508,676 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get rel_ops_host_error_request => '無法完成該請求。';
+
+  @override
+  String get rel_svc_push_api_select_sessions =>
+      '請選擇 1–128 個持久工作階段 ID，每個 ID 包含 1–200 個 ASCII 字元，且只能使用字母、數字、_ . : @ 或 -。請移除空白 ID 和空格。';
+
+  @override
+  String get rel_svc_push_api_unavailable => '此伺服器無法使用行動推播。';
+
+  @override
+  String get rel_svc_push_api_invalid_vapid => '伺服器 VAPID 公開金鑰無效。';
+
+  @override
+  String get rel_svc_push_api_update_plugin =>
+      '此伺服器需要更新 mobile-push 外掛程式才能使用自動訂閱。';
+
+  @override
+  String get rel_svc_push_status_android_only => '僅限 Android';
+
+  @override
+  String get rel_svc_push_native_prefs_sync_failed => '無法同步原生通知偏好設定。';
+
+  @override
+  String get rel_svc_push_choose_android_connection => '請先在 Android 上選擇已儲存的連線。';
+
+  @override
+  String get rel_svc_push_status_checking_authorization => '正在檢查伺服器授權';
+
+  @override
+  String get rel_svc_push_revoke_persist_failed => '無法儲存撤銷狀態。請在離開應用程式前再次嘗試停用。';
+
+  @override
+  String get rel_svc_push_status_off_api_ready => '已關閉；伺服器 API 已就緒';
+
+  @override
+  String get rel_svc_push_status_off_revoke_pending => '已關閉；等待伺服器撤銷';
+
+  @override
+  String get rel_svc_push_status_off_connection_changed => '已關閉；已儲存的連線已變更';
+
+  @override
+  String get rel_svc_push_status_pending_endpoint => '正在等待散發器端點';
+
+  @override
+  String get rel_svc_push_status_registering => '正在註冊';
+
+  @override
+  String get rel_svc_push_status_pending_challenge => '加密驗證待處理（正在等待靜默伺服器驗證推播）';
+
+  @override
+  String get rel_svc_push_allow_android_notifications_retry =>
+      '請在系統設定中允許 Android 通知，然後重試。';
+
+  @override
+  String get rel_svc_push_plugin_invalid =>
+      '伺服器 mobile-push 外掛程式無法使用、版本過舊或傳回了無效的訂閱回應。請讓管理員更新該外掛程式，然後重試。';
+
+  @override
+  String get rel_svc_push_transport_unavailable =>
+      '沒有可用的推播傳輸方式。內建傳送需要正常運作的 Google Play 服務；也可安裝 UnifiedPush 散發器後重試。';
+
+  @override
+  String get rel_svc_push_transport_choice =>
+      '有多個 UnifiedPush 散發器可用。請在「進階傳輸」中選擇一個，然後重試。';
+
+  @override
+  String get rel_svc_push_transport_missing =>
+      '所選 UnifiedPush 散發器無法使用。請還原它，或在「進階傳輸」中選擇其他散發器。';
+
+  @override
+  String get rel_svc_push_companion_unavailable =>
+      '伺服器 mobile-push 配套元件無法使用。它可能未安裝、已停用，或此連線可能指向錯誤的控制面板。請在伺服器上安裝或啟用該元件，檢查控制面板連線，然後重新整理。請參閱上方的伺服器設定指南。';
+
+  @override
+  String get rel_svc_push_server_denied => '伺服器拒絕了行動推播。請讓管理員授權此主體和這些工作階段。';
+
+  @override
+  String get rel_svc_push_not_ready => '行動推播尚未就緒。請檢查伺服器外掛程式授權、散發器和網路，然後重試。';
+
+  @override
+  String get rel_svc_push_availability_read_failed =>
+      '無法讀取 Android 推播可用性。請在下方重試。';
+
+  @override
+  String get rel_svc_push_setup_failed =>
+      '推播設定失敗。請檢查 Android 權限、伺服器授權和傳輸方式，然後重試。';
+
+  @override
+  String rel_svc_push_status(String status) {
+    return '狀態：$status';
+  }
+
+  @override
+  String rel_svc_push_status_bound(
+    String bound,
+    String connection,
+    String status,
+  ) {
+    return '狀態：已繫結至 $bound（對 $connection 未啟用；交握：$status）';
+  }
+
+  @override
+  String get rel_svc_push_another_saved_connection => '另一個已儲存的連線';
+
+  @override
+  String get rel_svc_push_background_notifications => '背景通知';
+
+  @override
+  String rel_svc_push_bound_subtitle(String bound, String connection) {
+    return '已繫結至 $bound — 請先在下方撤銷該繫結，再為 $connection 啟用';
+  }
+
+  @override
+  String rel_svc_push_private_activity(String connection) {
+    return '$connection 的私人伺服器活動';
+  }
+
+  @override
+  String rel_svc_push_bound_warning_named(String bound) {
+    return '已繫結至另一個已儲存的連線（$bound）。請先停用並撤銷該繫結，再為此連線啟用。';
+  }
+
+  @override
+  String get rel_svc_push_bound_warning => '已繫結至另一個已儲存的連線。請先停用並撤銷該繫結，再為此連線啟用。';
+
+  @override
+  String get rel_svc_push_local_notifications_muted =>
+      '上方已關閉本機通知。背景通知授權不變，但在開啟「啟用通知」之前，一般背景活動提示會保持靜音。';
+
+  @override
+  String rel_svc_push_legacy_subscription(int count) {
+    return '舊版訂閱：僅限 $count 個已選工作階段。它不會自動擴展。請先關閉再開啟，以選擇加入伺服器授權的工作階段。';
+  }
+
+  @override
+  String get rel_svc_push_authorized_binding =>
+      '僅繫結至此已儲存的連線和設定檔。工作階段存取權限遵循目前伺服器授權。';
+
+  @override
+  String get rel_svc_push_revocation_pending =>
+      '伺服器撤銷待處理。本機傳送已關閉；請在原始已儲存登入仍可用時重試。';
+
+  @override
+  String get rel_svc_push_refresh_retry => '重新整理 / 重試';
+
+  @override
+  String rel_svc_push_disable_named(String bound) {
+    return '停用並撤銷 $bound';
+  }
+
+  @override
+  String get rel_svc_push_other_connection => '其他連線';
+
+  @override
+  String get rel_svc_push_disable => '停用並撤銷';
+
+  @override
+  String get rel_svc_push_refresh_explanation =>
+      '重新整理 / 重試會在伺服器設定後重新檢查可用性；它無法安裝配套元件。啟用通知仍是單獨的選擇。';
+
+  @override
+  String get rel_svc_push_companion_required =>
+      '背景通知需要另外安裝並啟用伺服器端 mobile-push 配套元件。Android 無法安裝它。僅更新 APK 不會完成伺服器設定。';
+
+  @override
+  String get rel_svc_push_server_setup_guide => '伺服器設定指南';
+
+  @override
+  String get rel_svc_push_enable_disclosure =>
+      '啟用後將要求 Android 通知權限，並與此伺服器分享本次安裝的端點和加密金鑰。加密的活動提示不包含聊天內容。僅包括伺服器登入授權的工作階段。';
+
+  @override
+  String get rel_svc_push_transport_disclosure =>
+      '內建傳送使用 Google 推播傳輸並需要 Google Play 服務，但不包含 Firebase SDK。也可改用選用的 UnifiedPush 散發器。傳送為盡力而為；請重新開啟 Hermes 進行協調。';
+
+  @override
+  String get rel_svc_push_advanced_transport => '進階傳輸';
+
+  @override
+  String get rel_svc_push_automatic_explanation =>
+      '自動模式會保留現有散發器選擇；否則在可用時使用內建 Google 傳送。變更傳輸方式前請先停用。';
+
+  @override
+  String get rel_svc_push_transport_label => '推播傳輸';
+
+  @override
+  String get rel_svc_push_automatic_recommended => '自動（建議）';
+
+  @override
+  String get rel_svc_push_selected_unavailable => '所選散發器（無法使用）';
+
+  @override
+  String get rel_svc_push_no_transport_detected =>
+      '未偵測到可用的傳輸方式。內建傳送需要 Google Play 服務；若沒有，請安裝並設定 UnifiedPush 散發器，然後重新整理。';
+
+  @override
+  String get rel_svc_push_channel_turns_name => 'Ares 輪次';
+
+  @override
+  String get rel_svc_push_channel_turns_description => '背景輪次完成通知';
+
+  @override
+  String get rel_svc_push_channel_attention_name => 'Ares 待處理';
+
+  @override
+  String get rel_svc_push_channel_attention_description => '需要您處理的核准和輸入要求';
+
+  @override
+  String get rel_svc_push_channel_background_name => 'Ares 背景';
+
+  @override
+  String get rel_svc_push_channel_background_description => '背景任務完成';
+
+  @override
+  String get rel_svc_push_channel_notices_name => 'Ares 通知';
+
+  @override
+  String get rel_svc_push_channel_notices_description => '額度和外掛程式通知';
+
+  @override
+  String get rel_svc_push_diag_not_initialised => '未初始化';
+
+  @override
+  String get rel_svc_push_diag_replies_off => '回覆通知已關閉';
+
+  @override
+  String get rel_svc_push_diag_conversation => '對話';
+
+  @override
+  String get rel_svc_push_diag_conversation_permission_denied => '對話；權限遭拒';
+
+  @override
+  String rel_svc_push_diag_conversation_error(String error) {
+    return '對話：$error';
+  }
+
+  @override
+  String get rel_svc_push_diag_failures_off => '失敗通知已關閉';
+
+  @override
+  String rel_svc_push_diag_kind_off(String kind) {
+    return '$kind 已關閉';
+  }
+
+  @override
+  String get rel_svc_push_diag_windows_setting_unknown => 'Windows 未回報其通知設定';
+
+  @override
+  String get rel_svc_backup_not_hermes_configuration_backup =>
+      '此檔案不是 Hermes 設定備份。';
+
+  @override
+  String get rel_svc_backup_newer_version_cannot_import =>
+      '此備份由較新版本的應用程式建立，無法匯入。';
+
+  @override
+  String get rel_svc_backup_missing_client_certificate =>
+      '此備份宣告某個連線使用用戶端憑證，但並未包含該憑證，因此無法完整還原。';
+
+  @override
+  String get rel_svc_backup_damaged_unreadable => '此備份檔案已損毀，無法讀取。';
+
+  @override
+  String get rel_svc_backup_unsupported_preference_type =>
+      '某項已儲存的偏好設定類型不受支援，無法匯出。';
+
+  @override
+  String get rel_svc_backup_choose_passphrase_api_keys =>
+      '請選擇複雜密碼 — 備份包含您的 API 金鑰。';
+
+  @override
+  String get rel_svc_backup_could_not_protect_safely => '無法安全保護備份。';
+
+  @override
+  String get rel_svc_backup_unsupported_encryption => '此備份使用不受支援的加密方式。';
+
+  @override
+  String get rel_svc_backup_wrong_passphrase_or_altered => '複雜密碼錯誤，或此備份檔案已遭修改。';
+
+  @override
+  String get rel_svc_backup_share_subject => 'Hermes 設定備份';
+
+  @override
+  String get rel_svc_backup_selected_file_unreadable => '無法讀取該檔案。';
+
+  @override
+  String rel_svc_backup_connections_added(int count) {
+    return '已新增 $count 個';
+  }
+
+  @override
+  String rel_svc_backup_connections_updated(int count) {
+    return '已更新 $count 個';
+  }
+
+  @override
+  String rel_svc_backup_connections_removed(int count) {
+    return '已移除 $count 個';
+  }
+
+  @override
+  String get rel_svc_backup_no_connection_changes => '連線未變更';
+
+  @override
+  String rel_svc_backup_connections_summary(String changes) {
+    return '連線：$changes';
+  }
+
+  @override
+  String rel_svc_backup_restore_summary(String connections, int count) {
+    return '$connections · 已還原 $count 項設定';
+  }
+
+  @override
+  String rel_svc_backup_certificate_not_included(String label, String error) {
+    return '無法將「$label」的用戶端憑證包含在此備份中：$error';
+  }
+
+  @override
+  String get rel_svc_backup_certificate_password_needed =>
+      '此憑證需要密碼。在下方輸入後，憑證將自動開啟。';
+
+  @override
+  String get rel_svc_backup_certificate_password_or_corrupt => '憑證密碼錯誤，或檔案已損毀。';
+
+  @override
+  String get rel_svc_backup_certificate_password_incorrect => '憑證密碼錯誤。';
+
+  @override
+  String get rel_svc_backup_certificate_unsupported_encryption =>
+      '此憑證使用應用程式無法讀取的加密方式。';
+
+  @override
+  String get rel_svc_backup_certificate_unreadable_pkcs12 =>
+      '所選檔案不是可讀取的 PKCS#12（.p12/.pfx）憑證。';
+
+  @override
+  String get rel_svc_backup_certificate_unreadable => '無法讀取所選憑證。';
+
+  @override
+  String get rel_svc_backup_not_certificate_file =>
+      '該檔案不是憑證：請選擇 .p12/.pfx 容器，或 PEM 憑證和金鑰檔案。';
+
+  @override
+  String get rel_svc_backup_not_pem_certificate => '所選憑證不是 PEM 憑證。';
+
+  @override
+  String get rel_svc_backup_not_pem_private_key => '所選私密金鑰不是 PEM 私密金鑰。';
+
+  @override
+  String get rel_svc_backup_certificate_pair_unloadable => '無法載入所選憑證和私密金鑰。';
+
+  @override
+  String get rel_svc_backup_saved_certificate_files_unreadable =>
+      '無法讀取已儲存的用戶端憑證檔案。';
+
+  @override
+  String get rel_svc_backup_client_certificate_storage_failed =>
+      '無法將用戶端憑證安全地儲存在此裝置上。';
+
+  @override
+  String get rel_svc_backup_certificate_storage_failed => '無法將憑證安全地儲存在此裝置上。';
+
+  @override
+  String get rel_svc_backup_client_certificate_label => '用戶端憑證';
+
+  @override
+  String rel_svc_backup_search_dashboard_unreachable(String error) {
+    return '無法連線至控制面板：$error';
+  }
+
+  @override
+  String get rel_svc_backup_search_credentials_rejected =>
+      '控制面板拒絕了已儲存的認證。請檢查此連線的控制面板使用者名稱和密碼。';
+
+  @override
+  String get rel_svc_backup_search_not_supported =>
+      '此控制面板未提供工作階段搜尋。請更新主機上的 Hermes，或切換回裝置端搜尋。';
+
+  @override
+  String rel_svc_backup_search_redirected(int statusCode) {
+    return '控制面板重新導向了工作階段搜尋（HTTP $statusCode）。Ares 不會攜帶已儲存的認證跟隨重新導向；請檢查連線位址。';
+  }
+
+  @override
+  String rel_svc_backup_search_http_failed(int statusCode) {
+    return '工作階段搜尋失敗，HTTP $statusCode。';
+  }
+
+  @override
+  String get rel_svc_backup_search_malformed_response => '控制面板傳回了格式錯誤的搜尋回應。';
+
+  @override
+  String get rel_svc_backup_search_unexpected_response => '控制面板傳回了非預期的搜尋回應。';
+
+  @override
+  String get rel_svc_backup_search_too_many_results => '控制面板傳回的搜尋結果多於要求數量。';
+
+  @override
+  String get rel_svc_backup_message_search_unexpected_response => '訊息搜尋回應異常。';
+
+  @override
+  String get rel_svc_backup_message_search_unexpected_result => '訊息搜尋結果異常。';
+
+  @override
+  String get rel_svc_backup_ai_search_api_key_rejected =>
+      'Hermes API 拒絕了已儲存的 API 金鑰。';
+
+  @override
+  String rel_svc_backup_ai_search_http_failed(int statusCode) {
+    return 'AI 查詢改寫失敗，HTTP $statusCode。';
+  }
+
+  @override
+  String get rel_svc_backup_ai_search_no_usable_query => '所選模型未傳回可用的搜尋查詢。';
+
+  @override
+  String get rel_svc_backup_ai_search_malformed_response =>
+      'Hermes 傳回了格式錯誤的 AI 改寫回應。';
+
+  @override
+  String get rel_svc_backup_space_name_already_exists => '已存在同名空間';
+
+  @override
+  String get rel_svc_backup_space_name_length_invalid => '空間名稱必須為 1–80 個字元';
+
+  @override
+  String get ng_rel_svc_backup_gateway_address_required =>
+      '輸入您的 Hermes 控制面板位址。';
+
+  @override
+  String ng_rel_svc_backup_gateway_address_scheme(String scheme) {
+    return '位址必須以 http:// 或 https:// 開頭（收到 $scheme）。';
+  }
+
+  @override
+  String get ng_rel_svc_backup_gateway_address_invalid => '該位址無效。';
+
+  @override
+  String get ng_rel_svc_backup_gateway_address_no_host => '位址中沒有主機名稱。';
+
+  @override
+  String get ng_rel_svc_backup_sign_in_main_window => '請在主視窗中登入。';
+
+  @override
+  String get rel_svc_backup_sign_in_renewal_failed => '閘道目前無法續訂登入。';
+
+  @override
+  String get rel_svc_backup_sign_in_provider_unreachable =>
+      '閘道無法續訂登入：登入提供者無法連線。';
+
+  @override
+  String get rel_svc_backup_sign_in_renewal_timed_out => '續訂登入逾時。';
+
+  @override
+  String get rel_svc_backup_sign_in_no_tokens => '閘道未傳回登入權杖。';
+
+  @override
+  String get ng_rel_svc_backup_probe_timed_out =>
+      '要求逾時。請檢查位址、VPN 或 Tailscale 連線。';
+
+  @override
+  String ng_rel_svc_backup_probe_tls_failed(String error) {
+    return 'TLS 交握失敗：$error';
+  }
+
+  @override
+  String ng_rel_svc_backup_gateway_answered_http(int statusCode) {
+    return '閘道傳回了 HTTP $statusCode。';
+  }
+
+  @override
+  String get ng_rel_svc_backup_gateway_answer_timed_out => '閘道回應時間過長。';
+
+  @override
+  String ng_rel_svc_backup_browser_callback_not_ready(String error) {
+    return '無法準備接收瀏覽器回呼：$error';
+  }
+
+  @override
+  String get ng_rel_svc_backup_browser_signed_in_body => '現在可以返回 Hermes。';
+
+  @override
+  String get ng_rel_svc_backup_browser_waiting_title => '正在等待登入';
+
+  @override
+  String get ng_rel_svc_backup_browser_not_current => '此頁面不屬於目前的登入流程。';
+
+  @override
+  String get ng_rel_svc_backup_browser_open_failed => '無法開啟瀏覽器進行登入。';
+
+  @override
+  String get ng_rel_svc_backup_browser_sign_in_timed_out => '登入時間過長。請再試一次。';
+
+  @override
+  String ng_rel_svc_backup_gateway_refused_sign_in(int statusCode) {
+    return '閘道拒絕了登入（HTTP $statusCode）。';
+  }
+
+  @override
+  String get rel_svc_misc_alert_caution => '注意';
+
+  @override
+  String get rel_svc_misc_alert_important => '重要';
+
+  @override
+  String get rel_svc_misc_alert_tip => '提示';
+
+  @override
+  String get rel_svc_misc_alert_warning => '警告';
+
+  @override
+  String get rel_svc_misc_allow_folder_session => '在工作階段結束前允許存取此資料夾。';
+
+  @override
+  String get rel_svc_misc_allow_website_session => '在工作階段結束前允許存取此網站。';
+
+  @override
+  String rel_svc_misc_approval_needed_title(String title) {
+    return '需要核准 — $title';
+  }
+
+  @override
+  String get rel_svc_misc_attach_file_reference => '附加檔案參照';
+
+  @override
+  String get rel_svc_misc_attach_folder_reference => '附加資料夾參照';
+
+  @override
+  String get rel_svc_misc_attach_git_context => '附加 git 內容';
+
+  @override
+  String get rel_svc_misc_attach_image_reference => '附加圖片參照';
+
+  @override
+  String get rel_svc_misc_attach_staged_diff => '附加已暫存的差異';
+
+  @override
+  String get rel_svc_misc_attach_tool_reference => '附加工具參照';
+
+  @override
+  String get rel_svc_misc_attach_unstaged_diff => '附加未暫存的差異';
+
+  @override
+  String get rel_svc_misc_attach_url_reference => '附加 URL 參照';
+
+  @override
+  String get rel_svc_misc_background_task_completed => '背景工作已完成';
+
+  @override
+  String rel_svc_misc_background_task_named_completed(String taskId) {
+    return '背景工作 $taskId 已完成';
+  }
+
+  @override
+  String get rel_svc_misc_chat => '聊天';
+
+  @override
+  String get rel_svc_misc_compacting_context => '正在壓縮對話內容…';
+
+  @override
+  String rel_svc_misc_completed_in(String duration) {
+    return '在 $duration 內完成';
+  }
+
+  @override
+  String get rel_svc_misc_context_compacted => '對話內容已壓縮';
+
+  @override
+  String get rel_svc_misc_cron_readback_mismatch => 'Cron 模型讀回結果不相符';
+
+  @override
+  String get rel_svc_misc_cron_update_rejected => 'Cron 更新遭拒';
+
+  @override
+  String get rel_svc_misc_deny_folder_grant => '不授予此資料夾的存取權限。';
+
+  @override
+  String get rel_svc_misc_deny_website_grant => '不授予此網站的存取權限。';
+
+  @override
+  String rel_svc_misc_failed_after(String duration) {
+    return '在 $duration 後失敗';
+  }
+
+  @override
+  String get rel_svc_misc_gateway_folder_unnamed => '閘道未指定資料夾。';
+
+  @override
+  String get rel_svc_misc_gateway_idle_unconfirmed => '閘道處於閒置狀態。無法確認上一輪的結果。';
+
+  @override
+  String get rel_svc_misc_gateway_turn_failed => '閘道輪次失敗';
+
+  @override
+  String rel_svc_misc_gateway_turn_status(String status) {
+    return '閘道輪次：$status';
+  }
+
+  @override
+  String get rel_svc_misc_gateway_website_unnamed => '閘道未指定網站。';
+
+  @override
+  String get rel_svc_misc_hermes_review => 'Hermes 審查';
+
+  @override
+  String get rel_svc_misc_hermes_turn_failed => 'Hermes 輪次失敗';
+
+  @override
+  String get rel_svc_misc_image_recovery_companion_gap =>
+      '搭配復原不支援圖片和文字復原。此連線無法復原未獲確認的圖片傳送，也不會自動重新傳送任何內容。';
+
+  @override
+  String get rel_svc_misc_image_recovery_rest_gap =>
+      'Classic REST/SSE 不支援圖片和文字復原。此連線無法復原未獲確認的圖片傳送，也不會自動重新傳送任何內容。';
+
+  @override
+  String rel_svc_misc_input_needed_title(String title) {
+    return '需要輸入 — $title';
+  }
+
+  @override
+  String get rel_svc_misc_parallel_workspace_connection_changed =>
+      '連線已變更。請重新開啟以使用工作區。';
+
+  @override
+  String get rel_svc_misc_preparing => '正在準備';
+
+  @override
+  String get rel_svc_misc_save_folder_grant => '儲存此資料夾授權以供後續要求使用。';
+
+  @override
+  String get rel_svc_misc_save_website_grant => '儲存此網站授權以供後續要求使用。';
+
+  @override
+  String get rel_svc_misc_stored_identity_turn_conflict =>
+      '在另一個輪次已獲准時，此聊天透過其儲存的身分開啟。未傳送的提示未被傳送；請在該輪次結束後明確重試。';
+
+  @override
+  String get rel_svc_misc_untitled => '未命名';
+
+  @override
+  String get rel_svc_misc_wake_capture_silent =>
+      '用戶端喚醒擷取只偵測到靜音 — 請檢查作業系統的麥克風存取權限，並重新切換喚醒詞。';
+
+  @override
+  String get rel_svc_misc_wake_capture_stalled => '用戶端喚醒擷取停滯：未收到麥克風音訊回呼。';
+
+  @override
+  String rel_svc_misc_wake_feed_refused(int count, String detail) {
+    return '喚醒詞音訊串流拒絕了連續 $count 個影格$detail — 請重新切換喚醒詞以重新啟用。';
+  }
+
+  @override
+  String rel_svc_misc_wake_microphone_failed(String error) {
+    return '用戶端喚醒麥克風串流失敗：$error';
+  }
+
+  @override
+  String get rel_svc_misc_wake_track_ended =>
+      '喚醒詞擷取期間麥克風軌道已結束 — 請重新切換喚醒詞以重新啟用。';
+
+  @override
+  String get rel_svc_misc_website => '網站';
+
+  @override
+  String get rel_svc_lan_timeout => '區域網路探索逾時';
+
+  @override
+  String get rel_svc_notification_permission_denied => '權限遭拒';
+
+  @override
+  String get rel_svc_notifications_off => '通知已關閉';
 }

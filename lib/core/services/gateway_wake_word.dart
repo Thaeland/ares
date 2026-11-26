@@ -538,13 +538,11 @@ class _WakePcmFeeder {
     _sub = session.pcmInt16Le.listen(
       _onChunk,
       onError: (Object error) {
-        _fail('Client wake microphone stream failed: $error');
+        _fail(serviceStrings.rel_svc_misc_wake_microphone_failed('$error'));
       },
       onDone: () {
         if (!_stopped && !_failed) {
-          _fail(
-            'Microphone track ended during wake-word capture — re-toggle wake word to re-arm.',
-          );
+          _fail(serviceStrings.rel_svc_misc_wake_track_ended);
         }
       },
     );
@@ -570,9 +568,7 @@ class _WakePcmFeeder {
     if (_stopped || _failed) return;
     _stallTimer?.cancel();
     _stallTimer = Timer(stallTimeout, () {
-      _fail(
-        'Client wake capture stalled: no microphone audio callbacks arrived.',
-      );
+      _fail(serviceStrings.rel_svc_misc_wake_capture_stalled);
     });
   }
 
@@ -630,9 +626,7 @@ class _WakePcmFeeder {
       if (peak < silencePeakInt16) {
         _silentFrames++;
         if (_silentFrames >= silenceFramesThreshold) {
-          _fail(
-            'Client wake capture hears only silence — check OS microphone access and re-toggle wake word.',
-          );
+          _fail(serviceStrings.rel_svc_misc_wake_capture_silent);
           return;
         }
         continue;
@@ -697,7 +691,7 @@ class _WakePcmFeeder {
     if (_feedFailures >= maxConsecutiveFeedFailures) {
       final detail = (reason != null && reason.isNotEmpty) ? ' ($reason)' : '';
       _fail(
-        'Wake-word feed refused $_feedFailures consecutive frames$detail — re-toggle wake word to re-arm.',
+        serviceStrings.rel_svc_misc_wake_feed_refused(_feedFailures, detail),
       );
     }
   }

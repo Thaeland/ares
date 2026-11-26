@@ -178,17 +178,18 @@ class AlertBanner extends StatelessWidget {
 
   final AlertPiece alert;
 
-  static const _labels = {
-    'note': 'Note',
-    'tip': 'Tip',
-    'important': 'Important',
-    'warning': 'Warning',
-    'caution': 'Caution',
-  };
-
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final l = context.sharedL10n;
+    final label = switch (alert.type) {
+      'note' => l.release_preview_note,
+      'tip' => l.rel_svc_misc_alert_tip,
+      'important' => l.rel_svc_misc_alert_important,
+      'warning' => l.rel_svc_misc_alert_warning,
+      'caution' => l.rel_svc_misc_alert_caution,
+      _ => alert.type,
+    };
     return Container(
       key: Key('alert-${alert.type}'),
       margin: const EdgeInsets.symmetric(vertical: 6),
@@ -200,10 +201,7 @@ class AlertBanner extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            _labels[alert.type] ?? alert.type,
-            style: const TextStyle(fontWeight: FontWeight.w700),
-          ),
+          Text(label, style: const TextStyle(fontWeight: FontWeight.w700)),
           const SizedBox(height: 4),
           Text(alert.body),
         ],
