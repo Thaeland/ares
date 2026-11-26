@@ -120,7 +120,8 @@ Future<void> _pump(WidgetTester tester, Size size) async {
           child: child!,
         ),
       ),
-      home: const NgMainPage(),
+      // This suite verifies an opened chat, not the 5.0 cold-start landing.
+      home: const NgMainPage(coldStart: false),
     ),
   );
   await _frames(tester);
