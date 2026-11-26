@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/client_certificate.dart';
@@ -11,8 +12,11 @@ import 'composer_session_rpc.dart';
 import 'connection_manager.dart';
 import 'gateway_turn_coordinator.dart';
 import 'gateway_turn_journal.dart';
+import 'gateway_wake_word.dart';
+import 'gpt_live_conversation.dart';
 import 'projects_gateway_client.dart';
 import 'remote_workspace.dart';
+import 'voice_live_mode.dart';
 import 'ws_client.dart';
 import 'system_sleep_gate.dart';
 
@@ -27,6 +31,27 @@ enum DesktopConnectionState {
   connecting,
   connected,
   reconnecting,
+}
+
+/// Clients that serve the gateway voice surface (`wake.*`, voice mode and
+/// GPT-Live): each client this file constructs, until it is closed. Kept
+/// outside the class, as [SlashCommandConnectionMemory] keeps its refusals,
+/// so a stand-in that implements [DesktopGatewayClient] for a chat's turns
+/// only is a client without voice rather than one that throws on first use.
+final Expando<bool> _servesVoice = Expando('DesktopGatewayClient voice');
+
+/// Voice a chat may use but must never need: a chat opens on a client
+/// without it, and shows no wake or voice-mode controls there.
+extension DesktopGatewayVoice on DesktopGatewayClient {
+  /// The wake-word controller, or null when this client serves no gateway
+  /// voice (it is closed, or a stand-in): wake is then not offered.
+  GatewayWakeWordController? get servedWakeWord =>
+      _servesVoice[this] == true ? wakeWord : null;
+
+  /// The GPT-Live / Chained mode controller, or null as for
+  /// [servedWakeWord].
+  VoiceLiveModeController? get servedVoiceLiveMode =>
+      _servesVoice[this] == true ? voiceLiveMode : null;
 }
 
 /// Authenticated JSON-RPC transport for a Hermes Desktop remote gateway.
@@ -56,6 +81,13 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
   final Map<String, String> _customHeaders;
   WsClient? _ws;
   bool get sessionAuthority => _ws?.sessionAuthority == true;
+  bool get isSocketConnected => !_closed && _ws?.isConnected == true;
+  String get connectionId => _connectionId;
+  String? get gatewayProfile => _gatewayProfile;
+  final _gatewayEvents = StreamController<StreamEvent>.broadcast();
+  final _socketReady = StreamController<void>.broadcast();
+  Stream<StreamEvent> get gatewayEvents => _gatewayEvents.stream;
+  Stream<void> get socketReady => _socketReady.stream;
   Future<WsClient>? _socketInFlight;
   Timer? _reconnectTimer;
   int _reconnectAttempts = 0;
@@ -85,7 +117,32 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
   GatewayTurnSessionBoundCallback? _sessionCreatedListener;
   GatewayTurnCoordinatorRegistry? _turnCoordinatorRegistry;
   ProjectsGatewayClient? _projects;
+  GatewayWakeWordController? _wakeWord;
+  VoiceLiveModeController? _voiceLiveMode;
   final CapabilityRegistry _capabilities = CapabilityRegistry();
+
+  /// Gateway-backed wake-word controller scoped to this connection/profile.
+  GatewayWakeWordController get wakeWord =>
+      _wakeWord ??= GatewayWakeWordController(
+        transport: GatewayWakeTransport.fromDesktop(this),
+      );
+
+  /// Gateway-backed GPT-Live / Chained mode controller for this profile.
+  VoiceLiveModeController get voiceLiveMode =>
+      _voiceLiveMode ??= VoiceLiveModeController.fromDesktop(this);
+
+  @visibleForTesting
+  set debugVoiceLiveMode(VoiceLiveModeController? controller) {
+    _voiceLiveMode?.dispose();
+    _voiceLiveMode = controller;
+  }
+
+  /// Non-owning GPT-Live REST transport sharing this gateway's dashboard auth.
+  GptLiveTransport createGptLiveTransport() =>
+      GptLiveGatewayTransport.fromDashboard(
+        _dashboard,
+        profile: _gatewayProfile,
+      );
 
   static const _asyncEventTypes = {
     'background.complete',
@@ -127,6 +184,7 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
       ownsSocket: _ownsSocket,
     );
     SystemSleepGate.instance.addListener(_onSystemSleep);
+    _servesVoice[this] = true;
   }
 
   late final RemoteWorkspaceOwner workspace;
@@ -1126,7 +1184,9 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
     _capabilities.bindTo(client);
     final gatewayReady = client.onGatewayReady;
     client.onGatewayReady = (frame) {
-      if (!_closed) gatewayReady?.call(frame);
+      if (_closed) return;
+      gatewayReady?.call(frame);
+      if (!_socketReady.isClosed) _socketReady.add(null);
     };
     _serverRequestClientOrdinals.putIfAbsent(
       client,
@@ -1136,6 +1196,7 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
     client.onConnectionClosed = () => _forgetServerRequestsFrom(client);
     client.onStreamEvent = (event) {
       if (_closed) return;
+      if (!_gatewayEvents.isClosed) _gatewayEvents.add(event);
       final ownerSessionId = _mobileSessionIdFor(
         event.sessionId ?? event.data['session_id']?.toString(),
       );
@@ -1849,6 +1910,8 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
     // Idempotent: a double close must not re-enter or corrupt state.
     if (_closed) return;
     _closed = true;
+    unawaited(_gatewayEvents.close());
+    unawaited(_socketReady.close());
     SystemSleepGate.instance.removeListener(_onSystemSleep);
     workspace.close();
     slashRefusals.reset();
@@ -1861,6 +1924,13 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
     _sessionCreatedListener = null;
     _connectionListener = null;
     _projects = null;
+    // A closed client serves no voice: a late read must not build a fresh
+    // controller on it.
+    _servesVoice[this] = null;
+    _wakeWord?.dispose();
+    _wakeWord = null;
+    _voiceLiveMode?.dispose();
+    _voiceLiveMode = null;
     _ws?.close();
     _ws = null;
     _gatewaySessionIds.clear();

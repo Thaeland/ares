@@ -7388,6 +7388,240 @@ class AppLocalizationsEs extends AppLocalizations {
       'Sesión iniciada con el token de despliegue.';
 
   @override
+  String get auto_speak_replies_title => 'Leer respuestas en voz alta';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'Lee cada nueva respuesta en voz alta al finalizar un turno. Desactivado por defecto; el control de respuestas habladas sigue aplicando.';
+
+  @override
+  String get ng_auto_read_replies_title => 'Leer respuestas automáticamente';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      'Lee cada nueva respuesta en voz alta al finalizar un turno. Desactivado por defecto.';
+
+  @override
+  String get barge_in_title => 'Interrumpir';
+
+  @override
+  String get barge_in_subtitle =>
+      'Hable durante una respuesta para interrumpirla. El micrófono permanece encendido mientras se leen las respuestas en voz alta.';
+
+  @override
+  String get barge_in_mic_live =>
+      'Micrófono activado: hable para interrumpir la respuesta';
+
+  @override
+  String get ng_barge_in_title => 'Interrumpir';
+
+  @override
+  String get ng_barge_in_subtitle =>
+      'Hable durante una respuesta para interrumpirla. El micrófono permanece encendido mientras se leen las respuestas en voz alta.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'Micrófono activado: hable para interrumpir la respuesta';
+
+  @override
+  String get wake_word_title => 'Palabra de activación';
+
+  @override
+  String get wake_word_subtitle =>
+      'Detección manos libres en la pasarela. Desactivada por defecto; solo transmite audio cuando la captura del dispositivo está activa.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'Escuchando la palabra de activación \"$phrase\"';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'Palabra de activación \"$phrase\" — en pausa';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'Palabra de activación \"$phrase\" — desactivada';
+  }
+
+  @override
+  String get wake_word_arming => 'Activando palabra de activación…';
+
+  @override
+  String get wake_word_stop => 'Detener palabra de activación';
+
+  @override
+  String get wake_word_rearm => 'Reactivar';
+
+  @override
+  String get wake_word_capture_mode => 'Modo de captura';
+
+  @override
+  String get wake_word_capture_auto => 'Automático';
+
+  @override
+  String get wake_word_capture_client => 'Micrófono de este dispositivo';
+
+  @override
+  String get wake_word_capture_local => 'Micrófono del host de la pasarela';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      'Esta pasarela no permite que las aplicaciones cambien el modo de captura. Configura wake_word.capture en la configuración de Hermes del host de la pasarela.';
+
+  @override
+  String get wake_word_input_device => 'Micrófono de entrada';
+
+  @override
+  String get wake_word_default_device => 'Predeterminado del sistema';
+
+  @override
+  String get ng_wake_word_title => 'Palabra de activación';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'Detección manos libres en la pasarela. Desactivada por defecto.';
+
+  @override
+  String get voice_engine_title => 'Motor de conversación por voz';
+
+  @override
+  String get voice_engine_subtitle =>
+      'Elija cómo se ejecutan las conversaciones de voz manos libres en este perfil de la pasarela.';
+
+  @override
+  String get voice_engine_chained => 'Encadenado (voz a texto → Hermes → voz)';
+
+  @override
+  String get voice_engine_chained_short => 'Encadenado';
+
+  @override
+  String get voice_engine_live => 'GPT-Live (voz en tiempo real)';
+
+  @override
+  String get voice_engine_live_short => 'GPT-Live';
+
+  @override
+  String get voice_engine_live_needs_key =>
+      'Configure una clave de API de OpenAI en el host de la pasarela para activar GPT-Live.';
+
+  @override
+  String voice_engine_fallback_chained(String reason) {
+    return 'GPT-Live no disponible ($reason) — se usa la voz encadenada.';
+  }
+
+  @override
+  String get voice_live_start => 'Iniciar conversación de voz';
+
+  @override
+  String get voice_live_stop => 'Finalizar conversación de voz';
+
+  @override
+  String get voice_live_mute => 'Silenciar micrófono';
+
+  @override
+  String get voice_live_unmute => 'Activar micrófono';
+
+  @override
+  String get voice_live_interrupt => 'Interrumpir o responder ahora';
+
+  @override
+  String get voice_live_listening => 'Escuchando';
+
+  @override
+  String get voice_live_speaking => 'Hablando';
+
+  @override
+  String get voice_live_thinking => 'Pensando';
+
+  @override
+  String get voice_live_muted => 'Silenciado';
+
+  @override
+  String get voice_live_ended_connection_lost =>
+      'La sesión de voz en vivo perdió la conexión.';
+
+  @override
+  String get voice_live_ended_closed =>
+      'El servicio cerró la sesión de voz en vivo.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'Esa palabra de activación pertenece al perfil «$profile». Abre una conexión con ese perfil para responder.';
+  }
+
+  @override
+  String get wake_word_reason_disabled => 'Desactivada — toque para activar';
+
+  @override
+  String get wake_word_reason_surface =>
+      'Limitada a otra superficie (configuración wake_word.surface)';
+
+  @override
+  String get wake_word_reason_owned =>
+      'Otra superficie controla la escucha de la palabra de activación';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return 'Otra superficie ($surface) controla la escucha de la palabra de activación';
+  }
+
+  @override
+  String get wake_word_reason_unavailable =>
+      'Palabra de activación no disponible en esta pasarela';
+
+  @override
+  String get wake_word_reason_permission_denied =>
+      'Permiso de micrófono denegado';
+
+  @override
+  String get wake_word_reason_permission_required =>
+      'Se necesita permiso de micrófono — toque para activar';
+
+  @override
+  String get voice_live_not_enabled =>
+      'GPT-Live no está activado para este perfil.';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live no está disponible';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'No se pudo iniciar GPT-Live: $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return 'La transcripción agotó el tiempo tras $seconds s ($provider no respondió)';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return 'Error de STT de $provider (HTTP $status)';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return 'Falló la solicitud de TTS a $provider';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return 'Error de TTS de $provider (HTTP $status)';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return 'Escuchando (\"$phrase\")';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return 'Desactivada (\"$phrase\")';
+  }
+
+  @override
   String ng_wire_setting_unavailable(Object setting) {
     return 'Cambiar $setting aún no está disponible en la pasarela compartida';
   }

@@ -215,8 +215,9 @@ class NgUserItem extends NgItem {
   /// submits this. Null when [text] is what was sent.
   final String? sentText;
 
-  /// Extra `prompt.submit` params (a regenerate's truncation target), sent
-  /// again unchanged with the same submission id when the send is retried.
+  /// Extra `prompt.submit` params (a regenerate's truncation target, a
+  /// voice-live delegation's surface and context), sent again unchanged
+  /// with the same submission id when the send is retried.
   final Map<String, Object> promptParams;
 
   /// The saved row behind a stored prompt (the gateway's `row_id`): the

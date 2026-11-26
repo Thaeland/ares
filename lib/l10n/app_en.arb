@@ -3336,6 +3336,169 @@
   "ng_use_a_deployment_token": "Use a deployment session token",
   "ng_sign_in_with_deployment_token": "Sign in with deployment token",
   "ng_signed_in_with_deployment_token": "Signed in with the deployment token.",
+  "auto_speak_replies_title": "Auto-read replies aloud",
+  "auto_speak_replies_subtitle": "Reads each new reply aloud when a turn completes. Off by default; the per-chat spoken-replies toggle still applies.",
+  "ng_auto_read_replies_title": "Auto-read replies",
+  "ng_auto_read_replies_subtitle": "Reads each new reply aloud when a turn completes. Off by default.",
+  "barge_in_title": "Barge in",
+  "barge_in_subtitle": "Speak over a reply to cut it short. The microphone stays on while replies are read aloud.",
+  "barge_in_mic_live": "Microphone on: speak to cut the reply short",
+  "ng_barge_in_title": "Barge in",
+  "ng_barge_in_subtitle": "Speak over a reply to cut it short. The microphone stays on while replies are read aloud.",
+  "ng_barge_in_mic_live": "Microphone on: speak to cut the reply short",
+  "wake_word_title": "Wake word",
+  "wake_word_subtitle": "Hands-free wake detection on the gateway. Off by default; streams microphone audio only when client capture is active.",
+  "wake_word_listening": "Listening for wake word \"{phrase}\"",
+  "@wake_word_listening": {
+    "placeholders": {
+      "phrase": {
+        "type": "String"
+      }
+    }
+  },
+  "wake_word_paused": "Wake word \"{phrase}\" — paused",
+  "@wake_word_paused": {
+    "placeholders": {
+      "phrase": {
+        "type": "String"
+      }
+    }
+  },
+  "wake_word_off": "Wake word \"{phrase}\" — off",
+  "@wake_word_off": {
+    "placeholders": {
+      "phrase": {
+        "type": "String"
+      }
+    }
+  },
+  "wake_word_arming": "Arming wake word…",
+  "wake_word_stop": "Stop wake word",
+  "wake_word_rearm": "Re-arm",
+  "wake_word_capture_mode": "Capture mode",
+  "wake_word_capture_auto": "Automatic",
+  "wake_word_capture_client": "This device's microphone",
+  "wake_word_capture_local": "Gateway host microphone",
+  "wake_word_capture_unavailable": "This gateway doesn't let apps change the capture mode. Set wake_word.capture in the Hermes config on the gateway host.",
+  "wake_word_input_device": "Input microphone",
+  "wake_word_default_device": "System default",
+  "ng_wake_word_title": "Wake word",
+  "ng_wake_word_subtitle": "Hands-free wake detection on the gateway. Off by default.",
+  "voice_engine_title": "Voice conversation engine",
+  "voice_engine_subtitle": "Choose how hands-free voice conversations run on this gateway profile.",
+  "voice_engine_chained": "Chained (speech-to-text → Hermes → speech)",
+  "voice_engine_chained_short": "Chained",
+  "voice_engine_live": "GPT-Live (real-time voice)",
+  "voice_engine_live_short": "GPT-Live",
+  "voice_engine_live_needs_key": "Configure an OpenAI API key on the gateway host to enable GPT-Live.",
+  "voice_engine_fallback_chained": "GPT-Live unavailable ({reason}) — using Chained voice.",
+  "@voice_engine_fallback_chained": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "voice_live_start": "Start voice conversation",
+  "voice_live_stop": "End voice conversation",
+  "voice_live_mute": "Mute microphone",
+  "voice_live_unmute": "Unmute microphone",
+  "voice_live_interrupt": "Interrupt or respond now",
+  "voice_live_listening": "Listening",
+  "voice_live_speaking": "Speaking",
+  "voice_live_thinking": "Thinking",
+  "voice_live_muted": "Muted",
+  "voice_live_ended_connection_lost": "The live voice session lost its connection.",
+  "voice_live_ended_closed": "The live voice session was closed by the service.",
+  "wake_word_other_profile": "That wake word belongs to profile \"{profile}\". Open a connection to that profile to answer it.",
+  "@wake_word_other_profile": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "wake_word_reason_disabled": "Off — tap to enable",
+  "wake_word_reason_surface": "Scoped to another surface (config wake_word.surface)",
+  "wake_word_reason_owned": "Another surface owns the wake-word listener",
+  "wake_word_reason_owned_by": "Another surface ({surface}) owns the wake-word listener",
+  "@wake_word_reason_owned_by": {
+    "placeholders": {
+      "surface": {
+        "type": "String"
+      }
+    }
+  },
+  "wake_word_reason_unavailable": "Wake word unavailable on this gateway",
+  "wake_word_reason_permission_denied": "Microphone permission denied",
+  "wake_word_reason_permission_required": "Microphone permission required — tap to enable",
+  "voice_live_not_enabled": "GPT-Live is not enabled for this profile.",
+  "voice_live_not_available": "GPT-Live is not available",
+  "voice_live_start_failed": "GPT-Live could not start: {error}",
+  "@voice_live_start_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "voice_direct_stt_timeout": "Transcription timed out after {seconds}s ({provider} did not answer)",
+  "@voice_direct_stt_timeout": {
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      },
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "voice_direct_stt_error": "{provider} STT error (HTTP {status})",
+  "@voice_direct_stt_error": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "voice_direct_tts_failed": "{provider} TTS request failed",
+  "@voice_direct_tts_failed": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "voice_direct_tts_error": "{provider} TTS error (HTTP {status})",
+  "@voice_direct_tts_error": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_wake_status_listening": "Listening (\"{phrase}\")",
+  "@ng_wake_status_listening": {
+    "placeholders": {
+      "phrase": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_wake_status_off": "Off (\"{phrase}\")",
+  "@ng_wake_status_off": {
+    "placeholders": {
+      "phrase": {
+        "type": "String"
+      }
+    }
+  },
   "ng_wire_setting_unavailable": "Changing {setting} is not available on the shared gateway yet",
   "@ng_wire_setting_unavailable": {
     "description": "A setting change was not sent: a Hermes 0.23+ shared gateway has no form for that config key (or that scope). {setting} is the key, with its scope in brackets when one was asked for.",

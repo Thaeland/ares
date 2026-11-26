@@ -7388,6 +7388,241 @@ class AppLocalizationsUk extends AppLocalizations {
       'Вхід виконано з токеном розгортання.';
 
   @override
+  String get auto_speak_replies_title => 'Читати відповіді вголос';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'Читає кожен новий відгук уголос після завершення ходу. За замовчуванням вимкнено; перемикач «Spoken replies» у чаті все ще застосовується.';
+
+  @override
+  String get ng_auto_read_replies_title => 'Читати відповіді автоматично';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      'Читає кожен новий відгук уголос після завершення ходу. За замовчуванням вимкнено.';
+
+  @override
+  String get barge_in_title => 'Перервати';
+
+  @override
+  String get barge_in_subtitle =>
+      'Говоріть під час відповіді, щоб перервати читання. Мікрофон залишається увімкненим, поки відповіді читаються вголос.';
+
+  @override
+  String get barge_in_mic_live =>
+      'Мікрофон увімкнено: говоріть, щоб перервати відповідь';
+
+  @override
+  String get ng_barge_in_title => 'Перервати';
+
+  @override
+  String get ng_barge_in_subtitle =>
+      'Говоріть під час відповіді, щоб перервати читання. Мікрофон залишається увімкненим, поки відповіді читаються вголос.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'Мікрофон увімкнено: говоріть, щоб перервати відповідь';
+
+  @override
+  String get wake_word_title => 'Ключова фраза';
+
+  @override
+  String get wake_word_subtitle =>
+      'Розпізнавання ключової фрази на шлюзі. За замовчуванням вимкнено; передає аудіо лише під час клієнтського захоплення.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'Очікування ключової фрази «$phrase»';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'Ключова фраза «$phrase» — призупинено';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'Ключова фраза «$phrase» — вимкнено';
+  }
+
+  @override
+  String get wake_word_arming => 'Увімкнення ключової фрази…';
+
+  @override
+  String get wake_word_stop => 'Зупинити ключову фразу';
+
+  @override
+  String get wake_word_rearm => 'Перезапустити';
+
+  @override
+  String get wake_word_capture_mode => 'Режим захоплення';
+
+  @override
+  String get wake_word_capture_auto => 'Автоматично';
+
+  @override
+  String get wake_word_capture_client => 'Мікрофон цього пристрою';
+
+  @override
+  String get wake_word_capture_local => 'Мікрофон хоста шлюзу';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      'Цей шлюз не дозволяє застосункам змінювати режим захоплення. Задайте wake_word.capture у конфігурації Hermes на хості шлюзу.';
+
+  @override
+  String get wake_word_input_device => 'Вхідний мікрофон';
+
+  @override
+  String get wake_word_default_device => 'Системний за замовчуванням';
+
+  @override
+  String get ng_wake_word_title => 'Ключова фраза';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'Розпізнавання ключової фрази на шлюзі. За замовчуванням вимкнено.';
+
+  @override
+  String get voice_engine_title => 'Рушій голосової розмови';
+
+  @override
+  String get voice_engine_subtitle =>
+      'Виберіть, як працюють голосові розмови без рук у цьому профілі шлюзу.';
+
+  @override
+  String get voice_engine_chained =>
+      'Ланцюжок (мовлення в текст → Hermes → мовлення)';
+
+  @override
+  String get voice_engine_chained_short => 'Ланцюжок';
+
+  @override
+  String get voice_engine_live => 'GPT-Live (голос у реальному часі)';
+
+  @override
+  String get voice_engine_live_short => 'GPT-Live';
+
+  @override
+  String get voice_engine_live_needs_key =>
+      'Укажіть ключ OpenAI API на хості шлюзу, щоб увімкнути GPT-Live.';
+
+  @override
+  String voice_engine_fallback_chained(String reason) {
+    return 'GPT-Live недоступний ($reason) — використовується голос ланцюжком.';
+  }
+
+  @override
+  String get voice_live_start => 'Почати голосову розмову';
+
+  @override
+  String get voice_live_stop => 'Завершити голосову розмову';
+
+  @override
+  String get voice_live_mute => 'Вимкнути мікрофон';
+
+  @override
+  String get voice_live_unmute => 'Увімкнути мікрофон';
+
+  @override
+  String get voice_live_interrupt => 'Перервати або відповісти зараз';
+
+  @override
+  String get voice_live_listening => 'Слухає';
+
+  @override
+  String get voice_live_speaking => 'Говорить';
+
+  @override
+  String get voice_live_thinking => 'Думає';
+
+  @override
+  String get voice_live_muted => 'Мікрофон вимкнено';
+
+  @override
+  String get voice_live_ended_connection_lost =>
+      'Сеанс живого голосу втратив з’єднання.';
+
+  @override
+  String get voice_live_ended_closed => 'Сеанс живого голосу закрито сервісом.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'Це слово активації належить профілю «$profile». Відкрийте підключення до цього профілю, щоб відповісти.';
+  }
+
+  @override
+  String get wake_word_reason_disabled =>
+      'Вимкнено — торкніться, щоб увімкнути';
+
+  @override
+  String get wake_word_reason_surface =>
+      'Обмежено іншим інтерфейсом (налаштування wake_word.surface)';
+
+  @override
+  String get wake_word_reason_owned =>
+      'Прослуховування ключової фрази зайняте іншим інтерфейсом';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return 'Прослуховування ключової фрази зайняте іншим інтерфейсом ($surface)';
+  }
+
+  @override
+  String get wake_word_reason_unavailable =>
+      'Ключова фраза недоступна на цьому шлюзі';
+
+  @override
+  String get wake_word_reason_permission_denied =>
+      'Доступ до мікрофона заборонено';
+
+  @override
+  String get wake_word_reason_permission_required =>
+      'Потрібен доступ до мікрофона — торкніться, щоб увімкнути';
+
+  @override
+  String get voice_live_not_enabled =>
+      'GPT-Live не ввімкнено для цього профілю.';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live недоступний';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'Не вдалося запустити GPT-Live: $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return 'Розпізнавання мовлення не завершилося за $seconds с ($provider не відповів)';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return 'Помилка STT $provider (HTTP $status)';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return 'Запит TTS до $provider не виконано';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return 'Помилка TTS $provider (HTTP $status)';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return 'Слухає («$phrase»)';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return 'Вимкнено («$phrase»)';
+  }
+
+  @override
   String ng_wire_setting_unavailable(Object setting) {
     return 'Зміна параметра $setting поки недоступна на спільному шлюзі';
   }

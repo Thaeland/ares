@@ -1725,7 +1725,8 @@ class WsClient {
     try {
       final effectiveSubmissionId = submissionId ?? const Uuid().v4();
       final baseParams = <String, dynamic>{
-        // A regenerate's truncation target (Desktop's truncateSubmitParams).
+        // A regenerate's truncation target (Desktop's truncateSubmitParams),
+        // or a voice-live delegation's surface and context.
         ...extraParams,
         'session_id': sessionId,
         'text': promptText,

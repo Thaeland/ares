@@ -7393,6 +7393,241 @@ class AppLocalizationsDe extends AppLocalizations {
       'Mit dem Bereitstellungstoken angemeldet.';
 
   @override
+  String get auto_speak_replies_title => 'Antworten automatisch vorlesen';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'Liest jede neue Antwort nach Abschluss eines Turns hörbar vor. Aus standardmäßig; der in-Chat Schalter „Spoken replies“ gilt weiterhin.';
+
+  @override
+  String get ng_auto_read_replies_title => 'Antworten automatisch vorlesen';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      'Liest jede neue Antwort nach Abschluss eines Turns hörbar vor. Aus standardmäßig.';
+
+  @override
+  String get barge_in_title => 'Hereinbrechen';
+
+  @override
+  String get barge_in_subtitle =>
+      'Sprechen Sie während einer Antwort, um das Vorlesen abzubrechen. Das Mikrofon bleibt eingeschaltet, solange Antworten vorgelesen werden.';
+
+  @override
+  String get barge_in_mic_live =>
+      'Mikrofon an: Sprechen Sie, um die Antwort abzubrechen';
+
+  @override
+  String get ng_barge_in_title => 'Hereinbrechen';
+
+  @override
+  String get ng_barge_in_subtitle =>
+      'Sprechen Sie während einer Antwort, um das Vorlesen abzubrechen. Das Mikrofon bleibt eingeschaltet, solange Antworten vorgelesen werden.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'Mikrofon an: Sprechen Sie, um die Antwort abzubrechen';
+
+  @override
+  String get wake_word_title => 'Aktivierungswort';
+
+  @override
+  String get wake_word_subtitle =>
+      'Freihändige Aktivierungswort-Erkennung über das Gateway. Standardmäßig aus; überträgt Mikrofon-Audio nur bei aktiver Geräteaufnahme.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'Hört auf Aktivierungswort „$phrase“';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'Aktivierungswort „$phrase“ — pausiert';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'Aktivierungswort „$phrase“ — aus';
+  }
+
+  @override
+  String get wake_word_arming => 'Aktivierungswort wird vorbereitet…';
+
+  @override
+  String get wake_word_stop => 'Aktivierungswort stoppen';
+
+  @override
+  String get wake_word_rearm => 'Neu aktivieren';
+
+  @override
+  String get wake_word_capture_mode => 'Aufnahmemodus';
+
+  @override
+  String get wake_word_capture_auto => 'Automatisch';
+
+  @override
+  String get wake_word_capture_client => 'Mikrofon dieses Geräts';
+
+  @override
+  String get wake_word_capture_local => 'Mikrofon des Gateway-Hosts';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      'Dieses Gateway lässt Apps den Aufnahmemodus nicht ändern. Lege wake_word.capture in der Hermes-Konfiguration auf dem Gateway-Host fest.';
+
+  @override
+  String get wake_word_input_device => 'Eingabemikrofon';
+
+  @override
+  String get wake_word_default_device => 'Systemstandard';
+
+  @override
+  String get ng_wake_word_title => 'Aktivierungswort';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'Freihändige Aktivierungswort-Erkennung über das Gateway. Standardmäßig aus.';
+
+  @override
+  String get voice_engine_title => 'Sprachgesprächs-Engine';
+
+  @override
+  String get voice_engine_subtitle =>
+      'Wählen Sie, wie freihändige Sprachgespräche auf diesem Gateway-Profil laufen.';
+
+  @override
+  String get voice_engine_chained =>
+      'Verkettet (Sprache zu Text → Hermes → Sprache)';
+
+  @override
+  String get voice_engine_chained_short => 'Verkettet';
+
+  @override
+  String get voice_engine_live => 'GPT-Live (Echtzeit-Sprache)';
+
+  @override
+  String get voice_engine_live_short => 'GPT-Live';
+
+  @override
+  String get voice_engine_live_needs_key =>
+      'Hinterlegen Sie auf dem Gateway-Host einen OpenAI-API-Schlüssel, um GPT-Live zu aktivieren.';
+
+  @override
+  String voice_engine_fallback_chained(String reason) {
+    return 'GPT-Live nicht verfügbar ($reason) — verkettete Sprache wird verwendet.';
+  }
+
+  @override
+  String get voice_live_start => 'Sprachgespräch starten';
+
+  @override
+  String get voice_live_stop => 'Sprachgespräch beenden';
+
+  @override
+  String get voice_live_mute => 'Mikrofon stummschalten';
+
+  @override
+  String get voice_live_unmute => 'Mikrofon einschalten';
+
+  @override
+  String get voice_live_interrupt => 'Unterbrechen oder jetzt antworten';
+
+  @override
+  String get voice_live_listening => 'Hört zu';
+
+  @override
+  String get voice_live_speaking => 'Spricht';
+
+  @override
+  String get voice_live_thinking => 'Denkt nach';
+
+  @override
+  String get voice_live_muted => 'Stumm';
+
+  @override
+  String get voice_live_ended_connection_lost =>
+      'Die Live-Sprachsitzung hat die Verbindung verloren.';
+
+  @override
+  String get voice_live_ended_closed =>
+      'Die Live-Sprachsitzung wurde vom Dienst beendet.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'Dieses Aktivierungswort gehört zum Profil „$profile“. Öffne eine Verbindung zu diesem Profil, um darauf zu antworten.';
+  }
+
+  @override
+  String get wake_word_reason_disabled => 'Aus — zum Aktivieren tippen';
+
+  @override
+  String get wake_word_reason_surface =>
+      'Auf eine andere Oberfläche beschränkt (Konfiguration wake_word.surface)';
+
+  @override
+  String get wake_word_reason_owned =>
+      'Eine andere Oberfläche belegt die Aktivierungswort-Erkennung';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return 'Eine andere Oberfläche ($surface) belegt die Aktivierungswort-Erkennung';
+  }
+
+  @override
+  String get wake_word_reason_unavailable =>
+      'Aktivierungswort auf diesem Gateway nicht verfügbar';
+
+  @override
+  String get wake_word_reason_permission_denied =>
+      'Mikrofonberechtigung verweigert';
+
+  @override
+  String get wake_word_reason_permission_required =>
+      'Mikrofonberechtigung erforderlich — zum Aktivieren tippen';
+
+  @override
+  String get voice_live_not_enabled =>
+      'GPT-Live ist für dieses Profil nicht aktiviert.';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live ist nicht verfügbar';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'GPT-Live konnte nicht starten: $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return 'Zeitüberschreitung bei der Transkription nach $seconds s ($provider hat nicht geantwortet)';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return 'STT-Fehler von $provider (HTTP $status)';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return 'TTS-Anfrage an $provider fehlgeschlagen';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return 'TTS-Fehler von $provider (HTTP $status)';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return 'Hört zu („$phrase“)';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return 'Aus („$phrase“)';
+  }
+
+  @override
   String ng_wire_setting_unavailable(Object setting) {
     return '$setting lässt sich über das gemeinsame Gateway noch nicht ändern';
   }

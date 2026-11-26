@@ -69,6 +69,19 @@ import '../../core/widgets/session_history_page.dart';
 import '../../core/widgets/git_review_pane.dart';
 import '../../core/models/turn_changed_files.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
+import '../../core/services/auto_speak_replies.dart';
+import '../../core/services/client_direct_voice.dart';
+import '../../core/services/client_direct_voice_speaker.dart';
+import '../../core/services/connection_mutation_barrier.dart';
+import '../../core/services/gateway_wake_word.dart';
+import '../../core/services/gpt_live_conversation.dart';
+import '../../core/services/voice_live_engine.dart';
+import '../../core/services/voice_live_mode.dart';
+import '../../core/services/wake_voice_request.dart';
+import '../../core/utils/voice_stop_word.dart';
+import '../../core/widgets/barge_in_indicator.dart';
+import '../../core/widgets/gateway_wake_controls.dart';
+import '../../core/widgets/voice_live_controls.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
 import '../../core/services/attachment_draft_service.dart';
 import '../../core/widgets/client_held_queue_bar.dart';
@@ -104,6 +117,9 @@ class NgChatView extends StatefulWidget {
     this.onResume,
     this.onOpenCommandPalette,
     this.readAloudFactory,
+    this.wakeController,
+    this.voiceModeController,
+    this.voiceLiveEngineFactory,
     this.screenCapture,
   });
 
@@ -125,6 +141,19 @@ class NgChatView extends StatefulWidget {
   /// Test hook: supplies the read-aloud controller (e.g. a fake speaker).
   @visibleForTesting
   final NgReadAloud Function()? readAloudFactory;
+
+  /// Test hook: overrides `chat.gateway.wakeWord`.
+  @visibleForTesting
+  final GatewayWakeWordController? wakeController;
+
+  /// Test hook: overrides `chat.gateway.voiceLiveMode`.
+  @visibleForTesting
+  final VoiceLiveModeController? voiceModeController;
+
+  /// Test hook: overrides the per-chat [VoiceLiveEngine].
+  @visibleForTesting
+  final VoiceLiveEngine Function(GptLiveTransport transport)?
+  voiceLiveEngineFactory;
 
   /// Desktop screen capture; tests pass a fake-channel controller.
   final ScreenCaptureController? screenCapture;
@@ -340,11 +369,176 @@ class _NgChatViewState extends State<NgChatView>
   bool _listening = false;
   String _beforeDictation = '';
 
+  VoiceLiveEngine? _liveEngine;
+  VoiceLiveModeController? _boundVoiceMode;
+  Timer? _liveReplyTimer;
+  String? _liveDelegationId;
+  int _livePriorItemCount = 0;
+  bool _liveTurnObserved = false;
+  DateTime? _liveSubmittedAt;
+
+  /// Counts live-voice teardowns, so a start that was cancelled by one is
+  /// told apart from a start the host refused.
+  int _liveTeardowns = 0;
+
   /// One read-aloud engine for this transcript: the reading reply's action
   /// row shows Stop, and starting another reply stops the current one.
   late final NgReadAloud _readAloud;
 
   NgChatController get chat => widget.chat;
+
+  // The gateway's voice controllers, read once per gateway. A view can
+  // outlive its gateway by a frame (a connection switch disposes it first):
+  // it keeps the controllers it bound, which are inert once disposed, and
+  // never builds a fresh one on the disposed gateway.
+  NextGenGateway? _voiceGateway;
+  GatewayWakeWordController? _gatewayWake;
+  VoiceLiveModeController? _gatewayVoiceMode;
+
+  NextGenGateway _currentVoiceGateway() {
+    final gateway = chat.gateway;
+    if (!identical(gateway, _voiceGateway)) {
+      _voiceGateway = gateway;
+      _gatewayWake = null;
+      _gatewayVoiceMode = null;
+    }
+    return gateway;
+  }
+
+  GatewayWakeWordController get _wake {
+    if (widget.wakeController case final controller?) return controller;
+    final gateway = _currentVoiceGateway();
+    return _gatewayWake ??= gateway.wakeWord;
+  }
+
+  VoiceLiveModeController get _voiceMode {
+    if (widget.voiceModeController case final controller?) return controller;
+    final gateway = _currentVoiceGateway();
+    return _gatewayVoiceMode ??= gateway.voiceLiveMode;
+  }
+
+  void _bindWake() {
+    _wake.bindSessionId(chat.storedId ?? chat.runtimeId);
+    _wake.onWakeDetected = _onWakeDetected;
+    _syncWakeVoicePause();
+  }
+
+  void _syncWakeVoicePause() {
+    // A stopped session keeps the capture device until the vendor answers
+    // its goodbye (or the 15 s fallback): wake resumes only once it is free.
+    _wake.setPausedForVoice(
+      _listening ||
+          _readAloud.readingKey != null ||
+          (_liveEngine?.active ?? false) ||
+          (_liveEngine?.holdsMicrophone ?? false),
+    );
+  }
+
+  /// As Desktop's `wake.detected` handling (app/contrib/wiring.tsx): a phrase
+  /// enrolled by another profile is answered in THAT profile's chat, and a
+  /// fresh session is a new view. Either way the voice starts on the new
+  /// view once it is showing, never in the chat that merely heard it.
+  void _onWakeDetected(WakeDetectedEvent event) {
+    if (!mounted) return;
+    final gateway = chat.gateway;
+    final target = event.profile;
+    if (target != null &&
+        wakeProfileKey(target) != wakeProfileKey(gateway.profile)) {
+      _routeWakeToProfile(target, freshSession: event.startNewSession);
+      return;
+    }
+    if (event.startNewSession && !chat.isNew && widget.onNewChat != null) {
+      WakeVoiceRequest.request(
+        connectionId: gateway.connection.id,
+        profile: gateway.profile,
+        freshSession: true,
+      );
+      widget.onNewChat!();
+      // The fresh chat is another view; it takes the request once it shows.
+      // Should the shell keep this view instead, nothing starts here and
+      // wake goes back to listening.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _syncWakeVoicePause();
+      });
+      return;
+    }
+    _startWakeVoice();
+  }
+
+  /// Hands a wake phrase of another profile to the saved gateway that
+  /// reaches it on the same machine. With none saved, nothing starts.
+  void _routeWakeToProfile(String profile, {required bool freshSession}) {
+    final scope = context.getInheritedWidgetOfExactType<NgScope>();
+    final match = scope == null
+        ? null
+        : wakeConnectionForProfile(
+            scope.connections,
+            from: chat.gateway.connection,
+            profile: profile,
+          );
+    if (scope == null ||
+        match == null ||
+        ConnectionMutationBarrier.isPending(match.id)) {
+      ngToast(context, ngL.wake_word_other_profile(profile.trim()));
+      // Nothing took the microphone: wake listens again.
+      _syncWakeVoicePause();
+      return;
+    }
+    WakeVoiceRequest.request(
+      connectionId: match.id,
+      profile: match.gatewayProfile,
+      freshSession: freshSession,
+    );
+    unawaited(
+      scope.switchTo(match.id).catchError((Object _) {
+        WakeVoiceRequest.clear();
+      }),
+    );
+  }
+
+  /// Takes a wake request routed to this view's owner: after a profile
+  /// switch or a new chat, the view that now shows the chat starts voice.
+  void _maybeTakeWakeVoice() {
+    if (!mounted) return;
+    final gateway = chat.gateway;
+    final pending = WakeVoiceRequest.pendingFor(
+      connectionId: gateway.connection.id,
+      profile: gateway.profile,
+    );
+    if (pending == null) return;
+    if (ModalRoute.isCurrentOf(context) == false) return;
+    if (pending.freshSession && !chat.isNew) {
+      // The gateway opened on an existing chat: ask for the fresh one; its
+      // view takes the request.
+      final openNew = widget.onNewChat;
+      if (openNew != null) {
+        openNew();
+        return;
+      }
+    }
+    if (!WakeVoiceRequest.take(
+      connectionId: gateway.connection.id,
+      profile: gateway.profile,
+      isNewChat: chat.isNew || widget.onNewChat == null,
+    )) {
+      return;
+    }
+    _startWakeVoice();
+  }
+
+  void _startWakeVoice() {
+    if (!mounted) return;
+    if (_liveEngine?.active == true) return;
+    // A view that has only just mounted does not know the host's voice mode
+    // yet; the conversation start reads it first and then picks the engine.
+    if (!_voiceMode.hasStatus || _voiceMode.effectiveMode == 'gpt-live') {
+      unawaited(_startVoiceConversation());
+      return;
+    }
+    if (!_listening) {
+      unawaited(_toggleDictation());
+    }
+  }
 
   @override
   void initState() {
@@ -360,6 +554,10 @@ class _NgChatViewState extends State<NgChatView>
     if (initial != null) unawaited(_applyLinkPrefill(initial));
     chat.addListener(_onChat);
     _wasRunning = chat.running;
+    // Opening a chat never reads the reply already at its bottom; one that
+    // completes while the chat is open (even a turn running now) is read.
+    _autoReadTurnSeen = chat.running;
+    _markBottomReplySpoken();
     unawaited(
       loadStatusLayout().then((layout) {
         if (!mounted) return;
@@ -367,8 +565,25 @@ class _NgChatViewState extends State<NgChatView>
         if (layout.visible('context-usage')) unawaited(_loadBreakdown());
       }),
     );
-    _readAloud = (widget.readAloudFactory ?? NgReadAloud.new)();
+    final gateway = chat.gateway;
+    final scopeKey = '${gateway.connection.id}::${gateway.profile ?? ''}';
+    _readAloud =
+        (widget.readAloudFactory ??
+        () {
+          return NgReadAloud(
+            directSpeakerFactory: (fallback) => ClientDirectVoiceReplySpeaker(
+              store: VoiceClientRuntime.storeFor(
+                gateway.connection,
+                connectionId: gateway.connection.id,
+                profile: gateway.profile,
+              ),
+              scopeKey: scopeKey,
+              fallback: fallback,
+            ),
+          );
+        })();
     _readAloud.addListener(_onReadAloud);
+    _bindWake();
     _readAloud.onUnavailable = () {
       if (mounted) {
         ngToast(context, ngL.read_aloud_is_unavailable_on_this_device);
@@ -389,6 +604,21 @@ class _NgChatViewState extends State<NgChatView>
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
       if (chat.running && mounted) setState(() {});
     });
+    _bindLiveEngine();
+    // A wake word routed here (a fresh chat, or this profile after a
+    // switch) starts its voice once this view is showing.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeTakeWakeVoice());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // ModalRoute makes this depend on visibility. As Classic's _revokeVoice:
+    // once another route covers the chat (a pushed page, a sheet, a dialog,
+    // a menu), it may not keep a live microphone behind it.
+    if (ModalRoute.isCurrentOf(context) == false) {
+      _teardownLiveVoice('routeChanged');
+    }
   }
 
   @override
@@ -415,6 +645,351 @@ class _NgChatViewState extends State<NgChatView>
       chat.addListener(_onChat);
       // A reply being read belongs to the chat we left.
       unawaited(_readAloud.stop());
+      // Switching to a chat never reads the reply already at its bottom.
+      _autoReadServed.clear();
+      _autoReadTurnSeen = chat.running;
+      _markBottomReplySpoken();
+      _bindWake();
+      _disposeLiveEngine();
+      _bindLiveEngine();
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _maybeTakeWakeVoice(),
+      );
+    } else {
+      if (old.wakeController != widget.wakeController) {
+        _bindWake();
+      }
+      if (old.voiceModeController != widget.voiceModeController ||
+          old.voiceLiveEngineFactory != widget.voiceLiveEngineFactory) {
+        _disposeLiveEngine();
+        _bindLiveEngine();
+      }
+    }
+  }
+
+  void _bindLiveEngine() {
+    _disposeLiveEngine();
+    final mode = _voiceMode;
+    _boundVoiceMode = mode;
+    mode.addListener(_onLiveEngineChanged);
+    if (widget.voiceModeController != null || chat.gateway.state.isConnected) {
+      unawaited(mode.refresh());
+    }
+    final transport = mode.transport;
+    final engine =
+        widget.voiceLiveEngineFactory?.call(transport) ??
+        VoiceLiveEngine(
+          transport: transport,
+          connectionId: chat.gateway.connection.id,
+        );
+    engine.onDelegation = _onLiveDelegation;
+    engine.onError = (message) {
+      if (!mounted) return;
+      ngToast(context, message);
+    };
+    engine.onClosed = (reason) {
+      if (!mounted) return;
+      // The session ended under us (connection lost, closed by the service):
+      // drop the turn it was feeding and say why.
+      _stopLiveReplyFeed();
+      _syncWakeVoicePause();
+      setState(() {});
+      final notice = voiceLiveEndedNotice(context, reason);
+      if (notice != null) ngToast(context, notice);
+    };
+    engine.onStopWord = () {
+      if (!mounted) return;
+      _syncWakeVoicePause();
+      setState(() {});
+    };
+    engine.addListener(_onLiveEngineChanged);
+    _liveEngine = engine;
+  }
+
+  void _disposeLiveEngine() {
+    _stopLiveReplyFeed();
+    _boundVoiceMode?.removeListener(_onLiveEngineChanged);
+    _boundVoiceMode = null;
+    final engine = _liveEngine;
+    _liveEngine = null;
+    if (engine != null) {
+      engine.removeListener(_onLiveEngineChanged);
+      engine.dispose();
+    }
+  }
+
+  void _startLiveReplyFeed() {
+    _liveReplyTimer?.cancel();
+    _liveReplyTimer = Timer.periodic(const Duration(milliseconds: 200), (_) {
+      if (!mounted) return;
+      _feedNextGenLiveReply();
+    });
+  }
+
+  void _stopLiveReplyFeed() {
+    _liveReplyTimer?.cancel();
+    _liveReplyTimer = null;
+    _liveDelegationId = null;
+    _livePriorItemCount = 0;
+    _liveTurnObserved = false;
+    _liveSubmittedAt = null;
+  }
+
+  void _feedNextGenLiveReply() {
+    final engine = _liveEngine;
+    final delegationId = _liveDelegationId;
+    if (engine == null || !engine.active || delegationId == null) return;
+
+    final start = _livePriorItemCount.clamp(0, chat.items.length);
+    final parts = <String>[];
+    String? runningTool;
+    for (var i = start; i < chat.items.length; i++) {
+      final item = chat.items[i];
+      if (item is! NgAssistantItem) continue;
+      if (!item.isEmpty) {
+        parts.add(item.text.trim());
+        _autoReadServed.add(item.key);
+      }
+      if (chat.running) {
+        for (final tool in item.tools.reversed) {
+          if (tool.running && tool.name.trim().isNotEmpty) {
+            runningTool = tool.name.trim();
+            break;
+          }
+        }
+      }
+    }
+    final turnReply = parts.where((p) => p.isNotEmpty).join('\n\n');
+
+    if (chat.running) {
+      _liveTurnObserved = true;
+      if (runningTool != null) {
+        engine.think(
+          'Hermes is working: $runningTool. Not done yet.',
+          delegationId: delegationId,
+        );
+      }
+      if (turnReply.isNotEmpty) {
+        engine.speak(turnReply, delegationId: delegationId);
+      }
+      return;
+    }
+
+    if (turnReply.isNotEmpty) {
+      _liveTurnObserved = true;
+      engine.speak(turnReply, delegationId: delegationId, flush: true);
+      _stopLiveReplyFeed();
+      engine.settle();
+      return;
+    }
+
+    final submittedAt = _liveSubmittedAt;
+    final graceExpired =
+        submittedAt != null &&
+        DateTime.now().difference(submittedAt) > const Duration(seconds: 15);
+    if (_liveTurnObserved || graceExpired) {
+      if (engine.spokenCursor == 0) {
+        engine.think(
+          'Hermes finished that request without a spoken result.',
+          delegationId: delegationId,
+        );
+      }
+      _stopLiveReplyFeed();
+      engine.settle();
+    }
+  }
+
+  /// Ends the live session at once, with no wait for the vendor: this chat is
+  /// in the background, hidden or covered, so it may not keep a microphone.
+  /// The engine stays bound; Start opens a new session when the chat is back.
+  void _teardownLiveVoice(String reason) {
+    _liveTeardowns++;
+    _stopLiveReplyFeed();
+    final engine = _liveEngine;
+    if (engine == null || !engine.engaged) return;
+    unawaited(engine.stopNow(reason));
+  }
+
+  void _onLiveEngineChanged() {
+    if (!mounted) return;
+    _syncWakeVoicePause();
+    setState(() {});
+  }
+
+  List<Map<String, dynamic>> _seedLiveHistory() {
+    final turns = <({String role, String text})>[];
+    for (final item in chat.items) {
+      if (item is NgUserItem && item.failure == null) {
+        final text = (item.sentText ?? item.text).trim();
+        if (text.isNotEmpty) turns.add((role: 'user', text: text));
+      } else if (item is NgAssistantItem && !item.isEmpty) {
+        final text = item.text.trim();
+        if (text.isNotEmpty) turns.add((role: 'assistant', text: text));
+      }
+    }
+    return toLiveHistory(turns);
+  }
+
+  Future<void> _startVoiceConversation() async {
+    final mode = _voiceMode;
+    // One status read per start: a read made here to choose the engine is
+    // handed to it; with a cached status the engine reads a fresh one.
+    GptLiveStatus? fresh;
+    if (!mode.hasStatus) {
+      fresh = await mode.refresh();
+    }
+    if (!mounted) return;
+    if (mode.selectedMode == 'gpt-live') {
+      // A background teardown nulls the engine; rebind on demand so the
+      // start button still opens a live conversation after app resume.
+      if (_liveEngine == null) _bindLiveEngine();
+      final engine = _liveEngine;
+      if (mode.liveAvailable && engine != null) {
+        await _wake.pauseForVoice();
+        if (!mounted) return;
+        final teardowns = _liveTeardowns;
+        final started = await engine.start(
+          history: _seedLiveHistory(),
+          status: fresh,
+        );
+        if (started && mounted) {
+          _syncWakeVoicePause();
+          setState(() {});
+          return;
+        }
+        if (!mounted) return;
+        // Cancelled by a teardown (background, hidden or covered chat), not
+        // refused by the host: no fallback, and no other microphone path.
+        if (teardowns != _liveTeardowns || !identical(engine, _liveEngine)) {
+          _syncWakeVoicePause();
+          return;
+        }
+      }
+      final reason =
+          mode.unavailableReason ??
+          engine?.reason ??
+          ngL.voice_engine_live_needs_key;
+      ngToast(context, ngL.voice_engine_fallback_chained(reason));
+    }
+    if (!_listening) {
+      await _toggleDictation();
+    }
+  }
+
+  Future<void> _stopLiveVoice() async {
+    _stopLiveReplyFeed();
+    final engine = _liveEngine;
+    if (engine == null) return;
+    await engine.stop();
+    if (!mounted) return;
+    _syncWakeVoicePause();
+    setState(() {});
+  }
+
+  void _toggleLiveMute() {
+    final engine = _liveEngine;
+    if (engine == null || !engine.active) return;
+    engine.setMuted(!engine.muted);
+  }
+
+  void _interruptLiveVoice() {
+    if (chat.running) {
+      unawaited(chat.stop());
+    }
+    _liveEngine?.stopTurn();
+  }
+
+  void _onLiveDelegation(String id, Map<String, String> prompt) {
+    final engine = _liveEngine;
+    if (engine == null || !engine.active) return;
+    final utterance = (prompt['prompt'] ?? '').trim();
+    final voiceContext = (prompt['context'] ?? '').trim();
+    if (utterance.isEmpty) return;
+    if (isVoiceStopCommand(utterance)) {
+      unawaited(_stopLiveVoice());
+      return;
+    }
+    // Capture owner identity BEFORE any await so a late event for a switched,
+    // closed or re-scoped chat never lands in another session.
+    final ownerChat = chat;
+    final ownerEngine = engine;
+    final ownerEpoch = engine.startEpoch;
+    final ownerConnectionId = ownerChat.gateway.connection.id;
+    final ownerProfile = ownerChat.gateway.profile;
+    final ownerAccountEpoch = ConnectionMutationBarrier.capture(
+      ownerConnectionId,
+    );
+
+    bool stillOwned() =>
+        mounted &&
+        identical(chat, ownerChat) &&
+        identical(_liveEngine, ownerEngine) &&
+        ownerEngine.active &&
+        ownerEngine.startEpoch == ownerEpoch &&
+        ownerChat.gateway.connection.id == ownerConnectionId &&
+        ownerChat.gateway.profile == ownerProfile &&
+        ConnectionMutationBarrier.isCurrent(
+          ownerConnectionId,
+          ownerAccountEpoch,
+        );
+
+    unawaited(
+      _submitNextGenLiveDelegation(
+        delegationId: id,
+        utterance: utterance,
+        voiceContext: voiceContext,
+        ownerChat: ownerChat,
+        ownerEngine: ownerEngine,
+        stillOwned: stillOwned,
+      ),
+    );
+  }
+
+  Future<void> _submitNextGenLiveDelegation({
+    required String delegationId,
+    required String utterance,
+    required String voiceContext,
+    required NgChatController ownerChat,
+    required VoiceLiveEngine ownerEngine,
+    required bool Function() stillOwned,
+  }) async {
+    if (!stillOwned()) return;
+    if (ownerChat.running) {
+      try {
+        await ownerChat.stop(parkLocalQueue: false);
+      } catch (_) {}
+      for (var i = 0; i < 30 && stillOwned() && ownerChat.running; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+      }
+    }
+    if (!stillOwned()) return;
+    _liveDelegationId = delegationId;
+    _livePriorItemCount = ownerChat.items.length;
+    _liveTurnObserved = false;
+    _liveSubmittedAt = DateTime.now();
+    _startLiveReplyFeed();
+    var sent = false;
+    try {
+      sent = await ownerChat.send(
+        utterance,
+        promptParams: <String, Object>{
+          'surface': 'voice-live',
+          if (voiceContext.isNotEmpty) 'voice_context': voiceContext,
+        },
+      );
+    } catch (_) {
+      sent = false;
+    }
+    if (!sent && stillOwned() && _liveDelegationId == delegationId) {
+      _stopLiveReplyFeed();
+      ownerEngine.speak(
+        'Sorry, I could not reach Hermes for that request.',
+        delegationId: delegationId,
+        flush: true,
+      );
+      ownerEngine.settle();
+    } else if (stillOwned()) {
+      _feedNextGenLiveReply();
     }
   }
 
@@ -427,11 +1002,13 @@ class _NgChatViewState extends State<NgChatView>
       final voice = _voice;
       if (voice != null) unawaited(voice.stop());
     }
+    _syncWakeVoicePause();
     setState(() {});
   }
 
   void _onChat() {
     if (!mounted) return;
+    _wake.bindSessionId(chat.storedId ?? chat.runtimeId);
     // A link for this already-open chat (main page offers it here).
     final offered = chat.consumeInitialText();
     if (offered != null) unawaited(_applyLinkPrefill(offered));
@@ -445,6 +1022,8 @@ class _NgChatViewState extends State<NgChatView>
     if (reading != null && !chat.items.any((item) => item.key == reading)) {
       unawaited(_readAloud.stop());
     }
+    _feedNextGenLiveReply();
+    _maybeAutoReadReply();
     // Each finished turn changes the context: read the breakdown again.
     final ended = _wasRunning && !chat.running;
     _wasRunning = chat.running;
@@ -452,6 +1031,48 @@ class _NgChatViewState extends State<NgChatView>
       unawaited(_loadBreakdown());
     }
     setState(() {});
+  }
+
+  /// Replies auto-read has dealt with: read once, or already at the bottom
+  /// when the chat was opened or switched to. Item keys restart in every
+  /// chat controller, so a switch starts a fresh set.
+  final Set<String> _autoReadServed = <String>{};
+
+  /// A turn of this chat was seen running while it was open. Only the reply
+  /// that ends such a turn is read: as Desktop (use-auto-speak-replies), a
+  /// reply that was already there (opening the chat, switching to it, a
+  /// history reload) is marked spoken, never read.
+  bool _autoReadTurnSeen = false;
+
+  /// Marks the reply now at the bottom as spoken, without reading it.
+  void _markBottomReplySpoken() {
+    final last = chat.items.isEmpty ? null : chat.items.last;
+    if (last is NgAssistantItem) _autoReadServed.add(last.key);
+  }
+
+  /// Auto-reads the reply that completes a turn while this chat is open,
+  /// once.
+  void _maybeAutoReadReply() {
+    if (chat.running) {
+      _autoReadTurnSeen = true;
+      return;
+    }
+    if (chat.items.isEmpty) return;
+    final last = chat.items.last;
+    if (last is! NgAssistantItem || last.isEmpty) return;
+    final completedHere = _autoReadTurnSeen;
+    _autoReadTurnSeen = false;
+    if (!completedHere) {
+      _autoReadServed.add(last.key);
+      return;
+    }
+    if (_liveEngine?.active == true) return;
+    if (!autoSpeakRepliesEnabled.value) return;
+    if (_autoReadServed.contains(last.key)) return;
+    _autoReadServed.add(last.key);
+    final text = last.text.trim();
+    if (text.isEmpty) return;
+    unawaited(_readAloud.read(last.key, text));
   }
 
   bool _wasRunning = false;
@@ -505,6 +1126,10 @@ class _NgChatViewState extends State<NgChatView>
 
   @override
   void dispose() {
+    if (identical(_wake.onWakeDetected, _onWakeDetected)) {
+      _wake.onWakeDetected = null;
+    }
+    _wake.setPausedForVoice(false);
     WidgetsBinding.instance.removeObserver(this);
     CompanionDraft.pending.removeListener(_applyCompanionDraft);
     chat.removeListener(_onChat);
@@ -518,6 +1143,7 @@ class _NgChatViewState extends State<NgChatView>
     _focus.dispose();
     _scroll.dispose();
     _voice?.dispose();
+    _disposeLiveEngine();
     // Unsent picks only live in the app cache.
     if (_drafts.isNotEmpty) {
       unawaited(chat.attachmentService.removeAll(List.of(_drafts)));
@@ -532,6 +1158,7 @@ class _NgChatViewState extends State<NgChatView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    _wake.setAppForeground(state == AppLifecycleState.resumed);
     if (state != AppLifecycleState.resumed) {
       _checkpoint?.cancel();
       unawaited(_draftWriter.flush());
@@ -539,6 +1166,11 @@ class _NgChatViewState extends State<NgChatView>
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached) {
+      // The live session is tied to the foreground screen: close the peer
+      // and stop the tracks on a real background. `inactive` alone is not
+      // one: the OS microphone prompt on first use puts the app there while
+      // the session it is granting is still starting.
+      _teardownLiveVoice('background');
       if (chat.running) _companionLeftDuringTurn = true;
     } else if (state == AppLifecycleState.resumed &&
         _companionLeftDuringTurn &&
@@ -1329,6 +1961,42 @@ class _NgChatViewState extends State<NgChatView>
           ),
         );
         return true;
+      case 'wake':
+        final arg = command.arg.trim().toLowerCase();
+        _input.clear();
+        final sid = chat.storedId ?? chat.runtimeId;
+        switch (arg) {
+          case '' || 'toggle':
+            final ok = await _wake.toggle(sessionId: sid);
+            if (!ok && mounted && _wake.state.notice.isNotEmpty) {
+              ngToast(context, _wake.state.notice);
+            }
+          case 'on' || 'start':
+            final ok = await _wake.startExplicit(sessionId: sid);
+            if (!ok && mounted && _wake.state.notice.isNotEmpty) {
+              ngToast(context, _wake.state.notice);
+            }
+          case 'off' || 'stop':
+            await _wake.stopExplicit();
+          case 'status':
+            final st = await _wake.refreshStatus();
+            if (mounted) {
+              final status = st.listening
+                  ? ngL.ng_wake_status_listening(st.phrase)
+                  : ngL.ng_wake_status_off(st.phrase);
+              ngToast(
+                context,
+                st.notice.isNotEmpty ? '$status — ${st.notice}' : status,
+              );
+            }
+          default:
+            await showGatewayWakeSheet(
+              context,
+              controller: _wake,
+              sessionId: sid,
+            );
+        }
+        return true;
     }
     final owner = chat;
     _decidingCommand = true;
@@ -1456,27 +2124,33 @@ class _NgChatViewState extends State<NgChatView>
     if (_listening) {
       await _voice?.stop();
       setState(() => _listening = false);
+      _syncWakeVoicePause();
       return;
     }
+    await _wake.pauseForVoice();
     final voice = _voice ??= createVoiceComposerAdapter();
     final ok = await voice.initialize(
       onStatus: (status) {
         if ((status == 'done' || status == 'notListening') && mounted) {
           setState(() => _listening = false);
+          _syncWakeVoicePause();
         }
       },
       onError: (message) {
         if (!mounted) return;
         setState(() => _listening = false);
+        _syncWakeVoicePause();
         ngToast(context, ngL.ng_dictation_stopped(message));
       },
     );
     if (!ok) {
+      _syncWakeVoicePause();
       if (mounted) ngToast(context, ngL.ng_speech_recognition_isn_t_available);
       return;
     }
     _beforeDictation = _input.text.trim();
     setState(() => _listening = true);
+    _syncWakeVoicePause();
     await voice.listen(
       onResult: ({required transcript, required isFinal}) {
         final joined = [
@@ -1487,7 +2161,10 @@ class _NgChatViewState extends State<NgChatView>
           text: joined,
           selection: TextSelection.collapsed(offset: joined.length),
         );
-        if (isFinal && mounted) setState(() => _listening = false);
+        if (isFinal && mounted) {
+          setState(() => _listening = false);
+          _syncWakeVoicePause();
+        }
       },
     );
   }
@@ -1681,6 +2358,24 @@ class _NgChatViewState extends State<NgChatView>
                       onPressed: () => setState(() => _showSessionFiles = true),
                     ),
                   if (!compactTools) ...[
+                    GatewayWakeToolbarButton(
+                      controller: _wake,
+                      sessionId: chat.storedId ?? chat.runtimeId,
+                      onNotice: (msg) => ngToast(context, msg),
+                    ),
+                    if (_voiceMode.hasStatus)
+                      IconButton(
+                        key: const ValueKey('voice-engine-toolbar'),
+                        tooltip: ngL.voice_engine_title,
+                        icon: const Icon(Icons.graphic_eq),
+                        onPressed: () => unawaited(
+                          showVoiceEngineSheet(
+                            context,
+                            controller: _voiceMode,
+                            disabled: _liveEngine?.active == true,
+                          ),
+                        ),
+                      ),
                     if (widget.onOpenCommandPalette != null)
                       IconButton(
                         key: const ValueKey('app-command-palette-button'),
@@ -1718,81 +2413,110 @@ class _NgChatViewState extends State<NgChatView>
                       onPressed: () => _openHistory(chat.storedId),
                     ),
                   ] else
-                    // The radio's controls move here from the app bar.
-                    PopupMenuButton<String>(
-                      key: const ValueKey('chat-tools-menu'),
-                      tooltip: 'More chat tools',
-                      icon: const Icon(Icons.widgets_outlined),
-                      onSelected: (tool) {
-                        if (tool == 'app-command-palette') {
-                          widget.onOpenCommandPalette?.call();
-                          return;
-                        }
-                        if (tool == radioToolValue) {
-                          final current = compactRadioTool(context);
-                          if (current != null) {
-                            unawaited(showAresRadioSheet(context, current));
+                    // Narrow panes (< 480 px) fold chat tools into one menu.
+                    ListenableBuilder(
+                      listenable: Listenable.merge([_wake, _voiceMode]),
+                      builder: (context, _) => PopupMenuButton<String>(
+                        key: const ValueKey('chat-tools-menu'),
+                        tooltip: 'More chat tools',
+                        icon: const Icon(Icons.widgets_outlined),
+                        onSelected: (tool) async {
+                          if (tool == 'app-command-palette') {
+                            widget.onOpenCommandPalette?.call();
+                            return;
                           }
-                          return;
-                        }
-                        final id = chat.storedId;
-                        if (tool == 'browser' && id != null) {
-                          setState(
-                            () => _preview.open(chat.gateway.workspace, id),
-                          );
-                        }
-                        if (tool == 'queue' && showQueue) {
-                          _openGatewayQueue(chat, parentId!);
-                        }
-                        if (tool == 'workers') workers?.open(context);
-                        if (tool == 'history') _openHistory(id);
-                      },
-                      itemBuilder: (_) => [
-                        if (widget.onOpenCommandPalette != null)
+                          if (tool == voiceEngineToolValue) {
+                            await showVoiceEngineSheet(
+                              context,
+                              controller: _voiceMode,
+                              disabled: _liveEngine?.active == true,
+                            );
+                            return;
+                          }
+                          if (tool == wakeWordToolValue) {
+                            final sid = chat.storedId ?? chat.runtimeId;
+                            final wasOn =
+                                _wake.state.listening ||
+                                (_wake.state.enabled && _wake.state.paused);
+                            final ok = await _wake.toggle(sessionId: sid);
+                            if (!ok &&
+                                !wasOn &&
+                                context.mounted &&
+                                _wake.state.notice.isNotEmpty) {
+                              ngToast(context, _wake.state.notice);
+                            }
+                            return;
+                          }
+                          if (tool == radioToolValue) {
+                            final current = compactRadioTool(context);
+                            if (current != null) {
+                              unawaited(showAresRadioSheet(context, current));
+                            }
+                            return;
+                          }
+                          final id = chat.storedId;
+                          if (tool == 'browser' && id != null) {
+                            setState(
+                              () => _preview.open(chat.gateway.workspace, id),
+                            );
+                          }
+                          if (tool == 'queue' && showQueue) {
+                            _openGatewayQueue(chat, parentId!);
+                          }
+                          if (tool == 'workers') workers?.open(context);
+                          if (tool == 'history') _openHistory(id);
+                        },
+                        itemBuilder: (_) => [
+                          if (widget.onOpenCommandPalette != null)
+                            PopupMenuItem(
+                              value: 'app-command-palette',
+                              child: ListTile(
+                                leading: const Icon(Icons.keyboard_command_key),
+                                title: Text(ngL.palette_open),
+                              ),
+                            ),
+                          if (_wake.state.offered)
+                            wakeWordToolItem(context, _wake.state),
+                          if (_voiceMode.hasStatus)
+                            voiceEngineToolItem(context, _voiceMode),
+                          if (chat.storedId != null)
+                            const PopupMenuItem(
+                              value: 'browser',
+                              child: ListTile(
+                                leading: Icon(Icons.web_asset),
+                                title: Text('Open browser preview'),
+                              ),
+                            ),
+                          if (showQueue)
+                            const PopupMenuItem(
+                              value: 'queue',
+                              child: ListTile(
+                                leading: Icon(Icons.queue),
+                                title: Text('Gateway queue'),
+                              ),
+                            ),
+                          if (workers != null)
+                            PopupMenuItem(
+                              value: 'workers',
+                              child: ListTile(
+                                leading: const Icon(Icons.hub_outlined),
+                                title: Text(ngL.workspace_workers),
+                              ),
+                            ),
                           PopupMenuItem(
-                            value: 'app-command-palette',
+                            value: 'history',
                             child: ListTile(
-                              leading: const Icon(Icons.keyboard_command_key),
-                              title: Text(ngL.palette_open),
+                              leading: const Icon(Icons.manage_history),
+                              title: Text(
+                                chat.storedId == null
+                                    ? ngL.ng_import_claude_or_codex
+                                    : ngL.ng_session_history,
+                              ),
                             ),
                           ),
-                        if (chat.storedId != null)
-                          const PopupMenuItem(
-                            value: 'browser',
-                            child: ListTile(
-                              leading: Icon(Icons.web_asset),
-                              title: Text('Open browser preview'),
-                            ),
-                          ),
-                        if (showQueue)
-                          const PopupMenuItem(
-                            value: 'queue',
-                            child: ListTile(
-                              leading: Icon(Icons.queue),
-                              title: Text('Gateway queue'),
-                            ),
-                          ),
-                        if (workers != null)
-                          PopupMenuItem(
-                            value: 'workers',
-                            child: ListTile(
-                              leading: const Icon(Icons.hub_outlined),
-                              title: Text(ngL.workspace_workers),
-                            ),
-                          ),
-                        PopupMenuItem(
-                          value: 'history',
-                          child: ListTile(
-                            leading: const Icon(Icons.manage_history),
-                            title: Text(
-                              chat.storedId == null
-                                  ? ngL.ng_import_claude_or_codex
-                                  : ngL.ng_session_history,
-                            ),
-                          ),
-                        ),
-                        if (radio != null) radioToolItem(context),
-                      ],
+                          if (radio != null) radioToolItem(context),
+                        ],
+                      ),
                     ),
                   if (chat.usage != null)
                     IconButton(
@@ -1842,26 +2566,40 @@ class _NgChatViewState extends State<NgChatView>
                           setState(() => _showSessionFiles = false);
                         },
                       ),
-                // The body's real height: Scaffold has already taken the
-                // keyboard off it, so cards above the composer size from it.
-                child: LayoutBuilder(
-                  builder: (context, body) => Column(
-                    children: [
-                      if (!state.isConnected) _connectionBanner(c, gateway),
-                      Expanded(child: _transcript(c)),
-                      // Everything under the transcript shares one strip
-                      // bounded by the body (which the keyboard has already
-                      // shrunk): the cards keep their own caps and the
-                      // composer takes what is left, so it is never pushed
-                      // under the keyboard.
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxHeight: ngComposerStripMaxHeight(body.maxHeight),
+                child: Column(
+                  children: [
+                    if (!state.isConnected) _connectionBanner(c, gateway),
+                    // The body's real height under the connection banner:
+                    // Scaffold has already taken the keyboard off it, so
+                    // cards above the composer size from it.
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (context, body) => Column(
+                          children: [
+                            Expanded(child: _transcript(c)),
+                            // Everything under the transcript shares one
+                            // strip bounded by the body (which the keyboard
+                            // has already shrunk): the cards keep their own
+                            // caps and the composer takes what is left, so
+                            // it is never pushed under the keyboard.
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight: ngComposerStripMaxHeight(
+                                  body.maxHeight,
+                                ),
+                              ),
+                              child: _bottomStrip(
+                                c,
+                                state,
+                                gateway,
+                                body.maxHeight,
+                              ),
+                            ),
+                          ],
                         ),
-                        child: _bottomStrip(c, state, gateway, body.maxHeight),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             );
@@ -1913,6 +2651,22 @@ class _NgChatViewState extends State<NgChatView>
           ),
         if (chat.error != null) _errorBar(c),
         if (chat.queued.isNotEmpty) _queue(c),
+        GatewayWakeListeningBanner(
+          controller: _wake,
+          available: available,
+          sessionId: chat.storedId ?? chat.runtimeId,
+        ),
+        // Barge-in keeps the microphone on while a reply is read: say so.
+        if (_readAloud.bargeInListening)
+          BargeInMicLiveIndicator(
+            label: ngL.ng_barge_in_mic_live,
+            maxHeight: ngAboveComposerMaxHeight(
+              context,
+              available: available,
+              fraction: 0.15,
+              withKeyboard: 0.1,
+            ),
+          ),
         if (chat.catalog case final operation?)
           CatalogInstallCard(
             key: ValueKey(operation.opId),
@@ -2726,37 +3480,82 @@ class _NgChatViewState extends State<NgChatView>
                       ),
                     ),
                     const Spacer(),
-                    IconButton(
-                      tooltip: _listening
-                          ? ngL.ng_stop_dictation
-                          : ngL.ng_dictate,
-                      icon: Icon(
-                        _listening ? Icons.mic : Icons.mic_none,
-                        color: _listening ? c.accent : c.text2,
+                    if (_liveEngine case final live? when live.active) ...[
+                      VoiceLiveInlineControls(
+                        engine: live,
+                        compact: MediaQuery.sizeOf(context).width < 480,
+                        onToggleMute: _toggleLiveMute,
+                        onInterrupt: _interruptLiveVoice,
+                        onStop: () => unawaited(_stopLiveVoice()),
                       ),
-                      onPressed: _toggleDictation,
-                    ),
-                    if (chat.running && !hasText)
-                      IconButton.filled(
-                        tooltip: ngL.ng_stop,
-                        style: IconButton.styleFrom(
-                          backgroundColor: c.inverse,
-                          foregroundColor: c.onInverse,
+                      if (hasText)
+                        IconButton.filled(
+                          tooltip: ngL.ng_send,
+                          style: IconButton.styleFrom(
+                            backgroundColor: c.accent,
+                            foregroundColor: c.onAccent,
+                            disabledBackgroundColor: c.surface3,
+                          ),
+                          icon: const Icon(Icons.arrow_upward_rounded),
+                          onPressed: canSend ? _send : null,
                         ),
-                        icon: const Icon(Icons.stop_rounded),
-                        onPressed: chat.stop,
-                      )
-                    else
-                      IconButton.filled(
-                        tooltip: ngL.ng_send,
-                        style: IconButton.styleFrom(
-                          backgroundColor: c.accent,
-                          foregroundColor: c.onAccent,
-                          disabledBackgroundColor: c.surface3,
+                    ] else ...[
+                      IconButton(
+                        tooltip: _listening
+                            ? ngL.ng_stop_dictation
+                            : ngL.ng_dictate,
+                        icon: Icon(
+                          _listening ? Icons.mic : Icons.mic_none,
+                          color: _listening ? c.accent : c.text2,
                         ),
-                        icon: const Icon(Icons.arrow_upward_rounded),
-                        onPressed: canSend ? _send : null,
+                        onPressed: _toggleDictation,
                       ),
+                      if (_voiceMode.hasStatus &&
+                          !chat.running &&
+                          !hasText &&
+                          !_listening)
+                        GestureDetector(
+                          onLongPress: () => unawaited(
+                            showVoiceEngineSheet(
+                              context,
+                              controller: _voiceMode,
+                            ),
+                          ),
+                          child: IconButton(
+                            key: const ValueKey('voice-live-start'),
+                            tooltip: ngL.voice_live_start,
+                            icon: Icon(
+                              Icons.graphic_eq,
+                              color: _voiceMode.effectiveMode == 'gpt-live'
+                                  ? c.accent
+                                  : c.text2,
+                            ),
+                            onPressed: () =>
+                                unawaited(_startVoiceConversation()),
+                          ),
+                        ),
+                      if (chat.running && !hasText)
+                        IconButton.filled(
+                          tooltip: ngL.ng_stop,
+                          style: IconButton.styleFrom(
+                            backgroundColor: c.inverse,
+                            foregroundColor: c.onInverse,
+                          ),
+                          icon: const Icon(Icons.stop_rounded),
+                          onPressed: chat.stop,
+                        )
+                      else
+                        IconButton.filled(
+                          tooltip: ngL.ng_send,
+                          style: IconButton.styleFrom(
+                            backgroundColor: c.accent,
+                            foregroundColor: c.onAccent,
+                            disabledBackgroundColor: c.surface3,
+                          ),
+                          icon: const Icon(Icons.arrow_upward_rounded),
+                          onPressed: canSend ? _send : null,
+                        ),
+                    ],
                   ],
                 ),
               ),

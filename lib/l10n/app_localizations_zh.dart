@@ -7081,6 +7081,223 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_signed_in_with_deployment_token => '已使用部署令牌登录。';
 
   @override
+  String get auto_speak_replies_title => '自动朗读回复';
+
+  @override
+  String get auto_speak_replies_subtitle => '每回合结束后自动朗读新回复。默认关闭；聊天内的已朗读开关仍然生效。';
+
+  @override
+  String get ng_auto_read_replies_title => '自动朗读回复';
+
+  @override
+  String get ng_auto_read_replies_subtitle => '每回合结束后自动朗读新回复。默认关闭。';
+
+  @override
+  String get barge_in_title => '插话';
+
+  @override
+  String get barge_in_subtitle => '朗读回复时开口说话即可提前停止。朗读回复期间麦克风保持开启。';
+
+  @override
+  String get barge_in_mic_live => '麦克风已开启：说话即可打断回复';
+
+  @override
+  String get ng_barge_in_title => '插话';
+
+  @override
+  String get ng_barge_in_subtitle => '朗读回复时开口说话即可提前停止。朗读回复期间麦克风保持开启。';
+
+  @override
+  String get ng_barge_in_mic_live => '麦克风已开启：说话即可打断回复';
+
+  @override
+  String get wake_word_title => '唤醒词';
+
+  @override
+  String get wake_word_subtitle => '由网关提供免提唤醒检测。默认关闭；仅在启用设备麦克风采集时发送音频。';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return '正在监听唤醒词“$phrase”';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return '唤醒词“$phrase” — 已暂停';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return '唤醒词“$phrase” — 已关闭';
+  }
+
+  @override
+  String get wake_word_arming => '正在启用唤醒词…';
+
+  @override
+  String get wake_word_stop => '停止唤醒词';
+
+  @override
+  String get wake_word_rearm => '重新启用';
+
+  @override
+  String get wake_word_capture_mode => '采集模式';
+
+  @override
+  String get wake_word_capture_auto => '自动';
+
+  @override
+  String get wake_word_capture_client => '此设备麦克风';
+
+  @override
+  String get wake_word_capture_local => '网关主机麦克风';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      '此网关不允许应用更改采集模式。请在网关主机的 Hermes 配置中设置 wake_word.capture。';
+
+  @override
+  String get wake_word_input_device => '输入麦克风';
+
+  @override
+  String get wake_word_default_device => '系统默认';
+
+  @override
+  String get ng_wake_word_title => '唤醒词';
+
+  @override
+  String get ng_wake_word_subtitle => '由网关提供免提唤醒检测。默认关闭。';
+
+  @override
+  String get voice_engine_title => '语音对话引擎';
+
+  @override
+  String get voice_engine_subtitle => '选择此网关配置文件中免提语音对话的运行方式。';
+
+  @override
+  String get voice_engine_chained => '串联（语音转文字 → Hermes → 语音）';
+
+  @override
+  String get voice_engine_chained_short => '串联';
+
+  @override
+  String get voice_engine_live => 'GPT-Live（实时语音）';
+
+  @override
+  String get voice_engine_live_short => 'GPT-Live';
+
+  @override
+  String get voice_engine_live_needs_key =>
+      '请在网关主机上配置 OpenAI API 密钥以启用 GPT-Live。';
+
+  @override
+  String voice_engine_fallback_chained(String reason) {
+    return 'GPT-Live 不可用（$reason）— 改用串联语音。';
+  }
+
+  @override
+  String get voice_live_start => '开始语音对话';
+
+  @override
+  String get voice_live_stop => '结束语音对话';
+
+  @override
+  String get voice_live_mute => '麦克风静音';
+
+  @override
+  String get voice_live_unmute => '取消麦克风静音';
+
+  @override
+  String get voice_live_interrupt => '打断或立即回应';
+
+  @override
+  String get voice_live_listening => '正在聆听';
+
+  @override
+  String get voice_live_speaking => '正在说话';
+
+  @override
+  String get voice_live_thinking => '正在思考';
+
+  @override
+  String get voice_live_muted => '已静音';
+
+  @override
+  String get voice_live_ended_connection_lost => '实时语音会话的连接已断开。';
+
+  @override
+  String get voice_live_ended_closed => '实时语音会话已被服务关闭。';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return '该唤醒词属于配置文件“$profile”。请打开到该配置文件的连接以应答。';
+  }
+
+  @override
+  String get wake_word_reason_disabled => '已关闭 — 点按以启用';
+
+  @override
+  String get wake_word_reason_surface => '仅限其他界面使用（配置 wake_word.surface）';
+
+  @override
+  String get wake_word_reason_owned => '唤醒词监听由其他界面占用';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return '唤醒词监听由其他界面（$surface）占用';
+  }
+
+  @override
+  String get wake_word_reason_unavailable => '此网关不支持唤醒词';
+
+  @override
+  String get wake_word_reason_permission_denied => '麦克风权限被拒绝';
+
+  @override
+  String get wake_word_reason_permission_required => '需要麦克风权限 — 点按以启用';
+
+  @override
+  String get voice_live_not_enabled => '此配置文件未启用 GPT-Live。';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live 不可用';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return '无法启动 GPT-Live：$error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return '转写在 $seconds 秒后超时（$provider 未响应）';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return '$provider 语音转文字错误（HTTP $status）';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return '$provider 文字转语音请求失败';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return '$provider 文字转语音错误（HTTP $status）';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return '正在监听（“$phrase”）';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return '已关闭（“$phrase”）';
+  }
+
+  @override
   String ng_wire_setting_unavailable(Object setting) {
     return '共享网关暂不支持更改 $setting';
   }
@@ -15314,6 +15531,223 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署令牌登录。';
+
+  @override
+  String get auto_speak_replies_title => '自动朗读回复';
+
+  @override
+  String get auto_speak_replies_subtitle => '每回合结束后自动朗读新回复。默认关闭；聊天内的已朗读开关仍然生效。';
+
+  @override
+  String get ng_auto_read_replies_title => '自动朗读回复';
+
+  @override
+  String get ng_auto_read_replies_subtitle => '每回合结束后自动朗读新回复。默认关闭。';
+
+  @override
+  String get barge_in_title => '插话';
+
+  @override
+  String get barge_in_subtitle => '朗读回复时开口说话即可提前停止。朗读回复期间麦克风保持开启。';
+
+  @override
+  String get barge_in_mic_live => '麦克风已开启：说话即可打断回复';
+
+  @override
+  String get ng_barge_in_title => '插话';
+
+  @override
+  String get ng_barge_in_subtitle => '朗读回复时开口说话即可提前停止。朗读回复期间麦克风保持开启。';
+
+  @override
+  String get ng_barge_in_mic_live => '麦克风已开启：说话即可打断回复';
+
+  @override
+  String get wake_word_title => '唤醒词';
+
+  @override
+  String get wake_word_subtitle => '由网关提供免提唤醒检测。默认关闭；仅在启用设备麦克风采集时发送音频。';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return '正在监听唤醒词“$phrase”';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return '唤醒词“$phrase” — 已暂停';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return '唤醒词“$phrase” — 已关闭';
+  }
+
+  @override
+  String get wake_word_arming => '正在启用唤醒词…';
+
+  @override
+  String get wake_word_stop => '停止唤醒词';
+
+  @override
+  String get wake_word_rearm => '重新启用';
+
+  @override
+  String get wake_word_capture_mode => '采集模式';
+
+  @override
+  String get wake_word_capture_auto => '自动';
+
+  @override
+  String get wake_word_capture_client => '此设备麦克风';
+
+  @override
+  String get wake_word_capture_local => '网关主机麦克风';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      '此网关不允许应用更改采集模式。请在网关主机的 Hermes 配置中设置 wake_word.capture。';
+
+  @override
+  String get wake_word_input_device => '输入麦克风';
+
+  @override
+  String get wake_word_default_device => '系统默认';
+
+  @override
+  String get ng_wake_word_title => '唤醒词';
+
+  @override
+  String get ng_wake_word_subtitle => '由网关提供免提唤醒检测。默认关闭。';
+
+  @override
+  String get voice_engine_title => '语音对话引擎';
+
+  @override
+  String get voice_engine_subtitle => '选择此网关配置文件中免提语音对话的运行方式。';
+
+  @override
+  String get voice_engine_chained => '串联（语音转文字 → Hermes → 语音）';
+
+  @override
+  String get voice_engine_chained_short => '串联';
+
+  @override
+  String get voice_engine_live => 'GPT-Live（实时语音）';
+
+  @override
+  String get voice_engine_live_short => 'GPT-Live';
+
+  @override
+  String get voice_engine_live_needs_key =>
+      '请在网关主机上配置 OpenAI API 密钥以启用 GPT-Live。';
+
+  @override
+  String voice_engine_fallback_chained(String reason) {
+    return 'GPT-Live 不可用（$reason）— 改用串联语音。';
+  }
+
+  @override
+  String get voice_live_start => '开始语音对话';
+
+  @override
+  String get voice_live_stop => '结束语音对话';
+
+  @override
+  String get voice_live_mute => '麦克风静音';
+
+  @override
+  String get voice_live_unmute => '取消麦克风静音';
+
+  @override
+  String get voice_live_interrupt => '打断或立即回应';
+
+  @override
+  String get voice_live_listening => '正在聆听';
+
+  @override
+  String get voice_live_speaking => '正在说话';
+
+  @override
+  String get voice_live_thinking => '正在思考';
+
+  @override
+  String get voice_live_muted => '已静音';
+
+  @override
+  String get voice_live_ended_connection_lost => '实时语音会话的连接已断开。';
+
+  @override
+  String get voice_live_ended_closed => '实时语音会话已被服务关闭。';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return '该唤醒词属于配置文件“$profile”。请打开到该配置文件的连接以应答。';
+  }
+
+  @override
+  String get wake_word_reason_disabled => '已关闭 — 点按以启用';
+
+  @override
+  String get wake_word_reason_surface => '仅限其他界面使用（配置 wake_word.surface）';
+
+  @override
+  String get wake_word_reason_owned => '唤醒词监听由其他界面占用';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return '唤醒词监听由其他界面（$surface）占用';
+  }
+
+  @override
+  String get wake_word_reason_unavailable => '此网关不支持唤醒词';
+
+  @override
+  String get wake_word_reason_permission_denied => '麦克风权限被拒绝';
+
+  @override
+  String get wake_word_reason_permission_required => '需要麦克风权限 — 点按以启用';
+
+  @override
+  String get voice_live_not_enabled => '此配置文件未启用 GPT-Live。';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live 不可用';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return '无法启动 GPT-Live：$error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return '转写在 $seconds 秒后超时（$provider 未响应）';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return '$provider 语音转文字错误（HTTP $status）';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return '$provider 文字转语音请求失败';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return '$provider 文字转语音错误（HTTP $status）';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return '正在监听（“$phrase”）';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return '已关闭（“$phrase”）';
+  }
 
   @override
   String ng_wire_setting_unavailable(Object setting) {
@@ -23947,6 +24381,224 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署權杖登入。';
+
+  @override
+  String get auto_speak_replies_title => '自動朗讀回覆';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      '回合完成後自動朗讀每則新回覆。預設關閉；單一對話的語音回覆開關仍然有效。';
+
+  @override
+  String get ng_auto_read_replies_title => '自動朗讀回覆';
+
+  @override
+  String get ng_auto_read_replies_subtitle => '回合完成後自動朗讀每則新回覆。預設關閉。';
+
+  @override
+  String get barge_in_title => '插話打斷';
+
+  @override
+  String get barge_in_subtitle => '朗讀回覆時開口說話即可中斷播放。朗讀回覆期間麥克風保持開啟。';
+
+  @override
+  String get barge_in_mic_live => '麥克風已開啟：說話即可打斷回覆';
+
+  @override
+  String get ng_barge_in_title => '插話打斷';
+
+  @override
+  String get ng_barge_in_subtitle => '朗讀回覆時開口說話即可中斷播放。朗讀回覆期間麥克風保持開啟。';
+
+  @override
+  String get ng_barge_in_mic_live => '麥克風已開啟：說話即可打斷回覆';
+
+  @override
+  String get wake_word_title => '喚醒詞';
+
+  @override
+  String get wake_word_subtitle => '由閘道器提供免持喚醒偵測。預設關閉；僅在啟用裝置麥克風擷取時傳送音訊。';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return '正在聆聽喚醒詞「$phrase」';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return '喚醒詞「$phrase」— 已暫停';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return '喚醒詞「$phrase」— 已關閉';
+  }
+
+  @override
+  String get wake_word_arming => '正在啟用喚醒詞…';
+
+  @override
+  String get wake_word_stop => '停止喚醒詞';
+
+  @override
+  String get wake_word_rearm => '重新啟用';
+
+  @override
+  String get wake_word_capture_mode => '擷取模式';
+
+  @override
+  String get wake_word_capture_auto => '自動';
+
+  @override
+  String get wake_word_capture_client => '此裝置麥克風';
+
+  @override
+  String get wake_word_capture_local => '閘道器主機麥克風';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      '此閘道器不允許應用程式變更擷取模式。請在閘道器主機的 Hermes 設定中設定 wake_word.capture。';
+
+  @override
+  String get wake_word_input_device => '輸入麥克風';
+
+  @override
+  String get wake_word_default_device => '系統預設';
+
+  @override
+  String get ng_wake_word_title => '喚醒詞';
+
+  @override
+  String get ng_wake_word_subtitle => '由閘道器提供免持喚醒偵測。預設關閉。';
+
+  @override
+  String get voice_engine_title => '語音對話引擎';
+
+  @override
+  String get voice_engine_subtitle => '選擇此閘道器設定檔中免持語音對話的執行方式。';
+
+  @override
+  String get voice_engine_chained => '串接（語音轉文字 → Hermes → 語音）';
+
+  @override
+  String get voice_engine_chained_short => '串接';
+
+  @override
+  String get voice_engine_live => 'GPT-Live（即時語音）';
+
+  @override
+  String get voice_engine_live_short => 'GPT-Live';
+
+  @override
+  String get voice_engine_live_needs_key =>
+      '請在閘道器主機上設定 OpenAI API 金鑰以啟用 GPT-Live。';
+
+  @override
+  String voice_engine_fallback_chained(String reason) {
+    return 'GPT-Live 無法使用（$reason）— 改用串接語音。';
+  }
+
+  @override
+  String get voice_live_start => '開始語音對話';
+
+  @override
+  String get voice_live_stop => '結束語音對話';
+
+  @override
+  String get voice_live_mute => '麥克風靜音';
+
+  @override
+  String get voice_live_unmute => '取消麥克風靜音';
+
+  @override
+  String get voice_live_interrupt => '打斷或立即回應';
+
+  @override
+  String get voice_live_listening => '正在聆聽';
+
+  @override
+  String get voice_live_speaking => '正在說話';
+
+  @override
+  String get voice_live_thinking => '正在思考';
+
+  @override
+  String get voice_live_muted => '已靜音';
+
+  @override
+  String get voice_live_ended_connection_lost => '即時語音工作階段的連線已中斷。';
+
+  @override
+  String get voice_live_ended_closed => '即時語音工作階段已被服務關閉。';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return '此喚醒詞屬於設定檔「$profile」。請開啟連到該設定檔的連線以回應。';
+  }
+
+  @override
+  String get wake_word_reason_disabled => '已關閉 — 點按以啟用';
+
+  @override
+  String get wake_word_reason_surface => '僅限其他介面使用（設定 wake_word.surface）';
+
+  @override
+  String get wake_word_reason_owned => '喚醒詞聆聽由其他介面佔用';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return '喚醒詞聆聽由其他介面（$surface）佔用';
+  }
+
+  @override
+  String get wake_word_reason_unavailable => '此閘道器不支援喚醒詞';
+
+  @override
+  String get wake_word_reason_permission_denied => '麥克風權限遭拒';
+
+  @override
+  String get wake_word_reason_permission_required => '需要麥克風權限 — 點按以啟用';
+
+  @override
+  String get voice_live_not_enabled => '此設定檔未啟用 GPT-Live。';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live 無法使用';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return '無法啟動 GPT-Live：$error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return '轉錄在 $seconds 秒後逾時（$provider 未回應）';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return '$provider 語音轉文字錯誤（HTTP $status）';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return '$provider 文字轉語音要求失敗';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return '$provider 文字轉語音錯誤（HTTP $status）';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return '正在聆聽（「$phrase」）';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return '已關閉（「$phrase」）';
+  }
 
   @override
   String ng_wire_setting_unavailable(Object setting) {

@@ -7178,6 +7178,227 @@ class AppLocalizationsJa extends AppLocalizations {
   String get ng_signed_in_with_deployment_token => 'デプロイメントトークンでサインインしています。';
 
   @override
+  String get auto_speak_replies_title => '返信を自動読み上げ';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'ターン完了時に各返信を読み上げます。デフォルトではオフ。チャット内の読み上げトグルは引き続き有効です。';
+
+  @override
+  String get ng_auto_read_replies_title => '返信を自動読み上げ';
+
+  @override
+  String get ng_auto_read_replies_subtitle => 'ターン完了時に各返信を読み上げます。デフォルトではオフ。';
+
+  @override
+  String get barge_in_title => '割り込み';
+
+  @override
+  String get barge_in_subtitle => '読み上げ中に話すと途中で止められます。返信の読み上げ中はマイクがオンのままになります。';
+
+  @override
+  String get barge_in_mic_live => 'マイクオン：話すと返信の読み上げを止めます';
+
+  @override
+  String get ng_barge_in_title => '割り込み';
+
+  @override
+  String get ng_barge_in_subtitle =>
+      '読み上げ中に話すと途中で止められます。返信の読み上げ中はマイクがオンのままになります。';
+
+  @override
+  String get ng_barge_in_mic_live => 'マイクオン：話すと返信の読み上げを止めます';
+
+  @override
+  String get wake_word_title => 'ウェイクワード';
+
+  @override
+  String get wake_word_subtitle =>
+      'ゲートウェイでのハンズフリー起動語検出。既定ではオフ。クライアント収音が有効なときのみマイク音声を送信します。';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'ウェイクワード「$phrase」を待機中';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'ウェイクワード「$phrase」— 一時停止中';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'ウェイクワード「$phrase」— オフ';
+  }
+
+  @override
+  String get wake_word_arming => 'ウェイクワードを準備中…';
+
+  @override
+  String get wake_word_stop => 'ウェイクワードを停止';
+
+  @override
+  String get wake_word_rearm => '再待機';
+
+  @override
+  String get wake_word_capture_mode => '収音モード';
+
+  @override
+  String get wake_word_capture_auto => '自動';
+
+  @override
+  String get wake_word_capture_client => 'このデバイスのマイク';
+
+  @override
+  String get wake_word_capture_local => 'ゲートウェイホストのマイク';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      'このゲートウェイでは、アプリから収音モードを変更できません。ゲートウェイホストの Hermes 設定で wake_word.capture を設定してください。';
+
+  @override
+  String get wake_word_input_device => '入力マイク';
+
+  @override
+  String get wake_word_default_device => 'システム既定';
+
+  @override
+  String get ng_wake_word_title => 'ウェイクワード';
+
+  @override
+  String get ng_wake_word_subtitle => 'ゲートウェイでのハンズフリー起動語検出。既定ではオフ。';
+
+  @override
+  String get voice_engine_title => '音声会話エンジン';
+
+  @override
+  String get voice_engine_subtitle => 'このゲートウェイプロファイルでハンズフリー音声会話をどう動かすかを選びます。';
+
+  @override
+  String get voice_engine_chained => '連結（音声→テキスト → Hermes → 音声）';
+
+  @override
+  String get voice_engine_chained_short => '連結';
+
+  @override
+  String get voice_engine_live => 'GPT-Live（リアルタイム音声）';
+
+  @override
+  String get voice_engine_live_short => 'GPT-Live';
+
+  @override
+  String get voice_engine_live_needs_key =>
+      'GPT-Live を有効にするには、ゲートウェイホストに OpenAI API キーを設定してください。';
+
+  @override
+  String voice_engine_fallback_chained(String reason) {
+    return 'GPT-Live を利用できません（$reason）— 連結音声を使用します。';
+  }
+
+  @override
+  String get voice_live_start => '音声会話を開始';
+
+  @override
+  String get voice_live_stop => '音声会話を終了';
+
+  @override
+  String get voice_live_mute => 'マイクをミュート';
+
+  @override
+  String get voice_live_unmute => 'マイクのミュートを解除';
+
+  @override
+  String get voice_live_interrupt => '割り込む／今すぐ応答';
+
+  @override
+  String get voice_live_listening => '聞き取り中';
+
+  @override
+  String get voice_live_speaking => '話しています';
+
+  @override
+  String get voice_live_thinking => '考え中';
+
+  @override
+  String get voice_live_muted => 'ミュート中';
+
+  @override
+  String get voice_live_ended_connection_lost => 'ライブ音声セッションの接続が切れました。';
+
+  @override
+  String get voice_live_ended_closed => 'ライブ音声セッションはサービスによって終了されました。';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'このウェイクワードはプロファイル「$profile」のものです。応答するには、そのプロファイルへの接続を開いてください。';
+  }
+
+  @override
+  String get wake_word_reason_disabled => 'オフ — タップして有効化';
+
+  @override
+  String get wake_word_reason_surface =>
+      '別のサーフェスに限定されています（設定 wake_word.surface）';
+
+  @override
+  String get wake_word_reason_owned => '別のサーフェスがウェイクワードの待機を担当しています';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return '別のサーフェス（$surface）がウェイクワードの待機を担当しています';
+  }
+
+  @override
+  String get wake_word_reason_unavailable => 'このゲートウェイではウェイクワードを利用できません';
+
+  @override
+  String get wake_word_reason_permission_denied => 'マイクの権限が拒否されました';
+
+  @override
+  String get wake_word_reason_permission_required => 'マイクの権限が必要です — タップして有効化';
+
+  @override
+  String get voice_live_not_enabled => 'このプロファイルでは GPT-Live が有効になっていません。';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live を利用できません';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'GPT-Live を開始できませんでした: $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return '$seconds 秒で文字起こしがタイムアウトしました（$provider から応答がありません）';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return '$provider の STT エラー（HTTP $status）';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return '$provider への TTS リクエストに失敗しました';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return '$provider の TTS エラー（HTTP $status）';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return '待機中（「$phrase」）';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return 'オフ（「$phrase」）';
+  }
+
+  @override
   String ng_wire_setting_unavailable(Object setting) {
     return '$setting の変更は、共有ゲートウェイではまだ利用できません';
   }

@@ -7184,6 +7184,229 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_signed_in_with_deployment_token => '배포 토큰으로 로그인했습니다.';
 
   @override
+  String get auto_speak_replies_title => '답변을 자동으로 읽기';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      '턴이 완료될 때마다 새 답변을 읽어줍니다. 기본적으로 꺼짐; 채팅 내 말하기 토글이 계속 적용됩니다.';
+
+  @override
+  String get ng_auto_read_replies_title => '답변 자동 읽기';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      '턴이 완료될 때마다 새 답변을 읽어줍니다. 기본적으로 꺼짐.';
+
+  @override
+  String get barge_in_title => '말 끊기';
+
+  @override
+  String get barge_in_subtitle =>
+      '답변을 읽는 중에 말하면 멈출 수 있습니다. 답변을 소리 내어 읽는 동안 마이크가 켜져 있습니다.';
+
+  @override
+  String get barge_in_mic_live => '마이크 켜짐: 말하면 답변 읽기가 멈춥니다';
+
+  @override
+  String get ng_barge_in_title => '말 끊기';
+
+  @override
+  String get ng_barge_in_subtitle =>
+      '답변을 읽는 중에 말하면 멈출 수 있습니다. 답변을 소리 내어 읽는 동안 마이크가 켜져 있습니다.';
+
+  @override
+  String get ng_barge_in_mic_live => '마이크 켜짐: 말하면 답변 읽기가 멈춥니다';
+
+  @override
+  String get wake_word_title => '호출어';
+
+  @override
+  String get wake_word_subtitle =>
+      '게이트웨이의 핸즈프리 호출어 감지입니다. 기본값은 꺼짐이며 클라이언트 캡처가 활성화된 경우에만 마이크 오디오를 전송합니다.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return '호출어 \"$phrase\" 듣는 중';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return '호출어 \"$phrase\" — 일시 중지됨';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return '호출어 \"$phrase\" — 꺼짐';
+  }
+
+  @override
+  String get wake_word_arming => '호출어 준비 중…';
+
+  @override
+  String get wake_word_stop => '호출어 중지';
+
+  @override
+  String get wake_word_rearm => '다시 대기';
+
+  @override
+  String get wake_word_capture_mode => '캡처 모드';
+
+  @override
+  String get wake_word_capture_auto => '자동';
+
+  @override
+  String get wake_word_capture_client => '이 기기의 마이크';
+
+  @override
+  String get wake_word_capture_local => '게이트웨이 호스트 마이크';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      '이 게이트웨이에서는 앱이 캡처 모드를 변경할 수 없습니다. 게이트웨이 호스트의 Hermes 설정에서 wake_word.capture를 지정하세요.';
+
+  @override
+  String get wake_word_input_device => '입력 마이크';
+
+  @override
+  String get wake_word_default_device => '시스템 기본값';
+
+  @override
+  String get ng_wake_word_title => '호출어';
+
+  @override
+  String get ng_wake_word_subtitle => '게이트웨이의 핸즈프리 호출어 감지입니다. 기본값은 꺼짐입니다.';
+
+  @override
+  String get voice_engine_title => '음성 대화 엔진';
+
+  @override
+  String get voice_engine_subtitle =>
+      '이 게이트웨이 프로필에서 핸즈프리 음성 대화를 실행할 방식을 선택하세요.';
+
+  @override
+  String get voice_engine_chained => '연결형 (음성 인식 → Hermes → 음성 합성)';
+
+  @override
+  String get voice_engine_chained_short => '연결형';
+
+  @override
+  String get voice_engine_live => 'GPT-Live (실시간 음성)';
+
+  @override
+  String get voice_engine_live_short => 'GPT-Live';
+
+  @override
+  String get voice_engine_live_needs_key =>
+      'GPT-Live를 사용하려면 게이트웨이 호스트에 OpenAI API 키를 설정하세요.';
+
+  @override
+  String voice_engine_fallback_chained(String reason) {
+    return 'GPT-Live를 사용할 수 없음($reason) — 연결형 음성을 사용합니다.';
+  }
+
+  @override
+  String get voice_live_start => '음성 대화 시작';
+
+  @override
+  String get voice_live_stop => '음성 대화 종료';
+
+  @override
+  String get voice_live_mute => '마이크 음소거';
+
+  @override
+  String get voice_live_unmute => '마이크 음소거 해제';
+
+  @override
+  String get voice_live_interrupt => '끼어들기 또는 지금 응답';
+
+  @override
+  String get voice_live_listening => '듣는 중';
+
+  @override
+  String get voice_live_speaking => '말하는 중';
+
+  @override
+  String get voice_live_thinking => '생각하는 중';
+
+  @override
+  String get voice_live_muted => '음소거됨';
+
+  @override
+  String get voice_live_ended_connection_lost => '실시간 음성 세션의 연결이 끊어졌습니다.';
+
+  @override
+  String get voice_live_ended_closed => '서비스에서 실시간 음성 세션을 종료했습니다.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return '이 호출어는 프로필 \"$profile\"의 것입니다. 응답하려면 해당 프로필에 대한 연결을 여세요.';
+  }
+
+  @override
+  String get wake_word_reason_disabled => '꺼짐 — 탭하여 켜기';
+
+  @override
+  String get wake_word_reason_surface => '다른 화면으로 제한됨(설정 wake_word.surface)';
+
+  @override
+  String get wake_word_reason_owned => '다른 화면이 호출어 수신을 맡고 있습니다';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return '다른 화면($surface)이 호출어 수신을 맡고 있습니다';
+  }
+
+  @override
+  String get wake_word_reason_unavailable => '이 게이트웨이에서는 호출어를 사용할 수 없습니다';
+
+  @override
+  String get wake_word_reason_permission_denied => '마이크 권한이 거부되었습니다';
+
+  @override
+  String get wake_word_reason_permission_required => '마이크 권한이 필요합니다 — 탭하여 켜기';
+
+  @override
+  String get voice_live_not_enabled => '이 프로필에서 GPT-Live가 켜져 있지 않습니다.';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live를 사용할 수 없습니다';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'GPT-Live를 시작할 수 없습니다: $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return '$seconds초 후 받아쓰기 시간이 초과되었습니다($provider 응답 없음)';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return '$provider STT 오류(HTTP $status)';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return '$provider TTS 요청 실패';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return '$provider TTS 오류(HTTP $status)';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return '듣는 중(\"$phrase\")';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return '꺼짐(\"$phrase\")';
+  }
+
+  @override
   String ng_wire_setting_unavailable(Object setting) {
     return '$setting 변경은 공유 게이트웨이에서 아직 사용할 수 없습니다';
   }

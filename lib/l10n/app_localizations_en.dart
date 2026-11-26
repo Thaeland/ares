@@ -7333,6 +7333,240 @@ class AppLocalizationsEn extends AppLocalizations {
       'Signed in with the deployment token.';
 
   @override
+  String get auto_speak_replies_title => 'Auto-read replies aloud';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'Reads each new reply aloud when a turn completes. Off by default; the per-chat spoken-replies toggle still applies.';
+
+  @override
+  String get ng_auto_read_replies_title => 'Auto-read replies';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      'Reads each new reply aloud when a turn completes. Off by default.';
+
+  @override
+  String get barge_in_title => 'Barge in';
+
+  @override
+  String get barge_in_subtitle =>
+      'Speak over a reply to cut it short. The microphone stays on while replies are read aloud.';
+
+  @override
+  String get barge_in_mic_live => 'Microphone on: speak to cut the reply short';
+
+  @override
+  String get ng_barge_in_title => 'Barge in';
+
+  @override
+  String get ng_barge_in_subtitle =>
+      'Speak over a reply to cut it short. The microphone stays on while replies are read aloud.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'Microphone on: speak to cut the reply short';
+
+  @override
+  String get wake_word_title => 'Wake word';
+
+  @override
+  String get wake_word_subtitle =>
+      'Hands-free wake detection on the gateway. Off by default; streams microphone audio only when client capture is active.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'Listening for wake word \"$phrase\"';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'Wake word \"$phrase\" — paused';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'Wake word \"$phrase\" — off';
+  }
+
+  @override
+  String get wake_word_arming => 'Arming wake word…';
+
+  @override
+  String get wake_word_stop => 'Stop wake word';
+
+  @override
+  String get wake_word_rearm => 'Re-arm';
+
+  @override
+  String get wake_word_capture_mode => 'Capture mode';
+
+  @override
+  String get wake_word_capture_auto => 'Automatic';
+
+  @override
+  String get wake_word_capture_client => 'This device\'s microphone';
+
+  @override
+  String get wake_word_capture_local => 'Gateway host microphone';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      'This gateway doesn\'t let apps change the capture mode. Set wake_word.capture in the Hermes config on the gateway host.';
+
+  @override
+  String get wake_word_input_device => 'Input microphone';
+
+  @override
+  String get wake_word_default_device => 'System default';
+
+  @override
+  String get ng_wake_word_title => 'Wake word';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'Hands-free wake detection on the gateway. Off by default.';
+
+  @override
+  String get voice_engine_title => 'Voice conversation engine';
+
+  @override
+  String get voice_engine_subtitle =>
+      'Choose how hands-free voice conversations run on this gateway profile.';
+
+  @override
+  String get voice_engine_chained =>
+      'Chained (speech-to-text → Hermes → speech)';
+
+  @override
+  String get voice_engine_chained_short => 'Chained';
+
+  @override
+  String get voice_engine_live => 'GPT-Live (real-time voice)';
+
+  @override
+  String get voice_engine_live_short => 'GPT-Live';
+
+  @override
+  String get voice_engine_live_needs_key =>
+      'Configure an OpenAI API key on the gateway host to enable GPT-Live.';
+
+  @override
+  String voice_engine_fallback_chained(String reason) {
+    return 'GPT-Live unavailable ($reason) — using Chained voice.';
+  }
+
+  @override
+  String get voice_live_start => 'Start voice conversation';
+
+  @override
+  String get voice_live_stop => 'End voice conversation';
+
+  @override
+  String get voice_live_mute => 'Mute microphone';
+
+  @override
+  String get voice_live_unmute => 'Unmute microphone';
+
+  @override
+  String get voice_live_interrupt => 'Interrupt or respond now';
+
+  @override
+  String get voice_live_listening => 'Listening';
+
+  @override
+  String get voice_live_speaking => 'Speaking';
+
+  @override
+  String get voice_live_thinking => 'Thinking';
+
+  @override
+  String get voice_live_muted => 'Muted';
+
+  @override
+  String get voice_live_ended_connection_lost =>
+      'The live voice session lost its connection.';
+
+  @override
+  String get voice_live_ended_closed =>
+      'The live voice session was closed by the service.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'That wake word belongs to profile \"$profile\". Open a connection to that profile to answer it.';
+  }
+
+  @override
+  String get wake_word_reason_disabled => 'Off — tap to enable';
+
+  @override
+  String get wake_word_reason_surface =>
+      'Scoped to another surface (config wake_word.surface)';
+
+  @override
+  String get wake_word_reason_owned =>
+      'Another surface owns the wake-word listener';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return 'Another surface ($surface) owns the wake-word listener';
+  }
+
+  @override
+  String get wake_word_reason_unavailable =>
+      'Wake word unavailable on this gateway';
+
+  @override
+  String get wake_word_reason_permission_denied =>
+      'Microphone permission denied';
+
+  @override
+  String get wake_word_reason_permission_required =>
+      'Microphone permission required — tap to enable';
+
+  @override
+  String get voice_live_not_enabled =>
+      'GPT-Live is not enabled for this profile.';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live is not available';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'GPT-Live could not start: $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return 'Transcription timed out after ${seconds}s ($provider did not answer)';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return '$provider STT error (HTTP $status)';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return '$provider TTS request failed';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return '$provider TTS error (HTTP $status)';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return 'Listening (\"$phrase\")';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return 'Off (\"$phrase\")';
+  }
+
+  @override
   String ng_wire_setting_unavailable(Object setting) {
     return 'Changing $setting is not available on the shared gateway yet';
   }

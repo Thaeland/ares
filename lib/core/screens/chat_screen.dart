@@ -25,6 +25,9 @@ import '../presentation/transcript_reading.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:uuid/uuid.dart';
 import '../controllers/hands_free_conversation_controller.dart';
+import '../services/auto_speak_replies.dart';
+import '../services/barge_in_monitor.dart';
+import '../services/barge_in_preference.dart';
 import '../services/hermes_deeplink.dart' show appendComposerPrefill;
 import '../services/hands_free_preference.dart';
 import '../services/hands_free_voice_platform.dart';
@@ -32,6 +35,17 @@ import '../services/android_voice_composer_adapter.dart';
 import '../services/hands_free_speech.dart';
 import '../services/hands_free_route_observer.dart';
 import '../services/connection_mutation_barrier.dart';
+import '../services/client_direct_voice.dart';
+import '../services/client_direct_voice_speaker.dart';
+import '../services/gateway_wake_word.dart';
+import '../services/gpt_live_conversation.dart';
+import '../services/voice_live_engine.dart';
+import '../services/voice_live_mode.dart';
+import '../services/wake_voice_request.dart';
+import '../utils/voice_stop_word.dart';
+import '../widgets/barge_in_indicator.dart';
+import '../widgets/gateway_wake_controls.dart';
+import '../widgets/voice_live_controls.dart';
 import '../widgets/hands_free_voice_controls.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -730,6 +744,11 @@ class ChatScreen extends StatefulWidget {
   @visibleForTesting
   final VoiceReplySpeaker? testVoiceReplySpeaker;
 
+  /// Supplies the read-aloud barge-in monitor (production listens through
+  /// the platform's dictation path).
+  @visibleForTesting
+  final BargeInMonitor Function()? testBargeInMonitor;
+
   /// Retained/offstage destinations must explicitly relinquish voice authority.
   final bool active;
 
@@ -805,6 +824,21 @@ class ChatScreen extends StatefulWidget {
 
   /// Test seam for the Kanban dock: a fake board transport and gateway owner.
   final TestChatKanban? testKanban;
+  @visibleForTesting
+  final VoiceLiveModeController? testVoiceLiveMode;
+
+  @visibleForTesting
+  final VoiceLiveEngine Function(GptLiveTransport transport)?
+  testVoiceLiveEngineFactory;
+
+  /// Overrides the Desktop gateway's wake-word controller.
+  @visibleForTesting
+  final GatewayWakeWordController? testWakeController;
+
+  /// Supplies the saved connections a wake phrase of another profile is
+  /// routed among, without reading secure storage.
+  @visibleForTesting
+  final Future<List<SavedConnection>> Function()? testSavedConnections;
 
   /// The composer's gateway calls (completion, context breakdown, compress)
   /// without a socket. Production uses the Desktop gateway client.
@@ -835,6 +869,7 @@ class ChatScreen extends StatefulWidget {
     this.testVoiceTranscription,
     this.testHandsFreePlatform,
     this.testVoiceReplySpeaker,
+    this.testBargeInMonitor,
     this.active = true,
     this.singleSession = false,
     this.notifications,
@@ -851,6 +886,10 @@ class ChatScreen extends StatefulWidget {
     this.testMediaFilesClient,
     this.testTaskHistorySource,
     this.testSlashGateway,
+    this.testVoiceLiveMode,
+    this.testVoiceLiveEngineFactory,
+    this.testWakeController,
+    this.testSavedConnections,
     this.testComposerRpc,
     this.onArchiveChanged,
     this.sessionArchiver,
@@ -960,6 +999,21 @@ class _ChatScreenState extends State<ChatScreen>
   late final Future<ChatModelOverrideStore> _chatModelStore;
   late final Future<void> _sessionModelRestore;
   DesktopGatewayClient? _desktopGateway;
+  // Voice is optional: a client that serves none (closed, or a stand-in
+  // relaying turns only) leaves wake not offered and live voice unbound.
+  GatewayWakeWordController? get _wake =>
+      widget.testWakeController ?? _desktopGateway?.servedWakeWord;
+  VoiceLiveModeController? get _voiceLiveMode =>
+      widget.testVoiceLiveMode ?? _desktopGateway?.servedVoiceLiveMode;
+  VoiceLiveEngine? _liveEngine;
+  GptLiveTransport? _liveTransport;
+  String? _liveDelegationId;
+  String? _liveDelegatedTurnId;
+  bool _liveTurnObserved = false;
+
+  /// Counts live-voice teardowns, so a start that was cancelled by one is
+  /// told apart from a start the host refused.
+  int _liveTeardowns = 0;
   GatewayTurnApplicationController? _localTurnController;
   NormalGatewayApplicationSession? _normalSession;
   bool _normalSessionReady = false;
@@ -1136,6 +1190,14 @@ class _ChatScreenState extends State<ChatScreen>
   DashboardClient? _voiceDashboard;
   late final HandsFreeConversationController _handsFree;
   late final VoiceReplySpeaker _replySpeaker;
+
+  /// The client-direct speaker this screen made (null when a test injects
+  /// one): disposed with the screen so its audio player is released.
+  ClientDirectVoiceReplySpeaker? _ownedDirectSpeaker;
+
+  /// The barge-in monitor whose microphone is open over the reply being
+  /// read aloud; the composer shows that the mic is on while it is set.
+  BargeInMonitor? _bargeInLive;
   late final Future<void> _voiceSetup;
   final Object _voiceRouteToken = Object();
   ModalRoute<dynamic>? _voiceRoute;
@@ -1288,8 +1350,20 @@ class _ChatScreenState extends State<ChatScreen>
           ),
     )..addListener(_onVoiceComposerChanged);
     unawaited(_voiceRecording.ready);
+    // The direct speaker opens its audio player on first playback only, and
+    // this screen releases it on dispose.
     _replySpeaker =
-        widget.testVoiceReplySpeaker ?? FlutterVoiceReplySpeaker(_flutterTts);
+        widget.testVoiceReplySpeaker ??
+        (_ownedDirectSpeaker = ClientDirectVoiceReplySpeaker(
+          store: VoiceClientRuntime.storeFor(
+            widget.connection,
+            connectionId: widget.connection.id,
+            profile: widget.connection.gatewayProfile,
+          ),
+          scopeKey:
+              '${widget.connection.id}::${widget.connection.gatewayProfile ?? ''}',
+          fallback: FlutterVoiceReplySpeaker(_flutterTts),
+        ));
     _handsFree = HandsFreeConversationController(
       platform:
           widget.testHandsFreePlatform ??
@@ -1326,6 +1400,8 @@ class _ChatScreenState extends State<ChatScreen>
         final gateway = _normalSession!.client;
         _desktopGateway = gateway;
         if (gateway != null) widget.testDesktopGateway?.call(gateway);
+        if (gateway != null) _bindWake();
+        if (_voiceLiveMode != null) _bindLiveVoice();
         // The catalogue is per connection: a bound transport invalidates any
         // failure recorded before the socket existed. An application session
         // can exist without a Desktop client (routing/test owners).
@@ -1339,6 +1415,17 @@ class _ChatScreenState extends State<ChatScreen>
         _desktopGateway = null;
       }
     }
+    if (_liveEngine == null &&
+        (widget.testVoiceLiveMode != null ||
+            widget.testVoiceLiveEngineFactory != null)) {
+      _bindLiveVoice();
+    }
+    if (_desktopGateway == null && widget.testWakeController != null) {
+      _bindWake();
+    }
+    // A wake word routed here (a fresh chat, or this profile's connection)
+    // starts its voice once this chat is on screen.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeTakeWakeVoice());
     // Test seam: with no real gateway, hand the same handler to the test
     // hook so it can simulate reconnect transitions.
     if (widget.testRemotePromptSubmit != null && _normalSession == null) {
@@ -1684,6 +1771,7 @@ class _ChatScreenState extends State<ChatScreen>
         snapshot.phase == NormalGatewayTurnPhase.reconciledUnknown) {
       _awaitingVoiceReply = false;
     }
+    var voiceSpoke = false;
     if (snapshot.phase == NormalGatewayTurnPhase.completed &&
         _awaitingVoiceReply) {
       final rows = currentRows;
@@ -1694,14 +1782,51 @@ class _ChatScreenState extends State<ChatScreen>
             row['_gateway_interim'] != true &&
             text.isNotEmpty) {
           _awaitingVoiceReply = false;
+          // Spoken as the voice reply: auto-read never reads it again.
+          AutoReadLedger.claim(
+            _autoReadChatKey,
+            _normalReplyKeys(snapshot, row),
+          );
           unawaited(_speakAssistantText(text).catchError((Object _) {}));
+          voiceSpoke = true;
           break;
         }
       }
       _awaitingVoiceReply = false;
     }
+    _feedClassicLiveSnapshot(snapshot, currentRows);
+    // An ordinary typed turn with auto-read on: read the terminal reply,
+    // once. The owner hands a completed snapshot to this route again (a
+    // re-subscription, the route coming back); the ledger keeps it to one
+    // read.
+    if (!voiceSpoke &&
+        _liveEngine?.active != true &&
+        snapshot.phase == NormalGatewayTurnPhase.completed &&
+        autoSpeakRepliesEnabled.value) {
+      final rows = currentRows;
+      for (final row in rows.reversed) {
+        if (row['role'] == 'user') break;
+        final text = row['content']?.toString() ?? '';
+        if (const {'assistant', 'agent'}.contains(row['role']) &&
+            row['_gateway_interim'] != true &&
+            text.isNotEmpty) {
+          if (AutoReadLedger.claim(
+            _autoReadChatKey,
+            _normalReplyKeys(snapshot, row),
+          )) {
+            unawaited(_speakAssistantText(text).catchError((Object _) {}));
+          }
+          break;
+        }
+      }
+    }
+    // The route this chat captured with its dependencies, not an ancestor
+    // lookup at the end of the frame: a chat deactivated by then (leaving,
+    // or torn down after a failed build) must not look up its ancestors.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || ModalRoute.of(context)?.isCurrent != true) return;
+      if (!mounted || !_voiceElementActive || _voiceRoute?.isCurrent != true) {
+        return;
+      }
       final currentInputs =
           _normalChat?.snapshot.pendingInput ?? const <StreamEvent>[];
       for (final event in snapshot.pendingInput) {
@@ -1713,6 +1838,20 @@ class _ChatScreenState extends State<ChatScreen>
       }
     });
   }
+
+  /// This chat in [AutoReadLedger].
+  String get _autoReadChatKey =>
+      '${widget.connection.id}::${widget.session.id}';
+
+  /// A completed normal-owner reply's identity: its turn (submission) id
+  /// and, once persisted, its durable row id.
+  List<String> _normalReplyKeys(
+    NormalGatewayChatSnapshot snapshot,
+    Map<String, dynamic> row,
+  ) => [
+    if (snapshot.turnId case final turn?) 'turn:$turn',
+    if (row['id'] case final id?) 'row:$id',
+  ];
 
   void _queuePersistedHistoryContext(NormalGatewayChatSnapshot snapshot) {
     final owner = _normalChat;
@@ -2143,6 +2282,12 @@ class _ChatScreenState extends State<ChatScreen>
     final current = ModalRoute.isCurrentOf(context) == true;
     if (!current || !widget.active) {
       _revokeVoice(HandsFreeStopReason.routeChanged);
+    } else {
+      // On top again (a pushed chat or a sheet closed): this chat owns the
+      // wake word once more. The chat that covered it took the single
+      // `wake.detected` handler and let go of it when it left.
+      _bindWake();
+      _syncClassicWakeForLive();
     }
     if (current && _normalChat != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -2153,12 +2298,510 @@ class _ChatScreenState extends State<ChatScreen>
     }
   }
 
+  /// The gateway owns wake detection. Bind this chat so a wake event starts
+  /// dictation on the active session, never on a neighbouring chat.
+  /// The narrow-pane More chat tools row: as the wide pane's toggle button,
+  /// a refused start says why.
+  Future<void> _toggleWakeFromMenu() async {
+    final wake = _wake;
+    if (wake == null) return;
+    final state = wake.state;
+    final wasOn = state.listening || (state.enabled && state.paused);
+    final ok = await wake.toggle(sessionId: widget.session.id);
+    final notice = wake.state.notice.trim();
+    if (!ok && !wasOn && mounted && notice.isNotEmpty) {
+      ScaffoldMessenger.maybeOf(
+        context,
+      )?.showSnackBar(SnackBar(content: Text(notice)));
+    }
+  }
+
+  void _bindWake() {
+    final wake = _wake;
+    if (wake == null) return;
+    wake.bindSessionId(widget.session.id);
+    wake.onWakeDetected = _onWakeDetected;
+    wake.setAppForeground(_voiceElementActive && !_appInBackground);
+  }
+
+  /// As Desktop's `wake.detected` handling (app/contrib/wiring.tsx): a phrase
+  /// enrolled by another profile is answered in THAT profile's chat, and a
+  /// fresh session is a new chat. Either way the voice starts in the new
+  /// chat once it is on screen, never in the chat that merely heard it.
+  void _onWakeDetected(WakeDetectedEvent event) {
+    if (!mounted || !_voiceElementActive) return;
+    final target = event.profile;
+    if (target != null &&
+        wakeProfileKey(target) !=
+            wakeProfileKey(widget.connection.gatewayProfile)) {
+      unawaited(_routeWakeToProfile(target));
+      return;
+    }
+    if (event.startNewSession && !_isFreshChat && !widget.singleSession) {
+      WakeVoiceRequest.request(
+        connectionId: widget.connection.id,
+        profile: widget.connection.gatewayProfile,
+        freshSession: true,
+      );
+      unawaited(_openFreshDraftChat(''));
+      return;
+    }
+    unawaited(_startWakeVoice());
+  }
+
+  /// A chat nothing has been said in yet (what `/new` opens).
+  bool get _isFreshChat =>
+      widget.session.isLocalDraft &&
+      _messages.isEmpty &&
+      (_normalSnapshot?.displayRows.isEmpty ?? true) &&
+      !_sending &&
+      !_streaming;
+
+  /// Hands a wake phrase of another profile to the saved connection that
+  /// reaches it on the same machine, in a fresh chat. With none saved,
+  /// nothing starts.
+  Future<void> _routeWakeToProfile(String profile) async {
+    var saved = const <SavedConnection>[];
+    try {
+      saved =
+          await (widget.testSavedConnections?.call() ??
+              SharedPreferences.getInstance().then(
+                (prefs) =>
+                    ConnectionManager(prefs).loadConnectionsWithSecrets(),
+              ));
+    } catch (_) {
+      // Unreadable storage is the same as no saved owner.
+    }
+    if (!mounted || !_voiceElementActive || !widget.active) return;
+    final match = wakeConnectionForProfile(
+      saved,
+      from: widget.connection,
+      profile: profile,
+    );
+    if (match == null ||
+        widget.singleSession ||
+        ConnectionMutationBarrier.isPending(match.id) ||
+        _voiceRoute?.isCurrent != true) {
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        SnackBar(
+          content: Text(
+            context.sharedL10n.wake_word_other_profile(profile.trim()),
+          ),
+        ),
+      );
+      // Nothing took the microphone: wake listens again.
+      _syncClassicWakeForLive();
+      return;
+    }
+    WakeVoiceRequest.request(
+      connectionId: match.id,
+      profile: match.gatewayProfile,
+      freshSession: true,
+    );
+    await _openFreshDraftChat('', owner: match);
+  }
+
+  /// Takes a wake request routed to this chat's owner: the chat that now
+  /// shows the fresh session starts the voice.
+  void _maybeTakeWakeVoice() {
+    if (!mounted || !_voiceElementActive || !widget.active) return;
+    if (!WakeVoiceRequest.take(
+      connectionId: widget.connection.id,
+      profile: widget.connection.gatewayProfile,
+      isNewChat: _isFreshChat,
+    )) {
+      return;
+    }
+    unawaited(_startWakeVoice());
+  }
+
+  Future<void> _startWakeVoice() async {
+    if (!mounted || !_voiceElementActive) return;
+    if (_liveEngine?.active == true) return;
+    // A chat that has only just mounted does not know the host's voice mode
+    // yet: read it before picking the engine.
+    final mode = _voiceLiveMode;
+    if (mode != null && !mode.hasStatus) {
+      await mode.refresh();
+      if (!mounted || !_voiceElementActive || !widget.active) return;
+      if (_liveEngine?.active == true) return;
+    }
+    if (mode?.effectiveMode == 'gpt-live') {
+      unawaited(_startVoiceConversation());
+      return;
+    }
+    if (!_voiceComposer.listening && !_voiceComposer.starting) {
+      unawaited(_startVoiceInput());
+    }
+  }
+
+  void _bindLiveVoice() {
+    _disposeLiveVoice();
+    final mode = _voiceLiveMode;
+    mode?.addListener(_onLiveVoiceChanged);
+    if (mode != null) {
+      unawaited(mode.refresh());
+    }
+    final transport =
+        mode?.transport ??
+        GptLiveGatewayTransport(
+          widget.connection,
+          profile: widget.connection.gatewayProfile,
+        );
+    final ownsTransport = mode == null;
+    if (ownsTransport) _liveTransport = transport;
+    final engine =
+        widget.testVoiceLiveEngineFactory?.call(transport) ??
+        VoiceLiveEngine(
+          transport: transport,
+          connectionId: widget.connection.id,
+        );
+    engine.onDelegation = _onLiveDelegation;
+    engine.onError = (message) {
+      if (!mounted) return;
+      ScaffoldMessenger.maybeOf(
+        context,
+      )?.showSnackBar(SnackBar(content: Text(message)));
+    };
+    engine.onClosed = (reason) {
+      if (!mounted) return;
+      // The session ended under us (connection lost, closed by the service):
+      // drop the turn it was feeding and say why.
+      _liveDelegationId = null;
+      _liveDelegatedTurnId = null;
+      _liveTurnObserved = false;
+      _syncClassicWakeForLive();
+      setState(() {});
+      final notice = voiceLiveEndedNotice(context, reason);
+      if (notice != null) {
+        ScaffoldMessenger.maybeOf(
+          context,
+        )?.showSnackBar(SnackBar(content: Text(notice)));
+      }
+    };
+    engine.onStopWord = () {
+      if (!mounted) return;
+      _syncClassicWakeForLive();
+      setState(() {});
+    };
+    engine.addListener(_onLiveVoiceChanged);
+    _liveEngine = engine;
+  }
+
+  void _disposeLiveVoice() {
+    _liveDelegationId = null;
+    _liveDelegatedTurnId = null;
+    _liveTurnObserved = false;
+    _voiceLiveMode?.removeListener(_onLiveVoiceChanged);
+    final engine = _liveEngine;
+    _liveEngine = null;
+    if (engine != null) {
+      engine.removeListener(_onLiveVoiceChanged);
+      engine.dispose();
+    }
+    _liveTransport?.dispose();
+    _liveTransport = null;
+  }
+
+  /// Ends the live session at once, with no wait for the vendor: this chat is
+  /// in the background, hidden or covered, so it may not keep a microphone.
+  /// The engine stays bound; Start opens a new session when the chat is back.
+  void _teardownLiveVoice(String reason) {
+    _liveTeardowns++;
+    _liveDelegationId = null;
+    _liveDelegatedTurnId = null;
+    _liveTurnObserved = false;
+    final engine = _liveEngine;
+    if (engine == null || !engine.engaged) return;
+    unawaited(engine.stopNow(reason));
+  }
+
+  void _onLiveVoiceChanged() {
+    if (!mounted) return;
+    _syncClassicWakeForLive();
+    setState(() {});
+  }
+
+  void _syncClassicWakeForLive() {
+    if (_wake case final wake?) {
+      // A stopped session keeps the capture device until the vendor answers
+      // its goodbye (or the 15 s fallback): wake resumes only once it is free.
+      final busy =
+          _voiceComposer.listening ||
+          _voiceComposer.starting ||
+          (_liveEngine?.active ?? false) ||
+          (_liveEngine?.holdsMicrophone ?? false);
+      wake.setPausedForVoice(busy);
+    }
+  }
+
+  List<Map<String, dynamic>> _seedClassicLiveHistory() {
+    final source = _normalSnapshot?.displayRows.isNotEmpty == true
+        ? _normalSnapshot!.displayRows
+        : _messages;
+    final turns = <({String role, String text})>[];
+    for (final row in source) {
+      final role = row['role']?.toString();
+      if (role != 'user' && role != 'assistant') continue;
+      final text = row['content']?.toString().trim() ?? '';
+      if (text.isEmpty) continue;
+      turns.add((role: role!, text: text));
+    }
+    return toLiveHistory(turns);
+  }
+
+  Future<void> _startVoiceConversation() async {
+    final mode = _voiceLiveMode;
+    // One status read per start: a read made here to choose the engine is
+    // handed to it; with a cached status the engine reads a fresh one.
+    GptLiveStatus? fresh;
+    if (mode != null && !mode.hasStatus) {
+      fresh = await mode.refresh();
+    }
+    if (!mounted) return;
+    if (mode != null && mode.selectedMode == 'gpt-live') {
+      // A background teardown nulls the engine; rebind on demand so the
+      // start button still opens a live conversation after app resume.
+      if (_liveEngine == null) _bindLiveVoice();
+      final engine = _liveEngine;
+      if (mode.liveAvailable && engine != null) {
+        if (_wake case final wake?) {
+          await wake.pauseForVoice();
+        }
+        if (!mounted) return;
+        final teardowns = _liveTeardowns;
+        final started = await engine.start(
+          history: _seedClassicLiveHistory(),
+          status: fresh,
+        );
+        if (started && mounted) {
+          _syncClassicWakeForLive();
+          setState(() {});
+          return;
+        }
+        if (!mounted) return;
+        // Cancelled by a teardown (background, hidden or covered chat), not
+        // refused by the host: no fallback, and no other microphone path.
+        if (teardowns != _liveTeardowns || !identical(engine, _liveEngine)) {
+          _syncClassicWakeForLive();
+          return;
+        }
+      }
+      final reason =
+          mode.unavailableReason ??
+          engine?.reason ??
+          context.sharedL10n.voice_engine_live_needs_key;
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        SnackBar(
+          content: Text(
+            context.sharedL10n.voice_engine_fallback_chained(reason),
+          ),
+        ),
+      );
+    }
+    if (handsFreeEnabled.value && _handsFreeSupported) {
+      await _startHandsFree();
+    } else if (!_voiceComposer.listening && !_voiceComposer.starting) {
+      await _startVoiceInput();
+    }
+  }
+
+  Future<void> _stopLiveVoice() async {
+    _liveDelegationId = null;
+    _liveDelegatedTurnId = null;
+    _liveTurnObserved = false;
+    final engine = _liveEngine;
+    if (engine == null) return;
+    await engine.stop();
+    if (!mounted) return;
+    _syncClassicWakeForLive();
+    setState(() {});
+  }
+
+  void _toggleLiveMute() {
+    final engine = _liveEngine;
+    if (engine == null || !engine.active) return;
+    engine.setMuted(!engine.muted);
+  }
+
+  void _interruptLiveVoice() {
+    if (_streaming && !_stopResponseInFlight) {
+      unawaited(_stopResponse());
+    }
+    _liveEngine?.stopTurn();
+  }
+
+  void _onLiveDelegation(String id, Map<String, String> prompt) {
+    final engine = _liveEngine;
+    if (engine == null || !engine.active) return;
+    final utterance = (prompt['prompt'] ?? '').trim();
+    final voiceContext = (prompt['context'] ?? '').trim();
+    if (utterance.isEmpty) return;
+    if (isVoiceStopCommand(utterance)) {
+      unawaited(_stopLiveVoice());
+      return;
+    }
+    // Capture owner identity BEFORE any await so a late event after a chat
+    // switch, route close or connection/profile change is dropped cleanly.
+    final ownerSessionId = widget.session.id;
+    final ownerConnectionId = widget.connection.id;
+    final ownerProfile = widget.connection.gatewayProfile;
+    final ownerAccountEpoch = ConnectionMutationBarrier.capture(
+      ownerConnectionId,
+    );
+    final ownerEngine = engine;
+    final ownerEpoch = engine.startEpoch;
+    final ownerNormalChat = _normalChat;
+
+    bool stillOwned() =>
+        mounted &&
+        _voiceElementActive &&
+        widget.active &&
+        widget.session.id == ownerSessionId &&
+        widget.connection.id == ownerConnectionId &&
+        widget.connection.gatewayProfile == ownerProfile &&
+        ConnectionMutationBarrier.isCurrent(
+          ownerConnectionId,
+          ownerAccountEpoch,
+        ) &&
+        identical(_liveEngine, ownerEngine) &&
+        ownerEngine.active &&
+        ownerEngine.startEpoch == ownerEpoch &&
+        identical(_normalChat, ownerNormalChat);
+
+    unawaited(
+      _submitClassicLiveDelegation(
+        delegationId: id,
+        utterance: utterance,
+        voiceContext: voiceContext,
+        ownerEngine: ownerEngine,
+        stillOwned: stillOwned,
+      ),
+    );
+  }
+
+  Future<void> _submitClassicLiveDelegation({
+    required String delegationId,
+    required String utterance,
+    required String voiceContext,
+    required VoiceLiveEngine ownerEngine,
+    required bool Function() stillOwned,
+  }) async {
+    if (!stillOwned()) return;
+    if (_streaming || _normalChat?.snapshot.hasActiveTurn == true) {
+      if (!_stopResponseInFlight) {
+        try {
+          await _stopResponse();
+        } catch (_) {}
+      }
+      for (
+        var i = 0;
+        i < 30 &&
+            stillOwned() &&
+            (_streaming ||
+                _sending ||
+                _normalChat?.snapshot.hasActiveTurn == true);
+        i++
+      ) {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+      }
+    }
+    if (!stillOwned()) return;
+    _liveDelegationId = delegationId;
+    _liveDelegatedTurnId = null;
+    _liveTurnObserved = false;
+    try {
+      await _sendMessage(
+        textOverride: utterance,
+        promptParams: <String, Object?>{
+          'surface': 'voice-live',
+          if (voiceContext.isNotEmpty) 'voice_context': voiceContext,
+        },
+      );
+    } catch (_) {
+      if (stillOwned() && _liveDelegationId == delegationId) {
+        _liveDelegationId = null;
+        _liveDelegatedTurnId = null;
+        _liveTurnObserved = false;
+        ownerEngine.speak(
+          'Sorry, I could not reach Hermes for that request.',
+          delegationId: delegationId,
+          flush: true,
+        );
+        ownerEngine.settle();
+      }
+    }
+  }
+
+  void _feedClassicLiveSnapshot(
+    NormalGatewayChatSnapshot snapshot,
+    List<Map<String, dynamic>> currentRows,
+  ) {
+    final engine = _liveEngine;
+    final delegationId = _liveDelegationId;
+    if (engine == null || !engine.active || delegationId == null) return;
+    if (_liveDelegatedTurnId == null) {
+      if (!snapshot.hasActiveTurn || snapshot.turnId == null) return;
+      _liveDelegatedTurnId = snapshot.turnId;
+    } else if (snapshot.turnId != _liveDelegatedTurnId) {
+      return;
+    }
+
+    final parts = <String>[];
+    for (final row in currentRows) {
+      if (!const {'assistant', 'agent'}.contains(row['role'])) continue;
+      final text = row['content']?.toString().trim() ?? '';
+      if (text.isNotEmpty) parts.add(text);
+    }
+    final turnReply = parts.join('\n\n');
+
+    if (snapshot.hasActiveTurn) {
+      _liveTurnObserved = true;
+      final status = snapshot.status;
+      if (status != null &&
+          status.kind == 'tool' &&
+          status.text.trim().isNotEmpty) {
+        engine.think(
+          'Hermes is working: ${status.text.trim()}. Not done yet.',
+          delegationId: delegationId,
+        );
+      }
+      if (turnReply.isNotEmpty) {
+        engine.speak(turnReply, delegationId: delegationId);
+      }
+      return;
+    }
+
+    if (!_liveTurnObserved) return;
+    final terminalText =
+        snapshot.terminal?.turnId == _liveDelegatedTurnId &&
+            (snapshot.terminal?.publicFinalText?.trim().isNotEmpty ?? false)
+        ? snapshot.terminal!.publicFinalText!.trim()
+        : turnReply;
+    if (terminalText.isNotEmpty) {
+      engine.speak(terminalText, delegationId: delegationId, flush: true);
+    } else if (engine.spokenCursor == 0) {
+      engine.think(
+        'Hermes finished that request without a spoken result.',
+        delegationId: delegationId,
+      );
+    }
+    _liveDelegationId = null;
+    _liveDelegatedTurnId = null;
+    _liveTurnObserved = false;
+    engine.settle();
+  }
+
   @override
   void didUpdateWidget(covariant ChatScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.connection != widget.connection ||
         oldWidget.session.id != widget.session.id) {
       _preview.close();
+      _bindWake();
+      // The live session belongs to the chat we left; close it and rebind
+      // for the new chat, mirroring the NextGen composer teardown.
+      if (_liveEngine != null) _bindLiveVoice();
     }
     if (oldWidget.connection.id != widget.connection.id ||
         oldWidget.connection.gatewayProfile !=
@@ -2209,9 +2852,26 @@ class _ChatScreenState extends State<ChatScreen>
     // notifies the global observer. Revoke before leaving the active tree;
     // neither retained callbacks nor pending audio starts may borrow a reparent.
     _voiceElementActive = false;
+    _releaseWake();
     handsFreeRouteObserver.removeListener(_onVoiceRouteChanged);
     _revokeVoice(HandsFreeStopReason.routeChanged);
     super.deactivate();
+  }
+
+  /// Lets go of the wake word when this chat leaves the tree. Only the chat
+  /// bound to it does, so a chat leaving never pauses wake under the one
+  /// still showing. The pause runs once this frame is done: notifying the
+  /// controller's listeners while the tree is torn down is not allowed, and a
+  /// chat that comes straight back (a reparent) keeps it.
+  void _releaseWake() {
+    final wake = _wake;
+    if (wake == null || wake.onWakeDetected != _onWakeDetected) return;
+    wake.onWakeDetected = null;
+    scheduleMicrotask(() {
+      if (!_voiceElementActive && wake.onWakeDetected == null) {
+        wake.setAppForeground(false);
+      }
+    });
   }
 
   @override
@@ -2219,6 +2879,7 @@ class _ChatScreenState extends State<ChatScreen>
     super.activate();
     _voiceElementActive = true;
     handsFreeRouteObserver.addListener(_onVoiceRouteChanged);
+    _bindWake();
     // Reactivation restores observation, never microphone consent.
   }
 
@@ -2240,6 +2901,8 @@ class _ChatScreenState extends State<ChatScreen>
     _ownedResumeClient?.close();
     _ownedResumeClient = null;
     _manualAudioIntent++;
+    // deactivate() already let go of the wake word (see _releaseWake).
+    _releaseWake();
     _composerFocus
       ..removeListener(_syncComposerKeyboardEndScroll)
       ..dispose();
@@ -2250,9 +2913,17 @@ class _ChatScreenState extends State<ChatScreen>
     _handsFree
       ..removeListener(_onVoiceComposerChanged)
       ..dispose();
+    _disposeLiveVoice();
     _voiceTurn?.finish(HandsFreeTurnStatus.unknown);
     _voiceTurn = null;
-    unawaited(_replySpeaker.stop().catchError((Object _) {}));
+    final ownedSpeaker = _ownedDirectSpeaker;
+    _ownedDirectSpeaker = null;
+    unawaited(
+      _replySpeaker
+          .stop()
+          .catchError((Object _) {})
+          .whenComplete(() => ownedSpeaker?.dispose()),
+    );
     final normalChat = _normalChat;
     final reservation = _normalReservation;
     final subscription = _normalSubscription;
@@ -2354,9 +3025,21 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     final foreground = state == AppLifecycleState.resumed;
+    _wake?.setAppForeground(foreground);
     if (_voiceForeground != foreground) _voiceForegroundEpoch++;
     _voiceForeground = foreground;
-    if (!_voiceForeground) _revokeVoice(HandsFreeStopReason.background);
+    if (!_voiceForeground) {
+      _revokeVoice(HandsFreeStopReason.background);
+    }
+    // The live session is tied to the foreground screen: close the peer and
+    // stop the tracks on a real background. `inactive` alone is not one: the
+    // OS microphone prompt on first use puts the app there while the session
+    // it is granting is still starting.
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached) {
+      _teardownLiveVoice('background');
+    }
     if ((defaultTargetPlatform == TargetPlatform.windows &&
             state == AppLifecycleState.inactive) ||
         state == AppLifecycleState.paused ||
@@ -3150,6 +3833,13 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   void _revokeVoice(HandsFreeStopReason reason) {
+    // GPT-Live follows hands-free: a chat that is offstage (active: false),
+    // covered by another route, switched or leaving the tree may not keep a
+    // live microphone. The app lifecycle is handled where it arrives,
+    // because `inactive` alone (the OS microphone prompt) is no background.
+    if (reason != HandsFreeStopReason.background) {
+      _teardownLiveVoice(reason.name);
+    }
     if (!_voiceRouteCurrent ||
         !_voiceForeground ||
         !_voiceAccountCurrent() ||
@@ -3469,6 +4159,15 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   void _onVoiceComposerChanged() {
+    // Wake stays silent while the mic is owned by dictation, so the engine
+    // never hears its own playback and a wake word cannot start a second mic.
+    if (_wake case final wake?) {
+      if (_voiceComposer.listening || _voiceComposer.starting) {
+        unawaited(wake.pauseForVoice());
+      } else {
+        wake.setPausedForVoice(false);
+      }
+    }
     if (_voiceBound &&
         _handsFree.active &&
         (_voiceRecording.recording ||
@@ -3481,6 +4180,15 @@ class _ChatScreenState extends State<ChatScreen>
       _voiceTurn = null;
     }
     if (mounted && _voiceElementActive) setState(() {});
+  }
+
+  /// Marks whether this send's reply is to be spoken. A spoken reply's voice
+  /// config is resolved while the turn runs, not after the reply lands.
+  void _expectVoiceReply(bool speakResponse) {
+    _awaitingVoiceReply = speakResponse && _voiceReplyEnabled;
+    if (_awaitingVoiceReply || autoSpeakRepliesEnabled.value) {
+      _ownedDirectSpeaker?.warm();
+    }
   }
 
   Future<void> _speakAssistantText(String text) async {
@@ -3518,15 +4226,57 @@ class _ChatScreenState extends State<ChatScreen>
           ),
         );
     }
+    var interrupted = false;
+    var ended = false;
+    final monitor = bargeInEnabled.value
+        ? (widget.testBargeInMonitor?.call() ?? SpeechToTextBargeInMonitor())
+        : null;
+    bool readCurrent() =>
+        mounted &&
+        intent == _manualAudioIntent &&
+        _voiceRouteCurrent &&
+        _voiceForeground;
+    void listenForBargeIn(BargeInMonitor monitor, VoidCallback cut) {
+      unawaited(
+        monitor
+            .start(
+              onInterrupt: () {
+                interrupted = true;
+                cut();
+              },
+              echoText: spokenText,
+              isCurrent: readCurrent,
+            )
+            .then((opened) {
+              // The mic is live once the monitor really opened it, and only
+              // while this read is still the one playing.
+              if (!opened || ended || interrupted || !readCurrent()) return;
+              setState(() => _bargeInLive = monitor);
+            }, onError: (Object _) {}),
+      );
+    }
+
     try {
       if (!_handsFreeSupported && widget.testVoiceReplySpeaker == null) {
         // Preserve non-Android Read aloud: queue mode/input-length APIs are
         // Android-only; hands-free completion guarantees are not claimed here.
         await _flutterTts.stop();
+        if (monitor != null) {
+          listenForBargeIn(
+            monitor,
+            () => unawaited(_flutterTts.stop().catchError((Object _) {})),
+          );
+        }
         await _flutterTts.speak(spokenText);
         return;
       }
       await _replySpeaker.stop();
+      if (monitor != null) {
+        listenForBargeIn(
+          monitor,
+          () => unawaited(_replySpeaker.stop().catchError((Object _) {})),
+        );
+      }
       final outcome = await _replySpeaker.speak(
         spokenText,
         isCurrent: () =>
@@ -3539,6 +4289,7 @@ class _ChatScreenState extends State<ChatScreen>
         throw StateError('Playback unavailable');
       }
     } catch (_) {
+      if (interrupted) return;
       if (!announce || !mounted) return;
       final messenger = ScaffoldMessenger.of(context);
       messenger
@@ -3551,6 +4302,16 @@ class _ChatScreenState extends State<ChatScreen>
             duration: Duration(seconds: 3),
           ),
         );
+    } finally {
+      ended = true;
+      await monitor?.stop();
+      if (monitor != null && identical(_bargeInLive, monitor)) {
+        if (mounted) {
+          setState(() => _bargeInLive = null);
+        } else {
+          _bargeInLive = null;
+        }
+      }
     }
   }
 
@@ -4447,7 +5208,24 @@ class _ChatScreenState extends State<ChatScreen>
       pendingSubmission.complete();
     }
     if (materialized) _registerMaterializedAssistantMessage();
-    if (speakTerminalResponse) unawaited(_speakAssistantText(nextText));
+    // The submission's identity: a terminal state applied again (a replay,
+    // the route coming back) is never read a second time.
+    final replyKeys = [
+      'turn:${projection.clientTurnId}',
+      if (projection.messageId case final id?) 'message:$id',
+    ];
+    if (speakTerminalResponse) {
+      AutoReadLedger.claim(_autoReadChatKey, replyKeys);
+      unawaited(_speakAssistantText(nextText));
+    } else if (projection.isTerminal &&
+        !projection.isFailClosed &&
+        _liveEngine?.active != true &&
+        autoSpeakRepliesEnabled.value &&
+        nextText.trim().isNotEmpty &&
+        AutoReadLedger.claim(_autoReadChatKey, replyKeys)) {
+      // Ordinary typed turn: auto-read the terminal reply, once.
+      unawaited(_speakAssistantText(nextText).catchError((Object _) {}));
+    }
     if (projection.isActive) {
       _scrollCoordinator.beginStreaming(isNearEnd: _isNearEnd());
       _scheduleStreamingFollow();
@@ -5666,12 +6444,7 @@ class _ChatScreenState extends State<ChatScreen>
         final transcribe = widget.testVoiceTranscription;
         final transcript = transcribe != null
             ? await transcribe(path)
-            : await transcribeVoiceRecording(
-                _voiceDashboard ??= DashboardClient.fromConnection(
-                  widget.connection,
-                ),
-                path,
-              );
+            : await _transcribeWithClientDirectFallback(path);
         if (!_isVoiceAuthorityCurrent(authority) || transcript.trim().isEmpty) {
           return;
         }
@@ -5688,6 +6461,37 @@ class _ChatScreenState extends State<ChatScreen>
         // transport continues owning the response. No transport write is retried.
         await Future.any([sending, receipt.future]);
       },
+    );
+  }
+
+  /// Provider-direct transcription when the gateway's profile config says the
+  /// client may call it; otherwise the existing authenticated audio relay.
+  /// Provider rejections are surfaced, never retried through the relay.
+  Future<String> _transcribeWithClientDirectFallback(String path) async {
+    final connection = widget.connection;
+    final store = VoiceClientRuntime.storeFor(
+      connection,
+      connectionId: connection.id,
+      profile: connection.gatewayProfile,
+    );
+    try {
+      final direct = await store.transcribe(
+        path,
+        fileName: 'recording.m4a',
+        mimeType: 'audio/mp4',
+      );
+      if (direct != null) return direct;
+    } on ClientDirectVoiceException catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.maybeOf(
+          context,
+        )?.showSnackBar(SnackBar(content: Text(error.message)));
+      }
+      throw const VoiceTranscriptionException();
+    }
+    return transcribeVoiceRecording(
+      _voiceDashboard ??= DashboardClient.fromConnection(connection),
+      path,
     );
   }
 
@@ -6465,12 +7269,20 @@ class _ChatScreenState extends State<ChatScreen>
   /// commits to the gateway on its first prompt. Unlike the conversation
   /// browser's New button, a chat screen has no chat-space context, so the
   /// draft is not assigned to any space.
-  Future<void> _openFreshDraftChat(String title) async {
+  ///
+  /// With [owner], the chat belongs to another saved connection (a wake
+  /// phrase of that profile): it shares nothing of this chat's project,
+  /// archive or host callbacks.
+  Future<void> _openFreshDraftChat(
+    String title, {
+    SavedConnection? owner,
+  }) async {
     final now = DateTime.now();
+    final sameOwner = owner == null;
     final draft = Session(
       id: GatewayChatClient.generateSessionId(),
       title: title.isEmpty ? context.l10n.new_chat : title,
-      model: widget.session.model,
+      model: sameOwner ? widget.session.model : '',
       source: 'mobile',
       messageCount: 0,
       isActive: true,
@@ -6502,16 +7314,22 @@ class _ChatScreenState extends State<ChatScreen>
         // session-ensure observer stay behind — both are scoped to the
         // parent session.
         builder: (_) => ChatScreen(
-          connection: widget.connection,
+          connection: owner ?? widget.connection,
           session: draft,
-          projectName: widget.projectName,
-          projectWorkingDirectory: widget.projectWorkingDirectory,
+          projectName: sameOwner ? widget.projectName : null,
+          projectWorkingDirectory: sameOwner
+              ? widget.projectWorkingDirectory
+              : null,
           turnApplicationController: widget.turnApplicationController,
-          onOpenSession: hostOpen == null ? null : openFromDraft,
-          onArchiveChanged: widget.onArchiveChanged,
-          sessionArchiver: widget.sessionArchiver,
+          onOpenSession: hostOpen == null || !sameOwner ? null : openFromDraft,
+          onArchiveChanged: sameOwner ? widget.onArchiveChanged : null,
+          sessionArchiver: sameOwner ? widget.sessionArchiver : null,
           testTurnApplicationSession: widget.testTurnApplicationSession,
           testApiClient: widget.testApiClient,
+          testVoiceLiveMode: widget.testVoiceLiveMode,
+          testVoiceLiveEngineFactory: widget.testVoiceLiveEngineFactory,
+          testWakeController: widget.testWakeController,
+          testSavedConnections: widget.testSavedConnections,
           testAttachmentDraftService: widget.testAttachmentDraftService,
           testRemotePromptSubmit: widget.testRemotePromptSubmit,
           testNormalResume: widget.testNormalResume,
@@ -6523,6 +7341,7 @@ class _ChatScreenState extends State<ChatScreen>
           testVoiceTranscription: widget.testVoiceTranscription,
           testHandsFreePlatform: widget.testHandsFreePlatform,
           testVoiceReplySpeaker: widget.testVoiceReplySpeaker,
+          testBargeInMonitor: widget.testBargeInMonitor,
           testTurnNotifications: widget.testTurnNotifications,
           testProjectOverviewLoader: widget.testProjectOverviewLoader,
           testLegacyProjectSessionEnsure: widget.testLegacyProjectSessionEnsure,
@@ -6755,7 +7574,7 @@ class _ChatScreenState extends State<ChatScreen>
           ];
 
     if (!keepComposer) _commitComposerForSend();
-    _awaitingVoiceReply = speakResponse && _voiceReplyEnabled;
+    _expectVoiceReply(speakResponse);
     final responseGeneration = ++_responseGeneration;
     voiceBinding?.responseGeneration = responseGeneration;
     _activeResponseTransport = _ResponseTransport.rest;
@@ -6921,6 +7740,7 @@ class _ChatScreenState extends State<ChatScreen>
               _activeResponseTransport = _ResponseTransport.none;
             });
             _scheduleScrollTarget(_scrollCoordinator.endStreaming());
+            var voiceSpoke = false;
             if (_awaitingVoiceReply) {
               _awaitingVoiceReply = false;
               final assistant = messages.reversed.firstWhere(
@@ -6929,6 +7749,33 @@ class _ChatScreenState extends State<ChatScreen>
               );
               final assistantText = assistant['content']?.toString();
               if (assistantText != null) {
+                if (assistant['id'] case final id?) {
+                  AutoReadLedger.claim(_autoReadChatKey, ['row:$id']);
+                }
+                await _speakAssistantText(assistantText);
+                voiceSpoke = true;
+              }
+            }
+            if (!voiceSpoke && autoSpeakRepliesEnabled.value) {
+              // Ordinary typed turn: auto-read the terminal reply, once by
+              // its durable id. (This runs once per finished send; a row
+              // with no id is still read that once.)
+              final assistant = messages.reversed.firstWhere(
+                (message) => message['role'] == 'assistant',
+                orElse: () => const <String, dynamic>{},
+              );
+              final rawContent = assistant['content'];
+              String? assistantText;
+              if (rawContent is String) {
+                assistantText = rawContent.trim();
+              } else if (rawContent != null) {
+                assistantText = rawContent.toString().trim();
+              }
+              final rowId = assistant['id'];
+              if (assistantText != null &&
+                  assistantText.isNotEmpty &&
+                  (rowId == null ||
+                      AutoReadLedger.claim(_autoReadChatKey, ['row:$rowId']))) {
                 await _speakAssistantText(assistantText);
               }
             }
@@ -7102,7 +7949,7 @@ class _ChatScreenState extends State<ChatScreen>
         PreparedImageStore.supports(imageText, attachments);
     PreparedImageCapture? capture;
     var handedOff = false;
-    _awaitingVoiceReply = speakResponse && _voiceReplyEnabled;
+    _expectVoiceReply(speakResponse);
     try {
       final projectCwd = widget.projectWorkingDirectory?.trim();
       if (widget.session.isLocalDraft && projectCwd?.isNotEmpty == true) {
@@ -7304,7 +8151,7 @@ class _ChatScreenState extends State<ChatScreen>
     final turnSession = _turnApplicationSession;
     if (turnSession == null) return;
     _noteGitTurnStarted();
-    _awaitingVoiceReply = speakResponse && _voiceReplyEnabled;
+    _expectVoiceReply(speakResponse);
     final responseGeneration = ++_responseGeneration;
     _activeResponseTransport = _ResponseTransport.desktop;
     final staged = <GatewayTurnAttachmentReceipt>[];
@@ -9471,6 +10318,19 @@ class _ChatScreenState extends State<ChatScreen>
               ),
             ),
           if (!compactTools) ...[
+            if (_voiceLiveMode?.hasStatus == true)
+              IconButton(
+                key: const ValueKey('voice-engine-toolbar'),
+                tooltip: context.sharedL10n.voice_engine_title,
+                icon: const Icon(Icons.graphic_eq),
+                onPressed: () => unawaited(
+                  showVoiceEngineSheet(
+                    context,
+                    controller: _voiceLiveMode!,
+                    disabled: _liveEngine?.active == true,
+                  ),
+                ),
+              ),
             if (widget.onOpenAppCommandPalette != null)
               IconButton(
                 key: const ValueKey('app-command-palette-button'),
@@ -9497,17 +10357,34 @@ class _ChatScreenState extends State<ChatScreen>
                 onPressed: () => workers.open(context),
               ),
           ] else if (_desktopGateway != null ||
+              _voiceLiveMode?.hasStatus == true ||
+              _wake?.state.offered == true ||
               workers != null ||
               radio != null ||
               widget.onOpenAppCommandPalette != null)
             // One always-visible menu on narrow panes, also while a reply
             // streams (the gateway queue matters most then). The radio's
-            // controls move here from the app bar.
+            // and the wake word's controls move here from the app bar and
+            // the composer row.
             PopupMenuButton<String>(
               key: const ValueKey('chat-tools-menu'),
               tooltip: 'More chat tools',
               icon: const Icon(Icons.widgets_outlined),
               onSelected: (tool) {
+                if (tool == wakeWordToolValue) {
+                  unawaited(_toggleWakeFromMenu());
+                  return;
+                }
+                if (tool == voiceEngineToolValue && _voiceLiveMode != null) {
+                  unawaited(
+                    showVoiceEngineSheet(
+                      context,
+                      controller: _voiceLiveMode!,
+                      disabled: _liveEngine?.active == true,
+                    ),
+                  );
+                  return;
+                }
                 if (tool == 'app-command-palette') {
                   widget.onOpenAppCommandPalette?.call();
                   return;
@@ -9534,6 +10411,10 @@ class _ChatScreenState extends State<ChatScreen>
                 if (tool == 'history') _openHistory();
               },
               itemBuilder: (_) => [
+                if (_wake case final wake? when wake.state.offered)
+                  wakeWordToolItem(context, wake.state),
+                if (_voiceLiveMode?.hasStatus == true)
+                  voiceEngineToolItem(context, _voiceLiveMode!),
                 if (widget.onOpenAppCommandPalette != null)
                   PopupMenuItem(
                     value: 'app-command-palette',
@@ -9824,6 +10705,7 @@ class _ChatScreenState extends State<ChatScreen>
                             ),
                           _buildInputBar(
                             availableHeight: viewport.maxHeight - slashHeight,
+                            compactTools: compactTools,
                           ),
                         ],
                       );
@@ -9907,7 +10789,10 @@ class _ChatScreenState extends State<ChatScreen>
     return _terminalTurnNotice;
   }
 
-  Widget _buildInputBar({required double availableHeight}) {
+  Widget _buildInputBar({
+    required double availableHeight,
+    bool compactTools = false,
+  }) {
     final handsFreeAction = _buildHandsFreeComposerAction();
     final separateVoiceAction = MediaQuery.sizeOf(context).width < 400;
     // Also true in a pane whose host Scaffold already resized for the
@@ -10236,6 +11121,17 @@ class _ChatScreenState extends State<ChatScreen>
                         onStop: () => unawaited(_voiceComposer.stop()),
                         onCancel: () => unawaited(_voiceComposer.cancel()),
                       ),
+                    if (_wake case final wake?)
+                      GatewayWakeListeningBanner(
+                        controller: wake,
+                        available: availableHeight,
+                        sessionId: widget.session.id,
+                      ),
+                    // Barge-in keeps the mic on while a reply is read.
+                    if (_bargeInLive != null)
+                      BargeInMicLiveIndicator(
+                        label: context.l10n.barge_in_mic_live,
+                      ),
                   ],
                 ),
               ),
@@ -10409,7 +11305,19 @@ class _ChatScreenState extends State<ChatScreen>
                       const SizedBox(width: 8),
                       if (!separateVoiceAction && handsFreeAction != null)
                         handsFreeAction,
-                      if (!_voiceComposer.listening && !_streaming)
+                      // A pane under 480 px has it in More chat tools, as
+                      // NextGen does.
+                      if (_wake case final wake? when !compactTools)
+                        GatewayWakeToolbarButton(
+                          controller: wake,
+                          sessionId: widget.session.id,
+                          onNotice: (msg) => ScaffoldMessenger.maybeOf(
+                            context,
+                          )?.showSnackBar(SnackBar(content: Text(msg))),
+                        ),
+                      if (!_voiceComposer.listening &&
+                          !_streaming &&
+                          _liveEngine?.active != true)
                         VoiceComposerStartButton(
                           enabled:
                               !_transcriptLoadBlocksComposer &&
@@ -10527,6 +11435,35 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Widget? _buildHandsFreeComposerAction() {
+    if (_liveEngine case final live? when live.active) {
+      return VoiceLiveInlineControls(
+        engine: live,
+        compact: MediaQuery.sizeOf(context).width < 480,
+        onToggleMute: _toggleLiveMute,
+        onInterrupt: _interruptLiveVoice,
+        onStop: () => unawaited(_stopLiveVoice()),
+      );
+    }
+    if (_voiceLiveMode case final mode?
+        when mode.hasStatus && mode.selectedMode == 'gpt-live') {
+      if (_voiceComposer.listening ||
+          _streaming ||
+          _sending ||
+          _preparingSend) {
+        return null;
+      }
+      return GestureDetector(
+        onLongPress: () =>
+            unawaited(showVoiceEngineSheet(context, controller: mode)),
+        child: IconButton(
+          key: const Key('voice-live-start'),
+          tooltip: context.sharedL10n.voice_live_start,
+          icon: const Icon(Icons.graphic_eq),
+          constraints: const BoxConstraints.tightFor(width: 48, height: 48),
+          onPressed: () => unawaited(_startVoiceConversation()),
+        ),
+      );
+    }
     // The feature is switched off in Settings: hide the control entirely. A
     // session that is still winding down after the switch keeps its Stop
     // reachable until the stop lands.

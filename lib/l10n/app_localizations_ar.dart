@@ -7329,6 +7329,236 @@ class AppLocalizationsAr extends AppLocalizations {
       'تم تسجيل الدخول برمز النشر.';
 
   @override
+  String get auto_speak_replies_title => 'قراءة الردود تلقائيًا بصوت عالٍ';
+
+  @override
+  String get auto_speak_replies_subtitle =>
+      'يقرأ كل رد جديد بصوت عالٍ عند اكتمال الدور. متوقف افتراضيًا؛ يظل مفتاح الردود المنطوقة لكل محادثة ساريًا.';
+
+  @override
+  String get ng_auto_read_replies_title => 'قراءة الردود تلقائيًا';
+
+  @override
+  String get ng_auto_read_replies_subtitle =>
+      'يقرأ كل رد جديد بصوت عالٍ عند اكتمال الدور. متوقف افتراضيًا.';
+
+  @override
+  String get barge_in_title => 'المقاطعة بالحديث';
+
+  @override
+  String get barge_in_subtitle =>
+      'تحدّث أثناء قراءة الرد لإيقافها فورًا. يبقى الميكروفون قيد التشغيل أثناء قراءة الردود بصوت عالٍ.';
+
+  @override
+  String get barge_in_mic_live => 'الميكروفون قيد التشغيل: تحدّث لإيقاف الرد';
+
+  @override
+  String get ng_barge_in_title => 'المقاطعة بالحديث';
+
+  @override
+  String get ng_barge_in_subtitle =>
+      'تحدّث أثناء قراءة الرد لإيقافها فورًا. يبقى الميكروفون قيد التشغيل أثناء قراءة الردود بصوت عالٍ.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'الميكروفون قيد التشغيل: تحدّث لإيقاف الرد';
+
+  @override
+  String get wake_word_title => 'كلمة التنبيه';
+
+  @override
+  String get wake_word_subtitle =>
+      'اكتشاف كلمة التنبيه عبر البوابة بدون استخدام اليدين. متوقف افتراضيًا؛ يبث صوت الميكروفون فقط عند تفعيل التقاط الجهاز.';
+
+  @override
+  String wake_word_listening(String phrase) {
+    return 'جارٍ الاستماع لكلمة التنبيه \"$phrase\"';
+  }
+
+  @override
+  String wake_word_paused(String phrase) {
+    return 'كلمة التنبيه \"$phrase\" — متوقفة مؤقتًا';
+  }
+
+  @override
+  String wake_word_off(String phrase) {
+    return 'كلمة التنبيه \"$phrase\" — متوقفة';
+  }
+
+  @override
+  String get wake_word_arming => 'جارٍ تفعيل كلمة التنبيه…';
+
+  @override
+  String get wake_word_stop => 'إيقاف كلمة التنبيه';
+
+  @override
+  String get wake_word_rearm => 'إعادة التفعيل';
+
+  @override
+  String get wake_word_capture_mode => 'وضع الالتقاط';
+
+  @override
+  String get wake_word_capture_auto => 'تلقائي';
+
+  @override
+  String get wake_word_capture_client => 'ميكروفون هذا الجهاز';
+
+  @override
+  String get wake_word_capture_local => 'ميكروفون مضيف البوابة';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      'لا تسمح هذه البوابة للتطبيقات بتغيير وضع الالتقاط. اضبط wake_word.capture في إعدادات Hermes على مضيف البوابة.';
+
+  @override
+  String get wake_word_input_device => 'ميكروفون الإدخال';
+
+  @override
+  String get wake_word_default_device => 'الافتراضي للنظام';
+
+  @override
+  String get ng_wake_word_title => 'كلمة التنبيه';
+
+  @override
+  String get ng_wake_word_subtitle =>
+      'اكتشاف كلمة التنبيه عبر البوابة بدون استخدام اليدين. متوقف افتراضيًا.';
+
+  @override
+  String get voice_engine_title => 'محرك المحادثة الصوتية';
+
+  @override
+  String get voice_engine_subtitle =>
+      'اختر طريقة تشغيل المحادثات الصوتية دون لمس في ملف تعريف البوابة هذا.';
+
+  @override
+  String get voice_engine_chained =>
+      'متسلسل (تحويل الكلام إلى نص → Hermes → كلام)';
+
+  @override
+  String get voice_engine_chained_short => 'متسلسل';
+
+  @override
+  String get voice_engine_live => 'GPT-Live (صوت في الوقت الفعلي)';
+
+  @override
+  String get voice_engine_live_short => 'GPT-Live';
+
+  @override
+  String get voice_engine_live_needs_key =>
+      'اضبط مفتاح OpenAI API على مضيف البوابة لتفعيل GPT-Live.';
+
+  @override
+  String voice_engine_fallback_chained(String reason) {
+    return 'GPT-Live غير متاح ($reason) — يتم استخدام الصوت المتسلسل.';
+  }
+
+  @override
+  String get voice_live_start => 'بدء محادثة صوتية';
+
+  @override
+  String get voice_live_stop => 'إنهاء المحادثة الصوتية';
+
+  @override
+  String get voice_live_mute => 'كتم الميكروفون';
+
+  @override
+  String get voice_live_unmute => 'إلغاء كتم الميكروفون';
+
+  @override
+  String get voice_live_interrupt => 'المقاطعة أو الرد الآن';
+
+  @override
+  String get voice_live_listening => 'جارٍ الاستماع';
+
+  @override
+  String get voice_live_speaking => 'يتحدث';
+
+  @override
+  String get voice_live_thinking => 'يفكر';
+
+  @override
+  String get voice_live_muted => 'مكتوم';
+
+  @override
+  String get voice_live_ended_connection_lost =>
+      'انقطع اتصال جلسة الصوت المباشرة.';
+
+  @override
+  String get voice_live_ended_closed => 'أغلقت الخدمة جلسة الصوت المباشرة.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'كلمة التنبيه هذه تخص الملف الشخصي \"$profile\". افتح اتصالاً بهذا الملف الشخصي للرد عليها.';
+  }
+
+  @override
+  String get wake_word_reason_disabled => 'متوقفة — انقر للتفعيل';
+
+  @override
+  String get wake_word_reason_surface =>
+      'مقصورة على واجهة أخرى (الإعداد wake_word.surface)';
+
+  @override
+  String get wake_word_reason_owned => 'واجهة أخرى تملك مستمع كلمة التنبيه';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return 'الواجهة ($surface) تملك مستمع كلمة التنبيه';
+  }
+
+  @override
+  String get wake_word_reason_unavailable =>
+      'كلمة التنبيه غير متاحة على هذه البوابة';
+
+  @override
+  String get wake_word_reason_permission_denied => 'تم رفض إذن الميكروفون';
+
+  @override
+  String get wake_word_reason_permission_required =>
+      'إذن الميكروفون مطلوب — انقر للتفعيل';
+
+  @override
+  String get voice_live_not_enabled => 'GPT-Live غير مفعّل لملف التعريف هذا.';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live غير متاح';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'تعذّر بدء GPT-Live: $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return 'انتهت مهلة التفريغ النصي بعد $seconds ث (لم يستجب $provider)';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return 'خطأ في تحويل الكلام إلى نص من $provider (HTTP $status)';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return 'فشل طلب تحويل النص إلى كلام من $provider';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return 'خطأ في تحويل النص إلى كلام من $provider (HTTP $status)';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return 'جارٍ الاستماع (\"$phrase\")';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return 'متوقفة (\"$phrase\")';
+  }
+
+  @override
   String ng_wire_setting_unavailable(Object setting) {
     return 'تغيير $setting غير متاح بعد على البوابة المشتركة';
   }

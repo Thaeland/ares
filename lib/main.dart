@@ -28,6 +28,8 @@ import 'core/services/mobile_push_service.dart';
 import 'core/services/notification_approval_authority.dart';
 import 'core/services/connection_mutation_barrier.dart';
 import 'core/services/notification_prefs.dart';
+import 'core/services/auto_speak_replies.dart';
+import 'core/services/barge_in_preference.dart';
 import 'core/services/hands_free_preference.dart';
 import 'core/services/hermes_sign_in.dart';
 import 'core/services/hermes_deeplink.dart';
@@ -60,6 +62,7 @@ import 'core/widgets/setup_interface_choice.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
+import 'package:hermes_android/core/l10n/service_strings.dart';
 
 import 'nextgen/nextgen_home.dart';
 import 'nextgen/ui/connect_screen.dart';
@@ -530,6 +533,8 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
       unawaited(_loadBackgroundPolicy());
       unawaited(NotificationPrefsStore.load());
       unawaited(HandsFreePreferenceStore.load());
+      unawaited(AutoSpeakRepliesStore.load());
+      unawaited(BargeInPreferenceStore.load());
       _restoreNormalSessions();
       // The singleton is process-owned, not disposed with a replaceable root.
       unawaited(
@@ -1422,7 +1427,13 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
                 fleet: _fleet,
                 child: DesktopShortcuts(
                   store: _shortcutsStore,
-                  child: nextGen ? NgLocalizationScope(child: child!) : child!,
+                  // Text services build outside any widget follows the
+                  // app's language in both layouts.
+                  child: ServiceStringsScope(
+                    child: nextGen
+                        ? NgLocalizationScope(child: child!)
+                        : child!,
+                  ),
                 ),
               ),
             ),

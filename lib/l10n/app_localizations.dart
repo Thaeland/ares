@@ -12363,6 +12363,384 @@ abstract class AppLocalizations {
   /// **'Signed in with the deployment token.'**
   String get ng_signed_in_with_deployment_token;
 
+  /// No description provided for @auto_speak_replies_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-read replies aloud'**
+  String get auto_speak_replies_title;
+
+  /// No description provided for @auto_speak_replies_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reads each new reply aloud when a turn completes. Off by default; the per-chat spoken-replies toggle still applies.'**
+  String get auto_speak_replies_subtitle;
+
+  /// No description provided for @ng_auto_read_replies_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-read replies'**
+  String get ng_auto_read_replies_title;
+
+  /// No description provided for @ng_auto_read_replies_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reads each new reply aloud when a turn completes. Off by default.'**
+  String get ng_auto_read_replies_subtitle;
+
+  /// No description provided for @barge_in_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Barge in'**
+  String get barge_in_title;
+
+  /// No description provided for @barge_in_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Speak over a reply to cut it short. The microphone stays on while replies are read aloud.'**
+  String get barge_in_subtitle;
+
+  /// No description provided for @barge_in_mic_live.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone on: speak to cut the reply short'**
+  String get barge_in_mic_live;
+
+  /// No description provided for @ng_barge_in_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Barge in'**
+  String get ng_barge_in_title;
+
+  /// No description provided for @ng_barge_in_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Speak over a reply to cut it short. The microphone stays on while replies are read aloud.'**
+  String get ng_barge_in_subtitle;
+
+  /// No description provided for @ng_barge_in_mic_live.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone on: speak to cut the reply short'**
+  String get ng_barge_in_mic_live;
+
+  /// No description provided for @wake_word_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake word'**
+  String get wake_word_title;
+
+  /// No description provided for @wake_word_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hands-free wake detection on the gateway. Off by default; streams microphone audio only when client capture is active.'**
+  String get wake_word_subtitle;
+
+  /// No description provided for @wake_word_listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening for wake word \"{phrase}\"'**
+  String wake_word_listening(String phrase);
+
+  /// No description provided for @wake_word_paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake word \"{phrase}\" — paused'**
+  String wake_word_paused(String phrase);
+
+  /// No description provided for @wake_word_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake word \"{phrase}\" — off'**
+  String wake_word_off(String phrase);
+
+  /// No description provided for @wake_word_arming.
+  ///
+  /// In en, this message translates to:
+  /// **'Arming wake word…'**
+  String get wake_word_arming;
+
+  /// No description provided for @wake_word_stop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop wake word'**
+  String get wake_word_stop;
+
+  /// No description provided for @wake_word_rearm.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-arm'**
+  String get wake_word_rearm;
+
+  /// No description provided for @wake_word_capture_mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Capture mode'**
+  String get wake_word_capture_mode;
+
+  /// No description provided for @wake_word_capture_auto.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get wake_word_capture_auto;
+
+  /// No description provided for @wake_word_capture_client.
+  ///
+  /// In en, this message translates to:
+  /// **'This device\'s microphone'**
+  String get wake_word_capture_client;
+
+  /// No description provided for @wake_word_capture_local.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway host microphone'**
+  String get wake_word_capture_local;
+
+  /// No description provided for @wake_word_capture_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway doesn\'t let apps change the capture mode. Set wake_word.capture in the Hermes config on the gateway host.'**
+  String get wake_word_capture_unavailable;
+
+  /// No description provided for @wake_word_input_device.
+  ///
+  /// In en, this message translates to:
+  /// **'Input microphone'**
+  String get wake_word_input_device;
+
+  /// No description provided for @wake_word_default_device.
+  ///
+  /// In en, this message translates to:
+  /// **'System default'**
+  String get wake_word_default_device;
+
+  /// No description provided for @ng_wake_word_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake word'**
+  String get ng_wake_word_title;
+
+  /// No description provided for @ng_wake_word_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hands-free wake detection on the gateway. Off by default.'**
+  String get ng_wake_word_subtitle;
+
+  /// No description provided for @voice_engine_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice conversation engine'**
+  String get voice_engine_title;
+
+  /// No description provided for @voice_engine_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how hands-free voice conversations run on this gateway profile.'**
+  String get voice_engine_subtitle;
+
+  /// No description provided for @voice_engine_chained.
+  ///
+  /// In en, this message translates to:
+  /// **'Chained (speech-to-text → Hermes → speech)'**
+  String get voice_engine_chained;
+
+  /// No description provided for @voice_engine_chained_short.
+  ///
+  /// In en, this message translates to:
+  /// **'Chained'**
+  String get voice_engine_chained_short;
+
+  /// No description provided for @voice_engine_live.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-Live (real-time voice)'**
+  String get voice_engine_live;
+
+  /// No description provided for @voice_engine_live_short.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-Live'**
+  String get voice_engine_live_short;
+
+  /// No description provided for @voice_engine_live_needs_key.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure an OpenAI API key on the gateway host to enable GPT-Live.'**
+  String get voice_engine_live_needs_key;
+
+  /// No description provided for @voice_engine_fallback_chained.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-Live unavailable ({reason}) — using Chained voice.'**
+  String voice_engine_fallback_chained(String reason);
+
+  /// No description provided for @voice_live_start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start voice conversation'**
+  String get voice_live_start;
+
+  /// No description provided for @voice_live_stop.
+  ///
+  /// In en, this message translates to:
+  /// **'End voice conversation'**
+  String get voice_live_stop;
+
+  /// No description provided for @voice_live_mute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute microphone'**
+  String get voice_live_mute;
+
+  /// No description provided for @voice_live_unmute.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute microphone'**
+  String get voice_live_unmute;
+
+  /// No description provided for @voice_live_interrupt.
+  ///
+  /// In en, this message translates to:
+  /// **'Interrupt or respond now'**
+  String get voice_live_interrupt;
+
+  /// No description provided for @voice_live_listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening'**
+  String get voice_live_listening;
+
+  /// No description provided for @voice_live_speaking.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaking'**
+  String get voice_live_speaking;
+
+  /// No description provided for @voice_live_thinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinking'**
+  String get voice_live_thinking;
+
+  /// No description provided for @voice_live_muted.
+  ///
+  /// In en, this message translates to:
+  /// **'Muted'**
+  String get voice_live_muted;
+
+  /// No description provided for @voice_live_ended_connection_lost.
+  ///
+  /// In en, this message translates to:
+  /// **'The live voice session lost its connection.'**
+  String get voice_live_ended_connection_lost;
+
+  /// No description provided for @voice_live_ended_closed.
+  ///
+  /// In en, this message translates to:
+  /// **'The live voice session was closed by the service.'**
+  String get voice_live_ended_closed;
+
+  /// No description provided for @wake_word_other_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'That wake word belongs to profile \"{profile}\". Open a connection to that profile to answer it.'**
+  String wake_word_other_profile(String profile);
+
+  /// No description provided for @wake_word_reason_disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Off — tap to enable'**
+  String get wake_word_reason_disabled;
+
+  /// No description provided for @wake_word_reason_surface.
+  ///
+  /// In en, this message translates to:
+  /// **'Scoped to another surface (config wake_word.surface)'**
+  String get wake_word_reason_surface;
+
+  /// No description provided for @wake_word_reason_owned.
+  ///
+  /// In en, this message translates to:
+  /// **'Another surface owns the wake-word listener'**
+  String get wake_word_reason_owned;
+
+  /// No description provided for @wake_word_reason_owned_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Another surface ({surface}) owns the wake-word listener'**
+  String wake_word_reason_owned_by(String surface);
+
+  /// No description provided for @wake_word_reason_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake word unavailable on this gateway'**
+  String get wake_word_reason_unavailable;
+
+  /// No description provided for @wake_word_reason_permission_denied.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission denied'**
+  String get wake_word_reason_permission_denied;
+
+  /// No description provided for @wake_word_reason_permission_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission required — tap to enable'**
+  String get wake_word_reason_permission_required;
+
+  /// No description provided for @voice_live_not_enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-Live is not enabled for this profile.'**
+  String get voice_live_not_enabled;
+
+  /// No description provided for @voice_live_not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-Live is not available'**
+  String get voice_live_not_available;
+
+  /// No description provided for @voice_live_start_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-Live could not start: {error}'**
+  String voice_live_start_failed(String error);
+
+  /// No description provided for @voice_direct_stt_timeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Transcription timed out after {seconds}s ({provider} did not answer)'**
+  String voice_direct_stt_timeout(String seconds, String provider);
+
+  /// No description provided for @voice_direct_stt_error.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} STT error (HTTP {status})'**
+  String voice_direct_stt_error(String provider, String status);
+
+  /// No description provided for @voice_direct_tts_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} TTS request failed'**
+  String voice_direct_tts_failed(String provider);
+
+  /// No description provided for @voice_direct_tts_error.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} TTS error (HTTP {status})'**
+  String voice_direct_tts_error(String provider, String status);
+
+  /// No description provided for @ng_wake_status_listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening (\"{phrase}\")'**
+  String ng_wake_status_listening(String phrase);
+
+  /// No description provided for @ng_wake_status_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Off (\"{phrase}\")'**
+  String ng_wake_status_off(String phrase);
+
   /// A setting change was not sent: a Hermes 0.23+ shared gateway has no form for that config key (or that scope). {setting} is the key, with its scope in brackets when one was asked for.
   ///
   /// In en, this message translates to:

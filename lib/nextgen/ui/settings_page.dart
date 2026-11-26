@@ -21,6 +21,10 @@ import '../../core/services/turn_notification_service.dart';
 import '../../core/services/hermes_sign_in.dart';
 import '../../core/services/legal_links.dart';
 import '../data/connection_check.dart';
+import '../../core/services/auto_speak_replies.dart';
+import '../../core/services/barge_in_preference.dart';
+import '../../core/widgets/gateway_wake_controls.dart';
+import '../../core/widgets/voice_live_controls.dart';
 import '../nextgen_preferences.dart';
 import '../theme/nextgen_theme.dart';
 import 'models_page.dart';
@@ -50,6 +54,11 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
 
   Future<void> _loadMe() async {
     final gateway = NgScope.of(context).gateway;
+    unawaited(gateway.voiceLiveMode.refresh());
+    if (gateway.state.isConnected) {
+      unawaited(gateway.wakeWord.refreshStatus());
+      unawaited(gateway.wakeWord.refreshClientInputDevices());
+    }
     try {
       final res = await gateway.dashboard.apiRequest('GET', 'auth/me');
       if (res.statusCode == 200 && mounted) {
@@ -331,6 +340,68 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                         NextGenPreferences.setGlow(scope.prefs, v),
                   ),
                   PresentationSettingsPanel(preferences: scope.prefs),
+                ],
+              ),
+            ),
+            NgSectionLabel(ngL.ng_auto_read_replies_title),
+            NgCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ValueListenableBuilder<bool>(
+                    valueListenable: autoSpeakRepliesEnabled,
+                    builder: (context, enabled, _) => SwitchListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                      title: Text(ngL.ng_auto_read_replies_title),
+                      subtitle: Text(ngL.ng_auto_read_replies_subtitle),
+                      value: enabled,
+                      onChanged: (v) =>
+                          unawaited(AutoSpeakRepliesStore.setEnabled(v)),
+                    ),
+                  ),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: bargeInEnabled,
+                    builder: (context, enabled, _) => SwitchListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                      title: Text(ngL.ng_barge_in_title),
+                      subtitle: Text(ngL.ng_barge_in_subtitle),
+                      value: enabled,
+                      onChanged: (v) =>
+                          unawaited(BargeInPreferenceStore.setEnabled(v)),
+                    ),
+                  ),
+                  const Divider(height: 16),
+                  ListenableBuilder(
+                    listenable: scope.gateway.voiceLiveMode,
+                    builder: (context, _) =>
+                        scope.gateway.voiceLiveMode.hasStatus
+                        ? Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 4,
+                                ),
+                                child: VoiceEngineSettingsPanel(
+                                  controller: scope.gateway.voiceLiveMode,
+                                ),
+                              ),
+                              const Divider(height: 16),
+                            ],
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 4,
+                    ),
+                    child: GatewayWakeSettingsPanel(
+                      controller: scope.gateway.wakeWord,
+                    ),
+                  ),
                 ],
               ),
             ),
