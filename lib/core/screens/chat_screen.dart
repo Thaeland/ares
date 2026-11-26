@@ -992,10 +992,12 @@ class _ChatScreenState extends State<ChatScreen>
   late final Future<ChatModelOverrideStore> _chatModelStore;
   late final Future<void> _sessionModelRestore;
   DesktopGatewayClient? _desktopGateway;
+  // Voice is optional: a client that serves none (closed, or a stand-in
+  // relaying turns only) leaves wake not offered and live voice unbound.
   GatewayWakeWordController? get _wake =>
-      widget.testWakeController ?? _desktopGateway?.wakeWord;
+      widget.testWakeController ?? _desktopGateway?.servedWakeWord;
   VoiceLiveModeController? get _voiceLiveMode =>
-      widget.testVoiceLiveMode ?? _desktopGateway?.voiceLiveMode;
+      widget.testVoiceLiveMode ?? _desktopGateway?.servedVoiceLiveMode;
   VoiceLiveEngine? _liveEngine;
   GptLiveTransport? _liveTransport;
   String? _liveDelegationId;
@@ -1391,7 +1393,7 @@ class _ChatScreenState extends State<ChatScreen>
         _desktopGateway = gateway;
         if (gateway != null) widget.testDesktopGateway?.call(gateway);
         if (gateway != null) _bindWake();
-        if (gateway != null) _bindLiveVoice();
+        if (_voiceLiveMode != null) _bindLiveVoice();
         // The catalogue is per connection: a bound transport invalidates any
         // failure recorded before the socket existed. An application session
         // can exist without a Desktop client (routing/test owners).
@@ -2340,7 +2342,6 @@ class _ChatScreenState extends State<ChatScreen>
     }
     final transport =
         mode?.transport ??
-        _desktopGateway?.createGptLiveTransport() ??
         GptLiveGatewayTransport(
           widget.connection,
           profile: widget.connection.gatewayProfile,

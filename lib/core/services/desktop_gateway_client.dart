@@ -33,6 +33,27 @@ enum DesktopConnectionState {
   reconnecting,
 }
 
+/// Clients that serve the gateway voice surface (`wake.*`, voice mode and
+/// GPT-Live): each client this file constructs, until it is closed. Kept
+/// outside the class, as [SlashCommandConnectionMemory] keeps its refusals,
+/// so a stand-in that implements [DesktopGatewayClient] for a chat's turns
+/// only is a client without voice rather than one that throws on first use.
+final Expando<bool> _servesVoice = Expando('DesktopGatewayClient voice');
+
+/// Voice a chat may use but must never need: a chat opens on a client
+/// without it, and shows no wake or voice-mode controls there.
+extension DesktopGatewayVoice on DesktopGatewayClient {
+  /// The wake-word controller, or null when this client serves no gateway
+  /// voice (it is closed, or a stand-in): wake is then not offered.
+  GatewayWakeWordController? get servedWakeWord =>
+      _servesVoice[this] == true ? wakeWord : null;
+
+  /// The GPT-Live / Chained mode controller, or null as for
+  /// [servedWakeWord].
+  VoiceLiveModeController? get servedVoiceLiveMode =>
+      _servesVoice[this] == true ? voiceLiveMode : null;
+}
+
 /// Authenticated JSON-RPC transport for a Hermes Desktop remote gateway.
 ///
 /// The mobile OpenAI-compatible endpoint remains available for legacy
@@ -163,6 +184,7 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
       ownsSocket: _ownsSocket,
     );
     SystemSleepGate.instance.addListener(_onSystemSleep);
+    _servesVoice[this] = true;
   }
 
   late final RemoteWorkspaceOwner workspace;
@@ -1902,6 +1924,9 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
     _sessionCreatedListener = null;
     _connectionListener = null;
     _projects = null;
+    // A closed client serves no voice: a late read must not build a fresh
+    // controller on it.
+    _servesVoice[this] = null;
     _wakeWord?.dispose();
     _wakeWord = null;
     _voiceLiveMode?.dispose();
