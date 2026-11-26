@@ -5022,5 +5022,372 @@
   "rel_ops_cap_value_payment": "دفع",
   "@rel_ops_cap_value_payment": {
     "description": "Capability _capabilityValue display label for wire value payment. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_term_connecting": "جارٍ الاتصال…",
+  "@rel_ops_term_connecting": {
+    "description": "Terminal connection status."
+  },
+  "rel_ops_term_unbound": "لا توجد جلسة نشطة مطابقة أو مجلد عمل مطابق على المضيف. افتح الدردشة المرتبطة أولًا.",
+  "@rel_ops_term_unbound": {
+    "description": "Terminal page: unbound."
+  },
+  "rel_ops_term_unsupported": "لا توفر هذه البوابة إمكانية الطرفية هذه. لم تُشغَّل أي صدفة محلية.",
+  "@rel_ops_term_unsupported": {
+    "description": "Terminal page: unsupported."
+  },
+  "rel_ops_term_local_pty_unavailable": "الطرفية الزائفة المحلية (PTY) المضمّنة غير متاحة على هذا الجهاز.",
+  "@rel_ops_term_local_pty_unavailable": {
+    "description": "Terminal page: local pty unavailable."
+  },
+  "rel_ops_term_operation_failed": "تعذّر فتح الطرفية أو التحكم بها. تحقّق من المضيف وبيانات الاعتماد والبصمة. لم تُشغَّل أي صدفة بديلة.",
+  "@rel_ops_term_operation_failed": {
+    "description": "Terminal page: operation failed."
+  },
+  "rel_ops_term_input_refused": "رُفض الإدخال. أعد فتح الدردشة الأصلية.",
+  "@rel_ops_term_input_refused": {
+    "description": "Terminal page: input refused."
+  },
+  "rel_ops_term_cancel": "إلغاء",
+  "@rel_ops_term_cancel": {
+    "description": "Terminal page: cancel."
+  },
+  "rel_ops_term_confirm": "تأكيد",
+  "@rel_ops_term_confirm": {
+    "description": "Terminal page: confirm."
+  },
+  "rel_ops_term_open_device_title": "هل تريد فتح صدفة على هذا الجهاز؟",
+  "@rel_ops_term_open_device_title": {
+    "description": "Terminal page: open device title."
+  },
+  "rel_ops_term_ssh_shell": "صدفة SSH",
+  "@rel_ops_term_ssh_shell": {
+    "description": "Terminal page: ssh shell."
+  },
+  "rel_ops_term_local_shell": "صدفة محلية",
+  "@rel_ops_term_local_shell": {
+    "description": "Terminal page: local shell."
+  },
+  "rel_ops_term_connection_lost": "فُقد الاتصال",
+  "@rel_ops_term_connection_lost": {
+    "description": "Terminal page: connection lost."
+  },
+  "rel_ops_term_shell_ended": "انتهت الصدفة",
+  "@rel_ops_term_shell_ended": {
+    "description": "Terminal page: shell ended."
+  },
+  "rel_ops_term_no_owner": "لا تملك هذه الدردشة جهة مصادَقًا عليها مسؤولة عن طرفية البوابة. لا يكفي عنوان URL أو تسجيل الدخول إلى السحابة وحده لإتاحة صدفة.",
+  "@rel_ops_term_no_owner": {
+    "description": "Terminal page: no owner."
+  },
+  "rel_ops_term_open_gateway_title": "هل تريد فتح صدفة على البوابة؟",
+  "@rel_ops_term_open_gateway_title": {
+    "description": "Terminal page: open gateway title."
+  },
+  "rel_ops_term_shell_expired": "انتهت الصدفة أو انتهت صلاحيتها",
+  "@rel_ops_term_shell_expired": {
+    "description": "Terminal page: shell expired."
+  },
+  "rel_ops_term_disconnected": "غير متصل",
+  "@rel_ops_term_disconnected": {
+    "description": "Terminal page: disconnected."
+  },
+  "rel_ops_term_gateway_shell": "صدفة البوابة",
+  "@rel_ops_term_gateway_shell": {
+    "description": "Terminal page: gateway shell."
+  },
+  "rel_ops_term_close_body": "إنهاء هذه الصدفة. لإبقائها قيد التشغيل، أخفِ اللوحة بدلًا من ذلك.",
+  "@rel_ops_term_close_body": {
+    "description": "Terminal page: close body."
+  },
+  "rel_ops_term_closing": "جارٍ الإغلاق…",
+  "@rel_ops_term_closing": {
+    "description": "Terminal page: closing."
+  },
+  "rel_ops_term_close_unconfirmed": "لم يُؤكَّد الإغلاق",
+  "@rel_ops_term_close_unconfirmed": {
+    "description": "Terminal page: close unconfirmed."
+  },
+  "rel_ops_term_processes_require_chat": "تتطلب عمليات الوكيل الدردشة المرتبطة التي تمّت المصادقة عليها.",
+  "@rel_ops_term_processes_require_chat": {
+    "description": "Terminal page: processes require chat."
+  },
+  "rel_ops_term_watching_processes": "تجري مراقبة عمليات الوكيل في هذه الدردشة. إغلاق عرض المرآة لا يوقف العملية أبدًا.",
+  "@rel_ops_term_watching_processes": {
+    "description": "Terminal page: watching processes."
+  },
+  "rel_ops_term_paste_limit": "اللصق محدود بـ 16 KiB.",
+  "@rel_ops_term_paste_limit": {
+    "description": "Terminal page: paste limit."
+  },
+  "rel_ops_term_paste": "لصق",
+  "@rel_ops_term_paste": {
+    "description": "Terminal page: paste."
+  },
+  "rel_ops_term_select_first": "حدّد مخرجات الطرفية أولًا.",
+  "@rel_ops_term_select_first": {
+    "description": "Terminal page: select first."
+  },
+  "rel_ops_term_open_chat_to_insert": "افتح الدردشة الأصلية قبل إدراج المخرجات.",
+  "@rel_ops_term_open_chat_to_insert": {
+    "description": "Terminal page: open chat to insert."
+  },
+  "rel_ops_term_added_to_draft": "أُضيفت إلى مسودة الدردشة الأصلية. لم يُرسَل شيء.",
+  "@rel_ops_term_added_to_draft": {
+    "description": "Terminal page: added to draft."
+  },
+  "rel_ops_term_close": "إغلاق",
+  "@rel_ops_term_close": {
+    "description": "Terminal page: close."
+  },
+  "rel_ops_term_add_selection": "إضافة التحديد إلى مسودة الدردشة",
+  "@rel_ops_term_add_selection": {
+    "description": "Terminal page: add selection."
+  },
+  "rel_ops_term_new_terminal": "طرفية جديدة",
+  "@rel_ops_term_new_terminal": {
+    "description": "Terminal page: new terminal."
+  },
+  "rel_ops_term_gateway_terminal": "طرفية مضيف البوابة",
+  "@rel_ops_term_gateway_terminal": {
+    "description": "Terminal page: gateway terminal."
+  },
+  "rel_ops_term_verified_ssh_terminal": "طرفية SSH متحقق منها",
+  "@rel_ops_term_verified_ssh_terminal": {
+    "description": "Terminal page: verified ssh terminal."
+  },
+  "rel_ops_term_device_local_shell": "هذا الجهاز (صدفة محلية)",
+  "@rel_ops_term_device_local_shell": {
+    "description": "Terminal page: device local shell."
+  },
+  "rel_ops_term_local_unavailable_mobile": "الصدفة المحلية غير متاحة على الأجهزة المحمولة",
+  "@rel_ops_term_local_unavailable_mobile": {
+    "description": "Terminal page: local unavailable mobile."
+  },
+  "rel_ops_term_watch_processes": "مراقبة عمليات الوكيل",
+  "@rel_ops_term_watch_processes": {
+    "description": "Terminal page: watch processes."
+  },
+  "rel_ops_term_select_output": "تحديد المخرجات أو نسخها",
+  "@rel_ops_term_select_output": {
+    "description": "Terminal page: select output."
+  },
+  "rel_ops_term_add_selected_output": "إضافة المخرجات المحددة إلى مسودة الدردشة",
+  "@rel_ops_term_add_selected_output": {
+    "description": "Terminal page: add selected output."
+  },
+  "rel_ops_term_review_paste": "مراجعة اللصق من الحافظة",
+  "@rel_ops_term_review_paste": {
+    "description": "Terminal page: review paste."
+  },
+  "rel_ops_term_reconnect": "إعادة الاتصال بالصدفة نفسها",
+  "@rel_ops_term_reconnect": {
+    "description": "Terminal page: reconnect."
+  },
+  "rel_ops_term_close_mirror": "إغلاق عرض المرآة",
+  "@rel_ops_term_close_mirror": {
+    "description": "Terminal page: close mirror."
+  },
+  "rel_ops_term_close_shell": "إغلاق الصدفة",
+  "@rel_ops_term_close_shell": {
+    "description": "Terminal page: close shell."
+  },
+  "rel_ops_term_empty": "اختر + لفتح طرفية. لا تبدأ أي صدفة تلقائيًا.",
+  "@rel_ops_term_empty": {
+    "description": "Terminal page: empty."
+  },
+  "rel_ops_term_reason_stale": "متقادم",
+  "@rel_ops_term_reason_stale": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_mismatch": "عدم تطابق",
+  "@rel_ops_term_reason_mismatch": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unbound": "غير مرتبط",
+  "@rel_ops_term_reason_unbound": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unsupported": "غير مدعوم",
+  "@rel_ops_term_reason_unsupported": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_denied": "مرفوض",
+  "@rel_ops_term_reason_denied": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_ineligible": "غير مؤهل",
+  "@rel_ops_term_reason_ineligible": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unavailable": "غير متاح",
+  "@rel_ops_term_reason_unavailable": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_invalid": "غير صالح",
+  "@rel_ops_term_reason_invalid": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_insecure": "غير آمن",
+  "@rel_ops_term_reason_insecure": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_refused": "رفضت البوابة عملية الطرفية هذه ({reason}).",
+  "@rel_ops_term_refused": {
+    "description": "Terminal page: refused. Preserve server/user placeholder values.",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_open_device_body": "هذا هو الجهاز الذي يشغّل Ares، وليس {connection}. تستخدم الصدفة أذونات التطبيق وتبدأ في مساحة تخزينه.",
+  "@rel_ops_term_open_device_body": {
+    "description": "Terminal page: open device body. Preserve server/user placeholder values.",
+    "placeholders": {
+      "connection": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_open_gateway_body": "ابدأ صدفة على {host} في مجلد العمل المتحقق منه للدردشة. هذه ليست صدفة على الجهاز المحلي.",
+  "@rel_ops_term_open_gateway_body": {
+    "description": "Terminal page: open gateway body. Preserve server/user placeholder values.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_close_tab_title": "هل تريد إغلاق {label}؟",
+  "@rel_ops_term_close_tab_title": {
+    "description": "Terminal page: close tab title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_read_only_status": "للقراءة فقط · {status}",
+  "@rel_ops_term_read_only_status": {
+    "description": "Terminal page: read only status. Preserve server/user placeholder values.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_paste_title": "هل تريد اللصق في {label}؟",
+  "@rel_ops_term_paste_title": {
+    "description": "Terminal page: paste title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_output_title": "المخرجات · {label}",
+  "@rel_ops_term_output_title": {
+    "description": "Terminal page: output title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_mirror_status": "عرض مرآة للعملية للقراءة فقط · {label}",
+  "@rel_ops_term_mirror_status": {
+    "description": "Terminal page: mirror status. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_status_label": "{status} · {label}",
+  "@rel_ops_term_status_label": {
+    "description": "Terminal page: status label. Preserve server/user placeholder values.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_ssh_tab": "SSH {user}@{host}:{port} · {number}",
+  "@rel_ops_term_ssh_tab": {
+    "description": "SSH tab label. Preserve SSH and the login address.",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      },
+      "host": {
+        "type": "String"
+      },
+      "port": {
+        "type": "int"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_device_tab": "هذا الجهاز · {number}",
+  "@rel_ops_term_device_tab": {
+    "description": "Local device shell tab label.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_gateway_tab": "البوابة {host} · {number}",
+  "@rel_ops_term_gateway_tab": {
+    "description": "Gateway shell tab label; host is unchanged.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_earlier_output_trimmed": "[اقتُطعت المخرجات السابقة]",
+  "@rel_ops_term_earlier_output_trimmed": {
+    "description": "App-authored terminal replay notice, not shell output."
+  },
+  "rel_ops_term_ssh_dialog_title": "فتح طرفية SSH متحقق منها",
+  "@rel_ops_term_ssh_dialog_title": {
+    "description": "SSH terminal dialog: ssh dialog title. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_dialog_body": "استخدم بصمة حصلت عليها بشكل مستقل من مسؤول المضيف. يفتح هذا جلسة دخول بعيدة جديدة، وليس البوابة أو صدفة محلية.",
+  "@rel_ops_term_ssh_dialog_body": {
+    "description": "SSH terminal dialog: ssh dialog body. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_host": "مضيف SSH",
+  "@rel_ops_term_ssh_host": {
+    "description": "SSH terminal dialog: ssh host. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_port": "المنفذ",
+  "@rel_ops_term_ssh_port": {
+    "description": "SSH terminal dialog: ssh port. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_user": "المستخدم",
+  "@rel_ops_term_ssh_user": {
+    "description": "SSH terminal dialog: ssh user. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_fingerprint": "بصمة مفتاح المضيف (SHA256:…)",
+  "@rel_ops_term_ssh_fingerprint": {
+    "description": "SSH terminal dialog: ssh fingerprint. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_password": "كلمة مرور SSH (لا تُحفظ)",
+  "@rel_ops_term_ssh_password": {
+    "description": "SSH terminal dialog: ssh password. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_connect": "اتصال",
+  "@rel_ops_term_connect": {
+    "description": "SSH terminal dialog: connect. Keep SSH/SHA256 protocol notation unchanged."
   }
 }

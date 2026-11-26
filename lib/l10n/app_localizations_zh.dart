@@ -12054,6 +12054,252 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rel_ops_cap_value_payment => '支付';
+
+  @override
+  String get rel_ops_term_connecting => '正在连接…';
+
+  @override
+  String get rel_ops_term_unbound => '没有匹配的活动会话或主机工作目录。请先打开所属聊天。';
+
+  @override
+  String get rel_ops_term_unsupported => '此网关不提供这项终端功能。未启动本地命令行解释器。';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable => '此设备无法使用随附的本地伪终端（PTY）。';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      '无法打开或控制终端。请检查主机、凭据和指纹。未启动备用命令行解释器。';
+
+  @override
+  String get rel_ops_term_input_refused => '输入被拒绝。请重新打开原始聊天。';
+
+  @override
+  String get rel_ops_term_cancel => '取消';
+
+  @override
+  String get rel_ops_term_confirm => '确认';
+
+  @override
+  String get rel_ops_term_open_device_title => '在此设备上打开命令行解释器？';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'SSH 命令行解释器';
+
+  @override
+  String get rel_ops_term_local_shell => '本地命令行解释器';
+
+  @override
+  String get rel_ops_term_connection_lost => '连接已丢失';
+
+  @override
+  String get rel_ops_term_shell_ended => '命令行解释器已结束';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      '此聊天没有经过身份验证的网关终端所有者。仅凭 URL 或云端登录无法获得命令行访问权限。';
+
+  @override
+  String get rel_ops_term_open_gateway_title => '打开网关命令行解释器？';
+
+  @override
+  String get rel_ops_term_shell_expired => '命令行解释器已结束或已过期';
+
+  @override
+  String get rel_ops_term_disconnected => '已断开连接';
+
+  @override
+  String get rel_ops_term_gateway_shell => '网关命令行解释器';
+
+  @override
+  String get rel_ops_term_close_body => '结束此命令行解释器。如需保持运行，请改为隐藏面板。';
+
+  @override
+  String get rel_ops_term_closing => '正在关闭…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => '关闭未确认';
+
+  @override
+  String get rel_ops_term_processes_require_chat => '代理进程需要经过身份验证的所属聊天。';
+
+  @override
+  String get rel_ops_term_watching_processes => '正在监视此聊天的代理进程。关闭镜像视图绝不会停止其进程。';
+
+  @override
+  String get rel_ops_term_paste_limit => '粘贴大小限制为 16 KiB。';
+
+  @override
+  String get rel_ops_term_paste => '粘贴';
+
+  @override
+  String get rel_ops_term_select_first => '请先选择终端输出。';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert => '插入输出前，请打开原始聊天。';
+
+  @override
+  String get rel_ops_term_added_to_draft => '已添加到原始聊天草稿。未发送任何内容。';
+
+  @override
+  String get rel_ops_term_close => '关闭';
+
+  @override
+  String get rel_ops_term_add_selection => '将所选内容添加到聊天草稿';
+
+  @override
+  String get rel_ops_term_new_terminal => '新建终端';
+
+  @override
+  String get rel_ops_term_gateway_terminal => '网关主机终端';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => '已验证的 SSH 终端';
+
+  @override
+  String get rel_ops_term_device_local_shell => '此设备（本地命令行解释器）';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile => '移动设备无法使用本地命令行解释器';
+
+  @override
+  String get rel_ops_term_watch_processes => '监视代理进程';
+
+  @override
+  String get rel_ops_term_select_output => '选择或复制输出';
+
+  @override
+  String get rel_ops_term_add_selected_output => '将所选输出添加到聊天草稿';
+
+  @override
+  String get rel_ops_term_review_paste => '检查剪贴板粘贴内容';
+
+  @override
+  String get rel_ops_term_reconnect => '重新连接同一命令行解释器';
+
+  @override
+  String get rel_ops_term_close_mirror => '关闭镜像视图';
+
+  @override
+  String get rel_ops_term_close_shell => '关闭命令行解释器';
+
+  @override
+  String get rel_ops_term_empty => '选择 + 以打开终端。不会自动启动任何命令行解释器。';
+
+  @override
+  String get rel_ops_term_reason_stale => '已失效';
+
+  @override
+  String get rel_ops_term_reason_mismatch => '不匹配';
+
+  @override
+  String get rel_ops_term_reason_unbound => '未绑定';
+
+  @override
+  String get rel_ops_term_reason_unsupported => '不支持';
+
+  @override
+  String get rel_ops_term_reason_denied => '已拒绝';
+
+  @override
+  String get rel_ops_term_reason_ineligible => '不符合条件';
+
+  @override
+  String get rel_ops_term_reason_unavailable => '不可用';
+
+  @override
+  String get rel_ops_term_reason_invalid => '无效';
+
+  @override
+  String get rel_ops_term_reason_insecure => '不安全';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return '网关拒绝了此终端操作（$reason）。';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return '这是运行 Ares 的设备，而不是 $connection。命令行解释器使用应用权限，并在应用存储空间中启动。';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return '在 $host 上经过验证的聊天工作目录中启动命令行解释器。这不是设备本地的命令行解释器。';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return '关闭 $label？';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return '只读 · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return '粘贴到 $label？';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return '输出 · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return '只读进程镜像 · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return '此设备 · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return '网关 $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed => '[较早的输出已截断]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title => '打开已验证的 SSH 终端';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      '请使用通过独立渠道从主机管理员处获得的指纹。此操作会打开新的远程登录会话，而非网关或本地命令行解释器。';
+
+  @override
+  String get rel_ops_term_ssh_host => 'SSH 主机';
+
+  @override
+  String get rel_ops_term_ssh_port => '端口';
+
+  @override
+  String get rel_ops_term_ssh_user => '用户';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => '主机密钥指纹（SHA256:…）';
+
+  @override
+  String get rel_ops_term_ssh_password => 'SSH 密码（不保存）';
+
+  @override
+  String get rel_ops_term_connect => '连接';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -24106,6 +24352,252 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get rel_ops_cap_value_payment => '支付';
+
+  @override
+  String get rel_ops_term_connecting => '正在连接…';
+
+  @override
+  String get rel_ops_term_unbound => '没有匹配的活动会话或主机工作目录。请先打开所属聊天。';
+
+  @override
+  String get rel_ops_term_unsupported => '此网关不提供这项终端功能。未启动本地命令行解释器。';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable => '此设备无法使用随附的本地伪终端（PTY）。';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      '无法打开或控制终端。请检查主机、凭据和指纹。未启动备用命令行解释器。';
+
+  @override
+  String get rel_ops_term_input_refused => '输入被拒绝。请重新打开原始聊天。';
+
+  @override
+  String get rel_ops_term_cancel => '取消';
+
+  @override
+  String get rel_ops_term_confirm => '确认';
+
+  @override
+  String get rel_ops_term_open_device_title => '在此设备上打开命令行解释器？';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'SSH 命令行解释器';
+
+  @override
+  String get rel_ops_term_local_shell => '本地命令行解释器';
+
+  @override
+  String get rel_ops_term_connection_lost => '连接已丢失';
+
+  @override
+  String get rel_ops_term_shell_ended => '命令行解释器已结束';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      '此聊天没有经过身份验证的网关终端所有者。仅凭 URL 或云端登录无法获得命令行访问权限。';
+
+  @override
+  String get rel_ops_term_open_gateway_title => '打开网关命令行解释器？';
+
+  @override
+  String get rel_ops_term_shell_expired => '命令行解释器已结束或已过期';
+
+  @override
+  String get rel_ops_term_disconnected => '已断开连接';
+
+  @override
+  String get rel_ops_term_gateway_shell => '网关命令行解释器';
+
+  @override
+  String get rel_ops_term_close_body => '结束此命令行解释器。如需保持运行，请改为隐藏面板。';
+
+  @override
+  String get rel_ops_term_closing => '正在关闭…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => '关闭未确认';
+
+  @override
+  String get rel_ops_term_processes_require_chat => '代理进程需要经过身份验证的所属聊天。';
+
+  @override
+  String get rel_ops_term_watching_processes => '正在监视此聊天的代理进程。关闭镜像视图绝不会停止其进程。';
+
+  @override
+  String get rel_ops_term_paste_limit => '粘贴大小限制为 16 KiB。';
+
+  @override
+  String get rel_ops_term_paste => '粘贴';
+
+  @override
+  String get rel_ops_term_select_first => '请先选择终端输出。';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert => '插入输出前，请打开原始聊天。';
+
+  @override
+  String get rel_ops_term_added_to_draft => '已添加到原始聊天草稿。未发送任何内容。';
+
+  @override
+  String get rel_ops_term_close => '关闭';
+
+  @override
+  String get rel_ops_term_add_selection => '将所选内容添加到聊天草稿';
+
+  @override
+  String get rel_ops_term_new_terminal => '新建终端';
+
+  @override
+  String get rel_ops_term_gateway_terminal => '网关主机终端';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => '已验证的 SSH 终端';
+
+  @override
+  String get rel_ops_term_device_local_shell => '此设备（本地命令行解释器）';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile => '移动设备无法使用本地命令行解释器';
+
+  @override
+  String get rel_ops_term_watch_processes => '监视代理进程';
+
+  @override
+  String get rel_ops_term_select_output => '选择或复制输出';
+
+  @override
+  String get rel_ops_term_add_selected_output => '将所选输出添加到聊天草稿';
+
+  @override
+  String get rel_ops_term_review_paste => '检查剪贴板粘贴内容';
+
+  @override
+  String get rel_ops_term_reconnect => '重新连接同一命令行解释器';
+
+  @override
+  String get rel_ops_term_close_mirror => '关闭镜像视图';
+
+  @override
+  String get rel_ops_term_close_shell => '关闭命令行解释器';
+
+  @override
+  String get rel_ops_term_empty => '选择 + 以打开终端。不会自动启动任何命令行解释器。';
+
+  @override
+  String get rel_ops_term_reason_stale => '已失效';
+
+  @override
+  String get rel_ops_term_reason_mismatch => '不匹配';
+
+  @override
+  String get rel_ops_term_reason_unbound => '未绑定';
+
+  @override
+  String get rel_ops_term_reason_unsupported => '不支持';
+
+  @override
+  String get rel_ops_term_reason_denied => '已拒绝';
+
+  @override
+  String get rel_ops_term_reason_ineligible => '不符合条件';
+
+  @override
+  String get rel_ops_term_reason_unavailable => '不可用';
+
+  @override
+  String get rel_ops_term_reason_invalid => '无效';
+
+  @override
+  String get rel_ops_term_reason_insecure => '不安全';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return '网关拒绝了此终端操作（$reason）。';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return '这是运行 Ares 的设备，而不是 $connection。命令行解释器使用应用权限，并在应用存储空间中启动。';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return '在 $host 上经过验证的聊天工作目录中启动命令行解释器。这不是设备本地的命令行解释器。';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return '关闭 $label？';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return '只读 · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return '粘贴到 $label？';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return '输出 · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return '只读进程镜像 · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return '此设备 · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return '网关 $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed => '[较早的输出已截断]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title => '打开已验证的 SSH 终端';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      '请使用通过独立渠道从主机管理员处获得的指纹。此操作会打开新的远程登录会话，而非网关或本地命令行解释器。';
+
+  @override
+  String get rel_ops_term_ssh_host => 'SSH 主机';
+
+  @override
+  String get rel_ops_term_ssh_port => '端口';
+
+  @override
+  String get rel_ops_term_ssh_user => '用户';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => '主机密钥指纹（SHA256:…）';
+
+  @override
+  String get rel_ops_term_ssh_password => 'SSH 密码（不保存）';
+
+  @override
+  String get rel_ops_term_connect => '连接';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -36162,4 +36654,251 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get rel_ops_cap_value_payment => '付款';
+
+  @override
+  String get rel_ops_term_connecting => '正在連線…';
+
+  @override
+  String get rel_ops_term_unbound => '沒有相符的作用中工作階段或主機工作目錄。請先開啟所屬聊天。';
+
+  @override
+  String get rel_ops_term_unsupported => '此閘道不提供這項終端機功能。未啟動本機命令殼層。';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable => '此裝置無法使用隨附的本機虛擬終端機（PTY）。';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      '無法開啟或控制終端機。請檢查主機、認證資料及指紋。未啟動備用命令殼層。';
+
+  @override
+  String get rel_ops_term_input_refused => '輸入遭拒。請重新開啟原始聊天。';
+
+  @override
+  String get rel_ops_term_cancel => '取消';
+
+  @override
+  String get rel_ops_term_confirm => '確認';
+
+  @override
+  String get rel_ops_term_open_device_title => '在此裝置上開啟命令殼層？';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'SSH 命令殼層';
+
+  @override
+  String get rel_ops_term_local_shell => '本機命令殼層';
+
+  @override
+  String get rel_ops_term_connection_lost => '連線已中斷';
+
+  @override
+  String get rel_ops_term_shell_ended => '命令殼層已結束';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      '此聊天沒有經過身分驗證的閘道終端機擁有者。僅憑 URL 或雲端登入無法取得命令殼層的存取權。';
+
+  @override
+  String get rel_ops_term_open_gateway_title => '開啟閘道命令殼層？';
+
+  @override
+  String get rel_ops_term_shell_expired => '命令殼層已結束或已到期';
+
+  @override
+  String get rel_ops_term_disconnected => '已中斷連線';
+
+  @override
+  String get rel_ops_term_gateway_shell => '閘道命令殼層';
+
+  @override
+  String get rel_ops_term_close_body => '結束此命令殼層。如需保持執行，請改為隱藏面板。';
+
+  @override
+  String get rel_ops_term_closing => '正在關閉…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => '尚未確認關閉';
+
+  @override
+  String get rel_ops_term_processes_require_chat => '代理程式的處理程序需要經過身分驗證的所屬聊天。';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      '正在監看此聊天的代理程式處理程序。關閉鏡像檢視絕不會停止其處理程序。';
+
+  @override
+  String get rel_ops_term_paste_limit => '貼上大小限制為 16 KiB。';
+
+  @override
+  String get rel_ops_term_paste => '貼上';
+
+  @override
+  String get rel_ops_term_select_first => '請先選取終端機輸出。';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert => '插入輸出前，請開啟原始聊天。';
+
+  @override
+  String get rel_ops_term_added_to_draft => '已新增至原始聊天草稿。未傳送任何內容。';
+
+  @override
+  String get rel_ops_term_close => '關閉';
+
+  @override
+  String get rel_ops_term_add_selection => '將所選內容新增至聊天草稿';
+
+  @override
+  String get rel_ops_term_new_terminal => '新增終端機';
+
+  @override
+  String get rel_ops_term_gateway_terminal => '閘道主機終端機';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => '已驗證的 SSH 終端機';
+
+  @override
+  String get rel_ops_term_device_local_shell => '此裝置（本機命令殼層）';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile => '行動裝置無法使用本機命令殼層';
+
+  @override
+  String get rel_ops_term_watch_processes => '監看代理程式處理程序';
+
+  @override
+  String get rel_ops_term_select_output => '選取或複製輸出';
+
+  @override
+  String get rel_ops_term_add_selected_output => '將所選輸出新增至聊天草稿';
+
+  @override
+  String get rel_ops_term_review_paste => '檢查剪貼簿貼上內容';
+
+  @override
+  String get rel_ops_term_reconnect => '重新連線至同一命令殼層';
+
+  @override
+  String get rel_ops_term_close_mirror => '關閉鏡像檢視';
+
+  @override
+  String get rel_ops_term_close_shell => '關閉命令殼層';
+
+  @override
+  String get rel_ops_term_empty => '選取 + 以開啟終端機。不會自動啟動任何命令殼層。';
+
+  @override
+  String get rel_ops_term_reason_stale => '已失效';
+
+  @override
+  String get rel_ops_term_reason_mismatch => '不相符';
+
+  @override
+  String get rel_ops_term_reason_unbound => '未繫結';
+
+  @override
+  String get rel_ops_term_reason_unsupported => '不支援';
+
+  @override
+  String get rel_ops_term_reason_denied => '已拒絕';
+
+  @override
+  String get rel_ops_term_reason_ineligible => '不符合資格';
+
+  @override
+  String get rel_ops_term_reason_unavailable => '無法使用';
+
+  @override
+  String get rel_ops_term_reason_invalid => '無效';
+
+  @override
+  String get rel_ops_term_reason_insecure => '不安全';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return '閘道拒絕了此終端機操作（$reason）。';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return '這是執行 Ares 的裝置，而非 $connection。命令殼層使用應用程式的權限，並在應用程式的儲存空間中啟動。';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return '在 $host 上經過驗證的聊天工作目錄中啟動命令殼層。這不是裝置本機的命令殼層。';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return '關閉 $label？';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return '唯讀 · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return '貼上至 $label？';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return '輸出 · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return '唯讀處理程序鏡像 · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return '此裝置 · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return '閘道 $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed => '[較早的輸出已截斷]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title => '開啟已驗證的 SSH 終端機';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      '請使用透過獨立管道向主機管理員取得的指紋。此操作會開啟新的遠端登入工作階段，而非閘道或本機命令殼層。';
+
+  @override
+  String get rel_ops_term_ssh_host => 'SSH 主機';
+
+  @override
+  String get rel_ops_term_ssh_port => '連接埠';
+
+  @override
+  String get rel_ops_term_ssh_user => '使用者';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => '主機金鑰指紋（SHA256:…）';
+
+  @override
+  String get rel_ops_term_ssh_password => 'SSH 密碼（不儲存）';
+
+  @override
+  String get rel_ops_term_connect => '連線';
 }

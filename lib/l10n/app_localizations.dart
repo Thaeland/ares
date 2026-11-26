@@ -20664,6 +20664,444 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'payment'**
   String get rel_ops_cap_value_payment;
+
+  /// Terminal connection status.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting…'**
+  String get rel_ops_term_connecting;
+
+  /// Terminal page: unbound.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching live session or host working directory. Open the owning chat first.'**
+  String get rel_ops_term_unbound;
+
+  /// Terminal page: unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway does not offer this terminal capability. No local shell was started.'**
+  String get rel_ops_term_unsupported;
+
+  /// Terminal page: local pty unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The packaged local PTY is unavailable on this device.'**
+  String get rel_ops_term_local_pty_unavailable;
+
+  /// Terminal page: operation failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open or control the terminal. Check the host, credentials and fingerprint. No fallback shell was started.'**
+  String get rel_ops_term_operation_failed;
+
+  /// Terminal page: input refused.
+  ///
+  /// In en, this message translates to:
+  /// **'Input refused. Reopen the originating chat.'**
+  String get rel_ops_term_input_refused;
+
+  /// Terminal page: cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get rel_ops_term_cancel;
+
+  /// Terminal page: confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get rel_ops_term_confirm;
+
+  /// Terminal page: open device title.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a shell on this device?'**
+  String get rel_ops_term_open_device_title;
+
+  /// Terminal page: ssh shell.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH shell'**
+  String get rel_ops_term_ssh_shell;
+
+  /// Terminal page: local shell.
+  ///
+  /// In en, this message translates to:
+  /// **'Local shell'**
+  String get rel_ops_term_local_shell;
+
+  /// Terminal page: connection lost.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection lost'**
+  String get rel_ops_term_connection_lost;
+
+  /// Terminal page: shell ended.
+  ///
+  /// In en, this message translates to:
+  /// **'Shell ended'**
+  String get rel_ops_term_shell_ended;
+
+  /// Terminal page: no owner.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat has no authenticated gateway terminal owner. A URL or Cloud login alone does not grant a shell.'**
+  String get rel_ops_term_no_owner;
+
+  /// Terminal page: open gateway title.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a gateway shell?'**
+  String get rel_ops_term_open_gateway_title;
+
+  /// Terminal page: shell expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Shell ended or expired'**
+  String get rel_ops_term_shell_expired;
+
+  /// Terminal page: disconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get rel_ops_term_disconnected;
+
+  /// Terminal page: gateway shell.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway shell'**
+  String get rel_ops_term_gateway_shell;
+
+  /// Terminal page: close body.
+  ///
+  /// In en, this message translates to:
+  /// **'End this shell. To keep it running, hide the pane instead.'**
+  String get rel_ops_term_close_body;
+
+  /// Terminal page: closing.
+  ///
+  /// In en, this message translates to:
+  /// **'Closing…'**
+  String get rel_ops_term_closing;
+
+  /// Terminal page: close unconfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Close not confirmed'**
+  String get rel_ops_term_close_unconfirmed;
+
+  /// Terminal page: processes require chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Agent processes require the authenticated owning chat.'**
+  String get rel_ops_term_processes_require_chat;
+
+  /// Terminal page: watching processes.
+  ///
+  /// In en, this message translates to:
+  /// **'Watching this chat’s agent processes. Closing a mirror never stops its process.'**
+  String get rel_ops_term_watching_processes;
+
+  /// Terminal page: paste limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste is limited to 16 KiB.'**
+  String get rel_ops_term_paste_limit;
+
+  /// Terminal page: paste.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste'**
+  String get rel_ops_term_paste;
+
+  /// Terminal page: select first.
+  ///
+  /// In en, this message translates to:
+  /// **'Select terminal output first.'**
+  String get rel_ops_term_select_first;
+
+  /// Terminal page: open chat to insert.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the originating chat before inserting output.'**
+  String get rel_ops_term_open_chat_to_insert;
+
+  /// Terminal page: added to draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to the originating chat draft. Nothing was sent.'**
+  String get rel_ops_term_added_to_draft;
+
+  /// Terminal page: close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get rel_ops_term_close;
+
+  /// Terminal page: add selection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add selection to chat draft'**
+  String get rel_ops_term_add_selection;
+
+  /// Terminal page: new terminal.
+  ///
+  /// In en, this message translates to:
+  /// **'New terminal'**
+  String get rel_ops_term_new_terminal;
+
+  /// Terminal page: gateway terminal.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway host terminal'**
+  String get rel_ops_term_gateway_terminal;
+
+  /// Terminal page: verified ssh terminal.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified SSH terminal'**
+  String get rel_ops_term_verified_ssh_terminal;
+
+  /// Terminal page: device local shell.
+  ///
+  /// In en, this message translates to:
+  /// **'This device (local shell)'**
+  String get rel_ops_term_device_local_shell;
+
+  /// Terminal page: local unavailable mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Local shell unavailable on mobile'**
+  String get rel_ops_term_local_unavailable_mobile;
+
+  /// Terminal page: watch processes.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch agent processes'**
+  String get rel_ops_term_watch_processes;
+
+  /// Terminal page: select output.
+  ///
+  /// In en, this message translates to:
+  /// **'Select or copy output'**
+  String get rel_ops_term_select_output;
+
+  /// Terminal page: add selected output.
+  ///
+  /// In en, this message translates to:
+  /// **'Add selected output to chat draft'**
+  String get rel_ops_term_add_selected_output;
+
+  /// Terminal page: review paste.
+  ///
+  /// In en, this message translates to:
+  /// **'Review clipboard paste'**
+  String get rel_ops_term_review_paste;
+
+  /// Terminal page: reconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect same shell'**
+  String get rel_ops_term_reconnect;
+
+  /// Terminal page: close mirror.
+  ///
+  /// In en, this message translates to:
+  /// **'Close mirror'**
+  String get rel_ops_term_close_mirror;
+
+  /// Terminal page: close shell.
+  ///
+  /// In en, this message translates to:
+  /// **'Close shell'**
+  String get rel_ops_term_close_shell;
+
+  /// Terminal page: empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose + to open a terminal. No shell starts automatically.'**
+  String get rel_ops_term_empty;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'stale'**
+  String get rel_ops_term_reason_stale;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'mismatch'**
+  String get rel_ops_term_reason_mismatch;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'unbound'**
+  String get rel_ops_term_reason_unbound;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'unsupported'**
+  String get rel_ops_term_reason_unsupported;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'denied'**
+  String get rel_ops_term_reason_denied;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'ineligible'**
+  String get rel_ops_term_reason_ineligible;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'unavailable'**
+  String get rel_ops_term_reason_unavailable;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'invalid'**
+  String get rel_ops_term_reason_invalid;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'insecure'**
+  String get rel_ops_term_reason_insecure;
+
+  /// Terminal page: refused. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway refused this terminal operation ({reason}).'**
+  String rel_ops_term_refused(String reason);
+
+  /// Terminal page: open device body. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the Ares device, not {connection}. The shell uses your app permissions and starts in app storage.'**
+  String rel_ops_term_open_device_body(String connection);
+
+  /// Terminal page: open gateway body. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a shell on {host} in the verified chat working directory. This is not a device shell.'**
+  String rel_ops_term_open_gateway_body(String host);
+
+  /// Terminal page: close tab title. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Close {label}?'**
+  String rel_ops_term_close_tab_title(String label);
+
+  /// Terminal page: read only status. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Read-only · {status}'**
+  String rel_ops_term_read_only_status(String status);
+
+  /// Terminal page: paste title. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste into {label}?'**
+  String rel_ops_term_paste_title(String label);
+
+  /// Terminal page: output title. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Output · {label}'**
+  String rel_ops_term_output_title(String label);
+
+  /// Terminal page: mirror status. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Read-only process mirror · {label}'**
+  String rel_ops_term_mirror_status(String label);
+
+  /// Terminal page: status label. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'{status} · {label}'**
+  String rel_ops_term_status_label(String status, String label);
+
+  /// SSH tab label. Preserve SSH and the login address.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH {user}@{host}:{port} · {number}'**
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number);
+
+  /// Local device shell tab label.
+  ///
+  /// In en, this message translates to:
+  /// **'This device · {number}'**
+  String rel_ops_term_device_tab(int number);
+
+  /// Gateway shell tab label; host is unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway {host} · {number}'**
+  String rel_ops_term_gateway_tab(String host, int number);
+
+  /// App-authored terminal replay notice, not shell output.
+  ///
+  /// In en, this message translates to:
+  /// **'[Earlier output trimmed]'**
+  String get rel_ops_term_earlier_output_trimmed;
+
+  /// SSH terminal dialog: ssh dialog title. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a verified SSH terminal'**
+  String get rel_ops_term_ssh_dialog_title;
+
+  /// SSH terminal dialog: ssh dialog body. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a fingerprint obtained independently from the host administrator. This opens a new remote login, not the gateway or a local shell.'**
+  String get rel_ops_term_ssh_dialog_body;
+
+  /// SSH terminal dialog: ssh host. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH host'**
+  String get rel_ops_term_ssh_host;
+
+  /// SSH terminal dialog: ssh port. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Port'**
+  String get rel_ops_term_ssh_port;
+
+  /// SSH terminal dialog: ssh user. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get rel_ops_term_ssh_user;
+
+  /// SSH terminal dialog: ssh fingerprint. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Host key fingerprint (SHA256:…)'**
+  String get rel_ops_term_ssh_fingerprint;
+
+  /// SSH terminal dialog: ssh password. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH password (not saved)'**
+  String get rel_ops_term_ssh_password;
+
+  /// SSH terminal dialog: connect. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get rel_ops_term_connect;
 }
 
 class _AppLocalizationsDelegate

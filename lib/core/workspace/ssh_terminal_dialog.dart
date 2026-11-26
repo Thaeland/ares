@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+
 typedef SshLogin = ({
   String host,
   int port,
@@ -30,20 +32,18 @@ class _SshState extends State<SshTerminalDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Open a verified SSH terminal'),
+    title: Text(context.sharedL10n.rel_ops_term_ssh_dialog_title),
     content: SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            'Use a fingerprint obtained independently from the host administrator. This opens a new remote login, not the gateway or a local shell.',
-          ),
+          Text(context.sharedL10n.rel_ops_term_ssh_dialog_body),
           for (final (i, label) in [
-            'SSH host',
-            'Port',
-            'User',
-            'Host key fingerprint (SHA256:…)',
-            'SSH password (not saved)',
+            context.sharedL10n.rel_ops_term_ssh_host,
+            context.sharedL10n.rel_ops_term_ssh_port,
+            context.sharedL10n.rel_ops_term_ssh_user,
+            context.sharedL10n.rel_ops_term_ssh_fingerprint,
+            context.sharedL10n.rel_ops_term_ssh_password,
           ].indexed)
             TextField(
               controller: values[i],
@@ -58,7 +58,7 @@ class _SshState extends State<SshTerminalDialog> {
     actions: [
       TextButton(
         onPressed: () => Navigator.pop(context),
-        child: const Text('Cancel'),
+        child: Text(context.sharedL10n.rel_ops_term_cancel),
       ),
       FilledButton(
         onPressed: () => Navigator.pop(context, (
@@ -68,7 +68,7 @@ class _SshState extends State<SshTerminalDialog> {
           pin: values[3].text,
           password: values[4].text,
         )),
-        child: const Text('Connect'),
+        child: Text(context.sharedL10n.rel_ops_term_connect),
       ),
     ],
   );

@@ -4076,5 +4076,372 @@
   "rel_ops_cap_value_payment": "결제",
   "@rel_ops_cap_value_payment": {
     "description": "Capability _capabilityValue display label for wire value payment. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_term_connecting": "연결 중…",
+  "@rel_ops_term_connecting": {
+    "description": "Terminal connection status."
+  },
+  "rel_ops_term_unbound": "일치하는 활성 세션이나 호스트 작업 디렉터리가 없습니다. 먼저 해당 채팅을 여세요.",
+  "@rel_ops_term_unbound": {
+    "description": "Terminal page: unbound."
+  },
+  "rel_ops_term_unsupported": "이 게이트웨이는 이 터미널 기능을 제공하지 않습니다. 로컬 셸은 시작되지 않았습니다.",
+  "@rel_ops_term_unsupported": {
+    "description": "Terminal page: unsupported."
+  },
+  "rel_ops_term_local_pty_unavailable": "포함된 로컬 PTY를 이 기기에서 사용할 수 없습니다.",
+  "@rel_ops_term_local_pty_unavailable": {
+    "description": "Terminal page: local pty unavailable."
+  },
+  "rel_ops_term_operation_failed": "터미널을 열거나 제어할 수 없습니다. 호스트, 인증 정보, 지문을 확인하세요. 대체 셸은 시작되지 않았습니다.",
+  "@rel_ops_term_operation_failed": {
+    "description": "Terminal page: operation failed."
+  },
+  "rel_ops_term_input_refused": "입력이 거부되었습니다. 원래 채팅을 다시 여세요.",
+  "@rel_ops_term_input_refused": {
+    "description": "Terminal page: input refused."
+  },
+  "rel_ops_term_cancel": "취소",
+  "@rel_ops_term_cancel": {
+    "description": "Terminal page: cancel."
+  },
+  "rel_ops_term_confirm": "확인",
+  "@rel_ops_term_confirm": {
+    "description": "Terminal page: confirm."
+  },
+  "rel_ops_term_open_device_title": "이 기기에서 셸을 열까요?",
+  "@rel_ops_term_open_device_title": {
+    "description": "Terminal page: open device title."
+  },
+  "rel_ops_term_ssh_shell": "SSH 셸",
+  "@rel_ops_term_ssh_shell": {
+    "description": "Terminal page: ssh shell."
+  },
+  "rel_ops_term_local_shell": "로컬 셸",
+  "@rel_ops_term_local_shell": {
+    "description": "Terminal page: local shell."
+  },
+  "rel_ops_term_connection_lost": "연결이 끊어졌습니다",
+  "@rel_ops_term_connection_lost": {
+    "description": "Terminal page: connection lost."
+  },
+  "rel_ops_term_shell_ended": "셸이 종료되었습니다",
+  "@rel_ops_term_shell_ended": {
+    "description": "Terminal page: shell ended."
+  },
+  "rel_ops_term_no_owner": "이 채팅에는 인증된 게이트웨이 터미널 소유자가 없습니다. URL이나 클라우드 로그인만으로는 셸 액세스 권한이 부여되지 않습니다.",
+  "@rel_ops_term_no_owner": {
+    "description": "Terminal page: no owner."
+  },
+  "rel_ops_term_open_gateway_title": "게이트웨이 셸을 열까요?",
+  "@rel_ops_term_open_gateway_title": {
+    "description": "Terminal page: open gateway title."
+  },
+  "rel_ops_term_shell_expired": "셸이 종료되었거나 만료되었습니다",
+  "@rel_ops_term_shell_expired": {
+    "description": "Terminal page: shell expired."
+  },
+  "rel_ops_term_disconnected": "연결 해제됨",
+  "@rel_ops_term_disconnected": {
+    "description": "Terminal page: disconnected."
+  },
+  "rel_ops_term_gateway_shell": "게이트웨이 셸",
+  "@rel_ops_term_gateway_shell": {
+    "description": "Terminal page: gateway shell."
+  },
+  "rel_ops_term_close_body": "이 셸을 종료합니다. 계속 실행하려면 대신 창을 숨기세요.",
+  "@rel_ops_term_close_body": {
+    "description": "Terminal page: close body."
+  },
+  "rel_ops_term_closing": "닫는 중…",
+  "@rel_ops_term_closing": {
+    "description": "Terminal page: closing."
+  },
+  "rel_ops_term_close_unconfirmed": "닫힘이 확인되지 않았습니다",
+  "@rel_ops_term_close_unconfirmed": {
+    "description": "Terminal page: close unconfirmed."
+  },
+  "rel_ops_term_processes_require_chat": "에이전트 프로세스에는 인증된 해당 채팅이 필요합니다.",
+  "@rel_ops_term_processes_require_chat": {
+    "description": "Terminal page: processes require chat."
+  },
+  "rel_ops_term_watching_processes": "이 채팅의 에이전트 프로세스를 모니터링하고 있습니다. 미러 보기를 닫아도 해당 프로세스는 중지되지 않습니다.",
+  "@rel_ops_term_watching_processes": {
+    "description": "Terminal page: watching processes."
+  },
+  "rel_ops_term_paste_limit": "붙여넣기는 16 KiB로 제한됩니다.",
+  "@rel_ops_term_paste_limit": {
+    "description": "Terminal page: paste limit."
+  },
+  "rel_ops_term_paste": "붙여넣기",
+  "@rel_ops_term_paste": {
+    "description": "Terminal page: paste."
+  },
+  "rel_ops_term_select_first": "먼저 터미널 출력을 선택하세요.",
+  "@rel_ops_term_select_first": {
+    "description": "Terminal page: select first."
+  },
+  "rel_ops_term_open_chat_to_insert": "출력을 삽입하기 전에 원래 채팅을 여세요.",
+  "@rel_ops_term_open_chat_to_insert": {
+    "description": "Terminal page: open chat to insert."
+  },
+  "rel_ops_term_added_to_draft": "원래 채팅의 초안에 추가했습니다. 전송된 내용은 없습니다.",
+  "@rel_ops_term_added_to_draft": {
+    "description": "Terminal page: added to draft."
+  },
+  "rel_ops_term_close": "닫기",
+  "@rel_ops_term_close": {
+    "description": "Terminal page: close."
+  },
+  "rel_ops_term_add_selection": "선택 항목을 채팅 초안에 추가",
+  "@rel_ops_term_add_selection": {
+    "description": "Terminal page: add selection."
+  },
+  "rel_ops_term_new_terminal": "새 터미널",
+  "@rel_ops_term_new_terminal": {
+    "description": "Terminal page: new terminal."
+  },
+  "rel_ops_term_gateway_terminal": "게이트웨이 호스트 터미널",
+  "@rel_ops_term_gateway_terminal": {
+    "description": "Terminal page: gateway terminal."
+  },
+  "rel_ops_term_verified_ssh_terminal": "검증된 SSH 터미널",
+  "@rel_ops_term_verified_ssh_terminal": {
+    "description": "Terminal page: verified ssh terminal."
+  },
+  "rel_ops_term_device_local_shell": "이 기기 (로컬 셸)",
+  "@rel_ops_term_device_local_shell": {
+    "description": "Terminal page: device local shell."
+  },
+  "rel_ops_term_local_unavailable_mobile": "모바일에서는 로컬 셸을 사용할 수 없습니다",
+  "@rel_ops_term_local_unavailable_mobile": {
+    "description": "Terminal page: local unavailable mobile."
+  },
+  "rel_ops_term_watch_processes": "에이전트 프로세스 모니터링",
+  "@rel_ops_term_watch_processes": {
+    "description": "Terminal page: watch processes."
+  },
+  "rel_ops_term_select_output": "출력 선택 또는 복사",
+  "@rel_ops_term_select_output": {
+    "description": "Terminal page: select output."
+  },
+  "rel_ops_term_add_selected_output": "선택한 출력을 채팅 초안에 추가",
+  "@rel_ops_term_add_selected_output": {
+    "description": "Terminal page: add selected output."
+  },
+  "rel_ops_term_review_paste": "클립보드 붙여넣기 검토",
+  "@rel_ops_term_review_paste": {
+    "description": "Terminal page: review paste."
+  },
+  "rel_ops_term_reconnect": "동일한 셸에 다시 연결",
+  "@rel_ops_term_reconnect": {
+    "description": "Terminal page: reconnect."
+  },
+  "rel_ops_term_close_mirror": "미러 보기 닫기",
+  "@rel_ops_term_close_mirror": {
+    "description": "Terminal page: close mirror."
+  },
+  "rel_ops_term_close_shell": "셸 닫기",
+  "@rel_ops_term_close_shell": {
+    "description": "Terminal page: close shell."
+  },
+  "rel_ops_term_empty": "+를 선택하여 터미널을 여세요. 셸은 자동으로 시작되지 않습니다.",
+  "@rel_ops_term_empty": {
+    "description": "Terminal page: empty."
+  },
+  "rel_ops_term_reason_stale": "오래된 상태",
+  "@rel_ops_term_reason_stale": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_mismatch": "불일치",
+  "@rel_ops_term_reason_mismatch": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unbound": "연결 대상 없음",
+  "@rel_ops_term_reason_unbound": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unsupported": "지원되지 않음",
+  "@rel_ops_term_reason_unsupported": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_denied": "거부됨",
+  "@rel_ops_term_reason_denied": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_ineligible": "자격 없음",
+  "@rel_ops_term_reason_ineligible": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unavailable": "사용할 수 없음",
+  "@rel_ops_term_reason_unavailable": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_invalid": "유효하지 않음",
+  "@rel_ops_term_reason_invalid": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_insecure": "안전하지 않음",
+  "@rel_ops_term_reason_insecure": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_refused": "게이트웨이가 이 터미널 작업을 거부했습니다 ({reason}).",
+  "@rel_ops_term_refused": {
+    "description": "Terminal page: refused. Preserve server/user placeholder values.",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_open_device_body": "이것은 {connection}이(가) 아닌 Ares 기기입니다. 셸은 앱 권한을 사용하며 앱 저장소에서 시작됩니다.",
+  "@rel_ops_term_open_device_body": {
+    "description": "Terminal page: open device body. Preserve server/user placeholder values.",
+    "placeholders": {
+      "connection": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_open_gateway_body": "{host}에서 채팅의 검증된 작업 디렉터리에 셸을 시작합니다. 기기 셸이 아닙니다.",
+  "@rel_ops_term_open_gateway_body": {
+    "description": "Terminal page: open gateway body. Preserve server/user placeholder values.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_close_tab_title": "{label}을(를) 닫을까요?",
+  "@rel_ops_term_close_tab_title": {
+    "description": "Terminal page: close tab title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_read_only_status": "읽기 전용 · {status}",
+  "@rel_ops_term_read_only_status": {
+    "description": "Terminal page: read only status. Preserve server/user placeholder values.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_paste_title": "{label}에 붙여넣을까요?",
+  "@rel_ops_term_paste_title": {
+    "description": "Terminal page: paste title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_output_title": "출력 · {label}",
+  "@rel_ops_term_output_title": {
+    "description": "Terminal page: output title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_mirror_status": "읽기 전용 프로세스 미러 · {label}",
+  "@rel_ops_term_mirror_status": {
+    "description": "Terminal page: mirror status. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_status_label": "{status} · {label}",
+  "@rel_ops_term_status_label": {
+    "description": "Terminal page: status label. Preserve server/user placeholder values.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_ssh_tab": "SSH {user}@{host}:{port} · {number}",
+  "@rel_ops_term_ssh_tab": {
+    "description": "SSH tab label. Preserve SSH and the login address.",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      },
+      "host": {
+        "type": "String"
+      },
+      "port": {
+        "type": "int"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_device_tab": "이 기기 · {number}",
+  "@rel_ops_term_device_tab": {
+    "description": "Local device shell tab label.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_gateway_tab": "게이트웨이 {host} · {number}",
+  "@rel_ops_term_gateway_tab": {
+    "description": "Gateway shell tab label; host is unchanged.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_earlier_output_trimmed": "[이전 출력이 잘렸습니다]",
+  "@rel_ops_term_earlier_output_trimmed": {
+    "description": "App-authored terminal replay notice, not shell output."
+  },
+  "rel_ops_term_ssh_dialog_title": "검증된 SSH 터미널 열기",
+  "@rel_ops_term_ssh_dialog_title": {
+    "description": "SSH terminal dialog: ssh dialog title. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_dialog_body": "호스트 관리자로부터 독립적인 경로로 얻은 지문을 사용하세요. 게이트웨이나 로컬 셸이 아닌 새 원격 로그인 세션을 엽니다.",
+  "@rel_ops_term_ssh_dialog_body": {
+    "description": "SSH terminal dialog: ssh dialog body. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_host": "SSH 호스트",
+  "@rel_ops_term_ssh_host": {
+    "description": "SSH terminal dialog: ssh host. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_port": "포트",
+  "@rel_ops_term_ssh_port": {
+    "description": "SSH terminal dialog: ssh port. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_user": "사용자",
+  "@rel_ops_term_ssh_user": {
+    "description": "SSH terminal dialog: ssh user. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_fingerprint": "호스트 키 지문 (SHA256:…)",
+  "@rel_ops_term_ssh_fingerprint": {
+    "description": "SSH terminal dialog: ssh fingerprint. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_password": "SSH 비밀번호 (저장되지 않음)",
+  "@rel_ops_term_ssh_password": {
+    "description": "SSH terminal dialog: ssh password. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_connect": "연결",
+  "@rel_ops_term_connect": {
+    "description": "SSH terminal dialog: connect. Keep SSH/SHA256 protocol notation unchanged."
   }
 }

@@ -12280,4 +12280,256 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get rel_ops_cap_value_payment => '支払い';
+
+  @override
+  String get rel_ops_term_connecting => '接続中…';
+
+  @override
+  String get rel_ops_term_unbound =>
+      '一致する稼働中のセッションまたはホストの作業ディレクトリがありません。先に対応するチャットを開いてください。';
+
+  @override
+  String get rel_ops_term_unsupported =>
+      'このゲートウェイはこのターミナル機能を提供していません。ローカルシェルは起動されていません。';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable =>
+      '同梱のローカルPTYはこのデバイスでは利用できません。';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      'ターミナルを開くか操作することができませんでした。ホスト、認証情報、フィンガープリントを確認してください。代替シェルは起動されていません。';
+
+  @override
+  String get rel_ops_term_input_refused => '入力が拒否されました。元のチャットを開き直してください。';
+
+  @override
+  String get rel_ops_term_cancel => 'キャンセル';
+
+  @override
+  String get rel_ops_term_confirm => '確認';
+
+  @override
+  String get rel_ops_term_open_device_title => 'このデバイスでシェルを開きますか？';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'SSHシェル';
+
+  @override
+  String get rel_ops_term_local_shell => 'ローカルシェル';
+
+  @override
+  String get rel_ops_term_connection_lost => '接続が失われました';
+
+  @override
+  String get rel_ops_term_shell_ended => 'シェルが終了しました';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      'このチャットには認証済みのゲートウェイターミナル所有者がいません。URLまたはクラウドへのログインだけではシェルへのアクセス権は付与されません。';
+
+  @override
+  String get rel_ops_term_open_gateway_title => 'ゲートウェイのシェルを開きますか？';
+
+  @override
+  String get rel_ops_term_shell_expired => 'シェルが終了したか有効期限が切れました';
+
+  @override
+  String get rel_ops_term_disconnected => '切断済み';
+
+  @override
+  String get rel_ops_term_gateway_shell => 'ゲートウェイシェル';
+
+  @override
+  String get rel_ops_term_close_body =>
+      'このシェルを終了します。実行を続けるには、代わりにペインを非表示にしてください。';
+
+  @override
+  String get rel_ops_term_closing => '終了中…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => '終了を確認できませんでした';
+
+  @override
+  String get rel_ops_term_processes_require_chat =>
+      'エージェントプロセスには、認証済みの対応するチャットが必要です。';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      'このチャットのエージェントプロセスを監視しています。ミラー表示を閉じてもプロセスは停止しません。';
+
+  @override
+  String get rel_ops_term_paste_limit => '貼り付けは16 KiBまでです。';
+
+  @override
+  String get rel_ops_term_paste => '貼り付け';
+
+  @override
+  String get rel_ops_term_select_first => '先にターミナルの出力を選択してください。';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert => '出力を挿入する前に元のチャットを開いてください。';
+
+  @override
+  String get rel_ops_term_added_to_draft => '元のチャットの下書きに追加しました。何も送信されていません。';
+
+  @override
+  String get rel_ops_term_close => '閉じる';
+
+  @override
+  String get rel_ops_term_add_selection => '選択範囲をチャットの下書きに追加';
+
+  @override
+  String get rel_ops_term_new_terminal => '新しいターミナル';
+
+  @override
+  String get rel_ops_term_gateway_terminal => 'ゲートウェイホストのターミナル';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => '検証済みSSHターミナル';
+
+  @override
+  String get rel_ops_term_device_local_shell => 'このデバイス（ローカルシェル）';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile => 'モバイルではローカルシェルを利用できません';
+
+  @override
+  String get rel_ops_term_watch_processes => 'エージェントプロセスを監視';
+
+  @override
+  String get rel_ops_term_select_output => '出力を選択またはコピー';
+
+  @override
+  String get rel_ops_term_add_selected_output => '選択した出力をチャットの下書きに追加';
+
+  @override
+  String get rel_ops_term_review_paste => 'クリップボードからの貼り付け内容を確認';
+
+  @override
+  String get rel_ops_term_reconnect => '同じシェルに再接続';
+
+  @override
+  String get rel_ops_term_close_mirror => 'ミラー表示を閉じる';
+
+  @override
+  String get rel_ops_term_close_shell => 'シェルを閉じる';
+
+  @override
+  String get rel_ops_term_empty => '+ を選択してターミナルを開いてください。シェルが自動的に起動することはありません。';
+
+  @override
+  String get rel_ops_term_reason_stale => '古い状態';
+
+  @override
+  String get rel_ops_term_reason_mismatch => '不一致';
+
+  @override
+  String get rel_ops_term_reason_unbound => '未関連付け';
+
+  @override
+  String get rel_ops_term_reason_unsupported => '未対応';
+
+  @override
+  String get rel_ops_term_reason_denied => '拒否';
+
+  @override
+  String get rel_ops_term_reason_ineligible => '利用資格なし';
+
+  @override
+  String get rel_ops_term_reason_unavailable => '利用不可';
+
+  @override
+  String get rel_ops_term_reason_invalid => '無効';
+
+  @override
+  String get rel_ops_term_reason_insecure => '安全でない接続';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return 'ゲートウェイがこのターミナル操作を拒否しました（$reason）。';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return 'これはAresのデバイスであり、$connectionではありません。シェルはアプリの権限を使用し、アプリのストレージで起動します。';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return '$host上の、検証済みのチャット作業ディレクトリでシェルを起動します。これはデバイスのシェルではありません。';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return '$labelを閉じますか？';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return '読み取り専用 · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return '$labelに貼り付けますか？';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return '出力 · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return '読み取り専用のプロセスミラー · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return 'このデバイス · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return 'ゲートウェイ $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed => '[以前の出力は切り詰められました]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title => '検証済みSSHターミナルを開く';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      'ホスト管理者から独立した経路で取得したフィンガープリントを使用してください。ゲートウェイやローカルシェルではなく、新しいリモートログインセッションを開きます。';
+
+  @override
+  String get rel_ops_term_ssh_host => 'SSHホスト';
+
+  @override
+  String get rel_ops_term_ssh_port => 'ポート';
+
+  @override
+  String get rel_ops_term_ssh_user => 'ユーザー';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => 'ホスト鍵のフィンガープリント（SHA256:…）';
+
+  @override
+  String get rel_ops_term_ssh_password => 'SSHパスワード（保存されません）';
+
+  @override
+  String get rel_ops_term_connect => '接続';
 }

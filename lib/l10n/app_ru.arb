@@ -4076,5 +4076,372 @@
   "rel_ops_cap_value_payment": "платёж",
   "@rel_ops_cap_value_payment": {
     "description": "Capability _capabilityValue display label for wire value payment. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_term_connecting": "Подключение…",
+  "@rel_ops_term_connecting": {
+    "description": "Terminal connection status."
+  },
+  "rel_ops_term_unbound": "Нет подходящего активного сеанса или рабочего каталога на хосте. Сначала откройте связанный чат.",
+  "@rel_ops_term_unbound": {
+    "description": "Terminal page: unbound."
+  },
+  "rel_ops_term_unsupported": "Этот шлюз не предоставляет такую возможность терминала. Локальная оболочка не была запущена.",
+  "@rel_ops_term_unsupported": {
+    "description": "Terminal page: unsupported."
+  },
+  "rel_ops_term_local_pty_unavailable": "Встроенный локальный псевдотерминал (PTY) недоступен на этом устройстве.",
+  "@rel_ops_term_local_pty_unavailable": {
+    "description": "Terminal page: local pty unavailable."
+  },
+  "rel_ops_term_operation_failed": "Не удалось открыть терминал или управлять им. Проверьте хост, учётные данные и отпечаток. Запасная оболочка не была запущена.",
+  "@rel_ops_term_operation_failed": {
+    "description": "Terminal page: operation failed."
+  },
+  "rel_ops_term_input_refused": "Ввод отклонён. Снова откройте исходный чат.",
+  "@rel_ops_term_input_refused": {
+    "description": "Terminal page: input refused."
+  },
+  "rel_ops_term_cancel": "Отмена",
+  "@rel_ops_term_cancel": {
+    "description": "Terminal page: cancel."
+  },
+  "rel_ops_term_confirm": "Подтвердить",
+  "@rel_ops_term_confirm": {
+    "description": "Terminal page: confirm."
+  },
+  "rel_ops_term_open_device_title": "Открыть оболочку на этом устройстве?",
+  "@rel_ops_term_open_device_title": {
+    "description": "Terminal page: open device title."
+  },
+  "rel_ops_term_ssh_shell": "Оболочка SSH",
+  "@rel_ops_term_ssh_shell": {
+    "description": "Terminal page: ssh shell."
+  },
+  "rel_ops_term_local_shell": "Локальная оболочка",
+  "@rel_ops_term_local_shell": {
+    "description": "Terminal page: local shell."
+  },
+  "rel_ops_term_connection_lost": "Соединение потеряно",
+  "@rel_ops_term_connection_lost": {
+    "description": "Terminal page: connection lost."
+  },
+  "rel_ops_term_shell_ended": "Оболочка завершена",
+  "@rel_ops_term_shell_ended": {
+    "description": "Terminal page: shell ended."
+  },
+  "rel_ops_term_no_owner": "У этого чата нет аутентифицированного владельца терминала шлюза. Одного URL или входа в облако недостаточно для доступа к оболочке.",
+  "@rel_ops_term_no_owner": {
+    "description": "Terminal page: no owner."
+  },
+  "rel_ops_term_open_gateway_title": "Открыть оболочку шлюза?",
+  "@rel_ops_term_open_gateway_title": {
+    "description": "Terminal page: open gateway title."
+  },
+  "rel_ops_term_shell_expired": "Оболочка завершена или срок её действия истёк",
+  "@rel_ops_term_shell_expired": {
+    "description": "Terminal page: shell expired."
+  },
+  "rel_ops_term_disconnected": "Отключено",
+  "@rel_ops_term_disconnected": {
+    "description": "Terminal page: disconnected."
+  },
+  "rel_ops_term_gateway_shell": "Оболочка шлюза",
+  "@rel_ops_term_gateway_shell": {
+    "description": "Terminal page: gateway shell."
+  },
+  "rel_ops_term_close_body": "Завершить эту оболочку. Чтобы оставить её работающей, вместо этого скройте панель.",
+  "@rel_ops_term_close_body": {
+    "description": "Terminal page: close body."
+  },
+  "rel_ops_term_closing": "Закрытие…",
+  "@rel_ops_term_closing": {
+    "description": "Terminal page: closing."
+  },
+  "rel_ops_term_close_unconfirmed": "Закрытие не подтверждено",
+  "@rel_ops_term_close_unconfirmed": {
+    "description": "Terminal page: close unconfirmed."
+  },
+  "rel_ops_term_processes_require_chat": "Для процессов агента требуется аутентифицированный чат, которому они принадлежат.",
+  "@rel_ops_term_processes_require_chat": {
+    "description": "Terminal page: processes require chat."
+  },
+  "rel_ops_term_watching_processes": "Наблюдение за процессами агента этого чата. Закрытие зеркального представления никогда не останавливает его процесс.",
+  "@rel_ops_term_watching_processes": {
+    "description": "Terminal page: watching processes."
+  },
+  "rel_ops_term_paste_limit": "Размер вставки ограничен 16 KiB.",
+  "@rel_ops_term_paste_limit": {
+    "description": "Terminal page: paste limit."
+  },
+  "rel_ops_term_paste": "Вставить",
+  "@rel_ops_term_paste": {
+    "description": "Terminal page: paste."
+  },
+  "rel_ops_term_select_first": "Сначала выделите вывод терминала.",
+  "@rel_ops_term_select_first": {
+    "description": "Terminal page: select first."
+  },
+  "rel_ops_term_open_chat_to_insert": "Откройте исходный чат перед вставкой вывода.",
+  "@rel_ops_term_open_chat_to_insert": {
+    "description": "Terminal page: open chat to insert."
+  },
+  "rel_ops_term_added_to_draft": "Добавлено в черновик исходного чата. Ничего не отправлено.",
+  "@rel_ops_term_added_to_draft": {
+    "description": "Terminal page: added to draft."
+  },
+  "rel_ops_term_close": "Закрыть",
+  "@rel_ops_term_close": {
+    "description": "Terminal page: close."
+  },
+  "rel_ops_term_add_selection": "Добавить выделенное в черновик чата",
+  "@rel_ops_term_add_selection": {
+    "description": "Terminal page: add selection."
+  },
+  "rel_ops_term_new_terminal": "Новый терминал",
+  "@rel_ops_term_new_terminal": {
+    "description": "Terminal page: new terminal."
+  },
+  "rel_ops_term_gateway_terminal": "Терминал хоста шлюза",
+  "@rel_ops_term_gateway_terminal": {
+    "description": "Terminal page: gateway terminal."
+  },
+  "rel_ops_term_verified_ssh_terminal": "Проверенный терминал SSH",
+  "@rel_ops_term_verified_ssh_terminal": {
+    "description": "Terminal page: verified ssh terminal."
+  },
+  "rel_ops_term_device_local_shell": "Это устройство (локальная оболочка)",
+  "@rel_ops_term_device_local_shell": {
+    "description": "Terminal page: device local shell."
+  },
+  "rel_ops_term_local_unavailable_mobile": "Локальная оболочка недоступна на мобильных устройствах",
+  "@rel_ops_term_local_unavailable_mobile": {
+    "description": "Terminal page: local unavailable mobile."
+  },
+  "rel_ops_term_watch_processes": "Наблюдать за процессами агента",
+  "@rel_ops_term_watch_processes": {
+    "description": "Terminal page: watch processes."
+  },
+  "rel_ops_term_select_output": "Выделить или скопировать вывод",
+  "@rel_ops_term_select_output": {
+    "description": "Terminal page: select output."
+  },
+  "rel_ops_term_add_selected_output": "Добавить выделенный вывод в черновик чата",
+  "@rel_ops_term_add_selected_output": {
+    "description": "Terminal page: add selected output."
+  },
+  "rel_ops_term_review_paste": "Проверить вставку из буфера обмена",
+  "@rel_ops_term_review_paste": {
+    "description": "Terminal page: review paste."
+  },
+  "rel_ops_term_reconnect": "Подключиться к той же оболочке заново",
+  "@rel_ops_term_reconnect": {
+    "description": "Terminal page: reconnect."
+  },
+  "rel_ops_term_close_mirror": "Закрыть зеркальное представление",
+  "@rel_ops_term_close_mirror": {
+    "description": "Terminal page: close mirror."
+  },
+  "rel_ops_term_close_shell": "Закрыть оболочку",
+  "@rel_ops_term_close_shell": {
+    "description": "Terminal page: close shell."
+  },
+  "rel_ops_term_empty": "Нажмите +, чтобы открыть терминал. Ни одна оболочка не запускается автоматически.",
+  "@rel_ops_term_empty": {
+    "description": "Terminal page: empty."
+  },
+  "rel_ops_term_reason_stale": "устарело",
+  "@rel_ops_term_reason_stale": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_mismatch": "несоответствие",
+  "@rel_ops_term_reason_mismatch": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unbound": "не привязано",
+  "@rel_ops_term_reason_unbound": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unsupported": "не поддерживается",
+  "@rel_ops_term_reason_unsupported": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_denied": "отказано",
+  "@rel_ops_term_reason_denied": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_ineligible": "не соответствует условиям",
+  "@rel_ops_term_reason_ineligible": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unavailable": "недоступно",
+  "@rel_ops_term_reason_unavailable": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_invalid": "недопустимо",
+  "@rel_ops_term_reason_invalid": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_insecure": "небезопасно",
+  "@rel_ops_term_reason_insecure": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_refused": "Шлюз отклонил эту операцию терминала ({reason}).",
+  "@rel_ops_term_refused": {
+    "description": "Terminal page: refused. Preserve server/user placeholder values.",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_open_device_body": "Это устройство с Ares, а не {connection}. Оболочка использует разрешения приложения и запускается в его хранилище.",
+  "@rel_ops_term_open_device_body": {
+    "description": "Terminal page: open device body. Preserve server/user placeholder values.",
+    "placeholders": {
+      "connection": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_open_gateway_body": "Запустите оболочку на {host} в проверенном рабочем каталоге чата. Это не оболочка устройства.",
+  "@rel_ops_term_open_gateway_body": {
+    "description": "Terminal page: open gateway body. Preserve server/user placeholder values.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_close_tab_title": "Закрыть {label}?",
+  "@rel_ops_term_close_tab_title": {
+    "description": "Terminal page: close tab title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_read_only_status": "Только чтение · {status}",
+  "@rel_ops_term_read_only_status": {
+    "description": "Terminal page: read only status. Preserve server/user placeholder values.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_paste_title": "Вставить в {label}?",
+  "@rel_ops_term_paste_title": {
+    "description": "Terminal page: paste title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_output_title": "Вывод · {label}",
+  "@rel_ops_term_output_title": {
+    "description": "Terminal page: output title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_mirror_status": "Зеркальное представление процесса только для чтения · {label}",
+  "@rel_ops_term_mirror_status": {
+    "description": "Terminal page: mirror status. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_status_label": "{status} · {label}",
+  "@rel_ops_term_status_label": {
+    "description": "Terminal page: status label. Preserve server/user placeholder values.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_ssh_tab": "SSH {user}@{host}:{port} · {number}",
+  "@rel_ops_term_ssh_tab": {
+    "description": "SSH tab label. Preserve SSH and the login address.",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      },
+      "host": {
+        "type": "String"
+      },
+      "port": {
+        "type": "int"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_device_tab": "Это устройство · {number}",
+  "@rel_ops_term_device_tab": {
+    "description": "Local device shell tab label.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_gateway_tab": "Шлюз {host} · {number}",
+  "@rel_ops_term_gateway_tab": {
+    "description": "Gateway shell tab label; host is unchanged.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_earlier_output_trimmed": "[Предыдущий вывод обрезан]",
+  "@rel_ops_term_earlier_output_trimmed": {
+    "description": "App-authored terminal replay notice, not shell output."
+  },
+  "rel_ops_term_ssh_dialog_title": "Открыть проверенный терминал SSH",
+  "@rel_ops_term_ssh_dialog_title": {
+    "description": "SSH terminal dialog: ssh dialog title. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_dialog_body": "Используйте отпечаток, полученный по независимому каналу от администратора хоста. Будет открыт новый удалённый сеанс входа, а не шлюз или локальная оболочка.",
+  "@rel_ops_term_ssh_dialog_body": {
+    "description": "SSH terminal dialog: ssh dialog body. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_host": "Хост SSH",
+  "@rel_ops_term_ssh_host": {
+    "description": "SSH terminal dialog: ssh host. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_port": "Порт",
+  "@rel_ops_term_ssh_port": {
+    "description": "SSH terminal dialog: ssh port. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_user": "Пользователь",
+  "@rel_ops_term_ssh_user": {
+    "description": "SSH terminal dialog: ssh user. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_fingerprint": "Отпечаток ключа хоста (SHA256:…)",
+  "@rel_ops_term_ssh_fingerprint": {
+    "description": "SSH terminal dialog: ssh fingerprint. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_password": "Пароль SSH (не сохраняется)",
+  "@rel_ops_term_ssh_password": {
+    "description": "SSH terminal dialog: ssh password. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_connect": "Подключиться",
+  "@rel_ops_term_connect": {
+    "description": "SSH terminal dialog: connect. Keep SSH/SHA256 protocol notation unchanged."
   }
 }

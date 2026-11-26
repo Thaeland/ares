@@ -12731,4 +12731,268 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get rel_ops_cap_value_payment => 'платёж';
+
+  @override
+  String get rel_ops_term_connecting => 'Подключение…';
+
+  @override
+  String get rel_ops_term_unbound =>
+      'Нет подходящего активного сеанса или рабочего каталога на хосте. Сначала откройте связанный чат.';
+
+  @override
+  String get rel_ops_term_unsupported =>
+      'Этот шлюз не предоставляет такую возможность терминала. Локальная оболочка не была запущена.';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable =>
+      'Встроенный локальный псевдотерминал (PTY) недоступен на этом устройстве.';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      'Не удалось открыть терминал или управлять им. Проверьте хост, учётные данные и отпечаток. Запасная оболочка не была запущена.';
+
+  @override
+  String get rel_ops_term_input_refused =>
+      'Ввод отклонён. Снова откройте исходный чат.';
+
+  @override
+  String get rel_ops_term_cancel => 'Отмена';
+
+  @override
+  String get rel_ops_term_confirm => 'Подтвердить';
+
+  @override
+  String get rel_ops_term_open_device_title =>
+      'Открыть оболочку на этом устройстве?';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'Оболочка SSH';
+
+  @override
+  String get rel_ops_term_local_shell => 'Локальная оболочка';
+
+  @override
+  String get rel_ops_term_connection_lost => 'Соединение потеряно';
+
+  @override
+  String get rel_ops_term_shell_ended => 'Оболочка завершена';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      'У этого чата нет аутентифицированного владельца терминала шлюза. Одного URL или входа в облако недостаточно для доступа к оболочке.';
+
+  @override
+  String get rel_ops_term_open_gateway_title => 'Открыть оболочку шлюза?';
+
+  @override
+  String get rel_ops_term_shell_expired =>
+      'Оболочка завершена или срок её действия истёк';
+
+  @override
+  String get rel_ops_term_disconnected => 'Отключено';
+
+  @override
+  String get rel_ops_term_gateway_shell => 'Оболочка шлюза';
+
+  @override
+  String get rel_ops_term_close_body =>
+      'Завершить эту оболочку. Чтобы оставить её работающей, вместо этого скройте панель.';
+
+  @override
+  String get rel_ops_term_closing => 'Закрытие…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => 'Закрытие не подтверждено';
+
+  @override
+  String get rel_ops_term_processes_require_chat =>
+      'Для процессов агента требуется аутентифицированный чат, которому они принадлежат.';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      'Наблюдение за процессами агента этого чата. Закрытие зеркального представления никогда не останавливает его процесс.';
+
+  @override
+  String get rel_ops_term_paste_limit => 'Размер вставки ограничен 16 KiB.';
+
+  @override
+  String get rel_ops_term_paste => 'Вставить';
+
+  @override
+  String get rel_ops_term_select_first => 'Сначала выделите вывод терминала.';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert =>
+      'Откройте исходный чат перед вставкой вывода.';
+
+  @override
+  String get rel_ops_term_added_to_draft =>
+      'Добавлено в черновик исходного чата. Ничего не отправлено.';
+
+  @override
+  String get rel_ops_term_close => 'Закрыть';
+
+  @override
+  String get rel_ops_term_add_selection =>
+      'Добавить выделенное в черновик чата';
+
+  @override
+  String get rel_ops_term_new_terminal => 'Новый терминал';
+
+  @override
+  String get rel_ops_term_gateway_terminal => 'Терминал хоста шлюза';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => 'Проверенный терминал SSH';
+
+  @override
+  String get rel_ops_term_device_local_shell =>
+      'Это устройство (локальная оболочка)';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile =>
+      'Локальная оболочка недоступна на мобильных устройствах';
+
+  @override
+  String get rel_ops_term_watch_processes => 'Наблюдать за процессами агента';
+
+  @override
+  String get rel_ops_term_select_output => 'Выделить или скопировать вывод';
+
+  @override
+  String get rel_ops_term_add_selected_output =>
+      'Добавить выделенный вывод в черновик чата';
+
+  @override
+  String get rel_ops_term_review_paste => 'Проверить вставку из буфера обмена';
+
+  @override
+  String get rel_ops_term_reconnect => 'Подключиться к той же оболочке заново';
+
+  @override
+  String get rel_ops_term_close_mirror => 'Закрыть зеркальное представление';
+
+  @override
+  String get rel_ops_term_close_shell => 'Закрыть оболочку';
+
+  @override
+  String get rel_ops_term_empty =>
+      'Нажмите +, чтобы открыть терминал. Ни одна оболочка не запускается автоматически.';
+
+  @override
+  String get rel_ops_term_reason_stale => 'устарело';
+
+  @override
+  String get rel_ops_term_reason_mismatch => 'несоответствие';
+
+  @override
+  String get rel_ops_term_reason_unbound => 'не привязано';
+
+  @override
+  String get rel_ops_term_reason_unsupported => 'не поддерживается';
+
+  @override
+  String get rel_ops_term_reason_denied => 'отказано';
+
+  @override
+  String get rel_ops_term_reason_ineligible => 'не соответствует условиям';
+
+  @override
+  String get rel_ops_term_reason_unavailable => 'недоступно';
+
+  @override
+  String get rel_ops_term_reason_invalid => 'недопустимо';
+
+  @override
+  String get rel_ops_term_reason_insecure => 'небезопасно';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return 'Шлюз отклонил эту операцию терминала ($reason).';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return 'Это устройство с Ares, а не $connection. Оболочка использует разрешения приложения и запускается в его хранилище.';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return 'Запустите оболочку на $host в проверенном рабочем каталоге чата. Это не оболочка устройства.';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return 'Закрыть $label?';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return 'Только чтение · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return 'Вставить в $label?';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return 'Вывод · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return 'Зеркальное представление процесса только для чтения · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return 'Это устройство · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return 'Шлюз $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed =>
+      '[Предыдущий вывод обрезан]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title =>
+      'Открыть проверенный терминал SSH';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      'Используйте отпечаток, полученный по независимому каналу от администратора хоста. Будет открыт новый удалённый сеанс входа, а не шлюз или локальная оболочка.';
+
+  @override
+  String get rel_ops_term_ssh_host => 'Хост SSH';
+
+  @override
+  String get rel_ops_term_ssh_port => 'Порт';
+
+  @override
+  String get rel_ops_term_ssh_user => 'Пользователь';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => 'Отпечаток ключа хоста (SHA256:…)';
+
+  @override
+  String get rel_ops_term_ssh_password => 'Пароль SSH (не сохраняется)';
+
+  @override
+  String get rel_ops_term_connect => 'Подключиться';
 }

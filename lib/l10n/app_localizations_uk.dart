@@ -12727,4 +12727,269 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get rel_ops_cap_value_payment => 'платіж';
+
+  @override
+  String get rel_ops_term_connecting => 'Підключення…';
+
+  @override
+  String get rel_ops_term_unbound =>
+      'Немає відповідного активного сеансу або робочого каталогу на хості. Спочатку відкрийте пов’язаний чат.';
+
+  @override
+  String get rel_ops_term_unsupported =>
+      'Цей шлюз не надає такої можливості термінала. Локальну оболонку не було запущено.';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable =>
+      'Вбудований локальний псевдотермінал (PTY) недоступний на цьому пристрої.';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      'Не вдалося відкрити термінал або керувати ним. Перевірте хост, облікові дані та відбиток. Запасну оболонку не було запущено.';
+
+  @override
+  String get rel_ops_term_input_refused =>
+      'Введення відхилено. Знову відкрийте початковий чат.';
+
+  @override
+  String get rel_ops_term_cancel => 'Скасувати';
+
+  @override
+  String get rel_ops_term_confirm => 'Підтвердити';
+
+  @override
+  String get rel_ops_term_open_device_title =>
+      'Відкрити оболонку на цьому пристрої?';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'Оболонка SSH';
+
+  @override
+  String get rel_ops_term_local_shell => 'Локальна оболонка';
+
+  @override
+  String get rel_ops_term_connection_lost => 'З’єднання втрачено';
+
+  @override
+  String get rel_ops_term_shell_ended => 'Оболонку завершено';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      'Цей чат не має автентифікованого власника термінала шлюзу. Самої URL-адреси або входу в хмару недостатньо для доступу до оболонки.';
+
+  @override
+  String get rel_ops_term_open_gateway_title => 'Відкрити оболонку шлюзу?';
+
+  @override
+  String get rel_ops_term_shell_expired =>
+      'Оболонку завершено або термін її дії минув';
+
+  @override
+  String get rel_ops_term_disconnected => 'Відключено';
+
+  @override
+  String get rel_ops_term_gateway_shell => 'Оболонка шлюзу';
+
+  @override
+  String get rel_ops_term_close_body =>
+      'Завершити цю оболонку. Щоб залишити її працювати, натомість приховайте панель.';
+
+  @override
+  String get rel_ops_term_closing => 'Закриття…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => 'Закриття не підтверджено';
+
+  @override
+  String get rel_ops_term_processes_require_chat =>
+      'Для процесів агента потрібен автентифікований чат, якому вони належать.';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      'Спостереження за процесами агента цього чату. Закриття дзеркального подання ніколи не зупиняє його процес.';
+
+  @override
+  String get rel_ops_term_paste_limit => 'Розмір вставлення обмежено 16 KiB.';
+
+  @override
+  String get rel_ops_term_paste => 'Вставити';
+
+  @override
+  String get rel_ops_term_select_first => 'Спочатку виділіть вивід термінала.';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert =>
+      'Відкрийте початковий чат перед вставленням виводу.';
+
+  @override
+  String get rel_ops_term_added_to_draft =>
+      'Додано до чернетки початкового чату. Нічого не надіслано.';
+
+  @override
+  String get rel_ops_term_close => 'Закрити';
+
+  @override
+  String get rel_ops_term_add_selection => 'Додати виділене до чернетки чату';
+
+  @override
+  String get rel_ops_term_new_terminal => 'Новий термінал';
+
+  @override
+  String get rel_ops_term_gateway_terminal => 'Термінал хоста шлюзу';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => 'Перевірений термінал SSH';
+
+  @override
+  String get rel_ops_term_device_local_shell =>
+      'Цей пристрій (локальна оболонка)';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile =>
+      'Локальна оболонка недоступна на мобільних пристроях';
+
+  @override
+  String get rel_ops_term_watch_processes => 'Спостерігати за процесами агента';
+
+  @override
+  String get rel_ops_term_select_output => 'Виділити або скопіювати вивід';
+
+  @override
+  String get rel_ops_term_add_selected_output =>
+      'Додати виділений вивід до чернетки чату';
+
+  @override
+  String get rel_ops_term_review_paste =>
+      'Перевірити вставлення з буфера обміну';
+
+  @override
+  String get rel_ops_term_reconnect =>
+      'Повторно підключитися до тієї самої оболонки';
+
+  @override
+  String get rel_ops_term_close_mirror => 'Закрити дзеркальне подання';
+
+  @override
+  String get rel_ops_term_close_shell => 'Закрити оболонку';
+
+  @override
+  String get rel_ops_term_empty =>
+      'Натисніть +, щоб відкрити термінал. Жодна оболонка не запускається автоматично.';
+
+  @override
+  String get rel_ops_term_reason_stale => 'застаріле';
+
+  @override
+  String get rel_ops_term_reason_mismatch => 'невідповідність';
+
+  @override
+  String get rel_ops_term_reason_unbound => 'не прив’язано';
+
+  @override
+  String get rel_ops_term_reason_unsupported => 'не підтримується';
+
+  @override
+  String get rel_ops_term_reason_denied => 'відмовлено';
+
+  @override
+  String get rel_ops_term_reason_ineligible => 'не відповідає умовам';
+
+  @override
+  String get rel_ops_term_reason_unavailable => 'недоступно';
+
+  @override
+  String get rel_ops_term_reason_invalid => 'некоректне';
+
+  @override
+  String get rel_ops_term_reason_insecure => 'небезпечно';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return 'Шлюз відхилив цю операцію термінала ($reason).';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return 'Це пристрій з Ares, а не $connection. Оболонка використовує дозволи застосунку та запускається в його сховищі.';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return 'Запустіть оболонку на $host у перевіреному робочому каталозі чату. Це не оболонка пристрою.';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return 'Закрити $label?';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return 'Лише читання · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return 'Вставити в $label?';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return 'Вивід · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return 'Дзеркальне подання процесу лише для читання · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return 'Цей пристрій · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return 'Шлюз $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed =>
+      '[Попередній вивід обрізано]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title =>
+      'Відкрити перевірений термінал SSH';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      'Використовуйте відбиток, отриманий незалежним шляхом від адміністратора хоста. Буде відкрито новий віддалений сеанс входу, а не шлюз чи локальну оболонку.';
+
+  @override
+  String get rel_ops_term_ssh_host => 'Хост SSH';
+
+  @override
+  String get rel_ops_term_ssh_port => 'Порт';
+
+  @override
+  String get rel_ops_term_ssh_user => 'Користувач';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => 'Відбиток ключа хоста (SHA256:…)';
+
+  @override
+  String get rel_ops_term_ssh_password => 'Пароль SSH (не зберігається)';
+
+  @override
+  String get rel_ops_term_connect => 'Підключитися';
 }

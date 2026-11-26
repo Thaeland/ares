@@ -12281,4 +12281,255 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get rel_ops_cap_value_payment => '결제';
+
+  @override
+  String get rel_ops_term_connecting => '연결 중…';
+
+  @override
+  String get rel_ops_term_unbound =>
+      '일치하는 활성 세션이나 호스트 작업 디렉터리가 없습니다. 먼저 해당 채팅을 여세요.';
+
+  @override
+  String get rel_ops_term_unsupported =>
+      '이 게이트웨이는 이 터미널 기능을 제공하지 않습니다. 로컬 셸은 시작되지 않았습니다.';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable =>
+      '포함된 로컬 PTY를 이 기기에서 사용할 수 없습니다.';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      '터미널을 열거나 제어할 수 없습니다. 호스트, 인증 정보, 지문을 확인하세요. 대체 셸은 시작되지 않았습니다.';
+
+  @override
+  String get rel_ops_term_input_refused => '입력이 거부되었습니다. 원래 채팅을 다시 여세요.';
+
+  @override
+  String get rel_ops_term_cancel => '취소';
+
+  @override
+  String get rel_ops_term_confirm => '확인';
+
+  @override
+  String get rel_ops_term_open_device_title => '이 기기에서 셸을 열까요?';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'SSH 셸';
+
+  @override
+  String get rel_ops_term_local_shell => '로컬 셸';
+
+  @override
+  String get rel_ops_term_connection_lost => '연결이 끊어졌습니다';
+
+  @override
+  String get rel_ops_term_shell_ended => '셸이 종료되었습니다';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      '이 채팅에는 인증된 게이트웨이 터미널 소유자가 없습니다. URL이나 클라우드 로그인만으로는 셸 액세스 권한이 부여되지 않습니다.';
+
+  @override
+  String get rel_ops_term_open_gateway_title => '게이트웨이 셸을 열까요?';
+
+  @override
+  String get rel_ops_term_shell_expired => '셸이 종료되었거나 만료되었습니다';
+
+  @override
+  String get rel_ops_term_disconnected => '연결 해제됨';
+
+  @override
+  String get rel_ops_term_gateway_shell => '게이트웨이 셸';
+
+  @override
+  String get rel_ops_term_close_body => '이 셸을 종료합니다. 계속 실행하려면 대신 창을 숨기세요.';
+
+  @override
+  String get rel_ops_term_closing => '닫는 중…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => '닫힘이 확인되지 않았습니다';
+
+  @override
+  String get rel_ops_term_processes_require_chat =>
+      '에이전트 프로세스에는 인증된 해당 채팅이 필요합니다.';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      '이 채팅의 에이전트 프로세스를 모니터링하고 있습니다. 미러 보기를 닫아도 해당 프로세스는 중지되지 않습니다.';
+
+  @override
+  String get rel_ops_term_paste_limit => '붙여넣기는 16 KiB로 제한됩니다.';
+
+  @override
+  String get rel_ops_term_paste => '붙여넣기';
+
+  @override
+  String get rel_ops_term_select_first => '먼저 터미널 출력을 선택하세요.';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert => '출력을 삽입하기 전에 원래 채팅을 여세요.';
+
+  @override
+  String get rel_ops_term_added_to_draft => '원래 채팅의 초안에 추가했습니다. 전송된 내용은 없습니다.';
+
+  @override
+  String get rel_ops_term_close => '닫기';
+
+  @override
+  String get rel_ops_term_add_selection => '선택 항목을 채팅 초안에 추가';
+
+  @override
+  String get rel_ops_term_new_terminal => '새 터미널';
+
+  @override
+  String get rel_ops_term_gateway_terminal => '게이트웨이 호스트 터미널';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => '검증된 SSH 터미널';
+
+  @override
+  String get rel_ops_term_device_local_shell => '이 기기 (로컬 셸)';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile => '모바일에서는 로컬 셸을 사용할 수 없습니다';
+
+  @override
+  String get rel_ops_term_watch_processes => '에이전트 프로세스 모니터링';
+
+  @override
+  String get rel_ops_term_select_output => '출력 선택 또는 복사';
+
+  @override
+  String get rel_ops_term_add_selected_output => '선택한 출력을 채팅 초안에 추가';
+
+  @override
+  String get rel_ops_term_review_paste => '클립보드 붙여넣기 검토';
+
+  @override
+  String get rel_ops_term_reconnect => '동일한 셸에 다시 연결';
+
+  @override
+  String get rel_ops_term_close_mirror => '미러 보기 닫기';
+
+  @override
+  String get rel_ops_term_close_shell => '셸 닫기';
+
+  @override
+  String get rel_ops_term_empty => '+를 선택하여 터미널을 여세요. 셸은 자동으로 시작되지 않습니다.';
+
+  @override
+  String get rel_ops_term_reason_stale => '오래된 상태';
+
+  @override
+  String get rel_ops_term_reason_mismatch => '불일치';
+
+  @override
+  String get rel_ops_term_reason_unbound => '연결 대상 없음';
+
+  @override
+  String get rel_ops_term_reason_unsupported => '지원되지 않음';
+
+  @override
+  String get rel_ops_term_reason_denied => '거부됨';
+
+  @override
+  String get rel_ops_term_reason_ineligible => '자격 없음';
+
+  @override
+  String get rel_ops_term_reason_unavailable => '사용할 수 없음';
+
+  @override
+  String get rel_ops_term_reason_invalid => '유효하지 않음';
+
+  @override
+  String get rel_ops_term_reason_insecure => '안전하지 않음';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return '게이트웨이가 이 터미널 작업을 거부했습니다 ($reason).';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return '이것은 $connection이(가) 아닌 Ares 기기입니다. 셸은 앱 권한을 사용하며 앱 저장소에서 시작됩니다.';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return '$host에서 채팅의 검증된 작업 디렉터리에 셸을 시작합니다. 기기 셸이 아닙니다.';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return '$label을(를) 닫을까요?';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return '읽기 전용 · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return '$label에 붙여넣을까요?';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return '출력 · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return '읽기 전용 프로세스 미러 · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return '이 기기 · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return '게이트웨이 $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed => '[이전 출력이 잘렸습니다]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title => '검증된 SSH 터미널 열기';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      '호스트 관리자로부터 독립적인 경로로 얻은 지문을 사용하세요. 게이트웨이나 로컬 셸이 아닌 새 원격 로그인 세션을 엽니다.';
+
+  @override
+  String get rel_ops_term_ssh_host => 'SSH 호스트';
+
+  @override
+  String get rel_ops_term_ssh_port => '포트';
+
+  @override
+  String get rel_ops_term_ssh_user => '사용자';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => '호스트 키 지문 (SHA256:…)';
+
+  @override
+  String get rel_ops_term_ssh_password => 'SSH 비밀번호 (저장되지 않음)';
+
+  @override
+  String get rel_ops_term_connect => '연결';
 }

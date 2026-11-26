@@ -12749,4 +12749,268 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get rel_ops_cap_value_payment => 'Zahlung';
+
+  @override
+  String get rel_ops_term_connecting => 'Verbindung wird hergestellt…';
+
+  @override
+  String get rel_ops_term_unbound =>
+      'Keine passende aktive Sitzung oder kein passendes Arbeitsverzeichnis auf dem Host. Öffne zuerst den zugehörigen Chat.';
+
+  @override
+  String get rel_ops_term_unsupported =>
+      'Dieses Gateway bietet diese Terminalfunktion nicht an. Es wurde keine lokale Shell gestartet.';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable =>
+      'Die mitgelieferte lokale PTY ist auf diesem Gerät nicht verfügbar.';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      'Das Terminal konnte nicht geöffnet oder gesteuert werden. Prüfe Host, Zugangsdaten und Fingerabdruck. Es wurde keine Ersatz-Shell gestartet.';
+
+  @override
+  String get rel_ops_term_input_refused =>
+      'Eingabe abgelehnt. Öffne den ursprünglichen Chat erneut.';
+
+  @override
+  String get rel_ops_term_cancel => 'Abbrechen';
+
+  @override
+  String get rel_ops_term_confirm => 'Bestätigen';
+
+  @override
+  String get rel_ops_term_open_device_title =>
+      'Eine Shell auf diesem Gerät öffnen?';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'SSH-Shell';
+
+  @override
+  String get rel_ops_term_local_shell => 'Lokale Shell';
+
+  @override
+  String get rel_ops_term_connection_lost => 'Verbindung verloren';
+
+  @override
+  String get rel_ops_term_shell_ended => 'Shell beendet';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      'Dieser Chat hat keinen authentifizierten Verantwortlichen für das Gateway-Terminal. Eine URL oder eine Cloud-Anmeldung allein gewährt keinen Shell-Zugriff.';
+
+  @override
+  String get rel_ops_term_open_gateway_title => 'Eine Gateway-Shell öffnen?';
+
+  @override
+  String get rel_ops_term_shell_expired => 'Shell beendet oder abgelaufen';
+
+  @override
+  String get rel_ops_term_disconnected => 'Getrennt';
+
+  @override
+  String get rel_ops_term_gateway_shell => 'Gateway-Shell';
+
+  @override
+  String get rel_ops_term_close_body =>
+      'Diese Shell beenden. Blende stattdessen den Bereich aus, um sie weiterlaufen zu lassen.';
+
+  @override
+  String get rel_ops_term_closing => 'Wird geschlossen…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => 'Schließen nicht bestätigt';
+
+  @override
+  String get rel_ops_term_processes_require_chat =>
+      'Agentenprozesse erfordern den authentifizierten zugehörigen Chat.';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      'Die Agentenprozesse dieses Chats werden beobachtet. Das Schließen einer Spiegelansicht stoppt niemals den zugehörigen Prozess.';
+
+  @override
+  String get rel_ops_term_paste_limit => 'Einfügen ist auf 16 KiB begrenzt.';
+
+  @override
+  String get rel_ops_term_paste => 'Einfügen';
+
+  @override
+  String get rel_ops_term_select_first =>
+      'Wähle zuerst die Terminalausgabe aus.';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert =>
+      'Öffne den ursprünglichen Chat, bevor du die Ausgabe einfügst.';
+
+  @override
+  String get rel_ops_term_added_to_draft =>
+      'Zum Entwurf des ursprünglichen Chats hinzugefügt. Es wurde nichts gesendet.';
+
+  @override
+  String get rel_ops_term_close => 'Schließen';
+
+  @override
+  String get rel_ops_term_add_selection => 'Auswahl zum Chatentwurf hinzufügen';
+
+  @override
+  String get rel_ops_term_new_terminal => 'Neues Terminal';
+
+  @override
+  String get rel_ops_term_gateway_terminal => 'Terminal des Gateway-Hosts';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => 'Verifiziertes SSH-Terminal';
+
+  @override
+  String get rel_ops_term_device_local_shell => 'Dieses Gerät (lokale Shell)';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile =>
+      'Lokale Shell auf Mobilgeräten nicht verfügbar';
+
+  @override
+  String get rel_ops_term_watch_processes => 'Agentenprozesse beobachten';
+
+  @override
+  String get rel_ops_term_select_output => 'Ausgabe auswählen oder kopieren';
+
+  @override
+  String get rel_ops_term_add_selected_output =>
+      'Ausgewählte Ausgabe zum Chatentwurf hinzufügen';
+
+  @override
+  String get rel_ops_term_review_paste =>
+      'Einfügen aus der Zwischenablage prüfen';
+
+  @override
+  String get rel_ops_term_reconnect => 'Mit derselben Shell erneut verbinden';
+
+  @override
+  String get rel_ops_term_close_mirror => 'Spiegelansicht schließen';
+
+  @override
+  String get rel_ops_term_close_shell => 'Shell schließen';
+
+  @override
+  String get rel_ops_term_empty =>
+      'Wähle +, um ein Terminal zu öffnen. Es wird keine Shell automatisch gestartet.';
+
+  @override
+  String get rel_ops_term_reason_stale => 'veraltet';
+
+  @override
+  String get rel_ops_term_reason_mismatch => 'keine Übereinstimmung';
+
+  @override
+  String get rel_ops_term_reason_unbound => 'nicht zugeordnet';
+
+  @override
+  String get rel_ops_term_reason_unsupported => 'nicht unterstützt';
+
+  @override
+  String get rel_ops_term_reason_denied => 'abgelehnt';
+
+  @override
+  String get rel_ops_term_reason_ineligible => 'nicht berechtigt';
+
+  @override
+  String get rel_ops_term_reason_unavailable => 'nicht verfügbar';
+
+  @override
+  String get rel_ops_term_reason_invalid => 'ungültig';
+
+  @override
+  String get rel_ops_term_reason_insecure => 'unsicher';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return 'Das Gateway hat diesen Terminalvorgang abgelehnt ($reason).';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return 'Dies ist das Ares-Gerät, nicht $connection. Die Shell nutzt die Berechtigungen deiner App und startet im App-Speicher.';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return 'Starte eine Shell auf $host im verifizierten Arbeitsverzeichnis des Chats. Dies ist keine Geräte-Shell.';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return '$label schließen?';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return 'Schreibgeschützt · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return 'In $label einfügen?';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return 'Ausgabe · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return 'Schreibgeschützte Prozess-Spiegelansicht · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return 'Dieses Gerät · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return 'Gateway $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed => '[Frühere Ausgabe gekürzt]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title =>
+      'Ein verifiziertes SSH-Terminal öffnen';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      'Verwende einen Fingerabdruck, den du über einen unabhängigen Kanal vom Host-Administrator erhalten hast. Dies öffnet eine neue Remote-Anmeldung, nicht das Gateway oder eine lokale Shell.';
+
+  @override
+  String get rel_ops_term_ssh_host => 'SSH-Host';
+
+  @override
+  String get rel_ops_term_ssh_port => 'Port';
+
+  @override
+  String get rel_ops_term_ssh_user => 'Benutzer';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint =>
+      'Fingerabdruck des Hostschlüssels (SHA256:…)';
+
+  @override
+  String get rel_ops_term_ssh_password =>
+      'SSH-Passwort (wird nicht gespeichert)';
+
+  @override
+  String get rel_ops_term_connect => 'Verbinden';
 }

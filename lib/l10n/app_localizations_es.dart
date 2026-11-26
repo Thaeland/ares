@@ -12745,4 +12745,272 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get rel_ops_cap_value_payment => 'pago';
+
+  @override
+  String get rel_ops_term_connecting => 'Conectando…';
+
+  @override
+  String get rel_ops_term_unbound =>
+      'No hay ninguna sesión activa ni directorio de trabajo del host que coincidan. Abre primero el chat al que pertenece.';
+
+  @override
+  String get rel_ops_term_unsupported =>
+      'Este Gateway no ofrece esta función de terminal. No se ha iniciado ningún intérprete de comandos local.';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable =>
+      'La PTY local incluida no está disponible en este dispositivo.';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      'No se pudo abrir ni controlar el terminal. Comprueba el host, las credenciales y la huella digital. No se ha iniciado ningún intérprete de comandos alternativo.';
+
+  @override
+  String get rel_ops_term_input_refused =>
+      'Entrada rechazada. Vuelve a abrir el chat de origen.';
+
+  @override
+  String get rel_ops_term_cancel => 'Cancelar';
+
+  @override
+  String get rel_ops_term_confirm => 'Confirmar';
+
+  @override
+  String get rel_ops_term_open_device_title =>
+      '¿Abrir un intérprete de comandos en este dispositivo?';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'Intérprete de comandos SSH';
+
+  @override
+  String get rel_ops_term_local_shell => 'Intérprete de comandos local';
+
+  @override
+  String get rel_ops_term_connection_lost => 'Conexión perdida';
+
+  @override
+  String get rel_ops_term_shell_ended => 'Intérprete de comandos finalizado';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      'Este chat no tiene un propietario autenticado del terminal del Gateway. Una URL o un inicio de sesión en la nube por sí solos no dan acceso a un intérprete de comandos.';
+
+  @override
+  String get rel_ops_term_open_gateway_title =>
+      '¿Abrir un intérprete de comandos del Gateway?';
+
+  @override
+  String get rel_ops_term_shell_expired =>
+      'El intérprete de comandos ha finalizado o caducado';
+
+  @override
+  String get rel_ops_term_disconnected => 'Desconectado';
+
+  @override
+  String get rel_ops_term_gateway_shell => 'Intérprete de comandos del Gateway';
+
+  @override
+  String get rel_ops_term_close_body =>
+      'Finaliza este intérprete de comandos. Para mantenerlo en ejecución, oculta el panel en su lugar.';
+
+  @override
+  String get rel_ops_term_closing => 'Cerrando…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => 'Cierre no confirmado';
+
+  @override
+  String get rel_ops_term_processes_require_chat =>
+      'Los procesos del agente requieren el chat autenticado al que pertenecen.';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      'Supervisando los procesos del agente de este chat. Cerrar una vista espejo nunca detiene su proceso.';
+
+  @override
+  String get rel_ops_term_paste_limit => 'El pegado está limitado a 16 KiB.';
+
+  @override
+  String get rel_ops_term_paste => 'Pegar';
+
+  @override
+  String get rel_ops_term_select_first =>
+      'Selecciona primero la salida del terminal.';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert =>
+      'Abre el chat de origen antes de insertar la salida.';
+
+  @override
+  String get rel_ops_term_added_to_draft =>
+      'Se ha añadido al borrador del chat de origen. No se ha enviado nada.';
+
+  @override
+  String get rel_ops_term_close => 'Cerrar';
+
+  @override
+  String get rel_ops_term_add_selection =>
+      'Añadir selección al borrador del chat';
+
+  @override
+  String get rel_ops_term_new_terminal => 'Nuevo terminal';
+
+  @override
+  String get rel_ops_term_gateway_terminal => 'Terminal del host del Gateway';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => 'Terminal SSH verificado';
+
+  @override
+  String get rel_ops_term_device_local_shell =>
+      'Este dispositivo (intérprete de comandos local)';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile =>
+      'Intérprete de comandos local no disponible en móviles';
+
+  @override
+  String get rel_ops_term_watch_processes => 'Supervisar procesos del agente';
+
+  @override
+  String get rel_ops_term_select_output => 'Seleccionar o copiar la salida';
+
+  @override
+  String get rel_ops_term_add_selected_output =>
+      'Añadir la salida seleccionada al borrador del chat';
+
+  @override
+  String get rel_ops_term_review_paste => 'Revisar el pegado del portapapeles';
+
+  @override
+  String get rel_ops_term_reconnect =>
+      'Reconectar al mismo intérprete de comandos';
+
+  @override
+  String get rel_ops_term_close_mirror => 'Cerrar vista espejo';
+
+  @override
+  String get rel_ops_term_close_shell => 'Cerrar intérprete de comandos';
+
+  @override
+  String get rel_ops_term_empty =>
+      'Selecciona + para abrir un terminal. No se inicia ningún intérprete de comandos automáticamente.';
+
+  @override
+  String get rel_ops_term_reason_stale => 'obsoleto';
+
+  @override
+  String get rel_ops_term_reason_mismatch => 'no coincide';
+
+  @override
+  String get rel_ops_term_reason_unbound => 'sin vincular';
+
+  @override
+  String get rel_ops_term_reason_unsupported => 'no compatible';
+
+  @override
+  String get rel_ops_term_reason_denied => 'denegado';
+
+  @override
+  String get rel_ops_term_reason_ineligible => 'no apto';
+
+  @override
+  String get rel_ops_term_reason_unavailable => 'no disponible';
+
+  @override
+  String get rel_ops_term_reason_invalid => 'no válido';
+
+  @override
+  String get rel_ops_term_reason_insecure => 'no seguro';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return 'El Gateway ha rechazado esta operación de terminal ($reason).';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return 'Este es el dispositivo de Ares, no $connection. El intérprete de comandos usa los permisos de la aplicación y se inicia en su almacenamiento.';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return 'Inicia un intérprete de comandos en $host, en el directorio de trabajo verificado del chat. No es un intérprete de comandos del dispositivo.';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return '¿Cerrar $label?';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return 'Solo lectura · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return '¿Pegar en $label?';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return 'Salida · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return 'Vista espejo del proceso de solo lectura · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return 'Este dispositivo · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return 'Gateway $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed =>
+      '[Salida anterior recortada]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title =>
+      'Abrir un terminal SSH verificado';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      'Usa una huella digital obtenida de forma independiente del administrador del host. Esto abre una nueva sesión remota, no el Gateway ni un intérprete de comandos local.';
+
+  @override
+  String get rel_ops_term_ssh_host => 'Host SSH';
+
+  @override
+  String get rel_ops_term_ssh_port => 'Puerto';
+
+  @override
+  String get rel_ops_term_ssh_user => 'Usuario';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint =>
+      'Huella digital de la clave del host (SHA256:…)';
+
+  @override
+  String get rel_ops_term_ssh_password => 'Contraseña SSH (no se guarda)';
+
+  @override
+  String get rel_ops_term_connect => 'Conectar';
 }

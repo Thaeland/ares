@@ -12592,4 +12592,264 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get rel_ops_cap_value_payment => 'دفع';
+
+  @override
+  String get rel_ops_term_connecting => 'جارٍ الاتصال…';
+
+  @override
+  String get rel_ops_term_unbound =>
+      'لا توجد جلسة نشطة مطابقة أو مجلد عمل مطابق على المضيف. افتح الدردشة المرتبطة أولًا.';
+
+  @override
+  String get rel_ops_term_unsupported =>
+      'لا توفر هذه البوابة إمكانية الطرفية هذه. لم تُشغَّل أي صدفة محلية.';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable =>
+      'الطرفية الزائفة المحلية (PTY) المضمّنة غير متاحة على هذا الجهاز.';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      'تعذّر فتح الطرفية أو التحكم بها. تحقّق من المضيف وبيانات الاعتماد والبصمة. لم تُشغَّل أي صدفة بديلة.';
+
+  @override
+  String get rel_ops_term_input_refused =>
+      'رُفض الإدخال. أعد فتح الدردشة الأصلية.';
+
+  @override
+  String get rel_ops_term_cancel => 'إلغاء';
+
+  @override
+  String get rel_ops_term_confirm => 'تأكيد';
+
+  @override
+  String get rel_ops_term_open_device_title =>
+      'هل تريد فتح صدفة على هذا الجهاز؟';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'صدفة SSH';
+
+  @override
+  String get rel_ops_term_local_shell => 'صدفة محلية';
+
+  @override
+  String get rel_ops_term_connection_lost => 'فُقد الاتصال';
+
+  @override
+  String get rel_ops_term_shell_ended => 'انتهت الصدفة';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      'لا تملك هذه الدردشة جهة مصادَقًا عليها مسؤولة عن طرفية البوابة. لا يكفي عنوان URL أو تسجيل الدخول إلى السحابة وحده لإتاحة صدفة.';
+
+  @override
+  String get rel_ops_term_open_gateway_title => 'هل تريد فتح صدفة على البوابة؟';
+
+  @override
+  String get rel_ops_term_shell_expired => 'انتهت الصدفة أو انتهت صلاحيتها';
+
+  @override
+  String get rel_ops_term_disconnected => 'غير متصل';
+
+  @override
+  String get rel_ops_term_gateway_shell => 'صدفة البوابة';
+
+  @override
+  String get rel_ops_term_close_body =>
+      'إنهاء هذه الصدفة. لإبقائها قيد التشغيل، أخفِ اللوحة بدلًا من ذلك.';
+
+  @override
+  String get rel_ops_term_closing => 'جارٍ الإغلاق…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => 'لم يُؤكَّد الإغلاق';
+
+  @override
+  String get rel_ops_term_processes_require_chat =>
+      'تتطلب عمليات الوكيل الدردشة المرتبطة التي تمّت المصادقة عليها.';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      'تجري مراقبة عمليات الوكيل في هذه الدردشة. إغلاق عرض المرآة لا يوقف العملية أبدًا.';
+
+  @override
+  String get rel_ops_term_paste_limit => 'اللصق محدود بـ 16 KiB.';
+
+  @override
+  String get rel_ops_term_paste => 'لصق';
+
+  @override
+  String get rel_ops_term_select_first => 'حدّد مخرجات الطرفية أولًا.';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert =>
+      'افتح الدردشة الأصلية قبل إدراج المخرجات.';
+
+  @override
+  String get rel_ops_term_added_to_draft =>
+      'أُضيفت إلى مسودة الدردشة الأصلية. لم يُرسَل شيء.';
+
+  @override
+  String get rel_ops_term_close => 'إغلاق';
+
+  @override
+  String get rel_ops_term_add_selection => 'إضافة التحديد إلى مسودة الدردشة';
+
+  @override
+  String get rel_ops_term_new_terminal => 'طرفية جديدة';
+
+  @override
+  String get rel_ops_term_gateway_terminal => 'طرفية مضيف البوابة';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => 'طرفية SSH متحقق منها';
+
+  @override
+  String get rel_ops_term_device_local_shell => 'هذا الجهاز (صدفة محلية)';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile =>
+      'الصدفة المحلية غير متاحة على الأجهزة المحمولة';
+
+  @override
+  String get rel_ops_term_watch_processes => 'مراقبة عمليات الوكيل';
+
+  @override
+  String get rel_ops_term_select_output => 'تحديد المخرجات أو نسخها';
+
+  @override
+  String get rel_ops_term_add_selected_output =>
+      'إضافة المخرجات المحددة إلى مسودة الدردشة';
+
+  @override
+  String get rel_ops_term_review_paste => 'مراجعة اللصق من الحافظة';
+
+  @override
+  String get rel_ops_term_reconnect => 'إعادة الاتصال بالصدفة نفسها';
+
+  @override
+  String get rel_ops_term_close_mirror => 'إغلاق عرض المرآة';
+
+  @override
+  String get rel_ops_term_close_shell => 'إغلاق الصدفة';
+
+  @override
+  String get rel_ops_term_empty =>
+      'اختر + لفتح طرفية. لا تبدأ أي صدفة تلقائيًا.';
+
+  @override
+  String get rel_ops_term_reason_stale => 'متقادم';
+
+  @override
+  String get rel_ops_term_reason_mismatch => 'عدم تطابق';
+
+  @override
+  String get rel_ops_term_reason_unbound => 'غير مرتبط';
+
+  @override
+  String get rel_ops_term_reason_unsupported => 'غير مدعوم';
+
+  @override
+  String get rel_ops_term_reason_denied => 'مرفوض';
+
+  @override
+  String get rel_ops_term_reason_ineligible => 'غير مؤهل';
+
+  @override
+  String get rel_ops_term_reason_unavailable => 'غير متاح';
+
+  @override
+  String get rel_ops_term_reason_invalid => 'غير صالح';
+
+  @override
+  String get rel_ops_term_reason_insecure => 'غير آمن';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return 'رفضت البوابة عملية الطرفية هذه ($reason).';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return 'هذا هو الجهاز الذي يشغّل Ares، وليس $connection. تستخدم الصدفة أذونات التطبيق وتبدأ في مساحة تخزينه.';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return 'ابدأ صدفة على $host في مجلد العمل المتحقق منه للدردشة. هذه ليست صدفة على الجهاز المحلي.';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return 'هل تريد إغلاق $label؟';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return 'للقراءة فقط · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return 'هل تريد اللصق في $label؟';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return 'المخرجات · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return 'عرض مرآة للعملية للقراءة فقط · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return 'هذا الجهاز · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return 'البوابة $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed =>
+      '[اقتُطعت المخرجات السابقة]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title => 'فتح طرفية SSH متحقق منها';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      'استخدم بصمة حصلت عليها بشكل مستقل من مسؤول المضيف. يفتح هذا جلسة دخول بعيدة جديدة، وليس البوابة أو صدفة محلية.';
+
+  @override
+  String get rel_ops_term_ssh_host => 'مضيف SSH';
+
+  @override
+  String get rel_ops_term_ssh_port => 'المنفذ';
+
+  @override
+  String get rel_ops_term_ssh_user => 'المستخدم';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => 'بصمة مفتاح المضيف (SHA256:…)';
+
+  @override
+  String get rel_ops_term_ssh_password => 'كلمة مرور SSH (لا تُحفظ)';
+
+  @override
+  String get rel_ops_term_connect => 'اتصال';
 }
