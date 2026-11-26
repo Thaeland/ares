@@ -876,10 +876,9 @@ compact re-homes the inline chat as a full-screen route.
   microphone, speech recognition, camera and photo library (iOS/macOS), plus
   local-network access for gateway connections.
 - **Android-only features are hidden, not broken:** the foreground/background
-  work service, battery-optimisation prompts, embedded FCM push bridge, APK
-  self-update and the Android hands-free wake-word service do not apply to
-  Apple platforms and are omitted there. Android behaviour and tests are
-  unchanged.
+  work service, battery-optimisation prompts, embedded FCM push bridge and the
+  Android hands-free wake-word service do not apply to Apple platforms and are
+  omitted there. The in-app GitHub updater is removed on every platform.
 - **Known limitations:** background execution follows iOS/macOS rules (no
   Android-style foreground service), so a backgrounded turn is reported via
   local notifications rather than a persistent socket. `image_picker` camera
@@ -943,14 +942,9 @@ flutter build windows --release
 
 The app is written to `build\windows\x64\runner\Release`.
 
-That build asks GitHub at launch whether a newer release exists, as the
-Android build from GitHub does. A Microsoft Store package must not: the Store
-delivers its updates, and the GitHub releases carry no Windows download. Build
-the Store package with the check compiled out:
-
-```powershell
-flutter build windows --release --dart-define=ARES_PLAY_BUILD=true
-```
+Windows builds do not check GitHub for updates. Update through the Microsoft
+Store for Store installs, or use the releases page for manually installed
+builds. No platform includes an in-app update check or APK installer.
 
 ### Test
 
