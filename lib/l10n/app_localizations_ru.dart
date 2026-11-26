@@ -7163,4 +7163,97 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Вход выполнен с токеном развёртывания.';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count карточки Kanban',
+      many: '$count карточек Kanban',
+      few: '$count карточки Kanban',
+      one: '$count карточка Kanban',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return '$count завершено';
+  }
+
+  @override
+  String get ng_show_kanban => 'Показать карточки Kanban';
+
+  @override
+  String get ng_hide_kanban => 'Скрыть карточки Kanban';
+
+  @override
+  String get ng_kanban_status_triage => 'Разбор';
+
+  @override
+  String get ng_kanban_status_todo => 'К выполнению';
+
+  @override
+  String get ng_kanban_status_scheduled => 'Запланировано';
+
+  @override
+  String get ng_kanban_status_ready => 'Готово к работе';
+
+  @override
+  String get ng_kanban_status_running => 'Выполняется';
+
+  @override
+  String get ng_kanban_status_blocked => 'Заблокировано';
+
+  @override
+  String get ng_kanban_status_review => 'На проверке';
+
+  @override
+  String get ng_kanban_status_done => 'Завершено';
+
+  @override
+  String get ng_kanban_status_archived => 'В архиве';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return 'Открыть «$title» в Kanban';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return 'Показать все ($count)';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return 'Этот чат ($count)';
+  }
+
+  @override
+  String get ng_kanban_close => 'Закрыть Kanban';
+
+  @override
+  String get ng_kanban_block_no_dashboard =>
+      'У этого подключения нет доступа к панели управления, поэтому статус карточек не обновляется в реальном времени, а доску открыть нельзя.';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      'Kanban не включён на этом шлюзе. Включите плагин kanban, чтобы видеть статус в реальном времени и открывать доску.';
+
+  @override
+  String get ng_kanban_block_denied =>
+      'Войдите в панель управления, чтобы видеть статус карточек в реальном времени и открывать доску.';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      'Для Kanban нужен HTTPS или локальное подключение, поэтому статус карточек не обновляется в реальном времени, а доску открыть нельзя.';
+
+  @override
+  String get ng_kanban_block_unreachable =>
+      'Не удалось связаться с Kanban на этом шлюзе. Статус карточек может быть устаревшим.';
+
+  @override
+  String get ng_kanban_block_stale =>
+      'Подключение изменилось. Откройте этот чат заново, чтобы видеть статус карточек в реальном времени.';
 }

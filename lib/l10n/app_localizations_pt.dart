@@ -7161,6 +7161,97 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Sessão iniciada com o token de implementação.';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cartões Kanban',
+      one: '1 cartão Kanban',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return '$count concluídos';
+  }
+
+  @override
+  String get ng_show_kanban => 'Mostrar cartões Kanban';
+
+  @override
+  String get ng_hide_kanban => 'Ocultar cartões Kanban';
+
+  @override
+  String get ng_kanban_status_triage => 'Triagem';
+
+  @override
+  String get ng_kanban_status_todo => 'Por fazer';
+
+  @override
+  String get ng_kanban_status_scheduled => 'Agendado';
+
+  @override
+  String get ng_kanban_status_ready => 'Pronto';
+
+  @override
+  String get ng_kanban_status_running => 'Em execução';
+
+  @override
+  String get ng_kanban_status_blocked => 'Bloqueado';
+
+  @override
+  String get ng_kanban_status_review => 'Em revisão';
+
+  @override
+  String get ng_kanban_status_done => 'Concluído';
+
+  @override
+  String get ng_kanban_status_archived => 'Arquivado';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return 'Abrir $title no Kanban';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return 'Mostrar todos os $count';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return 'Esta conversa ($count)';
+  }
+
+  @override
+  String get ng_kanban_close => 'Fechar o Kanban';
+
+  @override
+  String get ng_kanban_block_no_dashboard =>
+      'Esta ligação não tem acesso ao painel, por isso o estado dos cartões não é em direto e o quadro não pode ser aberto.';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      'O Kanban não está ativado neste gateway. Ative o plugin kanban para ver o estado em direto e abrir o quadro.';
+
+  @override
+  String get ng_kanban_block_denied =>
+      'Inicie sessão no painel para ver o estado em direto dos cartões e abrir o quadro.';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      'O Kanban precisa de HTTPS ou de uma ligação local, por isso o estado dos cartões não é em direto e o quadro não pode ser aberto.';
+
+  @override
+  String get ng_kanban_block_unreachable =>
+      'Não foi possível contactar o Kanban neste gateway. O estado dos cartões pode estar desatualizado.';
+
+  @override
+  String get ng_kanban_block_stale =>
+      'A ligação mudou. Reabra esta conversa para ver o estado em direto dos cartões.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -13766,4 +13857,95 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Conectado com o token de implantação.';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cartões do Kanban',
+      one: '1 cartão do Kanban',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return '$count concluídos';
+  }
+
+  @override
+  String get ng_show_kanban => 'Mostrar cartões do Kanban';
+
+  @override
+  String get ng_hide_kanban => 'Ocultar cartões do Kanban';
+
+  @override
+  String get ng_kanban_status_triage => 'Triagem';
+
+  @override
+  String get ng_kanban_status_todo => 'A fazer';
+
+  @override
+  String get ng_kanban_status_scheduled => 'Agendado';
+
+  @override
+  String get ng_kanban_status_ready => 'Pronto';
+
+  @override
+  String get ng_kanban_status_running => 'Em execução';
+
+  @override
+  String get ng_kanban_status_blocked => 'Bloqueado';
+
+  @override
+  String get ng_kanban_status_review => 'Em revisão';
+
+  @override
+  String get ng_kanban_status_done => 'Concluído';
+
+  @override
+  String get ng_kanban_status_archived => 'Arquivado';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return 'Abrir $title no Kanban';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return 'Mostrar todos os $count';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return 'Este chat ($count)';
+  }
+
+  @override
+  String get ng_kanban_close => 'Fechar o Kanban';
+
+  @override
+  String get ng_kanban_block_no_dashboard =>
+      'Esta conexão não tem acesso ao painel, então o status dos cartões não é em tempo real e o quadro não pode ser aberto.';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      'O Kanban não está ativado neste gateway. Ative o plugin kanban para ver o status em tempo real e abrir o quadro.';
+
+  @override
+  String get ng_kanban_block_denied =>
+      'Entre no painel para ver o status dos cartões em tempo real e abrir o quadro.';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      'O Kanban precisa de HTTPS ou de uma conexão local, então o status dos cartões não é em tempo real e o quadro não pode ser aberto.';
+
+  @override
+  String get ng_kanban_block_unreachable =>
+      'Não foi possível acessar o Kanban neste gateway. O status dos cartões pode estar desatualizado.';
+
+  @override
+  String get ng_kanban_block_stale =>
+      'A conexão mudou. Reabra este chat para ver o status dos cartões em tempo real.';
 }

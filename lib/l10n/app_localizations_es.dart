@@ -7159,4 +7159,95 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Sesión iniciada con el token de despliegue.';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tarjetas Kanban',
+      one: '1 tarjeta Kanban',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return '$count completadas';
+  }
+
+  @override
+  String get ng_show_kanban => 'Mostrar tarjetas Kanban';
+
+  @override
+  String get ng_hide_kanban => 'Ocultar tarjetas Kanban';
+
+  @override
+  String get ng_kanban_status_triage => 'Clasificación';
+
+  @override
+  String get ng_kanban_status_todo => 'Por hacer';
+
+  @override
+  String get ng_kanban_status_scheduled => 'Programada';
+
+  @override
+  String get ng_kanban_status_ready => 'Lista';
+
+  @override
+  String get ng_kanban_status_running => 'En ejecución';
+
+  @override
+  String get ng_kanban_status_blocked => 'Bloqueada';
+
+  @override
+  String get ng_kanban_status_review => 'En revisión';
+
+  @override
+  String get ng_kanban_status_done => 'Completada';
+
+  @override
+  String get ng_kanban_status_archived => 'Archivada';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return 'Abrir $title en Kanban';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return 'Mostrar las $count';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return 'Este chat ($count)';
+  }
+
+  @override
+  String get ng_kanban_close => 'Cerrar Kanban';
+
+  @override
+  String get ng_kanban_block_no_dashboard =>
+      'Esta conexión no tiene acceso al panel, así que el estado de las tarjetas no se actualiza en vivo y el tablero no se puede abrir.';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      'Kanban no está activado en este gateway. Activa su plugin kanban para ver el estado en vivo y abrir el tablero.';
+
+  @override
+  String get ng_kanban_block_denied =>
+      'Inicia sesión en el panel para ver el estado en vivo de las tarjetas y abrir el tablero.';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      'Kanban necesita HTTPS o una conexión local, así que el estado de las tarjetas no se actualiza en vivo y el tablero no se puede abrir.';
+
+  @override
+  String get ng_kanban_block_unreachable =>
+      'No se pudo conectar con Kanban en este gateway. El estado de las tarjetas puede estar desactualizado.';
+
+  @override
+  String get ng_kanban_block_stale =>
+      'La conexión ha cambiado. Vuelve a abrir este chat para ver el estado en vivo de las tarjetas.';
 }

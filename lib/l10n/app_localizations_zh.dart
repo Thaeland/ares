@@ -6852,6 +6852,94 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署令牌登录。';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 张看板卡片',
+      one: '1 张看板卡片',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return '$count 张已完成';
+  }
+
+  @override
+  String get ng_show_kanban => '显示看板卡片';
+
+  @override
+  String get ng_hide_kanban => '隐藏看板卡片';
+
+  @override
+  String get ng_kanban_status_triage => '待分类';
+
+  @override
+  String get ng_kanban_status_todo => '待办';
+
+  @override
+  String get ng_kanban_status_scheduled => '已排期';
+
+  @override
+  String get ng_kanban_status_ready => '就绪';
+
+  @override
+  String get ng_kanban_status_running => '运行中';
+
+  @override
+  String get ng_kanban_status_blocked => '已阻塞';
+
+  @override
+  String get ng_kanban_status_review => '审核中';
+
+  @override
+  String get ng_kanban_status_done => '已完成';
+
+  @override
+  String get ng_kanban_status_archived => '已归档';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return '在看板中打开“$title”';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return '显示全部 $count 张';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return '此聊天（$count）';
+  }
+
+  @override
+  String get ng_kanban_close => '关闭看板';
+
+  @override
+  String get ng_kanban_block_no_dashboard =>
+      '此连接无法访问控制面板，因此卡片状态不会实时更新，也无法打开看板。';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      '此网关未启用看板。请启用其 kanban 插件，以查看实时状态并打开看板。';
+
+  @override
+  String get ng_kanban_block_denied => '请登录控制面板，以查看卡片的实时状态并打开看板。';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      '看板需要 HTTPS 或本地连接，因此卡片状态不会实时更新，也无法打开看板。';
+
+  @override
+  String get ng_kanban_block_unreachable => '无法连接此网关上的看板。卡片状态可能已过期。';
+
+  @override
+  String get ng_kanban_block_stale => '连接已更改。请重新打开此聊天，以查看卡片的实时状态。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -13154,6 +13242,94 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署令牌登录。';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 张看板卡片',
+      one: '1 张看板卡片',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return '$count 张已完成';
+  }
+
+  @override
+  String get ng_show_kanban => '显示看板卡片';
+
+  @override
+  String get ng_hide_kanban => '隐藏看板卡片';
+
+  @override
+  String get ng_kanban_status_triage => '待分类';
+
+  @override
+  String get ng_kanban_status_todo => '待办';
+
+  @override
+  String get ng_kanban_status_scheduled => '已排期';
+
+  @override
+  String get ng_kanban_status_ready => '就绪';
+
+  @override
+  String get ng_kanban_status_running => '运行中';
+
+  @override
+  String get ng_kanban_status_blocked => '已阻塞';
+
+  @override
+  String get ng_kanban_status_review => '审核中';
+
+  @override
+  String get ng_kanban_status_done => '已完成';
+
+  @override
+  String get ng_kanban_status_archived => '已归档';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return '在看板中打开“$title”';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return '显示全部 $count 张';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return '此聊天（$count）';
+  }
+
+  @override
+  String get ng_kanban_close => '关闭看板';
+
+  @override
+  String get ng_kanban_block_no_dashboard =>
+      '此连接无法访问控制面板，因此卡片状态不会实时更新，也无法打开看板。';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      '此网关未启用看板。请启用其 kanban 插件，以查看实时状态并打开看板。';
+
+  @override
+  String get ng_kanban_block_denied => '请登录控制面板，以查看卡片的实时状态并打开看板。';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      '看板需要 HTTPS 或本地连接，因此卡片状态不会实时更新，也无法打开看板。';
+
+  @override
+  String get ng_kanban_block_unreachable => '无法连接此网关上的看板。卡片状态可能已过期。';
+
+  @override
+  String get ng_kanban_block_stale => '连接已更改。请重新打开此聊天，以查看卡片的实时状态。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -19854,4 +20030,91 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署權杖登入。';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 張看板卡片',
+      one: '1 張看板卡片',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return '$count 張已完成';
+  }
+
+  @override
+  String get ng_show_kanban => '顯示看板卡片';
+
+  @override
+  String get ng_hide_kanban => '隱藏看板卡片';
+
+  @override
+  String get ng_kanban_status_triage => '待分類';
+
+  @override
+  String get ng_kanban_status_todo => '待辦';
+
+  @override
+  String get ng_kanban_status_scheduled => '已排程';
+
+  @override
+  String get ng_kanban_status_ready => '就緒';
+
+  @override
+  String get ng_kanban_status_running => '執行中';
+
+  @override
+  String get ng_kanban_status_blocked => '受阻';
+
+  @override
+  String get ng_kanban_status_review => '審查中';
+
+  @override
+  String get ng_kanban_status_done => '已完成';
+
+  @override
+  String get ng_kanban_status_archived => '已封存';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return '在看板中開啟「$title」';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return '顯示全部 $count 張';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return '此聊天（$count）';
+  }
+
+  @override
+  String get ng_kanban_close => '關閉看板';
+
+  @override
+  String get ng_kanban_block_no_dashboard => '此連線無法存取控制台，因此卡片狀態不會即時更新，也無法開啟看板。';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      '此閘道未啟用看板。請啟用其 kanban 外掛程式，以查看即時狀態並開啟看板。';
+
+  @override
+  String get ng_kanban_block_denied => '請登入控制台，以查看卡片的即時狀態並開啟看板。';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      '看板需要 HTTPS 或本機連線，因此卡片狀態不會即時更新，也無法開啟看板。';
+
+  @override
+  String get ng_kanban_block_unreachable => '無法連線到此閘道上的看板。卡片狀態可能已過期。';
+
+  @override
+  String get ng_kanban_block_stale => '連線已變更。請重新開啟此聊天，以查看卡片的即時狀態。';
 }

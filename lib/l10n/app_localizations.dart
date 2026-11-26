@@ -11984,6 +11984,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Signed in with the deployment token.'**
   String get ng_signed_in_with_deployment_token;
+
+  /// No description provided for @ng_dock_kanban.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 Kanban card} other{{count} Kanban cards}}'**
+  String ng_dock_kanban(int count);
+
+  /// No description provided for @ng_dock_kanban_done.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} done'**
+  String ng_dock_kanban_done(int count);
+
+  /// No description provided for @ng_show_kanban.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Kanban cards'**
+  String get ng_show_kanban;
+
+  /// No description provided for @ng_hide_kanban.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Kanban cards'**
+  String get ng_hide_kanban;
+
+  /// No description provided for @ng_kanban_status_triage.
+  ///
+  /// In en, this message translates to:
+  /// **'Triage'**
+  String get ng_kanban_status_triage;
+
+  /// No description provided for @ng_kanban_status_todo.
+  ///
+  /// In en, this message translates to:
+  /// **'To do'**
+  String get ng_kanban_status_todo;
+
+  /// No description provided for @ng_kanban_status_scheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get ng_kanban_status_scheduled;
+
+  /// No description provided for @ng_kanban_status_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get ng_kanban_status_ready;
+
+  /// No description provided for @ng_kanban_status_running.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get ng_kanban_status_running;
+
+  /// No description provided for @ng_kanban_status_blocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked'**
+  String get ng_kanban_status_blocked;
+
+  /// No description provided for @ng_kanban_status_review.
+  ///
+  /// In en, this message translates to:
+  /// **'In review'**
+  String get ng_kanban_status_review;
+
+  /// No description provided for @ng_kanban_status_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get ng_kanban_status_done;
+
+  /// No description provided for @ng_kanban_status_archived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get ng_kanban_status_archived;
+
+  /// No description provided for @ng_kanban_open_card.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {title} in Kanban'**
+  String ng_kanban_open_card(String title);
+
+  /// No description provided for @ng_kanban_show_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all {count}'**
+  String ng_kanban_show_all(int count);
+
+  /// No description provided for @ng_kanban_this_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat ({count})'**
+  String ng_kanban_this_chat(int count);
+
+  /// No description provided for @ng_kanban_close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close Kanban'**
+  String get ng_kanban_close;
+
+  /// No description provided for @ng_kanban_block_no_dashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'This connection has no dashboard access, so card status is not live and the board cannot open.'**
+  String get ng_kanban_block_no_dashboard;
+
+  /// No description provided for @ng_kanban_block_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Kanban is not turned on for this gateway. Enable its kanban plugin to see live status and open the board.'**
+  String get ng_kanban_block_unsupported;
+
+  /// No description provided for @ng_kanban_block_denied.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to the dashboard to see live card status and open the board.'**
+  String get ng_kanban_block_denied;
+
+  /// No description provided for @ng_kanban_block_insecure.
+  ///
+  /// In en, this message translates to:
+  /// **'Kanban needs HTTPS or a local connection, so card status is not live and the board cannot open.'**
+  String get ng_kanban_block_insecure;
+
+  /// No description provided for @ng_kanban_block_unreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not reach Kanban on this gateway. Card status may be out of date.'**
+  String get ng_kanban_block_unreachable;
+
+  /// No description provided for @ng_kanban_block_stale.
+  ///
+  /// In en, this message translates to:
+  /// **'The connection changed. Reopen this chat to see live card status.'**
+  String get ng_kanban_block_stale;
 }
 
 class _AppLocalizationsDelegate

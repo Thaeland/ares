@@ -7159,4 +7159,97 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Вхід виконано з токеном розгортання.';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count картки Kanban',
+      many: '$count карток Kanban',
+      few: '$count картки Kanban',
+      one: '1 картка Kanban',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return '$count завершено';
+  }
+
+  @override
+  String get ng_show_kanban => 'Показати картки Kanban';
+
+  @override
+  String get ng_hide_kanban => 'Приховати картки Kanban';
+
+  @override
+  String get ng_kanban_status_triage => 'Розбір';
+
+  @override
+  String get ng_kanban_status_todo => 'До виконання';
+
+  @override
+  String get ng_kanban_status_scheduled => 'Заплановано';
+
+  @override
+  String get ng_kanban_status_ready => 'Готово до роботи';
+
+  @override
+  String get ng_kanban_status_running => 'Виконується';
+
+  @override
+  String get ng_kanban_status_blocked => 'Заблоковано';
+
+  @override
+  String get ng_kanban_status_review => 'На перевірці';
+
+  @override
+  String get ng_kanban_status_done => 'Завершено';
+
+  @override
+  String get ng_kanban_status_archived => 'В архіві';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return 'Відкрити «$title» у Kanban';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return 'Показати всі ($count)';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return 'Цей чат ($count)';
+  }
+
+  @override
+  String get ng_kanban_close => 'Закрити Kanban';
+
+  @override
+  String get ng_kanban_block_no_dashboard =>
+      'Це підключення не має доступу до панелі керування, тому стан карток не оновлюється наживо, а дошку відкрити не можна.';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      'Kanban не ввімкнено на цьому шлюзі. Увімкніть плагін kanban, щоб бачити стан наживо й відкривати дошку.';
+
+  @override
+  String get ng_kanban_block_denied =>
+      'Увійдіть до панелі керування, щоб бачити стан карток наживо й відкривати дошку.';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      'Для Kanban потрібен HTTPS або локальне підключення, тому стан карток не оновлюється наживо, а дошку відкрити не можна.';
+
+  @override
+  String get ng_kanban_block_unreachable =>
+      'Не вдалося зв’язатися з Kanban на цьому шлюзі. Стан карток може бути застарілим.';
+
+  @override
+  String get ng_kanban_block_stale =>
+      'Підключення змінилося. Відкрийте цей чат знову, щоб бачити стан карток наживо.';
 }

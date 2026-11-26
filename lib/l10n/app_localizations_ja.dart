@@ -6949,4 +6949,95 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ng_signed_in_with_deployment_token => 'デプロイメントトークンでサインインしています。';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count件のカンバンカード',
+      one: '$count件のカンバンカード',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return '$count件完了';
+  }
+
+  @override
+  String get ng_show_kanban => 'カンバンカードを表示';
+
+  @override
+  String get ng_hide_kanban => 'カンバンカードを非表示';
+
+  @override
+  String get ng_kanban_status_triage => 'トリアージ';
+
+  @override
+  String get ng_kanban_status_todo => '未着手';
+
+  @override
+  String get ng_kanban_status_scheduled => '予定済み';
+
+  @override
+  String get ng_kanban_status_ready => '準備完了';
+
+  @override
+  String get ng_kanban_status_running => '実行中';
+
+  @override
+  String get ng_kanban_status_blocked => 'ブロック中';
+
+  @override
+  String get ng_kanban_status_review => 'レビュー中';
+
+  @override
+  String get ng_kanban_status_done => '完了';
+
+  @override
+  String get ng_kanban_status_archived => 'アーカイブ済み';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return '$titleをカンバンで開く';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return '$count件すべて表示';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return 'このチャット（$count）';
+  }
+
+  @override
+  String get ng_kanban_close => 'カンバンを閉じる';
+
+  @override
+  String get ng_kanban_block_no_dashboard =>
+      'この接続にはダッシュボードへのアクセスがないため、カードの状態はリアルタイムではなく、ボードも開けません。';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      'このゲートウェイではカンバンが有効になっていません。カンバンプラグインを有効にすると、リアルタイムの状態を確認してボードを開けます。';
+
+  @override
+  String get ng_kanban_block_denied =>
+      'カードのリアルタイムの状態を確認してボードを開くには、ダッシュボードにサインインしてください。';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      'カンバンにはHTTPSまたはローカル接続が必要なため、カードの状態はリアルタイムではなく、ボードも開けません。';
+
+  @override
+  String get ng_kanban_block_unreachable =>
+      'このゲートウェイのカンバンに接続できませんでした。カードの状態が古い可能性があります。';
+
+  @override
+  String get ng_kanban_block_stale =>
+      '接続が変更されました。カードのリアルタイムの状態を確認するには、このチャットを開き直してください。';
 }

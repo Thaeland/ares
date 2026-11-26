@@ -7100,4 +7100,95 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'تم تسجيل الدخول برمز النشر.';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'عدد بطاقات Kanban: $count',
+      one: 'بطاقة Kanban واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return 'عدد المكتملة: $count';
+  }
+
+  @override
+  String get ng_show_kanban => 'إظهار بطاقات Kanban';
+
+  @override
+  String get ng_hide_kanban => 'إخفاء بطاقات Kanban';
+
+  @override
+  String get ng_kanban_status_triage => 'الفرز';
+
+  @override
+  String get ng_kanban_status_todo => 'للتنفيذ';
+
+  @override
+  String get ng_kanban_status_scheduled => 'مجدولة';
+
+  @override
+  String get ng_kanban_status_ready => 'جاهزة';
+
+  @override
+  String get ng_kanban_status_running => 'قيد التشغيل';
+
+  @override
+  String get ng_kanban_status_blocked => 'متعذّر التقدّم';
+
+  @override
+  String get ng_kanban_status_review => 'قيد المراجعة';
+
+  @override
+  String get ng_kanban_status_done => 'مكتملة';
+
+  @override
+  String get ng_kanban_status_archived => 'مؤرشفة';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return 'فتح $title في Kanban';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return 'إظهار الكل ($count)';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return 'هذه المحادثة ($count)';
+  }
+
+  @override
+  String get ng_kanban_close => 'إغلاق Kanban';
+
+  @override
+  String get ng_kanban_block_no_dashboard =>
+      'لا يملك هذا الاتصال صلاحية الوصول إلى لوحة التحكم، لذا لا تُحدَّث حالة البطاقات مباشرةً ولا يمكن فتح اللوحة.';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      'Kanban غير مفعّل على هذه البوابة. فعّل إضافة kanban لعرض الحالة المباشرة وفتح اللوحة.';
+
+  @override
+  String get ng_kanban_block_denied =>
+      'سجّل الدخول إلى لوحة التحكم لعرض الحالة المباشرة للبطاقات وفتح اللوحة.';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      'يتطلب Kanban اتصال HTTPS أو اتصالًا محليًا، لذا لا تُحدَّث حالة البطاقات مباشرةً ولا يمكن فتح اللوحة.';
+
+  @override
+  String get ng_kanban_block_unreachable =>
+      'تعذّر الوصول إلى Kanban على هذه البوابة. قد تكون حالة البطاقات قديمة.';
+
+  @override
+  String get ng_kanban_block_stale =>
+      'تغيّر الاتصال. أعد فتح هذه المحادثة لعرض الحالة المباشرة للبطاقات.';
 }

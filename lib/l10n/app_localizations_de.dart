@@ -7164,4 +7164,95 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Mit dem Bereitstellungstoken angemeldet.';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Kanban-Karten',
+      one: '1 Kanban-Karte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return '$count erledigt';
+  }
+
+  @override
+  String get ng_show_kanban => 'Kanban-Karten anzeigen';
+
+  @override
+  String get ng_hide_kanban => 'Kanban-Karten ausblenden';
+
+  @override
+  String get ng_kanban_status_triage => 'Sichtung';
+
+  @override
+  String get ng_kanban_status_todo => 'Zu erledigen';
+
+  @override
+  String get ng_kanban_status_scheduled => 'Geplant';
+
+  @override
+  String get ng_kanban_status_ready => 'Bereit';
+
+  @override
+  String get ng_kanban_status_running => 'Läuft';
+
+  @override
+  String get ng_kanban_status_blocked => 'Blockiert';
+
+  @override
+  String get ng_kanban_status_review => 'In Prüfung';
+
+  @override
+  String get ng_kanban_status_done => 'Erledigt';
+
+  @override
+  String get ng_kanban_status_archived => 'Archiviert';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return '$title in Kanban öffnen';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return 'Alle $count anzeigen';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return 'Dieser Chat ($count)';
+  }
+
+  @override
+  String get ng_kanban_close => 'Kanban schließen';
+
+  @override
+  String get ng_kanban_block_no_dashboard =>
+      'Diese Verbindung hat keinen Dashboard-Zugriff. Der Kartenstatus ist daher nicht live, und das Board lässt sich nicht öffnen.';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      'Kanban ist für dieses Gateway nicht aktiviert. Aktiviere das Kanban-Plugin, um den Live-Status zu sehen und das Board zu öffnen.';
+
+  @override
+  String get ng_kanban_block_denied =>
+      'Melde dich beim Dashboard an, um den Live-Status der Karten zu sehen und das Board zu öffnen.';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      'Kanban benötigt HTTPS oder eine lokale Verbindung. Der Kartenstatus ist daher nicht live, und das Board lässt sich nicht öffnen.';
+
+  @override
+  String get ng_kanban_block_unreachable =>
+      'Kanban ist auf diesem Gateway nicht erreichbar. Der Kartenstatus ist möglicherweise veraltet.';
+
+  @override
+  String get ng_kanban_block_stale =>
+      'Die Verbindung hat sich geändert. Öffne diesen Chat erneut, um den Live-Status der Karten zu sehen.';
 }

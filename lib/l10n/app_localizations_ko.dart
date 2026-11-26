@@ -6955,4 +6955,94 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_signed_in_with_deployment_token => '배포 토큰으로 로그인했습니다.';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '칸반 카드 $count개',
+      one: '칸반 카드 1개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return '$count개 완료';
+  }
+
+  @override
+  String get ng_show_kanban => '칸반 카드 표시';
+
+  @override
+  String get ng_hide_kanban => '칸반 카드 숨기기';
+
+  @override
+  String get ng_kanban_status_triage => '분류';
+
+  @override
+  String get ng_kanban_status_todo => '할 일';
+
+  @override
+  String get ng_kanban_status_scheduled => '예약됨';
+
+  @override
+  String get ng_kanban_status_ready => '준비됨';
+
+  @override
+  String get ng_kanban_status_running => '실행 중';
+
+  @override
+  String get ng_kanban_status_blocked => '차단됨';
+
+  @override
+  String get ng_kanban_status_review => '검토 중';
+
+  @override
+  String get ng_kanban_status_done => '완료';
+
+  @override
+  String get ng_kanban_status_archived => '보관됨';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return '칸반에서 $title 열기';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return '$count개 모두 표시';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return '이 채팅($count)';
+  }
+
+  @override
+  String get ng_kanban_close => '칸반 닫기';
+
+  @override
+  String get ng_kanban_block_no_dashboard =>
+      '이 연결에는 대시보드 접근 권한이 없어 카드 상태가 실시간으로 표시되지 않으며 보드를 열 수 없습니다.';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      '이 게이트웨이에서 칸반이 켜져 있지 않습니다. 칸반 플러그인을 사용 설정하면 실시간 상태를 보고 보드를 열 수 있습니다.';
+
+  @override
+  String get ng_kanban_block_denied => '카드의 실시간 상태를 보고 보드를 열려면 대시보드에 로그인하세요.';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      '칸반에는 HTTPS 또는 로컬 연결이 필요하므로 카드 상태가 실시간으로 표시되지 않으며 보드를 열 수 없습니다.';
+
+  @override
+  String get ng_kanban_block_unreachable =>
+      '이 게이트웨이의 칸반에 연결할 수 없습니다. 카드 상태가 최신이 아닐 수 있습니다.';
+
+  @override
+  String get ng_kanban_block_stale =>
+      '연결이 변경되었습니다. 카드의 실시간 상태를 보려면 이 채팅을 다시 여세요.';
 }

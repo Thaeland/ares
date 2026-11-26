@@ -7104,4 +7104,95 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Signed in with the deployment token.';
+
+  @override
+  String ng_dock_kanban(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Kanban cards',
+      one: '1 Kanban card',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_dock_kanban_done(int count) {
+    return '$count done';
+  }
+
+  @override
+  String get ng_show_kanban => 'Show Kanban cards';
+
+  @override
+  String get ng_hide_kanban => 'Hide Kanban cards';
+
+  @override
+  String get ng_kanban_status_triage => 'Triage';
+
+  @override
+  String get ng_kanban_status_todo => 'To do';
+
+  @override
+  String get ng_kanban_status_scheduled => 'Scheduled';
+
+  @override
+  String get ng_kanban_status_ready => 'Ready';
+
+  @override
+  String get ng_kanban_status_running => 'Running';
+
+  @override
+  String get ng_kanban_status_blocked => 'Blocked';
+
+  @override
+  String get ng_kanban_status_review => 'In review';
+
+  @override
+  String get ng_kanban_status_done => 'Done';
+
+  @override
+  String get ng_kanban_status_archived => 'Archived';
+
+  @override
+  String ng_kanban_open_card(String title) {
+    return 'Open $title in Kanban';
+  }
+
+  @override
+  String ng_kanban_show_all(int count) {
+    return 'Show all $count';
+  }
+
+  @override
+  String ng_kanban_this_chat(int count) {
+    return 'This chat ($count)';
+  }
+
+  @override
+  String get ng_kanban_close => 'Close Kanban';
+
+  @override
+  String get ng_kanban_block_no_dashboard =>
+      'This connection has no dashboard access, so card status is not live and the board cannot open.';
+
+  @override
+  String get ng_kanban_block_unsupported =>
+      'Kanban is not turned on for this gateway. Enable its kanban plugin to see live status and open the board.';
+
+  @override
+  String get ng_kanban_block_denied =>
+      'Sign in to the dashboard to see live card status and open the board.';
+
+  @override
+  String get ng_kanban_block_insecure =>
+      'Kanban needs HTTPS or a local connection, so card status is not live and the board cannot open.';
+
+  @override
+  String get ng_kanban_block_unreachable =>
+      'Could not reach Kanban on this gateway. Card status may be out of date.';
+
+  @override
+  String get ng_kanban_block_stale =>
+      'The connection changed. Reopen this chat to see live card status.';
 }

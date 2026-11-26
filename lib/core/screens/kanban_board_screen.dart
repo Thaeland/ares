@@ -27,6 +27,17 @@ class KanbanBoardScreen extends StatefulWidget {
     /// Card id to open in the detail sheet once the board has loaded. The dock
     /// (t_7b7d44f3) reuses this entry point to open the card it created.
     this.initialCardId,
+
+    /// Limits the board to these card ids until the user clears the chip: the
+    /// chat dock's "show all" opens the board on the cards of one chat.
+    this.initialCardFilter,
+
+    /// Starts with archived cards shown (a chat's finished cards).
+    this.initialIncludeArchived = false,
+
+    /// When set, the board is a pane beside a chat rather than a route: the
+    /// app bar gets a close button that calls this instead of a back arrow.
+    this.onClose,
   });
 
   final RemoteWorkspaceOwner owner;
@@ -39,6 +50,13 @@ class KanbanBoardScreen extends StatefulWidget {
 
   /// Card id to open in the detail sheet once the board has a snapshot.
   final String? initialCardId;
+
+  /// Card ids the board starts filtered to; null shows every card.
+  final Set<String>? initialCardFilter;
+  final bool initialIncludeArchived;
+
+  /// Closes the board when it is shown as a pane.
+  final VoidCallback? onClose;
 
   @override
   State<KanbanBoardScreen> createState() => _KanbanBoardScreenState();
@@ -57,6 +75,13 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
   bool _lanesByProfile = false;
   Map<String, bool> _collapsedLanes = const {};
   int _narrowColumnIndex = 3; // Default to 'ready' on phone widths.
+
+  /// The cards the board is limited to (one chat's), until cleared.
+  Set<String>? _cardFilter;
+
+  /// The narrow board follows the opened card or filter to its column until
+  /// the user picks a column.
+  bool _narrowColumnPicked = false;
 
   bool _loading = true;
   WorkspaceFailure? _failure;
@@ -97,6 +122,8 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     super.initState();
     _account = ConnectionMutationBarrier.capture(widget.route.connectionId);
     ConnectionMutationBarrier.addListener(_onAccountChanged);
+    _cardFilter = widget.initialCardFilter;
+    _includeArchived = widget.initialIncludeArchived;
     final initialCard = widget.initialCardId?.trim();
     _pendingInitialCardId = (initialCard == null || initialCard.isEmpty)
         ? null
@@ -142,6 +169,9 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       _target = null;
       _account = ConnectionMutationBarrier.capture(widget.route.connectionId);
       _cancelRealtime();
+      _cardFilter = widget.initialCardFilter;
+      _includeArchived = widget.initialIncludeArchived;
+      _narrowColumnPicked = false;
       final initialCard = widget.initialCardId?.trim();
       _pendingInitialCardId = (initialCard == null || initialCard.isEmpty)
           ? null
@@ -271,6 +301,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
         _errorDetail = null;
       });
 
+      _followToColumn(snap);
       _maybeFocusInitialCard(snap);
 
       if (rebindEvents && widget.enableLivePolling) {
@@ -379,6 +410,8 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     _pendingInitialCardId = null;
     _pendingInitialBoard = null;
     setState(() {
+      // The chat filter names cards of the board it was opened on.
+      if (normalized != _effectiveSlug) _cardFilter = null;
       _boardSlug = normalized;
       _selectedIds.clear();
       _selectionMode = false;
@@ -394,10 +427,25 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     setState(() => _pinnedBoards = _prefs?.pinnedBoards ?? const []);
   }
 
+  /// On a narrow board, shows the column that holds the opened card or the
+  /// first card of the chat filter, instead of the default column.
+  void _followToColumn(KanbanBoardSnapshot snap) {
+    if (_narrowColumnPicked) return;
+    final wanted = <String>{...?_cardFilter, ?_pendingInitialCardId};
+    if (wanted.isEmpty) return;
+    final index = snap.columns.indexWhere(
+      (column) => column.tasks.any((task) => wanted.contains(task.id)),
+    );
+    if (index < 0 || index == _narrowColumnIndex) return;
+    setState(() => _narrowColumnIndex = index);
+  }
+
   List<KanbanTaskCard> _filterTasks(List<KanbanTaskCard> input) {
+    final only = _cardFilter;
     return [
       for (final task in input)
-        if ((_assigneeFilter.isEmpty ||
+        if ((only == null || only.contains(task.id)) &&
+            (_assigneeFilter.isEmpty ||
                 (_assigneeFilter == '__unassigned__'
                     ? task.assignee == null
                     : task.assignee == _assigneeFilter)) &&
@@ -870,6 +918,15 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: widget.onClose == null,
+        leading: widget.onClose == null
+            ? null
+            : IconButton(
+                key: const Key('kanban-close'),
+                tooltip: l10n.ng_kanban_close,
+                icon: const Icon(Icons.close),
+                onPressed: widget.onClose,
+              ),
         title: InkWell(
           key: const Key('kanban-board-switcher'),
           borderRadius: BorderRadius.circular(8),
@@ -889,19 +946,26 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                 const Icon(Icons.expand_more, size: 18),
                 if (activeCount > 0) ...[
                   const SizedBox(width: 8),
-                  Container(
-                    key: const Key('kanban-active-count'),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '$activeCount active',
-                      style: Theme.of(context).textTheme.labelSmall,
+                  // On a phone or in the chat's side pane the title shares
+                  // a narrow bar with three actions: the badge gives way
+                  // instead of overflowing.
+                  Flexible(
+                    child: Container(
+                      key: const Key('kanban-active-count'),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '$activeCount active',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
                     ),
                   ),
                 ],
@@ -1053,23 +1117,45 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
               ),
             ),
           ),
-          DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              key: const Key('kanban-assignee-filter'),
-              value: _assigneeFilter,
-              hint: const Text('All assignees'),
-              items: [
-                const DropdownMenuItem(value: '', child: Text('All assignees')),
-                const DropdownMenuItem(
-                  value: '__unassigned__',
-                  child: Text('Unassigned'),
-                ),
-                for (final name in assignees)
-                  DropdownMenuItem(value: name, child: Text('@$name')),
-              ],
-              onChanged: (v) => setState(() => _assigneeFilter = v ?? ''),
+          // Bounded, so a long name or large text is cut short rather than
+          // overflowing a narrow board (a phone, the chat's side pane).
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 220),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                key: const Key('kanban-assignee-filter'),
+                isExpanded: true,
+                value: _assigneeFilter,
+                hint: const Text('All assignees'),
+                items: [
+                  const DropdownMenuItem(
+                    value: '',
+                    child: Text(
+                      'All assignees',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const DropdownMenuItem(
+                    value: '__unassigned__',
+                    child: Text('Unassigned', overflow: TextOverflow.ellipsis),
+                  ),
+                  for (final name in assignees)
+                    DropdownMenuItem(
+                      value: name,
+                      child: Text('@$name', overflow: TextOverflow.ellipsis),
+                    ),
+                ],
+                onChanged: (v) => setState(() => _assigneeFilter = v ?? ''),
+              ),
             ),
           ),
+          if (_cardFilter case final only?)
+            InputChip(
+              key: const Key('kanban-chat-filter'),
+              avatar: const Icon(Icons.forum_outlined, size: 16),
+              label: Text(context.sharedL10n.ng_kanban_this_chat(only.length)),
+              onDeleted: () => setState(() => _cardFilter = null),
+            ),
           FilterChip(
             key: const Key('kanban-archived-toggle'),
             label: const Text('Archived'),
@@ -1138,7 +1224,10 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                   key: Key('kanban-tab-${c.name}'),
                   selected: idx == safeIdx,
                   label: Text('${c.label} ($count)'),
-                  onSelected: (_) => setState(() => _narrowColumnIndex = idx),
+                  onSelected: (_) => setState(() {
+                    _narrowColumnPicked = true;
+                    _narrowColumnIndex = idx;
+                  }),
                 ),
               );
             },
@@ -2956,13 +3045,19 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
             Expanded(
               child: DropdownButtonFormField<String>(
                 key: const Key('kanban-detail-status'),
+                // The sheet is also opened on phones and in the chat's
+                // side pane: the chosen value must fit half its width.
+                isExpanded: true,
                 initialValue: task.status,
                 decoration: const InputDecoration(labelText: 'Status'),
                 items: [
                   for (final s in allowedStatuses)
                     DropdownMenuItem(
                       value: s,
-                      child: Text(kanbanColumnLabels[s] ?? s),
+                      child: Text(
+                        kanbanColumnLabels[s] ?? s,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                 ],
                 onChanged: (v) {
@@ -2974,12 +3069,19 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
             Expanded(
               child: DropdownButtonFormField<String>(
                 key: const Key('kanban-detail-assignee'),
+                isExpanded: true,
                 initialValue: task.assignee ?? '',
                 decoration: const InputDecoration(labelText: 'Assignee'),
                 items: [
-                  const DropdownMenuItem(value: '', child: Text('Unassigned')),
+                  const DropdownMenuItem(
+                    value: '',
+                    child: Text('Unassigned', overflow: TextOverflow.ellipsis),
+                  ),
                   for (final name in profileNames)
-                    DropdownMenuItem(value: name, child: Text('@$name')),
+                    DropdownMenuItem(
+                      value: name,
+                      child: Text('@$name', overflow: TextOverflow.ellipsis),
+                    ),
                 ],
                 onChanged: (v) {
                   if (v != null) unawaited(_changeAssignee(v));
