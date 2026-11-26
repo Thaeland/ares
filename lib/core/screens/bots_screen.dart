@@ -765,36 +765,53 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-            child: SegmentedButton<_BotsTab>(
-              segments: const [
-                ButtonSegment(
-                  value: _BotsTab.roster,
-                  label: Text('Roster'),
-                  icon: Icon(Icons.people_outline),
-                ),
-                ButtonSegment(
-                  value: _BotsTab.rooms,
-                  label: Text('Rooms'),
-                  icon: Icon(Icons.groups_outlined),
-                ),
-                ButtonSegment(
-                  value: _BotsTab.screen,
-                  label: Text('Screen'),
-                  icon: Icon(Icons.desktop_windows_outlined),
-                ),
-                ButtonSegment(
-                  value: _BotsTab.routines,
-                  label: Text('Routines'),
-                  icon: Icon(Icons.schedule_outlined),
-                ),
-              ],
-              selected: {_tab},
-              onSelectionChanged: (s) => _onTabChanged(s.single),
-            ),
+            child: LayoutBuilder(builder: _tabs),
           ),
           Expanded(child: _loadBody(isNarrow)),
         ],
       ),
+    );
+  }
+
+  static const _tabSpecs = [
+    (_BotsTab.roster, 'Roster', Icons.people_outline),
+    (_BotsTab.rooms, 'Rooms', Icons.groups_outlined),
+    (_BotsTab.screen, 'Screen', Icons.desktop_windows_outlined),
+    (_BotsTab.routines, 'Routines', Icons.schedule_outlined),
+  ];
+
+  /// The tab switcher. Labels show when all four fit at the current text
+  /// size; otherwise the tabs are icons with their names as tooltips.
+  Widget _tabs(BuildContext context, BoxConstraints constraints) {
+    final style = Theme.of(context).textTheme.labelLarge;
+    final scaler = MediaQuery.textScalerOf(context);
+    var needed = 0.0;
+    for (final (_, label, _) in _tabSpecs) {
+      final painter = TextPainter(
+        text: TextSpan(text: label, style: style),
+        textDirection: Directionality.of(context),
+        textScaler: scaler,
+        maxLines: 1,
+      )..layout();
+      // Icon, gap and the segment's own padding around the label.
+      needed += painter.width + 18 + 8 + 48;
+      painter.dispose();
+    }
+    final labels = needed <= constraints.maxWidth;
+    return SegmentedButton<_BotsTab>(
+      key: const Key('bots-tabs'),
+      showSelectedIcon: false,
+      segments: [
+        for (final (tab, label, icon) in _tabSpecs)
+          ButtonSegment(
+            value: tab,
+            label: labels ? Text(label) : null,
+            tooltip: labels ? null : label,
+            icon: Icon(icon),
+          ),
+      ],
+      selected: {_tab},
+      onSelectionChanged: (s) => _onTabChanged(s.single),
     );
   }
 
@@ -1134,10 +1151,14 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       padding: const EdgeInsets.all(16),
       children: [
         DropdownButtonFormField<String>(
+          isExpanded: true,
           initialValue: profiles.contains(selected) ? selected : null,
           items: [
             for (final n in profiles)
-              DropdownMenuItem(value: n, child: Text(n)),
+              DropdownMenuItem(
+                value: n,
+                child: Text(n, overflow: TextOverflow.ellipsis),
+              ),
           ],
           decoration: const InputDecoration(
             labelText: 'Bot',
@@ -1220,16 +1241,12 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
               'No sandbox image switch is pending.',
             if (imageSwitch != null)
               'switch image: ${imageSwitch['current_image'] ?? '?'} → ${imageSwitch['target_image'] ?? '?'}',
+            if (status.running)
+              status.lease.isAgent
+                  ? 'the bot is in control'
+                  : 'a person is in control',
           ].join(' · '),
         ),
-        trailing: status.running
-            ? Text(
-                status.lease.isAgent
-                    ? 'agent holds'
-                    : '${status.lease.holder} holds',
-                style: Theme.of(context).textTheme.bodySmall,
-              )
-            : null,
       ),
     );
   }
@@ -1427,10 +1444,14 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       padding: const EdgeInsets.all(16),
       children: [
         DropdownButtonFormField<String>(
+          isExpanded: true,
           initialValue: profiles.contains(selected) ? selected : null,
           items: [
             for (final n in profiles)
-              DropdownMenuItem(value: n, child: Text(n)),
+              DropdownMenuItem(
+                value: n,
+                child: Text(n, overflow: TextOverflow.ellipsis),
+              ),
           ],
           decoration: const InputDecoration(
             labelText: 'Bot',
@@ -1452,11 +1473,14 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         const SizedBox(height: 12),
         Row(
           children: [
-            Text(
-              _routinesScope ?? '${selected ?? '—'} · routines',
-              style: Theme.of(context).textTheme.titleSmall,
+            Expanded(
+              child: Text(
+                _routinesScope ?? '${selected ?? '—'} · routines',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
             ),
-            const Spacer(),
             IconButton(
               tooltip: 'Refresh',
               icon: const Icon(Icons.refresh),

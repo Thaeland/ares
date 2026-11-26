@@ -1248,30 +1248,42 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     }
 
     final snap = _snapshot!;
-    return Column(
-      children: [
-        if (_pinnedBoards.isNotEmpty) _buildPinnedTabs(),
-        _buildFilterBar(snap),
-        Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              if (constraints.maxWidth < 640) {
-                return _buildNarrowBoard(snap);
-              }
-              return _buildWideBoard(snap);
-            },
+    return LayoutBuilder(
+      builder: (context, body) => Column(
+        children: [
+          // The pinned boards and filters never take more than about a third
+          // of the board: with large text or the keyboard up they scroll.
+          ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: body.maxHeight * 0.35),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  if (_pinnedBoards.isNotEmpty) _buildPinnedTabs(),
+                  _buildFilterBar(snap),
+                ],
+              ),
+            ),
           ),
-        ),
-      ],
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth < 640) {
+                  return _buildNarrowBoard(snap);
+                }
+                return _buildWideBoard(snap);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildPinnedTabs() {
-    return SizedBox(
-      height: 40,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
         children: [
           for (final slug in _pinnedBoards)
             Padding(
@@ -1413,28 +1425,30 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     final col = snap.columns[safeIdx];
     return Column(
       children: [
-        SizedBox(
-          height: 42,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            itemCount: snap.columns.length,
-            itemBuilder: (context, idx) {
-              final c = snap.columns[idx];
-              final count = _filterTasks(c.tasks).length;
-              return Padding(
-                padding: const EdgeInsets.only(right: 6),
-                child: ChoiceChip(
-                  key: Key('kanban-tab-${c.name}'),
-                  selected: idx == safeIdx,
-                  label: Text('${c.label} ($count)'),
-                  onSelected: (_) => setState(() {
-                    _narrowColumnPicked = true;
-                    _narrowColumnIndex = idx;
-                  }),
+        // Sized by its chips, so large text makes the row taller rather
+        // than clipping it.
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.fromLTRB(12, 2, 12, 4),
+          child: Row(
+            children: [
+              for (var idx = 0; idx < snap.columns.length; idx++)
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: ChoiceChip(
+                    key: Key('kanban-tab-${snap.columns[idx].name}'),
+                    selected: idx == safeIdx,
+                    label: Text(
+                      '${snap.columns[idx].label} '
+                      '(${_filterTasks(snap.columns[idx].tasks).length})',
+                    ),
+                    onSelected: (_) => setState(() {
+                      _narrowColumnPicked = true;
+                      _narrowColumnIndex = idx;
+                    }),
+                  ),
                 ),
-              );
-            },
+            ],
           ),
         ),
         const Divider(height: 1),
@@ -1994,6 +2008,7 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
                   ),
                   if (widget.projects.isNotEmpty)
                     DropdownButtonFormField<String?>(
+                      isExpanded: true,
                       initialValue: projectId,
                       decoration: const InputDecoration(
                         labelText: 'Linked project (optional)',
@@ -2001,10 +2016,16 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
                       items: [
                         const DropdownMenuItem(
                           value: null,
-                          child: Text('None'),
+                          child: Text('None', overflow: TextOverflow.ellipsis),
                         ),
                         for (final p in widget.projects)
-                          DropdownMenuItem(value: p.id, child: Text(p.name)),
+                          DropdownMenuItem(
+                            value: p.id,
+                            child: Text(
+                              p.name,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                       ],
                       onChanged: (v) => setModal(() => projectId = v),
                     ),
@@ -2450,204 +2471,260 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
   Widget build(BuildContext context) {
     final l10n = context.sharedL10n;
     return AlertDialog(
+      // Title, fields and buttons scroll as one, above the keyboard.
+      scrollable: true,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       title: const Text('New Kanban task'),
       content: SizedBox(
         width: 480,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextField(
-                key: const Key('kanban-new-title'),
-                controller: _title,
-                autofocus: true,
-                decoration: const InputDecoration(labelText: 'Title *'),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              key: const Key('kanban-new-title'),
+              controller: _title,
+              autofocus: true,
+              decoration: const InputDecoration(labelText: 'Title *'),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              key: const Key('kanban-new-body'),
+              controller: _body,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                labelText: 'Spec & acceptance criteria',
               ),
-              const SizedBox(height: 8),
-              TextField(
-                key: const Key('kanban-new-body'),
-                controller: _body,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Spec & acceptance criteria',
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                TextButton.icon(
+                  key: const Key('kanban-new-estimate'),
+                  onPressed: _estimateComplexity,
+                  icon: const Icon(Icons.analytics_outlined, size: 18),
+                  label: const Text('Estimate'),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  TextButton.icon(
-                    key: const Key('kanban-new-estimate'),
-                    onPressed: _estimateComplexity,
-                    icon: const Icon(Icons.analytics_outlined, size: 18),
-                    label: const Text('Estimate'),
-                  ),
-                  if (_estimate != null)
-                    Expanded(
-                      child: Text(
-                        _estimate!.ok
-                            ? 'Complexity ${_estimate!.complexity ?? '?'} (~${_estimate!.estTokens ?? 0} tok — token estimate only, not a dollar-cost claim)'
-                            : (_estimate!.reason ?? 'Estimate unavailable'),
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ),
-                ],
-              ),
-              DropdownButtonFormField<String>(
-                key: const Key('kanban-new-column'),
-                initialValue: _column,
-                decoration: const InputDecoration(labelText: 'Initial column'),
-                items: const [
-                  DropdownMenuItem(value: 'ready', child: Text('Ready')),
-                  DropdownMenuItem(value: 'todo', child: Text('Todo')),
-                  DropdownMenuItem(value: 'triage', child: Text('Triage')),
-                  DropdownMenuItem(value: 'blocked', child: Text('Blocked')),
-                ],
-                onChanged: (v) => setState(() => _column = v ?? 'ready'),
-              ),
-              DropdownButtonFormField<String>(
-                key: const Key('kanban-new-assignee'),
-                initialValue: widget.profiles.any((p) => p.name == _assignee)
-                    ? _assignee
-                    : '__parked__',
-                decoration: const InputDecoration(labelText: 'Worker assignee'),
-                items: [
-                  const DropdownMenuItem(
-                    value: '__parked__',
-                    child: Text('Parked (unassigned)'),
-                  ),
-                  for (final p in widget.profiles)
-                    DropdownMenuItem(value: p.name, child: Text('@${p.name}')),
-                ],
-                onChanged: (v) => setState(() => _assignee = v ?? '__parked__'),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      key: const Key('kanban-new-priority'),
-                      controller: _priority,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'Priority'),
+                if (_estimate != null)
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      _estimate!.ok
+                          ? 'Complexity ${_estimate!.complexity ?? '?'} (~${_estimate!.estTokens ?? 0} tok — token estimate only, not a dollar-cost claim)'
+                          : (_estimate!.reason ?? 'Estimate unavailable'),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      key: const Key('kanban-new-workspace-kind'),
-                      initialValue: _workspaceKind,
-                      decoration: const InputDecoration(labelText: 'Workspace'),
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'scratch',
-                          child: Text('Scratch'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'worktree',
-                          child: Text('Git worktree'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'dir',
-                          child: Text('Shared dir'),
-                        ),
-                      ],
-                      onChanged: (v) =>
-                          setState(() => _workspaceKind = v ?? 'scratch'),
-                    ),
-                  ),
-                ],
-              ),
-              if (_workspaceKind != 'scratch')
-                TextField(
-                  key: const Key('kanban-new-workspace-path'),
-                  controller: _workspacePath,
-                  decoration: const InputDecoration(
-                    labelText: 'Host workspace path',
+              ],
+            ),
+            DropdownButtonFormField<String>(
+              isExpanded: true,
+              key: const Key('kanban-new-column'),
+              initialValue: _column,
+              decoration: const InputDecoration(labelText: 'Initial column'),
+              items: const [
+                DropdownMenuItem(
+                  value: 'ready',
+                  child: Text('Ready', overflow: TextOverflow.ellipsis),
+                ),
+                DropdownMenuItem(
+                  value: 'todo',
+                  child: Text('Todo', overflow: TextOverflow.ellipsis),
+                ),
+                DropdownMenuItem(
+                  value: 'triage',
+                  child: Text('Triage', overflow: TextOverflow.ellipsis),
+                ),
+                DropdownMenuItem(
+                  value: 'blocked',
+                  child: Text('Blocked', overflow: TextOverflow.ellipsis),
+                ),
+              ],
+              onChanged: (v) => setState(() => _column = v ?? 'ready'),
+            ),
+            DropdownButtonFormField<String>(
+              isExpanded: true,
+              key: const Key('kanban-new-assignee'),
+              initialValue: widget.profiles.any((p) => p.name == _assignee)
+                  ? _assignee
+                  : '__parked__',
+              decoration: const InputDecoration(labelText: 'Worker assignee'),
+              items: [
+                const DropdownMenuItem(
+                  value: '__parked__',
+                  child: Text(
+                    'Parked (unassigned)',
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-              if (widget.existingTasks.isNotEmpty)
-                DropdownButtonFormField<String?>(
-                  key: const Key('kanban-new-parent'),
-                  initialValue: _parentId,
-                  isExpanded: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Parent dependency (optional)',
+                for (final p in widget.profiles)
+                  DropdownMenuItem(
+                    value: p.name,
+                    child: Text('@${p.name}', overflow: TextOverflow.ellipsis),
                   ),
-                  items: [
-                    const DropdownMenuItem(value: null, child: Text('None')),
-                    for (final t in widget.existingTasks)
+              ],
+              onChanged: (v) => setState(() => _assignee = v ?? '__parked__'),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    key: const Key('kanban-new-priority'),
+                    controller: _priority,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(labelText: 'Priority'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    isExpanded: true,
+                    key: const Key('kanban-new-workspace-kind'),
+                    initialValue: _workspaceKind,
+                    decoration: const InputDecoration(labelText: 'Workspace'),
+                    items: const [
                       DropdownMenuItem(
-                        value: t.id,
+                        value: 'scratch',
+                        child: Text('Scratch', overflow: TextOverflow.ellipsis),
+                      ),
+                      DropdownMenuItem(
+                        value: 'worktree',
                         child: Text(
-                          '${t.id}: ${t.title}',
+                          'Git worktree',
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                  ],
-                  onChanged: (v) => setState(() => _parentId = v),
+                      DropdownMenuItem(
+                        value: 'dir',
+                        child: Text(
+                          'Shared dir',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                    onChanged: (v) =>
+                        setState(() => _workspaceKind = v ?? 'scratch'),
+                  ),
                 ),
+              ],
+            ),
+            if (_workspaceKind != 'scratch')
               TextField(
-                key: const Key('kanban-new-skills'),
-                controller: _skills,
+                key: const Key('kanban-new-workspace-path'),
+                controller: _workspacePath,
                 decoration: const InputDecoration(
-                  labelText: 'Pinned skills (comma-separated, optional)',
+                  labelText: 'Host workspace path',
                 ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      key: const Key('kanban-new-provider'),
-                      controller: _provider,
-                      decoration: const InputDecoration(
-                        labelText: 'Provider override',
+            if (widget.existingTasks.isNotEmpty)
+              DropdownButtonFormField<String?>(
+                key: const Key('kanban-new-parent'),
+                initialValue: _parentId,
+                isExpanded: true,
+                decoration: const InputDecoration(
+                  labelText: 'Parent dependency (optional)',
+                ),
+                items: [
+                  const DropdownMenuItem(
+                    value: null,
+                    child: Text('None', overflow: TextOverflow.ellipsis),
+                  ),
+                  for (final t in widget.existingTasks)
+                    DropdownMenuItem(
+                      value: t.id,
+                      child: Text(
+                        '${t.id}: ${t.title}',
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextField(
-                      key: const Key('kanban-new-model'),
-                      controller: _model,
-                      decoration: const InputDecoration(
-                        labelText: 'Model override',
-                      ),
+                ],
+                onChanged: (v) => setState(() => _parentId = v),
+              ),
+            TextField(
+              key: const Key('kanban-new-skills'),
+              controller: _skills,
+              decoration: const InputDecoration(
+                labelText: 'Pinned skills (comma-separated, optional)',
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    key: const Key('kanban-new-provider'),
+                    controller: _provider,
+                    decoration: const InputDecoration(
+                      labelText: 'Provider override',
                     ),
                   ),
-                ],
-              ),
-              DropdownButtonFormField<String>(
-                initialValue: _reasoningEffort,
-                decoration: const InputDecoration(
-                  labelText: 'Reasoning effort',
                 ),
-                items: const [
-                  DropdownMenuItem(value: '', child: Text('Profile default')),
-                  DropdownMenuItem(value: 'none', child: Text('None')),
-                  DropdownMenuItem(value: 'minimal', child: Text('Minimal')),
-                  DropdownMenuItem(value: 'low', child: Text('Low')),
-                  DropdownMenuItem(value: 'medium', child: Text('Medium')),
-                  DropdownMenuItem(value: 'high', child: Text('High')),
-                  DropdownMenuItem(value: 'xhigh', child: Text('X-High')),
-                ],
-                onChanged: (v) => setState(() => _reasoningEffort = v ?? ''),
-              ),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: const Text('Goal loop mode'),
-                value: _goalMode,
-                onChanged: (v) => setState(() => _goalMode = v),
-              ),
-              if (_goalMode)
-                TextField(
-                  controller: _goalTurns,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Goal max turns (blank = default)',
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    key: const Key('kanban-new-model'),
+                    controller: _model,
+                    decoration: const InputDecoration(
+                      labelText: 'Model override',
+                    ),
                   ),
                 ),
-            ],
-          ),
+              ],
+            ),
+            DropdownButtonFormField<String>(
+              isExpanded: true,
+              initialValue: _reasoningEffort,
+              decoration: const InputDecoration(labelText: 'Reasoning effort'),
+              items: const [
+                DropdownMenuItem(
+                  value: '',
+                  child: Text(
+                    'Profile default',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                DropdownMenuItem(
+                  value: 'none',
+                  child: Text('None', overflow: TextOverflow.ellipsis),
+                ),
+                DropdownMenuItem(
+                  value: 'minimal',
+                  child: Text('Minimal', overflow: TextOverflow.ellipsis),
+                ),
+                DropdownMenuItem(
+                  value: 'low',
+                  child: Text('Low', overflow: TextOverflow.ellipsis),
+                ),
+                DropdownMenuItem(
+                  value: 'medium',
+                  child: Text('Medium', overflow: TextOverflow.ellipsis),
+                ),
+                DropdownMenuItem(
+                  value: 'high',
+                  child: Text('High', overflow: TextOverflow.ellipsis),
+                ),
+                DropdownMenuItem(
+                  value: 'xhigh',
+                  child: Text('X-High', overflow: TextOverflow.ellipsis),
+                ),
+              ],
+              onChanged: (v) => setState(() => _reasoningEffort = v ?? ''),
+            ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Goal loop mode'),
+              value: _goalMode,
+              onChanged: (v) => setState(() => _goalMode = v),
+            ),
+            if (_goalMode)
+              TextField(
+                controller: _goalTurns,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Goal max turns (blank = default)',
+                ),
+              ),
+          ],
         ),
       ),
       actions: [
@@ -2724,6 +2801,7 @@ class _OrchestrationSheetState extends State<_OrchestrationSheet> {
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
+                isExpanded: true,
                 key: const Key('kanban-orch-profile'),
                 initialValue: names.contains(_orchestrator)
                     ? _orchestrator
@@ -2735,15 +2813,25 @@ class _OrchestrationSheetState extends State<_OrchestrationSheet> {
                 items: [
                   const DropdownMenuItem(
                     value: '',
-                    child: Text('Inherit active default'),
+                    child: Text(
+                      'Inherit active default',
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   for (final p in widget.profiles)
-                    DropdownMenuItem(value: p.name, child: Text('@${p.name}')),
+                    DropdownMenuItem(
+                      value: p.name,
+                      child: Text(
+                        '@${p.name}',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                 ],
                 onChanged: (v) => setState(() => _orchestrator = v ?? ''),
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
+                isExpanded: true,
                 key: const Key('kanban-default-assignee'),
                 initialValue: names.contains(_defaultAssignee)
                     ? _defaultAssignee
@@ -2755,10 +2843,19 @@ class _OrchestrationSheetState extends State<_OrchestrationSheet> {
                 items: [
                   const DropdownMenuItem(
                     value: '',
-                    child: Text('Inherit active default'),
+                    child: Text(
+                      'Inherit active default',
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   for (final p in widget.profiles)
-                    DropdownMenuItem(value: p.name, child: Text('@${p.name}')),
+                    DropdownMenuItem(
+                      value: p.name,
+                      child: Text(
+                        '@${p.name}',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                 ],
                 onChanged: (v) => setState(() => _defaultAssignee = v ?? ''),
               ),
