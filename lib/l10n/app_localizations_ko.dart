@@ -7401,4 +7401,314 @@ class AppLocalizationsKo extends AppLocalizations {
   String ng_wake_status_off(String phrase) {
     return '꺼짐(\"$phrase\")';
   }
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return '$setting 변경은 공유 게이트웨이에서 아직 사용할 수 없습니다';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method 요청은 공유 게이트웨이에서 아직 사용할 수 없습니다';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return '표준 게이트웨이는 다음 명시적 세션 옵션을 지원하지 않습니다: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale => '요청이 오래되었거나 사용할 수 없습니다. 다시 연결한 후 응답하세요';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      '세션 리비전을 확인할 수 없습니다. 세션을 다시 연 후 메타데이터를 편집하세요';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      '세션 실행 ID를 확인할 수 없습니다. 다시 연결한 후 이 명령을 사용하세요';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      '이 메시지는 아직 저장되지 않았습니다. 완료될 때까지 기다린 후 다시 분기하세요';
+
+  @override
+  String get ng_wire_not_available => '공유 게이트웨이에서 아직 사용할 수 없습니다';
+
+  @override
+  String get edit_turn_title => '이 프롬프트를 편집할까요?';
+
+  @override
+  String get edit_turn_body => '여기서부터 프롬프트를 다시 실행합니다. 이후 대화 차례는 보관됩니다.';
+
+  @override
+  String get edit_turn_send => '보내기';
+
+  @override
+  String get restore_turn_title => '이 체크포인트로 복원할까요?';
+
+  @override
+  String get restore_turn_body => '이 프롬프트 이후의 대화 내용을 제거하고 여기서부터 다시 실행합니다.';
+
+  @override
+  String get restore_turn_confirm => '복원 및 다시 실행';
+
+  @override
+  String get edit_turn_later_turns_body => '이후 대화 차례가 보관 처리됩니다. 계속할까요?';
+
+  @override
+  String get session_history => '세션 기록';
+
+  @override
+  String get import_claude_or_codex => 'Claude 또는 Codex 가져오기';
+
+  @override
+  String get ng_session_history => '세션 기록';
+
+  @override
+  String get ng_import_claude_or_codex => 'Claude 또는 Codex 가져오기';
+
+  @override
+  String get ng_edit_and_resend => '편집 후 다시 보내기';
+
+  @override
+  String get ng_restore_turn_confirm => '복원 및 다시 실행';
+
+  @override
+  String get rewind_target_unsaved =>
+      '이 메시지는 아직 저장되지 않았습니다. 완료될 때까지 기다린 후 다시 편집하세요.';
+
+  @override
+  String get rewind_turn_busy =>
+      '현재 응답이 아직 중지되지 않아 아무것도 전송되지 않았습니다. 잠시 후 다시 시도하세요.';
+
+  @override
+  String get rewind_session_changed =>
+      '이 채팅은 여기에서 연 이후 변경되어 아무것도 삭제되거나 전송되지 않았습니다. 다시 연 후 다시 시도하세요.';
+
+  @override
+  String get history_lineage => '관련 채팅';
+
+  @override
+  String get history_lineage_none => '이 채팅에는 분기나 형제 브랜치가 없습니다.';
+
+  @override
+  String get history_lineage_unavailable => '이 게이트웨이에서 관련 채팅을 읽을 수 없습니다.';
+
+  @override
+  String get history_lineage_parent => '상위';
+
+  @override
+  String get history_lineage_sibling => '형제';
+
+  @override
+  String get history_lineage_fork => '분기';
+
+  @override
+  String get history_messages => '메시지';
+
+  @override
+  String get history_messages_hint => '저장된 메시지를 선택하면 그 지점에서 분기하거나 되감을 수 있습니다.';
+
+  @override
+  String get history_messages_none => '저장된 메시지가 아직 없습니다.';
+
+  @override
+  String get history_messages_unavailable =>
+      '저장된 메시지를 읽을 수 없습니다. 이 채팅을 연 후 새로 고치세요.';
+
+  @override
+  String get history_role_user => '나';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => '여기서 분기';
+
+  @override
+  String get history_rewind_here => '여기까지 되감기';
+
+  @override
+  String get history_branch_title => '이 메시지에서 분기';
+
+  @override
+  String get history_branch_body =>
+      '선택한 메시지까지의 기록을 담은 새 채팅을 만듭니다. 현재 채팅은 그대로 유지됩니다.';
+
+  @override
+  String get history_rewind_title => '이 메시지까지 되감기';
+
+  @override
+  String get history_rewind_body =>
+      '선택한 메시지부터 이후 메시지가 이 채팅에서 삭제됩니다. 컴퓨터의 파일은 변경되지 않습니다. 파일 복원은 체크포인트에서 따로 합니다.';
+
+  @override
+  String history_branched(String id) {
+    return '$id(으)로 분기됨';
+  }
+
+  @override
+  String get history_open_chat => '채팅 열기';
+
+  @override
+  String get history_mutate_unsupported =>
+      '분기와 되감기는 이 게이트웨이에 Hermes 0.23 이상이 필요합니다.';
+
+  @override
+  String get history_checkpoints => '체크포인트';
+
+  @override
+  String get history_checkpoints_none => '이 세션에는 파일 체크포인트가 없습니다.';
+
+  @override
+  String get history_checkpoints_unavailable => '이 게이트웨이에서는 체크포인트를 사용할 수 없습니다.';
+
+  @override
+  String get history_diff_none => '차이가 없습니다.';
+
+  @override
+  String get history_diff_loading => '변경 사항을 불러오는 중…';
+
+  @override
+  String get history_diff_failed => '변경 사항을 불러오지 못해 이 체크포인트를 아직 복원할 수 없습니다.';
+
+  @override
+  String get history_restore_checkpoint => '체크포인트 복원';
+
+  @override
+  String get history_restore_title => '이 체크포인트 복원';
+
+  @override
+  String get history_restore_body =>
+      '이 체크포인트 이후 에이전트가 변경한 파일이 당시 상태로 돌아갑니다. 직접 변경한 내용은 유지됩니다. 이후 채팅 메시지도 삭제될 수 있습니다. 대화는 분기되지 않습니다.';
+
+  @override
+  String get history_restore_body_all =>
+      '세션 폴더의 모든 파일이 직접 변경한 내용까지 포함해 이 체크포인트로 돌아갑니다. 이후 채팅 메시지도 삭제될 수 있습니다. 대화는 분기되지 않습니다.';
+
+  @override
+  String get history_restore_own_edits => '내가 편집한 내용도 되돌리기';
+
+  @override
+  String get history_restored => '체크포인트를 복원했습니다.';
+
+  @override
+  String history_restored_removed(int count) {
+    return '체크포인트를 복원했습니다. 채팅 메시지 $count개가 삭제되었습니다.';
+  }
+
+  @override
+  String get history_export => '내보내기';
+
+  @override
+  String get history_export_redact => '토큰 가리기';
+
+  @override
+  String get history_export_action => '대화 기록 내보내기';
+
+  @override
+  String get history_export_saved => '대화 기록을 저장했습니다.';
+
+  @override
+  String get history_export_unsupported =>
+      '내보내기는 이 게이트웨이에 Hermes 0.23 이상이 필요합니다.';
+
+  @override
+  String get history_import_unsupported =>
+      '이 게이트웨이는 Claude 및 Codex 가져오기를 지원하지 않습니다.';
+
+  @override
+  String history_import_destination(String profile) {
+    return '대상 프로필: $profile.';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return '$host에서 읽는 중 · 대상 프로필: $profile. 읽지 못한 로그: $count개.';
+  }
+
+  @override
+  String get history_import_all => '전체';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return '호스트 세션을 검색할 수 없습니다: $reason';
+  }
+
+  @override
+  String get history_import_none =>
+      '이 호스트에서 Claude Code 또는 Codex 세션을 찾지 못했습니다.';
+
+  @override
+  String get history_import_no_match => '일치하는 호스트 세션이 없습니다.';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return '세션을 미리 볼 수 없습니다: $reason';
+  }
+
+  @override
+  String get history_import_open => '가져온 세션 열기';
+
+  @override
+  String get history_import_action => '선택한 세션 가져오기';
+
+  @override
+  String get history_import_title => '이 세션 가져오기';
+
+  @override
+  String history_import_body(String profile) {
+    return '이 Claude 또는 Codex 세션을 이 게이트웨이의 프로필 \"$profile\"(으)로 복사합니다.';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return '이 세션은 이미 \"$profile\"(으)로 가져왔습니다. 기존 사본으로 계속합니다.';
+  }
+
+  @override
+  String history_imported(String id) {
+    return '$id(으)로 가져옴';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return '이미 $id(으)로 가져옴';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return '디렉터리: $path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return '미리보기는 $total개 중 $shown개를 표시합니다.';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return '완료할 수 없습니다: $reason';
+  }
+
+  @override
+  String get history_error_unavailable =>
+      '게이트웨이가 지금 이 작업을 수행할 수 없습니다. 다시 시도하세요.';
+
+  @override
+  String get history_error_unsupported => '이 게이트웨이는 이 작업을 지원하지 않습니다.';
+
+  @override
+  String get history_error_denied => '이 게이트웨이가 요청을 거부했습니다.';
+
+  @override
+  String get history_error_changed =>
+      '이 페이지가 열려 있는 동안 채팅이 변경되었습니다. 새로 고친 후 다시 시도하세요.';
+
+  @override
+  String get history_error_unbound => '이 채팅이 게이트웨이에서 열려 있지 않습니다. 연 후 다시 시도하세요.';
+
+  @override
+  String get history_error_invalid => '게이트웨이가 이 앱에서 읽을 수 없는 응답을 보냈습니다.';
 }

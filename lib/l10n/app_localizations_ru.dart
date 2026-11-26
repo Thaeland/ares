@@ -7619,4 +7619,326 @@ class AppLocalizationsRu extends AppLocalizations {
   String ng_wake_status_off(String phrase) {
     return 'Выкл. («$phrase»)';
   }
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'Изменение параметра $setting пока недоступно на общем шлюзе';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return 'Запрос $method пока недоступен на общем шлюзе';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'Канонический шлюз не поддерживает явные параметры сеанса: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'Запрос устарел или недоступен; переподключитесь, прежде чем отвечать';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'Ревизия сеанса недоступна; откройте сеанс заново, прежде чем изменять метаданные';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'Идентификатор выполнения сеанса недоступен; переподключитесь перед этой командой';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'Это сообщение ещё не сохранено; дождитесь его завершения и создайте ветку от него снова';
+
+  @override
+  String get ng_wire_not_available => 'Пока недоступно на общем шлюзе';
+
+  @override
+  String get edit_turn_title => 'Изменить этот запрос?';
+
+  @override
+  String get edit_turn_body =>
+      'Запрос будет выполнен заново с этого места. Последующие ходы будут архивированы.';
+
+  @override
+  String get edit_turn_send => 'Отправить';
+
+  @override
+  String get restore_turn_title => 'Восстановить до этой контрольной точки?';
+
+  @override
+  String get restore_turn_body =>
+      'Всё после этого запроса будет удалено из диалога, и запрос выполнится заново с этого места.';
+
+  @override
+  String get restore_turn_confirm => 'Восстановить и повторить';
+
+  @override
+  String get edit_turn_later_turns_body =>
+      'Последующие ходы диалога будут архивированы. Продолжить?';
+
+  @override
+  String get session_history => 'История сессии';
+
+  @override
+  String get import_claude_or_codex => 'Импорт из Claude или Codex';
+
+  @override
+  String get ng_session_history => 'История сессии';
+
+  @override
+  String get ng_import_claude_or_codex => 'Импорт из Claude или Codex';
+
+  @override
+  String get ng_edit_and_resend => 'Изменить и отправить снова';
+
+  @override
+  String get ng_restore_turn_confirm => 'Восстановить и повторить';
+
+  @override
+  String get rewind_target_unsaved =>
+      'Это сообщение ещё не сохранено. Дождитесь завершения и отредактируйте его снова.';
+
+  @override
+  String get rewind_turn_busy =>
+      'Текущий ответ ещё не остановлен, поэтому ничего не отправлено. Повторите попытку через мгновение.';
+
+  @override
+  String get rewind_session_changed =>
+      'Этот чат изменился с момента открытия здесь, поэтому ничего не удалено и не отправлено. Откройте его заново и повторите попытку.';
+
+  @override
+  String get history_lineage => 'Связанные чаты';
+
+  @override
+  String get history_lineage_none =>
+      'У этого чата нет ответвлений и соседних веток.';
+
+  @override
+  String get history_lineage_unavailable =>
+      'Не удалось прочитать связанные чаты с этого шлюза.';
+
+  @override
+  String get history_lineage_parent => 'Родитель';
+
+  @override
+  String get history_lineage_sibling => 'Соседняя ветка';
+
+  @override
+  String get history_lineage_fork => 'Ответвление';
+
+  @override
+  String get history_messages => 'Сообщения';
+
+  @override
+  String get history_messages_hint =>
+      'Выберите сохранённое сообщение, чтобы создать ветку или откатиться к нему.';
+
+  @override
+  String get history_messages_none => 'Сохранённых сообщений пока нет.';
+
+  @override
+  String get history_messages_unavailable =>
+      'Не удалось прочитать сохранённые сообщения. Откройте этот чат и обновите.';
+
+  @override
+  String get history_role_user => 'Вы';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => 'Создать ветку отсюда';
+
+  @override
+  String get history_rewind_here => 'Откатить сюда';
+
+  @override
+  String get history_branch_title => 'Создать ветку от этого сообщения';
+
+  @override
+  String get history_branch_body =>
+      'Будет создан новый чат с историей до выбранного сообщения. Текущий чат останется без изменений.';
+
+  @override
+  String get history_rewind_title => 'Откатить к этому сообщению';
+
+  @override
+  String get history_rewind_body =>
+      'Сообщения начиная с выбранного будут удалены из этого чата. Файлы на компьютере не изменятся. Их восстановление выполняется отдельно через контрольные точки.';
+
+  @override
+  String history_branched(String id) {
+    return 'Создана ветка $id';
+  }
+
+  @override
+  String get history_open_chat => 'Открыть чат';
+
+  @override
+  String get history_mutate_unsupported =>
+      'Для веток и отката на этом шлюзе нужен Hermes 0.23 или новее.';
+
+  @override
+  String get history_checkpoints => 'Контрольные точки';
+
+  @override
+  String get history_checkpoints_none =>
+      'В этой сессии нет контрольных точек файлов.';
+
+  @override
+  String get history_checkpoints_unavailable =>
+      'Контрольные точки недоступны на этом шлюзе.';
+
+  @override
+  String get history_diff_none => 'Различий нет.';
+
+  @override
+  String get history_diff_loading => 'Загрузка изменений…';
+
+  @override
+  String get history_diff_failed =>
+      'Не удалось загрузить изменения, поэтому эту контрольную точку пока нельзя восстановить.';
+
+  @override
+  String get history_restore_checkpoint => 'Восстановить контрольную точку';
+
+  @override
+  String get history_restore_title => 'Восстановить эту контрольную точку';
+
+  @override
+  String get history_restore_body =>
+      'Файлы, изменённые агентом после этой контрольной точки, вернутся к тогдашнему состоянию. Ваши собственные изменения сохранятся. Более поздние сообщения чата тоже могут быть удалены. Ветка разговора не создаётся.';
+
+  @override
+  String get history_restore_body_all =>
+      'Все файлы в папке сессии вернутся к этой контрольной точке, включая ваши собственные изменения. Более поздние сообщения чата тоже могут быть удалены. Ветка разговора не создаётся.';
+
+  @override
+  String get history_restore_own_edits => 'Отменить и мои собственные правки';
+
+  @override
+  String get history_restored => 'Контрольная точка восстановлена.';
+
+  @override
+  String history_restored_removed(int count) {
+    return 'Контрольная точка восстановлена. Удалено сообщений чата: $count.';
+  }
+
+  @override
+  String get history_export => 'Экспорт';
+
+  @override
+  String get history_export_redact => 'Скрывать токены';
+
+  @override
+  String get history_export_action => 'Экспортировать расшифровку';
+
+  @override
+  String get history_export_saved => 'Расшифровка сохранена.';
+
+  @override
+  String get history_export_unsupported =>
+      'Для экспорта на этом шлюзе нужен Hermes 0.23 или новее.';
+
+  @override
+  String get history_import_unsupported =>
+      'Этот шлюз не поддерживает импорт из Claude и Codex.';
+
+  @override
+  String history_import_destination(String profile) {
+    return 'Профиль назначения: $profile.';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return 'Чтение с $host · Профиль назначения: $profile. Не удалось прочитать журналов: $count.';
+  }
+
+  @override
+  String get history_import_all => 'Все';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return 'Не удалось просмотреть сессии хоста: $reason';
+  }
+
+  @override
+  String get history_import_none =>
+      'На этом хосте не найдено сессий Claude Code или Codex.';
+
+  @override
+  String get history_import_no_match => 'Подходящих сессий хоста нет.';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return 'Не удалось показать сессию: $reason';
+  }
+
+  @override
+  String get history_import_open => 'Открыть импортированную сессию';
+
+  @override
+  String get history_import_action => 'Импортировать выбранную сессию';
+
+  @override
+  String get history_import_title => 'Импортировать эту сессию';
+
+  @override
+  String history_import_body(String profile) {
+    return 'Скопировать эту сессию Claude или Codex в профиль «$profile» на этом шлюзе.';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return 'Эта сессия уже импортирована в «$profile». Продолжить с существующей копией.';
+  }
+
+  @override
+  String history_imported(String id) {
+    return 'Импортировано как $id';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return 'Уже импортировано как $id';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return 'Каталог: $path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return 'Показано $shown из $total.';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return 'Не удалось завершить: $reason';
+  }
+
+  @override
+  String get history_error_unavailable =>
+      'Шлюз не смог выполнить это сейчас. Повторите попытку.';
+
+  @override
+  String get history_error_unsupported => 'Этот шлюз это не поддерживает.';
+
+  @override
+  String get history_error_denied => 'Этот шлюз отклонил запрос.';
+
+  @override
+  String get history_error_changed =>
+      'Этот чат изменился, пока страница была открыта. Обновите и повторите попытку.';
+
+  @override
+  String get history_error_unbound =>
+      'Этот чат не открыт на шлюзе. Откройте его и повторите попытку.';
+
+  @override
+  String get history_error_invalid =>
+      'Шлюз прислал ответ, который приложение не смогло прочитать.';
 }

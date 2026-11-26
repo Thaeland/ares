@@ -26,6 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/markdown_file_fixture.dart';
 import 'support/mtls_fixture.dart';
+import 'support/strict_nextgen_gateway.dart';
 
 SavedConnection _connection({String id = 'c1', String profile = 'work'}) =>
     SavedConnection(
@@ -111,12 +112,21 @@ class _Gateway extends NextGenGateway {
     return dummy;
   }
 
+  /// On an authority gateway the call goes through the client's guard and
+  /// the strict contract check, as the real socket does.
   @override
   Future<Map<String, dynamic>> call(
     String method,
     Map<String, dynamic> params, {
     Duration timeout = const Duration(seconds: 30),
-  }) async {
+  }) => sessionAuthority
+      ? strictCall(this, method, params, _answer)
+      : _answer(method, params);
+
+  Future<Map<String, dynamic>> _answer(
+    String method,
+    Map<String, dynamic> params,
+  ) async {
     calls.add((method: method, params: Map.of(params)));
     switch (method) {
       case 'projects.list':
