@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../l10n/l10n.dart';
 import '../services/connection_manager.dart';
@@ -1172,6 +1173,7 @@ class _BotsScreenState extends State<BotsScreen> {
           [
             job.schedule,
             if (job.enabled) 'enabled' else 'paused',
+            ?job.repeat,
             if (job.state.isNotEmpty) job.state,
             if (job.lastStatus.isNotEmpty) 'last: ${job.lastStatus}',
             if (job.nextRunAt != null) 'next: ${job.nextRunAt}',
@@ -1231,31 +1233,33 @@ class _BotsScreenState extends State<BotsScreen> {
   }
 
   void _openRoutineDialog() {
+    final profile = _routinesProfile;
+    if (profile == null) return;
     showDialog<void>(
       context: context,
       builder: (context) => _RoutineDialog(
-        defaultProfile: _routinesProfile ?? _screenProfile ?? '',
-        onAdd: (title, schedule, instruction, repeat) async {
+        onAdd: (draft) async {
           final target = _target;
-          final profile = _routinesProfile;
-          if (target == null || profile == null) return;
-          setState(() => _routinesLoading = true);
+          if (target == null) return 'Not connected.';
           try {
             await target.botRoutineAdd(
               profile: profile,
-              title: title,
-              schedule: schedule,
-              instruction: instruction,
-              repeat: repeat,
+              title: draft.title,
+              schedule: draft.schedule,
+              instruction: draft.instruction,
+              repeat: draft.repeat,
+              continuity: draft.continuity,
+              deliverToBotChat: draft.deliverToBotChat,
             );
-            if (!mounted) return;
-            _toast('Routine added');
-            await _loadRoutines(target);
+          } on WorkspaceException catch (e) {
+            return 'Add failed: ${e.reason.name}';
           } catch (e) {
-            if (!mounted) return;
-            setState(() => _routinesLoading = false);
-            _toast('Add failed: $e');
+            return 'Add failed: $e';
           }
+          if (!mounted) return null;
+          _toast('Routine added');
+          if (_routinesProfile == profile) unawaited(_loadRoutines(target));
+          return null;
         },
       ),
     );
@@ -1528,17 +1532,36 @@ class _CreateRoomSheetState extends State<_CreateRoomSheet> {
   }
 }
 
-class _RoutineDialog extends StatefulWidget {
-  const _RoutineDialog({required this.defaultProfile, required this.onAdd});
+/// What the New routine form sends: `cron.manage add` for one bot.
+class _RoutineDraft {
+  const _RoutineDraft({
+    required this.title,
+    required this.instruction,
+    required this.schedule,
+    required this.repeat,
+    required this.continuity,
+    required this.deliverToBotChat,
+  });
 
-  final String defaultProfile;
-  final Future<void> Function(
-    String title,
-    String schedule,
-    String instruction,
-    int? repeat,
-  )
-  onAdd;
+  final String title;
+  final String instruction;
+
+  /// A Hermes schedule: a cron expression or `every <n><m|h|d>`.
+  final String schedule;
+
+  /// Run count after which the routine stops; null keeps it running.
+  final int? repeat;
+  final bool continuity;
+  final bool deliverToBotChat;
+}
+
+enum _RoutineScheduleKind { cron, interval }
+
+class _RoutineDialog extends StatefulWidget {
+  const _RoutineDialog({required this.onAdd});
+
+  /// Creates the routine; returns the error to show, or null on success.
+  final Future<String?> Function(_RoutineDraft draft) onAdd;
 
   @override
   State<_RoutineDialog> createState() => _RoutineDialogState();
@@ -1546,95 +1569,272 @@ class _RoutineDialog extends StatefulWidget {
 
 class _RoutineDialogState extends State<_RoutineDialog> {
   final _titleInput = TextEditingController();
-  final _scheduleInput = TextEditingController(text: '0 9 * * *');
   final _instructionInput = TextEditingController();
-  final _repeatInput = TextEditingController(text: '1');
+  final _cronInput = TextEditingController(text: '0 9 * * *');
+  final _intervalInput = TextEditingController(text: '1');
+  // Blank on purpose: 'Repeat' is a run COUNT on the gateway, so a default
+  // of 1 would retire a daily routine after its first run.
+  final _repeatInput = TextEditingController();
+  _RoutineScheduleKind _kind = _RoutineScheduleKind.cron;
+  String _intervalUnit = 'h';
+  bool _continuity = false;
+  bool _deliverToBotChat = false;
   bool _busy = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    // The Add button follows what is typed.
+    for (final input in _inputs) {
+      input.addListener(_onInput);
+    }
+  }
+
+  List<TextEditingController> get _inputs => [
+    _titleInput,
+    _instructionInput,
+    _cronInput,
+    _intervalInput,
+    _repeatInput,
+  ];
+
+  void _onInput() {
+    if (mounted) setState(() {});
+  }
 
   @override
   void dispose() {
-    _titleInput.dispose();
-    _scheduleInput.dispose();
-    _instructionInput.dispose();
-    _repeatInput.dispose();
+    for (final input in _inputs) {
+      input.dispose();
+    }
     super.dispose();
+  }
+
+  String get _schedule {
+    if (_kind == _RoutineScheduleKind.cron) return _cronInput.text.trim();
+    final every = int.tryParse(_intervalInput.text.trim()) ?? 0;
+    return every < 1 ? '' : 'every $every$_intervalUnit';
+  }
+
+  bool get _canAdd =>
+      !_busy &&
+      _titleInput.text.trim().isNotEmpty &&
+      _instructionInput.text.trim().isNotEmpty &&
+      _schedule.isNotEmpty;
+
+  Future<void> _submit() async {
+    if (!_canAdd) return;
+    final limit = int.tryParse(_repeatInput.text.trim());
+    final draft = _RoutineDraft(
+      title: _titleInput.text.trim(),
+      instruction: _instructionInput.text.trim(),
+      schedule: _schedule,
+      repeat: limit != null && limit > 0 ? limit : null,
+      continuity: _continuity,
+      deliverToBotChat: _deliverToBotChat,
+    );
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    final error = await widget.onAdd(draft);
+    if (!mounted) return;
+    if (error == null) {
+      Navigator.of(context).pop();
+      return;
+    }
+    setState(() {
+      _busy = false;
+      _error = error;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    const gap = SizedBox(height: 12);
+    final digits = [FilteringTextInputFormatter.digitsOnly];
     return AlertDialog(
+      scrollable: true,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       title: const Text('New routine'),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextField(
+            key: const Key('bots-routine-title'),
+            controller: _titleInput,
+            decoration: const InputDecoration(
+              labelText: 'Title',
+              border: OutlineInputBorder(),
+            ),
+            autofocus: true,
+          ),
+          gap,
+          TextField(
+            key: const Key('bots-routine-instruction'),
+            controller: _instructionInput,
+            minLines: 2,
+            maxLines: 6,
+            decoration: const InputDecoration(
+              labelText: 'Instruction',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          gap,
+          DropdownButtonFormField<_RoutineScheduleKind>(
+            key: const Key('bots-routine-schedule-kind'),
+            isExpanded: true,
+            initialValue: _kind,
+            decoration: const InputDecoration(
+              labelText: 'Schedule',
+              border: OutlineInputBorder(),
+            ),
+            items: const [
+              DropdownMenuItem(
+                value: _RoutineScheduleKind.cron,
+                child: Text('Cron expression', overflow: TextOverflow.ellipsis),
+              ),
+              DropdownMenuItem(
+                value: _RoutineScheduleKind.interval,
+                child: Text('Interval', overflow: TextOverflow.ellipsis),
+              ),
+            ],
+            onChanged: _busy
+                ? null
+                : (kind) => setState(() => _kind = kind ?? _kind),
+          ),
+          gap,
+          if (_kind == _RoutineScheduleKind.cron)
+            TextField(
+              key: const Key('bots-routine-cron'),
+              controller: _cronInput,
+              decoration: const InputDecoration(
+                labelText: 'Cron expression',
+                helperText: '0 9 * * * runs every day at 09:00',
+                helperMaxLines: 3,
+                border: OutlineInputBorder(),
+              ),
+            )
+          else
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: TextField(
+                    key: const Key('bots-routine-interval'),
+                    controller: _intervalInput,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: digits,
+                    decoration: const InputDecoration(
+                      labelText: 'Every',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: DropdownButtonFormField<String>(
+                    key: const Key('bots-routine-interval-unit'),
+                    isExpanded: true,
+                    initialValue: _intervalUnit,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'm',
+                        child: Text('minutes', overflow: TextOverflow.ellipsis),
+                      ),
+                      DropdownMenuItem(
+                        value: 'h',
+                        child: Text('hours', overflow: TextOverflow.ellipsis),
+                      ),
+                      DropdownMenuItem(
+                        value: 'd',
+                        child: Text('days', overflow: TextOverflow.ellipsis),
+                      ),
+                    ],
+                    onChanged: _busy
+                        ? null
+                        : (unit) => setState(() => _intervalUnit = unit ?? 'h'),
+                  ),
+                ),
+              ],
+            ),
+          gap,
+          TextField(
+            key: const Key('bots-routine-repeat'),
+            controller: _repeatInput,
+            keyboardType: TextInputType.number,
+            inputFormatters: digits,
+            decoration: const InputDecoration(
+              labelText: 'Stop after (runs)',
+              hintText: '∞',
+              helperText: 'Leave blank to keep running',
+              helperMaxLines: 3,
+              border: OutlineInputBorder(),
+            ),
+          ),
+          gap,
+          DropdownButtonFormField<bool>(
+            key: const Key('bots-routine-deliver'),
+            isExpanded: true,
+            initialValue: _deliverToBotChat,
+            decoration: const InputDecoration(
+              labelText: 'Send results to',
+              border: OutlineInputBorder(),
+            ),
+            items: const [
+              DropdownMenuItem(
+                value: false,
+                child: Text(
+                  'Run history only',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              DropdownMenuItem(
+                value: true,
+                child: Text('Bot Chat', overflow: TextOverflow.ellipsis),
+              ),
+            ],
+            onChanged: _busy
+                ? null
+                : (value) => setState(() => _deliverToBotChat = value ?? false),
+          ),
+          CheckboxListTile(
+            key: const Key('bots-routine-continuity'),
+            contentPadding: EdgeInsets.zero,
+            controlAffinity: ListTileControlAffinity.leading,
+            title: const Text('Continue from the previous run'),
+            value: _continuity,
+            onChanged: _busy
+                ? null
+                : (value) => setState(() => _continuity = value ?? false),
+          ),
+          if (_error case final error?)
             Text(
-              'Schedule is a raw cron string (e.g. 0 9 * * *).',
-              style: Theme.of(context).textTheme.bodySmall,
+              error,
+              key: const Key('bots-routine-error'),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _titleInput,
-              decoration: const InputDecoration(
-                labelText: 'Title',
-                border: OutlineInputBorder(),
-              ),
-              autofocus: true,
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _scheduleInput,
-              decoration: const InputDecoration(
-                labelText: 'Schedule',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _instructionInput,
-              minLines: 2,
-              maxLines: 6,
-              decoration: const InputDecoration(
-                labelText: 'Instruction',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _repeatInput,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Repeat (days)',
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: _busy ? null : () => Navigator.of(context).pop(),
           child: Text(context.sharedL10n.cancel),
         ),
         FilledButton(
-          onPressed:
-              _busy ||
-                  _titleInput.text.trim().isEmpty ||
-                  _instructionInput.text.trim().isEmpty
-              ? null
-              : () async {
-                  setState(() => _busy = true);
-                  final repeat = int.tryParse(_repeatInput.text.trim());
-                  await widget.onAdd(
-                    _titleInput.text.trim(),
-                    _scheduleInput.text.trim(),
-                    _instructionInput.text.trim(),
-                    repeat != null && repeat > 0 ? repeat : null,
-                  );
-                  if (context.mounted) Navigator.of(context).pop();
-                },
+          key: const Key('bots-routine-add'),
+          onPressed: _canAdd ? _submit : null,
           child: _busy
-              ? const CircularProgressIndicator()
+              ? const SizedBox.square(
+                  dimension: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
               : Text(context.sharedL10n.add),
         ),
       ],

@@ -827,7 +827,18 @@ extension WorkspaceBots on WorkspaceTarget {
     required String title,
     required String schedule,
     required String instruction,
+
+    /// How many runs before the gateway retires the job (`cronjob_tools.py`:
+    /// "Optional repeat count"). Null sends nothing: a recurring schedule
+    /// then runs forever, a one-shot runs once.
     int? repeat,
+
+    /// Each run continues from the previous run's session.
+    bool continuity = false,
+
+    /// Posts each run's output into the bot's own Bot Chat (one agent turn
+    /// per run). Off leaves the output in the run's own history.
+    bool deliverToBotChat = false,
   }) async {
     final bot = profile;
     final raw = await _rpcBot(profile, 'cron.manage', {
@@ -835,9 +846,9 @@ extension WorkspaceBots on WorkspaceTarget {
       'name': '[bot:$bot] $title',
       'schedule': schedule,
       'prompt': instruction,
-      'repeat': ?repeat,
-      'continuity': true,
-      'deliver': 'bot-chat',
+      if (repeat != null && repeat > 0) 'repeat': repeat,
+      if (continuity) 'continuity': true,
+      if (deliverToBotChat) 'deliver': 'bot-chat',
     });
     final job = raw['job'] ?? raw['job_id'];
     if (job is Map) return RoutineJob.fromJson(job);
