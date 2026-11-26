@@ -1,6 +1,9 @@
 // Regression tests cut from the independent review of v5/bots @ d74ba224
 // (evidence/bots-review-d74ba224, probes K1-K6). Each test failed on the
 // reviewed code and names the probe it replaces.
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -233,5 +236,190 @@ void main() {
       expect(reassign.body, containsPair('profile', 'reviewer'));
       expect(reassign.body, containsPair('reclaim_first', true));
     });
+  });
+
+  group('K6 live events', () {
+    late KanbanEventsServer events;
+
+    /// `board:id,id` per batch the board passed on.
+    late List<String> delivered;
+
+    Future<KanbanReviewApi> openLive(
+      WidgetTester tester,
+      Future<void> Function(WebSocket socket, Uri uri, int index) onSocket,
+    ) async {
+      tester.view.physicalSize = const Size(1280, 900);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      events = await KanbanEventsServer.start(tester);
+      events.onSocket = onSocket;
+      delivered = [];
+      final api = KanbanReviewApi();
+      final owner = kanbanReviewOwner(api.client, port: events.port);
+      addTearDown(owner.close);
+      await tester.pumpWidget(
+        kanbanReviewApp(
+          owner,
+          live: true,
+          onLiveEvents: (board, batch) =>
+              delivered.add('$board:${batch.map((e) => e.id).join(',')}'),
+        ),
+      );
+      return api;
+    }
+
+    Future<void> leave(WidgetTester tester) async {
+      await tester.pumpWidget(const SizedBox());
+      // dart:io waits up to 5 s for the server's close frame.
+      await kanbanLive(tester, const Duration(seconds: 6));
+      await events.close(tester);
+    }
+
+    testWidgets('a stream the server closes is dialled again from the last '
+        'event seen; a repeated event is applied once', (tester) async {
+      final api = await openLive(tester, (socket, uri, index) async {
+        if (index == 0) {
+          socket.add(
+            kanbanEventsFrame([
+              {'id': 13, 'task_id': 't_run_1', 'kind': 'heartbeat'},
+            ], 13),
+          );
+        } else if (index == 1) {
+          // Event 13 again (already seen), then a new one.
+          socket.add(
+            kanbanEventsFrame([
+              {'id': 13, 'task_id': 't_run_1', 'kind': 'heartbeat'},
+              {'id': 14, 'task_id': 't_run_1', 'kind': 'completed'},
+            ], 14),
+          );
+        } else {
+          return; // stays open
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 40));
+        await socket.close(WebSocketStatus.goingAway);
+      });
+      await kanbanLive(tester, const Duration(seconds: 6));
+      expect(events.dials, [
+        {'profile': 'work', 'since': '12'},
+        {'profile': 'work', 'since': '13'},
+        {'profile': 'work', 'since': '14'},
+      ]);
+      expect(events.open, hasLength(1));
+      expect(delivered, ['default:13', 'default:14']);
+      // Two batches, two debounced board reads; nothing else reloaded.
+      expect(api.count('GET', '/plugins/kanban/board'), 1 + 2);
+      expect(api.count('GET', '/plugins/kanban/profiles'), 1);
+      await leave(tester);
+    });
+
+    testWidgets('a burst of frames is applied in one board read, not a full '
+        'reload per frame', (tester) async {
+      final api = await openLive(tester, (socket, uri, index) async {
+        for (var id = 13; id < 18; id++) {
+          socket.add(
+            kanbanEventsFrame([
+              {'id': id, 'task_id': 't_ready_0', 'kind': 'commented'},
+            ], id),
+          );
+        }
+      });
+      await kanbanLive(tester, const Duration(seconds: 2));
+      expect(delivered.join(';'), contains('default:13'));
+      expect(
+        delivered.map((d) => d.split(':').last).join(','),
+        '13,14,15,16,17',
+      );
+      expect(api.count('GET', '/plugins/kanban/board'), 1 + 1);
+      for (final path in ['/boards', '/profiles', '/projects']) {
+        expect(api.count('GET', '/plugins/kanban$path'), 1, reason: path);
+      }
+      await leave(tester);
+    });
+
+    testWidgets('leaving the board closes its stream and dials nothing more', (
+      tester,
+    ) async {
+      await openLive(tester, (socket, uri, index) async {});
+      await kanbanLive(tester, const Duration(seconds: 1));
+      expect(events.open, hasLength(1));
+      await tester.pumpWidget(const SizedBox());
+      await kanbanLive(tester, const Duration(seconds: 40));
+      expect(events.open, isEmpty);
+      expect(events.upgrades, hasLength(1));
+      await events.close(tester);
+    });
+
+    testWidgets('a fast board switch does not leave the first board’s socket '
+        'open', (tester) async {
+      final api = KanbanReviewApi();
+      final hold = Completer<void>();
+      // The first board's ticket is slow: the switch lands before it.
+      api.holds['POST /api/auth/ws-ticket'] = hold;
+      tester.view.physicalSize = const Size(1280, 900);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      events = await KanbanEventsServer.start(tester);
+      delivered = [];
+      final owner = kanbanReviewOwner(api.client, port: events.port);
+      addTearDown(owner.close);
+      await tester.pumpWidget(kanbanReviewApp(owner, live: true));
+      await kanbanShown(tester, find.byKey(const Key('kanban-card-t_ready_0')));
+      await kanbanLive(tester, const Duration(milliseconds: 300));
+      expect(api.count('POST', '/api/auth/ws-ticket'), 1);
+
+      await tester.tap(find.byKey(const Key('kanban-board-switcher')));
+      await kanbanStep(tester);
+      await tester.tap(find.byKey(const Key('kanban-board-row-ops-board')));
+      await kanbanStep(tester);
+      await kanbanShown(tester, find.byKey(const Key('kanban-card-t_ops_0')));
+      await kanbanLive(tester, const Duration(milliseconds: 500));
+      hold.complete();
+      await kanbanLive(tester, const Duration(seconds: 2));
+
+      expect(events.upgrades, hasLength(2));
+      expect(events.open.values.map((u) => u.queryParameters['board']), [
+        'ops-board',
+      ]);
+      await leave(tester);
+    });
+  });
+
+  testWidgets('a bulk action that finishes after a board switch leaves the '
+      'new board’s selection alone', (tester) async {
+    tester.view.physicalSize = const Size(1280, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    final api = KanbanReviewApi();
+    final owner = kanbanReviewOwner(api.client);
+    addTearDown(owner.close);
+    await tester.pumpWidget(kanbanReviewApp(owner));
+    await kanbanShown(tester, find.byKey(const Key('kanban-card-t_ready_0')));
+    await tester.longPress(find.byKey(const Key('kanban-card-t_ready_0')));
+    await kanbanStep(tester);
+    final hold = Completer<void>();
+    api.holds['POST /api/plugins/kanban/tasks/bulk'] = hold;
+    await tester.tap(find.byKey(const Key('kanban-bulk-archive')));
+    await kanbanStep(tester);
+    await tester.tap(find.byKey(const Key('kanban-confirm-ok')));
+    await kanbanStep(tester);
+
+    await tester.tap(find.byKey(const Key('kanban-board-switcher')));
+    await kanbanStep(tester);
+    await tester.tap(find.byKey(const Key('kanban-board-row-ops-board')));
+    await kanbanShown(tester, find.byKey(const Key('kanban-card-t_ops_0')));
+    await tester.longPress(find.byKey(const Key('kanban-card-t_ops_0')));
+    await kanbanStep(tester);
+    expect(find.text('1 selected'), findsOneWidget);
+
+    hold.complete();
+    await kanbanStep(tester);
+    expect(find.text('1 selected'), findsOneWidget);
+    expect(find.text('Archived selected cards'), findsNothing);
+    final archived = api.calls.singleWhere(
+      (c) => c.path.endsWith('/tasks/bulk'),
+    );
+    // It went to the board it was started on.
+    expect(archived.query['board'], isNull);
+    expect(archived.body?['ids'], ['t_ready_0']);
   });
 }

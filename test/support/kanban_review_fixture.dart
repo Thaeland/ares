@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -68,7 +69,7 @@ class KanbanReviewApi {
   final calls = <KanbanReviewCall>[];
 
   /// `METHOD path` (and, when the request names one, `METHOD path@board`)
-  /// to a completer the reply waits on.
+  /// to a completer the next such reply waits on.
   final holds = <String, Completer<void>>{};
 
   /// The reply of `POST /tasks/<id>/decompose` (plugin_api.py:1600-1607).
@@ -127,9 +128,10 @@ class KanbanReviewApi {
     final query = request.url.queryParameters;
     calls.add(KanbanReviewCall(request.method, path, query, body));
     final board = query['board'] ?? 'default';
+    // One-shot: the first matching request waits, later ones do not.
     final hold =
-        holds['${request.method} $path@$board'] ??
-        holds['${request.method} $path'];
+        holds.remove('${request.method} $path@$board') ??
+        holds.remove('${request.method} $path');
     if (hold != null) await hold.future;
     if (path == '/auth/password-login') {
       return http.Response(
@@ -263,6 +265,7 @@ Widget kanbanReviewApp(
   double textScale = 1.0,
   bool live = false,
   Locale? locale,
+  void Function(String board, List<KanbanEventRecord> events)? onLiveEvents,
 }) => MaterialApp(
   locale: locale,
   localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -278,5 +281,83 @@ Widget kanbanReviewApp(
     route: owner.route(),
     connection: kanbanReviewConnection,
     enableLivePolling: live,
+    onLiveEvents: onLiveEvents,
   ),
 );
+
+/// A loopback `/api/plugins/kanban/events` endpoint: real WebSockets, so the
+/// board's own socket code runs. [onSocket] scripts each connection.
+class KanbanEventsServer {
+  KanbanEventsServer._(this._server, this._saved);
+
+  final HttpServer _server;
+  final HttpOverrides? _saved;
+  final upgrades = <Uri>[];
+
+  /// Sockets the board has open right now, with the URI each was opened on.
+  final open = <WebSocket, Uri>{};
+  Future<void> Function(WebSocket socket, Uri uri, int index)? onSocket;
+
+  int get port => _server.port;
+
+  /// `since` and `board` of each upgrade (the ticket is single use).
+  List<Map<String, String>> get dials => [
+    for (final uri in upgrades) Map.of(uri.queryParameters)..remove('ticket'),
+  ];
+
+  static Future<KanbanEventsServer> start(WidgetTester tester) async {
+    // flutter_test answers every dart:io request with 400; these are real.
+    final saved = HttpOverrides.current;
+    HttpOverrides.global = null;
+    final server = (await tester.runAsync(
+      () => HttpServer.bind(InternetAddress.loopbackIPv4, 0),
+    ))!;
+    final events = KanbanEventsServer._(server, saved);
+    server.listen((request) async {
+      if (!WebSocketTransformer.isUpgradeRequest(request)) {
+        request.response.statusCode = 404;
+        await request.response.close();
+        return;
+      }
+      final index = events.upgrades.length;
+      events.upgrades.add(request.uri);
+      final socket = await WebSocketTransformer.upgrade(request);
+      events.open[socket] = request.uri;
+      socket.listen(
+        (_) {},
+        onDone: () => events.open.remove(socket),
+        cancelOnError: true,
+      );
+      await events.onSocket?.call(socket, request.uri, index);
+    });
+    return events;
+  }
+
+  Future<void> close(WidgetTester tester) async {
+    await tester.runAsync(() async {
+      for (final socket in open.keys.toList()) {
+        await socket.close();
+      }
+      await _server.close(force: true);
+    });
+    HttpOverrides.global = _saved;
+  }
+}
+
+String kanbanEventsFrame(List<Map<String, Object?>> events, int cursor) =>
+    jsonEncode({'events': events, 'cursor': cursor});
+
+/// Real-time waits (for loopback IO) interleaved with fake-time pumps (for
+/// the board's timers), [total] of fake time in [step]s.
+Future<void> kanbanLive(
+  WidgetTester tester,
+  Duration total, {
+  Duration step = const Duration(milliseconds: 100),
+}) async {
+  for (var t = Duration.zero; t < total; t += step) {
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 15)),
+    );
+    await tester.pump(step);
+  }
+}

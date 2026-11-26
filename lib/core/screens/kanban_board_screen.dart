@@ -38,6 +38,7 @@ class KanbanBoardScreen extends StatefulWidget {
     /// When set, the board is a pane beside a chat rather than a route: the
     /// app bar gets a close button that calls this instead of a back arrow.
     this.onClose,
+    this.onLiveEvents,
   });
 
   final RemoteWorkspaceOwner owner;
@@ -57,6 +58,11 @@ class KanbanBoardScreen extends StatefulWidget {
 
   /// Closes the board when it is shown as a pane.
   final VoidCallback? onClose;
+
+  /// Each batch of new live events, once and in order: an event the stream
+  /// sends again after a re-dial is not passed on twice.
+  final void Function(String board, List<KanbanEventRecord> events)?
+  onLiveEvents;
 
   @override
   State<KanbanBoardScreen> createState() => _KanbanBoardScreenState();
@@ -137,6 +143,24 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
   final Map<String, int> _cursorByBoard = <String, int>{};
   StreamSubscription<KanbanEventsFrame>? _eventsSub;
   Timer? _pollTimer;
+
+  /// Bumped whenever the live stream is cancelled or re-bound: a socket, a
+  /// frame or a re-dial from an older binding is dropped on arrival.
+  int _realtimeGeneration = 0;
+  Timer? _redialTimer;
+  int _redialAttempt = 0;
+
+  /// A stream that stays up this long earns a short wait on its next drop;
+  /// one that keeps closing at once is dialled ever more slowly.
+  Timer? _stableTimer;
+
+  /// Frames are applied in one board read once they stop arriving.
+  Timer? _frameReload;
+  static const _frameDebounce = Duration(milliseconds: 400);
+
+  /// Bumped when the board shown changes; an action started on the old
+  /// board finishes without touching the new one.
+  int _boardEpoch = 0;
 
   /// Card id from the widget to open in the detail sheet once the snapshot
   /// carries it. Sticky across reloads until consumed or cancelled.
@@ -239,8 +263,15 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
   }
 
   void _cancelRealtime() {
+    _realtimeGeneration++;
     _pollTimer?.cancel();
     _pollTimer = null;
+    _redialTimer?.cancel();
+    _redialTimer = null;
+    _stableTimer?.cancel();
+    _stableTimer = null;
+    _frameReload?.cancel();
+    _frameReload = null;
     final sub = _eventsSub;
     _eventsSub = null;
     if (sub != null) unawaited(sub.cancel());
@@ -364,31 +395,142 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     }
   }
 
+  /// Follows `/api/plugins/kanban/events` for [slug] from its cursor. A
+  /// closed or refused stream is dialled again with backoff from the last
+  /// event seen, so nothing is missed and nothing is applied twice; a board
+  /// switch or leaving the board cancels it, including a dial still in
+  /// flight. The 15 s poll stands in only while no stream is open.
   void _bindRealtime(WorkspaceTarget target, String slug, int initialCursor) {
     _cancelRealtime();
-    final since = _cursorByBoard[slug] ?? initialCursor;
-    unawaited(() async {
-      final sub = await target.watchKanbanEvents(
-        board: _queryBoard,
-        since: since,
-        onFrame: (frame) {
-          if (!mounted || !target.isCurrent) return;
-          _cursorByBoard[slug] = frame.cursor;
-          _notifyTerminalEvents(frame.events);
-          unawaited(_reload(silent: true));
-        },
-      );
-      if (!mounted || !target.isCurrent) {
-        await sub?.cancel();
-        return;
-      }
-      _eventsSub = sub;
-    }());
+    _redialAttempt = 0;
+    _cursorByBoard.putIfAbsent(slug, () => initialCursor);
+    _dialEvents(target, slug, _realtimeGeneration, _queryBoard);
+    final generation = _realtimeGeneration;
     _pollTimer = Timer.periodic(const Duration(seconds: 15), (_) {
-      if (mounted && target.isCurrent) {
+      if (generation != _realtimeGeneration) return;
+      if (_eventsSub == null && mounted && target.isCurrent) {
         unawaited(_reload(silent: true));
       }
     });
+  }
+
+  bool _liveCurrent(WorkspaceTarget target, int generation) =>
+      mounted && generation == _realtimeGeneration && target.isCurrent;
+
+  void _dialEvents(
+    WorkspaceTarget target,
+    String slug,
+    int generation,
+    String? queryBoard,
+  ) {
+    unawaited(() async {
+      StreamSubscription<KanbanEventsFrame>? sub;
+      var closed = false;
+      sub = await target.watchKanbanEvents(
+        board: queryBoard,
+        since: _cursorByBoard[slug] ?? 0,
+        onFrame: (frame) {
+          if (!_liveCurrent(target, generation)) return;
+          _onEventsFrame(target, slug, frame);
+        },
+        onClosed: () {
+          closed = true;
+          if (!_liveCurrent(target, generation)) return;
+          if (identical(_eventsSub, sub)) {
+            _eventsSub = null;
+            _stableTimer?.cancel();
+            _stableTimer = null;
+          }
+          _scheduleRedial(target, slug, generation, queryBoard);
+        },
+      );
+      if (!_liveCurrent(target, generation)) {
+        // The board changed (or was left) while this socket was dialling.
+        await sub?.cancel();
+        return;
+      }
+      if (sub == null || closed) {
+        _scheduleRedial(target, slug, generation, queryBoard);
+        return;
+      }
+      _eventsSub = sub;
+      _stableTimer?.cancel();
+      _stableTimer = Timer(const Duration(seconds: 30), () {
+        if (generation == _realtimeGeneration) _redialAttempt = 0;
+      });
+    }());
+  }
+
+  void _scheduleRedial(
+    WorkspaceTarget target,
+    String slug,
+    int generation,
+    String? queryBoard,
+  ) {
+    if (_redialTimer?.isActive == true) return;
+    final seconds = 1 << _redialAttempt.clamp(0, 5);
+    _redialAttempt++;
+    _redialTimer = Timer(Duration(seconds: seconds), () {
+      _redialTimer = null;
+      if (!_liveCurrent(target, generation)) return;
+      _dialEvents(target, slug, generation, queryBoard);
+    });
+  }
+
+  void _onEventsFrame(
+    WorkspaceTarget target,
+    String slug,
+    KanbanEventsFrame frame,
+  ) {
+    final seen = _cursorByBoard[slug] ?? 0;
+    final fresh = [
+      for (final event in frame.events)
+        if (event.id == null || event.id! > seen) event,
+    ];
+    var cursor = seen;
+    for (final event in fresh) {
+      if (event.id != null && event.id! > cursor) cursor = event.id!;
+    }
+    if (frame.cursor > cursor) cursor = frame.cursor;
+    _cursorByBoard[slug] = cursor;
+    if (fresh.isEmpty) return;
+    widget.onLiveEvents?.call(slug, List.unmodifiable(fresh));
+    _notifyTerminalEvents(fresh);
+    _frameReload?.cancel();
+    final generation = _realtimeGeneration;
+    _frameReload = Timer(_frameDebounce, () {
+      _frameReload = null;
+      if (_liveCurrent(target, generation)) unawaited(_refreshSnapshot());
+    });
+  }
+
+  /// One board read for the live stream, instead of the full five-request
+  /// reload: the cards move, the board list and profiles stay as they are.
+  Future<void> _refreshSnapshot() async {
+    final token = _loadToken = Object();
+    final epoch = _boardEpoch;
+    try {
+      final target = await _bound();
+      final snap = await target.kanbanBoardSnapshot(
+        board: _queryBoard,
+        includeArchived: _includeArchived,
+      );
+      if (!mounted ||
+          !identical(token, _loadToken) ||
+          epoch != _boardEpoch ||
+          !target.isCurrent) {
+        return;
+      }
+      final liveIds = {for (final t in snap.allTasks) t.id};
+      setState(() {
+        _snapshot = snap;
+        _selectedIds.removeWhere((id) => !liveIds.contains(id));
+        if (_selectedIds.isEmpty) _selectionMode = false;
+      });
+      _maybeFocusInitialCard(snap);
+    } catch (_) {
+      // The next frame or the poll tries again.
+    }
   }
 
   void _notifyTerminalEvents(List<KanbanEventRecord> events) {
@@ -443,6 +585,8 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     final normalized = slug == _serverCurrentBoard ? slug : slug.trim();
     _pendingInitialCardId = null;
     _pendingInitialBoard = null;
+    _boardEpoch++;
+    _cancelRealtime();
     setState(() {
       // The chat filter names cards of the board it was opened on.
       if (normalized != _effectiveSlug) _cardFilter = null;
@@ -590,18 +734,20 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       confirmLabel: 'Move',
     );
     if (!confirmed || !mounted) return;
+    final epoch = _boardEpoch;
+    final board = _queryBoard;
     try {
       final target = await _bound();
       final results = await target.kanbanBulkUpdate(
-        board: _queryBoard,
+        board: board,
         ids: ids,
         status: targetStatus,
       );
-      if (!mounted || !target.isCurrent) return;
+      if (!mounted || !target.isCurrent || epoch != _boardEpoch) return;
       _applyBulkResults(results, 'Moved cards to $targetStatus');
       await _reload(silent: true);
     } catch (e) {
-      _toast(_describeError(e));
+      if (epoch == _boardEpoch) _toast(_describeError(e));
     }
   }
 
@@ -619,22 +765,24 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       confirmLabel: assignee.isEmpty ? 'Unassign' : 'Assign',
     );
     if (!confirmed || !mounted) return;
+    final epoch = _boardEpoch;
+    final board = _queryBoard;
     try {
       final target = await _bound();
       final results = await target.kanbanBulkUpdate(
-        board: _queryBoard,
+        board: board,
         ids: ids,
         assignee: assignee,
         reclaimFirst: true,
       );
-      if (!mounted || !target.isCurrent) return;
+      if (!mounted || !target.isCurrent || epoch != _boardEpoch) return;
       _applyBulkResults(
         results,
         assignee.isEmpty ? 'Unassigned selected cards' : 'Assigned @$assignee',
       );
       await _reload(silent: true);
     } catch (e) {
-      _toast(_describeError(e));
+      if (epoch == _boardEpoch) _toast(_describeError(e));
     }
   }
 
@@ -649,18 +797,20 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       confirmLabel: 'Archive',
     );
     if (!confirmed || !mounted) return;
+    final epoch = _boardEpoch;
+    final board = _queryBoard;
     try {
       final target = await _bound();
       final results = await target.kanbanBulkUpdate(
-        board: _queryBoard,
+        board: board,
         ids: ids,
         archive: true,
       );
-      if (!mounted || !target.isCurrent) return;
+      if (!mounted || !target.isCurrent || epoch != _boardEpoch) return;
       _applyBulkResults(results, 'Archived selected cards');
       await _reload(silent: true);
     } catch (e) {
-      _toast(_describeError(e));
+      if (epoch == _boardEpoch) _toast(_describeError(e));
     }
   }
 
@@ -674,19 +824,21 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       confirmLabel: 'Delete',
     );
     if (!confirmed || !mounted) return;
+    final epoch = _boardEpoch;
+    final board = _queryBoard;
     try {
       final target = await _bound();
       final failed = <String>[];
       String? firstError;
       for (final id in ids) {
         try {
-          await target.kanbanDeleteTask(taskId: id, board: _queryBoard);
+          await target.kanbanDeleteTask(taskId: id, board: board);
         } catch (e) {
           failed.add(id);
           firstError ??= _describeError(e);
         }
       }
-      if (!mounted || !target.isCurrent) return;
+      if (!mounted || !target.isCurrent || epoch != _boardEpoch) return;
       setState(() {
         _selectedIds
           ..clear()
@@ -702,7 +854,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       }
       await _reload(silent: true);
     } catch (e) {
-      _toast(_describeError(e));
+      if (epoch == _boardEpoch) _toast(_describeError(e));
     }
   }
 
@@ -790,6 +942,8 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
           final path = await target.kanbanArchiveBoard(slug);
           if (!mounted || !target.isCurrent) return;
           if (_effectiveSlug == slug) {
+            _boardEpoch++;
+            _cancelRealtime();
             _boardSlug = '';
             await _prefs?.setSelectedBoard('');
           }
