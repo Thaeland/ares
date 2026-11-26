@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/android_launch_intent_service.dart';
 import 'package:hermes_android/core/services/android_share_intent_service.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
+import 'package:hermes_android/core/services/notification_approval_authority.dart';
+import 'package:hermes_android/core/services/turn_notification_service.dart';
 import 'package:hermes_android/core/services/hermes_deeplink.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:hermes_android/nextgen/data/chat_controller.dart';
@@ -39,6 +43,9 @@ Future<DemoGateway> _app(
   addTearDown(t.view.reset);
   final gateway = DemoGateway(DateTime.now(), withProjects: true);
   final prefs = await SharedPreferences.getInstance();
+  await prefs.setStringList('saved_connections', [
+    jsonEncode(gateway.connection.toMap()),
+  ]);
   final manager = ConnectionManager(prefs);
   final chat = pane ? NgChatController(gateway) : null;
   await t.pumpWidget(
@@ -97,6 +104,7 @@ void main() {
     });
     nextGenEnabled.value = true;
     nextGenOpenRequest.value = null;
+    nextGenNotificationAnswer.value = null;
     pendingWindowsToastTarget = null;
     HermesDeepLinkService.shared.pendingLink.value = null;
   });
@@ -121,6 +129,18 @@ void main() {
     expect(find.byType(NgBrandLanding), findsNothing);
     expect(find.text('Search chats'), findsOneWidget);
   });
+
+  testWidgets(
+    'each fresh primary launch shows landing, not only first install',
+    (t) async {
+      await _app(t);
+      await _newChat(t);
+      await t.pumpWidget(const SizedBox.shrink());
+      await _app(t);
+      expect(find.byType(NgBrandLanding), findsOneWidget);
+      expect(find.byType(NgChatView), findsNothing);
+    },
+  );
 
   testWidgets(
     'Open a chat opens discoverable drawer then selection leaves landing',
@@ -175,6 +195,47 @@ void main() {
       expect(nextGenOpenRequest.value, isNull);
     },
   );
+
+  testWidgets(
+    'Windows toast activation skips landing and consumes validated target',
+    (t) async {
+      final origin = NotificationApprovalAuthority.origin(demoConnection());
+      final target = WindowsToastTarget(
+        'demo',
+        'release',
+        origin['approvalAccount']!,
+        origin['approvalMutation']!,
+      );
+      expect(
+        routeNotificationToNextGen('demo', 'release', target: target),
+        isTrue,
+      );
+      await _app(t);
+      expect(find.byType(NgBrandLanding), findsNothing);
+      expect(
+        t.widget<NgChatView>(find.byType(NgChatView)).chat.storedId,
+        'release',
+      );
+      expect(pendingWindowsToastTarget, isNull);
+    },
+  );
+
+  testWidgets('cold notification answer bypasses landing for its session', (
+    t,
+  ) async {
+    nextGenNotificationAnswer.value = (
+      connectionId: 'demo',
+      sessionId: 'release',
+      requestId: 'approval-1',
+      choice: 'once',
+    );
+    await _app(t);
+    expect(find.byType(NgBrandLanding), findsNothing);
+    expect(
+      t.widget<NgChatView>(find.byType(NgChatView)).chat.storedId,
+      'release',
+    );
+  });
 
   for (final link in [
     const HermesDeepLink.session('release'),

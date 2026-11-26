@@ -238,16 +238,25 @@ class _NgMainPageState extends State<_NgMainContent>
       final external =
           widget.shareIntents?.pendingShare.value != null ||
           (widget.launchIntents?.pendingQuickChat.value ?? false);
+      final answer = nextGenNotificationAnswer.value;
+      final answering = answer?.connectionId == scope.connection.id;
       final coldStart = widget.takeColdStart();
-      if (coldStart && requested == null && !action && !external) {
+      if (coldStart &&
+          requested == null &&
+          !action &&
+          !external &&
+          !answering) {
         _landing = true;
       } else {
         // Explicit activations never restore an unrelated last chat while
         // waiting for the link's session list or action destination.
-        final id = !coldStart && !action && !external
+        final id = !coldStart && !action && !external && !answering
             ? NextGenPreferences.launchSession(
-                scope.prefs, scope.connection.id, requested: requested)
-            : requested;
+                scope.prefs,
+                scope.connection.id,
+                requested: requested,
+              )
+            : requested ?? (answering ? answer?.sessionId : null);
         _openId(id, '', initial: true);
       }
       _listenForRequests(scope);
