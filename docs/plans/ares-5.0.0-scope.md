@@ -58,3 +58,9 @@ Source baseline: Ares 4.0.15 and Hermes Desktop 0.23.4. Entries describe the aud
 - **Embeds.** Ares embeds no third-party player (no WebView), so YouTube, TikTok and Maps links stay ordinary links; the consent card was removed.
 
 Evidence detail: [Desktop guide](https://hermes-agent.nousresearch.com/docs/user-guide/desktop); [pinned Desktop](https://github.com/NousResearch/hermes-agent/tree/b7ee21c14e38316273f88d8ed112491ba1c87d15/apps/desktop); [pinned Ares](https://github.com/rusty4444/ares/tree/66fb4452192e5900e4e5342246aebe49b636d017/lib).
+
+## Release decisions (Sam, 26 November 2026)
+
+- **SSH trust:** managed SSH bootstrap and adoption use the gateway's trust-on-first-use, as Hermes Desktop does, behind a clear warning. A changed host key is never accepted silently. The strict pinned path (paste a key you obtained yourself) stays available as the stronger option.
+- **LGPL in voice:** the Windows and Linux WebRTC libraries bundled for GPT-Live include FFmpeg under LGPL-2.1-or-later, dynamically linked. Accepted as documented in `third_party/webrtc/NOTICE.md`.
+- **Hands-on verification:** Sam tests the Windows build (notification banner clicks warm and cold, the MSIX pop-out, tray, close-to-tray and the global hotkey) and the Android build (GPT-Live and the microphone, lifecycle around permission prompts) on his own devices. Linux lock/resume on GNOME, KDE and sway and the macOS permission flows are recorded as untested on hardware unless Sam runs them.
