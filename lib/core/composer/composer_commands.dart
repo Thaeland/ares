@@ -393,11 +393,10 @@ List<ResumeCandidate> filterResume(
 }
 
 class ArgumentHint {
-  const ArgumentHint(this.text, this.label, {this.meta = ''});
+  const ArgumentHint(this.text, this.label);
 
   final String text;
   final String label;
-  final String meta;
 }
 
 /// A `complete.slash` answer: its rows and where they replace the typed
@@ -450,7 +449,6 @@ List<ArgumentHint> parseArgumentHints(Object? result) {
       ArgumentHint(
         text.trim(),
         display is String && display.isNotEmpty ? display : text.trim(),
-        meta: item['meta'] is String ? item['meta'] as String : '',
       ),
     );
   }

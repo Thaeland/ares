@@ -849,6 +849,7 @@ class _NgChatViewState extends State<NgChatView>
   }
 
   Future<void> _startVoiceConversation() async {
+    if (isParkedAutomotive) return;
     final mode = _voiceMode;
     // One status read per start: a read made here to choose the engine is
     // handed to it; with a cached status the engine reads a fresh one.
@@ -2701,9 +2702,9 @@ class _NgChatViewState extends State<NgChatView>
       showsSentAsMessageNote: false,
       suppressed: _suggestionsOpen,
       child: NgSlashSuggestions(
-        // ComposerReferenceAssist owns argument rows and caches by prefix.
-        // The imported 4.x overlay owns only command-name suggestions here.
-        completeArguments: false,
+        // Keep 5.0 argument insertion semantics, with one completion owner.
+        appendArgumentSpace: false,
+        argumentDebounce: const Duration(milliseconds: 60),
         chat: chat,
         controller: _input,
         focusNode: _focus,
@@ -3440,15 +3441,6 @@ class _NgChatViewState extends State<NgChatView>
                               ? starterSuggestions(query)
                               : rows;
                         },
-                        completeSlash: (text) async {
-                          final owner = chat;
-                          final sessionId = await owner.liveSessionId();
-                          final result = await owner.gateway.call(
-                            'complete.slash',
-                            {'text': text, 'session_id': ?sessionId},
-                          );
-                          return parseArgumentCompletion(result);
-                        },
                       ),
                     ),
                   ),
@@ -3610,7 +3602,8 @@ class _NgChatViewState extends State<NgChatView>
                           ),
                           onPressed: _toggleDictation,
                         ),
-                      if (_voiceMode.hasStatus &&
+                      if (!isParkedAutomotive &&
+                          _voiceMode.hasStatus &&
                           !chat.running &&
                           !hasText &&
                           !_listening)

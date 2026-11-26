@@ -261,11 +261,7 @@ class _ComposerReferenceAssistState extends State<ComposerReferenceAssist> {
               arguments.map(
                 (row) => (
                   row.label,
-                  row.meta.isNotEmpty
-                      ? row.meta
-                      : row.label == row.text
-                      ? ''
-                      : row.text,
+                  row.label == row.text ? '' : row.text,
                   () => _replaceArgument(row),
                 ),
               ),

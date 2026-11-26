@@ -712,22 +712,65 @@ void main() {
       'text': '/personality al',
       'session_id': 'rt-1',
     });
-    // 5.0's shared reference assist owns argument rows and its per-prefix
-    // cache; the 4.x overlay only handles command names in the integrated UI.
-    final alice = find.widgetWithText(ListTile, 'alice');
-    expect(alice, findsOneWidget);
-    expect(
-      find.descendant(of: alice, matching: find.text('Friendly helper')),
-      findsOneWidget,
-    );
+    expect(find.byKey(_row('alice')), findsOneWidget);
+    expect(_inBox('Friendly helper'), findsOneWidget);
     expect(gateway.completions, ['/personality al']);
 
-    await tester.tap(alice);
+    await tester.tap(find.byKey(_row('alice')));
     await _settle(tester);
     expect(_composer(tester), '/personality alice');
     expect(_value(tester).selection, const TextSelection.collapsed(offset: 18));
     expect(find.byKey(_boxKey), findsNothing);
     expect(gateway.of('slash.exec'), isEmpty);
+  });
+
+  for (final acceptKey in [LogicalKeyboardKey.enter, LogicalKeyboardKey.tab]) {
+    testWidgets(
+      'argument choices accept ${acceptKey.keyLabel} without sending',
+      (tester) async {
+        final gateway = _Gateway();
+        gateway.handlers['complete.slash'] = (_) => {
+          'items': [
+            _item('alice', 'Friendly helper'),
+            _item('alfred', 'Butler'),
+          ],
+          'replace_from': 13,
+        };
+        await pump(tester, runtimeId: 'rt-1', gateway: gateway);
+        await _type(tester, '/personality al');
+        expect(gateway.completions, ['/personality al']);
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.sendKeyEvent(acceptKey);
+        await _settle(tester);
+        expect(_composer(tester), '/personality alfred');
+        expect(
+          _value(tester).selection,
+          const TextSelection.collapsed(offset: 19),
+        );
+        expect(find.byKey(_boxKey), findsNothing);
+        expect(gateway.of('slash.exec'), isEmpty);
+        expect(gateway.of('prompt.submit'), isEmpty);
+      },
+    );
+  }
+
+  testWidgets('Escape dismisses argument choices without sending', (
+    tester,
+  ) async {
+    final gateway = _Gateway();
+    gateway.handlers['complete.slash'] = (_) => {
+      'items': [_item('alice', 'Friendly helper')],
+      'replace_from': 13,
+    };
+    await pump(tester, runtimeId: 'rt-1', gateway: gateway);
+    await _type(tester, '/personality al');
+    expect(find.byKey(_boxKey), findsOneWidget);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await _settle(tester);
+    expect(find.byKey(_boxKey), findsNothing);
+    expect(_composer(tester), '/personality al');
+    expect(gateway.of('slash.exec'), isEmpty);
+    expect(gateway.of('prompt.submit'), isEmpty);
   });
 
   group('placement', () {

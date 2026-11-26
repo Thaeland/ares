@@ -2579,6 +2579,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _startVoiceConversation() async {
+    if (isParkedAutomotive) return;
     final mode = _voiceLiveMode;
     // One status read per start: a read made here to choose the engine is
     // handed to it; with a cached status the engine reads a fresh one.
@@ -11537,6 +11538,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Widget? _buildHandsFreeComposerAction() {
+    if (isParkedAutomotive) return null;
     if (_liveEngine case final live? when live.active) {
       return VoiceLiveInlineControls(
         engine: live,
