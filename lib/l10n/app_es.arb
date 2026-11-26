@@ -3188,7 +3188,7 @@
   "ng_release_message_search_unavailable": "Búsqueda de mensajes no disponible. Se muestran las coincidencias locales.",
   "ng_release_insights_days": "{days, plural, one{{days} día} other{{days} días}}",
   "ng_release_signed_in_you": "tú",
-  "ng_release_unsent_prompt_gone": "Ese prompt sin enviar ya no está en la cola.",
+  "release_chat_unsent_prompt_gone": "Ese prompt sin enviar ya no está en la cola.",
   "ng_release_attachment_not_attached": "La pasarela no ha adjuntado {name}.",
   "ng_release_gateway_not_connected": "Aún no hay conexión con la pasarela.",
   "ng_release_gateway_unreachable": "No se pudo acceder a la pasarela.",
@@ -3310,5 +3310,8 @@
   "release_misc_api_key_required": "El servidor requiere una clave de API. Introduce tu API_SERVER_KEY.",
   "release_misc_gateway_not_found": "El endpoint {endpoint} de la pasarela ha devuelto HTTP 404. Comprueba el prefijo de ruta de la pasarela y las rutas del proxy inverso.",
   "release_misc_gateway_http_error": "El endpoint {endpoint} de la pasarela ha devuelto HTTP {statusCode}.",
-  "release_misc_gateway_unreachable": "No se puede acceder al endpoint {endpoint} de la pasarela."
+  "release_misc_gateway_unreachable": "No se puede acceder al endpoint {endpoint} de la pasarela.",
+  "release_core_schedule_invalid_delivery_target": "Destino de entrega no válido",
+  "release_core_file_save_direct_only": "Solo se puede guardar un archivo situado directamente en el directorio de trabajo.",
+  "release_core_file_save_hidden": "La puerta de enlace no puede guardar archivos ocultos."
 }

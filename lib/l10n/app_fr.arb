@@ -3188,7 +3188,7 @@
   "ng_release_message_search_unavailable": "Recherche de messages indisponible. Affichage des résultats locaux.",
   "ng_release_insights_days": "{days, plural, one{{days} jour} other{{days} jours}}",
   "ng_release_signed_in_you": "vous",
-  "ng_release_unsent_prompt_gone": "Ce prompt non envoyé n’est plus dans la file d’attente.",
+  "release_chat_unsent_prompt_gone": "Ce prompt non envoyé n’est plus dans la file d’attente.",
   "ng_release_attachment_not_attached": "La passerelle n’a pas joint {name}.",
   "ng_release_gateway_not_connected": "Pas encore connecté à la passerelle.",
   "ng_release_gateway_unreachable": "Impossible de joindre la passerelle.",
@@ -3310,5 +3310,8 @@
   "release_misc_api_key_required": "Le serveur nécessite une clé API. Saisissez votre API_SERVER_KEY.",
   "release_misc_gateway_not_found": "Le point de terminaison de la passerelle {endpoint} a renvoyé HTTP 404. Vérifiez le préfixe de chemin de la passerelle et les routes du proxy inverse.",
   "release_misc_gateway_http_error": "Le point de terminaison de la passerelle {endpoint} a renvoyé HTTP {statusCode}.",
-  "release_misc_gateway_unreachable": "Impossible de joindre le point de terminaison de la passerelle {endpoint}."
+  "release_misc_gateway_unreachable": "Impossible de joindre le point de terminaison de la passerelle {endpoint}.",
+  "release_core_schedule_invalid_delivery_target": "Destination de livraison non valide",
+  "release_core_file_save_direct_only": "Seul un fichier situé directement dans le répertoire de travail peut être enregistré.",
+  "release_core_file_save_hidden": "La passerelle ne peut pas enregistrer les fichiers masqués."
 }

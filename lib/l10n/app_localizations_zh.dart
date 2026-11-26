@@ -11041,7 +11041,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_release_signed_in_you => '你';
 
   @override
-  String get ng_release_unsent_prompt_gone => '该未发送的提示词已不在队列中。';
+  String get release_chat_unsent_prompt_gone => '该未发送的提示词已不在队列中。';
 
   @override
   String ng_release_attachment_not_attached(String name) {
@@ -11486,6 +11486,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String release_misc_gateway_unreachable(String endpoint) {
     return '无法连接到网关端点 $endpoint。';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target => '无效的投递目标';
+
+  @override
+  String get release_core_file_save_direct_only => '只能保存工作目录直属的文件。';
+
+  @override
+  String get release_core_file_save_hidden => '网关无法保存隐藏文件。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -22525,7 +22534,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_release_signed_in_you => '你';
 
   @override
-  String get ng_release_unsent_prompt_gone => '该未发送的提示词已不在队列中。';
+  String get release_chat_unsent_prompt_gone => '该未发送的提示词已不在队列中。';
 
   @override
   String ng_release_attachment_not_attached(String name) {
@@ -22970,6 +22979,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String release_misc_gateway_unreachable(String endpoint) {
     return '无法连接到网关端点 $endpoint。';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target => '无效的投递目标';
+
+  @override
+  String get release_core_file_save_direct_only => '只能保存工作目录直属的文件。';
+
+  @override
+  String get release_core_file_save_hidden => '网关无法保存隐藏文件。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -34013,7 +34031,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get ng_release_signed_in_you => '你';
 
   @override
-  String get ng_release_unsent_prompt_gone => '該未傳送的提示詞已不在佇列中。';
+  String get release_chat_unsent_prompt_gone => '該未傳送的提示詞已不在佇列中。';
 
   @override
   String ng_release_attachment_not_attached(String name) {
@@ -34458,4 +34476,13 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String release_misc_gateway_unreachable(String endpoint) {
     return '無法連線至閘道端點 $endpoint。';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target => '無效的傳送目標';
+
+  @override
+  String get release_core_file_save_direct_only => '只能儲存工作目錄直屬的檔案。';
+
+  @override
+  String get release_core_file_save_hidden => '閘道無法儲存隱藏檔案。';
 }

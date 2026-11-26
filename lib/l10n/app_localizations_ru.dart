@@ -1130,7 +1130,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cron => 'Cron';
 
   @override
-  String get crons => 'Задания cron';
+  String get crons => 'Крон';
 
   @override
   String get cron_conversations_empty =>
@@ -11647,7 +11647,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get ng_release_signed_in_you => 'вы';
 
   @override
-  String get ng_release_unsent_prompt_gone =>
+  String get release_chat_unsent_prompt_gone =>
       'Этого неотправленного промпта больше нет в очереди.';
 
   @override
@@ -12144,4 +12144,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String release_misc_gateway_unreachable(String endpoint) {
     return 'Не удалось связаться с конечной точкой шлюза $endpoint.';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      'Недопустимая цель доставки';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      'Можно сохранить только файл непосредственно в рабочем каталоге.';
+
+  @override
+  String get release_core_file_save_hidden =>
+      'Шлюз не может сохранять скрытые файлы.';
 }

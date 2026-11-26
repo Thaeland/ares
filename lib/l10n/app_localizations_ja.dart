@@ -11237,7 +11237,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get ng_release_signed_in_you => 'あなた';
 
   @override
-  String get ng_release_unsent_prompt_gone => 'その未送信プロンプトはキューにありません。';
+  String get release_chat_unsent_prompt_gone => 'その未送信プロンプトはキューにありません。';
 
   @override
   String ng_release_attachment_not_attached(String name) {
@@ -11700,4 +11700,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String release_misc_gateway_unreachable(String endpoint) {
     return 'ゲートウェイのエンドポイント$endpointに接続できません。';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target => '配信先が無効です';
+
+  @override
+  String get release_core_file_save_direct_only => '作業ディレクトリ直下のファイルのみ保存できます。';
+
+  @override
+  String get release_core_file_save_hidden => 'ゲートウェイでは隠しファイルを保存できません。';
 }

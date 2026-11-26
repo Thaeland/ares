@@ -7377,8 +7377,8 @@
     "description": "Fallback person name in NextGen’s “Signed in as {name}.” connection check when the response has no user object.",
     "placeholders": {}
   },
-  "ng_release_unsent_prompt_gone": "That unsent prompt is no longer in the queue.",
-  "@ng_release_unsent_prompt_gone": {
+  "release_chat_unsent_prompt_gone": "That unsent prompt is no longer in the queue.",
+  "@release_chat_unsent_prompt_gone": {
     "description": "NextGen error when a queued, unsent prompt was removed before its edit could be saved.",
     "placeholders": {}
   },
@@ -8097,5 +8097,11 @@
         "description": "Gateway health-check URL."
       }
     }
-  }
+  },
+  "release_core_schedule_invalid_delivery_target": "Invalid delivery target",
+  "@release_core_schedule_invalid_delivery_target": {"description": "Shared validation refusal; preserve the specific delivery target or file-saving reason."},
+  "release_core_file_save_direct_only": "Only a file directly in the working directory can be saved.",
+  "@release_core_file_save_direct_only": {"description": "Shared validation refusal; preserve the specific delivery target or file-saving reason."},
+  "release_core_file_save_hidden": "Hidden files can't be saved by the gateway.",
+  "@release_core_file_save_hidden": {"description": "Shared validation refusal; preserve the specific delivery target or file-saving reason."}
 }

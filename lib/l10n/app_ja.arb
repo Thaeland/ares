@@ -3188,7 +3188,7 @@
   "ng_release_message_search_unavailable": "メッセージ検索を利用できません。ローカルの一致結果を表示しています。",
   "ng_release_insights_days": "{days, plural, one{{days}日} other{{days}日}}",
   "ng_release_signed_in_you": "あなた",
-  "ng_release_unsent_prompt_gone": "その未送信プロンプトはキューにありません。",
+  "release_chat_unsent_prompt_gone": "その未送信プロンプトはキューにありません。",
   "ng_release_attachment_not_attached": "ゲートウェイが{name}の添付を確認しませんでした。",
   "ng_release_gateway_not_connected": "まだゲートウェイに接続していません。",
   "ng_release_gateway_unreachable": "ゲートウェイに接続できませんでした。",
@@ -3310,5 +3310,8 @@
   "release_misc_api_key_required": "サーバーにはAPIキーが必要です。API_SERVER_KEYを入力してください。",
   "release_misc_gateway_not_found": "ゲートウェイのエンドポイント{endpoint}からHTTP 404が返されました。ゲートウェイのパスプレフィックスとリバースプロキシのルートを確認してください。",
   "release_misc_gateway_http_error": "ゲートウェイのエンドポイント{endpoint}からHTTP {statusCode}が返されました。",
-  "release_misc_gateway_unreachable": "ゲートウェイのエンドポイント{endpoint}に接続できません。"
+  "release_misc_gateway_unreachable": "ゲートウェイのエンドポイント{endpoint}に接続できません。",
+  "release_core_schedule_invalid_delivery_target": "配信先が無効です",
+  "release_core_file_save_direct_only": "作業ディレクトリ直下のファイルのみ保存できます。",
+  "release_core_file_save_hidden": "ゲートウェイでは隠しファイルを保存できません。"
 }

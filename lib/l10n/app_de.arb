@@ -3188,7 +3188,7 @@
   "ng_release_message_search_unavailable": "Nachrichtensuche nicht verfügbar. Lokale Treffer werden angezeigt.",
   "ng_release_insights_days": "{days, plural, one{{days} Tag} other{{days} Tage}}",
   "ng_release_signed_in_you": "du",
-  "ng_release_unsent_prompt_gone": "Dieser ungesendete Prompt ist nicht mehr in der Warteschlange.",
+  "release_chat_unsent_prompt_gone": "Dieser ungesendete Prompt ist nicht mehr in der Warteschlange.",
   "ng_release_attachment_not_attached": "Das Gateway hat {name} nicht angehängt.",
   "ng_release_gateway_not_connected": "Noch nicht mit dem Gateway verbunden.",
   "ng_release_gateway_unreachable": "Das Gateway konnte nicht erreicht werden.",
@@ -3310,5 +3310,8 @@
   "release_misc_api_key_required": "Der Server erfordert einen API-Schlüssel. Gib deinen API_SERVER_KEY ein.",
   "release_misc_gateway_not_found": "Gateway-Endpunkt {endpoint} hat HTTP 404 zurückgegeben. Prüfe das Gateway-Pfadpräfix und die Reverse-Proxy-Routen.",
   "release_misc_gateway_http_error": "Gateway-Endpunkt {endpoint} hat HTTP {statusCode} zurückgegeben.",
-  "release_misc_gateway_unreachable": "Gateway-Endpunkt {endpoint} nicht erreichbar."
+  "release_misc_gateway_unreachable": "Gateway-Endpunkt {endpoint} nicht erreichbar.",
+  "release_core_schedule_invalid_delivery_target": "Ungültiges Zustellziel",
+  "release_core_file_save_direct_only": "Nur eine Datei direkt im Arbeitsverzeichnis kann gespeichert werden.",
+  "release_core_file_save_hidden": "Versteckte Dateien können vom Gateway nicht gespeichert werden."
 }

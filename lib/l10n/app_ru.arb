@@ -315,7 +315,7 @@
   "credit_notifications": "Уведомления о кредитах",
   "credit_notifications_description": "Использование кредитов остановлено или возобновлено.",
   "cron": "Cron",
-  "crons": "Задания cron",
+  "crons": "Крон",
   "cron_conversations_empty": "Здесь появятся чаты запланированных заданий, включая предыдущие запуски.",
   "search_cron_conversations": "Поиск чатов cron",
   "cron_jobs": "Задачи Cron",
@@ -3188,7 +3188,7 @@
   "ng_release_message_search_unavailable": "Поиск по сообщениям недоступен. Показаны локальные совпадения.",
   "ng_release_insights_days": "{days, plural, one{{days} дн.} other{{days} дн.}}",
   "ng_release_signed_in_you": "вы",
-  "ng_release_unsent_prompt_gone": "Этого неотправленного промпта больше нет в очереди.",
+  "release_chat_unsent_prompt_gone": "Этого неотправленного промпта больше нет в очереди.",
   "ng_release_attachment_not_attached": "Шлюз не прикрепил {name}.",
   "ng_release_gateway_not_connected": "Подключение к шлюзу ещё не установлено.",
   "ng_release_gateway_unreachable": "Не удалось связаться со шлюзом.",
@@ -3310,5 +3310,8 @@
   "release_misc_api_key_required": "Серверу требуется ключ API. Введите свой API_SERVER_KEY.",
   "release_misc_gateway_not_found": "Конечная точка шлюза {endpoint} вернула HTTP 404. Проверьте префикс пути шлюза и маршруты обратного прокси.",
   "release_misc_gateway_http_error": "Конечная точка шлюза {endpoint} вернула HTTP {statusCode}.",
-  "release_misc_gateway_unreachable": "Не удалось связаться с конечной точкой шлюза {endpoint}."
+  "release_misc_gateway_unreachable": "Не удалось связаться с конечной точкой шлюза {endpoint}.",
+  "release_core_schedule_invalid_delivery_target": "Недопустимая цель доставки",
+  "release_core_file_save_direct_only": "Можно сохранить только файл непосредственно в рабочем каталоге.",
+  "release_core_file_save_hidden": "Шлюз не может сохранять скрытые файлы."
 }

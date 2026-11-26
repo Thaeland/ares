@@ -3304,7 +3304,7 @@
   "ng_release_message_search_unavailable": "Пошук повідомлень недоступний. Показано локальні збіги.",
   "ng_release_insights_days": "{days, plural, one{{days} день} other{Днів: {days}}}",
   "ng_release_signed_in_you": "ви",
-  "ng_release_unsent_prompt_gone": "Цього ненадісланого запиту більше немає в черзі.",
+  "release_chat_unsent_prompt_gone": "Цього ненадісланого запиту більше немає в черзі.",
   "ng_release_attachment_not_attached": "Шлюз не додав вкладення {name}.",
   "ng_release_gateway_not_connected": "Підключення до шлюзу ще не встановлено.",
   "ng_release_gateway_unreachable": "Не вдалося зв’язатися зі шлюзом.",
@@ -3426,5 +3426,8 @@
   "release_misc_api_key_required": "Сервер потребує ключа API. Уведіть свій API_SERVER_KEY.",
   "release_misc_gateway_not_found": "Кінцева точка шлюзу {endpoint} повернула HTTP 404. Перевірте префікс шляху шлюзу й маршрути зворотного проксі.",
   "release_misc_gateway_http_error": "Кінцева точка шлюзу {endpoint} повернула HTTP {statusCode}.",
-  "release_misc_gateway_unreachable": "Не вдається зв’язатися з кінцевою точкою шлюзу {endpoint}."
+  "release_misc_gateway_unreachable": "Не вдається зв’язатися з кінцевою точкою шлюзу {endpoint}.",
+  "release_core_schedule_invalid_delivery_target": "Недійсне місце доставки",
+  "release_core_file_save_direct_only": "Можна зберегти лише файл безпосередньо в робочому каталозі.",
+  "release_core_file_save_hidden": "Шлюз не може зберігати приховані файли."
 }

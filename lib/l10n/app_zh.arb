@@ -3188,7 +3188,7 @@
   "ng_release_message_search_unavailable": "消息搜索不可用。正在显示本地匹配结果。",
   "ng_release_insights_days": "{days, plural, one{{days} 天} other{{days} 天}}",
   "ng_release_signed_in_you": "你",
-  "ng_release_unsent_prompt_gone": "该未发送的提示词已不在队列中。",
+  "release_chat_unsent_prompt_gone": "该未发送的提示词已不在队列中。",
   "ng_release_attachment_not_attached": "网关未附加 {name}。",
   "ng_release_gateway_not_connected": "尚未连接到网关。",
   "ng_release_gateway_unreachable": "无法连接到网关。",
@@ -3310,5 +3310,8 @@
   "release_misc_api_key_required": "服务器需要 API 密钥。请输入你的 API_SERVER_KEY。",
   "release_misc_gateway_not_found": "网关端点 {endpoint} 返回 HTTP 404。请检查网关路径前缀和反向代理路由。",
   "release_misc_gateway_http_error": "网关端点 {endpoint} 返回 HTTP {statusCode}。",
-  "release_misc_gateway_unreachable": "无法连接到网关端点 {endpoint}。"
+  "release_misc_gateway_unreachable": "无法连接到网关端点 {endpoint}。",
+  "release_core_schedule_invalid_delivery_target": "无效的投递目标",
+  "release_core_file_save_direct_only": "只能保存工作目录直属的文件。",
+  "release_core_file_save_hidden": "网关无法保存隐藏文件。"
 }

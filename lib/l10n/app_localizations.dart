@@ -18918,7 +18918,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'That unsent prompt is no longer in the queue.'**
-  String get ng_release_unsent_prompt_gone;
+  String get release_chat_unsent_prompt_gone;
 
   /// NextGen attachment error when the gateway does not confirm attaching the selected file.
   ///
@@ -19651,6 +19651,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cannot reach Gateway endpoint {endpoint}.'**
   String release_misc_gateway_unreachable(String endpoint);
+
+  /// Shared validation refusal; preserve the specific delivery target or file-saving reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid delivery target'**
+  String get release_core_schedule_invalid_delivery_target;
+
+  /// Shared validation refusal; preserve the specific delivery target or file-saving reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a file directly in the working directory can be saved.'**
+  String get release_core_file_save_direct_only;
+
+  /// Shared validation refusal; preserve the specific delivery target or file-saving reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden files can\'t be saved by the gateway.'**
+  String get release_core_file_save_hidden;
 }
 
 class _AppLocalizationsDelegate

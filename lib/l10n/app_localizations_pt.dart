@@ -1136,7 +1136,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get cron => 'Cron';
 
   @override
-  String get crons => 'Tarefas cron';
+  String get crons => 'Crons';
 
   @override
   String get cron_conversations_empty =>
@@ -11659,7 +11659,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ng_release_signed_in_you => 'utilizador atual';
 
   @override
-  String get ng_release_unsent_prompt_gone =>
+  String get release_chat_unsent_prompt_gone =>
       'Essa instrução não enviada já não está na fila.';
 
   @override
@@ -12155,6 +12155,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String release_misc_gateway_unreachable(String endpoint) {
     return 'Não é possível aceder ao endpoint $endpoint do gateway.';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      'Destino de entrega inválido';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      'Só é possível guardar um ficheiro diretamente no diretório de trabalho.';
+
+  @override
+  String get release_core_file_save_hidden =>
+      'O gateway não pode guardar ficheiros ocultos.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -13288,7 +13300,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get cron => 'Cron';
 
   @override
-  String get crons => 'Agendamentos';
+  String get crons => 'Agenda';
 
   @override
   String get cron_conversations_empty =>
@@ -23800,7 +23812,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get ng_release_signed_in_you => 'você';
 
   @override
-  String get ng_release_unsent_prompt_gone =>
+  String get release_chat_unsent_prompt_gone =>
       'Aquele prompt não enviado não está mais na fila.';
 
   @override
@@ -24291,4 +24303,16 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String release_misc_gateway_unreachable(String endpoint) {
     return 'Não foi possível acessar o endpoint $endpoint do Gateway.';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      'Destino de entrega inválido';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      'Só é possível salvar um arquivo diretamente no diretório de trabalho.';
+
+  @override
+  String get release_core_file_save_hidden =>
+      'O gateway não pode salvar arquivos ocultos.';
 }

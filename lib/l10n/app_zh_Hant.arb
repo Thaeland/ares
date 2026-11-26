@@ -4146,7 +4146,7 @@
   "ng_release_message_search_unavailable": "訊息搜尋無法使用。正在顯示本機符合結果。",
   "ng_release_insights_days": "{days, plural, one{{days} 天} other{{days} 天}}",
   "ng_release_signed_in_you": "你",
-  "ng_release_unsent_prompt_gone": "該未傳送的提示詞已不在佇列中。",
+  "release_chat_unsent_prompt_gone": "該未傳送的提示詞已不在佇列中。",
   "ng_release_attachment_not_attached": "閘道未附加 {name}。",
   "ng_release_gateway_not_connected": "尚未連線至閘道。",
   "ng_release_gateway_unreachable": "無法連線至閘道。",
@@ -4268,5 +4268,8 @@
   "release_misc_api_key_required": "伺服器需要 API 金鑰。請輸入你的 API_SERVER_KEY。",
   "release_misc_gateway_not_found": "閘道端點 {endpoint} 傳回 HTTP 404。請檢查閘道路徑前置字串和反向代理路由。",
   "release_misc_gateway_http_error": "閘道端點 {endpoint} 傳回 HTTP {statusCode}。",
-  "release_misc_gateway_unreachable": "無法連線至閘道端點 {endpoint}。"
+  "release_misc_gateway_unreachable": "無法連線至閘道端點 {endpoint}。",
+  "release_core_schedule_invalid_delivery_target": "無效的傳送目標",
+  "release_core_file_save_direct_only": "只能儲存工作目錄直屬的檔案。",
+  "release_core_file_save_hidden": "閘道無法儲存隱藏檔案。"
 }

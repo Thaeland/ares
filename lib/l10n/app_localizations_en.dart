@@ -11527,7 +11527,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ng_release_signed_in_you => 'you';
 
   @override
-  String get ng_release_unsent_prompt_gone =>
+  String get release_chat_unsent_prompt_gone =>
       'That unsent prompt is no longer in the queue.';
 
   @override
@@ -12011,4 +12011,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String release_misc_gateway_unreachable(String endpoint) {
     return 'Cannot reach Gateway endpoint $endpoint.';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      'Invalid delivery target';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      'Only a file directly in the working directory can be saved.';
+
+  @override
+  String get release_core_file_save_hidden =>
+      'Hidden files can\'t be saved by the gateway.';
 }

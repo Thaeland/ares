@@ -315,7 +315,7 @@
   "credit_notifications": "Notificações de crédito",
   "credit_notifications_description": "O uso de crédito foi interrompido ou restaurado.",
   "cron": "Cron",
-  "crons": "Tarefas cron",
+  "crons": "Crons",
   "cron_conversations_empty": "As conversas de tarefas agendadas aparecem aqui, incluindo execuções anteriores.",
   "search_cron_conversations": "Pesquisar conversas cron",
   "cron_jobs": "Tarefas Cron",
@@ -3188,7 +3188,7 @@
   "ng_release_message_search_unavailable": "Pesquisa de mensagens indisponível. A mostrar correspondências locais.",
   "ng_release_insights_days": "{days, plural, one{{days} dia} other{{days} dias}}",
   "ng_release_signed_in_you": "utilizador atual",
-  "ng_release_unsent_prompt_gone": "Essa instrução não enviada já não está na fila.",
+  "release_chat_unsent_prompt_gone": "Essa instrução não enviada já não está na fila.",
   "ng_release_attachment_not_attached": "O gateway não anexou {name}.",
   "ng_release_gateway_not_connected": "Ainda sem ligação ao gateway.",
   "ng_release_gateway_unreachable": "Não foi possível aceder ao gateway.",
@@ -3310,5 +3310,8 @@
   "release_misc_api_key_required": "O servidor requer uma chave de API. Introduza a sua API_SERVER_KEY.",
   "release_misc_gateway_not_found": "O endpoint {endpoint} do gateway devolveu HTTP 404. Verifique o prefixo do caminho do gateway e as rotas do proxy inverso.",
   "release_misc_gateway_http_error": "O endpoint {endpoint} do gateway devolveu HTTP {statusCode}.",
-  "release_misc_gateway_unreachable": "Não é possível aceder ao endpoint {endpoint} do gateway."
+  "release_misc_gateway_unreachable": "Não é possível aceder ao endpoint {endpoint} do gateway.",
+  "release_core_schedule_invalid_delivery_target": "Destino de entrega inválido",
+  "release_core_file_save_direct_only": "Só é possível guardar um ficheiro diretamente no diretório de trabalho.",
+  "release_core_file_save_hidden": "O gateway não pode guardar ficheiros ocultos."
 }

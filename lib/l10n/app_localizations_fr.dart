@@ -11683,7 +11683,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ng_release_signed_in_you => 'vous';
 
   @override
-  String get ng_release_unsent_prompt_gone =>
+  String get release_chat_unsent_prompt_gone =>
       'Ce prompt non envoyé n’est plus dans la file d’attente.';
 
   @override
@@ -12182,4 +12182,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String release_misc_gateway_unreachable(String endpoint) {
     return 'Impossible de joindre le point de terminaison de la passerelle $endpoint.';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      'Destination de livraison non valide';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      'Seul un fichier situé directement dans le répertoire de travail peut être enregistré.';
+
+  @override
+  String get release_core_file_save_hidden =>
+      'La passerelle ne peut pas enregistrer les fichiers masqués.';
 }

@@ -4134,7 +4134,7 @@
   "ng_release_message_search_unavailable": "البحث في الرسائل غير متاح. تُعرض النتائج المحلية المطابقة.",
   "ng_release_insights_days": "{days, plural, one{{days} يوم} other{عدد الأيام: {days}}}",
   "ng_release_signed_in_you": "أنت",
-  "ng_release_unsent_prompt_gone": "لم يعد ذلك الطلب غير المرسَل في قائمة الانتظار.",
+  "release_chat_unsent_prompt_gone": "لم يعد ذلك الطلب غير المرسَل في قائمة الانتظار.",
   "ng_release_attachment_not_attached": "لم تُرفق البوابة {name}.",
   "ng_release_gateway_not_connected": "لم يتم الاتصال بالبوابة بعد.",
   "ng_release_gateway_unreachable": "تعذّر الوصول إلى البوابة.",
@@ -4256,5 +4256,8 @@
   "release_misc_api_key_required": "يتطلب الخادم مفتاح API. أدخل قيمة API_SERVER_KEY الخاصة بك.",
   "release_misc_gateway_not_found": "أعادت نقطة اتصال البوابة {endpoint} رمز HTTP 404. تحقّق من بادئة مسار البوابة ومسارات الوكيل العكسي.",
   "release_misc_gateway_http_error": "أعادت نقطة اتصال البوابة {endpoint} رمز HTTP {statusCode}.",
-  "release_misc_gateway_unreachable": "يتعذّر الوصول إلى نقطة اتصال البوابة {endpoint}."
+  "release_misc_gateway_unreachable": "يتعذّر الوصول إلى نقطة اتصال البوابة {endpoint}.",
+  "release_core_schedule_invalid_delivery_target": "وجهة التسليم غير صالحة",
+  "release_core_file_save_direct_only": "لا يمكن حفظ إلا ملف موجود مباشرة في دليل العمل.",
+  "release_core_file_save_hidden": "لا يمكن للبوابة حفظ الملفات المخفية."
 }

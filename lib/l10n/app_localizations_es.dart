@@ -11658,7 +11658,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_release_signed_in_you => 'tú';
 
   @override
-  String get ng_release_unsent_prompt_gone =>
+  String get release_chat_unsent_prompt_gone =>
       'Ese prompt sin enviar ya no está en la cola.';
 
   @override
@@ -12151,4 +12151,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String release_misc_gateway_unreachable(String endpoint) {
     return 'No se puede acceder al endpoint $endpoint de la pasarela.';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      'Destino de entrega no válido';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      'Solo se puede guardar un archivo situado directamente en el directorio de trabajo.';
+
+  @override
+  String get release_core_file_save_hidden =>
+      'La puerta de enlace no puede guardar archivos ocultos.';
 }

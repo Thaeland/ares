@@ -11243,7 +11243,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_release_signed_in_you => '사용자';
 
   @override
-  String get ng_release_unsent_prompt_gone => '해당 미전송 프롬프트는 더 이상 대기열에 없습니다.';
+  String get release_chat_unsent_prompt_gone => '해당 미전송 프롬프트는 더 이상 대기열에 없습니다.';
 
   @override
   String ng_release_attachment_not_attached(String name) {
@@ -11704,4 +11704,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String release_misc_gateway_unreachable(String endpoint) {
     return '게이트웨이 엔드포인트 $endpoint에 연결할 수 없습니다.';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      '전송 대상이 올바르지 않습니다';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      '작업 디렉터리 바로 아래에 있는 파일만 저장할 수 있습니다.';
+
+  @override
+  String get release_core_file_save_hidden => '게이트웨이는 숨김 파일을 저장할 수 없습니다.';
 }

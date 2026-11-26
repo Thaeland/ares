@@ -11639,7 +11639,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get ng_release_signed_in_you => 'ви';
 
   @override
-  String get ng_release_unsent_prompt_gone =>
+  String get release_chat_unsent_prompt_gone =>
       'Цього ненадісланого запиту більше немає в черзі.';
 
   @override
@@ -12137,4 +12137,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String release_misc_gateway_unreachable(String endpoint) {
     return 'Не вдається зв’язатися з кінцевою точкою шлюзу $endpoint.';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      'Недійсне місце доставки';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      'Можна зберегти лише файл безпосередньо в робочому каталозі.';
+
+  @override
+  String get release_core_file_save_hidden =>
+      'Шлюз не може зберігати приховані файли.';
 }

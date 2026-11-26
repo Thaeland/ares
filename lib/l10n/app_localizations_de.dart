@@ -11661,7 +11661,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get ng_release_signed_in_you => 'du';
 
   @override
-  String get ng_release_unsent_prompt_gone =>
+  String get release_chat_unsent_prompt_gone =>
       'Dieser ungesendete Prompt ist nicht mehr in der Warteschlange.';
 
   @override
@@ -12157,4 +12157,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String release_misc_gateway_unreachable(String endpoint) {
     return 'Gateway-Endpunkt $endpoint nicht erreichbar.';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      'Ungültiges Zustellziel';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      'Nur eine Datei direkt im Arbeitsverzeichnis kann gespeichert werden.';
+
+  @override
+  String get release_core_file_save_hidden =>
+      'Versteckte Dateien können vom Gateway nicht gespeichert werden.';
 }

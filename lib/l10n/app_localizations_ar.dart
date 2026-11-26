@@ -11525,7 +11525,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ng_release_signed_in_you => 'أنت';
 
   @override
-  String get ng_release_unsent_prompt_gone =>
+  String get release_chat_unsent_prompt_gone =>
       'لم يعد ذلك الطلب غير المرسَل في قائمة الانتظار.';
 
   @override
@@ -12012,4 +12012,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String release_misc_gateway_unreachable(String endpoint) {
     return 'يتعذّر الوصول إلى نقطة اتصال البوابة $endpoint.';
   }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      'وجهة التسليم غير صالحة';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      'لا يمكن حفظ إلا ملف موجود مباشرة في دليل العمل.';
+
+  @override
+  String get release_core_file_save_hidden =>
+      'لا يمكن للبوابة حفظ الملفات المخفية.';
 }
