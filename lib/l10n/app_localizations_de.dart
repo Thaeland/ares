@@ -7433,14 +7433,22 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get barge_in_subtitle =>
-      'Sprechen Sie beim Vorlesen etwas an, um es abzubrechen';
+      'Sprechen Sie während einer Antwort, um das Vorlesen abzubrechen. Das Mikrofon bleibt eingeschaltet, solange Antworten vorgelesen werden.';
+
+  @override
+  String get barge_in_mic_live =>
+      'Mikrofon an: Sprechen Sie, um die Antwort abzubrechen';
 
   @override
   String get ng_barge_in_title => 'Hereinbrechen';
 
   @override
   String get ng_barge_in_subtitle =>
-      'Sprechen Sie beim Vorlesen etwas an, um es abzubrechen';
+      'Sprechen Sie während einer Antwort, um das Vorlesen abzubrechen. Das Mikrofon bleibt eingeschaltet, solange Antworten vorgelesen werden.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'Mikrofon an: Sprechen Sie, um die Antwort abzubrechen';
 
   @override
   String get wake_word_title => 'Aktivierungswort';

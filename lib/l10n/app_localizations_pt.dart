@@ -7429,13 +7429,23 @@ class AppLocalizationsPt extends AppLocalizations {
   String get barge_in_title => 'Interromper a leitura';
 
   @override
-  String get barge_in_subtitle => 'Fale sobre a resposta para interrompê-la';
+  String get barge_in_subtitle =>
+      'Fale por cima de uma resposta para a interromper. O microfone fica ligado enquanto as respostas são lidas em voz alta.';
+
+  @override
+  String get barge_in_mic_live =>
+      'Microfone ligado: fale para interromper a resposta';
 
   @override
   String get ng_barge_in_title => 'Interromper a leitura';
 
   @override
-  String get ng_barge_in_subtitle => 'Fale sobre a resposta para interrompê-la';
+  String get ng_barge_in_subtitle =>
+      'Fale por cima de uma resposta para a interromper. O microfone fica ligado enquanto as respostas são lidas em voz alta.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'Microfone ligado: fale para interromper a resposta';
 
   @override
   String get wake_word_title => 'Palavra de ativação';
@@ -14189,13 +14199,23 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get barge_in_title => 'Interromper a leitura';
 
   @override
-  String get barge_in_subtitle => 'Fale sobre a resposta para interrompê-la';
+  String get barge_in_subtitle =>
+      'Fale durante uma resposta para interrompê-la. O microfone fica ligado enquanto as respostas são lidas em voz alta.';
+
+  @override
+  String get barge_in_mic_live =>
+      'Microfone ligado: fale para interromper a resposta';
 
   @override
   String get ng_barge_in_title => 'Interromper a leitura';
 
   @override
-  String get ng_barge_in_subtitle => 'Fale sobre a resposta para interrompê-la';
+  String get ng_barge_in_subtitle =>
+      'Fale durante uma resposta para interrompê-la. O microfone fica ligado enquanto as respostas são lidas em voz alta.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'Microfone ligado: fale para interromper a resposta';
 
   @override
   String get wake_word_title => 'Palavra de ativação';

@@ -12438,8 +12438,14 @@ abstract class AppLocalizations {
   /// No description provided for @barge_in_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Speak over the reply to cut it short'**
+  /// **'Speak over a reply to cut it short. The microphone stays on while replies are read aloud.'**
   String get barge_in_subtitle;
+
+  /// No description provided for @barge_in_mic_live.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone on: speak to cut the reply short'**
+  String get barge_in_mic_live;
 
   /// No description provided for @ng_barge_in_title.
   ///
@@ -12450,8 +12456,14 @@ abstract class AppLocalizations {
   /// No description provided for @ng_barge_in_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Speak over the reply to cut it short'**
+  /// **'Speak over a reply to cut it short. The microphone stays on while replies are read aloud.'**
   String get ng_barge_in_subtitle;
+
+  /// No description provided for @ng_barge_in_mic_live.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone on: speak to cut the reply short'**
+  String get ng_barge_in_mic_live;
 
   /// No description provided for @wake_word_title.
   ///

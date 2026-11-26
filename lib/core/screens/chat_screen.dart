@@ -38,6 +38,7 @@ import '../services/voice_live_engine.dart';
 import '../services/voice_live_mode.dart';
 import '../services/wake_voice_request.dart';
 import '../utils/voice_stop_word.dart';
+import '../widgets/barge_in_indicator.dart';
 import '../widgets/gateway_wake_controls.dart';
 import '../widgets/voice_live_controls.dart';
 import '../widgets/hands_free_voice_controls.dart';
@@ -733,6 +734,11 @@ class ChatScreen extends StatefulWidget {
   @visibleForTesting
   final VoiceReplySpeaker? testVoiceReplySpeaker;
 
+  /// Supplies the read-aloud barge-in monitor (production listens through
+  /// the platform's dictation path).
+  @visibleForTesting
+  final BargeInMonitor Function()? testBargeInMonitor;
+
   /// Retained/offstage destinations must explicitly relinquish voice authority.
   final bool active;
 
@@ -850,6 +856,7 @@ class ChatScreen extends StatefulWidget {
     this.testVoiceTranscription,
     this.testHandsFreePlatform,
     this.testVoiceReplySpeaker,
+    this.testBargeInMonitor,
     this.active = true,
     this.singleSession = false,
     this.notifications,
@@ -1172,6 +1179,10 @@ class _ChatScreenState extends State<ChatScreen>
   /// The client-direct speaker this screen made (null when a test injects
   /// one): disposed with the screen so its audio player is released.
   ClientDirectVoiceReplySpeaker? _ownedDirectSpeaker;
+
+  /// The barge-in monitor whose microphone is open over the reply being
+  /// read aloud; the composer shows that the mic is on while it is set.
+  BargeInMonitor? _bargeInLive;
   late final Future<void> _voiceSetup;
   final Object _voiceRouteToken = Object();
   ModalRoute<dynamic>? _voiceRoute;
@@ -3778,26 +3789,44 @@ class _ChatScreenState extends State<ChatScreen>
         );
     }
     var interrupted = false;
-    final monitor = bargeInEnabled.value ? SpeechToTextBargeInMonitor() : null;
+    var ended = false;
+    final monitor = bargeInEnabled.value
+        ? (widget.testBargeInMonitor?.call() ?? SpeechToTextBargeInMonitor())
+        : null;
+    bool readCurrent() =>
+        mounted &&
+        intent == _manualAudioIntent &&
+        _voiceRouteCurrent &&
+        _voiceForeground;
+    void listenForBargeIn(BargeInMonitor monitor, VoidCallback cut) {
+      unawaited(
+        monitor
+            .start(
+              onInterrupt: () {
+                interrupted = true;
+                cut();
+              },
+              echoText: spokenText,
+              isCurrent: readCurrent,
+            )
+            .then((opened) {
+              // The mic is live once the monitor really opened it, and only
+              // while this read is still the one playing.
+              if (!opened || ended || interrupted || !readCurrent()) return;
+              setState(() => _bargeInLive = monitor);
+            }, onError: (Object _) {}),
+      );
+    }
+
     try {
       if (!_handsFreeSupported && widget.testVoiceReplySpeaker == null) {
         // Preserve non-Android Read aloud: queue mode/input-length APIs are
         // Android-only; hands-free completion guarantees are not claimed here.
         await _flutterTts.stop();
         if (monitor != null) {
-          unawaited(
-            monitor.start(
-              onInterrupt: () {
-                interrupted = true;
-                unawaited(_flutterTts.stop().catchError((Object _) {}));
-              },
-              echoText: spokenText,
-              isCurrent: () =>
-                  mounted &&
-                  intent == _manualAudioIntent &&
-                  _voiceRouteCurrent &&
-                  _voiceForeground,
-            ),
+          listenForBargeIn(
+            monitor,
+            () => unawaited(_flutterTts.stop().catchError((Object _) {})),
           );
         }
         await _flutterTts.speak(spokenText);
@@ -3805,19 +3834,9 @@ class _ChatScreenState extends State<ChatScreen>
       }
       await _replySpeaker.stop();
       if (monitor != null) {
-        unawaited(
-          monitor.start(
-            onInterrupt: () {
-              interrupted = true;
-              unawaited(_replySpeaker.stop().catchError((Object _) {}));
-            },
-            echoText: spokenText,
-            isCurrent: () =>
-                mounted &&
-                intent == _manualAudioIntent &&
-                _voiceRouteCurrent &&
-                _voiceForeground,
-          ),
+        listenForBargeIn(
+          monitor,
+          () => unawaited(_replySpeaker.stop().catchError((Object _) {})),
         );
       }
       final outcome = await _replySpeaker.speak(
@@ -3846,7 +3865,15 @@ class _ChatScreenState extends State<ChatScreen>
           ),
         );
     } finally {
+      ended = true;
       await monitor?.stop();
+      if (monitor != null && identical(_bargeInLive, monitor)) {
+        if (mounted) {
+          setState(() => _bargeInLive = null);
+        } else {
+          _bargeInLive = null;
+        }
+      }
     }
   }
 
@@ -6822,6 +6849,7 @@ class _ChatScreenState extends State<ChatScreen>
           testVoiceTranscription: widget.testVoiceTranscription,
           testHandsFreePlatform: widget.testHandsFreePlatform,
           testVoiceReplySpeaker: widget.testVoiceReplySpeaker,
+          testBargeInMonitor: widget.testBargeInMonitor,
           testTurnNotifications: widget.testTurnNotifications,
           testProjectOverviewLoader: widget.testProjectOverviewLoader,
           testLegacyProjectSessionEnsure: widget.testLegacyProjectSessionEnsure,
@@ -10535,6 +10563,11 @@ class _ChatScreenState extends State<ChatScreen>
                         controller: wake,
                         available: availableHeight,
                         sessionId: widget.session.id,
+                      ),
+                    // Barge-in keeps the mic on while a reply is read.
+                    if (_bargeInLive != null)
+                      BargeInMicLiveIndicator(
+                        label: context.l10n.barge_in_mic_live,
                       ),
                   ],
                 ),

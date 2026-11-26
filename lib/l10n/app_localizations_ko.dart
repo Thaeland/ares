@@ -7223,13 +7223,21 @@ class AppLocalizationsKo extends AppLocalizations {
   String get barge_in_title => '말 끊기';
 
   @override
-  String get barge_in_subtitle => '읽는 중에 말해 멈추게 하기';
+  String get barge_in_subtitle =>
+      '답변을 읽는 중에 말하면 멈출 수 있습니다. 답변을 소리 내어 읽는 동안 마이크가 켜져 있습니다.';
+
+  @override
+  String get barge_in_mic_live => '마이크 켜짐: 말하면 답변 읽기가 멈춥니다';
 
   @override
   String get ng_barge_in_title => '말 끊기';
 
   @override
-  String get ng_barge_in_subtitle => '읽는 중에 말해 멈추게 하기';
+  String get ng_barge_in_subtitle =>
+      '답변을 읽는 중에 말하면 멈출 수 있습니다. 답변을 소리 내어 읽는 동안 마이크가 켜져 있습니다.';
+
+  @override
+  String get ng_barge_in_mic_live => '마이크 켜짐: 말하면 답변 읽기가 멈춥니다';
 
   @override
   String get wake_word_title => '호출어';

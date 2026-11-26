@@ -7368,13 +7368,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get barge_in_title => 'المقاطعة بالحديث';
 
   @override
-  String get barge_in_subtitle => 'تحدث أثناء قراءة الرد لإيقافها فورًا';
+  String get barge_in_subtitle =>
+      'تحدّث أثناء قراءة الرد لإيقافها فورًا. يبقى الميكروفون قيد التشغيل أثناء قراءة الردود بصوت عالٍ.';
+
+  @override
+  String get barge_in_mic_live => 'الميكروفون قيد التشغيل: تحدّث لإيقاف الرد';
 
   @override
   String get ng_barge_in_title => 'المقاطعة بالحديث';
 
   @override
-  String get ng_barge_in_subtitle => 'تحدث أثناء قراءة الرد لإيقافها فورًا';
+  String get ng_barge_in_subtitle =>
+      'تحدّث أثناء قراءة الرد لإيقافها فورًا. يبقى الميكروفون قيد التشغيل أثناء قراءة الردود بصوت عالٍ.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'الميكروفون قيد التشغيل: تحدّث لإيقاف الرد';
 
   @override
   String get wake_word_title => 'كلمة التنبيه';

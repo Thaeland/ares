@@ -74,6 +74,7 @@ import '../../core/services/voice_live_engine.dart';
 import '../../core/services/voice_live_mode.dart';
 import '../../core/services/wake_voice_request.dart';
 import '../../core/utils/voice_stop_word.dart';
+import '../../core/widgets/barge_in_indicator.dart';
 import '../../core/widgets/gateway_wake_controls.dart';
 import '../../core/widgets/voice_live_controls.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
@@ -2526,6 +2527,17 @@ class _NgChatViewState extends State<NgChatView>
           available: available,
           sessionId: chat.storedId ?? chat.runtimeId,
         ),
+        // Barge-in keeps the microphone on while a reply is read: say so.
+        if (_readAloud.bargeInListening)
+          BargeInMicLiveIndicator(
+            label: ngL.ng_barge_in_mic_live,
+            maxHeight: ngAboveComposerMaxHeight(
+              context,
+              available: available,
+              fraction: 0.15,
+              withKeyboard: 0.1,
+            ),
+          ),
         if (chat.catalog case final operation?)
           CatalogInstallCard(
             key: ValueKey(operation.opId),

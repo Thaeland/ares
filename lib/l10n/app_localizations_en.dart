@@ -7372,13 +7372,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get barge_in_title => 'Barge in';
 
   @override
-  String get barge_in_subtitle => 'Speak over the reply to cut it short';
+  String get barge_in_subtitle =>
+      'Speak over a reply to cut it short. The microphone stays on while replies are read aloud.';
+
+  @override
+  String get barge_in_mic_live => 'Microphone on: speak to cut the reply short';
 
   @override
   String get ng_barge_in_title => 'Barge in';
 
   @override
-  String get ng_barge_in_subtitle => 'Speak over the reply to cut it short';
+  String get ng_barge_in_subtitle =>
+      'Speak over a reply to cut it short. The microphone stays on while replies are read aloud.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'Microphone on: speak to cut the reply short';
 
   @override
   String get wake_word_title => 'Wake word';

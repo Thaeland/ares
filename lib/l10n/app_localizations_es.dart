@@ -7427,13 +7427,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String get barge_in_title => 'Interrumpir';
 
   @override
-  String get barge_in_subtitle => 'Hable sobre la respuesta para acortarla';
+  String get barge_in_subtitle =>
+      'Hable durante una respuesta para interrumpirla. El micrófono permanece encendido mientras se leen las respuestas en voz alta.';
+
+  @override
+  String get barge_in_mic_live =>
+      'Micrófono activado: hable para interrumpir la respuesta';
 
   @override
   String get ng_barge_in_title => 'Interrumpir';
 
   @override
-  String get ng_barge_in_subtitle => 'Hable sobre la respuesta para acortarla';
+  String get ng_barge_in_subtitle =>
+      'Hable durante una respuesta para interrumpirla. El micrófono permanece encendido mientras se leen las respuestas en voz alta.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'Micrófono activado: hable para interrumpir la respuesta';
 
   @override
   String get wake_word_title => 'Palabra de activación';

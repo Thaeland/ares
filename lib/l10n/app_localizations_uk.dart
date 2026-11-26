@@ -7428,14 +7428,22 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get barge_in_subtitle =>
-      'Скажіть щось під час читання, щоб зупинити його';
+      'Говоріть під час відповіді, щоб перервати читання. Мікрофон залишається увімкненим, поки відповіді читаються вголос.';
+
+  @override
+  String get barge_in_mic_live =>
+      'Мікрофон увімкнено: говоріть, щоб перервати відповідь';
 
   @override
   String get ng_barge_in_title => 'Перерватити';
 
   @override
   String get ng_barge_in_subtitle =>
-      'Скажіть щось під час читання, щоб зупинити його';
+      'Говоріть під час відповіді, щоб перервати читання. Мікрофон залишається увімкненим, поки відповіді читаються вголос.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'Мікрофон увімкнено: говоріть, щоб перервати відповідь';
 
   @override
   String get wake_word_title => 'Ключова фраза';

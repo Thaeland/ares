@@ -84,6 +84,19 @@ class NgReadAloud extends ChangeNotifier {
   /// The key of the reply currently being read, if any.
   String? get readingKey => _readingKey;
 
+  /// The barge-in monitor whose microphone is open for the current read.
+  BargeInMonitor? _liveMonitor;
+
+  /// True while barge-in listens over a read: the microphone is on, and the
+  /// view shows that it is.
+  bool get bargeInListening => _liveMonitor != null;
+
+  void _setBargeInMonitor(BargeInMonitor? monitor) {
+    if (identical(_liveMonitor, monitor)) return;
+    _liveMonitor = monitor;
+    if (!_disposed) notifyListeners();
+  }
+
   bool isReading(String key) => _readingKey == key;
 
   /// Reads [text] for the reply identified by [key], stopping any other
@@ -96,27 +109,44 @@ class NgReadAloud extends ChangeNotifier {
     BargeInMonitor? monitor;
     HandsFreeSpeechOutcome? outcome;
     var interrupted = false;
+    var ended = false;
     try {
       await _configureVoice();
       if (_disposed || intent != _generation) return;
       if (bargeInEnabled.value) {
-        monitor = _bargeInMonitor();
+        final listening = monitor = _bargeInMonitor();
         unawaited(
-          monitor.start(
-            onInterrupt: () {
-              interrupted = true;
-              unawaited(stop());
-            },
-            echoText: spoken,
-            isCurrent: () => !_disposed && intent == _generation,
-          ),
+          listening
+              .start(
+                onInterrupt: () {
+                  interrupted = true;
+                  unawaited(stop());
+                },
+                echoText: spoken,
+                isCurrent: () => !_disposed && intent == _generation,
+              )
+              .then((opened) {
+                // The mic is live only once the monitor really opened it,
+                // and only while this read is still the one playing.
+                if (opened &&
+                    !ended &&
+                    !interrupted &&
+                    !_disposed &&
+                    intent == _generation) {
+                  _setBargeInMonitor(listening);
+                }
+              }, onError: (Object _) {}),
         );
       }
       outcome = await _speak(spoken, intent);
     } catch (_) {
       outcome = HandsFreeSpeechOutcome.failed;
     } finally {
+      ended = true;
       await monitor?.stop();
+      if (monitor != null && identical(_liveMonitor, monitor)) {
+        _setBargeInMonitor(null);
+      }
     }
     // A user interrupt is not a failure: stop() already cleaned the state.
     if (interrupted) return;
@@ -233,6 +263,7 @@ class NgReadAloud extends ChangeNotifier {
     _disposed = true;
     _generation++;
     _readingKey = null;
+    _liveMonitor = null;
     final speaker = _speaker;
     final owned = _ownedDirect;
     _ownedDirect = null;

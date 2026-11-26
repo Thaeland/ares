@@ -7444,14 +7444,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get barge_in_subtitle =>
-      'Parlez par-dessus la réponse pour l’interrompre';
+      'Parlez par-dessus une réponse pour l’interrompre. Le micro reste allumé pendant la lecture des réponses à voix haute.';
+
+  @override
+  String get barge_in_mic_live =>
+      'Micro allumé : parlez pour interrompre la réponse';
 
   @override
   String get ng_barge_in_title => 'Couper la lecture';
 
   @override
   String get ng_barge_in_subtitle =>
-      'Parlez par-dessus la réponse pour l’interrompre';
+      'Parlez par-dessus une réponse pour l’interrompre. Le micro reste allumé pendant la lecture des réponses à voix haute.';
+
+  @override
+  String get ng_barge_in_mic_live =>
+      'Micro allumé : parlez pour interrompre la réponse';
 
   @override
   String get wake_word_title => 'Mot d’activation';

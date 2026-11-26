@@ -7118,13 +7118,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get barge_in_title => '插话';
 
   @override
-  String get barge_in_subtitle => '朗读时开口说话即可提前停止';
+  String get barge_in_subtitle => '朗读回复时开口说话即可提前停止。朗读回复期间麦克风保持开启。';
+
+  @override
+  String get barge_in_mic_live => '麦克风已开启：说话即可打断回复';
 
   @override
   String get ng_barge_in_title => '插话';
 
   @override
-  String get ng_barge_in_subtitle => '朗读时开口说话即可提前停止';
+  String get ng_barge_in_subtitle => '朗读回复时开口说话即可提前停止。朗读回复期间麦克风保持开启。';
+
+  @override
+  String get ng_barge_in_mic_live => '麦克风已开启：说话即可打断回复';
 
   @override
   String get wake_word_title => '唤醒词';
@@ -13569,13 +13575,19 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get barge_in_title => '插话';
 
   @override
-  String get barge_in_subtitle => '朗读时开口说话即可提前停止';
+  String get barge_in_subtitle => '朗读回复时开口说话即可提前停止。朗读回复期间麦克风保持开启。';
+
+  @override
+  String get barge_in_mic_live => '麦克风已开启：说话即可打断回复';
 
   @override
   String get ng_barge_in_title => '插话';
 
   @override
-  String get ng_barge_in_subtitle => '朗读时开口说话即可提前停止';
+  String get ng_barge_in_subtitle => '朗读回复时开口说话即可提前停止。朗读回复期间麦克风保持开启。';
+
+  @override
+  String get ng_barge_in_mic_live => '麦克风已开启：说话即可打断回复';
 
   @override
   String get wake_word_title => '唤醒词';
@@ -20363,13 +20375,19 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get barge_in_title => '插話打斷';
 
   @override
-  String get barge_in_subtitle => '在朗讀回覆時開口即可中斷播放';
+  String get barge_in_subtitle => '朗讀回覆時開口說話即可中斷播放。朗讀回覆期間麥克風保持開啟。';
+
+  @override
+  String get barge_in_mic_live => '麥克風已開啟：說話即可打斷回覆';
 
   @override
   String get ng_barge_in_title => '插話打斷';
 
   @override
-  String get ng_barge_in_subtitle => '在朗讀回覆時開口即可中斷播放';
+  String get ng_barge_in_subtitle => '朗讀回覆時開口說話即可中斷播放。朗讀回覆期間麥克風保持開啟。';
+
+  @override
+  String get ng_barge_in_mic_live => '麥克風已開啟：說話即可打斷回覆';
 
   @override
   String get wake_word_title => '喚醒詞';

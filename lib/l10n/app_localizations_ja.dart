@@ -7216,13 +7216,20 @@ class AppLocalizationsJa extends AppLocalizations {
   String get barge_in_title => '割り込み';
 
   @override
-  String get barge_in_subtitle => '読み上げ中に話して途中で止める';
+  String get barge_in_subtitle => '読み上げ中に話すと途中で止められます。返信の読み上げ中はマイクがオンのままになります。';
+
+  @override
+  String get barge_in_mic_live => 'マイクオン：話すと返信の読み上げを止めます';
 
   @override
   String get ng_barge_in_title => '割り込み';
 
   @override
-  String get ng_barge_in_subtitle => '読み上げ中に話して途中で止める';
+  String get ng_barge_in_subtitle =>
+      '読み上げ中に話すと途中で止められます。返信の読み上げ中はマイクがオンのままになります。';
+
+  @override
+  String get ng_barge_in_mic_live => 'マイクオン：話すと返信の読み上げを止めます';
 
   @override
   String get wake_word_title => 'ウェイクワード';
