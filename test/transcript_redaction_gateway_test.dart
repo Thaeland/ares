@@ -8,6 +8,11 @@
 // benign code (`os.environ["OPENAI_API_KEY"]`), so a redacted export
 // failed, saved rows vanished from the history list and a foreign preview
 // with an already-redacted header refused to open.
+// Wall-clock budgets: the full suite runs this file alone (-j1) via the
+// 'perf' tag (dart_test.yaml), so parallel load can't fail it.
+@Tags(['perf'])
+library;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/history/transcript_redaction.dart';
 import 'package:hermes_android/core/services/remote_workspace.dart';

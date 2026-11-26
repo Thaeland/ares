@@ -25,6 +25,8 @@ const _noticeAssets = <String>[
   'third_party/licenses/webrtc-third-party-licenses.txt',
   'third_party/licenses/audioswitch-Apache-2.0.txt',
   'third_party/licenses/flutter_webrtc-NOTICE.txt',
+  'third_party/licenses/unorm_dart-MIT.txt',
+  'third_party/licenses/Unicode-3.0.txt',
 ];
 
 const _webrtc =
@@ -96,6 +98,8 @@ void main() {
       _webrtc,
       'audioswitch (com.github.davidliu, Android)',
       'flutter_webrtc (1.6.3) NOTICE',
+      'unorm_dart (0.3.3)',
+      'Unicode Character Database (unorm_dart 0.3.3 normalisation data)',
     ]);
     for (var index = 0; index < _noticeAssets.length; index++) {
       final entry = entries[index + 1] as LicenseEntryWithLineBreaks;

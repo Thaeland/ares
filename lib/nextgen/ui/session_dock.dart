@@ -79,7 +79,8 @@ class NgDock extends StatefulWidget {
   final List<NgSubagent> subagents;
 
   /// The chat's Kanban cards. The dock follows the board only while it is
-  /// on screen, and lets go when the chat is closed or switched.
+  /// on screen, and lets go when the chat is closed or switched, covered by
+  /// a route or in a hidden pane.
   final ChatKanbanDockController? kanban;
   final ValueChanged<ChatKanbanCard>? onOpenKanbanCard;
   final VoidCallback? onShowAllKanban;
@@ -90,32 +91,17 @@ class NgDock extends StatefulWidget {
   State<NgDock> createState() => _NgDockState();
 }
 
-class _NgDockState extends State<NgDock> {
+class _NgDockState extends State<NgDock> with KanbanDockAttachment<NgDock> {
   final Set<_DockSection> _open = {};
 
   void _toggle(_DockSection s) => setState(() {
     if (!_open.remove(s)) _open.add(s);
   });
 
+  /// Attached only while the chat is on screen: a route over it (the board
+  /// it opened, a sheet) or a hidden pane lets go of the board.
   @override
-  void initState() {
-    super.initState();
-    widget.kanban?.attach();
-  }
-
-  @override
-  void didUpdateWidget(covariant NgDock oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (identical(oldWidget.kanban, widget.kanban)) return;
-    oldWidget.kanban?.detach();
-    widget.kanban?.attach();
-  }
-
-  @override
-  void dispose() {
-    widget.kanban?.detach();
-    super.dispose();
-  }
+  ChatKanbanDockController? get attachedKanban => widget.kanban;
 
   @override
   Widget build(BuildContext context) {

@@ -51,7 +51,14 @@ Source pin: Hermes `b7ee21c14e38316273f88d8ed112491ba1c87d15`.
 
 A chat's session ids are its stored id plus the ids `session.resume` returns
 for it (`stored_session_id`, `resumed`): a compressed chat resumes as its
-continuation, and cards made afterwards carry that id.
+continuation, and cards made afterwards carry that id. A compression inside
+an open chat moves it to the continuation too
+(`tui_gateway/session_compression.py`, `_sync_session_key_after_compress`),
+and the gateway's next `session.info` names it in `stored_session_id`. Both
+layouts add that id as well (NextGen in `NgChatController._withInfo`,
+Classic through the chat owner's `kanbanSessionIds` and the screen's
+`session.info` handler) and keep the older ones, so cards stamped with
+either id belong to the chat.
 
 The board always outranks the transcript: once the board has reported a
 card, its title, status and assignee come from the board.
@@ -71,13 +78,30 @@ again. On open (and when a new card appears) it reads:
 
 It then follows each board that still has an unfinished card of this chat
 through the board screen's own `watchKanbanEvents` stream, and re-reads only
-when an event names one of its cards or is a `created` event. When every
-card is finished the stream is closed. If the host offers no event stream,
-it polls that board every 15 seconds, the interval the board screen itself
-uses, and stops when nothing is unfinished.
+when an event names one of its cards or is a `created` event. Such a frame
+re-reads only its own board (`GET /board`, no `GET /boards`, no other
+board), and asks `GET /tasks/{id}` only for the cards the frame named that
+the board no longer lists. Frames are coalesced: the first after a quiet
+spell is read at once, and the ones in the 300 ms after it share one read
+when that window ends. When every card is finished the stream is closed.
 
-Closing the chat or switching to another one closes the stream, the poll and
-the transport. The rows are kept in memory for when the chat is shown again.
+A stream that closes is dialled again from its cursor after 1, 2, 4, 8, 16
+and then every 32 seconds, as the board screen does; one that stayed open
+for 30 seconds starts again at 1 second. The events in between arrive with
+the new stream, so nothing is re-read for the drop itself. If the host
+offers no event stream, or while a dropped one waits to be dialled again,
+the dock polls that board alone every 15 seconds, the interval the board
+screen itself uses, and stops when nothing is unfinished.
+
+On screen means all of: no route covers the chat (`ModalRoute.isCurrentOf`;
+the board the dock opened as a route on a phone, a sheet, another screen),
+its pane is the one shown (`Visibility.of` and `HermesPaneVisibility`: the
+Classic shell keeps visited panes mounted in an `IndexedStack` with their
+tickers running) and its tickers run (`TickerMode`). Both layouts use the
+same `KanbanDockAttachment` (`lib/core/widgets/kanban_dock.dart`). Leaving
+the screen, closing the chat or switching to another one closes the stream,
+the poll and the transport. The rows are kept in memory, and coming back
+reads the board once and follows it again.
 
 ## Opening the board
 
@@ -154,10 +178,17 @@ No live gateway: a fake gateway and a fake Kanban transport
 in-memory dashboard (`test/support/kanban_board_fixture.dart`).
 
 - `test/chat_kanban_dock_test.dart`: sources, de-duplication, provenance,
-  dismissal, access reasons, stream and poll lifetime, late answers.
+  dismissal, access reasons, stream and poll lifetime, late answers; the
+  frame window, per-board and per-card re-reads, and the re-dial backoff.
 - `test/nextgen_kanban_dock_test.dart` and
   `test/classic_kanban_dock_test.dart`: a `kanban_create` in a turn makes a
   row with the right status; a status event updates it; a tap opens the
   board with that card selected (route and pane); another chat's card never
   shows; reload from history restores the rows; the reason is shown when
   the board cannot open; the narrow and keyboard cases.
+- `test/kanban_dock_compression_test.dart`: both layouts, a compression in
+  an open chat; cards stamped with the old and the continuation id both
+  stay in the dock.
+- `test/kanban_dock_visibility_test.dart`: both layouts, the board route
+  the dock opens, a sheet and a hidden IndexedStack pane (the real Classic
+  shell) detach the dock; coming back reads once and follows again.

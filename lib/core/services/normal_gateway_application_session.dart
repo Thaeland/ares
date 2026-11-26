@@ -456,10 +456,16 @@ class NormalGatewayApplicationSession {
       winner._createdEmptySessionId = null;
     }
     // One chat under two ids: its Kanban cards stay with the surviving owner.
-    if (loser._kanban.isNotEmpty) {
+    if (loser._kanban.isNotEmpty || loser._kanbanSessionIds.isNotEmpty) {
       winner._kanban.addAll(loser._kanban);
+      for (final id in loser._kanbanSessionIds) {
+        if (!winner._kanbanSessionIds.contains(id)) {
+          winner._kanbanSessionIds.add(id);
+        }
+      }
       winner._kanbanRevision++;
       loser._kanban.clear();
+      loser._kanbanSessionIds.clear();
     }
     winner._listeners.addAll(loser._listeners);
     loser._listeners.clear();
@@ -911,6 +917,11 @@ class NormalGatewayChatOwner {
   /// Kanban cards this chat's own tool calls made or linked, kept for its
   /// dock: tool activities carry no arguments or results.
   final List<ChatKanbanSeed> _kanban = [];
+
+  /// Session ids the gateway moved this chat to (`session.info`'s
+  /// `stored_session_id` after context compression), oldest first: cards
+  /// made after a compression carry the newer id.
+  final List<String> _kanbanSessionIds = [];
   int _kanbanRevision = 0;
   final List<GatewaySubagentActivity> _subagents = [];
   final List<GatewaySubagentActivity> _activityChildren = [];
@@ -978,9 +989,31 @@ class NormalGatewayChatOwner {
   List<ChatKanbanSeed> get kanbanSeeds =>
       _redirect != null ? _root.kanbanSeeds : List.unmodifiable(_kanban);
 
-  /// Changes whenever [kanbanSeeds] does, so a route reads them only then.
+  /// The session ids `session.info` moved this chat to, oldest first.
+  List<String> get kanbanSessionIds => _redirect != null
+      ? _root.kanbanSessionIds
+      : List.unmodifiable(_kanbanSessionIds);
+
+  /// Changes whenever [kanbanSeeds] or [kanbanSessionIds] does, so a route
+  /// reads them only then.
   int get kanbanRevision =>
       _redirect != null ? _root.kanbanRevision : _kanbanRevision;
+
+  /// Takes the stored session id a `session.info` names. True when it is
+  /// new for this chat.
+  bool _observeStoredSessionId(Map<String, dynamic> data) {
+    final info = data['info'] is Map ? data['info'] as Map : data;
+    final stored = info['stored_session_id'];
+    if (stored is! String) return false;
+    final id = stored.trim();
+    if (id.isEmpty || id == storedSessionId || _kanbanSessionIds.contains(id)) {
+      return false;
+    }
+    _kanbanSessionIds.add(id);
+    if (_kanbanSessionIds.length > 16) _kanbanSessionIds.removeAt(0);
+    _kanbanRevision++;
+    return true;
+  }
 
   NormalGatewayChatSnapshot get snapshot => _redirect != null
       ? _root.snapshot
@@ -2099,6 +2132,12 @@ class NormalGatewayChatOwner {
 
   void _event(StreamEvent event) {
     if (_session._closed) return;
+    // Context compression moved the chat to a continuation session: its
+    // Kanban dock must count cards stamped with the new id as well. Told at
+    // once, because an idle chat's session.info goes no further below.
+    if (event.type == 'session.info' && _observeStoredSessionId(event.data)) {
+      _notify();
+    }
     if (const {
       'notification.show',
       'notification.clear',

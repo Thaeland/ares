@@ -45,6 +45,9 @@ void registerAppLicenses({AssetBundle? assetBundle}) {
           'audioswitch (com.github.davidliu, Android)',
       'third_party/licenses/flutter_webrtc-NOTICE.txt':
           'flutter_webrtc (1.6.3) NOTICE',
+      'third_party/licenses/unorm_dart-MIT.txt': 'unorm_dart (0.3.3)',
+      'third_party/licenses/Unicode-3.0.txt':
+          'Unicode Character Database (unorm_dart 0.3.3 normalisation data)',
     };
     for (final notice in notices.entries) {
       yield LicenseEntryWithLineBreaks([

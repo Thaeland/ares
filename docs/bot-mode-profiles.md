@@ -28,6 +28,12 @@ scoped, like `profiles.list`). A refusal keeps the gateway's message
 - The id is Desktop's `slugifyProfileName` of the typed name and must match
   `PROFILE_ID_RE` (`^[a-z0-9][a-z0-9_-]{0,63}$`). A name on the roster is
   taken. Reserved names (`hermes`, `test`, …) are the gateway's to refuse.
+  `botProfileSlug` is a line-for-line port: NFC, then each letter or digit
+  through NFKD without its combining marks (`unorm_dart`, MIT, Unicode 18
+  tables; see NOTICE.md), else a `u<hex>` token. `test/bot_profile_slug_test.dart`
+  holds it to the ids Desktop's own function gives for 41 names
+  (`Ｂｏｔ２` → `bot2`, `ﬁle` → `file`, `Ⅻ` → `xii`, `ǿ` → `u1ff`, the 64-character
+  cut).
 - `description` is `Title — description`; SOUL.md is Desktop's composed
   persona unless the user wrote one. The teammate protocol is never
   appended: the gateway injects it (`bot_mode_protocol`).
@@ -41,7 +47,14 @@ scoped, like `profiles.list`). A refusal keeps the gateway's message
 Desktop's classic shapes (`circle`, `blob`, `squircle`, `pill`, `triangle`,
 `hexagon`, `cloud`, `drop`), the 12 `PROFILE_SWATCHES` (`hsl(h 68% 58%)`, in
 Desktop's spelling), "Match the name", and an uploaded picture (PNG, JPEG,
-WebP or GIF up to 15 MB, cropped to a 256 px PNG). Desktop's Generate
+WebP or GIF up to 15 MB, cropped to a 256 px PNG). The picker returns a
+path, not the bytes (`withData: false`): the picker's size and then the
+file's length on disk are checked against 15 MB before anything is read
+(`readBotAvatarFile`). The picture is decoded at `botAvatarDecodeSize` of the
+size its header gives (short side down to 256 px, long side at most
+2048 px), so a small file claiming huge dimensions is never decoded at full
+size (`test/bot_avatar_pick_test.dart`, `test/bot_avatar_decode_test.dart`).
+Desktop's Generate
 (`image.generate`) and Pet tabs and its generated blob faces are not ported;
 a `blobatar…` shape from Desktop is drawn as `blob`.
 
@@ -64,6 +77,19 @@ MCP server asks first. Desktop writes the description with
 `cli.exec profile describe`; Ares uses `profiles.configure description`,
 the gateway's typed editor path. Clearing the model (Desktop's
 `config unset model`) is not offered: both provider and model are required.
+
+## Roster search (data.ts, filterBots)
+
+`filterBotRoster` in `remote_bots.dart`. The query is trimmed, lowercased
+and loses a leading `@`. It matches the title the row shows (the record's
+`title`, else the profile's display name, else its id) and Desktop's
+`displayName` spelling of it (`research-buddy` as "Research Buddy", the
+untitled default profile as "Hermes"), the profile id, the @handle (`hermes`
+for `default`), the description, and the preview of the latest activity
+(the fresher of the Bot Chat and the last session, Desktop's
+`botActivitySession`). Ares also matches the row's subtitle (model and
+provider) and the last session's preview, both of which it shows. Search
+narrows the roster and never re-orders it.
 
 ## Sections (user-sections.ts)
 

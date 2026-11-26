@@ -50,6 +50,14 @@ the plugin runs. What is still trusted is recorded in
 [docs/libwebrtc-desktop-download.md](docs/libwebrtc-desktop-download.md).
 The gateway host performs session creation and holds any provider API key.
 
+The New Bot form turns a typed name into a profile id with Unicode NFC and
+NFKD normalisation from the Dart `unorm_dart` 0.3.3 library
+([MIT licence](third_party/licenses/unorm_dart-MIT.txt), Copyright (c) 2018
+Yasuhiro Shimizu; no dependencies). Its normalisation tables are derived from
+the Unicode Character Database
+([Unicode License v3](third_party/licenses/Unicode-3.0.txt), Copyright
+© 1991-2026 Unicode, Inc.). Both notices are shown in the app's licences.
+
 The completion sounds `ares_mail.wav` and `ares_reminder.wav` (in
 `android/app/src/main/res/raw/`, `ios/Runner/` and `macos/Runner/`) and the
 in-app chime are original tones made for this application. They contain no

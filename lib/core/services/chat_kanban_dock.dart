@@ -16,6 +16,7 @@ library;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -378,6 +379,7 @@ class ChatKanbanDockController extends ChangeNotifier {
     this._online,
     Future<SharedPreferences> Function()? preferences,
     this.pollInterval = const Duration(seconds: 15),
+    this.frameWindow = const Duration(milliseconds: 300),
   }) : profile = profile?.trim().isEmpty ?? true ? null : profile!.trim(),
        _preferences = preferences ?? SharedPreferences.getInstance;
 
@@ -389,6 +391,16 @@ class ChatKanbanDockController extends ChangeNotifier {
   /// The board screen's own fallback poll interval; the dock never re-reads
   /// faster, and only polls a board whose event stream is unavailable.
   final Duration pollInterval;
+
+  /// Event frames within this window share one read: the first frame after
+  /// a quiet spell reads at once, the ones after it in the window are read
+  /// together when it ends.
+  final Duration frameWindow;
+
+  /// A dropped event stream is dialled again after 1, 2, 4 … 32 s, as the
+  /// board screen does; one that stayed open this long starts again at 1 s.
+  static const _stableStream = Duration(seconds: 30);
+  static const _maxRedialShift = 5;
 
   static const _maxEntries = 200;
   static const _maxCardReads = 8;
@@ -419,15 +431,34 @@ class ChatKanbanDockController extends ChangeNotifier {
   ChatKanbanBlock? _block;
   final Map<String, StreamSubscription<KanbanEventsFrame>> _subs = {};
   final Map<String, int> _cursors = {};
-  final Map<String, int> _closes = {};
   final Set<String> _noStream = {};
+
+  /// Dropped streams waiting to be dialled again, by board, and how many
+  /// times each has been dialled since it last stayed open.
+  final Map<String, Timer> _redials = {};
+  final Map<String, int> _redialAttempts = {};
+  final Map<String, Timer> _stable = {};
+
+  /// Reads the boards with no open stream (none offered, or a dropped one
+  /// waiting to be dialled again).
   Timer? _poll;
+
+  /// Reads everything again while the board is unreachable.
+  Timer? _retry;
 
   int _views = 0;
   Object _epoch = Object();
   bool _disposed = false;
   Future<void>? _reading;
-  bool _readAgain = false;
+
+  /// Reads waiting for the read loop: everything, or the named boards (with
+  /// the cards their frames named).
+  bool _dueFull = false;
+  final Map<String, Set<String>> _dueBoards = {};
+
+  /// The open frame window, and the frames that arrived in it.
+  Timer? _window;
+  final Map<String, Set<String>> _heldBoards = {};
   bool _notifyQueued = false;
 
   /// The rows to draw: unfinished cards first, each group in the order the
@@ -473,7 +504,11 @@ class ChatKanbanDockController extends ChangeNotifier {
   }
 
   @visibleForTesting
-  bool get debugWatching => _subs.isNotEmpty || _poll != null;
+  bool get debugWatching =>
+      _subs.isNotEmpty ||
+      _redials.isNotEmpty ||
+      _poll != null ||
+      _retry != null;
 
   bool get _attached => _views > 0 && !_disposed;
 
@@ -493,15 +528,16 @@ class ChatKanbanDockController extends ChangeNotifier {
     _views++;
     if (_views != 1) return;
     _noStream.clear();
-    _closes.clear();
+    _redialAttempts.clear();
     // Follow from the board as it is now, not from where an earlier visit
     // stopped: the read that comes first already covers what happened since.
     _cursors.clear();
     scheduleMicrotask(() => unawaited(refresh()));
   }
 
-  /// The dock left the screen (the chat was closed or switched away from):
-  /// stop following the board. The rows are kept for when it comes back.
+  /// The dock left the screen (the chat was closed, switched away from,
+  /// covered by a route or hidden): stop following the board. The rows are
+  /// kept for when it comes back.
   void detach() {
     if (_views == 0) return;
     _views--;
@@ -510,14 +546,31 @@ class ChatKanbanDockController extends ChangeNotifier {
 
   void _stop() {
     _epoch = Object();
+    _unfollow();
+    _retry?.cancel();
+    _retry = null;
+    _window?.cancel();
+    _window = null;
+    _heldBoards.clear();
+    _dueBoards.clear();
+    _dueFull = false;
+    _source?.close();
+    _source = null;
+  }
+
+  /// Lets go of every stream, pending re-dial and poll.
+  void _unfollow() {
     _poll?.cancel();
     _poll = null;
     for (final sub in _subs.values) {
       unawaited(sub.cancel());
     }
     _subs.clear();
-    _source?.close();
-    _source = null;
+    for (final timer in [..._redials.values, ..._stable.values]) {
+      timer.cancel();
+    }
+    _redials.clear();
+    _stable.clear();
   }
 
   @override
@@ -640,22 +693,41 @@ class ChatKanbanDockController extends ChangeNotifier {
     _entries.removeAt(drop < 0 ? 0 : drop);
   }
 
-  /// Reads the board for this chat's cards and follows it. Calls made while
-  /// a read is running share it and cause one more afterwards.
+  /// Reads the board for this chat's cards and follows it: `GET /boards`,
+  /// then each board the chat has cards on. Calls made while a read is
+  /// running share it and cause one more afterwards.
   Future<void> refresh() {
     if (!_attached) return Future.value();
+    _dueFull = true;
+    // A full read covers whatever the frames held in a window asked for.
+    _heldBoards.clear();
+    return _drain();
+  }
+
+  /// Runs the reads that are due, one at a time.
+  Future<void> _drain() {
     final running = _reading;
-    if (running != null) {
-      _readAgain = true;
-      return running;
+    if (running != null) return running;
+    if (!_attached || !(_dueFull || _dueBoards.isNotEmpty)) {
+      return Future.value();
     }
     late final Future<void> mine;
     mine = () async {
       try {
-        do {
-          _readAgain = false;
-          await _read();
-        } while (_readAgain && _attached);
+        while (_attached && (_dueFull || _dueBoards.isNotEmpty)) {
+          if (_dueFull) {
+            _dueFull = false;
+            _dueBoards.clear();
+            await _read();
+          } else {
+            final boards = {
+              for (final MapEntry(:key, :value) in _dueBoards.entries)
+                key: {...value},
+            };
+            _dueBoards.clear();
+            await _readBoards(boards);
+          }
+        }
       } finally {
         if (identical(_reading, mine)) _reading = null;
       }
@@ -663,24 +735,59 @@ class ChatKanbanDockController extends ChangeNotifier {
     return _reading = mine;
   }
 
+  /// An event frame on [board] concerns this chat ([ids] are the cards it
+  /// named): read that board only. The first frame after a quiet spell reads
+  /// at once; frames in the [frameWindow] after it are read together when
+  /// the window ends.
+  void _frameRead(String board, Set<String> ids) {
+    if (!_attached) return;
+    if (_window != null) {
+      (_heldBoards[board] ??= {}).addAll(ids);
+      return;
+    }
+    (_dueBoards[board] ??= {}).addAll(ids);
+    _openWindow();
+    unawaited(_drain());
+  }
+
+  void _openWindow() {
+    _window = Timer(frameWindow, () {
+      _window = null;
+      if (!_attached || _heldBoards.isEmpty) return;
+      for (final MapEntry(:key, :value) in _heldBoards.entries) {
+        (_dueBoards[key] ??= {}).addAll(value);
+      }
+      _heldBoards.clear();
+      _openWindow();
+      unawaited(_drain());
+    });
+  }
+
+  ChatKanbanBlock _blockFor(WorkspaceException e) => switch (e.reason) {
+    WorkspaceFailure.unsupported => ChatKanbanBlock.unsupported,
+    WorkspaceFailure.denied => ChatKanbanBlock.denied,
+    WorkspaceFailure.insecure => ChatKanbanBlock.insecure,
+    WorkspaceFailure.stale ||
+    WorkspaceFailure.mismatch => ChatKanbanBlock.stale,
+    _ => ChatKanbanBlock.unreachable,
+  };
+
   void _blocked(ChatKanbanBlock block) {
     // A board that cannot be read is not followed; unfinished cards on an
     // unreachable one are tried again at the board screen's poll interval.
-    for (final sub in _subs.values) {
-      unawaited(sub.cancel());
-    }
-    _subs.clear();
-    _poll?.cancel();
-    _poll = null;
+    _unfollow();
+    _retry?.cancel();
+    _retry = null;
     if (block == ChatKanbanBlock.unreachable &&
         _entries.any((e) => !e.settled)) {
-      _poll = Timer.periodic(pollInterval, (_) => unawaited(refresh()));
+      _retry = Timer.periodic(pollInterval, (_) => unawaited(refresh()));
     }
     if (_block == block) return;
     _block = block;
     _changed();
   }
 
+  /// Everything: the current board, then every board the chat has cards on.
   Future<void> _read() async {
     final epoch = _epoch;
     bool stale() => _disposed || !identical(epoch, _epoch);
@@ -697,53 +804,38 @@ class ChatKanbanDockController extends ChangeNotifier {
       _currentBoard = current;
       final boards = <String>{current, for (final e in _entries) ?e.board};
       for (final board in boards) {
-        final KanbanBoardSnapshot snap;
-        try {
-          snap = await source.snapshot(board);
-        } on KanbanBoardNotFoundException {
-          if (stale()) return;
-          // The board was archived or deleted with its cards.
-          for (final e in _entries.where((e) => e.board == board).toList()) {
-            _forget(e);
-          }
-          continue;
-        }
-        if (stale()) return;
-        final seen = <String>{};
-        for (final task in snap.allTasks) {
-          final mine =
-              task.sessionId != null && _sessionIds.contains(task.sessionId);
-          var entry = _find(task.id, board);
-          if (entry == null) {
-            if (!mine) continue;
-            _gone.remove(task.id);
-            entry = _Entry(task.id);
-            _add(entry);
-          }
-          seen.add(task.id);
-          _take(entry, board, task);
-        }
-        _cursors.putIfAbsent(board, () => snap.latestEventId);
-        // Not among the open cards: archived, deleted, or on another board.
-        final absent = [
-          for (final e in _entries)
-            if (!seen.contains(e.id) &&
-                !(e.archived && e.confirmed) &&
-                e.misses < _maxMisses &&
-                (e.board == board || (e.board == null && board == current)))
-              e,
-        ];
-        for (final entry in absent.take(_maxCardReads)) {
-          final task = await source.card(board, entry.id);
-          if (stale()) return;
-          if (task != null) {
-            _take(entry, board, task);
-          } else if (entry.board == board) {
-            _forget(entry);
-          } else {
-            entry.misses++;
-          }
-        }
+        if (!await _readBoard(source, board, stale)) return;
+      }
+      _retry?.cancel();
+      _retry = null;
+      if (_block != null) _block = null;
+      await _follow(source, stale);
+      if (stale()) return;
+      _changed();
+    } on WorkspaceException catch (e) {
+      if (stale()) return;
+      _blocked(_blockFor(e));
+    } catch (_) {
+      if (stale()) return;
+      _blocked(ChatKanbanBlock.unreachable);
+    }
+  }
+
+  /// Only [boards], each for the cards its frames named: no `GET /boards`
+  /// and no other board.
+  Future<void> _readBoards(Map<String, Set<String>> boards) async {
+    final epoch = _epoch;
+    bool stale() => _disposed || !identical(epoch, _epoch);
+    if (stale() || (_sessionIds.isEmpty && _entries.isEmpty)) return;
+    final source = _source;
+    if (source == null || _currentBoard == null) {
+      // Nothing has been read yet: read everything.
+      return _read();
+    }
+    if (!(_online?.call() ?? true)) return;
+    try {
+      for (final MapEntry(key: board, value: ids) in boards.entries) {
+        if (!await _readBoard(source, board, stale, concerned: ids)) return;
       }
       if (_block != null) _block = null;
       await _follow(source, stale);
@@ -751,18 +843,73 @@ class ChatKanbanDockController extends ChangeNotifier {
       _changed();
     } on WorkspaceException catch (e) {
       if (stale()) return;
-      _blocked(switch (e.reason) {
-        WorkspaceFailure.unsupported => ChatKanbanBlock.unsupported,
-        WorkspaceFailure.denied => ChatKanbanBlock.denied,
-        WorkspaceFailure.insecure => ChatKanbanBlock.insecure,
-        WorkspaceFailure.stale ||
-        WorkspaceFailure.mismatch => ChatKanbanBlock.stale,
-        _ => ChatKanbanBlock.unreachable,
-      });
+      _blocked(_blockFor(e));
     } catch (_) {
       if (stale()) return;
       _blocked(ChatKanbanBlock.unreachable);
     }
+  }
+
+  /// Reads [board]'s open cards for this chat's (its own and provenance),
+  /// then asks for its tracked cards missing from them one by one: all of
+  /// them, or only those in [concerned] (the cards a frame named). False
+  /// when the read went stale.
+  Future<bool> _readBoard(
+    ChatKanbanSource source,
+    String board,
+    bool Function() stale, {
+    Set<String>? concerned,
+  }) async {
+    final current = _currentBoard;
+    final KanbanBoardSnapshot snap;
+    try {
+      snap = await source.snapshot(board);
+    } on KanbanBoardNotFoundException {
+      if (stale()) return false;
+      // The board was archived or deleted with its cards.
+      for (final e in _entries.where((e) => e.board == board).toList()) {
+        _forget(e);
+      }
+      return true;
+    }
+    if (stale()) return false;
+    final seen = <String>{};
+    for (final task in snap.allTasks) {
+      final mine =
+          task.sessionId != null && _sessionIds.contains(task.sessionId);
+      var entry = _find(task.id, board);
+      if (entry == null) {
+        if (!mine) continue;
+        _gone.remove(task.id);
+        entry = _Entry(task.id);
+        _add(entry);
+      }
+      seen.add(task.id);
+      _take(entry, board, task);
+    }
+    _cursors.putIfAbsent(board, () => snap.latestEventId);
+    // Not among the open cards: archived, deleted, or on another board.
+    final absent = [
+      for (final e in _entries)
+        if (!seen.contains(e.id) &&
+            (concerned == null || concerned.contains(e.id)) &&
+            !(e.archived && e.confirmed) &&
+            e.misses < _maxMisses &&
+            (e.board == board || (e.board == null && board == current)))
+          e,
+    ];
+    for (final entry in absent.take(_maxCardReads)) {
+      final task = await source.card(board, entry.id);
+      if (stale()) return false;
+      if (task != null) {
+        _take(entry, board, task);
+      } else if (entry.board == board) {
+        _forget(entry);
+      } else {
+        entry.misses++;
+      }
+    }
+    return true;
   }
 
   /// The board has no such card any more.
@@ -787,66 +934,162 @@ class ChatKanbanDockController extends ChangeNotifier {
     }
   }
 
+  /// The boards with an unfinished card of this chat.
+  Set<String> get _wanted => {
+    for (final e in _entries)
+      if (!e.settled && e.board != null) e.board!,
+  };
+
   /// Follows every board that still has unfinished cards of this chat, and
   /// lets go of the others.
   Future<void> _follow(ChatKanbanSource source, bool Function() stale) async {
-    final wanted = <String>{
-      for (final e in _entries)
-        if (!e.settled && e.board != null) e.board!,
-    };
+    final wanted = _wanted;
     for (final board in _subs.keys.toList()) {
-      if (!wanted.contains(board)) unawaited(_subs.remove(board)?.cancel());
+      if (wanted.contains(board)) continue;
+      unawaited(_subs.remove(board)?.cancel());
+      _stable.remove(board)?.cancel();
     }
-    final epoch = _epoch;
+    for (final board in _redials.keys.toList()) {
+      if (wanted.contains(board)) continue;
+      _redials.remove(board)?.cancel();
+      _redialAttempts.remove(board);
+    }
     for (final board in wanted) {
-      if (_subs.containsKey(board) || _noStream.contains(board)) continue;
-      final sub = await source.watch(
-        board,
-        since: _cursors[board] ?? 0,
-        onFrame: (frame) => _onFrame(epoch, board, frame),
-        onClosed: () => _onClosed(epoch, board),
-      );
-      if (stale()) {
-        unawaited(sub?.cancel());
-        return;
+      if (_subs.containsKey(board) ||
+          _noStream.contains(board) ||
+          _redials.containsKey(board)) {
+        continue;
       }
-      if (sub == null) {
-        _noStream.add(board);
-      } else {
-        _subs[board] = sub;
-      }
+      if (!await _dial(source, board, stale)) return;
     }
-    final poll = wanted.any(_noStream.contains);
-    if (!poll) {
+    _pollUnfollowed();
+  }
+
+  /// Opens [board]'s event stream from its cursor. False when the read that
+  /// asked went stale.
+  Future<bool> _dial(
+    ChatKanbanSource source,
+    String board,
+    bool Function() stale,
+  ) async {
+    final epoch = _epoch;
+    var closed = false;
+    final sub = await source.watch(
+      board,
+      since: _cursors[board] ?? 0,
+      onFrame: (frame) => _onFrame(epoch, board, frame),
+      onClosed: () {
+        closed = true;
+        _onClosed(epoch, board);
+      },
+    );
+    if (stale()) {
+      unawaited(sub?.cancel());
+      return false;
+    }
+    if (sub == null) {
+      // The host offers no event stream: the poll reads this board.
+      _noStream.add(board);
+    } else if (!closed) {
+      // Closed while dialling: [_onClosed] has already set the re-dial.
+      _subs[board] = sub;
+      _stable[board]?.cancel();
+      _stable[board] = Timer(_stableStream, () {
+        _stable.remove(board);
+        _redialAttempts.remove(board);
+      });
+    }
+    return true;
+  }
+
+  /// Boards with unfinished cards of this chat and no open stream (the host
+  /// offers none, or a dropped one waits to be dialled again) are read at
+  /// the board screen's poll interval, on their own.
+  void _pollUnfollowed() {
+    final unfollowed = {
+      for (final board in _wanted)
+        if (!_subs.containsKey(board) &&
+            (_noStream.contains(board) || _redials.containsKey(board)))
+          board,
+    };
+    if (unfollowed.isEmpty) {
       _poll?.cancel();
       _poll = null;
-    } else {
-      _poll ??= Timer.periodic(pollInterval, (_) => unawaited(refresh()));
+      return;
     }
+    _poll ??= Timer.periodic(pollInterval, (_) {
+      if (!_attached) return;
+      final boards = {
+        for (final board in _wanted)
+          if (!_subs.containsKey(board) &&
+              (_noStream.contains(board) || _redials.containsKey(board)))
+            board,
+      };
+      if (boards.isEmpty) {
+        _poll?.cancel();
+        _poll = null;
+        return;
+      }
+      for (final board in boards) {
+        _dueBoards[board] ??= {};
+      }
+      unawaited(_drain());
+    });
   }
 
   void _onFrame(Object epoch, String board, KanbanEventsFrame frame) {
     if (_disposed || !identical(epoch, _epoch)) return;
     _cursors[board] = frame.cursor;
-    _closes.remove(board);
     // A new card may be this chat's (provenance); other cards' events are not
     // this dock's business.
-    final relevant = frame.events.any(
-      (event) =>
-          event.kind == 'created' ||
-          (event.taskId != null && _entries.any((e) => e.id == event.taskId)),
-    );
-    if (relevant) unawaited(refresh());
+    var relevant = false;
+    final ids = <String>{};
+    for (final event in frame.events) {
+      final id = event.taskId;
+      final tracked = id != null && _entries.any((e) => e.id == id);
+      if (event.kind == 'created' || tracked) {
+        relevant = true;
+        if (tracked) ids.add(id);
+      }
+    }
+    if (relevant) _frameRead(board, ids);
   }
 
+  /// [board]'s stream closed: dial it again from its cursor after 1, 2, 4 …
+  /// 32 s, as the board screen does. The events in between come with it,
+  /// and the poll stands in meanwhile.
   void _onClosed(Object epoch, String board) {
     if (_disposed || !identical(epoch, _epoch)) return;
     _subs.remove(board);
-    // A stream that keeps closing is not available: fall back to the poll.
-    final closes = (_closes[board] ?? 0) + 1;
-    _closes[board] = closes;
-    if (closes > 2) _noStream.add(board);
-    unawaited(refresh());
+    _stable.remove(board)?.cancel();
+    if (_redials.containsKey(board)) return;
+    final attempt = _redialAttempts[board] ?? 0;
+    _redialAttempts[board] = attempt + 1;
+    final wait = Duration(seconds: 1 << math.min(attempt, _maxRedialShift));
+    _redials[board] = Timer(wait, () {
+      _redials.remove(board);
+      unawaited(_redial(epoch, board));
+    });
+    _pollUnfollowed();
+  }
+
+  Future<void> _redial(Object epoch, String board) async {
+    bool stale() => _disposed || !identical(epoch, _epoch);
+    final source = _source;
+    if (stale() || !_attached || source == null) return;
+    if (!_wanted.contains(board) || _subs.containsKey(board)) {
+      _pollUnfollowed();
+      return;
+    }
+    // Offline: the chat refreshes the dock when its socket is up again.
+    if (!(_online?.call() ?? true)) return;
+    try {
+      if (await _dial(source, board, stale)) _pollUnfollowed();
+    } on WorkspaceException catch (e) {
+      if (!stale()) _blocked(_blockFor(e));
+    } catch (_) {
+      if (!stale()) _blocked(ChatKanbanBlock.unreachable);
+    }
   }
 
   String? get _dismissedScope {

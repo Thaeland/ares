@@ -1541,7 +1541,11 @@ class _ChatScreenState extends State<ChatScreen>
     if (_normalChat case final owner?
         when owner.kanbanRevision != _kanbanSeedsSeen) {
       _kanbanSeedsSeen = owner.kanbanRevision;
-      _kanbanDock.observeSeeds(owner.kanbanSeeds);
+      // The ids compression moved the chat to, before the cards: a card
+      // made after a compression carries the newer id.
+      _kanbanDock
+        ..setChat(primaryId: null, aliases: owner.kanbanSessionIds)
+        ..observeSeeds(owner.kanbanSeeds);
     }
     final rejectedDraft = snapshot.rejectedDraft;
     if (rejectedDraft != null &&
@@ -8352,6 +8356,18 @@ class _ChatScreenState extends State<ChatScreen>
     }
   }
 
+  /// Context compression moves the chat to a continuation session, and
+  /// `session.info` names it (`stored_session_id`). Cards made from then on
+  /// carry that id, cards made before keep the old one: the Kanban strip
+  /// counts both as this chat's.
+  void _adoptCompressedSessionId(Map<String, dynamic> data) {
+    final info = data['info'] is Map ? data['info'] as Map : data;
+    final stored = info['stored_session_id'];
+    if (stored is String && stored.trim().isNotEmpty) {
+      _kanbanDock.setChat(primaryId: null, aliases: [stored]);
+    }
+  }
+
   void _adoptRouteEffort(Map<String, dynamic> data) {
     final info = data['info'] is Map
         ? Map<String, dynamic>.from(data['info'] as Map)
@@ -8376,6 +8392,7 @@ class _ChatScreenState extends State<ChatScreen>
   void _handleDesktopGatewayEvent(StreamEvent event, int responseGeneration) {
     if (!mounted || responseGeneration != _responseGeneration) return;
     if (event.type == 'session.info') {
+      _adoptCompressedSessionId(event.data);
       _adoptRouteEffort(event.data);
       return;
     }

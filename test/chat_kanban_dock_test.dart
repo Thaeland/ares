@@ -654,30 +654,190 @@ void main() {
     dock.dispose();
   });
 
-  test('a dropped stream is reopened, then given up for the poll', () async {
-    final source = FakeKanbanSource()
-      ..put('default', _task('t_1', status: 'running', session: 'chat-a'));
-    final dock = ChatKanbanDockController(
+  group('load (review of deb6f558, item 3)', () {
+    ChatKanbanDockController followed(
+      FakeKanbanSource source, {
+      Duration pollInterval = const Duration(seconds: 15),
+    }) => ChatKanbanDockController(
       connectionId: 'conn-a',
       profile: 'work',
       openSource: () => source,
-      pollInterval: const Duration(hours: 1),
+      pollInterval: pollInterval,
     )..setChat(primaryId: 'chat-a');
-    addTearDown(dock.dispose);
-    dock.attach();
-    await pumpEventQueue();
-    expect(source.count('watch:default@10'), 1);
-    for (var i = 0; i < 2; i++) {
-      await source.drop('default');
-      await pumpEventQueue();
-      expect(source.watching, {'default'}, reason: 'reopened after drop $i');
-    }
-    await source.drop('default');
-    await pumpEventQueue();
-    expect(source.watching, isEmpty);
-    expect(source.count('watch:default@10'), 3);
-    // Still followed, by the poll.
-    expect(dock.debugWatching, isTrue);
+
+    int dials(FakeKanbanSource source) =>
+        source.requests.where((r) => r.startsWith('watch:')).length;
+
+    testWidgets('frames within 300 ms share one read, of their own board '
+        'only, and never GET /boards', (tester) async {
+      final source = FakeKanbanSource()
+        ..put('default', _task('t_1', status: 'ready', session: 'chat-a'))
+        ..put('ops-board', _task('t_ops', status: 'running'));
+      final dock = followed(source)
+        ..observeHistoryRows(
+          kanbanCreateRows(toolId: 'c1', taskId: 't_ops', board: 'ops-board'),
+        )
+        ..attach();
+      await tester.pump();
+      await tester.pump();
+      expect(source.watching, {'default', 'ops-board'});
+      final boards = source.count('boards');
+      final ops = source.count('board:ops-board');
+      final own = source.count('board:default');
+
+      // A burst of moves on the default board, 50 ms apart.
+      for (final (i, status) in const [
+        'running',
+        'blocked',
+        'running',
+        'review',
+        'done',
+      ].indexed) {
+        source.put('default', _task('t_1', status: status, session: 'chat-a'));
+        source.emit('default', [
+          {'id': 30 + i, 'task_id': 't_1', 'kind': 'status'},
+        ]);
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      // The first frame was read at once; the four after it wait for the
+      // window to end.
+      expect(source.count('board:default'), own + 1);
+      expect(dock.cards.firstWhere((c) => c.id == 't_1').status, 'running');
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump();
+      expect(source.count('board:default'), own + 2);
+      expect(dock.cards.firstWhere((c) => c.id == 't_1').status, 'done');
+      // Nothing else was read for them.
+      expect(source.count('board:ops-board'), ops);
+      expect(source.count('boards'), boards);
+
+      // A frame on the other board reads that board only.
+      await tester.pump(const Duration(seconds: 1));
+      source.put('ops-board', _task('t_ops', status: 'blocked'));
+      source.emit('ops-board', [
+        {'id': 40, 'task_id': 't_ops', 'kind': 'blocked'},
+      ]);
+      await tester.pump();
+      expect(source.count('board:ops-board'), ops + 1);
+      expect(source.count('board:default'), own + 2);
+      expect(source.count('boards'), boards);
+      expect(dock.cards.firstWhere((c) => c.id == 't_ops').status, 'blocked');
+      dock.dispose();
+    });
+
+    testWidgets('a frame naming a card missing from its board asks for that '
+        'card only', (tester) async {
+      final source = FakeKanbanSource()
+        ..put('default', _task('t_1', status: 'running', session: 'chat-a'))
+        ..put('default', _task('t_2', status: 'running', session: 'chat-a'));
+      final dock = followed(source)..attach();
+      await tester.pump();
+      await tester.pump();
+      expect(_ids(dock), ['t_1', 't_2']);
+      // Both leave the open board, but the frame names only one of them.
+      source
+        ..remove('default', 't_1')
+        ..remove('default', 't_2');
+      source.emit('default', [
+        {'id': 30, 'task_id': 't_1', 'kind': 'deleted'},
+      ]);
+      await tester.pump();
+      expect(source.requests, contains('card:default/t_1'));
+      expect(source.requests, isNot(contains('card:default/t_2')));
+      expect(_ids(dock), ['t_2']);
+      dock.dispose();
+    });
+
+    testWidgets('a dropped stream is dialled again after 1, 2, 4 … 32 s from '
+        'its cursor, as the board screen does', (tester) async {
+      final source = FakeKanbanSource()
+        ..put('default', _task('t_1', status: 'running', session: 'chat-a'));
+      final dock = followed(source, pollInterval: const Duration(hours: 1))
+        ..attach();
+      await tester.pump();
+      await tester.pump();
+      expect(source.requests.last, 'watch:default@10');
+      // Someone else's card moves: the cursor follows, nothing is read.
+      source.emit('default', [
+        {'id': 11, 'task_id': 't_other', 'kind': 'commented'},
+      ]);
+      await tester.pump();
+      final reads = source.requests.length;
+      var dialled = dials(source);
+
+      for (final wait in const [1, 2, 4, 8, 16, 32, 32]) {
+        unawaited(source.drop('default'));
+        await tester.pump();
+        expect(source.watching, isEmpty);
+        expect(dock.debugWatching, isTrue, reason: 'a re-dial is due');
+        await tester.pump(Duration(seconds: wait) - const Duration(seconds: 1));
+        await tester.pump(const Duration(milliseconds: 999));
+        expect(dials(source), dialled, reason: 'not before $wait s');
+        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pump();
+        dialled++;
+        expect(dials(source), dialled, reason: 'at $wait s');
+        expect(source.requests.last, 'watch:default@11');
+        expect(source.watching, {'default'});
+      }
+      // The stream replays from the cursor: no board was read meanwhile.
+      expect(source.requests.length, reads + 7);
+
+      // Open for 30 s: the next drop waits 1 s again.
+      await tester.pump(const Duration(seconds: 30));
+      unawaited(source.drop('default'));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump();
+      expect(dials(source), dialled + 1);
+      expect(source.watching, {'default'});
+
+      // Leaving the screen cancels a re-dial that is due.
+      unawaited(source.drop('default'));
+      await tester.pump();
+      dock.detach();
+      await tester.pump(const Duration(minutes: 2));
+      expect(dials(source), dialled + 1);
+      expect(dock.debugWatching, isFalse);
+      dock.dispose();
+    });
+
+    testWidgets('while a dropped stream waits to be dialled again, the poll '
+        'reads that board on its own', (tester) async {
+      final source = FakeKanbanSource()
+        ..put('default', _task('t_1', status: 'running', session: 'chat-a'));
+      final dock = followed(
+        source,
+        pollInterval: const Duration(milliseconds: 600),
+      )..attach();
+      await tester.pump();
+      await tester.pump();
+      // Five drops: the next re-dial waits 32 s.
+      for (final wait in const [1, 2, 4, 8, 16]) {
+        unawaited(source.drop('default'));
+        await tester.pump();
+        await tester.pump(Duration(seconds: wait));
+        await tester.pump();
+      }
+      expect(source.watching, {'default'});
+      final boards = source.count('boards');
+      final own = source.count('board:default');
+      unawaited(source.drop('default'));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pump();
+      expect(source.count('board:default'), own + 5);
+      expect(source.count('boards'), boards);
+      expect(source.watching, isEmpty);
+      // Dialled again at 32 s: the poll stops.
+      await tester.pump(const Duration(seconds: 29));
+      await tester.pump();
+      expect(source.watching, {'default'});
+      final polled = source.count('board:default');
+      await tester.pump(const Duration(seconds: 5));
+      expect(source.count('board:default'), polled);
+      dock.dispose();
+    });
   });
 
   test('the dock keeps a bounded number of cards', () async {

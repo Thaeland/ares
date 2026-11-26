@@ -31,6 +31,7 @@ final class BotRosterProfile {
     this.canonicalSessionId,
     this.workerSessionId,
     this.lastSessionPreview,
+    this.activityPreview,
     this.look = const {},
     this.lookRevision,
     this.lastActive = 0,
@@ -48,6 +49,10 @@ final class BotRosterProfile {
   final String? canonicalSessionId;
   final String? workerSessionId;
   final String? lastSessionPreview;
+
+  /// The preview of the bot's latest activity: the fresher of its Bot Chat
+  /// and its last session (Desktop's `botActivitySession`).
+  final String? activityPreview;
 
   /// Hermes Desktop's per-bot record, `ui_meta['hermes-bots']` in the
   /// profile's profile.yaml: title, avatar shape/colour, pin, section.
@@ -99,6 +104,7 @@ final class BotRosterProfile {
     canonicalSessionId: canonicalSessionId,
     workerSessionId: workerSessionId,
     lastSessionPreview: lastSessionPreview,
+    activityPreview: activityPreview,
     look: Map<String, dynamic>.unmodifiable(next),
     lookRevision: lookRevision,
     lastActive: lastActive,
@@ -125,6 +131,13 @@ final class BotRosterProfile {
       active(canonical),
       active(lastSession),
     ].reduce((a, b) => a > b ? a : b);
+    // Desktop's botActivitySession: the Bot Chat unless the last session is
+    // newer.
+    final activity = canonical is Map && lastSession is Map
+        ? (active(canonical) >= active(lastSession) ? canonical : lastSession)
+        : canonical is Map
+        ? canonical
+        : lastSession;
     return BotRosterProfile(
       name: name,
       path: path is String ? path : '',
@@ -144,6 +157,9 @@ final class BotRosterProfile {
       lastSessionPreview: lastSession is Map
           ? lastSession['preview'] as String?
           : null,
+      activityPreview: activity is Map && activity['preview'] is String
+          ? activity['preview'] as String
+          : null,
       look: bots is Map ? Map<String, dynamic>.unmodifiable(bots) : const {},
       lookRevision: revisions is Map
           ? switch (revisions['hermes-bots']) {
@@ -156,30 +172,76 @@ final class BotRosterProfile {
   }
 }
 
+/// The name Desktop's `displayName` (labels.ts) gives [bot] on a single
+/// gateway: its Bot Mode title, else its profile display name, else
+/// "Hermes" for an untitled default profile, else its id with `-`/`_` read
+/// as spaces and each word capitalised.
+String botDesktopDisplayName(BotRosterProfile bot) {
+  final own = bot.look['title'];
+  if (own is String && own.trim().isNotEmpty) return own.trim();
+  if (bot.displayName.trim().isNotEmpty) return bot.displayName.trim();
+  if (bot.name.trim().toLowerCase() == 'default') return 'Hermes';
+  return bot.name
+      .replaceAll(RegExp(r'[-_]+'), ' ')
+      .trim()
+      .replaceAllMapped(RegExp(r'\b\w'), (match) => match[0]!.toUpperCase());
+}
+
+/// Desktop's `filterBots` (data.ts): [query], trimmed, lowercased and
+/// without a leading `@`, matches a row by the title it shows (and Desktop's
+/// spelling of it), its profile id, its @handle, its description and the
+/// preview of its latest activity. The row's subtitle (model and provider)
+/// and its last session's preview, which Ares shows, count too. Search
+/// narrows the roster; it never re-ranks it.
+List<BotRosterProfile> filterBotRoster(
+  Iterable<BotRosterProfile> roster,
+  String query,
+) {
+  final needle = query.trim().toLowerCase().replaceFirst(RegExp('^@'), '');
+  if (needle.isEmpty) return roster.toList();
+  return [
+    for (final bot in roster)
+      if ([
+        bot.title,
+        botDesktopDisplayName(bot),
+        bot.name,
+        bot.handle,
+        bot.displayName,
+        if (bot.look['description'] case final String own) own,
+        bot.description,
+        ?bot.activityPreview,
+        ?bot.lastSessionPreview,
+        bot.model,
+        bot.provider,
+      ].any((text) => text.toLowerCase().contains(needle)))
+        bot,
+  ];
+}
+
 /// The profile id grammar (`hermes_constants.PROFILE_ID_RE`, mirrored by
 /// Desktop's `PROFILE_ID_ARG_RE`).
 final botProfileIdPattern = RegExp(r'^[a-z0-9][a-z0-9_-]{0,63}$');
 
-/// Desktop's `slugifyProfileName` (labels.ts): the profile id a typed bot
-/// name becomes. Accented Latin folds to its base letter; any other letter
-/// or digit becomes a `u<hex>` token; the rest collapses to `-`; at most 64
-/// characters, cut at a token boundary.
+/// Desktop's `slugifyProfileName` (labels.ts at b7ee21c14e): the profile id
+/// a typed bot name becomes. The name is NFC-normalised; each letter or
+/// digit whose NFKD form, without its combining marks, is ASCII letters and
+/// digits becomes those (`Résumé` → `resume`, `Ｂｏｔ２` → `bot2`, `ﬁ` →
+/// `fi`); any other letter or digit becomes a `u<hex>` token of its NFC code
+/// point (`小` → `u5c0f`); runs of `-` collapse; then Desktop's `slugify`
+/// (lowercase, anything outside `a-z0-9_-` to `-`, no `-` at either end);
+/// at most 64 characters, cut at a token boundary.
 String botProfileSlug(String value) {
-  final buffer = StringBuffer();
-  for (final rune in value.trim().runes) {
-    final ch = String.fromCharCode(rune);
-    final folded = _foldLatin(ch);
-    if (RegExp(r'^[a-zA-Z0-9]+$').hasMatch(folded)) {
-      buffer.write(folded);
-    } else if (_isLetterOrDigit(rune)) {
-      buffer.write('-u${rune.toRadixString(16)}-');
-    } else {
-      buffer.write(ch);
-    }
-  }
-  final slug = buffer
-      .toString()
-      .replaceAll(RegExp(r'-+'), '-')
+  final folded = unorm
+      .nfc(value)
+      .replaceAllMapped(_letterOrDigit, (match) {
+        final ch = match[0]!;
+        final base = unorm.nfkd(ch).replaceAll(_marks, '');
+        return _asciiAlnum.hasMatch(base)
+            ? base
+            : '-u${ch.runes.first.toRadixString(16)}-';
+      })
+      .replaceAll(RegExp(r'-+'), '-');
+  final slug = folded
       .toLowerCase()
       .replaceAll(RegExp(r'[^a-z0-9_-]+'), '-')
       .replaceAll(RegExp(r'^-+|-+$'), '');
@@ -191,6 +253,10 @@ String botProfileSlug(String value) {
     '',
   );
 }
+
+final _letterOrDigit = RegExp(r'[\p{L}\p{N}]', unicode: true);
+final _marks = RegExp(r'\p{M}+', unicode: true);
+final _asciiAlnum = RegExp(r'^[a-zA-Z0-9]+$');
 
 /// Desktop's `botProfileIdentity`: a name that is not plain ASCII cannot be
 /// the profile id, so it becomes the title when the title is left empty.
@@ -204,30 +270,6 @@ String botProfileSlug(String value) {
         : (RegExp(r'[^\u0020-\u007e]').hasMatch(entered) ? entered : ''),
   );
 }
-
-// Latin letters whose NFKD form is an ASCII letter plus combining marks
-// (the ones Desktop folds). Letters with no such decomposition (ø, ł, ß, æ)
-// become `u<hex>` tokens there, and here.
-const _latinFolds = {
-  'àáâãäåāăą': 'a', 'çćĉċč': 'c', 'ď': 'd', 'èéêëēĕėęě': 'e', //
-  'ĝğġģ': 'g', 'ĥ': 'h', 'ìíîïĩīĭį': 'i', 'ĵ': 'j', 'ķ': 'k', //
-  'ĺļľ': 'l', 'ñńņň': 'n', 'òóôõöōŏő': 'o', 'ŕŗř': 'r', //
-  'śŝşš': 's', 'ţť': 't', 'ùúûüũūŭůűų': 'u', 'ŵ': 'w', 'ýÿŷ': 'y', //
-  'źżž': 'z',
-};
-
-String _foldLatin(String ch) {
-  final lower = ch.toLowerCase();
-  for (final entry in _latinFolds.entries) {
-    if (entry.key.contains(lower)) {
-      return ch == lower ? entry.value : entry.value.toUpperCase();
-    }
-  }
-  return ch;
-}
-
-bool _isLetterOrDigit(int rune) =>
-    RegExp(r'[\p{L}\p{N}]', unicode: true).hasMatch(String.fromCharCode(rune));
 
 /// A Bot Mode profile request the gateway refused, in its own words (shown
 /// inline in the form that sent it).

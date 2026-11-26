@@ -1,6 +1,11 @@
 // Delivered-file indexing runs on the UI thread when a reply is final. On
 // 242fa67c, 20 KB of one character took 9.4 s (JIT), 20 KB of spaces 3.4 s,
 // and 20 KB of '>' overflowed the stack (render re-check, 6c6508ea gaps).
+// Wall-clock budgets: the full suite runs this file alone (-j1) via the
+// 'perf' tag (dart_test.yaml), so parallel load can't fail it.
+@Tags(['perf'])
+library;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/utils/delivered_files.dart';
 

@@ -9,6 +9,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unorm_dart/unorm_dart.dart' as unorm;
 import 'package:uuid/uuid.dart';
 
 import 'bot_display_rfb.dart';
