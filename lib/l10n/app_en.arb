@@ -3411,5 +3411,7 @@
   "voice_live_listening": "Listening",
   "voice_live_speaking": "Speaking",
   "voice_live_thinking": "Thinking",
-  "voice_live_muted": "Muted"
+  "voice_live_muted": "Muted",
+  "voice_live_ended_connection_lost": "The live voice session lost its connection.",
+  "voice_live_ended_closed": "The live voice session was closed by the service."
 }

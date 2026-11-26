@@ -2069,5 +2069,7 @@
   "wake_word_input_device": "Вхідний мікрофон",
   "wake_word_default_device": "Системний за замовчуванням",
   "ng_wake_word_title": "Ключова фраза",
-  "ng_wake_word_subtitle": "Розпізнавання ключової фрази на шлюзі. За замовчуванням вимкнено."
+  "ng_wake_word_subtitle": "Розпізнавання ключової фрази на шлюзі. За замовчуванням вимкнено.",
+  "voice_live_ended_connection_lost": "Сеанс живого голосу втратив з’єднання.",
+  "voice_live_ended_closed": "Сеанс живого голосу закрито сервісом."
 }

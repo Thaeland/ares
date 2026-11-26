@@ -2971,5 +2971,7 @@
   "wake_word_input_device": "ميكروفون الإدخال",
   "wake_word_default_device": "الافتراضي للنظام",
   "ng_wake_word_title": "كلمة التنبيه",
-  "ng_wake_word_subtitle": "اكتشاف كلمة التنبيه عبر البوابة بدون استخدام اليدين. متوقف افتراضيًا."
+  "ng_wake_word_subtitle": "اكتشاف كلمة التنبيه عبر البوابة بدون استخدام اليدين. متوقف افتراضيًا.",
+  "voice_live_ended_connection_lost": "انقطع اتصال جلسة الصوت المباشرة.",
+  "voice_live_ended_closed": "أغلقت الخدمة جلسة الصوت المباشرة."
 }

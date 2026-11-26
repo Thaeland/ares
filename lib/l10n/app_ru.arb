@@ -1916,5 +1916,7 @@
   "wake_word_input_device": "Входной микрофон",
   "wake_word_default_device": "По умолчанию системы",
   "ng_wake_word_title": "Кодовая фраза",
-  "ng_wake_word_subtitle": "Распознавание кодовой фразы на шлюзе. По умолчанию выключено."
+  "ng_wake_word_subtitle": "Распознавание кодовой фразы на шлюзе. По умолчанию выключено.",
+  "voice_live_ended_connection_lost": "Сеанс живого голоса потерял соединение.",
+  "voice_live_ended_closed": "Сеанс живого голоса был закрыт сервисом."
 }

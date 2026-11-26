@@ -7341,4 +7341,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get voice_live_muted => 'Muted';
+
+  @override
+  String get voice_live_ended_connection_lost => '실시간 음성 세션의 연결이 끊어졌습니다.';
+
+  @override
+  String get voice_live_ended_closed => '서비스에서 실시간 음성 세션을 종료했습니다.';
 }

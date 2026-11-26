@@ -4,6 +4,7 @@
 // VoiceLiveEngine and GptLiveConversation run; nothing leaves the test.
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:hermes_android/core/services/connection_mutation_barrier.dart';
 import 'package:hermes_android/core/services/gpt_live_conversation.dart';
 import 'package:hermes_android/core/services/voice_live_engine.dart';
@@ -151,6 +152,102 @@ void main() {
       expect(tracks.last.stopped, isFalse);
       expect(engine.active, isTrue);
       expect(transport.sessionCalls, 2);
+    });
+  });
+
+  group('connection loss', () {
+    for (final state in const [
+      RTCPeerConnectionState.RTCPeerConnectionStateFailed,
+      RTCPeerConnectionState.RTCPeerConnectionStateDisconnected,
+    ]) {
+      test('peer ${state.name} finishes the session as connection_lost and '
+          'stops the microphone (review probe G6)', () async {
+        final live = newFakeLive();
+        final engine = _engine(live);
+        addTearDown(engine.dispose);
+        final announced = <String>[];
+        engine.onClosed = announced.add;
+        expect(await engine.start(), isTrue);
+        expect(live.peer.onConnectionState, isNotNull);
+
+        live.peer.onConnectionState!(state);
+        await pumpEventQueue();
+
+        expect(announced, ['connection_lost']);
+        expect(live.track.stopped, isTrue);
+        expect(live.peer.closed, isTrue);
+        expect(live.peer.channel.closed, isTrue);
+        expect(engine.active, isFalse);
+        expect(engine.state, VoiceLiveState.idle);
+        expect(_holdsMicrophone(engine), isFalse);
+      });
+    }
+
+    test('connecting and connected keep the session', () async {
+      final live = newFakeLive();
+      final engine = _engine(live);
+      addTearDown(engine.dispose);
+      final announced = <String>[];
+      engine.onClosed = announced.add;
+      expect(await engine.start(), isTrue);
+
+      live.peer.onConnectionState!(
+        RTCPeerConnectionState.RTCPeerConnectionStateConnecting,
+      );
+      live.peer.onConnectionState!(
+        RTCPeerConnectionState.RTCPeerConnectionStateConnected,
+      );
+      await pumpEventQueue();
+
+      expect(announced, isEmpty);
+      expect(engine.active, isTrue);
+      expect(live.track.stopped, isFalse);
+    });
+
+    test('the data channel closing under the session finishes it as '
+        'connection_lost', () async {
+      final live = newFakeLive();
+      final engine = _engine(live);
+      addTearDown(engine.dispose);
+      final announced = <String>[];
+      engine.onClosed = announced.add;
+      expect(await engine.start(), isTrue);
+      expect(live.peer.channel.onDataChannelState, isNotNull);
+
+      live.peer.channel.remoteClose();
+      await pumpEventQueue();
+
+      expect(announced, ['connection_lost']);
+      expect(live.track.stopped, isTrue);
+      expect(live.peer.closed, isTrue);
+      expect(engine.active, isFalse);
+    });
+
+    test('closing the channel ourselves is never reported as a lost '
+        'connection', () async {
+      final live = await startFakeLive();
+      final reasons = <String>[];
+      live.conversation.onClosed = (reason, _) => reasons.add(reason);
+
+      // forceClose closes the channel, which reports its closed state.
+      await live.conversation.forceClose('stopped');
+      await pumpEventQueue();
+
+      expect(live.peer.channel.closed, isTrue);
+      expect(reasons, ['stopped']);
+      live.conversation.dispose();
+    });
+
+    test('nothing is sent once the channel has reported closing', () async {
+      final live = await startFakeLive();
+      addTearDown(live.conversation.dispose);
+      final channel = live.peer.channel;
+
+      channel.onDataChannelState!(RTCDataChannelState.RTCDataChannelClosing);
+      live.conversation.instruct('Respond now.');
+      live.conversation.speak('A reply.');
+
+      expect(channel.sent, isEmpty);
     });
   });
 }

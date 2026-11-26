@@ -24,6 +24,22 @@ String voiceLiveStateLabel(BuildContext context, VoiceLiveEngine engine) {
   };
 }
 
+/// What to tell the person when a live session ends without them asking
+/// (Desktop's `liveEndedMessage`). `connection_lost` and `closed` are our own
+/// machine reasons and get copy; any other reason is server-sent and passes
+/// through verbatim. Null when there is nothing to announce: a stop the app
+/// made itself, or a failed start (reported by its own error).
+String? voiceLiveEndedNotice(BuildContext context, String reason) {
+  final l10n = context.sharedL10n;
+  final text = reason.trim();
+  return switch (text) {
+    'close_requested' || 'start_failed' || 'cancelled' || 'disposed' => null,
+    'connection_lost' => l10n.voice_live_ended_connection_lost,
+    'closed' || '' => l10n.voice_live_ended_closed,
+    _ => text,
+  };
+}
+
 /// Entry for a narrow pane's (`< 480 px`) "More chat tools" menu.
 PopupMenuItem<String> voiceEngineToolItem(
   BuildContext context,

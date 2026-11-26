@@ -7548,4 +7548,11 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get voice_live_muted => 'Muted';
+
+  @override
+  String get voice_live_ended_connection_lost =>
+      'Сеанс живого голосу втратив з’єднання.';
+
+  @override
+  String get voice_live_ended_closed => 'Сеанс живого голосу закрито сервісом.';
 }

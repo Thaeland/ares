@@ -2983,5 +2983,7 @@
   "wake_word_input_device": "輸入麥克風",
   "wake_word_default_device": "系統預設",
   "ng_wake_word_title": "喚醒詞",
-  "ng_wake_word_subtitle": "由閘道器提供免持喚醒偵測。預設關閉。"
+  "ng_wake_word_subtitle": "由閘道器提供免持喚醒偵測。預設關閉。",
+  "voice_live_ended_connection_lost": "即時語音工作階段的連線已中斷。",
+  "voice_live_ended_closed": "即時語音工作階段已被服務關閉。"
 }

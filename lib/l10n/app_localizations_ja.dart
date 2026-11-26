@@ -7334,4 +7334,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get voice_live_muted => 'Muted';
+
+  @override
+  String get voice_live_ended_connection_lost => 'ライブ音声セッションの接続が切れました。';
+
+  @override
+  String get voice_live_ended_closed => 'ライブ音声セッションはサービスによって終了されました。';
 }

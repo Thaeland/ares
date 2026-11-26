@@ -2166,10 +2166,21 @@ class _ChatScreenState extends State<ChatScreen>
         context,
       )?.showSnackBar(SnackBar(content: Text(message)));
     };
-    engine.onClosed = (_) {
+    engine.onClosed = (reason) {
       if (!mounted) return;
+      // The session ended under us (connection lost, closed by the service):
+      // drop the turn it was feeding and say why.
+      _liveDelegationId = null;
+      _liveDelegatedTurnId = null;
+      _liveTurnObserved = false;
       _syncClassicWakeForLive();
       setState(() {});
+      final notice = voiceLiveEndedNotice(context, reason);
+      if (notice != null) {
+        ScaffoldMessenger.maybeOf(
+          context,
+        )?.showSnackBar(SnackBar(content: Text(notice)));
+      }
     };
     engine.onStopWord = () {
       if (!mounted) return;

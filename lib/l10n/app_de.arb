@@ -1916,5 +1916,7 @@
   "wake_word_input_device": "Eingabemikrofon",
   "wake_word_default_device": "Systemstandard",
   "ng_wake_word_title": "Aktivierungswort",
-  "ng_wake_word_subtitle": "Freihändige Aktivierungswort-Erkennung über das Gateway. Standardmäßig aus."
+  "ng_wake_word_subtitle": "Freihändige Aktivierungswort-Erkennung über das Gateway. Standardmäßig aus.",
+  "voice_live_ended_connection_lost": "Die Live-Sprachsitzung hat die Verbindung verloren.",
+  "voice_live_ended_closed": "Die Live-Sprachsitzung wurde vom Dienst beendet."
 }

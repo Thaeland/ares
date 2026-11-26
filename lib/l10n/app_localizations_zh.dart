@@ -7235,6 +7235,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get voice_live_muted => 'Muted';
+
+  @override
+  String get voice_live_ended_connection_lost => '实时语音会话的连接已断开。';
+
+  @override
+  String get voice_live_ended_closed => '实时语音会话已被服务关闭。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -13619,6 +13625,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_wake_word_subtitle => '由网关提供免提唤醒检测。默认关闭。';
+
+  @override
+  String get voice_live_ended_connection_lost => '实时语音会话的连接已断开。';
+
+  @override
+  String get voice_live_ended_closed => '实时语音会话已被服务关闭。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -20402,4 +20414,10 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get ng_wake_word_subtitle => '由閘道器提供免持喚醒偵測。預設關閉。';
+
+  @override
+  String get voice_live_ended_connection_lost => '即時語音工作階段的連線已中斷。';
+
+  @override
+  String get voice_live_ended_closed => '即時語音工作階段已被服務關閉。';
 }

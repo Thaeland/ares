@@ -1916,5 +1916,7 @@
   "wake_word_input_device": "Micrófono de entrada",
   "wake_word_default_device": "Predeterminado del sistema",
   "ng_wake_word_title": "Palabra de activación",
-  "ng_wake_word_subtitle": "Detección manos libres en la pasarela. Desactivada por defecto."
+  "ng_wake_word_subtitle": "Detección manos libres en la pasarela. Desactivada por defecto.",
+  "voice_live_ended_connection_lost": "La sesión de voz en vivo perdió la conexión.",
+  "voice_live_ended_closed": "El servicio cerró la sesión de voz en vivo."
 }

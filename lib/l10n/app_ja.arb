@@ -1916,5 +1916,7 @@
   "wake_word_input_device": "入力マイク",
   "wake_word_default_device": "システム既定",
   "ng_wake_word_title": "ウェイクワード",
-  "ng_wake_word_subtitle": "ゲートウェイでのハンズフリー起動語検出。既定ではオフ。"
+  "ng_wake_word_subtitle": "ゲートウェイでのハンズフリー起動語検出。既定ではオフ。",
+  "voice_live_ended_connection_lost": "ライブ音声セッションの接続が切れました。",
+  "voice_live_ended_closed": "ライブ音声セッションはサービスによって終了されました。"
 }

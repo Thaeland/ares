@@ -12650,6 +12650,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Muted'**
   String get voice_live_muted;
+
+  /// No description provided for @voice_live_ended_connection_lost.
+  ///
+  /// In en, this message translates to:
+  /// **'The live voice session lost its connection.'**
+  String get voice_live_ended_connection_lost;
+
+  /// No description provided for @voice_live_ended_closed.
+  ///
+  /// In en, this message translates to:
+  /// **'The live voice session was closed by the service.'**
+  String get voice_live_ended_closed;
 }
 
 class _AppLocalizationsDelegate

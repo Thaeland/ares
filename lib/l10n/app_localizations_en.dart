@@ -7491,4 +7491,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get voice_live_muted => 'Muted';
+
+  @override
+  String get voice_live_ended_connection_lost =>
+      'The live voice session lost its connection.';
+
+  @override
+  String get voice_live_ended_closed =>
+      'The live voice session was closed by the service.';
 }

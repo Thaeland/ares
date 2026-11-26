@@ -418,6 +418,15 @@ class GptLiveConversation extends ChangeNotifier
     try {
       final peer = await (peerConnectionFactory ?? _createPeer)();
       _peer = peer;
+      // A dropped transport ends the session (Desktop: `connection_lost`).
+      peer.onConnectionState = (state) {
+        if (!identical(_peer, peer)) return;
+        if (state == RTCPeerConnectionState.RTCPeerConnectionStateFailed ||
+            state ==
+                RTCPeerConnectionState.RTCPeerConnectionStateDisconnected) {
+          unawaited(_finish('connection_lost'));
+        }
+      };
       final microphone = await (microphoneFactory ?? _defaultGetUserMedia)();
       _microphone = microphone;
       for (final track in microphone.getAudioTracks()) {
@@ -430,6 +439,18 @@ class GptLiveConversation extends ChangeNotifier
       _events = events;
       events.onMessage = (message) {
         if (identical(_events, events)) handleEvent(message.text);
+      };
+      // Our own close nulls [_events] first, so only a channel that closed
+      // under the session lands here (Desktop: `if (!finalized) finish`).
+      events.onDataChannelState = (state) {
+        if (!identical(_events, events)) return;
+        if (state == RTCDataChannelState.RTCDataChannelClosing ||
+            state == RTCDataChannelState.RTCDataChannelClosed) {
+          _eventsDead = true;
+        }
+        if (state == RTCDataChannelState.RTCDataChannelClosed) {
+          unawaited(_finish('connection_lost'));
+        }
       };
       final offer = await peer.createOffer();
       await peer.setLocalDescription(offer);

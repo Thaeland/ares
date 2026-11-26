@@ -7552,4 +7552,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get voice_live_muted => 'Muted';
+
+  @override
+  String get voice_live_ended_connection_lost =>
+      'Сеанс живого голоса потерял соединение.';
+
+  @override
+  String get voice_live_ended_closed =>
+      'Сеанс живого голоса был закрыт сервисом.';
 }

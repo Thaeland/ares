@@ -532,10 +532,15 @@ class _NgChatViewState extends State<NgChatView>
       if (!mounted) return;
       ngToast(context, message);
     };
-    engine.onClosed = (_) {
+    engine.onClosed = (reason) {
       if (!mounted) return;
+      // The session ended under us (connection lost, closed by the service):
+      // drop the turn it was feeding and say why.
+      _stopLiveReplyFeed();
       _syncWakeVoicePause();
       setState(() {});
+      final notice = voiceLiveEndedNotice(context, reason);
+      if (notice != null) ngToast(context, notice);
     };
     engine.onStopWord = () {
       if (!mounted) return;

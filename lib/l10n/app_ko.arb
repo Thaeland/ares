@@ -1916,5 +1916,7 @@
   "wake_word_input_device": "입력 마이크",
   "wake_word_default_device": "시스템 기본값",
   "ng_wake_word_title": "호출어",
-  "ng_wake_word_subtitle": "게이트웨이의 핸즈프리 호출어 감지입니다. 기본값은 꺼짐입니다."
+  "ng_wake_word_subtitle": "게이트웨이의 핸즈프리 호출어 감지입니다. 기본값은 꺼짐입니다.",
+  "voice_live_ended_connection_lost": "실시간 음성 세션의 연결이 끊어졌습니다.",
+  "voice_live_ended_closed": "서비스에서 실시간 음성 세션을 종료했습니다."
 }

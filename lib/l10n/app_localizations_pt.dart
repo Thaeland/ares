@@ -7548,6 +7548,14 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get voice_live_muted => 'Muted';
+
+  @override
+  String get voice_live_ended_connection_lost =>
+      'A sessão de voz em direto perdeu a ligação.';
+
+  @override
+  String get voice_live_ended_closed =>
+      'A sessão de voz em direto foi encerrada pelo serviço.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -14239,4 +14247,12 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get ng_wake_word_subtitle =>
       'Detecção mãos-livres no gateway. Desativada por padrão.';
+
+  @override
+  String get voice_live_ended_connection_lost =>
+      'A sessão de voz ao vivo perdeu a conexão.';
+
+  @override
+  String get voice_live_ended_closed =>
+      'A sessão de voz ao vivo foi encerrada pelo serviço.';
 }

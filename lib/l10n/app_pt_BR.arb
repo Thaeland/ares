@@ -1916,5 +1916,7 @@
   "wake_word_input_device": "Microfone de entrada",
   "wake_word_default_device": "Padrão do sistema",
   "ng_wake_word_title": "Palavra de ativação",
-  "ng_wake_word_subtitle": "Detecção mãos-livres no gateway. Desativada por padrão."
+  "ng_wake_word_subtitle": "Detecção mãos-livres no gateway. Desativada por padrão.",
+  "voice_live_ended_connection_lost": "A sessão de voz ao vivo perdeu a conexão.",
+  "voice_live_ended_closed": "A sessão de voz ao vivo foi encerrada pelo serviço."
 }

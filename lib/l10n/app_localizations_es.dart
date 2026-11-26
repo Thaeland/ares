@@ -7546,4 +7546,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get voice_live_muted => 'Muted';
+
+  @override
+  String get voice_live_ended_connection_lost =>
+      'La sesión de voz en vivo perdió la conexión.';
+
+  @override
+  String get voice_live_ended_closed =>
+      'El servicio cerró la sesión de voz en vivo.';
 }

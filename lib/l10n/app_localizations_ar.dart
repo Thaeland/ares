@@ -7487,4 +7487,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get voice_live_muted => 'Muted';
+
+  @override
+  String get voice_live_ended_connection_lost =>
+      'انقطع اتصال جلسة الصوت المباشرة.';
+
+  @override
+  String get voice_live_ended_closed => 'أغلقت الخدمة جلسة الصوت المباشرة.';
 }

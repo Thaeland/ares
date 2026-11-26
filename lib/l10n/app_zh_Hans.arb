@@ -1916,5 +1916,7 @@
   "wake_word_input_device": "输入麦克风",
   "wake_word_default_device": "系统默认",
   "ng_wake_word_title": "唤醒词",
-  "ng_wake_word_subtitle": "由网关提供免提唤醒检测。默认关闭。"
+  "ng_wake_word_subtitle": "由网关提供免提唤醒检测。默认关闭。",
+  "voice_live_ended_connection_lost": "实时语音会话的连接已断开。",
+  "voice_live_ended_closed": "实时语音会话已被服务关闭。"
 }
