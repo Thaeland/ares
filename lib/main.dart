@@ -62,6 +62,7 @@ import 'core/widgets/setup_interface_choice.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
+import 'package:hermes_android/core/l10n/service_strings.dart';
 
 import 'nextgen/nextgen_home.dart';
 import 'nextgen/ui/connect_screen.dart';
@@ -1426,7 +1427,13 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
                 fleet: _fleet,
                 child: DesktopShortcuts(
                   store: _shortcutsStore,
-                  child: nextGen ? NgLocalizationScope(child: child!) : child!,
+                  // Text services build outside any widget follows the
+                  // app's language in both layouts.
+                  child: ServiceStringsScope(
+                    child: nextGen
+                        ? NgLocalizationScope(child: child!)
+                        : child!,
+                  ),
                 ),
               ),
             ),

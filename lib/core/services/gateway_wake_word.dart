@@ -6,7 +6,9 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:record/record.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../nextgen/data/nextgen_gateway.dart';
+import '../l10n/service_strings.dart';
 import 'connection_mutation_barrier.dart';
 import 'desktop_gateway_client.dart';
 import 'ws_client.dart';
@@ -411,21 +413,27 @@ class GatewayWakeTransport {
 }
 
 /// Friendly fallback text for gateway wake refusal codes (mirrors Desktop's
-/// `REASON_TEXT` in `store/wake-word.ts`).
-String formatWakeRefusalReason(String? reason, {String? ownerSurface}) {
+/// `REASON_TEXT` in `store/wake-word.ts`), in the app's language. An unknown
+/// code is shown as the gateway sent it.
+String formatWakeRefusalReason(
+  String? reason, {
+  String? ownerSurface,
+  AppLocalizations? strings,
+}) {
   final code = reason?.trim() ?? '';
   if (code.isEmpty) return '';
+  final l10n = strings ?? serviceStrings;
+  final owner = ownerSurface?.trim() ?? '';
   return switch (code) {
-    'disabled' => 'Off — tap to enable',
-    'disabled_for_surface' =>
-      'Scoped to another surface (config wake_word.surface)',
+    'disabled' => l10n.wake_word_reason_disabled,
+    'disabled_for_surface' => l10n.wake_word_reason_surface,
     'owned' || 'not_owner' =>
-      (ownerSurface != null && ownerSurface.trim().isNotEmpty)
-          ? 'Another surface (${ownerSurface.trim()}) owns the wake-word listener'
-          : 'Another surface owns the wake-word listener',
-    'unavailable' => 'Wake word unavailable on this gateway',
-    'permission_denied' => 'Microphone permission denied',
-    'permission_required' => 'Microphone permission required — tap to enable',
+      owner.isNotEmpty
+          ? l10n.wake_word_reason_owned_by(owner)
+          : l10n.wake_word_reason_owned,
+    'unavailable' => l10n.wake_word_reason_unavailable,
+    'permission_denied' => l10n.wake_word_reason_permission_denied,
+    'permission_required' => l10n.wake_word_reason_permission_required,
     _ => code,
   };
 }
@@ -938,7 +946,11 @@ class GatewayWakeWordController extends ChangeNotifier {
 
     final wasEnabled = _state.enabled;
     _setState(
-      _state.copyWith(pending: true, notice: 'Arming wake word…', reason: null),
+      _state.copyWith(
+        pending: true,
+        notice: serviceStrings.wake_word_arming,
+        reason: null,
+      ),
     );
 
     try {

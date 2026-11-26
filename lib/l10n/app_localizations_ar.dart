@@ -7329,28 +7329,6 @@ class AppLocalizationsAr extends AppLocalizations {
       'تم تسجيل الدخول برمز النشر.';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
-
-  @override
-  String get windows_window_activity_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
-
-  @override
-  String get windows_completion_sound => 'Completion sound';
-
-  @override
-  String get windows_sound_default => 'Windows default';
-
-  @override
-  String get windows_sound_mail => 'Mail';
-
-  @override
-  String get windows_sound_reminder => 'Reminder';
-
-  @override
-  String get windows_sound_silent => 'Silent';
-
-  @override
   String get auto_speak_replies_title => 'قراءة الردود تلقائيًا بصوت عالٍ';
 
   @override
@@ -7442,60 +7420,60 @@ class AppLocalizationsAr extends AppLocalizations {
       'اكتشاف كلمة التنبيه عبر البوابة بدون استخدام اليدين. متوقف افتراضيًا.';
 
   @override
-  String get voice_engine_title => 'Voice conversation engine';
+  String get voice_engine_title => 'محرك المحادثة الصوتية';
 
   @override
   String get voice_engine_subtitle =>
-      'Choose how hands-free voice conversations run on this gateway profile.';
+      'اختر طريقة تشغيل المحادثات الصوتية دون لمس في ملف تعريف البوابة هذا.';
 
   @override
   String get voice_engine_chained =>
-      'Chained (speech-to-text → Hermes → speech)';
+      'متسلسل (تحويل الكلام إلى نص → Hermes → كلام)';
 
   @override
-  String get voice_engine_chained_short => 'Chained';
+  String get voice_engine_chained_short => 'متسلسل';
 
   @override
-  String get voice_engine_live => 'GPT-Live (real-time voice)';
+  String get voice_engine_live => 'GPT-Live (صوت في الوقت الفعلي)';
 
   @override
   String get voice_engine_live_short => 'GPT-Live';
 
   @override
   String get voice_engine_live_needs_key =>
-      'Configure an OpenAI API key on the gateway host to enable GPT-Live.';
+      'اضبط مفتاح OpenAI API على مضيف البوابة لتفعيل GPT-Live.';
 
   @override
   String voice_engine_fallback_chained(String reason) {
-    return 'GPT-Live unavailable ($reason) — using Chained voice.';
+    return 'GPT-Live غير متاح ($reason) — يتم استخدام الصوت المتسلسل.';
   }
 
   @override
-  String get voice_live_start => 'Start voice conversation';
+  String get voice_live_start => 'بدء محادثة صوتية';
 
   @override
-  String get voice_live_stop => 'End voice conversation';
+  String get voice_live_stop => 'إنهاء المحادثة الصوتية';
 
   @override
-  String get voice_live_mute => 'Mute microphone';
+  String get voice_live_mute => 'كتم الميكروفون';
 
   @override
-  String get voice_live_unmute => 'Unmute microphone';
+  String get voice_live_unmute => 'إلغاء كتم الميكروفون';
 
   @override
-  String get voice_live_interrupt => 'Interrupt or respond now';
+  String get voice_live_interrupt => 'المقاطعة أو الرد الآن';
 
   @override
-  String get voice_live_listening => 'Listening';
+  String get voice_live_listening => 'جارٍ الاستماع';
 
   @override
-  String get voice_live_speaking => 'Speaking';
+  String get voice_live_speaking => 'يتحدث';
 
   @override
-  String get voice_live_thinking => 'Thinking';
+  String get voice_live_thinking => 'يفكر';
 
   @override
-  String get voice_live_muted => 'Muted';
+  String get voice_live_muted => 'مكتوم';
 
   @override
   String get voice_live_ended_connection_lost =>
@@ -7507,5 +7485,72 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String wake_word_other_profile(String profile) {
     return 'كلمة التنبيه هذه تخص الملف الشخصي \"$profile\". افتح اتصالاً بهذا الملف الشخصي للرد عليها.';
+  }
+
+  @override
+  String get wake_word_reason_disabled => 'متوقفة — انقر للتفعيل';
+
+  @override
+  String get wake_word_reason_surface =>
+      'مقصورة على واجهة أخرى (الإعداد wake_word.surface)';
+
+  @override
+  String get wake_word_reason_owned => 'واجهة أخرى تملك مستمع كلمة التنبيه';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return 'الواجهة ($surface) تملك مستمع كلمة التنبيه';
+  }
+
+  @override
+  String get wake_word_reason_unavailable =>
+      'كلمة التنبيه غير متاحة على هذه البوابة';
+
+  @override
+  String get wake_word_reason_permission_denied => 'تم رفض إذن الميكروفون';
+
+  @override
+  String get wake_word_reason_permission_required =>
+      'إذن الميكروفون مطلوب — انقر للتفعيل';
+
+  @override
+  String get voice_live_not_enabled => 'GPT-Live غير مفعّل لملف التعريف هذا.';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live غير متاح';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'تعذّر بدء GPT-Live: $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return 'انتهت مهلة التفريغ النصي بعد $seconds ث (لم يستجب $provider)';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return 'خطأ في تحويل الكلام إلى نص من $provider (HTTP $status)';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return 'فشل طلب تحويل النص إلى كلام من $provider';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return 'خطأ في تحويل النص إلى كلام من $provider (HTTP $status)';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return 'جارٍ الاستماع (\"$phrase\")';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return 'متوقفة (\"$phrase\")';
   }
 }

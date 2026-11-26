@@ -7333,28 +7333,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Signed in with the deployment token.';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
-
-  @override
-  String get windows_window_activity_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
-
-  @override
-  String get windows_completion_sound => 'Completion sound';
-
-  @override
-  String get windows_sound_default => 'Windows default';
-
-  @override
-  String get windows_sound_mail => 'Mail';
-
-  @override
-  String get windows_sound_reminder => 'Reminder';
-
-  @override
-  String get windows_sound_silent => 'Silent';
-
-  @override
   String get auto_speak_replies_title => 'Auto-read replies aloud';
 
   @override
@@ -7512,5 +7490,75 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String wake_word_other_profile(String profile) {
     return 'That wake word belongs to profile \"$profile\". Open a connection to that profile to answer it.';
+  }
+
+  @override
+  String get wake_word_reason_disabled => 'Off — tap to enable';
+
+  @override
+  String get wake_word_reason_surface =>
+      'Scoped to another surface (config wake_word.surface)';
+
+  @override
+  String get wake_word_reason_owned =>
+      'Another surface owns the wake-word listener';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return 'Another surface ($surface) owns the wake-word listener';
+  }
+
+  @override
+  String get wake_word_reason_unavailable =>
+      'Wake word unavailable on this gateway';
+
+  @override
+  String get wake_word_reason_permission_denied =>
+      'Microphone permission denied';
+
+  @override
+  String get wake_word_reason_permission_required =>
+      'Microphone permission required — tap to enable';
+
+  @override
+  String get voice_live_not_enabled =>
+      'GPT-Live is not enabled for this profile.';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live is not available';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'GPT-Live could not start: $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return 'Transcription timed out after ${seconds}s ($provider did not answer)';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return '$provider STT error (HTTP $status)';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return '$provider TTS request failed';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return '$provider TTS error (HTTP $status)';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return 'Listening (\"$phrase\")';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return 'Off (\"$phrase\")';
   }
 }

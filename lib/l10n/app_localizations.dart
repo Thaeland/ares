@@ -12363,48 +12363,6 @@ abstract class AppLocalizations {
   /// **'Signed in with the deployment token.'**
   String get ng_signed_in_with_deployment_token;
 
-  /// No description provided for @windows_window_activity.
-  ///
-  /// In en, this message translates to:
-  /// **'Share chat activity'**
-  String get windows_window_activity;
-
-  /// No description provided for @windows_window_activity_hint.
-  ///
-  /// In en, this message translates to:
-  /// **'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.'**
-  String get windows_window_activity_hint;
-
-  /// No description provided for @windows_completion_sound.
-  ///
-  /// In en, this message translates to:
-  /// **'Completion sound'**
-  String get windows_completion_sound;
-
-  /// No description provided for @windows_sound_default.
-  ///
-  /// In en, this message translates to:
-  /// **'Windows default'**
-  String get windows_sound_default;
-
-  /// No description provided for @windows_sound_mail.
-  ///
-  /// In en, this message translates to:
-  /// **'Mail'**
-  String get windows_sound_mail;
-
-  /// No description provided for @windows_sound_reminder.
-  ///
-  /// In en, this message translates to:
-  /// **'Reminder'**
-  String get windows_sound_reminder;
-
-  /// No description provided for @windows_sound_silent.
-  ///
-  /// In en, this message translates to:
-  /// **'Silent'**
-  String get windows_sound_silent;
-
   /// No description provided for @auto_speak_replies_title.
   ///
   /// In en, this message translates to:
@@ -12680,6 +12638,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That wake word belongs to profile \"{profile}\". Open a connection to that profile to answer it.'**
   String wake_word_other_profile(String profile);
+
+  /// No description provided for @wake_word_reason_disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Off — tap to enable'**
+  String get wake_word_reason_disabled;
+
+  /// No description provided for @wake_word_reason_surface.
+  ///
+  /// In en, this message translates to:
+  /// **'Scoped to another surface (config wake_word.surface)'**
+  String get wake_word_reason_surface;
+
+  /// No description provided for @wake_word_reason_owned.
+  ///
+  /// In en, this message translates to:
+  /// **'Another surface owns the wake-word listener'**
+  String get wake_word_reason_owned;
+
+  /// No description provided for @wake_word_reason_owned_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Another surface ({surface}) owns the wake-word listener'**
+  String wake_word_reason_owned_by(String surface);
+
+  /// No description provided for @wake_word_reason_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake word unavailable on this gateway'**
+  String get wake_word_reason_unavailable;
+
+  /// No description provided for @wake_word_reason_permission_denied.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission denied'**
+  String get wake_word_reason_permission_denied;
+
+  /// No description provided for @wake_word_reason_permission_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission required — tap to enable'**
+  String get wake_word_reason_permission_required;
+
+  /// No description provided for @voice_live_not_enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-Live is not enabled for this profile.'**
+  String get voice_live_not_enabled;
+
+  /// No description provided for @voice_live_not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-Live is not available'**
+  String get voice_live_not_available;
+
+  /// No description provided for @voice_live_start_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-Live could not start: {error}'**
+  String voice_live_start_failed(String error);
+
+  /// No description provided for @voice_direct_stt_timeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Transcription timed out after {seconds}s ({provider} did not answer)'**
+  String voice_direct_stt_timeout(String seconds, String provider);
+
+  /// No description provided for @voice_direct_stt_error.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} STT error (HTTP {status})'**
+  String voice_direct_stt_error(String provider, String status);
+
+  /// No description provided for @voice_direct_tts_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} TTS request failed'**
+  String voice_direct_tts_failed(String provider);
+
+  /// No description provided for @voice_direct_tts_error.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} TTS error (HTTP {status})'**
+  String voice_direct_tts_error(String provider, String status);
+
+  /// No description provided for @ng_wake_status_listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening (\"{phrase}\")'**
+  String ng_wake_status_listening(String phrase);
+
+  /// No description provided for @ng_wake_status_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Off (\"{phrase}\")'**
+  String ng_wake_status_off(String phrase);
 }
 
 class _AppLocalizationsDelegate

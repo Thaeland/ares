@@ -7184,28 +7184,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_signed_in_with_deployment_token => '배포 토큰으로 로그인했습니다.';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
-
-  @override
-  String get windows_window_activity_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
-
-  @override
-  String get windows_completion_sound => 'Completion sound';
-
-  @override
-  String get windows_sound_default => 'Windows default';
-
-  @override
-  String get windows_sound_mail => 'Mail';
-
-  @override
-  String get windows_sound_reminder => 'Reminder';
-
-  @override
-  String get windows_sound_silent => 'Silent';
-
-  @override
   String get auto_speak_replies_title => '답변을 자동으로 읽기';
 
   @override
@@ -7213,7 +7191,7 @@ class AppLocalizationsKo extends AppLocalizations {
       '턴이 완료될 때마다 새 답변을 읽어줍니다. 기본적으로 꺼짐; 채팅 내 말하기 토글이 계속 적용됩니다.';
 
   @override
-  String get ng_auto_read_replies_title => 'Auto-read replies';
+  String get ng_auto_read_replies_title => '답변 자동 읽기';
 
   @override
   String get ng_auto_read_replies_subtitle =>
@@ -7295,60 +7273,59 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_wake_word_subtitle => '게이트웨이의 핸즈프리 호출어 감지입니다. 기본값은 꺼짐입니다.';
 
   @override
-  String get voice_engine_title => 'Voice conversation engine';
+  String get voice_engine_title => '음성 대화 엔진';
 
   @override
   String get voice_engine_subtitle =>
-      'Choose how hands-free voice conversations run on this gateway profile.';
+      '이 게이트웨이 프로필에서 핸즈프리 음성 대화를 실행할 방식을 선택하세요.';
 
   @override
-  String get voice_engine_chained =>
-      'Chained (speech-to-text → Hermes → speech)';
+  String get voice_engine_chained => '연결형 (음성 인식 → Hermes → 음성 합성)';
 
   @override
-  String get voice_engine_chained_short => 'Chained';
+  String get voice_engine_chained_short => '연결형';
 
   @override
-  String get voice_engine_live => 'GPT-Live (real-time voice)';
+  String get voice_engine_live => 'GPT-Live (실시간 음성)';
 
   @override
   String get voice_engine_live_short => 'GPT-Live';
 
   @override
   String get voice_engine_live_needs_key =>
-      'Configure an OpenAI API key on the gateway host to enable GPT-Live.';
+      'GPT-Live를 사용하려면 게이트웨이 호스트에 OpenAI API 키를 설정하세요.';
 
   @override
   String voice_engine_fallback_chained(String reason) {
-    return 'GPT-Live unavailable ($reason) — using Chained voice.';
+    return 'GPT-Live를 사용할 수 없음($reason) — 연결형 음성을 사용합니다.';
   }
 
   @override
-  String get voice_live_start => 'Start voice conversation';
+  String get voice_live_start => '음성 대화 시작';
 
   @override
-  String get voice_live_stop => 'End voice conversation';
+  String get voice_live_stop => '음성 대화 종료';
 
   @override
-  String get voice_live_mute => 'Mute microphone';
+  String get voice_live_mute => '마이크 음소거';
 
   @override
-  String get voice_live_unmute => 'Unmute microphone';
+  String get voice_live_unmute => '마이크 음소거 해제';
 
   @override
-  String get voice_live_interrupt => 'Interrupt or respond now';
+  String get voice_live_interrupt => '끼어들기 또는 지금 응답';
 
   @override
-  String get voice_live_listening => 'Listening';
+  String get voice_live_listening => '듣는 중';
 
   @override
-  String get voice_live_speaking => 'Speaking';
+  String get voice_live_speaking => '말하는 중';
 
   @override
-  String get voice_live_thinking => 'Thinking';
+  String get voice_live_thinking => '생각하는 중';
 
   @override
-  String get voice_live_muted => 'Muted';
+  String get voice_live_muted => '음소거됨';
 
   @override
   String get voice_live_ended_connection_lost => '실시간 음성 세션의 연결이 끊어졌습니다.';
@@ -7359,5 +7336,69 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String wake_word_other_profile(String profile) {
     return '이 호출어는 프로필 \"$profile\"의 것입니다. 응답하려면 해당 프로필에 대한 연결을 여세요.';
+  }
+
+  @override
+  String get wake_word_reason_disabled => '꺼짐 — 탭하여 켜기';
+
+  @override
+  String get wake_word_reason_surface => '다른 화면으로 제한됨(설정 wake_word.surface)';
+
+  @override
+  String get wake_word_reason_owned => '다른 화면이 호출어 수신을 맡고 있습니다';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return '다른 화면($surface)이 호출어 수신을 맡고 있습니다';
+  }
+
+  @override
+  String get wake_word_reason_unavailable => '이 게이트웨이에서는 호출어를 사용할 수 없습니다';
+
+  @override
+  String get wake_word_reason_permission_denied => '마이크 권한이 거부되었습니다';
+
+  @override
+  String get wake_word_reason_permission_required => '마이크 권한이 필요합니다 — 탭하여 켜기';
+
+  @override
+  String get voice_live_not_enabled => '이 프로필에서 GPT-Live가 켜져 있지 않습니다.';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live를 사용할 수 없습니다';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'GPT-Live를 시작할 수 없습니다: $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return '$seconds초 후 받아쓰기 시간이 초과되었습니다($provider 응답 없음)';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return '$provider STT 오류(HTTP $status)';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return '$provider TTS 요청 실패';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return '$provider TTS 오류(HTTP $status)';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return '듣는 중(\"$phrase\")';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return '꺼짐(\"$phrase\")';
   }
 }

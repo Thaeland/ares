@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
+import '../l10n/service_strings.dart';
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 
@@ -438,13 +439,19 @@ class VoiceClientConfigStore {
           .timeout(Duration(milliseconds: (stt.timeoutSeconds * 1000).round()));
     } on TimeoutException {
       throw ClientDirectVoiceException(
-        'Transcription timed out after ${stt.timeoutSeconds}s (${stt.provider} did not answer)',
+        serviceStrings.voice_direct_stt_timeout(
+          '${stt.timeoutSeconds}',
+          stt.provider,
+        ),
       );
     }
     final body = await http.Response.fromStream(response);
     if (body.statusCode < 200 || body.statusCode >= 300) {
       throw ClientDirectVoiceException(
-        '${stt.provider} STT error (HTTP ${body.statusCode})',
+        serviceStrings.voice_direct_stt_error(
+          stt.provider,
+          '${body.statusCode}',
+        ),
       );
     }
     final transcript = transcriptFromProviderBody(stt.wire, body.body);
@@ -491,11 +498,16 @@ class VoiceClientConfigStore {
         body: jsonEncode(payload),
       );
     } catch (_) {
-      throw ClientDirectVoiceException('${tts.provider} TTS request failed');
+      throw ClientDirectVoiceException(
+        serviceStrings.voice_direct_tts_failed(tts.provider),
+      );
     }
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw ClientDirectVoiceException(
-        '${tts.provider} TTS error (HTTP ${response.statusCode})',
+        serviceStrings.voice_direct_tts_error(
+          tts.provider,
+          '${response.statusCode}',
+        ),
       );
     }
     return response.bodyBytes.isEmpty ? null : response.bodyBytes;

@@ -7404,28 +7404,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'Connecté avec le jeton de déploiement.';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
-
-  @override
-  String get windows_window_activity_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
-
-  @override
-  String get windows_completion_sound => 'Completion sound';
-
-  @override
-  String get windows_sound_default => 'Windows default';
-
-  @override
-  String get windows_sound_mail => 'Mail';
-
-  @override
-  String get windows_sound_reminder => 'Reminder';
-
-  @override
-  String get windows_sound_silent => 'Silent';
-
-  @override
   String get auto_speak_replies_title => 'Lire les réponses à voix haute';
 
   @override
@@ -7433,7 +7411,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Lit chaque nouvelle réponse à voix haute à la fin d’un tour. Par défaut désactivé ; le contrôle « Spoken replies » reste valable.';
 
   @override
-  String get ng_auto_read_replies_title => 'Auto-read replies';
+  String get ng_auto_read_replies_title => 'Lecture automatique des réponses';
 
   @override
   String get ng_auto_read_replies_subtitle =>
@@ -7518,60 +7496,60 @@ class AppLocalizationsFr extends AppLocalizations {
       'Détection mains libres sur la passerelle. Désactivée par défaut.';
 
   @override
-  String get voice_engine_title => 'Voice conversation engine';
+  String get voice_engine_title => 'Moteur de conversation vocale';
 
   @override
   String get voice_engine_subtitle =>
-      'Choose how hands-free voice conversations run on this gateway profile.';
+      'Choisissez comment les conversations vocales mains libres fonctionnent sur ce profil de passerelle.';
 
   @override
   String get voice_engine_chained =>
-      'Chained (speech-to-text → Hermes → speech)';
+      'Enchaîné (parole en texte → Hermes → parole)';
 
   @override
-  String get voice_engine_chained_short => 'Chained';
+  String get voice_engine_chained_short => 'Enchaîné';
 
   @override
-  String get voice_engine_live => 'GPT-Live (real-time voice)';
+  String get voice_engine_live => 'GPT-Live (voix en temps réel)';
 
   @override
   String get voice_engine_live_short => 'GPT-Live';
 
   @override
   String get voice_engine_live_needs_key =>
-      'Configure an OpenAI API key on the gateway host to enable GPT-Live.';
+      'Configurez une clé d’API OpenAI sur l’hôte de la passerelle pour activer GPT-Live.';
 
   @override
   String voice_engine_fallback_chained(String reason) {
-    return 'GPT-Live unavailable ($reason) — using Chained voice.';
+    return 'GPT-Live indisponible ($reason) — voix enchaînée utilisée.';
   }
 
   @override
-  String get voice_live_start => 'Start voice conversation';
+  String get voice_live_start => 'Démarrer une conversation vocale';
 
   @override
-  String get voice_live_stop => 'End voice conversation';
+  String get voice_live_stop => 'Terminer la conversation vocale';
 
   @override
-  String get voice_live_mute => 'Mute microphone';
+  String get voice_live_mute => 'Couper le micro';
 
   @override
-  String get voice_live_unmute => 'Unmute microphone';
+  String get voice_live_unmute => 'Réactiver le micro';
 
   @override
-  String get voice_live_interrupt => 'Interrupt or respond now';
+  String get voice_live_interrupt => 'Interrompre ou répondre maintenant';
 
   @override
-  String get voice_live_listening => 'Listening';
+  String get voice_live_listening => 'À l’écoute';
 
   @override
-  String get voice_live_speaking => 'Speaking';
+  String get voice_live_speaking => 'Parle';
 
   @override
-  String get voice_live_thinking => 'Thinking';
+  String get voice_live_thinking => 'Réfléchit';
 
   @override
-  String get voice_live_muted => 'Muted';
+  String get voice_live_muted => 'Micro coupé';
 
   @override
   String get voice_live_ended_connection_lost =>
@@ -7584,5 +7562,75 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String wake_word_other_profile(String profile) {
     return 'Ce mot d’activation appartient au profil « $profile ». Ouvrez une connexion à ce profil pour y répondre.';
+  }
+
+  @override
+  String get wake_word_reason_disabled => 'Désactivé — touchez pour activer';
+
+  @override
+  String get wake_word_reason_surface =>
+      'Limité à une autre interface (configuration wake_word.surface)';
+
+  @override
+  String get wake_word_reason_owned =>
+      'Une autre interface gère l’écoute du mot d’activation';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return 'Une autre interface ($surface) gère l’écoute du mot d’activation';
+  }
+
+  @override
+  String get wake_word_reason_unavailable =>
+      'Mot d’activation indisponible sur cette passerelle';
+
+  @override
+  String get wake_word_reason_permission_denied =>
+      'Autorisation du micro refusée';
+
+  @override
+  String get wake_word_reason_permission_required =>
+      'Autorisation du micro requise — touchez pour activer';
+
+  @override
+  String get voice_live_not_enabled =>
+      'GPT-Live n’est pas activé pour ce profil.';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live n’est pas disponible';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'Impossible de démarrer GPT-Live : $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return 'La transcription a expiré après $seconds s ($provider n’a pas répondu)';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return 'Erreur STT de $provider (HTTP $status)';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return 'La requête TTS à $provider a échoué';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return 'Erreur TTS de $provider (HTTP $status)';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return 'À l’écoute (« $phrase »)';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return 'Désactivé (« $phrase »)';
   }
 }

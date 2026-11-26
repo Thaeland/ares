@@ -15,6 +15,7 @@ import '../../nextgen/theme/nextgen_theme.dart';
 import '../../nextgen/ui/parallel_chat_pane.dart';
 import '../../nextgen/ui/nextgen_scope.dart';
 import '../l10n/l10n.dart';
+import '../l10n/service_strings.dart';
 import '../presentation/imported_theme.dart' show ImportedThemeStore;
 import '../presentation/presentation_scope.dart';
 import '../presentation/reading_controls.dart';
@@ -446,7 +447,7 @@ class _PopoutChatAppState extends State<PopoutChatApp> {
       // The same imported theme and reading choices as the main window.
       builder: (_, child) => PresentationRoot(
         preferences: prefs,
-        child: NgLocalizationScope(child: child!),
+        child: ServiceStringsScope(child: NgLocalizationScope(child: child!)),
       ),
       home: gateway == null
           ? _classicChat(

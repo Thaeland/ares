@@ -7388,28 +7388,6 @@ class AppLocalizationsUk extends AppLocalizations {
       'Вхід виконано з токеном розгортання.';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
-
-  @override
-  String get windows_window_activity_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
-
-  @override
-  String get windows_completion_sound => 'Completion sound';
-
-  @override
-  String get windows_sound_default => 'Windows default';
-
-  @override
-  String get windows_sound_mail => 'Mail';
-
-  @override
-  String get windows_sound_reminder => 'Reminder';
-
-  @override
-  String get windows_sound_silent => 'Silent';
-
-  @override
   String get auto_speak_replies_title => 'Читати відповіді вголос';
 
   @override
@@ -7417,14 +7395,14 @@ class AppLocalizationsUk extends AppLocalizations {
       'Читає кожен новий відгук уголос після завершення ходу. За замовчуванням вимкнено; перемикач «Spoken replies» у чаті все ще застосовується.';
 
   @override
-  String get ng_auto_read_replies_title => 'Auto-read replies';
+  String get ng_auto_read_replies_title => 'Читати відповіді автоматично';
 
   @override
   String get ng_auto_read_replies_subtitle =>
       'Читає кожен новий відгук уголос після завершення ходу. За замовчуванням вимкнено.';
 
   @override
-  String get barge_in_title => 'Перерватити';
+  String get barge_in_title => 'Перервати';
 
   @override
   String get barge_in_subtitle =>
@@ -7435,7 +7413,7 @@ class AppLocalizationsUk extends AppLocalizations {
       'Мікрофон увімкнено: говоріть, щоб перервати відповідь';
 
   @override
-  String get ng_barge_in_title => 'Перерватити';
+  String get ng_barge_in_title => 'Перервати';
 
   @override
   String get ng_barge_in_subtitle =>
@@ -7502,60 +7480,60 @@ class AppLocalizationsUk extends AppLocalizations {
       'Розпізнавання ключової фрази на шлюзі. За замовчуванням вимкнено.';
 
   @override
-  String get voice_engine_title => 'Voice conversation engine';
+  String get voice_engine_title => 'Рушій голосової розмови';
 
   @override
   String get voice_engine_subtitle =>
-      'Choose how hands-free voice conversations run on this gateway profile.';
+      'Виберіть, як працюють голосові розмови без рук у цьому профілі шлюзу.';
 
   @override
   String get voice_engine_chained =>
-      'Chained (speech-to-text → Hermes → speech)';
+      'Ланцюжок (мовлення в текст → Hermes → мовлення)';
 
   @override
-  String get voice_engine_chained_short => 'Chained';
+  String get voice_engine_chained_short => 'Ланцюжок';
 
   @override
-  String get voice_engine_live => 'GPT-Live (real-time voice)';
+  String get voice_engine_live => 'GPT-Live (голос у реальному часі)';
 
   @override
   String get voice_engine_live_short => 'GPT-Live';
 
   @override
   String get voice_engine_live_needs_key =>
-      'Configure an OpenAI API key on the gateway host to enable GPT-Live.';
+      'Укажіть ключ OpenAI API на хості шлюзу, щоб увімкнути GPT-Live.';
 
   @override
   String voice_engine_fallback_chained(String reason) {
-    return 'GPT-Live unavailable ($reason) — using Chained voice.';
+    return 'GPT-Live недоступний ($reason) — використовується голос ланцюжком.';
   }
 
   @override
-  String get voice_live_start => 'Start voice conversation';
+  String get voice_live_start => 'Почати голосову розмову';
 
   @override
-  String get voice_live_stop => 'End voice conversation';
+  String get voice_live_stop => 'Завершити голосову розмову';
 
   @override
-  String get voice_live_mute => 'Mute microphone';
+  String get voice_live_mute => 'Вимкнути мікрофон';
 
   @override
-  String get voice_live_unmute => 'Unmute microphone';
+  String get voice_live_unmute => 'Увімкнути мікрофон';
 
   @override
-  String get voice_live_interrupt => 'Interrupt or respond now';
+  String get voice_live_interrupt => 'Перервати або відповісти зараз';
 
   @override
-  String get voice_live_listening => 'Listening';
+  String get voice_live_listening => 'Слухає';
 
   @override
-  String get voice_live_speaking => 'Speaking';
+  String get voice_live_speaking => 'Говорить';
 
   @override
-  String get voice_live_thinking => 'Thinking';
+  String get voice_live_thinking => 'Думає';
 
   @override
-  String get voice_live_muted => 'Muted';
+  String get voice_live_muted => 'Мікрофон вимкнено';
 
   @override
   String get voice_live_ended_connection_lost =>
@@ -7567,5 +7545,76 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String wake_word_other_profile(String profile) {
     return 'Це слово активації належить профілю «$profile». Відкрийте підключення до цього профілю, щоб відповісти.';
+  }
+
+  @override
+  String get wake_word_reason_disabled =>
+      'Вимкнено — торкніться, щоб увімкнути';
+
+  @override
+  String get wake_word_reason_surface =>
+      'Обмежено іншим інтерфейсом (налаштування wake_word.surface)';
+
+  @override
+  String get wake_word_reason_owned =>
+      'Прослуховування ключової фрази зайняте іншим інтерфейсом';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return 'Прослуховування ключової фрази зайняте іншим інтерфейсом ($surface)';
+  }
+
+  @override
+  String get wake_word_reason_unavailable =>
+      'Ключова фраза недоступна на цьому шлюзі';
+
+  @override
+  String get wake_word_reason_permission_denied =>
+      'Доступ до мікрофона заборонено';
+
+  @override
+  String get wake_word_reason_permission_required =>
+      'Потрібен доступ до мікрофона — торкніться, щоб увімкнути';
+
+  @override
+  String get voice_live_not_enabled =>
+      'GPT-Live не ввімкнено для цього профілю.';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live недоступний';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'Не вдалося запустити GPT-Live: $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return 'Розпізнавання мовлення не завершилося за $seconds с ($provider не відповів)';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return 'Помилка STT $provider (HTTP $status)';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return 'Запит TTS до $provider не виконано';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return 'Помилка TTS $provider (HTTP $status)';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return 'Слухає («$phrase»)';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return 'Вимкнено («$phrase»)';
   }
 }

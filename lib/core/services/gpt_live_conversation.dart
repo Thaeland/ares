@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
+import '../l10n/service_strings.dart';
 import 'connection_manager.dart';
 
 /// Which voice engine the active profile selected, and whether GPT-Live can
@@ -563,7 +564,7 @@ class GptLiveConversation extends ChangeNotifier
       // A call on a peer that teardown already closed fails; that is the
       // teardown, not a start error.
       if (cancelled()) return abandon();
-      onError?.call('GPT-Live could not start: $error', true);
+      onError?.call(serviceStrings.voice_live_start_failed('$error'), true);
       await _finish('start_failed');
       return false;
     } finally {

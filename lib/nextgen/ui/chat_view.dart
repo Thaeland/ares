@@ -1920,10 +1920,12 @@ class _NgChatViewState extends State<NgChatView>
           case 'status':
             final st = await _wake.refreshStatus();
             if (mounted) {
-              final detail = st.notice.isNotEmpty ? ' — ${st.notice}' : '';
+              final status = st.listening
+                  ? ngL.ng_wake_status_listening(st.phrase)
+                  : ngL.ng_wake_status_off(st.phrase);
               ngToast(
                 context,
-                '${st.listening ? "Listening" : "Off"} ("${st.phrase}")$detail',
+                st.notice.isNotEmpty ? '$status — ${st.notice}' : status,
               );
             }
           default:

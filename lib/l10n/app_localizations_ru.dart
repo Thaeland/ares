@@ -7392,28 +7392,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Вход выполнен с токеном развёртывания.';
 
   @override
-  String get windows_window_activity => 'Share chat activity';
-
-  @override
-  String get windows_window_activity_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
-
-  @override
-  String get windows_completion_sound => 'Completion sound';
-
-  @override
-  String get windows_sound_default => 'Windows default';
-
-  @override
-  String get windows_sound_mail => 'Mail';
-
-  @override
-  String get windows_sound_reminder => 'Reminder';
-
-  @override
-  String get windows_sound_silent => 'Silent';
-
-  @override
   String get auto_speak_replies_title => 'Читать ответы вслух';
 
   @override
@@ -7421,7 +7399,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Читает каждую новую реплику вслух после завершения хода. По умолчанию выключено; тоггл «Spoken replies» в чате по-прежнему действует.';
 
   @override
-  String get ng_auto_read_replies_title => 'Auto-read replies';
+  String get ng_auto_read_replies_title => 'Читать ответы автоматически';
 
   @override
   String get ng_auto_read_replies_subtitle =>
@@ -7506,60 +7484,59 @@ class AppLocalizationsRu extends AppLocalizations {
       'Распознавание кодовой фразы на шлюзе. По умолчанию выключено.';
 
   @override
-  String get voice_engine_title => 'Voice conversation engine';
+  String get voice_engine_title => 'Движок голосового диалога';
 
   @override
   String get voice_engine_subtitle =>
-      'Choose how hands-free voice conversations run on this gateway profile.';
+      'Выберите, как работают голосовые диалоги без рук в этом профиле шлюза.';
 
   @override
-  String get voice_engine_chained =>
-      'Chained (speech-to-text → Hermes → speech)';
+  String get voice_engine_chained => 'Цепочка (речь в текст → Hermes → речь)';
 
   @override
-  String get voice_engine_chained_short => 'Chained';
+  String get voice_engine_chained_short => 'Цепочка';
 
   @override
-  String get voice_engine_live => 'GPT-Live (real-time voice)';
+  String get voice_engine_live => 'GPT-Live (голос в реальном времени)';
 
   @override
   String get voice_engine_live_short => 'GPT-Live';
 
   @override
   String get voice_engine_live_needs_key =>
-      'Configure an OpenAI API key on the gateway host to enable GPT-Live.';
+      'Укажите ключ OpenAI API на хосте шлюза, чтобы включить GPT-Live.';
 
   @override
   String voice_engine_fallback_chained(String reason) {
-    return 'GPT-Live unavailable ($reason) — using Chained voice.';
+    return 'GPT-Live недоступен ($reason) — используется голос по цепочке.';
   }
 
   @override
-  String get voice_live_start => 'Start voice conversation';
+  String get voice_live_start => 'Начать голосовой диалог';
 
   @override
-  String get voice_live_stop => 'End voice conversation';
+  String get voice_live_stop => 'Завершить голосовой диалог';
 
   @override
-  String get voice_live_mute => 'Mute microphone';
+  String get voice_live_mute => 'Выключить микрофон';
 
   @override
-  String get voice_live_unmute => 'Unmute microphone';
+  String get voice_live_unmute => 'Включить микрофон';
 
   @override
-  String get voice_live_interrupt => 'Interrupt or respond now';
+  String get voice_live_interrupt => 'Прервать или ответить сейчас';
 
   @override
-  String get voice_live_listening => 'Listening';
+  String get voice_live_listening => 'Слушает';
 
   @override
-  String get voice_live_speaking => 'Speaking';
+  String get voice_live_speaking => 'Говорит';
 
   @override
-  String get voice_live_thinking => 'Thinking';
+  String get voice_live_thinking => 'Думает';
 
   @override
-  String get voice_live_muted => 'Muted';
+  String get voice_live_muted => 'Микрофон выключен';
 
   @override
   String get voice_live_ended_connection_lost =>
@@ -7572,5 +7549,74 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String wake_word_other_profile(String profile) {
     return 'Это слово активации относится к профилю «$profile». Откройте подключение к этому профилю, чтобы ответить.';
+  }
+
+  @override
+  String get wake_word_reason_disabled => 'Выкл. — нажмите, чтобы включить';
+
+  @override
+  String get wake_word_reason_surface =>
+      'Ограничено другим интерфейсом (настройка wake_word.surface)';
+
+  @override
+  String get wake_word_reason_owned =>
+      'Прослушивание кодовой фразы занято другим интерфейсом';
+
+  @override
+  String wake_word_reason_owned_by(String surface) {
+    return 'Прослушивание кодовой фразы занято другим интерфейсом ($surface)';
+  }
+
+  @override
+  String get wake_word_reason_unavailable =>
+      'Кодовая фраза недоступна на этом шлюзе';
+
+  @override
+  String get wake_word_reason_permission_denied =>
+      'Доступ к микрофону запрещён';
+
+  @override
+  String get wake_word_reason_permission_required =>
+      'Нужен доступ к микрофону — нажмите, чтобы включить';
+
+  @override
+  String get voice_live_not_enabled => 'GPT-Live не включён для этого профиля.';
+
+  @override
+  String get voice_live_not_available => 'GPT-Live недоступен';
+
+  @override
+  String voice_live_start_failed(String error) {
+    return 'Не удалось запустить GPT-Live: $error';
+  }
+
+  @override
+  String voice_direct_stt_timeout(String seconds, String provider) {
+    return 'Распознавание речи не завершилось за $seconds с ($provider не ответил)';
+  }
+
+  @override
+  String voice_direct_stt_error(String provider, String status) {
+    return 'Ошибка STT $provider (HTTP $status)';
+  }
+
+  @override
+  String voice_direct_tts_failed(String provider) {
+    return 'Запрос TTS к $provider не выполнен';
+  }
+
+  @override
+  String voice_direct_tts_error(String provider, String status) {
+    return 'Ошибка TTS $provider (HTTP $status)';
+  }
+
+  @override
+  String ng_wake_status_listening(String phrase) {
+    return 'Слушает («$phrase»)';
+  }
+
+  @override
+  String ng_wake_status_off(String phrase) {
+    return 'Выкл. («$phrase»)';
   }
 }

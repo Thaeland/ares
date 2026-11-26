@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../l10n/service_strings.dart';
 import '../utils/speech_text.dart';
 import '../utils/voice_stop_word.dart';
 import 'connection_mutation_barrier.dart';
@@ -112,7 +113,7 @@ class VoiceLiveEngine extends ChangeNotifier {
     if (status == null) return null;
     if (!status.available && status.reason != null) return status.reason;
     if (status.available && !status.isLive) {
-      return 'GPT-Live is not enabled for this profile.';
+      return serviceStrings.voice_live_not_enabled;
     }
     return null;
   }
@@ -265,7 +266,7 @@ class VoiceLiveEngine extends ChangeNotifier {
     }
     if (_disposing || epoch != _startEpoch) return false;
     if (!startable) {
-      onError?.call(reason ?? 'GPT-Live is not available');
+      onError?.call(reason ?? serviceStrings.voice_live_not_available);
       return false;
     }
     if (_conversation.active) return false;
