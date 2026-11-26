@@ -28,15 +28,33 @@ void main() {
 
   group('adaptive size classes (window size only)', () {
     test('600 / 840 breakpoints and useful-height guard', () {
-      expect(adaptiveSizeClassOf(const Size(599, 900)), AdaptiveSizeClass.compact);
-      expect(adaptiveSizeClassOf(const Size(600, 900)), AdaptiveSizeClass.medium);
-      expect(adaptiveSizeClassOf(const Size(839, 900)), AdaptiveSizeClass.medium);
-      expect(adaptiveSizeClassOf(const Size(840, 900)), AdaptiveSizeClass.expanded);
+      expect(
+        adaptiveSizeClassOf(const Size(599, 900)),
+        AdaptiveSizeClass.compact,
+      );
+      expect(
+        adaptiveSizeClassOf(const Size(600, 900)),
+        AdaptiveSizeClass.medium,
+      );
+      expect(
+        adaptiveSizeClassOf(const Size(839, 900)),
+        AdaptiveSizeClass.medium,
+      );
+      expect(
+        adaptiveSizeClassOf(const Size(840, 900)),
+        AdaptiveSizeClass.expanded,
+      );
       // Wide but short windows fall back to the medium rail.
-      expect(adaptiveSizeClassOf(const Size(1000, 400)), AdaptiveSizeClass.medium);
+      expect(
+        adaptiveSizeClassOf(const Size(1000, 400)),
+        AdaptiveSizeClass.medium,
+      );
       expect(
         adaptiveSizeClassOf(
-          Size(AdaptiveBreakpoints.expanded, AdaptiveBreakpoints.expandedMinHeight),
+          Size(
+            AdaptiveBreakpoints.expanded,
+            AdaptiveBreakpoints.expandedMinHeight,
+          ),
         ),
         AdaptiveSizeClass.expanded,
       );
@@ -234,6 +252,12 @@ void main() {
       final gateway = await pumpNextGen(tester, const Size(1024, 800));
       // No modal drawer at the expanded breakpoint; the sidebar is inline.
       expect(find.byType(Drawer), findsNothing);
+      expect(find.byKey(const Key('ng-session-search')), findsOneWidget);
+      // Cold launch is the brand landing; opening a new chat exposes the
+      // chat header's sidebar toggle without changing the docked layout.
+      expect(find.byKey(const Key('ng-brand-new-chat')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('ng-brand-new-chat')));
+      await tester.pump(const Duration(milliseconds: 300));
       expect(find.byKey(const Key('ng-session-search')), findsOneWidget);
       expect(find.byKey(const ValueKey('ng-sidebar-button')), findsOneWidget);
       await unmount(tester, gateway);
