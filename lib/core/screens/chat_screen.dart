@@ -52,6 +52,8 @@ import '../widgets/client_held_queue_bar.dart';
 import '../widgets/image_recovery_capability_notice.dart';
 import '../widgets/prepared_image_recovery.dart';
 import '../services/chat_presentation_state.dart';
+import '../services/chat_kanban_dock.dart';
+import '../widgets/kanban_dock.dart';
 import '../services/chat_model_override_store.dart';
 import '../services/chat_density_preference.dart';
 import '../services/chat_history_window.dart';
@@ -735,6 +737,9 @@ class ChatScreen extends StatefulWidget {
   @visibleForTesting
   final SlashCommandGateway? testSlashGateway;
 
+  /// Test seam for the Kanban dock: a fake board transport and gateway owner.
+  final TestChatKanban? testKanban;
+
   const ChatScreen({
     required this.connection,
     required this.session,
@@ -749,6 +754,7 @@ class ChatScreen extends StatefulWidget {
     this.testAttachmentDraftService,
     this.testRemotePromptSubmit,
     this.testNormalResume,
+    this.testKanban,
     this.testServerFilePicker,
     this.screenCapture,
     this.testRemoteAttachmentUpload,
@@ -1242,6 +1248,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (widget.testRemotePromptSubmit != null && _normalSession == null) {
       _attachNormalSession();
     }
+    _syncKanbanChat();
     if (widget.initialComposerText == null) unawaited(_restoreComposerDraft());
     widget.testDesktopConnectionHook?.handler = (state) {
       widget.testDesktopConnectionHook?.currentState = state;
@@ -1348,6 +1355,9 @@ class _ChatScreenState extends State<ChatScreen>
   }) {
     if (!mounted) return;
     _observeVoiceNormalTerminal(snapshot);
+    if (_normalChat case final owner?) {
+      _kanbanDock.observeSeeds(owner.kanbanSeeds);
+    }
     final rejectedDraft = snapshot.rejectedDraft;
     if (rejectedDraft != null &&
         widget.initialComposerText == null &&
@@ -1412,6 +1422,7 @@ class _ChatScreenState extends State<ChatScreen>
         snapshot.storedSessionId != null &&
         _storedSessionId != snapshot.storedSessionId;
     _storedSessionId = snapshot.storedSessionId;
+    _syncKanbanChat();
     if (bindingChanged) {
       unawaited(_refreshProjectName());
       unawaited(_refreshArchiveState());
@@ -1848,6 +1859,58 @@ class _ChatScreenState extends State<ChatScreen>
       widget.testStoredSessionKey?.call(widget.session.id) ??
       widget.session.id;
 
+  /// The Kanban cards this chat sent to the board, drawn above the composer
+  /// with the chat's other status rows. One per connection and chat.
+  late ChatKanbanDockController _kanbanDock = _newKanbanDock();
+  final GlobalKey<KanbanPaneHostState> _kanbanPane = GlobalKey();
+
+  /// The gateway owner the dock reads the board and opens it through; null
+  /// on a connection with no dashboard.
+  RemoteWorkspaceOwner? get _kanbanOwner =>
+      widget.testKanban?.owner ?? _desktopGateway?.workspace;
+
+  ChatKanbanDockController _newKanbanDock() => ChatKanbanDockController(
+    connectionId: widget.connection.id,
+    profile: widget.connection.gatewayProfile,
+    openSource: () {
+      final fake = widget.testKanban?.source;
+      if (fake != null) return fake();
+      final owner = _kanbanOwner;
+      return owner == null ? null : WorkspaceChatKanbanSource(owner);
+    },
+  );
+
+  /// Tells the dock which session ids are this chat: a card whose
+  /// `session_id` is one of them was created by this chat.
+  void _syncKanbanChat() {
+    final draft = widget.session.isLocalDraft;
+    _kanbanDock.setChat(
+      primaryId: _storedSessionId ?? (draft ? null : _storedSessionKey),
+      aliases: [
+        if (!draft) widget.session.id,
+        widget.session.lineageRootId,
+        _normalChat?.storedSessionId,
+      ],
+    );
+  }
+
+  Future<void> _openKanban([ChatKanbanCard? card]) {
+    final dock = _kanbanDock;
+    return openChatKanban(
+      context,
+      dock: dock,
+      owner: _kanbanOwner,
+      connection: widget.connection,
+      card: card,
+      pane: _kanbanPane.currentState,
+      // Closed or switched to another chat meanwhile: open nothing.
+      isCurrent: () => mounted && identical(dock, _kanbanDock),
+      explain: (reason) => ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(reason))),
+    );
+  }
+
   static String? _normalisedProjectName(String? value) {
     final trimmed = value?.trim() ?? '';
     return trimmed.isEmpty ? null : trimmed;
@@ -1892,6 +1955,7 @@ class _ChatScreenState extends State<ChatScreen>
     _normalChat?.bindStoredSession(storedSessionId);
     _presentationRegistry.bind(localSessionId, storedSessionId);
     setState(() => _storedSessionId = storedSessionId);
+    _syncKanbanChat();
     unawaited(_refreshProjectName());
     unawaited(_refreshArchiveState());
   }
@@ -1960,6 +2024,16 @@ class _ChatScreenState extends State<ChatScreen>
         oldWidget.session.id != widget.session.id) {
       _preview.close();
     }
+    if (oldWidget.connection.id != widget.connection.id ||
+        oldWidget.connection.gatewayProfile !=
+            widget.connection.gatewayProfile ||
+        oldWidget.session.id != widget.session.id) {
+      // Another chat, connection or profile: its cards are not this one's.
+      _kanbanPane.currentState?.close();
+      _kanbanDock.dispose();
+      _kanbanDock = _newKanbanDock();
+      _syncKanbanChat();
+    }
     if (_slashGateway case final gateway?) {
       _slashController.useRefusals(gateway.slashRefusals);
     }
@@ -2024,6 +2098,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (pendingSubmission != null && !pendingSubmission.isCompleted) {
       pendingSubmission.complete();
     }
+    _kanbanDock.dispose();
     _manualAudioIntent++;
     _composerFocus
       ..removeListener(_syncComposerKeyboardEndScroll)
@@ -3931,6 +4006,11 @@ class _ChatScreenState extends State<ChatScreen>
     List<Map<String, dynamic>> messages, {
     bool replacePresentation = true,
   }) {
+    // The stored rows carry this chat's Kanban tool calls with their results;
+    // a refreshed history also means a turn may have just ended.
+    _kanbanDock
+      ..observeHistoryRows(messages)
+      ..turnEnded();
     final normal = _normalChat != null;
     final liveRuns = !normal && !replacePresentation
         ? _timeline.runs
@@ -6391,6 +6471,13 @@ class _ChatScreenState extends State<ChatScreen>
       return;
     }
     if (event.type.startsWith('tool.')) {
+      if (event.type == 'tool.complete') {
+        _kanbanDock.observeToolCall(
+          name: event.data['name']?.toString() ?? '',
+          args: event.data['args'],
+          result: event.data['result'],
+        );
+      }
       _upsertToolProgress(event.data, eventType: event.type);
       return;
     }
@@ -8457,7 +8544,11 @@ class _ChatScreenState extends State<ChatScreen>
         ),
       ),
     );
-    return transcriptShortcuts(_reader, chat);
+    // A wide chat opens the Kanban board beside itself (the dock's rows).
+    return KanbanPaneHost(
+      key: _kanbanPane,
+      child: transcriptShortcuts(_reader, chat),
+    );
   }
 
   Widget _buildGatewayNotification(GatewayNotification notification) {
@@ -8655,6 +8746,12 @@ class _ChatScreenState extends State<ChatScreen>
                             !_sending &&
                             !_streaming,
                       ),
+                    ClassicKanbanDock(
+                      dock: _kanbanDock,
+                      availableHeight: availableHeight,
+                      onOpen: (card) => unawaited(_openKanban(card)),
+                      onShowAll: () => unawaited(_openKanban()),
+                    ),
                     if (_currentActivityText case final activity?)
                       ChatActivityBar(text: activity)
                     else if (_terminalNoticeText case final notice?)

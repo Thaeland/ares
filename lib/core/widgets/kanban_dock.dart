@@ -446,6 +446,14 @@ class _ClassicKanbanDockState extends State<ClassicKanbanDock> {
   );
 }
 
+/// Test seam for a chat screen: the board transport and gateway owner its
+/// dock uses instead of its own connection's.
+class TestChatKanban {
+  const TestChatKanban({this.source, this.owner});
+  final ChatKanbanSource Function()? source;
+  final RemoteWorkspaceOwner? owner;
+}
+
 /// What a tap in the dock opens: one card, or the board limited to the
 /// chat's cards.
 @immutable
@@ -485,10 +493,11 @@ class KanbanOpenRequest {
 /// Opens the board for [card], or for every card of the chat when [card] is
 /// null, on the chat's own connection and profile.
 ///
-/// Wide chats show it as a pane ([KanbanPaneHost]); narrow ones push the
-/// board's route. When the board cannot open, [explain] is given the reason
-/// and the row stays. [isCurrent] is asked after the one await: a chat that
-/// was closed or switched meanwhile opens nothing.
+/// Wide chats show it as a pane ([KanbanPaneHost], found above [context]
+/// unless [pane] names it); narrow ones push the board's route. When the
+/// board cannot open, [explain] is given the reason and the row stays.
+/// [isCurrent] is asked after the one await: a chat that was closed or
+/// switched meanwhile opens nothing.
 Future<void> openChatKanban(
   BuildContext context, {
   required ChatKanbanDockController dock,
@@ -497,9 +506,10 @@ Future<void> openChatKanban(
   required bool Function() isCurrent,
   required void Function(String reason) explain,
   ChatKanbanCard? card,
+  KanbanPaneHostState? pane,
 }) async {
   final l = context.sharedL10n;
-  final pane = KanbanPaneHost.maybeOf(context);
+  pane ??= KanbanPaneHost.maybeOf(context);
   final navigator = Navigator.of(context);
   if (owner == null) {
     explain(kanbanBlockReason(l, ChatKanbanBlock.noDashboard));

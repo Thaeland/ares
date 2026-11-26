@@ -17,6 +17,7 @@ import '../utils/message_content.dart';
 import 'connection_manager.dart';
 import 'composer_draft_store.dart';
 import 'chat_history_window.dart';
+import 'chat_kanban_dock.dart';
 import 'chat_presentation_state.dart';
 import 'desktop_gateway_client.dart';
 import 'normal_gateway_pending_store.dart';
@@ -439,6 +440,9 @@ class NormalGatewayApplicationSession {
     if (!identical(winner, source) || canonical.turnId != null) {
       winner._createdEmptySessionId = null;
     }
+    // One chat under two ids: its Kanban cards stay with the surviving owner.
+    winner._kanban.addAll(loser._kanban);
+    loser._kanban.clear();
     winner._listeners.addAll(loser._listeners);
     loser._listeners.clear();
     loser._redirect = winner;
@@ -885,6 +889,10 @@ class NormalGatewayChatOwner {
   int _historyObservation = 0;
   String? _createdEmptySessionId;
   final List<GatewayToolActivity> _tools = [];
+
+  /// Kanban cards this chat's own tool calls made or linked, kept for its
+  /// dock: tool activities carry no arguments or results.
+  final List<ChatKanbanSeed> _kanban = [];
   final List<GatewaySubagentActivity> _subagents = [];
   final List<GatewaySubagentActivity> _activityChildren = [];
   bool _hasTurnSubagentPresentation = false;
@@ -945,6 +953,11 @@ class NormalGatewayChatOwner {
             row['role'] == 'assistant' &&
             (row['content']?.toString().isNotEmpty ?? false),
       );
+
+  /// The Kanban cards this chat sent to the board in turns this owner saw,
+  /// oldest first.
+  List<ChatKanbanSeed> get kanbanSeeds =>
+      _redirect != null ? _root.kanbanSeeds : List.unmodifiable(_kanban);
 
   NormalGatewayChatSnapshot get snapshot => _redirect != null
       ? _root.snapshot
@@ -2349,6 +2362,16 @@ class NormalGatewayChatOwner {
             : null;
       }
     } else if (event.type.startsWith('tool.')) {
+      if (event.type == 'tool.complete') {
+        _kanban.addAll(
+          chatKanbanSeedsFromToolCall(
+            name: event.data['name']?.toString() ?? '',
+            args: event.data['args'],
+            result: event.data['result'],
+          ),
+        );
+        if (_kanban.length > 64) _kanban.removeRange(0, _kanban.length - 64);
+      }
       final update = GatewayToolActivity.fromGatewayEvent(
         event.type,
         event.data,
