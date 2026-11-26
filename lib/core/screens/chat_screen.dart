@@ -1228,6 +1228,7 @@ class _ChatScreenState extends State<ChatScreen>
         }
         return gateway.fetchSlashCommands(sessionId: widget.session.id);
       },
+      localCommands: _localSlashCommands,
     )..addListener(_onSlashCommandChanged);
     if (_slashGateway case final gateway?) {
       _slashController.useRefusals(gateway.slashRefusals);
@@ -1949,6 +1950,17 @@ class _ChatScreenState extends State<ChatScreen>
 
   /// Slash-command RPCs need the Desktop socket. The REST/SSE transport keeps
   /// its existing text-send behaviour and never shows the dropdown.
+  /// `/kanban` and `/bots` open the board and the bots screen on this chat's
+  /// gateway; they are offered while there is one, listed by the gateway or
+  /// not.
+  List<SlashCommand> _localSlashCommands() {
+    if (!mounted || _kanbanOwner == null) return const [];
+    return const [
+      SlashCommand(name: 'kanban', description: 'Open the Kanban board'),
+      SlashCommand(name: 'bots', description: 'Open your bots'),
+    ];
+  }
+
   bool get _slashCommandsAvailable =>
       _slashGateway?.slashCommandsSupported ?? false;
 
@@ -5613,10 +5625,11 @@ class _ChatScreenState extends State<ChatScreen>
     if (name == null) return null;
     if (_sending || _streaming || _preparingSend) return '';
     final bareName = name.toLowerCase().replaceFirst(RegExp(r'^/+'), '');
+    final screenOwner = _kanbanOwner;
     if (bareName == 'kanban' &&
         _slashCommandArgument(text).isEmpty &&
-        _desktopGateway != null) {
-      final gateway = _desktopGateway!;
+        screenOwner != null) {
+      final owner = screenOwner;
       final connection = widget.connection;
       _setRestoredComposer('');
       _commitComposerForSend();
@@ -5624,8 +5637,8 @@ class _ChatScreenState extends State<ChatScreen>
         Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => KanbanBoardScreen(
-              owner: gateway.workspace,
-              route: gateway.workspace.route(),
+              owner: owner,
+              route: owner.route(),
               connection: connection,
             ),
           ),
@@ -5635,8 +5648,8 @@ class _ChatScreenState extends State<ChatScreen>
     }
     if (bareName == 'bots' &&
         _slashCommandArgument(text).isEmpty &&
-        _desktopGateway != null) {
-      final gateway = _desktopGateway!;
+        screenOwner != null) {
+      final owner = screenOwner;
       final connection = widget.connection;
       _setRestoredComposer('');
       _commitComposerForSend();
@@ -5644,8 +5657,8 @@ class _ChatScreenState extends State<ChatScreen>
         Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => BotsScreen(
-              owner: gateway.workspace,
-              route: gateway.workspace.route(),
+              owner: owner,
+              route: owner.route(),
               connection: connection,
             ),
           ),

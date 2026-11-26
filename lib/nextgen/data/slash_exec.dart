@@ -10,6 +10,14 @@ import '../../core/widgets/slash_command_highlight.dart';
 /// and a bare `/model` opens the model sheet.
 const Set<String> kNgLocalSlashCommands = {'new', 'reset', 'stop', 'model'};
 
+/// Commands that open an Ares screen when typed bare: `/kanban` the board,
+/// `/bots` the bots screen. Always highlighted, listed by the gateway or not;
+/// with an argument they go to the gateway like any other command.
+const Map<String, String> kNgScreenSlashCommands = {
+  'kanban': 'Open the Kanban board',
+  'bots': 'Open your bots',
+};
+
 /// How long a send waits for a catalogue that is still loading before it
 /// decides with Classic's fallback set instead.
 const Duration kNgSlashCatalogWait = Duration(seconds: 2);
