@@ -1,6 +1,5 @@
-// PROTOTYPE (mock/nextgen-brand): invented chats and an in-memory gateway for
-// tool/render_brand_mockups.dart. Adapted from ares-apple's store screenshot
-// fixtures. Nothing here talks to a network.
+// Invented chats and an in-memory gateway for the brand render harness.
+// Adapted from ares-apple's store screenshot fixtures. No network access.
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';

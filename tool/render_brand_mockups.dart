@@ -1,5 +1,5 @@
-// PROTOTYPE (mock/nextgen-brand): renders the NextGen brand mockups from the
-// app's real widgets on invented chats. No network, no device.
+// Renders the approved NextGen brand screens from the app's real widgets
+// on invented chats. No network, no device.
 //
 //   flutter test tool/render_brand_mockups.dart
 //
