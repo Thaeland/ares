@@ -2701,6 +2701,9 @@ class _NgChatViewState extends State<NgChatView>
       showsSentAsMessageNote: false,
       suppressed: _suggestionsOpen,
       child: NgSlashSuggestions(
+        // ComposerReferenceAssist owns argument rows and caches by prefix.
+        // The imported 4.x overlay owns only command-name suggestions here.
+        completeArguments: false,
         chat: chat,
         controller: _input,
         focusNode: _focus,

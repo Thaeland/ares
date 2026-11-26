@@ -712,13 +712,20 @@ void main() {
       'text': '/personality al',
       'session_id': 'rt-1',
     });
-    expect(find.byKey(_row('alice')), findsOneWidget);
-    expect(_inBox('Friendly helper'), findsOneWidget);
+    // 5.0's shared reference assist owns argument rows and its per-prefix
+    // cache; the 4.x overlay only handles command names in the integrated UI.
+    final alice = find.widgetWithText(ListTile, 'alice');
+    expect(alice, findsOneWidget);
+    expect(
+      find.descendant(of: alice, matching: find.text('Friendly helper')),
+      findsOneWidget,
+    );
+    expect(gateway.completions, ['/personality al']);
 
-    await tester.tap(find.byKey(_row('alice')));
+    await tester.tap(alice);
     await _settle(tester);
-    expect(_composer(tester), '/personality alice ');
-    expect(_value(tester).selection, const TextSelection.collapsed(offset: 19));
+    expect(_composer(tester), '/personality alice');
+    expect(_value(tester).selection, const TextSelection.collapsed(offset: 18));
     expect(find.byKey(_boxKey), findsNothing);
     expect(gateway.of('slash.exec'), isEmpty);
   });
@@ -809,7 +816,9 @@ void main() {
             child: Navigator(
               key: navigator,
               onGenerateInitialRoutes: (_, _) => [
-                MaterialPageRoute<void>(builder: (_) => const NgMainPage()),
+                MaterialPageRoute<void>(
+                  builder: (_) => const NgMainPage(coldStart: false),
+                ),
               ],
             ),
           ),

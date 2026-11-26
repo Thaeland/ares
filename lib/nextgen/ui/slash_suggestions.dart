@@ -36,6 +36,7 @@ class NgSlashSuggestions extends StatefulWidget {
     this.maxRows = 6,
     this.maxWidth = 420,
     this.debounce = kNgSlashSuggestDebounce,
+    this.completeArguments = true,
   });
 
   final NgChatController chat;
@@ -62,6 +63,10 @@ class NgSlashSuggestions extends StatefulWidget {
   final int maxRows;
   final double maxWidth;
   final Duration debounce;
+
+  /// Disable when the containing composer already owns argument completion
+  /// and its per-prefix cache; command-name suggestions remain available.
+  final bool completeArguments;
 
   static final Set<_NgSlashSuggestionsState> _states = {};
 
@@ -219,7 +224,9 @@ class _NgSlashSuggestionsState extends State<NgSlashSuggestions> {
     final query = widget.focusNode.hasFocus && !_dismissed
         ? NgSlashQuery.of(widget.controller.value)
         : null;
-    if (query == null) return _close();
+    if (query == null || (query.isArgument && !widget.completeArguments)) {
+      return _close();
+    }
     // Composing-only and other same-place updates change nothing.
     if (query.sameAs(_query)) return;
     // A tap or caret move never opens the box (a tap on the token shows the
