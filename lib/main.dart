@@ -1554,6 +1554,28 @@ class HermesHeader extends StatelessWidget {
   }
 }
 
+String _localizedHealthMessage(
+  AppLocalizations l10n,
+  ApiHealthCheckResult result, {
+  required bool apiKeyProvided,
+}) {
+  if (result.isHealthy) return '';
+  final endpoint = result.endpoint.toString();
+  final statusCode = result.statusCode;
+  if (statusCode == 401 || statusCode == 403) {
+    return apiKeyProvided
+        ? l10n.release_misc_api_key_rejected(endpoint, statusCode!)
+        : l10n.release_misc_api_key_required;
+  }
+  if (statusCode == 404) {
+    return l10n.release_misc_gateway_not_found(endpoint);
+  }
+  if (statusCode != null) {
+    return l10n.release_misc_gateway_http_error(endpoint, statusCode);
+  }
+  return l10n.release_misc_gateway_unreachable(endpoint);
+}
+
 class HomeScreen extends StatefulWidget {
   final ConnectionManager connManager;
   final GatewayTurnApplicationController turnApplicationController;
@@ -1963,6 +1985,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   void _showApiKeyDialog(SavedConnection conn) {
+    final l10n = context.l10n;
     final ctrl = TextEditingController(text: conn.apiKey);
     bool validating = false;
     String? error;
@@ -2058,7 +2081,11 @@ class HomeScreenState extends State<HomeScreen> {
                           await _closeDialogAndRefresh(ctx);
                         } else {
                           setDialogState(() {
-                            error = result.userMessage(apiKeyProvided: true);
+                            error = _localizedHealthMessage(
+                              l10n,
+                              result,
+                              apiKeyProvided: true,
+                            );
                             validating = false;
                           });
                         }
@@ -2099,6 +2126,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   void _showDashboardAuthDialog(SavedConnection conn) {
+    final l10n = context.l10n;
     final gatewayPrefixCtrl = TextEditingController(
       text: conn.gatewayPrefix ?? '',
     );
@@ -2273,7 +2301,9 @@ class HomeScreenState extends State<HomeScreen> {
                         if (!ctx.mounted) return;
                         if (!result.isHealthy) {
                           setDialogState(() {
-                            error = result.userMessage(
+                            error = _localizedHealthMessage(
+                              l10n,
+                              result,
                               apiKeyProvided: conn.apiKey.isNotEmpty,
                             );
                             validating = false;
@@ -2514,7 +2544,9 @@ class HomeScreenState extends State<HomeScreen> {
                             key: const Key('home_lan_discovery_button'),
                             onPressed: _showLanDiscovery,
                             icon: const Icon(Icons.wifi_find),
-                            label: const Text('Find Hermes on LAN'),
+                            label: Text(
+                              context.l10n.release_misc_find_hermes_on_lan,
+                            ),
                           ),
                         ],
                       ),
@@ -2635,6 +2667,7 @@ class _AddDialogState extends State<_AddDialog> {
   /// Whether the current imported identity was committed by a successful save.
   /// Anything still staged when the dialog closes is discarded.
   bool _certificateSaved = false;
+  bool _didInitializeDefaultLabel = false;
 
   bool get _isEditing => widget.initialConnection != null;
 
@@ -2645,7 +2678,7 @@ class _AddDialogState extends State<_AddDialog> {
     super.initState();
     final conn = widget.initialConnection;
     _label = TextEditingController(
-      text: widget.initialLabel ?? conn?.label ?? 'Home',
+      text: widget.initialLabel ?? conn?.label ?? '',
     );
     _host = TextEditingController(
       text: conn == null
@@ -2704,6 +2737,17 @@ class _AddDialogState extends State<_AddDialog> {
         conn?.customHeaders.isNotEmpty == true ||
         _dashboardProxied ||
         conn?.desktopGatewayUrl?.isNotEmpty == true;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_didInitializeDefaultLabel) {
+      _didInitializeDefaultLabel = true;
+      if (widget.initialLabel == null && widget.initialConnection == null) {
+        _label.text = context.l10n.nav_home;
+      }
+    }
   }
 
   void _onHostChanged() {
@@ -3060,6 +3104,7 @@ class _AddDialogState extends State<_AddDialog> {
       _certificateFileLease.run(_validateAndSaveOwned);
 
   Future<void> _validateAndSaveOwned() async {
+    final l10n = context.l10n;
     _scheduleCertificateCleanup();
     final label = _label.text.trim();
     final host = _host.text.trim();
@@ -3122,7 +3167,11 @@ class _AddDialogState extends State<_AddDialog> {
 
       if (!result.isHealthy) {
         setState(() {
-          _error = result.userMessage(apiKeyProvided: apiKey.isNotEmpty);
+          _error = _localizedHealthMessage(
+            l10n,
+            result,
+            apiKeyProvided: apiKey.isNotEmpty,
+          );
           _validating = false;
         });
         return;
@@ -3297,8 +3346,7 @@ class _AddDialogState extends State<_AddDialog> {
               controller: _host,
               decoration: InputDecoration(
                 labelText: context.l10n.host,
-                hintText:
-                    '192.168.1.50, 100.x.y.z, or hermes-machine.tailnet.ts.net',
+                hintText: context.l10n.example_host_hint,
               ),
               keyboardType: TextInputType.text,
               autocorrect: false,
@@ -3699,7 +3747,7 @@ class LanDiscoverySheet extends StatefulWidget {
 class _LanDiscoverySheetState extends State<LanDiscoverySheet> {
   List<DiscoveredHermesServer> _servers = [];
   bool _scanning = true;
-  String? _error;
+  Object? _error;
 
   @override
   void initState() {
@@ -3724,7 +3772,7 @@ class _LanDiscoverySheetState extends State<LanDiscoverySheet> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = 'Discovery failed: $e';
+        _error = e;
         _scanning = false;
       });
     }
@@ -3745,7 +3793,7 @@ class _LanDiscoverySheetState extends State<LanDiscoverySheet> {
               children: [
                 Expanded(
                   child: Text(
-                    'Find Hermes on LAN',
+                    context.l10n.release_misc_find_hermes_on_lan,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
@@ -3762,14 +3810,14 @@ class _LanDiscoverySheetState extends State<LanDiscoverySheet> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
-                _error!,
+                context.l10n.release_misc_discovery_failed(_error.toString()),
                 style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ),
           if (!_scanning && _servers.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              child: Text('No Hermes servers found on the local network.'),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+              child: Text(context.l10n.release_misc_no_lan_servers),
             ),
           Flexible(
             child: ListView.builder(
