@@ -116,11 +116,33 @@ Map<String, String> delegationPrompt(List<LiveFragment> fragments) {
       .where((line) => !line.endsWith(': '))
       .join('\n');
   return {
+    // Desktop: `prompt || transcript.slice(-400)`, the most recent words.
     'prompt': prompt.isNotEmpty
         ? prompt
-        : context.substring(0, context.length.clamp(0, 400)),
+        : context.substring(context.length > 400 ? context.length - 400 : 0),
     'context': context,
   };
+}
+
+/// How much conversation the backend receives per delegation (Desktop's
+/// `CONTEXT_WINDOW_MS` and `CONTEXT_MAX_FRAGMENTS`).
+const int liveContextWindowMs = 5 * 60000;
+const int liveContextMaxFragments = 80;
+
+/// Recent conversation, oldest first, bounded by time and count. The vendor's
+/// `start_ms` / `end_ms` are milliseconds from the start of the session, so
+/// the window is measured back from the last fragment's end, never from the
+/// wall clock (Desktop's `VoiceLiveSession.contextWindow`).
+List<LiveFragment> liveContextWindow(List<LiveFragment> transcript) {
+  if (transcript.isEmpty) return const [];
+  final floor = transcript.last.endMs - liveContextWindowMs;
+  final window = [
+    for (final fragment in transcript)
+      if (fragment.endMs >= floor) fragment,
+  ];
+  return window.length > liveContextMaxFragments
+      ? window.sublist(window.length - liveContextMaxFragments)
+      : window;
 }
 
 /// Vendor cap: 500 tokens per commentary append. Keep headroom.
@@ -429,15 +451,9 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
         final delegation = event['delegation'];
         if (delegation is Map && delegation['id'] != null) {
           _delegationId = delegation['id'].toString();
-          final contextWindow = _transcript.where(
-            (fragment) =>
-                fragment.endMs == 0 ||
-                fragment.endMs >=
-                    DateTime.now().millisecondsSinceEpoch - 300000,
-          );
           onDelegation?.call(
             _delegationId!,
-            delegationPrompt(contextWindow.toList()),
+            delegationPrompt(liveContextWindow(_transcript)),
           );
         }
       case 'error':

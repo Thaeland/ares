@@ -102,7 +102,6 @@ void main() {
       Map<String, String>? delegated;
       String? delegationId;
       String? closedReason;
-      final now = DateTime.now().millisecondsSinceEpoch;
       final conversation = GptLiveConversation(
         transport: transport,
         onTranscript: (fragment) => transcript = fragment,
@@ -115,9 +114,12 @@ void main() {
       addTearDown(conversation.dispose);
 
       conversation.handleEvent(
-        '{"type":"session.input_transcript.delta","delta":"hello","start_ms":$now,"end_ms":$now}',
+        // Vendor timing is milliseconds from the start of the session.
+        '{"type":"session.input_transcript.delta","delta":"hello","start_ms":1200,"end_ms":1900}',
       );
       expect(transcript?.speaker, 'user');
+      expect(transcript?.startMs, 1200);
+      expect(transcript?.endMs, 1900);
       expect(conversation.transcript.single.text, 'hello');
 
       conversation.handleEvent(
