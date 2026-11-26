@@ -53,6 +53,16 @@ static void my_application_activate(GApplication* application) {
   }
 
   gtk_window_set_default_size(window, 1280, 720);
+  if (self->dart_entrypoint_arguments != nullptr) {
+    for (char** arg = self->dart_entrypoint_arguments; *arg != nullptr;
+         ++arg) {
+      if (g_strcmp0(*arg, "--ares-pet-companion-v1") == 0) {
+        gtk_window_set_keep_above(window, TRUE);
+        gtk_window_set_default_size(window, 360, 520);
+        break;
+      }
+    }
+  }
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(

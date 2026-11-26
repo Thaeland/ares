@@ -16,6 +16,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../models/attachment_draft.dart';
 import '../models/hermes_project.dart';
 import '../models/projects_tree_overview.dart';
+import '../presentation/presentation_chrome.dart';
+import '../render/render_scope.dart';
 import '../services/android_share_intent_service.dart';
 import '../services/app_update_service.dart';
 import '../services/attachment_draft_service.dart';
@@ -2260,6 +2262,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
               maxDownloadBytes: maxAttachmentDownloadBytes,
             ),
             onOpenSession: (session) => unawaited(_openSession(session)),
+            contributionsScope: renderConnectionKey(connection),
           ),
         ),
       );
@@ -2470,6 +2473,7 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         title: Text(widget.connection.label),
         centerTitle: false,
         actions: [
+          const PresentationChrome(),
           if (_destination == HermesDestination.chats) ...[
             IconButton(
               tooltip: _inboxActionCount == 0

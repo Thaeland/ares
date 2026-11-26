@@ -191,6 +191,9 @@ class AttachmentVideoSession {
   Future<void> setMuted(bool muted) =>
       _enqueue(() => _controller!.setVolume(muted ? 0 : 1));
 
+  Future<void> setPlaybackSpeed(double speed) =>
+      _enqueue(() => _controller!.setPlaybackSpeed(speed));
+
   Future<void> _enqueue(Future<void> Function() action) {
     if (_closed || !_ready) return Future<void>.value();
     final command = _commands.then((_) async {

@@ -219,6 +219,100 @@ void main() {
     },
   );
 
+  // A setup_beat card waits for its chat (Desktop parks it per session and
+  // re-delivers open_requests on resume): leaving the chat must not answer
+  // it with an error, and opening the chat again shows it again.
+  test(
+    'a setup card survives leaving its chat and returns on reopen',
+    () async {
+      final gateway = await _ServerRequestGateway.start(
+        withDashboardAuth: true,
+        withTurnRecovery: true,
+      );
+      final controller = GatewayTurnApplicationController(
+        journalFactory: () => GatewayTurnJournal(store: _MemoryJournalStore()),
+      );
+      addTearDown(() async {
+        await controller.close();
+        await gateway.stop();
+      });
+      final connection = SavedConnection(
+        id: 'setup-card-reopen',
+        label: 'Fixture',
+        host: '127.0.0.1',
+        port: gateway.port,
+        apiKey: 'fixture-key',
+        dashboardPortOverride: gateway.port,
+        dashboardUsername: 'user',
+        dashboardPassword: 'pass',
+      );
+      final session = controller.sessionFor(connection);
+      final first = Completer<StreamEvent>();
+      final token = session.setAsyncEventListener('mobile-1', (_, event) {
+        if (event.type == 'setup_beat.request' && !first.isCompleted) {
+          first.complete(event);
+        }
+      });
+      await session.submit(localSessionId: 'mobile-1', text: 'Set me up');
+      gateway.sendServerRequest(
+        id: 'beat-1',
+        method: 'setup_beat',
+        params: {
+          'session_id': 'runtime-1',
+          'beat': 'build',
+          'question': 'Pick a first build',
+          'card': {
+            'options': [
+              {'id': 'site', 'label': 'A website'},
+            ],
+          },
+        },
+      );
+      final requestId = (await first.future.timeout(
+        const Duration(seconds: 5),
+      )).data['server_request_id'].toString();
+
+      // The chat's screen goes away.
+      session.removeAsyncEventListener('mobile-1', token);
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      expect(
+        gateway.serverResponses.containsKey('beat-1'),
+        isFalse,
+        reason: 'leaving the chat must not answer its setup card',
+      );
+
+      // Opened again: the card is delivered to the new screen.
+      final replayed = Completer<StreamEvent>();
+      session.setAsyncEventListener('mobile-1', (_, event) {
+        if (event.type == 'setup_beat.request' && !replayed.isCompleted) {
+          replayed.complete(event);
+        }
+      });
+      final again = await replayed.future.timeout(const Duration(seconds: 5));
+      expect(again.data['server_request_id'], requestId);
+      final answered = Completer<Map<String, dynamic>>();
+      gateway.onServerResponse = (_, frame) {
+        if (frame['id'] == 'beat-1' && !answered.isCompleted) {
+          answered.complete(frame);
+        }
+      };
+      expect(
+        (session as GatewaySetupBeatResponder).tryRespondToSetupBeat(
+          sessionId: 'mobile-1',
+          requestId: requestId,
+          result: {
+            'answer': {'build': 'site', 'label': 'A website'},
+          },
+        ),
+        isTrue,
+      );
+      final frame = await answered.future.timeout(const Duration(seconds: 5));
+      expect(frame['result'], {
+        'answer': {'build': 'site', 'label': 'A website'},
+      });
+    },
+  );
+
   test('WsClient advertises and answers server initiated requests', () async {
     final gateway = await _ServerRequestGateway.start();
     addTearDown(gateway.stop);

@@ -16,6 +16,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/models/attachment_draft.dart';
 import '../../core/preview/chat_preview.dart';
+import '../../core/render/render_scope.dart';
+import '../../core/capabilities/capability_admin.dart';
+import '../../core/render/catalog_install.dart';
+import '../../core/render/rich_transcript.dart';
+import '../../core/render/setup_beat.dart';
 import '../../core/screens/workspace_workers_screen.dart';
 import '../../core/screens/gateway_queue_screen.dart';
 import '../../core/screens/kanban_board_screen.dart';
@@ -23,6 +28,7 @@ import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
 import '../../core/utils/delivered_files.dart';
 import '../../core/utils/media_tags.dart';
+import '../../core/widgets/chat_presence.dart';
 import '../../core/widgets/desktop_shortcuts.dart';
 import '../../core/widgets/transcript_reader.dart';
 import '../../core/widgets/transcript_body.dart';
@@ -32,6 +38,12 @@ import '../../core/widgets/orphan_draft_recovery.dart';
 import '../../core/widgets/markdown_code_block.dart';
 import '../../core/widgets/media_artifact_card.dart';
 import '../../core/widgets/slash_command_highlight.dart';
+import '../../core/presentation/companion_draft.dart';
+import '../../core/presentation/petdex.dart';
+import '../../core/presentation/presentation_chrome.dart';
+import '../../core/presentation/radio.dart' show showAresRadioSheet;
+import '../../core/presentation/reading_controls.dart';
+import '../../core/presentation/transcript_reading.dart';
 import '../../core/widgets/session_files_view.dart';
 import '../../core/widgets/git_review_pane.dart';
 import '../../core/models/turn_changed_files.dart';
@@ -86,6 +98,9 @@ class NgChatView extends StatefulWidget {
 
 class _NgChatViewState extends State<NgChatView>
     with WidgetsBindingObserver, TerminalComposerAttachment<NgChatView> {
+  bool _companionLeftDuringTurn = false;
+  bool _companionUnread = false;
+
   @override
   SavedConnection get terminalConnection => chat.gateway.connection;
   @override
@@ -102,6 +117,64 @@ class _NgChatViewState extends State<NgChatView>
       sessionId: chat.storedId,
       maxDownloadBytes: maxAttachmentDownloadBytes,
     );
+  }
+
+  Future<WidgetHtmlSource?> _readWidgetHtml(String path) async {
+    if (!mounted) return null;
+    final client = _filesClient();
+    try {
+      final preview = await client.readText(path);
+      if (preview.binary) return null;
+      return WidgetHtmlSource(preview.text, truncated: preview.truncated);
+    } catch (_) {
+      return null;
+    } finally {
+      if (client is RemoteFilesClient) client.close();
+    }
+  }
+
+  /// Installs a failed catalog plugin again after its operation settled,
+  /// through the capabilities install of the chat's own connection and
+  /// profile (not the active one, which may be another connection) into the
+  /// row's own target profile, as Desktop's retrySettled does through the
+  /// owner of the request's session.
+  Future<CatalogRetryResult> _retryCatalogRow(CatalogRow row) async {
+    final gateway = chat.gateway;
+    final admin = CapabilityAdmin.fromDashboard(
+      gateway.dashboard,
+      profile: gateway.profile,
+      // The chat's own socket: a settled card belongs to a live chat.
+      rpc: (method, params) =>
+          gateway.call(method, params, timeout: const Duration(minutes: 3)),
+    );
+    final mutation = await admin.installCatalogPlugin(
+      row.name,
+      profile: row.targetProfile,
+      force: row.approvedForce,
+      enable: row.approvedEnable,
+      ref: row.approvedRef,
+    );
+    return CatalogRetryResult(
+      ok: mutation.ok,
+      message:
+          mutation.message ??
+          (mutation.lines.isEmpty ? null : mutation.lines.join('\n')),
+    );
+  }
+
+  /// A widget may continue only an idle chat, as in Classic: a running
+  /// turn, dictation, an attachment being prepared or a stale owner
+  /// refuses it rather than steering or queueing a hidden prompt.
+  Future<void> _deliverWidgetIntent(String prompt) async {
+    if (!mounted ||
+        chat.running ||
+        _listening ||
+        _preparing ||
+        !chat.draftOwnerCurrent) {
+      throw StateError('undelivered');
+    }
+    final accepted = await chat.send(prompt, hidden: true);
+    if (!accepted) throw StateError('undelivered');
   }
 
   final _input = SlashCommandHighlightController();
@@ -160,14 +233,6 @@ class _NgChatViewState extends State<NgChatView>
     );
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed) {
-      _checkpoint?.cancel();
-      unawaited(_draftWriter.flush());
-    }
-  }
-
   bool _openGit = false;
   String? _gitFocus;
 
@@ -215,6 +280,7 @@ class _NgChatViewState extends State<NgChatView>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    CompanionDraft.pending.addListener(_applyCompanionDraft);
     _openDraft();
     _input.addListener(_onDraftEdit);
     chat.addListener(_onChat);
@@ -283,6 +349,10 @@ class _NgChatViewState extends State<NgChatView>
 
   void _onChat() {
     if (!mounted) return;
+    if (_companionLeftDuringTurn && !chat.running) {
+      _companionLeftDuringTurn = false;
+      _companionUnread = true;
+    }
     // A retry or history reload can remove the reply being read; do not
     // keep speaking a row that no longer has a Stop affordance.
     final reading = _readAloud.readingKey;
@@ -311,8 +381,9 @@ class _NgChatViewState extends State<NgChatView>
 
   @override
   void dispose() {
-    chat.removeListener(_onChat);
     WidgetsBinding.instance.removeObserver(this);
+    CompanionDraft.pending.removeListener(_applyCompanionDraft);
+    chat.removeListener(_onChat);
     _checkpoint?.cancel();
     unawaited(_draftWriter.close());
     _readAloud.removeListener(_onReadAloud);
@@ -328,6 +399,32 @@ class _NgChatViewState extends State<NgChatView>
       unawaited(chat.attachmentService.removeAll(List.of(_drafts)));
     }
     super.dispose();
+  }
+
+  void _applyCompanionDraft() {
+    if (!mounted) return;
+    CompanionDraft.applyTo(_input);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) {
+      _checkpoint?.cancel();
+      unawaited(_draftWriter.flush());
+    }
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached) {
+      if (chat.running) _companionLeftDuringTurn = true;
+    } else if (state == AppLifecycleState.resumed &&
+        _companionLeftDuringTurn &&
+        !chat.running &&
+        mounted) {
+      setState(() {
+        _companionLeftDuringTurn = false;
+        _companionUnread = true;
+      });
+    }
   }
 
   int get _slotsLeft => maxRemoteAttachmentDrafts - _drafts.length;
@@ -475,6 +572,18 @@ class _NgChatViewState extends State<NgChatView>
       // Not a command the gateway runs: it goes out as a prompt, exactly as
       // before, provided the draft is still the one that was decided on.
       if (!mounted || _input.text.trim() != text) return;
+    }
+    // A message sent while a setup card waits closes the card with
+    // {wrote_instead}; the backend ends the card's turn, so the message
+    // waits for that turn to end and runs as the next one, never a steer
+    // (Desktop's yieldParkedCardsToMessage).
+    if (chat.yieldSetupBeatToMessage() &&
+        chat.running &&
+        _drafts.isEmpty &&
+        text.isNotEmpty) {
+      _input.clear();
+      chat.enqueue(text);
+      return;
     }
     if (_drafts.isNotEmpty && !chat.running) {
       final raw = _input.text;
@@ -750,6 +859,32 @@ class _NgChatViewState extends State<NgChatView>
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
     final gateway = NgScope.of(context).gateway;
+    // Render state (embed consent, revisions, video memory) is scoped per
+    // connection and chat; presence reports only this chat's own socket.
+    return RenderScope(
+      connection: renderConnectionKey(chat.gateway.connection),
+      chat: chat.storedId ?? 'draft:${identityHashCode(chat)}',
+      child: ChatPresence(
+        target: () {
+          final socket = chat.gateway.socket;
+          final runtime = chat.runtimeId;
+          return socket != null &&
+                  runtime != null &&
+                  chat.gateway.storedIdFor(runtime) == chat.storedId
+              ? (socket, runtime)
+              : null;
+        },
+        // As the controller names it for the completion cue.
+        cueKey: () {
+          final id = chat.storedId ?? chat.runtimeId;
+          return id == null ? null : '${chat.gateway.connection.id}|$id';
+        },
+        child: _buildScoped(c, gateway),
+      ),
+    );
+  }
+
+  Widget _buildScoped(NgColors c, NextGenGateway gateway) {
     return _preview.layout(
       chat: _buildChat(c, gateway),
       storedId: chat.storedId,
@@ -772,7 +907,11 @@ class _NgChatViewState extends State<NgChatView>
 
   Widget _buildChat(NgColors c, NextGenGateway gateway) {
     final view = ListenableBuilder(
-      listenable: gateway,
+      // The radio switching on or off adds or drops its narrow-pane entry.
+      listenable: Listenable.merge([
+        gateway,
+        presentationToolsListenable(context),
+      ]),
       builder: (context, _) {
         final state = gateway.state;
         final fileChat = chat;
@@ -794,6 +933,7 @@ class _NgChatViewState extends State<NgChatView>
         return LayoutBuilder(
           builder: (context, box) {
             final compactTools = box.maxWidth < 480;
+            final radio = compactTools ? compactRadioTool(context) : null;
             return Scaffold(
               backgroundColor: c.background,
               appBar: AppBar(
@@ -854,6 +994,19 @@ class _NgChatViewState extends State<NgChatView>
                   ),
                 ),
                 actions: [
+                  PresentationChrome(
+                    compact: compactTools,
+                    activity: chat.running
+                        ? PetActivity.working
+                        : _companionUnread
+                        ? PetActivity.completed
+                        : PetActivity.idle,
+                    unread: _companionUnread,
+                    onCompose: () {
+                      setState(() => _companionUnread = false);
+                      _focus.requestFocus();
+                    },
+                  ),
                   if (chat.items.isNotEmpty)
                     IconButton(
                       tooltip: 'Find in transcript',
@@ -887,12 +1040,22 @@ class _NgChatViewState extends State<NgChatView>
                         icon: const Icon(Icons.hub_outlined),
                         onPressed: () => workers.open(context),
                       ),
-                  ] else if (chat.storedId != null || workers != null)
+                  ] else if (chat.storedId != null ||
+                      workers != null ||
+                      radio != null)
+                    // The radio's controls move here from the app bar.
                     PopupMenuButton<String>(
                       key: const ValueKey('chat-tools-menu'),
                       tooltip: 'More chat tools',
                       icon: const Icon(Icons.widgets_outlined),
                       onSelected: (tool) {
+                        if (tool == radioToolValue) {
+                          final current = compactRadioTool(context);
+                          if (current != null) {
+                            unawaited(showAresRadioSheet(context, current));
+                          }
+                          return;
+                        }
                         final id = chat.storedId;
                         if (tool == 'browser' && id != null) {
                           setState(
@@ -929,6 +1092,7 @@ class _NgChatViewState extends State<NgChatView>
                               title: Text(ngL.workspace_workers),
                             ),
                           ),
+                        if (radio != null) radioToolItem(context),
                       ],
                     ),
                   if (chat.usage != null)
@@ -1003,7 +1167,26 @@ class _NgChatViewState extends State<NgChatView>
                         ),
                       if (chat.error != null) _errorBar(c),
                       if (chat.queued.isNotEmpty) _queue(c),
-                      if (chat.request != null)
+                      if (chat.catalog case final operation?)
+                        CatalogInstallCard(
+                          key: ValueKey(operation.opId),
+                          operation: operation,
+                          respond: (answer) =>
+                              chat.respondCatalog(operation, answer),
+                          retry: _retryCatalogRow,
+                          onDismiss: () => chat.dismissCatalog(operation.opId),
+                        ),
+                      // The composer stays below a setup card: a message
+                      // sent instead of an answer closes the card.
+                      if (chat.request?.setupBeat case final card?)
+                        SetupBeatCard(
+                          key: ValueKey(card.requestId),
+                          request: card,
+                          onAnswer: (result) async =>
+                              chat.sendSetupBeat(card.requestId, result),
+                        ),
+                      if (chat.request != null &&
+                          chat.request!.kind != NgRequestKind.setupBeat)
                         _InputPanel(
                           chat: chat,
                           request: chat.request!,
@@ -1029,7 +1212,9 @@ class _NgChatViewState extends State<NgChatView>
         );
       },
     );
-    return transcriptShortcuts(_reader, view);
+    // Item keys restart in every chat controller, so reactions live with
+    // this chat's controller and never in a map shared by all chats.
+    return ReactionScope(chat: chat, child: transcriptShortcuts(_reader, view));
   }
 
   Future<void> _rename() async {
@@ -1354,6 +1539,8 @@ class _NgChatViewState extends State<NgChatView>
                 ? chat.retryLast
                 : null,
             readAloud: _readAloud,
+            readHtml: _readWidgetHtml,
+            onIntent: _deliverWidgetIntent,
           ),
           if (!item.open &&
               _latestAssistant(items, item) &&
@@ -1529,33 +1716,42 @@ class _NgChatViewState extends State<NgChatView>
                               .map((item) => item.text),
                         ),
                   onSend: () => unawaited(_send()),
-                  child: TextField(
-                    key: const ValueKey('ng-composer-field'),
-                    controller: _input,
-                    focusNode: _focus,
-                    onTap: () {
-                      // Android can hide the keyboard with Back while this node
-                      // retains focus. Explicitly show it on every composer tap.
-                      _focus.requestFocus();
-                      unawaited(
-                        SystemChannels.textInput.invokeMethod<void>(
-                          'TextInput.show',
+                  child: ChatPresenceComposer(
+                    builder: (_, input) => TextField(
+                      key: const ValueKey('ng-composer-field'),
+                      onChanged: (_) => input(),
+                      controller: _input,
+                      focusNode: _focus,
+                      onTap: () {
+                        // Android can hide the keyboard with Back while this
+                        // node retains focus. Explicitly show it on every
+                        // composer tap.
+                        _focus.requestFocus();
+                        unawaited(
+                          SystemChannels.textInput.invokeMethod<void>(
+                            'TextInput.show',
+                          ),
+                        );
+                      },
+                      minLines: 1,
+                      maxLines: 8,
+                      textCapitalization: TextCapitalization.sentences,
+                      style: NgType.body.copyWith(color: c.text),
+                      decoration: InputDecoration(
+                        hintText: _listening
+                            ? ngL.ng_listening
+                            : chat.running
+                            ? ngL.ng_steer_or_queue_a_message
+                            : ngL.ng_message_hermes,
+                        hintStyle: NgType.body.copyWith(color: c.textMuted),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.fromLTRB(
+                          12,
+                          12,
+                          12,
+                          6,
                         ),
-                      );
-                    },
-                    minLines: 1,
-                    maxLines: 8,
-                    textCapitalization: TextCapitalization.sentences,
-                    style: NgType.body.copyWith(color: c.text),
-                    decoration: InputDecoration(
-                      hintText: _listening
-                          ? ngL.ng_listening
-                          : chat.running
-                          ? ngL.ng_steer_or_queue_a_message
-                          : ngL.ng_message_hermes,
-                      hintStyle: NgType.body.copyWith(color: c.textMuted),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
+                      ),
                     ),
                   ),
                 ),
@@ -1863,111 +2059,118 @@ class _UserBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(top: 14, bottom: 4, left: 48),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          if (item.steered)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 4, right: 4),
-              child: Text(
-                ngL.ng_steered,
-                style: NgType.caption.copyWith(color: c.text3),
+    return transcriptDirection(
+      context,
+      Padding(
+        padding: const EdgeInsets.only(top: 14, bottom: 4, left: 48),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if (item.steered)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4, right: 4),
+                child: Text(
+                  ngL.ng_steered,
+                  style: NgType.caption.copyWith(color: c.text3),
+                ),
               ),
-            ),
-          if (item.text.isNotEmpty)
-            GestureDetector(
-              onLongPress: () {
-                Clipboard.setData(ClipboardData(text: item.text));
-                ngToast(context, ngL.ng_copied);
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: c.userBubble,
-                  borderRadius: BorderRadius.circular(NgRadii.lg),
-                ),
-                child: transcriptBody(
-                  SelectableText(
-                    ngCapShown(item.text),
-                    style: NgType.body.copyWith(
-                      color: c.onUserBubble.withValues(
-                        alpha: item.pending ? 0.6 : 1,
+            if (item.text.isNotEmpty)
+              GestureDetector(
+                onLongPress: () {
+                  Clipboard.setData(ClipboardData(text: item.text));
+                  ngToast(context, ngL.ng_copied);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: userBubbleFill(context, c.userBubble),
+                    borderRadius: BorderRadius.circular(NgRadii.lg),
+                  ),
+                  child: transcriptBody(
+                    SelectableText(
+                      ngCapShown(item.text),
+                      style: chatTypeface(
+                        context,
+                        NgType.body.copyWith(
+                          color: c.onUserBubble.withValues(
+                            alpha: item.pending ? 0.6 : 1,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          if (item.attachments.isEmpty && item.files.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                alignment: WrapAlignment.end,
-                children: [
-                  for (final f in item.files)
-                    NgPill(f, icon: Icons.attach_file),
-                ],
+            if (item.attachments.isEmpty && item.files.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  alignment: WrapAlignment.end,
+                  children: [
+                    for (final f in item.files)
+                      NgPill(f, icon: Icons.attach_file),
+                  ],
+                ),
               ),
-            ),
-          if (item.attachments.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                alignment: WrapAlignment.end,
-                children: [
-                  for (final a in item.attachments)
-                    NgPill(
-                      a.uploadProgress == null
-                          ? a.name
-                          : '${a.name} · ${ngL.ng_uploading_percent((a.uploadProgress! * 100).round())}',
-                      icon: a.status == AttachmentDraftStatus.failed
-                          ? Icons.error_outline
-                          : a.kind == AttachmentDraftKind.image
-                          ? Icons.image_outlined
-                          : Icons.attach_file,
-                      tone: a.status == AttachmentDraftStatus.failed
-                          ? NgTone.danger
-                          : NgTone.neutral,
+            if (item.attachments.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  alignment: WrapAlignment.end,
+                  children: [
+                    for (final a in item.attachments)
+                      NgPill(
+                        a.uploadProgress == null
+                            ? a.name
+                            : '${a.name} · ${ngL.ng_uploading_percent((a.uploadProgress! * 100).round())}',
+                        icon: a.status == AttachmentDraftStatus.failed
+                            ? Icons.error_outline
+                            : a.kind == AttachmentDraftKind.image
+                            ? Icons.image_outlined
+                            : Icons.attach_file,
+                        tone: a.status == AttachmentDraftStatus.failed
+                            ? NgTone.danger
+                            : NgTone.neutral,
+                      ),
+                  ],
+                ),
+              ),
+            if (item.time != null && !item.pending)
+              Padding(
+                padding: const EdgeInsets.only(top: 4, right: 4),
+                child: Text(
+                  ngStamp(context, item.time!),
+                  key: const ValueKey('ng-user-time'),
+                  style: NgType.caption.copyWith(color: c.textMuted),
+                ),
+              ),
+            MessageReaction(messageId: item.key),
+            if (item.failure != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        ngL.ng_not_sent(item.failure ?? ''),
+                        style: NgType.caption.copyWith(color: c.danger),
+                      ),
                     ),
-                ],
+                    if (onRetry != null)
+                      TextButton(onPressed: onRetry, child: Text(ngL.ng_retry)),
+                  ],
+                ),
               ),
-            ),
-          if (item.time != null && !item.pending)
-            Padding(
-              padding: const EdgeInsets.only(top: 4, right: 4),
-              child: Text(
-                ngStamp(context, item.time!),
-                key: const ValueKey('ng-user-time'),
-                style: NgType.caption.copyWith(color: c.textMuted),
-              ),
-            ),
-          if (item.failure != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    child: Text(
-                      ngL.ng_not_sent(item.failure ?? ''),
-                      style: NgType.caption.copyWith(color: c.danger),
-                    ),
-                  ),
-                  if (onRetry != null)
-                    TextButton(onPressed: onRetry, child: Text(ngL.ng_retry)),
-                ],
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -2096,8 +2299,12 @@ class _AssistantBlock extends StatefulWidget {
     required this.files,
     required this.filesIdentity,
     required this.readAloud,
+    this.readHtml,
+    this.onIntent,
     this.onRetry,
   });
+  final WidgetHtmlReader? readHtml;
+  final Future<void> Function(String prompt)? onIntent;
   final NgAssistantItem item;
 
   /// Opens a files client for this chat, for `MEDIA:` deliveries.
@@ -2131,14 +2338,20 @@ class _AssistantBlockState extends State<_AssistantBlock> {
     // Theme.of can hand back an equal but new ThemeData on each build, so
     // the cache keys on what the style sheet below reads.
     final theme = Theme.of(context);
+    final reading = ReadingControls.maybeOf(context);
     final look = Object.hash(
       theme.brightness,
       theme.textTheme.bodyMedium,
       c.text,
+      c.text3,
       c.accentText,
       c.well,
       c.stroke,
       c.strokeStrong,
+      reading?.chatFont,
+      reading?.terminalFont,
+      reading?.embedMode,
+      isFinal,
     );
     if (look != _proseLook) {
       _prose.clear();
@@ -2151,6 +2364,19 @@ class _AssistantBlockState extends State<_AssistantBlock> {
       // across paragraphs and code fences; a SelectableText here would be
       // its own island and confine the selection to a single block.
       selectable: false,
+      // Remote images follow Inline Embeds, as in Classic: a link when Off,
+      // a placeholder until Load or Always allow when Ask, the image (https
+      // only, capped) when Always or allowed.
+      sizedImageBuilder: (image) => externalEmbed(
+        context,
+        uri: '${image.uri}',
+        alt: image.alt ?? image.title,
+        blocked: Text(
+          image.alt ?? image.title ?? '',
+          style: NgType.body.copyWith(color: c.text3),
+        ),
+        linkColor: c.accentText,
+      ),
       onTapLink: (_, href, _) {
         if (_openDelivered(href)) return;
         final uri = href == null ? null : Uri.tryParse(href);
@@ -2159,12 +2385,15 @@ class _AssistantBlockState extends State<_AssistantBlock> {
         }
       },
       styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
-        p: NgType.body.copyWith(color: c.text),
+        p: chatTypeface(context, NgType.body.copyWith(color: c.text)),
         listBullet: NgType.body.copyWith(color: c.text),
         h1: NgType.title.copyWith(color: c.text),
         h2: NgType.heading.copyWith(color: c.text, fontSize: 18),
         h3: NgType.heading.copyWith(color: c.text),
-        code: NgType.code.copyWith(color: c.text, backgroundColor: c.well),
+        code: terminalTypeface(
+          context,
+          NgType.code.copyWith(color: c.text, backgroundColor: c.well),
+        ),
         codeblockDecoration: BoxDecoration(
           color: c.well,
           borderRadius: BorderRadius.circular(NgRadii.md),
@@ -2180,7 +2409,15 @@ class _AssistantBlockState extends State<_AssistantBlock> {
     );
     Widget cached(String text) {
       used.add(text);
-      return _prose.putIfAbsent(text, () => transcriptBody(parse(text)));
+      return _prose.putIfAbsent(
+        text,
+        () => transcriptEmbeds(
+          context,
+          text,
+          transcriptBody(parse(text)),
+          complete: isFinal,
+        ),
+      );
     }
 
     Widget codeBlock(String text) {
@@ -2223,14 +2460,29 @@ class _AssistantBlockState extends State<_AssistantBlock> {
     final seen = <String, int>{};
     for (final (block, code) in ngSplitCodeFences(text)) {
       if (code) {
-        // Code is documentation, never a delivery; a fence stays whole and
-        // exposes the same copy/wrap controls as Classic.
-        out.add(codeBlock(block));
+        final fence = ngCodeFenceParts(block);
+        out.add(
+          RichFence(
+            language: fence.language,
+            code: fence.code,
+            corpus: text,
+            fallback: codeBlock(block),
+            readHtml: widget.readHtml,
+            onIntent: widget.onIntent,
+          ),
+        );
         continue;
       }
       final segments = splitMediaTags(block, isFinal: isFinal);
       if (!segments.any((s) => s.isMedia)) {
-        out.add(prose(inlineMediaTagsAsLinks(block, isFinal: isFinal)));
+        out.addAll(
+          richProseWidgets(
+            text: inlineMediaTagsAsLinks(block, isFinal: isFinal),
+            markdown: (chunk) => prose(chunk),
+            readHtml: widget.readHtml,
+            onIntent: widget.onIntent,
+          ),
+        );
         continue;
       }
       for (final segment in segments) {
@@ -2240,8 +2492,13 @@ class _AssistantBlockState extends State<_AssistantBlock> {
           final n = seen.update(media.path, (v) => v + 1, ifAbsent: () => 0);
           out.add(card(media, n));
         } else if (segment.text.trim().isNotEmpty) {
-          out.add(
-            prose(inlineMediaTagsAsLinks(segment.text, isFinal: isFinal)),
+          out.addAll(
+            richProseWidgets(
+              text: inlineMediaTagsAsLinks(segment.text, isFinal: isFinal),
+              markdown: (chunk) => prose(chunk),
+              readHtml: widget.readHtml,
+              onIntent: widget.onIntent,
+            ),
           );
         }
       }
@@ -2281,109 +2538,113 @@ class _AssistantBlockState extends State<_AssistantBlock> {
     final tools = item.tools;
     final runningTool = tools.where((t) => t.running).lastOrNull;
     final reading = widget.readAloud.isReading(item.key);
-    return Padding(
-      padding: const EdgeInsets.only(top: 12, bottom: 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (item.reasoning.trim().isNotEmpty)
-            _Disclosure(
-              icon: Icons.psychology_outlined,
-              label: item.open && item.text.isEmpty
-                  ? ngL.ng_thinking
-                  : ngL.ng_thought,
-              open: _showThinking,
-              onTap: () => setState(() => _showThinking = !_showThinking),
-              child: Text(
-                item.reasoning.trim(),
-                style: NgType.bodySmall.copyWith(color: c.text3),
+    return transcriptDirection(
+      context,
+      Padding(
+        padding: const EdgeInsets.only(top: 12, bottom: 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (item.reasoning.trim().isNotEmpty)
+              _Disclosure(
+                icon: Icons.psychology_outlined,
+                label: item.open && item.text.isEmpty
+                    ? ngL.ng_thinking
+                    : ngL.ng_thought,
+                open: _showThinking,
+                onTap: () => setState(() => _showThinking = !_showThinking),
+                child: Text(
+                  item.reasoning.trim(),
+                  style: NgType.bodySmall.copyWith(color: c.text3),
+                ),
               ),
-            ),
-          if (tools.isNotEmpty)
-            _Disclosure(
-              icon: Icons.build_outlined,
-              label: runningTool != null
-                  ? '${runningTool.name}${runningTool.detail == null ? '' : ' · ${runningTool.detail}'}'
-                  : tools.length == 1
-                  ? ngL.ng_used(tools.first.name)
-                  : ngL.ng_used_tools(tools.length),
-              busy: runningTool != null,
-              open: _showTools,
-              onTap: () => setState(() => _showTools = !_showTools),
-              child: Column(
-                children: [for (final t in tools) _ToolRow(tool: t)],
+            if (tools.isNotEmpty)
+              _Disclosure(
+                icon: Icons.build_outlined,
+                label: runningTool != null
+                    ? '${runningTool.name}${runningTool.detail == null ? '' : ' · ${runningTool.detail}'}'
+                    : tools.length == 1
+                    ? ngL.ng_used(tools.first.name)
+                    : ngL.ng_used_tools(tools.length),
+                busy: runningTool != null,
+                open: _showTools,
+                onTap: () => setState(() => _showTools = !_showTools),
+                child: Column(
+                  children: [for (final t in tools) _ToolRow(tool: t)],
+                ),
               ),
-            ),
-          if (item.text.isNotEmpty)
-            // One SelectionArea spans the whole reply so a single drag can
-            // select across paragraphs, lists and code fences — as much of
-            // the response as the user wants, not just one block.
-            SelectionArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: _content(c, item),
+            if (item.text.isNotEmpty)
+              // One SelectionArea spans the whole reply so a single drag can
+              // select across paragraphs, lists and code fences — as much of
+              // the response as the user wants, not just one block.
+              SelectionArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: _content(c, item),
+                ),
               ),
-            ),
-          if (!item.open && item.text.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  _ActionIcon(
-                    icon: Icons.copy_rounded,
-                    tooltip: ngL.ng_copy,
-                    onTap: () {
-                      Clipboard.setData(ClipboardData(text: item.text));
-                      ngToast(context, ngL.ng_copied);
-                    },
-                  ),
-                  _ActionIcon(
-                    icon: reading
-                        ? Icons.stop_circle_outlined
-                        : Icons.volume_up_outlined,
-                    tooltip: reading ? ngL.ng_stop : ngL.ng_read_aloud,
-                    onTap: () {
-                      if (reading) {
-                        unawaited(widget.readAloud.stop());
-                      } else {
-                        unawaited(widget.readAloud.read(item.key, item.text));
-                      }
-                    },
-                  ),
-                  _ActionIcon(
-                    icon: Icons.flag_outlined,
-                    tooltip: ngL.report_ai_output,
-                    onTap: reportAresAiOutput,
-                  ),
-                  if (widget.onRetry != null)
+            if (!item.open && item.text.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
                     _ActionIcon(
-                      icon: Icons.refresh_rounded,
-                      tooltip: ngL.ng_retry,
-                      onTap: widget.onRetry!,
+                      icon: Icons.copy_rounded,
+                      tooltip: ngL.ng_copy,
+                      onTap: () {
+                        Clipboard.setData(ClipboardData(text: item.text));
+                        ngToast(context, ngL.ng_copied);
+                      },
                     ),
-                  if (item.outputTokens != null && item.outputTokens! > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 6),
-                      child: Text(
-                        '${ngCompactNumber(item.outputTokens!)} tokens',
-                        style: NgType.caption.copyWith(color: c.textMuted),
+                    _ActionIcon(
+                      icon: reading
+                          ? Icons.stop_circle_outlined
+                          : Icons.volume_up_outlined,
+                      tooltip: reading ? ngL.ng_stop : ngL.ng_read_aloud,
+                      onTap: () {
+                        if (reading) {
+                          unawaited(widget.readAloud.stop());
+                        } else {
+                          unawaited(widget.readAloud.read(item.key, item.text));
+                        }
+                      },
+                    ),
+                    _ActionIcon(
+                      icon: Icons.flag_outlined,
+                      tooltip: ngL.report_ai_output,
+                      onTap: reportAresAiOutput,
+                    ),
+                    if (widget.onRetry != null)
+                      _ActionIcon(
+                        icon: Icons.refresh_rounded,
+                        tooltip: ngL.ng_retry,
+                        onTap: widget.onRetry!,
                       ),
-                    ),
-                  if (item.time != null)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 6),
-                      child: Text(
-                        ngStamp(context, item.time!),
-                        key: const ValueKey('ng-reply-time'),
-                        style: NgType.caption.copyWith(color: c.textMuted),
+                    if (item.outputTokens != null && item.outputTokens! > 0)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 6),
+                        child: Text(
+                          '${ngCompactNumber(item.outputTokens!)} tokens',
+                          style: NgType.caption.copyWith(color: c.textMuted),
+                        ),
                       ),
-                    ),
-                ],
+                    if (item.time != null)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 6),
+                        child: Text(
+                          ngStamp(context, item.time!),
+                          key: const ValueKey('ng-reply-time'),
+                          style: NgType.caption.copyWith(color: c.textMuted),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-        ],
+            MessageReaction(messageId: item.key),
+          ],
+        ),
       ),
     );
   }
@@ -2586,6 +2847,8 @@ class _ToolRowState extends State<_ToolRow> {
         if (_open) ...[
           if (t.input?.isNotEmpty ?? false) _codeBlock(c, t.input!),
           if (t.output?.isNotEmpty ?? false) _codeBlock(c, t.output!),
+          if (t.name == 'vision_analyze' || t.name == 'image_generate')
+            InspectedImageTile(source: t.input ?? '', output: t.output),
         ],
       ],
     );
@@ -2765,6 +3028,9 @@ class _InputPanelState extends State<_InputPanel> {
 
   List<Widget> _body(NgColors c, NgInputRequest r) {
     switch (r.kind) {
+      case NgRequestKind.setupBeat:
+        // Drawn by SetupBeatCard instead of this panel.
+        return const [];
       case NgRequestKind.approval:
         return [
           Wrap(
