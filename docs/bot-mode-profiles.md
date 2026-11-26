@@ -28,6 +28,12 @@ scoped, like `profiles.list`). A refusal keeps the gateway's message
 - The id is Desktop's `slugifyProfileName` of the typed name and must match
   `PROFILE_ID_RE` (`^[a-z0-9][a-z0-9_-]{0,63}$`). A name on the roster is
   taken. Reserved names (`hermes`, `test`, …) are the gateway's to refuse.
+  `botProfileSlug` is a line-for-line port: NFC, then each letter or digit
+  through NFKD without its combining marks (`unorm_dart`, MIT, Unicode 18
+  tables; see NOTICE.md), else a `u<hex>` token. `test/bot_profile_slug_test.dart`
+  holds it to the ids Desktop's own function gives for 41 names
+  (`Ｂｏｔ２` → `bot2`, `ﬁle` → `file`, `Ⅻ` → `xii`, `ǿ` → `u1ff`, the 64-character
+  cut).
 - `description` is `Title — description`; SOUL.md is Desktop's composed
   persona unless the user wrote one. The teammate protocol is never
   appended: the gateway injects it (`bot_mode_protocol`).

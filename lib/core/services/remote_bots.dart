@@ -222,26 +222,26 @@ List<BotRosterProfile> filterBotRoster(
 /// Desktop's `PROFILE_ID_ARG_RE`).
 final botProfileIdPattern = RegExp(r'^[a-z0-9][a-z0-9_-]{0,63}$');
 
-/// Desktop's `slugifyProfileName` (labels.ts): the profile id a typed bot
-/// name becomes. Accented Latin folds to its base letter; any other letter
-/// or digit becomes a `u<hex>` token; the rest collapses to `-`; at most 64
-/// characters, cut at a token boundary.
+/// Desktop's `slugifyProfileName` (labels.ts at b7ee21c14e): the profile id
+/// a typed bot name becomes. The name is NFC-normalised; each letter or
+/// digit whose NFKD form, without its combining marks, is ASCII letters and
+/// digits becomes those (`Résumé` → `resume`, `Ｂｏｔ２` → `bot2`, `ﬁ` →
+/// `fi`); any other letter or digit becomes a `u<hex>` token of its NFC code
+/// point (`小` → `u5c0f`); runs of `-` collapse; then Desktop's `slugify`
+/// (lowercase, anything outside `a-z0-9_-` to `-`, no `-` at either end);
+/// at most 64 characters, cut at a token boundary.
 String botProfileSlug(String value) {
-  final buffer = StringBuffer();
-  for (final rune in value.trim().runes) {
-    final ch = String.fromCharCode(rune);
-    final folded = _foldLatin(ch);
-    if (RegExp(r'^[a-zA-Z0-9]+$').hasMatch(folded)) {
-      buffer.write(folded);
-    } else if (_isLetterOrDigit(rune)) {
-      buffer.write('-u${rune.toRadixString(16)}-');
-    } else {
-      buffer.write(ch);
-    }
-  }
-  final slug = buffer
-      .toString()
-      .replaceAll(RegExp(r'-+'), '-')
+  final folded = unorm
+      .nfc(value)
+      .replaceAllMapped(_letterOrDigit, (match) {
+        final ch = match[0]!;
+        final base = unorm.nfkd(ch).replaceAll(_marks, '');
+        return _asciiAlnum.hasMatch(base)
+            ? base
+            : '-u${ch.runes.first.toRadixString(16)}-';
+      })
+      .replaceAll(RegExp(r'-+'), '-');
+  final slug = folded
       .toLowerCase()
       .replaceAll(RegExp(r'[^a-z0-9_-]+'), '-')
       .replaceAll(RegExp(r'^-+|-+$'), '');
@@ -253,6 +253,10 @@ String botProfileSlug(String value) {
     '',
   );
 }
+
+final _letterOrDigit = RegExp(r'[\p{L}\p{N}]', unicode: true);
+final _marks = RegExp(r'\p{M}+', unicode: true);
+final _asciiAlnum = RegExp(r'^[a-zA-Z0-9]+$');
 
 /// Desktop's `botProfileIdentity`: a name that is not plain ASCII cannot be
 /// the profile id, so it becomes the title when the title is left empty.
@@ -266,30 +270,6 @@ String botProfileSlug(String value) {
         : (RegExp(r'[^\u0020-\u007e]').hasMatch(entered) ? entered : ''),
   );
 }
-
-// Latin letters whose NFKD form is an ASCII letter plus combining marks
-// (the ones Desktop folds). Letters with no such decomposition (ø, ł, ß, æ)
-// become `u<hex>` tokens there, and here.
-const _latinFolds = {
-  'àáâãäåāăą': 'a', 'çćĉċč': 'c', 'ď': 'd', 'èéêëēĕėęě': 'e', //
-  'ĝğġģ': 'g', 'ĥ': 'h', 'ìíîïĩīĭį': 'i', 'ĵ': 'j', 'ķ': 'k', //
-  'ĺļľ': 'l', 'ñńņň': 'n', 'òóôõöōŏő': 'o', 'ŕŗř': 'r', //
-  'śŝşš': 's', 'ţť': 't', 'ùúûüũūŭůűų': 'u', 'ŵ': 'w', 'ýÿŷ': 'y', //
-  'źżž': 'z',
-};
-
-String _foldLatin(String ch) {
-  final lower = ch.toLowerCase();
-  for (final entry in _latinFolds.entries) {
-    if (entry.key.contains(lower)) {
-      return ch == lower ? entry.value : entry.value.toUpperCase();
-    }
-  }
-  return ch;
-}
-
-bool _isLetterOrDigit(int rune) =>
-    RegExp(r'[\p{L}\p{N}]', unicode: true).hasMatch(String.fromCharCode(rune));
 
 /// A Bot Mode profile request the gateway refused, in its own words (shown
 /// inline in the form that sent it).

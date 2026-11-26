@@ -19,6 +19,8 @@ const _noticeAssets = <String>[
   'third_party/licenses/flutter-BSD-3-Clause.txt',
   'third_party/licenses/Apache-2.0.txt',
   'third_party/licenses/gradle-NOTICE.txt',
+  'third_party/licenses/unorm_dart-MIT.txt',
+  'third_party/licenses/Unicode-3.0.txt',
 ];
 
 void main() {
@@ -80,6 +82,8 @@ void main() {
       'Flutter iOS scaffold (source material)',
       'Gradle wrapper (Library build material)',
       'Gradle wrapper (Library build material)',
+      'unorm_dart (0.3.3)',
+      'Unicode Character Database (unorm_dart 0.3.3 normalisation data)',
     ]);
     for (var index = 0; index < _noticeAssets.length; index++) {
       final entry = entries[index + 1] as LicenseEntryWithLineBreaks;
