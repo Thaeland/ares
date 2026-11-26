@@ -617,4 +617,121 @@ void main() {
       expect(gateway.leaseOf('workbot')['holder'], 'agent');
     });
   });
+
+  group('display.install', () {
+    Future<BotsReviewGateway> startInstall(WidgetTester tester) async {
+      wide(tester, const Size(900, 1000));
+      final gateway = BotsReviewGateway();
+      final owner = botsReviewOwner(gateway);
+      addTearDown(owner.close);
+      await tester.pumpWidget(botsReviewApp(owner));
+      await openBotsScreenTab(tester);
+      // researchbot's host has no screen packages yet.
+      await tester.tap(find.byType(DropdownButtonFormField<String>));
+      await botsStep(tester, 6);
+      await tester.tap(find.text('researchbot').last);
+      await botsStep(tester);
+      expect(find.text('Not installed'), findsOneWidget);
+      await tester.tap(find.text('Install'));
+      await botsStep(tester);
+      expect(gateway.named('display.install').single.params, {
+        'profile': 'researchbot',
+      });
+      return gateway;
+    }
+
+    testWidgets('shows the log, answers the sudo prompt only in its own '
+        'response, and adopts the status the install ends with', (
+      tester,
+    ) async {
+      const secret = 'fixture-sudo-pass';
+      final gateway = await startInstall(tester);
+      expect(find.byKey(const Key('bots-install-card')), findsOneWidget);
+      expect(find.textContaining('sudo apt-get install'), findsOneWidget);
+
+      gateway.emit('display.install.log', {
+        'profile_key': 'key-researchbot',
+        'line': 'Reading package lists...',
+      });
+      // Another profile's install is not this one's output.
+      gateway.emit('display.install.log', {
+        'profile_key': 'key-workbot',
+        'line': 'NOT MINE',
+      });
+      await botsStep(tester, 2);
+      expect(find.textContaining('Reading package lists...'), findsOneWidget);
+      expect(find.textContaining('NOT MINE'), findsNothing);
+
+      final answer = gateway.ask('display.install.sudo', {
+        'session_id': '',
+        'profile_key': 'key-researchbot',
+      });
+      await botsStep(tester, 4);
+      final field = tester.widget<TextField>(
+        find.byKey(const Key('bots-sudo-password')),
+      );
+      expect(field.obscureText, isTrue);
+      expect(field.autocorrect, isFalse);
+      expect(field.enableSuggestions, isFalse);
+      await tester.enterText(
+        find.byKey(const Key('bots-sudo-password')),
+        secret,
+      );
+      await tester.tap(find.byKey(const Key('bots-sudo-submit')));
+      await botsStep(tester, 4);
+      expect(await answer, {'value': secret});
+      // Not in any call the app made, and not left on screen.
+      expect(
+        gateway.calls.where((c) => '${c.params}'.contains(secret)),
+        isEmpty,
+      );
+      expect(find.textContaining(secret), findsNothing);
+      expect(find.byKey(const Key('bots-sudo-dialog')), findsNothing);
+
+      gateway.installed.add('researchbot');
+      gateway.emit('display.install.done', {
+        'profile_key': 'key-researchbot',
+        'code': 0,
+        'status': gateway.statusOf('researchbot'),
+      });
+      await botsStep(tester, 4);
+      expect(find.byKey(const Key('bots-install-card')), findsNothing);
+      expect(find.text('Stopped'), findsOneWidget);
+      expect(find.text('Start'), findsOneWidget);
+      expect(gateway.refusals, isEmpty);
+    });
+
+    testWidgets('a cancelled sudo prompt answers empty, and an install '
+        'that ends without sudo says what to do', (tester) async {
+      final gateway = await startInstall(tester);
+      final answer = gateway.ask('display.install.sudo', {
+        'session_id': '',
+        'profile_key': 'key-researchbot',
+      });
+      await botsStep(tester, 4);
+      await tester.tap(find.byKey(const Key('bots-sudo-cancel')));
+      await botsStep(tester, 4);
+      expect(await answer, {'value': ''});
+
+      gateway.emit('display.install.done', {
+        'profile_key': 'key-researchbot',
+        'code': -2,
+        'status': gateway.statusOf('researchbot'),
+      });
+      await botsStep(tester, 4);
+      expect(
+        tester.widget<Text>(find.byKey(const Key('bots-install-error'))).data,
+        contains('sudo is not available'),
+      );
+      expect(find.text('Not installed'), findsOneWidget);
+      // The watch ended with the install: a later prompt is not taken.
+      expect(
+        await gateway.ask('display.install.sudo', {
+          'session_id': '',
+          'profile_key': 'key-researchbot',
+        }),
+        isNull,
+      );
+    });
+  });
 }

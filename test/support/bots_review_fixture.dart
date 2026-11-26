@@ -166,6 +166,43 @@ class BotsReviewGateway {
     return extra.isEmpty ? null : _error(-32602, 'invalid params: $extra');
   }
 
+  final _eventTaps = <StreamCallback>[];
+  final _requestHandlers = <String, List<ServerRequestCallback>>{};
+  var _requestSeq = 0;
+
+  /// Pushes one gateway event to everything watching this connection.
+  void emit(String type, Map<String, dynamic> payload) {
+    for (final tap in List.of(_eventTaps)) {
+      tap(StreamEvent(type: type, data: payload));
+    }
+  }
+
+  /// A server→client request. Completes with the client's response, or with
+  /// null when nothing on the connection takes [method] (-32601 on the wire).
+  Future<Map<String, dynamic>?> ask(
+    String method,
+    Map<String, dynamic> params,
+  ) {
+    final answer = Completer<Map<String, dynamic>?>();
+    final request = GatewayServerRequest.forTesting(
+      id: 'srq-${++_requestSeq}',
+      method: method,
+      params: params,
+      respond: (result) {
+        if (answer.isCompleted) return false;
+        answer.complete(result);
+        return true;
+      },
+    );
+    for (final handler in List.of(_requestHandlers[method] ?? const [])) {
+      if (handler(request)) return answer.future;
+    }
+    answer.complete(null);
+    return answer.future;
+  }
+
+  Map<String, dynamic> statusOf(String profile) => _status(profile);
+
   Map<String, dynamic> _status(String profile) => {
     'profile': profile,
     'profile_key': 'key-$profile',
@@ -545,6 +582,22 @@ class BotsReviewSocket extends Fake implements WsClient {
     void Function()? onSent,
     bool includeProfile = true,
   }) => gateway.handle(method, params);
+
+  @override
+  void Function() watchEvents(StreamCallback listener) {
+    gateway._eventTaps.add(listener);
+    return () => gateway._eventTaps.remove(listener);
+  }
+
+  @override
+  void Function() handleServerRequests(
+    String method,
+    ServerRequestCallback handler,
+  ) {
+    final handlers = gateway._requestHandlers.putIfAbsent(method, () => []);
+    handlers.add(handler);
+    return () => handlers.remove(handler);
+  }
 }
 
 RemoteWorkspaceOwner botsReviewOwner(BotsReviewGateway gateway) {

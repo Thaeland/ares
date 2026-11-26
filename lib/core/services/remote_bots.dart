@@ -619,6 +619,22 @@ final class DisplayObserveResult {
   }
 }
 
+/// The gateway asking for the sudo password of a Bot Desktop install
+/// (`tui_gateway/methods_display.py`, server→client request). Answered once.
+final class DisplayInstallSudoRequest {
+  DisplayInstallSudoRequest._(this._request);
+  final GatewayServerRequest _request;
+
+  String get id => _request.id;
+
+  /// Sends [password] as this request's response and nowhere else.
+  bool answer(String password) => _request.respond({'value': password});
+
+  /// The empty answer the gateway reads as "skipped": the install goes on
+  /// without sudo and ends with the command to run by hand.
+  bool skip() => _request.respond(const {'value': ''});
+}
+
 final class DisplayThumbnail {
   const DisplayThumbnail({this.dataUrl, this.suppressed, this.bytes});
 
@@ -1111,6 +1127,48 @@ extension WorkspaceBots on WorkspaceTarget {
       profileKey: raw['profile_key'] as String?,
     );
   }
+
+  /// Follows the package install `display.install` starts for the profile
+  /// whose key is [profileKey]: each `display.install.log` line, then
+  /// `display.install.done` with the exit code (0 ok, -1 cancelled, -2 no
+  /// sudo) and a fresh status. Returns the function that stops following.
+  void Function() watchDisplayInstall({
+    required String? profileKey,
+    required void Function(String line) onLog,
+    required void Function(int code, DisplayStatus? status) onDone,
+  }) => _socket.watchEvents((event) {
+    if (event.type != 'display.install.log' &&
+        event.type != 'display.install.done') {
+      return;
+    }
+    if (!isCurrent) return;
+    final key = event.data['profile_key'];
+    if (profileKey != null && key != profileKey) return;
+    if (event.type == 'display.install.log') {
+      final line = event.data['line'];
+      if (line is String) onLog(line);
+      return;
+    }
+    final code = event.data['code'];
+    final status = event.data['status'];
+    onDone(
+      code is int ? code : 1,
+      status is Map ? DisplayStatus.fromJson(status) : null,
+    );
+  });
+
+  /// Takes the gateway's masked `display.install.sudo` prompt for
+  /// [profileKey] (any profile when null). The password goes only into the
+  /// response to that one request; it is never a param of any call.
+  void Function() answerDisplayInstallSudo({
+    required String? profileKey,
+    required void Function(DisplayInstallSudoRequest request) onAsked,
+  }) => _socket.handleServerRequests('display.install.sudo', (request) {
+    final key = request.params['profile_key'];
+    if (!isCurrent || (profileKey != null && key != profileKey)) return false;
+    onAsked(DisplayInstallSudoRequest._(request));
+    return true;
+  });
 
   Future<DisplayLease> displayLeaseAcquire(
     String? profile,

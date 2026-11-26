@@ -78,6 +78,10 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
 
   /// The take-over in progress: the live viewer and the lease it holds.
   BotDesktopSession? _session;
+
+  /// The package install this screen started, with its output so far.
+  _BotInstall? _install;
+  void Function()? _installUnwatch;
   DisplayThumbnail? _thumbnail;
   ImageProvider? _thumbnailImage;
   bool _thumbnailSuppressed = false;
@@ -123,6 +127,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     _thumbnailImage?.evict();
     _searchController.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    _stopInstallWatch();
     _closePaneAfterHandBack();
     super.dispose();
   }
@@ -406,18 +411,121 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> _startInstalling() => _screenAction(
-    send: (target, bot) => target.displayInstall(bot),
-    apply: (target, bot, result) {
-      _toast(
-        result.started
-            ? 'Installing screen (${result.command ?? 'process launched'})'
-            : 'Install declined: ${result.command ?? 'unknown reason'}',
-      );
-      unawaited(_loadScreen(target));
-    },
-    failure: 'Install failed',
-  );
+  void _stopInstallWatch() {
+    _installUnwatch?.call();
+    _installUnwatch = null;
+  }
+
+  /// `display.install` only starts the package manager on the gateway host.
+  /// Its output arrives as `display.install.log` events, its end as
+  /// `display.install.done`, and its sudo prompt as a request this screen
+  /// answers; all three are followed from before the call is sent.
+  Future<void> _startInstalling() async {
+    final target = _target;
+    final bot = _screenProfile;
+    if (target == null || bot == null || _install?.running == true) return;
+    final profileKey = _display?.profileKey;
+    final install = _BotInstall(bot);
+    _stopInstallWatch();
+    final unwatchLog = target.watchDisplayInstall(
+      profileKey: profileKey,
+      onLog: (line) {
+        if (!mounted) return;
+        setState(() {
+          install.lines.add(line);
+          if (install.lines.length > _BotInstall.keep) {
+            install.lines.removeAt(0);
+          }
+        });
+      },
+      onDone: (code, status) => _installDone(target, install, code, status),
+    );
+    final unwatchSudo = target.answerDisplayInstallSudo(
+      profileKey: profileKey,
+      onAsked: (request) => unawaited(_askSudo(install, request)),
+    );
+    _installUnwatch = () {
+      unwatchLog();
+      unwatchSudo();
+    };
+    setState(() {
+      _install = install;
+      _screenBusy = true;
+    });
+    try {
+      final result = await target.displayInstall(bot);
+      if (!mounted) return;
+      if (!result.started) {
+        _installFailed(install, 'The gateway did not start the install.');
+      } else if (result.command case final command?) {
+        setState(() => install.lines.insert(0, '\$ $command'));
+      }
+    } catch (e) {
+      _installFailed(install, 'Install failed: $e');
+    } finally {
+      if (mounted) setState(() => _screenBusy = false);
+    }
+  }
+
+  void _installFailed(_BotInstall install, String message) {
+    if (identical(_install, install)) _stopInstallWatch();
+    if (!mounted) return;
+    setState(() {
+      install.running = false;
+      install.error = message;
+    });
+  }
+
+  void _installDone(
+    WorkspaceTarget target,
+    _BotInstall install,
+    int code,
+    DisplayStatus? status,
+  ) {
+    if (code != 0 || status?.installed != true) {
+      _installFailed(install, switch (code) {
+        -1 => 'The install was cancelled.',
+        -2 =>
+          'sudo is not available on the gateway host. Run the command '
+              'above there, then refresh.',
+        _ => 'The install failed (exit code $code).',
+      });
+      return;
+    }
+    if (identical(_install, install)) _stopInstallWatch();
+    if (!mounted) return;
+    setState(() {
+      install.running = false;
+      if (identical(_install, install)) _install = null;
+      if (_ownsScreen(target, install.bot)) _display = status;
+    });
+    _toast('Bot Desktop installed for ${install.bot}');
+  }
+
+  /// The gateway's sudo prompt for the install this screen started. The
+  /// password is read from an obscured field and goes straight into the
+  /// response to that one request: it is never stored, logged or put in any
+  /// call's params. Cancelling answers empty, which the gateway reads as
+  /// "skipped".
+  Future<void> _askSudo(
+    _BotInstall install,
+    DisplayInstallSudoRequest request,
+  ) async {
+    if (!mounted) {
+      request.skip();
+      return;
+    }
+    final password = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => _SudoPasswordDialog(bot: install.bot),
+    );
+    if (password == null || password.isEmpty) {
+      request.skip();
+    } else {
+      request.answer(password);
+    }
+  }
 
   Future<void> _startScreen() => _screenAction(
     send: (target, bot) => target.displayStart(bot),
@@ -1049,6 +1157,8 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
             ),
           ),
         if (status != null) _displayCard(status),
+        if (_install case final install? when install.bot == selected)
+          _installCard(install),
         if (status != null) _screenControls(status),
         if (status?.running == true) _thumbnailCard(),
         const SizedBox(height: 12),
@@ -1112,11 +1222,68 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     );
   }
 
+  Widget _installCard(_BotInstall install) {
+    final scheme = Theme.of(context).colorScheme;
+    return Card(
+      key: const Key('bots-install-card'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              install.running
+                  ? 'Installing Bot Desktop on the gateway host…'
+                  : 'The install did not finish',
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            if (install.running)
+              const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: LinearProgressIndicator(),
+              ),
+            if (install.lines.isNotEmpty)
+              Container(
+                key: const Key('bots-install-log'),
+                margin: const EdgeInsets.only(top: 8),
+                constraints: const BoxConstraints(maxHeight: 180),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: scheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: SingleChildScrollView(
+                  reverse: true,
+                  child: SelectableText(
+                    install.lines.join('\n'),
+                    style: const TextStyle(
+                      fontFamily: 'GeistMono',
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+            if (install.error case final error?)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  error,
+                  key: const Key('bots-install-error'),
+                  style: TextStyle(color: scheme.error),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _screenControls(DisplayStatus status) {
     final unsupported = !status.supported;
     final installed = status.installed;
     final running = status.running;
     final humanHeld = !status.lease.isAgent;
+    final installing = _install?.running == true;
     final imageSwitchPending = status.imageSwitch != null;
     return Card(
       child: Padding(
@@ -1127,7 +1294,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
           children: [
             if (!unsupported && !installed)
               OutlinedButton.icon(
-                onPressed: _screenBusy ? null : _startInstalling,
+                onPressed: _screenBusy || installing ? null : _startInstalling,
                 icon: const Icon(Icons.download_outlined),
                 label: const Text('Install'),
               ),
@@ -1176,7 +1343,9 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
                 message:
                     'The gateway reported missing pieces: ${status.missing.join(', ')}',
                 child: TextButton(
-                  onPressed: _screenBusy ? null : _startInstalling,
+                  onPressed: _screenBusy || installing
+                      ? null
+                      : _startInstalling,
                   child: const Text('Install missing pieces'),
                 ),
               ),
@@ -1694,6 +1863,91 @@ class _CreateRoomSheetState extends State<_CreateRoomSheet> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// One package install on a bot's gateway host, as far as this screen has
+/// followed it.
+class _BotInstall {
+  _BotInstall(this.bot);
+
+  /// Output lines kept on screen.
+  static const keep = 200;
+
+  final String bot;
+  final lines = <String>[];
+  bool running = true;
+  String? error;
+}
+
+/// Asks for the sudo password of a Bot Desktop install. Pops with the text
+/// (null on Cancel) and clears its own copy; nothing else keeps it.
+class _SudoPasswordDialog extends StatefulWidget {
+  const _SudoPasswordDialog({required this.bot});
+  final String bot;
+
+  @override
+  State<_SudoPasswordDialog> createState() => _SudoPasswordDialogState();
+}
+
+class _SudoPasswordDialogState extends State<_SudoPasswordDialog> {
+  final _password = TextEditingController();
+
+  @override
+  void dispose() {
+    _password
+      ..clear()
+      ..dispose();
+    super.dispose();
+  }
+
+  void _submit() => Navigator.of(context).pop(_password.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      key: const Key('bots-sudo-dialog'),
+      scrollable: true,
+      title: const Text('Administrator password'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Installing Bot Desktop for ${widget.bot} needs sudo on the '
+            'gateway host. The password is sent only to that gateway, for '
+            'this install, and is not saved.',
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            key: const Key('bots-sudo-password'),
+            controller: _password,
+            autofocus: true,
+            obscureText: true,
+            autocorrect: false,
+            enableSuggestions: false,
+            keyboardType: TextInputType.visiblePassword,
+            onSubmitted: (_) => _submit(),
+            decoration: const InputDecoration(
+              labelText: 'sudo password',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          key: const Key('bots-sudo-cancel'),
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(context.sharedL10n.cancel),
+        ),
+        FilledButton(
+          key: const Key('bots-sudo-submit'),
+          onPressed: _submit,
+          child: const Text('Continue'),
+        ),
+      ],
     );
   }
 }

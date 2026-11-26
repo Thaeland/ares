@@ -394,6 +394,38 @@ class WsClient {
   /// Global stream listener (receives all untargeted events).
   StreamCallback? onStreamEvent;
   ServerRequestCallback? onServerRequest;
+
+  /// Extra observers of every pushed event, beside the one [onStreamEvent]
+  /// slot its owner (the chat) holds. App-level events such as
+  /// `display.install.log` carry no session, so no session listener sees them.
+  final List<StreamCallback> _eventTaps = [];
+
+  /// Observes every pushed event until the returned function is called.
+  void Function() watchEvents(StreamCallback listener) {
+    _eventTaps.add(listener);
+    return () => _eventTaps.remove(listener);
+  }
+
+  /// Handlers for one server→client request method, asked before
+  /// [onServerRequest]: a screen that started an operation answers the
+  /// prompt that operation raises (e.g. `display.install.sudo`).
+  final Map<String, List<ServerRequestCallback>> _requestHandlers = {};
+
+  /// Answers [method] requests until the returned function is called. The
+  /// handler returns true once it has taken the request.
+  void Function() handleServerRequests(
+    String method,
+    ServerRequestCallback handler,
+  ) {
+    _requestHandlers.putIfAbsent(method, () => []).add(handler);
+    if (_connected) _advertiseServerRequestSupport();
+    return () {
+      final handlers = _requestHandlers[method];
+      handlers?.remove(handler);
+      if (handlers != null && handlers.isEmpty) _requestHandlers.remove(method);
+    };
+  }
+
   ConnectionCallback? onConnectionChanged;
   void Function()? onConnectionClosed;
   GatewayReadyCallback? onGatewayReady;
@@ -790,7 +822,10 @@ class WsClient {
     // Never claim support unless this socket can actually route the requests.
     // A recovery socket without a handler would otherwise make the gateway
     // send prompts that this client immediately rejects with -32601.
-    if (_serverRequestsAdvertised || onServerRequest == null) return;
+    if (_serverRequestsAdvertised ||
+        (onServerRequest == null && _requestHandlers.isEmpty)) {
+      return;
+    }
     _serverRequestsAdvertised = true;
     // This method is connection-scoped, not profile-scoped. Older gateways
     // answer -32601; deliberately ignore that response so they keep working.
@@ -836,6 +871,13 @@ class WsClient {
         request.fail(-32603, 'Preview unavailable');
       }
       return;
+    }
+    for (final handler in List.of(_requestHandlers[method] ?? const [])) {
+      try {
+        if (handler(request)) return;
+      } catch (_) {
+        // A scoped handler that throws leaves the request to the next one.
+      }
     }
     final listener = onServerRequest;
     if (listener == null) {
@@ -1037,6 +1079,13 @@ class WsClient {
       onStreamEvent?.call(event);
     } catch (_) {
       // Global observers cannot block the session-scoped listener chain.
+    }
+    for (final tap in List.of(_eventTaps)) {
+      try {
+        tap(event);
+      } catch (_) {
+        // Nor can one tap block another.
+      }
     }
     final sessionId = event.sessionId;
     if (sessionId == null || sessionId.isEmpty) return;
