@@ -5102,5 +5102,179 @@
   "rel_admin_skin_slate": "石板",
   "@rel_admin_skin_slate": {
     "description": "Release administration: slate"
+  },
+  "rel_admin_no_available_cloud_agents_in_this_account": "此账户中没有可用的 Cloud 智能体。",
+  "@rel_admin_no_available_cloud_agents_in_this_account": {
+    "description": "Release administration: No available Cloud agents in this account."
+  },
+  "rel_admin_the_previous_undo_receipt_could_not_be_verified_no": "无法验证之前的撤销凭据。未作任何更改。",
+  "@rel_admin_the_previous_undo_receipt_could_not_be_verified_no": {
+    "description": "Release administration: The previous undo receipt could not be verified. No change was made."
+  },
+  "rel_admin_transfer_to_cloud": "传输到 Cloud",
+  "@rel_admin_transfer_to_cloud": {
+    "description": "Release administration: Transfer to Cloud"
+  },
+  "rel_admin_connection_changed_leave_this_page_a_restore_already_submitted": "连接已更改。请离开此页面。已提交的恢复操作可能继续。",
+  "@rel_admin_connection_changed_leave_this_page_a_restore_already_submitted": {
+    "description": "Release administration: Connection changed. Leave this page. A restore already submitted may continue."
+  },
+  "rel_admin_find_my_cloud_agents": "查找我的 Cloud 智能体",
+  "@rel_admin_find_my_cloud_agents": {
+    "description": "Release administration: Find my Cloud agents"
+  },
+  "rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup": "撤销会用传输前的备份替换目标。",
+  "@rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup": {
+    "description": "Release administration: Undo replaces the destination with its pre-transfer backup."
+  },
+  "rel_admin_replace_this_cloud_agent_with_the_entire_source_home": "使用整个源主目录替换此 Cloud 智能体，包括凭据、对话和文件。源不会被删除。入站消息机器人将关闭。",
+  "@rel_admin_replace_this_cloud_agent_with_the_entire_source_home": {
+    "description": "Release administration: Replace this Cloud agent with the entire source home, including credentials, conversations and files. The source is not deleted. Incoming messaging bots are switched off."
+  },
+  "rel_admin_type_destination_agent_id": "输入目标智能体 ID",
+  "@rel_admin_type_destination_agent_id": {
+    "description": "Release administration: Type destination agent ID"
+  },
+  "rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open": "无法保留本地撤销凭据。请保持此页面打开。",
+  "@rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open": {
+    "description": "Release administration: Could not retain the local undo receipt. Keep this page open."
+  },
+  "rel_admin_undo_transfer": "撤销传输",
+  "@rel_admin_undo_transfer": {
+    "description": "Release administration: Undo transfer"
+  },
+  "rel_admin_replace_cloud_agent": "替换 Cloud 智能体",
+  "@rel_admin_replace_cloud_agent": {
+    "description": "Release administration: Replace Cloud agent"
+  },
+  "rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed": "本地撤销凭据已遗忘。未移除远程备份。",
+  "@rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed": {
+    "description": "Release administration: Local undo receipt forgotten. No remote backup was removed."
+  },
+  "rel_admin_forget_local_undo_receipt_only": "仅遗忘本地撤销凭据",
+  "@rel_admin_forget_local_undo_receipt_only": {
+    "description": "Release administration: Forget local undo receipt only"
+  },
+  "rel_admin_stop_before_restore": "在恢复前停止",
+  "@rel_admin_stop_before_restore": {
+    "description": "Release administration: Stop before restore"
+  },
+  "rel_admin_do_not_close_this_page_restore_runs_on_the": "请勿关闭此页面。恢复在目标上运行，无法取消。",
+  "@rel_admin_do_not_close_this_page_restore_runs_on_the": {
+    "description": "Release administration: Do not close this page. Restore runs on the destination and cannot be cancelled."
+  },
+  "rel_admin_files_restored_destination_gateway_needs_attention": "文件已恢复；目标网关需要处理。",
+  "@rel_admin_files_restored_destination_gateway_needs_attention": {
+    "description": "Release administration: Files restored; destination gateway needs attention."
+  },
+  "rel_admin_transfer_sign_in": "请登录且仅登录一个已保存的 {origin} Ares 连接，然后返回此处。",
+  "@rel_admin_transfer_sign_in": {
+    "description": "Release administration: Sign in to exactly one saved Ares connection for {origin}, then return here.",
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_transfer_source": "来源：{gateway} / {profile}",
+  "@rel_admin_transfer_source": {
+    "description": "Release administration: Source: {gateway} / {profile}",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_transfer_destination": "目标：{name} · {origin} / default",
+  "@rel_admin_transfer_destination": {
+    "description": "Release administration: Destination: {name} · {origin} / default",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_agent_id": "智能体 ID：{id}",
+  "@rel_admin_agent_id": {
+    "description": "Release administration: Agent ID: {id}",
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_transfer_status": "状态：{phase}",
+  "@rel_admin_transfer_status": {
+    "description": "Release administration: Status: {phase}",
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_copied_percent": "已复制 {percent}%",
+  "@rel_admin_copied_percent": {
+    "description": "Release administration: Copied {percent}%",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_undo_point": "目标上的撤销点：{path}",
+  "@rel_admin_undo_point": {
+    "description": "Release administration: Undo point on destination: {path}",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_messaging_disabled": "消息已禁用：{channels}",
+  "@rel_admin_messaging_disabled": {
+    "description": "Release administration: Messaging disabled: {channels}",
+    "placeholders": {
+      "channels": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_phase_prepared": "已准备",
+  "@rel_admin_phase_prepared": {
+    "description": "Release administration: prepared"
+  },
+  "rel_admin_phase_backup": "备份",
+  "@rel_admin_phase_backup": {
+    "description": "Release administration: backup"
+  },
+  "rel_admin_phase_upload": "上传",
+  "@rel_admin_phase_upload": {
+    "description": "Release administration: upload"
+  },
+  "rel_admin_phase_restore": "恢复",
+  "@rel_admin_phase_restore": {
+    "description": "Release administration: restore"
+  },
+  "rel_admin_phase_finished": "已完成",
+  "@rel_admin_phase_finished": {
+    "description": "Release administration: finished"
+  },
+  "rel_admin_phase_failed": "失败",
+  "@rel_admin_phase_failed": {
+    "description": "Release administration: failed"
+  },
+  "rel_admin_phase_undo": "撤销",
+  "@rel_admin_phase_undo": {
+    "description": "Release administration: undo"
+  },
+  "rel_admin_phase_undone": "已撤销",
+  "@rel_admin_phase_undone": {
+    "description": "Release administration: undone"
   }
 }

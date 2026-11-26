@@ -12743,6 +12743,131 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rel_admin_skin_slate => '石板';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      '此账户中没有可用的 Cloud 智能体。';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      '无法验证之前的撤销凭据。未作任何更改。';
+
+  @override
+  String get rel_admin_transfer_to_cloud => '传输到 Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      '连接已更改。请离开此页面。已提交的恢复操作可能继续。';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => '查找我的 Cloud 智能体';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      '撤销会用传输前的备份替换目标。';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      '使用整个源主目录替换此 Cloud 智能体，包括凭据、对话和文件。源不会被删除。入站消息机器人将关闭。';
+
+  @override
+  String get rel_admin_type_destination_agent_id => '输入目标智能体 ID';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      '无法保留本地撤销凭据。请保持此页面打开。';
+
+  @override
+  String get rel_admin_undo_transfer => '撤销传输';
+
+  @override
+  String get rel_admin_replace_cloud_agent => '替换 Cloud 智能体';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      '本地撤销凭据已遗忘。未移除远程备份。';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only => '仅遗忘本地撤销凭据';
+
+  @override
+  String get rel_admin_stop_before_restore => '在恢复前停止';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      '请勿关闭此页面。恢复在目标上运行，无法取消。';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      '文件已恢复；目标网关需要处理。';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return '请登录且仅登录一个已保存的 $origin Ares 连接，然后返回此处。';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return '来源：$gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return '目标：$name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return '智能体 ID：$id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return '状态：$phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return '已复制 $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return '目标上的撤销点：$path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return '消息已禁用：$channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => '已准备';
+
+  @override
+  String get rel_admin_phase_backup => '备份';
+
+  @override
+  String get rel_admin_phase_upload => '上传';
+
+  @override
+  String get rel_admin_phase_restore => '恢复';
+
+  @override
+  String get rel_admin_phase_finished => '已完成';
+
+  @override
+  String get rel_admin_phase_failed => '失败';
+
+  @override
+  String get rel_admin_phase_undo => '撤销';
+
+  @override
+  String get rel_admin_phase_undone => '已撤销';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -25484,6 +25609,131 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get rel_admin_skin_slate => '石板';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      '此账户中没有可用的 Cloud 智能体。';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      '无法验证之前的撤销凭据。未作任何更改。';
+
+  @override
+  String get rel_admin_transfer_to_cloud => '传输到 Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      '连接已更改。请离开此页面。已提交的恢复操作可能继续。';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => '查找我的 Cloud 智能体';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      '撤销会用传输前的备份替换目标。';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      '使用整个源主目录替换此 Cloud 智能体，包括凭据、对话和文件。源不会被删除。入站消息机器人将关闭。';
+
+  @override
+  String get rel_admin_type_destination_agent_id => '输入目标智能体 ID';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      '无法保留本地撤销凭据。请保持此页面打开。';
+
+  @override
+  String get rel_admin_undo_transfer => '撤销传输';
+
+  @override
+  String get rel_admin_replace_cloud_agent => '替换 Cloud 智能体';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      '本地撤销凭据已遗忘。未移除远程备份。';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only => '仅遗忘本地撤销凭据';
+
+  @override
+  String get rel_admin_stop_before_restore => '在恢复前停止';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      '请勿关闭此页面。恢复在目标上运行，无法取消。';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      '文件已恢复；目标网关需要处理。';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return '请登录且仅登录一个已保存的 $origin Ares 连接，然后返回此处。';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return '来源：$gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return '目标：$name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return '智能体 ID：$id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return '状态：$phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return '已复制 $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return '目标上的撤销点：$path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return '消息已禁用：$channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => '已准备';
+
+  @override
+  String get rel_admin_phase_backup => '备份';
+
+  @override
+  String get rel_admin_phase_upload => '上传';
+
+  @override
+  String get rel_admin_phase_restore => '恢复';
+
+  @override
+  String get rel_admin_phase_finished => '已完成';
+
+  @override
+  String get rel_admin_phase_failed => '失败';
+
+  @override
+  String get rel_admin_phase_undo => '撤销';
+
+  @override
+  String get rel_admin_phase_undone => '已撤销';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -38229,4 +38479,129 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get rel_admin_skin_slate => '石板';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      '此帳戶中沒有可用的 Cloud 代理。';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      '無法驗證先前的復原憑據。未作任何變更。';
+
+  @override
+  String get rel_admin_transfer_to_cloud => '傳輸至 Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      '連線已變更。請離開此頁面。已提交的還原作業可能繼續。';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => '尋找我的 Cloud 代理';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      '復原會用傳輸前的備份取代目的地。';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      '使用整個來源主目錄取代此 Cloud 代理，包括憑證、對話和檔案。來源不會被刪除。傳入訊息機器人將關閉。';
+
+  @override
+  String get rel_admin_type_destination_agent_id => '輸入目的地代理 ID';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      '無法保留本機復原憑據。請保持此頁面開啟。';
+
+  @override
+  String get rel_admin_undo_transfer => '復原傳輸';
+
+  @override
+  String get rel_admin_replace_cloud_agent => '取代 Cloud 代理';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      '本機復原憑據已忘記。未移除遠端備份。';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only => '僅忘記本機復原憑據';
+
+  @override
+  String get rel_admin_stop_before_restore => '在還原前停止';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      '請勿關閉此頁面。還原在目的地執行，無法取消。';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      '檔案已還原；目的地閘道需要處理。';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return '請登入且僅登入一個已儲存的 $origin Ares 連線，然後返回此處。';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return '來源：$gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return '目的地：$name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return '代理 ID：$id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return '狀態：$phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return '已複製 $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return '目的地上的復原點：$path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return '訊息已停用：$channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => '已準備';
+
+  @override
+  String get rel_admin_phase_backup => '備份';
+
+  @override
+  String get rel_admin_phase_upload => '上傳';
+
+  @override
+  String get rel_admin_phase_restore => '還原';
+
+  @override
+  String get rel_admin_phase_finished => '已完成';
+
+  @override
+  String get rel_admin_phase_failed => '失敗';
+
+  @override
+  String get rel_admin_phase_undo => '復原';
+
+  @override
+  String get rel_admin_phase_undone => '已復原';
 }

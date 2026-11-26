@@ -13507,4 +13507,131 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get rel_admin_skin_slate => 'pizarra';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      'No hay agentes de Cloud disponibles en esta cuenta.';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      'No se pudo verificar el recibo anterior para deshacer. No se realizó ningún cambio.';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'Transferir a Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      'La conexión cambió. Sal de esta página. Una restauración ya enviada puede continuar.';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => 'Buscar mis agentes de Cloud';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      'Deshacer sustituye el destino por su copia de seguridad anterior a la transferencia.';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      'Sustituye este agente de Cloud por todo el directorio de origen, incluidas credenciales, conversaciones y archivos. El origen no se elimina. Los bots de mensajería entrante se desactivan.';
+
+  @override
+  String get rel_admin_type_destination_agent_id =>
+      'Escribe el ID del agente de destino';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      'No se pudo conservar el recibo local para deshacer. Mantén esta página abierta.';
+
+  @override
+  String get rel_admin_undo_transfer => 'Deshacer transferencia';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'Sustituir agente de Cloud';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      'Se olvidó el recibo local para deshacer. No se eliminó ninguna copia de seguridad remota.';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only =>
+      'Olvidar solo el recibo local para deshacer';
+
+  @override
+  String get rel_admin_stop_before_restore => 'Detener antes de restaurar';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      'No cierres esta página. La restauración se ejecuta en el destino y no se puede cancelar.';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      'Archivos restaurados; la puerta de enlace de destino requiere atención.';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return 'Inicia sesión en exactamente una conexión guardada de Ares para $origin y vuelve aquí.';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return 'Origen: $gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return 'Destino: $name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return 'ID del agente: $id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return 'Estado: $phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return 'Copiado $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return 'Punto para deshacer en el destino: $path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return 'Mensajería desactivada: $channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => 'preparado';
+
+  @override
+  String get rel_admin_phase_backup => 'copia de seguridad';
+
+  @override
+  String get rel_admin_phase_upload => 'subida';
+
+  @override
+  String get rel_admin_phase_restore => 'restauración';
+
+  @override
+  String get rel_admin_phase_finished => 'finalizado';
+
+  @override
+  String get rel_admin_phase_failed => 'fallido';
+
+  @override
+  String get rel_admin_phase_undo => 'deshacer';
+
+  @override
+  String get rel_admin_phase_undone => 'deshecho';
 }

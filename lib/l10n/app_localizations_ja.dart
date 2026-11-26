@@ -12975,4 +12975,129 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get rel_admin_skin_slate => 'スレート';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      'このアカウントに利用可能なCloudエージェントはありません。';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      '前回の取り消し用レシートを確認できませんでした。変更は行われていません。';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'Cloudに転送';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      '接続が変更されました。このページを離れてください。送信済みの復元は続行される場合があります。';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => '自分のCloudエージェントを検索';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      '取り消すと、転送先が転送前のバックアップに置き換わります。';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      'このCloudエージェントを、認証情報、会話、ファイルを含む転送元のホーム全体で置き換えます。転送元は削除されません。受信メッセージングボットはオフになります。';
+
+  @override
+  String get rel_admin_type_destination_agent_id => '転送先エージェントIDを入力';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      'ローカルの取り消し用レシートを保持できませんでした。このページを開いたままにしてください。';
+
+  @override
+  String get rel_admin_undo_transfer => '転送を取り消す';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'Cloudエージェントを置き換え';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      'ローカルの取り消し用レシートを削除しました。リモートのバックアップは削除されていません。';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only => 'ローカルの取り消し用レシートのみ削除';
+
+  @override
+  String get rel_admin_stop_before_restore => '復元前に停止';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      'このページを閉じないでください。復元は転送先で実行され、キャンセルできません。';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      'ファイルを復元しました。転送先のゲートウェイに対応が必要です。';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return '$originの保存済みAres接続のうち1つだけにサインインしてから、ここに戻ってください。';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return '転送元：$gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return '転送先：$name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return 'エージェントID：$id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return '状態：$phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return '$percent%コピー済み';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return '転送先の取り消しポイント：$path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return 'メッセージング無効：$channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => '準備完了';
+
+  @override
+  String get rel_admin_phase_backup => 'バックアップ';
+
+  @override
+  String get rel_admin_phase_upload => 'アップロード';
+
+  @override
+  String get rel_admin_phase_restore => '復元';
+
+  @override
+  String get rel_admin_phase_finished => '完了';
+
+  @override
+  String get rel_admin_phase_failed => '失敗';
+
+  @override
+  String get rel_admin_phase_undo => '取り消し';
+
+  @override
+  String get rel_admin_phase_undone => '取り消し済み';
 }

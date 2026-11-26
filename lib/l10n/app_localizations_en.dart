@@ -13337,4 +13337,130 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rel_admin_skin_slate => 'slate';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      'No available Cloud agents in this account.';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      'The previous undo receipt could not be verified. No change was made.';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'Transfer to Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      'Connection changed. Leave this page. A restore already submitted may continue.';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => 'Find my Cloud agents';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      'Undo replaces the destination with its pre-transfer backup.';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      'Replace this Cloud agent with the entire source home, including credentials, conversations and files. The source is not deleted. Incoming messaging bots are switched off.';
+
+  @override
+  String get rel_admin_type_destination_agent_id => 'Type destination agent ID';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      'Could not retain the local undo receipt. Keep this page open.';
+
+  @override
+  String get rel_admin_undo_transfer => 'Undo transfer';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'Replace Cloud agent';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      'Local undo receipt forgotten. No remote backup was removed.';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only =>
+      'Forget local undo receipt only';
+
+  @override
+  String get rel_admin_stop_before_restore => 'Stop before restore';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      'Do not close this page. Restore runs on the destination and cannot be cancelled.';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      'Files restored; destination gateway needs attention.';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return 'Sign in to exactly one saved Ares connection for $origin, then return here.';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return 'Source: $gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return 'Destination: $name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return 'Agent ID: $id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return 'Status: $phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return 'Copied $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return 'Undo point on destination: $path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return 'Messaging disabled: $channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => 'prepared';
+
+  @override
+  String get rel_admin_phase_backup => 'backup';
+
+  @override
+  String get rel_admin_phase_upload => 'upload';
+
+  @override
+  String get rel_admin_phase_restore => 'restore';
+
+  @override
+  String get rel_admin_phase_finished => 'finished';
+
+  @override
+  String get rel_admin_phase_failed => 'failed';
+
+  @override
+  String get rel_admin_phase_undo => 'undo';
+
+  @override
+  String get rel_admin_phase_undone => 'undone';
 }

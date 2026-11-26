@@ -12983,4 +12983,129 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get rel_admin_skin_slate => '슬레이트';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      '이 계정에 사용 가능한 Cloud 에이전트가 없습니다.';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      '이전 실행 취소 확인서를 검증할 수 없습니다. 변경 사항이 없습니다.';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'Cloud로 전송';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      '연결이 변경되었습니다. 이 페이지를 떠나세요. 이미 제출된 복원은 계속될 수 있습니다.';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => '내 Cloud 에이전트 찾기';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      '실행 취소는 대상을 전송 전 백업으로 대체합니다.';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      '이 Cloud 에이전트를 자격 증명, 대화 및 파일을 포함한 전체 원본 홈으로 대체합니다. 원본은 삭제되지 않습니다. 수신 메시징 봇은 꺼집니다.';
+
+  @override
+  String get rel_admin_type_destination_agent_id => '대상 에이전트 ID 입력';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      '로컬 실행 취소 확인서를 보관할 수 없습니다. 이 페이지를 열어 두세요.';
+
+  @override
+  String get rel_admin_undo_transfer => '전송 실행 취소';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'Cloud 에이전트 대체';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      '로컬 실행 취소 확인서를 삭제했습니다. 원격 백업은 제거되지 않았습니다.';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only => '로컬 실행 취소 확인서만 삭제';
+
+  @override
+  String get rel_admin_stop_before_restore => '복원 전 중지';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      '이 페이지를 닫지 마세요. 복원은 대상에서 실행되며 취소할 수 없습니다.';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      '파일을 복원했습니다. 대상 게이트웨이를 확인해야 합니다.';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return '$origin에 대해 저장된 Ares 연결 중 정확히 하나에 로그인한 후 여기로 돌아오세요.';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return '원본: $gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return '대상: $name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return '에이전트 ID: $id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return '상태: $phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return '$percent% 복사됨';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return '대상의 실행 취소 지점: $path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return '메시징 비활성화됨: $channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => '준비됨';
+
+  @override
+  String get rel_admin_phase_backup => '백업';
+
+  @override
+  String get rel_admin_phase_upload => '업로드';
+
+  @override
+  String get rel_admin_phase_restore => '복원';
+
+  @override
+  String get rel_admin_phase_finished => '완료됨';
+
+  @override
+  String get rel_admin_phase_failed => '실패';
+
+  @override
+  String get rel_admin_phase_undo => '실행 취소';
+
+  @override
+  String get rel_admin_phase_undone => '실행 취소됨';
 }

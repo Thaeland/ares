@@ -21854,6 +21854,202 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'slate'**
   String get rel_admin_skin_slate;
+
+  /// Release administration: No available Cloud agents in this account.
+  ///
+  /// In en, this message translates to:
+  /// **'No available Cloud agents in this account.'**
+  String get rel_admin_no_available_cloud_agents_in_this_account;
+
+  /// Release administration: The previous undo receipt could not be verified. No change was made.
+  ///
+  /// In en, this message translates to:
+  /// **'The previous undo receipt could not be verified. No change was made.'**
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no;
+
+  /// Release administration: Transfer to Cloud
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer to Cloud'**
+  String get rel_admin_transfer_to_cloud;
+
+  /// Release administration: Connection changed. Leave this page. A restore already submitted may continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection changed. Leave this page. A restore already submitted may continue.'**
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted;
+
+  /// Release administration: Find my Cloud agents
+  ///
+  /// In en, this message translates to:
+  /// **'Find my Cloud agents'**
+  String get rel_admin_find_my_cloud_agents;
+
+  /// Release administration: Undo replaces the destination with its pre-transfer backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo replaces the destination with its pre-transfer backup.'**
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup;
+
+  /// Release administration: Replace this Cloud agent with the entire source home, including credentials, conversations and files. The source is not deleted. Incoming messaging bots are switched off.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace this Cloud agent with the entire source home, including credentials, conversations and files. The source is not deleted. Incoming messaging bots are switched off.'**
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home;
+
+  /// Release administration: Type destination agent ID
+  ///
+  /// In en, this message translates to:
+  /// **'Type destination agent ID'**
+  String get rel_admin_type_destination_agent_id;
+
+  /// Release administration: Could not retain the local undo receipt. Keep this page open.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not retain the local undo receipt. Keep this page open.'**
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open;
+
+  /// Release administration: Undo transfer
+  ///
+  /// In en, this message translates to:
+  /// **'Undo transfer'**
+  String get rel_admin_undo_transfer;
+
+  /// Release administration: Replace Cloud agent
+  ///
+  /// In en, this message translates to:
+  /// **'Replace Cloud agent'**
+  String get rel_admin_replace_cloud_agent;
+
+  /// Release administration: Local undo receipt forgotten. No remote backup was removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Local undo receipt forgotten. No remote backup was removed.'**
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed;
+
+  /// Release administration: Forget local undo receipt only
+  ///
+  /// In en, this message translates to:
+  /// **'Forget local undo receipt only'**
+  String get rel_admin_forget_local_undo_receipt_only;
+
+  /// Release administration: Stop before restore
+  ///
+  /// In en, this message translates to:
+  /// **'Stop before restore'**
+  String get rel_admin_stop_before_restore;
+
+  /// Release administration: Do not close this page. Restore runs on the destination and cannot be cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Do not close this page. Restore runs on the destination and cannot be cancelled.'**
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the;
+
+  /// Release administration: Files restored; destination gateway needs attention.
+  ///
+  /// In en, this message translates to:
+  /// **'Files restored; destination gateway needs attention.'**
+  String get rel_admin_files_restored_destination_gateway_needs_attention;
+
+  /// Release administration: Sign in to exactly one saved Ares connection for {origin}, then return here.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to exactly one saved Ares connection for {origin}, then return here.'**
+  String rel_admin_transfer_sign_in(String origin);
+
+  /// Release administration: Source: {gateway} / {profile}
+  ///
+  /// In en, this message translates to:
+  /// **'Source: {gateway} / {profile}'**
+  String rel_admin_transfer_source(String gateway, String profile);
+
+  /// Release administration: Destination: {name} · {origin} / default
+  ///
+  /// In en, this message translates to:
+  /// **'Destination: {name} · {origin} / default'**
+  String rel_admin_transfer_destination(String name, String origin);
+
+  /// Release administration: Agent ID: {id}
+  ///
+  /// In en, this message translates to:
+  /// **'Agent ID: {id}'**
+  String rel_admin_agent_id(String id);
+
+  /// Release administration: Status: {phase}
+  ///
+  /// In en, this message translates to:
+  /// **'Status: {phase}'**
+  String rel_admin_transfer_status(String phase);
+
+  /// Release administration: Copied {percent}%
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {percent}%'**
+  String rel_admin_copied_percent(String percent);
+
+  /// Release administration: Undo point on destination: {path}
+  ///
+  /// In en, this message translates to:
+  /// **'Undo point on destination: {path}'**
+  String rel_admin_undo_point(String path);
+
+  /// Release administration: Messaging disabled: {channels}
+  ///
+  /// In en, this message translates to:
+  /// **'Messaging disabled: {channels}'**
+  String rel_admin_messaging_disabled(String channels);
+
+  /// Release administration: prepared
+  ///
+  /// In en, this message translates to:
+  /// **'prepared'**
+  String get rel_admin_phase_prepared;
+
+  /// Release administration: backup
+  ///
+  /// In en, this message translates to:
+  /// **'backup'**
+  String get rel_admin_phase_backup;
+
+  /// Release administration: upload
+  ///
+  /// In en, this message translates to:
+  /// **'upload'**
+  String get rel_admin_phase_upload;
+
+  /// Release administration: restore
+  ///
+  /// In en, this message translates to:
+  /// **'restore'**
+  String get rel_admin_phase_restore;
+
+  /// Release administration: finished
+  ///
+  /// In en, this message translates to:
+  /// **'finished'**
+  String get rel_admin_phase_finished;
+
+  /// Release administration: failed
+  ///
+  /// In en, this message translates to:
+  /// **'failed'**
+  String get rel_admin_phase_failed;
+
+  /// Release administration: undo
+  ///
+  /// In en, this message translates to:
+  /// **'undo'**
+  String get rel_admin_phase_undo;
+
+  /// Release administration: undone
+  ///
+  /// In en, this message translates to:
+  /// **'undone'**
+  String get rel_admin_phase_undone;
 }
 
 class _AppLocalizationsDelegate

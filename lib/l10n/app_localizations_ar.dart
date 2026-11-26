@@ -13337,4 +13337,131 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get rel_admin_skin_slate => 'أردوازي';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      'لا يوجد وكلاء Cloud متاحون في هذا الحساب.';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      'تعذّر التحقق من إيصال التراجع السابق. لم يُجرَ أي تغيير.';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'النقل إلى Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      'تغيّر الاتصال. غادر هذه الصفحة. قد تستمر عملية استعادة سبق إرسالها.';
+
+  @override
+  String get rel_admin_find_my_cloud_agents =>
+      'العثور على وكلاء Cloud الخاصين بي';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      'يستبدل التراجع الوجهة بنسختها الاحتياطية السابقة للنقل.';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      'استبدل وكيل Cloud هذا بالمجلد الرئيسي للمصدر بالكامل، بما في ذلك بيانات الاعتماد والمحادثات والملفات. لا يُحذف المصدر. تُعطّل بوتات المراسلة الواردة.';
+
+  @override
+  String get rel_admin_type_destination_agent_id => 'اكتب معرّف وكيل الوجهة';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      'تعذّر الاحتفاظ بإيصال التراجع المحلي. أبقِ هذه الصفحة مفتوحة.';
+
+  @override
+  String get rel_admin_undo_transfer => 'التراجع عن النقل';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'استبدال وكيل Cloud';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      'نُسي إيصال التراجع المحلي. لم تُزل أي نسخة احتياطية بعيدة.';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only =>
+      'نسيان إيصال التراجع المحلي فقط';
+
+  @override
+  String get rel_admin_stop_before_restore => 'الإيقاف قبل الاستعادة';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      'لا تغلق هذه الصفحة. تعمل الاستعادة على الوجهة ولا يمكن إلغاؤها.';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      'استُعيدت الملفات؛ تحتاج بوابة الوجهة إلى عناية.';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return 'سجّل الدخول إلى اتصال Ares محفوظ واحد فقط لـ $origin، ثم عُد إلى هنا.';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return 'المصدر: $gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return 'الوجهة: $name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return 'معرّف الوكيل: $id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return 'الحالة: $phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return 'نُسخ $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return 'نقطة التراجع على الوجهة: $path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return 'المراسلة معطّلة: $channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => 'جاهز';
+
+  @override
+  String get rel_admin_phase_backup => 'نسخ احتياطي';
+
+  @override
+  String get rel_admin_phase_upload => 'رفع';
+
+  @override
+  String get rel_admin_phase_restore => 'استعادة';
+
+  @override
+  String get rel_admin_phase_finished => 'مكتمل';
+
+  @override
+  String get rel_admin_phase_failed => 'فشل';
+
+  @override
+  String get rel_admin_phase_undo => 'تراجع';
+
+  @override
+  String get rel_admin_phase_undone => 'تم التراجع';
 }

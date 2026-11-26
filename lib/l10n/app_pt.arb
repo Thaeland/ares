@@ -5102,5 +5102,179 @@
   "rel_admin_skin_slate": "ardósia",
   "@rel_admin_skin_slate": {
     "description": "Release administration: slate"
+  },
+  "rel_admin_no_available_cloud_agents_in_this_account": "Não há agentes Cloud disponíveis nesta conta.",
+  "@rel_admin_no_available_cloud_agents_in_this_account": {
+    "description": "Release administration: No available Cloud agents in this account."
+  },
+  "rel_admin_the_previous_undo_receipt_could_not_be_verified_no": "Não foi possível verificar o recibo de anulação anterior. Não foi feita nenhuma alteração.",
+  "@rel_admin_the_previous_undo_receipt_could_not_be_verified_no": {
+    "description": "Release administration: The previous undo receipt could not be verified. No change was made."
+  },
+  "rel_admin_transfer_to_cloud": "Transferir para Cloud",
+  "@rel_admin_transfer_to_cloud": {
+    "description": "Release administration: Transfer to Cloud"
+  },
+  "rel_admin_connection_changed_leave_this_page_a_restore_already_submitted": "A ligação mudou. Saia desta página. Um restauro já enviado poderá continuar.",
+  "@rel_admin_connection_changed_leave_this_page_a_restore_already_submitted": {
+    "description": "Release administration: Connection changed. Leave this page. A restore already submitted may continue."
+  },
+  "rel_admin_find_my_cloud_agents": "Encontrar os meus agentes Cloud",
+  "@rel_admin_find_my_cloud_agents": {
+    "description": "Release administration: Find my Cloud agents"
+  },
+  "rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup": "A anulação substitui o destino pela cópia de segurança anterior à transferência.",
+  "@rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup": {
+    "description": "Release administration: Undo replaces the destination with its pre-transfer backup."
+  },
+  "rel_admin_replace_this_cloud_agent_with_the_entire_source_home": "Substitua este agente Cloud por toda a pasta pessoal de origem, incluindo credenciais, conversas e ficheiros. A origem não é eliminada. Os bots de mensagens recebidas são desligados.",
+  "@rel_admin_replace_this_cloud_agent_with_the_entire_source_home": {
+    "description": "Release administration: Replace this Cloud agent with the entire source home, including credentials, conversations and files. The source is not deleted. Incoming messaging bots are switched off."
+  },
+  "rel_admin_type_destination_agent_id": "Introduza o ID do agente de destino",
+  "@rel_admin_type_destination_agent_id": {
+    "description": "Release administration: Type destination agent ID"
+  },
+  "rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open": "Não foi possível guardar o recibo de anulação local. Mantenha esta página aberta.",
+  "@rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open": {
+    "description": "Release administration: Could not retain the local undo receipt. Keep this page open."
+  },
+  "rel_admin_undo_transfer": "Anular transferência",
+  "@rel_admin_undo_transfer": {
+    "description": "Release administration: Undo transfer"
+  },
+  "rel_admin_replace_cloud_agent": "Substituir agente Cloud",
+  "@rel_admin_replace_cloud_agent": {
+    "description": "Release administration: Replace Cloud agent"
+  },
+  "rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed": "Recibo de anulação local esquecido. Nenhuma cópia de segurança remota foi removida.",
+  "@rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed": {
+    "description": "Release administration: Local undo receipt forgotten. No remote backup was removed."
+  },
+  "rel_admin_forget_local_undo_receipt_only": "Esquecer apenas o recibo de anulação local",
+  "@rel_admin_forget_local_undo_receipt_only": {
+    "description": "Release administration: Forget local undo receipt only"
+  },
+  "rel_admin_stop_before_restore": "Parar antes de restaurar",
+  "@rel_admin_stop_before_restore": {
+    "description": "Release administration: Stop before restore"
+  },
+  "rel_admin_do_not_close_this_page_restore_runs_on_the": "Não feche esta página. O restauro é executado no destino e não pode ser cancelado.",
+  "@rel_admin_do_not_close_this_page_restore_runs_on_the": {
+    "description": "Release administration: Do not close this page. Restore runs on the destination and cannot be cancelled."
+  },
+  "rel_admin_files_restored_destination_gateway_needs_attention": "Ficheiros restaurados; o gateway de destino requer atenção.",
+  "@rel_admin_files_restored_destination_gateway_needs_attention": {
+    "description": "Release administration: Files restored; destination gateway needs attention."
+  },
+  "rel_admin_transfer_sign_in": "Inicie sessão em exatamente uma ligação Ares guardada para {origin} e volte aqui.",
+  "@rel_admin_transfer_sign_in": {
+    "description": "Release administration: Sign in to exactly one saved Ares connection for {origin}, then return here.",
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_transfer_source": "Origem: {gateway} / {profile}",
+  "@rel_admin_transfer_source": {
+    "description": "Release administration: Source: {gateway} / {profile}",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_transfer_destination": "Destino: {name} · {origin} / default",
+  "@rel_admin_transfer_destination": {
+    "description": "Release administration: Destination: {name} · {origin} / default",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_agent_id": "ID do agente: {id}",
+  "@rel_admin_agent_id": {
+    "description": "Release administration: Agent ID: {id}",
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_transfer_status": "Estado: {phase}",
+  "@rel_admin_transfer_status": {
+    "description": "Release administration: Status: {phase}",
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_copied_percent": "Copiado {percent}%",
+  "@rel_admin_copied_percent": {
+    "description": "Release administration: Copied {percent}%",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_undo_point": "Ponto de anulação no destino: {path}",
+  "@rel_admin_undo_point": {
+    "description": "Release administration: Undo point on destination: {path}",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_messaging_disabled": "Mensagens desativadas: {channels}",
+  "@rel_admin_messaging_disabled": {
+    "description": "Release administration: Messaging disabled: {channels}",
+    "placeholders": {
+      "channels": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_phase_prepared": "preparado",
+  "@rel_admin_phase_prepared": {
+    "description": "Release administration: prepared"
+  },
+  "rel_admin_phase_backup": "cópia de segurança",
+  "@rel_admin_phase_backup": {
+    "description": "Release administration: backup"
+  },
+  "rel_admin_phase_upload": "carregamento",
+  "@rel_admin_phase_upload": {
+    "description": "Release administration: upload"
+  },
+  "rel_admin_phase_restore": "restauro",
+  "@rel_admin_phase_restore": {
+    "description": "Release administration: restore"
+  },
+  "rel_admin_phase_finished": "concluído",
+  "@rel_admin_phase_finished": {
+    "description": "Release administration: finished"
+  },
+  "rel_admin_phase_failed": "falhou",
+  "@rel_admin_phase_failed": {
+    "description": "Release administration: failed"
+  },
+  "rel_admin_phase_undo": "anulação",
+  "@rel_admin_phase_undo": {
+    "description": "Release administration: undo"
+  },
+  "rel_admin_phase_undone": "anulado",
+  "@rel_admin_phase_undone": {
+    "description": "Release administration: undone"
   }
 }

@@ -13478,4 +13478,131 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get rel_admin_skin_slate => 'сланець';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      'У цьому обліковому записі немає доступних агентів Cloud.';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      'Не вдалося перевірити попередню квитанцію скасування. Змін не було.';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'Перенести до Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      'Підключення змінилося. Залиште цю сторінку. Уже надіслане відновлення може тривати.';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => 'Знайти моїх агентів Cloud';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      'Скасування замінює вміст призначення резервною копією до перенесення.';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      'Замініть цього агента Cloud усім домашнім каталогом джерела, включно з обліковими даними, розмовами й файлами. Джерело не видаляється. Боти вхідних повідомлень вимикаються.';
+
+  @override
+  String get rel_admin_type_destination_agent_id =>
+      'Введіть ID агента призначення';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      'Не вдалося зберегти локальну квитанцію скасування. Залиште сторінку відкритою.';
+
+  @override
+  String get rel_admin_undo_transfer => 'Скасувати перенесення';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'Замінити агента Cloud';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      'Локальну квитанцію скасування забуто. Віддалені резервні копії не видалено.';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only =>
+      'Забути лише локальну квитанцію скасування';
+
+  @override
+  String get rel_admin_stop_before_restore => 'Зупинити до відновлення';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      'Не закривайте сторінку. Відновлення виконується на боці призначення, його не можна скасувати.';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      'Файли відновлено; шлюз призначення потребує уваги.';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return 'Увійдіть рівно в одне збережене підключення Ares для $origin, потім поверніться сюди.';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return 'Джерело: $gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return 'Призначення: $name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return 'ID агента: $id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return 'Стан: $phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return 'Скопійовано $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return 'Точка скасування на боці призначення: $path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return 'Повідомлення вимкнено: $channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => 'підготовлено';
+
+  @override
+  String get rel_admin_phase_backup => 'резервне копіювання';
+
+  @override
+  String get rel_admin_phase_upload => 'завантаження';
+
+  @override
+  String get rel_admin_phase_restore => 'відновлення';
+
+  @override
+  String get rel_admin_phase_finished => 'завершено';
+
+  @override
+  String get rel_admin_phase_failed => 'помилка';
+
+  @override
+  String get rel_admin_phase_undo => 'скасування';
+
+  @override
+  String get rel_admin_phase_undone => 'скасовано';
 }

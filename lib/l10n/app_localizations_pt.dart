@@ -13511,6 +13511,134 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get rel_admin_skin_slate => 'ardósia';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      'Não há agentes Cloud disponíveis nesta conta.';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      'Não foi possível verificar o recibo de anulação anterior. Não foi feita nenhuma alteração.';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'Transferir para Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      'A ligação mudou. Saia desta página. Um restauro já enviado poderá continuar.';
+
+  @override
+  String get rel_admin_find_my_cloud_agents =>
+      'Encontrar os meus agentes Cloud';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      'A anulação substitui o destino pela cópia de segurança anterior à transferência.';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      'Substitua este agente Cloud por toda a pasta pessoal de origem, incluindo credenciais, conversas e ficheiros. A origem não é eliminada. Os bots de mensagens recebidas são desligados.';
+
+  @override
+  String get rel_admin_type_destination_agent_id =>
+      'Introduza o ID do agente de destino';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      'Não foi possível guardar o recibo de anulação local. Mantenha esta página aberta.';
+
+  @override
+  String get rel_admin_undo_transfer => 'Anular transferência';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'Substituir agente Cloud';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      'Recibo de anulação local esquecido. Nenhuma cópia de segurança remota foi removida.';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only =>
+      'Esquecer apenas o recibo de anulação local';
+
+  @override
+  String get rel_admin_stop_before_restore => 'Parar antes de restaurar';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      'Não feche esta página. O restauro é executado no destino e não pode ser cancelado.';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      'Ficheiros restaurados; o gateway de destino requer atenção.';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return 'Inicie sessão em exatamente uma ligação Ares guardada para $origin e volte aqui.';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return 'Origem: $gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return 'Destino: $name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return 'ID do agente: $id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return 'Estado: $phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return 'Copiado $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return 'Ponto de anulação no destino: $path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return 'Mensagens desativadas: $channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => 'preparado';
+
+  @override
+  String get rel_admin_phase_backup => 'cópia de segurança';
+
+  @override
+  String get rel_admin_phase_upload => 'carregamento';
+
+  @override
+  String get rel_admin_phase_restore => 'restauro';
+
+  @override
+  String get rel_admin_phase_finished => 'concluído';
+
+  @override
+  String get rel_admin_phase_failed => 'falhou';
+
+  @override
+  String get rel_admin_phase_undo => 'anulação';
+
+  @override
+  String get rel_admin_phase_undone => 'anulado';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -26998,4 +27126,131 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get rel_admin_skin_slate => 'ardósia';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      'Não há agentes Cloud disponíveis nesta conta.';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      'Não foi possível verificar o recibo de desfazer anterior. Nenhuma alteração foi feita.';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'Transferir para Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      'A conexão mudou. Saia desta página. Uma restauração já enviada pode continuar.';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => 'Encontrar meus agentes Cloud';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      'Desfazer substitui o destino pelo backup anterior à transferência.';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      'Substitua este agente Cloud por toda a pasta pessoal de origem, incluindo credenciais, conversas e arquivos. A origem não é excluída. Os bots de mensagens recebidas são desativados.';
+
+  @override
+  String get rel_admin_type_destination_agent_id =>
+      'Digite o ID do agente de destino';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      'Não foi possível guardar o recibo local de desfazer. Mantenha esta página aberta.';
+
+  @override
+  String get rel_admin_undo_transfer => 'Desfazer transferência';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'Substituir agente Cloud';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      'Recibo local de desfazer esquecido. Nenhum backup remoto foi removido.';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only =>
+      'Esquecer apenas o recibo local de desfazer';
+
+  @override
+  String get rel_admin_stop_before_restore => 'Parar antes de restaurar';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      'Não feche esta página. A restauração é executada no destino e não pode ser cancelada.';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      'Arquivos restaurados; o gateway de destino requer atenção.';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return 'Entre em exatamente uma conexão Ares salva para $origin e volte aqui.';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return 'Origem: $gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return 'Destino: $name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return 'ID do agente: $id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return 'Status: $phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return 'Copiado $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return 'Ponto de desfazer no destino: $path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return 'Mensagens desativadas: $channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => 'preparado';
+
+  @override
+  String get rel_admin_phase_backup => 'backup';
+
+  @override
+  String get rel_admin_phase_upload => 'envio';
+
+  @override
+  String get rel_admin_phase_restore => 'restauração';
+
+  @override
+  String get rel_admin_phase_finished => 'concluído';
+
+  @override
+  String get rel_admin_phase_failed => 'falhou';
+
+  @override
+  String get rel_admin_phase_undo => 'desfazer';
+
+  @override
+  String get rel_admin_phase_undone => 'desfeito';
 }

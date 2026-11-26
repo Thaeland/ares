@@ -13546,4 +13546,131 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rel_admin_skin_slate => 'ardoise';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      'Aucun agent Cloud disponible dans ce compte.';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      'Le reçu d’annulation précédent n’a pas pu être vérifié. Aucune modification n’a été effectuée.';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'Transférer vers Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      'La connexion a changé. Quittez cette page. Une restauration déjà soumise peut se poursuivre.';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => 'Trouver mes agents Cloud';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      'L’annulation remplace la destination par sa sauvegarde d’avant le transfert.';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      'Remplacez cet agent Cloud par tout le répertoire personnel source, y compris les identifiants, conversations et fichiers. La source n’est pas supprimée. Les bots de messagerie entrante sont désactivés.';
+
+  @override
+  String get rel_admin_type_destination_agent_id =>
+      'Saisissez l’identifiant de l’agent de destination';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      'Le reçu d’annulation local n’a pas pu être conservé. Gardez cette page ouverte.';
+
+  @override
+  String get rel_admin_undo_transfer => 'Annuler le transfert';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'Remplacer l’agent Cloud';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      'Reçu d’annulation local oublié. Aucune sauvegarde distante n’a été supprimée.';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only =>
+      'Oublier uniquement le reçu d’annulation local';
+
+  @override
+  String get rel_admin_stop_before_restore => 'Arrêter avant la restauration';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      'Ne fermez pas cette page. La restauration s’exécute sur la destination et ne peut pas être annulée.';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      'Fichiers restaurés ; la passerelle de destination nécessite une intervention.';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return 'Connectez-vous à une seule connexion Ares enregistrée pour $origin, puis revenez ici.';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return 'Source : $gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return 'Destination : $name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return 'Identifiant de l’agent : $id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return 'État : $phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return 'Copié à $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return 'Point d’annulation sur la destination : $path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return 'Messagerie désactivée : $channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => 'préparé';
+
+  @override
+  String get rel_admin_phase_backup => 'sauvegarde';
+
+  @override
+  String get rel_admin_phase_upload => 'téléversement';
+
+  @override
+  String get rel_admin_phase_restore => 'restauration';
+
+  @override
+  String get rel_admin_phase_finished => 'terminé';
+
+  @override
+  String get rel_admin_phase_failed => 'échoué';
+
+  @override
+  String get rel_admin_phase_undo => 'annulation';
+
+  @override
+  String get rel_admin_phase_undone => 'annulé';
 }

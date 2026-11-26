@@ -13486,4 +13486,131 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get rel_admin_skin_slate => 'сланец';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      'В этом аккаунте нет доступных агентов Cloud.';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      'Не удалось проверить предыдущую квитанцию отмены. Изменений не было.';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'Перенести в Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      'Подключение изменилось. Покиньте эту страницу. Уже отправленное восстановление может продолжаться.';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => 'Найти моих агентов Cloud';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      'Отмена заменяет содержимое назначения резервной копией до переноса.';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      'Замените этого агента Cloud всем домашним каталогом источника, включая учётные данные, разговоры и файлы. Источник не удаляется. Боты входящих сообщений отключаются.';
+
+  @override
+  String get rel_admin_type_destination_agent_id =>
+      'Введите ID агента назначения';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      'Не удалось сохранить локальную квитанцию отмены. Оставьте страницу открытой.';
+
+  @override
+  String get rel_admin_undo_transfer => 'Отменить перенос';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'Заменить агента Cloud';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      'Локальная квитанция отмены забыта. Удалённые резервные копии не удалены.';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only =>
+      'Забыть только локальную квитанцию отмены';
+
+  @override
+  String get rel_admin_stop_before_restore => 'Остановить до восстановления';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      'Не закрывайте страницу. Восстановление выполняется на стороне назначения, его нельзя отменить.';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      'Файлы восстановлены; шлюз назначения требует внимания.';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return 'Войдите ровно в одно сохранённое подключение Ares для $origin, затем вернитесь сюда.';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return 'Источник: $gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return 'Назначение: $name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return 'ID агента: $id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return 'Статус: $phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return 'Скопировано $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return 'Точка отмены на стороне назначения: $path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return 'Сообщения отключены: $channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => 'подготовлено';
+
+  @override
+  String get rel_admin_phase_backup => 'резервное копирование';
+
+  @override
+  String get rel_admin_phase_upload => 'загрузка';
+
+  @override
+  String get rel_admin_phase_restore => 'восстановление';
+
+  @override
+  String get rel_admin_phase_finished => 'завершено';
+
+  @override
+  String get rel_admin_phase_failed => 'ошибка';
+
+  @override
+  String get rel_admin_phase_undo => 'отмена';
+
+  @override
+  String get rel_admin_phase_undone => 'отменено';
 }

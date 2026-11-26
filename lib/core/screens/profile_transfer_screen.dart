@@ -1,3 +1,4 @@
+import '../l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/connection_manager.dart';
@@ -73,6 +74,7 @@ class _ProfileTransferState extends State<ProfileTransferScreen> {
   }
 
   Future<void> run(Future<void> Function() work) async {
+    final l = context.sharedL10n;
     if (busy || revoked) return;
     setState(() {
       busy = true;
@@ -82,7 +84,7 @@ class _ProfileTransferState extends State<ProfileTransferScreen> {
       widget.source.check();
       await work();
     } catch (e) {
-      message = profileError(e);
+      message = profileError(e, l);
     } finally {
       busy = false;
       redraw();
@@ -90,13 +92,15 @@ class _ProfileTransferState extends State<ProfileTransferScreen> {
   }
 
   Future<void> discover([String? org]) async {
+    final l = context.sharedL10n;
     directory = await widget.source.cloudAgents(org: org);
     if (directory!.teams.isEmpty && directory!.agents.isEmpty) {
-      message = 'No available Cloud agents in this account.';
+      message = l.rel_admin_no_available_cloud_agents_in_this_account;
     }
   }
 
   Future<void> select(CloudAgent row) async {
+    final l = context.sharedL10n;
     final manager = ConnectionManager(
       prefs = await SharedPreferences.getInstance(),
     );
@@ -109,8 +113,7 @@ class _ProfileTransferState extends State<ProfileTransferScreen> {
     );
     final list = matches().toList();
     if (list.length != 1) {
-      message =
-          'Sign in to exactly one saved Ares connection for ${row.origin}, then return here.';
+      message = l.rel_admin_transfer_sign_in(row.origin);
       return;
     }
     final id = list.single.id;
@@ -149,24 +152,36 @@ class _ProfileTransferState extends State<ProfileTransferScreen> {
         await transfer.recoverUndo(previous);
       } on WorkspaceException {
         message =
-            'The previous undo receipt could not be verified. No change was made.';
+            l.rel_admin_the_previous_undo_receipt_could_not_be_verified_no;
       }
     }
   }
 
+  String _phaseLabel(AgentTransferPhase phase) => switch (phase) {
+    AgentTransferPhase.prepared => context.sharedL10n.rel_admin_phase_prepared,
+    AgentTransferPhase.backup => context.sharedL10n.rel_admin_phase_backup,
+    AgentTransferPhase.upload => context.sharedL10n.rel_admin_phase_upload,
+    AgentTransferPhase.restore => context.sharedL10n.rel_admin_phase_restore,
+    AgentTransferPhase.finished => context.sharedL10n.rel_admin_phase_finished,
+    AgentTransferPhase.failed => context.sharedL10n.rel_admin_phase_failed,
+    AgentTransferPhase.undo => context.sharedL10n.rel_admin_phase_undo,
+    AgentTransferPhase.undone => context.sharedL10n.rel_admin_phase_undone,
+  };
+
   @override
   Widget build(BuildContext context) {
+    final l = context.sharedL10n;
     final current = op;
     final row = agent;
     return Scaffold(
-      appBar: AppBar(title: const Text('Transfer to Cloud')),
+      appBar: AppBar(title: Text(l.rel_admin_transfer_to_cloud)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text('Source: ${widget.label} / ${widget.source.name}'),
+          Text(l.rel_admin_transfer_source(widget.label, widget.source.name)),
           if (revoked)
-            const Text(
-              'Connection changed. Leave this page. A restore already submitted may continue.',
+            Text(
+              l.rel_admin_connection_changed_leave_this_page_a_restore_already_submitted,
             )
           else ...[
             if (busy)
@@ -179,7 +194,7 @@ class _ProfileTransferState extends State<ProfileTransferScreen> {
             if (current == null || row == null) ...[
               TextButton(
                 onPressed: busy ? null : () => run(discover),
-                child: const Text('Find my Cloud agents'),
+                child: Text(l.rel_admin_find_my_cloud_agents),
               ),
               for (final t
                   in directory?.teams.entries ?? <MapEntry<String, String>>[])
@@ -195,23 +210,27 @@ class _ProfileTransferState extends State<ProfileTransferScreen> {
                   onTap: busy ? null : () => run(() => select(a)),
                 ),
             ] else ...[
-              Text('Destination: ${row.name} · ${row.origin} / default'),
-              Text('Agent ID: ${row.id}'),
-              Text('Status: ${current.phase.name}'),
+              Text(l.rel_admin_transfer_destination(row.name, row.origin)),
+              Text(l.rel_admin_agent_id(row.id)),
+              Text(l.rel_admin_transfer_status(_phaseLabel(current.phase))),
               if (current.phase == AgentTransferPhase.upload)
-                Text('Copied ${((current.fraction ?? 0) * 100).floor()}%'),
+                Text(
+                  l.rel_admin_copied_percent(
+                    ((current.fraction ?? 0) * 100).floor().toString(),
+                  ),
+                ),
               if (current.phase == AgentTransferPhase.prepared ||
                   current.canUndo) ...[
                 Text(
                   current.canUndo
-                      ? 'Undo replaces the destination with its pre-transfer backup.'
-                      : 'Replace this Cloud agent with the entire source home, including credentials, conversations and files. The source is not deleted. Incoming messaging bots are switched off.',
+                      ? l.rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup
+                      : l.rel_admin_replace_this_cloud_agent_with_the_entire_source_home,
                 ),
                 TextField(
                   controller: typed,
                   enabled: !busy,
-                  decoration: const InputDecoration(
-                    labelText: 'Type destination agent ID',
+                  decoration: InputDecoration(
+                    labelText: l.rel_admin_type_destination_agent_id,
                   ),
                 ),
                 FilledButton(
@@ -231,14 +250,16 @@ class _ProfileTransferState extends State<ProfileTransferScreen> {
                               await current.replace(value, redraw);
                             } finally {
                               if (await savingReceipt == false) {
-                                message =
-                                    'Could not retain the local undo receipt. Keep this page open.';
+                                message = l
+                                    .rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open;
                               }
                             }
                           }
                         }),
                   child: Text(
-                    current.canUndo ? 'Undo transfer' : 'Replace Cloud agent',
+                    current.canUndo
+                        ? l.rel_admin_undo_transfer
+                        : l.rel_admin_replace_cloud_agent,
                   ),
                 ),
                 if (priorReceipt)
@@ -261,10 +282,10 @@ class _ProfileTransferState extends State<ProfileTransferScreen> {
                             savingReceipt = null;
                             dest?.close();
                             dest = null;
-                            message =
-                                'Local undo receipt forgotten. No remote backup was removed.';
+                            message = l
+                                .rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed;
                           }),
-                    child: const Text('Forget local undo receipt only'),
+                    child: Text(l.rel_admin_forget_local_undo_receipt_only),
                   ),
               ],
               if (busy &&
@@ -274,23 +295,23 @@ class _ProfileTransferState extends State<ProfileTransferScreen> {
                   }.contains(current.phase))
                 TextButton(
                   onPressed: current.cancel,
-                  child: const Text('Stop before restore'),
+                  child: Text(l.rel_admin_stop_before_restore),
                 ),
               if (current.phase == AgentTransferPhase.restore ||
                   current.phase == AgentTransferPhase.undo)
-                const Text(
-                  'Do not close this page. Restore runs on the destination and cannot be cancelled.',
-                ),
+                Text(l.rel_admin_do_not_close_this_page_restore_runs_on_the),
               if (current.undoArchive != null)
-                SelectableText(
-                  'Undo point on destination: ${current.undoArchive}',
-                ),
+                SelectableText(l.rel_admin_undo_point(current.undoArchive!)),
               if (current.gatewayDown)
-                const Text(
-                  'Files restored; destination gateway needs attention.',
+                Text(
+                  l.rel_admin_files_restored_destination_gateway_needs_attention,
                 ),
               if (current.messagingOff.isNotEmpty)
-                Text('Messaging disabled: ${current.messagingOff.join(', ')}'),
+                Text(
+                  l.rel_admin_messaging_disabled(
+                    current.messagingOff.join(', '),
+                  ),
+                ),
             ],
           ],
         ],
