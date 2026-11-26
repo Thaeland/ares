@@ -78,10 +78,20 @@ again. On open (and when a new card appears) it reads:
 
 It then follows each board that still has an unfinished card of this chat
 through the board screen's own `watchKanbanEvents` stream, and re-reads only
-when an event names one of its cards or is a `created` event. When every
-card is finished the stream is closed. If the host offers no event stream,
-it polls that board every 15 seconds, the interval the board screen itself
-uses, and stops when nothing is unfinished.
+when an event names one of its cards or is a `created` event. Such a frame
+re-reads only its own board (`GET /board`, no `GET /boards`, no other
+board), and asks `GET /tasks/{id}` only for the cards the frame named that
+the board no longer lists. Frames are coalesced: the first after a quiet
+spell is read at once, and the ones in the 300 ms after it share one read
+when that window ends. When every card is finished the stream is closed.
+
+A stream that closes is dialled again from its cursor after 1, 2, 4, 8, 16
+and then every 32 seconds, as the board screen does; one that stayed open
+for 30 seconds starts again at 1 second. The events in between arrive with
+the new stream, so nothing is re-read for the drop itself. If the host
+offers no event stream, or while a dropped one waits to be dialled again,
+the dock polls that board alone every 15 seconds, the interval the board
+screen itself uses, and stops when nothing is unfinished.
 
 On screen means all of: no route covers the chat (`ModalRoute.isCurrentOf`;
 the board the dock opened as a route on a phone, a sheet, another screen),
@@ -168,7 +178,8 @@ No live gateway: a fake gateway and a fake Kanban transport
 in-memory dashboard (`test/support/kanban_board_fixture.dart`).
 
 - `test/chat_kanban_dock_test.dart`: sources, de-duplication, provenance,
-  dismissal, access reasons, stream and poll lifetime, late answers.
+  dismissal, access reasons, stream and poll lifetime, late answers; the
+  frame window, per-board and per-card re-reads, and the re-dial backoff.
 - `test/nextgen_kanban_dock_test.dart` and
   `test/classic_kanban_dock_test.dart`: a `kanban_create` in a turn makes a
   row with the right status; a status event updates it; a tap opens the
