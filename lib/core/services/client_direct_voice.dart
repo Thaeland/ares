@@ -8,44 +8,146 @@ import 'package:http/http.dart' as http;
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 
-/// Process-wide, scope-keyed stores. A store is app-lifetime; its credentials
-/// are dropped by [VoiceClientConfigStore.clear] on background/sign-out and
-/// replaced when the connection/profile scope changes.
+/// Process-wide, scope-keyed stores. A store is bound to one saved
+/// connection exactly as it was when the store was made (host, ports,
+/// prefixes, credentials, headers, certificate): its credentials are dropped
+/// by [VoiceClientConfigStore.clear] on background, and the whole store is
+/// closed when that connection is edited or deleted (through
+/// [ConnectionMutationBarrier]) or on sign-out ([closeAll]). A store a caller
+/// still holds after that serves nothing, so no provider key can come from
+/// the old host; [storeFor] then makes a new one for the new connection.
 class VoiceClientRuntime {
   VoiceClientRuntime._();
 
-  static final Map<String, VoiceClientConfigStore> _stores = {};
+  static final Map<String, _VoiceStoreEntry> _stores = {};
+  static bool _observing = false;
 
   static VoiceClientConfigStore storeFor(
     SavedConnection connection, {
     required String connectionId,
     String? profile,
   }) {
+    _observe();
     final key = '$connectionId::${profile ?? ''}';
-    return _stores.putIfAbsent(key, () {
-      // Dedicated, app-lifetime client: a chat closing its own dashboard must
-      // not invalidate the cached credentials resolver.
-      final dashboard = DashboardClient.fromConnection(connection);
-      return VoiceClientConfigStore(
-        fetchConfig: () async {
-          final response = await dashboard.apiRequest(
-            'GET',
-            'audio/voice-config',
-            queryParameters: profile == null ? null : {'profile': profile},
-          );
-          if (response.statusCode != 200) return null;
-          return jsonDecode(response.body);
-        },
-      );
-    });
+    final identity = _connectionIdentity(connection);
+    final existing = _stores[key];
+    if (existing != null) {
+      if (existing.identity == identity && existing.current) {
+        return existing.store;
+      }
+      _stores.remove(key);
+      existing.close();
+    }
+    // Dedicated client: a chat closing its own dashboard must not invalidate
+    // the cached credentials resolver.
+    final dashboard = DashboardClient.fromConnection(connection);
+    final epoch = ConnectionMutationBarrier.capture(connectionId);
+    late final _VoiceStoreEntry entry;
+    final store = VoiceClientConfigStore(
+      fetchConfig: () async {
+        // Never while the connection is being edited, nor after: the old
+        // host must not be asked for keys again.
+        if (!entry.current) return null;
+        final response = await dashboard.apiRequest(
+          'GET',
+          'audio/voice-config',
+          queryParameters: profile == null ? null : {'profile': profile},
+        );
+        if (!entry.current || response.statusCode != 200) return null;
+        return jsonDecode(response.body);
+      },
+    );
+    entry = _VoiceStoreEntry(
+      connectionId: connectionId,
+      epoch: epoch,
+      identity: identity,
+      store: store,
+      dashboard: dashboard,
+    );
+    _stores[key] = entry;
+    return store;
   }
 
-  static void closeAll() {
-    for (final store in _stores.values) {
-      store.dispose();
-    }
-    _stores.clear();
+  static void _observe() {
+    if (_observing) return;
+    _observing = true;
+    ConnectionMutationBarrier.addListener(_onConnectionMutation);
   }
+
+  /// An edit or deletion of a saved connection begins here, before anything
+  /// is committed: close every store bound to it.
+  static void _onConnectionMutation() {
+    final stale = [
+      for (final entry in _stores.entries)
+        if (!entry.value.current) entry.key,
+    ];
+    for (final key in stale) {
+      _stores.remove(key)?.close();
+    }
+  }
+
+  /// Sign-out: drops every store and the credentials it holds.
+  static void closeAll() {
+    final entries = _stores.values.toList();
+    _stores.clear();
+    for (final entry in entries) {
+      entry.close();
+    }
+  }
+}
+
+class _VoiceStoreEntry {
+  _VoiceStoreEntry({
+    required this.connectionId,
+    required this.epoch,
+    required this.identity,
+    required this.store,
+    required this.dashboard,
+  });
+
+  final String connectionId;
+  final Object? epoch;
+  final int identity;
+  final VoiceClientConfigStore store;
+  final DashboardClient dashboard;
+  bool _closed = false;
+
+  /// Still the connection the store was made for, with no edit in progress.
+  bool get current =>
+      !_closed && ConnectionMutationBarrier.isCurrent(connectionId, epoch);
+
+  void close() {
+    if (_closed) return;
+    _closed = true;
+    store.dispose();
+    dashboard.close();
+  }
+}
+
+/// Everything about a saved connection that decides which host is asked and
+/// with which credentials. In memory only.
+int _connectionIdentity(SavedConnection c) {
+  final headers = c.customHeaders.entries.toList()
+    ..sort((a, b) => a.key.compareTo(b.key));
+  return Object.hashAll([
+    c.host,
+    c.port,
+    c.useHttps,
+    c.gatewayPrefix,
+    c.dashboardPrefix,
+    c.dashboardProxied,
+    c.desktopGatewayUrl,
+    c.dashboardPortOverride,
+    c.dashboardUsername,
+    c.dashboardPassword,
+    c.gatewayProfile,
+    c.singleLogin,
+    c.signInMethod,
+    c.apiKey,
+    c.deploymentToken,
+    c.clientCertificate,
+    for (final header in headers) ...[header.key, header.value],
+  ]);
 }
 
 /// Client-direct voice: the gateway resolves the active profile's provider

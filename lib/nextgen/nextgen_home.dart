@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../core/services/client_direct_voice.dart';
 import '../core/services/connection_manager.dart';
 import '../core/services/gateway_fleet.dart';
 import '../core/services/hermes_sign_in.dart';
@@ -229,6 +230,9 @@ class _NextGenHomeState extends State<NextGenHome> {
   }
 
   Future<void> _signOut(SavedConnection connection) async {
+    // Client-direct voice keys held in memory go first: nothing fetched for
+    // this account may outlive the sign-out.
+    VoiceClientRuntime.closeAll();
     final gateway = _gateway;
     if (gateway != null && gateway.connection.id == connection.id) {
       try {
