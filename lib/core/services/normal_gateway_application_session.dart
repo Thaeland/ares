@@ -10,6 +10,7 @@ import '../models/gateway_activity.dart';
 import '../models/gateway_insight.dart';
 import '../models/normal_gateway_persisted_turn.dart';
 import '../models/slash_command.dart';
+import '../l10n/service_strings.dart';
 import '../utils/chat_conversation_projection.dart';
 import '../utils/android_prompt_context.dart';
 import '../utils/generated_media.dart';
@@ -521,7 +522,7 @@ class NormalGatewayApplicationSession {
         final chat = chatFor(
           marker.localSessionId,
           storedSessionId: marker.storedSessionId,
-          title: 'Chat',
+          title: serviceStrings.rel_svc_misc_chat,
         );
         chat._restore(marker);
       }
@@ -1050,7 +1051,8 @@ class NormalGatewayChatOwner {
           status: _status,
           error: _error,
           responseFailure: _terminalReceipt?.completed == false
-              ? _terminalReceipt!.error ?? 'Gateway turn failed'
+              ? _terminalReceipt!.error ??
+                    serviceStrings.rel_svc_misc_gateway_turn_failed
               : null,
           rejectedDraft:
               phase == NormalGatewayTurnPhase.failed &&
@@ -2584,7 +2586,9 @@ class NormalGatewayChatOwner {
       unawaited(
         _settle(
           false,
-          failure ?? event.data['message']?.toString() ?? 'Gateway turn failed',
+          failure ??
+              event.data['message']?.toString() ??
+              serviceStrings.rel_svc_misc_gateway_turn_failed,
         ),
       );
     } else if (ownedLifecycleTerminal) {
@@ -2969,10 +2973,9 @@ class NormalGatewayChatOwner {
       _boundSettledPresentation();
       _error = error;
       _status = completed == null
-          ? const GatewayTurnStatus(
+          ? GatewayTurnStatus(
               kind: 'reconciled_unknown',
-              text:
-                  'The gateway is idle. The previous turn’s outcome could not be confirmed.',
+              text: serviceStrings.rel_svc_misc_gateway_idle_unconfirmed,
             )
           : null;
       _pendingInput.clear();
@@ -3042,7 +3045,9 @@ class NormalGatewayChatOwner {
             await _session.notifications.showKind(
               origin: _session.connection,
               kind: kind,
-              title: completed ? 'Hermes response ready' : 'Hermes turn failed',
+              title: completed
+                  ? serviceStrings.hermes_response_ready
+                  : serviceStrings.rel_svc_misc_hermes_turn_failed,
               body: settledTitle,
               eventId: settledTurnId,
               sessionId: settledSessionId,
@@ -3146,21 +3151,27 @@ class NormalGatewayChatOwner {
           origin: _session.connection,
           kind: kind,
           title: approval
-              ? 'Approval needed — $title'
-              : 'Input needed — $title',
+              ? serviceStrings.rel_svc_misc_approval_needed_title(title)
+              : serviceStrings.rel_svc_misc_input_needed_title(title),
           // Sensitive request text and secrets never enter a notification.
           body: approval
-              ? 'Open the chat to review the requested action.'
-              : 'Open the chat to respond.',
+              ? serviceStrings.release_chat_notification_review_action
+              : serviceStrings.release_chat_notification_respond,
           // Kept across a reconnect's new local key: one notification per
           // request. Same identity the chat route uses for its own post.
           eventId: eventId,
           sessionId: sessionId,
           connectionId: _session.connection.id,
           actions: approval
-              ? const [
-                  TurnNotificationAction(id: 'approve', label: 'Approve'),
-                  TurnNotificationAction(id: 'reject', label: 'Deny'),
+              ? [
+                  TurnNotificationAction(
+                    id: 'approve',
+                    label: serviceStrings.approve,
+                  ),
+                  TurnNotificationAction(
+                    id: 'reject',
+                    label: serviceStrings.deny,
+                  ),
                 ]
               : const [],
           payload: jsonEncode({
@@ -3298,9 +3309,7 @@ class NormalGatewayChatOwner {
     if (!snapshot.hasActiveTurn) return null;
     assert(!wireEmitted);
     _handoffRejection = StateError(
-      'This chat was opened through its stored identity while another turn '
-      'was admitted. The unsent prompt was not sent; retry explicitly after '
-      'that turn finishes.',
+      serviceStrings.rel_svc_misc_stored_identity_turn_conflict,
     );
     _generation++; // fences held ensure/history/write-ahead and submit starts
     _reservation = null;
@@ -3533,7 +3542,8 @@ String? _failure(Map<String, dynamic> state) {
     'cancelled',
     'canceled',
   }.contains(status)) {
-    return state['message']?.toString() ?? 'Gateway turn $status';
+    return state['message']?.toString() ??
+        serviceStrings.rel_svc_misc_gateway_turn_status(status ?? '');
   }
   return null;
 }
