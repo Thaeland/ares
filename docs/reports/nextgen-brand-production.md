@@ -81,9 +81,10 @@ Output: `/Volumes/Storage/Hermes/workspace/ares-v5-lanes/mockups/nextgen-brand/f
 ## Required gates
 
 - `flutter analyze --no-pub --fatal-infos`: clean on the frozen source.
-- Full non-perf `flutter test --no-pub -j2 --exclude-tags perf`: PENDING.
-- Serial perf files at `-j1`: PENDING.
+- Full non-perf `flutter test --no-pub -j2 --exclude-tags perf`: **8,336 passed, 0 failed, 0 skipped**, 635 suites, reporter `done.success=true`, process exit 0 (1,223.138 seconds).
+- Serial perf files at `-j1`: **29 passed, 0 failed, 0 skipped**, 2 suites, reporter `done.success=true`, process exit 0 (6.583 seconds). Files: `test/delivered_files_perf_test.dart`, `test/transcript_redaction_gateway_test.dart`.
+- Required combined test total: **8,365 passed**. These are disjoint non-perf and perf runs, not overlapping targeted-run totals.
 
-Full-suite environment uses the task's exact SSH/PTTY/Python fixtures, system ffmpeg/ffprobe, and `TMPDIR=$PWD/.dart_tool/full-tmp`. Initial exploratory runs are diagnostic only and are not claimed as completed gates. The final full-suite run is recorded separately in `.dart_tool/brand-full-final.jsonl`.
+Full-suite environment uses the task's exact SSH/PTY/Python fixtures, system ffmpeg/ffprobe, and `TMPDIR=$PWD/.dart_tool/full-tmp`. Initial exploratory runs are diagnostic only and are not claimed as completed gates. The final full-suite run is recorded separately in `.dart_tool/brand-full-final.jsonl`.
 
 Native OS notification delivery, physical-device keyboard behaviour and store builds are not claimed by these widget/fixture gates; the downstream integration card owns the broader device/release acceptance checks.
