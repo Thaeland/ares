@@ -100,6 +100,7 @@ import 'project_greeting.dart';
 import 'session_dock.dart';
 import 'sessions_sidebar.dart';
 import 'slash_command_info.dart';
+import 'brand.dart';
 import 'widgets.dart';
 import '../nextgen_l10n.dart';
 import '../../core/desktop/screen_capture.dart';
@@ -3009,16 +3010,29 @@ class _NgChatViewState extends State<NgChatView>
       return const Center(child: CircularProgressIndicator());
     }
     if (chat.items.isEmpty) {
+      // PROTOTYPE (mock/nextgen-brand): the brand, smaller, above the
+      // greeting of a new chat.
+      final brand = ngBrandOnNewChat && chat.historyError == null;
       return NgGlow(
-        child: NgEmpty(
-          icon: Icons.auto_awesome,
-          title: chat.historyError ?? ngL.ng_what_should_we_work_on,
-          titleWidget: chat.canPickProject && chat.historyError == null
-              ? NgProjectGreeting(chat: chat)
-              : null,
-          body: chat.historyError == null
-              ? ngL.ng_ask_hermes_anything_it_can_run
-              : null,
+        child: LayoutBuilder(
+          builder: (context, box) {
+            final header = brand
+                ? ngNewChatBrand(box.maxHeight, sparkle: ngBrandKeepSparkle)
+                : null;
+            return NgEmpty(
+              header: header,
+              icon: header == null || ngBrandKeepSparkle
+                  ? Icons.auto_awesome
+                  : null,
+              title: chat.historyError ?? ngL.ng_what_should_we_work_on,
+              titleWidget: chat.canPickProject && chat.historyError == null
+                  ? NgProjectGreeting(chat: chat)
+                  : null,
+              body: chat.historyError == null
+                  ? ngL.ng_ask_hermes_anything_it_can_run
+                  : null,
+            );
+          },
         ),
       );
     }

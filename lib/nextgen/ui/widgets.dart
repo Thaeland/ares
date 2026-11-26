@@ -503,13 +503,19 @@ class NgEmpty extends StatelessWidget {
     this.body,
     this.action,
     this.titleWidget,
+    this.header,
   });
 
   final Widget? titleWidget;
-  final IconData icon;
+
+  /// No icon when null (PROTOTYPE: the brand can stand in for it).
+  final IconData? icon;
   final String title;
   final String? body;
   final Widget? action;
+
+  /// PROTOTYPE (mock/nextgen-brand): drawn above everything else.
+  final Widget? header;
 
   @override
   Widget build(BuildContext context) {
@@ -520,8 +526,14 @@ class NgEmpty extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 36, color: c.text3),
-            const SizedBox(height: 14),
+            if (header != null) ...[
+              header!,
+              SizedBox(height: icon == null ? 26 : 30),
+            ],
+            if (icon != null) ...[
+              Icon(icon, size: 36, color: c.text3),
+              const SizedBox(height: 14),
+            ],
             titleWidget ??
                 Text(
                   title,

@@ -20,6 +20,7 @@ import '../data/chat_controller.dart';
 import '../nextgen_preferences.dart';
 import '../theme/nextgen_theme.dart';
 import 'capabilities_page.dart';
+import 'brand.dart';
 import 'chat_view.dart';
 import 'insights_page.dart';
 import 'more_page.dart';
@@ -68,6 +69,10 @@ class _NgMainPageState extends State<_NgMainContent>
 
   NgSessionsModel? _sessions;
   NgChatController? _chat;
+
+  /// PROTOTYPE (mock/nextgen-brand): the brand landing shows on launch until
+  /// a chat is opened or started.
+  bool _landing = false;
   bool _foreground = true;
   NextGenGateway? _notificationGateway;
   Object? _notificationMutation;
@@ -173,12 +178,18 @@ class _NgMainPageState extends State<_NgMainContent>
     if (sessions == null) {
       _sessions = NgSessionsModel(scope)..addListener(_onSessionsChanged);
       unawaited(_sessions!.refresh());
-      final last = NextGenPreferences.launchSession(
-        scope.prefs,
-        scope.connection.id,
-        requested: _takeOpenRequest(scope.connection.id),
-      );
-      _openId(last, '', initial: true);
+      final requested = _takeOpenRequest(scope.connection.id);
+      if (ngBrandLanding && requested == null) {
+        // PROTOTYPE: no chat until the user picks one on the landing.
+        _landing = true;
+      } else {
+        final last = NextGenPreferences.launchSession(
+          scope.prefs,
+          scope.connection.id,
+          requested: requested,
+        );
+        _openId(last, '', initial: true);
+      }
       _listenForRequests(scope);
     } else {
       sessions.scope = scope;
@@ -281,7 +292,10 @@ class _NgMainPageState extends State<_NgMainContent>
     if (initial) {
       _chat = chat;
     } else {
-      setState(() => _chat = chat);
+      setState(() {
+        _chat = chat;
+        _landing = false;
+      });
     }
 
     // Park the old controller in the LRU cache instead of disposing it.
@@ -895,12 +909,16 @@ class _NgMainPageState extends State<_NgMainContent>
 
   void _open(Session s) {
     _scaffold.currentState?.closeDrawer();
-    if (s.id == _chat?.storedId) return;
+    if (s.id == _chat?.storedId) {
+      if (_landing) setState(() => _landing = false);
+      return;
+    }
     _openId(s.id, ngSessionTitle(s));
   }
 
   void _newChat() {
     _scaffold.currentState?.closeDrawer();
+    if (_landing) setState(() => _landing = false);
     if (_chat?.isNew == true &&
         _chat!.items.isEmpty &&
         _chat!.workingDirectory == null) {
@@ -962,7 +980,15 @@ class _NgMainPageState extends State<_NgMainContent>
       }
     }
 
-    final view = chat == null
+    final view = _landing
+        ? NgBrandLanding(
+            sessions: _sessions!,
+            docked: docked,
+            onNewChat: _newChat,
+            onOpen: _open,
+            onOpenChats: toggleSidebar,
+          )
+        : chat == null
         ? const SizedBox.shrink()
         : NgChatView(
             key: ObjectKey(chat),
