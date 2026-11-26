@@ -1,5 +1,7 @@
 # NextGen chat release localisation inventory
 
+**Integration complete:** the parent consumed all seven registry entries into every catalogue and regenerated localisations. These are punctuation/placeholder-only templates, so no English vocabulary needs translation; supplied status/progress labels retain their existing translations. The verification requirements below are the original pre-integration checklist; final execution results are in [the consolidated report](l10n-release-chat.md).
+
 Scope: `lib/nextgen/ui/chat_view.dart` only. Original line numbers below were captured before edits. The complete 5,087-line source and every non-comment string-bearing line were reviewed. Existing English words, labels, menus, tooltips, accessibility labels, status/error messages and approval/question/login controls already use `ngL` or `context.sharedL10n`; no remaining standalone hardcoded English prose was found. This pass extracts the remaining composed display patterns so translators can reorder their placeholders without changing the English output.
 
 ## Original display patterns (before edits)

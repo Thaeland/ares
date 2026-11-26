@@ -1,5 +1,7 @@
 # Release localisation: chat preview and terminal
 
+**Integration complete:** the parent consumed both registry keys into every catalogue and regenerated localisations. Locale number markers follow the nearby comment-number glossary; English stays unchanged. The verification requirements below are the original pre-integration checklist; final execution results are in [the consolidated report](l10n-release-chat.md).
+
 ## Scope and outcome
 
 Read every file in `lib/core/preview/` before edits: `chat_preview.dart`, `preview_messages.dart`, `preview_evidence.dart`, `reader_canvas.dart`, `reader_document.dart`. `lib/core/terminal/` does **not exist** in this checkout; no terminal code was invented or moved. Neither chat screen was edited.
