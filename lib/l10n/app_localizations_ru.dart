@@ -7560,4 +7560,9 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get voice_live_ended_closed =>
       'Сеанс живого голоса был закрыт сервисом.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'Это слово активации относится к профилю «$profile». Откройте подключение к этому профилю, чтобы ответить.';
+  }
 }

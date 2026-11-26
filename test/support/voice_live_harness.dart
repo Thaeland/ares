@@ -1,6 +1,7 @@
 // Widget harness for GPT-Live in both layouts: the real VoiceLiveEngine over
 // a fake LiveConversation, mounted in Classic's ChatScreen and NextGen's
 // NgChatView. No WebRTC plugin, no gateway socket, no network.
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -211,20 +212,38 @@ class ClassicLiveFixture {
   );
   VoiceLiveEngine? engine;
 
-  VoiceLiveEngine engineFactory(GptLiveTransport transport) =>
-      engine = VoiceLiveEngine(transport: transport, session: conversation);
+  /// One conversation per engine a view created, in order: every chat view
+  /// (and every rebind) owns its own session, as in production. The first
+  /// is [conversation].
+  final conversations = <HarnessConversation>[];
 
+  VoiceLiveEngine engineFactory(GptLiveTransport transport) {
+    final session = conversations.isEmpty
+        ? conversation
+        : HarnessConversation();
+    conversations.add(session);
+    return engine = VoiceLiveEngine(transport: transport, session: session);
+  }
+
+  /// [wake] overrides the gateway's wake-word controller; [saved] is what a
+  /// wake phrase of another profile is routed among; [connection] is the
+  /// chat's owner (the fixture connection by default).
   Widget app({
     bool active = true,
     GlobalKey<NavigatorState>? navigatorKey,
     String sessionId = 'voice-session',
+    GatewayWakeWordController? wake,
+    List<SavedConnection>? saved,
+    SavedConnection? connection,
   }) => MaterialApp(
     navigatorKey: navigatorKey,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: ChatScreen(
       active: active,
-      connection: harnessClassicConnection,
+      connection: connection ?? harnessClassicConnection,
+      testWakeController: wake,
+      testSavedConnections: saved == null ? null : () async => saved,
       session: Session(
         id: sessionId,
         title: 'Voice chat',
@@ -248,34 +267,121 @@ class ClassicLiveFixture {
   );
 }
 
+/// A wake-word controller whose gateway is a script: the host arms on its
+/// own microphone (no client capture) and the test delivers `wake.detected`.
+class HarnessWake {
+  HarnessWake({String connectionId = 'c1', String? profile}) {
+    controller = GatewayWakeWordController(
+      resumeRetryDelay: Duration.zero,
+      transport: GatewayWakeTransport(
+        connectionId: connectionId,
+        profile: profile,
+        events: _events.stream,
+        ready: const Stream<void>.empty(),
+        isConnected: () => true,
+        call: (method, params, {timeout = const Duration(seconds: 30)}) async {
+          calls.add(method);
+          if (method == 'wake.status') {
+            return {
+              'listening': true,
+              'enabled': true,
+              'available': true,
+              'owned_by_caller': true,
+              'phrase': 'hey hermes',
+              'capture': 'local',
+              'sample_rate': 16000,
+              'frame_length': 1280,
+            };
+          }
+          return {'started': true, 'capture': 'local'};
+        },
+      ),
+    );
+  }
+
+  final _events = StreamController<StreamEvent>.broadcast();
+  final calls = <String>[];
+  late final GatewayWakeWordController controller;
+
+  /// The gateway heard a wake phrase. [profile] names the profile whose
+  /// phrase matched; [startNewSession] is omitted when null (the host
+  /// default is a fresh session).
+  void detect({String? profile, bool? startNewSession}) => _events.add(
+    StreamEvent(
+      type: 'wake.detected',
+      data: {
+        'phrase': 'hey hermes',
+        'profile': profile,
+        'start_new_session': ?startNewSession,
+      },
+    ),
+  );
+
+  void dispose() {
+    controller.dispose();
+    unawaited(_events.close());
+  }
+}
+
 /// One NextGen chat's live-voice seams.
 class NextGenLiveFixture {
   NextGenLiveFixture({
     HarnessConversation? conversation,
     HarnessGateway? gateway,
     this.wake,
+    List<SavedConnection>? connections,
   }) : conversation = conversation ?? HarnessConversation(),
-       gateway = gateway ?? HarnessGateway(harnessNextGenConnection());
+       gateway = gateway ?? HarnessGateway(harnessNextGenConnection()) {
+    this.connections = connections ?? [this.gateway.connection];
+  }
 
   final HarnessConversation conversation;
   final HarnessGateway gateway;
   final GatewayWakeWordController? wake;
+  late final List<SavedConnection> connections;
   final transport = HarnessLiveTransport();
   late final mode = VoiceLiveModeController(
     connectionId: gateway.connection.id,
     transport: transport,
     registerShared: false,
   );
+
+  /// An existing chat (it has a stored session).
   late final chat = NgChatController(gateway, sessionId: 'stored')
     ..runtimeId = 'stored'
     ..debugApplyHistory(const []);
+
+  /// A fresh chat: no stored session yet.
+  late final freshChat = NgChatController(gateway);
   VoiceLiveEngine? engine;
 
-  VoiceLiveEngine engineFactory(GptLiveTransport transport) =>
-      engine = VoiceLiveEngine(transport: transport, session: conversation);
+  /// Connection ids the view asked the shell to switch to.
+  final switchedTo = <String>[];
 
-  Future<Widget> app({GlobalKey<NavigatorState>? navigatorKey}) async {
+  /// How often the view asked the shell for a new chat.
+  int newChats = 0;
+
+  /// One conversation per engine a view created, in order: every chat view
+  /// (and every rebind) owns its own session, as in production. The first
+  /// is [conversation].
+  final conversations = <HarnessConversation>[];
+
+  VoiceLiveEngine engineFactory(GptLiveTransport transport) {
+    final session = conversations.isEmpty
+        ? conversation
+        : HarnessConversation();
+    conversations.add(session);
+    return engine = VoiceLiveEngine(transport: transport, session: session);
+  }
+
+  /// [showing] defaults to the existing chat. The view is keyed by its chat
+  /// as the main page keys it, so another chat is another view.
+  Future<Widget> app({
+    GlobalKey<NavigatorState>? navigatorKey,
+    NgChatController? showing,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
+    final shown = showing ?? chat;
     return MaterialApp(
       navigatorKey: navigatorKey,
       locale: const Locale('en'),
@@ -285,17 +391,18 @@ class NextGenLiveFixture {
       home: NgScope(
         connManager: ConnectionManager(prefs),
         gateway: gateway,
-        connections: [gateway.connection],
-        switchTo: (_) async {},
+        connections: connections,
+        switchTo: (id) async => switchedTo.add(id),
         addGateway: () async {},
         signOut: (_) async {},
         reload: () async {},
         signInAgain: () async {},
         child: Scaffold(
           body: NgChatView(
-            chat: chat,
+            key: ObjectKey(shown),
+            chat: shown,
             onOpenSidebar: () {},
-            onNewChat: () {},
+            onNewChat: () => newChats++,
             wakeController: wake,
             voiceModeController: mode,
             voiceLiveEngineFactory: engineFactory,

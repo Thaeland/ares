@@ -7347,4 +7347,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get voice_live_ended_closed => '서비스에서 실시간 음성 세션을 종료했습니다.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return '이 호출어는 프로필 \"$profile\"의 것입니다. 응답하려면 해당 프로필에 대한 연결을 여세요.';
+  }
 }

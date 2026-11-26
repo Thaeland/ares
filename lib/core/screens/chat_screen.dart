@@ -36,6 +36,7 @@ import '../services/gateway_wake_word.dart';
 import '../services/gpt_live_conversation.dart';
 import '../services/voice_live_engine.dart';
 import '../services/voice_live_mode.dart';
+import '../services/wake_voice_request.dart';
 import '../utils/voice_stop_word.dart';
 import '../widgets/gateway_wake_controls.dart';
 import '../widgets/voice_live_controls.dart';
@@ -812,6 +813,15 @@ class ChatScreen extends StatefulWidget {
   final VoiceLiveEngine Function(GptLiveTransport transport)?
   testVoiceLiveEngineFactory;
 
+  /// Overrides the Desktop gateway's wake-word controller.
+  @visibleForTesting
+  final GatewayWakeWordController? testWakeController;
+
+  /// Supplies the saved connections a wake phrase of another profile is
+  /// routed among, without reading secure storage.
+  @visibleForTesting
+  final Future<List<SavedConnection>> Function()? testSavedConnections;
+
   /// The composer's gateway calls (completion, context breakdown, compress)
   /// without a socket. Production uses the Desktop gateway client.
   final ComposerSessionRpc? testComposerRpc;
@@ -858,6 +868,8 @@ class ChatScreen extends StatefulWidget {
     this.testSlashGateway,
     this.testVoiceLiveMode,
     this.testVoiceLiveEngineFactory,
+    this.testWakeController,
+    this.testSavedConnections,
     this.testComposerRpc,
     this.onArchiveChanged,
     this.sessionArchiver,
@@ -967,7 +979,8 @@ class _ChatScreenState extends State<ChatScreen>
   late final Future<ChatModelOverrideStore> _chatModelStore;
   late final Future<void> _sessionModelRestore;
   DesktopGatewayClient? _desktopGateway;
-  GatewayWakeWordController? get _wake => _desktopGateway?.wakeWord;
+  GatewayWakeWordController? get _wake =>
+      widget.testWakeController ?? _desktopGateway?.wakeWord;
   VoiceLiveModeController? get _voiceLiveMode =>
       widget.testVoiceLiveMode ?? _desktopGateway?.voiceLiveMode;
   VoiceLiveEngine? _liveEngine;
@@ -1374,6 +1387,12 @@ class _ChatScreenState extends State<ChatScreen>
             widget.testVoiceLiveEngineFactory != null)) {
       _bindLiveVoice();
     }
+    if (_desktopGateway == null && widget.testWakeController != null) {
+      _bindWake();
+    }
+    // A wake word routed here (a fresh chat, or this profile's connection)
+    // starts its voice once this chat is on screen.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeTakeWakeVoice());
     // Test seam: with no real gateway, hand the same handler to the test
     // hook so it can simulate reconnect transitions.
     if (widget.testRemotePromptSubmit != null && _normalSession == null) {
@@ -2109,6 +2128,12 @@ class _ChatScreenState extends State<ChatScreen>
     final current = ModalRoute.isCurrentOf(context) == true;
     if (!current || !widget.active) {
       _revokeVoice(HandsFreeStopReason.routeChanged);
+    } else {
+      // On top again (a pushed chat or a sheet closed): this chat owns the
+      // wake word once more. The chat that covered it took the single
+      // `wake.detected` handler and let go of it when it left.
+      _bindWake();
+      _syncClassicWakeForLive();
     }
     if (current && _normalChat != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -2129,10 +2154,109 @@ class _ChatScreenState extends State<ChatScreen>
     wake.setAppForeground(_voiceElementActive && !_appInBackground);
   }
 
+  /// As Desktop's `wake.detected` handling (app/contrib/wiring.tsx): a phrase
+  /// enrolled by another profile is answered in THAT profile's chat, and a
+  /// fresh session is a new chat. Either way the voice starts in the new
+  /// chat once it is on screen, never in the chat that merely heard it.
   void _onWakeDetected(WakeDetectedEvent event) {
     if (!mounted || !_voiceElementActive) return;
+    final target = event.profile;
+    if (target != null &&
+        wakeProfileKey(target) !=
+            wakeProfileKey(widget.connection.gatewayProfile)) {
+      unawaited(_routeWakeToProfile(target));
+      return;
+    }
+    if (event.startNewSession && !_isFreshChat && !widget.singleSession) {
+      WakeVoiceRequest.request(
+        connectionId: widget.connection.id,
+        profile: widget.connection.gatewayProfile,
+        freshSession: true,
+      );
+      unawaited(_openFreshDraftChat(''));
+      return;
+    }
+    unawaited(_startWakeVoice());
+  }
+
+  /// A chat nothing has been said in yet (what `/new` opens).
+  bool get _isFreshChat =>
+      widget.session.isLocalDraft &&
+      _messages.isEmpty &&
+      (_normalSnapshot?.displayRows.isEmpty ?? true) &&
+      !_sending &&
+      !_streaming;
+
+  /// Hands a wake phrase of another profile to the saved connection that
+  /// reaches it on the same machine, in a fresh chat. With none saved,
+  /// nothing starts.
+  Future<void> _routeWakeToProfile(String profile) async {
+    var saved = const <SavedConnection>[];
+    try {
+      saved =
+          await (widget.testSavedConnections?.call() ??
+              SharedPreferences.getInstance().then(
+                (prefs) =>
+                    ConnectionManager(prefs).loadConnectionsWithSecrets(),
+              ));
+    } catch (_) {
+      // Unreadable storage is the same as no saved owner.
+    }
+    if (!mounted || !_voiceElementActive || !widget.active) return;
+    final match = wakeConnectionForProfile(
+      saved,
+      from: widget.connection,
+      profile: profile,
+    );
+    if (match == null ||
+        widget.singleSession ||
+        ConnectionMutationBarrier.isPending(match.id) ||
+        _voiceRoute?.isCurrent != true) {
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        SnackBar(
+          content: Text(
+            context.sharedL10n.wake_word_other_profile(profile.trim()),
+          ),
+        ),
+      );
+      // Nothing took the microphone: wake listens again.
+      _syncClassicWakeForLive();
+      return;
+    }
+    WakeVoiceRequest.request(
+      connectionId: match.id,
+      profile: match.gatewayProfile,
+      freshSession: true,
+    );
+    await _openFreshDraftChat('', owner: match);
+  }
+
+  /// Takes a wake request routed to this chat's owner: the chat that now
+  /// shows the fresh session starts the voice.
+  void _maybeTakeWakeVoice() {
+    if (!mounted || !_voiceElementActive || !widget.active) return;
+    if (!WakeVoiceRequest.take(
+      connectionId: widget.connection.id,
+      profile: widget.connection.gatewayProfile,
+      isNewChat: _isFreshChat,
+    )) {
+      return;
+    }
+    unawaited(_startWakeVoice());
+  }
+
+  Future<void> _startWakeVoice() async {
+    if (!mounted || !_voiceElementActive) return;
     if (_liveEngine?.active == true) return;
-    if (_voiceLiveMode?.effectiveMode == 'gpt-live') {
+    // A chat that has only just mounted does not know the host's voice mode
+    // yet: read it before picking the engine.
+    final mode = _voiceLiveMode;
+    if (mode != null && !mode.hasStatus) {
+      await mode.refresh();
+      if (!mounted || !_voiceElementActive || !widget.active) return;
+      if (_liveEngine?.active == true) return;
+    }
+    if (mode?.effectiveMode == 'gpt-live') {
       unawaited(_startVoiceConversation());
       return;
     }
@@ -2542,10 +2666,26 @@ class _ChatScreenState extends State<ChatScreen>
     // notifies the global observer. Revoke before leaving the active tree;
     // neither retained callbacks nor pending audio starts may borrow a reparent.
     _voiceElementActive = false;
-    _wake?.setAppForeground(false);
+    _releaseWake();
     handsFreeRouteObserver.removeListener(_onVoiceRouteChanged);
     _revokeVoice(HandsFreeStopReason.routeChanged);
     super.deactivate();
+  }
+
+  /// Lets go of the wake word when this chat leaves the tree. Only the chat
+  /// bound to it does, so a chat leaving never pauses wake under the one
+  /// still showing. The pause runs once this frame is done: notifying the
+  /// controller's listeners while the tree is torn down is not allowed, and a
+  /// chat that comes straight back (a reparent) keeps it.
+  void _releaseWake() {
+    final wake = _wake;
+    if (wake == null || wake.onWakeDetected != _onWakeDetected) return;
+    wake.onWakeDetected = null;
+    scheduleMicrotask(() {
+      if (!_voiceElementActive && wake.onWakeDetected == null) {
+        wake.setAppForeground(false);
+      }
+    });
   }
 
   @override
@@ -2574,11 +2714,8 @@ class _ChatScreenState extends State<ChatScreen>
     _ownedResumeClient?.close();
     _ownedResumeClient = null;
     _manualAudioIntent++;
-    final wake = _wake;
-    if (wake != null) {
-      if (wake.onWakeDetected == _onWakeDetected) wake.onWakeDetected = null;
-      wake.setAppForeground(false);
-    }
+    // deactivate() already let go of the wake word (see _releaseWake).
+    _releaseWake();
     _composerFocus
       ..removeListener(_syncComposerKeyboardEndScroll)
       ..dispose();
@@ -6594,12 +6731,20 @@ class _ChatScreenState extends State<ChatScreen>
   /// commits to the gateway on its first prompt. Unlike the conversation
   /// browser's New button, a chat screen has no chat-space context, so the
   /// draft is not assigned to any space.
-  Future<void> _openFreshDraftChat(String title) async {
+  ///
+  /// With [owner], the chat belongs to another saved connection (a wake
+  /// phrase of that profile): it shares nothing of this chat's project,
+  /// archive or host callbacks.
+  Future<void> _openFreshDraftChat(
+    String title, {
+    SavedConnection? owner,
+  }) async {
     final now = DateTime.now();
+    final sameOwner = owner == null;
     final draft = Session(
       id: GatewayChatClient.generateSessionId(),
       title: title.isEmpty ? context.l10n.new_chat : title,
-      model: widget.session.model,
+      model: sameOwner ? widget.session.model : '',
       source: 'mobile',
       messageCount: 0,
       isActive: true,
@@ -6631,16 +6776,22 @@ class _ChatScreenState extends State<ChatScreen>
         // session-ensure observer stay behind — both are scoped to the
         // parent session.
         builder: (_) => ChatScreen(
-          connection: widget.connection,
+          connection: owner ?? widget.connection,
           session: draft,
-          projectName: widget.projectName,
-          projectWorkingDirectory: widget.projectWorkingDirectory,
+          projectName: sameOwner ? widget.projectName : null,
+          projectWorkingDirectory: sameOwner
+              ? widget.projectWorkingDirectory
+              : null,
           turnApplicationController: widget.turnApplicationController,
-          onOpenSession: hostOpen == null ? null : openFromDraft,
-          onArchiveChanged: widget.onArchiveChanged,
-          sessionArchiver: widget.sessionArchiver,
+          onOpenSession: hostOpen == null || !sameOwner ? null : openFromDraft,
+          onArchiveChanged: sameOwner ? widget.onArchiveChanged : null,
+          sessionArchiver: sameOwner ? widget.sessionArchiver : null,
           testTurnApplicationSession: widget.testTurnApplicationSession,
           testApiClient: widget.testApiClient,
+          testVoiceLiveMode: widget.testVoiceLiveMode,
+          testVoiceLiveEngineFactory: widget.testVoiceLiveEngineFactory,
+          testWakeController: widget.testWakeController,
+          testSavedConnections: widget.testSavedConnections,
           testAttachmentDraftService: widget.testAttachmentDraftService,
           testRemotePromptSubmit: widget.testRemotePromptSubmit,
           testNormalResume: widget.testNormalResume,

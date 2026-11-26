@@ -72,6 +72,7 @@ import '../../core/services/gateway_wake_word.dart';
 import '../../core/services/gpt_live_conversation.dart';
 import '../../core/services/voice_live_engine.dart';
 import '../../core/services/voice_live_mode.dart';
+import '../../core/services/wake_voice_request.dart';
 import '../../core/utils/voice_stop_word.dart';
 import '../../core/widgets/gateway_wake_controls.dart';
 import '../../core/widgets/voice_live_controls.dart';
@@ -399,13 +400,104 @@ class _NgChatViewState extends State<NgChatView>
     );
   }
 
+  /// As Desktop's `wake.detected` handling (app/contrib/wiring.tsx): a phrase
+  /// enrolled by another profile is answered in THAT profile's chat, and a
+  /// fresh session is a new view. Either way the voice starts on the new
+  /// view once it is showing, never in the chat that merely heard it.
   void _onWakeDetected(WakeDetectedEvent event) {
     if (!mounted) return;
-    if (event.startNewSession && !chat.isNew && widget.onNewChat != null) {
-      widget.onNewChat!();
+    final gateway = chat.gateway;
+    final target = event.profile;
+    if (target != null &&
+        wakeProfileKey(target) != wakeProfileKey(gateway.profile)) {
+      _routeWakeToProfile(target, freshSession: event.startNewSession);
+      return;
     }
+    if (event.startNewSession && !chat.isNew && widget.onNewChat != null) {
+      WakeVoiceRequest.request(
+        connectionId: gateway.connection.id,
+        profile: gateway.profile,
+        freshSession: true,
+      );
+      widget.onNewChat!();
+      // The fresh chat is another view; it takes the request once it shows.
+      // Should the shell keep this view instead, nothing starts here and
+      // wake goes back to listening.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _syncWakeVoicePause();
+      });
+      return;
+    }
+    _startWakeVoice();
+  }
+
+  /// Hands a wake phrase of another profile to the saved gateway that
+  /// reaches it on the same machine. With none saved, nothing starts.
+  void _routeWakeToProfile(String profile, {required bool freshSession}) {
+    final scope = context.getInheritedWidgetOfExactType<NgScope>();
+    final match = scope == null
+        ? null
+        : wakeConnectionForProfile(
+            scope.connections,
+            from: chat.gateway.connection,
+            profile: profile,
+          );
+    if (scope == null ||
+        match == null ||
+        ConnectionMutationBarrier.isPending(match.id)) {
+      ngToast(context, ngL.wake_word_other_profile(profile.trim()));
+      // Nothing took the microphone: wake listens again.
+      _syncWakeVoicePause();
+      return;
+    }
+    WakeVoiceRequest.request(
+      connectionId: match.id,
+      profile: match.gatewayProfile,
+      freshSession: freshSession,
+    );
+    unawaited(
+      scope.switchTo(match.id).catchError((Object _) {
+        WakeVoiceRequest.clear();
+      }),
+    );
+  }
+
+  /// Takes a wake request routed to this view's owner: after a profile
+  /// switch or a new chat, the view that now shows the chat starts voice.
+  void _maybeTakeWakeVoice() {
+    if (!mounted) return;
+    final gateway = chat.gateway;
+    final pending = WakeVoiceRequest.pendingFor(
+      connectionId: gateway.connection.id,
+      profile: gateway.profile,
+    );
+    if (pending == null) return;
+    if (ModalRoute.isCurrentOf(context) == false) return;
+    if (pending.freshSession && !chat.isNew) {
+      // The gateway opened on an existing chat: ask for the fresh one; its
+      // view takes the request.
+      final openNew = widget.onNewChat;
+      if (openNew != null) {
+        openNew();
+        return;
+      }
+    }
+    if (!WakeVoiceRequest.take(
+      connectionId: gateway.connection.id,
+      profile: gateway.profile,
+      isNewChat: chat.isNew || widget.onNewChat == null,
+    )) {
+      return;
+    }
+    _startWakeVoice();
+  }
+
+  void _startWakeVoice() {
+    if (!mounted) return;
     if (_liveEngine?.active == true) return;
-    if (_voiceMode.effectiveMode == 'gpt-live') {
+    // A view that has only just mounted does not know the host's voice mode
+    // yet; the conversation start reads it first and then picks the engine.
+    if (!_voiceMode.hasStatus || _voiceMode.effectiveMode == 'gpt-live') {
       unawaited(_startVoiceConversation());
       return;
     }
@@ -475,6 +567,9 @@ class _NgChatViewState extends State<NgChatView>
       if (chat.running && mounted) setState(() {});
     });
     _bindLiveEngine();
+    // A wake word routed here (a fresh chat, or this profile after a
+    // switch) starts its voice once this view is showing.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeTakeWakeVoice());
   }
 
   @override
@@ -515,6 +610,9 @@ class _NgChatViewState extends State<NgChatView>
       _bindWake();
       _disposeLiveEngine();
       _bindLiveEngine();
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _maybeTakeWakeVoice(),
+      );
     } else {
       if (old.wakeController != widget.wakeController) {
         _bindWake();

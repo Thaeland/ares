@@ -7499,4 +7499,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get voice_live_ended_closed =>
       'The live voice session was closed by the service.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'That wake word belongs to profile \"$profile\". Open a connection to that profile to answer it.';
+  }
 }

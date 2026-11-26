@@ -1918,5 +1918,6 @@
   "ng_wake_word_title": "Mot d’activation",
   "ng_wake_word_subtitle": "Détection mains libres sur la passerelle. Désactivée par défaut.",
   "voice_live_ended_connection_lost": "La session vocale en direct a perdu la connexion.",
-  "voice_live_ended_closed": "La session vocale en direct a été fermée par le service."
+  "voice_live_ended_closed": "La session vocale en direct a été fermée par le service.",
+  "wake_word_other_profile": "Ce mot d’activation appartient au profil « {profile} ». Ouvrez une connexion à ce profil pour y répondre."
 }

@@ -7572,4 +7572,9 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get voice_live_ended_closed =>
       'La session vocale en direct a été fermée par le service.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'Ce mot d’activation appartient au profil « $profile ». Ouvrez une connexion à ce profil pour y répondre.';
+  }
 }

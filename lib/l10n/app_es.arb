@@ -1918,5 +1918,6 @@
   "ng_wake_word_title": "Palabra de activación",
   "ng_wake_word_subtitle": "Detección manos libres en la pasarela. Desactivada por defecto.",
   "voice_live_ended_connection_lost": "La sesión de voz en vivo perdió la conexión.",
-  "voice_live_ended_closed": "El servicio cerró la sesión de voz en vivo."
+  "voice_live_ended_closed": "El servicio cerró la sesión de voz en vivo.",
+  "wake_word_other_profile": "Esa palabra de activación pertenece al perfil «{profile}». Abre una conexión con ese perfil para responder."
 }

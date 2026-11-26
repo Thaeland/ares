@@ -7241,6 +7241,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get voice_live_ended_closed => '实时语音会话已被服务关闭。';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return '该唤醒词属于配置文件“$profile”。请打开到该配置文件的连接以应答。';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -13631,6 +13636,11 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get voice_live_ended_closed => '实时语音会话已被服务关闭。';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return '该唤醒词属于配置文件“$profile”。请打开到该配置文件的连接以应答。';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -20420,4 +20430,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get voice_live_ended_closed => '即時語音工作階段已被服務關閉。';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return '此喚醒詞屬於設定檔「$profile」。請開啟連到該設定檔的連線以回應。';
+  }
 }

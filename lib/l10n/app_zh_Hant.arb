@@ -2985,5 +2985,6 @@
   "ng_wake_word_title": "喚醒詞",
   "ng_wake_word_subtitle": "由閘道器提供免持喚醒偵測。預設關閉。",
   "voice_live_ended_connection_lost": "即時語音工作階段的連線已中斷。",
-  "voice_live_ended_closed": "即時語音工作階段已被服務關閉。"
+  "voice_live_ended_closed": "即時語音工作階段已被服務關閉。",
+  "wake_word_other_profile": "此喚醒詞屬於設定檔「{profile}」。請開啟連到該設定檔的連線以回應。"
 }

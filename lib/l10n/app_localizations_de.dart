@@ -7561,4 +7561,9 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get voice_live_ended_closed =>
       'Die Live-Sprachsitzung wurde vom Dienst beendet.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'Dieses Aktivierungswort gehört zum Profil „$profile“. Öffne eine Verbindung zu diesem Profil, um darauf zu antworten.';
+  }
 }

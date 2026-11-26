@@ -12662,6 +12662,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The live voice session was closed by the service.'**
   String get voice_live_ended_closed;
+
+  /// No description provided for @wake_word_other_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'That wake word belongs to profile \"{profile}\". Open a connection to that profile to answer it.'**
+  String wake_word_other_profile(String profile);
 }
 
 class _AppLocalizationsDelegate

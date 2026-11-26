@@ -1918,5 +1918,6 @@
   "ng_wake_word_title": "Palavra de ativação",
   "ng_wake_word_subtitle": "Deteção mãos-livres no gateway. Desativada por predefinição.",
   "voice_live_ended_connection_lost": "A sessão de voz em direto perdeu a ligação.",
-  "voice_live_ended_closed": "A sessão de voz em direto foi encerrada pelo serviço."
+  "voice_live_ended_closed": "A sessão de voz em direto foi encerrada pelo serviço.",
+  "wake_word_other_profile": "Essa palavra de ativação pertence ao perfil «{profile}». Abra uma ligação a esse perfil para responder."
 }

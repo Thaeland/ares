@@ -7556,6 +7556,11 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get voice_live_ended_closed =>
       'A sessão de voz em direto foi encerrada pelo serviço.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'Essa palavra de ativação pertence ao perfil «$profile». Abra uma ligação a esse perfil para responder.';
+  }
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -14255,4 +14260,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get voice_live_ended_closed =>
       'A sessão de voz ao vivo foi encerrada pelo serviço.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'Essa palavra de ativação pertence ao perfil \"$profile\". Abra uma conexão com esse perfil para responder.';
+  }
 }

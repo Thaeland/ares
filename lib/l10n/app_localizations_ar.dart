@@ -7494,4 +7494,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get voice_live_ended_closed => 'أغلقت الخدمة جلسة الصوت المباشرة.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'كلمة التنبيه هذه تخص الملف الشخصي \"$profile\". افتح اتصالاً بهذا الملف الشخصي للرد عليها.';
+  }
 }

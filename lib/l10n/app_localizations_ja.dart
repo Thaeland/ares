@@ -7340,4 +7340,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get voice_live_ended_closed => 'ライブ音声セッションはサービスによって終了されました。';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'このウェイクワードはプロファイル「$profile」のものです。応答するには、そのプロファイルへの接続を開いてください。';
+  }
 }

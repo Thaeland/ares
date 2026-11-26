@@ -7554,4 +7554,9 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get voice_live_ended_closed =>
       'El servicio cerró la sesión de voz en vivo.';
+
+  @override
+  String wake_word_other_profile(String profile) {
+    return 'Esa palabra de activación pertenece al perfil «$profile». Abre una conexión con ese perfil para responder.';
+  }
 }

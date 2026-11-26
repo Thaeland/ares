@@ -1918,5 +1918,6 @@
   "ng_wake_word_title": "Aktivierungswort",
   "ng_wake_word_subtitle": "Freihändige Aktivierungswort-Erkennung über das Gateway. Standardmäßig aus.",
   "voice_live_ended_connection_lost": "Die Live-Sprachsitzung hat die Verbindung verloren.",
-  "voice_live_ended_closed": "Die Live-Sprachsitzung wurde vom Dienst beendet."
+  "voice_live_ended_closed": "Die Live-Sprachsitzung wurde vom Dienst beendet.",
+  "wake_word_other_profile": "Dieses Aktivierungswort gehört zum Profil „{profile}“. Öffne eine Verbindung zu diesem Profil, um darauf zu antworten."
 }
