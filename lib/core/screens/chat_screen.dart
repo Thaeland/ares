@@ -2190,6 +2190,22 @@ class _ChatScreenState extends State<ChatScreen>
 
   /// The gateway owns wake detection. Bind this chat so a wake event starts
   /// dictation on the active session, never on a neighbouring chat.
+  /// The narrow-pane More chat tools row: as the wide pane's toggle button,
+  /// a refused start says why.
+  Future<void> _toggleWakeFromMenu() async {
+    final wake = _wake;
+    if (wake == null) return;
+    final state = wake.state;
+    final wasOn = state.listening || (state.enabled && state.paused);
+    final ok = await wake.toggle(sessionId: widget.session.id);
+    final notice = wake.state.notice.trim();
+    if (!ok && !wasOn && mounted && notice.isNotEmpty) {
+      ScaffoldMessenger.maybeOf(
+        context,
+      )?.showSnackBar(SnackBar(content: Text(notice)));
+    }
+  }
+
   void _bindWake() {
     final wake = _wake;
     if (wake == null) return;
@@ -9887,17 +9903,23 @@ class _ChatScreenState extends State<ChatScreen>
               ),
           ] else if (_desktopGateway != null ||
               _voiceLiveMode?.hasStatus == true ||
+              _wake?.state.offered == true ||
               workers != null ||
               radio != null ||
               widget.onOpenAppCommandPalette != null)
             // One always-visible menu on narrow panes, also while a reply
             // streams (the gateway queue matters most then). The radio's
-            // controls move here from the app bar.
+            // and the wake word's controls move here from the app bar and
+            // the composer row.
             PopupMenuButton<String>(
               key: const ValueKey('chat-tools-menu'),
               tooltip: 'More chat tools',
               icon: const Icon(Icons.widgets_outlined),
               onSelected: (tool) {
+                if (tool == wakeWordToolValue) {
+                  unawaited(_toggleWakeFromMenu());
+                  return;
+                }
                 if (tool == voiceEngineToolValue && _voiceLiveMode != null) {
                   unawaited(
                     showVoiceEngineSheet(
@@ -9933,6 +9955,8 @@ class _ChatScreenState extends State<ChatScreen>
                 }
               },
               itemBuilder: (_) => [
+                if (_wake case final wake? when wake.state.offered)
+                  wakeWordToolItem(context, wake.state),
                 if (_voiceLiveMode?.hasStatus == true)
                   voiceEngineToolItem(context, _voiceLiveMode!),
                 if (widget.onOpenAppCommandPalette != null)
@@ -10200,6 +10224,7 @@ class _ChatScreenState extends State<ChatScreen>
                             ),
                           _buildInputBar(
                             availableHeight: viewport.maxHeight - slashHeight,
+                            compactTools: compactTools,
                           ),
                         ],
                       );
@@ -10279,7 +10304,10 @@ class _ChatScreenState extends State<ChatScreen>
     return _terminalTurnNotice;
   }
 
-  Widget _buildInputBar({required double availableHeight}) {
+  Widget _buildInputBar({
+    required double availableHeight,
+    bool compactTools = false,
+  }) {
     final handsFreeAction = _buildHandsFreeComposerAction();
     final separateVoiceAction = MediaQuery.sizeOf(context).width < 400;
     // Also true in a pane whose host Scaffold already resized for the
@@ -10786,7 +10814,9 @@ class _ChatScreenState extends State<ChatScreen>
                       const SizedBox(width: 8),
                       if (!separateVoiceAction && handsFreeAction != null)
                         handsFreeAction,
-                      if (_wake case final wake?)
+                      // A pane under 480 px has it in More chat tools, as
+                      // NextGen does.
+                      if (_wake case final wake? when !compactTools)
                         GatewayWakeToolbarButton(
                           controller: wake,
                           sessionId: widget.session.id,
