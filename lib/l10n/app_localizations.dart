@@ -11462,6 +11462,528 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'failed'**
   String get catalog_scan_failed;
+
+  /// No description provided for @deployment_token_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Deployment token (optional)'**
+  String get deployment_token_label;
+
+  /// No description provided for @deployment_token_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.'**
+  String get deployment_token_helper;
+
+  /// No description provided for @deployment_token_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard session token'**
+  String get deployment_token_hint;
+
+  /// No description provided for @custom_headers_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom headers (optional)'**
+  String get custom_headers_label;
+
+  /// No description provided for @custom_headers_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'One per line, e.g. X-Custom: value. Forbidden headers are rejected.'**
+  String get custom_headers_helper;
+
+  /// No description provided for @custom_headers_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. X-Custom-Header: value'**
+  String get custom_headers_hint;
+
+  /// No description provided for @desktop_tray_open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Ares'**
+  String get desktop_tray_open;
+
+  /// No description provided for @desktop_tray_new_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'New chat'**
+  String get desktop_tray_new_chat;
+
+  /// No description provided for @desktop_tray_quick_entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick entry…'**
+  String get desktop_tray_quick_entry;
+
+  /// No description provided for @desktop_tray_pause_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause notifications'**
+  String get desktop_tray_pause_notifications;
+
+  /// No description provided for @desktop_tray_quit.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit Ares'**
+  String get desktop_tray_quit;
+
+  /// No description provided for @desktop_integration_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Desktop integration'**
+  String get desktop_integration_title;
+
+  /// No description provided for @desktop_tray_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Ares in the tray or menu bar'**
+  String get desktop_tray_setting;
+
+  /// No description provided for @desktop_tray_setting_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Ares, start a chat, open quick entry, pause notifications or quit from the icon.'**
+  String get desktop_tray_setting_help;
+
+  /// No description provided for @desktop_close_to_tray_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep running in the tray when the window closes'**
+  String get desktop_close_to_tray_setting;
+
+  /// No description provided for @desktop_tray_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This desktop has no system tray Ares can use.'**
+  String get desktop_tray_unsupported;
+
+  /// No description provided for @quick_entry_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick entry'**
+  String get quick_entry_title;
+
+  /// No description provided for @quick_entry_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a prompt for Ares…'**
+  String get quick_entry_hint;
+
+  /// No description provided for @quick_entry_submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Put in composer'**
+  String get quick_entry_submit;
+
+  /// No description provided for @quick_entry_never_sends.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter puts the text in the chat\'s composer. Nothing is sent until you press Send.'**
+  String get quick_entry_never_sends;
+
+  /// No description provided for @quick_entry_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick entry couldn\'t open. Try again.'**
+  String get quick_entry_unavailable;
+
+  /// No description provided for @desktop_hotkey_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick entry shortcut'**
+  String get desktop_hotkey_setting;
+
+  /// No description provided for @desktop_hotkey_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Press {shortcut} anywhere to open quick entry.'**
+  String desktop_hotkey_help(String shortcut);
+
+  /// No description provided for @desktop_hotkey_conflict.
+  ///
+  /// In en, this message translates to:
+  /// **'Another app already uses {shortcut}. Choose a different shortcut.'**
+  String desktop_hotkey_conflict(String shortcut);
+
+  /// No description provided for @desktop_hotkey_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This desktop does not let apps register a global shortcut (for example on Wayland).'**
+  String get desktop_hotkey_unsupported;
+
+  /// No description provided for @desktop_hotkey_no_modifier.
+  ///
+  /// In en, this message translates to:
+  /// **'Include Cmd, Ctrl or Alt.'**
+  String get desktop_hotkey_no_modifier;
+
+  /// No description provided for @desktop_hotkey_super_key.
+  ///
+  /// In en, this message translates to:
+  /// **'The Windows or Super key is reserved for the system.'**
+  String get desktop_hotkey_super_key;
+
+  /// No description provided for @desktop_hotkey_reserved.
+  ///
+  /// In en, this message translates to:
+  /// **'The system already uses this shortcut.'**
+  String get desktop_hotkey_reserved;
+
+  /// No description provided for @desktop_hotkey_in_app.
+  ///
+  /// In en, this message translates to:
+  /// **'Ares already uses this shortcut for {action}.'**
+  String desktop_hotkey_in_app(String action);
+
+  /// No description provided for @desktop_hotkey_change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get desktop_hotkey_change;
+
+  /// No description provided for @desktop_hotkey_reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Use default'**
+  String get desktop_hotkey_reset;
+
+  /// No description provided for @capture_screen_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Capture screen'**
+  String get capture_screen_action;
+
+  /// No description provided for @capture_screen_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds a screenshot to the message as a draft. Nothing is sent until you press Send.'**
+  String get capture_screen_help;
+
+  /// No description provided for @capture_screen_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen capture isn\'t available on this desktop.'**
+  String get capture_screen_unavailable;
+
+  /// No description provided for @capture_screen_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t capture the screen. Try again.'**
+  String get capture_screen_failed;
+
+  /// No description provided for @capture_permission_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow screen recording'**
+  String get capture_permission_title;
+
+  /// No description provided for @capture_permission_body.
+  ///
+  /// In en, this message translates to:
+  /// **'To capture a window, Ares needs the Screen Recording permission. Turn on Ares in System Settings > Privacy & Security > Screen Recording, then try again.'**
+  String get capture_permission_body;
+
+  /// No description provided for @capture_open_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open System Settings'**
+  String get capture_open_settings;
+
+  /// No description provided for @keep_awake_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep computer awake'**
+  String get keep_awake_title;
+
+  /// No description provided for @keep_awake_title_mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep screen on'**
+  String get keep_awake_title_mobile;
+
+  /// No description provided for @keep_awake_mode_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get keep_awake_mode_off;
+
+  /// No description provided for @keep_awake_mode_while_working.
+  ///
+  /// In en, this message translates to:
+  /// **'While working'**
+  String get keep_awake_mode_while_working;
+
+  /// No description provided for @keep_awake_mode_always.
+  ///
+  /// In en, this message translates to:
+  /// **'Always'**
+  String get keep_awake_mode_always;
+
+  /// No description provided for @keep_awake_off_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Never block system sleep (default).'**
+  String get keep_awake_off_help;
+
+  /// No description provided for @keep_awake_while_working_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Prevent idle sleep only while an agent turn is running.'**
+  String get keep_awake_while_working_help;
+
+  /// No description provided for @keep_awake_always_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Prevent idle sleep while Ares is open on this device.'**
+  String get keep_awake_always_help;
+
+  /// No description provided for @keep_awake_off_help_mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Let the screen turn off as usual (default).'**
+  String get keep_awake_off_help_mobile;
+
+  /// No description provided for @keep_awake_while_working_help_mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the screen on while an agent turn is running and Ares is open.'**
+  String get keep_awake_while_working_help_mobile;
+
+  /// No description provided for @keep_awake_always_help_mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the screen on while Ares is open.'**
+  String get keep_awake_always_help_mobile;
+
+  /// No description provided for @ng_token_gateway_has_no_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway has no sign-in, so it can\'t check a deployment token. Turn on dashboard authentication on the host (or update Hermes), then try again.'**
+  String get ng_token_gateway_has_no_sign_in;
+
+  /// No description provided for @palette_open.
+  ///
+  /// In en, this message translates to:
+  /// **'App command palette'**
+  String get palette_open;
+
+  /// No description provided for @palette_no_matches.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching actions'**
+  String get palette_no_matches;
+
+  /// No description provided for @palette_filter_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type to filter actions…'**
+  String get palette_filter_hint;
+
+  /// No description provided for @palette_keys_move.
+  ///
+  /// In en, this message translates to:
+  /// **'↑↓ to move'**
+  String get palette_keys_move;
+
+  /// No description provided for @palette_keys_run.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter to run'**
+  String get palette_keys_run;
+
+  /// No description provided for @palette_keys_close.
+  ///
+  /// In en, this message translates to:
+  /// **'Esc to close'**
+  String get palette_keys_close;
+
+  /// No description provided for @palette_search_sessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Search sessions'**
+  String get palette_search_sessions;
+
+  /// No description provided for @palette_scheduled_crons.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled / Crons'**
+  String get palette_scheduled_crons;
+
+  /// No description provided for @palette_capabilities_skills.
+  ///
+  /// In en, this message translates to:
+  /// **'Capabilities & skills'**
+  String get palette_capabilities_skills;
+
+  /// No description provided for @palette_insights_usage.
+  ///
+  /// In en, this message translates to:
+  /// **'Insights & usage'**
+  String get palette_insights_usage;
+
+  /// No description provided for @palette_more_projects.
+  ///
+  /// In en, this message translates to:
+  /// **'More & projects'**
+  String get palette_more_projects;
+
+  /// No description provided for @deeplink_chat_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat not found in the list. It may not have loaded yet.'**
+  String get deeplink_chat_not_found;
+
+  /// No description provided for @keyboard_shortcuts_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard shortcuts'**
+  String get keyboard_shortcuts_title;
+
+  /// No description provided for @shortcuts_reset_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset all'**
+  String get shortcuts_reset_all;
+
+  /// No description provided for @shortcuts_reset_to_default.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to default'**
+  String get shortcuts_reset_to_default;
+
+  /// No description provided for @shortcut_action_command_palette.
+  ///
+  /// In en, this message translates to:
+  /// **'Command palette'**
+  String get shortcut_action_command_palette;
+
+  /// No description provided for @shortcut_action_new_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'New chat'**
+  String get shortcut_action_new_chat;
+
+  /// No description provided for @shortcut_action_search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get shortcut_action_search;
+
+  /// No description provided for @shortcut_action_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get shortcut_action_settings;
+
+  /// No description provided for @shortcut_action_go_to_tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to tab {number}'**
+  String shortcut_action_go_to_tab(int number);
+
+  /// No description provided for @shortcuts_conflict.
+  ///
+  /// In en, this message translates to:
+  /// **'Conflict: \"{first}\" and \"{second}\" both use {chord}. The custom shortcut keeps its default until you change one of them.'**
+  String shortcuts_conflict(String first, String second, String chord);
+
+  /// No description provided for @shortcuts_editor_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Shortcut: {action}'**
+  String shortcuts_editor_title(String action);
+
+  /// No description provided for @shortcuts_editor_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Press a key combination, or choose modifiers and a key below:'**
+  String get shortcuts_editor_help;
+
+  /// No description provided for @shortcuts_editor_needs_modifier.
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least Cmd/Meta, Ctrl or Alt so typing in the composer is unaffected.'**
+  String get shortcuts_editor_needs_modifier;
+
+  /// No description provided for @shortcuts_text_editing_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'{chord} is a text editing shortcut (copy, paste, cut, undo, redo or select all). Binding it here takes it away from text fields.'**
+  String shortcuts_text_editing_warning(String chord);
+
+  /// No description provided for @shortcuts_text_editing_in_use.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{action}\" uses {chord}, a text editing shortcut. Text fields lose it while it is bound here.'**
+  String shortcuts_text_editing_in_use(String action, String chord);
+
+  /// No description provided for @custom_headers_problem_format.
+  ///
+  /// In en, this message translates to:
+  /// **'Line {line}: expected \"Name: Value\"'**
+  String custom_headers_problem_format(int line);
+
+  /// No description provided for @custom_headers_problem_missing_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Line {line}: missing header name'**
+  String custom_headers_problem_missing_name(int line);
+
+  /// No description provided for @custom_headers_problem_invalid_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Line {line}: invalid header name \"{name}\"'**
+  String custom_headers_problem_invalid_name(int line, String name);
+
+  /// No description provided for @custom_headers_problem_reserved.
+  ///
+  /// In en, this message translates to:
+  /// **'Line {line}: \"{name}\" is reserved and cannot be passed through'**
+  String custom_headers_problem_reserved(int line, String name);
+
+  /// No description provided for @custom_headers_problem_empty_value.
+  ///
+  /// In en, this message translates to:
+  /// **'Line {line}: empty header value'**
+  String custom_headers_problem_empty_value(int line);
+
+  /// No description provided for @ng_enter_a_deployment_token.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a deployment session token.'**
+  String get ng_enter_a_deployment_token;
+
+  /// No description provided for @ng_custom_headers.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom headers'**
+  String get ng_custom_headers;
+
+  /// No description provided for @ng_custom_headers_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra HTTP headers for this gateway (Name: Value, one per line), sent on its REST and WebSocket calls. They are kept in the secure credential store. Authentication and hop-by-hop headers are rejected.'**
+  String get ng_custom_headers_help;
+
+  /// No description provided for @ng_use_a_deployment_token.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a deployment session token'**
+  String get ng_use_a_deployment_token;
+
+  /// No description provided for @ng_sign_in_with_deployment_token.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with deployment token'**
+  String get ng_sign_in_with_deployment_token;
+
+  /// No description provided for @ng_signed_in_with_deployment_token.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in with the deployment token.'**
+  String get ng_signed_in_with_deployment_token;
 }
 
 class _AppLocalizationsDelegate

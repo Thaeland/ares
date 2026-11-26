@@ -6843,4 +6843,320 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => 'falló';
+
+  @override
+  String get deployment_token_label => 'Token de despliegue (opcional)';
+
+  @override
+  String get deployment_token_helper =>
+      'Para tokens de sesión de Hermes Dashboard enviados como X-Hermes-Session-Token. No se guarda en texto plano en las preferencias.';
+
+  @override
+  String get deployment_token_hint => 'Token de sesión del panel';
+
+  @override
+  String get custom_headers_label => 'Encabezados personalizados (opcional)';
+
+  @override
+  String get custom_headers_helper =>
+      'Uno por línea, p. ej. X-Custom: valor. Se rechazan los encabezados prohibidos.';
+
+  @override
+  String get custom_headers_hint => 'p. ej. X-Custom-Header: valor';
+
+  @override
+  String get desktop_tray_open => 'Abrir Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'Nuevo chat';
+
+  @override
+  String get desktop_tray_quick_entry => 'Entrada rápida…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'Pausar notificaciones';
+
+  @override
+  String get desktop_tray_quit => 'Salir de Ares';
+
+  @override
+  String get desktop_integration_title => 'Integración con el escritorio';
+
+  @override
+  String get desktop_tray_setting =>
+      'Mostrar Ares en la bandeja del sistema o la barra de menús';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'Desde el icono puedes abrir Ares, iniciar un chat, abrir la entrada rápida, pausar las notificaciones o salir.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'Seguir ejecutándose en la bandeja al cerrar la ventana';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'Este escritorio no tiene una bandeja del sistema que Ares pueda usar.';
+
+  @override
+  String get quick_entry_title => 'Entrada rápida';
+
+  @override
+  String get quick_entry_hint => 'Escribe una instrucción para Ares…';
+
+  @override
+  String get quick_entry_submit => 'Poner en el editor';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Enter coloca el texto en el editor del chat. No se envía nada hasta que pulses Enviar.';
+
+  @override
+  String get quick_entry_unavailable =>
+      'No se pudo abrir la entrada rápida. Inténtalo de nuevo.';
+
+  @override
+  String get desktop_hotkey_setting => 'Atajo de entrada rápida';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'Pulsa $shortcut en cualquier lugar para abrir la entrada rápida.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return 'Otra app ya usa $shortcut. Elige un atajo diferente.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'Este escritorio no permite que las apps registren un atajo global (por ejemplo, en Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Incluye Cmd, Ctrl o Alt.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'La tecla Windows o Super está reservada para el sistema.';
+
+  @override
+  String get desktop_hotkey_reserved => 'El sistema ya usa este atajo.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares ya usa este atajo para $action.';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'Cambiar';
+
+  @override
+  String get desktop_hotkey_reset => 'Usar predeterminado';
+
+  @override
+  String get capture_screen_action => 'Capturar pantalla';
+
+  @override
+  String get capture_screen_help =>
+      'Añade una captura al mensaje como borrador. No se envía nada hasta que pulses Enviar.';
+
+  @override
+  String get capture_screen_unavailable =>
+      'La captura de pantalla no está disponible en este escritorio.';
+
+  @override
+  String get capture_screen_failed =>
+      'No se pudo capturar la pantalla. Inténtalo de nuevo.';
+
+  @override
+  String get capture_permission_title => 'Permitir la grabación de pantalla';
+
+  @override
+  String get capture_permission_body =>
+      'Para capturar una ventana, Ares necesita el permiso de grabación de pantalla. Activa Ares en Ajustes del Sistema > Privacidad y seguridad > Grabación de pantalla y vuelve a intentarlo.';
+
+  @override
+  String get capture_open_settings => 'Abrir Ajustes del Sistema';
+
+  @override
+  String get keep_awake_title => 'Mantener el equipo activo';
+
+  @override
+  String get keep_awake_title_mobile => 'Mantener la pantalla encendida';
+
+  @override
+  String get keep_awake_mode_off => 'Desactivado';
+
+  @override
+  String get keep_awake_mode_while_working => 'Mientras trabaja';
+
+  @override
+  String get keep_awake_mode_always => 'Siempre';
+
+  @override
+  String get keep_awake_off_help =>
+      'No bloquear nunca la suspensión del sistema (predeterminado).';
+
+  @override
+  String get keep_awake_while_working_help =>
+      'Evitar la suspensión por inactividad solo mientras se ejecuta un turno del agente.';
+
+  @override
+  String get keep_awake_always_help =>
+      'Evitar la suspensión por inactividad mientras Ares esté abierto en este dispositivo.';
+
+  @override
+  String get keep_awake_off_help_mobile =>
+      'Dejar que la pantalla se apague como siempre (predeterminado).';
+
+  @override
+  String get keep_awake_while_working_help_mobile =>
+      'Mantener la pantalla encendida mientras se ejecuta un turno del agente y Ares está abierto.';
+
+  @override
+  String get keep_awake_always_help_mobile =>
+      'Mantener la pantalla encendida mientras Ares esté abierto.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'Este gateway no tiene inicio de sesión, así que no puede comprobar un token de despliegue. Activa la autenticación del panel en el host (o actualiza Hermes) y vuelve a intentarlo.';
+
+  @override
+  String get palette_open => 'Paleta de comandos de la app';
+
+  @override
+  String get palette_no_matches => 'No hay acciones que coincidan';
+
+  @override
+  String get palette_filter_hint => 'Escribe para filtrar acciones…';
+
+  @override
+  String get palette_keys_move => '↑↓ para moverte';
+
+  @override
+  String get palette_keys_run => 'Intro para ejecutar';
+
+  @override
+  String get palette_keys_close => 'Esc para cerrar';
+
+  @override
+  String get palette_search_sessions => 'Buscar sesiones';
+
+  @override
+  String get palette_scheduled_crons => 'Programadas / Crons';
+
+  @override
+  String get palette_capabilities_skills => 'Capacidades y habilidades';
+
+  @override
+  String get palette_insights_usage => 'Información y uso';
+
+  @override
+  String get palette_more_projects => 'Más y proyectos';
+
+  @override
+  String get deeplink_chat_not_found =>
+      'No se encontró el chat en la lista. Puede que aún no se haya cargado.';
+
+  @override
+  String get keyboard_shortcuts_title => 'Atajos de teclado';
+
+  @override
+  String get shortcuts_reset_all => 'Restablecer todo';
+
+  @override
+  String get shortcuts_reset_to_default => 'Restablecer valor predeterminado';
+
+  @override
+  String get shortcut_action_command_palette => 'Paleta de comandos';
+
+  @override
+  String get shortcut_action_new_chat => 'Nuevo chat';
+
+  @override
+  String get shortcut_action_search => 'Buscar';
+
+  @override
+  String get shortcut_action_settings => 'Ajustes';
+
+  @override
+  String shortcut_action_go_to_tab(int number) {
+    return 'Ir a la pestaña $number';
+  }
+
+  @override
+  String shortcuts_conflict(String first, String second, String chord) {
+    return 'Conflicto: «$first» y «$second» usan $chord. El atajo personalizado mantiene su valor predeterminado hasta que cambies uno de ellos.';
+  }
+
+  @override
+  String shortcuts_editor_title(String action) {
+    return 'Atajo: $action';
+  }
+
+  @override
+  String get shortcuts_editor_help =>
+      'Pulsa una combinación de teclas o elige modificadores y una tecla abajo:';
+
+  @override
+  String get shortcuts_editor_needs_modifier =>
+      'Elige al menos Cmd/Meta, Ctrl o Alt para que escribir en el editor no se vea afectado.';
+
+  @override
+  String shortcuts_text_editing_warning(String chord) {
+    return '$chord es un atajo de edición de texto (copiar, pegar, cortar, deshacer, rehacer o seleccionar todo). Si lo asignas aquí, los campos de texto lo pierden.';
+  }
+
+  @override
+  String shortcuts_text_editing_in_use(String action, String chord) {
+    return '«$action» usa $chord, un atajo de edición de texto. Los campos de texto lo pierden mientras esté asignado aquí.';
+  }
+
+  @override
+  String custom_headers_problem_format(int line) {
+    return 'Línea $line: se esperaba «Nombre: Valor»';
+  }
+
+  @override
+  String custom_headers_problem_missing_name(int line) {
+    return 'Línea $line: falta el nombre del encabezado';
+  }
+
+  @override
+  String custom_headers_problem_invalid_name(int line, String name) {
+    return 'Línea $line: nombre de encabezado no válido «$name»';
+  }
+
+  @override
+  String custom_headers_problem_reserved(int line, String name) {
+    return 'Línea $line: «$name» está reservado y no se puede reenviar';
+  }
+
+  @override
+  String custom_headers_problem_empty_value(int line) {
+    return 'Línea $line: valor de encabezado vacío';
+  }
+
+  @override
+  String get ng_enter_a_deployment_token =>
+      'Introduce un token de sesión de despliegue.';
+
+  @override
+  String get ng_custom_headers => 'Encabezados personalizados';
+
+  @override
+  String get ng_custom_headers_help =>
+      'Encabezados HTTP adicionales para este gateway (Nombre: Valor, uno por línea), enviados en sus llamadas REST y WebSocket. Se guardan en el almacén seguro de credenciales. Se rechazan los encabezados de autenticación y de salto a salto.';
+
+  @override
+  String get ng_use_a_deployment_token =>
+      'Usar un token de sesión de despliegue';
+
+  @override
+  String get ng_sign_in_with_deployment_token =>
+      'Iniciar sesión con token de despliegue';
+
+  @override
+  String get ng_signed_in_with_deployment_token =>
+      'Sesión iniciada con el token de despliegue.';
 }

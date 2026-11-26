@@ -99,6 +99,11 @@ install(FILES "${ARES_FLUTTER_SDK}/bin/cache/pkg/sky_engine/LICENSE"
   DESTINATION "${INSTALL_BUNDLE_DATA_DIR}/licenses" RENAME flutter-engine.txt
   COMPONENT Runtime)
 
+# Desktop entry (launcher + x-scheme-handler/hermes for hermes:// links). A
+# relocatable bundle cannot register it by itself: see docs/linux-runner.md.
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/packaging/${APPLICATION_ID}.desktop"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications" COMPONENT Runtime)
+
 add_executable(ares-pty ../native/terminal/pty_posix.cc)
 target_link_libraries(ares-pty PRIVATE util)
 add_dependencies(${BINARY_NAME} ares-pty)
