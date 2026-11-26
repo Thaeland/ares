@@ -1,5 +1,7 @@
-// Canonical wire audit, the lanes this branch does not contain yet:
-// v5/history (ec8af35e), v5/voice (30d239e1) and v5/bots (123050e4).
+// Canonical wire audit, requests copied from the code that builds them
+// instead of captured from it: the lanes this branch does not contain yet,
+// v5/history (ec8af35e), v5/voice (30d239e1) and v5/bots (123050e4), and
+// five producers of this base whose flow no capture suite drives.
 //
 // Their producers are not in this tree, so each request below is the frame
 // that lane's code builds, copied from the named method at the named commit,
@@ -284,6 +286,54 @@ const _botFrames = <_Frame>[
   ),
 ];
 
+// Producers of this base whose flow is not driven end to end by a capture
+// suite: the request below is the frame the named code builds.
+const _base = 'this base';
+const _undrivenFrames = <_Frame>[
+  (
+    // lib/core/services/ws_client.dart respondToClarify(lockAnswer: true),
+    // for the owner's batch `clarify` server request (not a projected
+    // prompt, which the guard answers with clarify.respond by prompt id).
+    'WsClient.respondToClarify (batch lock)',
+    'clarify.lock',
+    {'request_id': 'srq-batch-1', 'answer': 'main', 'question_id': 'q1'},
+  ),
+  (
+    // lib/nextgen/data/chat_controller.dart runCommand, the dispatch stage
+    // after slash.exec refused.
+    'NgChatController.runCommand (dispatch stage)',
+    'command.dispatch',
+    {'session_id': _session, 'name': 'goal', 'arg': 'ship it'},
+  ),
+  (
+    // lib/nextgen/data/chat_controller.dart _detach.
+    'NgChatController._detach',
+    'image.detach',
+    {'session_id': _session, 'path': '/tmp/a.png'},
+  ),
+  (
+    // lib/core/services/remote_profile_admin.dart ProfileRoster.create.
+    'ProfileRoster.create',
+    'profiles.create',
+    {
+      'name': 'ops',
+      'clone_from': 'work',
+      'clone_all': false,
+      'clone_channels': false,
+      'no_alias': true,
+      'mirror_credentials': false,
+      'share_auth': false,
+      'profile': 'work',
+    },
+  ),
+  (
+    // lib/core/services/workspace_discovery.dart discoverRepositories.
+    'WorkspaceTarget.discoverRepositories',
+    'projects.discover_repos',
+    {'scan': true, 'profile': 'work'},
+  ),
+];
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final log = WireCaptureLog('pending_lanes');
@@ -316,6 +366,10 @@ void main() {
       );
     }
   }
+
+  test('this base: five producers whose flow no capture suite drives', () {
+    return sendAll(_base, _undrivenFrames);
+  });
 
   test('v5/history: checkpoints, export, foreign sessions, fenced edits', () {
     return sendAll(_history, _historyFrames);

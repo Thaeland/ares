@@ -12,6 +12,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/capabilities/capability_admin.dart';
+import 'package:hermes_android/core/composer/regenerate.dart';
 import 'package:hermes_android/core/services/canonical_wire.dart';
 import 'package:hermes_android/core/services/desktop_gateway_client.dart';
 import 'package:hermes_android/core/services/hermes_sign_in.dart';
@@ -268,6 +269,10 @@ void main() {
       'RemoteModelAdmin.previewPlan',
       (rpc) => models(rpc).previewPlan('tier-pro'),
     );
+    await both(
+      'RemoteModelAdmin.schedulePlan',
+      (rpc) => models(rpc).schedulePlan('tier-pro', 'scheduled'),
+    );
     // Neither socket has opened the chat, so its fences are unknown: the
     // level goes as the `config.set reasoning` the owner also serves.
     expect(gateway.calls('session.mutate'), isEmpty);
@@ -366,6 +371,18 @@ void main() {
     }
     // Neither socket had opened the chat: each read its fences first.
     expect(gateway.calls('session.resume'), hasLength(2));
+  });
+
+  test('regenerate reads the transcript rows of the session', () async {
+    await both(
+      'resolveRegenerateTarget (session.history)',
+      (rpc) => resolveRegenerateTarget(
+        rpc: rpc,
+        sessionId: 'stored-1',
+        text: 'hello',
+      ),
+    );
+    expect(gateway.calls('session.history'), hasLength(2));
   });
 
   test('the legacy sudo and secret RPC fallbacks are not sent', () async {
