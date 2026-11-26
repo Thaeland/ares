@@ -1800,8 +1800,13 @@ class _ChatScreenState extends State<ChatScreen>
         }
       }
     }
+    // The route this chat captured with its dependencies, not an ancestor
+    // lookup at the end of the frame: a chat deactivated by then (leaving,
+    // or torn down after a failed build) must not look up its ancestors.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || ModalRoute.of(context)?.isCurrent != true) return;
+      if (!mounted || !_voiceElementActive || _voiceRoute?.isCurrent != true) {
+        return;
+      }
       final currentInputs =
           _normalChat?.snapshot.pendingInput ?? const <StreamEvent>[];
       for (final event in snapshot.pendingInput) {
