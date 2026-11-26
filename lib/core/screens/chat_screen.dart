@@ -35,6 +35,7 @@ import '../services/gateway_wake_word.dart';
 import '../services/gpt_live_conversation.dart';
 import '../services/voice_live_engine.dart';
 import '../services/voice_live_mode.dart';
+import '../utils/voice_stop_word.dart';
 import '../widgets/gateway_wake_controls.dart';
 import '../widgets/voice_live_controls.dart';
 import '../widgets/hands_free_voice_controls.dart';
@@ -1984,6 +1985,7 @@ class _ChatScreenState extends State<ChatScreen>
           transport: transport,
           connectionId: widget.connection.id,
         );
+    engine.onDelegation = _onLiveDelegation;
     engine.onError = (message) {
       if (!mounted) return;
       ScaffoldMessenger.maybeOf(
@@ -2108,6 +2110,102 @@ class _ChatScreenState extends State<ChatScreen>
       unawaited(_stopResponse());
     }
     _liveEngine?.stopTurn();
+  }
+
+  void _onLiveDelegation(String id, Map<String, String> prompt) {
+    final engine = _liveEngine;
+    if (engine == null || !engine.active) return;
+    final utterance = (prompt['prompt'] ?? '').trim();
+    final voiceContext = (prompt['context'] ?? '').trim();
+    if (utterance.isEmpty) return;
+    if (isVoiceStopCommand(utterance)) {
+      unawaited(_stopLiveVoice());
+      return;
+    }
+    // Capture owner identity BEFORE any await so a late event after a chat
+    // switch, route close or connection/profile change is dropped cleanly.
+    final ownerSessionId = widget.session.id;
+    final ownerConnectionId = widget.connection.id;
+    final ownerProfile = widget.connection.gatewayProfile;
+    final ownerAccountEpoch = ConnectionMutationBarrier.capture(
+      ownerConnectionId,
+    );
+    final ownerEngine = engine;
+    final ownerEpoch = engine.startEpoch;
+    final ownerNormalChat = _normalChat;
+
+    bool stillOwned() =>
+        mounted &&
+        _voiceElementActive &&
+        widget.active &&
+        widget.session.id == ownerSessionId &&
+        widget.connection.id == ownerConnectionId &&
+        widget.connection.gatewayProfile == ownerProfile &&
+        ConnectionMutationBarrier.isCurrent(
+          ownerConnectionId,
+          ownerAccountEpoch,
+        ) &&
+        identical(_liveEngine, ownerEngine) &&
+        ownerEngine.active &&
+        ownerEngine.startEpoch == ownerEpoch &&
+        identical(_normalChat, ownerNormalChat);
+
+    unawaited(
+      _submitClassicLiveDelegation(
+        delegationId: id,
+        utterance: utterance,
+        voiceContext: voiceContext,
+        ownerEngine: ownerEngine,
+        stillOwned: stillOwned,
+      ),
+    );
+  }
+
+  Future<void> _submitClassicLiveDelegation({
+    required String delegationId,
+    required String utterance,
+    required String voiceContext,
+    required VoiceLiveEngine ownerEngine,
+    required bool Function() stillOwned,
+  }) async {
+    if (!stillOwned()) return;
+    if (_streaming || _normalChat?.snapshot.hasActiveTurn == true) {
+      if (!_stopResponseInFlight) {
+        try {
+          await _stopResponse();
+        } catch (_) {}
+      }
+      for (
+        var i = 0;
+        i < 30 &&
+            stillOwned() &&
+            (_streaming ||
+                _sending ||
+                _normalChat?.snapshot.hasActiveTurn == true);
+        i++
+      ) {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+      }
+    }
+    if (!stillOwned()) return;
+    try {
+      await _sendMessage(
+        textOverride: utterance,
+        promptParams: <String, Object?>{
+          'surface': 'voice-live',
+          if (voiceContext.isNotEmpty) 'voice_context': voiceContext,
+        },
+      );
+    } catch (_) {
+      if (stillOwned()) {
+        ownerEngine.speak(
+          'Sorry, I could not reach Hermes for that request.',
+          delegationId: delegationId,
+          flush: true,
+        );
+        ownerEngine.settle();
+      }
+    }
   }
 
   @override

@@ -50,10 +50,12 @@ import '../../core/services/android_voice_composer_adapter.dart';
 import '../../core/services/auto_speak_replies.dart';
 import '../../core/services/client_direct_voice.dart';
 import '../../core/services/client_direct_voice_speaker.dart';
+import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/gateway_wake_word.dart';
 import '../../core/services/gpt_live_conversation.dart';
 import '../../core/services/voice_live_engine.dart';
 import '../../core/services/voice_live_mode.dart';
+import '../../core/utils/voice_stop_word.dart';
 import '../../core/widgets/gateway_wake_controls.dart';
 import '../../core/widgets/voice_live_controls.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
@@ -438,6 +440,7 @@ class _NgChatViewState extends State<NgChatView>
           transport: transport,
           connectionId: chat.gateway.connection.id,
         );
+    engine.onDelegation = _onLiveDelegation;
     engine.onError = (message) {
       if (!mounted) return;
       ngToast(context, message);
@@ -538,6 +541,92 @@ class _NgChatViewState extends State<NgChatView>
       unawaited(chat.stop());
     }
     _liveEngine?.stopTurn();
+  }
+
+  void _onLiveDelegation(String id, Map<String, String> prompt) {
+    final engine = _liveEngine;
+    if (engine == null || !engine.active) return;
+    final utterance = (prompt['prompt'] ?? '').trim();
+    final voiceContext = (prompt['context'] ?? '').trim();
+    if (utterance.isEmpty) return;
+    if (isVoiceStopCommand(utterance)) {
+      unawaited(_stopLiveVoice());
+      return;
+    }
+    // Capture owner identity BEFORE any await so a late event for a switched,
+    // closed or re-scoped chat never lands in another session.
+    final ownerChat = chat;
+    final ownerEngine = engine;
+    final ownerEpoch = engine.startEpoch;
+    final ownerConnectionId = ownerChat.gateway.connection.id;
+    final ownerProfile = ownerChat.gateway.profile;
+    final ownerAccountEpoch = ConnectionMutationBarrier.capture(
+      ownerConnectionId,
+    );
+
+    bool stillOwned() =>
+        mounted &&
+        identical(chat, ownerChat) &&
+        identical(_liveEngine, ownerEngine) &&
+        ownerEngine.active &&
+        ownerEngine.startEpoch == ownerEpoch &&
+        ownerChat.gateway.connection.id == ownerConnectionId &&
+        ownerChat.gateway.profile == ownerProfile &&
+        ConnectionMutationBarrier.isCurrent(
+          ownerConnectionId,
+          ownerAccountEpoch,
+        );
+
+    unawaited(
+      _submitNextGenLiveDelegation(
+        delegationId: id,
+        utterance: utterance,
+        voiceContext: voiceContext,
+        ownerChat: ownerChat,
+        ownerEngine: ownerEngine,
+        stillOwned: stillOwned,
+      ),
+    );
+  }
+
+  Future<void> _submitNextGenLiveDelegation({
+    required String delegationId,
+    required String utterance,
+    required String voiceContext,
+    required NgChatController ownerChat,
+    required VoiceLiveEngine ownerEngine,
+    required bool Function() stillOwned,
+  }) async {
+    if (!stillOwned()) return;
+    if (ownerChat.running) {
+      try {
+        await ownerChat.stop(parkLocalQueue: false);
+      } catch (_) {}
+      for (var i = 0; i < 30 && stillOwned() && ownerChat.running; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+      }
+    }
+    if (!stillOwned()) return;
+    var sent = false;
+    try {
+      sent = await ownerChat.send(
+        utterance,
+        promptParams: <String, Object>{
+          'surface': 'voice-live',
+          if (voiceContext.isNotEmpty) 'voice_context': voiceContext,
+        },
+      );
+    } catch (_) {
+      sent = false;
+    }
+    if (!sent && stillOwned()) {
+      ownerEngine.speak(
+        'Sorry, I could not reach Hermes for that request.',
+        delegationId: delegationId,
+        flush: true,
+      );
+      ownerEngine.settle();
+    }
   }
 
   void _onReadAloud() {
