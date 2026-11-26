@@ -7432,4 +7432,16 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Вход выполнен с токеном развёртывания.';
+
+  @override
+  String get rewind_target_unsaved =>
+      'Это сообщение ещё не сохранено. Дождитесь завершения и отредактируйте его снова.';
+
+  @override
+  String get rewind_turn_busy =>
+      'Текущий ответ ещё не остановлен, поэтому ничего не отправлено. Повторите попытку через мгновение.';
+
+  @override
+  String get rewind_session_changed =>
+      'Этот чат изменился с момента открытия здесь, поэтому ничего не удалено и не отправлено. Откройте его заново и повторите попытку.';
 }

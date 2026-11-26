@@ -1905,5 +1905,8 @@
   "keep_awake_always_help": "Leerlauf-Ruhezustand verhindern, solange Ares auf diesem Gerät geöffnet ist.",
   "keep_awake_off_help_mobile": "Bildschirm wie gewohnt ausschalten lassen (Standard).",
   "keep_awake_while_working_help_mobile": "Bildschirm eingeschaltet lassen, während ein Agent-Durchlauf läuft und Ares geöffnet ist.",
-  "keep_awake_always_help_mobile": "Bildschirm eingeschaltet lassen, solange Ares geöffnet ist."
+  "keep_awake_always_help_mobile": "Bildschirm eingeschaltet lassen, solange Ares geöffnet ist.",
+  "rewind_target_unsaved": "Diese Nachricht ist noch nicht gespeichert. Warte, bis sie abgeschlossen ist, und bearbeite sie dann erneut.",
+  "rewind_turn_busy": "Die aktuelle Antwort wurde noch nicht gestoppt, daher wurde nichts gesendet. Versuche es gleich noch einmal.",
+  "rewind_session_changed": "Dieser Chat hat sich geändert, seit er hier geöffnet wurde, daher wurde nichts entfernt oder gesendet. Öffne ihn erneut und versuche es noch einmal."
 }

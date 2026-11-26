@@ -1905,5 +1905,8 @@
   "keep_awake_always_help": "Empêcher la mise en veille d’inactivité tant qu’Ares est ouvert sur cet appareil.",
   "keep_awake_off_help_mobile": "Laisser l’écran s’éteindre normalement (par défaut).",
   "keep_awake_while_working_help_mobile": "Garder l’écran allumé pendant un tour de l’agent, tant qu’Ares est ouvert.",
-  "keep_awake_always_help_mobile": "Garder l’écran allumé tant qu’Ares est ouvert."
+  "keep_awake_always_help_mobile": "Garder l’écran allumé tant qu’Ares est ouvert.",
+  "rewind_target_unsaved": "Ce message n'est pas encore enregistré. Attendez qu'il soit terminé, puis modifiez-le à nouveau.",
+  "rewind_turn_busy": "La réponse en cours n'est pas encore arrêtée, rien n'a donc été envoyé. Réessayez dans un instant.",
+  "rewind_session_changed": "Cette conversation a changé depuis son ouverture ici, rien n'a donc été supprimé ni envoyé. Rouvrez-la, puis réessayez."
 }

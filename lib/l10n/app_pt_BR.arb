@@ -1905,5 +1905,8 @@
   "keep_awake_always_help": "Impedir a suspensão por inatividade enquanto o Ares estiver aberto neste dispositivo.",
   "keep_awake_off_help_mobile": "Deixar a tela desligar normalmente (padrão).",
   "keep_awake_while_working_help_mobile": "Manter a tela ligada enquanto um turno do agente estiver em andamento e o Ares estiver aberto.",
-  "keep_awake_always_help_mobile": "Manter a tela ligada enquanto o Ares estiver aberto."
+  "keep_awake_always_help_mobile": "Manter a tela ligada enquanto o Ares estiver aberto.",
+  "rewind_target_unsaved": "Esta mensagem ainda não foi salva. Aguarde a conclusão e edite-a novamente.",
+  "rewind_turn_busy": "A resposta atual ainda não parou, então nada foi enviado. Tente novamente em instantes.",
+  "rewind_session_changed": "Esta conversa mudou desde que foi aberta aqui, então nada foi removido nem enviado. Reabra-a e tente novamente."
 }

@@ -1298,6 +1298,51 @@ class NormalGatewayChatOwner {
     }
   }
 
+  /// The gateway accepted a rewind at saved row [from]: that turn and every
+  /// later one are archived, as Desktop's `applyRewindOptimistic` drops
+  /// everything after the source turn. The saved rows from [from] through
+  /// [through] (the newest row the transcript had then) leave this owner's
+  /// history, so a stale observation cannot hand them back to the chat, and
+  /// the local presentation of this visit's earlier turns (rows, timeline,
+  /// outcomes) goes with them. The running turn is kept. The next read
+  /// reconciles: rows the server still lists return with it.
+  void applyAcceptedRewind(int from, {int? through}) {
+    if (_redirect != null) {
+      return _root.applyAcceptedRewind(from, through: through);
+    }
+    bool archived(Map<String, dynamic> row) {
+      final id = row['id'];
+      return id is int && id >= from && (through == null || id <= through);
+    }
+
+    _history.removeWhere(archived);
+    _historyConfirmationRows = [
+      for (final row in _historyConfirmationRows)
+        if (!archived(row)) row,
+    ];
+    _historyPresentation.removeWhere((entry) => archived(entry.row));
+    final scopes = {
+      for (final row in _priorDisplay) row['_normal_projection_id'],
+      for (final settled in _settledPresentation)
+        for (final row in settled.rows) row['_normal_projection_id'],
+    }.whereType<String>().toSet();
+    _priorDisplay.clear();
+    _settledPresentation.clear();
+    if (_timeline.scopes.any(scopes.contains)) {
+      final retained = _timeline.scopes.where(
+        (scope) => !scopes.contains(scope),
+      );
+      _timeline = retained.isEmpty
+          ? _timeline.clear()
+          : _timeline.retainScopes(retained);
+    }
+    final outcomes = _uncoveredOutcomes(_receivedOutcomes, scopes);
+    _receivedOutcomes
+      ..clear()
+      ..addAll(outcomes);
+    _notify();
+  }
+
   List<ReceivedScopeOutcome> _uncoveredOutcomes(
     List<ReceivedScopeOutcome> outcomes,
     Set<String> covered,

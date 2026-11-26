@@ -27,9 +27,10 @@ bool isSyntheticRendererId(String? messageId) {
 /// `confirm_truncate` states that the submit really is a rewind/edit/regenerate:
 /// the gateway drops history only for a submit that says so, so a leftover
 /// ordinal riding along on an ordinary send cannot delete the transcript.
-/// Emits `confirm_truncate` plus ONE durable target (`truncate_before_row_id`
+/// Emits `confirm_truncate` plus ONE target (`truncate_before_row_id`
 /// preferred, else non-synthetic `truncate_before_message_id`, else
-/// `truncate_before_user_ordinal`). Ordinal 0 additionally sets
+/// `truncate_before_user_ordinal`; [RewindPlan] never passes an ordinal).
+/// Ordinal 0 additionally sets
 /// `confirm_empty_truncate`. A cut that archives later user turns sets
 /// `confirm_deep_truncate` only when [confirmDeepTruncate] is true.
 Map<String, dynamic> truncateSubmitParams(
@@ -111,6 +112,91 @@ Future<int?> resolveDurableRowId(
   return lookup.rowId;
 }
 
+/// The session's full saved transcript (`session.history`), read once for a
+/// rewind: it addresses the turn by its durable row and says what a cut
+/// there archives. The rows on screen cannot answer either question: they
+/// are a paged tail, and rows of this visit have no durable identity yet.
+class RewindHistory {
+  RewindHistory._(this._users, this.maxRowId);
+
+  /// Visible user turns that carry a durable `row_id`, in transcript order.
+  final List<({int rowId, String text})> _users;
+
+  /// The newest durable row of any role, or null when none is stamped.
+  final int? maxRowId;
+
+  /// Whether the gateway stamps durable rows on this transcript.
+  bool get hasRowIds => _users.isNotEmpty;
+
+  /// Null when `session.history` cannot be read (an old gateway, a dropped
+  /// socket): the caller then knows nothing about the saved transcript.
+  static Future<RewindHistory?> read(
+    GatewayRpcCall requestGateway,
+    String sessionId,
+  ) async {
+    final Object? raw;
+    try {
+      final result = await requestGateway('session.history', {
+        'session_id': sessionId,
+      });
+      raw = result?['messages'];
+    } catch (_) {
+      return null;
+    }
+    if (raw is! List) return null;
+    final users = <({int rowId, String text})>[];
+    int? maxRowId;
+    for (final entry in raw) {
+      if (entry is! Map) continue;
+      final rid = _parsePositiveInt(entry['row_id']);
+      if (rid == null) continue;
+      if (maxRowId == null || rid > maxRowId) maxRowId = rid;
+      if (entry['role'] != 'user') continue;
+      final kind = entry['display_kind'];
+      if (kind != null && kind != '') continue;
+      final rawText = entry['text'] ?? entry['content'];
+      if (rawText != null && rawText is! String) continue;
+      users.add((rowId: rid, text: (rawText as String? ?? '').trim()));
+    }
+    return RewindHistory._(users, maxRowId);
+  }
+
+  /// The durable row of one user turn. The bubble's own row id wins when
+  /// the transcript has it (Desktop's first choice, `source.rowId`); else
+  /// the turn is matched by exact trimmed text, as rewind.ts
+  /// `resolveDurableRowId`: a unique match, or the newest of several only
+  /// when [expectedOrdinal] says the target is the latest turn.
+  int? rowFor({
+    int? bubbleRowId,
+    required String sourceText,
+    int? expectedOrdinal,
+  }) {
+    if (bubbleRowId != null &&
+        bubbleRowId > 0 &&
+        _users.any((user) => user.rowId == bubbleRowId)) {
+      return bubbleRowId;
+    }
+    final wanted = sourceText.trim();
+    if (wanted.isEmpty) return null;
+    final matches = _users.where((user) => user.text == wanted).toList();
+    if (matches.length == 1) return matches.single.rowId;
+    if (matches.length > 1 &&
+        expectedOrdinal != null &&
+        expectedOrdinal >= _users.length - 1) {
+      final last = matches.last;
+      return identical(_users.last, last) ? last.rowId : null;
+    }
+    return null;
+  }
+
+  /// Whether a cut at [rowId] archives later user turns (Desktop's
+  /// `laterVisibleUserTurns`): what the deep-cut confirm asks about.
+  bool laterUserTurns(int rowId) {
+    final index = _users.indexWhere((user) => user.rowId == rowId);
+    return index >= 0 && index < _users.length - 1;
+  }
+}
+
 /// Full lookup used by [RewindPlan.resolve] so callers distinguish an
 /// unresolvable turn in a `row_id`-stamped transcript from a legacy gateway
 /// that does not stamp `row_id`.
@@ -120,65 +206,20 @@ Future<DurableRowLookup> lookupDurableRowId(
   String sourceText,
   int? expectedOrdinal,
 ) async {
-  final wanted = sourceText.trim();
-  if (wanted.isEmpty) {
+  if (sourceText.trim().isEmpty) {
     return const DurableRowLookup(rowId: null, persistedHasRowIds: false);
   }
-
-  List<Map<String, dynamic>> messages;
-  try {
-    final result = await requestGateway('session.history', {
-      'session_id': sessionId,
-    });
-    final raw = result?['messages'];
-    if (raw is! List) {
-      return const DurableRowLookup(rowId: null, persistedHasRowIds: false);
-    }
-    messages = [
-      for (final entry in raw)
-        if (entry is Map) Map<String, dynamic>.from(entry),
-    ];
-  } catch (_) {
+  final history = await RewindHistory.read(requestGateway, sessionId);
+  if (history == null || !history.hasRowIds) {
     return const DurableRowLookup(rowId: null, persistedHasRowIds: false);
   }
-
-  final visibleUsers = messages
-      .where(
-        (m) =>
-            m['role'] == 'user' &&
-            (m['display_kind'] == null || m['display_kind'] == ''),
-      )
-      .toList();
-  final durableUsers = <({int rowId, String text})>[];
-  for (final m in visibleUsers) {
-    final rid = _parsePositiveInt(m['row_id']);
-    if (rid == null) continue;
-    final rawText = m['text'] ?? m['content'];
-    if (rawText != null && rawText is! String) continue;
-    durableUsers.add((rowId: rid, text: (rawText as String? ?? '').trim()));
-  }
-
-  if (durableUsers.isEmpty) {
-    return const DurableRowLookup(rowId: null, persistedHasRowIds: false);
-  }
-
-  final matches = durableUsers.where((u) => u.text == wanted).toList();
-  if (matches.length == 1) {
-    return DurableRowLookup(
-      rowId: matches.single.rowId,
-      persistedHasRowIds: true,
-    );
-  }
-  if (matches.length > 1 &&
-      expectedOrdinal != null &&
-      expectedOrdinal >= durableUsers.length - 1) {
-    final last = matches.last;
-    return DurableRowLookup(
-      rowId: identical(durableUsers.last, last) ? last.rowId : null,
-      persistedHasRowIds: true,
-    );
-  }
-  return const DurableRowLookup(rowId: null, persistedHasRowIds: true);
+  return DurableRowLookup(
+    rowId: history.rowFor(
+      sourceText: sourceText,
+      expectedOrdinal: expectedOrdinal,
+    ),
+    persistedHasRowIds: true,
+  );
 }
 
 /// Resolved target for ONE truncating `prompt.submit`.
@@ -202,10 +243,25 @@ class RewindPlan {
       truncateMessageId != null ||
       truncateOrdinal != null;
 
-  /// Target priority: `truncate_before_row_id` preferred (direct or resolved
-  /// from `session.history`), else non-synthetic `truncate_before_message_id`,
-  /// else `truncate_before_user_ordinal` (only when `session.history` does not
-  /// stamp `row_id`s).
+  /// A plan for a target the caller already resolved ([RewindHistory]):
+  /// the durable row, or none (a plain resubmit). [originalOrdinal] is the
+  /// turn's place among the user turns, kept only for the first-turn
+  /// `confirm_empty_truncate` rule.
+  const RewindPlan.resolved({
+    required int? rowId,
+    required this.sourceText,
+    required this.originalOrdinal,
+  }) : truncateOrdinal = null,
+       truncateMessageId = null,
+       truncateRowId = rowId;
+
+  /// Target priority: `truncate_before_row_id` (direct or resolved from
+  /// `session.history`), else a non-synthetic `truncate_before_message_id`.
+  /// Never `truncate_before_user_ordinal`: a client-side ordinal can
+  /// disagree with the gateway's (#87059), and the gateway fails it closed
+  /// on a durable session. An unresolved target is a plain resubmit, as
+  /// rewind.ts `runRewindSubmit` (`resolvedOrdinal = undefined` on both
+  /// branches).
   static Future<RewindPlan> resolve({
     required GatewayRpcCall requestGateway,
     required String sessionId,
@@ -270,9 +326,7 @@ class RewindPlan {
     }
 
     return RewindPlan._(
-      truncateOrdinal: (!lookup.persistedHasRowIds && hasOrdinal)
-          ? truncateOrdinal
-          : null,
+      truncateOrdinal: null,
       truncateMessageId: null,
       truncateRowId: null,
       sourceText: sourceText,
@@ -299,11 +353,16 @@ Map<String, dynamic> buildRewindParams(
       confirmDeepTruncate: confirmDeepTruncate,
     ),
   };
-  if (params.isEmpty) return const {};
+  // rewind.ts:361-369. With the ordinal dropped, the durable row is
+  // authoritative and a cut at the first active turn is allowed. An
+  // unresolved first turn sends the flag bare, as Desktop does: the legacy
+  // sidecar ignores it on a non-empty prefix, and the canonical transport
+  // strips it (it is one of Desktop's TRUNCATE_KEYS).
   if (plan.truncateOrdinal == null &&
       (plan.truncateRowId != null || plan.originalOrdinal == 0)) {
     params['confirm_empty_truncate'] = true;
   }
+  if (params.isEmpty) return const {};
   if (rebindSurvivorRowIds != null) {
     final ids = {
       for (final id in rebindSurvivorRowIds)

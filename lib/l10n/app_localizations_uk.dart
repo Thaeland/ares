@@ -7428,4 +7428,16 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Вхід виконано з токеном розгортання.';
+
+  @override
+  String get rewind_target_unsaved =>
+      'Це повідомлення ще не збережено. Дочекайтеся завершення й відредагуйте його знову.';
+
+  @override
+  String get rewind_turn_busy =>
+      'Поточну відповідь ще не зупинено, тому нічого не надіслано. Спробуйте ще раз за мить.';
+
+  @override
+  String get rewind_session_changed =>
+      'Цей чат змінився відтоді, як його відкрили тут, тому нічого не вилучено й не надіслано. Відкрийте його знову та повторіть спробу.';
 }

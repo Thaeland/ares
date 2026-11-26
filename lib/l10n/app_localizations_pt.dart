@@ -7430,6 +7430,18 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Sessão iniciada com o token de implementação.';
+
+  @override
+  String get rewind_target_unsaved =>
+      'Esta mensagem ainda não foi guardada. Aguarde que termine e edite-a novamente.';
+
+  @override
+  String get rewind_turn_busy =>
+      'A resposta atual ainda não parou, por isso nada foi enviado. Tente novamente dentro de momentos.';
+
+  @override
+  String get rewind_session_changed =>
+      'Esta conversa mudou desde que foi aberta aqui, por isso nada foi removido nem enviado. Reabra-a e tente novamente.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -14081,4 +14093,16 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Conectado com o token de implantação.';
+
+  @override
+  String get rewind_target_unsaved =>
+      'Esta mensagem ainda não foi salva. Aguarde a conclusão e edite-a novamente.';
+
+  @override
+  String get rewind_turn_busy =>
+      'A resposta atual ainda não parou, então nada foi enviado. Tente novamente em instantes.';
+
+  @override
+  String get rewind_session_changed =>
+      'Esta conversa mudou desde que foi aberta aqui, então nada foi removido nem enviado. Reabra-a e tente novamente.';
 }

@@ -11,7 +11,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../widgets/session_name_dialog.dart';
 import '../widgets/rewind_dialogs.dart';
-import '../history/rewind_submit.dart' show RewindPlan, buildRewindParams;
+import '../history/rewind_submit.dart'
+    show RewindHistory, RewindPlan, buildRewindParams;
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../presentation/companion_draft.dart';
@@ -2417,6 +2418,13 @@ class _ChatScreenState extends State<ChatScreen>
       ..showSnackBar(SnackBar(content: Text(text)));
   }
 
+  /// A saved row's durable id (the REST history's `id`, the gateway's
+  /// `row_id`). Rows of this visit have none until history covers them.
+  static int? _durableRowId(Map<String, dynamic> row) {
+    final id = row['id'];
+    return id is int && id > 0 ? id : null;
+  }
+
   /// User rows the transcript currently renders, used only for positions in
   /// the rewind/edit confirm path. The durable row id is resolved against
   /// `session.history` on the gateway, never from these client-side rows.
@@ -2445,16 +2453,19 @@ class _ChatScreenState extends State<ChatScreen>
     );
   }
 
-  /// One truncating `prompt.submit` for Edit and Restore (Desktop rewind
-  /// semantics). The composer draft is never consumed (`textOverride`), a
-  /// live turn is interrupted first, and a cut that archives later user turns
-  /// requires the destructive checkpoint confirm before any wire call.
+  /// Edit and Restore of a stored turn, with Desktop's rewind semantics
+  /// (rewind.ts `planEdit` / `planRestore` → `runRewindSubmit`). The
+  /// session's full saved transcript (`session.history`) names the durable
+  /// row (the bubble's own row id first) and says whether the cut archives
+  /// later user turns: the rows on screen are a paged tail and cannot. A
+  /// cut that does asks first; nothing is sent before the answer. A live
+  /// turn is interrupted, then the turn is submitted once. The composer
+  /// draft is never consumed (`textOverride`).
   Future<void> _submitRewindTurn({
     required String text,
     required String sourceText,
-    required int truncateOrdinal,
-    required bool laterTurns,
-    bool alwaysConfirm = false,
+    required int? bubbleRowId,
+    required bool restore,
   }) async {
     final l10n = context.sharedL10n;
     final gateway = _desktopGateway;
@@ -2465,39 +2476,103 @@ class _ChatScreenState extends State<ChatScreen>
       _showRetryNotice(l10n.composer_retry_unavailable);
       return;
     }
-    if (laterTurns || alwaysConfirm) {
-      final confirmed = await showRestoreTurnConfirm(context);
-      if (!mounted || !confirmed) return;
-    }
-    final plan = await RewindPlan.resolve(
-      requestGateway: gateway.requestSessionRpc,
-      sessionId: session,
-      truncateOrdinal: truncateOrdinal,
-      truncateMessageId: null,
-      truncateRowId: null,
-      sourceText: sourceText,
+    final position = _userTurnPosition(sourceText);
+    final history = await RewindHistory.read(
+      gateway.requestSessionRpc,
+      session,
     );
     if (!mounted) return;
-    if (_sending || _streaming || _preparingSend || _pendingReattachResync) {
+    final rowId = history == null
+        ? bubbleRowId
+        : history.rowFor(
+            bubbleRowId: bubbleRowId,
+            sourceText: sourceText,
+            expectedOrdinal: position.ordinal,
+          );
+    if (rowId == null && history != null && history.hasRowIds) {
+      // A saved transcript that does not hold this turn yet: a cut would be
+      // a guess and a plain resend a duplicate. Say so; send nothing.
+      _showRetryNotice(l10n.rewind_target_unsaved);
       return;
     }
-    // Best-effort interrupt before the rewind, as Desktop's runRewindSubmit.
-    try {
-      await gateway.interruptPrompt(sessionId: session);
-    } catch (_) {
-      // The submit still gates on the gateway's own busy state.
+    final laterTurns = rowId != null && history != null
+        ? history.laterUserTurns(rowId)
+        : position.laterTurns;
+    if (laterTurns || restore) {
+      final confirmed = await showRestoreTurnConfirm(
+        context,
+        body: restore ? null : l10n.edit_turn_later_turns_body,
+      );
+      if (!mounted || !confirmed) return;
     }
-    if (!mounted) return;
+    final normal = _normalChat;
+    if (_streaming || normal?.snapshot.hasActiveTurn == true) {
+      // Edit interrupts a live turn on purpose (Desktop's
+      // planEditAfterConfirm): stop it, then wait for it to settle. A turn
+      // the owner still runs after this screen stopped streaming it (a
+      // reattached or background turn) is interrupted through the owner.
+      if (_streaming) {
+        await _stopResponse();
+      } else {
+        try {
+          await normal!.interrupt();
+        } catch (_) {
+          // Still live below: the notice says nothing was sent.
+        }
+      }
+      for (var i = 0; i < 50 && mounted && _hasLiveTurn; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+      if (!mounted) return;
+    } else {
+      // A detached turn may still run on the gateway: best-effort
+      // interrupt before the rewind, as Desktop's runRewindSubmit.
+      try {
+        await gateway.interruptPrompt(sessionId: session);
+      } catch (_) {
+        // The submit still gates on the gateway's own busy state.
+      }
+      if (!mounted) return;
+    }
+    if (_hasLiveTurn) {
+      // Never a silent no-op: say why nothing was sent.
+      _showRetryNotice(l10n.rewind_turn_busy);
+      return;
+    }
     await _sendMessage(
       textOverride: text.trim(),
-      promptParams: buildRewindParams(plan, confirmDeepTruncate: laterTurns),
+      promptParams: buildRewindParams(
+        RewindPlan.resolved(
+          rowId: rowId,
+          sourceText: sourceText,
+          originalOrdinal: position.ordinal,
+        ),
+        confirmDeepTruncate: laterTurns,
+      ),
+      onAccepted: rowId == null
+          ? null
+          : () => _applyAcceptedRewind(rowId, through: history?.maxRowId),
     );
+  }
+
+  /// The gateway accepted a rewind at [rowId]: the archived turns leave the
+  /// transcript at once (Desktop's `applyRewindOptimistic`), and the next
+  /// history read reconciles.
+  void _applyAcceptedRewind(int rowId, {int? through}) {
+    if (!mounted) return;
+    // The owner first: its snapshot must not hand the archived rows back.
+    _normalChat?.applyAcceptedRewind(rowId, through: through);
+    _historyWindow.applyRewind(rowId, through: through);
+    _historyWindowRevision++;
+    _extractToolMessages(_historyWindow.rows, replacePresentation: true);
+    setState(() => _messages = _restHistoryForPresentation());
   }
 
   /// Re-run a stored prompt with edited text. Cancel or no change sends
   /// nothing; the edited text replaces the turn, never appends a new one.
-  Future<void> _editAndResendTurn(String content) async {
-    if (_archiving || _sending || _preparingSend) return;
+  Future<void> _editAndResendTurn(String content, {int? rowId}) async {
+    // A live turn does not block the edit: it is interrupted on confirm.
+    if (_archiving || _preparingSend) return;
     final edited = await showDialog<String>(
       context: context,
       builder: (_) => EditTurnDialog(initialText: content),
@@ -2505,25 +2580,22 @@ class _ChatScreenState extends State<ChatScreen>
     if (!mounted || edited == null) return;
     final text = edited.trim();
     if (text.isEmpty || text == content.trim()) return;
-    final position = _userTurnPosition(content);
     await _submitRewindTurn(
       text: text,
       sourceText: content.trim(),
-      truncateOrdinal: position.ordinal,
-      laterTurns: position.laterTurns,
+      bubbleRowId: rowId,
+      restore: false,
     );
   }
 
   /// Restore a stored prompt to this checkpoint after explicit confirmation.
-  Future<void> _restoreUserTurn(String content) async {
-    if (_archiving || _sending || _preparingSend) return;
-    final position = _userTurnPosition(content);
+  Future<void> _restoreUserTurn(String content, {int? rowId}) async {
+    if (_archiving || _preparingSend) return;
     await _submitRewindTurn(
       text: content.trim(),
       sourceText: content.trim(),
-      truncateOrdinal: position.ordinal,
-      laterTurns: position.laterTurns,
-      alwaysConfirm: true,
+      bubbleRowId: rowId,
+      restore: true,
     );
   }
 
@@ -10794,10 +10866,13 @@ class _ChatScreenState extends State<ChatScreen>
       onEdit: !isUser
           ? null
           : _canRegenerate
-          ? () => unawaited(_editAndResendTurn(content))
+          ? () => unawaited(
+              _editAndResendTurn(content, rowId: _durableRowId(msg)),
+            )
           : () => _editAndResend(content),
       onRestore: isUser && _canRegenerate
-          ? () => unawaited(_restoreUserTurn(content))
+          ? () =>
+                unawaited(_restoreUserTurn(content, rowId: _durableRowId(msg)))
           : null,
       // Every assistant reply offers Regenerate; whether it replaces the
       // turn or asks again is decided when it is chosen.

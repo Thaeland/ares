@@ -7428,4 +7428,16 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Sesión iniciada con el token de despliegue.';
+
+  @override
+  String get rewind_target_unsaved =>
+      'Este mensaje aún no está guardado. Espera a que termine y vuelve a editarlo.';
+
+  @override
+  String get rewind_turn_busy =>
+      'La respuesta actual aún no se ha detenido, así que no se envió nada. Inténtalo de nuevo en un momento.';
+
+  @override
+  String get rewind_session_changed =>
+      'Este chat ha cambiado desde que se abrió aquí, así que no se eliminó ni se envió nada. Vuelve a abrirlo e inténtalo de nuevo.';
 }

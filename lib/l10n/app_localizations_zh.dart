@@ -7118,6 +7118,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署令牌登录。';
+
+  @override
+  String get rewind_target_unsaved => '此消息尚未保存。请等待其完成后再编辑。';
+
+  @override
+  String get rewind_turn_busy => '当前回复尚未停止，因此未发送任何内容。请稍后再试。';
+
+  @override
+  String get rewind_session_changed => '此聊天自在此处打开后已发生变化，因此未移除或发送任何内容。请重新打开后再试。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -13463,6 +13472,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署令牌登录。';
+
+  @override
+  String get rewind_target_unsaved => '此消息尚未保存。请等待其完成后再编辑。';
+
+  @override
+  String get rewind_turn_busy => '当前回复尚未停止，因此未发送任何内容。请稍后再试。';
+
+  @override
+  String get rewind_session_changed => '此聊天自在此处打开后已发生变化，因此未移除或发送任何内容。请重新打开后再试。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -20206,4 +20224,13 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署權杖登入。';
+
+  @override
+  String get rewind_target_unsaved => '此訊息尚未儲存。請等待其完成後再編輯。';
+
+  @override
+  String get rewind_turn_busy => '目前的回覆尚未停止，因此未傳送任何內容。請稍後再試。';
+
+  @override
+  String get rewind_session_changed => '此聊天自在此處開啟後已有變更，因此未移除或傳送任何內容。請重新開啟後再試。';
 }

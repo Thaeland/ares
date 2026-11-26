@@ -1905,5 +1905,8 @@
   "keep_awake_always_help": "このデバイスで Ares が開いている間はアイドルスリープを防ぎます。",
   "keep_awake_off_help_mobile": "画面は通常どおりオフになります(デフォルト)。",
   "keep_awake_while_working_help_mobile": "エージェントのターンが実行中で Ares が開いている間、画面をオンのままにします。",
-  "keep_awake_always_help_mobile": "Ares が開いている間、画面をオンのままにします。"
+  "keep_awake_always_help_mobile": "Ares が開いている間、画面をオンのままにします。",
+  "rewind_target_unsaved": "このメッセージはまだ保存されていません。完了するまで待ってから、もう一度編集してください。",
+  "rewind_turn_busy": "現在の返信がまだ停止していないため、何も送信されませんでした。少し待ってからもう一度お試しください。",
+  "rewind_session_changed": "このチャットはここで開いてから変更されたため、何も削除・送信されませんでした。開き直してからもう一度お試しください。"
 }

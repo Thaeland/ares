@@ -7369,4 +7369,16 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'تم تسجيل الدخول برمز النشر.';
+
+  @override
+  String get rewind_target_unsaved =>
+      'لم تُحفظ هذه الرسالة بعد. انتظر حتى تستقر ثم عدّلها مرة أخرى.';
+
+  @override
+  String get rewind_turn_busy =>
+      'لم يتوقف الرد الحالي بعد، لذلك لم يُرسل شيء. حاول مرة أخرى بعد لحظة.';
+
+  @override
+  String get rewind_session_changed =>
+      'تغيّرت هذه المحادثة منذ فتحها هنا، لذلك لم يُحذف أو يُرسل شيء. أعد فتحها ثم حاول مرة أخرى.';
 }

@@ -7444,4 +7444,16 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Connecté avec le jeton de déploiement.';
+
+  @override
+  String get rewind_target_unsaved =>
+      'Ce message n\'est pas encore enregistré. Attendez qu\'il soit terminé, puis modifiez-le à nouveau.';
+
+  @override
+  String get rewind_turn_busy =>
+      'La réponse en cours n\'est pas encore arrêtée, rien n\'a donc été envoyé. Réessayez dans un instant.';
+
+  @override
+  String get rewind_session_changed =>
+      'Cette conversation a changé depuis son ouverture ici, rien n\'a donc été supprimé ni envoyé. Rouvrez-la, puis réessayez.';
 }

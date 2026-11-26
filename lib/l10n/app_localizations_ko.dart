@@ -7221,4 +7221,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_signed_in_with_deployment_token => '배포 토큰으로 로그인했습니다.';
+
+  @override
+  String get rewind_target_unsaved =>
+      '이 메시지는 아직 저장되지 않았습니다. 완료될 때까지 기다린 후 다시 편집하세요.';
+
+  @override
+  String get rewind_turn_busy =>
+      '현재 응답이 아직 중지되지 않아 아무것도 전송되지 않았습니다. 잠시 후 다시 시도하세요.';
+
+  @override
+  String get rewind_session_changed =>
+      '이 채팅은 여기에서 연 이후 변경되어 아무것도 삭제되거나 전송되지 않았습니다. 다시 연 후 다시 시도하세요.';
 }

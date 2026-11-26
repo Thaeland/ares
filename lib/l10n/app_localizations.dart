@@ -12440,6 +12440,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Signed in with the deployment token.'**
   String get ng_signed_in_with_deployment_token;
+
+  /// No description provided for @rewind_target_unsaved.
+  ///
+  /// In en, this message translates to:
+  /// **'This message is not saved yet. Wait for it to settle, then edit it again.'**
+  String get rewind_target_unsaved;
+
+  /// No description provided for @rewind_turn_busy.
+  ///
+  /// In en, this message translates to:
+  /// **'The current reply has not stopped yet, so nothing was sent. Try again in a moment.'**
+  String get rewind_turn_busy;
+
+  /// No description provided for @rewind_session_changed.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat changed since it was opened here, so nothing was removed or sent. Reopen it, then try again.'**
+  String get rewind_session_changed;
 }
 
 class _AppLocalizationsDelegate

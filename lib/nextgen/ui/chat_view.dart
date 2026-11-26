@@ -2055,22 +2055,22 @@ class _NgChatViewState extends State<NgChatView>
     }
   }
 
-  /// Stored prompt positions among visible user turns. The durable target is
-  /// resolved against `session.history`; these positions only drive the
-  /// destructive-cut confirm and the ordinal fallback on legacy gateways.
-  ({int ordinal, bool laterTurns}) _turnPosition(NgUserItem item) {
-    final users = chat.items
-        .whereType<NgUserItem>()
-        .where((entry) => !entry.steered)
-        .toList();
-    final index = users.indexOf(item);
-    return (
-      ordinal: index < 0 ? users.length : index,
-      laterTurns: index >= 0 && index < users.length - 1,
-    );
+  /// The cut an edit or restore of [item] makes, or null (with a notice)
+  /// when the saved transcript does not hold the turn yet.
+  Future<NgRewindTarget?> _rewindTarget(
+    NgChatController owner,
+    NgUserItem item,
+  ) async {
+    final target = await owner.rewindTargetFor(item);
+    if (!mounted || !identical(owner, widget.chat)) return null;
+    if (target == null) {
+      ngToast(context, context.sharedL10n.rewind_target_unsaved);
+    }
+    return target;
   }
 
   Future<void> _editTurn(NgUserItem item) async {
+    final owner = chat;
     final edited = await showDialog<String>(
       context: context,
       builder: (_) => EditTurnDialog(initialText: item.text),
@@ -2078,26 +2078,29 @@ class _NgChatViewState extends State<NgChatView>
     if (!mounted || edited == null) return;
     final text = edited.trim();
     if (text.isEmpty || text == item.text.trim()) return;
-    final position = _turnPosition(item);
-    if (position.laterTurns && !await showRestoreTurnConfirm(context)) return;
-    if (!mounted) return;
-    await chat.rewindUserTurn(
-      text: text,
-      sourceText: item.text.trim(),
-      truncateOrdinal: position.ordinal,
-      confirmDeepTruncate: position.laterTurns,
-    );
+    final target = await _rewindTarget(owner, item);
+    if (target == null || !mounted) return;
+    if (target.laterTurns &&
+        !await showRestoreTurnConfirm(
+          context,
+          body: context.sharedL10n.edit_turn_later_turns_body,
+        )) {
+      return;
+    }
+    if (!mounted || !identical(owner, widget.chat)) return;
+    await owner.rewindUserTurn(item: item, text: text, target: target);
   }
 
   Future<void> _restoreTurn(NgUserItem item) async {
+    final owner = chat;
+    final target = await _rewindTarget(owner, item);
+    if (target == null || !mounted) return;
     if (!await showRestoreTurnConfirm(context)) return;
-    if (!mounted) return;
-    final position = _turnPosition(item);
-    await chat.rewindUserTurn(
+    if (!mounted || !identical(owner, widget.chat)) return;
+    await owner.rewindUserTurn(
+      item: item,
       text: item.text.trim(),
-      sourceText: item.text.trim(),
-      truncateOrdinal: position.ordinal,
-      confirmDeepTruncate: position.laterTurns,
+      target: target,
     );
   }
 

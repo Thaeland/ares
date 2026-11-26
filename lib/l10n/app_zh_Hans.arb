@@ -1905,5 +1905,8 @@
   "keep_awake_always_help": "在此设备上打开 Ares 期间阻止空闲睡眠。",
   "keep_awake_off_help_mobile": "让屏幕照常关闭（默认）。",
   "keep_awake_while_working_help_mobile": "在代理回合运行且 Ares 打开期间保持屏幕常亮。",
-  "keep_awake_always_help_mobile": "在 Ares 打开期间保持屏幕常亮。"
+  "keep_awake_always_help_mobile": "在 Ares 打开期间保持屏幕常亮。",
+  "rewind_target_unsaved": "此消息尚未保存。请等待其完成后再编辑。",
+  "rewind_turn_busy": "当前回复尚未停止，因此未发送任何内容。请稍后再试。",
+  "rewind_session_changed": "此聊天自在此处打开后已发生变化，因此未移除或发送任何内容。请重新打开后再试。"
 }

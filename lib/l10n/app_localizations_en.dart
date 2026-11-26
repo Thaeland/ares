@@ -7373,4 +7373,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Signed in with the deployment token.';
+
+  @override
+  String get rewind_target_unsaved =>
+      'This message is not saved yet. Wait for it to settle, then edit it again.';
+
+  @override
+  String get rewind_turn_busy =>
+      'The current reply has not stopped yet, so nothing was sent. Try again in a moment.';
+
+  @override
+  String get rewind_session_changed =>
+      'This chat changed since it was opened here, so nothing was removed or sent. Reopen it, then try again.';
 }

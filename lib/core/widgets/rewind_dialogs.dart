@@ -72,15 +72,19 @@ class _EditTurnDialogState extends State<EditTurnDialog> {
 }
 
 /// Confirmation for restoring a checkpoint or for any rewind that would
-/// archive later user turns. True only when the user chose the confirm action.
-Future<bool> showRestoreTurnConfirm(BuildContext context) async {
+/// archive later user turns ([body] replaces the restore copy for an edit).
+/// True only when the user chose the confirm action.
+Future<bool> showRestoreTurnConfirm(
+  BuildContext context, {
+  String? body,
+}) async {
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (dialogContext) {
       final l10n = dialogContext.sharedL10n;
       return AlertDialog(
         title: Text(l10n.restore_turn_title),
-        content: Text(l10n.restore_turn_body),
+        content: Text(body ?? l10n.restore_turn_body),
         actions: [
           TextButton(
             key: const Key('restore-turn-cancel'),

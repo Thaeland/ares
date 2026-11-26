@@ -114,8 +114,30 @@ void main() {
         truncateRowId: null,
         sourceText: 'retry me',
       );
+      // rewind.ts:361-369: the ordinal is dropped, and an unresolved FIRST
+      // turn still sends the bare confirm_empty_truncate (the legacy sidecar
+      // ignores it on a non-empty prefix; the canonical transport strips it).
+      expect(buildRewindParams(ambiguousMid, confirmDeepTruncate: true), {
+        'confirm_empty_truncate': true,
+      });
+      expect(ambiguousMid.truncates, isFalse);
+      final ambiguousLater = await RewindPlan.resolve(
+        requestGateway: (_, _) async => {
+          'messages': [
+            {'row_id': 10, 'role': 'user', 'text': 'first turn'},
+            {'row_id': 11, 'role': 'user', 'text': 'retry me'},
+            {'row_id': 12, 'role': 'user', 'text': 'retry me'},
+            {'row_id': 13, 'role': 'user', 'text': 'later turn'},
+          ],
+        },
+        sessionId: 'rt-1',
+        truncateOrdinal: 1,
+        truncateMessageId: null,
+        truncateRowId: null,
+        sourceText: 'retry me',
+      );
       expect(
-        buildRewindParams(ambiguousMid, confirmDeepTruncate: true),
+        buildRewindParams(ambiguousLater, confirmDeepTruncate: true),
         isEmpty,
       );
 
@@ -135,7 +157,11 @@ void main() {
       );
       expect(latestMatch.truncateRowId, 11);
 
-      // Legacy gateway with no row_id stamps falls back to ordinal.
+      // A transcript without row_id stamps has no durable address. Desktop
+      // never falls back to truncate_before_user_ordinal (rewind.ts:313-324,
+      // `resolvedOrdinal = undefined`): a client-side ordinal can disagree
+      // with the gateway's (#87059). It resubmits plainly; only the bare
+      // first-turn flag rides along.
       final legacyOrdinal = await RewindPlan.resolve(
         requestGateway: (_, _) async => {
           'messages': [
@@ -148,11 +174,59 @@ void main() {
         truncateRowId: null,
         sourceText: 'First',
       );
+      expect(legacyOrdinal.truncates, isFalse);
       expect(buildRewindParams(legacyOrdinal, confirmDeepTruncate: false), {
-        'confirm_truncate': true,
-        'truncate_before_user_ordinal': 0,
         'confirm_empty_truncate': true,
       });
+
+      // The bubble's own durable row wins over content matching, and says
+      // whether the cut archives later user turns.
+      final history = (await RewindHistory.read(
+        (_, _) async => {
+          'messages': [
+            {'row_id': 7, 'role': 'user', 'text': 'retry me'},
+            {'row_id': 8, 'role': 'assistant', 'text': 'answer'},
+            {'row_id': 9, 'role': 'user', 'text': 'retry me'},
+            {
+              'row_id': 10,
+              'role': 'user',
+              'text': 'hidden',
+              'display_kind': 'hidden',
+            },
+            {'row_id': 11, 'role': 'user', 'text': 'last'},
+          ],
+        },
+        'rt-1',
+      ))!;
+      expect(history.rowFor(bubbleRowId: 7, sourceText: 'changed since'), 7);
+      expect(
+        history.rowFor(sourceText: 'retry me', expectedOrdinal: 0),
+        isNull,
+      );
+      expect(history.rowFor(bubbleRowId: 99, sourceText: 'last'), 11);
+      expect(history.laterUserTurns(7), isTrue);
+      expect(history.laterUserTurns(11), isFalse);
+      expect(history.maxRowId, 11);
+      expect(
+        await RewindHistory.read((_, _) async => throw StateError('x'), 's'),
+        isNull,
+      );
+      expect(
+        buildRewindParams(
+          const RewindPlan.resolved(
+            rowId: 7,
+            sourceText: 'retry me',
+            originalOrdinal: 0,
+          ),
+          confirmDeepTruncate: true,
+        ),
+        {
+          'confirm_truncate': true,
+          'truncate_before_row_id': 7,
+          'confirm_deep_truncate': true,
+          'confirm_empty_truncate': true,
+        },
+      );
     },
   );
 

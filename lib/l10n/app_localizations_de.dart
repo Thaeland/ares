@@ -7433,4 +7433,16 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Mit dem Bereitstellungstoken angemeldet.';
+
+  @override
+  String get rewind_target_unsaved =>
+      'Diese Nachricht ist noch nicht gespeichert. Warte, bis sie abgeschlossen ist, und bearbeite sie dann erneut.';
+
+  @override
+  String get rewind_turn_busy =>
+      'Die aktuelle Antwort wurde noch nicht gestoppt, daher wurde nichts gesendet. Versuche es gleich noch einmal.';
+
+  @override
+  String get rewind_session_changed =>
+      'Dieser Chat hat sich geändert, seit er hier geöffnet wurde, daher wurde nichts entfernt oder gesendet. Öffne ihn erneut und versuche es noch einmal.';
 }

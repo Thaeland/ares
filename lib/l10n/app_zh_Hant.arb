@@ -2972,5 +2972,8 @@
   "keep_awake_always_help": "在此裝置上開啟 Ares 期間阻止閒置睡眠。",
   "keep_awake_off_help_mobile": "讓螢幕照常關閉（預設）。",
   "keep_awake_while_working_help_mobile": "在代理回合執行且 Ares 開啟期間讓螢幕保持開啟。",
-  "keep_awake_always_help_mobile": "在 Ares 開啟期間讓螢幕保持開啟。"
+  "keep_awake_always_help_mobile": "在 Ares 開啟期間讓螢幕保持開啟。",
+  "rewind_target_unsaved": "此訊息尚未儲存。請等待其完成後再編輯。",
+  "rewind_turn_busy": "目前的回覆尚未停止，因此未傳送任何內容。請稍後再試。",
+  "rewind_session_changed": "此聊天自在此處開啟後已有變更，因此未移除或傳送任何內容。請重新開啟後再試。"
 }

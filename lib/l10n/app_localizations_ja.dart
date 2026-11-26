@@ -7215,4 +7215,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ng_signed_in_with_deployment_token => 'デプロイメントトークンでサインインしています。';
+
+  @override
+  String get rewind_target_unsaved =>
+      'このメッセージはまだ保存されていません。完了するまで待ってから、もう一度編集してください。';
+
+  @override
+  String get rewind_turn_busy =>
+      '現在の返信がまだ停止していないため、何も送信されませんでした。少し待ってからもう一度お試しください。';
+
+  @override
+  String get rewind_session_changed =>
+      'このチャットはここで開いてから変更されたため、何も削除・送信されませんでした。開き直してからもう一度お試しください。';
 }

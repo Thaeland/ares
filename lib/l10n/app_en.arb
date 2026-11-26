@@ -3348,5 +3348,8 @@
   "ng_custom_headers_help": "Extra HTTP headers for this gateway (Name: Value, one per line), sent on its REST and WebSocket calls. They are kept in the secure credential store. Authentication and hop-by-hop headers are rejected.",
   "ng_use_a_deployment_token": "Use a deployment session token",
   "ng_sign_in_with_deployment_token": "Sign in with deployment token",
-  "ng_signed_in_with_deployment_token": "Signed in with the deployment token."
+  "ng_signed_in_with_deployment_token": "Signed in with the deployment token.",
+  "rewind_target_unsaved": "This message is not saved yet. Wait for it to settle, then edit it again.",
+  "rewind_turn_busy": "The current reply has not stopped yet, so nothing was sent. Try again in a moment.",
+  "rewind_session_changed": "This chat changed since it was opened here, so nothing was removed or sent. Reopen it, then try again."
 }
