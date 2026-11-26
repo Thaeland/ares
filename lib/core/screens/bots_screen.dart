@@ -14,6 +14,7 @@ import '../../nextgen/data/chat_controller.dart';
 import '../../nextgen/data/nextgen_gateway.dart';
 import '../../nextgen/ui/chat_view.dart';
 import '../../nextgen/ui/nextgen_scope.dart';
+import 'bot_profile_forms.dart';
 import 'chat_screen.dart';
 
 /// Native Bot Mode workspace (`F11`): the bot roster, canonical bot chats,
@@ -29,11 +30,17 @@ class BotsScreen extends StatefulWidget {
     required this.connection,
     this.displayConnector,
     this.openBotChat,
+    this.pickAvatarImage,
   });
 
   final RemoteWorkspaceOwner owner;
   final WorkspaceRoute route;
   final SavedConnection connection;
+
+  /// Picks an avatar picture as a PNG data URL. Production opens the file
+  /// picker ([pickBotAvatarImage]); tests supply one.
+  @visibleForTesting
+  final Future<String?> Function()? pickAvatarImage;
 
   /// Opens the live screen for a `display.observe` ticket. Production dials
   /// the gateway's `/api/display/ws`; tests supply an in-memory screen.
@@ -74,6 +81,10 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
   String? _installId;
   String _search = '';
   final _searchController = TextEditingController();
+
+  /// Stored avatar pictures (data URLs) by bot, read on [_avatarTarget].
+  Map<String, String> _avatars = const {};
+  WorkspaceTarget? _avatarTarget;
 
   // Rooms
   RoomCapabilities? _roomsCaps;
@@ -255,6 +266,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         _screenProfile ??= _roster.firstOrNull?.name;
         _routinesProfile ??= _screenProfile;
       });
+      unawaited(_loadAvatars(target, roster.profiles));
       if (_tab == _BotsTab.rooms) unawaited(_loadRooms(target));
       if (_tab == _BotsTab.routines) unawaited(_loadRoutines(target));
       if (_tab == _BotsTab.screen) unawaited(_loadScreen(target));
@@ -286,6 +298,121 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
 
   bool _ownsRoutines(WorkspaceTarget target, String bot) =>
       _owns(target) && _routinesProfile == bot;
+
+  /// Reads the stored pictures of the bots that have one (Desktop's
+  /// `pullServerAvatars`), one at a time, on [target] only.
+  Future<void> _loadAvatars(
+    WorkspaceTarget target,
+    List<BotRosterProfile> roster,
+  ) async {
+    if (!identical(_avatarTarget, target)) {
+      _avatarTarget = target;
+      _avatars = const {};
+    }
+    for (final bot in roster) {
+      if (!bot.hasAvatar || _avatars.containsKey(bot.name)) continue;
+      try {
+        final image = await target.botProfileAvatarUrl(bot.name);
+        if (!_owns(target) || !identical(_avatarTarget, target)) return;
+        if (image != null) {
+          setState(() => _avatars = {..._avatars, bot.name: image});
+        }
+      } on WorkspaceException catch (e) {
+        if (!_owns(target) || e.reason == WorkspaceFailure.unsupported) return;
+      }
+    }
+  }
+
+  Uint8List? _avatarOf(BotRosterProfile bot) =>
+      identical(_avatarTarget, _target) && bot.hasAvatar
+      ? DisplayThumbnail.decode(_avatars[bot.name])
+      : null;
+
+  Widget _face(BotRosterProfile bot, double size) {
+    final look = botAppearance(bot.name, bot.look);
+    return BotFace(
+      key: Key('bots-face-${bot.name}'),
+      name: bot.name,
+      shape: look.shape,
+      color: look.color,
+      image: _avatarOf(bot),
+      size: size,
+    );
+  }
+
+  // ── New Bot ───────────────────────────────────────────────────────────
+
+  void _openNewBot() {
+    final target = _target;
+    if (target == null || !_owns(target)) return;
+    unawaited(
+      showBotForm(
+        context,
+        BotCreateForm(
+          roster: _roster,
+          pickImage: widget.pickAvatarImage ?? pickBotAvatarImage,
+          onSubmit: (draft) => _createBot(target, draft),
+        ),
+      ),
+    );
+  }
+
+  /// Desktop's New Bot submit: `profiles.create`, then the look on the new
+  /// profile's record and its picture. Every step is fenced to [target]: a
+  /// reply that arrives after the connection changed is dropped.
+  Future<BotFormResult> _createBot(
+    WorkspaceTarget target,
+    BotCreateDraft draft,
+  ) async {
+    final l10n = context.sharedL10n;
+    if (!_owns(target)) return const BotFormDropped();
+    final BotProfileCreated created;
+    try {
+      created = await target.botProfileCreate(
+        name: draft.name,
+        description: draft.description,
+        cloneFrom: draft.cloneFrom,
+        noSkills: draft.noSkills,
+        shareAuth: draft.shareAuth,
+        soul: draft.soul,
+        model: draft.model,
+        provider: draft.provider,
+      );
+    } on BotProfileRefusal catch (e) {
+      if (!_owns(target)) return const BotFormDropped();
+      return BotFormFailed(e.message);
+    } on WorkspaceException catch (e) {
+      if (!_owns(target)) return const BotFormDropped();
+      return BotFormFailed(l10n.ng_bots_request_failed(e.reason.name));
+    }
+    if (!_owns(target)) return const BotFormDropped();
+    // The profile exists from here on; the look is best-effort, as in
+    // Desktop, and Edit Profile can finish it.
+    var lookSaved = true;
+    try {
+      final saved = await target.botSaveLook(created.name, draft.look);
+      if (!_owns(target)) return const BotFormDropped();
+      lookSaved = saved != BotLookSave.failed;
+      final image = draft.image;
+      if (image != null) {
+        await target.botProfileSetAvatar(created.name, image);
+        if (!_owns(target)) return const BotFormDropped();
+      }
+    } on WorkspaceException {
+      if (!_owns(target)) return const BotFormDropped();
+      lookSaved = false;
+    }
+    final shown = draft.title.isNotEmpty ? draft.title : created.name;
+    _toast(
+      [
+        l10n.ng_bots_created(shown),
+        if (!lookSaved) l10n.ng_bots_look_failed,
+        ...created.warnings,
+      ].join('\n'),
+    );
+    unawaited(_load());
+    return const BotFormDone();
+  }
 
   Future<void> _loadRooms(WorkspaceTarget target) async {
     final request = ++_roomsRequest;
@@ -944,14 +1071,27 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        TextField(
-          controller: _searchController,
-          decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.search),
-            hintText: context.sharedL10n.ng_bots_search,
-            border: const OutlineInputBorder(),
-            isDense: true,
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.search),
+                  hintText: context.sharedL10n.ng_bots_search,
+                  border: const OutlineInputBorder(),
+                  isDense: true,
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+            IconButton.filledTonal(
+              key: const Key('bots-new-bot'),
+              tooltip: context.sharedL10n.ng_bots_new_bot,
+              icon: const Icon(Icons.person_add_alt_1_outlined),
+              onPressed: _target == null ? null : _openNewBot,
+            ),
+          ],
         ),
         const SizedBox(height: 12),
         if (_visibleRoster.isEmpty)
@@ -963,11 +1103,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
           Card(
             margin: const EdgeInsets.only(bottom: 8),
             child: ListTile(
-              leading: CircleAvatar(
-                child: Icon(
-                  bot.hasAvatar ? Icons.smart_toy : Icons.person_outline,
-                ),
-              ),
+              leading: _face(bot, 40),
               title: Text(
                 bot.title,
                 style: const TextStyle(fontWeight: FontWeight.w600),
@@ -1008,6 +1144,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       isScrollControlled: true,
       builder: (sheetContext) => _RosterDetailSheet(
         bot: bot,
+        face: _face(bot, 44),
         onOpenChat: () {
           Navigator.of(sheetContext).pop();
           _openCanonicalChat(bot);
@@ -1706,12 +1843,14 @@ extension on DisplayStatus {
 class _RosterDetailSheet extends StatelessWidget {
   const _RosterDetailSheet({
     required this.bot,
+    required this.face,
     required this.onOpenChat,
     required this.onOpenRoutines,
     required this.onOpenScreen,
   });
 
   final BotRosterProfile bot;
+  final Widget face;
   final VoidCallback onOpenChat;
   final VoidCallback onOpenRoutines;
   final VoidCallback onOpenScreen;
@@ -1727,12 +1866,7 @@ class _RosterDetailSheet extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 22,
-                  child: Icon(
-                    bot.hasAvatar ? Icons.smart_toy : Icons.person_outline,
-                  ),
-                ),
+                face,
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(

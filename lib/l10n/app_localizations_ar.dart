@@ -9059,4 +9059,264 @@ class AppLocalizationsAr extends AppLocalizations {
   String ng_board_run_title(String id, String profile, String outcome) {
     return 'التشغيل رقم $id · @$profile · $outcome';
   }
+
+  @override
+  String get ng_bots_new_bot => 'بوت جديد';
+
+  @override
+  String get ng_bots_new_bot_hint =>
+      'زميل فريق مُسمّى له ذاكرته ومهاراته ومحادثته الخاصة، ويمكنه مراسلة وكلائك الآخرين.';
+
+  @override
+  String get ng_bots_field_name => 'الاسم';
+
+  @override
+  String get ng_bots_field_title => 'العنوان';
+
+  @override
+  String get ng_bots_field_description => 'الوصف';
+
+  @override
+  String get ng_bots_description_hint => 'بمَ يجب أن يساعد هذا البوت؟';
+
+  @override
+  String get ng_bots_name_invalid =>
+      'استخدم أحرفًا صغيرة أو أرقامًا أو شرطات أو شرطات سفلية، وابدأ بحرف أو رقم (64 حرفًا على الأكثر).';
+
+  @override
+  String ng_bots_name_taken(String name) {
+    return 'يوجد وكيل باسم “$name” بالفعل.';
+  }
+
+  @override
+  String ng_bots_profile_id(String id) {
+    return 'معرّف الملف الشخصي: $id';
+  }
+
+  @override
+  String get ng_bots_advanced =>
+      'متقدم — النموذج والمهارات ومجموعات الأدوات وSOUL.md';
+
+  @override
+  String get ng_bots_clone_from => 'استنساخ من ملف شخصي';
+
+  @override
+  String get ng_bots_clone_main => 'الملف الرئيسي (default)';
+
+  @override
+  String get ng_bots_fresh_profile => 'ملف جديد (مهارات مضمّنة)';
+
+  @override
+  String get ng_bots_create_empty => 'إنشاء فارغ (تخطي المهارات المضمّنة)';
+
+  @override
+  String get ng_bots_share_keys => 'مشاركة المفاتيح والحسابات مع الملف الرئيسي';
+
+  @override
+  String get ng_bots_provider => 'المزوّد';
+
+  @override
+  String get ng_bots_model => 'النموذج';
+
+  @override
+  String get ng_bots_model_pair => 'أدخل المزوّد والنموذج معًا.';
+
+  @override
+  String get ng_bots_soul => 'SOUL.md (اختياري — يستبدل الشخصية المُنشأة)';
+
+  @override
+  String get ng_bots_soul_edit => 'SOUL.md';
+
+  @override
+  String get ng_bots_creating => 'جارٍ الإنشاء…';
+
+  @override
+  String get ng_bots_create_bot => 'إنشاء البوت';
+
+  @override
+  String ng_bots_created(String name) {
+    return 'تم إنشاء البوت “$name”';
+  }
+
+  @override
+  String get ng_bots_look_failed =>
+      'لم يُحفظ مظهره على البوابة؛ اضبطه من تعديل الملف الشخصي.';
+
+  @override
+  String ng_bots_request_failed(String reason) {
+    return 'لم تقبل البوابة الطلب ($reason).';
+  }
+
+  @override
+  String get ng_bots_avatar_shape => 'الشكل';
+
+  @override
+  String ng_bots_avatar_shape_n(int n) {
+    return 'الشكل $n';
+  }
+
+  @override
+  String get ng_bots_avatar_colour => 'اللون';
+
+  @override
+  String ng_bots_avatar_colour_n(int n) {
+    return 'اللون $n';
+  }
+
+  @override
+  String get ng_bots_avatar_match_name => 'حسب الاسم';
+
+  @override
+  String get ng_bots_avatar_upload => 'اختر صورة…';
+
+  @override
+  String get ng_bots_avatar_remove => 'إزالة الصورة — استخدام الشكل';
+
+  @override
+  String get ng_bots_avatar_too_large =>
+      'الصورة كبيرة جدًا (الحد الأقصى 15 ميغابايت).';
+
+  @override
+  String get ng_bots_avatar_unreadable => 'تعذّرت قراءة تلك الصورة.';
+
+  @override
+  String get ng_bots_edit_profile => 'تعديل الملف الشخصي';
+
+  @override
+  String ng_bots_edit_description(String name, String profile) {
+    return 'مظهر $name ودوره ($profile).';
+  }
+
+  @override
+  String ng_bots_advanced_failed(String reason) {
+    return 'تعذّر تحميل إعدادات الملف الشخصي ($reason).';
+  }
+
+  @override
+  String get ng_bots_skills => 'المهارات';
+
+  @override
+  String get ng_bots_toolsets => 'مجموعات الأدوات';
+
+  @override
+  String get ng_bots_toolsets_hint =>
+      'ترك الكل (أو لا شيء) محددًا يُبقي السلوك الافتراضي لمجموعات الأدوات.';
+
+  @override
+  String get ng_bots_mcp_servers => 'خوادم MCP';
+
+  @override
+  String get ng_bots_saving => 'جارٍ الحفظ…';
+
+  @override
+  String get ng_bots_confirm_changes_title => 'حفظ هذه التغييرات؟';
+
+  @override
+  String get ng_bots_change_remove_image => 'إزالة صورة البوت';
+
+  @override
+  String get ng_bots_change_soul => 'استبدال ملف SOUL.md الخاص به';
+
+  @override
+  String ng_bots_change_turn_off(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'إيقاف المهارات أو مجموعات الأدوات أو خوادم MCP: $count',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_bots_updated(String name) {
+    return 'تم تحديث $name';
+  }
+
+  @override
+  String ng_bots_sections_failed(String sections) {
+    return 'فشلت بعض الأقسام: $sections';
+  }
+
+  @override
+  String get ng_bots_model_confirm_title => 'تبديل النموذج؟';
+
+  @override
+  String get ng_bots_model_confirm_ok => 'تبديل';
+
+  @override
+  String get ng_bots_model_not_switched => 'لم يتم تبديل النموذج.';
+
+  @override
+  String get ng_bots_section_new => 'قسم جديد';
+
+  @override
+  String get ng_bots_section_new_ellipsis => 'قسم جديد…';
+
+  @override
+  String get ng_bots_section_name => 'اسم القسم';
+
+  @override
+  String get ng_bots_section_name_hint => 'مثلًا: العملاء';
+
+  @override
+  String get ng_bots_section_create => 'إنشاء';
+
+  @override
+  String get ng_bots_section_rename => 'إعادة تسمية القسم';
+
+  @override
+  String get ng_bots_section_delete => 'حذف القسم';
+
+  @override
+  String get ng_bots_section_move_up => 'نقل لأعلى';
+
+  @override
+  String get ng_bots_section_move_down => 'نقل لأسفل';
+
+  @override
+  String get ng_bots_section_unassigned => 'غير مُصنّف';
+
+  @override
+  String ng_bots_section_options(String name) {
+    return 'خيارات القسم $name';
+  }
+
+  @override
+  String get ng_bots_section_empty =>
+      'لا بوتات هنا بعد. استخدم «النقل إلى قسم» على أحد البوتات.';
+
+  @override
+  String get ng_bots_section_move_to => 'النقل إلى قسم';
+
+  @override
+  String get ng_bots_section_remove => 'إزالة من القسم';
+
+  @override
+  String ng_bots_section_deleted(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تم حذف “$name” — نُقل $count من البوتات إلى غير مُصنّف',
+      zero: 'تم حذف “$name”',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_undo => 'تراجع';
+
+  @override
+  String ng_bots_section_move_failed(String reason) {
+    return 'تعذّر نقل البوت ($reason).';
+  }
+
+  @override
+  String ng_bots_bot_actions(String name) {
+    return 'إجراءات $name';
+  }
+
+  @override
+  String ng_bots_section_toggle(String name) {
+    return 'إظهار $name أو إخفاؤه';
+  }
 }

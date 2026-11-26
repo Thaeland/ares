@@ -9161,4 +9161,268 @@ class AppLocalizationsFr extends AppLocalizations {
   String ng_board_run_title(String id, String profile, String outcome) {
     return 'Exécution n° $id · @$profile · $outcome';
   }
+
+  @override
+  String get ng_bots_new_bot => 'Nouveau bot';
+
+  @override
+  String get ng_bots_new_bot_hint =>
+      'Un coéquipier nommé, avec sa propre mémoire, ses compétences et son chat. Il peut écrire à vos autres agents.';
+
+  @override
+  String get ng_bots_field_name => 'Nom';
+
+  @override
+  String get ng_bots_field_title => 'Titre';
+
+  @override
+  String get ng_bots_field_description => 'Description';
+
+  @override
+  String get ng_bots_description_hint => 'Avec quoi ce bot doit-il aider ?';
+
+  @override
+  String get ng_bots_name_invalid =>
+      'Utilisez des minuscules, chiffres, tirets ou tirets bas, en commençant par une lettre ou un chiffre (64 caractères au plus).';
+
+  @override
+  String ng_bots_name_taken(String name) {
+    return 'Un agent nommé « $name » existe déjà.';
+  }
+
+  @override
+  String ng_bots_profile_id(String id) {
+    return 'ID de profil : $id';
+  }
+
+  @override
+  String get ng_bots_advanced =>
+      'Avancé — modèle, compétences, jeux d’outils, SOUL.md';
+
+  @override
+  String get ng_bots_clone_from => 'Cloner depuis le profil';
+
+  @override
+  String get ng_bots_clone_main => 'Profil principal (default)';
+
+  @override
+  String get ng_bots_fresh_profile => 'Nouveau profil (compétences fournies)';
+
+  @override
+  String get ng_bots_create_empty =>
+      'Créer vide (sans les compétences fournies)';
+
+  @override
+  String get ng_bots_share_keys =>
+      'Partager clés et comptes avec le profil principal';
+
+  @override
+  String get ng_bots_provider => 'Fournisseur';
+
+  @override
+  String get ng_bots_model => 'Modèle';
+
+  @override
+  String get ng_bots_model_pair => 'Indiquez un fournisseur et un modèle.';
+
+  @override
+  String get ng_bots_soul =>
+      'SOUL.md (facultatif — remplace la persona générée)';
+
+  @override
+  String get ng_bots_soul_edit => 'SOUL.md';
+
+  @override
+  String get ng_bots_creating => 'Création…';
+
+  @override
+  String get ng_bots_create_bot => 'Créer le bot';
+
+  @override
+  String ng_bots_created(String name) {
+    return 'Bot « $name » créé';
+  }
+
+  @override
+  String get ng_bots_look_failed =>
+      'Son apparence n’a pas été enregistrée sur la passerelle ; réglez-la dans Modifier le profil.';
+
+  @override
+  String ng_bots_request_failed(String reason) {
+    return 'La passerelle ne l’a pas accepté ($reason).';
+  }
+
+  @override
+  String get ng_bots_avatar_shape => 'Forme';
+
+  @override
+  String ng_bots_avatar_shape_n(int n) {
+    return 'Forme $n';
+  }
+
+  @override
+  String get ng_bots_avatar_colour => 'Couleur';
+
+  @override
+  String ng_bots_avatar_colour_n(int n) {
+    return 'Couleur $n';
+  }
+
+  @override
+  String get ng_bots_avatar_match_name => 'Selon le nom';
+
+  @override
+  String get ng_bots_avatar_upload => 'Choisir une image…';
+
+  @override
+  String get ng_bots_avatar_remove => 'Retirer l’image — utiliser la forme';
+
+  @override
+  String get ng_bots_avatar_too_large => 'Image trop volumineuse (15 Mo max.).';
+
+  @override
+  String get ng_bots_avatar_unreadable => 'Impossible de lire cette image.';
+
+  @override
+  String get ng_bots_edit_profile => 'Modifier le profil';
+
+  @override
+  String ng_bots_edit_description(String name, String profile) {
+    return 'Apparence et rôle de $name ($profile).';
+  }
+
+  @override
+  String ng_bots_advanced_failed(String reason) {
+    return 'Impossible de charger les réglages du profil ($reason).';
+  }
+
+  @override
+  String get ng_bots_skills => 'Compétences';
+
+  @override
+  String get ng_bots_toolsets => 'Jeux d’outils';
+
+  @override
+  String get ng_bots_toolsets_hint =>
+      'Tout cocher (ou rien) conserve le comportement par défaut des jeux d’outils.';
+
+  @override
+  String get ng_bots_mcp_servers => 'Serveurs MCP';
+
+  @override
+  String get ng_bots_saving => 'Enregistrement…';
+
+  @override
+  String get ng_bots_confirm_changes_title => 'Enregistrer ces modifications ?';
+
+  @override
+  String get ng_bots_change_remove_image => 'Retirer l’image du bot';
+
+  @override
+  String get ng_bots_change_soul => 'Remplacer son SOUL.md';
+
+  @override
+  String ng_bots_change_turn_off(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Désactiver $count compétences, jeux d’outils ou serveurs MCP',
+      one: 'Désactiver 1 compétence, jeu d’outils ou serveur MCP',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_bots_updated(String name) {
+    return '$name mis à jour';
+  }
+
+  @override
+  String ng_bots_sections_failed(String sections) {
+    return 'Certaines sections ont échoué : $sections';
+  }
+
+  @override
+  String get ng_bots_model_confirm_title => 'Changer de modèle ?';
+
+  @override
+  String get ng_bots_model_confirm_ok => 'Changer';
+
+  @override
+  String get ng_bots_model_not_switched => 'Le modèle n’a pas été changé.';
+
+  @override
+  String get ng_bots_section_new => 'Nouvelle section';
+
+  @override
+  String get ng_bots_section_new_ellipsis => 'Nouvelle section…';
+
+  @override
+  String get ng_bots_section_name => 'Nom de la section';
+
+  @override
+  String get ng_bots_section_name_hint => 'p. ex. Clients';
+
+  @override
+  String get ng_bots_section_create => 'Créer';
+
+  @override
+  String get ng_bots_section_rename => 'Renommer la section';
+
+  @override
+  String get ng_bots_section_delete => 'Supprimer la section';
+
+  @override
+  String get ng_bots_section_move_up => 'Monter';
+
+  @override
+  String get ng_bots_section_move_down => 'Descendre';
+
+  @override
+  String get ng_bots_section_unassigned => 'Non classés';
+
+  @override
+  String ng_bots_section_options(String name) {
+    return 'Options de la section $name';
+  }
+
+  @override
+  String get ng_bots_section_empty =>
+      'Aucun bot ici pour l’instant. Utilisez Déplacer vers une section sur un bot.';
+
+  @override
+  String get ng_bots_section_move_to => 'Déplacer vers une section';
+
+  @override
+  String get ng_bots_section_remove => 'Retirer de la section';
+
+  @override
+  String ng_bots_section_deleted(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '« $name » supprimée — $count bots déplacés vers Non classés',
+      one: '« $name » supprimée — 1 bot déplacé vers Non classés',
+      zero: '« $name » supprimée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_undo => 'Annuler';
+
+  @override
+  String ng_bots_section_move_failed(String reason) {
+    return 'Impossible de déplacer le bot ($reason).';
+  }
+
+  @override
+  String ng_bots_bot_actions(String name) {
+    return 'Actions pour $name';
+  }
+
+  @override
+  String ng_bots_section_toggle(String name) {
+    return 'Afficher ou masquer $name';
+  }
 }

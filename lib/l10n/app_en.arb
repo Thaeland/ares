@@ -4781,5 +4781,193 @@
         "type": "String"
       }
     }
+  },
+  "ng_bots_new_bot": "New bot",
+  "ng_bots_new_bot_hint": "A named teammate with its own memory, skills, and chat. It can message your other agents.",
+  "ng_bots_field_name": "Name",
+  "ng_bots_field_title": "Title",
+  "ng_bots_field_description": "Description",
+  "ng_bots_description_hint": "What should this bot help with?",
+  "ng_bots_name_invalid": "Use lowercase letters, numbers, hyphens or underscores, starting with a letter or number (64 characters at most).",
+  "ng_bots_name_taken": "An agent named “{name}” already exists.",
+  "@ng_bots_name_taken": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_bots_profile_id": "Profile id: {id}",
+  "@ng_bots_profile_id": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_bots_advanced": "Advanced — model, skills, toolsets, SOUL.md",
+  "ng_bots_clone_from": "Clone from profile",
+  "ng_bots_clone_main": "Main profile (default)",
+  "ng_bots_fresh_profile": "Fresh profile (bundled skills)",
+  "ng_bots_create_empty": "Create empty (skip bundled skills)",
+  "ng_bots_share_keys": "Share keys & accounts with the main profile",
+  "ng_bots_provider": "Provider",
+  "ng_bots_model": "Model",
+  "ng_bots_model_pair": "Enter both a provider and a model.",
+  "ng_bots_soul": "SOUL.md (optional — replaces the generated persona)",
+  "ng_bots_soul_edit": "SOUL.md",
+  "ng_bots_creating": "Creating…",
+  "ng_bots_create_bot": "Create bot",
+  "ng_bots_created": "Bot “{name}” created",
+  "@ng_bots_created": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_bots_look_failed": "Its look was not saved on the gateway; set it in Edit profile.",
+  "ng_bots_request_failed": "The gateway did not take it ({reason}).",
+  "@ng_bots_request_failed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_bots_avatar_shape": "Shape",
+  "ng_bots_avatar_shape_n": "Shape {n}",
+  "@ng_bots_avatar_shape_n": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_bots_avatar_colour": "Colour",
+  "ng_bots_avatar_colour_n": "Colour {n}",
+  "@ng_bots_avatar_colour_n": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_bots_avatar_match_name": "Match the name",
+  "ng_bots_avatar_upload": "Choose an image…",
+  "ng_bots_avatar_remove": "Remove image — use shape",
+  "ng_bots_avatar_too_large": "Image too large (max 15 MB).",
+  "ng_bots_avatar_unreadable": "That image could not be read.",
+  "ng_bots_edit_profile": "Edit profile",
+  "ng_bots_edit_description": "Appearance and role for {name} ({profile}).",
+  "@ng_bots_edit_description": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_bots_advanced_failed": "Could not load the profile settings ({reason}).",
+  "@ng_bots_advanced_failed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_bots_skills": "Skills",
+  "ng_bots_toolsets": "Toolsets",
+  "ng_bots_toolsets_hint": "Leaving all (or none) checked keeps the default toolset behaviour.",
+  "ng_bots_mcp_servers": "MCP servers",
+  "ng_bots_saving": "Saving…",
+  "ng_bots_confirm_changes_title": "Save these changes?",
+  "ng_bots_change_remove_image": "Remove the bot’s picture",
+  "ng_bots_change_soul": "Replace its SOUL.md",
+  "ng_bots_change_turn_off": "{count, plural, =1{Turn off 1 skill, toolset or MCP server} other{Turn off {count} skills, toolsets or MCP servers}}",
+  "@ng_bots_change_turn_off": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_bots_updated": "{name} updated",
+  "@ng_bots_updated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_bots_sections_failed": "Some sections failed: {sections}",
+  "@ng_bots_sections_failed": {
+    "placeholders": {
+      "sections": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_bots_model_confirm_title": "Switch the model?",
+  "ng_bots_model_confirm_ok": "Switch",
+  "ng_bots_model_not_switched": "The model was not switched.",
+  "ng_bots_section_new": "New section",
+  "ng_bots_section_new_ellipsis": "New section…",
+  "ng_bots_section_name": "Section name",
+  "ng_bots_section_name_hint": "e.g. Clients",
+  "ng_bots_section_create": "Create",
+  "ng_bots_section_rename": "Rename section",
+  "ng_bots_section_delete": "Delete section",
+  "ng_bots_section_move_up": "Move up",
+  "ng_bots_section_move_down": "Move down",
+  "ng_bots_section_unassigned": "Unassigned",
+  "ng_bots_section_options": "{name} section options",
+  "@ng_bots_section_options": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_bots_section_empty": "No bots here yet. Use Move to section on a bot.",
+  "ng_bots_section_move_to": "Move to section",
+  "ng_bots_section_remove": "Remove from section",
+  "ng_bots_section_deleted": "{count, plural, =0{Deleted “{name}”} =1{Deleted “{name}” — 1 bot moved to Unassigned} other{Deleted “{name}” — {count} bots moved to Unassigned}}",
+  "@ng_bots_section_deleted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_bots_undo": "Undo",
+  "ng_bots_section_move_failed": "Could not move the bot ({reason}).",
+  "@ng_bots_section_move_failed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_bots_bot_actions": "{name} actions",
+  "@ng_bots_bot_actions": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_bots_section_toggle": "Show or hide {name}",
+  "@ng_bots_section_toggle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

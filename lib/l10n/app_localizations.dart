@@ -15108,6 +15108,426 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Run #{id} · @{profile} · {outcome}'**
   String ng_board_run_title(String id, String profile, String outcome);
+
+  /// No description provided for @ng_bots_new_bot.
+  ///
+  /// In en, this message translates to:
+  /// **'New bot'**
+  String get ng_bots_new_bot;
+
+  /// No description provided for @ng_bots_new_bot_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'A named teammate with its own memory, skills, and chat. It can message your other agents.'**
+  String get ng_bots_new_bot_hint;
+
+  /// No description provided for @ng_bots_field_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get ng_bots_field_name;
+
+  /// No description provided for @ng_bots_field_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get ng_bots_field_title;
+
+  /// No description provided for @ng_bots_field_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get ng_bots_field_description;
+
+  /// No description provided for @ng_bots_description_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'What should this bot help with?'**
+  String get ng_bots_description_hint;
+
+  /// No description provided for @ng_bots_name_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Use lowercase letters, numbers, hyphens or underscores, starting with a letter or number (64 characters at most).'**
+  String get ng_bots_name_invalid;
+
+  /// No description provided for @ng_bots_name_taken.
+  ///
+  /// In en, this message translates to:
+  /// **'An agent named “{name}” already exists.'**
+  String ng_bots_name_taken(String name);
+
+  /// No description provided for @ng_bots_profile_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile id: {id}'**
+  String ng_bots_profile_id(String id);
+
+  /// No description provided for @ng_bots_advanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced — model, skills, toolsets, SOUL.md'**
+  String get ng_bots_advanced;
+
+  /// No description provided for @ng_bots_clone_from.
+  ///
+  /// In en, this message translates to:
+  /// **'Clone from profile'**
+  String get ng_bots_clone_from;
+
+  /// No description provided for @ng_bots_clone_main.
+  ///
+  /// In en, this message translates to:
+  /// **'Main profile (default)'**
+  String get ng_bots_clone_main;
+
+  /// No description provided for @ng_bots_fresh_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Fresh profile (bundled skills)'**
+  String get ng_bots_fresh_profile;
+
+  /// No description provided for @ng_bots_create_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Create empty (skip bundled skills)'**
+  String get ng_bots_create_empty;
+
+  /// No description provided for @ng_bots_share_keys.
+  ///
+  /// In en, this message translates to:
+  /// **'Share keys & accounts with the main profile'**
+  String get ng_bots_share_keys;
+
+  /// No description provided for @ng_bots_provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider'**
+  String get ng_bots_provider;
+
+  /// No description provided for @ng_bots_model.
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get ng_bots_model;
+
+  /// No description provided for @ng_bots_model_pair.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter both a provider and a model.'**
+  String get ng_bots_model_pair;
+
+  /// No description provided for @ng_bots_soul.
+  ///
+  /// In en, this message translates to:
+  /// **'SOUL.md (optional — replaces the generated persona)'**
+  String get ng_bots_soul;
+
+  /// No description provided for @ng_bots_soul_edit.
+  ///
+  /// In en, this message translates to:
+  /// **'SOUL.md'**
+  String get ng_bots_soul_edit;
+
+  /// No description provided for @ng_bots_creating.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating…'**
+  String get ng_bots_creating;
+
+  /// No description provided for @ng_bots_create_bot.
+  ///
+  /// In en, this message translates to:
+  /// **'Create bot'**
+  String get ng_bots_create_bot;
+
+  /// No description provided for @ng_bots_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Bot “{name}” created'**
+  String ng_bots_created(String name);
+
+  /// No description provided for @ng_bots_look_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Its look was not saved on the gateway; set it in Edit profile.'**
+  String get ng_bots_look_failed;
+
+  /// No description provided for @ng_bots_request_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not take it ({reason}).'**
+  String ng_bots_request_failed(String reason);
+
+  /// No description provided for @ng_bots_avatar_shape.
+  ///
+  /// In en, this message translates to:
+  /// **'Shape'**
+  String get ng_bots_avatar_shape;
+
+  /// No description provided for @ng_bots_avatar_shape_n.
+  ///
+  /// In en, this message translates to:
+  /// **'Shape {n}'**
+  String ng_bots_avatar_shape_n(int n);
+
+  /// No description provided for @ng_bots_avatar_colour.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get ng_bots_avatar_colour;
+
+  /// No description provided for @ng_bots_avatar_colour_n.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour {n}'**
+  String ng_bots_avatar_colour_n(int n);
+
+  /// No description provided for @ng_bots_avatar_match_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Match the name'**
+  String get ng_bots_avatar_match_name;
+
+  /// No description provided for @ng_bots_avatar_upload.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an image…'**
+  String get ng_bots_avatar_upload;
+
+  /// No description provided for @ng_bots_avatar_remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove image — use shape'**
+  String get ng_bots_avatar_remove;
+
+  /// No description provided for @ng_bots_avatar_too_large.
+  ///
+  /// In en, this message translates to:
+  /// **'Image too large (max 15 MB).'**
+  String get ng_bots_avatar_too_large;
+
+  /// No description provided for @ng_bots_avatar_unreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'That image could not be read.'**
+  String get ng_bots_avatar_unreadable;
+
+  /// No description provided for @ng_bots_edit_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get ng_bots_edit_profile;
+
+  /// No description provided for @ng_bots_edit_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance and role for {name} ({profile}).'**
+  String ng_bots_edit_description(String name, String profile);
+
+  /// No description provided for @ng_bots_advanced_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the profile settings ({reason}).'**
+  String ng_bots_advanced_failed(String reason);
+
+  /// No description provided for @ng_bots_skills.
+  ///
+  /// In en, this message translates to:
+  /// **'Skills'**
+  String get ng_bots_skills;
+
+  /// No description provided for @ng_bots_toolsets.
+  ///
+  /// In en, this message translates to:
+  /// **'Toolsets'**
+  String get ng_bots_toolsets;
+
+  /// No description provided for @ng_bots_toolsets_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaving all (or none) checked keeps the default toolset behaviour.'**
+  String get ng_bots_toolsets_hint;
+
+  /// No description provided for @ng_bots_mcp_servers.
+  ///
+  /// In en, this message translates to:
+  /// **'MCP servers'**
+  String get ng_bots_mcp_servers;
+
+  /// No description provided for @ng_bots_saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving…'**
+  String get ng_bots_saving;
+
+  /// No description provided for @ng_bots_confirm_changes_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Save these changes?'**
+  String get ng_bots_confirm_changes_title;
+
+  /// No description provided for @ng_bots_change_remove_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the bot’s picture'**
+  String get ng_bots_change_remove_image;
+
+  /// No description provided for @ng_bots_change_soul.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace its SOUL.md'**
+  String get ng_bots_change_soul;
+
+  /// No description provided for @ng_bots_change_turn_off.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Turn off 1 skill, toolset or MCP server} other{Turn off {count} skills, toolsets or MCP servers}}'**
+  String ng_bots_change_turn_off(int count);
+
+  /// No description provided for @ng_bots_updated.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} updated'**
+  String ng_bots_updated(String name);
+
+  /// No description provided for @ng_bots_sections_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Some sections failed: {sections}'**
+  String ng_bots_sections_failed(String sections);
+
+  /// No description provided for @ng_bots_model_confirm_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch the model?'**
+  String get ng_bots_model_confirm_title;
+
+  /// No description provided for @ng_bots_model_confirm_ok.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch'**
+  String get ng_bots_model_confirm_ok;
+
+  /// No description provided for @ng_bots_model_not_switched.
+  ///
+  /// In en, this message translates to:
+  /// **'The model was not switched.'**
+  String get ng_bots_model_not_switched;
+
+  /// No description provided for @ng_bots_section_new.
+  ///
+  /// In en, this message translates to:
+  /// **'New section'**
+  String get ng_bots_section_new;
+
+  /// No description provided for @ng_bots_section_new_ellipsis.
+  ///
+  /// In en, this message translates to:
+  /// **'New section…'**
+  String get ng_bots_section_new_ellipsis;
+
+  /// No description provided for @ng_bots_section_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Section name'**
+  String get ng_bots_section_name;
+
+  /// No description provided for @ng_bots_section_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Clients'**
+  String get ng_bots_section_name_hint;
+
+  /// No description provided for @ng_bots_section_create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get ng_bots_section_create;
+
+  /// No description provided for @ng_bots_section_rename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename section'**
+  String get ng_bots_section_rename;
+
+  /// No description provided for @ng_bots_section_delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete section'**
+  String get ng_bots_section_delete;
+
+  /// No description provided for @ng_bots_section_move_up.
+  ///
+  /// In en, this message translates to:
+  /// **'Move up'**
+  String get ng_bots_section_move_up;
+
+  /// No description provided for @ng_bots_section_move_down.
+  ///
+  /// In en, this message translates to:
+  /// **'Move down'**
+  String get ng_bots_section_move_down;
+
+  /// No description provided for @ng_bots_section_unassigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Unassigned'**
+  String get ng_bots_section_unassigned;
+
+  /// No description provided for @ng_bots_section_options.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} section options'**
+  String ng_bots_section_options(String name);
+
+  /// No description provided for @ng_bots_section_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No bots here yet. Use Move to section on a bot.'**
+  String get ng_bots_section_empty;
+
+  /// No description provided for @ng_bots_section_move_to.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to section'**
+  String get ng_bots_section_move_to;
+
+  /// No description provided for @ng_bots_section_remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from section'**
+  String get ng_bots_section_remove;
+
+  /// No description provided for @ng_bots_section_deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Deleted “{name}”} =1{Deleted “{name}” — 1 bot moved to Unassigned} other{Deleted “{name}” — {count} bots moved to Unassigned}}'**
+  String ng_bots_section_deleted(String name, int count);
+
+  /// No description provided for @ng_bots_undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get ng_bots_undo;
+
+  /// No description provided for @ng_bots_section_move_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not move the bot ({reason}).'**
+  String ng_bots_section_move_failed(String reason);
+
+  /// No description provided for @ng_bots_bot_actions.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} actions'**
+  String ng_bots_bot_actions(String name);
+
+  /// No description provided for @ng_bots_section_toggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show or hide {name}'**
+  String ng_bots_section_toggle(String name);
 }
 
 class _AppLocalizationsDelegate

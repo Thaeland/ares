@@ -214,6 +214,82 @@ void main() {
         });
         expect(errors, isEmpty, reason: errors.join('\n'));
       });
+
+      testWidgets('F11 the New Bot form, every field above the keyboard', (
+        tester,
+      ) async {
+        _phone(tester);
+        final gateway = BotsReviewGateway();
+        final owner = botsReviewOwner(gateway);
+        addTearDown(owner.close);
+        final errors = await _overflows(tester, () async {
+          await tester.pumpWidget(
+            _app(
+              layout,
+              BotsScreen(
+                owner: owner,
+                route: owner.route(),
+                connection: botsReviewConnection,
+                pickAvatarImage: () async =>
+                    'data:image/png;base64,$botsFixturePng',
+              ),
+            ),
+          );
+          await botsShown(tester, find.text('WorkBot'));
+          await tester.tap(find.byKey(const Key('bots-new-bot')));
+          await botsStep(tester);
+          await tester.enterText(
+            find.byKey(const Key('bots-new-name')),
+            'Smørrebrød Research Assistant',
+          );
+          await botsStep(tester, 2);
+          tester.view.viewInsets = const FakeViewPadding(bottom: _keyboard);
+          await botsStep(tester);
+          await tester.ensureVisible(
+            find.byKey(const Key('bots-avatar-upload')),
+          );
+          await botsStep(tester, 2);
+          await tester.tap(find.byKey(const Key('bots-avatar-upload')));
+          await botsStep(tester, 2);
+          await tester.ensureVisible(
+            find.byKey(const Key('bots-new-advanced')),
+          );
+          await botsStep(tester, 2);
+          await tester.tap(find.byKey(const Key('bots-new-advanced')));
+          await botsStep(tester);
+          // Whatever takes the keyboard, and Create, fits above it.
+          for (final key in [
+            'bots-new-name',
+            'bots-new-title',
+            'bots-new-description',
+            'bots-new-clone',
+            'bots-new-provider',
+            'bots-new-model',
+            'bots-new-soul',
+            'bots-form-save',
+          ]) {
+            final field = find.byKey(Key(key));
+            await tester.ensureVisible(field);
+            await botsStep(tester, 2);
+            _expectAboveKeyboard(tester, field);
+          }
+          // The pickers and switches scroll into reach (at 2.0x a long
+          // label can be taller than what the keyboard leaves).
+          for (final key in [
+            'bots-avatar-shape-drop',
+            'bots-avatar-colour-11',
+            'bots-avatar-remove',
+            'bots-new-no-skills',
+            'bots-new-share-auth',
+          ]) {
+            final field = find.byKey(Key(key));
+            await tester.ensureVisible(field);
+            await botsStep(tester, 2);
+            expect(field.hitTestable(), findsOneWidget, reason: key);
+          }
+        });
+        expect(errors, isEmpty, reason: errors.join('\n'));
+      });
     });
   }
 }

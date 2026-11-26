@@ -8878,4 +8878,261 @@ class AppLocalizationsJa extends AppLocalizations {
   String ng_board_run_title(String id, String profile, String outcome) {
     return '実行 #$id · @$profile · $outcome';
   }
+
+  @override
+  String get ng_bots_new_bot => '新しいボット';
+
+  @override
+  String get ng_bots_new_bot_hint =>
+      '独自のメモリ、スキル、チャットを持つ名前付きのチームメイト。他のエージェントにメッセージを送れます。';
+
+  @override
+  String get ng_bots_field_name => '名前';
+
+  @override
+  String get ng_bots_field_title => 'タイトル';
+
+  @override
+  String get ng_bots_field_description => '説明';
+
+  @override
+  String get ng_bots_description_hint => 'このボットに何を手伝ってほしいですか？';
+
+  @override
+  String get ng_bots_name_invalid =>
+      '小文字、数字、ハイフン、アンダースコアを使い、英字か数字で始めてください（最大 64 文字）。';
+
+  @override
+  String ng_bots_name_taken(String name) {
+    return '「$name」という名前のエージェントはすでに存在します。';
+  }
+
+  @override
+  String ng_bots_profile_id(String id) {
+    return 'プロファイル ID: $id';
+  }
+
+  @override
+  String get ng_bots_advanced => '詳細 — モデル、スキル、ツールセット、SOUL.md';
+
+  @override
+  String get ng_bots_clone_from => '複製元のプロファイル';
+
+  @override
+  String get ng_bots_clone_main => 'メインプロファイル（default）';
+
+  @override
+  String get ng_bots_fresh_profile => '新規プロファイル（同梱スキル）';
+
+  @override
+  String get ng_bots_create_empty => '空で作成（同梱スキルを省略）';
+
+  @override
+  String get ng_bots_share_keys => 'キーとアカウントをメインプロファイルと共有';
+
+  @override
+  String get ng_bots_provider => 'プロバイダー';
+
+  @override
+  String get ng_bots_model => 'モデル';
+
+  @override
+  String get ng_bots_model_pair => 'プロバイダーとモデルの両方を入力してください。';
+
+  @override
+  String get ng_bots_soul => 'SOUL.md（任意 — 生成されたペルソナを置き換え）';
+
+  @override
+  String get ng_bots_soul_edit => 'SOUL.md';
+
+  @override
+  String get ng_bots_creating => '作成中…';
+
+  @override
+  String get ng_bots_create_bot => 'ボットを作成';
+
+  @override
+  String ng_bots_created(String name) {
+    return 'ボット「$name」を作成しました';
+  }
+
+  @override
+  String get ng_bots_look_failed =>
+      '見た目はゲートウェイに保存されませんでした。「プロファイルを編集」で設定してください。';
+
+  @override
+  String ng_bots_request_failed(String reason) {
+    return 'ゲートウェイが受け付けませんでした（$reason）。';
+  }
+
+  @override
+  String get ng_bots_avatar_shape => '形';
+
+  @override
+  String ng_bots_avatar_shape_n(int n) {
+    return '形 $n';
+  }
+
+  @override
+  String get ng_bots_avatar_colour => '色';
+
+  @override
+  String ng_bots_avatar_colour_n(int n) {
+    return '色 $n';
+  }
+
+  @override
+  String get ng_bots_avatar_match_name => '名前に合わせる';
+
+  @override
+  String get ng_bots_avatar_upload => '画像を選択…';
+
+  @override
+  String get ng_bots_avatar_remove => '画像を削除 — 形を使う';
+
+  @override
+  String get ng_bots_avatar_too_large => '画像が大きすぎます（最大 15 MB）。';
+
+  @override
+  String get ng_bots_avatar_unreadable => 'その画像を読み込めませんでした。';
+
+  @override
+  String get ng_bots_edit_profile => 'プロファイルを編集';
+
+  @override
+  String ng_bots_edit_description(String name, String profile) {
+    return '$name（$profile）の外観と役割。';
+  }
+
+  @override
+  String ng_bots_advanced_failed(String reason) {
+    return 'プロファイル設定を読み込めませんでした（$reason）。';
+  }
+
+  @override
+  String get ng_bots_skills => 'スキル';
+
+  @override
+  String get ng_bots_toolsets => 'ツールセット';
+
+  @override
+  String get ng_bots_toolsets_hint =>
+      'すべて（またはなし）をチェックしたままにすると既定のツールセット動作になります。';
+
+  @override
+  String get ng_bots_mcp_servers => 'MCP サーバー';
+
+  @override
+  String get ng_bots_saving => '保存中…';
+
+  @override
+  String get ng_bots_confirm_changes_title => 'これらの変更を保存しますか？';
+
+  @override
+  String get ng_bots_change_remove_image => 'ボットの画像を削除';
+
+  @override
+  String get ng_bots_change_soul => 'SOUL.md を置き換え';
+
+  @override
+  String ng_bots_change_turn_off(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'スキル・ツールセット・MCP サーバーを $count 件オフにする',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_bots_updated(String name) {
+    return '$name を更新しました';
+  }
+
+  @override
+  String ng_bots_sections_failed(String sections) {
+    return '一部のセクションが失敗しました: $sections';
+  }
+
+  @override
+  String get ng_bots_model_confirm_title => 'モデルを切り替えますか？';
+
+  @override
+  String get ng_bots_model_confirm_ok => '切り替える';
+
+  @override
+  String get ng_bots_model_not_switched => 'モデルは切り替えられていません。';
+
+  @override
+  String get ng_bots_section_new => '新しいセクション';
+
+  @override
+  String get ng_bots_section_new_ellipsis => '新しいセクション…';
+
+  @override
+  String get ng_bots_section_name => 'セクション名';
+
+  @override
+  String get ng_bots_section_name_hint => '例: クライアント';
+
+  @override
+  String get ng_bots_section_create => '作成';
+
+  @override
+  String get ng_bots_section_rename => 'セクション名を変更';
+
+  @override
+  String get ng_bots_section_delete => 'セクションを削除';
+
+  @override
+  String get ng_bots_section_move_up => '上へ移動';
+
+  @override
+  String get ng_bots_section_move_down => '下へ移動';
+
+  @override
+  String get ng_bots_section_unassigned => '未割り当て';
+
+  @override
+  String ng_bots_section_options(String name) {
+    return 'セクション「$name」のオプション';
+  }
+
+  @override
+  String get ng_bots_section_empty => 'まだボットはありません。ボットの「セクションへ移動」を使ってください。';
+
+  @override
+  String get ng_bots_section_move_to => 'セクションへ移動';
+
+  @override
+  String get ng_bots_section_remove => 'セクションから外す';
+
+  @override
+  String ng_bots_section_deleted(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '「$name」を削除しました — $count 件のボットを未割り当てに移動',
+      zero: '「$name」を削除しました',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_undo => '元に戻す';
+
+  @override
+  String ng_bots_section_move_failed(String reason) {
+    return 'ボットを移動できませんでした（$reason）。';
+  }
+
+  @override
+  String ng_bots_bot_actions(String name) {
+    return '$name の操作';
+  }
+
+  @override
+  String ng_bots_section_toggle(String name) {
+    return '$name の表示を切り替え';
+  }
 }

@@ -31,6 +31,9 @@ final class BotRosterProfile {
     this.canonicalSessionId,
     this.workerSessionId,
     this.lastSessionPreview,
+    this.look = const {},
+    this.lookRevision,
+    this.lastActive = 0,
   });
 
   final String name;
@@ -46,10 +49,45 @@ final class BotRosterProfile {
   final String? workerSessionId;
   final String? lastSessionPreview;
 
+  /// Hermes Desktop's per-bot record, `ui_meta['hermes-bots']` in the
+  /// profile's profile.yaml: title, avatar shape/colour, pin, section.
+  final Map<String, dynamic> look;
+
+  /// The gateway's CAS revision of [look]; null on a gateway that has no
+  /// `ui_meta_revisions` (no compare-and-set: a plain write).
+  final int? lookRevision;
+
+  /// Newest `last_active` (seconds) of the bot's Bot Chat and last session.
+  final double lastActive;
+
   String get handle => botHandleFor(name);
 
-  String get title =>
-      displayName.isNotEmpty && displayName != name ? displayName : name;
+  /// The Bot Mode title Desktop shows: the record's title, else the
+  /// profile's display name, else its id.
+  String get title {
+    final own = look['title'];
+    if (own is String && own.trim().isNotEmpty) return own.trim();
+    return displayName.isNotEmpty && displayName != name ? displayName : name;
+  }
+
+  String? get lookShape => _lookString('shape');
+  String? get lookColor => _lookString('color');
+  bool get pinned => look['pinned'] == true;
+  String? get sectionId => _lookString('sectionId');
+  String? get sectionName => _lookString('sectionName');
+
+  /// Desktop's roster order key (`sortRosterBots`): the newer of the bot's
+  /// creation time and its last message, in milliseconds.
+  double get activity {
+    final created = look['created'];
+    final made = created is num ? created.toDouble() : 0.0;
+    return made > lastActive * 1000 ? made : lastActive * 1000;
+  }
+
+  String? _lookString(String key) {
+    final value = look[key];
+    return value is String && value.trim().isNotEmpty ? value.trim() : null;
+  }
 
   factory BotRosterProfile.fromJson(Map raw) {
     final name = raw['name'];
@@ -58,6 +96,15 @@ final class BotRosterProfile {
     final canonical = raw['canonical_session'];
     final lastSession = raw['last_session'];
     final worker = raw['worker_session'];
+    final uiMeta = raw['ui_meta'];
+    final bots = uiMeta is Map ? uiMeta['hermes-bots'] : null;
+    final revisions = raw['ui_meta_revisions'];
+    double active(Object? session) =>
+        session is Map ? (session['last_active'] as num?)?.toDouble() ?? 0 : 0;
+    final lastActive = [
+      active(canonical),
+      active(lastSession),
+    ].reduce((a, b) => a > b ? a : b);
     return BotRosterProfile(
       name: name,
       path: path is String ? path : '',
@@ -77,9 +124,203 @@ final class BotRosterProfile {
       lastSessionPreview: lastSession is Map
           ? lastSession['preview'] as String?
           : null,
+      look: bots is Map ? Map<String, dynamic>.unmodifiable(bots) : const {},
+      lookRevision: revisions is Map
+          ? switch (revisions['hermes-bots']) {
+              final int n when n >= 0 => n,
+              _ => 0,
+            }
+          : null,
+      lastActive: lastActive,
     );
   }
 }
+
+/// The profile id grammar (`hermes_constants.PROFILE_ID_RE`, mirrored by
+/// Desktop's `PROFILE_ID_ARG_RE`).
+final botProfileIdPattern = RegExp(r'^[a-z0-9][a-z0-9_-]{0,63}$');
+
+/// Desktop's `slugifyProfileName` (labels.ts): the profile id a typed bot
+/// name becomes. Accented Latin folds to its base letter; any other letter
+/// or digit becomes a `u<hex>` token; the rest collapses to `-`; at most 64
+/// characters, cut at a token boundary.
+String botProfileSlug(String value) {
+  final buffer = StringBuffer();
+  for (final rune in value.trim().runes) {
+    final ch = String.fromCharCode(rune);
+    final folded = _foldLatin(ch);
+    if (RegExp(r'^[a-zA-Z0-9]+$').hasMatch(folded)) {
+      buffer.write(folded);
+    } else if (_isLetterOrDigit(rune)) {
+      buffer.write('-u${rune.toRadixString(16)}-');
+    } else {
+      buffer.write(ch);
+    }
+  }
+  final slug = buffer
+      .toString()
+      .replaceAll(RegExp(r'-+'), '-')
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^a-z0-9_-]+'), '-')
+      .replaceAll(RegExp(r'^-+|-+$'), '');
+  if (slug.length <= 64) return slug;
+  final cut = slug.substring(0, 64);
+  final boundary = slug[64] == '-' ? 64 : cut.lastIndexOf('-');
+  return (boundary > 0 ? cut.substring(0, boundary) : cut).replaceAll(
+    RegExp(r'-+$'),
+    '',
+  );
+}
+
+/// Desktop's `botProfileIdentity`: a name that is not plain ASCII cannot be
+/// the profile id, so it becomes the title when the title is left empty.
+({String slug, String title}) botProfileIdentity(String name, String title) {
+  final entered = name.trim();
+  final typed = title.trim();
+  return (
+    slug: botProfileSlug(entered),
+    title: typed.isNotEmpty
+        ? typed
+        : (RegExp(r'[^\u0020-\u007e]').hasMatch(entered) ? entered : ''),
+  );
+}
+
+// Latin letters whose NFKD form is an ASCII letter plus combining marks
+// (the ones Desktop folds). Letters with no such decomposition (ø, ł, ß, æ)
+// become `u<hex>` tokens there, and here.
+const _latinFolds = {
+  'àáâãäåāăą': 'a', 'çćĉċč': 'c', 'ď': 'd', 'èéêëēĕėęě': 'e', //
+  'ĝğġģ': 'g', 'ĥ': 'h', 'ìíîïĩīĭį': 'i', 'ĵ': 'j', 'ķ': 'k', //
+  'ĺļľ': 'l', 'ñńņň': 'n', 'òóôõöōŏő': 'o', 'ŕŗř': 'r', //
+  'śŝşš': 's', 'ţť': 't', 'ùúûüũūŭůűų': 'u', 'ŵ': 'w', 'ýÿŷ': 'y', //
+  'źżž': 'z',
+};
+
+String _foldLatin(String ch) {
+  final lower = ch.toLowerCase();
+  for (final entry in _latinFolds.entries) {
+    if (entry.key.contains(lower)) {
+      return ch == lower ? entry.value : entry.value.toUpperCase();
+    }
+  }
+  return ch;
+}
+
+bool _isLetterOrDigit(int rune) =>
+    RegExp(r'[\p{L}\p{N}]', unicode: true).hasMatch(String.fromCharCode(rune));
+
+/// A Bot Mode profile request the gateway refused, in its own words (shown
+/// inline in the form that sent it).
+final class BotProfileRefusal extends WorkspaceException {
+  const BotProfileRefusal(this.code, this.message)
+    : super(WorkspaceFailure.unavailable);
+  final int code;
+  final String message;
+}
+
+/// `profiles.create`'s reply.
+final class BotProfileCreated {
+  const BotProfileCreated({required this.name, required this.warnings});
+  final String name;
+  final List<String> warnings;
+}
+
+/// One toggle in the profile editor's Skills, Toolsets or MCP list.
+final class BotProfileToggle {
+  const BotProfileToggle({
+    required this.name,
+    required this.enabled,
+    this.label = '',
+    this.detail = '',
+  });
+  final String name;
+  final bool enabled;
+  final String label;
+  final String detail;
+  BotProfileToggle withEnabled(bool on) =>
+      BotProfileToggle(name: name, enabled: on, label: label, detail: detail);
+}
+
+/// `profiles.describe`: what Edit Profile's Advanced section shows.
+final class BotProfileDescription {
+  const BotProfileDescription({
+    required this.description,
+    required this.soul,
+    required this.provider,
+    required this.model,
+    required this.skills,
+    required this.toolsets,
+    required this.mcpServers,
+  });
+  final String description;
+  final String soul;
+  final String provider;
+  final String model;
+  final List<BotProfileToggle> skills;
+  final List<BotProfileToggle> toolsets;
+  final List<BotProfileToggle> mcpServers;
+
+  factory BotProfileDescription.fromJson(Map raw) {
+    List<BotProfileToggle> toggles(Object? list, String label, String detail) =>
+        [
+          if (list is List)
+            for (final item in list)
+              if (item is Map && item['name'] is String)
+                BotProfileToggle(
+                  name: item['name'] as String,
+                  enabled: item['enabled'] == true,
+                  label: item[label] is String ? item[label] as String : '',
+                  detail: item[detail] is String ? item[detail] as String : '',
+                ),
+        ];
+    final model = raw['model'];
+    return BotProfileDescription(
+      description: raw['description'] as String? ?? '',
+      soul: raw['soul'] as String? ?? '',
+      provider: model is Map ? model['provider'] as String? ?? '' : '',
+      model: model is Map ? model['default'] as String? ?? '' : '',
+      skills: toggles(raw['skills'], 'name', ''),
+      toolsets: toggles(raw['toolsets'], 'label', 'description'),
+      mcpServers: toggles(raw['mcp_servers'], 'name', 'transport'),
+    );
+  }
+}
+
+/// `profiles.configure`'s reply: per-section results, and the expensive or
+/// data-policy model gate (`confirm_required`, nothing written).
+final class BotProfileConfigured {
+  const BotProfileConfigured({
+    required this.applied,
+    this.confirmMessage,
+    this.uiMetaConflict = false,
+  });
+  final Map<String, bool> applied;
+  final String? confirmMessage;
+  final bool uiMetaConflict;
+  bool get confirmRequired => confirmMessage != null;
+  List<String> get failed => [
+    for (final e in applied.entries)
+      if (!e.value) e.key,
+  ];
+
+  factory BotProfileConfigured.fromJson(Map raw) {
+    final applied = raw['applied'];
+    return BotProfileConfigured(
+      applied: {
+        if (applied is Map)
+          for (final e in applied.entries)
+            if (e.value is bool) '${e.key}': e.value as bool,
+      },
+      confirmMessage: raw['confirm_required'] == true
+          ? (raw['confirm_message'] as String? ?? '')
+          : null,
+      uiMetaConflict: applied is Map && applied['ui_meta_conflicts'] is Map,
+    );
+  }
+}
+
+/// How a look save ended (Desktop's `serverOutcome`).
+enum BotLookSave { persisted, failed, unsupported }
 
 final class BotRoster {
   const BotRoster({
@@ -736,6 +977,167 @@ extension WorkspaceBots on WorkspaceTarget {
       'include_sessions': includeSessions,
     });
     return BotRoster.fromJson(raw);
+  }
+
+  // ── Profiles (New Bot, Edit Profile) ────────────────────────────────────
+
+  /// A `profiles.*` call (`tui_gateway/methods_profiles.py`): launch-scoped
+  /// like `profiles.list`, the profile named by `name`. A refusal keeps the
+  /// gateway's own message so the form can show it inline.
+  Future<Map<String, dynamic>> _rpcProfile(
+    String method,
+    Map<String, dynamic> params,
+  ) => _guard(checkCurrent, () async {
+    checkCurrent();
+    final response = await _socket.send(method, params, includeProfile: false);
+    checkCurrent();
+    final error = response['error'];
+    if (error != null) {
+      final code = error is Map ? error['code'] : null;
+      if (code == -32601) _fail(WorkspaceFailure.unsupported);
+      if (const {401, 403}.contains(code)) _fail(WorkspaceFailure.denied);
+      final message = error is Map ? error['message'] : null;
+      if (code is int && message is String && message.trim().isNotEmpty) {
+        throw BotProfileRefusal(code, message.trim());
+      }
+      _fail(WorkspaceFailure.unavailable);
+    }
+    final result = response['result'];
+    if (result is! Map<String, dynamic>) _fail(WorkspaceFailure.invalid);
+    return result;
+  });
+
+  /// `profiles.create`, as Desktop's New Bot sends it (create-dialog.tsx):
+  /// [cloneFrom] null starts a fresh profile; [shareAuth] keeps one login
+  /// pool with the default profile.
+  Future<BotProfileCreated> botProfileCreate({
+    required String name,
+    String description = '',
+    String? cloneFrom,
+    bool noSkills = false,
+    bool shareAuth = true,
+    String? soul,
+    String model = '',
+    String provider = '',
+  }) async {
+    final raw = await _rpcProfile('profiles.create', {
+      'name': name,
+      'description': description,
+      'clone_from': cloneFrom,
+      'no_skills': noSkills,
+      'share_auth': shareAuth,
+      'soul': ?soul,
+      if (model.trim().isNotEmpty && provider.trim().isNotEmpty) ...{
+        'model': model.trim(),
+        'provider': provider.trim(),
+      },
+    });
+    final warnings = raw['warnings'];
+    return BotProfileCreated(
+      name: raw['name'] as String? ?? name,
+      warnings: [
+        if (warnings is List)
+          for (final w in warnings)
+            if (w is String) w,
+      ],
+    );
+  }
+
+  Future<BotProfileDescription> botProfileDescribe(String name) async =>
+      BotProfileDescription.fromJson(
+        await _rpcProfile('profiles.describe', {'name': name}),
+      );
+
+  /// `profiles.configure`: each section is independent and only the ones
+  /// given are written; the lists replace what the profile had.
+  Future<BotProfileConfigured> botProfileConfigure(
+    String name, {
+    Map<String, dynamic>? uiMeta,
+    Map<String, int>? expectedRevisions,
+    String? description,
+    String? soul,
+    String? model,
+    String? provider,
+    bool confirmExpensiveModel = false,
+    List<String>? disabledSkills,
+    List<String>? enabledToolsets,
+    List<String>? enabledMcpServers,
+  }) async => BotProfileConfigured.fromJson(
+    await _rpcProfile('profiles.configure', {
+      'name': name,
+      'ui_meta': ?uiMeta,
+      'ui_meta_expected_revisions': ?expectedRevisions,
+      'description': ?description,
+      'soul': ?soul,
+      'model': ?model,
+      'provider': ?provider,
+      if (confirmExpensiveModel) 'confirm_expensive_model': true,
+      'disabled_skills': ?disabledSkills,
+      'enabled_toolsets': ?enabledToolsets,
+      'enabled_mcp_servers': ?enabledMcpServers,
+    }),
+  );
+
+  /// Stores (or with null, clears) the bot's avatar in the profile's asset
+  /// store (`profiles.set_asset`, PNG/JPEG/WebP up to 2 MB).
+  Future<void> botProfileSetAvatar(String name, String? dataUrl) =>
+      _rpcProfile('profiles.set_asset', {
+        'name': name,
+        'asset': 'avatar',
+        if (dataUrl == null) 'clear': true else 'data': dataUrl,
+      });
+
+  /// The bot's stored avatar as a data URL, or null when it has none (or it
+  /// is not a bounded image).
+  Future<String?> botProfileAvatarUrl(String name) async {
+    final raw = await _rpcProfile('profiles.get_asset', {
+      'name': name,
+      'asset': 'avatar',
+    });
+    final data = raw['data'];
+    if (raw['found'] != true || data is! String) return null;
+    return DisplayThumbnail.decode(data) == null ? null : data;
+  }
+
+  /// Desktop's `saveBotMeta` server half (data.ts `persistBotMetaPatch`):
+  /// re-read the bot's record, write the patch over it with the revision it
+  /// read, and re-read on a conflict. Image data never rides ui_meta.
+  Future<BotLookSave> botSaveLook(
+    String name,
+    Map<String, dynamic> patch,
+  ) async {
+    final fields = Map<String, dynamic>.from(patch)
+      ..remove('image')
+      ..remove('pet');
+    for (var attempt = 0; attempt < 3; attempt++) {
+      final roster = await botRoster(includeSessions: false);
+      final row = roster.find(name);
+      if (row == null) return BotLookSave.failed;
+      final base = Map<String, dynamic>.from(row.look)..remove('chat');
+      final revision = row.lookRevision;
+      final BotProfileConfigured result;
+      try {
+        result = await botProfileConfigure(
+          name,
+          uiMeta: {
+            'hermes-bots': {...base, ...fields},
+          },
+          expectedRevisions: revision == null
+              ? null
+              : {'hermes-bots': revision},
+        );
+      } on WorkspaceException catch (e) {
+        if (e.reason == WorkspaceFailure.unsupported) {
+          return BotLookSave.unsupported;
+        }
+        rethrow;
+      }
+      if (result.uiMetaConflict) continue;
+      final applied = result.applied['ui_meta'];
+      if (applied == true) return BotLookSave.persisted;
+      return applied == false ? BotLookSave.failed : BotLookSave.unsupported;
+    }
+    return BotLookSave.failed;
   }
 
   // ── Canonical bot chat ─────────────────────────────────────────────────

@@ -9137,4 +9137,267 @@ class AppLocalizationsUk extends AppLocalizations {
   String ng_board_run_title(String id, String profile, String outcome) {
     return 'Запуск №$id · @$profile · $outcome';
   }
+
+  @override
+  String get ng_bots_new_bot => 'Новий бот';
+
+  @override
+  String get ng_bots_new_bot_hint =>
+      'Іменований напарник із власною пам’яттю, навичками й чатом. Може писати іншим вашим агентам.';
+
+  @override
+  String get ng_bots_field_name => 'Ім’я';
+
+  @override
+  String get ng_bots_field_title => 'Заголовок';
+
+  @override
+  String get ng_bots_field_description => 'Опис';
+
+  @override
+  String get ng_bots_description_hint => 'З чим має допомагати цей бот?';
+
+  @override
+  String get ng_bots_name_invalid =>
+      'Використовуйте малі літери, цифри, дефіси або підкреслення; починайте з літери чи цифри (не більше 64 символів).';
+
+  @override
+  String ng_bots_name_taken(String name) {
+    return 'Агент з іменем «$name» уже існує.';
+  }
+
+  @override
+  String ng_bots_profile_id(String id) {
+    return 'ID профілю: $id';
+  }
+
+  @override
+  String get ng_bots_advanced =>
+      'Додатково — модель, навички, набори інструментів, SOUL.md';
+
+  @override
+  String get ng_bots_clone_from => 'Клонувати профіль';
+
+  @override
+  String get ng_bots_clone_main => 'Основний профіль (default)';
+
+  @override
+  String get ng_bots_fresh_profile => 'Новий профіль (вбудовані навички)';
+
+  @override
+  String get ng_bots_create_empty =>
+      'Створити порожнім (без вбудованих навичок)';
+
+  @override
+  String get ng_bots_share_keys =>
+      'Спільні ключі й облікові записи з основним профілем';
+
+  @override
+  String get ng_bots_provider => 'Провайдер';
+
+  @override
+  String get ng_bots_model => 'Модель';
+
+  @override
+  String get ng_bots_model_pair => 'Укажіть і провайдера, і модель.';
+
+  @override
+  String get ng_bots_soul =>
+      'SOUL.md (необов’язково — замінює створену персону)';
+
+  @override
+  String get ng_bots_soul_edit => 'SOUL.md';
+
+  @override
+  String get ng_bots_creating => 'Створення…';
+
+  @override
+  String get ng_bots_create_bot => 'Створити бота';
+
+  @override
+  String ng_bots_created(String name) {
+    return 'Бота «$name» створено';
+  }
+
+  @override
+  String get ng_bots_look_failed =>
+      'Зовнішній вигляд не збережено на шлюзі; задайте його в «Редагувати профіль».';
+
+  @override
+  String ng_bots_request_failed(String reason) {
+    return 'Шлюз не прийняв запит ($reason).';
+  }
+
+  @override
+  String get ng_bots_avatar_shape => 'Форма';
+
+  @override
+  String ng_bots_avatar_shape_n(int n) {
+    return 'Форма $n';
+  }
+
+  @override
+  String get ng_bots_avatar_colour => 'Колір';
+
+  @override
+  String ng_bots_avatar_colour_n(int n) {
+    return 'Колір $n';
+  }
+
+  @override
+  String get ng_bots_avatar_match_name => 'За ім’ям';
+
+  @override
+  String get ng_bots_avatar_upload => 'Вибрати зображення…';
+
+  @override
+  String get ng_bots_avatar_remove => 'Прибрати зображення — використати форму';
+
+  @override
+  String get ng_bots_avatar_too_large => 'Зображення завелике (до 15 МБ).';
+
+  @override
+  String get ng_bots_avatar_unreadable => 'Не вдалося прочитати зображення.';
+
+  @override
+  String get ng_bots_edit_profile => 'Редагувати профіль';
+
+  @override
+  String ng_bots_edit_description(String name, String profile) {
+    return 'Вигляд і роль $name ($profile).';
+  }
+
+  @override
+  String ng_bots_advanced_failed(String reason) {
+    return 'Не вдалося завантажити налаштування профілю ($reason).';
+  }
+
+  @override
+  String get ng_bots_skills => 'Навички';
+
+  @override
+  String get ng_bots_toolsets => 'Набори інструментів';
+
+  @override
+  String get ng_bots_toolsets_hint =>
+      'Якщо позначено всі (або жодного), діє типовий набір.';
+
+  @override
+  String get ng_bots_mcp_servers => 'MCP-сервери';
+
+  @override
+  String get ng_bots_saving => 'Збереження…';
+
+  @override
+  String get ng_bots_confirm_changes_title => 'Зберегти ці зміни?';
+
+  @override
+  String get ng_bots_change_remove_image => 'Видалити зображення бота';
+
+  @override
+  String get ng_bots_change_soul => 'Замінити його SOUL.md';
+
+  @override
+  String ng_bots_change_turn_off(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Вимкнути навички, набори чи MCP-сервери: $count',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_bots_updated(String name) {
+    return '$name: оновлено';
+  }
+
+  @override
+  String ng_bots_sections_failed(String sections) {
+    return 'Не вдалося зберегти: $sections';
+  }
+
+  @override
+  String get ng_bots_model_confirm_title => 'Змінити модель?';
+
+  @override
+  String get ng_bots_model_confirm_ok => 'Змінити';
+
+  @override
+  String get ng_bots_model_not_switched => 'Модель не змінено.';
+
+  @override
+  String get ng_bots_section_new => 'Новий розділ';
+
+  @override
+  String get ng_bots_section_new_ellipsis => 'Новий розділ…';
+
+  @override
+  String get ng_bots_section_name => 'Назва розділу';
+
+  @override
+  String get ng_bots_section_name_hint => 'наприклад, Клієнти';
+
+  @override
+  String get ng_bots_section_create => 'Створити';
+
+  @override
+  String get ng_bots_section_rename => 'Перейменувати розділ';
+
+  @override
+  String get ng_bots_section_delete => 'Видалити розділ';
+
+  @override
+  String get ng_bots_section_move_up => 'Вище';
+
+  @override
+  String get ng_bots_section_move_down => 'Нижче';
+
+  @override
+  String get ng_bots_section_unassigned => 'Без розділу';
+
+  @override
+  String ng_bots_section_options(String name) {
+    return 'Параметри розділу «$name»';
+  }
+
+  @override
+  String get ng_bots_section_empty =>
+      'Тут поки немає ботів. Скористайтеся «Перемістити в розділ» у бота.';
+
+  @override
+  String get ng_bots_section_move_to => 'Перемістити в розділ';
+
+  @override
+  String get ng_bots_section_remove => 'Прибрати з розділу';
+
+  @override
+  String ng_bots_section_deleted(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Розділ «$name» видалено — ботів переміщено в «Без розділу»: $count',
+      zero: 'Розділ «$name» видалено',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_undo => 'Скасувати';
+
+  @override
+  String ng_bots_section_move_failed(String reason) {
+    return 'Не вдалося перемістити бота ($reason).';
+  }
+
+  @override
+  String ng_bots_bot_actions(String name) {
+    return 'Дії: $name';
+  }
+
+  @override
+  String ng_bots_section_toggle(String name) {
+    return 'Показати або сховати «$name»';
+  }
 }

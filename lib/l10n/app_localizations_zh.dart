@@ -8755,6 +8755,259 @@ class AppLocalizationsZh extends AppLocalizations {
   String ng_board_run_title(String id, String profile, String outcome) {
     return '运行 #$id · @$profile · $outcome';
   }
+
+  @override
+  String get ng_bots_new_bot => '新建机器人';
+
+  @override
+  String get ng_bots_new_bot_hint => '一个有名字的队友，拥有自己的记忆、技能和聊天，可以给你的其他智能体发消息。';
+
+  @override
+  String get ng_bots_field_name => '名称';
+
+  @override
+  String get ng_bots_field_title => '标题';
+
+  @override
+  String get ng_bots_field_description => '描述';
+
+  @override
+  String get ng_bots_description_hint => '这个机器人应该帮忙做什么？';
+
+  @override
+  String get ng_bots_name_invalid => '使用小写字母、数字、连字符或下划线，并以字母或数字开头（最多 64 个字符）。';
+
+  @override
+  String ng_bots_name_taken(String name) {
+    return '名为“$name”的智能体已存在。';
+  }
+
+  @override
+  String ng_bots_profile_id(String id) {
+    return '配置文件 ID：$id';
+  }
+
+  @override
+  String get ng_bots_advanced => '高级 — 模型、技能、工具集、SOUL.md';
+
+  @override
+  String get ng_bots_clone_from => '从配置文件克隆';
+
+  @override
+  String get ng_bots_clone_main => '主配置文件（default）';
+
+  @override
+  String get ng_bots_fresh_profile => '全新配置文件（内置技能）';
+
+  @override
+  String get ng_bots_create_empty => '创建空配置（跳过内置技能）';
+
+  @override
+  String get ng_bots_share_keys => '与主配置文件共享密钥和账户';
+
+  @override
+  String get ng_bots_provider => '提供商';
+
+  @override
+  String get ng_bots_model => '模型';
+
+  @override
+  String get ng_bots_model_pair => '请同时输入提供商和模型。';
+
+  @override
+  String get ng_bots_soul => 'SOUL.md（可选 — 替换生成的人设）';
+
+  @override
+  String get ng_bots_soul_edit => 'SOUL.md';
+
+  @override
+  String get ng_bots_creating => '正在创建…';
+
+  @override
+  String get ng_bots_create_bot => '创建机器人';
+
+  @override
+  String ng_bots_created(String name) {
+    return '已创建机器人“$name”';
+  }
+
+  @override
+  String get ng_bots_look_failed => '外观未保存到网关；请在“编辑配置文件”中设置。';
+
+  @override
+  String ng_bots_request_failed(String reason) {
+    return '网关未接受（$reason）。';
+  }
+
+  @override
+  String get ng_bots_avatar_shape => '形状';
+
+  @override
+  String ng_bots_avatar_shape_n(int n) {
+    return '形状 $n';
+  }
+
+  @override
+  String get ng_bots_avatar_colour => '颜色';
+
+  @override
+  String ng_bots_avatar_colour_n(int n) {
+    return '颜色 $n';
+  }
+
+  @override
+  String get ng_bots_avatar_match_name => '跟随名称';
+
+  @override
+  String get ng_bots_avatar_upload => '选择图片…';
+
+  @override
+  String get ng_bots_avatar_remove => '移除图片 — 使用形状';
+
+  @override
+  String get ng_bots_avatar_too_large => '图片过大（最大 15 MB）。';
+
+  @override
+  String get ng_bots_avatar_unreadable => '无法读取该图片。';
+
+  @override
+  String get ng_bots_edit_profile => '编辑配置文件';
+
+  @override
+  String ng_bots_edit_description(String name, String profile) {
+    return '$name（$profile）的外观和角色。';
+  }
+
+  @override
+  String ng_bots_advanced_failed(String reason) {
+    return '无法加载配置文件设置（$reason）。';
+  }
+
+  @override
+  String get ng_bots_skills => '技能';
+
+  @override
+  String get ng_bots_toolsets => '工具集';
+
+  @override
+  String get ng_bots_toolsets_hint => '全部（或都不）勾选时保持默认工具集行为。';
+
+  @override
+  String get ng_bots_mcp_servers => 'MCP 服务器';
+
+  @override
+  String get ng_bots_saving => '正在保存…';
+
+  @override
+  String get ng_bots_confirm_changes_title => '保存这些更改？';
+
+  @override
+  String get ng_bots_change_remove_image => '移除机器人的图片';
+
+  @override
+  String get ng_bots_change_soul => '替换其 SOUL.md';
+
+  @override
+  String ng_bots_change_turn_off(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '关闭 $count 个技能、工具集或 MCP 服务器',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_bots_updated(String name) {
+    return '已更新 $name';
+  }
+
+  @override
+  String ng_bots_sections_failed(String sections) {
+    return '部分内容失败：$sections';
+  }
+
+  @override
+  String get ng_bots_model_confirm_title => '切换模型？';
+
+  @override
+  String get ng_bots_model_confirm_ok => '切换';
+
+  @override
+  String get ng_bots_model_not_switched => '未切换模型。';
+
+  @override
+  String get ng_bots_section_new => '新建分组';
+
+  @override
+  String get ng_bots_section_new_ellipsis => '新建分组…';
+
+  @override
+  String get ng_bots_section_name => '分组名称';
+
+  @override
+  String get ng_bots_section_name_hint => '例如：客户';
+
+  @override
+  String get ng_bots_section_create => '创建';
+
+  @override
+  String get ng_bots_section_rename => '重命名分组';
+
+  @override
+  String get ng_bots_section_delete => '删除分组';
+
+  @override
+  String get ng_bots_section_move_up => '上移';
+
+  @override
+  String get ng_bots_section_move_down => '下移';
+
+  @override
+  String get ng_bots_section_unassigned => '未分组';
+
+  @override
+  String ng_bots_section_options(String name) {
+    return '分组“$name”的选项';
+  }
+
+  @override
+  String get ng_bots_section_empty => '这里还没有机器人。请对机器人使用“移到分组”。';
+
+  @override
+  String get ng_bots_section_move_to => '移到分组';
+
+  @override
+  String get ng_bots_section_remove => '移出分组';
+
+  @override
+  String ng_bots_section_deleted(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已删除“$name” — $count 个机器人移到未分组',
+      zero: '已删除“$name”',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_undo => '撤销';
+
+  @override
+  String ng_bots_section_move_failed(String reason) {
+    return '无法移动机器人（$reason）。';
+  }
+
+  @override
+  String ng_bots_bot_actions(String name) {
+    return '$name 的操作';
+  }
+
+  @override
+  String ng_bots_section_toggle(String name) {
+    return '显示或隐藏“$name”';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -16736,6 +16989,259 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   @override
   String ng_board_run_title(String id, String profile, String outcome) {
     return '运行 #$id · @$profile · $outcome';
+  }
+
+  @override
+  String get ng_bots_new_bot => '新建机器人';
+
+  @override
+  String get ng_bots_new_bot_hint => '一个有名字的队友，拥有自己的记忆、技能和聊天，可以给你的其他智能体发消息。';
+
+  @override
+  String get ng_bots_field_name => '名称';
+
+  @override
+  String get ng_bots_field_title => '标题';
+
+  @override
+  String get ng_bots_field_description => '描述';
+
+  @override
+  String get ng_bots_description_hint => '这个机器人应该帮忙做什么？';
+
+  @override
+  String get ng_bots_name_invalid => '使用小写字母、数字、连字符或下划线，并以字母或数字开头（最多 64 个字符）。';
+
+  @override
+  String ng_bots_name_taken(String name) {
+    return '名为“$name”的智能体已存在。';
+  }
+
+  @override
+  String ng_bots_profile_id(String id) {
+    return '配置文件 ID：$id';
+  }
+
+  @override
+  String get ng_bots_advanced => '高级 — 模型、技能、工具集、SOUL.md';
+
+  @override
+  String get ng_bots_clone_from => '从配置文件克隆';
+
+  @override
+  String get ng_bots_clone_main => '主配置文件（default）';
+
+  @override
+  String get ng_bots_fresh_profile => '全新配置文件（内置技能）';
+
+  @override
+  String get ng_bots_create_empty => '创建空配置（跳过内置技能）';
+
+  @override
+  String get ng_bots_share_keys => '与主配置文件共享密钥和账户';
+
+  @override
+  String get ng_bots_provider => '提供商';
+
+  @override
+  String get ng_bots_model => '模型';
+
+  @override
+  String get ng_bots_model_pair => '请同时输入提供商和模型。';
+
+  @override
+  String get ng_bots_soul => 'SOUL.md（可选 — 替换生成的人设）';
+
+  @override
+  String get ng_bots_soul_edit => 'SOUL.md';
+
+  @override
+  String get ng_bots_creating => '正在创建…';
+
+  @override
+  String get ng_bots_create_bot => '创建机器人';
+
+  @override
+  String ng_bots_created(String name) {
+    return '已创建机器人“$name”';
+  }
+
+  @override
+  String get ng_bots_look_failed => '外观未保存到网关；请在“编辑配置文件”中设置。';
+
+  @override
+  String ng_bots_request_failed(String reason) {
+    return '网关未接受（$reason）。';
+  }
+
+  @override
+  String get ng_bots_avatar_shape => '形状';
+
+  @override
+  String ng_bots_avatar_shape_n(int n) {
+    return '形状 $n';
+  }
+
+  @override
+  String get ng_bots_avatar_colour => '颜色';
+
+  @override
+  String ng_bots_avatar_colour_n(int n) {
+    return '颜色 $n';
+  }
+
+  @override
+  String get ng_bots_avatar_match_name => '跟随名称';
+
+  @override
+  String get ng_bots_avatar_upload => '选择图片…';
+
+  @override
+  String get ng_bots_avatar_remove => '移除图片 — 使用形状';
+
+  @override
+  String get ng_bots_avatar_too_large => '图片过大（最大 15 MB）。';
+
+  @override
+  String get ng_bots_avatar_unreadable => '无法读取该图片。';
+
+  @override
+  String get ng_bots_edit_profile => '编辑配置文件';
+
+  @override
+  String ng_bots_edit_description(String name, String profile) {
+    return '$name（$profile）的外观和角色。';
+  }
+
+  @override
+  String ng_bots_advanced_failed(String reason) {
+    return '无法加载配置文件设置（$reason）。';
+  }
+
+  @override
+  String get ng_bots_skills => '技能';
+
+  @override
+  String get ng_bots_toolsets => '工具集';
+
+  @override
+  String get ng_bots_toolsets_hint => '全部（或都不）勾选时保持默认工具集行为。';
+
+  @override
+  String get ng_bots_mcp_servers => 'MCP 服务器';
+
+  @override
+  String get ng_bots_saving => '正在保存…';
+
+  @override
+  String get ng_bots_confirm_changes_title => '保存这些更改？';
+
+  @override
+  String get ng_bots_change_remove_image => '移除机器人的图片';
+
+  @override
+  String get ng_bots_change_soul => '替换其 SOUL.md';
+
+  @override
+  String ng_bots_change_turn_off(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '关闭 $count 个技能、工具集或 MCP 服务器',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_bots_updated(String name) {
+    return '已更新 $name';
+  }
+
+  @override
+  String ng_bots_sections_failed(String sections) {
+    return '部分内容失败：$sections';
+  }
+
+  @override
+  String get ng_bots_model_confirm_title => '切换模型？';
+
+  @override
+  String get ng_bots_model_confirm_ok => '切换';
+
+  @override
+  String get ng_bots_model_not_switched => '未切换模型。';
+
+  @override
+  String get ng_bots_section_new => '新建分组';
+
+  @override
+  String get ng_bots_section_new_ellipsis => '新建分组…';
+
+  @override
+  String get ng_bots_section_name => '分组名称';
+
+  @override
+  String get ng_bots_section_name_hint => '例如：客户';
+
+  @override
+  String get ng_bots_section_create => '创建';
+
+  @override
+  String get ng_bots_section_rename => '重命名分组';
+
+  @override
+  String get ng_bots_section_delete => '删除分组';
+
+  @override
+  String get ng_bots_section_move_up => '上移';
+
+  @override
+  String get ng_bots_section_move_down => '下移';
+
+  @override
+  String get ng_bots_section_unassigned => '未分组';
+
+  @override
+  String ng_bots_section_options(String name) {
+    return '分组“$name”的选项';
+  }
+
+  @override
+  String get ng_bots_section_empty => '这里还没有机器人。请对机器人使用“移到分组”。';
+
+  @override
+  String get ng_bots_section_move_to => '移到分组';
+
+  @override
+  String get ng_bots_section_remove => '移出分组';
+
+  @override
+  String ng_bots_section_deleted(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已删除“$name” — $count 个机器人移到未分组',
+      zero: '已删除“$name”',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_undo => '撤销';
+
+  @override
+  String ng_bots_section_move_failed(String reason) {
+    return '无法移动机器人（$reason）。';
+  }
+
+  @override
+  String ng_bots_bot_actions(String name) {
+    return '$name 的操作';
+  }
+
+  @override
+  String ng_bots_section_toggle(String name) {
+    return '显示或隐藏“$name”';
   }
 }
 
@@ -25115,5 +25621,258 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   @override
   String ng_board_run_title(String id, String profile, String outcome) {
     return '執行 #$id · @$profile · $outcome';
+  }
+
+  @override
+  String get ng_bots_new_bot => '新增機器人';
+
+  @override
+  String get ng_bots_new_bot_hint => '一個有名字的隊友，擁有自己的記憶、技能和聊天，可以傳訊息給你的其他智慧體。';
+
+  @override
+  String get ng_bots_field_name => '名稱';
+
+  @override
+  String get ng_bots_field_title => '標題';
+
+  @override
+  String get ng_bots_field_description => '描述';
+
+  @override
+  String get ng_bots_description_hint => '這個機器人應該幫忙做什麼？';
+
+  @override
+  String get ng_bots_name_invalid => '使用小寫字母、數字、連字號或底線，並以字母或數字開頭（最多 64 個字元）。';
+
+  @override
+  String ng_bots_name_taken(String name) {
+    return '名為「$name」的智慧體已存在。';
+  }
+
+  @override
+  String ng_bots_profile_id(String id) {
+    return '設定檔 ID：$id';
+  }
+
+  @override
+  String get ng_bots_advanced => '進階 — 模型、技能、工具集、SOUL.md';
+
+  @override
+  String get ng_bots_clone_from => '從設定檔複製';
+
+  @override
+  String get ng_bots_clone_main => '主設定檔（default）';
+
+  @override
+  String get ng_bots_fresh_profile => '全新設定檔（內建技能）';
+
+  @override
+  String get ng_bots_create_empty => '建立空白設定（略過內建技能）';
+
+  @override
+  String get ng_bots_share_keys => '與主設定檔共用金鑰和帳戶';
+
+  @override
+  String get ng_bots_provider => '供應商';
+
+  @override
+  String get ng_bots_model => '模型';
+
+  @override
+  String get ng_bots_model_pair => '請同時輸入供應商和模型。';
+
+  @override
+  String get ng_bots_soul => 'SOUL.md（選填 — 取代產生的人設）';
+
+  @override
+  String get ng_bots_soul_edit => 'SOUL.md';
+
+  @override
+  String get ng_bots_creating => '正在建立…';
+
+  @override
+  String get ng_bots_create_bot => '建立機器人';
+
+  @override
+  String ng_bots_created(String name) {
+    return '已建立機器人「$name」';
+  }
+
+  @override
+  String get ng_bots_look_failed => '外觀未儲存到閘道；請在「編輯設定檔」中設定。';
+
+  @override
+  String ng_bots_request_failed(String reason) {
+    return '閘道未接受（$reason）。';
+  }
+
+  @override
+  String get ng_bots_avatar_shape => '形狀';
+
+  @override
+  String ng_bots_avatar_shape_n(int n) {
+    return '形狀 $n';
+  }
+
+  @override
+  String get ng_bots_avatar_colour => '顏色';
+
+  @override
+  String ng_bots_avatar_colour_n(int n) {
+    return '顏色 $n';
+  }
+
+  @override
+  String get ng_bots_avatar_match_name => '依名稱';
+
+  @override
+  String get ng_bots_avatar_upload => '選擇圖片…';
+
+  @override
+  String get ng_bots_avatar_remove => '移除圖片 — 使用形狀';
+
+  @override
+  String get ng_bots_avatar_too_large => '圖片過大（最大 15 MB）。';
+
+  @override
+  String get ng_bots_avatar_unreadable => '無法讀取該圖片。';
+
+  @override
+  String get ng_bots_edit_profile => '編輯設定檔';
+
+  @override
+  String ng_bots_edit_description(String name, String profile) {
+    return '$name（$profile）的外觀和角色。';
+  }
+
+  @override
+  String ng_bots_advanced_failed(String reason) {
+    return '無法載入設定檔設定（$reason）。';
+  }
+
+  @override
+  String get ng_bots_skills => '技能';
+
+  @override
+  String get ng_bots_toolsets => '工具集';
+
+  @override
+  String get ng_bots_toolsets_hint => '全部（或都不）勾選時維持預設工具集行為。';
+
+  @override
+  String get ng_bots_mcp_servers => 'MCP 伺服器';
+
+  @override
+  String get ng_bots_saving => '正在儲存…';
+
+  @override
+  String get ng_bots_confirm_changes_title => '儲存這些變更？';
+
+  @override
+  String get ng_bots_change_remove_image => '移除機器人的圖片';
+
+  @override
+  String get ng_bots_change_soul => '取代其 SOUL.md';
+
+  @override
+  String ng_bots_change_turn_off(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '關閉 $count 個技能、工具集或 MCP 伺服器',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_bots_updated(String name) {
+    return '已更新 $name';
+  }
+
+  @override
+  String ng_bots_sections_failed(String sections) {
+    return '部分內容失敗：$sections';
+  }
+
+  @override
+  String get ng_bots_model_confirm_title => '切換模型？';
+
+  @override
+  String get ng_bots_model_confirm_ok => '切換';
+
+  @override
+  String get ng_bots_model_not_switched => '未切換模型。';
+
+  @override
+  String get ng_bots_section_new => '新增分組';
+
+  @override
+  String get ng_bots_section_new_ellipsis => '新增分組…';
+
+  @override
+  String get ng_bots_section_name => '分組名稱';
+
+  @override
+  String get ng_bots_section_name_hint => '例如：客戶';
+
+  @override
+  String get ng_bots_section_create => '建立';
+
+  @override
+  String get ng_bots_section_rename => '重新命名分組';
+
+  @override
+  String get ng_bots_section_delete => '刪除分組';
+
+  @override
+  String get ng_bots_section_move_up => '上移';
+
+  @override
+  String get ng_bots_section_move_down => '下移';
+
+  @override
+  String get ng_bots_section_unassigned => '未分組';
+
+  @override
+  String ng_bots_section_options(String name) {
+    return '分組「$name」的選項';
+  }
+
+  @override
+  String get ng_bots_section_empty => '這裡還沒有機器人。請對機器人使用「移到分組」。';
+
+  @override
+  String get ng_bots_section_move_to => '移到分組';
+
+  @override
+  String get ng_bots_section_remove => '移出分組';
+
+  @override
+  String ng_bots_section_deleted(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已刪除「$name」— $count 個機器人移到未分組',
+      zero: '已刪除「$name」',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_undo => '復原';
+
+  @override
+  String ng_bots_section_move_failed(String reason) {
+    return '無法移動機器人（$reason）。';
+  }
+
+  @override
+  String ng_bots_bot_actions(String name) {
+    return '$name 的操作';
+  }
+
+  @override
+  String ng_bots_section_toggle(String name) {
+    return '顯示或隱藏「$name」';
   }
 }

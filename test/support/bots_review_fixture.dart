@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,6 +11,10 @@ import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+
+/// A 1x1 PNG, base64 (what a picked and normalised avatar looks like).
+const botsFixturePng =
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
 
 /// Waits (real and fake time) until [finder] matches, then asserts it does.
 Future<void> botsShown(WidgetTester tester, Finder finder) async {
@@ -225,39 +230,410 @@ class BotsReviewGateway {
     return times == 1 ? 'once' : '$times times';
   }
 
-  Map<String, dynamic> _respond(String method, Map<String, dynamic> p) {
-    final profile = p['profile'] is String ? p['profile'] as String : 'workbot';
+  /// The roster `profiles.list` answers, rows as `methods_profiles.py`
+  /// builds them. `profiles.create` adds to it.
+  final profiles = <Map<String, dynamic>>[
+    {
+      'name': 'workbot',
+      'path': '/home/bots/workbot',
+      'is_default': false,
+      'model': 'claude-sonnet',
+      'provider': 'anthropic',
+      'description': 'Primary worker bot',
+      'display_name': 'WorkBot',
+      'skill_count': 4,
+      'has_avatar': true,
+      'canonical_session': {'id': 'sess-canonical-workbot'},
+      'last_session': {'preview': 'last coding turn'},
+    },
+    {
+      'name': 'researchbot',
+      'path': '/home/bots/researchbot',
+      'is_default': false,
+      'model': 'gpt-5',
+      'provider': 'openrouter',
+      'description': 'Research bot',
+      'display_name': 'ResearchBot',
+      'skill_count': 2,
+    },
+  ];
+
+  /// Per-profile `profile.yaml` `ui_meta` and `_ui_meta_revisions`.
+  final uiMeta = <String, Map<String, dynamic>>{};
+  final uiMetaRevisions = <String, Map<String, int>>{};
+
+  /// Stored avatars (data URLs) by profile.
+  final avatars = <String, String>{
+    'workbot': 'data:image/png;base64,$botsFixturePng',
+  };
+
+  /// What `profiles.describe` reports, by profile.
+  final described = <String, Map<String, dynamic>>{};
+
+  /// Models whose pick answers `confirm_required` until confirmed.
+  final guardedModels = <String>{};
+
+  /// Sections `profiles.configure` reports as not applied.
+  final failSections = <String>{};
+
+  /// Bumped behind the client's back: another Desktop wrote the record.
+  void bumpRevision(String profile, Map<String, dynamic> meta) {
+    uiMeta[profile] = {...?uiMeta[profile], 'hermes-bots': meta};
+    final revs = uiMetaRevisions.putIfAbsent(profile, () => {});
+    revs['hermes-bots'] = (revs['hermes-bots'] ?? 0) + 1;
+  }
+
+  Map<String, dynamic> describeOf(String profile) =>
+      described[profile] ??
+      {
+        'name': profile,
+        'description': '',
+        'soul': '# $profile\n',
+        'model': {'provider': 'anthropic', 'default': 'claude-sonnet'},
+        'skills': [
+          {'name': 'web-research', 'enabled': true},
+          {'name': 'git-helper', 'enabled': true},
+        ],
+        'toolsets': [
+          {
+            'name': 'web',
+            'label': 'Web',
+            'description': 'Search and fetch',
+            'tool_count': 2,
+            'enabled': true,
+          },
+          {
+            'name': 'terminal',
+            'label': 'Terminal',
+            'description': 'Run commands',
+            'tool_count': 1,
+            'enabled': true,
+          },
+        ],
+        'toolsets_pinned': false,
+        'mcp_servers': [
+          {'name': 'github', 'enabled': false, 'transport': 'http'},
+        ],
+      };
+
+  Map<String, dynamic>? _row(String? name) =>
+      profiles.where((r) => r['name'] == name).firstOrNull;
+
+  static final _profileId = RegExp(r'^[a-z0-9][a-z0-9_-]{0,63}$');
+  static const _reserved = {'hermes', 'test', 'tmp', 'root', 'sudo'};
+
+  /// `params` against a contract's typed fields: `{key: (type check)}`.
+  static Map<String, dynamic>? _typed(
+    Map<String, dynamic> params,
+    Map<String, bool Function(Object?)> fields,
+  ) {
+    final refused = _closed(params, {...fields.keys, 'profile'});
+    if (refused != null) return refused;
+    for (final MapEntry(:key, :value) in params.entries) {
+      final ok = key == 'profile'
+          ? value == null || value is String
+          : fields[key]!(value);
+      if (!ok) return _error(-32602, 'invalid params: $key');
+    }
+    return null;
+  }
+
+  static bool _str(Object? v) => v == null || v is String;
+  static bool _flag(Object? v) => v == null || v is bool || v is String;
+  static bool _names(Object? v) =>
+      v == null || v is List && v.every((e) => e is String);
+
+  /// `tui_gateway/methods_profiles.py` at b7ee21c14e, with the contracts in
+  /// `tui_gateway/contracts/profiles_vault_complete_foreign_subagents.py`.
+  Map<String, dynamic> _profiles(String method, Map<String, dynamic> p) {
     switch (method) {
       case 'profiles.list':
+        final refused = _typed(p, {'include_sessions': _flag});
+        if (refused != null) return refused;
         return _ok({
           'profiles': [
-            {
-              'name': 'workbot',
-              'path': '/home/bots/workbot',
-              'is_default': false,
-              'model': 'claude-sonnet',
-              'provider': 'anthropic',
-              'description': 'Primary worker bot',
-              'display_name': 'WorkBot',
-              'skill_count': 4,
-              'has_avatar': true,
-              'canonical_session': {'id': 'sess-canonical-workbot'},
-              'last_session': {'preview': 'last coding turn'},
-            },
-            {
-              'name': 'researchbot',
-              'path': '/home/bots/researchbot',
-              'is_default': false,
-              'model': 'gpt-5',
-              'provider': 'openrouter',
-              'description': 'Research bot',
-              'display_name': 'ResearchBot',
-              'skill_count': 2,
-            },
+            for (final row in profiles)
+              {
+                ...row,
+                'has_avatar': avatars.containsKey(row['name']),
+                'ui_meta_revisions': {...?uiMetaRevisions[row['name']]},
+                if (uiMeta[row['name']]?.isNotEmpty == true)
+                  'ui_meta': jsonDecode(jsonEncode(uiMeta[row['name']])),
+              },
           ],
           'bot_mode_protocol': true,
           'install_id': 'fixture-install-1',
         });
+      case 'profiles.create':
+        final refused = _typed(p, {
+          'name': (v) => v is String,
+          'description': _str,
+          'clone_from': _str,
+          'clone_all': _flag,
+          'clone_channels': _flag,
+          'no_skills': _flag,
+          'no_alias': _flag,
+          'soul': _str,
+          'model': _str,
+          'provider': _str,
+          'share_auth': _flag,
+          'mirror_credentials': _flag,
+          'clone_config': _flag,
+          'sync_imports': _flag,
+          'report': _flag,
+        });
+        if (refused != null) return refused;
+        final name = (p['name'] as String).trim();
+        if (name.isEmpty) return _error(4061, 'name required');
+        if (!_profileId.hasMatch(name)) {
+          return _error(4062, "Invalid profile name '$name'.");
+        }
+        if (_reserved.contains(name)) {
+          return _error(
+            4062,
+            "Profile name '$name' is reserved — it collides with either the "
+            'Hermes installation itself or a common system binary.  Pick a '
+            'different name.',
+          );
+        }
+        if (_row(name) != null || name == 'default') {
+          return _error(
+            4062,
+            "A profile named '$name' already exists. Switch to it with "
+            '`hermes profile use $name`, see all profiles with `hermes '
+            'profile list`, or choose a different name.',
+          );
+        }
+        final clone = p['clone_from'] as String?;
+        if (clone != null && clone != 'default' && _row(clone) == null) {
+          return _error(4062, "Profile '$clone' does not exist.");
+        }
+        final model = (p['model'] as String? ?? '').trim();
+        final provider = (p['provider'] as String? ?? '').trim();
+        profiles.add({
+          'name': name,
+          'path': '/home/bots/$name',
+          'is_default': false,
+          'model': model.isEmpty ? 'claude-sonnet' : model,
+          'provider': provider.isEmpty ? 'anthropic' : provider,
+          'description': (p['description'] as String? ?? '').trim(),
+          'display_name': '',
+          'skill_count': p['no_skills'] == true ? 0 : 3,
+        });
+        return _ok({
+          'ok': true,
+          'name': name,
+          'path': '/home/bots/$name',
+          'soul_written': p['soul'] is String,
+          'model_set': model.isNotEmpty && provider.isNotEmpty,
+          'mirrored': {'env': true, 'auth': 'shared'},
+          'warnings': <String>[],
+        });
+      case 'profiles.describe':
+        final refused = _typed(p, {'name': _str});
+        if (refused != null) return refused;
+        final name = (p['name'] as String? ?? '').trim();
+        if (name.isEmpty) return _error(4063, 'name required');
+        if (_row(name) == null) {
+          return _error(4064, "profile '$name' not found");
+        }
+        return _ok({
+          ...describeOf(name),
+          'description': _row(name)!['description'],
+        });
+      case 'profiles.configure':
+        final refused = _typed(p, {
+          'name': _str,
+          'ui_meta': (v) => v == null || v is Map,
+          'ui_meta_expected_revisions': (v) =>
+              v == null || v is Map && v.values.every((e) => e is int),
+          'soul': _str,
+          'description': _str,
+          'model': _str,
+          'provider': _str,
+          'confirm_expensive_model': _flag,
+          'disabled_skills': _names,
+          'enabled_toolsets': _names,
+          'enabled_mcp_servers': _names,
+        });
+        if (refused != null) return refused;
+        final name = (p['name'] as String? ?? '').trim();
+        if (name.isEmpty) return _error(4063, 'name required');
+        final row = _row(name);
+        if (row == null) return _error(4064, "profile '$name' not found");
+        final applied = <String, dynamic>{};
+        bool ok(String section) => !failSections.contains(section);
+        final incoming = p['ui_meta'];
+        if (incoming is Map) {
+          final revs = uiMetaRevisions.putIfAbsent(name, () => {});
+          final expected = p['ui_meta_expected_revisions'] as Map?;
+          final conflicts = {
+            if (expected != null)
+              for (final key in incoming.keys)
+                if (expected[key] != (revs[key] ?? 0))
+                  key: {'expected': expected[key], 'actual': revs[key] ?? 0},
+          };
+          if (conflicts.isNotEmpty) {
+            applied['ui_meta'] = false;
+            applied['ui_meta_conflicts'] = conflicts;
+            applied['ui_meta_revisions'] = {
+              for (final key in incoming.keys) key: revs[key] ?? 0,
+            };
+          } else if (!ok('ui_meta')) {
+            applied['ui_meta'] = false;
+          } else {
+            final current = uiMeta.putIfAbsent(name, () => {});
+            for (final MapEntry(:key, :value) in incoming.entries) {
+              if (value == null) {
+                current.remove(key);
+              } else {
+                current['$key'] = jsonDecode(jsonEncode(value));
+              }
+              revs['$key'] = (revs['$key'] ?? 0) + 1;
+            }
+            applied['ui_meta'] = true;
+            applied['ui_meta_revisions'] = {
+              for (final key in incoming.keys) key: revs[key],
+            };
+          }
+        }
+        final described = Map<String, dynamic>.from(describeOf(name));
+        if (p['soul'] is String) {
+          applied['soul'] = ok('soul');
+          if (ok('soul')) described['soul'] = p['soul'];
+        }
+        if (p['description'] is String) {
+          applied['description'] = ok('description');
+          if (ok('description')) {
+            row['description'] = (p['description'] as String).trim();
+          }
+        }
+        String? confirm;
+        final model = (p['model'] as String? ?? '').trim();
+        final provider = (p['provider'] as String? ?? '').trim();
+        if (model.isNotEmpty && provider.isNotEmpty) {
+          if (guardedModels.contains(model) &&
+              p['confirm_expensive_model'] != true) {
+            confirm = '$model costs more than your current model.';
+          } else {
+            applied['model'] = ok('model');
+            if (ok('model')) {
+              row['model'] = model;
+              row['provider'] = provider;
+              described['model'] = {'provider': provider, 'default': model};
+            }
+          }
+        }
+        for (final (param, section, list) in [
+          ('disabled_skills', 'skills', 'skills'),
+          ('enabled_toolsets', 'toolsets', 'toolsets'),
+          ('enabled_mcp_servers', 'mcp_servers', 'mcp_servers'),
+        ]) {
+          final names = p[param];
+          if (names is! List) continue;
+          applied[section] = ok(section);
+          if (!ok(section)) continue;
+          final items = [
+            for (final item in described[list] as List)
+              Map<String, dynamic>.from(item as Map),
+          ];
+          for (final item in items) {
+            final listed = names.contains(item['name']);
+            item['enabled'] = param == 'disabled_skills'
+                ? !listed
+                : (param == 'enabled_toolsets' && names.isEmpty) || listed;
+          }
+          described[list] = items;
+        }
+        this.described[name] = described;
+        final flags = [
+          for (final v in applied.values)
+            if (v is bool) v,
+        ];
+        return _ok({
+          'ok': flags.every((v) => v),
+          'applied': applied,
+          if (confirm != null) ...{
+            'confirm_required': true,
+            'confirm_message': confirm,
+          },
+        });
+      case 'profiles.set_asset':
+        final refused = _typed(p, {
+          'name': _str,
+          'asset': _str,
+          'data': _str,
+          'clear': _flag,
+        });
+        if (refused != null) return refused;
+        final asset = (p['asset'] as String? ?? 'avatar').trim().toLowerCase();
+        final name = (p['name'] as String? ?? '').trim();
+        if (name.isEmpty) return _error(4063, 'name required');
+        if (asset != 'avatar') {
+          return _error(4066, "unknown asset '$asset' (supported: avatar)");
+        }
+        if (_row(name) == null) {
+          return _error(4064, "profile '$name' not found");
+        }
+        if (p['clear'] == true) {
+          final removed = avatars.remove(name) == null ? 0 : 1;
+          return _ok({
+            'ok': true,
+            'asset': asset,
+            'size': 0,
+            'removed': removed,
+          });
+        }
+        final data = p['data'] as String? ?? '';
+        if (data.isEmpty) {
+          return _error(4067, 'data required (data URL or base64)');
+        }
+        final match = RegExp(
+          r'^data:(image/(?:png|jpeg|webp));base64,(.*)$',
+        ).firstMatch(data);
+        final List<int> blob;
+        try {
+          blob = base64Decode(match != null ? match[2]! : data);
+        } on FormatException {
+          return _error(4068, 'data is not valid base64');
+        }
+        if (blob.length > 2000000) {
+          return _error(
+            4069,
+            'asset too large (${blob.length} bytes; max 2MB)',
+          );
+        }
+        const png = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+        if (blob.length < 8 ||
+            !List.generate(8, (i) => blob[i] == png[i]).every((b) => b)) {
+          return _error(4070, 'unsupported image format (PNG/JPEG/WebP only)');
+        }
+        avatars[name] = data;
+        return _ok({'ok': true, 'asset': asset, 'size': blob.length});
+      case 'profiles.get_asset':
+        final refused = _typed(p, {'name': _str, 'asset': _str});
+        if (refused != null) return refused;
+        final name = (p['name'] as String? ?? '').trim();
+        if (name.isEmpty) return _error(4063, 'name required');
+        if (_row(name) == null) {
+          return _error(4064, "profile '$name' not found");
+        }
+        final data = avatars[name];
+        if (data == null) return _ok({'found': false});
+        return _ok({
+          'found': true,
+          'mime': 'image/png',
+          'size': base64Decode(data.split(',').last).length,
+          'data': data,
+        });
+    }
+    return _error(-32601, 'method not found: $method');
+  }
+
+  Map<String, dynamic> _respond(String method, Map<String, dynamic> p) {
+    final profile = p['profile'] is String ? p['profile'] as String : 'workbot';
+    if (method.startsWith('profiles.')) return _profiles(method, p);
+    switch (method) {
       case 'session.list':
         return _ok({
           'sessions': [
@@ -625,7 +1001,10 @@ Widget botsReviewApp(
   double textScale = 1.0,
   Locale? locale,
   BotDisplayConnector? displayConnector,
+  ThemeData? theme,
+  Future<String?> Function()? pickAvatarImage,
 }) => MaterialApp(
+  theme: theme,
   locale: locale,
   localizationsDelegates: AppLocalizations.localizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
@@ -640,6 +1019,7 @@ Widget botsReviewApp(
     route: owner.route(),
     connection: botsReviewConnection,
     displayConnector: displayConnector,
+    pickAvatarImage: pickAvatarImage,
   ),
 );
 

@@ -9146,4 +9146,265 @@ class AppLocalizationsRu extends AppLocalizations {
   String ng_board_run_title(String id, String profile, String outcome) {
     return 'Запуск №$id · @$profile · $outcome';
   }
+
+  @override
+  String get ng_bots_new_bot => 'Новый бот';
+
+  @override
+  String get ng_bots_new_bot_hint =>
+      'Именованный напарник со своей памятью, навыками и чатом. Может писать другим вашим агентам.';
+
+  @override
+  String get ng_bots_field_name => 'Имя';
+
+  @override
+  String get ng_bots_field_title => 'Заголовок';
+
+  @override
+  String get ng_bots_field_description => 'Описание';
+
+  @override
+  String get ng_bots_description_hint => 'С чем должен помогать этот бот?';
+
+  @override
+  String get ng_bots_name_invalid =>
+      'Используйте строчные буквы, цифры, дефисы или подчёркивания; начинайте с буквы или цифры (не более 64 символов).';
+
+  @override
+  String ng_bots_name_taken(String name) {
+    return 'Агент с именем «$name» уже существует.';
+  }
+
+  @override
+  String ng_bots_profile_id(String id) {
+    return 'ID профиля: $id';
+  }
+
+  @override
+  String get ng_bots_advanced =>
+      'Дополнительно — модель, навыки, наборы инструментов, SOUL.md';
+
+  @override
+  String get ng_bots_clone_from => 'Клонировать профиль';
+
+  @override
+  String get ng_bots_clone_main => 'Основной профиль (default)';
+
+  @override
+  String get ng_bots_fresh_profile => 'Новый профиль (встроенные навыки)';
+
+  @override
+  String get ng_bots_create_empty => 'Создать пустым (без встроенных навыков)';
+
+  @override
+  String get ng_bots_share_keys => 'Общие ключи и аккаунты с основным профилем';
+
+  @override
+  String get ng_bots_provider => 'Провайдер';
+
+  @override
+  String get ng_bots_model => 'Модель';
+
+  @override
+  String get ng_bots_model_pair => 'Укажите и провайдера, и модель.';
+
+  @override
+  String get ng_bots_soul =>
+      'SOUL.md (необязательно — заменяет созданную персону)';
+
+  @override
+  String get ng_bots_soul_edit => 'SOUL.md';
+
+  @override
+  String get ng_bots_creating => 'Создание…';
+
+  @override
+  String get ng_bots_create_bot => 'Создать бота';
+
+  @override
+  String ng_bots_created(String name) {
+    return 'Бот «$name» создан';
+  }
+
+  @override
+  String get ng_bots_look_failed =>
+      'Внешний вид не сохранён на шлюзе; задайте его в «Изменить профиль».';
+
+  @override
+  String ng_bots_request_failed(String reason) {
+    return 'Шлюз не принял запрос ($reason).';
+  }
+
+  @override
+  String get ng_bots_avatar_shape => 'Форма';
+
+  @override
+  String ng_bots_avatar_shape_n(int n) {
+    return 'Форма $n';
+  }
+
+  @override
+  String get ng_bots_avatar_colour => 'Цвет';
+
+  @override
+  String ng_bots_avatar_colour_n(int n) {
+    return 'Цвет $n';
+  }
+
+  @override
+  String get ng_bots_avatar_match_name => 'По имени';
+
+  @override
+  String get ng_bots_avatar_upload => 'Выбрать изображение…';
+
+  @override
+  String get ng_bots_avatar_remove => 'Убрать изображение — использовать форму';
+
+  @override
+  String get ng_bots_avatar_too_large =>
+      'Изображение слишком большое (до 15 МБ).';
+
+  @override
+  String get ng_bots_avatar_unreadable => 'Не удалось прочитать изображение.';
+
+  @override
+  String get ng_bots_edit_profile => 'Изменить профиль';
+
+  @override
+  String ng_bots_edit_description(String name, String profile) {
+    return 'Внешний вид и роль $name ($profile).';
+  }
+
+  @override
+  String ng_bots_advanced_failed(String reason) {
+    return 'Не удалось загрузить настройки профиля ($reason).';
+  }
+
+  @override
+  String get ng_bots_skills => 'Навыки';
+
+  @override
+  String get ng_bots_toolsets => 'Наборы инструментов';
+
+  @override
+  String get ng_bots_toolsets_hint =>
+      'Если отмечены все (или ни одного), действует набор по умолчанию.';
+
+  @override
+  String get ng_bots_mcp_servers => 'MCP-серверы';
+
+  @override
+  String get ng_bots_saving => 'Сохранение…';
+
+  @override
+  String get ng_bots_confirm_changes_title => 'Сохранить эти изменения?';
+
+  @override
+  String get ng_bots_change_remove_image => 'Удалить изображение бота';
+
+  @override
+  String get ng_bots_change_soul => 'Заменить его SOUL.md';
+
+  @override
+  String ng_bots_change_turn_off(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Отключить навыки, наборы или MCP-серверы: $count',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_bots_updated(String name) {
+    return '$name: обновлено';
+  }
+
+  @override
+  String ng_bots_sections_failed(String sections) {
+    return 'Не удалось сохранить: $sections';
+  }
+
+  @override
+  String get ng_bots_model_confirm_title => 'Сменить модель?';
+
+  @override
+  String get ng_bots_model_confirm_ok => 'Сменить';
+
+  @override
+  String get ng_bots_model_not_switched => 'Модель не изменена.';
+
+  @override
+  String get ng_bots_section_new => 'Новый раздел';
+
+  @override
+  String get ng_bots_section_new_ellipsis => 'Новый раздел…';
+
+  @override
+  String get ng_bots_section_name => 'Название раздела';
+
+  @override
+  String get ng_bots_section_name_hint => 'например, Клиенты';
+
+  @override
+  String get ng_bots_section_create => 'Создать';
+
+  @override
+  String get ng_bots_section_rename => 'Переименовать раздел';
+
+  @override
+  String get ng_bots_section_delete => 'Удалить раздел';
+
+  @override
+  String get ng_bots_section_move_up => 'Выше';
+
+  @override
+  String get ng_bots_section_move_down => 'Ниже';
+
+  @override
+  String get ng_bots_section_unassigned => 'Без раздела';
+
+  @override
+  String ng_bots_section_options(String name) {
+    return 'Параметры раздела «$name»';
+  }
+
+  @override
+  String get ng_bots_section_empty =>
+      'Здесь пока нет ботов. Используйте «Переместить в раздел» у бота.';
+
+  @override
+  String get ng_bots_section_move_to => 'Переместить в раздел';
+
+  @override
+  String get ng_bots_section_remove => 'Убрать из раздела';
+
+  @override
+  String ng_bots_section_deleted(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Раздел «$name» удалён — ботов перемещено в «Без раздела»: $count',
+      zero: 'Раздел «$name» удалён',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_undo => 'Отменить';
+
+  @override
+  String ng_bots_section_move_failed(String reason) {
+    return 'Не удалось переместить бота ($reason).';
+  }
+
+  @override
+  String ng_bots_bot_actions(String name) {
+    return 'Действия: $name';
+  }
+
+  @override
+  String ng_bots_section_toggle(String name) {
+    return 'Показать или скрыть «$name»';
+  }
 }
