@@ -44,6 +44,8 @@ String workspaceErrorText(
   WorkspaceException() => l10n.release_core_workspace_operation_failed(
     workspaceFailureLabel(l10n, error.reason),
   ),
+  FormatException(message: 'Invalid delivery target') =>
+    l10n.release_core_schedule_invalid_delivery_target,
   FormatException() => l10n.release_core_workspace_invalid_data,
   _ =>
     l10n.release_core_session_files_view_gateway_operation_could_not_be_confirmed,

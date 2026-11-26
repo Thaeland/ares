@@ -744,11 +744,15 @@ class _FilesState extends State<SessionFilesView> {
               .release_core_session_files_view_preview_truncated_editing_disabled,
         ),
       if (_saveNote != null)
-        Text(
-          _saveNote == guardedSaveUnavailable
-              ? context.sharedL10n.release_core_guarded_save_unavailable
-              : context.sharedL10n.release_core_guarded_save_refused,
-        ),
+        Text(switch (_saveNote!) {
+          guardedSaveUnavailable =>
+            context.sharedL10n.release_core_guarded_save_unavailable,
+          'Only a file directly in the working directory can be saved.' =>
+            context.sharedL10n.release_core_file_save_direct_only,
+          "Hidden files can't be saved by the gateway." =>
+            context.sharedL10n.release_core_file_save_hidden,
+          _ => context.sharedL10n.release_core_guarded_save_refused,
+        }),
       Wrap(
         children: [
           if (!_editing && !file.binary)
