@@ -21102,6 +21102,286 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connect'**
   String get rel_ops_term_connect;
+
+  /// Verified SSH destination validation refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid SSH host, port or user.'**
+  String get rel_ops_ssh_invalid_destination;
+
+  /// Verified SSH key format refusal. Preserve OpenSSH and Ed25519.
+  ///
+  /// In en, this message translates to:
+  /// **'An OpenSSH Ed25519 public host key is required.'**
+  String get rel_ops_ssh_public_key_required;
+
+  /// Verified SSH key binary validation refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid Ed25519 host key.'**
+  String get rel_ops_ssh_invalid_public_key;
+
+  /// Saved SSH pin failed validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid saved host key.'**
+  String get rel_ops_ssh_invalid_saved_key;
+
+  /// Host key enrollment could not be read back.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not verify host-key enrollment.'**
+  String get rel_ops_ssh_enrollment_unverified;
+
+  /// SSH pin replacement refusal. Preserve separate verification requirement.
+  ///
+  /// In en, this message translates to:
+  /// **'A different key is already pinned. Verify the change separately.'**
+  String get rel_ops_ssh_different_key_pinned;
+
+  /// System OpenSSH transport unavailable refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'System OpenSSH is unavailable.'**
+  String get rel_ops_ssh_open_ssh_unavailable;
+
+  /// Connection refused before explicit host key enrollment.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm the host key before connecting.'**
+  String get rel_ops_ssh_confirm_host_key;
+
+  /// Unsafe or relative SSH identity path refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an absolute identity file.'**
+  String get rel_ops_ssh_absolute_identity_required;
+
+  /// Remote loopback port validation refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid remote port.'**
+  String get rel_ops_ssh_invalid_remote_port;
+
+  /// SSH preview response size refusal. Preserve 64 KiB limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview exceeds the 64 KiB limit.'**
+  String get rel_ops_ssh_preview_too_large;
+
+  /// SSH subprocess nonzero exit refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH connection refused. Check the enrolled host key, identity and service.'**
+  String get rel_ops_ssh_connection_refused;
+
+  /// Remote HTTP status or header validation refusal. Preserve HTTP 200.
+  ///
+  /// In en, this message translates to:
+  /// **'The remote service did not return HTTP 200.'**
+  String get rel_ops_ssh_http_not_ok;
+
+  /// Encoded remote HTTP response refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Encoded responses are not supported by this preview.'**
+  String get rel_ops_ssh_encoded_response;
+
+  /// Unsupported remote preview content type refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Only text and HTML source can be previewed.'**
+  String get rel_ops_ssh_preview_type_unsupported;
+
+  /// Remote health response did not affirm ok.
+  ///
+  /// In en, this message translates to:
+  /// **'The service did not confirm gateway health.'**
+  String get rel_ops_ssh_health_unconfirmed;
+
+  /// SSH screen notice for an unenrolled destination.
+  ///
+  /// In en, this message translates to:
+  /// **'Enroll the host’s public key first.'**
+  String get rel_ops_ssh_enroll_host_key_first;
+
+  /// Cancel an SSH enrollment or connection confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get rel_ops_ssh_cancel;
+
+  /// Confirm an SSH enrollment or connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get rel_ops_ssh_confirm;
+
+  /// Explicit SSH host key enrollment confirmation title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin this SSH host key?'**
+  String get rel_ops_ssh_pin_title;
+
+  /// Host key enrollment consent. Preserve independent-channel verification and no-connection assurance. Values are verbatim SSH identifiers.
+  ///
+  /// In en, this message translates to:
+  /// **'{destination}\n{fingerprint}\nCompare this fingerprint with the host administrator over an independent channel. No connection will be made.'**
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint);
+
+  /// Successful host key enrollment notice.
+  ///
+  /// In en, this message translates to:
+  /// **'Host key pinned.'**
+  String get rel_ops_ssh_host_key_pinned;
+
+  /// SSH remote shell connection consent detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Open an interactive login shell.'**
+  String get rel_ops_ssh_shell_detail;
+
+  /// Remote loopback HTTP read consent. Preserve literal loopback address; path is / or /api/health and must remain unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Read {path} on remote 127.0.0.1:{port} through an SSH channel.'**
+  String rel_ops_ssh_read_detail(String path, int port);
+
+  /// SSH connection confirmation title; destination is verbatim user@host:port.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to {destination}?'**
+  String rel_ops_ssh_connect_title(String destination);
+
+  /// SSH connection confirmation layout combining localized operation and authentication consent with a verbatim fingerprint.
+  ///
+  /// In en, this message translates to:
+  /// **'{detail}\n{fingerprint}\n{authentication}'**
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  );
+
+  /// SSH agent authentication consent detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticate with your SSH agent.'**
+  String get rel_ops_ssh_agent_auth;
+
+  /// Selected SSH identity file authentication consent detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the selected identity file.'**
+  String get rel_ops_ssh_identity_auth;
+
+  /// Successful SSH remote gateway health check result.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway is responding on remote loopback port {port}.'**
+  String rel_ops_ssh_gateway_responding(int port);
+
+  /// Remote SSH shell exited cleanly.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH session closed.'**
+  String get rel_ops_ssh_session_closed;
+
+  /// Remote SSH shell exited with nonzero status.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH session ended without a clean exit.'**
+  String get rel_ops_ssh_session_unclean;
+
+  /// Safe SSH operation failure notice replacing untrusted system errors.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH operation failed. Check the destination and identity.'**
+  String get rel_ops_ssh_operation_failed;
+
+  /// Verified SSH screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified SSH'**
+  String get rel_ops_ssh_title;
+
+  /// Security explanation on unsupported devices. Preserve the relay enrollment restriction.
+  ///
+  /// In en, this message translates to:
+  /// **'This device has no supported system OpenSSH transport. The pinned gateway relay automatically accepts new keys and cannot be used for verified enrollment.'**
+  String get rel_ops_ssh_unsupported;
+
+  /// SSH hostname input label.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH host'**
+  String get rel_ops_ssh_host;
+
+  /// SSH transport port input label.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH port'**
+  String get rel_ops_ssh_port;
+
+  /// SSH username input label.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH user'**
+  String get rel_ops_ssh_user;
+
+  /// SSH identity path input label and agent fallback explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Identity file (optional; otherwise use SSH agent)'**
+  String get rel_ops_ssh_identity;
+
+  /// Public host key input label. Preserve ssh-ed25519 algorithm token.
+  ///
+  /// In en, this message translates to:
+  /// **'Public host key from administrator (ssh-ed25519)'**
+  String get rel_ops_ssh_public_key;
+
+  /// Open SSH host key enrollment review.
+  ///
+  /// In en, this message translates to:
+  /// **'Review host key'**
+  String get rel_ops_ssh_review_key;
+
+  /// Remote HTTP service loopback port input label.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote loopback service port'**
+  String get rel_ops_ssh_remote_port;
+
+  /// Check remote gateway health through SSH.
+  ///
+  /// In en, this message translates to:
+  /// **'Check gateway over SSH'**
+  String get rel_ops_ssh_check_gateway;
+
+  /// Read remote text or HTML source through SSH.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview source over SSH'**
+  String get rel_ops_ssh_preview_source;
+
+  /// Explicitly open a remote SSH login shell.
+  ///
+  /// In en, this message translates to:
+  /// **'Open SSH shell'**
+  String get rel_ops_ssh_open_shell;
+
+  /// Input label for a line sent to the active remote shell.
+  ///
+  /// In en, this message translates to:
+  /// **'Line to remote shell'**
+  String get rel_ops_ssh_shell_line;
+
+  /// Terminate the active SSH shell subprocess.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect shell'**
+  String get rel_ops_ssh_disconnect;
 }
 
 class _AppLocalizationsDelegate

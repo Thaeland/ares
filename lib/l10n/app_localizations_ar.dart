@@ -12852,4 +12852,170 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get rel_ops_term_connect => 'اتصال';
+
+  @override
+  String get rel_ops_ssh_invalid_destination =>
+      'مضيف SSH أو المنفذ أو المستخدم غير صالح.';
+
+  @override
+  String get rel_ops_ssh_public_key_required =>
+      'يلزم مفتاح مضيف عام بصيغة OpenSSH Ed25519.';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'مفتاح مضيف Ed25519 غير صالح.';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => 'مفتاح المضيف المحفوظ غير صالح.';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified =>
+      'تعذّر التحقق من تسجيل مفتاح المضيف.';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned =>
+      'هناك مفتاح مختلف مثبّت بالفعل. تحقّق من التغيير بشكل منفصل.';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable => 'لا يتوفر OpenSSH على النظام.';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key => 'أكّد مفتاح المضيف قبل الاتصال.';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required =>
+      'اختر ملف هوية ذا مسار مطلق.';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => 'المنفذ البعيد غير صالح.';
+
+  @override
+  String get rel_ops_ssh_preview_too_large =>
+      'تتجاوز المعاينة الحد الأقصى البالغ 64 KiB.';
+
+  @override
+  String get rel_ops_ssh_connection_refused =>
+      'رُفض اتصال SSH. تحقّق من مفتاح المضيف المسجّل والهوية والخدمة.';
+
+  @override
+  String get rel_ops_ssh_http_not_ok => 'لم تُرجع الخدمة البعيدة HTTP 200.';
+
+  @override
+  String get rel_ops_ssh_encoded_response =>
+      'لا تدعم هذه المعاينة الاستجابات المرمّزة.';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported =>
+      'يمكن معاينة النصوص وشيفرة HTML المصدرية فقط.';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed => 'لم تؤكّد الخدمة سلامة البوابة.';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first =>
+      'سجّل المفتاح العام للمضيف أولًا.';
+
+  @override
+  String get rel_ops_ssh_cancel => 'إلغاء';
+
+  @override
+  String get rel_ops_ssh_confirm => 'تأكيد';
+
+  @override
+  String get rel_ops_ssh_pin_title => 'هل تريد تثبيت مفتاح مضيف SSH هذا؟';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\nقارن هذه البصمة مع مسؤول المضيف عبر قناة مستقلة. لن يتم إجراء أي اتصال.';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => 'تم تثبيت مفتاح المضيف.';
+
+  @override
+  String get rel_ops_ssh_shell_detail => 'افتح صدفة تسجيل دخول تفاعلية.';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return 'اقرأ $path على العنوان البعيد 127.0.0.1:$port عبر قناة SSH.';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return 'هل تريد الاتصال بـ $destination؟';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => 'صادِق باستخدام وكيل SSH الخاص بك.';
+
+  @override
+  String get rel_ops_ssh_identity_auth => 'استخدم ملف الهوية المحدّد.';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return 'تستجيب البوابة على منفذ الاسترجاع البعيد $port.';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'أُغلقت جلسة SSH.';
+
+  @override
+  String get rel_ops_ssh_session_unclean => 'انتهت جلسة SSH دون خروج سليم.';
+
+  @override
+  String get rel_ops_ssh_operation_failed =>
+      'فشلت عملية SSH. تحقّق من الوجهة والهوية.';
+
+  @override
+  String get rel_ops_ssh_title => 'SSH متحقَّق منه';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      'لا تتوفر على هذا الجهاز وسيلة نقل مدعومة عبر OpenSSH الخاص بالنظام. يقبل مرحّل البوابة المثبّت مفاتيح جديدة تلقائيًا ولا يمكن استخدامه للتسجيل المتحقَّق منه.';
+
+  @override
+  String get rel_ops_ssh_host => 'مضيف SSH';
+
+  @override
+  String get rel_ops_ssh_port => 'منفذ SSH';
+
+  @override
+  String get rel_ops_ssh_user => 'مستخدم SSH';
+
+  @override
+  String get rel_ops_ssh_identity =>
+      'ملف الهوية (اختياري؛ يُستخدم وكيل SSH بخلاف ذلك)';
+
+  @override
+  String get rel_ops_ssh_public_key =>
+      'مفتاح المضيف العام من المسؤول (ssh-ed25519)';
+
+  @override
+  String get rel_ops_ssh_review_key => 'مراجعة مفتاح المضيف';
+
+  @override
+  String get rel_ops_ssh_remote_port => 'منفذ خدمة الاسترجاع البعيدة';
+
+  @override
+  String get rel_ops_ssh_check_gateway => 'فحص البوابة عبر SSH';
+
+  @override
+  String get rel_ops_ssh_preview_source => 'معاينة الشيفرة المصدرية عبر SSH';
+
+  @override
+  String get rel_ops_ssh_open_shell => 'فتح صدفة SSH';
+
+  @override
+  String get rel_ops_ssh_shell_line => 'سطر لإرساله إلى الصدفة البعيدة';
+
+  @override
+  String get rel_ops_ssh_disconnect => 'قطع اتصال الصدفة';
 }

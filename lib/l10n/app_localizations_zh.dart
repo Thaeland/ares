@@ -12300,6 +12300,159 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rel_ops_term_connect => '连接';
+
+  @override
+  String get rel_ops_ssh_invalid_destination => 'SSH 主机、端口或用户无效。';
+
+  @override
+  String get rel_ops_ssh_public_key_required => '需要 OpenSSH Ed25519 格式的主机公钥。';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Ed25519 主机密钥无效。';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => '已保存的主机密钥无效。';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified => '无法验证主机密钥注册。';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned => '已固定了另一把密钥。请单独验证此变更。';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable => '系统 OpenSSH 不可用。';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key => '请先确认主机密钥再连接。';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required => '请选择使用绝对路径的身份密钥文件。';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => '远程端口无效。';
+
+  @override
+  String get rel_ops_ssh_preview_too_large => '预览超出 64 KiB 限制。';
+
+  @override
+  String get rel_ops_ssh_connection_refused => 'SSH 连接被拒绝。请检查已注册的主机密钥、身份凭据和服务。';
+
+  @override
+  String get rel_ops_ssh_http_not_ok => '远程服务未返回 HTTP 200。';
+
+  @override
+  String get rel_ops_ssh_encoded_response => '此预览不支持经过编码的响应。';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported => '只能预览文本和 HTML 源代码。';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed => '服务未确认网关运行正常。';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first => '请先注册主机的公钥。';
+
+  @override
+  String get rel_ops_ssh_cancel => '取消';
+
+  @override
+  String get rel_ops_ssh_confirm => '确认';
+
+  @override
+  String get rel_ops_ssh_pin_title => '固定此 SSH 主机密钥？';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\n请通过独立渠道与主机管理员核对此指纹。不会建立任何连接。';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => '主机密钥已固定。';
+
+  @override
+  String get rel_ops_ssh_shell_detail => '打开交互式登录 shell。';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return '通过 SSH 通道读取远程 127.0.0.1:$port 上的 $path。';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return '连接到 $destination？';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => '使用你的 SSH 代理进行身份验证。';
+
+  @override
+  String get rel_ops_ssh_identity_auth => '使用选定的身份密钥文件。';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return '网关正在远程回环端口 $port 上响应。';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'SSH 会话已关闭。';
+
+  @override
+  String get rel_ops_ssh_session_unclean => 'SSH 会话未正常退出。';
+
+  @override
+  String get rel_ops_ssh_operation_failed => 'SSH 操作失败。请检查目标和身份凭据。';
+
+  @override
+  String get rel_ops_ssh_title => '经验证的 SSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      '此设备没有受支持的系统 OpenSSH 传输方式。已固定网关的中继会自动接受新密钥，因此不能用于经验证的注册。';
+
+  @override
+  String get rel_ops_ssh_host => 'SSH 主机';
+
+  @override
+  String get rel_ops_ssh_port => 'SSH 端口';
+
+  @override
+  String get rel_ops_ssh_user => 'SSH 用户';
+
+  @override
+  String get rel_ops_ssh_identity => '身份密钥文件（可选；否则使用 SSH 代理）';
+
+  @override
+  String get rel_ops_ssh_public_key => '管理员提供的主机公钥（ssh-ed25519）';
+
+  @override
+  String get rel_ops_ssh_review_key => '审查主机密钥';
+
+  @override
+  String get rel_ops_ssh_remote_port => '远程回环服务端口';
+
+  @override
+  String get rel_ops_ssh_check_gateway => '通过 SSH 检查网关';
+
+  @override
+  String get rel_ops_ssh_preview_source => '通过 SSH 预览源代码';
+
+  @override
+  String get rel_ops_ssh_open_shell => '打开 SSH shell';
+
+  @override
+  String get rel_ops_ssh_shell_line => '发送到远程 shell 的行';
+
+  @override
+  String get rel_ops_ssh_disconnect => '断开 shell 连接';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -24598,6 +24751,159 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get rel_ops_term_connect => '连接';
+
+  @override
+  String get rel_ops_ssh_invalid_destination => 'SSH 主机、端口或用户无效。';
+
+  @override
+  String get rel_ops_ssh_public_key_required => '需要 OpenSSH Ed25519 格式的主机公钥。';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Ed25519 主机密钥无效。';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => '已保存的主机密钥无效。';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified => '无法验证主机密钥注册。';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned => '已固定了另一把密钥。请单独验证此变更。';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable => '系统 OpenSSH 不可用。';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key => '请先确认主机密钥再连接。';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required => '请选择使用绝对路径的身份密钥文件。';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => '远程端口无效。';
+
+  @override
+  String get rel_ops_ssh_preview_too_large => '预览超出 64 KiB 限制。';
+
+  @override
+  String get rel_ops_ssh_connection_refused => 'SSH 连接被拒绝。请检查已注册的主机密钥、身份凭据和服务。';
+
+  @override
+  String get rel_ops_ssh_http_not_ok => '远程服务未返回 HTTP 200。';
+
+  @override
+  String get rel_ops_ssh_encoded_response => '此预览不支持经过编码的响应。';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported => '只能预览文本和 HTML 源代码。';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed => '服务未确认网关运行正常。';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first => '请先注册主机的公钥。';
+
+  @override
+  String get rel_ops_ssh_cancel => '取消';
+
+  @override
+  String get rel_ops_ssh_confirm => '确认';
+
+  @override
+  String get rel_ops_ssh_pin_title => '固定此 SSH 主机密钥？';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\n请通过独立渠道与主机管理员核对此指纹。不会建立任何连接。';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => '主机密钥已固定。';
+
+  @override
+  String get rel_ops_ssh_shell_detail => '打开交互式登录 shell。';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return '通过 SSH 通道读取远程 127.0.0.1:$port 上的 $path。';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return '连接到 $destination？';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => '使用你的 SSH 代理进行身份验证。';
+
+  @override
+  String get rel_ops_ssh_identity_auth => '使用选定的身份密钥文件。';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return '网关正在远程回环端口 $port 上响应。';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'SSH 会话已关闭。';
+
+  @override
+  String get rel_ops_ssh_session_unclean => 'SSH 会话未正常退出。';
+
+  @override
+  String get rel_ops_ssh_operation_failed => 'SSH 操作失败。请检查目标和身份凭据。';
+
+  @override
+  String get rel_ops_ssh_title => '经验证的 SSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      '此设备没有受支持的系统 OpenSSH 传输方式。已固定网关的中继会自动接受新密钥，因此不能用于经验证的注册。';
+
+  @override
+  String get rel_ops_ssh_host => 'SSH 主机';
+
+  @override
+  String get rel_ops_ssh_port => 'SSH 端口';
+
+  @override
+  String get rel_ops_ssh_user => 'SSH 用户';
+
+  @override
+  String get rel_ops_ssh_identity => '身份密钥文件（可选；否则使用 SSH 代理）';
+
+  @override
+  String get rel_ops_ssh_public_key => '管理员提供的主机公钥（ssh-ed25519）';
+
+  @override
+  String get rel_ops_ssh_review_key => '审查主机密钥';
+
+  @override
+  String get rel_ops_ssh_remote_port => '远程回环服务端口';
+
+  @override
+  String get rel_ops_ssh_check_gateway => '通过 SSH 检查网关';
+
+  @override
+  String get rel_ops_ssh_preview_source => '通过 SSH 预览源代码';
+
+  @override
+  String get rel_ops_ssh_open_shell => '打开 SSH shell';
+
+  @override
+  String get rel_ops_ssh_shell_line => '发送到远程 shell 的行';
+
+  @override
+  String get rel_ops_ssh_disconnect => '断开 shell 连接';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -36901,4 +37207,157 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get rel_ops_term_connect => '連線';
+
+  @override
+  String get rel_ops_ssh_invalid_destination => 'SSH 主機、連接埠或使用者無效。';
+
+  @override
+  String get rel_ops_ssh_public_key_required => '需要 OpenSSH Ed25519 格式的主機公開金鑰。';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Ed25519 主機金鑰無效。';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => '已儲存的主機金鑰無效。';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified => '無法驗證主機金鑰註冊。';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned => '已固定另一把金鑰。請另行驗證此變更。';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable => '系統 OpenSSH 無法使用。';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key => '請先確認主機金鑰再連線。';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required => '請選取使用絕對路徑的身分金鑰檔案。';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => '遠端連接埠無效。';
+
+  @override
+  String get rel_ops_ssh_preview_too_large => '預覽超過 64 KiB 限制。';
+
+  @override
+  String get rel_ops_ssh_connection_refused => 'SSH 連線遭拒。請檢查已註冊的主機金鑰、身分憑證和服務。';
+
+  @override
+  String get rel_ops_ssh_http_not_ok => '遠端服務未傳回 HTTP 200。';
+
+  @override
+  String get rel_ops_ssh_encoded_response => '此預覽不支援經過編碼的回應。';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported => '只能預覽文字和 HTML 原始碼。';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed => '服務未確認閘道運作正常。';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first => '請先註冊主機的公開金鑰。';
+
+  @override
+  String get rel_ops_ssh_cancel => '取消';
+
+  @override
+  String get rel_ops_ssh_confirm => '確認';
+
+  @override
+  String get rel_ops_ssh_pin_title => '固定此 SSH 主機金鑰？';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\n請透過獨立管道與主機管理員核對此指紋。不會建立任何連線。';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => '主機金鑰已固定。';
+
+  @override
+  String get rel_ops_ssh_shell_detail => '開啟互動式登入 shell。';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return '透過 SSH 通道讀取遠端 127.0.0.1:$port 上的 $path。';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return '連線至 $destination？';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => '使用你的 SSH 代理程式進行身分驗證。';
+
+  @override
+  String get rel_ops_ssh_identity_auth => '使用選取的身分金鑰檔案。';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return '閘道正在遠端回送連接埠 $port 上回應。';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'SSH 工作階段已關閉。';
+
+  @override
+  String get rel_ops_ssh_session_unclean => 'SSH 工作階段未正常結束。';
+
+  @override
+  String get rel_ops_ssh_operation_failed => 'SSH 操作失敗。請檢查目的地和身分憑證。';
+
+  @override
+  String get rel_ops_ssh_title => '經驗證的 SSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      '此裝置沒有受支援的系統 OpenSSH 傳輸方式。已固定閘道的中繼會自動接受新金鑰，因此無法用於經驗證的註冊。';
+
+  @override
+  String get rel_ops_ssh_host => 'SSH 主機';
+
+  @override
+  String get rel_ops_ssh_port => 'SSH 連接埠';
+
+  @override
+  String get rel_ops_ssh_user => 'SSH 使用者';
+
+  @override
+  String get rel_ops_ssh_identity => '身分金鑰檔案（選填；否則使用 SSH 代理程式）';
+
+  @override
+  String get rel_ops_ssh_public_key => '管理員提供的主機公開金鑰（ssh-ed25519）';
+
+  @override
+  String get rel_ops_ssh_review_key => '檢視主機金鑰';
+
+  @override
+  String get rel_ops_ssh_remote_port => '遠端回送服務連接埠';
+
+  @override
+  String get rel_ops_ssh_check_gateway => '透過 SSH 檢查閘道';
+
+  @override
+  String get rel_ops_ssh_preview_source => '透過 SSH 預覽原始碼';
+
+  @override
+  String get rel_ops_ssh_open_shell => '開啟 SSH shell';
+
+  @override
+  String get rel_ops_ssh_shell_line => '傳送至遠端 shell 的行';
+
+  @override
+  String get rel_ops_ssh_disconnect => '中斷 shell 連線';
 }

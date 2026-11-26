@@ -4443,5 +4443,226 @@
   "rel_ops_term_connect": "连接",
   "@rel_ops_term_connect": {
     "description": "SSH terminal dialog: connect. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_ssh_invalid_destination": "SSH 主机、端口或用户无效。",
+  "@rel_ops_ssh_invalid_destination": {
+    "description": "Verified SSH destination validation refusal."
+  },
+  "rel_ops_ssh_public_key_required": "需要 OpenSSH Ed25519 格式的主机公钥。",
+  "@rel_ops_ssh_public_key_required": {
+    "description": "Verified SSH key format refusal. Preserve OpenSSH and Ed25519."
+  },
+  "rel_ops_ssh_invalid_public_key": "Ed25519 主机密钥无效。",
+  "@rel_ops_ssh_invalid_public_key": {
+    "description": "Verified SSH key binary validation refusal."
+  },
+  "rel_ops_ssh_invalid_saved_key": "已保存的主机密钥无效。",
+  "@rel_ops_ssh_invalid_saved_key": {
+    "description": "Saved SSH pin failed validation."
+  },
+  "rel_ops_ssh_enrollment_unverified": "无法验证主机密钥注册。",
+  "@rel_ops_ssh_enrollment_unverified": {
+    "description": "Host key enrollment could not be read back."
+  },
+  "rel_ops_ssh_different_key_pinned": "已固定了另一把密钥。请单独验证此变更。",
+  "@rel_ops_ssh_different_key_pinned": {
+    "description": "SSH pin replacement refusal. Preserve separate verification requirement."
+  },
+  "rel_ops_ssh_open_ssh_unavailable": "系统 OpenSSH 不可用。",
+  "@rel_ops_ssh_open_ssh_unavailable": {
+    "description": "System OpenSSH transport unavailable refusal."
+  },
+  "rel_ops_ssh_confirm_host_key": "请先确认主机密钥再连接。",
+  "@rel_ops_ssh_confirm_host_key": {
+    "description": "Connection refused before explicit host key enrollment."
+  },
+  "rel_ops_ssh_absolute_identity_required": "请选择使用绝对路径的身份密钥文件。",
+  "@rel_ops_ssh_absolute_identity_required": {
+    "description": "Unsafe or relative SSH identity path refusal."
+  },
+  "rel_ops_ssh_invalid_remote_port": "远程端口无效。",
+  "@rel_ops_ssh_invalid_remote_port": {
+    "description": "Remote loopback port validation refusal."
+  },
+  "rel_ops_ssh_preview_too_large": "预览超出 64 KiB 限制。",
+  "@rel_ops_ssh_preview_too_large": {
+    "description": "SSH preview response size refusal. Preserve 64 KiB limit."
+  },
+  "rel_ops_ssh_connection_refused": "SSH 连接被拒绝。请检查已注册的主机密钥、身份凭据和服务。",
+  "@rel_ops_ssh_connection_refused": {
+    "description": "SSH subprocess nonzero exit refusal."
+  },
+  "rel_ops_ssh_http_not_ok": "远程服务未返回 HTTP 200。",
+  "@rel_ops_ssh_http_not_ok": {
+    "description": "Remote HTTP status or header validation refusal. Preserve HTTP 200."
+  },
+  "rel_ops_ssh_encoded_response": "此预览不支持经过编码的响应。",
+  "@rel_ops_ssh_encoded_response": {
+    "description": "Encoded remote HTTP response refusal."
+  },
+  "rel_ops_ssh_preview_type_unsupported": "只能预览文本和 HTML 源代码。",
+  "@rel_ops_ssh_preview_type_unsupported": {
+    "description": "Unsupported remote preview content type refusal."
+  },
+  "rel_ops_ssh_health_unconfirmed": "服务未确认网关运行正常。",
+  "@rel_ops_ssh_health_unconfirmed": {
+    "description": "Remote health response did not affirm ok."
+  },
+  "rel_ops_ssh_enroll_host_key_first": "请先注册主机的公钥。",
+  "@rel_ops_ssh_enroll_host_key_first": {
+    "description": "SSH screen notice for an unenrolled destination."
+  },
+  "rel_ops_ssh_cancel": "取消",
+  "@rel_ops_ssh_cancel": {
+    "description": "Cancel an SSH enrollment or connection confirmation."
+  },
+  "rel_ops_ssh_confirm": "确认",
+  "@rel_ops_ssh_confirm": {
+    "description": "Confirm an SSH enrollment or connection."
+  },
+  "rel_ops_ssh_pin_title": "固定此 SSH 主机密钥？",
+  "@rel_ops_ssh_pin_title": {
+    "description": "Explicit SSH host key enrollment confirmation title."
+  },
+  "rel_ops_ssh_pin_detail": "{destination}\n{fingerprint}\n请通过独立渠道与主机管理员核对此指纹。不会建立任何连接。",
+  "@rel_ops_ssh_pin_detail": {
+    "description": "Host key enrollment consent. Preserve independent-channel verification and no-connection assurance. Values are verbatim SSH identifiers.",
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      },
+      "fingerprint": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_ssh_host_key_pinned": "主机密钥已固定。",
+  "@rel_ops_ssh_host_key_pinned": {
+    "description": "Successful host key enrollment notice."
+  },
+  "rel_ops_ssh_shell_detail": "打开交互式登录 shell。",
+  "@rel_ops_ssh_shell_detail": {
+    "description": "SSH remote shell connection consent detail."
+  },
+  "rel_ops_ssh_read_detail": "通过 SSH 通道读取远程 127.0.0.1:{port} 上的 {path}。",
+  "@rel_ops_ssh_read_detail": {
+    "description": "Remote loopback HTTP read consent. Preserve literal loopback address; path is / or /api/health and must remain unchanged.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "port": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_ssh_connect_title": "连接到 {destination}？",
+  "@rel_ops_ssh_connect_title": {
+    "description": "SSH connection confirmation title; destination is verbatim user@host:port.",
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_ssh_connect_detail": "{detail}\n{fingerprint}\n{authentication}",
+  "@rel_ops_ssh_connect_detail": {
+    "description": "SSH connection confirmation layout combining localized operation and authentication consent with a verbatim fingerprint.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      },
+      "fingerprint": {
+        "type": "String"
+      },
+      "authentication": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_ssh_agent_auth": "使用你的 SSH 代理进行身份验证。",
+  "@rel_ops_ssh_agent_auth": {
+    "description": "SSH agent authentication consent detail."
+  },
+  "rel_ops_ssh_identity_auth": "使用选定的身份密钥文件。",
+  "@rel_ops_ssh_identity_auth": {
+    "description": "Selected SSH identity file authentication consent detail."
+  },
+  "rel_ops_ssh_gateway_responding": "网关正在远程回环端口 {port} 上响应。",
+  "@rel_ops_ssh_gateway_responding": {
+    "description": "Successful SSH remote gateway health check result.",
+    "placeholders": {
+      "port": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_ssh_session_closed": "SSH 会话已关闭。",
+  "@rel_ops_ssh_session_closed": {
+    "description": "Remote SSH shell exited cleanly."
+  },
+  "rel_ops_ssh_session_unclean": "SSH 会话未正常退出。",
+  "@rel_ops_ssh_session_unclean": {
+    "description": "Remote SSH shell exited with nonzero status."
+  },
+  "rel_ops_ssh_operation_failed": "SSH 操作失败。请检查目标和身份凭据。",
+  "@rel_ops_ssh_operation_failed": {
+    "description": "Safe SSH operation failure notice replacing untrusted system errors."
+  },
+  "rel_ops_ssh_title": "经验证的 SSH",
+  "@rel_ops_ssh_title": {
+    "description": "Verified SSH screen title."
+  },
+  "rel_ops_ssh_unsupported": "此设备没有受支持的系统 OpenSSH 传输方式。已固定网关的中继会自动接受新密钥，因此不能用于经验证的注册。",
+  "@rel_ops_ssh_unsupported": {
+    "description": "Security explanation on unsupported devices. Preserve the relay enrollment restriction."
+  },
+  "rel_ops_ssh_host": "SSH 主机",
+  "@rel_ops_ssh_host": {
+    "description": "SSH hostname input label."
+  },
+  "rel_ops_ssh_port": "SSH 端口",
+  "@rel_ops_ssh_port": {
+    "description": "SSH transport port input label."
+  },
+  "rel_ops_ssh_user": "SSH 用户",
+  "@rel_ops_ssh_user": {
+    "description": "SSH username input label."
+  },
+  "rel_ops_ssh_identity": "身份密钥文件（可选；否则使用 SSH 代理）",
+  "@rel_ops_ssh_identity": {
+    "description": "SSH identity path input label and agent fallback explanation."
+  },
+  "rel_ops_ssh_public_key": "管理员提供的主机公钥（ssh-ed25519）",
+  "@rel_ops_ssh_public_key": {
+    "description": "Public host key input label. Preserve ssh-ed25519 algorithm token."
+  },
+  "rel_ops_ssh_review_key": "审查主机密钥",
+  "@rel_ops_ssh_review_key": {
+    "description": "Open SSH host key enrollment review."
+  },
+  "rel_ops_ssh_remote_port": "远程回环服务端口",
+  "@rel_ops_ssh_remote_port": {
+    "description": "Remote HTTP service loopback port input label."
+  },
+  "rel_ops_ssh_check_gateway": "通过 SSH 检查网关",
+  "@rel_ops_ssh_check_gateway": {
+    "description": "Check remote gateway health through SSH."
+  },
+  "rel_ops_ssh_preview_source": "通过 SSH 预览源代码",
+  "@rel_ops_ssh_preview_source": {
+    "description": "Read remote text or HTML source through SSH."
+  },
+  "rel_ops_ssh_open_shell": "打开 SSH shell",
+  "@rel_ops_ssh_open_shell": {
+    "description": "Explicitly open a remote SSH login shell."
+  },
+  "rel_ops_ssh_shell_line": "发送到远程 shell 的行",
+  "@rel_ops_ssh_shell_line": {
+    "description": "Input label for a line sent to the active remote shell."
+  },
+  "rel_ops_ssh_disconnect": "断开 shell 连接",
+  "@rel_ops_ssh_disconnect": {
+    "description": "Terminate the active SSH shell subprocess."
   }
 }

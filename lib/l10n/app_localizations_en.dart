@@ -12857,4 +12857,175 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rel_ops_term_connect => 'Connect';
+
+  @override
+  String get rel_ops_ssh_invalid_destination =>
+      'Invalid SSH host, port or user.';
+
+  @override
+  String get rel_ops_ssh_public_key_required =>
+      'An OpenSSH Ed25519 public host key is required.';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Invalid Ed25519 host key.';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => 'Invalid saved host key.';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified =>
+      'Could not verify host-key enrollment.';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned =>
+      'A different key is already pinned. Verify the change separately.';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable =>
+      'System OpenSSH is unavailable.';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key =>
+      'Confirm the host key before connecting.';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required =>
+      'Select an absolute identity file.';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => 'Invalid remote port.';
+
+  @override
+  String get rel_ops_ssh_preview_too_large =>
+      'Preview exceeds the 64 KiB limit.';
+
+  @override
+  String get rel_ops_ssh_connection_refused =>
+      'SSH connection refused. Check the enrolled host key, identity and service.';
+
+  @override
+  String get rel_ops_ssh_http_not_ok =>
+      'The remote service did not return HTTP 200.';
+
+  @override
+  String get rel_ops_ssh_encoded_response =>
+      'Encoded responses are not supported by this preview.';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported =>
+      'Only text and HTML source can be previewed.';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed =>
+      'The service did not confirm gateway health.';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first =>
+      'Enroll the host’s public key first.';
+
+  @override
+  String get rel_ops_ssh_cancel => 'Cancel';
+
+  @override
+  String get rel_ops_ssh_confirm => 'Confirm';
+
+  @override
+  String get rel_ops_ssh_pin_title => 'Pin this SSH host key?';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\nCompare this fingerprint with the host administrator over an independent channel. No connection will be made.';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => 'Host key pinned.';
+
+  @override
+  String get rel_ops_ssh_shell_detail => 'Open an interactive login shell.';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return 'Read $path on remote 127.0.0.1:$port through an SSH channel.';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return 'Connect to $destination?';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => 'Authenticate with your SSH agent.';
+
+  @override
+  String get rel_ops_ssh_identity_auth => 'Use the selected identity file.';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return 'Gateway is responding on remote loopback port $port.';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'SSH session closed.';
+
+  @override
+  String get rel_ops_ssh_session_unclean =>
+      'SSH session ended without a clean exit.';
+
+  @override
+  String get rel_ops_ssh_operation_failed =>
+      'SSH operation failed. Check the destination and identity.';
+
+  @override
+  String get rel_ops_ssh_title => 'Verified SSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      'This device has no supported system OpenSSH transport. The pinned gateway relay automatically accepts new keys and cannot be used for verified enrollment.';
+
+  @override
+  String get rel_ops_ssh_host => 'SSH host';
+
+  @override
+  String get rel_ops_ssh_port => 'SSH port';
+
+  @override
+  String get rel_ops_ssh_user => 'SSH user';
+
+  @override
+  String get rel_ops_ssh_identity =>
+      'Identity file (optional; otherwise use SSH agent)';
+
+  @override
+  String get rel_ops_ssh_public_key =>
+      'Public host key from administrator (ssh-ed25519)';
+
+  @override
+  String get rel_ops_ssh_review_key => 'Review host key';
+
+  @override
+  String get rel_ops_ssh_remote_port => 'Remote loopback service port';
+
+  @override
+  String get rel_ops_ssh_check_gateway => 'Check gateway over SSH';
+
+  @override
+  String get rel_ops_ssh_preview_source => 'Preview source over SSH';
+
+  @override
+  String get rel_ops_ssh_open_shell => 'Open SSH shell';
+
+  @override
+  String get rel_ops_ssh_shell_line => 'Line to remote shell';
+
+  @override
+  String get rel_ops_ssh_disconnect => 'Disconnect shell';
 }

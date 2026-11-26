@@ -10,12 +10,24 @@ void main() {
     for (final h in ['-F', 'host name', 'a,b', 'user@host', '../host']) {
       expect(
         () => SshDestination(h, 22, 'fixture'),
-        throwsA(isA<FleetSshException>()),
+        throwsA(
+          isA<FleetSshException>().having(
+            (e) => e.reason,
+            'reason',
+            FleetSshFailure.invalidDestination,
+          ),
+        ),
       );
     }
     expect(
       () => SshPublicKey.parse('ssh-ed25519 ${'A' * 68}'),
-      throwsA(isA<FleetSshException>()),
+      throwsA(
+        isA<FleetSshException>().having(
+          (e) => e.reason,
+          'reason',
+          FleetSshFailure.invalidPublicKey,
+        ),
+      ),
     );
   });
   test(
@@ -66,8 +78,16 @@ void main() {
             preview: false,
             port: 9119,
             identity: identity,
+            healthMessage: (port) =>
+                'Gateway is responding on remote loopback port $port.',
           ),
-          throwsA(isA<FleetSshException>()),
+          throwsA(
+            isA<FleetSshException>().having(
+              (e) => e.reason,
+              'reason',
+              FleetSshFailure.confirmHostKey,
+            ),
+          ),
         );
         await ssh.enroll(a.dst, a.key);
         await ssh.enroll(a.dst, a.key);
@@ -77,8 +97,10 @@ void main() {
             preview: false,
             port: 9119,
             identity: identity,
+            healthMessage: (port) =>
+                'Gateway is responding on remote loopback port $port.',
           ),
-          contains('responding'),
+          'Gateway is responding on remote loopback port 9119.',
         );
         expect(
           await ssh.readLoopback(
@@ -86,6 +108,8 @@ void main() {
             preview: true,
             port: 3000,
             identity: identity,
+            healthMessage: (port) =>
+                'Gateway is responding on remote loopback port $port.',
           ),
           'preview-fixture',
         );
@@ -102,7 +126,13 @@ void main() {
         await errors;
         await expectLater(
           ssh.enroll(a.dst, b.key),
-          throwsA(isA<FleetSshException>()),
+          throwsA(
+            isA<FleetSshException>().having(
+              (e) => e.reason,
+              'reason',
+              FleetSshFailure.differentKeyPinned,
+            ),
+          ),
         );
         expect((await ssh.enrolled(a.dst))!.fingerprint, a.fingerprint);
         // The peer presenting key B is genuinely reached with pin A. A command
@@ -114,8 +144,16 @@ void main() {
             preview: false,
             port: 9119,
             identity: identity,
+            healthMessage: (port) =>
+                'Gateway is responding on remote loopback port $port.',
           ),
-          throwsA(isA<FleetSshException>()),
+          throwsA(
+            isA<FleetSshException>().having(
+              (e) => e.reason,
+              'reason',
+              FleetSshFailure.connectionRefused,
+            ),
+          ),
         );
       } finally {
         for (final p in peers) {

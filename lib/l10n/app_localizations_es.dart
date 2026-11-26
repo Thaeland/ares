@@ -13013,4 +13013,181 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get rel_ops_term_connect => 'Conectar';
+
+  @override
+  String get rel_ops_ssh_invalid_destination =>
+      'Host, puerto o usuario SSH no válido.';
+
+  @override
+  String get rel_ops_ssh_public_key_required =>
+      'Se requiere una clave pública de host OpenSSH Ed25519.';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key =>
+      'Clave de host Ed25519 no válida.';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key =>
+      'La clave de host guardada no es válida.';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified =>
+      'No se ha podido verificar el registro de la clave de host.';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned =>
+      'Ya hay otra clave fijada. Verifica el cambio por separado.';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable =>
+      'OpenSSH no está disponible en el sistema.';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key =>
+      'Confirma la clave de host antes de conectar.';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required =>
+      'Selecciona un archivo de identidad con una ruta absoluta.';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => 'Puerto remoto no válido.';
+
+  @override
+  String get rel_ops_ssh_preview_too_large =>
+      'La vista previa supera el límite de 64 KiB.';
+
+  @override
+  String get rel_ops_ssh_connection_refused =>
+      'Conexión SSH rechazada. Comprueba la clave de host registrada, la identidad y el servicio.';
+
+  @override
+  String get rel_ops_ssh_http_not_ok =>
+      'El servicio remoto no ha devuelto HTTP 200.';
+
+  @override
+  String get rel_ops_ssh_encoded_response =>
+      'Esta vista previa no admite respuestas codificadas.';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported =>
+      'Solo se pueden previsualizar texto y código fuente HTML.';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed =>
+      'El servicio no ha confirmado el buen estado de la pasarela.';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first =>
+      'Registra primero la clave pública del host.';
+
+  @override
+  String get rel_ops_ssh_cancel => 'Cancelar';
+
+  @override
+  String get rel_ops_ssh_confirm => 'Confirmar';
+
+  @override
+  String get rel_ops_ssh_pin_title => '¿Fijar esta clave de host SSH?';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\nCompara esta huella con el administrador del host por un canal independiente. No se establecerá ninguna conexión.';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => 'Clave de host fijada.';
+
+  @override
+  String get rel_ops_ssh_shell_detail =>
+      'Abrir una shell de inicio de sesión interactiva.';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return 'Leer $path en 127.0.0.1:$port del equipo remoto a través de un canal SSH.';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return '¿Conectar con $destination?';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => 'Autentícate con tu agente SSH.';
+
+  @override
+  String get rel_ops_ssh_identity_auth =>
+      'Usar el archivo de identidad seleccionado.';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return 'La pasarela responde en el puerto de bucle local remoto $port.';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'Sesión SSH cerrada.';
+
+  @override
+  String get rel_ops_ssh_session_unclean =>
+      'La sesión SSH ha terminado sin una salida correcta.';
+
+  @override
+  String get rel_ops_ssh_operation_failed =>
+      'La operación SSH ha fallado. Comprueba el destino y la identidad.';
+
+  @override
+  String get rel_ops_ssh_title => 'SSH verificado';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      'Este dispositivo no dispone de un transporte OpenSSH del sistema compatible. El relé de la pasarela fijada acepta automáticamente claves nuevas y no puede usarse para un registro verificado.';
+
+  @override
+  String get rel_ops_ssh_host => 'Host SSH';
+
+  @override
+  String get rel_ops_ssh_port => 'Puerto SSH';
+
+  @override
+  String get rel_ops_ssh_user => 'Usuario SSH';
+
+  @override
+  String get rel_ops_ssh_identity =>
+      'Archivo de identidad (opcional; de lo contrario, usar el agente SSH)';
+
+  @override
+  String get rel_ops_ssh_public_key =>
+      'Clave pública de host del administrador (ssh-ed25519)';
+
+  @override
+  String get rel_ops_ssh_review_key => 'Revisar clave de host';
+
+  @override
+  String get rel_ops_ssh_remote_port =>
+      'Puerto del servicio de bucle local remoto';
+
+  @override
+  String get rel_ops_ssh_check_gateway => 'Comprobar pasarela por SSH';
+
+  @override
+  String get rel_ops_ssh_preview_source =>
+      'Previsualizar código fuente por SSH';
+
+  @override
+  String get rel_ops_ssh_open_shell => 'Abrir shell SSH';
+
+  @override
+  String get rel_ops_ssh_shell_line => 'Línea para la shell remota';
+
+  @override
+  String get rel_ops_ssh_disconnect => 'Desconectar shell';
 }

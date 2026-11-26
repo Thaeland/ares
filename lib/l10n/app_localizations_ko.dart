@@ -12532,4 +12532,165 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get rel_ops_term_connect => '연결';
+
+  @override
+  String get rel_ops_ssh_invalid_destination =>
+      'SSH 호스트, 포트 또는 사용자가 올바르지 않습니다.';
+
+  @override
+  String get rel_ops_ssh_public_key_required =>
+      'OpenSSH Ed25519 형식의 호스트 공개 키가 필요합니다.';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Ed25519 호스트 키가 올바르지 않습니다.';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => '저장된 호스트 키가 올바르지 않습니다.';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified => '호스트 키 등록을 검증할 수 없습니다.';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned =>
+      '다른 키가 이미 고정되어 있습니다. 변경 사항을 별도로 검증하세요.';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable => '시스템 OpenSSH를 사용할 수 없습니다.';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key => '연결하기 전에 호스트 키를 확인하세요.';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required =>
+      '절대 경로로 지정된 인증 키 파일을 선택하세요.';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => '원격 포트가 올바르지 않습니다.';
+
+  @override
+  String get rel_ops_ssh_preview_too_large => '미리보기가 64 KiB 제한을 초과합니다.';
+
+  @override
+  String get rel_ops_ssh_connection_refused =>
+      'SSH 연결이 거부되었습니다. 등록된 호스트 키, 인증 정보 및 서비스를 확인하세요.';
+
+  @override
+  String get rel_ops_ssh_http_not_ok => '원격 서비스가 HTTP 200을 반환하지 않았습니다.';
+
+  @override
+  String get rel_ops_ssh_encoded_response => '이 미리보기는 인코딩된 응답을 지원하지 않습니다.';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported =>
+      '텍스트와 HTML 소스만 미리 볼 수 있습니다.';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed =>
+      '서비스가 게이트웨이의 정상 작동 상태를 확인해 주지 않았습니다.';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first => '먼저 호스트의 공개 키를 등록하세요.';
+
+  @override
+  String get rel_ops_ssh_cancel => '취소';
+
+  @override
+  String get rel_ops_ssh_confirm => '확인';
+
+  @override
+  String get rel_ops_ssh_pin_title => '이 SSH 호스트 키를 고정하시겠습니까?';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\n독립적인 채널을 통해 호스트 관리자와 이 지문을 대조하세요. 연결은 이루어지지 않습니다.';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => '호스트 키가 고정되었습니다.';
+
+  @override
+  String get rel_ops_ssh_shell_detail => '대화형 로그인 셸을 엽니다.';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return 'SSH 채널을 통해 원격 127.0.0.1:$port의 $path를 읽습니다.';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return '$destination에 연결하시겠습니까?';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => 'SSH 에이전트로 인증합니다.';
+
+  @override
+  String get rel_ops_ssh_identity_auth => '선택한 인증 키 파일을 사용합니다.';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return '게이트웨이가 원격 루프백 포트 $port에서 응답하고 있습니다.';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'SSH 세션이 닫혔습니다.';
+
+  @override
+  String get rel_ops_ssh_session_unclean => 'SSH 세션이 정상적으로 종료되지 않았습니다.';
+
+  @override
+  String get rel_ops_ssh_operation_failed =>
+      'SSH 작업에 실패했습니다. 대상과 인증 정보를 확인하세요.';
+
+  @override
+  String get rel_ops_ssh_title => '검증된 SSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      '이 기기에는 지원되는 시스템 OpenSSH 전송 수단이 없습니다. 고정된 게이트웨이 릴레이는 새 키를 자동으로 수락하므로 검증된 등록에 사용할 수 없습니다.';
+
+  @override
+  String get rel_ops_ssh_host => 'SSH 호스트';
+
+  @override
+  String get rel_ops_ssh_port => 'SSH 포트';
+
+  @override
+  String get rel_ops_ssh_user => 'SSH 사용자';
+
+  @override
+  String get rel_ops_ssh_identity => '인증 키 파일(선택 사항, 지정하지 않으면 SSH 에이전트 사용)';
+
+  @override
+  String get rel_ops_ssh_public_key => '관리자가 제공한 호스트 공개 키(ssh-ed25519)';
+
+  @override
+  String get rel_ops_ssh_review_key => '호스트 키 검토';
+
+  @override
+  String get rel_ops_ssh_remote_port => '원격 루프백 서비스 포트';
+
+  @override
+  String get rel_ops_ssh_check_gateway => 'SSH로 게이트웨이 확인';
+
+  @override
+  String get rel_ops_ssh_preview_source => 'SSH로 소스 미리보기';
+
+  @override
+  String get rel_ops_ssh_open_shell => 'SSH 셸 열기';
+
+  @override
+  String get rel_ops_ssh_shell_line => '원격 셸로 보낼 줄';
+
+  @override
+  String get rel_ops_ssh_disconnect => '셸 연결 해제';
 }

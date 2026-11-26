@@ -4443,5 +4443,226 @@
   "rel_ops_term_connect": "Ligar",
   "@rel_ops_term_connect": {
     "description": "SSH terminal dialog: connect. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_ssh_invalid_destination": "Anfitrião, porta ou utilizador SSH inválido.",
+  "@rel_ops_ssh_invalid_destination": {
+    "description": "Verified SSH destination validation refusal."
+  },
+  "rel_ops_ssh_public_key_required": "É necessária uma chave pública do anfitrião OpenSSH Ed25519.",
+  "@rel_ops_ssh_public_key_required": {
+    "description": "Verified SSH key format refusal. Preserve OpenSSH and Ed25519."
+  },
+  "rel_ops_ssh_invalid_public_key": "Chave do anfitrião Ed25519 inválida.",
+  "@rel_ops_ssh_invalid_public_key": {
+    "description": "Verified SSH key binary validation refusal."
+  },
+  "rel_ops_ssh_invalid_saved_key": "A chave do anfitrião guardada é inválida.",
+  "@rel_ops_ssh_invalid_saved_key": {
+    "description": "Saved SSH pin failed validation."
+  },
+  "rel_ops_ssh_enrollment_unverified": "Não foi possível verificar o registo da chave do anfitrião.",
+  "@rel_ops_ssh_enrollment_unverified": {
+    "description": "Host key enrollment could not be read back."
+  },
+  "rel_ops_ssh_different_key_pinned": "Já existe outra chave fixada. Verifique a alteração separadamente.",
+  "@rel_ops_ssh_different_key_pinned": {
+    "description": "SSH pin replacement refusal. Preserve separate verification requirement."
+  },
+  "rel_ops_ssh_open_ssh_unavailable": "O OpenSSH do sistema não está disponível.",
+  "@rel_ops_ssh_open_ssh_unavailable": {
+    "description": "System OpenSSH transport unavailable refusal."
+  },
+  "rel_ops_ssh_confirm_host_key": "Confirme a chave do anfitrião antes de estabelecer a ligação.",
+  "@rel_ops_ssh_confirm_host_key": {
+    "description": "Connection refused before explicit host key enrollment."
+  },
+  "rel_ops_ssh_absolute_identity_required": "Selecione um ficheiro de identidade com um caminho absoluto.",
+  "@rel_ops_ssh_absolute_identity_required": {
+    "description": "Unsafe or relative SSH identity path refusal."
+  },
+  "rel_ops_ssh_invalid_remote_port": "Porta remota inválida.",
+  "@rel_ops_ssh_invalid_remote_port": {
+    "description": "Remote loopback port validation refusal."
+  },
+  "rel_ops_ssh_preview_too_large": "A pré-visualização excede o limite de 64 KiB.",
+  "@rel_ops_ssh_preview_too_large": {
+    "description": "SSH preview response size refusal. Preserve 64 KiB limit."
+  },
+  "rel_ops_ssh_connection_refused": "Ligação SSH recusada. Verifique a chave do anfitrião registada, a identidade e o serviço.",
+  "@rel_ops_ssh_connection_refused": {
+    "description": "SSH subprocess nonzero exit refusal."
+  },
+  "rel_ops_ssh_http_not_ok": "O serviço remoto não devolveu HTTP 200.",
+  "@rel_ops_ssh_http_not_ok": {
+    "description": "Remote HTTP status or header validation refusal. Preserve HTTP 200."
+  },
+  "rel_ops_ssh_encoded_response": "Esta pré-visualização não suporta respostas codificadas.",
+  "@rel_ops_ssh_encoded_response": {
+    "description": "Encoded remote HTTP response refusal."
+  },
+  "rel_ops_ssh_preview_type_unsupported": "Só é possível pré-visualizar texto e código-fonte HTML.",
+  "@rel_ops_ssh_preview_type_unsupported": {
+    "description": "Unsupported remote preview content type refusal."
+  },
+  "rel_ops_ssh_health_unconfirmed": "O serviço não confirmou o bom funcionamento do gateway.",
+  "@rel_ops_ssh_health_unconfirmed": {
+    "description": "Remote health response did not affirm ok."
+  },
+  "rel_ops_ssh_enroll_host_key_first": "Registe primeiro a chave pública do anfitrião.",
+  "@rel_ops_ssh_enroll_host_key_first": {
+    "description": "SSH screen notice for an unenrolled destination."
+  },
+  "rel_ops_ssh_cancel": "Cancelar",
+  "@rel_ops_ssh_cancel": {
+    "description": "Cancel an SSH enrollment or connection confirmation."
+  },
+  "rel_ops_ssh_confirm": "Confirmar",
+  "@rel_ops_ssh_confirm": {
+    "description": "Confirm an SSH enrollment or connection."
+  },
+  "rel_ops_ssh_pin_title": "Fixar esta chave do anfitrião SSH?",
+  "@rel_ops_ssh_pin_title": {
+    "description": "Explicit SSH host key enrollment confirmation title."
+  },
+  "rel_ops_ssh_pin_detail": "{destination}\n{fingerprint}\nCompare esta impressão digital com o administrador do anfitrião através de um canal independente. Não será estabelecida qualquer ligação.",
+  "@rel_ops_ssh_pin_detail": {
+    "description": "Host key enrollment consent. Preserve independent-channel verification and no-connection assurance. Values are verbatim SSH identifiers.",
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      },
+      "fingerprint": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_ssh_host_key_pinned": "Chave do anfitrião fixada.",
+  "@rel_ops_ssh_host_key_pinned": {
+    "description": "Successful host key enrollment notice."
+  },
+  "rel_ops_ssh_shell_detail": "Abrir uma shell de início de sessão interativa.",
+  "@rel_ops_ssh_shell_detail": {
+    "description": "SSH remote shell connection consent detail."
+  },
+  "rel_ops_ssh_read_detail": "Ler {path} em 127.0.0.1:{port} da máquina remota através de um canal SSH.",
+  "@rel_ops_ssh_read_detail": {
+    "description": "Remote loopback HTTP read consent. Preserve literal loopback address; path is / or /api/health and must remain unchanged.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "port": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_ssh_connect_title": "Ligar a {destination}?",
+  "@rel_ops_ssh_connect_title": {
+    "description": "SSH connection confirmation title; destination is verbatim user@host:port.",
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_ssh_connect_detail": "{detail}\n{fingerprint}\n{authentication}",
+  "@rel_ops_ssh_connect_detail": {
+    "description": "SSH connection confirmation layout combining localized operation and authentication consent with a verbatim fingerprint.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      },
+      "fingerprint": {
+        "type": "String"
+      },
+      "authentication": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_ssh_agent_auth": "Autentique-se com o seu agente SSH.",
+  "@rel_ops_ssh_agent_auth": {
+    "description": "SSH agent authentication consent detail."
+  },
+  "rel_ops_ssh_identity_auth": "Utilizar o ficheiro de identidade selecionado.",
+  "@rel_ops_ssh_identity_auth": {
+    "description": "Selected SSH identity file authentication consent detail."
+  },
+  "rel_ops_ssh_gateway_responding": "O gateway está a responder na porta de loopback remota {port}.",
+  "@rel_ops_ssh_gateway_responding": {
+    "description": "Successful SSH remote gateway health check result.",
+    "placeholders": {
+      "port": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_ssh_session_closed": "Sessão SSH fechada.",
+  "@rel_ops_ssh_session_closed": {
+    "description": "Remote SSH shell exited cleanly."
+  },
+  "rel_ops_ssh_session_unclean": "A sessão SSH terminou sem uma saída normal.",
+  "@rel_ops_ssh_session_unclean": {
+    "description": "Remote SSH shell exited with nonzero status."
+  },
+  "rel_ops_ssh_operation_failed": "A operação SSH falhou. Verifique o destino e a identidade.",
+  "@rel_ops_ssh_operation_failed": {
+    "description": "Safe SSH operation failure notice replacing untrusted system errors."
+  },
+  "rel_ops_ssh_title": "SSH verificado",
+  "@rel_ops_ssh_title": {
+    "description": "Verified SSH screen title."
+  },
+  "rel_ops_ssh_unsupported": "Este dispositivo não dispõe de um transporte OpenSSH do sistema suportado. O retransmissor do gateway fixado aceita automaticamente novas chaves e não pode ser utilizado para um registo verificado.",
+  "@rel_ops_ssh_unsupported": {
+    "description": "Security explanation on unsupported devices. Preserve the relay enrollment restriction."
+  },
+  "rel_ops_ssh_host": "Anfitrião SSH",
+  "@rel_ops_ssh_host": {
+    "description": "SSH hostname input label."
+  },
+  "rel_ops_ssh_port": "Porta SSH",
+  "@rel_ops_ssh_port": {
+    "description": "SSH transport port input label."
+  },
+  "rel_ops_ssh_user": "Utilizador SSH",
+  "@rel_ops_ssh_user": {
+    "description": "SSH username input label."
+  },
+  "rel_ops_ssh_identity": "Ficheiro de identidade (opcional; caso contrário, utilizar o agente SSH)",
+  "@rel_ops_ssh_identity": {
+    "description": "SSH identity path input label and agent fallback explanation."
+  },
+  "rel_ops_ssh_public_key": "Chave pública do anfitrião fornecida pelo administrador (ssh-ed25519)",
+  "@rel_ops_ssh_public_key": {
+    "description": "Public host key input label. Preserve ssh-ed25519 algorithm token."
+  },
+  "rel_ops_ssh_review_key": "Rever chave do anfitrião",
+  "@rel_ops_ssh_review_key": {
+    "description": "Open SSH host key enrollment review."
+  },
+  "rel_ops_ssh_remote_port": "Porta do serviço de loopback remoto",
+  "@rel_ops_ssh_remote_port": {
+    "description": "Remote HTTP service loopback port input label."
+  },
+  "rel_ops_ssh_check_gateway": "Verificar gateway por SSH",
+  "@rel_ops_ssh_check_gateway": {
+    "description": "Check remote gateway health through SSH."
+  },
+  "rel_ops_ssh_preview_source": "Pré-visualizar código-fonte por SSH",
+  "@rel_ops_ssh_preview_source": {
+    "description": "Read remote text or HTML source through SSH."
+  },
+  "rel_ops_ssh_open_shell": "Abrir shell SSH",
+  "@rel_ops_ssh_open_shell": {
+    "description": "Explicitly open a remote SSH login shell."
+  },
+  "rel_ops_ssh_shell_line": "Linha para a shell remota",
+  "@rel_ops_ssh_shell_line": {
+    "description": "Input label for a line sent to the active remote shell."
+  },
+  "rel_ops_ssh_disconnect": "Desligar shell",
+  "@rel_ops_ssh_disconnect": {
+    "description": "Terminate the active SSH shell subprocess."
   }
 }

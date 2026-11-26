@@ -13018,6 +13018,182 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get rel_ops_term_connect => 'Ligar';
+
+  @override
+  String get rel_ops_ssh_invalid_destination =>
+      'Anfitrião, porta ou utilizador SSH inválido.';
+
+  @override
+  String get rel_ops_ssh_public_key_required =>
+      'É necessária uma chave pública do anfitrião OpenSSH Ed25519.';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key =>
+      'Chave do anfitrião Ed25519 inválida.';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key =>
+      'A chave do anfitrião guardada é inválida.';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified =>
+      'Não foi possível verificar o registo da chave do anfitrião.';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned =>
+      'Já existe outra chave fixada. Verifique a alteração separadamente.';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable =>
+      'O OpenSSH do sistema não está disponível.';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key =>
+      'Confirme a chave do anfitrião antes de estabelecer a ligação.';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required =>
+      'Selecione um ficheiro de identidade com um caminho absoluto.';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => 'Porta remota inválida.';
+
+  @override
+  String get rel_ops_ssh_preview_too_large =>
+      'A pré-visualização excede o limite de 64 KiB.';
+
+  @override
+  String get rel_ops_ssh_connection_refused =>
+      'Ligação SSH recusada. Verifique a chave do anfitrião registada, a identidade e o serviço.';
+
+  @override
+  String get rel_ops_ssh_http_not_ok =>
+      'O serviço remoto não devolveu HTTP 200.';
+
+  @override
+  String get rel_ops_ssh_encoded_response =>
+      'Esta pré-visualização não suporta respostas codificadas.';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported =>
+      'Só é possível pré-visualizar texto e código-fonte HTML.';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed =>
+      'O serviço não confirmou o bom funcionamento do gateway.';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first =>
+      'Registe primeiro a chave pública do anfitrião.';
+
+  @override
+  String get rel_ops_ssh_cancel => 'Cancelar';
+
+  @override
+  String get rel_ops_ssh_confirm => 'Confirmar';
+
+  @override
+  String get rel_ops_ssh_pin_title => 'Fixar esta chave do anfitrião SSH?';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\nCompare esta impressão digital com o administrador do anfitrião através de um canal independente. Não será estabelecida qualquer ligação.';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => 'Chave do anfitrião fixada.';
+
+  @override
+  String get rel_ops_ssh_shell_detail =>
+      'Abrir uma shell de início de sessão interativa.';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return 'Ler $path em 127.0.0.1:$port da máquina remota através de um canal SSH.';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return 'Ligar a $destination?';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => 'Autentique-se com o seu agente SSH.';
+
+  @override
+  String get rel_ops_ssh_identity_auth =>
+      'Utilizar o ficheiro de identidade selecionado.';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return 'O gateway está a responder na porta de loopback remota $port.';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'Sessão SSH fechada.';
+
+  @override
+  String get rel_ops_ssh_session_unclean =>
+      'A sessão SSH terminou sem uma saída normal.';
+
+  @override
+  String get rel_ops_ssh_operation_failed =>
+      'A operação SSH falhou. Verifique o destino e a identidade.';
+
+  @override
+  String get rel_ops_ssh_title => 'SSH verificado';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      'Este dispositivo não dispõe de um transporte OpenSSH do sistema suportado. O retransmissor do gateway fixado aceita automaticamente novas chaves e não pode ser utilizado para um registo verificado.';
+
+  @override
+  String get rel_ops_ssh_host => 'Anfitrião SSH';
+
+  @override
+  String get rel_ops_ssh_port => 'Porta SSH';
+
+  @override
+  String get rel_ops_ssh_user => 'Utilizador SSH';
+
+  @override
+  String get rel_ops_ssh_identity =>
+      'Ficheiro de identidade (opcional; caso contrário, utilizar o agente SSH)';
+
+  @override
+  String get rel_ops_ssh_public_key =>
+      'Chave pública do anfitrião fornecida pelo administrador (ssh-ed25519)';
+
+  @override
+  String get rel_ops_ssh_review_key => 'Rever chave do anfitrião';
+
+  @override
+  String get rel_ops_ssh_remote_port => 'Porta do serviço de loopback remoto';
+
+  @override
+  String get rel_ops_ssh_check_gateway => 'Verificar gateway por SSH';
+
+  @override
+  String get rel_ops_ssh_preview_source =>
+      'Pré-visualizar código-fonte por SSH';
+
+  @override
+  String get rel_ops_ssh_open_shell => 'Abrir shell SSH';
+
+  @override
+  String get rel_ops_ssh_shell_line => 'Linha para a shell remota';
+
+  @override
+  String get rel_ops_ssh_disconnect => 'Desligar shell';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -26017,4 +26193,178 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get rel_ops_term_connect => 'Conectar';
+
+  @override
+  String get rel_ops_ssh_invalid_destination =>
+      'Host, porta ou usuário SSH inválido.';
+
+  @override
+  String get rel_ops_ssh_public_key_required =>
+      'É necessária uma chave pública do host OpenSSH Ed25519.';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key =>
+      'Chave do host Ed25519 inválida.';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key =>
+      'A chave do host salva é inválida.';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified =>
+      'Não foi possível verificar o cadastro da chave do host.';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned =>
+      'Já existe outra chave fixada. Verifique a alteração separadamente.';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable =>
+      'O OpenSSH do sistema não está disponível.';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key =>
+      'Confirme a chave do host antes de conectar.';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required =>
+      'Selecione um arquivo de identidade com um caminho absoluto.';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => 'Porta remota inválida.';
+
+  @override
+  String get rel_ops_ssh_preview_too_large =>
+      'A prévia excede o limite de 64 KiB.';
+
+  @override
+  String get rel_ops_ssh_connection_refused =>
+      'Conexão SSH recusada. Verifique a chave do host cadastrada, a identidade e o serviço.';
+
+  @override
+  String get rel_ops_ssh_http_not_ok =>
+      'O serviço remoto não retornou HTTP 200.';
+
+  @override
+  String get rel_ops_ssh_encoded_response =>
+      'Esta prévia não oferece suporte a respostas codificadas.';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported =>
+      'Só é possível visualizar texto e código-fonte HTML.';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed =>
+      'O serviço não confirmou o bom funcionamento do Gateway.';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first =>
+      'Cadastre primeiro a chave pública do host.';
+
+  @override
+  String get rel_ops_ssh_cancel => 'Cancelar';
+
+  @override
+  String get rel_ops_ssh_confirm => 'Confirmar';
+
+  @override
+  String get rel_ops_ssh_pin_title => 'Fixar esta chave do host SSH?';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\nCompare esta impressão digital com o administrador do host por um canal independente. Nenhuma conexão será estabelecida.';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => 'Chave do host fixada.';
+
+  @override
+  String get rel_ops_ssh_shell_detail => 'Abrir um shell de login interativo.';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return 'Ler $path em 127.0.0.1:$port da máquina remota por um canal SSH.';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return 'Conectar a $destination?';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => 'Autentique-se com seu agente SSH.';
+
+  @override
+  String get rel_ops_ssh_identity_auth =>
+      'Usar o arquivo de identidade selecionado.';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return 'O Gateway está respondendo na porta de loopback remota $port.';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'Sessão SSH fechada.';
+
+  @override
+  String get rel_ops_ssh_session_unclean =>
+      'A sessão SSH terminou sem uma saída normal.';
+
+  @override
+  String get rel_ops_ssh_operation_failed =>
+      'A operação SSH falhou. Verifique o destino e a identidade.';
+
+  @override
+  String get rel_ops_ssh_title => 'SSH verificado';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      'Este dispositivo não tem um transporte OpenSSH do sistema compatível. O retransmissor do Gateway fixado aceita novas chaves automaticamente e não pode ser usado para um cadastro verificado.';
+
+  @override
+  String get rel_ops_ssh_host => 'Host SSH';
+
+  @override
+  String get rel_ops_ssh_port => 'Porta SSH';
+
+  @override
+  String get rel_ops_ssh_user => 'Usuário SSH';
+
+  @override
+  String get rel_ops_ssh_identity =>
+      'Arquivo de identidade (opcional; caso contrário, usar o agente SSH)';
+
+  @override
+  String get rel_ops_ssh_public_key =>
+      'Chave pública do host fornecida pelo administrador (ssh-ed25519)';
+
+  @override
+  String get rel_ops_ssh_review_key => 'Revisar chave do host';
+
+  @override
+  String get rel_ops_ssh_remote_port => 'Porta do serviço de loopback remoto';
+
+  @override
+  String get rel_ops_ssh_check_gateway => 'Verificar Gateway por SSH';
+
+  @override
+  String get rel_ops_ssh_preview_source => 'Visualizar código-fonte por SSH';
+
+  @override
+  String get rel_ops_ssh_open_shell => 'Abrir shell SSH';
+
+  @override
+  String get rel_ops_ssh_shell_line => 'Linha para o shell remoto';
+
+  @override
+  String get rel_ops_ssh_disconnect => 'Desconectar shell';
 }

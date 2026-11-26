@@ -12995,4 +12995,181 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get rel_ops_term_connect => 'Подключиться';
+
+  @override
+  String get rel_ops_ssh_invalid_destination =>
+      'Недопустимый хост, порт или пользователь SSH.';
+
+  @override
+  String get rel_ops_ssh_public_key_required =>
+      'Требуется открытый ключ хоста OpenSSH Ed25519.';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key =>
+      'Недопустимый ключ хоста Ed25519.';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key =>
+      'Недопустимый сохранённый ключ хоста.';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified =>
+      'Не удалось проверить регистрацию ключа хоста.';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned =>
+      'Уже закреплён другой ключ. Проверьте изменение отдельно.';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable =>
+      'Системный OpenSSH недоступен.';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key =>
+      'Подтвердите ключ хоста перед подключением.';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required =>
+      'Выберите файл идентификации с абсолютным путём.';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => 'Недопустимый удалённый порт.';
+
+  @override
+  String get rel_ops_ssh_preview_too_large =>
+      'Предпросмотр превышает ограничение в 64 KiB.';
+
+  @override
+  String get rel_ops_ssh_connection_refused =>
+      'SSH-подключение отклонено. Проверьте зарегистрированный ключ хоста, данные идентификации и службу.';
+
+  @override
+  String get rel_ops_ssh_http_not_ok => 'Удалённая служба не вернула HTTP 200.';
+
+  @override
+  String get rel_ops_ssh_encoded_response =>
+      'Этот предпросмотр не поддерживает закодированные ответы.';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported =>
+      'Предпросмотр доступен только для текста и исходного кода HTML.';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed =>
+      'Служба не подтвердила работоспособность шлюза.';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first =>
+      'Сначала зарегистрируйте открытый ключ хоста.';
+
+  @override
+  String get rel_ops_ssh_cancel => 'Отмена';
+
+  @override
+  String get rel_ops_ssh_confirm => 'Подтвердить';
+
+  @override
+  String get rel_ops_ssh_pin_title => 'Закрепить этот ключ хоста SSH?';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\nСверьте этот отпечаток с администратором хоста по независимому каналу. Подключение установлено не будет.';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => 'Ключ хоста закреплён.';
+
+  @override
+  String get rel_ops_ssh_shell_detail =>
+      'Открыть интерактивную оболочку входа в систему.';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return 'Прочитать $path на удалённом адресе 127.0.0.1:$port через канал SSH.';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return 'Подключиться к $destination?';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth =>
+      'Пройти аутентификацию с помощью вашего агента SSH.';
+
+  @override
+  String get rel_ops_ssh_identity_auth =>
+      'Использовать выбранный файл идентификации.';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return 'Шлюз отвечает на удалённом порту петлевого интерфейса $port.';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'Сессия SSH закрыта.';
+
+  @override
+  String get rel_ops_ssh_session_unclean =>
+      'Сессия SSH завершилась некорректно.';
+
+  @override
+  String get rel_ops_ssh_operation_failed =>
+      'Сбой операции SSH. Проверьте адрес назначения и данные идентификации.';
+
+  @override
+  String get rel_ops_ssh_title => 'Проверенный SSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      'На этом устройстве нет поддерживаемого системного транспорта OpenSSH. Ретранслятор закреплённого шлюза автоматически принимает новые ключи и не может использоваться для проверенной регистрации.';
+
+  @override
+  String get rel_ops_ssh_host => 'Хост SSH';
+
+  @override
+  String get rel_ops_ssh_port => 'Порт SSH';
+
+  @override
+  String get rel_ops_ssh_user => 'Пользователь SSH';
+
+  @override
+  String get rel_ops_ssh_identity =>
+      'Файл идентификации (необязательно; иначе используется агент SSH)';
+
+  @override
+  String get rel_ops_ssh_public_key =>
+      'Открытый ключ хоста от администратора (ssh-ed25519)';
+
+  @override
+  String get rel_ops_ssh_review_key => 'Проверить ключ хоста';
+
+  @override
+  String get rel_ops_ssh_remote_port =>
+      'Удалённый порт службы на петлевом интерфейсе';
+
+  @override
+  String get rel_ops_ssh_check_gateway => 'Проверить шлюз через SSH';
+
+  @override
+  String get rel_ops_ssh_preview_source =>
+      'Предпросмотр исходного кода через SSH';
+
+  @override
+  String get rel_ops_ssh_open_shell => 'Открыть оболочку SSH';
+
+  @override
+  String get rel_ops_ssh_shell_line => 'Строка для удалённой оболочки';
+
+  @override
+  String get rel_ops_ssh_disconnect => 'Отключить оболочку';
 }

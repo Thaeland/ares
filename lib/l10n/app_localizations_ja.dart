@@ -12532,4 +12532,162 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get rel_ops_term_connect => '接続';
+
+  @override
+  String get rel_ops_ssh_invalid_destination => 'SSHホスト、ポート、またはユーザーが無効です。';
+
+  @override
+  String get rel_ops_ssh_public_key_required =>
+      'OpenSSH Ed25519形式のホスト公開鍵が必要です。';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Ed25519ホスト鍵が無効です。';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => '保存されたホスト鍵が無効です。';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified => 'ホスト鍵の登録を検証できませんでした。';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned =>
+      '別の鍵がすでに固定されています。変更を別途検証してください。';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable => 'システムのOpenSSHを利用できません。';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key => '接続する前にホスト鍵を確認してください。';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required =>
+      '絶対パスで指定された認証鍵ファイルを選択してください。';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => 'リモートポートが無効です。';
+
+  @override
+  String get rel_ops_ssh_preview_too_large => 'プレビューが64 KiBの上限を超えています。';
+
+  @override
+  String get rel_ops_ssh_connection_refused =>
+      'SSH接続が拒否されました。登録済みのホスト鍵、認証情報、サービスを確認してください。';
+
+  @override
+  String get rel_ops_ssh_http_not_ok => 'リモートサービスからHTTP 200が返されませんでした。';
+
+  @override
+  String get rel_ops_ssh_encoded_response => 'このプレビューはエンコードされた応答に対応していません。';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported =>
+      'プレビューできるのはテキストとHTMLソースのみです。';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed => 'サービスからゲートウェイの正常性を確認できませんでした。';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first => 'まずホストの公開鍵を登録してください。';
+
+  @override
+  String get rel_ops_ssh_cancel => 'キャンセル';
+
+  @override
+  String get rel_ops_ssh_confirm => '確認';
+
+  @override
+  String get rel_ops_ssh_pin_title => 'このSSHホスト鍵を固定しますか？';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\n独立した通信経路でホスト管理者にこのフィンガープリントを照合してください。接続は行われません。';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => 'ホスト鍵を固定しました。';
+
+  @override
+  String get rel_ops_ssh_shell_detail => '対話型ログインシェルを開きます。';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return 'SSHチャネル経由でリモートの127.0.0.1:$portにある$pathを読み取ります。';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return '$destinationに接続しますか？';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => 'SSHエージェントで認証します。';
+
+  @override
+  String get rel_ops_ssh_identity_auth => '選択した認証鍵ファイルを使用します。';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return 'ゲートウェイがリモートのループバックポート$portで応答しています。';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'SSHセッションを閉じました。';
+
+  @override
+  String get rel_ops_ssh_session_unclean => 'SSHセッションが正常に終了しませんでした。';
+
+  @override
+  String get rel_ops_ssh_operation_failed => 'SSH操作に失敗しました。接続先と認証情報を確認してください。';
+
+  @override
+  String get rel_ops_ssh_title => '検証済みSSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      'このデバイスには、対応するシステムOpenSSHトランスポートがありません。固定済みゲートウェイのリレーは新しい鍵を自動的に受け入れるため、検証付きの登録には使用できません。';
+
+  @override
+  String get rel_ops_ssh_host => 'SSHホスト';
+
+  @override
+  String get rel_ops_ssh_port => 'SSHポート';
+
+  @override
+  String get rel_ops_ssh_user => 'SSHユーザー';
+
+  @override
+  String get rel_ops_ssh_identity => '認証鍵ファイル（任意。未指定の場合はSSHエージェントを使用）';
+
+  @override
+  String get rel_ops_ssh_public_key => '管理者から提供されたホスト公開鍵（ssh-ed25519）';
+
+  @override
+  String get rel_ops_ssh_review_key => 'ホスト鍵を確認';
+
+  @override
+  String get rel_ops_ssh_remote_port => 'リモートのループバックサービスポート';
+
+  @override
+  String get rel_ops_ssh_check_gateway => 'SSH経由でゲートウェイを確認';
+
+  @override
+  String get rel_ops_ssh_preview_source => 'SSH経由でソースをプレビュー';
+
+  @override
+  String get rel_ops_ssh_open_shell => 'SSHシェルを開く';
+
+  @override
+  String get rel_ops_ssh_shell_line => 'リモートシェルに送信する行';
+
+  @override
+  String get rel_ops_ssh_disconnect => 'シェルを切断';
 }
