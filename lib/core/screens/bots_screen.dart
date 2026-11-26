@@ -1941,7 +1941,8 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         ),
         subtitle: Text(
           [
-            if (installed) '${status.geometry} · ${status.placement}',
+            if (installed)
+              '${status.geometry} · ${_displayPlacementLabel(context.sharedL10n, status.placement)}',
             if (status.pid != null)
               context.sharedL10n.ng_bots_pid('${status.pid}'),
             if (status.missing.isNotEmpty)
@@ -2363,6 +2364,12 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     );
   }
 }
+
+String _displayPlacementLabel(AppLocalizations l10n, String placement) =>
+    switch (placement) {
+      'gateway' => l10n.ng_gateway_2,
+      _ => placement,
+    };
 
 extension on DisplayStatus {
   DisplayStatus copyWith({DisplayLease? lease}) => DisplayStatus(
