@@ -5132,5 +5132,2970 @@
         "type": "String"
       }
     }
+  },
+  "release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded": "This passage is no longer in the loaded window.",
+  "@release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded": {
+    "description": "Shared transcript reader user interface: This passage is no longer in the loaded window."
+  },
+  "release_core_transcript_reader_loaded_prompts": "Loaded prompts",
+  "@release_core_transcript_reader_loaded_prompts": {
+    "description": "Shared transcript reader user interface: Loaded prompts"
+  },
+  "release_core_transcript_reader_jump_to_latest": "Jump to latest",
+  "@release_core_transcript_reader_jump_to_latest": {
+    "description": "Shared transcript reader user interface: Jump to latest"
+  },
+  "release_core_transcript_reader_no_prompts_loaded": "No prompts loaded",
+  "@release_core_transcript_reader_no_prompts_loaded": {
+    "description": "Shared transcript reader user interface: No prompts loaded"
+  },
+  "release_core_transcript_reader_find_in_loaded_messages": "Find in loaded messages",
+  "@release_core_transcript_reader_find_in_loaded_messages": {
+    "description": "Shared transcript reader user interface: Find in loaded messages"
+  },
+  "release_core_transcript_reader_previous_match": "Previous match",
+  "@release_core_transcript_reader_previous_match": {
+    "description": "Shared transcript reader user interface: Previous match"
+  },
+  "release_core_transcript_reader_next_match": "Next match",
+  "@release_core_transcript_reader_next_match": {
+    "description": "Shared transcript reader user interface: Next match"
+  },
+  "release_core_transcript_reader_prompt_timeline": "Prompt timeline",
+  "@release_core_transcript_reader_prompt_timeline": {
+    "description": "Shared transcript reader user interface: Prompt timeline"
+  },
+  "release_core_transcript_reader_close_find": "Close find",
+  "@release_core_transcript_reader_close_find": {
+    "description": "Shared transcript reader user interface: Close find"
+  },
+  "release_core_session_organisation_organise_chats": "Organise chats",
+  "@release_core_session_organisation_organise_chats": {
+    "description": "Shared session organisation user interface: Organise chats"
+  },
+  "release_core_session_organisation_show_model_and_usage": "Show model and usage",
+  "@release_core_session_organisation_show_model_and_usage": {
+    "description": "Shared session organisation user interface: Show model and usage"
+  },
+  "release_core_session_files_view_connection_changed_reopen_files_on_the_new_connection": "Connection changed. Reopen files on the new connection.",
+  "@release_core_session_files_view_connection_changed_reopen_files_on_the_new_connection": {
+    "description": "Shared session files view user interface: Connection changed. Reopen files on the new connection."
+  },
+  "release_core_session_files_view_the_connection_or_session_changed_reopen_this_pane": "The connection or session changed. Reopen this pane.",
+  "@release_core_session_files_view_the_connection_or_session_changed_reopen_this_pane": {
+    "description": "Shared session files view user interface: The connection or session changed. Reopen this pane."
+  },
+  "release_core_session_files_view_no_verified_host_working_directory_for_this_session": "No verified host working directory for this session.",
+  "@release_core_session_files_view_no_verified_host_working_directory_for_this_session": {
+    "description": "Shared session files view user interface: No verified host working directory for this session."
+  },
+  "release_core_session_files_view_the_gateway_denied_this_operation": "The gateway denied this operation.",
+  "@release_core_session_files_view_the_gateway_denied_this_operation": {
+    "description": "Shared session files view user interface: The gateway denied this operation."
+  },
+  "release_core_session_files_view_this_gateway_does_not_support_this_operation": "This gateway does not support this operation.",
+  "@release_core_session_files_view_this_gateway_does_not_support_this_operation": {
+    "description": "Shared session files view user interface: This gateway does not support this operation."
+  },
+  "release_core_session_files_view_the_file_owner_or_working_directory_changed_reload": "The file, owner or working directory changed. Reload and review.",
+  "@release_core_session_files_view_the_file_owner_or_working_directory_changed_reload": {
+    "description": "Shared session files view user interface: The file, owner or working directory changed. Reload and review."
+  },
+  "release_core_session_files_view_the_gateway_returned_an_unsafe_path_or_invalid": "The gateway returned an unsafe path or invalid file response.",
+  "@release_core_session_files_view_the_gateway_returned_an_unsafe_path_or_invalid": {
+    "description": "Shared session files view user interface: The gateway returned an unsafe path or invalid file response."
+  },
+  "release_core_session_files_view_workspace_access_requires_a_secure_gateway_connection": "Workspace access requires a secure gateway connection.",
+  "@release_core_session_files_view_workspace_access_requires_a_secure_gateway_connection": {
+    "description": "Shared session files view user interface: Workspace access requires a secure gateway connection."
+  },
+  "release_core_session_files_view_gateway_unavailable_refresh_to_check_the_current_state": "Gateway unavailable. Refresh to check the current state.",
+  "@release_core_session_files_view_gateway_unavailable_refresh_to_check_the_current_state": {
+    "description": "Shared session files view user interface: Gateway unavailable. Refresh to check the current state."
+  },
+  "release_core_session_files_view_gateway_operation_could_not_be_confirmed": "Gateway operation could not be confirmed.",
+  "@release_core_session_files_view_gateway_operation_could_not_be_confirmed": {
+    "description": "Shared session files view user interface: Gateway operation could not be confirmed."
+  },
+  "release_core_session_files_view_git_status_unavailable": "Git status unavailable.",
+  "@release_core_session_files_view_git_status_unavailable": {
+    "description": "Shared session files view user interface: Git status unavailable."
+  },
+  "release_core_session_files_view_change_this_chat_s_working_directory": "Change this chat’s working directory?",
+  "@release_core_session_files_view_change_this_chat_s_working_directory": {
+    "description": "Shared session files view user interface: Change this chat’s working directory?"
+  },
+  "release_core_session_files_view_absolute_gateway_directory": "Absolute gateway directory",
+  "@release_core_session_files_view_absolute_gateway_directory": {
+    "description": "Shared session files view user interface: Absolute gateway directory"
+  },
+  "release_core_session_files_view_change_directory": "Change directory",
+  "@release_core_session_files_view_change_directory": {
+    "description": "Shared session files view user interface: Change directory"
+  },
+  "release_core_session_files_view_replace_gateway_file": "Replace gateway file?",
+  "@release_core_session_files_view_replace_gateway_file": {
+    "description": "Shared session files view user interface: Replace gateway file?"
+  },
+  "release_core_session_files_view_only_if_the_file_still_matches_the_version": "{path}\n\nOnly if the file still matches the version you reviewed. A compatible host retains the displaced file for recovery.",
+  "@release_core_session_files_view_only_if_the_file_still_matches_the_version": {
+    "description": "Shared session files view user interface: {value1}\n\nOnly if the file still matches the version you reviewed. A compatible host retains the displaced file for recovery.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_session_files_view_save_changes": "Save changes",
+  "@release_core_session_files_view_save_changes": {
+    "description": "Shared session files view user interface: Save changes"
+  },
+  "release_core_session_files_view_saved_and_verified_on_the_gateway": "Saved and verified on the gateway.",
+  "@release_core_session_files_view_saved_and_verified_on_the_gateway": {
+    "description": "Shared session files view user interface: Saved and verified on the gateway."
+  },
+  "release_core_session_files_view_guarded_saving_is_unavailable_on_this_gateway_your": "Guarded saving is unavailable on this gateway. Your draft is still here.",
+  "@release_core_session_files_view_guarded_saving_is_unavailable_on_this_gateway_your": {
+    "description": "Shared session files view user interface: Guarded saving is unavailable on this gateway. Your draft is still here."
+  },
+  "release_core_session_files_view_save_was_not_confirmed_your_draft_is_still": "{reason} Save was not confirmed. Your draft is still here.",
+  "@release_core_session_files_view_save_was_not_confirmed_your_draft_is_still": {
+    "description": "Shared session files view user interface: {value1} Save was not confirmed. Your draft is still here.",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_session_files_view_review_current_gateway_version": "Review current gateway version",
+  "@release_core_session_files_view_review_current_gateway_version": {
+    "description": "Shared session files view user interface: Review current gateway version"
+  },
+  "release_core_session_files_view_discard_draft_and_reload": "Discard draft and reload",
+  "@release_core_session_files_view_discard_draft_and_reload": {
+    "description": "Shared session files view user interface: Discard draft and reload"
+  },
+  "release_core_session_files_view_keep_draft_against_this_version": "Keep draft against this version",
+  "@release_core_session_files_view_keep_draft_against_this_version": {
+    "description": "Shared session files view user interface: Keep draft against this version"
+  },
+  "release_core_session_files_view_discard_unsaved_edits": "Discard unsaved edits?",
+  "@release_core_session_files_view_discard_unsaved_edits": {
+    "description": "Shared session files view user interface: Discard unsaved edits?"
+  },
+  "release_core_session_files_view_keep_editing": "Keep editing",
+  "@release_core_session_files_view_keep_editing": {
+    "description": "Shared session files view user interface: Keep editing"
+  },
+  "release_core_session_files_view_discard_edits": "Discard edits",
+  "@release_core_session_files_view_discard_edits": {
+    "description": "Shared session files view user interface: Discard edits"
+  },
+  "release_core_session_files_view_remote_working_directory": "Remote working directory",
+  "@release_core_session_files_view_remote_working_directory": {
+    "description": "Shared session files view user interface: Remote working directory"
+  },
+  "release_core_session_files_view_change_working_directory": "Change working directory",
+  "@release_core_session_files_view_change_working_directory": {
+    "description": "Shared session files view user interface: Change working directory"
+  },
+  "release_core_session_files_view_show_ignored_files": "Show ignored files",
+  "@release_core_session_files_view_show_ignored_files": {
+    "description": "Shared session files view user interface: Show ignored files"
+  },
+  "release_core_session_files_view_gateway_does_not_report_ignored_status": "Gateway does not report ignored status.",
+  "@release_core_session_files_view_gateway_does_not_report_ignored_status": {
+    "description": "Shared session files view user interface: Gateway does not report ignored status."
+  },
+  "release_core_session_files_view_no_visible_entries": "No visible entries",
+  "@release_core_session_files_view_no_visible_entries": {
+    "description": "Shared session files view user interface: No visible entries"
+  },
+  "release_core_session_files_view_changed": "Changed",
+  "@release_core_session_files_view_changed": {
+    "description": "Shared session files view user interface: Changed"
+  },
+  "release_core_session_files_view_ignored": "Ignored",
+  "@release_core_session_files_view_ignored": {
+    "description": "Shared session files view user interface: Ignored"
+  },
+  "release_core_session_files_view_actions_for": "Actions for {name}",
+  "@release_core_session_files_view_actions_for": {
+    "description": "Shared session files view user interface: Actions for {value1}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_session_files_view_copy_relative_path": "Copy relative path",
+  "@release_core_session_files_view_copy_relative_path": {
+    "description": "Shared session files view user interface: Copy relative path"
+  },
+  "release_core_session_files_view_copy_gateway_path": "Copy gateway path",
+  "@release_core_session_files_view_copy_gateway_path": {
+    "description": "Shared session files view user interface: Copy gateway path"
+  },
+  "release_core_session_files_view_attach_folder_reference": "Attach folder reference",
+  "@release_core_session_files_view_attach_folder_reference": {
+    "description": "Shared session files view user interface: Attach folder reference"
+  },
+  "release_core_session_files_view_attach_file_reference": "Attach file reference",
+  "@release_core_session_files_view_attach_file_reference": {
+    "description": "Shared session files view user interface: Attach file reference"
+  },
+  "release_core_session_files_view_preview_truncated_editing_disabled": "Preview truncated — editing disabled.",
+  "@release_core_session_files_view_preview_truncated_editing_disabled": {
+    "description": "Shared session files view user interface: Preview truncated — editing disabled."
+  },
+  "release_core_session_files_view_select_lines": "Select lines",
+  "@release_core_session_files_view_select_lines": {
+    "description": "Shared session files view user interface: Select lines"
+  },
+  "release_core_session_files_view_review_gateway_version": "Review gateway version",
+  "@release_core_session_files_view_review_gateway_version": {
+    "description": "Shared session files view user interface: Review gateway version"
+  },
+  "release_core_session_files_view_attach_selected_lines": "Attach selected lines",
+  "@release_core_session_files_view_attach_selected_lines": {
+    "description": "Shared session files view user interface: Attach selected lines"
+  },
+  "release_core_session_files_view_binary_file_no_text_preview": "Binary file — no text preview.",
+  "@release_core_session_files_view_binary_file_no_text_preview": {
+    "description": "Shared session files view user interface: Binary file — no text preview."
+  },
+  "release_core_session_files_view_file_source": "File source",
+  "@release_core_session_files_view_file_source": {
+    "description": "Shared session files view user interface: File source"
+  },
+  "release_core_session_files_view_close_session_files": "Close session files",
+  "@release_core_session_files_view_close_session_files": {
+    "description": "Shared session files view user interface: Close session files"
+  },
+  "release_core_session_files_view_back_to_tree": "Back to tree",
+  "@release_core_session_files_view_back_to_tree": {
+    "description": "Shared session files view user interface: Back to tree"
+  },
+  "release_core_session_files_view_session_files": "Session files",
+  "@release_core_session_files_view_session_files": {
+    "description": "Shared session files view user interface: Session files"
+  },
+  "release_core_session_files_view_git_review": "Git review",
+  "@release_core_session_files_view_git_review": {
+    "description": "Shared session files view user interface: Git review"
+  },
+  "release_core_session_files_view_refresh_tree": "Refresh tree",
+  "@release_core_session_files_view_refresh_tree": {
+    "description": "Shared session files view user interface: Refresh tree"
+  },
+  "release_core_gateway_queue_screen_this_connection_changed_reopen_its_chat": "This connection changed. Reopen its chat.",
+  "@release_core_gateway_queue_screen_this_connection_changed_reopen_its_chat": {
+    "description": "Shared gateway queue screen user interface: This connection changed. Reopen its chat."
+  },
+  "release_core_gateway_queue_screen_disconnected_reconnect_the_chat_then_refresh": "Disconnected. Reconnect the chat, then refresh.",
+  "@release_core_gateway_queue_screen_disconnected_reconnect_the_chat_then_refresh": {
+    "description": "Shared gateway queue screen user interface: Disconnected. Reconnect the chat, then refresh."
+  },
+  "release_core_gateway_queue_screen_gateway_queue_unavailable": "Gateway queue unavailable: {reason}.",
+  "@release_core_gateway_queue_screen_gateway_queue_unavailable": {
+    "description": "Shared gateway queue screen user interface: Gateway queue unavailable: {value1}.",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_gateway_queue_screen_not_confirmed_nothing_was_resent": "Not confirmed ({reason}). Nothing was resent.",
+  "@release_core_gateway_queue_screen_not_confirmed_nothing_was_resent": {
+    "description": "Shared gateway queue screen user interface: Not confirmed ({value1}). Nothing was resent.",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_gateway_queue_screen_gateway_confirmed_admission": "Gateway confirmed admission.",
+  "@release_core_gateway_queue_screen_gateway_confirmed_admission": {
+    "description": "Shared gateway queue screen user interface: Gateway confirmed admission."
+  },
+  "release_core_gateway_queue_screen_edited_entry_admitted_at_the_end_of_the": "Edited entry admitted at the end of the queue.",
+  "@release_core_gateway_queue_screen_edited_entry_admitted_at_the_end_of_the": {
+    "description": "Shared gateway queue screen user interface: Edited entry admitted at the end of the queue."
+  },
+  "release_core_gateway_queue_screen_discard_unknown_outcome": "Discard unknown outcome?",
+  "@release_core_gateway_queue_screen_discard_unknown_outcome": {
+    "description": "Shared gateway queue screen user interface: Discard unknown outcome?"
+  },
+  "release_core_gateway_queue_screen_remove_this_entry": "Remove this entry?",
+  "@release_core_gateway_queue_screen_remove_this_entry": {
+    "description": "Shared gateway queue screen user interface: Remove this entry?"
+  },
+  "release_core_gateway_queue_screen_the_lost_turn_will_not_be_retried_waiting": "The lost turn will not be retried. Waiting turns may now run.",
+  "@release_core_gateway_queue_screen_the_lost_turn_will_not_be_retried_waiting": {
+    "description": "Shared gateway queue screen user interface: The lost turn will not be retried. Waiting turns may now run."
+  },
+  "release_core_gateway_queue_screen_if_the_gateway_has_just_started_this_entry": "If the gateway has just started this entry, removing it can stop that turn.",
+  "@release_core_gateway_queue_screen_if_the_gateway_has_just_started_this_entry": {
+    "description": "Shared gateway queue screen user interface: If the gateway has just started this entry, removing it can stop that turn."
+  },
+  "release_core_gateway_queue_screen_keep": "Keep",
+  "@release_core_gateway_queue_screen_keep": {
+    "description": "Shared gateway queue screen user interface: Keep"
+  },
+  "release_core_gateway_queue_screen_discard_and_resume": "Discard and resume",
+  "@release_core_gateway_queue_screen_discard_and_resume": {
+    "description": "Shared gateway queue screen user interface: Discard and resume"
+  },
+  "release_core_gateway_queue_screen_remove_entry": "Remove entry",
+  "@release_core_gateway_queue_screen_remove_entry": {
+    "description": "Shared gateway queue screen user interface: Remove entry"
+  },
+  "release_core_gateway_queue_screen_lost_admission_resolved_it_was_not_resent": "Lost admission resolved; it was not resent.",
+  "@release_core_gateway_queue_screen_lost_admission_resolved_it_was_not_resent": {
+    "description": "Shared gateway queue screen user interface: Lost admission resolved; it was not resent."
+  },
+  "release_core_gateway_queue_screen_gateway_acknowledged_removal": "Gateway acknowledged removal.",
+  "@release_core_gateway_queue_screen_gateway_acknowledged_removal": {
+    "description": "Shared gateway queue screen user interface: Gateway acknowledged removal."
+  },
+  "release_core_gateway_queue_screen_gateway_queue": "Gateway queue",
+  "@release_core_gateway_queue_screen_gateway_queue": {
+    "description": "Shared gateway queue screen user interface: Gateway queue"
+  },
+  "release_core_gateway_queue_screen_refresh_queue": "Refresh queue",
+  "@release_core_gateway_queue_screen_refresh_queue": {
+    "description": "Shared gateway queue screen user interface: Refresh queue"
+  },
+  "release_core_gateway_queue_screen_queue_paused_unknown_outcome": "Queue paused: unknown outcome",
+  "@release_core_gateway_queue_screen_queue_paused_unknown_outcome": {
+    "description": "Shared gateway queue screen user interface: Queue paused: unknown outcome"
+  },
+  "release_core_gateway_queue_screen_review_the_lost_admission_before_resuming_nothing_is": "Review the lost admission before resuming. Nothing is sent again.",
+  "@release_core_gateway_queue_screen_review_the_lost_admission_before_resuming_nothing_is": {
+    "description": "Shared gateway queue screen user interface: Review the lost admission before resuming. Nothing is sent again."
+  },
+  "release_core_gateway_queue_screen_no_pending_admissions": "No pending admissions",
+  "@release_core_gateway_queue_screen_no_pending_admissions": {
+    "description": "Shared gateway queue screen user interface: No pending admissions"
+  },
+  "release_core_gateway_queue_screen_discard": "Discard…",
+  "@release_core_gateway_queue_screen_discard": {
+    "description": "Shared gateway queue screen user interface: Discard…"
+  },
+  "release_core_gateway_queue_screen_gateway_acknowledged_the_steering_request": "Gateway acknowledged the steering request.",
+  "@release_core_gateway_queue_screen_gateway_acknowledged_the_steering_request": {
+    "description": "Shared gateway queue screen user interface: Gateway acknowledged the steering request."
+  },
+  "release_core_gateway_queue_screen_steer_running_turn": "Steer running turn",
+  "@release_core_gateway_queue_screen_steer_running_turn": {
+    "description": "Shared gateway queue screen user interface: Steer running turn"
+  },
+  "release_core_gateway_queue_screen_remove": "Remove…",
+  "@release_core_gateway_queue_screen_remove": {
+    "description": "Shared gateway queue screen user interface: Remove…"
+  },
+  "release_core_gateway_queue_screen_next_prompt": "Next prompt",
+  "@release_core_gateway_queue_screen_next_prompt": {
+    "description": "Shared gateway queue screen user interface: Next prompt"
+  },
+  "release_core_gateway_queue_screen_edit_queued_prompt": "Edit queued prompt",
+  "@release_core_gateway_queue_screen_edit_queued_prompt": {
+    "description": "Shared gateway queue screen user interface: Edit queued prompt"
+  },
+  "release_core_gateway_queue_screen_submit_to_gateway_queue": "Submit to gateway queue",
+  "@release_core_gateway_queue_screen_submit_to_gateway_queue": {
+    "description": "Shared gateway queue screen user interface: Submit to gateway queue"
+  },
+  "release_core_gateway_queue_screen_save_at_queue_end": "Save at queue end",
+  "@release_core_gateway_queue_screen_save_at_queue_end": {
+    "description": "Shared gateway queue screen user interface: Save at queue end"
+  },
+  "release_core_gateway_queue_screen_cancel_edit": "Cancel edit",
+  "@release_core_gateway_queue_screen_cancel_edit": {
+    "description": "Shared gateway queue screen user interface: Cancel edit"
+  },
+  "release_core_git_review_pane_the_git_operation_did_not_complete": "The Git operation did not complete.",
+  "@release_core_git_review_pane_the_git_operation_did_not_complete": {
+    "description": "Shared git review pane user interface: The Git operation did not complete."
+  },
+  "release_core_git_review_pane_close_git_review": "Close Git review",
+  "@release_core_git_review_pane_close_git_review": {
+    "description": "Shared git review pane user interface: Close Git review"
+  },
+  "release_core_git_review_pane_pin_lane": "Pin lane",
+  "@release_core_git_review_pane_pin_lane": {
+    "description": "Shared git review pane user interface: Pin lane"
+  },
+  "release_core_git_review_pane_refresh_git_review": "Refresh Git review",
+  "@release_core_git_review_pane_refresh_git_review": {
+    "description": "Shared git review pane user interface: Refresh Git review"
+  },
+  "release_core_git_review_pane_uncommitted": "Uncommitted",
+  "@release_core_git_review_pane_uncommitted": {
+    "description": "Shared git review pane user interface: Uncommitted"
+  },
+  "release_core_git_review_pane_last_turn": "Last turn",
+  "@release_core_git_review_pane_last_turn": {
+    "description": "Shared git review pane user interface: Last turn"
+  },
+  "release_core_git_review_pane_branch_and_last_turn_views_are_read_only": "Branch and last-turn views are read-only.",
+  "@release_core_git_review_pane_branch_and_last_turn_views_are_read_only": {
+    "description": "Shared git review pane user interface: Branch and last-turn views are read-only."
+  },
+  "release_core_git_review_pane_mark_head_as_the_turn_baseline": "Mark HEAD as the turn baseline",
+  "@release_core_git_review_pane_mark_head_as_the_turn_baseline": {
+    "description": "Shared git review pane user interface: Mark HEAD as the turn baseline"
+  },
+  "release_core_git_review_pane_stage_all": "Stage all",
+  "@release_core_git_review_pane_stage_all": {
+    "description": "Shared git review pane user interface: Stage all"
+  },
+  "release_core_git_review_pane_discard_every_uncommitted_change": "Discard every uncommitted change?",
+  "@release_core_git_review_pane_discard_every_uncommitted_change": {
+    "description": "Shared git review pane user interface: Discard every uncommitted change?"
+  },
+  "release_core_git_review_pane_tracked_files_return_to_head_and_untracked_files": "Tracked files return to HEAD and untracked files in this session directory are removed.",
+  "@release_core_git_review_pane_tracked_files_return_to_head_and_untracked_files": {
+    "description": "Shared git review pane user interface: Tracked files return to HEAD and untracked files in this session directory are removed."
+  },
+  "release_core_git_review_pane_discard": "Discard",
+  "@release_core_git_review_pane_discard": {
+    "description": "Shared git review pane user interface: Discard"
+  },
+  "release_core_git_review_pane_discard_all": "Discard all",
+  "@release_core_git_review_pane_discard_all": {
+    "description": "Shared git review pane user interface: Discard all"
+  },
+  "release_core_git_review_pane_unstage": "Unstage",
+  "@release_core_git_review_pane_unstage": {
+    "description": "Shared git review pane user interface: Unstage"
+  },
+  "release_core_git_review_pane_stage": "Stage",
+  "@release_core_git_review_pane_stage": {
+    "description": "Shared git review pane user interface: Stage"
+  },
+  "release_core_git_review_pane_discard_file": "Discard file",
+  "@release_core_git_review_pane_discard_file": {
+    "description": "Shared git review pane user interface: Discard file"
+  },
+  "release_core_git_review_pane_discard_2": "Discard {path}?",
+  "@release_core_git_review_pane_discard_2": {
+    "description": "Shared git review pane user interface: Discard {value1}?",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_git_review_pane_this_restores_the_committed_copy_or_removes_the": "This restores the committed copy or removes the untracked file.",
+  "@release_core_git_review_pane_this_restores_the_committed_copy_or_removes_the": {
+    "description": "Shared git review pane user interface: This restores the committed copy or removes the untracked file."
+  },
+  "release_core_git_review_pane_commit_message": "Commit message",
+  "@release_core_git_review_pane_commit_message": {
+    "description": "Shared git review pane user interface: Commit message"
+  },
+  "release_core_git_review_pane_nothing_in_the_diff_to_summarise": "Nothing in the diff to summarise.",
+  "@release_core_git_review_pane_nothing_in_the_diff_to_summarise": {
+    "description": "Shared git review pane user interface: Nothing in the diff to summarise."
+  },
+  "release_core_git_review_pane_generate_message": "Generate message",
+  "@release_core_git_review_pane_generate_message": {
+    "description": "Shared git review pane user interface: Generate message"
+  },
+  "release_core_git_review_pane_commit": "Commit",
+  "@release_core_git_review_pane_commit": {
+    "description": "Shared git review pane user interface: Commit"
+  },
+  "release_core_git_review_pane_commit_and_push": "Commit and push",
+  "@release_core_git_review_pane_commit_and_push": {
+    "description": "Shared git review pane user interface: Commit and push"
+  },
+  "release_core_git_review_pane_push": "Push",
+  "@release_core_git_review_pane_push": {
+    "description": "Shared git review pane user interface: Push"
+  },
+  "release_core_git_review_pane_create_pull_request": "Create pull request",
+  "@release_core_git_review_pane_create_pull_request": {
+    "description": "Shared git review pane user interface: Create pull request"
+  },
+  "release_core_git_review_pane_pull_request_ready": "Pull request ready",
+  "@release_core_git_review_pane_pull_request_ready": {
+    "description": "Shared git review pane user interface: Pull request ready"
+  },
+  "release_core_git_review_pane_ask_hermes_to_ship": "Ask Hermes to ship",
+  "@release_core_git_review_pane_ask_hermes_to_ship": {
+    "description": "Shared git review pane user interface: Ask Hermes to ship"
+  },
+  "release_core_git_review_pane_gh_is_authenticated_on_this_gateway": "gh is authenticated on this gateway.",
+  "@release_core_git_review_pane_gh_is_authenticated_on_this_gateway": {
+    "description": "Shared git review pane user interface: gh is authenticated on this gateway."
+  },
+  "release_core_git_review_pane_install_the_github_cli_gh_and_sign_in": "Install the GitHub CLI (gh) and sign in to open PRs",
+  "@release_core_git_review_pane_install_the_github_cli_gh_and_sign_in": {
+    "description": "Shared git review pane user interface: Install the GitHub CLI (gh) and sign in to open PRs"
+  },
+  "release_core_git_review_pane_worktrees": "Worktrees",
+  "@release_core_git_review_pane_worktrees": {
+    "description": "Shared git review pane user interface: Worktrees"
+  },
+  "release_core_git_review_pane_main": "Main",
+  "@release_core_git_review_pane_main": {
+    "description": "Shared git review pane user interface: Main"
+  },
+  "release_core_git_review_pane_follow": "Follow {branch}?",
+  "@release_core_git_review_pane_follow": {
+    "description": "Shared git review pane user interface: Follow {value1}?",
+    "placeholders": {
+      "branch": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_git_review_pane_the_session_working_directory_becomes_this_worktree_unless": "The session working directory becomes this worktree unless the lane is pinned.",
+  "@release_core_git_review_pane_the_session_working_directory_becomes_this_worktree_unless": {
+    "description": "Shared git review pane user interface: The session working directory becomes this worktree unless the lane is pinned."
+  },
+  "release_core_git_review_pane_follow_2": "Follow",
+  "@release_core_git_review_pane_follow_2": {
+    "description": "Shared git review pane user interface: Follow"
+  },
+  "release_core_git_review_pane_remove": "Remove {branch}?",
+  "@release_core_git_review_pane_remove": {
+    "description": "Shared git review pane user interface: Remove {value1}?",
+    "placeholders": {
+      "branch": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_git_review_pane_the_worktree_directory_is_removed": "The worktree directory is removed.",
+  "@release_core_git_review_pane_the_worktree_directory_is_removed": {
+    "description": "Shared git review pane user interface: The worktree directory is removed."
+  },
+  "release_core_git_review_pane_remove_2": "Remove",
+  "@release_core_git_review_pane_remove_2": {
+    "description": "Shared git review pane user interface: Remove"
+  },
+  "release_core_git_review_pane_new_worktree_name": "New worktree name",
+  "@release_core_git_review_pane_new_worktree_name": {
+    "description": "Shared git review pane user interface: New worktree name"
+  },
+  "release_core_git_review_pane_new_branch": "New branch",
+  "@release_core_git_review_pane_new_branch": {
+    "description": "Shared git review pane user interface: New branch"
+  },
+  "release_core_git_review_pane_base_branch": "Base branch",
+  "@release_core_git_review_pane_base_branch": {
+    "description": "Shared git review pane user interface: Base branch"
+  },
+  "release_core_git_review_pane_create_worktree": "Create worktree",
+  "@release_core_git_review_pane_create_worktree": {
+    "description": "Shared git review pane user interface: Create worktree"
+  },
+  "release_core_git_review_pane_existing_branch": "Existing branch",
+  "@release_core_git_review_pane_existing_branch": {
+    "description": "Shared git review pane user interface: Existing branch"
+  },
+  "release_core_git_review_pane_convert_branch_to_worktree": "Convert branch to worktree",
+  "@release_core_git_review_pane_convert_branch_to_worktree": {
+    "description": "Shared git review pane user interface: Convert branch to worktree"
+  },
+  "release_core_git_review_pane_switch_branch": "Switch branch",
+  "@release_core_git_review_pane_switch_branch": {
+    "description": "Shared git review pane user interface: Switch branch"
+  },
+  "release_core_git_review_pane_this_gateway_does_not_support_that_git_operation": "This gateway does not support that Git operation.",
+  "@release_core_git_review_pane_this_gateway_does_not_support_that_git_operation": {
+    "description": "Shared git review pane user interface: This gateway does not support that Git operation."
+  },
+  "release_core_git_review_pane_git_needs_the_session_directory_on_the_local": "Git needs the session directory on the local terminal backend.",
+  "@release_core_git_review_pane_git_needs_the_session_directory_on_the_local": {
+    "description": "Shared git review pane user interface: Git needs the session directory on the local terminal backend."
+  },
+  "release_core_git_review_pane_the_gateway_refused_the_git_operation": "The gateway refused the Git operation.",
+  "@release_core_git_review_pane_the_gateway_refused_the_git_operation": {
+    "description": "Shared git review pane user interface: The gateway refused the Git operation."
+  },
+  "release_core_git_review_pane_the_session_changed_refresh_and_try_again": "The session changed. Refresh and try again.",
+  "@release_core_git_review_pane_the_session_changed_refresh_and_try_again": {
+    "description": "Shared git review pane user interface: The session changed. Refresh and try again."
+  },
+  "release_core_git_review_pane_this_review_is_no_longer_the_selected_session": "This review is no longer the selected session.",
+  "@release_core_git_review_pane_this_review_is_no_longer_the_selected_session": {
+    "description": "Shared git review pane user interface: This review is no longer the selected session."
+  },
+  "release_core_git_review_pane_the_gateway_returned_an_unexpected_git_result": "The gateway returned an unexpected Git result.",
+  "@release_core_git_review_pane_the_gateway_returned_an_unexpected_git_result": {
+    "description": "Shared git review pane user interface: The gateway returned an unexpected Git result."
+  },
+  "release_core_git_review_pane_git_review_requires_the_gateway_transport": "Git review requires the gateway transport.",
+  "@release_core_git_review_pane_git_review_requires_the_gateway_transport": {
+    "description": "Shared git review pane user interface: Git review requires the gateway transport."
+  },
+  "release_core_client_held_queue_bar_resume": "Resume",
+  "@release_core_client_held_queue_bar_resume": {
+    "description": "Shared client held queue bar user interface: Resume"
+  },
+  "release_core_client_held_queue_bar_send_queued_prompt": "Send queued prompt",
+  "@release_core_client_held_queue_bar_send_queued_prompt": {
+    "description": "Shared client held queue bar user interface: Send queued prompt"
+  },
+  "release_core_client_held_queue_bar_edit_unsent_prompt": "Edit unsent prompt",
+  "@release_core_client_held_queue_bar_edit_unsent_prompt": {
+    "description": "Shared client held queue bar user interface: Edit unsent prompt"
+  },
+  "release_core_client_held_queue_bar_remove_unsent_prompt": "Remove unsent prompt",
+  "@release_core_client_held_queue_bar_remove_unsent_prompt": {
+    "description": "Shared client held queue bar user interface: Remove unsent prompt"
+  },
+  "release_core_workspace_discovery_view_repository_discovery": "Repository discovery",
+  "@release_core_workspace_discovery_view_repository_discovery": {
+    "description": "Shared workspace discovery view user interface: Repository discovery"
+  },
+  "release_core_workspace_discovery_view_refresh_results": "Refresh results",
+  "@release_core_workspace_discovery_view_refresh_results": {
+    "description": "Shared workspace discovery view user interface: Refresh results"
+  },
+  "release_core_workspace_discovery_view_hide": "Hide {path}",
+  "@release_core_workspace_discovery_view_hide": {
+    "description": "Shared workspace discovery view user interface: Hide {value1}",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_workspace_discovery_view_invalid_path_or_discovery_data_use_absolute_server": "Invalid path or discovery data. Use absolute server paths without . or .. components.",
+  "@release_core_workspace_discovery_view_invalid_path_or_discovery_data_use_absolute_server": {
+    "description": "Shared workspace discovery view user interface: Invalid path or discovery data. Use absolute server paths without . or .. components."
+  },
+  "release_core_workspace_discovery_view_this_gateway_does_not_support_repository_discovery": "This gateway does not support repository discovery.",
+  "@release_core_workspace_discovery_view_this_gateway_does_not_support_repository_discovery": {
+    "description": "Shared workspace discovery view user interface: This gateway does not support repository discovery."
+  },
+  "release_core_workspace_discovery_view_the_gateway_denied_access_to_repository_discovery": "The gateway denied access to repository discovery.",
+  "@release_core_workspace_discovery_view_the_gateway_denied_access_to_repository_discovery": {
+    "description": "Shared workspace discovery view user interface: The gateway denied access to repository discovery."
+  },
+  "release_core_workspace_discovery_view_the_connection_changed_reopen_discovery_on_the_current": "The connection changed. Reopen discovery on the current gateway.",
+  "@release_core_workspace_discovery_view_the_connection_changed_reopen_discovery_on_the_current": {
+    "description": "Shared workspace discovery view user interface: The connection changed. Reopen discovery on the current gateway."
+  },
+  "release_core_workspace_discovery_view_the_displayed_settings_have_changed_refresh_before_trying": "The displayed settings have changed. Refresh before trying again.",
+  "@release_core_workspace_discovery_view_the_displayed_settings_have_changed_refresh_before_trying": {
+    "description": "Shared workspace discovery view user interface: The displayed settings have changed. Refresh before trying again."
+  },
+  "release_core_workspace_discovery_view_could_not_load_or_verify_discovery_settings_refresh": "Could not load or verify discovery settings. Refresh to try again.",
+  "@release_core_workspace_discovery_view_could_not_load_or_verify_discovery_settings_refresh": {
+    "description": "Shared workspace discovery view user interface: Could not load or verify discovery settings. Refresh to try again."
+  },
+  "release_core_workspace_discovery_view_repositories_shown_of": "Repositories shown: {visible} of {total}",
+  "@release_core_workspace_discovery_view_repositories_shown_of": {
+    "description": "Shared workspace discovery view user interface: Repositories shown: {count1} of {count2}",
+    "placeholders": {
+      "visible": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "release_core_workspace_discovery_view_the_gateway_returned_no_repositories": "The gateway returned no repositories.",
+  "@release_core_workspace_discovery_view_the_gateway_returned_no_repositories": {
+    "description": "Shared workspace discovery view user interface: The gateway returned no repositories."
+  },
+  "release_core_workspace_discovery_view_no_repositories_match_your_device_filters": "No repositories match your device filters.",
+  "@release_core_workspace_discovery_view_no_repositories_match_your_device_filters": {
+    "description": "Shared workspace discovery view user interface: No repositories match your device filters."
+  },
+  "release_core_workspace_discovery_view_gateway_scan_policy": "Gateway scan policy",
+  "@release_core_workspace_discovery_view_gateway_scan_policy": {
+    "description": "Shared workspace discovery view user interface: Gateway scan policy"
+  },
+  "release_core_workspace_discovery_view_this_gateway_did_not_report_a_scan_policy": "This gateway did not report a scan policy.",
+  "@release_core_workspace_discovery_view_this_gateway_did_not_report_a_scan_policy": {
+    "description": "Shared workspace discovery view user interface: This gateway did not report a scan policy."
+  },
+  "release_core_workspace_discovery_view_to_scan_folders_configure_repository_scanning_in_the": "To scan folders, configure repository scanning in the gateway profile’s Desktop settings.",
+  "@release_core_workspace_discovery_view_to_scan_folders_configure_repository_scanning_in_the": {
+    "description": "Shared workspace discovery view user interface: To scan folders, configure repository scanning in the gateway profile’s Desktop settings."
+  },
+  "release_core_workspace_discovery_view_results_can_include_cached_repositories_and_repositories_with": "Results can include cached repositories and repositories with sessions. A scan does not guarantee that every folder was reached.",
+  "@release_core_workspace_discovery_view_results_can_include_cached_repositories_and_repositories_with": {
+    "description": "Shared workspace discovery view user interface: Results can include cached repositories and repositories with sessions. A scan does not guarantee that every folder was reached."
+  },
+  "release_core_workspace_discovery_view_scan_gateway_roots": "Scan gateway roots",
+  "@release_core_workspace_discovery_view_scan_gateway_roots": {
+    "description": "Shared workspace discovery view user interface: Scan gateway roots"
+  },
+  "release_core_workspace_discovery_view_filter_results_on_this_device": "Filter results on this device",
+  "@release_core_workspace_discovery_view_filter_results_on_this_device": {
+    "description": "Shared workspace discovery view user interface: Filter results on this device"
+  },
+  "release_core_workspace_discovery_view_only_this_discovery_list_changes_not_the_gateway": "Only this discovery list changes, not the gateway scan.",
+  "@release_core_workspace_discovery_view_only_this_discovery_list_changes_not_the_gateway": {
+    "description": "Shared workspace discovery view user interface: Only this discovery list changes, not the gateway scan."
+  },
+  "release_core_workspace_discovery_view_include_subtrees_empty_all": "Include subtrees (empty = all)",
+  "@release_core_workspace_discovery_view_include_subtrees_empty_all": {
+    "description": "Shared workspace discovery view user interface: Include subtrees (empty = all)"
+  },
+  "release_core_workspace_discovery_view_exclude_subtrees": "Exclude subtrees",
+  "@release_core_workspace_discovery_view_exclude_subtrees": {
+    "description": "Shared workspace discovery view user interface: Exclude subtrees"
+  },
+  "release_core_workspace_discovery_view_apply_filters": "Apply filters",
+  "@release_core_workspace_discovery_view_apply_filters": {
+    "description": "Shared workspace discovery view user interface: Apply filters"
+  },
+  "release_core_workspace_discovery_view_hidden_repositories": "Hidden repositories ({count})",
+  "@release_core_workspace_discovery_view_hidden_repositories": {
+    "description": "Shared workspace discovery view user interface: Hidden repositories ({count1})",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "release_core_workspace_discovery_view_undo_hide": "Undo hide",
+  "@release_core_workspace_discovery_view_undo_hide": {
+    "description": "Shared workspace discovery view user interface: Undo hide"
+  },
+  "release_core_workspace_discovery_view_one_absolute_server_path_per_line": "One absolute server path per line",
+  "@release_core_workspace_discovery_view_one_absolute_server_path_per_line": {
+    "description": "Shared workspace discovery view user interface: One absolute server path per line"
+  },
+  "release_core_project_settings_view_project_settings": "Project settings",
+  "@release_core_project_settings_view_project_settings": {
+    "description": "Shared project settings view user interface: Project settings"
+  },
+  "release_core_project_settings_view_the_gateway_did_not_confirm_the_selected_project": "The gateway did not confirm the selected project or change. Review the settings before trying again.",
+  "@release_core_project_settings_view_the_gateway_did_not_confirm_the_selected_project": {
+    "description": "Shared project settings view user interface: The gateway did not confirm the selected project or change. Review the settings before trying again."
+  },
+  "release_core_project_settings_view_could_not_verify_these_settings_use_one_absolute": "Could not verify these settings. Use one absolute server folder path per line, without . or .. components.",
+  "@release_core_project_settings_view_could_not_verify_these_settings_use_one_absolute": {
+    "description": "Shared project settings view user interface: Could not verify these settings. Use one absolute server folder path per line, without . or .. components."
+  },
+  "release_core_project_settings_view_set_active": "Set active",
+  "@release_core_project_settings_view_set_active": {
+    "description": "Shared project settings view user interface: Set active"
+  },
+  "release_core_project_settings_view_icon": "Icon",
+  "@release_core_project_settings_view_icon": {
+    "description": "Shared project settings view user interface: Icon"
+  },
+  "release_core_project_settings_view_folder": "Folder",
+  "@release_core_project_settings_view_folder": {
+    "description": "Shared project settings view user interface: Folder"
+  },
+  "release_core_project_settings_view_repository": "Repository",
+  "@release_core_project_settings_view_repository": {
+    "description": "Shared project settings view user interface: Repository"
+  },
+  "release_core_project_settings_view_rocket": "Rocket",
+  "@release_core_project_settings_view_rocket": {
+    "description": "Shared project settings view user interface: Rocket"
+  },
+  "release_core_project_settings_view_star": "Star",
+  "@release_core_project_settings_view_star": {
+    "description": "Shared project settings view user interface: Star"
+  },
+  "release_core_project_settings_view_book": "Book",
+  "@release_core_project_settings_view_book": {
+    "description": "Shared project settings view user interface: Book"
+  },
+  "release_core_project_settings_view_terminal": "Terminal",
+  "@release_core_project_settings_view_terminal": {
+    "description": "Shared project settings view user interface: Terminal"
+  },
+  "release_core_project_settings_view_colour": "Colour",
+  "@release_core_project_settings_view_colour": {
+    "description": "Shared project settings view user interface: Colour"
+  },
+  "release_core_project_settings_view_primary_folder": "Primary folder",
+  "@release_core_project_settings_view_primary_folder": {
+    "description": "Shared project settings view user interface: Primary folder"
+  },
+  "release_core_project_settings_view_server_folder_paths": "Server folder paths",
+  "@release_core_project_settings_view_server_folder_paths": {
+    "description": "Shared project settings view user interface: Server folder paths"
+  },
+  "release_core_project_settings_view_one_absolute_path_per_line_existing_folders_are": "One absolute path per line. Existing folders are kept.",
+  "@release_core_project_settings_view_one_absolute_path_per_line_existing_folders_are": {
+    "description": "Shared project settings view user interface: One absolute path per line. Existing folders are kept."
+  },
+  "release_core_project_settings_view_add_folders": "Add folders",
+  "@release_core_project_settings_view_add_folders": {
+    "description": "Shared project settings view user interface: Add folders"
+  },
+  "release_core_project_settings_view_choose": "Choose {label}",
+  "@release_core_project_settings_view_choose": {
+    "description": "Shared project settings view user interface: Choose {value1}",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_prepared_image_recovery_wait_for_an_empty_draft_before_restoring": "Wait for an empty draft before restoring.",
+  "@release_core_prepared_image_recovery_wait_for_an_empty_draft_before_restoring": {
+    "description": "Shared prepared image recovery user interface: Wait for an empty draft before restoring."
+  },
+  "release_core_prepared_image_recovery_no_unacknowledged_image_drafts_in_this_chat": "No unacknowledged image drafts in this chat.",
+  "@release_core_prepared_image_recovery_no_unacknowledged_image_drafts_in_this_chat": {
+    "description": "Shared prepared image recovery user interface: No unacknowledged image drafts in this chat."
+  },
+  "release_core_prepared_image_recovery_unacknowledged_image_drafts": "Unacknowledged image drafts",
+  "@release_core_prepared_image_recovery_unacknowledged_image_drafts": {
+    "description": "Shared prepared image recovery user interface: Unacknowledged image drafts"
+  },
+  "release_core_prepared_image_recovery_the_gateway_may_already_have_received_these_restore": "The gateway may already have received these. Restore to review; nothing is sent.",
+  "@release_core_prepared_image_recovery_the_gateway_may_already_have_received_these_restore": {
+    "description": "Shared prepared image recovery user interface: The gateway may already have received these. Restore to review; nothing is sent."
+  },
+  "release_core_prepared_image_recovery_image_draft": "Image draft",
+  "@release_core_prepared_image_recovery_image_draft": {
+    "description": "Shared prepared image recovery user interface: Image draft"
+  },
+  "release_core_prepared_image_recovery_discard_local_copy": "Discard local copy",
+  "@release_core_prepared_image_recovery_discard_local_copy": {
+    "description": "Shared prepared image recovery user interface: Discard local copy"
+  },
+  "release_core_prepared_image_recovery_discard_this_local_image_draft": "Discard this local image draft?",
+  "@release_core_prepared_image_recovery_discard_this_local_image_draft": {
+    "description": "Shared prepared image recovery user interface: Discard this local image draft?"
+  },
+  "release_core_prepared_image_recovery_image_draft_recovery_is_unavailable": "Image draft recovery is unavailable.",
+  "@release_core_prepared_image_recovery_image_draft_recovery_is_unavailable": {
+    "description": "Shared prepared image recovery user interface: Image draft recovery is unavailable."
+  },
+  "release_core_prepared_image_recovery_recover_image_draft": "Recover image draft…",
+  "@release_core_prepared_image_recovery_recover_image_draft": {
+    "description": "Shared prepared image recovery user interface: Recover image draft…"
+  },
+  "release_core_session_search_mode_menu_could_not_save_search_mode": "Could not save search mode.",
+  "@release_core_session_search_mode_menu_could_not_save_search_mode": {
+    "description": "Shared session search mode menu user interface: Could not save search mode."
+  },
+  "release_core_projects_pane_discover_repositories": "Discover repositories",
+  "@release_core_projects_pane_discover_repositories": {
+    "description": "Shared projects pane user interface: Discover repositories"
+  },
+  "release_core_projects_pane_project_created_but_the_gateway_did_not_confirm": "Project created, but the gateway did not confirm its idea.",
+  "@release_core_projects_pane_project_created_but_the_gateway_did_not_confirm": {
+    "description": "Shared projects pane user interface: Project created, but the gateway did not confirm its idea."
+  },
+  "release_core_projects_pane_project_idea_optional": "Project idea (optional)",
+  "@release_core_projects_pane_project_idea_optional": {
+    "description": "Shared projects pane user interface: Project idea (optional)"
+  },
+  "release_core_projects_pane_saved_in_the_project_description_not_a_file": "Saved in the project description, not a file.",
+  "@release_core_projects_pane_saved_in_the_project_description_not_a_file": {
+    "description": "Shared projects pane user interface: Saved in the project description, not a file."
+  },
+  "release_core_project_detail_screen_new_chat_in_this_lane": "New chat in this lane",
+  "@release_core_project_detail_screen_new_chat_in_this_lane": {
+    "description": "Shared project detail screen user interface: New chat in this lane"
+  },
+  "release_core_project_detail_screen_review_git": "Review Git",
+  "@release_core_project_detail_screen_review_git": {
+    "description": "Shared project detail screen user interface: Review Git"
+  },
+  "release_core_more_pane_gateway_fleet": "Gateway fleet",
+  "@release_core_more_pane_gateway_fleet": {
+    "description": "Shared more pane user interface: Gateway fleet"
+  },
+  "release_core_more_pane_connected_sessions_hermes_cloud_and_desktop_webapp": "Connected sessions, Hermes Cloud and Desktop Webapp",
+  "@release_core_more_pane_connected_sessions_hermes_cloud_and_desktop_webapp": {
+    "description": "Shared more pane user interface: Connected sessions, Hermes Cloud and Desktop Webapp"
+  },
+  "release_core_more_pane_use_dashboard_sign_in_for_a_named_profile": "Use dashboard sign-in for a named profile. This legacy API cannot confirm which profile owns chat history.",
+  "@release_core_more_pane_use_dashboard_sign_in_for_a_named_profile": {
+    "description": "Shared more pane user interface: Use dashboard sign-in for a named profile. This legacy API cannot confirm which profile owns chat history."
+  },
+  "release_core_more_pane_capabilities": "Capabilities",
+  "@release_core_more_pane_capabilities": {
+    "description": "Shared more pane user interface: Capabilities"
+  },
+  "release_core_more_pane_install_and_govern_skills_plugins_connectors_and_tool": "Install and govern skills, plugins, connectors and tool backends",
+  "@release_core_more_pane_install_and_govern_skills_plugins_connectors_and_tool": {
+    "description": "Shared more pane user interface: Install and govern skills, plugins, connectors and tool backends"
+  },
+  "release_core_more_pane_browser_vault": "Browser vault",
+  "@release_core_more_pane_browser_vault": {
+    "description": "Shared more pane user interface: Browser vault"
+  },
+  "release_core_more_pane_site_logins_addresses_cards_and_credential_sources": "Site logins, addresses, cards and credential sources",
+  "@release_core_more_pane_site_logins_addresses_cards_and_credential_sources": {
+    "description": "Shared more pane user interface: Site logins, addresses, cards and credential sources"
+  },
+  "release_core_more_pane_agent_policy": "Agent policy",
+  "@release_core_more_pane_agent_policy": {
+    "description": "Shared more pane user interface: Agent policy"
+  },
+  "release_core_more_pane_approvals_checkpoints_browser_access_and_shared_metrics": "Approvals, checkpoints, browser access and shared metrics",
+  "@release_core_more_pane_approvals_checkpoints_browser_access_and_shared_metrics": {
+    "description": "Shared more pane user interface: Approvals, checkpoints, browser access and shared metrics"
+  },
+  "release_core_more_pane_remote_logs_health_maintenance_and_update": "Remote logs, health, maintenance and update",
+  "@release_core_more_pane_remote_logs_health_maintenance_and_update": {
+    "description": "Shared more pane user interface: Remote logs, health, maintenance and update"
+  },
+  "release_core_more_pane_schedules": "Schedules",
+  "@release_core_more_pane_schedules": {
+    "description": "Shared more pane user interface: Schedules"
+  },
+  "release_core_more_pane_all_profiles_blueprints_catch_up_and_stop": "All profiles, blueprints, catch-up and stop",
+  "@release_core_more_pane_all_profiles_blueprints_catch_up_and_stop": {
+    "description": "Shared more pane user interface: All profiles, blueprints, catch-up and stop"
+  },
+  "release_core_more_pane_memory_graph": "Memory graph",
+  "@release_core_more_pane_memory_graph": {
+    "description": "Shared more pane user interface: Memory graph"
+  },
+  "release_core_more_pane_timeline_edits_and_memory_providers": "Timeline, edits and memory providers",
+  "@release_core_more_pane_timeline_edits_and_memory_providers": {
+    "description": "Shared more pane user interface: Timeline, edits and memory providers"
+  },
+  "release_core_more_pane_providers_and_routes": "Providers and routes",
+  "@release_core_more_pane_providers_and_routes": {
+    "description": "Shared more pane user interface: Providers and routes"
+  },
+  "release_core_more_pane_keys_endpoints_delegation_and_mixtures": "Keys, endpoints, delegation and mixtures",
+  "@release_core_more_pane_keys_endpoints_delegation_and_mixtures": {
+    "description": "Shared more pane user interface: Keys, endpoints, delegation and mixtures"
+  },
+  "release_core_more_pane_credits_and_plans": "Credits and plans",
+  "@release_core_more_pane_credits_and_plans": {
+    "description": "Shared more pane user interface: Credits and plans"
+  },
+  "release_core_more_pane_consented_nous_billing_when_the_account_allows_it": "Consented Nous billing when the account allows it",
+  "@release_core_more_pane_consented_nous_billing_when_the_account_allows_it": {
+    "description": "Shared more pane user interface: Consented Nous billing when the account allows it"
+  },
+  "release_core_fleet_screen_this_gateway_does_not_offer_this_service": "This gateway does not offer this service.",
+  "@release_core_fleet_screen_this_gateway_does_not_offer_this_service": {
+    "description": "Shared fleet screen user interface: This gateway does not offer this service."
+  },
+  "release_core_fleet_screen_sign_in_or_permission_required_on_this_gateway": "Sign-in or permission required on this gateway.",
+  "@release_core_fleet_screen_sign_in_or_permission_required_on_this_gateway": {
+    "description": "Shared fleet screen user interface: Sign-in or permission required on this gateway."
+  },
+  "release_core_fleet_screen_a_secure_gateway_address_is_required": "A secure gateway address is required.",
+  "@release_core_fleet_screen_a_secure_gateway_address_is_required": {
+    "description": "Shared fleet screen user interface: A secure gateway address is required."
+  },
+  "release_core_fleet_screen_the_owner_changed_refresh_before_continuing": "The owner changed. Refresh before continuing.",
+  "@release_core_fleet_screen_the_owner_changed_refresh_before_continuing": {
+    "description": "Shared fleet screen user interface: The owner changed. Refresh before continuing."
+  },
+  "release_core_fleet_screen_could_not_verify_the_operation_check_the_gateway": "Could not verify the operation. Check the gateway and refresh.",
+  "@release_core_fleet_screen_could_not_verify_the_operation_check_the_gateway": {
+    "description": "Shared fleet screen user interface: Could not verify the operation. Check the gateway and refresh."
+  },
+  "release_core_fleet_screen_verified_ssh": "Verified SSH",
+  "@release_core_fleet_screen_verified_ssh": {
+    "description": "Shared fleet screen user interface: Verified SSH"
+  },
+  "release_core_fleet_screen_confirm_a_host_key_inspect_a_remote_service": "Confirm a host key, inspect a remote service or open its shell",
+  "@release_core_fleet_screen_confirm_a_host_key_inspect_a_remote_service": {
+    "description": "Shared fleet screen user interface: Confirm a host key, inspect a remote service or open its shell"
+  },
+  "release_core_fleet_screen_cloud_and_desktop_webapp": "Cloud and Desktop Webapp",
+  "@release_core_fleet_screen_cloud_and_desktop_webapp": {
+    "description": "Shared fleet screen user interface: Cloud and Desktop Webapp"
+  },
+  "release_core_fleet_screen_register_an_existing_gateway_or_webapp": "Register an existing gateway or Webapp",
+  "@release_core_fleet_screen_register_an_existing_gateway_or_webapp": {
+    "description": "Shared fleet screen user interface: Register an existing gateway or Webapp"
+  },
+  "release_core_fleet_screen_sign_in_to_its_address_nothing_is_hosted": "Sign in to its address. Nothing is hosted on this device.",
+  "@release_core_fleet_screen_sign_in_to_its_address_nothing_is_hosted": {
+    "description": "Shared fleet screen user interface: Sign in to its address. Nothing is hosted on this device."
+  },
+  "release_core_fleet_screen_fleet_updates": "Fleet updates",
+  "@release_core_fleet_screen_fleet_updates": {
+    "description": "Shared fleet screen user interface: Fleet updates"
+  },
+  "release_core_fleet_screen_refresh_roster": "Refresh roster",
+  "@release_core_fleet_screen_refresh_roster": {
+    "description": "Shared fleet screen user interface: Refresh roster"
+  },
+  "release_core_fleet_screen_disconnect": "Disconnect {gateway}",
+  "@release_core_fleet_screen_disconnect": {
+    "description": "Shared fleet screen user interface: Disconnect {value1}",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_fleet_screen_open_this_gateway_on_launch": "Open this gateway on launch",
+  "@release_core_fleet_screen_open_this_gateway_on_launch": {
+    "description": "Shared fleet screen user interface: Open this gateway on launch"
+  },
+  "release_core_fleet_screen_primary_for_ares_does_not_change_the_last": "Primary for Ares; does not change the last-used gateway.",
+  "@release_core_fleet_screen_primary_for_ares_does_not_change_the_last": {
+    "description": "Shared fleet screen user interface: Primary for Ares; does not change the last-used gateway."
+  },
+  "release_core_fleet_screen_reconnect_in_fleet_on_launch": "Reconnect in fleet on launch",
+  "@release_core_fleet_screen_reconnect_in_fleet_on_launch": {
+    "description": "Shared fleet screen user interface: Reconnect in fleet on launch"
+  },
+  "release_core_fleet_screen_no_sessions_for_this_profile": "No sessions for this profile.",
+  "@release_core_fleet_screen_no_sessions_for_this_profile": {
+    "description": "Shared fleet screen user interface: No sessions for this profile."
+  },
+  "release_core_fleet_screen_more_sessions": "More sessions",
+  "@release_core_fleet_screen_more_sessions": {
+    "description": "Shared fleet screen user interface: More sessions"
+  },
+  "release_core_fleet_screen_this_gateway_was_disconnected": "This gateway was disconnected.",
+  "@release_core_fleet_screen_this_gateway_was_disconnected": {
+    "description": "Shared fleet screen user interface: This gateway was disconnected."
+  },
+  "release_core_fleet_screen_some_conversation_data_could_not_be_loaded": "Some conversation data could not be loaded.",
+  "@release_core_fleet_screen_some_conversation_data_could_not_be_loaded": {
+    "description": "Shared fleet screen user interface: Some conversation data could not be loaded."
+  },
+  "release_core_fleet_screen_message_this_session": "Message this session",
+  "@release_core_fleet_screen_message_this_session": {
+    "description": "Shared fleet screen user interface: Message this session"
+  },
+  "release_core_fleet_screen_send_to_this_session": "Send to this session",
+  "@release_core_fleet_screen_send_to_this_session": {
+    "description": "Shared fleet screen user interface: Send to this session"
+  },
+  "release_core_fleet_updates_screen_update_these_remote_gateways": "Update these remote gateways?",
+  "@release_core_fleet_updates_screen_update_these_remote_gateways": {
+    "description": "Shared fleet updates screen user interface: Update these remote gateways?"
+  },
+  "release_core_fleet_updates_screen_this_can_restart_the_backend_and_interrupt_other": "This can restart the backend and interrupt other users. It will not update Ares.\n\n{gateways}",
+  "@release_core_fleet_updates_screen_this_can_restart_the_backend_and_interrupt_other": {
+    "description": "Shared fleet updates screen user interface: This can restart the backend and interrupt other users. It will not update Ares.\n\n{value1}",
+    "placeholders": {
+      "gateways": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_fleet_updates_screen_update_listed_gateways": "Update listed gateways",
+  "@release_core_fleet_updates_screen_update_listed_gateways": {
+    "description": "Shared fleet updates screen user interface: Update listed gateways"
+  },
+  "release_core_fleet_updates_screen_checks_connected_gateways_cloud_is_platform_managed_entries": "Checks connected gateways. Cloud is platform-managed; entries without enrollment provenance are excluded.",
+  "@release_core_fleet_updates_screen_checks_connected_gateways_cloud_is_platform_managed_entries": {
+    "description": "Shared fleet updates screen user interface: Checks connected gateways. Cloud is platform-managed; entries without enrollment provenance are excluded."
+  },
+  "release_core_fleet_updates_screen_check_connected_gateways": "Check connected gateways",
+  "@release_core_fleet_updates_screen_check_connected_gateways": {
+    "description": "Shared fleet updates screen user interface: Check connected gateways"
+  },
+  "release_core_fleet_updates_screen_read_update_receipt": "Read update receipt",
+  "@release_core_fleet_updates_screen_read_update_receipt": {
+    "description": "Shared fleet updates screen user interface: Read update receipt"
+  },
+  "release_core_fleet_updates_screen_review_eligible_updates": "Review eligible updates",
+  "@release_core_fleet_updates_screen_review_eligible_updates": {
+    "description": "Shared fleet updates screen user interface: Review eligible updates"
+  },
+  "release_core_fleet_webapp_screen_account_changed_reopen_this_page": "Account changed. Reopen this page.",
+  "@release_core_fleet_webapp_screen_account_changed_reopen_this_page": {
+    "description": "Shared fleet webapp screen user interface: Account changed. Reopen this page."
+  },
+  "release_core_fleet_webapp_screen_set_the_webapp_s_primary_gateway": "Set the Webapp’s primary gateway?",
+  "@release_core_fleet_webapp_screen_set_the_webapp_s_primary_gateway": {
+    "description": "Shared fleet webapp screen user interface: Set the Webapp’s primary gateway?"
+  },
+  "release_core_fleet_webapp_screen_this_changes_the_shared_registry_not_the_last": "{webapp} → {gateway} ({id})\nThis changes the shared registry, not the last-used gateway.",
+  "@release_core_fleet_webapp_screen_this_changes_the_shared_registry_not_the_last": {
+    "description": "Shared fleet webapp screen user interface: {value1} → {value2} ({value3})\nThis changes the shared registry, not the last-used gateway.",
+    "placeholders": {
+      "webapp": {
+        "type": "String"
+      },
+      "gateway": {
+        "type": "String"
+      },
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_fleet_webapp_screen_set_primary": "Set primary",
+  "@release_core_fleet_webapp_screen_set_primary": {
+    "description": "Shared fleet webapp screen user interface: Set primary"
+  },
+  "release_core_fleet_webapp_screen_serving_profile": "Serving profile",
+  "@release_core_fleet_webapp_screen_serving_profile": {
+    "description": "Shared fleet webapp screen user interface: Serving profile"
+  },
+  "release_core_fleet_webapp_screen_hermes_cloud": "Hermes Cloud",
+  "@release_core_fleet_webapp_screen_hermes_cloud": {
+    "description": "Shared fleet webapp screen user interface: Hermes Cloud"
+  },
+  "release_core_fleet_webapp_screen_discover_signed_in_agents": "Discover signed-in agents",
+  "@release_core_fleet_webapp_screen_discover_signed_in_agents": {
+    "description": "Shared fleet webapp screen user interface: Discover signed-in agents"
+  },
+  "release_core_fleet_webapp_screen_organisation": "Organisation: {organisation}",
+  "@release_core_fleet_webapp_screen_organisation": {
+    "description": "Shared fleet webapp screen user interface: Organisation: {value1}",
+    "placeholders": {
+      "organisation": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_fleet_webapp_screen_no_agents_available": "No agents available.",
+  "@release_core_fleet_webapp_screen_no_agents_available": {
+    "description": "Shared fleet webapp screen user interface: No agents available."
+  },
+  "release_core_fleet_webapp_screen_existing_desktop_webapp": "Existing Desktop Webapp",
+  "@release_core_fleet_webapp_screen_existing_desktop_webapp": {
+    "description": "Shared fleet webapp screen user interface: Existing Desktop Webapp"
+  },
+  "release_core_fleet_webapp_screen_check_gateway_and_web_access_status": "Check gateway and Web Access status",
+  "@release_core_fleet_webapp_screen_check_gateway_and_web_access_status": {
+    "description": "Shared fleet webapp screen user interface: Check gateway and Web Access status"
+  },
+  "release_core_fleet_webapp_screen_these_settings_belong_to_the_machine_serving_this": "These settings belong to the machine serving this Webapp. Publishing and restarts are not remote actions.",
+  "@release_core_fleet_webapp_screen_these_settings_belong_to_the_machine_serving_this": {
+    "description": "Shared fleet webapp screen user interface: These settings belong to the machine serving this Webapp. Publishing and restarts are not remote actions."
+  },
+  "release_core_fleet_webapp_screen_read_webapp_gateway_registry": "Read Webapp gateway registry",
+  "@release_core_fleet_webapp_screen_read_webapp_gateway_registry": {
+    "description": "Shared fleet webapp screen user interface: Read Webapp gateway registry"
+  },
+  "release_core_fleet_webapp_screen_last_used": "Last used",
+  "@release_core_fleet_webapp_screen_last_used": {
+    "description": "Shared fleet webapp screen user interface: Last used"
+  },
+  "release_core_fleet_webapp_screen_primary": "Primary",
+  "@release_core_fleet_webapp_screen_primary": {
+    "description": "Shared fleet webapp screen user interface: Primary"
+  },
+  "release_core_fleet_webapp_screen_set_primary_2": "Set primary: {gateway}",
+  "@release_core_fleet_webapp_screen_set_primary_2": {
+    "description": "Shared fleet webapp screen user interface: Set primary: {value1}",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_fleet_webapp_screen_read_shared_display_preferences": "Read shared display preferences",
+  "@release_core_fleet_webapp_screen_read_shared_display_preferences": {
+    "description": "Shared fleet webapp screen user interface: Read shared display preferences"
+  },
+  "release_core_fleet_webapp_screen_chat_text_direction_on_this_webapp_and_desktop": "Chat text direction on this Webapp and Desktop",
+  "@release_core_fleet_webapp_screen_chat_text_direction_on_this_webapp_and_desktop": {
+    "description": "Shared fleet webapp screen user interface: Chat text direction on this Webapp and Desktop"
+  },
+  "release_core_schedule_desk_screen_created_on": "Created {job} on {profile}.",
+  "@release_core_schedule_desk_screen_created_on": {
+    "description": "Shared schedule desk screen user interface: Created {value1} on {value2}.",
+    "placeholders": {
+      "job": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_schedule_desk_screen_the_list_covers_every_profile_on_this_gateway": "The list covers every profile on this gateway. Stop, pause, catch-up, delivery and blueprints are sent to the job's owning profile.",
+  "@release_core_schedule_desk_screen_the_list_covers_every_profile_on_this_gateway": {
+    "description": "Shared schedule desk screen user interface: The list covers every profile on this gateway. Stop, pause, catch-up, delivery and blueprints are sent to the job's owning profile."
+  },
+  "release_core_schedule_desk_screen_a_run_is_in_progress": "A run is in progress",
+  "@release_core_schedule_desk_screen_a_run_is_in_progress": {
+    "description": "Shared schedule desk screen user interface: A run is in progress"
+  },
+  "release_core_schedule_desk_screen_no_current_run": "No current run",
+  "@release_core_schedule_desk_screen_no_current_run": {
+    "description": "Shared schedule desk screen user interface: No current run"
+  },
+  "release_core_schedule_desk_screen_stop_requested_for": "Stop requested for {job}.",
+  "@release_core_schedule_desk_screen_stop_requested_for": {
+    "description": "Shared schedule desk screen user interface: Stop requested for {value1}.",
+    "placeholders": {
+      "job": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_schedule_desk_screen_no_run_was_in_flight_for": "No run was in flight for {job}.",
+  "@release_core_schedule_desk_screen_no_run_was_in_flight_for": {
+    "description": "Shared schedule desk screen user interface: No run was in flight for {value1}.",
+    "placeholders": {
+      "job": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_schedule_desk_screen_stop_current_run": "Stop current run",
+  "@release_core_schedule_desk_screen_stop_current_run": {
+    "description": "Shared schedule desk screen user interface: Stop current run"
+  },
+  "release_core_schedule_desk_screen_pause_future_runs": "Pause future runs",
+  "@release_core_schedule_desk_screen_pause_future_runs": {
+    "description": "Shared schedule desk screen user interface: Pause future runs"
+  },
+  "release_core_schedule_desk_screen_resume_future_runs": "Resume future runs",
+  "@release_core_schedule_desk_screen_resume_future_runs": {
+    "description": "Shared schedule desk screen user interface: Resume future runs"
+  },
+  "release_core_schedule_desk_screen_catch_up_default": "Catch-up default",
+  "@release_core_schedule_desk_screen_catch_up_default": {
+    "description": "Shared schedule desk screen user interface: Catch-up default"
+  },
+  "release_core_schedule_desk_screen_run_one_missed": "Run one missed",
+  "@release_core_schedule_desk_screen_run_one_missed": {
+    "description": "Shared schedule desk screen user interface: Run one missed"
+  },
+  "release_core_schedule_desk_screen_skip_missed": "Skip missed",
+  "@release_core_schedule_desk_screen_skip_missed": {
+    "description": "Shared schedule desk screen user interface: Skip missed"
+  },
+  "release_core_schedule_desk_screen_blueprint_recipes": "Blueprint recipes",
+  "@release_core_schedule_desk_screen_blueprint_recipes": {
+    "description": "Shared schedule desk screen user interface: Blueprint recipes"
+  },
+  "release_core_schedule_desk_screen_profile_for_the_new_job": "Profile for the new job",
+  "@release_core_schedule_desk_screen_profile_for_the_new_job": {
+    "description": "Shared schedule desk screen user interface: Profile for the new job"
+  },
+  "release_core_schedule_desk_screen_create": "Create {blueprint}",
+  "@release_core_schedule_desk_screen_create": {
+    "description": "Shared schedule desk screen user interface: Create {value1}",
+    "placeholders": {
+      "blueprint": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_schedule_desk_screen_loading_delivery_targets": "Loading delivery targets",
+  "@release_core_schedule_desk_screen_loading_delivery_targets": {
+    "description": "Shared schedule desk screen user interface: Loading delivery targets"
+  },
+  "release_core_schedule_desk_screen_no_home_channel": "{target} (no home channel)",
+  "@release_core_schedule_desk_screen_no_home_channel": {
+    "description": "Shared schedule desk screen user interface: {value1} (no home channel)",
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_memory_graph_screen_edit": "Edit {label}",
+  "@release_core_memory_graph_screen_edit": {
+    "description": "Shared memory graph screen user interface: Edit {value1}",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_memory_graph_screen_content": "Content",
+  "@release_core_memory_graph_screen_content": {
+    "description": "Shared memory graph screen user interface: Content"
+  },
+  "release_core_memory_graph_screen_archive_skill": "Archive skill",
+  "@release_core_memory_graph_screen_archive_skill": {
+    "description": "Shared memory graph screen user interface: Archive skill"
+  },
+  "release_core_memory_graph_screen_delete_memory": "Delete memory",
+  "@release_core_memory_graph_screen_delete_memory": {
+    "description": "Shared memory graph screen user interface: Delete memory"
+  },
+  "release_core_memory_graph_screen_archive_on_it_can_be_restored_on_the": "Archive {label} on {profile}? It can be restored on the host with the Curator.",
+  "@release_core_memory_graph_screen_archive_on_it_can_be_restored_on_the": {
+    "description": "Shared memory graph screen user interface: Archive {value1} on {value2}? It can be restored on the host with the Curator.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_memory_graph_screen_delete_from_this_removes_that_memory": "Delete {label} from {profile}? This removes that memory.",
+  "@release_core_memory_graph_screen_delete_from_this_removes_that_memory": {
+    "description": "Shared memory graph screen user interface: Delete {value1} from {value2}? This removes that memory.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_memory_graph_screen_filter": "Filter",
+  "@release_core_memory_graph_screen_filter": {
+    "description": "Shared memory graph screen user interface: Filter"
+  },
+  "release_core_memory_graph_screen_timeline": "Timeline",
+  "@release_core_memory_graph_screen_timeline": {
+    "description": "Shared memory graph screen user interface: Timeline"
+  },
+  "release_core_memory_graph_screen_play_timeline": "Play timeline",
+  "@release_core_memory_graph_screen_play_timeline": {
+    "description": "Shared memory graph screen user interface: Play timeline"
+  },
+  "release_core_memory_graph_screen_layout_code": "Layout code",
+  "@release_core_memory_graph_screen_layout_code": {
+    "description": "Shared memory graph screen user interface: Layout code"
+  },
+  "release_core_memory_graph_screen_external_memory_providers": "External memory providers",
+  "@release_core_memory_graph_screen_external_memory_providers": {
+    "description": "Shared memory graph screen user interface: External memory providers"
+  },
+  "release_core_memory_graph_screen_a_value_is_stored_leave_blank_to_keep": "A value is stored. Leave blank to keep it.",
+  "@release_core_memory_graph_screen_a_value_is_stored_leave_blank_to_keep": {
+    "description": "Shared memory graph screen user interface: A value is stored. Leave blank to keep it."
+  },
+  "release_core_memory_graph_screen_save_provider": "Save provider",
+  "@release_core_memory_graph_screen_save_provider": {
+    "description": "Shared memory graph screen user interface: Save provider"
+  },
+  "release_core_workspace_profiles_screen_applies_to": "Applies to: {profile}",
+  "@release_core_workspace_profiles_screen_applies_to": {
+    "description": "Shared workspace profiles screen user interface: Applies to: {value1}",
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_workspace_profiles_screen_choose_another_profile": "Choose another profile",
+  "@release_core_workspace_profiles_screen_choose_another_profile": {
+    "description": "Shared workspace profiles screen user interface: Choose another profile"
+  },
+  "release_core_workspace_profiles_screen_could_not_verify_the_selected_profile_on_this": "Could not verify the selected profile on this gateway.",
+  "@release_core_workspace_profiles_screen_could_not_verify_the_selected_profile_on_this": {
+    "description": "Shared workspace profiles screen user interface: Could not verify the selected profile on this gateway."
+  },
+  "release_core_workspace_profiles_screen_create_profile": "Create profile",
+  "@release_core_workspace_profiles_screen_create_profile": {
+    "description": "Shared workspace profiles screen user interface: Create profile"
+  },
+  "release_core_workspace_profiles_screen_new_profile_id": "New profile ID",
+  "@release_core_workspace_profiles_screen_new_profile_id": {
+    "description": "Shared workspace profiles screen user interface: New profile ID"
+  },
+  "release_core_assets_screen_links": "Links",
+  "@release_core_assets_screen_links": {
+    "description": "Shared assets screen user interface: Links"
+  },
+  "release_core_workspace_picker_no_matching_items": "No matching items.",
+  "@release_core_workspace_picker_no_matching_items": {
+    "description": "Shared workspace picker user interface: No matching items."
+  },
+  "release_core_workspace_picker_save_layout": "Save layout",
+  "@release_core_workspace_picker_save_layout": {
+    "description": "Shared workspace picker user interface: Save layout"
+  },
+  "release_core_workspace_picker_layout_name": "Layout name",
+  "@release_core_workspace_picker_layout_name": {
+    "description": "Shared workspace picker user interface: Layout name"
+  },
+  "release_core_workspace_popout_this_chat_already_has_a_pop_out_window": "This chat already has a pop-out window.",
+  "@release_core_workspace_popout_this_chat_already_has_a_pop_out_window": {
+    "description": "Shared workspace popout user interface: This chat already has a pop-out window."
+  },
+  "release_core_workspace_popout_could_not_open_this_saved_chat_check_the": "Could not open this saved chat. Check the connection and try again.",
+  "@release_core_workspace_popout_could_not_open_this_saved_chat_check_the": {
+    "description": "Shared workspace popout user interface: Could not open this saved chat. Check the connection and try again."
+  },
+  "release_core_popout_bootstrap_use_the_main_window_to_change_your_connection": "Use the main window to change your connection.",
+  "@release_core_popout_bootstrap_use_the_main_window_to_change_your_connection": {
+    "description": "Shared popout bootstrap user interface: Use the main window to change your connection."
+  },
+  "release_core_guarded_save_refused": "This file can't be saved by the gateway",
+  "@release_core_guarded_save_refused": {
+    "description": "Guarded file-save refusal; retain the draft."
+  },
+  "release_core_guarded_save_unavailable": "Guarded saving isn't available on this gateway",
+  "@release_core_guarded_save_unavailable": {
+    "description": "Host does not support safe guarded file writes."
+  },
+  "release_core_git_files_changed": "{count, plural, =1{1 file changed this turn} other{{count} files changed this turn}}",
+  "@release_core_git_files_changed": {
+    "description": "Number of files changed in the current turn.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "release_core_git_entries_omitted": "{count, plural, =1{1 Git entry was left out because it was not safe to show.} other{{count} Git entries were left out because they were not safe to show.}}",
+  "@release_core_git_entries_omitted": {
+    "description": "Number of unsafe Git entries withheld from display.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "release_core_git_staged": "Staged",
+  "@release_core_git_staged": {
+    "description": "Git file state for an entry in the index."
+  },
+  "release_core_session_sort_recent": "Recent activity",
+  "@release_core_session_sort_recent": {
+    "description": "Chat list sort order."
+  },
+  "release_core_session_sort_created": "Newest created",
+  "@release_core_session_sort_created": {
+    "description": "Chat list sort order."
+  },
+  "release_core_session_sort_status": "Running first",
+  "@release_core_session_sort_status": {
+    "description": "Chat list sort order."
+  },
+  "release_core_session_sort_tokens": "Most tokens",
+  "@release_core_session_sort_tokens": {
+    "description": "Chat list sort order."
+  },
+  "release_core_session_sort_cost": "Highest cost",
+  "@release_core_session_sort_cost": {
+    "description": "Chat list sort order."
+  },
+  "release_core_session_group_standard": "Default grouping",
+  "@release_core_session_group_standard": {
+    "description": "Chat list grouping mode."
+  },
+  "release_core_session_group_status": "Group by status",
+  "@release_core_session_group_status": {
+    "description": "Chat list grouping mode."
+  },
+  "release_core_session_group_project": "Group by project",
+  "@release_core_session_group_project": {
+    "description": "Chat list grouping mode."
+  },
+  "release_core_session_tokens": "{count} tokens",
+  "@release_core_session_tokens": {
+    "description": "Token count in the optional model and usage summary.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "release_core_search_gateway_mode": "{mode} (gateway)",
+  "@release_core_search_gateway_mode": {
+    "description": "Search mode served by the gateway.",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_search_mode_tooltip": "{label}: {mode}",
+  "@release_core_search_mode_tooltip": {
+    "description": "Search mode menu tooltip.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_image_recovery_new_turn": "Sending creates a new turn",
+  "@release_core_image_recovery_new_turn": {
+    "description": "Warning that a recovered image copy starts a new turn."
+  },
+  "release_core_image_recovery_metadata": "{count, plural, =1{1 image · {date}} other{{count} images · {date}}}",
+  "@release_core_image_recovery_metadata": {
+    "description": "Recovered image draft image count and creation date.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_discovery_scanning": "Scanning: {state}",
+  "@release_core_discovery_scanning": {
+    "description": "Gateway repository scanning policy state.",
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_discovery_enabled": "enabled",
+  "@release_core_discovery_enabled": {
+    "description": "State of the gateway repository scanning policy."
+  },
+  "release_core_discovery_disabled": "disabled",
+  "@release_core_discovery_disabled": {
+    "description": "State of the gateway repository scanning policy."
+  },
+  "release_core_discovery_none": "none",
+  "@release_core_discovery_none": {
+    "description": "No paths are configured in the gateway repository scan policy."
+  },
+  "release_core_discovery_roots": "Scan roots: {paths}",
+  "@release_core_discovery_roots": {
+    "description": "Newline-separated server paths scanned for repositories.",
+    "placeholders": {
+      "paths": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_discovery_excluded": "Excluded subtrees: {paths}",
+  "@release_core_discovery_excluded": {
+    "description": "Newline-separated server subtrees omitted from scans.",
+    "placeholders": {
+      "paths": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_discovery_repository_sessions": "{path}\nSessions: {count}",
+  "@release_core_discovery_repository_sessions": {
+    "description": "Repository root and number of its sessions.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "release_core_projects_local_only": "This Hermes gateway is older than server-side projects, so chats stay grouped on this device only. Update Hermes to share the same projects across your devices.",
+  "@release_core_projects_local_only": {
+    "description": "Projects compatibility notice for a host without server-side projects."
+  },
+  "release_core_fleet_no_address": "No gateway address yet",
+  "@release_core_fleet_no_address": {
+    "description": "A discovered Cloud agent does not have an address yet."
+  },
+  "release_core_fleet_diagnostics": "Gateway {version} · {access}",
+  "@release_core_fleet_diagnostics": {
+    "description": "Gateway version and web-access diagnostic state.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "access": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_schedule_builtin": "built-in",
+  "@release_core_schedule_builtin": {
+    "description": "Origin of a built-in schedule blueprint."
+  },
+  "release_core_memory_gateway_profile": "gateway",
+  "@release_core_memory_gateway_profile": {
+    "description": "Gateway default profile used in the memory graph header."
+  },
+  "release_core_memory_profile_summary": "Profile {profile} on {gateway}. The share code stores zoom, time and filters only.",
+  "@release_core_memory_profile_summary": {
+    "description": "Bound memory graph owner and explanation of non-sensitive layout sharing.",
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      },
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_memory_layers_summary": "Built-in memory {memoryBytes} bytes, user {userBytes} bytes. Active provider {provider}.",
+  "@release_core_memory_layers_summary": {
+    "description": "Memory layer storage sizes and selected provider.",
+    "placeholders": {
+      "memoryBytes": {
+        "type": "int"
+      },
+      "userBytes": {
+        "type": "int"
+      },
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_memory_kind_all": "All",
+  "@release_core_memory_kind_all": {
+    "description": "Memory graph node kind filter."
+  },
+  "release_core_memory_kind_skill": "Skills",
+  "@release_core_memory_kind_skill": {
+    "description": "Memory graph node kind filter."
+  },
+  "release_core_memory_kind_memory": "Memory",
+  "@release_core_memory_kind_memory": {
+    "description": "Memory graph node kind filter."
+  },
+  "release_core_workspace_failure_stale": "connection changed",
+  "@release_core_workspace_failure_stale": {
+    "description": "Reason why a gateway workspace or queue operation could not be confirmed."
+  },
+  "release_core_workspace_failure_unbound": "no verified working directory",
+  "@release_core_workspace_failure_unbound": {
+    "description": "Reason why a gateway workspace or queue operation could not be confirmed."
+  },
+  "release_core_workspace_failure_denied": "permission denied",
+  "@release_core_workspace_failure_denied": {
+    "description": "Reason why a gateway workspace or queue operation could not be confirmed."
+  },
+  "release_core_workspace_failure_ineligible": "operation not allowed for this file",
+  "@release_core_workspace_failure_ineligible": {
+    "description": "Reason why a gateway workspace or queue operation could not be confirmed."
+  },
+  "release_core_workspace_failure_unsupported": "not supported by this gateway",
+  "@release_core_workspace_failure_unsupported": {
+    "description": "Reason why a gateway workspace or queue operation could not be confirmed."
+  },
+  "release_core_workspace_failure_mismatch": "remote state changed",
+  "@release_core_workspace_failure_mismatch": {
+    "description": "Reason why a gateway workspace or queue operation could not be confirmed."
+  },
+  "release_core_workspace_failure_invalid": "invalid gateway response",
+  "@release_core_workspace_failure_invalid": {
+    "description": "Reason why a gateway workspace or queue operation could not be confirmed."
+  },
+  "release_core_workspace_failure_insecure": "secure connection required",
+  "@release_core_workspace_failure_insecure": {
+    "description": "Reason why a gateway workspace or queue operation could not be confirmed."
+  },
+  "release_core_workspace_failure_unavailable": "gateway unavailable",
+  "@release_core_workspace_failure_unavailable": {
+    "description": "Reason why a gateway workspace or queue operation could not be confirmed."
+  },
+  "release_core_queue_state_queued": "Queued",
+  "@release_core_queue_state_queued": {
+    "description": "State of a prompt admitted to the server-owned gateway queue."
+  },
+  "release_core_queue_state_started": "Started",
+  "@release_core_queue_state_started": {
+    "description": "State of a prompt admitted to the server-owned gateway queue."
+  },
+  "release_core_queue_state_unknown": "Unknown outcome",
+  "@release_core_queue_state_unknown": {
+    "description": "State of a prompt admitted to the server-owned gateway queue."
+  },
+  "release_core_unknown_state": "Unknown",
+  "@release_core_unknown_state": {
+    "description": "Fallback for a gateway state not understood by this client."
+  },
+  "release_core_fleet_state_idle": "Offline",
+  "@release_core_fleet_state_idle": {
+    "description": "Connection phase shown in the gateway fleet roster."
+  },
+  "release_core_fleet_state_connected": "Connected",
+  "@release_core_fleet_state_connected": {
+    "description": "Connection phase shown in the gateway fleet roster."
+  },
+  "release_core_fleet_state_reconnecting": "Reconnecting…",
+  "@release_core_fleet_state_reconnecting": {
+    "description": "Connection phase shown in the gateway fleet roster."
+  },
+  "release_core_fleet_state_sessionExpired": "Signed out",
+  "@release_core_fleet_state_sessionExpired": {
+    "description": "Connection phase shown in the gateway fleet roster."
+  },
+  "release_core_fleet_state_failed": "Connection failed",
+  "@release_core_fleet_state_failed": {
+    "description": "Connection phase shown in the gateway fleet roster."
+  },
+  "release_core_workspace_operation_failed": "Gateway operation could not be confirmed: {reason}.",
+  "@release_core_workspace_operation_failed": {
+    "description": "Workspace operation failed without a confirmed remote result.",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_workspace_invalid_data": "The data or input could not be verified. Review it and try again.",
+  "@release_core_workspace_invalid_data": {
+    "description": "Safe localized replacement for a parser or validation exception."
+  },
+  "release_core_parallel_workspace_layout_changed_in_this_window_but_could_not": "Layout changed in this window but could not be saved.",
+  "@release_core_parallel_workspace_layout_changed_in_this_window_but_could_not": {
+    "description": "Shared parallel workspace user interface: Layout changed in this window but could not be saved."
+  },
+  "release_core_parallel_workspace_first_pane": "First pane",
+  "@release_core_parallel_workspace_first_pane": {
+    "description": "Shared parallel workspace user interface: First pane"
+  },
+  "release_core_parallel_workspace_second_pane": "Second pane",
+  "@release_core_parallel_workspace_second_pane": {
+    "description": "Shared parallel workspace user interface: Second pane"
+  },
+  "release_core_parallel_workspace_unavailable_page": "Unavailable page",
+  "@release_core_parallel_workspace_unavailable_page": {
+    "description": "Shared parallel workspace user interface: Unavailable page"
+  },
+  "release_core_parallel_workspace_close_a_tab_first_maximum": "Close a tab first (maximum {maximum}).",
+  "@release_core_parallel_workspace_close_a_tab_first_maximum": {
+    "description": "Shared parallel workspace user interface: Close a tab first (maximum {value1}).",
+    "placeholders": {
+      "maximum": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_parallel_workspace_dock_beside_current_pane": "Dock beside current pane",
+  "@release_core_parallel_workspace_dock_beside_current_pane": {
+    "description": "Shared parallel workspace user interface: Dock beside current pane"
+  },
+  "release_core_parallel_workspace_add_chat": "Add chat",
+  "@release_core_parallel_workspace_add_chat": {
+    "description": "Shared parallel workspace user interface: Add chat"
+  },
+  "release_core_parallel_workspace_action_failed_check_the_connection_and_try_again": "Action failed. Check the connection and try again.",
+  "@release_core_parallel_workspace_action_failed_check_the_connection_and_try_again": {
+    "description": "Shared parallel workspace user interface: Action failed. Check the connection and try again."
+  },
+  "release_core_parallel_workspace_close_a_tab_before_reopening_another": "Close a tab before reopening another.",
+  "@release_core_parallel_workspace_close_a_tab_before_reopening_another": {
+    "description": "Shared parallel workspace user interface: Close a tab before reopening another."
+  },
+  "release_core_parallel_workspace_replace_layout": "Replace layout “{name}”?",
+  "@release_core_parallel_workspace_replace_layout": {
+    "description": "Shared parallel workspace user interface: Replace layout “{value1}”?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_parallel_workspace_layout_limit_reached_replace_an_existing_layout": "Layout limit reached. Replace an existing layout.",
+  "@release_core_parallel_workspace_layout_limit_reached_replace_an_existing_layout": {
+    "description": "Shared parallel workspace user interface: Layout limit reached. Replace an existing layout."
+  },
+  "release_core_parallel_workspace_restore_layout": "Restore layout",
+  "@release_core_parallel_workspace_restore_layout": {
+    "description": "Shared parallel workspace user interface: Restore layout"
+  },
+  "release_core_parallel_workspace_workspace_options": "Workspace options",
+  "@release_core_parallel_workspace_workspace_options": {
+    "description": "Shared parallel workspace user interface: Workspace options"
+  },
+  "release_core_parallel_workspace_dock_another_pane": "Dock another pane",
+  "@release_core_parallel_workspace_dock_another_pane": {
+    "description": "Shared parallel workspace user interface: Dock another pane"
+  },
+  "release_core_parallel_workspace_swap_panes": "Swap panes",
+  "@release_core_parallel_workspace_swap_panes": {
+    "description": "Shared parallel workspace user interface: Swap panes"
+  },
+  "release_core_parallel_workspace_undock_second_pane": "Undock second pane",
+  "@release_core_parallel_workspace_undock_second_pane": {
+    "description": "Shared parallel workspace user interface: Undock second pane"
+  },
+  "release_core_parallel_workspace_arrange_side_by_side": "Arrange side by side",
+  "@release_core_parallel_workspace_arrange_side_by_side": {
+    "description": "Shared parallel workspace user interface: Arrange side by side"
+  },
+  "release_core_parallel_workspace_arrange_top_to_bottom": "Arrange top to bottom",
+  "@release_core_parallel_workspace_arrange_top_to_bottom": {
+    "description": "Shared parallel workspace user interface: Arrange top to bottom"
+  },
+  "release_core_parallel_workspace_change_split_size": "Change split size ({percent}%)",
+  "@release_core_parallel_workspace_change_split_size": {
+    "description": "Shared parallel workspace user interface: Change split size ({value1}%)",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_parallel_workspace_focus_pane_full_screen": "Focus pane full screen",
+  "@release_core_parallel_workspace_focus_pane_full_screen": {
+    "description": "Shared parallel workspace user interface: Focus pane full screen"
+  },
+  "release_core_parallel_workspace_open_chat_in_new_window": "Open chat in new window",
+  "@release_core_parallel_workspace_open_chat_in_new_window": {
+    "description": "Shared parallel workspace user interface: Open chat in new window"
+  },
+  "release_core_parallel_workspace_hide_pane_keep_running": "Hide pane (keep running)",
+  "@release_core_parallel_workspace_hide_pane_keep_running": {
+    "description": "Shared parallel workspace user interface: Hide pane (keep running)"
+  },
+  "release_core_parallel_workspace_previous_tab": "Previous tab",
+  "@release_core_parallel_workspace_previous_tab": {
+    "description": "Shared parallel workspace user interface: Previous tab"
+  },
+  "release_core_parallel_workspace_next_tab": "Next tab",
+  "@release_core_parallel_workspace_next_tab": {
+    "description": "Shared parallel workspace user interface: Next tab"
+  },
+  "release_core_parallel_workspace_move_tab_left": "Move tab left",
+  "@release_core_parallel_workspace_move_tab_left": {
+    "description": "Shared parallel workspace user interface: Move tab left"
+  },
+  "release_core_parallel_workspace_move_tab_right": "Move tab right",
+  "@release_core_parallel_workspace_move_tab_right": {
+    "description": "Shared parallel workspace user interface: Move tab right"
+  },
+  "release_core_parallel_workspace_reload_current_tab": "Reload current tab",
+  "@release_core_parallel_workspace_reload_current_tab": {
+    "description": "Shared parallel workspace user interface: Reload current tab"
+  },
+  "release_core_parallel_workspace_close_tab": "Close tab",
+  "@release_core_parallel_workspace_close_tab": {
+    "description": "Shared parallel workspace user interface: Close tab"
+  },
+  "release_core_parallel_workspace_close_other_tabs": "Close other tabs",
+  "@release_core_parallel_workspace_close_other_tabs": {
+    "description": "Shared parallel workspace user interface: Close other tabs"
+  },
+  "release_core_parallel_workspace_close_tabs_to_the_right": "Close tabs to the right",
+  "@release_core_parallel_workspace_close_tabs_to_the_right": {
+    "description": "Shared parallel workspace user interface: Close tabs to the right"
+  },
+  "release_core_parallel_workspace_close_all_tabs": "Close all tabs",
+  "@release_core_parallel_workspace_close_all_tabs": {
+    "description": "Shared parallel workspace user interface: Close all tabs"
+  },
+  "release_core_parallel_workspace_reopen_closed_tab": "Reopen closed tab",
+  "@release_core_parallel_workspace_reopen_closed_tab": {
+    "description": "Shared parallel workspace user interface: Reopen closed tab"
+  },
+  "release_core_parallel_workspace_save_named_layout": "Save named layout",
+  "@release_core_parallel_workspace_save_named_layout": {
+    "description": "Shared parallel workspace user interface: Save named layout"
+  },
+  "release_core_parallel_workspace_restore_named_layout": "Restore named layout",
+  "@release_core_parallel_workspace_restore_named_layout": {
+    "description": "Shared parallel workspace user interface: Restore named layout"
+  },
+  "release_core_parallel_workspace_refresh_chat_list": "Refresh chat list",
+  "@release_core_parallel_workspace_refresh_chat_list": {
+    "description": "Shared parallel workspace user interface: Refresh chat list"
+  },
+  "release_core_parallel_workspace_workspace_tools": "Workspace tools",
+  "@release_core_parallel_workspace_workspace_tools": {
+    "description": "Shared parallel workspace user interface: Workspace tools"
+  },
+  "release_core_parallel_workspace_choose_a_chat_for_this_pane": "Choose a chat for this pane",
+  "@release_core_parallel_workspace_choose_a_chat_for_this_pane": {
+    "description": "Shared parallel workspace user interface: Choose a chat for this pane"
+  },
+  "release_core_parallel_workspace_choose_chat_for": "Choose chat for {pane}",
+  "@release_core_parallel_workspace_choose_chat_for": {
+    "description": "Shared parallel workspace user interface: Choose chat for {value1}",
+    "placeholders": {
+      "pane": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_parallel_workspace_add_a_chat_to_start_a_workspace": "Add a chat to start a workspace.",
+  "@release_core_parallel_workspace_add_a_chat_to_start_a_workspace": {
+    "description": "Shared parallel workspace user interface: Add a chat to start a workspace."
+  },
+  "release_core_parallel_workspace_select_a_tab_to_show_its_pane": "Select a tab to show its pane.",
+  "@release_core_parallel_workspace_select_a_tab_to_show_its_pane": {
+    "description": "Shared parallel workspace user interface: Select a tab to show its pane."
+  },
+  "release_core_parallel_workspace_parallel_workspace": "Parallel workspace",
+  "@release_core_parallel_workspace_parallel_workspace": {
+    "description": "Shared parallel workspace user interface: Parallel workspace"
+  },
+  "release_core_parallel_workspace_show_workspace": "Show workspace",
+  "@release_core_parallel_workspace_show_workspace": {
+    "description": "Shared parallel workspace user interface: Show workspace"
+  },
+  "release_core_parallel_workspace_could_not_load_chats_retry": "Could not load chats. Retry",
+  "@release_core_parallel_workspace_could_not_load_chats_retry": {
+    "description": "Shared parallel workspace user interface: Could not load chats. Retry"
+  },
+  "release_core_parallel_workspace_close": "Close {pane}",
+  "@release_core_parallel_workspace_close": {
+    "description": "Shared parallel workspace user interface: Close {value1}",
+    "placeholders": {
+      "pane": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_parallel_workspace_switch_pane": "Switch pane: {pane}",
+  "@release_core_parallel_workspace_switch_pane": {
+    "description": "Shared parallel workspace user interface: Switch pane: {value1}",
+    "placeholders": {
+      "pane": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_workspace_registry_session_id_copied": "Session ID copied.",
+  "@release_core_workspace_registry_session_id_copied": {
+    "description": "Shared workspace registry user interface: Session ID copied."
+  },
+  "release_core_workspace_registry_chat_details": "Chat details",
+  "@release_core_workspace_registry_chat_details": {
+    "description": "Shared workspace registry user interface: Chat details"
+  },
+  "release_core_workspace_registry_server_default": "Server default",
+  "@release_core_workspace_registry_server_default": {
+    "description": "Shared workspace registry user interface: Server default"
+  },
+  "release_core_workspace_registry_session_id": "Session ID",
+  "@release_core_workspace_registry_session_id": {
+    "description": "Shared workspace registry user interface: Session ID"
+  },
+  "release_core_workspace_registry_title": "Title",
+  "@release_core_workspace_registry_title": {
+    "description": "Shared workspace registry user interface: Title"
+  },
+  "release_core_workspace_label_terminals": "Terminals",
+  "@release_core_workspace_label_terminals": {
+    "description": "Built-in parallel workspace page or action name."
+  },
+  "release_core_workspace_label_copy_id": "Copy session ID",
+  "@release_core_workspace_label_copy_id": {
+    "description": "Built-in parallel workspace page or action name."
+  },
+  "release_core_workspace_label_contributions": "Contributions",
+  "@release_core_workspace_label_contributions": {
+    "description": "Built-in parallel workspace page or action name."
+  },
+  "release_core_workspace_owner_inactive": "This workspace owner is no longer active.",
+  "@release_core_workspace_owner_inactive": {
+    "description": "Reason workspace actions are disabled after the owner changes."
+  },
+  "release_core_workspace_select_chat": "Select a chat first.",
+  "@release_core_workspace_select_chat": {
+    "description": "Reason a workspace contribution requiring a session is disabled."
+  },
+  "release_core_workspace_chat_unavailable": "This chat is not available for this connection.",
+  "@release_core_workspace_chat_unavailable": {
+    "description": "Unavailable chat pane in a retained workspace."
+  },
+  "release_core_workspace_page_unavailable": "This page is not available for this connection.",
+  "@release_core_workspace_page_unavailable": {
+    "description": "Unavailable contribution page in a retained workspace."
+  },
+  "release_core_client_queue_count": "{count} queued",
+  "@release_core_client_queue_count": {
+    "description": "Number of unsent prompts held on the client.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "release_core_client_queue_paused_count": "{count} queued — paused",
+  "@release_core_client_queue_paused_count": {
+    "description": "Number of unsent client-held prompts while local draining is parked.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "release_core_git_diff_truncated": "{diff}\n… truncated",
+  "@release_core_git_diff_truncated": {
+    "description": "A long Git diff preview has been shortened on this device.",
+    "placeholders": {
+      "diff": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_search_no_models": "Hermes returned no configured selectable models.",
+  "@release_core_search_no_models": {
+    "description": "Search model picker cannot open because the host returned no selectable models."
+  },
+  "release_core_chat_archive_unavailable": "Chat archive action is unavailable.",
+  "@release_core_chat_archive_unavailable": {
+    "description": "A chat archive mutation cannot start for this row or owner."
+  },
+  "release_core_chat_pin_unconfirmed": "Pin state was not confirmed.",
+  "@release_core_chat_pin_unconfirmed": {
+    "description": "A server chat pin update did not match the requested state."
+  },
+  "release_core_chat_archive_unconfirmed": "Archive state was not confirmed.",
+  "@release_core_chat_archive_unconfirmed": {
+    "description": "A server chat archive update did not match the requested state."
+  },
+  "release_core_chat_archive_history_unavailable": "Archived history unavailable",
+  "@release_core_chat_archive_history_unavailable": {
+    "description": "Archived conversation data has not been verified."
+  },
+  "release_core_quick_chat_history_unavailable": "Quick Chat history unavailable",
+  "@release_core_quick_chat_history_unavailable": {
+    "description": "Quick Chat history has not been verified."
+  },
+  "release_core_chat_project_ownership_unavailable": "Project ownership unavailable",
+  "@release_core_chat_project_ownership_unavailable": {
+    "description": "Project ownership cannot be verified for the conversation browser."
+  },
+  "release_core_chat_unknown_project": "Unknown project",
+  "@release_core_chat_unknown_project": {
+    "description": "Conversation group whose server project ownership is not known."
+  },
+  "release_core_chat_local_search_fallback": "Message search unavailable. Showing local matches.",
+  "@release_core_chat_local_search_fallback": {
+    "description": "Search failed; local matches remain visible."
+  },
+  "release_core_fleet_update_eligible": "Eligible · {version}",
+  "@release_core_fleet_update_eligible": {
+    "description": "An eligible remote gateway update and its version.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "release_core_fleet_update_state_1": "Skipped: same installation",
+  "@release_core_fleet_update_state_1": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_2": "Not checked",
+  "@release_core_fleet_update_state_2": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_3": "Skipped: Cloud-managed",
+  "@release_core_fleet_update_state_3": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_4": "Skipped: not enrolled as a direct gateway",
+  "@release_core_fleet_update_state_4": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_5": "Skipped: disconnected or busy",
+  "@release_core_fleet_update_state_5": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_6": "No applicable update",
+  "@release_core_fleet_update_state_6": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_7": "Could not verify eligibility",
+  "@release_core_fleet_update_state_7": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_8": "Skipped: stale, busy or already requested",
+  "@release_core_fleet_update_state_8": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_9": "Requesting",
+  "@release_core_fleet_update_state_9": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_10": "Accepted; receipt unavailable",
+  "@release_core_fleet_update_state_10": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_11": "Accepted; awaiting receipt",
+  "@release_core_fleet_update_state_11": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_12": "Skipped: a chat on this installation is running",
+  "@release_core_fleet_update_state_12": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_13": "Not confirmed; do not resend automatically",
+  "@release_core_fleet_update_state_13": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_14": "Reconnect to check receipt",
+  "@release_core_fleet_update_state_14": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_15": "Receipt unavailable",
+  "@release_core_fleet_update_state_15": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_16": "Awaiting matching receipt",
+  "@release_core_fleet_update_state_16": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_17": "Updated; follow-up required",
+  "@release_core_fleet_update_state_17": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_19": "Partially updated",
+  "@release_core_fleet_update_state_19": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_20": "Update failed",
+  "@release_core_fleet_update_state_20": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_fleet_update_state_21": "Not confirmed",
+  "@release_core_fleet_update_state_21": {
+    "description": "Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded."
+  },
+  "release_core_cloud_status_ready": "Ready",
+  "@release_core_cloud_status_ready": {
+    "description": "Known server-reported Cloud agent status in the gateway fleet list."
+  },
+  "release_core_cloud_status_online": "Online",
+  "@release_core_cloud_status_online": {
+    "description": "Known server-reported Cloud agent status in the gateway fleet list."
+  },
+  "release_core_cloud_status_stopped": "Stopped",
+  "@release_core_cloud_status_stopped": {
+    "description": "Known server-reported Cloud agent status in the gateway fleet list."
+  },
+  "release_core_cloud_status_error": "Error",
+  "@release_core_cloud_status_error": {
+    "description": "Known server-reported Cloud agent status in the gateway fleet list."
+  },
+  "ng_release_more_contributions_subtitle": "Reviewed reply cards for this connection",
+  "@ng_release_more_contributions_subtitle": {
+    "description": "NextGen More menu subtitle for reviewed reply-card contributions.",
+    "placeholders": {}
+  },
+  "ng_release_more_gateway_fleet": "Gateway fleet",
+  "@ng_release_more_gateway_fleet": {
+    "description": "NextGen More menu entry for the fleet of gateways.",
+    "placeholders": {}
+  },
+  "ng_release_more_memory_graph": "Memory graph",
+  "@ng_release_more_memory_graph": {
+    "description": "NextGen More menu entry for the memory graph.",
+    "placeholders": {}
+  },
+  "ng_release_more_memory_graph_subtitle": "Timeline, edits and memory providers",
+  "@ng_release_more_memory_graph_subtitle": {
+    "description": "NextGen More menu subtitle for memory history and providers.",
+    "placeholders": {}
+  },
+  "ng_release_more_capabilities_subtitle": "Install and govern skills, plugins, connectors and tool backends",
+  "@ng_release_more_capabilities_subtitle": {
+    "description": "NextGen More menu subtitle for capability administration.",
+    "placeholders": {}
+  },
+  "ng_release_more_browser_vault": "Browser vault",
+  "@ng_release_more_browser_vault": {
+    "description": "NextGen More menu entry for browser credentials and saved details.",
+    "placeholders": {}
+  },
+  "ng_release_more_browser_vault_subtitle": "Site logins, addresses, cards and credential sources",
+  "@ng_release_more_browser_vault_subtitle": {
+    "description": "NextGen More menu subtitle for browser vault administration.",
+    "placeholders": {}
+  },
+  "ng_release_more_agent_policy": "Agent policy",
+  "@ng_release_more_agent_policy": {
+    "description": "NextGen More menu entry for agent policy administration.",
+    "placeholders": {}
+  },
+  "ng_release_more_agent_policy_subtitle": "Approvals, checkpoints, browser access and shared metrics",
+  "@ng_release_more_agent_policy_subtitle": {
+    "description": "NextGen More menu subtitle for agent policies. Navigation copy only; does not grant consent.",
+    "placeholders": {}
+  },
+  "ng_release_more_schedules": "Schedules",
+  "@ng_release_more_schedules": {
+    "description": "NextGen More menu entry for the cross-profile schedule desk.",
+    "placeholders": {}
+  },
+  "ng_release_more_schedules_subtitle": "All profiles, blueprints, catch-up and stop",
+  "@ng_release_more_schedules_subtitle": {
+    "description": "NextGen More menu subtitle describing schedule management.",
+    "placeholders": {}
+  },
+  "ng_release_more_host_subtitle": "Remote logs, health, maintenance and update",
+  "@ng_release_more_host_subtitle": {
+    "description": "NextGen More menu subtitle for host operations.",
+    "placeholders": {}
+  },
+  "ng_release_more_providers_routes": "Providers and routes",
+  "@ng_release_more_providers_routes": {
+    "description": "NextGen More menu entry for model providers and routing.",
+    "placeholders": {}
+  },
+  "ng_release_more_providers_routes_subtitle": "Keys, endpoints, delegation and mixtures",
+  "@ng_release_more_providers_routes_subtitle": {
+    "description": "NextGen More menu subtitle for provider configuration.",
+    "placeholders": {}
+  },
+  "ng_release_more_credits_plans": "Credits and plans",
+  "@ng_release_more_credits_plans": {
+    "description": "NextGen More menu entry for billing and plans.",
+    "placeholders": {}
+  },
+  "ng_release_more_credits_plans_subtitle": "Consented Nous billing when the account allows it",
+  "@ng_release_more_credits_plans_subtitle": {
+    "description": "NextGen More menu billing subtitle. Describes existing account-gated, consented billing; does not authorize it.",
+    "placeholders": {}
+  },
+  "ng_release_reopen_last_chat": "Reopen last chat on launch",
+  "@ng_release_reopen_last_chat": {
+    "description": "NextGen setting to reopen the most recent chat when launching the app.",
+    "placeholders": {}
+  },
+  "ng_release_launch_preference_failed": "Could not save launch preference.",
+  "@ng_release_launch_preference_failed": {
+    "description": "NextGen snackbar when the local launch preference cannot be saved.",
+    "placeholders": {}
+  },
+  "ng_release_sign_in_or": "or",
+  "@ng_release_sign_in_or": {
+    "description": "Separator between password and browser sign-in options in NextGen.",
+    "placeholders": {}
+  },
+  "ng_release_deployment_sign_in_hint": "{message} You can still sign in with a deployment session token on the next step.",
+  "@ng_release_deployment_sign_in_hint": {
+    "description": "NextGen unsupported-provider notice with an already-localized explanation as its verbatim prefix.",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_release_message_search_unavailable": "Message search unavailable. Showing local matches.",
+  "@ng_release_message_search_unavailable": {
+    "description": "NextGen sidebar fallback when remote message search fails; locally cached matches remain visible.",
+    "placeholders": {}
+  },
+  "ng_release_insights_days": "{days, plural, one{{days} day} other{{days} days}}",
+  "@ng_release_insights_days": {
+    "description": "NextGen Insights reporting-period selector. Currently offers 7, 30 and 90 days.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_release_signed_in_you": "you",
+  "@ng_release_signed_in_you": {
+    "description": "Fallback person name in NextGen’s “Signed in as {name}.” connection check when the response has no user object.",
+    "placeholders": {}
+  },
+  "ng_release_unsent_prompt_gone": "That unsent prompt is no longer in the queue.",
+  "@ng_release_unsent_prompt_gone": {
+    "description": "NextGen error when a queued, unsent prompt was removed before its edit could be saved.",
+    "placeholders": {}
+  },
+  "ng_release_attachment_not_attached": "The gateway did not attach {name}.",
+  "@ng_release_attachment_not_attached": {
+    "description": "NextGen attachment error when the gateway does not confirm attaching the selected file.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_release_gateway_not_connected": "Not connected to the gateway yet.",
+  "@ng_release_gateway_not_connected": {
+    "description": "NextGen error when an action needs a live gateway connection.",
+    "placeholders": {}
+  },
+  "ng_release_gateway_unreachable": "Couldn't reach the gateway.",
+  "@ng_release_gateway_unreachable": {
+    "description": "NextGen timeout fallback when no more specific gateway connection reason is available.",
+    "placeholders": {}
+  },
+  "ng_release_projects_scope_changed": "Projects scope is no longer selected",
+  "@ng_release_projects_scope_changed": {
+    "description": "NextGen project-operation error when the selected connection or profile changed.",
+    "placeholders": {}
+  },
+  "ng_release_missing_providers": "Missing providers",
+  "@ng_release_missing_providers": {
+    "description": "NextGen model catalogue error when the gateway omits its provider list.",
+    "placeholders": {}
+  },
+  "ng_release_missing_tasks": "Missing tasks",
+  "@ng_release_missing_tasks": {
+    "description": "NextGen auxiliary-model catalogue error when the gateway omits its helper-task list.",
+    "placeholders": {}
+  },
+  "ng_release_age_minutes": "{count}m",
+  "@ng_release_age_minutes": {
+    "description": "Compact NextGen sidebar chat age in minutes. Keep it short; no “ago” suffix.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_release_age_hours": "{count}h",
+  "@ng_release_age_hours": {
+    "description": "Compact NextGen sidebar chat age in hours. Keep it short; no “ago” suffix.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_release_age_days": "{count}d",
+  "@ng_release_age_days": {
+    "description": "Compact NextGen sidebar chat age in days. Keep it short; no “ago” suffix.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_release_age_weeks": "{count}w",
+  "@ng_release_age_weeks": {
+    "description": "Compact NextGen sidebar chat age in whole weeks. Keep it short; no “ago” suffix.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_release_age_years": "{count}y",
+  "@ng_release_age_years": {
+    "description": "Compact NextGen sidebar chat age in whole years. Keep it short; no “ago” suffix.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_release_compact_billions": "{count}B",
+  "@ng_release_compact_billions": {
+    "description": "Compact NextGen number in billions. The count is already scaled and formatted; translate the magnitude suffix.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_release_compact_millions": "{count}M",
+  "@ng_release_compact_millions": {
+    "description": "Compact NextGen number in millions. The count is already scaled and formatted; translate the magnitude suffix.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_release_compact_thousands": "{count}k",
+  "@ng_release_compact_thousands": {
+    "description": "Compact NextGen number in thousands. The count is already scaled and formatted; translate the magnitude suffix.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_release_token_thousands": "{count}K",
+  "@ng_release_token_thousands": {
+    "description": "Compact NextGen model context/output size in thousands of tokens. Count is already scaled; preserve the uppercase K in English.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_release_elapsed_minutes_seconds": "{minutes}m {seconds}s",
+  "@ng_release_elapsed_minutes_seconds": {
+    "description": "Compact elapsed time for a NextGen subagent, with whole minutes and remaining seconds.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_release_elapsed_seconds": "{seconds}s",
+  "@ng_release_elapsed_seconds": {
+    "description": "Compact elapsed time for a NextGen subagent that has run for less than one minute.",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_release_notification_foreground": "Ares was on screen",
+  "@ng_release_notification_foreground": {
+    "description": "NextGen recent-notification diagnostic explaining why a foreground reply did not notify.",
+    "placeholders": {}
+  },
+  "ng_release_notification_stopped": "the turn was stopped",
+  "@ng_release_notification_stopped": {
+    "description": "NextGen recent-notification diagnostic explaining why an interrupted turn did not notify.",
+    "placeholders": {}
+  },
+  "ng_release_more_parallel_workspace": "Parallel workspace",
+  "@ng_release_more_parallel_workspace": {
+    "description": "NextGen More menu entry for opening several chats in one workspace.",
+    "placeholders": {}
+  },
+  "ng_release_more_parallel_workspace_subtitle": "Open multiple chats in tabs or side by side.",
+  "@ng_release_more_parallel_workspace_subtitle": {
+    "description": "NextGen More menu subtitle for the parallel chat workspace.",
+    "placeholders": {}
+  },
+  "release_chat_unknown_model": "unknown",
+  "@release_chat_unknown_model": {
+    "description": "Fallback model name in the chat model picker's profile-default summary.",
+    "placeholders": {}
+  },
+  "release_chat_profile_default": "Profile default: {model}",
+  "@release_chat_profile_default": {
+    "description": "Chat model picker summary when the profile does not report a provider.",
+    "placeholders": {
+      "model": {
+        "type": "String"
+      }
+    }
+  },
+  "release_chat_profile_default_provider": "Profile default: {model} • {provider}",
+  "@release_chat_profile_default_provider": {
+    "description": "Chat model picker summary showing the profile's default model and provider.",
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "release_chat_choose_provider": "This model is available from multiple providers. Choose a provider to continue.",
+  "@release_chat_choose_provider": {
+    "description": "Chat model picker notice requiring an explicit provider for an ambiguous model.",
+    "placeholders": {}
+  },
+  "release_chat_slash_needs_gateway": "Slash commands need the Desktop gateway",
+  "@release_chat_slash_needs_gateway": {
+    "description": "Classic chat slash-command catalogue error when there is no Desktop gateway.",
+    "placeholders": {}
+  },
+  "release_chat_recovering_without_resending": "Recovering without resending",
+  "@release_chat_recovering_without_resending": {
+    "description": "Classic chat activity status during reconciliation; the prompt is not sent again.",
+    "placeholders": {}
+  },
+  "release_chat_live_request_unreachable": "Sorry, I could not reach Hermes for that request.",
+  "@release_chat_live_request_unreachable": {
+    "description": "Spoken live-voice failure notice in both chat layouts when the delegated request cannot reach Hermes.",
+    "placeholders": {}
+  },
+  "release_chat_live_working": "Hermes is working: {tool}. Not done yet.",
+  "@release_chat_live_working": {
+    "description": "Live-voice progress announcement in both chat layouts. The tool is a server-supplied tool name or status.",
+    "placeholders": {
+      "tool": {
+        "type": "String"
+      }
+    }
+  },
+  "release_chat_live_finished_without_spoken_result": "Hermes finished that request without a spoken result.",
+  "@release_chat_live_finished_without_spoken_result": {
+    "description": "Live-voice announcement in both chat layouts when the completed request has no spoken reply.",
+    "placeholders": {}
+  },
+  "release_chat_reply_language_unavailable": "Selected reply language is unavailable",
+  "@release_chat_reply_language_unavailable": {
+    "description": "Classic chat voice-setup error detail when the selected reply language cannot be configured.",
+    "placeholders": {}
+  },
+  "release_chat_reply_voice_unavailable": "Selected reply voice is unavailable",
+  "@release_chat_reply_voice_unavailable": {
+    "description": "Classic chat voice-setup error detail when the selected reply voice cannot be configured.",
+    "placeholders": {}
+  },
+  "release_chat_reply_voice_configuration_unavailable": "Reply voice configuration is unavailable",
+  "@release_chat_reply_voice_configuration_unavailable": {
+    "description": "Classic chat voice-setup error detail when rate, volume or pitch configuration fails.",
+    "placeholders": {}
+  },
+  "release_chat_notification_review_action": "Open the chat to review the requested action.",
+  "@release_chat_notification_review_action": {
+    "description": "Privacy-preserving native approval notification body; action details remain inside the authenticated chat.",
+    "placeholders": {}
+  },
+  "release_chat_notification_respond": "Open the chat to respond.",
+  "@release_chat_notification_respond": {
+    "description": "Privacy-preserving native question or secret-input notification body; prompt content remains inside the chat.",
+    "placeholders": {}
+  },
+  "release_chat_start_new_main_window": "Start a new chat in the main window.",
+  "@release_chat_start_new_main_window": {
+    "description": "Classic single-session window notice when a new-chat slash command needs the main window.",
+    "placeholders": {}
+  },
+  "release_chat_no_desktop_gateway": "No Desktop gateway",
+  "@release_chat_no_desktop_gateway": {
+    "description": "Classic composer RPC error detail when no Desktop gateway is available.",
+    "placeholders": {}
+  },
+  "release_chat_attachment_preparation_cancelled": "Attachment preparation was cancelled.",
+  "@release_chat_attachment_preparation_cancelled": {
+    "description": "Classic chat upload error when the attachment's owning response generation has been cancelled.",
+    "placeholders": {}
+  },
+  "release_chat_approval_authority_revoked": "Approval authority was revoked.",
+  "@release_chat_approval_authority_revoked": {
+    "description": "Classic approval refusal detail when the original approval authority is no longer current.",
+    "placeholders": {}
+  },
+  "release_chat_gateway_session_disconnected": "The Desktop gateway session is no longer connected",
+  "@release_chat_gateway_session_disconnected": {
+    "description": "Classic approval, question, sudo or secret response error when its Desktop gateway session has disconnected.",
+    "placeholders": {}
+  },
+  "release_chat_stop_requested": "Stop requested. Waiting for Hermes to finish.",
+  "@release_chat_stop_requested": {
+    "description": "Classic chat notice after requesting interruption without yet observing terminal settlement.",
+    "placeholders": {}
+  },
+  "release_chat_stop_request_failed": "Could not request stop: {error}",
+  "@release_chat_stop_request_failed": {
+    "description": "Classic chat interruption failure notice, preserving the reported error detail.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "release_chat_queued_prompt_not_sent": "The queued prompt was not sent.",
+  "@release_chat_queued_prompt_not_sent": {
+    "description": "Classic chat refusal detail inside the existing send-failed notice for a client-held prompt.",
+    "placeholders": {}
+  },
+  "release_chat_running_turn_unreachable": "The running turn could not be reached. Reconnecting without resending.",
+  "@release_chat_running_turn_unreachable": {
+    "description": "Classic chat stop notice when the running turn is unreachable; reconnection does not resend the prompt.",
+    "placeholders": {}
+  },
+  "release_chat_wait_for_composer": "Wait for the composer to become available.",
+  "@release_chat_wait_for_composer": {
+    "description": "Browser-preview attachment refusal in both chat layouts while the composer is busy.",
+    "placeholders": {}
+  },
+  "release_chat_find_in_transcript": "Find in transcript",
+  "@release_chat_find_in_transcript": {
+    "description": "Toolbar tooltip in both chat layouts opening search in the currently loaded transcript.",
+    "placeholders": {}
+  },
+  "release_chat_open_browser_preview": "Open browser preview",
+  "@release_chat_open_browser_preview": {
+    "description": "Toolbar tooltip and compact chat-tools menu entry opening the browser preview in both chat layouts.",
+    "placeholders": {}
+  },
+  "release_chat_more_tools": "More chat tools",
+  "@release_chat_more_tools": {
+    "description": "Compact toolbar overflow-menu tooltip in both chat layouts.",
+    "placeholders": {}
+  },
+  "release_chat_queue_until_finished": "Queue until this turn finishes",
+  "@release_chat_queue_until_finished": {
+    "description": "Classic composer tooltip for holding a prompt locally until the running turn finishes.",
+    "placeholders": {}
+  },
+  "release_chat_format_bold": "Bold",
+  "@release_chat_format_bold": {
+    "description": "Classic composer formatting-button tooltip and accessibility label for bold Markdown.",
+    "placeholders": {}
+  },
+  "release_chat_format_italic": "Italic",
+  "@release_chat_format_italic": {
+    "description": "Classic composer formatting-button tooltip and accessibility label for italic Markdown.",
+    "placeholders": {}
+  },
+  "ng_release_chat_gateway_queue_requirements": "The gateway queue needs an attached chat and a text-only prompt.",
+  "@ng_release_chat_gateway_queue_requirements": {
+    "description": "NextGen refusal when the gateway queue lacks an attached stored chat or the draft has attachments.",
+    "placeholders": {}
+  },
+  "ng_release_chat_start_new_main_screen": "Start a new chat from the main chat screen.",
+  "@ng_release_chat_start_new_main_screen": {
+    "description": "NextGen new-chat command notice in a pane with no new-chat callback.",
+    "placeholders": {}
+  },
+  "ng_release_chat_image": "image",
+  "@ng_release_chat_image": {
+    "description": "NextGen fallback item name inside the could-not-prepare-that-file message after a captured image cannot be staged.",
+    "placeholders": {}
+  },
+  "ng_release_chat_tool_seconds": "{seconds}s",
+  "@ng_release_chat_tool_seconds": {
+    "description": "NextGen tool elapsed duration, with seconds already formatted to one decimal place.",
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "release_preview_chat_changed": "Chat changed. Reconnect the preview to continue.",
+  "@release_preview_chat_changed": {
+    "description": "Preview notice after its owning chat changes."
+  },
+  "release_preview_authenticating_chat": "Authenticating chat…",
+  "@release_preview_authenticating_chat": {
+    "description": "Preview progress while verifying the owning chat."
+  },
+  "release_preview_unavailable_reason": "Preview unavailable: {reason}",
+  "@release_preview_unavailable_reason": {
+    "description": "Preview refusal with an already localized workspace failure reason.",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "release_preview_operation_failed": "Preview operation failed.",
+  "@release_preview_operation_failed": {
+    "description": "Safe fallback for an unexpected preview operation failure."
+  },
+  "release_preview_added_to_draft": "Added to draft. Nothing sent.",
+  "@release_preview_added_to_draft": {
+    "description": "Preview evidence was staged in the composer, not submitted."
+  },
+  "release_preview_open_site_title": "Open this site?",
+  "@release_preview_open_site_title": {
+    "description": "Confirmation before loading a new preview origin."
+  },
+  "release_preview_open_site_body": "{origin}\n\nReader mode loads only this document. It does not share cookies, sign-in details or the page with Hermes.",
+  "@release_preview_open_site_body": {
+    "description": "Preview origin approval explanation. The origin is a URL origin, not translated.",
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "release_preview_open_site": "Open site",
+  "@release_preview_open_site": {
+    "description": "Confirm loading the approved preview origin."
+  },
+  "release_preview_discard_pins_title": "Discard unstaged pins?",
+  "@release_preview_discard_pins_title": {
+    "description": "Confirmation before navigation drops annotation pins not yet staged."
+  },
+  "release_preview_keep_pins": "Keep pins",
+  "@release_preview_keep_pins": {
+    "description": "Cancel navigation and retain the preview annotation pins."
+  },
+  "release_preview_share_page_title": "Share this page with this chat?",
+  "@release_preview_share_page_title": {
+    "description": "Consent title before enabling reader access for the owning chat."
+  },
+  "release_preview_share_page_body": "Hermes can read the displayed text and element list from {origin}, and scroll this pane. Navigation ends sharing. Forms and credentials are not shared.",
+  "@release_preview_share_page_body": {
+    "description": "Exact reader-sharing scope disclosure. Keep navigation revocation and form/credential exclusions explicit.",
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "release_preview_share_page": "Share page",
+  "@release_preview_share_page": {
+    "description": "Confirm reader sharing with the current chat."
+  },
+  "release_preview_comment_number": "Comment #{number}",
+  "@release_preview_comment_number": {
+    "description": "Title of the annotation comment dialog, with the pin number.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "release_preview_note": "Note",
+  "@release_preview_note": {
+    "description": "Label of the preview annotation comment text field."
+  },
+  "release_preview_keep_pin": "Keep pin",
+  "@release_preview_keep_pin": {
+    "description": "Save the current preview annotation pin locally."
+  },
+  "release_preview_title": "Browser preview",
+  "@release_preview_title": {
+    "description": "Title of the isolated browser reader pane."
+  },
+  "release_preview_hide": "Hide preview",
+  "@release_preview_hide": {
+    "description": "Tooltip: hide the preview without forgetting its document."
+  },
+  "release_preview_close_and_forget": "Close and forget page",
+  "@release_preview_close_and_forget": {
+    "description": "Tooltip: close the preview and forget its document."
+  },
+  "release_preview_site_address": "Site address",
+  "@release_preview_site_address": {
+    "description": "Label of the preview URL field."
+  },
+  "release_preview_go_to_address": "Go to address",
+  "@release_preview_go_to_address": {
+    "description": "Tooltip: navigate the preview to the entered URL."
+  },
+  "release_preview_forward": "Forward",
+  "@release_preview_forward": {
+    "description": "Tooltip: advance through preview navigation history."
+  },
+  "release_preview_reload": "Reload",
+  "@release_preview_reload": {
+    "description": "Tooltip: reload the current preview document."
+  },
+  "release_preview_share_with_hermes": "Share page with Hermes",
+  "@release_preview_share_with_hermes": {
+    "description": "Tooltip: request consent to share the preview reader with Hermes."
+  },
+  "release_preview_stop_sharing": "Stop sharing page",
+  "@release_preview_stop_sharing": {
+    "description": "Tooltip: revoke the current reader-sharing grant."
+  },
+  "release_preview_annotate": "Annotate element or region",
+  "@release_preview_annotate": {
+    "description": "Tooltip: toggle preview annotation mode."
+  },
+  "release_preview_reader_console": "Reader console",
+  "@release_preview_reader_console": {
+    "description": "Tooltip: toggle the credential-free reader request log."
+  },
+  "release_preview_reconnect": "Reconnect preview",
+  "@release_preview_reconnect": {
+    "description": "Action to rebind a preview to its current chat."
+  },
+  "release_preview_reader_mode_help": "Reader mode: HTML and text. No scripts, embedded resources or signed-in browser profile.",
+  "@release_preview_reader_mode_help": {
+    "description": "Preview empty-state description of its reader-only limitations."
+  },
+  "release_preview_sharing_origin": "Sharing reader with this chat: {origin}",
+  "@release_preview_sharing_origin": {
+    "description": "Persistent notice while this preview reader is shared with the owning chat.",
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "release_preview_annotation_help": "Tap an element or drag a region to comment.",
+  "@release_preview_annotation_help": {
+    "description": "Instruction shown in preview annotation mode."
+  },
+  "release_preview_reader_requests": "Reader requests (JavaScript is off)",
+  "@release_preview_reader_requests": {
+    "description": "Reader console heading when no log rows are selected."
+  },
+  "release_preview_selected_requests": "{count} selected · JavaScript is off",
+  "@release_preview_selected_requests": {
+    "description": "Reader console heading with the selected log-row count.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "release_preview_copy_all": "Copy all",
+  "@release_preview_copy_all": {
+    "description": "Copy every retained reader request log row."
+  },
+  "release_preview_copy_selected": "Copy selected",
+  "@release_preview_copy_selected": {
+    "description": "Copy only the selected reader request log rows."
+  },
+  "release_preview_add_log_to_draft": "Add log to draft",
+  "@release_preview_add_log_to_draft": {
+    "description": "Stage the reader request log in the composer without sending."
+  },
+  "release_preview_requests_draft": "Reader requests:\n{log}",
+  "@release_preview_requests_draft": {
+    "description": "Heading and request log staged visibly in the composer. Preserve log line breaks.",
+    "placeholders": {
+      "log": {
+        "type": "String"
+      }
+    }
+  },
+  "release_preview_add_pins_to_draft": "Add {count} to draft",
+  "@release_preview_add_pins_to_draft": {
+    "description": "Stage the current preview annotation pins in the composer without sending.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "release_preview_request_loaded": "HTTP 200 · {origin} · {count, plural, one{{count} reader element} other{{count} reader elements}}",
+  "@release_preview_request_loaded": {
+    "description": "A successful reader fetch log row; retain HTTP 200 and the untranslated URL origin.",
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "release_preview_annotation_intro": "Review these comments on the preview of {origin}. The attached crops are numbered in the same order.",
+  "@release_preview_annotation_intro": {
+    "description": "Introduction to annotation evidence staged visibly in the composer, followed by technical coordinates and user notes.",
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "release_preview_reader_region": "reader region",
+  "@release_preview_reader_region": {
+    "description": "Label for a user-drawn reader region in staged annotation evidence."
+  },
+  "release_preview_capture_failed": "Could not capture these pixels.",
+  "@release_preview_capture_failed": {
+    "description": "Preview failure when an annotation crop cannot be captured."
+  },
+  "release_preview_address_not_approved": "This address is outside the approved preview origin.",
+  "@release_preview_address_not_approved": {
+    "description": "Preview address-policy refusal. Do not imply that navigation was approved."
+  },
+  "release_preview_page_limit": "Page exceeds the reader limit.",
+  "@release_preview_page_limit": {
+    "description": "Preview page exceeds the reader byte or source length budget."
+  },
+  "release_preview_page_unreadable": "The page could not be read.",
+  "@release_preview_page_unreadable": {
+    "description": "Preview HTML parse failed or the worker returned invalid data."
+  },
+  "release_preview_page_complex": "This page is too complex for reader mode.",
+  "@release_preview_page_complex": {
+    "description": "Preview background parsing exceeded its time budget."
+  },
+  "release_preview_http_failed": "HTTP {statusCode}. No redirect or sign-in was followed.",
+  "@release_preview_http_failed": {
+    "description": "Reader HTTP failure with the response status. Retain the no-redirect and no-sign-in guarantees.",
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "release_preview_unsupported_type": "Only HTML and plain text can open in reader mode.",
+  "@release_preview_unsupported_type": {
+    "description": "Preview MIME type is not supported."
+  },
+  "release_preview_load_insecure": "The site could not be loaded securely.",
+  "@release_preview_load_insecure": {
+    "description": "Credential-free preview fetch failed."
+  },
+  "release_preview_crop_limit": "Preview crop exceeds its limit.",
+  "@release_preview_crop_limit": {
+    "description": "Attachment preparation rejected the preview crop byte budget."
+  },
+  "release_preview_image_unreadable": "The selected image is empty or unreadable.",
+  "@release_preview_image_unreadable": {
+    "description": "Preview crop preparation found an empty or unreadable image."
+  },
+  "release_preview_image_budget": "The selected image exceeds the 64 MiB draft budget.",
+  "@release_preview_image_budget": {
+    "description": "Preview crop preparation rejected the per-image draft byte budget."
+  },
+  "release_preview_image_format": "Unsupported image format. Choose a JPEG, PNG, or WebP image.",
+  "@release_preview_image_format": {
+    "description": "Preview crop preparation rejected an unsupported image format."
+  },
+  "release_preview_image_decode": "The selected JPEG, PNG, or WebP image could not be decoded safely.",
+  "@release_preview_image_decode": {
+    "description": "Preview crop preparation could not safely decode the image."
+  },
+  "release_preview_image_sanitize": "Unable to sanitize this image. Choose a valid JPEG, PNG, or WebP image.",
+  "@release_preview_image_sanitize": {
+    "description": "Preview crop preparation could not scrub image metadata safely."
+  },
+  "release_preview_draft_budget": "Attachments are limited to 64 MiB total per draft.",
+  "@release_preview_draft_budget": {
+    "description": "Preview evidence would exceed the total attachment byte budget."
+  },
+  "release_preview_generic_file_limit": "Generic files are limited to 16 MiB each.",
+  "@release_preview_generic_file_limit": {
+    "description": "An existing generic attachment exceeds the limit checked while staging preview evidence."
+  },
+  "release_preview_image_not_sanitized": "Remote images must be sanitized before upload.",
+  "@release_preview_image_not_sanitized": {
+    "description": "An existing image fails the safety check while staging preview evidence."
+  },
+  "release_preview_stage_failed": "Could not add preview evidence to the draft. Try again.",
+  "@release_preview_stage_failed": {
+    "description": "Safe localized fallback for an unknown attachment preparation failure; never show raw service diagnostics."
+  },
+  "release_misc_find_hermes_on_lan": "Find Hermes on LAN",
+  "@release_misc_find_hermes_on_lan": {
+    "description": "Button and sheet title for finding Hermes servers on the local area network. Hermes is a product name; LAN means local area network.",
+    "placeholders": {}
+  },
+  "release_misc_discovery_failed": "Discovery failed: {error}",
+  "@release_misc_discovery_failed": {
+    "description": "Failure notice when local-network server discovery fails. The diagnostic error text is shown verbatim after a translated label.",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "Diagnostic details supplied by the discovery service."
+      }
+    }
+  },
+  "release_misc_no_lan_servers": "No Hermes servers found on the local network.",
+  "@release_misc_no_lan_servers": {
+    "description": "Empty result message after the local-network Hermes server scan completes.",
+    "placeholders": {}
+  },
+  "release_misc_api_key_rejected": "API key was rejected by {endpoint} (HTTP {statusCode}).",
+  "@release_misc_api_key_rejected": {
+    "description": "Connection health-check failure after the server rejects a supplied API key.",
+    "placeholders": {
+      "endpoint": {
+        "type": "String",
+        "description": "Gateway health-check URL."
+      },
+      "statusCode": {
+        "type": "int",
+        "description": "HTTP rejection status code, 401 or 403."
+      }
+    }
+  },
+  "release_misc_api_key_required": "Server requires an API key. Enter your API_SERVER_KEY.",
+  "@release_misc_api_key_required": {
+    "description": "Connection health-check failure when the server requires an API key and none was supplied. Keep the configuration identifier API_SERVER_KEY unchanged.",
+    "placeholders": {}
+  },
+  "release_misc_gateway_not_found": "Gateway endpoint {endpoint} returned HTTP 404. Check the Gateway path prefix and reverse-proxy routes.",
+  "@release_misc_gateway_not_found": {
+    "description": "Connection health-check failure for a missing gateway endpoint, including configuration checks rather than assuming the service identity.",
+    "placeholders": {
+      "endpoint": {
+        "type": "String",
+        "description": "Gateway health-check URL."
+      }
+    }
+  },
+  "release_misc_gateway_http_error": "Gateway endpoint {endpoint} returned HTTP {statusCode}.",
+  "@release_misc_gateway_http_error": {
+    "description": "Connection health-check failure for an HTTP status other than an authentication refusal or a missing endpoint.",
+    "placeholders": {
+      "endpoint": {
+        "type": "String",
+        "description": "Gateway health-check URL."
+      },
+      "statusCode": {
+        "type": "int",
+        "description": "HTTP failure status code."
+      }
+    }
+  },
+  "release_misc_gateway_unreachable": "Cannot reach Gateway endpoint {endpoint}.",
+  "@release_misc_gateway_unreachable": {
+    "description": "Connection health-check network failure without an HTTP response.",
+    "placeholders": {
+      "endpoint": {
+        "type": "String",
+        "description": "Gateway health-check URL."
+      }
+    }
   }
 }
