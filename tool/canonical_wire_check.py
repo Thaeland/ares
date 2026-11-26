@@ -52,6 +52,7 @@ def _load(tree):
     from gateway.session_connections import METHODS as connection_methods, session_owned
     from gateway.session_group_controls import GROUP_METHODS
     from tui_gateway import ws_legacy_fallback as fallback
+    from gateway import session_control_actions
     from persistence.authority.runtime import parse_mutation
     from persistence.core.errors import AuthorityRefusal
 
@@ -66,6 +67,9 @@ def _load(tree):
         'profile_implicit': frozenset(session_controls._PROFILE_IMPLICIT),
         'fallback': fallback,
         'parse_mutation': parse_mutation,
+        'validate_control': session_control_actions._validate,
+        'control_actions': frozenset(session_control_actions._ACTION_COMMANDS)
+        | frozenset(session_control_actions._SUBGOAL_ACTIONS),
         'refusal': AuthorityRefusal,
     }
 
@@ -371,6 +375,16 @@ def check(ctx, method, params):
             out.update(verdict=f'4001 {exc.reason}',
                        problems=[f'parse_mutation refused {operation!r} payload {params.get("payload")!r}'])
             return out
+    if method == 'session.control':
+        action, args = params.get('action'), params.get('args')
+        try:
+            if not isinstance(action, str):
+                raise ctx['refusal']('invalid_params')
+            ctx['validate_control'](action.strip(), {} if args is None else args)
+        except ctx['refusal'] as exc:
+            out.update(verdict=f'4001 {exc.reason}',
+                       problems=[f'session_control_actions._validate refused {action!r} args {args!r}'])
+            return out
     if method == 'prompt.submit' and not (params.get('submission_id') or params.get('input_id')):
         out.update(verdict='4001 invalid_params', problems=['prompt.submit needs submission_id or input_id'])
         return out
@@ -520,6 +534,7 @@ def emit_dart(ctx, pin):
         f'const configSetSessionKeys = {_dart_set(CONFIG_SET_SESSION_KEYS)};',
         f'const configSetProfileKeys = {_dart_set(CONFIG_SET_PROFILE_KEYS)};',
         f'const mutationPolicyOperations = {_dart_set(_POLICY_OPERATIONS)};',
+        f"const sessionControlActions = {_dart_set(ctx['control_actions'])};",
         '',
         'const canonicalWireContracts = <String, WireContract>{',
     ]

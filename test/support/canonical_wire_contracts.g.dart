@@ -116,6 +116,21 @@ const mutationPolicyOperations = {
   'rewind',
   'workspace',
 };
+const sessionControlActions = {
+  'goal.clear',
+  'goal.pause',
+  'goal.resume',
+  'goal.unwait',
+  'heartbeat.clear',
+  'heartbeat.pause',
+  'heartbeat.resume',
+  'loop.pause',
+  'loop.resume',
+  'loop.stop',
+  'subgoal.add',
+  'subgoal.clear',
+  'subgoal.remove',
+};
 
 const canonicalWireContracts = <String, WireContract>{
   'a2a.forward': WireContract(

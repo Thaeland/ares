@@ -244,9 +244,21 @@ Map<String, dynamic>? _mutate(Map<String, dynamic> params) {
 
 // gateway/session_control_actions.py::_validate.
 Map<String, dynamic>? _control(Map<String, dynamic> params) {
-  final args = params['args'];
-  if (args == null) return null;
-  if (args is! Map || args.keys.any((key) => key != 'text' && key != 'index')) {
+  final action = params['action'];
+  final args = params['args'] ?? const <String, dynamic>{};
+  if (action is! String ||
+      !sessionControlActions.contains(action.trim()) ||
+      args is! Map ||
+      args.keys.any((key) => key != 'text' && key != 'index')) {
+    return _invalidParams();
+  }
+  final index = args['index'];
+  final text = args['text'];
+  if (action.trim() == 'subgoal.remove' && (index is! int || index < 1)) {
+    return _invalidParams();
+  }
+  if (action.trim() == 'subgoal.add' &&
+      (text is! String || text.trim().isEmpty)) {
     return _invalidParams();
   }
   return null;
