@@ -123,6 +123,12 @@ flutter:
     - third_party/licenses/flutter-BSD-3-Clause.txt
     - third_party/licenses/Apache-2.0.txt
     - third_party/licenses/gradle-NOTICE.txt
+    - third_party/webrtc/NOTICE.md
+    - third_party/licenses/webrtc-BSD-3-Clause.txt
+    - third_party/licenses/webrtc-PATENTS.txt
+    - third_party/licenses/webrtc-third-party-licenses.txt
+    - third_party/licenses/audioswitch-Apache-2.0.txt
+    - third_party/licenses/flutter_webrtc-NOTICE.txt
 
 # MSIX package for sideloading and the Microsoft Store (built on Windows).
 #   flutter build windows --release

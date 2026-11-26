@@ -30,9 +30,21 @@ Telegram onboarding draws its QR code on the device with the Dart `qr` library
 ([BSD-3-Clause licence](third_party/licenses/qr-BSD-3-Clause.txt)); no QR
 payload is sent to an image-generation service.
 
-Real-time GPT-Live voice conversations use `flutter_webrtc` (`dart_webrtc`,
-`webrtc_interface`, `logger`), distributed under the MIT Licence. The gateway
-host performs session creation and holds any provider API key.
+Real-time GPT-Live voice conversations use `flutter_webrtc` 1.6.3
+(`dart_webrtc`, `webrtc_interface`, `logger`; MIT). It is not MIT all the way
+down: its `NOTICE` adds Apache-2.0 code (Shiguredo) and MIT code
+(react-native-webrtc), and it brings native WebRTC libraries under their own
+terms: `io.github.webrtc-sdk:android` 150.7871.04 on Android and the
+`WebRTC-SDK` 150.7871.04 `WebRTC.xcframework` on iOS and macOS (WebRTC,
+BSD-3-Clause with Google's patent grant), `com.github.davidliu:audioswitch`
+on Android (Apache-2.0), and the `libwebrtc.m150.7871.07` binaries on Windows
+and Linux (an MIT wrapper around WebRTC). The WebRTC libraries bundle
+BoringSSL, libvpx, Opus, libyuv, libsrtp, dav1d, libaom, Abseil and others
+under BSD, ISC/OpenSSL and Apache-2.0 terms; the Windows and Linux libraries
+also carry OpenH264 (BSD-2-Clause), libjpeg-turbo and FFmpeg
+(LGPL-2.1-or-later). What ships where, the full texts and the LGPL source
+pointers are in [third_party/webrtc/NOTICE.md](third_party/webrtc/NOTICE.md).
+The gateway host performs session creation and holds any provider API key.
 
 The completion sounds `ares_mail.wav` and `ares_reminder.wav` (in
 `android/app/src/main/res/raw/`, `ios/Runner/` and `macos/Runner/`) and the
