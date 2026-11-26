@@ -383,10 +383,36 @@ class _NgChatViewState extends State<NgChatView>
   late final NgReadAloud _readAloud;
 
   NgChatController get chat => widget.chat;
-  GatewayWakeWordController get _wake =>
-      widget.wakeController ?? chat.gateway.wakeWord;
-  VoiceLiveModeController get _voiceMode =>
-      widget.voiceModeController ?? chat.gateway.voiceLiveMode;
+
+  // The gateway's voice controllers, read once per gateway. A view can
+  // outlive its gateway by a frame (a connection switch disposes it first):
+  // it keeps the controllers it bound, which are inert once disposed, and
+  // never builds a fresh one on the disposed gateway.
+  NextGenGateway? _voiceGateway;
+  GatewayWakeWordController? _gatewayWake;
+  VoiceLiveModeController? _gatewayVoiceMode;
+
+  NextGenGateway _currentVoiceGateway() {
+    final gateway = chat.gateway;
+    if (!identical(gateway, _voiceGateway)) {
+      _voiceGateway = gateway;
+      _gatewayWake = null;
+      _gatewayVoiceMode = null;
+    }
+    return gateway;
+  }
+
+  GatewayWakeWordController get _wake {
+    if (widget.wakeController case final controller?) return controller;
+    final gateway = _currentVoiceGateway();
+    return _gatewayWake ??= gateway.wakeWord;
+  }
+
+  VoiceLiveModeController get _voiceMode {
+    if (widget.voiceModeController case final controller?) return controller;
+    final gateway = _currentVoiceGateway();
+    return _gatewayVoiceMode ??= gateway.voiceLiveMode;
+  }
 
   void _bindWake() {
     _wake.bindSessionId(chat.storedId ?? chat.runtimeId);
