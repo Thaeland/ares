@@ -237,7 +237,7 @@ class FakeHistoryBackend {
         foreignLists.add(Map<String, dynamic>.from(params));
         final offset = params['offset'] is int ? params['offset'] as int : 0;
         final source = params['source'] as String?;
-        if (offset > 0) {
+        if (offset > 0 || source == 'codex') {
           return {
             'result': {
               'sessions': [
@@ -286,6 +286,20 @@ class FakeHistoryBackend {
           };
         }
         foreignPreviews.add(Map<String, dynamic>.from(params));
+        if (params['id'] == codexHandle) {
+          return {
+            'result': {
+              'messages': [
+                {'role': 'user', 'content': 'Run migration $fixtureToken'},
+                {'role': 'assistant', 'content': 'Migration applied cleanly.'},
+              ],
+              'total': 52,
+              'truncated': true,
+              'already_imported': 'existing-codex-1',
+              'cwd': '/srv/codex-project',
+            },
+          };
+        }
         return {
           'result': {
             'messages': [
@@ -308,6 +322,14 @@ class FakeHistoryBackend {
           };
         }
         foreignImports.add(Map<String, dynamic>.from(params));
+        if (params['id'] == codexHandle) {
+          return {
+            'result': {
+              'session_id': 'existing-codex-1',
+              'already_imported': true,
+            },
+          };
+        }
         return {
           'result': {
             'session_id': 'imported-host-1',

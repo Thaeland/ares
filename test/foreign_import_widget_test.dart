@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hermes_android/core/models/projects_tree_overview.dart';
 import 'package:hermes_android/core/screens/chat_screen.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/desktop_gateway_client.dart';
@@ -21,10 +22,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/fake_history_owner.dart';
 import 'support/fake_voice_composer_adapter.dart';
+import 'support/inert_turn_application_session.dart';
 import 'support/pump_chat_updates.dart';
 
 class _OwnerController extends GatewayTurnApplicationController {
-  _OwnerController(this.normal);
+  _OwnerController(this.normal)
+    : super(sessionFactory: (_) => InertTurnApplicationSession());
   final NormalGatewayApplicationSession normal;
 
   @override
@@ -184,6 +187,7 @@ void main() {
             history: (_) async => const [],
           );
           final controller = _OwnerController(normal);
+          await normal.ready;
           disposeShell = controller.close;
           app = MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -202,6 +206,7 @@ void main() {
                 isLocalDraft: true,
               ),
               turnApplicationController: controller,
+              testProjectOverviewLoader: () async => ProjectsTreeOverview.empty,
               testApiClient: backend.apiClient,
               testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
             ),
@@ -373,6 +378,176 @@ void main() {
           findsOneWidget,
         );
         expect(find.byKey(const ValueKey('history-import-host')), findsNothing);
+        await tester.pumpWidget(const SizedBox.shrink());
+      },
+    );
+
+    testWidgets(
+      '$label filters by Codex source, previews truncated already-imported session, and re-opens idempotent copy via host route',
+      (tester) async {
+        SharedPreferences.setMockInitialValues({});
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(800, 1200);
+        addTearDown(tester.view.reset);
+
+        final backend = FakeHistoryBackend(profile: 'field-work');
+        addTearDown(backend.close);
+
+        String? openedSessionId;
+        String? openedTitle;
+        late final Future<void> Function() disposeShell;
+        late final Widget app;
+
+        if (classic) {
+          final client = _ClassicDesktopClient(backend.owner);
+          final normal = NormalGatewayApplicationSession(
+            connection: backend.connection,
+            scope: 'foreign-import-codex-classic',
+            client: client,
+            submit:
+                ({
+                  required sessionId,
+                  required text,
+                  required onEvent,
+                  required onSent,
+                }) async {},
+            resume:
+                ({required localSessionId, required storedSessionId}) async =>
+                    const ResumedGatewaySession(runtimeSessionId: 'rt-2'),
+            history: (_) async => const [],
+          );
+          final controller = _OwnerController(normal);
+          await normal.ready;
+          disposeShell = controller.close;
+          app = MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: ChatScreen(
+              connection: backend.connection,
+              session: Session(
+                id: 'local-draft',
+                title: 'New chat',
+                model: 'fixture',
+                source: 'mobile',
+                messageCount: 0,
+                isActive: true,
+                preview: '',
+                startedAt: 1,
+                isLocalDraft: true,
+              ),
+              turnApplicationController: controller,
+              testProjectOverviewLoader: () async => ProjectsTreeOverview.empty,
+              testApiClient: backend.apiClient,
+              testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
+              onOpenSession: (session) async {
+                openedSessionId = session.id;
+                openedTitle = session.title;
+              },
+            ),
+          );
+        } else {
+          final prefs = await SharedPreferences.getInstance();
+          final gateway = _NgHistoryGateway(backend);
+          final chat = NgChatController(gateway);
+          disposeShell = () async {
+            chat.dispose();
+            gateway.dispose();
+          };
+          app = MaterialApp(
+            theme: nextGenTheme(Brightness.dark, NextGenLook.instance),
+            home: NgScope(
+              connManager: ConnectionManager(prefs),
+              gateway: gateway,
+              connections: [backend.connection],
+              switchTo: (_) async {},
+              addGateway: () async {},
+              signOut: (_) async {},
+              reload: () async {},
+              signInAgain: () async {},
+              child: NgChatView(
+                chat: chat,
+                onOpenSidebar: () {},
+                onNewChat: () {},
+                onOpenSessionId: (id, {title}) {
+                  openedSessionId = id;
+                  openedTitle = title;
+                },
+              ),
+            ),
+          );
+        }
+
+        try {
+          await tester.pumpWidget(app);
+          await tester.pump(const Duration(milliseconds: 200));
+
+          if (classic) {
+            await tester.tap(find.byTooltip('Chat actions'));
+            await _settle(tester);
+            await tester.tap(find.text('Import Claude or Codex'));
+          } else {
+            await tester.tap(find.byKey(const ValueKey('session-history')));
+          }
+          await _settle(tester);
+
+          // Filter directly to Codex source (session.foreign.list with source='codex').
+          await tester.tap(find.text('Codex'));
+          await _settle(tester);
+          expect(backend.foreignLists.last, {
+            'source': 'codex',
+            'offset': 0,
+            'limit': 25,
+            'profile': 'field-work',
+          });
+          expect(find.text('Plan the release'), findsNothing);
+
+          final codexTile = find.byKey(
+            const ValueKey('history-foreign-${FakeHistoryBackend.codexHandle}'),
+          );
+          await _reveal(tester, codexTile);
+          await tester.tap(codexTile);
+          await _settle(tester);
+
+          // Preview contract (b7ee21c14e): truncated + already_imported + cwd + redaction.
+          expect(backend.foreignPreviews.last, {
+            'id': FakeHistoryBackend.codexHandle,
+            'profile': 'field-work',
+          });
+          expect(find.text('Preview shows 2 of 52.'), findsOneWidget);
+          expect(find.text('Directory: /srv/codex-project'), findsOneWidget);
+          expect(find.text('Open imported session'), findsOneWidget);
+          expect(
+            find.textContaining(FakeHistoryBackend.fixtureToken),
+            findsNothing,
+          );
+
+          final openImported = find.byKey(
+            const ValueKey('history-import-host'),
+          );
+          await _reveal(tester, openImported);
+          await tester.tap(openImported);
+          await _settle(tester);
+          await tester.tap(find.byKey(const ValueKey('history-confirm')));
+          await _settle(tester);
+
+          expect(backend.foreignImports.single, {
+            'id': FakeHistoryBackend.codexHandle,
+            'profile': 'field-work',
+          });
+          expect(
+            find.text('Already imported as existing-codex-1'),
+            findsOneWidget,
+          );
+
+          await tester.tap(find.byKey(const ValueKey('history-open-session')));
+          await _settle(tester);
+          expect(openedSessionId, 'existing-codex-1');
+          expect(openedTitle, 'Migrate database');
+        } finally {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await disposeShell();
+          await tester.pump();
+        }
       },
     );
   }

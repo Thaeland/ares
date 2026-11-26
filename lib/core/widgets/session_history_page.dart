@@ -303,7 +303,7 @@ class _SessionHistoryPageState extends State<SessionHistoryPage> {
     });
     try {
       final page = await target.foreignSessions(source: source);
-      if (!mounted || !target.isCurrent) return;
+      if (!mounted || !target.isCurrent || _foreignSource != source) return;
       setState(() {
         _foreignUnsupported = false;
         _foreign = page;

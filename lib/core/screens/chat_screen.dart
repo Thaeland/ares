@@ -2578,14 +2578,16 @@ class _ChatScreenState extends State<ChatScreen>
             unawaited(_fetchMessages(focusSavedHistory: true));
             _editComposerAsUser(text);
           },
-          onOpenSession: _openStoredSessionFromHistory,
+          onOpenSession: widget.singleSession && widget.onOpenSession == null
+              ? null
+              : _openStoredSessionFromHistory,
         ),
       ),
     );
   }
 
   void _openStoredSessionFromHistory(String sessionId, {String? title}) {
-    if (!mounted || widget.singleSession) return;
+    if (!mounted) return;
     final now = DateTime.now().millisecondsSinceEpoch / 1000.0;
     final target = Session(
       id: sessionId,
@@ -2598,6 +2600,12 @@ class _ChatScreenState extends State<ChatScreen>
       startedAt: now,
       isLocalDraft: false,
     );
+    final hostOpen = widget.onOpenSession;
+    if (hostOpen != null) {
+      unawaited(hostOpen(target));
+      return;
+    }
+    if (widget.singleSession) return;
     Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
         builder: (_) => ChatScreen(
