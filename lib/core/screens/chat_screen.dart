@@ -64,6 +64,7 @@ import '../services/gateway_turn_ui_projection.dart';
 import '../services/remote_files_client.dart';
 import '../preview/chat_preview.dart';
 import 'kanban_board_screen.dart';
+import 'bots_screen.dart';
 import '../render/render_scope.dart';
 import '../capabilities/capability_admin.dart';
 import '../render/catalog_install.dart';
@@ -4881,6 +4882,26 @@ class _ChatScreenState extends State<ChatScreen>
         Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => KanbanBoardScreen(
+              owner: gateway.workspace,
+              route: gateway.workspace.route(),
+              connection: connection,
+            ),
+          ),
+        ),
+      );
+      return '';
+    }
+    if (bareName == 'bots' &&
+        _slashCommandArgument(text).isEmpty &&
+        _desktopGateway != null) {
+      final gateway = _desktopGateway!;
+      final connection = widget.connection;
+      _setRestoredComposer('');
+      _commitComposerForSend();
+      unawaited(
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => BotsScreen(
               owner: gateway.workspace,
               route: gateway.workspace.route(),
               connection: connection,

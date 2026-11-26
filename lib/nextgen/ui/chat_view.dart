@@ -24,6 +24,7 @@ import '../../core/render/setup_beat.dart';
 import '../../core/screens/workspace_workers_screen.dart';
 import '../../core/screens/gateway_queue_screen.dart';
 import '../../core/screens/kanban_board_screen.dart';
+import '../../core/screens/bots_screen.dart';
 import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
 import '../../core/utils/delivered_files.dart';
@@ -668,6 +669,20 @@ class _NgChatViewState extends State<NgChatView>
         await Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => KanbanBoardScreen(
+              owner: gateway.workspace,
+              route: gateway.workspace.route(),
+              connection: conn,
+            ),
+          ),
+        );
+        return true;
+      case 'bots' when command.arg.isEmpty:
+        _input.clear();
+        final gateway = chat.gateway;
+        final conn = gateway.connection;
+        await Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => BotsScreen(
               owner: gateway.workspace,
               route: gateway.workspace.route(),
               connection: conn,
