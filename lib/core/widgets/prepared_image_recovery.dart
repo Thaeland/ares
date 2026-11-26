@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+
 import '../models/attachment_draft.dart';
 import '../services/attachment_draft_service.dart';
 import '../services/prepared_image_store.dart';
@@ -25,12 +27,15 @@ class PreparedImageRecovery extends StatefulWidget {
 class _PreparedImageRecoveryState extends State<PreparedImageRecovery> {
   bool busy = false;
   Future<void> open() async {
+    final l10n = context.sharedL10n;
     if (busy) return;
     final revision = widget.revision();
     if (revision == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Wait for an empty draft before restoring.'),
+        SnackBar(
+          content: Text(
+            l10n.release_core_prepared_image_recovery_wait_for_an_empty_draft_before_restoring,
+          ),
         ),
       );
       return;
@@ -47,68 +52,79 @@ class _PreparedImageRecoveryState extends State<PreparedImageRecovery> {
       if (!mounted || !current()) return;
       if (entries.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No unacknowledged image drafts in this chat.'),
+          SnackBar(
+            content: Text(
+              l10n.release_core_prepared_image_recovery_no_unacknowledged_image_drafts_in_this_chat,
+            ),
           ),
         );
         return;
       }
-      final choice =
-          await showModalBottomSheet<
-            ({PreparedImageEntry entry, bool discard})
-          >(
-            context: context,
-            builder: (context) => SafeArea(
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  const ListTile(
-                    title: Text('Unacknowledged image drafts'),
-                    subtitle: Text(
-                      'The gateway may already have received these. Restore to review; nothing is sent.',
-                    ),
-                  ),
-                  for (final entry in entries)
-                    ListTile(
-                      title: Text(
-                        entry.text.isEmpty ? 'Image draft' : entry.text,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Text(
-                        '${entry.imageCount} image(s) · ${entry.created.toLocal()}${entry.copyOnly ? ' · Sending creates a new turn' : ''}',
-                      ),
-                      onTap: () => Navigator.pop(context, (
-                        entry: entry,
-                        discard: false,
-                      )),
-                      trailing: IconButton(
-                        tooltip: 'Discard local copy',
-                        icon: const Icon(Icons.delete_outline),
-                        onPressed: () => Navigator.pop(context, (
-                          entry: entry,
-                          discard: true,
-                        )),
-                      ),
-                    ),
-                ],
+      final choice = await showModalBottomSheet<({PreparedImageEntry entry, bool discard})>(
+        context: context,
+        builder: (context) => SafeArea(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              ListTile(
+                title: Text(
+                  l10n.release_core_prepared_image_recovery_unacknowledged_image_drafts,
+                ),
+                subtitle: Text(
+                  l10n.release_core_prepared_image_recovery_the_gateway_may_already_have_received_these_restore,
+                ),
               ),
-            ),
-          );
+              for (final entry in entries)
+                ListTile(
+                  title: Text(
+                    entry.text.isEmpty
+                        ? l10n.release_core_prepared_image_recovery_image_draft
+                        : entry.text,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(
+                    [
+                      l10n.release_core_image_recovery_metadata(
+                        entry.imageCount,
+                        MaterialLocalizations.of(
+                          context,
+                        ).formatFullDate(entry.created.toLocal()),
+                      ),
+                      if (entry.copyOnly)
+                        l10n.release_core_image_recovery_new_turn,
+                    ].join(' · '),
+                  ),
+                  onTap: () =>
+                      Navigator.pop(context, (entry: entry, discard: false)),
+                  trailing: IconButton(
+                    tooltip: l10n
+                        .release_core_prepared_image_recovery_discard_local_copy,
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: () =>
+                        Navigator.pop(context, (entry: entry, discard: true)),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
       if (!mounted || !current() || choice == null) return;
       if (choice.discard) {
         final confirmed = await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Discard this local image draft?'),
+            title: Text(
+              l10n.release_core_prepared_image_recovery_discard_this_local_image_draft,
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
+                child: Text(l10n.cancel),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, true),
-                child: const Text('Discard'),
+                child: Text(l10n.release_core_git_review_pane_discard),
               ),
             ],
           ),
@@ -128,7 +144,11 @@ class _PreparedImageRecoveryState extends State<PreparedImageRecovery> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Image draft recovery is unavailable.')),
+          SnackBar(
+            content: Text(
+              l10n.release_core_prepared_image_recovery_image_draft_recovery_is_unavailable,
+            ),
+          ),
         );
       }
     } finally {
@@ -140,6 +160,10 @@ class _PreparedImageRecoveryState extends State<PreparedImageRecovery> {
   Widget build(BuildContext context) => TextButton.icon(
     onPressed: busy ? null : open,
     icon: const Icon(Icons.restore, size: 18),
-    label: const Text('Recover image draft…'),
+    label: Text(
+      context
+          .sharedL10n
+          .release_core_prepared_image_recovery_recover_image_draft,
+    ),
   );
 }

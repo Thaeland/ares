@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+
 import '../models/turn_changed_files.dart';
 import '../services/remote_workspace.dart';
 import 'markdown_link_handler.dart';
@@ -34,9 +36,7 @@ class TurnChangedFilesCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              files.length == 1
-                  ? '1 file changed this turn'
-                  : '${files.length} files changed this turn',
+              context.sharedL10n.release_core_git_files_changed(files.length),
               style: theme.textTheme.titleSmall,
             ),
             for (final file in files)
@@ -93,7 +93,7 @@ class _GitReviewPaneState extends State<GitReviewPane> {
   String? _baseline;
   String? _baselineCwd;
   var _omitted = 0;
-  String? _message;
+  String Function(AppLocalizations)? _message;
   String? _diff;
   String? _selected;
   String? _prUrl;
@@ -219,7 +219,8 @@ class _GitReviewPaneState extends State<GitReviewPane> {
       if (!_owns(epoch)) return;
       setState(() {
         _busy = false;
-        _message = 'The Git operation did not complete.';
+        _message = (l10n) => l10n
+            .release_core_git_review_pane_the_git_operation_did_not_complete;
         if (bound != null) _target = bound;
       });
     }
@@ -300,7 +301,8 @@ class _GitReviewPaneState extends State<GitReviewPane> {
       if (!_owns(epoch)) return;
       setState(() {
         _busy = false;
-        _message = 'The Git operation did not complete.';
+        _message = (l10n) => l10n
+            .release_core_git_review_pane_the_git_operation_did_not_complete;
       });
     }
   }
@@ -314,7 +316,7 @@ class _GitReviewPaneState extends State<GitReviewPane> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(context.sharedL10n.cancel),
           ),
           FilledButton(
             key: const Key('git-confirm'),
@@ -338,12 +340,20 @@ class _GitReviewPaneState extends State<GitReviewPane> {
             Row(
               children: [
                 IconButton(
-                  tooltip: 'Close Git review',
+                  tooltip: context
+                      .sharedL10n
+                      .release_core_git_review_pane_close_git_review,
                   onPressed: widget.onClose,
                   icon: const Icon(Icons.close),
                 ),
-                const Expanded(child: Text('Git review')),
-                const Text('Pin lane'),
+                Expanded(
+                  child: Text(
+                    context
+                        .sharedL10n
+                        .release_core_session_files_view_git_review,
+                  ),
+                ),
+                Text(context.sharedL10n.release_core_git_review_pane_pin_lane),
                 Switch(
                   key: const Key('git-follow-pin'),
                   value: _pinned,
@@ -351,37 +361,42 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                 ),
                 IconButton(
                   key: const Key('git-refresh'),
-                  tooltip: 'Refresh Git review',
+                  tooltip: context
+                      .sharedL10n
+                      .release_core_git_review_pane_refresh_git_review,
                   onPressed: _busy ? null : () => _load(),
                   icon: const Icon(Icons.refresh),
                 ),
               ],
             ),
             if (_busy) const LinearProgressIndicator(),
-            if (_message != null) Text(_message!, key: const Key('git-error')),
+            if (_message != null)
+              Text(_message!(context.sharedL10n), key: const Key('git-error')),
             if (_omitted > 0)
               Text(
-                _omitted == 1
-                    ? '1 Git entry was left out because it was not safe to show.'
-                    : '$_omitted Git entries were left out because they were not safe to show.',
+                context.sharedL10n.release_core_git_entries_omitted(_omitted),
                 key: const Key('git-omitted'),
               ),
             if (_target?.canonicalCwd case final cwd?)
               Text(cwd, key: const Key('git-cwd')),
             const SizedBox(height: 8),
             SegmentedButton<GitReviewScope>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: GitReviewScope.uncommitted,
-                  label: Text('Uncommitted'),
+                  label: Text(
+                    context.sharedL10n.release_core_git_review_pane_uncommitted,
+                  ),
                 ),
                 ButtonSegment(
                   value: GitReviewScope.branch,
-                  label: Text('Branch'),
+                  label: Text(context.sharedL10n.branch),
                 ),
                 ButtonSegment(
                   value: GitReviewScope.lastTurn,
-                  label: Text('Last turn'),
+                  label: Text(
+                    context.sharedL10n.release_core_git_review_pane_last_turn,
+                  ),
                 ),
               ],
               selected: {_scope},
@@ -396,10 +411,12 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                     },
             ),
             if (_scope != GitReviewScope.uncommitted)
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(top: 8),
                 child: Text(
-                  'Branch and last-turn views are read-only.',
+                  context
+                      .sharedL10n
+                      .release_core_git_review_pane_branch_and_last_turn_views_are_read_only,
                   key: Key('git-readonly'),
                 ),
               ),
@@ -425,7 +442,11 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                         _baseline = sha;
                         _baselineCwd = cwd;
                       }),
-                child: const Text('Mark HEAD as the turn baseline'),
+                child: Text(
+                  context
+                      .sharedL10n
+                      .release_core_git_review_pane_mark_head_as_the_turn_baseline,
+                ),
               ),
             if (shipping) ...[
               Wrap(
@@ -436,7 +457,9 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                     onPressed: _busy
                         ? null
                         : () => _act((target) => target.gitStage()),
-                    child: const Text('Stage all'),
+                    child: Text(
+                      context.sharedL10n.release_core_git_review_pane_stage_all,
+                    ),
                   ),
                   TextButton(
                     key: const Key('git-revert-all'),
@@ -444,13 +467,23 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                         ? null
                         : () async {
                             final yes = await _confirm(
-                              'Discard every uncommitted change?',
-                              'Tracked files return to HEAD and untracked files in this session directory are removed.',
-                              'Discard',
+                              context
+                                  .sharedL10n
+                                  .release_core_git_review_pane_discard_every_uncommitted_change,
+                              context
+                                  .sharedL10n
+                                  .release_core_git_review_pane_tracked_files_return_to_head_and_untracked_files,
+                              context
+                                  .sharedL10n
+                                  .release_core_git_review_pane_discard,
                             );
                             if (yes) await _act((target) => target.gitRevert());
                           },
-                    child: const Text('Discard all'),
+                    child: Text(
+                      context
+                          .sharedL10n
+                          .release_core_git_review_pane_discard_all,
+                    ),
                   ),
                 ],
               ),
@@ -461,7 +494,7 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                 selected: file.path == _selected,
                 title: Text(file.path),
                 subtitle: Text(
-                  '${file.status} +${file.added} -${file.removed}${file.staged ? ' staged' : ''}',
+                  '${file.status} +${file.added} -${file.removed}${file.staged ? ' · ${context.sharedL10n.release_core_git_staged}' : ''}',
                 ),
                 onTap: () async {
                   setState(() => _selected = file.path);
@@ -476,7 +509,13 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                                   ? 'git-unstage-${file.path}'
                                   : 'git-stage-${file.path}',
                             ),
-                            tooltip: file.staged ? 'Unstage' : 'Stage',
+                            tooltip: file.staged
+                                ? context
+                                      .sharedL10n
+                                      .release_core_git_review_pane_unstage
+                                : context
+                                      .sharedL10n
+                                      .release_core_git_review_pane_stage,
                             onPressed: _busy
                                 ? null
                                 : () => _act(
@@ -488,14 +527,23 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                           ),
                           IconButton(
                             key: Key('git-revert-${file.path}'),
-                            tooltip: 'Discard file',
+                            tooltip: context
+                                .sharedL10n
+                                .release_core_git_review_pane_discard_file,
                             onPressed: _busy
                                 ? null
                                 : () async {
                                     final yes = await _confirm(
-                                      'Discard ${file.path}?',
-                                      'This restores the committed copy or removes the untracked file.',
-                                      'Discard',
+                                      context.sharedL10n
+                                          .release_core_git_review_pane_discard_2(
+                                            (file.path).toString(),
+                                          ),
+                                      context
+                                          .sharedL10n
+                                          .release_core_git_review_pane_this_restores_the_committed_copy_or_removes_the,
+                                      context
+                                          .sharedL10n
+                                          .release_core_git_review_pane_discard,
                                     );
                                     if (yes) {
                                       await _act(
@@ -513,7 +561,9 @@ class _GitReviewPaneState extends State<GitReviewPane> {
             if (_diff != null)
               SelectableText(
                 _diff!.length > 20000
-                    ? '${_diff!.substring(0, 20000)}\n\u2026 truncated'
+                    ? context.sharedL10n.release_core_git_diff_truncated(
+                        _diff!.substring(0, 20000),
+                      )
                     : _diff!,
                 key: const Key('git-diff'),
                 style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
@@ -524,7 +574,11 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                 controller: _commit,
                 minLines: 2,
                 maxLines: 6,
-                decoration: const InputDecoration(labelText: 'Commit message'),
+                decoration: InputDecoration(
+                  labelText: context
+                      .sharedL10n
+                      .release_core_git_review_pane_commit_message,
+                ),
               ),
               Wrap(
                 spacing: 8,
@@ -540,12 +594,17 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                               avoid: _commit.text,
                             );
                             if (draft.isEmpty) {
-                              _message = 'Nothing in the diff to summarise.';
+                              _message = (l10n) => l10n
+                                  .release_core_git_review_pane_nothing_in_the_diff_to_summarise;
                               return;
                             }
                             _commit.text = draft;
                           }),
-                    child: const Text('Generate message'),
+                    child: Text(
+                      context
+                          .sharedL10n
+                          .release_core_git_review_pane_generate_message,
+                    ),
                   ),
                   FilledButton(
                     key: const Key('git-commit'),
@@ -554,7 +613,9 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                         : () => _act(
                             (target) => target.gitCommit(message: _commit.text),
                           ),
-                    child: const Text('Commit'),
+                    child: Text(
+                      context.sharedL10n.release_core_git_review_pane_commit,
+                    ),
                   ),
                   FilledButton(
                     key: const Key('git-commit-push'),
@@ -566,14 +627,20 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                               push: true,
                             ),
                           ),
-                    child: const Text('Commit and push'),
+                    child: Text(
+                      context
+                          .sharedL10n
+                          .release_core_git_review_pane_commit_and_push,
+                    ),
                   ),
                   OutlinedButton(
                     key: const Key('git-push'),
                     onPressed: _busy
                         ? null
                         : () => _act((target) => target.gitPush()),
-                    child: const Text('Push'),
+                    child: Text(
+                      context.sharedL10n.release_core_git_review_pane_push,
+                    ),
                   ),
                   OutlinedButton(
                     key: const Key('git-pr'),
@@ -589,8 +656,12 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                         : null,
                     child: Text(
                       _prUrl == null
-                          ? 'Create pull request'
-                          : 'Pull request ready',
+                          ? context
+                                .sharedL10n
+                                .release_core_git_review_pane_create_pull_request
+                          : context
+                                .sharedL10n
+                                .release_core_git_review_pane_pull_request_ready,
                     ),
                   ),
                   if (widget.onHandOff != null)
@@ -601,14 +672,22 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                           'Ship this session workspace: review the uncommitted diff, commit, push to its private remote, and open a pull request if gh is available. Stay in this repository.',
                         );
                       },
-                      child: const Text('Ask Hermes to ship'),
+                      child: Text(
+                        context
+                            .sharedL10n
+                            .release_core_git_review_pane_ask_hermes_to_ship,
+                      ),
                     ),
                 ],
               ),
               Text(
                 _ghReady
-                    ? 'gh is authenticated on this gateway.'
-                    : 'Install the GitHub CLI (gh) and sign in to open PRs',
+                    ? context
+                          .sharedL10n
+                          .release_core_git_review_pane_gh_is_authenticated_on_this_gateway
+                    : context
+                          .sharedL10n
+                          .release_core_git_review_pane_install_the_github_cli_gh_and_sign_in,
                 key: const Key('git-gh'),
               ),
               if (_prUrl case final url?)
@@ -619,19 +698,22 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                     ),
                     TextButton(
                       onPressed: () => unawaited(_openPullRequest(url)),
-                      child: const Text('Open'),
+                      child: Text(context.sharedL10n.notification_open_action),
                     ),
                   ],
                 ),
             ],
             const Divider(),
-            Text('Worktrees', style: Theme.of(context).textTheme.titleSmall),
+            Text(
+              context.sharedL10n.release_core_git_review_pane_worktrees,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
             for (final tree in _trees)
               ListTile(
                 title: Text(tree.branch ?? tree.path),
                 subtitle: Text(tree.path),
                 trailing: tree.isMain
-                    ? const Text('Main')
+                    ? Text(context.sharedL10n.release_core_git_review_pane_main)
                     : Wrap(
                         children: [
                           TextButton(
@@ -640,9 +722,16 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                                 ? null
                                 : () async {
                                     final yes = await _confirm(
-                                      'Follow ${tree.branch}?',
-                                      'The session working directory becomes this worktree unless the lane is pinned.',
-                                      'Follow',
+                                      context.sharedL10n
+                                          .release_core_git_review_pane_follow(
+                                            (tree.branch).toString(),
+                                          ),
+                                      context
+                                          .sharedL10n
+                                          .release_core_git_review_pane_the_session_working_directory_becomes_this_worktree_unless,
+                                      context
+                                          .sharedL10n
+                                          .release_core_git_review_pane_follow_2,
                                     );
                                     if (!yes || _pinned) return;
                                     await _act((target) async {
@@ -655,7 +744,11 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                                       await _load(expected: tree.path);
                                     });
                                   },
-                            child: const Text('Follow'),
+                            child: Text(
+                              context
+                                  .sharedL10n
+                                  .release_core_git_review_pane_follow_2,
+                            ),
                           ),
                           TextButton(
                             key: Key('git-remove-${tree.branch}'),
@@ -663,9 +756,16 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                                 ? null
                                 : () async {
                                     final yes = await _confirm(
-                                      'Remove ${tree.branch}?',
-                                      'The worktree directory is removed.',
-                                      'Remove',
+                                      context.sharedL10n
+                                          .release_core_git_review_pane_remove(
+                                            (tree.branch).toString(),
+                                          ),
+                                      context
+                                          .sharedL10n
+                                          .release_core_git_review_pane_the_worktree_directory_is_removed,
+                                      context
+                                          .sharedL10n
+                                          .release_core_git_review_pane_remove_2,
                                     );
                                     if (!yes) return;
                                     await _act(
@@ -674,7 +774,11 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                                       ),
                                     );
                                   },
-                            child: const Text('Remove'),
+                            child: Text(
+                              context
+                                  .sharedL10n
+                                  .release_core_git_review_pane_remove_2,
+                            ),
                           ),
                         ],
                       ),
@@ -682,18 +786,27 @@ class _GitReviewPaneState extends State<GitReviewPane> {
             TextField(
               key: const Key('git-worktree-name'),
               controller: _workName,
-              decoration: const InputDecoration(labelText: 'New worktree name'),
+              decoration: InputDecoration(
+                labelText: context
+                    .sharedL10n
+                    .release_core_git_review_pane_new_worktree_name,
+              ),
             ),
             TextField(
               key: const Key('git-worktree-branch'),
               controller: _workBranch,
-              decoration: const InputDecoration(labelText: 'New branch'),
+              decoration: InputDecoration(
+                labelText:
+                    context.sharedL10n.release_core_git_review_pane_new_branch,
+              ),
             ),
             if (_bases.isNotEmpty)
               DropdownButton<String>(
                 key: const Key('git-worktree-base'),
                 value: _bases.any((row) => row.name == _base) ? _base : null,
-                hint: const Text('Base branch'),
+                hint: Text(
+                  context.sharedL10n.release_core_git_review_pane_base_branch,
+                ),
                 items: [
                   for (final row in _bases)
                     DropdownMenuItem(value: row.name, child: Text(row.name)),
@@ -715,7 +828,9 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                         base: _base,
                       );
                     }),
-              child: const Text('Create worktree'),
+              child: Text(
+                context.sharedL10n.release_core_git_review_pane_create_worktree,
+              ),
             ),
             if (_branches.isNotEmpty) ...[
               DropdownButton<String>(
@@ -723,7 +838,11 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                 value: _branches.any((row) => row.name == _convert)
                     ? _convert
                     : null,
-                hint: const Text('Existing branch'),
+                hint: Text(
+                  context
+                      .sharedL10n
+                      .release_core_git_review_pane_existing_branch,
+                ),
                 items: [
                   for (final row in _branches.where((row) => !row.isRemote))
                     DropdownMenuItem(value: row.name, child: Text(row.name)),
@@ -738,14 +857,20 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                         (target) =>
                             target.gitWorktreeAdd(existingBranch: _convert),
                       ),
-                child: const Text('Convert branch to worktree'),
+                child: Text(
+                  context
+                      .sharedL10n
+                      .release_core_git_review_pane_convert_branch_to_worktree,
+                ),
               ),
               DropdownButton<String>(
                 key: const Key('git-switch-branch'),
                 value: _branches.any((row) => row.name == _switchTo)
                     ? _switchTo
                     : null,
-                hint: const Text('Switch branch'),
+                hint: Text(
+                  context.sharedL10n.release_core_git_review_pane_switch_branch,
+                ),
                 items: [
                   for (final row in _branches.where((row) => !row.isRemote))
                     DropdownMenuItem(value: row.name, child: Text(row.name)),
@@ -758,7 +883,9 @@ class _GitReviewPaneState extends State<GitReviewPane> {
                     ? null
                     : () =>
                           _act((target) => target.gitSwitchBranch(_switchTo!)),
-                child: const Text('Switch branch'),
+                child: Text(
+                  context.sharedL10n.release_core_git_review_pane_switch_branch,
+                ),
               ),
             ],
           ],
@@ -774,16 +901,22 @@ class _GitReviewPaneState extends State<GitReviewPane> {
   }
 }
 
-String _why(WorkspaceException error) => switch (error.reason) {
-  WorkspaceFailure.unsupported =>
-    'This gateway does not support that Git operation.',
-  WorkspaceFailure.unbound =>
-    'Git needs the session directory on the local terminal backend.',
-  WorkspaceFailure.denied ||
-  WorkspaceFailure.ineligible => 'The gateway refused the Git operation.',
-  WorkspaceFailure.mismatch => 'The session changed. Refresh and try again.',
-  WorkspaceFailure.stale => 'This review is no longer the selected session.',
-  WorkspaceFailure.invalid => 'The gateway returned an unexpected Git result.',
-  WorkspaceFailure.insecure => 'Git review requires the gateway transport.',
-  WorkspaceFailure.unavailable => 'The Git operation did not complete.',
-};
+String Function(AppLocalizations) _why(WorkspaceException error) =>
+    (l10n) => switch (error.reason) {
+      WorkspaceFailure.unsupported =>
+        l10n.release_core_git_review_pane_this_gateway_does_not_support_that_git_operation,
+      WorkspaceFailure.unbound =>
+        l10n.release_core_git_review_pane_git_needs_the_session_directory_on_the_local,
+      WorkspaceFailure.denied || WorkspaceFailure.ineligible =>
+        l10n.release_core_git_review_pane_the_gateway_refused_the_git_operation,
+      WorkspaceFailure.mismatch =>
+        l10n.release_core_git_review_pane_the_session_changed_refresh_and_try_again,
+      WorkspaceFailure.stale =>
+        l10n.release_core_git_review_pane_this_review_is_no_longer_the_selected_session,
+      WorkspaceFailure.invalid =>
+        l10n.release_core_git_review_pane_the_gateway_returned_an_unexpected_git_result,
+      WorkspaceFailure.insecure =>
+        l10n.release_core_git_review_pane_git_review_requires_the_gateway_transport,
+      WorkspaceFailure.unavailable =>
+        l10n.release_core_git_review_pane_the_git_operation_did_not_complete,
+    };

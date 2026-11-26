@@ -280,7 +280,9 @@ class _AssetsScreenState extends State<AssetsScreen> {
               Padding(
                 padding: const EdgeInsets.only(right: HermesSpacing.sm),
                 child: FilterChip(
-                  label: const Text('Links'),
+                  label: Text(
+                    context.sharedL10n.release_core_assets_screen_links,
+                  ),
                   selected: _linksOnly,
                   onSelected: (_) => setState(() {
                     _linksOnly = true;
@@ -371,7 +373,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
         actions: [
           if (widget.contributionsScope case final scope?)
             IconButton(
-              tooltip: 'Contributions',
+              tooltip: context.sharedL10n.render_contributions,
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(

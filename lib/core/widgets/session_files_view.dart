@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../l10n/l10n.dart';
 import 'package:flutter/services.dart';
 
 import '../composer/composer_drag.dart';
@@ -129,7 +131,7 @@ class _FilesState extends State<SessionFilesView> {
   bool _showSource = false;
   bool _review = false;
   bool _git = false;
-  String? _message;
+  String Function(AppLocalizations)? _message;
   String? _saveNote;
   bool get _dirty => _editing && _file != null && _source.text != _file!.text;
   bool _owns(int e) => mounted && e == _epoch;
@@ -181,7 +183,8 @@ class _FilesState extends State<SessionFilesView> {
       _pane.invalidate();
       setState(() {
         _clear();
-        _message = 'Connection changed. Reopen files on the new connection.';
+        _message = (l10n) => l10n
+            .release_core_session_files_view_connection_changed_reopen_files_on_the_new_connection;
       });
     }
   }
@@ -195,26 +198,28 @@ class _FilesState extends State<SessionFilesView> {
     super.dispose();
   }
 
-  String _failure(Object e) => e is WorkspaceException
+  String Function(AppLocalizations) _failure(Object e) =>
+      (l10n) => e is WorkspaceException
       ? switch (e.reason) {
           WorkspaceFailure.stale =>
-            'The connection or session changed. Reopen this pane.',
+            l10n.release_core_session_files_view_the_connection_or_session_changed_reopen_this_pane,
           WorkspaceFailure.unbound =>
-            'No verified host working directory for this session.',
-          WorkspaceFailure.denied => 'The gateway denied this operation.',
-          WorkspaceFailure.ineligible => guardedSaveRefused,
+            l10n.release_core_session_files_view_no_verified_host_working_directory_for_this_session,
+          WorkspaceFailure.denied =>
+            l10n.release_core_session_files_view_the_gateway_denied_this_operation,
+          WorkspaceFailure.ineligible => l10n.release_core_guarded_save_refused,
           WorkspaceFailure.unsupported =>
-            'This gateway does not support this operation.',
+            l10n.release_core_session_files_view_this_gateway_does_not_support_this_operation,
           WorkspaceFailure.mismatch =>
-            'The file, owner or working directory changed. Reload and review.',
+            l10n.release_core_session_files_view_the_file_owner_or_working_directory_changed_reload,
           WorkspaceFailure.invalid =>
-            'The gateway returned an unsafe path or invalid file response.',
+            l10n.release_core_session_files_view_the_gateway_returned_an_unsafe_path_or_invalid,
           WorkspaceFailure.insecure =>
-            'Workspace access requires a secure gateway connection.',
+            l10n.release_core_session_files_view_workspace_access_requires_a_secure_gateway_connection,
           WorkspaceFailure.unavailable =>
-            'Gateway unavailable. Refresh to check the current state.',
+            l10n.release_core_session_files_view_gateway_unavailable_refresh_to_check_the_current_state,
         }
-      : 'Gateway operation could not be confirmed.';
+      : l10n.release_core_session_files_view_gateway_operation_could_not_be_confirmed;
 
   Future<void> _reload() async {
     final previous = {..._expanded};
@@ -246,7 +251,7 @@ class _FilesState extends State<SessionFilesView> {
         }
       }
       Set<String> changed = {};
-      String? statusMessage;
+      String Function(AppLocalizations)? statusMessage;
       try {
         changed = await t.changedPaths();
       } on WorkspaceException catch (err) {
@@ -254,7 +259,8 @@ class _FilesState extends State<SessionFilesView> {
             err.reason == WorkspaceFailure.mismatch) {
           rethrow;
         }
-        statusMessage = 'Git status unavailable.';
+        statusMessage = (l10n) =>
+            l10n.release_core_session_files_view_git_status_unavailable;
       }
       if (!_owns(e)) return;
       t.checkCurrent();
@@ -372,22 +378,30 @@ class _FilesState extends State<SessionFilesView> {
     final path = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Change this chat’s working directory?'),
+        title: Text(
+          ctx
+              .sharedL10n
+              .release_core_session_files_view_change_this_chat_s_working_directory,
+        ),
         content: TextFormField(
           initialValue: draft,
           onChanged: (v) => draft = v,
-          decoration: const InputDecoration(
-            labelText: 'Absolute gateway directory',
+          decoration: InputDecoration(
+            labelText: ctx
+                .sharedL10n
+                .release_core_session_files_view_absolute_gateway_directory,
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(ctx.sharedL10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, draft),
-            child: const Text('Change directory'),
+            child: Text(
+              ctx.sharedL10n.release_core_session_files_view_change_directory,
+            ),
           ),
         ],
       ),
@@ -404,18 +418,27 @@ class _FilesState extends State<SessionFilesView> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Replace gateway file?'),
+        title: Text(
+          context
+              .sharedL10n
+              .release_core_session_files_view_replace_gateway_file,
+        ),
         content: Text(
-          '${file.entry.path}\n\nOnly if the file still matches the version you reviewed. A compatible host retains the displaced file for recovery.',
+          context.sharedL10n
+              .release_core_session_files_view_only_if_the_file_still_matches_the_version(
+                (file.entry.path).toString(),
+              ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(context.sharedL10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Save changes'),
+            child: Text(
+              context.sharedL10n.release_core_session_files_view_save_changes,
+            ),
           ),
         ],
       ),
@@ -427,18 +450,21 @@ class _FilesState extends State<SessionFilesView> {
       t.checkCurrent();
       setState(() {
         _display(saved);
-        _message = 'Saved and verified on the gateway.';
+        _message = (l10n) => l10n
+            .release_core_session_files_view_saved_and_verified_on_the_gateway;
       });
     } on WorkspaceException catch (err) {
       if (!_owns(e)) return;
       setState(() {
         _review = true;
-        _message = switch (err.reason) {
+        _message = (l10n) => switch (err.reason) {
           WorkspaceFailure.unsupported =>
-            'Guarded saving is unavailable on this gateway. Your draft is still here.',
-          WorkspaceFailure.ineligible => guardedSaveRefused,
+            l10n.release_core_session_files_view_guarded_saving_is_unavailable_on_this_gateway_your,
+          WorkspaceFailure.ineligible => l10n.release_core_guarded_save_refused,
           _ =>
-            '${_failure(err)} Save was not confirmed. Your draft is still here.',
+            l10n.release_core_session_files_view_save_was_not_confirmed_your_draft_is_still(
+              _failure(err)(l10n),
+            ),
         };
       });
     }
@@ -451,7 +477,11 @@ class _FilesState extends State<SessionFilesView> {
     final choice = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Review current gateway version'),
+        title: Text(
+          ctx
+              .sharedL10n
+              .release_core_session_files_view_review_current_gateway_version,
+        ),
         content: SizedBox(
           width: 480,
           child: SingleChildScrollView(child: SelectableText(current.text)),
@@ -459,16 +489,24 @@ class _FilesState extends State<SessionFilesView> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(ctx.sharedL10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Discard draft and reload'),
+            child: Text(
+              ctx
+                  .sharedL10n
+                  .release_core_session_files_view_discard_draft_and_reload,
+            ),
           ),
           if (current.editable)
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Keep draft against this version'),
+              child: Text(
+                ctx
+                    .sharedL10n
+                    .release_core_session_files_view_keep_draft_against_this_version,
+              ),
             ),
         ],
       ),
@@ -492,15 +530,27 @@ class _FilesState extends State<SessionFilesView> {
         await showDialog<bool>(
               context: context,
               builder: (ctx) => AlertDialog(
-                title: const Text('Discard unsaved edits?'),
+                title: Text(
+                  context
+                      .sharedL10n
+                      .release_core_session_files_view_discard_unsaved_edits,
+                ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(ctx),
-                    child: const Text('Keep editing'),
+                    child: Text(
+                      context
+                          .sharedL10n
+                          .release_core_session_files_view_keep_editing,
+                    ),
                   ),
                   TextButton(
                     onPressed: () => Navigator.pop(ctx, true),
-                    child: const Text('Discard edits'),
+                    child: Text(
+                      context
+                          .sharedL10n
+                          .release_core_session_files_view_discard_edits,
+                    ),
                   ),
                 ],
               ),
@@ -542,10 +592,16 @@ class _FilesState extends State<SessionFilesView> {
     return Column(
       children: [
         ListTile(
-          title: const Text('Remote working directory'),
+          title: Text(
+            context
+                .sharedL10n
+                .release_core_session_files_view_remote_working_directory,
+          ),
           subtitle: SelectableText(t.fileRoot),
           trailing: IconButton(
-            tooltip: 'Change working directory',
+            tooltip: context
+                .sharedL10n
+                .release_core_session_files_view_change_working_directory,
             icon: const Icon(Icons.drive_file_move_outline),
             onPressed: _busy ? null : _move,
           ),
@@ -553,15 +609,29 @@ class _FilesState extends State<SessionFilesView> {
         if (flags)
           CheckboxListTile(
             dense: true,
-            title: const Text('Show ignored files'),
+            title: Text(
+              context
+                  .sharedL10n
+                  .release_core_session_files_view_show_ignored_files,
+            ),
             value: _showIgnored,
             onChanged: (v) => setState(() => _showIgnored = v ?? false),
           ),
         if (!flags && visible.isNotEmpty)
-          const Text('Gateway does not report ignored status.'),
+          Text(
+            context
+                .sharedL10n
+                .release_core_session_files_view_gateway_does_not_report_ignored_status,
+          ),
         Expanded(
           child: visible.isEmpty
-              ? const Center(child: Text('No visible entries'))
+              ? Center(
+                  child: Text(
+                    context
+                        .sharedL10n
+                        .release_core_session_files_view_no_visible_entries,
+                  ),
+                )
               : ListView.builder(
                   itemCount: visible.length,
                   itemBuilder: (ctx, i) {
@@ -595,13 +665,24 @@ class _FilesState extends State<SessionFilesView> {
                         ),
                         title: Text(n.name),
                         subtitle: _changed.contains(n.path)
-                            ? const Text('Changed')
+                            ? Text(
+                                context
+                                    .sharedL10n
+                                    .release_core_session_files_view_changed,
+                              )
                             : n.ignored == true
-                            ? const Text('Ignored')
+                            ? Text(
+                                context
+                                    .sharedL10n
+                                    .release_core_session_files_view_ignored,
+                              )
                             : null,
                         onTap: () => _open(n),
                         trailing: PopupMenuButton<String>(
-                          tooltip: 'Actions for ${n.name}',
+                          tooltip: context.sharedL10n
+                              .release_core_session_files_view_actions_for(
+                                (n.name).toString(),
+                              ),
                           enabled: !_busy,
                           onSelected: (v) {
                             if (n.owner == _target) {
@@ -613,20 +694,32 @@ class _FilesState extends State<SessionFilesView> {
                             }
                           },
                           itemBuilder: (_) => [
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: 'relative',
-                              child: Text('Copy relative path'),
+                              child: Text(
+                                context
+                                    .sharedL10n
+                                    .release_core_session_files_view_copy_relative_path,
+                              ),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: 'absolute',
-                              child: Text('Copy gateway path'),
+                              child: Text(
+                                context
+                                    .sharedL10n
+                                    .release_core_session_files_view_copy_gateway_path,
+                              ),
                             ),
                             PopupMenuItem(
                               value: 'attach',
                               child: Text(
                                 n.directory
-                                    ? 'Attach folder reference'
-                                    : 'Attach file reference',
+                                    ? context
+                                          .sharedL10n
+                                          .release_core_session_files_view_attach_folder_reference
+                                    : context
+                                          .sharedL10n
+                                          .release_core_session_files_view_attach_file_reference,
                               ),
                             ),
                           ],
@@ -644,14 +737,26 @@ class _FilesState extends State<SessionFilesView> {
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       SelectableText(file.entry.relative),
-      if (file.truncated) const Text('Preview truncated — editing disabled.'),
-      if (_saveNote != null) Text(_saveNote!),
+      if (file.truncated)
+        Text(
+          context
+              .sharedL10n
+              .release_core_session_files_view_preview_truncated_editing_disabled,
+        ),
+      if (_saveNote != null)
+        Text(
+          _saveNote == guardedSaveUnavailable
+              ? context.sharedL10n.release_core_guarded_save_unavailable
+              : context.sharedL10n.release_core_guarded_save_refused,
+        ),
       Wrap(
         children: [
           if (!_editing && !file.binary)
             TextButton(
               onPressed: () => setState(() => _showSource = true),
-              child: const Text('Select lines'),
+              child: Text(
+                context.sharedL10n.release_core_session_files_view_select_lines,
+              ),
             ),
           if (!_editing && file.editable && _saveNote == null)
             TextButton(
@@ -661,17 +766,21 @@ class _FilesState extends State<SessionFilesView> {
                       _editing = true;
                       _showSource = true;
                     }),
-              child: const Text('Edit'),
+              child: Text(context.sharedL10n.edit),
             ),
           if (_editing)
             TextButton(
               onPressed: _busy || _review || !_dirty ? null : _save,
-              child: const Text('Save'),
+              child: Text(context.sharedL10n.save),
             ),
           if (_review)
             TextButton(
               onPressed: _busy ? null : _reviewLatest,
-              child: const Text('Review gateway version'),
+              child: Text(
+                context
+                    .sharedL10n
+                    .release_core_session_files_view_review_gateway_version,
+              ),
             ),
           if (!_editing && _showSource && !file.binary)
             ValueListenableBuilder(
@@ -681,14 +790,24 @@ class _FilesState extends State<SessionFilesView> {
                     _busy || !v.selection.isValid || v.selection.isCollapsed
                     ? null
                     : () => _reference(file.entry, lines: true),
-                child: const Text('Attach selected lines'),
+                child: Text(
+                  context
+                      .sharedL10n
+                      .release_core_session_files_view_attach_selected_lines,
+                ),
               ),
             ),
         ],
       ),
       Expanded(
         child: file.binary
-            ? const Center(child: Text('Binary file — no text preview.'))
+            ? Center(
+                child: Text(
+                  context
+                      .sharedL10n
+                      .release_core_session_files_view_binary_file_no_text_preview,
+                ),
+              )
             : !_showSource
             ? MarkdownFilePreview(
                 key: ValueKey(file.entry.path),
@@ -703,8 +822,10 @@ class _FilesState extends State<SessionFilesView> {
                 style: const TextStyle(fontFamily: 'monospace'),
                 onChanged: (_) => setState(() {}),
                 textAlignVertical: TextAlignVertical.top,
-                decoration: const InputDecoration(
-                  labelText: 'File source',
+                decoration: InputDecoration(
+                  labelText: context
+                      .sharedL10n
+                      .release_core_session_files_view_file_source,
                   alignLabelWithHint: true,
                 ),
               ),
@@ -756,16 +877,28 @@ class _FilesState extends State<SessionFilesView> {
                   children: [
                     IconButton(
                       tooltip: file == null
-                          ? 'Close session files'
-                          : 'Back to tree',
+                          ? context
+                                .sharedL10n
+                                .release_core_session_files_view_close_session_files
+                          : context
+                                .sharedL10n
+                                .release_core_session_files_view_back_to_tree,
                       icon: Icon(file == null ? Icons.close : Icons.arrow_back),
                       onPressed: _busy ? null : _back,
                     ),
-                    const Expanded(child: Text('Session files')),
+                    Expanded(
+                      child: Text(
+                        context
+                            .sharedL10n
+                            .release_core_session_files_view_session_files,
+                      ),
+                    ),
                     if (file == null)
                       IconButton(
                         key: const Key('open-git-review'),
-                        tooltip: 'Git review',
+                        tooltip: context
+                            .sharedL10n
+                            .release_core_session_files_view_git_review,
                         icon: const Icon(Icons.difference_outlined),
                         onPressed: _busy
                             ? null
@@ -773,14 +906,16 @@ class _FilesState extends State<SessionFilesView> {
                       ),
                     if (file == null)
                       IconButton(
-                        tooltip: 'Refresh tree',
+                        tooltip: context
+                            .sharedL10n
+                            .release_core_session_files_view_refresh_tree,
                         icon: const Icon(Icons.refresh),
                         onPressed: _busy ? null : _reload,
                       ),
                   ],
                 ),
                 if (_busy) const LinearProgressIndicator(),
-                if (_message != null) Text(_message!),
+                if (_message != null) Text(_message!(context.sharedL10n)),
                 if (t != null)
                   Expanded(child: file == null ? _tree(t) : _document(file)),
               ],
