@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -250,38 +251,111 @@ class BotAvatarTooLarge implements Exception {
   const BotAvatarTooLarge();
 }
 
+/// Desktop's upload limit for a bot picture (avatar-picker.tsx).
+const botAvatarMaxBytes = 15000000;
+
 /// Desktop's upload path: pick a PNG, JPEG, WebP or GIF (at most 15 MB) and
-/// reduce it to a 256 px square PNG data URL (`normalizeAvatarImage`).
+/// reduce it to a 256 px square PNG data URL (`normalizeAvatarImage`). The
+/// picker hands back a path, not the bytes, so a file over the limit is
+/// refused before anything is read.
 Future<String?> pickBotAvatarImage() async {
   final picked = await FilePicker.platform.pickFiles(
     type: FileType.custom,
     allowedExtensions: const ['png', 'jpg', 'jpeg', 'webp', 'gif'],
-    withData: true,
+    withData: false,
   );
   final file = picked?.files.singleOrNull;
   if (file == null) return null;
-  if (file.size > 15000000) throw const BotAvatarTooLarge();
-  final bytes = file.bytes;
+  final bytes = await readBotAvatarFile(file);
   if (bytes == null) return null;
   return normalizeBotAvatar(bytes);
 }
 
-Future<String?> normalizeBotAvatar(Uint8List bytes, {int edge = 256}) async {
+/// The bytes of a picked picture, read only once its size is known to be
+/// within [botAvatarMaxBytes]: the picker's own size first, then the file's
+/// length on disk (the picker reports 0 when it does not know). Throws
+/// [BotAvatarTooLarge] before reading anything bigger.
+Future<Uint8List?> readBotAvatarFile(PlatformFile file) async {
+  if (file.size > botAvatarMaxBytes) throw const BotAvatarTooLarge();
+  final path = file.path;
+  if (path == null) {
+    // No file to stat (the picker already holds the bytes).
+    final bytes = file.bytes;
+    if (bytes != null && bytes.length > botAvatarMaxBytes) {
+      throw const BotAvatarTooLarge();
+    }
+    return bytes;
+  }
+  final handle = File(path);
+  if (await handle.length() > botAvatarMaxBytes) {
+    throw const BotAvatarTooLarge();
+  }
+  final bytes = await handle.readAsBytes();
+  // It may have grown in between.
+  if (bytes.length > botAvatarMaxBytes) throw const BotAvatarTooLarge();
+  return bytes;
+}
+
+/// The size a [width] x [height] picture is decoded at for an [edge] px
+/// avatar: its short side brought down to [edge] (never up) and its long
+/// side in proportion, but at most eight times [edge]. A picture of huge
+/// dimensions (a few kilobytes of PNG can claim 40000 x 40000) is never
+/// decoded at full size.
+({int width, int height}) botAvatarDecodeSize(
+  int width,
+  int height, {
+  int edge = 256,
+}) {
+  final short = math.min(width, height);
+  final scale = short > edge ? edge / short : 1.0;
+  int fit(int side) => math.max(1, math.min((side * scale).round(), edge * 8));
+  return (width: fit(width), height: fit(height));
+}
+
+/// Crops [bytes] to its centred square and returns it as an [edge] px PNG
+/// data URL, or null when it is not a picture. The picture is decoded at
+/// [botAvatarDecodeSize] of the size its header gives; [onDecoded] is told
+/// the decoded size.
+Future<String?> normalizeBotAvatar(
+  Uint8List bytes, {
+  int edge = 256,
+  @visibleForTesting void Function(int width, int height)? onDecoded,
+}) async {
+  ui.ImageDescriptor? descriptor;
   ui.Codec? codec;
   ui.Image? source;
   ui.Image? out;
   try {
-    codec = await ui.instantiateImageCodec(bytes);
+    final buffer = await ui.ImmutableBuffer.fromUint8List(bytes);
+    try {
+      // Reads the header: the picture's size, before any pixel is decoded.
+      descriptor = await ui.ImageDescriptor.encoded(buffer);
+    } finally {
+      // The descriptor keeps what it needs.
+      buffer.dispose();
+    }
+    final width = descriptor.width;
+    final height = descriptor.height;
+    final size = botAvatarDecodeSize(width, height, edge: edge);
+    codec = await descriptor.instantiateCodec(
+      targetWidth: size.width,
+      targetHeight: size.height,
+    );
     source = (await codec.getNextFrame()).image;
-    final side = math.min(source.width, source.height).toDouble();
+    onDecoded?.call(source.width, source.height);
+    if (width <= 0 || height <= 0) return null;
+    // The original's centred square, in the decoded picture's pixels.
+    final sx = source.width / width;
+    final sy = source.height / height;
+    final side = math.min(width, height).toDouble();
     final recorder = ui.PictureRecorder();
     Canvas(recorder).drawImageRect(
       source,
       Rect.fromLTWH(
-        (source.width - side) / 2,
-        (source.height - side) / 2,
-        side,
-        side,
+        (width - side) / 2 * sx,
+        (height - side) / 2 * sy,
+        side * sx,
+        side * sy,
       ),
       Rect.fromLTWH(0, 0, edge.toDouble(), edge.toDouble()),
       Paint()..filterQuality = FilterQuality.medium,
@@ -296,6 +370,7 @@ Future<String?> normalizeBotAvatar(Uint8List bytes, {int edge = 256}) async {
     source?.dispose();
     out?.dispose();
     codec?.dispose();
+    descriptor?.dispose();
   }
 }
 

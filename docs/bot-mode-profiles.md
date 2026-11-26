@@ -47,7 +47,14 @@ scoped, like `profiles.list`). A refusal keeps the gateway's message
 Desktop's classic shapes (`circle`, `blob`, `squircle`, `pill`, `triangle`,
 `hexagon`, `cloud`, `drop`), the 12 `PROFILE_SWATCHES` (`hsl(h 68% 58%)`, in
 Desktop's spelling), "Match the name", and an uploaded picture (PNG, JPEG,
-WebP or GIF up to 15 MB, cropped to a 256 px PNG). Desktop's Generate
+WebP or GIF up to 15 MB, cropped to a 256 px PNG). The picker returns a
+path, not the bytes (`withData: false`): the picker's size and then the
+file's length on disk are checked against 15 MB before anything is read
+(`readBotAvatarFile`). The picture is decoded at `botAvatarDecodeSize` of the
+size its header gives (short side down to 256 px, long side at most
+2048 px), so a small file claiming huge dimensions is never decoded at full
+size (`test/bot_avatar_pick_test.dart`, `test/bot_avatar_decode_test.dart`).
+Desktop's Generate
 (`image.generate`) and Pet tabs and its generated blob faces are not ported;
 a `blobatar…` shape from Desktop is drawn as `blob`.
 
