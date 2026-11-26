@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
 
+import 'strict_authority_gateway.dart';
+
 /// A socket that records each `client.activity` with the real time it was
 /// sent. Presence ages input on a real clock, so tests advance it with
 /// [waitRealSeconds].
@@ -9,6 +11,9 @@ class PresenceSocket implements WsClient {
   bool capable;
   final clock = Stopwatch()..start();
   final reports = <Map<String, dynamic>>[];
+
+  /// Reports the gateway's contract refuses; a suite expects none.
+  final refusals = <Map<String, dynamic>>[];
   final at = <Duration>[];
 
   /// Other requests, when a chat view also uses this socket.
@@ -36,6 +41,13 @@ class PresenceSocket implements WsClient {
     if (method != 'client.activity' || includeProfile) {
       other.add(method);
       return {};
+    }
+    // A report is also a wire frame: the gateway's contract for it is closed
+    // (ClientActivityParams), on a session authority as on a legacy gateway.
+    final refused = strictAuthorityReply(null, method, params);
+    if (refused != null) {
+      refusals.add(params);
+      return refused;
     }
     reports.add(params);
     at.add(clock.elapsed);

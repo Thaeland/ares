@@ -7388,6 +7388,328 @@ class AppLocalizationsUk extends AppLocalizations {
       'Вхід виконано з токеном розгортання.';
 
   @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'Зміна параметра $setting поки недоступна на спільному шлюзі';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return 'Запит $method поки недоступний на спільному шлюзі';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'Канонічний шлюз не підтримує явні параметри сеансу: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'Запит застарів або недоступний; під’єднайтеся знову, перш ніж відповідати';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'Ревізія сеансу недоступна; відкрийте сеанс знову, перш ніж редагувати метадані';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'Ідентифікатор виконання сеансу недоступний; під’єднайтеся знову перед цією командою';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'Це повідомлення ще не збережено; дочекайтеся його завершення і створіть гілку від нього ще раз';
+
+  @override
+  String get ng_wire_not_available => 'Поки недоступно на спільному шлюзі';
+
+  @override
+  String get edit_turn_title => 'Редагувати цей запит?';
+
+  @override
+  String get edit_turn_body =>
+      'Запит буде повторно виконано звідси. Наступні ходи буде заархівовано.';
+
+  @override
+  String get edit_turn_send => 'Надіслати';
+
+  @override
+  String get restore_turn_title => 'Відновити до цієї контрольної точки?';
+
+  @override
+  String get restore_turn_body =>
+      'Усе після цього запиту буде вилучено з розмови, а запит виконається знову звідси.';
+
+  @override
+  String get restore_turn_confirm => 'Відновити й запустити знову';
+
+  @override
+  String get edit_turn_later_turns_body =>
+      'Це заархівує наступні ходи розмови. Продовжити?';
+
+  @override
+  String get session_history => 'Історія сесії';
+
+  @override
+  String get import_claude_or_codex => 'Імпортувати Claude або Codex';
+
+  @override
+  String get ng_session_history => 'Історія сесії';
+
+  @override
+  String get ng_import_claude_or_codex => 'Імпортувати Claude або Codex';
+
+  @override
+  String get ng_edit_and_resend => 'Редагувати й надіслати знову';
+
+  @override
+  String get ng_restore_turn_confirm => 'Відновити й запустити знову';
+
+  @override
+  String get rewind_target_unsaved =>
+      'Це повідомлення ще не збережено. Дочекайтеся завершення й відредагуйте його знову.';
+
+  @override
+  String get rewind_turn_busy =>
+      'Поточну відповідь ще не зупинено, тому нічого не надіслано. Спробуйте ще раз за мить.';
+
+  @override
+  String get rewind_session_changed =>
+      'Цей чат змінився відтоді, як його відкрили тут, тому нічого не вилучено й не надіслано. Відкрийте його знову та повторіть спробу.';
+
+  @override
+  String get history_lineage => 'Пов’язані чати';
+
+  @override
+  String get history_lineage_none =>
+      'Цей чат не має відгалужень чи сусідніх гілок.';
+
+  @override
+  String get history_lineage_unavailable =>
+      'Не вдалося прочитати пов’язані чати з цього шлюзу.';
+
+  @override
+  String get history_lineage_parent => 'Батьківський';
+
+  @override
+  String get history_lineage_sibling => 'Сусідня гілка';
+
+  @override
+  String get history_lineage_fork => 'Відгалуження';
+
+  @override
+  String get history_messages => 'Повідомлення';
+
+  @override
+  String get history_messages_hint =>
+      'Виберіть збережене повідомлення, щоб створити гілку або відкотитися до нього.';
+
+  @override
+  String get history_messages_none => 'Збережених повідомлень ще немає.';
+
+  @override
+  String get history_messages_unavailable =>
+      'Не вдалося прочитати збережені повідомлення. Відкрийте цей чат і оновіть.';
+
+  @override
+  String get history_role_user => 'Ви';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => 'Створити гілку звідси';
+
+  @override
+  String get history_rewind_here => 'Відкотити сюди';
+
+  @override
+  String get history_branch_title => 'Створити гілку від цього повідомлення';
+
+  @override
+  String get history_branch_body =>
+      'Буде створено новий чат з історією до вибраного повідомлення. Поточний чат залишиться без змін.';
+
+  @override
+  String get history_rewind_title => 'Відкотити до цього повідомлення';
+
+  @override
+  String get history_rewind_body =>
+      'Повідомлення, починаючи з вибраного, буде вилучено з цього чату. Файли на комп’ютері не зміняться. Їх відновлення виконується окремо через контрольні точки.';
+
+  @override
+  String history_branched(String id) {
+    return 'Створено гілку $id';
+  }
+
+  @override
+  String get history_open_chat => 'Відкрити чат';
+
+  @override
+  String get history_mutate_unsupported =>
+      'Для гілок і відкату на цьому шлюзі потрібен Hermes 0.23 або новіший.';
+
+  @override
+  String get history_checkpoints => 'Контрольні точки';
+
+  @override
+  String get history_checkpoints_none =>
+      'У цій сесії немає контрольних точок файлів.';
+
+  @override
+  String get history_checkpoints_unavailable =>
+      'Контрольні точки недоступні на цьому шлюзі.';
+
+  @override
+  String get history_diff_none => 'Відмінностей немає.';
+
+  @override
+  String get history_diff_loading => 'Завантаження змін…';
+
+  @override
+  String get history_diff_failed =>
+      'Не вдалося завантажити зміни, тому цю контрольну точку поки не можна відновити.';
+
+  @override
+  String get history_restore_checkpoint => 'Відновити контрольну точку';
+
+  @override
+  String get history_restore_title => 'Відновити цю контрольну точку';
+
+  @override
+  String get history_restore_body =>
+      'Файли, які агент змінив після цієї контрольної точки, повернуться до тодішнього стану. Ваші власні зміни збережуться. Пізніші повідомлення чату також можуть бути вилучені. Гілка розмови не створюється.';
+
+  @override
+  String get history_restore_body_all =>
+      'Усі файли в теці сесії повернуться до цієї контрольної точки, включно з вашими власними змінами. Пізніші повідомлення чату також можуть бути вилучені. Гілка розмови не створюється.';
+
+  @override
+  String get history_restore_own_edits => 'Скасувати й мої власні зміни';
+
+  @override
+  String get history_restored => 'Контрольну точку відновлено.';
+
+  @override
+  String history_restored_removed(int count) {
+    return 'Контрольну точку відновлено. Вилучено повідомлень чату: $count.';
+  }
+
+  @override
+  String get history_export => 'Експорт';
+
+  @override
+  String get history_export_redact => 'Приховувати токени';
+
+  @override
+  String get history_export_action => 'Експортувати розшифровку';
+
+  @override
+  String get history_export_saved => 'Розшифровку збережено.';
+
+  @override
+  String get history_export_unsupported =>
+      'Для експорту на цьому шлюзі потрібен Hermes 0.23 або новіший.';
+
+  @override
+  String get history_import_unsupported =>
+      'Цей шлюз не підтримує імпорт із Claude та Codex.';
+
+  @override
+  String history_import_destination(String profile) {
+    return 'Профіль призначення: $profile.';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return 'Читання з $host · Профіль призначення: $profile. Не вдалося прочитати журналів: $count.';
+  }
+
+  @override
+  String get history_import_all => 'Усі';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return 'Не вдалося переглянути сесії хоста: $reason';
+  }
+
+  @override
+  String get history_import_none =>
+      'На цьому хості не знайдено сесій Claude Code чи Codex.';
+
+  @override
+  String get history_import_no_match => 'Відповідних сесій хоста немає.';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return 'Не вдалося показати сесію: $reason';
+  }
+
+  @override
+  String get history_import_open => 'Відкрити імпортовану сесію';
+
+  @override
+  String get history_import_action => 'Імпортувати вибрану сесію';
+
+  @override
+  String get history_import_title => 'Імпортувати цю сесію';
+
+  @override
+  String history_import_body(String profile) {
+    return 'Скопіювати цю сесію Claude чи Codex у профіль «$profile» на цьому шлюзі.';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return 'Цю сесію вже імпортовано в «$profile». Продовжити з наявною копією.';
+  }
+
+  @override
+  String history_imported(String id) {
+    return 'Імпортовано як $id';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return 'Уже імпортовано як $id';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return 'Каталог: $path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return 'Показано $shown із $total.';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return 'Не вдалося завершити: $reason';
+  }
+
+  @override
+  String get history_error_unavailable =>
+      'Шлюз не зміг виконати це зараз. Спробуйте ще раз.';
+
+  @override
+  String get history_error_unsupported => 'Цей шлюз цього не підтримує.';
+
+  @override
+  String get history_error_denied => 'Цей шлюз відхилив запит.';
+
+  @override
+  String get history_error_changed =>
+      'Цей чат змінився, поки сторінка була відкрита. Оновіть і спробуйте ще раз.';
+
+  @override
+  String get history_error_unbound =>
+      'Цей чат не відкрито на шлюзі. Відкрийте його і спробуйте ще раз.';
+
+  @override
+  String get history_error_invalid =>
+      'Шлюз надіслав відповідь, яку застосунок не зміг прочитати.';
+
+  @override
   String ng_dock_kanban(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

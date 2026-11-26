@@ -10,6 +10,11 @@ import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import '../widgets/session_name_dialog.dart';
+import '../widgets/rewind_dialogs.dart';
+import '../history/canonical_rewind.dart'
+    show rewindFencesUnknownReason, rewindTargetUnsavedReason;
+import '../history/rewind_submit.dart'
+    show RewindHistory, RewindPlan, buildRewindParams;
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../presentation/companion_draft.dart';
@@ -115,6 +120,7 @@ import '../utils/turn_recovery_fallback.dart';
 import '../theme/hermes_theme.dart';
 import 'files_screen.dart';
 import '../widgets/session_files_view.dart';
+import '../widgets/session_history_page.dart';
 import 'workspace_workers_screen.dart';
 import 'gateway_queue_screen.dart';
 import '../widgets/git_review_pane.dart';
@@ -2525,6 +2531,187 @@ class _ChatScreenState extends State<ChatScreen>
       ..showSnackBar(SnackBar(content: Text(text)));
   }
 
+  /// A saved row's durable id (the REST history's `id`, the gateway's
+  /// `row_id`). Rows of this visit have none until history covers them.
+  static int? _durableRowId(Map<String, dynamic> row) {
+    final id = row['id'];
+    return id is int && id > 0 ? id : null;
+  }
+
+  /// User rows the transcript currently renders, used only for positions in
+  /// the rewind/edit confirm path. The durable row id is resolved against
+  /// `session.history` on the gateway, never from these client-side rows.
+  List<Map<String, dynamic>> get _rewindRows {
+    final received = _normalSnapshot?.displayRows ?? const [];
+    return received.isNotEmpty ? received : _messages;
+  }
+
+  /// Best-effort visible-user ordinal of a stored prompt plus whether later
+  /// user turns would be archived by cutting at it (Desktop's
+  /// `visibleUserOrdinal` / `confirmIfDeepCut`). Identical prompts resolve to
+  /// their most recent occurrence; the gateway content lookup has the last
+  /// word on the durable target.
+  ({int ordinal, bool laterTurns}) _userTurnPosition(String content) {
+    final wanted = content.trim();
+    var count = 0;
+    var matched = -1;
+    for (final row in _rewindRows) {
+      if (row['role'] != 'user') continue;
+      if (_transcriptText(row).trim() == wanted) matched = count;
+      count++;
+    }
+    return (
+      ordinal: matched < 0 ? count : matched,
+      laterTurns: matched >= 0 && matched < count - 1,
+    );
+  }
+
+  /// Edit and Restore of a stored turn, with Desktop's rewind semantics
+  /// (rewind.ts `planEdit` / `planRestore` → `runRewindSubmit`). The
+  /// session's full saved transcript (`session.history`) names the durable
+  /// row (the bubble's own row id first) and says whether the cut archives
+  /// later user turns: the rows on screen are a paged tail and cannot. A
+  /// cut that does asks first; nothing is sent before the answer. A live
+  /// turn is interrupted, then the turn is submitted once. The composer
+  /// draft is never consumed (`textOverride`).
+  Future<void> _submitRewindTurn({
+    required String text,
+    required String sourceText,
+    required int? bubbleRowId,
+    required bool restore,
+  }) async {
+    final l10n = context.sharedL10n;
+    final gateway = _desktopGateway;
+    final session = _normalLocalSessionKey;
+    if (!_canRegenerate ||
+        gateway == null ||
+        !gateway.hasLiveSession(session)) {
+      _showRetryNotice(l10n.composer_retry_unavailable);
+      return;
+    }
+    final position = _userTurnPosition(sourceText);
+    final history = await RewindHistory.read(
+      gateway.requestSessionRpc,
+      session,
+    );
+    if (!mounted) return;
+    final rowId = history == null
+        ? bubbleRowId
+        : history.rowFor(
+            bubbleRowId: bubbleRowId,
+            sourceText: sourceText,
+            expectedOrdinal: position.ordinal,
+          );
+    if (rowId == null && history != null && history.hasRowIds) {
+      // A saved transcript that does not hold this turn yet: a cut would be
+      // a guess and a plain resend a duplicate. Say so; send nothing.
+      _showRetryNotice(l10n.rewind_target_unsaved);
+      return;
+    }
+    final laterTurns = rowId != null && history != null
+        ? history.laterUserTurns(rowId)
+        : position.laterTurns;
+    if (laterTurns || restore) {
+      final confirmed = await showRestoreTurnConfirm(
+        context,
+        body: restore ? null : l10n.edit_turn_later_turns_body,
+      );
+      if (!mounted || !confirmed) return;
+    }
+    final normal = _normalChat;
+    if (_streaming || normal?.snapshot.hasActiveTurn == true) {
+      // Edit interrupts a live turn on purpose (Desktop's
+      // planEditAfterConfirm): stop it, then wait for it to settle. A turn
+      // the owner still runs after this screen stopped streaming it (a
+      // reattached or background turn) is interrupted through the owner.
+      if (_streaming) {
+        await _stopResponse();
+      } else {
+        try {
+          await normal!.interrupt();
+        } catch (_) {
+          // Still live below: the notice says nothing was sent.
+        }
+      }
+      for (var i = 0; i < 50 && mounted && _hasLiveTurn; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+      if (!mounted) return;
+    } else {
+      // A detached turn may still run on the gateway: best-effort
+      // interrupt before the rewind, as Desktop's runRewindSubmit.
+      try {
+        await gateway.interruptPrompt(sessionId: session);
+      } catch (_) {
+        // The submit still gates on the gateway's own busy state.
+      }
+      if (!mounted) return;
+    }
+    if (_hasLiveTurn) {
+      // Never a silent no-op: say why nothing was sent.
+      _showRetryNotice(l10n.rewind_turn_busy);
+      return;
+    }
+    await _sendMessage(
+      textOverride: text.trim(),
+      promptParams: buildRewindParams(
+        RewindPlan.resolved(
+          rowId: rowId,
+          sourceText: sourceText,
+          originalOrdinal: position.ordinal,
+        ),
+        confirmDeepTruncate: laterTurns,
+      ),
+      onAccepted: rowId == null
+          ? null
+          : () => _applyAcceptedRewind(rowId, through: history?.maxRowId),
+    );
+  }
+
+  /// The gateway accepted a rewind at [rowId]: the archived turns leave the
+  /// transcript at once (Desktop's `applyRewindOptimistic`), and the next
+  /// history read reconciles.
+  void _applyAcceptedRewind(int rowId, {int? through}) {
+    if (!mounted) return;
+    // The owner first: its snapshot must not hand the archived rows back.
+    _normalChat?.applyAcceptedRewind(rowId, through: through);
+    _historyWindow.applyRewind(rowId, through: through);
+    _historyWindowRevision++;
+    _extractToolMessages(_historyWindow.rows, replacePresentation: true);
+    setState(() => _messages = _restHistoryForPresentation());
+  }
+
+  /// Re-run a stored prompt with edited text. Cancel or no change sends
+  /// nothing; the edited text replaces the turn, never appends a new one.
+  Future<void> _editAndResendTurn(String content, {int? rowId}) async {
+    // A live turn does not block the edit: it is interrupted on confirm.
+    if (_archiving || _preparingSend) return;
+    final edited = await showDialog<String>(
+      context: context,
+      builder: (_) => EditTurnDialog(initialText: content),
+    );
+    if (!mounted || edited == null) return;
+    final text = edited.trim();
+    if (text.isEmpty || text == content.trim()) return;
+    await _submitRewindTurn(
+      text: text,
+      sourceText: content.trim(),
+      bubbleRowId: rowId,
+      restore: false,
+    );
+  }
+
+  /// Restore a stored prompt to this checkpoint after explicit confirmation.
+  Future<void> _restoreUserTurn(String content, {int? rowId}) async {
+    if (_archiving || _preparingSend) return;
+    await _submitRewindTurn(
+      text: content.trim(),
+      sourceText: content.trim(),
+      bubbleRowId: rowId,
+      restore: true,
+    );
+  }
+
   /// The newest prompt the person sent here, for Retry.
   String? get _lastPromptText {
     for (final rows in [
@@ -2754,6 +2941,89 @@ class _ChatScreenState extends State<ChatScreen>
     }
     await SharePlus.instance.share(
       ShareParams(subject: _sessionTitle, text: buffer.toString().trim()),
+    );
+  }
+
+  void _openHistory() {
+    final gateway = _desktopGateway;
+    if (gateway == null || !mounted) return;
+    final id = _fileSessionId;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => SessionHistoryPage(
+          owner: gateway.workspace,
+          storedSessionId: id,
+          onRewound: (text) {
+            if (!mounted) return;
+            unawaited(_fetchMessages(focusSavedHistory: true));
+            _editComposerAsUser(text);
+          },
+          onRestored: () {
+            if (!mounted) return;
+            unawaited(_fetchMessages(focusSavedHistory: true));
+          },
+          onOpenSession: widget.singleSession && widget.onOpenSession == null
+              ? null
+              : _openStoredSessionFromHistory,
+        ),
+      ),
+    );
+  }
+
+  void _openStoredSessionFromHistory(String sessionId, {String? title}) {
+    if (!mounted) return;
+    final now = DateTime.now().millisecondsSinceEpoch / 1000.0;
+    final target = Session(
+      id: sessionId,
+      title: (title == null || title.trim().isEmpty) ? sessionId : title.trim(),
+      model: widget.session.model,
+      source: 'desktop',
+      messageCount: 1,
+      isActive: false,
+      preview: '',
+      startedAt: now,
+      isLocalDraft: false,
+    );
+    final hostOpen = widget.onOpenSession;
+    if (hostOpen != null) {
+      unawaited(hostOpen(target));
+      return;
+    }
+    if (widget.singleSession) return;
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => ChatScreen(
+          connection: widget.connection,
+          session: target,
+          projectName: widget.projectName,
+          projectWorkingDirectory: widget.projectWorkingDirectory,
+          turnApplicationController: widget.turnApplicationController,
+          // The same open path as this chat (main's /resume rule: every
+          // ChatScreen is built with one). Null here, as this branch only
+          // runs for a chat whose host gave it none.
+          onOpenSession: widget.onOpenSession,
+          onArchiveChanged: widget.onArchiveChanged,
+          sessionArchiver: widget.sessionArchiver,
+          testTurnApplicationSession: widget.testTurnApplicationSession,
+          testApiClient: widget.testApiClient,
+          testAttachmentDraftService: widget.testAttachmentDraftService,
+          testRemotePromptSubmit: widget.testRemotePromptSubmit,
+          testNormalResume: widget.testNormalResume,
+          testServerFilePicker: widget.testServerFilePicker,
+          testRemoteAttachmentUpload: widget.testRemoteAttachmentUpload,
+          testComposerDraftReader: widget.testComposerDraftReader,
+          testVoiceComposerAdapter: widget.testVoiceComposerAdapter,
+          testVoiceRecorder: widget.testVoiceRecorder,
+          testVoiceTranscription: widget.testVoiceTranscription,
+          testHandsFreePlatform: widget.testHandsFreePlatform,
+          testVoiceReplySpeaker: widget.testVoiceReplySpeaker,
+          testTurnNotifications: widget.testTurnNotifications,
+          testProjectOverviewLoader: widget.testProjectOverviewLoader,
+          testMediaFilesClient: widget.testMediaFilesClient,
+          testTaskHistorySource: widget.testTaskHistorySource,
+          testSlashGateway: widget.testSlashGateway,
+        ),
+      ),
     );
   }
 
@@ -8904,10 +9174,17 @@ class _ChatScreenState extends State<ChatScreen>
       _awaitingVoiceReply = false;
       // The server's own refusal stays verbatim in both strings; the API-only
       // variant only appends what to check. Nothing here resends or reroutes.
-      _terminalTurnNotice =
+      _terminalTurnNotice = switch (e) {
+        // The transport's own refusals, in the user's language.
+        JsonRpcError(reason: rewindTargetUnsavedReason) =>
+          context.sharedL10n.rewind_target_unsaved,
+        JsonRpcError(reason: rewindFencesUnknownReason) =>
+          context.sharedL10n.rewind_session_changed,
+        _ =>
           shouldExplainApiOnlyPermissionDenial(widget.connection, '$e')
-          ? context.l10n.send_failed_api_only_permission_denied(e)
-          : context.l10n.send_failed(e);
+              ? context.l10n.send_failed_api_only_permission_denied(e)
+              : context.l10n.send_failed(e),
+      };
       if (removePendingUserMessage &&
           _messages.isNotEmpty &&
           _messages.last['role'] == 'user') {
@@ -9254,6 +9531,7 @@ class _ChatScreenState extends State<ChatScreen>
                     openGatewayQueue(fresh);
                   }
                 }
+                if (tool == 'history') _openHistory();
               },
               itemBuilder: (_) => [
                 if (widget.onOpenAppCommandPalette != null)
@@ -9286,6 +9564,18 @@ class _ChatScreenState extends State<ChatScreen>
                     child: ListTile(
                       leading: const Icon(Icons.hub_outlined),
                       title: Text(context.l10n.workspace_workers),
+                    ),
+                  ),
+                if (_desktopGateway != null)
+                  PopupMenuItem(
+                    value: 'history',
+                    child: ListTile(
+                      leading: const Icon(Icons.account_tree_outlined),
+                      title: Text(
+                        _fileSessionId == null
+                            ? context.l10n.import_claude_or_codex
+                            : context.l10n.session_history,
+                      ),
                     ),
                   ),
                 if (radio != null) radioToolItem(context),
@@ -9337,6 +9627,7 @@ class _ChatScreenState extends State<ChatScreen>
                   _fetchMessages(focusSavedHistory: true);
                 }
                 if (action == 'export') _exportConversation();
+                if (action == 'history') _openHistory();
                 if (action == 'received-output-info') {
                   unawaited(_showReceivedOutputDetails());
                 }
@@ -9400,6 +9691,18 @@ class _ChatScreenState extends State<ChatScreen>
                     title: Text(context.l10n.export_share),
                   ),
                 ),
+                if (_desktopGateway != null)
+                  PopupMenuItem(
+                    value: 'history',
+                    child: ListTile(
+                      leading: const Icon(Icons.account_tree_outlined),
+                      title: Text(
+                        _fileSessionId == null
+                            ? context.l10n.import_claude_or_codex
+                            : context.l10n.session_history,
+                      ),
+                    ),
+                  ),
                 if (_hasReceivedOutput)
                   PopupMenuItem(
                     value: 'received-output-info',
@@ -10748,7 +11051,20 @@ class _ChatScreenState extends State<ChatScreen>
       onReadAloud: isUser
           ? null
           : () => _readAssistantText(content, announce: true),
-      onEdit: isUser ? () => _editAndResend(content) : null,
+      // Where the transport truncates, Edit rewinds to this turn (Desktop's
+      // edit-and-resend); elsewhere it loads the text back into the composer,
+      // as it always has there.
+      onEdit: !isUser
+          ? null
+          : _canRegenerate
+          ? () => unawaited(
+              _editAndResendTurn(content, rowId: _durableRowId(msg)),
+            )
+          : () => _editAndResend(content),
+      onRestore: isUser && _canRegenerate
+          ? () =>
+                unawaited(_restoreUserTurn(content, rowId: _durableRowId(msg)))
+          : null,
       // Every assistant reply offers Regenerate; whether it replaces the
       // turn or asks again is decided when it is chosen.
       onRetry: isUser
@@ -11144,6 +11460,7 @@ class MessageBubble extends StatelessWidget {
   final Map<String, dynamic> metadata;
   final Future<void> Function()? onReadAloud;
   final VoidCallback? onEdit;
+  final VoidCallback? onRestore;
   final Future<void> Function()? onRetry;
   final bool mediaReferencesFinal;
 
@@ -11170,6 +11487,7 @@ class MessageBubble extends StatelessWidget {
     this.metadata = const {},
     this.onReadAloud,
     this.onEdit,
+    this.onRestore,
     this.onRetry,
     this.mediaFilesClient,
     this.mediaSourceIdentity,
@@ -11597,6 +11915,18 @@ class MessageBubble extends StatelessWidget {
                     onEdit!();
                   },
                 ),
+              if (onRestore != null)
+                _actionTile(
+                  sheetContext,
+                  key: const Key('message-action-restore'),
+                  label: context.l10n.restore_turn_confirm,
+                  tooltip: context.l10n.restore_turn_confirm,
+                  icon: Icons.settings_backup_restore,
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    onRestore!();
+                  },
+                ),
               if (onRetry != null)
                 _actionTile(
                   sheetContext,
@@ -11699,12 +12029,14 @@ class MessageBubble extends StatelessWidget {
 
   Widget _actionTile(
     BuildContext context, {
+    Key? key,
     required String label,
     required String tooltip,
     required IconData icon,
     required VoidCallback onTap,
   }) {
     return Semantics(
+      key: key,
       label: label,
       button: true,
       excludeSemantics: true,

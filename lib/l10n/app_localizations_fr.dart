@@ -7404,6 +7404,332 @@ class AppLocalizationsFr extends AppLocalizations {
       'Connecté avec le jeton de déploiement.';
 
   @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'La modification de $setting n’est pas encore disponible sur la passerelle partagée';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method n’est pas encore disponible sur la passerelle partagée';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'La passerelle canonique ne prend pas en charge ces options de session explicites : $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'La demande est obsolète ou indisponible ; reconnectez-vous avant de répondre';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'La révision de la session est indisponible ; rouvrez la session avant de modifier les métadonnées';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'L’identité d’exécution de la session est indisponible ; reconnectez-vous avant cette commande';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'Ce message n’est pas encore enregistré ; attendez qu’il soit finalisé, puis créez de nouveau une branche à partir de lui';
+
+  @override
+  String get ng_wire_not_available =>
+      'Pas encore disponible sur la passerelle partagée';
+
+  @override
+  String get edit_turn_title => 'Modifier cette invite ?';
+
+  @override
+  String get edit_turn_body =>
+      'L’invite sera relancée à partir d’ici. Les tours suivants seront archivés.';
+
+  @override
+  String get edit_turn_send => 'Envoyer';
+
+  @override
+  String get restore_turn_title => 'Restaurer à ce point de contrôle ?';
+
+  @override
+  String get restore_turn_body =>
+      'Tout ce qui suit cette invite sera retiré de la conversation et l’invite sera relancée à partir d’ici.';
+
+  @override
+  String get restore_turn_confirm => 'Restaurer et relancer';
+
+  @override
+  String get edit_turn_later_turns_body =>
+      'Cela archivera les tours suivants de la conversation. Continuer ?';
+
+  @override
+  String get session_history => 'Historique de la session';
+
+  @override
+  String get import_claude_or_codex => 'Importer Claude ou Codex';
+
+  @override
+  String get ng_session_history => 'Historique de la session';
+
+  @override
+  String get ng_import_claude_or_codex => 'Importer Claude ou Codex';
+
+  @override
+  String get ng_edit_and_resend => 'Modifier et renvoyer';
+
+  @override
+  String get ng_restore_turn_confirm => 'Restaurer et relancer';
+
+  @override
+  String get rewind_target_unsaved =>
+      'Ce message n\'est pas encore enregistré. Attendez qu\'il soit terminé, puis modifiez-le à nouveau.';
+
+  @override
+  String get rewind_turn_busy =>
+      'La réponse en cours n\'est pas encore arrêtée, rien n\'a donc été envoyé. Réessayez dans un instant.';
+
+  @override
+  String get rewind_session_changed =>
+      'Cette conversation a changé depuis son ouverture ici, rien n\'a donc été supprimé ni envoyé. Rouvrez-la, puis réessayez.';
+
+  @override
+  String get history_lineage => 'Conversations liées';
+
+  @override
+  String get history_lineage_none =>
+      'Cette conversation n’a ni branche ni conversation sœur.';
+
+  @override
+  String get history_lineage_unavailable =>
+      'Impossible de lire les conversations liées depuis cette passerelle.';
+
+  @override
+  String get history_lineage_parent => 'Parent';
+
+  @override
+  String get history_lineage_sibling => 'Sœur';
+
+  @override
+  String get history_lineage_fork => 'Branche';
+
+  @override
+  String get history_messages => 'Messages';
+
+  @override
+  String get history_messages_hint =>
+      'Sélectionnez un message enregistré pour créer une branche ou revenir à ce point.';
+
+  @override
+  String get history_messages_none =>
+      'Aucun message enregistré pour l’instant.';
+
+  @override
+  String get history_messages_unavailable =>
+      'Impossible de lire les messages enregistrés. Ouvrez cette conversation, puis actualisez.';
+
+  @override
+  String get history_role_user => 'Vous';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => 'Créer une branche ici';
+
+  @override
+  String get history_rewind_here => 'Revenir à ce point';
+
+  @override
+  String get history_branch_title => 'Créer une branche depuis ce message';
+
+  @override
+  String get history_branch_body =>
+      'Cela crée une nouvelle conversation contenant l’historique jusqu’au message sélectionné. La conversation actuelle reste telle quelle.';
+
+  @override
+  String get history_rewind_title => 'Revenir à ce message';
+
+  @override
+  String get history_rewind_body =>
+      'Les messages à partir de celui sélectionné sont retirés de cette conversation. Les fichiers de l’ordinateur ne changent pas. Leur restauration est une action distincte, par point de contrôle.';
+
+  @override
+  String history_branched(String id) {
+    return 'Branche créée : $id';
+  }
+
+  @override
+  String get history_open_chat => 'Ouvrir la conversation';
+
+  @override
+  String get history_mutate_unsupported =>
+      'Les branches et le retour en arrière nécessitent Hermes 0.23 ou plus récent sur cette passerelle.';
+
+  @override
+  String get history_checkpoints => 'Points de contrôle';
+
+  @override
+  String get history_checkpoints_none =>
+      'Cette session n’a aucun point de contrôle de fichiers.';
+
+  @override
+  String get history_checkpoints_unavailable =>
+      'Les points de contrôle ne sont pas disponibles sur cette passerelle.';
+
+  @override
+  String get history_diff_none => 'Aucune différence.';
+
+  @override
+  String get history_diff_loading => 'Chargement des modifications…';
+
+  @override
+  String get history_diff_failed =>
+      'Les modifications n’ont pas pu être chargées ; ce point de contrôle ne peut pas encore être restauré.';
+
+  @override
+  String get history_restore_checkpoint => 'Restaurer le point de contrôle';
+
+  @override
+  String get history_restore_title => 'Restaurer ce point de contrôle';
+
+  @override
+  String get history_restore_body =>
+      'Les fichiers modifiés par l’agent depuis ce point de contrôle reviennent à leur état d’alors. Vos propres modifications sont conservées. Des messages ultérieurs peuvent aussi être retirés. La conversation n’est pas dupliquée.';
+
+  @override
+  String get history_restore_body_all =>
+      'Tous les fichiers du dossier de la session reviennent à ce point de contrôle, y compris vos propres modifications. Des messages ultérieurs peuvent aussi être retirés. La conversation n’est pas dupliquée.';
+
+  @override
+  String get history_restore_own_edits =>
+      'Annuler aussi mes propres modifications';
+
+  @override
+  String get history_restored => 'Point de contrôle restauré.';
+
+  @override
+  String history_restored_removed(int count) {
+    return 'Point de contrôle restauré. $count messages ont été retirés.';
+  }
+
+  @override
+  String get history_export => 'Exporter';
+
+  @override
+  String get history_export_redact => 'Masquer les jetons';
+
+  @override
+  String get history_export_action => 'Exporter la transcription';
+
+  @override
+  String get history_export_saved => 'Transcription enregistrée.';
+
+  @override
+  String get history_export_unsupported =>
+      'L’export nécessite Hermes 0.23 ou plus récent sur cette passerelle.';
+
+  @override
+  String get history_import_unsupported =>
+      'L’import depuis Claude et Codex n’est pas pris en charge par cette passerelle.';
+
+  @override
+  String history_import_destination(String profile) {
+    return 'Profil de destination : $profile.';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return 'Lecture depuis $host · Profil de destination : $profile. $count journaux illisibles.';
+  }
+
+  @override
+  String get history_import_all => 'Tous';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return 'Impossible d’analyser les sessions de l’hôte : $reason';
+  }
+
+  @override
+  String get history_import_none =>
+      'Aucune session Claude Code ou Codex trouvée sur cet hôte.';
+
+  @override
+  String get history_import_no_match => 'Aucune session d’hôte correspondante.';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return 'Aperçu de la session impossible : $reason';
+  }
+
+  @override
+  String get history_import_open => 'Ouvrir la session importée';
+
+  @override
+  String get history_import_action => 'Importer la session sélectionnée';
+
+  @override
+  String get history_import_title => 'Importer cette session';
+
+  @override
+  String history_import_body(String profile) {
+    return 'Copier cette session Claude ou Codex dans le profil « $profile » de cette passerelle.';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return 'Cette session a déjà été importée dans « $profile ». Continuer avec la copie existante.';
+  }
+
+  @override
+  String history_imported(String id) {
+    return 'Importé : $id';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return 'Déjà importé : $id';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return 'Dossier : $path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return 'L’aperçu affiche $shown sur $total.';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return 'Impossible de terminer : $reason';
+  }
+
+  @override
+  String get history_error_unavailable =>
+      'La passerelle n’a pas pu le faire pour le moment. Réessayez.';
+
+  @override
+  String get history_error_unsupported =>
+      'Cette passerelle ne prend pas cela en charge.';
+
+  @override
+  String get history_error_denied => 'Cette passerelle a refusé la demande.';
+
+  @override
+  String get history_error_changed =>
+      'Cette conversation a changé pendant que cette page était ouverte. Actualisez, puis réessayez.';
+
+  @override
+  String get history_error_unbound =>
+      'Cette conversation n’est pas ouverte sur la passerelle. Ouvrez-la, puis réessayez.';
+
+  @override
+  String get history_error_invalid =>
+      'La passerelle a envoyé une réponse que cette application n’a pas pu lire.';
+
+  @override
   String ng_dock_kanban(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

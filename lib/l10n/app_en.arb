@@ -3336,10 +3336,248 @@
   "ng_use_a_deployment_token": "Use a deployment session token",
   "ng_sign_in_with_deployment_token": "Sign in with deployment token",
   "ng_signed_in_with_deployment_token": "Signed in with the deployment token.",
+  "ng_wire_setting_unavailable": "Changing {setting} is not available on the shared gateway yet",
+  "@ng_wire_setting_unavailable": {
+    "description": "A setting change was not sent: a Hermes 0.23+ shared gateway has no form for that config key (or that scope). {setting} is the key, with its scope in brackets when one was asked for.",
+    "placeholders": {
+      "setting": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_wire_method_unavailable": "{method} is not available on the shared gateway yet",
+  "@ng_wire_method_unavailable": {
+    "description": "A request was not sent: a Hermes 0.23+ shared gateway does not serve that method. {method} is the wire method name.",
+    "placeholders": {
+      "method": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_wire_session_options_unsupported": "Canonical gateway does not support explicit session options: {options}",
+  "@ng_wire_session_options_unsupported": {
+    "description": "A new chat was not created: the shared gateway has no field for these options. {options} is a comma-separated list of option names.",
+    "placeholders": {
+      "options": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_wire_prompt_stale": "Prompt is stale or unavailable; reconnect before responding",
+  "@ng_wire_prompt_stale": {
+    "description": "An approval or question could not be answered: it is no longer the one the gateway waits on."
+  },
+  "ng_wire_revision_unavailable": "Session revision unavailable; reopen the session before editing metadata",
+  "@ng_wire_revision_unavailable": {
+    "description": "A rename, archive or similar edit was not sent: the app has not learned the chat revision the gateway requires."
+  },
+  "ng_wire_generation_unavailable": "Session execution identity unavailable; reconnect before this command",
+  "@ng_wire_generation_unavailable": {
+    "description": "A command was not sent: the app has not learned which turn of the chat is current."
+  },
+  "ng_wire_message_not_saved": "This message is not saved yet; wait for it to settle, then branch from it again",
+  "@ng_wire_message_not_saved": {
+    "description": "A branch from a message was not sent: the message has no saved id yet."
+  },
+  "ng_wire_not_available": "Not available on the shared gateway yet",
+  "@ng_wire_not_available": {
+    "description": "Tooltip or note on a control that is disabled because the connected Hermes 0.23+ shared gateway does not offer it."
+  },
+  "edit_turn_title": "Edit this prompt?",
+  "edit_turn_body": "The prompt will be re-run from here. Later turns are archived.",
+  "edit_turn_send": "Send",
+  "restore_turn_title": "Restore to this checkpoint?",
+  "restore_turn_body": "Everything after this prompt is removed from the conversation, and the prompt runs again from here.",
+  "restore_turn_confirm": "Restore & rerun",
+  "edit_turn_later_turns_body": "This will archive later turns from the conversation. Continue?",
+  "session_history": "Session history",
+  "import_claude_or_codex": "Import Claude or Codex",
+  "ng_session_history": "Session history",
+  "ng_import_claude_or_codex": "Import Claude or Codex",
+  "ng_edit_and_resend": "Edit and resend",
+  "ng_restore_turn_confirm": "Restore & rerun",
+  "rewind_target_unsaved": "This message is not saved yet. Wait for it to settle, then edit it again.",
+  "rewind_turn_busy": "The current reply has not stopped yet, so nothing was sent. Try again in a moment.",
+  "rewind_session_changed": "This chat changed since it was opened here, so nothing was removed or sent. Reopen it, then try again.",
+  "history_lineage": "Related chats",
+  "history_lineage_none": "This chat has no forks or sibling branches.",
+  "history_lineage_unavailable": "Related chats could not be read from this gateway.",
+  "history_lineage_parent": "Parent",
+  "history_lineage_sibling": "Sibling",
+  "history_lineage_fork": "Fork",
+  "history_messages": "Messages",
+  "history_messages_hint": "Select a saved message to branch or rewind there.",
+  "history_messages_none": "No saved messages yet.",
+  "history_messages_unavailable": "The saved messages could not be read. Open this chat, then refresh.",
+  "history_role_user": "You",
+  "history_role_assistant": "Hermes",
+  "history_branch_here": "Branch from here",
+  "history_rewind_here": "Rewind to here",
+  "history_branch_title": "Branch from this message",
+  "history_branch_body": "This creates a new chat containing history through the selected message. The current chat stays as it is.",
+  "history_rewind_title": "Rewind to this message",
+  "history_rewind_body": "Messages from the selected one onward are removed from this chat. Files on the computer are not changed. Restoring those is a separate checkpoint action.",
+  "history_branched": "Branched as {id}",
+  "@history_branched": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "history_open_chat": "Open chat",
+  "history_mutate_unsupported": "Branch and rewind need Hermes 0.23 or newer on this gateway.",
+  "history_checkpoints": "Checkpoints",
+  "history_checkpoints_none": "This session has no filesystem checkpoints.",
+  "history_checkpoints_unavailable": "Checkpoints are not available on this gateway.",
+  "history_diff_none": "No differences.",
+  "history_diff_loading": "Loading the changes…",
+  "history_diff_failed": "The changes could not be loaded, so this checkpoint cannot be restored yet.",
+  "history_restore_checkpoint": "Restore checkpoint",
+  "history_restore_title": "Restore this checkpoint",
+  "history_restore_body": "The files the agent changed since this checkpoint go back to how they were then. Changes you made yourself are kept. Later chat messages can be removed as well. The conversation is not branched.",
+  "history_restore_body_all": "Every file in the session folder goes back to this checkpoint, including changes you made yourself. Later chat messages can be removed as well. The conversation is not branched.",
+  "history_restore_own_edits": "Also revert my own edits",
+  "history_restored": "Checkpoint restored.",
+  "history_restored_removed": "Checkpoint restored. {count} chat messages were removed.",
+  "@history_restored_removed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "history_export": "Export",
+  "history_export_redact": "Redact tokens",
+  "history_export_action": "Export transcript",
+  "history_export_saved": "Transcript saved.",
+  "history_export_unsupported": "Export needs Hermes 0.23 or newer on this gateway.",
+  "history_import_unsupported": "Claude and Codex import is not supported by this gateway.",
+  "history_import_destination": "Destination profile: {profile}.",
+  "@history_import_destination": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "history_import_reading": "Reading from {host} · Destination profile: {profile}. {count} logs could not be read.",
+  "@history_import_reading": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "history_import_all": "All",
+  "history_import_scan_failed": "Could not scan host sessions: {reason}",
+  "@history_import_scan_failed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "history_import_none": "No Claude Code or Codex sessions found on this host.",
+  "history_import_no_match": "No matching host sessions.",
+  "history_import_preview_failed": "Could not preview session: {reason}",
+  "@history_import_preview_failed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "history_import_open": "Open imported session",
+  "history_import_action": "Import selected session",
+  "history_import_title": "Import this session",
+  "history_import_body": "Copy this Claude or Codex session into profile \"{profile}\" on this gateway.",
+  "@history_import_body": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "history_import_body_existing": "This session was already imported into \"{profile}\". Continue with the existing copy.",
+  "@history_import_body_existing": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "history_imported": "Imported as {id}",
+  "@history_imported": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "history_imported_already": "Already imported as {id}",
+  "@history_imported_already": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "history_import_directory": "Directory: {path}",
+  "@history_import_directory": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "history_import_preview_partial": "Preview shows {shown} of {total}.",
+  "@history_import_preview_partial": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "history_failed": "Could not finish: {reason}",
+  "@history_failed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "history_error_unavailable": "The gateway could not do this right now. Try again.",
+  "history_error_unsupported": "This gateway does not support this.",
+  "history_error_denied": "This gateway refused the request.",
+  "history_error_changed": "This chat changed while this page was open. Refresh, then try again.",
+  "history_error_unbound": "This chat is not open on the gateway. Open it, then try again.",
+  "history_error_invalid": "The gateway sent an answer this app could not read.",
   "ng_dock_kanban": "{count, plural, =1{1 Kanban card} other{{count} Kanban cards}}",
-  "@ng_dock_kanban": {"placeholders": {"count": {"type": "int"}}},
+  "@ng_dock_kanban": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_dock_kanban_done": "{count} done",
-  "@ng_dock_kanban_done": {"placeholders": {"count": {"type": "int"}}},
+  "@ng_dock_kanban_done": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_show_kanban": "Show Kanban cards",
   "ng_hide_kanban": "Hide Kanban cards",
   "ng_kanban_status_triage": "Triage",
@@ -3352,11 +3590,29 @@
   "ng_kanban_status_done": "Done",
   "ng_kanban_status_archived": "Archived",
   "ng_kanban_open_card": "Open {title} in Kanban",
-  "@ng_kanban_open_card": {"placeholders": {"title": {"type": "String"}}},
+  "@ng_kanban_open_card": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "ng_kanban_show_all": "Show all {count}",
-  "@ng_kanban_show_all": {"placeholders": {"count": {"type": "int"}}},
+  "@ng_kanban_show_all": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_kanban_this_chat": "This chat ({count})",
-  "@ng_kanban_this_chat": {"placeholders": {"count": {"type": "int"}}},
+  "@ng_kanban_this_chat": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_kanban_close": "Close Kanban",
   "ng_kanban_block_no_dashboard": "This connection has no dashboard access, so card status is not live and the board cannot open.",
   "ng_kanban_block_unsupported": "Kanban is not turned on for this gateway. Enable its kanban plugin to see live status and open the board.",
@@ -3369,76 +3625,199 @@
   "ng_bots_tab_screen": "Screen",
   "ng_bots_tab_routines": "Routines",
   "ng_bots_rooms_load_failed": "Could not load rooms: {error}",
-  "@ng_bots_rooms_load_failed": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_rooms_load_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_routines_load_failed": "Could not load routines: {error}",
-  "@ng_bots_routines_load_failed": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_routines_load_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_desktop_failed": "Bot Desktop: {error}",
-  "@ng_bots_desktop_failed": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_desktop_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_install_not_started": "The gateway did not start the install.",
   "ng_bots_install_failed_error": "Install failed: {error}",
-  "@ng_bots_install_failed_error": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_install_failed_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_install_cancelled": "The install was cancelled.",
   "ng_bots_install_no_sudo": "sudo is not available on the gateway host. Run the command above there, then refresh.",
   "ng_bots_install_exit_code": "The install failed (exit code {code}).",
-  "@ng_bots_install_exit_code": {"placeholders": {"code": {"type": "String"}}},
+  "@ng_bots_install_exit_code": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_install_done": "Bot Desktop installed for {bot}",
-  "@ng_bots_install_done": {"placeholders": {"bot": {"type": "String"}}},
+  "@ng_bots_install_done": {
+    "placeholders": {
+      "bot": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_start_failed": "Start failed",
   "ng_bots_stop_title": "Stop Bot Desktop for {bot}?",
-  "@ng_bots_stop_title": {"placeholders": {"bot": {"type": "String"}}},
+  "@ng_bots_stop_title": {
+    "placeholders": {
+      "bot": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_stop_human_held": "Someone is controlling this screen. Stopping it ends their session and closes everything open on it.",
   "ng_bots_stop_body": "Everything open on the bot’s screen is closed.",
   "ng_bots_stop_refused": "Stop refused",
   "ng_bots_take_over_reason": "Take over from Ares",
   "ng_bots_take_over_failed": "Take over failed: {error}",
-  "@ng_bots_take_over_failed": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_take_over_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_force_hand_back_title": "Give {bot}’s screen back to the bot?",
-  "@ng_bots_force_hand_back_title": {"placeholders": {"bot": {"type": "String"}}},
+  "@ng_bots_force_hand_back_title": {
+    "placeholders": {
+      "bot": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_force_hand_back_body": "A person is holding this screen. If they are still using it, they lose control.",
   "ng_bots_hand_back": "Hand back",
   "ng_bots_hand_back_failed": "Hand back failed",
   "ng_bots_adopt_title": "Adopt the new sandbox image?",
   "ng_bots_adopt_body": "{bot} moves from {current} to {target}. Its container is recreated on the next terminal call; anything kept only in the current container is lost.",
-  "@ng_bots_adopt_body": {"placeholders": {"bot": {"type": "String"}, "current": {"type": "String"}, "target": {"type": "String"}}},
+  "@ng_bots_adopt_body": {
+    "placeholders": {
+      "bot": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_adopt_image": "Adopt image",
   "ng_bots_image_switch_failed": "Image switch failed",
   "ng_bots_keep_refused": "Keep refused",
   "ng_bots_chat_open_failed": "Could not open Bot Chat: {error}",
-  "@ng_bots_chat_open_failed": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_chat_open_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_title": "Bots · {connection}",
-  "@ng_bots_title": {"placeholders": {"connection": {"type": "String"}}},
+  "@ng_bots_title": {
+    "placeholders": {
+      "connection": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_protocol_tooltip": "Gateway injects the teammate-messaging protocol itself — no extra SOUL.md protocol is sent.",
   "ng_bots_unavailable": "Bots unavailable ({reason})",
-  "@ng_bots_unavailable": {"placeholders": {"reason": {"type": "String"}}},
+  "@ng_bots_unavailable": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_account_changed": "The account changed. Reconnect or refresh.",
   "ng_bots_try_refresh": "Try refreshing. If it persists, the gateway may not support bots.",
   "ng_bots_search": "Search bots",
   "ng_bots_none_found": "No bots found.",
   "ng_bots_no_model": "no model",
   "ng_bots_skill_count": "{count, plural, =1{1 skill} other{{count} skills}}",
-  "@ng_bots_skill_count": {"placeholders": {"count": {"type": "int"}}},
+  "@ng_bots_skill_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_bots_bot_chat": "Bot Chat",
   "ng_bots_install_id": "Gateway reports install id {id} · bot_mode_protocol: {protocol}",
-  "@ng_bots_install_id": {"placeholders": {"id": {"type": "String"}, "protocol": {"type": "String"}}},
+  "@ng_bots_install_id": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      },
+      "protocol": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_protocol_note": "The gateway injects the teammate-messaging protocol when bot_mode_protocol is set. Handle: default→hermes, otherwise the profile name.",
   "ng_bots_no_rooms": "No rooms yet. Create one from your roster.",
   "ng_bots_member_count": "{count, plural, =1{1 member} other{{count} members}}",
-  "@ng_bots_member_count": {"placeholders": {"count": {"type": "int"}}},
+  "@ng_bots_member_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_bots_room_disbanded": "disbanded",
   "ng_bots_room_adopted": "adopted",
   "ng_bots_rooms_gateway": "Gateway rooms",
   "ng_bots_rooms_desktop": "Desktop-driven rooms",
   "ng_bots_rooms_gateway_body": "Rooms are owned by the gateway. Methods: {methods}.",
-  "@ng_bots_rooms_gateway_body": {"placeholders": {"methods": {"type": "String"}}},
+  "@ng_bots_rooms_gateway_body": {
+    "placeholders": {
+      "methods": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_rooms_no_seat": "Rooms may not be seated by this gateway (persistent process required).",
   "ng_bots_rooms_fallback": "Classic fallback: the Desktop drives the group rounds (not newly created here).",
   "ng_bots_create_room": "Create room",
   "ng_bots_refresh_rooms": "Refresh rooms",
   "ng_bots_room_created": "Room created",
   "ng_bots_room_refused": "Room creation refused ({reason})",
-  "@ng_bots_room_refused": {"placeholders": {"reason": {"type": "String"}}},
+  "@ng_bots_room_refused": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_room_failed": "Room creation failed: {error}",
-  "@ng_bots_room_failed": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_room_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_bot": "Bot",
   "ng_bots_screen_unavailable": "Screen status unavailable",
   "ng_bots_screen_unavailable_body": "Start the bot’s screen to watch its thumbnail, or take over to use it yourself.",
@@ -3446,14 +3825,41 @@
   "ng_bots_not_installed": "Not installed",
   "ng_bots_unsupported_host": "Unsupported host",
   "ng_bots_pid": "pid {pid}",
-  "@ng_bots_pid": {"placeholders": {"pid": {"type": "String"}}},
+  "@ng_bots_pid": {
+    "placeholders": {
+      "pid": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_missing": "missing: {items}",
-  "@ng_bots_missing": {"placeholders": {"items": {"type": "String"}}},
+  "@ng_bots_missing": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_blocked": "blocked: {reason}",
-  "@ng_bots_blocked": {"placeholders": {"reason": {"type": "String"}}},
+  "@ng_bots_blocked": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_no_switch": "No sandbox image switch is pending.",
   "ng_bots_switch_image": "switch image: {current} → {target}",
-  "@ng_bots_switch_image": {"placeholders": {"current": {"type": "String"}, "target": {"type": "String"}}},
+  "@ng_bots_switch_image": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_bot_in_control": "the bot is in control",
   "ng_bots_person_in_control": "a person is in control",
   "ng_bots_installing": "Installing Bot Desktop on the gateway host…",
@@ -3463,48 +3869,123 @@
   "ng_bots_take_over": "Take over",
   "ng_bots_keep_image": "Keep current image",
   "ng_bots_missing_pieces": "The gateway reported missing pieces: {items}",
-  "@ng_bots_missing_pieces": {"placeholders": {"items": {"type": "String"}}},
+  "@ng_bots_missing_pieces": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_install_missing": "Install missing pieces",
   "ng_bots_thumbnail_unavailable": "Thumbnail unavailable",
   "ng_bots_thumbnail_title": "Screen thumbnail (live)",
   "ng_bots_thumbnail_suppressed": "Thumbnail suppressed while the screen is human-held.",
   "ng_bots_thumbnail_pending": "Thumbnail not available yet.",
   "ng_bots_routines_of": "{bot} · routines",
-  "@ng_bots_routines_of": {"placeholders": {"bot": {"type": "String"}}},
+  "@ng_bots_routines_of": {
+    "placeholders": {
+      "bot": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_add_routine": "Add routine",
   "ng_bots_no_routines": "No routines for this bot.",
   "ng_bots_routines_note": "Routines are [bot:<name>]-tagged jobs owned by the bot’s profile store. Legacy delegated routines are force-paused on load.",
   "ng_bots_routine_last": "last: {status}",
-  "@ng_bots_routine_last": {"placeholders": {"status": {"type": "String"}}},
+  "@ng_bots_routine_last": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_routine_next": "next: {time}",
-  "@ng_bots_routine_next": {"placeholders": {"time": {"type": "String"}}},
+  "@ng_bots_routine_next": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_routine_error": "error: {error}",
-  "@ng_bots_routine_error": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_routine_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_remove_routine_title": "Remove routine {routine}?",
-  "@ng_bots_remove_routine_title": {"placeholders": {"routine": {"type": "String"}}},
+  "@ng_bots_remove_routine_title": {
+    "placeholders": {
+      "routine": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_remove_routine_body": "The routine is deleted from {bot}’s schedule. This cannot be undone.",
-  "@ng_bots_remove_routine_body": {"placeholders": {"bot": {"type": "String"}}},
+  "@ng_bots_remove_routine_body": {
+    "placeholders": {
+      "bot": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_routine_action_failed": "{action} failed: {error}",
-  "@ng_bots_routine_action_failed": {"placeholders": {"action": {"type": "String"}, "error": {"type": "String"}}},
+  "@ng_bots_routine_action_failed": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_not_connected": "Not connected.",
   "ng_bots_add_failed": "Add failed: {error}",
-  "@ng_bots_add_failed": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_add_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_routine_added": "Routine added",
   "ng_bots_routine_enabled": "enabled",
   "ng_bots_routine_paused": "paused",
   "ng_bots_path": "Path: {path}",
-  "@ng_bots_path": {"placeholders": {"path": {"type": "String"}}},
+  "@ng_bots_path": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_chat_present": "Bot Chat present",
   "ng_bots_chat_missing": "Bot Chat missing",
   "ng_bots_last_session": "Last session: {preview}",
-  "@ng_bots_last_session": {"placeholders": {"preview": {"type": "String"}}},
+  "@ng_bots_last_session": {
+    "placeholders": {
+      "preview": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_open_chat": "Open Bot Chat",
   "ng_bots_desktop": "Bot Desktop",
   "ng_bots_room_name": "Room name",
   "ng_bots_select_member": "Select at least one member.",
   "ng_bots_sudo_title": "Administrator password",
   "ng_bots_sudo_body": "Installing Bot Desktop for {bot} needs sudo on the gateway host. The password is sent only to that gateway, for this install, and is not saved.",
-  "@ng_bots_sudo_body": {"placeholders": {"bot": {"type": "String"}}},
+  "@ng_bots_sudo_body": {
+    "placeholders": {
+      "bot": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_sudo_password": "sudo password",
   "ng_bots_new_routine": "New routine",
   "ng_bots_routine_title": "Title",
@@ -3523,36 +4004,96 @@
   "ng_bots_continuity": "Continue from the previous run",
   "ng_bots_account_changed_refresh": "Account changed. Refresh before continuing.",
   "ng_bots_room_load_failed": "Could not load room: {error}",
-  "@ng_bots_room_load_failed": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_room_load_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_send_failed": "Send failed: {error}",
-  "@ng_bots_send_failed": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_send_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_stop_failed": "Stop failed: {error}",
-  "@ng_bots_stop_failed": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_stop_failed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_stop_room": "Stop room",
   "ng_bots_send_message": "Send a message",
   "ng_bots_room_hint": "Message the room (mention members with @handle)",
   "ng_bots_history": "History",
   "ng_bots_revision": "revision {revision}",
-  "@ng_bots_revision": {"placeholders": {"revision": {"type": "String"}}},
+  "@ng_bots_revision": {
+    "placeholders": {
+      "revision": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_last_error": "last error: {error}",
-  "@ng_bots_last_error": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_bots_last_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_members": "Members",
   "ng_bots_room_context": "Room context",
   "ng_bots_purpose": "Purpose: {purpose}",
-  "@ng_bots_purpose": {"placeholders": {"purpose": {"type": "String"}}},
+  "@ng_bots_purpose": {
+    "placeholders": {
+      "purpose": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_notes": "Notes: {notes}",
-  "@ng_bots_notes": {"placeholders": {"notes": {"type": "String"}}},
+  "@ng_bots_notes": {
+    "placeholders": {
+      "notes": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_routing": "Routing: {routing}",
-  "@ng_bots_routing": {"placeholders": {"routing": {"type": "String"}}},
+  "@ng_bots_routing": {
+    "placeholders": {
+      "routing": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_lead": "lead {member}",
-  "@ng_bots_lead": {"placeholders": {"member": {"type": "String"}}},
+  "@ng_bots_lead": {
+    "placeholders": {
+      "member": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_viewer_you_control": "You control this screen. The bot waits until you hand it back.",
   "ng_bots_viewer_handed_back": "Control is back with the bot.",
   "ng_bots_viewer_background": "Control went back to the bot because the app left the foreground.",
   "ng_bots_viewer_taken": "Someone else took control of this screen.",
   "ng_bots_viewer_lost": "The live view was lost, so control went back to the bot.",
   "ng_bots_viewer_title": "Bot Desktop · {bot}",
-  "@ng_bots_viewer_title": {"placeholders": {"bot": {"type": "String"}}},
+  "@ng_bots_viewer_title": {
+    "placeholders": {
+      "bot": {
+        "type": "String"
+      }
+    }
+  },
   "ng_bots_viewer_type_hint": "Type on the bot’s screen",
   "ng_bots_viewer_type": "Type it",
   "ng_bots_viewer_enter": "Enter",
@@ -3564,12 +4105,33 @@
   "ng_slash_kanban": "Open the Kanban board",
   "ng_slash_bots": "Open your bots",
   "ng_board_card_count": "{count, plural, =1{1 card} other{{count} cards}}",
-  "@ng_board_card_count": {"placeholders": {"count": {"type": "int"}}},
+  "@ng_board_card_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_board_event_toast": "Kanban {task}: {event}",
-  "@ng_board_event_toast": {"placeholders": {"task": {"type": "String"}, "event": {"type": "String"}}},
+  "@ng_board_event_toast": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      },
+      "event": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_task": "task",
   "ng_board_refused_http": "Action refused (HTTP {status}).",
-  "@ng_board_refused_http": {"placeholders": {"status": {"type": "String"}}},
+  "@ng_board_refused_http": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_err_unsupported": "Kanban plugin is not enabled on this gateway.",
   "ng_board_err_denied": "Sign-in or permission required on this gateway.",
   "ng_board_err_stale": "Gateway owner changed. Refresh before continuing.",
@@ -3577,64 +4139,226 @@
   "ng_board_err_unreachable": "Could not reach the Kanban service on this gateway.",
   "ng_board_err_failed": "Operation failed. Refresh and try again.",
   "ng_board_block_title": "Block {task}",
-  "@ng_board_block_title": {"placeholders": {"task": {"type": "String"}}},
+  "@ng_board_block_title": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_block_reason": "Blocker reason",
   "ng_board_block_hint": "What is blocking this card?",
   "ng_board_review_title": "Request review for {task}",
-  "@ng_board_review_title": {"placeholders": {"task": {"type": "String"}}},
+  "@ng_board_review_title": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_review_summary": "Review summary",
   "ng_board_review_hint": "What was implemented and verified?",
   "ng_board_move_title": "Move {cards} to {column}?",
-  "@ng_board_move_title": {"placeholders": {"cards": {"type": "String"}, "column": {"type": "String"}}},
+  "@ng_board_move_title": {
+    "placeholders": {
+      "cards": {
+        "type": "String"
+      },
+      "column": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_move_body": "Every selected card on {board} changes column. A card that is running stops running.",
-  "@ng_board_move_body": {"placeholders": {"board": {"type": "String"}}},
+  "@ng_board_move_body": {
+    "placeholders": {
+      "board": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_move": "Move",
   "ng_board_moved": "Moved cards to {column}",
-  "@ng_board_moved": {"placeholders": {"column": {"type": "String"}}},
+  "@ng_board_moved": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_unassign_title": "Unassign {cards}?",
-  "@ng_board_unassign_title": {"placeholders": {"cards": {"type": "String"}}},
+  "@ng_board_unassign_title": {
+    "placeholders": {
+      "cards": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_assign_title": "Assign {cards} to @{profile}?",
-  "@ng_board_assign_title": {"placeholders": {"cards": {"type": "String"}, "profile": {"type": "String"}}},
+  "@ng_board_assign_title": {
+    "placeholders": {
+      "cards": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_assign_body": "Cards that are running are reclaimed first: their workers are stopped.",
   "ng_board_unassign": "Unassign",
   "ng_board_assign": "Assign",
   "ng_board_unassigned_done": "Unassigned selected cards",
   "ng_board_assigned_done": "Assigned @{profile}",
-  "@ng_board_assigned_done": {"placeholders": {"profile": {"type": "String"}}},
+  "@ng_board_assigned_done": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_archive_title": "Archive {cards}?",
-  "@ng_board_archive_title": {"placeholders": {"cards": {"type": "String"}}},
+  "@ng_board_archive_title": {
+    "placeholders": {
+      "cards": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_archive_body": "Archived cards leave {board}. Turn on Archived to see them again.",
-  "@ng_board_archive_body": {"placeholders": {"board": {"type": "String"}}},
+  "@ng_board_archive_body": {
+    "placeholders": {
+      "board": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_archived_done": "Archived selected cards",
   "ng_board_delete_title": "Delete {cards}?",
-  "@ng_board_delete_title": {"placeholders": {"cards": {"type": "String"}}},
+  "@ng_board_delete_title": {
+    "placeholders": {
+      "cards": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_delete_body": "This permanently deletes the selected cards from {board}.",
-  "@ng_board_delete_body": {"placeholders": {"board": {"type": "String"}}},
+  "@ng_board_delete_body": {
+    "placeholders": {
+      "board": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_deleted": "Deleted {cards}.",
-  "@ng_board_deleted": {"placeholders": {"cards": {"type": "String"}}},
+  "@ng_board_deleted": {
+    "placeholders": {
+      "cards": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_partial_failure": "{failed} of {total} failed: {reason}",
-  "@ng_board_partial_failure": {"placeholders": {"failed": {"type": "String"}, "total": {"type": "String"}, "reason": {"type": "String"}}},
+  "@ng_board_partial_failure": {
+    "placeholders": {
+      "failed": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_refused": "refused",
   "ng_board_dispatched": "Dispatched: {spawned} spawned, {promoted} promoted, {reclaimed} reclaimed.",
-  "@ng_board_dispatched": {"placeholders": {"spawned": {"type": "String"}, "promoted": {"type": "String"}, "reclaimed": {"type": "String"}}},
+  "@ng_board_dispatched": {
+    "placeholders": {
+      "spawned": {
+        "type": "String"
+      },
+      "promoted": {
+        "type": "String"
+      },
+      "reclaimed": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_board_archived": "Archived board {board}",
-  "@ng_board_board_archived": {"placeholders": {"board": {"type": "String"}}},
+  "@ng_board_board_archived": {
+    "placeholders": {
+      "board": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_board_archived_to": "Archived to {path}",
-  "@ng_board_board_archived_to": {"placeholders": {"path": {"type": "String"}}},
+  "@ng_board_board_archived_to": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_exported": "Exported {board} to {archive}",
-  "@ng_board_exported": {"placeholders": {"board": {"type": "String"}, "archive": {"type": "String"}}},
+  "@ng_board_exported": {
+    "placeholders": {
+      "board": {
+        "type": "String"
+      },
+      "archive": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_imported": "Imported board {board}{warnings}",
-  "@ng_board_imported": {"placeholders": {"board": {"type": "String"}, "warnings": {"type": "String"}}},
+  "@ng_board_imported": {
+    "placeholders": {
+      "board": {
+        "type": "String"
+      },
+      "warnings": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_created": "Created {task}",
-  "@ng_board_created": {"placeholders": {"task": {"type": "String"}}},
+  "@ng_board_created": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_orchestration_saved": "Saved Kanban orchestration",
   "ng_board_auto_describe_unavailable": "Auto-describe unavailable",
   "ng_board_description_updated": "Updated @{profile} description",
-  "@ng_board_description_updated": {"placeholders": {"profile": {"type": "String"}}},
+  "@ng_board_description_updated": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_title": "Kanban · {board}",
-  "@ng_board_title": {"placeholders": {"board": {"type": "String"}}},
+  "@ng_board_title": {
+    "placeholders": {
+      "board": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_active": "{count} active",
-  "@ng_board_active": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_board_active": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_dispatch": "Dispatch ready tasks now",
   "ng_board_orchestration": "Orchestration & workers",
   "ng_board_new_task": "New task",
@@ -3645,26 +4369,68 @@
   "ng_board_running_by_profile": "Running by profile",
   "ng_board_select": "Select",
   "ng_board_selected_chip": "Selected ({count})",
-  "@ng_board_selected_chip": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_board_selected_chip": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_locked_column": "Managed column — drag drop disabled",
   "ng_board_add_to": "Add to {column}",
-  "@ng_board_add_to": {"placeholders": {"column": {"type": "String"}}},
+  "@ng_board_add_to": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_collapse": "Collapse {column}",
-  "@ng_board_collapse": {"placeholders": {"column": {"type": "String"}}},
+  "@ng_board_collapse": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_column_empty": "No {column} tasks",
-  "@ng_board_column_empty": {"placeholders": {"column": {"type": "String"}}},
+  "@ng_board_column_empty": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_drop_here": "Drop or + task",
   "ng_board_card_actions": "Card actions",
   "ng_board_open_details": "Open details",
   "ng_board_select_card": "Select card",
   "ng_board_move_to": "Move to {column}",
-  "@ng_board_move_to": {"placeholders": {"column": {"type": "String"}}},
+  "@ng_board_move_to": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_parked": "Parked",
   "ng_board_blocked_by": "Blocked by {count}",
-  "@ng_board_blocked_by": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_board_blocked_by": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_goal_loop": "Goal loop",
   "ng_board_selected": "{count} selected",
-  "@ng_board_selected": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_board_selected": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_move_menu": "Move…",
   "ng_board_assign_menu": "Assign…",
   "ng_board_new_board_title": "New Kanban board",
@@ -3677,7 +4443,13 @@
   "ng_board_import_path": "Host .tar.gz archive path",
   "ng_board_import": "Import",
   "ng_board_edit_board": "Edit {board}",
-  "@ng_board_edit_board": {"placeholders": {"board": {"type": "String"}}},
+  "@ng_board_edit_board": {
+    "placeholders": {
+      "board": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_name": "Name",
   "ng_board_description": "Description",
   "ng_board_workdir_clear": "Default workdir (blank clears)",
@@ -3687,9 +4459,21 @@
   "ng_board_unpin": "Unpin tab",
   "ng_board_pin": "Pin tab",
   "ng_board_archive_board_title": "Archive board {board}?",
-  "@ng_board_archive_board_title": {"placeholders": {"board": {"type": "String"}}},
+  "@ng_board_archive_board_title": {
+    "placeholders": {
+      "board": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_archive_board_body": "The board and its {cards} leave the board list. The gateway keeps an archive on its host.",
-  "@ng_board_archive_board_body": {"placeholders": {"cards": {"type": "String"}}},
+  "@ng_board_archive_board_body": {
+    "placeholders": {
+      "cards": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_edit_metadata": "Edit metadata",
   "ng_board_export": "Export .tar.gz on host",
   "ng_board_move_pin_left": "Move pinned tab left",
@@ -3699,7 +4483,16 @@
   "ng_board_spec": "Spec & acceptance criteria",
   "ng_board_estimate": "Estimate",
   "ng_board_estimate_draft": "Complexity {complexity} (~{tokens} tok — token estimate only, not a dollar-cost claim)",
-  "@ng_board_estimate_draft": {"placeholders": {"complexity": {"type": "String"}, "tokens": {"type": "String"}}},
+  "@ng_board_estimate_draft": {
+    "placeholders": {
+      "complexity": {
+        "type": "String"
+      },
+      "tokens": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_estimate_unavailable": "Estimate unavailable",
   "ng_board_initial_column": "Initial column",
   "ng_board_worker_assignee": "Worker assignee",
@@ -3722,49 +4515,136 @@
   "ng_board_create_task": "Create task",
   "ng_board_orchestration_title": "Orchestration & worker profiles",
   "ng_board_orchestrator": "Orchestrator profile (resolved: {profile})",
-  "@ng_board_orchestrator": {"placeholders": {"profile": {"type": "String"}}},
+  "@ng_board_orchestrator": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_inherit_default": "Inherit active default",
   "ng_board_default_assignee": "Default assignee (resolved: {profile})",
-  "@ng_board_default_assignee": {"placeholders": {"profile": {"type": "String"}}},
+  "@ng_board_default_assignee": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_auto_decompose": "Auto-decompose triage cards",
   "ng_board_auto_decompose_help": "Uses the configured kanban_decomposer model on triage tasks",
   "ng_board_save_orchestration": "Save orchestration",
   "ng_board_worker_descriptions": "Worker specialization descriptions",
   "ng_board_worker_label": "@{profile} ({model} · {skills})",
-  "@ng_board_worker_label": {"placeholders": {"profile": {"type": "String"}, "model": {"type": "String"}, "skills": {"type": "String"}}},
+  "@ng_board_worker_label": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      },
+      "model": {
+        "type": "String"
+      },
+      "skills": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_default_model": "default model",
   "ng_board_save_description": "Save description",
   "ng_board_auto_describe": "Auto-describe from skills & persona",
   "ng_board_manual_block": "Manual operator block",
   "ng_board_requested_review": "Requested review",
   "ng_board_requeue_title": "Requeue {task}?",
-  "@ng_board_requeue_title": {"placeholders": {"task": {"type": "String"}}},
+  "@ng_board_requeue_title": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_requeue_body": "A worker running this card is stopped and the card goes back to the queue.",
   "ng_board_requeue": "Requeue",
   "ng_board_reassign_title": "Reassign {task} to @{profile}?",
-  "@ng_board_reassign_title": {"placeholders": {"task": {"type": "String"}, "profile": {"type": "String"}}},
+  "@ng_board_reassign_title": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_reassign_body": "This card is running: its worker is stopped first.",
   "ng_board_reassign": "Reassign",
   "ng_board_saved_task": "Saved task {task}",
-  "@ng_board_saved_task": {"placeholders": {"task": {"type": "String"}}},
+  "@ng_board_saved_task": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_commented_requeued": "Posted comment and requeued task",
   "ng_board_commented": "Posted comment",
   "ng_board_requeued": "Requeued {task}",
-  "@ng_board_requeued": {"placeholders": {"task": {"type": "String"}}},
+  "@ng_board_requeued": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_decompose_failed": "Decompose failed.",
   "ng_board_decompose_failed_reason": "Decompose failed: {reason}",
-  "@ng_board_decompose_failed_reason": {"placeholders": {"reason": {"type": "String"}}},
+  "@ng_board_decompose_failed_reason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_decomposed": "{count, plural, =1{Decomposed into 1 child task} other{Decomposed into {count} child tasks}}",
-  "@ng_board_decomposed": {"placeholders": {"count": {"type": "int"}}},
+  "@ng_board_decomposed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ng_board_no_children": "No child tasks were created.",
   "ng_board_no_children_reason": "No child tasks were created: {reason}",
-  "@ng_board_no_children_reason": {"placeholders": {"reason": {"type": "String"}}},
+  "@ng_board_no_children_reason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_uploaded": "Uploaded {file}",
-  "@ng_board_uploaded": {"placeholders": {"file": {"type": "String"}}},
+  "@ng_board_uploaded": {
+    "placeholders": {
+      "file": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_linked_parent": "Linked parent {task}",
-  "@ng_board_linked_parent": {"placeholders": {"task": {"type": "String"}}},
+  "@ng_board_linked_parent": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_unlinked_parent": "Removed parent link {task}",
-  "@ng_board_unlinked_parent": {"placeholders": {"task": {"type": "String"}}},
+  "@ng_board_unlinked_parent": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_task_load_failed": "Unable to load task",
   "ng_board_refresh_task": "Refresh task",
   "ng_board_tab_overview": "Overview",
@@ -3774,7 +4654,19 @@
   "ng_board_decompose": "Decompose",
   "ng_board_attach": "Attach file",
   "ng_board_estimate_task": "Estimate: {complexity} · ~{tokens} tokens ({rationale}) — not a dollar-cost claim.",
-  "@ng_board_estimate_task": {"placeholders": {"complexity": {"type": "String"}, "tokens": {"type": "String"}, "rationale": {"type": "String"}}},
+  "@ng_board_estimate_task": {
+    "placeholders": {
+      "complexity": {
+        "type": "String"
+      },
+      "tokens": {
+        "type": "String"
+      },
+      "rationale": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_no_rationale": "no rationale",
   "ng_board_status": "Status",
   "ng_board_assignee": "Assignee",
@@ -3783,31 +4675,91 @@
   "ng_board_save_changes": "Save changes",
   "ng_board_clear_model": "Clear model override",
   "ng_board_blocked_reason": "Blocked reason: {reason}",
-  "@ng_board_blocked_reason": {"placeholders": {"reason": {"type": "String"}}},
+  "@ng_board_blocked_reason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_result": "Result: {result}",
-  "@ng_board_result": {"placeholders": {"result": {"type": "String"}}},
+  "@ng_board_result": {
+    "placeholders": {
+      "result": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_parents": "Blocked by (parents · {count})",
-  "@ng_board_parents": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_board_parents": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_add_parent": "+ Add parent",
   "ng_board_children": "Blocks (children · {count})",
-  "@ng_board_children": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_board_children": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_attachments": "Attachments ({count})",
-  "@ng_board_attachments": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_board_attachments": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_worker": "worker",
   "ng_board_comments": "Comments ({count})",
-  "@ng_board_comments": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_board_comments": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_comment_hint": "Add comment / worker guidance",
   "ng_board_post_comment": "Post comment",
   "ng_board_comment_requeue": "Comment & requeue",
   "ng_board_runs": "Runs ({count})",
-  "@ng_board_runs": {"placeholders": {"count": {"type": "String"}}},
+  "@ng_board_runs": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_no_runs": "No worker runs recorded yet.",
   "ng_board_run_error": "Error: {error}",
-  "@ng_board_run_error": {"placeholders": {"error": {"type": "String"}}},
+  "@ng_board_run_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_log_tail_truncated": "Worker log tail ({bytes} B, truncated)",
-  "@ng_board_log_tail_truncated": {"placeholders": {"bytes": {"type": "String"}}},
+  "@ng_board_log_tail_truncated": {
+    "placeholders": {
+      "bytes": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_log_tail": "Worker log tail ({bytes} B)",
-  "@ng_board_log_tail": {"placeholders": {"bytes": {"type": "String"}}},
+  "@ng_board_log_tail": {
+    "placeholders": {
+      "bytes": {
+        "type": "String"
+      }
+    }
+  },
   "ng_board_refresh_log": "Refresh log",
   "ng_board_no_log": "No worker log output.",
   "ng_board_no_events": "No events recorded.",
@@ -3817,5 +4769,17 @@
   "ng_bots_room_running": "running",
   "ng_bots_room_idle": "idle",
   "ng_board_run_title": "Run #{id} · @{profile} · {outcome}",
-  "@ng_board_run_title": {"placeholders": {"id": {"type": "String"}, "profile": {"type": "String"}, "outcome": {"type": "String"}}}
+  "@ng_board_run_title": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      },
+      "outcome": {
+        "type": "String"
+      }
+    }
+  }
 }

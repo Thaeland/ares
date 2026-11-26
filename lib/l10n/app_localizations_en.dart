@@ -7333,6 +7333,328 @@ class AppLocalizationsEn extends AppLocalizations {
       'Signed in with the deployment token.';
 
   @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'Changing $setting is not available on the shared gateway yet';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method is not available on the shared gateway yet';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'Canonical gateway does not support explicit session options: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'Prompt is stale or unavailable; reconnect before responding';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'Session revision unavailable; reopen the session before editing metadata';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'Session execution identity unavailable; reconnect before this command';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'This message is not saved yet; wait for it to settle, then branch from it again';
+
+  @override
+  String get ng_wire_not_available => 'Not available on the shared gateway yet';
+
+  @override
+  String get edit_turn_title => 'Edit this prompt?';
+
+  @override
+  String get edit_turn_body =>
+      'The prompt will be re-run from here. Later turns are archived.';
+
+  @override
+  String get edit_turn_send => 'Send';
+
+  @override
+  String get restore_turn_title => 'Restore to this checkpoint?';
+
+  @override
+  String get restore_turn_body =>
+      'Everything after this prompt is removed from the conversation, and the prompt runs again from here.';
+
+  @override
+  String get restore_turn_confirm => 'Restore & rerun';
+
+  @override
+  String get edit_turn_later_turns_body =>
+      'This will archive later turns from the conversation. Continue?';
+
+  @override
+  String get session_history => 'Session history';
+
+  @override
+  String get import_claude_or_codex => 'Import Claude or Codex';
+
+  @override
+  String get ng_session_history => 'Session history';
+
+  @override
+  String get ng_import_claude_or_codex => 'Import Claude or Codex';
+
+  @override
+  String get ng_edit_and_resend => 'Edit and resend';
+
+  @override
+  String get ng_restore_turn_confirm => 'Restore & rerun';
+
+  @override
+  String get rewind_target_unsaved =>
+      'This message is not saved yet. Wait for it to settle, then edit it again.';
+
+  @override
+  String get rewind_turn_busy =>
+      'The current reply has not stopped yet, so nothing was sent. Try again in a moment.';
+
+  @override
+  String get rewind_session_changed =>
+      'This chat changed since it was opened here, so nothing was removed or sent. Reopen it, then try again.';
+
+  @override
+  String get history_lineage => 'Related chats';
+
+  @override
+  String get history_lineage_none =>
+      'This chat has no forks or sibling branches.';
+
+  @override
+  String get history_lineage_unavailable =>
+      'Related chats could not be read from this gateway.';
+
+  @override
+  String get history_lineage_parent => 'Parent';
+
+  @override
+  String get history_lineage_sibling => 'Sibling';
+
+  @override
+  String get history_lineage_fork => 'Fork';
+
+  @override
+  String get history_messages => 'Messages';
+
+  @override
+  String get history_messages_hint =>
+      'Select a saved message to branch or rewind there.';
+
+  @override
+  String get history_messages_none => 'No saved messages yet.';
+
+  @override
+  String get history_messages_unavailable =>
+      'The saved messages could not be read. Open this chat, then refresh.';
+
+  @override
+  String get history_role_user => 'You';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => 'Branch from here';
+
+  @override
+  String get history_rewind_here => 'Rewind to here';
+
+  @override
+  String get history_branch_title => 'Branch from this message';
+
+  @override
+  String get history_branch_body =>
+      'This creates a new chat containing history through the selected message. The current chat stays as it is.';
+
+  @override
+  String get history_rewind_title => 'Rewind to this message';
+
+  @override
+  String get history_rewind_body =>
+      'Messages from the selected one onward are removed from this chat. Files on the computer are not changed. Restoring those is a separate checkpoint action.';
+
+  @override
+  String history_branched(String id) {
+    return 'Branched as $id';
+  }
+
+  @override
+  String get history_open_chat => 'Open chat';
+
+  @override
+  String get history_mutate_unsupported =>
+      'Branch and rewind need Hermes 0.23 or newer on this gateway.';
+
+  @override
+  String get history_checkpoints => 'Checkpoints';
+
+  @override
+  String get history_checkpoints_none =>
+      'This session has no filesystem checkpoints.';
+
+  @override
+  String get history_checkpoints_unavailable =>
+      'Checkpoints are not available on this gateway.';
+
+  @override
+  String get history_diff_none => 'No differences.';
+
+  @override
+  String get history_diff_loading => 'Loading the changes…';
+
+  @override
+  String get history_diff_failed =>
+      'The changes could not be loaded, so this checkpoint cannot be restored yet.';
+
+  @override
+  String get history_restore_checkpoint => 'Restore checkpoint';
+
+  @override
+  String get history_restore_title => 'Restore this checkpoint';
+
+  @override
+  String get history_restore_body =>
+      'The files the agent changed since this checkpoint go back to how they were then. Changes you made yourself are kept. Later chat messages can be removed as well. The conversation is not branched.';
+
+  @override
+  String get history_restore_body_all =>
+      'Every file in the session folder goes back to this checkpoint, including changes you made yourself. Later chat messages can be removed as well. The conversation is not branched.';
+
+  @override
+  String get history_restore_own_edits => 'Also revert my own edits';
+
+  @override
+  String get history_restored => 'Checkpoint restored.';
+
+  @override
+  String history_restored_removed(int count) {
+    return 'Checkpoint restored. $count chat messages were removed.';
+  }
+
+  @override
+  String get history_export => 'Export';
+
+  @override
+  String get history_export_redact => 'Redact tokens';
+
+  @override
+  String get history_export_action => 'Export transcript';
+
+  @override
+  String get history_export_saved => 'Transcript saved.';
+
+  @override
+  String get history_export_unsupported =>
+      'Export needs Hermes 0.23 or newer on this gateway.';
+
+  @override
+  String get history_import_unsupported =>
+      'Claude and Codex import is not supported by this gateway.';
+
+  @override
+  String history_import_destination(String profile) {
+    return 'Destination profile: $profile.';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return 'Reading from $host · Destination profile: $profile. $count logs could not be read.';
+  }
+
+  @override
+  String get history_import_all => 'All';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return 'Could not scan host sessions: $reason';
+  }
+
+  @override
+  String get history_import_none =>
+      'No Claude Code or Codex sessions found on this host.';
+
+  @override
+  String get history_import_no_match => 'No matching host sessions.';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return 'Could not preview session: $reason';
+  }
+
+  @override
+  String get history_import_open => 'Open imported session';
+
+  @override
+  String get history_import_action => 'Import selected session';
+
+  @override
+  String get history_import_title => 'Import this session';
+
+  @override
+  String history_import_body(String profile) {
+    return 'Copy this Claude or Codex session into profile \"$profile\" on this gateway.';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return 'This session was already imported into \"$profile\". Continue with the existing copy.';
+  }
+
+  @override
+  String history_imported(String id) {
+    return 'Imported as $id';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return 'Already imported as $id';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return 'Directory: $path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return 'Preview shows $shown of $total.';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return 'Could not finish: $reason';
+  }
+
+  @override
+  String get history_error_unavailable =>
+      'The gateway could not do this right now. Try again.';
+
+  @override
+  String get history_error_unsupported => 'This gateway does not support this.';
+
+  @override
+  String get history_error_denied => 'This gateway refused the request.';
+
+  @override
+  String get history_error_changed =>
+      'This chat changed while this page was open. Refresh, then try again.';
+
+  @override
+  String get history_error_unbound =>
+      'This chat is not open on the gateway. Open it, then try again.';
+
+  @override
+  String get history_error_invalid =>
+      'The gateway sent an answer this app could not read.';
+
+  @override
   String ng_dock_kanban(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

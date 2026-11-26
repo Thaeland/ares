@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:hermes_android/core/models/connection.dart';
 
+import 'strict_authority_gateway.dart';
+
 /// Disposable dashboard and JSON-RPC peer, with deliberately distinct stored,
 /// runtime, child-control and transcript IDs. No application/provider login.
 class WorkerPeer {
@@ -11,6 +13,9 @@ class WorkerPeer {
   final HttpServer server;
   final sockets = <WebSocket>[];
   final frames = <Map<String, dynamic>>[];
+
+  /// Frames the pinned gateway's contracts refuse (the shared strict fake).
+  final refusals = <Map<String, dynamic>>[];
   final tickets = <String>{};
   final held = Completer<void>(), release = Completer<void>();
   String? holdMethod;
@@ -107,6 +112,12 @@ class WorkerPeer {
 
   Future<void> _rpc(WebSocket ws, Map<String, dynamic> frame) async {
     frames.add(frame);
+    final refused = strictAuthorityFrame(frame);
+    if (refused != null) {
+      refusals.add(frame);
+      ws.add(refused);
+      return;
+    }
     final method = frame['method'] as String;
     final params = frame['params'] as Map;
     final result = switch (method) {

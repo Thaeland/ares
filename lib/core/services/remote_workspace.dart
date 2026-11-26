@@ -5,6 +5,7 @@ library;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,9 @@ import 'portable_profile_bundle.dart';
 import 'host_operations.dart';
 import 'ws_client.dart';
 import 'preview_peer.dart';
+import '../history/foreign_session.dart';
+import '../history/fork_lineage.dart';
+import '../history/transcript_redaction.dart';
 
 export 'host_operations.dart';
 
@@ -33,6 +37,7 @@ part 'remote_host_ops.dart';
 
 part 'workspace_workers.dart';
 part 'workspace_queue.dart';
+part 'session_history.dart';
 
 part 'remote_workspace_terminal.dart';
 part 'remote_kanban.dart';
@@ -375,7 +380,7 @@ final class WorkspaceTarget {
     checkCurrent();
     final error = response['error'];
     if (error != null) {
-      if (error is Map && error['code'] == -32601) {
+      if (error is Map && _missingRpcMethod(error)) {
         _fail(WorkspaceFailure.unsupported);
       }
       if (error is Map && const {401, 403}.contains(error['code'])) {
@@ -386,6 +391,18 @@ final class WorkspaceTarget {
     final result = response['result'];
     if (result is! Map<String, dynamic>) _fail(WorkspaceFailure.invalid);
     return result;
+  }
+
+  /// Desktop's `isMissingRpcMethod`: the code decides (`-32601`); a refusal
+  /// without a code is judged by its message. A gateway that has no handler
+  /// for a method is "not available here", never a failure to report raw.
+  static bool _missingRpcMethod(Map<dynamic, dynamic> error) {
+    final code = error['code'];
+    if (code == -32601) return true;
+    if (code != null) return false;
+    final message = error['message']?.toString().toLowerCase() ?? '';
+    return message.contains('method not found') ||
+        message.contains('unknown method');
   }
 
   Future<T> _withOwner<T>(

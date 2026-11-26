@@ -39,6 +39,7 @@ import '../../core/widgets/transcript_body.dart';
 import '../../core/services/chat_presentation_state.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/widgets/composer_prompt_recall.dart';
+import '../../core/widgets/rewind_dialogs.dart';
 import '../../core/composer/composer_commands.dart';
 import '../../core/composer/composer_drag.dart';
 import '../../core/composer/composer_intake.dart';
@@ -64,6 +65,7 @@ import '../../core/presentation/radio.dart' show showAresRadioSheet;
 import '../../core/presentation/reading_controls.dart';
 import '../../core/presentation/transcript_reading.dart';
 import '../../core/widgets/session_files_view.dart';
+import '../../core/widgets/session_history_page.dart';
 import '../../core/widgets/git_review_pane.dart';
 import '../../core/models/turn_changed_files.dart';
 import '../../core/services/android_voice_composer_adapter.dart';
@@ -98,6 +100,7 @@ class NgChatView extends StatefulWidget {
     this.sessions,
     this.loadSessions,
     this.onNewChat,
+    this.onOpenSessionId,
     this.onResume,
     this.onOpenCommandPalette,
     this.readAloudFactory,
@@ -115,6 +118,7 @@ class NgChatView extends StatefulWidget {
   /// view with no sidebar list of its own (a parallel pane, a pop-out).
   final Future<List<Session>> Function()? loadSessions;
   final VoidCallback? onNewChat;
+  final void Function(String sessionId, {String? title})? onOpenSessionId;
   final void Function(String id, String title)? onResume;
   final VoidCallback? onOpenCommandPalette;
 
@@ -1704,10 +1708,16 @@ class _NgChatViewState extends State<NgChatView>
                         icon: const Icon(Icons.hub_outlined),
                         onPressed: () => workers.open(context),
                       ),
-                  ] else if (chat.storedId != null ||
-                      workers != null ||
-                      radio != null ||
-                      widget.onOpenCommandPalette != null)
+                    IconButton(
+                      key: const ValueKey('session-history'),
+                      tooltip: chat.storedId == null
+                          ? ngL.ng_import_claude_or_codex
+                          : ngL.ng_session_history,
+                      // Its own icon: Session files next to it is the tree.
+                      icon: const Icon(Icons.manage_history),
+                      onPressed: () => _openHistory(chat.storedId),
+                    ),
+                  ] else
                     // The radio's controls move here from the app bar.
                     PopupMenuButton<String>(
                       key: const ValueKey('chat-tools-menu'),
@@ -1735,6 +1745,7 @@ class _NgChatViewState extends State<NgChatView>
                           _openGatewayQueue(chat, parentId!);
                         }
                         if (tool == 'workers') workers?.open(context);
+                        if (tool == 'history') _openHistory(id);
                       },
                       itemBuilder: (_) => [
                         if (widget.onOpenCommandPalette != null)
@@ -1769,6 +1780,17 @@ class _NgChatViewState extends State<NgChatView>
                               title: Text(ngL.workspace_workers),
                             ),
                           ),
+                        PopupMenuItem(
+                          value: 'history',
+                          child: ListTile(
+                            leading: const Icon(Icons.manage_history),
+                            title: Text(
+                              chat.storedId == null
+                                  ? ngL.ng_import_claude_or_codex
+                                  : ngL.ng_session_history,
+                            ),
+                          ),
+                        ),
                         if (radio != null) radioToolItem(context),
                       ],
                     ),
@@ -1933,6 +1955,32 @@ class _NgChatViewState extends State<NgChatView>
     }
   }
 
+  void _openHistory(String? storedId) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => SessionHistoryPage(
+          owner: chat.gateway.workspace,
+          storedSessionId: storedId,
+          onRewound: (text) {
+            if (!mounted) return;
+            chat.resync();
+            _input.text = text;
+            _input.selection = TextSelection.collapsed(offset: text.length);
+          },
+          onRestored: () {
+            if (mounted) chat.resync();
+          },
+          onOpenSession: widget.onOpenSessionId == null
+              ? null
+              : (sessionId, {title}) {
+                  unawaited(widget.sessions?.refresh());
+                  widget.onOpenSessionId!(sessionId, title: title);
+                },
+        ),
+      ),
+    );
+  }
+
   void _showUsage() {
     final u = chat.usage!;
     final c = NgColors.of(context);
@@ -2041,6 +2089,55 @@ class _NgChatViewState extends State<NgChatView>
     if (text != null && _input.text.trim().isEmpty && _drafts.isEmpty) {
       _setComposer(text);
     }
+  }
+
+  /// The cut an edit or restore of [item] makes, or null (with a notice)
+  /// when the saved transcript does not hold the turn yet.
+  Future<NgRewindTarget?> _rewindTarget(
+    NgChatController owner,
+    NgUserItem item,
+  ) async {
+    final target = await owner.rewindTargetFor(item);
+    if (!mounted || !identical(owner, widget.chat)) return null;
+    if (target == null) {
+      ngToast(context, context.sharedL10n.rewind_target_unsaved);
+    }
+    return target;
+  }
+
+  Future<void> _editTurn(NgUserItem item) async {
+    final owner = chat;
+    final edited = await showDialog<String>(
+      context: context,
+      builder: (_) => EditTurnDialog(initialText: item.text),
+    );
+    if (!mounted || edited == null) return;
+    final text = edited.trim();
+    if (text.isEmpty || text == item.text.trim()) return;
+    final target = await _rewindTarget(owner, item);
+    if (target == null || !mounted) return;
+    if (target.laterTurns &&
+        !await showRestoreTurnConfirm(
+          context,
+          body: context.sharedL10n.edit_turn_later_turns_body,
+        )) {
+      return;
+    }
+    if (!mounted || !identical(owner, widget.chat)) return;
+    await owner.rewindUserTurn(item: item, text: text, target: target);
+  }
+
+  Future<void> _restoreTurn(NgUserItem item) async {
+    final owner = chat;
+    final target = await _rewindTarget(owner, item);
+    if (target == null || !mounted) return;
+    if (!await showRestoreTurnConfirm(context)) return;
+    if (!mounted || !identical(owner, widget.chat)) return;
+    await owner.rewindUserTurn(
+      item: item,
+      text: item.text.trim(),
+      target: target,
+    );
   }
 
   Widget _errorBar(NgColors c) {
@@ -2266,6 +2363,12 @@ class _NgChatViewState extends State<NgChatView>
         item: item,
         onRetry: i == lastUserIndex && !chat.running && !item.recoverInComposer
             ? () => unawaited(_retry())
+            : null,
+        onEdit: !item.pending && item.failure == null
+            ? () => unawaited(_editTurn(item))
+            : null,
+        onRestore: !item.pending && item.failure == null
+            ? () => unawaited(_restoreTurn(item))
             : null,
       ),
       NgAssistantItem() => Column(
@@ -2930,9 +3033,16 @@ class _CommandCardState extends State<_CommandCard> {
 }
 
 class _UserBubble extends StatelessWidget {
-  const _UserBubble({required this.item, this.onRetry});
+  const _UserBubble({
+    required this.item,
+    this.onRetry,
+    this.onEdit,
+    this.onRestore,
+  });
   final NgUserItem item;
   final VoidCallback? onRetry;
+  final VoidCallback? onEdit;
+  final VoidCallback? onRestore;
 
   @override
   Widget build(BuildContext context) {
@@ -3030,6 +3140,29 @@ class _UserBubble extends StatelessWidget {
                 ),
               ),
             MessageReaction(messageId: item.key),
+            if (onEdit != null || onRestore != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: Wrap(
+                  alignment: WrapAlignment.end,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 4,
+                  children: [
+                    if (onEdit != null)
+                      TextButton(
+                        key: const Key('ng-user-edit'),
+                        onPressed: onEdit,
+                        child: Text(ngL.ng_edit_and_resend),
+                      ),
+                    if (onRestore != null)
+                      TextButton(
+                        key: const Key('ng-user-restore'),
+                        onPressed: onRestore,
+                        child: Text(ngL.ng_restore_turn_confirm),
+                      ),
+                  ],
+                ),
+              ),
             if (item.failure != null)
               Padding(
                 padding: const EdgeInsets.only(top: 4),

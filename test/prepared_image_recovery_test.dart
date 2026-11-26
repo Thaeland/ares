@@ -15,6 +15,8 @@ import 'package:hermes_android/nextgen/data/nextgen_gateway.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'support/strict_nextgen_gateway.dart';
+
 class _Paths extends PathProviderPlatform {
   _Paths(this.root);
   final Directory root;
@@ -41,12 +43,22 @@ class _Gateway extends NextGenGateway {
   final calls = <Map<String, dynamic>>[];
   bool ack = false;
   int uploads = 0;
+
+  /// On an authority gateway the call goes through the client's guard and
+  /// the strict contract check, as the real socket does.
   @override
   Future<Map<String, dynamic>> call(
     String method,
     Map<String, dynamic> params, {
     Duration timeout = const Duration(seconds: 30),
-  }) async {
+  }) => sessionAuthority
+      ? strictCall(this, method, params, _answer)
+      : _answer(method, params);
+
+  Future<Map<String, dynamic>> _answer(
+    String method,
+    Map<String, dynamic> params,
+  ) async {
     if (method == 'image.attach_bytes') {
       return {
         'attached': true,

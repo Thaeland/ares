@@ -7081,6 +7081,302 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_signed_in_with_deployment_token => '已使用部署令牌登录。';
 
   @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return '共享网关暂不支持更改 $setting';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '共享网关暂不支持 $method';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return '规范网关不支持以下显式会话选项：$options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale => '该请求已过期或不可用；请重新连接后再回复';
+
+  @override
+  String get ng_wire_revision_unavailable => '会话修订版本不可用；请重新打开会话后再编辑元数据';
+
+  @override
+  String get ng_wire_generation_unavailable => '会话执行标识不可用；请重新连接后再使用此命令';
+
+  @override
+  String get ng_wire_message_not_saved => '此消息尚未保存；请等待其完成后再从它创建分支';
+
+  @override
+  String get ng_wire_not_available => '共享网关暂不支持';
+
+  @override
+  String get edit_turn_title => '编辑此提示？';
+
+  @override
+  String get edit_turn_body => '将从此处重新运行该提示，后续轮次会被归档。';
+
+  @override
+  String get edit_turn_send => '发送';
+
+  @override
+  String get restore_turn_title => '恢复到此检查点？';
+
+  @override
+  String get restore_turn_body => '此提示之后的所有内容将从对话中移除，并从此处重新运行该提示。';
+
+  @override
+  String get restore_turn_confirm => '恢复并重跑';
+
+  @override
+  String get edit_turn_later_turns_body => '这会将对话中的后续轮次归档。要继续吗？';
+
+  @override
+  String get session_history => '会话历史';
+
+  @override
+  String get import_claude_or_codex => '导入 Claude 或 Codex';
+
+  @override
+  String get ng_session_history => '会话历史';
+
+  @override
+  String get ng_import_claude_or_codex => '导入 Claude 或 Codex';
+
+  @override
+  String get ng_edit_and_resend => '编辑并重发';
+
+  @override
+  String get ng_restore_turn_confirm => '恢复并重跑';
+
+  @override
+  String get rewind_target_unsaved => '此消息尚未保存。请等待其完成后再编辑。';
+
+  @override
+  String get rewind_turn_busy => '当前回复尚未停止，因此未发送任何内容。请稍后再试。';
+
+  @override
+  String get rewind_session_changed => '此聊天自在此处打开后已发生变化，因此未移除或发送任何内容。请重新打开后再试。';
+
+  @override
+  String get history_lineage => '相关聊天';
+
+  @override
+  String get history_lineage_none => '此聊天没有分支或同级分支。';
+
+  @override
+  String get history_lineage_unavailable => '无法从此网关读取相关聊天。';
+
+  @override
+  String get history_lineage_parent => '父级';
+
+  @override
+  String get history_lineage_sibling => '同级';
+
+  @override
+  String get history_lineage_fork => '分支';
+
+  @override
+  String get history_messages => '消息';
+
+  @override
+  String get history_messages_hint => '选择一条已保存的消息，从那里分支或回退。';
+
+  @override
+  String get history_messages_none => '尚无已保存的消息。';
+
+  @override
+  String get history_messages_unavailable => '无法读取已保存的消息。请打开此聊天后刷新。';
+
+  @override
+  String get history_role_user => '你';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => '从这里分支';
+
+  @override
+  String get history_rewind_here => '回退到这里';
+
+  @override
+  String get history_branch_title => '从此消息分支';
+
+  @override
+  String get history_branch_body => '这会创建一个包含到所选消息为止历史的新聊天。当前聊天保持不变。';
+
+  @override
+  String get history_rewind_title => '回退到此消息';
+
+  @override
+  String get history_rewind_body =>
+      '从所选消息起的消息将从此聊天中移除。电脑上的文件不会更改。恢复文件是单独的检查点操作。';
+
+  @override
+  String history_branched(String id) {
+    return '已分支为 $id';
+  }
+
+  @override
+  String get history_open_chat => '打开聊天';
+
+  @override
+  String get history_mutate_unsupported => '分支和回退需要此网关运行 Hermes 0.23 或更高版本。';
+
+  @override
+  String get history_checkpoints => '检查点';
+
+  @override
+  String get history_checkpoints_none => '此会话没有文件检查点。';
+
+  @override
+  String get history_checkpoints_unavailable => '此网关不提供检查点。';
+
+  @override
+  String get history_diff_none => '没有差异。';
+
+  @override
+  String get history_diff_loading => '正在加载更改…';
+
+  @override
+  String get history_diff_failed => '无法加载更改，因此暂时不能恢复此检查点。';
+
+  @override
+  String get history_restore_checkpoint => '恢复检查点';
+
+  @override
+  String get history_restore_title => '恢复此检查点';
+
+  @override
+  String get history_restore_body =>
+      '代理自此检查点以来更改的文件将恢复到当时的状态。你自己的更改会保留。之后的聊天消息也可能被移除。对话不会分支。';
+
+  @override
+  String get history_restore_body_all =>
+      '会话文件夹中的所有文件都将恢复到此检查点，包括你自己的更改。之后的聊天消息也可能被移除。对话不会分支。';
+
+  @override
+  String get history_restore_own_edits => '同时还原我自己的更改';
+
+  @override
+  String get history_restored => '检查点已恢复。';
+
+  @override
+  String history_restored_removed(int count) {
+    return '检查点已恢复。已移除 $count 条聊天消息。';
+  }
+
+  @override
+  String get history_export => '导出';
+
+  @override
+  String get history_export_redact => '隐去令牌';
+
+  @override
+  String get history_export_action => '导出对话记录';
+
+  @override
+  String get history_export_saved => '对话记录已保存。';
+
+  @override
+  String get history_export_unsupported => '导出需要此网关运行 Hermes 0.23 或更高版本。';
+
+  @override
+  String get history_import_unsupported => '此网关不支持导入 Claude 和 Codex。';
+
+  @override
+  String history_import_destination(String profile) {
+    return '目标配置文件：$profile。';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return '正在从 $host 读取 · 目标配置文件：$profile。有 $count 个日志无法读取。';
+  }
+
+  @override
+  String get history_import_all => '全部';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return '无法扫描主机会话：$reason';
+  }
+
+  @override
+  String get history_import_none => '在此主机上未找到 Claude Code 或 Codex 会话。';
+
+  @override
+  String get history_import_no_match => '没有匹配的主机会话。';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return '无法预览会话：$reason';
+  }
+
+  @override
+  String get history_import_open => '打开已导入的会话';
+
+  @override
+  String get history_import_action => '导入所选会话';
+
+  @override
+  String get history_import_title => '导入此会话';
+
+  @override
+  String history_import_body(String profile) {
+    return '将此 Claude 或 Codex 会话复制到此网关上的配置文件“$profile”。';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return '此会话已导入到“$profile”。将继续使用现有副本。';
+  }
+
+  @override
+  String history_imported(String id) {
+    return '已导入为 $id';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return '已导入过，名称为 $id';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return '目录：$path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return '预览显示 $total 条中的 $shown 条。';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return '无法完成：$reason';
+  }
+
+  @override
+  String get history_error_unavailable => '网关暂时无法执行此操作。请重试。';
+
+  @override
+  String get history_error_unsupported => '此网关不支持此操作。';
+
+  @override
+  String get history_error_denied => '此网关拒绝了该请求。';
+
+  @override
+  String get history_error_changed => '此页面打开期间聊天已发生变化。请刷新后重试。';
+
+  @override
+  String get history_error_unbound => '此聊天未在网关上打开。请打开后重试。';
+
+  @override
+  String get history_error_invalid => '网关返回了此应用无法读取的响应。';
+
+  @override
   String ng_dock_kanban(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -14765,6 +15061,302 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署令牌登录。';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return '共享网关暂不支持更改 $setting';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '共享网关暂不支持 $method';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return '规范网关不支持以下显式会话选项：$options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale => '该请求已过期或不可用；请重新连接后再回复';
+
+  @override
+  String get ng_wire_revision_unavailable => '会话修订版本不可用；请重新打开会话后再编辑元数据';
+
+  @override
+  String get ng_wire_generation_unavailable => '会话执行标识不可用；请重新连接后再使用此命令';
+
+  @override
+  String get ng_wire_message_not_saved => '此消息尚未保存；请等待其完成后再从它创建分支';
+
+  @override
+  String get ng_wire_not_available => '共享网关暂不支持';
+
+  @override
+  String get edit_turn_title => '编辑此提示？';
+
+  @override
+  String get edit_turn_body => '将从此处重新运行该提示，后续轮次会被归档。';
+
+  @override
+  String get edit_turn_send => '发送';
+
+  @override
+  String get restore_turn_title => '恢复到此检查点？';
+
+  @override
+  String get restore_turn_body => '此提示之后的所有内容将从对话中移除，并从此处重新运行该提示。';
+
+  @override
+  String get restore_turn_confirm => '恢复并重跑';
+
+  @override
+  String get edit_turn_later_turns_body => '这会将对话中的后续轮次归档。要继续吗？';
+
+  @override
+  String get session_history => '会话历史';
+
+  @override
+  String get import_claude_or_codex => '导入 Claude 或 Codex';
+
+  @override
+  String get ng_session_history => '会话历史';
+
+  @override
+  String get ng_import_claude_or_codex => '导入 Claude 或 Codex';
+
+  @override
+  String get ng_edit_and_resend => '编辑并重发';
+
+  @override
+  String get ng_restore_turn_confirm => '恢复并重跑';
+
+  @override
+  String get rewind_target_unsaved => '此消息尚未保存。请等待其完成后再编辑。';
+
+  @override
+  String get rewind_turn_busy => '当前回复尚未停止，因此未发送任何内容。请稍后再试。';
+
+  @override
+  String get rewind_session_changed => '此聊天自在此处打开后已发生变化，因此未移除或发送任何内容。请重新打开后再试。';
+
+  @override
+  String get history_lineage => '相关聊天';
+
+  @override
+  String get history_lineage_none => '此聊天没有分支或同级分支。';
+
+  @override
+  String get history_lineage_unavailable => '无法从此网关读取相关聊天。';
+
+  @override
+  String get history_lineage_parent => '父级';
+
+  @override
+  String get history_lineage_sibling => '同级';
+
+  @override
+  String get history_lineage_fork => '分支';
+
+  @override
+  String get history_messages => '消息';
+
+  @override
+  String get history_messages_hint => '选择一条已保存的消息，从那里分支或回退。';
+
+  @override
+  String get history_messages_none => '尚无已保存的消息。';
+
+  @override
+  String get history_messages_unavailable => '无法读取已保存的消息。请打开此聊天后刷新。';
+
+  @override
+  String get history_role_user => '你';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => '从这里分支';
+
+  @override
+  String get history_rewind_here => '回退到这里';
+
+  @override
+  String get history_branch_title => '从此消息分支';
+
+  @override
+  String get history_branch_body => '这会创建一个包含到所选消息为止历史的新聊天。当前聊天保持不变。';
+
+  @override
+  String get history_rewind_title => '回退到此消息';
+
+  @override
+  String get history_rewind_body =>
+      '从所选消息起的消息将从此聊天中移除。电脑上的文件不会更改。恢复文件是单独的检查点操作。';
+
+  @override
+  String history_branched(String id) {
+    return '已分支为 $id';
+  }
+
+  @override
+  String get history_open_chat => '打开聊天';
+
+  @override
+  String get history_mutate_unsupported => '分支和回退需要此网关运行 Hermes 0.23 或更高版本。';
+
+  @override
+  String get history_checkpoints => '检查点';
+
+  @override
+  String get history_checkpoints_none => '此会话没有文件检查点。';
+
+  @override
+  String get history_checkpoints_unavailable => '此网关不提供检查点。';
+
+  @override
+  String get history_diff_none => '没有差异。';
+
+  @override
+  String get history_diff_loading => '正在加载更改…';
+
+  @override
+  String get history_diff_failed => '无法加载更改，因此暂时不能恢复此检查点。';
+
+  @override
+  String get history_restore_checkpoint => '恢复检查点';
+
+  @override
+  String get history_restore_title => '恢复此检查点';
+
+  @override
+  String get history_restore_body =>
+      '代理自此检查点以来更改的文件将恢复到当时的状态。你自己的更改会保留。之后的聊天消息也可能被移除。对话不会分支。';
+
+  @override
+  String get history_restore_body_all =>
+      '会话文件夹中的所有文件都将恢复到此检查点，包括你自己的更改。之后的聊天消息也可能被移除。对话不会分支。';
+
+  @override
+  String get history_restore_own_edits => '同时还原我自己的更改';
+
+  @override
+  String get history_restored => '检查点已恢复。';
+
+  @override
+  String history_restored_removed(int count) {
+    return '检查点已恢复。已移除 $count 条聊天消息。';
+  }
+
+  @override
+  String get history_export => '导出';
+
+  @override
+  String get history_export_redact => '隐去令牌';
+
+  @override
+  String get history_export_action => '导出对话记录';
+
+  @override
+  String get history_export_saved => '对话记录已保存。';
+
+  @override
+  String get history_export_unsupported => '导出需要此网关运行 Hermes 0.23 或更高版本。';
+
+  @override
+  String get history_import_unsupported => '此网关不支持导入 Claude 和 Codex。';
+
+  @override
+  String history_import_destination(String profile) {
+    return '目标配置文件：$profile。';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return '正在从 $host 读取 · 目标配置文件：$profile。有 $count 个日志无法读取。';
+  }
+
+  @override
+  String get history_import_all => '全部';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return '无法扫描主机会话：$reason';
+  }
+
+  @override
+  String get history_import_none => '在此主机上未找到 Claude Code 或 Codex 会话。';
+
+  @override
+  String get history_import_no_match => '没有匹配的主机会话。';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return '无法预览会话：$reason';
+  }
+
+  @override
+  String get history_import_open => '打开已导入的会话';
+
+  @override
+  String get history_import_action => '导入所选会话';
+
+  @override
+  String get history_import_title => '导入此会话';
+
+  @override
+  String history_import_body(String profile) {
+    return '将此 Claude 或 Codex 会话复制到此网关上的配置文件“$profile”。';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return '此会话已导入到“$profile”。将继续使用现有副本。';
+  }
+
+  @override
+  String history_imported(String id) {
+    return '已导入为 $id';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return '已导入过，名称为 $id';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return '目录：$path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return '预览显示 $total 条中的 $shown 条。';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return '无法完成：$reason';
+  }
+
+  @override
+  String get history_error_unavailable => '网关暂时无法执行此操作。请重试。';
+
+  @override
+  String get history_error_unsupported => '此网关不支持此操作。';
+
+  @override
+  String get history_error_denied => '此网关拒绝了该请求。';
+
+  @override
+  String get history_error_changed => '此页面打开期间聊天已发生变化。请刷新后重试。';
+
+  @override
+  String get history_error_unbound => '此聊天未在网关上打开。请打开后重试。';
+
+  @override
+  String get history_error_invalid => '网关返回了此应用无法读取的响应。';
 
   @override
   String ng_dock_kanban(int count) {
@@ -22849,6 +23441,302 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署權杖登入。';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return '共用閘道尚不支援變更 $setting';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '共用閘道尚不支援 $method';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return '標準閘道不支援下列明確指定的工作階段選項：$options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale => '此要求已過期或無法使用；請重新連線後再回覆';
+
+  @override
+  String get ng_wire_revision_unavailable => '無法取得工作階段修訂版本；請重新開啟工作階段後再編輯中繼資料';
+
+  @override
+  String get ng_wire_generation_unavailable => '無法取得工作階段執行識別碼；請重新連線後再使用此指令';
+
+  @override
+  String get ng_wire_message_not_saved => '此訊息尚未儲存；請等它完成後，再從它建立分支';
+
+  @override
+  String get ng_wire_not_available => '共用閘道尚不支援';
+
+  @override
+  String get edit_turn_title => '編輯此提示？';
+
+  @override
+  String get edit_turn_body => '將從此處重新執行該提示，後續輪次會被封存。';
+
+  @override
+  String get edit_turn_send => '傳送';
+
+  @override
+  String get restore_turn_title => '還原至此檢查點？';
+
+  @override
+  String get restore_turn_body => '此提示之後的所有內容將從對話中移除，並從此處重新執行該提示。';
+
+  @override
+  String get restore_turn_confirm => '還原並重新執行';
+
+  @override
+  String get edit_turn_later_turns_body => '這會將對話中的後續輪次封存。要繼續嗎？';
+
+  @override
+  String get session_history => '工作階段紀錄';
+
+  @override
+  String get import_claude_or_codex => '匯入 Claude 或 Codex';
+
+  @override
+  String get ng_session_history => '工作階段紀錄';
+
+  @override
+  String get ng_import_claude_or_codex => '匯入 Claude 或 Codex';
+
+  @override
+  String get ng_edit_and_resend => '編輯並重發';
+
+  @override
+  String get ng_restore_turn_confirm => '還原並重新執行';
+
+  @override
+  String get rewind_target_unsaved => '此訊息尚未儲存。請等待其完成後再編輯。';
+
+  @override
+  String get rewind_turn_busy => '目前的回覆尚未停止，因此未傳送任何內容。請稍後再試。';
+
+  @override
+  String get rewind_session_changed => '此聊天自在此處開啟後已有變更，因此未移除或傳送任何內容。請重新開啟後再試。';
+
+  @override
+  String get history_lineage => '相關聊天';
+
+  @override
+  String get history_lineage_none => '此聊天沒有分支或同層分支。';
+
+  @override
+  String get history_lineage_unavailable => '無法從此閘道讀取相關聊天。';
+
+  @override
+  String get history_lineage_parent => '上層';
+
+  @override
+  String get history_lineage_sibling => '同層';
+
+  @override
+  String get history_lineage_fork => '分支';
+
+  @override
+  String get history_messages => '訊息';
+
+  @override
+  String get history_messages_hint => '選擇一則已儲存的訊息，從該處分支或回溯。';
+
+  @override
+  String get history_messages_none => '尚無已儲存的訊息。';
+
+  @override
+  String get history_messages_unavailable => '無法讀取已儲存的訊息。請開啟此聊天後重新整理。';
+
+  @override
+  String get history_role_user => '你';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => '從這裡分支';
+
+  @override
+  String get history_rewind_here => '回溯到這裡';
+
+  @override
+  String get history_branch_title => '從此訊息分支';
+
+  @override
+  String get history_branch_body => '這會建立一個包含到所選訊息為止歷史的新聊天。目前的聊天保持不變。';
+
+  @override
+  String get history_rewind_title => '回溯到此訊息';
+
+  @override
+  String get history_rewind_body =>
+      '從所選訊息起的訊息將從此聊天中移除。電腦上的檔案不會變更。還原檔案是另外的檢查點操作。';
+
+  @override
+  String history_branched(String id) {
+    return '已分支為 $id';
+  }
+
+  @override
+  String get history_open_chat => '開啟聊天';
+
+  @override
+  String get history_mutate_unsupported => '分支和回溯需要此閘道執行 Hermes 0.23 或更新版本。';
+
+  @override
+  String get history_checkpoints => '檢查點';
+
+  @override
+  String get history_checkpoints_none => '此工作階段沒有檔案檢查點。';
+
+  @override
+  String get history_checkpoints_unavailable => '此閘道不提供檢查點。';
+
+  @override
+  String get history_diff_none => '沒有差異。';
+
+  @override
+  String get history_diff_loading => '正在載入變更…';
+
+  @override
+  String get history_diff_failed => '無法載入變更，因此暫時不能還原此檢查點。';
+
+  @override
+  String get history_restore_checkpoint => '還原檢查點';
+
+  @override
+  String get history_restore_title => '還原此檢查點';
+
+  @override
+  String get history_restore_body =>
+      '代理自此檢查點以來變更的檔案將還原到當時的狀態。你自己的變更會保留。之後的聊天訊息也可能被移除。對話不會分支。';
+
+  @override
+  String get history_restore_body_all =>
+      '工作階段資料夾中的所有檔案都將還原到此檢查點，包括你自己的變更。之後的聊天訊息也可能被移除。對話不會分支。';
+
+  @override
+  String get history_restore_own_edits => '同時還原我自己的變更';
+
+  @override
+  String get history_restored => '檢查點已還原。';
+
+  @override
+  String history_restored_removed(int count) {
+    return '檢查點已還原。已移除 $count 則聊天訊息。';
+  }
+
+  @override
+  String get history_export => '匯出';
+
+  @override
+  String get history_export_redact => '隱去權杖';
+
+  @override
+  String get history_export_action => '匯出對話記錄';
+
+  @override
+  String get history_export_saved => '對話記錄已儲存。';
+
+  @override
+  String get history_export_unsupported => '匯出需要此閘道執行 Hermes 0.23 或更新版本。';
+
+  @override
+  String get history_import_unsupported => '此閘道不支援匯入 Claude 和 Codex。';
+
+  @override
+  String history_import_destination(String profile) {
+    return '目標設定檔：$profile。';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return '正在從 $host 讀取 · 目標設定檔：$profile。有 $count 個記錄無法讀取。';
+  }
+
+  @override
+  String get history_import_all => '全部';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return '無法掃描主機工作階段：$reason';
+  }
+
+  @override
+  String get history_import_none => '在此主機上找不到 Claude Code 或 Codex 工作階段。';
+
+  @override
+  String get history_import_no_match => '沒有相符的主機工作階段。';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return '無法預覽工作階段：$reason';
+  }
+
+  @override
+  String get history_import_open => '開啟已匯入的工作階段';
+
+  @override
+  String get history_import_action => '匯入所選工作階段';
+
+  @override
+  String get history_import_title => '匯入此工作階段';
+
+  @override
+  String history_import_body(String profile) {
+    return '將此 Claude 或 Codex 工作階段複製到此閘道上的設定檔「$profile」。';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return '此工作階段已匯入到「$profile」。將繼續使用現有副本。';
+  }
+
+  @override
+  String history_imported(String id) {
+    return '已匯入為 $id';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return '先前已匯入為 $id';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return '目錄：$path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return '預覽顯示 $total 則中的 $shown 則。';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return '無法完成：$reason';
+  }
+
+  @override
+  String get history_error_unavailable => '閘道暫時無法執行此操作。請重試。';
+
+  @override
+  String get history_error_unsupported => '此閘道不支援此操作。';
+
+  @override
+  String get history_error_denied => '此閘道拒絕了該要求。';
+
+  @override
+  String get history_error_changed => '此頁面開啟期間聊天已有變更。請重新整理後再試。';
+
+  @override
+  String get history_error_unbound => '此聊天未在閘道上開啟。請開啟後再試。';
+
+  @override
+  String get history_error_invalid => '閘道傳回了此應用程式無法讀取的回應。';
 
   @override
   String ng_dock_kanban(int count) {

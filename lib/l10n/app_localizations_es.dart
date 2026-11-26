@@ -7388,6 +7388,331 @@ class AppLocalizationsEs extends AppLocalizations {
       'Sesión iniciada con el token de despliegue.';
 
   @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'Cambiar $setting aún no está disponible en la pasarela compartida';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method aún no está disponible en la pasarela compartida';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'La pasarela canónica no admite estas opciones de sesión explícitas: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'La solicitud está obsoleta o no disponible; vuelve a conectarte antes de responder';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'La revisión de la sesión no está disponible; vuelve a abrir la sesión antes de editar los metadatos';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'La identidad de ejecución de la sesión no está disponible; vuelve a conectarte antes de usar este comando';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'Este mensaje aún no se ha guardado; espera a que termine y vuelve a bifurcar desde él';
+
+  @override
+  String get ng_wire_not_available =>
+      'Aún no disponible en la pasarela compartida';
+
+  @override
+  String get edit_turn_title => '¿Editar este mensaje?';
+
+  @override
+  String get edit_turn_body =>
+      'El mensaje se volverá a ejecutar desde aquí. Los turnos posteriores se archivan.';
+
+  @override
+  String get edit_turn_send => 'Enviar';
+
+  @override
+  String get restore_turn_title => '¿Restaurar a este punto de control?';
+
+  @override
+  String get restore_turn_body =>
+      'Se eliminará de la conversación todo lo posterior a este mensaje y volverá a ejecutarse desde aquí.';
+
+  @override
+  String get restore_turn_confirm => 'Restaurar y reejecutar';
+
+  @override
+  String get edit_turn_later_turns_body =>
+      'Esto archivará los turnos posteriores de la conversación. ¿Continuar?';
+
+  @override
+  String get session_history => 'Historial de la sesión';
+
+  @override
+  String get import_claude_or_codex => 'Importar Claude o Codex';
+
+  @override
+  String get ng_session_history => 'Historial de la sesión';
+
+  @override
+  String get ng_import_claude_or_codex => 'Importar Claude o Codex';
+
+  @override
+  String get ng_edit_and_resend => 'Editar y reenviar';
+
+  @override
+  String get ng_restore_turn_confirm => 'Restaurar y reejecutar';
+
+  @override
+  String get rewind_target_unsaved =>
+      'Este mensaje aún no está guardado. Espera a que termine y vuelve a editarlo.';
+
+  @override
+  String get rewind_turn_busy =>
+      'La respuesta actual aún no se ha detenido, así que no se envió nada. Inténtalo de nuevo en un momento.';
+
+  @override
+  String get rewind_session_changed =>
+      'Este chat ha cambiado desde que se abrió aquí, así que no se eliminó ni se envió nada. Vuelve a abrirlo e inténtalo de nuevo.';
+
+  @override
+  String get history_lineage => 'Chats relacionados';
+
+  @override
+  String get history_lineage_none =>
+      'Este chat no tiene bifurcaciones ni ramas hermanas.';
+
+  @override
+  String get history_lineage_unavailable =>
+      'No se pudieron leer los chats relacionados de este gateway.';
+
+  @override
+  String get history_lineage_parent => 'Origen';
+
+  @override
+  String get history_lineage_sibling => 'Hermano';
+
+  @override
+  String get history_lineage_fork => 'Bifurcación';
+
+  @override
+  String get history_messages => 'Mensajes';
+
+  @override
+  String get history_messages_hint =>
+      'Selecciona un mensaje guardado para bifurcar o rebobinar ahí.';
+
+  @override
+  String get history_messages_none => 'Aún no hay mensajes guardados.';
+
+  @override
+  String get history_messages_unavailable =>
+      'No se pudieron leer los mensajes guardados. Abre este chat y actualiza.';
+
+  @override
+  String get history_role_user => 'Tú';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => 'Bifurcar desde aquí';
+
+  @override
+  String get history_rewind_here => 'Rebobinar hasta aquí';
+
+  @override
+  String get history_branch_title => 'Bifurcar desde este mensaje';
+
+  @override
+  String get history_branch_body =>
+      'Esto crea un chat nuevo con el historial hasta el mensaje seleccionado. El chat actual se queda como está.';
+
+  @override
+  String get history_rewind_title => 'Rebobinar hasta este mensaje';
+
+  @override
+  String get history_rewind_body =>
+      'Los mensajes desde el seleccionado en adelante se eliminan de este chat. Los archivos del equipo no cambian. Restaurarlos es una acción aparte con puntos de control.';
+
+  @override
+  String history_branched(String id) {
+    return 'Bifurcado como $id';
+  }
+
+  @override
+  String get history_open_chat => 'Abrir chat';
+
+  @override
+  String get history_mutate_unsupported =>
+      'Bifurcar y rebobinar requieren Hermes 0.23 o posterior en este gateway.';
+
+  @override
+  String get history_checkpoints => 'Puntos de control';
+
+  @override
+  String get history_checkpoints_none =>
+      'Esta sesión no tiene puntos de control de archivos.';
+
+  @override
+  String get history_checkpoints_unavailable =>
+      'Los puntos de control no están disponibles en este gateway.';
+
+  @override
+  String get history_diff_none => 'Sin diferencias.';
+
+  @override
+  String get history_diff_loading => 'Cargando los cambios…';
+
+  @override
+  String get history_diff_failed =>
+      'No se pudieron cargar los cambios, así que este punto de control aún no se puede restaurar.';
+
+  @override
+  String get history_restore_checkpoint => 'Restaurar punto de control';
+
+  @override
+  String get history_restore_title => 'Restaurar este punto de control';
+
+  @override
+  String get history_restore_body =>
+      'Los archivos que el agente cambió desde este punto de control vuelven a como estaban. Tus propios cambios se conservan. También pueden eliminarse mensajes posteriores del chat. La conversación no se bifurca.';
+
+  @override
+  String get history_restore_body_all =>
+      'Todos los archivos de la carpeta de la sesión vuelven a este punto de control, incluidos tus propios cambios. También pueden eliminarse mensajes posteriores del chat. La conversación no se bifurca.';
+
+  @override
+  String get history_restore_own_edits =>
+      'Revertir también mis propios cambios';
+
+  @override
+  String get history_restored => 'Punto de control restaurado.';
+
+  @override
+  String history_restored_removed(int count) {
+    return 'Punto de control restaurado. Se eliminaron $count mensajes del chat.';
+  }
+
+  @override
+  String get history_export => 'Exportar';
+
+  @override
+  String get history_export_redact => 'Ocultar tokens';
+
+  @override
+  String get history_export_action => 'Exportar transcripción';
+
+  @override
+  String get history_export_saved => 'Transcripción guardada.';
+
+  @override
+  String get history_export_unsupported =>
+      'Exportar requiere Hermes 0.23 o posterior en este gateway.';
+
+  @override
+  String get history_import_unsupported =>
+      'Este gateway no admite la importación de Claude y Codex.';
+
+  @override
+  String history_import_destination(String profile) {
+    return 'Perfil de destino: $profile.';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return 'Leyendo de $host · Perfil de destino: $profile. No se pudieron leer $count registros.';
+  }
+
+  @override
+  String get history_import_all => 'Todos';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return 'No se pudieron buscar las sesiones del host: $reason';
+  }
+
+  @override
+  String get history_import_none =>
+      'No se encontraron sesiones de Claude Code ni de Codex en este host.';
+
+  @override
+  String get history_import_no_match =>
+      'No hay sesiones del host que coincidan.';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return 'No se pudo previsualizar la sesión: $reason';
+  }
+
+  @override
+  String get history_import_open => 'Abrir sesión importada';
+
+  @override
+  String get history_import_action => 'Importar sesión seleccionada';
+
+  @override
+  String get history_import_title => 'Importar esta sesión';
+
+  @override
+  String history_import_body(String profile) {
+    return 'Copiar esta sesión de Claude o Codex al perfil «$profile» de este gateway.';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return 'Esta sesión ya se importó en «$profile». Continúa con la copia existente.';
+  }
+
+  @override
+  String history_imported(String id) {
+    return 'Importado como $id';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return 'Ya importado como $id';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return 'Directorio: $path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return 'La vista previa muestra $shown de $total.';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return 'No se pudo completar: $reason';
+  }
+
+  @override
+  String get history_error_unavailable =>
+      'El gateway no pudo hacerlo ahora. Inténtalo de nuevo.';
+
+  @override
+  String get history_error_unsupported => 'Este gateway no admite esta acción.';
+
+  @override
+  String get history_error_denied => 'Este gateway rechazó la solicitud.';
+
+  @override
+  String get history_error_changed =>
+      'Este chat cambió mientras esta página estaba abierta. Actualiza y vuelve a intentarlo.';
+
+  @override
+  String get history_error_unbound =>
+      'Este chat no está abierto en el gateway. Ábrelo y vuelve a intentarlo.';
+
+  @override
+  String get history_error_invalid =>
+      'El gateway envió una respuesta que esta app no pudo leer.';
+
+  @override
   String ng_dock_kanban(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

@@ -8,6 +8,8 @@ import 'package:hermes_android/core/services/remote_workspace.dart';
 import 'package:hermes_android/core/services/scoped_profile_owner.dart';
 import 'package:hermes_android/nextgen/data/nextgen_gateway.dart';
 
+import 'support/strict_authority_gateway.dart';
+
 void main() {
   test('layout codes carry zoom and filters, not memory text', () {
     const layout = MemoryLayout(
@@ -394,6 +396,11 @@ class OpsFixture {
     );
     socket.listen((raw) {
       final frame = jsonDecode(raw as String) as Map<String, dynamic>;
+      final refused = strictAuthorityFrame(frame);
+      if (refused != null) {
+        socket.add(refused);
+        return;
+      }
       final result = frame['method'] == 'profiles.list'
           ? {
               'profiles': [

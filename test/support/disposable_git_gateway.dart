@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:hermes_android/core/models/connection.dart';
 
+import 'strict_authority_gateway.dart';
+
 /// Loopback gateway whose Git routes run real `git` in one disposable
 /// repository. The route name chooses the argv; request bodies are not a
 /// command line, and `gh` is never started.
@@ -100,6 +102,11 @@ class DisposableGitGateway {
           final frame = jsonDecode(raw as String) as Map<String, dynamic>;
           final method = frame['method'];
           final params = frame['params'];
+          final refused = strictAuthorityFrame(frame);
+          if (refused != null) {
+            socket.add(refused);
+            return;
+          }
           Object? result = <String, Object?>{};
           if (method == 'session.resume' && params is Map) {
             if (dropResume) {
