@@ -149,6 +149,7 @@ class KanbanTaskCard {
     this.parentCount = 0,
     this.openParentCount = 0,
     this.childCount = 0,
+    this.sessionId,
   });
 
   final String id;
@@ -181,6 +182,11 @@ class KanbanTaskCard {
   final int openParentCount;
   final int childCount;
 
+  /// The session whose agent loop created the task (Hermes provenance,
+  /// `kanban_db.Task.session_id`); null for a card made from the CLI or the
+  /// dashboard. The chat dock matches it to the chat's own session.
+  final String? sessionId;
+
   factory KanbanTaskCard.fromJson(Map raw) {
     final rawSkills = raw['skills'];
     final skills = <String>[
@@ -189,6 +195,7 @@ class KanbanTaskCard {
           if (s is String && s.trim().isNotEmpty) s.trim(),
     ];
     final assignee = (raw['assignee'] as String?)?.trim();
+    final session = raw['session_id'];
     return KanbanTaskCard(
       id: raw['id']?.toString() ?? '',
       title: raw['title']?.toString() ?? '',
@@ -219,6 +226,9 @@ class KanbanTaskCard {
       parentCount: (raw['parent_count'] as num?)?.toInt() ?? 0,
       openParentCount: (raw['open_parent_count'] as num?)?.toInt() ?? 0,
       childCount: (raw['child_count'] as num?)?.toInt() ?? 0,
+      sessionId: session is String && session.trim().isNotEmpty
+          ? session.trim()
+          : null,
     );
   }
 }
