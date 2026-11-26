@@ -13,6 +13,8 @@ import '../widgets/bot_desktop_viewer.dart';
 import '../../nextgen/data/chat_controller.dart';
 import '../../nextgen/data/nextgen_gateway.dart';
 import '../../nextgen/ui/chat_view.dart';
+import '../../nextgen/ui/nextgen_scope.dart';
+import 'chat_screen.dart';
 
 /// Native Bot Mode workspace (`F11`): the bot roster, canonical bot chats,
 /// per-bot routines, multi-bot rooms and the Bot Desktop (status, start/stop,
@@ -26,6 +28,7 @@ class BotsScreen extends StatefulWidget {
     required this.route,
     required this.connection,
     this.displayConnector,
+    this.openBotChat,
   });
 
   final RemoteWorkspaceOwner owner;
@@ -36,6 +39,11 @@ class BotsScreen extends StatefulWidget {
   /// the gateway's `/api/display/ws`; tests supply an in-memory screen.
   @visibleForTesting
   final BotDisplayConnector? displayConnector;
+
+  /// Shows a bot's chat page. Production pushes it; tests inspect it.
+  @visibleForTesting
+  final Future<void> Function(BuildContext context, BotChatPage page)?
+  openBotChat;
 
   @override
   State<BotsScreen> createState() => _BotsScreenState();
@@ -707,16 +715,20 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         final chat = await target.resolveCanonicalChat(bot.name);
         // The connection or account changed while the chat was resolved.
         if (!mounted || !_owns(target)) return;
-        await Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => BotChatPage(
-              connection: widget.connection,
-              storedId: chat.sessionId,
-              title: botCanonicalChatTitle,
-              profile: chat.profile,
-            ),
-          ),
+        final page = BotChatPage(
+          connection: widget.connection,
+          storedId: chat.sessionId,
+          title: botCanonicalChatTitle,
+          profile: chat.profile,
         );
+        final open = widget.openBotChat;
+        if (open != null) {
+          await open(context, page);
+        } else {
+          await Navigator.of(
+            context,
+          ).push(MaterialPageRoute<void>(builder: (_) => page));
+        }
         if (mounted) setState(() {});
       } on WorkspaceException catch (e) {
         if (mounted) _toast('Could not open Bot Chat: ${e.reason.name}');
@@ -2262,8 +2274,11 @@ class _RoutineDialogState extends State<_RoutineDialog> {
   }
 }
 
-/// Pushed page hosting the canonical Bot Chat. The same page is used by
-/// Classic and NextGen because it is a self-contained Material page.
+/// Pushed page hosting a bot's canonical Bot Chat, on the bot's own profile.
+///
+/// Each layout shows it with its own chat: inside NextGen (an [NgScope] is
+/// above) the NextGen chat view, on a gateway and scope of its own for the
+/// bot's profile; in Classic the Classic chat screen on [chatConnection].
 class BotChatPage extends StatefulWidget {
   const BotChatPage({
     super.key,
@@ -2271,12 +2286,34 @@ class BotChatPage extends StatefulWidget {
     required this.storedId,
     required this.title,
     required this.profile,
+    this.gatewayFactory,
+    this.classicChatBuilder,
   });
 
+  /// The connection the roster was read on.
   final SavedConnection connection;
   final String storedId;
   final String title;
+
+  /// The bot: the profile that owns [storedId].
   final String profile;
+
+  /// Builds the NextGen chat's gateway. Tests record what it is given.
+  @visibleForTesting
+  final NextGenGateway Function(SavedConnection connection)? gatewayFactory;
+
+  /// Builds the Classic chat. Tests record what it is given.
+  @visibleForTesting
+  final Widget Function(SavedConnection connection, Session session)?
+  classicChatBuilder;
+
+  /// The same gateway and account, on the bot's own profile. A bot's chat is
+  /// a session in the bot's profile: read, resumed and sent to there, as
+  /// Desktop opens it (`requestForBot`), not on whatever profile the saved
+  /// connection selects. An unsaved copy; the saved connection is untouched.
+  SavedConnection get chatConnection => profile.trim().isEmpty
+      ? connection
+      : connection.copyWith(gatewayProfile: profile.trim());
 
   @override
   State<BotChatPage> createState() => _BotChatPageState();
@@ -2285,19 +2322,27 @@ class BotChatPage extends StatefulWidget {
 class _BotChatPageState extends State<BotChatPage> {
   NextGenGateway? _gateway;
   NgChatController? _chat;
+  NgScope? _nextGen;
+  bool _resolved = false;
   bool _loading = true;
   String? _failure;
 
   @override
-  void initState() {
-    super.initState();
-    unawaited(_start());
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_resolved) return;
+    _resolved = true;
+    // Read once: which layout this page was pushed from does not change.
+    _nextGen = context.getInheritedWidgetOfExactType<NgScope>();
+    if (_nextGen != null) unawaited(_start());
   }
 
   Future<void> _start() async {
-    final gateway = NextGenGateway(widget.connection);
-    _gateway = gateway;
     try {
+      final gateway = (widget.gatewayFactory ?? NextGenGateway.new)(
+        widget.chatConnection,
+      );
+      _gateway = gateway;
       final chat = NgChatController(
         gateway,
         sessionId: widget.storedId,
@@ -2325,11 +2370,35 @@ class _BotChatPageState extends State<BotChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final nextGen = _nextGen;
+    if (nextGen == null) {
+      final session = Session(
+        id: widget.storedId,
+        title: widget.title,
+        model: '',
+        source: 'desktop',
+        messageCount: 0,
+        hasKnownMessageCount: false,
+        isActive: false,
+        preview: '',
+        startedAt: 0,
+      );
+      final build = widget.classicChatBuilder;
+      if (build != null) return build(widget.chatConnection, session);
+      return ChatScreen(
+        connection: widget.chatConnection,
+        session: session,
+        singleSession: true,
+        onClose: () => Navigator.of(context).maybePop(),
+      );
+    }
+    final chat = _chat;
+    final gateway = _gateway;
     return Scaffold(
       appBar: AppBar(title: Text('${widget.title} · ${widget.profile}')),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : _failure != null
+          : _failure != null || chat == null || gateway == null
           ? Center(
               child: Padding(
                 padding: const EdgeInsets.all(24),
@@ -2339,7 +2408,19 @@ class _BotChatPageState extends State<BotChatPage> {
                 ),
               ),
             )
-          : NgChatView(key: ObjectKey(_chat), chat: _chat!),
+          // The chat view reads its gateway from the scope: give it the
+          // bot's, so nothing in it reaches the connection's own profile.
+          : NgScope(
+              connManager: nextGen.connManager,
+              gateway: gateway,
+              connections: nextGen.connections,
+              switchTo: nextGen.switchTo,
+              addGateway: nextGen.addGateway,
+              signOut: nextGen.signOut,
+              reload: nextGen.reload,
+              signInAgain: nextGen.signInAgain,
+              child: NgChatView(key: ObjectKey(chat), chat: chat),
+            ),
     );
   }
 }

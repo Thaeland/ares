@@ -7,7 +7,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hermes_android/core/screens/bots_screen.dart';
+import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/remote_workspace.dart';
+import 'package:hermes_android/l10n/app_localizations.dart';
+import 'package:hermes_android/nextgen/data/nextgen_gateway.dart';
+import 'package:hermes_android/nextgen/ui/nextgen_scope.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/bots_review_fixture.dart';
 import 'support/fake_rfb_screen.dart';
@@ -733,5 +739,133 @@ void main() {
         isNull,
       );
     });
+  });
+
+  group('Bot Chat runs on the bot’s own profile', () {
+    testWidgets('the roster opens the chat scoped to the bot, not to the '
+        'connection’s profile', (tester) async {
+      wide(tester);
+      final gateway = BotsReviewGateway();
+      final owner = botsReviewOwner(gateway);
+      addTearDown(owner.close);
+      final opened = <BotChatPage>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home:
+              Function.apply(BotsScreen.new, const [], {
+                    #owner: owner,
+                    #route: owner.route(),
+                    #connection: botsReviewConnection,
+                    #openBotChat:
+                        (BuildContext context, BotChatPage page) async {
+                          opened.add(page);
+                        },
+                  })
+                  as Widget,
+        ),
+      );
+      await botsShown(tester, find.text('ResearchBot'));
+      await tester.tap(find.text('ResearchBot'));
+      await botsShown(tester, find.text('Open Bot Chat'));
+      await botsStep(tester); // the sheet has slid in
+      await tester.tap(find.text('Open Bot Chat'));
+      await botsStep(tester);
+      final page = opened.single;
+      // The chat was found (here: minted) in researchbot's profile...
+      expect(
+        gateway.named('session.list').single.params['profile'],
+        'researchbot',
+      );
+      expect(page.storedId, 'sess-canonical-researchbot');
+      // ...and is opened there, while the saved connection stays on 'work'.
+      expect(page.connection.gatewayProfile, 'work');
+      final scoped = (page as dynamic).chatConnection as SavedConnection;
+      expect(scoped.gatewayProfile, 'researchbot');
+      expect(scoped.id, page.connection.id);
+      expect(scoped.host, page.connection.host);
+    });
+
+    Widget page(Map<Symbol, dynamic> seams) =>
+        Function.apply(BotChatPage.new, const [], {
+              #connection: botsReviewConnection,
+              #storedId: 'sess-canonical-researchbot',
+              #title: 'Bot Chat',
+              #profile: 'researchbot',
+              ...seams,
+            })
+            as Widget;
+
+    testWidgets('Classic shows its own chat screen on the scoped connection', (
+      tester,
+    ) async {
+      final seen = <(SavedConnection, Session)>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          home: page({
+            #classicChatBuilder: (SavedConnection connection, Session session) {
+              seen.add((connection, session));
+              return const Text('classic chat');
+            },
+          }),
+        ),
+      );
+      await tester.pump();
+      expect(find.text('classic chat'), findsOneWidget);
+      expect(seen.last.$1.gatewayProfile, 'researchbot');
+      expect(seen.last.$1.id, botsReviewConnection.id);
+      expect(seen.last.$2.id, 'sess-canonical-researchbot');
+      expect(botsReviewConnection.gatewayProfile, 'work');
+    });
+
+    testWidgets('NextGen builds a gateway of its own for the bot’s profile', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final ambient = NextGenGateway(botsReviewConnection);
+      addTearDown(ambient.dispose);
+      final seen = <SavedConnection>[];
+      Future<void> never([Object? _]) async {}
+      await tester.pumpWidget(
+        NgScope(
+          connManager: ConnectionManager(prefs, nativePushSupported: false),
+          gateway: ambient,
+          connections: [botsReviewConnection],
+          switchTo: never,
+          addGateway: never,
+          signOut: never,
+          reload: never,
+          signInAgain: never,
+          child: MaterialApp(
+            home: page({
+              #gatewayFactory: (SavedConnection connection) {
+                seen.add(connection);
+                throw StateError('fixture stops here');
+              },
+            }),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(seen.single.gatewayProfile, 'researchbot');
+      expect(ambient.profile, 'work');
+      expect(find.textContaining('fixture stops here'), findsOneWidget);
+    });
+
+    test(
+      'a gateway on the scoped connection is owned by the bot’s profile',
+      () {
+        final scoped = botsReviewConnection.copyWith(
+          gatewayProfile: 'researchbot',
+        );
+        final gateway = NextGenGateway(scoped);
+        addTearDown(gateway.dispose);
+        expect(gateway.profile, 'researchbot');
+        expect(gateway.workspace.profile, 'researchbot');
+        expect(gateway.workspace.connectionId, botsReviewConnection.id);
+      },
+    );
   });
 }
