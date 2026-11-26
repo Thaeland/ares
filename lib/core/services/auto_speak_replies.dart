@@ -37,3 +37,44 @@ abstract final class AutoSpeakRepliesStore {
     }
   }
 }
+
+/// The replies Classic auto-read has read, per chat, for as long as the app
+/// runs (memory only): each reply is read at most once, however often its
+/// snapshot is applied again or its chat route comes back.
+///
+/// A reply is named by its turn/submission id and/or its durable row id,
+/// never by its text: two turns can both say "Done.". Bounded, oldest chats
+/// and replies first out.
+abstract final class AutoReadLedger {
+  static const _maxChats = 64;
+  static const _maxPerChat = 64;
+
+  /// Chat key → reply keys: chats least recently used first, replies oldest
+  /// first.
+  static final _chats = <String, Set<String>>{};
+
+  /// Claims the reply named by [replyKeys] in [chatKey]. True only the first
+  /// time: false when any of the keys was claimed before, and false with no
+  /// key at all (a reply with no identity cannot be read at most once).
+  static bool claim(String chatKey, Iterable<String> replyKeys) {
+    final keys = replyKeys.where((key) => key.isNotEmpty).toSet();
+    if (keys.isEmpty) return false;
+    final spoken = _chats.remove(chatKey) ?? <String>{};
+    _chats[chatKey] = spoken;
+    while (_chats.length > _maxChats) {
+      _chats.remove(_chats.keys.first);
+    }
+    if (keys.any(spoken.contains)) {
+      spoken.addAll(keys);
+      return false;
+    }
+    spoken.addAll(keys);
+    while (spoken.length > _maxPerChat) {
+      spoken.remove(spoken.first);
+    }
+    return true;
+  }
+
+  @visibleForTesting
+  static void reset() => _chats.clear();
+}

@@ -1754,6 +1754,11 @@ class _ChatScreenState extends State<ChatScreen>
             row['_gateway_interim'] != true &&
             text.isNotEmpty) {
           _awaitingVoiceReply = false;
+          // Spoken as the voice reply: auto-read never reads it again.
+          AutoReadLedger.claim(
+            _autoReadChatKey,
+            _normalReplyKeys(snapshot, row),
+          );
           unawaited(_speakAssistantText(text).catchError((Object _) {}));
           voiceSpoke = true;
           break;
@@ -1762,7 +1767,10 @@ class _ChatScreenState extends State<ChatScreen>
       _awaitingVoiceReply = false;
     }
     _feedClassicLiveSnapshot(snapshot, currentRows);
-    // An ordinary typed turn with auto-read on: read the terminal reply.
+    // An ordinary typed turn with auto-read on: read the terminal reply,
+    // once. The owner hands a completed snapshot to this route again (a
+    // re-subscription, the route coming back); the ledger keeps it to one
+    // read.
     if (!voiceSpoke &&
         _liveEngine?.active != true &&
         snapshot.phase == NormalGatewayTurnPhase.completed &&
@@ -1774,7 +1782,12 @@ class _ChatScreenState extends State<ChatScreen>
         if (const {'assistant', 'agent'}.contains(row['role']) &&
             row['_gateway_interim'] != true &&
             text.isNotEmpty) {
-          unawaited(_speakAssistantText(text).catchError((Object _) {}));
+          if (AutoReadLedger.claim(
+            _autoReadChatKey,
+            _normalReplyKeys(snapshot, row),
+          )) {
+            unawaited(_speakAssistantText(text).catchError((Object _) {}));
+          }
           break;
         }
       }
@@ -1792,6 +1805,20 @@ class _ChatScreenState extends State<ChatScreen>
       }
     });
   }
+
+  /// This chat in [AutoReadLedger].
+  String get _autoReadChatKey =>
+      '${widget.connection.id}::${widget.session.id}';
+
+  /// A completed normal-owner reply's identity: its turn (submission) id
+  /// and, once persisted, its durable row id.
+  List<String> _normalReplyKeys(
+    NormalGatewayChatSnapshot snapshot,
+    Map<String, dynamic> row,
+  ) => [
+    if (snapshot.turnId case final turn?) 'turn:$turn',
+    if (row['id'] case final id?) 'row:$id',
+  ];
 
   void _queuePersistedHistoryContext(NormalGatewayChatSnapshot snapshot) {
     final owner = _normalChat;
@@ -4770,14 +4797,22 @@ class _ChatScreenState extends State<ChatScreen>
       pendingSubmission.complete();
     }
     if (materialized) _registerMaterializedAssistantMessage();
+    // The submission's identity: a terminal state applied again (a replay,
+    // the route coming back) is never read a second time.
+    final replyKeys = [
+      'turn:${projection.clientTurnId}',
+      if (projection.messageId case final id?) 'message:$id',
+    ];
     if (speakTerminalResponse) {
+      AutoReadLedger.claim(_autoReadChatKey, replyKeys);
       unawaited(_speakAssistantText(nextText));
     } else if (projection.isTerminal &&
         !projection.isFailClosed &&
         _liveEngine?.active != true &&
         autoSpeakRepliesEnabled.value &&
-        nextText.trim().isNotEmpty) {
-      // Ordinary typed turn: auto-read the terminal reply.
+        nextText.trim().isNotEmpty &&
+        AutoReadLedger.claim(_autoReadChatKey, replyKeys)) {
+      // Ordinary typed turn: auto-read the terminal reply, once.
       unawaited(_speakAssistantText(nextText).catchError((Object _) {}));
     }
     if (projection.isActive) {
@@ -7257,12 +7292,17 @@ class _ChatScreenState extends State<ChatScreen>
               );
               final assistantText = assistant['content']?.toString();
               if (assistantText != null) {
+                if (assistant['id'] case final id?) {
+                  AutoReadLedger.claim(_autoReadChatKey, ['row:$id']);
+                }
                 await _speakAssistantText(assistantText);
                 voiceSpoke = true;
               }
             }
             if (!voiceSpoke && autoSpeakRepliesEnabled.value) {
-              // Ordinary typed turn: auto-read the terminal reply.
+              // Ordinary typed turn: auto-read the terminal reply, once by
+              // its durable id. (This runs once per finished send; a row
+              // with no id is still read that once.)
               final assistant = messages.reversed.firstWhere(
                 (message) => message['role'] == 'assistant',
                 orElse: () => const <String, dynamic>{},
@@ -7274,7 +7314,11 @@ class _ChatScreenState extends State<ChatScreen>
               } else if (rawContent != null) {
                 assistantText = rawContent.toString().trim();
               }
-              if (assistantText != null && assistantText.isNotEmpty) {
+              final rowId = assistant['id'];
+              if (assistantText != null &&
+                  assistantText.isNotEmpty &&
+                  (rowId == null ||
+                      AutoReadLedger.claim(_autoReadChatKey, ['row:$rowId']))) {
                 await _speakAssistantText(assistantText);
               }
             }
