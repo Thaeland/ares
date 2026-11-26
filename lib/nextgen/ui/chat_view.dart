@@ -3484,6 +3484,7 @@ class _NgChatViewState extends State<NgChatView>
                   child: OsFileDropTarget(
                     onFiles: (files) => unawaited(_acceptOsFiles(files)),
                     child: ClipboardAttachmentPaste(
+                      owner: chat,
                       onAttachment: _acceptClipboard,
                       child: ComposerDropSurface(
                         onDrop: (drag) => unawaited(_acceptDrop(drag)),
@@ -3496,6 +3497,8 @@ class _NgChatViewState extends State<NgChatView>
                               key: const ValueKey('ng-composer-field'),
                               onChanged: (_) => input(),
                               controller: _input,
+                              contextMenuBuilder:
+                                  ClipboardAttachmentPaste.contextMenuBuilder,
                               focusNode: _focus,
                               contentInsertionConfiguration:
                                   composerImageInsertion(_acceptImageBytes),

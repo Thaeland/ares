@@ -9,6 +9,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -299,6 +301,128 @@ void main() {
       ),
     );
   }
+
+  testWidgets(
+    'desktop focused paste appends bitmap and multiple image files; toolbar shares intake',
+    (tester) async {
+      final env = await pump(tester, keyed: false);
+      final field = find.byKey(_fieldKey);
+      await tester.enterText(field, 'preserved text');
+      target(tester).onFiles(make(1, 'existing'));
+      await _drain(tester);
+      Future<void> keyboardPaste() async {
+        await tester.showKeyboard(field);
+        final modifier = defaultTargetPlatform == TargetPlatform.macOS
+            ? LogicalKeyboardKey.metaLeft
+            : LogicalKeyboardKey.controlLeft;
+        await tester.sendKeyDownEvent(modifier);
+        await tester.sendKeyEvent(LogicalKeyboardKey.keyV);
+        await tester.sendKeyUpEvent(modifier);
+        await _drain(tester);
+      }
+
+      clip = ClipboardAttachment(image: png);
+      await keyboardPaste();
+      await keyboardPaste();
+      expect(_chips().length, 3);
+      final a = File('${root.path}/copied-a.png')..writeAsBytesSync(png);
+      final b = File('${root.path}/copied-b.png')..writeAsBytesSync(png);
+      clip = ClipboardAttachment(files: [a.path, b.path]);
+      await keyboardPaste();
+      expect(_chips().length, 5);
+      clip = ClipboardAttachment(image: png);
+      // No text on the clipboard: Flutter normally omits the Paste item.
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'Clipboard.hasStrings') return {'value': false};
+          return null;
+        },
+      );
+      await tester.tapAt(
+        tester.getTopLeft(field) + const Offset(20, 20),
+        kind: PointerDeviceKind.mouse,
+        buttons: kSecondaryMouseButton,
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Paste'), findsOneWidget);
+      await tester.tap(find.text('Paste'));
+      await _drain(tester);
+      expect(_chips().length, 6);
+      clip = ClipboardAttachment(image: Uint8List.fromList([1, 2, 3]));
+      await keyboardPaste();
+      expect(_chips().length, 6, reason: 'unsupported bitmap must be rejected');
+      clip = ClipboardAttachment(files: [a.path, b.path, a.path, b.path]);
+      await keyboardPaste();
+      await _drain(
+        tester,
+        done: () => _chips().length == maxRemoteAttachmentDrafts,
+      );
+      expect(_chips().length, maxRemoteAttachmentDrafts);
+      clip = ClipboardAttachment(image: png);
+      await keyboardPaste();
+      expect(
+        _chips().length,
+        maxRemoteAttachmentDrafts,
+        reason: 'paste respects the shared cap',
+      );
+      expect(
+        tester.widget<TextField>(field).controller!.text,
+        'preserved text',
+      );
+      expect(env.gateway.of('prompt.submit'), isEmpty);
+      expect(tester.takeException(), isNull);
+      final staged = Directory('${root.path}/composer-paste');
+      expect(staged.existsSync() ? staged.listSync() : [], isEmpty);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+    variant: TargetPlatformVariant({
+      TargetPlatform.macOS,
+      TargetPlatform.windows,
+      TargetPlatform.linux,
+    }),
+  );
+
+  testWidgets(
+    'desktop clipboard read started in previous composer never attaches after navigation',
+    (tester) async {
+      final env = await pump(tester, keyed: false);
+      final pending = Completer<ClipboardAttachment?>();
+      debugClipboardAttachmentReader = () => pending.future;
+      await tester.showKeyboard(find.byKey(_fieldKey));
+      await ctrlV(tester);
+      await tester.pumpWidget(const SizedBox.shrink());
+      pending.complete(ClipboardAttachment(image: png));
+      await _drain(tester);
+      final staged = Directory('${root.path}/composer-paste');
+      expect(staged.existsSync() ? staged.listSync() : [], isEmpty);
+      expect(env.gateway.of('prompt.submit'), isEmpty);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('clipboard read is fenced before unkeyed NextGen owner switch', (
+    tester,
+  ) async {
+    final env = await pump(tester, keyed: false);
+    final pending = Completer<ClipboardAttachment?>();
+    debugClipboardAttachmentReader = () => pending.future;
+    await tester.showKeyboard(find.byKey(_fieldKey));
+    await ctrlV(tester);
+    final other = NgChatController(env.gateway, sessionId: 'clipboard-b')
+      ..runtimeId = 'rt-b';
+    addTearDown(other.dispose);
+    env.chat.value = other;
+    await tester.pump();
+    pending.complete(ClipboardAttachment(image: png));
+    await _drain(tester);
+    expect(_chips(), isEmpty);
+    expect(env.gateway.of('prompt.submit'), isEmpty);
+    expect(tester.takeException(), isNull);
+    final staged = Directory('${root.path}/composer-paste');
+    expect(staged.existsSync() ? staged.listSync() : [], isEmpty);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
 
   for (final order in ['drop-first', 'paste-first']) {
     for (final kind in ['files', 'image']) {

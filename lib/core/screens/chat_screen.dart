@@ -5856,6 +5856,7 @@ class _ChatScreenState extends State<ChatScreen>
   Future<int> _intakeLocalFiles(
     List<OsIntakeFile> files, {
     Object? owner,
+    bool preserveRestImage = false,
   }) async {
     final intakeOwner = owner ?? _intakeOwner;
     var staged = 0;
@@ -5888,6 +5889,10 @@ class _ChatScreenState extends State<ChatScreen>
         file,
         () => _intake.run(() async {
           if (!mounted || intakeOwner != _intakeOwner) return 0;
+          if (restImage && preserveRestImage && _attachmentDrafts.isNotEmpty) {
+            full = true;
+            return 0;
+          }
           if (!restImage &&
               _attachmentDrafts.length >= maxRemoteAttachmentDrafts) {
             full = true;
@@ -5905,11 +5910,18 @@ class _ChatScreenState extends State<ChatScreen>
       if (!mounted) break;
       if (full) {
         _showAttachmentError(
-          context.l10n.you_can_attach_up_to_items(maxRemoteAttachmentDrafts),
+          context.l10n.you_can_attach_up_to_items(
+            restImage ? 1 : maxRemoteAttachmentDrafts,
+          ),
         );
         break;
       }
-      if (restImage) break;
+      if (restImage) {
+        if (preserveRestImage && files.length > 1) {
+          _showAttachmentError(context.l10n.you_can_attach_up_to_items(1));
+        }
+        break;
+      }
     }
     if (folders && mounted) {
       _showAttachmentError(context.sharedL10n.composer_drop_folder_unsupported);
@@ -5949,10 +5961,19 @@ class _ChatScreenState extends State<ChatScreen>
     final owner = _intakeOwner;
     final image = found.image;
     if (image != null) {
-      await _intakeImageBytes(image, 'image/png', owner: owner);
+      await _intakeImageBytes(
+        image,
+        'image/png',
+        owner: owner,
+        preserveRestImage: true,
+      );
       return;
     }
-    await _intakeLocalFiles(await osIntakeFilesFor(found.files), owner: owner);
+    await _intakeLocalFiles(
+      await osIntakeFilesFor(found.files),
+      owner: owner,
+      preserveRestImage: true,
+    );
   }
 
   /// A pasted or keyboard-inserted image (Android keyboards insert images
@@ -5961,6 +5982,7 @@ class _ChatScreenState extends State<ChatScreen>
     Uint8List bytes,
     String mimeType, {
     Object? owner,
+    bool preserveRestImage = false,
   }) async {
     final intakeOwner = owner ?? _intakeOwner;
     if (!mounted) return;
@@ -5981,7 +6003,11 @@ class _ChatScreenState extends State<ChatScreen>
     }
     try {
       if (mounted) {
-        await _intakeLocalFiles([OsIntakeFile(path)], owner: intakeOwner);
+        await _intakeLocalFiles(
+          [OsIntakeFile(path)],
+          owner: intakeOwner,
+          preserveRestImage: preserveRestImage,
+        );
       }
     } finally {
       // The draft holds its own sanitised copy (or there is no draft).
@@ -11323,6 +11349,7 @@ class _ChatScreenState extends State<ChatScreen>
                                 onFiles: (files) =>
                                     unawaited(_intakeLocalFiles(files)),
                                 child: ClipboardAttachmentPaste(
+                                  owner: _intakeOwner,
                                   enabled: _attachIntakeOpen,
                                   onAttachment: _intakeClipboard,
                                   child: ComposerDropSurface(
@@ -11354,6 +11381,9 @@ class _ChatScreenState extends State<ChatScreen>
                                             onChanged: (_) => input(),
                                             focusNode: _composerFocus,
                                             controller: _textController,
+                                            contextMenuBuilder:
+                                                ClipboardAttachmentPaste
+                                                    .contextMenuBuilder,
                                             inputFormatters: [
                                               _largePasteFormatter,
                                               _pathPasteFormatter,

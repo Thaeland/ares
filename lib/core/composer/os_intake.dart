@@ -80,6 +80,8 @@ Future<ClipboardAttachment?> readClipboardAttachment() async {
   return null;
 }
 
+int _stagedImageSequence = 0;
+
 /// Writes pasted image bytes into the app's cache for the draft pipeline to
 /// read; the caller discards it ([discardStagedComposerImage]) afterwards.
 Future<String> stageComposerImageBytes(
@@ -96,10 +98,15 @@ Future<String> stageComposerImageBytes(
   final dir = Directory('${root.path}/composer-paste');
   await dir.create(recursive: true);
   final file = File(
-    '${dir.path}/pasted-${DateTime.now().microsecondsSinceEpoch}.$extension',
+    '${dir.path}/pasted-${DateTime.now().microsecondsSinceEpoch}-${_stagedImageSequence++}.$extension',
   );
-  await file.writeAsBytes(bytes, flush: true);
-  return file.path;
+  try {
+    await file.writeAsBytes(bytes, flush: true);
+    return file.path;
+  } catch (_) {
+    await discardStagedComposerImage(file.path);
+    rethrow;
+  }
 }
 
 /// Removes a staged paste image once the draft pipeline has made its own
@@ -234,16 +241,67 @@ class _OsFileDropTargetState extends State<OsFileDropTarget> {
 /// Paste (Cmd/Ctrl+V) that takes files or an image from the clipboard as
 /// attachments; plain text pastes as it always did. The editor's paste
 /// action is overridable, so this sits above the TextField.
-class ClipboardAttachmentPaste extends StatelessWidget {
+class ClipboardAttachmentPaste extends StatefulWidget {
   const ClipboardAttachmentPaste({
     super.key,
     required this.child,
     required this.onAttachment,
     this.enabled = true,
+    this.owner,
   });
 
   final Widget child;
   final Future<void> Function(ClipboardAttachment found) onAttachment;
+
+  /// Changes invalidate reads started before a chat/connection handoff.
+  final Object? owner;
+
+  /// Flutter's toolbar calls EditableTextState.pasteText directly, bypassing
+  /// Actions, and hides Paste when the clipboard has no text. Route both
+  /// toolbar and keyboard paste through the same intake without reading the
+  /// clipboard merely to display the menu. Labels remain Flutter-localized.
+  static Widget contextMenuBuilder(
+    BuildContext context,
+    EditableTextState editor,
+  ) {
+    if (!composerDesktopIntake) {
+      // Preserve iOS's system menu and the ordinary mobile/web toolbar.
+      if (SystemContextMenu.isSupportedByField(editor)) {
+        return SystemContextMenu.editableText(editableTextState: editor);
+      }
+      return AdaptiveTextSelectionToolbar.editableText(
+        editableTextState: editor,
+      );
+    }
+    final intake = editor.context
+        .findAncestorStateOfType<_ClipboardAttachmentPasteState>();
+    final items = editor.contextMenuButtonItems;
+    if (intake != null && composerDesktopIntake && intake.widget.enabled) {
+      final paste = ContextMenuButtonItem(
+        type: ContextMenuButtonType.paste,
+        onPressed: () {
+          editor.hideToolbar();
+          unawaited(
+            intake._paste(
+              () => editor.pasteText(SelectionChangedCause.toolbar),
+            ),
+          );
+        },
+      );
+      final index = items.indexWhere(
+        (item) => item.type == ContextMenuButtonType.paste,
+      );
+      if (index < 0) {
+        items.add(paste);
+      } else {
+        items[index] = paste;
+      }
+    }
+    return AdaptiveTextSelectionToolbar.buttonItems(
+      anchors: editor.contextMenuAnchors,
+      buttonItems: items,
+    );
+  }
 
   /// When false (the composer takes no attachments right now), paste is
   /// the editor's plain text paste. The tree keeps its shape either way, so
@@ -251,39 +309,64 @@ class ClipboardAttachmentPaste extends StatelessWidget {
   final bool enabled;
 
   @override
+  State<ClipboardAttachmentPaste> createState() =>
+      _ClipboardAttachmentPasteState();
+}
+
+class _ClipboardAttachmentPasteState extends State<ClipboardAttachmentPaste> {
+  int _revision = 0;
+
+  @override
+  void didUpdateWidget(ClipboardAttachmentPaste oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.owner != widget.owner ||
+        oldWidget.enabled != widget.enabled) {
+      _revision++;
+    }
+  }
+
+  Future<void> _paste(VoidCallback fallback) async {
+    if (!widget.enabled) {
+      fallback();
+      return;
+    }
+    final revision = _revision;
+    final attach = widget.onAttachment;
+    ClipboardAttachment? found;
+    try {
+      found = await readClipboardAttachment();
+    } catch (_) {
+      // A denied/unavailable clipboard must not break ordinary text paste.
+    }
+    if (!mounted || revision != _revision) return;
+    if (found != null) {
+      await attach(found);
+    } else {
+      fallback();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (!composerDesktopIntake && debugClipboardAttachmentReader == null) {
-      return child;
+      return widget.child;
     }
     return Actions(
-      actions: {
-        PasteTextIntent: _AttachmentPasteAction(onAttachment, enabled: enabled),
-      },
-      child: child,
+      actions: {PasteTextIntent: _AttachmentPasteAction(_paste)},
+      child: widget.child,
     );
   }
 }
 
 class _AttachmentPasteAction extends Action<PasteTextIntent> {
-  _AttachmentPasteAction(this.onAttachment, {required this.enabled});
+  _AttachmentPasteAction(this.paste);
 
-  final Future<void> Function(ClipboardAttachment found) onAttachment;
-  final bool enabled;
+  final Future<void> Function(VoidCallback fallback) paste;
 
   @override
   Object? invoke(PasteTextIntent intent) {
-    // The editor's own paste, captured now: it is only reachable while
-    // this override runs.
     final fallback = callingAction;
-    if (!enabled) return fallback?.invoke(intent);
-    unawaited(() async {
-      final found = await readClipboardAttachment();
-      if (found != null) {
-        await onAttachment(found);
-        return;
-      }
-      fallback?.invoke(intent);
-    }());
+    unawaited(paste(() => fallback?.invoke(intent)));
     return null;
   }
 }

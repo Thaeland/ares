@@ -4,8 +4,11 @@
 // chat switch mid-intake never stages a draft in the other chat, keyed or
 // not (CR6: the intake belongs to the chat it started in). (Attach picker +
 // drop needs a Desktop gateway: see classic_intake_wire_race_test.dart.)
+import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -104,7 +107,11 @@ void main() {
     } catch (_) {}
   });
 
-  ChatScreen chat(String id, List<String> sent) => ChatScreen(
+  ChatScreen chat(
+    String id,
+    List<String> sent, {
+    bool remote = true,
+  }) => ChatScreen(
     connection: _conn('race-$id'),
     session: _session(id),
     testApiClient: ApiClient(
@@ -116,15 +123,17 @@ void main() {
     testAttachmentDraftService: AttachmentDraftService(
       cacheDirectoryProvider: () async => cache,
     ),
-    testRemotePromptSubmit: completedStockTurn(({
-      required sessionId,
-      required text,
-      required onEvent,
-      required onSent,
-    }) async {
-      sent.add(text);
-      onSent();
-    }),
+    testRemotePromptSubmit: !remote
+        ? null
+        : completedStockTurn(({
+            required sessionId,
+            required text,
+            required onEvent,
+            required onSent,
+          }) async {
+            sent.add(text);
+            onSent();
+          }),
     testRemoteAttachmentUpload: ({required draft, required dataUrl}) async =>
         AttachmentUploadReceipt(refText: '@file:/attachments/${draft.name}'),
   );
@@ -173,6 +182,170 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(800, 4000));
     addTearDown(() => tester.binding.setSurfaceSize(null));
   }
+
+  testWidgets(
+    'desktop focused paste appends bitmap and multiple image files; toolbar shares intake',
+    (tester) async {
+      await big(tester);
+      final sent = <String>[];
+      await tester.pumpWidget(app(chat('desktop-paste', sent)));
+      await pumpChatUpdates(tester);
+      final field = find.byKey(_composerKey);
+      await tester.enterText(field, 'preserved text');
+      target(tester).onFiles(make(1, 'existing'));
+      await _drain(tester);
+      Future<void> keyboardPaste() async {
+        await tester.showKeyboard(field);
+        final modifier = defaultTargetPlatform == TargetPlatform.macOS
+            ? LogicalKeyboardKey.metaLeft
+            : LogicalKeyboardKey.controlLeft;
+        await tester.sendKeyDownEvent(modifier);
+        await tester.sendKeyEvent(LogicalKeyboardKey.keyV);
+        await tester.sendKeyUpEvent(modifier);
+        await _drain(tester);
+      }
+
+      clip = ClipboardAttachment(image: png);
+      await keyboardPaste();
+      await keyboardPaste();
+      expect(_tiles(), 3);
+      final a = File('${root.path}/copied-a.png')..writeAsBytesSync(png);
+      final b = File('${root.path}/copied-b.png')..writeAsBytesSync(png);
+      clip = ClipboardAttachment(files: [a.path, b.path]);
+      await keyboardPaste();
+      expect(_tiles(), 5);
+      clip = ClipboardAttachment(image: png);
+      // No text on the clipboard: Flutter normally omits the Paste item.
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'Clipboard.hasStrings') return {'value': false};
+          return null;
+        },
+      );
+      await tester.tapAt(
+        tester.getTopLeft(field) + const Offset(20, 20),
+        kind: PointerDeviceKind.mouse,
+        buttons: kSecondaryMouseButton,
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Paste'), findsOneWidget);
+      await tester.tap(find.text('Paste'));
+      await _drain(tester);
+      expect(_tiles(), 6);
+      clip = ClipboardAttachment(image: Uint8List.fromList([1, 2, 3]));
+      await keyboardPaste();
+      expect(_tiles(), 6, reason: 'unsupported bitmap must be rejected');
+      clip = ClipboardAttachment(files: [a.path, b.path, a.path, b.path]);
+      await keyboardPaste();
+      await _drain(tester, done: () => _tiles() == maxRemoteAttachmentDrafts);
+      expect(_tiles(), maxRemoteAttachmentDrafts);
+      clip = ClipboardAttachment(image: png);
+      await keyboardPaste();
+      expect(
+        _tiles(),
+        maxRemoteAttachmentDrafts,
+        reason: 'paste respects the shared cap',
+      );
+      expect(
+        tester.widget<TextField>(field).controller!.text,
+        'preserved text',
+      );
+      expect(sent, isEmpty);
+      expect(tester.takeException(), isNull);
+      final staged = Directory('${root.path}/composer-paste');
+      expect(staged.existsSync() ? staged.listSync() : [], isEmpty);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+    variant: TargetPlatformVariant({
+      TargetPlatform.macOS,
+      TargetPlatform.windows,
+      TargetPlatform.linux,
+    }),
+  );
+
+  testWidgets(
+    'desktop clipboard read started in previous composer never attaches after navigation',
+    (tester) async {
+      await big(tester);
+      final sent = <String>[];
+      await tester.pumpWidget(app(chat('desktop-paste', sent)));
+      await pumpChatUpdates(tester);
+      final pending = Completer<ClipboardAttachment?>();
+      debugClipboardAttachmentReader = () => pending.future;
+      await tester.showKeyboard(find.byKey(_composerKey));
+      await ctrlV(tester);
+      await tester.pumpWidget(const SizedBox.shrink());
+      pending.complete(ClipboardAttachment(image: png));
+      await _drain(tester);
+      final staged = Directory('${root.path}/composer-paste');
+      expect(staged.existsSync() ? staged.listSync() : [], isEmpty);
+      expect(sent, isEmpty);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('clipboard read is fenced before unkeyed Classic owner switch', (
+    tester,
+  ) async {
+    await big(tester);
+    final sent = <String>[];
+    await tester.pumpWidget(app(chat('clipboard-a', sent)));
+    await pumpChatUpdates(tester);
+    final pending = Completer<ClipboardAttachment?>();
+    debugClipboardAttachmentReader = () => pending.future;
+    await tester.showKeyboard(find.byKey(_composerKey));
+    await ctrlV(tester);
+    await tester.pumpWidget(app(chat('clipboard-b', sent)));
+    pending.complete(ClipboardAttachment(image: png));
+    await _drain(tester);
+    expect(_tiles(), 0);
+    expect(sent, isEmpty);
+    expect(tester.takeException(), isNull);
+    final staged = Directory('${root.path}/composer-paste');
+    expect(staged.existsSync() ? staged.listSync() : [], isEmpty);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets(
+    'legacy REST clipboard paste preserves its existing single image instead of replacing it',
+    (tester) async {
+      await big(tester);
+      await tester.pumpWidget(app(chat('clipboard-rest', [], remote: false)));
+      await pumpChatUpdates(tester);
+      await tester.enterText(find.byKey(_composerKey), 'keep this text');
+      clip = ClipboardAttachment(image: png);
+      await ctrlV(tester);
+      await _drain(tester, done: () => _tiles() == 1);
+      expect(_tiles(), 1);
+      final first = tester
+          .widget<AttachmentDraftTile>(find.byType(AttachmentDraftTile))
+          .draft;
+      await ctrlV(tester);
+      await _drain(tester);
+      final copied = File('${root.path}/second.png')..writeAsBytesSync(png);
+      clip = ClipboardAttachment(files: [copied.path]);
+      await ctrlV(tester);
+      await _drain(tester);
+      expect(_tiles(), 1);
+      expect(
+        tester
+            .widget<AttachmentDraftTile>(find.byType(AttachmentDraftTile))
+            .draft
+            .id,
+        first.id,
+      );
+      expect(File(first.cachedPath).existsSync(), isTrue);
+      expect(
+        tester.widget<TextField>(find.byKey(_composerKey)).controller!.text,
+        'keep this text',
+      );
+      final staged = Directory('${root.path}/composer-paste');
+      expect(staged.listSync(), isEmpty);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
 
   for (final order in ['drop-first', 'paste-first']) {
     for (final kind in ['files', 'image']) {
