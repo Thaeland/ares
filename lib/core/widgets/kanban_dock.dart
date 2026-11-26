@@ -9,6 +9,7 @@ import '../services/connection_manager.dart';
 import '../services/remote_workspace.dart';
 import '../theme/hermes_theme.dart';
 import '../utils/above_composer.dart';
+import 'hermes_shell.dart' show HermesPaneVisibility;
 
 /// Rows drawn before "show all" takes over.
 const kanbanDockVisibleRows = 5;
@@ -298,6 +299,59 @@ class _KanbanDockRow extends StatelessWidget {
   }
 }
 
+/// Whether the chat around [context] is on screen: no route covers it (the
+/// board the dock opened on a phone, a sheet, another screen), its pane is
+/// the one shown (the Classic shell keeps visited panes in an
+/// [IndexedStack] with their tickers running) and its tickers run (an
+/// offstage route or tab). Each lookup makes a [State] that calls this from
+/// `didChangeDependencies` hear when it changes.
+bool kanbanDockOnScreen(BuildContext context) =>
+    TickerMode.valuesOf(context).enabled &&
+    ModalRoute.isCurrentOf(context) != false &&
+    HermesPaneVisibility.of(context) &&
+    Visibility.of(context);
+
+/// Keeps a dock's [ChatKanbanDockController] attached only while the chat
+/// is on screen ([kanbanDockOnScreen]): it reads the board only then
+/// (docs/kanban-chat-dock.md, "Live status"). Leaving lets go of the
+/// board's event stream or poll; coming back reads once and follows again.
+mixin KanbanDockAttachment<T extends StatefulWidget> on State<T> {
+  /// The controller the dock shows now, if any.
+  ChatKanbanDockController? get attachedKanban;
+
+  ChatKanbanDockController? _attachedKanban;
+  bool _kanbanOnScreen = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _kanbanOnScreen = kanbanDockOnScreen(context);
+    _syncKanbanAttachment();
+  }
+
+  @override
+  void didUpdateWidget(covariant T oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // The widget may now show another chat's controller.
+    _syncKanbanAttachment();
+  }
+
+  @override
+  void dispose() {
+    _attachedKanban?.detach();
+    _attachedKanban = null;
+    super.dispose();
+  }
+
+  void _syncKanbanAttachment() {
+    final wanted = _kanbanOnScreen ? attachedKanban : null;
+    if (identical(wanted, _attachedKanban)) return;
+    _attachedKanban?.detach();
+    _attachedKanban = wanted;
+    wanted?.attach();
+  }
+}
+
 /// Classic's Kanban strip above the composer: one row that folds open, as
 /// the NextGen dock's sections do.
 class ClassicKanbanDock extends StatefulWidget {
@@ -319,28 +373,12 @@ class ClassicKanbanDock extends StatefulWidget {
   State<ClassicKanbanDock> createState() => _ClassicKanbanDockState();
 }
 
-class _ClassicKanbanDockState extends State<ClassicKanbanDock> {
+class _ClassicKanbanDockState extends State<ClassicKanbanDock>
+    with KanbanDockAttachment<ClassicKanbanDock> {
   bool _open = false;
 
   @override
-  void initState() {
-    super.initState();
-    widget.dock.attach();
-  }
-
-  @override
-  void didUpdateWidget(covariant ClassicKanbanDock oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (identical(oldWidget.dock, widget.dock)) return;
-    oldWidget.dock.detach();
-    widget.dock.attach();
-  }
-
-  @override
-  void dispose() {
-    widget.dock.detach();
-    super.dispose();
-  }
+  ChatKanbanDockController get attachedKanban => widget.dock;
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(

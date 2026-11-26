@@ -89,7 +89,8 @@ NgChatController ngDockChat(
   final chat = NgChatController(gateway, sessionId: session)
     ..runtimeId = 'rt-$session'
     ..model = 'model-a';
-  if (source != null) chat.debugKanbanSource = () => source;
+  // Each attach opens the transport afresh, as the app's own source does.
+  if (source != null) chat.debugKanbanSource = () => source..closed = false;
   return chat;
 }
 

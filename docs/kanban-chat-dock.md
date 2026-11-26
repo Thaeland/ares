@@ -83,8 +83,15 @@ card is finished the stream is closed. If the host offers no event stream,
 it polls that board every 15 seconds, the interval the board screen itself
 uses, and stops when nothing is unfinished.
 
-Closing the chat or switching to another one closes the stream, the poll and
-the transport. The rows are kept in memory for when the chat is shown again.
+On screen means all of: no route covers the chat (`ModalRoute.isCurrentOf`;
+the board the dock opened as a route on a phone, a sheet, another screen),
+its pane is the one shown (`Visibility.of` and `HermesPaneVisibility`: the
+Classic shell keeps visited panes mounted in an `IndexedStack` with their
+tickers running) and its tickers run (`TickerMode`). Both layouts use the
+same `KanbanDockAttachment` (`lib/core/widgets/kanban_dock.dart`). Leaving
+the screen, closing the chat or switching to another one closes the stream,
+the poll and the transport. The rows are kept in memory, and coming back
+reads the board once and follows it again.
 
 ## Opening the board
 
@@ -171,3 +178,6 @@ in-memory dashboard (`test/support/kanban_board_fixture.dart`).
 - `test/kanban_dock_compression_test.dart`: both layouts, a compression in
   an open chat; cards stamped with the old and the continuation id both
   stay in the dock.
+- `test/kanban_dock_visibility_test.dart`: both layouts, the board route
+  the dock opens, a sheet and a hidden IndexedStack pane (the real Classic
+  shell) detach the dock; coming back reads once and follows again.
