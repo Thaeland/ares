@@ -4008,20 +4008,16 @@ class _UserBubble extends StatelessWidget {
                   ],
                 ),
               ),
-            if (item.time != null && !item.pending)
+            // One footer line: the history actions sit to the left of the
+            // time, not stacked underneath it. A narrow screen or large text
+            // wraps the line, and the time stays last.
+            if (onEdit != null ||
+                onRestore != null ||
+                (item.time != null && !item.pending))
               Padding(
                 padding: const EdgeInsets.only(top: 4, right: 4),
-                child: Text(
-                  ngStamp(context, item.time!),
-                  key: const ValueKey('ng-user-time'),
-                  style: NgType.caption.copyWith(color: c.textMuted),
-                ),
-              ),
-            MessageReaction(messageId: item.key),
-            if (onEdit != null || onRestore != null)
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
                 child: Wrap(
+                  key: const ValueKey('ng-user-footer'),
                   alignment: WrapAlignment.end,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   spacing: 4,
@@ -4038,9 +4034,16 @@ class _UserBubble extends StatelessWidget {
                         onPressed: onRestore,
                         child: Text(ngL.ng_restore_turn_confirm),
                       ),
+                    if (item.time != null && !item.pending)
+                      Text(
+                        ngStamp(context, item.time!),
+                        key: const ValueKey('ng-user-time'),
+                        style: NgType.caption.copyWith(color: c.textMuted),
+                      ),
                   ],
                 ),
               ),
+            MessageReaction(messageId: item.key),
             if (item.failure != null)
               Padding(
                 padding: const EdgeInsets.only(top: 4),

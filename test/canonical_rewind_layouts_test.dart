@@ -673,6 +673,45 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     });
 
+    testWidgets('Edit and resend and Restore & rerun sit to the left of the '
+        'time on one line, not underneath it', (tester) async {
+      await _pumpNextGen(tester, authority: true);
+      // The list is reversed: the newest user turn's footer is the first.
+      final footer = find.byKey(const ValueKey('ng-user-footer')).first;
+      Finder inFooter(Key key) =>
+          find.descendant(of: footer, matching: find.byKey(key));
+      final time = tester.getRect(inFooter(const ValueKey('ng-user-time')));
+      final edit = tester.getRect(inFooter(const Key('ng-user-edit')));
+      final restore = tester.getRect(inFooter(const Key('ng-user-restore')));
+      expect(edit.right, lessThanOrEqualTo(restore.left));
+      expect(restore.right, lessThanOrEqualTo(time.left));
+      for (final button in [edit, restore]) {
+        expect(button.center.dy, moreOrLessEquals(time.center.dy, epsilon: 1));
+      }
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets('the footer wraps on a narrow phone at 2x text without '
+        'overflowing, and the time stays last', (tester) async {
+      await _pumpNextGen(tester, authority: true);
+      await tester.binding.setSurfaceSize(const Size(320, 1400));
+      tester.platformDispatcher.textScaleFactorTestValue = 2.0;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await _settle(tester);
+      expect(tester.takeException(), isNull);
+      final footer = find.byKey(const ValueKey('ng-user-footer')).first;
+      Finder inFooter(Key key) =>
+          find.descendant(of: footer, matching: find.byKey(key));
+      final time = tester.getRect(inFooter(const ValueKey('ng-user-time')));
+      final restore = tester.getRect(inFooter(const Key('ng-user-restore')));
+      expect(
+        time.top > restore.top || time.left >= restore.right,
+        isTrue,
+        reason: 'the time is after the actions: same line or the next one',
+      );
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
     testWidgets('composer Retry (retryLast, the regenerate that '
         'switch-then-retry runs): rewind, one plain submit', (tester) async {
       final ng = await _pumpNextGen(tester, authority: true);
