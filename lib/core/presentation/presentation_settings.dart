@@ -328,6 +328,7 @@ class _PresentationSettingsPanelState extends State<PresentationSettingsPanel> {
   Widget _tip(String id, String text) {
     if (_dismissedTips.contains(id)) return const SizedBox.shrink();
     return MaterialBanner(
+      forceActionsBelow: true,
       content: Text(text),
       actions: [
         TextButton(

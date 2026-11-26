@@ -2545,7 +2545,9 @@ class HomeScreenState extends State<HomeScreen> {
                             onPressed: _showLanDiscovery,
                             icon: const Icon(Icons.wifi_find),
                             label: Text(
-                              context.l10n.release_misc_find_hermes_on_lan,
+                              context
+                                  .sharedL10n
+                                  .release_misc_find_hermes_on_lan,
                             ),
                           ),
                         ],
@@ -3793,7 +3795,7 @@ class _LanDiscoverySheetState extends State<LanDiscoverySheet> {
               children: [
                 Expanded(
                   child: Text(
-                    context.l10n.release_misc_find_hermes_on_lan,
+                    context.sharedL10n.release_misc_find_hermes_on_lan,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
@@ -3810,14 +3812,16 @@ class _LanDiscoverySheetState extends State<LanDiscoverySheet> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
-                context.l10n.release_misc_discovery_failed(_error.toString()),
+                context.sharedL10n.release_misc_discovery_failed(
+                  _error.toString(),
+                ),
                 style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ),
           if (!_scanning && _servers.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              child: Text(context.l10n.release_misc_no_lan_servers),
+              child: Text(context.sharedL10n.release_misc_no_lan_servers),
             ),
           Flexible(
             child: ListView.builder(
