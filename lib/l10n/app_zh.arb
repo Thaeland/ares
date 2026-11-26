@@ -3314,5 +3314,767 @@
   "release_misc_gateway_unreachable": "无法连接到网关端点 {endpoint}。",
   "release_core_schedule_invalid_delivery_target": "无效的投递目标",
   "release_core_file_save_direct_only": "只能保存工作目录直属的文件。",
-  "release_core_file_save_hidden": "网关无法保存隐藏文件。"
+  "release_core_file_save_hidden": "网关无法保存隐藏文件。",
+  "rel_ops_cap_install_blocked": "安装已被阻止（{verdict}）：{detail}",
+  "@rel_ops_cap_install_blocked": {
+    "description": "Capability administration: Install blocked ({verdict}): {detail}",
+    "placeholders": {
+      "verdict": {
+        "type": "String"
+      },
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_scan_confirm": "扫描结果：{verdict}。安装前请确认 {requested}。",
+  "@rel_ops_cap_scan_confirm": {
+    "description": "Capability administration: Scan verdict: {verdict}. Confirm {requested} before installing.",
+    "placeholders": {
+      "verdict": {
+        "type": "String"
+      },
+      "requested": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_install_unconfirmed": "网关尚未确认 {requested} 已安装。",
+  "@rel_ops_cap_install_unconfirmed": {
+    "description": "Capability administration: The gateway has not confirmed that {requested} is installed.",
+    "placeholders": {
+      "requested": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_edit_skill": "编辑 {name}",
+  "@rel_ops_cap_edit_skill": {
+    "description": "Capability administration: Edit {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_archive_skill": "归档 {name}？",
+  "@rel_ops_cap_archive_skill": {
+    "description": "Capability administration: Archive {name}?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_archive_explanation": "技能将被归档，可通过 {command} 恢复。",
+  "@rel_ops_cap_archive_explanation": {
+    "description": "Archive confirmation. The command placeholder is the literal CLI command hermes curator restore; do not translate or alter the command.",
+    "placeholders": {
+      "command": {
+        "type": "String",
+        "example": "hermes curator restore"
+      }
+    }
+  },
+  "rel_ops_cap_install_anyway": "仍要安装 {name}",
+  "@rel_ops_cap_install_anyway": {
+    "description": "Capability administration: Install {name} anyway",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_install_despite_scan": "仍要安装扫描未通过的 {name}？",
+  "@rel_ops_cap_install_despite_scan": {
+    "description": "Capability administration: Install {name} despite the scan?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_scan_warning": "安全扫描已阻止 {name}。此确认仅适用于 {name}。",
+  "@rel_ops_cap_scan_warning": {
+    "description": "Capability administration: The security scan blocked {name}. This confirmation applies only to {name}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_accept_scan_warning": "接受功能权限不会绕过对 {name} 的扫描。",
+  "@rel_ops_cap_accept_scan_warning": {
+    "description": "Capability administration: Accepting capabilities does not override the scan of {name}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_review_scan": "查看 {name} 的扫描结果",
+  "@rel_ops_cap_review_scan": {
+    "description": "Capability administration: Review scan for {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_desktop_grants": "{description}\n文件夹和预览脚本的授权保留在该计算机的 Desktop 应用中。在此移除插件不会撤销这些本地授权。",
+  "@rel_ops_cap_desktop_grants": {
+    "description": "Plugin description followed by a warning about local Desktop app grants. Desktop is the app name; preserve it.",
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_remove_plugin": "移除 {name}？",
+  "@rel_ops_cap_remove_plugin": {
+    "description": "Capability administration: Remove {name}?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_probe_result": "探测 {name}：{tools}",
+  "@rel_ops_cap_probe_result": {
+    "description": "Capability administration: Probe {name}: {tools}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "tools": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_save_tool_grants_for": "保存 {connector} 的工具授权",
+  "@rel_ops_cap_save_tool_grants_for": {
+    "description": "Capability administration: Save tool grants for {connector}",
+    "placeholders": {
+      "connector": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_backends_for": "{name} 的后端",
+  "@rel_ops_cap_backends_for": {
+    "description": "Capability administration: Backends for {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_use_backend_confirmation": "使用 {name}？",
+  "@rel_ops_cap_use_backend_confirmation": {
+    "description": "Capability administration: Use {name}?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_unlock_source": "解锁 {name}",
+  "@rel_ops_cap_unlock_source": {
+    "description": "Capability administration: Unlock {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_capabilities": "功能",
+  "@rel_ops_cap_capabilities": {
+    "description": "Capability administration: Capabilities"
+  },
+  "rel_ops_cap_plugins": "插件",
+  "@rel_ops_cap_plugins": {
+    "description": "Capability administration: Plugins"
+  },
+  "rel_ops_cap_connectors": "连接器",
+  "@rel_ops_cap_connectors": {
+    "description": "Capability administration: Connectors"
+  },
+  "rel_ops_cap_backends": "后端",
+  "@rel_ops_cap_backends": {
+    "description": "Capability administration: Backends"
+  },
+  "rel_ops_cap_save_skill": "保存技能",
+  "@rel_ops_cap_save_skill": {
+    "description": "Capability administration: Save skill"
+  },
+  "rel_ops_cap_archive": "归档",
+  "@rel_ops_cap_archive": {
+    "description": "Capability administration: Archive"
+  },
+  "rel_ops_cap_hub_identifier": "Hub 标识符",
+  "@rel_ops_cap_hub_identifier": {
+    "description": "Capability administration: Hub identifier"
+  },
+  "rel_ops_cap_install": "安装",
+  "@rel_ops_cap_install": {
+    "description": "Capability administration: Install"
+  },
+  "rel_ops_cap_update_all": "全部更新",
+  "@rel_ops_cap_update_all": {
+    "description": "Capability administration: Update all"
+  },
+  "rel_ops_cap_unlock": "解锁",
+  "@rel_ops_cap_unlock": {
+    "description": "Capability administration: Unlock"
+  },
+  "rel_ops_cap_lock": "锁定",
+  "@rel_ops_cap_lock": {
+    "description": "Capability administration: Lock"
+  },
+  "rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet": "此更新会添加功能。尚未进行任何更改。",
+  "@rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet": {
+    "description": "Capability administration: This update adds capabilities. Nothing changed yet."
+  },
+  "rel_ops_cap_the_scan_blocked_this_plugin": "扫描已阻止此插件。",
+  "@rel_ops_cap_the_scan_blocked_this_plugin": {
+    "description": "Capability administration: The scan blocked this plugin."
+  },
+  "rel_ops_cap_the_plugin_was_not_changed": "插件未更改。",
+  "@rel_ops_cap_the_plugin_was_not_changed": {
+    "description": "Capability administration: The plugin was not changed."
+  },
+  "rel_ops_cap_repository": "代码仓库",
+  "@rel_ops_cap_repository": {
+    "description": "Capability administration: Repository"
+  },
+  "rel_ops_cap_install_plugin": "安装插件",
+  "@rel_ops_cap_install_plugin": {
+    "description": "Capability administration: Install plugin"
+  },
+  "rel_ops_cap_update_plugins": "更新插件",
+  "@rel_ops_cap_update_plugins": {
+    "description": "Capability administration: Update plugins"
+  },
+  "rel_ops_cap_accept_capabilities": "接受功能权限",
+  "@rel_ops_cap_accept_capabilities": {
+    "description": "Capability administration: Accept capabilities"
+  },
+  "rel_ops_cap_update": "更新",
+  "@rel_ops_cap_update": {
+    "description": "Capability administration: Update"
+  },
+  "rel_ops_cap_remove_desktop_half": "移除桌面端组件",
+  "@rel_ops_cap_remove_desktop_half": {
+    "description": "Capability administration: Remove desktop half"
+  },
+  "rel_ops_cap_server_name": "服务器名称",
+  "@rel_ops_cap_server_name": {
+    "description": "Capability administration: Server name"
+  },
+  "rel_ops_cap_command": "命令",
+  "@rel_ops_cap_command": {
+    "description": "Capability administration: Command"
+  },
+  "rel_ops_cap_http_url": "HTTP URL",
+  "@rel_ops_cap_http_url": {
+    "description": "Capability administration: HTTP URL"
+  },
+  "rel_ops_cap_add_server": "添加服务器",
+  "@rel_ops_cap_add_server": {
+    "description": "Capability administration: Add server"
+  },
+  "rel_ops_cap_probe": "探测",
+  "@rel_ops_cap_probe": {
+    "description": "Capability administration: Probe"
+  },
+  "rel_ops_cap_probe_failed": "探测失败。",
+  "@rel_ops_cap_probe_failed": {
+    "description": "Capability administration: Probe failed."
+  },
+  "rel_ops_cap_logs": "日志",
+  "@rel_ops_cap_logs": {
+    "description": "Capability administration: Logs"
+  },
+  "rel_ops_cap_mcp_log": "MCP 日志",
+  "@rel_ops_cap_mcp_log": {
+    "description": "Capability administration: MCP log"
+  },
+  "rel_ops_cap_connector": "连接器",
+  "@rel_ops_cap_connector": {
+    "description": "Capability administration: Connector"
+  },
+  "rel_ops_cap_account_alias": "账户别名",
+  "@rel_ops_cap_account_alias": {
+    "description": "Capability administration: Account alias"
+  },
+  "rel_ops_cap_link_account": "关联账户",
+  "@rel_ops_cap_link_account": {
+    "description": "Capability administration: Link account"
+  },
+  "rel_ops_cap_remove_account": "移除账户",
+  "@rel_ops_cap_remove_account": {
+    "description": "Capability administration: Remove account"
+  },
+  "rel_ops_cap_tool_connector": "工具连接器",
+  "@rel_ops_cap_tool_connector": {
+    "description": "Capability administration: Tool connector"
+  },
+  "rel_ops_cap_load_tools": "加载工具",
+  "@rel_ops_cap_load_tools": {
+    "description": "Capability administration: Load tools"
+  },
+  "rel_ops_cap_save_tool_grants": "保存工具授权",
+  "@rel_ops_cap_save_tool_grants": {
+    "description": "Capability administration: Save tool grants"
+  },
+  "rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged": "此策略没有成员修订版本，因此工具授权保持不变。",
+  "@rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged": {
+    "description": "Capability administration: This policy has no member revision, so tool grants stay unchanged."
+  },
+  "rel_ops_cap_active": "使用中",
+  "@rel_ops_cap_active": {
+    "description": "Capability administration: Active"
+  },
+  "rel_ops_cap_use": "使用",
+  "@rel_ops_cap_use": {
+    "description": "Capability administration: Use"
+  },
+  "rel_ops_cap_run_setup": "运行设置",
+  "@rel_ops_cap_run_setup": {
+    "description": "Capability administration: Run setup"
+  },
+  "rel_ops_cap_terminal_backends": "终端后端",
+  "@rel_ops_cap_terminal_backends": {
+    "description": "Capability administration: Terminal backends"
+  },
+  "rel_ops_cap_this_changes_the_terminal_backend_for_this_profile": "这会更改此配置文件的终端后端。",
+  "@rel_ops_cap_this_changes_the_terminal_backend_for_this_profile": {
+    "description": "Capability administration: This changes the terminal backend for this profile."
+  },
+  "rel_ops_cap_use_backend": "使用后端",
+  "@rel_ops_cap_use_backend": {
+    "description": "Capability administration: Use backend"
+  },
+  "rel_ops_cap_select": "选择",
+  "@rel_ops_cap_select": {
+    "description": "Capability administration: Select"
+  },
+  "rel_ops_cap_browser_vault": "浏览器保险库",
+  "@rel_ops_cap_browser_vault": {
+    "description": "Capability administration: Browser vault"
+  },
+  "rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here": "已保存的网站登录信息、地址和银行卡。密码保留在安全字段中，不会在此列出。",
+  "@rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here": {
+    "description": "Capability administration: Saved site logins, addresses and cards. Passwords stay in the secure fields and are not listed here."
+  },
+  "rel_ops_cap_remove_saved_item": "移除已保存的项目",
+  "@rel_ops_cap_remove_saved_item": {
+    "description": "Capability administration: Remove saved item"
+  },
+  "rel_ops_cap_delete_this_item": "删除此项目？",
+  "@rel_ops_cap_delete_this_item": {
+    "description": "Capability administration: Delete this item?"
+  },
+  "rel_ops_cap_unlocked": "已解锁",
+  "@rel_ops_cap_unlocked": {
+    "description": "Capability administration: Unlocked"
+  },
+  "rel_ops_cap_locked": "已锁定",
+  "@rel_ops_cap_locked": {
+    "description": "Capability administration: Locked"
+  },
+  "rel_ops_cap_not_detected": "未检测到",
+  "@rel_ops_cap_not_detected": {
+    "description": "Capability administration: Not detected"
+  },
+  "rel_ops_cap_master_password": "主密码",
+  "@rel_ops_cap_master_password": {
+    "description": "Capability administration: Master password"
+  },
+  "rel_ops_cap_login": "登录信息",
+  "@rel_ops_cap_login": {
+    "description": "Capability administration: Login"
+  },
+  "rel_ops_cap_address": "地址",
+  "@rel_ops_cap_address": {
+    "description": "Capability administration: Address"
+  },
+  "rel_ops_cap_card": "银行卡",
+  "@rel_ops_cap_card": {
+    "description": "Capability administration: Card"
+  },
+  "rel_ops_cap_label": "标签",
+  "@rel_ops_cap_label": {
+    "description": "Capability administration: Label"
+  },
+  "rel_ops_cap_site_origin": "网站源",
+  "@rel_ops_cap_site_origin": {
+    "description": "Capability administration: Site origin"
+  },
+  "rel_ops_cap_identifier": "标识符",
+  "@rel_ops_cap_identifier": {
+    "description": "Capability administration: Identifier"
+  },
+  "rel_ops_cap_password": "密码",
+  "@rel_ops_cap_password": {
+    "description": "Capability administration: Password"
+  },
+  "rel_ops_cap_authenticator_key": "身份验证密钥",
+  "@rel_ops_cap_authenticator_key": {
+    "description": "Capability administration: Authenticator key"
+  },
+  "rel_ops_cap_street": "街道",
+  "@rel_ops_cap_street": {
+    "description": "Capability administration: Street"
+  },
+  "rel_ops_cap_city": "城市",
+  "@rel_ops_cap_city": {
+    "description": "Capability administration: City"
+  },
+  "rel_ops_cap_postal_code": "邮政编码",
+  "@rel_ops_cap_postal_code": {
+    "description": "Capability administration: Postal code"
+  },
+  "rel_ops_cap_country": "国家或地区",
+  "@rel_ops_cap_country": {
+    "description": "Capability administration: Country"
+  },
+  "rel_ops_cap_name_on_card": "持卡人姓名",
+  "@rel_ops_cap_name_on_card": {
+    "description": "Capability administration: Name on card"
+  },
+  "rel_ops_cap_card_number": "卡号",
+  "@rel_ops_cap_card_number": {
+    "description": "Capability administration: Card number"
+  },
+  "rel_ops_cap_expiry_month": "到期月份",
+  "@rel_ops_cap_expiry_month": {
+    "description": "Capability administration: Expiry month"
+  },
+  "rel_ops_cap_expiry_year": "到期年份",
+  "@rel_ops_cap_expiry_year": {
+    "description": "Capability administration: Expiry year"
+  },
+  "rel_ops_cap_security_code": "安全码",
+  "@rel_ops_cap_security_code": {
+    "description": "Capability administration: Security code"
+  },
+  "rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method": "此网关没有共享指标的同意授权方法。",
+  "@rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method": {
+    "description": "Capability administration: This gateway has no shared-metrics consent method."
+  },
+  "rel_ops_cap_agent_policy": "智能体策略",
+  "@rel_ops_cap_agent_policy": {
+    "description": "Capability administration: Agent policy"
+  },
+  "rel_ops_cap_loading_policy": "正在加载策略",
+  "@rel_ops_cap_loading_policy": {
+    "description": "Capability administration: Loading policy"
+  },
+  "rel_ops_cap_approval_timeout": "审批超时",
+  "@rel_ops_cap_approval_timeout": {
+    "description": "Capability administration: Approval timeout"
+  },
+  "rel_ops_cap_confirm_mcp_reloads": "确认 MCP 重新加载",
+  "@rel_ops_cap_confirm_mcp_reloads": {
+    "description": "Capability administration: Confirm MCP reloads"
+  },
+  "rel_ops_cap_command_allowlist": "命令允许列表",
+  "@rel_ops_cap_command_allowlist": {
+    "description": "Capability administration: Command allowlist"
+  },
+  "rel_ops_cap_file_checkpoints": "文件检查点",
+  "@rel_ops_cap_file_checkpoints": {
+    "description": "Capability administration: File checkpoints"
+  },
+  "rel_ops_cap_checkpoint_limit": "检查点上限",
+  "@rel_ops_cap_checkpoint_limit": {
+    "description": "Capability administration: Checkpoint limit"
+  },
+  "rel_ops_cap_browser_private_urls": "浏览器私有 URL",
+  "@rel_ops_cap_browser_private_urls": {
+    "description": "Capability administration: Browser private URLs"
+  },
+  "rel_ops_cap_use_my_real_browser_profile": "使用我的真实浏览器配置文件",
+  "@rel_ops_cap_use_my_real_browser_profile": {
+    "description": "Capability administration: Use my real browser profile"
+  },
+  "rel_ops_cap_save_policy": "保存策略",
+  "@rel_ops_cap_save_policy": {
+    "description": "Capability administration: Save policy"
+  },
+  "rel_ops_cap_shared_metrics_for_this_profile": "此配置文件的共享指标",
+  "@rel_ops_cap_shared_metrics_for_this_profile": {
+    "description": "Capability administration: Shared metrics for this profile"
+  },
+  "rel_ops_cap_send_shared_metrics": "发送共享指标",
+  "@rel_ops_cap_send_shared_metrics": {
+    "description": "Capability administration: Send shared metrics"
+  },
+  "rel_ops_cap_error_enter_a_label": "请输入标签。",
+  "@rel_ops_cap_error_enter_a_label": {
+    "description": "Capability administration: Enter a label."
+  },
+  "rel_ops_cap_error_enter_a_valid_url_like_https_example_com": "请输入有效的 URL，例如 https://example.com。",
+  "@rel_ops_cap_error_enter_a_valid_url_like_https_example_com": {
+    "description": "Capability administration: Enter a valid URL like https://example.com."
+  },
+  "rel_ops_cap_error_enter_the_identifier_and_password": "请输入标识符和密码。",
+  "@rel_ops_cap_error_enter_the_identifier_and_password": {
+    "description": "Capability administration: Enter the identifier and password."
+  },
+  "rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code": "请输入持卡人姓名、卡号、有效期和安全码。",
+  "@rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code": {
+    "description": "Capability administration: Enter the card name, number, expiry and security code."
+  },
+  "rel_ops_cap_error_enter_the_street_city_postal_code_and_country": "请输入街道、城市、邮政编码和国家或地区。",
+  "@rel_ops_cap_error_enter_the_street_city_postal_code_and_country": {
+    "description": "Capability administration: Enter the street, city, postal code and country."
+  },
+  "rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read": "网关返回了无法读取的响应。",
+  "@rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read": {
+    "description": "Capability administration: The gateway returned a response that could not be read."
+  },
+  "rel_ops_cap_error_the_gateway_refused_the_request_status": "网关拒绝了请求（{statusCode}）。",
+  "@rel_ops_cap_error_the_gateway_refused_the_request_status": {
+    "description": "Capability administration: The gateway refused the request ({statusCode}).",
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable": "此连接没有网关套接字，因此 {method} 不可用。",
+  "@rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable": {
+    "description": "Missing gateway socket error. The method placeholder is a JSON-RPC wire method; do not translate it.",
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_error_choose_a_skill": "请选择技能。",
+  "@rel_ops_cap_error_choose_a_skill": {
+    "description": "Capability administration: Choose a skill."
+  },
+  "rel_ops_cap_error_the_skill_text_was_not_returned": "未返回技能文本。",
+  "@rel_ops_cap_error_the_skill_text_was_not_returned": {
+    "description": "Capability administration: The skill text was not returned."
+  },
+  "rel_ops_cap_error_the_skill_was_not_saved": "技能未保存。",
+  "@rel_ops_cap_error_the_skill_was_not_saved": {
+    "description": "Capability administration: The skill was not saved."
+  },
+  "rel_ops_cap_error_the_skill_was_not_archived": "技能未归档。",
+  "@rel_ops_cap_error_the_skill_was_not_archived": {
+    "description": "Capability administration: The skill was not archived."
+  },
+  "rel_ops_cap_error_the_skill_was_not_installed": "技能未安装。",
+  "@rel_ops_cap_error_the_skill_was_not_installed": {
+    "description": "Capability administration: The skill was not installed."
+  },
+  "rel_ops_cap_error_skill_updates_did_not_start": "技能更新未启动。",
+  "@rel_ops_cap_error_skill_updates_did_not_start": {
+    "description": "Capability administration: Skill updates did not start."
+  },
+  "rel_ops_cap_error_the_skill_was_not_removed": "技能未移除。",
+  "@rel_ops_cap_error_the_skill_was_not_removed": {
+    "description": "Capability administration: The skill was not removed."
+  },
+  "rel_ops_cap_error_enter_a_skill_or_plugin_identifier": "请输入技能或插件标识符。",
+  "@rel_ops_cap_error_enter_a_skill_or_plugin_identifier": {
+    "description": "Capability administration: Enter a skill or plugin identifier."
+  },
+  "rel_ops_cap_error_choose_a_plugin": "请选择插件。",
+  "@rel_ops_cap_error_choose_a_plugin": {
+    "description": "Capability administration: Choose a plugin."
+  },
+  "rel_ops_cap_error_the_plugin_was_not_removed": "插件未移除。",
+  "@rel_ops_cap_error_the_plugin_was_not_removed": {
+    "description": "Capability administration: The plugin was not removed."
+  },
+  "rel_ops_cap_error_the_desktop_half_was_not_removed": "桌面端组件未移除。",
+  "@rel_ops_cap_error_the_desktop_half_was_not_removed": {
+    "description": "Capability administration: The desktop half was not removed."
+  },
+  "rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key": "此网关未为插件分配稳定的键。",
+  "@rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key": {
+    "description": "Capability administration: This gateway did not give the plugin a stable key."
+  },
+  "rel_ops_cap_error_the_plugin_was_not_changed": "插件未更改。",
+  "@rel_ops_cap_error_the_plugin_was_not_changed": {
+    "description": "Capability administration: The plugin was not changed."
+  },
+  "rel_ops_cap_error_choose_a_server": "请选择服务器。",
+  "@rel_ops_cap_error_choose_a_server": {
+    "description": "Capability administration: Choose a server."
+  },
+  "rel_ops_cap_error_name_the_server": "请为服务器命名。",
+  "@rel_ops_cap_error_name_the_server": {
+    "description": "Capability administration: Name the server."
+  },
+  "rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url": "请为服务器提供命令或 http(s) URL。",
+  "@rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url": {
+    "description": "Capability administration: Give the server a command or an http(s) URL."
+  },
+  "rel_ops_cap_error_choose_a_toolset": "请选择工具集。",
+  "@rel_ops_cap_error_choose_a_toolset": {
+    "description": "Capability administration: Choose a toolset."
+  },
+  "rel_ops_cap_error_tool_backend_status_was_not_returned": "未返回工具后端状态。",
+  "@rel_ops_cap_error_tool_backend_status_was_not_returned": {
+    "description": "Capability administration: Tool backend status was not returned."
+  },
+  "rel_ops_cap_error_choose_a_provider": "请选择提供商。",
+  "@rel_ops_cap_error_choose_a_provider": {
+    "description": "Capability administration: Choose a provider."
+  },
+  "rel_ops_cap_error_this_provider_has_no_setup_action": "此提供商没有设置操作。",
+  "@rel_ops_cap_error_this_provider_has_no_setup_action": {
+    "description": "Capability administration: This provider has no setup action."
+  },
+  "rel_ops_cap_error_setup_did_not_start": "设置未启动。",
+  "@rel_ops_cap_error_setup_did_not_start": {
+    "description": "Capability administration: Setup did not start."
+  },
+  "rel_ops_cap_error_choose_a_terminal_backend": "请选择终端后端。",
+  "@rel_ops_cap_error_choose_a_terminal_backend": {
+    "description": "Capability administration: Choose a terminal backend."
+  },
+  "rel_ops_cap_error_name_the_connector": "请为连接器命名。",
+  "@rel_ops_cap_error_name_the_connector": {
+    "description": "Capability administration: Name the connector."
+  },
+  "rel_ops_cap_error_choose_an_account": "请选择账户。",
+  "@rel_ops_cap_error_choose_an_account": {
+    "description": "Capability administration: Choose an account."
+  },
+  "rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants": "更改工具授权前，请重新加载连接器策略。",
+  "@rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants": {
+    "description": "Capability administration: Reload the connector policy before changing tool grants."
+  },
+  "rel_ops_cap_error_choose_an_item": "请选择项目。",
+  "@rel_ops_cap_error_choose_an_item": {
+    "description": "Capability administration: Choose an item."
+  },
+  "rel_ops_cap_error_choose_a_source": "请选择来源。",
+  "@rel_ops_cap_error_choose_a_source": {
+    "description": "Capability administration: Choose a source."
+  },
+  "rel_ops_cap_error_enter_the_master_password": "请输入主密码。",
+  "@rel_ops_cap_error_enter_the_master_password": {
+    "description": "Capability administration: Enter the master password."
+  },
+  "rel_ops_cap_error_gateway_config_was_not_returned": "未返回网关配置。",
+  "@rel_ops_cap_error_gateway_config_was_not_returned": {
+    "description": "Capability administration: Gateway config was not returned."
+  },
+  "rel_ops_cap_error_choose_a_known_approval_mode": "请选择已知的审批模式。",
+  "@rel_ops_cap_error_choose_a_known_approval_mode": {
+    "description": "Capability administration: Choose a known approval mode."
+  },
+  "rel_ops_cap_error_use_a_positive_limit": "请使用大于零的上限。",
+  "@rel_ops_cap_error_use_a_positive_limit": {
+    "description": "Capability administration: Use a positive limit."
+  },
+  "rel_ops_cap_error_the_policy_was_not_saved": "策略未保存。",
+  "@rel_ops_cap_error_the_policy_was_not_saved": {
+    "description": "Capability administration: The policy was not saved."
+  },
+  "rel_ops_cap_value_manual": "手动",
+  "@rel_ops_cap_value_manual": {
+    "description": "Capability _capabilityValue display label for wire value manual. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_smart": "智能",
+  "@rel_ops_cap_value_smart": {
+    "description": "Capability _capabilityValue display label for wire value smart. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_off": "关闭",
+  "@rel_ops_cap_value_off": {
+    "description": "Capability _capabilityValue display label for wire value off. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_safe": "安全",
+  "@rel_ops_cap_value_safe": {
+    "description": "Capability _capabilityValue display label for wire value safe. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_caution": "谨慎",
+  "@rel_ops_cap_value_caution": {
+    "description": "Capability _capabilityValue display label for wire value caution. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_dangerous": "危险",
+  "@rel_ops_cap_value_dangerous": {
+    "description": "Capability _capabilityValue display label for wire value dangerous. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_blocked": "已阻止",
+  "@rel_ops_cap_value_blocked": {
+    "description": "Capability _capabilityValue display label for wire value blocked. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_clean": "无威胁",
+  "@rel_ops_cap_value_clean": {
+    "description": "Capability _capabilityValue display label for wire value clean. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_ready": "就绪",
+  "@rel_ops_cap_value_ready": {
+    "description": "Capability _capabilityValue display label for wire value ready. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_available": "可用",
+  "@rel_ops_cap_value_available": {
+    "description": "Capability _capabilityValue display label for wire value available. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_unavailable": "不可用",
+  "@rel_ops_cap_value_unavailable": {
+    "description": "Capability _capabilityValue display label for wire value unavailable. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_enabled": "已启用",
+  "@rel_ops_cap_value_enabled": {
+    "description": "Capability _capabilityValue display label for wire value enabled. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_disabled": "已禁用",
+  "@rel_ops_cap_value_disabled": {
+    "description": "Capability _capabilityValue display label for wire value disabled. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_active": "使用中",
+  "@rel_ops_cap_value_active": {
+    "description": "Capability _capabilityValue display label for wire value active. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_inactive": "未使用",
+  "@rel_ops_cap_value_inactive": {
+    "description": "Capability _capabilityValue display label for wire value inactive. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_installed": "已安装",
+  "@rel_ops_cap_value_installed": {
+    "description": "Capability _capabilityValue display label for wire value installed. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_missing": "缺失",
+  "@rel_ops_cap_value_missing": {
+    "description": "Capability _capabilityValue display label for wire value missing. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_configured": "已配置",
+  "@rel_ops_cap_value_configured": {
+    "description": "Capability _capabilityValue display label for wire value configured. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_not_configured": "未配置",
+  "@rel_ops_cap_value_not_configured": {
+    "description": "Capability _capabilityValue display label for wire value not_configured. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_error": "错误",
+  "@rel_ops_cap_value_error": {
+    "description": "Capability _capabilityValue display label for wire value error. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_unknown": "未知",
+  "@rel_ops_cap_value_unknown": {
+    "description": "Capability _capabilityValue display label for wire value unknown. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_login": "登录信息",
+  "@rel_ops_cap_value_login": {
+    "description": "Capability _capabilityValue display label for wire value login. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_address": "地址",
+  "@rel_ops_cap_value_address": {
+    "description": "Capability _capabilityValue display label for wire value address. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_payment": "支付",
+  "@rel_ops_cap_value_payment": {
+    "description": "Capability _capabilityValue display label for wire value payment. Keep wire identifiers unchanged; localise only this display label."
+  }
 }

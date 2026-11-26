@@ -3314,5 +3314,767 @@
   "release_misc_gateway_unreachable": "Не удалось связаться с конечной точкой шлюза {endpoint}.",
   "release_core_schedule_invalid_delivery_target": "Недопустимая цель доставки",
   "release_core_file_save_direct_only": "Можно сохранить только файл непосредственно в рабочем каталоге.",
-  "release_core_file_save_hidden": "Шлюз не может сохранять скрытые файлы."
+  "release_core_file_save_hidden": "Шлюз не может сохранять скрытые файлы.",
+  "rel_ops_cap_install_blocked": "Установка заблокирована ({verdict}): {detail}",
+  "@rel_ops_cap_install_blocked": {
+    "description": "Capability administration: Install blocked ({verdict}): {detail}",
+    "placeholders": {
+      "verdict": {
+        "type": "String"
+      },
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_scan_confirm": "Результат проверки: {verdict}. Подтвердите {requested} перед установкой.",
+  "@rel_ops_cap_scan_confirm": {
+    "description": "Capability administration: Scan verdict: {verdict}. Confirm {requested} before installing.",
+    "placeholders": {
+      "verdict": {
+        "type": "String"
+      },
+      "requested": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_install_unconfirmed": "Шлюз не подтвердил установку {requested}.",
+  "@rel_ops_cap_install_unconfirmed": {
+    "description": "Capability administration: The gateway has not confirmed that {requested} is installed.",
+    "placeholders": {
+      "requested": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_edit_skill": "Изменить {name}",
+  "@rel_ops_cap_edit_skill": {
+    "description": "Capability administration: Edit {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_archive_skill": "Архивировать {name}?",
+  "@rel_ops_cap_archive_skill": {
+    "description": "Capability administration: Archive {name}?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_archive_explanation": "Навык будет архивирован, и его можно будет восстановить командой {command}.",
+  "@rel_ops_cap_archive_explanation": {
+    "description": "Archive confirmation. The command placeholder is the literal CLI command hermes curator restore; do not translate or alter the command.",
+    "placeholders": {
+      "command": {
+        "type": "String",
+        "example": "hermes curator restore"
+      }
+    }
+  },
+  "rel_ops_cap_install_anyway": "Всё равно установить {name}",
+  "@rel_ops_cap_install_anyway": {
+    "description": "Capability administration: Install {name} anyway",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_install_despite_scan": "Установить {name} вопреки результату проверки?",
+  "@rel_ops_cap_install_despite_scan": {
+    "description": "Capability administration: Install {name} despite the scan?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_scan_warning": "Проверка безопасности заблокировала {name}. Это подтверждение действует только для {name}.",
+  "@rel_ops_cap_scan_warning": {
+    "description": "Capability administration: The security scan blocked {name}. This confirmation applies only to {name}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_accept_scan_warning": "Принятие возможностей не отменяет результат проверки {name}.",
+  "@rel_ops_cap_accept_scan_warning": {
+    "description": "Capability administration: Accepting capabilities does not override the scan of {name}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_review_scan": "Просмотреть результат проверки {name}",
+  "@rel_ops_cap_review_scan": {
+    "description": "Capability administration: Review scan for {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_desktop_grants": "{description}\nРазрешения на папки и скрипты предпросмотра остаются в приложении Desktop на том компьютере. Удаление плагина здесь не отзывает эти локальные разрешения.",
+  "@rel_ops_cap_desktop_grants": {
+    "description": "Plugin description followed by a warning about local Desktop app grants. Desktop is the app name; preserve it.",
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_remove_plugin": "Удалить {name}?",
+  "@rel_ops_cap_remove_plugin": {
+    "description": "Capability administration: Remove {name}?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_probe_result": "Проверка подключения {name}: {tools}",
+  "@rel_ops_cap_probe_result": {
+    "description": "Capability administration: Probe {name}: {tools}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "tools": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_save_tool_grants_for": "Сохранить разрешения инструментов для {connector}",
+  "@rel_ops_cap_save_tool_grants_for": {
+    "description": "Capability administration: Save tool grants for {connector}",
+    "placeholders": {
+      "connector": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_backends_for": "Серверные модули для {name}",
+  "@rel_ops_cap_backends_for": {
+    "description": "Capability administration: Backends for {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_use_backend_confirmation": "Использовать {name}?",
+  "@rel_ops_cap_use_backend_confirmation": {
+    "description": "Capability administration: Use {name}?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_unlock_source": "Разблокировать {name}",
+  "@rel_ops_cap_unlock_source": {
+    "description": "Capability administration: Unlock {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_capabilities": "Возможности",
+  "@rel_ops_cap_capabilities": {
+    "description": "Capability administration: Capabilities"
+  },
+  "rel_ops_cap_plugins": "Плагины",
+  "@rel_ops_cap_plugins": {
+    "description": "Capability administration: Plugins"
+  },
+  "rel_ops_cap_connectors": "Коннекторы",
+  "@rel_ops_cap_connectors": {
+    "description": "Capability administration: Connectors"
+  },
+  "rel_ops_cap_backends": "Серверные модули",
+  "@rel_ops_cap_backends": {
+    "description": "Capability administration: Backends"
+  },
+  "rel_ops_cap_save_skill": "Сохранить навык",
+  "@rel_ops_cap_save_skill": {
+    "description": "Capability administration: Save skill"
+  },
+  "rel_ops_cap_archive": "Архивировать",
+  "@rel_ops_cap_archive": {
+    "description": "Capability administration: Archive"
+  },
+  "rel_ops_cap_hub_identifier": "Идентификатор Hub",
+  "@rel_ops_cap_hub_identifier": {
+    "description": "Capability administration: Hub identifier"
+  },
+  "rel_ops_cap_install": "Установить",
+  "@rel_ops_cap_install": {
+    "description": "Capability administration: Install"
+  },
+  "rel_ops_cap_update_all": "Обновить всё",
+  "@rel_ops_cap_update_all": {
+    "description": "Capability administration: Update all"
+  },
+  "rel_ops_cap_unlock": "Разблокировать",
+  "@rel_ops_cap_unlock": {
+    "description": "Capability administration: Unlock"
+  },
+  "rel_ops_cap_lock": "Заблокировать",
+  "@rel_ops_cap_lock": {
+    "description": "Capability administration: Lock"
+  },
+  "rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet": "Это обновление добавляет возможности. Пока ничего не изменено.",
+  "@rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet": {
+    "description": "Capability administration: This update adds capabilities. Nothing changed yet."
+  },
+  "rel_ops_cap_the_scan_blocked_this_plugin": "Проверка заблокировала этот плагин.",
+  "@rel_ops_cap_the_scan_blocked_this_plugin": {
+    "description": "Capability administration: The scan blocked this plugin."
+  },
+  "rel_ops_cap_the_plugin_was_not_changed": "Плагин не изменён.",
+  "@rel_ops_cap_the_plugin_was_not_changed": {
+    "description": "Capability administration: The plugin was not changed."
+  },
+  "rel_ops_cap_repository": "Репозиторий",
+  "@rel_ops_cap_repository": {
+    "description": "Capability administration: Repository"
+  },
+  "rel_ops_cap_install_plugin": "Установить плагин",
+  "@rel_ops_cap_install_plugin": {
+    "description": "Capability administration: Install plugin"
+  },
+  "rel_ops_cap_update_plugins": "Обновить плагины",
+  "@rel_ops_cap_update_plugins": {
+    "description": "Capability administration: Update plugins"
+  },
+  "rel_ops_cap_accept_capabilities": "Принять возможности",
+  "@rel_ops_cap_accept_capabilities": {
+    "description": "Capability administration: Accept capabilities"
+  },
+  "rel_ops_cap_update": "Обновить",
+  "@rel_ops_cap_update": {
+    "description": "Capability administration: Update"
+  },
+  "rel_ops_cap_remove_desktop_half": "Удалить настольный компонент",
+  "@rel_ops_cap_remove_desktop_half": {
+    "description": "Capability administration: Remove desktop half"
+  },
+  "rel_ops_cap_server_name": "Имя сервера",
+  "@rel_ops_cap_server_name": {
+    "description": "Capability administration: Server name"
+  },
+  "rel_ops_cap_command": "Команда",
+  "@rel_ops_cap_command": {
+    "description": "Capability administration: Command"
+  },
+  "rel_ops_cap_http_url": "HTTP URL",
+  "@rel_ops_cap_http_url": {
+    "description": "Capability administration: HTTP URL"
+  },
+  "rel_ops_cap_add_server": "Добавить сервер",
+  "@rel_ops_cap_add_server": {
+    "description": "Capability administration: Add server"
+  },
+  "rel_ops_cap_probe": "Проверить подключение",
+  "@rel_ops_cap_probe": {
+    "description": "Capability administration: Probe"
+  },
+  "rel_ops_cap_probe_failed": "Проверка подключения не удалась.",
+  "@rel_ops_cap_probe_failed": {
+    "description": "Capability administration: Probe failed."
+  },
+  "rel_ops_cap_logs": "Журналы",
+  "@rel_ops_cap_logs": {
+    "description": "Capability administration: Logs"
+  },
+  "rel_ops_cap_mcp_log": "Журнал MCP",
+  "@rel_ops_cap_mcp_log": {
+    "description": "Capability administration: MCP log"
+  },
+  "rel_ops_cap_connector": "Коннектор",
+  "@rel_ops_cap_connector": {
+    "description": "Capability administration: Connector"
+  },
+  "rel_ops_cap_account_alias": "Псевдоним учётной записи",
+  "@rel_ops_cap_account_alias": {
+    "description": "Capability administration: Account alias"
+  },
+  "rel_ops_cap_link_account": "Привязать учётную запись",
+  "@rel_ops_cap_link_account": {
+    "description": "Capability administration: Link account"
+  },
+  "rel_ops_cap_remove_account": "Удалить учётную запись",
+  "@rel_ops_cap_remove_account": {
+    "description": "Capability administration: Remove account"
+  },
+  "rel_ops_cap_tool_connector": "Коннектор инструментов",
+  "@rel_ops_cap_tool_connector": {
+    "description": "Capability administration: Tool connector"
+  },
+  "rel_ops_cap_load_tools": "Загрузить инструменты",
+  "@rel_ops_cap_load_tools": {
+    "description": "Capability administration: Load tools"
+  },
+  "rel_ops_cap_save_tool_grants": "Сохранить разрешения инструментов",
+  "@rel_ops_cap_save_tool_grants": {
+    "description": "Capability administration: Save tool grants"
+  },
+  "rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged": "В этой политике нет ревизии участника, поэтому разрешения инструментов остаются без изменений.",
+  "@rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged": {
+    "description": "Capability administration: This policy has no member revision, so tool grants stay unchanged."
+  },
+  "rel_ops_cap_active": "Активен",
+  "@rel_ops_cap_active": {
+    "description": "Capability administration: Active"
+  },
+  "rel_ops_cap_use": "Использовать",
+  "@rel_ops_cap_use": {
+    "description": "Capability administration: Use"
+  },
+  "rel_ops_cap_run_setup": "Запустить настройку",
+  "@rel_ops_cap_run_setup": {
+    "description": "Capability administration: Run setup"
+  },
+  "rel_ops_cap_terminal_backends": "Серверные модули терминала",
+  "@rel_ops_cap_terminal_backends": {
+    "description": "Capability administration: Terminal backends"
+  },
+  "rel_ops_cap_this_changes_the_terminal_backend_for_this_profile": "Это изменит серверный модуль терминала для этого профиля.",
+  "@rel_ops_cap_this_changes_the_terminal_backend_for_this_profile": {
+    "description": "Capability administration: This changes the terminal backend for this profile."
+  },
+  "rel_ops_cap_use_backend": "Использовать модуль",
+  "@rel_ops_cap_use_backend": {
+    "description": "Capability administration: Use backend"
+  },
+  "rel_ops_cap_select": "Выбрать",
+  "@rel_ops_cap_select": {
+    "description": "Capability administration: Select"
+  },
+  "rel_ops_cap_browser_vault": "Хранилище браузера",
+  "@rel_ops_cap_browser_vault": {
+    "description": "Capability administration: Browser vault"
+  },
+  "rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here": "Сохранённые данные входа на сайты, адреса и карты. Пароли остаются в защищённых полях и здесь не отображаются.",
+  "@rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here": {
+    "description": "Capability administration: Saved site logins, addresses and cards. Passwords stay in the secure fields and are not listed here."
+  },
+  "rel_ops_cap_remove_saved_item": "Удалить сохранённый элемент",
+  "@rel_ops_cap_remove_saved_item": {
+    "description": "Capability administration: Remove saved item"
+  },
+  "rel_ops_cap_delete_this_item": "Удалить этот элемент?",
+  "@rel_ops_cap_delete_this_item": {
+    "description": "Capability administration: Delete this item?"
+  },
+  "rel_ops_cap_unlocked": "Разблокировано",
+  "@rel_ops_cap_unlocked": {
+    "description": "Capability administration: Unlocked"
+  },
+  "rel_ops_cap_locked": "Заблокировано",
+  "@rel_ops_cap_locked": {
+    "description": "Capability administration: Locked"
+  },
+  "rel_ops_cap_not_detected": "Не обнаружено",
+  "@rel_ops_cap_not_detected": {
+    "description": "Capability administration: Not detected"
+  },
+  "rel_ops_cap_master_password": "Мастер-пароль",
+  "@rel_ops_cap_master_password": {
+    "description": "Capability administration: Master password"
+  },
+  "rel_ops_cap_login": "Данные входа",
+  "@rel_ops_cap_login": {
+    "description": "Capability administration: Login"
+  },
+  "rel_ops_cap_address": "Адрес",
+  "@rel_ops_cap_address": {
+    "description": "Capability administration: Address"
+  },
+  "rel_ops_cap_card": "Карта",
+  "@rel_ops_cap_card": {
+    "description": "Capability administration: Card"
+  },
+  "rel_ops_cap_label": "Метка",
+  "@rel_ops_cap_label": {
+    "description": "Capability administration: Label"
+  },
+  "rel_ops_cap_site_origin": "Источник сайта",
+  "@rel_ops_cap_site_origin": {
+    "description": "Capability administration: Site origin"
+  },
+  "rel_ops_cap_identifier": "Идентификатор",
+  "@rel_ops_cap_identifier": {
+    "description": "Capability administration: Identifier"
+  },
+  "rel_ops_cap_password": "Пароль",
+  "@rel_ops_cap_password": {
+    "description": "Capability administration: Password"
+  },
+  "rel_ops_cap_authenticator_key": "Ключ аутентификатора",
+  "@rel_ops_cap_authenticator_key": {
+    "description": "Capability administration: Authenticator key"
+  },
+  "rel_ops_cap_street": "Улица",
+  "@rel_ops_cap_street": {
+    "description": "Capability administration: Street"
+  },
+  "rel_ops_cap_city": "Город",
+  "@rel_ops_cap_city": {
+    "description": "Capability administration: City"
+  },
+  "rel_ops_cap_postal_code": "Почтовый индекс",
+  "@rel_ops_cap_postal_code": {
+    "description": "Capability administration: Postal code"
+  },
+  "rel_ops_cap_country": "Страна",
+  "@rel_ops_cap_country": {
+    "description": "Capability administration: Country"
+  },
+  "rel_ops_cap_name_on_card": "Имя на карте",
+  "@rel_ops_cap_name_on_card": {
+    "description": "Capability administration: Name on card"
+  },
+  "rel_ops_cap_card_number": "Номер карты",
+  "@rel_ops_cap_card_number": {
+    "description": "Capability administration: Card number"
+  },
+  "rel_ops_cap_expiry_month": "Месяц окончания срока действия",
+  "@rel_ops_cap_expiry_month": {
+    "description": "Capability administration: Expiry month"
+  },
+  "rel_ops_cap_expiry_year": "Год окончания срока действия",
+  "@rel_ops_cap_expiry_year": {
+    "description": "Capability administration: Expiry year"
+  },
+  "rel_ops_cap_security_code": "Код безопасности",
+  "@rel_ops_cap_security_code": {
+    "description": "Capability administration: Security code"
+  },
+  "rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method": "У этого шлюза нет метода получения согласия на передачу общих метрик.",
+  "@rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method": {
+    "description": "Capability administration: This gateway has no shared-metrics consent method."
+  },
+  "rel_ops_cap_agent_policy": "Политика агента",
+  "@rel_ops_cap_agent_policy": {
+    "description": "Capability administration: Agent policy"
+  },
+  "rel_ops_cap_loading_policy": "Загрузка политики",
+  "@rel_ops_cap_loading_policy": {
+    "description": "Capability administration: Loading policy"
+  },
+  "rel_ops_cap_approval_timeout": "Время ожидания одобрения",
+  "@rel_ops_cap_approval_timeout": {
+    "description": "Capability administration: Approval timeout"
+  },
+  "rel_ops_cap_confirm_mcp_reloads": "Подтверждать перезагрузки MCP",
+  "@rel_ops_cap_confirm_mcp_reloads": {
+    "description": "Capability administration: Confirm MCP reloads"
+  },
+  "rel_ops_cap_command_allowlist": "Список разрешённых команд",
+  "@rel_ops_cap_command_allowlist": {
+    "description": "Capability administration: Command allowlist"
+  },
+  "rel_ops_cap_file_checkpoints": "Контрольные точки файлов",
+  "@rel_ops_cap_file_checkpoints": {
+    "description": "Capability administration: File checkpoints"
+  },
+  "rel_ops_cap_checkpoint_limit": "Лимит контрольных точек",
+  "@rel_ops_cap_checkpoint_limit": {
+    "description": "Capability administration: Checkpoint limit"
+  },
+  "rel_ops_cap_browser_private_urls": "Частные URL в браузере",
+  "@rel_ops_cap_browser_private_urls": {
+    "description": "Capability administration: Browser private URLs"
+  },
+  "rel_ops_cap_use_my_real_browser_profile": "Использовать мой настоящий профиль браузера",
+  "@rel_ops_cap_use_my_real_browser_profile": {
+    "description": "Capability administration: Use my real browser profile"
+  },
+  "rel_ops_cap_save_policy": "Сохранить политику",
+  "@rel_ops_cap_save_policy": {
+    "description": "Capability administration: Save policy"
+  },
+  "rel_ops_cap_shared_metrics_for_this_profile": "Общие метрики этого профиля",
+  "@rel_ops_cap_shared_metrics_for_this_profile": {
+    "description": "Capability administration: Shared metrics for this profile"
+  },
+  "rel_ops_cap_send_shared_metrics": "Отправлять общие метрики",
+  "@rel_ops_cap_send_shared_metrics": {
+    "description": "Capability administration: Send shared metrics"
+  },
+  "rel_ops_cap_error_enter_a_label": "Введите метку.",
+  "@rel_ops_cap_error_enter_a_label": {
+    "description": "Capability administration: Enter a label."
+  },
+  "rel_ops_cap_error_enter_a_valid_url_like_https_example_com": "Введите корректный URL, например https://example.com.",
+  "@rel_ops_cap_error_enter_a_valid_url_like_https_example_com": {
+    "description": "Capability administration: Enter a valid URL like https://example.com."
+  },
+  "rel_ops_cap_error_enter_the_identifier_and_password": "Введите идентификатор и пароль.",
+  "@rel_ops_cap_error_enter_the_identifier_and_password": {
+    "description": "Capability administration: Enter the identifier and password."
+  },
+  "rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code": "Введите имя на карте, номер, срок действия и код безопасности.",
+  "@rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code": {
+    "description": "Capability administration: Enter the card name, number, expiry and security code."
+  },
+  "rel_ops_cap_error_enter_the_street_city_postal_code_and_country": "Введите улицу, город, почтовый индекс и страну.",
+  "@rel_ops_cap_error_enter_the_street_city_postal_code_and_country": {
+    "description": "Capability administration: Enter the street, city, postal code and country."
+  },
+  "rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read": "Шлюз вернул ответ, который не удалось прочитать.",
+  "@rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read": {
+    "description": "Capability administration: The gateway returned a response that could not be read."
+  },
+  "rel_ops_cap_error_the_gateway_refused_the_request_status": "Шлюз отклонил запрос ({statusCode}).",
+  "@rel_ops_cap_error_the_gateway_refused_the_request_status": {
+    "description": "Capability administration: The gateway refused the request ({statusCode}).",
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable": "У этого подключения нет сокета шлюза, поэтому {method} недоступен.",
+  "@rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable": {
+    "description": "Missing gateway socket error. The method placeholder is a JSON-RPC wire method; do not translate it.",
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_error_choose_a_skill": "Выберите навык.",
+  "@rel_ops_cap_error_choose_a_skill": {
+    "description": "Capability administration: Choose a skill."
+  },
+  "rel_ops_cap_error_the_skill_text_was_not_returned": "Текст навыка не получен.",
+  "@rel_ops_cap_error_the_skill_text_was_not_returned": {
+    "description": "Capability administration: The skill text was not returned."
+  },
+  "rel_ops_cap_error_the_skill_was_not_saved": "Навык не сохранён.",
+  "@rel_ops_cap_error_the_skill_was_not_saved": {
+    "description": "Capability administration: The skill was not saved."
+  },
+  "rel_ops_cap_error_the_skill_was_not_archived": "Навык не архивирован.",
+  "@rel_ops_cap_error_the_skill_was_not_archived": {
+    "description": "Capability administration: The skill was not archived."
+  },
+  "rel_ops_cap_error_the_skill_was_not_installed": "Навык не установлен.",
+  "@rel_ops_cap_error_the_skill_was_not_installed": {
+    "description": "Capability administration: The skill was not installed."
+  },
+  "rel_ops_cap_error_skill_updates_did_not_start": "Обновление навыков не запущено.",
+  "@rel_ops_cap_error_skill_updates_did_not_start": {
+    "description": "Capability administration: Skill updates did not start."
+  },
+  "rel_ops_cap_error_the_skill_was_not_removed": "Навык не удалён.",
+  "@rel_ops_cap_error_the_skill_was_not_removed": {
+    "description": "Capability administration: The skill was not removed."
+  },
+  "rel_ops_cap_error_enter_a_skill_or_plugin_identifier": "Введите идентификатор навыка или плагина.",
+  "@rel_ops_cap_error_enter_a_skill_or_plugin_identifier": {
+    "description": "Capability administration: Enter a skill or plugin identifier."
+  },
+  "rel_ops_cap_error_choose_a_plugin": "Выберите плагин.",
+  "@rel_ops_cap_error_choose_a_plugin": {
+    "description": "Capability administration: Choose a plugin."
+  },
+  "rel_ops_cap_error_the_plugin_was_not_removed": "Плагин не удалён.",
+  "@rel_ops_cap_error_the_plugin_was_not_removed": {
+    "description": "Capability administration: The plugin was not removed."
+  },
+  "rel_ops_cap_error_the_desktop_half_was_not_removed": "Настольный компонент не удалён.",
+  "@rel_ops_cap_error_the_desktop_half_was_not_removed": {
+    "description": "Capability administration: The desktop half was not removed."
+  },
+  "rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key": "Этот шлюз не назначил плагину стабильный ключ.",
+  "@rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key": {
+    "description": "Capability administration: This gateway did not give the plugin a stable key."
+  },
+  "rel_ops_cap_error_the_plugin_was_not_changed": "Плагин не изменён.",
+  "@rel_ops_cap_error_the_plugin_was_not_changed": {
+    "description": "Capability administration: The plugin was not changed."
+  },
+  "rel_ops_cap_error_choose_a_server": "Выберите сервер.",
+  "@rel_ops_cap_error_choose_a_server": {
+    "description": "Capability administration: Choose a server."
+  },
+  "rel_ops_cap_error_name_the_server": "Укажите имя сервера.",
+  "@rel_ops_cap_error_name_the_server": {
+    "description": "Capability administration: Name the server."
+  },
+  "rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url": "Укажите для сервера команду или URL http(s).",
+  "@rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url": {
+    "description": "Capability administration: Give the server a command or an http(s) URL."
+  },
+  "rel_ops_cap_error_choose_a_toolset": "Выберите набор инструментов.",
+  "@rel_ops_cap_error_choose_a_toolset": {
+    "description": "Capability administration: Choose a toolset."
+  },
+  "rel_ops_cap_error_tool_backend_status_was_not_returned": "Состояние серверного модуля инструментов не получено.",
+  "@rel_ops_cap_error_tool_backend_status_was_not_returned": {
+    "description": "Capability administration: Tool backend status was not returned."
+  },
+  "rel_ops_cap_error_choose_a_provider": "Выберите провайдера.",
+  "@rel_ops_cap_error_choose_a_provider": {
+    "description": "Capability administration: Choose a provider."
+  },
+  "rel_ops_cap_error_this_provider_has_no_setup_action": "У этого провайдера нет действия настройки.",
+  "@rel_ops_cap_error_this_provider_has_no_setup_action": {
+    "description": "Capability administration: This provider has no setup action."
+  },
+  "rel_ops_cap_error_setup_did_not_start": "Настройка не запущена.",
+  "@rel_ops_cap_error_setup_did_not_start": {
+    "description": "Capability administration: Setup did not start."
+  },
+  "rel_ops_cap_error_choose_a_terminal_backend": "Выберите серверный модуль терминала.",
+  "@rel_ops_cap_error_choose_a_terminal_backend": {
+    "description": "Capability administration: Choose a terminal backend."
+  },
+  "rel_ops_cap_error_name_the_connector": "Укажите имя коннектора.",
+  "@rel_ops_cap_error_name_the_connector": {
+    "description": "Capability administration: Name the connector."
+  },
+  "rel_ops_cap_error_choose_an_account": "Выберите учётную запись.",
+  "@rel_ops_cap_error_choose_an_account": {
+    "description": "Capability administration: Choose an account."
+  },
+  "rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants": "Перезагрузите политику коннектора перед изменением разрешений инструментов.",
+  "@rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants": {
+    "description": "Capability administration: Reload the connector policy before changing tool grants."
+  },
+  "rel_ops_cap_error_choose_an_item": "Выберите элемент.",
+  "@rel_ops_cap_error_choose_an_item": {
+    "description": "Capability administration: Choose an item."
+  },
+  "rel_ops_cap_error_choose_a_source": "Выберите источник.",
+  "@rel_ops_cap_error_choose_a_source": {
+    "description": "Capability administration: Choose a source."
+  },
+  "rel_ops_cap_error_enter_the_master_password": "Введите мастер-пароль.",
+  "@rel_ops_cap_error_enter_the_master_password": {
+    "description": "Capability administration: Enter the master password."
+  },
+  "rel_ops_cap_error_gateway_config_was_not_returned": "Конфигурация шлюза не получена.",
+  "@rel_ops_cap_error_gateway_config_was_not_returned": {
+    "description": "Capability administration: Gateway config was not returned."
+  },
+  "rel_ops_cap_error_choose_a_known_approval_mode": "Выберите известный режим одобрения.",
+  "@rel_ops_cap_error_choose_a_known_approval_mode": {
+    "description": "Capability administration: Choose a known approval mode."
+  },
+  "rel_ops_cap_error_use_a_positive_limit": "Укажите положительный лимит.",
+  "@rel_ops_cap_error_use_a_positive_limit": {
+    "description": "Capability administration: Use a positive limit."
+  },
+  "rel_ops_cap_error_the_policy_was_not_saved": "Политика не сохранена.",
+  "@rel_ops_cap_error_the_policy_was_not_saved": {
+    "description": "Capability administration: The policy was not saved."
+  },
+  "rel_ops_cap_value_manual": "вручную",
+  "@rel_ops_cap_value_manual": {
+    "description": "Capability _capabilityValue display label for wire value manual. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_smart": "интеллектуальный",
+  "@rel_ops_cap_value_smart": {
+    "description": "Capability _capabilityValue display label for wire value smart. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_off": "выкл.",
+  "@rel_ops_cap_value_off": {
+    "description": "Capability _capabilityValue display label for wire value off. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_safe": "безопасно",
+  "@rel_ops_cap_value_safe": {
+    "description": "Capability _capabilityValue display label for wire value safe. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_caution": "осторожно",
+  "@rel_ops_cap_value_caution": {
+    "description": "Capability _capabilityValue display label for wire value caution. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_dangerous": "опасно",
+  "@rel_ops_cap_value_dangerous": {
+    "description": "Capability _capabilityValue display label for wire value dangerous. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_blocked": "заблокировано",
+  "@rel_ops_cap_value_blocked": {
+    "description": "Capability _capabilityValue display label for wire value blocked. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_clean": "угроз нет",
+  "@rel_ops_cap_value_clean": {
+    "description": "Capability _capabilityValue display label for wire value clean. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_ready": "готово",
+  "@rel_ops_cap_value_ready": {
+    "description": "Capability _capabilityValue display label for wire value ready. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_available": "доступно",
+  "@rel_ops_cap_value_available": {
+    "description": "Capability _capabilityValue display label for wire value available. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_unavailable": "недоступно",
+  "@rel_ops_cap_value_unavailable": {
+    "description": "Capability _capabilityValue display label for wire value unavailable. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_enabled": "включено",
+  "@rel_ops_cap_value_enabled": {
+    "description": "Capability _capabilityValue display label for wire value enabled. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_disabled": "отключено",
+  "@rel_ops_cap_value_disabled": {
+    "description": "Capability _capabilityValue display label for wire value disabled. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_active": "активно",
+  "@rel_ops_cap_value_active": {
+    "description": "Capability _capabilityValue display label for wire value active. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_inactive": "неактивно",
+  "@rel_ops_cap_value_inactive": {
+    "description": "Capability _capabilityValue display label for wire value inactive. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_installed": "установлено",
+  "@rel_ops_cap_value_installed": {
+    "description": "Capability _capabilityValue display label for wire value installed. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_missing": "отсутствует",
+  "@rel_ops_cap_value_missing": {
+    "description": "Capability _capabilityValue display label for wire value missing. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_configured": "настроено",
+  "@rel_ops_cap_value_configured": {
+    "description": "Capability _capabilityValue display label for wire value configured. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_not_configured": "не настроено",
+  "@rel_ops_cap_value_not_configured": {
+    "description": "Capability _capabilityValue display label for wire value not_configured. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_error": "ошибка",
+  "@rel_ops_cap_value_error": {
+    "description": "Capability _capabilityValue display label for wire value error. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_unknown": "неизвестно",
+  "@rel_ops_cap_value_unknown": {
+    "description": "Capability _capabilityValue display label for wire value unknown. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_login": "данные входа",
+  "@rel_ops_cap_value_login": {
+    "description": "Capability _capabilityValue display label for wire value login. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_address": "адрес",
+  "@rel_ops_cap_value_address": {
+    "description": "Capability _capabilityValue display label for wire value address. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_payment": "платёж",
+  "@rel_ops_cap_value_payment": {
+    "description": "Capability _capabilityValue display label for wire value payment. Keep wire identifiers unchanged; localise only this display label."
+  }
 }

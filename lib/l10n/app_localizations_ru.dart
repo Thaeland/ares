@@ -12157,4 +12157,578 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'Шлюз не может сохранять скрытые файлы.';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return 'Установка заблокирована ($verdict): $detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return 'Результат проверки: $verdict. Подтвердите $requested перед установкой.';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return 'Шлюз не подтвердил установку $requested.';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return 'Изменить $name';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return 'Архивировать $name?';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return 'Навык будет архивирован, и его можно будет восстановить командой $command.';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return 'Всё равно установить $name';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return 'Установить $name вопреки результату проверки?';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return 'Проверка безопасности заблокировала $name. Это подтверждение действует только для $name.';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return 'Принятие возможностей не отменяет результат проверки $name.';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return 'Просмотреть результат проверки $name';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\nРазрешения на папки и скрипты предпросмотра остаются в приложении Desktop на том компьютере. Удаление плагина здесь не отзывает эти локальные разрешения.';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return 'Удалить $name?';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return 'Проверка подключения $name: $tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return 'Сохранить разрешения инструментов для $connector';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return 'Серверные модули для $name';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return 'Использовать $name?';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return 'Разблокировать $name';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => 'Возможности';
+
+  @override
+  String get rel_ops_cap_plugins => 'Плагины';
+
+  @override
+  String get rel_ops_cap_connectors => 'Коннекторы';
+
+  @override
+  String get rel_ops_cap_backends => 'Серверные модули';
+
+  @override
+  String get rel_ops_cap_save_skill => 'Сохранить навык';
+
+  @override
+  String get rel_ops_cap_archive => 'Архивировать';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Идентификатор Hub';
+
+  @override
+  String get rel_ops_cap_install => 'Установить';
+
+  @override
+  String get rel_ops_cap_update_all => 'Обновить всё';
+
+  @override
+  String get rel_ops_cap_unlock => 'Разблокировать';
+
+  @override
+  String get rel_ops_cap_lock => 'Заблокировать';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      'Это обновление добавляет возможности. Пока ничего не изменено.';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin =>
+      'Проверка заблокировала этот плагин.';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => 'Плагин не изменён.';
+
+  @override
+  String get rel_ops_cap_repository => 'Репозиторий';
+
+  @override
+  String get rel_ops_cap_install_plugin => 'Установить плагин';
+
+  @override
+  String get rel_ops_cap_update_plugins => 'Обновить плагины';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => 'Принять возможности';
+
+  @override
+  String get rel_ops_cap_update => 'Обновить';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => 'Удалить настольный компонент';
+
+  @override
+  String get rel_ops_cap_server_name => 'Имя сервера';
+
+  @override
+  String get rel_ops_cap_command => 'Команда';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => 'Добавить сервер';
+
+  @override
+  String get rel_ops_cap_probe => 'Проверить подключение';
+
+  @override
+  String get rel_ops_cap_probe_failed => 'Проверка подключения не удалась.';
+
+  @override
+  String get rel_ops_cap_logs => 'Журналы';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'Журнал MCP';
+
+  @override
+  String get rel_ops_cap_connector => 'Коннектор';
+
+  @override
+  String get rel_ops_cap_account_alias => 'Псевдоним учётной записи';
+
+  @override
+  String get rel_ops_cap_link_account => 'Привязать учётную запись';
+
+  @override
+  String get rel_ops_cap_remove_account => 'Удалить учётную запись';
+
+  @override
+  String get rel_ops_cap_tool_connector => 'Коннектор инструментов';
+
+  @override
+  String get rel_ops_cap_load_tools => 'Загрузить инструменты';
+
+  @override
+  String get rel_ops_cap_save_tool_grants =>
+      'Сохранить разрешения инструментов';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      'В этой политике нет ревизии участника, поэтому разрешения инструментов остаются без изменений.';
+
+  @override
+  String get rel_ops_cap_active => 'Активен';
+
+  @override
+  String get rel_ops_cap_use => 'Использовать';
+
+  @override
+  String get rel_ops_cap_run_setup => 'Запустить настройку';
+
+  @override
+  String get rel_ops_cap_terminal_backends => 'Серверные модули терминала';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      'Это изменит серверный модуль терминала для этого профиля.';
+
+  @override
+  String get rel_ops_cap_use_backend => 'Использовать модуль';
+
+  @override
+  String get rel_ops_cap_select => 'Выбрать';
+
+  @override
+  String get rel_ops_cap_browser_vault => 'Хранилище браузера';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      'Сохранённые данные входа на сайты, адреса и карты. Пароли остаются в защищённых полях и здесь не отображаются.';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => 'Удалить сохранённый элемент';
+
+  @override
+  String get rel_ops_cap_delete_this_item => 'Удалить этот элемент?';
+
+  @override
+  String get rel_ops_cap_unlocked => 'Разблокировано';
+
+  @override
+  String get rel_ops_cap_locked => 'Заблокировано';
+
+  @override
+  String get rel_ops_cap_not_detected => 'Не обнаружено';
+
+  @override
+  String get rel_ops_cap_master_password => 'Мастер-пароль';
+
+  @override
+  String get rel_ops_cap_login => 'Данные входа';
+
+  @override
+  String get rel_ops_cap_address => 'Адрес';
+
+  @override
+  String get rel_ops_cap_card => 'Карта';
+
+  @override
+  String get rel_ops_cap_label => 'Метка';
+
+  @override
+  String get rel_ops_cap_site_origin => 'Источник сайта';
+
+  @override
+  String get rel_ops_cap_identifier => 'Идентификатор';
+
+  @override
+  String get rel_ops_cap_password => 'Пароль';
+
+  @override
+  String get rel_ops_cap_authenticator_key => 'Ключ аутентификатора';
+
+  @override
+  String get rel_ops_cap_street => 'Улица';
+
+  @override
+  String get rel_ops_cap_city => 'Город';
+
+  @override
+  String get rel_ops_cap_postal_code => 'Почтовый индекс';
+
+  @override
+  String get rel_ops_cap_country => 'Страна';
+
+  @override
+  String get rel_ops_cap_name_on_card => 'Имя на карте';
+
+  @override
+  String get rel_ops_cap_card_number => 'Номер карты';
+
+  @override
+  String get rel_ops_cap_expiry_month => 'Месяц окончания срока действия';
+
+  @override
+  String get rel_ops_cap_expiry_year => 'Год окончания срока действия';
+
+  @override
+  String get rel_ops_cap_security_code => 'Код безопасности';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      'У этого шлюза нет метода получения согласия на передачу общих метрик.';
+
+  @override
+  String get rel_ops_cap_agent_policy => 'Политика агента';
+
+  @override
+  String get rel_ops_cap_loading_policy => 'Загрузка политики';
+
+  @override
+  String get rel_ops_cap_approval_timeout => 'Время ожидания одобрения';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => 'Подтверждать перезагрузки MCP';
+
+  @override
+  String get rel_ops_cap_command_allowlist => 'Список разрешённых команд';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => 'Контрольные точки файлов';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => 'Лимит контрольных точек';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => 'Частные URL в браузере';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile =>
+      'Использовать мой настоящий профиль браузера';
+
+  @override
+  String get rel_ops_cap_save_policy => 'Сохранить политику';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile =>
+      'Общие метрики этого профиля';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => 'Отправлять общие метрики';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => 'Введите метку.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      'Введите корректный URL, например https://example.com.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      'Введите идентификатор и пароль.';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      'Введите имя на карте, номер, срок действия и код безопасности.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      'Введите улицу, город, почтовый индекс и страну.';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      'Шлюз вернул ответ, который не удалось прочитать.';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return 'Шлюз отклонил запрос ($statusCode).';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return 'У этого подключения нет сокета шлюза, поэтому $method недоступен.';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => 'Выберите навык.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned =>
+      'Текст навыка не получен.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved => 'Навык не сохранён.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived =>
+      'Навык не архивирован.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed =>
+      'Навык не установлен.';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start =>
+      'Обновление навыков не запущено.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed => 'Навык не удалён.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      'Введите идентификатор навыка или плагина.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => 'Выберите плагин.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed =>
+      'Плагин не удалён.';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed =>
+      'Настольный компонент не удалён.';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      'Этот шлюз не назначил плагину стабильный ключ.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed =>
+      'Плагин не изменён.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => 'Выберите сервер.';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => 'Укажите имя сервера.';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      'Укажите для сервера команду или URL http(s).';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset =>
+      'Выберите набор инструментов.';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      'Состояние серверного модуля инструментов не получено.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => 'Выберите провайдера.';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      'У этого провайдера нет действия настройки.';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => 'Настройка не запущена.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend =>
+      'Выберите серверный модуль терминала.';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => 'Укажите имя коннектора.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => 'Выберите учётную запись.';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      'Перезагрузите политику коннектора перед изменением разрешений инструментов.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => 'Выберите элемент.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => 'Выберите источник.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password =>
+      'Введите мастер-пароль.';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned =>
+      'Конфигурация шлюза не получена.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode =>
+      'Выберите известный режим одобрения.';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit =>
+      'Укажите положительный лимит.';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved =>
+      'Политика не сохранена.';
+
+  @override
+  String get rel_ops_cap_value_manual => 'вручную';
+
+  @override
+  String get rel_ops_cap_value_smart => 'интеллектуальный';
+
+  @override
+  String get rel_ops_cap_value_off => 'выкл.';
+
+  @override
+  String get rel_ops_cap_value_safe => 'безопасно';
+
+  @override
+  String get rel_ops_cap_value_caution => 'осторожно';
+
+  @override
+  String get rel_ops_cap_value_dangerous => 'опасно';
+
+  @override
+  String get rel_ops_cap_value_blocked => 'заблокировано';
+
+  @override
+  String get rel_ops_cap_value_clean => 'угроз нет';
+
+  @override
+  String get rel_ops_cap_value_ready => 'готово';
+
+  @override
+  String get rel_ops_cap_value_available => 'доступно';
+
+  @override
+  String get rel_ops_cap_value_unavailable => 'недоступно';
+
+  @override
+  String get rel_ops_cap_value_enabled => 'включено';
+
+  @override
+  String get rel_ops_cap_value_disabled => 'отключено';
+
+  @override
+  String get rel_ops_cap_value_active => 'активно';
+
+  @override
+  String get rel_ops_cap_value_inactive => 'неактивно';
+
+  @override
+  String get rel_ops_cap_value_installed => 'установлено';
+
+  @override
+  String get rel_ops_cap_value_missing => 'отсутствует';
+
+  @override
+  String get rel_ops_cap_value_configured => 'настроено';
+
+  @override
+  String get rel_ops_cap_value_not_configured => 'не настроено';
+
+  @override
+  String get rel_ops_cap_value_error => 'ошибка';
+
+  @override
+  String get rel_ops_cap_value_unknown => 'неизвестно';
+
+  @override
+  String get rel_ops_cap_value_login => 'данные входа';
+
+  @override
+  String get rel_ops_cap_value_address => 'адрес';
+
+  @override
+  String get rel_ops_cap_value_payment => 'платёж';
 }

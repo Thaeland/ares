@@ -11718,4 +11718,567 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get release_core_file_save_hidden => '게이트웨이는 숨김 파일을 저장할 수 없습니다.';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return '설치 차단됨($verdict): $detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return '검사 결과: $verdict. 설치하기 전에 $requested을(를) 확인하세요.';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return '게이트웨이에서 $requested의 설치를 아직 확인하지 않았습니다.';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return '$name 편집';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return '$name을(를) 보관할까요?';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return '스킬이 보관되며 $command 명령으로 복원할 수 있습니다.';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return '그래도 $name 설치';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return '검사 결과에도 불구하고 $name을(를) 설치할까요?';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return '보안 검사에서 $name을(를) 차단했습니다. 이 확인은 $name에만 적용됩니다.';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return '기능 권한을 수락해도 $name의 검사 결과를 무시할 수 없습니다.';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return '$name 검사 결과 검토';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\n폴더 및 미리 보기 스크립트 권한은 해당 컴퓨터의 Desktop 앱에 유지됩니다. 여기서 플러그인을 제거해도 해당 로컬 권한은 취소되지 않습니다.';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return '$name을(를) 제거할까요?';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return '$name 연결 테스트: $tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return '$connector의 도구 권한 저장';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return '$name의 백엔드';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return '$name을(를) 사용할까요?';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return '$name 잠금 해제';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => '기능';
+
+  @override
+  String get rel_ops_cap_plugins => '플러그인';
+
+  @override
+  String get rel_ops_cap_connectors => '커넥터';
+
+  @override
+  String get rel_ops_cap_backends => '백엔드';
+
+  @override
+  String get rel_ops_cap_save_skill => '스킬 저장';
+
+  @override
+  String get rel_ops_cap_archive => '보관';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Hub 식별자';
+
+  @override
+  String get rel_ops_cap_install => '설치';
+
+  @override
+  String get rel_ops_cap_update_all => '모두 업데이트';
+
+  @override
+  String get rel_ops_cap_unlock => '잠금 해제';
+
+  @override
+  String get rel_ops_cap_lock => '잠금';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      '이 업데이트는 기능을 추가합니다. 아직 변경된 사항은 없습니다.';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin => '검사에서 이 플러그인을 차단했습니다.';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => '플러그인이 변경되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_repository => '저장소';
+
+  @override
+  String get rel_ops_cap_install_plugin => '플러그인 설치';
+
+  @override
+  String get rel_ops_cap_update_plugins => '플러그인 업데이트';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => '기능 권한 수락';
+
+  @override
+  String get rel_ops_cap_update => '업데이트';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => '데스크톱 구성 요소 제거';
+
+  @override
+  String get rel_ops_cap_server_name => '서버 이름';
+
+  @override
+  String get rel_ops_cap_command => '명령';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => '서버 추가';
+
+  @override
+  String get rel_ops_cap_probe => '연결 테스트';
+
+  @override
+  String get rel_ops_cap_probe_failed => '연결 테스트에 실패했습니다.';
+
+  @override
+  String get rel_ops_cap_logs => '로그';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'MCP 로그';
+
+  @override
+  String get rel_ops_cap_connector => '커넥터';
+
+  @override
+  String get rel_ops_cap_account_alias => '계정 별칭';
+
+  @override
+  String get rel_ops_cap_link_account => '계정 연결';
+
+  @override
+  String get rel_ops_cap_remove_account => '계정 제거';
+
+  @override
+  String get rel_ops_cap_tool_connector => '도구 커넥터';
+
+  @override
+  String get rel_ops_cap_load_tools => '도구 불러오기';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => '도구 권한 저장';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      '이 정책에는 멤버 리비전이 없으므로 도구 권한이 변경되지 않습니다.';
+
+  @override
+  String get rel_ops_cap_active => '사용 중';
+
+  @override
+  String get rel_ops_cap_use => '사용';
+
+  @override
+  String get rel_ops_cap_run_setup => '설정 실행';
+
+  @override
+  String get rel_ops_cap_terminal_backends => '터미널 백엔드';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      '이 프로필의 터미널 백엔드가 변경됩니다.';
+
+  @override
+  String get rel_ops_cap_use_backend => '백엔드 사용';
+
+  @override
+  String get rel_ops_cap_select => '선택';
+
+  @override
+  String get rel_ops_cap_browser_vault => '브라우저 보관함';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      '저장된 사이트 로그인, 주소 및 카드입니다. 비밀번호는 보안 필드에 유지되며 여기에 표시되지 않습니다.';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => '저장된 항목 제거';
+
+  @override
+  String get rel_ops_cap_delete_this_item => '이 항목을 삭제할까요?';
+
+  @override
+  String get rel_ops_cap_unlocked => '잠금 해제됨';
+
+  @override
+  String get rel_ops_cap_locked => '잠김';
+
+  @override
+  String get rel_ops_cap_not_detected => '감지되지 않음';
+
+  @override
+  String get rel_ops_cap_master_password => '마스터 비밀번호';
+
+  @override
+  String get rel_ops_cap_login => '로그인 정보';
+
+  @override
+  String get rel_ops_cap_address => '주소';
+
+  @override
+  String get rel_ops_cap_card => '카드';
+
+  @override
+  String get rel_ops_cap_label => '라벨';
+
+  @override
+  String get rel_ops_cap_site_origin => '사이트 출처';
+
+  @override
+  String get rel_ops_cap_identifier => '식별자';
+
+  @override
+  String get rel_ops_cap_password => '비밀번호';
+
+  @override
+  String get rel_ops_cap_authenticator_key => '인증 키';
+
+  @override
+  String get rel_ops_cap_street => '도로명 주소';
+
+  @override
+  String get rel_ops_cap_city => '도시';
+
+  @override
+  String get rel_ops_cap_postal_code => '우편번호';
+
+  @override
+  String get rel_ops_cap_country => '국가';
+
+  @override
+  String get rel_ops_cap_name_on_card => '카드 소유자 이름';
+
+  @override
+  String get rel_ops_cap_card_number => '카드 번호';
+
+  @override
+  String get rel_ops_cap_expiry_month => '만료 월';
+
+  @override
+  String get rel_ops_cap_expiry_year => '만료 연도';
+
+  @override
+  String get rel_ops_cap_security_code => '보안 코드';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      '이 게이트웨이에는 공유 지표 동의 메서드가 없습니다.';
+
+  @override
+  String get rel_ops_cap_agent_policy => '에이전트 정책';
+
+  @override
+  String get rel_ops_cap_loading_policy => '정책 불러오는 중';
+
+  @override
+  String get rel_ops_cap_approval_timeout => '승인 대기 시간 제한';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => 'MCP 새로고침 확인';
+
+  @override
+  String get rel_ops_cap_command_allowlist => '명령 허용 목록';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => '파일 체크포인트';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => '체크포인트 한도';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => '브라우저 비공개 URL';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile => '내 실제 브라우저 프로필 사용';
+
+  @override
+  String get rel_ops_cap_save_policy => '정책 저장';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile => '이 프로필의 공유 지표';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => '공유 지표 전송';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => '라벨을 입력하세요.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      'https://example.com과 같은 올바른 URL을 입력하세요.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      '식별자와 비밀번호를 입력하세요.';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      '카드 소유자 이름, 번호, 만료일 및 보안 코드를 입력하세요.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      '도로명 주소, 도시, 우편번호 및 국가를 입력하세요.';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      '게이트웨이가 읽을 수 없는 응답을 반환했습니다.';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return '게이트웨이가 요청을 거부했습니다($statusCode).';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return '이 연결에는 게이트웨이 소켓이 없으므로 $method을(를) 사용할 수 없습니다.';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => '스킬을 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned =>
+      '스킬 텍스트가 반환되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved => '스킬이 저장되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived => '스킬이 보관되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed => '스킬이 설치되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start =>
+      '스킬 업데이트가 시작되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed => '스킬이 제거되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      '스킬 또는 플러그인 식별자를 입력하세요.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => '플러그인을 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed =>
+      '플러그인이 제거되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed =>
+      '데스크톱 구성 요소가 제거되지 않았습니다.';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      '이 게이트웨이는 플러그인에 안정적인 키를 부여하지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed =>
+      '플러그인이 변경되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => '서버를 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => '서버 이름을 지정하세요.';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      '서버에 명령 또는 http(s) URL을 지정하세요.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset => '도구 모음을 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      '도구 백엔드 상태가 반환되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => '제공업체를 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      '이 제공업체에는 설정 작업이 없습니다.';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => '설정이 시작되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend => '터미널 백엔드를 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => '커넥터 이름을 지정하세요.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => '계정을 선택하세요.';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      '도구 권한을 변경하기 전에 커넥터 정책을 새로고침하세요.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => '항목을 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => '소스를 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password => '마스터 비밀번호를 입력하세요.';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned =>
+      '게이트웨이 구성이 반환되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode =>
+      '알려진 승인 모드를 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit => '양수인 한도를 사용하세요.';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved => '정책이 저장되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_value_manual => '수동';
+
+  @override
+  String get rel_ops_cap_value_smart => '스마트';
+
+  @override
+  String get rel_ops_cap_value_off => '꺼짐';
+
+  @override
+  String get rel_ops_cap_value_safe => '안전';
+
+  @override
+  String get rel_ops_cap_value_caution => '주의';
+
+  @override
+  String get rel_ops_cap_value_dangerous => '위험';
+
+  @override
+  String get rel_ops_cap_value_blocked => '차단됨';
+
+  @override
+  String get rel_ops_cap_value_clean => '위협 없음';
+
+  @override
+  String get rel_ops_cap_value_ready => '준비됨';
+
+  @override
+  String get rel_ops_cap_value_available => '사용 가능';
+
+  @override
+  String get rel_ops_cap_value_unavailable => '사용 불가';
+
+  @override
+  String get rel_ops_cap_value_enabled => '활성화됨';
+
+  @override
+  String get rel_ops_cap_value_disabled => '비활성화됨';
+
+  @override
+  String get rel_ops_cap_value_active => '사용 중';
+
+  @override
+  String get rel_ops_cap_value_inactive => '사용하지 않음';
+
+  @override
+  String get rel_ops_cap_value_installed => '설치됨';
+
+  @override
+  String get rel_ops_cap_value_missing => '없음';
+
+  @override
+  String get rel_ops_cap_value_configured => '구성됨';
+
+  @override
+  String get rel_ops_cap_value_not_configured => '구성되지 않음';
+
+  @override
+  String get rel_ops_cap_value_error => '오류';
+
+  @override
+  String get rel_ops_cap_value_unknown => '알 수 없음';
+
+  @override
+  String get rel_ops_cap_value_login => '로그인 정보';
+
+  @override
+  String get rel_ops_cap_value_address => '주소';
+
+  @override
+  String get rel_ops_cap_value_payment => '결제';
 }

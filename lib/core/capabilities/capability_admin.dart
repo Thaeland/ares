@@ -28,24 +28,144 @@ class CapabilityResponse {
   final String body;
 }
 
-class CapabilityException implements Exception {
-  const CapabilityException(this.message, {this.statusCode, this.rpcCode});
+enum CapabilityFailure {
+  enterALabel,
+  enterAValidUrlLikeHttpsExampleCom,
+  enterTheIdentifierAndPassword,
+  enterTheCardNameNumberExpiryAndSecurityCode,
+  enterTheStreetCityPostalCodeAndCountry,
+  theGatewayReturnedAResponseThatCouldNotBeRead,
+  theGatewayRefusedTheRequestStatus,
+  thisConnectionHasNoGatewaySocketSoMethodIsUnavailable,
+  chooseASkill,
+  theSkillTextWasNotReturned,
+  theSkillWasNotSaved,
+  theSkillWasNotArchived,
+  theSkillWasNotInstalled,
+  skillUpdatesDidNotStart,
+  theSkillWasNotRemoved,
+  enterASkillOrPluginIdentifier,
+  chooseAPlugin,
+  thePluginWasNotRemoved,
+  theDesktopHalfWasNotRemoved,
+  thisGatewayDidNotGiveThePluginAStableKey,
+  thePluginWasNotChanged,
+  chooseAServer,
+  nameTheServer,
+  giveTheServerACommandOrAnHttpSUrl,
+  chooseAToolset,
+  toolBackendStatusWasNotReturned,
+  chooseAProvider,
+  thisProviderHasNoSetupAction,
+  setupDidNotStart,
+  chooseATerminalBackend,
+  nameTheConnector,
+  chooseAnAccount,
+  reloadTheConnectorPolicyBeforeChangingToolGrants,
+  chooseAnItem,
+  chooseASource,
+  enterTheMasterPassword,
+  gatewayConfigWasNotReturned,
+  chooseAKnownApprovalMode,
+  useAPositiveLimit,
+  thePolicyWasNotSaved,
+}
 
-  final String message;
+String _failureEnglish(
+  CapabilityFailure reason, {
+  int? statusCode,
+  String? method,
+}) => switch (reason) {
+  CapabilityFailure.enterALabel => 'Enter a label.',
+  CapabilityFailure.enterAValidUrlLikeHttpsExampleCom =>
+    'Enter a valid URL like https://example.com.',
+  CapabilityFailure.enterTheIdentifierAndPassword =>
+    'Enter the identifier and password.',
+  CapabilityFailure.enterTheCardNameNumberExpiryAndSecurityCode =>
+    'Enter the card name, number, expiry and security code.',
+  CapabilityFailure.enterTheStreetCityPostalCodeAndCountry =>
+    'Enter the street, city, postal code and country.',
+  CapabilityFailure.theGatewayReturnedAResponseThatCouldNotBeRead =>
+    'The gateway returned a response that could not be read.',
+  CapabilityFailure.theGatewayRefusedTheRequestStatus =>
+    'The gateway refused the request (${statusCode}).',
+  CapabilityFailure.thisConnectionHasNoGatewaySocketSoMethodIsUnavailable =>
+    'This connection has no gateway socket, so ${method} is unavailable.',
+  CapabilityFailure.chooseASkill => 'Choose a skill.',
+  CapabilityFailure.theSkillTextWasNotReturned =>
+    'The skill text was not returned.',
+  CapabilityFailure.theSkillWasNotSaved => 'The skill was not saved.',
+  CapabilityFailure.theSkillWasNotArchived => 'The skill was not archived.',
+  CapabilityFailure.theSkillWasNotInstalled => 'The skill was not installed.',
+  CapabilityFailure.skillUpdatesDidNotStart => 'Skill updates did not start.',
+  CapabilityFailure.theSkillWasNotRemoved => 'The skill was not removed.',
+  CapabilityFailure.enterASkillOrPluginIdentifier =>
+    'Enter a skill or plugin identifier.',
+  CapabilityFailure.chooseAPlugin => 'Choose a plugin.',
+  CapabilityFailure.thePluginWasNotRemoved => 'The plugin was not removed.',
+  CapabilityFailure.theDesktopHalfWasNotRemoved =>
+    'The desktop half was not removed.',
+  CapabilityFailure.thisGatewayDidNotGiveThePluginAStableKey =>
+    'This gateway did not give the plugin a stable key.',
+  CapabilityFailure.thePluginWasNotChanged => 'The plugin was not changed.',
+  CapabilityFailure.chooseAServer => 'Choose a server.',
+  CapabilityFailure.nameTheServer => 'Name the server.',
+  CapabilityFailure.giveTheServerACommandOrAnHttpSUrl =>
+    'Give the server a command or an http(s) URL.',
+  CapabilityFailure.chooseAToolset => 'Choose a toolset.',
+  CapabilityFailure.toolBackendStatusWasNotReturned =>
+    'Tool backend status was not returned.',
+  CapabilityFailure.chooseAProvider => 'Choose a provider.',
+  CapabilityFailure.thisProviderHasNoSetupAction =>
+    'This provider has no setup action.',
+  CapabilityFailure.setupDidNotStart => 'Setup did not start.',
+  CapabilityFailure.chooseATerminalBackend => 'Choose a terminal backend.',
+  CapabilityFailure.nameTheConnector => 'Name the connector.',
+  CapabilityFailure.chooseAnAccount => 'Choose an account.',
+  CapabilityFailure.reloadTheConnectorPolicyBeforeChangingToolGrants =>
+    'Reload the connector policy before changing tool grants.',
+  CapabilityFailure.chooseAnItem => 'Choose an item.',
+  CapabilityFailure.chooseASource => 'Choose a source.',
+  CapabilityFailure.enterTheMasterPassword => 'Enter the master password.',
+  CapabilityFailure.gatewayConfigWasNotReturned =>
+    'Gateway config was not returned.',
+  CapabilityFailure.chooseAKnownApprovalMode => 'Choose a known approval mode.',
+  CapabilityFailure.useAPositiveLimit => 'Use a positive limit.',
+  CapabilityFailure.thePolicyWasNotSaved => 'The policy was not saved.',
+};
+
+class CapabilityException implements Exception {
+  const CapabilityException(String message, {this.statusCode, this.rpcCode})
+    : _message = message,
+      reason = null,
+      method = null;
+
+  const CapabilityException.reason(
+    this.reason, {
+    this.statusCode,
+    this.rpcCode,
+    this.method,
+  }) : _message = null;
+
+  final String? _message;
+  final CapabilityFailure? reason;
+  final String? method;
   final int? statusCode;
   final int? rpcCode;
-
+  String get message =>
+      _message ??
+      _failureEnglish(reason!, statusCode: statusCode, method: method);
   bool get methodMissing => rpcCode == -32601;
-
   @override
   String toString() => message;
 }
 
 class VaultFormException implements Exception {
-  const VaultFormException(this.message);
-
-  final String message;
-
+  const VaultFormException(String message) : _message = message, reason = null;
+  const VaultFormException.reason(this.reason) : _message = null;
+  final String? _message;
+  final CapabilityFailure? reason;
+  String get message => _message ?? _failureEnglish(reason!);
   @override
   String toString() => message;
 }
@@ -416,17 +536,19 @@ class VaultDraft {
 
   Map<String, String> secret() {
     if (label.trim().isEmpty) {
-      throw const VaultFormException('Enter a label.');
+      throw const VaultFormException.reason(CapabilityFailure.enterALabel);
     }
     if (!validVaultOrigin(origin)) {
-      throw const VaultFormException(
-        'Enter a valid URL like https://example.com.',
+      throw const VaultFormException.reason(
+        CapabilityFailure.enterAValidUrlLikeHttpsExampleCom,
       );
     }
     switch (kind) {
       case 'login':
         if (identifier.trim().isEmpty || password.isEmpty) {
-          throw const VaultFormException('Enter the identifier and password.');
+          throw const VaultFormException.reason(
+            CapabilityFailure.enterTheIdentifierAndPassword,
+          );
         }
         return {
           'identifier_type': identifier.contains('@') ? 'email' : 'username',
@@ -444,8 +566,8 @@ class VaultDraft {
             month > 12 ||
             !RegExp(r'^\d{2,4}$').hasMatch(expYear.trim()) ||
             !RegExp(r'^\d{3,4}$').hasMatch(cvc)) {
-          throw const VaultFormException(
-            'Enter the card name, number, expiry and security code.',
+          throw const VaultFormException.reason(
+            CapabilityFailure.enterTheCardNameNumberExpiryAndSecurityCode,
           );
         }
         return {
@@ -461,8 +583,8 @@ class VaultDraft {
             city.trim().isEmpty ||
             postal.trim().isEmpty ||
             country.trim().isEmpty) {
-          throw const VaultFormException(
-            'Enter the street, city, postal code and country.',
+          throw const VaultFormException.reason(
+            CapabilityFailure.enterTheStreetCityPostalCodeAndCountry,
           );
         }
         return {
@@ -598,8 +720,8 @@ class CapabilityAdmin {
     try {
       return jsonDecode(response.body);
     } on FormatException {
-      throw const CapabilityException(
-        'The gateway returned a response that could not be read.',
+      throw const CapabilityException.reason(
+        CapabilityFailure.theGatewayReturnedAResponseThatCouldNotBeRead,
       );
     }
   }
@@ -617,7 +739,10 @@ class CapabilityAdmin {
     } on FormatException {
       // A non-JSON refusal still must not be copied through.
     }
-    return 'The gateway refused the request (${response.statusCode}).';
+    throw CapabilityException.reason(
+      CapabilityFailure.theGatewayRefusedTheRequestStatus,
+      statusCode: response.statusCode,
+    );
   }
 
   Future<Map<String, dynamic>> _call(
@@ -627,8 +752,9 @@ class CapabilityAdmin {
   }) async {
     final rpc = _rpc;
     if (rpc == null) {
-      throw CapabilityException(
-        'This connection has no gateway socket, so $method is unavailable.',
+      throw CapabilityException.reason(
+        CapabilityFailure.thisConnectionHasNoGatewaySocketSoMethodIsUnavailable,
+        method: method,
       );
     }
     final selected = profile;
@@ -647,13 +773,13 @@ class CapabilityAdmin {
     }
   }
 
-  static String _name(Object? value, String fallback) {
+  static String _name(Object? value, CapabilityFailure fallback) {
     final text = value?.toString().trim() ?? '';
     if (text.isEmpty ||
         text.contains('/') ||
         text.contains('\\') ||
         text.contains('..')) {
-      throw CapabilityException(fallback);
+      throw CapabilityException.reason(fallback);
     }
     return text;
   }
@@ -672,7 +798,7 @@ class CapabilityAdmin {
   );
 
   Future<String> skillContent(String name) async {
-    final skill = _name(name, 'Choose a skill.');
+    final skill = _name(name, CapabilityFailure.chooseASkill);
     final decoded = await _send(
       'GET',
       'skills/content',
@@ -680,7 +806,9 @@ class CapabilityAdmin {
     );
     final content = decoded is Map ? decoded['content'] : null;
     if (content is! String) {
-      throw const CapabilityException('The skill text was not returned.');
+      throw const CapabilityException.reason(
+        CapabilityFailure.theSkillTextWasNotReturned,
+      );
     }
     return content;
   }
@@ -689,7 +817,10 @@ class CapabilityAdmin {
     await _send(
       'PUT',
       'skills/toggle',
-      body: {'name': _name(name, 'Choose a skill.'), 'enabled': enabled},
+      body: {
+        'name': _name(name, CapabilityFailure.chooseASkill),
+        'enabled': enabled,
+      },
     );
   }
 
@@ -697,17 +828,22 @@ class CapabilityAdmin {
     await _send(
       'PUT',
       'skills/lock',
-      body: {'name': _name(name, 'Choose a skill.'), 'locked': locked},
+      body: {
+        'name': _name(name, CapabilityFailure.chooseASkill),
+        'locked': locked,
+      },
     );
   }
 
   Future<String> learningContent(String name) async {
-    final skill = _name(name, 'Choose a skill.');
+    final skill = _name(name, CapabilityFailure.chooseASkill);
     final decoded = await _send('GET', 'learning/node', query: {'id': skill});
     if (decoded is! Map ||
         decoded['ok'] == false ||
         decoded['content'] is! String) {
-      throw const CapabilityException('The skill text was not returned.');
+      throw const CapabilityException.reason(
+        CapabilityFailure.theSkillTextWasNotReturned,
+      );
     }
     return decoded['content'] as String;
   }
@@ -716,18 +852,21 @@ class CapabilityAdmin {
     final decoded = await _send(
       'PUT',
       'learning/node',
-      body: {'id': _name(name, 'Choose a skill.'), 'content': content},
+      body: {
+        'id': _name(name, CapabilityFailure.chooseASkill),
+        'content': content,
+      },
     );
-    _requireOk(decoded, 'The skill was not saved.');
+    _requireOk(decoded, CapabilityFailure.theSkillWasNotSaved);
   }
 
   Future<void> archiveSkill(String name) async {
     final decoded = await _send(
       'DELETE',
       'learning/node',
-      body: {'id': _name(name, 'Choose a skill.')},
+      body: {'id': _name(name, CapabilityFailure.chooseASkill)},
     );
-    _requireOk(decoded, 'The skill was not archived.');
+    _requireOk(decoded, CapabilityFailure.theSkillWasNotArchived);
   }
 
   Future<SkillScan> scanHubSkill(String identifier) async {
@@ -758,7 +897,7 @@ class CapabilityAdmin {
       body: {'identifier': _identifier(identifier), if (force) 'force': true},
       timeout: const Duration(seconds: 45),
     );
-    _requireOk(decoded, 'The skill was not installed.');
+    _requireOk(decoded, CapabilityFailure.theSkillWasNotInstalled);
     final action = decoded is Map
         ? (decoded['name'] ?? decoded['action'])?.toString()
         : null;
@@ -786,16 +925,16 @@ class CapabilityAdmin {
       body: const {},
       timeout: const Duration(seconds: 120),
     );
-    _requireOk(decoded, 'Skill updates did not start.');
+    _requireOk(decoded, CapabilityFailure.skillUpdatesDidNotStart);
   }
 
   Future<void> uninstallHubSkill(String name) async {
     final decoded = await _send(
       'POST',
       'skills/hub/uninstall',
-      body: {'name': _name(name, 'Choose a skill.')},
+      body: {'name': _name(name, CapabilityFailure.chooseASkill)},
     );
-    _requireOk(decoded, 'The skill was not removed.');
+    _requireOk(decoded, CapabilityFailure.theSkillWasNotRemoved);
   }
 
   SkillScan _scan(Object? decoded) {
@@ -829,19 +968,20 @@ class CapabilityAdmin {
   String _identifier(String value) {
     final trimmed = value.trim();
     if (trimmed.isEmpty || trimmed.contains('\n') || trimmed.contains('\r')) {
-      throw const CapabilityException('Enter a skill or plugin identifier.');
+      throw const CapabilityException.reason(
+        CapabilityFailure.enterASkillOrPluginIdentifier,
+      );
     }
     return trimmed;
   }
 
-  void _requireOk(Object? decoded, String fallback) {
+  void _requireOk(Object? decoded, CapabilityFailure fallback) {
     if (decoded is Map && decoded['ok'] == false) {
       final message = decoded['message'] ?? decoded['error'];
-      throw CapabilityException(
-        message is String && message.trim().isNotEmpty
-            ? redactLogText(message.trim())
-            : fallback,
-      );
+      if (message is String && message.trim().isNotEmpty) {
+        throw CapabilityException(redactLogText(message.trim()));
+      }
+      throw CapabilityException.reason(fallback);
     }
   }
 
@@ -887,7 +1027,7 @@ class CapabilityAdmin {
     return _pluginAction({
       'action': 'install',
       'identifier': '',
-      'catalog_name': _name(catalogName, 'Choose a plugin.'),
+      'catalog_name': _name(catalogName, CapabilityFailure.chooseAPlugin),
       'force': force,
       'enable': enable,
       if (ref != null && ref.trim().isNotEmpty) 'ref': ref.trim(),
@@ -902,7 +1042,7 @@ class CapabilityAdmin {
   }) {
     return _pluginAction({
       'action': 'update',
-      'name': _name(name, 'Choose a plugin.'),
+      'name': _name(name, CapabilityFailure.chooseAPlugin),
       'force': force,
       if (acceptCapabilities) 'accept_capabilities': true,
     });
@@ -911,24 +1051,24 @@ class CapabilityAdmin {
   Future<void> removePlugin(String name) async {
     final decoded = await _call('plugins.manage', {
       'action': 'remove',
-      'name': _name(name, 'Choose a plugin.'),
+      'name': _name(name, CapabilityFailure.chooseAPlugin),
     });
-    _requireOk(decoded, 'The plugin was not removed.');
+    _requireOk(decoded, CapabilityFailure.thePluginWasNotRemoved);
   }
 
   Future<void> removePluginDesktopHalf(String name) async {
     final decoded = await _call('plugins.manage', {
       'action': 'remove_desktop',
-      'name': _name(name, 'Choose a plugin.'),
+      'name': _name(name, CapabilityFailure.chooseAPlugin),
     });
-    _requireOk(decoded, 'The desktop half was not removed.');
+    _requireOk(decoded, CapabilityFailure.theDesktopHalfWasNotRemoved);
   }
 
   Future<void> togglePlugin(String key, bool enable) async {
     final pluginKey = key.trim();
     if (pluginKey.isEmpty) {
-      throw const CapabilityException(
-        'This gateway did not give the plugin a stable key.',
+      throw const CapabilityException.reason(
+        CapabilityFailure.thisGatewayDidNotGiveThePluginAStableKey,
       );
     }
     final decoded = await _call('plugins.manage', {
@@ -936,7 +1076,7 @@ class CapabilityAdmin {
       'key': pluginKey,
       'enable': enable,
     });
-    _requireOk(decoded, 'The plugin was not changed.');
+    _requireOk(decoded, CapabilityFailure.thePluginWasNotChanged);
   }
 
   Future<PluginMutation> updateAllPlugins() =>
@@ -981,7 +1121,7 @@ class CapabilityAdmin {
   }
 
   Future<McpProbe> probeMcpServer(String name) async {
-    final server = _name(name, 'Choose a server.');
+    final server = _name(name, CapabilityFailure.chooseAServer);
     final decoded = await _send(
       'POST',
       'mcp/servers/${Uri.encodeComponent(server)}/test',
@@ -1000,7 +1140,7 @@ class CapabilityAdmin {
   }
 
   Future<void> setMcpEnabled(String name, bool enabled) async {
-    final server = _name(name, 'Choose a server.');
+    final server = _name(name, CapabilityFailure.chooseAServer);
     await _send(
       'PUT',
       'mcp/servers/${Uri.encodeComponent(server)}/enabled',
@@ -1009,11 +1149,11 @@ class CapabilityAdmin {
   }
 
   Future<void> addMcpServer(String name, McpServerSpec spec) async {
-    final server = _name(name, 'Name the server.');
+    final server = _name(name, CapabilityFailure.nameTheServer);
     if (spec.command == null &&
         (spec.url == null || !validVaultOrigin(spec.url!))) {
-      throw const CapabilityException(
-        'Give the server a command or an http(s) URL.',
+      throw const CapabilityException.reason(
+        CapabilityFailure.giveTheServerACommandOrAnHttpSUrl,
       );
     }
     await _send(
@@ -1062,13 +1202,15 @@ class CapabilityAdmin {
   }
 
   Future<ToolsetSetup> toolsetSetup(String name) async {
-    final toolset = _name(name, 'Choose a toolset.');
+    final toolset = _name(name, CapabilityFailure.chooseAToolset);
     final decoded = await _send(
       'GET',
       'tools/toolsets/${Uri.encodeComponent(toolset)}/config',
     );
     if (decoded is! Map) {
-      throw const CapabilityException('Tool backend status was not returned.');
+      throw const CapabilityException.reason(
+        CapabilityFailure.toolBackendStatusWasNotReturned,
+      );
     }
     final providers = <ToolProviderRecord>[
       for (final row
@@ -1095,10 +1237,10 @@ class CapabilityAdmin {
   }
 
   Future<void> selectToolsetProvider(String name, String provider) async {
-    final toolset = _name(name, 'Choose a toolset.');
+    final toolset = _name(name, CapabilityFailure.chooseAToolset);
     final selected = provider.trim();
     if (selected.isEmpty) {
-      throw const CapabilityException('Choose a provider.');
+      throw const CapabilityException.reason(CapabilityFailure.chooseAProvider);
     }
     await _send(
       'PUT',
@@ -1108,17 +1250,19 @@ class CapabilityAdmin {
   }
 
   Future<void> runToolsetSetup(String name, String key) async {
-    final toolset = _name(name, 'Choose a toolset.');
+    final toolset = _name(name, CapabilityFailure.chooseAToolset);
     final setup = key.trim();
     if (setup.isEmpty) {
-      throw const CapabilityException('This provider has no setup action.');
+      throw const CapabilityException.reason(
+        CapabilityFailure.thisProviderHasNoSetupAction,
+      );
     }
     final decoded = await _send(
       'POST',
       'tools/toolsets/${Uri.encodeComponent(toolset)}/post-setup',
       body: {'key': setup},
     );
-    _requireOk(decoded, 'Setup did not start.');
+    _requireOk(decoded, CapabilityFailure.setupDidNotStart);
   }
 
   Future<List<TerminalBackendRecord>> terminalBackends() async {
@@ -1142,7 +1286,9 @@ class CapabilityAdmin {
   Future<void> selectTerminalBackend(String name) async {
     final backend = name.trim();
     if (backend.isEmpty) {
-      throw const CapabilityException('Choose a terminal backend.');
+      throw const CapabilityException.reason(
+        CapabilityFailure.chooseATerminalBackend,
+      );
     }
     await _send('PUT', 'tools/terminal/backend', body: {'backend': backend});
   }
@@ -1167,7 +1313,10 @@ class CapabilityAdmin {
 
   Future<void> connectConnector(String connector, {String? alias}) async {
     final slug = connector.trim();
-    if (slug.isEmpty) throw const CapabilityException('Name the connector.');
+    if (slug.isEmpty)
+      throw const CapabilityException.reason(
+        CapabilityFailure.nameTheConnector,
+      );
     final named = _clean(alias);
     await _call('connectors.connect', {
       'connectors': [slug],
@@ -1179,14 +1328,17 @@ class CapabilityAdmin {
 
   Future<void> removeConnectorAccount(String connectionId) async {
     final id = connectionId.trim();
-    if (id.isEmpty) throw const CapabilityException('Choose an account.');
+    if (id.isEmpty)
+      throw const CapabilityException.reason(CapabilityFailure.chooseAnAccount);
     await _call('connectors.accounts.remove', {'connection_id': id});
   }
 
   Future<ConnectorToolGrant> connectorTools(String slug) async {
     final connector = slug.trim();
     if (connector.isEmpty) {
-      throw const CapabilityException('Name the connector.');
+      throw const CapabilityException.reason(
+        CapabilityFailure.nameTheConnector,
+      );
     }
     final policy = await _call('connectors.policy.get', {});
     final tools = await _call('connectors.tools', {
@@ -1225,8 +1377,8 @@ class CapabilityAdmin {
     final slug = connector.trim();
     final revision = expectedRevision.trim();
     if (slug.isEmpty || revision.isEmpty) {
-      throw const CapabilityException(
-        'Reload the connector policy before changing tool grants.',
+      throw const CapabilityException.reason(
+        CapabilityFailure.reloadTheConnectorPolicyBeforeChangingToolGrants,
       );
     }
     await _call('connectors.policy.set', {
@@ -1293,6 +1445,7 @@ class CapabilityAdmin {
         'secret': secret,
       }, secrets: secret.values);
     } on CapabilityException catch (error) {
+      if (error.reason != null) rethrow;
       throw CapabilityException(
         scrubSecrets(error.message, secret.values),
         statusCode: error.statusCode,
@@ -1303,28 +1456,35 @@ class CapabilityAdmin {
 
   Future<void> removeVaultItem(String id) async {
     final item = id.trim();
-    if (item.isEmpty) throw const CapabilityException('Choose an item.');
+    if (item.isEmpty)
+      throw const CapabilityException.reason(CapabilityFailure.chooseAnItem);
     await _call('vault.remove', {'id': item});
   }
 
   Future<void> setVaultSourceEnabled(String name, bool enabled) async {
     await _call('vault.source.set', {
-      'name': _name(name, 'Choose a source.'),
+      'name': _name(name, CapabilityFailure.chooseASource),
       'enabled': enabled,
     });
   }
 
   Future<void> unlockVaultSource(String name, String password) async {
     if (password.isEmpty) {
-      throw const VaultFormException('Enter the master password.');
+      throw const VaultFormException.reason(
+        CapabilityFailure.enterTheMasterPassword,
+      );
     }
     try {
       await _call(
         'vault.unlock',
-        {'name': _name(name, 'Choose a source.'), 'password': password},
+        {
+          'name': _name(name, CapabilityFailure.chooseASource),
+          'password': password,
+        },
         secrets: [password],
       );
     } on CapabilityException catch (error) {
+      if (error.reason != null) rethrow;
       throw CapabilityException(
         scrubSecrets(error.message, [password]),
         rpcCode: error.rpcCode,
@@ -1333,13 +1493,17 @@ class CapabilityAdmin {
   }
 
   Future<void> lockVaultSource(String name) async {
-    await _call('vault.lock', {'name': _name(name, 'Choose a source.')});
+    await _call('vault.lock', {
+      'name': _name(name, CapabilityFailure.chooseASource),
+    });
   }
 
   Future<AgentPolicy> agentPolicy() async {
     final decoded = await _send('GET', 'config');
     if (decoded is! Map) {
-      throw const CapabilityException('Gateway config was not returned.');
+      throw const CapabilityException.reason(
+        CapabilityFailure.gatewayConfigWasNotReturned,
+      );
     }
     final approvals = decoded['approvals'] is Map
         ? decoded['approvals'] as Map
@@ -1380,17 +1544,21 @@ class CapabilityAdmin {
 
   Future<void> saveAgentPolicy(AgentPolicy policy) async {
     if (!AgentPolicy.modes.contains(policy.approvalMode)) {
-      throw const CapabilityException('Choose a known approval mode.');
+      throw const CapabilityException.reason(
+        CapabilityFailure.chooseAKnownApprovalMode,
+      );
     }
     if (policy.approvalTimeout < 1 || policy.checkpointLimit < 1) {
-      throw const CapabilityException('Use a positive limit.');
+      throw const CapabilityException.reason(
+        CapabilityFailure.useAPositiveLimit,
+      );
     }
     final decoded = await _send(
       'PUT',
       'config',
       body: {'config': policy.toWrite()},
     );
-    _requireOk(decoded, 'The policy was not saved.');
+    _requireOk(decoded, CapabilityFailure.thePolicyWasNotSaved);
   }
 
   Future<SharedMetricsConsent> sharedMetrics() async {

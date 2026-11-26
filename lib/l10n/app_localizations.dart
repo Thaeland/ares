@@ -19675,6 +19675,995 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hidden files can\'t be saved by the gateway.'**
   String get release_core_file_save_hidden;
+
+  /// Capability administration: Install blocked ({verdict}): {detail}
+  ///
+  /// In en, this message translates to:
+  /// **'Install blocked ({verdict}): {detail}'**
+  String rel_ops_cap_install_blocked(String verdict, String detail);
+
+  /// Capability administration: Scan verdict: {verdict}. Confirm {requested} before installing.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan verdict: {verdict}. Confirm {requested} before installing.'**
+  String rel_ops_cap_scan_confirm(String verdict, String requested);
+
+  /// Capability administration: The gateway has not confirmed that {requested} is installed.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway has not confirmed that {requested} is installed.'**
+  String rel_ops_cap_install_unconfirmed(String requested);
+
+  /// Capability administration: Edit {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {name}'**
+  String rel_ops_cap_edit_skill(String name);
+
+  /// Capability administration: Archive {name}?
+  ///
+  /// In en, this message translates to:
+  /// **'Archive {name}?'**
+  String rel_ops_cap_archive_skill(String name);
+
+  /// Archive confirmation. The command placeholder is the literal CLI command hermes curator restore; do not translate or alter the command.
+  ///
+  /// In en, this message translates to:
+  /// **'The skill is archived and can be restored with {command}.'**
+  String rel_ops_cap_archive_explanation(String command);
+
+  /// Capability administration: Install {name} anyway
+  ///
+  /// In en, this message translates to:
+  /// **'Install {name} anyway'**
+  String rel_ops_cap_install_anyway(String name);
+
+  /// Capability administration: Install {name} despite the scan?
+  ///
+  /// In en, this message translates to:
+  /// **'Install {name} despite the scan?'**
+  String rel_ops_cap_install_despite_scan(String name);
+
+  /// Capability administration: The security scan blocked {name}. This confirmation applies only to {name}.
+  ///
+  /// In en, this message translates to:
+  /// **'The security scan blocked {name}. This confirmation applies only to {name}.'**
+  String rel_ops_cap_scan_warning(String name);
+
+  /// Capability administration: Accepting capabilities does not override the scan of {name}.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepting capabilities does not override the scan of {name}.'**
+  String rel_ops_cap_accept_scan_warning(String name);
+
+  /// Capability administration: Review scan for {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Review scan for {name}'**
+  String rel_ops_cap_review_scan(String name);
+
+  /// Plugin description followed by a warning about local Desktop app grants. Desktop is the app name; preserve it.
+  ///
+  /// In en, this message translates to:
+  /// **'{description}\nFolder and preview-script grants stay in the Desktop app on that computer. Removing the plugin here does not revoke those local grants.'**
+  String rel_ops_cap_desktop_grants(String description);
+
+  /// Capability administration: Remove {name}?
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name}?'**
+  String rel_ops_cap_remove_plugin(String name);
+
+  /// Capability administration: Probe {name}: {tools}
+  ///
+  /// In en, this message translates to:
+  /// **'Probe {name}: {tools}'**
+  String rel_ops_cap_probe_result(String name, String tools);
+
+  /// Capability administration: Save tool grants for {connector}
+  ///
+  /// In en, this message translates to:
+  /// **'Save tool grants for {connector}'**
+  String rel_ops_cap_save_tool_grants_for(String connector);
+
+  /// Capability administration: Backends for {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Backends for {name}'**
+  String rel_ops_cap_backends_for(String name);
+
+  /// Capability administration: Use {name}?
+  ///
+  /// In en, this message translates to:
+  /// **'Use {name}?'**
+  String rel_ops_cap_use_backend_confirmation(String name);
+
+  /// Capability administration: Unlock {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock {name}'**
+  String rel_ops_cap_unlock_source(String name);
+
+  /// Capability administration: Capabilities
+  ///
+  /// In en, this message translates to:
+  /// **'Capabilities'**
+  String get rel_ops_cap_capabilities;
+
+  /// Capability administration: Plugins
+  ///
+  /// In en, this message translates to:
+  /// **'Plugins'**
+  String get rel_ops_cap_plugins;
+
+  /// Capability administration: Connectors
+  ///
+  /// In en, this message translates to:
+  /// **'Connectors'**
+  String get rel_ops_cap_connectors;
+
+  /// Capability administration: Backends
+  ///
+  /// In en, this message translates to:
+  /// **'Backends'**
+  String get rel_ops_cap_backends;
+
+  /// Capability administration: Save skill
+  ///
+  /// In en, this message translates to:
+  /// **'Save skill'**
+  String get rel_ops_cap_save_skill;
+
+  /// Capability administration: Archive
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get rel_ops_cap_archive;
+
+  /// Capability administration: Hub identifier
+  ///
+  /// In en, this message translates to:
+  /// **'Hub identifier'**
+  String get rel_ops_cap_hub_identifier;
+
+  /// Capability administration: Install
+  ///
+  /// In en, this message translates to:
+  /// **'Install'**
+  String get rel_ops_cap_install;
+
+  /// Capability administration: Update all
+  ///
+  /// In en, this message translates to:
+  /// **'Update all'**
+  String get rel_ops_cap_update_all;
+
+  /// Capability administration: Unlock
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get rel_ops_cap_unlock;
+
+  /// Capability administration: Lock
+  ///
+  /// In en, this message translates to:
+  /// **'Lock'**
+  String get rel_ops_cap_lock;
+
+  /// Capability administration: This update adds capabilities. Nothing changed yet.
+  ///
+  /// In en, this message translates to:
+  /// **'This update adds capabilities. Nothing changed yet.'**
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet;
+
+  /// Capability administration: The scan blocked this plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'The scan blocked this plugin.'**
+  String get rel_ops_cap_the_scan_blocked_this_plugin;
+
+  /// Capability administration: The plugin was not changed.
+  ///
+  /// In en, this message translates to:
+  /// **'The plugin was not changed.'**
+  String get rel_ops_cap_the_plugin_was_not_changed;
+
+  /// Capability administration: Repository
+  ///
+  /// In en, this message translates to:
+  /// **'Repository'**
+  String get rel_ops_cap_repository;
+
+  /// Capability administration: Install plugin
+  ///
+  /// In en, this message translates to:
+  /// **'Install plugin'**
+  String get rel_ops_cap_install_plugin;
+
+  /// Capability administration: Update plugins
+  ///
+  /// In en, this message translates to:
+  /// **'Update plugins'**
+  String get rel_ops_cap_update_plugins;
+
+  /// Capability administration: Accept capabilities
+  ///
+  /// In en, this message translates to:
+  /// **'Accept capabilities'**
+  String get rel_ops_cap_accept_capabilities;
+
+  /// Capability administration: Update
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get rel_ops_cap_update;
+
+  /// Capability administration: Remove desktop half
+  ///
+  /// In en, this message translates to:
+  /// **'Remove desktop half'**
+  String get rel_ops_cap_remove_desktop_half;
+
+  /// Capability administration: Server name
+  ///
+  /// In en, this message translates to:
+  /// **'Server name'**
+  String get rel_ops_cap_server_name;
+
+  /// Capability administration: Command
+  ///
+  /// In en, this message translates to:
+  /// **'Command'**
+  String get rel_ops_cap_command;
+
+  /// Capability administration: HTTP URL
+  ///
+  /// In en, this message translates to:
+  /// **'HTTP URL'**
+  String get rel_ops_cap_http_url;
+
+  /// Capability administration: Add server
+  ///
+  /// In en, this message translates to:
+  /// **'Add server'**
+  String get rel_ops_cap_add_server;
+
+  /// Capability administration: Probe
+  ///
+  /// In en, this message translates to:
+  /// **'Probe'**
+  String get rel_ops_cap_probe;
+
+  /// Capability administration: Probe failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Probe failed.'**
+  String get rel_ops_cap_probe_failed;
+
+  /// Capability administration: Logs
+  ///
+  /// In en, this message translates to:
+  /// **'Logs'**
+  String get rel_ops_cap_logs;
+
+  /// Capability administration: MCP log
+  ///
+  /// In en, this message translates to:
+  /// **'MCP log'**
+  String get rel_ops_cap_mcp_log;
+
+  /// Capability administration: Connector
+  ///
+  /// In en, this message translates to:
+  /// **'Connector'**
+  String get rel_ops_cap_connector;
+
+  /// Capability administration: Account alias
+  ///
+  /// In en, this message translates to:
+  /// **'Account alias'**
+  String get rel_ops_cap_account_alias;
+
+  /// Capability administration: Link account
+  ///
+  /// In en, this message translates to:
+  /// **'Link account'**
+  String get rel_ops_cap_link_account;
+
+  /// Capability administration: Remove account
+  ///
+  /// In en, this message translates to:
+  /// **'Remove account'**
+  String get rel_ops_cap_remove_account;
+
+  /// Capability administration: Tool connector
+  ///
+  /// In en, this message translates to:
+  /// **'Tool connector'**
+  String get rel_ops_cap_tool_connector;
+
+  /// Capability administration: Load tools
+  ///
+  /// In en, this message translates to:
+  /// **'Load tools'**
+  String get rel_ops_cap_load_tools;
+
+  /// Capability administration: Save tool grants
+  ///
+  /// In en, this message translates to:
+  /// **'Save tool grants'**
+  String get rel_ops_cap_save_tool_grants;
+
+  /// Capability administration: This policy has no member revision, so tool grants stay unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'This policy has no member revision, so tool grants stay unchanged.'**
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged;
+
+  /// Capability administration: Active
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get rel_ops_cap_active;
+
+  /// Capability administration: Use
+  ///
+  /// In en, this message translates to:
+  /// **'Use'**
+  String get rel_ops_cap_use;
+
+  /// Capability administration: Run setup
+  ///
+  /// In en, this message translates to:
+  /// **'Run setup'**
+  String get rel_ops_cap_run_setup;
+
+  /// Capability administration: Terminal backends
+  ///
+  /// In en, this message translates to:
+  /// **'Terminal backends'**
+  String get rel_ops_cap_terminal_backends;
+
+  /// Capability administration: This changes the terminal backend for this profile.
+  ///
+  /// In en, this message translates to:
+  /// **'This changes the terminal backend for this profile.'**
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile;
+
+  /// Capability administration: Use backend
+  ///
+  /// In en, this message translates to:
+  /// **'Use backend'**
+  String get rel_ops_cap_use_backend;
+
+  /// Capability administration: Select
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get rel_ops_cap_select;
+
+  /// Capability administration: Browser vault
+  ///
+  /// In en, this message translates to:
+  /// **'Browser vault'**
+  String get rel_ops_cap_browser_vault;
+
+  /// Capability administration: Saved site logins, addresses and cards. Passwords stay in the secure fields and are not listed here.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved site logins, addresses and cards. Passwords stay in the secure fields and are not listed here.'**
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here;
+
+  /// Capability administration: Remove saved item
+  ///
+  /// In en, this message translates to:
+  /// **'Remove saved item'**
+  String get rel_ops_cap_remove_saved_item;
+
+  /// Capability administration: Delete this item?
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this item?'**
+  String get rel_ops_cap_delete_this_item;
+
+  /// Capability administration: Unlocked
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked'**
+  String get rel_ops_cap_unlocked;
+
+  /// Capability administration: Locked
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get rel_ops_cap_locked;
+
+  /// Capability administration: Not detected
+  ///
+  /// In en, this message translates to:
+  /// **'Not detected'**
+  String get rel_ops_cap_not_detected;
+
+  /// Capability administration: Master password
+  ///
+  /// In en, this message translates to:
+  /// **'Master password'**
+  String get rel_ops_cap_master_password;
+
+  /// Capability administration: Login
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get rel_ops_cap_login;
+
+  /// Capability administration: Address
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get rel_ops_cap_address;
+
+  /// Capability administration: Card
+  ///
+  /// In en, this message translates to:
+  /// **'Card'**
+  String get rel_ops_cap_card;
+
+  /// Capability administration: Label
+  ///
+  /// In en, this message translates to:
+  /// **'Label'**
+  String get rel_ops_cap_label;
+
+  /// Capability administration: Site origin
+  ///
+  /// In en, this message translates to:
+  /// **'Site origin'**
+  String get rel_ops_cap_site_origin;
+
+  /// Capability administration: Identifier
+  ///
+  /// In en, this message translates to:
+  /// **'Identifier'**
+  String get rel_ops_cap_identifier;
+
+  /// Capability administration: Password
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get rel_ops_cap_password;
+
+  /// Capability administration: Authenticator key
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticator key'**
+  String get rel_ops_cap_authenticator_key;
+
+  /// Capability administration: Street
+  ///
+  /// In en, this message translates to:
+  /// **'Street'**
+  String get rel_ops_cap_street;
+
+  /// Capability administration: City
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get rel_ops_cap_city;
+
+  /// Capability administration: Postal code
+  ///
+  /// In en, this message translates to:
+  /// **'Postal code'**
+  String get rel_ops_cap_postal_code;
+
+  /// Capability administration: Country
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get rel_ops_cap_country;
+
+  /// Capability administration: Name on card
+  ///
+  /// In en, this message translates to:
+  /// **'Name on card'**
+  String get rel_ops_cap_name_on_card;
+
+  /// Capability administration: Card number
+  ///
+  /// In en, this message translates to:
+  /// **'Card number'**
+  String get rel_ops_cap_card_number;
+
+  /// Capability administration: Expiry month
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry month'**
+  String get rel_ops_cap_expiry_month;
+
+  /// Capability administration: Expiry year
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry year'**
+  String get rel_ops_cap_expiry_year;
+
+  /// Capability administration: Security code
+  ///
+  /// In en, this message translates to:
+  /// **'Security code'**
+  String get rel_ops_cap_security_code;
+
+  /// Capability administration: This gateway has no shared-metrics consent method.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway has no shared-metrics consent method.'**
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method;
+
+  /// Capability administration: Agent policy
+  ///
+  /// In en, this message translates to:
+  /// **'Agent policy'**
+  String get rel_ops_cap_agent_policy;
+
+  /// Capability administration: Loading policy
+  ///
+  /// In en, this message translates to:
+  /// **'Loading policy'**
+  String get rel_ops_cap_loading_policy;
+
+  /// Capability administration: Approval timeout
+  ///
+  /// In en, this message translates to:
+  /// **'Approval timeout'**
+  String get rel_ops_cap_approval_timeout;
+
+  /// Capability administration: Confirm MCP reloads
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm MCP reloads'**
+  String get rel_ops_cap_confirm_mcp_reloads;
+
+  /// Capability administration: Command allowlist
+  ///
+  /// In en, this message translates to:
+  /// **'Command allowlist'**
+  String get rel_ops_cap_command_allowlist;
+
+  /// Capability administration: File checkpoints
+  ///
+  /// In en, this message translates to:
+  /// **'File checkpoints'**
+  String get rel_ops_cap_file_checkpoints;
+
+  /// Capability administration: Checkpoint limit
+  ///
+  /// In en, this message translates to:
+  /// **'Checkpoint limit'**
+  String get rel_ops_cap_checkpoint_limit;
+
+  /// Capability administration: Browser private URLs
+  ///
+  /// In en, this message translates to:
+  /// **'Browser private URLs'**
+  String get rel_ops_cap_browser_private_urls;
+
+  /// Capability administration: Use my real browser profile
+  ///
+  /// In en, this message translates to:
+  /// **'Use my real browser profile'**
+  String get rel_ops_cap_use_my_real_browser_profile;
+
+  /// Capability administration: Save policy
+  ///
+  /// In en, this message translates to:
+  /// **'Save policy'**
+  String get rel_ops_cap_save_policy;
+
+  /// Capability administration: Shared metrics for this profile
+  ///
+  /// In en, this message translates to:
+  /// **'Shared metrics for this profile'**
+  String get rel_ops_cap_shared_metrics_for_this_profile;
+
+  /// Capability administration: Send shared metrics
+  ///
+  /// In en, this message translates to:
+  /// **'Send shared metrics'**
+  String get rel_ops_cap_send_shared_metrics;
+
+  /// Capability administration: Enter a label.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a label.'**
+  String get rel_ops_cap_error_enter_a_label;
+
+  /// Capability administration: Enter a valid URL like https://example.com.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid URL like https://example.com.'**
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com;
+
+  /// Capability administration: Enter the identifier and password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the identifier and password.'**
+  String get rel_ops_cap_error_enter_the_identifier_and_password;
+
+  /// Capability administration: Enter the card name, number, expiry and security code.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the card name, number, expiry and security code.'**
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code;
+
+  /// Capability administration: Enter the street, city, postal code and country.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the street, city, postal code and country.'**
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country;
+
+  /// Capability administration: The gateway returned a response that could not be read.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway returned a response that could not be read.'**
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read;
+
+  /// Capability administration: The gateway refused the request ({statusCode}).
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway refused the request ({statusCode}).'**
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  );
+
+  /// Missing gateway socket error. The method placeholder is a JSON-RPC wire method; do not translate it.
+  ///
+  /// In en, this message translates to:
+  /// **'This connection has no gateway socket, so {method} is unavailable.'**
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  );
+
+  /// Capability administration: Choose a skill.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a skill.'**
+  String get rel_ops_cap_error_choose_a_skill;
+
+  /// Capability administration: The skill text was not returned.
+  ///
+  /// In en, this message translates to:
+  /// **'The skill text was not returned.'**
+  String get rel_ops_cap_error_the_skill_text_was_not_returned;
+
+  /// Capability administration: The skill was not saved.
+  ///
+  /// In en, this message translates to:
+  /// **'The skill was not saved.'**
+  String get rel_ops_cap_error_the_skill_was_not_saved;
+
+  /// Capability administration: The skill was not archived.
+  ///
+  /// In en, this message translates to:
+  /// **'The skill was not archived.'**
+  String get rel_ops_cap_error_the_skill_was_not_archived;
+
+  /// Capability administration: The skill was not installed.
+  ///
+  /// In en, this message translates to:
+  /// **'The skill was not installed.'**
+  String get rel_ops_cap_error_the_skill_was_not_installed;
+
+  /// Capability administration: Skill updates did not start.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill updates did not start.'**
+  String get rel_ops_cap_error_skill_updates_did_not_start;
+
+  /// Capability administration: The skill was not removed.
+  ///
+  /// In en, this message translates to:
+  /// **'The skill was not removed.'**
+  String get rel_ops_cap_error_the_skill_was_not_removed;
+
+  /// Capability administration: Enter a skill or plugin identifier.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a skill or plugin identifier.'**
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier;
+
+  /// Capability administration: Choose a plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a plugin.'**
+  String get rel_ops_cap_error_choose_a_plugin;
+
+  /// Capability administration: The plugin was not removed.
+  ///
+  /// In en, this message translates to:
+  /// **'The plugin was not removed.'**
+  String get rel_ops_cap_error_the_plugin_was_not_removed;
+
+  /// Capability administration: The desktop half was not removed.
+  ///
+  /// In en, this message translates to:
+  /// **'The desktop half was not removed.'**
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed;
+
+  /// Capability administration: This gateway did not give the plugin a stable key.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway did not give the plugin a stable key.'**
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key;
+
+  /// Capability administration: The plugin was not changed.
+  ///
+  /// In en, this message translates to:
+  /// **'The plugin was not changed.'**
+  String get rel_ops_cap_error_the_plugin_was_not_changed;
+
+  /// Capability administration: Choose a server.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a server.'**
+  String get rel_ops_cap_error_choose_a_server;
+
+  /// Capability administration: Name the server.
+  ///
+  /// In en, this message translates to:
+  /// **'Name the server.'**
+  String get rel_ops_cap_error_name_the_server;
+
+  /// Capability administration: Give the server a command or an http(s) URL.
+  ///
+  /// In en, this message translates to:
+  /// **'Give the server a command or an http(s) URL.'**
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url;
+
+  /// Capability administration: Choose a toolset.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a toolset.'**
+  String get rel_ops_cap_error_choose_a_toolset;
+
+  /// Capability administration: Tool backend status was not returned.
+  ///
+  /// In en, this message translates to:
+  /// **'Tool backend status was not returned.'**
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned;
+
+  /// Capability administration: Choose a provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a provider.'**
+  String get rel_ops_cap_error_choose_a_provider;
+
+  /// Capability administration: This provider has no setup action.
+  ///
+  /// In en, this message translates to:
+  /// **'This provider has no setup action.'**
+  String get rel_ops_cap_error_this_provider_has_no_setup_action;
+
+  /// Capability administration: Setup did not start.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup did not start.'**
+  String get rel_ops_cap_error_setup_did_not_start;
+
+  /// Capability administration: Choose a terminal backend.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a terminal backend.'**
+  String get rel_ops_cap_error_choose_a_terminal_backend;
+
+  /// Capability administration: Name the connector.
+  ///
+  /// In en, this message translates to:
+  /// **'Name the connector.'**
+  String get rel_ops_cap_error_name_the_connector;
+
+  /// Capability administration: Choose an account.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an account.'**
+  String get rel_ops_cap_error_choose_an_account;
+
+  /// Capability administration: Reload the connector policy before changing tool grants.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload the connector policy before changing tool grants.'**
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants;
+
+  /// Capability administration: Choose an item.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an item.'**
+  String get rel_ops_cap_error_choose_an_item;
+
+  /// Capability administration: Choose a source.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a source.'**
+  String get rel_ops_cap_error_choose_a_source;
+
+  /// Capability administration: Enter the master password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the master password.'**
+  String get rel_ops_cap_error_enter_the_master_password;
+
+  /// Capability administration: Gateway config was not returned.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway config was not returned.'**
+  String get rel_ops_cap_error_gateway_config_was_not_returned;
+
+  /// Capability administration: Choose a known approval mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a known approval mode.'**
+  String get rel_ops_cap_error_choose_a_known_approval_mode;
+
+  /// Capability administration: Use a positive limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a positive limit.'**
+  String get rel_ops_cap_error_use_a_positive_limit;
+
+  /// Capability administration: The policy was not saved.
+  ///
+  /// In en, this message translates to:
+  /// **'The policy was not saved.'**
+  String get rel_ops_cap_error_the_policy_was_not_saved;
+
+  /// Capability _capabilityValue display label for wire value manual. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'manual'**
+  String get rel_ops_cap_value_manual;
+
+  /// Capability _capabilityValue display label for wire value smart. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'smart'**
+  String get rel_ops_cap_value_smart;
+
+  /// Capability _capabilityValue display label for wire value off. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'off'**
+  String get rel_ops_cap_value_off;
+
+  /// Capability _capabilityValue display label for wire value safe. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'safe'**
+  String get rel_ops_cap_value_safe;
+
+  /// Capability _capabilityValue display label for wire value caution. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'caution'**
+  String get rel_ops_cap_value_caution;
+
+  /// Capability _capabilityValue display label for wire value dangerous. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'dangerous'**
+  String get rel_ops_cap_value_dangerous;
+
+  /// Capability _capabilityValue display label for wire value blocked. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'blocked'**
+  String get rel_ops_cap_value_blocked;
+
+  /// Capability _capabilityValue display label for wire value clean. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'clean'**
+  String get rel_ops_cap_value_clean;
+
+  /// Capability _capabilityValue display label for wire value ready. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'ready'**
+  String get rel_ops_cap_value_ready;
+
+  /// Capability _capabilityValue display label for wire value available. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'available'**
+  String get rel_ops_cap_value_available;
+
+  /// Capability _capabilityValue display label for wire value unavailable. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'unavailable'**
+  String get rel_ops_cap_value_unavailable;
+
+  /// Capability _capabilityValue display label for wire value enabled. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'enabled'**
+  String get rel_ops_cap_value_enabled;
+
+  /// Capability _capabilityValue display label for wire value disabled. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'disabled'**
+  String get rel_ops_cap_value_disabled;
+
+  /// Capability _capabilityValue display label for wire value active. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'active'**
+  String get rel_ops_cap_value_active;
+
+  /// Capability _capabilityValue display label for wire value inactive. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'inactive'**
+  String get rel_ops_cap_value_inactive;
+
+  /// Capability _capabilityValue display label for wire value installed. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'installed'**
+  String get rel_ops_cap_value_installed;
+
+  /// Capability _capabilityValue display label for wire value missing. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'missing'**
+  String get rel_ops_cap_value_missing;
+
+  /// Capability _capabilityValue display label for wire value configured. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'configured'**
+  String get rel_ops_cap_value_configured;
+
+  /// Capability _capabilityValue display label for wire value not_configured. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'not_configured'**
+  String get rel_ops_cap_value_not_configured;
+
+  /// Capability _capabilityValue display label for wire value error. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'error'**
+  String get rel_ops_cap_value_error;
+
+  /// Capability _capabilityValue display label for wire value unknown. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'unknown'**
+  String get rel_ops_cap_value_unknown;
+
+  /// Capability _capabilityValue display label for wire value login. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'login'**
+  String get rel_ops_cap_value_login;
+
+  /// Capability _capabilityValue display label for wire value address. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'address'**
+  String get rel_ops_cap_value_address;
+
+  /// Capability _capabilityValue display label for wire value payment. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'payment'**
+  String get rel_ops_cap_value_payment;
 }
 
 class _AppLocalizationsDelegate

@@ -11498,6 +11498,562 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get release_core_file_save_hidden => '网关无法保存隐藏文件。';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return '安装已被阻止（$verdict）：$detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return '扫描结果：$verdict。安装前请确认 $requested。';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return '网关尚未确认 $requested 已安装。';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return '编辑 $name';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return '归档 $name？';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return '技能将被归档，可通过 $command 恢复。';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return '仍要安装 $name';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return '仍要安装扫描未通过的 $name？';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return '安全扫描已阻止 $name。此确认仅适用于 $name。';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return '接受功能权限不会绕过对 $name 的扫描。';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return '查看 $name 的扫描结果';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\n文件夹和预览脚本的授权保留在该计算机的 Desktop 应用中。在此移除插件不会撤销这些本地授权。';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return '移除 $name？';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return '探测 $name：$tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return '保存 $connector 的工具授权';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return '$name 的后端';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return '使用 $name？';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return '解锁 $name';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => '功能';
+
+  @override
+  String get rel_ops_cap_plugins => '插件';
+
+  @override
+  String get rel_ops_cap_connectors => '连接器';
+
+  @override
+  String get rel_ops_cap_backends => '后端';
+
+  @override
+  String get rel_ops_cap_save_skill => '保存技能';
+
+  @override
+  String get rel_ops_cap_archive => '归档';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Hub 标识符';
+
+  @override
+  String get rel_ops_cap_install => '安装';
+
+  @override
+  String get rel_ops_cap_update_all => '全部更新';
+
+  @override
+  String get rel_ops_cap_unlock => '解锁';
+
+  @override
+  String get rel_ops_cap_lock => '锁定';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      '此更新会添加功能。尚未进行任何更改。';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin => '扫描已阻止此插件。';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => '插件未更改。';
+
+  @override
+  String get rel_ops_cap_repository => '代码仓库';
+
+  @override
+  String get rel_ops_cap_install_plugin => '安装插件';
+
+  @override
+  String get rel_ops_cap_update_plugins => '更新插件';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => '接受功能权限';
+
+  @override
+  String get rel_ops_cap_update => '更新';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => '移除桌面端组件';
+
+  @override
+  String get rel_ops_cap_server_name => '服务器名称';
+
+  @override
+  String get rel_ops_cap_command => '命令';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => '添加服务器';
+
+  @override
+  String get rel_ops_cap_probe => '探测';
+
+  @override
+  String get rel_ops_cap_probe_failed => '探测失败。';
+
+  @override
+  String get rel_ops_cap_logs => '日志';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'MCP 日志';
+
+  @override
+  String get rel_ops_cap_connector => '连接器';
+
+  @override
+  String get rel_ops_cap_account_alias => '账户别名';
+
+  @override
+  String get rel_ops_cap_link_account => '关联账户';
+
+  @override
+  String get rel_ops_cap_remove_account => '移除账户';
+
+  @override
+  String get rel_ops_cap_tool_connector => '工具连接器';
+
+  @override
+  String get rel_ops_cap_load_tools => '加载工具';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => '保存工具授权';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      '此策略没有成员修订版本，因此工具授权保持不变。';
+
+  @override
+  String get rel_ops_cap_active => '使用中';
+
+  @override
+  String get rel_ops_cap_use => '使用';
+
+  @override
+  String get rel_ops_cap_run_setup => '运行设置';
+
+  @override
+  String get rel_ops_cap_terminal_backends => '终端后端';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      '这会更改此配置文件的终端后端。';
+
+  @override
+  String get rel_ops_cap_use_backend => '使用后端';
+
+  @override
+  String get rel_ops_cap_select => '选择';
+
+  @override
+  String get rel_ops_cap_browser_vault => '浏览器保险库';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      '已保存的网站登录信息、地址和银行卡。密码保留在安全字段中，不会在此列出。';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => '移除已保存的项目';
+
+  @override
+  String get rel_ops_cap_delete_this_item => '删除此项目？';
+
+  @override
+  String get rel_ops_cap_unlocked => '已解锁';
+
+  @override
+  String get rel_ops_cap_locked => '已锁定';
+
+  @override
+  String get rel_ops_cap_not_detected => '未检测到';
+
+  @override
+  String get rel_ops_cap_master_password => '主密码';
+
+  @override
+  String get rel_ops_cap_login => '登录信息';
+
+  @override
+  String get rel_ops_cap_address => '地址';
+
+  @override
+  String get rel_ops_cap_card => '银行卡';
+
+  @override
+  String get rel_ops_cap_label => '标签';
+
+  @override
+  String get rel_ops_cap_site_origin => '网站源';
+
+  @override
+  String get rel_ops_cap_identifier => '标识符';
+
+  @override
+  String get rel_ops_cap_password => '密码';
+
+  @override
+  String get rel_ops_cap_authenticator_key => '身份验证密钥';
+
+  @override
+  String get rel_ops_cap_street => '街道';
+
+  @override
+  String get rel_ops_cap_city => '城市';
+
+  @override
+  String get rel_ops_cap_postal_code => '邮政编码';
+
+  @override
+  String get rel_ops_cap_country => '国家或地区';
+
+  @override
+  String get rel_ops_cap_name_on_card => '持卡人姓名';
+
+  @override
+  String get rel_ops_cap_card_number => '卡号';
+
+  @override
+  String get rel_ops_cap_expiry_month => '到期月份';
+
+  @override
+  String get rel_ops_cap_expiry_year => '到期年份';
+
+  @override
+  String get rel_ops_cap_security_code => '安全码';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      '此网关没有共享指标的同意授权方法。';
+
+  @override
+  String get rel_ops_cap_agent_policy => '智能体策略';
+
+  @override
+  String get rel_ops_cap_loading_policy => '正在加载策略';
+
+  @override
+  String get rel_ops_cap_approval_timeout => '审批超时';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => '确认 MCP 重新加载';
+
+  @override
+  String get rel_ops_cap_command_allowlist => '命令允许列表';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => '文件检查点';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => '检查点上限';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => '浏览器私有 URL';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile => '使用我的真实浏览器配置文件';
+
+  @override
+  String get rel_ops_cap_save_policy => '保存策略';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile => '此配置文件的共享指标';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => '发送共享指标';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => '请输入标签。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      '请输入有效的 URL，例如 https://example.com。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      '请输入标识符和密码。';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      '请输入持卡人姓名、卡号、有效期和安全码。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      '请输入街道、城市、邮政编码和国家或地区。';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      '网关返回了无法读取的响应。';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return '网关拒绝了请求（$statusCode）。';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return '此连接没有网关套接字，因此 $method 不可用。';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => '请选择技能。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned => '未返回技能文本。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved => '技能未保存。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived => '技能未归档。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed => '技能未安装。';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start => '技能更新未启动。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed => '技能未移除。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      '请输入技能或插件标识符。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => '请选择插件。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed => '插件未移除。';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed => '桌面端组件未移除。';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      '此网关未为插件分配稳定的键。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed => '插件未更改。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => '请选择服务器。';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => '请为服务器命名。';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      '请为服务器提供命令或 http(s) URL。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset => '请选择工具集。';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      '未返回工具后端状态。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => '请选择提供商。';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      '此提供商没有设置操作。';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => '设置未启动。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend => '请选择终端后端。';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => '请为连接器命名。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => '请选择账户。';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      '更改工具授权前，请重新加载连接器策略。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => '请选择项目。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => '请选择来源。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password => '请输入主密码。';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned => '未返回网关配置。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode => '请选择已知的审批模式。';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit => '请使用大于零的上限。';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved => '策略未保存。';
+
+  @override
+  String get rel_ops_cap_value_manual => '手动';
+
+  @override
+  String get rel_ops_cap_value_smart => '智能';
+
+  @override
+  String get rel_ops_cap_value_off => '关闭';
+
+  @override
+  String get rel_ops_cap_value_safe => '安全';
+
+  @override
+  String get rel_ops_cap_value_caution => '谨慎';
+
+  @override
+  String get rel_ops_cap_value_dangerous => '危险';
+
+  @override
+  String get rel_ops_cap_value_blocked => '已阻止';
+
+  @override
+  String get rel_ops_cap_value_clean => '无威胁';
+
+  @override
+  String get rel_ops_cap_value_ready => '就绪';
+
+  @override
+  String get rel_ops_cap_value_available => '可用';
+
+  @override
+  String get rel_ops_cap_value_unavailable => '不可用';
+
+  @override
+  String get rel_ops_cap_value_enabled => '已启用';
+
+  @override
+  String get rel_ops_cap_value_disabled => '已禁用';
+
+  @override
+  String get rel_ops_cap_value_active => '使用中';
+
+  @override
+  String get rel_ops_cap_value_inactive => '未使用';
+
+  @override
+  String get rel_ops_cap_value_installed => '已安装';
+
+  @override
+  String get rel_ops_cap_value_missing => '缺失';
+
+  @override
+  String get rel_ops_cap_value_configured => '已配置';
+
+  @override
+  String get rel_ops_cap_value_not_configured => '未配置';
+
+  @override
+  String get rel_ops_cap_value_error => '错误';
+
+  @override
+  String get rel_ops_cap_value_unknown => '未知';
+
+  @override
+  String get rel_ops_cap_value_login => '登录信息';
+
+  @override
+  String get rel_ops_cap_value_address => '地址';
+
+  @override
+  String get rel_ops_cap_value_payment => '支付';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -22994,6 +23550,562 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get release_core_file_save_hidden => '网关无法保存隐藏文件。';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return '安装已被阻止（$verdict）：$detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return '扫描结果：$verdict。安装前请确认 $requested。';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return '网关尚未确认 $requested 已安装。';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return '编辑 $name';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return '归档 $name？';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return '技能将被归档，可通过 $command 恢复。';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return '仍要安装 $name';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return '仍要安装扫描未通过的 $name？';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return '安全扫描已阻止 $name。此确认仅适用于 $name。';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return '接受功能权限不会绕过对 $name 的扫描。';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return '查看 $name 的扫描结果';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\n文件夹和预览脚本的授权保留在该计算机的 Desktop 应用中。在此移除插件不会撤销这些本地授权。';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return '移除 $name？';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return '探测 $name：$tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return '保存 $connector 的工具授权';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return '$name 的后端';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return '使用 $name？';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return '解锁 $name';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => '功能';
+
+  @override
+  String get rel_ops_cap_plugins => '插件';
+
+  @override
+  String get rel_ops_cap_connectors => '连接器';
+
+  @override
+  String get rel_ops_cap_backends => '后端';
+
+  @override
+  String get rel_ops_cap_save_skill => '保存技能';
+
+  @override
+  String get rel_ops_cap_archive => '归档';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Hub 标识符';
+
+  @override
+  String get rel_ops_cap_install => '安装';
+
+  @override
+  String get rel_ops_cap_update_all => '全部更新';
+
+  @override
+  String get rel_ops_cap_unlock => '解锁';
+
+  @override
+  String get rel_ops_cap_lock => '锁定';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      '此更新会添加功能。尚未进行任何更改。';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin => '扫描已阻止此插件。';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => '插件未更改。';
+
+  @override
+  String get rel_ops_cap_repository => '代码仓库';
+
+  @override
+  String get rel_ops_cap_install_plugin => '安装插件';
+
+  @override
+  String get rel_ops_cap_update_plugins => '更新插件';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => '接受功能权限';
+
+  @override
+  String get rel_ops_cap_update => '更新';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => '移除桌面端组件';
+
+  @override
+  String get rel_ops_cap_server_name => '服务器名称';
+
+  @override
+  String get rel_ops_cap_command => '命令';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => '添加服务器';
+
+  @override
+  String get rel_ops_cap_probe => '探测';
+
+  @override
+  String get rel_ops_cap_probe_failed => '探测失败。';
+
+  @override
+  String get rel_ops_cap_logs => '日志';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'MCP 日志';
+
+  @override
+  String get rel_ops_cap_connector => '连接器';
+
+  @override
+  String get rel_ops_cap_account_alias => '账户别名';
+
+  @override
+  String get rel_ops_cap_link_account => '关联账户';
+
+  @override
+  String get rel_ops_cap_remove_account => '移除账户';
+
+  @override
+  String get rel_ops_cap_tool_connector => '工具连接器';
+
+  @override
+  String get rel_ops_cap_load_tools => '加载工具';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => '保存工具授权';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      '此策略没有成员修订版本，因此工具授权保持不变。';
+
+  @override
+  String get rel_ops_cap_active => '使用中';
+
+  @override
+  String get rel_ops_cap_use => '使用';
+
+  @override
+  String get rel_ops_cap_run_setup => '运行设置';
+
+  @override
+  String get rel_ops_cap_terminal_backends => '终端后端';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      '这会更改此配置文件的终端后端。';
+
+  @override
+  String get rel_ops_cap_use_backend => '使用后端';
+
+  @override
+  String get rel_ops_cap_select => '选择';
+
+  @override
+  String get rel_ops_cap_browser_vault => '浏览器保险库';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      '已保存的网站登录信息、地址和银行卡。密码保留在安全字段中，不会在此列出。';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => '移除已保存的项目';
+
+  @override
+  String get rel_ops_cap_delete_this_item => '删除此项目？';
+
+  @override
+  String get rel_ops_cap_unlocked => '已解锁';
+
+  @override
+  String get rel_ops_cap_locked => '已锁定';
+
+  @override
+  String get rel_ops_cap_not_detected => '未检测到';
+
+  @override
+  String get rel_ops_cap_master_password => '主密码';
+
+  @override
+  String get rel_ops_cap_login => '登录信息';
+
+  @override
+  String get rel_ops_cap_address => '地址';
+
+  @override
+  String get rel_ops_cap_card => '银行卡';
+
+  @override
+  String get rel_ops_cap_label => '标签';
+
+  @override
+  String get rel_ops_cap_site_origin => '网站源';
+
+  @override
+  String get rel_ops_cap_identifier => '标识符';
+
+  @override
+  String get rel_ops_cap_password => '密码';
+
+  @override
+  String get rel_ops_cap_authenticator_key => '身份验证密钥';
+
+  @override
+  String get rel_ops_cap_street => '街道';
+
+  @override
+  String get rel_ops_cap_city => '城市';
+
+  @override
+  String get rel_ops_cap_postal_code => '邮政编码';
+
+  @override
+  String get rel_ops_cap_country => '国家或地区';
+
+  @override
+  String get rel_ops_cap_name_on_card => '持卡人姓名';
+
+  @override
+  String get rel_ops_cap_card_number => '卡号';
+
+  @override
+  String get rel_ops_cap_expiry_month => '到期月份';
+
+  @override
+  String get rel_ops_cap_expiry_year => '到期年份';
+
+  @override
+  String get rel_ops_cap_security_code => '安全码';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      '此网关没有共享指标的同意授权方法。';
+
+  @override
+  String get rel_ops_cap_agent_policy => '智能体策略';
+
+  @override
+  String get rel_ops_cap_loading_policy => '正在加载策略';
+
+  @override
+  String get rel_ops_cap_approval_timeout => '审批超时';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => '确认 MCP 重新加载';
+
+  @override
+  String get rel_ops_cap_command_allowlist => '命令允许列表';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => '文件检查点';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => '检查点上限';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => '浏览器私有 URL';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile => '使用我的真实浏览器配置文件';
+
+  @override
+  String get rel_ops_cap_save_policy => '保存策略';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile => '此配置文件的共享指标';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => '发送共享指标';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => '请输入标签。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      '请输入有效的 URL，例如 https://example.com。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      '请输入标识符和密码。';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      '请输入持卡人姓名、卡号、有效期和安全码。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      '请输入街道、城市、邮政编码和国家或地区。';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      '网关返回了无法读取的响应。';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return '网关拒绝了请求（$statusCode）。';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return '此连接没有网关套接字，因此 $method 不可用。';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => '请选择技能。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned => '未返回技能文本。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved => '技能未保存。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived => '技能未归档。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed => '技能未安装。';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start => '技能更新未启动。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed => '技能未移除。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      '请输入技能或插件标识符。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => '请选择插件。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed => '插件未移除。';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed => '桌面端组件未移除。';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      '此网关未为插件分配稳定的键。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed => '插件未更改。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => '请选择服务器。';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => '请为服务器命名。';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      '请为服务器提供命令或 http(s) URL。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset => '请选择工具集。';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      '未返回工具后端状态。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => '请选择提供商。';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      '此提供商没有设置操作。';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => '设置未启动。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend => '请选择终端后端。';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => '请为连接器命名。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => '请选择账户。';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      '更改工具授权前，请重新加载连接器策略。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => '请选择项目。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => '请选择来源。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password => '请输入主密码。';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned => '未返回网关配置。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode => '请选择已知的审批模式。';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit => '请使用大于零的上限。';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved => '策略未保存。';
+
+  @override
+  String get rel_ops_cap_value_manual => '手动';
+
+  @override
+  String get rel_ops_cap_value_smart => '智能';
+
+  @override
+  String get rel_ops_cap_value_off => '关闭';
+
+  @override
+  String get rel_ops_cap_value_safe => '安全';
+
+  @override
+  String get rel_ops_cap_value_caution => '谨慎';
+
+  @override
+  String get rel_ops_cap_value_dangerous => '危险';
+
+  @override
+  String get rel_ops_cap_value_blocked => '已阻止';
+
+  @override
+  String get rel_ops_cap_value_clean => '无威胁';
+
+  @override
+  String get rel_ops_cap_value_ready => '就绪';
+
+  @override
+  String get rel_ops_cap_value_available => '可用';
+
+  @override
+  String get rel_ops_cap_value_unavailable => '不可用';
+
+  @override
+  String get rel_ops_cap_value_enabled => '已启用';
+
+  @override
+  String get rel_ops_cap_value_disabled => '已禁用';
+
+  @override
+  String get rel_ops_cap_value_active => '使用中';
+
+  @override
+  String get rel_ops_cap_value_inactive => '未使用';
+
+  @override
+  String get rel_ops_cap_value_installed => '已安装';
+
+  @override
+  String get rel_ops_cap_value_missing => '缺失';
+
+  @override
+  String get rel_ops_cap_value_configured => '已配置';
+
+  @override
+  String get rel_ops_cap_value_not_configured => '未配置';
+
+  @override
+  String get rel_ops_cap_value_error => '错误';
+
+  @override
+  String get rel_ops_cap_value_unknown => '未知';
+
+  @override
+  String get rel_ops_cap_value_login => '登录信息';
+
+  @override
+  String get rel_ops_cap_value_address => '地址';
+
+  @override
+  String get rel_ops_cap_value_payment => '支付';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -34494,4 +35606,560 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get release_core_file_save_hidden => '閘道無法儲存隱藏檔案。';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return '安裝已遭封鎖（$verdict）：$detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return '掃描結果：$verdict。安裝前請確認 $requested。';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return '閘道尚未確認 $requested 已安裝。';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return '編輯 $name';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return '封存 $name？';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return '技能將被封存，可透過 $command 還原。';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return '仍要安裝 $name';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return '仍要安裝未通過掃描的 $name？';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return '安全掃描已封鎖 $name。此確認僅適用於 $name。';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return '接受功能權限不會略過對 $name 的掃描。';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return '檢視 $name 的掃描結果';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\n資料夾和預覽指令碼的授權會保留在該電腦的 Desktop 應用程式中。在此移除外掛程式不會撤銷這些本機授權。';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return '移除 $name？';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return '探測 $name：$tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return '儲存 $connector 的工具授權';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return '$name 的後端';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return '使用 $name？';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return '解鎖 $name';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => '功能';
+
+  @override
+  String get rel_ops_cap_plugins => '外掛程式';
+
+  @override
+  String get rel_ops_cap_connectors => '連接器';
+
+  @override
+  String get rel_ops_cap_backends => '後端';
+
+  @override
+  String get rel_ops_cap_save_skill => '儲存技能';
+
+  @override
+  String get rel_ops_cap_archive => '封存';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Hub 識別碼';
+
+  @override
+  String get rel_ops_cap_install => '安裝';
+
+  @override
+  String get rel_ops_cap_update_all => '全部更新';
+
+  @override
+  String get rel_ops_cap_unlock => '解鎖';
+
+  @override
+  String get rel_ops_cap_lock => '鎖定';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      '此更新會新增功能。尚未進行任何變更。';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin => '掃描已封鎖此外掛程式。';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => '外掛程式未變更。';
+
+  @override
+  String get rel_ops_cap_repository => '程式碼儲存庫';
+
+  @override
+  String get rel_ops_cap_install_plugin => '安裝外掛程式';
+
+  @override
+  String get rel_ops_cap_update_plugins => '更新外掛程式';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => '接受功能權限';
+
+  @override
+  String get rel_ops_cap_update => '更新';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => '移除桌面端元件';
+
+  @override
+  String get rel_ops_cap_server_name => '伺服器名稱';
+
+  @override
+  String get rel_ops_cap_command => '命令';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => '新增伺服器';
+
+  @override
+  String get rel_ops_cap_probe => '探測';
+
+  @override
+  String get rel_ops_cap_probe_failed => '探測失敗。';
+
+  @override
+  String get rel_ops_cap_logs => '記錄';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'MCP 記錄';
+
+  @override
+  String get rel_ops_cap_connector => '連接器';
+
+  @override
+  String get rel_ops_cap_account_alias => '帳戶別名';
+
+  @override
+  String get rel_ops_cap_link_account => '連結帳戶';
+
+  @override
+  String get rel_ops_cap_remove_account => '移除帳戶';
+
+  @override
+  String get rel_ops_cap_tool_connector => '工具連接器';
+
+  @override
+  String get rel_ops_cap_load_tools => '載入工具';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => '儲存工具授權';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      '此原則沒有成員修訂版本，因此工具授權維持不變。';
+
+  @override
+  String get rel_ops_cap_active => '使用中';
+
+  @override
+  String get rel_ops_cap_use => '使用';
+
+  @override
+  String get rel_ops_cap_run_setup => '執行設定';
+
+  @override
+  String get rel_ops_cap_terminal_backends => '終端機後端';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      '這會變更此設定檔的終端機後端。';
+
+  @override
+  String get rel_ops_cap_use_backend => '使用後端';
+
+  @override
+  String get rel_ops_cap_select => '選取';
+
+  @override
+  String get rel_ops_cap_browser_vault => '瀏覽器保險庫';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      '已儲存的網站登入資訊、地址和付款卡。密碼會保留在安全欄位中，不會在此列出。';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => '移除已儲存的項目';
+
+  @override
+  String get rel_ops_cap_delete_this_item => '刪除此項目？';
+
+  @override
+  String get rel_ops_cap_unlocked => '已解鎖';
+
+  @override
+  String get rel_ops_cap_locked => '已鎖定';
+
+  @override
+  String get rel_ops_cap_not_detected => '未偵測到';
+
+  @override
+  String get rel_ops_cap_master_password => '主密碼';
+
+  @override
+  String get rel_ops_cap_login => '登入資訊';
+
+  @override
+  String get rel_ops_cap_address => '地址';
+
+  @override
+  String get rel_ops_cap_card => '付款卡';
+
+  @override
+  String get rel_ops_cap_label => '標籤';
+
+  @override
+  String get rel_ops_cap_site_origin => '網站來源';
+
+  @override
+  String get rel_ops_cap_identifier => '識別碼';
+
+  @override
+  String get rel_ops_cap_password => '密碼';
+
+  @override
+  String get rel_ops_cap_authenticator_key => '驗證器金鑰';
+
+  @override
+  String get rel_ops_cap_street => '街道';
+
+  @override
+  String get rel_ops_cap_city => '城市';
+
+  @override
+  String get rel_ops_cap_postal_code => '郵遞區號';
+
+  @override
+  String get rel_ops_cap_country => '國家或地區';
+
+  @override
+  String get rel_ops_cap_name_on_card => '持卡人姓名';
+
+  @override
+  String get rel_ops_cap_card_number => '卡號';
+
+  @override
+  String get rel_ops_cap_expiry_month => '到期月份';
+
+  @override
+  String get rel_ops_cap_expiry_year => '到期年份';
+
+  @override
+  String get rel_ops_cap_security_code => '安全碼';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      '此閘道沒有共用指標的同意授權方法。';
+
+  @override
+  String get rel_ops_cap_agent_policy => '代理程式原則';
+
+  @override
+  String get rel_ops_cap_loading_policy => '正在載入原則';
+
+  @override
+  String get rel_ops_cap_approval_timeout => '核准逾時';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => '確認 MCP 重新載入';
+
+  @override
+  String get rel_ops_cap_command_allowlist => '命令允許清單';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => '檔案檢查點';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => '檢查點上限';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => '瀏覽器私人 URL';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile => '使用我的實際瀏覽器設定檔';
+
+  @override
+  String get rel_ops_cap_save_policy => '儲存原則';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile => '此設定檔的共用指標';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => '傳送共用指標';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => '請輸入標籤。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      '請輸入有效的 URL，例如 https://example.com。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      '請輸入識別碼和密碼。';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      '請輸入持卡人姓名、卡號、有效期限和安全碼。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      '請輸入街道、城市、郵遞區號和國家或地區。';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      '閘道傳回了無法讀取的回應。';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return '閘道拒絕了要求（$statusCode）。';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return '此連線沒有閘道通訊端，因此無法使用 $method。';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => '請選擇技能。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned => '未傳回技能文字。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved => '技能未儲存。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived => '技能未封存。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed => '技能未安裝。';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start => '技能更新未啟動。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed => '技能未移除。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      '請輸入技能或外掛程式識別碼。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => '請選擇外掛程式。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed => '外掛程式未移除。';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed => '桌面端元件未移除。';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      '此閘道未為外掛程式指派穩定的索引鍵。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed => '外掛程式未變更。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => '請選擇伺服器。';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => '請為伺服器命名。';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      '請為伺服器提供命令或 http(s) URL。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset => '請選擇工具組。';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      '未傳回工具後端狀態。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => '請選擇供應商。';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      '此供應商沒有設定動作。';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => '設定未啟動。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend => '請選擇終端機後端。';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => '請為連接器命名。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => '請選擇帳戶。';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      '變更工具授權前，請重新載入連接器原則。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => '請選擇項目。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => '請選擇來源。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password => '請輸入主密碼。';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned => '未傳回閘道設定。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode => '請選擇已知的核准模式。';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit => '請使用大於零的上限。';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved => '原則未儲存。';
+
+  @override
+  String get rel_ops_cap_value_manual => '手動';
+
+  @override
+  String get rel_ops_cap_value_smart => '智慧';
+
+  @override
+  String get rel_ops_cap_value_off => '關閉';
+
+  @override
+  String get rel_ops_cap_value_safe => '安全';
+
+  @override
+  String get rel_ops_cap_value_caution => '謹慎';
+
+  @override
+  String get rel_ops_cap_value_dangerous => '危險';
+
+  @override
+  String get rel_ops_cap_value_blocked => '已封鎖';
+
+  @override
+  String get rel_ops_cap_value_clean => '無威脅';
+
+  @override
+  String get rel_ops_cap_value_ready => '就緒';
+
+  @override
+  String get rel_ops_cap_value_available => '可用';
+
+  @override
+  String get rel_ops_cap_value_unavailable => '無法使用';
+
+  @override
+  String get rel_ops_cap_value_enabled => '已啟用';
+
+  @override
+  String get rel_ops_cap_value_disabled => '已停用';
+
+  @override
+  String get rel_ops_cap_value_active => '使用中';
+
+  @override
+  String get rel_ops_cap_value_inactive => '未使用';
+
+  @override
+  String get rel_ops_cap_value_installed => '已安裝';
+
+  @override
+  String get rel_ops_cap_value_missing => '缺少';
+
+  @override
+  String get rel_ops_cap_value_configured => '已設定';
+
+  @override
+  String get rel_ops_cap_value_not_configured => '未設定';
+
+  @override
+  String get rel_ops_cap_value_error => '錯誤';
+
+  @override
+  String get rel_ops_cap_value_unknown => '未知';
+
+  @override
+  String get rel_ops_cap_value_login => '登入資訊';
+
+  @override
+  String get rel_ops_cap_value_address => '地址';
+
+  @override
+  String get rel_ops_cap_value_payment => '付款';
 }

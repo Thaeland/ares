@@ -12025,4 +12025,571 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'لا يمكن للبوابة حفظ الملفات المخفية.';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return 'حُظر التثبيت ($verdict): $detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return 'نتيجة الفحص: $verdict. أكّد $requested قبل التثبيت.';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return 'لم تؤكد البوابة تثبيت $requested.';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return 'تعديل $name';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return 'أرشفة $name؟';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return 'ستتم أرشفة المهارة ويمكن استعادتها باستخدام $command.';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return 'تثبيت $name على أي حال';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return 'تثبيت $name رغم نتيجة الفحص؟';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return 'حظر فحص الأمان $name. يسري هذا التأكيد على $name فقط.';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return 'قبول الإمكانات لا يتجاوز فحص $name.';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return 'مراجعة فحص $name';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\nتبقى أذونات المجلدات وسكربتات المعاينة في تطبيق Desktop على ذلك الحاسوب. إزالة الملحق هنا لا تلغي تلك الأذونات المحلية.';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return 'إزالة $name؟';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return 'اختبار اتصال $name: $tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return 'حفظ أذونات الأدوات للموصّل $connector';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return 'محرّكات $name';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return 'استخدام $name؟';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return 'فتح قفل $name';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => 'الإمكانات';
+
+  @override
+  String get rel_ops_cap_plugins => 'الملحقات';
+
+  @override
+  String get rel_ops_cap_connectors => 'الموصّلات';
+
+  @override
+  String get rel_ops_cap_backends => 'المحرّكات';
+
+  @override
+  String get rel_ops_cap_save_skill => 'حفظ المهارة';
+
+  @override
+  String get rel_ops_cap_archive => 'أرشفة';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'معرّف Hub';
+
+  @override
+  String get rel_ops_cap_install => 'تثبيت';
+
+  @override
+  String get rel_ops_cap_update_all => 'تحديث الكل';
+
+  @override
+  String get rel_ops_cap_unlock => 'فتح القفل';
+
+  @override
+  String get rel_ops_cap_lock => 'قفل';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      'يضيف هذا التحديث إمكانات. لم يتغير شيء بعد.';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin =>
+      'حظر الفحص هذا الملحق.';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => 'لم يتغير الملحق.';
+
+  @override
+  String get rel_ops_cap_repository => 'المستودع';
+
+  @override
+  String get rel_ops_cap_install_plugin => 'تثبيت ملحق';
+
+  @override
+  String get rel_ops_cap_update_plugins => 'تحديث الملحقات';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => 'قبول الإمكانات';
+
+  @override
+  String get rel_ops_cap_update => 'تحديث';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => 'إزالة مكوّن سطح المكتب';
+
+  @override
+  String get rel_ops_cap_server_name => 'اسم الخادم';
+
+  @override
+  String get rel_ops_cap_command => 'الأمر';
+
+  @override
+  String get rel_ops_cap_http_url => 'عنوان HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => 'إضافة خادم';
+
+  @override
+  String get rel_ops_cap_probe => 'اختبار الاتصال';
+
+  @override
+  String get rel_ops_cap_probe_failed => 'فشل اختبار الاتصال.';
+
+  @override
+  String get rel_ops_cap_logs => 'السجلات';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'سجل MCP';
+
+  @override
+  String get rel_ops_cap_connector => 'الموصّل';
+
+  @override
+  String get rel_ops_cap_account_alias => 'الاسم المستعار للحساب';
+
+  @override
+  String get rel_ops_cap_link_account => 'ربط حساب';
+
+  @override
+  String get rel_ops_cap_remove_account => 'إزالة الحساب';
+
+  @override
+  String get rel_ops_cap_tool_connector => 'موصّل الأدوات';
+
+  @override
+  String get rel_ops_cap_load_tools => 'تحميل الأدوات';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => 'حفظ أذونات الأدوات';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      'لا تتضمن هذه السياسة مراجعة للعضو، لذا تبقى أذونات الأدوات دون تغيير.';
+
+  @override
+  String get rel_ops_cap_active => 'نشط';
+
+  @override
+  String get rel_ops_cap_use => 'استخدام';
+
+  @override
+  String get rel_ops_cap_run_setup => 'تشغيل الإعداد';
+
+  @override
+  String get rel_ops_cap_terminal_backends => 'محرّكات الطرفية';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      'يغيّر هذا محرّك الطرفية لهذا الملف الشخصي.';
+
+  @override
+  String get rel_ops_cap_use_backend => 'استخدام المحرّك';
+
+  @override
+  String get rel_ops_cap_select => 'اختيار';
+
+  @override
+  String get rel_ops_cap_browser_vault => 'خزنة المتصفح';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      'بيانات الدخول إلى المواقع والعناوين والبطاقات المحفوظة. تبقى كلمات المرور في الحقول الآمنة ولا تُعرض هنا.';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => 'إزالة العنصر المحفوظ';
+
+  @override
+  String get rel_ops_cap_delete_this_item => 'حذف هذا العنصر؟';
+
+  @override
+  String get rel_ops_cap_unlocked => 'مفتوح القفل';
+
+  @override
+  String get rel_ops_cap_locked => 'مقفل';
+
+  @override
+  String get rel_ops_cap_not_detected => 'لم يُكتشف';
+
+  @override
+  String get rel_ops_cap_master_password => 'كلمة المرور الرئيسية';
+
+  @override
+  String get rel_ops_cap_login => 'بيانات الدخول';
+
+  @override
+  String get rel_ops_cap_address => 'العنوان';
+
+  @override
+  String get rel_ops_cap_card => 'البطاقة';
+
+  @override
+  String get rel_ops_cap_label => 'التسمية';
+
+  @override
+  String get rel_ops_cap_site_origin => 'أصل الموقع';
+
+  @override
+  String get rel_ops_cap_identifier => 'المعرّف';
+
+  @override
+  String get rel_ops_cap_password => 'كلمة المرور';
+
+  @override
+  String get rel_ops_cap_authenticator_key => 'مفتاح المصادقة';
+
+  @override
+  String get rel_ops_cap_street => 'الشارع';
+
+  @override
+  String get rel_ops_cap_city => 'المدينة';
+
+  @override
+  String get rel_ops_cap_postal_code => 'الرمز البريدي';
+
+  @override
+  String get rel_ops_cap_country => 'البلد';
+
+  @override
+  String get rel_ops_cap_name_on_card => 'الاسم على البطاقة';
+
+  @override
+  String get rel_ops_cap_card_number => 'رقم البطاقة';
+
+  @override
+  String get rel_ops_cap_expiry_month => 'شهر انتهاء الصلاحية';
+
+  @override
+  String get rel_ops_cap_expiry_year => 'سنة انتهاء الصلاحية';
+
+  @override
+  String get rel_ops_cap_security_code => 'رمز الأمان';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      'لا تتضمن هذه البوابة طريقة للموافقة على مشاركة المقاييس.';
+
+  @override
+  String get rel_ops_cap_agent_policy => 'سياسة الوكيل';
+
+  @override
+  String get rel_ops_cap_loading_policy => 'جارٍ تحميل السياسة';
+
+  @override
+  String get rel_ops_cap_approval_timeout => 'مهلة الموافقة';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => 'تأكيد إعادة تحميل MCP';
+
+  @override
+  String get rel_ops_cap_command_allowlist => 'قائمة الأوامر المسموح بها';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => 'نقاط استعادة الملفات';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => 'الحد الأقصى لنقاط الاستعادة';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => 'عناوين URL الخاصة في المتصفح';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile =>
+      'استخدام ملفي الشخصي الحقيقي للمتصفح';
+
+  @override
+  String get rel_ops_cap_save_policy => 'حفظ السياسة';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile =>
+      'المقاييس المشتركة لهذا الملف الشخصي';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => 'إرسال المقاييس المشتركة';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => 'أدخل تسمية.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      'أدخل عنوان URL صالحًا مثل https://example.com.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      'أدخل المعرّف وكلمة المرور.';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      'أدخل الاسم على البطاقة ورقمها وتاريخ انتهاء صلاحيتها ورمز الأمان.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      'أدخل الشارع والمدينة والرمز البريدي والبلد.';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      'أعادت البوابة استجابة تعذّرت قراءتها.';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return 'رفضت البوابة الطلب ($statusCode).';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return 'لا يتضمن هذا الاتصال مقبسًا للبوابة، لذا فإن $method غير متاح.';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => 'اختر مهارة.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned =>
+      'لم يُرجع نص المهارة.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved => 'لم تُحفظ المهارة.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived =>
+      'لم تُؤرشف المهارة.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed =>
+      'لم تُثبّت المهارة.';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start =>
+      'لم تبدأ تحديثات المهارات.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed => 'لم تُزل المهارة.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      'أدخل معرّف مهارة أو ملحق.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => 'اختر ملحقًا.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed => 'لم يُزل الملحق.';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed =>
+      'لم يُزل مكوّن سطح المكتب.';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      'لم تمنح هذه البوابة الملحق مفتاحًا ثابتًا.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed => 'لم يتغير الملحق.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => 'اختر خادمًا.';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => 'أدخل اسمًا للخادم.';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      'حدّد أمرًا أو عنوان http(s) URL للخادم.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset => 'اختر مجموعة أدوات.';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      'لم تُرجع حالة محرّك الأدوات.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => 'اختر مزوّدًا.';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      'لا يتضمن هذا المزوّد إجراء إعداد.';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => 'لم يبدأ الإعداد.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend => 'اختر محرّك طرفية.';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => 'أدخل اسمًا للموصّل.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => 'اختر حسابًا.';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      'أعد تحميل سياسة الموصّل قبل تغيير أذونات الأدوات.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => 'اختر عنصرًا.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => 'اختر مصدرًا.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password =>
+      'أدخل كلمة المرور الرئيسية.';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned =>
+      'لم تُرجع إعدادات البوابة.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode =>
+      'اختر وضع موافقة معروفًا.';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit => 'استخدم حدًا موجبًا.';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved => 'لم تُحفظ السياسة.';
+
+  @override
+  String get rel_ops_cap_value_manual => 'يدوي';
+
+  @override
+  String get rel_ops_cap_value_smart => 'ذكي';
+
+  @override
+  String get rel_ops_cap_value_off => 'متوقف';
+
+  @override
+  String get rel_ops_cap_value_safe => 'آمن';
+
+  @override
+  String get rel_ops_cap_value_caution => 'حذر';
+
+  @override
+  String get rel_ops_cap_value_dangerous => 'خطير';
+
+  @override
+  String get rel_ops_cap_value_blocked => 'محظور';
+
+  @override
+  String get rel_ops_cap_value_clean => 'خالٍ من التهديدات';
+
+  @override
+  String get rel_ops_cap_value_ready => 'جاهز';
+
+  @override
+  String get rel_ops_cap_value_available => 'متاح';
+
+  @override
+  String get rel_ops_cap_value_unavailable => 'غير متاح';
+
+  @override
+  String get rel_ops_cap_value_enabled => 'مفعّل';
+
+  @override
+  String get rel_ops_cap_value_disabled => 'معطّل';
+
+  @override
+  String get rel_ops_cap_value_active => 'نشط';
+
+  @override
+  String get rel_ops_cap_value_inactive => 'غير نشط';
+
+  @override
+  String get rel_ops_cap_value_installed => 'مثبّت';
+
+  @override
+  String get rel_ops_cap_value_missing => 'مفقود';
+
+  @override
+  String get rel_ops_cap_value_configured => 'مُعدّ';
+
+  @override
+  String get rel_ops_cap_value_not_configured => 'غير مُعدّ';
+
+  @override
+  String get rel_ops_cap_value_error => 'خطأ';
+
+  @override
+  String get rel_ops_cap_value_unknown => 'غير معروف';
+
+  @override
+  String get rel_ops_cap_value_login => 'بيانات الدخول';
+
+  @override
+  String get rel_ops_cap_value_address => 'عنوان';
+
+  @override
+  String get rel_ops_cap_value_payment => 'دفع';
 }

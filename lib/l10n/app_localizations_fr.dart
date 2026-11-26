@@ -12196,4 +12196,590 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'La passerelle ne peut pas enregistrer les fichiers masqués.';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return 'Installation bloquée ($verdict) : $detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return 'Résultat de l’analyse : $verdict. Confirmez $requested avant l’installation.';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return 'La passerelle n’a pas confirmé l’installation de $requested.';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return 'Modifier $name';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return 'Archiver $name ?';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return 'La compétence sera archivée et pourra être restaurée avec $command.';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return 'Installer $name quand même';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return 'Installer $name malgré l’analyse ?';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return 'L’analyse de sécurité a bloqué $name. Cette confirmation ne s’applique qu’à $name.';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return 'Accepter les capacités ne permet pas de contourner l’analyse de $name.';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return 'Consulter l’analyse de $name';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\nLes autorisations des dossiers et des scripts d’aperçu restent dans l’application Desktop de cet ordinateur. Supprimer le plugin ici ne révoque pas ces autorisations locales.';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return 'Supprimer $name ?';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return 'Test de $name : $tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return 'Enregistrer les autorisations des outils pour $connector';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return 'Moteurs pour $name';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return 'Utiliser $name ?';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return 'Déverrouiller $name';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => 'Capacités';
+
+  @override
+  String get rel_ops_cap_plugins => 'Plugins';
+
+  @override
+  String get rel_ops_cap_connectors => 'Connecteurs';
+
+  @override
+  String get rel_ops_cap_backends => 'Moteurs';
+
+  @override
+  String get rel_ops_cap_save_skill => 'Enregistrer la compétence';
+
+  @override
+  String get rel_ops_cap_archive => 'Archiver';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Identifiant du Hub';
+
+  @override
+  String get rel_ops_cap_install => 'Installer';
+
+  @override
+  String get rel_ops_cap_update_all => 'Tout mettre à jour';
+
+  @override
+  String get rel_ops_cap_unlock => 'Déverrouiller';
+
+  @override
+  String get rel_ops_cap_lock => 'Verrouiller';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      'Cette mise à jour ajoute des capacités. Rien n’a encore changé.';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin =>
+      'L’analyse a bloqué ce plugin.';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed =>
+      'Le plugin n’a pas été modifié.';
+
+  @override
+  String get rel_ops_cap_repository => 'Dépôt';
+
+  @override
+  String get rel_ops_cap_install_plugin => 'Installer un plugin';
+
+  @override
+  String get rel_ops_cap_update_plugins => 'Mettre à jour les plugins';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => 'Accepter les capacités';
+
+  @override
+  String get rel_ops_cap_update => 'Mettre à jour';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half =>
+      'Supprimer le composant de bureau';
+
+  @override
+  String get rel_ops_cap_server_name => 'Nom du serveur';
+
+  @override
+  String get rel_ops_cap_command => 'Commande';
+
+  @override
+  String get rel_ops_cap_http_url => 'URL HTTP';
+
+  @override
+  String get rel_ops_cap_add_server => 'Ajouter un serveur';
+
+  @override
+  String get rel_ops_cap_probe => 'Tester';
+
+  @override
+  String get rel_ops_cap_probe_failed => 'Échec du test.';
+
+  @override
+  String get rel_ops_cap_logs => 'Journaux';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'Journal MCP';
+
+  @override
+  String get rel_ops_cap_connector => 'Connecteur';
+
+  @override
+  String get rel_ops_cap_account_alias => 'Alias du compte';
+
+  @override
+  String get rel_ops_cap_link_account => 'Associer un compte';
+
+  @override
+  String get rel_ops_cap_remove_account => 'Supprimer le compte';
+
+  @override
+  String get rel_ops_cap_tool_connector => 'Connecteur d’outils';
+
+  @override
+  String get rel_ops_cap_load_tools => 'Charger les outils';
+
+  @override
+  String get rel_ops_cap_save_tool_grants =>
+      'Enregistrer les autorisations des outils';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      'Cette politique n’a pas de révision de membre ; les autorisations des outils restent donc inchangées.';
+
+  @override
+  String get rel_ops_cap_active => 'Actif';
+
+  @override
+  String get rel_ops_cap_use => 'Utiliser';
+
+  @override
+  String get rel_ops_cap_run_setup => 'Lancer la configuration';
+
+  @override
+  String get rel_ops_cap_terminal_backends => 'Moteurs du terminal';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      'Cela modifie le moteur du terminal pour ce profil.';
+
+  @override
+  String get rel_ops_cap_use_backend => 'Utiliser ce moteur';
+
+  @override
+  String get rel_ops_cap_select => 'Sélectionner';
+
+  @override
+  String get rel_ops_cap_browser_vault => 'Coffre-fort du navigateur';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      'Connexions aux sites, adresses et cartes enregistrées. Les mots de passe restent dans les champs sécurisés et ne sont pas affichés ici.';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => 'Supprimer l’élément enregistré';
+
+  @override
+  String get rel_ops_cap_delete_this_item => 'Supprimer cet élément ?';
+
+  @override
+  String get rel_ops_cap_unlocked => 'Déverrouillé';
+
+  @override
+  String get rel_ops_cap_locked => 'Verrouillé';
+
+  @override
+  String get rel_ops_cap_not_detected => 'Non détecté';
+
+  @override
+  String get rel_ops_cap_master_password => 'Mot de passe principal';
+
+  @override
+  String get rel_ops_cap_login => 'Identifiants de connexion';
+
+  @override
+  String get rel_ops_cap_address => 'Adresse';
+
+  @override
+  String get rel_ops_cap_card => 'Carte';
+
+  @override
+  String get rel_ops_cap_label => 'Libellé';
+
+  @override
+  String get rel_ops_cap_site_origin => 'Origine du site';
+
+  @override
+  String get rel_ops_cap_identifier => 'Identifiant';
+
+  @override
+  String get rel_ops_cap_password => 'Mot de passe';
+
+  @override
+  String get rel_ops_cap_authenticator_key => 'Clé d’authentification';
+
+  @override
+  String get rel_ops_cap_street => 'Rue';
+
+  @override
+  String get rel_ops_cap_city => 'Ville';
+
+  @override
+  String get rel_ops_cap_postal_code => 'Code postal';
+
+  @override
+  String get rel_ops_cap_country => 'Pays';
+
+  @override
+  String get rel_ops_cap_name_on_card => 'Nom sur la carte';
+
+  @override
+  String get rel_ops_cap_card_number => 'Numéro de carte';
+
+  @override
+  String get rel_ops_cap_expiry_month => 'Mois d’expiration';
+
+  @override
+  String get rel_ops_cap_expiry_year => 'Année d’expiration';
+
+  @override
+  String get rel_ops_cap_security_code => 'Code de sécurité';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      'Cette passerelle n’a pas de méthode de consentement au partage des métriques.';
+
+  @override
+  String get rel_ops_cap_agent_policy => 'Politique de l’agent';
+
+  @override
+  String get rel_ops_cap_loading_policy => 'Chargement de la politique';
+
+  @override
+  String get rel_ops_cap_approval_timeout => 'Délai d’approbation';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads =>
+      'Confirmer les rechargements MCP';
+
+  @override
+  String get rel_ops_cap_command_allowlist => 'Liste des commandes autorisées';
+
+  @override
+  String get rel_ops_cap_file_checkpoints =>
+      'Points de restauration des fichiers';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit =>
+      'Limite des points de restauration';
+
+  @override
+  String get rel_ops_cap_browser_private_urls =>
+      'URL privées dans le navigateur';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile =>
+      'Utiliser mon vrai profil de navigateur';
+
+  @override
+  String get rel_ops_cap_save_policy => 'Enregistrer la politique';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile =>
+      'Métriques partagées pour ce profil';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics =>
+      'Envoyer les métriques partagées';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => 'Saisissez un libellé.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      'Saisissez une URL valide, comme https://example.com.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      'Saisissez l’identifiant et le mot de passe.';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      'Saisissez le nom sur la carte, son numéro, sa date d’expiration et son code de sécurité.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      'Saisissez la rue, la ville, le code postal et le pays.';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      'La passerelle a renvoyé une réponse illisible.';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return 'La passerelle a refusé la requête ($statusCode).';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return 'Cette connexion n’a pas de socket de passerelle ; $method n’est donc pas disponible.';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => 'Choisissez une compétence.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned =>
+      'Le texte de la compétence n’a pas été renvoyé.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved =>
+      'La compétence n’a pas été enregistrée.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived =>
+      'La compétence n’a pas été archivée.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed =>
+      'La compétence n’a pas été installée.';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start =>
+      'Les mises à jour des compétences n’ont pas démarré.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed =>
+      'La compétence n’a pas été supprimée.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      'Saisissez un identifiant de compétence ou de plugin.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => 'Choisissez un plugin.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed =>
+      'Le plugin n’a pas été supprimé.';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed =>
+      'Le composant de bureau n’a pas été supprimé.';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      'Cette passerelle n’a pas attribué de clé stable au plugin.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed =>
+      'Le plugin n’a pas été modifié.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => 'Choisissez un serveur.';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => 'Donnez un nom au serveur.';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      'Indiquez une commande ou une URL http(s) pour le serveur.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset =>
+      'Choisissez un ensemble d’outils.';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      'L’état du moteur d’outils n’a pas été renvoyé.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider =>
+      'Choisissez un fournisseur.';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      'Ce fournisseur n’a pas d’action de configuration.';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start =>
+      'La configuration n’a pas démarré.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend =>
+      'Choisissez un moteur de terminal.';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector =>
+      'Donnez un nom au connecteur.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => 'Choisissez un compte.';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      'Rechargez la politique du connecteur avant de modifier les autorisations des outils.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => 'Choisissez un élément.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => 'Choisissez une source.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password =>
+      'Saisissez le mot de passe principal.';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned =>
+      'La configuration de la passerelle n’a pas été renvoyée.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode =>
+      'Choisissez un mode d’approbation connu.';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit =>
+      'Utilisez une limite positive.';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved =>
+      'La politique n’a pas été enregistrée.';
+
+  @override
+  String get rel_ops_cap_value_manual => 'manuelle';
+
+  @override
+  String get rel_ops_cap_value_smart => 'intelligente';
+
+  @override
+  String get rel_ops_cap_value_off => 'désactivé';
+
+  @override
+  String get rel_ops_cap_value_safe => 'sûr';
+
+  @override
+  String get rel_ops_cap_value_caution => 'prudence';
+
+  @override
+  String get rel_ops_cap_value_dangerous => 'dangereux';
+
+  @override
+  String get rel_ops_cap_value_blocked => 'bloqué';
+
+  @override
+  String get rel_ops_cap_value_clean => 'sans menace';
+
+  @override
+  String get rel_ops_cap_value_ready => 'prêt';
+
+  @override
+  String get rel_ops_cap_value_available => 'disponible';
+
+  @override
+  String get rel_ops_cap_value_unavailable => 'indisponible';
+
+  @override
+  String get rel_ops_cap_value_enabled => 'activé';
+
+  @override
+  String get rel_ops_cap_value_disabled => 'désactivé';
+
+  @override
+  String get rel_ops_cap_value_active => 'actif';
+
+  @override
+  String get rel_ops_cap_value_inactive => 'inactif';
+
+  @override
+  String get rel_ops_cap_value_installed => 'installé';
+
+  @override
+  String get rel_ops_cap_value_missing => 'manquant';
+
+  @override
+  String get rel_ops_cap_value_configured => 'configuré';
+
+  @override
+  String get rel_ops_cap_value_not_configured => 'non configuré';
+
+  @override
+  String get rel_ops_cap_value_error => 'erreur';
+
+  @override
+  String get rel_ops_cap_value_unknown => 'inconnu';
+
+  @override
+  String get rel_ops_cap_value_login => 'connexion';
+
+  @override
+  String get rel_ops_cap_value_address => 'adresse';
+
+  @override
+  String get rel_ops_cap_value_payment => 'paiement';
 }

@@ -11712,4 +11712,572 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get release_core_file_save_hidden => 'ゲートウェイでは隠しファイルを保存できません。';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return 'インストールがブロックされました（$verdict）：$detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return 'スキャン結果：$verdict。インストール前に $requested を確認してください。';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return 'ゲートウェイは $requested のインストールをまだ確認していません。';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return '$name を編集';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return '$name をアーカイブしますか？';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return 'スキルはアーカイブされ、$command で復元できます。';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return 'それでも $name をインストール';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return 'スキャン結果にかかわらず $name をインストールしますか？';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return 'セキュリティスキャンにより $name がブロックされました。この確認は $name にのみ適用されます。';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return '機能の許可を承認しても、$name のスキャン結果は無効になりません。';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return '$name のスキャン結果を確認';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\nフォルダーとプレビュースクリプトへの許可は、そのコンピューターの Desktop アプリに保持されます。ここでプラグインを削除しても、それらのローカルの許可は取り消されません。';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return '$name を削除しますか？';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return '$name の接続テスト：$tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return '$connector のツールの許可を保存';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return '$name のバックエンド';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return '$name を使用しますか？';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return '$name をロック解除';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => '機能';
+
+  @override
+  String get rel_ops_cap_plugins => 'プラグイン';
+
+  @override
+  String get rel_ops_cap_connectors => 'コネクター';
+
+  @override
+  String get rel_ops_cap_backends => 'バックエンド';
+
+  @override
+  String get rel_ops_cap_save_skill => 'スキルを保存';
+
+  @override
+  String get rel_ops_cap_archive => 'アーカイブ';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Hub 識別子';
+
+  @override
+  String get rel_ops_cap_install => 'インストール';
+
+  @override
+  String get rel_ops_cap_update_all => 'すべて更新';
+
+  @override
+  String get rel_ops_cap_unlock => 'ロック解除';
+
+  @override
+  String get rel_ops_cap_lock => 'ロック';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      'この更新では機能が追加されます。まだ何も変更されていません。';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin =>
+      'スキャンによりこのプラグインがブロックされました。';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => 'プラグインは変更されませんでした。';
+
+  @override
+  String get rel_ops_cap_repository => 'リポジトリ';
+
+  @override
+  String get rel_ops_cap_install_plugin => 'プラグインをインストール';
+
+  @override
+  String get rel_ops_cap_update_plugins => 'プラグインを更新';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => '機能の許可を承認';
+
+  @override
+  String get rel_ops_cap_update => '更新';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => 'デスクトップ側のコンポーネントを削除';
+
+  @override
+  String get rel_ops_cap_server_name => 'サーバー名';
+
+  @override
+  String get rel_ops_cap_command => 'コマンド';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => 'サーバーを追加';
+
+  @override
+  String get rel_ops_cap_probe => '接続テスト';
+
+  @override
+  String get rel_ops_cap_probe_failed => '接続テストに失敗しました。';
+
+  @override
+  String get rel_ops_cap_logs => 'ログ';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'MCP ログ';
+
+  @override
+  String get rel_ops_cap_connector => 'コネクター';
+
+  @override
+  String get rel_ops_cap_account_alias => 'アカウントの別名';
+
+  @override
+  String get rel_ops_cap_link_account => 'アカウントを連携';
+
+  @override
+  String get rel_ops_cap_remove_account => 'アカウントを削除';
+
+  @override
+  String get rel_ops_cap_tool_connector => 'ツールコネクター';
+
+  @override
+  String get rel_ops_cap_load_tools => 'ツールを読み込む';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => 'ツールの許可を保存';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      'このポリシーにはメンバーリビジョンがないため、ツールの許可は変更されません。';
+
+  @override
+  String get rel_ops_cap_active => '使用中';
+
+  @override
+  String get rel_ops_cap_use => '使用';
+
+  @override
+  String get rel_ops_cap_run_setup => 'セットアップを実行';
+
+  @override
+  String get rel_ops_cap_terminal_backends => 'ターミナルバックエンド';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      'このプロファイルのターミナルバックエンドが変更されます。';
+
+  @override
+  String get rel_ops_cap_use_backend => 'バックエンドを使用';
+
+  @override
+  String get rel_ops_cap_select => '選択';
+
+  @override
+  String get rel_ops_cap_browser_vault => 'ブラウザー保管庫';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      '保存されたサイトのログイン情報、住所、カード。パスワードは安全なフィールドに保持され、ここには表示されません。';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => '保存済みの項目を削除';
+
+  @override
+  String get rel_ops_cap_delete_this_item => 'この項目を削除しますか？';
+
+  @override
+  String get rel_ops_cap_unlocked => 'ロック解除済み';
+
+  @override
+  String get rel_ops_cap_locked => 'ロック中';
+
+  @override
+  String get rel_ops_cap_not_detected => '未検出';
+
+  @override
+  String get rel_ops_cap_master_password => 'マスターパスワード';
+
+  @override
+  String get rel_ops_cap_login => 'ログイン情報';
+
+  @override
+  String get rel_ops_cap_address => '住所';
+
+  @override
+  String get rel_ops_cap_card => 'カード';
+
+  @override
+  String get rel_ops_cap_label => 'ラベル';
+
+  @override
+  String get rel_ops_cap_site_origin => 'サイトのオリジン';
+
+  @override
+  String get rel_ops_cap_identifier => '識別子';
+
+  @override
+  String get rel_ops_cap_password => 'パスワード';
+
+  @override
+  String get rel_ops_cap_authenticator_key => '認証キー';
+
+  @override
+  String get rel_ops_cap_street => '町名・番地';
+
+  @override
+  String get rel_ops_cap_city => '市区町村';
+
+  @override
+  String get rel_ops_cap_postal_code => '郵便番号';
+
+  @override
+  String get rel_ops_cap_country => '国・地域';
+
+  @override
+  String get rel_ops_cap_name_on_card => 'カード名義';
+
+  @override
+  String get rel_ops_cap_card_number => 'カード番号';
+
+  @override
+  String get rel_ops_cap_expiry_month => '有効期限の月';
+
+  @override
+  String get rel_ops_cap_expiry_year => '有効期限の年';
+
+  @override
+  String get rel_ops_cap_security_code => 'セキュリティコード';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      'このゲートウェイには共有メトリクスへの同意を設定するメソッドがありません。';
+
+  @override
+  String get rel_ops_cap_agent_policy => 'エージェントポリシー';
+
+  @override
+  String get rel_ops_cap_loading_policy => 'ポリシーを読み込み中';
+
+  @override
+  String get rel_ops_cap_approval_timeout => '承認のタイムアウト';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => 'MCP の再読み込みを確認';
+
+  @override
+  String get rel_ops_cap_command_allowlist => 'コマンドの許可リスト';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => 'ファイルのチェックポイント';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => 'チェックポイントの上限';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => 'ブラウザーのプライベート URL';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile => '実際のブラウザープロファイルを使用';
+
+  @override
+  String get rel_ops_cap_save_policy => 'ポリシーを保存';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile => 'このプロファイルの共有メトリクス';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => '共有メトリクスを送信';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => 'ラベルを入力してください。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      'https://example.com のような有効な URL を入力してください。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      '識別子とパスワードを入力してください。';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      'カード名義、番号、有効期限、セキュリティコードを入力してください。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      '町名・番地、市区町村、郵便番号、国・地域を入力してください。';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      'ゲートウェイから読み取れない応答が返されました。';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return 'ゲートウェイがリクエストを拒否しました（$statusCode）。';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return 'この接続にはゲートウェイソケットがないため、$method は使用できません。';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => 'スキルを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned =>
+      'スキルのテキストが返されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved => 'スキルは保存されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived =>
+      'スキルはアーカイブされませんでした。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed =>
+      'スキルはインストールされませんでした。';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start =>
+      'スキルの更新は開始されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed => 'スキルは削除されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      'スキルまたはプラグインの識別子を入力してください。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => 'プラグインを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed =>
+      'プラグインは削除されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed =>
+      'デスクトップ側のコンポーネントは削除されませんでした。';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      'このゲートウェイはプラグインに安定したキーを割り当てませんでした。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed =>
+      'プラグインは変更されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => 'サーバーを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => 'サーバーに名前を付けてください。';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      'サーバーのコマンドまたは http(s) URL を指定してください。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset => 'ツールセットを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      'ツールバックエンドの状態が返されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => 'プロバイダーを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      'このプロバイダーにはセットアップ操作がありません。';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => 'セットアップは開始されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend =>
+      'ターミナルバックエンドを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => 'コネクターに名前を付けてください。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => 'アカウントを選択してください。';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      'ツールの許可を変更する前にコネクターポリシーを再読み込みしてください。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => '項目を選択してください。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => 'ソースを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password =>
+      'マスターパスワードを入力してください。';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned =>
+      'ゲートウェイの設定が返されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode =>
+      '既知の承認モードを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit => '上限には正の値を使用してください。';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved => 'ポリシーは保存されませんでした。';
+
+  @override
+  String get rel_ops_cap_value_manual => '手動';
+
+  @override
+  String get rel_ops_cap_value_smart => 'スマート';
+
+  @override
+  String get rel_ops_cap_value_off => 'オフ';
+
+  @override
+  String get rel_ops_cap_value_safe => '安全';
+
+  @override
+  String get rel_ops_cap_value_caution => '注意';
+
+  @override
+  String get rel_ops_cap_value_dangerous => '危険';
+
+  @override
+  String get rel_ops_cap_value_blocked => 'ブロック済み';
+
+  @override
+  String get rel_ops_cap_value_clean => '脅威なし';
+
+  @override
+  String get rel_ops_cap_value_ready => '準備完了';
+
+  @override
+  String get rel_ops_cap_value_available => '利用可能';
+
+  @override
+  String get rel_ops_cap_value_unavailable => '利用不可';
+
+  @override
+  String get rel_ops_cap_value_enabled => '有効';
+
+  @override
+  String get rel_ops_cap_value_disabled => '無効';
+
+  @override
+  String get rel_ops_cap_value_active => '使用中';
+
+  @override
+  String get rel_ops_cap_value_inactive => '未使用';
+
+  @override
+  String get rel_ops_cap_value_installed => 'インストール済み';
+
+  @override
+  String get rel_ops_cap_value_missing => '見つかりません';
+
+  @override
+  String get rel_ops_cap_value_configured => '設定済み';
+
+  @override
+  String get rel_ops_cap_value_not_configured => '未設定';
+
+  @override
+  String get rel_ops_cap_value_error => 'エラー';
+
+  @override
+  String get rel_ops_cap_value_unknown => '不明';
+
+  @override
+  String get rel_ops_cap_value_login => 'ログイン情報';
+
+  @override
+  String get rel_ops_cap_value_address => '住所';
+
+  @override
+  String get rel_ops_cap_value_payment => '支払い';
 }
