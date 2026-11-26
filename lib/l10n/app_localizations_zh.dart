@@ -7079,6 +7079,36 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署令牌登录。';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return '共享网关暂不支持更改 $setting';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '共享网关暂不支持 $method';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return '规范网关不支持以下显式会话选项：$options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale => '该请求已过期或不可用；请重新连接后再回复';
+
+  @override
+  String get ng_wire_revision_unavailable => '会话修订版本不可用；请重新打开会话后再编辑元数据';
+
+  @override
+  String get ng_wire_generation_unavailable => '会话执行标识不可用；请重新连接后再使用此命令';
+
+  @override
+  String get ng_wire_message_not_saved => '此消息尚未保存；请等待其完成后再从它创建分支';
+
+  @override
+  String get ng_wire_not_available => '共享网关暂不支持';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -13385,6 +13415,36 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署令牌登录。';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return '共享网关暂不支持更改 $setting';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '共享网关暂不支持 $method';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return '规范网关不支持以下显式会话选项：$options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale => '该请求已过期或不可用；请重新连接后再回复';
+
+  @override
+  String get ng_wire_revision_unavailable => '会话修订版本不可用；请重新打开会话后再编辑元数据';
+
+  @override
+  String get ng_wire_generation_unavailable => '会话执行标识不可用；请重新连接后再使用此命令';
+
+  @override
+  String get ng_wire_message_not_saved => '此消息尚未保存；请等待其完成后再从它创建分支';
+
+  @override
+  String get ng_wire_not_available => '共享网关暂不支持';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -20089,4 +20149,34 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get ng_signed_in_with_deployment_token => '已使用部署權杖登入。';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return '共用閘道尚不支援變更 $setting';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '共用閘道尚不支援 $method';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return '標準閘道不支援下列明確指定的工作階段選項：$options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale => '此要求已過期或無法使用；請重新連線後再回覆';
+
+  @override
+  String get ng_wire_revision_unavailable => '無法取得工作階段修訂版本；請重新開啟工作階段後再編輯中繼資料';
+
+  @override
+  String get ng_wire_generation_unavailable => '無法取得工作階段執行識別碼；請重新連線後再使用此指令';
+
+  @override
+  String get ng_wire_message_not_saved => '此訊息尚未儲存；請等它完成後，再從它建立分支';
+
+  @override
+  String get ng_wire_not_available => '共用閘道尚不支援';
 }

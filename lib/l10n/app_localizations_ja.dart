@@ -7176,4 +7176,37 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ng_signed_in_with_deployment_token => 'デプロイメントトークンでサインインしています。';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return '$setting の変更は、共有ゲートウェイではまだ利用できません';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method は、共有ゲートウェイではまだ利用できません';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return '正規ゲートウェイは、明示的に指定された次のセッションオプションに対応していません: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale => 'この確認は古いか、利用できません。再接続してから回答してください';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'セッションのリビジョンを取得できません。セッションを開き直してからメタデータを編集してください';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'セッションの実行 ID を取得できません。再接続してからこのコマンドを実行してください';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'このメッセージはまだ保存されていません。確定するまで待ってから、もう一度ここから分岐してください';
+
+  @override
+  String get ng_wire_not_available => '共有ゲートウェイではまだ利用できません';
 }

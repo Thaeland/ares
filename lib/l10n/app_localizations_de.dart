@@ -7391,4 +7391,39 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Mit dem Bereitstellungstoken angemeldet.';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return '$setting lässt sich über das gemeinsame Gateway noch nicht ändern';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method ist über das gemeinsame Gateway noch nicht verfügbar';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'Das kanonische Gateway unterstützt diese ausdrücklichen Sitzungsoptionen nicht: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'Die Abfrage ist veraltet oder nicht verfügbar; verbinde dich neu, bevor du antwortest';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'Die Sitzungsrevision ist nicht verfügbar; öffne die Sitzung erneut, bevor du Metadaten bearbeitest';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'Die Ausführungskennung der Sitzung ist nicht verfügbar; verbinde dich vor diesem Befehl neu';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'Diese Nachricht ist noch nicht gespeichert; warte, bis sie abgeschlossen ist, und verzweige dann erneut von ihr';
+
+  @override
+  String get ng_wire_not_available =>
+      'Über das gemeinsame Gateway noch nicht verfügbar';
 }

@@ -7327,4 +7327,38 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'تم تسجيل الدخول برمز النشر.';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'تغيير $setting غير متاح بعد على البوابة المشتركة';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method غير متاح بعد على البوابة المشتركة';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'لا تدعم البوابة القياسية خيارات الجلسة الصريحة التالية: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'الطلب قديم أو غير متاح؛ أعد الاتصال قبل الرد';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'مراجعة الجلسة غير متاحة؛ أعد فتح الجلسة قبل تعديل البيانات الوصفية';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'معرّف تنفيذ الجلسة غير متاح؛ أعد الاتصال قبل استخدام هذا الأمر';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'لم تُحفظ هذه الرسالة بعد؛ انتظر حتى تكتمل ثم أنشئ فرعًا منها مرة أخرى';
+
+  @override
+  String get ng_wire_not_available => 'غير متاح بعد على البوابة المشتركة';
 }

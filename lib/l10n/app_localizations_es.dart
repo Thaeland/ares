@@ -7386,4 +7386,39 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Sesión iniciada con el token de despliegue.';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'Cambiar $setting aún no está disponible en la pasarela compartida';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method aún no está disponible en la pasarela compartida';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'La pasarela canónica no admite estas opciones de sesión explícitas: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'La solicitud está obsoleta o no disponible; vuelve a conectarte antes de responder';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'La revisión de la sesión no está disponible; vuelve a abrir la sesión antes de editar los metadatos';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'La identidad de ejecución de la sesión no está disponible; vuelve a conectarte antes de usar este comando';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'Este mensaje aún no se ha guardado; espera a que termine y vuelve a bifurcar desde él';
+
+  @override
+  String get ng_wire_not_available =>
+      'Aún no disponible en la pasarela compartida';
 }

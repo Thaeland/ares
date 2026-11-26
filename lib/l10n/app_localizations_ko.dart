@@ -7182,4 +7182,37 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_signed_in_with_deployment_token => '배포 토큰으로 로그인했습니다.';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return '$setting 변경은 공유 게이트웨이에서 아직 사용할 수 없습니다';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method 요청은 공유 게이트웨이에서 아직 사용할 수 없습니다';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return '표준 게이트웨이는 다음 명시적 세션 옵션을 지원하지 않습니다: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale => '요청이 오래되었거나 사용할 수 없습니다. 다시 연결한 후 응답하세요';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      '세션 리비전을 확인할 수 없습니다. 세션을 다시 연 후 메타데이터를 편집하세요';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      '세션 실행 ID를 확인할 수 없습니다. 다시 연결한 후 이 명령을 사용하세요';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      '이 메시지는 아직 저장되지 않았습니다. 완료될 때까지 기다린 후 다시 분기하세요';
+
+  @override
+  String get ng_wire_not_available => '공유 게이트웨이에서 아직 사용할 수 없습니다';
 }

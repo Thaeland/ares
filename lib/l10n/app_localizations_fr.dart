@@ -7402,4 +7402,39 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Connecté avec le jeton de déploiement.';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'La modification de $setting n’est pas encore disponible sur la passerelle partagée';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method n’est pas encore disponible sur la passerelle partagée';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'La passerelle canonique ne prend pas en charge ces options de session explicites : $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'La demande est obsolète ou indisponible ; reconnectez-vous avant de répondre';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'La révision de la session est indisponible ; rouvrez la session avant de modifier les métadonnées';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'L’identité d’exécution de la session est indisponible ; reconnectez-vous avant cette commande';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'Ce message n’est pas encore enregistré ; attendez qu’il soit finalisé, puis créez de nouveau une branche à partir de lui';
+
+  @override
+  String get ng_wire_not_available =>
+      'Pas encore disponible sur la passerelle partagée';
 }

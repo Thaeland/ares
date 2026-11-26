@@ -7331,4 +7331,38 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Signed in with the deployment token.';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'Changing $setting is not available on the shared gateway yet';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method is not available on the shared gateway yet';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'Canonical gateway does not support explicit session options: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'Prompt is stale or unavailable; reconnect before responding';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'Session revision unavailable; reopen the session before editing metadata';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'Session execution identity unavailable; reconnect before this command';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'This message is not saved yet; wait for it to settle, then branch from it again';
+
+  @override
+  String get ng_wire_not_available => 'Not available on the shared gateway yet';
 }

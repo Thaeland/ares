@@ -7388,6 +7388,41 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Sessão iniciada com o token de implementação.';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'Alterar $setting ainda não está disponível no gateway partilhado';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method ainda não está disponível no gateway partilhado';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'O gateway canónico não suporta estas opções de sessão explícitas: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'O pedido está desatualizado ou indisponível; volte a ligar antes de responder';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'A revisão da sessão não está disponível; reabra a sessão antes de editar os metadados';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'A identidade de execução da sessão não está disponível; volte a ligar antes de usar este comando';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'Esta mensagem ainda não foi guardada; aguarde que fique concluída e volte a ramificar a partir dela';
+
+  @override
+  String get ng_wire_not_available =>
+      'Ainda não disponível no gateway partilhado';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -13997,4 +14032,39 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Conectado com o token de implantação.';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'Alterar $setting ainda não está disponível no gateway compartilhado';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return '$method ainda não está disponível no gateway compartilhado';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'O gateway canônico não aceita estas opções de sessão explícitas: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'A solicitação está desatualizada ou indisponível; reconecte antes de responder';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'A revisão da sessão não está disponível; reabra a sessão antes de editar os metadados';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'A identidade de execução da sessão não está disponível; reconecte antes de usar este comando';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'Esta mensagem ainda não foi salva; aguarde até que ela seja concluída e ramifique a partir dela de novo';
+
+  @override
+  String get ng_wire_not_available =>
+      'Ainda não disponível no gateway compartilhado';
 }

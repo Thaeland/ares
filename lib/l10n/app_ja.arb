@@ -1892,5 +1892,13 @@
   "keep_awake_always_help": "このデバイスで Ares が開いている間はアイドルスリープを防ぎます。",
   "keep_awake_off_help_mobile": "画面は通常どおりオフになります(デフォルト)。",
   "keep_awake_while_working_help_mobile": "エージェントのターンが実行中で Ares が開いている間、画面をオンのままにします。",
-  "keep_awake_always_help_mobile": "Ares が開いている間、画面をオンのままにします。"
+  "keep_awake_always_help_mobile": "Ares が開いている間、画面をオンのままにします。",
+  "ng_wire_setting_unavailable": "{setting} の変更は、共有ゲートウェイではまだ利用できません",
+  "ng_wire_method_unavailable": "{method} は、共有ゲートウェイではまだ利用できません",
+  "ng_wire_session_options_unsupported": "正規ゲートウェイは、明示的に指定された次のセッションオプションに対応していません: {options}",
+  "ng_wire_prompt_stale": "この確認は古いか、利用できません。再接続してから回答してください",
+  "ng_wire_revision_unavailable": "セッションのリビジョンを取得できません。セッションを開き直してからメタデータを編集してください",
+  "ng_wire_generation_unavailable": "セッションの実行 ID を取得できません。再接続してからこのコマンドを実行してください",
+  "ng_wire_message_not_saved": "このメッセージはまだ保存されていません。確定するまで待ってから、もう一度ここから分岐してください",
+  "ng_wire_not_available": "共有ゲートウェイではまだ利用できません"
 }

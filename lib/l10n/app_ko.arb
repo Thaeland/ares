@@ -1892,5 +1892,13 @@
   "keep_awake_always_help": "이 기기에서 Ares가 열려 있는 동안 유휴 절전을 막습니다.",
   "keep_awake_off_help_mobile": "평소처럼 화면이 꺼지도록 둡니다(기본값).",
   "keep_awake_while_working_help_mobile": "에이전트 턴이 실행 중이고 Ares가 열려 있는 동안 화면을 켜 둡니다.",
-  "keep_awake_always_help_mobile": "Ares가 열려 있는 동안 화면을 켜 둡니다."
+  "keep_awake_always_help_mobile": "Ares가 열려 있는 동안 화면을 켜 둡니다.",
+  "ng_wire_setting_unavailable": "{setting} 변경은 공유 게이트웨이에서 아직 사용할 수 없습니다",
+  "ng_wire_method_unavailable": "{method} 요청은 공유 게이트웨이에서 아직 사용할 수 없습니다",
+  "ng_wire_session_options_unsupported": "표준 게이트웨이는 다음 명시적 세션 옵션을 지원하지 않습니다: {options}",
+  "ng_wire_prompt_stale": "요청이 오래되었거나 사용할 수 없습니다. 다시 연결한 후 응답하세요",
+  "ng_wire_revision_unavailable": "세션 리비전을 확인할 수 없습니다. 세션을 다시 연 후 메타데이터를 편집하세요",
+  "ng_wire_generation_unavailable": "세션 실행 ID를 확인할 수 없습니다. 다시 연결한 후 이 명령을 사용하세요",
+  "ng_wire_message_not_saved": "이 메시지는 아직 저장되지 않았습니다. 완료될 때까지 기다린 후 다시 분기하세요",
+  "ng_wire_not_available": "공유 게이트웨이에서 아직 사용할 수 없습니다"
 }

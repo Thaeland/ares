@@ -12362,6 +12362,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Signed in with the deployment token.'**
   String get ng_signed_in_with_deployment_token;
+
+  /// A setting change was not sent: a Hermes 0.23+ shared gateway has no form for that config key (or that scope). {setting} is the key, with its scope in brackets when one was asked for.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing {setting} is not available on the shared gateway yet'**
+  String ng_wire_setting_unavailable(Object setting);
+
+  /// A request was not sent: a Hermes 0.23+ shared gateway does not serve that method. {method} is the wire method name.
+  ///
+  /// In en, this message translates to:
+  /// **'{method} is not available on the shared gateway yet'**
+  String ng_wire_method_unavailable(Object method);
+
+  /// A new chat was not created: the shared gateway has no field for these options. {options} is a comma-separated list of option names.
+  ///
+  /// In en, this message translates to:
+  /// **'Canonical gateway does not support explicit session options: {options}'**
+  String ng_wire_session_options_unsupported(Object options);
+
+  /// An approval or question could not be answered: it is no longer the one the gateway waits on.
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt is stale or unavailable; reconnect before responding'**
+  String get ng_wire_prompt_stale;
+
+  /// A rename, archive or similar edit was not sent: the app has not learned the chat revision the gateway requires.
+  ///
+  /// In en, this message translates to:
+  /// **'Session revision unavailable; reopen the session before editing metadata'**
+  String get ng_wire_revision_unavailable;
+
+  /// A command was not sent: the app has not learned which turn of the chat is current.
+  ///
+  /// In en, this message translates to:
+  /// **'Session execution identity unavailable; reconnect before this command'**
+  String get ng_wire_generation_unavailable;
+
+  /// A branch from a message was not sent: the message has no saved id yet.
+  ///
+  /// In en, this message translates to:
+  /// **'This message is not saved yet; wait for it to settle, then branch from it again'**
+  String get ng_wire_message_not_saved;
+
+  /// Tooltip or note on a control that is disabled because the connected Hermes 0.23+ shared gateway does not offer it.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available on the shared gateway yet'**
+  String get ng_wire_not_available;
 }
 
 class _AppLocalizationsDelegate

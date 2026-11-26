@@ -16,6 +16,7 @@ import 'package:web_socket_channel/io.dart';
 
 import '../models/client_certificate.dart';
 import '../models/slash_command.dart';
+import 'canonical_wire.dart';
 import 'gateway_headers.dart';
 import 'hermes_sign_in.dart';
 import 'tls_client_factory.dart';
@@ -382,6 +383,13 @@ class WsClient {
   /// receipt, or an event's stamp). Stop and Steer name it; it is never
   /// guessed or advanced to a claim the socket has not seen.
   final Map<String, int> _executionGenerations = {};
+
+  /// The guard every request on a session-authority socket goes through
+  /// ([send]): revisions, open prompts and unanswered edits of this socket.
+  /// A new connection starts with none.
+  late CanonicalWire _canonical = _newCanonicalWire();
+  CanonicalWire _newCanonicalWire() =>
+      CanonicalWire(generationFor: (id) => _executionGenerations[id]);
   final Map<int, _ConnectionClosedListener> _connectionClosedListeners = {};
   Completer<Map<String, dynamic>>? _gatewayReadyCompleter;
   Map<String, dynamic>? _gatewayReadyFrame;
@@ -593,6 +601,7 @@ class WsClient {
     _streams.clear();
     _sessionStreams.clear();
     _executionGenerations.clear();
+    _canonical = _newCanonicalWire();
     for (final listener in listenersToNotify) {
       try {
         listener();
@@ -809,20 +818,32 @@ class WsClient {
     );
   }
 
-  void _deliverServerRequest(
+  /// Whether a view took the request.
+  bool _deliverServerRequest(
     String id,
     String method,
     Map<String, dynamic> params, {
     bool replayed = false,
   }) {
+    // A canonical approval or question is not a request frame: the owner
+    // published it as an event and takes its answer as `approval.respond` /
+    // `clarify.respond`. It cannot be failed either: other viewers may still
+    // answer it.
+    final prompt = sessionAuthority && _canonical.holdsPrompt(id);
     final request = GatewayServerRequest._(
       id: id,
       method: method,
       params: Map<String, dynamic>.from(params),
       replayed: replayed,
-      respond: (result) => _sendServerResponse(id, result: result),
-      fail: (code, message) =>
-          _sendServerResponse(id, error: {'code': code, 'message': message}),
+      respond: prompt
+          ? (result) => _answerCanonicalPrompt(id, method, result)
+          : (result) => _sendServerResponse(id, result: result),
+      fail: prompt
+          ? (_, _) => true
+          : (code, message) => _sendServerResponse(
+              id,
+              error: {'code': code, 'message': message},
+            ),
     );
     if (method == 'preview.read' || method == 'preview.act') {
       try {
@@ -835,20 +856,57 @@ class WsClient {
       } catch (_) {
         request.fail(-32603, 'Preview unavailable');
       }
-      return;
+      return true;
     }
     final listener = onServerRequest;
     if (listener == null) {
       request.fail(-32601, 'no handler for server request: $method');
-      return;
+      return false;
     }
     try {
       if (!listener(request)) {
         request.fail(-32601, 'no handler for server request: $method');
+        return false;
       }
+      return true;
     } catch (_) {
       request.fail(-32603, 'server request handler crashed: $method');
+      return false;
     }
+  }
+
+  /// Answers a canonical prompt a view was handed as a server request. The
+  /// view's result is the legacy response body (`{choice}`, `{answer}` or a
+  /// one-question `{answers}`); [send] turns it into the owner's contract.
+  bool _answerCanonicalPrompt(
+    String id,
+    String kind,
+    Map<String, dynamic> result,
+  ) {
+    if (!_connected || _channel == null) return false;
+    final Map<String, dynamic> params;
+    if (kind == 'approval') {
+      final choice = result['choice'];
+      params = {
+        'prompt_id': id,
+        'choice': choice is String && choice.isNotEmpty ? choice : 'deny',
+      };
+    } else {
+      final answers = result['answers'];
+      final answer =
+          result['answer'] ??
+          (answers is Map
+              ? answers[id] ?? (answers.isEmpty ? null : answers.values.first)
+              : null);
+      params = {'prompt_id': id, 'answer': answer?.toString() ?? ''};
+    }
+    unawaited(
+      send(
+        kind == 'approval' ? 'approval.respond' : 'clarify.respond',
+        params,
+      ).then<void>((_) {}, onError: (_, _) {}),
+    );
+    return true;
   }
 
   /// Re-deliver unanswered requests returned by `session.resume` or event
@@ -1033,6 +1091,54 @@ class WsClient {
       event.sessionId,
       event.envelope['execution_generation'],
     );
+    if (sessionAuthority) {
+      final canonical = _canonical;
+      canonical.noteEvent(event.type, event.sessionId, event.data);
+      // The owner publishes an approval or a question as an event carrying
+      // its prompt id. Both layouts already show the legacy server request
+      // of the same kind, so hand them that (as Hermes Desktop projects it)
+      // and answer by prompt id.
+      final prompt = onServerRequest == null
+          ? null
+          : canonical.adoptPromptEvent(
+              event.type,
+              event.sessionId,
+              event.data,
+              event.envelope['execution_generation'],
+            );
+      if (prompt != null) {
+        _noteExecutionGeneration(
+          event.sessionId,
+          event.data['execution_generation'],
+        );
+        if (_deliverServerRequest(prompt.id, prompt.method, prompt.params)) {
+          return;
+        }
+      }
+      final settled = canonical.settlePromptEvent(event.type, event.data);
+      if (settled != null) {
+        _dispatchToListeners(event);
+        // Answered here or by another viewer: the card comes down.
+        _dispatchToListeners(
+          StreamEvent(
+            type: 'request.cancel',
+            data: {
+              'id': settled,
+              'request_id': settled,
+              'reason': 'resolved',
+              'session_id': ?event.sessionId,
+            },
+            sessionId: event.sessionId,
+            envelope: event.envelope,
+          ),
+        );
+        return;
+      }
+    }
+    _dispatchToListeners(event);
+  }
+
+  void _dispatchToListeners(StreamEvent event) {
     try {
       onStreamEvent?.call(event);
     } catch (_) {
@@ -1100,7 +1206,161 @@ class WsClient {
   }
 
   /// Send a JSON-RPC method call and wait for response.
+  ///
+  /// On a session-authority socket the request first goes through the
+  /// canonical guard ([CanonicalWire]): a legacy shape the owner has a
+  /// canonical form for is translated, and one it has none for is answered
+  /// here with a [canonicalRefusalCode] error, never sent. A legacy socket
+  /// sends [params] as given.
   Future<Map<String, dynamic>> send(
+    String method,
+    Map<String, dynamic> params, {
+    Duration timeout = const Duration(seconds: 30),
+    void Function()? onSent,
+    bool includeProfile = true,
+  }) {
+    if (!sessionAuthority) {
+      return _sendWire(
+        method,
+        params,
+        timeout: timeout,
+        onSent: onSent,
+        includeProfile: includeProfile,
+      );
+    }
+    return _sendCanonical(
+      method,
+      params,
+      timeout: timeout,
+      onSent: onSent,
+      includeProfile: includeProfile,
+    );
+  }
+
+  Future<Map<String, dynamic>> _sendCanonical(
+    String method,
+    Map<String, dynamic> params, {
+    required Duration timeout,
+    required void Function()? onSent,
+    required bool includeProfile,
+  }) async {
+    if (!_connected || _channel == null) {
+      throw Exception('Not connected');
+    }
+    final canonical = _canonical;
+    CanonicalRequest request;
+    try {
+      request = await _prepareCanonical(
+        canonical,
+        method,
+        params,
+        timeout: timeout,
+        includeProfile: includeProfile,
+      );
+    } on CanonicalWireRefusal catch (refusal) {
+      // Nothing was sent: a definite refusal, in the reply shape every
+      // caller already reads.
+      return {'jsonrpc': '2.0', 'error': refusal.toError()};
+    }
+    var reply = await _sendWire(
+      request.method,
+      request.params,
+      timeout: timeout,
+      onSent: onSent,
+      includeProfile: includeProfile,
+    );
+    if (reply['error'] != null &&
+        identical(canonical, _canonical) &&
+        canonical.retryableFence(request, reply['error'])) {
+      // The owner named its current fences on the refusal: a value pick is
+      // presented once more at them.
+      _noteCanonicalFailure(canonical, request, reply['error']);
+      try {
+        request = canonical.prepare(method, params);
+      } on Object {
+        return reply;
+      }
+      reply = await _sendWire(
+        request.method,
+        request.params,
+        timeout: timeout,
+        includeProfile: includeProfile,
+      );
+    }
+    if (!identical(canonical, _canonical)) return reply;
+    final error = reply['error'];
+    if (error != null) {
+      _noteCanonicalFailure(canonical, request, error);
+      return reply;
+    }
+    final result = reply['result'];
+    if (result is Map) {
+      final sessionId = result['session_id'];
+      if (sessionId is String) {
+        _noteExecutionGeneration(sessionId, result['execution_generation']);
+      }
+    }
+    final adapted = canonical.adaptResult(request, result);
+    return identical(adapted, result) ? reply : {...reply, 'result': adapted};
+  }
+
+  void _noteCanonicalFailure(
+    CanonicalWire canonical,
+    CanonicalRequest request,
+    Object? error,
+  ) {
+    canonical.noteFailure(request, error);
+    final data = error is Map ? error['data'] : null;
+    final sessionId = request.params['session_id'];
+    if (data is Map && sessionId is String) {
+      _noteExecutionGeneration(sessionId, data['execution_generation']);
+    }
+  }
+
+  /// A fenced edit names the session's revision (and, for most, its
+  /// execution generation). A socket that has not learned them reads the
+  /// session once (`session.resume`, no transcript) instead of refusing.
+  Future<CanonicalRequest> _prepareCanonical(
+    CanonicalWire canonical,
+    String method,
+    Map<String, dynamic> params, {
+    required Duration timeout,
+    required bool includeProfile,
+  }) async {
+    try {
+      return canonical.prepare(method, params);
+    } on CanonicalFencesNeeded catch (needed) {
+      final resume = canonical.prepare('session.resume', {
+        'session_id': needed.sessionId,
+        'omit_messages': true,
+        'defer_history': true,
+        if (params['profile'] != null) 'profile': params['profile'],
+      });
+      final reply = await _sendWire(
+        resume.method,
+        resume.params,
+        timeout: timeout,
+        includeProfile: includeProfile,
+      );
+      final result = reply['result'];
+      if (reply['error'] == null &&
+          result is Map &&
+          identical(canonical, _canonical)) {
+        final sessionId = result['session_id'];
+        if (sessionId is String) {
+          _noteExecutionGeneration(sessionId, result['execution_generation']);
+        }
+        canonical.adaptResult(resume, result);
+      }
+      try {
+        return canonical.prepare(method, params);
+      } on CanonicalFencesNeeded catch (still) {
+        throw still.refusal;
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> _sendWire(
     String method,
     Map<String, dynamic> params, {
     Duration timeout = const Duration(seconds: 30),

@@ -7386,4 +7386,38 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Вхід виконано з токеном розгортання.';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'Зміна параметра $setting поки недоступна на спільному шлюзі';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return 'Запит $method поки недоступний на спільному шлюзі';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'Канонічний шлюз не підтримує явні параметри сеансу: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'Запит застарів або недоступний; під’єднайтеся знову, перш ніж відповідати';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'Ревізія сеансу недоступна; відкрийте сеанс знову, перш ніж редагувати метадані';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'Ідентифікатор виконання сеансу недоступний; під’єднайтеся знову перед цією командою';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'Це повідомлення ще не збережено; дочекайтеся його завершення і створіть гілку від нього ще раз';
+
+  @override
+  String get ng_wire_not_available => 'Поки недоступно на спільному шлюзі';
 }

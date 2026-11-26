@@ -1892,5 +1892,13 @@
   "keep_awake_always_help": "Evitar la suspensión por inactividad mientras Ares esté abierto en este dispositivo.",
   "keep_awake_off_help_mobile": "Dejar que la pantalla se apague como siempre (predeterminado).",
   "keep_awake_while_working_help_mobile": "Mantener la pantalla encendida mientras se ejecuta un turno del agente y Ares está abierto.",
-  "keep_awake_always_help_mobile": "Mantener la pantalla encendida mientras Ares esté abierto."
+  "keep_awake_always_help_mobile": "Mantener la pantalla encendida mientras Ares esté abierto.",
+  "ng_wire_setting_unavailable": "Cambiar {setting} aún no está disponible en la pasarela compartida",
+  "ng_wire_method_unavailable": "{method} aún no está disponible en la pasarela compartida",
+  "ng_wire_session_options_unsupported": "La pasarela canónica no admite estas opciones de sesión explícitas: {options}",
+  "ng_wire_prompt_stale": "La solicitud está obsoleta o no disponible; vuelve a conectarte antes de responder",
+  "ng_wire_revision_unavailable": "La revisión de la sesión no está disponible; vuelve a abrir la sesión antes de editar los metadatos",
+  "ng_wire_generation_unavailable": "La identidad de ejecución de la sesión no está disponible; vuelve a conectarte antes de usar este comando",
+  "ng_wire_message_not_saved": "Este mensaje aún no se ha guardado; espera a que termine y vuelve a bifurcar desde él",
+  "ng_wire_not_available": "Aún no disponible en la pasarela compartida"
 }

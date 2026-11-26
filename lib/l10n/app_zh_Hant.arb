@@ -2959,5 +2959,34 @@
   "keep_awake_always_help": "在此裝置上開啟 Ares 期間阻止閒置睡眠。",
   "keep_awake_off_help_mobile": "讓螢幕照常關閉（預設）。",
   "keep_awake_while_working_help_mobile": "在代理回合執行且 Ares 開啟期間讓螢幕保持開啟。",
-  "keep_awake_always_help_mobile": "在 Ares 開啟期間讓螢幕保持開啟。"
+  "keep_awake_always_help_mobile": "在 Ares 開啟期間讓螢幕保持開啟。",
+  "ng_wire_setting_unavailable": "共用閘道尚不支援變更 {setting}",
+  "@ng_wire_setting_unavailable": {
+    "placeholders": {
+      "setting": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_wire_method_unavailable": "共用閘道尚不支援 {method}",
+  "@ng_wire_method_unavailable": {
+    "placeholders": {
+      "method": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_wire_session_options_unsupported": "標準閘道不支援下列明確指定的工作階段選項：{options}",
+  "@ng_wire_session_options_unsupported": {
+    "placeholders": {
+      "options": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_wire_prompt_stale": "此要求已過期或無法使用；請重新連線後再回覆",
+  "ng_wire_revision_unavailable": "無法取得工作階段修訂版本；請重新開啟工作階段後再編輯中繼資料",
+  "ng_wire_generation_unavailable": "無法取得工作階段執行識別碼；請重新連線後再使用此指令",
+  "ng_wire_message_not_saved": "此訊息尚未儲存；請等它完成後，再從它建立分支",
+  "ng_wire_not_available": "共用閘道尚不支援"
 }

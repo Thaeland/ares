@@ -2947,5 +2947,34 @@
   "keep_awake_always_help": "منع السكون بسبب الخمول ما دام Ares مفتوحًا على هذا الجهاز.",
   "keep_awake_off_help_mobile": "دع الشاشة تنطفئ كالمعتاد (الافتراضي).",
   "keep_awake_while_working_help_mobile": "إبقاء الشاشة قيد التشغيل أثناء تشغيل دور الوكيل وما دام Ares مفتوحًا.",
-  "keep_awake_always_help_mobile": "إبقاء الشاشة قيد التشغيل ما دام Ares مفتوحًا."
+  "keep_awake_always_help_mobile": "إبقاء الشاشة قيد التشغيل ما دام Ares مفتوحًا.",
+  "ng_wire_setting_unavailable": "تغيير {setting} غير متاح بعد على البوابة المشتركة",
+  "@ng_wire_setting_unavailable": {
+    "placeholders": {
+      "setting": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_wire_method_unavailable": "{method} غير متاح بعد على البوابة المشتركة",
+  "@ng_wire_method_unavailable": {
+    "placeholders": {
+      "method": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_wire_session_options_unsupported": "لا تدعم البوابة القياسية خيارات الجلسة الصريحة التالية: {options}",
+  "@ng_wire_session_options_unsupported": {
+    "placeholders": {
+      "options": {
+        "type": "Object"
+      }
+    }
+  },
+  "ng_wire_prompt_stale": "الطلب قديم أو غير متاح؛ أعد الاتصال قبل الرد",
+  "ng_wire_revision_unavailable": "مراجعة الجلسة غير متاحة؛ أعد فتح الجلسة قبل تعديل البيانات الوصفية",
+  "ng_wire_generation_unavailable": "معرّف تنفيذ الجلسة غير متاح؛ أعد الاتصال قبل استخدام هذا الأمر",
+  "ng_wire_message_not_saved": "لم تُحفظ هذه الرسالة بعد؛ انتظر حتى تكتمل ثم أنشئ فرعًا منها مرة أخرى",
+  "ng_wire_not_available": "غير متاح بعد على البوابة المشتركة"
 }

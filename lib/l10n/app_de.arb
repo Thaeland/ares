@@ -1892,5 +1892,13 @@
   "keep_awake_always_help": "Leerlauf-Ruhezustand verhindern, solange Ares auf diesem Gerät geöffnet ist.",
   "keep_awake_off_help_mobile": "Bildschirm wie gewohnt ausschalten lassen (Standard).",
   "keep_awake_while_working_help_mobile": "Bildschirm eingeschaltet lassen, während ein Agent-Durchlauf läuft und Ares geöffnet ist.",
-  "keep_awake_always_help_mobile": "Bildschirm eingeschaltet lassen, solange Ares geöffnet ist."
+  "keep_awake_always_help_mobile": "Bildschirm eingeschaltet lassen, solange Ares geöffnet ist.",
+  "ng_wire_setting_unavailable": "{setting} lässt sich über das gemeinsame Gateway noch nicht ändern",
+  "ng_wire_method_unavailable": "{method} ist über das gemeinsame Gateway noch nicht verfügbar",
+  "ng_wire_session_options_unsupported": "Das kanonische Gateway unterstützt diese ausdrücklichen Sitzungsoptionen nicht: {options}",
+  "ng_wire_prompt_stale": "Die Abfrage ist veraltet oder nicht verfügbar; verbinde dich neu, bevor du antwortest",
+  "ng_wire_revision_unavailable": "Die Sitzungsrevision ist nicht verfügbar; öffne die Sitzung erneut, bevor du Metadaten bearbeitest",
+  "ng_wire_generation_unavailable": "Die Ausführungskennung der Sitzung ist nicht verfügbar; verbinde dich vor diesem Befehl neu",
+  "ng_wire_message_not_saved": "Diese Nachricht ist noch nicht gespeichert; warte, bis sie abgeschlossen ist, und verzweige dann erneut von ihr",
+  "ng_wire_not_available": "Über das gemeinsame Gateway noch nicht verfügbar"
 }

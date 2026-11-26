@@ -2045,5 +2045,13 @@
   "keep_awake_always_help": "Не давати засинати від бездіяльності, поки Ares відкрито на цьому пристрої.",
   "keep_awake_off_help_mobile": "Екран вимикається як зазвичай (типово).",
   "keep_awake_while_working_help_mobile": "Не вимикати екран, поки триває хід агента й Ares відкрито.",
-  "keep_awake_always_help_mobile": "Не вимикати екран, поки Ares відкрито."
+  "keep_awake_always_help_mobile": "Не вимикати екран, поки Ares відкрито.",
+  "ng_wire_setting_unavailable": "Зміна параметра {setting} поки недоступна на спільному шлюзі",
+  "ng_wire_method_unavailable": "Запит {method} поки недоступний на спільному шлюзі",
+  "ng_wire_session_options_unsupported": "Канонічний шлюз не підтримує явні параметри сеансу: {options}",
+  "ng_wire_prompt_stale": "Запит застарів або недоступний; під’єднайтеся знову, перш ніж відповідати",
+  "ng_wire_revision_unavailable": "Ревізія сеансу недоступна; відкрийте сеанс знову, перш ніж редагувати метадані",
+  "ng_wire_generation_unavailable": "Ідентифікатор виконання сеансу недоступний; під’єднайтеся знову перед цією командою",
+  "ng_wire_message_not_saved": "Це повідомлення ще не збережено; дочекайтеся його завершення і створіть гілку від нього ще раз",
+  "ng_wire_not_available": "Поки недоступно на спільному шлюзі"
 }

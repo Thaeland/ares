@@ -1892,5 +1892,13 @@
   "keep_awake_always_help": "Impedir a suspensão por inatividade enquanto o Ares estiver aberto neste dispositivo.",
   "keep_awake_off_help_mobile": "Deixar a tela desligar normalmente (padrão).",
   "keep_awake_while_working_help_mobile": "Manter a tela ligada enquanto um turno do agente estiver em andamento e o Ares estiver aberto.",
-  "keep_awake_always_help_mobile": "Manter a tela ligada enquanto o Ares estiver aberto."
+  "keep_awake_always_help_mobile": "Manter a tela ligada enquanto o Ares estiver aberto.",
+  "ng_wire_setting_unavailable": "Alterar {setting} ainda não está disponível no gateway compartilhado",
+  "ng_wire_method_unavailable": "{method} ainda não está disponível no gateway compartilhado",
+  "ng_wire_session_options_unsupported": "O gateway canônico não aceita estas opções de sessão explícitas: {options}",
+  "ng_wire_prompt_stale": "A solicitação está desatualizada ou indisponível; reconecte antes de responder",
+  "ng_wire_revision_unavailable": "A revisão da sessão não está disponível; reabra a sessão antes de editar os metadados",
+  "ng_wire_generation_unavailable": "A identidade de execução da sessão não está disponível; reconecte antes de usar este comando",
+  "ng_wire_message_not_saved": "Esta mensagem ainda não foi salva; aguarde até que ela seja concluída e ramifique a partir dela de novo",
+  "ng_wire_not_available": "Ainda não disponível no gateway compartilhado"
 }

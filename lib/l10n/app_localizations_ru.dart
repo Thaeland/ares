@@ -7390,4 +7390,38 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get ng_signed_in_with_deployment_token =>
       'Вход выполнен с токеном развёртывания.';
+
+  @override
+  String ng_wire_setting_unavailable(Object setting) {
+    return 'Изменение параметра $setting пока недоступно на общем шлюзе';
+  }
+
+  @override
+  String ng_wire_method_unavailable(Object method) {
+    return 'Запрос $method пока недоступен на общем шлюзе';
+  }
+
+  @override
+  String ng_wire_session_options_unsupported(Object options) {
+    return 'Канонический шлюз не поддерживает явные параметры сеанса: $options';
+  }
+
+  @override
+  String get ng_wire_prompt_stale =>
+      'Запрос устарел или недоступен; переподключитесь, прежде чем отвечать';
+
+  @override
+  String get ng_wire_revision_unavailable =>
+      'Ревизия сеанса недоступна; откройте сеанс заново, прежде чем изменять метаданные';
+
+  @override
+  String get ng_wire_generation_unavailable =>
+      'Идентификатор выполнения сеанса недоступен; переподключитесь перед этой командой';
+
+  @override
+  String get ng_wire_message_not_saved =>
+      'Это сообщение ещё не сохранено; дождитесь его завершения и создайте ветку от него снова';
+
+  @override
+  String get ng_wire_not_available => 'Пока недоступно на общем шлюзе';
 }

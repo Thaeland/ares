@@ -1892,5 +1892,13 @@
   "keep_awake_always_help": "Empêcher la mise en veille d’inactivité tant qu’Ares est ouvert sur cet appareil.",
   "keep_awake_off_help_mobile": "Laisser l’écran s’éteindre normalement (par défaut).",
   "keep_awake_while_working_help_mobile": "Garder l’écran allumé pendant un tour de l’agent, tant qu’Ares est ouvert.",
-  "keep_awake_always_help_mobile": "Garder l’écran allumé tant qu’Ares est ouvert."
+  "keep_awake_always_help_mobile": "Garder l’écran allumé tant qu’Ares est ouvert.",
+  "ng_wire_setting_unavailable": "La modification de {setting} n’est pas encore disponible sur la passerelle partagée",
+  "ng_wire_method_unavailable": "{method} n’est pas encore disponible sur la passerelle partagée",
+  "ng_wire_session_options_unsupported": "La passerelle canonique ne prend pas en charge ces options de session explicites : {options}",
+  "ng_wire_prompt_stale": "La demande est obsolète ou indisponible ; reconnectez-vous avant de répondre",
+  "ng_wire_revision_unavailable": "La révision de la session est indisponible ; rouvrez la session avant de modifier les métadonnées",
+  "ng_wire_generation_unavailable": "L’identité d’exécution de la session est indisponible ; reconnectez-vous avant cette commande",
+  "ng_wire_message_not_saved": "Ce message n’est pas encore enregistré ; attendez qu’il soit finalisé, puis créez de nouveau une branche à partir de lui",
+  "ng_wire_not_available": "Pas encore disponible sur la passerelle partagée"
 }
