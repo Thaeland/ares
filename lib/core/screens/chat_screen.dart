@@ -2885,6 +2885,10 @@ class _ChatScreenState extends State<ChatScreen>
           projectName: widget.projectName,
           projectWorkingDirectory: widget.projectWorkingDirectory,
           turnApplicationController: widget.turnApplicationController,
+          // The same open path as this chat (main's /resume rule: every
+          // ChatScreen is built with one). Null here, as this branch only
+          // runs for a chat whose host gave it none.
+          onOpenSession: widget.onOpenSession,
           onArchiveChanged: widget.onArchiveChanged,
           sessionArchiver: widget.sessionArchiver,
           testTurnApplicationSession: widget.testTurnApplicationSession,
