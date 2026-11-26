@@ -1220,7 +1220,7 @@ class WsClient {
     bool includeProfile = true,
   }) {
     if (!sessionAuthority) {
-      return _sendWire(
+      return _sendRequest(
         method,
         params,
         timeout: timeout,
@@ -1253,7 +1253,7 @@ class WsClient {
       params,
       // The caller's own request reports when it was written; a read the
       // guard adds first (the session's fences) does not.
-      wire: (wireMethod, wireParams, {required bool own}) => _sendWire(
+      wire: (wireMethod, wireParams, {required bool own}) => _sendRequest(
         wireMethod,
         wireParams,
         timeout: timeout,
@@ -1267,7 +1267,7 @@ class WsClient {
     );
   }
 
-  Future<Map<String, dynamic>> _sendWire(
+  Future<Map<String, dynamic>> _sendRequest(
     String method,
     Map<String, dynamic> params, {
     Duration timeout = const Duration(seconds: 30),

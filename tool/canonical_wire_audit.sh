@@ -10,7 +10,9 @@
 # fetched or hosted. [python] needs pydantic (default: the Hermes venv).
 #
 # 1. The capture suites drive the real producers of both layouts against the
-#    strict gateway and write build/canonical-wire/*.json.
+#    strict gateway and write build/canonical-wire/*.json (pending_lanes.json
+#    holds the frames of lanes not merged into this branch yet, copied from
+#    their code and sent through the real socket).
 # 2. The authority-mode suites that already existed run with a tap on their
 #    (now strict) fakes and append build/canonical-wire/tap/*.jsonl.
 # 3. tool/canonical_wire_check.py validates every frame and writes
@@ -27,6 +29,7 @@ captures=(
   test/canonical_wire_classic_capture_test.dart
   test/canonical_wire_nextgen_capture_test.dart
   test/canonical_wire_services_capture_test.dart
+  test/canonical_wire_pending_lanes_capture_test.dart
   test/strict_authority_gateway_test.dart
 )
 flutter test --no-pub -j1 "${captures[@]}" >"$out/captures.log" 2>&1 || {
