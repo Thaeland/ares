@@ -1199,6 +1199,14 @@ class NgChatController extends ChangeNotifier {
     final t = raw['title']?.toString();
     if (t != null && t.trim().isNotEmpty) title = t;
     usage = NgUsage.parse(raw['usage']) ?? usage;
+    // Context compression moves the chat to a continuation session and the
+    // gateway says so here (`stored_session_id`). Cards made from then on
+    // carry the new id, cards made before keep the old one: the dock counts
+    // both as this chat's.
+    final stored = raw['stored_session_id'];
+    if (stored is String && stored.trim().isNotEmpty) {
+      kanban.setChat(primaryId: storedId, aliases: [stored]);
+    }
   }
 
   // ── History ─────────────────────────────────────────────────────────

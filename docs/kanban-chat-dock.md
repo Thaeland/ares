@@ -51,7 +51,14 @@ Source pin: Hermes `b7ee21c14e38316273f88d8ed112491ba1c87d15`.
 
 A chat's session ids are its stored id plus the ids `session.resume` returns
 for it (`stored_session_id`, `resumed`): a compressed chat resumes as its
-continuation, and cards made afterwards carry that id.
+continuation, and cards made afterwards carry that id. A compression inside
+an open chat moves it to the continuation too
+(`tui_gateway/session_compression.py`, `_sync_session_key_after_compress`),
+and the gateway's next `session.info` names it in `stored_session_id`. Both
+layouts add that id as well (NextGen in `NgChatController._withInfo`,
+Classic through the chat owner's `kanbanSessionIds` and the screen's
+`session.info` handler) and keep the older ones, so cards stamped with
+either id belong to the chat.
 
 The board always outranks the transcript: once the board has reported a
 card, its title, status and assignee come from the board.
@@ -161,3 +168,6 @@ in-memory dashboard (`test/support/kanban_board_fixture.dart`).
   board with that card selected (route and pane); another chat's card never
   shows; reload from history restores the rows; the reason is shown when
   the board cannot open; the narrow and keyboard cases.
+- `test/kanban_dock_compression_test.dart`: both layouts, a compression in
+  an open chat; cards stamped with the old and the continuation id both
+  stay in the dock.
