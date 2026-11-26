@@ -15670,6 +15670,51 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get rel_svc_notifications_off => 'as notificações estão desativadas';
+
+  @override
+  String rel_chat_preview_pin_label(int number, String note) {
+    return 'n.º $number $note';
+  }
+
+  @override
+  String rel_chat_preview_pin_number(int number) {
+    return 'n.º $number';
+  }
+
+  @override
+  String ng_rel_chat_wake_status_notice(String status, String notice) {
+    return '$status — $notice';
+  }
+
+  @override
+  String ng_rel_chat_cost_amount(String amount) {
+    return '\$$amount';
+  }
+
+  @override
+  String ng_rel_chat_context_ratio(String used, String maximum) {
+    return '$used / $maximum';
+  }
+
+  @override
+  String ng_rel_chat_connection_reason(String status, String reason) {
+    return '$status $reason';
+  }
+
+  @override
+  String ng_rel_chat_notice_time(String message, String time) {
+    return '$message · $time';
+  }
+
+  @override
+  String ng_rel_chat_attachment_progress(String name, String progress) {
+    return '$name · $progress';
+  }
+
+  @override
+  String ng_rel_chat_tool_detail(String name, String detail) {
+    return '$name · $detail';
+  }
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -31312,4 +31357,49 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get rel_svc_notifications_off => 'as notificações estão desativadas';
+
+  @override
+  String rel_chat_preview_pin_label(int number, String note) {
+    return 'nº $number $note';
+  }
+
+  @override
+  String rel_chat_preview_pin_number(int number) {
+    return 'nº $number';
+  }
+
+  @override
+  String ng_rel_chat_wake_status_notice(String status, String notice) {
+    return '$status — $notice';
+  }
+
+  @override
+  String ng_rel_chat_cost_amount(String amount) {
+    return '\$$amount';
+  }
+
+  @override
+  String ng_rel_chat_context_ratio(String used, String maximum) {
+    return '$used / $maximum';
+  }
+
+  @override
+  String ng_rel_chat_connection_reason(String status, String reason) {
+    return '$status $reason';
+  }
+
+  @override
+  String ng_rel_chat_notice_time(String message, String time) {
+    return '$message · $time';
+  }
+
+  @override
+  String ng_rel_chat_attachment_progress(String name, String progress) {
+    return '$name · $progress';
+  }
+
+  @override
+  String ng_rel_chat_tool_detail(String name, String detail) {
+    return '$name · $detail';
+  }
 }

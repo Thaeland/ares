@@ -8125,5 +8125,107 @@
   "rel_svc_misc_website": "網站",
   "rel_svc_lan_timeout": "區域網路探索逾時",
   "rel_svc_notification_permission_denied": "權限遭拒",
-  "rel_svc_notifications_off": "通知已關閉"
+  "rel_svc_notifications_off": "通知已關閉",
+  "rel_chat_preview_pin_label": "#{number} {note}",
+  "@rel_chat_preview_pin_label": {
+    "description": "Preview annotation chip: pin number followed by the user's note. Preserve the note verbatim.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_chat_preview_pin_number": "#{number}",
+  "@rel_chat_preview_pin_number": {
+    "description": "Number badge over a pinned preview region; corresponds to the numbered annotation chip and crop.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_rel_chat_wake_status_notice": "{status} — {notice}",
+  "@ng_rel_chat_wake_status_notice": {
+    "description": "NextGen chat toast combining the already localised wake-word status with an additional gateway notice. Preserve the supplied text verbatim.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "notice": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_rel_chat_cost_amount": "${amount}",
+  "@ng_rel_chat_cost_amount": {
+    "description": "NextGen chat usage sheet cost value. Amount is preformatted to four decimal places; the dollar sign is the existing currency convention, not a request for currency conversion.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_rel_chat_context_ratio": "{used} / {maximum}",
+  "@ng_rel_chat_context_ratio": {
+    "description": "NextGen chat usage sheet context usage ratio. Used and maximum are preformatted compact token counts.",
+    "placeholders": {
+      "used": {
+        "type": "String"
+      },
+      "maximum": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_rel_chat_connection_reason": "{status} {reason}",
+  "@ng_rel_chat_connection_reason": {
+    "description": "NextGen chat connection banner combining an already localised connection status with its supplied reason. Preserve both supplied messages.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_rel_chat_notice_time": "{message} · {time}",
+  "@ng_rel_chat_notice_time": {
+    "description": "NextGen transcript notice followed by its preformatted timestamp. Message is incoming notice text and must remain verbatim.",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_rel_chat_attachment_progress": "{name} · {progress}",
+  "@ng_rel_chat_attachment_progress": {
+    "description": "NextGen user-message attachment pill combining the original filename with an already localised upload-progress label.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "progress": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_rel_chat_tool_detail": "{name} · {detail}",
+  "@ng_rel_chat_tool_detail": {
+    "description": "NextGen assistant tool disclosure label while a tool is running and has a non-null detail. Tool name is a protocol identifier; preserve it and the supplied detail verbatim.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "detail": {
+        "type": "String"
+      }
+    }
+  }
 }
