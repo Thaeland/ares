@@ -2,7 +2,7 @@
 
 ## Decision already settled
 
-Sam approved trust on first use. This audit does **not** reopen that decision. Ares may offer a gateway-managed SSH path with an honest first-use warning, alongside the existing independently pinned, direct OpenSSH path. No managed UI has been implemented yet.
+Sam approved trust on first use and then authorised the gateway-API-limited UX below. This audit does **not** reopen that decision. Ares offers an honest managed first-use warning alongside the independently pinned direct OpenSSH path. Its shared managed screen starts/attaches and disconnects saved gateway SSH hosts, shows one elapsed pending state and the reported tunnel status, and requires external verified key repair followed by confirmed Retry after a changed-key block.
 
 The remaining issue is the difference between native Desktop's Electron bridge and the gateway's remotely callable REST API at **`b7ee21c14e38316273f88d8ed112491ba1c87d15`**. They do not expose the same capabilities.
 
@@ -40,11 +40,8 @@ The tunnel view in `hermes_cli/gateway_connections_ssh.py:tunnel_status` contain
 
 The remote connection implementation also requires Hermes to be installed already (`hermes-not-found` otherwise). “Bootstrap” here starts or attaches an isolated owned `hermes serve`; it is not an installer for an empty host.
 
-## Required scope decision
+## Authorised release scope
 
-Either:
+Use the **gateway-API-limited** implementation: one elapsed pending state, an explicit no-fingerprint warning, no interrupting cancellation or invented logs, operator-assisted changed-key repair followed by confirmed retry, and no native-only managed SSH update/recovery controls. Leaving the page does not stop the remote operation. Explicit disconnect after completion is separately confirmed because it stops the gateway-owned serve.
 
-- authorise the **gateway-API-limited** implementation: one pending state, explicit no-fingerprint/no-log notice, queued disconnect rather than interrupting cancellation, operator-assisted changed-key repair followed by confirmed retry, and managed SSH update/recovery unavailable (as in the browser bridge); or
-- supply/implement an upstream gateway contract for cancellable bootstrap/progress, safe confirmed known-hosts replacement and native-equivalent managed SSH update/recovery, then pin Ares's contract tests to that revision.
-
-Do not invent request parameters, shell out on the gateway to reset trust, tunnel arbitrary ports, weaken the strict pinned path, or mark missing operations successful. No full Flutter gates were run because application implementation is blocked on this scope decision. `flutter pub get --offline --enforce-lockfile` passed on the new local `v5/fleet-tofu` branch based on `6521d11d`; nothing was pushed.
+Do not invent request parameters, shell out on the gateway to reset trust, tunnel arbitrary ports, weaken the strict pinned path, or mark missing operations successful. Flutter acceptance results belong in the task handoff; the audit alone is not feature validation. No real hosts, accounts, hosting or inference are needed for the fake-gateway tests.

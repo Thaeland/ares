@@ -114,6 +114,11 @@ void main() {
             }
             await tap('Gateway fleet');
             await tester.pumpAndSettle();
+            await tap('Gateway-managed SSH');
+            await tester.pumpAndSettle();
+            expect(find.text('Read saved SSH hosts'), findsOneWidget);
+            await tester.pageBack();
+            await tester.pumpAndSettle();
             if (FleetSsh.supported) {
               await tap('Verified SSH');
               await tester.pumpAndSettle();

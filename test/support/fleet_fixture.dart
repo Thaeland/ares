@@ -20,6 +20,13 @@ class FleetFixture {
   String primary = 'local';
   String receipt = '0' * 32;
   bool mayUpdate = true;
+  bool includeSsh = false;
+  String sshHost = 'fixture.invalid';
+  String? sshErrorKind;
+  bool sshConnected = false;
+  Completer<void>? holdSsh;
+  final enteredSsh = Completer<void>();
+  final sshWrites = <({String method, String body, String? origin})>[];
 
   /// Holds `GET /api/hermes/update/check` until completed, so a test can
   /// change chat state between eligibility review and the update POST.
@@ -70,6 +77,15 @@ class FleetFixture {
     'primary': primary,
     'lastUsed': 'local',
     'connections': [
+      if (includeSsh)
+        {
+          'id': 'ssh-fixture',
+          'kind': 'ssh',
+          'label': 'Fixture SSH',
+          'host': sshHost,
+          'port': 2222,
+          'keyPath': 'never-render-this',
+        },
       {'id': 'local', 'kind': 'local', 'label': 'Webapp host'},
       {
         'id': 'other',
@@ -163,6 +179,42 @@ class FleetFixture {
             'hermes_session_at=fixture-$name' ||
         req.headers.value('authorization') != null) {
       res.statusCode = 401;
+    } else if (path == '/api/gateway-connections/ssh-fixture/ssh' &&
+        !req.uri.hasQuery) {
+      if (req.method != 'GET') {
+        sshWrites.add((
+          method: req.method,
+          body: await utf8.decoder.bind(req).join(),
+          origin: req.headers.value('origin'),
+        ));
+      }
+      if (req.method == 'POST') {
+        if (!enteredSsh.isCompleted) enteredSsh.complete();
+        await holdSsh?.future;
+      }
+      if (req.method == 'POST' && sshErrorKind != null) {
+        res.statusCode = 502;
+        body = {
+          'detail': {'kind': sshErrorKind, 'message': 'never-render-this'},
+        };
+      } else if (req.method == 'DELETE') {
+        sshConnected = false;
+        body = {'ok': true, 'disconnected': true};
+      } else {
+        if (req.method == 'POST') sshConnected = true;
+        body = {
+          'ok': true,
+          'connected': sshConnected,
+          if (sshConnected) ...{
+            'host': sshHost,
+            'localPort': 40001,
+            'remotePort': 9119,
+            'pid': 42,
+            'hermesVersion': '1.2.3',
+            'reused': true,
+          },
+        };
+      }
     } else if (path == '/api/auth/ws-ticket') {
       final ticket = '$name-${++issued}';
       tickets.add('hermes-gateway-ticket.$ticket');
