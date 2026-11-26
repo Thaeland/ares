@@ -17,6 +17,7 @@ import '../../core/models/slash_command.dart';
 import '../../core/render/catalog_install.dart';
 import '../../core/render/setup_beat.dart';
 import '../../core/services/attachment_draft_service.dart';
+import '../../core/services/chat_kanban_dock.dart';
 import '../../core/services/completion_cue_player.dart';
 import '../../core/services/remote_workspace.dart';
 import '../../core/services/system_sleep_gate.dart';
@@ -854,6 +855,26 @@ class NgChatController extends ChangeNotifier {
   /// since, so one delegation's finished siblings stay beside its live ones.
   DateTime? subagentBatchStart;
 
+  /// The Kanban cards this chat sent to the board, for the dock: its own
+  /// `kanban_create` / `kanban_link` calls plus the cards the board says this
+  /// session created. Reads through this chat's own gateway owner only.
+  late final ChatKanbanDockController kanban = ChatKanbanDockController(
+    connectionId: gateway.connection.id,
+    profile: gateway.profile,
+    openSource: () => _disposed
+        ? null
+        : debugKanbanSource?.call() ?? WorkspaceChatKanbanSource(kanbanOwner),
+  )..setChat(primaryId: storedId);
+
+  /// The gateway owner the dock reads the board and opens it through.
+  RemoteWorkspaceOwner get kanbanOwner => debugKanbanOwner ?? gateway.workspace;
+
+  @visibleForTesting
+  RemoteWorkspaceOwner? debugKanbanOwner;
+
+  @visibleForTesting
+  ChatKanbanSource Function()? debugKanbanSource;
+
   /// The subagents the dock shows while any of them is still live.
   List<NgSubagent> get dockSubagents {
     final start = subagentBatchStart;
@@ -972,6 +993,15 @@ class NgChatController extends ChangeNotifier {
       }
       runtimeId = result['session_id']?.toString() ?? runtimeId;
       if (runtimeId != null) gateway.bindRuntime(runtimeId!, id);
+      // A compressed chat resumes as its continuation: cards it creates
+      // from here on carry that session id.
+      kanban.setChat(
+        primaryId: id,
+        aliases: [
+          for (final key in const ['stored_session_id', 'resumed'])
+            if (result[key] case final String alias) alias,
+        ],
+      );
       final wasRunning = running;
       running = result['running'] == true;
       if (running && !wasRunning) {
@@ -1140,6 +1170,7 @@ class NgChatController extends ChangeNotifier {
   /// Shows [page] (the newest rows, asked for with [limit]) as the whole
   /// transcript.
   void _setRows(List<Map<String, dynamic>> page, int limit) {
+    kanban.observeHistoryRows(page);
     final full = page.length >= limit;
     final rows = full ? ngFromFirstTurn(page) : page;
     hasOlder = full;
@@ -1165,6 +1196,7 @@ class NgChatController extends ChangeNotifier {
       final guardShift = _olderShift;
       final page = await _fetchRows(id, limit: ngHistoryPage, offset: offset);
       if (_disposed) return;
+      kanban.observeHistoryRows(page);
       // Adoption or a window rebuild during the fetch moved the accounting
       // this page's offset was computed from. Applying it would double-count
       // the adopted rows in the shift; drop it and let the next scroll retry
@@ -1228,6 +1260,9 @@ class NgChatController extends ChangeNotifier {
           offset: page * ngHistoryPage,
         );
         if (_disposed || storedId != id || _rowIds.length != baseline) return;
+        // The finished turn's stored rows: its Kanban calls are here even
+        // when the gateway sent no live tool events for them.
+        kanban.observeHistoryRows(rows);
         final known = _rowIds.whereType<String>().toSet();
         var cut = rows.length;
         while (cut > 0) {
@@ -1919,6 +1954,11 @@ class NgChatController extends ChangeNotifier {
         tool.failed =
             result is Map &&
             (result['success'] == false || result['error'] != null);
+        kanban.observeToolCall(
+          name: s('name') ?? tool.name,
+          args: p['args'] ?? tool.input,
+          result: result ?? s('result_text'),
+        );
       case 'status.update':
         final text = s('text');
         status = text == null || text.trim().isEmpty ? null : text;
@@ -2226,6 +2266,7 @@ class NgChatController extends ChangeNotifier {
     thinkingFrame = null;
     turnStartedAt = null;
     request = null;
+    kanban.turnEnded();
     onTurnFinished?.call();
     // The goal's judge runs after the turn; pick up its verdict.
     if (control?.goal != null) unawaited(refreshControl());
@@ -2402,6 +2443,8 @@ class NgChatController extends ChangeNotifier {
         error = ngL.ng_project_cwd_fallback(actualCwd);
       }
       if (runtimeId != null) gateway.bindRuntime(runtimeId!, storedId!);
+      // Created just now: there is nothing on the board to look for yet.
+      kanban.setChat(primaryId: storedId, discover: false);
       final storedDraft = result['stored_session_id'];
       if (draftOwnerCurrent &&
           storedDraft is String &&
@@ -3644,6 +3687,7 @@ class NgChatController extends ChangeNotifier {
     for (final sub in _subs) {
       unawaited(sub.cancel());
     }
+    kanban.dispose();
     super.dispose();
   }
 }

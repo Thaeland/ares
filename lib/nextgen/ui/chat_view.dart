@@ -25,6 +25,7 @@ import '../../core/render/setup_beat.dart';
 import '../../core/screens/workspace_workers_screen.dart';
 import '../../core/screens/gateway_queue_screen.dart';
 import '../../core/screens/kanban_board_screen.dart';
+import '../../core/widgets/kanban_dock.dart';
 import '../../core/screens/bots_screen.dart';
 import '../../core/services/remote_files_client.dart';
 import '../../core/services/legal_links.dart';
@@ -984,7 +985,8 @@ class _NgChatViewState extends State<NgChatView>
           final id = chat.storedId ?? chat.runtimeId;
           return id == null ? null : '${chat.gateway.connection.id}|$id';
         },
-        child: _buildScoped(c, gateway),
+        // A wide chat opens the Kanban board beside itself (the dock's rows).
+        child: KanbanPaneHost(child: _buildScoped(c, gateway)),
       ),
     );
   }

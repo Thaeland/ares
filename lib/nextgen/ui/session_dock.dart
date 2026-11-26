@@ -1,19 +1,23 @@
 // What sits above the composer: one card with a folding row per thing going
 // on (the goal with its loop and heartbeat, running subagents, the agent's
-// task list), each opening to its details.
+// task list, the Kanban cards the chat sent to the board), each opening to
+// its details.
 import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../core/services/chat_kanban_dock.dart';
+import '../../core/widgets/kanban_dock.dart';
 import '../data/chat_controller.dart';
 import '../data/session_control.dart';
 import '../nextgen_l10n.dart';
 import '../theme/nextgen_theme.dart';
 import 'widgets.dart';
 
-/// The card above the composer: a row each for the goal, running subagents
-/// and the task list, when there is one. Each row folds open to its details.
+/// The card above the composer: a row each for the goal, running subagents,
+/// the task list and the chat's Kanban cards, when there are any. Each row
+/// folds open to its details.
 class NgSessionDock extends StatelessWidget {
   const NgSessionDock({super.key, required this.chat, this.available});
   final NgChatController chat;
@@ -21,12 +25,28 @@ class NgSessionDock extends StatelessWidget {
   /// The chat body's height (keyboard already removed), when known.
   final double? available;
 
+  /// Opens the board on [card], or on all of this chat's cards, through the
+  /// chat's own gateway. A chat closed or switched meanwhile opens nothing.
+  Future<void> _openKanban(BuildContext context, [ChatKanbanCard? card]) =>
+      openChatKanban(
+        context,
+        dock: chat.kanban,
+        owner: chat.kanbanOwner,
+        connection: chat.gateway.connection,
+        card: card,
+        isCurrent: () => context.mounted && chat.draftOwnerCurrent,
+        explain: (reason) => ngToast(context, reason),
+      );
+
   @override
   Widget build(BuildContext context) => NgDock(
     control: chat.control,
     todos: chat.todos,
     todosLive: chat.todosLive,
     subagents: chat.dockSubagents,
+    kanban: chat.kanban,
+    onOpenKanbanCard: (card) => unawaited(_openKanban(context, card)),
+    onShowAllKanban: () => unawaited(_openKanban(context)),
     onOpenControl: () =>
         showNgSheet<void>(context, builder: (_) => NgControlSheet(chat: chat)),
     onStopSubagent: chat.stopSubagent,
@@ -34,7 +54,7 @@ class NgSessionDock extends StatelessWidget {
   );
 }
 
-enum _DockSection { goal, subagents, tasks }
+enum _DockSection { goal, subagents, tasks, kanban }
 
 class NgDock extends StatefulWidget {
   const NgDock({
@@ -43,6 +63,9 @@ class NgDock extends StatefulWidget {
     this.todos,
     this.todosLive = false,
     this.subagents = const [],
+    this.kanban,
+    this.onOpenKanbanCard,
+    this.onShowAllKanban,
     required this.onOpenControl,
     required this.onStopSubagent,
     this.available,
@@ -54,6 +77,12 @@ class NgDock extends StatefulWidget {
   final NgTodoList? todos;
   final bool todosLive;
   final List<NgSubagent> subagents;
+
+  /// The chat's Kanban cards. The dock follows the board only while it is
+  /// on screen, and lets go when the chat is closed or switched.
+  final ChatKanbanDockController? kanban;
+  final ValueChanged<ChatKanbanCard>? onOpenKanbanCard;
+  final VoidCallback? onShowAllKanban;
   final VoidCallback onOpenControl;
   final Future<void> Function(NgSubagent agent) onStopSubagent;
 
@@ -69,15 +98,46 @@ class _NgDockState extends State<NgDock> {
   });
 
   @override
+  void initState() {
+    super.initState();
+    widget.kanban?.attach();
+  }
+
+  @override
+  void didUpdateWidget(covariant NgDock oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (identical(oldWidget.kanban, widget.kanban)) return;
+    oldWidget.kanban?.detach();
+    widget.kanban?.attach();
+  }
+
+  @override
+  void dispose() {
+    widget.kanban?.detach();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final kanban = widget.kanban;
+    if (kanban == null) return _build(context, null);
+    return ListenableBuilder(
+      listenable: kanban,
+      builder: (context, _) => _build(context, kanban),
+    );
+  }
+
+  Widget _build(BuildContext context, ChatKanbanDockController? kanban) {
     final c = NgColors.of(context);
     final control = widget.control;
     final todos = widget.todos;
     final agents = widget.subagents;
+    final cards = kanban?.cards ?? const <ChatKanbanCard>[];
     final sections = <Widget>[
       if (control != null) _goalSection(context, c, control),
       if (agents.isNotEmpty) _subagentSection(c, agents),
       if (todos != null && todos.items.isNotEmpty) _taskSection(c, todos),
+      if (kanban != null && cards.isNotEmpty) _kanbanSection(c, kanban, cards),
     ];
     // Never more than about half the visible screen, so the transcript stays
     // usable on a small phone at large text; the dock scrolls beyond that.
@@ -409,6 +469,41 @@ class _NgDockState extends State<NgDock> {
           for (final (item, depth) in todos.tree())
             _TodoRow(item: item, depth: depth, live: live),
         ],
+      ),
+    );
+  }
+
+  Widget _kanbanSection(
+    NgColors c,
+    ChatKanbanDockController dock,
+    List<ChatKanbanCard> cards,
+  ) {
+    final style = KanbanDockStyle(
+      title: NgType.bodySmall,
+      meta: NgType.caption,
+      text: c.text,
+      dim: c.text3,
+      accent: c.accentText,
+      success: c.success,
+      warning: c.warning,
+      danger: c.danger,
+    );
+    final current = cards.where((card) => !card.settled).firstOrNull;
+    return _section(
+      id: _DockSection.kanban,
+      c: c,
+      icon: Icons.view_kanban_outlined,
+      tint: current == null ? c.text3 : c.accentText,
+      label: kanbanDockLabel(ngL, cards),
+      trailing: KanbanDockDots(cards: cards, style: style),
+      detail: current?.title,
+      showLabel: ngL.ng_show_kanban,
+      hideLabel: ngL.ng_hide_kanban,
+      body: KanbanDockRows(
+        dock: dock,
+        style: style,
+        onOpen: widget.onOpenKanbanCard ?? (_) {},
+        onShowAll: widget.onShowAllKanban ?? () {},
       ),
     );
   }
