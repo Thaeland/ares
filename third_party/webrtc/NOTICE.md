@@ -16,7 +16,7 @@ inventory, not legal clearance.
 | Android | `io.github.webrtc-sdk:android:150.7871.04` (AAR; `libjingle_peerconnection_so.so` for arm64-v8a, armeabi-v7a, x86, x86_64) | Maven Central | AAR SHA-256 `1872dda4e3bf7d6ea6f7c6e11861332081c57081a1e62fc82fab72415c69c84c`; POM licence: The 3-Clause BSD License |
 | Android | `com.github.davidliu:audioswitch` at commit `039a35aefab7747c557242fa216c9ea11743b604` | JitPack (fork of twilio/audioswitch) | Apache-2.0, Copyright 2020 Twilio, inc. |
 | iOS, macOS | `WebRTC-SDK` 150.7871.04 pod (`WebRTC.xcframework`) | <https://github.com/webrtc-sdk/Specs/releases/download/150.7871.04/WebRTC.xcframework.zip> | ZIP SHA-256 `9532fe3ce47507c304f37a4355b907be1e89967971d614a04603005a546249be` (GitHub release digest); its `LICENSE` is the WebRTC BSD-3-Clause text, byte for byte |
-| Windows, Linux | `libwebrtc.m150.7871.07` prebuilt (`libwebrtc.dll` / `libwebrtc.so`) | <https://github.com/webrtc-sdk/libwebrtc/releases/tag/libwebrtc.m150.7871.07> | Per-arch ZIP SHA-256 below; flutter_webrtc's CMake downloads the archive at configure time |
+| Windows, Linux | `libwebrtc.m150.7871.07` prebuilt (`libwebrtc.dll` / `libwebrtc.so`) | <https://github.com/webrtc-sdk/libwebrtc/releases/tag/libwebrtc.m150.7871.07> | Per-arch ZIP SHA-256 below; downloaded at CMake configure time and checked against these hashes (see [docs/libwebrtc-desktop-download.md](../../docs/libwebrtc-desktop-download.md)) |
 | all | `flutter_webrtc` 1.6.3 (with `dart_webrtc`, `webrtc_interface`) | pub.dev | MIT (its LICENSE is in the app's package licences); its `NOTICE` adds Apache-2.0 code from Shiguredo and MIT code from react-native-webrtc |
 
 libwebrtc.m150.7871.07 release archives (SHA-256 computed locally, equal to

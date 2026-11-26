@@ -70,6 +70,11 @@ set_target_properties(${BINARY_NAME}
 )
 
 
+# flutter_webrtc downloads a prebuilt libwebrtc with no checksum; pin it by
+# SHA-256 before the plugins are added (docs/libwebrtc-desktop-download.md).
+include("${CMAKE_CURRENT_SOURCE_DIR}/../third_party/webrtc/libwebrtc_pin.cmake")
+ares_pin_libwebrtc_for_app()
+
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
 include(flutter/generated_plugins.cmake)

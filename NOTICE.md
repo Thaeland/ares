@@ -44,6 +44,10 @@ under BSD, ISC/OpenSSL and Apache-2.0 terms; the Windows and Linux libraries
 also carry OpenH264 (BSD-2-Clause), libjpeg-turbo and FFmpeg
 (LGPL-2.1-or-later). What ships where, the full texts and the LGPL source
 pointers are in [third_party/webrtc/NOTICE.md](third_party/webrtc/NOTICE.md).
+flutter_webrtc downloads the Windows and Linux libwebrtc archive at build
+time with no checksum of its own; Ares pins it by SHA-256 and checks it before
+the plugin runs. What is still trusted is recorded in
+[docs/libwebrtc-desktop-download.md](docs/libwebrtc-desktop-download.md).
 The gateway host performs session creation and holds any provider API key.
 
 The completion sounds `ares_mail.wav` and `ares_reminder.wav` (in
