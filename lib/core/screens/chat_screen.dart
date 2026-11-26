@@ -32,7 +32,11 @@ import '../services/connection_mutation_barrier.dart';
 import '../services/client_direct_voice.dart';
 import '../services/client_direct_voice_speaker.dart';
 import '../services/gateway_wake_word.dart';
+import '../services/gpt_live_conversation.dart';
+import '../services/voice_live_engine.dart';
+import '../services/voice_live_mode.dart';
 import '../widgets/gateway_wake_controls.dart';
+import '../widgets/voice_live_controls.dart';
 import '../widgets/hands_free_voice_controls.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -705,6 +709,13 @@ class ChatScreen extends StatefulWidget {
   @visibleForTesting
   final SlashCommandGateway? testSlashGateway;
 
+  @visibleForTesting
+  final VoiceLiveModeController? testVoiceLiveMode;
+
+  @visibleForTesting
+  final VoiceLiveEngine Function(GptLiveTransport transport)?
+  testVoiceLiveEngineFactory;
+
   const ChatScreen({
     required this.connection,
     required this.session,
@@ -742,6 +753,8 @@ class ChatScreen extends StatefulWidget {
     this.testMediaFilesClient,
     this.testTaskHistorySource,
     this.testSlashGateway,
+    this.testVoiceLiveMode,
+    this.testVoiceLiveEngineFactory,
     this.onArchiveChanged,
     this.sessionArchiver,
     super.key,
@@ -841,6 +854,10 @@ class _ChatScreenState extends State<ChatScreen>
   late final Future<void> _sessionModelRestore;
   DesktopGatewayClient? _desktopGateway;
   GatewayWakeWordController? get _wake => _desktopGateway?.wakeWord;
+  VoiceLiveModeController? get _voiceLiveMode =>
+      widget.testVoiceLiveMode ?? _desktopGateway?.voiceLiveMode;
+  VoiceLiveEngine? _liveEngine;
+  GptLiveTransport? _liveTransport;
   GatewayTurnApplicationController? _localTurnController;
   NormalGatewayApplicationSession? _normalSession;
   bool _normalSessionReady = false;
@@ -1193,6 +1210,7 @@ class _ChatScreenState extends State<ChatScreen>
         _desktopGateway = gateway;
         if (gateway != null) widget.testDesktopGateway?.call(gateway);
         if (gateway != null) _bindWake();
+        if (gateway != null) _bindLiveVoice();
         // The catalogue is per connection: a bound transport invalidates any
         // failure recorded before the socket existed. An application session
         // can exist without a Desktop client (routing/test owners).
@@ -1205,6 +1223,11 @@ class _ChatScreenState extends State<ChatScreen>
         // actionable configuration error when Desktop attachments are needed.
         _desktopGateway = null;
       }
+    }
+    if (_liveEngine == null &&
+        (widget.testVoiceLiveMode != null ||
+            widget.testVoiceLiveEngineFactory != null)) {
+      _bindLiveVoice();
     }
     // Test seam: with no real gateway, hand the same handler to the test
     // hook so it can simulate reconnect transitions.
@@ -1929,9 +1952,162 @@ class _ChatScreenState extends State<ChatScreen>
 
   void _onWakeDetected(WakeDetectedEvent event) {
     if (!mounted || !_voiceElementActive) return;
+    if (_liveEngine?.active == true) return;
+    if (_voiceLiveMode?.effectiveMode == 'gpt-live') {
+      unawaited(_startVoiceConversation());
+      return;
+    }
     if (!_voiceComposer.listening && !_voiceComposer.starting) {
       unawaited(_startVoiceInput());
     }
+  }
+
+  void _bindLiveVoice() {
+    _disposeLiveVoice();
+    final mode = _voiceLiveMode;
+    mode?.addListener(_onLiveVoiceChanged);
+    if (mode != null) {
+      unawaited(mode.refresh());
+    }
+    final transport =
+        mode?.transport ??
+        _desktopGateway?.createGptLiveTransport() ??
+        GptLiveGatewayTransport(
+          widget.connection,
+          profile: widget.connection.gatewayProfile,
+        );
+    final ownsTransport = mode == null;
+    if (ownsTransport) _liveTransport = transport;
+    final engine =
+        widget.testVoiceLiveEngineFactory?.call(transport) ??
+        VoiceLiveEngine(
+          transport: transport,
+          connectionId: widget.connection.id,
+        );
+    engine.onError = (message) {
+      if (!mounted) return;
+      ScaffoldMessenger.maybeOf(
+        context,
+      )?.showSnackBar(SnackBar(content: Text(message)));
+    };
+    engine.onClosed = (_) {
+      if (!mounted) return;
+      _syncClassicWakeForLive();
+      setState(() {});
+    };
+    engine.onStopWord = () {
+      if (!mounted) return;
+      _syncClassicWakeForLive();
+      setState(() {});
+    };
+    engine.addListener(_onLiveVoiceChanged);
+    _liveEngine = engine;
+    unawaited(engine.refresh());
+  }
+
+  void _disposeLiveVoice() {
+    _voiceLiveMode?.removeListener(_onLiveVoiceChanged);
+    final engine = _liveEngine;
+    _liveEngine = null;
+    if (engine != null) {
+      engine.removeListener(_onLiveVoiceChanged);
+      engine.dispose();
+    }
+    _liveTransport?.dispose();
+    _liveTransport = null;
+  }
+
+  void _onLiveVoiceChanged() {
+    if (!mounted) return;
+    _syncClassicWakeForLive();
+    setState(() {});
+  }
+
+  void _syncClassicWakeForLive() {
+    if (_wake case final wake?) {
+      final busy =
+          _voiceComposer.listening ||
+          _voiceComposer.starting ||
+          (_liveEngine?.active ?? false);
+      wake.setPausedForVoice(busy);
+    }
+  }
+
+  List<Map<String, dynamic>> _seedClassicLiveHistory() {
+    final source = _normalSnapshot?.displayRows.isNotEmpty == true
+        ? _normalSnapshot!.displayRows
+        : _messages;
+    final turns = <({String role, String text})>[];
+    for (final row in source) {
+      final role = row['role']?.toString();
+      if (role != 'user' && role != 'assistant') continue;
+      final text = row['content']?.toString().trim() ?? '';
+      if (text.isEmpty) continue;
+      turns.add((role: role!, text: text));
+    }
+    return toLiveHistory(turns);
+  }
+
+  Future<void> _startVoiceConversation() async {
+    final mode = _voiceLiveMode;
+    final engine = _liveEngine;
+    if (mode != null && !mode.hasStatus) {
+      await mode.refresh();
+    }
+    if (!mounted) return;
+    if (mode != null && mode.selectedMode == 'gpt-live') {
+      if (mode.liveAvailable && engine != null) {
+        if (_wake case final wake?) {
+          await wake.pauseForVoice();
+        }
+        if (!mounted) return;
+        final started = await engine.start(history: _seedClassicLiveHistory());
+        if (started && mounted) {
+          _syncClassicWakeForLive();
+          setState(() {});
+          return;
+        }
+        if (!mounted) return;
+      }
+      final reason =
+          mode.unavailableReason ??
+          engine?.reason ??
+          context.sharedL10n.voice_engine_live_needs_key;
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        SnackBar(
+          content: Text(
+            context.sharedL10n.voice_engine_fallback_chained(reason),
+          ),
+        ),
+      );
+    }
+    if (handsFreeEnabled.value && _handsFreeSupported) {
+      await _startHandsFree();
+    } else if (!_voiceComposer.listening && !_voiceComposer.starting) {
+      await _startVoiceInput();
+    }
+  }
+
+  Future<void> _stopLiveVoice() async {
+    final engine = _liveEngine;
+    if (engine == null) return;
+    await engine.stop();
+    if (!mounted) return;
+    _syncClassicWakeForLive();
+    setState(() {});
+  }
+
+  void _toggleLiveMute() {
+    final engine = _liveEngine;
+    if (engine == null || !engine.active) return;
+    engine.setMuted(!engine.muted);
+  }
+
+  void _interruptLiveVoice() {
+    if (_streaming && !_stopResponseInFlight) {
+      unawaited(_stopResponse());
+    }
+    _liveEngine?.stopTurn();
   }
 
   @override
@@ -2017,6 +2193,7 @@ class _ChatScreenState extends State<ChatScreen>
     _handsFree
       ..removeListener(_onVoiceComposerChanged)
       ..dispose();
+    _disposeLiveVoice();
     _voiceTurn?.finish(HandsFreeTurnStatus.unknown);
     _voiceTurn = null;
     unawaited(_replySpeaker.stop().catchError((Object _) {}));
@@ -8145,6 +8322,19 @@ class _ChatScreenState extends State<ChatScreen>
               ),
             ),
           if (!compactTools) ...[
+            if (_voiceLiveMode?.hasStatus == true)
+              IconButton(
+                key: const ValueKey('voice-engine-toolbar'),
+                tooltip: context.sharedL10n.voice_engine_title,
+                icon: const Icon(Icons.graphic_eq),
+                onPressed: () => unawaited(
+                  showVoiceEngineSheet(
+                    context,
+                    controller: _voiceLiveMode!,
+                    disabled: _liveEngine?.active == true,
+                  ),
+                ),
+              ),
             if (_desktopGateway != null)
               IconButton(
                 tooltip: 'Open browser preview',
@@ -8164,6 +8354,7 @@ class _ChatScreenState extends State<ChatScreen>
                 onPressed: () => workers.open(context),
               ),
           ] else if (_desktopGateway != null ||
+              _voiceLiveMode?.hasStatus == true ||
               workers != null ||
               radio != null)
             // One always-visible menu on narrow panes, also while a reply
@@ -8174,6 +8365,16 @@ class _ChatScreenState extends State<ChatScreen>
               tooltip: 'More chat tools',
               icon: const Icon(Icons.widgets_outlined),
               onSelected: (tool) {
+                if (tool == voiceEngineToolValue && _voiceLiveMode != null) {
+                  unawaited(
+                    showVoiceEngineSheet(
+                      context,
+                      controller: _voiceLiveMode!,
+                      disabled: _liveEngine?.active == true,
+                    ),
+                  );
+                  return;
+                }
                 if (tool == radioToolValue) {
                   final current = compactRadioTool(context);
                   if (current != null) {
@@ -8195,6 +8396,8 @@ class _ChatScreenState extends State<ChatScreen>
                 }
               },
               itemBuilder: (_) => [
+                if (_voiceLiveMode?.hasStatus == true)
+                  voiceEngineToolItem(context, _voiceLiveMode!),
                 if (_desktopGateway != null)
                   const PopupMenuItem(
                     value: 'browser',
@@ -8950,7 +9153,9 @@ class _ChatScreenState extends State<ChatScreen>
                             context,
                           )?.showSnackBar(SnackBar(content: Text(msg))),
                         ),
-                      if (!_voiceComposer.listening && !_streaming)
+                      if (!_voiceComposer.listening &&
+                          !_streaming &&
+                          _liveEngine?.active != true)
                         VoiceComposerStartButton(
                           enabled:
                               !_transcriptLoadBlocksComposer &&
@@ -9068,6 +9273,35 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Widget? _buildHandsFreeComposerAction() {
+    if (_liveEngine case final live? when live.active) {
+      return VoiceLiveInlineControls(
+        engine: live,
+        compact: MediaQuery.sizeOf(context).width < 480,
+        onToggleMute: _toggleLiveMute,
+        onInterrupt: _interruptLiveVoice,
+        onStop: () => unawaited(_stopLiveVoice()),
+      );
+    }
+    if (_voiceLiveMode case final mode?
+        when mode.hasStatus && mode.selectedMode == 'gpt-live') {
+      if (_voiceComposer.listening ||
+          _streaming ||
+          _sending ||
+          _preparingSend) {
+        return null;
+      }
+      return GestureDetector(
+        onLongPress: () =>
+            unawaited(showVoiceEngineSheet(context, controller: mode)),
+        child: IconButton(
+          key: const Key('voice-live-start'),
+          tooltip: context.sharedL10n.voice_live_start,
+          icon: const Icon(Icons.graphic_eq),
+          constraints: const BoxConstraints.tightFor(width: 48, height: 48),
+          onPressed: () => unawaited(_startVoiceConversation()),
+        ),
+      );
+    }
     // The feature is switched off in Settings: hide the control entirely. A
     // session that is still winding down after the switch keeps its Stop
     // reachable until the stop lands.

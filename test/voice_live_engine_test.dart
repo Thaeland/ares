@@ -67,8 +67,13 @@ class _FakeConversation implements LiveConversation {
     _active = false;
   }
 
+  @override
   void Function(String id, Map<String, String> prompt)? onDelegation;
+  @override
+  void Function(LiveFragment fragment)? onTranscript;
+  @override
   void Function(String message, bool fatal)? onError;
+  @override
   void Function(String reason, int? usageSeconds)? onClosed;
 
   /// Test helper: simulate a vendor delegation.

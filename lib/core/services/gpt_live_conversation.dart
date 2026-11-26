@@ -261,6 +261,7 @@ abstract class LiveConversation {
   set onDelegation(
     void Function(String id, Map<String, String> prompt)? callback,
   );
+  set onTranscript(void Function(LiveFragment fragment)? callback);
   set onError(void Function(String message, bool fatal)? callback);
   set onClosed(void Function(String reason, int? usageSeconds)? callback);
 }

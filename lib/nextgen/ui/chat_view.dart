@@ -51,7 +51,11 @@ import '../../core/services/auto_speak_replies.dart';
 import '../../core/services/client_direct_voice.dart';
 import '../../core/services/client_direct_voice_speaker.dart';
 import '../../core/services/gateway_wake_word.dart';
+import '../../core/services/gpt_live_conversation.dart';
+import '../../core/services/voice_live_engine.dart';
+import '../../core/services/voice_live_mode.dart';
 import '../../core/widgets/gateway_wake_controls.dart';
+import '../../core/widgets/voice_live_controls.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
 import '../../core/services/attachment_draft_service.dart';
 import '../../core/widgets/client_held_queue_bar.dart';
@@ -83,6 +87,8 @@ class NgChatView extends StatefulWidget {
     this.onNewChat,
     this.readAloudFactory,
     this.wakeController,
+    this.voiceModeController,
+    this.voiceLiveEngineFactory,
   });
 
   final NgChatController chat;
@@ -100,6 +106,15 @@ class NgChatView extends StatefulWidget {
   /// Test hook: overrides `chat.gateway.wakeWord`.
   @visibleForTesting
   final GatewayWakeWordController? wakeController;
+
+  /// Test hook: overrides `chat.gateway.voiceLiveMode`.
+  @visibleForTesting
+  final VoiceLiveModeController? voiceModeController;
+
+  /// Test hook: overrides the per-chat [VoiceLiveEngine].
+  @visibleForTesting
+  final VoiceLiveEngine Function(GptLiveTransport transport)?
+  voiceLiveEngineFactory;
 
   @override
   State<NgChatView> createState() => _NgChatViewState();
@@ -279,6 +294,9 @@ class _NgChatViewState extends State<NgChatView>
   bool _listening = false;
   String _beforeDictation = '';
 
+  VoiceLiveEngine? _liveEngine;
+  VoiceLiveModeController? _boundVoiceMode;
+
   /// One read-aloud engine for this transcript: the reading reply's action
   /// row shows Stop, and starting another reply stops the current one.
   late final NgReadAloud _readAloud;
@@ -286,6 +304,8 @@ class _NgChatViewState extends State<NgChatView>
   NgChatController get chat => widget.chat;
   GatewayWakeWordController get _wake =>
       widget.wakeController ?? chat.gateway.wakeWord;
+  VoiceLiveModeController get _voiceMode =>
+      widget.voiceModeController ?? chat.gateway.voiceLiveMode;
 
   void _bindWake() {
     _wake.bindSessionId(chat.storedId ?? chat.runtimeId);
@@ -294,13 +314,22 @@ class _NgChatViewState extends State<NgChatView>
   }
 
   void _syncWakeVoicePause() {
-    _wake.setPausedForVoice(_listening || _readAloud.readingKey != null);
+    _wake.setPausedForVoice(
+      _listening ||
+          _readAloud.readingKey != null ||
+          (_liveEngine?.active ?? false),
+    );
   }
 
   void _onWakeDetected(WakeDetectedEvent event) {
     if (!mounted) return;
     if (event.startNewSession && !chat.isNew && widget.onNewChat != null) {
       widget.onNewChat!();
+    }
+    if (_liveEngine?.active == true) return;
+    if (_voiceMode.effectiveMode == 'gpt-live') {
+      unawaited(_startVoiceConversation());
+      return;
     }
     if (!_listening) {
       unawaited(_toggleDictation());
@@ -354,6 +383,7 @@ class _NgChatViewState extends State<NgChatView>
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
       if (chat.running && mounted) setState(() {});
     });
+    _bindLiveEngine();
   }
 
   @override
@@ -381,9 +411,133 @@ class _NgChatViewState extends State<NgChatView>
       // A reply being read belongs to the chat we left.
       unawaited(_readAloud.stop());
       _bindWake();
-    } else if (old.wakeController != widget.wakeController) {
-      _bindWake();
+      _disposeLiveEngine();
+      _bindLiveEngine();
+    } else {
+      if (old.wakeController != widget.wakeController) {
+        _bindWake();
+      }
+      if (old.voiceModeController != widget.voiceModeController ||
+          old.voiceLiveEngineFactory != widget.voiceLiveEngineFactory) {
+        _disposeLiveEngine();
+        _bindLiveEngine();
+      }
     }
+  }
+
+  void _bindLiveEngine() {
+    _disposeLiveEngine();
+    final mode = _voiceMode;
+    _boundVoiceMode = mode;
+    mode.addListener(_onLiveEngineChanged);
+    unawaited(mode.refresh());
+    final transport = mode.transport;
+    final engine =
+        widget.voiceLiveEngineFactory?.call(transport) ??
+        VoiceLiveEngine(
+          transport: transport,
+          connectionId: chat.gateway.connection.id,
+        );
+    engine.onError = (message) {
+      if (!mounted) return;
+      ngToast(context, message);
+    };
+    engine.onClosed = (_) {
+      if (!mounted) return;
+      _syncWakeVoicePause();
+      setState(() {});
+    };
+    engine.onStopWord = () {
+      if (!mounted) return;
+      _syncWakeVoicePause();
+      setState(() {});
+    };
+    engine.addListener(_onLiveEngineChanged);
+    _liveEngine = engine;
+    unawaited(engine.refresh());
+  }
+
+  void _disposeLiveEngine() {
+    _boundVoiceMode?.removeListener(_onLiveEngineChanged);
+    _boundVoiceMode = null;
+    final engine = _liveEngine;
+    _liveEngine = null;
+    if (engine != null) {
+      engine.removeListener(_onLiveEngineChanged);
+      engine.dispose();
+    }
+  }
+
+  void _onLiveEngineChanged() {
+    if (!mounted) return;
+    _syncWakeVoicePause();
+    setState(() {});
+  }
+
+  List<Map<String, dynamic>> _seedLiveHistory() {
+    final turns = <({String role, String text})>[];
+    for (final item in chat.items) {
+      if (item is NgUserItem && item.failure == null) {
+        final text = (item.sentText ?? item.text).trim();
+        if (text.isNotEmpty) turns.add((role: 'user', text: text));
+      } else if (item is NgAssistantItem && !item.isEmpty) {
+        final text = item.text.trim();
+        if (text.isNotEmpty) turns.add((role: 'assistant', text: text));
+      }
+    }
+    return toLiveHistory(turns);
+  }
+
+  Future<void> _startVoiceConversation() async {
+    final mode = _voiceMode;
+    final engine = _liveEngine;
+    if (!mode.hasStatus) {
+      await mode.refresh();
+    }
+    if (!mounted) return;
+    if (mode.selectedMode == 'gpt-live') {
+      if (mode.liveAvailable && engine != null) {
+        await _wake.pauseForVoice();
+        if (!mounted) return;
+        final started = await engine.start(history: _seedLiveHistory());
+        if (started && mounted) {
+          _syncWakeVoicePause();
+          setState(() {});
+          return;
+        }
+        if (!mounted) return;
+      }
+      final reason =
+          mode.unavailableReason ??
+          engine?.reason ??
+          ngL.voice_engine_live_needs_key;
+      ngToast(context, ngL.voice_engine_fallback_chained(reason));
+    }
+    if (!_listening) {
+      await _toggleDictation();
+    }
+  }
+
+  Future<void> _stopLiveVoice() async {
+    final engine = _liveEngine;
+    if (engine == null) return;
+    await engine.stop();
+    if (!mounted) return;
+    _syncWakeVoicePause();
+    setState(() {});
+  }
+
+  void _toggleLiveMute() {
+    final engine = _liveEngine;
+    if (engine == null || !engine.active) return;
+    engine.setMuted(!engine.muted);
+  }
+
+  void _interruptLiveVoice() {
+    if (chat.running) {
+      unawaited(chat.stop());
+    }
+    _liveEngine?.stopTurn();
   }
 
   void _onReadAloud() {
@@ -471,6 +625,7 @@ class _NgChatViewState extends State<NgChatView>
     _focus.dispose();
     _scroll.dispose();
     _voice?.dispose();
+    _disposeLiveEngine();
     // Unsent picks only live in the app cache.
     if (_drafts.isNotEmpty) {
       unawaited(chat.attachmentService.removeAll(List.of(_drafts)));
@@ -1132,6 +1287,19 @@ class _NgChatViewState extends State<NgChatView>
                       sessionId: chat.storedId ?? chat.runtimeId,
                       onNotice: (msg) => ngToast(context, msg),
                     ),
+                    if (_voiceMode.hasStatus)
+                      IconButton(
+                        key: const ValueKey('voice-engine-toolbar'),
+                        tooltip: ngL.voice_engine_title,
+                        icon: const Icon(Icons.graphic_eq),
+                        onPressed: () => unawaited(
+                          showVoiceEngineSheet(
+                            context,
+                            controller: _voiceMode,
+                            disabled: _liveEngine?.active == true,
+                          ),
+                        ),
+                      ),
                     if (chat.storedId case final id?)
                       IconButton(
                         tooltip: 'Open browser preview',
@@ -1155,12 +1323,20 @@ class _NgChatViewState extends State<NgChatView>
                   ] else
                     // Narrow panes (< 480 px) fold chat tools into one menu.
                     ListenableBuilder(
-                      listenable: _wake,
+                      listenable: Listenable.merge([_wake, _voiceMode]),
                       builder: (context, _) => PopupMenuButton<String>(
                         key: const ValueKey('chat-tools-menu'),
                         tooltip: 'More chat tools',
                         icon: const Icon(Icons.widgets_outlined),
                         onSelected: (tool) async {
+                          if (tool == voiceEngineToolValue) {
+                            await showVoiceEngineSheet(
+                              context,
+                              controller: _voiceMode,
+                              disabled: _liveEngine?.active == true,
+                            );
+                            return;
+                          }
                           if (tool == wakeWordToolValue) {
                             final sid = chat.storedId ?? chat.runtimeId;
                             final wasOn =
@@ -1195,6 +1371,8 @@ class _NgChatViewState extends State<NgChatView>
                         },
                         itemBuilder: (_) => [
                           wakeWordToolItem(context, _wake.state),
+                          if (_voiceMode.hasStatus)
+                            voiceEngineToolItem(context, _voiceMode),
                           if (chat.storedId != null)
                             const PopupMenuItem(
                               value: 'browser',
@@ -1912,37 +2090,82 @@ class _NgChatViewState extends State<NgChatView>
                       ),
                     ),
                     const Spacer(),
-                    IconButton(
-                      tooltip: _listening
-                          ? ngL.ng_stop_dictation
-                          : ngL.ng_dictate,
-                      icon: Icon(
-                        _listening ? Icons.mic : Icons.mic_none,
-                        color: _listening ? c.accent : c.text2,
+                    if (_liveEngine case final live? when live.active) ...[
+                      VoiceLiveInlineControls(
+                        engine: live,
+                        compact: MediaQuery.sizeOf(context).width < 480,
+                        onToggleMute: _toggleLiveMute,
+                        onInterrupt: _interruptLiveVoice,
+                        onStop: () => unawaited(_stopLiveVoice()),
                       ),
-                      onPressed: _toggleDictation,
-                    ),
-                    if (chat.running && !hasText)
-                      IconButton.filled(
-                        tooltip: ngL.ng_stop,
-                        style: IconButton.styleFrom(
-                          backgroundColor: c.inverse,
-                          foregroundColor: c.onInverse,
+                      if (hasText)
+                        IconButton.filled(
+                          tooltip: ngL.ng_send,
+                          style: IconButton.styleFrom(
+                            backgroundColor: c.accent,
+                            foregroundColor: c.onAccent,
+                            disabledBackgroundColor: c.surface3,
+                          ),
+                          icon: const Icon(Icons.arrow_upward_rounded),
+                          onPressed: canSend ? _send : null,
                         ),
-                        icon: const Icon(Icons.stop_rounded),
-                        onPressed: chat.stop,
-                      )
-                    else
-                      IconButton.filled(
-                        tooltip: ngL.ng_send,
-                        style: IconButton.styleFrom(
-                          backgroundColor: c.accent,
-                          foregroundColor: c.onAccent,
-                          disabledBackgroundColor: c.surface3,
+                    ] else ...[
+                      IconButton(
+                        tooltip: _listening
+                            ? ngL.ng_stop_dictation
+                            : ngL.ng_dictate,
+                        icon: Icon(
+                          _listening ? Icons.mic : Icons.mic_none,
+                          color: _listening ? c.accent : c.text2,
                         ),
-                        icon: const Icon(Icons.arrow_upward_rounded),
-                        onPressed: canSend ? _send : null,
+                        onPressed: _toggleDictation,
                       ),
+                      if (_voiceMode.hasStatus &&
+                          !chat.running &&
+                          !hasText &&
+                          !_listening)
+                        GestureDetector(
+                          onLongPress: () => unawaited(
+                            showVoiceEngineSheet(
+                              context,
+                              controller: _voiceMode,
+                            ),
+                          ),
+                          child: IconButton(
+                            key: const ValueKey('voice-live-start'),
+                            tooltip: ngL.voice_live_start,
+                            icon: Icon(
+                              Icons.graphic_eq,
+                              color: _voiceMode.effectiveMode == 'gpt-live'
+                                  ? c.accent
+                                  : c.text2,
+                            ),
+                            onPressed: () =>
+                                unawaited(_startVoiceConversation()),
+                          ),
+                        ),
+                      if (chat.running && !hasText)
+                        IconButton.filled(
+                          tooltip: ngL.ng_stop,
+                          style: IconButton.styleFrom(
+                            backgroundColor: c.inverse,
+                            foregroundColor: c.onInverse,
+                          ),
+                          icon: const Icon(Icons.stop_rounded),
+                          onPressed: chat.stop,
+                        )
+                      else
+                        IconButton.filled(
+                          tooltip: ngL.ng_send,
+                          style: IconButton.styleFrom(
+                            backgroundColor: c.accent,
+                            foregroundColor: c.onAccent,
+                            disabledBackgroundColor: c.surface3,
+                          ),
+                          icon: const Icon(Icons.arrow_upward_rounded),
+                          onPressed: canSend ? _send : null,
+                        ),
+                    ],
                   ],
                 ),
               ],
