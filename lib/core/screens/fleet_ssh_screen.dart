@@ -121,10 +121,11 @@ class _FleetSshScreenState extends State<FleetSshScreen> {
           return;
         }
         await client.enroll(dest, key);
-        if (mounted)
+        if (mounted) {
           setState(
             () => message = context.sharedL10n.rel_ops_ssh_host_key_pinned,
           );
+        }
         return;
       }
       final key = await client.enrolled(dest);
