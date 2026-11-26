@@ -42,7 +42,12 @@ String messageStructure(String message) {
     final header = RegExp(
       r'^([A-Za-z_][A-Za-z_0-9]*)\s*,\s*(plural|select|selectordinal)\s*,',
     ).firstMatch(expression);
-    if (header == null) continue;
+    if (header == null) {
+      if (RegExp(r'^[A-Za-z_][A-Za-z_0-9]*$').hasMatch(expression)) {
+        nodes.add('value:$expression');
+      }
+      continue;
+    }
     final branches = <String>[];
     var offset = header.end;
     while (offset < expression.length) {

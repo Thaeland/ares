@@ -36,6 +36,10 @@ void main() {
         isNot(messageStructure(source)),
       );
       expect(
+        messageStructure('{count, plural, =1{One {name}} other{Many}}'),
+        isNot(messageStructure('{count, plural, =1{One} other{Many {name}}}')),
+      );
+      expect(
         () => messageStructure('{count, plural, other{Broken}'),
         throwsFormatException,
       );
