@@ -248,7 +248,7 @@ class _TerminalPageState extends State<TerminalPage> {
             builder: (_) => const SshTerminalDialog(),
           )
         : null;
-    if (!current || !origin.current()) return;
+    if (!mounted || !current || !origin.current()) return;
     if (ssh && login == null) return;
     if (!ssh &&
         !await confirm(
@@ -548,8 +548,9 @@ class _TerminalPageState extends State<TerminalPage> {
     if (!await confirm(
       context.sharedL10n.rel_ops_term_paste_title(t.label(context)),
       text,
-    ))
+    )) {
       return;
+    }
     check(t);
     if (identical(active, t) && t.live) t.emulator.commitPaste(text);
   }
