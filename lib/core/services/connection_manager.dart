@@ -2627,6 +2627,10 @@ class _LiveStream {
 /// cannot be determined). Callers that must never act on a guess — like
 /// the project folder provisioner — branch on this instead of string-
 /// matching a bare Exception.
+class DashboardHostKeyChanged implements Exception {
+  const DashboardHostKeyChanged();
+}
+
 class DashboardHttpException implements Exception {
   final int statusCode;
   const DashboardHttpException(this.statusCode);
@@ -3068,6 +3072,29 @@ class DashboardClient {
     return mintHostTerminalTicket ? true : data;
   }
 
+  /// Closed machine-scoped SSH contract. No body, credentials or arbitrary
+  /// ports: the serving gateway owns its saved destination and known_hosts.
+  Future<Object?> managedSshJson({
+    String? connectionId,
+    required String method,
+    required void Function() check,
+  }) {
+    if (!const {'GET', 'POST', 'DELETE'}.contains(method) ||
+        (connectionId == null && method != 'GET')) {
+      throw const FormatException('Invalid managed SSH operation');
+    }
+    return _workspaceJson(
+      [
+        'gateway-connections',
+        if (connectionId != null) ...[connectionId, 'ssh'],
+      ],
+      query: const {},
+      check: check,
+      profileMethod: method,
+      managedSsh: true,
+    );
+  }
+
   /// Never forward this content to `/fs/write-text`: the old route ignores
   /// preconditions. A distinct URL makes old gateways fail closed.
   Future<Object?> workspaceReplaceText({
@@ -3186,6 +3213,7 @@ class DashboardClient {
     String? profileMethod,
     Map<String, Object?>? profileBody,
     Map<String, Object>? gitPost,
+    bool managedSsh = false,
   }) async {
     if (segments.isEmpty ||
         segments.any(
@@ -3307,19 +3335,21 @@ class DashboardClient {
             })
           : '{}';
     }
+    if (managedSsh && request.method != 'GET') {
+      request.headers['Origin'] = base.origin;
+    }
     check();
     // Last gate for a host update: nothing is sent when this throws.
     if (beforeSend != null) await beforeSend();
     check();
-    final response = await _http
-        .send(request)
-        .timeout(ApiClient.requestTimeout);
+    final timeout = managedSsh
+        ? const Duration(minutes: 5)
+        : ApiClient.requestTimeout;
+    final response = await _http.send(request).timeout(timeout);
     final bytes = BytesBuilder(copy: false);
-    await for (final chunk in response.stream.timeout(
-      ApiClient.requestTimeout,
-    )) {
+    await for (final chunk in response.stream.timeout(timeout)) {
       check();
-      if (response.statusCode != 200) {
+      if (response.statusCode != 200 && !managedSsh) {
         throw DashboardHttpException(response.statusCode);
       }
       if (bytes.length + chunk.length > 2 * 1024 * 1024) {
@@ -3328,10 +3358,24 @@ class DashboardClient {
       bytes.add(chunk);
     }
     check();
+    final payload = bytes.takeBytes();
     if (response.statusCode != 200) {
+      if (managedSsh && response.statusCode == 502) {
+        // Read only the discriminator. Raw errors may contain secrets or paths.
+        try {
+          final error = jsonDecode(utf8.decode(payload));
+          if (error is Map &&
+              error['detail'] is Map &&
+              error['detail']['kind'] == 'host-key-changed') {
+            throw const DashboardHostKeyChanged();
+          }
+        } on FormatException {
+          /* A malformed error remains a generic failure. */
+        }
+      }
       throw DashboardHttpException(response.statusCode);
     }
-    final data = jsonDecode(utf8.decode(bytes.takeBytes()));
+    final data = jsonDecode(utf8.decode(payload));
     if (!mintHostTerminalTicket) return data;
     if (data is! Map ||
         data['ticket'] is! String ||
