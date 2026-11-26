@@ -3,6 +3,7 @@
 // pill composer (model chip, dictation, send/stop, steer or queue while busy).
 import 'dart:async';
 import '../../core/workspace/terminal_chat_link.dart';
+import '../../core/services/hermes_deeplink.dart' show appendComposerPrefill;
 import '../../core/services/connection_manager.dart';
 import '../../core/services/remote_workspace.dart' show RemoteWorkspaceOwner;
 
@@ -69,6 +70,7 @@ import 'sessions_sidebar.dart';
 import 'slash_command_info.dart';
 import 'widgets.dart';
 import '../nextgen_l10n.dart';
+import '../../core/desktop/screen_capture.dart';
 
 class NgChatView extends StatefulWidget {
   const NgChatView({
@@ -78,7 +80,9 @@ class NgChatView extends StatefulWidget {
     this.onClose,
     this.sessions,
     this.onNewChat,
+    this.onOpenCommandPalette,
     this.readAloudFactory,
+    this.screenCapture,
   });
 
   final NgChatController chat;
@@ -88,10 +92,14 @@ class NgChatView extends StatefulWidget {
   /// The sidebar's list, for a dot on its button while other chats are unread.
   final NgSessionsModel? sessions;
   final VoidCallback? onNewChat;
+  final VoidCallback? onOpenCommandPalette;
 
   /// Test hook: supplies the read-aloud controller (e.g. a fake speaker).
   @visibleForTesting
   final NgReadAloud Function()? readAloudFactory;
+
+  /// Desktop screen capture; tests pass a fake-channel controller.
+  final ScreenCaptureController? screenCapture;
 
   @override
   State<NgChatView> createState() => _NgChatViewState();
@@ -196,6 +204,30 @@ class _NgChatViewState extends State<NgChatView>
     unawaited(_restoreDraft());
   }
 
+  /// Puts a `hermes://` link's prefill after whatever the composer holds or
+  /// the draft store has (an unsent draft is never replaced). Reads the
+  /// draft first so a restore that has not landed yet is not lost.
+  Future<void> _applyLinkPrefill(String prefill) async {
+    final writer = _draftWriter;
+    String? draft;
+    try {
+      draft = await writer
+          .read(requireProvenance: true)
+          .timeout(const Duration(seconds: 5));
+    } catch (_) {
+      draft = null;
+    }
+    if (!mounted || !identical(writer, _draftWriter)) return;
+    final current = _input.text;
+    final base = current.trim().isNotEmpty ? current : (draft ?? '');
+    final text = appendComposerPrefill(base, prefill);
+    if (text == current) return;
+    _input.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+
   Future<void> _restoreDraft() async {
     final writer = _draftWriter;
     final revision = writer.revision;
@@ -284,6 +316,11 @@ class _NgChatViewState extends State<NgChatView>
     CompanionDraft.pending.addListener(_applyCompanionDraft);
     _openDraft();
     _input.addListener(_onDraftEdit);
+    // Validated deep-link prefill: one-shot, never sent — it only populates
+    // the composer, which the user still edits before anything is sent. It
+    // goes after the chat's unsent draft, never over it.
+    final initial = chat.consumeInitialText();
+    if (initial != null) unawaited(_applyLinkPrefill(initial));
     chat.addListener(_onChat);
     _readAloud = (widget.readAloudFactory ?? NgReadAloud.new)();
     _readAloud.addListener(_onReadAloud);
@@ -350,6 +387,9 @@ class _NgChatViewState extends State<NgChatView>
 
   void _onChat() {
     if (!mounted) return;
+    // A link for this already-open chat (main page offers it here).
+    final offered = chat.consumeInitialText();
+    if (offered != null) unawaited(_applyLinkPrefill(offered));
     if (_companionLeftDuringTurn && !chat.running) {
       _companionLeftDuringTurn = false;
       _companionUnread = true;
@@ -431,6 +471,8 @@ class _NgChatViewState extends State<NgChatView>
   int get _slotsLeft => maxRemoteAttachmentDrafts - _drafts.length;
 
   Future<void> _attach() async {
+    final offerCapture = await screenCaptureOffered(widget.screenCapture);
+    if (!mounted) return;
     _imageDraftRevision++;
     final c = NgColors.of(context);
     final choice = await showNgSheet<String>(
@@ -454,11 +496,26 @@ class _NgChatViewState extends State<NgChatView>
               title: Text(ngL.ng_files),
               onTap: () => Navigator.pop(context, 'files'),
             ),
+            if (offerCapture)
+              ListTile(
+                key: const Key('ng-attach-capture-screen'),
+                leading: Icon(
+                  Icons.screenshot_monitor_outlined,
+                  color: c.text2,
+                ),
+                title: Text(ngL.capture_screen_action),
+                subtitle: Text(ngL.capture_screen_help),
+                onTap: () => Navigator.pop(context, 'screen'),
+              ),
           ],
         ),
       ),
     );
     if (choice == null || !mounted) return;
+    if (choice == 'screen') {
+      await _captureScreen();
+      return;
+    }
     if (_slotsLeft <= 0) {
       ngToast(
         context,
@@ -536,6 +593,39 @@ class _NgChatViewState extends State<NgChatView>
       if (mounted) setState(() => _preparing = false);
     }
     if (errors.isNotEmpty && mounted) ngToast(context, errors.first);
+  }
+
+  /// Adds a screen capture as an image draft. Never sends.
+  Future<void> _captureScreen() async {
+    if (_slotsLeft <= 0) {
+      ngToast(
+        context,
+        ngL.ng_you_can_attach_up_to_files(maxRemoteAttachmentDrafts),
+      );
+      return;
+    }
+    await captureScreenIntoDraft(
+      context,
+      controller: widget.screenCapture,
+      attach: (png, name) async {
+        if (!mounted) return;
+        setState(() => _preparing = true);
+        try {
+          final draft = await chat.attachmentService.prepareImage(
+            sourcePath: png.path,
+            displayName: name,
+            existingDrafts: _drafts,
+            mode: AttachmentDraftMode.remoteGateway,
+            maxTotalBytes: maxNextGenAttachmentDraftBytes,
+          );
+          if (mounted) setState(() => _drafts.add(draft));
+        } on AttachmentDraftException catch (e) {
+          if (mounted) ngToast(context, e.message);
+        } finally {
+          if (mounted) setState(() => _preparing = false);
+        }
+      },
+    );
   }
 
   Future<void> _removeDraft(AttachmentDraft draft) async {
@@ -1035,6 +1125,13 @@ class _NgChatViewState extends State<NgChatView>
                       onPressed: () => setState(() => _showSessionFiles = true),
                     ),
                   if (!compactTools) ...[
+                    if (widget.onOpenCommandPalette != null)
+                      IconButton(
+                        key: const ValueKey('app-command-palette-button'),
+                        tooltip: ngL.palette_open,
+                        icon: const Icon(Icons.keyboard_command_key),
+                        onPressed: widget.onOpenCommandPalette,
+                      ),
                     if (chat.storedId case final id?)
                       IconButton(
                         tooltip: 'Open browser preview',
@@ -1057,13 +1154,18 @@ class _NgChatViewState extends State<NgChatView>
                       ),
                   ] else if (chat.storedId != null ||
                       workers != null ||
-                      radio != null)
+                      radio != null ||
+                      widget.onOpenCommandPalette != null)
                     // The radio's controls move here from the app bar.
                     PopupMenuButton<String>(
                       key: const ValueKey('chat-tools-menu'),
                       tooltip: 'More chat tools',
                       icon: const Icon(Icons.widgets_outlined),
                       onSelected: (tool) {
+                        if (tool == 'app-command-palette') {
+                          widget.onOpenCommandPalette?.call();
+                          return;
+                        }
                         if (tool == radioToolValue) {
                           final current = compactRadioTool(context);
                           if (current != null) {
@@ -1083,6 +1185,14 @@ class _NgChatViewState extends State<NgChatView>
                         if (tool == 'workers') workers?.open(context);
                       },
                       itemBuilder: (_) => [
+                        if (widget.onOpenCommandPalette != null)
+                          PopupMenuItem(
+                            value: 'app-command-palette',
+                            child: ListTile(
+                              leading: const Icon(Icons.keyboard_command_key),
+                              title: Text(ngL.palette_open),
+                            ),
+                          ),
                         if (chat.storedId != null)
                           const PopupMenuItem(
                             value: 'browser',

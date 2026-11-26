@@ -43,5 +43,18 @@
 	<string>NSApplication</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Ares uses speech recognition so you can dictate messages to your Hermes agent.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>com.hermesagent.ares.deeplink</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>hermes</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
