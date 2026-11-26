@@ -1,4 +1,7 @@
 {
+  "@@locale": "zh_Hant",
+  "workspace_workers": "即時工作者",
+  "workers_unattached": "僅顯示數量。若要引導工作者，請在其所屬的上層聊天中選擇「即時工作者」。",
   "slash_local_arguments": "此處的快捷指令不支援參數。請使用應用程式中的控制項；草稿已保留。",
   "fallback_title": "備用模型",
   "fallback_notice": "主模型無法使用時，會依序嘗試清單中的模型。變更只適用於此設定檔；編輯後請儲存整份清單。",
@@ -13,9 +16,6 @@
   "fallback_legacy_title": "舊版備用設定（唯讀）",
   "fallback_legacy_notice": "嘗試完清單中的模型後，主機還會使用 fallback_model，並略過重複的路由。即使上方清單是空的，這些舊版項目仍會保留。請在主機上編輯。",
   "fallback_priority": "優先順序 {position}",
-  "fallback_move_up": "上移",
-  "fallback_move_down": "下移",
-  "fallback_routing_read_only": "路由詳細資料或未列出的供應商已保留。請在主機上編輯此供應商／模型；此處仍可調整順序或刪除項目。",
   "@fallback_priority": {
     "placeholders": {
       "position": {
@@ -23,6 +23,9 @@
       }
     }
   },
+  "fallback_move_up": "上移",
+  "fallback_move_down": "下移",
+  "fallback_routing_read_only": "路由詳細資料或未列出的供應商已保留。請在主機上編輯此供應商／模型；此處仍可調整順序或刪除項目。",
   "cron_model_default": "使用預設設定",
   "cron_model_notice": "僅適用於此 cron 任務。未固定模型時，Hermes 先使用 cron 預設模型，再使用主模型。請在主機上管理自訂模型。",
   "model_management_unavailable": "無法載入或儲存模型設定。請重新整理後重試。",
@@ -39,6 +42,13 @@
   "portal_recorded_usage": "已記錄用量",
   "portal_all_providers": "涵蓋所選閘道設定檔中的所有供應商。記錄的費用為零，不代表模型免費。",
   "portal_period": "最近 {days} 天",
+  "@portal_period": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
   "portal_sessions": "工作階段",
   "portal_input": "輸入令牌",
   "portal_output": "輸出令牌",
@@ -47,25 +57,15 @@
   "portal_recorded_models": "已記錄模型",
   "portal_no_models": "沒有已記錄模型。",
   "portal_unavailable": "無法取得資料。請檢查連線、所選設定檔和閘道版本後重試。",
-  "@portal_period": {
-    "placeholders": {
-      "days": {
-        "type": "String"
-      }
-    }
-  },
   "paste_attachment_failed_text_kept": "無法將貼上的文字加為附件，文字已保留在訊息中。",
   "background_task_report": "背景任務",
   "background_process_report": "背景程序",
   "background_report_issues": "已報告問題，展開查看詳細資料。",
   "background_report_expand": "展開報告",
   "background_report_collapse": "收合報告",
-  "@@locale": "zh_Hant",
   "ng_brand_open_chat": "開啟聊天",
   "ng_brand_recent": "最近聊天",
   "ng_brand_sidebar_hint": "或從側邊欄選擇聊天",
-  "workspace_workers": "即時工作者",
-  "workers_unattached": "僅顯示數量。若要引導工作者，請在其所屬的上層聊天中選擇「即時工作者」。",
   "copy_session_id": "複製工作階段 ID",
   "copy_session_id_failed": "無法複製工作階段 ID。",
   "setup_interface_title": "選擇介面",
@@ -78,8 +78,6 @@
   "ng_switch": "切換",
   "ng_model_confirmation_required": "選擇此模型前需要確認。",
   "ng_model_switches_next_turn": "將在下一輪切換到 {model}。",
-  "ng_model_switch_not_connected": "聊天尚未準備好切換模型。請重新開啟後再試。",
-  "ng_gateway_kept_default_model": "閘道在此聊天中保留了 {model}。請在傳送前重新選擇模型。",
   "@ng_model_switches_next_turn": {
     "placeholders": {
       "model": {
@@ -87,6 +85,8 @@
       }
     }
   },
+  "ng_model_switch_not_connected": "聊天尚未準備好切換模型。請重新開啟後再試。",
+  "ng_gateway_kept_default_model": "閘道在此聊天中保留了 {model}。請在傳送前重新選擇模型。",
   "@ng_gateway_kept_default_model": {
     "placeholders": {
       "model": {
@@ -103,9 +103,23 @@
   "hands_free_waiting": "等待 Hermes 回覆",
   "hands_free_speaking": "正在朗讀 — 麥克風已關閉",
   "hands_free_followup": "最多聆聽 {seconds} 秒",
+  "@hands_free_followup": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "hands_free_error": "免持已停止",
   "hands_free_setup": "免持設定",
   "hands_free_preview": "語音預覽：{transcript}",
+  "@hands_free_preview": {
+    "placeholders": {
+      "transcript": {
+        "type": "String"
+      }
+    }
+  },
   "hands_free_short_disclosure": "只有在前景開啟此聊天時才會聆聽。喚醒詞偵測不需連網，但語音功能可能會使用網路。聆聽會消耗電力。",
   "hands_free_error_action": "請檢查麥克風權限、語音服務、朗讀聲音和連線，先點選「停止」，再點選「開始」重試。先前的內容不會重新傳送。",
   "hands_free_disclosure": "喚醒詞由 CPU 離線偵測。Android 語音辨識、所選的朗讀聲音和閘道可能會使用網路。持續聆聽會耗電，也可能誤觸發。聊天畫面遭遮住、關閉或離開前景時，聆聽就會停止；重新開啟聊天也不會自動恢復。手動語音輸入的內容仍可在草稿中編輯。",
@@ -116,20 +130,6 @@
   "hands_free_followup_off": "後續聆聽已關閉 — 每次提問請說 Hey Hermes",
   "hands_free_start_blocked": "請先清空草稿、移除附件並結束手動語音操作。聊天必須已連線、沒有正在處理的回覆，且已開啟語音回覆，才能開始免持對話。",
   "hands_free_setup_complete": "麥克風設定完成。請再次點選開始。",
-  "@hands_free_followup": {
-    "placeholders": {
-      "seconds": {
-        "type": "int"
-      }
-    }
-  },
-  "@hands_free_preview": {
-    "placeholders": {
-      "transcript": {
-        "type": "String"
-      }
-    }
-  },
   "message_time_recorded": "伺服器記錄的時間：{time}（當地時間）",
   "@message_time_recorded": {
     "placeholders": {
@@ -173,6 +173,16 @@
   "attachment_pdf_failed": "無法預覽此 PDF。請儲存或分享原始檔案。",
   "attachment_pdf_unavailable": "PDF 預覽只在 Android 上可用。你仍可儲存或分享這個檔案。",
   "attachment_pdf_page": "第 {page} 頁，共 {total} 頁",
+  "@attachment_pdf_page": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "attachment_previous_page": "上一頁",
   "attachment_next_page": "下一頁",
   "attachment_loading": "正在載入預覽…",
@@ -187,16 +197,6 @@
   "attachment_video_seek": "影片進度",
   "attachment_close": "關閉預覽",
   "attachment_retry": "重試",
-  "@attachment_pdf_page": {
-    "placeholders": {
-      "page": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
   "saved_history_heading": "已儲存的記錄",
   "received_output_heading": "已收到的輸出（尚未確認是否與已儲存的記錄相符）",
   "received_output_details": "關於已收到的輸出",
@@ -646,9 +646,15 @@
   "chat_activity_share": "分享聊天活動",
   "chat_activity_share_hint": "在你使用此聊天時告知相容的已連線閘道，讓其手機通知外掛程式避免重複提醒。不會傳送任何金鑰或訊息內容。",
   "completion_sound": "完成提示音",
+  "completion_sound_system": "系統預設",
   "completion_sound_mail": "郵件",
   "completion_sound_reminder": "提醒",
   "completion_sound_silent": "靜音",
+  "completion_sound_scope": "會在回覆完成、測試通知及應用程式內播放。核准和其他提醒維持原本的音效。",
+  "completion_sound_scope_android": "會在回覆完成、測試通知及應用程式內播放。核准、其他提醒、伺服器的背景通知和 Android Auto 訊息維持原本的音效。",
+  "notification_open_action": "開啟",
+  "app_sounds_mute": "將應用程式音效設為靜音",
+  "app_sounds_mute_hint": "停止 Ares 開啟時播放的完成提示音。通知會保留自己的音效。",
   "notifications_permission_denied": "系統已阻止通知。請在 Android 設定中允許此應用程式傳送通知。",
   "off_no_thinking": "關閉（無思考）",
   "offline_showing_the_last_known_activity": "離線 — 顯示最後已知的活動。",
@@ -1238,8 +1244,6 @@
   "provider_oauth_checking_account": "已收到授權。正在檢查主機帳戶…",
   "provider_oauth_verification_unavailable": "已收到授權；無法驗證帳戶。請開啟用量頁面以重新整理帳戶用量。",
   "provider_oauth_verified_account": "已在 Hermes 主機上以 {email} 登入。請開啟用量頁面以重新整理帳戶用量。",
-  "provider_oauth_credentials_unverified": "主機報告驗證資訊可用；帳戶身分尚未驗證。",
-  "provider_oauth_account_status_unknown": "無法取得主機帳戶狀態。",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1247,6 +1251,8 @@
       }
     }
   },
+  "provider_oauth_credentials_unverified": "主機報告驗證資訊可用；帳戶身分尚未驗證。",
+  "provider_oauth_account_status_unknown": "無法取得主機帳戶狀態。",
   "app_language": "應用程式語言",
   "app_language_system": "與手機相同",
   "auto_archives_after_72_hours": "72 小時後自動封存",
@@ -1383,6 +1389,69 @@
   "slash_command_failed": "無法執行指令。",
   "slash_command_unsupported": "此指令在此伺服器上不可用。",
   "slash_sessions_inline": "請開啟工作階段清單選擇聊天。草稿已保留。",
+  "composer_snippets": "提示詞片段",
+  "composer_snippets_description": "選擇一則起始提示詞，填入訊息輸入框。",
+  "composer_snippet_review": "程式碼審查",
+  "composer_snippet_review_body": "審查目前變更中的回歸問題、遺漏的邊界情況和缺少的測試。",
+  "composer_snippet_review_text": "請審查其中的錯誤、回歸問題和缺少的測試。",
+  "composer_snippet_plan": "實作計畫",
+  "composer_snippet_plan_body": "修改程式碼前先概述做法，讓變更保持聚焦。",
+  "composer_snippet_plan_text": "請在修改程式碼前擬定簡明的實作計畫。",
+  "composer_snippet_explain": "解釋這段程式碼",
+  "composer_snippet_explain_body": "逐步說明所選程式碼的運作方式，並指出關鍵檔案。",
+  "composer_snippet_explain_text": "請解釋其運作方式，並指出關鍵檔案。",
+  "composer_status": "狀態",
+  "composer_status_context": "上下文",
+  "composer_status_cache": "快取命中",
+  "composer_status_throughput": "輸出 token/秒",
+  "composer_status_running": "執行中",
+  "composer_status_session": "工作階段",
+  "composer_status_not_reported": "未回報",
+  "composer_status_empty": "未回報上下文明細。",
+  "composer_status_loading": "正在載入上下文明細",
+  "composer_status_reset": "重設狀態列",
+  "composer_resume_title": "繼續聊天",
+  "composer_resume_search": "搜尋標題和 ID",
+  "composer_resume_empty": "沒有符合的聊天。",
+  "composer_resume_unavailable": "此窗格沒有可供搜尋的聊天清單。",
+  "composer_failure_retry": "重試",
+  "composer_failure_retry_at": "於 {time} 重試",
+  "composer_failure_compress": "壓縮",
+  "composer_failure_switch_model": "切換模型",
+  "composer_failure_switch_to": "切換為 {model}",
+  "composer_failure_new_chat": "新增聊天",
+  "composer_failure_edit": "編輯訊息",
+  "composer_failure_details": "詳細資訊",
+  "composer_failure_hide_details": "隱藏詳細資訊",
+  "composer_failure_copy": "複製診斷資訊",
+  "composer_failure_account": "另一項修復需在閘道帳號端完成，無法在此聊天中進行。",
+  "composer_failure_account_only": "此問題必須在閘道帳號端修復，無法在此聊天中處理。",
+  "composer_failure_confirm_compress": "壓縮此聊天？閘道會縮短對話記錄。",
+  "composer_failure_confirm_model": "將此聊天切換為 {model}？",
+  "composer_drop_attach": "拖放以新增附件",
+  "composer_drop_folder_unsupported": "無法附加資料夾。請改為拖放其中的檔案。",
+  "composer_drop_reference": "拖放以新增參照",
+  "composer_reference_copy": "複製參照",
+  "composer_reference_remove": "移除參照",
+  "composer_btw_usage": "用法：/btw <question> — 根據此對話的快照回答，不中斷目前的對話。",
+  "composer_background_usage": "用法：/background <prompt> — 任務獨立執行，結果會回到此處。",
+  "composer_handoff_usage": "用法：/handoff <platform> — 將此聊天轉移到指定的訊息平台。",
+  "composer_command_needs_session": "此指令需要已開啟的聊天。",
+  "composer_retry_not_found": "已儲存的歷史記錄中沒有此回合，因此「重試」無法取代它。未重新傳送任何內容。請編輯訊息並傳送，以再試一次。",
+  "composer_retry_unavailable": "此連線不支援透過「重試」取代某個回合，因此未重新傳送任何內容。請編輯訊息並傳送，以再試一次。",
+  "composer_failure_switch_no_retry": "切換只會變更模型：此連線無法重新執行失敗的輪次。切換後請重新傳送。",
+  "composer_command_needs_gateway_session": "此聊天尚無閘道工作階段。請先傳送訊息，再重新執行指令。",
+  "composer_side_question": "btw — 正在根據對話快照回答",
+  "composer_side_question_id": "btw {id} — 正在根據對話快照回答",
+  "composer_background_started": "背景任務已啟動。你可以繼續聊天，結果會顯示在此處。",
+  "composer_background_started_id": "背景任務 {id} 已啟動。你可以繼續聊天，結果會顯示在此處。",
+  "composer_handoff_requested": "已要求移交至 {platform}。",
+  "composer_handoff_done": "已將此聊天移交至 {platform}。",
+  "composer_handoff_failed": "移交失敗。",
+  "composer_handoff_timeout": "移交尚未完成，可能仍在閘道上進行。",
+  "composer_compress_done": "已壓縮此聊天。",
+  "composer_file_missing": "此裝置上沒有該檔案。",
+  "composer_attach_busy": "此回覆完成後即可新增附件。",
   "nextgen_toggle": "NextGen 介面",
   "nextgen_toggle_subtitle": "全新設計：一次登入、即時聊天和網路發現。你的閘道和聊天與此介面共用。",
   "nextgen_single_login": "使用單一登入",
@@ -1730,7 +1799,6 @@
   "ng_project_home": "首頁",
   "ng_choose_project": "選擇專案",
   "ng_project_cwd_fallback": "專案資料夾不可用，因此此聊天在 {path} 中執行。",
-  "ng_project_create_uncertain": "閘道可能已建立此聊天，但未確認。開始新聊天前請檢查聊天清單；此要求不會自動重試。",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1738,6 +1806,7 @@
       }
     }
   },
+  "ng_project_create_uncertain": "閘道可能已建立此聊天，但未確認。開始新聊天前請檢查聊天清單；此要求不會自動重試。",
   "ng_what_should_we_work_on": "我們要做些什麼？",
   "ng_ask_hermes_anything_it_can_run": "向 Hermes 提問。它可以執行工具、瀏覽網頁，還能處理伺服器上的檔案。",
   "ng_working_2": "正在處理 · {frame}",
@@ -2532,12 +2601,6 @@
   "ng_dock_goal_blocked": "目標受阻",
   "ng_dock_goal_done": "目標已完成",
   "ng_dock_turn_of": "第 {used}/{max} 輪",
-  "ng_dock_turn": "第 {used} 輪",
-  "ng_dock_subagents": "{count, plural, =1{1 個子代理} other{{count} 個子代理}}",
-  "ng_dock_subagents_done": "{count} 個已完成",
-  "ng_dock_tasks": "任務 {done}/{total}",
-  "ng_dock_previous_tasks": "上輪任務 {done}/{total}",
-  "ng_dock_manage": "管理",
   "@ng_dock_turn_of": {
     "placeholders": {
       "used": {
@@ -2548,6 +2611,7 @@
       }
     }
   },
+  "ng_dock_turn": "第 {used} 輪",
   "@ng_dock_turn": {
     "placeholders": {
       "used": {
@@ -2555,6 +2619,7 @@
       }
     }
   },
+  "ng_dock_subagents": "{count, plural, =1{1 個子代理} other{{count} 個子代理}}",
   "@ng_dock_subagents": {
     "placeholders": {
       "count": {
@@ -2562,6 +2627,7 @@
       }
     }
   },
+  "ng_dock_subagents_done": "{count} 個已完成",
   "@ng_dock_subagents_done": {
     "placeholders": {
       "count": {
@@ -2569,6 +2635,7 @@
       }
     }
   },
+  "ng_dock_tasks": "任務 {done}/{total}",
   "@ng_dock_tasks": {
     "placeholders": {
       "done": {
@@ -2579,6 +2646,7 @@
       }
     }
   },
+  "ng_dock_previous_tasks": "上輪任務 {done}/{total}",
   "@ng_dock_previous_tasks": {
     "placeholders": {
       "done": {
@@ -2589,6 +2657,7 @@
       }
     }
   },
+  "ng_dock_manage": "管理",
   "ng_recent_notifications": "最近通知",
   "ng_recent_notifications_hint": "Ares 嘗試發布的內容，以及 Android 是否顯示了通知",
   "ng_recent_notifications_empty": "目前還沒有。當回覆、問題或失敗會觸發通知時，相關嘗試會顯示在這裡。",
@@ -2834,12 +2903,38 @@
   "appearance_tip_theme": "匯入的佈景主題會取代內建配色，直到你取消選擇。只會保留色彩。",
   "appearance_tip_pet": "夥伴只在這台裝置上儲存一張小肖像，不會上傳你用來孵化的圖片。",
   "appearance_theme_import_failed": "無法匯入這個佈景主題。請選擇以 .vsix、.json 或 .jsonc 檔案儲存的 VS Code 色彩佈景主題。",
-  "completion_sound_system": "系統預設",
-  "completion_sound_scope": "會在回覆完成、測試通知及應用程式內播放。核准和其他提醒維持原本的音效。",
-  "completion_sound_scope_android": "會在回覆完成、測試通知及應用程式內播放。核准、其他提醒、伺服器的背景通知和 Android Auto 訊息維持原本的音效。",
-  "notification_open_action": "開啟",
-  "app_sounds_mute": "將應用程式音效設為靜音",
-  "app_sounds_mute_hint": "停止 Ares 開啟時播放的完成提示音。通知會保留自己的音效。",
+  "render_widget_file_truncated": "僅讀取了此檔案的開頭，元件可能不完整。",
+  "setup_beat_title": "設定",
+  "setup_beat_use_name": "使用 {name}",
+  "setup_beat_name_hint": "你希望 Hermes 怎麼稱呼你？",
+  "setup_beat_on_computer": "此步驟需在執行 Hermes 的電腦上，於 Hermes 中完成。繼續會保留該處已完成的設定。",
+  "setup_beat_not_waiting": "此設定卡片已不再等待回答。",
+  "catalog_kind_plugin": "外掛程式",
+  "catalog_kind_skill": "技能",
+  "catalog_tier_official": "官方",
+  "catalog_tier_verified": "已驗證",
+  "catalog_tier_community": "社群",
+  "catalog_install": "安裝",
+  "catalog_waiting": "等待你選擇",
+  "catalog_installed": "已安裝",
+  "catalog_installed_off": "已安裝，尚未啟用",
+  "catalog_skipped": "已略過",
+  "catalog_not_installed": "未安裝",
+  "catalog_target_profile": "安裝至 {profile} 設定檔",
+  "catalog_source": "{repo} 的 {sha}",
+  "catalog_scan": "安全掃描：{status}。{summary}",
+  "catalog_requires_hermes": "需要 Hermes {range}",
+  "catalog_skill_ready": "技能 {name} 已可使用",
+  "catalog_missing_env": "仍需要：{names}",
+  "catalog_server_error": "{name} 未能連線：{error}",
+  "catalog_send_failed": "未能傳送你的選擇。請再試一次。",
+  "attachment_video_speed": "播放速度",
+  "catalog_installing": "正在安裝…",
+  "catalog_phase_downloading": "正在下載…",
+  "catalog_phase_python_packages": "正在安裝 Python 套件…",
+  "catalog_phase_loading_tools": "正在載入工具…",
+  "setup_beat_send_failed": "未能傳送你的回答。請再試一次。",
+  "catalog_tool_count": "{count, plural, =1{1 個工具} other{{count} 個工具}}",
   "render_svg_not_drawn": "未繪製此 SVG。",
   "render_notes_directive": "筆記指令",
   "render_maths_source": "數學原始碼",
@@ -2875,7 +2970,12 @@
   "catalog_scan_passed": "通過",
   "catalog_scan_warnings": "發現警告",
   "catalog_scan_failed": "失敗",
-  "composer_failure_switch_no_retry": "切換只會變更模型：此連線無法重新執行失敗的輪次。切換後請重新傳送。",
+  "deployment_token_label": "部署權杖（選填）",
+  "deployment_token_helper": "用於以 X-Hermes-Session-Token 傳送的 Hermes Dashboard 工作階段權杖。不會以明文儲存在偏好設定中。",
+  "deployment_token_hint": "儀表板工作階段權杖",
+  "custom_headers_label": "自訂標頭（選填）",
+  "custom_headers_helper": "每行一個，例如 X-Custom: 值。禁止的標頭會遭拒絕。",
+  "custom_headers_hint": "例如 X-Custom-Header: 值",
   "desktop_tray_open": "開啟 Ares",
   "desktop_tray_new_chat": "新聊天",
   "desktop_tray_quick_entry": "快速輸入…",
@@ -2908,6 +3008,17 @@
   "capture_permission_title": "允許螢幕錄製",
   "capture_permission_body": "若要擷取視窗，Ares 需要螢幕錄製權限。請在「系統設定」>「隱私權與安全性」>「螢幕錄製」中開啟 Ares，然後再試一次。",
   "capture_open_settings": "開啟系統設定",
+  "keep_awake_title": "讓電腦保持喚醒",
+  "keep_awake_title_mobile": "讓螢幕保持開啟",
+  "keep_awake_mode_off": "關閉",
+  "keep_awake_mode_while_working": "工作時",
+  "keep_awake_mode_always": "一律",
+  "keep_awake_off_help": "絕不阻止系統睡眠（預設）。",
+  "keep_awake_while_working_help": "僅在代理回合執行時阻止閒置睡眠。",
+  "keep_awake_always_help": "在此裝置上開啟 Ares 期間阻止閒置睡眠。",
+  "keep_awake_off_help_mobile": "讓螢幕照常關閉（預設）。",
+  "keep_awake_while_working_help_mobile": "在代理回合執行且 Ares 開啟期間讓螢幕保持開啟。",
+  "keep_awake_always_help_mobile": "在 Ares 開啟期間讓螢幕保持開啟。",
   "ng_token_gateway_has_no_sign_in": "此閘道沒有登入功能，因此無法驗證部署權杖。請在主機上啟用儀表板驗證（或更新 Hermes），然後再試一次。",
   "palette_open": "應用程式命令面板",
   "palette_no_matches": "沒有相符的操作",
@@ -2946,23 +3057,6 @@
   "ng_use_a_deployment_token": "使用部署工作階段權杖",
   "ng_sign_in_with_deployment_token": "使用部署權杖登入",
   "ng_signed_in_with_deployment_token": "已使用部署權杖登入。",
-  "deployment_token_label": "部署權杖（選填）",
-  "deployment_token_helper": "用於以 X-Hermes-Session-Token 傳送的 Hermes Dashboard 工作階段權杖。不會以明文儲存在偏好設定中。",
-  "deployment_token_hint": "儀表板工作階段權杖",
-  "custom_headers_label": "自訂標頭（選填）",
-  "custom_headers_helper": "每行一個，例如 X-Custom: 值。禁止的標頭會遭拒絕。",
-  "custom_headers_hint": "例如 X-Custom-Header: 值",
-  "keep_awake_title": "讓電腦保持喚醒",
-  "keep_awake_title_mobile": "讓螢幕保持開啟",
-  "keep_awake_mode_off": "關閉",
-  "keep_awake_mode_while_working": "工作時",
-  "keep_awake_mode_always": "一律",
-  "keep_awake_off_help": "絕不阻止系統睡眠（預設）。",
-  "keep_awake_while_working_help": "僅在代理回合執行時阻止閒置睡眠。",
-  "keep_awake_always_help": "在此裝置上開啟 Ares 期間阻止閒置睡眠。",
-  "keep_awake_off_help_mobile": "讓螢幕照常關閉（預設）。",
-  "keep_awake_while_working_help_mobile": "在代理回合執行且 Ares 開啟期間讓螢幕保持開啟。",
-  "keep_awake_always_help_mobile": "在 Ares 開啟期間讓螢幕保持開啟。",
   "auto_speak_replies_title": "自動朗讀回覆",
   "auto_speak_replies_subtitle": "回合完成後自動朗讀每則新回覆。預設關閉；單一對話的語音回覆開關仍然有效。",
   "ng_auto_read_replies_title": "自動朗讀回覆",
@@ -3055,8 +3149,6 @@
   "ng_wire_generation_unavailable": "無法取得工作階段執行識別碼；請重新連線後再使用此指令",
   "ng_wire_message_not_saved": "此訊息尚未儲存；請等它完成後，再從它建立分支",
   "ng_wire_not_available": "共用閘道尚不支援",
-  "session_history": "工作階段紀錄",
-  "import_claude_or_codex": "匯入 Claude 或 Codex",
   "edit_turn_title": "編輯此提示？",
   "edit_turn_body": "將從此處重新執行該提示，後續輪次會被封存。",
   "edit_turn_send": "傳送",
@@ -3064,6 +3156,8 @@
   "restore_turn_body": "此提示之後的所有內容將從對話中移除，並從此處重新執行該提示。",
   "restore_turn_confirm": "還原並重新執行",
   "edit_turn_later_turns_body": "這會將對話中的後續輪次封存。要繼續嗎？",
+  "session_history": "工作階段紀錄",
+  "import_claude_or_codex": "匯入 Claude 或 Codex",
   "ng_session_history": "工作階段紀錄",
   "ng_import_claude_or_codex": "匯入 Claude 或 Codex",
   "ng_edit_and_resend": "編輯並重發",
@@ -3574,100 +3668,6 @@
   "ng_bots_section_move_failed": "無法移動機器人（{reason}）。",
   "ng_bots_bot_actions": "{name} 的操作",
   "ng_bots_section_toggle": "顯示或隱藏「{name}」",
-  "composer_snippets": "提示詞片段",
-  "composer_snippets_description": "選擇一則起始提示詞，填入訊息輸入框。",
-  "composer_snippet_review": "程式碼審查",
-  "composer_snippet_review_body": "審查目前變更中的回歸問題、遺漏的邊界情況和缺少的測試。",
-  "composer_snippet_review_text": "請審查其中的錯誤、回歸問題和缺少的測試。",
-  "composer_snippet_plan": "實作計畫",
-  "composer_snippet_plan_body": "修改程式碼前先概述做法，讓變更保持聚焦。",
-  "composer_snippet_plan_text": "請在修改程式碼前擬定簡明的實作計畫。",
-  "composer_snippet_explain": "解釋這段程式碼",
-  "composer_snippet_explain_body": "逐步說明所選程式碼的運作方式，並指出關鍵檔案。",
-  "composer_snippet_explain_text": "請解釋其運作方式，並指出關鍵檔案。",
-  "composer_status": "狀態",
-  "composer_status_context": "上下文",
-  "composer_status_cache": "快取命中",
-  "composer_status_throughput": "輸出 token/秒",
-  "composer_status_running": "執行中",
-  "composer_status_session": "工作階段",
-  "composer_status_not_reported": "未回報",
-  "composer_status_empty": "未回報上下文明細。",
-  "composer_status_loading": "正在載入上下文明細",
-  "composer_status_reset": "重設狀態列",
-  "composer_resume_title": "繼續聊天",
-  "composer_resume_search": "搜尋標題和 ID",
-  "composer_resume_empty": "沒有符合的聊天。",
-  "composer_resume_unavailable": "此窗格沒有可供搜尋的聊天清單。",
-  "composer_failure_retry": "重試",
-  "composer_failure_retry_at": "於 {time} 重試",
-  "composer_failure_compress": "壓縮",
-  "composer_failure_switch_model": "切換模型",
-  "composer_failure_switch_to": "切換為 {model}",
-  "composer_failure_new_chat": "新增聊天",
-  "composer_failure_edit": "編輯訊息",
-  "composer_failure_details": "詳細資訊",
-  "composer_failure_hide_details": "隱藏詳細資訊",
-  "composer_failure_copy": "複製診斷資訊",
-  "composer_failure_account": "另一項修復需在閘道帳號端完成，無法在此聊天中進行。",
-  "composer_failure_account_only": "此問題必須在閘道帳號端修復，無法在此聊天中處理。",
-  "composer_failure_confirm_compress": "壓縮此聊天？閘道會縮短對話記錄。",
-  "composer_failure_confirm_model": "將此聊天切換為 {model}？",
-  "composer_drop_attach": "拖放以新增附件",
-  "composer_drop_folder_unsupported": "無法附加資料夾。請改為拖放其中的檔案。",
-  "composer_drop_reference": "拖放以新增參照",
-  "composer_reference_copy": "複製參照",
-  "composer_reference_remove": "移除參照",
-  "composer_btw_usage": "用法：/btw <question> — 根據此對話的快照回答，不中斷目前的對話。",
-  "composer_background_usage": "用法：/background <prompt> — 任務獨立執行，結果會回到此處。",
-  "composer_handoff_usage": "用法：/handoff <platform> — 將此聊天轉移到指定的訊息平台。",
-  "composer_command_needs_session": "此指令需要已開啟的聊天。",
-  "composer_retry_not_found": "已儲存的歷史記錄中沒有此回合，因此「重試」無法取代它。未重新傳送任何內容。請編輯訊息並傳送，以再試一次。",
-  "composer_retry_unavailable": "此連線不支援透過「重試」取代某個回合，因此未重新傳送任何內容。請編輯訊息並傳送，以再試一次。",
-  "composer_command_needs_gateway_session": "此聊天尚無閘道工作階段。請先傳送訊息，再重新執行指令。",
-  "composer_side_question": "btw — 正在根據對話快照回答",
-  "composer_side_question_id": "btw {id} — 正在根據對話快照回答",
-  "composer_background_started": "背景任務已啟動。你可以繼續聊天，結果會顯示在此處。",
-  "composer_background_started_id": "背景任務 {id} 已啟動。你可以繼續聊天，結果會顯示在此處。",
-  "composer_handoff_requested": "已要求移交至 {platform}。",
-  "composer_handoff_done": "已將此聊天移交至 {platform}。",
-  "composer_handoff_failed": "移交失敗。",
-  "composer_handoff_timeout": "移交尚未完成，可能仍在閘道上進行。",
-  "composer_compress_done": "已壓縮此聊天。",
-  "composer_file_missing": "此裝置上沒有該檔案。",
-  "composer_attach_busy": "此回覆完成後即可新增附件。",
-  "render_widget_file_truncated": "僅讀取了此檔案的開頭，元件可能不完整。",
-  "setup_beat_title": "設定",
-  "setup_beat_use_name": "使用 {name}",
-  "setup_beat_name_hint": "你希望 Hermes 怎麼稱呼你？",
-  "setup_beat_on_computer": "此步驟需在執行 Hermes 的電腦上，於 Hermes 中完成。繼續會保留該處已完成的設定。",
-  "setup_beat_not_waiting": "此設定卡片已不再等待回答。",
-  "catalog_kind_plugin": "外掛程式",
-  "catalog_kind_skill": "技能",
-  "catalog_tier_official": "官方",
-  "catalog_tier_verified": "已驗證",
-  "catalog_tier_community": "社群",
-  "catalog_install": "安裝",
-  "catalog_waiting": "等待你選擇",
-  "catalog_installed": "已安裝",
-  "catalog_installed_off": "已安裝，尚未啟用",
-  "catalog_skipped": "已略過",
-  "catalog_not_installed": "未安裝",
-  "catalog_target_profile": "安裝至 {profile} 設定檔",
-  "catalog_source": "{repo} 的 {sha}",
-  "catalog_scan": "安全掃描：{status}。{summary}",
-  "catalog_requires_hermes": "需要 Hermes {range}",
-  "catalog_skill_ready": "技能 {name} 已可使用",
-  "catalog_missing_env": "仍需要：{names}",
-  "catalog_server_error": "{name} 未能連線：{error}",
-  "catalog_send_failed": "未能傳送你的選擇。請再試一次。",
-  "attachment_video_speed": "播放速度",
-  "catalog_installing": "正在安裝…",
-  "catalog_phase_downloading": "正在下載…",
-  "catalog_phase_python_packages": "正在安裝 Python 套件…",
-  "catalog_phase_loading_tools": "正在載入工具…",
-  "setup_beat_send_failed": "未能傳送你的回答。請再試一次。",
-  "catalog_tool_count": "{count, plural, =1{1 個工具} other{{count} 個工具}}",
   "release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded": "這段內容已不在目前載入的範圍內。",
   "release_core_transcript_reader_loaded_prompts": "已載入的提示詞",
   "release_core_transcript_reader_jump_to_latest": "跳至最新內容",

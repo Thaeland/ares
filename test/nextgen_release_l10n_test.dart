@@ -40,8 +40,6 @@ const _releaseKeys = [
   'ng_release_more_providers_routes_subtitle',
   'ng_release_more_credits_plans',
   'ng_release_more_credits_plans_subtitle',
-  'ng_release_reopen_last_chat',
-  'ng_release_launch_preference_failed',
   'ng_release_sign_in_or',
   'ng_release_deployment_sign_in_hint',
   'ng_release_message_search_unavailable',
@@ -95,7 +93,7 @@ Widget _app(Locale locale, {Widget? child}) => MaterialApp(
 void main() {
   test('NextGen release entries exist in every supported catalogue', () {
     final english = _arb('en');
-    expect(_releaseKeys.toSet(), hasLength(45));
+    expect(_releaseKeys.toSet(), hasLength(43));
     for (final locale in AppLocalizations.supportedLocales) {
       final id = [
         locale.languageCode,
