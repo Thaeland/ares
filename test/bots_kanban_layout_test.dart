@@ -215,6 +215,76 @@ void main() {
         expect(errors, isEmpty, reason: errors.join('\n'));
       });
 
+      testWidgets('F11 roster sections, Move to section and the section name '
+          'above the keyboard', (tester) async {
+        _phone(tester);
+        SharedPreferences.setMockInitialValues({
+          'bot-sections-v1:c-bots:work':
+              '[{"id":"sec-a","name":"Clients and long-running partnerships"}]',
+        });
+        final gateway = BotsReviewGateway()
+          ..bumpRevision('workbot', {
+            'sectionId': 'sec-a',
+            'sectionName': 'Clients and long-running partnerships',
+          });
+        final owner = botsReviewOwner(gateway);
+        addTearDown(owner.close);
+        final errors = await _overflows(tester, () async {
+          await tester.pumpWidget(
+            _app(
+              layout,
+              BotsScreen(
+                owner: owner,
+                route: owner.route(),
+                connection: botsReviewConnection,
+              ),
+            ),
+          );
+          await botsShown(tester, find.text('WorkBot'));
+          await botsStep(tester);
+          for (final key in [
+            'bots-new-section',
+            'bots-section-sec-a',
+            'bots-section-menu-sec-a',
+            'bots-section-unassigned',
+            'bots-row-menu-researchbot',
+          ]) {
+            // The roster is a lazy list: scroll each one in.
+            final target = find.byKey(Key(key));
+            await tester.scrollUntilVisible(
+              target,
+              80,
+              scrollable: find
+                  .descendant(
+                    of: find.byType(ListView),
+                    matching: find.byType(Scrollable),
+                  )
+                  .first,
+            );
+            await botsStep(tester, 2);
+            expect(target.hitTestable(), findsOneWidget, reason: key);
+          }
+          await tester.tap(find.byKey(const Key('bots-row-menu-researchbot')));
+          await botsStep(tester);
+          await tester.tap(find.byKey(const Key('bots-row-move')));
+          await botsStep(tester);
+          final fresh = find.byKey(const Key('bots-move-to-new'));
+          await tester.ensureVisible(fresh);
+          await botsStep(tester, 2);
+          await tester.tap(fresh);
+          await botsStep(tester);
+          tester.view.viewInsets = const FakeViewPadding(bottom: _keyboard);
+          await botsStep(tester);
+          for (final key in ['bots-section-name', 'bots-section-ok']) {
+            final field = find.byKey(Key(key));
+            await tester.ensureVisible(field);
+            await botsStep(tester, 2);
+            _expectAboveKeyboard(tester, field);
+          }
+        });
+        expect(errors, isEmpty, reason: errors.join('\n'));
+      });
+
       testWidgets('F11 the bot sheet and Edit Profile, every field above the '
           'keyboard', (tester) async {
         _phone(tester);

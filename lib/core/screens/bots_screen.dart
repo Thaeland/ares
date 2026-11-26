@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,6 +8,7 @@ import '../l10n/l10n.dart';
 import '../services/connection_manager.dart';
 import '../services/connection_mutation_barrier.dart';
 import '../services/bot_desktop_session.dart';
+import '../services/bot_sections.dart';
 import '../services/remote_workspace.dart';
 import '../theme/hermes_theme.dart';
 import '../widgets/bot_desktop_viewer.dart';
@@ -86,6 +88,15 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
   Map<String, String> _avatars = const {};
   WorkspaceTarget? _avatarTarget;
 
+  /// Roster sections (Desktop's user-sections.ts): this device's list for
+  /// the connection, the sections whose delete is still clearing members,
+  /// and the blocks collapsed for this visit.
+  List<BotSection> _sections = const [];
+  String? _sectionsScope;
+  final _sectionDeletes = <String>{};
+  final _collapsed = <String>{};
+  final _backfilled = <String>{};
+
   // Rooms
   RoomCapabilities? _roomsCaps;
   List<RoomSummary> _rooms = const [];
@@ -135,6 +146,11 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       _target = null;
       _account = ConnectionMutationBarrier.capture(widget.route.connectionId);
       _cancelThumbnail();
+      // Sections are this connection's: the next roster reads its own.
+      _sectionsScope = null;
+      _sections = const [];
+      _sectionDeletes.clear();
+      _collapsed.clear();
       unawaited(_load());
     }
   }
@@ -267,6 +283,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         _routinesProfile ??= _screenProfile;
       });
       unawaited(_loadAvatars(target, roster.profiles));
+      unawaited(_syncSections(target, roster.profiles));
       if (_tab == _BotsTab.rooms) unawaited(_loadRooms(target));
       if (_tab == _BotsTab.routines) unawaited(_loadRoutines(target));
       if (_tab == _BotsTab.screen) unawaited(_loadScreen(target));
@@ -410,8 +427,276 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         ...created.warnings,
       ].join('\n'),
     );
-    unawaited(_load());
+    unawaited(_refreshRoster(target));
     return const BotFormDone();
+  }
+
+  /// Re-reads the roster after a write without the loading screen.
+  Future<void> _refreshRoster(WorkspaceTarget target) async {
+    try {
+      final roster = await target.botRoster(includeSessions: true);
+      if (!_owns(target)) return;
+      setState(() => _roster = roster.profiles);
+      unawaited(_loadAvatars(target, roster.profiles));
+      await _syncSections(target, roster.profiles);
+    } on WorkspaceException {
+      // The roster on screen stays; Refresh retries.
+    }
+  }
+
+  // ── Sections ──────────────────────────────────────────────────────────
+
+  String get _sectionScope =>
+      BotSectionStore.key(widget.route.connectionId, widget.route.profile);
+
+  void _saveSections() =>
+      unawaited(BotSectionStore.save(_sectionScope, _sections));
+
+  /// Reads this connection's sections once, adopts the ones other devices
+  /// made from what their members carry, and stamps the name on members
+  /// filed before names rode along (Desktop's adopt and backfill).
+  Future<void> _syncSections(
+    WorkspaceTarget target,
+    List<BotRosterProfile> roster,
+  ) async {
+    final scope = _sectionScope;
+    if (_sectionsScope != scope) {
+      final loaded = await BotSectionStore.load(scope);
+      if (!_owns(target) || scope != _sectionScope) return;
+      _sectionsScope = scope;
+      _sections = loaded;
+    }
+    final next = adoptBotSections(_sections, roster, _sectionDeletes);
+    final changed = !listEquals(next, _sections);
+    setState(() => _sections = next);
+    if (changed) _saveSections();
+    final known = {for (final s in _sections) s.id};
+    for (final bot in roster) {
+      final id = bot.sectionId;
+      if (id == null ||
+          !known.contains(id) ||
+          bot.sectionName != null ||
+          !_backfilled.add('$scope|${bot.name}')) {
+        continue;
+      }
+      if (!await _fileBots(target, [bot], id, refresh: false)) return;
+    }
+  }
+
+  /// Desktop's `moveBotsToSection`: one look write per bot, in sequence,
+  /// with the section's name riding along (null clears both). Shown at once,
+  /// confirmed by the next roster read.
+  Future<bool> _fileBots(
+    WorkspaceTarget target,
+    List<BotRosterProfile> bots,
+    String? sectionId, {
+    bool refresh = true,
+  }) async {
+    final l10n = context.sharedL10n;
+    for (final bot in bots) {
+      // Deleted while this walked its members: do not refile the rest.
+      if (sectionId != null && !_sections.any((s) => s.id == sectionId)) {
+        return false;
+      }
+      final name = sectionId == null
+          ? null
+          : _sections.firstWhere((s) => s.id == sectionId).name;
+      // Compared with the row as it is now, not as the caller saw it (an
+      // Undo refiles members its delete has already cleared).
+      final current = _roster.where((r) => r.name == bot.name).firstOrNull;
+      if (current == null) continue;
+      if (current.sectionId == sectionId && current.sectionName == name) {
+        continue;
+      }
+      final fields = {'sectionId': sectionId, 'sectionName': name};
+      setState(() {
+        _roster = [
+          for (final row in _roster)
+            row.name == bot.name ? row.withLook({...row.look, ...fields}) : row,
+        ];
+      });
+      String? failure;
+      try {
+        final saved = await target.botSaveLook(bot.name, fields);
+        if (!_owns(target)) return false;
+        if (saved == BotLookSave.failed) failure = 'ui_meta';
+      } on BotProfileRefusal catch (e) {
+        if (!_owns(target)) return false;
+        failure = e.message;
+      } on WorkspaceException catch (e) {
+        if (!_owns(target)) return false;
+        failure = e.reason.name;
+      }
+      if (failure != null) {
+        _toast(l10n.ng_bots_section_move_failed(failure));
+        unawaited(_refreshRoster(target));
+        return false;
+      }
+    }
+    if (refresh) unawaited(_refreshRoster(target));
+    return true;
+  }
+
+  Future<String?> _askSectionName({
+    required String title,
+    required String ok,
+    String initial = '',
+  }) async {
+    final name = await showDialog<String>(
+      context: context,
+      builder: (_) =>
+          _SectionNameDialog(title: title, ok: ok, initial: initial),
+    );
+    final clean = name?.trim();
+    return clean == null || clean.isEmpty ? null : clean;
+  }
+
+  /// New section, filing [bot] into it when its menu asked.
+  Future<void> _newSection([BotRosterProfile? bot]) async {
+    final target = _target;
+    if (target == null) return;
+    final l10n = context.sharedL10n;
+    final name = await _askSectionName(
+      title: l10n.ng_bots_section_new,
+      ok: l10n.ng_bots_section_create,
+    );
+    if (name == null || !_owns(target)) return;
+    final section = BotSection(newBotSectionId(), name);
+    setState(() => _sections = [..._sections, section]);
+    _saveSections();
+    if (bot != null) await _fileBots(target, [bot], section.id);
+  }
+
+  Future<void> _renameSection(BotSection section) async {
+    final target = _target;
+    if (target == null) return;
+    final l10n = context.sharedL10n;
+    final name = await _askSectionName(
+      title: l10n.ng_bots_section_rename,
+      ok: l10n.rename,
+      initial: section.name,
+    );
+    if (name == null || !_owns(target)) return;
+    setState(() {
+      _sections = [
+        for (final s in _sections)
+          s.id == section.id ? BotSection(s.id, name) : s,
+      ];
+    });
+    _saveSections();
+    // Members carry the name: re-stamping them takes it to other devices.
+    await _fileBots(target, [
+      for (final bot in _roster)
+        if (bot.sectionId == section.id) bot,
+    ], section.id);
+  }
+
+  void _moveSection(String id, int delta) {
+    final from = _sections.indexWhere((s) => s.id == id);
+    final to = from + delta;
+    if (from < 0 || to < 0 || to >= _sections.length) return;
+    setState(() {
+      final next = [..._sections];
+      next.insert(to, next.removeAt(from));
+      _sections = next;
+    });
+    _saveSections();
+  }
+
+  /// Deletes the section only: its bots fall back to Unassigned, so there is
+  /// nothing to confirm, and Undo puts the section and its bots back.
+  Future<void> _deleteSection(BotSection section) async {
+    final target = _target;
+    if (target == null) return;
+    final l10n = context.sharedL10n;
+    final index = _sections.indexOf(section);
+    final members = [
+      for (final bot in _roster)
+        if (bot.sectionId == section.id) bot,
+    ];
+    _sectionDeletes.add(section.id);
+    setState(
+      () => _sections = [
+        for (final s in _sections)
+          if (s.id != section.id) s,
+      ],
+    );
+    _saveSections();
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 8),
+          content: Text(
+            l10n.ng_bots_section_deleted(section.name, members.length),
+          ),
+          action: SnackBarAction(
+            key: const Key('bots-section-undo'),
+            label: l10n.ng_bots_undo,
+            onPressed: () {
+              if (!_owns(target)) return;
+              _sectionDeletes.remove(section.id);
+              setState(() {
+                final next = [
+                  for (final s in _sections)
+                    if (s.id != section.id) s,
+                ];
+                next.insert(index.clamp(0, next.length), section);
+                _sections = next;
+              });
+              _saveSections();
+              unawaited(_fileBots(target, members, section.id));
+            },
+          ),
+        ),
+      );
+    await _fileBots(target, members, null);
+    _sectionDeletes.remove(section.id);
+  }
+
+  Future<void> _openMoveTo(BotRosterProfile bot) async {
+    final target = _target;
+    if (target == null) return;
+    // Not section ids: those are trimmed.
+    const fresh = ' new', none = ' none';
+    final choice = await showDialog<String>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        key: const Key('bots-move-to'),
+        title: Text(ctx.sharedL10n.ng_bots_section_move_to),
+        children: [
+          for (final s in _sections)
+            SimpleDialogOption(
+              key: Key('bots-move-to-${s.id}'),
+              onPressed: () => Navigator.pop(ctx, s.id),
+              child: Row(
+                children: [
+                  Icon(
+                    s.id == bot.sectionId ? Icons.check : Icons.folder_outlined,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(child: Text(s.name)),
+                ],
+              ),
+            ),
+          SimpleDialogOption(
+            key: const Key('bots-move-to-new'),
+            onPressed: () => Navigator.pop(ctx, fresh),
+            child: Text(ctx.sharedL10n.ng_bots_section_new_ellipsis),
+          ),
+          if (bot.sectionId != null)
+            SimpleDialogOption(
+              key: const Key('bots-move-to-none'),
+              onPressed: () => Navigator.pop(ctx, none),
+              child: Text(ctx.sharedL10n.ng_bots_section_remove),
+            ),
+        ],
+      ),
+    );
+    if (choice == null || !_owns(target)) return;
+    if (choice == fresh) return _newSection(bot);
+    await _fileBots(target, [bot], choice == none ? null : choice);
   }
 
   // ── Edit Profile ──────────────────────────────────────────────────────
@@ -516,7 +801,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       if (!_owns(target)) return const BotFormDropped();
       return BotFormFailed(l10n.ng_bots_request_failed(e.reason.name));
     }
-    unawaited(_load());
+    unawaited(_refreshRoster(target));
     if (failed.isNotEmpty) {
       return BotFormFailed(l10n.ng_bots_sections_failed(failed.join(', ')));
     }
@@ -1209,6 +1494,14 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
               icon: const Icon(Icons.person_add_alt_1_outlined),
               onPressed: _target == null ? null : _openNewBot,
             ),
+            IconButton(
+              key: const Key('bots-new-section'),
+              tooltip: context.sharedL10n.ng_bots_section_new,
+              icon: const Icon(Icons.create_new_folder_outlined),
+              onPressed: _target == null
+                  ? null
+                  : () => unawaited(_newSection()),
+            ),
           ],
         ),
         const SizedBox(height: 12),
@@ -1217,30 +1510,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
             padding: EdgeInsets.only(top: 48),
             child: Center(child: Text(context.sharedL10n.ng_bots_none_found)),
           ),
-        for (final bot in _visibleRoster)
-          Card(
-            margin: const EdgeInsets.only(bottom: 8),
-            child: ListTile(
-              leading: _face(bot, 40),
-              title: Text(
-                bot.title,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              subtitle: Text(
-                [
-                  bot.model.isNotEmpty
-                      ? bot.model
-                      : context.sharedL10n.ng_bots_no_model,
-                  if (bot.provider.isNotEmpty) bot.provider,
-                  context.sharedL10n.ng_bots_skill_count(bot.skillCount),
-                  if (bot.canonicalSessionId != null)
-                    context.sharedL10n.ng_bots_bot_chat,
-                ].join(' · '),
-              ),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => _openRosterDetail(bot),
-            ),
-          ),
+        ..._rosterRows(),
         const SizedBox(height: 16),
         const SizedBox(height: 4),
         Text(
@@ -1253,6 +1523,167 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
           style: TextStyle(fontSize: 12, color: HermesTokens.of(context).muted),
         ),
       ],
+    );
+  }
+
+  /// The roster in Desktop's order (pinned, then newest activity), grouped
+  /// into sections when there are any: sections in their order, then
+  /// Unassigned. A search looks in every section and opens them all.
+  List<Widget> _rosterRows() {
+    final rows = sortBotRoster(_visibleRoster);
+    if (_sections.isEmpty) return [for (final bot in rows) _botCard(bot)];
+    final searching = _search.isNotEmpty;
+    final l10n = context.sharedL10n;
+    return [
+      for (final block in groupBotsBySection(rows, _sections))
+        // An empty Unassigned is not worth a heading; an empty section is
+        // somewhere the user made.
+        if (block.rows.isNotEmpty || block.id != null) ...[
+          _sectionHeader(block, searching),
+          if (searching || !_collapsed.contains(block.key))
+            if (block.rows.isEmpty)
+              Padding(
+                key: Key('bots-section-empty-${block.id}'),
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+                child: Text(
+                  l10n.ng_bots_section_empty,
+                  style: TextStyle(color: HermesTokens.of(context).muted),
+                ),
+              )
+            else
+              for (final bot in block.rows) _botCard(bot),
+        ],
+    ];
+  }
+
+  Widget _sectionHeader(BotSectionBlock block, bool searching) {
+    final l10n = context.sharedL10n;
+    final id = block.id;
+    final name = id == null ? l10n.ng_bots_section_unassigned : block.name;
+    final collapsed = !searching && _collapsed.contains(block.key);
+    final order = _sections.indexWhere((s) => s.id == id);
+    return Semantics(
+      button: true,
+      expanded: !collapsed,
+      label: l10n.ng_bots_section_toggle(name),
+      child: InkWell(
+        key: Key('bots-section-${id ?? 'unassigned'}'),
+        borderRadius: BorderRadius.circular(8),
+        onTap: searching
+            ? null
+            : () => setState(() {
+                if (!_collapsed.remove(block.key)) _collapsed.add(block.key);
+              }),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            children: [
+              Icon(collapsed ? Icons.chevron_right : Icons.expand_more),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+              ),
+              Text(
+                '${block.rows.length}',
+                style: TextStyle(color: HermesTokens.of(context).muted),
+              ),
+              if (id != null)
+                PopupMenuButton<String>(
+                  key: Key('bots-section-menu-$id'),
+                  tooltip: l10n.ng_bots_section_options(name),
+                  onSelected: (action) {
+                    final section = _sections.firstWhere((s) => s.id == id);
+                    switch (action) {
+                      case 'rename':
+                        unawaited(_renameSection(section));
+                      case 'up':
+                        _moveSection(id, -1);
+                      case 'down':
+                        _moveSection(id, 1);
+                      case 'delete':
+                        unawaited(_deleteSection(section));
+                    }
+                  },
+                  itemBuilder: (_) => [
+                    PopupMenuItem(
+                      key: const Key('bots-section-rename'),
+                      value: 'rename',
+                      child: Text(l10n.ng_bots_section_rename),
+                    ),
+                    PopupMenuItem(
+                      key: const Key('bots-section-up'),
+                      value: 'up',
+                      enabled: order > 0,
+                      child: Text(l10n.ng_bots_section_move_up),
+                    ),
+                    PopupMenuItem(
+                      key: const Key('bots-section-down'),
+                      value: 'down',
+                      enabled: order >= 0 && order < _sections.length - 1,
+                      child: Text(l10n.ng_bots_section_move_down),
+                    ),
+                    PopupMenuItem(
+                      key: const Key('bots-section-delete'),
+                      value: 'delete',
+                      child: Text(l10n.ng_bots_section_delete),
+                    ),
+                  ],
+                )
+              else
+                const SizedBox(width: 12),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _botCard(BotRosterProfile bot) {
+    final l10n = context.sharedL10n;
+    return Card(
+      key: Key('bots-row-${bot.name}'),
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: _face(bot, 40),
+        title: Text(
+          bot.title,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        subtitle: Text(
+          [
+            bot.model.isNotEmpty ? bot.model : l10n.ng_bots_no_model,
+            if (bot.provider.isNotEmpty) bot.provider,
+            l10n.ng_bots_skill_count(bot.skillCount),
+            if (bot.canonicalSessionId != null) l10n.ng_bots_bot_chat,
+          ].join(' · '),
+        ),
+        trailing: PopupMenuButton<String>(
+          key: Key('bots-row-menu-${bot.name}'),
+          tooltip: l10n.ng_bots_bot_actions(bot.title),
+          onSelected: (action) => switch (action) {
+            'edit' => _openEditProfile(bot),
+            _ => unawaited(_openMoveTo(bot)),
+          },
+          itemBuilder: (_) => [
+            PopupMenuItem(
+              key: const Key('bots-row-edit'),
+              value: 'edit',
+              child: Text(l10n.ng_bots_edit_profile),
+            ),
+            PopupMenuItem(
+              key: const Key('bots-row-move'),
+              value: 'move',
+              child: Text(l10n.ng_bots_section_move_to),
+            ),
+          ],
+        ),
+        onTap: () => _openRosterDetail(bot),
+      ),
     );
   }
 
@@ -1960,6 +2391,65 @@ extension on DisplayStatus {
     lease: lease ?? this.lease,
     profileKey: profileKey,
   );
+}
+
+/// The one section-name dialog (New section and Rename). It owns its
+/// controller, so the field outlives the closing animation.
+class _SectionNameDialog extends StatefulWidget {
+  const _SectionNameDialog({
+    required this.title,
+    required this.ok,
+    required this.initial,
+  });
+
+  final String title;
+  final String ok;
+  final String initial;
+
+  @override
+  State<_SectionNameDialog> createState() => _SectionNameDialogState();
+}
+
+class _SectionNameDialogState extends State<_SectionNameDialog> {
+  late final _controller = TextEditingController(text: widget.initial);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.sharedL10n;
+    return AlertDialog(
+      key: const Key('bots-section-dialog'),
+      scrollable: true,
+      title: Text(widget.title),
+      content: TextField(
+        key: const Key('bots-section-name'),
+        controller: _controller,
+        autofocus: true,
+        decoration: InputDecoration(
+          labelText: l10n.ng_bots_section_name,
+          hintText: l10n.ng_bots_section_name_hint,
+        ),
+        onSubmitted: (v) => Navigator.pop(context, v),
+      ),
+      actions: [
+        TextButton(
+          key: const Key('bots-section-cancel'),
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(
+          key: const Key('bots-section-ok'),
+          onPressed: () => Navigator.pop(context, _controller.text),
+          child: Text(widget.ok),
+        ),
+      ],
+    );
+  }
 }
 
 class _RosterDetailSheet extends StatelessWidget {

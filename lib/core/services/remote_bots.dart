@@ -84,6 +84,26 @@ final class BotRosterProfile {
     return made > lastActive * 1000 ? made : lastActive * 1000;
   }
 
+  /// This row with [next] as its record (an edit shown before the next
+  /// roster read confirms it).
+  BotRosterProfile withLook(Map<String, dynamic> next) => BotRosterProfile(
+    name: name,
+    path: path,
+    isDefault: isDefault,
+    model: model,
+    provider: provider,
+    description: description,
+    displayName: displayName,
+    skillCount: skillCount,
+    hasAvatar: hasAvatar,
+    canonicalSessionId: canonicalSessionId,
+    workerSessionId: workerSessionId,
+    lastSessionPreview: lastSessionPreview,
+    look: Map<String, dynamic>.unmodifiable(next),
+    lookRevision: lookRevision,
+    lastActive: lastActive,
+  );
+
   String? _lookString(String key) {
     final value = look[key];
     return value is String && value.trim().isNotEmpty ? value.trim() : null;

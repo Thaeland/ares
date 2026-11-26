@@ -153,4 +153,47 @@ void main() {
     ], 'the save confirmation');
     expect(seen, contains('• Das Bild des Bots entfernen'));
   });
+
+  testWidgets('roster sections and their menus in German', (tester) async {
+    _wide(tester);
+    SharedPreferences.setMockInitialValues({
+      'bot-sections-v1:c-bots:work': '[{"id":"sec-a","name":"Kunden"}]',
+    });
+    final gateway = BotsReviewGateway()
+      ..bumpRevision('workbot', {
+        'sectionId': 'sec-a',
+        'sectionName': 'Kunden',
+      });
+    final owner = botsReviewOwner(gateway);
+    addTearDown(owner.close);
+    await tester.pumpWidget(botsReviewApp(owner, locale: _german));
+    await botsShown(tester, find.text('WorkBot'));
+    await botsStep(tester, 4);
+    final seen = _shown();
+    await tester.tap(find.byKey(const Key('bots-section-menu-sec-a')));
+    await botsStep(tester, 6);
+    seen.addAll(_shown());
+    await tester.tapAt(const Offset(4, 4));
+    await botsStep(tester, 6);
+    await tester.tap(find.byKey(const Key('bots-row-menu-workbot')));
+    await botsStep(tester, 6);
+    seen.addAll(_shown());
+    await tester.tap(find.byKey(const Key('bots-row-move')));
+    await botsStep(tester, 6);
+    seen.addAll(_shown());
+    _expectLocalised(seen, const [
+      'ng_bots_section_new',
+      'ng_bots_section_unassigned',
+      'ng_bots_section_rename',
+      'ng_bots_section_move_up',
+      'ng_bots_section_move_down',
+      'ng_bots_section_delete',
+      'ng_bots_edit_profile',
+      'ng_bots_section_move_to',
+      'ng_bots_section_new_ellipsis',
+      'ng_bots_section_remove',
+    ], 'the sections');
+    expect(seen, contains('Optionen für Bereich Kunden'));
+    expect(seen, contains('Aktionen für WorkBot'));
+  });
 }
