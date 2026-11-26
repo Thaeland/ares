@@ -222,7 +222,7 @@ class FakeLiveTransport implements GptLiveTransport {
   void dispose() {}
 }
 
-/// A live conversation over fakes, already started.
+/// A live conversation and the fakes under it.
 typedef StartedLive = ({
   GptLiveConversation conversation,
   FakeLivePeer peer,
@@ -230,7 +230,9 @@ typedef StartedLive = ({
   FakeLiveTransport transport,
 });
 
-Future<StartedLive> startFakeLive({List<Map<String, dynamic>>? history}) async {
+/// A live conversation over fakes that has not started yet (hand it to a
+/// [VoiceLiveEngine] as its `session`, or call `start` yourself).
+StartedLive newFakeLive() {
   final transport = FakeLiveTransport();
   final peer = FakeLivePeer();
   final track = FakeLiveTrack();
@@ -239,14 +241,19 @@ Future<StartedLive> startFakeLive({List<Map<String, dynamic>>? history}) async {
     peerConnectionFactory: () async => peer,
     microphoneFactory: () async => FakeLiveStream(track),
   );
-  final started = await conversation.start(history: history);
-  if (!started) throw StateError('fake live conversation did not start');
   return (
     conversation: conversation,
     peer: peer,
     track: track,
     transport: transport,
   );
+}
+
+Future<StartedLive> startFakeLive({List<Map<String, dynamic>>? history}) async {
+  final live = newFakeLive();
+  final started = await live.conversation.start(history: history);
+  if (!started) throw StateError('fake live conversation did not start');
+  return live;
 }
 
 /// Delivers a transcript delta as the vendor sends it: `start_ms` / `end_ms`

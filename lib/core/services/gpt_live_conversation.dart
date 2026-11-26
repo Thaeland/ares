@@ -145,8 +145,15 @@ List<LiveFragment> liveContextWindow(List<LiveFragment> transcript) {
       : window;
 }
 
-/// Vendor cap: 500 tokens per commentary append. Keep headroom.
-List<String> chunkForCommentary(String text, {int limit = 1400}) {
+/// Vendor cap: 500 tokens per append. ~4 chars/token, keep headroom
+/// (Desktop's `APPEND_CHAR_LIMIT`).
+const int liveAppendCharLimit = 1400;
+
+/// Splits a reply into append-sized chunks on sentence boundaries.
+List<String> chunkForCommentary(
+  String text, {
+  int limit = liveAppendCharLimit,
+}) {
   final clean = text.replaceAll(RegExp(r'\s+'), ' ').trim();
   if (clean.isEmpty) return const [];
   if (clean.length <= limit) return [clean];
@@ -518,15 +525,21 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
     });
   }
 
+  /// Steers the live persona mid-conversation (session-wide), e.g. "finish
+  /// and respond now". Desktop's `VoiceLiveSession.instruct`: the vendor
+  /// event is `session.instructions.append` with `content` and an explicit
+  /// null `delegation_id`.
   @override
-  /// Instruction back to the model (e.g. "finish and respond now").
   void instruct(String text) {
-    final clean = text.replaceAll(RegExp(r'\s+'), ' ').trim();
+    final clean = text.trim();
     if (clean.isEmpty) return;
     _send({
-      'type': 'session.instruct',
-      'text': clean,
-      'event_id': _nextEventId('instruct'),
+      'type': 'session.instructions.append',
+      'content': clean.length > liveAppendCharLimit
+          ? clean.substring(0, liveAppendCharLimit)
+          : clean,
+      'delegation_id': null,
+      'event_id': _nextEventId('instr'),
     });
   }
 

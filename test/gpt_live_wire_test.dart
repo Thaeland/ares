@@ -4,6 +4,7 @@
 // The real GptLiveConversation runs over a fake peer; nothing leaves the test.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/gpt_live_conversation.dart';
+import 'package:hermes_android/core/services/voice_live_engine.dart';
 
 import 'support/fake_live_webrtc.dart';
 
@@ -109,6 +110,67 @@ void main() {
       expect(prompt['context'], context);
       expect(prompt['prompt'], context.substring(context.length - 400));
       expect(prompt['prompt'], endsWith('Sentence number 59.'));
+    });
+  });
+
+  group('interrupt / respond now', () {
+    const nudge =
+        'The user has finished speaking. Respond now to what they said.';
+
+    test("instruct sends Desktop's session.instructions.append with "
+        'content and a null delegation_id (review probe G4)', () async {
+      final live = await startFakeLive();
+      addTearDown(live.conversation.dispose);
+
+      live.conversation.instruct(nudge);
+
+      final sent = live.peer.channel.sent.last;
+      expect(sent['type'], 'session.instructions.append');
+      expect(sent['content'], nudge);
+      expect(sent.containsKey('delegation_id'), isTrue);
+      expect(sent['delegation_id'], isNull);
+      expect(sent['event_id'], isA<String>());
+      expect(sent['event_id'], isNotEmpty);
+      expect(sent.keys.toSet(), {
+        'type',
+        'content',
+        'delegation_id',
+        'event_id',
+      });
+    });
+
+    test('the composer control (VoiceLiveEngine.stopTurn) reaches the vendor '
+        'in that shape, never as session.instruct', () async {
+      final live = newFakeLive();
+      final engine = VoiceLiveEngine(
+        transport: live.transport,
+        session: live.conversation,
+      );
+      addTearDown(engine.dispose);
+      expect(await engine.start(), isTrue);
+
+      engine.stopTurn();
+
+      final channel = live.peer.channel;
+      expect(channel.sentOfType('session.instruct'), isEmpty);
+      final sent = channel.sentOfType('session.instructions.append').single;
+      expect(sent['content'], nudge);
+      expect(sent['delegation_id'], isNull);
+    });
+
+    test('an instruction is cut to the vendor append limit and every one '
+        'carries its own event id', () async {
+      final live = await startFakeLive();
+      addTearDown(live.conversation.dispose);
+
+      live.conversation.instruct('x' * 2000);
+      live.conversation.instruct('  second  ');
+
+      final sent = live.peer.channel.sentOfType('session.instructions.append');
+      expect(sent, hasLength(2));
+      expect(sent.first['content'], 'x' * 1400);
+      expect(sent.last['content'], 'second');
+      expect(sent.first['event_id'], isNot(sent.last['event_id']));
     });
   });
 }
