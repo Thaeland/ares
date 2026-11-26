@@ -12343,4 +12343,502 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get rel_admin_preset_required =>
       'Збережіть попереднє налаштування перед застосуванням.';
+
+  @override
+  String get rel_admin_cancel => 'Скасувати';
+
+  @override
+  String get rel_admin_refresh => 'Оновити';
+
+  @override
+  String get rel_admin_credits_and_plans => 'Кредити й тарифні плани';
+
+  @override
+  String get rel_admin_saved => 'Збережено';
+
+  @override
+  String get rel_admin_name => 'Ім’я';
+
+  @override
+  String get rel_admin_base_url => 'Базова адреса';
+
+  @override
+  String get rel_admin_model => 'Модель';
+
+  @override
+  String get rel_admin_signed_in => 'Ви ввійшли';
+
+  @override
+  String get rel_admin_not_signed_in => 'Вхід не виконано';
+
+  @override
+  String get rel_admin_provider => 'Провайдер';
+
+  @override
+  String get rel_admin_apply_to_this_chat => 'Застосувати до цього чату';
+
+  @override
+  String get rel_admin_auto => 'Авто';
+
+  @override
+  String get rel_admin_chat_completions => 'Доповнення чату';
+
+  @override
+  String get rel_admin_codex_responses => 'Відповіді Codex';
+
+  @override
+  String get rel_admin_anthropic_messages => 'Повідомлення Anthropic';
+
+  @override
+  String get rel_admin_could_not_complete_that_request =>
+      'Не вдалося виконати цей запит.';
+
+  @override
+  String get rel_admin_confirm => 'Підтвердити';
+
+  @override
+  String get rel_admin_providers_and_billing => 'Постачальники й оплата';
+
+  @override
+  String get rel_admin_api_keys => 'Ключі API';
+
+  @override
+  String get rel_admin_custom_endpoints => 'Власні кінцеві точки';
+
+  @override
+  String get rel_admin_provider_accounts => 'Облікові записи постачальників';
+
+  @override
+  String get rel_admin_effort_and_speed_presets =>
+      'Попередні налаштування зусиль і швидкості';
+
+  @override
+  String get rel_admin_delegation => 'Делегування';
+
+  @override
+  String get rel_admin_mixture_of_agents => 'Суміш агентів';
+
+  @override
+  String get rel_admin_no_provider_keys_were_reported_for_this_profile =>
+      'Для цього профілю не повідомлено про ключі постачальників.';
+
+  @override
+  String get rel_admin_not_saved => 'Не збережено';
+
+  @override
+  String get rel_admin_new_key_value => 'Нове значення ключа';
+
+  @override
+  String get rel_admin_provider_key_saved => 'Ключ постачальника збережено.';
+
+  @override
+  String get rel_admin_save_key => 'Зберегти ключ';
+
+  @override
+  String get rel_admin_clear_provider_key => 'Видалити ключ постачальника';
+
+  @override
+  String get rel_admin_provider_key_cleared => 'Ключ постачальника видалено.';
+
+  @override
+  String get rel_admin_clear_key => 'Видалити ключ';
+
+  @override
+  String get rel_admin_new_endpoint => 'Нова кінцева точка';
+
+  @override
+  String get rel_admin_api_key => 'Ключ API';
+
+  @override
+  String get rel_admin_leave_blank_to_keep_a_key_this_endpoint_already_has =>
+      'Залиште порожнім, щоб зберегти наявний ключ цієї кінцевої точки.';
+
+  @override
+  String get rel_admin_reachable => 'Доступна';
+
+  @override
+  String get rel_admin_unreachable => 'Недоступна';
+
+  @override
+  String get rel_admin_test_endpoint => 'Перевірити кінцеву точку';
+
+  @override
+  String get rel_admin_endpoint_saved => 'Кінцеву точку збережено.';
+
+  @override
+  String get rel_admin_save_endpoint => 'Зберегти кінцеву точку';
+
+  @override
+  String get rel_admin_use_this_endpoint => 'Використати цю кінцеву точку';
+
+  @override
+  String
+  get rel_admin_make_this_named_endpoint_the_current_model_for_this_profile =>
+      'Зробити цю іменовану кінцеву точку поточною моделлю цього профілю?';
+
+  @override
+  String get rel_admin_endpoint_is_now_current =>
+      'Кінцева точка тепер поточна.';
+
+  @override
+  String get rel_admin_use_endpoint => 'Використати кінцеву точку';
+
+  @override
+  String get rel_admin_delete_endpoint => 'Видалити кінцеву точку';
+
+  @override
+  String get rel_admin_delete_this_named_endpoint_from_the_profile =>
+      'Видалити цю іменовану кінцеву точку з профілю?';
+
+  @override
+  String get rel_admin_endpoint_deleted => 'Кінцеву точку видалено.';
+
+  @override
+  String get rel_admin_signing_in_stays_on_the_provider_sign_in_screen =>
+      'Вхід виконується на екрані постачальника. Відключення можливе лише коли шлюз повідомляє, що обліковий запис можна видалити.';
+
+  @override
+  String get rel_admin_disconnect_this_provider_account_on_the_gateway =>
+      'Відключити цей обліковий запис постачальника на шлюзі?';
+
+  @override
+  String get rel_admin_provider_account_disconnected =>
+      'Обліковий запис постачальника відключено.';
+
+  @override
+  String get rel_admin_disconnect => 'Відключити';
+
+  @override
+  String get rel_admin_not_disconnectable => 'Неможливо відключити';
+
+  @override
+  String get rel_admin_fast => 'Швидко';
+
+  @override
+  String get rel_admin_preset_saved_for_this_model =>
+      'Попереднє налаштування для цієї моделі збережено.';
+
+  @override
+  String get rel_admin_save_preset => 'Зберегти попереднє налаштування';
+
+  @override
+  String get rel_admin_chat_id => 'ID чату';
+
+  @override
+  String get rel_admin_apply_preset => 'Застосувати попереднє налаштування';
+
+  @override
+  String get rel_admin_set_this_chat_s_effort_and_speed_from_the_saved_preset =>
+      'Установити зусилля й швидкість цього чату зі збереженого попереднього налаштування?';
+
+  @override
+  String get rel_admin_preset_applied_to_this_chat =>
+      'Попереднє налаштування застосовано до цього чату.';
+
+  @override
+  String get rel_admin_this_route_sends_the_picked_effort_unchanged =>
+      'Цей маршрут передає вибране зусилля без змін.';
+
+  @override
+  String get rel_admin_show_route_clamp => 'Показати обмеження маршруту';
+
+  @override
+  String get rel_admin_delegation_backend => 'Бекенд делегування';
+
+  @override
+  String get rel_admin_delegation_backend_saved =>
+      'Бекенд делегування збережено.';
+
+  @override
+  String get rel_admin_save_backend => 'Зберегти бекенд';
+
+  @override
+  String get rel_admin_max_iterations => 'Максимум ітерацій';
+
+  @override
+  String get rel_admin_max_concurrent_children =>
+      'Максимум паралельних дочірніх агентів';
+
+  @override
+  String get rel_admin_child_timeout_seconds =>
+      'Час очікування дочірнього агента в секундах';
+
+  @override
+  String get rel_admin_delegation_effort_leave_unchanged =>
+      'Зусилля делегування, залишити без змін';
+
+  @override
+  String get rel_admin_delegation_limits_saved =>
+      'Обмеження делегування збережено.';
+
+  @override
+  String get rel_admin_save_limits => 'Зберегти обмеження';
+
+  @override
+  String get rel_admin_remove_route => 'Прибрати маршрут';
+
+  @override
+  String get rel_admin_route_name => 'Назва маршруту';
+
+  @override
+  String get rel_admin_route_provider => 'Постачальник маршруту';
+
+  @override
+  String get rel_admin_route_model => 'Модель маршруту';
+
+  @override
+  String get rel_admin_route_effort_unchanged => 'Зусилля маршруту без змін';
+
+  @override
+  String get rel_admin_add_route => 'Додати маршрут';
+
+  @override
+  String get rel_admin_default_route => 'Маршрут за замовчуванням';
+
+  @override
+  String get rel_admin_delegation_routes_saved =>
+      'Маршрути делегування збережено.';
+
+  @override
+  String get rel_admin_save_routes => 'Зберегти маршрути';
+
+  @override
+  String get rel_admin_profile_routes_saved => 'Маршрути профілів збережено.';
+
+  @override
+  String get rel_admin_save_profile_routes => 'Зберегти маршрути профілів';
+
+  @override
+  String get rel_admin_no_mixture_is_loaded => 'Суміш не завантажено.';
+
+  @override
+  String get rel_admin_mixture_enabled => 'Суміш увімкнено';
+
+  @override
+  String get rel_admin_loud_degraded_references =>
+      'Сповіщати про погіршення референсних моделей';
+
+  @override
+  String get rel_admin_silent_degraded_references =>
+      'Не сповіщати про погіршення референсних моделей';
+
+  @override
+  String get rel_admin_aggregator => 'Агрегатор';
+
+  @override
+  String get rel_admin_aggregator_provider => 'Постачальник агрегатора';
+
+  @override
+  String get rel_admin_aggregator_model => 'Модель агрегатора';
+
+  @override
+  String get rel_admin_reference_provider => 'Постачальник референсної моделі';
+
+  @override
+  String get rel_admin_reference_model => 'Референсна модель';
+
+  @override
+  String get rel_admin_add_reference_model => 'Додати референсну модель';
+
+  @override
+  String get rel_admin_mixture_saved => 'Суміш збережено.';
+
+  @override
+  String get rel_admin_save_mixture => 'Зберегти суміш';
+
+  @override
+  String get rel_admin_credit_purchase_submitted =>
+      'Купівлю кредитів надіслано.';
+
+  @override
+  String get rel_admin_credit_purchase_settled => 'Купівлю кредитів завершено.';
+
+  @override
+  String get rel_admin_credit_and_plan_changes_wait_for_confirmation_a_plan =>
+      'Зміни кредитів і планів очікують підтвердження. План із негайним списанням відображається, але тут не підтверджується.';
+
+  @override
+  String get rel_admin_buy_credits => 'Купити кредити';
+
+  @override
+  String get rel_admin_retry_same_charge => 'Повторити те саме списання';
+
+  @override
+  String get rel_admin_retry_the_same_credit_charge_this_does_not_start =>
+      'Повторіть те саме списання за кредити. Це не починає другу купівлю.';
+
+  @override
+  String get rel_admin_credit_purchases_are_not_available_for_this_account =>
+      'Купівля кредитів недоступна для цього облікового запису.';
+
+  @override
+  String get rel_admin_auto_reload => 'Автопоповнення';
+
+  @override
+  String get rel_admin_read_only_until_this_account_can_charge =>
+      'Лише читання, доки обліковий запис не зможе оплачувати.';
+
+  @override
+  String get rel_admin_auto_reload_updated => 'Автопоповнення оновлено.';
+
+  @override
+  String get rel_admin_keep_going_on_credits => 'Продовжувати за кредити';
+
+  @override
+  String get rel_admin_continue_on_credits_when_the_plan_window_is_used_up =>
+      'Продовжувати за кредити після вичерпання квоти періоду плану?';
+
+  @override
+  String
+  get rel_admin_stop_continuing_on_credits_when_the_plan_window_is_used_up =>
+      'Припинити продовження за кредити після вичерпання квоти періоду плану?';
+
+  @override
+  String get rel_admin_credit_continuation_updated =>
+      'Продовження за кредити оновлено.';
+
+  @override
+  String get rel_admin_this_plan_change_is_not_confirmed_from_ares =>
+      'Ця зміна плану не підтверджується з Ares.';
+
+  @override
+  String get rel_admin_this_change_is_scheduled_confirm_to_apply_it =>
+      'Цю зміну заплановано. Підтвердьте, щоб застосувати її.';
+
+  @override
+  String get rel_admin_preview_plan => 'Попередній перегляд плану';
+
+  @override
+  String get rel_admin_schedule_plan_change => 'Запланувати зміну плану';
+
+  @override
+  String get rel_admin_plan_change_scheduled => 'Зміну плану заплановано.';
+
+  @override
+  String get rel_admin_confirm_scheduled_plan_change =>
+      'Підтвердити заплановану зміну плану';
+
+  @override
+  String rel_admin_remove_key_confirm(String key) {
+    return 'Видалити збережене значення $key із цього профілю?';
+  }
+
+  @override
+  String rel_admin_current_endpoint(String name) {
+    return '$name · поточна';
+  }
+
+  @override
+  String rel_admin_endpoint_result(
+    String status,
+    String transport,
+    String count,
+    String message,
+  ) {
+    return '$status · $transport · моделей: $count. $message';
+  }
+
+  @override
+  String rel_admin_disconnect_account(String name) {
+    return 'Відключити $name';
+  }
+
+  @override
+  String rel_admin_delegation_blocked(String reason) {
+    return 'Делегування заблоковано: $reason';
+  }
+
+  @override
+  String rel_admin_backend_unavailable(String name) {
+    return '$name · недоступний';
+  }
+
+  @override
+  String rel_admin_reference_number(String number) {
+    return 'Референсна модель $number';
+  }
+
+  @override
+  String rel_admin_reload_enable_confirm(String amount, String threshold) {
+    return 'Увімкнути автопоповнення та списувати $amount, коли баланс опускається нижче $threshold?';
+  }
+
+  @override
+  String rel_admin_reload_disable_confirm(String amount, String threshold) {
+    return 'Вимкнути автопоповнення? Зараз списується $amount, коли баланс опускається нижче $threshold.';
+  }
+
+  @override
+  String get rel_admin_this_plan => 'цей план';
+
+  @override
+  String rel_admin_plan_confirm(String name) {
+    return 'Запланувати $name. Зміну призначено на кінець поточного періоду. Зараз списання не буде.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price(String name, String price) {
+    return 'Запланувати $name за $price. Зміну призначено на кінець поточного періоду. Зараз списання не буде.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_when(String name, String when) {
+    return 'Запланувати $name. Набуває чинності $when. Зараз списання не буде.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price_when(
+    String name,
+    String price,
+    String when,
+  ) {
+    return 'Запланувати $name за $price. Набуває чинності $when. Зараз списання не буде.';
+  }
+
+  @override
+  String rel_admin_balance(String amount) {
+    return 'Баланс $amount';
+  }
+
+  @override
+  String rel_admin_buy_confirm(String amount) {
+    return 'Списати \$$amount через спосіб оплати цього облікового запису Nous. Будуть витрачені реальні гроші.';
+  }
+
+  @override
+  String rel_admin_reload_portal(String url) {
+    return 'Змініть автопоповнення на порталі: $url';
+  }
+
+  @override
+  String rel_admin_team_portal(String url) {
+    return 'Підписки команди змінюються на порталі: $url';
+  }
+
+  @override
+  String get rel_admin_effort_none => 'немає';
+
+  @override
+  String get rel_admin_effort_minimal => 'мінімальний';
+
+  @override
+  String get rel_admin_effort_low => 'низький';
+
+  @override
+  String get rel_admin_effort_medium => 'середній';
+
+  @override
+  String get rel_admin_effort_high => 'високий';
+
+  @override
+  String get rel_admin_effort_xhigh => 'дуже високий';
+
+  @override
+  String get rel_admin_effort_max => 'максимальний';
+
+  @override
+  String get rel_admin_effort_ultra => 'надвисокий';
+
+  @override
+  String get rel_admin_auto_lower => 'Авто';
 }

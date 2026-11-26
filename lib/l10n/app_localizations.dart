@@ -19987,6 +19987,857 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save a preset before applying it.'**
   String get rel_admin_preset_required;
+
+  /// Release administration: Cancel
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get rel_admin_cancel;
+
+  /// Release administration: Refresh
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get rel_admin_refresh;
+
+  /// Release administration: Credits and plans
+  ///
+  /// In en, this message translates to:
+  /// **'Credits and plans'**
+  String get rel_admin_credits_and_plans;
+
+  /// Release administration: Saved
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get rel_admin_saved;
+
+  /// Release administration: Name
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get rel_admin_name;
+
+  /// Release administration: Base URL
+  ///
+  /// In en, this message translates to:
+  /// **'Base URL'**
+  String get rel_admin_base_url;
+
+  /// Release administration: Model
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get rel_admin_model;
+
+  /// Release administration: Signed in
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in'**
+  String get rel_admin_signed_in;
+
+  /// Release administration: Not signed in
+  ///
+  /// In en, this message translates to:
+  /// **'Not signed in'**
+  String get rel_admin_not_signed_in;
+
+  /// Release administration: Provider
+  ///
+  /// In en, this message translates to:
+  /// **'Provider'**
+  String get rel_admin_provider;
+
+  /// Release administration: Apply to this chat
+  ///
+  /// In en, this message translates to:
+  /// **'Apply to this chat'**
+  String get rel_admin_apply_to_this_chat;
+
+  /// Release administration: Auto
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get rel_admin_auto;
+
+  /// Release administration: Chat Completions
+  ///
+  /// In en, this message translates to:
+  /// **'Chat Completions'**
+  String get rel_admin_chat_completions;
+
+  /// Release administration: Codex Responses
+  ///
+  /// In en, this message translates to:
+  /// **'Codex Responses'**
+  String get rel_admin_codex_responses;
+
+  /// Release administration: Anthropic Messages
+  ///
+  /// In en, this message translates to:
+  /// **'Anthropic Messages'**
+  String get rel_admin_anthropic_messages;
+
+  /// Release administration: Could not complete that request.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not complete that request.'**
+  String get rel_admin_could_not_complete_that_request;
+
+  /// Release administration: Confirm
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get rel_admin_confirm;
+
+  /// Release administration: Providers and billing
+  ///
+  /// In en, this message translates to:
+  /// **'Providers and billing'**
+  String get rel_admin_providers_and_billing;
+
+  /// Release administration: API keys
+  ///
+  /// In en, this message translates to:
+  /// **'API keys'**
+  String get rel_admin_api_keys;
+
+  /// Release administration: Custom endpoints
+  ///
+  /// In en, this message translates to:
+  /// **'Custom endpoints'**
+  String get rel_admin_custom_endpoints;
+
+  /// Release administration: Provider accounts
+  ///
+  /// In en, this message translates to:
+  /// **'Provider accounts'**
+  String get rel_admin_provider_accounts;
+
+  /// Release administration: Effort and speed presets
+  ///
+  /// In en, this message translates to:
+  /// **'Effort and speed presets'**
+  String get rel_admin_effort_and_speed_presets;
+
+  /// Release administration: Delegation
+  ///
+  /// In en, this message translates to:
+  /// **'Delegation'**
+  String get rel_admin_delegation;
+
+  /// Release administration: Mixture of agents
+  ///
+  /// In en, this message translates to:
+  /// **'Mixture of agents'**
+  String get rel_admin_mixture_of_agents;
+
+  /// Release administration: No provider keys were reported for this profile.
+  ///
+  /// In en, this message translates to:
+  /// **'No provider keys were reported for this profile.'**
+  String get rel_admin_no_provider_keys_were_reported_for_this_profile;
+
+  /// Release administration: Not saved
+  ///
+  /// In en, this message translates to:
+  /// **'Not saved'**
+  String get rel_admin_not_saved;
+
+  /// Release administration: New key value
+  ///
+  /// In en, this message translates to:
+  /// **'New key value'**
+  String get rel_admin_new_key_value;
+
+  /// Release administration: Provider key saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider key saved.'**
+  String get rel_admin_provider_key_saved;
+
+  /// Release administration: Save key
+  ///
+  /// In en, this message translates to:
+  /// **'Save key'**
+  String get rel_admin_save_key;
+
+  /// Release administration: Clear provider key
+  ///
+  /// In en, this message translates to:
+  /// **'Clear provider key'**
+  String get rel_admin_clear_provider_key;
+
+  /// Release administration: Provider key cleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider key cleared.'**
+  String get rel_admin_provider_key_cleared;
+
+  /// Release administration: Clear key
+  ///
+  /// In en, this message translates to:
+  /// **'Clear key'**
+  String get rel_admin_clear_key;
+
+  /// Release administration: New endpoint
+  ///
+  /// In en, this message translates to:
+  /// **'New endpoint'**
+  String get rel_admin_new_endpoint;
+
+  /// Release administration: API key
+  ///
+  /// In en, this message translates to:
+  /// **'API key'**
+  String get rel_admin_api_key;
+
+  /// Release administration: Leave blank to keep a key this endpoint already has.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave blank to keep a key this endpoint already has.'**
+  String get rel_admin_leave_blank_to_keep_a_key_this_endpoint_already_has;
+
+  /// Release administration: Reachable
+  ///
+  /// In en, this message translates to:
+  /// **'Reachable'**
+  String get rel_admin_reachable;
+
+  /// Release administration: Unreachable
+  ///
+  /// In en, this message translates to:
+  /// **'Unreachable'**
+  String get rel_admin_unreachable;
+
+  /// Release administration: Test endpoint
+  ///
+  /// In en, this message translates to:
+  /// **'Test endpoint'**
+  String get rel_admin_test_endpoint;
+
+  /// Release administration: Endpoint saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Endpoint saved.'**
+  String get rel_admin_endpoint_saved;
+
+  /// Release administration: Save endpoint
+  ///
+  /// In en, this message translates to:
+  /// **'Save endpoint'**
+  String get rel_admin_save_endpoint;
+
+  /// Release administration: Use this endpoint
+  ///
+  /// In en, this message translates to:
+  /// **'Use this endpoint'**
+  String get rel_admin_use_this_endpoint;
+
+  /// Release administration: Make this named endpoint the current model for this profile?
+  ///
+  /// In en, this message translates to:
+  /// **'Make this named endpoint the current model for this profile?'**
+  String
+  get rel_admin_make_this_named_endpoint_the_current_model_for_this_profile;
+
+  /// Release administration: Endpoint is now current.
+  ///
+  /// In en, this message translates to:
+  /// **'Endpoint is now current.'**
+  String get rel_admin_endpoint_is_now_current;
+
+  /// Release administration: Use endpoint
+  ///
+  /// In en, this message translates to:
+  /// **'Use endpoint'**
+  String get rel_admin_use_endpoint;
+
+  /// Release administration: Delete endpoint
+  ///
+  /// In en, this message translates to:
+  /// **'Delete endpoint'**
+  String get rel_admin_delete_endpoint;
+
+  /// Release administration: Delete this named endpoint from the profile?
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this named endpoint from the profile?'**
+  String get rel_admin_delete_this_named_endpoint_from_the_profile;
+
+  /// Release administration: Endpoint deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Endpoint deleted.'**
+  String get rel_admin_endpoint_deleted;
+
+  /// Release administration: Signing in stays on the provider sign-in screen. Disconnect only runs when this gateway says the account can be removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in stays on the provider sign-in screen. Disconnect only runs when this gateway says the account can be removed.'**
+  String get rel_admin_signing_in_stays_on_the_provider_sign_in_screen;
+
+  /// Release administration: Disconnect this provider account on the gateway?
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect this provider account on the gateway?'**
+  String get rel_admin_disconnect_this_provider_account_on_the_gateway;
+
+  /// Release administration: Provider account disconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider account disconnected.'**
+  String get rel_admin_provider_account_disconnected;
+
+  /// Release administration: Disconnect
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get rel_admin_disconnect;
+
+  /// Release administration: Not disconnectable
+  ///
+  /// In en, this message translates to:
+  /// **'Not disconnectable'**
+  String get rel_admin_not_disconnectable;
+
+  /// Release administration: Fast
+  ///
+  /// In en, this message translates to:
+  /// **'Fast'**
+  String get rel_admin_fast;
+
+  /// Release administration: Preset saved for this model.
+  ///
+  /// In en, this message translates to:
+  /// **'Preset saved for this model.'**
+  String get rel_admin_preset_saved_for_this_model;
+
+  /// Release administration: Save preset
+  ///
+  /// In en, this message translates to:
+  /// **'Save preset'**
+  String get rel_admin_save_preset;
+
+  /// Release administration: Chat id
+  ///
+  /// In en, this message translates to:
+  /// **'Chat id'**
+  String get rel_admin_chat_id;
+
+  /// Release administration: Apply preset
+  ///
+  /// In en, this message translates to:
+  /// **'Apply preset'**
+  String get rel_admin_apply_preset;
+
+  /// Release administration: Set this chat's effort and speed from the saved preset?
+  ///
+  /// In en, this message translates to:
+  /// **'Set this chat\'s effort and speed from the saved preset?'**
+  String get rel_admin_set_this_chat_s_effort_and_speed_from_the_saved_preset;
+
+  /// Release administration: Preset applied to this chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Preset applied to this chat.'**
+  String get rel_admin_preset_applied_to_this_chat;
+
+  /// Release administration: This route sends the picked effort unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'This route sends the picked effort unchanged.'**
+  String get rel_admin_this_route_sends_the_picked_effort_unchanged;
+
+  /// Release administration: Show route clamp
+  ///
+  /// In en, this message translates to:
+  /// **'Show route clamp'**
+  String get rel_admin_show_route_clamp;
+
+  /// Release administration: Delegation backend
+  ///
+  /// In en, this message translates to:
+  /// **'Delegation backend'**
+  String get rel_admin_delegation_backend;
+
+  /// Release administration: Delegation backend saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Delegation backend saved.'**
+  String get rel_admin_delegation_backend_saved;
+
+  /// Release administration: Save backend
+  ///
+  /// In en, this message translates to:
+  /// **'Save backend'**
+  String get rel_admin_save_backend;
+
+  /// Release administration: Max iterations
+  ///
+  /// In en, this message translates to:
+  /// **'Max iterations'**
+  String get rel_admin_max_iterations;
+
+  /// Release administration: Max concurrent children
+  ///
+  /// In en, this message translates to:
+  /// **'Max concurrent children'**
+  String get rel_admin_max_concurrent_children;
+
+  /// Release administration: Child timeout seconds
+  ///
+  /// In en, this message translates to:
+  /// **'Child timeout seconds'**
+  String get rel_admin_child_timeout_seconds;
+
+  /// Release administration: Delegation effort, leave unchanged
+  ///
+  /// In en, this message translates to:
+  /// **'Delegation effort, leave unchanged'**
+  String get rel_admin_delegation_effort_leave_unchanged;
+
+  /// Release administration: Delegation limits saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Delegation limits saved.'**
+  String get rel_admin_delegation_limits_saved;
+
+  /// Release administration: Save limits
+  ///
+  /// In en, this message translates to:
+  /// **'Save limits'**
+  String get rel_admin_save_limits;
+
+  /// Release administration: Remove route
+  ///
+  /// In en, this message translates to:
+  /// **'Remove route'**
+  String get rel_admin_remove_route;
+
+  /// Release administration: Route name
+  ///
+  /// In en, this message translates to:
+  /// **'Route name'**
+  String get rel_admin_route_name;
+
+  /// Release administration: Route provider
+  ///
+  /// In en, this message translates to:
+  /// **'Route provider'**
+  String get rel_admin_route_provider;
+
+  /// Release administration: Route model
+  ///
+  /// In en, this message translates to:
+  /// **'Route model'**
+  String get rel_admin_route_model;
+
+  /// Release administration: Route effort unchanged
+  ///
+  /// In en, this message translates to:
+  /// **'Route effort unchanged'**
+  String get rel_admin_route_effort_unchanged;
+
+  /// Release administration: Add route
+  ///
+  /// In en, this message translates to:
+  /// **'Add route'**
+  String get rel_admin_add_route;
+
+  /// Release administration: Default route
+  ///
+  /// In en, this message translates to:
+  /// **'Default route'**
+  String get rel_admin_default_route;
+
+  /// Release administration: Delegation routes saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Delegation routes saved.'**
+  String get rel_admin_delegation_routes_saved;
+
+  /// Release administration: Save routes
+  ///
+  /// In en, this message translates to:
+  /// **'Save routes'**
+  String get rel_admin_save_routes;
+
+  /// Release administration: Profile routes saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile routes saved.'**
+  String get rel_admin_profile_routes_saved;
+
+  /// Release administration: Save profile routes
+  ///
+  /// In en, this message translates to:
+  /// **'Save profile routes'**
+  String get rel_admin_save_profile_routes;
+
+  /// Release administration: No mixture is loaded.
+  ///
+  /// In en, this message translates to:
+  /// **'No mixture is loaded.'**
+  String get rel_admin_no_mixture_is_loaded;
+
+  /// Release administration: Mixture enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Mixture enabled'**
+  String get rel_admin_mixture_enabled;
+
+  /// Release administration: Loud degraded references
+  ///
+  /// In en, this message translates to:
+  /// **'Loud degraded references'**
+  String get rel_admin_loud_degraded_references;
+
+  /// Release administration: Silent degraded references
+  ///
+  /// In en, this message translates to:
+  /// **'Silent degraded references'**
+  String get rel_admin_silent_degraded_references;
+
+  /// Release administration: Aggregator
+  ///
+  /// In en, this message translates to:
+  /// **'Aggregator'**
+  String get rel_admin_aggregator;
+
+  /// Release administration: Aggregator provider
+  ///
+  /// In en, this message translates to:
+  /// **'Aggregator provider'**
+  String get rel_admin_aggregator_provider;
+
+  /// Release administration: Aggregator model
+  ///
+  /// In en, this message translates to:
+  /// **'Aggregator model'**
+  String get rel_admin_aggregator_model;
+
+  /// Release administration: Reference provider
+  ///
+  /// In en, this message translates to:
+  /// **'Reference provider'**
+  String get rel_admin_reference_provider;
+
+  /// Release administration: Reference model
+  ///
+  /// In en, this message translates to:
+  /// **'Reference model'**
+  String get rel_admin_reference_model;
+
+  /// Release administration: Add reference model
+  ///
+  /// In en, this message translates to:
+  /// **'Add reference model'**
+  String get rel_admin_add_reference_model;
+
+  /// Release administration: Mixture saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixture saved.'**
+  String get rel_admin_mixture_saved;
+
+  /// Release administration: Save mixture
+  ///
+  /// In en, this message translates to:
+  /// **'Save mixture'**
+  String get rel_admin_save_mixture;
+
+  /// Release administration: Credit purchase submitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit purchase submitted.'**
+  String get rel_admin_credit_purchase_submitted;
+
+  /// Release administration: Credit purchase settled.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit purchase settled.'**
+  String get rel_admin_credit_purchase_settled;
+
+  /// Release administration: Credit and plan changes wait for confirmation. A plan that would charge immediately is shown and not confirmed here.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit and plan changes wait for confirmation. A plan that would charge immediately is shown and not confirmed here.'**
+  String get rel_admin_credit_and_plan_changes_wait_for_confirmation_a_plan;
+
+  /// Release administration: Buy credits
+  ///
+  /// In en, this message translates to:
+  /// **'Buy credits'**
+  String get rel_admin_buy_credits;
+
+  /// Release administration: Retry same charge
+  ///
+  /// In en, this message translates to:
+  /// **'Retry same charge'**
+  String get rel_admin_retry_same_charge;
+
+  /// Release administration: Retry the same credit charge. This does not start a second purchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry the same credit charge. This does not start a second purchase.'**
+  String get rel_admin_retry_the_same_credit_charge_this_does_not_start;
+
+  /// Release administration: Credit purchases are not available for this account.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit purchases are not available for this account.'**
+  String get rel_admin_credit_purchases_are_not_available_for_this_account;
+
+  /// Release administration: Auto-reload
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-reload'**
+  String get rel_admin_auto_reload;
+
+  /// Release administration: Read-only until this account can charge.
+  ///
+  /// In en, this message translates to:
+  /// **'Read-only until this account can charge.'**
+  String get rel_admin_read_only_until_this_account_can_charge;
+
+  /// Release administration: Auto-reload updated.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-reload updated.'**
+  String get rel_admin_auto_reload_updated;
+
+  /// Release administration: Keep going on credits
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going on credits'**
+  String get rel_admin_keep_going_on_credits;
+
+  /// Release administration: Continue on credits when the plan window is used up?
+  ///
+  /// In en, this message translates to:
+  /// **'Continue on credits when the plan window is used up?'**
+  String get rel_admin_continue_on_credits_when_the_plan_window_is_used_up;
+
+  /// Release administration: Stop continuing on credits when the plan window is used up?
+  ///
+  /// In en, this message translates to:
+  /// **'Stop continuing on credits when the plan window is used up?'**
+  String
+  get rel_admin_stop_continuing_on_credits_when_the_plan_window_is_used_up;
+
+  /// Release administration: Credit continuation updated.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit continuation updated.'**
+  String get rel_admin_credit_continuation_updated;
+
+  /// Release administration: This plan change is not confirmed from Ares.
+  ///
+  /// In en, this message translates to:
+  /// **'This plan change is not confirmed from Ares.'**
+  String get rel_admin_this_plan_change_is_not_confirmed_from_ares;
+
+  /// Release administration: This change is scheduled. Confirm to apply it.
+  ///
+  /// In en, this message translates to:
+  /// **'This change is scheduled. Confirm to apply it.'**
+  String get rel_admin_this_change_is_scheduled_confirm_to_apply_it;
+
+  /// Release administration: Preview plan
+  ///
+  /// In en, this message translates to:
+  /// **'Preview plan'**
+  String get rel_admin_preview_plan;
+
+  /// Release administration: Schedule plan change
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule plan change'**
+  String get rel_admin_schedule_plan_change;
+
+  /// Release administration: Plan change scheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan change scheduled.'**
+  String get rel_admin_plan_change_scheduled;
+
+  /// Release administration: Confirm scheduled plan change
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm scheduled plan change'**
+  String get rel_admin_confirm_scheduled_plan_change;
+
+  /// Release administration: Remove the saved {key} value from this profile?
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the saved {key} value from this profile?'**
+  String rel_admin_remove_key_confirm(String key);
+
+  /// Release administration: {name} · current
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · current'**
+  String rel_admin_current_endpoint(String name);
+
+  /// Release administration: {status} · {transport} · {count} models. {message}
+  ///
+  /// In en, this message translates to:
+  /// **'{status} · {transport} · {count} models. {message}'**
+  String rel_admin_endpoint_result(
+    String status,
+    String transport,
+    String count,
+    String message,
+  );
+
+  /// Release administration: Disconnect {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect {name}'**
+  String rel_admin_disconnect_account(String name);
+
+  /// Release administration: Delegation is blocked: {reason}
+  ///
+  /// In en, this message translates to:
+  /// **'Delegation is blocked: {reason}'**
+  String rel_admin_delegation_blocked(String reason);
+
+  /// Release administration: {name} · unavailable
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · unavailable'**
+  String rel_admin_backend_unavailable(String name);
+
+  /// Release administration: Reference {number}
+  ///
+  /// In en, this message translates to:
+  /// **'Reference {number}'**
+  String rel_admin_reference_number(String number);
+
+  /// Release administration: Turn on auto-reload and charge {amount} when the balance falls below {threshold}?
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on auto-reload and charge {amount} when the balance falls below {threshold}?'**
+  String rel_admin_reload_enable_confirm(String amount, String threshold);
+
+  /// Release administration: Turn off auto-reload? It currently charges {amount} when the balance falls below {threshold}.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off auto-reload? It currently charges {amount} when the balance falls below {threshold}.'**
+  String rel_admin_reload_disable_confirm(String amount, String threshold);
+
+  /// Release administration: this plan
+  ///
+  /// In en, this message translates to:
+  /// **'this plan'**
+  String get rel_admin_this_plan;
+
+  /// Release administration: Schedule {name}. It is scheduled for the end of the current period. No charge is made now.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule {name}. It is scheduled for the end of the current period. No charge is made now.'**
+  String rel_admin_plan_confirm(String name);
+
+  /// Release administration: Schedule {name} at {price}. It is scheduled for the end of the current period. No charge is made now.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule {name} at {price}. It is scheduled for the end of the current period. No charge is made now.'**
+  String rel_admin_plan_confirm_price(String name, String price);
+
+  /// Release administration: Schedule {name}. It takes effect {when}. No charge is made now.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule {name}. It takes effect {when}. No charge is made now.'**
+  String rel_admin_plan_confirm_when(String name, String when);
+
+  /// Release administration: Schedule {name} at {price}. It takes effect {when}. No charge is made now.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule {name} at {price}. It takes effect {when}. No charge is made now.'**
+  String rel_admin_plan_confirm_price_when(
+    String name,
+    String price,
+    String when,
+  );
+
+  /// Release administration: Balance {amount}
+  ///
+  /// In en, this message translates to:
+  /// **'Balance {amount}'**
+  String rel_admin_balance(String amount);
+
+  /// Release administration: Charge ${amount} to the payment method on this Nous account. This spends real money.
+  ///
+  /// In en, this message translates to:
+  /// **'Charge \${amount} to the payment method on this Nous account. This spends real money.'**
+  String rel_admin_buy_confirm(String amount);
+
+  /// Release administration: Change auto-reload on the portal: {url}
+  ///
+  /// In en, this message translates to:
+  /// **'Change auto-reload on the portal: {url}'**
+  String rel_admin_reload_portal(String url);
+
+  /// Release administration: Team subscriptions are changed on the portal: {url}
+  ///
+  /// In en, this message translates to:
+  /// **'Team subscriptions are changed on the portal: {url}'**
+  String rel_admin_team_portal(String url);
+
+  /// Release administration: none
+  ///
+  /// In en, this message translates to:
+  /// **'none'**
+  String get rel_admin_effort_none;
+
+  /// Release administration: minimal
+  ///
+  /// In en, this message translates to:
+  /// **'minimal'**
+  String get rel_admin_effort_minimal;
+
+  /// Release administration: low
+  ///
+  /// In en, this message translates to:
+  /// **'low'**
+  String get rel_admin_effort_low;
+
+  /// Release administration: medium
+  ///
+  /// In en, this message translates to:
+  /// **'medium'**
+  String get rel_admin_effort_medium;
+
+  /// Release administration: high
+  ///
+  /// In en, this message translates to:
+  /// **'high'**
+  String get rel_admin_effort_high;
+
+  /// Release administration: xhigh
+  ///
+  /// In en, this message translates to:
+  /// **'xhigh'**
+  String get rel_admin_effort_xhigh;
+
+  /// Release administration: max
+  ///
+  /// In en, this message translates to:
+  /// **'max'**
+  String get rel_admin_effort_max;
+
+  /// Release administration: ultra
+  ///
+  /// In en, this message translates to:
+  /// **'ultra'**
+  String get rel_admin_effort_ultra;
+
+  /// Release administration: auto
+  ///
+  /// In en, this message translates to:
+  /// **'auto'**
+  String get rel_admin_auto_lower;
 }
 
 class _AppLocalizationsDelegate

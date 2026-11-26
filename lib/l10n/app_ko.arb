@@ -3527,5 +3527,677 @@
   "rel_admin_preset_required": "프리셋을 적용하기 전에 저장하세요.",
   "@rel_admin_preset_required": {
     "description": "Release administration: Save a preset before applying it."
+  },
+  "rel_admin_cancel": "취소",
+  "@rel_admin_cancel": {
+    "description": "Release administration: Cancel"
+  },
+  "rel_admin_refresh": "새로고침",
+  "@rel_admin_refresh": {
+    "description": "Release administration: Refresh"
+  },
+  "rel_admin_credits_and_plans": "크레딧 및 요금제",
+  "@rel_admin_credits_and_plans": {
+    "description": "Release administration: Credits and plans"
+  },
+  "rel_admin_saved": "저장했어요",
+  "@rel_admin_saved": {
+    "description": "Release administration: Saved"
+  },
+  "rel_admin_name": "이름",
+  "@rel_admin_name": {
+    "description": "Release administration: Name"
+  },
+  "rel_admin_base_url": "기본 URL",
+  "@rel_admin_base_url": {
+    "description": "Release administration: Base URL"
+  },
+  "rel_admin_model": "모델",
+  "@rel_admin_model": {
+    "description": "Release administration: Model"
+  },
+  "rel_admin_signed_in": "로그인됨",
+  "@rel_admin_signed_in": {
+    "description": "Release administration: Signed in"
+  },
+  "rel_admin_not_signed_in": "로그인되지 않음",
+  "@rel_admin_not_signed_in": {
+    "description": "Release administration: Not signed in"
+  },
+  "rel_admin_provider": "공급자",
+  "@rel_admin_provider": {
+    "description": "Release administration: Provider"
+  },
+  "rel_admin_apply_to_this_chat": "이 채팅에 적용",
+  "@rel_admin_apply_to_this_chat": {
+    "description": "Release administration: Apply to this chat"
+  },
+  "rel_admin_auto": "자동",
+  "@rel_admin_auto": {
+    "description": "Release administration: Auto"
+  },
+  "rel_admin_chat_completions": "채팅 완성",
+  "@rel_admin_chat_completions": {
+    "description": "Release administration: Chat Completions"
+  },
+  "rel_admin_codex_responses": "Codex 응답",
+  "@rel_admin_codex_responses": {
+    "description": "Release administration: Codex Responses"
+  },
+  "rel_admin_anthropic_messages": "Anthropic 메시지",
+  "@rel_admin_anthropic_messages": {
+    "description": "Release administration: Anthropic Messages"
+  },
+  "rel_admin_could_not_complete_that_request": "해당 요청을 완료할 수 없습니다.",
+  "@rel_admin_could_not_complete_that_request": {
+    "description": "Release administration: Could not complete that request."
+  },
+  "rel_admin_confirm": "확인",
+  "@rel_admin_confirm": {
+    "description": "Release administration: Confirm"
+  },
+  "rel_admin_providers_and_billing": "공급자 및 결제",
+  "@rel_admin_providers_and_billing": {
+    "description": "Release administration: Providers and billing"
+  },
+  "rel_admin_api_keys": "API 키",
+  "@rel_admin_api_keys": {
+    "description": "Release administration: API keys"
+  },
+  "rel_admin_custom_endpoints": "사용자 지정 엔드포인트",
+  "@rel_admin_custom_endpoints": {
+    "description": "Release administration: Custom endpoints"
+  },
+  "rel_admin_provider_accounts": "공급자 계정",
+  "@rel_admin_provider_accounts": {
+    "description": "Release administration: Provider accounts"
+  },
+  "rel_admin_effort_and_speed_presets": "추론 수준 및 속도 프리셋",
+  "@rel_admin_effort_and_speed_presets": {
+    "description": "Release administration: Effort and speed presets"
+  },
+  "rel_admin_delegation": "위임",
+  "@rel_admin_delegation": {
+    "description": "Release administration: Delegation"
+  },
+  "rel_admin_mixture_of_agents": "에이전트 혼합",
+  "@rel_admin_mixture_of_agents": {
+    "description": "Release administration: Mixture of agents"
+  },
+  "rel_admin_no_provider_keys_were_reported_for_this_profile": "이 프로필에 보고된 공급자 키가 없습니다.",
+  "@rel_admin_no_provider_keys_were_reported_for_this_profile": {
+    "description": "Release administration: No provider keys were reported for this profile."
+  },
+  "rel_admin_not_saved": "저장되지 않음",
+  "@rel_admin_not_saved": {
+    "description": "Release administration: Not saved"
+  },
+  "rel_admin_new_key_value": "새 키 값",
+  "@rel_admin_new_key_value": {
+    "description": "Release administration: New key value"
+  },
+  "rel_admin_provider_key_saved": "공급자 키를 저장했습니다.",
+  "@rel_admin_provider_key_saved": {
+    "description": "Release administration: Provider key saved."
+  },
+  "rel_admin_save_key": "키 저장",
+  "@rel_admin_save_key": {
+    "description": "Release administration: Save key"
+  },
+  "rel_admin_clear_provider_key": "공급자 키 지우기",
+  "@rel_admin_clear_provider_key": {
+    "description": "Release administration: Clear provider key"
+  },
+  "rel_admin_provider_key_cleared": "공급자 키를 지웠습니다.",
+  "@rel_admin_provider_key_cleared": {
+    "description": "Release administration: Provider key cleared."
+  },
+  "rel_admin_clear_key": "키 지우기",
+  "@rel_admin_clear_key": {
+    "description": "Release administration: Clear key"
+  },
+  "rel_admin_new_endpoint": "새 엔드포인트",
+  "@rel_admin_new_endpoint": {
+    "description": "Release administration: New endpoint"
+  },
+  "rel_admin_api_key": "API 키",
+  "@rel_admin_api_key": {
+    "description": "Release administration: API key"
+  },
+  "rel_admin_leave_blank_to_keep_a_key_this_endpoint_already_has": "이 엔드포인트의 기존 키를 유지하려면 비워 두세요.",
+  "@rel_admin_leave_blank_to_keep_a_key_this_endpoint_already_has": {
+    "description": "Release administration: Leave blank to keep a key this endpoint already has."
+  },
+  "rel_admin_reachable": "연결 가능",
+  "@rel_admin_reachable": {
+    "description": "Release administration: Reachable"
+  },
+  "rel_admin_unreachable": "연결 불가",
+  "@rel_admin_unreachable": {
+    "description": "Release administration: Unreachable"
+  },
+  "rel_admin_test_endpoint": "엔드포인트 테스트",
+  "@rel_admin_test_endpoint": {
+    "description": "Release administration: Test endpoint"
+  },
+  "rel_admin_endpoint_saved": "엔드포인트를 저장했습니다.",
+  "@rel_admin_endpoint_saved": {
+    "description": "Release administration: Endpoint saved."
+  },
+  "rel_admin_save_endpoint": "엔드포인트 저장",
+  "@rel_admin_save_endpoint": {
+    "description": "Release administration: Save endpoint"
+  },
+  "rel_admin_use_this_endpoint": "이 엔드포인트 사용",
+  "@rel_admin_use_this_endpoint": {
+    "description": "Release administration: Use this endpoint"
+  },
+  "rel_admin_make_this_named_endpoint_the_current_model_for_this_profile": "이 명명된 엔드포인트를 이 프로필의 현재 모델로 설정할까요?",
+  "@rel_admin_make_this_named_endpoint_the_current_model_for_this_profile": {
+    "description": "Release administration: Make this named endpoint the current model for this profile?"
+  },
+  "rel_admin_endpoint_is_now_current": "엔드포인트가 현재 설정으로 지정되었습니다.",
+  "@rel_admin_endpoint_is_now_current": {
+    "description": "Release administration: Endpoint is now current."
+  },
+  "rel_admin_use_endpoint": "엔드포인트 사용",
+  "@rel_admin_use_endpoint": {
+    "description": "Release administration: Use endpoint"
+  },
+  "rel_admin_delete_endpoint": "엔드포인트 삭제",
+  "@rel_admin_delete_endpoint": {
+    "description": "Release administration: Delete endpoint"
+  },
+  "rel_admin_delete_this_named_endpoint_from_the_profile": "이 명명된 엔드포인트를 프로필에서 삭제할까요?",
+  "@rel_admin_delete_this_named_endpoint_from_the_profile": {
+    "description": "Release administration: Delete this named endpoint from the profile?"
+  },
+  "rel_admin_endpoint_deleted": "엔드포인트를 삭제했습니다.",
+  "@rel_admin_endpoint_deleted": {
+    "description": "Release administration: Endpoint deleted."
+  },
+  "rel_admin_signing_in_stays_on_the_provider_sign_in_screen": "로그인은 공급자 로그인 화면에서 진행합니다. 이 게이트웨이가 계정을 제거할 수 있다고 알릴 때만 연결 해제가 실행됩니다.",
+  "@rel_admin_signing_in_stays_on_the_provider_sign_in_screen": {
+    "description": "Release administration: Signing in stays on the provider sign-in screen. Disconnect only runs when this gateway says the account can be removed."
+  },
+  "rel_admin_disconnect_this_provider_account_on_the_gateway": "게이트웨이에서 이 공급자 계정의 연결을 해제할까요?",
+  "@rel_admin_disconnect_this_provider_account_on_the_gateway": {
+    "description": "Release administration: Disconnect this provider account on the gateway?"
+  },
+  "rel_admin_provider_account_disconnected": "공급자 계정의 연결을 해제했습니다.",
+  "@rel_admin_provider_account_disconnected": {
+    "description": "Release administration: Provider account disconnected."
+  },
+  "rel_admin_disconnect": "연결 해제",
+  "@rel_admin_disconnect": {
+    "description": "Release administration: Disconnect"
+  },
+  "rel_admin_not_disconnectable": "연결 해제 불가",
+  "@rel_admin_not_disconnectable": {
+    "description": "Release administration: Not disconnectable"
+  },
+  "rel_admin_fast": "빠름",
+  "@rel_admin_fast": {
+    "description": "Release administration: Fast"
+  },
+  "rel_admin_preset_saved_for_this_model": "이 모델의 프리셋을 저장했습니다.",
+  "@rel_admin_preset_saved_for_this_model": {
+    "description": "Release administration: Preset saved for this model."
+  },
+  "rel_admin_save_preset": "프리셋 저장",
+  "@rel_admin_save_preset": {
+    "description": "Release administration: Save preset"
+  },
+  "rel_admin_chat_id": "채팅 ID",
+  "@rel_admin_chat_id": {
+    "description": "Release administration: Chat id"
+  },
+  "rel_admin_apply_preset": "프리셋 적용",
+  "@rel_admin_apply_preset": {
+    "description": "Release administration: Apply preset"
+  },
+  "rel_admin_set_this_chat_s_effort_and_speed_from_the_saved_preset": "저장된 프리셋으로 이 채팅의 추론 수준과 속도를 설정할까요?",
+  "@rel_admin_set_this_chat_s_effort_and_speed_from_the_saved_preset": {
+    "description": "Release administration: Set this chat's effort and speed from the saved preset?"
+  },
+  "rel_admin_preset_applied_to_this_chat": "이 채팅에 프리셋을 적용했습니다.",
+  "@rel_admin_preset_applied_to_this_chat": {
+    "description": "Release administration: Preset applied to this chat."
+  },
+  "rel_admin_this_route_sends_the_picked_effort_unchanged": "이 경로는 선택한 추론 수준을 변경 없이 전송합니다.",
+  "@rel_admin_this_route_sends_the_picked_effort_unchanged": {
+    "description": "Release administration: This route sends the picked effort unchanged."
+  },
+  "rel_admin_show_route_clamp": "경로 제한 표시",
+  "@rel_admin_show_route_clamp": {
+    "description": "Release administration: Show route clamp"
+  },
+  "rel_admin_delegation_backend": "위임 백엔드",
+  "@rel_admin_delegation_backend": {
+    "description": "Release administration: Delegation backend"
+  },
+  "rel_admin_delegation_backend_saved": "위임 백엔드를 저장했습니다.",
+  "@rel_admin_delegation_backend_saved": {
+    "description": "Release administration: Delegation backend saved."
+  },
+  "rel_admin_save_backend": "백엔드 저장",
+  "@rel_admin_save_backend": {
+    "description": "Release administration: Save backend"
+  },
+  "rel_admin_max_iterations": "최대 반복 횟수",
+  "@rel_admin_max_iterations": {
+    "description": "Release administration: Max iterations"
+  },
+  "rel_admin_max_concurrent_children": "최대 동시 하위 에이전트 수",
+  "@rel_admin_max_concurrent_children": {
+    "description": "Release administration: Max concurrent children"
+  },
+  "rel_admin_child_timeout_seconds": "하위 에이전트 시간 제한(초)",
+  "@rel_admin_child_timeout_seconds": {
+    "description": "Release administration: Child timeout seconds"
+  },
+  "rel_admin_delegation_effort_leave_unchanged": "위임 추론 수준, 변경하지 않음",
+  "@rel_admin_delegation_effort_leave_unchanged": {
+    "description": "Release administration: Delegation effort, leave unchanged"
+  },
+  "rel_admin_delegation_limits_saved": "위임 제한을 저장했습니다.",
+  "@rel_admin_delegation_limits_saved": {
+    "description": "Release administration: Delegation limits saved."
+  },
+  "rel_admin_save_limits": "제한 저장",
+  "@rel_admin_save_limits": {
+    "description": "Release administration: Save limits"
+  },
+  "rel_admin_remove_route": "경로 제거",
+  "@rel_admin_remove_route": {
+    "description": "Release administration: Remove route"
+  },
+  "rel_admin_route_name": "경로 이름",
+  "@rel_admin_route_name": {
+    "description": "Release administration: Route name"
+  },
+  "rel_admin_route_provider": "경로 공급자",
+  "@rel_admin_route_provider": {
+    "description": "Release administration: Route provider"
+  },
+  "rel_admin_route_model": "경로 모델",
+  "@rel_admin_route_model": {
+    "description": "Release administration: Route model"
+  },
+  "rel_admin_route_effort_unchanged": "경로 추론 수준 변경 없음",
+  "@rel_admin_route_effort_unchanged": {
+    "description": "Release administration: Route effort unchanged"
+  },
+  "rel_admin_add_route": "경로 추가",
+  "@rel_admin_add_route": {
+    "description": "Release administration: Add route"
+  },
+  "rel_admin_default_route": "기본 경로",
+  "@rel_admin_default_route": {
+    "description": "Release administration: Default route"
+  },
+  "rel_admin_delegation_routes_saved": "위임 경로를 저장했습니다.",
+  "@rel_admin_delegation_routes_saved": {
+    "description": "Release administration: Delegation routes saved."
+  },
+  "rel_admin_save_routes": "경로 저장",
+  "@rel_admin_save_routes": {
+    "description": "Release administration: Save routes"
+  },
+  "rel_admin_profile_routes_saved": "프로필 경로를 저장했습니다.",
+  "@rel_admin_profile_routes_saved": {
+    "description": "Release administration: Profile routes saved."
+  },
+  "rel_admin_save_profile_routes": "프로필 경로 저장",
+  "@rel_admin_save_profile_routes": {
+    "description": "Release administration: Save profile routes"
+  },
+  "rel_admin_no_mixture_is_loaded": "로드된 혼합 구성이 없습니다.",
+  "@rel_admin_no_mixture_is_loaded": {
+    "description": "Release administration: No mixture is loaded."
+  },
+  "rel_admin_mixture_enabled": "혼합 구성 활성화",
+  "@rel_admin_mixture_enabled": {
+    "description": "Release administration: Mixture enabled"
+  },
+  "rel_admin_loud_degraded_references": "참조 모델 성능 저하 알림",
+  "@rel_admin_loud_degraded_references": {
+    "description": "Release administration: Loud degraded references"
+  },
+  "rel_admin_silent_degraded_references": "참조 모델 성능 저하 무음",
+  "@rel_admin_silent_degraded_references": {
+    "description": "Release administration: Silent degraded references"
+  },
+  "rel_admin_aggregator": "집계 모델",
+  "@rel_admin_aggregator": {
+    "description": "Release administration: Aggregator"
+  },
+  "rel_admin_aggregator_provider": "집계 모델 공급자",
+  "@rel_admin_aggregator_provider": {
+    "description": "Release administration: Aggregator provider"
+  },
+  "rel_admin_aggregator_model": "집계 모델",
+  "@rel_admin_aggregator_model": {
+    "description": "Release administration: Aggregator model"
+  },
+  "rel_admin_reference_provider": "참조 모델 공급자",
+  "@rel_admin_reference_provider": {
+    "description": "Release administration: Reference provider"
+  },
+  "rel_admin_reference_model": "참조 모델",
+  "@rel_admin_reference_model": {
+    "description": "Release administration: Reference model"
+  },
+  "rel_admin_add_reference_model": "참조 모델 추가",
+  "@rel_admin_add_reference_model": {
+    "description": "Release administration: Add reference model"
+  },
+  "rel_admin_mixture_saved": "혼합 구성을 저장했습니다.",
+  "@rel_admin_mixture_saved": {
+    "description": "Release administration: Mixture saved."
+  },
+  "rel_admin_save_mixture": "혼합 구성 저장",
+  "@rel_admin_save_mixture": {
+    "description": "Release administration: Save mixture"
+  },
+  "rel_admin_credit_purchase_submitted": "크레딧 구매를 제출했습니다.",
+  "@rel_admin_credit_purchase_submitted": {
+    "description": "Release administration: Credit purchase submitted."
+  },
+  "rel_admin_credit_purchase_settled": "크레딧 구매가 정산되었습니다.",
+  "@rel_admin_credit_purchase_settled": {
+    "description": "Release administration: Credit purchase settled."
+  },
+  "rel_admin_credit_and_plan_changes_wait_for_confirmation_a_plan": "크레딧 및 요금제 변경은 확인을 기다립니다. 즉시 청구되는 요금제는 표시되지만 여기서 확정되지 않습니다.",
+  "@rel_admin_credit_and_plan_changes_wait_for_confirmation_a_plan": {
+    "description": "Release administration: Credit and plan changes wait for confirmation. A plan that would charge immediately is shown and not confirmed here."
+  },
+  "rel_admin_buy_credits": "크레딧 구매",
+  "@rel_admin_buy_credits": {
+    "description": "Release administration: Buy credits"
+  },
+  "rel_admin_retry_same_charge": "동일 결제 재시도",
+  "@rel_admin_retry_same_charge": {
+    "description": "Release administration: Retry same charge"
+  },
+  "rel_admin_retry_the_same_credit_charge_this_does_not_start": "동일한 크레딧 결제를 재시도합니다. 두 번째 구매를 시작하지 않습니다.",
+  "@rel_admin_retry_the_same_credit_charge_this_does_not_start": {
+    "description": "Release administration: Retry the same credit charge. This does not start a second purchase."
+  },
+  "rel_admin_credit_purchases_are_not_available_for_this_account": "이 계정에서는 크레딧을 구매할 수 없습니다.",
+  "@rel_admin_credit_purchases_are_not_available_for_this_account": {
+    "description": "Release administration: Credit purchases are not available for this account."
+  },
+  "rel_admin_auto_reload": "자동 충전",
+  "@rel_admin_auto_reload": {
+    "description": "Release administration: Auto-reload"
+  },
+  "rel_admin_read_only_until_this_account_can_charge": "이 계정에서 결제할 수 있을 때까지 읽기 전용입니다.",
+  "@rel_admin_read_only_until_this_account_can_charge": {
+    "description": "Release administration: Read-only until this account can charge."
+  },
+  "rel_admin_auto_reload_updated": "자동 충전을 업데이트했습니다.",
+  "@rel_admin_auto_reload_updated": {
+    "description": "Release administration: Auto-reload updated."
+  },
+  "rel_admin_keep_going_on_credits": "크레딧으로 계속",
+  "@rel_admin_keep_going_on_credits": {
+    "description": "Release administration: Keep going on credits"
+  },
+  "rel_admin_continue_on_credits_when_the_plan_window_is_used_up": "요금제 기간의 할당량을 다 쓰면 크레딧으로 계속할까요?",
+  "@rel_admin_continue_on_credits_when_the_plan_window_is_used_up": {
+    "description": "Release administration: Continue on credits when the plan window is used up?"
+  },
+  "rel_admin_stop_continuing_on_credits_when_the_plan_window_is_used_up": "요금제 기간의 할당량을 다 쓰면 크레딧으로 계속하는 것을 중지할까요?",
+  "@rel_admin_stop_continuing_on_credits_when_the_plan_window_is_used_up": {
+    "description": "Release administration: Stop continuing on credits when the plan window is used up?"
+  },
+  "rel_admin_credit_continuation_updated": "크레딧 계속 사용 설정을 업데이트했습니다.",
+  "@rel_admin_credit_continuation_updated": {
+    "description": "Release administration: Credit continuation updated."
+  },
+  "rel_admin_this_plan_change_is_not_confirmed_from_ares": "이 요금제 변경은 Ares에서 확정되지 않습니다.",
+  "@rel_admin_this_plan_change_is_not_confirmed_from_ares": {
+    "description": "Release administration: This plan change is not confirmed from Ares."
+  },
+  "rel_admin_this_change_is_scheduled_confirm_to_apply_it": "이 변경은 예약되어 있습니다. 적용하려면 확인하세요.",
+  "@rel_admin_this_change_is_scheduled_confirm_to_apply_it": {
+    "description": "Release administration: This change is scheduled. Confirm to apply it."
+  },
+  "rel_admin_preview_plan": "요금제 미리 보기",
+  "@rel_admin_preview_plan": {
+    "description": "Release administration: Preview plan"
+  },
+  "rel_admin_schedule_plan_change": "요금제 변경 예약",
+  "@rel_admin_schedule_plan_change": {
+    "description": "Release administration: Schedule plan change"
+  },
+  "rel_admin_plan_change_scheduled": "요금제 변경을 예약했습니다.",
+  "@rel_admin_plan_change_scheduled": {
+    "description": "Release administration: Plan change scheduled."
+  },
+  "rel_admin_confirm_scheduled_plan_change": "예약된 요금제 변경 확정",
+  "@rel_admin_confirm_scheduled_plan_change": {
+    "description": "Release administration: Confirm scheduled plan change"
+  },
+  "rel_admin_remove_key_confirm": "이 프로필에서 저장된 {key} 값을 제거할까요?",
+  "@rel_admin_remove_key_confirm": {
+    "description": "Release administration: Remove the saved {key} value from this profile?",
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_current_endpoint": "{name} · 현재",
+  "@rel_admin_current_endpoint": {
+    "description": "Release administration: {name} · current",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_endpoint_result": "{status} · {transport} · 모델 {count}개. {message}",
+  "@rel_admin_endpoint_result": {
+    "description": "Release administration: {status} · {transport} · {count} models. {message}",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "transport": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      },
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_disconnect_account": "{name} 연결 해제",
+  "@rel_admin_disconnect_account": {
+    "description": "Release administration: Disconnect {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_delegation_blocked": "위임이 차단되었습니다: {reason}",
+  "@rel_admin_delegation_blocked": {
+    "description": "Release administration: Delegation is blocked: {reason}",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backend_unavailable": "{name} · 사용 불가",
+  "@rel_admin_backend_unavailable": {
+    "description": "Release administration: {name} · unavailable",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_reference_number": "참조 {number}",
+  "@rel_admin_reference_number": {
+    "description": "Release administration: Reference {number}",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_reload_enable_confirm": "자동 충전을 켜고 잔액이 {threshold} 미만이 되면 {amount}를 청구할까요?",
+  "@rel_admin_reload_enable_confirm": {
+    "description": "Release administration: Turn on auto-reload and charge {amount} when the balance falls below {threshold}?",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "threshold": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_reload_disable_confirm": "자동 충전을 끌까요? 현재 잔액이 {threshold} 미만이 되면 {amount}가 청구됩니다.",
+  "@rel_admin_reload_disable_confirm": {
+    "description": "Release administration: Turn off auto-reload? It currently charges {amount} when the balance falls below {threshold}.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "threshold": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_this_plan": "이 요금제",
+  "@rel_admin_this_plan": {
+    "description": "Release administration: this plan"
+  },
+  "rel_admin_plan_confirm": "{name}을(를) 예약합니다. 현재 기간이 끝날 때 적용됩니다. 지금은 청구되지 않습니다.",
+  "@rel_admin_plan_confirm": {
+    "description": "Release administration: Schedule {name}. It is scheduled for the end of the current period. No charge is made now.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_plan_confirm_price": "{name}을(를) {price}에 예약합니다. 현재 기간이 끝날 때 적용됩니다. 지금은 청구되지 않습니다.",
+  "@rel_admin_plan_confirm_price": {
+    "description": "Release administration: Schedule {name} at {price}. It is scheduled for the end of the current period. No charge is made now.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_plan_confirm_when": "{name}을(를) 예약합니다. {when}에 적용됩니다. 지금은 청구되지 않습니다.",
+  "@rel_admin_plan_confirm_when": {
+    "description": "Release administration: Schedule {name}. It takes effect {when}. No charge is made now.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_plan_confirm_price_when": "{name}을(를) {price}에 예약합니다. {when}에 적용됩니다. 지금은 청구되지 않습니다.",
+  "@rel_admin_plan_confirm_price_when": {
+    "description": "Release administration: Schedule {name} at {price}. It takes effect {when}. No charge is made now.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_balance": "잔액 {amount}",
+  "@rel_admin_balance": {
+    "description": "Release administration: Balance {amount}",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_buy_confirm": "이 Nous 계정의 결제 수단으로 ${amount}를 청구합니다. 실제 돈이 지출됩니다.",
+  "@rel_admin_buy_confirm": {
+    "description": "Release administration: Charge ${amount} to the payment method on this Nous account. This spends real money.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_reload_portal": "포털에서 자동 충전 변경: {url}",
+  "@rel_admin_reload_portal": {
+    "description": "Release administration: Change auto-reload on the portal: {url}",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_team_portal": "팀 구독은 포털에서 변경합니다: {url}",
+  "@rel_admin_team_portal": {
+    "description": "Release administration: Team subscriptions are changed on the portal: {url}",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_effort_none": "없음",
+  "@rel_admin_effort_none": {
+    "description": "Release administration: none"
+  },
+  "rel_admin_effort_minimal": "최소",
+  "@rel_admin_effort_minimal": {
+    "description": "Release administration: minimal"
+  },
+  "rel_admin_effort_low": "낮음",
+  "@rel_admin_effort_low": {
+    "description": "Release administration: low"
+  },
+  "rel_admin_effort_medium": "중간",
+  "@rel_admin_effort_medium": {
+    "description": "Release administration: medium"
+  },
+  "rel_admin_effort_high": "높음",
+  "@rel_admin_effort_high": {
+    "description": "Release administration: high"
+  },
+  "rel_admin_effort_xhigh": "매우 높음",
+  "@rel_admin_effort_xhigh": {
+    "description": "Release administration: xhigh"
+  },
+  "rel_admin_effort_max": "최대",
+  "@rel_admin_effort_max": {
+    "description": "Release administration: max"
+  },
+  "rel_admin_effort_ultra": "초고",
+  "@rel_admin_effort_ultra": {
+    "description": "Release administration: ultra"
+  },
+  "rel_admin_auto_lower": "자동",
+  "@rel_admin_auto_lower": {
+    "description": "Release administration: auto"
   }
 }

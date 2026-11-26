@@ -12220,4 +12220,494 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rel_admin_preset_required => 'Save a preset before applying it.';
+
+  @override
+  String get rel_admin_cancel => 'Cancel';
+
+  @override
+  String get rel_admin_refresh => 'Refresh';
+
+  @override
+  String get rel_admin_credits_and_plans => 'Credits and plans';
+
+  @override
+  String get rel_admin_saved => 'Saved';
+
+  @override
+  String get rel_admin_name => 'Name';
+
+  @override
+  String get rel_admin_base_url => 'Base URL';
+
+  @override
+  String get rel_admin_model => 'Model';
+
+  @override
+  String get rel_admin_signed_in => 'Signed in';
+
+  @override
+  String get rel_admin_not_signed_in => 'Not signed in';
+
+  @override
+  String get rel_admin_provider => 'Provider';
+
+  @override
+  String get rel_admin_apply_to_this_chat => 'Apply to this chat';
+
+  @override
+  String get rel_admin_auto => 'Auto';
+
+  @override
+  String get rel_admin_chat_completions => 'Chat Completions';
+
+  @override
+  String get rel_admin_codex_responses => 'Codex Responses';
+
+  @override
+  String get rel_admin_anthropic_messages => 'Anthropic Messages';
+
+  @override
+  String get rel_admin_could_not_complete_that_request =>
+      'Could not complete that request.';
+
+  @override
+  String get rel_admin_confirm => 'Confirm';
+
+  @override
+  String get rel_admin_providers_and_billing => 'Providers and billing';
+
+  @override
+  String get rel_admin_api_keys => 'API keys';
+
+  @override
+  String get rel_admin_custom_endpoints => 'Custom endpoints';
+
+  @override
+  String get rel_admin_provider_accounts => 'Provider accounts';
+
+  @override
+  String get rel_admin_effort_and_speed_presets => 'Effort and speed presets';
+
+  @override
+  String get rel_admin_delegation => 'Delegation';
+
+  @override
+  String get rel_admin_mixture_of_agents => 'Mixture of agents';
+
+  @override
+  String get rel_admin_no_provider_keys_were_reported_for_this_profile =>
+      'No provider keys were reported for this profile.';
+
+  @override
+  String get rel_admin_not_saved => 'Not saved';
+
+  @override
+  String get rel_admin_new_key_value => 'New key value';
+
+  @override
+  String get rel_admin_provider_key_saved => 'Provider key saved.';
+
+  @override
+  String get rel_admin_save_key => 'Save key';
+
+  @override
+  String get rel_admin_clear_provider_key => 'Clear provider key';
+
+  @override
+  String get rel_admin_provider_key_cleared => 'Provider key cleared.';
+
+  @override
+  String get rel_admin_clear_key => 'Clear key';
+
+  @override
+  String get rel_admin_new_endpoint => 'New endpoint';
+
+  @override
+  String get rel_admin_api_key => 'API key';
+
+  @override
+  String get rel_admin_leave_blank_to_keep_a_key_this_endpoint_already_has =>
+      'Leave blank to keep a key this endpoint already has.';
+
+  @override
+  String get rel_admin_reachable => 'Reachable';
+
+  @override
+  String get rel_admin_unreachable => 'Unreachable';
+
+  @override
+  String get rel_admin_test_endpoint => 'Test endpoint';
+
+  @override
+  String get rel_admin_endpoint_saved => 'Endpoint saved.';
+
+  @override
+  String get rel_admin_save_endpoint => 'Save endpoint';
+
+  @override
+  String get rel_admin_use_this_endpoint => 'Use this endpoint';
+
+  @override
+  String
+  get rel_admin_make_this_named_endpoint_the_current_model_for_this_profile =>
+      'Make this named endpoint the current model for this profile?';
+
+  @override
+  String get rel_admin_endpoint_is_now_current => 'Endpoint is now current.';
+
+  @override
+  String get rel_admin_use_endpoint => 'Use endpoint';
+
+  @override
+  String get rel_admin_delete_endpoint => 'Delete endpoint';
+
+  @override
+  String get rel_admin_delete_this_named_endpoint_from_the_profile =>
+      'Delete this named endpoint from the profile?';
+
+  @override
+  String get rel_admin_endpoint_deleted => 'Endpoint deleted.';
+
+  @override
+  String get rel_admin_signing_in_stays_on_the_provider_sign_in_screen =>
+      'Signing in stays on the provider sign-in screen. Disconnect only runs when this gateway says the account can be removed.';
+
+  @override
+  String get rel_admin_disconnect_this_provider_account_on_the_gateway =>
+      'Disconnect this provider account on the gateway?';
+
+  @override
+  String get rel_admin_provider_account_disconnected =>
+      'Provider account disconnected.';
+
+  @override
+  String get rel_admin_disconnect => 'Disconnect';
+
+  @override
+  String get rel_admin_not_disconnectable => 'Not disconnectable';
+
+  @override
+  String get rel_admin_fast => 'Fast';
+
+  @override
+  String get rel_admin_preset_saved_for_this_model =>
+      'Preset saved for this model.';
+
+  @override
+  String get rel_admin_save_preset => 'Save preset';
+
+  @override
+  String get rel_admin_chat_id => 'Chat id';
+
+  @override
+  String get rel_admin_apply_preset => 'Apply preset';
+
+  @override
+  String get rel_admin_set_this_chat_s_effort_and_speed_from_the_saved_preset =>
+      'Set this chat\'s effort and speed from the saved preset?';
+
+  @override
+  String get rel_admin_preset_applied_to_this_chat =>
+      'Preset applied to this chat.';
+
+  @override
+  String get rel_admin_this_route_sends_the_picked_effort_unchanged =>
+      'This route sends the picked effort unchanged.';
+
+  @override
+  String get rel_admin_show_route_clamp => 'Show route clamp';
+
+  @override
+  String get rel_admin_delegation_backend => 'Delegation backend';
+
+  @override
+  String get rel_admin_delegation_backend_saved => 'Delegation backend saved.';
+
+  @override
+  String get rel_admin_save_backend => 'Save backend';
+
+  @override
+  String get rel_admin_max_iterations => 'Max iterations';
+
+  @override
+  String get rel_admin_max_concurrent_children => 'Max concurrent children';
+
+  @override
+  String get rel_admin_child_timeout_seconds => 'Child timeout seconds';
+
+  @override
+  String get rel_admin_delegation_effort_leave_unchanged =>
+      'Delegation effort, leave unchanged';
+
+  @override
+  String get rel_admin_delegation_limits_saved => 'Delegation limits saved.';
+
+  @override
+  String get rel_admin_save_limits => 'Save limits';
+
+  @override
+  String get rel_admin_remove_route => 'Remove route';
+
+  @override
+  String get rel_admin_route_name => 'Route name';
+
+  @override
+  String get rel_admin_route_provider => 'Route provider';
+
+  @override
+  String get rel_admin_route_model => 'Route model';
+
+  @override
+  String get rel_admin_route_effort_unchanged => 'Route effort unchanged';
+
+  @override
+  String get rel_admin_add_route => 'Add route';
+
+  @override
+  String get rel_admin_default_route => 'Default route';
+
+  @override
+  String get rel_admin_delegation_routes_saved => 'Delegation routes saved.';
+
+  @override
+  String get rel_admin_save_routes => 'Save routes';
+
+  @override
+  String get rel_admin_profile_routes_saved => 'Profile routes saved.';
+
+  @override
+  String get rel_admin_save_profile_routes => 'Save profile routes';
+
+  @override
+  String get rel_admin_no_mixture_is_loaded => 'No mixture is loaded.';
+
+  @override
+  String get rel_admin_mixture_enabled => 'Mixture enabled';
+
+  @override
+  String get rel_admin_loud_degraded_references => 'Loud degraded references';
+
+  @override
+  String get rel_admin_silent_degraded_references =>
+      'Silent degraded references';
+
+  @override
+  String get rel_admin_aggregator => 'Aggregator';
+
+  @override
+  String get rel_admin_aggregator_provider => 'Aggregator provider';
+
+  @override
+  String get rel_admin_aggregator_model => 'Aggregator model';
+
+  @override
+  String get rel_admin_reference_provider => 'Reference provider';
+
+  @override
+  String get rel_admin_reference_model => 'Reference model';
+
+  @override
+  String get rel_admin_add_reference_model => 'Add reference model';
+
+  @override
+  String get rel_admin_mixture_saved => 'Mixture saved.';
+
+  @override
+  String get rel_admin_save_mixture => 'Save mixture';
+
+  @override
+  String get rel_admin_credit_purchase_submitted =>
+      'Credit purchase submitted.';
+
+  @override
+  String get rel_admin_credit_purchase_settled => 'Credit purchase settled.';
+
+  @override
+  String get rel_admin_credit_and_plan_changes_wait_for_confirmation_a_plan =>
+      'Credit and plan changes wait for confirmation. A plan that would charge immediately is shown and not confirmed here.';
+
+  @override
+  String get rel_admin_buy_credits => 'Buy credits';
+
+  @override
+  String get rel_admin_retry_same_charge => 'Retry same charge';
+
+  @override
+  String get rel_admin_retry_the_same_credit_charge_this_does_not_start =>
+      'Retry the same credit charge. This does not start a second purchase.';
+
+  @override
+  String get rel_admin_credit_purchases_are_not_available_for_this_account =>
+      'Credit purchases are not available for this account.';
+
+  @override
+  String get rel_admin_auto_reload => 'Auto-reload';
+
+  @override
+  String get rel_admin_read_only_until_this_account_can_charge =>
+      'Read-only until this account can charge.';
+
+  @override
+  String get rel_admin_auto_reload_updated => 'Auto-reload updated.';
+
+  @override
+  String get rel_admin_keep_going_on_credits => 'Keep going on credits';
+
+  @override
+  String get rel_admin_continue_on_credits_when_the_plan_window_is_used_up =>
+      'Continue on credits when the plan window is used up?';
+
+  @override
+  String
+  get rel_admin_stop_continuing_on_credits_when_the_plan_window_is_used_up =>
+      'Stop continuing on credits when the plan window is used up?';
+
+  @override
+  String get rel_admin_credit_continuation_updated =>
+      'Credit continuation updated.';
+
+  @override
+  String get rel_admin_this_plan_change_is_not_confirmed_from_ares =>
+      'This plan change is not confirmed from Ares.';
+
+  @override
+  String get rel_admin_this_change_is_scheduled_confirm_to_apply_it =>
+      'This change is scheduled. Confirm to apply it.';
+
+  @override
+  String get rel_admin_preview_plan => 'Preview plan';
+
+  @override
+  String get rel_admin_schedule_plan_change => 'Schedule plan change';
+
+  @override
+  String get rel_admin_plan_change_scheduled => 'Plan change scheduled.';
+
+  @override
+  String get rel_admin_confirm_scheduled_plan_change =>
+      'Confirm scheduled plan change';
+
+  @override
+  String rel_admin_remove_key_confirm(String key) {
+    return 'Remove the saved $key value from this profile?';
+  }
+
+  @override
+  String rel_admin_current_endpoint(String name) {
+    return '$name · current';
+  }
+
+  @override
+  String rel_admin_endpoint_result(
+    String status,
+    String transport,
+    String count,
+    String message,
+  ) {
+    return '$status · $transport · $count models. $message';
+  }
+
+  @override
+  String rel_admin_disconnect_account(String name) {
+    return 'Disconnect $name';
+  }
+
+  @override
+  String rel_admin_delegation_blocked(String reason) {
+    return 'Delegation is blocked: $reason';
+  }
+
+  @override
+  String rel_admin_backend_unavailable(String name) {
+    return '$name · unavailable';
+  }
+
+  @override
+  String rel_admin_reference_number(String number) {
+    return 'Reference $number';
+  }
+
+  @override
+  String rel_admin_reload_enable_confirm(String amount, String threshold) {
+    return 'Turn on auto-reload and charge $amount when the balance falls below $threshold?';
+  }
+
+  @override
+  String rel_admin_reload_disable_confirm(String amount, String threshold) {
+    return 'Turn off auto-reload? It currently charges $amount when the balance falls below $threshold.';
+  }
+
+  @override
+  String get rel_admin_this_plan => 'this plan';
+
+  @override
+  String rel_admin_plan_confirm(String name) {
+    return 'Schedule $name. It is scheduled for the end of the current period. No charge is made now.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price(String name, String price) {
+    return 'Schedule $name at $price. It is scheduled for the end of the current period. No charge is made now.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_when(String name, String when) {
+    return 'Schedule $name. It takes effect $when. No charge is made now.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price_when(
+    String name,
+    String price,
+    String when,
+  ) {
+    return 'Schedule $name at $price. It takes effect $when. No charge is made now.';
+  }
+
+  @override
+  String rel_admin_balance(String amount) {
+    return 'Balance $amount';
+  }
+
+  @override
+  String rel_admin_buy_confirm(String amount) {
+    return 'Charge \$$amount to the payment method on this Nous account. This spends real money.';
+  }
+
+  @override
+  String rel_admin_reload_portal(String url) {
+    return 'Change auto-reload on the portal: $url';
+  }
+
+  @override
+  String rel_admin_team_portal(String url) {
+    return 'Team subscriptions are changed on the portal: $url';
+  }
+
+  @override
+  String get rel_admin_effort_none => 'none';
+
+  @override
+  String get rel_admin_effort_minimal => 'minimal';
+
+  @override
+  String get rel_admin_effort_low => 'low';
+
+  @override
+  String get rel_admin_effort_medium => 'medium';
+
+  @override
+  String get rel_admin_effort_high => 'high';
+
+  @override
+  String get rel_admin_effort_xhigh => 'xhigh';
+
+  @override
+  String get rel_admin_effort_max => 'max';
+
+  @override
+  String get rel_admin_effort_ultra => 'ultra';
+
+  @override
+  String get rel_admin_auto_lower => 'auto';
 }

@@ -47,55 +47,60 @@ void main() {
     );
   });
 
-  test(
-    'mixture edits keep the other preset fields and reject a blank slot',
-    () {
-      final saved = editActiveMixture(
-        {
-          'active_preset': 'default',
-          'presets': {
-            'default': {
-              'enabled': false,
-              'fanout': 'user_turn',
-              'reference_temperature': 0.2,
-              'aggregator': {
-                'provider': 'old',
-                'model': 'old-model',
-                'extra': 1,
-              },
-              'reference_models': [
-                {'provider': 'a', 'model': 'one', 'reasoning_effort': 'low'},
-              ],
-            },
+  test('mixture edits keep the other preset fields and reject a blank slot', () {
+    final saved = editActiveMixture(
+      {
+        'active_preset': 'default',
+        'presets': {
+          'default': {
+            'enabled': false,
+            'fanout': 'user_turn',
+            'reference_temperature': 0.2,
+            'aggregator': {'provider': 'old', 'model': 'old-model', 'extra': 1},
+            'reference_models': [
+              {'provider': 'a', 'model': 'one', 'reasoning_effort': 'low'},
+            ],
           },
         },
+      },
+      enabled: true,
+      policy: 'silent',
+      aggregator: {'provider': 'nous', 'model': 'agg', 'extra': 1},
+      references: [
+        {'provider': 'a', 'model': 'one', 'reasoning_effort': 'low'},
+        {'provider': 'b', 'model': 'two'},
+      ],
+    );
+    final preset = (saved['presets'] as Map)['default'] as Map;
+    expect(preset['fanout'], 'user_turn');
+    expect(preset['reference_temperature'], 0.2);
+    expect((preset['aggregator'] as Map)['extra'], 1);
+    expect(preset['reference_models'], hasLength(2));
+    expect(
+      () => editActiveMixture(
+        saved,
         enabled: true,
-        policy: 'silent',
-        aggregator: {'provider': 'nous', 'model': 'agg', 'extra': 1},
+        policy: 'loud',
+        aggregator: {'provider': '', 'model': 'agg'},
         references: [
-          {'provider': 'a', 'model': 'one', 'reasoning_effort': 'low'},
-          {'provider': 'b', 'model': 'two'},
+          {'provider': 'a', 'model': 'one'},
         ],
-      );
-      final preset = (saved['presets'] as Map)['default'] as Map;
-      expect(preset['fanout'], 'user_turn');
-      expect(preset['reference_temperature'], 0.2);
-      expect((preset['aggregator'] as Map)['extra'], 1);
-      expect(preset['reference_models'], hasLength(2));
-      expect(
-        () => editActiveMixture(
-          saved,
-          enabled: true,
-          policy: 'loud',
-          aggregator: {'provider': '', 'model': 'agg'},
-          references: [
-            {'provider': 'a', 'model': 'one'},
-          ],
-        ),
-        throwsA(isA<ModelAdminException>()),
-      );
-    },
-  );
+      ),
+      throwsA(
+        isA<ModelAdminException>()
+            .having(
+              (e) => e.reason,
+              'reason',
+              ModelAdminFailure.mixtureSlotsRequired,
+            )
+            .having(
+              (e) => e.message,
+              'English rendering',
+              'Name a provider and model for the aggregator and every reference.',
+            ),
+      ),
+    );
+  });
 
   test(
     'remote HTTP writes stay on the profile and do not send a plaintext remote URL',
@@ -201,7 +206,19 @@ void main() {
             apiMode: 'chat_completions',
           ),
         ),
-        throwsA(isA<ModelAdminException>()),
+        throwsA(
+          isA<ModelAdminException>()
+              .having(
+                (e) => e.reason,
+                'reason',
+                ModelAdminFailure.endpointHttps,
+              )
+              .having(
+                (e) => e.message,
+                'English rendering',
+                'Use HTTPS for a remote endpoint, or HTTP on localhost.',
+              ),
+        ),
       );
       final tested = await admin.testEndpoint(
         const EndpointDraft(

@@ -323,7 +323,19 @@ void main() {
             apiMode: '',
           ),
         ),
-        throwsA(isA<ModelAdminException>()),
+        throwsA(
+          isA<ModelAdminException>()
+              .having(
+                (e) => e.reason,
+                'reason',
+                ModelAdminFailure.endpointHttps,
+              )
+              .having(
+                (e) => e.message,
+                'English rendering',
+                'Use HTTPS for a remote endpoint, or HTTP on localhost.',
+              ),
+        ),
         reason: param,
       );
     }
@@ -336,7 +348,15 @@ void main() {
           apiMode: '',
         ),
       ),
-      throwsA(isA<ModelAdminException>()),
+      throwsA(
+        isA<ModelAdminException>()
+            .having((e) => e.reason, 'reason', ModelAdminFailure.endpointHttps)
+            .having(
+              (e) => e.message,
+              'English rendering',
+              'Use HTTPS for a remote endpoint, or HTTP on localhost.',
+            ),
+      ),
     );
     expect(
       () => validateEndpointDraft(
@@ -347,7 +367,15 @@ void main() {
           apiMode: '',
         ),
       ),
-      throwsA(isA<ModelAdminException>()),
+      throwsA(
+        isA<ModelAdminException>()
+            .having((e) => e.reason, 'reason', ModelAdminFailure.endpointHttps)
+            .having(
+              (e) => e.message,
+              'English rendering',
+              'Use HTTPS for a remote endpoint, or HTTP on localhost.',
+            ),
+      ),
     );
     expect(
       () => validateEndpointDraft(

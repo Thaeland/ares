@@ -12402,4 +12402,505 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get rel_admin_preset_required =>
       'Enregistrez un préréglage avant de l’appliquer.';
+
+  @override
+  String get rel_admin_cancel => 'Annuler';
+
+  @override
+  String get rel_admin_refresh => 'Actualiser';
+
+  @override
+  String get rel_admin_credits_and_plans => 'Crédits et offres';
+
+  @override
+  String get rel_admin_saved => 'Enregistré';
+
+  @override
+  String get rel_admin_name => 'Nom';
+
+  @override
+  String get rel_admin_base_url => 'URL de base';
+
+  @override
+  String get rel_admin_model => 'Modèle';
+
+  @override
+  String get rel_admin_signed_in => 'Session ouverte';
+
+  @override
+  String get rel_admin_not_signed_in => 'Non connecté';
+
+  @override
+  String get rel_admin_provider => 'Fournisseur';
+
+  @override
+  String get rel_admin_apply_to_this_chat => 'Appliquer à cette discussion';
+
+  @override
+  String get rel_admin_auto => 'Automatique';
+
+  @override
+  String get rel_admin_chat_completions => 'Complétions de chat';
+
+  @override
+  String get rel_admin_codex_responses => 'Réponses Codex';
+
+  @override
+  String get rel_admin_anthropic_messages => 'Messages Anthropic';
+
+  @override
+  String get rel_admin_could_not_complete_that_request =>
+      'Cette demande n’a pas pu être effectuée.';
+
+  @override
+  String get rel_admin_confirm => 'Confirmer';
+
+  @override
+  String get rel_admin_providers_and_billing => 'Fournisseurs et facturation';
+
+  @override
+  String get rel_admin_api_keys => 'Clés API';
+
+  @override
+  String get rel_admin_custom_endpoints =>
+      'Points de terminaison personnalisés';
+
+  @override
+  String get rel_admin_provider_accounts => 'Comptes fournisseurs';
+
+  @override
+  String get rel_admin_effort_and_speed_presets =>
+      'Préréglages d’effort et de vitesse';
+
+  @override
+  String get rel_admin_delegation => 'Délégation';
+
+  @override
+  String get rel_admin_mixture_of_agents => 'Mélange d’agents';
+
+  @override
+  String get rel_admin_no_provider_keys_were_reported_for_this_profile =>
+      'Aucune clé de fournisseur n’a été signalée pour ce profil.';
+
+  @override
+  String get rel_admin_not_saved => 'Non enregistré';
+
+  @override
+  String get rel_admin_new_key_value => 'Nouvelle valeur de clé';
+
+  @override
+  String get rel_admin_provider_key_saved => 'Clé du fournisseur enregistrée.';
+
+  @override
+  String get rel_admin_save_key => 'Enregistrer la clé';
+
+  @override
+  String get rel_admin_clear_provider_key => 'Effacer la clé du fournisseur';
+
+  @override
+  String get rel_admin_provider_key_cleared => 'Clé du fournisseur effacée.';
+
+  @override
+  String get rel_admin_clear_key => 'Effacer la clé';
+
+  @override
+  String get rel_admin_new_endpoint => 'Nouveau point de terminaison';
+
+  @override
+  String get rel_admin_api_key => 'Clé API';
+
+  @override
+  String get rel_admin_leave_blank_to_keep_a_key_this_endpoint_already_has =>
+      'Laissez vide pour conserver la clé existante de ce point de terminaison.';
+
+  @override
+  String get rel_admin_reachable => 'Accessible';
+
+  @override
+  String get rel_admin_unreachable => 'Inaccessible';
+
+  @override
+  String get rel_admin_test_endpoint => 'Tester le point de terminaison';
+
+  @override
+  String get rel_admin_endpoint_saved => 'Point de terminaison enregistré.';
+
+  @override
+  String get rel_admin_save_endpoint => 'Enregistrer le point de terminaison';
+
+  @override
+  String get rel_admin_use_this_endpoint => 'Utiliser ce point de terminaison';
+
+  @override
+  String
+  get rel_admin_make_this_named_endpoint_the_current_model_for_this_profile =>
+      'Définir ce point de terminaison nommé comme modèle actuel de ce profil ?';
+
+  @override
+  String get rel_admin_endpoint_is_now_current =>
+      'Ce point de terminaison est désormais le point actuel.';
+
+  @override
+  String get rel_admin_use_endpoint => 'Utiliser le point de terminaison';
+
+  @override
+  String get rel_admin_delete_endpoint => 'Supprimer le point de terminaison';
+
+  @override
+  String get rel_admin_delete_this_named_endpoint_from_the_profile =>
+      'Supprimer ce point de terminaison nommé du profil ?';
+
+  @override
+  String get rel_admin_endpoint_deleted => 'Point de terminaison supprimé.';
+
+  @override
+  String get rel_admin_signing_in_stays_on_the_provider_sign_in_screen =>
+      'La connexion reste sur l’écran de connexion du fournisseur. La déconnexion n’a lieu que si cette passerelle indique que le compte peut être supprimé.';
+
+  @override
+  String get rel_admin_disconnect_this_provider_account_on_the_gateway =>
+      'Déconnecter ce compte fournisseur sur la passerelle ?';
+
+  @override
+  String get rel_admin_provider_account_disconnected =>
+      'Compte fournisseur déconnecté.';
+
+  @override
+  String get rel_admin_disconnect => 'Déconnecter';
+
+  @override
+  String get rel_admin_not_disconnectable => 'Déconnexion impossible';
+
+  @override
+  String get rel_admin_fast => 'Rapide';
+
+  @override
+  String get rel_admin_preset_saved_for_this_model =>
+      'Préréglage enregistré pour ce modèle.';
+
+  @override
+  String get rel_admin_save_preset => 'Enregistrer le préréglage';
+
+  @override
+  String get rel_admin_chat_id => 'Identifiant du chat';
+
+  @override
+  String get rel_admin_apply_preset => 'Appliquer le préréglage';
+
+  @override
+  String get rel_admin_set_this_chat_s_effort_and_speed_from_the_saved_preset =>
+      'Définir l’effort et la vitesse de ce chat à partir du préréglage enregistré ?';
+
+  @override
+  String get rel_admin_preset_applied_to_this_chat =>
+      'Préréglage appliqué à ce chat.';
+
+  @override
+  String get rel_admin_this_route_sends_the_picked_effort_unchanged =>
+      'Cette route transmet l’effort choisi sans modification.';
+
+  @override
+  String get rel_admin_show_route_clamp => 'Afficher la limitation de la route';
+
+  @override
+  String get rel_admin_delegation_backend => 'Moteur de délégation';
+
+  @override
+  String get rel_admin_delegation_backend_saved =>
+      'Moteur de délégation enregistré.';
+
+  @override
+  String get rel_admin_save_backend => 'Enregistrer le moteur';
+
+  @override
+  String get rel_admin_max_iterations => 'Itérations maximales';
+
+  @override
+  String get rel_admin_max_concurrent_children =>
+      'Agents enfants simultanés maximum';
+
+  @override
+  String get rel_admin_child_timeout_seconds =>
+      'Délai des agents enfants en secondes';
+
+  @override
+  String get rel_admin_delegation_effort_leave_unchanged =>
+      'Effort de délégation, laisser inchangé';
+
+  @override
+  String get rel_admin_delegation_limits_saved =>
+      'Limites de délégation enregistrées.';
+
+  @override
+  String get rel_admin_save_limits => 'Enregistrer les limites';
+
+  @override
+  String get rel_admin_remove_route => 'Retirer la route';
+
+  @override
+  String get rel_admin_route_name => 'Nom de la route';
+
+  @override
+  String get rel_admin_route_provider => 'Fournisseur de la route';
+
+  @override
+  String get rel_admin_route_model => 'Modèle de la route';
+
+  @override
+  String get rel_admin_route_effort_unchanged => 'Effort de la route inchangé';
+
+  @override
+  String get rel_admin_add_route => 'Ajouter une route';
+
+  @override
+  String get rel_admin_default_route => 'Route par défaut';
+
+  @override
+  String get rel_admin_delegation_routes_saved =>
+      'Routes de délégation enregistrées.';
+
+  @override
+  String get rel_admin_save_routes => 'Enregistrer les routes';
+
+  @override
+  String get rel_admin_profile_routes_saved => 'Routes de profil enregistrées.';
+
+  @override
+  String get rel_admin_save_profile_routes =>
+      'Enregistrer les routes de profil';
+
+  @override
+  String get rel_admin_no_mixture_is_loaded => 'Aucun mélange n’est chargé.';
+
+  @override
+  String get rel_admin_mixture_enabled => 'Mélange activé';
+
+  @override
+  String get rel_admin_loud_degraded_references =>
+      'Références dégradées avec alerte';
+
+  @override
+  String get rel_admin_silent_degraded_references =>
+      'Références dégradées silencieuses';
+
+  @override
+  String get rel_admin_aggregator => 'Agrégateur';
+
+  @override
+  String get rel_admin_aggregator_provider => 'Fournisseur de l’agrégateur';
+
+  @override
+  String get rel_admin_aggregator_model => 'Modèle de l’agrégateur';
+
+  @override
+  String get rel_admin_reference_provider => 'Fournisseur de référence';
+
+  @override
+  String get rel_admin_reference_model => 'Modèle de référence';
+
+  @override
+  String get rel_admin_add_reference_model => 'Ajouter un modèle de référence';
+
+  @override
+  String get rel_admin_mixture_saved => 'Mélange enregistré.';
+
+  @override
+  String get rel_admin_save_mixture => 'Enregistrer le mélange';
+
+  @override
+  String get rel_admin_credit_purchase_submitted => 'Achat de crédits envoyé.';
+
+  @override
+  String get rel_admin_credit_purchase_settled => 'Achat de crédits finalisé.';
+
+  @override
+  String get rel_admin_credit_and_plan_changes_wait_for_confirmation_a_plan =>
+      'Les changements de crédits et d’offre attendent une confirmation. Une offre entraînant un débit immédiat est affichée, mais n’est pas confirmée ici.';
+
+  @override
+  String get rel_admin_buy_credits => 'Acheter des crédits';
+
+  @override
+  String get rel_admin_retry_same_charge => 'Réessayer le même débit';
+
+  @override
+  String get rel_admin_retry_the_same_credit_charge_this_does_not_start =>
+      'Réessayez le même débit de crédits. Cela ne lance pas un second achat.';
+
+  @override
+  String get rel_admin_credit_purchases_are_not_available_for_this_account =>
+      'L’achat de crédits n’est pas disponible pour ce compte.';
+
+  @override
+  String get rel_admin_auto_reload => 'Recharge automatique';
+
+  @override
+  String get rel_admin_read_only_until_this_account_can_charge =>
+      'Lecture seule tant que ce compte ne peut pas être débité.';
+
+  @override
+  String get rel_admin_auto_reload_updated =>
+      'Recharge automatique mise à jour.';
+
+  @override
+  String get rel_admin_keep_going_on_credits => 'Continuer avec des crédits';
+
+  @override
+  String get rel_admin_continue_on_credits_when_the_plan_window_is_used_up =>
+      'Continuer avec des crédits lorsque le quota de la période de l’offre est épuisé ?';
+
+  @override
+  String
+  get rel_admin_stop_continuing_on_credits_when_the_plan_window_is_used_up =>
+      'Arrêter de continuer avec des crédits lorsque le quota de la période de l’offre est épuisé ?';
+
+  @override
+  String get rel_admin_credit_continuation_updated =>
+      'Poursuite avec des crédits mise à jour.';
+
+  @override
+  String get rel_admin_this_plan_change_is_not_confirmed_from_ares =>
+      'Ce changement d’offre n’est pas confirmé depuis Ares.';
+
+  @override
+  String get rel_admin_this_change_is_scheduled_confirm_to_apply_it =>
+      'Ce changement est programmé. Confirmez pour l’appliquer.';
+
+  @override
+  String get rel_admin_preview_plan => 'Aperçu de l’offre';
+
+  @override
+  String get rel_admin_schedule_plan_change =>
+      'Programmer le changement d’offre';
+
+  @override
+  String get rel_admin_plan_change_scheduled => 'Changement d’offre programmé.';
+
+  @override
+  String get rel_admin_confirm_scheduled_plan_change =>
+      'Confirmer le changement d’offre programmé';
+
+  @override
+  String rel_admin_remove_key_confirm(String key) {
+    return 'Supprimer la valeur enregistrée de $key de ce profil ?';
+  }
+
+  @override
+  String rel_admin_current_endpoint(String name) {
+    return '$name · actuel';
+  }
+
+  @override
+  String rel_admin_endpoint_result(
+    String status,
+    String transport,
+    String count,
+    String message,
+  ) {
+    return '$status · $transport · $count modèles. $message';
+  }
+
+  @override
+  String rel_admin_disconnect_account(String name) {
+    return 'Déconnecter $name';
+  }
+
+  @override
+  String rel_admin_delegation_blocked(String reason) {
+    return 'La délégation est bloquée : $reason';
+  }
+
+  @override
+  String rel_admin_backend_unavailable(String name) {
+    return '$name · indisponible';
+  }
+
+  @override
+  String rel_admin_reference_number(String number) {
+    return 'Référence $number';
+  }
+
+  @override
+  String rel_admin_reload_enable_confirm(String amount, String threshold) {
+    return 'Activer la recharge automatique et débiter $amount lorsque le solde descend sous $threshold ?';
+  }
+
+  @override
+  String rel_admin_reload_disable_confirm(String amount, String threshold) {
+    return 'Désactiver la recharge automatique ? Elle débite actuellement $amount lorsque le solde descend sous $threshold.';
+  }
+
+  @override
+  String get rel_admin_this_plan => 'cette offre';
+
+  @override
+  String rel_admin_plan_confirm(String name) {
+    return 'Programmer $name. Le changement est prévu à la fin de la période en cours. Aucun débit n’est effectué maintenant.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price(String name, String price) {
+    return 'Programmer $name à $price. Le changement est prévu à la fin de la période en cours. Aucun débit n’est effectué maintenant.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_when(String name, String when) {
+    return 'Programmer $name. Le changement prend effet $when. Aucun débit n’est effectué maintenant.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price_when(
+    String name,
+    String price,
+    String when,
+  ) {
+    return 'Programmer $name à $price. Le changement prend effet $when. Aucun débit n’est effectué maintenant.';
+  }
+
+  @override
+  String rel_admin_balance(String amount) {
+    return 'Solde $amount';
+  }
+
+  @override
+  String rel_admin_buy_confirm(String amount) {
+    return 'Débiter \$$amount sur le moyen de paiement de ce compte Nous. Cela dépense de l’argent réel.';
+  }
+
+  @override
+  String rel_admin_reload_portal(String url) {
+    return 'Modifiez la recharge automatique sur le portail : $url';
+  }
+
+  @override
+  String rel_admin_team_portal(String url) {
+    return 'Les abonnements d’équipe se modifient sur le portail : $url';
+  }
+
+  @override
+  String get rel_admin_effort_none => 'aucun';
+
+  @override
+  String get rel_admin_effort_minimal => 'minimal';
+
+  @override
+  String get rel_admin_effort_low => 'faible';
+
+  @override
+  String get rel_admin_effort_medium => 'moyen';
+
+  @override
+  String get rel_admin_effort_high => 'élevé';
+
+  @override
+  String get rel_admin_effort_xhigh => 'très élevé';
+
+  @override
+  String get rel_admin_effort_max => 'maximal';
+
+  @override
+  String get rel_admin_effort_ultra => 'ultra-élevé';
+
+  @override
+  String get rel_admin_auto_lower => 'Automatique';
 }

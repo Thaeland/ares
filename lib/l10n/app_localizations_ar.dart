@@ -12214,4 +12214,496 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get rel_admin_preset_required => 'احفظ إعدادًا مسبقًا قبل تطبيقه.';
+
+  @override
+  String get rel_admin_cancel => 'إلغاء';
+
+  @override
+  String get rel_admin_refresh => 'تحديث';
+
+  @override
+  String get rel_admin_credits_and_plans => 'الأرصدة والخطط';
+
+  @override
+  String get rel_admin_saved => 'تم الحفظ';
+
+  @override
+  String get rel_admin_name => 'الاسم';
+
+  @override
+  String get rel_admin_base_url => 'عنوان URL الأساسي';
+
+  @override
+  String get rel_admin_model => 'النموذج';
+
+  @override
+  String get rel_admin_signed_in => 'تم تسجيل الدخول';
+
+  @override
+  String get rel_admin_not_signed_in => 'لم يتم تسجيل الدخول';
+
+  @override
+  String get rel_admin_provider => 'المزوّد';
+
+  @override
+  String get rel_admin_apply_to_this_chat => 'تطبيق على هذه الدردشة';
+
+  @override
+  String get rel_admin_auto => 'تلقائي';
+
+  @override
+  String get rel_admin_chat_completions => 'إكمالات المحادثة';
+
+  @override
+  String get rel_admin_codex_responses => 'استجابات Codex';
+
+  @override
+  String get rel_admin_anthropic_messages => 'رسائل Anthropic';
+
+  @override
+  String get rel_admin_could_not_complete_that_request =>
+      'تعذّر إكمال ذلك الطلب.';
+
+  @override
+  String get rel_admin_confirm => 'تأكيد';
+
+  @override
+  String get rel_admin_providers_and_billing => 'الموفرون والفوترة';
+
+  @override
+  String get rel_admin_api_keys => 'مفاتيح API';
+
+  @override
+  String get rel_admin_custom_endpoints => 'نقاط نهاية مخصصة';
+
+  @override
+  String get rel_admin_provider_accounts => 'حسابات الموفرين';
+
+  @override
+  String get rel_admin_effort_and_speed_presets =>
+      'إعدادات الجهد والسرعة المسبقة';
+
+  @override
+  String get rel_admin_delegation => 'التفويض';
+
+  @override
+  String get rel_admin_mixture_of_agents => 'مزيج الوكلاء';
+
+  @override
+  String get rel_admin_no_provider_keys_were_reported_for_this_profile =>
+      'لم يُبلّغ عن مفاتيح موفر لهذا الملف التعريفي.';
+
+  @override
+  String get rel_admin_not_saved => 'غير محفوظ';
+
+  @override
+  String get rel_admin_new_key_value => 'قيمة المفتاح الجديدة';
+
+  @override
+  String get rel_admin_provider_key_saved => 'حُفظ مفتاح الموفر.';
+
+  @override
+  String get rel_admin_save_key => 'حفظ المفتاح';
+
+  @override
+  String get rel_admin_clear_provider_key => 'مسح مفتاح الموفر';
+
+  @override
+  String get rel_admin_provider_key_cleared => 'مُسح مفتاح الموفر.';
+
+  @override
+  String get rel_admin_clear_key => 'مسح المفتاح';
+
+  @override
+  String get rel_admin_new_endpoint => 'نقطة نهاية جديدة';
+
+  @override
+  String get rel_admin_api_key => 'مفتاح API';
+
+  @override
+  String get rel_admin_leave_blank_to_keep_a_key_this_endpoint_already_has =>
+      'اتركه فارغًا للاحتفاظ بالمفتاح الموجود لنقطة النهاية هذه.';
+
+  @override
+  String get rel_admin_reachable => 'يمكن الوصول إليه';
+
+  @override
+  String get rel_admin_unreachable => 'يتعذّر الوصول إليه';
+
+  @override
+  String get rel_admin_test_endpoint => 'اختبار نقطة النهاية';
+
+  @override
+  String get rel_admin_endpoint_saved => 'حُفظت نقطة النهاية.';
+
+  @override
+  String get rel_admin_save_endpoint => 'حفظ نقطة النهاية';
+
+  @override
+  String get rel_admin_use_this_endpoint => 'استخدام نقطة النهاية هذه';
+
+  @override
+  String
+  get rel_admin_make_this_named_endpoint_the_current_model_for_this_profile =>
+      'هل تريد جعل نقطة النهاية المسماة هذه النموذج الحالي لهذا الملف التعريفي؟';
+
+  @override
+  String get rel_admin_endpoint_is_now_current =>
+      'أصبحت نقطة النهاية هي الحالية.';
+
+  @override
+  String get rel_admin_use_endpoint => 'استخدام نقطة النهاية';
+
+  @override
+  String get rel_admin_delete_endpoint => 'حذف نقطة النهاية';
+
+  @override
+  String get rel_admin_delete_this_named_endpoint_from_the_profile =>
+      'هل تريد حذف نقطة النهاية المسماة هذه من الملف التعريفي؟';
+
+  @override
+  String get rel_admin_endpoint_deleted => 'حُذفت نقطة النهاية.';
+
+  @override
+  String get rel_admin_signing_in_stays_on_the_provider_sign_in_screen =>
+      'يبقى تسجيل الدخول في شاشة تسجيل دخول الموفر. لا يُنفَّذ الفصل إلا عندما تؤكد هذه البوابة إمكانية إزالة الحساب.';
+
+  @override
+  String get rel_admin_disconnect_this_provider_account_on_the_gateway =>
+      'هل تريد فصل حساب الموفر هذا على البوابة؟';
+
+  @override
+  String get rel_admin_provider_account_disconnected => 'فُصل حساب الموفر.';
+
+  @override
+  String get rel_admin_disconnect => 'قطع الاتصال';
+
+  @override
+  String get rel_admin_not_disconnectable => 'غير قابل للفصل';
+
+  @override
+  String get rel_admin_fast => 'سريع';
+
+  @override
+  String get rel_admin_preset_saved_for_this_model =>
+      'حُفظ الإعداد المسبق لهذا النموذج.';
+
+  @override
+  String get rel_admin_save_preset => 'حفظ الإعداد المسبق';
+
+  @override
+  String get rel_admin_chat_id => 'معرّف المحادثة';
+
+  @override
+  String get rel_admin_apply_preset => 'تطبيق الإعداد المسبق';
+
+  @override
+  String get rel_admin_set_this_chat_s_effort_and_speed_from_the_saved_preset =>
+      'هل تريد ضبط جهد هذه المحادثة وسرعتها من الإعداد المسبق المحفوظ؟';
+
+  @override
+  String get rel_admin_preset_applied_to_this_chat =>
+      'طُبّق الإعداد المسبق على هذه المحادثة.';
+
+  @override
+  String get rel_admin_this_route_sends_the_picked_effort_unchanged =>
+      'ترسل قاعدة التوجيه هذه الجهد المحدد دون تغيير.';
+
+  @override
+  String get rel_admin_show_route_clamp => 'عرض تقييد الجهد للمسار';
+
+  @override
+  String get rel_admin_delegation_backend => 'واجهة التفويض الخلفية';
+
+  @override
+  String get rel_admin_delegation_backend_saved =>
+      'حُفظت واجهة التفويض الخلفية.';
+
+  @override
+  String get rel_admin_save_backend => 'حفظ الواجهة الخلفية';
+
+  @override
+  String get rel_admin_max_iterations => 'الحد الأقصى للتكرارات';
+
+  @override
+  String get rel_admin_max_concurrent_children =>
+      'الحد الأقصى للوكلاء الفرعيين المتزامنين';
+
+  @override
+  String get rel_admin_child_timeout_seconds => 'مهلة الوكيل الفرعي بالثواني';
+
+  @override
+  String get rel_admin_delegation_effort_leave_unchanged =>
+      'جهد التفويض، اتركه دون تغيير';
+
+  @override
+  String get rel_admin_delegation_limits_saved => 'حُفظت حدود التفويض.';
+
+  @override
+  String get rel_admin_save_limits => 'حفظ الحدود';
+
+  @override
+  String get rel_admin_remove_route => 'إزالة قاعدة التوجيه';
+
+  @override
+  String get rel_admin_route_name => 'اسم قاعدة التوجيه';
+
+  @override
+  String get rel_admin_route_provider => 'موفر قاعدة التوجيه';
+
+  @override
+  String get rel_admin_route_model => 'نموذج قاعدة التوجيه';
+
+  @override
+  String get rel_admin_route_effort_unchanged => 'جهد قاعدة التوجيه دون تغيير';
+
+  @override
+  String get rel_admin_add_route => 'إضافة قاعدة توجيه';
+
+  @override
+  String get rel_admin_default_route => 'قاعدة التوجيه الافتراضية';
+
+  @override
+  String get rel_admin_delegation_routes_saved => 'حُفظت قواعد توجيه التفويض.';
+
+  @override
+  String get rel_admin_save_routes => 'حفظ قواعد التوجيه';
+
+  @override
+  String get rel_admin_profile_routes_saved =>
+      'حُفظت قواعد توجيه ملفات التعريف.';
+
+  @override
+  String get rel_admin_save_profile_routes => 'حفظ قواعد توجيه ملفات التعريف';
+
+  @override
+  String get rel_admin_no_mixture_is_loaded => 'لم يُحمَّل أي مزيج.';
+
+  @override
+  String get rel_admin_mixture_enabled => 'المزيج مفعّل';
+
+  @override
+  String get rel_admin_loud_degraded_references => 'تنبيه عند تدهور المراجع';
+
+  @override
+  String get rel_admin_silent_degraded_references => 'صمت عند تدهور المراجع';
+
+  @override
+  String get rel_admin_aggregator => 'المجمّع';
+
+  @override
+  String get rel_admin_aggregator_provider => 'موفر المجمّع';
+
+  @override
+  String get rel_admin_aggregator_model => 'نموذج المجمّع';
+
+  @override
+  String get rel_admin_reference_provider => 'موفر المرجع';
+
+  @override
+  String get rel_admin_reference_model => 'النموذج المرجعي';
+
+  @override
+  String get rel_admin_add_reference_model => 'إضافة نموذج مرجعي';
+
+  @override
+  String get rel_admin_mixture_saved => 'حُفظ المزيج.';
+
+  @override
+  String get rel_admin_save_mixture => 'حفظ المزيج';
+
+  @override
+  String get rel_admin_credit_purchase_submitted => 'أُرسل طلب شراء الرصيد.';
+
+  @override
+  String get rel_admin_credit_purchase_settled => 'سُوّيت عملية شراء الرصيد.';
+
+  @override
+  String get rel_admin_credit_and_plan_changes_wait_for_confirmation_a_plan =>
+      'تنتظر تغييرات الرصيد والخطة التأكيد. تُعرض الخطة التي ستفرض رسومًا فورية ولا تُؤكَّد هنا.';
+
+  @override
+  String get rel_admin_buy_credits => 'شراء رصيد';
+
+  @override
+  String get rel_admin_retry_same_charge => 'إعادة محاولة الرسوم نفسها';
+
+  @override
+  String get rel_admin_retry_the_same_credit_charge_this_does_not_start =>
+      'أعِد محاولة رسوم الرصيد نفسها. لا يبدأ هذا عملية شراء ثانية.';
+
+  @override
+  String get rel_admin_credit_purchases_are_not_available_for_this_account =>
+      'شراء الرصيد غير متاح لهذا الحساب.';
+
+  @override
+  String get rel_admin_auto_reload => 'إعادة الشحن التلقائي';
+
+  @override
+  String get rel_admin_read_only_until_this_account_can_charge =>
+      'للقراءة فقط حتى يتمكن هذا الحساب من الدفع.';
+
+  @override
+  String get rel_admin_auto_reload_updated => 'حُدّثت إعادة الشحن التلقائي.';
+
+  @override
+  String get rel_admin_keep_going_on_credits => 'المتابعة باستخدام الرصيد';
+
+  @override
+  String get rel_admin_continue_on_credits_when_the_plan_window_is_used_up =>
+      'هل تريد المتابعة باستخدام الرصيد عند استنفاد حصة فترة الخطة؟';
+
+  @override
+  String
+  get rel_admin_stop_continuing_on_credits_when_the_plan_window_is_used_up =>
+      'هل تريد إيقاف المتابعة باستخدام الرصيد عند استنفاد حصة فترة الخطة؟';
+
+  @override
+  String get rel_admin_credit_continuation_updated =>
+      'حُدّثت المتابعة باستخدام الرصيد.';
+
+  @override
+  String get rel_admin_this_plan_change_is_not_confirmed_from_ares =>
+      'لا يُؤكَّد تغيير الخطة هذا من Ares.';
+
+  @override
+  String get rel_admin_this_change_is_scheduled_confirm_to_apply_it =>
+      'هذا التغيير مجدول. أكّد لتطبيقه.';
+
+  @override
+  String get rel_admin_preview_plan => 'معاينة الخطة';
+
+  @override
+  String get rel_admin_schedule_plan_change => 'جدولة تغيير الخطة';
+
+  @override
+  String get rel_admin_plan_change_scheduled => 'جُدول تغيير الخطة.';
+
+  @override
+  String get rel_admin_confirm_scheduled_plan_change =>
+      'تأكيد تغيير الخطة المجدول';
+
+  @override
+  String rel_admin_remove_key_confirm(String key) {
+    return 'هل تريد إزالة قيمة $key المحفوظة من هذا الملف التعريفي؟';
+  }
+
+  @override
+  String rel_admin_current_endpoint(String name) {
+    return '$name · الحالي';
+  }
+
+  @override
+  String rel_admin_endpoint_result(
+    String status,
+    String transport,
+    String count,
+    String message,
+  ) {
+    return '$status · $transport · $count نماذج. $message';
+  }
+
+  @override
+  String rel_admin_disconnect_account(String name) {
+    return 'فصل $name';
+  }
+
+  @override
+  String rel_admin_delegation_blocked(String reason) {
+    return 'التفويض محظور: $reason';
+  }
+
+  @override
+  String rel_admin_backend_unavailable(String name) {
+    return '$name · غير متاح';
+  }
+
+  @override
+  String rel_admin_reference_number(String number) {
+    return 'المرجع $number';
+  }
+
+  @override
+  String rel_admin_reload_enable_confirm(String amount, String threshold) {
+    return 'هل تريد تشغيل إعادة الشحن التلقائي وفرض رسوم $amount عندما ينخفض الرصيد عن $threshold؟';
+  }
+
+  @override
+  String rel_admin_reload_disable_confirm(String amount, String threshold) {
+    return 'هل تريد إيقاف إعادة الشحن التلقائي؟ تُفرض حاليًا رسوم $amount عندما ينخفض الرصيد عن $threshold.';
+  }
+
+  @override
+  String get rel_admin_this_plan => 'هذه الخطة';
+
+  @override
+  String rel_admin_plan_confirm(String name) {
+    return 'جدولة $name. يُجدول لنهاية الفترة الحالية. لا تُفرض رسوم الآن.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price(String name, String price) {
+    return 'جدولة $name بسعر $price. يُجدول لنهاية الفترة الحالية. لا تُفرض رسوم الآن.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_when(String name, String when) {
+    return 'جدولة $name. يسري $when. لا تُفرض رسوم الآن.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price_when(
+    String name,
+    String price,
+    String when,
+  ) {
+    return 'جدولة $name بسعر $price. يسري $when. لا تُفرض رسوم الآن.';
+  }
+
+  @override
+  String rel_admin_balance(String amount) {
+    return 'الرصيد $amount';
+  }
+
+  @override
+  String rel_admin_buy_confirm(String amount) {
+    return 'فرض رسوم \$$amount على وسيلة الدفع في حساب Nous هذا. هذا ينفق أموالًا حقيقية.';
+  }
+
+  @override
+  String rel_admin_reload_portal(String url) {
+    return 'غيّر إعادة الشحن التلقائي على البوابة الإلكترونية: $url';
+  }
+
+  @override
+  String rel_admin_team_portal(String url) {
+    return 'تُغيَّر اشتراكات الفريق على البوابة الإلكترونية: $url';
+  }
+
+  @override
+  String get rel_admin_effort_none => 'بلا';
+
+  @override
+  String get rel_admin_effort_minimal => 'أدنى';
+
+  @override
+  String get rel_admin_effort_low => 'منخفض';
+
+  @override
+  String get rel_admin_effort_medium => 'متوسط';
+
+  @override
+  String get rel_admin_effort_high => 'مرتفع';
+
+  @override
+  String get rel_admin_effort_xhigh => 'مرتفع جدًا';
+
+  @override
+  String get rel_admin_effort_max => 'أقصى';
+
+  @override
+  String get rel_admin_effort_ultra => 'فائق';
+
+  @override
+  String get rel_admin_auto_lower => 'تلقائي';
 }
