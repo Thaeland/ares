@@ -32,6 +32,7 @@ import 'fleet_screen.dart';
 import 'workspace_workers_screen.dart';
 import 'host_operations_screen.dart';
 import 'kanban_board_screen.dart';
+import 'bots_screen.dart';
 import 'schedule_desk_screen.dart';
 import 'memory_graph_screen.dart';
 import '../services/gateway_turn_application_controller.dart';
@@ -2354,6 +2355,16 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
           KanbanBoardScreen(
             owner: kanban.workspace,
             route: kanban.workspace.route(),
+            connection: connection,
+          ),
+        );
+      case 'bots':
+        final bots = _ownedGateway;
+        if (bots == null) return;
+        _push(
+          BotsScreen(
+            owner: bots.workspace,
+            route: bots.workspace.route(),
             connection: connection,
           ),
         );

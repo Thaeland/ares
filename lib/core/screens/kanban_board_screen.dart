@@ -19,12 +19,26 @@ class KanbanBoardScreen extends StatefulWidget {
     required this.route,
     required this.connection,
     this.enableLivePolling = true,
+
+    /// Board the board opens on. When null, the stored pref (or the server
+    /// default) is used. Transient: never overwrites the saved selection.
+    this.initialBoard,
+
+    /// Card id to open in the detail sheet once the board has loaded. The dock
+    /// (t_7b7d44f3) reuses this entry point to open the card it created.
+    this.initialCardId,
   });
 
   final RemoteWorkspaceOwner owner;
   final WorkspaceRoute route;
   final SavedConnection connection;
   final bool enableLivePolling;
+
+  /// Board the board opens on; null means "stored pref or server default".
+  final String? initialBoard;
+
+  /// Card id to open in the detail sheet once the board has a snapshot.
+  final String? initialCardId;
 
   @override
   State<KanbanBoardScreen> createState() => _KanbanBoardScreenState();
@@ -65,6 +79,14 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
   StreamSubscription<KanbanEventsFrame>? _eventsSub;
   Timer? _pollTimer;
 
+  /// Card id from the widget to open in the detail sheet once the snapshot
+  /// carries it. Sticky across reloads until consumed or cancelled.
+  String? _pendingInitialCardId;
+
+  /// Board slug the pending card belongs to. When null the card may open on
+  /// any board (the open is scoped to the board it is actually found on).
+  String? _pendingInitialBoard;
+
   String get _effectiveSlug =>
       _boardSlug.isEmpty ? _serverCurrentBoard : _boardSlug;
 
@@ -75,6 +97,14 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     super.initState();
     _account = ConnectionMutationBarrier.capture(widget.route.connectionId);
     ConnectionMutationBarrier.addListener(_onAccountChanged);
+    final initialCard = widget.initialCardId?.trim();
+    _pendingInitialCardId = (initialCard == null || initialCard.isEmpty)
+        ? null
+        : initialCard;
+    final initialBoard = widget.initialBoard?.trim();
+    _pendingInitialBoard = (initialBoard == null || initialBoard.isEmpty)
+        ? null
+        : initialBoard;
     _searchController.addListener(() {
       final next = _searchController.text.trim();
       if (next != _searchQuery && mounted) {
@@ -114,6 +144,17 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       _cancelRealtime();
       unawaited(_initAndLoad());
     }
+    if (oldWidget.initialCardId != widget.initialCardId ||
+        oldWidget.initialBoard != widget.initialBoard) {
+      final initialCard = widget.initialCardId?.trim();
+      _pendingInitialCardId = (initialCard == null || initialCard.isEmpty)
+          ? null
+          : initialCard;
+      final initialBoard = widget.initialBoard?.trim();
+      _pendingInitialBoard = (initialBoard == null || initialBoard.isEmpty)
+          ? null
+          : initialBoard;
+    }
   }
 
   @override
@@ -152,7 +193,10 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       profile: widget.route.profile,
     );
     _prefs = store;
-    _boardSlug = store.selectedBoard;
+    final requestedBoard = widget.initialBoard?.trim();
+    _boardSlug = (requestedBoard == null || requestedBoard.isEmpty)
+        ? store.selectedBoard
+        : requestedBoard;
     _pinnedBoards = store.pinnedBoards;
     _lanesByProfile = store.lanesByProfile;
     _collapsedLanes = store.collapsedLanes;
@@ -218,6 +262,8 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
         _failure = null;
         _errorDetail = null;
       });
+
+      _maybeFocusInitialCard(snap);
 
       if (rebindEvents && widget.enableLivePolling) {
         _bindRealtime(target, resolvedSlug, snap.latestEventId);
@@ -322,6 +368,8 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
 
   Future<void> _selectBoard(String slug) async {
     final normalized = slug == _serverCurrentBoard ? slug : slug.trim();
+    _pendingInitialCardId = null;
+    _pendingInitialBoard = null;
     setState(() {
       _boardSlug = normalized;
       _selectedIds.clear();
@@ -774,6 +822,18 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
         },
       ),
     );
+  }
+
+  void _maybeFocusInitialCard(KanbanBoardSnapshot snap) {
+    final id = _pendingInitialCardId;
+    if (id == null) return;
+    final wantedBoard = _pendingInitialBoard;
+    if (wantedBoard != null && _effectiveSlug != wantedBoard) return;
+    final card = snap.allTasks.where((t) => t.id == id).firstOrNull;
+    if (card == null) return; // Not loaded yet; next reload retries.
+    _pendingInitialCardId = null;
+    _pendingInitialBoard = null;
+    unawaited(_openTaskDetail(card));
   }
 
   Future<void> _openTaskDetail(KanbanTaskCard summary) async {

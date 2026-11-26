@@ -276,6 +276,91 @@ void main() {
   );
 
   testWidgets(
+    'Kanban board opens from outside with initialBoard and initialCardId',
+    (tester) async {
+      tester.view.physicalSize = const Size(1280, 900);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      final api = _KanbanFixtureApi();
+      final owner = _makeOwner(
+        api.client,
+        connectionId: 'c-kanban-focus',
+        profile: 'work',
+      );
+      addTearDown(owner.close);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: KanbanBoardScreen(
+            owner: owner,
+            route: owner.route(),
+            connection: _fixtureConnection,
+            enableLivePolling: false,
+            initialBoard: 'default',
+            initialCardId: 't_run_1',
+          ),
+        ),
+      );
+
+      // The pending card opens its detail sheet as soon as the snapshot lands.
+      await _shown(tester, find.byKey(const Key('kanban-active-count')));
+      await _shown(tester, find.textContaining('t_run_1 · running'));
+
+      // The focused sheet belongs to the board it was opened on.
+      expect(find.text('Kanban · default'), findsOneWidget);
+
+      // Closing the sheet leaves the board on screen.
+      await tester.tap(find.byIcon(Icons.close));
+      await _step(tester);
+      expect(find.text('Kanban · default'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Kanban board opens on a transient initial board without persisting the selection',
+    (tester) async {
+      tester.view.physicalSize = const Size(1280, 900);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      final api = _KanbanFixtureApi();
+      final owner = _makeOwner(
+        api.client,
+        connectionId: 'c-kanban-transient',
+        profile: 'work',
+      );
+      addTearDown(owner.close);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: KanbanBoardScreen(
+            owner: owner,
+            route: owner.route(),
+            connection: _fixtureConnection,
+            enableLivePolling: false,
+            initialBoard: 'ops-board',
+          ),
+        ),
+      );
+
+      await _shown(tester, find.text('Kanban · ops-board'));
+
+      // The transient board is not written to the saved selection.
+      final store = KanbanBoardPreferences(
+        await SharedPreferences.getInstance(),
+        connectionId: 'c-kanban-transient',
+        profile: 'work',
+      );
+      expect(store.selectedBoard, isEmpty);
+    },
+  );
+
+  testWidgets(
     'NextGen More → Kanban entry is reachable and renders on narrow phones',
     (tester) async {
       tester.view.physicalSize = const Size(390, 844);
@@ -308,6 +393,42 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('Kanban'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'NextGen More → Bots entry is reachable and renders on narrow phones',
+    (tester) async {
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      final gateway = NextGenGateway(_fixtureConnection);
+      addTearDown(gateway.dispose);
+      final connManager = ConnectionManager(
+        await SharedPreferences.getInstance(),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: nextGenTheme(Brightness.dark, NextGenLook.instance),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: NgScope(
+            gateway: gateway,
+            connManager: connManager,
+            connections: [_fixtureConnection],
+            switchTo: (_) async {},
+            addGateway: () async {},
+            signOut: (_) async {},
+            reload: () async {},
+            signInAgain: () async {},
+            child: NgMorePage(onOpenSession: (_) {}),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Bots'), findsOneWidget);
     },
   );
 }

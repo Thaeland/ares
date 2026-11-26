@@ -28,6 +28,7 @@ import '../../core/services/chat_assets_client.dart';
 import '../../core/screens/workspace_workers_screen.dart';
 import '../../core/screens/host_operations_screen.dart';
 import '../../core/screens/kanban_board_screen.dart';
+import '../../core/screens/bots_screen.dart';
 import '../../core/screens/memory_graph_screen.dart';
 import '../../core/screens/schedule_desk_screen.dart';
 import '../../core/services/dashboard_api_client.dart';
@@ -215,6 +216,18 @@ class NgMorePage extends StatelessWidget {
                       'Boards, task dependencies, worker assignment and logs',
                   onTap: () => push(
                     KanbanBoardScreen(
+                      owner: scope.gateway.workspace,
+                      route: scope.gateway.workspace.route(),
+                      connection: conn,
+                    ),
+                  ),
+                ),
+                NgRow(
+                  icon: Icons.pets_outlined,
+                  title: 'Bots',
+                  subtitle: 'Roster, rooms, routines and Bot Desktop',
+                  onTap: () => push(
+                    BotsScreen(
                       owner: scope.gateway.workspace,
                       route: scope.gateway.workspace.route(),
                       connection: conn,

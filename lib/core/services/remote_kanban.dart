@@ -1240,6 +1240,11 @@ extension WorkspaceKanban on WorkspaceTarget {
   /// Opens a fenced live `/api/plugins/kanban/events` stream for [board] from
   /// [since]. Returns null when the host refuses WebSocket upgrades or in
   /// widget tests without real sockets so callers keep their polling loop.
+  ///
+  /// This is the reusable public subscription the chat dock reuses in place of
+  /// the board's private `_bindRealtime` path: callers keep their own cursor
+  /// and cancel via the returned subscription's `cancel()`. The returned
+  /// subscription is not bound to any widget lifetime.
   Future<StreamSubscription<KanbanEventsFrame>?> watchKanbanEvents({
     String? board,
     required int since,
