@@ -26,13 +26,14 @@ REMOVED_SOURCES = (
 class ApkUpdateGuardrailsTest(unittest.TestCase):
     def test_app_cannot_install_packages(self):
         manifest = ET.parse(ROOT / "android/app/src/main/AndroidManifest.xml").getroot()
-        permissions = [
-            item.get(ANDROID + "name")
-            for item in manifest
-            if item.tag.startswith("uses-permission")
-        ]
-        self.assertTrue(permissions)
-        self.assertNotIn(INSTALL_PERMISSION, permissions)
+        entries = [item for item in manifest if item.tag.startswith("uses-permission")]
+        declared = [item.get(ANDROID + "name") for item in entries if item.get(TOOLS_NODE) != "remove"]
+        self.assertTrue(declared)
+        self.assertNotIn(INSTALL_PERMISSION, declared)
+        # Every lane, the default GitHub and F-Droid APK included, strips the
+        # permission if a dependency ever declares it.
+        removed = [item.get(ANDROID + "name") for item in entries if item.get(TOOLS_NODE) == "remove"]
+        self.assertIn(INSTALL_PERMISSION, removed)
         authorities = [
             item.get(ANDROID + "authorities", "")
             for item in manifest.findall("./application/provider")
@@ -57,7 +58,7 @@ class ApkUpdateGuardrailsTest(unittest.TestCase):
         self.assertTrue(sources)
         for source in sources:
             text = source.read_text(encoding="utf-8")
-            for marker in ("api.github.com", "releases/latest", "ACTION_INSTALL_PACKAGE", "PackageInstaller"):
+            for marker in ("api.github.com", "application/vnd.android.package-archive", "ACTION_INSTALL_PACKAGE", "PackageInstaller"):
                 self.assertNotIn(marker, text, f"{marker} in {source.relative_to(ROOT)}")
 
     def test_network_config_keeps_only_the_gateway_trust_rules(self):

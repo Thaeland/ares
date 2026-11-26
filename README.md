@@ -123,7 +123,7 @@ Debug builds use the separate `com.hermesagent.hermes_android.dev` package and A
 
 ### Updates
 
-Ares does not check for updates and cannot install them. Update through the store you installed it from (Google Play or F-Droid), or download the APK for your device from the [GitHub releases page](https://github.com/rusty4444/ares/releases) and install it over the existing app. GitHub APK builds up to 4.0.17 checked GitHub Releases on launch and could download and install an update; later versions have no update check, no installer and no Android permission to install packages.
+Ares does not check for updates and cannot install them. Update through the store you installed it from (Google Play or F-Droid), or download the APK for your device from the [GitHub releases page](https://github.com/rusty4444/ares/releases) and install it over the existing app. Builds up to 4.0.17 not installed from Google Play checked GitHub Releases on launch and could download and install an update; later versions have no update check, no installer and no Android permission to install packages. A GitHub APK installs over an existing copy only when that copy also came from GitHub releases: other channels may sign with a different key.
 
 The separate Play AAB is built with `ARES_PLAY_BUILD=true` and `--dart-define=ARES_PLAY_BUILD=true`. Every distribution links the [privacy policy](PRIVACY.md) and provides an AI-output report action.
 

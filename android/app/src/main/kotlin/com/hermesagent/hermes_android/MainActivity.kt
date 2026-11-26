@@ -64,7 +64,9 @@ class MainActivity : FlutterActivity() {
         attachmentPdfPreview = AttachmentPdfPreview(this, flutterEngine.dartExecutor.binaryMessenger)
         // Versions up to 4.0.17 downloaded update APKs here; nothing reads them now.
         val staleUpdates = File(cacheDir, "apk_update")
-        if (staleUpdates.exists()) Thread { staleUpdates.deleteRecursively() }.start()
+        runCatching {
+            if (staleUpdates.exists()) Thread { runCatching { staleUpdates.deleteRecursively() } }.start()
+        }
         attachmentFileSaver?.close()
         attachmentFileSaver = AttachmentFileSaver(this, flutterEngine.dartExecutor.binaryMessenger)
         BackgroundWorkPlatform.install(this, flutterEngine.dartExecutor.binaryMessenger)

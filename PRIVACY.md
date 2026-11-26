@@ -28,6 +28,8 @@ The server operator controls that server's retention, logging, model providers a
 
 Ares does not check for updates or download them itself. Updates are delivered by the store or site you installed the app from, such as Google Play, F-Droid or GitHub. That service's own privacy terms apply to how it operates.
 
+Versions up to 4.0.17 that were not installed from Google Play checked GitHub Releases when the app opened, which sent ordinary connection metadata such as your IP address and user agent to GitHub, and could download an update from GitHub. Later versions do not.
+
 ## Optional notifications and push
 
 Notifications can be disabled in Android or in the app. Optional push delivery requires the separately installed and authorised mobile-push server companion. Depending on your choices, the service may process session identifiers, registration tokens, endpoint addresses and encrypted challenge material. Notification text is kept minimal by design.
