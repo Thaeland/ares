@@ -10,7 +10,7 @@ Ares base: `feature/ares-v5.0.0` at `d15fccd7`. Branch: `v5/wire-audit`.
 
 ## Result
 
-Validated: 889 frames, 121 methods, 0 rejected by the gateway, 0 disagreements between the strict fake and the gateway (pin `b7ee21c14e`). 6 further requests are refused in the app before the wire, by design. `tool/canonical_wire_audit.sh` prints the current figures.
+Validated: 890 frames, 121 methods, 0 rejected by the gateway, 0 disagreements between the strict fake and the gateway (pin `b7ee21c14e`). 6 further requests are refused in the app before the wire, by design. 20 of the 890 are deliberately wrong frames from the strict fake's own corpus, which the gateway must refuse and does. `tool/canonical_wire_audit.sh` prints the current figures.
 
 No request Ares sends is refused by the gateway. Requests with no canonical
 form are refused in the app, by name, before they are sent.
@@ -206,7 +206,7 @@ layouts use, captured once.
 | `groups.stop` | — | `room_id` | GroupsStopParams | authority (group) | pending lane: 1 ok | pass |
 | `handoff.fail` | composer_commands.dart:358 | `error`, `profile`, `session_id` | HandoffFailParams | authority | nextgen: 1 ok | pass |
 | `handoff.request` | composer_commands.dart:134 | `platform`, `profile`, `session_id` | HandoffRequestParams | authority | nextgen: 1 ok | pass |
-| `handoff.state` | composer_commands.dart:338 | `profile`, `session_id` | SessionParams | authority | nextgen: 3 ok | pass |
+| `handoff.state` | composer_commands.dart:338 | `profile`, `session_id` | SessionParams | authority | nextgen: 4 ok | pass |
 | `image.attach_bytes` | gateway_turn_coordinator.dart:810; chat_controller.dart:2554 | `content_base64`, `filename`, `profile`, `session_id` | ImageAttachBytesParams | authority | nextgen/shared: 3 ok | pass |
 | `image.detach` | chat_controller.dart:2721 | `path`, `session_id` | ImageDetachParams | sidecar | copied frame, flow not driven: 1 ok | pass |
 | `plugins.manage` | capability_admin.dart:849,912,920,934… | `accept_capabilities`, `action`, `catalog_name`, `enable`, `force`, `identifier`, `key`, `name`, `profile`, `ref` | PluginsManageParams | sidecar | classic/nextgen: 16 ok | pass |
