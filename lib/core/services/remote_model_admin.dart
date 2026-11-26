@@ -37,7 +37,8 @@ class RemoteModelAdmin {
     );
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw ModelAdminException(
-        'The gateway returned HTTP ${response.statusCode}.',
+        ModelAdminFailure.httpError,
+        statusCode: response.statusCode,
       );
     }
     if (response.body.trim().isEmpty) return {};
@@ -45,14 +46,10 @@ class RemoteModelAdmin {
     try {
       decoded = jsonDecode(response.body);
     } catch (_) {
-      throw const ModelAdminException(
-        'The gateway response could not be read.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.responseUnreadable);
     }
     if (decoded is! Map) {
-      throw const ModelAdminException(
-        'The gateway response did not match the expected shape.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.responseShape);
     }
     return decoded.map((key, value) => MapEntry(key.toString(), value));
   }
@@ -63,9 +60,7 @@ class RemoteModelAdmin {
   ) async {
     final send = rpc;
     if (send == null) {
-      throw const ModelAdminException(
-        'Connect the live gateway session before changing billing or a chat.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.connectBeforeChange);
     }
     final response = await send(method, params);
     final error = response['error'];
@@ -76,24 +71,19 @@ class RemoteModelAdmin {
         rpcError;
     if (!envelope) return response;
     if (error is Map && error['code'] == -32601) {
-      throw const ModelAdminException(
-        'This gateway does not provide that operation.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.operationUnavailable);
     }
     if (error != null) {
-      throw ModelAdminException(
-        error is Map
-            ? safeBillingMessage(error['message'])
-            : 'The gateway refused this request.',
-      );
+      if (error is Map) {
+        throw ModelAdminException.server(error['message']?.toString());
+      }
+      throw const ModelAdminException(ModelAdminFailure.requestRefused);
     }
     final result = response['result'];
     if (result is Map) {
       return result.map((key, value) => MapEntry(key.toString(), value));
     }
-    throw const ModelAdminException(
-      'The gateway response did not match the expected shape.',
-    );
+    throw const ModelAdminException(ModelAdminFailure.responseShape);
   }
 
   Future<List<ProviderKeyGroup>> keys() async =>
@@ -105,7 +95,7 @@ class RemoteModelAdmin {
     if (!RegExp(r'^[A-Z][A-Z0-9_]{0,127}$').hasMatch(key) ||
         secret.isEmpty ||
         secret.length > 4096) {
-      throw const ModelAdminException('Enter the key to save.');
+      throw const ModelAdminException(ModelAdminFailure.keyRequired);
     }
     final saved = await _exchange(
       'PUT',
@@ -113,18 +103,18 @@ class RemoteModelAdmin {
       body: {'key': key, 'value': secret, 'provider_setup': true},
     );
     if (saved['ok'] == false) {
-      throw const ModelAdminException('The gateway did not save that key.');
+      throw const ModelAdminException(ModelAdminFailure.keySaveFailed);
     }
   }
 
   Future<void> clearKey(String envKey) async {
     final key = envKey.trim();
     if (!RegExp(r'^[A-Z][A-Z0-9_]{0,127}$').hasMatch(key)) {
-      throw const ModelAdminException('Choose a provider key to clear.');
+      throw const ModelAdminException(ModelAdminFailure.keyClearRequired);
     }
     final cleared = await _exchange('DELETE', 'env', body: {'key': key});
     if (cleared['ok'] == false) {
-      throw const ModelAdminException('The gateway did not clear that key.');
+      throw const ModelAdminException(ModelAdminFailure.keyClearFailed);
     }
   }
 
@@ -147,34 +137,26 @@ class RemoteModelAdmin {
       body: endpointRequestBody(draft),
     );
     if (saved['ok'] == false) {
-      throw const ModelAdminException(
-        'The gateway did not save that endpoint.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.endpointSaveFailed);
     }
   }
 
   Future<void> activateEndpoint(String id) async {
     if (!RegExp(r'^[A-Za-z0-9_.:-]{1,128}$').hasMatch(id)) {
-      throw const ModelAdminException(
-        'This endpoint identifier is not usable.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.endpointIdInvalid);
     }
     final activated = await _exchange(
       'POST',
       'providers/custom-endpoints/${Uri.encodeComponent(id)}/activate',
     );
     if (activated['ok'] != true || activated['model'] is! String) {
-      throw const ModelAdminException(
-        'The gateway did not activate that endpoint.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.endpointActivateFailed);
     }
   }
 
   Future<void> deleteEndpoint(String id) async {
     if (!RegExp(r'^[A-Za-z0-9_.:-]{1,128}$').hasMatch(id)) {
-      throw const ModelAdminException(
-        'This endpoint identifier is not usable.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.endpointIdInvalid);
     }
     await _exchange(
       'DELETE',
@@ -184,14 +166,12 @@ class RemoteModelAdmin {
 
   Future<List<ProviderAccountRow>> accounts() async {
     if (client.providerOAuthUnavailableReason != null) {
-      throw const ModelAdminException(
-        'Provider accounts need an authenticated HTTPS gateway, or localhost.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.accountsSecureRequired);
     }
     try {
       return providerAccounts(await client.getProviderOAuthCatalog());
     } on StateError {
-      throw const ModelAdminException('Provider accounts could not be read.');
+      throw const ModelAdminException(ModelAdminFailure.accountsReadFailed);
     }
   }
 
@@ -200,11 +180,11 @@ class RemoteModelAdmin {
       await client.disconnectProviderOAuth(providerId);
     } on StateError {
       throw const ModelAdminException(
-        'The gateway did not disconnect that account.',
+        ModelAdminFailure.accountDisconnectFailed,
       );
     } on ArgumentError {
       throw const ModelAdminException(
-        'That provider account cannot be disconnected.',
+        ModelAdminFailure.accountNotDisconnectable,
       );
     }
   }
@@ -217,9 +197,7 @@ class RemoteModelAdmin {
     List<String> allowed,
   ) async {
     if (!allowed.contains(backend)) {
-      throw const ModelAdminException(
-        'Choose one of the available delegation backends.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.backendRequired);
     }
     final saved = await _exchange(
       'PUT',
@@ -227,9 +205,7 @@ class RemoteModelAdmin {
       body: {'backend': backend},
     );
     if (saved['ok'] != true) {
-      throw const ModelAdminException(
-        'The gateway did not select that backend.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.backendSaveFailed);
     }
   }
 
@@ -243,7 +219,7 @@ class RemoteModelAdmin {
       body: modelRouteBody(routes: routes, defaultRoute: defaultRoute),
     );
     if (saved['ok'] != true) {
-      throw const ModelAdminException('The gateway did not save those routes.');
+      throw const ModelAdminException(ModelAdminFailure.routesSaveFailed);
     }
   }
 
@@ -256,12 +232,10 @@ class RemoteModelAdmin {
     for (final profile in profiles) {
       final name = profile['name']?.toString().trim() ?? '';
       if (name.isEmpty || name.length > 128) {
-        throw const ModelAdminException(
-          'Each profile route needs a profile name.',
-        );
+        throw const ModelAdminException(ModelAdminFailure.profileRouteRequired);
       }
       if (!names.add(name)) {
-        throw const ModelAdminException('Profile routes must be unique.');
+        throw const ModelAdminException(ModelAdminFailure.profileRouteUnique);
       }
       rows.add({
         ...profile,
@@ -271,7 +245,7 @@ class RemoteModelAdmin {
     }
     if (defaultProfile != null && !names.contains(defaultProfile)) {
       throw const ModelAdminException(
-        'The default profile route has to be one of the allowed profiles.',
+        ModelAdminFailure.profileRouteDefaultInvalid,
       );
     }
     final saved = await _exchange(
@@ -281,7 +255,7 @@ class RemoteModelAdmin {
     );
     if (saved['ok'] != true) {
       throw const ModelAdminException(
-        'The gateway did not save those profile routes.',
+        ModelAdminFailure.profileRoutesSaveFailed,
       );
     }
   }
@@ -301,7 +275,7 @@ class RemoteModelAdmin {
       },
     );
     if (saved['ok'] == false) {
-      throw const ModelAdminException('The gateway did not save those limits.');
+      throw const ModelAdminException(ModelAdminFailure.limitsSaveFailed);
     }
   }
 
@@ -310,7 +284,7 @@ class RemoteModelAdmin {
   Future<void> saveMixture(Map<String, dynamic> body) async {
     final saved = await _exchange('PUT', 'model/moa', body: body);
     if (saved['ok'] == false) {
-      throw const ModelAdminException('The gateway did not save that mixture.');
+      throw const ModelAdminException(ModelAdminFailure.mixtureSaveFailed);
     }
   }
 
@@ -359,9 +333,7 @@ class RemoteModelAdmin {
   }) {
     final selected = amount.trim();
     if (selected.isEmpty) {
-      throw const ModelAdminException(
-        'Choose one of the offered credit amounts.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.creditAmountRequired);
     }
     final supplied = idempotencyKey?.trim() ?? '';
     final key = supplied.isEmpty ? newIdempotencyKey() : supplied;
@@ -374,7 +346,7 @@ class RemoteModelAdmin {
   Future<Map<String, dynamic>> chargeStatus(String chargeId) {
     final id = chargeId.trim();
     if (id.isEmpty) {
-      throw const ModelAdminException('That charge could not be checked.');
+      throw const ModelAdminException(ModelAdminFailure.chargeCheckFailed);
     }
     return _call('billing.charge_status', {'charge_id': id});
   }
@@ -412,9 +384,7 @@ class RemoteModelAdmin {
     required String reloadToUsd,
   }) {
     if (thresholdUsd.trim().isEmpty || reloadToUsd.trim().isEmpty) {
-      throw const ModelAdminException(
-        'Auto-reload amounts were not provided, so they were not changed.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.reloadAmountsMissing);
     }
     return _call('billing.auto_reload', {
       'enabled': enabled,
@@ -428,16 +398,14 @@ class RemoteModelAdmin {
 
   Future<Map<String, dynamic>> previewPlan(String tierId) {
     if (tierId.trim().isEmpty) {
-      throw const ModelAdminException('Choose a plan first.');
+      throw const ModelAdminException(ModelAdminFailure.planRequired);
     }
     return _call('subscription.preview', {'subscription_type_id': tierId});
   }
 
   Future<Map<String, dynamic>> schedulePlan(String tierId, String? effect) {
     if (!planChangeCanCommit(effect)) {
-      throw const ModelAdminException(
-        'Only a scheduled plan change can be confirmed from here.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.planScheduledOnly);
     }
     return _call('subscription.change', {'subscription_type_id': tierId});
   }
