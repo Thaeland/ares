@@ -69,6 +69,7 @@ class _BotsScreenState extends State<BotsScreen> {
   DisplayStatus? _display;
   String? _watchViewerId;
   DisplayThumbnail? _thumbnail;
+  ImageProvider? _thumbnailImage;
   bool _thumbnailSuppressed = false;
   Timer? _thumbnailTimer;
   bool _screenBusy = false;
@@ -108,6 +109,7 @@ class _BotsScreenState extends State<BotsScreen> {
   void dispose() {
     ConnectionMutationBarrier.removeListener(_onAccountChanged);
     _cancelThumbnail();
+    _thumbnailImage?.evict();
     _searchController.dispose();
     _pane?.close();
     super.dispose();
@@ -130,6 +132,25 @@ class _BotsScreenState extends State<BotsScreen> {
       });
     }
   }
+
+  /// Swaps the decoded frame. The frame it replaces is dropped from the
+  /// image cache once the new one has painted, so a 4 s poll keeps one frame
+  /// in memory; nothing is written to disk.
+  void _showThumbnail(Uint8List? bytes) {
+    final previous = _thumbnailImage;
+    _thumbnailImage = bytes == null
+        ? null
+        : ResizeImage.resizeIfNeeded(
+            _thumbnailDecodeWidth,
+            null,
+            MemoryImage(bytes),
+          );
+    if (previous != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => previous.evict());
+    }
+  }
+
+  static const _thumbnailDecodeWidth = 1280;
 
   void _cancelThumbnail() {
     _thumbnailTimer?.cancel();
@@ -289,6 +310,7 @@ class _BotsScreenState extends State<BotsScreen> {
       setState(() {
         _thumbnail = thumb;
         _thumbnailSuppressed = thumb.suppressed != null;
+        _showThumbnail(thumb.bytes);
       });
     } catch (_) {
       // Thumbnail poll must not spam errors; leave the last frame.
@@ -942,6 +964,7 @@ class _BotsScreenState extends State<BotsScreen> {
               _screenProfile = n;
               _display = null;
               _thumbnail = null;
+              _showThumbnail(null);
               _watchViewerId = null;
               _thumbnailSuppressed = false;
             });
@@ -1095,6 +1118,17 @@ class _BotsScreenState extends State<BotsScreen> {
 
   Widget _thumbnailCard() {
     final thumbnail = _thumbnail;
+    final scheme = Theme.of(context).colorScheme;
+    final unavailable = Container(
+      height: 96,
+      width: double.infinity,
+      color: scheme.surfaceContainerHighest,
+      alignment: Alignment.center,
+      child: Text(
+        'Thumbnail unavailable',
+        style: TextStyle(color: scheme.onSurfaceVariant),
+      ),
+    );
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -1106,28 +1140,23 @@ class _BotsScreenState extends State<BotsScreen> {
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
-            if (thumbnail != null && thumbnail.dataUrl != null)
+            if (_thumbnailImage case final image?)
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  thumbnail.dataUrl!,
-                  errorBuilder: (_, _, _) => Container(
-                    height: 96,
-                    width: double.infinity,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.surfaceContainerHighest,
-                    child: Center(
-                      child: Text(
-                        'Thumbnail unavailable',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 360),
+                  // The last frame stays up while the next one decodes.
+                  child: Image(
+                    key: const Key('bots-thumbnail-image'),
+                    image: image,
+                    gaplessPlayback: true,
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, _, _) => unavailable,
                   ),
                 ),
               )
+            else if (thumbnail?.dataUrl != null)
+              unavailable
             else if (_thumbnailSuppressed)
               const Text('Thumbnail suppressed while the screen is human-held.')
             else

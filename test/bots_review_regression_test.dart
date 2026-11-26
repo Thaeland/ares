@@ -2,9 +2,11 @@
 // (evidence/bots-review-d74ba224, probes B1-B10). Each test failed on the
 // reviewed code and names the probe it replaces.
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hermes_android/core/services/remote_workspace.dart';
 
 import 'support/bots_review_fixture.dart';
 
@@ -342,6 +344,67 @@ void main() {
       await botsStep(tester);
       expect(find.text('Running'), findsNothing);
       expect(find.text('Not installed'), findsOneWidget);
+    });
+  });
+
+  group('B9 Bot Desktop thumbnail', () {
+    const png =
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA'
+        '60e6kgAAAABJRU5ErkJggg==';
+
+    testWidgets('the data: URL is decoded in memory and never fetched', (
+      tester,
+    ) async {
+      wide(tester, const Size(900, 900));
+      final gateway = BotsReviewGateway()
+        ..thumbnailDataUrl = 'data:image/png;base64,$png';
+      final owner = botsReviewOwner(gateway);
+      addTearDown(owner.close);
+      await tester.pumpWidget(botsReviewApp(owner));
+      await openBotsScreenTab(tester);
+      final image = tester.widget<Image>(
+        find.byKey(const Key('bots-thumbnail-image')),
+      );
+      expect(image.gaplessPlayback, isTrue);
+      var provider = image.image;
+      if (provider is ResizeImage) provider = provider.imageProvider;
+      expect(provider, isA<MemoryImage>());
+      expect((provider as MemoryImage).bytes, base64Decode(png));
+      expect(
+        find.byWidgetPredicate((w) => w is Image && w.image is NetworkImage),
+        findsNothing,
+      );
+      expect(find.text('Thumbnail unavailable'), findsNothing);
+    });
+
+    testWidgets('a frame that is not a bounded image is shown as unavailable', (
+      tester,
+    ) async {
+      wide(tester, const Size(900, 900));
+      final gateway = BotsReviewGateway()
+        ..thumbnailDataUrl = 'data:text/html;base64,PGI+eDwvYj4=';
+      final owner = botsReviewOwner(gateway);
+      addTearDown(owner.close);
+      await tester.pumpWidget(botsReviewApp(owner));
+      await openBotsScreenTab(tester);
+      expect(find.byKey(const Key('bots-thumbnail-image')), findsNothing);
+      expect(find.text('Thumbnail unavailable'), findsOneWidget);
+      expect(
+        find.byWidgetPredicate((w) => w is Image && w.image is NetworkImage),
+        findsNothing,
+      );
+    });
+
+    test('DisplayThumbnail decodes only bounded image data URLs', () {
+      Object? bytesOf(String? url) =>
+          (DisplayThumbnail.fromJson({'data_url': url}) as dynamic).bytes;
+      expect(bytesOf('data:image/png;base64,$png'), base64Decode(png));
+      expect(bytesOf(null), isNull);
+      expect(bytesOf('https://example.invalid/a.png'), isNull);
+      expect(bytesOf('data:text/html;base64,PGI+eDwvYj4='), isNull);
+      expect(bytesOf('data:image/png;base64,@@not-base64@@'), isNull);
+      final huge = 'data:image/jpeg;base64,${'A' * (6 * 1024 * 1024)}';
+      expect(bytesOf(huge), isNull);
     });
   });
 }

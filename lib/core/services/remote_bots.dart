@@ -614,15 +614,45 @@ final class DisplayObserveResult {
 }
 
 final class DisplayThumbnail {
-  const DisplayThumbnail({this.dataUrl, this.suppressed});
+  const DisplayThumbnail({this.dataUrl, this.suppressed, this.bytes});
 
+  /// The frame as the gateway sends it: a `data:image/jpeg;base64,...` URL.
   final String? dataUrl;
   final String? suppressed;
 
-  factory DisplayThumbnail.fromJson(Map raw) => DisplayThumbnail(
-    dataUrl: raw['data_url'] as String?,
-    suppressed: raw['suppressed'] as String?,
-  );
+  /// The image decoded from [dataUrl], or null when there is no frame or it
+  /// is not a bounded image. A `data:` URL is decoded here; no HTTP client
+  /// can fetch one (dart:io refuses a URI without a host).
+  final Uint8List? bytes;
+
+  /// A thumbnail is a small JPEG; anything past this is not one.
+  static const maxBytes = 4 * 1024 * 1024;
+
+  static Uint8List? decode(String? dataUrl) {
+    if (dataUrl == null ||
+        !dataUrl.startsWith('data:image/') ||
+        // base64 carries 3 bytes in 4 characters.
+        dataUrl.length > maxBytes ~/ 3 * 4 + 128) {
+      return null;
+    }
+    try {
+      final data = UriData.parse(dataUrl);
+      if (!data.mimeType.startsWith('image/')) return null;
+      final bytes = data.contentAsBytes();
+      return bytes.isEmpty || bytes.length > maxBytes ? null : bytes;
+    } on FormatException {
+      return null;
+    }
+  }
+
+  factory DisplayThumbnail.fromJson(Map raw) {
+    final dataUrl = raw['data_url'] as String?;
+    return DisplayThumbnail(
+      dataUrl: dataUrl,
+      suppressed: raw['suppressed'] as String?,
+      bytes: decode(dataUrl),
+    );
+  }
 }
 
 extension WorkspaceBots on WorkspaceTarget {
