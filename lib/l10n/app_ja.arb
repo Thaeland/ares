@@ -1805,6 +1805,7 @@
   "catalog_scan_passed": "合格",
   "catalog_scan_warnings": "警告あり",
   "catalog_scan_failed": "不合格",
+  "composer_failure_switch_no_retry": "切り替えで変わるのはモデルだけです。この接続では失敗したターンを再実行できません。切り替えた後にもう一度送信してください。",
   "desktop_tray_open": "Ares を開く",
   "desktop_tray_new_chat": "新しいチャット",
   "desktop_tray_quick_entry": "クイック入力…",

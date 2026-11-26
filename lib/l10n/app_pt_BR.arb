@@ -1805,6 +1805,7 @@
   "catalog_scan_passed": "aprovado",
   "catalog_scan_warnings": "encontrou avisos",
   "catalog_scan_failed": "falhou",
+  "composer_failure_switch_no_retry": "A troca muda só o modelo: esta conexão não consegue executar de novo o turno que falhou. Envie-o novamente depois de trocar.",
   "desktop_tray_open": "Abrir o Ares",
   "desktop_tray_new_chat": "Novo chat",
   "desktop_tray_quick_entry": "Entrada rápida…",

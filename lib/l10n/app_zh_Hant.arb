@@ -2872,6 +2872,7 @@
   "catalog_scan_passed": "通過",
   "catalog_scan_warnings": "發現警告",
   "catalog_scan_failed": "失敗",
+  "composer_failure_switch_no_retry": "切換只會變更模型：此連線無法重新執行失敗的輪次。切換後請重新傳送。",
   "desktop_tray_open": "開啟 Ares",
   "desktop_tray_new_chat": "新聊天",
   "desktop_tray_quick_entry": "快速輸入…",

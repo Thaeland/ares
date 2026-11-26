@@ -1805,6 +1805,7 @@
   "catalog_scan_passed": "пройдена",
   "catalog_scan_warnings": "найдены предупреждения",
   "catalog_scan_failed": "не пройдена",
+  "composer_failure_switch_no_retry": "Переключение меняет только модель: это подключение не может повторить неудавшийся ход. Отправьте его снова после переключения.",
   "desktop_tray_open": "Открыть Ares",
   "desktop_tray_new_chat": "Новый чат",
   "desktop_tray_quick_entry": "Быстрый ввод…",

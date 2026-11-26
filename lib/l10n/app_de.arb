@@ -1805,6 +1805,7 @@
   "catalog_scan_passed": "bestanden",
   "catalog_scan_warnings": "Warnungen gefunden",
   "catalog_scan_failed": "fehlgeschlagen",
+  "composer_failure_switch_no_retry": "Der Wechsel ändert nur das Modell: Diese Verbindung kann den fehlgeschlagenen Durchgang nicht erneut ausführen. Sende ihn nach dem Wechsel noch einmal.",
   "desktop_tray_open": "Ares öffnen",
   "desktop_tray_new_chat": "Neuer Chat",
   "desktop_tray_quick_entry": "Schnelleingabe…",

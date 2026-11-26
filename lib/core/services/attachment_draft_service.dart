@@ -373,7 +373,14 @@ class AttachmentDraftService {
     }
   }
 
-  void validateRemoteDrafts(Iterable<AttachmentDraft> drafts) {
+  /// The send-time check of a whole draft. NextGen passes its own limits
+  /// ([maxNextGenAttachmentBytes] per file, streamed past the inline size);
+  /// the count and image sanitising rules are the same everywhere.
+  void validateRemoteDrafts(
+    Iterable<AttachmentDraft> drafts, {
+    int maxFileBytes = maxGenericAttachmentBytes,
+    int maxTotalBytes = maxRemoteAttachmentDraftBytes,
+  }) {
     final snapshot = drafts.toList(growable: false);
     if (snapshot.length > maxRemoteAttachmentDrafts) {
       throw const AttachmentDraftException(
@@ -381,16 +388,21 @@ class AttachmentDraftService {
       );
     }
     final total = snapshot.fold<int>(0, (sum, draft) => sum + draft.byteLength);
-    if (total > maxRemoteAttachmentDraftBytes) {
-      throw const AttachmentDraftException(
-        'Attachments are limited to 64 MiB total per draft.',
+    if (total > maxTotalBytes) {
+      throw AttachmentDraftException(
+        maxTotalBytes == maxRemoteAttachmentDraftBytes
+            ? 'Attachments are limited to 64 MiB total per draft.'
+            : 'Attachments are limited to ${maxTotalBytes ~/ 1000000} MB '
+                  'total per draft.',
       );
     }
     for (final draft in snapshot) {
       if (draft.kind == AttachmentDraftKind.genericFile &&
-          draft.byteLength > maxGenericAttachmentBytes) {
-        throw const AttachmentDraftException(
-          'Generic files are limited to 16 MiB each.',
+          draft.byteLength > maxFileBytes) {
+        throw AttachmentDraftException(
+          maxFileBytes == maxGenericAttachmentBytes
+              ? 'Generic files are limited to 16 MiB each.'
+              : 'Files are limited to ${maxFileBytes ~/ 1000000} MB each.',
         );
       }
       if (draft.isImage && !draft.sanitized) {

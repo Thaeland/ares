@@ -1388,3 +1388,23 @@ double ngAboveComposerMaxHeight(
       : math.max(0.0, media.size.height - keyboard - media.padding.top);
   return height * (keyboard > 0 ? (withKeyboard ?? fraction) : fraction);
 }
+
+/// The tallest the strip under the transcript (dock, cards and composer)
+/// may be, from [available], the chat body's height with the keyboard
+/// already off it: most of it, leaving the transcript a share, but never
+/// less than the composer's own controls need (all of [available] when it
+/// is smaller still).
+double ngComposerStripMaxHeight(double available) {
+  if (!available.isFinite) return double.infinity;
+  const composerMinimum = 140.0;
+  return math.max(math.min(available, composerMinimum), available * 0.85);
+}
+
+/// The tallest the composer's editor may be inside a composer column of
+/// [maxHeight]: the send row (48) always fits under it, and the rows above
+/// it keep a share. A longer draft scrolls inside the editor.
+double ngComposerEditorMaxHeight(double maxHeight) {
+  if (!maxHeight.isFinite) return double.infinity;
+  const actionRow = 48.0;
+  return math.max(40.0, (maxHeight - actionRow) * 0.7);
+}

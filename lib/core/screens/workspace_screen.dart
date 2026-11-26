@@ -158,6 +158,7 @@ Widget buildWorkspaceChatScreen({
   Future<bool> Function(String sessionId, bool archived)? sessionArchiver,
   ApiClient? testApiClient,
   VoidCallback? onClose,
+  Future<void> Function(Session session)? onOpenSession,
   VoidCallback? onOpenAppCommandPalette,
 }) {
   return ChatScreen(
@@ -173,6 +174,7 @@ Widget buildWorkspaceChatScreen({
     sessionArchiver: sessionArchiver,
     testApiClient: testApiClient,
     onClose: onClose,
+    onOpenSession: onOpenSession,
     onOpenAppCommandPalette: onOpenAppCommandPalette,
   );
 }
@@ -1481,6 +1483,11 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
                           testApiClient: widget.testChatApiClientFactory
                               ?.call(),
                           onClose: _closeDetail,
+                          // /resume swaps the detail pane, keeping the list.
+                          onOpenSession: (picked) => _openSession(
+                            picked,
+                            projectName: _chatProjectLabels[picked.id],
+                          ),
                         ),
                       ),
               ),
@@ -1759,36 +1766,45 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
     }
 
     final builder = widget.sessionScreenBuilder;
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => ProfileTheme(
-          connection: widget.connection,
-          nextGen: false,
-          child:
-              builder?.call(session) ??
-              buildWorkspaceChatScreen(
-                connection: widget.connection,
-                session: session,
-                projectName: projectName,
-                projectWorkingDirectory: projectWorkingDirectory,
-                initialComposerText: initialComposerText,
-                initialComposerAppends: initialComposerAppends,
-                initialAttachmentDrafts: initialAttachmentDrafts,
-                turnApplicationController: widget.turnApplicationController,
-                sessionArchiver: (storedId, archived) async {
-                  final saved = await _archiveSession(
-                    session.withStoredId(storedId),
-                    archived,
-                  );
-                  onArchiveCommitted?.call();
-                  return saved;
-                },
-                testApiClient: widget.testChatApiClientFactory?.call(),
-                onOpenAppCommandPalette: _openCommandPalette,
-              ),
-        ),
+    late final MaterialPageRoute<void> route;
+    route = MaterialPageRoute<void>(
+      builder: (_) => ProfileTheme(
+        connection: widget.connection,
+        nextGen: false,
+        child:
+            builder?.call(session) ??
+            buildWorkspaceChatScreen(
+              connection: widget.connection,
+              session: session,
+              projectName: projectName,
+              projectWorkingDirectory: projectWorkingDirectory,
+              initialComposerText: initialComposerText,
+              initialComposerAppends: initialComposerAppends,
+              initialAttachmentDrafts: initialAttachmentDrafts,
+              turnApplicationController: widget.turnApplicationController,
+              sessionArchiver: (storedId, archived) async {
+                final saved = await _archiveSession(
+                  session.withStoredId(storedId),
+                  archived,
+                );
+                onArchiveCommitted?.call();
+                return saved;
+              },
+              testApiClient: widget.testChatApiClientFactory?.call(),
+              onOpenAppCommandPalette: _openCommandPalette,
+              // /resume opens the pick here, in place of this chat route.
+              onOpenSession: (picked) async {
+                if (!mounted) return;
+                if (route.isActive) Navigator.of(context).removeRoute(route);
+                await _openSession(
+                  picked,
+                  projectName: _chatProjectLabels[picked.id],
+                );
+              },
+            ),
       ),
     );
+    await Navigator.of(context).push(route);
     if (!mounted) return;
     if (refreshBrowser != null) {
       unawaited(refreshBrowser());

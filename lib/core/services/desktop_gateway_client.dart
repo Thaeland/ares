@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../models/client_certificate.dart';
 import '../models/slash_command.dart';
 import 'capability_registry.dart';
+import 'composer_session_rpc.dart';
 import 'connection_manager.dart';
 import 'gateway_turn_coordinator.dart';
 import 'gateway_turn_journal.dart';
@@ -33,7 +34,7 @@ enum DesktopConnectionState {
 /// The mobile OpenAI-compatible endpoint remains available for legacy
 /// profiles. When a connection supplies [SavedConnection.desktopGatewayUrl],
 /// chat writes and interactive events use this one Desktop session transport.
-class DesktopGatewayClient implements SlashCommandGateway {
+class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
   static final _localServerRequestKey = RegExp(
     r'^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}\.[0-9]+\.[0-9]+:',
   );
@@ -84,6 +85,8 @@ class DesktopGatewayClient implements SlashCommandGateway {
 
   static const _asyncEventTypes = {
     'background.complete',
+    // The answer to /btw arrives only as this event (Desktop's dispatcher).
+    'btw.complete',
     'review.summary',
     'notification.show',
     'notification.clear',
@@ -877,6 +880,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
   ///
   /// Opens the socket when the workspace has not connected yet. The call stays
   /// on this client, so a profile name cannot hop to another machine.
+  @override
   Future<Map<String, dynamic>> call(
     String method,
     Map<String, dynamic> params, {
@@ -1032,6 +1036,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
     String? submissionId,
     Future<void> Function()? beforeLegacy,
     Future<void> Function(Object?, String)? onReceipt,
+    Map<String, Object?> extraParams = const {},
   }) async {
     var emitted = false;
     if (beforeSend != null && !await beforeSend()) {
@@ -1055,6 +1060,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
           submissionId: submissionId,
           beforeLegacy: beforeLegacy,
           onReceipt: onReceipt,
+          extraParams: extraParams,
           onEvent: (event) {
             if (!_closed) onEvent(event);
           },
@@ -1520,6 +1526,51 @@ class DesktopGatewayClient implements SlashCommandGateway {
       throw StateError('The Desktop gateway session is no longer connected');
     }
     return client.slashExec(gatewaySessionId, command, onSent: onSent);
+  }
+
+  /// Whether [mobileSessionId] is bound to a gateway session on the live
+  /// socket, so a session-scoped RPC ([requestSessionRpc]) can reach it.
+  @override
+  bool hasLiveSession(String mobileSessionId) {
+    final client = _ws;
+    if (_closed || client == null || !client.isConnected) return false;
+    return _gatewaySessionIds.containsKey(mobileSessionId) ||
+        _gatewaySessionIds.containsValue(mobileSessionId);
+  }
+
+  /// One session-scoped JSON-RPC. The local session id in [params] is
+  /// replaced with the bound gateway id. Missing methods surface as
+  /// [JsonRpcError] `-32601` so the caller can fall back to slash.exec.
+  @override
+  Future<Map<String, dynamic>> requestSessionRpc(
+    String method,
+    Map<String, dynamic> params,
+  ) async {
+    final requested = params['session_id']?.toString();
+    final gatewaySessionId = requested == null
+        ? null
+        : (_gatewaySessionIds[requested] ??
+              (_gatewaySessionIds.containsValue(requested) ? requested : null));
+    final client = _ws;
+    if (gatewaySessionId == null || client == null || !client.isConnected) {
+      throw StateError('The Desktop gateway session is no longer connected');
+    }
+    final response = await client.send(method, {
+      ...params,
+      'session_id': gatewaySessionId,
+    });
+    final error = response['error'];
+    if (error != null) {
+      throw JsonRpcError.fromGateway(
+        method,
+        error is Map ? Map<dynamic, dynamic>.from(error) : const {},
+        fallbackMessage: 'The gateway refused $method',
+      );
+    }
+    final result = response['result'];
+    if (result is Map<String, dynamic>) return result;
+    if (result is Map) return Map<String, dynamic>.from(result);
+    return const {};
   }
 
   /// Interrupts the active turn in the Desktop gateway runtime. On the

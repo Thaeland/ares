@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../services/connection_manager.dart';
 import '../services/gateway_turn_application_controller.dart';
+import '../workspace/parallel_workspace.dart';
 import 'chat_screen.dart';
 
 class ClassicParallelChatPane extends StatefulWidget {
@@ -34,6 +35,8 @@ class _ClassicPaneState extends State<ClassicParallelChatPane> {
     active: TickerMode.valuesOf(context).enabled,
     turnApplicationController: widget.controller,
     onClose: widget.close,
+    // /resume opens the pick as a pane of this workspace, which stays.
+    onOpenSession: ParallelWorkspace.openSessionOf(context),
     testApiClient: _testClient,
   );
 }

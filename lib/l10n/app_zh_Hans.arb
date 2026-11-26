@@ -1805,6 +1805,7 @@
   "catalog_scan_passed": "已通过",
   "catalog_scan_warnings": "发现警告",
   "catalog_scan_failed": "未通过",
+  "composer_failure_switch_no_retry": "切换只会更改模型：此连接无法重新运行失败的轮次。切换后请重新发送。",
   "desktop_tray_open": "打开 Ares",
   "desktop_tray_new_chat": "新聊天",
   "desktop_tray_quick_entry": "快速输入…",

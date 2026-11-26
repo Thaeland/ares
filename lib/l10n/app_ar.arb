@@ -2860,6 +2860,7 @@
   "catalog_scan_passed": "نجح",
   "catalog_scan_warnings": "وُجدت تحذيرات",
   "catalog_scan_failed": "فشل",
+  "composer_failure_switch_no_retry": "يغيّر التبديل النموذج فقط: لا يمكن لهذا الاتصال إعادة تشغيل الدور الفاشل. أرسله مجددًا بعد التبديل.",
   "desktop_tray_open": "فتح Ares",
   "desktop_tray_new_chat": "دردشة جديدة",
   "desktop_tray_quick_entry": "إدخال سريع…",

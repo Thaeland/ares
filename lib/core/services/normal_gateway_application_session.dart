@@ -89,6 +89,13 @@ class NormalGatewayTurnTerminal {
   final String? publicFinalText;
 }
 
+/// A gateway failure frame kept for the chat's failure card.
+typedef NormalGatewayFailureFrame = ({
+  int serial,
+  bool detached,
+  Map<String, dynamic> data,
+});
+
 /// Durable history and transient presentation are deliberately separate. Never
 /// write displayRows into the history window: they have no durable row identity.
 class NormalGatewayChatSnapshot {
@@ -120,6 +127,13 @@ class NormalGatewayChatSnapshot {
   final DesktopConnectionState connectionState;
   final ChatTimeline timeline;
   final List<ReceivedScopeOutcome> receivedOutcomes;
+
+  /// The gateway's last `error`/`turn.error` frame for this chat (message and
+  /// failure surface), for the failure card. [serial] tells frames apart;
+  /// [detached] is a frame that arrived with no turn active here (a turn
+  /// that settled on the server after this client let go of it). Cleared
+  /// when the next turn starts.
+  final NormalGatewayFailureFrame? failureFrame;
   const NormalGatewayChatSnapshot({
     required this.turnId,
     this.terminal,
@@ -143,6 +157,7 @@ class NormalGatewayChatSnapshot {
     required this.connectionState,
     this.timeline = const ChatTimeline(),
     this.receivedOutcomes = const [],
+    this.failureFrame,
   });
   bool get hasActiveTurn => const {
     NormalGatewayTurnPhase.preparing,
@@ -1018,7 +1033,21 @@ class NormalGatewayChatOwner {
             for (final settled in _settledPresentation) ...settled.outcomes,
             ..._receivedOutcomes,
           ]),
+          failureFrame: _failureFrame,
         );
+
+  /// Every failure frame gets its own serial, across chats, so a screen never
+  /// takes one for another it already showed.
+  static int _failureSerials = 0;
+  NormalGatewayFailureFrame? _failureFrame;
+
+  void _keepFailureFrame(StreamEvent event, {required bool detached}) {
+    _failureFrame = (
+      serial: ++_failureSerials,
+      detached: detached,
+      data: Map<String, dynamic>.unmodifiable(event.data),
+    );
+  }
 
   void bindStoredSession(String storedSessionId) {
     if (this.storedSessionId != storedSessionId) {
@@ -1628,6 +1657,8 @@ class NormalGatewayChatOwner {
     _activityChildren.clear();
     _error = null;
     _status = null;
+    // A new turn supersedes the last one's failure.
+    _failureFrame = null;
     _notify();
     return _reservation;
   }
@@ -1747,6 +1778,7 @@ class NormalGatewayChatOwner {
     bool Function()? maySubmit,
     Future<bool> Function()? beforeSend,
     void Function()? onAccepted,
+    Map<String, Object?> promptParams = const {},
   }) async {
     if (_redirect != null) {
       return _root.submitPrepared(
@@ -1762,6 +1794,7 @@ class NormalGatewayChatOwner {
         maySubmit: maySubmit,
         beforeSend: beforeSend,
         onAccepted: onAccepted,
+        promptParams: promptParams,
       );
     }
     if (!identical(_reservation, reservation) ||
@@ -1895,6 +1928,7 @@ class NormalGatewayChatOwner {
                   submissionId: imageAttempt?.id,
                   beforeLegacy: imageAttempt?.beforeLegacy,
                   onReceipt: imageAttempt?.receipt,
+                  extraParams: promptParams,
                   text: text,
                   onEvent: onEvent,
                   onSent: onSent,
@@ -2024,6 +2058,7 @@ class NormalGatewayChatOwner {
       'notification.show',
       'notification.clear',
       'background.complete',
+      'btw.complete',
       'review.summary',
       // manage_catalog install cards: the chat screen draws and answers them.
       'connection.request',
@@ -2135,6 +2170,15 @@ class NormalGatewayChatOwner {
       _notify(meaningfulActivity: update != null);
       return;
     }
+    final failureFrame = const {'error', 'turn.error'}.contains(event.type);
+    if (failureFrame && !snapshot.hasActiveTurn) {
+      // No turn is live here: a turn that settled on the server after this
+      // client let go of it (detached) failed. The chat's failure card
+      // still has to say so (and offer Retry / Switch to).
+      _keepFailureFrame(event, detached: true);
+      _notify();
+      return;
+    }
     if (!snapshot.hasActiveTurn ||
         phase == NormalGatewayTurnPhase.preparing ||
         !wireEmitted ||
@@ -2158,6 +2202,9 @@ class NormalGatewayChatOwner {
       // arriving after B's onSent, before B has emitted any activity.
       if (!terminal) _wireTurnId ??= wireTurn;
     }
+    // The live turn's failure, for the card once the turn has settled as
+    // failed (a later success never shows it).
+    if (failureFrame) _keepFailureFrame(event, detached: false);
     final ownsResponse = wireTurn != null
         ? wireTurn == _wireTurnId
         : _sawResponseActivity;
