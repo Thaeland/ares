@@ -328,7 +328,6 @@ void main() {
                   ),
                   sessionsLoader: () async => _fixtureSessions(),
                   turnSignalsLoader: (_) async => HomeTurnSignals.empty,
-                  installedVersionLoader: () async => null,
                   onOpenSession: (s) => openedSessions.add(s.id),
                 ),
               ),
@@ -404,7 +403,6 @@ void main() {
                   ),
                   sessionsLoader: () async => _fixtureSessions(),
                   turnSignalsLoader: (_) async => HomeTurnSignals.empty,
-                  installedVersionLoader: () async => null,
                   onOpenSession: (s) => openedSessions.add(s.id),
                 ),
               ),
@@ -516,7 +514,6 @@ void main() {
                 ),
                 sessionsLoader: () async => _fixtureSessions(),
                 turnSignalsLoader: (_) async => HomeTurnSignals.empty,
-                installedVersionLoader: () async => null,
                 testChatApiClientFactory: _offlineClassicApiClient,
                 testDashboardHttpClient: MockClient(
                   (_) async => http.Response(

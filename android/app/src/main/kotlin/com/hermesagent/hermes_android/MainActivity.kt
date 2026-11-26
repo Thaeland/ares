@@ -33,7 +33,6 @@ class MainActivity : FlutterActivity() {
     private var pendingDeepLink: String? = null
     private var deepLinkReady = false
     private var attachmentPdfPreview: AttachmentPdfPreview? = null
-    private var apkUpdateInstaller: ApkUpdateInstaller? = null
     private var attachmentFileSaver: AttachmentFileSaver? = null
     private var handsFreeVoice: HandsFreeVoicePlugin? = null
 
@@ -95,16 +94,19 @@ class MainActivity : FlutterActivity() {
         }
         attachmentPdfPreview?.close()
         attachmentPdfPreview = AttachmentPdfPreview(this, flutterEngine.dartExecutor.binaryMessenger)
-        if (!BuildConfig.PLAY_BUILD) {
-            apkUpdateInstaller?.close()
-            apkUpdateInstaller = ApkUpdateInstaller(this, flutterEngine.dartExecutor.binaryMessenger)
+        // Versions up to 4.0.17 downloaded update APKs here; nothing reads them now.
+        val staleUpdates = File(cacheDir, "apk_update")
+        runCatching {
+            if (staleUpdates.exists()) Thread { runCatching { staleUpdates.deleteRecursively() } }.start()
         }
         attachmentFileSaver?.close()
         attachmentFileSaver = AttachmentFileSaver(this, flutterEngine.dartExecutor.binaryMessenger)
         BackgroundWorkPlatform.install(this, flutterEngine.dartExecutor.binaryMessenger)
         MobilePushPlugin.install(flutterEngine)
-        AutoMessagingPlugin.install(flutterEngine)
-        handsFreeVoice = HandsFreeVoicePlugin.install(flutterEngine)
+        if (!BuildConfig.PARKED_AUTOMOTIVE) {
+            AutoMessagingPlugin.install(flutterEngine)
+            handsFreeVoice = HandsFreeVoicePlugin.install(flutterEngine)
+        }
         shareChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, shareChannelName).apply {
             setMethodCallHandler { call, result ->
                 when (call.method) {
@@ -194,8 +196,6 @@ class MainActivity : FlutterActivity() {
         handsFreeVoice?.setForeground(false)
         attachmentPdfPreview?.close()
         attachmentPdfPreview = null
-        apkUpdateInstaller?.close()
-        apkUpdateInstaller = null
         attachmentFileSaver?.close()
         attachmentFileSaver = null
         // Finishing with Back removes the Activity without calling the

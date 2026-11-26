@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import '../l10n/service_strings.dart';
+import '../parked_automotive.dart';
 import '../utils/speech_text.dart';
 import '../utils/voice_stop_word.dart';
 import 'connection_mutation_barrier.dart';
@@ -241,7 +242,7 @@ class VoiceLiveEngine extends ChangeNotifier {
     List<Map<String, dynamic>>? history,
     GptLiveStatus? status,
   }) {
-    if (_disposing) return Future<bool>.value(false);
+    if (isParkedAutomotive || _disposing) return Future<bool>.value(false);
     // One start at a time: a second tap on Start joins the one in flight
     // instead of cancelling it (or opening a second peer and microphone).
     final flight = _startFlight;

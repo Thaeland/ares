@@ -3269,55 +3269,6 @@ class AppLocalizationsAr extends AppLocalizations {
       'تعذّر حفظ مساحات المحادثات على هذا الجهاز';
 
   @override
-  String get update_available => 'يتوفر تحديث';
-
-  @override
-  String get update_now => 'تحديث الآن';
-
-  @override
-  String get update_install => 'تثبيت التحديث';
-
-  @override
-  String get update_downloading => 'جارٍ تنزيل التحديث والتحقق منه…';
-
-  @override
-  String get update_allow_install =>
-      'اسمح لتطبيق Hermes بتثبيت هذا التحديث، ثم عُد إلى هنا واضغط على «تثبيت التحديث».';
-
-  @override
-  String get update_failed =>
-      'تعذّر تنزيل التحديث أو التحقق منه أو فتحه. حاول مجددًا أو راجع صفحة الإصدار.';
-
-  @override
-  String get a_newer_hermes_android_build_is_available_on_github =>
-      'يتوفر إصدار أحدث من Ares على GitHub.';
-
-  @override
-  String get release_notes => 'ملاحظات الإصدار';
-
-  @override
-  String get view_release => 'عرض الإصدار';
-
-  @override
-  String get skip_this_version => 'تخطّي هذا الإصدار';
-
-  @override
-  String get later => 'لاحقًا';
-
-  @override
-  String get check_for_updates => 'التحقق من وجود تحديثات';
-
-  @override
-  String get check_for_updates_on_launch =>
-      'التحقق من وجود تحديثات عند بدء التشغيل';
-
-  @override
-  String get you_re_on_the_latest_version => 'أنت تستخدم أحدث إصدار.';
-
-  @override
-  String get couldn_t_check_for_updates => 'تعذّر التحقق من وجود تحديثات.';
-
-  @override
   String get chat_density => 'كثافة عرض المحادثة';
 
   @override
@@ -15522,4 +15473,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fleet_managed_ssh_disconnect => 'قطع الاتصال';
+
+  @override
+  String get ng_slash_suggestions_loading => 'جارٍ تحميل الأوامر…';
+
+  @override
+  String get ng_slash_suggestions_empty => 'لا توجد أوامر مطابقة';
+
+  @override
+  String get ng_slash_suggestions_label => 'اقتراحات الأوامر';
+
+  @override
+  String get ng_slash_suggestions_skill => 'مهارة';
 }

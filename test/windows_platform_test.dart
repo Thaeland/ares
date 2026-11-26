@@ -13,7 +13,6 @@ void main() {
       expect(isWindowsPlatform, isTrue);
       expect(isApplePlatform, isFalse);
       expect(supportsAndroidBackgroundWork, isFalse);
-      expect(supportsApkSelfUpdate, isFalse);
       expect(supportsEmbeddedMobilePush, isFalse);
       expect(supportsHandsFreeWakeService, isFalse);
       expect(supportsLocalNotifications, isTrue);

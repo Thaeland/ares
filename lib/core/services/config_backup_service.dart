@@ -3,7 +3,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/service_strings.dart';
-import 'app_update_service.dart';
 import 'chat_density_preference.dart';
 import 'client_certificate_service.dart';
 import 'config_backup.dart';
@@ -80,8 +79,6 @@ class ConfigBackupService {
     'voice_locale',
     'app_text_size_preference',
     'chat_density',
-    AppUpdateService.checkOnLaunchKey,
-    AppUpdateService.skippedVersionKey,
   };
 
   /// Prefixes for per-connection and per-chat preferences, which are keyed by

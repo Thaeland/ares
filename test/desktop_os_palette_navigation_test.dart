@@ -109,7 +109,6 @@ void main() {
           ),
           sessionsLoader: () async => _sessions(),
           turnSignalsLoader: (_) async => HomeTurnSignals.empty,
-          installedVersionLoader: () async => null,
           testChatApiClientFactory: _offlineClassicApiClient,
           testDashboardHttpClient: MockClient(
             (_) async => http.Response(

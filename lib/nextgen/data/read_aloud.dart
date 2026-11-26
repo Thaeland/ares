@@ -15,6 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/parked_automotive.dart';
 import '../../core/controllers/hands_free_conversation_controller.dart'
     show HandsFreeSpeechOutcome;
 import '../../core/services/barge_in_monitor.dart';
@@ -31,12 +32,16 @@ class NgReadAloud extends ChangeNotifier {
     BargeInMonitor Function()? bargeInMonitor,
     VoiceReplySpeaker? Function(VoiceReplySpeaker fallback)?
     directSpeakerFactory,
-  }) : _tts = tts ?? FlutterTts(),
-       _bargeInMonitor = bargeInMonitor ?? SpeechToTextBargeInMonitor.new,
+  }) : _bargeInMonitor = bargeInMonitor ?? SpeechToTextBargeInMonitor.new,
        _prefs = prefs ?? SharedPreferences.getInstance,
        _android =
            android ??
            (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+    if (isParkedAutomotive) {
+      _speaker = null;
+      return;
+    }
+    _tts = tts ?? FlutterTts();
     final relaySpeaker = FlutterVoiceReplySpeaker(_tts);
     final direct = speaker == null && directSpeakerFactory != null
         ? directSpeakerFactory(relaySpeaker)
@@ -59,7 +64,7 @@ class NgReadAloud extends ChangeNotifier {
     }
   }
 
-  final FlutterTts _tts;
+  late final FlutterTts _tts;
   final BargeInMonitor Function() _bargeInMonitor;
   final Future<SharedPreferences> Function() _prefs;
   final bool _android;
@@ -103,7 +108,7 @@ class NgReadAloud extends ChangeNotifier {
   /// reply first. Empty text is a no-op.
   Future<void> read(String key, String text) async {
     final spoken = text.trim();
-    if (spoken.isEmpty || _disposed) return;
+    if (isParkedAutomotive || spoken.isEmpty || _disposed) return;
     final intent = await _claim(key);
     if (intent == null || _disposed) return;
     BargeInMonitor? monitor;
@@ -162,6 +167,7 @@ class NgReadAloud extends ChangeNotifier {
 
   /// Stops playback and clears the reading state.
   Future<void> stop() async {
+    if (isParkedAutomotive) return;
     _generation++;
     final had = _readingKey;
     _readingKey = null;
@@ -267,7 +273,11 @@ class NgReadAloud extends ChangeNotifier {
     final speaker = _speaker;
     final owned = _ownedDirect;
     _ownedDirect = null;
-    final stopping = speaker != null ? speaker.stop() : _tts.stop();
+    final stopping = isParkedAutomotive
+        ? Future<void>.value()
+        : speaker != null
+        ? speaker.stop()
+        : _tts.stop();
     unawaited(
       stopping.catchError((Object _) {}).whenComplete(() => owned?.dispose()),
     );

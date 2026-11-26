@@ -31,6 +31,7 @@ import 'scheduled_page.dart';
 import 'sessions_sidebar.dart';
 import 'widgets.dart';
 import 'settings_page.dart';
+import 'slash_suggestions.dart';
 import '../nextgen_l10n.dart';
 import '../../core/desktop/desktop_integration.dart';
 import '../../core/desktop/quick_entry.dart';
@@ -979,7 +980,8 @@ class _NgMainPageState extends State<_NgMainContent>
       // Back dismisses the open sidebar; it must not leave the app. The
       // drawer's local-history entry is cleared by the close animation.
       scaffold.closeDrawer();
-    } else {
+    } else if (!NgSlashSuggestions.dismissForBack()) {
+      // (An open `/` suggestions box takes Back first.)
       scaffold.openDrawer();
     }
   }

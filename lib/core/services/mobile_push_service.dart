@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../l10n/service_strings.dart';
+import '../parked_automotive.dart';
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 import 'mobile_push_api.dart';
@@ -48,8 +49,9 @@ class MobilePushService extends ChangeNotifier with WidgetsBindingObserver {
        _clientFactory = clientFactory ?? _dashboard,
        _providedStrings = strings,
        supported =
-           supported ??
-           (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+           !isParkedAutomotive &&
+           (supported ??
+               (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)) {
     status = _strings.off;
   }
   static const channelName = 'com.hermesagent.hermes_android/mobile_push';

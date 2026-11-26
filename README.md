@@ -25,12 +25,12 @@
 
 [![Ares 4.0.0 showcase: Classic and NextGen](docs/video/ares-4.0-poster.png)](docs/video/ares-4.0-showcase.mp4)
 
-**[Watch the 80 second showcase](docs/video/ares-4.0-showcase.mp4).** No voiceover. The score is original synthwave written for this film. It was recorded on the production-signed [4.0.0-rc.7](https://github.com/rusty4444/hermes-android/releases/tag/v4.0.0-rc.7) build during the candidate cycle, with illustrative fixture chats. **4.0.15** is the latest stable release. NextGen adapts the [Kyllene](https://github.com/Giton22/kyllene) design by Giton22 (MIT).
+**[Watch the 80 second showcase](docs/video/ares-4.0-showcase.mp4).** No voiceover. The score is original synthwave written for this film. It was recorded on the production-signed [4.0.0-rc.7](https://github.com/rusty4444/hermes-android/releases/tag/v4.0.0-rc.7) build during the candidate cycle, with illustrative fixture chats. **4.0.17** is the latest stable release. NextGen adapts the [Kyllene](https://github.com/Giton22/kyllene) design by Giton22 (MIT).
 
-# Ares - formerly Hermes Android v4.0.15
+# Ares - formerly Hermes Android v4.0.18
 
 > **Hermes Android is now Ares.** In 4.0.0 the app is called "Ares - formerly
-> Hermes Android", and the launcher label is Ares. **4.0.15** is the latest
+> Hermes Android", and the launcher label is Ares. **4.0.18** is the latest
 > stable release. The package
 > `com.hermesagent.hermes_android` and the signing key are unchanged, so the
 > update installs over the existing app. It still connects to
@@ -98,20 +98,19 @@ Emulator captures of production-signed **4.0.0-rc.7** (version code 30432). Clas
 
 ## Current release
 
-**4.0.15** (base build **3071**) is the latest stable release. Its ABI splits are
-`30711`, `30712` and `30713`, each above the highest published 4.0.14
-split (`30703`). The production package and signer are unchanged. Install over
-the existing app; do not uninstall or clear app data. 4.0.15 adds NextGen
-projects, slash commands that highlight, explain and run, and stops repeat
-alerts for questions answered on another device.
+**4.0.18** (base build **3074**) is the latest stable release. Its ABI splits are
+`30741`, `30742` and `30743`, each above the highest published 4.0.17
+split (`30733`). The production package and signer are unchanged. Install over
+the existing app; do not uninstall or clear app data. 4.0.18 removes the
+in-app update check and APK installer: updates come from your store.
 
 | Download | Device | Version code |
 | --- | --- | --- |
-| [ARM64 APK](https://github.com/rusty4444/ares/releases/download/v4.0.15/app-arm64-v8a-release.apk) | Most current Android phones/tablets | `30712` |
-| [ARMv7 APK](https://github.com/rusty4444/ares/releases/download/v4.0.15/app-armeabi-v7a-release.apk) | Older 32-bit ARM devices | `30711` |
-| [x86_64 APK](https://github.com/rusty4444/ares/releases/download/v4.0.15/app-x86_64-release.apk) | x86_64 Android devices/emulators | `30713` |
+| [ARM64 APK](https://github.com/rusty4444/ares/releases/download/v4.0.18/app-arm64-v8a-release.apk) | Most current Android phones/tablets | `30742` |
+| [ARMv7 APK](https://github.com/rusty4444/ares/releases/download/v4.0.18/app-armeabi-v7a-release.apk) | Older 32-bit ARM devices | `30741` |
+| [x86_64 APK](https://github.com/rusty4444/ares/releases/download/v4.0.18/app-x86_64-release.apk) | x86_64 Android devices/emulators | `30743` |
 
-[Release and checksums](https://github.com/rusty4444/ares/releases/tag/v4.0.15) · [4.0.15 release notes](docs/releases/4.0.15.md) · [Full changelog](CHANGELOG.md)
+[Release and checksums](https://github.com/rusty4444/ares/releases/tag/v4.0.18) · [4.0.18 release notes](docs/releases/4.0.18.md) · [Full changelog](CHANGELOG.md)
 
 Debug builds use the separate `com.hermesagent.hermes_android.dev` package and Android debug certificate. Older production APKs have lower version codes; downgrading can require uninstalling and restoring a backup.
 
@@ -122,11 +121,11 @@ Debug builds use the separate `com.hermesagent.hermes_android.dev` package and A
 - Assets is partial discovery of shared files, not a complete attachment or filesystem catalogue. Classic downloads are limited to 25 MiB per file. NextGen Save and Share stream delivered files up to 1 GiB; previews retain the 25 MiB budget.
 - Protect encrypted backups and their passwords. Backups can contain connection secrets and imported client private keys. See the [upgrade notes and compatibility limits](docs/releases/3.0.3.md#compatibility-and-delivery-limits).
 
-### Update checks
+### Updates
 
-The app checks GitHub Releases on ordinary launches. An answered check limits requests to once every 12 hours; offline attempts may retry on the next launch. On supported Android installs, **Update now** downloads the matching official APK, verifies its SHA-256, package, signing certificate and version, and opens the Android installer. You may need to allow Hermes to install apps and confirm the update; after granting permission, return to the app and tap **Install update**. Android may offer **Open** after installation. The original **View release** link remains available when an in-app update cannot be used. **Later** asks again on the next launch; **Skip this version** stays quiet until another version appears. Shares and Quick Chat shortcuts are not interrupted. In **Settings → About**, use **Check for updates** or disable **Check for updates on launch**. Backups include these choices, not HTTP response caches.
+Ares does not check for updates and cannot install them. Update through the store you installed it from (Google Play or F-Droid), or download the APK for your device from the [GitHub releases page](https://github.com/rusty4444/ares/releases) and install it over the existing app. Builds up to 4.0.17 not installed from Google Play checked GitHub Releases on launch and could download and install an update; later versions have no update check, no installer and no Android permission to install packages. A GitHub APK installs over an existing copy only when that copy also came from GitHub releases: other channels may sign with a different key.
 
-In-app installation is for the official GitHub APK distribution; other distribution channels may use different signing keys or update policies. A local debug build cannot update the production package. The separate Play AAB is built with `ARES_PLAY_BUILD=true` and `--dart-define=ARES_PLAY_BUILD=true`: it removes the GitHub install permission, provider, update checks and prompts, and uses Play-managed updates. Both distributions link the [privacy policy](PRIVACY.md) and provide an AI-output report action.
+The separate Play AAB is built with `ARES_PLAY_BUILD=true` and `--dart-define=ARES_PLAY_BUILD=true`. Every distribution links the [privacy policy](PRIVACY.md) and provides an AI-output report action.
 
 ## Background notifications: server setup required
 
@@ -321,54 +320,47 @@ sanitized implementation and validation record.
 - **Provider filters and code controls.** The NextGen model picker has
   tap-to-filter provider chips and readable dark-mode labels. Fenced code blocks
   in Classic and NextGen offer copy and line-wrap controls.
-- **Play distribution and safety.** A separate Play AAB removes the GitHub
-  self-updater and uses Play-managed updates. Both builds link the
-  [privacy policy](PRIVACY.md), and assistant replies offer **Report AI output**.
+- **Play distribution and safety.** A separate Play AAB is published on Google
+  Play. Both builds link the [privacy policy](PRIVACY.md), and assistant replies
+  offer **Report AI output**.
 
 NextGen adapts [Kyllene](https://github.com/Giton22/kyllene) by Giton22 (MIT).
 See [4.0.0 release notes](docs/releases/4.0.0.md).
 
-## What's new in v4.0.15
+## What's new in v4.0.18
 
-- **Projects in NextGen (#304).** More → Projects browses the selected
-  profile's projects, opens their chats and starts new chats in a project's
-  folder. A new chat's greeting also lets you choose the project it starts
-  in, as Kyllene does.
-- **Slash commands highlight, explain and run.** A typed command is
-  highlighted in both composers; tap it for a small card with its description
-  and usage. NextGen now runs commands through the gateway like Classic
-  (#303, contributed by @Thaeland, with refused commands no longer leaking
-  into the chat as prose).
-- **No repeat alerts after answering elsewhere.** A question or approval
-  answered on another device no longer re-notifies or keeps its yellow
-  highlight.
-- **Desktop composer.** On wide Windows and macOS windows the NextGen mic and
-  send buttons sit at the right edge again.
-- **NextGen chat list** hides one-shot, subagent, kanban and tool runs (#362).
-- **Stop and Steer on current gateways** target the running turn, and NextGen
-  catches up after the app returns from the background (#84).
-- **Android Auto replies (#356, contributed by @davidKooreman).** Finished
-  replies appear as car-ready conversations you can answer or mark read.
+- **No in-app updater (#379).** Ares no longer checks GitHub for a newer
+  version, prompts on launch, or downloads and installs an APK. Update through
+  the store you installed it from, or from the
+  [releases page](https://github.com/rusty4444/ares/releases). The Android
+  permission to install packages is gone, and the update controls have left
+  **Settings → About**.
 
-See [4.0.15 release notes](docs/releases/4.0.15.md).
+See [4.0.18 release notes](docs/releases/4.0.18.md).
 
-## What's new in v4.0.14
+## What's new in v4.0.17
 
-- **German copy in the NextGen interface is fixed (#359).** The German
-  catalogue had carried Spanish wording through the NextGen screens; the
-  German translation now carries real German copy with regression tests.
+- **Parked Android Automotive preview (#376).** Isolated packaging for the
+  Android Automotive target under the existing Ares application id, with
+  driver-display checks, text-first preview handling across media and update
+  boundaries, and CI-verified Play-bundle checks. The phone release package
+  and the Play listing are unchanged; the preview is parked and not published
+  to either Play track.
 
-See [4.0.14 release notes](docs/releases/4.0.14.md).
+See [4.0.17 release notes](docs/releases/4.0.17.md).
 
-## What's new in v4.0.13
+## What's new in v4.0.16
 
-- **Change the default and fallback models from NextGen (#357).** The Models
-  page can now set the default model, a fallback or a helper-task model to any
-  provider the gateway lists by name, named endpoints and provider plugins
-  included, and tapping a fallback row gives it another model. A default whose
-  address would be lost by switching stays read-only.
+- **Chat menu with a mouse (#373).** In NextGen, right-click a chat, or use
+  the ⋯ button that appears on hover, to pin, unpin, rename, archive or delete
+  it. Shift+F10 opens the menu from the keyboard. Long-press on Android is
+  unchanged.
+- **Suggested commands (#374).** Typing `/` in the NextGen composer opens a box
+  of matching commands with short descriptions, filtered as you type, like
+  Hermes desktop. Pick one with a tap, click, or the arrow keys and Enter or
+  Tab.
 
-See [4.0.13 release notes](docs/releases/4.0.13.md).
+See [4.0.16 release notes](docs/releases/4.0.16.md).
 
 ## Features
 
@@ -884,10 +876,9 @@ compact re-homes the inline chat as a full-screen route.
   microphone, speech recognition, camera and photo library (iOS/macOS), plus
   local-network access for gateway connections.
 - **Android-only features are hidden, not broken:** the foreground/background
-  work service, battery-optimisation prompts, embedded FCM push bridge, APK
-  self-update and the Android hands-free wake-word service do not apply to
-  Apple platforms and are omitted there. Android behaviour and tests are
-  unchanged.
+  work service, battery-optimisation prompts, embedded FCM push bridge and the
+  Android hands-free wake-word service do not apply to Apple platforms and are
+  omitted there. The in-app GitHub updater is removed on every platform.
 - **Known limitations:** background execution follows iOS/macOS rules (no
   Android-style foreground service), so a backgrounded turn is reported via
   local notifications rather than a persistent socket. `image_picker` camera
@@ -951,14 +942,9 @@ flutter build windows --release
 
 The app is written to `build\windows\x64\runner\Release`.
 
-That build asks GitHub at launch whether a newer release exists, as the
-Android build from GitHub does. A Microsoft Store package must not: the Store
-delivers its updates, and the GitHub releases carry no Windows download. Build
-the Store package with the check compiled out:
-
-```powershell
-flutter build windows --release --dart-define=ARES_PLAY_BUILD=true
-```
+Windows builds do not check GitHub for updates. Update through the Microsoft
+Store for Store installs, or use the releases page for manually installed
+builds. No platform includes an in-app update check or APK installer.
 
 ### Test
 
@@ -1050,7 +1036,7 @@ cp build/app/outputs/flutter-apk/app-*-release.apk release-apks/
 block in `android/app/build.gradle.kts` derives per-ABI codes as
 `base * 10 + ABI code` (armeabi-v7a = 1, arm64-v8a = 2, x86_64 = 3), so the
 codes stay ordered armeabi-v7a < arm64-v8a < x86_64 as fdroiddata requires.
-For v4.0.15, base `3071` produces codes `30711`/`30712`/`30713`.
+For v4.0.18, base `3074` produces codes `30741`/`30742`/`30743`.
 Before publication, CI verifies all three actual APKs: package, version, ABI,
 effective code, production signer and required licence/source assets. Releases
 include checksums and exact-commit source/relink materials. Release-floor checks
@@ -1064,7 +1050,7 @@ ARES_PLAY_BUILD=true flutter build appbundle --release --no-pub \
 ```
 
 The Play bundle is `build/app/outputs/bundle/release/app-release.aab`. CI verifies
-its package, base version code, target API, removed updater permission/provider
+its package, base version code, target API, absent package-install permission
 and production upload signer, then uploads it as the `ares-play-app-bundle`
 workflow artifact. It is not added to the GitHub APK release asset set.
 

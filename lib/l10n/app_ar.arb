@@ -1008,21 +1008,6 @@
     }
   },
   "could_not_save_chat_spaces": "تعذّر حفظ مساحات المحادثات على هذا الجهاز",
-  "update_available": "يتوفر تحديث",
-  "update_now": "تحديث الآن",
-  "update_install": "تثبيت التحديث",
-  "update_downloading": "جارٍ تنزيل التحديث والتحقق منه…",
-  "update_allow_install": "اسمح لتطبيق Hermes بتثبيت هذا التحديث، ثم عُد إلى هنا واضغط على «تثبيت التحديث».",
-  "update_failed": "تعذّر تنزيل التحديث أو التحقق منه أو فتحه. حاول مجددًا أو راجع صفحة الإصدار.",
-  "a_newer_hermes_android_build_is_available_on_github": "يتوفر إصدار أحدث من Ares على GitHub.",
-  "release_notes": "ملاحظات الإصدار",
-  "view_release": "عرض الإصدار",
-  "skip_this_version": "تخطّي هذا الإصدار",
-  "later": "لاحقًا",
-  "check_for_updates": "التحقق من وجود تحديثات",
-  "check_for_updates_on_launch": "التحقق من وجود تحديثات عند بدء التشغيل",
-  "you_re_on_the_latest_version": "أنت تستخدم أحدث إصدار.",
-  "couldn_t_check_for_updates": "تعذّر التحقق من وجود تحديثات.",
   "chat_density": "كثافة عرض المحادثة",
   "chat_density_2": "كثافة عرض المحادثة: {label}",
   "chat_density_comfortable": "مريح",
@@ -8225,5 +8210,9 @@
   "fleet_managed_ssh_verify": "التحقق من المفتاح بنفسك بدلًا من ذلك",
   "fleet_managed_ssh_pending": "في انتظار البوابة: {seconds} ث. مغادرة هذه الصفحة لا تلغي التهيئة. إذا فشل الطلب، فتحقق من الحالة قبل إعادة المحاولة.",
   "fleet_managed_ssh_status": "المضيف: {host}\nمنفذ الاسترجاع المحلي للبوابة: {localPort}\nمنفذ الاسترجاع المحلي البعيد: {remotePort}\nHermes: {version}\nأُعيد استخدامه: {reused}",
-  "fleet_managed_ssh_disconnect": "قطع الاتصال"
+  "fleet_managed_ssh_disconnect": "قطع الاتصال",
+  "ng_slash_suggestions_loading": "جارٍ تحميل الأوامر…",
+  "ng_slash_suggestions_empty": "لا توجد أوامر مطابقة",
+  "ng_slash_suggestions_label": "اقتراحات الأوامر",
+  "ng_slash_suggestions_skill": "مهارة"
 }

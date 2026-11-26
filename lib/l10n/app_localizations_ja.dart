@@ -3200,54 +3200,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get could_not_save_chat_spaces => 'この端末でチャットスペースを保存できませんでした';
 
   @override
-  String get update_available => '更新があります';
-
-  @override
-  String get update_now => 'Update now';
-
-  @override
-  String get update_install => 'Install update';
-
-  @override
-  String get update_downloading => 'Downloading and verifying update…';
-
-  @override
-  String get update_allow_install =>
-      'Allow Hermes to install this update, then return here and tap Install update.';
-
-  @override
-  String get update_failed =>
-      'The update could not be downloaded, verified, or opened. Try again or view the release page.';
-
-  @override
-  String get a_newer_hermes_android_build_is_available_on_github =>
-      'GitHub で新しい Ares ビルドが公開されています。';
-
-  @override
-  String get release_notes => 'リリースノート';
-
-  @override
-  String get view_release => 'リリースを見る';
-
-  @override
-  String get skip_this_version => 'このバージョンをスキップ';
-
-  @override
-  String get later => 'あとで';
-
-  @override
-  String get check_for_updates => 'アップデートを確認';
-
-  @override
-  String get check_for_updates_on_launch => '起動時にアップデートを確認';
-
-  @override
-  String get you_re_on_the_latest_version => 'すでに最新バージョンです。';
-
-  @override
-  String get couldn_t_check_for_updates => 'アップデートを確認できませんでした。';
-
-  @override
   String get chat_density => 'チャットの密度';
 
   @override
@@ -15105,4 +15057,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get fleet_managed_ssh_disconnect => '切断';
+
+  @override
+  String get ng_slash_suggestions_loading => 'コマンドを読み込み中…';
+
+  @override
+  String get ng_slash_suggestions_empty => '一致するコマンドはありません';
+
+  @override
+  String get ng_slash_suggestions_label => 'コマンドの候補';
+
+  @override
+  String get ng_slash_suggestions_skill => 'スキル';
 }

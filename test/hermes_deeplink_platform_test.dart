@@ -256,7 +256,6 @@ void main() {
               ),
             ],
             turnSignalsLoader: (_) async => HomeTurnSignals.empty,
-            installedVersionLoader: () async => null,
             testChatApiClientFactory: () => ApiClient(
               baseUrl: 'http://offline.test:8642',
               apiKey: 'fixture',

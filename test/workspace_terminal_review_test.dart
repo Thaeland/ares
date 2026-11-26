@@ -283,7 +283,6 @@ void main() {
             testChatApiClientFactory: fixture.api,
             testDashboardHttpClient: fixture.client(),
             turnSignalsLoader: (_) async => HomeTurnSignals.empty,
-            installedVersionLoader: () async => null,
           ),
         ),
       );
