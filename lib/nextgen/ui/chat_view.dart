@@ -16,6 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/parked_automotive.dart';
 import '../../core/models/attachment_draft.dart';
 import '../../core/preview/chat_preview.dart';
 import '../../core/render/render_scope.dart';
@@ -101,6 +102,7 @@ import 'session_dock.dart';
 import 'sessions_sidebar.dart';
 import 'slash_command_info.dart';
 import 'brand.dart';
+import 'slash_suggestions.dart';
 import 'widgets.dart';
 import '../nextgen_l10n.dart';
 import '../../core/services/android_share_intent_service.dart';
@@ -344,6 +346,10 @@ class _NgChatViewState extends State<NgChatView>
   /// The composer's command catalogue: it decides both the highlight and
   /// whether a sent `/command` runs on the gateway.
   final _slashCatalog = NgSlashCatalog();
+
+  /// Whether the `/` suggestions box is showing (it keeps the command info
+  /// card away).
+  bool _suggestionsOpen = false;
   final _focus = FocusNode();
   final _reader = GlobalKey<TranscriptReaderState>();
   final _scroll = ScrollController();
@@ -2169,6 +2175,7 @@ class _NgChatViewState extends State<NgChatView>
   }
 
   Future<void> _toggleDictation() async {
+    if (isParkedAutomotive) return;
     if (_listening) {
       await _voice?.stop();
       setState(() => _listening = false);
@@ -2692,7 +2699,12 @@ class _NgChatViewState extends State<NgChatView>
       // Commands run here now, so the card no longer says they are sent as
       // a message.
       showsSentAsMessageNote: false,
-      child: _composer(c, state),
+      suppressed: _suggestionsOpen,
+      child: NgSlashSuggestions(
+        chat: chat, controller: _input, focusNode: _focus, catalog: _slashCatalog,
+        onOpenChanged: (open) { if (mounted) setState(() => _suggestionsOpen = open); },
+        child: _composer(c, state),
+      ),
     );
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -3579,7 +3591,7 @@ class _NgChatViewState extends State<NgChatView>
                           onPressed: canSend ? _send : null,
                         ),
                     ] else ...[
-                      IconButton(
+                      if (!isParkedAutomotive) IconButton(
                         tooltip: _listening
                             ? ngL.ng_stop_dictation
                             : ngL.ng_dictate,
@@ -4487,7 +4499,7 @@ class _AssistantBlockState extends State<_AssistantBlock> {
                         ngToast(context, ngL.ng_copied);
                       },
                     ),
-                    _ActionIcon(
+                    if (!isParkedAutomotive) _ActionIcon(
                       icon: reading
                           ? Icons.stop_circle_outlined
                           : Icons.volume_up_outlined,

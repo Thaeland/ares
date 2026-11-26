@@ -12157,4 +12157,16 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'Шлюз не может сохранять скрытые файлы.';
+
+  @override
+  String get ng_slash_suggestions_loading => 'Загрузка команд…';
+
+  @override
+  String get ng_slash_suggestions_empty => 'Нет подходящих команд';
+
+  @override
+  String get ng_slash_suggestions_label => 'Предлагаемые команды';
+
+  @override
+  String get ng_slash_suggestions_skill => 'Навык';
 }

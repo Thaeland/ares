@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../../core/parked_automotive.dart';
 import '../../core/models/connection.dart';
 import '../../core/screens/settings_screen.dart';
 import '../../core/presentation/presentation_settings.dart';
@@ -390,8 +391,10 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                 ],
               ),
             ),
-            NgSectionLabel(ngL.ng_notifications),
-            const NgNotificationSettings(),
+            if (!isParkedAutomotive) ...[
+              NgSectionLabel(ngL.ng_notifications),
+              const NgNotificationSettings(),
+            ],
             NgSectionLabel(ngL.ng_interface),
             NgCard(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -408,8 +411,9 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                   NgRow(
                     icon: Icons.tune,
                     title: ngL.ng_more_settings,
-                    subtitle:
-                        ngL.ng_voice_notifications_language_backups_and_the,
+                    subtitle: isParkedAutomotive
+                        ? null
+                        : ngL.ng_voice_notifications_language_backups_and_the,
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (_) => SettingsScreen(connection: conn),

@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
+import '../parked_automotive.dart';
 import '../widgets/session_name_dialog.dart';
 import '../widgets/rewind_dialogs.dart';
 import '../history/canonical_rewind.dart'
@@ -1229,9 +1230,10 @@ class _ChatScreenState extends State<ChatScreen>
   Duration _followupTimeout = const Duration(seconds: 10);
   _HandsFreeTurnBinding? _voiceTurn;
   bool get _handsFreeSupported =>
-      widget.testHandsFreePlatform != null ||
-      (!kIsWeb && defaultTargetPlatform == TargetPlatform.android);
-  bool _voiceReplyEnabled = true;
+      !isParkedAutomotive &&
+      (widget.testHandsFreePlatform != null ||
+          (!kIsWeb && defaultTargetPlatform == TargetPlatform.android));
+  bool _voiceReplyEnabled = !isParkedAutomotive;
   bool _voicePlaybackConfigured = false;
   bool _awaitingVoiceReply = false;
   String? _voiceStatus;
@@ -3954,7 +3956,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _startHandsFree() async {
-    if (!handsFreeEnabled.value) return;
+    if (!handsFreeEnabled.value || !_handsFreeSupported) return;
     final authority = _captureVoiceAuthority();
     if (!_canStartHandsFree(authority)) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -4084,6 +4086,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _initVoice({bool requestSpeechPermission = false}) async {
+    if (isParkedAutomotive) return;
     // Also called from initState, before inherited lookups are safe.
     final l10n = serviceStrings;
     try {
@@ -4147,6 +4150,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _startVoiceInput() async {
+    if (isParkedAutomotive) return;
     final intent = ++_manualAudioIntent;
     if (_streaming ||
         _sending ||
@@ -4232,6 +4236,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _readAssistantText(String text, {bool announce = false}) async {
+    if (isParkedAutomotive) return;
     final intent = ++_manualAudioIntent;
     final spokenText = text.trim();
     if (spokenText.isEmpty) return;
@@ -6452,6 +6457,7 @@ class _ChatScreenState extends State<ChatScreen>
 
   /// Send message via SSE streaming (Gateway API Server).
   Future<void> _startRecordedVoice() async {
+    if (isParkedAutomotive) return;
     final authority = _captureVoiceAuthority();
     if (!_isVoiceAuthorityCurrent(authority) || _sending || _streaming) return;
     try {
@@ -10608,19 +10614,20 @@ class _ChatScreenState extends State<ChatScreen>
                 }
               },
               itemBuilder: (_) => [
-                PopupMenuItem(
-                  value: 'record-voice',
-                  enabled:
-                      !_voiceComposer.listening &&
-                      !_voiceRecording.busy &&
-                      !_voiceRecording.recording &&
-                      !_voiceRecording.hasDraft &&
-                      !_pendingReattachResync,
-                  child: ListTile(
-                    leading: const Icon(Icons.mic),
-                    title: Text(context.l10n.voice_recording_start),
+                if (!isParkedAutomotive)
+                  PopupMenuItem(
+                    value: 'record-voice',
+                    enabled:
+                        !_voiceComposer.listening &&
+                        !_voiceRecording.busy &&
+                        !_voiceRecording.recording &&
+                        !_voiceRecording.hasDraft &&
+                        !_pendingReattachResync,
+                    child: ListTile(
+                      leading: const Icon(Icons.mic),
+                      title: Text(context.l10n.voice_recording_start),
+                    ),
                   ),
-                ),
                 PopupMenuItem(
                   value: 'rename',
                   enabled: _canRename,
@@ -10956,10 +10963,10 @@ class _ChatScreenState extends State<ChatScreen>
                         onAnswer: (result) =>
                             _answerSetupBeat(_setupBeat!, result),
                       ),
-                    if (_voiceRecording.recording ||
+                    if (!isParkedAutomotive && (_voiceRecording.recording ||
                         _voiceRecording.hasDraft ||
                         _voiceRecording.busy ||
-                        _voiceRecording.error != null)
+                        _voiceRecording.error != null))
                       VoiceRecordingControls(
                         controller: _voiceRecording,
                         canSend:
@@ -11403,7 +11410,7 @@ class _ChatScreenState extends State<ChatScreen>
                             context,
                           )?.showSnackBar(SnackBar(content: Text(msg))),
                         ),
-                      if (!_voiceComposer.listening &&
+                      if (!isParkedAutomotive && !_voiceComposer.listening &&
                           !_streaming &&
                           _liveEngine?.active != true)
                         VoiceComposerStartButton(
@@ -11416,7 +11423,7 @@ class _ChatScreenState extends State<ChatScreen>
                               !_pendingReattachResync,
                           onPressed: _startVoiceInput,
                         ),
-                      Semantics(
+                      if (!isParkedAutomotive) Semantics(
                         label: context.l10n.spoken_replies,
                         value: _voiceReplyEnabled
                             ? context.l10n.on
@@ -12075,7 +12082,7 @@ class _ChatScreenState extends State<ChatScreen>
       mediaFilesClient: isUser ? null : _newMediaFilesClient,
       readWidgetHtml: _readWidgetHtml,
       onWidgetIntent: _deliverWidgetIntent,
-      onReadAloud: isUser
+      onReadAloud: isUser || isParkedAutomotive
           ? null
           : () => _readAssistantText(content, announce: true),
       // Where the transport truncates, Edit rewinds to this turn (Desktop's

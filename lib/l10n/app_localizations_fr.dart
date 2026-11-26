@@ -12196,4 +12196,16 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'La passerelle ne peut pas enregistrer les fichiers masqués.';
+
+  @override
+  String get ng_slash_suggestions_loading => 'Chargement des commandes…';
+
+  @override
+  String get ng_slash_suggestions_empty => 'Aucune commande correspondante';
+
+  @override
+  String get ng_slash_suggestions_label => 'Suggestions de commandes';
+
+  @override
+  String get ng_slash_suggestions_skill => 'Compétence';
 }

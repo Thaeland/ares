@@ -11498,6 +11498,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get release_core_file_save_hidden => '网关无法保存隐藏文件。';
+
+  @override
+  String get ng_slash_suggestions_loading => '正在加载命令…';
+
+  @override
+  String get ng_slash_suggestions_empty => '没有匹配的命令';
+
+  @override
+  String get ng_slash_suggestions_label => '命令建议';
+
+  @override
+  String get ng_slash_suggestions_skill => '技能';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -22994,6 +23006,18 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get release_core_file_save_hidden => '网关无法保存隐藏文件。';
+
+  @override
+  String get ng_slash_suggestions_loading => '正在加载命令…';
+
+  @override
+  String get ng_slash_suggestions_empty => '没有匹配的命令';
+
+  @override
+  String get ng_slash_suggestions_label => '命令建议';
+
+  @override
+  String get ng_slash_suggestions_skill => '技能';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).

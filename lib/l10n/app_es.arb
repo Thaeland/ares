@@ -1,5 +1,4 @@
 {
-  "@@locale": "es",
   "workspace_workers": "Subagentes activos",
   "workers_unattached": "Solo se muestran cantidades. Para dirigir un subagente, elige Subagentes activos en el chat principal conectado.",
   "slash_local_arguments": "Este atajo no admite argumentos aquí. Usa los controles de la aplicación; se conservó tu borrador.",
@@ -49,6 +48,7 @@
   "background_report_issues": "Se notificaron problemas; expande para ver los detalles.",
   "background_report_expand": "Expandir informe",
   "background_report_collapse": "Contraer informe",
+  "@@locale": "es",
   "ng_brand_open_chat": "Abrir un chat",
   "ng_brand_recent": "Recientes",
   "ng_brand_sidebar_hint": "o elige un chat de la barra lateral",
@@ -1107,6 +1107,8 @@
   "provider_oauth_checking_account": "Autorización recibida. Comprobando la cuenta del servidor…",
   "provider_oauth_verification_unavailable": "Autorización recibida; no se puede verificar la cuenta. Abre Uso para actualizar el uso de la cuenta.",
   "provider_oauth_verified_account": "Sesión iniciada en el servidor Hermes como {email}. Abre Uso para actualizar el uso de la cuenta.",
+  "provider_oauth_credentials_unverified": "El servidor informa que hay credenciales disponibles; la identidad de la cuenta no está verificada.",
+  "provider_oauth_account_status_unknown": "Estado de la cuenta del servidor no disponible.",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1114,8 +1116,6 @@
       }
     }
   },
-  "provider_oauth_credentials_unverified": "El servidor informa que hay credenciales disponibles; la identidad de la cuenta no está verificada.",
-  "provider_oauth_account_status_unknown": "Estado de la cuenta del servidor no disponible.",
   "app_language": "Idioma de la aplicación",
   "app_language_system": "El del teléfono",
   "auto_archives_after_72_hours": "Se archiva automáticamente tras 72 horas",
@@ -1382,6 +1382,7 @@
   "ng_project_home": "Inicio",
   "ng_choose_project": "Elegir un proyecto",
   "ng_project_cwd_fallback": "La carpeta del proyecto no estaba disponible, así que este chat se ejecuta en {path}.",
+  "ng_project_create_uncertain": "Es posible que la pasarela haya creado este chat, pero no lo confirmó. Revisa los chats antes de iniciar otro; esta solicitud no se reintentará automáticamente.",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1389,7 +1390,6 @@
       }
     }
   },
-  "ng_project_create_uncertain": "Es posible que la pasarela haya creado este chat, pero no lo confirmó. Revisa los chats antes de iniciar otro; esta solicitud no se reintentará automáticamente.",
   "ng_what_should_we_work_on": "¿En qué trabajamos?",
   "ng_ask_hermes_anything_it_can_run": "Pregúntale lo que quieras a Hermes. Puede usar herramientas, navegar y trabajar con tus archivos en el servidor.",
   "ng_working_2": "En curso · {frame}",
@@ -3314,5 +3314,9 @@
   "release_misc_gateway_unreachable": "No se puede acceder al endpoint {endpoint} de la pasarela.",
   "release_core_schedule_invalid_delivery_target": "Destino de entrega no válido",
   "release_core_file_save_direct_only": "Solo se puede guardar un archivo situado directamente en el directorio de trabajo.",
-  "release_core_file_save_hidden": "La puerta de enlace no puede guardar archivos ocultos."
+  "release_core_file_save_hidden": "La puerta de enlace no puede guardar archivos ocultos.",
+  "ng_slash_suggestions_loading": "Cargando comandos…",
+  "ng_slash_suggestions_empty": "No hay comandos que coincidan",
+  "ng_slash_suggestions_label": "Sugerencias de comandos",
+  "ng_slash_suggestions_skill": "Habilidad"
 }

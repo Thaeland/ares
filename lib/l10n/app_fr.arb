@@ -1,5 +1,4 @@
 {
-  "@@locale": "fr",
   "workspace_workers": "Sous-agents actifs",
   "workers_unattached": "Seul le nombre est affiché. Pour guider un sous-agent, choisissez Sous-agents actifs dans la conversation parente connectée.",
   "slash_local_arguments": "Ce raccourci n’accepte pas d’arguments ici. Utilisez les commandes de l’application ; votre brouillon a été conservé.",
@@ -49,6 +48,7 @@
   "background_report_issues": "Des problèmes ont été signalés — développez pour les détails.",
   "background_report_expand": "Développer le rapport",
   "background_report_collapse": "Réduire le rapport",
+  "@@locale": "fr",
   "ng_brand_open_chat": "Ouvrir un chat",
   "ng_brand_recent": "Récents",
   "ng_brand_sidebar_hint": "ou choisissez un chat dans la barre latérale",
@@ -1107,6 +1107,8 @@
   "provider_oauth_checking_account": "Autorisation reçue. Vérification du compte sur le serveur…",
   "provider_oauth_verification_unavailable": "Autorisation reçue ; vérification du compte indisponible. Ouvrez Utilisation pour actualiser les données du compte.",
   "provider_oauth_verified_account": "Connecté sur le serveur Hermes en tant que {email}. Ouvrez Utilisation pour actualiser les données du compte.",
+  "provider_oauth_credentials_unverified": "Le serveur signale des identifiants disponibles ; l’identité du compte n’est pas vérifiée.",
+  "provider_oauth_account_status_unknown": "État du compte sur le serveur indisponible.",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1114,8 +1116,6 @@
       }
     }
   },
-  "provider_oauth_credentials_unverified": "Le serveur signale des identifiants disponibles ; l’identité du compte n’est pas vérifiée.",
-  "provider_oauth_account_status_unknown": "État du compte sur le serveur indisponible.",
   "app_language": "Langue de l’application",
   "app_language_system": "Comme le téléphone",
   "auto_archives_after_72_hours": "Archivage automatique après 72 heures",
@@ -1382,6 +1382,7 @@
   "ng_project_home": "Accueil",
   "ng_choose_project": "Choisir un projet",
   "ng_project_cwd_fallback": "Le dossier du projet n’était pas disponible ; cette conversation s’exécute donc dans {path}.",
+  "ng_project_create_uncertain": "La passerelle a peut-être créé cette conversation sans le confirmer. Vérifiez les conversations avant d’en démarrer une autre ; cette demande ne sera pas relancée automatiquement.",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1389,7 +1390,6 @@
       }
     }
   },
-  "ng_project_create_uncertain": "La passerelle a peut-être créé cette conversation sans le confirmer. Vérifiez les conversations avant d’en démarrer une autre ; cette demande ne sera pas relancée automatiquement.",
   "ng_what_should_we_work_on": "Sur quoi voulez-vous travailler ?",
   "ng_ask_hermes_anything_it_can_run": "Demandez ce que vous voulez à Hermes. Il peut utiliser des outils, naviguer sur le Web et travailler sur vos fichiers sur le serveur.",
   "ng_working_2": "En cours · {frame}",
@@ -3314,5 +3314,9 @@
   "release_misc_gateway_unreachable": "Impossible de joindre le point de terminaison de la passerelle {endpoint}.",
   "release_core_schedule_invalid_delivery_target": "Destination de livraison non valide",
   "release_core_file_save_direct_only": "Seul un fichier situé directement dans le répertoire de travail peut être enregistré.",
-  "release_core_file_save_hidden": "La passerelle ne peut pas enregistrer les fichiers masqués."
+  "release_core_file_save_hidden": "La passerelle ne peut pas enregistrer les fichiers masqués.",
+  "ng_slash_suggestions_loading": "Chargement des commandes…",
+  "ng_slash_suggestions_empty": "Aucune commande correspondante",
+  "ng_slash_suggestions_label": "Suggestions de commandes",
+  "ng_slash_suggestions_skill": "Compétence"
 }

@@ -1,5 +1,4 @@
 {
-  "@@locale": "zh_Hant",
   "workspace_workers": "即時工作者",
   "workers_unattached": "僅顯示數量。若要引導工作者，請在其所屬的上層聊天中選擇「即時工作者」。",
   "slash_local_arguments": "此處的快捷指令不支援參數。請使用應用程式中的控制項；草稿已保留。",
@@ -16,6 +15,9 @@
   "fallback_legacy_title": "舊版備用設定（唯讀）",
   "fallback_legacy_notice": "嘗試完清單中的模型後，主機還會使用 fallback_model，並略過重複的路由。即使上方清單是空的，這些舊版項目仍會保留。請在主機上編輯。",
   "fallback_priority": "優先順序 {position}",
+  "fallback_move_up": "上移",
+  "fallback_move_down": "下移",
+  "fallback_routing_read_only": "路由詳細資料或未列出的供應商已保留。請在主機上編輯此供應商／模型；此處仍可調整順序或刪除項目。",
   "@fallback_priority": {
     "placeholders": {
       "position": {
@@ -23,9 +25,6 @@
       }
     }
   },
-  "fallback_move_up": "上移",
-  "fallback_move_down": "下移",
-  "fallback_routing_read_only": "路由詳細資料或未列出的供應商已保留。請在主機上編輯此供應商／模型；此處仍可調整順序或刪除項目。",
   "cron_model_default": "使用預設設定",
   "cron_model_notice": "僅適用於此 cron 任務。未固定模型時，Hermes 先使用 cron 預設模型，再使用主模型。請在主機上管理自訂模型。",
   "model_management_unavailable": "無法載入或儲存模型設定。請重新整理後重試。",
@@ -42,13 +41,6 @@
   "portal_recorded_usage": "已記錄用量",
   "portal_all_providers": "涵蓋所選閘道設定檔中的所有供應商。記錄的費用為零，不代表模型免費。",
   "portal_period": "最近 {days} 天",
-  "@portal_period": {
-    "placeholders": {
-      "days": {
-        "type": "String"
-      }
-    }
-  },
   "portal_sessions": "工作階段",
   "portal_input": "輸入令牌",
   "portal_output": "輸出令牌",
@@ -57,12 +49,20 @@
   "portal_recorded_models": "已記錄模型",
   "portal_no_models": "沒有已記錄模型。",
   "portal_unavailable": "無法取得資料。請檢查連線、所選設定檔和閘道版本後重試。",
+  "@portal_period": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
   "paste_attachment_failed_text_kept": "無法將貼上的文字加為附件，文字已保留在訊息中。",
   "background_task_report": "背景任務",
   "background_process_report": "背景程序",
   "background_report_issues": "已報告問題，展開查看詳細資料。",
   "background_report_expand": "展開報告",
   "background_report_collapse": "收合報告",
+  "@@locale": "zh_Hant",
   "ng_brand_open_chat": "開啟聊天",
   "ng_brand_recent": "最近聊天",
   "ng_brand_sidebar_hint": "或從側邊欄選擇聊天",
@@ -78,6 +78,8 @@
   "ng_switch": "切換",
   "ng_model_confirmation_required": "選擇此模型前需要確認。",
   "ng_model_switches_next_turn": "將在下一輪切換到 {model}。",
+  "ng_model_switch_not_connected": "聊天尚未準備好切換模型。請重新開啟後再試。",
+  "ng_gateway_kept_default_model": "閘道在此聊天中保留了 {model}。請在傳送前重新選擇模型。",
   "@ng_model_switches_next_turn": {
     "placeholders": {
       "model": {
@@ -85,8 +87,6 @@
       }
     }
   },
-  "ng_model_switch_not_connected": "聊天尚未準備好切換模型。請重新開啟後再試。",
-  "ng_gateway_kept_default_model": "閘道在此聊天中保留了 {model}。請在傳送前重新選擇模型。",
   "@ng_gateway_kept_default_model": {
     "placeholders": {
       "model": {
@@ -103,23 +103,9 @@
   "hands_free_waiting": "等待 Hermes 回覆",
   "hands_free_speaking": "正在朗讀 — 麥克風已關閉",
   "hands_free_followup": "最多聆聽 {seconds} 秒",
-  "@hands_free_followup": {
-    "placeholders": {
-      "seconds": {
-        "type": "int"
-      }
-    }
-  },
   "hands_free_error": "免持已停止",
   "hands_free_setup": "免持設定",
   "hands_free_preview": "語音預覽：{transcript}",
-  "@hands_free_preview": {
-    "placeholders": {
-      "transcript": {
-        "type": "String"
-      }
-    }
-  },
   "hands_free_short_disclosure": "只有在前景開啟此聊天時才會聆聽。喚醒詞偵測不需連網，但語音功能可能會使用網路。聆聽會消耗電力。",
   "hands_free_error_action": "請檢查麥克風權限、語音服務、朗讀聲音和連線，先點選「停止」，再點選「開始」重試。先前的內容不會重新傳送。",
   "hands_free_disclosure": "喚醒詞由 CPU 離線偵測。Android 語音辨識、所選的朗讀聲音和閘道可能會使用網路。持續聆聽會耗電，也可能誤觸發。聊天畫面遭遮住、關閉或離開前景時，聆聽就會停止；重新開啟聊天也不會自動恢復。手動語音輸入的內容仍可在草稿中編輯。",
@@ -130,6 +116,20 @@
   "hands_free_followup_off": "後續聆聽已關閉 — 每次提問請說 Hey Hermes",
   "hands_free_start_blocked": "請先清空草稿、移除附件並結束手動語音操作。聊天必須已連線、沒有正在處理的回覆，且已開啟語音回覆，才能開始免持對話。",
   "hands_free_setup_complete": "麥克風設定完成。請再次點選開始。",
+  "@hands_free_followup": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "@hands_free_preview": {
+    "placeholders": {
+      "transcript": {
+        "type": "String"
+      }
+    }
+  },
   "message_time_recorded": "伺服器記錄的時間：{time}（當地時間）",
   "@message_time_recorded": {
     "placeholders": {
@@ -173,16 +173,6 @@
   "attachment_pdf_failed": "無法預覽此 PDF。請儲存或分享原始檔案。",
   "attachment_pdf_unavailable": "PDF 預覽只在 Android 上可用。你仍可儲存或分享這個檔案。",
   "attachment_pdf_page": "第 {page} 頁，共 {total} 頁",
-  "@attachment_pdf_page": {
-    "placeholders": {
-      "page": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
   "attachment_previous_page": "上一頁",
   "attachment_next_page": "下一頁",
   "attachment_loading": "正在載入預覽…",
@@ -197,6 +187,16 @@
   "attachment_video_seek": "影片進度",
   "attachment_close": "關閉預覽",
   "attachment_retry": "重試",
+  "@attachment_pdf_page": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "saved_history_heading": "已儲存的記錄",
   "received_output_heading": "已收到的輸出（尚未確認是否與已儲存的記錄相符）",
   "received_output_details": "關於已收到的輸出",
@@ -1244,6 +1244,8 @@
   "provider_oauth_checking_account": "已收到授權。正在檢查主機帳戶…",
   "provider_oauth_verification_unavailable": "已收到授權；無法驗證帳戶。請開啟用量頁面以重新整理帳戶用量。",
   "provider_oauth_verified_account": "已在 Hermes 主機上以 {email} 登入。請開啟用量頁面以重新整理帳戶用量。",
+  "provider_oauth_credentials_unverified": "主機報告驗證資訊可用；帳戶身分尚未驗證。",
+  "provider_oauth_account_status_unknown": "無法取得主機帳戶狀態。",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1251,8 +1253,6 @@
       }
     }
   },
-  "provider_oauth_credentials_unverified": "主機報告驗證資訊可用；帳戶身分尚未驗證。",
-  "provider_oauth_account_status_unknown": "無法取得主機帳戶狀態。",
   "app_language": "應用程式語言",
   "app_language_system": "與手機相同",
   "auto_archives_after_72_hours": "72 小時後自動封存",
@@ -1799,6 +1799,7 @@
   "ng_project_home": "首頁",
   "ng_choose_project": "選擇專案",
   "ng_project_cwd_fallback": "專案資料夾不可用，因此此聊天在 {path} 中執行。",
+  "ng_project_create_uncertain": "閘道可能已建立此聊天，但未確認。開始新聊天前請檢查聊天清單；此要求不會自動重試。",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1806,7 +1807,6 @@
       }
     }
   },
-  "ng_project_create_uncertain": "閘道可能已建立此聊天，但未確認。開始新聊天前請檢查聊天清單；此要求不會自動重試。",
   "ng_what_should_we_work_on": "我們要做些什麼？",
   "ng_ask_hermes_anything_it_can_run": "向 Hermes 提問。它可以執行工具、瀏覽網頁，還能處理伺服器上的檔案。",
   "ng_working_2": "正在處理 · {frame}",
@@ -2601,6 +2601,12 @@
   "ng_dock_goal_blocked": "目標受阻",
   "ng_dock_goal_done": "目標已完成",
   "ng_dock_turn_of": "第 {used}/{max} 輪",
+  "ng_dock_turn": "第 {used} 輪",
+  "ng_dock_subagents": "{count, plural, =1{1 個子代理} other{{count} 個子代理}}",
+  "ng_dock_subagents_done": "{count} 個已完成",
+  "ng_dock_tasks": "任務 {done}/{total}",
+  "ng_dock_previous_tasks": "上輪任務 {done}/{total}",
+  "ng_dock_manage": "管理",
   "@ng_dock_turn_of": {
     "placeholders": {
       "used": {
@@ -2611,7 +2617,6 @@
       }
     }
   },
-  "ng_dock_turn": "第 {used} 輪",
   "@ng_dock_turn": {
     "placeholders": {
       "used": {
@@ -2619,7 +2624,6 @@
       }
     }
   },
-  "ng_dock_subagents": "{count, plural, =1{1 個子代理} other{{count} 個子代理}}",
   "@ng_dock_subagents": {
     "placeholders": {
       "count": {
@@ -2627,7 +2631,6 @@
       }
     }
   },
-  "ng_dock_subagents_done": "{count} 個已完成",
   "@ng_dock_subagents_done": {
     "placeholders": {
       "count": {
@@ -2635,7 +2638,6 @@
       }
     }
   },
-  "ng_dock_tasks": "任務 {done}/{total}",
   "@ng_dock_tasks": {
     "placeholders": {
       "done": {
@@ -2646,7 +2648,6 @@
       }
     }
   },
-  "ng_dock_previous_tasks": "上輪任務 {done}/{total}",
   "@ng_dock_previous_tasks": {
     "placeholders": {
       "done": {
@@ -2657,7 +2658,6 @@
       }
     }
   },
-  "ng_dock_manage": "管理",
   "ng_recent_notifications": "最近通知",
   "ng_recent_notifications_hint": "Ares 嘗試發布的內容，以及 Android 是否顯示了通知",
   "ng_recent_notifications_empty": "目前還沒有。當回覆、問題或失敗會觸發通知時，相關嘗試會顯示在這裡。",

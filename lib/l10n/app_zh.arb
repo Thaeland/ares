@@ -1,5 +1,4 @@
 {
-  "@@locale": "zh",
   "workspace_workers": "运行中的子代理",
   "workers_unattached": "仅显示数量。要向子代理发送指令，请在已连接的上级对话中选择“运行中的子代理”。",
   "slash_local_arguments": "此处的快捷命令不支持参数。请使用应用中的控件；草稿已保留。",
@@ -49,6 +48,7 @@
   "background_report_issues": "已报告问题，展开查看详情。",
   "background_report_expand": "展开报告",
   "background_report_collapse": "收起报告",
+  "@@locale": "zh",
   "ng_brand_open_chat": "打开聊天",
   "ng_brand_recent": "最近聊天",
   "ng_brand_sidebar_hint": "或从侧边栏选择聊天",
@@ -1107,6 +1107,8 @@
   "provider_oauth_checking_account": "已收到授权。正在检查主机账户…",
   "provider_oauth_verification_unavailable": "已收到授权；无法验证账户。请打开用量页面以刷新账户用量。",
   "provider_oauth_verified_account": "已在 Hermes 主机上以 {email} 登录。请打开用量页面以刷新账户用量。",
+  "provider_oauth_credentials_unverified": "主机报告凭据可用；账户身份尚未验证。",
+  "provider_oauth_account_status_unknown": "无法获取主机账户状态。",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1114,8 +1116,6 @@
       }
     }
   },
-  "provider_oauth_credentials_unverified": "主机报告凭据可用；账户身份尚未验证。",
-  "provider_oauth_account_status_unknown": "无法获取主机账户状态。",
   "app_language": "应用语言",
   "app_language_system": "与手机相同",
   "auto_archives_after_72_hours": "72 小时后自动归档",
@@ -1382,6 +1382,7 @@
   "ng_project_home": "主页",
   "ng_choose_project": "选择项目",
   "ng_project_cwd_fallback": "项目文件夹不可用，因此此聊天在 {path} 中运行。",
+  "ng_project_create_uncertain": "网关可能已创建此聊天，但未确认。开始新聊天前请检查聊天列表；此请求不会自动重试。",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1389,7 +1390,6 @@
       }
     }
   },
-  "ng_project_create_uncertain": "网关可能已创建此聊天，但未确认。开始新聊天前请检查聊天列表；此请求不会自动重试。",
   "ng_what_should_we_work_on": "我们要做些什么？",
   "ng_ask_hermes_anything_it_can_run": "向 Hermes 提问。它可以运行工具、浏览网页，还能处理服务器上的文件。",
   "ng_working_2": "正在处理 · {frame}",
@@ -3314,5 +3314,9 @@
   "release_misc_gateway_unreachable": "无法连接到网关端点 {endpoint}。",
   "release_core_schedule_invalid_delivery_target": "无效的投递目标",
   "release_core_file_save_direct_only": "只能保存工作目录直属的文件。",
-  "release_core_file_save_hidden": "网关无法保存隐藏文件。"
+  "release_core_file_save_hidden": "网关无法保存隐藏文件。",
+  "ng_slash_suggestions_loading": "正在加载命令…",
+  "ng_slash_suggestions_empty": "没有匹配的命令",
+  "ng_slash_suggestions_label": "命令建议",
+  "ng_slash_suggestions_skill": "技能"
 }

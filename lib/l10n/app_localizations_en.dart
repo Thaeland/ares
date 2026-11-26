@@ -12025,4 +12025,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'Hidden files can\'t be saved by the gateway.';
+
+  @override
+  String get ng_slash_suggestions_loading => 'Loading commands…';
+
+  @override
+  String get ng_slash_suggestions_empty => 'No matching commands';
+
+  @override
+  String get ng_slash_suggestions_label => 'Command suggestions';
+
+  @override
+  String get ng_slash_suggestions_skill => 'Skill';
 }

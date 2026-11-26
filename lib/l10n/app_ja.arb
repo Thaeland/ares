@@ -1,5 +1,4 @@
 {
-  "@@locale": "ja",
   "workspace_workers": "実行中のサブエージェント",
   "workers_unattached": "件数のみ表示しています。指示を送るには、接続中の親チャットで「実行中のサブエージェント」を選んでください。",
   "slash_local_arguments": "ここではこのショートカットに引数を指定できません。アプリの操作画面を使用してください。下書きは保持されています。",
@@ -49,6 +48,7 @@
   "background_report_issues": "問題が報告されています。展開して詳細を確認してください。",
   "background_report_expand": "レポートを展開",
   "background_report_collapse": "レポートを折りたたむ",
+  "@@locale": "ja",
   "ng_brand_open_chat": "チャットを開く",
   "ng_brand_recent": "最近のチャット",
   "ng_brand_sidebar_hint": "またはサイドバーからチャットを選択",
@@ -1107,6 +1107,8 @@
   "provider_oauth_checking_account": "承認を受信しました。ホストのアカウントを確認中…",
   "provider_oauth_verification_unavailable": "承認を受信しましたが、アカウントを検証できません。「使用状況」を開いてアカウントの使用状況を更新してください。",
   "provider_oauth_verified_account": "Hermesホストに {email} としてサインインしました。「使用状況」を開いてアカウントの使用状況を更新してください。",
+  "provider_oauth_credentials_unverified": "ホストは認証情報が利用可能と報告していますが、アカウントの本人確認は完了していません。",
+  "provider_oauth_account_status_unknown": "ホストのアカウント状態を取得できません。",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1114,8 +1116,6 @@
       }
     }
   },
-  "provider_oauth_credentials_unverified": "ホストは認証情報が利用可能と報告していますが、アカウントの本人確認は完了していません。",
-  "provider_oauth_account_status_unknown": "ホストのアカウント状態を取得できません。",
   "app_language": "アプリの言語",
   "app_language_system": "端末と同じ",
   "auto_archives_after_72_hours": "72時間後に自動でアーカイブ",
@@ -1382,6 +1382,7 @@
   "ng_project_home": "ホーム",
   "ng_choose_project": "プロジェクトを選択",
   "ng_project_cwd_fallback": "プロジェクトフォルダーを利用できなかったため、このチャットは {path} で実行されます。",
+  "ng_project_create_uncertain": "ゲートウェイがチャットを作成した可能性がありますが、確認できませんでした。別のチャットを開始する前にチャット一覧を確認してください。このリクエストは自動的に再試行されません。",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1389,7 +1390,6 @@
       }
     }
   },
-  "ng_project_create_uncertain": "ゲートウェイがチャットを作成した可能性がありますが、確認できませんでした。別のチャットを開始する前にチャット一覧を確認してください。このリクエストは自動的に再試行されません。",
   "ng_what_should_we_work_on": "何に取り組みますか？",
   "ng_ask_hermes_anything_it_can_run": "Hermesに何でも聞いてください。ツールの実行やウェブの閲覧、サーバー上のファイル操作ができます。",
   "ng_working_2": "作業中 · {frame}",
@@ -3314,5 +3314,9 @@
   "release_misc_gateway_unreachable": "ゲートウェイのエンドポイント{endpoint}に接続できません。",
   "release_core_schedule_invalid_delivery_target": "配信先が無効です",
   "release_core_file_save_direct_only": "作業ディレクトリ直下のファイルのみ保存できます。",
-  "release_core_file_save_hidden": "ゲートウェイでは隠しファイルを保存できません。"
+  "release_core_file_save_hidden": "ゲートウェイでは隠しファイルを保存できません。",
+  "ng_slash_suggestions_loading": "コマンドを読み込み中…",
+  "ng_slash_suggestions_empty": "一致するコマンドはありません",
+  "ng_slash_suggestions_label": "コマンドの候補",
+  "ng_slash_suggestions_skill": "スキル"
 }

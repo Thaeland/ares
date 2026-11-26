@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:hermes_android/core/l10n/l10n.dart';
 
 import '../render/render_scope.dart';
+import '../parked_automotive.dart';
 import '../services/attachment_controller.dart';
 import '../services/attachment_pdf_service.dart';
 import '../utils/attachment_types.dart';
@@ -298,7 +299,7 @@ class AttachmentPreviewDialog extends StatelessWidget {
         child: Center(child: attachmentImage(context, bytes)),
       );
     }
-    if (attachmentIsVideo(extension)) {
+    if (!isParkedAutomotive && attachmentIsVideo(extension)) {
       return AttachmentVideoPreview(
         key: ObjectKey(controller),
         bytes: bytes,

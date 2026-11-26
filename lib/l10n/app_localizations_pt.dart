@@ -12169,6 +12169,18 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'O gateway não pode guardar ficheiros ocultos.';
+
+  @override
+  String get ng_slash_suggestions_loading => 'A carregar comandos…';
+
+  @override
+  String get ng_slash_suggestions_empty => 'Nenhum comando correspondente';
+
+  @override
+  String get ng_slash_suggestions_label => 'Sugestões de comandos';
+
+  @override
+  String get ng_slash_suggestions_skill => 'Competência';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -24319,4 +24331,16 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get release_core_file_save_hidden =>
       'O gateway não pode salvar arquivos ocultos.';
+
+  @override
+  String get ng_slash_suggestions_loading => 'Carregando comandos…';
+
+  @override
+  String get ng_slash_suggestions_empty => 'Nenhum comando correspondente';
+
+  @override
+  String get ng_slash_suggestions_label => 'Sugestões de comandos';
+
+  @override
+  String get ng_slash_suggestions_skill => 'Habilidade';
 }

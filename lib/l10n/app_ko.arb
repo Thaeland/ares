@@ -1,5 +1,4 @@
 {
-  "@@locale": "ko",
   "workspace_workers": "실행 중인 하위 에이전트",
   "workers_unattached": "개수만 표시됩니다. 지시를 보내려면 연결된 상위 채팅에서 ‘실행 중인 하위 에이전트’를 선택하세요.",
   "slash_local_arguments": "이 바로 가기는 여기서 인수를 지원하지 않습니다. 앱의 컨트롤을 사용하세요. 초안은 보관되었습니다.",
@@ -49,6 +48,7 @@
   "background_report_issues": "문제가 보고되었습니다. 펼쳐서 자세히 확인하세요.",
   "background_report_expand": "보고서 펼치기",
   "background_report_collapse": "보고서 접기",
+  "@@locale": "ko",
   "ng_brand_open_chat": "채팅 열기",
   "ng_brand_recent": "최근 채팅",
   "ng_brand_sidebar_hint": "또는 사이드바에서 채팅을 선택하세요",
@@ -1107,6 +1107,8 @@
   "provider_oauth_checking_account": "승인을 받았습니다. 호스트 계정 확인 중…",
   "provider_oauth_verification_unavailable": "승인을 받았지만 계정을 검증할 수 없습니다. 사용량을 열어 계정 사용량을 새로고침하세요.",
   "provider_oauth_verified_account": "Hermes 호스트에 {email} 계정으로 로그인했습니다. 사용량을 열어 계정 사용량을 새로고침하세요.",
+  "provider_oauth_credentials_unverified": "호스트에서 인증 정보를 사용할 수 있다고 보고했지만 계정 신원은 검증되지 않았습니다.",
+  "provider_oauth_account_status_unknown": "호스트 계정 상태를 확인할 수 없습니다.",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1114,8 +1116,6 @@
       }
     }
   },
-  "provider_oauth_credentials_unverified": "호스트에서 인증 정보를 사용할 수 있다고 보고했지만 계정 신원은 검증되지 않았습니다.",
-  "provider_oauth_account_status_unknown": "호스트 계정 상태를 확인할 수 없습니다.",
   "app_language": "앱 언어",
   "app_language_system": "휴대전화와 동일",
   "auto_archives_after_72_hours": "72시간 후 자동 보관",
@@ -1382,6 +1382,7 @@
   "ng_project_home": "홈",
   "ng_choose_project": "프로젝트 선택",
   "ng_project_cwd_fallback": "프로젝트 폴더를 사용할 수 없어 이 채팅은 {path}에서 실행됩니다.",
+  "ng_project_create_uncertain": "게이트웨이가 채팅을 만들었을 수 있지만 확인하지 못했습니다. 새 채팅을 시작하기 전에 채팅 목록을 확인하세요. 이 요청은 자동으로 재시도되지 않습니다.",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1389,7 +1390,6 @@
       }
     }
   },
-  "ng_project_create_uncertain": "게이트웨이가 채팅을 만들었을 수 있지만 확인하지 못했습니다. 새 채팅을 시작하기 전에 채팅 목록을 확인하세요. 이 요청은 자동으로 재시도되지 않습니다.",
   "ng_what_should_we_work_on": "무엇을 해볼까요?",
   "ng_ask_hermes_anything_it_can_run": "Hermes에 무엇이든 물어보세요. 도구를 실행하고, 웹을 탐색하고, 서버의 파일을 다룰 수 있어요.",
   "ng_working_2": "작업 중 · {frame}",
@@ -3314,5 +3314,9 @@
   "release_misc_gateway_unreachable": "게이트웨이 엔드포인트 {endpoint}에 연결할 수 없습니다.",
   "release_core_schedule_invalid_delivery_target": "전송 대상이 올바르지 않습니다",
   "release_core_file_save_direct_only": "작업 디렉터리 바로 아래에 있는 파일만 저장할 수 있습니다.",
-  "release_core_file_save_hidden": "게이트웨이는 숨김 파일을 저장할 수 없습니다."
+  "release_core_file_save_hidden": "게이트웨이는 숨김 파일을 저장할 수 없습니다.",
+  "ng_slash_suggestions_loading": "명령을 불러오는 중…",
+  "ng_slash_suggestions_empty": "일치하는 명령이 없습니다",
+  "ng_slash_suggestions_label": "명령 제안",
+  "ng_slash_suggestions_skill": "스킬"
 }

@@ -1,5 +1,4 @@
 {
-  "@@locale": "uk",
   "workspace_workers": "Активні субагенти",
   "workers_unattached": "Показано лише кількість. Щоб дати вказівку, виберіть «Активні субагенти» в підключеному батьківському чаті.",
   "slash_local_arguments": "Цей ярлик тут не підтримує аргументи. Скористайтеся елементами керування застосунку; чернетку збережено.",
@@ -35,13 +34,6 @@
   "portal_recorded_usage": "Облік використання",
   "portal_all_providers": "Усі провайдери вибраного профілю шлюзу. Нульова записана вартість не означає, що модель безкоштовна.",
   "portal_period": "Останні {days} днів",
-  "@portal_period": {
-    "placeholders": {
-      "days": {
-        "type": "String"
-      }
-    }
-  },
   "portal_sessions": "Сесії",
   "portal_input": "Вхідні токени",
   "portal_output": "Вихідні токени",
@@ -50,12 +42,20 @@
   "portal_recorded_models": "Використані моделі",
   "portal_no_models": "Записів про моделі немає.",
   "portal_unavailable": "Недоступно. Перевірте підключення, вибраний профіль і версію шлюзу та повторіть спробу.",
+  "@portal_period": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
   "paste_attachment_failed_text_kept": "Не вдалося додати вставлений текст як вкладення. Текст залишено в повідомленні.",
   "background_task_report": "Фонове завдання",
   "background_process_report": "Фоновий процес",
   "background_report_issues": "Виявлено проблеми — розгорніть подробиці.",
   "background_report_expand": "Розгорнути звіт",
   "background_report_collapse": "Згорнути звіт",
+  "@@locale": "uk",
   "ng_brand_open_chat": "Відкрити чат",
   "ng_brand_recent": "Нещодавні",
   "ng_brand_sidebar_hint": "або виберіть чат на бічній панелі",
@@ -82,23 +82,9 @@
   "hands_free_waiting": "Очікування Hermes",
   "hands_free_speaking": "Відтворення відповіді — мікрофон вимкнено",
   "hands_free_followup": "Слухати до {seconds} секунд",
-  "@hands_free_followup": {
-    "placeholders": {
-      "seconds": {
-        "type": "int"
-      }
-    }
-  },
   "hands_free_error": "Голос без рук зупинено",
   "hands_free_setup": "Налаштування голосу без рук",
   "hands_free_preview": "Розпізнаний текст: {transcript}",
-  "@hands_free_preview": {
-    "placeholders": {
-      "transcript": {
-        "type": "String"
-      }
-    }
-  },
   "hands_free_short_disclosure": "Лише поки цей чат відкритий на екрані. Активація працює локально; розпізнавання мовлення може використовувати мережу. Витрачає заряд.",
   "hands_free_error_action": "Перевірте дозвіл мікрофона, службу розпізнавання, голос відповідей і підключення. Для повторної спроби натисніть «Зупинити», а потім «Почати». Повторного надсилання немає.",
   "hands_free_disclosure": "Активація голосом працює локально на процесорі. Розпізнавання Android, вибраний голос відповіді та шлюз можуть використовувати мережу. Слухання витрачає заряд; можливі хибні спрацювання. Зупиняється, коли чат перекритий, закритий або застосунок у фоні; повторне відкриття не запускає його. Звичайне диктування залишається редагованою чернеткою.",
@@ -109,6 +95,20 @@
   "hands_free_followup_off": "Продовження вимкнено — кажіть Hey Hermes перед кожним запитом",
   "hands_free_start_blocked": "Для запуску потрібні порожня чернетка, відсутність вкладень, підключений вільний чат і ввімкнені голосові відповіді. Спершу завершіть ручний запис.",
   "hands_free_setup_complete": "Мікрофон налаштовано. Знову натисніть «Почати».",
+  "@hands_free_followup": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "@hands_free_preview": {
+    "placeholders": {
+      "transcript": {
+        "type": "String"
+      }
+    }
+  },
   "message_time_recorded": "Збережено сервером: {time} (місцевий час)",
   "@message_time_recorded": {
     "placeholders": {
@@ -152,16 +152,6 @@
   "attachment_pdf_failed": "Не вдалося показати PDF. Збережіть оригінал або поділіться ним.",
   "attachment_pdf_unavailable": "Попередній перегляд PDF доступний на Android. Ви можете зберегти цей файл або поділитися ним.",
   "attachment_pdf_page": "Сторінка {page} з {total}",
-  "@attachment_pdf_page": {
-    "placeholders": {
-      "page": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
   "attachment_previous_page": "Попередня сторінка",
   "attachment_next_page": "Наступна сторінка",
   "attachment_loading": "Завантаження перегляду…",
@@ -176,6 +166,16 @@
   "attachment_video_seek": "Позиція відео",
   "attachment_close": "Закрити перегляд",
   "attachment_retry": "Повторити",
+  "@attachment_pdf_page": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "saved_history_heading": "Збережена історія",
   "received_output_heading": "Отримана відповідь — збіг зі збереженою історією не підтверджено",
   "received_output_details": "Про отриману відповідь",
@@ -1223,6 +1223,8 @@
   "provider_oauth_checking_account": "Дозвіл отримано. Перевірка облікового запису на сервері…",
   "provider_oauth_verification_unavailable": "Дозвіл отримано; перевірка облікового запису недоступна. Відкрийте «Використання», щоб оновити дані.",
   "provider_oauth_verified_account": "Вхід на сервері Hermes виконано як {email}. Відкрийте «Використання», щоб оновити дані.",
+  "provider_oauth_credentials_unverified": "Сервер повідомляє про наявність облікових даних; особу облікового запису не підтверджено.",
+  "provider_oauth_account_status_unknown": "Стан облікового запису на сервері недоступний.",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1230,8 +1232,6 @@
       }
     }
   },
-  "provider_oauth_credentials_unverified": "Сервер повідомляє про наявність облікових даних; особу облікового запису не підтверджено.",
-  "provider_oauth_account_status_unknown": "Стан облікового запису на сервері недоступний.",
   "app_language": "Мова застосунку",
   "app_language_system": "Як на телефоні",
   "auto_archives_after_72_hours": "Автоматично архівується через 72 години",
@@ -1498,6 +1498,7 @@
   "ng_project_home": "Головна",
   "ng_choose_project": "Вибрати проєкт",
   "ng_project_cwd_fallback": "Папка проєкту недоступна, тому цей чат працює в {path}.",
+  "ng_project_create_uncertain": "Шлюз міг створити цей чат, але не підтвердив це. Перевірте список чатів, перш ніж починати новий. Запит не буде повторено автоматично.",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1505,7 +1506,6 @@
       }
     }
   },
-  "ng_project_create_uncertain": "Шлюз міг створити цей чат, але не підтвердив це. Перевірте список чатів, перш ніж починати новий. Запит не буде повторено автоматично.",
   "ng_what_should_we_work_on": "Над чим попрацюємо?",
   "ng_ask_hermes_anything_it_can_run": "Запитайте Hermes про що завгодно. Він може запускати інструменти, переглядати вебсторінки й працювати з файлами на сервері.",
   "ng_working_2": "Працює · {frame}",
@@ -3430,5 +3430,9 @@
   "release_misc_gateway_unreachable": "Не вдається зв’язатися з кінцевою точкою шлюзу {endpoint}.",
   "release_core_schedule_invalid_delivery_target": "Недійсне місце доставки",
   "release_core_file_save_direct_only": "Можна зберегти лише файл безпосередньо в робочому каталозі.",
-  "release_core_file_save_hidden": "Шлюз не може зберігати приховані файли."
+  "release_core_file_save_hidden": "Шлюз не може зберігати приховані файли.",
+  "ng_slash_suggestions_loading": "Завантаження команд…",
+  "ng_slash_suggestions_empty": "Немає відповідних команд",
+  "ng_slash_suggestions_label": "Запропоновані команди",
+  "ng_slash_suggestions_skill": "Навичка"
 }

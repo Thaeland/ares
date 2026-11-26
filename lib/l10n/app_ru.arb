@@ -1,5 +1,4 @@
 {
-  "@@locale": "ru",
   "workspace_workers": "Активные субагенты",
   "workers_unattached": "Показано только количество. Чтобы дать указание, выберите «Активные субагенты» в подключённом родительском чате.",
   "slash_local_arguments": "Этот ярлык здесь не поддерживает аргументы. Используйте элементы управления приложения; черновик сохранён.",
@@ -49,6 +48,7 @@
   "background_report_issues": "Обнаружены проблемы — разверните для подробностей.",
   "background_report_expand": "Развернуть отчёт",
   "background_report_collapse": "Свернуть отчёт",
+  "@@locale": "ru",
   "ng_brand_open_chat": "Открыть чат",
   "ng_brand_recent": "Недавние",
   "ng_brand_sidebar_hint": "или выберите чат на боковой панели",
@@ -1107,6 +1107,8 @@
   "provider_oauth_checking_account": "Одобрение получено. Проверяем аккаунт на хосте…",
   "provider_oauth_verification_unavailable": "Одобрение получено; проверка аккаунта недоступна. Откройте раздел использования, чтобы обновить данные аккаунта.",
   "provider_oauth_verified_account": "Вход на хосте Hermes выполнен как {email}. Откройте раздел использования, чтобы обновить данные аккаунта.",
+  "provider_oauth_credentials_unverified": "Хост сообщает о наличии учётных данных; личность владельца аккаунта не проверена.",
+  "provider_oauth_account_status_unknown": "Статус аккаунта на хосте недоступен.",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1114,8 +1116,6 @@
       }
     }
   },
-  "provider_oauth_credentials_unverified": "Хост сообщает о наличии учётных данных; личность владельца аккаунта не проверена.",
-  "provider_oauth_account_status_unknown": "Статус аккаунта на хосте недоступен.",
   "app_language": "Язык приложения",
   "app_language_system": "Как на телефоне",
   "auto_archives_after_72_hours": "Автоматически архивируется через 72 часа",
@@ -1382,6 +1382,7 @@
   "ng_project_home": "Главная",
   "ng_choose_project": "Выбрать проект",
   "ng_project_cwd_fallback": "Папка проекта недоступна, поэтому этот чат работает в {path}.",
+  "ng_project_create_uncertain": "Шлюз мог создать этот чат, но не подтвердил это. Проверьте список чатов, прежде чем начинать новый. Запрос не будет повторён автоматически.",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1389,7 +1390,6 @@
       }
     }
   },
-  "ng_project_create_uncertain": "Шлюз мог создать этот чат, но не подтвердил это. Проверьте список чатов, прежде чем начинать новый. Запрос не будет повторён автоматически.",
   "ng_what_should_we_work_on": "Над чем поработаем?",
   "ng_ask_hermes_anything_it_can_run": "Спросите Hermes о чём угодно. Он умеет запускать инструменты, просматривать сайты и работать с файлами на сервере.",
   "ng_working_2": "Работает · {frame}",
@@ -3314,5 +3314,9 @@
   "release_misc_gateway_unreachable": "Не удалось связаться с конечной точкой шлюза {endpoint}.",
   "release_core_schedule_invalid_delivery_target": "Недопустимая цель доставки",
   "release_core_file_save_direct_only": "Можно сохранить только файл непосредственно в рабочем каталоге.",
-  "release_core_file_save_hidden": "Шлюз не может сохранять скрытые файлы."
+  "release_core_file_save_hidden": "Шлюз не может сохранять скрытые файлы.",
+  "ng_slash_suggestions_loading": "Загрузка команд…",
+  "ng_slash_suggestions_empty": "Нет подходящих команд",
+  "ng_slash_suggestions_label": "Предлагаемые команды",
+  "ng_slash_suggestions_skill": "Навык"
 }

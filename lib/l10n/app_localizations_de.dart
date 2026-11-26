@@ -12171,4 +12171,16 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'Versteckte Dateien können vom Gateway nicht gespeichert werden.';
+
+  @override
+  String get ng_slash_suggestions_loading => 'Befehle werden geladen…';
+
+  @override
+  String get ng_slash_suggestions_empty => 'Keine passenden Befehle';
+
+  @override
+  String get ng_slash_suggestions_label => 'Befehlsvorschläge';
+
+  @override
+  String get ng_slash_suggestions_skill => 'Skill';
 }

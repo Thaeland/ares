@@ -12164,4 +12164,16 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'La puerta de enlace no puede guardar archivos ocultos.';
+
+  @override
+  String get ng_slash_suggestions_loading => 'Cargando comandos…';
+
+  @override
+  String get ng_slash_suggestions_empty => 'No hay comandos que coincidan';
+
+  @override
+  String get ng_slash_suggestions_label => 'Sugerencias de comandos';
+
+  @override
+  String get ng_slash_suggestions_skill => 'Habilidad';
 }

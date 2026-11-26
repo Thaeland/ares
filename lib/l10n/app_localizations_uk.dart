@@ -12150,4 +12150,16 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'Шлюз не може зберігати приховані файли.';
+
+  @override
+  String get ng_slash_suggestions_loading => 'Завантаження команд…';
+
+  @override
+  String get ng_slash_suggestions_empty => 'Немає відповідних команд';
+
+  @override
+  String get ng_slash_suggestions_label => 'Запропоновані команди';
+
+  @override
+  String get ng_slash_suggestions_skill => 'Навичка';
 }

@@ -11718,4 +11718,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get release_core_file_save_hidden => '게이트웨이는 숨김 파일을 저장할 수 없습니다.';
+
+  @override
+  String get ng_slash_suggestions_loading => '명령을 불러오는 중…';
+
+  @override
+  String get ng_slash_suggestions_empty => '일치하는 명령이 없습니다';
+
+  @override
+  String get ng_slash_suggestions_label => '명령 제안';
+
+  @override
+  String get ng_slash_suggestions_skill => '스킬';
 }

@@ -8102,5 +8102,9 @@
   "release_core_file_save_hidden": "Hidden files can't be saved by the gateway.",
   "@release_core_file_save_hidden": {
     "description": "Shared validation refusal; preserve the specific delivery target or file-saving reason."
-  }
+  },
+  "ng_slash_suggestions_loading": "Loading commands…",
+  "ng_slash_suggestions_empty": "No matching commands",
+  "ng_slash_suggestions_label": "Command suggestions",
+  "ng_slash_suggestions_skill": "Skill"
 }

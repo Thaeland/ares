@@ -1,5 +1,4 @@
 {
-  "@@locale": "de",
   "workspace_workers": "Aktive Unteragenten",
   "workers_unattached": "Nur Anzahl. Wähle zum Steuern im verbundenen übergeordneten Chat „Aktive Unteragenten“.",
   "slash_local_arguments": "Diese Verknüpfung unterstützt hier keine Argumente. Verwende die App-Steuerelemente; dein Entwurf wurde beibehalten.",
@@ -49,6 +48,7 @@
   "background_report_issues": "Probleme gemeldet — für Details aufklappen.",
   "background_report_expand": "Bericht aufklappen",
   "background_report_collapse": "Bericht zuklappen",
+  "@@locale": "de",
   "ng_brand_open_chat": "Chat öffnen",
   "ng_brand_recent": "Zuletzt",
   "ng_brand_sidebar_hint": "oder einen Chat aus der Seitenleiste wählen",
@@ -1107,6 +1107,8 @@
   "provider_oauth_checking_account": "Genehmigung erhalten. Host-Konto wird geprüft…",
   "provider_oauth_verification_unavailable": "Genehmigung erhalten; Kontoverifizierung nicht verfügbar. Öffne Nutzung, um die Kontonutzung zu aktualisieren.",
   "provider_oauth_verified_account": "Auf dem Hermes-Host als {email} angemeldet. Öffne Nutzung, um die Kontonutzung zu aktualisieren.",
+  "provider_oauth_credentials_unverified": "Der Host meldet verfügbare Zugangsdaten; die Kontoidentität ist nicht verifiziert.",
+  "provider_oauth_account_status_unknown": "Host-Kontostatus nicht verfügbar.",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1114,8 +1116,6 @@
       }
     }
   },
-  "provider_oauth_credentials_unverified": "Der Host meldet verfügbare Zugangsdaten; die Kontoidentität ist nicht verifiziert.",
-  "provider_oauth_account_status_unknown": "Host-Kontostatus nicht verfügbar.",
   "app_language": "App-Sprache",
   "app_language_system": "Wie auf dem Telefon",
   "auto_archives_after_72_hours": "Wird nach 72 Stunden automatisch archiviert",
@@ -1382,6 +1382,7 @@
   "ng_project_home": "Home",
   "ng_choose_project": "Projekt auswählen",
   "ng_project_cwd_fallback": "Der Projektordner war nicht verfügbar. Dieser Chat läuft daher in {path}.",
+  "ng_project_create_uncertain": "Das Gateway hat diesen Chat möglicherweise erstellt, aber nicht bestätigt. Prüfe die Chats, bevor du einen weiteren startest. Diese Anfrage wird nicht automatisch wiederholt.",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1389,7 +1390,6 @@
       }
     }
   },
-  "ng_project_create_uncertain": "Das Gateway hat diesen Chat möglicherweise erstellt, aber nicht bestätigt. Prüfe die Chats, bevor du einen weiteren startest. Diese Anfrage wird nicht automatisch wiederholt.",
   "ng_what_should_we_work_on": "Woran sollen wir arbeiten?",
   "ng_ask_hermes_anything_it_can_run": "Frag Hermes alles. Es kann Tools ausführen, im Web suchen und mit deinen Dateien auf dem Server arbeiten.",
   "ng_working_2": "Wird bearbeitet · {frame}",
@@ -3314,5 +3314,9 @@
   "release_misc_gateway_unreachable": "Gateway-Endpunkt {endpoint} nicht erreichbar.",
   "release_core_schedule_invalid_delivery_target": "Ungültiges Zustellziel",
   "release_core_file_save_direct_only": "Nur eine Datei direkt im Arbeitsverzeichnis kann gespeichert werden.",
-  "release_core_file_save_hidden": "Versteckte Dateien können vom Gateway nicht gespeichert werden."
+  "release_core_file_save_hidden": "Versteckte Dateien können vom Gateway nicht gespeichert werden.",
+  "ng_slash_suggestions_loading": "Befehle werden geladen…",
+  "ng_slash_suggestions_empty": "Keine passenden Befehle",
+  "ng_slash_suggestions_label": "Befehlsvorschläge",
+  "ng_slash_suggestions_skill": "Skill"
 }

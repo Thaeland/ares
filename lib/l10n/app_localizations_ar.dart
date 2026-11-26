@@ -12025,4 +12025,16 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'لا يمكن للبوابة حفظ الملفات المخفية.';
+
+  @override
+  String get ng_slash_suggestions_loading => 'Loading commands…';
+
+  @override
+  String get ng_slash_suggestions_empty => 'No matching commands';
+
+  @override
+  String get ng_slash_suggestions_label => 'Command suggestions';
+
+  @override
+  String get ng_slash_suggestions_skill => 'Skill';
 }

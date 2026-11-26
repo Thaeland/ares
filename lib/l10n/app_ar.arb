@@ -1,5 +1,4 @@
 {
-  "@@locale": "ar",
   "workspace_workers": "العمّال النشطون",
   "workers_unattached": "أعداد فقط. لتوجيه عامل، اختر «العمّال النشطون» في المحادثة الأم المرتبط بها.",
   "slash_local_arguments": "لا يقبل هذا الاختصار معاملات هنا. استخدم عناصر التحكم في التطبيق. لم تتغير مسودتك.",
@@ -16,6 +15,9 @@
   "fallback_legacy_title": "النماذج الاحتياطية القديمة (للقراءة فقط)",
   "fallback_legacy_notice": "يستخدم المضيف أيضًا fallback_model بعد هذه القائمة، ويتخطى المسارات المكررة. تظل الإدخالات القديمة محفوظة حتى لو كانت القائمة أعلاه فارغة. يمكنك تعديلها على المضيف.",
   "fallback_priority": "الأولوية: {position}",
+  "fallback_move_up": "نقل لأعلى",
+  "fallback_move_down": "نقل لأسفل",
+  "fallback_routing_read_only": "يحتفظ التطبيق بتفاصيل التوجيه أو بالمزوّد غير المدرج. عدّل المزوّد أو النموذج على المضيف. لا يزال بإمكانك تغيير ترتيب الإدخال أو إزالته.",
   "@fallback_priority": {
     "placeholders": {
       "position": {
@@ -23,9 +25,6 @@
       }
     }
   },
-  "fallback_move_up": "نقل لأعلى",
-  "fallback_move_down": "نقل لأسفل",
-  "fallback_routing_read_only": "يحتفظ التطبيق بتفاصيل التوجيه أو بالمزوّد غير المدرج. عدّل المزوّد أو النموذج على المضيف. لا يزال بإمكانك تغيير ترتيب الإدخال أو إزالته.",
   "cron_model_default": "استخدام النموذج الافتراضي",
   "cron_model_notice": "ينطبق هذا الاختيار على مهمة cron هذه فقط. إذا لم تحدد لها نموذجًا بعينه، يستخدم Hermes نموذج cron الافتراضي، ثم النموذج الرئيسي. يمكنك إدارة النماذج المخصصة على المضيف.",
   "model_management_unavailable": "تعذّر تحميل إعدادات النماذج أو حفظها. حدّث الصفحة وحاول مجددًا.",
@@ -42,13 +41,6 @@
   "portal_recorded_usage": "الاستخدام المسجّل",
   "portal_all_providers": "يشمل جميع المزوّدين في الملف الشخصي المحدد للبوابة. تسجيل تكلفة قدرها صفر لا يعني أن النموذج مجاني.",
   "portal_period": "آخر {days} يومًا",
-  "@portal_period": {
-    "placeholders": {
-      "days": {
-        "type": "String"
-      }
-    }
-  },
   "portal_sessions": "الجلسات",
   "portal_input": "رموز الإدخال",
   "portal_output": "رموز الإخراج",
@@ -57,12 +49,20 @@
   "portal_recorded_models": "النماذج المسجّلة",
   "portal_no_models": "لا توجد نماذج مسجّلة.",
   "portal_unavailable": "البيانات غير متاحة. تحقق من الاتصال والملف الشخصي المحدد وإصدار البوابة، ثم أعد المحاولة.",
+  "@portal_period": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
   "paste_attachment_failed_text_kept": "تعذّر إرفاق المحتوى الملصق. بقي النص في الرسالة.",
   "background_task_report": "مهمة في الخلفية",
   "background_process_report": "عملية في الخلفية",
   "background_report_issues": "أُبلغ عن مشكلات. وسّع التقرير لعرض التفاصيل.",
   "background_report_expand": "توسيع التقرير",
   "background_report_collapse": "طيّ التقرير",
+  "@@locale": "ar",
   "ng_brand_open_chat": "فتح محادثة",
   "ng_brand_recent": "الأخيرة",
   "ng_brand_sidebar_hint": "أو اختر محادثة من الشريط الجانبي",
@@ -78,6 +78,8 @@
   "ng_switch": "تبديل",
   "ng_model_confirmation_required": "يلزم التأكيد قبل اختيار هذا النموذج.",
   "ng_model_switches_next_turn": "سيُستخدم {model} في الجولة التالية.",
+  "ng_model_switch_not_connected": "الدردشة غير جاهزة لتبديل النموذج. افتحها مجددًا وأعد المحاولة.",
+  "ng_gateway_kept_default_model": "أبقت البوابة على {model} لهذه الدردشة. أعد اختيار النموذج قبل الإرسال.",
   "@ng_model_switches_next_turn": {
     "placeholders": {
       "model": {
@@ -85,8 +87,6 @@
       }
     }
   },
-  "ng_model_switch_not_connected": "الدردشة غير جاهزة لتبديل النموذج. افتحها مجددًا وأعد المحاولة.",
-  "ng_gateway_kept_default_model": "أبقت البوابة على {model} لهذه الدردشة. أعد اختيار النموذج قبل الإرسال.",
   "@ng_gateway_kept_default_model": {
     "placeholders": {
       "model": {
@@ -103,23 +103,9 @@
   "hands_free_waiting": "في انتظار Hermes",
   "hands_free_speaking": "جارٍ نطق الرد — الميكروفون مغلق",
   "hands_free_followup": "الاستماع لمدة تصل إلى {seconds} ثانية",
-  "@hands_free_followup": {
-    "placeholders": {
-      "seconds": {
-        "type": "int"
-      }
-    }
-  },
   "hands_free_error": "توقف وضع الاستخدام دون لمس",
   "hands_free_setup": "إعداد الاستخدام دون لمس",
   "hands_free_preview": "معاينة الإملاء الصوتي: {transcript}",
-  "@hands_free_preview": {
-    "placeholders": {
-      "transcript": {
-        "type": "String"
-      }
-    }
-  },
   "hands_free_short_disclosure": "يعمل هذا الوضع فقط عندما تكون هذه الدردشة مفتوحة في الواجهة. لا يتطلب رصد عبارة التنبيه اتصالًا، لكن الخدمات الصوتية قد تستخدم الشبكة. يستهلك الاستماع طاقة البطارية.",
   "hands_free_error_action": "تحقق من إذن الميكروفون وخدمة الكلام وصوت الرد والاتصال، ثم اضغط على زر الإيقاف يليه زر البدء لإعادة المحاولة. لن يُعاد إرسال أي شيء.",
   "hands_free_disclosure": "تُرصد عبارة التنبيه على وحدة المعالجة المركزية (CPU) دون اتصال. قد تستخدم خدمة التعرّف على الكلام في Android وصوت الرد المحدد والبوابة اتصالات الشبكة. يستهلك الاستماع طاقة البطارية وقد يتنشط الميكروفون بالخطأ. يتوقف الوضع إذا غطّت شاشة أخرى الدردشة أو أُغلقت أو انتقلت إلى الخلفية. لا يُستأنف تلقائيًا عند فتحها مجددًا. يبقى النص الذي تمليه يدويًا مسودة قابلة للتعديل.",
@@ -130,6 +116,20 @@
   "hands_free_followup_off": "المتابعة معطّلة — قل «Hey Hermes» قبل كل طلب",
   "hands_free_start_blocked": "للبدء، يجب أن تكون المسودة فارغة وبلا مرفقات، وأن تكون الدردشة متصلة ولا تنفذ أي طلب، وأن تكون الردود المنطوقة مفعّلة. أنهِ أولًا أي إجراء صوتي بدأته يدويًا.",
   "hands_free_setup_complete": "اكتمل إعداد الميكروفون. اضغط على زر البدء مجددًا.",
+  "@hands_free_followup": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "@hands_free_preview": {
+    "placeholders": {
+      "transcript": {
+        "type": "String"
+      }
+    }
+  },
   "message_time_recorded": "وقت التسجيل على الخادم: {time} (بالتوقيت المحلي)",
   "@message_time_recorded": {
     "placeholders": {
@@ -173,16 +173,6 @@
   "attachment_pdf_failed": "تعذّرت معاينة ملف PDF هذا. احفظ الملف الأصلي أو شاركه.",
   "attachment_pdf_unavailable": "تتوفر معاينة ملفات PDF على Android. لا يزال بإمكانك حفظ هذا الملف أو مشاركته.",
   "attachment_pdf_page": "الصفحة {page} من {total}",
-  "@attachment_pdf_page": {
-    "placeholders": {
-      "page": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
   "attachment_previous_page": "الصفحة السابقة",
   "attachment_next_page": "الصفحة التالية",
   "attachment_loading": "جارٍ تحميل المعاينة…",
@@ -197,6 +187,16 @@
   "attachment_video_seek": "موضع التشغيل في الفيديو",
   "attachment_close": "إغلاق المعاينة",
   "attachment_retry": "إعادة المحاولة",
+  "@attachment_pdf_page": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "saved_history_heading": "السجل المحفوظ",
   "received_output_heading": "المخرجات المستلَمة — لم تتأكد مطابقتها للسجل المحفوظ",
   "received_output_details": "حول المخرجات المستلَمة",
@@ -1241,6 +1241,8 @@
   "provider_oauth_checking_account": "وصلت الموافقة. جارٍ التحقق من الحساب على المضيف…",
   "provider_oauth_verification_unavailable": "وصلت الموافقة، لكن التحقق من الحساب غير متاح. افتح «الاستخدام» لتحديث بيانات استخدام الحساب.",
   "provider_oauth_verified_account": "سجّلت الدخول إلى مضيف Hermes بالحساب {email}. افتح «الاستخدام» لتحديث بيانات استخدام الحساب.",
+  "provider_oauth_credentials_unverified": "يشير المضيف إلى توفّر بيانات الاعتماد، لكن لم يجرِ التحقق من هوية الحساب.",
+  "provider_oauth_account_status_unknown": "حالة الحساب على المضيف غير متاحة.",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1248,8 +1250,6 @@
       }
     }
   },
-  "provider_oauth_credentials_unverified": "يشير المضيف إلى توفّر بيانات الاعتماد، لكن لم يجرِ التحقق من هوية الحساب.",
-  "provider_oauth_account_status_unknown": "حالة الحساب على المضيف غير متاحة.",
   "app_language": "لغة التطبيق",
   "app_language_system": "لغة الهاتف",
   "auto_archives_after_72_hours": "يُؤرشف تلقائيًا بعد 72 ساعة",
@@ -1787,6 +1787,7 @@
   "ng_project_home": "الرئيسية",
   "ng_choose_project": "اختيار مشروع",
   "ng_project_cwd_fallback": "مجلد المشروع غير متاح، لذا تعمل هذه المحادثة في {path}.",
+  "ng_project_create_uncertain": "ربما أنشأت البوابة هذه المحادثة، لكنها لم تؤكّد ذلك. تحقّق من «المحادثات» قبل بدء محادثة أخرى. لن يُعاد إرسال الطلب تلقائيًا.",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1794,7 +1795,6 @@
       }
     }
   },
-  "ng_project_create_uncertain": "ربما أنشأت البوابة هذه المحادثة، لكنها لم تؤكّد ذلك. تحقّق من «المحادثات» قبل بدء محادثة أخرى. لن يُعاد إرسال الطلب تلقائيًا.",
   "ng_what_should_we_work_on": "ما الذي تودّ أن نعمل عليه؟",
   "ng_ask_hermes_anything_it_can_run": "اسأل Hermes عمّا تشاء. يمكنه تشغيل الأدوات والتصفّح والعمل على ملفاتك الموجودة على الخادم.",
   "ng_working_2": "جارٍ العمل · {frame}",
@@ -2589,6 +2589,12 @@
   "ng_dock_goal_blocked": "تعذّر التقدّم نحو الهدف",
   "ng_dock_goal_done": "اكتمل الهدف",
   "ng_dock_turn_of": "الجولة {used}/{max}",
+  "ng_dock_turn": "الجولة {used}",
+  "ng_dock_subagents": "{count, plural, =1{وكيل فرعي واحد} other{عدد الوكلاء الفرعيين: {count}}}",
+  "ng_dock_subagents_done": "عدد من أنهوا العمل: {count}",
+  "ng_dock_tasks": "المهام: {done}/{total}",
+  "ng_dock_previous_tasks": "المهام السابقة: {done}/{total}",
+  "ng_dock_manage": "إدارة",
   "@ng_dock_turn_of": {
     "placeholders": {
       "used": {
@@ -2599,7 +2605,6 @@
       }
     }
   },
-  "ng_dock_turn": "الجولة {used}",
   "@ng_dock_turn": {
     "placeholders": {
       "used": {
@@ -2607,7 +2612,6 @@
       }
     }
   },
-  "ng_dock_subagents": "{count, plural, =1{وكيل فرعي واحد} other{عدد الوكلاء الفرعيين: {count}}}",
   "@ng_dock_subagents": {
     "placeholders": {
       "count": {
@@ -2615,7 +2619,6 @@
       }
     }
   },
-  "ng_dock_subagents_done": "عدد من أنهوا العمل: {count}",
   "@ng_dock_subagents_done": {
     "placeholders": {
       "count": {
@@ -2623,7 +2626,6 @@
       }
     }
   },
-  "ng_dock_tasks": "المهام: {done}/{total}",
   "@ng_dock_tasks": {
     "placeholders": {
       "done": {
@@ -2634,7 +2636,6 @@
       }
     }
   },
-  "ng_dock_previous_tasks": "المهام السابقة: {done}/{total}",
   "@ng_dock_previous_tasks": {
     "placeholders": {
       "done": {
@@ -2645,7 +2646,6 @@
       }
     }
   },
-  "ng_dock_manage": "إدارة",
   "ng_recent_notifications": "الإشعارات الأخيرة",
   "ng_recent_notifications_hint": "الإشعارات التي حاول Ares إرسالها وما إذا كان Android قد عرضها",
   "ng_recent_notifications_empty": "لا توجد إشعارات بعد. ستظهر المحاولات هنا عند وجود ردّ أو سؤال أو إخفاق يستدعي إشعارك.",

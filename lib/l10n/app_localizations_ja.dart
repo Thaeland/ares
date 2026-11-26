@@ -11712,4 +11712,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get release_core_file_save_hidden => 'ゲートウェイでは隠しファイルを保存できません。';
+
+  @override
+  String get ng_slash_suggestions_loading => 'コマンドを読み込み中…';
+
+  @override
+  String get ng_slash_suggestions_empty => '一致するコマンドはありません';
+
+  @override
+  String get ng_slash_suggestions_label => 'コマンドの候補';
+
+  @override
+  String get ng_slash_suggestions_skill => 'スキル';
 }

@@ -1,5 +1,4 @@
 {
-  "@@locale": "pt",
   "workspace_workers": "Subagentes ativos",
   "workers_unattached": "Apenas contagens. Para orientar um subagente, escolha Subagentes ativos na conversa principal ligada.",
   "slash_local_arguments": "Este atalho não aceita argumentos aqui. Use os controlos da aplicação; o rascunho foi mantido.",
@@ -49,6 +48,7 @@
   "background_report_issues": "Foram comunicados problemas — expanda para ver os detalhes.",
   "background_report_expand": "Expandir relatório",
   "background_report_collapse": "Recolher relatório",
+  "@@locale": "pt",
   "ng_brand_open_chat": "Abrir uma conversa",
   "ng_brand_recent": "Recentes",
   "ng_brand_sidebar_hint": "ou escolha uma conversa na barra lateral",
@@ -1107,6 +1107,8 @@
   "provider_oauth_checking_account": "Aprovação recebida. A verificar a conta no servidor…",
   "provider_oauth_verification_unavailable": "Aprovação recebida; verificação da conta indisponível. Abra Utilização para atualizar a utilização da conta.",
   "provider_oauth_verified_account": "Sessão iniciada no servidor Hermes como {email}. Abra Utilização para atualizar a utilização da conta.",
+  "provider_oauth_credentials_unverified": "O servidor indica credenciais disponíveis; a identidade da conta não foi verificada.",
+  "provider_oauth_account_status_unknown": "Estado da conta no servidor indisponível.",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1114,8 +1116,6 @@
       }
     }
   },
-  "provider_oauth_credentials_unverified": "O servidor indica credenciais disponíveis; a identidade da conta não foi verificada.",
-  "provider_oauth_account_status_unknown": "Estado da conta no servidor indisponível.",
   "app_language": "Idioma da aplicação",
   "app_language_system": "O mesmo do telemóvel",
   "auto_archives_after_72_hours": "Arquivada automaticamente após 72 horas",
@@ -1382,6 +1382,7 @@
   "ng_project_home": "Início",
   "ng_choose_project": "Escolher um projeto",
   "ng_project_cwd_fallback": "A pasta do projeto não estava disponível, por isso esta conversa é executada em {path}.",
+  "ng_project_create_uncertain": "O gateway pode ter criado esta conversa, mas não a confirmou. Verifique as conversas antes de iniciar outra; este pedido não será repetido automaticamente.",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1389,7 +1390,6 @@
       }
     }
   },
-  "ng_project_create_uncertain": "O gateway pode ter criado esta conversa, mas não a confirmou. Verifique as conversas antes de iniciar outra; este pedido não será repetido automaticamente.",
   "ng_what_should_we_work_on": "Em que vamos trabalhar?",
   "ng_ask_hermes_anything_it_can_run": "Pergunte o que quiser ao Hermes. Pode usar ferramentas, navegar na Web e trabalhar nos seus ficheiros no servidor.",
   "ng_working_2": "A trabalhar · {frame}",
@@ -3314,5 +3314,9 @@
   "release_misc_gateway_unreachable": "Não é possível aceder ao endpoint {endpoint} do gateway.",
   "release_core_schedule_invalid_delivery_target": "Destino de entrega inválido",
   "release_core_file_save_direct_only": "Só é possível guardar um ficheiro diretamente no diretório de trabalho.",
-  "release_core_file_save_hidden": "O gateway não pode guardar ficheiros ocultos."
+  "release_core_file_save_hidden": "O gateway não pode guardar ficheiros ocultos.",
+  "ng_slash_suggestions_loading": "A carregar comandos…",
+  "ng_slash_suggestions_empty": "Nenhum comando correspondente",
+  "ng_slash_suggestions_label": "Sugestões de comandos",
+  "ng_slash_suggestions_skill": "Competência"
 }
