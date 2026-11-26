@@ -232,22 +232,37 @@ class VoiceLiveEngine extends ChangeNotifier {
   /// Start the live conversation. Returns false — without throwing — when
   /// the host refuses (chained mode, unavailable, no mic). The caller
   /// decides whether to fall through to the chained composer.
-  Future<bool> start({List<Map<String, dynamic>>? history}) {
+  ///
+  /// [status] is a `/voice-live/status` the caller has just read (the
+  /// composer reads it to choose the engine); it is used as is, so a start
+  /// reads the status once. Without it the engine reads it here.
+  Future<bool> start({
+    List<Map<String, dynamic>>? history,
+    GptLiveStatus? status,
+  }) {
     if (_disposing) return Future<bool>.value(false);
     // One start at a time: a second tap on Start joins the one in flight
     // instead of cancelling it (or opening a second peer and microphone).
     final flight = _startFlight;
     if (flight != null) return flight;
     late final Future<bool> run;
-    run = _start(history: history).whenComplete(() {
+    run = _start(history: history, status: status).whenComplete(() {
       if (identical(_startFlight, run)) _startFlight = null;
     });
     return _startFlight = run;
   }
 
-  Future<bool> _start({List<Map<String, dynamic>>? history}) async {
+  Future<bool> _start({
+    List<Map<String, dynamic>>? history,
+    GptLiveStatus? status,
+  }) async {
     final epoch = ++_startEpoch;
-    await refresh();
+    if (status != null) {
+      _status = status;
+      notifyListeners();
+    } else {
+      await refresh();
+    }
     if (_disposing || epoch != _startEpoch) return false;
     if (!startable) {
       onError?.call(reason ?? 'GPT-Live is not available');
@@ -256,6 +271,12 @@ class VoiceLiveEngine extends ChangeNotifier {
     if (_conversation.active) return false;
     _stopped = false;
     _clearUtteranceTimer();
+    // The conversation dials with the status just read, not a second read.
+    final Object conversation = _conversation;
+    final current = _status;
+    if (conversation is LiveStatusPrimer && current != null) {
+      conversation.primeStatus(current);
+    }
     final started = await _conversation.start(history: history);
     if (_disposing || _stopped || epoch != _startEpoch) {
       // Torn down while starting. The conversation cancels its own start;

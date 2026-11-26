@@ -2383,8 +2383,11 @@ class _ChatScreenState extends State<ChatScreen>
 
   Future<void> _startVoiceConversation() async {
     final mode = _voiceLiveMode;
+    // One status read per start: a read made here to choose the engine is
+    // handed to it; with a cached status the engine reads a fresh one.
+    GptLiveStatus? fresh;
     if (mode != null && !mode.hasStatus) {
-      await mode.refresh();
+      fresh = await mode.refresh();
     }
     if (!mounted) return;
     if (mode != null && mode.selectedMode == 'gpt-live') {
@@ -2398,7 +2401,10 @@ class _ChatScreenState extends State<ChatScreen>
         }
         if (!mounted) return;
         final teardowns = _liveTeardowns;
-        final started = await engine.start(history: _seedClassicLiveHistory());
+        final started = await engine.start(
+          history: _seedClassicLiveHistory(),
+          status: fresh,
+        );
         if (started && mounted) {
           _syncClassicWakeForLive();
           setState(() {});

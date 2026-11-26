@@ -261,6 +261,9 @@ class GptLiveGatewayTransport implements GptLiveTransport {
     return response.statusCode == 200 ? jsonDecode(response.body) : null;
   }
 
+  /// The host dials the vendor before it answers: Desktop's `timeoutMs`.
+  static const Duration sessionTimeout = Duration(seconds: 45);
+
   @override
   Future<Object?> createSession({
     required String sdp,
@@ -270,6 +273,7 @@ class GptLiveGatewayTransport implements GptLiveTransport {
       'POST',
       'audio/voice-live/session',
       queryParameters: _query,
+      timeout: sessionTimeout,
       body: <String, dynamic>{'sdp': sdp}
         ..addAll(history == null ? <String, dynamic>{} : {'history': history}),
     );
@@ -314,6 +318,13 @@ abstract interface class LiveMicrophoneOwner {
   bool get holdsMicrophone;
 }
 
+/// Optional capability of a [LiveConversation]: take the status the caller
+/// has just read, so the next start does not read `/voice-live/status`
+/// again (one status read per start).
+abstract interface class LiveStatusPrimer {
+  void primeStatus(GptLiveStatus status);
+}
+
 /// Optional capability of a [LiveConversation]: whether the voice's audio is
 /// playing, measured on the remote track (Desktop's `onSpeakingChange`).
 /// Silent where the platform reports no inbound audio level.
@@ -331,7 +342,11 @@ const Duration liveCloseTimeout = Duration(seconds: 15);
 /// plus spoken context, and the caller streams Hermes' answer back with
 /// [speak]. The vendor key stays on the gateway host.
 class GptLiveConversation extends ChangeNotifier
-    implements LiveConversation, LiveMicrophoneOwner, LiveSpeakingSignal {
+    implements
+        LiveConversation,
+        LiveMicrophoneOwner,
+        LiveSpeakingSignal,
+        LiveStatusPrimer {
   GptLiveConversation({
     required this.transport,
     this.onDelegation,
@@ -430,6 +445,11 @@ class GptLiveConversation extends ChangeNotifier
     return status;
   }
 
+  GptLiveStatus? _primedStatus;
+
+  @override
+  void primeStatus(GptLiveStatus status) => _primedStatus = status;
+
   @override
   Future<bool> start({
     List<Map<String, dynamic>>? history,
@@ -464,7 +484,10 @@ class GptLiveConversation extends ChangeNotifier
       }
       _closed = false;
       _eventsDead = false;
-      final status = await refreshStatus();
+      // The caller's fresh read, if it primed one; otherwise read it here.
+      final primed = _primedStatus;
+      _primedStatus = null;
+      final status = primed ?? await refreshStatus();
       if (cancelled()) return false;
       if (status == null || !status.isLive || !status.available) return false;
       peer = await (peerConnectionFactory ?? _createPeer)();

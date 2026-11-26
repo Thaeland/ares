@@ -790,8 +790,11 @@ class _NgChatViewState extends State<NgChatView>
 
   Future<void> _startVoiceConversation() async {
     final mode = _voiceMode;
+    // One status read per start: a read made here to choose the engine is
+    // handed to it; with a cached status the engine reads a fresh one.
+    GptLiveStatus? fresh;
     if (!mode.hasStatus) {
-      await mode.refresh();
+      fresh = await mode.refresh();
     }
     if (!mounted) return;
     if (mode.selectedMode == 'gpt-live') {
@@ -803,7 +806,10 @@ class _NgChatViewState extends State<NgChatView>
         await _wake.pauseForVoice();
         if (!mounted) return;
         final teardowns = _liveTeardowns;
-        final started = await engine.start(history: _seedLiveHistory());
+        final started = await engine.start(
+          history: _seedLiveHistory(),
+          status: fresh,
+        );
         if (started && mounted) {
           _syncWakeVoicePause();
           setState(() {});
