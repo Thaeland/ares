@@ -382,8 +382,7 @@ extension SessionHistory on WorkspaceTarget {
       _fail(WorkspaceFailure.invalid);
     }
     final safeName = _exportName(filename, normalized);
-    final body = redact ? redactSecrets(content) : content;
-    if (redact && containsSecret(body)) _fail(WorkspaceFailure.invalid);
+    final body = redact ? await redactTranscript(content) : content;
     return HistoryExport(format: normalized, filename: safeName, content: body);
   }, session: true);
 
@@ -432,18 +431,13 @@ extension SessionHistory on WorkspaceTarget {
       if ((role != 'user' && role != 'assistant') || content is! String) {
         continue;
       }
-      final text = redactSecrets(content);
-      if (containsSecret(text)) _fail(WorkspaceFailure.invalid);
-      messages.add(ForeignTurn(role: role, text: text));
+      messages.add(ForeignTurn(role: role, text: redactSecrets(content)));
     }
     final existing = result['already_imported'];
     final cwd = result['cwd'];
     final safeCwd = cwd is String && cwd.trim().isNotEmpty
         ? redactSecrets(cwd.trim())
         : null;
-    if (safeCwd != null && containsSecret(safeCwd)) {
-      _fail(WorkspaceFailure.invalid);
-    }
     return ForeignPreviewView(
       messages: messages,
       total: total,
@@ -491,7 +485,7 @@ extension SessionHistory on WorkspaceTarget {
       if (id is! int || id <= 0) continue;
       if (role != 'user' && role != 'assistant') continue;
       final text = redactSecrets(_historyText(row['text'] ?? row['content']));
-      if (text.isEmpty || containsSecret(text)) continue;
+      if (text.isEmpty) continue;
       messages.add(HistoryMessage(rowId: id, role: role, text: text));
     }
     return messages;
@@ -570,15 +564,12 @@ ForeignSessionSummary? _foreignSummary(Object? row) {
   }
   final turns = row['turn_count'];
   final safeTitle = redactSecrets(title);
-  if (containsSecret(safeTitle)) return null;
   final rawCwd = row['cwd'];
   final safeCwd = rawCwd is String && rawCwd.trim().isNotEmpty
       ? redactSecrets(rawCwd.trim())
       : null;
-  if (safeCwd != null && containsSecret(safeCwd)) return null;
   final rawExcerpt = row['excerpt'];
   final safeExcerpt = rawExcerpt is String ? redactSecrets(rawExcerpt) : '';
-  if (containsSecret(safeExcerpt)) return null;
   final mtime = row['mtime'];
   return ForeignSessionSummary(
     id: id,
@@ -591,6 +582,17 @@ ForeignSessionSummary? _foreignSummary(Object? row) {
     mtime: mtime is num ? mtime.toDouble() : 0,
   );
 }
+
+/// Exports above this size are redacted off the UI isolate: the rules are
+/// several passes over up to 2 MiB of text.
+const transcriptRedactionInlineLimit = 64 * 1024;
+
+/// [redactSecrets] for a whole export. A large transcript is redacted on
+/// another isolate so the page keeps drawing while it runs.
+Future<String> redactTranscript(String content) =>
+    content.length <= transcriptRedactionInlineLimit
+    ? Future.value(redactSecrets(content))
+    : Isolate.run(() => redactSecrets(content));
 
 String _historyText(Object? value) {
   if (value is String) return value.trim();
