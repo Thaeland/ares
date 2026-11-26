@@ -318,10 +318,12 @@ class VoiceClientConfigStore {
     this.ttl = const Duration(seconds: 60),
     http.Client? httpClient,
   }) : _http = httpClient ?? http.Client() {
-    _lifetime = AppLifecycleListener(
-      onHide: clear,
-      onStateChange: _onLifecycle,
-    );
+    // A plain observer, not an AppLifecycleListener: the listener asserts a
+    // strict state order (resumed > inactive > hidden > paused) that some
+    // platforms and the app's own tests skip, and one live listener makes
+    // every such jump throw. Hidden, paused and detached all clear the cache.
+    _lifetime = _VoiceConfigLifecycle(_onLifecycle);
+    WidgetsBinding.instance.addObserver(_lifetime);
     ConnectionMutationBarrier.addListener(_onAccountMutation);
   }
 
@@ -330,7 +332,7 @@ class VoiceClientConfigStore {
   final Future<Object?> Function() fetchConfig;
   final Duration ttl;
   final http.Client _http;
-  late final AppLifecycleListener _lifetime;
+  late final _VoiceConfigLifecycle _lifetime;
 
   String? _scopeKey;
   VoiceClientConfig? _cached;
@@ -518,7 +520,7 @@ class VoiceClientConfigStore {
     _disposed = true;
     clear();
     ConnectionMutationBarrier.removeListener(_onAccountMutation);
-    _lifetime.dispose();
+    WidgetsBinding.instance.removeObserver(_lifetime);
     _http.close();
   }
 }
@@ -553,4 +555,15 @@ bool isSilenceHallucination(String transcript, DirectSttConfig stt) {
   } catch (_) {
     return false;
   }
+}
+
+/// Forwards app lifecycle changes to the config store without the ordering
+/// assertions of [AppLifecycleListener].
+class _VoiceConfigLifecycle with WidgetsBindingObserver {
+  _VoiceConfigLifecycle(this._onChange);
+
+  final void Function(AppLifecycleState state) _onChange;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) => _onChange(state);
 }

@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/client_direct_voice.dart';
 import 'package:http/http.dart' as http;
@@ -210,6 +211,34 @@ void main() {
       expect(source, isNot(contains('SharedPreferences')));
       expect(source, isNot(contains('FlutterSecureStorage')));
       expect(source, isNot(contains('print(')));
+    },
+  );
+
+  test(
+    'backgrounding drops the cache, even on a resumed-to-paused jump',
+    () async {
+      var fetches = 0;
+      final store = VoiceClientConfigStore(
+        fetchConfig: () async {
+          fetches++;
+          return _configJson;
+        },
+        httpClient: MockClient((_) async => http.Response('ok', 200)),
+      );
+      addTearDown(store.dispose);
+      final binding = TestWidgetsFlutterBinding.instance;
+      addTearDown(
+        () => binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed),
+      );
+      binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await store.configFor('conn::profile');
+      expect(fetches, 1);
+
+      // No inactive/hidden in between: the store must neither assert on the
+      // order nor keep credentials across it.
+      binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      await store.configFor('conn::profile');
+      expect(fetches, 2);
     },
   );
 
