@@ -156,6 +156,11 @@ const canonicalOwnerConnectionVerbs = <String>{
   'connectors.connect',
 };
 
+/// Legacy RPC answers to a sensitive prompt. A session authority asks for a
+/// sudo password or a secret as a server request and takes the answer as
+/// that request's response frame; neither it nor its sidecar serves these.
+const canonicalUnservedMethods = <String>{'sudo.respond', 'secret.respond'};
+
 /// The levels `hermes_constants.parse_reasoning_effort` accepts.
 const canonicalReasoningEfforts = <String>{
   'none',
@@ -678,10 +683,11 @@ class CanonicalWire {
         return same(_botDelivery(params));
     }
     final owner = params['owner'];
-    if (method.startsWith('connect') &&
-        owner is Map &&
-        owner['type'] == 'session' &&
-        !canonicalOwnerConnectionVerbs.contains(method)) {
+    if (canonicalUnservedMethods.contains(method) ||
+        method.startsWith('connect') &&
+            owner is Map &&
+            owner['type'] == 'session' &&
+            !canonicalOwnerConnectionVerbs.contains(method)) {
       throw CanonicalWireRefusal(
         CanonicalRefusalKind.method,
         method,

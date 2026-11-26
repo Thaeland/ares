@@ -628,8 +628,11 @@ def main(argv):
             continue
         verdict = check(ctx, row.get('method'), row.get('params'))
         fake = row.get('strict_fake')
-        if fake in ('accepted', 'refused') and (fake == 'accepted') != verdict['ok']:
-            # The Dart strict fake and the gateway disagree: the fake is what the suites trust.
+        if (fake in ('accepted', 'refused') and (fake == 'accepted') != verdict['ok']
+                and verdict['verdict'] != 'contract violation'):
+            # The Dart strict fake and the gateway disagree: the fake is what the suites trust. It
+            # models routes, key sets and top-level types; a value constraint (a pattern, a nested
+            # model) is this tool's own check and fails the frame without being a disagreement.
             parity.append(f"{row.get('producer') or row.get('id')}: {row.get('method')} "
                           f"{json.dumps(row.get('params'), sort_keys=True)}: strict fake {fake}, "
                           f"gateway {verdict['verdict']} {verdict['problems']}")
