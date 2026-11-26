@@ -178,6 +178,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get background_report_collapse => 'Recolher relatório';
 
   @override
+  String get ng_brand_open_chat => 'Abrir uma conversa';
+
+  @override
+  String get ng_brand_recent => 'Recentes';
+
+  @override
+  String get ng_brand_sidebar_hint =>
+      'ou escolha uma conversa na barra lateral';
+
+  @override
   String get copy_session_id => 'Copiar ID da sessão';
 
   @override
@@ -9816,6 +9826,15 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get background_report_collapse => 'Recolher relatório';
+
+  @override
+  String get ng_brand_open_chat => 'Abrir um chat';
+
+  @override
+  String get ng_brand_recent => 'Recentes';
+
+  @override
+  String get ng_brand_sidebar_hint => 'ou escolha um chat na barra lateral';
 
   @override
   String get copy_session_id => 'Copiar ID da sessão';

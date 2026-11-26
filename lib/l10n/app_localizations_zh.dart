@@ -165,6 +165,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get background_report_collapse => '收起报告';
 
   @override
+  String get ng_brand_open_chat => '打开聊天';
+
+  @override
+  String get ng_brand_recent => '最近聊天';
+
+  @override
+  String get ng_brand_sidebar_hint => '或从侧边栏选择聊天';
+
+  @override
   String get copy_session_id => '复制会话 ID';
 
   @override
@@ -9388,6 +9397,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get background_report_collapse => '收起报告';
 
   @override
+  String get ng_brand_open_chat => '打开聊天';
+
+  @override
+  String get ng_brand_recent => '最近聊天';
+
+  @override
+  String get ng_brand_sidebar_hint => '或从侧边栏选择聊天';
+
+  @override
   String get copy_session_id => '复制会话 ID';
 
   @override
@@ -17838,6 +17856,15 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get background_report_collapse => '收合報告';
+
+  @override
+  String get ng_brand_open_chat => '開啟聊天';
+
+  @override
+  String get ng_brand_recent => '最近聊天';
+
+  @override
+  String get ng_brand_sidebar_hint => '或從側邊欄選擇聊天';
 
   @override
   String get copy_session_id => '複製工作階段 ID';

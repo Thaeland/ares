@@ -178,6 +178,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get background_report_collapse => 'Згорнути звіт';
 
   @override
+  String get ng_brand_open_chat => 'Відкрити чат';
+
+  @override
+  String get ng_brand_recent => 'Нещодавні';
+
+  @override
+  String get ng_brand_sidebar_hint => 'або виберіть чат на бічній панелі';
+
+  @override
   String get copy_session_id => 'Копіювати ID сеансу';
 
   @override

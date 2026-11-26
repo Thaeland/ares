@@ -5,6 +5,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../core/services/android_share_intent_service.dart';
+import '../core/services/android_launch_intent_service.dart';
 import '../core/services/client_direct_voice.dart';
 import '../core/services/connection_manager.dart';
 import '../core/services/gateway_fleet.dart';
@@ -23,7 +25,11 @@ class NextGenHome extends StatefulWidget {
     super.key,
     required this.connManager,
     this.testGatewayFactory,
+    this.shareIntents,
+    this.launchIntents,
   });
+  final AndroidShareIntentService? shareIntents;
+  final AndroidLaunchIntentService? launchIntents;
   final ConnectionManager connManager;
   @visibleForTesting
   final NextGenGateway Function(SavedConnection)? testGatewayFactory;
@@ -37,6 +43,18 @@ class _NextGenHomeState extends State<NextGenHome> {
   List<SavedConnection>? _connections;
   NextGenGateway? _gateway;
   String? _loadError;
+
+  bool _coldStart = true;
+
+  NgMainPage _mainPage() {
+    final cold = _coldStart;
+    _coldStart = false;
+    return NgMainPage(
+      coldStart: cold,
+      shareIntents: widget.shareIntents,
+      launchIntents: widget.launchIntents,
+    );
+  }
 
   ConnectionManager get _manager => widget.connManager;
 
@@ -302,9 +320,10 @@ class _NextGenHomeState extends State<NextGenHome> {
           onPopWithResult: (_) => _navigator.currentState?.maybePop(),
           child: Navigator(
             key: _navigator,
-            onGenerateInitialRoutes: (_, _) => [
-              MaterialPageRoute<void>(builder: (_) => const NgMainPage()),
-            ],
+            onGenerateInitialRoutes: (_, _) {
+              final page = _mainPage();
+              return [MaterialPageRoute<void>(builder: (_) => page)];
+            },
           ),
         ),
       ),

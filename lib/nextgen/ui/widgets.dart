@@ -283,9 +283,11 @@ class NgPrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minWidth: double.infinity,
+        minHeight: 50,
+      ),
       child: FilledButton(
         style: FilledButton.styleFrom(
           backgroundColor: c.accent,
@@ -310,7 +312,7 @@ class NgPrimaryButton extends StatelessWidget {
                     Icon(icon, size: 18),
                     const SizedBox(width: 8),
                   ],
-                  Text(label),
+                  Flexible(child: Text(label, textAlign: TextAlign.center)),
                 ],
               ),
       ),
@@ -334,9 +336,11 @@ class NgSecondaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minWidth: double.infinity,
+        minHeight: 50,
+      ),
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
           foregroundColor: c.text,
@@ -351,7 +355,7 @@ class NgSecondaryButton extends StatelessWidget {
               Icon(icon, size: 18),
               const SizedBox(width: 8),
             ],
-            Text(label),
+            Flexible(child: Text(label, textAlign: TextAlign.center)),
           ],
         ),
       ),
@@ -503,13 +507,19 @@ class NgEmpty extends StatelessWidget {
     this.body,
     this.action,
     this.titleWidget,
+    this.header,
   });
 
   final Widget? titleWidget;
-  final IconData icon;
+
+  /// No icon when null.
+  final IconData? icon;
   final String title;
   final String? body;
   final Widget? action;
+
+  /// Optional decorative header above the greeting.
+  final Widget? header;
 
   @override
   Widget build(BuildContext context) {
@@ -520,8 +530,14 @@ class NgEmpty extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 36, color: c.text3),
-            const SizedBox(height: 14),
+            if (header != null) ...[
+              header!,
+              SizedBox(height: icon == null ? 26 : 30),
+            ],
+            if (icon != null) ...[
+              Icon(icon, size: 36, color: c.text3),
+              const SizedBox(height: 14),
+            ],
             titleWidget ??
                 Text(
                   title,

@@ -12,6 +12,7 @@ import 'package:hermes_android/core/workspace/popout_bootstrap.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:hermes_android/nextgen/nextgen_preferences.dart';
 import 'package:hermes_android/nextgen/theme/nextgen_theme.dart';
+import 'package:hermes_android/nextgen/ui/brand.dart';
 import 'package:hermes_android/nextgen/ui/chat_view.dart';
 import 'package:hermes_android/nextgen/ui/nextgen_scope.dart';
 import 'package:hermes_android/nextgen/ui/parallel_chat_pane.dart';
@@ -96,6 +97,7 @@ void main() {
       ),
     );
     await _settle(tester);
+    expect(find.byType(NgBrandLanding), findsNothing);
     await _resume(tester);
     expect(find.text('Resume a chat'), findsOneWidget);
     expect(find.text('This pane has no chat list to search.'), findsNothing);
@@ -126,6 +128,7 @@ void main() {
     await _settle(tester);
     await tester.tap(find.text('Chat alpha').last);
     await _settle(tester);
+    expect(find.byType(NgBrandLanding), findsNothing);
     await _resume(tester);
     expect(find.text('Resume a chat'), findsOneWidget);
     expect(find.text('This pane has no chat list to search.'), findsNothing);
@@ -160,6 +163,7 @@ void main() {
       ),
     );
     await _settle(tester);
+    expect(find.byType(NgBrandLanding), findsNothing);
     await _resume(tester);
     expect(find.text('Resume a chat'), findsOneWidget);
     expect(find.text('This pane has no chat list to search.'), findsNothing);

@@ -177,6 +177,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get background_report_collapse => 'Contraer informe';
 
   @override
+  String get ng_brand_open_chat => 'Abrir un chat';
+
+  @override
+  String get ng_brand_recent => 'Recientes';
+
+  @override
+  String get ng_brand_sidebar_hint => 'o elige un chat de la barra lateral';
+
+  @override
   String get copy_session_id => 'Copiar ID de sesión';
 
   @override

@@ -114,6 +114,7 @@ flutter:
           weight: 500
   assets:
     - assets/
+    - assets/icon/ares_mark_black.png
     - LICENSE
     - assets/fonts/OFL.txt
     - assets/fonts/geist/OFL.txt

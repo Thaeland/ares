@@ -5,6 +5,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../../core/services/android_share_intent_service.dart';
+import '../../core/services/android_launch_intent_service.dart';
 import '../../core/models/hermes_project.dart';
 import '../../core/models/session.dart';
 import '../../core/services/notification_prefs.dart';
@@ -20,6 +22,7 @@ import '../data/chat_controller.dart';
 import '../nextgen_preferences.dart';
 import '../theme/nextgen_theme.dart';
 import 'capabilities_page.dart';
+import 'brand.dart';
 import 'chat_view.dart';
 import 'insights_page.dart';
 import 'more_page.dart';
@@ -32,16 +35,51 @@ import '../nextgen_l10n.dart';
 import '../../core/desktop/desktop_integration.dart';
 import '../../core/desktop/quick_entry.dart';
 
-class NgMainPage extends StatelessWidget {
-  const NgMainPage({super.key});
+class NgMainPage extends StatefulWidget {
+  const NgMainPage({
+    super.key,
+    this.shareIntents,
+    this.launchIntents,
+    this.coldStart = true,
+  });
+
+  final AndroidShareIntentService? shareIntents;
+  final AndroidLaunchIntentService? launchIntents;
+  final bool coldStart;
 
   @override
-  Widget build(BuildContext context) =>
-      _NgMainContent(key: ObjectKey(NgScope.of(context).gateway));
+  State<NgMainPage> createState() => _NgMainPageVisitState();
+}
+
+class _NgMainPageVisitState extends State<NgMainPage> {
+  bool _coldStart = true;
+
+  bool _takeColdStart() {
+    final cold = _coldStart;
+    _coldStart = false;
+    return cold && widget.coldStart;
+  }
+
+  @override
+  Widget build(BuildContext context) => _NgMainContent(
+    key: ObjectKey(NgScope.of(context).gateway),
+    takeColdStart: _takeColdStart,
+    shareIntents: widget.shareIntents,
+    launchIntents: widget.launchIntents,
+  );
 }
 
 class _NgMainContent extends StatefulWidget {
-  const _NgMainContent({super.key});
+  const _NgMainContent({
+    super.key,
+    required this.takeColdStart,
+    this.shareIntents,
+    this.launchIntents,
+  });
+
+  final AndroidShareIntentService? shareIntents;
+  final AndroidLaunchIntentService? launchIntents;
+  final bool Function() takeColdStart;
 
   @override
   State<_NgMainContent> createState() => _NgMainPageState();
@@ -68,6 +106,11 @@ class _NgMainPageState extends State<_NgMainContent>
 
   NgSessionsModel? _sessions;
   NgChatController? _chat;
+
+  /// The launch landing is dismissed permanently for this main-page visit
+  /// when a chat is opened, started, or an external action is handled.
+  AndroidSharePayload? _sharedPayload;
+  bool _landing = false;
   bool _foreground = true;
   NextGenGateway? _notificationGateway;
   Object? _notificationMutation;
@@ -81,6 +124,8 @@ class _NgMainPageState extends State<_NgMainContent>
   @override
   void initState() {
     super.initState();
+    widget.shareIntents?.pendingShare.addListener(_onExternalAction);
+    widget.launchIntents?.pendingQuickChat.addListener(_onExternalAction);
     WidgetsBinding.instance.addObserver(this);
     _desktopShortcutSub = desktopShortcutBus.stream.listen(_onDesktopShortcut);
     _quickEntryTargets = QuickEntryTargets.register(
@@ -100,6 +145,8 @@ class _NgMainPageState extends State<_NgMainContent>
 
   @override
   void dispose() {
+    widget.shareIntents?.pendingShare.removeListener(_onExternalAction);
+    widget.launchIntents?.pendingQuickChat.removeListener(_onExternalAction);
     _desktopShortcutSub?.cancel();
     _quickEntryTargets?.call();
     final deepLinkListener = _deepLinkListener;
@@ -124,6 +171,16 @@ class _NgMainPageState extends State<_NgMainContent>
     _sessions?.removeListener(_onSessionsChanged);
     _sessions?.dispose();
     super.dispose();
+  }
+
+  void _onExternalAction() {
+    if (!mounted || _sessions == null) return;
+    final share = widget.shareIntents?.takePendingShare();
+    final quick = widget.launchIntents?.takePendingQuickChat() ?? false;
+    if (share == null && !quick) return;
+    _scaffold.currentState?.closeDrawer();
+    _openId(null, '', initialText: share?.text);
+    _sharedPayload = share;
   }
 
   /// The chat a notification tap asked for, when it belongs to this
@@ -172,14 +229,43 @@ class _NgMainPageState extends State<_NgMainContent>
     final sessions = _sessions;
     if (sessions == null) {
       _sessions = NgSessionsModel(scope)..addListener(_onSessionsChanged);
-      unawaited(_sessions!.refresh());
-      final last = NextGenPreferences.launchSession(
-        scope.prefs,
-        scope.connection.id,
-        requested: _takeOpenRequest(scope.connection.id),
-      );
-      _openId(last, '', initial: true);
+      final requested = _takeOpenRequest(scope.connection.id);
+      final link = HermesDeepLinkService.shared.pendingLink.value;
+      final action =
+          link != null &&
+          !link.isIgnored &&
+          link.isFor(scope.connection.id, scope.connection.gatewayProfile);
+      final external =
+          widget.shareIntents?.pendingShare.value != null ||
+          (widget.launchIntents?.pendingQuickChat.value ?? false);
+      final answer = nextGenNotificationAnswer.value;
+      final answering = answer?.connectionId == scope.connection.id;
+      final coldStart = widget.takeColdStart();
+      if (coldStart &&
+          requested == null &&
+          !action &&
+          !external &&
+          !answering) {
+        _landing = true;
+      } else {
+        // Explicit activations never restore an unrelated last chat while
+        // waiting for the link's session list or action destination.
+        final id = !coldStart && !action && !external && !answering
+            ? NextGenPreferences.launchSession(
+                scope.prefs,
+                scope.connection.id,
+                requested: requested,
+              )
+            : requested ?? (answering ? answer?.sessionId : null);
+        _openId(id, '', initial: true);
+      }
       _listenForRequests(scope);
+      unawaited(_sessions!.refresh());
+      if (external) {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _onExternalAction(),
+        );
+      }
     } else {
       sessions.scope = scope;
     }
@@ -230,6 +316,7 @@ class _NgMainPageState extends State<_NgMainContent>
   }) {
     final scope = NgScope.of(context);
     final old = _chat;
+    if (initialText == null) _sharedPayload = null;
 
     // Try the LRU cache first: reuse the parsed transcript, just resync.
     NgChatController? cached;
@@ -281,7 +368,10 @@ class _NgMainPageState extends State<_NgMainContent>
     if (initial) {
       _chat = chat;
     } else {
-      setState(() => _chat = chat);
+      setState(() {
+        _chat = chat;
+        _landing = false;
+      });
     }
 
     // Park the old controller in the LRU cache instead of disposing it.
@@ -813,6 +903,7 @@ class _NgMainPageState extends State<_NgMainContent>
     }
     final link = HermesDeepLinkService.shared.takePendingLink();
     if (link == null || !mounted || link.isIgnored) return;
+    if (_landing) _openId(null, '');
     switch (link.kind) {
       case HermesDeepLinkKind.launch:
         return; // focus-only; no route, no prefill
@@ -895,12 +986,16 @@ class _NgMainPageState extends State<_NgMainContent>
 
   void _open(Session s) {
     _scaffold.currentState?.closeDrawer();
-    if (s.id == _chat?.storedId) return;
+    if (s.id == _chat?.storedId) {
+      if (_landing) setState(() => _landing = false);
+      return;
+    }
     _openId(s.id, ngSessionTitle(s));
   }
 
   void _newChat() {
     _scaffold.currentState?.closeDrawer();
+    if (_landing) setState(() => _landing = false);
     if (_chat?.isNew == true &&
         _chat!.items.isEmpty &&
         _chat!.workingDirectory == null) {
@@ -962,11 +1057,20 @@ class _NgMainPageState extends State<_NgMainContent>
       }
     }
 
-    final view = chat == null
+    final view = _landing
+        ? NgBrandLanding(
+            sessions: _sessions!,
+            docked: docked,
+            onNewChat: _newChat,
+            onOpen: _open,
+            onOpenChats: toggleSidebar,
+          )
+        : chat == null
         ? const SizedBox.shrink()
         : NgChatView(
             key: ObjectKey(chat),
             chat: chat,
+            initialSharedPayload: _sharedPayload,
             onOpenSidebar: toggleSidebar,
             sessions: _sessions,
             onNewChat: _newChat,

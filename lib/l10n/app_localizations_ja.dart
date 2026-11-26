@@ -175,6 +175,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get background_report_collapse => 'レポートを折りたたむ';
 
   @override
+  String get ng_brand_open_chat => 'チャットを開く';
+
+  @override
+  String get ng_brand_recent => '最近のチャット';
+
+  @override
+  String get ng_brand_sidebar_hint => 'またはサイドバーからチャットを選択';
+
+  @override
   String get copy_session_id => 'セッション ID をコピー';
 
   @override

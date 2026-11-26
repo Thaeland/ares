@@ -177,6 +177,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get background_report_collapse => 'Bericht zuklappen';
 
   @override
+  String get ng_brand_open_chat => 'Chat öffnen';
+
+  @override
+  String get ng_brand_recent => 'Zuletzt';
+
+  @override
+  String get ng_brand_sidebar_hint =>
+      'oder einen Chat aus der Seitenleiste wählen';
+
+  @override
   String get copy_session_id => 'Sitzungs-ID kopieren';
 
   @override

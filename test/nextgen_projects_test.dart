@@ -252,6 +252,12 @@ Future<void> _app(
     ),
   );
   await _frames(tester);
+  if (main &&
+      find.byKey(const Key('ng-brand-new-chat')).evaluate().isNotEmpty) {
+    expect(find.byKey(const Key('ng-brand-new-chat')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ng-brand-new-chat')));
+    await _frames(tester);
+  }
 }
 
 Future<void> _openMore(WidgetTester tester) async {

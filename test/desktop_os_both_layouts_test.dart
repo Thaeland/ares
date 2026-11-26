@@ -760,6 +760,11 @@ void main() {
             store: store,
           );
 
+          // The cold launch is the landing; start a chat before testing its
+          // wide header's palette button. All routing/rebinding checks remain.
+          expect(find.byKey(const Key('ng-brand-new-chat')), findsOneWidget);
+          await tester.tap(find.byKey(const Key('ng-brand-new-chat')));
+          await tester.pumpAndSettle();
           // Wide pane renders the App command palette IconButton directly.
           expect(
             find.byKey(const ValueKey('app-command-palette-button')),
