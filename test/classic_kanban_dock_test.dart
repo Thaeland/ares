@@ -280,7 +280,7 @@ void main() {
     expect(screen.route.connectionId, _connection.id);
     expect(screen.onClose, isNull, reason: 'a route, not a pane');
     expect(find.byKey(const ValueKey('kanban-pane')), findsNothing);
-    await _shown(tester, find.textContaining('t_1 · running'));
+    await _shown(tester, find.textContaining('t_1 · Running'));
     expect(tester.takeException(), isNull);
     await _close(tester);
   });
@@ -321,10 +321,10 @@ void main() {
     final pane = tester.getRect(find.byKey(const ValueKey('kanban-pane')));
     expect(pane.right, 1280);
     expect(tester.getRect(composer).right, lessThanOrEqualTo(pane.left));
-    await _shown(tester, find.textContaining('t_1 · running'));
+    await _shown(tester, find.textContaining('t_1 · Running'));
 
     // The sheet belongs to the pane; closing the pane leaves the chat.
-    Navigator.of(tester.element(find.textContaining('t_1 · running'))).pop();
+    Navigator.of(tester.element(find.textContaining('t_1 · Running'))).pop();
     await tester.pump(const Duration(milliseconds: 500));
     await tester.tap(find.byKey(const Key('kanban-close')));
     await tester.pump(const Duration(milliseconds: 500));

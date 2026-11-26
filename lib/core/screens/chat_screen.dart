@@ -1955,9 +1955,12 @@ class _ChatScreenState extends State<ChatScreen>
   /// not.
   List<SlashCommand> _localSlashCommands() {
     if (!mounted || _kanbanOwner == null) return const [];
-    return const [
-      SlashCommand(name: 'kanban', description: 'Open the Kanban board'),
-      SlashCommand(name: 'bots', description: 'Open your bots'),
+    return [
+      SlashCommand(
+        name: 'kanban',
+        description: context.sharedL10n.ng_slash_kanban,
+      ),
+      SlashCommand(name: 'bots', description: context.sharedL10n.ng_slash_bots),
     ];
   }
 

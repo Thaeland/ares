@@ -151,7 +151,7 @@ void main() {
 
       // Open task detail drawer on running card 't_run_1': reassign, inspect runs & log, comment & requeue, links.
       await tester.tap(find.byKey(const Key('kanban-card-t_run_1')));
-      await _shown(tester, find.textContaining('t_run_1 · running'));
+      await _shown(tester, find.textContaining('t_run_1 · Running'));
 
       // Reassigning a running card hits POST /tasks/{id}/reassign with reclaim_first: true.
       await tester.tap(find.byKey(const Key('kanban-detail-assignee')));
@@ -313,7 +313,7 @@ void main() {
 
       // The pending card opens its detail sheet as soon as the snapshot lands.
       await _shown(tester, find.byKey(const Key('kanban-active-count')));
-      await _shown(tester, find.textContaining('t_run_1 · running'));
+      await _shown(tester, find.textContaining('t_run_1 · Running'));
 
       // The focused sheet belongs to the board it was opened on.
       expect(find.text('Kanban · default'), findsOneWidget);

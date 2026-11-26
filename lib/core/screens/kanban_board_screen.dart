@@ -102,7 +102,29 @@ Future<bool> _confirmKanbanAction(
   return ok == true;
 }
 
-String _kanbanCardCount(int count) => count == 1 ? '1 card' : '$count cards';
+String _kanbanCardCount(BuildContext context, int count) =>
+    context.sharedL10n.ng_board_card_count(count);
+
+/// A linked card's column, or `?` before the board has reported it.
+String _linkedStatus(BuildContext context, KanbanLinkedTask? task) =>
+    task == null ? '?' : _columnLabel(context, task.status);
+
+/// A workflow column's name in the app's language (`ng_kanban_status_*`).
+String _columnLabel(BuildContext context, String status) {
+  final l = context.sharedL10n;
+  return switch (status) {
+    'triage' => l.ng_kanban_status_triage,
+    'todo' => l.ng_kanban_status_todo,
+    'scheduled' => l.ng_kanban_status_scheduled,
+    'ready' => l.ng_kanban_status_ready,
+    'running' => l.ng_kanban_status_running,
+    'blocked' => l.ng_kanban_status_blocked,
+    'review' => l.ng_kanban_status_review,
+    'done' => l.ng_kanban_status_done,
+    'archived' => l.ng_kanban_status_archived,
+    _ => status,
+  };
+}
 
 class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
   WorkspacePane? _pane;
@@ -550,7 +572,10 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Kanban ${ev.taskId ?? 'task'}: ${ev.kind.replaceAll('_', ' ')}',
+            context.sharedL10n.ng_board_event_toast(
+              ev.taskId ?? context.sharedL10n.ng_board_task,
+              ev.kind.replaceAll('_', ' '),
+            ),
           ),
           duration: const Duration(seconds: 3),
         ),
@@ -568,19 +593,19 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
 
   String _describeError(Object error) => switch (error) {
     KanbanActionRefusedException(:final detail, :final statusCode) =>
-      detail.isNotEmpty ? detail : 'Action refused (HTTP $statusCode).',
+      detail.isNotEmpty
+          ? detail
+          : context.sharedL10n.ng_board_refused_http('$statusCode'),
     WorkspaceException(:final reason) => switch (reason) {
       WorkspaceFailure.unsupported =>
-        'Kanban plugin is not enabled on this gateway.',
-      WorkspaceFailure.denied =>
-        'Sign-in or permission required on this gateway.',
-      WorkspaceFailure.stale || WorkspaceFailure.mismatch =>
-        'Gateway owner changed. Refresh before continuing.',
-      WorkspaceFailure.insecure =>
-        'HTTPS (or loopback) is required for Kanban workspace operations.',
-      _ => 'Could not reach the Kanban service on this gateway.',
+        context.sharedL10n.ng_board_err_unsupported,
+      WorkspaceFailure.denied => context.sharedL10n.ng_board_err_denied,
+      WorkspaceFailure.stale ||
+      WorkspaceFailure.mismatch => context.sharedL10n.ng_board_err_stale,
+      WorkspaceFailure.insecure => context.sharedL10n.ng_board_err_insecure,
+      _ => context.sharedL10n.ng_board_err_unreachable,
     },
-    _ => 'Operation failed. Refresh and try again.',
+    _ => context.sharedL10n.ng_board_err_failed,
   };
 
   Future<void> _selectBoard(String slug) async {
@@ -649,16 +674,16 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     String? reviewSummary;
     if (targetStatus == 'blocked') {
       blockReason = await _promptText(
-        title: 'Block ${task.id}',
-        label: 'Blocker reason',
-        hint: 'What is blocking this card?',
+        title: context.sharedL10n.ng_board_block_title(task.id),
+        label: context.sharedL10n.ng_board_block_reason,
+        hint: context.sharedL10n.ng_board_block_hint,
       );
       if (blockReason == null || blockReason.trim().isEmpty) return;
     } else if (targetStatus == 'review') {
       reviewSummary = await _promptText(
-        title: 'Request review for ${task.id}',
-        label: 'Review summary',
-        hint: 'What was implemented and verified?',
+        title: context.sharedL10n.ng_board_review_title(task.id),
+        label: context.sharedL10n.ng_board_review_summary,
+        hint: context.sharedL10n.ng_board_review_hint,
       );
       if (reviewSummary == null || reviewSummary.trim().isEmpty) return;
     }
@@ -727,13 +752,14 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
   Future<void> _runBulkMove(String targetStatus) async {
     final ids = _selectedIds.toList();
     if (ids.isEmpty) return;
-    final label = kanbanColumnLabels[targetStatus] ?? targetStatus;
+    final label = _columnLabel(context, targetStatus);
     final confirmed = await _confirmDestructive(
-      title: 'Move ${_kanbanCardCount(ids.length)} to $label?',
-      message:
-          'Every selected card on $_effectiveSlug changes column. '
-          'A card that is running stops running.',
-      confirmLabel: 'Move',
+      title: context.sharedL10n.ng_board_move_title(
+        _kanbanCardCount(context, ids.length),
+        label,
+      ),
+      message: context.sharedL10n.ng_board_move_body(_effectiveSlug),
+      confirmLabel: context.sharedL10n.ng_board_move,
     );
     if (!confirmed || !mounted) return;
     final epoch = _boardEpoch;
@@ -746,7 +772,10 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
         status: targetStatus,
       );
       if (!mounted || !target.isCurrent || epoch != _boardEpoch) return;
-      _applyBulkResults(results, 'Moved cards to $targetStatus');
+      _applyBulkResults(
+        results,
+        context.sharedL10n.ng_board_moved(_columnLabel(context, targetStatus)),
+      );
       await _reload(silent: true);
     } catch (e) {
       if (epoch == _boardEpoch) _toast(_describeError(e));
@@ -759,12 +788,17 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     // The request carries reclaim_first: a running card's worker is stopped.
     final confirmed = await _confirmDestructive(
       title: assignee.isEmpty
-          ? 'Unassign ${_kanbanCardCount(ids.length)}?'
-          : 'Assign ${_kanbanCardCount(ids.length)} to @$assignee?',
-      message:
-          'Cards that are running are reclaimed first: '
-          'their workers are stopped.',
-      confirmLabel: assignee.isEmpty ? 'Unassign' : 'Assign',
+          ? context.sharedL10n.ng_board_unassign_title(
+              _kanbanCardCount(context, ids.length),
+            )
+          : context.sharedL10n.ng_board_assign_title(
+              _kanbanCardCount(context, ids.length),
+              assignee,
+            ),
+      message: context.sharedL10n.ng_board_assign_body,
+      confirmLabel: assignee.isEmpty
+          ? context.sharedL10n.ng_board_unassign
+          : context.sharedL10n.ng_board_assign,
     );
     if (!confirmed || !mounted) return;
     final epoch = _boardEpoch;
@@ -780,7 +814,9 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       if (!mounted || !target.isCurrent || epoch != _boardEpoch) return;
       _applyBulkResults(
         results,
-        assignee.isEmpty ? 'Unassigned selected cards' : 'Assigned @$assignee',
+        assignee.isEmpty
+            ? context.sharedL10n.ng_board_unassigned_done
+            : context.sharedL10n.ng_board_assigned_done(assignee),
       );
       await _reload(silent: true);
     } catch (e) {
@@ -792,11 +828,11 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     final ids = _selectedIds.toList();
     if (ids.isEmpty) return;
     final confirmed = await _confirmDestructive(
-      title: 'Archive ${_kanbanCardCount(ids.length)}?',
-      message:
-          'Archived cards leave $_effectiveSlug. '
-          'Turn on Archived to see them again.',
-      confirmLabel: 'Archive',
+      title: context.sharedL10n.ng_board_archive_title(
+        _kanbanCardCount(context, ids.length),
+      ),
+      message: context.sharedL10n.ng_board_archive_body(_effectiveSlug),
+      confirmLabel: context.sharedL10n.ng_archive,
     );
     if (!confirmed || !mounted) return;
     final epoch = _boardEpoch;
@@ -809,7 +845,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
         archive: true,
       );
       if (!mounted || !target.isCurrent || epoch != _boardEpoch) return;
-      _applyBulkResults(results, 'Archived selected cards');
+      _applyBulkResults(results, context.sharedL10n.ng_board_archived_done);
       await _reload(silent: true);
     } catch (e) {
       if (epoch == _boardEpoch) _toast(_describeError(e));
@@ -820,10 +856,11 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     final ids = _selectedIds.toList();
     if (ids.isEmpty) return;
     final confirmed = await _confirmDestructive(
-      title: 'Delete ${ids.length} task(s)?',
-      message:
-          'This permanently deletes the selected cards from $_effectiveSlug.',
-      confirmLabel: 'Delete',
+      title: context.sharedL10n.ng_board_delete_title(
+        _kanbanCardCount(context, ids.length),
+      ),
+      message: context.sharedL10n.ng_board_delete_body(_effectiveSlug),
+      confirmLabel: context.sharedL10n.ng_delete,
     );
     if (!confirmed || !mounted) return;
     final epoch = _boardEpoch;
@@ -848,10 +885,18 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
         if (_selectedIds.isEmpty) _selectionMode = false;
       });
       if (failed.isEmpty) {
-        _toast('Deleted ${ids.length} task(s).');
+        _toast(
+          context.sharedL10n.ng_board_deleted(
+            _kanbanCardCount(context, ids.length),
+          ),
+        );
       } else {
         _toast(
-          '${failed.length} of ${ids.length} failed: ${firstError ?? 'refused'}',
+          context.sharedL10n.ng_board_partial_failure(
+            '${failed.length}',
+            '${ids.length}',
+            firstError ?? context.sharedL10n.ng_board_refused,
+          ),
         );
       }
       await _reload(silent: true);
@@ -875,7 +920,11 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       _toast(okMessage);
     } else {
       _toast(
-        '${failed.length} of ${results.length} failed: ${failed.first.error ?? 'refused'}',
+        context.sharedL10n.ng_board_partial_failure(
+          '${failed.length}',
+          '${results.length}',
+          failed.first.error ?? context.sharedL10n.ng_board_refused,
+        ),
       );
     }
   }
@@ -886,7 +935,11 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       final receipt = await target.kanbanDispatchNow(board: _queryBoard);
       if (!mounted || !target.isCurrent) return;
       _toast(
-        'Dispatched: ${receipt.spawnedCount} spawned, ${receipt.promoted} promoted, ${receipt.reclaimed} reclaimed.',
+        context.sharedL10n.ng_board_dispatched(
+          '${receipt.spawnedCount}',
+          '${receipt.promoted}',
+          '${receipt.reclaimed}',
+        ),
       );
       await _reload(silent: true);
     } catch (e) {
@@ -940,6 +993,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
           await _reload(silent: true);
         },
         onArchiveBoard: (slug) async {
+          final l10n = context.sharedL10n;
           final target = await _bound();
           final path = await target.kanbanArchiveBoard(slug);
           if (!mounted || !target.isCurrent) return;
@@ -951,7 +1005,11 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
           }
           await _prefs?.setBoardPinned(slug, false);
           _pinnedBoards = _prefs?.pinnedBoards ?? const [];
-          _toast(path == null ? 'Archived board $slug' : 'Archived to $path');
+          _toast(
+            path == null
+                ? l10n.ng_board_board_archived(slug)
+                : l10n.ng_board_board_archived_to(path),
+          );
           await _reload(rebindEvents: true);
         },
         onExportBoard: (slug, output) async {
@@ -961,7 +1019,12 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
             output: output,
           );
           if (!mounted || !target.isCurrent) return;
-          _toast('Exported ${exported.board} to ${exported.archive}');
+          _toast(
+            context.sharedL10n.ng_board_exported(
+              exported.board,
+              exported.archive,
+            ),
+          );
         },
         onImportBoard: (archive) async {
           final target = await _bound();
@@ -970,7 +1033,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
           final warn = imported.warnings.isEmpty
               ? ''
               : ' (${imported.warnings.join('; ')})';
-          _toast('Imported board ${imported.board}$warn');
+          _toast(context.sharedL10n.ng_board_imported(imported.board, warn));
           await _selectBoard(imported.board);
         },
       ),
@@ -1029,7 +1092,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
           if (created.warning != null && created.warning!.isNotEmpty) {
             _toast(created.warning!);
           } else {
-            _toast('Created ${created.task.id}');
+            _toast(context.sharedL10n.ng_board_created(created.task.id));
           }
           await _reload(silent: true);
         },
@@ -1053,7 +1116,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
           );
           if (mounted && target.isCurrent) {
             setState(() => _orchestration = updated);
-            _toast('Saved Kanban orchestration');
+            _toast(context.sharedL10n.ng_board_orchestration_saved);
           }
           return updated;
         },
@@ -1072,9 +1135,12 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
           final res = await target.kanbanDescribeProfileAuto(name);
           if (mounted && target.isCurrent) {
             if (!res.ok) {
-              _toast(res.reason ?? 'Auto-describe unavailable');
+              _toast(
+                res.reason ??
+                    context.sharedL10n.ng_board_auto_describe_unavailable,
+              );
             } else {
-              _toast('Updated @$name description');
+              _toast(context.sharedL10n.ng_board_description_updated(name));
               await _reload(silent: true);
             }
           }
@@ -1142,7 +1208,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
               children: [
                 Flexible(
                   child: Text(
-                    'Kanban · $_effectiveSlug',
+                    context.sharedL10n.ng_board_title(_effectiveSlug),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -1165,7 +1231,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        '$activeCount active',
+                        context.sharedL10n.ng_board_active('$activeCount'),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.labelSmall,
@@ -1180,13 +1246,13 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
         actions: [
           IconButton(
             key: const Key('kanban-dispatch-button'),
-            tooltip: 'Dispatch ready tasks now',
+            tooltip: context.sharedL10n.ng_board_dispatch,
             icon: const Icon(Icons.play_circle_outline),
             onPressed: snap == null ? null : _dispatchNow,
           ),
           IconButton(
             key: const Key('kanban-orchestration-button'),
-            tooltip: 'Orchestration & workers',
+            tooltip: context.sharedL10n.ng_board_orchestration,
             icon: const Icon(Icons.tune),
             onPressed: snap == null ? null : _openOrchestrationSheet,
           ),
@@ -1204,7 +1270,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
               key: const Key('kanban-new-task-button'),
               onPressed: _openNewTaskDialog,
               icon: const Icon(Icons.add),
-              label: const Text('New task'),
+              label: Text(context.sharedL10n.ng_board_new_task),
             ),
       bottomNavigationBar: _selectedIds.isEmpty ? null : _buildSelectionBar(),
       body: _buildBody(l10n),
@@ -1230,8 +1296,8 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
               ),
               if (_failure == WorkspaceFailure.unsupported) ...[
                 const SizedBox(height: 8),
-                const Text(
-                  'Enable the bundled "kanban" plugin in Capabilities → Plugins on this gateway to activate its board router.',
+                Text(
+                  context.sharedL10n.ng_board_enable_plugin,
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -1322,7 +1388,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
               decoration: InputDecoration(
                 isDense: true,
                 prefixIcon: const Icon(Icons.search, size: 18),
-                hintText: 'Filter tasks…',
+                hintText: context.sharedL10n.ng_board_filter,
                 suffixIcon: _searchQuery.isEmpty
                     ? null
                     : IconButton(
@@ -1342,18 +1408,21 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                 key: const Key('kanban-assignee-filter'),
                 isExpanded: true,
                 value: _assigneeFilter,
-                hint: const Text('All assignees'),
+                hint: Text(context.sharedL10n.ng_board_all_assignees),
                 items: [
-                  const DropdownMenuItem(
+                  DropdownMenuItem(
                     value: '',
                     child: Text(
-                      'All assignees',
+                      context.sharedL10n.ng_board_all_assignees,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const DropdownMenuItem(
+                  DropdownMenuItem(
                     value: '__unassigned__',
-                    child: Text('Unassigned', overflow: TextOverflow.ellipsis),
+                    child: Text(
+                      context.sharedL10n.ng_board_unassigned,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   for (final name in assignees)
                     DropdownMenuItem(
@@ -1374,7 +1443,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
             ),
           FilterChip(
             key: const Key('kanban-archived-toggle'),
-            label: const Text('Archived'),
+            label: Text(context.sharedL10n.ng_kanban_status_archived),
             selected: _includeArchived,
             onSelected: (v) {
               setState(() => _includeArchived = v);
@@ -1383,7 +1452,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
           ),
           FilterChip(
             key: const Key('kanban-lanes-by-profile'),
-            label: const Text('Running by profile'),
+            label: Text(context.sharedL10n.ng_board_running_by_profile),
             selected: _lanesByProfile,
             onSelected: (v) {
               setState(() => _lanesByProfile = v);
@@ -1394,8 +1463,10 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
             key: const Key('kanban-multiselect-toggle'),
             label: Text(
               _selectedIds.isEmpty
-                  ? 'Select'
-                  : 'Selected (${_selectedIds.length})',
+                  ? context.sharedL10n.ng_board_select
+                  : context.sharedL10n.ng_board_selected_chip(
+                      '${_selectedIds.length}',
+                    ),
             ),
             selected: _selectionMode || _selectedIds.isNotEmpty,
             onSelected: (v) {
@@ -1439,7 +1510,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                     key: Key('kanban-tab-${snap.columns[idx].name}'),
                     selected: idx == safeIdx,
                     label: Text(
-                      '${snap.columns[idx].label} '
+                      '${_columnLabel(context, snap.columns[idx].name)} '
                       '(${_filterTasks(snap.columns[idx].tasks).length})',
                     ),
                     onSelected: (_) => setState(() {
@@ -1488,7 +1559,9 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                 const SizedBox(height: 8),
                 RotatedBox(
                   quarterTurns: 1,
-                  child: Text('${col.label} (${tasks.length})'),
+                  child: Text(
+                    '${_columnLabel(context, col.name)} (${tasks.length})',
+                  ),
                 ),
               ],
             ),
@@ -1505,28 +1578,32 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
           child: Row(
             children: [
               if (col.isDragLocked) ...[
-                const Tooltip(
-                  message: 'Managed column — drag drop disabled',
+                Tooltip(
+                  message: context.sharedL10n.ng_board_locked_column,
                   child: Icon(Icons.lock_outline, size: 15),
                 ),
                 const SizedBox(width: 4),
               ],
               Expanded(
                 child: Text(
-                  '${col.label} · ${tasks.length}',
+                  '${_columnLabel(context, col.name)} · ${tasks.length}',
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
               ),
               if (!col.isDragLocked)
                 IconButton(
-                  tooltip: 'Add to ${col.label}',
+                  tooltip: context.sharedL10n.ng_board_add_to(
+                    _columnLabel(context, col.name),
+                  ),
                   icon: const Icon(Icons.add, size: 18),
                   visualDensity: VisualDensity.compact,
                   onPressed: () => _openNewTaskDialog(initialColumn: col.name),
                 ),
               if (wide)
                 IconButton(
-                  tooltip: 'Collapse ${col.label}',
+                  tooltip: context.sharedL10n.ng_board_collapse(
+                    _columnLabel(context, col.name),
+                  ),
                   icon: const Icon(Icons.unfold_less, size: 16),
                   visualDensity: VisualDensity.compact,
                   onPressed: () {
@@ -1548,8 +1625,10 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
               ? Center(
                   child: Text(
                     col.isDragLocked
-                        ? 'No ${col.label} tasks'
-                        : 'Drop or + task',
+                        ? context.sharedL10n.ng_board_column_empty(
+                            _columnLabel(context, col.name),
+                          )
+                        : context.sharedL10n.ng_board_drop_here,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 )
@@ -1599,7 +1678,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     if (col.name == 'running' && _lanesByProfile) {
       final grouped = <String, List<KanbanTaskCard>>{};
       for (final t in tasks) {
-        grouped.putIfAbsent(t.assignee ?? 'unassigned', () => []).add(t);
+        grouped.putIfAbsent(t.assignee ?? '', () => []).add(t);
       }
       final keys = grouped.keys.toList()..sort();
       return ListView(
@@ -1609,7 +1688,10 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               child: Text(
-                '@$profile (${grouped[profile]!.length})',
+                profile.isEmpty
+                    ? '${context.sharedL10n.ng_board_unassigned} '
+                          '(${grouped[profile]!.length})'
+                    : '@$profile (${grouped[profile]!.length})',
                 style: Theme.of(context).textTheme.labelMedium,
               ),
             ),
@@ -1769,7 +1851,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                     ),
                   PopupMenuButton<String>(
                     key: includeKeys ? Key('kanban-move-${task.id}') : null,
-                    tooltip: 'Card actions',
+                    tooltip: context.sharedL10n.ng_board_card_actions,
                     icon: const Icon(Icons.more_horiz, size: 18),
                     padding: EdgeInsets.zero,
                     onSelected: (action) {
@@ -1782,20 +1864,22 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                       }
                     },
                     itemBuilder: (_) => [
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: '__open__',
-                        child: Text('Open details'),
+                        child: Text(context.sharedL10n.ng_board_open_details),
                       ),
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: '__select__',
-                        child: Text('Select card'),
+                        child: Text(context.sharedL10n.ng_board_select_card),
                       ),
                       const PopupMenuDivider(),
                       for (final target in allowedMoves)
                         PopupMenuItem(
                           value: 'move:$target',
                           child: Text(
-                            'Move to ${kanbanColumnLabels[target] ?? target}',
+                            context.sharedL10n.ng_board_move_to(
+                              _columnLabel(context, target),
+                            ),
                           ),
                         ),
                     ],
@@ -1820,7 +1904,9 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                     visualDensity: VisualDensity.compact,
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     label: Text(
-                      task.assignee == null ? 'Parked' : '@${task.assignee}',
+                      task.assignee == null
+                          ? context.sharedL10n.ng_board_parked
+                          : '@${task.assignee}',
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ),
@@ -1829,7 +1915,9 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                       visualDensity: VisualDensity.compact,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       label: Text(
-                        'Blocked by ${task.openParentCount}',
+                        context.sharedL10n.ng_board_blocked_by(
+                          '${task.openParentCount}',
+                        ),
                         style: Theme.of(context).textTheme.labelSmall,
                       ),
                     ),
@@ -1848,7 +1936,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                       visualDensity: VisualDensity.compact,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       label: Text(
-                        'Goal loop',
+                        context.sharedL10n.ng_board_goal_loop,
                         style: Theme.of(context).textTheme.labelSmall,
                       ),
                     ),
@@ -1879,7 +1967,9 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
             runSpacing: 6,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Text('${_selectedIds.length} selected'),
+              Text(
+                context.sharedL10n.ng_board_selected('${_selectedIds.length}'),
+              ),
               PopupMenuButton<String>(
                 key: const Key('kanban-bulk-move'),
                 onSelected: _runBulkMove,
@@ -1887,29 +1977,38 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                   for (final col in unlockedTargets)
                     PopupMenuItem(
                       value: col,
-                      child: Text('Move to ${kanbanColumnLabels[col] ?? col}'),
+                      child: Text(
+                        context.sharedL10n.ng_board_move_to(
+                          _columnLabel(context, col),
+                        ),
+                      ),
                     ),
                 ],
-                child: const Chip(label: Text('Move…')),
+                child: Chip(label: Text(context.sharedL10n.ng_board_move_menu)),
               ),
               PopupMenuButton<String>(
                 key: const Key('kanban-bulk-assign'),
                 onSelected: _runBulkAssign,
                 itemBuilder: (_) => [
-                  const PopupMenuItem(value: '', child: Text('Unassign')),
+                  PopupMenuItem(
+                    value: '',
+                    child: Text(context.sharedL10n.ng_board_unassign),
+                  ),
                   for (final p in _profiles)
                     PopupMenuItem(value: p.name, child: Text('@${p.name}')),
                 ],
-                child: const Chip(label: Text('Assign…')),
+                child: Chip(
+                  label: Text(context.sharedL10n.ng_board_assign_menu),
+                ),
               ),
               ActionChip(
                 key: const Key('kanban-bulk-archive'),
-                label: const Text('Archive'),
+                label: Text(context.sharedL10n.ng_archive),
                 onPressed: _runBulkArchive,
               ),
               ActionChip(
                 key: const Key('kanban-bulk-delete'),
-                label: const Text('Delete'),
+                label: Text(context.sharedL10n.ng_delete),
                 onPressed: _runBulkDelete,
               ),
               TextButton(
@@ -1917,7 +2016,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                   _selectedIds.clear();
                   _selectionMode = false;
                 }),
-                child: const Text('Clear'),
+                child: Text(context.sharedL10n.ng_clear),
               ),
             ],
           ),
@@ -1987,7 +2086,7 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
         context: context,
         builder: (ctx) => StatefulBuilder(
           builder: (ctx, setModal) => AlertDialog(
-            title: const Text('New Kanban board'),
+            title: Text(context.sharedL10n.ng_board_new_board_title),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -1995,28 +2094,31 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
                   TextField(
                     key: const Key('kanban-create-board-slug'),
                     controller: slugCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'Slug (lowercase, e.g. release-v5)',
+                    decoration: InputDecoration(
+                      labelText: context.sharedL10n.ng_board_slug,
                     ),
                   ),
                   TextField(
                     key: const Key('kanban-create-board-name'),
                     controller: nameCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'Display name',
+                    decoration: InputDecoration(
+                      labelText: context.sharedL10n.ng_board_display_name,
                     ),
                   ),
                   if (widget.projects.isNotEmpty)
                     DropdownButtonFormField<String?>(
                       isExpanded: true,
                       initialValue: projectId,
-                      decoration: const InputDecoration(
-                        labelText: 'Linked project (optional)',
+                      decoration: InputDecoration(
+                        labelText: context.sharedL10n.ng_board_linked_project,
                       ),
                       items: [
-                        const DropdownMenuItem(
+                        DropdownMenuItem(
                           value: null,
-                          child: Text('None', overflow: TextOverflow.ellipsis),
+                          child: Text(
+                            context.sharedL10n.ng_board_none,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                         for (final p in widget.projects)
                           DropdownMenuItem(
@@ -2031,8 +2133,8 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
                     ),
                   TextField(
                     controller: workdirCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'Default workdir on host (optional)',
+                    decoration: InputDecoration(
+                      labelText: context.sharedL10n.ng_board_default_workdir,
                     ),
                   ),
                 ],
@@ -2046,7 +2148,7 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
               FilledButton(
                 key: const Key('kanban-create-board-submit'),
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Create'),
+                child: Text(context.sharedL10n.ng_create),
               ),
             ],
           ),
@@ -2075,12 +2177,12 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
       final ok = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Import board archive'),
+          title: Text(context.sharedL10n.ng_board_import_title),
           content: TextField(
             key: const Key('kanban-import-board-path'),
             controller: pathCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Host .tar.gz archive path',
+            decoration: InputDecoration(
+              labelText: context.sharedL10n.ng_board_import_path,
             ),
           ),
           actions: [
@@ -2091,7 +2193,7 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
             FilledButton(
               key: const Key('kanban-import-board-submit'),
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Import'),
+              child: Text(context.sharedL10n.ng_board_import),
             ),
           ],
         ),
@@ -2113,23 +2215,27 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
       final ok = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text('Edit ${board.slug}'),
+          title: Text(context.sharedL10n.ng_board_edit_board(board.slug)),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: nameCtrl,
-                  decoration: const InputDecoration(labelText: 'Name'),
+                  decoration: InputDecoration(
+                    labelText: context.sharedL10n.ng_board_name,
+                  ),
                 ),
                 TextField(
                   controller: descCtrl,
-                  decoration: const InputDecoration(labelText: 'Description'),
+                  decoration: InputDecoration(
+                    labelText: context.sharedL10n.ng_board_description,
+                  ),
                 ),
                 TextField(
                   controller: workdirCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Default workdir (blank clears)',
+                  decoration: InputDecoration(
+                    labelText: context.sharedL10n.ng_board_workdir_clear,
                   ),
                 ),
               ],
@@ -2184,7 +2290,7 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
               children: [
                 Expanded(
                   child: Text(
-                    'Kanban boards',
+                    context.sharedL10n.ng_board_boards,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
@@ -2192,22 +2298,22 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
                   key: const Key('kanban-import-board-btn'),
                   onPressed: _showImportDialog,
                   icon: const Icon(Icons.file_upload_outlined, size: 18),
-                  label: const Text('Import'),
+                  label: Text(context.sharedL10n.ng_board_import),
                 ),
                 FilledButton.tonalIcon(
                   key: const Key('kanban-new-board-btn'),
                   onPressed: _showCreateDialog,
                   icon: const Icon(Icons.add, size: 18),
-                  label: const Text('New board'),
+                  label: Text(context.sharedL10n.ng_board_new_board),
                 ),
               ],
             ),
             const SizedBox(height: 8),
             TextField(
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 isDense: true,
                 prefixIcon: Icon(Icons.search, size: 18),
-                hintText: 'Search boards…',
+                hintText: context.sharedL10n.ng_board_search_boards,
                 border: OutlineInputBorder(),
               ),
               onChanged: (v) => setState(() => _search = v.trim()),
@@ -2225,7 +2331,7 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
                     selected: board.slug == widget.activeSlug,
                     title: Text('${board.name} (${board.slug})'),
                     subtitle: Text(
-                      '${board.total} cards · ${board.activeWorkCount} active · ${board.defaultWorkspaceKind}',
+                      '${_kanbanCardCount(context, board.total)} · ${context.sharedL10n.ng_board_active('${board.activeWorkCount}')} · ${board.defaultWorkspaceKind}',
                     ),
                     onTap: () => widget.onSelect(board.slug),
                     trailing: Row(
@@ -2233,7 +2339,9 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
                       children: [
                         IconButton(
                           key: Key('kanban-pin-${board.slug}'),
-                          tooltip: pinned ? 'Unpin tab' : 'Pin tab',
+                          tooltip: pinned
+                              ? context.sharedL10n.ng_board_unpin
+                              : context.sharedL10n.ng_board_pin,
                           icon: Icon(
                             pinned ? Icons.push_pin : Icons.push_pin_outlined,
                             size: 18,
@@ -2260,13 +2368,13 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
                             } else if (action == 'archive') {
                               final confirmed = await _confirmKanbanAction(
                                 context,
-                                title: 'Archive board ${board.slug}?',
-                                message:
-                                    'The board and its '
-                                    '${_kanbanCardCount(board.total)} leave '
-                                    'the board list. The gateway keeps an '
-                                    'archive on its host.',
-                                confirmLabel: 'Archive',
+                                title: context.sharedL10n
+                                    .ng_board_archive_board_title(board.slug),
+                                message: context.sharedL10n
+                                    .ng_board_archive_board_body(
+                                      _kanbanCardCount(context, board.total),
+                                    ),
+                                confirmLabel: context.sharedL10n.ng_archive,
                               );
                               if (!confirmed || !context.mounted) return;
                               await widget.onArchiveBoard(board.slug);
@@ -2284,23 +2392,29 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
                             }
                           },
                           itemBuilder: (_) => [
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: 'edit',
-                              child: Text('Edit metadata'),
+                              child: Text(
+                                context.sharedL10n.ng_board_edit_metadata,
+                              ),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: 'export',
-                              child: Text('Export .tar.gz on host'),
+                              child: Text(context.sharedL10n.ng_board_export),
                             ),
                             if (pinned && _pins.indexOf(board.slug) > 0)
-                              const PopupMenuItem(
+                              PopupMenuItem(
                                 value: 'left',
-                                child: Text('Move pinned tab left'),
+                                child: Text(
+                                  context.sharedL10n.ng_board_move_pin_left,
+                                ),
                               ),
                             if (board.slug != 'default')
-                              const PopupMenuItem(
+                              PopupMenuItem(
                                 value: 'archive',
-                                child: Text('Archive board'),
+                                child: Text(
+                                  context.sharedL10n.ng_board_archive_board,
+                                ),
                               ),
                           ],
                         ),
@@ -2474,7 +2588,7 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
       // Title, fields and buttons scroll as one, above the keyboard.
       scrollable: true,
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      title: const Text('New Kanban task'),
+      title: Text(context.sharedL10n.ng_board_new_task_title),
       content: SizedBox(
         width: 480,
         child: Column(
@@ -2485,15 +2599,17 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
               key: const Key('kanban-new-title'),
               controller: _title,
               autofocus: true,
-              decoration: const InputDecoration(labelText: 'Title *'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.ng_board_title_required,
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
               key: const Key('kanban-new-body'),
               controller: _body,
               maxLines: 3,
-              decoration: const InputDecoration(
-                labelText: 'Spec & acceptance criteria',
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.ng_board_spec,
               ),
             ),
             const SizedBox(height: 8),
@@ -2501,18 +2617,24 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 TextButton.icon(
-                  key: const Key('kanban-new-estimate'),
+                  key: Key('kanban-new-estimate'),
                   onPressed: _estimateComplexity,
-                  icon: const Icon(Icons.analytics_outlined, size: 18),
-                  label: const Text('Estimate'),
+                  icon: Icon(Icons.analytics_outlined, size: 18),
+                  label: Text(context.sharedL10n.ng_board_estimate),
                 ),
                 if (_estimate != null)
                   SizedBox(
                     width: double.infinity,
                     child: Text(
                       _estimate!.ok
-                          ? 'Complexity ${_estimate!.complexity ?? '?'} (~${_estimate!.estTokens ?? 0} tok — token estimate only, not a dollar-cost claim)'
-                          : (_estimate!.reason ?? 'Estimate unavailable'),
+                          ? context.sharedL10n.ng_board_estimate_draft(
+                              _estimate!.complexity ?? '?',
+                              '${_estimate!.estTokens ?? 0}',
+                            )
+                          : (_estimate!.reason ??
+                                context
+                                    .sharedL10n
+                                    .ng_board_estimate_unavailable),
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
@@ -2520,25 +2642,39 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
             ),
             DropdownButtonFormField<String>(
               isExpanded: true,
-              key: const Key('kanban-new-column'),
+              key: Key('kanban-new-column'),
               initialValue: _column,
-              decoration: const InputDecoration(labelText: 'Initial column'),
-              items: const [
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.ng_board_initial_column,
+              ),
+              items: [
                 DropdownMenuItem(
                   value: 'ready',
-                  child: Text('Ready', overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    context.sharedL10n.ng_kanban_status_ready,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 DropdownMenuItem(
                   value: 'todo',
-                  child: Text('Todo', overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    context.sharedL10n.ng_kanban_status_todo,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 DropdownMenuItem(
                   value: 'triage',
-                  child: Text('Triage', overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    context.sharedL10n.ng_kanban_status_triage,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 DropdownMenuItem(
                   value: 'blocked',
-                  child: Text('Blocked', overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    context.sharedL10n.ng_kanban_status_blocked,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
               onChanged: (v) => setState(() => _column = v ?? 'ready'),
@@ -2549,12 +2685,14 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
               initialValue: widget.profiles.any((p) => p.name == _assignee)
                   ? _assignee
                   : '__parked__',
-              decoration: const InputDecoration(labelText: 'Worker assignee'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.ng_board_worker_assignee,
+              ),
               items: [
-                const DropdownMenuItem(
+                DropdownMenuItem(
                   value: '__parked__',
                   child: Text(
-                    'Parked (unassigned)',
+                    context.sharedL10n.ng_board_parked_unassigned,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -2573,32 +2711,39 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
                     key: const Key('kanban-new-priority'),
                     controller: _priority,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Priority'),
+                    decoration: InputDecoration(
+                      labelText: context.sharedL10n.ng_board_priority,
+                    ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: DropdownButtonFormField<String>(
                     isExpanded: true,
-                    key: const Key('kanban-new-workspace-kind'),
+                    key: Key('kanban-new-workspace-kind'),
                     initialValue: _workspaceKind,
-                    decoration: const InputDecoration(labelText: 'Workspace'),
-                    items: const [
+                    decoration: InputDecoration(
+                      labelText: context.sharedL10n.ng_board_workspace,
+                    ),
+                    items: [
                       DropdownMenuItem(
                         value: 'scratch',
-                        child: Text('Scratch', overflow: TextOverflow.ellipsis),
+                        child: Text(
+                          context.sharedL10n.ng_board_scratch,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       DropdownMenuItem(
                         value: 'worktree',
                         child: Text(
-                          'Git worktree',
+                          context.sharedL10n.ng_board_worktree,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       DropdownMenuItem(
                         value: 'dir',
                         child: Text(
-                          'Shared dir',
+                          context.sharedL10n.ng_board_shared_dir,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -2611,24 +2756,27 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
             ),
             if (_workspaceKind != 'scratch')
               TextField(
-                key: const Key('kanban-new-workspace-path'),
+                key: Key('kanban-new-workspace-path'),
                 controller: _workspacePath,
-                decoration: const InputDecoration(
-                  labelText: 'Host workspace path',
+                decoration: InputDecoration(
+                  labelText: context.sharedL10n.ng_board_workspace_path,
                 ),
               ),
             if (widget.existingTasks.isNotEmpty)
               DropdownButtonFormField<String?>(
-                key: const Key('kanban-new-parent'),
+                key: Key('kanban-new-parent'),
                 initialValue: _parentId,
                 isExpanded: true,
-                decoration: const InputDecoration(
-                  labelText: 'Parent dependency (optional)',
+                decoration: InputDecoration(
+                  labelText: context.sharedL10n.ng_board_parent,
                 ),
                 items: [
-                  const DropdownMenuItem(
+                  DropdownMenuItem(
                     value: null,
-                    child: Text('None', overflow: TextOverflow.ellipsis),
+                    child: Text(
+                      context.sharedL10n.ng_board_none,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   for (final t in widget.existingTasks)
                     DropdownMenuItem(
@@ -2642,30 +2790,30 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
                 onChanged: (v) => setState(() => _parentId = v),
               ),
             TextField(
-              key: const Key('kanban-new-skills'),
+              key: Key('kanban-new-skills'),
               controller: _skills,
-              decoration: const InputDecoration(
-                labelText: 'Pinned skills (comma-separated, optional)',
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.ng_board_skills,
               ),
             ),
             Row(
               children: [
                 Expanded(
                   child: TextField(
-                    key: const Key('kanban-new-provider'),
+                    key: Key('kanban-new-provider'),
                     controller: _provider,
-                    decoration: const InputDecoration(
-                      labelText: 'Provider override',
+                    decoration: InputDecoration(
+                      labelText: context.sharedL10n.ng_board_provider_override,
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: TextField(
-                    key: const Key('kanban-new-model'),
+                    key: Key('kanban-new-model'),
                     controller: _model,
-                    decoration: const InputDecoration(
-                      labelText: 'Model override',
+                    decoration: InputDecoration(
+                      labelText: context.sharedL10n.ng_board_model_override,
                     ),
                   ),
                 ),
@@ -2674,45 +2822,65 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
             DropdownButtonFormField<String>(
               isExpanded: true,
               initialValue: _reasoningEffort,
-              decoration: const InputDecoration(labelText: 'Reasoning effort'),
-              items: const [
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.ng_board_reasoning,
+              ),
+              items: [
                 DropdownMenuItem(
                   value: '',
                   child: Text(
-                    'Profile default',
+                    context.sharedL10n.ng_board_profile_default,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 DropdownMenuItem(
                   value: 'none',
-                  child: Text('None', overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    context.sharedL10n.ng_board_none,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 DropdownMenuItem(
                   value: 'minimal',
-                  child: Text('Minimal', overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    context.sharedL10n.ng_minimal,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 DropdownMenuItem(
                   value: 'low',
-                  child: Text('Low', overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    context.sharedL10n.ng_low,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 DropdownMenuItem(
                   value: 'medium',
-                  child: Text('Medium', overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    context.sharedL10n.ng_medium,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 DropdownMenuItem(
                   value: 'high',
-                  child: Text('High', overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    context.sharedL10n.ng_high,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 DropdownMenuItem(
                   value: 'xhigh',
-                  child: Text('X-High', overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    context.sharedL10n.ng_board_xhigh,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
               onChanged: (v) => setState(() => _reasoningEffort = v ?? ''),
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Goal loop mode'),
+              title: Text(context.sharedL10n.ng_board_goal_mode),
               value: _goalMode,
               onChanged: (v) => setState(() => _goalMode = v),
             ),
@@ -2720,8 +2888,8 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
               TextField(
                 controller: _goalTurns,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Goal max turns (blank = default)',
+                decoration: InputDecoration(
+                  labelText: context.sharedL10n.ng_board_goal_turns,
                 ),
               ),
           ],
@@ -2735,7 +2903,7 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
         FilledButton(
           key: const Key('kanban-new-submit'),
           onPressed: _submitting ? null : _submit,
-          child: const Text('Create task'),
+          child: Text(context.sharedL10n.ng_board_create_task),
         ),
       ],
     );
@@ -2796,7 +2964,7 @@ class _OrchestrationSheetState extends State<_OrchestrationSheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Orchestration & worker profiles',
+                context.sharedL10n.ng_board_orchestration_title,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 12),
@@ -2807,14 +2975,15 @@ class _OrchestrationSheetState extends State<_OrchestrationSheet> {
                     ? _orchestrator
                     : '',
                 decoration: InputDecoration(
-                  labelText:
-                      'Orchestrator profile (resolved: ${widget.initial.resolvedOrchestratorProfile ?? 'default'})',
+                  labelText: context.sharedL10n.ng_board_orchestrator(
+                    widget.initial.resolvedOrchestratorProfile ?? 'default',
+                  ),
                 ),
                 items: [
-                  const DropdownMenuItem(
+                  DropdownMenuItem(
                     value: '',
                     child: Text(
-                      'Inherit active default',
+                      context.sharedL10n.ng_board_inherit_default,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -2837,14 +3006,15 @@ class _OrchestrationSheetState extends State<_OrchestrationSheet> {
                     ? _defaultAssignee
                     : '',
                 decoration: InputDecoration(
-                  labelText:
-                      'Default assignee (resolved: ${widget.initial.resolvedDefaultAssignee ?? 'default'})',
+                  labelText: context.sharedL10n.ng_board_default_assignee(
+                    widget.initial.resolvedDefaultAssignee ?? 'default',
+                  ),
                 ),
                 items: [
-                  const DropdownMenuItem(
+                  DropdownMenuItem(
                     value: '',
                     child: Text(
-                      'Inherit active default',
+                      context.sharedL10n.ng_board_inherit_default,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -2862,10 +3032,8 @@ class _OrchestrationSheetState extends State<_OrchestrationSheet> {
               SwitchListTile(
                 key: const Key('kanban-auto-decompose'),
                 contentPadding: EdgeInsets.zero,
-                title: const Text('Auto-decompose triage cards'),
-                subtitle: const Text(
-                  'Uses the configured kanban_decomposer model on triage tasks',
-                ),
+                title: Text(context.sharedL10n.ng_board_auto_decompose),
+                subtitle: Text(context.sharedL10n.ng_board_auto_decompose_help),
                 value: _autoDecompose,
                 onChanged: (v) => setState(() => _autoDecompose = v),
               ),
@@ -2879,11 +3047,11 @@ class _OrchestrationSheetState extends State<_OrchestrationSheet> {
                   );
                   if (context.mounted) Navigator.pop(context);
                 },
-                child: const Text('Save orchestration'),
+                child: Text(context.sharedL10n.ng_board_save_orchestration),
               ),
               const Divider(height: 28),
               Text(
-                'Worker specialization descriptions',
+                context.sharedL10n.ng_board_worker_descriptions,
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(height: 8),
@@ -2898,14 +3066,20 @@ class _OrchestrationSheetState extends State<_OrchestrationSheet> {
                           controller: _descControllers[p.name],
                           decoration: InputDecoration(
                             isDense: true,
-                            labelText:
-                                '@${p.name} (${p.model ?? 'default model'} · ${p.skillCount} skills)',
+                            labelText: context.sharedL10n.ng_board_worker_label(
+                              p.name,
+                              p.model ??
+                                  context.sharedL10n.ng_board_default_model,
+                              context.sharedL10n.ng_bots_skill_count(
+                                p.skillCount,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                       IconButton(
                         key: Key('kanban-worker-save-${p.name}'),
-                        tooltip: 'Save description',
+                        tooltip: context.sharedL10n.ng_board_save_description,
                         icon: const Icon(Icons.check, size: 18),
                         onPressed: () => widget.onSaveProfileDescription(
                           p.name,
@@ -2914,7 +3088,7 @@ class _OrchestrationSheetState extends State<_OrchestrationSheet> {
                       ),
                       IconButton(
                         key: Key('kanban-worker-auto-${p.name}'),
-                        tooltip: 'Auto-describe from skills & persona',
+                        tooltip: context.sharedL10n.ng_board_auto_describe,
                         icon: const Icon(Icons.auto_awesome, size: 18),
                         onPressed: () async {
                           final next = await widget.onAutoDescribeProfile(
@@ -3069,6 +3243,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
   }
 
   Future<void> _changeStatus(String nextStatus) async {
+    final l10n = context.sharedL10n;
     final current = _detail?.task;
     if (current == null || current.status == nextStatus) return;
     try {
@@ -3077,8 +3252,10 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
         taskId: widget.taskId,
         board: widget.board,
         status: nextStatus,
-        blockReason: nextStatus == 'blocked' ? 'Manual operator block' : null,
-        summary: nextStatus == 'review' ? 'Requested review' : null,
+        blockReason: nextStatus == 'blocked'
+            ? l10n.ng_board_manual_block
+            : null,
+        summary: nextStatus == 'review' ? l10n.ng_board_requested_review : null,
       );
       if (!mounted || !target.isCurrent) return;
       await widget.onChanged();
@@ -3093,11 +3270,9 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
   /// Stopping a worker is never silent.
   Future<bool> _confirmRequeue() => _confirmKanbanAction(
     context,
-    title: 'Requeue ${widget.taskId}?',
-    message:
-        'A worker running this card is stopped and the card goes back '
-        'to the queue.',
-    confirmLabel: 'Requeue',
+    title: context.sharedL10n.ng_board_requeue_title(widget.taskId),
+    message: context.sharedL10n.ng_board_requeue_body,
+    confirmLabel: context.sharedL10n.ng_board_requeue,
   );
 
   Future<void> _changeAssignee(String profile) async {
@@ -3107,9 +3282,12 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
       // Reassigning a running card reclaims it first.
       final confirmed = await _confirmKanbanAction(
         context,
-        title: 'Reassign ${widget.taskId} to @$profile?',
-        message: 'This card is running: its worker is stopped first.',
-        confirmLabel: 'Reassign',
+        title: context.sharedL10n.ng_board_reassign_title(
+          widget.taskId,
+          profile,
+        ),
+        message: context.sharedL10n.ng_board_reassign_body,
+        confirmLabel: context.sharedL10n.ng_board_reassign,
       );
       if (!mounted) return;
       if (!confirmed) {
@@ -3164,7 +3342,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
         _modelCtrl.clear();
         _providerCtrl.clear();
       }
-      _msg('Saved task ${widget.taskId}');
+      _msg(context.sharedL10n.ng_board_saved_task(widget.taskId));
       await widget.onChanged();
       await _loadAll(silent: true);
     } catch (e) {
@@ -3192,7 +3370,9 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
       if (!mounted || !target.isCurrent) return;
       _commentCtrl.clear();
       _msg(
-        requeueAfter ? 'Posted comment and requeued task' : 'Posted comment',
+        requeueAfter
+            ? context.sharedL10n.ng_board_commented_requeued
+            : context.sharedL10n.ng_board_commented,
       );
       await widget.onChanged();
       await _loadAll(silent: true);
@@ -3210,7 +3390,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
         board: widget.board,
       );
       if (!mounted || !target.isCurrent) return;
-      _msg('Requeued ${widget.taskId}');
+      _msg(context.sharedL10n.ng_board_requeued(widget.taskId));
       await widget.onChanged();
       await _loadAll(silent: true);
     } catch (e) {
@@ -3229,8 +3409,10 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
       if (!outcome.ok) {
         // A refusal is a 200 with ok:false: show its reason, change nothing.
         final text = outcome.reason == null
-            ? 'Decompose failed.'
-            : 'Decompose failed: ${outcome.reason}';
+            ? context.sharedL10n.ng_board_decompose_failed
+            : context.sharedL10n.ng_board_decompose_failed_reason(
+                outcome.reason!,
+              );
         setState(() => _error = text);
         _msg(text);
         return;
@@ -3238,12 +3420,12 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
       final count = outcome.childIds.length;
       _msg(
         outcome.fanout && count > 0
-            ? (count == 1
-                  ? 'Decomposed into 1 child task'
-                  : 'Decomposed into $count child tasks')
+            ? context.sharedL10n.ng_board_decomposed(count)
             : (outcome.reason == null
-                  ? 'No child tasks were created.'
-                  : 'No child tasks were created: ${outcome.reason}'),
+                  ? context.sharedL10n.ng_board_no_children
+                  : context.sharedL10n.ng_board_no_children_reason(
+                      outcome.reason!,
+                    )),
       );
       await widget.onChanged();
       await _loadAll(silent: true);
@@ -3279,7 +3461,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
         bytes: file.bytes!,
       );
       if (!mounted || !target.isCurrent) return;
-      _msg('Uploaded ${file.name}');
+      _msg(context.sharedL10n.ng_board_uploaded(file.name));
       await _loadAll(silent: true);
     } catch (e) {
       _msg(widget.describeError(e));
@@ -3295,7 +3477,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
         childId: widget.taskId,
       );
       if (!mounted || !target.isCurrent) return;
-      _msg('Linked parent $parentId');
+      _msg(context.sharedL10n.ng_board_linked_parent(parentId));
       await widget.onChanged();
       await _loadAll(silent: true);
     } catch (e) {
@@ -3312,7 +3494,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
         childId: widget.taskId,
       );
       if (!mounted || !target.isCurrent) return;
-      _msg('Removed parent link $parentId');
+      _msg(context.sharedL10n.ng_board_unlinked_parent(parentId));
       await widget.onChanged();
       await _loadAll(silent: true);
     } catch (e) {
@@ -3328,7 +3510,11 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
       child: _loading && detail == null
           ? const Center(child: CircularProgressIndicator())
           : detail == null
-          ? Center(child: Text(_error ?? 'Unable to load task'))
+          ? Center(
+              child: Text(
+                _error ?? context.sharedL10n.ng_board_task_load_failed,
+              ),
+            )
           : DefaultTabController(
               length: 4,
               child: Column(
@@ -3339,12 +3525,13 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
                       children: [
                         Expanded(
                           child: Text(
-                            '${detail.task.id} · ${detail.task.status}',
+                            '${detail.task.id} · '
+                            '${_columnLabel(context, detail.task.status)}',
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ),
                         IconButton(
-                          tooltip: 'Refresh task',
+                          tooltip: context.sharedL10n.ng_board_refresh_task,
                           icon: const Icon(Icons.refresh),
                           onPressed: _loadAll,
                         ),
@@ -3369,13 +3556,13 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
                         ),
                       ),
                     ),
-                  const TabBar(
+                  TabBar(
                     isScrollable: true,
                     tabs: [
-                      Tab(text: 'Overview'),
-                      Tab(text: 'Comments & Links'),
-                      Tab(text: 'Runs & Log'),
-                      Tab(text: 'Events'),
+                      Tab(text: context.sharedL10n.ng_board_tab_overview),
+                      Tab(text: context.sharedL10n.ng_board_tab_comments),
+                      Tab(text: context.sharedL10n.ng_board_tab_runs),
+                      Tab(text: context.sharedL10n.ng_board_tab_events),
                     ],
                   ),
                   Expanded(
@@ -3424,24 +3611,24 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
             ActionChip(
               key: const Key('kanban-detail-reclaim'),
               avatar: const Icon(Icons.replay, size: 16),
-              label: const Text('Requeue'),
+              label: Text(context.sharedL10n.ng_board_requeue),
               onPressed: _reclaimOnly,
             ),
             ActionChip(
               key: const Key('kanban-detail-decompose'),
               avatar: const Icon(Icons.account_tree_outlined, size: 16),
-              label: const Text('Decompose'),
+              label: Text(context.sharedL10n.ng_board_decompose),
               onPressed: _decomposeTask,
             ),
             ActionChip(
               key: const Key('kanban-detail-estimate'),
               avatar: const Icon(Icons.analytics_outlined, size: 16),
-              label: const Text('Estimate'),
+              label: Text(context.sharedL10n.ng_board_estimate),
               onPressed: _estimateTask,
             ),
             ActionChip(
               avatar: const Icon(Icons.attach_file, size: 16),
-              label: const Text('Attach file'),
+              label: Text(context.sharedL10n.ng_board_attach),
               onPressed: _uploadAttachment,
             ),
           ],
@@ -3450,8 +3637,14 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
           const SizedBox(height: 8),
           Text(
             _estimate!.ok
-                ? 'Estimate: ${_estimate!.complexity ?? '?'} · ~${_estimate!.estTokens ?? 0} tokens (${_estimate!.rationale ?? 'no rationale'}) — not a dollar-cost claim.'
-                : (_estimate!.reason ?? 'Estimate unavailable'),
+                ? context.sharedL10n.ng_board_estimate_task(
+                    _estimate!.complexity ?? '?',
+                    '${_estimate!.estTokens ?? 0}',
+                    _estimate!.rationale ??
+                        context.sharedL10n.ng_board_no_rationale,
+                  )
+                : (_estimate!.reason ??
+                      context.sharedL10n.ng_board_estimate_unavailable),
           ),
         ],
         const SizedBox(height: 12),
@@ -3464,13 +3657,15 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
                 // side pane: the chosen value must fit half its width.
                 isExpanded: true,
                 initialValue: task.status,
-                decoration: const InputDecoration(labelText: 'Status'),
+                decoration: InputDecoration(
+                  labelText: context.sharedL10n.ng_board_status,
+                ),
                 items: [
                   for (final s in allowedStatuses)
                     DropdownMenuItem(
                       value: s,
                       child: Text(
-                        kanbanColumnLabels[s] ?? s,
+                        _columnLabel(context, s),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -3488,12 +3683,14 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
                   key: const Key('kanban-detail-assignee'),
                   isExpanded: true,
                   initialValue: task.assignee ?? '',
-                  decoration: const InputDecoration(labelText: 'Assignee'),
+                  decoration: InputDecoration(
+                    labelText: context.sharedL10n.ng_board_assignee,
+                  ),
                   items: [
-                    const DropdownMenuItem(
+                    DropdownMenuItem(
                       value: '',
                       child: Text(
-                        'Unassigned',
+                        context.sharedL10n.ng_board_unassigned,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -3515,14 +3712,18 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
         TextField(
           key: const Key('kanban-detail-title'),
           controller: _titleCtrl,
-          decoration: const InputDecoration(labelText: 'Title'),
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.ng_board_title_label,
+          ),
         ),
         const SizedBox(height: 8),
         TextField(
           key: const Key('kanban-detail-body'),
           controller: _bodyCtrl,
           maxLines: 4,
-          decoration: const InputDecoration(labelText: 'Body / specification'),
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.ng_board_body,
+          ),
         ),
         const SizedBox(height: 8),
         Row(
@@ -3531,7 +3732,9 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
               child: TextField(
                 controller: _priorityCtrl,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Priority'),
+                decoration: InputDecoration(
+                  labelText: context.sharedL10n.ng_board_priority,
+                ),
               ),
             ),
             const SizedBox(width: 8),
@@ -3539,8 +3742,8 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
               child: TextField(
                 key: const Key('kanban-detail-provider'),
                 controller: _providerCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Provider override',
+                decoration: InputDecoration(
+                  labelText: context.sharedL10n.ng_board_provider_override,
                 ),
               ),
             ),
@@ -3549,7 +3752,9 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
               child: TextField(
                 key: const Key('kanban-detail-model'),
                 controller: _modelCtrl,
-                decoration: const InputDecoration(labelText: 'Model override'),
+                decoration: InputDecoration(
+                  labelText: context.sharedL10n.ng_board_model_override,
+                ),
               ),
             ),
           ],
@@ -3560,23 +3765,23 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
             FilledButton(
               key: const Key('kanban-detail-save'),
               onPressed: _saveTaskEdits,
-              child: const Text('Save changes'),
+              child: Text(context.sharedL10n.ng_board_save_changes),
             ),
             const SizedBox(width: 8),
             if (task.modelOverride != null)
               TextButton(
                 onPressed: () => _saveTaskEdits(clearModel: true),
-                child: const Text('Clear model override'),
+                child: Text(context.sharedL10n.ng_board_clear_model),
               ),
           ],
         ),
         if (task.blockReason != null && task.blockReason!.isNotEmpty) ...[
           const SizedBox(height: 12),
-          Text('Blocked reason: ${task.blockReason}'),
+          Text(context.sharedL10n.ng_board_blocked_reason(task.blockReason!)),
         ],
         if (task.result != null && task.result!.isNotEmpty) ...[
           const SizedBox(height: 8),
-          Text('Result: ${task.result}'),
+          Text(context.sharedL10n.ng_board_result(task.result!)),
         ],
       ],
     );
@@ -3594,7 +3799,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
           children: [
             Expanded(
               child: Text(
-                'Blocked by (parents · ${detail.parents.length})',
+                context.sharedL10n.ng_board_parents('${detail.parents.length}'),
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             ),
@@ -3609,7 +3814,9 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
                       child: Text('${c.id}: ${c.title}'),
                     ),
                 ],
-                child: const Chip(label: Text('+ Add parent')),
+                child: Chip(
+                  label: Text(context.sharedL10n.ng_board_add_parent),
+                ),
               ),
           ],
         ),
@@ -3618,7 +3825,9 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
             dense: true,
             contentPadding: EdgeInsets.zero,
             title: Text(detail.linkedTasks[pid]?.title ?? pid),
-            subtitle: Text('$pid · ${detail.linkedTasks[pid]?.status ?? '?'}'),
+            subtitle: Text(
+              '$pid · ${_linkedStatus(context, detail.linkedTasks[pid])}',
+            ),
             trailing: IconButton(
               key: Key('kanban-unlink-parent-$pid'),
               icon: const Icon(Icons.link_off, size: 18),
@@ -3628,7 +3837,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
         if (detail.children.isNotEmpty) ...[
           const Divider(),
           Text(
-            'Blocks (children · ${detail.children.length})',
+            context.sharedL10n.ng_board_children('${detail.children.length}'),
             style: Theme.of(context).textTheme.titleSmall,
           ),
           for (final cid in detail.children)
@@ -3637,14 +3846,16 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
               contentPadding: EdgeInsets.zero,
               title: Text(detail.linkedTasks[cid]?.title ?? cid),
               subtitle: Text(
-                '$cid · ${detail.linkedTasks[cid]?.status ?? '?'}',
+                '$cid · ${_linkedStatus(context, detail.linkedTasks[cid])}',
               ),
             ),
         ],
         if (detail.attachments.isNotEmpty) ...[
           const Divider(),
           Text(
-            'Attachments (${detail.attachments.length})',
+            context.sharedL10n.ng_board_attachments(
+              '${detail.attachments.length}',
+            ),
             style: Theme.of(context).textTheme.titleSmall,
           ),
           for (final att in detail.attachments)
@@ -3653,12 +3864,14 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.attach_file, size: 18),
               title: Text(att.filename),
-              subtitle: Text('${att.size} B · ${att.uploadedBy ?? 'worker'}'),
+              subtitle: Text(
+                '${att.size} B · ${att.uploadedBy ?? context.sharedL10n.ng_board_worker}',
+              ),
             ),
         ],
         const Divider(),
         Text(
-          'Comments (${detail.comments.length})',
+          context.sharedL10n.ng_board_comments('${detail.comments.length}'),
           style: Theme.of(context).textTheme.titleSmall,
         ),
         const SizedBox(height: 8),
@@ -3675,8 +3888,8 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
           key: const Key('kanban-comment-input'),
           controller: _commentCtrl,
           maxLines: 3,
-          decoration: const InputDecoration(
-            labelText: 'Add comment / worker guidance',
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.ng_board_comment_hint,
             border: OutlineInputBorder(),
           ),
         ),
@@ -3687,12 +3900,12 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
             FilledButton(
               key: const Key('kanban-comment-submit'),
               onPressed: () => _postComment(requeueAfter: false),
-              child: const Text('Post comment'),
+              child: Text(context.sharedL10n.ng_board_post_comment),
             ),
             OutlinedButton(
               key: const Key('kanban-comment-requeue'),
               onPressed: () => _postComment(requeueAfter: true),
-              child: const Text('Comment & requeue'),
+              child: Text(context.sharedL10n.ng_board_comment_requeue),
             ),
           ],
         ),
@@ -3706,12 +3919,12 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
       padding: const EdgeInsets.all(16),
       children: [
         Text(
-          'Runs (${detail.runs.length})',
+          context.sharedL10n.ng_board_runs('${detail.runs.length}'),
           style: Theme.of(context).textTheme.titleSmall,
         ),
         const SizedBox(height: 6),
         if (detail.runs.isEmpty)
-          const Text('No worker runs recorded yet.')
+          Text(context.sharedL10n.ng_board_no_runs)
         else
           for (final run in detail.runs)
             Card(
@@ -3719,14 +3932,18 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
               child: ListTile(
                 dense: true,
                 title: Text(
-                  'Run #${run.id} · @${run.profile} · ${run.outcome ?? run.status}',
+                  context.sharedL10n.ng_board_run_title(
+                    '${run.id}',
+                    run.profile,
+                    run.outcome ?? run.status,
+                  ),
                 ),
                 subtitle: Text(
                   [
                     if (run.summary != null && run.summary!.isNotEmpty)
                       run.summary!,
                     if (run.error != null && run.error!.isNotEmpty)
-                      'Error: ${run.error}',
+                      context.sharedL10n.ng_board_run_error(run.error!),
                   ].join('\n'),
                 ),
               ),
@@ -3736,13 +3953,19 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
           children: [
             Expanded(
               child: Text(
-                'Worker log tail (${log?.sizeBytes ?? 0} B${log?.truncated == true ? ', truncated' : ''})',
+                log?.truncated == true
+                    ? context.sharedL10n.ng_board_log_tail_truncated(
+                        '${log?.sizeBytes ?? 0}',
+                      )
+                    : context.sharedL10n.ng_board_log_tail(
+                        '${log?.sizeBytes ?? 0}',
+                      ),
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             ),
             IconButton(
               key: const Key('kanban-refresh-log'),
-              tooltip: 'Refresh log',
+              tooltip: context.sharedL10n.ng_board_refresh_log,
               icon: const Icon(Icons.refresh, size: 18),
               onPressed: _refreshLogOnly,
             ),
@@ -3758,7 +3981,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
           ),
           child: SelectableText(
             log == null || !log.exists || log.content.isEmpty
-                ? 'No worker log output.'
+                ? context.sharedL10n.ng_board_no_log
                 : log.content,
             style: const TextStyle(fontFamily: 'GeistMono', fontSize: 12),
           ),
@@ -3769,7 +3992,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
 
   Widget _buildEventsTab(KanbanTaskDetail detail) {
     if (detail.events.isEmpty) {
-      return const Center(child: Text('No events recorded.'));
+      return Center(child: Text(context.sharedL10n.ng_board_no_events));
     }
     return ListView.builder(
       padding: const EdgeInsets.all(16),

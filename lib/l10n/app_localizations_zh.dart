@@ -7167,6 +7167,1298 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ng_kanban_block_stale => '连接已更改。请重新打开此聊天，以查看卡片的实时状态。';
+
+  @override
+  String get ng_bots_tab_roster => '名单';
+
+  @override
+  String get ng_bots_tab_rooms => '群聊';
+
+  @override
+  String get ng_bots_tab_screen => '屏幕';
+
+  @override
+  String get ng_bots_tab_routines => '例行任务';
+
+  @override
+  String ng_bots_rooms_load_failed(String error) {
+    return '无法加载群聊：$error';
+  }
+
+  @override
+  String ng_bots_routines_load_failed(String error) {
+    return '无法加载例行任务：$error';
+  }
+
+  @override
+  String ng_bots_desktop_failed(String error) {
+    return 'Bot Desktop：$error';
+  }
+
+  @override
+  String get ng_bots_install_not_started => '网关未启动安装。';
+
+  @override
+  String ng_bots_install_failed_error(String error) {
+    return '安装失败：$error';
+  }
+
+  @override
+  String get ng_bots_install_cancelled => '安装已取消。';
+
+  @override
+  String get ng_bots_install_no_sudo => '网关主机上无法使用 sudo。请在该主机上运行上方的命令，然后刷新。';
+
+  @override
+  String ng_bots_install_exit_code(String code) {
+    return '安装失败（退出代码 $code）。';
+  }
+
+  @override
+  String ng_bots_install_done(String bot) {
+    return '已为 $bot 安装 Bot Desktop';
+  }
+
+  @override
+  String get ng_bots_start_failed => '启动失败';
+
+  @override
+  String ng_bots_stop_title(String bot) {
+    return '要停止 $bot 的 Bot Desktop 吗？';
+  }
+
+  @override
+  String get ng_bots_stop_human_held => '有人正在控制此屏幕。停止后将结束其会话，并关闭屏幕上打开的所有内容。';
+
+  @override
+  String get ng_bots_stop_body => '机器人屏幕上打开的所有内容都将被关闭。';
+
+  @override
+  String get ng_bots_stop_refused => '停止请求被拒绝';
+
+  @override
+  String get ng_bots_take_over_reason => '从 Ares 接管';
+
+  @override
+  String ng_bots_take_over_failed(String error) {
+    return '接管失败：$error';
+  }
+
+  @override
+  String ng_bots_force_hand_back_title(String bot) {
+    return '要将 $bot 的屏幕交还给机器人吗？';
+  }
+
+  @override
+  String get ng_bots_force_hand_back_body => '有人正在占用此屏幕。如果对方仍在使用，将失去控制权。';
+
+  @override
+  String get ng_bots_hand_back => '交还';
+
+  @override
+  String get ng_bots_hand_back_failed => '交还失败';
+
+  @override
+  String get ng_bots_adopt_title => '要采用新的沙盒镜像吗？';
+
+  @override
+  String ng_bots_adopt_body(String bot, String current, String target) {
+    return '$bot 将从 $current 切换到 $target。其容器会在下一次终端调用时重建；仅保存在当前容器中的内容将会丢失。';
+  }
+
+  @override
+  String get ng_bots_adopt_image => '采用镜像';
+
+  @override
+  String get ng_bots_image_switch_failed => '镜像切换失败';
+
+  @override
+  String get ng_bots_keep_refused => '保留请求被拒绝';
+
+  @override
+  String ng_bots_chat_open_failed(String error) {
+    return '无法打开 Bot Chat：$error';
+  }
+
+  @override
+  String ng_bots_title(String connection) {
+    return '机器人 · $connection';
+  }
+
+  @override
+  String get ng_bots_protocol_tooltip => '网关会自行注入队友消息协议 — 不会额外发送 SOUL.md 协议。';
+
+  @override
+  String ng_bots_unavailable(String reason) {
+    return '机器人不可用（$reason）';
+  }
+
+  @override
+  String get ng_bots_account_changed => '账户已更改。请重新连接或刷新。';
+
+  @override
+  String get ng_bots_try_refresh => '请尝试刷新。如果问题仍然存在，该网关可能不支持机器人。';
+
+  @override
+  String get ng_bots_search => '搜索机器人';
+
+  @override
+  String get ng_bots_none_found => '未找到机器人。';
+
+  @override
+  String get ng_bots_no_model => '无模型';
+
+  @override
+  String ng_bots_skill_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 项技能',
+      one: '1 项技能',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_bot_chat => 'Bot Chat';
+
+  @override
+  String ng_bots_install_id(String id, String protocol) {
+    return '网关报告的安装 ID 为 $id · bot_mode_protocol：$protocol';
+  }
+
+  @override
+  String get ng_bots_protocol_note =>
+      '设置 bot_mode_protocol 后，网关会注入队友消息协议。标识名：default→hermes，否则为配置档案名称。';
+
+  @override
+  String get ng_bots_no_rooms => '还没有群聊。请从名单中创建一个。';
+
+  @override
+  String ng_bots_member_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 名成员',
+      one: '1 名成员',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_room_disbanded => '已解散';
+
+  @override
+  String get ng_bots_room_adopted => '已采用';
+
+  @override
+  String get ng_bots_rooms_gateway => '网关群聊';
+
+  @override
+  String get ng_bots_rooms_desktop => '桌面端驱动的群聊';
+
+  @override
+  String ng_bots_rooms_gateway_body(String methods) {
+    return '群聊归网关所有。方法：$methods。';
+  }
+
+  @override
+  String get ng_bots_rooms_no_seat => '此网关可能无法承载群聊（需要常驻进程）。';
+
+  @override
+  String get ng_bots_rooms_fallback => '经典回退模式：由桌面端驱动群聊轮次（不会在此新建）。';
+
+  @override
+  String get ng_bots_create_room => '创建群聊';
+
+  @override
+  String get ng_bots_refresh_rooms => '刷新群聊';
+
+  @override
+  String get ng_bots_room_created => '群聊已创建';
+
+  @override
+  String ng_bots_room_refused(String reason) {
+    return '群聊创建被拒绝（$reason）';
+  }
+
+  @override
+  String ng_bots_room_failed(String error) {
+    return '群聊创建失败：$error';
+  }
+
+  @override
+  String get ng_bots_bot => '机器人';
+
+  @override
+  String get ng_bots_screen_unavailable => '无法获取屏幕状态';
+
+  @override
+  String get ng_bots_screen_unavailable_body => '启动机器人的屏幕即可查看其缩略图，或接管后亲自使用。';
+
+  @override
+  String get ng_bots_take_over_note =>
+      '接管会打开实时屏幕并将控制权交给你。当你关闭实时屏幕、离开此页面或将应用切换到后台时，控制权会交还给机器人。';
+
+  @override
+  String get ng_bots_not_installed => '未安装';
+
+  @override
+  String get ng_bots_unsupported_host => '不支持的主机';
+
+  @override
+  String ng_bots_pid(String pid) {
+    return 'pid $pid';
+  }
+
+  @override
+  String ng_bots_missing(String items) {
+    return '缺少：$items';
+  }
+
+  @override
+  String ng_bots_blocked(String reason) {
+    return '受阻：$reason';
+  }
+
+  @override
+  String get ng_bots_no_switch => '没有待处理的沙盒镜像切换。';
+
+  @override
+  String ng_bots_switch_image(String current, String target) {
+    return '切换镜像：$current → $target';
+  }
+
+  @override
+  String get ng_bots_bot_in_control => '由机器人控制';
+
+  @override
+  String get ng_bots_person_in_control => '由真人控制';
+
+  @override
+  String get ng_bots_installing => '正在网关主机上安装 Bot Desktop…';
+
+  @override
+  String get ng_bots_install_unfinished => '安装未完成';
+
+  @override
+  String get ng_bots_install => '安装';
+
+  @override
+  String get ng_bots_start => '启动';
+
+  @override
+  String get ng_bots_take_over => '接管';
+
+  @override
+  String get ng_bots_keep_image => '保留当前镜像';
+
+  @override
+  String ng_bots_missing_pieces(String items) {
+    return '网关报告缺少组件：$items';
+  }
+
+  @override
+  String get ng_bots_install_missing => '安装缺少的组件';
+
+  @override
+  String get ng_bots_thumbnail_unavailable => '缩略图不可用';
+
+  @override
+  String get ng_bots_thumbnail_title => '屏幕缩略图（实时）';
+
+  @override
+  String get ng_bots_thumbnail_suppressed => '屏幕由真人控制期间不显示缩略图。';
+
+  @override
+  String get ng_bots_thumbnail_pending => '缩略图暂不可用。';
+
+  @override
+  String ng_bots_routines_of(String bot) {
+    return '$bot · 例行任务';
+  }
+
+  @override
+  String get ng_bots_add_routine => '添加例行任务';
+
+  @override
+  String get ng_bots_no_routines => '此机器人没有例行任务。';
+
+  @override
+  String get ng_bots_routines_note =>
+      '例行任务是带有 [bot:<name>] 标签的任务，归机器人的配置档案存储所有。旧版委派例行任务在加载时会被强制暂停。';
+
+  @override
+  String ng_bots_routine_last(String status) {
+    return '上次：$status';
+  }
+
+  @override
+  String ng_bots_routine_next(String time) {
+    return '下次：$time';
+  }
+
+  @override
+  String ng_bots_routine_error(String error) {
+    return '错误：$error';
+  }
+
+  @override
+  String ng_bots_remove_routine_title(String routine) {
+    return '要移除例行任务 $routine 吗？';
+  }
+
+  @override
+  String ng_bots_remove_routine_body(String bot) {
+    return '该例行任务将从 $bot 的计划中删除。此操作无法撤销。';
+  }
+
+  @override
+  String ng_bots_routine_action_failed(String action, String error) {
+    return '$action 失败：$error';
+  }
+
+  @override
+  String get ng_bots_not_connected => '未连接。';
+
+  @override
+  String ng_bots_add_failed(String error) {
+    return '添加失败：$error';
+  }
+
+  @override
+  String get ng_bots_routine_added => '已添加例行任务';
+
+  @override
+  String get ng_bots_routine_enabled => '已启用';
+
+  @override
+  String get ng_bots_routine_paused => '已暂停';
+
+  @override
+  String ng_bots_path(String path) {
+    return '路径：$path';
+  }
+
+  @override
+  String get ng_bots_chat_present => 'Bot Chat 已存在';
+
+  @override
+  String get ng_bots_chat_missing => '缺少 Bot Chat';
+
+  @override
+  String ng_bots_last_session(String preview) {
+    return '上次会话：$preview';
+  }
+
+  @override
+  String get ng_bots_open_chat => '打开 Bot Chat';
+
+  @override
+  String get ng_bots_desktop => 'Bot Desktop';
+
+  @override
+  String get ng_bots_room_name => '群聊名称';
+
+  @override
+  String get ng_bots_select_member => '请至少选择一名成员。';
+
+  @override
+  String get ng_bots_sudo_title => '管理员密码';
+
+  @override
+  String ng_bots_sudo_body(String bot) {
+    return '为 $bot 安装 Bot Desktop 需要在网关主机上使用 sudo。密码仅会发送到该网关，仅用于本次安装，且不会被保存。';
+  }
+
+  @override
+  String get ng_bots_sudo_password => 'sudo 密码';
+
+  @override
+  String get ng_bots_new_routine => '新建例行任务';
+
+  @override
+  String get ng_bots_routine_title => '标题';
+
+  @override
+  String get ng_bots_routine_instruction => '指令';
+
+  @override
+  String get ng_bots_cron => 'Cron 表达式';
+
+  @override
+  String get ng_bots_interval => '间隔';
+
+  @override
+  String get ng_bots_cron_help => '0 9 * * * 表示每天 09:00 运行';
+
+  @override
+  String get ng_bots_every => '每隔';
+
+  @override
+  String get ng_bots_unit_minutes => '分钟';
+
+  @override
+  String get ng_bots_unit_hours => '小时';
+
+  @override
+  String get ng_bots_unit_days => '天';
+
+  @override
+  String get ng_bots_stop_after => '运行几次后停止';
+
+  @override
+  String get ng_bots_stop_after_help => '留空则持续运行';
+
+  @override
+  String get ng_bots_send_results => '结果发送至';
+
+  @override
+  String get ng_bots_run_history => '仅记录运行历史';
+
+  @override
+  String get ng_bots_continuity => '接续上一次运行';
+
+  @override
+  String get ng_bots_account_changed_refresh => '账户已更改。请刷新后再继续。';
+
+  @override
+  String ng_bots_room_load_failed(String error) {
+    return '无法加载群聊：$error';
+  }
+
+  @override
+  String ng_bots_send_failed(String error) {
+    return '发送失败：$error';
+  }
+
+  @override
+  String ng_bots_stop_failed(String error) {
+    return '停止失败：$error';
+  }
+
+  @override
+  String get ng_bots_stop_room => '停止群聊';
+
+  @override
+  String get ng_bots_send_message => '发送消息';
+
+  @override
+  String get ng_bots_room_hint => '向群聊发送消息（使用 @handle 提及成员）';
+
+  @override
+  String get ng_bots_history => '历史记录';
+
+  @override
+  String ng_bots_revision(String revision) {
+    return '修订版本 $revision';
+  }
+
+  @override
+  String ng_bots_last_error(String error) {
+    return '上次错误：$error';
+  }
+
+  @override
+  String get ng_bots_members => '成员';
+
+  @override
+  String get ng_bots_room_context => '群聊上下文';
+
+  @override
+  String ng_bots_purpose(String purpose) {
+    return '目的：$purpose';
+  }
+
+  @override
+  String ng_bots_notes(String notes) {
+    return '备注：$notes';
+  }
+
+  @override
+  String ng_bots_routing(String routing) {
+    return '路由：$routing';
+  }
+
+  @override
+  String ng_bots_lead(String member) {
+    return '主导 $member';
+  }
+
+  @override
+  String get ng_bots_viewer_you_control => '你正在控制此屏幕。机器人会等待你交还控制权。';
+
+  @override
+  String get ng_bots_viewer_handed_back => '控制权已交还给机器人。';
+
+  @override
+  String get ng_bots_viewer_background => '应用已离开前台，控制权已交还给机器人。';
+
+  @override
+  String get ng_bots_viewer_taken => '其他人接管了此屏幕。';
+
+  @override
+  String get ng_bots_viewer_lost => '实时画面已中断，控制权已交还给机器人。';
+
+  @override
+  String ng_bots_viewer_title(String bot) {
+    return 'Bot Desktop · $bot';
+  }
+
+  @override
+  String get ng_bots_viewer_type_hint => '在机器人的屏幕上输入';
+
+  @override
+  String get ng_bots_viewer_type => '键入';
+
+  @override
+  String get ng_bots_viewer_enter => '回车';
+
+  @override
+  String get ng_bots_viewer_backspace => '退格';
+
+  @override
+  String get ng_more_kanban => '看板';
+
+  @override
+  String get ng_more_kanban_subtitle => '看板、任务依赖、工作者分配和日志';
+
+  @override
+  String get ng_more_bots => '机器人';
+
+  @override
+  String get ng_more_bots_subtitle => '名单、群聊、例行任务和 Bot Desktop';
+
+  @override
+  String get ng_slash_kanban => '打开看板';
+
+  @override
+  String get ng_slash_bots => '打开你的机器人';
+
+  @override
+  String ng_board_card_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 张卡片',
+      one: '1 张卡片',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_board_event_toast(String task, String event) {
+    return '看板 $task：$event';
+  }
+
+  @override
+  String get ng_board_task => '任务';
+
+  @override
+  String ng_board_refused_http(String status) {
+    return '操作被拒绝（HTTP $status）。';
+  }
+
+  @override
+  String get ng_board_err_unsupported => '此网关未启用看板插件。';
+
+  @override
+  String get ng_board_err_denied => '此网关需要登录或相应权限。';
+
+  @override
+  String get ng_board_err_stale => '网关所有者已更改。请刷新后再继续。';
+
+  @override
+  String get ng_board_err_insecure => '看板工作区操作需要 HTTPS（或回环地址）。';
+
+  @override
+  String get ng_board_err_unreachable => '无法连接此网关上的看板服务。';
+
+  @override
+  String get ng_board_err_failed => '操作失败。请刷新后重试。';
+
+  @override
+  String ng_board_block_title(String task) {
+    return '将 $task 标记为阻塞';
+  }
+
+  @override
+  String get ng_board_block_reason => '阻塞原因';
+
+  @override
+  String get ng_board_block_hint => '是什么阻塞了这张卡片？';
+
+  @override
+  String ng_board_review_title(String task) {
+    return '为 $task 请求审核';
+  }
+
+  @override
+  String get ng_board_review_summary => '审核摘要';
+
+  @override
+  String get ng_board_review_hint => '实现并验证了哪些内容？';
+
+  @override
+  String ng_board_move_title(String cards, String column) {
+    return '要将 $cards 移至 $column 吗？';
+  }
+
+  @override
+  String ng_board_move_body(String board) {
+    return '$board 上所有选中的卡片都会更换列。正在运行的卡片将停止运行。';
+  }
+
+  @override
+  String get ng_board_move => '移动';
+
+  @override
+  String ng_board_moved(String column) {
+    return '已将卡片移至 $column';
+  }
+
+  @override
+  String ng_board_unassign_title(String cards) {
+    return '要取消分配 $cards 吗？';
+  }
+
+  @override
+  String ng_board_assign_title(String cards, String profile) {
+    return '要将 $cards 分配给 @$profile 吗？';
+  }
+
+  @override
+  String get ng_board_assign_body => '正在运行的卡片会先被收回：其工作者将被停止。';
+
+  @override
+  String get ng_board_unassign => '取消分配';
+
+  @override
+  String get ng_board_assign => '分配';
+
+  @override
+  String get ng_board_unassigned_done => '已取消分配所选卡片';
+
+  @override
+  String ng_board_assigned_done(String profile) {
+    return '已分配给 @$profile';
+  }
+
+  @override
+  String ng_board_archive_title(String cards) {
+    return '要归档 $cards 吗？';
+  }
+
+  @override
+  String ng_board_archive_body(String board) {
+    return '已归档的卡片将从 $board 中移除。开启“已归档”即可再次查看。';
+  }
+
+  @override
+  String get ng_board_archived_done => '已归档所选卡片';
+
+  @override
+  String ng_board_delete_title(String cards) {
+    return '要删除 $cards 吗？';
+  }
+
+  @override
+  String ng_board_delete_body(String board) {
+    return '这将从 $board 中永久删除所选卡片。';
+  }
+
+  @override
+  String ng_board_deleted(String cards) {
+    return '已删除 $cards。';
+  }
+
+  @override
+  String ng_board_partial_failure(String failed, String total, String reason) {
+    return '$total 项中有 $failed 项失败：$reason';
+  }
+
+  @override
+  String get ng_board_refused => '已拒绝';
+
+  @override
+  String ng_board_dispatched(
+    String spawned,
+    String promoted,
+    String reclaimed,
+  ) {
+    return '已派发：启动 $spawned 个，推进 $promoted 个，收回 $reclaimed 个。';
+  }
+
+  @override
+  String ng_board_board_archived(String board) {
+    return '已归档看板 $board';
+  }
+
+  @override
+  String ng_board_board_archived_to(String path) {
+    return '已归档至 $path';
+  }
+
+  @override
+  String ng_board_exported(String board, String archive) {
+    return '已将 $board 导出至 $archive';
+  }
+
+  @override
+  String ng_board_imported(String board, String warnings) {
+    return '已导入看板 $board$warnings';
+  }
+
+  @override
+  String ng_board_created(String task) {
+    return '已创建 $task';
+  }
+
+  @override
+  String get ng_board_orchestration_saved => '已保存看板编排';
+
+  @override
+  String get ng_board_auto_describe_unavailable => '自动描述不可用';
+
+  @override
+  String ng_board_description_updated(String profile) {
+    return '已更新 @$profile 的描述';
+  }
+
+  @override
+  String ng_board_title(String board) {
+    return '看板 · $board';
+  }
+
+  @override
+  String ng_board_active(String count) {
+    return '$count 个进行中';
+  }
+
+  @override
+  String get ng_board_dispatch => '立即派发就绪任务';
+
+  @override
+  String get ng_board_orchestration => '编排与工作者';
+
+  @override
+  String get ng_board_new_task => '新建任务';
+
+  @override
+  String get ng_board_enable_plugin =>
+      '请在此网关的“功能 → 插件”中启用内置的“kanban”插件，以激活其看板路由。';
+
+  @override
+  String get ng_board_filter => '筛选任务…';
+
+  @override
+  String get ng_board_all_assignees => '所有负责人';
+
+  @override
+  String get ng_board_unassigned => '未分配';
+
+  @override
+  String get ng_board_running_by_profile => '各配置档案运行中';
+
+  @override
+  String get ng_board_select => '选择';
+
+  @override
+  String ng_board_selected_chip(String count) {
+    return '已选择（$count）';
+  }
+
+  @override
+  String get ng_board_locked_column => '受管理的列 — 已禁用拖放';
+
+  @override
+  String ng_board_add_to(String column) {
+    return '添加到 $column';
+  }
+
+  @override
+  String ng_board_collapse(String column) {
+    return '折叠 $column';
+  }
+
+  @override
+  String ng_board_column_empty(String column) {
+    return '$column 中没有任务';
+  }
+
+  @override
+  String get ng_board_drop_here => '拖放至此或 + 任务';
+
+  @override
+  String get ng_board_card_actions => '卡片操作';
+
+  @override
+  String get ng_board_open_details => '打开详情';
+
+  @override
+  String get ng_board_select_card => '选择卡片';
+
+  @override
+  String ng_board_move_to(String column) {
+    return '移至 $column';
+  }
+
+  @override
+  String get ng_board_parked => '搁置';
+
+  @override
+  String ng_board_blocked_by(String count) {
+    return '被 $count 项阻塞';
+  }
+
+  @override
+  String get ng_board_goal_loop => '目标循环';
+
+  @override
+  String ng_board_selected(String count) {
+    return '已选择 $count 项';
+  }
+
+  @override
+  String get ng_board_move_menu => '移动…';
+
+  @override
+  String get ng_board_assign_menu => '分配…';
+
+  @override
+  String get ng_board_new_board_title => '新建看板';
+
+  @override
+  String get ng_board_slug => '短标识（小写，例如 release-v5）';
+
+  @override
+  String get ng_board_display_name => '显示名称';
+
+  @override
+  String get ng_board_linked_project => '关联项目（可选）';
+
+  @override
+  String get ng_board_none => '无';
+
+  @override
+  String get ng_board_default_workdir => '主机上的默认工作目录（可选）';
+
+  @override
+  String get ng_board_import_title => '导入看板归档';
+
+  @override
+  String get ng_board_import_path => '主机上的 .tar.gz 归档路径';
+
+  @override
+  String get ng_board_import => '导入';
+
+  @override
+  String ng_board_edit_board(String board) {
+    return '编辑 $board';
+  }
+
+  @override
+  String get ng_board_name => '名称';
+
+  @override
+  String get ng_board_description => '描述';
+
+  @override
+  String get ng_board_workdir_clear => '默认工作目录（留空则清除）';
+
+  @override
+  String get ng_board_boards => '看板列表';
+
+  @override
+  String get ng_board_new_board => '新建看板';
+
+  @override
+  String get ng_board_search_boards => '搜索看板…';
+
+  @override
+  String get ng_board_unpin => '取消固定标签页';
+
+  @override
+  String get ng_board_pin => '固定标签页';
+
+  @override
+  String ng_board_archive_board_title(String board) {
+    return '要归档看板 $board 吗？';
+  }
+
+  @override
+  String ng_board_archive_board_body(String cards) {
+    return '该看板及其 $cards 将从看板列表中移除。网关会在其主机上保留归档。';
+  }
+
+  @override
+  String get ng_board_edit_metadata => '编辑元数据';
+
+  @override
+  String get ng_board_export => '在主机上导出 .tar.gz';
+
+  @override
+  String get ng_board_move_pin_left => '将固定标签页左移';
+
+  @override
+  String get ng_board_archive_board => '归档看板';
+
+  @override
+  String get ng_board_new_task_title => '新建看板任务';
+
+  @override
+  String get ng_board_title_required => '标题 *';
+
+  @override
+  String get ng_board_spec => '规格与验收标准';
+
+  @override
+  String get ng_board_estimate => '估算';
+
+  @override
+  String ng_board_estimate_draft(String complexity, String tokens) {
+    return '复杂度 $complexity（~$tokens 令牌 — 仅为令牌估算，并非美元成本）';
+  }
+
+  @override
+  String get ng_board_estimate_unavailable => '无法估算';
+
+  @override
+  String get ng_board_initial_column => '初始列';
+
+  @override
+  String get ng_board_worker_assignee => '负责的工作者';
+
+  @override
+  String get ng_board_parked_unassigned => '搁置（未分配）';
+
+  @override
+  String get ng_board_priority => '优先级';
+
+  @override
+  String get ng_board_workspace => '工作区';
+
+  @override
+  String get ng_board_scratch => '临时目录';
+
+  @override
+  String get ng_board_worktree => 'Git 工作树';
+
+  @override
+  String get ng_board_shared_dir => '共享目录';
+
+  @override
+  String get ng_board_workspace_path => '主机工作区路径';
+
+  @override
+  String get ng_board_parent => '父任务依赖（可选）';
+
+  @override
+  String get ng_board_skills => '固定技能（以逗号分隔，可选）';
+
+  @override
+  String get ng_board_provider_override => '提供商覆盖';
+
+  @override
+  String get ng_board_model_override => '模型覆盖';
+
+  @override
+  String get ng_board_reasoning => '推理强度';
+
+  @override
+  String get ng_board_profile_default => '配置档案默认值';
+
+  @override
+  String get ng_board_xhigh => '极高';
+
+  @override
+  String get ng_board_goal_mode => '目标循环模式';
+
+  @override
+  String get ng_board_goal_turns => '目标最大轮数（留空 = 默认）';
+
+  @override
+  String get ng_board_create_task => '创建任务';
+
+  @override
+  String get ng_board_orchestration_title => '编排与工作者配置档案';
+
+  @override
+  String ng_board_orchestrator(String profile) {
+    return '编排器配置档案（解析结果：$profile）';
+  }
+
+  @override
+  String get ng_board_inherit_default => '继承当前默认值';
+
+  @override
+  String ng_board_default_assignee(String profile) {
+    return '默认负责人（解析结果：$profile）';
+  }
+
+  @override
+  String get ng_board_auto_decompose => '自动拆解待分类卡片';
+
+  @override
+  String get ng_board_auto_decompose_help =>
+      '对待分类任务使用已配置的 kanban_decomposer 模型';
+
+  @override
+  String get ng_board_save_orchestration => '保存编排';
+
+  @override
+  String get ng_board_worker_descriptions => '工作者专长描述';
+
+  @override
+  String ng_board_worker_label(String profile, String model, String skills) {
+    return '@$profile（$model · $skills）';
+  }
+
+  @override
+  String get ng_board_default_model => '默认模型';
+
+  @override
+  String get ng_board_save_description => '保存描述';
+
+  @override
+  String get ng_board_auto_describe => '根据技能和角色自动描述';
+
+  @override
+  String get ng_board_manual_block => '操作员手动阻塞';
+
+  @override
+  String get ng_board_requested_review => '已请求审核';
+
+  @override
+  String ng_board_requeue_title(String task) {
+    return '要将 $task 重新排队吗？';
+  }
+
+  @override
+  String get ng_board_requeue_body => '正在运行此卡片的工作者将被停止，卡片将返回队列。';
+
+  @override
+  String get ng_board_requeue => '重新排队';
+
+  @override
+  String ng_board_reassign_title(String task, String profile) {
+    return '要将 $task 重新分配给 @$profile 吗？';
+  }
+
+  @override
+  String get ng_board_reassign_body => '此卡片正在运行：将先停止其工作者。';
+
+  @override
+  String get ng_board_reassign => '重新分配';
+
+  @override
+  String ng_board_saved_task(String task) {
+    return '已保存任务 $task';
+  }
+
+  @override
+  String get ng_board_commented_requeued => '已发表评论并将任务重新排队';
+
+  @override
+  String get ng_board_commented => '已发表评论';
+
+  @override
+  String ng_board_requeued(String task) {
+    return '已将 $task 重新排队';
+  }
+
+  @override
+  String get ng_board_decompose_failed => '拆解失败。';
+
+  @override
+  String ng_board_decompose_failed_reason(String reason) {
+    return '拆解失败：$reason';
+  }
+
+  @override
+  String ng_board_decomposed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已拆解为 $count 个子任务',
+      one: '已拆解为 1 个子任务',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_board_no_children => '未创建任何子任务。';
+
+  @override
+  String ng_board_no_children_reason(String reason) {
+    return '未创建任何子任务：$reason';
+  }
+
+  @override
+  String ng_board_uploaded(String file) {
+    return '已上传 $file';
+  }
+
+  @override
+  String ng_board_linked_parent(String task) {
+    return '已关联父任务 $task';
+  }
+
+  @override
+  String ng_board_unlinked_parent(String task) {
+    return '已移除父任务关联 $task';
+  }
+
+  @override
+  String get ng_board_task_load_failed => '无法加载任务';
+
+  @override
+  String get ng_board_refresh_task => '刷新任务';
+
+  @override
+  String get ng_board_tab_overview => '概览';
+
+  @override
+  String get ng_board_tab_comments => '评论与链接';
+
+  @override
+  String get ng_board_tab_runs => '运行与日志';
+
+  @override
+  String get ng_board_tab_events => '事件';
+
+  @override
+  String get ng_board_decompose => '拆解';
+
+  @override
+  String get ng_board_attach => '附加文件';
+
+  @override
+  String ng_board_estimate_task(
+    String complexity,
+    String tokens,
+    String rationale,
+  ) {
+    return '估算：$complexity · ~$tokens 令牌（$rationale）— 并非美元成本。';
+  }
+
+  @override
+  String get ng_board_no_rationale => '无理由说明';
+
+  @override
+  String get ng_board_status => '状态';
+
+  @override
+  String get ng_board_assignee => '负责人';
+
+  @override
+  String get ng_board_title_label => '标题';
+
+  @override
+  String get ng_board_body => '正文 / 规格说明';
+
+  @override
+  String get ng_board_save_changes => '保存更改';
+
+  @override
+  String get ng_board_clear_model => '清除模型覆盖';
+
+  @override
+  String ng_board_blocked_reason(String reason) {
+    return '阻塞原因：$reason';
+  }
+
+  @override
+  String ng_board_result(String result) {
+    return '结果：$result';
+  }
+
+  @override
+  String ng_board_parents(String count) {
+    return '受阻于（父任务 · $count）';
+  }
+
+  @override
+  String get ng_board_add_parent => '+ 添加父任务';
+
+  @override
+  String ng_board_children(String count) {
+    return '阻塞对象（子任务 · $count）';
+  }
+
+  @override
+  String ng_board_attachments(String count) {
+    return '附件（$count）';
+  }
+
+  @override
+  String get ng_board_worker => '工作者';
+
+  @override
+  String ng_board_comments(String count) {
+    return '评论（$count）';
+  }
+
+  @override
+  String get ng_board_comment_hint => '添加评论 / 工作者指引';
+
+  @override
+  String get ng_board_post_comment => '发表评论';
+
+  @override
+  String get ng_board_comment_requeue => '评论并重新排队';
+
+  @override
+  String ng_board_runs(String count) {
+    return '运行记录（$count）';
+  }
+
+  @override
+  String get ng_board_no_runs => '尚无工作者运行记录。';
+
+  @override
+  String ng_board_run_error(String error) {
+    return '错误：$error';
+  }
+
+  @override
+  String ng_board_log_tail_truncated(String bytes) {
+    return '工作者日志末尾（$bytes B，已截断）';
+  }
+
+  @override
+  String ng_board_log_tail(String bytes) {
+    return '工作者日志末尾（$bytes B）';
+  }
+
+  @override
+  String get ng_board_refresh_log => '刷新日志';
+
+  @override
+  String get ng_board_no_log => '无工作者日志输出。';
+
+  @override
+  String get ng_board_no_events => '未记录任何事件。';
+
+  @override
+  String get ng_bots_room_unknown => '未知';
+
+  @override
+  String get ng_bots_room_blocked => '已阻塞';
+
+  @override
+  String get ng_bots_room_working => '工作中';
+
+  @override
+  String get ng_bots_room_running => '运行中';
+
+  @override
+  String get ng_bots_room_idle => '空闲';
+
+  @override
+  String ng_board_run_title(String id, String profile, String outcome) {
+    return '运行 #$id · @$profile · $outcome';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -13561,6 +14853,1298 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_kanban_block_stale => '连接已更改。请重新打开此聊天，以查看卡片的实时状态。';
+
+  @override
+  String get ng_bots_tab_roster => '名单';
+
+  @override
+  String get ng_bots_tab_rooms => '群聊';
+
+  @override
+  String get ng_bots_tab_screen => '屏幕';
+
+  @override
+  String get ng_bots_tab_routines => '例行任务';
+
+  @override
+  String ng_bots_rooms_load_failed(String error) {
+    return '无法加载群聊：$error';
+  }
+
+  @override
+  String ng_bots_routines_load_failed(String error) {
+    return '无法加载例行任务：$error';
+  }
+
+  @override
+  String ng_bots_desktop_failed(String error) {
+    return 'Bot Desktop：$error';
+  }
+
+  @override
+  String get ng_bots_install_not_started => '网关未启动安装。';
+
+  @override
+  String ng_bots_install_failed_error(String error) {
+    return '安装失败：$error';
+  }
+
+  @override
+  String get ng_bots_install_cancelled => '安装已取消。';
+
+  @override
+  String get ng_bots_install_no_sudo => '网关主机上无法使用 sudo。请在该主机上运行上方的命令，然后刷新。';
+
+  @override
+  String ng_bots_install_exit_code(String code) {
+    return '安装失败（退出代码 $code）。';
+  }
+
+  @override
+  String ng_bots_install_done(String bot) {
+    return '已为 $bot 安装 Bot Desktop';
+  }
+
+  @override
+  String get ng_bots_start_failed => '启动失败';
+
+  @override
+  String ng_bots_stop_title(String bot) {
+    return '要停止 $bot 的 Bot Desktop 吗？';
+  }
+
+  @override
+  String get ng_bots_stop_human_held => '有人正在控制此屏幕。停止后将结束其会话，并关闭屏幕上打开的所有内容。';
+
+  @override
+  String get ng_bots_stop_body => '机器人屏幕上打开的所有内容都将被关闭。';
+
+  @override
+  String get ng_bots_stop_refused => '停止请求被拒绝';
+
+  @override
+  String get ng_bots_take_over_reason => '从 Ares 接管';
+
+  @override
+  String ng_bots_take_over_failed(String error) {
+    return '接管失败：$error';
+  }
+
+  @override
+  String ng_bots_force_hand_back_title(String bot) {
+    return '要将 $bot 的屏幕交还给机器人吗？';
+  }
+
+  @override
+  String get ng_bots_force_hand_back_body => '有人正在占用此屏幕。如果对方仍在使用，将失去控制权。';
+
+  @override
+  String get ng_bots_hand_back => '交还';
+
+  @override
+  String get ng_bots_hand_back_failed => '交还失败';
+
+  @override
+  String get ng_bots_adopt_title => '要采用新的沙盒镜像吗？';
+
+  @override
+  String ng_bots_adopt_body(String bot, String current, String target) {
+    return '$bot 将从 $current 切换到 $target。其容器会在下一次终端调用时重建；仅保存在当前容器中的内容将会丢失。';
+  }
+
+  @override
+  String get ng_bots_adopt_image => '采用镜像';
+
+  @override
+  String get ng_bots_image_switch_failed => '镜像切换失败';
+
+  @override
+  String get ng_bots_keep_refused => '保留请求被拒绝';
+
+  @override
+  String ng_bots_chat_open_failed(String error) {
+    return '无法打开 Bot Chat：$error';
+  }
+
+  @override
+  String ng_bots_title(String connection) {
+    return '机器人 · $connection';
+  }
+
+  @override
+  String get ng_bots_protocol_tooltip => '网关会自行注入队友消息协议 — 不会额外发送 SOUL.md 协议。';
+
+  @override
+  String ng_bots_unavailable(String reason) {
+    return '机器人不可用（$reason）';
+  }
+
+  @override
+  String get ng_bots_account_changed => '账户已更改。请重新连接或刷新。';
+
+  @override
+  String get ng_bots_try_refresh => '请尝试刷新。如果问题仍然存在，该网关可能不支持机器人。';
+
+  @override
+  String get ng_bots_search => '搜索机器人';
+
+  @override
+  String get ng_bots_none_found => '未找到机器人。';
+
+  @override
+  String get ng_bots_no_model => '无模型';
+
+  @override
+  String ng_bots_skill_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 项技能',
+      one: '1 项技能',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_bot_chat => 'Bot Chat';
+
+  @override
+  String ng_bots_install_id(String id, String protocol) {
+    return '网关报告的安装 ID 为 $id · bot_mode_protocol：$protocol';
+  }
+
+  @override
+  String get ng_bots_protocol_note =>
+      '设置 bot_mode_protocol 后，网关会注入队友消息协议。标识名：default→hermes，否则为配置档案名称。';
+
+  @override
+  String get ng_bots_no_rooms => '还没有群聊。请从名单中创建一个。';
+
+  @override
+  String ng_bots_member_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 名成员',
+      one: '1 名成员',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_room_disbanded => '已解散';
+
+  @override
+  String get ng_bots_room_adopted => '已采用';
+
+  @override
+  String get ng_bots_rooms_gateway => '网关群聊';
+
+  @override
+  String get ng_bots_rooms_desktop => '桌面端驱动的群聊';
+
+  @override
+  String ng_bots_rooms_gateway_body(String methods) {
+    return '群聊归网关所有。方法：$methods。';
+  }
+
+  @override
+  String get ng_bots_rooms_no_seat => '此网关可能无法承载群聊（需要常驻进程）。';
+
+  @override
+  String get ng_bots_rooms_fallback => '经典回退模式：由桌面端驱动群聊轮次（不会在此新建）。';
+
+  @override
+  String get ng_bots_create_room => '创建群聊';
+
+  @override
+  String get ng_bots_refresh_rooms => '刷新群聊';
+
+  @override
+  String get ng_bots_room_created => '群聊已创建';
+
+  @override
+  String ng_bots_room_refused(String reason) {
+    return '群聊创建被拒绝（$reason）';
+  }
+
+  @override
+  String ng_bots_room_failed(String error) {
+    return '群聊创建失败：$error';
+  }
+
+  @override
+  String get ng_bots_bot => '机器人';
+
+  @override
+  String get ng_bots_screen_unavailable => '无法获取屏幕状态';
+
+  @override
+  String get ng_bots_screen_unavailable_body => '启动机器人的屏幕即可查看其缩略图，或接管后亲自使用。';
+
+  @override
+  String get ng_bots_take_over_note =>
+      '接管会打开实时屏幕并将控制权交给你。当你关闭实时屏幕、离开此页面或将应用切换到后台时，控制权会交还给机器人。';
+
+  @override
+  String get ng_bots_not_installed => '未安装';
+
+  @override
+  String get ng_bots_unsupported_host => '不支持的主机';
+
+  @override
+  String ng_bots_pid(String pid) {
+    return 'pid $pid';
+  }
+
+  @override
+  String ng_bots_missing(String items) {
+    return '缺少：$items';
+  }
+
+  @override
+  String ng_bots_blocked(String reason) {
+    return '受阻：$reason';
+  }
+
+  @override
+  String get ng_bots_no_switch => '没有待处理的沙盒镜像切换。';
+
+  @override
+  String ng_bots_switch_image(String current, String target) {
+    return '切换镜像：$current → $target';
+  }
+
+  @override
+  String get ng_bots_bot_in_control => '由机器人控制';
+
+  @override
+  String get ng_bots_person_in_control => '由真人控制';
+
+  @override
+  String get ng_bots_installing => '正在网关主机上安装 Bot Desktop…';
+
+  @override
+  String get ng_bots_install_unfinished => '安装未完成';
+
+  @override
+  String get ng_bots_install => '安装';
+
+  @override
+  String get ng_bots_start => '启动';
+
+  @override
+  String get ng_bots_take_over => '接管';
+
+  @override
+  String get ng_bots_keep_image => '保留当前镜像';
+
+  @override
+  String ng_bots_missing_pieces(String items) {
+    return '网关报告缺少组件：$items';
+  }
+
+  @override
+  String get ng_bots_install_missing => '安装缺少的组件';
+
+  @override
+  String get ng_bots_thumbnail_unavailable => '缩略图不可用';
+
+  @override
+  String get ng_bots_thumbnail_title => '屏幕缩略图（实时）';
+
+  @override
+  String get ng_bots_thumbnail_suppressed => '屏幕由真人控制期间不显示缩略图。';
+
+  @override
+  String get ng_bots_thumbnail_pending => '缩略图暂不可用。';
+
+  @override
+  String ng_bots_routines_of(String bot) {
+    return '$bot · 例行任务';
+  }
+
+  @override
+  String get ng_bots_add_routine => '添加例行任务';
+
+  @override
+  String get ng_bots_no_routines => '此机器人没有例行任务。';
+
+  @override
+  String get ng_bots_routines_note =>
+      '例行任务是带有 [bot:<name>] 标签的任务，归机器人的配置档案存储所有。旧版委派例行任务在加载时会被强制暂停。';
+
+  @override
+  String ng_bots_routine_last(String status) {
+    return '上次：$status';
+  }
+
+  @override
+  String ng_bots_routine_next(String time) {
+    return '下次：$time';
+  }
+
+  @override
+  String ng_bots_routine_error(String error) {
+    return '错误：$error';
+  }
+
+  @override
+  String ng_bots_remove_routine_title(String routine) {
+    return '要移除例行任务 $routine 吗？';
+  }
+
+  @override
+  String ng_bots_remove_routine_body(String bot) {
+    return '该例行任务将从 $bot 的计划中删除。此操作无法撤销。';
+  }
+
+  @override
+  String ng_bots_routine_action_failed(String action, String error) {
+    return '$action 失败：$error';
+  }
+
+  @override
+  String get ng_bots_not_connected => '未连接。';
+
+  @override
+  String ng_bots_add_failed(String error) {
+    return '添加失败：$error';
+  }
+
+  @override
+  String get ng_bots_routine_added => '已添加例行任务';
+
+  @override
+  String get ng_bots_routine_enabled => '已启用';
+
+  @override
+  String get ng_bots_routine_paused => '已暂停';
+
+  @override
+  String ng_bots_path(String path) {
+    return '路径：$path';
+  }
+
+  @override
+  String get ng_bots_chat_present => 'Bot Chat 已存在';
+
+  @override
+  String get ng_bots_chat_missing => '缺少 Bot Chat';
+
+  @override
+  String ng_bots_last_session(String preview) {
+    return '上次会话：$preview';
+  }
+
+  @override
+  String get ng_bots_open_chat => '打开 Bot Chat';
+
+  @override
+  String get ng_bots_desktop => 'Bot Desktop';
+
+  @override
+  String get ng_bots_room_name => '群聊名称';
+
+  @override
+  String get ng_bots_select_member => '请至少选择一名成员。';
+
+  @override
+  String get ng_bots_sudo_title => '管理员密码';
+
+  @override
+  String ng_bots_sudo_body(String bot) {
+    return '为 $bot 安装 Bot Desktop 需要在网关主机上使用 sudo。密码仅会发送到该网关，仅用于本次安装，且不会被保存。';
+  }
+
+  @override
+  String get ng_bots_sudo_password => 'sudo 密码';
+
+  @override
+  String get ng_bots_new_routine => '新建例行任务';
+
+  @override
+  String get ng_bots_routine_title => '标题';
+
+  @override
+  String get ng_bots_routine_instruction => '指令';
+
+  @override
+  String get ng_bots_cron => 'Cron 表达式';
+
+  @override
+  String get ng_bots_interval => '间隔';
+
+  @override
+  String get ng_bots_cron_help => '0 9 * * * 表示每天 09:00 运行';
+
+  @override
+  String get ng_bots_every => '每隔';
+
+  @override
+  String get ng_bots_unit_minutes => '分钟';
+
+  @override
+  String get ng_bots_unit_hours => '小时';
+
+  @override
+  String get ng_bots_unit_days => '天';
+
+  @override
+  String get ng_bots_stop_after => '运行几次后停止';
+
+  @override
+  String get ng_bots_stop_after_help => '留空则持续运行';
+
+  @override
+  String get ng_bots_send_results => '结果发送至';
+
+  @override
+  String get ng_bots_run_history => '仅记录运行历史';
+
+  @override
+  String get ng_bots_continuity => '接续上一次运行';
+
+  @override
+  String get ng_bots_account_changed_refresh => '账户已更改。请刷新后再继续。';
+
+  @override
+  String ng_bots_room_load_failed(String error) {
+    return '无法加载群聊：$error';
+  }
+
+  @override
+  String ng_bots_send_failed(String error) {
+    return '发送失败：$error';
+  }
+
+  @override
+  String ng_bots_stop_failed(String error) {
+    return '停止失败：$error';
+  }
+
+  @override
+  String get ng_bots_stop_room => '停止群聊';
+
+  @override
+  String get ng_bots_send_message => '发送消息';
+
+  @override
+  String get ng_bots_room_hint => '向群聊发送消息（使用 @handle 提及成员）';
+
+  @override
+  String get ng_bots_history => '历史记录';
+
+  @override
+  String ng_bots_revision(String revision) {
+    return '修订版本 $revision';
+  }
+
+  @override
+  String ng_bots_last_error(String error) {
+    return '上次错误：$error';
+  }
+
+  @override
+  String get ng_bots_members => '成员';
+
+  @override
+  String get ng_bots_room_context => '群聊上下文';
+
+  @override
+  String ng_bots_purpose(String purpose) {
+    return '目的：$purpose';
+  }
+
+  @override
+  String ng_bots_notes(String notes) {
+    return '备注：$notes';
+  }
+
+  @override
+  String ng_bots_routing(String routing) {
+    return '路由：$routing';
+  }
+
+  @override
+  String ng_bots_lead(String member) {
+    return '主导 $member';
+  }
+
+  @override
+  String get ng_bots_viewer_you_control => '你正在控制此屏幕。机器人会等待你交还控制权。';
+
+  @override
+  String get ng_bots_viewer_handed_back => '控制权已交还给机器人。';
+
+  @override
+  String get ng_bots_viewer_background => '应用已离开前台，控制权已交还给机器人。';
+
+  @override
+  String get ng_bots_viewer_taken => '其他人接管了此屏幕。';
+
+  @override
+  String get ng_bots_viewer_lost => '实时画面已中断，控制权已交还给机器人。';
+
+  @override
+  String ng_bots_viewer_title(String bot) {
+    return 'Bot Desktop · $bot';
+  }
+
+  @override
+  String get ng_bots_viewer_type_hint => '在机器人的屏幕上输入';
+
+  @override
+  String get ng_bots_viewer_type => '键入';
+
+  @override
+  String get ng_bots_viewer_enter => '回车';
+
+  @override
+  String get ng_bots_viewer_backspace => '退格';
+
+  @override
+  String get ng_more_kanban => '看板';
+
+  @override
+  String get ng_more_kanban_subtitle => '看板、任务依赖、工作者分配和日志';
+
+  @override
+  String get ng_more_bots => '机器人';
+
+  @override
+  String get ng_more_bots_subtitle => '名单、群聊、例行任务和 Bot Desktop';
+
+  @override
+  String get ng_slash_kanban => '打开看板';
+
+  @override
+  String get ng_slash_bots => '打开你的机器人';
+
+  @override
+  String ng_board_card_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 张卡片',
+      one: '1 张卡片',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_board_event_toast(String task, String event) {
+    return '看板 $task：$event';
+  }
+
+  @override
+  String get ng_board_task => '任务';
+
+  @override
+  String ng_board_refused_http(String status) {
+    return '操作被拒绝（HTTP $status）。';
+  }
+
+  @override
+  String get ng_board_err_unsupported => '此网关未启用看板插件。';
+
+  @override
+  String get ng_board_err_denied => '此网关需要登录或相应权限。';
+
+  @override
+  String get ng_board_err_stale => '网关所有者已更改。请刷新后再继续。';
+
+  @override
+  String get ng_board_err_insecure => '看板工作区操作需要 HTTPS（或回环地址）。';
+
+  @override
+  String get ng_board_err_unreachable => '无法连接此网关上的看板服务。';
+
+  @override
+  String get ng_board_err_failed => '操作失败。请刷新后重试。';
+
+  @override
+  String ng_board_block_title(String task) {
+    return '将 $task 标记为阻塞';
+  }
+
+  @override
+  String get ng_board_block_reason => '阻塞原因';
+
+  @override
+  String get ng_board_block_hint => '是什么阻塞了这张卡片？';
+
+  @override
+  String ng_board_review_title(String task) {
+    return '为 $task 请求审核';
+  }
+
+  @override
+  String get ng_board_review_summary => '审核摘要';
+
+  @override
+  String get ng_board_review_hint => '实现并验证了哪些内容？';
+
+  @override
+  String ng_board_move_title(String cards, String column) {
+    return '要将 $cards 移至 $column 吗？';
+  }
+
+  @override
+  String ng_board_move_body(String board) {
+    return '$board 上所有选中的卡片都会更换列。正在运行的卡片将停止运行。';
+  }
+
+  @override
+  String get ng_board_move => '移动';
+
+  @override
+  String ng_board_moved(String column) {
+    return '已将卡片移至 $column';
+  }
+
+  @override
+  String ng_board_unassign_title(String cards) {
+    return '要取消分配 $cards 吗？';
+  }
+
+  @override
+  String ng_board_assign_title(String cards, String profile) {
+    return '要将 $cards 分配给 @$profile 吗？';
+  }
+
+  @override
+  String get ng_board_assign_body => '正在运行的卡片会先被收回：其工作者将被停止。';
+
+  @override
+  String get ng_board_unassign => '取消分配';
+
+  @override
+  String get ng_board_assign => '分配';
+
+  @override
+  String get ng_board_unassigned_done => '已取消分配所选卡片';
+
+  @override
+  String ng_board_assigned_done(String profile) {
+    return '已分配给 @$profile';
+  }
+
+  @override
+  String ng_board_archive_title(String cards) {
+    return '要归档 $cards 吗？';
+  }
+
+  @override
+  String ng_board_archive_body(String board) {
+    return '已归档的卡片将从 $board 中移除。开启“已归档”即可再次查看。';
+  }
+
+  @override
+  String get ng_board_archived_done => '已归档所选卡片';
+
+  @override
+  String ng_board_delete_title(String cards) {
+    return '要删除 $cards 吗？';
+  }
+
+  @override
+  String ng_board_delete_body(String board) {
+    return '这将从 $board 中永久删除所选卡片。';
+  }
+
+  @override
+  String ng_board_deleted(String cards) {
+    return '已删除 $cards。';
+  }
+
+  @override
+  String ng_board_partial_failure(String failed, String total, String reason) {
+    return '$total 项中有 $failed 项失败：$reason';
+  }
+
+  @override
+  String get ng_board_refused => '已拒绝';
+
+  @override
+  String ng_board_dispatched(
+    String spawned,
+    String promoted,
+    String reclaimed,
+  ) {
+    return '已派发：启动 $spawned 个，推进 $promoted 个，收回 $reclaimed 个。';
+  }
+
+  @override
+  String ng_board_board_archived(String board) {
+    return '已归档看板 $board';
+  }
+
+  @override
+  String ng_board_board_archived_to(String path) {
+    return '已归档至 $path';
+  }
+
+  @override
+  String ng_board_exported(String board, String archive) {
+    return '已将 $board 导出至 $archive';
+  }
+
+  @override
+  String ng_board_imported(String board, String warnings) {
+    return '已导入看板 $board$warnings';
+  }
+
+  @override
+  String ng_board_created(String task) {
+    return '已创建 $task';
+  }
+
+  @override
+  String get ng_board_orchestration_saved => '已保存看板编排';
+
+  @override
+  String get ng_board_auto_describe_unavailable => '自动描述不可用';
+
+  @override
+  String ng_board_description_updated(String profile) {
+    return '已更新 @$profile 的描述';
+  }
+
+  @override
+  String ng_board_title(String board) {
+    return '看板 · $board';
+  }
+
+  @override
+  String ng_board_active(String count) {
+    return '$count 个进行中';
+  }
+
+  @override
+  String get ng_board_dispatch => '立即派发就绪任务';
+
+  @override
+  String get ng_board_orchestration => '编排与工作者';
+
+  @override
+  String get ng_board_new_task => '新建任务';
+
+  @override
+  String get ng_board_enable_plugin =>
+      '请在此网关的“功能 → 插件”中启用内置的“kanban”插件，以激活其看板路由。';
+
+  @override
+  String get ng_board_filter => '筛选任务…';
+
+  @override
+  String get ng_board_all_assignees => '所有负责人';
+
+  @override
+  String get ng_board_unassigned => '未分配';
+
+  @override
+  String get ng_board_running_by_profile => '各配置档案运行中';
+
+  @override
+  String get ng_board_select => '选择';
+
+  @override
+  String ng_board_selected_chip(String count) {
+    return '已选择（$count）';
+  }
+
+  @override
+  String get ng_board_locked_column => '受管理的列 — 已禁用拖放';
+
+  @override
+  String ng_board_add_to(String column) {
+    return '添加到 $column';
+  }
+
+  @override
+  String ng_board_collapse(String column) {
+    return '折叠 $column';
+  }
+
+  @override
+  String ng_board_column_empty(String column) {
+    return '$column 中没有任务';
+  }
+
+  @override
+  String get ng_board_drop_here => '拖放至此或 + 任务';
+
+  @override
+  String get ng_board_card_actions => '卡片操作';
+
+  @override
+  String get ng_board_open_details => '打开详情';
+
+  @override
+  String get ng_board_select_card => '选择卡片';
+
+  @override
+  String ng_board_move_to(String column) {
+    return '移至 $column';
+  }
+
+  @override
+  String get ng_board_parked => '搁置';
+
+  @override
+  String ng_board_blocked_by(String count) {
+    return '被 $count 项阻塞';
+  }
+
+  @override
+  String get ng_board_goal_loop => '目标循环';
+
+  @override
+  String ng_board_selected(String count) {
+    return '已选择 $count 项';
+  }
+
+  @override
+  String get ng_board_move_menu => '移动…';
+
+  @override
+  String get ng_board_assign_menu => '分配…';
+
+  @override
+  String get ng_board_new_board_title => '新建看板';
+
+  @override
+  String get ng_board_slug => '短标识（小写，例如 release-v5）';
+
+  @override
+  String get ng_board_display_name => '显示名称';
+
+  @override
+  String get ng_board_linked_project => '关联项目（可选）';
+
+  @override
+  String get ng_board_none => '无';
+
+  @override
+  String get ng_board_default_workdir => '主机上的默认工作目录（可选）';
+
+  @override
+  String get ng_board_import_title => '导入看板归档';
+
+  @override
+  String get ng_board_import_path => '主机上的 .tar.gz 归档路径';
+
+  @override
+  String get ng_board_import => '导入';
+
+  @override
+  String ng_board_edit_board(String board) {
+    return '编辑 $board';
+  }
+
+  @override
+  String get ng_board_name => '名称';
+
+  @override
+  String get ng_board_description => '描述';
+
+  @override
+  String get ng_board_workdir_clear => '默认工作目录（留空则清除）';
+
+  @override
+  String get ng_board_boards => '看板列表';
+
+  @override
+  String get ng_board_new_board => '新建看板';
+
+  @override
+  String get ng_board_search_boards => '搜索看板…';
+
+  @override
+  String get ng_board_unpin => '取消固定标签页';
+
+  @override
+  String get ng_board_pin => '固定标签页';
+
+  @override
+  String ng_board_archive_board_title(String board) {
+    return '要归档看板 $board 吗？';
+  }
+
+  @override
+  String ng_board_archive_board_body(String cards) {
+    return '该看板及其 $cards 将从看板列表中移除。网关会在其主机上保留归档。';
+  }
+
+  @override
+  String get ng_board_edit_metadata => '编辑元数据';
+
+  @override
+  String get ng_board_export => '在主机上导出 .tar.gz';
+
+  @override
+  String get ng_board_move_pin_left => '将固定标签页左移';
+
+  @override
+  String get ng_board_archive_board => '归档看板';
+
+  @override
+  String get ng_board_new_task_title => '新建看板任务';
+
+  @override
+  String get ng_board_title_required => '标题 *';
+
+  @override
+  String get ng_board_spec => '规格与验收标准';
+
+  @override
+  String get ng_board_estimate => '估算';
+
+  @override
+  String ng_board_estimate_draft(String complexity, String tokens) {
+    return '复杂度 $complexity（~$tokens 令牌 — 仅为令牌估算，并非美元成本）';
+  }
+
+  @override
+  String get ng_board_estimate_unavailable => '无法估算';
+
+  @override
+  String get ng_board_initial_column => '初始列';
+
+  @override
+  String get ng_board_worker_assignee => '负责的工作者';
+
+  @override
+  String get ng_board_parked_unassigned => '搁置（未分配）';
+
+  @override
+  String get ng_board_priority => '优先级';
+
+  @override
+  String get ng_board_workspace => '工作区';
+
+  @override
+  String get ng_board_scratch => '临时目录';
+
+  @override
+  String get ng_board_worktree => 'Git 工作树';
+
+  @override
+  String get ng_board_shared_dir => '共享目录';
+
+  @override
+  String get ng_board_workspace_path => '主机工作区路径';
+
+  @override
+  String get ng_board_parent => '父任务依赖（可选）';
+
+  @override
+  String get ng_board_skills => '固定技能（以逗号分隔，可选）';
+
+  @override
+  String get ng_board_provider_override => '提供商覆盖';
+
+  @override
+  String get ng_board_model_override => '模型覆盖';
+
+  @override
+  String get ng_board_reasoning => '推理强度';
+
+  @override
+  String get ng_board_profile_default => '配置档案默认值';
+
+  @override
+  String get ng_board_xhigh => '极高';
+
+  @override
+  String get ng_board_goal_mode => '目标循环模式';
+
+  @override
+  String get ng_board_goal_turns => '目标最大轮数（留空 = 默认）';
+
+  @override
+  String get ng_board_create_task => '创建任务';
+
+  @override
+  String get ng_board_orchestration_title => '编排与工作者配置档案';
+
+  @override
+  String ng_board_orchestrator(String profile) {
+    return '编排器配置档案（解析结果：$profile）';
+  }
+
+  @override
+  String get ng_board_inherit_default => '继承当前默认值';
+
+  @override
+  String ng_board_default_assignee(String profile) {
+    return '默认负责人（解析结果：$profile）';
+  }
+
+  @override
+  String get ng_board_auto_decompose => '自动拆解待分类卡片';
+
+  @override
+  String get ng_board_auto_decompose_help =>
+      '对待分类任务使用已配置的 kanban_decomposer 模型';
+
+  @override
+  String get ng_board_save_orchestration => '保存编排';
+
+  @override
+  String get ng_board_worker_descriptions => '工作者专长描述';
+
+  @override
+  String ng_board_worker_label(String profile, String model, String skills) {
+    return '@$profile（$model · $skills）';
+  }
+
+  @override
+  String get ng_board_default_model => '默认模型';
+
+  @override
+  String get ng_board_save_description => '保存描述';
+
+  @override
+  String get ng_board_auto_describe => '根据技能和角色自动描述';
+
+  @override
+  String get ng_board_manual_block => '操作员手动阻塞';
+
+  @override
+  String get ng_board_requested_review => '已请求审核';
+
+  @override
+  String ng_board_requeue_title(String task) {
+    return '要将 $task 重新排队吗？';
+  }
+
+  @override
+  String get ng_board_requeue_body => '正在运行此卡片的工作者将被停止，卡片将返回队列。';
+
+  @override
+  String get ng_board_requeue => '重新排队';
+
+  @override
+  String ng_board_reassign_title(String task, String profile) {
+    return '要将 $task 重新分配给 @$profile 吗？';
+  }
+
+  @override
+  String get ng_board_reassign_body => '此卡片正在运行：将先停止其工作者。';
+
+  @override
+  String get ng_board_reassign => '重新分配';
+
+  @override
+  String ng_board_saved_task(String task) {
+    return '已保存任务 $task';
+  }
+
+  @override
+  String get ng_board_commented_requeued => '已发表评论并将任务重新排队';
+
+  @override
+  String get ng_board_commented => '已发表评论';
+
+  @override
+  String ng_board_requeued(String task) {
+    return '已将 $task 重新排队';
+  }
+
+  @override
+  String get ng_board_decompose_failed => '拆解失败。';
+
+  @override
+  String ng_board_decompose_failed_reason(String reason) {
+    return '拆解失败：$reason';
+  }
+
+  @override
+  String ng_board_decomposed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已拆解为 $count 个子任务',
+      one: '已拆解为 1 个子任务',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_board_no_children => '未创建任何子任务。';
+
+  @override
+  String ng_board_no_children_reason(String reason) {
+    return '未创建任何子任务：$reason';
+  }
+
+  @override
+  String ng_board_uploaded(String file) {
+    return '已上传 $file';
+  }
+
+  @override
+  String ng_board_linked_parent(String task) {
+    return '已关联父任务 $task';
+  }
+
+  @override
+  String ng_board_unlinked_parent(String task) {
+    return '已移除父任务关联 $task';
+  }
+
+  @override
+  String get ng_board_task_load_failed => '无法加载任务';
+
+  @override
+  String get ng_board_refresh_task => '刷新任务';
+
+  @override
+  String get ng_board_tab_overview => '概览';
+
+  @override
+  String get ng_board_tab_comments => '评论与链接';
+
+  @override
+  String get ng_board_tab_runs => '运行与日志';
+
+  @override
+  String get ng_board_tab_events => '事件';
+
+  @override
+  String get ng_board_decompose => '拆解';
+
+  @override
+  String get ng_board_attach => '附加文件';
+
+  @override
+  String ng_board_estimate_task(
+    String complexity,
+    String tokens,
+    String rationale,
+  ) {
+    return '估算：$complexity · ~$tokens 令牌（$rationale）— 并非美元成本。';
+  }
+
+  @override
+  String get ng_board_no_rationale => '无理由说明';
+
+  @override
+  String get ng_board_status => '状态';
+
+  @override
+  String get ng_board_assignee => '负责人';
+
+  @override
+  String get ng_board_title_label => '标题';
+
+  @override
+  String get ng_board_body => '正文 / 规格说明';
+
+  @override
+  String get ng_board_save_changes => '保存更改';
+
+  @override
+  String get ng_board_clear_model => '清除模型覆盖';
+
+  @override
+  String ng_board_blocked_reason(String reason) {
+    return '阻塞原因：$reason';
+  }
+
+  @override
+  String ng_board_result(String result) {
+    return '结果：$result';
+  }
+
+  @override
+  String ng_board_parents(String count) {
+    return '受阻于（父任务 · $count）';
+  }
+
+  @override
+  String get ng_board_add_parent => '+ 添加父任务';
+
+  @override
+  String ng_board_children(String count) {
+    return '阻塞对象（子任务 · $count）';
+  }
+
+  @override
+  String ng_board_attachments(String count) {
+    return '附件（$count）';
+  }
+
+  @override
+  String get ng_board_worker => '工作者';
+
+  @override
+  String ng_board_comments(String count) {
+    return '评论（$count）';
+  }
+
+  @override
+  String get ng_board_comment_hint => '添加评论 / 工作者指引';
+
+  @override
+  String get ng_board_post_comment => '发表评论';
+
+  @override
+  String get ng_board_comment_requeue => '评论并重新排队';
+
+  @override
+  String ng_board_runs(String count) {
+    return '运行记录（$count）';
+  }
+
+  @override
+  String get ng_board_no_runs => '尚无工作者运行记录。';
+
+  @override
+  String ng_board_run_error(String error) {
+    return '错误：$error';
+  }
+
+  @override
+  String ng_board_log_tail_truncated(String bytes) {
+    return '工作者日志末尾（$bytes B，已截断）';
+  }
+
+  @override
+  String ng_board_log_tail(String bytes) {
+    return '工作者日志末尾（$bytes B）';
+  }
+
+  @override
+  String get ng_board_refresh_log => '刷新日志';
+
+  @override
+  String get ng_board_no_log => '无工作者日志输出。';
+
+  @override
+  String get ng_board_no_events => '未记录任何事件。';
+
+  @override
+  String get ng_bots_room_unknown => '未知';
+
+  @override
+  String get ng_bots_room_blocked => '已阻塞';
+
+  @override
+  String get ng_bots_room_working => '工作中';
+
+  @override
+  String get ng_bots_room_running => '运行中';
+
+  @override
+  String get ng_bots_room_idle => '空闲';
+
+  @override
+  String ng_board_run_title(String id, String profile, String outcome) {
+    return '运行 #$id · @$profile · $outcome';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -20352,4 +22936,1296 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get ng_kanban_block_stale => '連線已變更。請重新開啟此聊天，以查看卡片的即時狀態。';
+
+  @override
+  String get ng_bots_tab_roster => '名單';
+
+  @override
+  String get ng_bots_tab_rooms => '群組';
+
+  @override
+  String get ng_bots_tab_screen => '螢幕';
+
+  @override
+  String get ng_bots_tab_routines => '例行工作';
+
+  @override
+  String ng_bots_rooms_load_failed(String error) {
+    return '無法載入群組：$error';
+  }
+
+  @override
+  String ng_bots_routines_load_failed(String error) {
+    return '無法載入例行工作：$error';
+  }
+
+  @override
+  String ng_bots_desktop_failed(String error) {
+    return 'Bot Desktop：$error';
+  }
+
+  @override
+  String get ng_bots_install_not_started => '閘道未開始安裝。';
+
+  @override
+  String ng_bots_install_failed_error(String error) {
+    return '安裝失敗：$error';
+  }
+
+  @override
+  String get ng_bots_install_cancelled => '安裝已取消。';
+
+  @override
+  String get ng_bots_install_no_sudo => '閘道主機上無法使用 sudo。請在該主機上執行上方的指令，然後重新整理。';
+
+  @override
+  String ng_bots_install_exit_code(String code) {
+    return '安裝失敗（結束代碼 $code）。';
+  }
+
+  @override
+  String ng_bots_install_done(String bot) {
+    return '已為 $bot 安裝 Bot Desktop';
+  }
+
+  @override
+  String get ng_bots_start_failed => '啟動失敗';
+
+  @override
+  String ng_bots_stop_title(String bot) {
+    return '要停止 $bot 的 Bot Desktop 嗎？';
+  }
+
+  @override
+  String get ng_bots_stop_human_held => '有人正在控制此螢幕。停止後會結束其工作階段，並關閉螢幕上開啟的所有內容。';
+
+  @override
+  String get ng_bots_stop_body => '機器人螢幕上開啟的所有內容都會關閉。';
+
+  @override
+  String get ng_bots_stop_refused => '停止要求遭拒';
+
+  @override
+  String get ng_bots_take_over_reason => '從 Ares 接管';
+
+  @override
+  String ng_bots_take_over_failed(String error) {
+    return '接管失敗：$error';
+  }
+
+  @override
+  String ng_bots_force_hand_back_title(String bot) {
+    return '要將 $bot 的螢幕交還給機器人嗎？';
+  }
+
+  @override
+  String get ng_bots_force_hand_back_body => '有人正在佔用此螢幕。如果對方仍在使用，將失去控制權。';
+
+  @override
+  String get ng_bots_hand_back => '交還';
+
+  @override
+  String get ng_bots_hand_back_failed => '交還失敗';
+
+  @override
+  String get ng_bots_adopt_title => '要採用新的沙箱映像檔嗎？';
+
+  @override
+  String ng_bots_adopt_body(String bot, String current, String target) {
+    return '$bot 將從 $current 切換到 $target。其容器會在下一次終端機呼叫時重建；僅保存在目前容器中的內容將會遺失。';
+  }
+
+  @override
+  String get ng_bots_adopt_image => '採用映像檔';
+
+  @override
+  String get ng_bots_image_switch_failed => '映像檔切換失敗';
+
+  @override
+  String get ng_bots_keep_refused => '保留要求遭拒';
+
+  @override
+  String ng_bots_chat_open_failed(String error) {
+    return '無法開啟 Bot Chat：$error';
+  }
+
+  @override
+  String ng_bots_title(String connection) {
+    return '機器人 · $connection';
+  }
+
+  @override
+  String get ng_bots_protocol_tooltip => '閘道會自行注入隊友訊息協定 — 不會另外傳送 SOUL.md 協定。';
+
+  @override
+  String ng_bots_unavailable(String reason) {
+    return '無法使用機器人（$reason）';
+  }
+
+  @override
+  String get ng_bots_account_changed => '帳戶已變更。請重新連線或重新整理。';
+
+  @override
+  String get ng_bots_try_refresh => '請嘗試重新整理。如果問題持續發生，此閘道可能不支援機器人。';
+
+  @override
+  String get ng_bots_search => '搜尋機器人';
+
+  @override
+  String get ng_bots_none_found => '找不到機器人。';
+
+  @override
+  String get ng_bots_no_model => '無模型';
+
+  @override
+  String ng_bots_skill_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 項技能',
+      one: '1 項技能',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_bot_chat => 'Bot Chat';
+
+  @override
+  String ng_bots_install_id(String id, String protocol) {
+    return '閘道回報的安裝 ID 為 $id · bot_mode_protocol：$protocol';
+  }
+
+  @override
+  String get ng_bots_protocol_note =>
+      '設定 bot_mode_protocol 後，閘道會注入隊友訊息協定。代稱：default→hermes，否則為設定檔名稱。';
+
+  @override
+  String get ng_bots_no_rooms => '尚無群組。請從名單建立一個。';
+
+  @override
+  String ng_bots_member_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 位成員',
+      one: '1 位成員',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_room_disbanded => '已解散';
+
+  @override
+  String get ng_bots_room_adopted => '已採用';
+
+  @override
+  String get ng_bots_rooms_gateway => '閘道群組';
+
+  @override
+  String get ng_bots_rooms_desktop => '由桌面端驅動的群組';
+
+  @override
+  String ng_bots_rooms_gateway_body(String methods) {
+    return '群組歸閘道所有。方法：$methods。';
+  }
+
+  @override
+  String get ng_bots_rooms_no_seat => '此閘道可能無法承載群組（需要常駐處理程序）。';
+
+  @override
+  String get ng_bots_rooms_fallback => '傳統備援模式：由桌面端驅動群組輪次（不會在此新建）。';
+
+  @override
+  String get ng_bots_create_room => '建立群組';
+
+  @override
+  String get ng_bots_refresh_rooms => '重新整理群組';
+
+  @override
+  String get ng_bots_room_created => '群組已建立';
+
+  @override
+  String ng_bots_room_refused(String reason) {
+    return '群組建立遭拒（$reason）';
+  }
+
+  @override
+  String ng_bots_room_failed(String error) {
+    return '群組建立失敗：$error';
+  }
+
+  @override
+  String get ng_bots_bot => '機器人';
+
+  @override
+  String get ng_bots_screen_unavailable => '無法取得螢幕狀態';
+
+  @override
+  String get ng_bots_screen_unavailable_body => '啟動機器人的螢幕即可查看其縮圖，或接管後親自使用。';
+
+  @override
+  String get ng_bots_take_over_note =>
+      '接管會開啟即時螢幕並將控制權交給你。當你關閉即時螢幕、離開此頁面或將應用程式切換到背景時，控制權會交還給機器人。';
+
+  @override
+  String get ng_bots_not_installed => '未安裝';
+
+  @override
+  String get ng_bots_unsupported_host => '不支援的主機';
+
+  @override
+  String ng_bots_pid(String pid) {
+    return 'pid $pid';
+  }
+
+  @override
+  String ng_bots_missing(String items) {
+    return '缺少：$items';
+  }
+
+  @override
+  String ng_bots_blocked(String reason) {
+    return '受阻：$reason';
+  }
+
+  @override
+  String get ng_bots_no_switch => '沒有待處理的沙箱映像檔切換。';
+
+  @override
+  String ng_bots_switch_image(String current, String target) {
+    return '切換映像檔：$current → $target';
+  }
+
+  @override
+  String get ng_bots_bot_in_control => '由機器人控制';
+
+  @override
+  String get ng_bots_person_in_control => '由真人控制';
+
+  @override
+  String get ng_bots_installing => '正在閘道主機上安裝 Bot Desktop…';
+
+  @override
+  String get ng_bots_install_unfinished => '安裝未完成';
+
+  @override
+  String get ng_bots_install => '安裝';
+
+  @override
+  String get ng_bots_start => '啟動';
+
+  @override
+  String get ng_bots_take_over => '接管';
+
+  @override
+  String get ng_bots_keep_image => '保留目前映像檔';
+
+  @override
+  String ng_bots_missing_pieces(String items) {
+    return '閘道回報缺少元件：$items';
+  }
+
+  @override
+  String get ng_bots_install_missing => '安裝缺少的元件';
+
+  @override
+  String get ng_bots_thumbnail_unavailable => '無法使用縮圖';
+
+  @override
+  String get ng_bots_thumbnail_title => '螢幕縮圖（即時）';
+
+  @override
+  String get ng_bots_thumbnail_suppressed => '螢幕由真人控制期間不顯示縮圖。';
+
+  @override
+  String get ng_bots_thumbnail_pending => '縮圖尚無法使用。';
+
+  @override
+  String ng_bots_routines_of(String bot) {
+    return '$bot · 例行工作';
+  }
+
+  @override
+  String get ng_bots_add_routine => '新增例行工作';
+
+  @override
+  String get ng_bots_no_routines => '此機器人沒有例行工作。';
+
+  @override
+  String get ng_bots_routines_note =>
+      '例行工作是帶有 [bot:<name>] 標籤的工作，歸機器人的設定檔儲存區所有。舊版委派例行工作在載入時會被強制暫停。';
+
+  @override
+  String ng_bots_routine_last(String status) {
+    return '上次：$status';
+  }
+
+  @override
+  String ng_bots_routine_next(String time) {
+    return '下次：$time';
+  }
+
+  @override
+  String ng_bots_routine_error(String error) {
+    return '錯誤：$error';
+  }
+
+  @override
+  String ng_bots_remove_routine_title(String routine) {
+    return '要移除例行工作 $routine 嗎？';
+  }
+
+  @override
+  String ng_bots_remove_routine_body(String bot) {
+    return '此例行工作將從 $bot 的排程中刪除。此動作無法復原。';
+  }
+
+  @override
+  String ng_bots_routine_action_failed(String action, String error) {
+    return '$action 失敗：$error';
+  }
+
+  @override
+  String get ng_bots_not_connected => '未連線。';
+
+  @override
+  String ng_bots_add_failed(String error) {
+    return '新增失敗：$error';
+  }
+
+  @override
+  String get ng_bots_routine_added => '已新增例行工作';
+
+  @override
+  String get ng_bots_routine_enabled => '已啟用';
+
+  @override
+  String get ng_bots_routine_paused => '已暫停';
+
+  @override
+  String ng_bots_path(String path) {
+    return '路徑：$path';
+  }
+
+  @override
+  String get ng_bots_chat_present => 'Bot Chat 已存在';
+
+  @override
+  String get ng_bots_chat_missing => '缺少 Bot Chat';
+
+  @override
+  String ng_bots_last_session(String preview) {
+    return '上次工作階段：$preview';
+  }
+
+  @override
+  String get ng_bots_open_chat => '開啟 Bot Chat';
+
+  @override
+  String get ng_bots_desktop => 'Bot Desktop';
+
+  @override
+  String get ng_bots_room_name => '群組名稱';
+
+  @override
+  String get ng_bots_select_member => '請至少選取一位成員。';
+
+  @override
+  String get ng_bots_sudo_title => '系統管理員密碼';
+
+  @override
+  String ng_bots_sudo_body(String bot) {
+    return '為 $bot 安裝 Bot Desktop 需要在閘道主機上使用 sudo。密碼只會傳送到該閘道、僅用於本次安裝，且不會儲存。';
+  }
+
+  @override
+  String get ng_bots_sudo_password => 'sudo 密碼';
+
+  @override
+  String get ng_bots_new_routine => '新增例行工作';
+
+  @override
+  String get ng_bots_routine_title => '標題';
+
+  @override
+  String get ng_bots_routine_instruction => '指示';
+
+  @override
+  String get ng_bots_cron => 'Cron 運算式';
+
+  @override
+  String get ng_bots_interval => '間隔';
+
+  @override
+  String get ng_bots_cron_help => '0 9 * * * 表示每天 09:00 執行';
+
+  @override
+  String get ng_bots_every => '每隔';
+
+  @override
+  String get ng_bots_unit_minutes => '分鐘';
+
+  @override
+  String get ng_bots_unit_hours => '小時';
+
+  @override
+  String get ng_bots_unit_days => '天';
+
+  @override
+  String get ng_bots_stop_after => '執行幾次後停止';
+
+  @override
+  String get ng_bots_stop_after_help => '留白即持續執行';
+
+  @override
+  String get ng_bots_send_results => '結果傳送至';
+
+  @override
+  String get ng_bots_run_history => '僅記錄執行歷史';
+
+  @override
+  String get ng_bots_continuity => '接續上一次執行';
+
+  @override
+  String get ng_bots_account_changed_refresh => '帳戶已變更。請重新整理後再繼續。';
+
+  @override
+  String ng_bots_room_load_failed(String error) {
+    return '無法載入群組：$error';
+  }
+
+  @override
+  String ng_bots_send_failed(String error) {
+    return '傳送失敗：$error';
+  }
+
+  @override
+  String ng_bots_stop_failed(String error) {
+    return '停止失敗：$error';
+  }
+
+  @override
+  String get ng_bots_stop_room => '停止群組';
+
+  @override
+  String get ng_bots_send_message => '傳送訊息';
+
+  @override
+  String get ng_bots_room_hint => '傳送訊息到群組（使用 @handle 提及成員）';
+
+  @override
+  String get ng_bots_history => '歷史記錄';
+
+  @override
+  String ng_bots_revision(String revision) {
+    return '修訂版本 $revision';
+  }
+
+  @override
+  String ng_bots_last_error(String error) {
+    return '上次錯誤：$error';
+  }
+
+  @override
+  String get ng_bots_members => '成員';
+
+  @override
+  String get ng_bots_room_context => '群組上下文';
+
+  @override
+  String ng_bots_purpose(String purpose) {
+    return '目的：$purpose';
+  }
+
+  @override
+  String ng_bots_notes(String notes) {
+    return '備註：$notes';
+  }
+
+  @override
+  String ng_bots_routing(String routing) {
+    return '路由：$routing';
+  }
+
+  @override
+  String ng_bots_lead(String member) {
+    return '主導 $member';
+  }
+
+  @override
+  String get ng_bots_viewer_you_control => '你正在控制此螢幕。機器人會等待你交還控制權。';
+
+  @override
+  String get ng_bots_viewer_handed_back => '控制權已交還給機器人。';
+
+  @override
+  String get ng_bots_viewer_background => '應用程式已離開前景，控制權已交還給機器人。';
+
+  @override
+  String get ng_bots_viewer_taken => '其他人接管了此螢幕。';
+
+  @override
+  String get ng_bots_viewer_lost => '即時畫面已中斷，控制權已交還給機器人。';
+
+  @override
+  String ng_bots_viewer_title(String bot) {
+    return 'Bot Desktop · $bot';
+  }
+
+  @override
+  String get ng_bots_viewer_type_hint => '在機器人的螢幕上輸入';
+
+  @override
+  String get ng_bots_viewer_type => '鍵入';
+
+  @override
+  String get ng_bots_viewer_enter => 'Enter 鍵';
+
+  @override
+  String get ng_bots_viewer_backspace => '退格鍵';
+
+  @override
+  String get ng_more_kanban => '看板';
+
+  @override
+  String get ng_more_kanban_subtitle => '看板、任務相依性、工作者指派和記錄';
+
+  @override
+  String get ng_more_bots => '機器人';
+
+  @override
+  String get ng_more_bots_subtitle => '名單、群組、例行工作和 Bot Desktop';
+
+  @override
+  String get ng_slash_kanban => '開啟看板';
+
+  @override
+  String get ng_slash_bots => '開啟你的機器人';
+
+  @override
+  String ng_board_card_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 張卡片',
+      one: '1 張卡片',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_board_event_toast(String task, String event) {
+    return '看板 $task：$event';
+  }
+
+  @override
+  String get ng_board_task => '任務';
+
+  @override
+  String ng_board_refused_http(String status) {
+    return '操作遭拒（HTTP $status）。';
+  }
+
+  @override
+  String get ng_board_err_unsupported => '此閘道未啟用看板外掛程式。';
+
+  @override
+  String get ng_board_err_denied => '此閘道需要登入或相應權限。';
+
+  @override
+  String get ng_board_err_stale => '閘道擁有者已變更。請重新整理後再繼續。';
+
+  @override
+  String get ng_board_err_insecure => '看板工作區操作需要 HTTPS（或回送位址）。';
+
+  @override
+  String get ng_board_err_unreachable => '無法連線到此閘道上的看板服務。';
+
+  @override
+  String get ng_board_err_failed => '操作失敗。請重新整理後重試。';
+
+  @override
+  String ng_board_block_title(String task) {
+    return '將 $task 標記為受阻';
+  }
+
+  @override
+  String get ng_board_block_reason => '受阻原因';
+
+  @override
+  String get ng_board_block_hint => '這張卡片因何受阻？';
+
+  @override
+  String ng_board_review_title(String task) {
+    return '為 $task 要求審查';
+  }
+
+  @override
+  String get ng_board_review_summary => '審查摘要';
+
+  @override
+  String get ng_board_review_hint => '實作並驗證了哪些內容？';
+
+  @override
+  String ng_board_move_title(String cards, String column) {
+    return '要將 $cards 移至 $column 嗎？';
+  }
+
+  @override
+  String ng_board_move_body(String board) {
+    return '$board 上所有選取的卡片都會變更欄。執行中的卡片將停止執行。';
+  }
+
+  @override
+  String get ng_board_move => '移動';
+
+  @override
+  String ng_board_moved(String column) {
+    return '已將卡片移至 $column';
+  }
+
+  @override
+  String ng_board_unassign_title(String cards) {
+    return '要取消指派 $cards 嗎？';
+  }
+
+  @override
+  String ng_board_assign_title(String cards, String profile) {
+    return '要將 $cards 指派給 @$profile 嗎？';
+  }
+
+  @override
+  String get ng_board_assign_body => '執行中的卡片會先被收回：其工作者將停止。';
+
+  @override
+  String get ng_board_unassign => '取消指派';
+
+  @override
+  String get ng_board_assign => '指派';
+
+  @override
+  String get ng_board_unassigned_done => '已取消指派所選卡片';
+
+  @override
+  String ng_board_assigned_done(String profile) {
+    return '已指派給 @$profile';
+  }
+
+  @override
+  String ng_board_archive_title(String cards) {
+    return '要封存 $cards 嗎？';
+  }
+
+  @override
+  String ng_board_archive_body(String board) {
+    return '已封存的卡片會從 $board 移除。開啟「已封存」即可再次查看。';
+  }
+
+  @override
+  String get ng_board_archived_done => '已封存所選卡片';
+
+  @override
+  String ng_board_delete_title(String cards) {
+    return '要刪除 $cards 嗎？';
+  }
+
+  @override
+  String ng_board_delete_body(String board) {
+    return '這會從 $board 永久刪除所選卡片。';
+  }
+
+  @override
+  String ng_board_deleted(String cards) {
+    return '已刪除 $cards。';
+  }
+
+  @override
+  String ng_board_partial_failure(String failed, String total, String reason) {
+    return '$total 項中有 $failed 項失敗：$reason';
+  }
+
+  @override
+  String get ng_board_refused => '遭拒';
+
+  @override
+  String ng_board_dispatched(
+    String spawned,
+    String promoted,
+    String reclaimed,
+  ) {
+    return '已派發：啟動 $spawned 個、推進 $promoted 個、收回 $reclaimed 個。';
+  }
+
+  @override
+  String ng_board_board_archived(String board) {
+    return '已封存看板 $board';
+  }
+
+  @override
+  String ng_board_board_archived_to(String path) {
+    return '已封存至 $path';
+  }
+
+  @override
+  String ng_board_exported(String board, String archive) {
+    return '已將 $board 匯出至 $archive';
+  }
+
+  @override
+  String ng_board_imported(String board, String warnings) {
+    return '已匯入看板 $board$warnings';
+  }
+
+  @override
+  String ng_board_created(String task) {
+    return '已建立 $task';
+  }
+
+  @override
+  String get ng_board_orchestration_saved => '已儲存看板編排';
+
+  @override
+  String get ng_board_auto_describe_unavailable => '無法使用自動描述';
+
+  @override
+  String ng_board_description_updated(String profile) {
+    return '已更新 @$profile 的描述';
+  }
+
+  @override
+  String ng_board_title(String board) {
+    return '看板 · $board';
+  }
+
+  @override
+  String ng_board_active(String count) {
+    return '$count 個進行中';
+  }
+
+  @override
+  String get ng_board_dispatch => '立即派發就緒任務';
+
+  @override
+  String get ng_board_orchestration => '編排與工作者';
+
+  @override
+  String get ng_board_new_task => '新增任務';
+
+  @override
+  String get ng_board_enable_plugin =>
+      '請在此閘道的「功能 → 外掛程式」中啟用內建的「kanban」外掛程式，以啟動其看板路由。';
+
+  @override
+  String get ng_board_filter => '篩選任務…';
+
+  @override
+  String get ng_board_all_assignees => '所有負責人';
+
+  @override
+  String get ng_board_unassigned => '未指派';
+
+  @override
+  String get ng_board_running_by_profile => '各設定檔執行中';
+
+  @override
+  String get ng_board_select => '選取';
+
+  @override
+  String ng_board_selected_chip(String count) {
+    return '已選取（$count）';
+  }
+
+  @override
+  String get ng_board_locked_column => '受管理的欄 — 已停用拖放';
+
+  @override
+  String ng_board_add_to(String column) {
+    return '新增至 $column';
+  }
+
+  @override
+  String ng_board_collapse(String column) {
+    return '收合 $column';
+  }
+
+  @override
+  String ng_board_column_empty(String column) {
+    return '$column 中沒有任務';
+  }
+
+  @override
+  String get ng_board_drop_here => '拖放至此或 + 任務';
+
+  @override
+  String get ng_board_card_actions => '卡片動作';
+
+  @override
+  String get ng_board_open_details => '開啟詳細資料';
+
+  @override
+  String get ng_board_select_card => '選取卡片';
+
+  @override
+  String ng_board_move_to(String column) {
+    return '移至 $column';
+  }
+
+  @override
+  String get ng_board_parked => '擱置';
+
+  @override
+  String ng_board_blocked_by(String count) {
+    return '受 $count 項阻擋';
+  }
+
+  @override
+  String get ng_board_goal_loop => '目標迴圈';
+
+  @override
+  String ng_board_selected(String count) {
+    return '已選取 $count 項';
+  }
+
+  @override
+  String get ng_board_move_menu => '移動…';
+
+  @override
+  String get ng_board_assign_menu => '指派…';
+
+  @override
+  String get ng_board_new_board_title => '新增看板';
+
+  @override
+  String get ng_board_slug => '簡短識別碼（小寫，例如 release-v5）';
+
+  @override
+  String get ng_board_display_name => '顯示名稱';
+
+  @override
+  String get ng_board_linked_project => '連結的專案（選填）';
+
+  @override
+  String get ng_board_none => '無';
+
+  @override
+  String get ng_board_default_workdir => '主機上的預設工作目錄（選填）';
+
+  @override
+  String get ng_board_import_title => '匯入看板封存檔';
+
+  @override
+  String get ng_board_import_path => '主機上的 .tar.gz 封存檔路徑';
+
+  @override
+  String get ng_board_import => '匯入';
+
+  @override
+  String ng_board_edit_board(String board) {
+    return '編輯 $board';
+  }
+
+  @override
+  String get ng_board_name => '名稱';
+
+  @override
+  String get ng_board_description => '描述';
+
+  @override
+  String get ng_board_workdir_clear => '預設工作目錄（留白即清除）';
+
+  @override
+  String get ng_board_boards => '看板清單';
+
+  @override
+  String get ng_board_new_board => '新增看板';
+
+  @override
+  String get ng_board_search_boards => '搜尋看板…';
+
+  @override
+  String get ng_board_unpin => '取消釘選分頁';
+
+  @override
+  String get ng_board_pin => '釘選分頁';
+
+  @override
+  String ng_board_archive_board_title(String board) {
+    return '要封存看板 $board 嗎？';
+  }
+
+  @override
+  String ng_board_archive_board_body(String cards) {
+    return '此看板及其 $cards 將從看板清單中移除。閘道會在其主機上保留封存檔。';
+  }
+
+  @override
+  String get ng_board_edit_metadata => '編輯中繼資料';
+
+  @override
+  String get ng_board_export => '在主機上匯出 .tar.gz';
+
+  @override
+  String get ng_board_move_pin_left => '將釘選分頁左移';
+
+  @override
+  String get ng_board_archive_board => '封存看板';
+
+  @override
+  String get ng_board_new_task_title => '新增看板任務';
+
+  @override
+  String get ng_board_title_required => '標題 *';
+
+  @override
+  String get ng_board_spec => '規格與驗收標準';
+
+  @override
+  String get ng_board_estimate => '估算';
+
+  @override
+  String ng_board_estimate_draft(String complexity, String tokens) {
+    return '複雜度 $complexity（~$tokens 令牌 — 僅為令牌估算，並非美元成本）';
+  }
+
+  @override
+  String get ng_board_estimate_unavailable => '無法估算';
+
+  @override
+  String get ng_board_initial_column => '初始欄';
+
+  @override
+  String get ng_board_worker_assignee => '負責的工作者';
+
+  @override
+  String get ng_board_parked_unassigned => '擱置（未指派）';
+
+  @override
+  String get ng_board_priority => '優先順序';
+
+  @override
+  String get ng_board_workspace => '工作區';
+
+  @override
+  String get ng_board_scratch => '暫存目錄';
+
+  @override
+  String get ng_board_worktree => 'Git 工作樹';
+
+  @override
+  String get ng_board_shared_dir => '共用目錄';
+
+  @override
+  String get ng_board_workspace_path => '主機工作區路徑';
+
+  @override
+  String get ng_board_parent => '父任務相依性（選填）';
+
+  @override
+  String get ng_board_skills => '固定技能（以逗號分隔，選填）';
+
+  @override
+  String get ng_board_provider_override => '供應商覆寫';
+
+  @override
+  String get ng_board_model_override => '模型覆寫';
+
+  @override
+  String get ng_board_reasoning => '推理強度';
+
+  @override
+  String get ng_board_profile_default => '設定檔預設值';
+
+  @override
+  String get ng_board_xhigh => '極高';
+
+  @override
+  String get ng_board_goal_mode => '目標迴圈模式';
+
+  @override
+  String get ng_board_goal_turns => '目標最大輪數（留白 = 預設）';
+
+  @override
+  String get ng_board_create_task => '建立任務';
+
+  @override
+  String get ng_board_orchestration_title => '編排與工作者設定檔';
+
+  @override
+  String ng_board_orchestrator(String profile) {
+    return '編排器設定檔（解析結果：$profile）';
+  }
+
+  @override
+  String get ng_board_inherit_default => '沿用目前的預設值';
+
+  @override
+  String ng_board_default_assignee(String profile) {
+    return '預設負責人（解析結果：$profile）';
+  }
+
+  @override
+  String get ng_board_auto_decompose => '自動拆解待分類卡片';
+
+  @override
+  String get ng_board_auto_decompose_help =>
+      '對待分類任務使用已設定的 kanban_decomposer 模型';
+
+  @override
+  String get ng_board_save_orchestration => '儲存編排';
+
+  @override
+  String get ng_board_worker_descriptions => '工作者專長描述';
+
+  @override
+  String ng_board_worker_label(String profile, String model, String skills) {
+    return '@$profile（$model · $skills）';
+  }
+
+  @override
+  String get ng_board_default_model => '預設模型';
+
+  @override
+  String get ng_board_save_description => '儲存描述';
+
+  @override
+  String get ng_board_auto_describe => '根據技能與角色設定自動描述';
+
+  @override
+  String get ng_board_manual_block => '操作員手動標記受阻';
+
+  @override
+  String get ng_board_requested_review => '已要求審查';
+
+  @override
+  String ng_board_requeue_title(String task) {
+    return '要將 $task 重新排入佇列嗎？';
+  }
+
+  @override
+  String get ng_board_requeue_body => '正在執行此卡片的工作者會停止，卡片會回到佇列。';
+
+  @override
+  String get ng_board_requeue => '重新排入佇列';
+
+  @override
+  String ng_board_reassign_title(String task, String profile) {
+    return '要將 $task 重新指派給 @$profile 嗎？';
+  }
+
+  @override
+  String get ng_board_reassign_body => '此卡片正在執行：會先停止其工作者。';
+
+  @override
+  String get ng_board_reassign => '重新指派';
+
+  @override
+  String ng_board_saved_task(String task) {
+    return '已儲存任務 $task';
+  }
+
+  @override
+  String get ng_board_commented_requeued => '已發布留言並將任務重新排入佇列';
+
+  @override
+  String get ng_board_commented => '已發布留言';
+
+  @override
+  String ng_board_requeued(String task) {
+    return '已將 $task 重新排入佇列';
+  }
+
+  @override
+  String get ng_board_decompose_failed => '拆解失敗。';
+
+  @override
+  String ng_board_decompose_failed_reason(String reason) {
+    return '拆解失敗：$reason';
+  }
+
+  @override
+  String ng_board_decomposed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已拆解為 $count 個子任務',
+      one: '已拆解為 1 個子任務',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_board_no_children => '未建立任何子任務。';
+
+  @override
+  String ng_board_no_children_reason(String reason) {
+    return '未建立任何子任務：$reason';
+  }
+
+  @override
+  String ng_board_uploaded(String file) {
+    return '已上傳 $file';
+  }
+
+  @override
+  String ng_board_linked_parent(String task) {
+    return '已連結父任務 $task';
+  }
+
+  @override
+  String ng_board_unlinked_parent(String task) {
+    return '已移除父任務連結 $task';
+  }
+
+  @override
+  String get ng_board_task_load_failed => '無法載入任務';
+
+  @override
+  String get ng_board_refresh_task => '重新整理任務';
+
+  @override
+  String get ng_board_tab_overview => '總覽';
+
+  @override
+  String get ng_board_tab_comments => '留言與連結';
+
+  @override
+  String get ng_board_tab_runs => '執行與記錄';
+
+  @override
+  String get ng_board_tab_events => '事件';
+
+  @override
+  String get ng_board_decompose => '拆解';
+
+  @override
+  String get ng_board_attach => '附加檔案';
+
+  @override
+  String ng_board_estimate_task(
+    String complexity,
+    String tokens,
+    String rationale,
+  ) {
+    return '估算：$complexity · ~$tokens 令牌（$rationale）— 並非美元成本。';
+  }
+
+  @override
+  String get ng_board_no_rationale => '無理由說明';
+
+  @override
+  String get ng_board_status => '狀態';
+
+  @override
+  String get ng_board_assignee => '負責人';
+
+  @override
+  String get ng_board_title_label => '標題';
+
+  @override
+  String get ng_board_body => '內文 / 規格說明';
+
+  @override
+  String get ng_board_save_changes => '儲存變更';
+
+  @override
+  String get ng_board_clear_model => '清除模型覆寫';
+
+  @override
+  String ng_board_blocked_reason(String reason) {
+    return '受阻原因：$reason';
+  }
+
+  @override
+  String ng_board_result(String result) {
+    return '結果：$result';
+  }
+
+  @override
+  String ng_board_parents(String count) {
+    return '受阻於（父任務 · $count）';
+  }
+
+  @override
+  String get ng_board_add_parent => '+ 新增父任務';
+
+  @override
+  String ng_board_children(String count) {
+    return '阻擋對象（子任務 · $count）';
+  }
+
+  @override
+  String ng_board_attachments(String count) {
+    return '附件（$count）';
+  }
+
+  @override
+  String get ng_board_worker => '工作者';
+
+  @override
+  String ng_board_comments(String count) {
+    return '留言（$count）';
+  }
+
+  @override
+  String get ng_board_comment_hint => '新增留言 / 工作者指引';
+
+  @override
+  String get ng_board_post_comment => '發布留言';
+
+  @override
+  String get ng_board_comment_requeue => '留言並重新排入佇列';
+
+  @override
+  String ng_board_runs(String count) {
+    return '執行記錄（$count）';
+  }
+
+  @override
+  String get ng_board_no_runs => '尚無工作者執行記錄。';
+
+  @override
+  String ng_board_run_error(String error) {
+    return '錯誤：$error';
+  }
+
+  @override
+  String ng_board_log_tail_truncated(String bytes) {
+    return '工作者記錄結尾（$bytes B，已截斷）';
+  }
+
+  @override
+  String ng_board_log_tail(String bytes) {
+    return '工作者記錄結尾（$bytes B）';
+  }
+
+  @override
+  String get ng_board_refresh_log => '重新整理記錄';
+
+  @override
+  String get ng_board_no_log => '沒有工作者記錄輸出。';
+
+  @override
+  String get ng_board_no_events => '未記錄任何事件。';
+
+  @override
+  String get ng_bots_room_unknown => '未知';
+
+  @override
+  String get ng_bots_room_blocked => '受阻';
+
+  @override
+  String get ng_bots_room_working => '工作中';
+
+  @override
+  String get ng_bots_room_running => '執行中';
+
+  @override
+  String get ng_bots_room_idle => '閒置';
+
+  @override
+  String ng_board_run_title(String id, String profile, String outcome) {
+    return '執行 #$id · @$profile · $outcome';
+  }
 }

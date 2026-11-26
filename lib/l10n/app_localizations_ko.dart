@@ -7272,4 +7272,1307 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get ng_kanban_block_stale =>
       '연결이 변경되었습니다. 카드의 실시간 상태를 보려면 이 채팅을 다시 여세요.';
+
+  @override
+  String get ng_bots_tab_roster => '봇 목록';
+
+  @override
+  String get ng_bots_tab_rooms => '룸';
+
+  @override
+  String get ng_bots_tab_screen => '화면';
+
+  @override
+  String get ng_bots_tab_routines => '루틴';
+
+  @override
+  String ng_bots_rooms_load_failed(String error) {
+    return '룸을 불러올 수 없습니다: $error';
+  }
+
+  @override
+  String ng_bots_routines_load_failed(String error) {
+    return '루틴을 불러올 수 없습니다: $error';
+  }
+
+  @override
+  String ng_bots_desktop_failed(String error) {
+    return 'Bot Desktop: $error';
+  }
+
+  @override
+  String get ng_bots_install_not_started => '게이트웨이가 설치를 시작하지 않았습니다.';
+
+  @override
+  String ng_bots_install_failed_error(String error) {
+    return '설치 실패: $error';
+  }
+
+  @override
+  String get ng_bots_install_cancelled => '설치가 취소되었습니다.';
+
+  @override
+  String get ng_bots_install_no_sudo =>
+      '게이트웨이 호스트에서 sudo를 사용할 수 없습니다. 위 명령을 해당 호스트에서 실행한 다음 새로 고침하세요.';
+
+  @override
+  String ng_bots_install_exit_code(String code) {
+    return '설치에 실패했습니다(종료 코드 $code).';
+  }
+
+  @override
+  String ng_bots_install_done(String bot) {
+    return '$bot에 Bot Desktop을 설치했습니다';
+  }
+
+  @override
+  String get ng_bots_start_failed => '시작 실패';
+
+  @override
+  String ng_bots_stop_title(String bot) {
+    return '$bot의 Bot Desktop을 중지할까요?';
+  }
+
+  @override
+  String get ng_bots_stop_human_held =>
+      '누군가 이 화면을 제어하고 있습니다. 중지하면 해당 세션이 종료되고 화면에 열려 있는 모든 항목이 닫힙니다.';
+
+  @override
+  String get ng_bots_stop_body => '봇 화면에 열려 있는 모든 항목이 닫힙니다.';
+
+  @override
+  String get ng_bots_stop_refused => '중지가 거부되었습니다';
+
+  @override
+  String get ng_bots_take_over_reason => 'Ares에서 제어권 가져오기';
+
+  @override
+  String ng_bots_take_over_failed(String error) {
+    return '제어권 가져오기 실패: $error';
+  }
+
+  @override
+  String ng_bots_force_hand_back_title(String bot) {
+    return '$bot의 화면을 봇에게 돌려줄까요?';
+  }
+
+  @override
+  String get ng_bots_force_hand_back_body =>
+      '사람이 이 화면을 제어하고 있습니다. 아직 사용 중이라면 제어권을 잃게 됩니다.';
+
+  @override
+  String get ng_bots_hand_back => '제어권 돌려주기';
+
+  @override
+  String get ng_bots_hand_back_failed => '제어권 반환 실패';
+
+  @override
+  String get ng_bots_adopt_title => '새 샌드박스 이미지를 적용할까요?';
+
+  @override
+  String ng_bots_adopt_body(String bot, String current, String target) {
+    return '$bot의 이미지가 $current에서 $target(으)로 변경됩니다. 다음 터미널 호출 시 컨테이너가 다시 생성되며, 현재 컨테이너에만 보관된 항목은 손실됩니다.';
+  }
+
+  @override
+  String get ng_bots_adopt_image => '이미지 적용';
+
+  @override
+  String get ng_bots_image_switch_failed => '이미지 전환 실패';
+
+  @override
+  String get ng_bots_keep_refused => '유지가 거부되었습니다';
+
+  @override
+  String ng_bots_chat_open_failed(String error) {
+    return 'Bot Chat을 열 수 없습니다: $error';
+  }
+
+  @override
+  String ng_bots_title(String connection) {
+    return '봇 · $connection';
+  }
+
+  @override
+  String get ng_bots_protocol_tooltip =>
+      '게이트웨이가 팀원 메시징 프로토콜을 직접 주입합니다 — 추가 SOUL.md 프로토콜은 전송되지 않습니다.';
+
+  @override
+  String ng_bots_unavailable(String reason) {
+    return '봇을 사용할 수 없습니다($reason)';
+  }
+
+  @override
+  String get ng_bots_account_changed => '계정이 변경되었습니다. 다시 연결하거나 새로 고침하세요.';
+
+  @override
+  String get ng_bots_try_refresh =>
+      '새로 고침해 보세요. 문제가 계속되면 게이트웨이가 봇을 지원하지 않을 수 있습니다.';
+
+  @override
+  String get ng_bots_search => '봇 검색';
+
+  @override
+  String get ng_bots_none_found => '봇을 찾을 수 없습니다.';
+
+  @override
+  String get ng_bots_no_model => '모델 없음';
+
+  @override
+  String ng_bots_skill_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '스킬 $count개',
+      one: '스킬 $count개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_bot_chat => 'Bot Chat';
+
+  @override
+  String ng_bots_install_id(String id, String protocol) {
+    return '게이트웨이가 보고한 설치 ID: $id · bot_mode_protocol: $protocol';
+  }
+
+  @override
+  String get ng_bots_protocol_note =>
+      'bot_mode_protocol이 설정되면 게이트웨이가 팀원 메시징 프로토콜을 주입합니다. 핸들: default→hermes, 그 외에는 프로필 이름입니다.';
+
+  @override
+  String get ng_bots_no_rooms => '아직 룸이 없습니다. 봇 목록에서 만드세요.';
+
+  @override
+  String ng_bots_member_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '멤버 $count명',
+      one: '멤버 $count명',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_room_disbanded => '해산됨';
+
+  @override
+  String get ng_bots_room_adopted => '채택됨';
+
+  @override
+  String get ng_bots_rooms_gateway => '게이트웨이 룸';
+
+  @override
+  String get ng_bots_rooms_desktop => '데스크톱 주도 룸';
+
+  @override
+  String ng_bots_rooms_gateway_body(String methods) {
+    return '룸은 게이트웨이가 소유합니다. 메서드: $methods.';
+  }
+
+  @override
+  String get ng_bots_rooms_no_seat =>
+      '이 게이트웨이에서는 룸을 운영하지 못할 수 있습니다(상주 프로세스 필요).';
+
+  @override
+  String get ng_bots_rooms_fallback =>
+      '기존 폴백: 데스크톱이 그룹 라운드를 진행합니다(여기서 새로 만들지 않음).';
+
+  @override
+  String get ng_bots_create_room => '룸 만들기';
+
+  @override
+  String get ng_bots_refresh_rooms => '룸 새로 고침';
+
+  @override
+  String get ng_bots_room_created => '룸을 만들었습니다';
+
+  @override
+  String ng_bots_room_refused(String reason) {
+    return '룸 만들기가 거부되었습니다($reason)';
+  }
+
+  @override
+  String ng_bots_room_failed(String error) {
+    return '룸 만들기 실패: $error';
+  }
+
+  @override
+  String get ng_bots_bot => '봇';
+
+  @override
+  String get ng_bots_screen_unavailable => '화면 상태를 사용할 수 없음';
+
+  @override
+  String get ng_bots_screen_unavailable_body =>
+      '봇 화면을 시작하면 썸네일을 볼 수 있고, 직접 사용하려면 제어권을 가져오세요.';
+
+  @override
+  String get ng_bots_take_over_note =>
+      '제어권 가져오기를 누르면 실시간 화면이 열리고 화면 제어권이 사용자에게 넘어옵니다. 실시간 화면을 닫거나, 이 페이지를 나가거나, 앱을 백그라운드로 보내면 제어권이 봇에게 돌아갑니다.';
+
+  @override
+  String get ng_bots_not_installed => '설치되지 않음';
+
+  @override
+  String get ng_bots_unsupported_host => '지원되지 않는 호스트';
+
+  @override
+  String ng_bots_pid(String pid) {
+    return 'pid $pid';
+  }
+
+  @override
+  String ng_bots_missing(String items) {
+    return '누락: $items';
+  }
+
+  @override
+  String ng_bots_blocked(String reason) {
+    return '차단됨: $reason';
+  }
+
+  @override
+  String get ng_bots_no_switch => '대기 중인 샌드박스 이미지 전환이 없습니다.';
+
+  @override
+  String ng_bots_switch_image(String current, String target) {
+    return '이미지 전환: $current → $target';
+  }
+
+  @override
+  String get ng_bots_bot_in_control => '봇이 제어 중';
+
+  @override
+  String get ng_bots_person_in_control => '사람이 제어 중';
+
+  @override
+  String get ng_bots_installing => '게이트웨이 호스트에 Bot Desktop을 설치하는 중…';
+
+  @override
+  String get ng_bots_install_unfinished => '설치가 완료되지 않았습니다';
+
+  @override
+  String get ng_bots_install => '설치';
+
+  @override
+  String get ng_bots_start => '시작';
+
+  @override
+  String get ng_bots_take_over => '제어권 가져오기';
+
+  @override
+  String get ng_bots_keep_image => '현재 이미지 유지';
+
+  @override
+  String ng_bots_missing_pieces(String items) {
+    return '게이트웨이에서 누락된 구성 요소를 보고했습니다: $items';
+  }
+
+  @override
+  String get ng_bots_install_missing => '누락된 구성 요소 설치';
+
+  @override
+  String get ng_bots_thumbnail_unavailable => '썸네일을 사용할 수 없음';
+
+  @override
+  String get ng_bots_thumbnail_title => '화면 썸네일(실시간)';
+
+  @override
+  String get ng_bots_thumbnail_suppressed =>
+      '사람이 화면을 제어하는 동안에는 썸네일이 표시되지 않습니다.';
+
+  @override
+  String get ng_bots_thumbnail_pending => '썸네일을 아직 사용할 수 없습니다.';
+
+  @override
+  String ng_bots_routines_of(String bot) {
+    return '$bot · 루틴';
+  }
+
+  @override
+  String get ng_bots_add_routine => '루틴 추가';
+
+  @override
+  String get ng_bots_no_routines => '이 봇에는 루틴이 없습니다.';
+
+  @override
+  String get ng_bots_routines_note =>
+      '루틴은 봇의 프로필 저장소가 소유하는 [bot:<name>] 태그가 지정된 작업입니다. 기존 위임 루틴은 로드 시 강제로 일시 중지됩니다.';
+
+  @override
+  String ng_bots_routine_last(String status) {
+    return '마지막: $status';
+  }
+
+  @override
+  String ng_bots_routine_next(String time) {
+    return '다음: $time';
+  }
+
+  @override
+  String ng_bots_routine_error(String error) {
+    return '오류: $error';
+  }
+
+  @override
+  String ng_bots_remove_routine_title(String routine) {
+    return '루틴 $routine을(를) 삭제할까요?';
+  }
+
+  @override
+  String ng_bots_remove_routine_body(String bot) {
+    return '이 루틴이 $bot의 일정에서 삭제됩니다. 이 작업은 되돌릴 수 없습니다.';
+  }
+
+  @override
+  String ng_bots_routine_action_failed(String action, String error) {
+    return '$action 실패: $error';
+  }
+
+  @override
+  String get ng_bots_not_connected => '연결되지 않았습니다.';
+
+  @override
+  String ng_bots_add_failed(String error) {
+    return '추가 실패: $error';
+  }
+
+  @override
+  String get ng_bots_routine_added => '루틴을 추가했습니다';
+
+  @override
+  String get ng_bots_routine_enabled => '사용 중';
+
+  @override
+  String get ng_bots_routine_paused => '일시 중지됨';
+
+  @override
+  String ng_bots_path(String path) {
+    return '경로: $path';
+  }
+
+  @override
+  String get ng_bots_chat_present => 'Bot Chat 있음';
+
+  @override
+  String get ng_bots_chat_missing => 'Bot Chat 없음';
+
+  @override
+  String ng_bots_last_session(String preview) {
+    return '마지막 세션: $preview';
+  }
+
+  @override
+  String get ng_bots_open_chat => 'Bot Chat 열기';
+
+  @override
+  String get ng_bots_desktop => 'Bot Desktop';
+
+  @override
+  String get ng_bots_room_name => '룸 이름';
+
+  @override
+  String get ng_bots_select_member => '멤버를 한 명 이상 선택하세요.';
+
+  @override
+  String get ng_bots_sudo_title => '관리자 암호';
+
+  @override
+  String ng_bots_sudo_body(String bot) {
+    return '$bot에 Bot Desktop을 설치하려면 게이트웨이 호스트에서 sudo가 필요합니다. 암호는 이번 설치를 위해 해당 게이트웨이에만 전송되며 저장되지 않습니다.';
+  }
+
+  @override
+  String get ng_bots_sudo_password => 'sudo 암호';
+
+  @override
+  String get ng_bots_new_routine => '새 루틴';
+
+  @override
+  String get ng_bots_routine_title => '제목';
+
+  @override
+  String get ng_bots_routine_instruction => '지시 사항';
+
+  @override
+  String get ng_bots_cron => 'cron 표현식';
+
+  @override
+  String get ng_bots_interval => '간격';
+
+  @override
+  String get ng_bots_cron_help => '0 9 * * *: 매일 09:00에 실행됩니다';
+
+  @override
+  String get ng_bots_every => '반복 주기';
+
+  @override
+  String get ng_bots_unit_minutes => '분';
+
+  @override
+  String get ng_bots_unit_hours => '시간';
+
+  @override
+  String get ng_bots_unit_days => '일';
+
+  @override
+  String get ng_bots_stop_after => '중지 전 실행 횟수';
+
+  @override
+  String get ng_bots_stop_after_help => '계속 실행하려면 비워 두세요';
+
+  @override
+  String get ng_bots_send_results => '결과 보낼 곳';
+
+  @override
+  String get ng_bots_run_history => '실행 기록만';
+
+  @override
+  String get ng_bots_continuity => '이전 실행에서 이어서 진행';
+
+  @override
+  String get ng_bots_account_changed_refresh =>
+      '계정이 변경되었습니다. 계속하기 전에 새로 고침하세요.';
+
+  @override
+  String ng_bots_room_load_failed(String error) {
+    return '룸을 불러올 수 없습니다: $error';
+  }
+
+  @override
+  String ng_bots_send_failed(String error) {
+    return '전송 실패: $error';
+  }
+
+  @override
+  String ng_bots_stop_failed(String error) {
+    return '중지 실패: $error';
+  }
+
+  @override
+  String get ng_bots_stop_room => '룸 중지';
+
+  @override
+  String get ng_bots_send_message => '메시지 보내기';
+
+  @override
+  String get ng_bots_room_hint => '룸에 메시지 보내기(@handle로 멤버 멘션)';
+
+  @override
+  String get ng_bots_history => '기록';
+
+  @override
+  String ng_bots_revision(String revision) {
+    return '리비전 $revision';
+  }
+
+  @override
+  String ng_bots_last_error(String error) {
+    return '마지막 오류: $error';
+  }
+
+  @override
+  String get ng_bots_members => '멤버';
+
+  @override
+  String get ng_bots_room_context => '룸 컨텍스트';
+
+  @override
+  String ng_bots_purpose(String purpose) {
+    return '목적: $purpose';
+  }
+
+  @override
+  String ng_bots_notes(String notes) {
+    return '메모: $notes';
+  }
+
+  @override
+  String ng_bots_routing(String routing) {
+    return '라우팅: $routing';
+  }
+
+  @override
+  String ng_bots_lead(String member) {
+    return '리더 $member';
+  }
+
+  @override
+  String get ng_bots_viewer_you_control =>
+      '이 화면을 직접 제어하고 있습니다. 제어권을 돌려줄 때까지 봇은 대기합니다.';
+
+  @override
+  String get ng_bots_viewer_handed_back => '제어권이 봇에게 돌아갔습니다.';
+
+  @override
+  String get ng_bots_viewer_background => '앱이 포그라운드를 벗어나 제어권이 봇에게 돌아갔습니다.';
+
+  @override
+  String get ng_bots_viewer_taken => '다른 사람이 이 화면의 제어권을 가져갔습니다.';
+
+  @override
+  String get ng_bots_viewer_lost => '실시간 보기 연결이 끊어져 제어권이 봇에게 돌아갔습니다.';
+
+  @override
+  String ng_bots_viewer_title(String bot) {
+    return 'Bot Desktop · $bot';
+  }
+
+  @override
+  String get ng_bots_viewer_type_hint => '봇 화면에 입력';
+
+  @override
+  String get ng_bots_viewer_type => '입력';
+
+  @override
+  String get ng_bots_viewer_enter => 'Enter';
+
+  @override
+  String get ng_bots_viewer_backspace => 'Backspace';
+
+  @override
+  String get ng_more_kanban => '칸반';
+
+  @override
+  String get ng_more_kanban_subtitle => '보드, 작업 종속성, 워커 할당 및 로그';
+
+  @override
+  String get ng_more_bots => '봇';
+
+  @override
+  String get ng_more_bots_subtitle => '봇 목록, 룸, 루틴 및 Bot Desktop';
+
+  @override
+  String get ng_slash_kanban => '칸반 보드 열기';
+
+  @override
+  String get ng_slash_bots => '봇 열기';
+
+  @override
+  String ng_board_card_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '카드 $count개',
+      one: '카드 $count개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_board_event_toast(String task, String event) {
+    return '칸반 $task: $event';
+  }
+
+  @override
+  String get ng_board_task => '작업';
+
+  @override
+  String ng_board_refused_http(String status) {
+    return '작업이 거부되었습니다(HTTP $status).';
+  }
+
+  @override
+  String get ng_board_err_unsupported => '이 게이트웨이에서 칸반 플러그인이 활성화되어 있지 않습니다.';
+
+  @override
+  String get ng_board_err_denied => '이 게이트웨이에서 로그인 또는 권한이 필요합니다.';
+
+  @override
+  String get ng_board_err_stale => '게이트웨이 소유자가 변경되었습니다. 계속하기 전에 새로 고침하세요.';
+
+  @override
+  String get ng_board_err_insecure => '칸반 작업 공간 작업에는 HTTPS(또는 루프백)가 필요합니다.';
+
+  @override
+  String get ng_board_err_unreachable => '이 게이트웨이의 칸반 서비스에 연결할 수 없습니다.';
+
+  @override
+  String get ng_board_err_failed => '작업에 실패했습니다. 새로 고침한 후 다시 시도하세요.';
+
+  @override
+  String ng_board_block_title(String task) {
+    return '$task 차단';
+  }
+
+  @override
+  String get ng_board_block_reason => '차단 사유';
+
+  @override
+  String get ng_board_block_hint => '이 카드를 막고 있는 것은 무엇인가요?';
+
+  @override
+  String ng_board_review_title(String task) {
+    return '$task 검토 요청';
+  }
+
+  @override
+  String get ng_board_review_summary => '검토 요약';
+
+  @override
+  String get ng_board_review_hint => '무엇을 구현하고 검증했나요?';
+
+  @override
+  String ng_board_move_title(String cards, String column) {
+    return '$cards를 $column(으)로 이동할까요?';
+  }
+
+  @override
+  String ng_board_move_body(String board) {
+    return '$board에서 선택한 모든 카드의 열이 변경됩니다. 실행 중인 카드는 실행이 중지됩니다.';
+  }
+
+  @override
+  String get ng_board_move => '이동';
+
+  @override
+  String ng_board_moved(String column) {
+    return '카드를 $column(으)로 이동했습니다';
+  }
+
+  @override
+  String ng_board_unassign_title(String cards) {
+    return '$cards의 할당을 해제할까요?';
+  }
+
+  @override
+  String ng_board_assign_title(String cards, String profile) {
+    return '$cards를 @$profile에게 할당할까요?';
+  }
+
+  @override
+  String get ng_board_assign_body => '실행 중인 카드는 먼저 회수되며, 해당 워커는 중지됩니다.';
+
+  @override
+  String get ng_board_unassign => '할당 해제';
+
+  @override
+  String get ng_board_assign => '할당';
+
+  @override
+  String get ng_board_unassigned_done => '선택한 카드의 할당을 해제했습니다';
+
+  @override
+  String ng_board_assigned_done(String profile) {
+    return '@$profile에게 할당했습니다';
+  }
+
+  @override
+  String ng_board_archive_title(String cards) {
+    return '$cards를 보관할까요?';
+  }
+
+  @override
+  String ng_board_archive_body(String board) {
+    return '보관된 카드는 $board에서 제외됩니다. 다시 보려면 보관됨을 켜세요.';
+  }
+
+  @override
+  String get ng_board_archived_done => '선택한 카드를 보관했습니다';
+
+  @override
+  String ng_board_delete_title(String cards) {
+    return '$cards를 삭제할까요?';
+  }
+
+  @override
+  String ng_board_delete_body(String board) {
+    return '선택한 카드가 $board에서 영구적으로 삭제됩니다.';
+  }
+
+  @override
+  String ng_board_deleted(String cards) {
+    return '$cards를 삭제했습니다.';
+  }
+
+  @override
+  String ng_board_partial_failure(String failed, String total, String reason) {
+    return '$total개 중 $failed개 실패: $reason';
+  }
+
+  @override
+  String get ng_board_refused => '거부됨';
+
+  @override
+  String ng_board_dispatched(
+    String spawned,
+    String promoted,
+    String reclaimed,
+  ) {
+    return '디스패치 완료: $spawned개 생성, $promoted개 승격, $reclaimed개 회수.';
+  }
+
+  @override
+  String ng_board_board_archived(String board) {
+    return '$board 보드를 보관했습니다';
+  }
+
+  @override
+  String ng_board_board_archived_to(String path) {
+    return '$path에 보관했습니다';
+  }
+
+  @override
+  String ng_board_exported(String board, String archive) {
+    return '$board 보드를 $archive(으)로 내보냈습니다';
+  }
+
+  @override
+  String ng_board_imported(String board, String warnings) {
+    return '$board 보드를 가져왔습니다$warnings';
+  }
+
+  @override
+  String ng_board_created(String task) {
+    return '$task을(를) 만들었습니다';
+  }
+
+  @override
+  String get ng_board_orchestration_saved => '칸반 오케스트레이션을 저장했습니다';
+
+  @override
+  String get ng_board_auto_describe_unavailable => '자동 설명을 사용할 수 없음';
+
+  @override
+  String ng_board_description_updated(String profile) {
+    return '@$profile 설명을 업데이트했습니다';
+  }
+
+  @override
+  String ng_board_title(String board) {
+    return '칸반 · $board';
+  }
+
+  @override
+  String ng_board_active(String count) {
+    return '$count개 활성';
+  }
+
+  @override
+  String get ng_board_dispatch => '준비된 작업 지금 디스패치';
+
+  @override
+  String get ng_board_orchestration => '오케스트레이션 및 워커';
+
+  @override
+  String get ng_board_new_task => '새 작업';
+
+  @override
+  String get ng_board_enable_plugin =>
+      '보드 라우터를 활성화하려면 이 게이트웨이의 기능 → 플러그인에서 번들 \"kanban\" 플러그인을 사용 설정하세요.';
+
+  @override
+  String get ng_board_filter => '작업 필터…';
+
+  @override
+  String get ng_board_all_assignees => '모든 담당자';
+
+  @override
+  String get ng_board_unassigned => '미할당';
+
+  @override
+  String get ng_board_running_by_profile => '프로필별 실행 중';
+
+  @override
+  String get ng_board_select => '선택';
+
+  @override
+  String ng_board_selected_chip(String count) {
+    return '선택됨($count)';
+  }
+
+  @override
+  String get ng_board_locked_column => '관리되는 열 — 끌어서 놓기 비활성화됨';
+
+  @override
+  String ng_board_add_to(String column) {
+    return '$column에 추가';
+  }
+
+  @override
+  String ng_board_collapse(String column) {
+    return '$column 접기';
+  }
+
+  @override
+  String ng_board_column_empty(String column) {
+    return '$column 작업 없음';
+  }
+
+  @override
+  String get ng_board_drop_here => '놓기 또는 + 작업';
+
+  @override
+  String get ng_board_card_actions => '카드 작업';
+
+  @override
+  String get ng_board_open_details => '세부 정보 열기';
+
+  @override
+  String get ng_board_select_card => '카드 선택';
+
+  @override
+  String ng_board_move_to(String column) {
+    return '$column(으)로 이동';
+  }
+
+  @override
+  String get ng_board_parked => '보류됨';
+
+  @override
+  String ng_board_blocked_by(String count) {
+    return '$count개 항목에 의해 차단됨';
+  }
+
+  @override
+  String get ng_board_goal_loop => '목표 루프';
+
+  @override
+  String ng_board_selected(String count) {
+    return '$count개 선택됨';
+  }
+
+  @override
+  String get ng_board_move_menu => '이동…';
+
+  @override
+  String get ng_board_assign_menu => '할당…';
+
+  @override
+  String get ng_board_new_board_title => '새 칸반 보드';
+
+  @override
+  String get ng_board_slug => '슬러그(소문자, 예: release-v5)';
+
+  @override
+  String get ng_board_display_name => '표시 이름';
+
+  @override
+  String get ng_board_linked_project => '연결된 프로젝트(선택 사항)';
+
+  @override
+  String get ng_board_none => '없음';
+
+  @override
+  String get ng_board_default_workdir => '호스트의 기본 작업 디렉터리(선택 사항)';
+
+  @override
+  String get ng_board_import_title => '보드 아카이브 가져오기';
+
+  @override
+  String get ng_board_import_path => '호스트의 .tar.gz 아카이브 경로';
+
+  @override
+  String get ng_board_import => '가져오기';
+
+  @override
+  String ng_board_edit_board(String board) {
+    return '$board 편집';
+  }
+
+  @override
+  String get ng_board_name => '이름';
+
+  @override
+  String get ng_board_description => '설명';
+
+  @override
+  String get ng_board_workdir_clear => '기본 작업 디렉터리(비워 두면 지워짐)';
+
+  @override
+  String get ng_board_boards => '칸반 보드';
+
+  @override
+  String get ng_board_new_board => '새 보드';
+
+  @override
+  String get ng_board_search_boards => '보드 검색…';
+
+  @override
+  String get ng_board_unpin => '탭 고정 해제';
+
+  @override
+  String get ng_board_pin => '탭 고정';
+
+  @override
+  String ng_board_archive_board_title(String board) {
+    return '$board 보드를 보관할까요?';
+  }
+
+  @override
+  String ng_board_archive_board_body(String cards) {
+    return '보드와 해당 $cards가 보드 목록에서 제외됩니다. 게이트웨이는 호스트에 아카이브를 보관합니다.';
+  }
+
+  @override
+  String get ng_board_edit_metadata => '메타데이터 편집';
+
+  @override
+  String get ng_board_export => '호스트에 .tar.gz 내보내기';
+
+  @override
+  String get ng_board_move_pin_left => '고정 탭을 왼쪽으로 이동';
+
+  @override
+  String get ng_board_archive_board => '보드 보관';
+
+  @override
+  String get ng_board_new_task_title => '새 칸반 작업';
+
+  @override
+  String get ng_board_title_required => '제목 *';
+
+  @override
+  String get ng_board_spec => '사양 및 인수 기준';
+
+  @override
+  String get ng_board_estimate => '추정';
+
+  @override
+  String ng_board_estimate_draft(String complexity, String tokens) {
+    return '복잡도 $complexity(~$tokens 토큰 — 토큰 추정치일 뿐이며 달러 비용 산정이 아닙니다)';
+  }
+
+  @override
+  String get ng_board_estimate_unavailable => '추정을 사용할 수 없음';
+
+  @override
+  String get ng_board_initial_column => '초기 열';
+
+  @override
+  String get ng_board_worker_assignee => '담당 워커';
+
+  @override
+  String get ng_board_parked_unassigned => '보류됨(미할당)';
+
+  @override
+  String get ng_board_priority => '우선순위';
+
+  @override
+  String get ng_board_workspace => '작업 공간';
+
+  @override
+  String get ng_board_scratch => '스크래치';
+
+  @override
+  String get ng_board_worktree => 'Git 워크트리';
+
+  @override
+  String get ng_board_shared_dir => '공유 디렉터리';
+
+  @override
+  String get ng_board_workspace_path => '호스트 작업 공간 경로';
+
+  @override
+  String get ng_board_parent => '상위 종속성(선택 사항)';
+
+  @override
+  String get ng_board_skills => '고정 스킬(쉼표로 구분, 선택 사항)';
+
+  @override
+  String get ng_board_provider_override => '제공자 재정의';
+
+  @override
+  String get ng_board_model_override => '모델 재정의';
+
+  @override
+  String get ng_board_reasoning => '추론 강도';
+
+  @override
+  String get ng_board_profile_default => '프로필 기본값';
+
+  @override
+  String get ng_board_xhigh => '매우 높음';
+
+  @override
+  String get ng_board_goal_mode => '목표 루프 모드';
+
+  @override
+  String get ng_board_goal_turns => '목표 최대 턴 수(빈칸 = 기본값)';
+
+  @override
+  String get ng_board_create_task => '작업 만들기';
+
+  @override
+  String get ng_board_orchestration_title => '오케스트레이션 및 워커 프로필';
+
+  @override
+  String ng_board_orchestrator(String profile) {
+    return '오케스트레이터 프로필(확인됨: $profile)';
+  }
+
+  @override
+  String get ng_board_inherit_default => '활성 기본값 상속';
+
+  @override
+  String ng_board_default_assignee(String profile) {
+    return '기본 담당자(확인됨: $profile)';
+  }
+
+  @override
+  String get ng_board_auto_decompose => '분류 카드 자동 분해';
+
+  @override
+  String get ng_board_auto_decompose_help =>
+      '분류 작업에 설정된 kanban_decomposer 모델을 사용합니다';
+
+  @override
+  String get ng_board_save_orchestration => '오케스트레이션 저장';
+
+  @override
+  String get ng_board_worker_descriptions => '워커 전문 분야 설명';
+
+  @override
+  String ng_board_worker_label(String profile, String model, String skills) {
+    return '@$profile($model · $skills)';
+  }
+
+  @override
+  String get ng_board_default_model => '기본 모델';
+
+  @override
+  String get ng_board_save_description => '설명 저장';
+
+  @override
+  String get ng_board_auto_describe => '스킬 및 페르소나에서 자동 설명';
+
+  @override
+  String get ng_board_manual_block => '운영자 수동 차단';
+
+  @override
+  String get ng_board_requested_review => '검토 요청됨';
+
+  @override
+  String ng_board_requeue_title(String task) {
+    return '$task을(를) 다시 대기열에 넣을까요?';
+  }
+
+  @override
+  String get ng_board_requeue_body => '이 카드를 실행 중인 워커가 중지되고 카드는 대기열로 돌아갑니다.';
+
+  @override
+  String get ng_board_requeue => '다시 대기열에 추가';
+
+  @override
+  String ng_board_reassign_title(String task, String profile) {
+    return '$task을(를) @$profile에게 재할당할까요?';
+  }
+
+  @override
+  String get ng_board_reassign_body => '이 카드는 실행 중이므로 먼저 해당 워커가 중지됩니다.';
+
+  @override
+  String get ng_board_reassign => '재할당';
+
+  @override
+  String ng_board_saved_task(String task) {
+    return '작업 $task을(를) 저장했습니다';
+  }
+
+  @override
+  String get ng_board_commented_requeued => '댓글을 게시하고 작업을 다시 대기열에 추가했습니다';
+
+  @override
+  String get ng_board_commented => '댓글을 게시했습니다';
+
+  @override
+  String ng_board_requeued(String task) {
+    return '$task을(를) 다시 대기열에 추가했습니다';
+  }
+
+  @override
+  String get ng_board_decompose_failed => '분해에 실패했습니다.';
+
+  @override
+  String ng_board_decompose_failed_reason(String reason) {
+    return '분해 실패: $reason';
+  }
+
+  @override
+  String ng_board_decomposed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '하위 작업 $count개로 분해했습니다',
+      one: '하위 작업 $count개로 분해했습니다',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_board_no_children => '하위 작업이 생성되지 않았습니다.';
+
+  @override
+  String ng_board_no_children_reason(String reason) {
+    return '하위 작업이 생성되지 않았습니다: $reason';
+  }
+
+  @override
+  String ng_board_uploaded(String file) {
+    return '$file을(를) 업로드했습니다';
+  }
+
+  @override
+  String ng_board_linked_parent(String task) {
+    return '상위 작업 $task을(를) 연결했습니다';
+  }
+
+  @override
+  String ng_board_unlinked_parent(String task) {
+    return '상위 작업 $task 연결을 제거했습니다';
+  }
+
+  @override
+  String get ng_board_task_load_failed => '작업을 불러올 수 없습니다';
+
+  @override
+  String get ng_board_refresh_task => '작업 새로 고침';
+
+  @override
+  String get ng_board_tab_overview => '개요';
+
+  @override
+  String get ng_board_tab_comments => '댓글 및 링크';
+
+  @override
+  String get ng_board_tab_runs => '실행 및 로그';
+
+  @override
+  String get ng_board_tab_events => '이벤트';
+
+  @override
+  String get ng_board_decompose => '분해';
+
+  @override
+  String get ng_board_attach => '파일 첨부';
+
+  @override
+  String ng_board_estimate_task(
+    String complexity,
+    String tokens,
+    String rationale,
+  ) {
+    return '추정: $complexity · ~$tokens 토큰($rationale) — 달러 비용 산정이 아닙니다.';
+  }
+
+  @override
+  String get ng_board_no_rationale => '근거 없음';
+
+  @override
+  String get ng_board_status => '상태';
+
+  @override
+  String get ng_board_assignee => '담당자';
+
+  @override
+  String get ng_board_title_label => '제목';
+
+  @override
+  String get ng_board_body => '본문 / 사양';
+
+  @override
+  String get ng_board_save_changes => '변경 사항 저장';
+
+  @override
+  String get ng_board_clear_model => '모델 재정의 지우기';
+
+  @override
+  String ng_board_blocked_reason(String reason) {
+    return '차단 사유: $reason';
+  }
+
+  @override
+  String ng_board_result(String result) {
+    return '결과: $result';
+  }
+
+  @override
+  String ng_board_parents(String count) {
+    return '차단 원인(상위 · $count)';
+  }
+
+  @override
+  String get ng_board_add_parent => '+ 상위 작업 추가';
+
+  @override
+  String ng_board_children(String count) {
+    return '차단 대상(하위 · $count)';
+  }
+
+  @override
+  String ng_board_attachments(String count) {
+    return '첨부 파일($count)';
+  }
+
+  @override
+  String get ng_board_worker => '워커';
+
+  @override
+  String ng_board_comments(String count) {
+    return '댓글($count)';
+  }
+
+  @override
+  String get ng_board_comment_hint => '댓글 / 워커 지침 추가';
+
+  @override
+  String get ng_board_post_comment => '댓글 게시';
+
+  @override
+  String get ng_board_comment_requeue => '댓글 달고 다시 대기열에 추가';
+
+  @override
+  String ng_board_runs(String count) {
+    return '실행($count)';
+  }
+
+  @override
+  String get ng_board_no_runs => '아직 기록된 워커 실행이 없습니다.';
+
+  @override
+  String ng_board_run_error(String error) {
+    return '오류: $error';
+  }
+
+  @override
+  String ng_board_log_tail_truncated(String bytes) {
+    return '워커 로그 끝부분($bytes B, 잘림)';
+  }
+
+  @override
+  String ng_board_log_tail(String bytes) {
+    return '워커 로그 끝부분($bytes B)';
+  }
+
+  @override
+  String get ng_board_refresh_log => '로그 새로 고침';
+
+  @override
+  String get ng_board_no_log => '워커 로그 출력이 없습니다.';
+
+  @override
+  String get ng_board_no_events => '기록된 이벤트가 없습니다.';
+
+  @override
+  String get ng_bots_room_unknown => '알 수 없음';
+
+  @override
+  String get ng_bots_room_blocked => '차단됨';
+
+  @override
+  String get ng_bots_room_working => '작업 중';
+
+  @override
+  String get ng_bots_room_running => '실행 중';
+
+  @override
+  String get ng_bots_room_idle => '대기 중';
+
+  @override
+  String ng_board_run_title(String id, String profile, String outcome) {
+    return '실행 #$id · @$profile · $outcome';
+  }
 }

@@ -7479,6 +7479,1347 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get ng_kanban_block_stale =>
       'A ligação mudou. Reabra esta conversa para ver o estado em direto dos cartões.';
+
+  @override
+  String get ng_bots_tab_roster => 'Equipa';
+
+  @override
+  String get ng_bots_tab_rooms => 'Salas';
+
+  @override
+  String get ng_bots_tab_screen => 'Ecrã';
+
+  @override
+  String get ng_bots_tab_routines => 'Rotinas';
+
+  @override
+  String ng_bots_rooms_load_failed(String error) {
+    return 'Não foi possível carregar as salas: $error';
+  }
+
+  @override
+  String ng_bots_routines_load_failed(String error) {
+    return 'Não foi possível carregar as rotinas: $error';
+  }
+
+  @override
+  String ng_bots_desktop_failed(String error) {
+    return 'Bot Desktop: $error';
+  }
+
+  @override
+  String get ng_bots_install_not_started =>
+      'O gateway não iniciou a instalação.';
+
+  @override
+  String ng_bots_install_failed_error(String error) {
+    return 'A instalação falhou: $error';
+  }
+
+  @override
+  String get ng_bots_install_cancelled => 'A instalação foi cancelada.';
+
+  @override
+  String get ng_bots_install_no_sudo =>
+      'O sudo não está disponível no anfitrião do gateway. Execute lá o comando acima e depois atualize.';
+
+  @override
+  String ng_bots_install_exit_code(String code) {
+    return 'A instalação falhou (código de saída $code).';
+  }
+
+  @override
+  String ng_bots_install_done(String bot) {
+    return 'Bot Desktop instalado para $bot';
+  }
+
+  @override
+  String get ng_bots_start_failed => 'Falha ao iniciar';
+
+  @override
+  String ng_bots_stop_title(String bot) {
+    return 'Parar o Bot Desktop de $bot?';
+  }
+
+  @override
+  String get ng_bots_stop_human_held =>
+      'Alguém está a controlar este ecrã. Pará-lo termina a sessão dessa pessoa e fecha tudo o que estiver aberto nele.';
+
+  @override
+  String get ng_bots_stop_body =>
+      'Tudo o que estiver aberto no ecrã do bot será fechado.';
+
+  @override
+  String get ng_bots_stop_refused => 'Paragem recusada';
+
+  @override
+  String get ng_bots_take_over_reason => 'Controlo assumido a partir do Ares';
+
+  @override
+  String ng_bots_take_over_failed(String error) {
+    return 'Não foi possível assumir o controlo: $error';
+  }
+
+  @override
+  String ng_bots_force_hand_back_title(String bot) {
+    return 'Devolver o ecrã de $bot ao bot?';
+  }
+
+  @override
+  String get ng_bots_force_hand_back_body =>
+      'Uma pessoa está a controlar este ecrã. Se ainda o estiver a utilizar, perderá o controlo.';
+
+  @override
+  String get ng_bots_hand_back => 'Devolver controlo';
+
+  @override
+  String get ng_bots_hand_back_failed => 'Falha ao devolver o controlo';
+
+  @override
+  String get ng_bots_adopt_title => 'Adotar a nova imagem de sandbox?';
+
+  @override
+  String ng_bots_adopt_body(String bot, String current, String target) {
+    return '$bot passa de $current para $target. O contentor é recriado na próxima chamada de terminal; tudo o que existir apenas no contentor atual será perdido.';
+  }
+
+  @override
+  String get ng_bots_adopt_image => 'Adotar imagem';
+
+  @override
+  String get ng_bots_image_switch_failed => 'Falha ao mudar de imagem';
+
+  @override
+  String get ng_bots_keep_refused => 'Pedido para manter a imagem recusado';
+
+  @override
+  String ng_bots_chat_open_failed(String error) {
+    return 'Não foi possível abrir o Bot Chat: $error';
+  }
+
+  @override
+  String ng_bots_title(String connection) {
+    return 'Bots · $connection';
+  }
+
+  @override
+  String get ng_bots_protocol_tooltip =>
+      'O gateway injeta ele próprio o protocolo de mensagens entre colegas — não é enviado nenhum protocolo SOUL.md adicional.';
+
+  @override
+  String ng_bots_unavailable(String reason) {
+    return 'Bots indisponíveis ($reason)';
+  }
+
+  @override
+  String get ng_bots_account_changed =>
+      'A conta mudou. Volte a ligar ou atualize.';
+
+  @override
+  String get ng_bots_try_refresh =>
+      'Experimente atualizar. Se persistir, o gateway pode não suportar bots.';
+
+  @override
+  String get ng_bots_search => 'Pesquisar bots';
+
+  @override
+  String get ng_bots_none_found => 'Nenhum bot encontrado.';
+
+  @override
+  String get ng_bots_no_model => 'sem modelo';
+
+  @override
+  String ng_bots_skill_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count competências',
+      one: '1 competência',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_bot_chat => 'Bot Chat';
+
+  @override
+  String ng_bots_install_id(String id, String protocol) {
+    return 'O gateway indica o ID de instalação $id · bot_mode_protocol: $protocol';
+  }
+
+  @override
+  String get ng_bots_protocol_note =>
+      'O gateway injeta o protocolo de mensagens entre colegas quando bot_mode_protocol está definido. Identificador: default→hermes; caso contrário, o nome do perfil.';
+
+  @override
+  String get ng_bots_no_rooms =>
+      'Ainda não há salas. Crie uma a partir da sua equipa.';
+
+  @override
+  String ng_bots_member_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count membros',
+      one: '1 membro',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_room_disbanded => 'dissolvida';
+
+  @override
+  String get ng_bots_room_adopted => 'adotada';
+
+  @override
+  String get ng_bots_rooms_gateway => 'Salas do gateway';
+
+  @override
+  String get ng_bots_rooms_desktop => 'Salas geridas pelo Desktop';
+
+  @override
+  String ng_bots_rooms_gateway_body(String methods) {
+    return 'As salas pertencem ao gateway. Métodos: $methods.';
+  }
+
+  @override
+  String get ng_bots_rooms_no_seat =>
+      'Este gateway pode não conseguir alojar salas (é necessário um processo persistente).';
+
+  @override
+  String get ng_bots_rooms_fallback =>
+      'Alternativa clássica: o Desktop conduz as rondas do grupo (não são criadas aqui).';
+
+  @override
+  String get ng_bots_create_room => 'Criar sala';
+
+  @override
+  String get ng_bots_refresh_rooms => 'Atualizar salas';
+
+  @override
+  String get ng_bots_room_created => 'Sala criada';
+
+  @override
+  String ng_bots_room_refused(String reason) {
+    return 'Criação da sala recusada ($reason)';
+  }
+
+  @override
+  String ng_bots_room_failed(String error) {
+    return 'Falha ao criar a sala: $error';
+  }
+
+  @override
+  String get ng_bots_bot => 'Bot';
+
+  @override
+  String get ng_bots_screen_unavailable => 'Estado do ecrã indisponível';
+
+  @override
+  String get ng_bots_screen_unavailable_body =>
+      'Inicie o ecrã do bot para ver a miniatura ou assuma o controlo para o utilizar.';
+
+  @override
+  String get ng_bots_take_over_note =>
+      'Assumir o controlo abre o ecrã em direto e dá-lhe o controlo do mesmo. O controlo volta para o bot quando fechar o ecrã em direto, sair desta página ou colocar a aplicação em segundo plano.';
+
+  @override
+  String get ng_bots_not_installed => 'Não instalado';
+
+  @override
+  String get ng_bots_unsupported_host => 'Anfitrião não suportado';
+
+  @override
+  String ng_bots_pid(String pid) {
+    return 'pid $pid';
+  }
+
+  @override
+  String ng_bots_missing(String items) {
+    return 'em falta: $items';
+  }
+
+  @override
+  String ng_bots_blocked(String reason) {
+    return 'bloqueado: $reason';
+  }
+
+  @override
+  String get ng_bots_no_switch =>
+      'Não há nenhuma mudança de imagem de sandbox pendente.';
+
+  @override
+  String ng_bots_switch_image(String current, String target) {
+    return 'mudar imagem: $current → $target';
+  }
+
+  @override
+  String get ng_bots_bot_in_control => 'o bot tem o controlo';
+
+  @override
+  String get ng_bots_person_in_control => 'uma pessoa tem o controlo';
+
+  @override
+  String get ng_bots_installing =>
+      'A instalar o Bot Desktop no anfitrião do gateway…';
+
+  @override
+  String get ng_bots_install_unfinished => 'A instalação não terminou';
+
+  @override
+  String get ng_bots_install => 'Instalar';
+
+  @override
+  String get ng_bots_start => 'Iniciar';
+
+  @override
+  String get ng_bots_take_over => 'Assumir controlo';
+
+  @override
+  String get ng_bots_keep_image => 'Manter imagem atual';
+
+  @override
+  String ng_bots_missing_pieces(String items) {
+    return 'O gateway indicou componentes em falta: $items';
+  }
+
+  @override
+  String get ng_bots_install_missing => 'Instalar componentes em falta';
+
+  @override
+  String get ng_bots_thumbnail_unavailable => 'Miniatura indisponível';
+
+  @override
+  String get ng_bots_thumbnail_title => 'Miniatura do ecrã (em direto)';
+
+  @override
+  String get ng_bots_thumbnail_suppressed =>
+      'Miniatura oculta enquanto uma pessoa controla o ecrã.';
+
+  @override
+  String get ng_bots_thumbnail_pending =>
+      'A miniatura ainda não está disponível.';
+
+  @override
+  String ng_bots_routines_of(String bot) {
+    return '$bot · rotinas';
+  }
+
+  @override
+  String get ng_bots_add_routine => 'Adicionar rotina';
+
+  @override
+  String get ng_bots_no_routines => 'Este bot não tem rotinas.';
+
+  @override
+  String get ng_bots_routines_note =>
+      'As rotinas são tarefas com a etiqueta [bot:<name>] que pertencem ao armazenamento do perfil do bot. As rotinas delegadas antigas são colocadas em pausa forçada ao carregar.';
+
+  @override
+  String ng_bots_routine_last(String status) {
+    return 'última: $status';
+  }
+
+  @override
+  String ng_bots_routine_next(String time) {
+    return 'próxima: $time';
+  }
+
+  @override
+  String ng_bots_routine_error(String error) {
+    return 'erro: $error';
+  }
+
+  @override
+  String ng_bots_remove_routine_title(String routine) {
+    return 'Remover a rotina $routine?';
+  }
+
+  @override
+  String ng_bots_remove_routine_body(String bot) {
+    return 'A rotina será eliminada da agenda de $bot. Esta ação não pode ser anulada.';
+  }
+
+  @override
+  String ng_bots_routine_action_failed(String action, String error) {
+    return 'Falha em «$action»: $error';
+  }
+
+  @override
+  String get ng_bots_not_connected => 'Sem ligação.';
+
+  @override
+  String ng_bots_add_failed(String error) {
+    return 'Falha ao adicionar: $error';
+  }
+
+  @override
+  String get ng_bots_routine_added => 'Rotina adicionada';
+
+  @override
+  String get ng_bots_routine_enabled => 'ativa';
+
+  @override
+  String get ng_bots_routine_paused => 'em pausa';
+
+  @override
+  String ng_bots_path(String path) {
+    return 'Caminho: $path';
+  }
+
+  @override
+  String get ng_bots_chat_present => 'Bot Chat presente';
+
+  @override
+  String get ng_bots_chat_missing => 'Bot Chat em falta';
+
+  @override
+  String ng_bots_last_session(String preview) {
+    return 'Última sessão: $preview';
+  }
+
+  @override
+  String get ng_bots_open_chat => 'Abrir Bot Chat';
+
+  @override
+  String get ng_bots_desktop => 'Bot Desktop';
+
+  @override
+  String get ng_bots_room_name => 'Nome da sala';
+
+  @override
+  String get ng_bots_select_member => 'Selecione pelo menos um membro.';
+
+  @override
+  String get ng_bots_sudo_title => 'Palavra-passe de administrador';
+
+  @override
+  String ng_bots_sudo_body(String bot) {
+    return 'A instalação do Bot Desktop para $bot requer sudo no anfitrião do gateway. A palavra-passe é enviada apenas para esse gateway, para esta instalação, e não é guardada.';
+  }
+
+  @override
+  String get ng_bots_sudo_password => 'Palavra-passe do sudo';
+
+  @override
+  String get ng_bots_new_routine => 'Nova rotina';
+
+  @override
+  String get ng_bots_routine_title => 'Título';
+
+  @override
+  String get ng_bots_routine_instruction => 'Instrução';
+
+  @override
+  String get ng_bots_cron => 'Expressão cron';
+
+  @override
+  String get ng_bots_interval => 'Intervalo';
+
+  @override
+  String get ng_bots_cron_help => '0 9 * * * executa todos os dias às 09:00';
+
+  @override
+  String get ng_bots_every => 'A cada';
+
+  @override
+  String get ng_bots_unit_minutes => 'minutos';
+
+  @override
+  String get ng_bots_unit_hours => 'horas';
+
+  @override
+  String get ng_bots_unit_days => 'dias';
+
+  @override
+  String get ng_bots_stop_after => 'Parar após (execuções)';
+
+  @override
+  String get ng_bots_stop_after_help =>
+      'Deixe em branco para continuar a executar';
+
+  @override
+  String get ng_bots_send_results => 'Enviar resultados para';
+
+  @override
+  String get ng_bots_run_history => 'Apenas histórico de execuções';
+
+  @override
+  String get ng_bots_continuity => 'Continuar a partir da execução anterior';
+
+  @override
+  String get ng_bots_account_changed_refresh =>
+      'A conta mudou. Atualize antes de continuar.';
+
+  @override
+  String ng_bots_room_load_failed(String error) {
+    return 'Não foi possível carregar a sala: $error';
+  }
+
+  @override
+  String ng_bots_send_failed(String error) {
+    return 'Falha ao enviar: $error';
+  }
+
+  @override
+  String ng_bots_stop_failed(String error) {
+    return 'Falha ao parar: $error';
+  }
+
+  @override
+  String get ng_bots_stop_room => 'Parar sala';
+
+  @override
+  String get ng_bots_send_message => 'Enviar uma mensagem';
+
+  @override
+  String get ng_bots_room_hint =>
+      'Escreva para a sala (mencione membros com @handle)';
+
+  @override
+  String get ng_bots_history => 'Histórico';
+
+  @override
+  String ng_bots_revision(String revision) {
+    return 'revisão $revision';
+  }
+
+  @override
+  String ng_bots_last_error(String error) {
+    return 'último erro: $error';
+  }
+
+  @override
+  String get ng_bots_members => 'Membros';
+
+  @override
+  String get ng_bots_room_context => 'Contexto da sala';
+
+  @override
+  String ng_bots_purpose(String purpose) {
+    return 'Objetivo: $purpose';
+  }
+
+  @override
+  String ng_bots_notes(String notes) {
+    return 'Notas: $notes';
+  }
+
+  @override
+  String ng_bots_routing(String routing) {
+    return 'Encaminhamento: $routing';
+  }
+
+  @override
+  String ng_bots_lead(String member) {
+    return 'líder $member';
+  }
+
+  @override
+  String get ng_bots_viewer_you_control =>
+      'Está a controlar este ecrã. O bot aguarda até lhe devolver o controlo.';
+
+  @override
+  String get ng_bots_viewer_handed_back => 'O controlo voltou para o bot.';
+
+  @override
+  String get ng_bots_viewer_background =>
+      'O controlo voltou para o bot porque a aplicação deixou de estar em primeiro plano.';
+
+  @override
+  String get ng_bots_viewer_taken =>
+      'Outra pessoa assumiu o controlo deste ecrã.';
+
+  @override
+  String get ng_bots_viewer_lost =>
+      'A visualização em direto foi perdida, por isso o controlo voltou para o bot.';
+
+  @override
+  String ng_bots_viewer_title(String bot) {
+    return 'Bot Desktop · $bot';
+  }
+
+  @override
+  String get ng_bots_viewer_type_hint => 'Escrever no ecrã do bot';
+
+  @override
+  String get ng_bots_viewer_type => 'Escrever';
+
+  @override
+  String get ng_bots_viewer_enter => 'Enter';
+
+  @override
+  String get ng_bots_viewer_backspace => 'Backspace';
+
+  @override
+  String get ng_more_kanban => 'Kanban';
+
+  @override
+  String get ng_more_kanban_subtitle =>
+      'Quadros, dependências de tarefas, atribuição de executores e registos';
+
+  @override
+  String get ng_more_bots => 'Bots';
+
+  @override
+  String get ng_more_bots_subtitle => 'Equipa, salas, rotinas e Bot Desktop';
+
+  @override
+  String get ng_slash_kanban => 'Abrir o quadro Kanban';
+
+  @override
+  String get ng_slash_bots => 'Abrir os seus bots';
+
+  @override
+  String ng_board_card_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cartões',
+      one: '1 cartão',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_board_event_toast(String task, String event) {
+    return 'Kanban $task: $event';
+  }
+
+  @override
+  String get ng_board_task => 'tarefa';
+
+  @override
+  String ng_board_refused_http(String status) {
+    return 'Ação recusada (HTTP $status).';
+  }
+
+  @override
+  String get ng_board_err_unsupported =>
+      'O plugin Kanban não está ativado neste gateway.';
+
+  @override
+  String get ng_board_err_denied =>
+      'É necessário iniciar sessão ou ter permissão neste gateway.';
+
+  @override
+  String get ng_board_err_stale =>
+      'O proprietário do gateway mudou. Atualize antes de continuar.';
+
+  @override
+  String get ng_board_err_insecure =>
+      'É necessário HTTPS (ou loopback) para operações no espaço de trabalho Kanban.';
+
+  @override
+  String get ng_board_err_unreachable =>
+      'Não foi possível contactar o serviço Kanban neste gateway.';
+
+  @override
+  String get ng_board_err_failed =>
+      'A operação falhou. Atualize e tente novamente.';
+
+  @override
+  String ng_board_block_title(String task) {
+    return 'Bloquear $task';
+  }
+
+  @override
+  String get ng_board_block_reason => 'Motivo do bloqueio';
+
+  @override
+  String get ng_board_block_hint => 'O que está a bloquear este cartão?';
+
+  @override
+  String ng_board_review_title(String task) {
+    return 'Pedir revisão de $task';
+  }
+
+  @override
+  String get ng_board_review_summary => 'Resumo para revisão';
+
+  @override
+  String get ng_board_review_hint => 'O que foi implementado e verificado?';
+
+  @override
+  String ng_board_move_title(String cards, String column) {
+    return 'Mover $cards para $column?';
+  }
+
+  @override
+  String ng_board_move_body(String board) {
+    return 'Todos os cartões selecionados em $board mudam de coluna. Um cartão em execução deixa de ser executado.';
+  }
+
+  @override
+  String get ng_board_move => 'Mover';
+
+  @override
+  String ng_board_moved(String column) {
+    return 'Cartões movidos para $column';
+  }
+
+  @override
+  String ng_board_unassign_title(String cards) {
+    return 'Remover a atribuição de $cards?';
+  }
+
+  @override
+  String ng_board_assign_title(String cards, String profile) {
+    return 'Atribuir $cards a @$profile?';
+  }
+
+  @override
+  String get ng_board_assign_body =>
+      'Os cartões em execução são recuperados primeiro: os respetivos executores são parados.';
+
+  @override
+  String get ng_board_unassign => 'Remover atribuição';
+
+  @override
+  String get ng_board_assign => 'Atribuir';
+
+  @override
+  String get ng_board_unassigned_done =>
+      'Atribuição removida dos cartões selecionados';
+
+  @override
+  String ng_board_assigned_done(String profile) {
+    return '@$profile atribuído';
+  }
+
+  @override
+  String ng_board_archive_title(String cards) {
+    return 'Arquivar $cards?';
+  }
+
+  @override
+  String ng_board_archive_body(String board) {
+    return 'Os cartões arquivados saem de $board. Ative Arquivados para voltar a vê-los.';
+  }
+
+  @override
+  String get ng_board_archived_done => 'Cartões selecionados arquivados';
+
+  @override
+  String ng_board_delete_title(String cards) {
+    return 'Eliminar $cards?';
+  }
+
+  @override
+  String ng_board_delete_body(String board) {
+    return 'Esta ação elimina permanentemente os cartões selecionados de $board.';
+  }
+
+  @override
+  String ng_board_deleted(String cards) {
+    return 'Eliminação concluída: $cards.';
+  }
+
+  @override
+  String ng_board_partial_failure(String failed, String total, String reason) {
+    return '$failed de $total falharam: $reason';
+  }
+
+  @override
+  String get ng_board_refused => 'recusado';
+
+  @override
+  String ng_board_dispatched(
+    String spawned,
+    String promoted,
+    String reclaimed,
+  ) {
+    return 'Despachado: $spawned iniciados, $promoted promovidos, $reclaimed recuperados.';
+  }
+
+  @override
+  String ng_board_board_archived(String board) {
+    return 'Quadro $board arquivado';
+  }
+
+  @override
+  String ng_board_board_archived_to(String path) {
+    return 'Arquivado em $path';
+  }
+
+  @override
+  String ng_board_exported(String board, String archive) {
+    return '$board exportado para $archive';
+  }
+
+  @override
+  String ng_board_imported(String board, String warnings) {
+    return 'Quadro $board importado$warnings';
+  }
+
+  @override
+  String ng_board_created(String task) {
+    return 'Tarefa $task criada';
+  }
+
+  @override
+  String get ng_board_orchestration_saved => 'Orquestração Kanban guardada';
+
+  @override
+  String get ng_board_auto_describe_unavailable =>
+      'Descrição automática indisponível';
+
+  @override
+  String ng_board_description_updated(String profile) {
+    return 'Descrição de @$profile atualizada';
+  }
+
+  @override
+  String ng_board_title(String board) {
+    return 'Kanban · $board';
+  }
+
+  @override
+  String ng_board_active(String count) {
+    return '$count em curso';
+  }
+
+  @override
+  String get ng_board_dispatch => 'Despachar agora as tarefas prontas';
+
+  @override
+  String get ng_board_orchestration => 'Orquestração e executores';
+
+  @override
+  String get ng_board_new_task => 'Nova tarefa';
+
+  @override
+  String get ng_board_enable_plugin =>
+      'Ative o plugin «kanban» incluído em Capacidades → Plugins neste gateway para ativar o respetivo router de quadros.';
+
+  @override
+  String get ng_board_filter => 'Filtrar tarefas…';
+
+  @override
+  String get ng_board_all_assignees => 'Todos os responsáveis';
+
+  @override
+  String get ng_board_unassigned => 'Sem responsável';
+
+  @override
+  String get ng_board_running_by_profile => 'Em execução por perfil';
+
+  @override
+  String get ng_board_select => 'Selecionar';
+
+  @override
+  String ng_board_selected_chip(String count) {
+    return 'Selecionados ($count)';
+  }
+
+  @override
+  String get ng_board_locked_column =>
+      'Coluna gerida — arrastar e largar desativado';
+
+  @override
+  String ng_board_add_to(String column) {
+    return 'Adicionar a $column';
+  }
+
+  @override
+  String ng_board_collapse(String column) {
+    return 'Recolher $column';
+  }
+
+  @override
+  String ng_board_column_empty(String column) {
+    return 'Sem tarefas em $column';
+  }
+
+  @override
+  String get ng_board_drop_here => 'Largue aqui ou + tarefa';
+
+  @override
+  String get ng_board_card_actions => 'Ações do cartão';
+
+  @override
+  String get ng_board_open_details => 'Abrir detalhes';
+
+  @override
+  String get ng_board_select_card => 'Selecionar cartão';
+
+  @override
+  String ng_board_move_to(String column) {
+    return 'Mover para $column';
+  }
+
+  @override
+  String get ng_board_parked => 'Em espera';
+
+  @override
+  String ng_board_blocked_by(String count) {
+    return 'Bloqueado por $count';
+  }
+
+  @override
+  String get ng_board_goal_loop => 'Ciclo de objetivo';
+
+  @override
+  String ng_board_selected(String count) {
+    return 'Selecionados: $count';
+  }
+
+  @override
+  String get ng_board_move_menu => 'Mover…';
+
+  @override
+  String get ng_board_assign_menu => 'Atribuir…';
+
+  @override
+  String get ng_board_new_board_title => 'Novo quadro Kanban';
+
+  @override
+  String get ng_board_slug => 'Slug (minúsculas, p. ex. release-v5)';
+
+  @override
+  String get ng_board_display_name => 'Nome a apresentar';
+
+  @override
+  String get ng_board_linked_project => 'Projeto associado (opcional)';
+
+  @override
+  String get ng_board_none => 'Nenhum';
+
+  @override
+  String get ng_board_default_workdir =>
+      'Diretório de trabalho predefinido no anfitrião (opcional)';
+
+  @override
+  String get ng_board_import_title => 'Importar arquivo de quadro';
+
+  @override
+  String get ng_board_import_path => 'Caminho do arquivo .tar.gz no anfitrião';
+
+  @override
+  String get ng_board_import => 'Importar';
+
+  @override
+  String ng_board_edit_board(String board) {
+    return 'Editar $board';
+  }
+
+  @override
+  String get ng_board_name => 'Nome';
+
+  @override
+  String get ng_board_description => 'Descrição';
+
+  @override
+  String get ng_board_workdir_clear =>
+      'Diretório de trabalho predefinido (vazio para limpar)';
+
+  @override
+  String get ng_board_boards => 'Quadros Kanban';
+
+  @override
+  String get ng_board_new_board => 'Novo quadro';
+
+  @override
+  String get ng_board_search_boards => 'Pesquisar quadros…';
+
+  @override
+  String get ng_board_unpin => 'Desafixar separador';
+
+  @override
+  String get ng_board_pin => 'Afixar separador';
+
+  @override
+  String ng_board_archive_board_title(String board) {
+    return 'Arquivar o quadro $board?';
+  }
+
+  @override
+  String ng_board_archive_board_body(String cards) {
+    return 'O quadro e os seus cartões ($cards) saem da lista de quadros. O gateway mantém um arquivo no respetivo anfitrião.';
+  }
+
+  @override
+  String get ng_board_edit_metadata => 'Editar metadados';
+
+  @override
+  String get ng_board_export => 'Exportar .tar.gz no anfitrião';
+
+  @override
+  String get ng_board_move_pin_left =>
+      'Mover separador afixado para a esquerda';
+
+  @override
+  String get ng_board_archive_board => 'Arquivar quadro';
+
+  @override
+  String get ng_board_new_task_title => 'Nova tarefa Kanban';
+
+  @override
+  String get ng_board_title_required => 'Título *';
+
+  @override
+  String get ng_board_spec => 'Especificação e critérios de aceitação';
+
+  @override
+  String get ng_board_estimate => 'Estimar';
+
+  @override
+  String ng_board_estimate_draft(String complexity, String tokens) {
+    return 'Complexidade $complexity (~$tokens tok — apenas estimativa de tokens, não de custo em dólares)';
+  }
+
+  @override
+  String get ng_board_estimate_unavailable => 'Estimativa indisponível';
+
+  @override
+  String get ng_board_initial_column => 'Coluna inicial';
+
+  @override
+  String get ng_board_worker_assignee => 'Executor atribuído';
+
+  @override
+  String get ng_board_parked_unassigned => 'Em espera (sem responsável)';
+
+  @override
+  String get ng_board_priority => 'Prioridade';
+
+  @override
+  String get ng_board_workspace => 'Espaço de trabalho';
+
+  @override
+  String get ng_board_scratch => 'Temporário';
+
+  @override
+  String get ng_board_worktree => 'Git worktree';
+
+  @override
+  String get ng_board_shared_dir => 'Diretório partilhado';
+
+  @override
+  String get ng_board_workspace_path =>
+      'Caminho do espaço de trabalho no anfitrião';
+
+  @override
+  String get ng_board_parent => 'Dependência-mãe (opcional)';
+
+  @override
+  String get ng_board_skills =>
+      'Competências fixas (separadas por vírgulas, opcional)';
+
+  @override
+  String get ng_board_provider_override => 'Substituição do fornecedor';
+
+  @override
+  String get ng_board_model_override => 'Substituição do modelo';
+
+  @override
+  String get ng_board_reasoning => 'Esforço de raciocínio';
+
+  @override
+  String get ng_board_profile_default => 'Predefinição do perfil';
+
+  @override
+  String get ng_board_xhigh => 'Muito alto';
+
+  @override
+  String get ng_board_goal_mode => 'Modo de ciclo de objetivo';
+
+  @override
+  String get ng_board_goal_turns =>
+      'Máximo de turnos do objetivo (vazio = predefinição)';
+
+  @override
+  String get ng_board_create_task => 'Criar tarefa';
+
+  @override
+  String get ng_board_orchestration_title =>
+      'Orquestração e perfis de executores';
+
+  @override
+  String ng_board_orchestrator(String profile) {
+    return 'Perfil do orquestrador (efetivo: $profile)';
+  }
+
+  @override
+  String get ng_board_inherit_default => 'Herdar a predefinição ativa';
+
+  @override
+  String ng_board_default_assignee(String profile) {
+    return 'Responsável predefinido (efetivo: $profile)';
+  }
+
+  @override
+  String get ng_board_auto_decompose =>
+      'Decompor automaticamente cartões de triagem';
+
+  @override
+  String get ng_board_auto_decompose_help =>
+      'Usa o modelo kanban_decomposer configurado nas tarefas de triagem';
+
+  @override
+  String get ng_board_save_orchestration => 'Guardar orquestração';
+
+  @override
+  String get ng_board_worker_descriptions =>
+      'Descrições da especialização dos executores';
+
+  @override
+  String ng_board_worker_label(String profile, String model, String skills) {
+    return '@$profile ($model · $skills)';
+  }
+
+  @override
+  String get ng_board_default_model => 'modelo predefinido';
+
+  @override
+  String get ng_board_save_description => 'Guardar descrição';
+
+  @override
+  String get ng_board_auto_describe =>
+      'Descrever automaticamente a partir das competências e da persona';
+
+  @override
+  String get ng_board_manual_block => 'Bloqueio manual do operador';
+
+  @override
+  String get ng_board_requested_review => 'Revisão pedida';
+
+  @override
+  String ng_board_requeue_title(String task) {
+    return 'Recolocar $task na fila?';
+  }
+
+  @override
+  String get ng_board_requeue_body =>
+      'O executor que está a processar este cartão é parado e o cartão volta para a fila.';
+
+  @override
+  String get ng_board_requeue => 'Recolocar na fila';
+
+  @override
+  String ng_board_reassign_title(String task, String profile) {
+    return 'Reatribuir $task a @$profile?';
+  }
+
+  @override
+  String get ng_board_reassign_body =>
+      'Este cartão está em execução: o respetivo executor é parado primeiro.';
+
+  @override
+  String get ng_board_reassign => 'Reatribuir';
+
+  @override
+  String ng_board_saved_task(String task) {
+    return 'Tarefa $task guardada';
+  }
+
+  @override
+  String get ng_board_commented_requeued =>
+      'Comentário publicado e tarefa recolocada na fila';
+
+  @override
+  String get ng_board_commented => 'Comentário publicado';
+
+  @override
+  String ng_board_requeued(String task) {
+    return 'Tarefa $task recolocada na fila';
+  }
+
+  @override
+  String get ng_board_decompose_failed => 'A decomposição falhou.';
+
+  @override
+  String ng_board_decompose_failed_reason(String reason) {
+    return 'A decomposição falhou: $reason';
+  }
+
+  @override
+  String ng_board_decomposed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Decomposta em $count tarefas-filhas',
+      one: 'Decomposta em 1 tarefa-filha',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_board_no_children => 'Não foram criadas tarefas-filhas.';
+
+  @override
+  String ng_board_no_children_reason(String reason) {
+    return 'Não foram criadas tarefas-filhas: $reason';
+  }
+
+  @override
+  String ng_board_uploaded(String file) {
+    return '$file carregado';
+  }
+
+  @override
+  String ng_board_linked_parent(String task) {
+    return 'Tarefa-mãe $task associada';
+  }
+
+  @override
+  String ng_board_unlinked_parent(String task) {
+    return 'Ligação à tarefa-mãe $task removida';
+  }
+
+  @override
+  String get ng_board_task_load_failed => 'Não foi possível carregar a tarefa';
+
+  @override
+  String get ng_board_refresh_task => 'Atualizar tarefa';
+
+  @override
+  String get ng_board_tab_overview => 'Visão geral';
+
+  @override
+  String get ng_board_tab_comments => 'Comentários e ligações';
+
+  @override
+  String get ng_board_tab_runs => 'Execuções e registo';
+
+  @override
+  String get ng_board_tab_events => 'Eventos';
+
+  @override
+  String get ng_board_decompose => 'Decompor';
+
+  @override
+  String get ng_board_attach => 'Anexar ficheiro';
+
+  @override
+  String ng_board_estimate_task(
+    String complexity,
+    String tokens,
+    String rationale,
+  ) {
+    return 'Estimativa: $complexity · ~$tokens tokens ($rationale) — não é uma estimativa de custo em dólares.';
+  }
+
+  @override
+  String get ng_board_no_rationale => 'sem justificação';
+
+  @override
+  String get ng_board_status => 'Estado';
+
+  @override
+  String get ng_board_assignee => 'Responsável';
+
+  @override
+  String get ng_board_title_label => 'Título';
+
+  @override
+  String get ng_board_body => 'Corpo / especificação';
+
+  @override
+  String get ng_board_save_changes => 'Guardar alterações';
+
+  @override
+  String get ng_board_clear_model => 'Limpar substituição do modelo';
+
+  @override
+  String ng_board_blocked_reason(String reason) {
+    return 'Motivo do bloqueio: $reason';
+  }
+
+  @override
+  String ng_board_result(String result) {
+    return 'Resultado: $result';
+  }
+
+  @override
+  String ng_board_parents(String count) {
+    return 'Bloqueado por (tarefas-mãe · $count)';
+  }
+
+  @override
+  String get ng_board_add_parent => '+ Adicionar tarefa-mãe';
+
+  @override
+  String ng_board_children(String count) {
+    return 'Bloqueia (tarefas-filhas · $count)';
+  }
+
+  @override
+  String ng_board_attachments(String count) {
+    return 'Anexos ($count)';
+  }
+
+  @override
+  String get ng_board_worker => 'executor';
+
+  @override
+  String ng_board_comments(String count) {
+    return 'Comentários ($count)';
+  }
+
+  @override
+  String get ng_board_comment_hint =>
+      'Adicionar comentário / orientação para o executor';
+
+  @override
+  String get ng_board_post_comment => 'Publicar comentário';
+
+  @override
+  String get ng_board_comment_requeue => 'Comentar e recolocar na fila';
+
+  @override
+  String ng_board_runs(String count) {
+    return 'Execuções ($count)';
+  }
+
+  @override
+  String get ng_board_no_runs =>
+      'Ainda não foram registadas execuções do executor.';
+
+  @override
+  String ng_board_run_error(String error) {
+    return 'Erro: $error';
+  }
+
+  @override
+  String ng_board_log_tail_truncated(String bytes) {
+    return 'Final do registo do executor ($bytes B, truncado)';
+  }
+
+  @override
+  String ng_board_log_tail(String bytes) {
+    return 'Final do registo do executor ($bytes B)';
+  }
+
+  @override
+  String get ng_board_refresh_log => 'Atualizar registo';
+
+  @override
+  String get ng_board_no_log => 'Sem saída no registo do executor.';
+
+  @override
+  String get ng_board_no_events => 'Não há eventos registados.';
+
+  @override
+  String get ng_bots_room_unknown => 'desconhecido';
+
+  @override
+  String get ng_bots_room_blocked => 'bloqueado';
+
+  @override
+  String get ng_bots_room_working => 'a trabalhar';
+
+  @override
+  String get ng_bots_room_running => 'em execução';
+
+  @override
+  String get ng_bots_room_idle => 'inativo';
+
+  @override
+  String ng_board_run_title(String id, String profile, String outcome) {
+    return 'Execução n.º $id · @$profile · $outcome';
+  }
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -14179,4 +15520,1343 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get ng_kanban_block_stale =>
       'A conexão mudou. Reabra este chat para ver o status dos cartões em tempo real.';
+
+  @override
+  String get ng_bots_tab_roster => 'Equipe';
+
+  @override
+  String get ng_bots_tab_rooms => 'Salas';
+
+  @override
+  String get ng_bots_tab_screen => 'Tela';
+
+  @override
+  String get ng_bots_tab_routines => 'Rotinas';
+
+  @override
+  String ng_bots_rooms_load_failed(String error) {
+    return 'Não foi possível carregar as salas: $error';
+  }
+
+  @override
+  String ng_bots_routines_load_failed(String error) {
+    return 'Não foi possível carregar as rotinas: $error';
+  }
+
+  @override
+  String ng_bots_desktop_failed(String error) {
+    return 'Bot Desktop: $error';
+  }
+
+  @override
+  String get ng_bots_install_not_started =>
+      'O gateway não iniciou a instalação.';
+
+  @override
+  String ng_bots_install_failed_error(String error) {
+    return 'Falha na instalação: $error';
+  }
+
+  @override
+  String get ng_bots_install_cancelled => 'A instalação foi cancelada.';
+
+  @override
+  String get ng_bots_install_no_sudo =>
+      'O sudo não está disponível no host do gateway. Execute o comando acima nele e depois atualize.';
+
+  @override
+  String ng_bots_install_exit_code(String code) {
+    return 'A instalação falhou (código de saída $code).';
+  }
+
+  @override
+  String ng_bots_install_done(String bot) {
+    return 'Bot Desktop instalado para $bot';
+  }
+
+  @override
+  String get ng_bots_start_failed => 'Falha ao iniciar';
+
+  @override
+  String ng_bots_stop_title(String bot) {
+    return 'Parar o Bot Desktop de $bot?';
+  }
+
+  @override
+  String get ng_bots_stop_human_held =>
+      'Alguém está controlando esta tela. Pará-la encerra a sessão dessa pessoa e fecha tudo o que estiver aberto nela.';
+
+  @override
+  String get ng_bots_stop_body =>
+      'Tudo o que estiver aberto na tela do bot será fechado.';
+
+  @override
+  String get ng_bots_stop_refused => 'Parada recusada';
+
+  @override
+  String get ng_bots_take_over_reason => 'Controle assumido pelo Ares';
+
+  @override
+  String ng_bots_take_over_failed(String error) {
+    return 'Não foi possível assumir o controle: $error';
+  }
+
+  @override
+  String ng_bots_force_hand_back_title(String bot) {
+    return 'Devolver a tela de $bot ao bot?';
+  }
+
+  @override
+  String get ng_bots_force_hand_back_body =>
+      'Uma pessoa está controlando esta tela. Se ainda estiver usando, ela perderá o controle.';
+
+  @override
+  String get ng_bots_hand_back => 'Devolver controle';
+
+  @override
+  String get ng_bots_hand_back_failed => 'Falha ao devolver o controle';
+
+  @override
+  String get ng_bots_adopt_title => 'Adotar a nova imagem de sandbox?';
+
+  @override
+  String ng_bots_adopt_body(String bot, String current, String target) {
+    return '$bot passa de $current para $target. O contêiner é recriado na próxima chamada de terminal; tudo o que existir apenas no contêiner atual será perdido.';
+  }
+
+  @override
+  String get ng_bots_adopt_image => 'Adotar imagem';
+
+  @override
+  String get ng_bots_image_switch_failed => 'Falha ao trocar de imagem';
+
+  @override
+  String get ng_bots_keep_refused =>
+      'Solicitação para manter a imagem recusada';
+
+  @override
+  String ng_bots_chat_open_failed(String error) {
+    return 'Não foi possível abrir o Bot Chat: $error';
+  }
+
+  @override
+  String ng_bots_title(String connection) {
+    return 'Bots · $connection';
+  }
+
+  @override
+  String get ng_bots_protocol_tooltip =>
+      'O próprio gateway injeta o protocolo de mensagens entre colegas — nenhum protocolo SOUL.md adicional é enviado.';
+
+  @override
+  String ng_bots_unavailable(String reason) {
+    return 'Bots indisponíveis ($reason)';
+  }
+
+  @override
+  String get ng_bots_account_changed => 'A conta mudou. Reconecte ou atualize.';
+
+  @override
+  String get ng_bots_try_refresh =>
+      'Tente atualizar. Se o problema persistir, o gateway pode não ter suporte a bots.';
+
+  @override
+  String get ng_bots_search => 'Buscar bots';
+
+  @override
+  String get ng_bots_none_found => 'Nenhum bot encontrado.';
+
+  @override
+  String get ng_bots_no_model => 'sem modelo';
+
+  @override
+  String ng_bots_skill_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count habilidades',
+      one: '1 habilidade',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_bot_chat => 'Bot Chat';
+
+  @override
+  String ng_bots_install_id(String id, String protocol) {
+    return 'O gateway informa o ID de instalação $id · bot_mode_protocol: $protocol';
+  }
+
+  @override
+  String get ng_bots_protocol_note =>
+      'O gateway injeta o protocolo de mensagens entre colegas quando bot_mode_protocol está definido. Identificador: default→hermes; caso contrário, o nome do perfil.';
+
+  @override
+  String get ng_bots_no_rooms =>
+      'Ainda não há salas. Crie uma a partir da sua equipe.';
+
+  @override
+  String ng_bots_member_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count membros',
+      one: '1 membro',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_room_disbanded => 'dissolvida';
+
+  @override
+  String get ng_bots_room_adopted => 'adotada';
+
+  @override
+  String get ng_bots_rooms_gateway => 'Salas do gateway';
+
+  @override
+  String get ng_bots_rooms_desktop => 'Salas gerenciadas pelo Desktop';
+
+  @override
+  String ng_bots_rooms_gateway_body(String methods) {
+    return 'As salas pertencem ao gateway. Métodos: $methods.';
+  }
+
+  @override
+  String get ng_bots_rooms_no_seat =>
+      'Este gateway talvez não consiga hospedar salas (é necessário um processo persistente).';
+
+  @override
+  String get ng_bots_rooms_fallback =>
+      'Alternativa clássica: o Desktop conduz as rodadas do grupo (não são criadas aqui).';
+
+  @override
+  String get ng_bots_create_room => 'Criar sala';
+
+  @override
+  String get ng_bots_refresh_rooms => 'Atualizar salas';
+
+  @override
+  String get ng_bots_room_created => 'Sala criada';
+
+  @override
+  String ng_bots_room_refused(String reason) {
+    return 'Criação da sala recusada ($reason)';
+  }
+
+  @override
+  String ng_bots_room_failed(String error) {
+    return 'Falha ao criar a sala: $error';
+  }
+
+  @override
+  String get ng_bots_bot => 'Bot';
+
+  @override
+  String get ng_bots_screen_unavailable => 'Status da tela indisponível';
+
+  @override
+  String get ng_bots_screen_unavailable_body =>
+      'Inicie a tela do bot para ver a miniatura ou assuma o controle para usá-la você mesmo.';
+
+  @override
+  String get ng_bots_take_over_note =>
+      'Assumir o controle abre a tela ao vivo e passa o controle dela para você. O controle volta para o bot quando você fecha a tela ao vivo, sai desta página ou coloca o app em segundo plano.';
+
+  @override
+  String get ng_bots_not_installed => 'Não instalado';
+
+  @override
+  String get ng_bots_unsupported_host => 'Host sem suporte';
+
+  @override
+  String ng_bots_pid(String pid) {
+    return 'pid $pid';
+  }
+
+  @override
+  String ng_bots_missing(String items) {
+    return 'faltando: $items';
+  }
+
+  @override
+  String ng_bots_blocked(String reason) {
+    return 'bloqueado: $reason';
+  }
+
+  @override
+  String get ng_bots_no_switch =>
+      'Nenhuma troca de imagem de sandbox pendente.';
+
+  @override
+  String ng_bots_switch_image(String current, String target) {
+    return 'trocar imagem: $current → $target';
+  }
+
+  @override
+  String get ng_bots_bot_in_control => 'o bot está no controle';
+
+  @override
+  String get ng_bots_person_in_control => 'uma pessoa está no controle';
+
+  @override
+  String get ng_bots_installing =>
+      'Instalando o Bot Desktop no host do gateway…';
+
+  @override
+  String get ng_bots_install_unfinished => 'A instalação não foi concluída';
+
+  @override
+  String get ng_bots_install => 'Instalar';
+
+  @override
+  String get ng_bots_start => 'Iniciar';
+
+  @override
+  String get ng_bots_take_over => 'Assumir controle';
+
+  @override
+  String get ng_bots_keep_image => 'Manter imagem atual';
+
+  @override
+  String ng_bots_missing_pieces(String items) {
+    return 'O gateway informou componentes ausentes: $items';
+  }
+
+  @override
+  String get ng_bots_install_missing => 'Instalar componentes ausentes';
+
+  @override
+  String get ng_bots_thumbnail_unavailable => 'Miniatura indisponível';
+
+  @override
+  String get ng_bots_thumbnail_title => 'Miniatura da tela (ao vivo)';
+
+  @override
+  String get ng_bots_thumbnail_suppressed =>
+      'Miniatura oculta enquanto uma pessoa controla a tela.';
+
+  @override
+  String get ng_bots_thumbnail_pending =>
+      'A miniatura ainda não está disponível.';
+
+  @override
+  String ng_bots_routines_of(String bot) {
+    return '$bot · rotinas';
+  }
+
+  @override
+  String get ng_bots_add_routine => 'Adicionar rotina';
+
+  @override
+  String get ng_bots_no_routines => 'Este bot não tem rotinas.';
+
+  @override
+  String get ng_bots_routines_note =>
+      'As rotinas são tarefas com a tag [bot:<name>] que pertencem ao armazenamento do perfil do bot. Rotinas delegadas legadas são pausadas à força ao carregar.';
+
+  @override
+  String ng_bots_routine_last(String status) {
+    return 'última: $status';
+  }
+
+  @override
+  String ng_bots_routine_next(String time) {
+    return 'próxima: $time';
+  }
+
+  @override
+  String ng_bots_routine_error(String error) {
+    return 'erro: $error';
+  }
+
+  @override
+  String ng_bots_remove_routine_title(String routine) {
+    return 'Remover a rotina $routine?';
+  }
+
+  @override
+  String ng_bots_remove_routine_body(String bot) {
+    return 'A rotina será excluída da agenda de $bot. Essa ação não pode ser desfeita.';
+  }
+
+  @override
+  String ng_bots_routine_action_failed(String action, String error) {
+    return 'Falha em “$action”: $error';
+  }
+
+  @override
+  String get ng_bots_not_connected => 'Não conectado.';
+
+  @override
+  String ng_bots_add_failed(String error) {
+    return 'Falha ao adicionar: $error';
+  }
+
+  @override
+  String get ng_bots_routine_added => 'Rotina adicionada';
+
+  @override
+  String get ng_bots_routine_enabled => 'ativada';
+
+  @override
+  String get ng_bots_routine_paused => 'pausada';
+
+  @override
+  String ng_bots_path(String path) {
+    return 'Caminho: $path';
+  }
+
+  @override
+  String get ng_bots_chat_present => 'Bot Chat presente';
+
+  @override
+  String get ng_bots_chat_missing => 'Bot Chat ausente';
+
+  @override
+  String ng_bots_last_session(String preview) {
+    return 'Última sessão: $preview';
+  }
+
+  @override
+  String get ng_bots_open_chat => 'Abrir Bot Chat';
+
+  @override
+  String get ng_bots_desktop => 'Bot Desktop';
+
+  @override
+  String get ng_bots_room_name => 'Nome da sala';
+
+  @override
+  String get ng_bots_select_member => 'Selecione pelo menos um membro.';
+
+  @override
+  String get ng_bots_sudo_title => 'Senha de administrador';
+
+  @override
+  String ng_bots_sudo_body(String bot) {
+    return 'A instalação do Bot Desktop para $bot exige sudo no host do gateway. A senha é enviada apenas para esse gateway, para esta instalação, e não é salva.';
+  }
+
+  @override
+  String get ng_bots_sudo_password => 'Senha do sudo';
+
+  @override
+  String get ng_bots_new_routine => 'Nova rotina';
+
+  @override
+  String get ng_bots_routine_title => 'Título';
+
+  @override
+  String get ng_bots_routine_instruction => 'Instrução';
+
+  @override
+  String get ng_bots_cron => 'Expressão cron';
+
+  @override
+  String get ng_bots_interval => 'Intervalo';
+
+  @override
+  String get ng_bots_cron_help => '0 9 * * * executa todos os dias às 09:00';
+
+  @override
+  String get ng_bots_every => 'A cada';
+
+  @override
+  String get ng_bots_unit_minutes => 'minutos';
+
+  @override
+  String get ng_bots_unit_hours => 'horas';
+
+  @override
+  String get ng_bots_unit_days => 'dias';
+
+  @override
+  String get ng_bots_stop_after => 'Parar após (execuções)';
+
+  @override
+  String get ng_bots_stop_after_help =>
+      'Deixe em branco para continuar executando';
+
+  @override
+  String get ng_bots_send_results => 'Enviar resultados para';
+
+  @override
+  String get ng_bots_run_history => 'Somente histórico de execuções';
+
+  @override
+  String get ng_bots_continuity => 'Continuar a partir da execução anterior';
+
+  @override
+  String get ng_bots_account_changed_refresh =>
+      'A conta mudou. Atualize antes de continuar.';
+
+  @override
+  String ng_bots_room_load_failed(String error) {
+    return 'Não foi possível carregar a sala: $error';
+  }
+
+  @override
+  String ng_bots_send_failed(String error) {
+    return 'Falha ao enviar: $error';
+  }
+
+  @override
+  String ng_bots_stop_failed(String error) {
+    return 'Falha ao parar: $error';
+  }
+
+  @override
+  String get ng_bots_stop_room => 'Parar sala';
+
+  @override
+  String get ng_bots_send_message => 'Enviar uma mensagem';
+
+  @override
+  String get ng_bots_room_hint =>
+      'Envie uma mensagem para a sala (mencione membros com @handle)';
+
+  @override
+  String get ng_bots_history => 'Histórico';
+
+  @override
+  String ng_bots_revision(String revision) {
+    return 'revisão $revision';
+  }
+
+  @override
+  String ng_bots_last_error(String error) {
+    return 'último erro: $error';
+  }
+
+  @override
+  String get ng_bots_members => 'Membros';
+
+  @override
+  String get ng_bots_room_context => 'Contexto da sala';
+
+  @override
+  String ng_bots_purpose(String purpose) {
+    return 'Objetivo: $purpose';
+  }
+
+  @override
+  String ng_bots_notes(String notes) {
+    return 'Notas: $notes';
+  }
+
+  @override
+  String ng_bots_routing(String routing) {
+    return 'Roteamento: $routing';
+  }
+
+  @override
+  String ng_bots_lead(String member) {
+    return 'líder $member';
+  }
+
+  @override
+  String get ng_bots_viewer_you_control =>
+      'Você está controlando esta tela. O bot aguarda até você devolver o controle.';
+
+  @override
+  String get ng_bots_viewer_handed_back => 'O controle voltou para o bot.';
+
+  @override
+  String get ng_bots_viewer_background =>
+      'O controle voltou para o bot porque o app saiu do primeiro plano.';
+
+  @override
+  String get ng_bots_viewer_taken =>
+      'Outra pessoa assumiu o controle desta tela.';
+
+  @override
+  String get ng_bots_viewer_lost =>
+      'A visualização ao vivo foi perdida, então o controle voltou para o bot.';
+
+  @override
+  String ng_bots_viewer_title(String bot) {
+    return 'Bot Desktop · $bot';
+  }
+
+  @override
+  String get ng_bots_viewer_type_hint => 'Digite na tela do bot';
+
+  @override
+  String get ng_bots_viewer_type => 'Digitar';
+
+  @override
+  String get ng_bots_viewer_enter => 'Enter';
+
+  @override
+  String get ng_bots_viewer_backspace => 'Backspace';
+
+  @override
+  String get ng_more_kanban => 'Kanban';
+
+  @override
+  String get ng_more_kanban_subtitle =>
+      'Quadros, dependências de tarefas, atribuição de executores e logs';
+
+  @override
+  String get ng_more_bots => 'Bots';
+
+  @override
+  String get ng_more_bots_subtitle => 'Equipe, salas, rotinas e Bot Desktop';
+
+  @override
+  String get ng_slash_kanban => 'Abrir o quadro Kanban';
+
+  @override
+  String get ng_slash_bots => 'Abrir seus bots';
+
+  @override
+  String ng_board_card_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cartões',
+      one: '1 cartão',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_board_event_toast(String task, String event) {
+    return 'Kanban $task: $event';
+  }
+
+  @override
+  String get ng_board_task => 'tarefa';
+
+  @override
+  String ng_board_refused_http(String status) {
+    return 'Ação recusada (HTTP $status).';
+  }
+
+  @override
+  String get ng_board_err_unsupported =>
+      'O plugin Kanban não está ativado neste gateway.';
+
+  @override
+  String get ng_board_err_denied =>
+      'É necessário fazer login ou ter permissão neste gateway.';
+
+  @override
+  String get ng_board_err_stale =>
+      'O proprietário do gateway mudou. Atualize antes de continuar.';
+
+  @override
+  String get ng_board_err_insecure =>
+      'É necessário HTTPS (ou loopback) para operações no espaço de trabalho Kanban.';
+
+  @override
+  String get ng_board_err_unreachable =>
+      'Não foi possível acessar o serviço Kanban neste gateway.';
+
+  @override
+  String get ng_board_err_failed =>
+      'A operação falhou. Atualize e tente novamente.';
+
+  @override
+  String ng_board_block_title(String task) {
+    return 'Bloquear $task';
+  }
+
+  @override
+  String get ng_board_block_reason => 'Motivo do bloqueio';
+
+  @override
+  String get ng_board_block_hint => 'O que está bloqueando este cartão?';
+
+  @override
+  String ng_board_review_title(String task) {
+    return 'Solicitar revisão de $task';
+  }
+
+  @override
+  String get ng_board_review_summary => 'Resumo para revisão';
+
+  @override
+  String get ng_board_review_hint => 'O que foi implementado e verificado?';
+
+  @override
+  String ng_board_move_title(String cards, String column) {
+    return 'Mover $cards para $column?';
+  }
+
+  @override
+  String ng_board_move_body(String board) {
+    return 'Todos os cartões selecionados em $board mudam de coluna. Um cartão em execução deixa de ser executado.';
+  }
+
+  @override
+  String get ng_board_move => 'Mover';
+
+  @override
+  String ng_board_moved(String column) {
+    return 'Cartões movidos para $column';
+  }
+
+  @override
+  String ng_board_unassign_title(String cards) {
+    return 'Remover a atribuição de $cards?';
+  }
+
+  @override
+  String ng_board_assign_title(String cards, String profile) {
+    return 'Atribuir $cards a @$profile?';
+  }
+
+  @override
+  String get ng_board_assign_body =>
+      'Os cartões em execução são recuperados primeiro: seus executores são interrompidos.';
+
+  @override
+  String get ng_board_unassign => 'Remover atribuição';
+
+  @override
+  String get ng_board_assign => 'Atribuir';
+
+  @override
+  String get ng_board_unassigned_done =>
+      'Atribuição removida dos cartões selecionados';
+
+  @override
+  String ng_board_assigned_done(String profile) {
+    return '@$profile atribuído';
+  }
+
+  @override
+  String ng_board_archive_title(String cards) {
+    return 'Arquivar $cards?';
+  }
+
+  @override
+  String ng_board_archive_body(String board) {
+    return 'Os cartões arquivados saem de $board. Ative Arquivados para vê-los novamente.';
+  }
+
+  @override
+  String get ng_board_archived_done => 'Cartões selecionados arquivados';
+
+  @override
+  String ng_board_delete_title(String cards) {
+    return 'Excluir $cards?';
+  }
+
+  @override
+  String ng_board_delete_body(String board) {
+    return 'Esta ação exclui permanentemente os cartões selecionados de $board.';
+  }
+
+  @override
+  String ng_board_deleted(String cards) {
+    return 'Exclusão concluída: $cards.';
+  }
+
+  @override
+  String ng_board_partial_failure(String failed, String total, String reason) {
+    return '$failed de $total falharam: $reason';
+  }
+
+  @override
+  String get ng_board_refused => 'recusado';
+
+  @override
+  String ng_board_dispatched(
+    String spawned,
+    String promoted,
+    String reclaimed,
+  ) {
+    return 'Despachado: $spawned iniciados, $promoted promovidos, $reclaimed recuperados.';
+  }
+
+  @override
+  String ng_board_board_archived(String board) {
+    return 'Quadro $board arquivado';
+  }
+
+  @override
+  String ng_board_board_archived_to(String path) {
+    return 'Arquivado em $path';
+  }
+
+  @override
+  String ng_board_exported(String board, String archive) {
+    return '$board exportado para $archive';
+  }
+
+  @override
+  String ng_board_imported(String board, String warnings) {
+    return 'Quadro $board importado$warnings';
+  }
+
+  @override
+  String ng_board_created(String task) {
+    return 'Tarefa $task criada';
+  }
+
+  @override
+  String get ng_board_orchestration_saved => 'Orquestração Kanban salva';
+
+  @override
+  String get ng_board_auto_describe_unavailable =>
+      'Descrição automática indisponível';
+
+  @override
+  String ng_board_description_updated(String profile) {
+    return 'Descrição de @$profile atualizada';
+  }
+
+  @override
+  String ng_board_title(String board) {
+    return 'Kanban · $board';
+  }
+
+  @override
+  String ng_board_active(String count) {
+    return '$count em andamento';
+  }
+
+  @override
+  String get ng_board_dispatch => 'Despachar as tarefas prontas agora';
+
+  @override
+  String get ng_board_orchestration => 'Orquestração e executores';
+
+  @override
+  String get ng_board_new_task => 'Nova tarefa';
+
+  @override
+  String get ng_board_enable_plugin =>
+      'Ative o plugin “kanban” incluído em Capacidades → Plugins neste gateway para ativar o roteador de quadros dele.';
+
+  @override
+  String get ng_board_filter => 'Filtrar tarefas…';
+
+  @override
+  String get ng_board_all_assignees => 'Todos os responsáveis';
+
+  @override
+  String get ng_board_unassigned => 'Sem responsável';
+
+  @override
+  String get ng_board_running_by_profile => 'Em execução por perfil';
+
+  @override
+  String get ng_board_select => 'Selecionar';
+
+  @override
+  String ng_board_selected_chip(String count) {
+    return 'Selecionados ($count)';
+  }
+
+  @override
+  String get ng_board_locked_column =>
+      'Coluna gerenciada — arrastar e soltar desativado';
+
+  @override
+  String ng_board_add_to(String column) {
+    return 'Adicionar em $column';
+  }
+
+  @override
+  String ng_board_collapse(String column) {
+    return 'Recolher $column';
+  }
+
+  @override
+  String ng_board_column_empty(String column) {
+    return 'Nenhuma tarefa em $column';
+  }
+
+  @override
+  String get ng_board_drop_here => 'Solte aqui ou + tarefa';
+
+  @override
+  String get ng_board_card_actions => 'Ações do cartão';
+
+  @override
+  String get ng_board_open_details => 'Abrir detalhes';
+
+  @override
+  String get ng_board_select_card => 'Selecionar cartão';
+
+  @override
+  String ng_board_move_to(String column) {
+    return 'Mover para $column';
+  }
+
+  @override
+  String get ng_board_parked => 'Em espera';
+
+  @override
+  String ng_board_blocked_by(String count) {
+    return 'Bloqueado por $count';
+  }
+
+  @override
+  String get ng_board_goal_loop => 'Ciclo de objetivo';
+
+  @override
+  String ng_board_selected(String count) {
+    return 'Selecionados: $count';
+  }
+
+  @override
+  String get ng_board_move_menu => 'Mover…';
+
+  @override
+  String get ng_board_assign_menu => 'Atribuir…';
+
+  @override
+  String get ng_board_new_board_title => 'Novo quadro Kanban';
+
+  @override
+  String get ng_board_slug => 'Slug (minúsculas, ex.: release-v5)';
+
+  @override
+  String get ng_board_display_name => 'Nome de exibição';
+
+  @override
+  String get ng_board_linked_project => 'Projeto vinculado (opcional)';
+
+  @override
+  String get ng_board_none => 'Nenhum';
+
+  @override
+  String get ng_board_default_workdir =>
+      'Diretório de trabalho padrão no host (opcional)';
+
+  @override
+  String get ng_board_import_title => 'Importar arquivo de quadro';
+
+  @override
+  String get ng_board_import_path => 'Caminho do arquivo .tar.gz no host';
+
+  @override
+  String get ng_board_import => 'Importar';
+
+  @override
+  String ng_board_edit_board(String board) {
+    return 'Editar $board';
+  }
+
+  @override
+  String get ng_board_name => 'Nome';
+
+  @override
+  String get ng_board_description => 'Descrição';
+
+  @override
+  String get ng_board_workdir_clear =>
+      'Diretório de trabalho padrão (em branco para limpar)';
+
+  @override
+  String get ng_board_boards => 'Quadros Kanban';
+
+  @override
+  String get ng_board_new_board => 'Novo quadro';
+
+  @override
+  String get ng_board_search_boards => 'Buscar quadros…';
+
+  @override
+  String get ng_board_unpin => 'Desafixar aba';
+
+  @override
+  String get ng_board_pin => 'Fixar aba';
+
+  @override
+  String ng_board_archive_board_title(String board) {
+    return 'Arquivar o quadro $board?';
+  }
+
+  @override
+  String ng_board_archive_board_body(String cards) {
+    return 'O quadro e seus cartões ($cards) saem da lista de quadros. O gateway mantém um arquivo no host dele.';
+  }
+
+  @override
+  String get ng_board_edit_metadata => 'Editar metadados';
+
+  @override
+  String get ng_board_export => 'Exportar .tar.gz no host';
+
+  @override
+  String get ng_board_move_pin_left => 'Mover aba fixada para a esquerda';
+
+  @override
+  String get ng_board_archive_board => 'Arquivar quadro';
+
+  @override
+  String get ng_board_new_task_title => 'Nova tarefa Kanban';
+
+  @override
+  String get ng_board_title_required => 'Título *';
+
+  @override
+  String get ng_board_spec => 'Especificação e critérios de aceitação';
+
+  @override
+  String get ng_board_estimate => 'Estimar';
+
+  @override
+  String ng_board_estimate_draft(String complexity, String tokens) {
+    return 'Complexidade $complexity (~$tokens tok — apenas estimativa de tokens, não de custo em dólares)';
+  }
+
+  @override
+  String get ng_board_estimate_unavailable => 'Estimativa indisponível';
+
+  @override
+  String get ng_board_initial_column => 'Coluna inicial';
+
+  @override
+  String get ng_board_worker_assignee => 'Executor atribuído';
+
+  @override
+  String get ng_board_parked_unassigned => 'Em espera (sem responsável)';
+
+  @override
+  String get ng_board_priority => 'Prioridade';
+
+  @override
+  String get ng_board_workspace => 'Espaço de trabalho';
+
+  @override
+  String get ng_board_scratch => 'Temporário';
+
+  @override
+  String get ng_board_worktree => 'Git worktree';
+
+  @override
+  String get ng_board_shared_dir => 'Diretório compartilhado';
+
+  @override
+  String get ng_board_workspace_path => 'Caminho do espaço de trabalho no host';
+
+  @override
+  String get ng_board_parent => 'Dependência-mãe (opcional)';
+
+  @override
+  String get ng_board_skills =>
+      'Habilidades fixadas (separadas por vírgula, opcional)';
+
+  @override
+  String get ng_board_provider_override => 'Substituição do provedor';
+
+  @override
+  String get ng_board_model_override => 'Substituição do modelo';
+
+  @override
+  String get ng_board_reasoning => 'Esforço de raciocínio';
+
+  @override
+  String get ng_board_profile_default => 'Padrão do perfil';
+
+  @override
+  String get ng_board_xhigh => 'Muito alto';
+
+  @override
+  String get ng_board_goal_mode => 'Modo de ciclo de objetivo';
+
+  @override
+  String get ng_board_goal_turns =>
+      'Máximo de turnos do objetivo (em branco = padrão)';
+
+  @override
+  String get ng_board_create_task => 'Criar tarefa';
+
+  @override
+  String get ng_board_orchestration_title =>
+      'Orquestração e perfis de executores';
+
+  @override
+  String ng_board_orchestrator(String profile) {
+    return 'Perfil do orquestrador (efetivo: $profile)';
+  }
+
+  @override
+  String get ng_board_inherit_default => 'Herdar o padrão ativo';
+
+  @override
+  String ng_board_default_assignee(String profile) {
+    return 'Responsável padrão (efetivo: $profile)';
+  }
+
+  @override
+  String get ng_board_auto_decompose =>
+      'Decompor automaticamente cartões de triagem';
+
+  @override
+  String get ng_board_auto_decompose_help =>
+      'Usa o modelo kanban_decomposer configurado nas tarefas de triagem';
+
+  @override
+  String get ng_board_save_orchestration => 'Salvar orquestração';
+
+  @override
+  String get ng_board_worker_descriptions =>
+      'Descrições da especialização dos executores';
+
+  @override
+  String ng_board_worker_label(String profile, String model, String skills) {
+    return '@$profile ($model · $skills)';
+  }
+
+  @override
+  String get ng_board_default_model => 'modelo padrão';
+
+  @override
+  String get ng_board_save_description => 'Salvar descrição';
+
+  @override
+  String get ng_board_auto_describe =>
+      'Descrever automaticamente com base nas habilidades e na persona';
+
+  @override
+  String get ng_board_manual_block => 'Bloqueio manual do operador';
+
+  @override
+  String get ng_board_requested_review => 'Revisão solicitada';
+
+  @override
+  String ng_board_requeue_title(String task) {
+    return 'Recolocar $task na fila?';
+  }
+
+  @override
+  String get ng_board_requeue_body =>
+      'O executor que está processando este cartão é interrompido e o cartão volta para a fila.';
+
+  @override
+  String get ng_board_requeue => 'Recolocar na fila';
+
+  @override
+  String ng_board_reassign_title(String task, String profile) {
+    return 'Reatribuir $task a @$profile?';
+  }
+
+  @override
+  String get ng_board_reassign_body =>
+      'Este cartão está em execução: seu executor é interrompido primeiro.';
+
+  @override
+  String get ng_board_reassign => 'Reatribuir';
+
+  @override
+  String ng_board_saved_task(String task) {
+    return 'Tarefa $task salva';
+  }
+
+  @override
+  String get ng_board_commented_requeued =>
+      'Comentário publicado e tarefa recolocada na fila';
+
+  @override
+  String get ng_board_commented => 'Comentário publicado';
+
+  @override
+  String ng_board_requeued(String task) {
+    return 'Tarefa $task recolocada na fila';
+  }
+
+  @override
+  String get ng_board_decompose_failed => 'Falha na decomposição.';
+
+  @override
+  String ng_board_decompose_failed_reason(String reason) {
+    return 'Falha na decomposição: $reason';
+  }
+
+  @override
+  String ng_board_decomposed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Decomposta em $count tarefas-filhas',
+      one: 'Decomposta em 1 tarefa-filha',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_board_no_children => 'Nenhuma tarefa-filha foi criada.';
+
+  @override
+  String ng_board_no_children_reason(String reason) {
+    return 'Nenhuma tarefa-filha foi criada: $reason';
+  }
+
+  @override
+  String ng_board_uploaded(String file) {
+    return '$file enviado';
+  }
+
+  @override
+  String ng_board_linked_parent(String task) {
+    return 'Tarefa-mãe $task vinculada';
+  }
+
+  @override
+  String ng_board_unlinked_parent(String task) {
+    return 'Vínculo com a tarefa-mãe $task removido';
+  }
+
+  @override
+  String get ng_board_task_load_failed => 'Não foi possível carregar a tarefa';
+
+  @override
+  String get ng_board_refresh_task => 'Atualizar tarefa';
+
+  @override
+  String get ng_board_tab_overview => 'Visão geral';
+
+  @override
+  String get ng_board_tab_comments => 'Comentários e links';
+
+  @override
+  String get ng_board_tab_runs => 'Execuções e log';
+
+  @override
+  String get ng_board_tab_events => 'Eventos';
+
+  @override
+  String get ng_board_decompose => 'Decompor';
+
+  @override
+  String get ng_board_attach => 'Anexar arquivo';
+
+  @override
+  String ng_board_estimate_task(
+    String complexity,
+    String tokens,
+    String rationale,
+  ) {
+    return 'Estimativa: $complexity · ~$tokens tokens ($rationale) — não é uma estimativa de custo em dólares.';
+  }
+
+  @override
+  String get ng_board_no_rationale => 'sem justificativa';
+
+  @override
+  String get ng_board_status => 'Status';
+
+  @override
+  String get ng_board_assignee => 'Responsável';
+
+  @override
+  String get ng_board_title_label => 'Título';
+
+  @override
+  String get ng_board_body => 'Corpo / especificação';
+
+  @override
+  String get ng_board_save_changes => 'Salvar alterações';
+
+  @override
+  String get ng_board_clear_model => 'Limpar substituição do modelo';
+
+  @override
+  String ng_board_blocked_reason(String reason) {
+    return 'Motivo do bloqueio: $reason';
+  }
+
+  @override
+  String ng_board_result(String result) {
+    return 'Resultado: $result';
+  }
+
+  @override
+  String ng_board_parents(String count) {
+    return 'Bloqueado por (tarefas-mãe · $count)';
+  }
+
+  @override
+  String get ng_board_add_parent => '+ Adicionar tarefa-mãe';
+
+  @override
+  String ng_board_children(String count) {
+    return 'Bloqueia (tarefas-filhas · $count)';
+  }
+
+  @override
+  String ng_board_attachments(String count) {
+    return 'Anexos ($count)';
+  }
+
+  @override
+  String get ng_board_worker => 'executor';
+
+  @override
+  String ng_board_comments(String count) {
+    return 'Comentários ($count)';
+  }
+
+  @override
+  String get ng_board_comment_hint =>
+      'Adicionar comentário / orientação para o executor';
+
+  @override
+  String get ng_board_post_comment => 'Publicar comentário';
+
+  @override
+  String get ng_board_comment_requeue => 'Comentar e recolocar na fila';
+
+  @override
+  String ng_board_runs(String count) {
+    return 'Execuções ($count)';
+  }
+
+  @override
+  String get ng_board_no_runs =>
+      'Nenhuma execução do executor registrada ainda.';
+
+  @override
+  String ng_board_run_error(String error) {
+    return 'Erro: $error';
+  }
+
+  @override
+  String ng_board_log_tail_truncated(String bytes) {
+    return 'Final do log do executor ($bytes B, truncado)';
+  }
+
+  @override
+  String ng_board_log_tail(String bytes) {
+    return 'Final do log do executor ($bytes B)';
+  }
+
+  @override
+  String get ng_board_refresh_log => 'Atualizar log';
+
+  @override
+  String get ng_board_no_log => 'Nenhuma saída no log do executor.';
+
+  @override
+  String get ng_board_no_events => 'Nenhum evento registrado.';
+
+  @override
+  String get ng_bots_room_unknown => 'desconhecido';
+
+  @override
+  String get ng_bots_room_blocked => 'bloqueado';
+
+  @override
+  String get ng_bots_room_working => 'trabalhando';
+
+  @override
+  String get ng_bots_room_running => 'em execução';
+
+  @override
+  String get ng_bots_room_idle => 'ocioso';
+
+  @override
+  String ng_board_run_title(String id, String profile, String outcome) {
+    return 'Execução nº $id · @$profile · $outcome';
+  }
 }

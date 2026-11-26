@@ -372,7 +372,7 @@ void main() {
     expect(find.byKey(const ValueKey('kanban-pane')), findsNothing);
 
     // The card's detail sheet is open on the board.
-    await _shown(tester, find.textContaining('t_1 · running'));
+    await _shown(tester, find.textContaining('t_1 · Running'));
     expect(find.text('Kanban · default'), findsOneWidget);
     expect(
       board.requests.where(
@@ -478,7 +478,7 @@ void main() {
     screen = tester.widget<KanbanBoardScreen>(find.byType(KanbanBoardScreen));
     expect(screen.initialCardId, 't_2');
     expect(screen.initialCardFilter, isNull);
-    await _shown(tester, find.textContaining('t_2 · running'));
+    await _shown(tester, find.textContaining('t_2 · Running'));
     expect(tester.takeException(), isNull);
     await _close(tester, gateway);
   });
@@ -740,7 +740,7 @@ void main() {
     );
     expect(screen.initialCardId, 't_1');
     expect(screen.onClose, isNull);
-    await _shown(tester, find.textContaining('t_1 · running'));
+    await _shown(tester, find.textContaining('t_1 · Running'));
     expect(tester.takeException(), isNull);
     await _close(tester, gateway);
   });

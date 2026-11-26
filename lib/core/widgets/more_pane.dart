@@ -186,8 +186,8 @@ List<MoreSection> buildMoreSections({
         ),
         MoreEntry(
           id: 'kanban',
-          title: 'Kanban',
-          subtitle: 'Boards, task dependencies, worker assignment and logs',
+          title: l10n.ng_more_kanban,
+          subtitle: l10n.ng_more_kanban_subtitle,
           icon: Icons.view_kanban_outlined,
           availability: workspaceAvailable
               ? MoreEntryAvailability.available
@@ -198,8 +198,8 @@ List<MoreSection> buildMoreSections({
         ),
         MoreEntry(
           id: 'bots',
-          title: 'Bots',
-          subtitle: 'Roster, rooms, routines and Bot Desktop',
+          title: l10n.ng_more_bots,
+          subtitle: l10n.ng_more_bots_subtitle,
           icon: Icons.pets_outlined,
           availability: workspaceAvailable
               ? MoreEntryAvailability.available

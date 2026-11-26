@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 
 import '../services/bot_desktop_session.dart';
 import '../services/bot_display_rfb.dart';
+import '../l10n/l10n.dart';
 
 /// The live Bot Desktop while the user holds it: the bot's screen, with the
 /// pointer, hardware keys and a line for typing on a phone. Closing the page
@@ -164,13 +165,11 @@ class _BotDesktopViewerPageState extends State<BotDesktopViewerPage> {
   }
 
   String _status() => switch (widget.session.closedBecause) {
-    null => 'You control this screen. The bot waits until you hand it back.',
-    BotDesktopClose.handedBack => 'Control is back with the bot.',
-    BotDesktopClose.background =>
-      'Control went back to the bot because the app left the foreground.',
-    BotDesktopClose.controlTaken => 'Someone else took control of this screen.',
-    BotDesktopClose.viewerLost =>
-      'The live view was lost, so control went back to the bot.',
+    null => context.sharedL10n.ng_bots_viewer_you_control,
+    BotDesktopClose.handedBack => context.sharedL10n.ng_bots_viewer_handed_back,
+    BotDesktopClose.background => context.sharedL10n.ng_bots_viewer_background,
+    BotDesktopClose.controlTaken => context.sharedL10n.ng_bots_viewer_taken,
+    BotDesktopClose.viewerLost => context.sharedL10n.ng_bots_viewer_lost,
   };
 
   @override
@@ -182,14 +181,18 @@ class _BotDesktopViewerPageState extends State<BotDesktopViewerPage> {
       key: const Key('bots-viewer'),
       appBar: AppBar(
         title: Text(
-          'Bot Desktop · ${widget.botName}',
+          context.sharedL10n.ng_bots_viewer_title(widget.botName),
           overflow: TextOverflow.ellipsis,
         ),
         actions: [
           TextButton(
             key: const Key('bots-viewer-hand-back'),
             onPressed: () => Navigator.of(context).maybePop(),
-            child: Text(closed ? 'Close' : 'Hand back'),
+            child: Text(
+              closed
+                  ? context.sharedL10n.close
+                  : context.sharedL10n.ng_bots_hand_back,
+            ),
           ),
         ],
       ),
@@ -290,9 +293,9 @@ class _BotDesktopViewerPageState extends State<BotDesktopViewerPage> {
                       enabled: !closed,
                       textInputAction: TextInputAction.send,
                       onSubmitted: (_) => _sendText(),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         isDense: true,
-                        hintText: 'Type on the bot’s screen',
+                        hintText: context.sharedL10n.ng_bots_viewer_type_hint,
                         hintMaxLines: 1,
                         border: OutlineInputBorder(),
                       ),
@@ -300,13 +303,13 @@ class _BotDesktopViewerPageState extends State<BotDesktopViewerPage> {
                   ),
                   IconButton(
                     key: const Key('bots-viewer-send-text'),
-                    tooltip: 'Type it',
+                    tooltip: context.sharedL10n.ng_bots_viewer_type,
                     icon: const Icon(Icons.keyboard_outlined),
                     onPressed: closed ? null : _sendText,
                   ),
                   IconButton(
                     key: const Key('bots-viewer-enter'),
-                    tooltip: 'Enter',
+                    tooltip: context.sharedL10n.ng_bots_viewer_enter,
                     icon: const Icon(Icons.keyboard_return),
                     onPressed: closed
                         ? null
@@ -314,7 +317,7 @@ class _BotDesktopViewerPageState extends State<BotDesktopViewerPage> {
                   ),
                   IconButton(
                     key: const Key('bots-viewer-backspace'),
-                    tooltip: 'Backspace',
+                    tooltip: context.sharedL10n.ng_bots_viewer_backspace,
                     icon: const Icon(Icons.backspace_outlined),
                     onPressed: closed
                         ? null

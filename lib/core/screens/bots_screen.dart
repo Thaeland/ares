@@ -307,7 +307,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         _roomsLoading = false;
         _roomsCaps = null;
         _rooms = const [];
-        _errorDetail = 'Could not load rooms: $e';
+        _errorDetail = context.sharedL10n.ng_bots_rooms_load_failed('$e');
       });
     }
   }
@@ -331,7 +331,9 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       setState(() {
         _routinesLoading = false;
         _routines = const [];
-        _errorDetail = 'Could not load routines: ${e.reason.name}';
+        _errorDetail = context.sharedL10n.ng_bots_routines_load_failed(
+          e.reason.name,
+        );
       });
     } catch (_) {
       if (!current()) return;
@@ -362,7 +364,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       if (!current()) return;
       setState(() {
         _display = null;
-        _errorDetail = 'Bot Desktop: ${e.reason.name}';
+        _errorDetail = context.sharedL10n.ng_bots_desktop_failed(e.reason.name);
       });
     } catch (_) {
       if (!current()) return;
@@ -464,12 +466,15 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       final result = await target.displayInstall(bot);
       if (!mounted) return;
       if (!result.started) {
-        _installFailed(install, 'The gateway did not start the install.');
+        _installFailed(install, context.sharedL10n.ng_bots_install_not_started);
       } else if (result.command case final command?) {
         setState(() => install.lines.insert(0, '\$ $command'));
       }
     } catch (e) {
-      _installFailed(install, 'Install failed: $e');
+      _installFailed(
+        install,
+        context.sharedL10n.ng_bots_install_failed_error('$e'),
+      );
     } finally {
       if (mounted) setState(() => _screenBusy = false);
     }
@@ -492,11 +497,9 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
   ) {
     if (code != 0 || status?.installed != true) {
       _installFailed(install, switch (code) {
-        -1 => 'The install was cancelled.',
-        -2 =>
-          'sudo is not available on the gateway host. Run the command '
-              'above there, then refresh.',
-        _ => 'The install failed (exit code $code).',
+        -1 => context.sharedL10n.ng_bots_install_cancelled,
+        -2 => context.sharedL10n.ng_bots_install_no_sudo,
+        _ => context.sharedL10n.ng_bots_install_exit_code('$code'),
       });
       return;
     }
@@ -507,7 +510,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       if (identical(_install, install)) _install = null;
       if (_ownsScreen(target, install.bot)) _display = status;
     });
-    _toast('Bot Desktop installed for ${install.bot}');
+    _toast(context.sharedL10n.ng_bots_install_done(install.bot));
   }
 
   /// The gateway's sudo prompt for the install this screen started. The
@@ -544,7 +547,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         _scheduleThumbnail(target, bot);
       }
     },
-    failure: 'Start failed',
+    failure: context.sharedL10n.ng_bots_start_failed,
   );
 
   Future<void> _stopScreen() async {
@@ -554,12 +557,11 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     // to (methods_display.py); say so before asking.
     final humanHeld = _display?.lease.isAgent == false;
     final confirmed = await _confirm(
-      title: 'Stop Bot Desktop for $profile?',
+      title: context.sharedL10n.ng_bots_stop_title(profile),
       message: humanHeld
-          ? 'Someone is controlling this screen. Stopping it ends their '
-                'session and closes everything open on it.'
-          : 'Everything open on the bot’s screen is closed.',
-      confirmLabel: 'Stop',
+          ? context.sharedL10n.ng_bots_stop_human_held
+          : context.sharedL10n.ng_bots_stop_body,
+      confirmLabel: context.sharedL10n.ng_stop,
     );
     if (!confirmed || !mounted || _screenProfile != profile) return;
     await _screenAction(
@@ -568,7 +570,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         _cancelThumbnail();
         setState(() => _display = status);
       },
-      failure: 'Stop refused',
+      failure: context.sharedL10n.ng_bots_stop_refused,
     );
   }
 
@@ -576,6 +578,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
   /// viewer nothing is acquired; when the viewer closes, for any reason, the
   /// lease goes back.
   Future<void> _takeOverScreen() async {
+    final l10n = context.sharedL10n;
     final target = _target;
     final profile = _screenProfile;
     if (target == null || profile == null || _session != null) return;
@@ -586,7 +589,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         target,
         profile,
         connect: widget.displayConnector,
-        reason: 'Take over from Ares',
+        reason: l10n.ng_bots_take_over_reason,
       );
       final foreground =
           WidgetsBinding.instance.lifecycleState == null ||
@@ -612,7 +615,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     } catch (e) {
       await session?.close();
       if (_ownsScreen(target, profile)) {
-        _toast('Take over failed: $e');
+        _toast(l10n.ng_bots_take_over_failed('$e'));
         unawaited(_loadScreen(target));
       }
     } finally {
@@ -626,18 +629,16 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     final profile = _screenProfile;
     if (_target == null || profile == null) return;
     final confirmed = await _confirm(
-      title: 'Give $profile’s screen back to the bot?',
-      message:
-          'A person is holding this screen. If they are still using it, '
-          'they lose control.',
-      confirmLabel: 'Hand back',
+      title: context.sharedL10n.ng_bots_force_hand_back_title(profile),
+      message: context.sharedL10n.ng_bots_force_hand_back_body,
+      confirmLabel: context.sharedL10n.ng_bots_hand_back,
     );
     if (!confirmed || !mounted || _screenProfile != profile) return;
     await _screenAction(
       send: (target, bot) => target.displayLeaseRelease(bot, force: true),
       apply: (target, bot, lease) =>
           setState(() => _display = _display?.copyWith(lease: lease)),
-      failure: 'Hand back failed',
+      failure: context.sharedL10n.ng_bots_hand_back_failed,
     );
   }
 
@@ -646,20 +647,20 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     if (_target == null || profile == null) return;
     final pending = _display?.imageSwitch;
     final confirmed = await _confirm(
-      title: 'Adopt the new sandbox image?',
-      message:
-          '$profile moves from ${pending?['current_image'] ?? '?'} to '
-          '${pending?['target_image'] ?? '?'}. Its container is recreated '
-          'on the next terminal call; anything kept only in the current '
-          'container is lost.',
-      confirmLabel: 'Adopt image',
+      title: context.sharedL10n.ng_bots_adopt_title,
+      message: context.sharedL10n.ng_bots_adopt_body(
+        profile,
+        '${pending?['current_image'] ?? '?'}',
+        '${pending?['target_image'] ?? '?'}',
+      ),
+      confirmLabel: context.sharedL10n.ng_bots_adopt_image,
     );
     if (!confirmed || !mounted || _screenProfile != profile) return;
     await _screenAction(
       send: (target, bot) =>
           target.displaySwitchSandboxImage(bot, approve: true),
       apply: (target, bot, status) => setState(() => _display = status),
-      failure: 'Image switch failed',
+      failure: context.sharedL10n.ng_bots_image_switch_failed,
     );
   }
 
@@ -667,7 +668,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     send: (target, bot) =>
         target.displaySwitchSandboxImage(bot, approve: false),
     apply: (target, bot, status) => setState(() => _display = status),
-    failure: 'Keep refused',
+    failure: context.sharedL10n.ng_bots_keep_refused,
   );
 
   /// Asks before stopping, replacing or removing something a bot is using.
@@ -731,9 +732,11 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         }
         if (mounted) setState(() {});
       } on WorkspaceException catch (e) {
-        if (mounted) _toast('Could not open Bot Chat: ${e.reason.name}');
+        if (mounted) {
+          _toast(context.sharedL10n.ng_bots_chat_open_failed(e.reason.name));
+        }
       } catch (e) {
-        if (mounted) _toast('Could not open Bot Chat: $e');
+        if (mounted) _toast(context.sharedL10n.ng_bots_chat_open_failed('$e'));
       }
     }());
   }
@@ -743,14 +746,13 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     final isNarrow = MediaQuery.of(context).size.width < 480;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bots · ${widget.connection.label}'),
+        title: Text(context.sharedL10n.ng_bots_title(widget.connection.label)),
         actions: [
           if (_botModeProtocol)
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Tooltip(
-                message:
-                    'Gateway injects the teammate-messaging protocol itself — no extra SOUL.md protocol is sent.',
+                message: context.sharedL10n.ng_bots_protocol_tooltip,
                 child: Icon(Icons.auto_awesome_outlined, size: 18),
               ),
             ),
@@ -773,11 +775,27 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     );
   }
 
-  static const _tabSpecs = [
-    (_BotsTab.roster, 'Roster', Icons.people_outline),
-    (_BotsTab.rooms, 'Rooms', Icons.groups_outlined),
-    (_BotsTab.screen, 'Screen', Icons.desktop_windows_outlined),
-    (_BotsTab.routines, 'Routines', Icons.schedule_outlined),
+  List<(_BotsTab, String, IconData)> get _tabSpecs => [
+    (
+      _BotsTab.roster,
+      context.sharedL10n.ng_bots_tab_roster,
+      Icons.people_outline,
+    ),
+    (
+      _BotsTab.rooms,
+      context.sharedL10n.ng_bots_tab_rooms,
+      Icons.groups_outlined,
+    ),
+    (
+      _BotsTab.screen,
+      context.sharedL10n.ng_bots_tab_screen,
+      Icons.desktop_windows_outlined,
+    ),
+    (
+      _BotsTab.routines,
+      context.sharedL10n.ng_bots_tab_routines,
+      Icons.schedule_outlined,
+    ),
   ];
 
   /// The tab switcher. Labels show when all four fit at the current text
@@ -846,20 +864,20 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Bots unavailable (${_failure!.name})',
+                context.sharedL10n.ng_bots_unavailable(_failure!.name),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
               Text(
                 _failure == WorkspaceFailure.stale
-                    ? 'The account changed. Reconnect or refresh.'
-                    : 'Try refreshing. If it persists, the gateway may not support bots.',
+                    ? context.sharedL10n.ng_bots_account_changed
+                    : context.sharedL10n.ng_bots_try_refresh,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => unawaited(_load()),
-                child: const Text('Refresh'),
+                child: Text(context.sharedL10n.refresh),
               ),
             ],
           ),
@@ -886,7 +904,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
                     ),
                   ),
                   IconButton(
-                    tooltip: 'Dismiss',
+                    tooltip: context.sharedL10n.ng_dismiss,
                     icon: const Icon(Icons.close, size: 18),
                     onPressed: () => setState(() => _errorDetail = null),
                   ),
@@ -930,16 +948,16 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
           controller: _searchController,
           decoration: InputDecoration(
             prefixIcon: const Icon(Icons.search),
-            hintText: 'Search bots',
+            hintText: context.sharedL10n.ng_bots_search,
             border: const OutlineInputBorder(),
             isDense: true,
           ),
         ),
         const SizedBox(height: 12),
         if (_visibleRoster.isEmpty)
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 48),
-            child: Center(child: Text('No bots found.')),
+            child: Center(child: Text(context.sharedL10n.ng_bots_none_found)),
           ),
         for (final bot in _visibleRoster)
           Card(
@@ -956,10 +974,13 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
               ),
               subtitle: Text(
                 [
-                  bot.model.isNotEmpty ? bot.model : 'no model',
+                  bot.model.isNotEmpty
+                      ? bot.model
+                      : context.sharedL10n.ng_bots_no_model,
                   if (bot.provider.isNotEmpty) bot.provider,
-                  '${bot.skillCount} skill${bot.skillCount == 1 ? '' : 's'}',
-                  if (bot.canonicalSessionId != null) 'Bot Chat',
+                  context.sharedL10n.ng_bots_skill_count(bot.skillCount),
+                  if (bot.canonicalSessionId != null)
+                    context.sharedL10n.ng_bots_bot_chat,
                 ].join(' · '),
               ),
               trailing: const Icon(Icons.chevron_right),
@@ -970,8 +991,11 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         const SizedBox(height: 4),
         Text(
           _installId != null
-              ? 'Gateway reports install id $_installId · bot_mode_protocol: $_botModeProtocol'
-              : 'The gateway injects the teammate-messaging protocol when bot_mode_protocol is set. Handle: default→hermes, otherwise the profile name.',
+              ? context.sharedL10n.ng_bots_install_id(
+                  _installId!,
+                  '$_botModeProtocol',
+                )
+              : context.sharedL10n.ng_bots_protocol_note,
           style: TextStyle(fontSize: 12, color: HermesTokens.of(context).muted),
         ),
       ],
@@ -1022,11 +1046,9 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         if (_roomsLoading)
           const Center(child: CircularProgressIndicator())
         else if (_rooms.isEmpty)
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 32),
-            child: Center(
-              child: Text('No rooms yet. Create one from your roster.'),
-            ),
+            child: Center(child: Text(context.sharedL10n.ng_bots_no_rooms)),
           ),
         for (final room in _rooms)
           Card(
@@ -1037,9 +1059,11 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
               ),
               title: Text(room.name),
               subtitle: Text(
-                '${room.members.length} member${room.members.length == 1 ? '' : 's'}'
-                '${room.disbanded ? ' · disbanded' : ''}'
-                '${room.adopted ? ' · adopted' : ''}',
+                [
+                  context.sharedL10n.ng_bots_member_count(room.members.length),
+                  if (room.disbanded) context.sharedL10n.ng_bots_room_disbanded,
+                  if (room.adopted) context.sharedL10n.ng_bots_room_adopted,
+                ].join(' · '),
               ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => _openRoom(room),
@@ -1055,13 +1079,19 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         leading: Icon(driver ? Icons.hub : Icons.desktop_windows_outlined),
-        title: Text(driver ? 'Gateway rooms' : 'Desktop-driven rooms'),
+        title: Text(
+          driver
+              ? context.sharedL10n.ng_bots_rooms_gateway
+              : context.sharedL10n.ng_bots_rooms_desktop,
+        ),
         subtitle: Text(
           driver
-              ? 'Rooms are owned by the gateway. Methods: ${caps.methods.join(', ')}.'
+              ? context.sharedL10n.ng_bots_rooms_gateway_body(
+                  caps.methods.join(', '),
+                )
               : (caps.persistentProcess
-                    ? 'Rooms may not be seated by this gateway (persistent process required).'
-                    : 'Classic fallback: the Desktop drives the group rounds (not newly created here).'),
+                    ? context.sharedL10n.ng_bots_rooms_no_seat
+                    : context.sharedL10n.ng_bots_rooms_fallback),
         ),
         trailing: Text(
           'v${caps.protocolVersion}',
@@ -1077,11 +1107,11 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         Expanded(
           child: OutlinedButton(
             onPressed: _roster.isEmpty ? null : () => _openCreateRoomSheet(),
-            child: Text('${context.sharedL10n.create} room'),
+            child: Text(context.sharedL10n.ng_bots_create_room),
           ),
         ),
         IconButton(
-          tooltip: 'Refresh rooms',
+          tooltip: context.sharedL10n.ng_bots_refresh_rooms,
           icon: const Icon(Icons.refresh),
           onPressed: () {
             final target = _target;
@@ -1099,6 +1129,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       builder: (sheetContext) => _CreateRoomSheet(
         roster: _roster,
         onCreate: (name, roomId, members) async {
+          final l10n = context.sharedL10n;
           Navigator.of(sheetContext).pop();
           final target = _target;
           if (target == null) return;
@@ -1112,16 +1143,16 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
               members: members,
             );
             if (!_owns(target)) return;
-            _toast('Room created');
+            _toast(l10n.ng_bots_room_created);
             await _loadRooms(target);
           } on WorkspaceException catch (e) {
             if (!_owns(target)) return;
             setState(() => _roomsLoading = false);
-            _toast('Room creation refused (${e.reason.name})');
+            _toast(l10n.ng_bots_room_refused(e.reason.name));
           } catch (e) {
             if (!_owns(target)) return;
             setState(() => _roomsLoading = false);
-            _toast('Room creation failed: $e');
+            _toast(l10n.ng_bots_room_failed('$e'));
           }
         },
       ),
@@ -1160,8 +1191,8 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
                 child: Text(n, overflow: TextOverflow.ellipsis),
               ),
           ],
-          decoration: const InputDecoration(
-            labelText: 'Bot',
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.ng_bots_bot,
             border: OutlineInputBorder(),
             isDense: true,
           ),
@@ -1182,10 +1213,10 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         const SizedBox(height: 12),
         if (status == null && !_screenBusy)
           Card(
-            child: const ListTile(
-              title: Text('Screen status unavailable'),
+            child: ListTile(
+              title: Text(context.sharedL10n.ng_bots_screen_unavailable),
               subtitle: Text(
-                'Start the bot’s screen to watch its thumbnail, or take over to use it yourself.',
+                context.sharedL10n.ng_bots_screen_unavailable_body,
               ),
             ),
           ),
@@ -1196,9 +1227,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         if (status?.running == true) _thumbnailCard(),
         const SizedBox(height: 12),
         Text(
-          'Take over opens the live screen and gives you control of it. '
-          'Control goes back to the bot when you close the live screen, '
-          'leave this page or put the app in the background.',
+          context.sharedL10n.ng_bots_take_over_note,
           style: TextStyle(fontSize: 12, color: HermesTokens.of(context).muted),
         ),
       ],
@@ -1225,26 +1254,30 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
           !unsupported
               ? installed
                     ? status.running
-                          ? 'Running'
-                          : 'Stopped'
-                    : 'Not installed'
-              : 'Unsupported host',
+                          ? context.sharedL10n.ng_running
+                          : context.sharedL10n.ng_stopped
+                    : context.sharedL10n.ng_bots_not_installed
+              : context.sharedL10n.ng_bots_unsupported_host,
         ),
         subtitle: Text(
           [
             if (installed) '${status.geometry} · ${status.placement}',
-            if (status.pid != null) 'pid ${status.pid}',
+            if (status.pid != null)
+              context.sharedL10n.ng_bots_pid('${status.pid}'),
             if (status.missing.isNotEmpty)
-              'missing: ${status.missing.join(', ')}',
-            if (blocked != null) 'blocked: $blocked',
+              context.sharedL10n.ng_bots_missing(status.missing.join(', ')),
+            if (blocked != null) context.sharedL10n.ng_bots_blocked(blocked),
             if (!unsupported && !installed && status.missing.isEmpty)
-              'No sandbox image switch is pending.',
+              context.sharedL10n.ng_bots_no_switch,
             if (imageSwitch != null)
-              'switch image: ${imageSwitch['current_image'] ?? '?'} → ${imageSwitch['target_image'] ?? '?'}',
+              context.sharedL10n.ng_bots_switch_image(
+                '${imageSwitch['current_image'] ?? '?'}',
+                '${imageSwitch['target_image'] ?? '?'}',
+              ),
             if (status.running)
               status.lease.isAgent
-                  ? 'the bot is in control'
-                  : 'a person is in control',
+                  ? context.sharedL10n.ng_bots_bot_in_control
+                  : context.sharedL10n.ng_bots_person_in_control,
           ].join(' · '),
         ),
       ),
@@ -1262,8 +1295,8 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
           children: [
             Text(
               install.running
-                  ? 'Installing Bot Desktop on the gateway host…'
-                  : 'The install did not finish',
+                  ? context.sharedL10n.ng_bots_installing
+                  : context.sharedL10n.ng_bots_install_unfinished,
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
             if (install.running)
@@ -1325,19 +1358,19 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
               OutlinedButton.icon(
                 onPressed: _screenBusy || installing ? null : _startInstalling,
                 icon: const Icon(Icons.download_outlined),
-                label: const Text('Install'),
+                label: Text(context.sharedL10n.ng_bots_install),
               ),
             if (!unsupported && installed && !running)
               FilledButton.icon(
                 onPressed: _screenBusy ? null : _startScreen,
                 icon: const Icon(Icons.play_arrow_outlined),
-                label: const Text('Start'),
+                label: Text(context.sharedL10n.ng_bots_start),
               ),
             if (!unsupported && installed && running)
               FilledButton.icon(
                 onPressed: _screenBusy ? null : () => _stopScreen(),
                 icon: const Icon(Icons.stop_circle_outlined),
-                label: const Text('Stop'),
+                label: Text(context.sharedL10n.ng_stop),
               ),
             if (!unsupported && installed && running)
               OutlinedButton.icon(
@@ -1346,36 +1379,37 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
                     ? null
                     : _takeOverScreen,
                 icon: const Icon(Icons.visibility_outlined),
-                label: const Text('Take over'),
+                label: Text(context.sharedL10n.ng_bots_take_over),
               ),
             if (!unsupported && running && humanHeld && _session == null)
               OutlinedButton.icon(
                 key: const Key('bots-force-hand-back'),
                 onPressed: _screenBusy ? null : _forceHandBack,
                 icon: const Icon(Icons.visibility_off_outlined),
-                label: const Text('Hand back'),
+                label: Text(context.sharedL10n.ng_bots_hand_back),
               ),
             if (imageSwitchPending && !_screenBusy) ...[
               FilledButton.icon(
                 onPressed: _screenBusy ? null : _switchSandboxImage,
                 icon: const Icon(Icons.sync_alt_outlined),
-                label: const Text('Adopt image'),
+                label: Text(context.sharedL10n.ng_bots_adopt_image),
               ),
               OutlinedButton.icon(
                 onPressed: _screenBusy ? null : _keepCurrentImage,
                 icon: const Icon(Icons.close),
-                label: const Text('Keep current image'),
+                label: Text(context.sharedL10n.ng_bots_keep_image),
               ),
             ],
             if (status.missing.isNotEmpty && !unsupported)
               Tooltip(
-                message:
-                    'The gateway reported missing pieces: ${status.missing.join(', ')}',
+                message: context.sharedL10n.ng_bots_missing_pieces(
+                  status.missing.join(', '),
+                ),
                 child: TextButton(
                   onPressed: _screenBusy || installing
                       ? null
                       : _startInstalling,
-                  child: const Text('Install missing pieces'),
+                  child: Text(context.sharedL10n.ng_bots_install_missing),
                 ),
               ),
           ],
@@ -1393,7 +1427,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       color: scheme.surfaceContainerHighest,
       alignment: Alignment.center,
       child: Text(
-        'Thumbnail unavailable',
+        context.sharedL10n.ng_bots_thumbnail_unavailable,
         style: TextStyle(color: scheme.onSurfaceVariant),
       ),
     );
@@ -1403,8 +1437,8 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Screen thumbnail (live)',
+            Text(
+              context.sharedL10n.ng_bots_thumbnail_title,
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
@@ -1426,9 +1460,9 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
             else if (thumbnail?.dataUrl != null)
               unavailable
             else if (_thumbnailSuppressed)
-              const Text('Thumbnail suppressed while the screen is human-held.')
+              Text(context.sharedL10n.ng_bots_thumbnail_suppressed)
             else
-              const Text('Thumbnail not available yet.'),
+              Text(context.sharedL10n.ng_bots_thumbnail_pending),
           ],
         ),
       ),
@@ -1453,8 +1487,8 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
                 child: Text(n, overflow: TextOverflow.ellipsis),
               ),
           ],
-          decoration: const InputDecoration(
-            labelText: 'Bot',
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.ng_bots_bot,
             border: OutlineInputBorder(),
             isDense: true,
           ),
@@ -1475,14 +1509,15 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
           children: [
             Expanded(
               child: Text(
-                _routinesScope ?? '${selected ?? '—'} · routines',
+                _routinesScope ??
+                    context.sharedL10n.ng_bots_routines_of(selected ?? '—'),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             ),
             IconButton(
-              tooltip: 'Refresh',
+              tooltip: context.sharedL10n.refresh,
               icon: const Icon(Icons.refresh),
               onPressed: () {
                 final target = _target;
@@ -1490,7 +1525,7 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
               },
             ),
             IconButton(
-              tooltip: 'Add routine',
+              tooltip: context.sharedL10n.ng_bots_add_routine,
               icon: const Icon(Icons.add_circle_outline),
               onPressed: _routinesLoading ? null : () => _openRoutineDialog(),
             ),
@@ -1503,14 +1538,14 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
             child: Center(child: CircularProgressIndicator()),
           )
         else if (_routines.isEmpty)
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 32),
-            child: Center(child: Text('No routines for this bot.')),
+            child: Center(child: Text(context.sharedL10n.ng_bots_no_routines)),
           ),
         for (final job in _routines) _routineTile(job),
         const SizedBox(height: 16),
         Text(
-          'Routines are [bot:<name>]-tagged jobs owned by the bot’s profile store. Legacy delegated routines are force-paused on load.',
+          context.sharedL10n.ng_bots_routines_note,
           style: TextStyle(fontSize: 12, color: HermesTokens.of(context).muted),
         ),
       ],
@@ -1532,13 +1567,18 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
         subtitle: Text(
           [
             job.schedule,
-            if (job.enabled) 'enabled' else 'paused',
+            if (job.enabled)
+              context.sharedL10n.ng_bots_routine_enabled
+            else
+              context.sharedL10n.ng_bots_routine_paused,
             ?job.repeat,
             if (job.state.isNotEmpty) job.state,
-            if (job.lastStatus.isNotEmpty) 'last: ${job.lastStatus}',
-            if (job.nextRunAt != null) 'next: ${job.nextRunAt}',
+            if (job.lastStatus.isNotEmpty)
+              context.sharedL10n.ng_bots_routine_last(job.lastStatus),
+            if (job.nextRunAt != null)
+              context.sharedL10n.ng_bots_routine_next(job.nextRunAt!),
             if (job.lastError != null && job.lastError!.isNotEmpty)
-              'error: ${job.lastError}',
+              context.sharedL10n.ng_bots_routine_error(job.lastError!),
           ].where((s) => s.isNotEmpty).join(' · '),
         ),
         trailing: Wrap(
@@ -1547,18 +1587,18 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
           children: [
             if (!job.enabled)
               IconButton(
-                tooltip: 'Resume',
+                tooltip: context.sharedL10n.ng_resume,
                 icon: const Icon(Icons.play_arrow_outlined),
                 onPressed: () => _routineAction('resume', job),
               )
             else
               IconButton(
-                tooltip: 'Pause',
+                tooltip: context.sharedL10n.ng_pause,
                 icon: const Icon(Icons.pause_outlined),
                 onPressed: () => _routineAction('pause', job),
               ),
             IconButton(
-              tooltip: 'Remove',
+              tooltip: context.sharedL10n.ng_remove,
               icon: const Icon(Icons.delete_outline),
               onPressed: () => _routineAction('remove', job),
             ),
@@ -1569,17 +1609,18 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
   }
 
   Future<void> _routineAction(String action, RoutineJob job) async {
+    final l10n = context.sharedL10n;
     final target = _target;
     final profile = _routinesProfile;
     if (target == null || profile == null) return;
     if (action == 'remove') {
       final title = RoutineJob.splitTags(job.name).title;
       final confirmed = await _confirm(
-        title: 'Remove routine ${title.isEmpty ? job.name : title}?',
-        message:
-            'The routine is deleted from $profile’s schedule. '
-            'This cannot be undone.',
-        confirmLabel: 'Remove',
+        title: l10n.ng_bots_remove_routine_title(
+          title.isEmpty ? job.name : title,
+        ),
+        message: l10n.ng_bots_remove_routine_body(profile),
+        confirmLabel: l10n.ng_remove,
       );
       if (!confirmed || !_ownsRoutines(target, profile)) return;
     }
@@ -1598,7 +1639,12 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     } catch (e) {
       if (_ownsRoutines(target, profile)) {
         setState(() => _routinesLoading = false);
-        _toast('$action failed: $e');
+        final verb = switch (action) {
+          'pause' => l10n.ng_pause,
+          'resume' => l10n.ng_resume,
+          _ => l10n.ng_remove,
+        };
+        _toast(l10n.ng_bots_routine_action_failed(verb, '$e'));
       }
     }
   }
@@ -1610,8 +1656,9 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       context: context,
       builder: (context) => _RoutineDialog(
         onAdd: (draft) async {
+          final l10n = context.sharedL10n;
           final target = _target;
-          if (target == null) return 'Not connected.';
+          if (target == null) return l10n.ng_bots_not_connected;
           try {
             await target.botRoutineAdd(
               profile: profile,
@@ -1623,12 +1670,12 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
               deliverToBotChat: draft.deliverToBotChat,
             );
           } on WorkspaceException catch (e) {
-            return 'Add failed: ${e.reason.name}';
+            return l10n.ng_bots_add_failed(e.reason.name);
           } catch (e) {
-            return 'Add failed: $e';
+            return l10n.ng_bots_add_failed('$e');
           }
           if (!_ownsRoutines(target, profile)) return null;
-          _toast('Routine added');
+          _toast(l10n.ng_bots_routine_added);
           unawaited(_loadRoutines(target));
           return null;
         },
@@ -1696,7 +1743,7 @@ class _RosterDetailSheet extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       Text(
-                        '@${bot.handle} · ${bot.model.isNotEmpty ? bot.model : 'no model'}'
+                        '@${bot.handle} · ${bot.model.isNotEmpty ? bot.model : context.sharedL10n.ng_bots_no_model}'
                         '${bot.provider.isNotEmpty ? ' · ${bot.provider}' : ''}',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
@@ -1718,14 +1765,16 @@ class _RosterDetailSheet extends StatelessWidget {
               ),
             if (bot.description.isNotEmpty) const SizedBox(height: 8),
             Text(
-              'Path: ${bot.path} · ${bot.skillCount} skills'
-              '${bot.canonicalSessionId != null ? ' · Bot Chat present' : ' · Bot Chat missing'}',
+              '${context.sharedL10n.ng_bots_path(bot.path)} · ${context.sharedL10n.ng_bots_skill_count(bot.skillCount)}'
+              ' · ${bot.canonicalSessionId != null ? context.sharedL10n.ng_bots_chat_present : context.sharedL10n.ng_bots_chat_missing}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             if (bot.lastSessionPreview != null) ...[
               const SizedBox(height: 8),
               Text(
-                'Last session: ${bot.lastSessionPreview}',
+                context.sharedL10n.ng_bots_last_session(
+                  bot.lastSessionPreview!,
+                ),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],
@@ -1738,17 +1787,17 @@ class _RosterDetailSheet extends StatelessWidget {
                 children: [
                   FilledButton.icon(
                     icon: const Icon(Icons.chat_bubble_outline),
-                    label: const Text('Open Bot Chat'),
+                    label: Text(context.sharedL10n.ng_bots_open_chat),
                     onPressed: onOpenChat,
                   ),
                   OutlinedButton.icon(
                     icon: const Icon(Icons.schedule_outlined),
-                    label: const Text('Routines'),
+                    label: Text(context.sharedL10n.ng_bots_tab_routines),
                     onPressed: onOpenRoutines,
                   ),
                   OutlinedButton.icon(
                     icon: const Icon(Icons.desktop_windows_outlined),
-                    label: const Text('Bot Desktop'),
+                    label: Text(context.sharedL10n.ng_bots_desktop),
                     onPressed: onOpenScreen,
                   ),
                 ],
@@ -1828,12 +1877,12 @@ class _CreateRoomSheetState extends State<_CreateRoomSheet> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Create room',
+                        context.sharedL10n.ng_bots_create_room,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
                     IconButton(
-                      tooltip: 'Close',
+                      tooltip: context.sharedL10n.close,
                       icon: const Icon(Icons.close),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
@@ -1842,8 +1891,8 @@ class _CreateRoomSheetState extends State<_CreateRoomSheet> {
                 const SizedBox(height: 12),
                 TextField(
                   controller: _nameInput,
-                  decoration: const InputDecoration(
-                    labelText: 'Room name',
+                  decoration: InputDecoration(
+                    labelText: context.sharedL10n.ng_bots_room_name,
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -1871,7 +1920,7 @@ class _CreateRoomSheetState extends State<_CreateRoomSheet> {
                 const SizedBox(height: 12),
                 if (members.isEmpty)
                   Text(
-                    'Select at least one member.',
+                    context.sharedL10n.ng_bots_select_member,
                     style: TextStyle(color: HermesTokens.of(context).muted),
                   ),
                 const SizedBox(height: 8),
@@ -1892,7 +1941,7 @@ class _CreateRoomSheetState extends State<_CreateRoomSheet> {
                         },
                   child: _busy
                       ? const CircularProgressIndicator()
-                      : const Text('Create room'),
+                      : Text(context.sharedL10n.ng_bots_create_room),
                 ),
               ],
             ),
@@ -1945,16 +1994,12 @@ class _SudoPasswordDialogState extends State<_SudoPasswordDialog> {
     return AlertDialog(
       key: const Key('bots-sudo-dialog'),
       scrollable: true,
-      title: const Text('Administrator password'),
+      title: Text(context.sharedL10n.ng_bots_sudo_title),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            'Installing Bot Desktop for ${widget.bot} needs sudo on the '
-            'gateway host. The password is sent only to that gateway, for '
-            'this install, and is not saved.',
-          ),
+          Text(context.sharedL10n.ng_bots_sudo_body(widget.bot)),
           const SizedBox(height: 12),
           TextField(
             key: const Key('bots-sudo-password'),
@@ -1965,8 +2010,8 @@ class _SudoPasswordDialogState extends State<_SudoPasswordDialog> {
             enableSuggestions: false,
             keyboardType: TextInputType.visiblePassword,
             onSubmitted: (_) => _submit(),
-            decoration: const InputDecoration(
-              labelText: 'sudo password',
+            decoration: InputDecoration(
+              labelText: context.sharedL10n.ng_bots_sudo_password,
               border: OutlineInputBorder(),
             ),
           ),
@@ -1981,7 +2026,7 @@ class _SudoPasswordDialogState extends State<_SudoPasswordDialog> {
         FilledButton(
           key: const Key('bots-sudo-submit'),
           onPressed: _submit,
-          child: const Text('Continue'),
+          child: Text(context.sharedL10n.ng_continue),
         ),
       ],
     );
@@ -2113,7 +2158,7 @@ class _RoutineDialogState extends State<_RoutineDialog> {
     return AlertDialog(
       scrollable: true,
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      title: const Text('New routine'),
+      title: Text(context.sharedL10n.ng_bots_new_routine),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -2121,8 +2166,8 @@ class _RoutineDialogState extends State<_RoutineDialog> {
           TextField(
             key: const Key('bots-routine-title'),
             controller: _titleInput,
-            decoration: const InputDecoration(
-              labelText: 'Title',
+            decoration: InputDecoration(
+              labelText: context.sharedL10n.ng_bots_routine_title,
               border: OutlineInputBorder(),
             ),
             autofocus: true,
@@ -2133,28 +2178,34 @@ class _RoutineDialogState extends State<_RoutineDialog> {
             controller: _instructionInput,
             minLines: 2,
             maxLines: 6,
-            decoration: const InputDecoration(
-              labelText: 'Instruction',
+            decoration: InputDecoration(
+              labelText: context.sharedL10n.ng_bots_routine_instruction,
               border: OutlineInputBorder(),
             ),
           ),
           gap,
           DropdownButtonFormField<_RoutineScheduleKind>(
-            key: const Key('bots-routine-schedule-kind'),
+            key: Key('bots-routine-schedule-kind'),
             isExpanded: true,
             initialValue: _kind,
-            decoration: const InputDecoration(
-              labelText: 'Schedule',
+            decoration: InputDecoration(
+              labelText: context.sharedL10n.ng_schedule,
               border: OutlineInputBorder(),
             ),
-            items: const [
+            items: [
               DropdownMenuItem(
                 value: _RoutineScheduleKind.cron,
-                child: Text('Cron expression', overflow: TextOverflow.ellipsis),
+                child: Text(
+                  context.sharedL10n.ng_bots_cron,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               DropdownMenuItem(
                 value: _RoutineScheduleKind.interval,
-                child: Text('Interval', overflow: TextOverflow.ellipsis),
+                child: Text(
+                  context.sharedL10n.ng_bots_interval,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
             onChanged: _busy
@@ -2166,9 +2217,9 @@ class _RoutineDialogState extends State<_RoutineDialog> {
             TextField(
               key: const Key('bots-routine-cron'),
               controller: _cronInput,
-              decoration: const InputDecoration(
-                labelText: 'Cron expression',
-                helperText: '0 9 * * * runs every day at 09:00',
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.ng_bots_cron,
+                helperText: context.sharedL10n.ng_bots_cron_help,
                 helperMaxLines: 3,
                 border: OutlineInputBorder(),
               ),
@@ -2183,8 +2234,8 @@ class _RoutineDialogState extends State<_RoutineDialog> {
                     controller: _intervalInput,
                     keyboardType: TextInputType.number,
                     inputFormatters: digits,
-                    decoration: const InputDecoration(
-                      labelText: 'Every',
+                    decoration: InputDecoration(
+                      labelText: context.sharedL10n.ng_bots_every,
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -2193,24 +2244,31 @@ class _RoutineDialogState extends State<_RoutineDialog> {
                 Expanded(
                   flex: 2,
                   child: DropdownButtonFormField<String>(
-                    key: const Key('bots-routine-interval-unit'),
+                    key: Key('bots-routine-interval-unit'),
                     isExpanded: true,
                     initialValue: _intervalUnit,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                    items: const [
+                    decoration: InputDecoration(border: OutlineInputBorder()),
+                    items: [
                       DropdownMenuItem(
                         value: 'm',
-                        child: Text('minutes', overflow: TextOverflow.ellipsis),
+                        child: Text(
+                          context.sharedL10n.ng_bots_unit_minutes,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       DropdownMenuItem(
                         value: 'h',
-                        child: Text('hours', overflow: TextOverflow.ellipsis),
+                        child: Text(
+                          context.sharedL10n.ng_bots_unit_hours,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       DropdownMenuItem(
                         value: 'd',
-                        child: Text('days', overflow: TextOverflow.ellipsis),
+                        child: Text(
+                          context.sharedL10n.ng_bots_unit_days,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                     onChanged: _busy
@@ -2226,34 +2284,37 @@ class _RoutineDialogState extends State<_RoutineDialog> {
             controller: _repeatInput,
             keyboardType: TextInputType.number,
             inputFormatters: digits,
-            decoration: const InputDecoration(
-              labelText: 'Stop after (runs)',
+            decoration: InputDecoration(
+              labelText: context.sharedL10n.ng_bots_stop_after,
               hintText: '∞',
-              helperText: 'Leave blank to keep running',
+              helperText: context.sharedL10n.ng_bots_stop_after_help,
               helperMaxLines: 3,
               border: OutlineInputBorder(),
             ),
           ),
           gap,
           DropdownButtonFormField<bool>(
-            key: const Key('bots-routine-deliver'),
+            key: Key('bots-routine-deliver'),
             isExpanded: true,
             initialValue: _deliverToBotChat,
-            decoration: const InputDecoration(
-              labelText: 'Send results to',
+            decoration: InputDecoration(
+              labelText: context.sharedL10n.ng_bots_send_results,
               border: OutlineInputBorder(),
             ),
-            items: const [
+            items: [
               DropdownMenuItem(
                 value: false,
                 child: Text(
-                  'Run history only',
+                  context.sharedL10n.ng_bots_run_history,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
               DropdownMenuItem(
                 value: true,
-                child: Text('Bot Chat', overflow: TextOverflow.ellipsis),
+                child: Text(
+                  context.sharedL10n.ng_bots_bot_chat,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
             onChanged: _busy
@@ -2264,7 +2325,7 @@ class _RoutineDialogState extends State<_RoutineDialog> {
             key: const Key('bots-routine-continuity'),
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
-            title: const Text('Continue from the previous run'),
+            title: Text(context.sharedL10n.ng_bots_continuity),
             value: _continuity,
             onChanged: _busy
                 ? null
@@ -2427,7 +2488,7 @@ class _BotChatPageState extends State<BotChatPage> {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'Could not open Bot Chat: $_failure',
+                  context.sharedL10n.ng_bots_chat_open_failed('$_failure'),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -2512,7 +2573,7 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
     if (mounted) {
       setState(() {
         _loading = false;
-        _error = 'Account changed. Refresh before continuing.';
+        _error = context.sharedL10n.ng_bots_account_changed_refresh;
       });
     }
   }
@@ -2546,7 +2607,7 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
       if (!mounted) return;
       setState(() {
         _loading = false;
-        _error = 'Could not load room: $e';
+        _error = context.sharedL10n.ng_bots_room_load_failed('$e');
       });
     }
   }
@@ -2566,7 +2627,11 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text('Send failed: $e')));
+          ..showSnackBar(
+            SnackBar(
+              content: Text(context.sharedL10n.ng_bots_send_failed('$e')),
+            ),
+          );
       }
     } finally {
       if (mounted) setState(() => _sending = false);
@@ -2584,7 +2649,11 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text('Stop failed: $e')));
+          ..showSnackBar(
+            SnackBar(
+              content: Text(context.sharedL10n.ng_bots_stop_failed('$e')),
+            ),
+          );
       }
     }
   }
@@ -2598,12 +2667,12 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
         title: Text(room.name.isNotEmpty ? room.name : room.roomId),
         actions: [
           IconButton(
-            tooltip: 'Refresh',
+            tooltip: context.sharedL10n.refresh,
             icon: const Icon(Icons.refresh),
             onPressed: () => unawaited(_load()),
           ),
           IconButton(
-            tooltip: 'Stop room',
+            tooltip: context.sharedL10n.ng_bots_stop_room,
             icon: const Icon(Icons.stop_circle_outlined),
             onPressed: _stop,
           ),
@@ -2627,8 +2696,8 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
                 const SizedBox(height: 12),
                 _contextCard(),
                 const SizedBox(height: 16),
-                const Text(
-                  'Send a message',
+                Text(
+                  context.sharedL10n.ng_bots_send_message,
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
@@ -2636,8 +2705,8 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
                   controller: _messageInput,
                   maxLines: 4,
                   maxLength: 65536,
-                  decoration: const InputDecoration(
-                    hintText: 'Message the room (mention members with @handle)',
+                  decoration: InputDecoration(
+                    hintText: context.sharedL10n.ng_bots_room_hint,
                     border: OutlineInputBorder(),
                     alignLabelWithHint: true,
                     counterText: '',
@@ -2656,8 +2725,8 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'History',
+                Text(
+                  context.sharedL10n.ng_bots_history,
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
@@ -2680,12 +2749,14 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
 
   Widget _roomHeaderCard(RoomSummary room, RoomDriverStatus? driver) {
     final status = driver == null
-        ? 'unknown'
+        ? context.sharedL10n.ng_bots_room_unknown
         : driver.running
         ? (driver.blocked
-              ? 'blocked'
-              : (driver.working ? 'working' : 'running'))
-        : 'idle';
+              ? context.sharedL10n.ng_bots_room_blocked
+              : (driver.working
+                    ? context.sharedL10n.ng_bots_room_working
+                    : context.sharedL10n.ng_bots_room_running))
+        : context.sharedL10n.ng_bots_room_idle;
     return Card(
       child: ListTile(
         leading: Icon(
@@ -2697,13 +2768,14 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
         ),
         subtitle: Text(
           [
-            '${room.revision} revision',
+            context.sharedL10n.ng_bots_revision('${room.revision}'),
             if (driver != null && driver.counts.isNotEmpty)
               driver.counts.entries
                   .map((e) => '${e.key}: ${e.value}')
                   .join(', '),
-            if (driver?.lastError != null) 'last error: ${driver!.lastError}',
-            if (room.disbanded) 'disbanded',
+            if (driver?.lastError != null)
+              context.sharedL10n.ng_bots_last_error(driver!.lastError!),
+            if (room.disbanded) context.sharedL10n.ng_bots_room_disbanded,
           ].join(' · '),
         ),
       ),
@@ -2717,7 +2789,10 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Members', style: Theme.of(context).textTheme.titleSmall),
+            Text(
+              context.sharedL10n.ng_bots_members,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -2745,13 +2820,16 @@ class _BotRoomScreenState extends State<BotRoomScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Room context', style: Theme.of(context).textTheme.titleSmall),
-            if (roomContext.purpose.isNotEmpty)
-              Text('Purpose: ${roomContext.purpose}'),
-            if (roomContext.notes.isNotEmpty)
-              Text('Notes: ${roomContext.notes}'),
             Text(
-              'Routing: ${roomContext.routing}${roomContext.leadMemberId.isNotEmpty ? ' · lead ${roomContext.leadMemberId}' : ''}',
+              context.sharedL10n.ng_bots_room_context,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            if (roomContext.purpose.isNotEmpty)
+              Text(context.sharedL10n.ng_bots_purpose(roomContext.purpose)),
+            if (roomContext.notes.isNotEmpty)
+              Text(context.sharedL10n.ng_bots_notes(roomContext.notes)),
+            Text(
+              '${context.sharedL10n.ng_bots_routing(roomContext.routing)}${roomContext.leadMemberId.isNotEmpty ? ' · ${context.sharedL10n.ng_bots_lead(roomContext.leadMemberId)}' : ''}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

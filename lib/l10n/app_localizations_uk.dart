@@ -7479,4 +7479,1340 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get ng_kanban_block_stale =>
       'Підключення змінилося. Відкрийте цей чат знову, щоб бачити стан карток наживо.';
+
+  @override
+  String get ng_bots_tab_roster => 'Склад';
+
+  @override
+  String get ng_bots_tab_rooms => 'Кімнати';
+
+  @override
+  String get ng_bots_tab_screen => 'Екран';
+
+  @override
+  String get ng_bots_tab_routines => 'Рутини';
+
+  @override
+  String ng_bots_rooms_load_failed(String error) {
+    return 'Не вдалося завантажити кімнати: $error';
+  }
+
+  @override
+  String ng_bots_routines_load_failed(String error) {
+    return 'Не вдалося завантажити рутини: $error';
+  }
+
+  @override
+  String ng_bots_desktop_failed(String error) {
+    return 'Bot Desktop: $error';
+  }
+
+  @override
+  String get ng_bots_install_not_started => 'Шлюз не запустив встановлення.';
+
+  @override
+  String ng_bots_install_failed_error(String error) {
+    return 'Помилка встановлення: $error';
+  }
+
+  @override
+  String get ng_bots_install_cancelled => 'Встановлення скасовано.';
+
+  @override
+  String get ng_bots_install_no_sudo =>
+      'sudo недоступний на хості шлюзу. Виконайте там команду вище, потім оновіть.';
+
+  @override
+  String ng_bots_install_exit_code(String code) {
+    return 'Встановлення не вдалося (код виходу $code).';
+  }
+
+  @override
+  String ng_bots_install_done(String bot) {
+    return 'Bot Desktop встановлено для $bot';
+  }
+
+  @override
+  String get ng_bots_start_failed => 'Не вдалося запустити';
+
+  @override
+  String ng_bots_stop_title(String bot) {
+    return 'Зупинити Bot Desktop для $bot?';
+  }
+
+  @override
+  String get ng_bots_stop_human_held =>
+      'Хтось керує цим екраном. Зупинка завершить сеанс цієї людини й закриє все, що відкрито на екрані.';
+
+  @override
+  String get ng_bots_stop_body =>
+      'Усе, що відкрито на екрані бота, буде закрито.';
+
+  @override
+  String get ng_bots_stop_refused => 'Зупинку відхилено';
+
+  @override
+  String get ng_bots_take_over_reason => 'Керування взято з Ares';
+
+  @override
+  String ng_bots_take_over_failed(String error) {
+    return 'Не вдалося взяти керування: $error';
+  }
+
+  @override
+  String ng_bots_force_hand_back_title(String bot) {
+    return 'Повернути екран $bot боту?';
+  }
+
+  @override
+  String get ng_bots_force_hand_back_body =>
+      'Цим екраном керує людина. Якщо вона ще працює з ним, то втратить керування.';
+
+  @override
+  String get ng_bots_hand_back => 'Повернути керування';
+
+  @override
+  String get ng_bots_hand_back_failed => 'Не вдалося повернути керування';
+
+  @override
+  String get ng_bots_adopt_title => 'Перейти на новий образ пісочниці?';
+
+  @override
+  String ng_bots_adopt_body(String bot, String current, String target) {
+    return '$bot переходить з $current на $target. Контейнер буде перестворено під час наступного виклику термінала; усе, що зберігається лише в поточному контейнері, буде втрачено.';
+  }
+
+  @override
+  String get ng_bots_adopt_image => 'Перейти на образ';
+
+  @override
+  String get ng_bots_image_switch_failed => 'Не вдалося змінити образ';
+
+  @override
+  String get ng_bots_keep_refused => 'Запит на збереження образу відхилено';
+
+  @override
+  String ng_bots_chat_open_failed(String error) {
+    return 'Не вдалося відкрити Bot Chat: $error';
+  }
+
+  @override
+  String ng_bots_title(String connection) {
+    return 'Боти · $connection';
+  }
+
+  @override
+  String get ng_bots_protocol_tooltip =>
+      'Шлюз сам додає протокол обміну повідомленнями між учасниками команди — додатковий протокол SOUL.md не надсилається.';
+
+  @override
+  String ng_bots_unavailable(String reason) {
+    return 'Боти недоступні ($reason)';
+  }
+
+  @override
+  String get ng_bots_account_changed =>
+      'Обліковий запис змінився. Перепідключіться або оновіть.';
+
+  @override
+  String get ng_bots_try_refresh =>
+      'Спробуйте оновити. Якщо проблема не зникне, можливо, шлюз не підтримує ботів.';
+
+  @override
+  String get ng_bots_search => 'Пошук ботів';
+
+  @override
+  String get ng_bots_none_found => 'Ботів не знайдено.';
+
+  @override
+  String get ng_bots_no_model => 'немає моделі';
+
+  @override
+  String ng_bots_skill_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count навички',
+      many: '$count навичок',
+      few: '$count навички',
+      one: '$count навичка',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_bot_chat => 'Bot Chat';
+
+  @override
+  String ng_bots_install_id(String id, String protocol) {
+    return 'Шлюз повідомляє ID встановлення $id · bot_mode_protocol: $protocol';
+  }
+
+  @override
+  String get ng_bots_protocol_note =>
+      'Шлюз додає протокол обміну повідомленнями між учасниками команди, якщо задано bot_mode_protocol. Ідентифікатор: default→hermes, в інших випадках — назва профілю.';
+
+  @override
+  String get ng_bots_no_rooms =>
+      'Кімнат поки немає. Створіть кімнату зі складу ботів.';
+
+  @override
+  String ng_bots_member_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count учасника',
+      many: '$count учасників',
+      few: '$count учасники',
+      one: '$count учасник',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_bots_room_disbanded => 'розформована';
+
+  @override
+  String get ng_bots_room_adopted => 'прийнята';
+
+  @override
+  String get ng_bots_rooms_gateway => 'Кімнати шлюзу';
+
+  @override
+  String get ng_bots_rooms_desktop => 'Кімнати під керуванням Desktop';
+
+  @override
+  String ng_bots_rooms_gateway_body(String methods) {
+    return 'Кімнати належать шлюзу. Методи: $methods.';
+  }
+
+  @override
+  String get ng_bots_rooms_no_seat =>
+      'Цей шлюз, можливо, не може розміщувати кімнати (потрібен постійний процес).';
+
+  @override
+  String get ng_bots_rooms_fallback =>
+      'Класичний резервний режим: Desktop веде раунди групи (тут нові не створюються).';
+
+  @override
+  String get ng_bots_create_room => 'Створити кімнату';
+
+  @override
+  String get ng_bots_refresh_rooms => 'Оновити кімнати';
+
+  @override
+  String get ng_bots_room_created => 'Кімнату створено';
+
+  @override
+  String ng_bots_room_refused(String reason) {
+    return 'Створення кімнати відхилено ($reason)';
+  }
+
+  @override
+  String ng_bots_room_failed(String error) {
+    return 'Не вдалося створити кімнату: $error';
+  }
+
+  @override
+  String get ng_bots_bot => 'Бот';
+
+  @override
+  String get ng_bots_screen_unavailable => 'Стан екрана недоступний';
+
+  @override
+  String get ng_bots_screen_unavailable_body =>
+      'Запустіть екран бота, щоб бачити мініатюру, або візьміть керування, щоб працювати з ним самостійно.';
+
+  @override
+  String get ng_bots_take_over_note =>
+      '«Взяти керування» відкриває екран у реальному часі й передає вам керування ним. Керування повертається боту, коли ви закриваєте екран, залишаєте цю сторінку або переводите застосунок у фоновий режим.';
+
+  @override
+  String get ng_bots_not_installed => 'Не встановлено';
+
+  @override
+  String get ng_bots_unsupported_host => 'Непідтримуваний хост';
+
+  @override
+  String ng_bots_pid(String pid) {
+    return 'pid $pid';
+  }
+
+  @override
+  String ng_bots_missing(String items) {
+    return 'бракує: $items';
+  }
+
+  @override
+  String ng_bots_blocked(String reason) {
+    return 'заблоковано: $reason';
+  }
+
+  @override
+  String get ng_bots_no_switch => 'Немає очікуваної зміни образу пісочниці.';
+
+  @override
+  String ng_bots_switch_image(String current, String target) {
+    return 'зміна образу: $current → $target';
+  }
+
+  @override
+  String get ng_bots_bot_in_control => 'керує бот';
+
+  @override
+  String get ng_bots_person_in_control => 'керує людина';
+
+  @override
+  String get ng_bots_installing => 'Встановлення Bot Desktop на хост шлюзу…';
+
+  @override
+  String get ng_bots_install_unfinished => 'Встановлення не завершено';
+
+  @override
+  String get ng_bots_install => 'Встановити';
+
+  @override
+  String get ng_bots_start => 'Запустити';
+
+  @override
+  String get ng_bots_take_over => 'Взяти керування';
+
+  @override
+  String get ng_bots_keep_image => 'Залишити поточний образ';
+
+  @override
+  String ng_bots_missing_pieces(String items) {
+    return 'Шлюз повідомив про відсутні компоненти: $items';
+  }
+
+  @override
+  String get ng_bots_install_missing => 'Встановити відсутні компоненти';
+
+  @override
+  String get ng_bots_thumbnail_unavailable => 'Мініатюра недоступна';
+
+  @override
+  String get ng_bots_thumbnail_title => 'Мініатюра екрана (у реальному часі)';
+
+  @override
+  String get ng_bots_thumbnail_suppressed =>
+      'Мініатюру приховано, поки екраном керує людина.';
+
+  @override
+  String get ng_bots_thumbnail_pending => 'Мініатюра ще недоступна.';
+
+  @override
+  String ng_bots_routines_of(String bot) {
+    return '$bot · рутини';
+  }
+
+  @override
+  String get ng_bots_add_routine => 'Додати рутину';
+
+  @override
+  String get ng_bots_no_routines => 'У цього бота немає рутин.';
+
+  @override
+  String get ng_bots_routines_note =>
+      'Рутини — це завдання з тегом [bot:<name>], що належать сховищу профілю бота. Застарілі делеговані рутини під час завантаження примусово призупиняються.';
+
+  @override
+  String ng_bots_routine_last(String status) {
+    return 'останній: $status';
+  }
+
+  @override
+  String ng_bots_routine_next(String time) {
+    return 'наступний: $time';
+  }
+
+  @override
+  String ng_bots_routine_error(String error) {
+    return 'помилка: $error';
+  }
+
+  @override
+  String ng_bots_remove_routine_title(String routine) {
+    return 'Видалити рутину $routine?';
+  }
+
+  @override
+  String ng_bots_remove_routine_body(String bot) {
+    return 'Рутину буде видалено з розкладу $bot. Цю дію не можна скасувати.';
+  }
+
+  @override
+  String ng_bots_routine_action_failed(String action, String error) {
+    return 'Не вдалося виконати «$action»: $error';
+  }
+
+  @override
+  String get ng_bots_not_connected => 'Немає підключення.';
+
+  @override
+  String ng_bots_add_failed(String error) {
+    return 'Не вдалося додати: $error';
+  }
+
+  @override
+  String get ng_bots_routine_added => 'Рутину додано';
+
+  @override
+  String get ng_bots_routine_enabled => 'увімкнена';
+
+  @override
+  String get ng_bots_routine_paused => 'призупинена';
+
+  @override
+  String ng_bots_path(String path) {
+    return 'Шлях: $path';
+  }
+
+  @override
+  String get ng_bots_chat_present => 'Bot Chat наявний';
+
+  @override
+  String get ng_bots_chat_missing => 'Bot Chat відсутній';
+
+  @override
+  String ng_bots_last_session(String preview) {
+    return 'Останній сеанс: $preview';
+  }
+
+  @override
+  String get ng_bots_open_chat => 'Відкрити Bot Chat';
+
+  @override
+  String get ng_bots_desktop => 'Bot Desktop';
+
+  @override
+  String get ng_bots_room_name => 'Назва кімнати';
+
+  @override
+  String get ng_bots_select_member => 'Виберіть принаймні одного учасника.';
+
+  @override
+  String get ng_bots_sudo_title => 'Пароль адміністратора';
+
+  @override
+  String ng_bots_sudo_body(String bot) {
+    return 'Для встановлення Bot Desktop для $bot потрібен sudo на хості шлюзу. Пароль надсилається лише на цей шлюз, лише для цього встановлення, і не зберігається.';
+  }
+
+  @override
+  String get ng_bots_sudo_password => 'Пароль sudo';
+
+  @override
+  String get ng_bots_new_routine => 'Нова рутина';
+
+  @override
+  String get ng_bots_routine_title => 'Назва';
+
+  @override
+  String get ng_bots_routine_instruction => 'Інструкція';
+
+  @override
+  String get ng_bots_cron => 'Вираз cron';
+
+  @override
+  String get ng_bots_interval => 'Інтервал';
+
+  @override
+  String get ng_bots_cron_help => '0 9 * * * — запуск щодня о 09:00';
+
+  @override
+  String get ng_bots_every => 'Кожні';
+
+  @override
+  String get ng_bots_unit_minutes => 'хвилини';
+
+  @override
+  String get ng_bots_unit_hours => 'години';
+
+  @override
+  String get ng_bots_unit_days => 'дні';
+
+  @override
+  String get ng_bots_stop_after => 'Зупинити після (запусків)';
+
+  @override
+  String get ng_bots_stop_after_help =>
+      'Залиште порожнім, щоб виконувати без обмежень';
+
+  @override
+  String get ng_bots_send_results => 'Надсилати результати до';
+
+  @override
+  String get ng_bots_run_history => 'Лише історія запусків';
+
+  @override
+  String get ng_bots_continuity => 'Продовжувати з попереднього запуску';
+
+  @override
+  String get ng_bots_account_changed_refresh =>
+      'Обліковий запис змінився. Оновіть, перш ніж продовжити.';
+
+  @override
+  String ng_bots_room_load_failed(String error) {
+    return 'Не вдалося завантажити кімнату: $error';
+  }
+
+  @override
+  String ng_bots_send_failed(String error) {
+    return 'Не вдалося надіслати: $error';
+  }
+
+  @override
+  String ng_bots_stop_failed(String error) {
+    return 'Не вдалося зупинити: $error';
+  }
+
+  @override
+  String get ng_bots_stop_room => 'Зупинити кімнату';
+
+  @override
+  String get ng_bots_send_message => 'Надіслати повідомлення';
+
+  @override
+  String get ng_bots_room_hint =>
+      'Повідомлення в кімнату (згадуйте учасників через @handle)';
+
+  @override
+  String get ng_bots_history => 'Історія';
+
+  @override
+  String ng_bots_revision(String revision) {
+    return 'ревізія $revision';
+  }
+
+  @override
+  String ng_bots_last_error(String error) {
+    return 'остання помилка: $error';
+  }
+
+  @override
+  String get ng_bots_members => 'Учасники';
+
+  @override
+  String get ng_bots_room_context => 'Контекст кімнати';
+
+  @override
+  String ng_bots_purpose(String purpose) {
+    return 'Мета: $purpose';
+  }
+
+  @override
+  String ng_bots_notes(String notes) {
+    return 'Нотатки: $notes';
+  }
+
+  @override
+  String ng_bots_routing(String routing) {
+    return 'Маршрутизація: $routing';
+  }
+
+  @override
+  String ng_bots_lead(String member) {
+    return 'ведучий $member';
+  }
+
+  @override
+  String get ng_bots_viewer_you_control =>
+      'Ви керуєте цим екраном. Бот чекає, доки ви не повернете керування.';
+
+  @override
+  String get ng_bots_viewer_handed_back => 'Керування повернуто боту.';
+
+  @override
+  String get ng_bots_viewer_background =>
+      'Керування повернуто боту, оскільки застосунок перейшов у фоновий режим.';
+
+  @override
+  String get ng_bots_viewer_taken => 'Хтось інший узяв керування цим екраном.';
+
+  @override
+  String get ng_bots_viewer_lost =>
+      'Трансляцію екрана втрачено, тому керування повернуто боту.';
+
+  @override
+  String ng_bots_viewer_title(String bot) {
+    return 'Bot Desktop · $bot';
+  }
+
+  @override
+  String get ng_bots_viewer_type_hint => 'Введення на екрані бота';
+
+  @override
+  String get ng_bots_viewer_type => 'Ввести';
+
+  @override
+  String get ng_bots_viewer_enter => 'Enter';
+
+  @override
+  String get ng_bots_viewer_backspace => 'Backspace';
+
+  @override
+  String get ng_more_kanban => 'Kanban';
+
+  @override
+  String get ng_more_kanban_subtitle =>
+      'Дошки, залежності завдань, призначення виконавців і журнали';
+
+  @override
+  String get ng_more_bots => 'Боти';
+
+  @override
+  String get ng_more_bots_subtitle => 'Склад, кімнати, рутини та Bot Desktop';
+
+  @override
+  String get ng_slash_kanban => 'Відкрити дошку Kanban';
+
+  @override
+  String get ng_slash_bots => 'Відкрити ваших ботів';
+
+  @override
+  String ng_board_card_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count картки',
+      many: '$count карток',
+      few: '$count картки',
+      one: '$count картка',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ng_board_event_toast(String task, String event) {
+    return 'Kanban $task: $event';
+  }
+
+  @override
+  String get ng_board_task => 'завдання';
+
+  @override
+  String ng_board_refused_http(String status) {
+    return 'Дію відхилено (HTTP $status).';
+  }
+
+  @override
+  String get ng_board_err_unsupported =>
+      'Плагін Kanban не ввімкнено на цьому шлюзі.';
+
+  @override
+  String get ng_board_err_denied => 'На цьому шлюзі потрібен вхід або дозвіл.';
+
+  @override
+  String get ng_board_err_stale =>
+      'Власник шлюзу змінився. Оновіть, перш ніж продовжити.';
+
+  @override
+  String get ng_board_err_insecure =>
+      'Для операцій із робочим простором Kanban потрібен HTTPS (або loopback).';
+
+  @override
+  String get ng_board_err_unreachable =>
+      'Не вдалося зв’язатися зі службою Kanban на цьому шлюзі.';
+
+  @override
+  String get ng_board_err_failed =>
+      'Операцію не виконано. Оновіть і спробуйте ще раз.';
+
+  @override
+  String ng_board_block_title(String task) {
+    return 'Заблокувати $task';
+  }
+
+  @override
+  String get ng_board_block_reason => 'Причина блокування';
+
+  @override
+  String get ng_board_block_hint => 'Що блокує цю картку?';
+
+  @override
+  String ng_board_review_title(String task) {
+    return 'Запросити перевірку $task';
+  }
+
+  @override
+  String get ng_board_review_summary => 'Підсумок для перевірки';
+
+  @override
+  String get ng_board_review_hint => 'Що було реалізовано й перевірено?';
+
+  @override
+  String ng_board_move_title(String cards, String column) {
+    return 'Перемістити до $column: $cards?';
+  }
+
+  @override
+  String ng_board_move_body(String board) {
+    return 'Усі вибрані картки на дошці $board змінять колонку. Картки, що виконуються, буде зупинено.';
+  }
+
+  @override
+  String get ng_board_move => 'Перемістити';
+
+  @override
+  String ng_board_moved(String column) {
+    return 'Картки переміщено до $column';
+  }
+
+  @override
+  String ng_board_unassign_title(String cards) {
+    return 'Зняти виконавця: $cards?';
+  }
+
+  @override
+  String ng_board_assign_title(String cards, String profile) {
+    return 'Призначити @$profile виконавцем: $cards?';
+  }
+
+  @override
+  String get ng_board_assign_body =>
+      'Картки, що виконуються, спершу повертаються: їхні виконавці зупиняються.';
+
+  @override
+  String get ng_board_unassign => 'Зняти призначення';
+
+  @override
+  String get ng_board_assign => 'Призначити';
+
+  @override
+  String get ng_board_unassigned_done => 'З вибраних карток знято призначення';
+
+  @override
+  String ng_board_assigned_done(String profile) {
+    return 'Призначено @$profile';
+  }
+
+  @override
+  String ng_board_archive_title(String cards) {
+    return 'Архівувати: $cards?';
+  }
+
+  @override
+  String ng_board_archive_body(String board) {
+    return 'Архівовані картки зникнуть із дошки $board. Увімкніть «Архівні», щоб знову їх побачити.';
+  }
+
+  @override
+  String get ng_board_archived_done => 'Вибрані картки архівовано';
+
+  @override
+  String ng_board_delete_title(String cards) {
+    return 'Видалити: $cards?';
+  }
+
+  @override
+  String ng_board_delete_body(String board) {
+    return 'Вибрані картки буде остаточно видалено з дошки $board.';
+  }
+
+  @override
+  String ng_board_deleted(String cards) {
+    return 'Видалено: $cards.';
+  }
+
+  @override
+  String ng_board_partial_failure(String failed, String total, String reason) {
+    return 'Не виконано $failed з $total: $reason';
+  }
+
+  @override
+  String get ng_board_refused => 'відхилено';
+
+  @override
+  String ng_board_dispatched(
+    String spawned,
+    String promoted,
+    String reclaimed,
+  ) {
+    return 'Диспетчеризація: запущено $spawned, просунуто $promoted, повернуто $reclaimed.';
+  }
+
+  @override
+  String ng_board_board_archived(String board) {
+    return 'Дошку $board архівовано';
+  }
+
+  @override
+  String ng_board_board_archived_to(String path) {
+    return 'Архівовано в $path';
+  }
+
+  @override
+  String ng_board_exported(String board, String archive) {
+    return 'Дошку $board експортовано в $archive';
+  }
+
+  @override
+  String ng_board_imported(String board, String warnings) {
+    return 'Дошку $board імпортовано$warnings';
+  }
+
+  @override
+  String ng_board_created(String task) {
+    return 'Створено завдання $task';
+  }
+
+  @override
+  String get ng_board_orchestration_saved => 'Оркестрацію Kanban збережено';
+
+  @override
+  String get ng_board_auto_describe_unavailable => 'Автоопис недоступний';
+
+  @override
+  String ng_board_description_updated(String profile) {
+    return 'Опис @$profile оновлено';
+  }
+
+  @override
+  String ng_board_title(String board) {
+    return 'Kanban · $board';
+  }
+
+  @override
+  String ng_board_active(String count) {
+    return 'активно: $count';
+  }
+
+  @override
+  String get ng_board_dispatch => 'Запустити готові завдання зараз';
+
+  @override
+  String get ng_board_orchestration => 'Оркестрація та виконавці';
+
+  @override
+  String get ng_board_new_task => 'Нове завдання';
+
+  @override
+  String get ng_board_enable_plugin =>
+      'Увімкніть вбудований плагін «kanban» у розділі «Можливості → Плагіни» на цьому шлюзі, щоб активувати його маршрутизатор дошок.';
+
+  @override
+  String get ng_board_filter => 'Фільтр завдань…';
+
+  @override
+  String get ng_board_all_assignees => 'Усі виконавці';
+
+  @override
+  String get ng_board_unassigned => 'Без виконавця';
+
+  @override
+  String get ng_board_running_by_profile => 'Виконується за профілями';
+
+  @override
+  String get ng_board_select => 'Вибрати';
+
+  @override
+  String ng_board_selected_chip(String count) {
+    return 'Вибрано ($count)';
+  }
+
+  @override
+  String get ng_board_locked_column =>
+      'Керована колонка — перетягування вимкнено';
+
+  @override
+  String ng_board_add_to(String column) {
+    return 'Додати до $column';
+  }
+
+  @override
+  String ng_board_collapse(String column) {
+    return 'Згорнути $column';
+  }
+
+  @override
+  String ng_board_column_empty(String column) {
+    return 'Немає завдань у $column';
+  }
+
+  @override
+  String get ng_board_drop_here => 'Перетягніть сюди або + завдання';
+
+  @override
+  String get ng_board_card_actions => 'Дії з карткою';
+
+  @override
+  String get ng_board_open_details => 'Відкрити подробиці';
+
+  @override
+  String get ng_board_select_card => 'Вибрати картку';
+
+  @override
+  String ng_board_move_to(String column) {
+    return 'Перемістити до $column';
+  }
+
+  @override
+  String get ng_board_parked => 'Відкладено';
+
+  @override
+  String ng_board_blocked_by(String count) {
+    return 'Блокують: $count';
+  }
+
+  @override
+  String get ng_board_goal_loop => 'Цільовий цикл';
+
+  @override
+  String ng_board_selected(String count) {
+    return 'Вибрано: $count';
+  }
+
+  @override
+  String get ng_board_move_menu => 'Перемістити…';
+
+  @override
+  String get ng_board_assign_menu => 'Призначити…';
+
+  @override
+  String get ng_board_new_board_title => 'Нова дошка Kanban';
+
+  @override
+  String get ng_board_slug => 'Slug (малі літери, наприклад release-v5)';
+
+  @override
+  String get ng_board_display_name => 'Відображувана назва';
+
+  @override
+  String get ng_board_linked_project => 'Пов’язаний проєкт (необов’язково)';
+
+  @override
+  String get ng_board_none => 'Немає';
+
+  @override
+  String get ng_board_default_workdir =>
+      'Робочий каталог за замовчуванням на хості (необов’язково)';
+
+  @override
+  String get ng_board_import_title => 'Імпорт архіву дошки';
+
+  @override
+  String get ng_board_import_path => 'Шлях до архіву .tar.gz на хості';
+
+  @override
+  String get ng_board_import => 'Імпортувати';
+
+  @override
+  String ng_board_edit_board(String board) {
+    return 'Редагувати $board';
+  }
+
+  @override
+  String get ng_board_name => 'Назва';
+
+  @override
+  String get ng_board_description => 'Опис';
+
+  @override
+  String get ng_board_workdir_clear =>
+      'Робочий каталог за замовчуванням (порожньо — очистити)';
+
+  @override
+  String get ng_board_boards => 'Дошки Kanban';
+
+  @override
+  String get ng_board_new_board => 'Нова дошка';
+
+  @override
+  String get ng_board_search_boards => 'Пошук дошок…';
+
+  @override
+  String get ng_board_unpin => 'Відкріпити вкладку';
+
+  @override
+  String get ng_board_pin => 'Закріпити вкладку';
+
+  @override
+  String ng_board_archive_board_title(String board) {
+    return 'Архівувати дошку $board?';
+  }
+
+  @override
+  String ng_board_archive_board_body(String cards) {
+    return 'Дошка та її картки ($cards) зникнуть зі списку дошок. Шлюз збереже архів на своєму хості.';
+  }
+
+  @override
+  String get ng_board_edit_metadata => 'Редагувати метадані';
+
+  @override
+  String get ng_board_export => 'Експорт .tar.gz на хості';
+
+  @override
+  String get ng_board_move_pin_left => 'Перемістити закріплену вкладку ліворуч';
+
+  @override
+  String get ng_board_archive_board => 'Архівувати дошку';
+
+  @override
+  String get ng_board_new_task_title => 'Нове завдання Kanban';
+
+  @override
+  String get ng_board_title_required => 'Назва *';
+
+  @override
+  String get ng_board_spec => 'Специфікація та критерії приймання';
+
+  @override
+  String get ng_board_estimate => 'Оцінити';
+
+  @override
+  String ng_board_estimate_draft(String complexity, String tokens) {
+    return 'Складність $complexity (~$tokens ток. — лише оцінка токенів, а не вартості в доларах)';
+  }
+
+  @override
+  String get ng_board_estimate_unavailable => 'Оцінка недоступна';
+
+  @override
+  String get ng_board_initial_column => 'Початкова колонка';
+
+  @override
+  String get ng_board_worker_assignee => 'Призначений виконавець';
+
+  @override
+  String get ng_board_parked_unassigned => 'Відкладено (без виконавця)';
+
+  @override
+  String get ng_board_priority => 'Пріоритет';
+
+  @override
+  String get ng_board_workspace => 'Робочий простір';
+
+  @override
+  String get ng_board_scratch => 'Тимчасовий';
+
+  @override
+  String get ng_board_worktree => 'Git worktree';
+
+  @override
+  String get ng_board_shared_dir => 'Спільний каталог';
+
+  @override
+  String get ng_board_workspace_path => 'Шлях до робочого простору на хості';
+
+  @override
+  String get ng_board_parent => 'Батьківська залежність (необов’язково)';
+
+  @override
+  String get ng_board_skills =>
+      'Закріплені навички (через кому, необов’язково)';
+
+  @override
+  String get ng_board_provider_override => 'Перевизначення провайдера';
+
+  @override
+  String get ng_board_model_override => 'Перевизначення моделі';
+
+  @override
+  String get ng_board_reasoning => 'Глибина міркувань';
+
+  @override
+  String get ng_board_profile_default => 'За замовчуванням для профілю';
+
+  @override
+  String get ng_board_xhigh => 'Дуже висока';
+
+  @override
+  String get ng_board_goal_mode => 'Режим цільового циклу';
+
+  @override
+  String get ng_board_goal_turns =>
+      'Макс. кількість ходів циклу (порожньо = за замовчуванням)';
+
+  @override
+  String get ng_board_create_task => 'Створити завдання';
+
+  @override
+  String get ng_board_orchestration_title =>
+      'Оркестрація та профілі виконавців';
+
+  @override
+  String ng_board_orchestrator(String profile) {
+    return 'Профіль оркестратора (фактично: $profile)';
+  }
+
+  @override
+  String get ng_board_inherit_default =>
+      'Успадкувати поточний профіль за замовчуванням';
+
+  @override
+  String ng_board_default_assignee(String profile) {
+    return 'Виконавець за замовчуванням (фактично: $profile)';
+  }
+
+  @override
+  String get ng_board_auto_decompose =>
+      'Автоматично розбивати картки із сортування';
+
+  @override
+  String get ng_board_auto_decompose_help =>
+      'Застосовує налаштовану модель kanban_decomposer до завдань із сортування';
+
+  @override
+  String get ng_board_save_orchestration => 'Зберегти оркестрацію';
+
+  @override
+  String get ng_board_worker_descriptions => 'Описи спеціалізацій виконавців';
+
+  @override
+  String ng_board_worker_label(String profile, String model, String skills) {
+    return '@$profile ($model · $skills)';
+  }
+
+  @override
+  String get ng_board_default_model => 'модель за замовчуванням';
+
+  @override
+  String get ng_board_save_description => 'Зберегти опис';
+
+  @override
+  String get ng_board_auto_describe => 'Автоопис за навичками та персоною';
+
+  @override
+  String get ng_board_manual_block => 'Ручне блокування оператором';
+
+  @override
+  String get ng_board_requested_review => 'Запитано перевірку';
+
+  @override
+  String ng_board_requeue_title(String task) {
+    return 'Повернути $task у чергу?';
+  }
+
+  @override
+  String get ng_board_requeue_body =>
+      'Виконавця, що працює над цією карткою, буде зупинено, а картка повернеться в чергу.';
+
+  @override
+  String get ng_board_requeue => 'Повернути в чергу';
+
+  @override
+  String ng_board_reassign_title(String task, String profile) {
+    return 'Перепризначити $task на @$profile?';
+  }
+
+  @override
+  String get ng_board_reassign_body =>
+      'Ця картка виконується: спершу буде зупинено її виконавця.';
+
+  @override
+  String get ng_board_reassign => 'Перепризначити';
+
+  @override
+  String ng_board_saved_task(String task) {
+    return 'Завдання $task збережено';
+  }
+
+  @override
+  String get ng_board_commented_requeued =>
+      'Коментар опубліковано, завдання повернуто в чергу';
+
+  @override
+  String get ng_board_commented => 'Коментар опубліковано';
+
+  @override
+  String ng_board_requeued(String task) {
+    return 'Завдання $task повернуто в чергу';
+  }
+
+  @override
+  String get ng_board_decompose_failed => 'Не вдалося розбити завдання.';
+
+  @override
+  String ng_board_decompose_failed_reason(String reason) {
+    return 'Не вдалося розбити завдання: $reason';
+  }
+
+  @override
+  String ng_board_decomposed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Розбито на $count дочірнього завдання',
+      many: 'Розбито на $count дочірніх завдань',
+      few: 'Розбито на $count дочірні завдання',
+      one: 'Розбито на $count дочірнє завдання',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_board_no_children => 'Дочірні завдання не створено.';
+
+  @override
+  String ng_board_no_children_reason(String reason) {
+    return 'Дочірні завдання не створено: $reason';
+  }
+
+  @override
+  String ng_board_uploaded(String file) {
+    return 'Файл $file завантажено';
+  }
+
+  @override
+  String ng_board_linked_parent(String task) {
+    return 'Батьківське завдання $task пов’язано';
+  }
+
+  @override
+  String ng_board_unlinked_parent(String task) {
+    return 'Зв’язок із батьківським завданням $task видалено';
+  }
+
+  @override
+  String get ng_board_task_load_failed => 'Не вдалося завантажити завдання';
+
+  @override
+  String get ng_board_refresh_task => 'Оновити завдання';
+
+  @override
+  String get ng_board_tab_overview => 'Огляд';
+
+  @override
+  String get ng_board_tab_comments => 'Коментарі та посилання';
+
+  @override
+  String get ng_board_tab_runs => 'Запуски та журнал';
+
+  @override
+  String get ng_board_tab_events => 'Події';
+
+  @override
+  String get ng_board_decompose => 'Розбити';
+
+  @override
+  String get ng_board_attach => 'Прикріпити файл';
+
+  @override
+  String ng_board_estimate_task(
+    String complexity,
+    String tokens,
+    String rationale,
+  ) {
+    return 'Оцінка: $complexity · ~$tokens токенів ($rationale) — це не оцінка вартості в доларах.';
+  }
+
+  @override
+  String get ng_board_no_rationale => 'без обґрунтування';
+
+  @override
+  String get ng_board_status => 'Статус';
+
+  @override
+  String get ng_board_assignee => 'Виконавець';
+
+  @override
+  String get ng_board_title_label => 'Назва';
+
+  @override
+  String get ng_board_body => 'Текст / специфікація';
+
+  @override
+  String get ng_board_save_changes => 'Зберегти зміни';
+
+  @override
+  String get ng_board_clear_model => 'Скинути перевизначення моделі';
+
+  @override
+  String ng_board_blocked_reason(String reason) {
+    return 'Причина блокування: $reason';
+  }
+
+  @override
+  String ng_board_result(String result) {
+    return 'Результат: $result';
+  }
+
+  @override
+  String ng_board_parents(String count) {
+    return 'Блокується (батьківські · $count)';
+  }
+
+  @override
+  String get ng_board_add_parent => '+ Додати батьківське';
+
+  @override
+  String ng_board_children(String count) {
+    return 'Блокує (дочірні · $count)';
+  }
+
+  @override
+  String ng_board_attachments(String count) {
+    return 'Вкладення ($count)';
+  }
+
+  @override
+  String get ng_board_worker => 'виконавець';
+
+  @override
+  String ng_board_comments(String count) {
+    return 'Коментарі ($count)';
+  }
+
+  @override
+  String get ng_board_comment_hint => 'Додати коментар / вказівки виконавцю';
+
+  @override
+  String get ng_board_post_comment => 'Опублікувати коментар';
+
+  @override
+  String get ng_board_comment_requeue => 'Коментувати й повернути в чергу';
+
+  @override
+  String ng_board_runs(String count) {
+    return 'Запуски ($count)';
+  }
+
+  @override
+  String get ng_board_no_runs => 'Запусків виконавців поки немає.';
+
+  @override
+  String ng_board_run_error(String error) {
+    return 'Помилка: $error';
+  }
+
+  @override
+  String ng_board_log_tail_truncated(String bytes) {
+    return 'Кінець журналу виконавця ($bytes Б, обрізано)';
+  }
+
+  @override
+  String ng_board_log_tail(String bytes) {
+    return 'Кінець журналу виконавця ($bytes Б)';
+  }
+
+  @override
+  String get ng_board_refresh_log => 'Оновити журнал';
+
+  @override
+  String get ng_board_no_log => 'Журнал виконавця порожній.';
+
+  @override
+  String get ng_board_no_events => 'Подій не зареєстровано.';
+
+  @override
+  String get ng_bots_room_unknown => 'невідомо';
+
+  @override
+  String get ng_bots_room_blocked => 'заблоковано';
+
+  @override
+  String get ng_bots_room_working => 'працює';
+
+  @override
+  String get ng_bots_room_running => 'запущено';
+
+  @override
+  String get ng_bots_room_idle => 'простоює';
+
+  @override
+  String ng_board_run_title(String id, String profile, String outcome) {
+    return 'Запуск №$id · @$profile · $outcome';
+  }
 }

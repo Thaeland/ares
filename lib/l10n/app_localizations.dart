@@ -12500,6 +12500,2092 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The connection changed. Reopen this chat to see live card status.'**
   String get ng_kanban_block_stale;
+
+  /// No description provided for @ng_bots_tab_roster.
+  ///
+  /// In en, this message translates to:
+  /// **'Roster'**
+  String get ng_bots_tab_roster;
+
+  /// No description provided for @ng_bots_tab_rooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooms'**
+  String get ng_bots_tab_rooms;
+
+  /// No description provided for @ng_bots_tab_screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen'**
+  String get ng_bots_tab_screen;
+
+  /// No description provided for @ng_bots_tab_routines.
+  ///
+  /// In en, this message translates to:
+  /// **'Routines'**
+  String get ng_bots_tab_routines;
+
+  /// No description provided for @ng_bots_rooms_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load rooms: {error}'**
+  String ng_bots_rooms_load_failed(String error);
+
+  /// No description provided for @ng_bots_routines_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load routines: {error}'**
+  String ng_bots_routines_load_failed(String error);
+
+  /// No description provided for @ng_bots_desktop_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Bot Desktop: {error}'**
+  String ng_bots_desktop_failed(String error);
+
+  /// No description provided for @ng_bots_install_not_started.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not start the install.'**
+  String get ng_bots_install_not_started;
+
+  /// No description provided for @ng_bots_install_failed_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Install failed: {error}'**
+  String ng_bots_install_failed_error(String error);
+
+  /// No description provided for @ng_bots_install_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'The install was cancelled.'**
+  String get ng_bots_install_cancelled;
+
+  /// No description provided for @ng_bots_install_no_sudo.
+  ///
+  /// In en, this message translates to:
+  /// **'sudo is not available on the gateway host. Run the command above there, then refresh.'**
+  String get ng_bots_install_no_sudo;
+
+  /// No description provided for @ng_bots_install_exit_code.
+  ///
+  /// In en, this message translates to:
+  /// **'The install failed (exit code {code}).'**
+  String ng_bots_install_exit_code(String code);
+
+  /// No description provided for @ng_bots_install_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Bot Desktop installed for {bot}'**
+  String ng_bots_install_done(String bot);
+
+  /// No description provided for @ng_bots_start_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Start failed'**
+  String get ng_bots_start_failed;
+
+  /// No description provided for @ng_bots_stop_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Bot Desktop for {bot}?'**
+  String ng_bots_stop_title(String bot);
+
+  /// No description provided for @ng_bots_stop_human_held.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone is controlling this screen. Stopping it ends their session and closes everything open on it.'**
+  String get ng_bots_stop_human_held;
+
+  /// No description provided for @ng_bots_stop_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything open on the bot’s screen is closed.'**
+  String get ng_bots_stop_body;
+
+  /// No description provided for @ng_bots_stop_refused.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop refused'**
+  String get ng_bots_stop_refused;
+
+  /// No description provided for @ng_bots_take_over_reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Take over from Ares'**
+  String get ng_bots_take_over_reason;
+
+  /// No description provided for @ng_bots_take_over_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Take over failed: {error}'**
+  String ng_bots_take_over_failed(String error);
+
+  /// No description provided for @ng_bots_force_hand_back_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Give {bot}’s screen back to the bot?'**
+  String ng_bots_force_hand_back_title(String bot);
+
+  /// No description provided for @ng_bots_force_hand_back_body.
+  ///
+  /// In en, this message translates to:
+  /// **'A person is holding this screen. If they are still using it, they lose control.'**
+  String get ng_bots_force_hand_back_body;
+
+  /// No description provided for @ng_bots_hand_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Hand back'**
+  String get ng_bots_hand_back;
+
+  /// No description provided for @ng_bots_hand_back_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Hand back failed'**
+  String get ng_bots_hand_back_failed;
+
+  /// No description provided for @ng_bots_adopt_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Adopt the new sandbox image?'**
+  String get ng_bots_adopt_title;
+
+  /// No description provided for @ng_bots_adopt_body.
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} moves from {current} to {target}. Its container is recreated on the next terminal call; anything kept only in the current container is lost.'**
+  String ng_bots_adopt_body(String bot, String current, String target);
+
+  /// No description provided for @ng_bots_adopt_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Adopt image'**
+  String get ng_bots_adopt_image;
+
+  /// No description provided for @ng_bots_image_switch_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Image switch failed'**
+  String get ng_bots_image_switch_failed;
+
+  /// No description provided for @ng_bots_keep_refused.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep refused'**
+  String get ng_bots_keep_refused;
+
+  /// No description provided for @ng_bots_chat_open_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open Bot Chat: {error}'**
+  String ng_bots_chat_open_failed(String error);
+
+  /// No description provided for @ng_bots_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots · {connection}'**
+  String ng_bots_title(String connection);
+
+  /// No description provided for @ng_bots_protocol_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway injects the teammate-messaging protocol itself — no extra SOUL.md protocol is sent.'**
+  String get ng_bots_protocol_tooltip;
+
+  /// No description provided for @ng_bots_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots unavailable ({reason})'**
+  String ng_bots_unavailable(String reason);
+
+  /// No description provided for @ng_bots_account_changed.
+  ///
+  /// In en, this message translates to:
+  /// **'The account changed. Reconnect or refresh.'**
+  String get ng_bots_account_changed;
+
+  /// No description provided for @ng_bots_try_refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Try refreshing. If it persists, the gateway may not support bots.'**
+  String get ng_bots_try_refresh;
+
+  /// No description provided for @ng_bots_search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search bots'**
+  String get ng_bots_search;
+
+  /// No description provided for @ng_bots_none_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No bots found.'**
+  String get ng_bots_none_found;
+
+  /// No description provided for @ng_bots_no_model.
+  ///
+  /// In en, this message translates to:
+  /// **'no model'**
+  String get ng_bots_no_model;
+
+  /// No description provided for @ng_bots_skill_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 skill} other{{count} skills}}'**
+  String ng_bots_skill_count(int count);
+
+  /// No description provided for @ng_bots_bot_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Bot Chat'**
+  String get ng_bots_bot_chat;
+
+  /// No description provided for @ng_bots_install_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway reports install id {id} · bot_mode_protocol: {protocol}'**
+  String ng_bots_install_id(String id, String protocol);
+
+  /// No description provided for @ng_bots_protocol_note.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway injects the teammate-messaging protocol when bot_mode_protocol is set. Handle: default→hermes, otherwise the profile name.'**
+  String get ng_bots_protocol_note;
+
+  /// No description provided for @ng_bots_no_rooms.
+  ///
+  /// In en, this message translates to:
+  /// **'No rooms yet. Create one from your roster.'**
+  String get ng_bots_no_rooms;
+
+  /// No description provided for @ng_bots_member_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 member} other{{count} members}}'**
+  String ng_bots_member_count(int count);
+
+  /// No description provided for @ng_bots_room_disbanded.
+  ///
+  /// In en, this message translates to:
+  /// **'disbanded'**
+  String get ng_bots_room_disbanded;
+
+  /// No description provided for @ng_bots_room_adopted.
+  ///
+  /// In en, this message translates to:
+  /// **'adopted'**
+  String get ng_bots_room_adopted;
+
+  /// No description provided for @ng_bots_rooms_gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway rooms'**
+  String get ng_bots_rooms_gateway;
+
+  /// No description provided for @ng_bots_rooms_desktop.
+  ///
+  /// In en, this message translates to:
+  /// **'Desktop-driven rooms'**
+  String get ng_bots_rooms_desktop;
+
+  /// No description provided for @ng_bots_rooms_gateway_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooms are owned by the gateway. Methods: {methods}.'**
+  String ng_bots_rooms_gateway_body(String methods);
+
+  /// No description provided for @ng_bots_rooms_no_seat.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooms may not be seated by this gateway (persistent process required).'**
+  String get ng_bots_rooms_no_seat;
+
+  /// No description provided for @ng_bots_rooms_fallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic fallback: the Desktop drives the group rounds (not newly created here).'**
+  String get ng_bots_rooms_fallback;
+
+  /// No description provided for @ng_bots_create_room.
+  ///
+  /// In en, this message translates to:
+  /// **'Create room'**
+  String get ng_bots_create_room;
+
+  /// No description provided for @ng_bots_refresh_rooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh rooms'**
+  String get ng_bots_refresh_rooms;
+
+  /// No description provided for @ng_bots_room_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Room created'**
+  String get ng_bots_room_created;
+
+  /// No description provided for @ng_bots_room_refused.
+  ///
+  /// In en, this message translates to:
+  /// **'Room creation refused ({reason})'**
+  String ng_bots_room_refused(String reason);
+
+  /// No description provided for @ng_bots_room_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Room creation failed: {error}'**
+  String ng_bots_room_failed(String error);
+
+  /// No description provided for @ng_bots_bot.
+  ///
+  /// In en, this message translates to:
+  /// **'Bot'**
+  String get ng_bots_bot;
+
+  /// No description provided for @ng_bots_screen_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen status unavailable'**
+  String get ng_bots_screen_unavailable;
+
+  /// No description provided for @ng_bots_screen_unavailable_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the bot’s screen to watch its thumbnail, or take over to use it yourself.'**
+  String get ng_bots_screen_unavailable_body;
+
+  /// No description provided for @ng_bots_take_over_note.
+  ///
+  /// In en, this message translates to:
+  /// **'Take over opens the live screen and gives you control of it. Control goes back to the bot when you close the live screen, leave this page or put the app in the background.'**
+  String get ng_bots_take_over_note;
+
+  /// No description provided for @ng_bots_not_installed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not installed'**
+  String get ng_bots_not_installed;
+
+  /// No description provided for @ng_bots_unsupported_host.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported host'**
+  String get ng_bots_unsupported_host;
+
+  /// No description provided for @ng_bots_pid.
+  ///
+  /// In en, this message translates to:
+  /// **'pid {pid}'**
+  String ng_bots_pid(String pid);
+
+  /// No description provided for @ng_bots_missing.
+  ///
+  /// In en, this message translates to:
+  /// **'missing: {items}'**
+  String ng_bots_missing(String items);
+
+  /// No description provided for @ng_bots_blocked.
+  ///
+  /// In en, this message translates to:
+  /// **'blocked: {reason}'**
+  String ng_bots_blocked(String reason);
+
+  /// No description provided for @ng_bots_no_switch.
+  ///
+  /// In en, this message translates to:
+  /// **'No sandbox image switch is pending.'**
+  String get ng_bots_no_switch;
+
+  /// No description provided for @ng_bots_switch_image.
+  ///
+  /// In en, this message translates to:
+  /// **'switch image: {current} → {target}'**
+  String ng_bots_switch_image(String current, String target);
+
+  /// No description provided for @ng_bots_bot_in_control.
+  ///
+  /// In en, this message translates to:
+  /// **'the bot is in control'**
+  String get ng_bots_bot_in_control;
+
+  /// No description provided for @ng_bots_person_in_control.
+  ///
+  /// In en, this message translates to:
+  /// **'a person is in control'**
+  String get ng_bots_person_in_control;
+
+  /// No description provided for @ng_bots_installing.
+  ///
+  /// In en, this message translates to:
+  /// **'Installing Bot Desktop on the gateway host…'**
+  String get ng_bots_installing;
+
+  /// No description provided for @ng_bots_install_unfinished.
+  ///
+  /// In en, this message translates to:
+  /// **'The install did not finish'**
+  String get ng_bots_install_unfinished;
+
+  /// No description provided for @ng_bots_install.
+  ///
+  /// In en, this message translates to:
+  /// **'Install'**
+  String get ng_bots_install;
+
+  /// No description provided for @ng_bots_start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get ng_bots_start;
+
+  /// No description provided for @ng_bots_take_over.
+  ///
+  /// In en, this message translates to:
+  /// **'Take over'**
+  String get ng_bots_take_over;
+
+  /// No description provided for @ng_bots_keep_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep current image'**
+  String get ng_bots_keep_image;
+
+  /// No description provided for @ng_bots_missing_pieces.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway reported missing pieces: {items}'**
+  String ng_bots_missing_pieces(String items);
+
+  /// No description provided for @ng_bots_install_missing.
+  ///
+  /// In en, this message translates to:
+  /// **'Install missing pieces'**
+  String get ng_bots_install_missing;
+
+  /// No description provided for @ng_bots_thumbnail_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Thumbnail unavailable'**
+  String get ng_bots_thumbnail_unavailable;
+
+  /// No description provided for @ng_bots_thumbnail_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen thumbnail (live)'**
+  String get ng_bots_thumbnail_title;
+
+  /// No description provided for @ng_bots_thumbnail_suppressed.
+  ///
+  /// In en, this message translates to:
+  /// **'Thumbnail suppressed while the screen is human-held.'**
+  String get ng_bots_thumbnail_suppressed;
+
+  /// No description provided for @ng_bots_thumbnail_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Thumbnail not available yet.'**
+  String get ng_bots_thumbnail_pending;
+
+  /// No description provided for @ng_bots_routines_of.
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} · routines'**
+  String ng_bots_routines_of(String bot);
+
+  /// No description provided for @ng_bots_add_routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Add routine'**
+  String get ng_bots_add_routine;
+
+  /// No description provided for @ng_bots_no_routines.
+  ///
+  /// In en, this message translates to:
+  /// **'No routines for this bot.'**
+  String get ng_bots_no_routines;
+
+  /// No description provided for @ng_bots_routines_note.
+  ///
+  /// In en, this message translates to:
+  /// **'Routines are [bot:<name>]-tagged jobs owned by the bot’s profile store. Legacy delegated routines are force-paused on load.'**
+  String get ng_bots_routines_note;
+
+  /// No description provided for @ng_bots_routine_last.
+  ///
+  /// In en, this message translates to:
+  /// **'last: {status}'**
+  String ng_bots_routine_last(String status);
+
+  /// No description provided for @ng_bots_routine_next.
+  ///
+  /// In en, this message translates to:
+  /// **'next: {time}'**
+  String ng_bots_routine_next(String time);
+
+  /// No description provided for @ng_bots_routine_error.
+  ///
+  /// In en, this message translates to:
+  /// **'error: {error}'**
+  String ng_bots_routine_error(String error);
+
+  /// No description provided for @ng_bots_remove_routine_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove routine {routine}?'**
+  String ng_bots_remove_routine_title(String routine);
+
+  /// No description provided for @ng_bots_remove_routine_body.
+  ///
+  /// In en, this message translates to:
+  /// **'The routine is deleted from {bot}’s schedule. This cannot be undone.'**
+  String ng_bots_remove_routine_body(String bot);
+
+  /// No description provided for @ng_bots_routine_action_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'{action} failed: {error}'**
+  String ng_bots_routine_action_failed(String action, String error);
+
+  /// No description provided for @ng_bots_not_connected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected.'**
+  String get ng_bots_not_connected;
+
+  /// No description provided for @ng_bots_add_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Add failed: {error}'**
+  String ng_bots_add_failed(String error);
+
+  /// No description provided for @ng_bots_routine_added.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine added'**
+  String get ng_bots_routine_added;
+
+  /// No description provided for @ng_bots_routine_enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'enabled'**
+  String get ng_bots_routine_enabled;
+
+  /// No description provided for @ng_bots_routine_paused.
+  ///
+  /// In en, this message translates to:
+  /// **'paused'**
+  String get ng_bots_routine_paused;
+
+  /// No description provided for @ng_bots_path.
+  ///
+  /// In en, this message translates to:
+  /// **'Path: {path}'**
+  String ng_bots_path(String path);
+
+  /// No description provided for @ng_bots_chat_present.
+  ///
+  /// In en, this message translates to:
+  /// **'Bot Chat present'**
+  String get ng_bots_chat_present;
+
+  /// No description provided for @ng_bots_chat_missing.
+  ///
+  /// In en, this message translates to:
+  /// **'Bot Chat missing'**
+  String get ng_bots_chat_missing;
+
+  /// No description provided for @ng_bots_last_session.
+  ///
+  /// In en, this message translates to:
+  /// **'Last session: {preview}'**
+  String ng_bots_last_session(String preview);
+
+  /// No description provided for @ng_bots_open_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Bot Chat'**
+  String get ng_bots_open_chat;
+
+  /// No description provided for @ng_bots_desktop.
+  ///
+  /// In en, this message translates to:
+  /// **'Bot Desktop'**
+  String get ng_bots_desktop;
+
+  /// No description provided for @ng_bots_room_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Room name'**
+  String get ng_bots_room_name;
+
+  /// No description provided for @ng_bots_select_member.
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least one member.'**
+  String get ng_bots_select_member;
+
+  /// No description provided for @ng_bots_sudo_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Administrator password'**
+  String get ng_bots_sudo_title;
+
+  /// No description provided for @ng_bots_sudo_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Installing Bot Desktop for {bot} needs sudo on the gateway host. The password is sent only to that gateway, for this install, and is not saved.'**
+  String ng_bots_sudo_body(String bot);
+
+  /// No description provided for @ng_bots_sudo_password.
+  ///
+  /// In en, this message translates to:
+  /// **'sudo password'**
+  String get ng_bots_sudo_password;
+
+  /// No description provided for @ng_bots_new_routine.
+  ///
+  /// In en, this message translates to:
+  /// **'New routine'**
+  String get ng_bots_new_routine;
+
+  /// No description provided for @ng_bots_routine_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get ng_bots_routine_title;
+
+  /// No description provided for @ng_bots_routine_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Instruction'**
+  String get ng_bots_routine_instruction;
+
+  /// No description provided for @ng_bots_cron.
+  ///
+  /// In en, this message translates to:
+  /// **'Cron expression'**
+  String get ng_bots_cron;
+
+  /// No description provided for @ng_bots_interval.
+  ///
+  /// In en, this message translates to:
+  /// **'Interval'**
+  String get ng_bots_interval;
+
+  /// No description provided for @ng_bots_cron_help.
+  ///
+  /// In en, this message translates to:
+  /// **'0 9 * * * runs every day at 09:00'**
+  String get ng_bots_cron_help;
+
+  /// No description provided for @ng_bots_every.
+  ///
+  /// In en, this message translates to:
+  /// **'Every'**
+  String get ng_bots_every;
+
+  /// No description provided for @ng_bots_unit_minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'minutes'**
+  String get ng_bots_unit_minutes;
+
+  /// No description provided for @ng_bots_unit_hours.
+  ///
+  /// In en, this message translates to:
+  /// **'hours'**
+  String get ng_bots_unit_hours;
+
+  /// No description provided for @ng_bots_unit_days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get ng_bots_unit_days;
+
+  /// No description provided for @ng_bots_stop_after.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop after (runs)'**
+  String get ng_bots_stop_after;
+
+  /// No description provided for @ng_bots_stop_after_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave blank to keep running'**
+  String get ng_bots_stop_after_help;
+
+  /// No description provided for @ng_bots_send_results.
+  ///
+  /// In en, this message translates to:
+  /// **'Send results to'**
+  String get ng_bots_send_results;
+
+  /// No description provided for @ng_bots_run_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Run history only'**
+  String get ng_bots_run_history;
+
+  /// No description provided for @ng_bots_continuity.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue from the previous run'**
+  String get ng_bots_continuity;
+
+  /// No description provided for @ng_bots_account_changed_refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Account changed. Refresh before continuing.'**
+  String get ng_bots_account_changed_refresh;
+
+  /// No description provided for @ng_bots_room_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load room: {error}'**
+  String ng_bots_room_load_failed(String error);
+
+  /// No description provided for @ng_bots_send_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Send failed: {error}'**
+  String ng_bots_send_failed(String error);
+
+  /// No description provided for @ng_bots_stop_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop failed: {error}'**
+  String ng_bots_stop_failed(String error);
+
+  /// No description provided for @ng_bots_stop_room.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop room'**
+  String get ng_bots_stop_room;
+
+  /// No description provided for @ng_bots_send_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a message'**
+  String get ng_bots_send_message;
+
+  /// No description provided for @ng_bots_room_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Message the room (mention members with @handle)'**
+  String get ng_bots_room_hint;
+
+  /// No description provided for @ng_bots_history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get ng_bots_history;
+
+  /// No description provided for @ng_bots_revision.
+  ///
+  /// In en, this message translates to:
+  /// **'revision {revision}'**
+  String ng_bots_revision(String revision);
+
+  /// No description provided for @ng_bots_last_error.
+  ///
+  /// In en, this message translates to:
+  /// **'last error: {error}'**
+  String ng_bots_last_error(String error);
+
+  /// No description provided for @ng_bots_members.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get ng_bots_members;
+
+  /// No description provided for @ng_bots_room_context.
+  ///
+  /// In en, this message translates to:
+  /// **'Room context'**
+  String get ng_bots_room_context;
+
+  /// No description provided for @ng_bots_purpose.
+  ///
+  /// In en, this message translates to:
+  /// **'Purpose: {purpose}'**
+  String ng_bots_purpose(String purpose);
+
+  /// No description provided for @ng_bots_notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes: {notes}'**
+  String ng_bots_notes(String notes);
+
+  /// No description provided for @ng_bots_routing.
+  ///
+  /// In en, this message translates to:
+  /// **'Routing: {routing}'**
+  String ng_bots_routing(String routing);
+
+  /// No description provided for @ng_bots_lead.
+  ///
+  /// In en, this message translates to:
+  /// **'lead {member}'**
+  String ng_bots_lead(String member);
+
+  /// No description provided for @ng_bots_viewer_you_control.
+  ///
+  /// In en, this message translates to:
+  /// **'You control this screen. The bot waits until you hand it back.'**
+  String get ng_bots_viewer_you_control;
+
+  /// No description provided for @ng_bots_viewer_handed_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Control is back with the bot.'**
+  String get ng_bots_viewer_handed_back;
+
+  /// No description provided for @ng_bots_viewer_background.
+  ///
+  /// In en, this message translates to:
+  /// **'Control went back to the bot because the app left the foreground.'**
+  String get ng_bots_viewer_background;
+
+  /// No description provided for @ng_bots_viewer_taken.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone else took control of this screen.'**
+  String get ng_bots_viewer_taken;
+
+  /// No description provided for @ng_bots_viewer_lost.
+  ///
+  /// In en, this message translates to:
+  /// **'The live view was lost, so control went back to the bot.'**
+  String get ng_bots_viewer_lost;
+
+  /// No description provided for @ng_bots_viewer_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Bot Desktop · {bot}'**
+  String ng_bots_viewer_title(String bot);
+
+  /// No description provided for @ng_bots_viewer_type_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type on the bot’s screen'**
+  String get ng_bots_viewer_type_hint;
+
+  /// No description provided for @ng_bots_viewer_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type it'**
+  String get ng_bots_viewer_type;
+
+  /// No description provided for @ng_bots_viewer_enter.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter'**
+  String get ng_bots_viewer_enter;
+
+  /// No description provided for @ng_bots_viewer_backspace.
+  ///
+  /// In en, this message translates to:
+  /// **'Backspace'**
+  String get ng_bots_viewer_backspace;
+
+  /// No description provided for @ng_more_kanban.
+  ///
+  /// In en, this message translates to:
+  /// **'Kanban'**
+  String get ng_more_kanban;
+
+  /// No description provided for @ng_more_kanban_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Boards, task dependencies, worker assignment and logs'**
+  String get ng_more_kanban_subtitle;
+
+  /// No description provided for @ng_more_bots.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots'**
+  String get ng_more_bots;
+
+  /// No description provided for @ng_more_bots_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Roster, rooms, routines and Bot Desktop'**
+  String get ng_more_bots_subtitle;
+
+  /// No description provided for @ng_slash_kanban.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the Kanban board'**
+  String get ng_slash_kanban;
+
+  /// No description provided for @ng_slash_bots.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your bots'**
+  String get ng_slash_bots;
+
+  /// No description provided for @ng_board_card_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 card} other{{count} cards}}'**
+  String ng_board_card_count(int count);
+
+  /// No description provided for @ng_board_event_toast.
+  ///
+  /// In en, this message translates to:
+  /// **'Kanban {task}: {event}'**
+  String ng_board_event_toast(String task, String event);
+
+  /// No description provided for @ng_board_task.
+  ///
+  /// In en, this message translates to:
+  /// **'task'**
+  String get ng_board_task;
+
+  /// No description provided for @ng_board_refused_http.
+  ///
+  /// In en, this message translates to:
+  /// **'Action refused (HTTP {status}).'**
+  String ng_board_refused_http(String status);
+
+  /// No description provided for @ng_board_err_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Kanban plugin is not enabled on this gateway.'**
+  String get ng_board_err_unsupported;
+
+  /// No description provided for @ng_board_err_denied.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in or permission required on this gateway.'**
+  String get ng_board_err_denied;
+
+  /// No description provided for @ng_board_err_stale.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway owner changed. Refresh before continuing.'**
+  String get ng_board_err_stale;
+
+  /// No description provided for @ng_board_err_insecure.
+  ///
+  /// In en, this message translates to:
+  /// **'HTTPS (or loopback) is required for Kanban workspace operations.'**
+  String get ng_board_err_insecure;
+
+  /// No description provided for @ng_board_err_unreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not reach the Kanban service on this gateway.'**
+  String get ng_board_err_unreachable;
+
+  /// No description provided for @ng_board_err_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation failed. Refresh and try again.'**
+  String get ng_board_err_failed;
+
+  /// No description provided for @ng_board_block_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Block {task}'**
+  String ng_board_block_title(String task);
+
+  /// No description provided for @ng_board_block_reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocker reason'**
+  String get ng_board_block_reason;
+
+  /// No description provided for @ng_board_block_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'What is blocking this card?'**
+  String get ng_board_block_hint;
+
+  /// No description provided for @ng_board_review_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Request review for {task}'**
+  String ng_board_review_title(String task);
+
+  /// No description provided for @ng_board_review_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Review summary'**
+  String get ng_board_review_summary;
+
+  /// No description provided for @ng_board_review_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'What was implemented and verified?'**
+  String get ng_board_review_hint;
+
+  /// No description provided for @ng_board_move_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Move {cards} to {column}?'**
+  String ng_board_move_title(String cards, String column);
+
+  /// No description provided for @ng_board_move_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Every selected card on {board} changes column. A card that is running stops running.'**
+  String ng_board_move_body(String board);
+
+  /// No description provided for @ng_board_move.
+  ///
+  /// In en, this message translates to:
+  /// **'Move'**
+  String get ng_board_move;
+
+  /// No description provided for @ng_board_moved.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved cards to {column}'**
+  String ng_board_moved(String column);
+
+  /// No description provided for @ng_board_unassign_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Unassign {cards}?'**
+  String ng_board_unassign_title(String cards);
+
+  /// No description provided for @ng_board_assign_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign {cards} to @{profile}?'**
+  String ng_board_assign_title(String cards, String profile);
+
+  /// No description provided for @ng_board_assign_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Cards that are running are reclaimed first: their workers are stopped.'**
+  String get ng_board_assign_body;
+
+  /// No description provided for @ng_board_unassign.
+  ///
+  /// In en, this message translates to:
+  /// **'Unassign'**
+  String get ng_board_unassign;
+
+  /// No description provided for @ng_board_assign.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign'**
+  String get ng_board_assign;
+
+  /// No description provided for @ng_board_unassigned_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Unassigned selected cards'**
+  String get ng_board_unassigned_done;
+
+  /// No description provided for @ng_board_assigned_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned @{profile}'**
+  String ng_board_assigned_done(String profile);
+
+  /// No description provided for @ng_board_archive_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive {cards}?'**
+  String ng_board_archive_title(String cards);
+
+  /// No description provided for @ng_board_archive_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived cards leave {board}. Turn on Archived to see them again.'**
+  String ng_board_archive_body(String board);
+
+  /// No description provided for @ng_board_archived_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived selected cards'**
+  String get ng_board_archived_done;
+
+  /// No description provided for @ng_board_delete_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {cards}?'**
+  String ng_board_delete_title(String cards);
+
+  /// No description provided for @ng_board_delete_body.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently deletes the selected cards from {board}.'**
+  String ng_board_delete_body(String board);
+
+  /// No description provided for @ng_board_deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {cards}.'**
+  String ng_board_deleted(String cards);
+
+  /// No description provided for @ng_board_partial_failure.
+  ///
+  /// In en, this message translates to:
+  /// **'{failed} of {total} failed: {reason}'**
+  String ng_board_partial_failure(String failed, String total, String reason);
+
+  /// No description provided for @ng_board_refused.
+  ///
+  /// In en, this message translates to:
+  /// **'refused'**
+  String get ng_board_refused;
+
+  /// No description provided for @ng_board_dispatched.
+  ///
+  /// In en, this message translates to:
+  /// **'Dispatched: {spawned} spawned, {promoted} promoted, {reclaimed} reclaimed.'**
+  String ng_board_dispatched(String spawned, String promoted, String reclaimed);
+
+  /// No description provided for @ng_board_board_archived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived board {board}'**
+  String ng_board_board_archived(String board);
+
+  /// No description provided for @ng_board_board_archived_to.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived to {path}'**
+  String ng_board_board_archived_to(String path);
+
+  /// No description provided for @ng_board_exported.
+  ///
+  /// In en, this message translates to:
+  /// **'Exported {board} to {archive}'**
+  String ng_board_exported(String board, String archive);
+
+  /// No description provided for @ng_board_imported.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported board {board}{warnings}'**
+  String ng_board_imported(String board, String warnings);
+
+  /// No description provided for @ng_board_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {task}'**
+  String ng_board_created(String task);
+
+  /// No description provided for @ng_board_orchestration_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Kanban orchestration'**
+  String get ng_board_orchestration_saved;
+
+  /// No description provided for @ng_board_auto_describe_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-describe unavailable'**
+  String get ng_board_auto_describe_unavailable;
+
+  /// No description provided for @ng_board_description_updated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated @{profile} description'**
+  String ng_board_description_updated(String profile);
+
+  /// No description provided for @ng_board_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Kanban · {board}'**
+  String ng_board_title(String board);
+
+  /// No description provided for @ng_board_active.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} active'**
+  String ng_board_active(String count);
+
+  /// No description provided for @ng_board_dispatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Dispatch ready tasks now'**
+  String get ng_board_dispatch;
+
+  /// No description provided for @ng_board_orchestration.
+  ///
+  /// In en, this message translates to:
+  /// **'Orchestration & workers'**
+  String get ng_board_orchestration;
+
+  /// No description provided for @ng_board_new_task.
+  ///
+  /// In en, this message translates to:
+  /// **'New task'**
+  String get ng_board_new_task;
+
+  /// No description provided for @ng_board_enable_plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable the bundled \"kanban\" plugin in Capabilities → Plugins on this gateway to activate its board router.'**
+  String get ng_board_enable_plugin;
+
+  /// No description provided for @ng_board_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter tasks…'**
+  String get ng_board_filter;
+
+  /// No description provided for @ng_board_all_assignees.
+  ///
+  /// In en, this message translates to:
+  /// **'All assignees'**
+  String get ng_board_all_assignees;
+
+  /// No description provided for @ng_board_unassigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Unassigned'**
+  String get ng_board_unassigned;
+
+  /// No description provided for @ng_board_running_by_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Running by profile'**
+  String get ng_board_running_by_profile;
+
+  /// No description provided for @ng_board_select.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get ng_board_select;
+
+  /// No description provided for @ng_board_selected_chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected ({count})'**
+  String ng_board_selected_chip(String count);
+
+  /// No description provided for @ng_board_locked_column.
+  ///
+  /// In en, this message translates to:
+  /// **'Managed column — drag drop disabled'**
+  String get ng_board_locked_column;
+
+  /// No description provided for @ng_board_add_to.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to {column}'**
+  String ng_board_add_to(String column);
+
+  /// No description provided for @ng_board_collapse.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse {column}'**
+  String ng_board_collapse(String column);
+
+  /// No description provided for @ng_board_column_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No {column} tasks'**
+  String ng_board_column_empty(String column);
+
+  /// No description provided for @ng_board_drop_here.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop or + task'**
+  String get ng_board_drop_here;
+
+  /// No description provided for @ng_board_card_actions.
+  ///
+  /// In en, this message translates to:
+  /// **'Card actions'**
+  String get ng_board_card_actions;
+
+  /// No description provided for @ng_board_open_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Open details'**
+  String get ng_board_open_details;
+
+  /// No description provided for @ng_board_select_card.
+  ///
+  /// In en, this message translates to:
+  /// **'Select card'**
+  String get ng_board_select_card;
+
+  /// No description provided for @ng_board_move_to.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to {column}'**
+  String ng_board_move_to(String column);
+
+  /// No description provided for @ng_board_parked.
+  ///
+  /// In en, this message translates to:
+  /// **'Parked'**
+  String get ng_board_parked;
+
+  /// No description provided for @ng_board_blocked_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked by {count}'**
+  String ng_board_blocked_by(String count);
+
+  /// No description provided for @ng_board_goal_loop.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal loop'**
+  String get ng_board_goal_loop;
+
+  /// No description provided for @ng_board_selected.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String ng_board_selected(String count);
+
+  /// No description provided for @ng_board_move_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Move…'**
+  String get ng_board_move_menu;
+
+  /// No description provided for @ng_board_assign_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign…'**
+  String get ng_board_assign_menu;
+
+  /// No description provided for @ng_board_new_board_title.
+  ///
+  /// In en, this message translates to:
+  /// **'New Kanban board'**
+  String get ng_board_new_board_title;
+
+  /// No description provided for @ng_board_slug.
+  ///
+  /// In en, this message translates to:
+  /// **'Slug (lowercase, e.g. release-v5)'**
+  String get ng_board_slug;
+
+  /// No description provided for @ng_board_display_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Display name'**
+  String get ng_board_display_name;
+
+  /// No description provided for @ng_board_linked_project.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked project (optional)'**
+  String get ng_board_linked_project;
+
+  /// No description provided for @ng_board_none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get ng_board_none;
+
+  /// No description provided for @ng_board_default_workdir.
+  ///
+  /// In en, this message translates to:
+  /// **'Default workdir on host (optional)'**
+  String get ng_board_default_workdir;
+
+  /// No description provided for @ng_board_import_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Import board archive'**
+  String get ng_board_import_title;
+
+  /// No description provided for @ng_board_import_path.
+  ///
+  /// In en, this message translates to:
+  /// **'Host .tar.gz archive path'**
+  String get ng_board_import_path;
+
+  /// No description provided for @ng_board_import.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get ng_board_import;
+
+  /// No description provided for @ng_board_edit_board.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {board}'**
+  String ng_board_edit_board(String board);
+
+  /// No description provided for @ng_board_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get ng_board_name;
+
+  /// No description provided for @ng_board_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get ng_board_description;
+
+  /// No description provided for @ng_board_workdir_clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Default workdir (blank clears)'**
+  String get ng_board_workdir_clear;
+
+  /// No description provided for @ng_board_boards.
+  ///
+  /// In en, this message translates to:
+  /// **'Kanban boards'**
+  String get ng_board_boards;
+
+  /// No description provided for @ng_board_new_board.
+  ///
+  /// In en, this message translates to:
+  /// **'New board'**
+  String get ng_board_new_board;
+
+  /// No description provided for @ng_board_search_boards.
+  ///
+  /// In en, this message translates to:
+  /// **'Search boards…'**
+  String get ng_board_search_boards;
+
+  /// No description provided for @ng_board_unpin.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpin tab'**
+  String get ng_board_unpin;
+
+  /// No description provided for @ng_board_pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin tab'**
+  String get ng_board_pin;
+
+  /// No description provided for @ng_board_archive_board_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive board {board}?'**
+  String ng_board_archive_board_title(String board);
+
+  /// No description provided for @ng_board_archive_board_body.
+  ///
+  /// In en, this message translates to:
+  /// **'The board and its {cards} leave the board list. The gateway keeps an archive on its host.'**
+  String ng_board_archive_board_body(String cards);
+
+  /// No description provided for @ng_board_edit_metadata.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit metadata'**
+  String get ng_board_edit_metadata;
+
+  /// No description provided for @ng_board_export.
+  ///
+  /// In en, this message translates to:
+  /// **'Export .tar.gz on host'**
+  String get ng_board_export;
+
+  /// No description provided for @ng_board_move_pin_left.
+  ///
+  /// In en, this message translates to:
+  /// **'Move pinned tab left'**
+  String get ng_board_move_pin_left;
+
+  /// No description provided for @ng_board_archive_board.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive board'**
+  String get ng_board_archive_board;
+
+  /// No description provided for @ng_board_new_task_title.
+  ///
+  /// In en, this message translates to:
+  /// **'New Kanban task'**
+  String get ng_board_new_task_title;
+
+  /// No description provided for @ng_board_title_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Title *'**
+  String get ng_board_title_required;
+
+  /// No description provided for @ng_board_spec.
+  ///
+  /// In en, this message translates to:
+  /// **'Spec & acceptance criteria'**
+  String get ng_board_spec;
+
+  /// No description provided for @ng_board_estimate.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimate'**
+  String get ng_board_estimate;
+
+  /// No description provided for @ng_board_estimate_draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Complexity {complexity} (~{tokens} tok — token estimate only, not a dollar-cost claim)'**
+  String ng_board_estimate_draft(String complexity, String tokens);
+
+  /// No description provided for @ng_board_estimate_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimate unavailable'**
+  String get ng_board_estimate_unavailable;
+
+  /// No description provided for @ng_board_initial_column.
+  ///
+  /// In en, this message translates to:
+  /// **'Initial column'**
+  String get ng_board_initial_column;
+
+  /// No description provided for @ng_board_worker_assignee.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker assignee'**
+  String get ng_board_worker_assignee;
+
+  /// No description provided for @ng_board_parked_unassigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Parked (unassigned)'**
+  String get ng_board_parked_unassigned;
+
+  /// No description provided for @ng_board_priority.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get ng_board_priority;
+
+  /// No description provided for @ng_board_workspace.
+  ///
+  /// In en, this message translates to:
+  /// **'Workspace'**
+  String get ng_board_workspace;
+
+  /// No description provided for @ng_board_scratch.
+  ///
+  /// In en, this message translates to:
+  /// **'Scratch'**
+  String get ng_board_scratch;
+
+  /// No description provided for @ng_board_worktree.
+  ///
+  /// In en, this message translates to:
+  /// **'Git worktree'**
+  String get ng_board_worktree;
+
+  /// No description provided for @ng_board_shared_dir.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared dir'**
+  String get ng_board_shared_dir;
+
+  /// No description provided for @ng_board_workspace_path.
+  ///
+  /// In en, this message translates to:
+  /// **'Host workspace path'**
+  String get ng_board_workspace_path;
+
+  /// No description provided for @ng_board_parent.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent dependency (optional)'**
+  String get ng_board_parent;
+
+  /// No description provided for @ng_board_skills.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned skills (comma-separated, optional)'**
+  String get ng_board_skills;
+
+  /// No description provided for @ng_board_provider_override.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider override'**
+  String get ng_board_provider_override;
+
+  /// No description provided for @ng_board_model_override.
+  ///
+  /// In en, this message translates to:
+  /// **'Model override'**
+  String get ng_board_model_override;
+
+  /// No description provided for @ng_board_reasoning.
+  ///
+  /// In en, this message translates to:
+  /// **'Reasoning effort'**
+  String get ng_board_reasoning;
+
+  /// No description provided for @ng_board_profile_default.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile default'**
+  String get ng_board_profile_default;
+
+  /// No description provided for @ng_board_xhigh.
+  ///
+  /// In en, this message translates to:
+  /// **'X-High'**
+  String get ng_board_xhigh;
+
+  /// No description provided for @ng_board_goal_mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal loop mode'**
+  String get ng_board_goal_mode;
+
+  /// No description provided for @ng_board_goal_turns.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal max turns (blank = default)'**
+  String get ng_board_goal_turns;
+
+  /// No description provided for @ng_board_create_task.
+  ///
+  /// In en, this message translates to:
+  /// **'Create task'**
+  String get ng_board_create_task;
+
+  /// No description provided for @ng_board_orchestration_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Orchestration & worker profiles'**
+  String get ng_board_orchestration_title;
+
+  /// No description provided for @ng_board_orchestrator.
+  ///
+  /// In en, this message translates to:
+  /// **'Orchestrator profile (resolved: {profile})'**
+  String ng_board_orchestrator(String profile);
+
+  /// No description provided for @ng_board_inherit_default.
+  ///
+  /// In en, this message translates to:
+  /// **'Inherit active default'**
+  String get ng_board_inherit_default;
+
+  /// No description provided for @ng_board_default_assignee.
+  ///
+  /// In en, this message translates to:
+  /// **'Default assignee (resolved: {profile})'**
+  String ng_board_default_assignee(String profile);
+
+  /// No description provided for @ng_board_auto_decompose.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-decompose triage cards'**
+  String get ng_board_auto_decompose;
+
+  /// No description provided for @ng_board_auto_decompose_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Uses the configured kanban_decomposer model on triage tasks'**
+  String get ng_board_auto_decompose_help;
+
+  /// No description provided for @ng_board_save_orchestration.
+  ///
+  /// In en, this message translates to:
+  /// **'Save orchestration'**
+  String get ng_board_save_orchestration;
+
+  /// No description provided for @ng_board_worker_descriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker specialization descriptions'**
+  String get ng_board_worker_descriptions;
+
+  /// No description provided for @ng_board_worker_label.
+  ///
+  /// In en, this message translates to:
+  /// **'@{profile} ({model} · {skills})'**
+  String ng_board_worker_label(String profile, String model, String skills);
+
+  /// No description provided for @ng_board_default_model.
+  ///
+  /// In en, this message translates to:
+  /// **'default model'**
+  String get ng_board_default_model;
+
+  /// No description provided for @ng_board_save_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Save description'**
+  String get ng_board_save_description;
+
+  /// No description provided for @ng_board_auto_describe.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-describe from skills & persona'**
+  String get ng_board_auto_describe;
+
+  /// No description provided for @ng_board_manual_block.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual operator block'**
+  String get ng_board_manual_block;
+
+  /// No description provided for @ng_board_requested_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested review'**
+  String get ng_board_requested_review;
+
+  /// No description provided for @ng_board_requeue_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Requeue {task}?'**
+  String ng_board_requeue_title(String task);
+
+  /// No description provided for @ng_board_requeue_body.
+  ///
+  /// In en, this message translates to:
+  /// **'A worker running this card is stopped and the card goes back to the queue.'**
+  String get ng_board_requeue_body;
+
+  /// No description provided for @ng_board_requeue.
+  ///
+  /// In en, this message translates to:
+  /// **'Requeue'**
+  String get ng_board_requeue;
+
+  /// No description provided for @ng_board_reassign_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Reassign {task} to @{profile}?'**
+  String ng_board_reassign_title(String task, String profile);
+
+  /// No description provided for @ng_board_reassign_body.
+  ///
+  /// In en, this message translates to:
+  /// **'This card is running: its worker is stopped first.'**
+  String get ng_board_reassign_body;
+
+  /// No description provided for @ng_board_reassign.
+  ///
+  /// In en, this message translates to:
+  /// **'Reassign'**
+  String get ng_board_reassign;
+
+  /// No description provided for @ng_board_saved_task.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved task {task}'**
+  String ng_board_saved_task(String task);
+
+  /// No description provided for @ng_board_commented_requeued.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted comment and requeued task'**
+  String get ng_board_commented_requeued;
+
+  /// No description provided for @ng_board_commented.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted comment'**
+  String get ng_board_commented;
+
+  /// No description provided for @ng_board_requeued.
+  ///
+  /// In en, this message translates to:
+  /// **'Requeued {task}'**
+  String ng_board_requeued(String task);
+
+  /// No description provided for @ng_board_decompose_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Decompose failed.'**
+  String get ng_board_decompose_failed;
+
+  /// No description provided for @ng_board_decompose_failed_reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Decompose failed: {reason}'**
+  String ng_board_decompose_failed_reason(String reason);
+
+  /// No description provided for @ng_board_decomposed.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Decomposed into 1 child task} other{Decomposed into {count} child tasks}}'**
+  String ng_board_decomposed(int count);
+
+  /// No description provided for @ng_board_no_children.
+  ///
+  /// In en, this message translates to:
+  /// **'No child tasks were created.'**
+  String get ng_board_no_children;
+
+  /// No description provided for @ng_board_no_children_reason.
+  ///
+  /// In en, this message translates to:
+  /// **'No child tasks were created: {reason}'**
+  String ng_board_no_children_reason(String reason);
+
+  /// No description provided for @ng_board_uploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploaded {file}'**
+  String ng_board_uploaded(String file);
+
+  /// No description provided for @ng_board_linked_parent.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked parent {task}'**
+  String ng_board_linked_parent(String task);
+
+  /// No description provided for @ng_board_unlinked_parent.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed parent link {task}'**
+  String ng_board_unlinked_parent(String task);
+
+  /// No description provided for @ng_board_task_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load task'**
+  String get ng_board_task_load_failed;
+
+  /// No description provided for @ng_board_refresh_task.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh task'**
+  String get ng_board_refresh_task;
+
+  /// No description provided for @ng_board_tab_overview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get ng_board_tab_overview;
+
+  /// No description provided for @ng_board_tab_comments.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments & Links'**
+  String get ng_board_tab_comments;
+
+  /// No description provided for @ng_board_tab_runs.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs & Log'**
+  String get ng_board_tab_runs;
+
+  /// No description provided for @ng_board_tab_events.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get ng_board_tab_events;
+
+  /// No description provided for @ng_board_decompose.
+  ///
+  /// In en, this message translates to:
+  /// **'Decompose'**
+  String get ng_board_decompose;
+
+  /// No description provided for @ng_board_attach.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach file'**
+  String get ng_board_attach;
+
+  /// No description provided for @ng_board_estimate_task.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimate: {complexity} · ~{tokens} tokens ({rationale}) — not a dollar-cost claim.'**
+  String ng_board_estimate_task(
+    String complexity,
+    String tokens,
+    String rationale,
+  );
+
+  /// No description provided for @ng_board_no_rationale.
+  ///
+  /// In en, this message translates to:
+  /// **'no rationale'**
+  String get ng_board_no_rationale;
+
+  /// No description provided for @ng_board_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get ng_board_status;
+
+  /// No description provided for @ng_board_assignee.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignee'**
+  String get ng_board_assignee;
+
+  /// No description provided for @ng_board_title_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get ng_board_title_label;
+
+  /// No description provided for @ng_board_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Body / specification'**
+  String get ng_board_body;
+
+  /// No description provided for @ng_board_save_changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get ng_board_save_changes;
+
+  /// No description provided for @ng_board_clear_model.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear model override'**
+  String get ng_board_clear_model;
+
+  /// No description provided for @ng_board_blocked_reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked reason: {reason}'**
+  String ng_board_blocked_reason(String reason);
+
+  /// No description provided for @ng_board_result.
+  ///
+  /// In en, this message translates to:
+  /// **'Result: {result}'**
+  String ng_board_result(String result);
+
+  /// No description provided for @ng_board_parents.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked by (parents · {count})'**
+  String ng_board_parents(String count);
+
+  /// No description provided for @ng_board_add_parent.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Add parent'**
+  String get ng_board_add_parent;
+
+  /// No description provided for @ng_board_children.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocks (children · {count})'**
+  String ng_board_children(String count);
+
+  /// No description provided for @ng_board_attachments.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachments ({count})'**
+  String ng_board_attachments(String count);
+
+  /// No description provided for @ng_board_worker.
+  ///
+  /// In en, this message translates to:
+  /// **'worker'**
+  String get ng_board_worker;
+
+  /// No description provided for @ng_board_comments.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments ({count})'**
+  String ng_board_comments(String count);
+
+  /// No description provided for @ng_board_comment_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add comment / worker guidance'**
+  String get ng_board_comment_hint;
+
+  /// No description provided for @ng_board_post_comment.
+  ///
+  /// In en, this message translates to:
+  /// **'Post comment'**
+  String get ng_board_post_comment;
+
+  /// No description provided for @ng_board_comment_requeue.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment & requeue'**
+  String get ng_board_comment_requeue;
+
+  /// No description provided for @ng_board_runs.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs ({count})'**
+  String ng_board_runs(String count);
+
+  /// No description provided for @ng_board_no_runs.
+  ///
+  /// In en, this message translates to:
+  /// **'No worker runs recorded yet.'**
+  String get ng_board_no_runs;
+
+  /// No description provided for @ng_board_run_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String ng_board_run_error(String error);
+
+  /// No description provided for @ng_board_log_tail_truncated.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker log tail ({bytes} B, truncated)'**
+  String ng_board_log_tail_truncated(String bytes);
+
+  /// No description provided for @ng_board_log_tail.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker log tail ({bytes} B)'**
+  String ng_board_log_tail(String bytes);
+
+  /// No description provided for @ng_board_refresh_log.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh log'**
+  String get ng_board_refresh_log;
+
+  /// No description provided for @ng_board_no_log.
+  ///
+  /// In en, this message translates to:
+  /// **'No worker log output.'**
+  String get ng_board_no_log;
+
+  /// No description provided for @ng_board_no_events.
+  ///
+  /// In en, this message translates to:
+  /// **'No events recorded.'**
+  String get ng_board_no_events;
+
+  /// No description provided for @ng_bots_room_unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'unknown'**
+  String get ng_bots_room_unknown;
+
+  /// No description provided for @ng_bots_room_blocked.
+  ///
+  /// In en, this message translates to:
+  /// **'blocked'**
+  String get ng_bots_room_blocked;
+
+  /// No description provided for @ng_bots_room_working.
+  ///
+  /// In en, this message translates to:
+  /// **'working'**
+  String get ng_bots_room_working;
+
+  /// No description provided for @ng_bots_room_running.
+  ///
+  /// In en, this message translates to:
+  /// **'running'**
+  String get ng_bots_room_running;
+
+  /// No description provided for @ng_bots_room_idle.
+  ///
+  /// In en, this message translates to:
+  /// **'idle'**
+  String get ng_bots_room_idle;
+
+  /// No description provided for @ng_board_run_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Run #{id} · @{profile} · {outcome}'**
+  String ng_board_run_title(String id, String profile, String outcome);
 }
 
 class _AppLocalizationsDelegate

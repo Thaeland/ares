@@ -211,9 +211,8 @@ class NgMorePage extends StatelessWidget {
                 ),
                 NgRow(
                   icon: Icons.view_kanban_outlined,
-                  title: 'Kanban',
-                  subtitle:
-                      'Boards, task dependencies, worker assignment and logs',
+                  title: ngL.ng_more_kanban,
+                  subtitle: ngL.ng_more_kanban_subtitle,
                   onTap: () => push(
                     KanbanBoardScreen(
                       owner: scope.gateway.workspace,
@@ -224,8 +223,8 @@ class NgMorePage extends StatelessWidget {
                 ),
                 NgRow(
                   icon: Icons.pets_outlined,
-                  title: 'Bots',
-                  subtitle: 'Roster, rooms, routines and Bot Desktop',
+                  title: ngL.ng_more_bots,
+                  subtitle: ngL.ng_more_bots_subtitle,
                   onTap: () => push(
                     BotsScreen(
                       owner: scope.gateway.workspace,
