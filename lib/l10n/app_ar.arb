@@ -1,5 +1,4 @@
 {
-  "@@locale": "ar",
   "workspace_workers": "العمّال النشطون",
   "workers_unattached": "أعداد فقط. لتوجيه عامل، اختر «العمّال النشطون» في المحادثة الأم المرتبط بها.",
   "slash_local_arguments": "لا يقبل هذا الاختصار معاملات هنا. استخدم عناصر التحكم في التطبيق. لم تتغير مسودتك.",
@@ -16,6 +15,9 @@
   "fallback_legacy_title": "النماذج الاحتياطية القديمة (للقراءة فقط)",
   "fallback_legacy_notice": "يستخدم المضيف أيضًا fallback_model بعد هذه القائمة، ويتخطى المسارات المكررة. تظل الإدخالات القديمة محفوظة حتى لو كانت القائمة أعلاه فارغة. يمكنك تعديلها على المضيف.",
   "fallback_priority": "الأولوية: {position}",
+  "fallback_move_up": "نقل لأعلى",
+  "fallback_move_down": "نقل لأسفل",
+  "fallback_routing_read_only": "يحتفظ التطبيق بتفاصيل التوجيه أو بالمزوّد غير المدرج. عدّل المزوّد أو النموذج على المضيف. لا يزال بإمكانك تغيير ترتيب الإدخال أو إزالته.",
   "@fallback_priority": {
     "placeholders": {
       "position": {
@@ -23,9 +25,6 @@
       }
     }
   },
-  "fallback_move_up": "نقل لأعلى",
-  "fallback_move_down": "نقل لأسفل",
-  "fallback_routing_read_only": "يحتفظ التطبيق بتفاصيل التوجيه أو بالمزوّد غير المدرج. عدّل المزوّد أو النموذج على المضيف. لا يزال بإمكانك تغيير ترتيب الإدخال أو إزالته.",
   "cron_model_default": "استخدام النموذج الافتراضي",
   "cron_model_notice": "ينطبق هذا الاختيار على مهمة cron هذه فقط. إذا لم تحدد لها نموذجًا بعينه، يستخدم Hermes نموذج cron الافتراضي، ثم النموذج الرئيسي. يمكنك إدارة النماذج المخصصة على المضيف.",
   "model_management_unavailable": "تعذّر تحميل إعدادات النماذج أو حفظها. حدّث الصفحة وحاول مجددًا.",
@@ -42,13 +41,6 @@
   "portal_recorded_usage": "الاستخدام المسجّل",
   "portal_all_providers": "يشمل جميع المزوّدين في الملف الشخصي المحدد للبوابة. تسجيل تكلفة قدرها صفر لا يعني أن النموذج مجاني.",
   "portal_period": "آخر {days} يومًا",
-  "@portal_period": {
-    "placeholders": {
-      "days": {
-        "type": "String"
-      }
-    }
-  },
   "portal_sessions": "الجلسات",
   "portal_input": "رموز الإدخال",
   "portal_output": "رموز الإخراج",
@@ -57,12 +49,20 @@
   "portal_recorded_models": "النماذج المسجّلة",
   "portal_no_models": "لا توجد نماذج مسجّلة.",
   "portal_unavailable": "البيانات غير متاحة. تحقق من الاتصال والملف الشخصي المحدد وإصدار البوابة، ثم أعد المحاولة.",
+  "@portal_period": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
   "paste_attachment_failed_text_kept": "تعذّر إرفاق المحتوى الملصق. بقي النص في الرسالة.",
   "background_task_report": "مهمة في الخلفية",
   "background_process_report": "عملية في الخلفية",
   "background_report_issues": "أُبلغ عن مشكلات. وسّع التقرير لعرض التفاصيل.",
   "background_report_expand": "توسيع التقرير",
   "background_report_collapse": "طيّ التقرير",
+  "@@locale": "ar",
   "copy_session_id": "نسخ معرّف الجلسة",
   "copy_session_id_failed": "تعذّر نسخ معرّف الجلسة.",
   "setup_interface_title": "اختر واجهتك",
@@ -75,6 +75,8 @@
   "ng_switch": "تبديل",
   "ng_model_confirmation_required": "يلزم التأكيد قبل اختيار هذا النموذج.",
   "ng_model_switches_next_turn": "سيُستخدم {model} في الجولة التالية.",
+  "ng_model_switch_not_connected": "الدردشة غير جاهزة لتبديل النموذج. افتحها مجددًا وأعد المحاولة.",
+  "ng_gateway_kept_default_model": "أبقت البوابة على {model} لهذه الدردشة. أعد اختيار النموذج قبل الإرسال.",
   "@ng_model_switches_next_turn": {
     "placeholders": {
       "model": {
@@ -82,8 +84,6 @@
       }
     }
   },
-  "ng_model_switch_not_connected": "الدردشة غير جاهزة لتبديل النموذج. افتحها مجددًا وأعد المحاولة.",
-  "ng_gateway_kept_default_model": "أبقت البوابة على {model} لهذه الدردشة. أعد اختيار النموذج قبل الإرسال.",
   "@ng_gateway_kept_default_model": {
     "placeholders": {
       "model": {
@@ -100,23 +100,9 @@
   "hands_free_waiting": "في انتظار Hermes",
   "hands_free_speaking": "جارٍ نطق الرد — الميكروفون مغلق",
   "hands_free_followup": "الاستماع لمدة تصل إلى {seconds} ثانية",
-  "@hands_free_followup": {
-    "placeholders": {
-      "seconds": {
-        "type": "int"
-      }
-    }
-  },
   "hands_free_error": "توقف وضع الاستخدام دون لمس",
   "hands_free_setup": "إعداد الاستخدام دون لمس",
   "hands_free_preview": "معاينة الإملاء الصوتي: {transcript}",
-  "@hands_free_preview": {
-    "placeholders": {
-      "transcript": {
-        "type": "String"
-      }
-    }
-  },
   "hands_free_short_disclosure": "يعمل هذا الوضع فقط عندما تكون هذه الدردشة مفتوحة في الواجهة. لا يتطلب رصد عبارة التنبيه اتصالًا، لكن الخدمات الصوتية قد تستخدم الشبكة. يستهلك الاستماع طاقة البطارية.",
   "hands_free_error_action": "تحقق من إذن الميكروفون وخدمة الكلام وصوت الرد والاتصال، ثم اضغط على زر الإيقاف يليه زر البدء لإعادة المحاولة. لن يُعاد إرسال أي شيء.",
   "hands_free_disclosure": "تُرصد عبارة التنبيه على وحدة المعالجة المركزية (CPU) دون اتصال. قد تستخدم خدمة التعرّف على الكلام في Android وصوت الرد المحدد والبوابة اتصالات الشبكة. يستهلك الاستماع طاقة البطارية وقد يتنشط الميكروفون بالخطأ. يتوقف الوضع إذا غطّت شاشة أخرى الدردشة أو أُغلقت أو انتقلت إلى الخلفية. لا يُستأنف تلقائيًا عند فتحها مجددًا. يبقى النص الذي تمليه يدويًا مسودة قابلة للتعديل.",
@@ -127,6 +113,20 @@
   "hands_free_followup_off": "المتابعة معطّلة — قل «Hey Hermes» قبل كل طلب",
   "hands_free_start_blocked": "للبدء، يجب أن تكون المسودة فارغة وبلا مرفقات، وأن تكون الدردشة متصلة ولا تنفذ أي طلب، وأن تكون الردود المنطوقة مفعّلة. أنهِ أولًا أي إجراء صوتي بدأته يدويًا.",
   "hands_free_setup_complete": "اكتمل إعداد الميكروفون. اضغط على زر البدء مجددًا.",
+  "@hands_free_followup": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "@hands_free_preview": {
+    "placeholders": {
+      "transcript": {
+        "type": "String"
+      }
+    }
+  },
   "message_time_recorded": "وقت التسجيل على الخادم: {time} (بالتوقيت المحلي)",
   "@message_time_recorded": {
     "placeholders": {
@@ -170,16 +170,6 @@
   "attachment_pdf_failed": "تعذّرت معاينة ملف PDF هذا. احفظ الملف الأصلي أو شاركه.",
   "attachment_pdf_unavailable": "تتوفر معاينة ملفات PDF على Android. لا يزال بإمكانك حفظ هذا الملف أو مشاركته.",
   "attachment_pdf_page": "الصفحة {page} من {total}",
-  "@attachment_pdf_page": {
-    "placeholders": {
-      "page": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
   "attachment_previous_page": "الصفحة السابقة",
   "attachment_next_page": "الصفحة التالية",
   "attachment_loading": "جارٍ تحميل المعاينة…",
@@ -194,6 +184,16 @@
   "attachment_video_seek": "موضع التشغيل في الفيديو",
   "attachment_close": "إغلاق المعاينة",
   "attachment_retry": "إعادة المحاولة",
+  "@attachment_pdf_page": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "saved_history_heading": "السجل المحفوظ",
   "received_output_heading": "المخرجات المستلَمة — لم تتأكد مطابقتها للسجل المحفوظ",
   "received_output_details": "حول المخرجات المستلَمة",
@@ -640,9 +640,15 @@
   "chat_activity_share": "مشاركة نشاط المحادثة",
   "chat_activity_share_hint": "أبلِغ البوابة المتصلة المتوافقة عندما تستخدم هذه المحادثة، حتى يتجنّب ملحق إشعارات الهاتف فيها التنبيهات المكررة. لا تُرسَل أي مفاتيح أو نصوص رسائل.",
   "completion_sound": "صوت الاكتمال",
+  "completion_sound_system": "الافتراضي للنظام",
   "completion_sound_mail": "البريد",
   "completion_sound_reminder": "تذكير",
   "completion_sound_silent": "صامت",
+  "completion_sound_scope": "يُشغَّل للردود المكتملة والإشعار التجريبي وداخل التطبيق. تحتفظ الموافقات والتنبيهات الأخرى بصوتها المعتاد.",
+  "completion_sound_scope_android": "يُشغَّل للردود المكتملة والإشعار التجريبي وداخل التطبيق. تحتفظ الموافقات والتنبيهات الأخرى وإشعارات الخلفية من الخادم ورسائل Android Auto بصوتها المعتاد.",
+  "notification_open_action": "فتح",
+  "app_sounds_mute": "كتم أصوات التطبيق",
+  "app_sounds_mute_hint": "يوقف صوت الاكتمال الذي يشغّله Ares أثناء فتحه. تحتفظ الإشعارات بصوتها الخاص.",
   "notifications_permission_denied": "يحظر نظام التشغيل الإشعارات. فعّل إشعارات هذا التطبيق في إعدادات Android.",
   "off_no_thinking": "متوقف (دون تفكير)",
   "offline_showing_the_last_known_activity": "غير متصل — يُعرض آخر نشاط معروف.",
@@ -1232,6 +1238,8 @@
   "provider_oauth_checking_account": "وصلت الموافقة. جارٍ التحقق من الحساب على المضيف…",
   "provider_oauth_verification_unavailable": "وصلت الموافقة، لكن التحقق من الحساب غير متاح. افتح «الاستخدام» لتحديث بيانات استخدام الحساب.",
   "provider_oauth_verified_account": "سجّلت الدخول إلى مضيف Hermes بالحساب {email}. افتح «الاستخدام» لتحديث بيانات استخدام الحساب.",
+  "provider_oauth_credentials_unverified": "يشير المضيف إلى توفّر بيانات الاعتماد، لكن لم يجرِ التحقق من هوية الحساب.",
+  "provider_oauth_account_status_unknown": "حالة الحساب على المضيف غير متاحة.",
   "@provider_oauth_verified_account": {
     "placeholders": {
       "email": {
@@ -1239,8 +1247,6 @@
       }
     }
   },
-  "provider_oauth_credentials_unverified": "يشير المضيف إلى توفّر بيانات الاعتماد، لكن لم يجرِ التحقق من هوية الحساب.",
-  "provider_oauth_account_status_unknown": "حالة الحساب على المضيف غير متاحة.",
   "app_language": "لغة التطبيق",
   "app_language_system": "لغة الهاتف",
   "auto_archives_after_72_hours": "يُؤرشف تلقائيًا بعد 72 ساعة",
@@ -1377,6 +1383,69 @@
   "slash_command_failed": "تعذّر تنفيذ الأمر.",
   "slash_command_unsupported": "هذا الأمر غير متاح على هذا الخادم.",
   "slash_sessions_inline": "افتح قائمة الجلسات لاختيار محادثة. مسودتك محفوظة.",
+  "composer_snippets": "مقتطفات الطلبات",
+  "composer_snippets_description": "اختر طلبًا مبدئيًا لإدراجه في محرّر الرسائل.",
+  "composer_snippet_review": "مراجعة الشيفرة",
+  "composer_snippet_review_body": "راجع التغيير الحالي بحثًا عن تراجعات وحالات طرفية أُغفلت واختبارات ناقصة.",
+  "composer_snippet_review_text": "يرجى مراجعة هذا بحثًا عن أخطاء وتراجعات واختبارات ناقصة.",
+  "composer_snippet_plan": "خطة التنفيذ",
+  "composer_snippet_plan_body": "حدّد نهجًا قبل تعديل الشيفرة لإبقاء التغييرات مركّزة.",
+  "composer_snippet_plan_text": "يرجى وضع خطة تنفيذ موجزة قبل تعديل الشيفرة.",
+  "composer_snippet_explain": "اشرح هذا",
+  "composer_snippet_explain_body": "اشرح طريقة عمل الشيفرة المحددة وأشِر إلى الملفات الأساسية.",
+  "composer_snippet_explain_text": "يرجى شرح طريقة عمل هذا وإرشادي إلى الملفات الأساسية.",
+  "composer_status": "الحالة",
+  "composer_status_context": "السياق",
+  "composer_status_cache": "إصابة الذاكرة المؤقتة",
+  "composer_status_throughput": "رموز الإخراج/ثانية",
+  "composer_status_running": "قيد التشغيل",
+  "composer_status_session": "الجلسة",
+  "composer_status_not_reported": "لم يُبلّغ عنه",
+  "composer_status_empty": "لم تُرسل تفاصيل توزيع السياق.",
+  "composer_status_loading": "جارٍ تحميل تفاصيل توزيع السياق",
+  "composer_status_reset": "إعادة ضبط شريط الحالة",
+  "composer_resume_title": "استئناف دردشة",
+  "composer_resume_search": "البحث في العناوين والمعرّفات",
+  "composer_resume_empty": "لا توجد دردشات مطابقة.",
+  "composer_resume_unavailable": "لا تتضمن هذه اللوحة قائمة دردشات للبحث فيها.",
+  "composer_failure_retry": "إعادة المحاولة",
+  "composer_failure_retry_at": "إعادة المحاولة عند {time}",
+  "composer_failure_compress": "ضغط",
+  "composer_failure_switch_model": "تبديل النموذج",
+  "composer_failure_switch_to": "التبديل إلى {model}",
+  "composer_failure_new_chat": "محادثة جديدة",
+  "composer_failure_edit": "تعديل الرسالة",
+  "composer_failure_details": "التفاصيل",
+  "composer_failure_hide_details": "إخفاء التفاصيل",
+  "composer_failure_copy": "نسخ بيانات التشخيص",
+  "composer_failure_account": "الحل الآخر يتطلب إجراءً في حساب البوابة. لا يمكن تنفيذه من هذه الدردشة.",
+  "composer_failure_account_only": "يجب إصلاح هذا في حساب البوابة. لا يمكن تنفيذه من هذه الدردشة.",
+  "composer_failure_confirm_compress": "هل تريد ضغط هذه الدردشة؟ ستختصر البوابة سجل المحادثة.",
+  "composer_failure_confirm_model": "هل تريد تبديل هذه الدردشة إلى {model}؟",
+  "composer_drop_attach": "أفلت للإرفاق",
+  "composer_drop_folder_unsupported": "لا يمكن إرفاق المجلدات. أفلت الملفات بدلًا منها.",
+  "composer_drop_reference": "أفلت لإضافة مرجع",
+  "composer_reference_copy": "نسخ المرجع",
+  "composer_reference_remove": "إزالة المرجع",
+  "composer_btw_usage": "الاستخدام: /btw <question> — إجابة من لقطة لهذه المحادثة دون مقاطعتها.",
+  "composer_background_usage": "الاستخدام: /background <prompt> — تعمل المهمة بشكل منفصل وتعود النتيجة إلى هنا.",
+  "composer_handoff_usage": "الاستخدام: /handoff <platform> — نقل هذه الدردشة إلى منصة المراسلة المحددة.",
+  "composer_command_needs_session": "يتطلب هذا الأمر دردشة مفتوحة.",
+  "composer_retry_not_found": "هذا التبادل غير موجود في السجل المحفوظ، لذا لا يمكن لخيار «إعادة المحاولة» استبداله. لم يُرسل شيء مجددًا. عدّل الرسالة وأرسلها للمحاولة من جديد.",
+  "composer_retry_unavailable": "لا يمكن لخيار «إعادة المحاولة» استبدال تبادل عبر هذا الاتصال، لذا لم يُرسل شيء مجددًا. عدّل الرسالة وأرسلها للمحاولة من جديد.",
+  "composer_failure_switch_no_retry": "يغيّر التبديل النموذج فقط: لا يمكن لهذا الاتصال إعادة تشغيل الدور الفاشل. أرسله مجددًا بعد التبديل.",
+  "composer_command_needs_gateway_session": "ليس لهذه الدردشة جلسة على البوابة بعد. أرسل رسالة أولًا، ثم شغّل الأمر مجددًا.",
+  "composer_side_question": "btw — إجابة من لقطة للمحادثة",
+  "composer_side_question_id": "btw {id} — إجابة من لقطة للمحادثة",
+  "composer_background_started": "بدأت المهمة في الخلفية. يمكنك متابعة الدردشة. ستظهر النتيجة هنا.",
+  "composer_background_started_id": "بدأت المهمة {id} في الخلفية. يمكنك متابعة الدردشة. ستظهر النتيجة هنا.",
+  "composer_handoff_requested": "طُلب النقل إلى {platform}.",
+  "composer_handoff_done": "نُقلت هذه الدردشة إلى {platform}.",
+  "composer_handoff_failed": "تعذّر النقل.",
+  "composer_handoff_timeout": "لم يكتمل النقل. قد يكون لا يزال قيد التنفيذ على البوابة.",
+  "composer_compress_done": "ضُغطت هذه الدردشة.",
+  "composer_file_missing": "هذا الملف غير موجود على هذا الجهاز.",
+  "composer_attach_busy": "يمكن إضافة المرفقات بعد اكتمال هذا الرد.",
   "nextgen_toggle": "واجهة NextGen",
   "nextgen_toggle_subtitle": "تصميم جديد يتيح تسجيل الدخول مرة واحدة والمحادثات المباشرة واكتشاف الأجهزة على الشبكة. بواباتك ومحادثاتك متاحة في هذه الواجهة أيضًا.",
   "nextgen_single_login": "تسجيل الدخول مرة واحدة",
@@ -1715,6 +1784,7 @@
   "ng_project_home": "الرئيسية",
   "ng_choose_project": "اختيار مشروع",
   "ng_project_cwd_fallback": "مجلد المشروع غير متاح، لذا تعمل هذه المحادثة في {path}.",
+  "ng_project_create_uncertain": "ربما أنشأت البوابة هذه المحادثة، لكنها لم تؤكّد ذلك. تحقّق من «المحادثات» قبل بدء محادثة أخرى. لن يُعاد إرسال الطلب تلقائيًا.",
   "@ng_project_cwd_fallback": {
     "placeholders": {
       "path": {
@@ -1722,7 +1792,6 @@
       }
     }
   },
-  "ng_project_create_uncertain": "ربما أنشأت البوابة هذه المحادثة، لكنها لم تؤكّد ذلك. تحقّق من «المحادثات» قبل بدء محادثة أخرى. لن يُعاد إرسال الطلب تلقائيًا.",
   "ng_what_should_we_work_on": "ما الذي تودّ أن نعمل عليه؟",
   "ng_ask_hermes_anything_it_can_run": "اسأل Hermes عمّا تشاء. يمكنه تشغيل الأدوات والتصفّح والعمل على ملفاتك الموجودة على الخادم.",
   "ng_working_2": "جارٍ العمل · {frame}",
@@ -2517,6 +2586,12 @@
   "ng_dock_goal_blocked": "تعذّر التقدّم نحو الهدف",
   "ng_dock_goal_done": "اكتمل الهدف",
   "ng_dock_turn_of": "الجولة {used}/{max}",
+  "ng_dock_turn": "الجولة {used}",
+  "ng_dock_subagents": "{count, plural, =1{وكيل فرعي واحد} other{عدد الوكلاء الفرعيين: {count}}}",
+  "ng_dock_subagents_done": "عدد من أنهوا العمل: {count}",
+  "ng_dock_tasks": "المهام: {done}/{total}",
+  "ng_dock_previous_tasks": "المهام السابقة: {done}/{total}",
+  "ng_dock_manage": "إدارة",
   "@ng_dock_turn_of": {
     "placeholders": {
       "used": {
@@ -2527,7 +2602,6 @@
       }
     }
   },
-  "ng_dock_turn": "الجولة {used}",
   "@ng_dock_turn": {
     "placeholders": {
       "used": {
@@ -2535,7 +2609,6 @@
       }
     }
   },
-  "ng_dock_subagents": "{count, plural, =1{وكيل فرعي واحد} other{عدد الوكلاء الفرعيين: {count}}}",
   "@ng_dock_subagents": {
     "placeholders": {
       "count": {
@@ -2543,7 +2616,6 @@
       }
     }
   },
-  "ng_dock_subagents_done": "عدد من أنهوا العمل: {count}",
   "@ng_dock_subagents_done": {
     "placeholders": {
       "count": {
@@ -2551,7 +2623,6 @@
       }
     }
   },
-  "ng_dock_tasks": "المهام: {done}/{total}",
   "@ng_dock_tasks": {
     "placeholders": {
       "done": {
@@ -2562,7 +2633,6 @@
       }
     }
   },
-  "ng_dock_previous_tasks": "المهام السابقة: {done}/{total}",
   "@ng_dock_previous_tasks": {
     "placeholders": {
       "done": {
@@ -2573,7 +2643,6 @@
       }
     }
   },
-  "ng_dock_manage": "إدارة",
   "ng_recent_notifications": "الإشعارات الأخيرة",
   "ng_recent_notifications_hint": "الإشعارات التي حاول Ares إرسالها وما إذا كان Android قد عرضها",
   "ng_recent_notifications_empty": "لا توجد إشعارات بعد. ستظهر المحاولات هنا عند وجود ردّ أو سؤال أو إخفاق يستدعي إشعارك.",
@@ -2819,12 +2888,38 @@
   "appearance_tip_theme": "تحل السمات المستوردة محل لوحة الألوان المدمجة حتى تلغي الاختيار. تُحفظ الألوان فقط.",
   "appearance_tip_pet": "يحفظ الرفيق صورة صغيرة واحدة على هذا الجهاز. لا يرفع الصورة التي تفقس منها.",
   "appearance_theme_import_failed": "تعذّر استيراد هذه السمة. اختر سمة ألوان من VS Code محفوظة في ملف بامتداد vsix أو json أو jsonc.",
-  "completion_sound_system": "الافتراضي للنظام",
-  "completion_sound_scope": "يُشغَّل للردود المكتملة والإشعار التجريبي وداخل التطبيق. تحتفظ الموافقات والتنبيهات الأخرى بصوتها المعتاد.",
-  "completion_sound_scope_android": "يُشغَّل للردود المكتملة والإشعار التجريبي وداخل التطبيق. تحتفظ الموافقات والتنبيهات الأخرى وإشعارات الخلفية من الخادم ورسائل Android Auto بصوتها المعتاد.",
-  "notification_open_action": "فتح",
-  "app_sounds_mute": "كتم أصوات التطبيق",
-  "app_sounds_mute_hint": "يوقف صوت الاكتمال الذي يشغّله Ares أثناء فتحه. تحتفظ الإشعارات بصوتها الخاص.",
+  "render_widget_file_truncated": "قُرئت بداية هذا الملف فقط، لذا قد يكون عنصر الواجهة غير مكتمل.",
+  "setup_beat_title": "الإعداد",
+  "setup_beat_use_name": "استخدام {name}",
+  "setup_beat_name_hint": "بأي اسم تريد أن يناديك Hermes؟",
+  "setup_beat_on_computer": "تُنفّذ هذه الخطوة في Hermes على الحاسوب الذي يعمل عليه. يحافظ خيار «متابعة» على الإعدادات الموجودة هناك.",
+  "setup_beat_not_waiting": "لم تعد بطاقة الإعداد هذه تنتظر إجابة.",
+  "catalog_kind_plugin": "إضافة",
+  "catalog_kind_skill": "مهارة",
+  "catalog_tier_official": "رسمي",
+  "catalog_tier_verified": "تم التحقق منه",
+  "catalog_tier_community": "مجتمعي",
+  "catalog_install": "تثبيت",
+  "catalog_waiting": "بانتظار اختيارك",
+  "catalog_installed": "مثبّت",
+  "catalog_installed_off": "مثبّت، غير مفعّل",
+  "catalog_skipped": "تم التخطي",
+  "catalog_not_installed": "غير مثبّت",
+  "catalog_target_profile": "يُثبّت في الملف الشخصي {profile}",
+  "catalog_source": "{repo} عند المراجعة {sha}",
+  "catalog_scan": "الفحص الأمني: {status}. {summary}",
+  "catalog_requires_hermes": "يتطلب Hermes {range}",
+  "catalog_skill_ready": "المهارة {name} جاهزة للاستخدام",
+  "catalog_missing_env": "لا يزال يتطلب: {names}",
+  "catalog_server_error": "لم يتصل {name}: {error}",
+  "catalog_send_failed": "لم يُرسل اختيارك. حاول مجددًا.",
+  "attachment_video_speed": "سرعة التشغيل",
+  "catalog_installing": "جارٍ التثبيت…",
+  "catalog_phase_downloading": "جارٍ التنزيل…",
+  "catalog_phase_python_packages": "جارٍ تثبيت حزم Python…",
+  "catalog_phase_loading_tools": "جارٍ تحميل أدواته…",
+  "setup_beat_send_failed": "لم تُرسل إجابتك. حاول مجددًا.",
+  "catalog_tool_count": "{count, plural, =1{أداة واحدة} other{{count} أداة}}",
   "render_svg_not_drawn": "لم تُرسَم صورة SVG هذه.",
   "render_notes_directive": "توجيه الملاحظات",
   "render_maths_source": "مصدر الرياضيات",
@@ -2860,7 +2955,12 @@
   "catalog_scan_passed": "نجح",
   "catalog_scan_warnings": "وُجدت تحذيرات",
   "catalog_scan_failed": "فشل",
-  "composer_failure_switch_no_retry": "يغيّر التبديل النموذج فقط: لا يمكن لهذا الاتصال إعادة تشغيل الدور الفاشل. أرسله مجددًا بعد التبديل.",
+  "deployment_token_label": "رمز النشر (اختياري)",
+  "deployment_token_helper": "لرموز جلسات Hermes Dashboard المرسلة بصفة X-Hermes-Session-Token. لا يُخزَّن كنص عادي في التفضيلات.",
+  "deployment_token_hint": "رمز جلسة لوحة التحكم",
+  "custom_headers_label": "ترويسات مخصصة (اختياري)",
+  "custom_headers_helper": "واحدة في كل سطر، مثل X-Custom: value. تُرفض الترويسات المحظورة.",
+  "custom_headers_hint": "مثال: X-Custom-Header: value",
   "desktop_tray_open": "فتح Ares",
   "desktop_tray_new_chat": "دردشة جديدة",
   "desktop_tray_quick_entry": "إدخال سريع…",
@@ -2893,6 +2993,17 @@
   "capture_permission_title": "السماح بتسجيل الشاشة",
   "capture_permission_body": "يحتاج Ares إلى إذن تسجيل الشاشة لالتقاط نافذة. فعّل Ares في إعدادات النظام > الخصوصية والأمن > تسجيل الشاشة، ثم حاول مرة أخرى.",
   "capture_open_settings": "فتح إعدادات النظام",
+  "keep_awake_title": "إبقاء الحاسوب مستيقظًا",
+  "keep_awake_title_mobile": "إبقاء الشاشة قيد التشغيل",
+  "keep_awake_mode_off": "إيقاف",
+  "keep_awake_mode_while_working": "أثناء العمل",
+  "keep_awake_mode_always": "دائمًا",
+  "keep_awake_off_help": "لا تمنع سكون النظام أبدًا (الافتراضي).",
+  "keep_awake_while_working_help": "منع السكون بسبب الخمول فقط أثناء تشغيل دور الوكيل.",
+  "keep_awake_always_help": "منع السكون بسبب الخمول ما دام Ares مفتوحًا على هذا الجهاز.",
+  "keep_awake_off_help_mobile": "دع الشاشة تنطفئ كالمعتاد (الافتراضي).",
+  "keep_awake_while_working_help_mobile": "إبقاء الشاشة قيد التشغيل أثناء تشغيل دور الوكيل وما دام Ares مفتوحًا.",
+  "keep_awake_always_help_mobile": "إبقاء الشاشة قيد التشغيل ما دام Ares مفتوحًا.",
   "ng_token_gateway_has_no_sign_in": "لا تحتوي هذه البوابة على تسجيل دخول، لذا لا يمكنها التحقق من رمز النشر. فعّل مصادقة لوحة التحكم على المضيف (أو حدّث Hermes)، ثم حاول مرة أخرى.",
   "palette_open": "لوحة أوامر التطبيق",
   "palette_no_matches": "لا توجد إجراءات مطابقة",
@@ -2931,23 +3042,6 @@
   "ng_use_a_deployment_token": "استخدام رمز جلسة النشر",
   "ng_sign_in_with_deployment_token": "تسجيل الدخول برمز النشر",
   "ng_signed_in_with_deployment_token": "تم تسجيل الدخول برمز النشر.",
-  "deployment_token_label": "رمز النشر (اختياري)",
-  "deployment_token_helper": "لرموز جلسات Hermes Dashboard المرسلة بصفة X-Hermes-Session-Token. لا يُخزَّن كنص عادي في التفضيلات.",
-  "deployment_token_hint": "رمز جلسة لوحة التحكم",
-  "custom_headers_label": "ترويسات مخصصة (اختياري)",
-  "custom_headers_helper": "واحدة في كل سطر، مثل X-Custom: value. تُرفض الترويسات المحظورة.",
-  "custom_headers_hint": "مثال: X-Custom-Header: value",
-  "keep_awake_title": "إبقاء الحاسوب مستيقظًا",
-  "keep_awake_title_mobile": "إبقاء الشاشة قيد التشغيل",
-  "keep_awake_mode_off": "إيقاف",
-  "keep_awake_mode_while_working": "أثناء العمل",
-  "keep_awake_mode_always": "دائمًا",
-  "keep_awake_off_help": "لا تمنع سكون النظام أبدًا (الافتراضي).",
-  "keep_awake_while_working_help": "منع السكون بسبب الخمول فقط أثناء تشغيل دور الوكيل.",
-  "keep_awake_always_help": "منع السكون بسبب الخمول ما دام Ares مفتوحًا على هذا الجهاز.",
-  "keep_awake_off_help_mobile": "دع الشاشة تنطفئ كالمعتاد (الافتراضي).",
-  "keep_awake_while_working_help_mobile": "إبقاء الشاشة قيد التشغيل أثناء تشغيل دور الوكيل وما دام Ares مفتوحًا.",
-  "keep_awake_always_help_mobile": "إبقاء الشاشة قيد التشغيل ما دام Ares مفتوحًا.",
   "auto_speak_replies_title": "قراءة الردود تلقائيًا بصوت عالٍ",
   "auto_speak_replies_subtitle": "يقرأ كل رد جديد بصوت عالٍ عند اكتمال الدور. متوقف افتراضيًا؛ يظل مفتاح الردود المنطوقة لكل محادثة ساريًا.",
   "ng_auto_read_replies_title": "قراءة الردود تلقائيًا",
@@ -3040,8 +3134,6 @@
   "ng_wire_generation_unavailable": "معرّف تنفيذ الجلسة غير متاح؛ أعد الاتصال قبل استخدام هذا الأمر",
   "ng_wire_message_not_saved": "لم تُحفظ هذه الرسالة بعد؛ انتظر حتى تكتمل ثم أنشئ فرعًا منها مرة أخرى",
   "ng_wire_not_available": "غير متاح بعد على البوابة المشتركة",
-  "session_history": "سجل الجلسة",
-  "import_claude_or_codex": "استيراد Claude أو Codex",
   "edit_turn_title": "هل تريد تعديل هذه الرسالة؟",
   "edit_turn_body": "سيُعاد تشغيل الرسالة من هنا، وتُؤرشف الأدوار اللاحقة.",
   "edit_turn_send": "إرسال",
@@ -3049,6 +3141,8 @@
   "restore_turn_body": "سيُزال كل ما يلي هذه الرسالة من المحادثة، وتُشغَّل الرسالة من جديد بدءًا من هنا.",
   "restore_turn_confirm": "استعادة وإعادة تشغيل",
   "edit_turn_later_turns_body": "سيؤدي هذا إلى أرشفة الأدوار اللاحقة من المحادثة. هل تريد المتابعة؟",
+  "session_history": "سجل الجلسة",
+  "import_claude_or_codex": "استيراد Claude أو Codex",
   "ng_session_history": "سجل الجلسة",
   "ng_import_claude_or_codex": "استيراد Claude أو Codex",
   "ng_edit_and_resend": "تعديل وإعادة إرسال",
