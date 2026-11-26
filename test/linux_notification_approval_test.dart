@@ -70,7 +70,7 @@ void main() {
   test(
     'Linux approval notifications carry the same action keys as Android',
     () {
-      const notification = TurnNotification(
+      final notification = TurnNotification(
         id: 7,
         title: 'Approval needed',
         body: 'Open the chat to review the requested action.',

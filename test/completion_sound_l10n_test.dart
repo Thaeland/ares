@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/notification_prefs.dart';
 import 'package:hermes_android/core/services/turn_notification_service.dart';
 
-TurnNotification _done() => const TurnNotification(
+TurnNotification _done() => TurnNotification(
   id: 1,
   title: 't',
   body: 'b',
