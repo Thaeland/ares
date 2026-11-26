@@ -215,6 +215,66 @@ void main() {
         expect(errors, isEmpty, reason: errors.join('\n'));
       });
 
+      testWidgets('F11 the bot sheet and Edit Profile, every field above the '
+          'keyboard', (tester) async {
+        _phone(tester);
+        final gateway = BotsReviewGateway();
+        final owner = botsReviewOwner(gateway);
+        addTearDown(owner.close);
+        final errors = await _overflows(tester, () async {
+          await tester.pumpWidget(
+            _app(
+              layout,
+              BotsScreen(
+                owner: owner,
+                route: owner.route(),
+                connection: botsReviewConnection,
+              ),
+            ),
+          );
+          await botsShown(tester, find.text('WorkBot'));
+          await tester.tap(find.text('WorkBot'));
+          await botsStep(tester);
+          final edit = find.byKey(const Key('bots-edit-profile'));
+          await tester.ensureVisible(edit);
+          await botsStep(tester, 2);
+          await tester.tap(edit);
+          await botsStep(tester);
+          tester.view.viewInsets = const FakeViewPadding(bottom: _keyboard);
+          await botsStep(tester);
+          final advanced = find.byKey(const Key('bots-edit-advanced'));
+          await tester.ensureVisible(advanced);
+          await botsStep(tester, 2);
+          await tester.tap(advanced);
+          await botsStep(tester);
+          for (final key in [
+            'bots-edit-title',
+            'bots-edit-description',
+            'bots-edit-provider',
+            'bots-edit-model',
+            'bots-edit-soul',
+            'bots-form-save',
+          ]) {
+            final field = find.byKey(Key(key));
+            await tester.ensureVisible(field);
+            await botsStep(tester, 2);
+            _expectAboveKeyboard(tester, field);
+          }
+          for (final key in [
+            'bots-avatar-remove',
+            'bots-edit-skill-git-helper',
+            'bots-edit-toolset-terminal',
+            'bots-edit-mcp-github',
+          ]) {
+            final field = find.byKey(Key(key));
+            await tester.ensureVisible(field);
+            await botsStep(tester, 2);
+            expect(field.hitTestable(), findsOneWidget, reason: key);
+          }
+        });
+        expect(errors, isEmpty, reason: errors.join('\n'));
+      });
+
       testWidgets('F11 the New Bot form, every field above the keyboard', (
         tester,
       ) async {

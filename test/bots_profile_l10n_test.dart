@@ -112,4 +112,45 @@ void main() {
     ], 'New Bot');
     expect(seen, contains('Ein Agent namens „workbot“ existiert bereits.'));
   });
+
+  testWidgets('Edit Profile and its confirmation in German', (tester) async {
+    _wide(tester);
+    final gateway = BotsReviewGateway();
+    final owner = botsReviewOwner(gateway);
+    addTearDown(owner.close);
+    await tester.pumpWidget(botsReviewApp(owner, locale: _german));
+    await botsShown(tester, find.text('WorkBot'));
+    await botsStep(tester, 3);
+    await tester.tap(find.text('WorkBot'));
+    await botsStep(tester, 3);
+    await tester.tap(find.byKey(const Key('bots-edit-profile')));
+    await botsStep(tester, 4);
+    await tester.ensureVisible(find.byKey(const Key('bots-edit-advanced')));
+    await tester.tap(find.byKey(const Key('bots-edit-advanced')));
+    await botsStep(tester, 4);
+    var seen = _shown();
+    _expectLocalised(seen, const [
+      'ng_bots_edit_profile',
+      'ng_bots_avatar_remove',
+      'ng_bots_advanced',
+      'ng_bots_provider',
+      'ng_bots_model',
+      'ng_bots_skills',
+      'ng_bots_toolsets',
+      'ng_bots_toolsets_hint',
+      'ng_bots_mcp_servers',
+    ], 'Edit Profile');
+    expect(seen, contains('Aussehen und Rolle von WorkBot (workbot).'));
+    await tester.ensureVisible(find.byKey(const Key('bots-avatar-remove')));
+    await tester.tap(find.byKey(const Key('bots-avatar-remove')));
+    await botsStep(tester, 2);
+    await tester.ensureVisible(find.byKey(const Key('bots-form-save')));
+    await tester.tap(find.byKey(const Key('bots-form-save')));
+    await botsStep(tester, 3);
+    seen = _shown();
+    _expectLocalised(seen, const [
+      'ng_bots_confirm_changes_title',
+    ], 'the save confirmation');
+    expect(seen, contains('• Das Bild des Bots entfernen'));
+  });
 }

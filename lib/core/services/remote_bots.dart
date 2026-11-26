@@ -1102,10 +1102,12 @@ extension WorkspaceBots on WorkspaceTarget {
   /// Desktop's `saveBotMeta` server half (data.ts `persistBotMetaPatch`):
   /// re-read the bot's record, write the patch over it with the revision it
   /// read, and re-read on a conflict. Image data never rides ui_meta.
+  /// Keys in [remove] are dropped from the record (Desktop's `undefined`).
   Future<BotLookSave> botSaveLook(
     String name,
-    Map<String, dynamic> patch,
-  ) async {
+    Map<String, dynamic> patch, {
+    Set<String> remove = const {},
+  }) async {
     final fields = Map<String, dynamic>.from(patch)
       ..remove('image')
       ..remove('pet');
@@ -1120,7 +1122,8 @@ extension WorkspaceBots on WorkspaceTarget {
         result = await botProfileConfigure(
           name,
           uiMeta: {
-            'hermes-bots': {...base, ...fields},
+            'hermes-bots': {...base, ...fields}
+              ..removeWhere((key, _) => remove.contains(key)),
           },
           expectedRevisions: revision == null
               ? null

@@ -414,6 +414,124 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
     return const BotFormDone();
   }
 
+  // ── Edit Profile ──────────────────────────────────────────────────────
+
+  void _openEditProfile(BotRosterProfile bot) {
+    final target = _target;
+    if (target == null || !_owns(target)) return;
+    unawaited(
+      showBotForm(
+        context,
+        BotEditForm(
+          bot: bot,
+          image: identical(_avatarTarget, target) ? _avatars[bot.name] : null,
+          pickImage: widget.pickAvatarImage ?? pickBotAvatarImage,
+          loadAdvanced: () async {
+            final described = await target.botProfileDescribe(bot.name);
+            if (!_owns(target)) {
+              throw const WorkspaceException(WorkspaceFailure.stale);
+            }
+            return described;
+          },
+          confirm: (title, message, ok) =>
+              _confirm(title: title, message: message, confirmLabel: ok),
+          onSubmit: (edit) => _saveProfile(target, bot.name, edit),
+        ),
+      ),
+    );
+  }
+
+  /// Desktop's Edit Profile save: the changed look fields over the bot's
+  /// current record (CAS), the picture only when it changed, and one
+  /// `profiles.configure` for the description and the dirty Advanced
+  /// sections. A guarded model asks with the gateway's own message and is
+  /// resent alone with `confirm_expensive_model`.
+  Future<BotFormResult> _saveProfile(
+    WorkspaceTarget target,
+    String name,
+    BotProfileEdit edit,
+  ) async {
+    final l10n = context.sharedL10n;
+    if (!_owns(target)) return const BotFormDropped();
+    final failed = <String>[];
+    var modelKept = false;
+    try {
+      if (edit.look != null || edit.lookRemove.isNotEmpty) {
+        final saved = await target.botSaveLook(
+          name,
+          edit.look ?? const {},
+          remove: edit.lookRemove,
+        );
+        if (!_owns(target)) return const BotFormDropped();
+        if (saved == BotLookSave.failed) failed.add('ui_meta');
+      }
+      if (edit.imageChanged) {
+        await target.botProfileSetAvatar(name, edit.image);
+        if (!_owns(target)) return const BotFormDropped();
+        if (identical(_avatarTarget, target)) {
+          final image = edit.image;
+          _avatars = {..._avatars}..remove(name);
+          if (image != null) _avatars = {..._avatars, name: image};
+        }
+      }
+      if (edit.description != null || edit.advanced) {
+        final result = await target.botProfileConfigure(
+          name,
+          description: edit.description,
+          soul: edit.soul,
+          model: edit.model,
+          provider: edit.provider,
+          disabledSkills: edit.disabledSkills,
+          enabledToolsets: edit.enabledToolsets,
+          enabledMcpServers: edit.enabledMcpServers,
+        );
+        if (!_owns(target)) return const BotFormDropped();
+        failed.addAll(result.failed);
+        final message = result.confirmMessage;
+        if (message != null && edit.model != null) {
+          final ok = await _confirm(
+            title: l10n.ng_bots_model_confirm_title,
+            message: message,
+            confirmLabel: l10n.ng_bots_model_confirm_ok,
+          );
+          if (!_owns(target)) return const BotFormDropped();
+          if (ok) {
+            final confirmed = await target.botProfileConfigure(
+              name,
+              model: edit.model,
+              provider: edit.provider,
+              confirmExpensiveModel: true,
+            );
+            if (!_owns(target)) return const BotFormDropped();
+            failed.addAll(confirmed.failed);
+          } else {
+            modelKept = true;
+          }
+        }
+      }
+    } on BotProfileRefusal catch (e) {
+      if (!_owns(target)) return const BotFormDropped();
+      return BotFormFailed(e.message);
+    } on WorkspaceException catch (e) {
+      if (!_owns(target)) return const BotFormDropped();
+      return BotFormFailed(l10n.ng_bots_request_failed(e.reason.name));
+    }
+    unawaited(_load());
+    if (failed.isNotEmpty) {
+      return BotFormFailed(l10n.ng_bots_sections_failed(failed.join(', ')));
+    }
+    final shown = edit.look?['title'] is String && edit.look!['title'] != ''
+        ? edit.look!['title'] as String
+        : (_roster.where((b) => b.name == name).firstOrNull?.title ?? name);
+    _toast(
+      [
+        l10n.ng_bots_updated(shown),
+        if (modelKept) l10n.ng_bots_model_not_switched,
+      ].join('\n'),
+    );
+    return const BotFormDone();
+  }
+
   Future<void> _loadRooms(WorkspaceTarget target) async {
     final request = ++_roomsRequest;
     bool current() => request == _roomsRequest && _owns(target);
@@ -1145,6 +1263,10 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
       builder: (sheetContext) => _RosterDetailSheet(
         bot: bot,
         face: _face(bot, 44),
+        onEditProfile: () {
+          Navigator.of(sheetContext).pop();
+          _openEditProfile(bot);
+        },
         onOpenChat: () {
           Navigator.of(sheetContext).pop();
           _openCanonicalChat(bot);
@@ -1844,6 +1966,7 @@ class _RosterDetailSheet extends StatelessWidget {
   const _RosterDetailSheet({
     required this.bot,
     required this.face,
+    required this.onEditProfile,
     required this.onOpenChat,
     required this.onOpenRoutines,
     required this.onOpenScreen,
@@ -1851,14 +1974,16 @@ class _RosterDetailSheet extends StatelessWidget {
 
   final BotRosterProfile bot;
   final Widget face;
+  final VoidCallback onEditProfile;
   final VoidCallback onOpenChat;
   final VoidCallback onOpenRoutines;
   final VoidCallback onOpenScreen;
 
   @override
   Widget build(BuildContext context) {
+    // Scrolls: at 2.0x text the sheet is taller than a phone.
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1923,6 +2048,12 @@ class _RosterDetailSheet extends StatelessWidget {
                     icon: const Icon(Icons.chat_bubble_outline),
                     label: Text(context.sharedL10n.ng_bots_open_chat),
                     onPressed: onOpenChat,
+                  ),
+                  OutlinedButton.icon(
+                    key: const Key('bots-edit-profile'),
+                    icon: const Icon(Icons.edit_outlined),
+                    label: Text(context.sharedL10n.ng_bots_edit_profile),
+                    onPressed: onEditProfile,
                   ),
                   OutlinedButton.icon(
                     icon: const Icon(Icons.schedule_outlined),
