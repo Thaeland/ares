@@ -32,7 +32,7 @@ class BotsScreen extends StatefulWidget {
   State<BotsScreen> createState() => _BotsScreenState();
 }
 
-enum _BotsTab { roster, rooms, screen, routines, relay }
+enum _BotsTab { roster, rooms, screen, routines }
 
 class _BotsScreenState extends State<BotsScreen> {
   WorkspacePane? _pane;
@@ -72,12 +72,6 @@ class _BotsScreenState extends State<BotsScreen> {
   String? _routinesScope;
   bool _routinesLoading = false;
 
-  // Relay
-  String? _relayProfile; // null = _screenProfile
-  final _relayInput = TextEditingController();
-  bool _relayBusy = false;
-  RelayDelivery? _relayResult;
-
   @override
   void initState() {
     super.initState();
@@ -86,9 +80,6 @@ class _BotsScreenState extends State<BotsScreen> {
     _searchController.addListener(() {
       final next = _searchController.text.trim();
       if (next != _search && mounted) setState(() => _search = next);
-    });
-    _relayInput.addListener(() {
-      if (mounted) setState(() {});
     });
     unawaited(_load());
   }
@@ -111,7 +102,6 @@ class _BotsScreenState extends State<BotsScreen> {
     ConnectionMutationBarrier.removeListener(_onAccountChanged);
     _cancelThumbnail();
     _searchController.dispose();
-    _relayInput.dispose();
     _pane?.close();
     super.dispose();
   }
@@ -168,14 +158,10 @@ class _BotsScreenState extends State<BotsScreen> {
         _loading = false;
         _screenProfile ??= _roster.firstOrNull?.name;
         _routinesProfile ??= _screenProfile;
-        _relayProfile ??= _screenProfile;
       });
       if (_tab == _BotsTab.rooms) unawaited(_loadRooms(target));
       if (_tab == _BotsTab.routines) unawaited(_loadRoutines(target));
       if (_tab == _BotsTab.screen) unawaited(_loadScreen(target));
-      if (_tab == _BotsTab.relay) {
-        // Relay target defaults to the screen profile; nothing to load.
-      }
     } on WorkspaceException catch (e) {
       if (!mounted || !identical(token, _token)) return;
       setState(() {
@@ -537,11 +523,6 @@ class _BotsScreenState extends State<BotsScreen> {
                   label: Text('Routines'),
                   icon: Icon(Icons.schedule_outlined),
                 ),
-                ButtonSegment(
-                  value: _BotsTab.relay,
-                  label: Text('Relay'),
-                  icon: Icon(Icons.send_outlined),
-                ),
               ],
               selected: {_tab},
               onSelectionChanged: (s) => _onTabChanged(s.single),
@@ -568,8 +549,6 @@ class _BotsScreenState extends State<BotsScreen> {
         _screenProfile ??= _roster.firstOrNull?.name;
         unawaited(_loadScreen(target));
       case _BotsTab.roster:
-        break;
-      case _BotsTab.relay:
         break;
     }
   }
@@ -640,7 +619,6 @@ class _BotsScreenState extends State<BotsScreen> {
             _BotsTab.rooms => _roomsView(),
             _BotsTab.screen => _screenView(isNarrow),
             _BotsTab.routines => _routinesView(isNarrow),
-            _BotsTab.relay => _relayView(),
           },
         ),
       ],
@@ -746,13 +724,6 @@ class _BotsScreenState extends State<BotsScreen> {
           });
           final target = _target;
           if (target != null) unawaited(_loadScreen(target));
-        },
-        onRelay: () {
-          Navigator.of(sheetContext).pop();
-          setState(() {
-            _relayProfile = bot.name;
-            _tab = _BotsTab.relay;
-          });
         },
       ),
     );
@@ -1289,129 +1260,6 @@ class _BotsScreenState extends State<BotsScreen> {
       ),
     );
   }
-
-  // ── Relay ──────────────────────────────────────────────────────────────
-
-  Widget _relayView() {
-    final profiles = _roster.map((p) => p.name).toList();
-    final selected = _relayProfile;
-    final isCurrent = selected == _screenProfile;
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        DropdownButtonFormField<String>(
-          initialValue: profiles.contains(selected) ? selected : null,
-          items: [
-            for (final n in profiles)
-              DropdownMenuItem(value: n, child: Text(n)),
-          ],
-          decoration: const InputDecoration(
-            labelText: 'Target bot',
-            border: OutlineInputBorder(),
-            isDense: true,
-          ),
-          onChanged: (n) {
-            if (n == null) return;
-            setState(() {
-              _relayProfile = n;
-              _relayResult = null;
-            });
-          },
-        ),
-        const SizedBox(height: 12),
-        Text(
-          'Cross-connection delivery (relayed by this app). The message is sent to the target bot\'s '
-          'profile through bot_relay.deliver.',
-          style: TextStyle(fontSize: 12, color: HermesTokens.of(context).muted),
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          controller: _relayInput,
-          maxLines: 5,
-          maxLength: 65536,
-          decoration: const InputDecoration(
-            hintText: 'Message to the target bot',
-            border: OutlineInputBorder(),
-            alignLabelWithHint: true,
-          ),
-        ),
-        const SizedBox(height: 12),
-        ElevatedButton.icon(
-          onPressed: _relayBusy || _relayInput.text.trim().isEmpty
-              ? null
-              : () => _sendRelay(),
-          icon: const Icon(Icons.send),
-          label: Text(
-            isCurrent
-                ? '${context.sharedL10n.send} to this bot'
-                : '${context.sharedL10n.send} to @${botHandleFor(selected!)}',
-          ),
-        ),
-        const SizedBox(height: 16),
-        if (_relayResult != null)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Delivery: ${_relayResult!.status.isEmpty ? 'unknown' : _relayResult!.status}',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  if (_relayResult!.reply != null)
-                    Text('Reply: ${_relayResult!.reply}'),
-                  if (_relayResult!.error != null)
-                    Text('Error: ${_relayResult!.error}'),
-                  if (_relayResult!.reason != null)
-                    Text('Reason: ${_relayResult!.reason}'),
-                  if (_relayResult!.deliveryId != null)
-                    Text(
-                      'delivery_id: ${_relayResult!.deliveryId}',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                ],
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Future<void> _sendRelay() async {
-    final target = _target;
-    final profile = _relayProfile;
-    final text = _relayInput.text.trim();
-    if (target == null || profile == null || text.isEmpty) return;
-    setState(() {
-      _relayBusy = true;
-      _relayResult = null;
-    });
-    try {
-      final fromProfile = _effectiveProfile;
-      final result = await target.botRelayDeliver(
-        profile: profile,
-        message: text,
-        fromProfile: fromProfile,
-        fromHandle: botHandleFor(fromProfile),
-        fromConnection: widget.connection.id,
-      );
-      if (!mounted) return;
-      setState(() => _relayResult = result);
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _relayResult = RelayDelivery(status: 'failed', error: '$e');
-      });
-    } finally {
-      if (mounted) setState(() => _relayBusy = false);
-    }
-  }
-
-  String get _effectiveProfile =>
-      _target?.effectiveProfile?.trim().isNotEmpty == true
-      ? _target!.effectiveProfile!
-      : (_roster.firstOrNull?.name ?? 'default');
 }
 
 extension on DisplayStatus {
@@ -1439,14 +1287,12 @@ class _RosterDetailSheet extends StatelessWidget {
     required this.onOpenChat,
     required this.onOpenRoutines,
     required this.onOpenScreen,
-    required this.onRelay,
   });
 
   final BotRosterProfile bot;
   final VoidCallback onOpenChat;
   final VoidCallback onOpenRoutines;
   final VoidCallback onOpenScreen;
-  final VoidCallback onRelay;
 
   @override
   Widget build(BuildContext context) {
@@ -1529,11 +1375,6 @@ class _RosterDetailSheet extends StatelessWidget {
                     icon: const Icon(Icons.desktop_windows_outlined),
                     label: const Text('Bot Desktop'),
                     onPressed: onOpenScreen,
-                  ),
-                  OutlinedButton.icon(
-                    icon: const Icon(Icons.send_outlined),
-                    label: const Text('Send relay'),
-                    onPressed: onRelay,
                   ),
                 ],
               ),

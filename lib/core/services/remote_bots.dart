@@ -149,7 +149,11 @@ final class RoutineJob {
   final String? lastError;
   final bool enabled;
   final String state;
-  final int? repeat;
+
+  /// The gateway's own wording of the run limit (`cron/job_args.py`
+  /// `_repeat_display`): `forever`, `once`, `3 times` or `1/3`. A string on
+  /// the wire, never a count.
+  final String? repeat;
   final String promptPreview;
   final String deliver;
 
@@ -185,7 +189,11 @@ final class RoutineJob {
       lastError: raw['last_error'] as String?,
       enabled: raw['enabled'] != false && raw['state'] != 'paused',
       state: raw['state'] as String? ?? '',
-      repeat: (raw['repeat'] as num?)?.toInt(),
+      repeat: switch (raw['repeat']) {
+        final String text when text.trim().isNotEmpty => text.trim(),
+        final num count => '$count',
+        _ => null,
+      },
       promptPreview:
           raw['prompt_preview'] as String? ?? raw['prompt'] as String? ?? '',
       deliver: raw['deliver'] as String? ?? '',
@@ -614,40 +622,6 @@ final class DisplayThumbnail {
   factory DisplayThumbnail.fromJson(Map raw) => DisplayThumbnail(
     dataUrl: raw['data_url'] as String?,
     suppressed: raw['suppressed'] as String?,
-  );
-}
-
-final class RelayDelivery {
-  const RelayDelivery({
-    required this.status,
-    this.deliveryId,
-    this.admissionId,
-    this.refused,
-    this.reply,
-    this.error,
-    this.reason,
-  });
-
-  final String status;
-  final String? deliveryId;
-  final String? admissionId;
-  final bool? refused;
-  final String? reply;
-  final String? error;
-  final String? reason;
-
-  bool get settled => status == 'settled';
-
-  factory RelayDelivery.fromJson(Map raw) => RelayDelivery(
-    status: raw['status'] as String? ?? '',
-    deliveryId: raw['delivery_id'] as String?,
-    admissionId: raw['admission_id'] as String?,
-    refused: raw['refused'] == true
-        ? true
-        : (raw['refused'] == false ? false : null),
-    reply: raw['reply'] as String?,
-    error: raw['error'] as String?,
-    reason: raw['reason'] as String?,
   );
 }
 
@@ -1116,27 +1090,6 @@ extension WorkspaceBots on WorkspaceTarget {
       'approve': approve,
     });
     return DisplayStatus.fromJson(raw);
-  }
-
-  // ── Cross-connection relay ─────────────────────────────────────────────
-
-  Future<RelayDelivery> botRelayDeliver({
-    required String profile,
-    required String message,
-    String? id,
-    String? fromProfile,
-    String? fromHandle,
-    String? fromConnection,
-  }) async {
-    final raw = await _rpcLaunch('bot_relay.deliver', {
-      'id': ?id,
-      'profile': profile,
-      'message': message,
-      'from_profile': ?fromProfile,
-      'from_handle': ?fromHandle,
-      'from_connection': ?fromConnection,
-    });
-    return RelayDelivery.fromJson(raw);
   }
 }
 
