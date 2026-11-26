@@ -1456,19 +1456,9 @@ class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
 
   // ── Roster ────────────────────────────────────────────────────────────
 
-  List<BotRosterProfile> get _visibleRoster {
-    final needle = _search.toLowerCase();
-    return _roster.where((p) {
-      if (needle.isEmpty) return true;
-      return [
-        p.name,
-        p.displayName,
-        p.description,
-        p.model,
-        p.provider,
-      ].where((s) => s.isNotEmpty).any((s) => s.toLowerCase().contains(needle));
-    }).toList();
-  }
+  /// The roster narrowed by the search field, as Desktop's filterBots.
+  List<BotRosterProfile> get _visibleRoster =>
+      filterBotRoster(_roster, _search);
 
   Widget _rosterView(bool isNarrow) {
     return ListView(

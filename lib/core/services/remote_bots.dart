@@ -31,6 +31,7 @@ final class BotRosterProfile {
     this.canonicalSessionId,
     this.workerSessionId,
     this.lastSessionPreview,
+    this.activityPreview,
     this.look = const {},
     this.lookRevision,
     this.lastActive = 0,
@@ -48,6 +49,10 @@ final class BotRosterProfile {
   final String? canonicalSessionId;
   final String? workerSessionId;
   final String? lastSessionPreview;
+
+  /// The preview of the bot's latest activity: the fresher of its Bot Chat
+  /// and its last session (Desktop's `botActivitySession`).
+  final String? activityPreview;
 
   /// Hermes Desktop's per-bot record, `ui_meta['hermes-bots']` in the
   /// profile's profile.yaml: title, avatar shape/colour, pin, section.
@@ -99,6 +104,7 @@ final class BotRosterProfile {
     canonicalSessionId: canonicalSessionId,
     workerSessionId: workerSessionId,
     lastSessionPreview: lastSessionPreview,
+    activityPreview: activityPreview,
     look: Map<String, dynamic>.unmodifiable(next),
     lookRevision: lookRevision,
     lastActive: lastActive,
@@ -125,6 +131,13 @@ final class BotRosterProfile {
       active(canonical),
       active(lastSession),
     ].reduce((a, b) => a > b ? a : b);
+    // Desktop's botActivitySession: the Bot Chat unless the last session is
+    // newer.
+    final activity = canonical is Map && lastSession is Map
+        ? (active(canonical) >= active(lastSession) ? canonical : lastSession)
+        : canonical is Map
+        ? canonical
+        : lastSession;
     return BotRosterProfile(
       name: name,
       path: path is String ? path : '',
@@ -144,6 +157,9 @@ final class BotRosterProfile {
       lastSessionPreview: lastSession is Map
           ? lastSession['preview'] as String?
           : null,
+      activityPreview: activity is Map && activity['preview'] is String
+          ? activity['preview'] as String
+          : null,
       look: bots is Map ? Map<String, dynamic>.unmodifiable(bots) : const {},
       lookRevision: revisions is Map
           ? switch (revisions['hermes-bots']) {
@@ -154,6 +170,52 @@ final class BotRosterProfile {
       lastActive: lastActive,
     );
   }
+}
+
+/// The name Desktop's `displayName` (labels.ts) gives [bot] on a single
+/// gateway: its Bot Mode title, else its profile display name, else
+/// "Hermes" for an untitled default profile, else its id with `-`/`_` read
+/// as spaces and each word capitalised.
+String botDesktopDisplayName(BotRosterProfile bot) {
+  final own = bot.look['title'];
+  if (own is String && own.trim().isNotEmpty) return own.trim();
+  if (bot.displayName.trim().isNotEmpty) return bot.displayName.trim();
+  if (bot.name.trim().toLowerCase() == 'default') return 'Hermes';
+  return bot.name
+      .replaceAll(RegExp(r'[-_]+'), ' ')
+      .trim()
+      .replaceAllMapped(RegExp(r'\b\w'), (match) => match[0]!.toUpperCase());
+}
+
+/// Desktop's `filterBots` (data.ts): [query], trimmed, lowercased and
+/// without a leading `@`, matches a row by the title it shows (and Desktop's
+/// spelling of it), its profile id, its @handle, its description and the
+/// preview of its latest activity. The row's subtitle (model and provider)
+/// and its last session's preview, which Ares shows, count too. Search
+/// narrows the roster; it never re-ranks it.
+List<BotRosterProfile> filterBotRoster(
+  Iterable<BotRosterProfile> roster,
+  String query,
+) {
+  final needle = query.trim().toLowerCase().replaceFirst(RegExp('^@'), '');
+  if (needle.isEmpty) return roster.toList();
+  return [
+    for (final bot in roster)
+      if ([
+        bot.title,
+        botDesktopDisplayName(bot),
+        bot.name,
+        bot.handle,
+        bot.displayName,
+        if (bot.look['description'] case final String own) own,
+        bot.description,
+        ?bot.activityPreview,
+        ?bot.lastSessionPreview,
+        bot.model,
+        bot.provider,
+      ].any((text) => text.toLowerCase().contains(needle)))
+        bot,
+  ];
 }
 
 /// The profile id grammar (`hermes_constants.PROFILE_ID_RE`, mirrored by

@@ -65,6 +65,19 @@ MCP server asks first. Desktop writes the description with
 the gateway's typed editor path. Clearing the model (Desktop's
 `config unset model`) is not offered: both provider and model are required.
 
+## Roster search (data.ts, filterBots)
+
+`filterBotRoster` in `remote_bots.dart`. The query is trimmed, lowercased
+and loses a leading `@`. It matches the title the row shows (the record's
+`title`, else the profile's display name, else its id) and Desktop's
+`displayName` spelling of it (`research-buddy` as "Research Buddy", the
+untitled default profile as "Hermes"), the profile id, the @handle (`hermes`
+for `default`), the description, and the preview of the latest activity
+(the fresher of the Bot Chat and the last session, Desktop's
+`botActivitySession`). Ares also matches the row's subtitle (model and
+provider) and the last session's preview, both of which it shows. Search
+narrows the roster and never re-orders it.
+
 ## Sections (user-sections.ts)
 
 - Membership is on the bot (`sectionId`, `sectionName` in its record).
