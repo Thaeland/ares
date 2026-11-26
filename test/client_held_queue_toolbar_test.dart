@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/screens/chat_screen.dart';
+import 'package:hermes_android/core/models/attachment_draft.dart';
 import 'package:hermes_android/core/services/client_held_queue.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/gateway_turn_application_controller.dart';
@@ -229,12 +230,12 @@ void main() {
       await _pumpClassic(tester, client);
       expect(
         find.byKey(const ValueKey('image-recovery-gap-restSse')),
-        findsOneWidget,
+        findsNothing,
       );
       expect(find.text('Recover image draft…'), findsNothing);
       expect(
         find.text(ImageRecoveryCapabilityNotice.restExplanation),
-        findsOneWidget,
+        findsNothing,
       );
 
       await tester.enterText(
@@ -349,11 +350,11 @@ void main() {
     );
     expect(
       find.byKey(const ValueKey('image-recovery-gap-recoveryV2')),
-      findsOneWidget,
+      findsNothing,
     );
     expect(
       find.text(ImageRecoveryCapabilityNotice.recoveryExplanation),
-      findsOneWidget,
+      findsNothing,
     );
     expect(find.text('Recover image draft…'), findsNothing);
     expect(
@@ -361,6 +362,44 @@ void main() {
       findsNothing,
     );
   });
+
+  for (final companion in [false, true]) {
+    testWidgets('image attachment shows recovery gap (companion=$companion)', (
+      tester,
+    ) async {
+      await _pumpClassic(
+        tester,
+        _RestStreams(),
+        turnSession: companion ? InertTurnApplicationSession() : null,
+        attachments: [
+          AttachmentDraft(
+            id: 'image',
+            cachedPath: '/fixture/image.png',
+            name: 'image.png',
+            byteLength: 7,
+            mediaType: 'image/png',
+            kind: AttachmentDraftKind.image,
+            sanitized: true,
+          ),
+        ],
+      );
+      expect(
+        find.byKey(
+          ValueKey(
+            'image-recovery-gap-${companion ? 'recoveryV2' : 'restSse'}',
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Recover image draft…'), findsNothing);
+      await tester.enterText(
+        find.byKey(const Key('chat-message-composer')),
+        'caption',
+      );
+      await _pump(tester);
+      expect(find.byType(ImageRecoveryCapabilityNotice), findsOneWidget);
+    });
+  }
 
   testWidgets('a stock composer does not show the REST recovery gap', (
     tester,
@@ -372,6 +411,17 @@ void main() {
         home: ChatScreen(
           connection: _connection,
           session: _session,
+          initialAttachmentDrafts: [
+            AttachmentDraft(
+              id: 'stock-image',
+              cachedPath: '/fixture/image.png',
+              name: 'image.png',
+              byteLength: 7,
+              mediaType: 'image/png',
+              kind: AttachmentDraftKind.image,
+              sanitized: true,
+            ),
+          ],
           testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
           testRemotePromptSubmit:
               ({
@@ -481,6 +531,7 @@ Future<void> _pumpClassic(
   WidgetTester tester,
   http.Client client, {
   GatewayTurnApplicationSession? turnSession,
+  List<AttachmentDraft> attachments = const [],
 }) async {
   await tester.pumpWidget(
     MaterialApp(
@@ -489,6 +540,7 @@ Future<void> _pumpClassic(
       home: ChatScreen(
         connection: _connection,
         session: _session,
+        initialAttachmentDrafts: attachments,
         testTurnApplicationSession: turnSession,
         testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
         testApiClient: ApiClient(

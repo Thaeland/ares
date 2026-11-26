@@ -7916,7 +7916,7 @@ class _ChatScreenState extends State<ChatScreen>
     return ImageRecoveryGap.restSse;
   }
 
-  bool get _quietEmptyComposer =>
+  bool get _quietImageComposer =>
       mounted &&
       widget.active &&
       _draftWriter.isCurrent &&
@@ -7930,8 +7930,7 @@ class _ChatScreenState extends State<ChatScreen>
       !_voiceRecording.busy &&
       !_voiceComposer.listening &&
       !_startingVoiceInput &&
-      _textController.text.isEmpty &&
-      _attachmentDrafts.isEmpty;
+      _attachmentDrafts.any((d) => d.isImage);
 
   Object? _imageRestoreRevision() =>
       mounted &&
@@ -10980,7 +10979,7 @@ class _ChatScreenState extends State<ChatScreen>
                           _editComposerAsUser(text);
                         },
                       )
-                    else if (_quietEmptyComposer && _imageRecoveryGap != null)
+                    else if (_quietImageComposer && _imageRecoveryGap != null)
                       ImageRecoveryCapabilityNotice(gap: _imageRecoveryGap!),
                     if (_recoveryMessage != null)
                       Padding(

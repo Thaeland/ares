@@ -78,6 +78,16 @@ class _Gateway extends NextGenGateway {
   }
 }
 
+class _SlowStore extends PreparedImageStore {
+  final checks = <({String key, Completer<bool> result})>[];
+  @override
+  Future<bool> hasRecoverable(PreparedImageTarget target) {
+    final result = Completer<bool>();
+    checks.add((key: target.key, result: result));
+    return result.future;
+  }
+}
+
 void main() {
   final connection = fixture;
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -113,6 +123,159 @@ void main() {
     PathProviderPlatform.instance = oldPaths;
     await dir.delete(recursive: true);
   });
+  Future<void> flush(WidgetTester t) async {
+    for (var i = 0; i < 30; i++) {
+      await t.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 2)),
+      );
+      await t.pump();
+    }
+  }
+
+  Widget recovery({
+    PreparedImageTarget? chat,
+    PreparedImageStore? reader,
+    Object? Function()? revision,
+  }) => MaterialApp(
+    home: Scaffold(
+      body: PreparedImageRecovery(
+        target: chat ?? target,
+        store: reader ?? store,
+        revision: revision ?? () => 0,
+        install: (_, _) {},
+      ),
+    ),
+  );
+
+  for (final discard in [false, true]) {
+    testWidgets(
+      'journal signal shows published entry and hides after ${discard ? 'discard' : 'retire'}',
+      (t) async {
+        await t.pumpWidget(recovery());
+        await flush(t);
+        expect(find.text('Recover image draft…'), findsNothing);
+        expect(t.getSize(find.byType(PreparedImageRecovery)).height, 0);
+        final entry = (await t.runAsync(() async {
+          final cap = await store.capture([
+            await image('signal', [1, 2]),
+          ]);
+          return (await store.prepare(
+            target,
+            'signal caption',
+            cap,
+            prompt: 'caption',
+          )).entry;
+        }))!;
+        await flush(t);
+        expect(find.text('Recover image draft…'), findsOneWidget);
+        if (discard) {
+          await t.tap(find.text('Recover image draft…'));
+          await flush(t);
+          await t.pumpAndSettle();
+          await t.tap(find.byTooltip('Discard local copy'));
+          await t.pumpAndSettle();
+          await t.tap(find.text('Discard'));
+          await t.pumpAndSettle();
+          await flush(t);
+        } else {
+          await t.runAsync(() => PreparedImageStore.retire(entry));
+          await flush(t);
+        }
+        expect(find.text('Recover image draft…'), findsNothing);
+        expect(t.getSize(find.byType(PreparedImageRecovery)).height, 0);
+      },
+    );
+  }
+
+  testWidgets('closing copy-only capture signals availability', (t) async {
+    final cap = (await t.runAsync(
+      () async => store.capture(
+        [
+          await image('copy', [3]),
+        ],
+        beforeUpload: (target: target, text: 'copy'),
+      ),
+    ))!;
+    await t.pumpWidget(recovery());
+    await flush(t);
+    expect(find.byType(TextButton), findsNothing);
+    await t.runAsync(cap.close);
+    await flush(t);
+    expect(find.byType(TextButton), findsOneWidget);
+  });
+
+  testWidgets(
+    'target switch hides an existing draft and ignores old slow result',
+    (t) async {
+      final slow = _SlowStore();
+      final other = PreparedImageTarget(connection, 'empty', target.transport);
+      await t.pumpWidget(recovery(reader: slow));
+      slow.checks.last.result.complete(true);
+      await t.pump();
+      expect(find.byType(TextButton), findsOneWidget);
+      PreparedImageStore.changes.value++;
+      final old = slow.checks.last.result;
+      await t.pumpWidget(recovery(chat: other, reader: slow));
+      expect(find.byType(TextButton), findsNothing);
+      slow.checks.last.result.complete(false);
+      await t.pump();
+      old.complete(true);
+      await t.pump();
+      expect(find.byType(TextButton), findsNothing);
+    },
+  );
+
+  testWidgets('checks revision values and store replacement, not rebuilds', (
+    t,
+  ) async {
+    final slow = _SlowStore();
+    var revision = 0;
+    await t.pumpWidget(recovery(reader: slow, revision: () => revision));
+    slow.checks.last.result.complete(false);
+    await t.pump();
+    await t.pumpWidget(recovery(reader: slow, revision: () => revision));
+    expect(slow.checks, hasLength(1));
+    revision++;
+    await t.pumpWidget(recovery(reader: slow, revision: () => revision));
+    expect(slow.checks, hasLength(2));
+    final replacement = _SlowStore();
+    await t.pumpWidget(recovery(reader: replacement, revision: () => revision));
+    replacement.checks.single.result.complete(false);
+    slow.checks.last.result.complete(true);
+    await t.pump();
+    expect(find.byType(TextButton), findsNothing);
+  });
+
+  testWidgets('corrupt manifest or unreadable scope offers no recovery', (
+    t,
+  ) async {
+    await t.runAsync(() async {
+      final cap = await store.capture([
+        await image('corrupt', [1]),
+      ]);
+      await store.prepare(target, 'caption', cap, prompt: 'caption');
+      final manifest =
+          await dir
+                  .list(recursive: true)
+                  .where((f) => f.path.endsWith('entry.json'))
+                  .single
+              as File;
+      await manifest.writeAsString('{broken');
+    });
+    await t.pumpWidget(recovery());
+    await flush(t);
+    expect(find.byType(TextButton), findsNothing);
+    await t.pumpWidget(
+      recovery(
+        reader: PreparedImageStore(
+          support: () async => throw const FileSystemException('unreadable'),
+        ),
+      ),
+    );
+    await flush(t);
+    expect(find.byType(TextButton), findsNothing);
+  });
+
   test(
     'only explicitly restored, unchanged occurrences can adopt frozen refs',
     () async {
@@ -360,6 +523,7 @@ void main() {
       }
 
       expect(installed, 0);
+      await waitFor(find.byType(TextButton));
       await tester.tap(find.byType(TextButton));
       await waitFor(find.text('caption'));
       await tester.pumpAndSettle();

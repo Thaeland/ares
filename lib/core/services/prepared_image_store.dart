@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -143,6 +144,7 @@ class PreparedImageCapture {
   Future<void> close() async {
     if (_publishedId != null) {
       PreparedImageStore._preparing.remove(_staging.path);
+      PreparedImageStore.changes.value++;
       return; // Recovery owns it until receipt/discard.
     }
     if (await _staging.exists()) await _staging.delete(recursive: true);
@@ -157,6 +159,7 @@ class PreparedImageStore {
   });
   final Future<Directory> Function() support, cache;
   static final shared = PreparedImageStore();
+  static final changes = ValueNotifier<int>(0);
   // Fallback fence if storage will neither mark nor unpublish an admitted ID.
   static final _spent = <String>{};
   static final _preparing = <String>{};
@@ -292,7 +295,9 @@ class PreparedImageStore {
     final dir = capture._publishedId != null
         ? staging
         : await staging.rename('${root.path}/$id');
-    return PreparedImageAttempt(await _read(target, dir, id));
+    final attempt = PreparedImageAttempt(await _read(target, dir, id));
+    changes.value++;
+    return attempt;
   }
 
   Future<PreparedImageEntry> _read(
@@ -340,6 +345,15 @@ class PreparedImageStore {
       }
     }
     return entries..sort((a, b) => b.created.compareTo(a.created));
+  }
+
+  /// A failed journal read would also fail on tap, so do not offer recovery.
+  Future<bool> hasRecoverable(PreparedImageTarget target) async {
+    try {
+      return (await list(target)).isNotEmpty;
+    } catch (_) {
+      return false;
+    }
   }
 
   /// Restore copies, not the journal's files. An edit, navigation, or receipt
@@ -428,29 +442,33 @@ class PreparedImageStore {
   static Future<void> retire(PreparedImageEntry entry) async {
     final dir = entry._dir;
     if (!await dir.exists()) return;
-    _spent.add(dir.path);
-    // Either marker or rename suffices: a deletion/rename failure must not
-    // turn an acknowledged item into another adoptable admission on restart.
     try {
-      await File('${dir.path}/spent').writeAsString('1', flush: true);
-    } on FileSystemException {
-      /* still try to unpublish */
-    }
-    final Directory gone;
-    try {
-      gone = await dir.rename('${dir.path}.retired');
-    } on FileSystemException {
-      if (!await dir.exists() || await File('${dir.path}/spent').exists()) {
-        _spent.remove(dir.path);
-        return;
+      _spent.add(dir.path);
+      // Either marker or rename suffices: a deletion/rename failure must not
+      // turn an acknowledged item into another adoptable admission on restart.
+      try {
+        await File('${dir.path}/spent').writeAsString('1', flush: true);
+      } on FileSystemException {
+        /* still try to unpublish */
       }
-      rethrow;
-    }
-    _spent.remove(dir.path);
-    try {
-      await gone.delete(recursive: true);
-    } on FileSystemException {
-      /* already unpublished */
+      final Directory gone;
+      try {
+        gone = await dir.rename('${dir.path}.retired');
+      } on FileSystemException {
+        if (!await dir.exists() || await File('${dir.path}/spent').exists()) {
+          _spent.remove(dir.path);
+          return;
+        }
+        rethrow;
+      }
+      _spent.remove(dir.path);
+      try {
+        await gone.delete(recursive: true);
+      } on FileSystemException {
+        /* already unpublished */
+      }
+    } finally {
+      changes.value++;
     }
   }
 }
