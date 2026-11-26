@@ -661,8 +661,9 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
               _url.clear();
               await _load();
             } catch (error) {
-              if (mounted)
+              if (mounted) {
                 setState(() => _error = _capabilityError(context, error));
+              }
             }
           },
           child: Text(context.sharedL10n.rel_ops_cap_add_server),
@@ -1372,11 +1373,13 @@ class _BrowserVaultScreenState extends State<BrowserVaultScreen> {
                 _clearSecrets();
                 await _load();
               } on VaultFormException catch (error) {
-                if (mounted)
+                if (mounted) {
                   setState(() => _error = _capabilityError(context, error));
+                }
               } catch (error) {
-                if (mounted)
+                if (mounted) {
                   setState(() => _error = _capabilityError(context, error));
+                }
               }
             },
             child: Text(context.sharedL10n.save),
@@ -1606,10 +1609,11 @@ class _AgentPolicyScreenState extends State<AgentPolicyScreen> {
                     try {
                       await _save(edited);
                     } catch (error) {
-                      if (mounted)
+                      if (mounted) {
                         setState(
                           () => _error = _capabilityError(context, error),
                         );
+                      }
                     }
                   },
                   child: Text(context.sharedL10n.rel_ops_cap_save_policy),

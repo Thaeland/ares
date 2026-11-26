@@ -88,9 +88,9 @@ String _failureEnglish(
   CapabilityFailure.theGatewayReturnedAResponseThatCouldNotBeRead =>
     'The gateway returned a response that could not be read.',
   CapabilityFailure.theGatewayRefusedTheRequestStatus =>
-    'The gateway refused the request (${statusCode}).',
+    'The gateway refused the request ($statusCode).',
   CapabilityFailure.thisConnectionHasNoGatewaySocketSoMethodIsUnavailable =>
-    'This connection has no gateway socket, so ${method} is unavailable.',
+    'This connection has no gateway socket, so $method is unavailable.',
   CapabilityFailure.chooseASkill => 'Choose a skill.',
   CapabilityFailure.theSkillTextWasNotReturned =>
     'The skill text was not returned.',
@@ -1313,10 +1313,11 @@ class CapabilityAdmin {
 
   Future<void> connectConnector(String connector, {String? alias}) async {
     final slug = connector.trim();
-    if (slug.isEmpty)
+    if (slug.isEmpty) {
       throw const CapabilityException.reason(
         CapabilityFailure.nameTheConnector,
       );
+    }
     final named = _clean(alias);
     await _call('connectors.connect', {
       'connectors': [slug],
@@ -1328,8 +1329,9 @@ class CapabilityAdmin {
 
   Future<void> removeConnectorAccount(String connectionId) async {
     final id = connectionId.trim();
-    if (id.isEmpty)
+    if (id.isEmpty) {
       throw const CapabilityException.reason(CapabilityFailure.chooseAnAccount);
+    }
     await _call('connectors.accounts.remove', {'connection_id': id});
   }
 
@@ -1456,8 +1458,9 @@ class CapabilityAdmin {
 
   Future<void> removeVaultItem(String id) async {
     final item = id.trim();
-    if (item.isEmpty)
+    if (item.isEmpty) {
       throw const CapabilityException.reason(CapabilityFailure.chooseAnItem);
+    }
     await _call('vault.remove', {'id': item});
   }
 
