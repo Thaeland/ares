@@ -313,6 +313,19 @@ class KanbanEventsServer {
       () => HttpServer.bind(InternetAddress.loopbackIPv4, 0),
     ))!;
     final events = KanbanEventsServer._(server, saved);
+    // The server is scaffolding: a write racing the board's own close on a
+    // loopback socket is the fixture's error, not the board's.
+    runZonedGuarded(() => events._serve(server), (error, stack) {
+      events.serverErrors.add(error);
+    });
+    return events;
+  }
+
+  /// Socket errors on the server side, kept out of the test's zone.
+  final serverErrors = <Object>[];
+
+  void _serve(HttpServer server) {
+    final events = this;
     server.listen((request) async {
       if (!WebSocketTransformer.isUpgradeRequest(request)) {
         request.response.statusCode = 404;
@@ -330,7 +343,6 @@ class KanbanEventsServer {
       );
       await events.onSocket?.call(socket, request.uri, index);
     });
-    return events;
   }
 
   Future<void> close(WidgetTester tester) async {

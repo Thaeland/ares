@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -1537,7 +1539,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 )
-              : _buildTaskList(col, tasks),
+              : _buildTaskList(col, tasks, wide: wide),
         ),
       ],
     );
@@ -1575,7 +1577,11 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     return columnContent;
   }
 
-  Widget _buildTaskList(KanbanColumn col, List<KanbanTaskCard> tasks) {
+  Widget _buildTaskList(
+    KanbanColumn col,
+    List<KanbanTaskCard> tasks, {
+    required bool wide,
+  }) {
     if (col.name == 'running' && _lanesByProfile) {
       final grouped = <String, List<KanbanTaskCard>>{};
       for (final t in tasks) {
@@ -1593,7 +1599,8 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                 style: Theme.of(context).textTheme.labelMedium,
               ),
             ),
-            for (final task in grouped[profile]!) _buildDraggableCard(task),
+            for (final task in grouped[profile]!)
+              _buildDraggableCard(task, wide: wide),
           ],
         ],
       );
@@ -1601,25 +1608,82 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     return ListView.builder(
       padding: const EdgeInsets.all(8),
       itemCount: tasks.length,
-      itemBuilder: (context, index) => _buildDraggableCard(tasks[index]),
+      itemBuilder: (context, index) =>
+          _buildDraggableCard(tasks[index], wide: wide),
     );
   }
 
-  Widget _buildDraggableCard(KanbanTaskCard task) {
+  /// Phones and tablets drag with a long press, so a swipe that starts on a
+  /// card still scrolls its column (and the board); a mouse drags at once.
+  static bool get _touchDrag => switch (defaultTargetPlatform) {
+    TargetPlatform.android ||
+    TargetPlatform.iOS ||
+    TargetPlatform.fuchsia => true,
+    _ => false,
+  };
+
+  Widget _buildDraggableCard(KanbanTaskCard task, {required bool wide}) {
+    final card = _buildTaskCard(task, includeKeys: true, touchDrag: wide);
+    // One column at a time has nowhere to drop: the card's menu moves it.
+    if (!wide) return card;
     final ghost = _buildTaskCard(task, includeKeys: false);
-    return Draggable<KanbanTaskCard>(
-      data: task,
-      feedback: Material(
-        elevation: 6,
-        borderRadius: BorderRadius.circular(10),
-        child: SizedBox(width: 268, child: ghost),
-      ),
-      childWhenDragging: Opacity(opacity: 0.4, child: ghost),
-      child: _buildTaskCard(task, includeKeys: true),
+    final feedback = Material(
+      elevation: 6,
+      borderRadius: BorderRadius.circular(10),
+      child: SizedBox(width: 268, child: ghost),
+    );
+    final dimmed = Opacity(opacity: 0.4, child: ghost);
+    if (!_touchDrag) {
+      return Draggable<KanbanTaskCard>(
+        data: task,
+        feedback: feedback,
+        childWhenDragging: dimmed,
+        child: card,
+      );
+    }
+    // A long press picks the card up. Let go without moving and it is a
+    // plain long press after all: the card is selected.
+    return Builder(
+      builder: (context) {
+        Offset? origin;
+        return LongPressDraggable<KanbanTaskCard>(
+          data: task,
+          feedback: feedback,
+          childWhenDragging: dimmed,
+          hapticFeedbackOnStart: true,
+          onDragStarted: () {
+            final box = context.findRenderObject();
+            origin = box is RenderBox && box.hasSize
+                ? box.localToGlobal(Offset.zero)
+                : null;
+          },
+          onDragEnd: (details) {
+            final start = origin;
+            if (details.wasAccepted || start == null || !mounted) return;
+            if ((details.offset - start).distance < kTouchSlop) {
+              _selectCard(task);
+            }
+          },
+          child: card,
+        );
+      },
     );
   }
 
-  Widget _buildTaskCard(KanbanTaskCard task, {required bool includeKeys}) {
+  void _selectCard(KanbanTaskCard task) {
+    setState(() {
+      _selectionMode = true;
+      _selectedIds.add(task.id);
+    });
+  }
+
+  /// [touchDrag]: the card sits in a long-press draggable on a touch screen,
+  /// which owns the long press (see [_buildDraggableCard]).
+  Widget _buildTaskCard(
+    KanbanTaskCard task, {
+    required bool includeKeys,
+    bool touchDrag = false,
+  }) {
     final selected = _selectedIds.contains(task.id);
     final allowedMoves = kanbanAllowedManualTargets(task.status);
     return Card(
@@ -1646,12 +1710,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
             unawaited(_openTaskDetail(task));
           }
         },
-        onLongPress: () {
-          setState(() {
-            _selectionMode = true;
-            _selectedIds.add(task.id);
-          });
-        },
+        onLongPress: touchDrag && _touchDrag ? null : () => _selectCard(task),
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
@@ -1703,10 +1762,7 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
                       if (action == '__open__') {
                         unawaited(_openTaskDetail(task));
                       } else if (action == '__select__') {
-                        setState(() {
-                          _selectionMode = true;
-                          _selectedIds.add(task.id);
-                        });
+                        _selectCard(task);
                       } else if (action.startsWith('move:')) {
                         unawaited(_moveTaskToStatus(task, action.substring(5)));
                       }

@@ -4,6 +4,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -421,5 +422,87 @@ void main() {
     // It went to the board it was started on.
     expect(archived.query['board'], isNull);
     expect(archived.body?['ids'], ['t_ready_0']);
+  });
+
+  group('K4 touch: a swipe on a card scrolls, a long press drags', () {
+    Future<KanbanReviewApi> open(WidgetTester tester, Size size) async {
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      final api = KanbanReviewApi(readyCount: 25);
+      final owner = kanbanReviewOwner(api.client);
+      addTearDown(owner.close);
+      await tester.pumpWidget(kanbanReviewApp(owner));
+      await kanbanShown(tester, find.byKey(const Key('kanban-card-t_ready_0')));
+      await kanbanStep(tester);
+      return api;
+    }
+
+    Future<double> swipeUp(WidgetTester tester, Finder card) async {
+      final list = find
+          .ancestor(of: card, matching: find.byType(Scrollable))
+          .first;
+      // Held: the card itself scrolls out of the lazy list.
+      final scroll = tester.state<ScrollableState>(list);
+      final before = scroll.position.pixels;
+      final gesture = await tester.startGesture(
+        tester.getCenter(card),
+        kind: PointerDeviceKind.touch,
+      );
+      for (var i = 0; i < 10; i++) {
+        await gesture.moveBy(const Offset(0, -30));
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      await gesture.up();
+      await tester.pump(const Duration(milliseconds: 300));
+      return scroll.position.pixels - before;
+    }
+
+    testWidgets('narrow (one column): the swipe scrolls the column', (
+      tester,
+    ) async {
+      await open(tester, const Size(390, 700));
+      // The card menu still moves a card.
+      expect(find.byKey(const Key('kanban-move-t_ready_0')), findsOneWidget);
+      final moved = await swipeUp(
+        tester,
+        find.byKey(const Key('kanban-card-t_ready_0')),
+      );
+      expect(moved, greaterThan(100));
+    });
+
+    testWidgets('wide: the swipe scrolls the column; long press, move and '
+        'drop moves the card; long press alone selects it', (tester) async {
+      final api = await open(tester, const Size(1280, 700));
+      final card = find.byKey(const Key('kanban-card-t_ready_0'));
+      final column = tester.state<ScrollableState>(
+        find.ancestor(of: card, matching: find.byType(Scrollable)).first,
+      );
+      expect(await swipeUp(tester, card), greaterThan(100));
+      column.position.jumpTo(0);
+      await tester.pump();
+
+      final from = tester.getCenter(card);
+      final to = tester.getCenter(find.byKey(const Key('kanban-column-todo')));
+      final gesture = await tester.startGesture(
+        from,
+        kind: PointerDeviceKind.touch,
+      );
+      await tester.pump(kLongPressTimeout + const Duration(milliseconds: 50));
+      for (var i = 1; i <= 10; i++) {
+        await gesture.moveTo(Offset.lerp(from, to, i / 10)!);
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      await gesture.up();
+      await kanbanStep(tester);
+      final patch = api.calls.singleWhere(
+        (c) => c.method == 'PATCH' && c.path.endsWith('/tasks/t_ready_0'),
+      );
+      expect(patch.body, containsPair('status', 'todo'));
+
+      await tester.longPress(find.byKey(const Key('kanban-card-t_ready_1')));
+      await kanbanStep(tester);
+      expect(find.text('1 selected'), findsOneWidget);
+    });
   });
 }
