@@ -47,7 +47,7 @@ const _releaseKeys = [
   'ng_release_message_search_unavailable',
   'ng_release_insights_days',
   'ng_release_signed_in_you',
-  'ng_release_unsent_prompt_gone',
+  'release_chat_unsent_prompt_gone',
   'ng_release_attachment_not_attached',
   'ng_release_gateway_not_connected',
   'ng_release_gateway_unreachable',

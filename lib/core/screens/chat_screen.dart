@@ -9919,7 +9919,9 @@ class _ChatScreenState extends State<ChatScreen>
   void _reportMissingHeldEdit() {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.sharedL10n.ng_release_unsent_prompt_gone)),
+      SnackBar(
+        content: Text(context.sharedL10n.release_chat_unsent_prompt_gone),
+      ),
     );
   }
 

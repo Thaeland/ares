@@ -150,7 +150,7 @@ void main() {
         expect(source, isNot(contains("'$text'")), reason: '$path $text');
       }
       if (path.contains('/core/')) {
-        expect(source, contains('ng_release_unsent_prompt_gone'));
+        expect(source, contains('release_chat_unsent_prompt_gone'));
         expect(source, isNot(contains('Text(heldPromptMissingMessage)')));
       }
     }

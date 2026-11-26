@@ -2470,7 +2470,7 @@ class NgChatController extends ChangeNotifier {
     final index = queued.indexOf(original);
     if (index < 0) {
       if (!queued.any((row) => row.key == original.key)) {
-        error = ngL.ng_release_unsent_prompt_gone;
+        error = ngL.release_chat_unsent_prompt_gone;
         _changed();
       }
       return;
