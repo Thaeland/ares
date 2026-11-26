@@ -2481,26 +2481,40 @@ class _NgChatViewState extends State<NgChatView>
                           setState(() => _showSessionFiles = false);
                         },
                       ),
-                // The body's real height: Scaffold has already taken the
-                // keyboard off it, so cards above the composer size from it.
-                child: LayoutBuilder(
-                  builder: (context, body) => Column(
-                    children: [
-                      if (!state.isConnected) _connectionBanner(c, gateway),
-                      Expanded(child: _transcript(c)),
-                      // Everything under the transcript shares one strip
-                      // bounded by the body (which the keyboard has already
-                      // shrunk): the cards keep their own caps and the
-                      // composer takes what is left, so it is never pushed
-                      // under the keyboard.
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxHeight: ngComposerStripMaxHeight(body.maxHeight),
+                child: Column(
+                  children: [
+                    if (!state.isConnected) _connectionBanner(c, gateway),
+                    // The body's real height under the connection banner:
+                    // Scaffold has already taken the keyboard off it, so
+                    // cards above the composer size from it.
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (context, body) => Column(
+                          children: [
+                            Expanded(child: _transcript(c)),
+                            // Everything under the transcript shares one
+                            // strip bounded by the body (which the keyboard
+                            // has already shrunk): the cards keep their own
+                            // caps and the composer takes what is left, so
+                            // it is never pushed under the keyboard.
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight: ngComposerStripMaxHeight(
+                                  body.maxHeight,
+                                ),
+                              ),
+                              child: _bottomStrip(
+                                c,
+                                state,
+                                gateway,
+                                body.maxHeight,
+                              ),
+                            ),
+                          ],
                         ),
-                        child: _bottomStrip(c, state, gateway, body.maxHeight),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             );

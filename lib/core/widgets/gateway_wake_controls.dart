@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../nextgen/ui/session_dock.dart' show ngAboveComposerMaxHeight;
 import '../l10n/l10n.dart';
 import '../services/gateway_wake_word.dart';
+import 'keyboard_room.dart';
 
 /// Menu value for the narrow-pane (`< 480 px`) "More chat tools" wake-word row.
 const String wakeWordToolValue = 'gateway-wake-word';
@@ -129,7 +130,10 @@ class GatewayWakeToolbarButton extends StatelessWidget {
 /// listening, arming, or paused for active voice/lifecycle.
 ///
 /// Constrained with [ngAboveComposerMaxHeight] so an open soft keyboard never
-/// pushes the composer off screen.
+/// pushes the composer off screen. While the keyboard is up it folds to a
+/// one-line chip (label and Stop); on a pane too narrow for a worded Stop at
+/// the current text size, Stop is an icon and the labels ellipsize. Stop
+/// stays in reach either way.
 class GatewayWakeListeningBanner extends StatelessWidget {
   const GatewayWakeListeningBanner({
     super.key,
@@ -142,6 +146,10 @@ class GatewayWakeListeningBanner extends StatelessWidget {
   final double available;
   final String? sessionId;
 
+  /// The narrowest the labels may get beside a worded Stop before Stop
+  /// becomes an icon.
+  static const _minLabelWidth = 112.0;
+
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
@@ -151,107 +159,201 @@ class GatewayWakeListeningBanner extends StatelessWidget {
         if (!state.listening && !state.paused && !state.pending) {
           return const SizedBox.shrink();
         }
-        final l10n = context.sharedL10n;
-        final scheme = Theme.of(context).colorScheme;
         final cap = ngAboveComposerMaxHeight(
           context,
           available: available,
           fraction: 0.22,
           withKeyboard: 0.16,
         );
-        final captureLabel = state.usesClientMic
-            ? l10n.wake_word_capture_client
-            : l10n.wake_word_capture_local;
-
+        final keyboardUp = keyboardHeightOf(context) > 0;
         return ConstrainedBox(
           constraints: BoxConstraints(maxHeight: cap),
           child: SingleChildScrollView(
-            child: Container(
-              key: const ValueKey('gateway-wake-banner'),
-              width: double.infinity,
-              margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: state.audioSilent
-                    ? scheme.errorContainer.withValues(alpha: 0.7)
-                    : scheme.secondaryContainer.withValues(alpha: 0.65),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: state.listening
-                      ? scheme.primary.withValues(alpha: 0.45)
-                      : scheme.outlineVariant,
-                ),
-              ),
-              child: Row(
-                children: [
-                  if (state.pending)
-                    const SizedBox.square(
-                      dimension: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  else
-                    Icon(
-                      state.paused ? Icons.pause_circle_outline : Icons.hearing,
-                      size: 18,
-                      color: state.listening
-                          ? scheme.primary
-                          : scheme.onSecondaryContainer,
-                    ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Semantics(
-                      liveRegion: true,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _wakeLabel(context, state),
-                            key: const ValueKey('gateway-wake-banner-label'),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                          if (state.listening)
-                            Text(
-                              state.audioSilent && state.notice.isNotEmpty
-                                  ? state.notice
-                                  : captureLabel,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    key: const ValueKey('gateway-wake-settings'),
-                    visualDensity: VisualDensity.compact,
-                    tooltip: l10n.wake_word_title,
-                    icon: const Icon(Icons.tune, size: 18),
-                    onPressed: () => unawaited(
-                      showGatewayWakeSheet(
-                        context,
-                        controller: controller,
-                        sessionId: sessionId,
-                      ),
-                    ),
-                  ),
-                  if (!state.pending)
-                    TextButton(
-                      key: const ValueKey('gateway-wake-stop'),
-                      onPressed: () => unawaited(controller.stopExplicit()),
-                      child: Text(l10n.wake_word_stop),
-                    ),
-                ],
-              ),
-            ),
+            child: keyboardUp ? _chip(context, state) : _banner(context, state),
           ),
         );
       },
     );
   }
+
+  Widget _icon(BuildContext context, GatewayWakeState state, double size) {
+    final scheme = Theme.of(context).colorScheme;
+    if (state.pending) {
+      return SizedBox.square(
+        dimension: size - 2,
+        child: const CircularProgressIndicator(strokeWidth: 2),
+      );
+    }
+    return Icon(
+      state.paused ? Icons.pause_circle_outline : Icons.hearing,
+      size: size,
+      color: state.listening ? scheme.primary : scheme.onSecondaryContainer,
+    );
+  }
+
+  BoxDecoration _decoration(BuildContext context, GatewayWakeState state) {
+    final scheme = Theme.of(context).colorScheme;
+    return BoxDecoration(
+      color: state.audioSilent
+          ? scheme.errorContainer.withValues(alpha: 0.7)
+          : scheme.secondaryContainer.withValues(alpha: 0.65),
+      borderRadius: BorderRadius.circular(14),
+      border: Border.all(
+        color: state.listening
+            ? scheme.primary.withValues(alpha: 0.45)
+            : scheme.outlineVariant,
+      ),
+    );
+  }
+
+  void _stop() => unawaited(controller.stopExplicit());
+
+  /// The keyboard is up: one line, the label ellipsized, Stop as an icon.
+  Widget _chip(BuildContext context, GatewayWakeState state) {
+    final l10n = context.sharedL10n;
+    return Semantics(
+      liveRegion: true,
+      child: Container(
+        key: const ValueKey('gateway-wake-chip'),
+        width: double.infinity,
+        margin: const EdgeInsets.fromLTRB(12, 2, 12, 2),
+        padding: const EdgeInsets.only(left: 10),
+        decoration: _decoration(context, state),
+        child: Row(
+          children: [
+            _icon(context, state, 16),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                _wakeLabel(context, state),
+                key: const ValueKey('gateway-wake-banner-label'),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+            ),
+            if (state.pending)
+              const SizedBox(height: 40)
+            else
+              IconButton(
+                key: const ValueKey('gateway-wake-stop'),
+                visualDensity: VisualDensity.compact,
+                tooltip: l10n.wake_word_stop,
+                icon: const Icon(Icons.stop_circle_outlined, size: 20),
+                onPressed: _stop,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _banner(BuildContext context, GatewayWakeState state) {
+    final l10n = context.sharedL10n;
+    final theme = Theme.of(context);
+    final captureLabel = state.usesClientMic
+        ? l10n.wake_word_capture_client
+        : l10n.wake_word_capture_local;
+    Widget labels({required int detailLines}) => Semantics(
+      liveRegion: true,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _wakeLabel(context, state),
+            key: const ValueKey('gateway-wake-banner-label'),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.labelMedium,
+          ),
+          if (state.listening)
+            Text(
+              state.audioSilent && state.notice.isNotEmpty
+                  ? state.notice
+                  : captureLabel,
+              maxLines: detailLines,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodySmall,
+            ),
+        ],
+      ),
+    );
+    final settings = IconButton(
+      key: const ValueKey('gateway-wake-settings'),
+      visualDensity: VisualDensity.compact,
+      tooltip: l10n.wake_word_title,
+      icon: const Icon(Icons.tune, size: 18),
+      onPressed: () => unawaited(
+        showGatewayWakeSheet(
+          context,
+          controller: controller,
+          sessionId: sessionId,
+        ),
+      ),
+    );
+    return Container(
+      key: const ValueKey('gateway-wake-banner'),
+      width: double.infinity,
+      margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: _decoration(context, state),
+      child: LayoutBuilder(
+        builder: (context, box) {
+          // The worded Stop only when the labels keep a useful width beside
+          // it at this text size; otherwise Stop is an icon (with the same
+          // tooltip) and the labels ellipsize, so the row never overflows.
+          final stopWidth =
+              _textWidth(
+                context,
+                l10n.wake_word_stop,
+                theme.textTheme.labelLarge,
+              ) +
+              32;
+          final worded =
+              18 + 8 + _minLabelWidth + 40 + stopWidth <= box.maxWidth;
+          return Row(
+            children: [
+              _icon(context, state, 18),
+              const SizedBox(width: 8),
+              Expanded(child: labels(detailLines: worded ? 2 : 1)),
+              settings,
+              if (!state.pending)
+                worded
+                    ? TextButton(
+                        key: const ValueKey('gateway-wake-stop'),
+                        onPressed: _stop,
+                        child: Text(
+                          l10n.wake_word_stop,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    : IconButton(
+                        key: const ValueKey('gateway-wake-stop'),
+                        visualDensity: VisualDensity.compact,
+                        tooltip: l10n.wake_word_stop,
+                        icon: const Icon(Icons.stop_circle_outlined, size: 20),
+                        onPressed: _stop,
+                      ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+double _textWidth(BuildContext context, String text, TextStyle? style) {
+  final painter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    textDirection: Directionality.of(context),
+    textScaler: MediaQuery.textScalerOf(context),
+    maxLines: 1,
+  )..layout();
+  final width = painter.width;
+  painter.dispose();
+  return width;
 }
 
 /// Opens a sheet with full wake-word controls (opt-in toggle, status/refusal,
