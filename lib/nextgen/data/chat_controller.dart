@@ -27,6 +27,8 @@ import '../../core/services/slash_command_errors.dart';
 import '../../core/services/ws_client.dart';
 import '../../core/composer/composer_commands.dart';
 import '../../core/composer/failure_recovery.dart';
+import '../../core/history/canonical_rewind.dart'
+    show rewindFencesUnknownReason, rewindTargetUnsavedReason;
 import '../../core/history/rewind_submit.dart'
     show
         RewindHistory,
@@ -1118,7 +1120,16 @@ class NgChatController extends ChangeNotifier {
     }
   }
 
-  static String _clean(Object e) => e
+  static String _clean(Object e) => switch (e) {
+    // The transport's own refusals, in the user's language.
+    JsonRpcError(reason: rewindTargetUnsavedReason) =>
+      ngL.rewind_target_unsaved,
+    JsonRpcError(reason: rewindFencesUnknownReason) =>
+      ngL.rewind_session_changed,
+    _ => _cleanText(e),
+  };
+
+  static String _cleanText(Object e) => e
       .toString()
       .replaceFirst('Bad state: ', '')
       .replaceFirst('Exception: ', '')

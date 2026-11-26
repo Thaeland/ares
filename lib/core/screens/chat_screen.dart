@@ -11,6 +11,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../widgets/session_name_dialog.dart';
 import '../widgets/rewind_dialogs.dart';
+import '../history/canonical_rewind.dart'
+    show rewindFencesUnknownReason, rewindTargetUnsavedReason;
 import '../history/rewind_submit.dart'
     show RewindHistory, RewindPlan, buildRewindParams;
 import 'package:flutter/services.dart';
@@ -9008,10 +9010,17 @@ class _ChatScreenState extends State<ChatScreen>
       _awaitingVoiceReply = false;
       // The server's own refusal stays verbatim in both strings; the API-only
       // variant only appends what to check. Nothing here resends or reroutes.
-      _terminalTurnNotice =
+      _terminalTurnNotice = switch (e) {
+        // The transport's own refusals, in the user's language.
+        JsonRpcError(reason: rewindTargetUnsavedReason) =>
+          context.sharedL10n.rewind_target_unsaved,
+        JsonRpcError(reason: rewindFencesUnknownReason) =>
+          context.sharedL10n.rewind_session_changed,
+        _ =>
           shouldExplainApiOnlyPermissionDenial(widget.connection, '$e')
-          ? context.l10n.send_failed_api_only_permission_denied(e)
-          : context.l10n.send_failed(e);
+              ? context.l10n.send_failed_api_only_permission_denied(e)
+              : context.l10n.send_failed(e),
+      };
       if (removePendingUserMessage &&
           _messages.isNotEmpty &&
           _messages.last['role'] == 'user') {

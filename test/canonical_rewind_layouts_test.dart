@@ -733,4 +733,52 @@ void main() {
     expect(icon, isNot(Icons.account_tree_outlined));
     await tester.pumpWidget(const SizedBox.shrink());
   });
+
+  const unsaved =
+      'This message is not saved yet. Wait for it to settle, then edit it '
+      'again.';
+
+  testWidgets('Classic: a turn the saved transcript does not hold yet is '
+      'refused with the localised notice; nothing reaches the wire', (
+    tester,
+  ) async {
+    final classic = await _pumpClassic(tester, authority: true);
+    // The gateway's transcript no longer holds the turn on screen.
+    classic.gateway.rows
+      ..clear()
+      ..add({'row_id': 40, 'role': 'user', 'text': 'Something else'});
+    await _classicEdit(tester, 'Keep this');
+    await _settle(tester, 40);
+
+    expect(find.text(unsaved), findsOneWidget);
+    expect(classic.gateway.calls('session.mutate'), isEmpty);
+    expect(classic.gateway.calls('prompt.submit'), isEmpty);
+    await _closeClassic(tester, classic);
+  });
+
+  testWidgets('NextGen: a turn the saved transcript does not hold yet is '
+      'refused with the localised notice; nothing reaches the wire', (
+    tester,
+  ) async {
+    final ng = await _pumpNextGen(tester, authority: true);
+    ng.gateway.rows
+      ..clear()
+      ..add({'row_id': 40, 'role': 'user', 'text': 'Something else'});
+    await tester.tap(find.byKey(const Key('ng-user-edit')).last);
+    await _settle(tester);
+    await tester.enterText(
+      find.byKey(const Key('edit-turn-field')),
+      'Edited probe',
+    );
+    await _settle(tester);
+    await tester.tap(find.byKey(const Key('edit-turn-send')));
+    await _settle(tester, 40);
+
+    expect(find.text(unsaved), findsOneWidget);
+    expect(ng.gateway.calls('session.mutate'), isEmpty);
+    expect(ng.gateway.calls('prompt.submit'), isEmpty);
+    // The view's own toast timer.
+    await tester.pump(const Duration(seconds: 6));
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
 }
