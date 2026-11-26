@@ -1,16 +1,22 @@
+import '../../l10n/app_localizations.dart';
+import '../l10n/service_strings.dart';
+
 const kReferenceKinds = ['file', 'folder', 'url', 'image', 'tool', 'git'];
 const kSimpleReferences = ['diff', 'staged'];
 
-const kReferenceMeta = {
-  'file': 'Attach a file reference',
-  'folder': 'Attach a folder reference',
-  'url': 'Attach a URL reference',
-  'image': 'Attach an image reference',
-  'tool': 'Attach a tool reference',
-  'git': 'Attach git context',
-  'diff': 'Attach the unstaged diff',
-  'staged': 'Attach the staged diff',
+Map<String, String> _referenceMeta(AppLocalizations l) => {
+  'file': l.rel_svc_misc_attach_file_reference,
+  'folder': l.rel_svc_misc_attach_folder_reference,
+  'url': l.rel_svc_misc_attach_url_reference,
+  'image': l.rel_svc_misc_attach_image_reference,
+  'tool': l.rel_svc_misc_attach_tool_reference,
+  'git': l.rel_svc_misc_attach_git_context,
+  'diff': l.rel_svc_misc_attach_unstaged_diff,
+  'staged': l.rel_svc_misc_attach_staged_diff,
 };
+
+/// Localized descriptions for callers that previously read the starter map.
+Map<String, String> get kReferenceMeta => _referenceMeta(serviceStrings);
 
 class ReferenceSuggestion {
   const ReferenceSuggestion({
@@ -44,7 +50,11 @@ class ReferenceChip {
 
 /// Local starter rows. A gateway listing replaces these once it arrives;
 /// an empty or failed listing does not invent paths.
-List<ReferenceSuggestion> starterSuggestions(String query) {
+List<ReferenceSuggestion> starterSuggestions(
+  String query, {
+  AppLocalizations? strings,
+}) {
+  final referenceMeta = _referenceMeta(strings ?? serviceStrings);
   final needle = query.toLowerCase();
   if (needle.contains(':')) return const [];
   final rows = <ReferenceSuggestion>[];
@@ -54,7 +64,7 @@ List<ReferenceSuggestion> starterSuggestions(String query) {
         ReferenceSuggestion(
           insert: '@$kind:',
           label: '@$kind:',
-          meta: kReferenceMeta[kind] ?? '',
+          meta: referenceMeta[kind] ?? '',
           kind: kind,
         ),
       );
@@ -66,7 +76,7 @@ List<ReferenceSuggestion> starterSuggestions(String query) {
         ReferenceSuggestion(
           insert: '@$kind',
           label: '@$kind',
-          meta: kReferenceMeta[kind] ?? '',
+          meta: referenceMeta[kind] ?? '',
           kind: kind,
         ),
       );
