@@ -191,8 +191,17 @@ class _WorkspaceProfilesScreenState extends State<WorkspaceProfilesScreen> {
                     children: [
                       ListTile(
                         leading: const Icon(Icons.arrow_back),
-                        title: Text('Applies to: $_selected'),
-                        subtitle: const Text('Choose another profile'),
+                        title: Text(
+                          context.sharedL10n
+                              .release_core_workspace_profiles_screen_applies_to(
+                                (_selected).toString(),
+                              ),
+                        ),
+                        subtitle: Text(
+                          context
+                              .sharedL10n
+                              .release_core_workspace_profiles_screen_choose_another_profile,
+                        ),
                         onTap: () {
                           roster.chooseAgain();
                           setState(_startRead);
@@ -208,9 +217,11 @@ class _WorkspaceProfilesScreenState extends State<WorkspaceProfilesScreen> {
                               );
                             }
                             if (s.hasError) {
-                              return const Center(
+                              return Center(
                                 child: Text(
-                                  'Could not verify the selected profile on this gateway.',
+                                  context
+                                      .sharedL10n
+                                      .release_core_workspace_profiles_screen_could_not_verify_the_selected_profile_on_this,
                                 ),
                               );
                             }
@@ -239,12 +250,20 @@ class _WorkspaceProfilesScreenState extends State<WorkspaceProfilesScreen> {
                   itemBuilder: (_, i) => i == names.length
                       ? ListTile(
                           leading: const Icon(Icons.person_add_alt),
-                          title: const Text('Create profile'),
+                          title: Text(
+                            context
+                                .sharedL10n
+                                .release_core_workspace_profiles_screen_create_profile,
+                          ),
                           onTap: () async {
                             final newName = await profileInput(
                               context,
-                              'Create profile',
-                              'New profile ID',
+                              context
+                                  .sharedL10n
+                                  .release_core_workspace_profiles_screen_create_profile,
+                              context
+                                  .sharedL10n
+                                  .release_core_workspace_profiles_screen_new_profile_id,
                               widget.label,
                             );
                             if (newName == null || !mounted) return;

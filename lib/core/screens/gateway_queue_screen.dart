@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import '../l10n/l10n.dart';
+import '../l10n/workspace_strings.dart';
 import 'package:uuid/uuid.dart';
 
 import '../services/connection_mutation_barrier.dart';
@@ -53,7 +56,7 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
   QueueAdmission? _editing;
   String _previous = '', _request = const Uuid().v4();
   bool _reading = false, _writing = false, _again = false, _closed = false;
-  String? _message;
+  String Function(AppLocalizations)? _message;
   void Function()? _stopWatch;
   bool get _alive => mounted && !_closed;
 
@@ -76,7 +79,8 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
           _previous = '';
           _editing = null;
           _queue = null;
-          _message = 'This connection changed. Reopen its chat.';
+          _message = (l10n) => l10n
+              .release_core_gateway_queue_screen_this_connection_changed_reopen_its_chat;
         });
       }
     }
@@ -122,7 +126,8 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
               // background simply because an old operation lost its response.
               setState(() {
                 _queue = null;
-                _message = 'Disconnected. Reconnect the chat, then refresh.';
+                _message = (l10n) => l10n
+                    .release_core_gateway_queue_screen_disconnected_reconnect_the_chat_then_refresh;
               });
             } else {
               unawaited(_read());
@@ -140,7 +145,10 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
       if (_alive) {
         setState(() {
           _queue = null;
-          _message = 'Gateway queue unavailable: ${e.reason.name}.';
+          _message = (l10n) =>
+              l10n.release_core_gateway_queue_screen_gateway_queue_unavailable(
+                workspaceFailureLabel(l10n, e.reason),
+              );
         });
       }
     } finally {
@@ -148,7 +156,10 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
     }
   }
 
-  Future<bool> _perform(Future<void> Function() action, String success) async {
+  Future<bool> _perform(
+    Future<void> Function() action,
+    String Function(AppLocalizations) success,
+  ) async {
     if (!_alive || _writing || _reading) return false;
     setState(() => _writing = true);
     var ok = false;
@@ -161,8 +172,10 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
     } on WorkspaceException catch (e) {
       if (_alive) {
         setState(
-          () => _message =
-              'Not confirmed (${e.reason.name}). Nothing was resent.',
+          () => _message = (l10n) => l10n
+              .release_core_gateway_queue_screen_not_confirmed_nothing_was_resent(
+                workspaceFailureLabel(l10n, e.reason),
+              ),
         );
       }
     } finally {
@@ -197,9 +210,9 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
     final request = _request;
     final ok = await _perform(
       () => row == null ? q.enqueue(text, request) : row.replace(text, request),
-      row == null
-          ? 'Gateway confirmed admission.'
-          : 'Edited entry admitted at the end of the queue.',
+      (l10n) => row == null
+          ? l10n.release_core_gateway_queue_screen_gateway_confirmed_admission
+          : l10n.release_core_gateway_queue_screen_edited_entry_admitted_at_the_end_of_the,
     );
     if (!ok || _request != request) return;
     if (row == null) widget.onAdmitted?.call(text);
@@ -219,21 +232,41 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          discard ? 'Discard unknown outcome?' : 'Remove this entry?',
+          discard
+              ? context
+                    .sharedL10n
+                    .release_core_gateway_queue_screen_discard_unknown_outcome
+              : context
+                    .sharedL10n
+                    .release_core_gateway_queue_screen_remove_this_entry,
         ),
         content: Text(
           discard
-              ? 'The lost turn will not be retried. Waiting turns may now run.'
-              : 'If the gateway has just started this entry, removing it can stop that turn.',
+              ? context
+                    .sharedL10n
+                    .release_core_gateway_queue_screen_the_lost_turn_will_not_be_retried_waiting
+              : context
+                    .sharedL10n
+                    .release_core_gateway_queue_screen_if_the_gateway_has_just_started_this_entry,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Keep'),
+            child: Text(
+              context.sharedL10n.release_core_gateway_queue_screen_keep,
+            ),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text(discard ? 'Discard and resume' : 'Remove entry'),
+            child: Text(
+              discard
+                  ? context
+                        .sharedL10n
+                        .release_core_gateway_queue_screen_discard_and_resume
+                  : context
+                        .sharedL10n
+                        .release_core_gateway_queue_screen_remove_entry,
+            ),
           ),
         ],
       ),
@@ -241,9 +274,9 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
     if (yes == true && _alive) {
       await _perform(
         discard ? row.discardUnknown : row.remove,
-        discard
-            ? 'Lost admission resolved; it was not resent.'
-            : 'Gateway acknowledged removal.',
+        (l10n) => discard
+            ? l10n.release_core_gateway_queue_screen_lost_admission_resolved_it_was_not_resent
+            : l10n.release_core_gateway_queue_screen_gateway_acknowledged_removal,
       );
     }
   }
@@ -258,10 +291,14 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Gateway queue'),
+          title: Text(
+            context.sharedL10n.release_core_gateway_queue_screen_gateway_queue,
+          ),
           actions: [
             IconButton(
-              tooltip: 'Refresh queue',
+              tooltip: context
+                  .sharedL10n
+                  .release_core_gateway_queue_screen_refresh_queue,
               onPressed: busy
                   ? null
                   : () {
@@ -287,19 +324,31 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
               if (_message != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(_message!),
+                  child: Text(_message!(context.sharedL10n)),
                 ),
               if (q != null) ...[
                 if (q.paused)
-                  const ListTile(
+                  ListTile(
                     leading: Icon(Icons.pause_circle_outline),
-                    title: Text('Queue paused: unknown outcome'),
+                    title: Text(
+                      context
+                          .sharedL10n
+                          .release_core_gateway_queue_screen_queue_paused_unknown_outcome,
+                    ),
                     subtitle: Text(
-                      'Review the lost admission before resuming. Nothing is sent again.',
+                      context
+                          .sharedL10n
+                          .release_core_gateway_queue_screen_review_the_lost_admission_before_resuming_nothing_is,
                     ),
                   ),
                 if (q.entries.isEmpty)
-                  const ListTile(title: Text('No pending admissions')),
+                  ListTile(
+                    title: Text(
+                      context
+                          .sharedL10n
+                          .release_core_gateway_queue_screen_no_pending_admissions,
+                    ),
+                  ),
                 for (final row in q.entries)
                   Card(
                     child: Padding(
@@ -312,13 +361,19 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
                             maxLines: 4,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Text('#${row.sequence} · ${row.state}'),
+                          Text(
+                            '#${row.sequence} · ${gatewayQueueStateLabel(context.sharedL10n, row.state)}',
+                          ),
                           Wrap(
                             children: [
                               if (row.unknown)
                                 TextButton(
                                   onPressed: busy ? null : () => _confirm(row),
-                                  child: const Text('Discard…'),
+                                  child: Text(
+                                    context
+                                        .sharedL10n
+                                        .release_core_gateway_queue_screen_discard,
+                                  ),
                                 ),
                               if (row.queued) ...[
                                 if (row.controls.contains('replace'))
@@ -326,7 +381,7 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
                                     onPressed: busy || _editing != null
                                         ? null
                                         : () => _edit(row),
-                                    child: const Text('Edit'),
+                                    child: Text(context.sharedL10n.edit),
                                   ),
                                 if (row.controls.contains('steer'))
                                   TextButton(
@@ -334,13 +389,22 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
                                         ? null
                                         : () => _perform(
                                             row.steer,
-                                            'Gateway acknowledged the steering request.',
+                                            (l10n) => l10n
+                                                .release_core_gateway_queue_screen_gateway_acknowledged_the_steering_request,
                                           ),
-                                    child: const Text('Steer running turn'),
+                                    child: Text(
+                                      context
+                                          .sharedL10n
+                                          .release_core_gateway_queue_screen_steer_running_turn,
+                                    ),
                                   ),
                                 TextButton(
                                   onPressed: busy ? null : () => _confirm(row),
-                                  child: const Text('Remove…'),
+                                  child: Text(
+                                    context
+                                        .sharedL10n
+                                        .release_core_gateway_queue_screen_remove,
+                                  ),
                                 ),
                               ],
                             ],
@@ -358,8 +422,12 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
                   onChanged: (_) => _request = const Uuid().v4(),
                   decoration: InputDecoration(
                     labelText: _editing == null
-                        ? 'Next prompt'
-                        : 'Edit queued prompt',
+                        ? context
+                              .sharedL10n
+                              .release_core_gateway_queue_screen_next_prompt
+                        : context
+                              .sharedL10n
+                              .release_core_gateway_queue_screen_edit_queued_prompt,
                   ),
                 ),
                 Wrap(
@@ -368,8 +436,12 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
                       onPressed: busy || q == null ? null : _save,
                       child: Text(
                         _editing == null
-                            ? 'Submit to gateway queue'
-                            : 'Save at queue end',
+                            ? context
+                                  .sharedL10n
+                                  .release_core_gateway_queue_screen_submit_to_gateway_queue
+                            : context
+                                  .sharedL10n
+                                  .release_core_gateway_queue_screen_save_at_queue_end,
                       ),
                     ),
                     if (_editing != null)
@@ -377,7 +449,11 @@ class _GatewayQueueScreenState extends State<GatewayQueueScreen> {
                         onPressed: _writing
                             ? null
                             : () => setState(_finishEdit),
-                        child: const Text('Cancel edit'),
+                        child: Text(
+                          context
+                              .sharedL10n
+                              .release_core_gateway_queue_screen_cancel_edit,
+                        ),
                       ),
                   ],
                 ),

@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+import '../l10n/service_strings.dart';
+import '../l10n/workspace_strings.dart';
+
 import '../../nextgen/data/chat_controller.dart';
 import '../../nextgen/ui/connect_screen.dart';
 import '../services/gateway_fleet.dart';
@@ -21,22 +25,27 @@ class FleetScope extends InheritedWidget {
   bool updateShouldNotify(FleetScope oldWidget) => fleet != oldWidget.fleet;
 }
 
-String fleetError(Object e) => switch (e) {
-  WorkspaceException(reason: WorkspaceFailure.unsupported) =>
-    'This gateway does not offer this service.',
-  WorkspaceException(reason: WorkspaceFailure.denied) =>
-    'Sign-in or permission required on this gateway.',
-  WorkspaceException(reason: WorkspaceFailure.insecure) =>
-    'A secure gateway address is required.',
-  WorkspaceException(
-    reason: WorkspaceFailure.stale || WorkspaceFailure.mismatch,
-  ) =>
-    'The owner changed. Refresh before continuing.',
-  _ => 'Could not verify the operation. Check the gateway and refresh.',
-};
+String fleetError(Object e, [AppLocalizations? strings]) {
+  final l10n = strings ?? serviceStrings;
+  return switch (e) {
+    WorkspaceException(reason: WorkspaceFailure.unsupported) =>
+      l10n.release_core_fleet_screen_this_gateway_does_not_offer_this_service,
+    WorkspaceException(reason: WorkspaceFailure.denied) =>
+      l10n.release_core_fleet_screen_sign_in_or_permission_required_on_this_gateway,
+    WorkspaceException(reason: WorkspaceFailure.insecure) =>
+      l10n.release_core_fleet_screen_a_secure_gateway_address_is_required,
+    WorkspaceException(
+      reason: WorkspaceFailure.stale || WorkspaceFailure.mismatch,
+    ) =>
+      l10n.release_core_fleet_screen_the_owner_changed_refresh_before_continuing,
+    _ =>
+      l10n.release_core_fleet_screen_could_not_verify_the_operation_check_the_gateway,
+  };
+}
+
 void _notice(BuildContext context, Object e) => ScaffoldMessenger.of(
   context,
-).showSnackBar(SnackBar(content: Text(fleetError(e))));
+).showSnackBar(SnackBar(content: Text(fleetError(e, context.sharedL10n))));
 
 Future<void> enrollFleetAddress(
   BuildContext context,
@@ -74,7 +83,9 @@ class _FleetScreenState extends State<FleetScreen> {
   Widget build(BuildContext context) {
     final fleet = FleetScope.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Gateway fleet')),
+      appBar: AppBar(
+        title: Text(context.sharedL10n.release_core_more_pane_gateway_fleet),
+      ),
       body: ListenableBuilder(
         listenable: fleet,
         builder: (context, _) => ListView(
@@ -82,9 +93,13 @@ class _FleetScreenState extends State<FleetScreen> {
           children: [
             ListTile(
               leading: const Icon(Icons.key_outlined),
-              title: const Text('Verified SSH'),
-              subtitle: const Text(
-                'Confirm a host key, inspect a remote service or open its shell',
+              title: Text(
+                context.sharedL10n.release_core_fleet_screen_verified_ssh,
+              ),
+              subtitle: Text(
+                context
+                    .sharedL10n
+                    .release_core_fleet_screen_confirm_a_host_key_inspect_a_remote_service,
               ),
               onTap: () => Navigator.push(
                 context,
@@ -94,7 +109,11 @@ class _FleetScreenState extends State<FleetScreen> {
             if (widget.serving case final owner?)
               ListTile(
                 leading: const Icon(Icons.dns_outlined),
-                title: const Text('Cloud and Desktop Webapp'),
+                title: Text(
+                  context
+                      .sharedL10n
+                      .release_core_fleet_screen_cloud_and_desktop_webapp,
+                ),
                 subtitle: Text(widget.label),
                 onTap: () => Navigator.push(
                   context,
@@ -109,9 +128,15 @@ class _FleetScreenState extends State<FleetScreen> {
               ),
             ListTile(
               leading: const Icon(Icons.add_link),
-              title: const Text('Register an existing gateway or Webapp'),
-              subtitle: const Text(
-                'Sign in to its address. Nothing is hosted on this device.',
+              title: Text(
+                context
+                    .sharedL10n
+                    .release_core_fleet_screen_register_an_existing_gateway_or_webapp,
+              ),
+              subtitle: Text(
+                context
+                    .sharedL10n
+                    .release_core_fleet_screen_sign_in_to_its_address_nothing_is_hosted,
               ),
               onTap: () async {
                 await enrollFleetAddress(context, fleet);
@@ -120,7 +145,9 @@ class _FleetScreenState extends State<FleetScreen> {
             ),
             const Divider(),
             ListTile(
-              title: const Text('Fleet updates'),
+              title: Text(
+                context.sharedL10n.release_core_fleet_screen_fleet_updates,
+              ),
               leading: const Icon(Icons.system_update_alt),
               onTap: () => Navigator.push(
                 context,
@@ -146,7 +173,7 @@ class _FleetScreenState extends State<FleetScreen> {
                             }
                           }
                         : null,
-                    child: const Text('Connect'),
+                    child: Text(context.sharedL10n.connect),
                   ),
                 ),
           ],
@@ -179,18 +206,32 @@ class _GatewayGroup extends StatelessWidget {
             ListTile(
               title: Text(c.label),
               subtitle: Text(
-                '${c.gatewayProfile ?? 'Serving profile'} · ${host.gateway.state.label}',
+                [
+                  c.gatewayProfile ??
+                      context
+                          .sharedL10n
+                          .release_core_fleet_webapp_screen_serving_profile,
+                  fleetGatewayStateLabel(
+                    context.sharedL10n,
+                    host.gateway.state.phase.name,
+                  ),
+                ].join(' · '),
               ),
               trailing: Wrap(
                 children: [
                   IconButton(
-                    tooltip: 'Refresh roster',
+                    tooltip: context
+                        .sharedL10n
+                        .release_core_fleet_screen_refresh_roster,
                     onPressed: host.loading ? null : host.refresh,
                     icon: const Icon(Icons.refresh),
                   ),
                   if (!childProfile)
                     IconButton(
-                      tooltip: 'Disconnect ${c.label}',
+                      tooltip: context.sharedL10n
+                          .release_core_fleet_screen_disconnect(
+                            (c.label).toString(),
+                          ),
                       onPressed: () => fleet.detach(c.id),
                       icon: const Icon(Icons.link_off),
                     ),
@@ -201,9 +242,15 @@ class _GatewayGroup extends StatelessWidget {
               const LinearProgressIndicator()
             else if (!childProfile)
               CheckboxListTile(
-                title: const Text('Open this gateway on launch'),
-                subtitle: const Text(
-                  'Primary for Ares; does not change the last-used gateway.',
+                title: Text(
+                  context
+                      .sharedL10n
+                      .release_core_fleet_screen_open_this_gateway_on_launch,
+                ),
+                subtitle: Text(
+                  context
+                      .sharedL10n
+                      .release_core_fleet_screen_primary_for_ares_does_not_change_the_last,
                 ),
                 value: GatewayFleet.primaryId(fleet.manager, [c]) == c.id,
                 onChanged: (_) async {
@@ -216,7 +263,11 @@ class _GatewayGroup extends StatelessWidget {
               ),
             if (!childProfile)
               SwitchListTile(
-                title: const Text('Reconnect in fleet on launch'),
+                title: Text(
+                  context
+                      .sharedL10n
+                      .release_core_fleet_screen_reconnect_in_fleet_on_launch,
+                ),
                 value: fleet.remembered(c.id),
                 onChanged: (v) async {
                   try {
@@ -231,7 +282,9 @@ class _GatewayGroup extends StatelessWidget {
             else if (host.failure case final why?)
               Padding(
                 padding: const EdgeInsets.all(12),
-                child: Text(fleetError(WorkspaceException(why))),
+                child: Text(
+                  fleetError(WorkspaceException(why), context.sharedL10n),
+                ),
               )
             else if (target != null) ...[
               Padding(
@@ -289,11 +342,19 @@ class _GatewayGroup extends StatelessWidget {
                   },
                 ),
               if (host.sessions.isEmpty)
-                const ListTile(title: Text('No sessions for this profile.')),
+                ListTile(
+                  title: Text(
+                    context
+                        .sharedL10n
+                        .release_core_fleet_screen_no_sessions_for_this_profile,
+                  ),
+                ),
               if (host.hasMore)
                 TextButton(
                   onPressed: () => host.refresh(more: true),
-                  child: const Text('More sessions'),
+                  child: Text(
+                    context.sharedL10n.release_core_fleet_screen_more_sessions,
+                  ),
                 ),
             ],
             if (!childProfile)
@@ -362,7 +423,13 @@ class _FleetChatState extends State<_FleetChat> {
       listenable: widget.fleet,
       builder: (context, _) {
         if (!widget.host.current) {
-          return const Center(child: Text('This gateway was disconnected.'));
+          return Center(
+            child: Text(
+              context
+                  .sharedL10n
+                  .release_core_fleet_screen_this_gateway_was_disconnected,
+            ),
+          );
         }
         final chat = widget.chat;
         return ListenableBuilder(
@@ -382,7 +449,9 @@ class _FleetChatState extends State<_FleetChat> {
                         if (item is NgUserItem || item is NgAssistantItem)
                           ListTile(
                             title: Text(
-                              item is NgUserItem ? 'You' : 'Assistant',
+                              item is NgUserItem
+                                  ? context.sharedL10n.history_role_user
+                                  : context.sharedL10n.task_role_assistant,
                             ),
                             subtitle: SelectableText(
                               item is NgUserItem
@@ -391,8 +460,10 @@ class _FleetChatState extends State<_FleetChat> {
                             ),
                           ),
                       if (chat.historyError != null || chat.error != null)
-                        const Text(
-                          'Some conversation data could not be loaded.',
+                        Text(
+                          context
+                              .sharedL10n
+                              .release_core_fleet_screen_some_conversation_data_could_not_be_loaded,
                         ),
                     ],
                   ),
@@ -403,13 +474,17 @@ class _FleetChatState extends State<_FleetChat> {
                     Expanded(
                       child: TextField(
                         controller: input,
-                        decoration: const InputDecoration(
-                          hintText: 'Message this session',
+                        decoration: InputDecoration(
+                          hintText: context
+                              .sharedL10n
+                              .release_core_fleet_screen_message_this_session,
                         ),
                       ),
                     ),
                     IconButton(
-                      tooltip: 'Send to this session',
+                      tooltip: context
+                          .sharedL10n
+                          .release_core_fleet_screen_send_to_this_session,
                       onPressed: switch (widget.host.target) {
                         final target?
                             when chat.runtimeId != null &&
