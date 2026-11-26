@@ -1,3 +1,5 @@
+import '../../l10n/app_localizations_en.dart';
+import '../l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import '../services/profile_file_save.dart';
 import 'package:qr/qr.dart';
@@ -6,17 +8,22 @@ import '../models/connection.dart';
 import 'profile_transfer_screen.dart';
 import 'profile_bundle_screen.dart';
 
-String profileError(Object e) => switch (e) {
-  WorkspaceException(reason: WorkspaceFailure.unsupported) =>
-    'This operation is unavailable on this gateway.',
-  WorkspaceException(reason: WorkspaceFailure.denied) =>
-    'Access denied by the gateway.',
-  WorkspaceException(reason: WorkspaceFailure.stale) =>
-    'Connection changed. Reopen Profiles.',
-  WorkspaceException(reason: WorkspaceFailure.invalid) =>
-    'Invalid input or gateway response. Check the target before retrying.',
-  _ => 'Could not verify the result. Refresh the target before trying again.',
-};
+/// English default preserves the caller outside this owned screen group.
+String profileError(Object e, [AppLocalizations? strings]) {
+  final l = strings ?? AppLocalizationsEn();
+  return switch (e) {
+    WorkspaceException(reason: WorkspaceFailure.unsupported) =>
+      l.rel_admin_this_operation_is_unavailable_on_this_gateway,
+    WorkspaceException(reason: WorkspaceFailure.denied) =>
+      l.rel_admin_access_denied_by_the_gateway,
+    WorkspaceException(reason: WorkspaceFailure.stale) =>
+      l.rel_admin_connection_changed_reopen_profiles,
+    WorkspaceException(reason: WorkspaceFailure.invalid) =>
+      l.rel_admin_invalid_input_or_gateway_response_check_the_target_before,
+    _ => l.rel_admin_could_not_verify_the_result_refresh_the_target_before,
+  };
+}
+
 Future<String?> profileInput(
   BuildContext context,
   String title,
@@ -42,11 +49,11 @@ Future<String?> profileInput(
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(ctx),
-          child: const Text('Cancel'),
+          child: Text(context.sharedL10n.rel_admin_cancel),
         ),
         FilledButton(
           onPressed: () => Navigator.pop(ctx, value),
-          child: const Text('Create'),
+          child: Text(context.sharedL10n.rel_admin_create),
         ),
       ],
     ),
@@ -131,6 +138,7 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
   }
 
   Future<void> run(Future<void> Function() work) async {
+    final l = context.sharedL10n;
     if (busy) return;
     setState(() {
       busy = true;
@@ -142,7 +150,7 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
       a.check();
       await work();
     } catch (e) {
-      if (mounted) message = profileError(e);
+      if (mounted) message = profileError(e, l);
     } finally {
       if (mounted) setState(() => busy = false);
     }
@@ -161,38 +169,40 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
   }
 
   Future<void> persona() async {
+    final l = context.sharedL10n;
     final before = await a.soul();
     edit(
-      'Edit SOUL.md',
-      'Save the persona for $scope.',
-      [_Field('Persona', value: before.content, lines: 7)],
+      l.rel_admin_edit_soul_md,
+      l.rel_admin_persona_scope(scope),
+      [_Field(l.rel_admin_persona, value: before.content, lines: 7)],
       (v) async {
         await a.saveSoul(before, v[0]);
-        message = 'Persona saved.';
+        message = l.rel_admin_persona_saved;
       },
     );
   }
 
   void channelEditor(ProfileChannel c) {
+    final l = context.sharedL10n;
     final inputs = [
       for (final f in c.fields)
         _Field(
-          '${f.key} (${f.isSet ? 'configured' : 'not set'})',
+          '${f.key} (${f.isSet ? l.rel_admin_configured : l.rel_admin_not_set})',
           value: f.listValue ?? '',
           secret: f.listValue == null,
         ),
     ];
     edit(
-      'Configure ${c.name}',
-      'Applies to $scope. Blank keeps an existing value. To remove a value, list its key below.',
+      l.rel_admin_configure_channel(c.name),
+      l.rel_admin_channel_warning(scope),
       [
         _Field(
-          'Enabled',
+          l.rel_admin_enabled,
           value: c.enabled ? 'yes' : 'no',
           choices: const ['yes', 'no'],
         ),
         ...inputs,
-        const _Field('Keys to remove (comma-separated)'),
+        _Field(l.rel_admin_keys_to_remove_comma_separated),
       ],
       (v) async {
         if (!{'yes', 'no'}.contains(v.first)) {
@@ -210,26 +220,27 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
         final hot = await a.updateChannel(c, v.first == 'yes', env, clear);
         channels = await a.channels();
         message = hot
-            ? 'Saved and applied by the gateway.'
-            : 'Saved. A gateway restart may be required.';
+            ? l.rel_admin_saved_and_applied_by_the_gateway
+            : l.rel_admin_saved_a_gateway_restart_may_be_required;
       },
     );
   }
 
   void newHook() {
+    final l = context.sharedL10n;
     edit(
-      'Create signed route',
-      'Applies to $scope. Use a unique name. The gateway creates a signing secret. If another operator creates the name simultaneously the host may replace that route.',
+      l.rel_admin_create_signed_route,
+      l.rel_admin_hook_warning(scope),
       [
-        const _Field('Route ID'),
-        const _Field(
-          'Signature',
+        _Field(l.rel_admin_route_id),
+        _Field(
+          l.rel_admin_signature,
           value: 'generic',
           choices: ['generic', 'github', 'gitlab', 'linear'],
         ),
-        const _Field('Events (comma-separated)'),
-        const _Field(
-          'Delivery target',
+        _Field(l.rel_admin_events_comma_separated),
+        _Field(
+          l.rel_admin_delivery_target,
           value: 'log',
           choices: [
             'log',
@@ -240,14 +251,14 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
             'github_comment',
           ],
         ),
-        const _Field('Prompt', lines: 3),
-        const _Field('Skills (comma-separated)'),
-        const _Field(
-          'Delivery mode',
+        _Field(l.rel_admin_prompt, lines: 3),
+        _Field(l.rel_admin_skills_comma_separated),
+        _Field(
+          l.rel_admin_delivery_mode,
           value: 'Agent processes event',
           choices: ['Agent processes event', 'Direct delivery'],
         ),
-        const _Field('Delivery chat ID (optional)'),
+        _Field(l.rel_admin_delivery_chat_id_optional),
       ],
       (v) async {
         final r = await a.createHook(
@@ -262,13 +273,48 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
         );
         hooks = await a.hooks();
         revealedSecret = r.secret;
-        message = 'Created ${r.url}. Store the signing secret before leaving.';
+        message = l.rel_admin_hook_created(r.url);
       },
     );
   }
 
+  String _choiceLabel(String value) => switch (value) {
+    'yes' => context.sharedL10n.rel_admin_choice_yes,
+    'no' => context.sharedL10n.rel_admin_choice_no,
+    'generic' => context.sharedL10n.rel_admin_choice_generic,
+    'log' => context.sharedL10n.rel_admin_choice_log,
+    'email' => context.sharedL10n.rel_admin_choice_email,
+    'github_comment' => context.sharedL10n.rel_admin_choice_github_comment,
+    'Agent processes event' => context.sharedL10n.rel_admin_choice_agent,
+    'Direct delivery' => context.sharedL10n.rel_admin_choice_direct,
+    // Provider names and signature identifiers are stable protocol names.
+    _ => value,
+  };
+
+  String _channelState(String value) => switch (value) {
+    'pending_restart' => context.sharedL10n.rel_admin_state_pending_restart,
+    'unknown' => context.sharedL10n.rel_admin_state_unknown,
+    'connected' => context.sharedL10n.rel_admin_state_connected,
+    'disconnected' => context.sharedL10n.rel_admin_state_disconnected,
+    'disabled' => context.sharedL10n.rel_admin_state_disabled,
+    'enabled' => context.sharedL10n.rel_admin_state_enabled,
+    'running' => context.sharedL10n.rel_admin_state_running,
+    'stopped' => context.sharedL10n.rel_admin_state_stopped,
+    'error' => context.sharedL10n.rel_admin_state_error,
+    'not_configured' => context.sharedL10n.rel_admin_state_not_configured,
+    'configured' => context.sharedL10n.rel_admin_configured,
+    'startup_failed' => context.sharedL10n.rel_admin_state_startup_failed,
+    'gateway_stopped' => context.sharedL10n.rel_admin_state_gateway_stopped,
+    'connecting' => context.sharedL10n.rel_admin_state_connecting,
+    'retrying' => context.sharedL10n.rel_admin_state_retrying,
+    'fatal' => context.sharedL10n.rel_admin_state_fatal,
+
+    _ => value,
+  };
+
   @override
   Widget build(BuildContext context) {
+    final l = context.sharedL10n;
     final form = editor;
     return ListView(
       padding: const EdgeInsets.all(12),
@@ -279,7 +325,9 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
           TextButton(
             onPressed: () => setState(() => showSecret = !showSecret),
             child: Text(
-              showSecret ? 'Hide signing secret' : 'Reveal signing secret',
+              showSecret
+                  ? l.rel_admin_hide_signing_secret
+                  : l.rel_admin_reveal_signing_secret,
             ),
           ),
           if (showSecret) SelectableText(revealedSecret!),
@@ -295,7 +343,10 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
                 decoration: InputDecoration(labelText: form.fields[i].label),
                 items: [
                   for (final option in options)
-                    DropdownMenuItem(value: option, child: Text(option)),
+                    DropdownMenuItem(
+                      value: option,
+                      child: Text(_choiceLabel(option)),
+                    ),
                 ],
                 onChanged: busy
                     ? null
@@ -329,7 +380,7 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
                         editor = null;
                         values = [];
                       }),
-                child: const Text('Cancel'),
+                child: Text(l.rel_admin_cancel),
               ),
               FilledButton(
                 onPressed: busy
@@ -342,13 +393,13 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
                           values = [];
                         }
                       }),
-                child: const Text('Confirm'),
+                child: Text(l.rel_admin_confirm),
               ),
             ],
           ),
         ] else ...[
-          action('Edit persona', persona, detail: 'SOUL.md'),
-          action('Portable profile bundle', () async {
+          action(l.rel_admin_edit_persona, persona, detail: 'SOUL.md'),
+          action(l.rel_admin_portable_profile_bundle, () async {
             await Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => ProfileBundleScreen(
@@ -361,38 +412,40 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
             );
           }),
           action(
-            'Clone profile',
+            l.rel_admin_clone_profile,
             () async => edit(
-              'Clone profile',
-              'Copy settings, skills, persona and potentially provider credentials from $scope. Messaging tokens are not requested.',
-              [const _Field('New profile ID')],
+              l.rel_admin_clone_profile,
+              l.rel_admin_clone_warning(scope),
+              [_Field(l.rel_admin_new_profile_id)],
               (v) async {
                 await a.roster.create(v[0], clone: a.name);
-                changeRoster('Cloned ${a.name} to ${v[0]}.');
+                changeRoster(l.rel_admin_cloned(a.name, v[0]));
               },
             ),
           ),
           action(
-            a.name == 'default' ? 'Rename display label' : 'Rename profile',
+            a.name == 'default'
+                ? l.rel_admin_rename_display_label
+                : l.rel_admin_rename_profile,
             () async => edit(
-              'Rename ${a.name}',
+              l.rel_admin_rename_target(a.name),
               a.name == 'default'
-                  ? 'Change the presentation label for $scope. Its ID stays default.'
-                  : 'Rename $scope on the server. A running gateway may stop.',
-              [const _Field('New name')],
+                  ? l.rel_admin_rename_label_warning(scope)
+                  : l.rel_admin_rename_warning(scope),
+              [_Field(l.rel_admin_new_name)],
               (v) async {
                 await a.rename(v[0]);
-                changeRoster('Rename verified.');
+                changeRoster(l.rel_admin_rename_verified);
               },
             ),
           ),
           if (a.name != 'default')
             action(
-              'Delete profile',
+              l.rel_admin_delete_profile,
               () async => edit(
-                'Delete ${a.name}',
-                'Permanently delete $scope, including sessions and credentials. Type the exact profile ID.',
-                [const _Field('Profile ID to delete')],
+                l.rel_admin_delete_target(a.name),
+                l.rel_admin_delete_profile_warning(scope),
+                [_Field(l.rel_admin_profile_id_to_delete)],
                 (v) async {
                   if (v[0] != a.name) {
                     throw const WorkspaceException(WorkspaceFailure.mismatch);
@@ -400,84 +453,94 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
                   final settled = await a.remove();
                   changeRoster(
                     settled
-                        ? 'Profile deleted.'
-                        : 'Profile deleted. Server identity cleanup is still pending.',
+                        ? l.rel_admin_profile_deleted
+                        : l.rel_admin_profile_deleted_server_identity_cleanup_is_still_pending,
                   );
                 },
               ),
             ),
           action(
-            'Export profile archive',
+            l.rel_admin_export_profile_archive,
             () async => edit(
-              'Export ${a.name}',
-              'Create a .tar.gz on $scope. Known credential stores are excluded, but private data can remain. Review before sharing.',
+              l.rel_admin_export_target(a.name),
+              l.rel_admin_export_warning(scope),
               [],
               (v) async {
-                message =
-                    'Archive on ${widget.label}: ${await a.exportProfile()}';
+                message = l.rel_admin_archive_on(
+                  widget.label,
+                  await a.exportProfile(),
+                );
               },
             ),
           ),
           action(
-            'Import profile archive',
+            l.rel_admin_import_profile_archive,
             () async => edit(
-              'Import a trusted profile',
-              'Use a reviewed .tar.gz already on ${widget.label}. It can contain plugins, scripts and schedules. A new profile ID is required.',
+              l.rel_admin_import_a_trusted_profile,
+              l.rel_admin_import_warning(widget.label),
               [
-                const _Field('Absolute archive path on gateway'),
-                const _Field('New profile ID'),
+                _Field(l.rel_admin_absolute_archive_path_on_gateway),
+                _Field(l.rel_admin_new_profile_id),
               ],
               (v) async {
                 await a.importProfile(v[0], v[1]);
-                changeRoster('Imported ${v[1]}.');
+                changeRoster(l.rel_admin_imported(v[1]));
               },
             ),
           ),
           const Divider(),
-          action('Messaging channels', () async {
+          action(l.rel_admin_messaging_channels, () async {
             channels = await a.channels();
           }),
           for (final c in channels ?? <ProfileChannel>[])
             action(
               c.name,
               () async => channelEditor(c),
-              detail: '${c.id} · ${c.state}',
+              detail: '${c.id} · ${_channelState(c.state)}',
             ),
-          action('DM pairing requests', () async {
+          action(l.rel_admin_dm_pairing_requests, () async {
             pairs = await a.pairs();
-            if (pairs!.isEmpty) message = 'No pending or approved users.';
+            if (pairs!.isEmpty) {
+              message = l.rel_admin_no_pending_or_approved_users;
+            }
           }),
           for (final p in pairs ?? <ProfilePair>[])
             if (p.pending &&
                 !RegExp(r'^[a-f0-9]{16}$').hasMatch(p.request ?? ''))
               ListTile(
                 title: Text(p.user),
-                subtitle: const Text(
-                  'Legacy pairing: no verifiable request ID. Ask the user to pair again.',
+                subtitle: Text(
+                  l.rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user,
                 ),
               )
             else
               action(
-                '${p.pending ? 'Approve' : 'Revoke'} ${p.user}',
+                p.pending
+                    ? l.rel_admin_approve_user(p.user)
+                    : l.rel_admin_revoke_user(p.user),
                 () async => edit(
-                  '${p.pending ? 'Approve' : 'Revoke'} ${p.user}',
-                  '${p.platform} on $scope: ${p.pending ? 'allow' : 'remove'} this user’s messaging access.',
+                  p.pending
+                      ? l.rel_admin_approve_user(p.user)
+                      : l.rel_admin_revoke_user(p.user),
+                  p.pending
+                      ? l.rel_admin_allow_pair(p.platform, scope)
+                      : l.rel_admin_remove_pair(p.platform, scope),
                   [],
                   (v) async {
                     await a.changePair(p);
                     pairs = await a.pairs();
-                    message = 'Pairing change verified.';
+                    message = l.rel_admin_pairing_change_verified;
                   },
                 ),
                 detail: p.platform,
               ),
           if (setup == null)
             action(
-              'Create Telegram bot by QR',
+              l.rel_admin_create_telegram_bot_by_qr,
               () async => edit(
-                'Create Telegram bot',
-                'Start a Telegram pairing on $scope using the gateway’s setup service.',
-                [const _Field('Bot name', value: 'Hermes Agent')],
+                l.rel_admin_create_telegram_bot,
+                l.rel_admin_telegram_start(scope),
+                [_Field(l.rel_admin_bot_name, value: 'Hermes Agent')],
                 (v) async {
                   final result = await a.startTelegram(v[0]);
                   qr = QrImage(
@@ -493,7 +556,7 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
           if (setup case final s?) ...[
             Center(
               child: Semantics(
-                label: 'Telegram bot creation QR code',
+                label: l.rel_admin_telegram_bot_creation_qr_code,
                 child: CustomPaint(
                   size: const Size.square(216),
                   painter: _QR(qr!),
@@ -501,56 +564,61 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
               ),
             ),
             SelectableText(s.payload),
-            Text('Expires: ${s.expires.toLocal()}'),
-            action('Check Telegram pairing', () async {
+            Text(l.rel_admin_expires(s.expires.toLocal().toString())),
+            action(l.rel_admin_check_telegram_pairing, () async {
               final status = await a.telegramStatus(s);
               if (!status.ready) {
-                message = 'Waiting for Telegram.';
+                message = l.rel_admin_waiting_for_telegram;
                 return;
               }
               edit(
-                'Apply Telegram bot',
-                'Enable @${status.bot} on $scope and attempt a gateway restart. Only the listed users may message it.',
-                [_Field('Allowed numeric user IDs', value: status.user)],
+                l.rel_admin_apply_telegram_bot,
+                l.rel_admin_telegram_apply(status.bot, scope),
+                [
+                  _Field(
+                    l.rel_admin_allowed_numeric_user_ids,
+                    value: status.user,
+                  ),
+                ],
                 (v) async {
                   final needs = await a.applyTelegram(s, csv(v[0]));
                   setup = null;
                   qr = null;
                   message = needs
-                      ? 'Saved. Restart still required.'
-                      : 'Saved; gateway restart requested.';
+                      ? l.rel_admin_saved_restart_still_required
+                      : l.rel_admin_saved_gateway_restart_requested;
                 },
               );
             }),
-            action('Cancel Telegram setup', () async {
+            action(l.rel_admin_cancel_telegram_setup, () async {
               await a.cancelTelegram(s);
               setup = null;
               qr = null;
             }),
           ],
           const Divider(),
-          action('Inbound webhooks', () async {
+          action(l.rel_admin_inbound_webhooks, () async {
             hooks = await a.hooks();
           }),
           if (hooks case final h?) ...[
             if (!h.enabled)
               action(
-                'Enable webhook service',
+                l.rel_admin_enable_webhook_service,
                 () async => edit(
-                  'Enable webhooks',
-                  'Enable inbound webhooks on $scope and attempt a gateway restart.',
+                  l.rel_admin_enable_webhooks,
+                  l.rel_admin_hooks_enable(scope),
                   [],
                   (v) async {
                     final needs = await a.enableHooks();
                     hooks = await a.hooks();
                     message = needs
-                        ? 'Enabled. Restart still required.'
-                        : 'Enabled; restart requested.';
+                        ? l.rel_admin_enabled_restart_still_required
+                        : l.rel_admin_enabled_restart_requested;
                   },
                 ),
               )
             else
-              action('Create signed route', () async => newHook()),
+              action(l.rel_admin_create_signed_route, () async => newHook()),
             for (final route in h.entries) ...[
               ListTile(
                 title: Text(route.name),
@@ -564,26 +632,26 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
                           ? null
                           : () => run(
                               () async => edit(
-                                '${del
-                                    ? 'Delete'
+                                del
+                                    ? l.rel_admin_delete_target(route.name)
                                     : route.enabled
-                                    ? 'Disable'
-                                    : 'Enable'} ${route.name}',
-                                'Change exactly ${route.name} on $scope.',
+                                    ? l.rel_admin_disable_target(route.name)
+                                    : l.rel_admin_enable_target(route.name),
+                                l.rel_admin_hook_change(route.name, scope),
                                 [],
                                 (v) async {
                                   await a.changeHook(route, delete: del);
                                   hooks = await a.hooks();
-                                  message = 'Route change verified.';
+                                  message = l.rel_admin_route_change_verified;
                                 },
                               ),
                             ),
                       child: Text(
                         del
-                            ? 'Delete route'
+                            ? l.rel_admin_delete_route
                             : route.enabled
-                            ? 'Disable route'
-                            : 'Enable route',
+                            ? l.rel_admin_disable_route
+                            : l.rel_admin_enable_route,
                       ),
                     ),
                 ],
@@ -592,19 +660,19 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
           ],
           const Divider(),
           action(
-            'Back up entire agent home',
+            l.rel_admin_back_up_entire_agent_home,
             () async => edit(
-              'Back up entire agent home',
-              'This is not an Ares settings backup. Save all profiles, sessions and credentials on ${widget.label}. The archive is sensitive.',
+              l.rel_admin_back_up_entire_agent_home,
+              l.rel_admin_backup_warning(widget.label),
               [],
               (v) async {
                 completedBackup = null;
                 backup = await a.startBackup();
-                message = 'Backup started on ${widget.label}.';
+                message = l.rel_admin_backup_started(widget.label);
               },
             ),
           ),
-          action('Transfer to a Cloud agent', () async {
+          action(l.rel_admin_transfer_to_a_cloud_agent, () async {
             await Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) =>
@@ -613,24 +681,24 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
             );
           }),
           if (backup case final b?)
-            action('Check backup progress', () async {
+            action(l.rel_admin_check_backup_progress, () async {
               if (await a.backupDone(b)) {
-                message = 'Backup verified on ${widget.label}: ${b.archive}';
+                message = l.rel_admin_backup_verified(widget.label, b.archive);
                 completedBackup = b;
                 backup = null;
               } else {
-                message = 'Backup still running on ${widget.label}.';
+                message = l.rel_admin_backup_running(widget.label);
               }
             }),
           if (completedBackup case final done?)
             action(
-              'Save backup to this device',
+              l.rel_admin_save_backup_to_this_device,
               () async {
                 final bytes = await a.backupBytes(done);
                 if (!mounted) return;
                 a.check();
                 final path = await saveProfileFile(
-                  title: 'Save sensitive full-home archive',
+                  title: l.rel_admin_save_sensitive_full_home_archive,
                   filename: 'hermes-backup.zip',
                   check: () {
                     if (!mounted || ModalRoute.of(context)?.isCurrent != true) {
@@ -640,9 +708,12 @@ class _ProfileAdminPanelState extends State<ProfileAdminPanel> {
                   },
                   bytes: bytes,
                 );
-                message = path == null ? 'Save cancelled.' : 'Backup saved.';
+                message = path == null
+                    ? l.rel_admin_save_cancelled
+                    : l.rel_admin_backup_saved;
               },
-              detail: 'Up to 32 MiB. Larger archives remain on the gateway.',
+              detail: l
+                  .rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway,
             ),
         ],
       ],

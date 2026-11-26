@@ -1,3 +1,4 @@
+import '../l10n/l10n.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/connection.dart';
@@ -42,6 +43,7 @@ class _BundleState extends State<ProfileBundleScreen> {
   }
 
   void _changed() {
+    final l = context.sharedL10n;
     try {
       widget.admin.check();
     } catch (_) {
@@ -51,7 +53,7 @@ class _BundleState extends State<ProfileBundleScreen> {
           checked.clear();
           preview = null;
           adopt = false;
-          message = 'Connection changed. Reopen Profiles.';
+          message = l.rel_admin_connection_changed_reopen_profiles;
         });
       }
     }
@@ -72,6 +74,7 @@ class _BundleState extends State<ProfileBundleScreen> {
   }
 
   Future<void> run(Future<void> Function() task) async {
+    final l = context.sharedL10n;
     if (busy) return;
     setState(() {
       busy = true;
@@ -82,8 +85,8 @@ class _BundleState extends State<ProfileBundleScreen> {
       await task();
     } catch (e) {
       message = e is FormatException
-          ? 'Unsupported or oversized profile archive.'
-          : profileError(e);
+          ? l.rel_admin_unsupported_or_oversized_profile_archive
+          : profileError(e, l);
     } finally {
       if (mounted) setState(() => busy = false);
     }
@@ -121,17 +124,42 @@ class _BundleState extends State<ProfileBundleScreen> {
   }
 
   String _layoutLabel(ProfilePresentation style) => switch (style.geometry) {
-    null => 'Current layout',
-    (paired: false, stacked: _, percent: _) => 'One pane',
-    final g =>
-      '${g.stacked ? 'Stacked' : 'Side by side'} · ${g.percent}% first pane',
+    null => context.sharedL10n.rel_admin_current_layout,
+    (paired: false, stacked: _, percent: _) =>
+      context.sharedL10n.rel_admin_one_pane,
+    final g => context.sharedL10n.rel_admin_layout_first_pane(
+      g.stacked
+          ? context.sharedL10n.rel_admin_stacked
+          : context.sharedL10n.rel_admin_side_by_side,
+      g.percent.toString(),
+    ),
+  };
+
+  String _skinLabel(String? value) => switch (value) {
+    null => context.sharedL10n.rel_admin_unchanged,
+    'classic' => context.sharedL10n.rel_admin_skin_classic,
+    'midnight' => context.sharedL10n.rel_admin_skin_midnight,
+    'ember' => context.sharedL10n.rel_admin_skin_ember,
+    'mono' => context.sharedL10n.rel_admin_skin_mono,
+    'cyberpunk' => context.sharedL10n.rel_admin_skin_cyberpunk,
+    'slate' => context.sharedL10n.rel_admin_skin_slate,
+    // Theme/product names and imported theme IDs remain identifiable.
+    _ => value,
+  };
+
+  String _modeLabel(ThemeMode? mode) => switch (mode) {
+    null => context.sharedL10n.rel_admin_unchanged,
+    ThemeMode.system => context.sharedL10n.rel_admin_mode_system,
+    ThemeMode.light => context.sharedL10n.rel_admin_mode_light,
+    ThemeMode.dark => context.sharedL10n.rel_admin_mode_dark,
   };
 
   @override
   Widget build(BuildContext context) {
+    final l = context.sharedL10n;
     final b = bundle;
     return Scaffold(
-      appBar: AppBar(title: const Text('Portable profile bundle')),
+      appBar: AppBar(title: Text(l.rel_admin_portable_profile_bundle)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -149,17 +177,24 @@ class _BundleState extends State<ProfileBundleScreen> {
                       check();
                       preview = style;
                       if (preview == null) {
-                        message = 'No supported appearance in this profile.';
+                        message =
+                            l.rel_admin_no_supported_appearance_in_this_profile;
                       }
                     }),
-              child: const Text('Review appearance saved with this profile'),
+              child: Text(
+                l.rel_admin_review_appearance_saved_with_this_profile,
+              ),
             ),
             if (preview case final style?) ...[
               Text(
-                'Skin: ${style.skin ?? 'unchanged'} · Mode: ${style.mode?.name ?? 'unchanged'} · ${_layoutLabel(style)}',
+                l.rel_admin_appearance_summary(
+                  _skinLabel(style.skin),
+                  _modeLabel(style.mode),
+                  _layoutLabel(style),
+                ),
               ),
-              const Text(
-                'Applies only to this named profile on this device. An imported arrangement starts with empty panes; choose its chats yourself.',
+              Text(
+                l.rel_admin_applies_only_to_this_named_profile_on_this_device,
               ),
               FilledButton(
                 onPressed: busy
@@ -170,15 +205,15 @@ class _BundleState extends State<ProfileBundleScreen> {
                         );
                         await store.apply(widget.connection, style, check);
                         preview = null;
-                        message =
-                            'Appearance applied to ${widget.gateway} / ${widget.admin.name}.';
+                        message = l.rel_admin_appearance_applied(
+                          widget.gateway,
+                          widget.admin.name,
+                        );
                       }),
-                child: const Text('Apply to this profile on this device'),
+                child: Text(l.rel_admin_apply_to_this_profile_on_this_device),
               ),
             ],
-            const Text(
-              'Export prepares a .tar.gz on the gateway. Review its portable files before saving a copy here. Import opens a local archive for review; opening alone uploads nothing.',
-            ),
+            Text(l.rel_admin_export_prepares_a_tar_gz_on_the_gateway_review),
             FilledButton(
               onPressed: busy
                   ? null
@@ -198,18 +233,22 @@ class _BundleState extends State<ProfileBundleScreen> {
                       importing = false;
                       checked.clear();
                     }),
-              child: const Text('Prepare profile export'),
+              child: Text(l.rel_admin_prepare_profile_export),
             ),
             TextButton(
               onPressed: busy ? null : () => run(selectLocal),
-              child: const Text('Open .tar.gz from this device'),
+              child: Text(l.rel_admin_open_tar_gz_from_this_device),
             ),
           ] else ...[
             Text(
-              'Bundle: ${b.profile} · ${b.files.length} reviewable files · ${b.omitted} omitted',
+              l.rel_admin_bundle_summary(
+                b.profile,
+                b.files.length.toString(),
+                b.omitted.toString(),
+              ),
             ),
-            const Text(
-              'Only selected text files travel. Review for secrets and private information. Config, skills and schedules can change what the new profile does.',
+            Text(
+              l.rel_admin_only_selected_text_files_travel_review_for_secrets_and,
             ),
             for (final entry in b.files.entries)
               ExpansionTile(
@@ -220,7 +259,7 @@ class _BundleState extends State<ProfileBundleScreen> {
                     child: SelectableText(entry.value),
                   ),
                   CheckboxListTile(
-                    title: const Text('Include this reviewed file'),
+                    title: Text(l.rel_admin_include_this_reviewed_file),
                     value: checked.contains(entry.key),
                     onChanged: busy
                         ? null
@@ -241,20 +280,22 @@ class _BundleState extends State<ProfileBundleScreen> {
                   onChanged: busy
                       ? null
                       : (v) => setState(() => adopt = v == true),
-                  title: const Text(
-                    'Apply appearance to the new profile on this device',
+                  title: Text(
+                    l.rel_admin_apply_appearance_to_the_new_profile_on_this_device,
                   ),
-                  subtitle: const Text(
-                    'Imports colours and pane sizes, never chats, tools or session IDs.',
+                  subtitle: Text(
+                    l.rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids,
                   ),
                 ),
-              const Text(
-                'The gateway retains a private staged copy. Import creates a new profile; it will not replace an existing one.',
+              Text(
+                l.rel_admin_the_gateway_retains_a_private_staged_copy_import_creates,
               ),
               TextField(
                 controller: dest,
                 enabled: !busy,
-                decoration: const InputDecoration(labelText: 'New profile ID'),
+                decoration: InputDecoration(
+                  labelText: l.rel_admin_new_profile_id,
+                ),
               ),
             ],
             FilledButton(
@@ -270,13 +311,13 @@ class _BundleState extends State<ProfileBundleScreen> {
                           check,
                         );
                         check();
-                        message = 'Imported $name on ${widget.gateway}.';
+                        message = l.rel_admin_imported_on(name, widget.gateway);
                         if (adopt && checked.contains('desktop.json')) {
                           final actual = ProfilePresentation.parse(receipt);
                           if (actual == null ||
                               actual.encode() != b.files['desktop.json']) {
-                            message +=
-                                ' Appearance not applied: the gateway did not confirm the reviewed overlay.';
+                            message += l
+                                .rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the;
                           } else {
                             try {
                               final store = ProfilePresentationStore(
@@ -289,11 +330,12 @@ class _BundleState extends State<ProfileBundleScreen> {
                                 actual,
                                 check,
                               );
-                              message += ' Appearance applied on this device.';
+                              message +=
+                                  l.rel_admin_appearance_applied_on_this_device;
                             } catch (_) {
                               check();
-                              message +=
-                                  ' Appearance was not saved on this device.';
+                              message += l
+                                  .rel_admin_appearance_was_not_saved_on_this_device;
                             }
                           }
                         }
@@ -301,23 +343,23 @@ class _BundleState extends State<ProfileBundleScreen> {
                         final bytes = b.encode(checked);
                         check();
                         final path = await saveProfileFile(
-                          title: 'Save reviewed profile bundle',
+                          title: l.rel_admin_save_reviewed_profile_bundle,
                           filename: '${b.profile}.tar.gz',
                           check: check,
                           bytes: bytes,
                         );
                         check();
                         message = path == null
-                            ? 'Save cancelled.'
-                            : 'Profile bundle saved.';
+                            ? l.rel_admin_save_cancelled
+                            : l.rel_admin_profile_bundle_saved;
                       }
                       checked.clear();
                       bundle = null;
                     }),
               child: Text(
                 importing
-                    ? 'Import selected files'
-                    : 'Save selected files to device',
+                    ? l.rel_admin_import_selected_files
+                    : l.rel_admin_save_selected_files_to_device,
               ),
             ),
           ],

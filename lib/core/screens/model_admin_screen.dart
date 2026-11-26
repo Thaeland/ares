@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../l10n/l10n.dart';
 import '../services/connection_manager.dart';
 import '../services/model_admin.dart';
 import '../services/remote_model_admin.dart';
@@ -16,13 +17,6 @@ enum ModelAdminSection {
   mixture,
   billing,
 }
-
-const _modeLabels = {
-  '': 'Auto',
-  'chat_completions': 'Chat Completions',
-  'codex_responses': 'Codex Responses',
-  'anthropic_messages': 'Anthropic Messages',
-};
 
 class PreferencesModelPresetStore implements ModelPresetStore {
   PreferencesModelPresetStore(this.prefs);
@@ -126,6 +120,13 @@ class ModelAdminScreen extends StatefulWidget {
 }
 
 class _ModelAdminScreenState extends State<ModelAdminScreen> {
+  Map<String, String> get _modeLabels => {
+    '': context.sharedL10n.rel_admin_auto,
+    'chat_completions': context.sharedL10n.rel_admin_chat_completions,
+    'codex_responses': context.sharedL10n.rel_admin_codex_responses,
+    'anthropic_messages': context.sharedL10n.rel_admin_anthropic_messages,
+  };
+
   late final DashboardClient _client =
       widget.dashboard ?? DashboardClient.fromConnection(widget.connection);
   late final RemoteModelAdmin _admin = RemoteModelAdmin(
@@ -264,7 +265,7 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
         case ModelAdminSection.billing:
           if (widget.rpc == null) {
             throw const ModelAdminException(
-              'Connect the live gateway session before reading billing. Nothing is charged from this page.',
+              ModelAdminFailure.connectBeforeBilling,
             );
           }
           final state = await _admin.billingState();
@@ -370,6 +371,7 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
   }
 
   Future<void> _run(Future<void> Function() action) async {
+    final l = context.sharedL10n;
     if (_busy) return;
     setState(() {
       _busy = true;
@@ -379,15 +381,18 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
     try {
       await action();
     } on ModelAdminException catch (error) {
-      if (mounted) setState(() => _error = error.message);
+      if (mounted) setState(() => _error = error.localized(l));
     } catch (_) {
-      if (mounted) setState(() => _error = 'Could not complete that request.');
+      if (mounted) {
+        setState(() => _error = l.rel_admin_could_not_complete_that_request);
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }
   }
 
   Future<bool> _confirm(String title, String body) async {
+    final l = context.sharedL10n;
     final agreed = await showDialog<bool>(
       context: context,
       builder: (dialog) => AlertDialog(
@@ -397,12 +402,12 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialog, false),
-            child: const Text('Cancel'),
+            child: Text(l.rel_admin_cancel),
           ),
           FilledButton(
             key: const Key('admin-confirm-yes'),
             onPressed: () => Navigator.pop(dialog, true),
-            child: const Text('Confirm'),
+            child: Text(l.rel_admin_confirm),
           ),
         ],
       ),
@@ -430,12 +435,13 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.sharedL10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Providers and billing'),
+        title: Text(l.rel_admin_providers_and_billing),
         actions: [
           IconButton(
-            tooltip: 'Refresh',
+            tooltip: l.rel_admin_refresh,
             onPressed: _busy ? null : _load,
             icon: const Icon(Icons.refresh),
           ),
@@ -448,34 +454,34 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
             key: const Key('model-admin-section'),
             isExpanded: true,
             value: _section,
-            items: const [
+            items: [
               DropdownMenuItem(
                 value: ModelAdminSection.keys,
-                child: Text('API keys'),
+                child: Text(l.rel_admin_api_keys),
               ),
               DropdownMenuItem(
                 value: ModelAdminSection.endpoints,
-                child: Text('Custom endpoints'),
+                child: Text(l.rel_admin_custom_endpoints),
               ),
               DropdownMenuItem(
                 value: ModelAdminSection.accounts,
-                child: Text('Provider accounts'),
+                child: Text(l.rel_admin_provider_accounts),
               ),
               DropdownMenuItem(
                 value: ModelAdminSection.presets,
-                child: Text('Effort and speed presets'),
+                child: Text(l.rel_admin_effort_and_speed_presets),
               ),
               DropdownMenuItem(
                 value: ModelAdminSection.delegation,
-                child: Text('Delegation'),
+                child: Text(l.rel_admin_delegation),
               ),
               DropdownMenuItem(
                 value: ModelAdminSection.mixture,
-                child: Text('Mixture of agents'),
+                child: Text(l.rel_admin_mixture_of_agents),
               ),
               DropdownMenuItem(
                 value: ModelAdminSection.billing,
-                child: Text('Credits and plans'),
+                child: Text(l.rel_admin_credits_and_plans),
               ),
             ],
             onChanged: _busy
@@ -503,629 +509,712 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
     );
   }
 
-  List<Widget> _keySection() => [
-    if (_keys.isEmpty)
-      const Text('No provider keys were reported for this profile.'),
-    if (_keys.isNotEmpty)
+  List<Widget> _keySection() {
+    final l = context.sharedL10n;
+    return [
+      if (_keys.isEmpty)
+        Text(l.rel_admin_no_provider_keys_were_reported_for_this_profile),
+      if (_keys.isNotEmpty)
+        DropdownButton<String>(
+          key: const Key('provider-key'),
+          isExpanded: true,
+          value: _selectedKey,
+          items: [
+            for (final key in _keys)
+              DropdownMenuItem(
+                value: key.envKey,
+                child: Text(
+                  '${key.name} · ${key.envKey} · ${key.saved ? l.rel_admin_saved : l.rel_admin_not_saved}',
+                ),
+              ),
+          ],
+          onChanged: (value) => setState(() => _selectedKey = value),
+        ),
+      TextField(
+        key: const Key('provider-key-value'),
+        controller: _keyValue,
+        obscureText: true,
+        enableSuggestions: false,
+        autocorrect: false,
+        decoration: InputDecoration(labelText: l.rel_admin_new_key_value),
+      ),
+      FilledButton(
+        key: const Key('provider-key-save'),
+        onPressed: _busy || _selectedKey == null
+            ? null
+            : () => _run(() async {
+                await _admin.saveKey(_selectedKey!, _keyValue.text);
+                _keyValue.clear();
+                if (mounted) {
+                  setState(() => _notice = l.rel_admin_provider_key_saved);
+                }
+                final keys = await _admin.keys();
+                if (mounted) setState(() => _keys = keys);
+              }),
+        child: Text(l.rel_admin_save_key),
+      ),
+      TextButton(
+        key: const Key('provider-key-clear'),
+        onPressed: _busy || _selectedKey == null
+            ? null
+            : () => _run(() async {
+                final key = _selectedKey!;
+                final agreed = await _confirm(
+                  l.rel_admin_clear_provider_key,
+                  l.rel_admin_remove_key_confirm(key),
+                );
+                if (!agreed) return;
+                await _admin.clearKey(key);
+                if (mounted) {
+                  setState(() => _notice = l.rel_admin_provider_key_cleared);
+                }
+                final keys = await _admin.keys();
+                if (mounted) setState(() => _keys = keys);
+              }),
+        child: Text(l.rel_admin_clear_key),
+      ),
+    ];
+  }
+
+  List<Widget> _endpointSection() {
+    final l = context.sharedL10n;
+    return [
       DropdownButton<String>(
-        key: const Key('provider-key'),
+        key: const Key('endpoint-existing'),
         isExpanded: true,
-        value: _selectedKey,
+        value: _endpointId,
         items: [
-          for (final key in _keys)
+          DropdownMenuItem(value: '', child: Text(l.rel_admin_new_endpoint)),
+          for (final endpoint in _endpoints)
             DropdownMenuItem(
-              value: key.envKey,
+              value: endpoint.id,
               child: Text(
-                '${key.name} · ${key.envKey} · ${key.saved ? 'Saved' : 'Not saved'}',
+                endpoint.current
+                    ? l.rel_admin_current_endpoint(endpoint.name)
+                    : endpoint.name,
               ),
             ),
         ],
-        onChanged: (value) => setState(() => _selectedKey = value),
-      ),
-    TextField(
-      key: const Key('provider-key-value'),
-      controller: _keyValue,
-      obscureText: true,
-      enableSuggestions: false,
-      autocorrect: false,
-      decoration: const InputDecoration(labelText: 'New key value'),
-    ),
-    FilledButton(
-      key: const Key('provider-key-save'),
-      onPressed: _busy || _selectedKey == null
-          ? null
-          : () => _run(() async {
-              await _admin.saveKey(_selectedKey!, _keyValue.text);
-              _keyValue.clear();
-              if (mounted) setState(() => _notice = 'Provider key saved.');
-              final keys = await _admin.keys();
-              if (mounted) setState(() => _keys = keys);
-            }),
-      child: const Text('Save key'),
-    ),
-    TextButton(
-      key: const Key('provider-key-clear'),
-      onPressed: _busy || _selectedKey == null
-          ? null
-          : () => _run(() async {
-              final key = _selectedKey!;
-              final agreed = await _confirm(
-                'Clear provider key',
-                'Remove the saved $key value from this profile?',
-              );
-              if (!agreed) return;
-              await _admin.clearKey(key);
-              if (mounted) setState(() => _notice = 'Provider key cleared.');
-              final keys = await _admin.keys();
-              if (mounted) setState(() => _keys = keys);
-            }),
-      child: const Text('Clear key'),
-    ),
-  ];
-
-  List<Widget> _endpointSection() => [
-    DropdownButton<String>(
-      key: const Key('endpoint-existing'),
-      isExpanded: true,
-      value: _endpointId,
-      items: [
-        const DropdownMenuItem(value: '', child: Text('New endpoint')),
-        for (final endpoint in _endpoints)
-          DropdownMenuItem(
-            value: endpoint.id,
-            child: Text(
-              '${endpoint.name}${endpoint.current ? ' · current' : ''}',
-            ),
-          ),
-      ],
-      onChanged: (value) {
-        final endpoint = _endpoints.where((row) => row.id == value).firstOrNull;
-        setState(() {
-          _endpointId = value ?? '';
-          _testResult = null;
-          if (endpoint != null) {
-            _endpointName.text = endpoint.name;
-            _endpointUrl.text = endpoint.baseUrl;
-            _endpointModel.text = endpoint.model;
-            _apiMode = endpoint.apiMode;
-            _endpointKey.clear();
-          }
-        });
-      },
-    ),
-    TextField(
-      key: const Key('endpoint-name'),
-      controller: _endpointName,
-      decoration: const InputDecoration(labelText: 'Name'),
-    ),
-    TextField(
-      key: const Key('endpoint-url'),
-      controller: _endpointUrl,
-      decoration: const InputDecoration(labelText: 'Base URL'),
-    ),
-    TextField(
-      key: const Key('endpoint-model'),
-      controller: _endpointModel,
-      decoration: const InputDecoration(labelText: 'Model'),
-    ),
-    DropdownButton<String>(
-      key: const Key('endpoint-mode'),
-      isExpanded: true,
-      value: _apiMode,
-      items: [
-        for (final mode in customEndpointApiModes)
-          DropdownMenuItem(value: mode, child: Text(_modeLabels[mode]!)),
-      ],
-      onChanged: (value) => setState(() => _apiMode = value ?? ''),
-    ),
-    TextField(
-      controller: _endpointKey,
-      obscureText: true,
-      enableSuggestions: false,
-      autocorrect: false,
-      decoration: const InputDecoration(
-        labelText: 'API key',
-        helperText: 'Leave blank to keep a key this endpoint already has.',
-      ),
-    ),
-    FilledButton(
-      key: const Key('endpoint-test'),
-      onPressed: _busy
-          ? null
-          : () => _run(() async {
-              final result = await _admin.testEndpoint(_draft());
-              if (!mounted) return;
-              final transport = result.transport.isEmpty
-                  ? 'auto'
-                  : result.transport;
-              setState(() {
-                _testResult =
-                    '${result.reachable ? 'Reachable' : 'Unreachable'} · $transport · ${result.models.length} models. ${result.message}';
-              });
-            }),
-      child: const Text('Test endpoint'),
-    ),
-    if (_testResult != null)
-      Text(_testResult!, key: const Key('endpoint-test-result')),
-    FilledButton(
-      key: const Key('endpoint-save'),
-      onPressed: _busy
-          ? null
-          : () => _run(() async {
-              await _admin.saveEndpoint(_draft());
+        onChanged: (value) {
+          final endpoint = _endpoints
+              .where((row) => row.id == value)
+              .firstOrNull;
+          setState(() {
+            _endpointId = value ?? '';
+            _testResult = null;
+            if (endpoint != null) {
+              _endpointName.text = endpoint.name;
+              _endpointUrl.text = endpoint.baseUrl;
+              _endpointModel.text = endpoint.model;
+              _apiMode = endpoint.apiMode;
               _endpointKey.clear();
-              if (mounted) setState(() => _notice = 'Endpoint saved.');
-              final endpoints = await _admin.endpoints();
-              if (mounted) setState(() => _endpoints = endpoints);
-            }),
-      child: const Text('Save endpoint'),
-    ),
-    TextButton(
-      key: const Key('endpoint-activate'),
-      onPressed: _busy || _endpointId.isEmpty
-          ? null
-          : () => _run(() async {
-              final agreed = await _confirm(
-                'Use this endpoint',
-                'Make this named endpoint the current model for this profile?',
-              );
-              if (!agreed) return;
-              await _admin.activateEndpoint(_endpointId);
-              if (mounted) setState(() => _notice = 'Endpoint is now current.');
-            }),
-      child: const Text('Use endpoint'),
-    ),
-    TextButton(
-      key: const Key('endpoint-delete'),
-      onPressed: _busy || _endpointId.isEmpty
-          ? null
-          : () => _run(() async {
-              final agreed = await _confirm(
-                'Delete endpoint',
-                'Delete this named endpoint from the profile?',
-              );
-              if (!agreed) return;
-              await _admin.deleteEndpoint(_endpointId);
-              if (mounted) {
+            }
+          });
+        },
+      ),
+      TextField(
+        key: const Key('endpoint-name'),
+        controller: _endpointName,
+        decoration: InputDecoration(labelText: l.rel_admin_name),
+      ),
+      TextField(
+        key: const Key('endpoint-url'),
+        controller: _endpointUrl,
+        decoration: InputDecoration(labelText: l.rel_admin_base_url),
+      ),
+      TextField(
+        key: const Key('endpoint-model'),
+        controller: _endpointModel,
+        decoration: InputDecoration(labelText: l.rel_admin_model),
+      ),
+      DropdownButton<String>(
+        key: const Key('endpoint-mode'),
+        isExpanded: true,
+        value: _apiMode,
+        items: [
+          for (final mode in customEndpointApiModes)
+            DropdownMenuItem(value: mode, child: Text(_modeLabels[mode]!)),
+        ],
+        onChanged: (value) => setState(() => _apiMode = value ?? ''),
+      ),
+      TextField(
+        controller: _endpointKey,
+        obscureText: true,
+        enableSuggestions: false,
+        autocorrect: false,
+        decoration: InputDecoration(
+          labelText: l.rel_admin_api_key,
+          helperText:
+              l.rel_admin_leave_blank_to_keep_a_key_this_endpoint_already_has,
+        ),
+      ),
+      FilledButton(
+        key: const Key('endpoint-test'),
+        onPressed: _busy
+            ? null
+            : () => _run(() async {
+                final result = await _admin.testEndpoint(_draft());
+                if (!mounted) return;
+                final transport = result.transport.isEmpty
+                    ? l.rel_admin_auto_lower
+                    : result.transport;
                 setState(() {
-                  _endpointId = '';
-                  _notice = 'Endpoint deleted.';
+                  _testResult = l.rel_admin_endpoint_result(
+                    result.reachable
+                        ? l.rel_admin_reachable
+                        : l.rel_admin_unreachable,
+                    transport,
+                    result.models.length.toString(),
+                    result.localizedMessage(l),
+                  );
                 });
-              }
-              final endpoints = await _admin.endpoints();
-              if (mounted) setState(() => _endpoints = endpoints);
-            }),
-      child: const Text('Delete endpoint'),
-    ),
-  ];
-
-  List<Widget> _accountSection() => [
-    const Text(
-      'Signing in stays on the provider sign-in screen. Disconnect only runs when this gateway says the account can be removed.',
-    ),
-    for (final account in _accounts)
-      ListTile(
-        title: Text(account.name),
-        subtitle: Text(account.loggedIn ? 'Signed in' : 'Not signed in'),
-        trailing: account.disconnectable && account.loggedIn
-            ? TextButton(
-                key: Key('disconnect-${account.id}'),
-                onPressed: _busy
-                    ? null
-                    : () => _run(() async {
-                        final agreed = await _confirm(
-                          'Disconnect ${account.name}',
-                          'Disconnect this provider account on the gateway?',
-                        );
-                        if (!agreed) return;
-                        await _admin.disconnectAccount(account.id);
-                        final accounts = await _admin.accounts();
-                        if (mounted) {
-                          setState(() {
-                            _accounts = accounts;
-                            _notice = 'Provider account disconnected.';
-                          });
-                        }
-                      }),
-                child: const Text('Disconnect'),
-              )
-            : const Text('Not disconnectable'),
+              }),
+        child: Text(l.rel_admin_test_endpoint),
       ),
-  ];
-
-  List<Widget> _presetSection() => [
-    TextField(
-      controller: _presetProvider,
-      decoration: const InputDecoration(labelText: 'Provider'),
-    ),
-    TextField(
-      key: const Key('preset-model'),
-      controller: _presetModel,
-      decoration: const InputDecoration(labelText: 'Model'),
-    ),
-    DropdownButton<String>(
-      key: const Key('preset-effort'),
-      isExpanded: true,
-      value: _presetEffort,
-      items: [
-        for (final effort in reasoningEffortLevels)
-          DropdownMenuItem(value: effort, child: Text(effort)),
-      ],
-      onChanged: (value) => setState(() => _presetEffort = value ?? 'medium'),
-    ),
-    SwitchListTile(
-      key: const Key('preset-fast'),
-      title: const Text('Fast'),
-      value: _presetFast,
-      onChanged: (value) => setState(() => _presetFast = value),
-    ),
-    FilledButton(
-      key: const Key('preset-save'),
-      onPressed: _busy
-          ? null
-          : () => _run(() async {
-              await _presets.save(
-                _presetProvider.text,
-                _presetModel.text,
-                ModelPreset(effort: _presetEffort, fast: _presetFast),
-              );
-              if (mounted) {
-                setState(() => _notice = 'Preset saved for this model.');
-              }
-            }),
-      child: const Text('Save preset'),
-    ),
-    TextField(
-      key: const Key('preset-session'),
-      controller: _sessionId,
-      decoration: const InputDecoration(labelText: 'Chat id'),
-    ),
-    FilledButton(
-      key: const Key('preset-apply'),
-      onPressed: _busy
-          ? null
-          : () => _run(() async {
-              final preset = _presets.read(
-                _presetProvider.text,
-                _presetModel.text,
-              );
-              if (preset == null || preset.isEmpty) {
-                throw const ModelAdminException(
-                  'Save a preset before applying it.',
+      if (_testResult != null)
+        Text(_testResult!, key: const Key('endpoint-test-result')),
+      FilledButton(
+        key: const Key('endpoint-save'),
+        onPressed: _busy
+            ? null
+            : () => _run(() async {
+                await _admin.saveEndpoint(_draft());
+                _endpointKey.clear();
+                if (mounted) {
+                  setState(() => _notice = l.rel_admin_endpoint_saved);
+                }
+                final endpoints = await _admin.endpoints();
+                if (mounted) setState(() => _endpoints = endpoints);
+              }),
+        child: Text(l.rel_admin_save_endpoint),
+      ),
+      TextButton(
+        key: const Key('endpoint-activate'),
+        onPressed: _busy || _endpointId.isEmpty
+            ? null
+            : () => _run(() async {
+                final agreed = await _confirm(
+                  l.rel_admin_use_this_endpoint,
+                  l.rel_admin_make_this_named_endpoint_the_current_model_for_this_profile,
                 );
-              }
-              final agreed = await _confirm(
-                'Apply preset',
-                'Set this chat\'s effort and speed from the saved preset?',
-              );
-              if (!agreed) return;
-              await _admin.applyPreset(
-                sessionId: _sessionId.text,
-                preset: preset,
-              );
-              if (mounted) {
-                setState(() => _notice = 'Preset applied to this chat.');
-              }
-            }),
-      child: const Text('Apply to this chat'),
-    ),
-    TextButton(
-      key: const Key('route-clamp'),
-      onPressed: _busy
-          ? null
-          : () => _run(() async {
-              final clamp = await _admin.routeClamp(_sessionId.text);
-              if (!mounted) return;
-              setState(() {
-                _clamp = clamp == null
-                    ? 'This route sends the picked effort unchanged.'
-                    : '${clamp.picked}→${clamp.wire}';
-              });
-            }),
-      child: const Text('Show route clamp'),
-    ),
-    if (_clamp != null) Text(_clamp!, key: const Key('route-clamp-label')),
-  ];
+                if (!agreed) return;
+                await _admin.activateEndpoint(_endpointId);
+                if (mounted) {
+                  setState(() => _notice = l.rel_admin_endpoint_is_now_current);
+                }
+              }),
+        child: Text(l.rel_admin_use_endpoint),
+      ),
+      TextButton(
+        key: const Key('endpoint-delete'),
+        onPressed: _busy || _endpointId.isEmpty
+            ? null
+            : () => _run(() async {
+                final agreed = await _confirm(
+                  l.rel_admin_delete_endpoint,
+                  l.rel_admin_delete_this_named_endpoint_from_the_profile,
+                );
+                if (!agreed) return;
+                await _admin.deleteEndpoint(_endpointId);
+                if (mounted) {
+                  setState(() {
+                    _endpointId = '';
+                    _notice = l.rel_admin_endpoint_deleted;
+                  });
+                }
+                final endpoints = await _admin.endpoints();
+                if (mounted) setState(() => _endpoints = endpoints);
+              }),
+        child: Text(l.rel_admin_delete_endpoint),
+      ),
+    ];
+  }
 
-  List<Widget> _delegationSection() => [
-    if (_blocked != null && _blocked!.isNotEmpty)
-      Text(
-        'Delegation is blocked: $_blocked',
-        key: const Key('delegation-blocked'),
-      ),
-    DropdownButton<String>(
-      key: const Key('delegation-backend'),
-      isExpanded: true,
-      value: _backends.any((row) => row['name'] == _backend) ? _backend : null,
-      hint: const Text('Delegation backend'),
-      items: [
-        for (final backend in _backends)
-          DropdownMenuItem(
-            value: backend['name']?.toString(),
-            enabled: backend['available'] == true,
-            child: Text(
-              '${backend['label'] ?? backend['name']}${backend['available'] == true ? '' : ' · unavailable'}',
-            ),
+  List<Widget> _accountSection() {
+    final l = context.sharedL10n;
+    return [
+      Text(l.rel_admin_signing_in_stays_on_the_provider_sign_in_screen),
+      for (final account in _accounts)
+        ListTile(
+          title: Text(account.name),
+          subtitle: Text(
+            account.loggedIn
+                ? l.rel_admin_signed_in
+                : l.rel_admin_not_signed_in,
           ),
-      ],
-      onChanged: (value) => setState(() => _backend = value),
-    ),
-    FilledButton(
-      key: const Key('delegation-backend-save'),
-      onPressed: _busy || _backend == null
-          ? null
-          : () => _run(() async {
-              await _admin.selectDelegationBackend(_backend!, [
-                for (final backend in _backends)
-                  if (backend['available'] == true && backend['name'] is String)
-                    backend['name'] as String,
-              ]);
-              if (mounted) {
-                setState(() => _notice = 'Delegation backend saved.');
-              }
-            }),
-      child: const Text('Save backend'),
-    ),
-    TextField(
-      controller: _iterations,
-      decoration: const InputDecoration(labelText: 'Max iterations'),
-      keyboardType: TextInputType.number,
-    ),
-    TextField(
-      controller: _children,
-      decoration: const InputDecoration(labelText: 'Max concurrent children'),
-      keyboardType: TextInputType.number,
-    ),
-    TextField(
-      controller: _timeout,
-      decoration: const InputDecoration(labelText: 'Child timeout seconds'),
-      keyboardType: TextInputType.number,
-    ),
-    DropdownButton<String>(
-      key: const Key('delegation-effort'),
-      isExpanded: true,
-      value: _limitEffort,
-      hint: const Text('Delegation effort, leave unchanged'),
-      items: [
-        for (final effort in reasoningEffortLevels)
-          DropdownMenuItem(value: effort, child: Text(effort)),
-      ],
-      onChanged: (value) => setState(() => _limitEffort = value),
-    ),
-    FilledButton(
-      key: const Key('delegation-limits-save'),
-      onPressed: _busy
-          ? null
-          : () => _run(() async {
-              await _admin.saveLimits(
-                DelegationLimits(
-                  maxIterations: int.tryParse(_iterations.text.trim()),
-                  maxConcurrentChildren: int.tryParse(_children.text.trim()),
-                  childTimeoutSeconds: int.tryParse(_timeout.text.trim()),
-                  reasoningEffort: _limitEffort,
-                ),
-              );
-              if (mounted) setState(() => _notice = 'Delegation limits saved.');
-            }),
-      child: const Text('Save limits'),
-    ),
-    for (final route in _routes)
-      ListTile(
-        title: Text(
-          '${route['name']} · ${route['provider'] ?? ''} · ${route['model']}',
+          trailing: account.disconnectable && account.loggedIn
+              ? TextButton(
+                  key: Key('disconnect-${account.id}'),
+                  onPressed: _busy
+                      ? null
+                      : () => _run(() async {
+                          final agreed = await _confirm(
+                            l.rel_admin_disconnect_account(account.name),
+                            l.rel_admin_disconnect_this_provider_account_on_the_gateway,
+                          );
+                          if (!agreed) return;
+                          await _admin.disconnectAccount(account.id);
+                          final accounts = await _admin.accounts();
+                          if (mounted) {
+                            setState(() {
+                              _accounts = accounts;
+                              _notice =
+                                  l.rel_admin_provider_account_disconnected;
+                            });
+                          }
+                        }),
+                  child: Text(l.rel_admin_disconnect),
+                )
+              : Text(l.rel_admin_not_disconnectable),
         ),
-        trailing: IconButton(
-          tooltip: 'Remove route',
-          onPressed: () => setState(() {
-            _routes = [
-              for (final item in _routes)
-                if (item['name'] != route['name']) item,
-            ];
-            if (_defaultRoute == route['name']) _defaultRoute = null;
-          }),
-          icon: const Icon(Icons.delete_outline),
-        ),
+    ];
+  }
+
+  String _effortLabel(String effort) => switch (effort) {
+    'none' => context.sharedL10n.rel_admin_effort_none,
+    'minimal' => context.sharedL10n.rel_admin_effort_minimal,
+    'low' => context.sharedL10n.rel_admin_effort_low,
+    'medium' => context.sharedL10n.rel_admin_effort_medium,
+    'high' => context.sharedL10n.rel_admin_effort_high,
+    'xhigh' => context.sharedL10n.rel_admin_effort_xhigh,
+    'max' => context.sharedL10n.rel_admin_effort_max,
+    'ultra' => context.sharedL10n.rel_admin_effort_ultra,
+    _ => effort,
+  };
+
+  List<Widget> _presetSection() {
+    final l = context.sharedL10n;
+    return [
+      TextField(
+        controller: _presetProvider,
+        decoration: InputDecoration(labelText: l.rel_admin_provider),
       ),
-    TextField(
-      controller: _routeName,
-      decoration: const InputDecoration(labelText: 'Route name'),
-    ),
-    TextField(
-      controller: _routeProvider,
-      decoration: const InputDecoration(labelText: 'Route provider'),
-    ),
-    TextField(
-      controller: _routeModel,
-      decoration: const InputDecoration(labelText: 'Route model'),
-    ),
-    DropdownButton<String>(
-      isExpanded: true,
-      value: _routeEffort,
-      items: [
-        const DropdownMenuItem(
-          value: '',
-          child: Text('Route effort unchanged'),
+      TextField(
+        key: const Key('preset-model'),
+        controller: _presetModel,
+        decoration: InputDecoration(labelText: l.rel_admin_model),
+      ),
+      DropdownButton<String>(
+        key: const Key('preset-effort'),
+        isExpanded: true,
+        value: _presetEffort,
+        items: [
+          for (final effort in reasoningEffortLevels)
+            DropdownMenuItem(value: effort, child: Text(_effortLabel(effort))),
+        ],
+        onChanged: (value) => setState(() => _presetEffort = value ?? 'medium'),
+      ),
+      SwitchListTile(
+        key: const Key('preset-fast'),
+        title: Text(l.rel_admin_fast),
+        value: _presetFast,
+        onChanged: (value) => setState(() => _presetFast = value),
+      ),
+      FilledButton(
+        key: const Key('preset-save'),
+        onPressed: _busy
+            ? null
+            : () => _run(() async {
+                await _presets.save(
+                  _presetProvider.text,
+                  _presetModel.text,
+                  ModelPreset(effort: _presetEffort, fast: _presetFast),
+                );
+                if (mounted) {
+                  setState(
+                    () => _notice = l.rel_admin_preset_saved_for_this_model,
+                  );
+                }
+              }),
+        child: Text(l.rel_admin_save_preset),
+      ),
+      TextField(
+        key: const Key('preset-session'),
+        controller: _sessionId,
+        decoration: InputDecoration(labelText: l.rel_admin_chat_id),
+      ),
+      FilledButton(
+        key: const Key('preset-apply'),
+        onPressed: _busy
+            ? null
+            : () => _run(() async {
+                final preset = _presets.read(
+                  _presetProvider.text,
+                  _presetModel.text,
+                );
+                if (preset == null || preset.isEmpty) {
+                  throw const ModelAdminException(
+                    ModelAdminFailure.presetRequired,
+                  );
+                }
+                final agreed = await _confirm(
+                  l.rel_admin_apply_preset,
+                  l.rel_admin_set_this_chat_s_effort_and_speed_from_the_saved_preset,
+                );
+                if (!agreed) return;
+                await _admin.applyPreset(
+                  sessionId: _sessionId.text,
+                  preset: preset,
+                );
+                if (mounted) {
+                  setState(
+                    () => _notice = l.rel_admin_preset_applied_to_this_chat,
+                  );
+                }
+              }),
+        child: Text(l.rel_admin_apply_to_this_chat),
+      ),
+      TextButton(
+        key: const Key('route-clamp'),
+        onPressed: _busy
+            ? null
+            : () => _run(() async {
+                final clamp = await _admin.routeClamp(_sessionId.text);
+                if (!mounted) return;
+                setState(() {
+                  _clamp = clamp == null
+                      ? l.rel_admin_this_route_sends_the_picked_effort_unchanged
+                      : '${_effortLabel(clamp.picked)}→${_effortLabel(clamp.wire)}';
+                });
+              }),
+        child: Text(l.rel_admin_show_route_clamp),
+      ),
+      if (_clamp != null) Text(_clamp!, key: const Key('route-clamp-label')),
+    ];
+  }
+
+  List<Widget> _delegationSection() {
+    final l = context.sharedL10n;
+    return [
+      if (_blocked != null && _blocked!.isNotEmpty)
+        Text(
+          l.rel_admin_delegation_blocked(_blocked!),
+          key: const Key('delegation-blocked'),
         ),
-        for (final effort in reasoningEffortLevels)
-          DropdownMenuItem(value: effort, child: Text(effort)),
-      ],
-      onChanged: (value) => setState(() => _routeEffort = value ?? ''),
-    ),
-    TextButton(
-      key: const Key('delegation-route-add'),
-      onPressed: () => setState(() {
-        _routes = [
-          ..._routes,
-          {
-            'name': _routeName.text.trim(),
-            'provider': _routeProvider.text.trim(),
-            'model': _routeModel.text.trim(),
-            'description': '',
-            if (_routeEffort.isNotEmpty) 'reasoning_effort': _routeEffort,
-          },
-        ];
-      }),
-      child: const Text('Add route'),
-    ),
-    DropdownButton<String>(
-      key: const Key('delegation-default'),
-      isExpanded: true,
-      value: _routes.any((route) => route['name'] == _defaultRoute)
-          ? _defaultRoute
-          : null,
-      hint: const Text('Default route'),
-      items: [
-        for (final route in _routes)
-          if (route['name'] is String)
+      DropdownButton<String>(
+        key: const Key('delegation-backend'),
+        isExpanded: true,
+        value: _backends.any((row) => row['name'] == _backend)
+            ? _backend
+            : null,
+        hint: Text(l.rel_admin_delegation_backend),
+        items: [
+          for (final backend in _backends)
             DropdownMenuItem(
-              value: route['name'] as String,
-              child: Text(route['name'] as String),
+              value: backend['name']?.toString(),
+              enabled: backend['available'] == true,
+              child: Text(
+                backend['available'] == true
+                    ? '${backend['label'] ?? backend['name']}'
+                    : l.rel_admin_backend_unavailable(
+                        '${backend['label'] ?? backend['name']}',
+                      ),
+              ),
             ),
-      ],
-      onChanged: (value) => setState(() => _defaultRoute = value),
-    ),
-    FilledButton(
-      key: const Key('delegation-routes-save'),
-      onPressed: _busy
-          ? null
-          : () => _run(() async {
-              await _admin.saveModelRoutes(
-                routes: _routes,
-                defaultRoute: _defaultRoute,
-              );
-              if (mounted) setState(() => _notice = 'Delegation routes saved.');
+        ],
+        onChanged: (value) => setState(() => _backend = value),
+      ),
+      FilledButton(
+        key: const Key('delegation-backend-save'),
+        onPressed: _busy || _backend == null
+            ? null
+            : () => _run(() async {
+                await _admin.selectDelegationBackend(_backend!, [
+                  for (final backend in _backends)
+                    if (backend['available'] == true &&
+                        backend['name'] is String)
+                      backend['name'] as String,
+                ]);
+                if (mounted) {
+                  setState(
+                    () => _notice = l.rel_admin_delegation_backend_saved,
+                  );
+                }
+              }),
+        child: Text(l.rel_admin_save_backend),
+      ),
+      TextField(
+        controller: _iterations,
+        decoration: InputDecoration(labelText: l.rel_admin_max_iterations),
+        keyboardType: TextInputType.number,
+      ),
+      TextField(
+        controller: _children,
+        decoration: InputDecoration(
+          labelText: l.rel_admin_max_concurrent_children,
+        ),
+        keyboardType: TextInputType.number,
+      ),
+      TextField(
+        controller: _timeout,
+        decoration: InputDecoration(
+          labelText: l.rel_admin_child_timeout_seconds,
+        ),
+        keyboardType: TextInputType.number,
+      ),
+      DropdownButton<String>(
+        key: const Key('delegation-effort'),
+        isExpanded: true,
+        value: _limitEffort,
+        hint: Text(l.rel_admin_delegation_effort_leave_unchanged),
+        items: [
+          for (final effort in reasoningEffortLevels)
+            DropdownMenuItem(value: effort, child: Text(_effortLabel(effort))),
+        ],
+        onChanged: (value) => setState(() => _limitEffort = value),
+      ),
+      FilledButton(
+        key: const Key('delegation-limits-save'),
+        onPressed: _busy
+            ? null
+            : () => _run(() async {
+                await _admin.saveLimits(
+                  DelegationLimits(
+                    maxIterations: int.tryParse(_iterations.text.trim()),
+                    maxConcurrentChildren: int.tryParse(_children.text.trim()),
+                    childTimeoutSeconds: int.tryParse(_timeout.text.trim()),
+                    reasoningEffort: _limitEffort,
+                  ),
+                );
+                if (mounted) {
+                  setState(() => _notice = l.rel_admin_delegation_limits_saved);
+                }
+              }),
+        child: Text(l.rel_admin_save_limits),
+      ),
+      for (final route in _routes)
+        ListTile(
+          title: Text(
+            '${route['name']} · ${route['provider'] ?? ''} · ${route['model']}',
+          ),
+          trailing: IconButton(
+            tooltip: l.rel_admin_remove_route,
+            onPressed: () => setState(() {
+              _routes = [
+                for (final item in _routes)
+                  if (item['name'] != route['name']) item,
+              ];
+              if (_defaultRoute == route['name']) _defaultRoute = null;
             }),
-      child: const Text('Save routes'),
-    ),
-    for (final name in _hostProfiles)
-      CheckboxListTile(
-        key: Key('profile-route-$name'),
-        title: Text(name),
-        value: _profileRoutes.any((route) => route['name'] == name),
-        onChanged: (checked) => setState(() {
-          _profileRoutes = [
-            for (final route in _profileRoutes)
-              if (route['name'] != name) route,
-            if (checked == true)
-              _profileRoutes
-                      .where((route) => route['name'] == name)
-                      .firstOrNull ??
-                  {'name': name, 'description': ''},
+            icon: const Icon(Icons.delete_outline),
+          ),
+        ),
+      TextField(
+        controller: _routeName,
+        decoration: InputDecoration(labelText: l.rel_admin_route_name),
+      ),
+      TextField(
+        controller: _routeProvider,
+        decoration: InputDecoration(labelText: l.rel_admin_route_provider),
+      ),
+      TextField(
+        controller: _routeModel,
+        decoration: InputDecoration(labelText: l.rel_admin_route_model),
+      ),
+      DropdownButton<String>(
+        isExpanded: true,
+        value: _routeEffort,
+        items: [
+          DropdownMenuItem(
+            value: '',
+            child: Text(l.rel_admin_route_effort_unchanged),
+          ),
+          for (final effort in reasoningEffortLevels)
+            DropdownMenuItem(value: effort, child: Text(_effortLabel(effort))),
+        ],
+        onChanged: (value) => setState(() => _routeEffort = value ?? ''),
+      ),
+      TextButton(
+        key: const Key('delegation-route-add'),
+        onPressed: () => setState(() {
+          _routes = [
+            ..._routes,
+            {
+              'name': _routeName.text.trim(),
+              'provider': _routeProvider.text.trim(),
+              'model': _routeModel.text.trim(),
+              'description': '',
+              if (_routeEffort.isNotEmpty) 'reasoning_effort': _routeEffort,
+            },
           ];
         }),
+        child: Text(l.rel_admin_add_route),
       ),
-    FilledButton(
-      key: const Key('profile-routes-save'),
-      onPressed: _busy
-          ? null
-          : () => _run(() async {
-              await _admin.saveProfileRoutes(
-                profiles: _profileRoutes,
-                defaultProfile:
-                    _profileRoutes.any(
-                      (route) => route['name'] == _defaultProfile,
-                    )
-                    ? _defaultProfile
-                    : null,
-              );
-              if (mounted) setState(() => _notice = 'Profile routes saved.');
-            }),
-      child: const Text('Save profile routes'),
-    ),
-  ];
-
-  List<Widget> _mixtureSection() => [
-    if (_mixture == null) const Text('No mixture is loaded.'),
-    SwitchListTile(
-      key: const Key('moa-enabled'),
-      title: const Text('Mixture enabled'),
-      value: _mixtureEnabled,
-      onChanged: (value) => setState(() => _mixtureEnabled = value),
-    ),
-    DropdownButton<String>(
-      key: const Key('moa-policy'),
-      isExpanded: true,
-      value: _policy,
-      items: const [
-        DropdownMenuItem(
-          value: 'loud',
-          child: Text('Loud degraded references'),
+      DropdownButton<String>(
+        key: const Key('delegation-default'),
+        isExpanded: true,
+        value: _routes.any((route) => route['name'] == _defaultRoute)
+            ? _defaultRoute
+            : null,
+        hint: Text(l.rel_admin_default_route),
+        items: [
+          for (final route in _routes)
+            if (route['name'] is String)
+              DropdownMenuItem(
+                value: route['name'] as String,
+                child: Text(route['name'] as String),
+              ),
+        ],
+        onChanged: (value) => setState(() => _defaultRoute = value),
+      ),
+      FilledButton(
+        key: const Key('delegation-routes-save'),
+        onPressed: _busy
+            ? null
+            : () => _run(() async {
+                await _admin.saveModelRoutes(
+                  routes: _routes,
+                  defaultRoute: _defaultRoute,
+                );
+                if (mounted) {
+                  setState(() => _notice = l.rel_admin_delegation_routes_saved);
+                }
+              }),
+        child: Text(l.rel_admin_save_routes),
+      ),
+      for (final name in _hostProfiles)
+        CheckboxListTile(
+          key: Key('profile-route-$name'),
+          title: Text(name),
+          value: _profileRoutes.any((route) => route['name'] == name),
+          onChanged: (checked) => setState(() {
+            _profileRoutes = [
+              for (final route in _profileRoutes)
+                if (route['name'] != name) route,
+              if (checked == true)
+                _profileRoutes
+                        .where((route) => route['name'] == name)
+                        .firstOrNull ??
+                    {'name': name, 'description': ''},
+            ];
+          }),
         ),
-        DropdownMenuItem(
-          value: 'silent',
-          child: Text('Silent degraded references'),
+      FilledButton(
+        key: const Key('profile-routes-save'),
+        onPressed: _busy
+            ? null
+            : () => _run(() async {
+                await _admin.saveProfileRoutes(
+                  profiles: _profileRoutes,
+                  defaultProfile:
+                      _profileRoutes.any(
+                        (route) => route['name'] == _defaultProfile,
+                      )
+                      ? _defaultProfile
+                      : null,
+                );
+                if (mounted) {
+                  setState(() => _notice = l.rel_admin_profile_routes_saved);
+                }
+              }),
+        child: Text(l.rel_admin_save_profile_routes),
+      ),
+    ];
+  }
+
+  List<Widget> _mixtureSection() {
+    final l = context.sharedL10n;
+    return [
+      if (_mixture == null) Text(l.rel_admin_no_mixture_is_loaded),
+      SwitchListTile(
+        key: const Key('moa-enabled'),
+        title: Text(l.rel_admin_mixture_enabled),
+        value: _mixtureEnabled,
+        onChanged: (value) => setState(() => _mixtureEnabled = value),
+      ),
+      DropdownButton<String>(
+        key: const Key('moa-policy'),
+        isExpanded: true,
+        value: _policy,
+        items: [
+          DropdownMenuItem(
+            value: 'loud',
+            child: Text(l.rel_admin_loud_degraded_references),
+          ),
+          DropdownMenuItem(
+            value: 'silent',
+            child: Text(l.rel_admin_silent_degraded_references),
+          ),
+        ],
+        onChanged: (value) => setState(() => _policy = value ?? 'loud'),
+      ),
+      Text(
+        l.rel_admin_aggregator,
+        style: Theme.of(context).textTheme.titleSmall,
+      ),
+      TextField(
+        controller: _aggregator.provider,
+        decoration: InputDecoration(labelText: l.rel_admin_aggregator_provider),
+      ),
+      TextField(
+        key: const Key('moa-aggregator-model'),
+        controller: _aggregator.model,
+        decoration: InputDecoration(labelText: l.rel_admin_aggregator_model),
+      ),
+      for (var index = 0; index < _references.length; index++) ...[
+        Text(l.rel_admin_reference_number('${index + 1}')),
+        TextField(
+          controller: _references[index].provider,
+          decoration: InputDecoration(
+            labelText: l.rel_admin_reference_provider,
+          ),
+        ),
+        TextField(
+          controller: _references[index].model,
+          decoration: InputDecoration(labelText: l.rel_admin_reference_model),
         ),
       ],
-      onChanged: (value) => setState(() => _policy = value ?? 'loud'),
-    ),
-    Text('Aggregator', style: Theme.of(context).textTheme.titleSmall),
-    TextField(
-      controller: _aggregator.provider,
-      decoration: const InputDecoration(labelText: 'Aggregator provider'),
-    ),
-    TextField(
-      key: const Key('moa-aggregator-model'),
-      controller: _aggregator.model,
-      decoration: const InputDecoration(labelText: 'Aggregator model'),
-    ),
-    for (var index = 0; index < _references.length; index++) ...[
-      Text('Reference ${index + 1}'),
-      TextField(
-        controller: _references[index].provider,
-        decoration: const InputDecoration(labelText: 'Reference provider'),
+      TextButton(
+        onPressed: () =>
+            setState(() => _references = [..._references, _SlotFields()]),
+        child: Text(l.rel_admin_add_reference_model),
       ),
-      TextField(
-        controller: _references[index].model,
-        decoration: const InputDecoration(labelText: 'Reference model'),
+      FilledButton(
+        key: const Key('moa-save'),
+        onPressed: _busy || _mixture == null
+            ? null
+            : () => _run(() async {
+                final source = Map<String, dynamic>.from(_mixture!);
+                final preset =
+                    source['presets'] is Map &&
+                        source['active_preset'] is String
+                    ? (source['presets'] as Map)[source['active_preset']]
+                    : null;
+                final baseReferences =
+                    preset is Map && preset['reference_models'] is List
+                    ? preset['reference_models'] as List
+                    : const [];
+                final edited = editActiveMixture(
+                  source,
+                  enabled: _mixtureEnabled,
+                  policy: _policy,
+                  aggregator: _aggregator.toSlot(
+                    base: preset is Map && preset['aggregator'] is Map
+                        ? Map<String, dynamic>.from(preset['aggregator'] as Map)
+                        : null,
+                  ),
+                  references: [
+                    for (var index = 0; index < _references.length; index++)
+                      _references[index].toSlot(
+                        base:
+                            index < baseReferences.length &&
+                                baseReferences[index] is Map
+                            ? Map<String, dynamic>.from(
+                                baseReferences[index] as Map,
+                              )
+                            : null,
+                      ),
+                  ],
+                );
+                await _admin.saveMixture(edited);
+                if (mounted) {
+                  setState(() => _notice = l.rel_admin_mixture_saved);
+                }
+              }),
+        child: Text(l.rel_admin_save_mixture),
       ),
-    ],
-    TextButton(
-      onPressed: () =>
-          setState(() => _references = [..._references, _SlotFields()]),
-      child: const Text('Add reference model'),
-    ),
-    FilledButton(
-      key: const Key('moa-save'),
-      onPressed: _busy || _mixture == null
-          ? null
-          : () => _run(() async {
-              final source = Map<String, dynamic>.from(_mixture!);
-              final preset =
-                  source['presets'] is Map && source['active_preset'] is String
-                  ? (source['presets'] as Map)[source['active_preset']]
-                  : null;
-              final baseReferences =
-                  preset is Map && preset['reference_models'] is List
-                  ? preset['reference_models'] as List
-                  : const [];
-              final edited = editActiveMixture(
-                source,
-                enabled: _mixtureEnabled,
-                policy: _policy,
-                aggregator: _aggregator.toSlot(
-                  base: preset is Map && preset['aggregator'] is Map
-                      ? Map<String, dynamic>.from(preset['aggregator'] as Map)
-                      : null,
-                ),
-                references: [
-                  for (var index = 0; index < _references.length; index++)
-                    _references[index].toSlot(
-                      base:
-                          index < baseReferences.length &&
-                              baseReferences[index] is Map
-                          ? Map<String, dynamic>.from(
-                              baseReferences[index] as Map,
-                            )
-                          : null,
-                    ),
-                ],
-              );
-              await _admin.saveMixture(edited);
-              if (mounted) setState(() => _notice = 'Mixture saved.');
-            }),
-      child: const Text('Save mixture'),
-    ),
-  ];
+    ];
+  }
 
   void _clearPreview() {
     _previewTier = null;
@@ -1154,6 +1243,7 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
   }
 
   String _autoReloadConfirm(bool enabled, Map<dynamic, dynamic> reload) {
+    final l = context.sharedL10n;
     final threshold = _usdLabel(
       reload['threshold_display'],
       reload['threshold_usd'],
@@ -1163,25 +1253,28 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
       reload['reload_to_usd'],
     );
     if (enabled) {
-      return 'Turn on auto-reload and charge $amount when the balance falls '
-          'below $threshold?';
+      return l.rel_admin_reload_enable_confirm(amount, threshold);
     }
-    return 'Turn off auto-reload? It currently charges $amount when the '
-        'balance falls below $threshold.';
+    return l.rel_admin_reload_disable_confirm(amount, threshold);
   }
 
   String _planConfirmBody() {
-    final name = (_previewName ?? _previewTier ?? 'this plan').trim();
+    final l = context.sharedL10n;
+    final name = (_previewName ?? _previewTier ?? l.rel_admin_this_plan).trim();
     final price = (_previewPrice ?? '').trim();
     final when = (_previewWhen ?? '').trim();
-    final priceText = price.isEmpty ? '' : ' at $price';
-    final whenText = when.isEmpty
-        ? ' It is scheduled for the end of the current period.'
-        : ' It takes effect $when.';
-    return 'Schedule $name$priceText.$whenText No charge is made now.';
+    if (price.isEmpty) {
+      return when.isEmpty
+          ? l.rel_admin_plan_confirm(name)
+          : l.rel_admin_plan_confirm_when(name, when);
+    }
+    return when.isEmpty
+        ? l.rel_admin_plan_confirm_price(name, price)
+        : l.rel_admin_plan_confirm_price_when(name, price, when);
   }
 
   Future<void> _buyCredits(String amount, {required bool retry}) async {
+    final l = context.sharedL10n;
     if (_chargeUnknown && !retry) return;
     final stored = _chargeKey?.trim() ?? '';
     final key = retry && stored.isNotEmpty ? stored : newIdempotencyKey();
@@ -1205,8 +1298,8 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
         _chargeUnknown = false;
         _chargeKey = null;
         _notice = result['ok'] == true
-            ? 'Credit purchase submitted.'
-            : safeBillingMessage(result['message'] ?? result['error']);
+            ? l.rel_admin_credit_purchase_submitted
+            : safeBillingMessage(result['message'] ?? result['error'], l: l);
       });
     } catch (error) {
       if (!chargeSendIsAmbiguous(error)) {
@@ -1232,11 +1325,12 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
     String key,
     String amount,
   ) {
+    final l = context.sharedL10n;
     final outcome = watched['outcome']?.toString();
     if (outcome == 'settled') {
       _chargeUnknown = false;
       _chargeKey = null;
-      _notice = 'Credit purchase settled.';
+      _notice = l.rel_admin_credit_purchase_settled;
       return;
     }
     if (outcome == 'unknown') {
@@ -1249,10 +1343,12 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
     _chargeKey = null;
     _notice = safeBillingMessage(
       watched['message'] ?? watched['reason'] ?? watched['error'],
+      l: l,
     );
   }
 
   List<Widget> _billingSection() {
+    final l = context.sharedL10n;
     final billing = _billing;
     final subscription = _subscription;
     final tiers = [
@@ -1265,10 +1361,9 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
     final reload = billing?['auto_reload'];
     final keepGoing = billing?['keep_going_on_credits'];
     return [
-      const Text(
-        'Credit and plan changes wait for confirmation. A plan that would charge immediately is shown and not confirmed here.',
-      ),
-      if (billing != null) Text('Balance ${billing['balance_display'] ?? '—'}'),
+      Text(l.rel_admin_credit_and_plan_changes_wait_for_confirmation_a_plan),
+      if (billing != null)
+        Text(l.rel_admin_balance('${billing['balance_display'] ?? '—'}')),
       if (billing != null && creditsPurchasable(billing)) ...[
         DropdownButton<String>(
           key: const Key('billing-amount'),
@@ -1287,18 +1382,18 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
               : () => _run(() async {
                   final amount = _amount!;
                   final agreed = await _confirm(
-                    'Buy credits',
-                    'Charge \$$amount to the payment method on this Nous account. This spends real money.',
+                    l.rel_admin_buy_credits,
+                    l.rel_admin_buy_confirm(amount),
                   );
                   if (!agreed) return;
                   await _buyCredits(amount, retry: false);
                 }),
-          child: const Text('Buy credits'),
+          child: Text(l.rel_admin_buy_credits),
         ),
         if (_chargeUnknown) ...[
-          const Text(
-            chargeOutcomeUnknownMessage,
-            key: Key('billing-charge-unknown'),
+          Text(
+            l.rel_admin_charge_unknown,
+            key: const Key('billing-charge-unknown'),
           ),
           TextButton(
             key: const Key('billing-charge-retry'),
@@ -1306,18 +1401,18 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
                 ? null
                 : () => _run(() async {
                     final agreed = await _confirm(
-                      'Retry same charge',
-                      'Retry the same credit charge. This does not start a second purchase.',
+                      l.rel_admin_retry_same_charge,
+                      l.rel_admin_retry_the_same_credit_charge_this_does_not_start,
                     );
                     if (!agreed) return;
                     await _buyCredits(_chargeAmount!, retry: true);
                   }),
-            child: const Text('Retry same charge'),
+            child: Text(l.rel_admin_retry_same_charge),
           ),
         ],
       ] else if (billing != null)
-        const Text(
-          'Credit purchases are not available for this account.',
+        Text(
+          l.rel_admin_credit_purchases_are_not_available_for_this_account,
           key: Key('billing-unavailable'),
         ),
       if (reload is Map &&
@@ -1325,16 +1420,16 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
           reload['reload_to_usd'] is String) ...[
         SwitchListTile(
           key: const Key('billing-auto-reload'),
-          title: const Text('Auto-reload'),
+          title: Text(l.rel_admin_auto_reload),
           subtitle: billing != null && autoReloadEditable(billing)
               ? null
-              : const Text('Read-only until this account can charge.'),
+              : Text(l.rel_admin_read_only_until_this_account_can_charge),
           value: reload['enabled'] == true,
           onChanged: _busy || billing == null || !autoReloadEditable(billing)
               ? null
               : (enabled) => _run(() async {
                   final agreed = await _confirm(
-                    'Auto-reload',
+                    l.rel_admin_auto_reload,
                     _autoReloadConfirm(enabled, reload),
                   );
                   if (!agreed) return;
@@ -1346,41 +1441,43 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
                   if (!mounted) return;
                   setState(() {
                     _notice = result['ok'] == true
-                        ? 'Auto-reload updated.'
+                        ? l.rel_admin_auto_reload_updated
                         : safeBillingMessage(
                             result['message'] ?? result['error'],
+                            l: l,
                           );
                   });
                 }),
         ),
         if (billing == null || !autoReloadEditable(billing))
           Text(
-            'Change auto-reload on the portal: ${billingPortalUrl(billing)}',
+            l.rel_admin_reload_portal(billingPortalUrl(billing)),
             key: const Key('billing-portal'),
           ),
       ],
       if (keepGoing is bool)
         SwitchListTile(
           key: const Key('billing-keep-going'),
-          title: const Text('Keep going on credits'),
+          title: Text(l.rel_admin_keep_going_on_credits),
           value: keepGoing,
           onChanged: _busy
               ? null
               : (enabled) => _run(() async {
                   final agreed = await _confirm(
-                    'Keep going on credits',
+                    l.rel_admin_keep_going_on_credits,
                     enabled
-                        ? 'Continue on credits when the plan window is used up?'
-                        : 'Stop continuing on credits when the plan window is used up?',
+                        ? l.rel_admin_continue_on_credits_when_the_plan_window_is_used_up
+                        : l.rel_admin_stop_continuing_on_credits_when_the_plan_window_is_used_up,
                   );
                   if (!agreed) return;
                   final result = await _admin.setKeepGoing(enabled);
                   if (!mounted) return;
                   setState(() {
                     _notice = result['ok'] == true
-                        ? 'Credit continuation updated.'
+                        ? l.rel_admin_credit_continuation_updated
                         : safeBillingMessage(
                             result['message'] ?? result['error'],
+                            l: l,
                           );
                   });
                 }),
@@ -1411,9 +1508,10 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
                           if (!committable) {
                             _clearPreview();
                             _notice = preview['ok'] == true
-                                ? 'This plan change is not confirmed from Ares.'
+                                ? l.rel_admin_this_plan_change_is_not_confirmed_from_ares
                                 : safeBillingMessage(
                                     preview['message'] ?? preview['error'],
+                                    l: l,
                                   );
                             return;
                           }
@@ -1429,16 +1527,16 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
                           _previewWhen =
                               _nonEmpty(preview['effective_display']) ??
                               _nonEmpty(preview['effective_at']);
-                          _notice =
-                              'This change is scheduled. Confirm to apply it.';
+                          _notice = l
+                              .rel_admin_this_change_is_scheduled_confirm_to_apply_it;
                         });
                       }),
-                child: const Text('Preview plan'),
+                child: Text(l.rel_admin_preview_plan),
               ),
             ),
       if (subscription?['context'] == 'team')
         Text(
-          'Team subscriptions are changed on the portal: ${billingPortalUrl(billing)}',
+          l.rel_admin_team_portal(billingPortalUrl(billing)),
           key: const Key('plan-portal'),
         ),
       if (planChangeCanCommit(_previewEffect) && _previewTier != null)
@@ -1448,7 +1546,7 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
               ? null
               : () => _run(() async {
                   final agreed = await _confirm(
-                    'Schedule plan change',
+                    l.rel_admin_schedule_plan_change,
                     _planConfirmBody(),
                   );
                   if (!agreed) return;
@@ -1460,13 +1558,14 @@ class _ModelAdminScreenState extends State<ModelAdminScreen> {
                   setState(() {
                     _clearPreview();
                     _notice = result['ok'] == true
-                        ? 'Plan change scheduled.'
+                        ? l.rel_admin_plan_change_scheduled
                         : safeBillingMessage(
                             result['message'] ?? result['error'],
+                            l: l,
                           );
                   });
                 }),
-          child: const Text('Confirm scheduled plan change'),
+          child: Text(l.rel_admin_confirm_scheduled_plan_change),
         ),
     ];
   }

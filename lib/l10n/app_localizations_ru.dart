@@ -12157,4 +12157,1460 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'Шлюз не может сохранять скрытые файлы.';
+
+  @override
+  String get rel_admin_choose_provider => 'Выберите провайдера и модель.';
+
+  @override
+  String get rel_admin_known_effort => 'Выберите известный уровень усилий.';
+
+  @override
+  String get rel_admin_endpoint_name_required =>
+      'Введите имя этой конечной точки.';
+
+  @override
+  String get rel_admin_endpoint_model_required =>
+      'Введите модель, которую обслуживает эта конечная точка.';
+
+  @override
+  String get rel_admin_known_api_mode =>
+      'Выберите автоматический или известный режим API.';
+
+  @override
+  String get rel_admin_endpoint_id_invalid =>
+      'Этот идентификатор конечной точки нельзя использовать.';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      'Используйте HTTPS для удалённой конечной точки или HTTP на localhost.';
+
+  @override
+  String get rel_admin_key_invalid => 'Этот ключ API нельзя сохранить.';
+
+  @override
+  String get rel_admin_response_shape =>
+      'Ответ шлюза не соответствует ожидаемой структуре.';
+
+  @override
+  String get rel_admin_limits_required =>
+      'Перед сохранением укажите ограничения итераций, параллелизма и времени ожидания.';
+
+  @override
+  String get rel_admin_route_required =>
+      'Для сохранения каждого маршрута нужны имя и модель.';
+
+  @override
+  String get rel_admin_route_unique =>
+      'Имена маршрутов должны быть уникальными.';
+
+  @override
+  String get rel_admin_route_default_invalid =>
+      'Маршрут по умолчанию должен быть одним из сохранённых маршрутов.';
+
+  @override
+  String get rel_admin_policy_required =>
+      'Выберите политику уведомления или молчания при деградации референсных моделей.';
+
+  @override
+  String get rel_admin_mixture_missing => 'Шлюз не вернул активную смесь.';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      'Укажите провайдера и модель для агрегатора и каждой референсной модели.';
+
+  @override
+  String get rel_admin_chat_id_required =>
+      'Введите ID чата, к которому применяется это изменение.';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return 'Шлюз вернул HTTP $status.';
+  }
+
+  @override
+  String get rel_admin_response_unreadable =>
+      'Не удалось прочитать ответ шлюза.';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      'Подключите активный сеанс шлюза перед изменением оплаты или чата.';
+
+  @override
+  String get rel_admin_operation_unavailable =>
+      'Этот шлюз не поддерживает данную операцию.';
+
+  @override
+  String get rel_admin_key_required => 'Введите ключ для сохранения.';
+
+  @override
+  String get rel_admin_key_save_failed => 'Шлюз не сохранил этот ключ.';
+
+  @override
+  String get rel_admin_key_clear_required =>
+      'Выберите ключ провайдера для удаления.';
+
+  @override
+  String get rel_admin_key_clear_failed => 'Шлюз не удалил этот ключ.';
+
+  @override
+  String get rel_admin_endpoint_save_failed =>
+      'Шлюз не сохранил эту конечную точку.';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      'Шлюз не активировал эту конечную точку.';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      'Для аккаунтов провайдеров нужен аутентифицированный шлюз HTTPS или localhost.';
+
+  @override
+  String get rel_admin_accounts_read_failed =>
+      'Не удалось прочитать аккаунты провайдеров.';
+
+  @override
+  String get rel_admin_account_disconnect_failed =>
+      'Шлюз не отключил этот аккаунт.';
+
+  @override
+  String get rel_admin_account_not_disconnectable =>
+      'Этот аккаунт провайдера нельзя отключить.';
+
+  @override
+  String get rel_admin_backend_required =>
+      'Выберите один из доступных бэкендов делегирования.';
+
+  @override
+  String get rel_admin_backend_save_failed => 'Шлюз не выбрал этот бэкенд.';
+
+  @override
+  String get rel_admin_routes_save_failed => 'Шлюз не сохранил эти маршруты.';
+
+  @override
+  String get rel_admin_profile_route_required =>
+      'Для каждого маршрута профиля нужно имя профиля.';
+
+  @override
+  String get rel_admin_profile_route_unique =>
+      'Маршруты профилей должны быть уникальными.';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      'Маршрут профиля по умолчанию должен быть одним из разрешённых профилей.';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      'Шлюз не сохранил эти маршруты профилей.';
+
+  @override
+  String get rel_admin_limits_save_failed =>
+      'Шлюз не сохранил эти ограничения.';
+
+  @override
+  String get rel_admin_mixture_save_failed => 'Шлюз не сохранил эту смесь.';
+
+  @override
+  String get rel_admin_credit_amount_required =>
+      'Выберите одну из предложенных сумм пополнения.';
+
+  @override
+  String get rel_admin_charge_check_failed =>
+      'Не удалось проверить это списание.';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      'Суммы автопополнения не указаны, поэтому они не изменены.';
+
+  @override
+  String get rel_admin_plan_required => 'Сначала выберите план.';
+
+  @override
+  String get rel_admin_plan_scheduled_only =>
+      'Здесь можно подтвердить только запланированную смену плана.';
+
+  @override
+  String get rel_admin_billing_refused => 'Шлюз отклонил этот запрос оплаты.';
+
+  @override
+  String get rel_admin_request_refused => 'Шлюз отклонил этот запрос.';
+
+  @override
+  String get rel_admin_endpoint_answered => 'Конечная точка ответила.';
+
+  @override
+  String get rel_admin_endpoint_no_answer => 'Конечная точка не ответила.';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      'Результат списания неизвестен. Оно ещё может завершиться. Проверьте портал перед повторной попыткой.';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      'Подключите активный сеанс шлюза перед просмотром оплаты. На этой странице ничего не списывается.';
+
+  @override
+  String get rel_admin_preset_required =>
+      'Сохраните предустановку перед применением.';
+
+  @override
+  String get rel_admin_cancel => 'Отмена';
+
+  @override
+  String get rel_admin_refresh => 'Обновить';
+
+  @override
+  String get rel_admin_credits_and_plans => 'Кредиты и тарифы';
+
+  @override
+  String get rel_admin_saved => 'Сохранено';
+
+  @override
+  String get rel_admin_name => 'Имя';
+
+  @override
+  String get rel_admin_base_url => 'Базовый URL';
+
+  @override
+  String get rel_admin_model => 'Модель';
+
+  @override
+  String get rel_admin_signed_in => 'Вход выполнен';
+
+  @override
+  String get rel_admin_not_signed_in => 'Вход не выполнен';
+
+  @override
+  String get rel_admin_provider => 'Провайдер';
+
+  @override
+  String get rel_admin_apply_to_this_chat => 'Применить к этому чату';
+
+  @override
+  String get rel_admin_auto => 'Авто';
+
+  @override
+  String get rel_admin_chat_completions => 'Дополнения чата';
+
+  @override
+  String get rel_admin_codex_responses => 'Ответы Codex';
+
+  @override
+  String get rel_admin_anthropic_messages => 'Сообщения Anthropic';
+
+  @override
+  String get rel_admin_could_not_complete_that_request =>
+      'Не удалось выполнить этот запрос.';
+
+  @override
+  String get rel_admin_confirm => 'Подтвердить';
+
+  @override
+  String get rel_admin_providers_and_billing => 'Провайдеры и оплата';
+
+  @override
+  String get rel_admin_api_keys => 'Ключи API';
+
+  @override
+  String get rel_admin_custom_endpoints => 'Пользовательские конечные точки';
+
+  @override
+  String get rel_admin_provider_accounts => 'Аккаунты провайдеров';
+
+  @override
+  String get rel_admin_effort_and_speed_presets =>
+      'Предустановки усилий и скорости';
+
+  @override
+  String get rel_admin_delegation => 'Делегирование';
+
+  @override
+  String get rel_admin_mixture_of_agents => 'Смесь агентов';
+
+  @override
+  String get rel_admin_no_provider_keys_were_reported_for_this_profile =>
+      'Для этого профиля не сообщено о ключах провайдеров.';
+
+  @override
+  String get rel_admin_not_saved => 'Не сохранено';
+
+  @override
+  String get rel_admin_new_key_value => 'Новое значение ключа';
+
+  @override
+  String get rel_admin_provider_key_saved => 'Ключ провайдера сохранён.';
+
+  @override
+  String get rel_admin_save_key => 'Сохранить ключ';
+
+  @override
+  String get rel_admin_clear_provider_key => 'Удалить ключ провайдера';
+
+  @override
+  String get rel_admin_provider_key_cleared => 'Ключ провайдера удалён.';
+
+  @override
+  String get rel_admin_clear_key => 'Удалить ключ';
+
+  @override
+  String get rel_admin_new_endpoint => 'Новая конечная точка';
+
+  @override
+  String get rel_admin_api_key => 'Ключ API';
+
+  @override
+  String get rel_admin_leave_blank_to_keep_a_key_this_endpoint_already_has =>
+      'Оставьте пустым, чтобы сохранить существующий ключ этой конечной точки.';
+
+  @override
+  String get rel_admin_reachable => 'Доступна';
+
+  @override
+  String get rel_admin_unreachable => 'Недоступна';
+
+  @override
+  String get rel_admin_test_endpoint => 'Проверить конечную точку';
+
+  @override
+  String get rel_admin_endpoint_saved => 'Конечная точка сохранена.';
+
+  @override
+  String get rel_admin_save_endpoint => 'Сохранить конечную точку';
+
+  @override
+  String get rel_admin_use_this_endpoint => 'Использовать эту конечную точку';
+
+  @override
+  String
+  get rel_admin_make_this_named_endpoint_the_current_model_for_this_profile =>
+      'Сделать эту именованную конечную точку текущей моделью этого профиля?';
+
+  @override
+  String get rel_admin_endpoint_is_now_current =>
+      'Конечная точка теперь текущая.';
+
+  @override
+  String get rel_admin_use_endpoint => 'Использовать конечную точку';
+
+  @override
+  String get rel_admin_delete_endpoint => 'Удалить конечную точку';
+
+  @override
+  String get rel_admin_delete_this_named_endpoint_from_the_profile =>
+      'Удалить эту именованную конечную точку из профиля?';
+
+  @override
+  String get rel_admin_endpoint_deleted => 'Конечная точка удалена.';
+
+  @override
+  String get rel_admin_signing_in_stays_on_the_provider_sign_in_screen =>
+      'Вход выполняется на экране провайдера. Отключение возможно только когда шлюз сообщает, что аккаунт можно удалить.';
+
+  @override
+  String get rel_admin_disconnect_this_provider_account_on_the_gateway =>
+      'Отключить этот аккаунт провайдера на шлюзе?';
+
+  @override
+  String get rel_admin_provider_account_disconnected =>
+      'Аккаунт провайдера отключён.';
+
+  @override
+  String get rel_admin_disconnect => 'Отключить';
+
+  @override
+  String get rel_admin_not_disconnectable => 'Нельзя отключить';
+
+  @override
+  String get rel_admin_fast => 'Быстро';
+
+  @override
+  String get rel_admin_preset_saved_for_this_model =>
+      'Предустановка для этой модели сохранена.';
+
+  @override
+  String get rel_admin_save_preset => 'Сохранить предустановку';
+
+  @override
+  String get rel_admin_chat_id => 'ID чата';
+
+  @override
+  String get rel_admin_apply_preset => 'Применить предустановку';
+
+  @override
+  String get rel_admin_set_this_chat_s_effort_and_speed_from_the_saved_preset =>
+      'Установить усилие и скорость этого чата из сохранённой предустановки?';
+
+  @override
+  String get rel_admin_preset_applied_to_this_chat =>
+      'Предустановка применена к этому чату.';
+
+  @override
+  String get rel_admin_this_route_sends_the_picked_effort_unchanged =>
+      'Этот маршрут передаёт выбранное усилие без изменений.';
+
+  @override
+  String get rel_admin_show_route_clamp => 'Показать ограничение маршрута';
+
+  @override
+  String get rel_admin_delegation_backend => 'Бэкенд делегирования';
+
+  @override
+  String get rel_admin_delegation_backend_saved =>
+      'Бэкенд делегирования сохранён.';
+
+  @override
+  String get rel_admin_save_backend => 'Сохранить бэкенд';
+
+  @override
+  String get rel_admin_max_iterations => 'Максимум итераций';
+
+  @override
+  String get rel_admin_max_concurrent_children =>
+      'Максимум параллельных дочерних агентов';
+
+  @override
+  String get rel_admin_child_timeout_seconds =>
+      'Тайм-аут дочернего агента в секундах';
+
+  @override
+  String get rel_admin_delegation_effort_leave_unchanged =>
+      'Усилие делегирования, оставить без изменений';
+
+  @override
+  String get rel_admin_delegation_limits_saved =>
+      'Ограничения делегирования сохранены.';
+
+  @override
+  String get rel_admin_save_limits => 'Сохранить ограничения';
+
+  @override
+  String get rel_admin_remove_route => 'Убрать маршрут';
+
+  @override
+  String get rel_admin_route_name => 'Имя маршрута';
+
+  @override
+  String get rel_admin_route_provider => 'Провайдер маршрута';
+
+  @override
+  String get rel_admin_route_model => 'Модель маршрута';
+
+  @override
+  String get rel_admin_route_effort_unchanged =>
+      'Усилие маршрута без изменений';
+
+  @override
+  String get rel_admin_add_route => 'Добавить маршрут';
+
+  @override
+  String get rel_admin_default_route => 'Маршрут по умолчанию';
+
+  @override
+  String get rel_admin_delegation_routes_saved =>
+      'Маршруты делегирования сохранены.';
+
+  @override
+  String get rel_admin_save_routes => 'Сохранить маршруты';
+
+  @override
+  String get rel_admin_profile_routes_saved => 'Маршруты профилей сохранены.';
+
+  @override
+  String get rel_admin_save_profile_routes => 'Сохранить маршруты профилей';
+
+  @override
+  String get rel_admin_no_mixture_is_loaded => 'Смесь не загружена.';
+
+  @override
+  String get rel_admin_mixture_enabled => 'Смесь включена';
+
+  @override
+  String get rel_admin_loud_degraded_references =>
+      'Уведомлять о деградации референсных моделей';
+
+  @override
+  String get rel_admin_silent_degraded_references =>
+      'Не уведомлять о деградации референсных моделей';
+
+  @override
+  String get rel_admin_aggregator => 'Агрегатор';
+
+  @override
+  String get rel_admin_aggregator_provider => 'Провайдер агрегатора';
+
+  @override
+  String get rel_admin_aggregator_model => 'Модель агрегатора';
+
+  @override
+  String get rel_admin_reference_provider => 'Провайдер референсной модели';
+
+  @override
+  String get rel_admin_reference_model => 'Референсная модель';
+
+  @override
+  String get rel_admin_add_reference_model => 'Добавить референсную модель';
+
+  @override
+  String get rel_admin_mixture_saved => 'Смесь сохранена.';
+
+  @override
+  String get rel_admin_save_mixture => 'Сохранить смесь';
+
+  @override
+  String get rel_admin_credit_purchase_submitted =>
+      'Покупка кредитов отправлена.';
+
+  @override
+  String get rel_admin_credit_purchase_settled => 'Покупка кредитов завершена.';
+
+  @override
+  String get rel_admin_credit_and_plan_changes_wait_for_confirmation_a_plan =>
+      'Изменения кредитов и планов ожидают подтверждения. План с немедленным списанием отображается, но здесь не подтверждается.';
+
+  @override
+  String get rel_admin_buy_credits => 'Купить кредиты';
+
+  @override
+  String get rel_admin_retry_same_charge => 'Повторить то же списание';
+
+  @override
+  String get rel_admin_retry_the_same_credit_charge_this_does_not_start =>
+      'Повторите то же списание за кредиты. Это не начинает вторую покупку.';
+
+  @override
+  String get rel_admin_credit_purchases_are_not_available_for_this_account =>
+      'Покупка кредитов недоступна для этого аккаунта.';
+
+  @override
+  String get rel_admin_auto_reload => 'Автопополнение';
+
+  @override
+  String get rel_admin_read_only_until_this_account_can_charge =>
+      'Только чтение, пока аккаунт не сможет оплачивать.';
+
+  @override
+  String get rel_admin_auto_reload_updated => 'Автопополнение обновлено.';
+
+  @override
+  String get rel_admin_keep_going_on_credits => 'Продолжать за кредиты';
+
+  @override
+  String get rel_admin_continue_on_credits_when_the_plan_window_is_used_up =>
+      'Продолжать за кредиты после исчерпания квоты периода плана?';
+
+  @override
+  String
+  get rel_admin_stop_continuing_on_credits_when_the_plan_window_is_used_up =>
+      'Прекратить продолжение за кредиты после исчерпания квоты периода плана?';
+
+  @override
+  String get rel_admin_credit_continuation_updated =>
+      'Продолжение за кредиты обновлено.';
+
+  @override
+  String get rel_admin_this_plan_change_is_not_confirmed_from_ares =>
+      'Эта смена плана не подтверждается из Ares.';
+
+  @override
+  String get rel_admin_this_change_is_scheduled_confirm_to_apply_it =>
+      'Это изменение запланировано. Подтвердите, чтобы применить его.';
+
+  @override
+  String get rel_admin_preview_plan => 'Предпросмотр плана';
+
+  @override
+  String get rel_admin_schedule_plan_change => 'Запланировать смену плана';
+
+  @override
+  String get rel_admin_plan_change_scheduled => 'Смена плана запланирована.';
+
+  @override
+  String get rel_admin_confirm_scheduled_plan_change =>
+      'Подтвердить запланированную смену плана';
+
+  @override
+  String rel_admin_remove_key_confirm(String key) {
+    return 'Удалить сохранённое значение $key из этого профиля?';
+  }
+
+  @override
+  String rel_admin_current_endpoint(String name) {
+    return '$name · текущая';
+  }
+
+  @override
+  String rel_admin_endpoint_result(
+    String status,
+    String transport,
+    String count,
+    String message,
+  ) {
+    return '$status · $transport · моделей: $count. $message';
+  }
+
+  @override
+  String rel_admin_disconnect_account(String name) {
+    return 'Отключить $name';
+  }
+
+  @override
+  String rel_admin_delegation_blocked(String reason) {
+    return 'Делегирование заблокировано: $reason';
+  }
+
+  @override
+  String rel_admin_backend_unavailable(String name) {
+    return '$name · недоступен';
+  }
+
+  @override
+  String rel_admin_reference_number(String number) {
+    return 'Референсная модель $number';
+  }
+
+  @override
+  String rel_admin_reload_enable_confirm(String amount, String threshold) {
+    return 'Включить автопополнение и списывать $amount, когда баланс опускается ниже $threshold?';
+  }
+
+  @override
+  String rel_admin_reload_disable_confirm(String amount, String threshold) {
+    return 'Выключить автопополнение? Сейчас списывается $amount, когда баланс опускается ниже $threshold.';
+  }
+
+  @override
+  String get rel_admin_this_plan => 'этот план';
+
+  @override
+  String rel_admin_plan_confirm(String name) {
+    return 'Запланировать $name. Изменение назначено на конец текущего периода. Сейчас списания не будет.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price(String name, String price) {
+    return 'Запланировать $name за $price. Изменение назначено на конец текущего периода. Сейчас списания не будет.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_when(String name, String when) {
+    return 'Запланировать $name. Вступает в силу $when. Сейчас списания не будет.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price_when(
+    String name,
+    String price,
+    String when,
+  ) {
+    return 'Запланировать $name за $price. Вступает в силу $when. Сейчас списания не будет.';
+  }
+
+  @override
+  String rel_admin_balance(String amount) {
+    return 'Баланс $amount';
+  }
+
+  @override
+  String rel_admin_buy_confirm(String amount) {
+    return 'Списать \$$amount через способ оплаты этого аккаунта Nous. Будут потрачены реальные деньги.';
+  }
+
+  @override
+  String rel_admin_reload_portal(String url) {
+    return 'Измените автопополнение на портале: $url';
+  }
+
+  @override
+  String rel_admin_team_portal(String url) {
+    return 'Подписки команды меняются на портале: $url';
+  }
+
+  @override
+  String get rel_admin_effort_none => 'нет';
+
+  @override
+  String get rel_admin_effort_minimal => 'минимальный';
+
+  @override
+  String get rel_admin_effort_low => 'низкий';
+
+  @override
+  String get rel_admin_effort_medium => 'средний';
+
+  @override
+  String get rel_admin_effort_high => 'высокий';
+
+  @override
+  String get rel_admin_effort_xhigh => 'очень высокий';
+
+  @override
+  String get rel_admin_effort_max => 'максимальный';
+
+  @override
+  String get rel_admin_effort_ultra => 'сверхвысокий';
+
+  @override
+  String get rel_admin_auto_lower => 'Авто';
+
+  @override
+  String get rel_admin_create => 'Создать';
+
+  @override
+  String get rel_admin_prompt => 'Промпт';
+
+  @override
+  String get rel_admin_new_profile_id => 'ID нового профиля';
+
+  @override
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway =>
+      'Эта операция недоступна на этом шлюзе.';
+
+  @override
+  String get rel_admin_access_denied_by_the_gateway =>
+      'Шлюз отказал в доступе.';
+
+  @override
+  String get rel_admin_connection_changed_reopen_profiles =>
+      'Подключение изменилось. Откройте профили заново.';
+
+  @override
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before =>
+      'Недопустимый ввод или ответ шлюза. Проверьте цель перед повторной попыткой.';
+
+  @override
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before =>
+      'Не удалось проверить результат. Обновите цель перед повторной попыткой.';
+
+  @override
+  String get rel_admin_edit_soul_md => 'Изменить SOUL.md';
+
+  @override
+  String get rel_admin_persona => 'Персона';
+
+  @override
+  String get rel_admin_persona_saved => 'Персона сохранена.';
+
+  @override
+  String get rel_admin_not_set => 'не задано';
+
+  @override
+  String get rel_admin_enabled => 'Включено';
+
+  @override
+  String get rel_admin_keys_to_remove_comma_separated =>
+      'Ключи для удаления (через запятую)';
+
+  @override
+  String get rel_admin_saved_and_applied_by_the_gateway =>
+      'Сохранено и применено шлюзом.';
+
+  @override
+  String get rel_admin_saved_a_gateway_restart_may_be_required =>
+      'Сохранено. Может потребоваться перезапуск шлюза.';
+
+  @override
+  String get rel_admin_create_signed_route => 'Создать подписанный маршрут';
+
+  @override
+  String get rel_admin_route_id => 'ID маршрута';
+
+  @override
+  String get rel_admin_signature => 'Подпись';
+
+  @override
+  String get rel_admin_events_comma_separated => 'События (через запятую)';
+
+  @override
+  String get rel_admin_delivery_target => 'Цель доставки';
+
+  @override
+  String get rel_admin_skills_comma_separated => 'Навыки (через запятую)';
+
+  @override
+  String get rel_admin_delivery_mode => 'Режим доставки';
+
+  @override
+  String get rel_admin_delivery_chat_id_optional =>
+      'ID чата доставки (необязательно)';
+
+  @override
+  String get rel_admin_hide_signing_secret => 'Скрыть секрет подписи';
+
+  @override
+  String get rel_admin_reveal_signing_secret => 'Показать секрет подписи';
+
+  @override
+  String get rel_admin_edit_persona => 'Изменить персону';
+
+  @override
+  String get rel_admin_portable_profile_bundle => 'Переносимый пакет профиля';
+
+  @override
+  String get rel_admin_clone_profile => 'Клонировать профиль';
+
+  @override
+  String get rel_admin_rename_display_label =>
+      'Переименовать отображаемую метку';
+
+  @override
+  String get rel_admin_rename_profile => 'Переименовать профиль';
+
+  @override
+  String get rel_admin_new_name => 'Новое имя';
+
+  @override
+  String get rel_admin_rename_verified => 'Переименование проверено.';
+
+  @override
+  String get rel_admin_delete_profile => 'Удалить профиль';
+
+  @override
+  String get rel_admin_profile_id_to_delete => 'ID профиля для удаления';
+
+  @override
+  String get rel_admin_profile_deleted => 'Профиль удалён.';
+
+  @override
+  String
+  get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending =>
+      'Профиль удалён. Очистка идентификационных данных сервера ещё ожидается.';
+
+  @override
+  String get rel_admin_export_profile_archive => 'Экспортировать архив профиля';
+
+  @override
+  String get rel_admin_import_profile_archive => 'Импортировать архив профиля';
+
+  @override
+  String get rel_admin_import_a_trusted_profile =>
+      'Импортировать доверенный профиль';
+
+  @override
+  String get rel_admin_absolute_archive_path_on_gateway =>
+      'Абсолютный путь к архиву на шлюзе';
+
+  @override
+  String get rel_admin_messaging_channels => 'Каналы сообщений';
+
+  @override
+  String get rel_admin_dm_pairing_requests =>
+      'Запросы сопряжения в личных сообщениях';
+
+  @override
+  String get rel_admin_no_pending_or_approved_users =>
+      'Нет ожидающих или одобренных пользователей.';
+
+  @override
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user =>
+      'Устаревшее сопряжение: нет проверяемого ID запроса. Попросите пользователя выполнить сопряжение снова.';
+
+  @override
+  String get rel_admin_pairing_change_verified =>
+      'Изменение сопряжения проверено.';
+
+  @override
+  String get rel_admin_create_telegram_bot_by_qr =>
+      'Создать бота Telegram по QR';
+
+  @override
+  String get rel_admin_create_telegram_bot => 'Создать бота Telegram';
+
+  @override
+  String get rel_admin_bot_name => 'Имя бота';
+
+  @override
+  String get rel_admin_telegram_bot_creation_qr_code =>
+      'QR-код создания бота Telegram';
+
+  @override
+  String get rel_admin_check_telegram_pairing =>
+      'Проверить сопряжение Telegram';
+
+  @override
+  String get rel_admin_waiting_for_telegram => 'Ожидание Telegram.';
+
+  @override
+  String get rel_admin_apply_telegram_bot => 'Применить бота Telegram';
+
+  @override
+  String get rel_admin_allowed_numeric_user_ids =>
+      'Разрешённые числовые ID пользователей';
+
+  @override
+  String get rel_admin_saved_restart_still_required =>
+      'Сохранено. Перезапуск всё ещё требуется.';
+
+  @override
+  String get rel_admin_saved_gateway_restart_requested =>
+      'Сохранено; запрошен перезапуск шлюза.';
+
+  @override
+  String get rel_admin_cancel_telegram_setup => 'Отменить настройку Telegram';
+
+  @override
+  String get rel_admin_inbound_webhooks => 'Входящие вебхуки';
+
+  @override
+  String get rel_admin_enable_webhook_service => 'Включить службу вебхуков';
+
+  @override
+  String get rel_admin_enable_webhooks => 'Включить вебхуки';
+
+  @override
+  String get rel_admin_enabled_restart_still_required =>
+      'Включено. Перезапуск всё ещё требуется.';
+
+  @override
+  String get rel_admin_enabled_restart_requested =>
+      'Включено; запрошен перезапуск.';
+
+  @override
+  String get rel_admin_route_change_verified => 'Изменение маршрута проверено.';
+
+  @override
+  String get rel_admin_delete_route => 'Удалить маршрут';
+
+  @override
+  String get rel_admin_disable_route => 'Отключить маршрут';
+
+  @override
+  String get rel_admin_enable_route => 'Включить маршрут';
+
+  @override
+  String get rel_admin_back_up_entire_agent_home =>
+      'Создать резервную копию всего домашнего каталога агента';
+
+  @override
+  String get rel_admin_transfer_to_a_cloud_agent => 'Перенести в агента Cloud';
+
+  @override
+  String get rel_admin_check_backup_progress =>
+      'Проверить ход резервного копирования';
+
+  @override
+  String get rel_admin_save_backup_to_this_device =>
+      'Сохранить резервную копию на этом устройстве';
+
+  @override
+  String get rel_admin_save_sensitive_full_home_archive =>
+      'Сохранить конфиденциальный архив всего домашнего каталога';
+
+  @override
+  String get rel_admin_save_cancelled => 'Сохранение отменено.';
+
+  @override
+  String get rel_admin_backup_saved => 'Резервная копия сохранена.';
+
+  @override
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway =>
+      'До 32 MiB. Архивы большего размера остаются на шлюзе.';
+
+  @override
+  String rel_admin_persona_scope(String scope) {
+    return 'Сохранить персону для $scope.';
+  }
+
+  @override
+  String rel_admin_configure_channel(String name) {
+    return 'Настроить $name';
+  }
+
+  @override
+  String rel_admin_channel_warning(String scope) {
+    return 'Применяется к $scope. Пустое поле сохраняет текущее значение. Для удаления значения укажите его ключ ниже.';
+  }
+
+  @override
+  String rel_admin_hook_warning(String scope) {
+    return 'Применяется к $scope. Используйте уникальное имя. Шлюз создаёт секрет подписи. Если другой оператор одновременно создаст это имя, хост может заменить этот маршрут.';
+  }
+
+  @override
+  String rel_admin_hook_created(String url) {
+    return 'Создано: $url. Сохраните секрет подписи перед выходом.';
+  }
+
+  @override
+  String rel_admin_clone_warning(String scope) {
+    return 'Скопировать настройки, навыки, персону и, возможно, учётные данные провайдеров из $scope. Токены сообщений не запрашиваются.';
+  }
+
+  @override
+  String rel_admin_cloned(String source, String destination) {
+    return '$source клонирован в $destination.';
+  }
+
+  @override
+  String rel_admin_rename_target(String name) {
+    return 'Переименовать $name';
+  }
+
+  @override
+  String rel_admin_rename_label_warning(String scope) {
+    return 'Изменить отображаемую метку $scope. ID останется default.';
+  }
+
+  @override
+  String rel_admin_rename_warning(String scope) {
+    return 'Переименовать $scope на сервере. Работающий шлюз может остановиться.';
+  }
+
+  @override
+  String rel_admin_delete_target(String name) {
+    return 'Удалить $name';
+  }
+
+  @override
+  String rel_admin_delete_profile_warning(String scope) {
+    return 'Безвозвратно удалить $scope, включая сеансы и учётные данные. Введите точный ID профиля.';
+  }
+
+  @override
+  String rel_admin_export_target(String name) {
+    return 'Экспортировать $name';
+  }
+
+  @override
+  String rel_admin_export_warning(String scope) {
+    return 'Создать .tar.gz на $scope. Известные хранилища учётных данных исключаются, но личные данные могут остаться. Проверьте перед отправкой.';
+  }
+
+  @override
+  String rel_admin_archive_on(String gateway, String path) {
+    return 'Архив на $gateway: $path';
+  }
+
+  @override
+  String rel_admin_import_warning(String gateway) {
+    return 'Используйте проверенный .tar.gz, уже находящийся на $gateway. Он может содержать плагины, скрипты и расписания. Нужен новый ID профиля.';
+  }
+
+  @override
+  String rel_admin_imported(String name) {
+    return 'Импортировано: $name.';
+  }
+
+  @override
+  String rel_admin_approve_user(String user) {
+    return 'Одобрить $user';
+  }
+
+  @override
+  String rel_admin_revoke_user(String user) {
+    return 'Отозвать $user';
+  }
+
+  @override
+  String rel_admin_allow_pair(String platform, String scope) {
+    return '$platform на $scope: разрешить этому пользователю доступ к сообщениям.';
+  }
+
+  @override
+  String rel_admin_remove_pair(String platform, String scope) {
+    return '$platform на $scope: удалить доступ этого пользователя к сообщениям.';
+  }
+
+  @override
+  String rel_admin_telegram_start(String scope) {
+    return 'Начать сопряжение Telegram на $scope через службу настройки шлюза.';
+  }
+
+  @override
+  String rel_admin_expires(String time) {
+    return 'Истекает: $time';
+  }
+
+  @override
+  String rel_admin_telegram_apply(String bot, String scope) {
+    return 'Включить @$bot на $scope и попытаться перезапустить шлюз. Только перечисленные пользователи смогут писать ему.';
+  }
+
+  @override
+  String rel_admin_hooks_enable(String scope) {
+    return 'Включить входящие вебхуки на $scope и попытаться перезапустить шлюз.';
+  }
+
+  @override
+  String rel_admin_disable_target(String name) {
+    return 'Отключить $name';
+  }
+
+  @override
+  String rel_admin_enable_target(String name) {
+    return 'Включить $name';
+  }
+
+  @override
+  String rel_admin_hook_change(String name, String scope) {
+    return 'Изменить именно $name на $scope.';
+  }
+
+  @override
+  String rel_admin_backup_warning(String gateway) {
+    return 'Это не резервная копия настроек Ares. Сохраните все профили, сеансы и учётные данные на $gateway. Архив содержит конфиденциальные данные.';
+  }
+
+  @override
+  String rel_admin_backup_started(String gateway) {
+    return 'Резервное копирование начато на $gateway.';
+  }
+
+  @override
+  String rel_admin_backup_verified(String gateway, String path) {
+    return 'Резервная копия проверена на $gateway: $path';
+  }
+
+  @override
+  String rel_admin_backup_running(String gateway) {
+    return 'Резервное копирование ещё идёт на $gateway.';
+  }
+
+  @override
+  String get rel_admin_choice_yes => 'да';
+
+  @override
+  String get rel_admin_choice_no => 'нет';
+
+  @override
+  String get rel_admin_choice_generic => 'общая';
+
+  @override
+  String get rel_admin_choice_log => 'журнал';
+
+  @override
+  String get rel_admin_choice_email => 'электронная почта';
+
+  @override
+  String get rel_admin_choice_github_comment => 'комментарий GitHub';
+
+  @override
+  String get rel_admin_choice_agent => 'Агент обрабатывает событие';
+
+  @override
+  String get rel_admin_choice_direct => 'Прямая доставка';
+
+  @override
+  String get rel_admin_configured => 'настроено';
+
+  @override
+  String get rel_admin_state_pending_restart => 'ожидает перезапуска';
+
+  @override
+  String get rel_admin_state_unknown => 'неизвестно';
+
+  @override
+  String get rel_admin_state_connected => 'подключено';
+
+  @override
+  String get rel_admin_state_disconnected => 'отключено';
+
+  @override
+  String get rel_admin_state_disabled => 'отключено';
+
+  @override
+  String get rel_admin_state_enabled => 'включено';
+
+  @override
+  String get rel_admin_state_running => 'работает';
+
+  @override
+  String get rel_admin_state_stopped => 'остановлено';
+
+  @override
+  String get rel_admin_state_error => 'ошибка';
+
+  @override
+  String get rel_admin_state_not_configured => 'не настроено';
+
+  @override
+  String get rel_admin_state_startup_failed => 'ошибка запуска';
+
+  @override
+  String get rel_admin_state_gateway_stopped => 'шлюз остановлен';
+
+  @override
+  String get rel_admin_state_connecting => 'подключение';
+
+  @override
+  String get rel_admin_state_retrying => 'повторная попытка';
+
+  @override
+  String get rel_admin_state_fatal => 'критическая ошибка';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      'Неподдерживаемый или слишком большой архив профиля.';
+
+  @override
+  String get rel_admin_current_layout => 'Текущая компоновка';
+
+  @override
+  String get rel_admin_one_pane => 'Одна панель';
+
+  @override
+  String get rel_admin_stacked => 'Вертикально';
+
+  @override
+  String get rel_admin_side_by_side => 'Рядом';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      'В этом профиле нет поддерживаемого оформления.';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      'Проверить оформление, сохранённое с этим профилем';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      'Применяется только к этому именованному профилю на этом устройстве. Импортированная компоновка начинается с пустых панелей; выберите чаты сами.';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device =>
+      'Применить к этому профилю на этом устройстве';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      'Экспорт подготавливает .tar.gz на шлюзе. Проверьте переносимые файлы перед сохранением копии здесь. Импорт открывает локальный архив для проверки; само открытие ничего не загружает.';
+
+  @override
+  String get rel_admin_prepare_profile_export => 'Подготовить экспорт профиля';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device =>
+      'Открыть .tar.gz с этого устройства';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      'Переносятся только выбранные текстовые файлы. Проверьте их на секреты и личные данные. Конфигурация, навыки и расписания могут изменить поведение нового профиля.';
+
+  @override
+  String get rel_admin_include_this_reviewed_file =>
+      'Включить этот проверенный файл';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      'Применить оформление к новому профилю на этом устройстве';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      'Импортирует цвета и размеры панелей, но не чаты, инструменты или ID сеансов.';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      'Шлюз сохраняет закрытую промежуточную копию. Импорт создаёт новый профиль и не заменяет существующий.';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' Оформление не применено: шлюз не подтвердил проверенное наложение.';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device =>
+      ' Оформление применено на этом устройстве.';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device =>
+      ' Оформление не сохранено на этом устройстве.';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle =>
+      'Сохранить проверенный пакет профиля';
+
+  @override
+  String get rel_admin_profile_bundle_saved => 'Пакет профиля сохранён.';
+
+  @override
+  String get rel_admin_import_selected_files => 'Импортировать выбранные файлы';
+
+  @override
+  String get rel_admin_save_selected_files_to_device =>
+      'Сохранить выбранные файлы на устройство';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · $percent% первая панель';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return 'Тема: $skin · Режим: $mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return 'Оформление применено к $gateway / $profile.';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return 'Пакет: $profile · файлов для проверки: $count · пропущено: $omitted';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return '$name импортирован на $gateway.';
+  }
+
+  @override
+  String get rel_admin_unchanged => 'без изменений';
+
+  @override
+  String get rel_admin_mode_system => 'системный';
+
+  @override
+  String get rel_admin_mode_light => 'светлый';
+
+  @override
+  String get rel_admin_mode_dark => 'тёмный';
+
+  @override
+  String get rel_admin_skin_classic => 'классическая';
+
+  @override
+  String get rel_admin_skin_midnight => 'полночь';
+
+  @override
+  String get rel_admin_skin_ember => 'угли';
+
+  @override
+  String get rel_admin_skin_mono => 'монохромная';
+
+  @override
+  String get rel_admin_skin_cyberpunk => 'киберпанк';
+
+  @override
+  String get rel_admin_skin_slate => 'сланец';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      'В этом аккаунте нет доступных агентов Cloud.';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      'Не удалось проверить предыдущую квитанцию отмены. Изменений не было.';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'Перенести в Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      'Подключение изменилось. Покиньте эту страницу. Уже отправленное восстановление может продолжаться.';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => 'Найти моих агентов Cloud';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      'Отмена заменяет содержимое назначения резервной копией до переноса.';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      'Замените этого агента Cloud всем домашним каталогом источника, включая учётные данные, разговоры и файлы. Источник не удаляется. Боты входящих сообщений отключаются.';
+
+  @override
+  String get rel_admin_type_destination_agent_id =>
+      'Введите ID агента назначения';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      'Не удалось сохранить локальную квитанцию отмены. Оставьте страницу открытой.';
+
+  @override
+  String get rel_admin_undo_transfer => 'Отменить перенос';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'Заменить агента Cloud';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      'Локальная квитанция отмены забыта. Удалённые резервные копии не удалены.';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only =>
+      'Забыть только локальную квитанцию отмены';
+
+  @override
+  String get rel_admin_stop_before_restore => 'Остановить до восстановления';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      'Не закрывайте страницу. Восстановление выполняется на стороне назначения, его нельзя отменить.';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      'Файлы восстановлены; шлюз назначения требует внимания.';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return 'Войдите ровно в одно сохранённое подключение Ares для $origin, затем вернитесь сюда.';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return 'Источник: $gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return 'Назначение: $name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return 'ID агента: $id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return 'Статус: $phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return 'Скопировано $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return 'Точка отмены на стороне назначения: $path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return 'Сообщения отключены: $channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => 'подготовлено';
+
+  @override
+  String get rel_admin_phase_backup => 'резервное копирование';
+
+  @override
+  String get rel_admin_phase_upload => 'загрузка';
+
+  @override
+  String get rel_admin_phase_restore => 'восстановление';
+
+  @override
+  String get rel_admin_phase_finished => 'завершено';
+
+  @override
+  String get rel_admin_phase_failed => 'ошибка';
+
+  @override
+  String get rel_admin_phase_undo => 'отмена';
+
+  @override
+  String get rel_admin_phase_undone => 'отменено';
 }

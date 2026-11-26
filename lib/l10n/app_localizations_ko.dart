@@ -11718,4 +11718,1394 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get release_core_file_save_hidden => '게이트웨이는 숨김 파일을 저장할 수 없습니다.';
+
+  @override
+  String get rel_admin_choose_provider => '공급자와 모델을 선택하세요.';
+
+  @override
+  String get rel_admin_known_effort => '알려진 추론 수준을 선택하세요.';
+
+  @override
+  String get rel_admin_endpoint_name_required => '이 엔드포인트의 이름을 입력하세요.';
+
+  @override
+  String get rel_admin_endpoint_model_required => '이 엔드포인트가 제공하는 모델을 입력하세요.';
+
+  @override
+  String get rel_admin_known_api_mode => '자동 또는 알려진 API 모드를 선택하세요.';
+
+  @override
+  String get rel_admin_endpoint_id_invalid => '이 엔드포인트 식별자는 사용할 수 없습니다.';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      '원격 엔드포인트에는 HTTPS를, localhost에는 HTTP를 사용하세요.';
+
+  @override
+  String get rel_admin_key_invalid => '해당 API 키를 저장할 수 없습니다.';
+
+  @override
+  String get rel_admin_response_shape => '게이트웨이 응답이 예상한 구조와 일치하지 않았습니다.';
+
+  @override
+  String get rel_admin_limits_required => '저장하기 전에 반복, 동시 실행 및 시간 제한을 입력하세요.';
+
+  @override
+  String get rel_admin_route_required => '각 경로를 저장하려면 이름과 모델이 필요합니다.';
+
+  @override
+  String get rel_admin_route_unique => '경로 이름은 고유해야 합니다.';
+
+  @override
+  String get rel_admin_route_default_invalid => '기본 경로는 저장된 경로 중 하나여야 합니다.';
+
+  @override
+  String get rel_admin_policy_required => '참조 모델 성능 저하 정책으로 알림 또는 무음을 선택하세요.';
+
+  @override
+  String get rel_admin_mixture_missing => '게이트웨이가 활성 혼합 구성을 반환하지 않았습니다.';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      '집계 모델과 모든 참조 모델의 공급자 및 모델을 지정하세요.';
+
+  @override
+  String get rel_admin_chat_id_required => '이 변경을 적용할 채팅 ID를 입력하세요.';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return '게이트웨이가 HTTP $status를 반환했습니다.';
+  }
+
+  @override
+  String get rel_admin_response_unreadable => '게이트웨이 응답을 읽을 수 없습니다.';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      '결제 또는 채팅을 변경하기 전에 실시간 게이트웨이 세션에 연결하세요.';
+
+  @override
+  String get rel_admin_operation_unavailable => '이 게이트웨이는 해당 작업을 제공하지 않습니다.';
+
+  @override
+  String get rel_admin_key_required => '저장할 키를 입력하세요.';
+
+  @override
+  String get rel_admin_key_save_failed => '게이트웨이가 해당 키를 저장하지 않았습니다.';
+
+  @override
+  String get rel_admin_key_clear_required => '지울 공급자 키를 선택하세요.';
+
+  @override
+  String get rel_admin_key_clear_failed => '게이트웨이가 해당 키를 지우지 않았습니다.';
+
+  @override
+  String get rel_admin_endpoint_save_failed => '게이트웨이가 해당 엔드포인트를 저장하지 않았습니다.';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      '게이트웨이가 해당 엔드포인트를 활성화하지 않았습니다.';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      '공급자 계정에는 인증된 HTTPS 게이트웨이 또는 localhost가 필요합니다.';
+
+  @override
+  String get rel_admin_accounts_read_failed => '공급자 계정을 읽을 수 없습니다.';
+
+  @override
+  String get rel_admin_account_disconnect_failed =>
+      '게이트웨이가 해당 계정을 연결 해제하지 않았습니다.';
+
+  @override
+  String get rel_admin_account_not_disconnectable =>
+      '해당 공급자 계정은 연결 해제할 수 없습니다.';
+
+  @override
+  String get rel_admin_backend_required => '사용 가능한 위임 백엔드 중 하나를 선택하세요.';
+
+  @override
+  String get rel_admin_backend_save_failed => '게이트웨이가 해당 백엔드를 선택하지 않았습니다.';
+
+  @override
+  String get rel_admin_routes_save_failed => '게이트웨이가 해당 경로를 저장하지 않았습니다.';
+
+  @override
+  String get rel_admin_profile_route_required => '각 프로필 경로에는 프로필 이름이 필요합니다.';
+
+  @override
+  String get rel_admin_profile_route_unique => '프로필 경로는 고유해야 합니다.';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      '기본 프로필 경로는 허용된 프로필 중 하나여야 합니다.';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      '게이트웨이가 해당 프로필 경로를 저장하지 않았습니다.';
+
+  @override
+  String get rel_admin_limits_save_failed => '게이트웨이가 해당 제한을 저장하지 않았습니다.';
+
+  @override
+  String get rel_admin_mixture_save_failed => '게이트웨이가 해당 혼합 구성을 저장하지 않았습니다.';
+
+  @override
+  String get rel_admin_credit_amount_required => '제공된 크레딧 금액 중 하나를 선택하세요.';
+
+  @override
+  String get rel_admin_charge_check_failed => '해당 결제를 확인할 수 없습니다.';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      '자동 충전 금액이 제공되지 않아 변경되지 않았습니다.';
+
+  @override
+  String get rel_admin_plan_required => '먼저 요금제를 선택하세요.';
+
+  @override
+  String get rel_admin_plan_scheduled_only => '여기서는 예약된 요금제 변경만 확정할 수 있습니다.';
+
+  @override
+  String get rel_admin_billing_refused => '게이트웨이가 이 결제 요청을 거부했습니다.';
+
+  @override
+  String get rel_admin_request_refused => '게이트웨이가 이 요청을 거부했습니다.';
+
+  @override
+  String get rel_admin_endpoint_answered => '엔드포인트가 응답했습니다.';
+
+  @override
+  String get rel_admin_endpoint_no_answer => '엔드포인트가 응답하지 않았습니다.';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      '결제 결과를 알 수 없습니다. 아직 정산될 수 있습니다. 재시도 전에 포털을 확인하세요.';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      '결제 정보를 읽기 전에 실시간 게이트웨이 세션에 연결하세요. 이 페이지에서는 청구되지 않습니다.';
+
+  @override
+  String get rel_admin_preset_required => '프리셋을 적용하기 전에 저장하세요.';
+
+  @override
+  String get rel_admin_cancel => '취소';
+
+  @override
+  String get rel_admin_refresh => '새로고침';
+
+  @override
+  String get rel_admin_credits_and_plans => '크레딧 및 요금제';
+
+  @override
+  String get rel_admin_saved => '저장했어요';
+
+  @override
+  String get rel_admin_name => '이름';
+
+  @override
+  String get rel_admin_base_url => '기본 URL';
+
+  @override
+  String get rel_admin_model => '모델';
+
+  @override
+  String get rel_admin_signed_in => '로그인됨';
+
+  @override
+  String get rel_admin_not_signed_in => '로그인되지 않음';
+
+  @override
+  String get rel_admin_provider => '공급자';
+
+  @override
+  String get rel_admin_apply_to_this_chat => '이 채팅에 적용';
+
+  @override
+  String get rel_admin_auto => '자동';
+
+  @override
+  String get rel_admin_chat_completions => '채팅 완성';
+
+  @override
+  String get rel_admin_codex_responses => 'Codex 응답';
+
+  @override
+  String get rel_admin_anthropic_messages => 'Anthropic 메시지';
+
+  @override
+  String get rel_admin_could_not_complete_that_request => '해당 요청을 완료할 수 없습니다.';
+
+  @override
+  String get rel_admin_confirm => '확인';
+
+  @override
+  String get rel_admin_providers_and_billing => '공급자 및 결제';
+
+  @override
+  String get rel_admin_api_keys => 'API 키';
+
+  @override
+  String get rel_admin_custom_endpoints => '사용자 지정 엔드포인트';
+
+  @override
+  String get rel_admin_provider_accounts => '공급자 계정';
+
+  @override
+  String get rel_admin_effort_and_speed_presets => '추론 수준 및 속도 프리셋';
+
+  @override
+  String get rel_admin_delegation => '위임';
+
+  @override
+  String get rel_admin_mixture_of_agents => '에이전트 혼합';
+
+  @override
+  String get rel_admin_no_provider_keys_were_reported_for_this_profile =>
+      '이 프로필에 보고된 공급자 키가 없습니다.';
+
+  @override
+  String get rel_admin_not_saved => '저장되지 않음';
+
+  @override
+  String get rel_admin_new_key_value => '새 키 값';
+
+  @override
+  String get rel_admin_provider_key_saved => '공급자 키를 저장했습니다.';
+
+  @override
+  String get rel_admin_save_key => '키 저장';
+
+  @override
+  String get rel_admin_clear_provider_key => '공급자 키 지우기';
+
+  @override
+  String get rel_admin_provider_key_cleared => '공급자 키를 지웠습니다.';
+
+  @override
+  String get rel_admin_clear_key => '키 지우기';
+
+  @override
+  String get rel_admin_new_endpoint => '새 엔드포인트';
+
+  @override
+  String get rel_admin_api_key => 'API 키';
+
+  @override
+  String get rel_admin_leave_blank_to_keep_a_key_this_endpoint_already_has =>
+      '이 엔드포인트의 기존 키를 유지하려면 비워 두세요.';
+
+  @override
+  String get rel_admin_reachable => '연결 가능';
+
+  @override
+  String get rel_admin_unreachable => '연결 불가';
+
+  @override
+  String get rel_admin_test_endpoint => '엔드포인트 테스트';
+
+  @override
+  String get rel_admin_endpoint_saved => '엔드포인트를 저장했습니다.';
+
+  @override
+  String get rel_admin_save_endpoint => '엔드포인트 저장';
+
+  @override
+  String get rel_admin_use_this_endpoint => '이 엔드포인트 사용';
+
+  @override
+  String
+  get rel_admin_make_this_named_endpoint_the_current_model_for_this_profile =>
+      '이 명명된 엔드포인트를 이 프로필의 현재 모델로 설정할까요?';
+
+  @override
+  String get rel_admin_endpoint_is_now_current => '엔드포인트가 현재 설정으로 지정되었습니다.';
+
+  @override
+  String get rel_admin_use_endpoint => '엔드포인트 사용';
+
+  @override
+  String get rel_admin_delete_endpoint => '엔드포인트 삭제';
+
+  @override
+  String get rel_admin_delete_this_named_endpoint_from_the_profile =>
+      '이 명명된 엔드포인트를 프로필에서 삭제할까요?';
+
+  @override
+  String get rel_admin_endpoint_deleted => '엔드포인트를 삭제했습니다.';
+
+  @override
+  String get rel_admin_signing_in_stays_on_the_provider_sign_in_screen =>
+      '로그인은 공급자 로그인 화면에서 진행합니다. 이 게이트웨이가 계정을 제거할 수 있다고 알릴 때만 연결 해제가 실행됩니다.';
+
+  @override
+  String get rel_admin_disconnect_this_provider_account_on_the_gateway =>
+      '게이트웨이에서 이 공급자 계정의 연결을 해제할까요?';
+
+  @override
+  String get rel_admin_provider_account_disconnected => '공급자 계정의 연결을 해제했습니다.';
+
+  @override
+  String get rel_admin_disconnect => '연결 해제';
+
+  @override
+  String get rel_admin_not_disconnectable => '연결 해제 불가';
+
+  @override
+  String get rel_admin_fast => '빠름';
+
+  @override
+  String get rel_admin_preset_saved_for_this_model => '이 모델의 프리셋을 저장했습니다.';
+
+  @override
+  String get rel_admin_save_preset => '프리셋 저장';
+
+  @override
+  String get rel_admin_chat_id => '채팅 ID';
+
+  @override
+  String get rel_admin_apply_preset => '프리셋 적용';
+
+  @override
+  String get rel_admin_set_this_chat_s_effort_and_speed_from_the_saved_preset =>
+      '저장된 프리셋으로 이 채팅의 추론 수준과 속도를 설정할까요?';
+
+  @override
+  String get rel_admin_preset_applied_to_this_chat => '이 채팅에 프리셋을 적용했습니다.';
+
+  @override
+  String get rel_admin_this_route_sends_the_picked_effort_unchanged =>
+      '이 경로는 선택한 추론 수준을 변경 없이 전송합니다.';
+
+  @override
+  String get rel_admin_show_route_clamp => '경로 제한 표시';
+
+  @override
+  String get rel_admin_delegation_backend => '위임 백엔드';
+
+  @override
+  String get rel_admin_delegation_backend_saved => '위임 백엔드를 저장했습니다.';
+
+  @override
+  String get rel_admin_save_backend => '백엔드 저장';
+
+  @override
+  String get rel_admin_max_iterations => '최대 반복 횟수';
+
+  @override
+  String get rel_admin_max_concurrent_children => '최대 동시 하위 에이전트 수';
+
+  @override
+  String get rel_admin_child_timeout_seconds => '하위 에이전트 시간 제한(초)';
+
+  @override
+  String get rel_admin_delegation_effort_leave_unchanged => '위임 추론 수준, 변경하지 않음';
+
+  @override
+  String get rel_admin_delegation_limits_saved => '위임 제한을 저장했습니다.';
+
+  @override
+  String get rel_admin_save_limits => '제한 저장';
+
+  @override
+  String get rel_admin_remove_route => '경로 제거';
+
+  @override
+  String get rel_admin_route_name => '경로 이름';
+
+  @override
+  String get rel_admin_route_provider => '경로 공급자';
+
+  @override
+  String get rel_admin_route_model => '경로 모델';
+
+  @override
+  String get rel_admin_route_effort_unchanged => '경로 추론 수준 변경 없음';
+
+  @override
+  String get rel_admin_add_route => '경로 추가';
+
+  @override
+  String get rel_admin_default_route => '기본 경로';
+
+  @override
+  String get rel_admin_delegation_routes_saved => '위임 경로를 저장했습니다.';
+
+  @override
+  String get rel_admin_save_routes => '경로 저장';
+
+  @override
+  String get rel_admin_profile_routes_saved => '프로필 경로를 저장했습니다.';
+
+  @override
+  String get rel_admin_save_profile_routes => '프로필 경로 저장';
+
+  @override
+  String get rel_admin_no_mixture_is_loaded => '로드된 혼합 구성이 없습니다.';
+
+  @override
+  String get rel_admin_mixture_enabled => '혼합 구성 활성화';
+
+  @override
+  String get rel_admin_loud_degraded_references => '참조 모델 성능 저하 알림';
+
+  @override
+  String get rel_admin_silent_degraded_references => '참조 모델 성능 저하 무음';
+
+  @override
+  String get rel_admin_aggregator => '집계 모델';
+
+  @override
+  String get rel_admin_aggregator_provider => '집계 모델 공급자';
+
+  @override
+  String get rel_admin_aggregator_model => '집계 모델';
+
+  @override
+  String get rel_admin_reference_provider => '참조 모델 공급자';
+
+  @override
+  String get rel_admin_reference_model => '참조 모델';
+
+  @override
+  String get rel_admin_add_reference_model => '참조 모델 추가';
+
+  @override
+  String get rel_admin_mixture_saved => '혼합 구성을 저장했습니다.';
+
+  @override
+  String get rel_admin_save_mixture => '혼합 구성 저장';
+
+  @override
+  String get rel_admin_credit_purchase_submitted => '크레딧 구매를 제출했습니다.';
+
+  @override
+  String get rel_admin_credit_purchase_settled => '크레딧 구매가 정산되었습니다.';
+
+  @override
+  String get rel_admin_credit_and_plan_changes_wait_for_confirmation_a_plan =>
+      '크레딧 및 요금제 변경은 확인을 기다립니다. 즉시 청구되는 요금제는 표시되지만 여기서 확정되지 않습니다.';
+
+  @override
+  String get rel_admin_buy_credits => '크레딧 구매';
+
+  @override
+  String get rel_admin_retry_same_charge => '동일 결제 재시도';
+
+  @override
+  String get rel_admin_retry_the_same_credit_charge_this_does_not_start =>
+      '동일한 크레딧 결제를 재시도합니다. 두 번째 구매를 시작하지 않습니다.';
+
+  @override
+  String get rel_admin_credit_purchases_are_not_available_for_this_account =>
+      '이 계정에서는 크레딧을 구매할 수 없습니다.';
+
+  @override
+  String get rel_admin_auto_reload => '자동 충전';
+
+  @override
+  String get rel_admin_read_only_until_this_account_can_charge =>
+      '이 계정에서 결제할 수 있을 때까지 읽기 전용입니다.';
+
+  @override
+  String get rel_admin_auto_reload_updated => '자동 충전을 업데이트했습니다.';
+
+  @override
+  String get rel_admin_keep_going_on_credits => '크레딧으로 계속';
+
+  @override
+  String get rel_admin_continue_on_credits_when_the_plan_window_is_used_up =>
+      '요금제 기간의 할당량을 다 쓰면 크레딧으로 계속할까요?';
+
+  @override
+  String
+  get rel_admin_stop_continuing_on_credits_when_the_plan_window_is_used_up =>
+      '요금제 기간의 할당량을 다 쓰면 크레딧으로 계속하는 것을 중지할까요?';
+
+  @override
+  String get rel_admin_credit_continuation_updated => '크레딧 계속 사용 설정을 업데이트했습니다.';
+
+  @override
+  String get rel_admin_this_plan_change_is_not_confirmed_from_ares =>
+      '이 요금제 변경은 Ares에서 확정되지 않습니다.';
+
+  @override
+  String get rel_admin_this_change_is_scheduled_confirm_to_apply_it =>
+      '이 변경은 예약되어 있습니다. 적용하려면 확인하세요.';
+
+  @override
+  String get rel_admin_preview_plan => '요금제 미리 보기';
+
+  @override
+  String get rel_admin_schedule_plan_change => '요금제 변경 예약';
+
+  @override
+  String get rel_admin_plan_change_scheduled => '요금제 변경을 예약했습니다.';
+
+  @override
+  String get rel_admin_confirm_scheduled_plan_change => '예약된 요금제 변경 확정';
+
+  @override
+  String rel_admin_remove_key_confirm(String key) {
+    return '이 프로필에서 저장된 $key 값을 제거할까요?';
+  }
+
+  @override
+  String rel_admin_current_endpoint(String name) {
+    return '$name · 현재';
+  }
+
+  @override
+  String rel_admin_endpoint_result(
+    String status,
+    String transport,
+    String count,
+    String message,
+  ) {
+    return '$status · $transport · 모델 $count개. $message';
+  }
+
+  @override
+  String rel_admin_disconnect_account(String name) {
+    return '$name 연결 해제';
+  }
+
+  @override
+  String rel_admin_delegation_blocked(String reason) {
+    return '위임이 차단되었습니다: $reason';
+  }
+
+  @override
+  String rel_admin_backend_unavailable(String name) {
+    return '$name · 사용 불가';
+  }
+
+  @override
+  String rel_admin_reference_number(String number) {
+    return '참조 $number';
+  }
+
+  @override
+  String rel_admin_reload_enable_confirm(String amount, String threshold) {
+    return '자동 충전을 켜고 잔액이 $threshold 미만이 되면 $amount를 청구할까요?';
+  }
+
+  @override
+  String rel_admin_reload_disable_confirm(String amount, String threshold) {
+    return '자동 충전을 끌까요? 현재 잔액이 $threshold 미만이 되면 $amount가 청구됩니다.';
+  }
+
+  @override
+  String get rel_admin_this_plan => '이 요금제';
+
+  @override
+  String rel_admin_plan_confirm(String name) {
+    return '$name을(를) 예약합니다. 현재 기간이 끝날 때 적용됩니다. 지금은 청구되지 않습니다.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price(String name, String price) {
+    return '$name을(를) $price에 예약합니다. 현재 기간이 끝날 때 적용됩니다. 지금은 청구되지 않습니다.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_when(String name, String when) {
+    return '$name을(를) 예약합니다. $when에 적용됩니다. 지금은 청구되지 않습니다.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price_when(
+    String name,
+    String price,
+    String when,
+  ) {
+    return '$name을(를) $price에 예약합니다. $when에 적용됩니다. 지금은 청구되지 않습니다.';
+  }
+
+  @override
+  String rel_admin_balance(String amount) {
+    return '잔액 $amount';
+  }
+
+  @override
+  String rel_admin_buy_confirm(String amount) {
+    return '이 Nous 계정의 결제 수단으로 \$$amount를 청구합니다. 실제 돈이 지출됩니다.';
+  }
+
+  @override
+  String rel_admin_reload_portal(String url) {
+    return '포털에서 자동 충전 변경: $url';
+  }
+
+  @override
+  String rel_admin_team_portal(String url) {
+    return '팀 구독은 포털에서 변경합니다: $url';
+  }
+
+  @override
+  String get rel_admin_effort_none => '없음';
+
+  @override
+  String get rel_admin_effort_minimal => '최소';
+
+  @override
+  String get rel_admin_effort_low => '낮음';
+
+  @override
+  String get rel_admin_effort_medium => '중간';
+
+  @override
+  String get rel_admin_effort_high => '높음';
+
+  @override
+  String get rel_admin_effort_xhigh => '매우 높음';
+
+  @override
+  String get rel_admin_effort_max => '최대';
+
+  @override
+  String get rel_admin_effort_ultra => '초고';
+
+  @override
+  String get rel_admin_auto_lower => '자동';
+
+  @override
+  String get rel_admin_create => '만들기';
+
+  @override
+  String get rel_admin_prompt => '프롬프트';
+
+  @override
+  String get rel_admin_new_profile_id => '새 프로필 ID';
+
+  @override
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway =>
+      '이 게이트웨이에서는 이 작업을 사용할 수 없습니다.';
+
+  @override
+  String get rel_admin_access_denied_by_the_gateway => '게이트웨이가 접근을 거부했습니다.';
+
+  @override
+  String get rel_admin_connection_changed_reopen_profiles =>
+      '연결이 변경되었습니다. 프로필을 다시 여세요.';
+
+  @override
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before =>
+      '입력 또는 게이트웨이 응답이 잘못되었습니다. 재시도 전에 대상을 확인하세요.';
+
+  @override
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before =>
+      '결과를 확인할 수 없습니다. 다시 시도하기 전에 대상을 새로 고치세요.';
+
+  @override
+  String get rel_admin_edit_soul_md => 'SOUL.md 편집';
+
+  @override
+  String get rel_admin_persona => '페르소나';
+
+  @override
+  String get rel_admin_persona_saved => '페르소나를 저장했습니다.';
+
+  @override
+  String get rel_admin_not_set => '설정되지 않음';
+
+  @override
+  String get rel_admin_enabled => '활성화됨';
+
+  @override
+  String get rel_admin_keys_to_remove_comma_separated => '제거할 키(쉼표로 구분)';
+
+  @override
+  String get rel_admin_saved_and_applied_by_the_gateway =>
+      '게이트웨이가 저장하고 적용했습니다.';
+
+  @override
+  String get rel_admin_saved_a_gateway_restart_may_be_required =>
+      '저장했습니다. 게이트웨이를 다시 시작해야 할 수 있습니다.';
+
+  @override
+  String get rel_admin_create_signed_route => '서명된 경로 만들기';
+
+  @override
+  String get rel_admin_route_id => '경로 ID';
+
+  @override
+  String get rel_admin_signature => '서명';
+
+  @override
+  String get rel_admin_events_comma_separated => '이벤트(쉼표로 구분)';
+
+  @override
+  String get rel_admin_delivery_target => '전달 대상';
+
+  @override
+  String get rel_admin_skills_comma_separated => '스킬(쉼표로 구분)';
+
+  @override
+  String get rel_admin_delivery_mode => '전달 모드';
+
+  @override
+  String get rel_admin_delivery_chat_id_optional => '전달 채팅 ID(선택 사항)';
+
+  @override
+  String get rel_admin_hide_signing_secret => '서명 비밀키 숨기기';
+
+  @override
+  String get rel_admin_reveal_signing_secret => '서명 비밀키 표시';
+
+  @override
+  String get rel_admin_edit_persona => '페르소나 편집';
+
+  @override
+  String get rel_admin_portable_profile_bundle => '이동식 프로필 번들';
+
+  @override
+  String get rel_admin_clone_profile => '프로필 복제';
+
+  @override
+  String get rel_admin_rename_display_label => '표시 이름 바꾸기';
+
+  @override
+  String get rel_admin_rename_profile => '프로필 이름 바꾸기';
+
+  @override
+  String get rel_admin_new_name => '새 이름';
+
+  @override
+  String get rel_admin_rename_verified => '이름 변경을 확인했습니다.';
+
+  @override
+  String get rel_admin_delete_profile => '프로필 삭제';
+
+  @override
+  String get rel_admin_profile_id_to_delete => '삭제할 프로필 ID';
+
+  @override
+  String get rel_admin_profile_deleted => '프로필을 삭제했습니다.';
+
+  @override
+  String
+  get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending =>
+      '프로필을 삭제했습니다. 서버 ID 정리는 아직 대기 중입니다.';
+
+  @override
+  String get rel_admin_export_profile_archive => '프로필 압축 파일 내보내기';
+
+  @override
+  String get rel_admin_import_profile_archive => '프로필 압축 파일 가져오기';
+
+  @override
+  String get rel_admin_import_a_trusted_profile => '신뢰할 수 있는 프로필 가져오기';
+
+  @override
+  String get rel_admin_absolute_archive_path_on_gateway => '게이트웨이의 압축 파일 절대 경로';
+
+  @override
+  String get rel_admin_messaging_channels => '메시징 채널';
+
+  @override
+  String get rel_admin_dm_pairing_requests => 'DM 페어링 요청';
+
+  @override
+  String get rel_admin_no_pending_or_approved_users => '대기 중이거나 승인된 사용자가 없습니다.';
+
+  @override
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user =>
+      '이전 페어링: 확인 가능한 요청 ID가 없습니다. 사용자에게 다시 페어링하도록 요청하세요.';
+
+  @override
+  String get rel_admin_pairing_change_verified => '페어링 변경을 확인했습니다.';
+
+  @override
+  String get rel_admin_create_telegram_bot_by_qr => 'QR로 Telegram 봇 만들기';
+
+  @override
+  String get rel_admin_create_telegram_bot => 'Telegram 봇 만들기';
+
+  @override
+  String get rel_admin_bot_name => '봇 이름';
+
+  @override
+  String get rel_admin_telegram_bot_creation_qr_code => 'Telegram 봇 생성 QR 코드';
+
+  @override
+  String get rel_admin_check_telegram_pairing => 'Telegram 페어링 확인';
+
+  @override
+  String get rel_admin_waiting_for_telegram => 'Telegram 대기 중.';
+
+  @override
+  String get rel_admin_apply_telegram_bot => 'Telegram 봇 적용';
+
+  @override
+  String get rel_admin_allowed_numeric_user_ids => '허용된 숫자 사용자 ID';
+
+  @override
+  String get rel_admin_saved_restart_still_required =>
+      '저장했습니다. 여전히 다시 시작해야 합니다.';
+
+  @override
+  String get rel_admin_saved_gateway_restart_requested =>
+      '저장했습니다. 게이트웨이 다시 시작을 요청했습니다.';
+
+  @override
+  String get rel_admin_cancel_telegram_setup => 'Telegram 설정 취소';
+
+  @override
+  String get rel_admin_inbound_webhooks => '수신 웹훅';
+
+  @override
+  String get rel_admin_enable_webhook_service => '웹훅 서비스 활성화';
+
+  @override
+  String get rel_admin_enable_webhooks => '웹훅 활성화';
+
+  @override
+  String get rel_admin_enabled_restart_still_required =>
+      '활성화했습니다. 여전히 다시 시작해야 합니다.';
+
+  @override
+  String get rel_admin_enabled_restart_requested => '활성화했습니다. 다시 시작을 요청했습니다.';
+
+  @override
+  String get rel_admin_route_change_verified => '경로 변경을 확인했습니다.';
+
+  @override
+  String get rel_admin_delete_route => '경로 삭제';
+
+  @override
+  String get rel_admin_disable_route => '경로 비활성화';
+
+  @override
+  String get rel_admin_enable_route => '경로 활성화';
+
+  @override
+  String get rel_admin_back_up_entire_agent_home => '전체 에이전트 홈 백업';
+
+  @override
+  String get rel_admin_transfer_to_a_cloud_agent => 'Cloud 에이전트로 전송';
+
+  @override
+  String get rel_admin_check_backup_progress => '백업 진행 상황 확인';
+
+  @override
+  String get rel_admin_save_backup_to_this_device => '이 기기에 백업 저장';
+
+  @override
+  String get rel_admin_save_sensitive_full_home_archive => '민감한 전체 홈 압축 파일 저장';
+
+  @override
+  String get rel_admin_save_cancelled => '저장을 취소했습니다.';
+
+  @override
+  String get rel_admin_backup_saved => '백업을 저장했습니다.';
+
+  @override
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway =>
+      '최대 32 MiB. 더 큰 압축 파일은 게이트웨이에 남습니다.';
+
+  @override
+  String rel_admin_persona_scope(String scope) {
+    return '$scope의 페르소나를 저장합니다.';
+  }
+
+  @override
+  String rel_admin_configure_channel(String name) {
+    return '$name 설정';
+  }
+
+  @override
+  String rel_admin_channel_warning(String scope) {
+    return '$scope에 적용됩니다. 비워 두면 기존 값이 유지됩니다. 값을 제거하려면 아래에 해당 키를 나열하세요.';
+  }
+
+  @override
+  String rel_admin_hook_warning(String scope) {
+    return '$scope에 적용됩니다. 고유한 이름을 사용하세요. 게이트웨이가 서명 비밀키를 만듭니다. 다른 운영자가 동시에 같은 이름을 만들면 호스트가 해당 경로를 대체할 수 있습니다.';
+  }
+
+  @override
+  String rel_admin_hook_created(String url) {
+    return '$url을(를) 만들었습니다. 떠나기 전에 서명 비밀키를 보관하세요.';
+  }
+
+  @override
+  String rel_admin_clone_warning(String scope) {
+    return '$scope에서 설정, 스킬, 페르소나 및 공급자 자격 증명을 복사할 수 있습니다. 메시징 토큰은 요청하지 않습니다.';
+  }
+
+  @override
+  String rel_admin_cloned(String source, String destination) {
+    return '$source을(를) $destination(으)로 복제했습니다.';
+  }
+
+  @override
+  String rel_admin_rename_target(String name) {
+    return '$name 이름 바꾸기';
+  }
+
+  @override
+  String rel_admin_rename_label_warning(String scope) {
+    return '$scope의 표시 이름을 변경합니다. ID는 default로 유지됩니다.';
+  }
+
+  @override
+  String rel_admin_rename_warning(String scope) {
+    return '서버에서 $scope의 이름을 변경합니다. 실행 중인 게이트웨이가 중지될 수 있습니다.';
+  }
+
+  @override
+  String rel_admin_delete_target(String name) {
+    return '$name 삭제';
+  }
+
+  @override
+  String rel_admin_delete_profile_warning(String scope) {
+    return '세션과 자격 증명을 포함한 $scope을(를) 영구 삭제합니다. 정확한 프로필 ID를 입력하세요.';
+  }
+
+  @override
+  String rel_admin_export_target(String name) {
+    return '$name 내보내기';
+  }
+
+  @override
+  String rel_admin_export_warning(String scope) {
+    return '$scope에 .tar.gz를 만듭니다. 알려진 자격 증명 저장소는 제외되지만 개인 데이터가 남을 수 있습니다. 공유하기 전에 검토하세요.';
+  }
+
+  @override
+  String rel_admin_archive_on(String gateway, String path) {
+    return '$gateway의 압축 파일: $path';
+  }
+
+  @override
+  String rel_admin_import_warning(String gateway) {
+    return '$gateway에 이미 있는 검토된 .tar.gz를 사용하세요. 플러그인, 스크립트 및 일정이 포함될 수 있습니다. 새 프로필 ID가 필요합니다.';
+  }
+
+  @override
+  String rel_admin_imported(String name) {
+    return '$name을(를) 가져왔습니다.';
+  }
+
+  @override
+  String rel_admin_approve_user(String user) {
+    return '$user 승인';
+  }
+
+  @override
+  String rel_admin_revoke_user(String user) {
+    return '$user 철회';
+  }
+
+  @override
+  String rel_admin_allow_pair(String platform, String scope) {
+    return '$scope의 $platform: 이 사용자의 메시징 접근을 허용합니다.';
+  }
+
+  @override
+  String rel_admin_remove_pair(String platform, String scope) {
+    return '$scope의 $platform: 이 사용자의 메시징 접근을 제거합니다.';
+  }
+
+  @override
+  String rel_admin_telegram_start(String scope) {
+    return '게이트웨이 설정 서비스를 사용하여 $scope에서 Telegram 페어링을 시작합니다.';
+  }
+
+  @override
+  String rel_admin_expires(String time) {
+    return '만료: $time';
+  }
+
+  @override
+  String rel_admin_telegram_apply(String bot, String scope) {
+    return '$scope에서 @$bot을(를) 활성화하고 게이트웨이 다시 시작을 시도합니다. 나열된 사용자만 메시지를 보낼 수 있습니다.';
+  }
+
+  @override
+  String rel_admin_hooks_enable(String scope) {
+    return '$scope에서 수신 웹훅을 활성화하고 게이트웨이 다시 시작을 시도합니다.';
+  }
+
+  @override
+  String rel_admin_disable_target(String name) {
+    return '$name 비활성화';
+  }
+
+  @override
+  String rel_admin_enable_target(String name) {
+    return '$name 활성화';
+  }
+
+  @override
+  String rel_admin_hook_change(String name, String scope) {
+    return '$scope의 $name만 변경합니다.';
+  }
+
+  @override
+  String rel_admin_backup_warning(String gateway) {
+    return 'Ares 설정 백업이 아닙니다. $gateway의 모든 프로필, 세션 및 자격 증명을 저장합니다. 압축 파일에는 민감한 정보가 있습니다.';
+  }
+
+  @override
+  String rel_admin_backup_started(String gateway) {
+    return '$gateway에서 백업을 시작했습니다.';
+  }
+
+  @override
+  String rel_admin_backup_verified(String gateway, String path) {
+    return '$gateway에서 백업을 확인했습니다: $path';
+  }
+
+  @override
+  String rel_admin_backup_running(String gateway) {
+    return '$gateway에서 백업이 아직 실행 중입니다.';
+  }
+
+  @override
+  String get rel_admin_choice_yes => '예';
+
+  @override
+  String get rel_admin_choice_no => '아니요';
+
+  @override
+  String get rel_admin_choice_generic => '일반';
+
+  @override
+  String get rel_admin_choice_log => '로그';
+
+  @override
+  String get rel_admin_choice_email => '이메일';
+
+  @override
+  String get rel_admin_choice_github_comment => 'GitHub 댓글';
+
+  @override
+  String get rel_admin_choice_agent => '에이전트가 이벤트 처리';
+
+  @override
+  String get rel_admin_choice_direct => '직접 전달';
+
+  @override
+  String get rel_admin_configured => '구성됨';
+
+  @override
+  String get rel_admin_state_pending_restart => '다시 시작 대기 중';
+
+  @override
+  String get rel_admin_state_unknown => '알 수 없음';
+
+  @override
+  String get rel_admin_state_connected => '연결됨';
+
+  @override
+  String get rel_admin_state_disconnected => '연결 해제됨';
+
+  @override
+  String get rel_admin_state_disabled => '비활성화됨';
+
+  @override
+  String get rel_admin_state_enabled => '활성화됨';
+
+  @override
+  String get rel_admin_state_running => '실행 중';
+
+  @override
+  String get rel_admin_state_stopped => '중지됨';
+
+  @override
+  String get rel_admin_state_error => '오류';
+
+  @override
+  String get rel_admin_state_not_configured => '구성되지 않음';
+
+  @override
+  String get rel_admin_state_startup_failed => '시작 실패';
+
+  @override
+  String get rel_admin_state_gateway_stopped => '게이트웨이 중지됨';
+
+  @override
+  String get rel_admin_state_connecting => '연결 중';
+
+  @override
+  String get rel_admin_state_retrying => '재시도 중';
+
+  @override
+  String get rel_admin_state_fatal => '치명적 오류';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      '지원되지 않거나 너무 큰 프로필 압축 파일입니다.';
+
+  @override
+  String get rel_admin_current_layout => '현재 레이아웃';
+
+  @override
+  String get rel_admin_one_pane => '패널 하나';
+
+  @override
+  String get rel_admin_stacked => '위아래로';
+
+  @override
+  String get rel_admin_side_by_side => '나란히';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      '이 프로필에 지원되는 모양이 없습니다.';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      '이 프로필에 저장된 모양 검토';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      '이 기기의 이 명명된 프로필에만 적용됩니다. 가져온 배치는 빈 패널로 시작하며 채팅은 직접 선택해야 합니다.';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device =>
+      '이 기기의 이 프로필에 적용';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      '내보내기는 게이트웨이에 .tar.gz를 준비합니다. 여기에 사본을 저장하기 전에 이동 가능한 파일을 검토하세요. 가져오기는 검토를 위해 로컬 압축 파일을 열며, 열기만으로는 아무것도 업로드하지 않습니다.';
+
+  @override
+  String get rel_admin_prepare_profile_export => '프로필 내보내기 준비';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device => '이 기기에서 .tar.gz 열기';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      '선택한 텍스트 파일만 전송됩니다. 비밀 정보와 개인 정보가 있는지 검토하세요. 설정, 스킬 및 일정은 새 프로필의 동작을 바꿀 수 있습니다.';
+
+  @override
+  String get rel_admin_include_this_reviewed_file => '검토한 이 파일 포함';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      '이 기기의 새 프로필에 모양 적용';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      '색상과 패널 크기를 가져오며 채팅, 도구 또는 세션 ID는 가져오지 않습니다.';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      '게이트웨이는 비공개 임시 사본을 보관합니다. 가져오기는 새 프로필을 만들며 기존 프로필을 대체하지 않습니다.';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' 모양을 적용하지 않았습니다. 게이트웨이가 검토한 오버레이를 확인하지 않았습니다.';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device =>
+      ' 이 기기에 모양을 적용했습니다.';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device =>
+      ' 이 기기에 모양을 저장하지 못했습니다.';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle => '검토한 프로필 번들 저장';
+
+  @override
+  String get rel_admin_profile_bundle_saved => '프로필 번들을 저장했습니다.';
+
+  @override
+  String get rel_admin_import_selected_files => '선택한 파일 가져오기';
+
+  @override
+  String get rel_admin_save_selected_files_to_device => '선택한 파일을 기기에 저장';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · 첫 패널 $percent%';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return '스킨: $skin · 모드: $mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return '$gateway / $profile에 모양을 적용했습니다.';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return '번들: $profile · 검토 가능한 파일 $count개 · 제외 $omitted개';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return '$gateway에서 $name을(를) 가져왔습니다.';
+  }
+
+  @override
+  String get rel_admin_unchanged => '변경 없음';
+
+  @override
+  String get rel_admin_mode_system => '시스템';
+
+  @override
+  String get rel_admin_mode_light => '밝게';
+
+  @override
+  String get rel_admin_mode_dark => '어둡게';
+
+  @override
+  String get rel_admin_skin_classic => '클래식';
+
+  @override
+  String get rel_admin_skin_midnight => '한밤중';
+
+  @override
+  String get rel_admin_skin_ember => '불씨';
+
+  @override
+  String get rel_admin_skin_mono => '단색';
+
+  @override
+  String get rel_admin_skin_cyberpunk => '사이버펑크';
+
+  @override
+  String get rel_admin_skin_slate => '슬레이트';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      '이 계정에 사용 가능한 Cloud 에이전트가 없습니다.';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      '이전 실행 취소 확인서를 검증할 수 없습니다. 변경 사항이 없습니다.';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'Cloud로 전송';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      '연결이 변경되었습니다. 이 페이지를 떠나세요. 이미 제출된 복원은 계속될 수 있습니다.';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => '내 Cloud 에이전트 찾기';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      '실행 취소는 대상을 전송 전 백업으로 대체합니다.';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      '이 Cloud 에이전트를 자격 증명, 대화 및 파일을 포함한 전체 원본 홈으로 대체합니다. 원본은 삭제되지 않습니다. 수신 메시징 봇은 꺼집니다.';
+
+  @override
+  String get rel_admin_type_destination_agent_id => '대상 에이전트 ID 입력';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      '로컬 실행 취소 확인서를 보관할 수 없습니다. 이 페이지를 열어 두세요.';
+
+  @override
+  String get rel_admin_undo_transfer => '전송 실행 취소';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'Cloud 에이전트 대체';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      '로컬 실행 취소 확인서를 삭제했습니다. 원격 백업은 제거되지 않았습니다.';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only => '로컬 실행 취소 확인서만 삭제';
+
+  @override
+  String get rel_admin_stop_before_restore => '복원 전 중지';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      '이 페이지를 닫지 마세요. 복원은 대상에서 실행되며 취소할 수 없습니다.';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      '파일을 복원했습니다. 대상 게이트웨이를 확인해야 합니다.';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return '$origin에 대해 저장된 Ares 연결 중 정확히 하나에 로그인한 후 여기로 돌아오세요.';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return '원본: $gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return '대상: $name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return '에이전트 ID: $id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return '상태: $phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return '$percent% 복사됨';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return '대상의 실행 취소 지점: $path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return '메시징 비활성화됨: $channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => '준비됨';
+
+  @override
+  String get rel_admin_phase_backup => '백업';
+
+  @override
+  String get rel_admin_phase_upload => '업로드';
+
+  @override
+  String get rel_admin_phase_restore => '복원';
+
+  @override
+  String get rel_admin_phase_finished => '완료됨';
+
+  @override
+  String get rel_admin_phase_failed => '실패';
+
+  @override
+  String get rel_admin_phase_undo => '실행 취소';
+
+  @override
+  String get rel_admin_phase_undone => '실행 취소됨';
 }

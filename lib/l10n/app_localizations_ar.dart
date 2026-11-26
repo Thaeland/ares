@@ -12025,4 +12025,1443 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'لا يمكن للبوابة حفظ الملفات المخفية.';
+
+  @override
+  String get rel_admin_choose_provider => 'اختر موفرًا ونموذجًا.';
+
+  @override
+  String get rel_admin_known_effort => 'اختر مستوى جهد معروفًا.';
+
+  @override
+  String get rel_admin_endpoint_name_required =>
+      'أدخل اسمًا لنقطة النهاية هذه.';
+
+  @override
+  String get rel_admin_endpoint_model_required =>
+      'أدخل النموذج الذي تقدمه نقطة النهاية هذه.';
+
+  @override
+  String get rel_admin_known_api_mode =>
+      'اختر الوضع التلقائي أو وضع API معروفًا.';
+
+  @override
+  String get rel_admin_endpoint_id_invalid =>
+      'معرّف نقطة النهاية هذا غير قابل للاستخدام.';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      'استخدم HTTPS لنقطة نهاية بعيدة، أو HTTP على localhost.';
+
+  @override
+  String get rel_admin_key_invalid => 'لا يمكن حفظ مفتاح API هذا.';
+
+  @override
+  String get rel_admin_response_shape =>
+      'لم تتطابق استجابة البوابة مع البنية المتوقعة.';
+
+  @override
+  String get rel_admin_limits_required =>
+      'أدخل حدود التكرار والتزامن والمهلة قبل الحفظ.';
+
+  @override
+  String get rel_admin_route_required =>
+      'تحتاج كل قاعدة توجيه إلى اسم ونموذج قبل حفظها.';
+
+  @override
+  String get rel_admin_route_unique => 'يجب أن تكون أسماء قواعد التوجيه فريدة.';
+
+  @override
+  String get rel_admin_route_default_invalid =>
+      'يجب أن تكون قاعدة التوجيه الافتراضية إحدى القواعد المحفوظة.';
+
+  @override
+  String get rel_admin_policy_required =>
+      'اختر سياسة مرجعية متدهورة مع تنبيه أو صامتة.';
+
+  @override
+  String get rel_admin_mixture_missing => 'لم تُرجع البوابة مزيجًا نشطًا.';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      'حدد موفرًا ونموذجًا للمجمّع ولكل مرجع.';
+
+  @override
+  String get rel_admin_chat_id_required =>
+      'أدخل معرّف المحادثة التي ينطبق عليها هذا التغيير.';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return 'أرجعت البوابة HTTP $status.';
+  }
+
+  @override
+  String get rel_admin_response_unreadable => 'تعذّرت قراءة استجابة البوابة.';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      'صِل جلسة البوابة المباشرة قبل تغيير الفوترة أو المحادثة.';
+
+  @override
+  String get rel_admin_operation_unavailable =>
+      'هذه البوابة لا توفر هذه العملية.';
+
+  @override
+  String get rel_admin_key_required => 'أدخل المفتاح المراد حفظه.';
+
+  @override
+  String get rel_admin_key_save_failed => 'لم تحفظ البوابة هذا المفتاح.';
+
+  @override
+  String get rel_admin_key_clear_required => 'اختر مفتاح موفر لمسحه.';
+
+  @override
+  String get rel_admin_key_clear_failed => 'لم تمسح البوابة هذا المفتاح.';
+
+  @override
+  String get rel_admin_endpoint_save_failed =>
+      'لم تحفظ البوابة نقطة النهاية هذه.';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      'لم تُفعّل البوابة نقطة النهاية هذه.';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      'تحتاج حسابات الموفر إلى بوابة HTTPS موثّقة أو localhost.';
+
+  @override
+  String get rel_admin_accounts_read_failed => 'تعذّرت قراءة حسابات الموفر.';
+
+  @override
+  String get rel_admin_account_disconnect_failed =>
+      'لم تفصل البوابة هذا الحساب.';
+
+  @override
+  String get rel_admin_account_not_disconnectable =>
+      'لا يمكن فصل حساب الموفر هذا.';
+
+  @override
+  String get rel_admin_backend_required =>
+      'اختر إحدى واجهات التفويض الخلفية المتاحة.';
+
+  @override
+  String get rel_admin_backend_save_failed =>
+      'لم تحدد البوابة تلك الواجهة الخلفية.';
+
+  @override
+  String get rel_admin_routes_save_failed =>
+      'لم تحفظ البوابة قواعد التوجيه تلك.';
+
+  @override
+  String get rel_admin_profile_route_required =>
+      'تحتاج كل قاعدة توجيه لملف تعريف إلى اسم ملف التعريف.';
+
+  @override
+  String get rel_admin_profile_route_unique =>
+      'يجب أن تكون قواعد توجيه ملفات التعريف فريدة.';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      'يجب أن تكون قاعدة توجيه ملف التعريف الافتراضية أحد ملفات التعريف المسموح بها.';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      'لم تحفظ البوابة قواعد توجيه ملفات التعريف تلك.';
+
+  @override
+  String get rel_admin_limits_save_failed => 'لم تحفظ البوابة تلك الحدود.';
+
+  @override
+  String get rel_admin_mixture_save_failed => 'لم تحفظ البوابة ذلك المزيج.';
+
+  @override
+  String get rel_admin_credit_amount_required =>
+      'اختر أحد مبالغ الرصيد المعروضة.';
+
+  @override
+  String get rel_admin_charge_check_failed => 'تعذّر التحقق من تلك الرسوم.';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      'لم تُقدَّم مبالغ إعادة الشحن التلقائي، لذا لم تُغيَّر.';
+
+  @override
+  String get rel_admin_plan_required => 'اختر خطة أولًا.';
+
+  @override
+  String get rel_admin_plan_scheduled_only =>
+      'يمكن تأكيد تغيير خطة مجدول فقط من هنا.';
+
+  @override
+  String get rel_admin_billing_refused => 'رفضت البوابة طلب الفوترة هذا.';
+
+  @override
+  String get rel_admin_request_refused => 'رفضت البوابة هذا الطلب.';
+
+  @override
+  String get rel_admin_endpoint_answered => 'استجابت نقطة النهاية.';
+
+  @override
+  String get rel_admin_endpoint_no_answer => 'لم تستجب نقطة النهاية.';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      'نتيجة الرسوم غير معروفة. قد تُسوّى لاحقًا. تحقّق من البوابة الإلكترونية قبل إعادة المحاولة.';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      'صِل جلسة البوابة المباشرة قبل قراءة الفوترة. لا تُفرض أي رسوم من هذه الصفحة.';
+
+  @override
+  String get rel_admin_preset_required => 'احفظ إعدادًا مسبقًا قبل تطبيقه.';
+
+  @override
+  String get rel_admin_cancel => 'إلغاء';
+
+  @override
+  String get rel_admin_refresh => 'تحديث';
+
+  @override
+  String get rel_admin_credits_and_plans => 'الأرصدة والخطط';
+
+  @override
+  String get rel_admin_saved => 'تم الحفظ';
+
+  @override
+  String get rel_admin_name => 'الاسم';
+
+  @override
+  String get rel_admin_base_url => 'عنوان URL الأساسي';
+
+  @override
+  String get rel_admin_model => 'النموذج';
+
+  @override
+  String get rel_admin_signed_in => 'تم تسجيل الدخول';
+
+  @override
+  String get rel_admin_not_signed_in => 'لم يتم تسجيل الدخول';
+
+  @override
+  String get rel_admin_provider => 'المزوّد';
+
+  @override
+  String get rel_admin_apply_to_this_chat => 'تطبيق على هذه الدردشة';
+
+  @override
+  String get rel_admin_auto => 'تلقائي';
+
+  @override
+  String get rel_admin_chat_completions => 'إكمالات المحادثة';
+
+  @override
+  String get rel_admin_codex_responses => 'استجابات Codex';
+
+  @override
+  String get rel_admin_anthropic_messages => 'رسائل Anthropic';
+
+  @override
+  String get rel_admin_could_not_complete_that_request =>
+      'تعذّر إكمال ذلك الطلب.';
+
+  @override
+  String get rel_admin_confirm => 'تأكيد';
+
+  @override
+  String get rel_admin_providers_and_billing => 'الموفرون والفوترة';
+
+  @override
+  String get rel_admin_api_keys => 'مفاتيح API';
+
+  @override
+  String get rel_admin_custom_endpoints => 'نقاط نهاية مخصصة';
+
+  @override
+  String get rel_admin_provider_accounts => 'حسابات الموفرين';
+
+  @override
+  String get rel_admin_effort_and_speed_presets =>
+      'إعدادات الجهد والسرعة المسبقة';
+
+  @override
+  String get rel_admin_delegation => 'التفويض';
+
+  @override
+  String get rel_admin_mixture_of_agents => 'مزيج الوكلاء';
+
+  @override
+  String get rel_admin_no_provider_keys_were_reported_for_this_profile =>
+      'لم يُبلّغ عن مفاتيح موفر لهذا الملف التعريفي.';
+
+  @override
+  String get rel_admin_not_saved => 'غير محفوظ';
+
+  @override
+  String get rel_admin_new_key_value => 'قيمة المفتاح الجديدة';
+
+  @override
+  String get rel_admin_provider_key_saved => 'حُفظ مفتاح الموفر.';
+
+  @override
+  String get rel_admin_save_key => 'حفظ المفتاح';
+
+  @override
+  String get rel_admin_clear_provider_key => 'مسح مفتاح الموفر';
+
+  @override
+  String get rel_admin_provider_key_cleared => 'مُسح مفتاح الموفر.';
+
+  @override
+  String get rel_admin_clear_key => 'مسح المفتاح';
+
+  @override
+  String get rel_admin_new_endpoint => 'نقطة نهاية جديدة';
+
+  @override
+  String get rel_admin_api_key => 'مفتاح API';
+
+  @override
+  String get rel_admin_leave_blank_to_keep_a_key_this_endpoint_already_has =>
+      'اتركه فارغًا للاحتفاظ بالمفتاح الموجود لنقطة النهاية هذه.';
+
+  @override
+  String get rel_admin_reachable => 'يمكن الوصول إليه';
+
+  @override
+  String get rel_admin_unreachable => 'يتعذّر الوصول إليه';
+
+  @override
+  String get rel_admin_test_endpoint => 'اختبار نقطة النهاية';
+
+  @override
+  String get rel_admin_endpoint_saved => 'حُفظت نقطة النهاية.';
+
+  @override
+  String get rel_admin_save_endpoint => 'حفظ نقطة النهاية';
+
+  @override
+  String get rel_admin_use_this_endpoint => 'استخدام نقطة النهاية هذه';
+
+  @override
+  String
+  get rel_admin_make_this_named_endpoint_the_current_model_for_this_profile =>
+      'هل تريد جعل نقطة النهاية المسماة هذه النموذج الحالي لهذا الملف التعريفي؟';
+
+  @override
+  String get rel_admin_endpoint_is_now_current =>
+      'أصبحت نقطة النهاية هي الحالية.';
+
+  @override
+  String get rel_admin_use_endpoint => 'استخدام نقطة النهاية';
+
+  @override
+  String get rel_admin_delete_endpoint => 'حذف نقطة النهاية';
+
+  @override
+  String get rel_admin_delete_this_named_endpoint_from_the_profile =>
+      'هل تريد حذف نقطة النهاية المسماة هذه من الملف التعريفي؟';
+
+  @override
+  String get rel_admin_endpoint_deleted => 'حُذفت نقطة النهاية.';
+
+  @override
+  String get rel_admin_signing_in_stays_on_the_provider_sign_in_screen =>
+      'يبقى تسجيل الدخول في شاشة تسجيل دخول الموفر. لا يُنفَّذ الفصل إلا عندما تؤكد هذه البوابة إمكانية إزالة الحساب.';
+
+  @override
+  String get rel_admin_disconnect_this_provider_account_on_the_gateway =>
+      'هل تريد فصل حساب الموفر هذا على البوابة؟';
+
+  @override
+  String get rel_admin_provider_account_disconnected => 'فُصل حساب الموفر.';
+
+  @override
+  String get rel_admin_disconnect => 'قطع الاتصال';
+
+  @override
+  String get rel_admin_not_disconnectable => 'غير قابل للفصل';
+
+  @override
+  String get rel_admin_fast => 'سريع';
+
+  @override
+  String get rel_admin_preset_saved_for_this_model =>
+      'حُفظ الإعداد المسبق لهذا النموذج.';
+
+  @override
+  String get rel_admin_save_preset => 'حفظ الإعداد المسبق';
+
+  @override
+  String get rel_admin_chat_id => 'معرّف المحادثة';
+
+  @override
+  String get rel_admin_apply_preset => 'تطبيق الإعداد المسبق';
+
+  @override
+  String get rel_admin_set_this_chat_s_effort_and_speed_from_the_saved_preset =>
+      'هل تريد ضبط جهد هذه المحادثة وسرعتها من الإعداد المسبق المحفوظ؟';
+
+  @override
+  String get rel_admin_preset_applied_to_this_chat =>
+      'طُبّق الإعداد المسبق على هذه المحادثة.';
+
+  @override
+  String get rel_admin_this_route_sends_the_picked_effort_unchanged =>
+      'ترسل قاعدة التوجيه هذه الجهد المحدد دون تغيير.';
+
+  @override
+  String get rel_admin_show_route_clamp => 'عرض تقييد الجهد للمسار';
+
+  @override
+  String get rel_admin_delegation_backend => 'واجهة التفويض الخلفية';
+
+  @override
+  String get rel_admin_delegation_backend_saved =>
+      'حُفظت واجهة التفويض الخلفية.';
+
+  @override
+  String get rel_admin_save_backend => 'حفظ الواجهة الخلفية';
+
+  @override
+  String get rel_admin_max_iterations => 'الحد الأقصى للتكرارات';
+
+  @override
+  String get rel_admin_max_concurrent_children =>
+      'الحد الأقصى للوكلاء الفرعيين المتزامنين';
+
+  @override
+  String get rel_admin_child_timeout_seconds => 'مهلة الوكيل الفرعي بالثواني';
+
+  @override
+  String get rel_admin_delegation_effort_leave_unchanged =>
+      'جهد التفويض، اتركه دون تغيير';
+
+  @override
+  String get rel_admin_delegation_limits_saved => 'حُفظت حدود التفويض.';
+
+  @override
+  String get rel_admin_save_limits => 'حفظ الحدود';
+
+  @override
+  String get rel_admin_remove_route => 'إزالة قاعدة التوجيه';
+
+  @override
+  String get rel_admin_route_name => 'اسم قاعدة التوجيه';
+
+  @override
+  String get rel_admin_route_provider => 'موفر قاعدة التوجيه';
+
+  @override
+  String get rel_admin_route_model => 'نموذج قاعدة التوجيه';
+
+  @override
+  String get rel_admin_route_effort_unchanged => 'جهد قاعدة التوجيه دون تغيير';
+
+  @override
+  String get rel_admin_add_route => 'إضافة قاعدة توجيه';
+
+  @override
+  String get rel_admin_default_route => 'قاعدة التوجيه الافتراضية';
+
+  @override
+  String get rel_admin_delegation_routes_saved => 'حُفظت قواعد توجيه التفويض.';
+
+  @override
+  String get rel_admin_save_routes => 'حفظ قواعد التوجيه';
+
+  @override
+  String get rel_admin_profile_routes_saved =>
+      'حُفظت قواعد توجيه ملفات التعريف.';
+
+  @override
+  String get rel_admin_save_profile_routes => 'حفظ قواعد توجيه ملفات التعريف';
+
+  @override
+  String get rel_admin_no_mixture_is_loaded => 'لم يُحمَّل أي مزيج.';
+
+  @override
+  String get rel_admin_mixture_enabled => 'المزيج مفعّل';
+
+  @override
+  String get rel_admin_loud_degraded_references => 'تنبيه عند تدهور المراجع';
+
+  @override
+  String get rel_admin_silent_degraded_references => 'صمت عند تدهور المراجع';
+
+  @override
+  String get rel_admin_aggregator => 'المجمّع';
+
+  @override
+  String get rel_admin_aggregator_provider => 'موفر المجمّع';
+
+  @override
+  String get rel_admin_aggregator_model => 'نموذج المجمّع';
+
+  @override
+  String get rel_admin_reference_provider => 'موفر المرجع';
+
+  @override
+  String get rel_admin_reference_model => 'النموذج المرجعي';
+
+  @override
+  String get rel_admin_add_reference_model => 'إضافة نموذج مرجعي';
+
+  @override
+  String get rel_admin_mixture_saved => 'حُفظ المزيج.';
+
+  @override
+  String get rel_admin_save_mixture => 'حفظ المزيج';
+
+  @override
+  String get rel_admin_credit_purchase_submitted => 'أُرسل طلب شراء الرصيد.';
+
+  @override
+  String get rel_admin_credit_purchase_settled => 'سُوّيت عملية شراء الرصيد.';
+
+  @override
+  String get rel_admin_credit_and_plan_changes_wait_for_confirmation_a_plan =>
+      'تنتظر تغييرات الرصيد والخطة التأكيد. تُعرض الخطة التي ستفرض رسومًا فورية ولا تُؤكَّد هنا.';
+
+  @override
+  String get rel_admin_buy_credits => 'شراء رصيد';
+
+  @override
+  String get rel_admin_retry_same_charge => 'إعادة محاولة الرسوم نفسها';
+
+  @override
+  String get rel_admin_retry_the_same_credit_charge_this_does_not_start =>
+      'أعِد محاولة رسوم الرصيد نفسها. لا يبدأ هذا عملية شراء ثانية.';
+
+  @override
+  String get rel_admin_credit_purchases_are_not_available_for_this_account =>
+      'شراء الرصيد غير متاح لهذا الحساب.';
+
+  @override
+  String get rel_admin_auto_reload => 'إعادة الشحن التلقائي';
+
+  @override
+  String get rel_admin_read_only_until_this_account_can_charge =>
+      'للقراءة فقط حتى يتمكن هذا الحساب من الدفع.';
+
+  @override
+  String get rel_admin_auto_reload_updated => 'حُدّثت إعادة الشحن التلقائي.';
+
+  @override
+  String get rel_admin_keep_going_on_credits => 'المتابعة باستخدام الرصيد';
+
+  @override
+  String get rel_admin_continue_on_credits_when_the_plan_window_is_used_up =>
+      'هل تريد المتابعة باستخدام الرصيد عند استنفاد حصة فترة الخطة؟';
+
+  @override
+  String
+  get rel_admin_stop_continuing_on_credits_when_the_plan_window_is_used_up =>
+      'هل تريد إيقاف المتابعة باستخدام الرصيد عند استنفاد حصة فترة الخطة؟';
+
+  @override
+  String get rel_admin_credit_continuation_updated =>
+      'حُدّثت المتابعة باستخدام الرصيد.';
+
+  @override
+  String get rel_admin_this_plan_change_is_not_confirmed_from_ares =>
+      'لا يُؤكَّد تغيير الخطة هذا من Ares.';
+
+  @override
+  String get rel_admin_this_change_is_scheduled_confirm_to_apply_it =>
+      'هذا التغيير مجدول. أكّد لتطبيقه.';
+
+  @override
+  String get rel_admin_preview_plan => 'معاينة الخطة';
+
+  @override
+  String get rel_admin_schedule_plan_change => 'جدولة تغيير الخطة';
+
+  @override
+  String get rel_admin_plan_change_scheduled => 'جُدول تغيير الخطة.';
+
+  @override
+  String get rel_admin_confirm_scheduled_plan_change =>
+      'تأكيد تغيير الخطة المجدول';
+
+  @override
+  String rel_admin_remove_key_confirm(String key) {
+    return 'هل تريد إزالة قيمة $key المحفوظة من هذا الملف التعريفي؟';
+  }
+
+  @override
+  String rel_admin_current_endpoint(String name) {
+    return '$name · الحالي';
+  }
+
+  @override
+  String rel_admin_endpoint_result(
+    String status,
+    String transport,
+    String count,
+    String message,
+  ) {
+    return '$status · $transport · $count نماذج. $message';
+  }
+
+  @override
+  String rel_admin_disconnect_account(String name) {
+    return 'فصل $name';
+  }
+
+  @override
+  String rel_admin_delegation_blocked(String reason) {
+    return 'التفويض محظور: $reason';
+  }
+
+  @override
+  String rel_admin_backend_unavailable(String name) {
+    return '$name · غير متاح';
+  }
+
+  @override
+  String rel_admin_reference_number(String number) {
+    return 'المرجع $number';
+  }
+
+  @override
+  String rel_admin_reload_enable_confirm(String amount, String threshold) {
+    return 'هل تريد تشغيل إعادة الشحن التلقائي وفرض رسوم $amount عندما ينخفض الرصيد عن $threshold؟';
+  }
+
+  @override
+  String rel_admin_reload_disable_confirm(String amount, String threshold) {
+    return 'هل تريد إيقاف إعادة الشحن التلقائي؟ تُفرض حاليًا رسوم $amount عندما ينخفض الرصيد عن $threshold.';
+  }
+
+  @override
+  String get rel_admin_this_plan => 'هذه الخطة';
+
+  @override
+  String rel_admin_plan_confirm(String name) {
+    return 'جدولة $name. يُجدول لنهاية الفترة الحالية. لا تُفرض رسوم الآن.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price(String name, String price) {
+    return 'جدولة $name بسعر $price. يُجدول لنهاية الفترة الحالية. لا تُفرض رسوم الآن.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_when(String name, String when) {
+    return 'جدولة $name. يسري $when. لا تُفرض رسوم الآن.';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price_when(
+    String name,
+    String price,
+    String when,
+  ) {
+    return 'جدولة $name بسعر $price. يسري $when. لا تُفرض رسوم الآن.';
+  }
+
+  @override
+  String rel_admin_balance(String amount) {
+    return 'الرصيد $amount';
+  }
+
+  @override
+  String rel_admin_buy_confirm(String amount) {
+    return 'فرض رسوم \$$amount على وسيلة الدفع في حساب Nous هذا. هذا ينفق أموالًا حقيقية.';
+  }
+
+  @override
+  String rel_admin_reload_portal(String url) {
+    return 'غيّر إعادة الشحن التلقائي على البوابة الإلكترونية: $url';
+  }
+
+  @override
+  String rel_admin_team_portal(String url) {
+    return 'تُغيَّر اشتراكات الفريق على البوابة الإلكترونية: $url';
+  }
+
+  @override
+  String get rel_admin_effort_none => 'بلا';
+
+  @override
+  String get rel_admin_effort_minimal => 'أدنى';
+
+  @override
+  String get rel_admin_effort_low => 'منخفض';
+
+  @override
+  String get rel_admin_effort_medium => 'متوسط';
+
+  @override
+  String get rel_admin_effort_high => 'مرتفع';
+
+  @override
+  String get rel_admin_effort_xhigh => 'مرتفع جدًا';
+
+  @override
+  String get rel_admin_effort_max => 'أقصى';
+
+  @override
+  String get rel_admin_effort_ultra => 'فائق';
+
+  @override
+  String get rel_admin_auto_lower => 'تلقائي';
+
+  @override
+  String get rel_admin_create => 'إنشاء';
+
+  @override
+  String get rel_admin_prompt => 'التعليمات';
+
+  @override
+  String get rel_admin_new_profile_id => 'معرّف الملف الشخصي الجديد';
+
+  @override
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway =>
+      'هذه العملية غير متاحة على هذه البوابة.';
+
+  @override
+  String get rel_admin_access_denied_by_the_gateway => 'رفضت البوابة الوصول.';
+
+  @override
+  String get rel_admin_connection_changed_reopen_profiles =>
+      'تغيّر الاتصال. أعِد فتح ملفات التعريف.';
+
+  @override
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before =>
+      'إدخال أو استجابة بوابة غير صالحة. تحقّق من الهدف قبل إعادة المحاولة.';
+
+  @override
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before =>
+      'تعذّر التحقق من النتيجة. حدّث الهدف قبل المحاولة مرة أخرى.';
+
+  @override
+  String get rel_admin_edit_soul_md => 'تحرير SOUL.md';
+
+  @override
+  String get rel_admin_persona => 'الشخصية';
+
+  @override
+  String get rel_admin_persona_saved => 'حُفظت الشخصية.';
+
+  @override
+  String get rel_admin_not_set => 'غير معيّن';
+
+  @override
+  String get rel_admin_enabled => 'مفعّل';
+
+  @override
+  String get rel_admin_keys_to_remove_comma_separated =>
+      'المفاتيح المراد إزالتها (مفصولة بفواصل)';
+
+  @override
+  String get rel_admin_saved_and_applied_by_the_gateway =>
+      'حُفظ وطُبّق بواسطة البوابة.';
+
+  @override
+  String get rel_admin_saved_a_gateway_restart_may_be_required =>
+      'حُفظ. قد تلزم إعادة تشغيل البوابة.';
+
+  @override
+  String get rel_admin_create_signed_route => 'إنشاء قاعدة توجيه موقّعة';
+
+  @override
+  String get rel_admin_route_id => 'معرّف قاعدة التوجيه';
+
+  @override
+  String get rel_admin_signature => 'التوقيع';
+
+  @override
+  String get rel_admin_events_comma_separated => 'الأحداث (مفصولة بفواصل)';
+
+  @override
+  String get rel_admin_delivery_target => 'وجهة التسليم';
+
+  @override
+  String get rel_admin_skills_comma_separated => 'المهارات (مفصولة بفواصل)';
+
+  @override
+  String get rel_admin_delivery_mode => 'وضع التسليم';
+
+  @override
+  String get rel_admin_delivery_chat_id_optional =>
+      'معرّف محادثة التسليم (اختياري)';
+
+  @override
+  String get rel_admin_hide_signing_secret => 'إخفاء سر التوقيع';
+
+  @override
+  String get rel_admin_reveal_signing_secret => 'إظهار سر التوقيع';
+
+  @override
+  String get rel_admin_edit_persona => 'تحرير الشخصية';
+
+  @override
+  String get rel_admin_portable_profile_bundle => 'حزمة ملف تعريف محمولة';
+
+  @override
+  String get rel_admin_clone_profile => 'استنساخ الملف التعريفي';
+
+  @override
+  String get rel_admin_rename_display_label => 'إعادة تسمية تسمية العرض';
+
+  @override
+  String get rel_admin_rename_profile => 'إعادة تسمية الملف التعريفي';
+
+  @override
+  String get rel_admin_new_name => 'الاسم الجديد';
+
+  @override
+  String get rel_admin_rename_verified => 'تم التحقق من إعادة التسمية.';
+
+  @override
+  String get rel_admin_delete_profile => 'حذف الملف التعريفي';
+
+  @override
+  String get rel_admin_profile_id_to_delete =>
+      'معرّف الملف التعريفي المراد حذفه';
+
+  @override
+  String get rel_admin_profile_deleted => 'حُذف الملف التعريفي.';
+
+  @override
+  String
+  get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending =>
+      'حُذف الملف التعريفي. لا يزال تنظيف هوية الخادم معلقًا.';
+
+  @override
+  String get rel_admin_export_profile_archive => 'تصدير أرشيف الملف التعريفي';
+
+  @override
+  String get rel_admin_import_profile_archive => 'استيراد أرشيف الملف التعريفي';
+
+  @override
+  String get rel_admin_import_a_trusted_profile => 'استيراد ملف تعريف موثوق';
+
+  @override
+  String get rel_admin_absolute_archive_path_on_gateway =>
+      'مسار الأرشيف المطلق على البوابة';
+
+  @override
+  String get rel_admin_messaging_channels => 'قنوات المراسلة';
+
+  @override
+  String get rel_admin_dm_pairing_requests => 'طلبات إقران الرسائل المباشرة';
+
+  @override
+  String get rel_admin_no_pending_or_approved_users =>
+      'لا يوجد مستخدمون معلقون أو معتمدون.';
+
+  @override
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user =>
+      'إقران قديم: لا يوجد معرّف طلب قابل للتحقق. اطلب من المستخدم الإقران مجددًا.';
+
+  @override
+  String get rel_admin_pairing_change_verified => 'تم التحقق من تغيير الإقران.';
+
+  @override
+  String get rel_admin_create_telegram_bot_by_qr => 'إنشاء بوت Telegram عبر QR';
+
+  @override
+  String get rel_admin_create_telegram_bot => 'إنشاء بوت Telegram';
+
+  @override
+  String get rel_admin_bot_name => 'اسم البوت';
+
+  @override
+  String get rel_admin_telegram_bot_creation_qr_code =>
+      'رمز QR لإنشاء بوت Telegram';
+
+  @override
+  String get rel_admin_check_telegram_pairing => 'التحقق من إقران Telegram';
+
+  @override
+  String get rel_admin_waiting_for_telegram => 'بانتظار Telegram.';
+
+  @override
+  String get rel_admin_apply_telegram_bot => 'تطبيق بوت Telegram';
+
+  @override
+  String get rel_admin_allowed_numeric_user_ids =>
+      'معرّفات المستخدمين الرقمية المسموح بها';
+
+  @override
+  String get rel_admin_saved_restart_still_required =>
+      'حُفظ. لا تزال إعادة التشغيل مطلوبة.';
+
+  @override
+  String get rel_admin_saved_gateway_restart_requested =>
+      'حُفظ؛ طُلبت إعادة تشغيل البوابة.';
+
+  @override
+  String get rel_admin_cancel_telegram_setup => 'إلغاء إعداد Telegram';
+
+  @override
+  String get rel_admin_inbound_webhooks => 'خطافات الويب الواردة';
+
+  @override
+  String get rel_admin_enable_webhook_service => 'تفعيل خدمة خطافات الويب';
+
+  @override
+  String get rel_admin_enable_webhooks => 'تفعيل خطافات الويب';
+
+  @override
+  String get rel_admin_enabled_restart_still_required =>
+      'فُعّل. لا تزال إعادة التشغيل مطلوبة.';
+
+  @override
+  String get rel_admin_enabled_restart_requested =>
+      'فُعّل؛ طُلبت إعادة التشغيل.';
+
+  @override
+  String get rel_admin_route_change_verified =>
+      'تم التحقق من تغيير قاعدة التوجيه.';
+
+  @override
+  String get rel_admin_delete_route => 'حذف قاعدة التوجيه';
+
+  @override
+  String get rel_admin_disable_route => 'تعطيل قاعدة التوجيه';
+
+  @override
+  String get rel_admin_enable_route => 'تفعيل قاعدة التوجيه';
+
+  @override
+  String get rel_admin_back_up_entire_agent_home =>
+      'نسخ مجلد الوكيل الرئيسي بالكامل احتياطيًا';
+
+  @override
+  String get rel_admin_transfer_to_a_cloud_agent => 'النقل إلى وكيل Cloud';
+
+  @override
+  String get rel_admin_check_backup_progress =>
+      'التحقق من تقدم النسخ الاحتياطي';
+
+  @override
+  String get rel_admin_save_backup_to_this_device =>
+      'حفظ النسخة الاحتياطية على هذا الجهاز';
+
+  @override
+  String get rel_admin_save_sensitive_full_home_archive =>
+      'حفظ أرشيف المجلد الرئيسي الكامل الحساس';
+
+  @override
+  String get rel_admin_save_cancelled => 'أُلغي الحفظ.';
+
+  @override
+  String get rel_admin_backup_saved => 'حُفظت النسخة الاحتياطية.';
+
+  @override
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway =>
+      'حتى 32 MiB. تبقى الأرشيفات الأكبر على البوابة.';
+
+  @override
+  String rel_admin_persona_scope(String scope) {
+    return 'احفظ الشخصية لـ $scope.';
+  }
+
+  @override
+  String rel_admin_configure_channel(String name) {
+    return 'إعداد $name';
+  }
+
+  @override
+  String rel_admin_channel_warning(String scope) {
+    return 'ينطبق على $scope. يترك الفراغ القيمة الحالية. لإزالة قيمة، أدرج مفتاحها أدناه.';
+  }
+
+  @override
+  String rel_admin_hook_warning(String scope) {
+    return 'ينطبق على $scope. استخدم اسمًا فريدًا. تنشئ البوابة سر توقيع. إذا أنشأ مشغّل آخر الاسم في الوقت نفسه، فقد يستبدل المضيف قاعدة التوجيه تلك.';
+  }
+
+  @override
+  String rel_admin_hook_created(String url) {
+    return 'أُنشئ $url. احفظ سر التوقيع قبل المغادرة.';
+  }
+
+  @override
+  String rel_admin_clone_warning(String scope) {
+    return 'انسخ الإعدادات والمهارات والشخصية وربما بيانات اعتماد الموفر من $scope. لا تُطلب رموز المراسلة.';
+  }
+
+  @override
+  String rel_admin_cloned(String source, String destination) {
+    return 'استُنسخ $source إلى $destination.';
+  }
+
+  @override
+  String rel_admin_rename_target(String name) {
+    return 'إعادة تسمية $name';
+  }
+
+  @override
+  String rel_admin_rename_label_warning(String scope) {
+    return 'غيّر تسمية العرض لـ $scope. يبقى معرّفه default.';
+  }
+
+  @override
+  String rel_admin_rename_warning(String scope) {
+    return 'أعِد تسمية $scope على الخادم. قد تتوقف بوابة قيد التشغيل.';
+  }
+
+  @override
+  String rel_admin_delete_target(String name) {
+    return 'حذف $name';
+  }
+
+  @override
+  String rel_admin_delete_profile_warning(String scope) {
+    return 'احذف $scope نهائيًا، بما في ذلك الجلسات وبيانات الاعتماد. اكتب معرّف الملف التعريفي بالضبط.';
+  }
+
+  @override
+  String rel_admin_export_target(String name) {
+    return 'تصدير $name';
+  }
+
+  @override
+  String rel_admin_export_warning(String scope) {
+    return 'أنشئ .tar.gz على $scope. تُستبعد مخازن بيانات الاعتماد المعروفة، لكن قد تبقى بيانات خاصة. راجع قبل المشاركة.';
+  }
+
+  @override
+  String rel_admin_archive_on(String gateway, String path) {
+    return 'الأرشيف على $gateway: $path';
+  }
+
+  @override
+  String rel_admin_import_warning(String gateway) {
+    return 'استخدم .tar.gz تمت مراجعته وموجودًا بالفعل على $gateway. قد يحتوي على إضافات وبرامج نصية وجداول. يلزم معرّف ملف تعريف جديد.';
+  }
+
+  @override
+  String rel_admin_imported(String name) {
+    return 'استُورد $name.';
+  }
+
+  @override
+  String rel_admin_approve_user(String user) {
+    return 'اعتماد $user';
+  }
+
+  @override
+  String rel_admin_revoke_user(String user) {
+    return 'إلغاء صلاحية $user';
+  }
+
+  @override
+  String rel_admin_allow_pair(String platform, String scope) {
+    return '$platform على $scope: السماح لهذا المستخدم بالوصول إلى المراسلة.';
+  }
+
+  @override
+  String rel_admin_remove_pair(String platform, String scope) {
+    return '$platform على $scope: إزالة وصول هذا المستخدم إلى المراسلة.';
+  }
+
+  @override
+  String rel_admin_telegram_start(String scope) {
+    return 'ابدأ إقران Telegram على $scope باستخدام خدمة إعداد البوابة.';
+  }
+
+  @override
+  String rel_admin_expires(String time) {
+    return 'تنتهي الصلاحية: $time';
+  }
+
+  @override
+  String rel_admin_telegram_apply(String bot, String scope) {
+    return 'فعّل @$bot على $scope وحاول إعادة تشغيل البوابة. لا يجوز مراسلته إلا للمستخدمين المدرجين.';
+  }
+
+  @override
+  String rel_admin_hooks_enable(String scope) {
+    return 'فعّل خطافات الويب الواردة على $scope وحاول إعادة تشغيل البوابة.';
+  }
+
+  @override
+  String rel_admin_disable_target(String name) {
+    return 'تعطيل $name';
+  }
+
+  @override
+  String rel_admin_enable_target(String name) {
+    return 'تفعيل $name';
+  }
+
+  @override
+  String rel_admin_hook_change(String name, String scope) {
+    return 'غيّر $name تحديدًا على $scope.';
+  }
+
+  @override
+  String rel_admin_backup_warning(String gateway) {
+    return 'هذه ليست نسخة احتياطية لإعدادات Ares. احفظ جميع ملفات التعريف والجلسات وبيانات الاعتماد على $gateway. الأرشيف حساس.';
+  }
+
+  @override
+  String rel_admin_backup_started(String gateway) {
+    return 'بدأ النسخ الاحتياطي على $gateway.';
+  }
+
+  @override
+  String rel_admin_backup_verified(String gateway, String path) {
+    return 'تم التحقق من النسخة الاحتياطية على $gateway: $path';
+  }
+
+  @override
+  String rel_admin_backup_running(String gateway) {
+    return 'لا يزال النسخ الاحتياطي جاريًا على $gateway.';
+  }
+
+  @override
+  String get rel_admin_choice_yes => 'نعم';
+
+  @override
+  String get rel_admin_choice_no => 'لا';
+
+  @override
+  String get rel_admin_choice_generic => 'عام';
+
+  @override
+  String get rel_admin_choice_log => 'سجل';
+
+  @override
+  String get rel_admin_choice_email => 'بريد إلكتروني';
+
+  @override
+  String get rel_admin_choice_github_comment => 'تعليق GitHub';
+
+  @override
+  String get rel_admin_choice_agent => 'يعالج الوكيل الحدث';
+
+  @override
+  String get rel_admin_choice_direct => 'تسليم مباشر';
+
+  @override
+  String get rel_admin_configured => 'مُعدّ';
+
+  @override
+  String get rel_admin_state_pending_restart => 'بانتظار إعادة التشغيل';
+
+  @override
+  String get rel_admin_state_unknown => 'غير معروف';
+
+  @override
+  String get rel_admin_state_connected => 'متصل';
+
+  @override
+  String get rel_admin_state_disconnected => 'غير متصل';
+
+  @override
+  String get rel_admin_state_disabled => 'معطّل';
+
+  @override
+  String get rel_admin_state_enabled => 'مفعّل';
+
+  @override
+  String get rel_admin_state_running => 'قيد التشغيل';
+
+  @override
+  String get rel_admin_state_stopped => 'متوقف';
+
+  @override
+  String get rel_admin_state_error => 'خطأ';
+
+  @override
+  String get rel_admin_state_not_configured => 'غير مُعدّ';
+
+  @override
+  String get rel_admin_state_startup_failed => 'فشل بدء التشغيل';
+
+  @override
+  String get rel_admin_state_gateway_stopped => 'البوابة متوقفة';
+
+  @override
+  String get rel_admin_state_connecting => 'جارٍ الاتصال';
+
+  @override
+  String get rel_admin_state_retrying => 'إعادة المحاولة';
+
+  @override
+  String get rel_admin_state_fatal => 'خطأ فادح';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      'أرشيف ملف تعريف غير مدعوم أو كبير جدًا.';
+
+  @override
+  String get rel_admin_current_layout => 'التخطيط الحالي';
+
+  @override
+  String get rel_admin_one_pane => 'لوحة واحدة';
+
+  @override
+  String get rel_admin_stacked => 'مكدّس';
+
+  @override
+  String get rel_admin_side_by_side => 'جنبًا إلى جنب';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      'لا يوجد مظهر مدعوم في هذا الملف التعريفي.';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      'مراجعة المظهر المحفوظ مع هذا الملف التعريفي';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      'ينطبق فقط على هذا الملف التعريفي المسمى على هذا الجهاز. يبدأ الترتيب المستورد بلوحات فارغة؛ اختر محادثاته بنفسك.';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device =>
+      'تطبيق على هذا الملف التعريفي على هذا الجهاز';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      'يُجهّز التصدير ملف .tar.gz على البوابة. راجع ملفاته المحمولة قبل حفظ نسخة هنا. يفتح الاستيراد أرشيفًا محليًا للمراجعة؛ الفتح وحده لا يرفع أي شيء.';
+
+  @override
+  String get rel_admin_prepare_profile_export => 'تجهيز تصدير الملف التعريفي';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device =>
+      'فتح .tar.gz من هذا الجهاز';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      'تُنقل الملفات النصية المحددة فقط. راجعها بحثًا عن الأسرار والمعلومات الخاصة. قد تغيّر الإعدادات والمهارات والجداول ما يفعله الملف التعريفي الجديد.';
+
+  @override
+  String get rel_admin_include_this_reviewed_file =>
+      'تضمين هذا الملف الذي تمت مراجعته';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      'تطبيق المظهر على الملف التعريفي الجديد على هذا الجهاز';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      'يستورد الألوان وأحجام اللوحات، وليس المحادثات أو الأدوات أو معرّفات الجلسات.';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      'تحتفظ البوابة بنسخة مرحلية خاصة. ينشئ الاستيراد ملف تعريف جديدًا؛ ولا يستبدل ملفًا موجودًا.';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' لم يُطبّق المظهر: لم تؤكد البوابة التراكب الذي تمت مراجعته.';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device =>
+      ' طُبّق المظهر على هذا الجهاز.';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device =>
+      ' لم يُحفظ المظهر على هذا الجهاز.';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle =>
+      'حفظ حزمة الملف التعريفي التي تمت مراجعتها';
+
+  @override
+  String get rel_admin_profile_bundle_saved => 'حُفظت حزمة الملف التعريفي.';
+
+  @override
+  String get rel_admin_import_selected_files => 'استيراد الملفات المحددة';
+
+  @override
+  String get rel_admin_save_selected_files_to_device =>
+      'حفظ الملفات المحددة على الجهاز';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · $percent% للوحة الأولى';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return 'السمة: $skin · الوضع: $mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return 'طُبّق المظهر على $gateway / $profile.';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return 'الحزمة: $profile · $count ملفات قابلة للمراجعة · $omitted مستبعدة';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return 'استُورد $name على $gateway.';
+  }
+
+  @override
+  String get rel_admin_unchanged => 'دون تغيير';
+
+  @override
+  String get rel_admin_mode_system => 'النظام';
+
+  @override
+  String get rel_admin_mode_light => 'فاتح';
+
+  @override
+  String get rel_admin_mode_dark => 'داكن';
+
+  @override
+  String get rel_admin_skin_classic => 'كلاسيكي';
+
+  @override
+  String get rel_admin_skin_midnight => 'منتصف الليل';
+
+  @override
+  String get rel_admin_skin_ember => 'جمر';
+
+  @override
+  String get rel_admin_skin_mono => 'أحادي اللون';
+
+  @override
+  String get rel_admin_skin_cyberpunk => 'سايبربانك';
+
+  @override
+  String get rel_admin_skin_slate => 'أردوازي';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      'لا يوجد وكلاء Cloud متاحون في هذا الحساب.';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      'تعذّر التحقق من إيصال التراجع السابق. لم يُجرَ أي تغيير.';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'النقل إلى Cloud';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      'تغيّر الاتصال. غادر هذه الصفحة. قد تستمر عملية استعادة سبق إرسالها.';
+
+  @override
+  String get rel_admin_find_my_cloud_agents =>
+      'العثور على وكلاء Cloud الخاصين بي';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      'يستبدل التراجع الوجهة بنسختها الاحتياطية السابقة للنقل.';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      'استبدل وكيل Cloud هذا بالمجلد الرئيسي للمصدر بالكامل، بما في ذلك بيانات الاعتماد والمحادثات والملفات. لا يُحذف المصدر. تُعطّل بوتات المراسلة الواردة.';
+
+  @override
+  String get rel_admin_type_destination_agent_id => 'اكتب معرّف وكيل الوجهة';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      'تعذّر الاحتفاظ بإيصال التراجع المحلي. أبقِ هذه الصفحة مفتوحة.';
+
+  @override
+  String get rel_admin_undo_transfer => 'التراجع عن النقل';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'استبدال وكيل Cloud';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      'نُسي إيصال التراجع المحلي. لم تُزل أي نسخة احتياطية بعيدة.';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only =>
+      'نسيان إيصال التراجع المحلي فقط';
+
+  @override
+  String get rel_admin_stop_before_restore => 'الإيقاف قبل الاستعادة';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      'لا تغلق هذه الصفحة. تعمل الاستعادة على الوجهة ولا يمكن إلغاؤها.';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      'استُعيدت الملفات؛ تحتاج بوابة الوجهة إلى عناية.';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return 'سجّل الدخول إلى اتصال Ares محفوظ واحد فقط لـ $origin، ثم عُد إلى هنا.';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return 'المصدر: $gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return 'الوجهة: $name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return 'معرّف الوكيل: $id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return 'الحالة: $phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return 'نُسخ $percent%';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return 'نقطة التراجع على الوجهة: $path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return 'المراسلة معطّلة: $channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => 'جاهز';
+
+  @override
+  String get rel_admin_phase_backup => 'نسخ احتياطي';
+
+  @override
+  String get rel_admin_phase_upload => 'رفع';
+
+  @override
+  String get rel_admin_phase_restore => 'استعادة';
+
+  @override
+  String get rel_admin_phase_finished => 'مكتمل';
+
+  @override
+  String get rel_admin_phase_failed => 'فشل';
+
+  @override
+  String get rel_admin_phase_undo => 'تراجع';
+
+  @override
+  String get rel_admin_phase_undone => 'تم التراجع';
 }

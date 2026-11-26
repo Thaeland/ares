@@ -11712,4 +11712,1392 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get release_core_file_save_hidden => 'ゲートウェイでは隠しファイルを保存できません。';
+
+  @override
+  String get rel_admin_choose_provider => 'プロバイダーとモデルを選択してください。';
+
+  @override
+  String get rel_admin_known_effort => '既知の思考レベルを選択してください。';
+
+  @override
+  String get rel_admin_endpoint_name_required => 'このエンドポイントの名前を入力してください。';
+
+  @override
+  String get rel_admin_endpoint_model_required => 'このエンドポイントが提供するモデルを入力してください。';
+
+  @override
+  String get rel_admin_known_api_mode => '自動または既知のAPIモードを選択してください。';
+
+  @override
+  String get rel_admin_endpoint_id_invalid => 'このエンドポイント識別子は使用できません。';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      'リモートエンドポイントにはHTTPS、localhostにはHTTPを使用してください。';
+
+  @override
+  String get rel_admin_key_invalid => 'そのAPIキーは保存できません。';
+
+  @override
+  String get rel_admin_response_shape => 'ゲートウェイの応答が想定された形式と一致しませんでした。';
+
+  @override
+  String get rel_admin_limits_required =>
+      '保存する前に反復回数、同時実行数、タイムアウトの上限を入力してください。';
+
+  @override
+  String get rel_admin_route_required => '保存するには各ルートに名前とモデルが必要です。';
+
+  @override
+  String get rel_admin_route_unique => 'ルート名は一意である必要があります。';
+
+  @override
+  String get rel_admin_route_default_invalid => 'デフォルトルートは保存済みのルートである必要があります。';
+
+  @override
+  String get rel_admin_policy_required =>
+      '参照モデルの機能低下時のポリシーとして通知ありまたはサイレントを選択してください。';
+
+  @override
+  String get rel_admin_mixture_missing => 'ゲートウェイから有効な混合構成が返されませんでした。';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      '集約モデルとすべての参照モデルのプロバイダーとモデルを指定してください。';
+
+  @override
+  String get rel_admin_chat_id_required => 'この変更を適用するチャットIDを入力してください。';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return 'ゲートウェイがHTTP $statusを返しました。';
+  }
+
+  @override
+  String get rel_admin_response_unreadable => 'ゲートウェイの応答を読み取れませんでした。';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      '請求またはチャットを変更する前に、ゲートウェイのライブセッションに接続してください。';
+
+  @override
+  String get rel_admin_operation_unavailable => 'このゲートウェイはその操作に対応していません。';
+
+  @override
+  String get rel_admin_key_required => '保存するキーを入力してください。';
+
+  @override
+  String get rel_admin_key_save_failed => 'ゲートウェイはそのキーを保存しませんでした。';
+
+  @override
+  String get rel_admin_key_clear_required => '削除するプロバイダーキーを選択してください。';
+
+  @override
+  String get rel_admin_key_clear_failed => 'ゲートウェイはそのキーを削除しませんでした。';
+
+  @override
+  String get rel_admin_endpoint_save_failed => 'ゲートウェイはそのエンドポイントを保存しませんでした。';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      'ゲートウェイはそのエンドポイントを有効にしませんでした。';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      'プロバイダーアカウントには認証済みのHTTPSゲートウェイまたはlocalhostが必要です。';
+
+  @override
+  String get rel_admin_accounts_read_failed => 'プロバイダーアカウントを読み取れませんでした。';
+
+  @override
+  String get rel_admin_account_disconnect_failed => 'ゲートウェイはそのアカウントを切断しませんでした。';
+
+  @override
+  String get rel_admin_account_not_disconnectable => 'そのプロバイダーアカウントは切断できません。';
+
+  @override
+  String get rel_admin_backend_required => '利用可能な委任バックエンドを選択してください。';
+
+  @override
+  String get rel_admin_backend_save_failed => 'ゲートウェイはそのバックエンドを選択しませんでした。';
+
+  @override
+  String get rel_admin_routes_save_failed => 'ゲートウェイはそれらのルートを保存しませんでした。';
+
+  @override
+  String get rel_admin_profile_route_required => '各プロファイルルートにはプロファイル名が必要です。';
+
+  @override
+  String get rel_admin_profile_route_unique => 'プロファイルルートは一意である必要があります。';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      'デフォルトのプロファイルルートは許可されたプロファイルのいずれかである必要があります。';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      'ゲートウェイはそれらのプロファイルルートを保存しませんでした。';
+
+  @override
+  String get rel_admin_limits_save_failed => 'ゲートウェイはそれらの上限を保存しませんでした。';
+
+  @override
+  String get rel_admin_mixture_save_failed => 'ゲートウェイはその混合構成を保存しませんでした。';
+
+  @override
+  String get rel_admin_credit_amount_required => '提示されたクレジット金額から選択してください。';
+
+  @override
+  String get rel_admin_charge_check_failed => 'その請求を確認できませんでした。';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      '自動チャージ金額が指定されていないため、変更されませんでした。';
+
+  @override
+  String get rel_admin_plan_required => '先にプランを選択してください。';
+
+  @override
+  String get rel_admin_plan_scheduled_only => 'ここでは予定されたプラン変更のみ確認できます。';
+
+  @override
+  String get rel_admin_billing_refused => 'ゲートウェイがこの請求リクエストを拒否しました。';
+
+  @override
+  String get rel_admin_request_refused => 'ゲートウェイがこのリクエストを拒否しました。';
+
+  @override
+  String get rel_admin_endpoint_answered => 'エンドポイントが応答しました。';
+
+  @override
+  String get rel_admin_endpoint_no_answer => 'エンドポイントが応答しませんでした。';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      '請求結果が不明です。まだ決済される可能性があります。再試行する前にポータルを確認してください。';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      '請求情報を確認する前に、ゲートウェイのライブセッションに接続してください。このページからは請求されません。';
+
+  @override
+  String get rel_admin_preset_required => '適用する前にプリセットを保存してください。';
+
+  @override
+  String get rel_admin_cancel => 'キャンセル';
+
+  @override
+  String get rel_admin_refresh => '更新';
+
+  @override
+  String get rel_admin_credits_and_plans => 'クレジットとプラン';
+
+  @override
+  String get rel_admin_saved => '保存しました';
+
+  @override
+  String get rel_admin_name => '名前';
+
+  @override
+  String get rel_admin_base_url => 'ベースURL';
+
+  @override
+  String get rel_admin_model => 'モデル';
+
+  @override
+  String get rel_admin_signed_in => 'サインイン済み';
+
+  @override
+  String get rel_admin_not_signed_in => '未ログイン';
+
+  @override
+  String get rel_admin_provider => 'プロバイダー';
+
+  @override
+  String get rel_admin_apply_to_this_chat => 'このチャットに適用';
+
+  @override
+  String get rel_admin_auto => '自動';
+
+  @override
+  String get rel_admin_chat_completions => 'チャット補完';
+
+  @override
+  String get rel_admin_codex_responses => 'Codexレスポンス';
+
+  @override
+  String get rel_admin_anthropic_messages => 'Anthropicメッセージ';
+
+  @override
+  String get rel_admin_could_not_complete_that_request => 'そのリクエストを完了できませんでした。';
+
+  @override
+  String get rel_admin_confirm => '確認';
+
+  @override
+  String get rel_admin_providers_and_billing => 'プロバイダーと請求';
+
+  @override
+  String get rel_admin_api_keys => 'APIキー';
+
+  @override
+  String get rel_admin_custom_endpoints => 'カスタムエンドポイント';
+
+  @override
+  String get rel_admin_provider_accounts => 'プロバイダーアカウント';
+
+  @override
+  String get rel_admin_effort_and_speed_presets => '思考レベルと速度のプリセット';
+
+  @override
+  String get rel_admin_delegation => '委任';
+
+  @override
+  String get rel_admin_mixture_of_agents => 'エージェント混合';
+
+  @override
+  String get rel_admin_no_provider_keys_were_reported_for_this_profile =>
+      'このプロファイルのプロバイダーキーは報告されていません。';
+
+  @override
+  String get rel_admin_not_saved => '未保存';
+
+  @override
+  String get rel_admin_new_key_value => '新しいキーの値';
+
+  @override
+  String get rel_admin_provider_key_saved => 'プロバイダーキーを保存しました。';
+
+  @override
+  String get rel_admin_save_key => 'キーを保存';
+
+  @override
+  String get rel_admin_clear_provider_key => 'プロバイダーキーを削除';
+
+  @override
+  String get rel_admin_provider_key_cleared => 'プロバイダーキーを削除しました。';
+
+  @override
+  String get rel_admin_clear_key => 'キーを削除';
+
+  @override
+  String get rel_admin_new_endpoint => '新しいエンドポイント';
+
+  @override
+  String get rel_admin_api_key => 'APIキー';
+
+  @override
+  String get rel_admin_leave_blank_to_keep_a_key_this_endpoint_already_has =>
+      'このエンドポイントの既存のキーを保持するには空欄にしてください。';
+
+  @override
+  String get rel_admin_reachable => '到達可能';
+
+  @override
+  String get rel_admin_unreachable => '到達不可';
+
+  @override
+  String get rel_admin_test_endpoint => 'エンドポイントをテスト';
+
+  @override
+  String get rel_admin_endpoint_saved => 'エンドポイントを保存しました。';
+
+  @override
+  String get rel_admin_save_endpoint => 'エンドポイントを保存';
+
+  @override
+  String get rel_admin_use_this_endpoint => 'このエンドポイントを使用';
+
+  @override
+  String
+  get rel_admin_make_this_named_endpoint_the_current_model_for_this_profile =>
+      'この名前付きエンドポイントをこのプロファイルの現在のモデルにしますか？';
+
+  @override
+  String get rel_admin_endpoint_is_now_current => 'このエンドポイントが現在の設定になりました。';
+
+  @override
+  String get rel_admin_use_endpoint => 'エンドポイントを使用';
+
+  @override
+  String get rel_admin_delete_endpoint => 'エンドポイントを削除';
+
+  @override
+  String get rel_admin_delete_this_named_endpoint_from_the_profile =>
+      'この名前付きエンドポイントをプロファイルから削除しますか？';
+
+  @override
+  String get rel_admin_endpoint_deleted => 'エンドポイントを削除しました。';
+
+  @override
+  String get rel_admin_signing_in_stays_on_the_provider_sign_in_screen =>
+      'サインインはプロバイダーのサインイン画面で行います。このゲートウェイがアカウントを削除できると示した場合のみ切断されます。';
+
+  @override
+  String get rel_admin_disconnect_this_provider_account_on_the_gateway =>
+      'ゲートウェイでこのプロバイダーアカウントを切断しますか？';
+
+  @override
+  String get rel_admin_provider_account_disconnected => 'プロバイダーアカウントを切断しました。';
+
+  @override
+  String get rel_admin_disconnect => '切断';
+
+  @override
+  String get rel_admin_not_disconnectable => '切断不可';
+
+  @override
+  String get rel_admin_fast => '高速';
+
+  @override
+  String get rel_admin_preset_saved_for_this_model => 'このモデルのプリセットを保存しました。';
+
+  @override
+  String get rel_admin_save_preset => 'プリセットを保存';
+
+  @override
+  String get rel_admin_chat_id => 'チャットID';
+
+  @override
+  String get rel_admin_apply_preset => 'プリセットを適用';
+
+  @override
+  String get rel_admin_set_this_chat_s_effort_and_speed_from_the_saved_preset =>
+      '保存済みプリセットからこのチャットの思考レベルと速度を設定しますか？';
+
+  @override
+  String get rel_admin_preset_applied_to_this_chat => 'このチャットにプリセットを適用しました。';
+
+  @override
+  String get rel_admin_this_route_sends_the_picked_effort_unchanged =>
+      'このルートは選択された思考レベルを変更せずに送信します。';
+
+  @override
+  String get rel_admin_show_route_clamp => 'ルートの制限を表示';
+
+  @override
+  String get rel_admin_delegation_backend => '委任バックエンド';
+
+  @override
+  String get rel_admin_delegation_backend_saved => '委任バックエンドを保存しました。';
+
+  @override
+  String get rel_admin_save_backend => 'バックエンドを保存';
+
+  @override
+  String get rel_admin_max_iterations => '最大反復回数';
+
+  @override
+  String get rel_admin_max_concurrent_children => '最大同時子エージェント数';
+
+  @override
+  String get rel_admin_child_timeout_seconds => '子エージェントのタイムアウト秒数';
+
+  @override
+  String get rel_admin_delegation_effort_leave_unchanged => '委任の思考レベル、変更なし';
+
+  @override
+  String get rel_admin_delegation_limits_saved => '委任の上限を保存しました。';
+
+  @override
+  String get rel_admin_save_limits => '上限を保存';
+
+  @override
+  String get rel_admin_remove_route => 'ルートを削除';
+
+  @override
+  String get rel_admin_route_name => 'ルート名';
+
+  @override
+  String get rel_admin_route_provider => 'ルートのプロバイダー';
+
+  @override
+  String get rel_admin_route_model => 'ルートのモデル';
+
+  @override
+  String get rel_admin_route_effort_unchanged => 'ルートの思考レベル変更なし';
+
+  @override
+  String get rel_admin_add_route => 'ルートを追加';
+
+  @override
+  String get rel_admin_default_route => 'デフォルトルート';
+
+  @override
+  String get rel_admin_delegation_routes_saved => '委任ルートを保存しました。';
+
+  @override
+  String get rel_admin_save_routes => 'ルートを保存';
+
+  @override
+  String get rel_admin_profile_routes_saved => 'プロファイルルートを保存しました。';
+
+  @override
+  String get rel_admin_save_profile_routes => 'プロファイルルートを保存';
+
+  @override
+  String get rel_admin_no_mixture_is_loaded => '混合構成が読み込まれていません。';
+
+  @override
+  String get rel_admin_mixture_enabled => '混合構成を有効化';
+
+  @override
+  String get rel_admin_loud_degraded_references => '参照モデル低下時に通知';
+
+  @override
+  String get rel_admin_silent_degraded_references => '参照モデル低下時に通知しない';
+
+  @override
+  String get rel_admin_aggregator => '集約モデル';
+
+  @override
+  String get rel_admin_aggregator_provider => '集約モデルのプロバイダー';
+
+  @override
+  String get rel_admin_aggregator_model => '集約モデル';
+
+  @override
+  String get rel_admin_reference_provider => '参照モデルのプロバイダー';
+
+  @override
+  String get rel_admin_reference_model => '参照モデル';
+
+  @override
+  String get rel_admin_add_reference_model => '参照モデルを追加';
+
+  @override
+  String get rel_admin_mixture_saved => '混合構成を保存しました。';
+
+  @override
+  String get rel_admin_save_mixture => '混合構成を保存';
+
+  @override
+  String get rel_admin_credit_purchase_submitted => 'クレジット購入を送信しました。';
+
+  @override
+  String get rel_admin_credit_purchase_settled => 'クレジット購入の決済が完了しました。';
+
+  @override
+  String get rel_admin_credit_and_plan_changes_wait_for_confirmation_a_plan =>
+      'クレジットとプランの変更は確認待ちになります。即時請求が発生するプランは表示されますが、ここでは確定されません。';
+
+  @override
+  String get rel_admin_buy_credits => 'クレジットを購入';
+
+  @override
+  String get rel_admin_retry_same_charge => '同じ請求を再試行';
+
+  @override
+  String get rel_admin_retry_the_same_credit_charge_this_does_not_start =>
+      '同じクレジット請求を再試行します。2回目の購入は開始されません。';
+
+  @override
+  String get rel_admin_credit_purchases_are_not_available_for_this_account =>
+      'このアカウントではクレジットを購入できません。';
+
+  @override
+  String get rel_admin_auto_reload => '自動チャージ';
+
+  @override
+  String get rel_admin_read_only_until_this_account_can_charge =>
+      'このアカウントで請求が可能になるまでは読み取り専用です。';
+
+  @override
+  String get rel_admin_auto_reload_updated => '自動チャージを更新しました。';
+
+  @override
+  String get rel_admin_keep_going_on_credits => 'クレジットで続行';
+
+  @override
+  String get rel_admin_continue_on_credits_when_the_plan_window_is_used_up =>
+      'プランの期間内の枠を使い切ったらクレジットで続行しますか？';
+
+  @override
+  String
+  get rel_admin_stop_continuing_on_credits_when_the_plan_window_is_used_up =>
+      'プランの期間内の枠を使い切った際にクレジットで続行するのをやめますか？';
+
+  @override
+  String get rel_admin_credit_continuation_updated => 'クレジットでの続行を更新しました。';
+
+  @override
+  String get rel_admin_this_plan_change_is_not_confirmed_from_ares =>
+      'このプラン変更はAresから確定されません。';
+
+  @override
+  String get rel_admin_this_change_is_scheduled_confirm_to_apply_it =>
+      'この変更は予定されています。適用するには確認してください。';
+
+  @override
+  String get rel_admin_preview_plan => 'プランをプレビュー';
+
+  @override
+  String get rel_admin_schedule_plan_change => 'プラン変更を予定';
+
+  @override
+  String get rel_admin_plan_change_scheduled => 'プラン変更を予定しました。';
+
+  @override
+  String get rel_admin_confirm_scheduled_plan_change => '予定されたプラン変更を確認';
+
+  @override
+  String rel_admin_remove_key_confirm(String key) {
+    return 'このプロファイルから保存済みの$keyの値を削除しますか？';
+  }
+
+  @override
+  String rel_admin_current_endpoint(String name) {
+    return '$name · 現在';
+  }
+
+  @override
+  String rel_admin_endpoint_result(
+    String status,
+    String transport,
+    String count,
+    String message,
+  ) {
+    return '$status · $transport · $countモデル。$message';
+  }
+
+  @override
+  String rel_admin_disconnect_account(String name) {
+    return '$nameを切断';
+  }
+
+  @override
+  String rel_admin_delegation_blocked(String reason) {
+    return '委任がブロックされています：$reason';
+  }
+
+  @override
+  String rel_admin_backend_unavailable(String name) {
+    return '$name · 利用不可';
+  }
+
+  @override
+  String rel_admin_reference_number(String number) {
+    return '参照 $number';
+  }
+
+  @override
+  String rel_admin_reload_enable_confirm(String amount, String threshold) {
+    return '自動チャージをオンにし、残高が$thresholdを下回ったときに$amountを請求しますか？';
+  }
+
+  @override
+  String rel_admin_reload_disable_confirm(String amount, String threshold) {
+    return '自動チャージをオフにしますか？現在は残高が$thresholdを下回ると$amountが請求されます。';
+  }
+
+  @override
+  String get rel_admin_this_plan => 'このプラン';
+
+  @override
+  String rel_admin_plan_confirm(String name) {
+    return '$nameを予定します。現在の期間の終了時に適用予定です。今は請求されません。';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price(String name, String price) {
+    return '$nameを$priceで予定します。現在の期間の終了時に適用予定です。今は請求されません。';
+  }
+
+  @override
+  String rel_admin_plan_confirm_when(String name, String when) {
+    return '$nameを予定します。$whenに適用されます。今は請求されません。';
+  }
+
+  @override
+  String rel_admin_plan_confirm_price_when(
+    String name,
+    String price,
+    String when,
+  ) {
+    return '$nameを$priceで予定します。$whenに適用されます。今は請求されません。';
+  }
+
+  @override
+  String rel_admin_balance(String amount) {
+    return '残高 $amount';
+  }
+
+  @override
+  String rel_admin_buy_confirm(String amount) {
+    return 'このNousアカウントの支払い方法に\$$amountを請求します。実際のお金が使われます。';
+  }
+
+  @override
+  String rel_admin_reload_portal(String url) {
+    return 'ポータルで自動チャージを変更：$url';
+  }
+
+  @override
+  String rel_admin_team_portal(String url) {
+    return 'チームのサブスクリプションはポータルで変更します：$url';
+  }
+
+  @override
+  String get rel_admin_effort_none => 'なし';
+
+  @override
+  String get rel_admin_effort_minimal => '最小';
+
+  @override
+  String get rel_admin_effort_low => '低';
+
+  @override
+  String get rel_admin_effort_medium => '中';
+
+  @override
+  String get rel_admin_effort_high => '高';
+
+  @override
+  String get rel_admin_effort_xhigh => '非常に高い';
+
+  @override
+  String get rel_admin_effort_max => '最大';
+
+  @override
+  String get rel_admin_effort_ultra => '超高';
+
+  @override
+  String get rel_admin_auto_lower => '自動';
+
+  @override
+  String get rel_admin_create => '作成';
+
+  @override
+  String get rel_admin_prompt => 'プロンプト';
+
+  @override
+  String get rel_admin_new_profile_id => '新しいプロファイルID';
+
+  @override
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway =>
+      'このゲートウェイではこの操作を利用できません。';
+
+  @override
+  String get rel_admin_access_denied_by_the_gateway => 'ゲートウェイによりアクセスが拒否されました。';
+
+  @override
+  String get rel_admin_connection_changed_reopen_profiles =>
+      '接続が変更されました。プロファイルを開き直してください。';
+
+  @override
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before =>
+      '入力またはゲートウェイの応答が無効です。再試行する前に対象を確認してください。';
+
+  @override
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before =>
+      '結果を確認できませんでした。再試行する前に対象を更新してください。';
+
+  @override
+  String get rel_admin_edit_soul_md => 'SOUL.mdを編集';
+
+  @override
+  String get rel_admin_persona => 'ペルソナ';
+
+  @override
+  String get rel_admin_persona_saved => 'ペルソナを保存しました。';
+
+  @override
+  String get rel_admin_not_set => '未設定';
+
+  @override
+  String get rel_admin_enabled => '有効';
+
+  @override
+  String get rel_admin_keys_to_remove_comma_separated => '削除するキー（カンマ区切り）';
+
+  @override
+  String get rel_admin_saved_and_applied_by_the_gateway => 'ゲートウェイで保存して適用しました。';
+
+  @override
+  String get rel_admin_saved_a_gateway_restart_may_be_required =>
+      '保存しました。ゲートウェイの再起動が必要な場合があります。';
+
+  @override
+  String get rel_admin_create_signed_route => '署名付きルートを作成';
+
+  @override
+  String get rel_admin_route_id => 'ルートID';
+
+  @override
+  String get rel_admin_signature => '署名';
+
+  @override
+  String get rel_admin_events_comma_separated => 'イベント（カンマ区切り）';
+
+  @override
+  String get rel_admin_delivery_target => '配信先';
+
+  @override
+  String get rel_admin_skills_comma_separated => 'スキル（カンマ区切り）';
+
+  @override
+  String get rel_admin_delivery_mode => '配信モード';
+
+  @override
+  String get rel_admin_delivery_chat_id_optional => '配信先チャットID（任意）';
+
+  @override
+  String get rel_admin_hide_signing_secret => '署名シークレットを非表示';
+
+  @override
+  String get rel_admin_reveal_signing_secret => '署名シークレットを表示';
+
+  @override
+  String get rel_admin_edit_persona => 'ペルソナを編集';
+
+  @override
+  String get rel_admin_portable_profile_bundle => 'ポータブルプロファイルバンドル';
+
+  @override
+  String get rel_admin_clone_profile => 'プロファイルを複製';
+
+  @override
+  String get rel_admin_rename_display_label => '表示名を変更';
+
+  @override
+  String get rel_admin_rename_profile => 'プロファイル名を変更';
+
+  @override
+  String get rel_admin_new_name => '新しい名前';
+
+  @override
+  String get rel_admin_rename_verified => '名前の変更を確認しました。';
+
+  @override
+  String get rel_admin_delete_profile => 'プロファイルを削除';
+
+  @override
+  String get rel_admin_profile_id_to_delete => '削除するプロファイルID';
+
+  @override
+  String get rel_admin_profile_deleted => 'プロファイルを削除しました。';
+
+  @override
+  String
+  get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending =>
+      'プロファイルを削除しました。サーバー識別情報のクリーンアップは保留中です。';
+
+  @override
+  String get rel_admin_export_profile_archive => 'プロファイルアーカイブをエクスポート';
+
+  @override
+  String get rel_admin_import_profile_archive => 'プロファイルアーカイブをインポート';
+
+  @override
+  String get rel_admin_import_a_trusted_profile => '信頼できるプロファイルをインポート';
+
+  @override
+  String get rel_admin_absolute_archive_path_on_gateway => 'ゲートウェイ上のアーカイブの絶対パス';
+
+  @override
+  String get rel_admin_messaging_channels => 'メッセージングチャンネル';
+
+  @override
+  String get rel_admin_dm_pairing_requests => 'DMペアリングリクエスト';
+
+  @override
+  String get rel_admin_no_pending_or_approved_users => '保留中または承認済みのユーザーはいません。';
+
+  @override
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user =>
+      '旧方式のペアリング：検証可能なリクエストIDがありません。ユーザーに再度ペアリングするよう依頼してください。';
+
+  @override
+  String get rel_admin_pairing_change_verified => 'ペアリングの変更を確認しました。';
+
+  @override
+  String get rel_admin_create_telegram_bot_by_qr => 'QRでTelegramボットを作成';
+
+  @override
+  String get rel_admin_create_telegram_bot => 'Telegramボットを作成';
+
+  @override
+  String get rel_admin_bot_name => 'ボット名';
+
+  @override
+  String get rel_admin_telegram_bot_creation_qr_code => 'Telegramボット作成用QRコード';
+
+  @override
+  String get rel_admin_check_telegram_pairing => 'Telegramのペアリングを確認';
+
+  @override
+  String get rel_admin_waiting_for_telegram => 'Telegramを待機中。';
+
+  @override
+  String get rel_admin_apply_telegram_bot => 'Telegramボットを適用';
+
+  @override
+  String get rel_admin_allowed_numeric_user_ids => '許可するユーザーの数値ID';
+
+  @override
+  String get rel_admin_saved_restart_still_required => '保存しました。再起動がまだ必要です。';
+
+  @override
+  String get rel_admin_saved_gateway_restart_requested =>
+      '保存しました。ゲートウェイの再起動を要求しました。';
+
+  @override
+  String get rel_admin_cancel_telegram_setup => 'Telegramの設定をキャンセル';
+
+  @override
+  String get rel_admin_inbound_webhooks => '受信Webhook';
+
+  @override
+  String get rel_admin_enable_webhook_service => 'Webhookサービスを有効化';
+
+  @override
+  String get rel_admin_enable_webhooks => 'Webhookを有効化';
+
+  @override
+  String get rel_admin_enabled_restart_still_required => '有効にしました。再起動がまだ必要です。';
+
+  @override
+  String get rel_admin_enabled_restart_requested => '有効にしました。再起動を要求しました。';
+
+  @override
+  String get rel_admin_route_change_verified => 'ルートの変更を確認しました。';
+
+  @override
+  String get rel_admin_delete_route => 'ルートを削除';
+
+  @override
+  String get rel_admin_disable_route => 'ルートを無効化';
+
+  @override
+  String get rel_admin_enable_route => 'ルートを有効化';
+
+  @override
+  String get rel_admin_back_up_entire_agent_home => 'エージェントのホーム全体をバックアップ';
+
+  @override
+  String get rel_admin_transfer_to_a_cloud_agent => 'Cloudエージェントに転送';
+
+  @override
+  String get rel_admin_check_backup_progress => 'バックアップの進行状況を確認';
+
+  @override
+  String get rel_admin_save_backup_to_this_device => 'このデバイスにバックアップを保存';
+
+  @override
+  String get rel_admin_save_sensitive_full_home_archive =>
+      '機密情報を含むホーム全体のアーカイブを保存';
+
+  @override
+  String get rel_admin_save_cancelled => '保存をキャンセルしました。';
+
+  @override
+  String get rel_admin_backup_saved => 'バックアップを保存しました。';
+
+  @override
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway =>
+      '最大32 MiB。これより大きいアーカイブはゲートウェイに残ります。';
+
+  @override
+  String rel_admin_persona_scope(String scope) {
+    return '$scopeのペルソナを保存します。';
+  }
+
+  @override
+  String rel_admin_configure_channel(String name) {
+    return '$nameを設定';
+  }
+
+  @override
+  String rel_admin_channel_warning(String scope) {
+    return '$scopeに適用します。空欄は既存の値を保持します。値を削除するには、そのキーを下に列挙してください。';
+  }
+
+  @override
+  String rel_admin_hook_warning(String scope) {
+    return '$scopeに適用します。一意の名前を使用してください。ゲートウェイが署名シークレットを作成します。別の操作者が同時に同じ名前を作成した場合、ホストがそのルートを置き換える可能性があります。';
+  }
+
+  @override
+  String rel_admin_hook_created(String url) {
+    return '$urlを作成しました。離れる前に署名シークレットを保存してください。';
+  }
+
+  @override
+  String rel_admin_clone_warning(String scope) {
+    return '$scopeから設定、スキル、ペルソナ、および場合によってはプロバイダー認証情報をコピーします。メッセージングトークンは要求されません。';
+  }
+
+  @override
+  String rel_admin_cloned(String source, String destination) {
+    return '$sourceを$destinationに複製しました。';
+  }
+
+  @override
+  String rel_admin_rename_target(String name) {
+    return '$nameの名前を変更';
+  }
+
+  @override
+  String rel_admin_rename_label_warning(String scope) {
+    return '$scopeの表示名を変更します。IDはdefaultのままです。';
+  }
+
+  @override
+  String rel_admin_rename_warning(String scope) {
+    return 'サーバー上の$scopeの名前を変更します。実行中のゲートウェイが停止する可能性があります。';
+  }
+
+  @override
+  String rel_admin_delete_target(String name) {
+    return '$nameを削除';
+  }
+
+  @override
+  String rel_admin_delete_profile_warning(String scope) {
+    return 'セッションと認証情報を含む$scopeを完全に削除します。正確なプロファイルIDを入力してください。';
+  }
+
+  @override
+  String rel_admin_export_target(String name) {
+    return '$nameをエクスポート';
+  }
+
+  @override
+  String rel_admin_export_warning(String scope) {
+    return '$scopeに.tar.gzを作成します。既知の認証情報ストアは除外されますが、個人データが残る可能性があります。共有前に確認してください。';
+  }
+
+  @override
+  String rel_admin_archive_on(String gateway, String path) {
+    return '$gatewayのアーカイブ：$path';
+  }
+
+  @override
+  String rel_admin_import_warning(String gateway) {
+    return '$gatewayにある確認済みの.tar.gzを使用します。プラグイン、スクリプト、スケジュールが含まれる場合があります。新しいプロファイルIDが必要です。';
+  }
+
+  @override
+  String rel_admin_imported(String name) {
+    return '$nameをインポートしました。';
+  }
+
+  @override
+  String rel_admin_approve_user(String user) {
+    return '$userを承認';
+  }
+
+  @override
+  String rel_admin_revoke_user(String user) {
+    return '$userを取り消す';
+  }
+
+  @override
+  String rel_admin_allow_pair(String platform, String scope) {
+    return '$scopeの$platform：このユーザーのメッセージングアクセスを許可します。';
+  }
+
+  @override
+  String rel_admin_remove_pair(String platform, String scope) {
+    return '$scopeの$platform：このユーザーのメッセージングアクセスを削除します。';
+  }
+
+  @override
+  String rel_admin_telegram_start(String scope) {
+    return 'ゲートウェイのセットアップサービスを使用して$scopeでTelegramペアリングを開始します。';
+  }
+
+  @override
+  String rel_admin_expires(String time) {
+    return '有効期限：$time';
+  }
+
+  @override
+  String rel_admin_telegram_apply(String bot, String scope) {
+    return '$scopeで@$botを有効にし、ゲートウェイの再起動を試みます。リストに記載されたユーザーのみメッセージを送信できます。';
+  }
+
+  @override
+  String rel_admin_hooks_enable(String scope) {
+    return '$scopeで受信Webhookを有効にし、ゲートウェイの再起動を試みます。';
+  }
+
+  @override
+  String rel_admin_disable_target(String name) {
+    return '$nameを無効化';
+  }
+
+  @override
+  String rel_admin_enable_target(String name) {
+    return '$nameを有効化';
+  }
+
+  @override
+  String rel_admin_hook_change(String name, String scope) {
+    return '$scopeの$nameのみを変更します。';
+  }
+
+  @override
+  String rel_admin_backup_warning(String gateway) {
+    return 'これはAresの設定のバックアップではありません。$gateway上のすべてのプロファイル、セッション、認証情報を保存します。アーカイブには機密情報が含まれます。';
+  }
+
+  @override
+  String rel_admin_backup_started(String gateway) {
+    return '$gatewayでバックアップを開始しました。';
+  }
+
+  @override
+  String rel_admin_backup_verified(String gateway, String path) {
+    return '$gatewayでバックアップを確認しました：$path';
+  }
+
+  @override
+  String rel_admin_backup_running(String gateway) {
+    return '$gatewayでバックアップを実行中です。';
+  }
+
+  @override
+  String get rel_admin_choice_yes => 'はい';
+
+  @override
+  String get rel_admin_choice_no => 'いいえ';
+
+  @override
+  String get rel_admin_choice_generic => '汎用';
+
+  @override
+  String get rel_admin_choice_log => 'ログ';
+
+  @override
+  String get rel_admin_choice_email => 'メール';
+
+  @override
+  String get rel_admin_choice_github_comment => 'GitHubコメント';
+
+  @override
+  String get rel_admin_choice_agent => 'エージェントがイベントを処理';
+
+  @override
+  String get rel_admin_choice_direct => '直接配信';
+
+  @override
+  String get rel_admin_configured => '設定済み';
+
+  @override
+  String get rel_admin_state_pending_restart => '再起動待ち';
+
+  @override
+  String get rel_admin_state_unknown => '不明';
+
+  @override
+  String get rel_admin_state_connected => '接続済み';
+
+  @override
+  String get rel_admin_state_disconnected => '未接続';
+
+  @override
+  String get rel_admin_state_disabled => '無効';
+
+  @override
+  String get rel_admin_state_enabled => '有効';
+
+  @override
+  String get rel_admin_state_running => '実行中';
+
+  @override
+  String get rel_admin_state_stopped => '停止';
+
+  @override
+  String get rel_admin_state_error => 'エラー';
+
+  @override
+  String get rel_admin_state_not_configured => '未設定';
+
+  @override
+  String get rel_admin_state_startup_failed => '起動失敗';
+
+  @override
+  String get rel_admin_state_gateway_stopped => 'ゲートウェイ停止';
+
+  @override
+  String get rel_admin_state_connecting => '接続中';
+
+  @override
+  String get rel_admin_state_retrying => '再試行中';
+
+  @override
+  String get rel_admin_state_fatal => '致命的エラー';
+
+  @override
+  String get rel_admin_unsupported_or_oversized_profile_archive =>
+      '未対応またはサイズが大きすぎるプロファイルアーカイブです。';
+
+  @override
+  String get rel_admin_current_layout => '現在のレイアウト';
+
+  @override
+  String get rel_admin_one_pane => '1ペイン';
+
+  @override
+  String get rel_admin_stacked => '上下配置';
+
+  @override
+  String get rel_admin_side_by_side => '左右配置';
+
+  @override
+  String get rel_admin_no_supported_appearance_in_this_profile =>
+      'このプロファイルに対応した外観はありません。';
+
+  @override
+  String get rel_admin_review_appearance_saved_with_this_profile =>
+      'このプロファイルに保存された外観を確認';
+
+  @override
+  String get rel_admin_applies_only_to_this_named_profile_on_this_device =>
+      'このデバイス上のこの名前付きプロファイルにのみ適用されます。インポートした配置は空のペインから始まります。チャットは自分で選択してください。';
+
+  @override
+  String get rel_admin_apply_to_this_profile_on_this_device =>
+      'このデバイスのこのプロファイルに適用';
+
+  @override
+  String get rel_admin_export_prepares_a_tar_gz_on_the_gateway_review =>
+      'エクスポートはゲートウェイ上に.tar.gzを準備します。ここにコピーを保存する前に、移行可能なファイルを確認してください。インポートは確認用にローカルアーカイブを開きます。開くだけではアップロードされません。';
+
+  @override
+  String get rel_admin_prepare_profile_export => 'プロファイルのエクスポートを準備';
+
+  @override
+  String get rel_admin_open_tar_gz_from_this_device => 'このデバイスの.tar.gzを開く';
+
+  @override
+  String get rel_admin_only_selected_text_files_travel_review_for_secrets_and =>
+      '選択したテキストファイルのみ転送されます。シークレットや個人情報が含まれていないか確認してください。設定、スキル、スケジュールによって新しいプロファイルの動作が変わる可能性があります。';
+
+  @override
+  String get rel_admin_include_this_reviewed_file => '確認済みのこのファイルを含める';
+
+  @override
+  String get rel_admin_apply_appearance_to_the_new_profile_on_this_device =>
+      'このデバイスの新しいプロファイルに外観を適用';
+
+  @override
+  String
+  get rel_admin_imports_colours_and_pane_sizes_never_chats_tools_or_session_ids =>
+      '色とペインのサイズをインポートします。チャット、ツール、セッションIDはインポートしません。';
+
+  @override
+  String
+  get rel_admin_the_gateway_retains_a_private_staged_copy_import_creates =>
+      'ゲートウェイは非公開のステージングコピーを保持します。インポートでは新しいプロファイルを作成し、既存のものは置き換えません。';
+
+  @override
+  String get rel_admin_appearance_not_applied_the_gateway_did_not_confirm_the =>
+      ' 外観は適用されませんでした。ゲートウェイが確認済みのオーバーレイを承認しませんでした。';
+
+  @override
+  String get rel_admin_appearance_applied_on_this_device =>
+      ' このデバイスに外観を適用しました。';
+
+  @override
+  String get rel_admin_appearance_was_not_saved_on_this_device =>
+      ' このデバイスに外観は保存されませんでした。';
+
+  @override
+  String get rel_admin_save_reviewed_profile_bundle => '確認済みプロファイルバンドルを保存';
+
+  @override
+  String get rel_admin_profile_bundle_saved => 'プロファイルバンドルを保存しました。';
+
+  @override
+  String get rel_admin_import_selected_files => '選択したファイルをインポート';
+
+  @override
+  String get rel_admin_save_selected_files_to_device => '選択したファイルをデバイスに保存';
+
+  @override
+  String rel_admin_layout_first_pane(String layout, String percent) {
+    return '$layout · 最初のペイン$percent%';
+  }
+
+  @override
+  String rel_admin_appearance_summary(String skin, String mode, String layout) {
+    return 'スキン：$skin · モード：$mode · $layout';
+  }
+
+  @override
+  String rel_admin_appearance_applied(String gateway, String profile) {
+    return '$gateway / $profileに外観を適用しました。';
+  }
+
+  @override
+  String rel_admin_bundle_summary(
+    String profile,
+    String count,
+    String omitted,
+  ) {
+    return 'バンドル：$profile · 確認可能なファイル$count件 · 除外$omitted件';
+  }
+
+  @override
+  String rel_admin_imported_on(String name, String gateway) {
+    return '$gatewayに$nameをインポートしました。';
+  }
+
+  @override
+  String get rel_admin_unchanged => '変更なし';
+
+  @override
+  String get rel_admin_mode_system => 'システム';
+
+  @override
+  String get rel_admin_mode_light => 'ライト';
+
+  @override
+  String get rel_admin_mode_dark => 'ダーク';
+
+  @override
+  String get rel_admin_skin_classic => 'クラシック';
+
+  @override
+  String get rel_admin_skin_midnight => 'ミッドナイト';
+
+  @override
+  String get rel_admin_skin_ember => '残り火';
+
+  @override
+  String get rel_admin_skin_mono => 'モノクロ';
+
+  @override
+  String get rel_admin_skin_cyberpunk => 'サイバーパンク';
+
+  @override
+  String get rel_admin_skin_slate => 'スレート';
+
+  @override
+  String get rel_admin_no_available_cloud_agents_in_this_account =>
+      'このアカウントに利用可能なCloudエージェントはありません。';
+
+  @override
+  String get rel_admin_the_previous_undo_receipt_could_not_be_verified_no =>
+      '前回の取り消し用レシートを確認できませんでした。変更は行われていません。';
+
+  @override
+  String get rel_admin_transfer_to_cloud => 'Cloudに転送';
+
+  @override
+  String
+  get rel_admin_connection_changed_leave_this_page_a_restore_already_submitted =>
+      '接続が変更されました。このページを離れてください。送信済みの復元は続行される場合があります。';
+
+  @override
+  String get rel_admin_find_my_cloud_agents => '自分のCloudエージェントを検索';
+
+  @override
+  String
+  get rel_admin_undo_replaces_the_destination_with_its_pre_transfer_backup =>
+      '取り消すと、転送先が転送前のバックアップに置き換わります。';
+
+  @override
+  String get rel_admin_replace_this_cloud_agent_with_the_entire_source_home =>
+      'このCloudエージェントを、認証情報、会話、ファイルを含む転送元のホーム全体で置き換えます。転送元は削除されません。受信メッセージングボットはオフになります。';
+
+  @override
+  String get rel_admin_type_destination_agent_id => '転送先エージェントIDを入力';
+
+  @override
+  String
+  get rel_admin_could_not_retain_the_local_undo_receipt_keep_this_page_open =>
+      'ローカルの取り消し用レシートを保持できませんでした。このページを開いたままにしてください。';
+
+  @override
+  String get rel_admin_undo_transfer => '転送を取り消す';
+
+  @override
+  String get rel_admin_replace_cloud_agent => 'Cloudエージェントを置き換え';
+
+  @override
+  String
+  get rel_admin_local_undo_receipt_forgotten_no_remote_backup_was_removed =>
+      'ローカルの取り消し用レシートを削除しました。リモートのバックアップは削除されていません。';
+
+  @override
+  String get rel_admin_forget_local_undo_receipt_only => 'ローカルの取り消し用レシートのみ削除';
+
+  @override
+  String get rel_admin_stop_before_restore => '復元前に停止';
+
+  @override
+  String get rel_admin_do_not_close_this_page_restore_runs_on_the =>
+      'このページを閉じないでください。復元は転送先で実行され、キャンセルできません。';
+
+  @override
+  String get rel_admin_files_restored_destination_gateway_needs_attention =>
+      'ファイルを復元しました。転送先のゲートウェイに対応が必要です。';
+
+  @override
+  String rel_admin_transfer_sign_in(String origin) {
+    return '$originの保存済みAres接続のうち1つだけにサインインしてから、ここに戻ってください。';
+  }
+
+  @override
+  String rel_admin_transfer_source(String gateway, String profile) {
+    return '転送元：$gateway / $profile';
+  }
+
+  @override
+  String rel_admin_transfer_destination(String name, String origin) {
+    return '転送先：$name · $origin / default';
+  }
+
+  @override
+  String rel_admin_agent_id(String id) {
+    return 'エージェントID：$id';
+  }
+
+  @override
+  String rel_admin_transfer_status(String phase) {
+    return '状態：$phase';
+  }
+
+  @override
+  String rel_admin_copied_percent(String percent) {
+    return '$percent%コピー済み';
+  }
+
+  @override
+  String rel_admin_undo_point(String path) {
+    return '転送先の取り消しポイント：$path';
+  }
+
+  @override
+  String rel_admin_messaging_disabled(String channels) {
+    return 'メッセージング無効：$channels';
+  }
+
+  @override
+  String get rel_admin_phase_prepared => '準備完了';
+
+  @override
+  String get rel_admin_phase_backup => 'バックアップ';
+
+  @override
+  String get rel_admin_phase_upload => 'アップロード';
+
+  @override
+  String get rel_admin_phase_restore => '復元';
+
+  @override
+  String get rel_admin_phase_finished => '完了';
+
+  @override
+  String get rel_admin_phase_failed => '失敗';
+
+  @override
+  String get rel_admin_phase_undo => '取り消し';
+
+  @override
+  String get rel_admin_phase_undone => '取り消し済み';
 }
