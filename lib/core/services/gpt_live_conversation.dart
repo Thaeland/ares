@@ -192,13 +192,19 @@ abstract interface class GptLiveTransport {
 }
 
 class GptLiveGatewayTransport implements GptLiveTransport {
-  GptLiveGatewayTransport(this.connection, {this.profile});
+  GptLiveGatewayTransport(SavedConnection connection, {this.profile})
+    : _dashboard = DashboardClient.fromConnection(connection),
+      ownsDashboard = true;
 
-  final SavedConnection connection;
+  GptLiveGatewayTransport.fromDashboard(
+    DashboardClient dashboard, {
+    this.profile,
+    this.ownsDashboard = false,
+  }) : _dashboard = dashboard;
+
   final String? profile;
-  late final DashboardClient _dashboard = DashboardClient.fromConnection(
-    connection,
-  );
+  final DashboardClient _dashboard;
+  final bool ownsDashboard;
 
   Map<String, String> get _query {
     final scope = profile;
@@ -231,7 +237,9 @@ class GptLiveGatewayTransport implements GptLiveTransport {
   }
 
   @override
-  void dispose() => _dashboard.close();
+  void dispose() {
+    if (ownsDashboard) _dashboard.close();
+  }
 }
 
 /// Minimal interface over the live conversation so callers can inject fakes in

@@ -3079,5 +3079,29 @@
   "wake_word_input_device": "Input microphone",
   "wake_word_default_device": "System default",
   "ng_wake_word_title": "Wake word",
-  "ng_wake_word_subtitle": "Hands-free wake detection on the gateway. Off by default."
+  "ng_wake_word_subtitle": "Hands-free wake detection on the gateway. Off by default.",
+  "voice_engine_title": "Voice conversation engine",
+  "voice_engine_subtitle": "Choose how hands-free voice conversations run on this gateway profile.",
+  "voice_engine_chained": "Chained (speech-to-text → Hermes → speech)",
+  "voice_engine_chained_short": "Chained",
+  "voice_engine_live": "GPT-Live (real-time voice)",
+  "voice_engine_live_short": "GPT-Live",
+  "voice_engine_live_needs_key": "Configure an OpenAI API key on the gateway host to enable GPT-Live.",
+  "voice_engine_fallback_chained": "GPT-Live unavailable ({reason}) — using Chained voice.",
+  "@voice_engine_fallback_chained": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "voice_live_start": "Start voice conversation",
+  "voice_live_stop": "End voice conversation",
+  "voice_live_mute": "Mute microphone",
+  "voice_live_unmute": "Unmute microphone",
+  "voice_live_interrupt": "Interrupt or respond now",
+  "voice_live_listening": "Listening",
+  "voice_live_speaking": "Speaking",
+  "voice_live_thinking": "Thinking",
+  "voice_live_muted": "Muted"
 }

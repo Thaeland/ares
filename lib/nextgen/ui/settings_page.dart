@@ -20,6 +20,7 @@ import '../data/connection_check.dart';
 import '../../core/services/auto_speak_replies.dart';
 import '../../core/services/barge_in_preference.dart';
 import '../../core/widgets/gateway_wake_controls.dart';
+import '../../core/widgets/voice_live_controls.dart';
 import '../nextgen_preferences.dart';
 import '../theme/nextgen_theme.dart';
 import 'models_page.dart';
@@ -47,6 +48,7 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
 
   Future<void> _loadMe() async {
     final gateway = NgScope.of(context).gateway;
+    unawaited(gateway.voiceLiveMode.refresh());
     if (gateway.state.isConnected) {
       unawaited(gateway.wakeWord.refreshStatus());
       unawaited(gateway.wakeWord.refreshClientInputDevices());
@@ -352,6 +354,28 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                     ),
                   ),
                   const Divider(height: 16),
+                  ListenableBuilder(
+                    listenable: scope.gateway.voiceLiveMode,
+                    builder: (context, _) =>
+                        scope.gateway.voiceLiveMode.hasStatus
+                        ? Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 4,
+                                ),
+                                child: VoiceEngineSettingsPanel(
+                                  controller: scope.gateway.voiceLiveMode,
+                                ),
+                              ),
+                              const Divider(height: 16),
+                            ],
+                          )
+                        : const SizedBox.shrink(),
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 4,

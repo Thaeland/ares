@@ -11648,6 +11648,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hands-free wake detection on the gateway. Off by default.'**
   String get ng_wake_word_subtitle;
+
+  /// No description provided for @voice_engine_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice conversation engine'**
+  String get voice_engine_title;
+
+  /// No description provided for @voice_engine_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how hands-free voice conversations run on this gateway profile.'**
+  String get voice_engine_subtitle;
+
+  /// No description provided for @voice_engine_chained.
+  ///
+  /// In en, this message translates to:
+  /// **'Chained (speech-to-text → Hermes → speech)'**
+  String get voice_engine_chained;
+
+  /// No description provided for @voice_engine_chained_short.
+  ///
+  /// In en, this message translates to:
+  /// **'Chained'**
+  String get voice_engine_chained_short;
+
+  /// No description provided for @voice_engine_live.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-Live (real-time voice)'**
+  String get voice_engine_live;
+
+  /// No description provided for @voice_engine_live_short.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-Live'**
+  String get voice_engine_live_short;
+
+  /// No description provided for @voice_engine_live_needs_key.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure an OpenAI API key on the gateway host to enable GPT-Live.'**
+  String get voice_engine_live_needs_key;
+
+  /// No description provided for @voice_engine_fallback_chained.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-Live unavailable ({reason}) — using Chained voice.'**
+  String voice_engine_fallback_chained(String reason);
+
+  /// No description provided for @voice_live_start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start voice conversation'**
+  String get voice_live_start;
+
+  /// No description provided for @voice_live_stop.
+  ///
+  /// In en, this message translates to:
+  /// **'End voice conversation'**
+  String get voice_live_stop;
+
+  /// No description provided for @voice_live_mute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute microphone'**
+  String get voice_live_mute;
+
+  /// No description provided for @voice_live_unmute.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute microphone'**
+  String get voice_live_unmute;
+
+  /// No description provided for @voice_live_interrupt.
+  ///
+  /// In en, this message translates to:
+  /// **'Interrupt or respond now'**
+  String get voice_live_interrupt;
+
+  /// No description provided for @voice_live_listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening'**
+  String get voice_live_listening;
+
+  /// No description provided for @voice_live_speaking.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaking'**
+  String get voice_live_speaking;
+
+  /// No description provided for @voice_live_thinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinking'**
+  String get voice_live_thinking;
+
+  /// No description provided for @voice_live_muted.
+  ///
+  /// In en, this message translates to:
+  /// **'Muted'**
+  String get voice_live_muted;
 }
 
 class _AppLocalizationsDelegate

@@ -17,6 +17,8 @@ import '../../core/services/remote_workspace.dart';
 import '../../core/services/chat_presentation_state.dart';
 import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/gateway_wake_word.dart';
+import '../../core/services/gpt_live_conversation.dart';
+import '../../core/services/voice_live_mode.dart';
 import '../../core/services/ws_client.dart';
 import '../nextgen_l10n.dart';
 import 'nextgen_projects.dart';
@@ -112,6 +114,7 @@ class NextGenGateway extends ChangeNotifier {
 
   NgProjects? _projects;
   GatewayWakeWordController? _wakeWord;
+  VoiceLiveModeController? _voiceLiveMode;
 
   NgProjects projects(SharedPreferences preferences) =>
       _projects ??= NgProjects(this, preferences);
@@ -127,6 +130,19 @@ class NextGenGateway extends ChangeNotifier {
     _wakeWord?.dispose();
     _wakeWord = controller;
   }
+
+  /// Gateway-backed GPT-Live / Chained mode controller for this profile.
+  VoiceLiveModeController get voiceLiveMode =>
+      _voiceLiveMode ??= VoiceLiveModeController.fromNextGen(this);
+
+  @visibleForTesting
+  set debugVoiceLiveMode(VoiceLiveModeController? controller) {
+    _voiceLiveMode?.dispose();
+    _voiceLiveMode = controller;
+  }
+
+  GptLiveTransport createGptLiveTransport() =>
+      GptLiveGatewayTransport.fromDashboard(dashboard, profile: profile);
 
   final SavedConnection connection;
   final GatewayUrl url;
@@ -683,6 +699,8 @@ class NextGenGateway extends ChangeNotifier {
   void dispose() {
     _wakeWord?.dispose();
     _wakeWord = null;
+    _voiceLiveMode?.dispose();
+    _voiceLiveMode = null;
     workspace.close();
     draftPresentation.close();
     _projects?.close();

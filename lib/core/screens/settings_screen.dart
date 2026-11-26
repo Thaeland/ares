@@ -17,7 +17,10 @@ import '../services/auto_speak_replies.dart';
 import '../services/barge_in_preference.dart';
 import '../services/desktop_gateway_client.dart';
 import '../services/gateway_wake_word.dart';
+import '../services/gpt_live_conversation.dart';
+import '../services/voice_live_mode.dart';
 import '../widgets/gateway_wake_controls.dart';
+import '../widgets/voice_live_controls.dart';
 import '../services/hands_free_preference.dart';
 import '../services/notification_prefs.dart';
 import '../widgets/background_work_settings.dart';
@@ -203,7 +206,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const SizedBox(height: 8),
         const _BargeInToggle(),
         const SizedBox(height: 8),
-        _ClassicWakeSettings(connection: widget.connection),
+        _ClassicWakeSettings(
+          connection: widget.connection,
+          dashboardClient: widget.dashboardClient,
+        ),
         const SizedBox(height: 16),
 
         // ---- Section: Session Sources ----
@@ -605,9 +611,10 @@ class _BargeInToggle extends StatelessWidget {
 /// so Settings never becomes a second owner of the microphone; otherwise a
 /// short-lived client connects on demand and is closed with the screen.
 class _ClassicWakeSettings extends StatefulWidget {
-  const _ClassicWakeSettings({required this.connection});
+  const _ClassicWakeSettings({required this.connection, this.dashboardClient});
 
   final SavedConnection connection;
+  final DashboardClient? dashboardClient;
 
   @override
   State<_ClassicWakeSettings> createState() => _ClassicWakeSettingsState();
@@ -616,6 +623,8 @@ class _ClassicWakeSettings extends StatefulWidget {
 class _ClassicWakeSettingsState extends State<_ClassicWakeSettings> {
   DesktopGatewayClient? _ownedGateway;
   GatewayWakeWordController? _controller;
+  VoiceLiveModeController? _voiceMode;
+  bool _ownsVoiceMode = false;
 
   @override
   void initState() {
@@ -630,12 +639,42 @@ class _ClassicWakeSettingsState extends State<_ClassicWakeSettings> {
       _ownedGateway = DesktopGatewayClient.fromConnection(connection);
       _controller = _ownedGateway!.wakeWord;
     }
+    _voiceMode = VoiceLiveModeController.sharedForConnection(
+      connection.id,
+      profile: connection.gatewayProfile,
+    );
+    if (_voiceMode == null) {
+      if (_ownedGateway != null && widget.dashboardClient == null) {
+        _voiceMode = _ownedGateway!.voiceLiveMode;
+      } else {
+        _ownsVoiceMode = true;
+        _voiceMode = VoiceLiveModeController(
+          connectionId: connection.id,
+          profile: connection.gatewayProfile,
+          transport: widget.dashboardClient != null
+              ? GptLiveGatewayTransport.fromDashboard(
+                  widget.dashboardClient!,
+                  profile: connection.gatewayProfile,
+                )
+              : GptLiveGatewayTransport(
+                  connection,
+                  profile: connection.gatewayProfile,
+                ),
+          rpc: _ownedGateway == null
+              ? null
+              : (method, params) => _ownedGateway!.call(method, params),
+          registerShared: false,
+        );
+      }
+    }
     unawaited(_controller!.refreshStatus());
     unawaited(_controller!.refreshClientInputDevices());
+    unawaited(_voiceMode!.refresh());
   }
 
   @override
   void dispose() {
+    if (_ownsVoiceMode) _voiceMode?.dispose();
     _ownedGateway?.close();
     super.dispose();
   }
@@ -643,11 +682,29 @@ class _ClassicWakeSettingsState extends State<_ClassicWakeSettings> {
   @override
   Widget build(BuildContext context) {
     final controller = _controller;
-    if (controller == null) return const SizedBox.shrink();
+    final voiceMode = _voiceMode;
+    if (controller == null && voiceMode == null) return const SizedBox.shrink();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: GatewayWakeSettingsPanel(controller: controller),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (voiceMode != null)
+              ListenableBuilder(
+                listenable: voiceMode,
+                builder: (context, _) => voiceMode.hasStatus
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: VoiceEngineSettingsPanel(controller: voiceMode),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            if (controller != null)
+              GatewayWakeSettingsPanel(controller: controller),
+          ],
+        ),
       ),
     );
   }

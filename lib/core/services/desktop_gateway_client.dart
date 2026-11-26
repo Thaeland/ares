@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/client_certificate.dart';
@@ -11,8 +12,10 @@ import 'connection_manager.dart';
 import 'gateway_turn_coordinator.dart';
 import 'gateway_turn_journal.dart';
 import 'gateway_wake_word.dart';
+import 'gpt_live_conversation.dart';
 import 'projects_gateway_client.dart';
 import 'remote_workspace.dart';
+import 'voice_live_mode.dart';
 import 'ws_client.dart';
 
 typedef DesktopAsyncEventCallback =
@@ -87,12 +90,30 @@ class DesktopGatewayClient implements SlashCommandGateway {
   GatewayTurnCoordinatorRegistry? _turnCoordinatorRegistry;
   ProjectsGatewayClient? _projects;
   GatewayWakeWordController? _wakeWord;
+  VoiceLiveModeController? _voiceLiveMode;
   final CapabilityRegistry _capabilities = CapabilityRegistry();
 
   /// Gateway-backed wake-word controller scoped to this connection/profile.
   GatewayWakeWordController get wakeWord =>
       _wakeWord ??= GatewayWakeWordController(
         transport: GatewayWakeTransport.fromDesktop(this),
+      );
+
+  /// Gateway-backed GPT-Live / Chained mode controller for this profile.
+  VoiceLiveModeController get voiceLiveMode =>
+      _voiceLiveMode ??= VoiceLiveModeController.fromDesktop(this);
+
+  @visibleForTesting
+  set debugVoiceLiveMode(VoiceLiveModeController? controller) {
+    _voiceLiveMode?.dispose();
+    _voiceLiveMode = controller;
+  }
+
+  /// Non-owning GPT-Live REST transport sharing this gateway's dashboard auth.
+  GptLiveTransport createGptLiveTransport() =>
+      GptLiveGatewayTransport.fromDashboard(
+        _dashboard,
+        profile: _gatewayProfile,
       );
 
   static const _asyncEventTypes = {
@@ -1707,6 +1728,8 @@ class DesktopGatewayClient implements SlashCommandGateway {
     _projects = null;
     _wakeWord?.dispose();
     _wakeWord = null;
+    _voiceLiveMode?.dispose();
+    _voiceLiveMode = null;
     _ws?.close();
     _ws = null;
     _gatewaySessionIds.clear();

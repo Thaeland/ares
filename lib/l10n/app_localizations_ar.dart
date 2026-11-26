@@ -6894,4 +6894,60 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get ng_wake_word_subtitle =>
       'اكتشاف كلمة التنبيه عبر البوابة بدون استخدام اليدين. متوقف افتراضيًا.';
+
+  @override
+  String get voice_engine_title => 'Voice conversation engine';
+
+  @override
+  String get voice_engine_subtitle =>
+      'Choose how hands-free voice conversations run on this gateway profile.';
+
+  @override
+  String get voice_engine_chained =>
+      'Chained (speech-to-text → Hermes → speech)';
+
+  @override
+  String get voice_engine_chained_short => 'Chained';
+
+  @override
+  String get voice_engine_live => 'GPT-Live (real-time voice)';
+
+  @override
+  String get voice_engine_live_short => 'GPT-Live';
+
+  @override
+  String get voice_engine_live_needs_key =>
+      'Configure an OpenAI API key on the gateway host to enable GPT-Live.';
+
+  @override
+  String voice_engine_fallback_chained(String reason) {
+    return 'GPT-Live unavailable ($reason) — using Chained voice.';
+  }
+
+  @override
+  String get voice_live_start => 'Start voice conversation';
+
+  @override
+  String get voice_live_stop => 'End voice conversation';
+
+  @override
+  String get voice_live_mute => 'Mute microphone';
+
+  @override
+  String get voice_live_unmute => 'Unmute microphone';
+
+  @override
+  String get voice_live_interrupt => 'Interrupt or respond now';
+
+  @override
+  String get voice_live_listening => 'Listening';
+
+  @override
+  String get voice_live_speaking => 'Speaking';
+
+  @override
+  String get voice_live_thinking => 'Thinking';
+
+  @override
+  String get voice_live_muted => 'Muted';
 }

@@ -24,6 +24,10 @@ Telegram onboarding draws its QR code on the device with the Dart `qr` library
 ([BSD-3-Clause licence](third_party/licenses/qr-BSD-3-Clause.txt)); no QR
 payload is sent to an image-generation service.
 
+Real-time GPT-Live voice conversations use `flutter_webrtc` (`dart_webrtc`,
+`webrtc_interface`, `logger`), distributed under the MIT Licence. The gateway
+host performs session creation and holds any provider API key.
+
 The completion sounds `ares_mail.wav` and `ares_reminder.wav` (in
 `android/app/src/main/res/raw/`, `ios/Runner/` and `macos/Runner/`) and the
 in-app chime are original tones made for this application. They contain no
