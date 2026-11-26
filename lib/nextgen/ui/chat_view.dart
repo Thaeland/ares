@@ -298,6 +298,11 @@ class _NgChatViewState extends State<NgChatView>
 
   VoiceLiveEngine? _liveEngine;
   VoiceLiveModeController? _boundVoiceMode;
+  Timer? _liveReplyTimer;
+  String? _liveDelegationId;
+  int _livePriorItemCount = 0;
+  bool _liveTurnObserved = false;
+  DateTime? _liveSubmittedAt;
 
   /// One read-aloud engine for this transcript: the reading reply's action
   /// row shows Stop, and starting another reply stops the current one.
@@ -432,7 +437,9 @@ class _NgChatViewState extends State<NgChatView>
     final mode = _voiceMode;
     _boundVoiceMode = mode;
     mode.addListener(_onLiveEngineChanged);
-    unawaited(mode.refresh());
+    if (widget.voiceModeController != null || chat.gateway.state.isConnected) {
+      unawaited(mode.refresh());
+    }
     final transport = mode.transport;
     final engine =
         widget.voiceLiveEngineFactory?.call(transport) ??
@@ -457,10 +464,10 @@ class _NgChatViewState extends State<NgChatView>
     };
     engine.addListener(_onLiveEngineChanged);
     _liveEngine = engine;
-    unawaited(engine.refresh());
   }
 
   void _disposeLiveEngine() {
+    _stopLiveReplyFeed();
     _boundVoiceMode?.removeListener(_onLiveEngineChanged);
     _boundVoiceMode = null;
     final engine = _liveEngine;
@@ -468,6 +475,87 @@ class _NgChatViewState extends State<NgChatView>
     if (engine != null) {
       engine.removeListener(_onLiveEngineChanged);
       engine.dispose();
+    }
+  }
+
+  void _startLiveReplyFeed() {
+    _liveReplyTimer?.cancel();
+    _liveReplyTimer = Timer.periodic(const Duration(milliseconds: 200), (_) {
+      if (!mounted) return;
+      _feedNextGenLiveReply();
+    });
+  }
+
+  void _stopLiveReplyFeed() {
+    _liveReplyTimer?.cancel();
+    _liveReplyTimer = null;
+    _liveDelegationId = null;
+    _livePriorItemCount = 0;
+    _liveTurnObserved = false;
+    _liveSubmittedAt = null;
+  }
+
+  void _feedNextGenLiveReply() {
+    final engine = _liveEngine;
+    final delegationId = _liveDelegationId;
+    if (engine == null || !engine.active || delegationId == null) return;
+
+    final start = _livePriorItemCount.clamp(0, chat.items.length);
+    final parts = <String>[];
+    String? runningTool;
+    for (var i = start; i < chat.items.length; i++) {
+      final item = chat.items[i];
+      if (item is! NgAssistantItem) continue;
+      if (!item.isEmpty) {
+        parts.add(item.text.trim());
+        _autoReadServed.add(item.key);
+      }
+      if (chat.running) {
+        for (final tool in item.tools.reversed) {
+          if (tool.running && tool.name.trim().isNotEmpty) {
+            runningTool = tool.name.trim();
+            break;
+          }
+        }
+      }
+    }
+    final turnReply = parts.where((p) => p.isNotEmpty).join('\n\n');
+
+    if (chat.running) {
+      _liveTurnObserved = true;
+      if (runningTool != null) {
+        engine.think(
+          'Hermes is working: $runningTool. Not done yet.',
+          delegationId: delegationId,
+        );
+      }
+      if (turnReply.isNotEmpty) {
+        engine.speak(turnReply, delegationId: delegationId);
+      }
+      return;
+    }
+
+    if (turnReply.isNotEmpty) {
+      _liveTurnObserved = true;
+      engine.speak(turnReply, delegationId: delegationId, flush: true);
+      _stopLiveReplyFeed();
+      engine.settle();
+      return;
+    }
+
+    final submittedAt = _liveSubmittedAt;
+    final graceExpired =
+        submittedAt != null &&
+        DateTime.now().difference(submittedAt) > const Duration(seconds: 15);
+    if (_liveTurnObserved || graceExpired) {
+      if (engine.spokenCursor == 0) {
+        engine.think(
+          'Hermes finished that request without a spoken result.',
+          delegationId: delegationId,
+        );
+      }
+      _stopLiveReplyFeed();
+      engine.settle();
     }
   }
 
@@ -522,6 +610,7 @@ class _NgChatViewState extends State<NgChatView>
   }
 
   Future<void> _stopLiveVoice() async {
+    _stopLiveReplyFeed();
     final engine = _liveEngine;
     if (engine == null) return;
     await engine.stop();
@@ -607,6 +696,11 @@ class _NgChatViewState extends State<NgChatView>
       }
     }
     if (!stillOwned()) return;
+    _liveDelegationId = delegationId;
+    _livePriorItemCount = ownerChat.items.length;
+    _liveTurnObserved = false;
+    _liveSubmittedAt = DateTime.now();
+    _startLiveReplyFeed();
     var sent = false;
     try {
       sent = await ownerChat.send(
@@ -619,13 +713,16 @@ class _NgChatViewState extends State<NgChatView>
     } catch (_) {
       sent = false;
     }
-    if (!sent && stillOwned()) {
+    if (!sent && stillOwned() && _liveDelegationId == delegationId) {
+      _stopLiveReplyFeed();
       ownerEngine.speak(
         'Sorry, I could not reach Hermes for that request.',
         delegationId: delegationId,
         flush: true,
       );
       ownerEngine.settle();
+    } else if (stillOwned()) {
+      _feedNextGenLiveReply();
     }
   }
 
@@ -655,6 +752,7 @@ class _NgChatViewState extends State<NgChatView>
     if (reading != null && !chat.items.any((item) => item.key == reading)) {
       unawaited(_readAloud.stop());
     }
+    _feedNextGenLiveReply();
     _maybeAutoReadReply();
     setState(() {});
   }
@@ -665,6 +763,7 @@ class _NgChatViewState extends State<NgChatView>
   final Set<String> _autoReadServed = <String>{};
 
   void _maybeAutoReadReply() {
+    if (_liveEngine?.active == true) return;
     if (!autoSpeakRepliesEnabled.value) return;
     if (chat.running) return;
     if (chat.items.isEmpty) return;

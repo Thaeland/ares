@@ -305,6 +305,11 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
   String? _delegationId;
   String? _sessionId;
   bool _closed = false;
+  bool _disposed = false;
+
+  void _safeNotify() {
+    if (!_disposed) notifyListeners();
+  }
 
   @override
   bool get active => _active;
@@ -316,7 +321,7 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
 
   Future<GptLiveStatus?> refreshStatus() async {
     final status = parseGptLiveStatus(await transport.status());
-    notifyListeners();
+    _safeNotify();
     return status;
   }
 
@@ -359,7 +364,7 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
       );
       _active = true;
       _closed = false;
-      notifyListeners();
+      _safeNotify();
       return true;
     } catch (error) {
       onError?.call('GPT-Live could not start: $error', true);
@@ -404,7 +409,7 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
         if (session is Map) {
           _sessionId = session['id']?.toString() ?? _sessionId;
         }
-        notifyListeners();
+        _safeNotify();
       case 'session.input_transcript.delta':
       case 'session.output_transcript.delta':
         final fragment = LiveFragment(
@@ -534,23 +539,32 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
     _closed = true;
     _active = false;
     final channel = _events;
+    final peer = _peer;
+    final mic = _microphone;
     _events = null;
+    _peer = null;
+    _microphone = null;
     try {
       channel?.close();
-      await _peer?.close();
-      for (final track in _microphone?.getAudioTracks() ?? const []) {
+      await peer?.close();
+      for (final track in mic?.getAudioTracks() ?? const []) {
         await track.stop();
       }
     } catch (_) {}
-    _peer = null;
-    _microphone = null;
-    notifyListeners();
-    onClosed?.call(reason, usageSeconds);
+    if (!_disposed) {
+      notifyListeners();
+      onClosed?.call(reason, usageSeconds);
+    }
   }
 
   @override
   void dispose() {
-    unawaited(forceClose('disposed'));
+    _disposed = true;
+    if (_active || _peer != null || _microphone != null || _events != null) {
+      unawaited(forceClose('disposed'));
+    } else {
+      _closed = true;
+    }
     super.dispose();
   }
 }

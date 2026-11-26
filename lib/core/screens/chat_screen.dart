@@ -859,6 +859,9 @@ class _ChatScreenState extends State<ChatScreen>
       widget.testVoiceLiveMode ?? _desktopGateway?.voiceLiveMode;
   VoiceLiveEngine? _liveEngine;
   GptLiveTransport? _liveTransport;
+  String? _liveDelegationId;
+  String? _liveDelegatedTurnId;
+  bool _liveTurnObserved = false;
   GatewayTurnApplicationController? _localTurnController;
   NormalGatewayApplicationSession? _normalSession;
   bool _normalSessionReady = false;
@@ -1580,8 +1583,10 @@ class _ChatScreenState extends State<ChatScreen>
       }
       _awaitingVoiceReply = false;
     }
+    _feedClassicLiveSnapshot(snapshot, currentRows);
     // An ordinary typed turn with auto-read on: read the terminal reply.
     if (!voiceSpoke &&
+        _liveEngine?.active != true &&
         snapshot.phase == NormalGatewayTurnPhase.completed &&
         autoSpeakRepliesEnabled.value) {
       final rows = currentRows;
@@ -2004,10 +2009,12 @@ class _ChatScreenState extends State<ChatScreen>
     };
     engine.addListener(_onLiveVoiceChanged);
     _liveEngine = engine;
-    unawaited(engine.refresh());
   }
 
   void _disposeLiveVoice() {
+    _liveDelegationId = null;
+    _liveDelegatedTurnId = null;
+    _liveTurnObserved = false;
     _voiceLiveMode?.removeListener(_onLiveVoiceChanged);
     final engine = _liveEngine;
     _liveEngine = null;
@@ -2091,6 +2098,9 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _stopLiveVoice() async {
+    _liveDelegationId = null;
+    _liveDelegatedTurnId = null;
+    _liveTurnObserved = false;
     final engine = _liveEngine;
     if (engine == null) return;
     await engine.stop();
@@ -2188,6 +2198,9 @@ class _ChatScreenState extends State<ChatScreen>
       }
     }
     if (!stillOwned()) return;
+    _liveDelegationId = delegationId;
+    _liveDelegatedTurnId = null;
+    _liveTurnObserved = false;
     try {
       await _sendMessage(
         textOverride: utterance,
@@ -2197,7 +2210,10 @@ class _ChatScreenState extends State<ChatScreen>
         },
       );
     } catch (_) {
-      if (stillOwned()) {
+      if (stillOwned() && _liveDelegationId == delegationId) {
+        _liveDelegationId = null;
+        _liveDelegatedTurnId = null;
+        _liveTurnObserved = false;
         ownerEngine.speak(
           'Sorry, I could not reach Hermes for that request.',
           delegationId: delegationId,
@@ -2206,6 +2222,65 @@ class _ChatScreenState extends State<ChatScreen>
         ownerEngine.settle();
       }
     }
+  }
+
+  void _feedClassicLiveSnapshot(
+    NormalGatewayChatSnapshot snapshot,
+    List<Map<String, dynamic>> currentRows,
+  ) {
+    final engine = _liveEngine;
+    final delegationId = _liveDelegationId;
+    if (engine == null || !engine.active || delegationId == null) return;
+    if (_liveDelegatedTurnId == null) {
+      if (!snapshot.hasActiveTurn || snapshot.turnId == null) return;
+      _liveDelegatedTurnId = snapshot.turnId;
+    } else if (snapshot.turnId != _liveDelegatedTurnId) {
+      return;
+    }
+
+    final parts = <String>[];
+    for (final row in currentRows) {
+      if (!const {'assistant', 'agent'}.contains(row['role'])) continue;
+      final text = row['content']?.toString().trim() ?? '';
+      if (text.isNotEmpty) parts.add(text);
+    }
+    final turnReply = parts.join('\n\n');
+
+    if (snapshot.hasActiveTurn) {
+      _liveTurnObserved = true;
+      final status = snapshot.status;
+      if (status != null &&
+          status.kind == 'tool' &&
+          status.text.trim().isNotEmpty) {
+        engine.think(
+          'Hermes is working: ${status.text.trim()}. Not done yet.',
+          delegationId: delegationId,
+        );
+      }
+      if (turnReply.isNotEmpty) {
+        engine.speak(turnReply, delegationId: delegationId);
+      }
+      return;
+    }
+
+    if (!_liveTurnObserved) return;
+    final terminalText =
+        snapshot.terminal?.turnId == _liveDelegatedTurnId &&
+            (snapshot.terminal?.publicFinalText?.trim().isNotEmpty ?? false)
+        ? snapshot.terminal!.publicFinalText!.trim()
+        : turnReply;
+    if (terminalText.isNotEmpty) {
+      engine.speak(terminalText, delegationId: delegationId, flush: true);
+    } else if (engine.spokenCursor == 0) {
+      engine.think(
+        'Hermes finished that request without a spoken result.',
+        delegationId: delegationId,
+      );
+    }
+    _liveDelegationId = null;
+    _liveDelegatedTurnId = null;
+    _liveTurnObserved = false;
+    engine.settle();
   }
 
   @override
@@ -4178,6 +4253,7 @@ class _ChatScreenState extends State<ChatScreen>
       unawaited(_speakAssistantText(nextText));
     } else if (projection.isTerminal &&
         !projection.isFailClosed &&
+        _liveEngine?.active != true &&
         autoSpeakRepliesEnabled.value &&
         nextText.trim().isNotEmpty) {
       // Ordinary typed turn: auto-read the terminal reply.
