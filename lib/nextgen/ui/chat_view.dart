@@ -385,10 +385,13 @@ class _NgChatViewState extends State<NgChatView>
   }
 
   void _syncWakeVoicePause() {
+    // A stopped session keeps the capture device until the vendor answers
+    // its goodbye (or the 15 s fallback): wake resumes only once it is free.
     _wake.setPausedForVoice(
       _listening ||
           _readAloud.readingKey != null ||
-          (_liveEngine?.active ?? false),
+          (_liveEngine?.active ?? false) ||
+          (_liveEngine?.holdsMicrophone ?? false),
     );
   }
 

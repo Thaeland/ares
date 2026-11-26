@@ -72,6 +72,17 @@ class VoiceLiveEngine extends ChangeNotifier {
   bool get active => _conversation.active;
   bool get muted => _muted;
   bool get liveOwningMic => startable && active;
+
+  /// The session still holds the capture device: live, or stopped and
+  /// waiting for the vendor's goodbye (at most [liveCloseTimeout]). Wake-word
+  /// capture stays paused until this is false.
+  bool get holdsMicrophone {
+    final Object conversation = _conversation;
+    return conversation is LiveMicrophoneOwner
+        ? conversation.holdsMicrophone
+        : _conversation.active;
+  }
+
   String? get delegationId => _delegationId;
   int get startEpoch => _startEpoch;
   int get spokenCursor => _spokenCursor;
@@ -108,8 +119,12 @@ class VoiceLiveEngine extends ChangeNotifier {
     if (_disposing || id == null) return;
     if (!ConnectionMutationBarrier.isCurrent(id, _accountEpoch)) {
       _accountEpoch = ConnectionMutationBarrier.capture(id);
-      if (_conversation.active || _state != VoiceLiveState.idle) {
-        unawaited(stop());
+      // Sign-out or a connection edit: the session belongs to the account
+      // that just changed. Close the peer and stop the tracks at once.
+      if (_conversation.active ||
+          holdsMicrophone ||
+          _state != VoiceLiveState.idle) {
+        unawaited(stopNow('signed_out'));
       }
     }
   }
@@ -178,9 +193,7 @@ class VoiceLiveEngine extends ChangeNotifier {
     return false;
   }
 
-  /// Stop the live session (user-initiated or internal).
-  Future<void> stop() async {
-    if (_disposing) return;
+  void _beginStop() {
     _startEpoch++;
     _stopped = true;
     _clearUtteranceTimer();
@@ -189,6 +202,15 @@ class VoiceLiveEngine extends ChangeNotifier {
     _spokenText = '';
     _spokenCursor = 0;
     _lastToolLabel = '';
+  }
+
+  /// Stop the live session on the user's request (Stop, a spoken stop
+  /// phrase). The session leaves [active] at once; its peer and tracks are
+  /// released when the vendor answers `session.close`, or after Desktop's
+  /// 15 s fallback ([holdsMicrophone] until then).
+  Future<void> stop() async {
+    if (_disposing) return;
+    _beginStop();
     try {
       await _conversation.close();
     } catch (_) {
@@ -197,6 +219,20 @@ class VoiceLiveEngine extends ChangeNotifier {
     if (_disposing) return;
     _state = VoiceLiveState.idle;
     _muted = false;
+    notifyListeners();
+  }
+
+  /// End the live session at once, with no wait for the vendor: sign-out or
+  /// a connection edit, a hidden or covered chat, app background.
+  Future<void> stopNow([String reason = 'stopped']) async {
+    if (_disposing) return;
+    _beginStop();
+    _state = VoiceLiveState.idle;
+    _muted = false;
+    try {
+      await _conversation.forceClose(reason);
+    } catch (_) {}
+    if (_disposing) return;
     notifyListeners();
   }
 
@@ -364,13 +400,18 @@ class VoiceLiveEngine extends ChangeNotifier {
   }
 
   void _handleClosed(String reason, int? usageSeconds) {
-    if (_disposing || _stopped) return;
+    if (_disposing) return;
+    // A session this engine stopped itself has now released its peer and
+    // microphone: listeners re-sync (wake resumes), but only a close the
+    // user did not ask for is announced.
+    final stoppedHere = _stopped;
     _clearUtteranceTimer();
     _state = VoiceLiveState.idle;
+    _muted = false;
     _delegationId = null;
     _spokenText = '';
     notifyListeners();
-    onClosed?.call(reason);
+    if (!stoppedHere) onClosed?.call(reason);
   }
 
   @override

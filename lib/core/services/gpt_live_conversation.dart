@@ -306,11 +306,25 @@ abstract class LiveConversation {
   set onClosed(void Function(String reason, int? usageSeconds)? callback);
 }
 
+/// Optional capability of a [LiveConversation]: whether it still holds the
+/// capture device. A session the user stopped keeps its peer (and so the
+/// microphone) until the vendor answers `session.close`; wake-word capture
+/// must stay paused until this turns false.
+abstract interface class LiveMicrophoneOwner {
+  bool get holdsMicrophone;
+}
+
+/// How long a graceful close waits for the vendor's `session.closed` before
+/// the peer is closed and the tracks stopped anyway (Desktop's
+/// `CLOSE_TIMEOUT_MS`).
+const Duration liveCloseTimeout = Duration(seconds: 15);
+
 /// Full-duplex GPT-Live conversation. Owns the WebRTC media session and the
 /// `oai-events` data channel; a delegation is handed to the caller as a prompt
 /// plus spoken context, and the caller streams Hermes' answer back with
 /// [speak]. The vendor key stays on the gateway host.
-class GptLiveConversation extends ChangeNotifier implements LiveConversation {
+class GptLiveConversation extends ChangeNotifier
+    implements LiveConversation, LiveMicrophoneOwner {
   GptLiveConversation({
     required this.transport,
     this.onDelegation,
@@ -319,9 +333,13 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
     this.onClosed,
     this.peerConnectionFactory,
     this.microphoneFactory,
+    this.closeTimeout = liveCloseTimeout,
   });
 
   final GptLiveTransport transport;
+
+  /// Fallback for a graceful [close] the vendor never answers.
+  final Duration closeTimeout;
   final Future<RTCPeerConnection> Function()? peerConnectionFactory;
   final Future<MediaStream> Function()? microphoneFactory;
 
@@ -344,8 +362,21 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
   int _eventId = 0;
   String? _delegationId;
   String? _sessionId;
+
+  /// Finalized: the peer, channel and tracks are released (or being
+  /// released) and no further event is delivered for that session.
   bool _closed = false;
   bool _disposed = false;
+
+  /// Armed by a graceful [close]; fires [closeTimeout] later.
+  Timer? _closeTimer;
+  Future<void>? _finishing;
+
+  /// The data channel reported closing or closed: nothing more can be sent.
+  bool _eventsDead = false;
+
+  @override
+  bool get holdsMicrophone => _microphone != null;
 
   void _safeNotify() {
     if (!_disposed) notifyListeners();
@@ -370,7 +401,18 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
     List<Map<String, dynamic>>? history,
     Duration iceTimeout = const Duration(seconds: 10),
   }) async {
-    if (_active) return false;
+    if (_disposed || _active) return false;
+    // A previous session still waiting for the vendor's `session.closed` is
+    // finished first: one peer and one microphone at a time.
+    if (_peer != null ||
+        _microphone != null ||
+        _events != null ||
+        _finishing != null) {
+      await _finish('close_requested');
+      if (_disposed || _active) return false;
+    }
+    _closed = false;
+    _eventsDead = false;
     final status = await refreshStatus();
     if (status == null || !status.isLive || !status.available) return false;
     try {
@@ -379,14 +421,16 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
       final microphone = await (microphoneFactory ?? _defaultGetUserMedia)();
       _microphone = microphone;
       for (final track in microphone.getAudioTracks()) {
-        peer.addTrack(track, microphone);
+        await peer.addTrack(track, microphone);
       }
       final events = await peer.createDataChannel(
         'oai-events',
         RTCDataChannelInit(),
       );
       _events = events;
-      events.onMessage = (message) => handleEvent(message.text);
+      events.onMessage = (message) {
+        if (identical(_events, events)) handleEvent(message.text);
+      };
       final offer = await peer.createOffer();
       await peer.setLocalDescription(offer);
       await _waitForIce(peer, iceTimeout);
@@ -403,12 +447,11 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
         RTCSessionDescription(result.sdp, 'answer'),
       );
       _active = true;
-      _closed = false;
       _safeNotify();
       return true;
     } catch (error) {
       onError?.call('GPT-Live could not start: $error', true);
-      await forceClose('start_failed');
+      await _finish('start_failed');
       return false;
     }
   }
@@ -443,6 +486,10 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
     } catch (_) {
       return;
     }
+    if (_disposed) return;
+    // After a graceful close only the vendor's goodbye matters: a late
+    // delegation or transcript must not start a turn or change the state.
+    if (_closeTimer != null && event['type'] != 'session.closed') return;
     switch (event['type']) {
       case 'session.started':
         final session = event['session'];
@@ -490,9 +537,11 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
         onGap?.call();
       case 'session.closed':
         final usage = event['usage'];
-        forceClose(
-          event['reason']?.toString() ?? 'closed',
-          usage is Map ? (usage['seconds'] as num?)?.toInt() : null,
+        unawaited(
+          _finish(
+            event['reason']?.toString() ?? 'closed',
+            usage is Map ? (usage['seconds'] as num?)?.toInt() : null,
+          ),
         );
     }
   }
@@ -501,9 +550,15 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
 
   bool _send(Map<String, dynamic> payload) {
     final channel = _events;
-    if (channel == null) return false;
+    if (channel == null || _eventsDead) return false;
     try {
-      channel.send(RTCDataChannelMessage(jsonEncode(payload)));
+      // A send that fails later (the channel closed under it) must not
+      // surface as an unhandled error; the close handling ends the session.
+      unawaited(
+        channel
+            .send(RTCDataChannelMessage(jsonEncode(payload)))
+            .catchError((Object _) {}),
+      );
       return true;
     } catch (_) {
       return false;
@@ -565,46 +620,104 @@ class GptLiveConversation extends ChangeNotifier implements LiveConversation {
     });
   }
 
+  /// Graceful close, as Desktop's `VoiceLiveSession.close`: ask for
+  /// `session.closed` and tear down when it arrives, or after
+  /// [closeTimeout]. The session stops being [active] at once and its
+  /// microphone tracks are disabled, so the controls hide and no more audio
+  /// leaves the device while the vendor answers.
   @override
   Future<void> close() async {
-    if (_closed) return;
-    if (!_send({'type': 'session.close'})) {
-      await forceClose('close_requested');
+    if (_closed || _closeTimer != null) return;
+    // Not connected yet (start in flight) or no channel to say goodbye on:
+    // tear down now.
+    if (!_active || !_send({'type': 'session.close'})) {
+      await _finish('close_requested');
+      return;
     }
+    _active = false;
+    for (final track
+        in _microphone?.getAudioTracks() ?? const <MediaStreamTrack>[]) {
+      track.enabled = false;
+    }
+    _closeTimer = Timer(
+      closeTimeout,
+      () => unawaited(_finish('close_requested')),
+    );
+    _safeNotify();
   }
 
+  /// Ends the session at once: sign-out, a hidden or covered chat, app
+  /// background, dispose. Says goodbye when the channel is still up (so the
+  /// vendor session does not linger), then closes the peer and stops the
+  /// tracks without waiting.
   @override
-  Future<void> forceClose(String reason, [int? usageSeconds]) async {
-    if (_closed) return;
+  Future<void> forceClose(String reason, [int? usageSeconds]) {
+    if (!_closed && _closeTimer == null && _active) {
+      _send({'type': 'session.close'});
+    }
+    return _finish(reason, usageSeconds);
+  }
+
+  /// Finalizes the session exactly once (Desktop's `finish`): stops the
+  /// microphone tracks, closes the data channel and the peer, then reports
+  /// [reason].
+  Future<void> _finish(String reason, [int? usageSeconds]) {
+    if (_closed) return _finishing ?? Future<void>.value();
     _closed = true;
     _active = false;
+    _closeTimer?.cancel();
+    _closeTimer = null;
     final channel = _events;
     final peer = _peer;
-    final mic = _microphone;
+    final microphone = _microphone;
+    // The handlers compare against these fields, so our own close below is
+    // never mistaken for a lost connection. The microphone stays recorded
+    // until its tracks have stopped ([holdsMicrophone]).
     _events = null;
     _peer = null;
-    _microphone = null;
-    try {
-      channel?.close();
-      await peer?.close();
-      for (final track in mic?.getAudioTracks() ?? const []) {
-        await track.stop();
+    return _finishing = () async {
+      await _release(channel, peer, microphone);
+      if (identical(_microphone, microphone)) _microphone = null;
+      _finishing = null;
+      if (!_disposed) {
+        notifyListeners();
+        onClosed?.call(reason, usageSeconds);
       }
-    } catch (_) {}
-    if (!_disposed) {
-      notifyListeners();
-      onClosed?.call(reason, usageSeconds);
+    }();
+  }
+
+  /// Releases one session's resources. Each step stands alone: the
+  /// microphone goes first and is freed even when the peer is already gone
+  /// (a native peer answers calls after close with an error).
+  static Future<void> _release(
+    RTCDataChannel? channel,
+    RTCPeerConnection? peer,
+    MediaStream? microphone,
+  ) async {
+    for (final track in microphone?.getTracks() ?? const <MediaStreamTrack>[]) {
+      try {
+        await track.stop();
+      } catch (_) {}
     }
+    try {
+      await microphone?.dispose();
+    } catch (_) {}
+    try {
+      await channel?.close();
+    } catch (_) {}
+    try {
+      await peer?.close();
+    } catch (_) {}
+    try {
+      await peer?.dispose();
+    } catch (_) {}
   }
 
   @override
   void dispose() {
+    if (_disposed) return;
     _disposed = true;
-    if (_active || _peer != null || _microphone != null || _events != null) {
-      unawaited(forceClose('disposed'));
-    } else {
-      _closed = true;
-    }
+    unawaited(forceClose('disposed'));
     super.dispose();
   }
 }

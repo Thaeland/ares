@@ -2203,10 +2203,13 @@ class _ChatScreenState extends State<ChatScreen>
 
   void _syncClassicWakeForLive() {
     if (_wake case final wake?) {
+      // A stopped session keeps the capture device until the vendor answers
+      // its goodbye (or the 15 s fallback): wake resumes only once it is free.
       final busy =
           _voiceComposer.listening ||
           _voiceComposer.starting ||
-          (_liveEngine?.active ?? false);
+          (_liveEngine?.active ?? false) ||
+          (_liveEngine?.holdsMicrophone ?? false);
       wake.setPausedForVoice(busy);
     }
   }
