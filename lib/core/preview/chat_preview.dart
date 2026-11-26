@@ -764,7 +764,7 @@ class _ChatPreviewState extends State<ChatPreview> {
                     for (final p in _pins)
                       InputChip(
                         label: Text(
-                          '#${p.number} ${p.note}',
+                          l10n.rel_chat_preview_pin_label(p.number, p.note),
                           overflow: TextOverflow.ellipsis,
                         ),
                         onDeleted: _busy

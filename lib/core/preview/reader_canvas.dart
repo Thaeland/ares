@@ -177,7 +177,13 @@ class _ReaderCanvasState extends State<ReaderCanvas> {
                     Positioned(
                       left: p.rect.left,
                       top: p.rect.top - _offset,
-                      child: Badge(label: Text('#${p.number}')),
+                      child: Badge(
+                        label: Text(
+                          context.sharedL10n.rel_chat_preview_pin_number(
+                            p.number,
+                          ),
+                        ),
+                      ),
                     ),
                   if (_start != null && _end != null)
                     Positioned.fromRect(
