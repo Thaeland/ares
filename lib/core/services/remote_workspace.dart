@@ -35,6 +35,7 @@ part 'workspace_queue.dart';
 
 part 'remote_workspace_terminal.dart';
 part 'remote_kanban.dart';
+part 'remote_bots.dart';
 
 /// Each entry is a particular operation, not permission for a whole family.
 enum WorkspaceRead {
