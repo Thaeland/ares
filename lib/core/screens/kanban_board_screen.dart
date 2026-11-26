@@ -2331,7 +2331,7 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
                     selected: board.slug == widget.activeSlug,
                     title: Text('${board.name} (${board.slug})'),
                     subtitle: Text(
-                      '${_kanbanCardCount(context, board.total)} · ${context.sharedL10n.ng_board_active('${board.activeWorkCount}')} · ${board.defaultWorkspaceKind}',
+                      '${_kanbanCardCount(context, board.total)} · ${context.sharedL10n.ng_board_active('${board.activeWorkCount}')} · ${_workspaceKindLabel(context.sharedL10n, board.defaultWorkspaceKind)}',
                     ),
                     onTap: () => widget.onSelect(board.slug),
                     trailing: Row(
@@ -2430,6 +2430,14 @@ class _BoardSwitcherSheetState extends State<_BoardSwitcherSheet> {
     );
   }
 }
+
+String _workspaceKindLabel(AppLocalizations l10n, String kind) =>
+    switch (kind) {
+      'scratch' => l10n.ng_board_scratch,
+      'worktree' => l10n.ng_board_worktree,
+      'dir' => l10n.ng_board_shared_dir,
+      _ => kind,
+    };
 
 class _NewTaskSpec {
   const _NewTaskSpec({
